@@ -205,7 +205,7 @@
 											<input type="hidden" name="hide_siupp_file" id="hide_siupp_file" value="{{$userData->fileSIUPP}}"/>
 											<a id="siupp-file" class="btn btn-link" style="color:black !important;" >{{$userData->fileSIUPP}}</a>
 											<div id="attachment-file">
-												*.pdf / .jpeg / .jpg / .png
+												*ukuran file maksimal 2 mb
 											</div>
 										</div>
 										<div class="form-group" style="margin-bottom:0.01%">
@@ -265,7 +265,7 @@
 											<input type="hidden" name="hide_sertifikat_file" id="hide_sertifikat_file" value="{{$userData->fileSertifikat}}"/>
 											<a id="sertifikat-file" class="btn btn-link" style="color:black !important;" >{{$userData->fileSertifikat}}</a>
 											<div id="attachment-file">
-												*.pdf / .jpeg / .jpg / .png
+												*ukuran file maksimal 2 mb
 											</div>
 										</div>
 										<div class="form-group">
@@ -317,7 +317,7 @@
 											<input type="hidden" name="hide_npwp_file" id="hide_npwp_file" value="{{$userData->fileNPWP}}"/>
 											<a id="npwp-file" class="btn btn-link" style="color:black !important;" >{{$userData->fileNPWP}}</a>
 											<div id="attachment-file">
-												*.pdf / .jpeg / .jpg / .png
+												*ukuran file maksimal 2 mb
 											</div>
 										</div>
 										<div class="form-group col-xs-12">
@@ -325,7 +325,7 @@
 											<input class="data-upload-berkas f1-file-ref-uji" id="fileInput-ref-uji" name="fuploadrefuji" type="file" accept="application/pdf,image/*">
 											<div id="ref-uji-file"></div>
 											<div id="attachment-file">
-												*.pdf / .jpeg / .jpg / .png
+												*ukuran file maksimal 2 mb
 											</div>
 										</div>
 										<div class="dv-srt-dukungan-prinsipal">
@@ -334,7 +334,7 @@
 												<input class="data-upload-berkas f1-file-prinsipal" id="fileInput-prinsipal" name="fuploadprinsipal" type="file" accept="application/pdf,image/*">
 												<div id="prinsipal-file"></div>
 												<div id="attachment-file">
-													*.pdf / .jpeg / .jpg / .png
+													*ukuran file maksimal 2 mb
 												</div>
 											</div>
 										</div>
