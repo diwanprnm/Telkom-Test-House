@@ -1,0 +1,30 @@
+Dear Ibu Ica,
+
+Berikut weekly report dari kami :
+untuk menu yang telah selesai sebagai berikut
+1. Pengajuan Pengujian 
+	- Form Pemohon
+	- Form Perusahaan
+	- Form Type Pengujian
+	- Form Perangkat
+	- Form Berkas
+	- Form Verifikasi Data
+	- Form Verifikasi Lampiran
+2. Status Pengujian View 
+	- Show List Pengujian
+3. Detail Pengujian View
+	- Show Detail pengujian
+	- Print Pengujian
+	- Upload Lampiran Pengujian
+4. Update Pengujian View ( sebelum melampirkan form pengujian)
+	- Update Detail Pengujian
+
+Admin dapat di akses ke http://37.72.172.144/telkom-dds/public/admin
+User dapat di akses ke http://37.72.172.144/telkom-dds/public
+
+Untuk detail report bisa di lihat di
+https://docs.google.com/spreadsheets/d/1xRonAYOlbXRzTSHa3lvbYhtFhHTPv3EezyXP-TY8Bdc/edit?ts=57b2f33c#gid=858984474
+
+Terima Kasih,
+
+Rully Primangesta

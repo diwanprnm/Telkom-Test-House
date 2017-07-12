@@ -1,0 +1,49 @@
+Kepada Ibu Icha
+
+Perkenalkan saya Rully, PM dari Boardinglabs untuk projek ini. Berikut weekly report dari kami :
+
+CMS dapat di akses ke http://37.72.172.144/telkom-dds/public
+untuk menu yang telah selesai sebagai berikut
+1. STEL 
+	- List Data STEL
+	- Create / Add Data STEL
+	- Update Data STEL
+	- Delete Data STEL
+	- Search Data STEL
+2. Tarif Pengujian 
+	- List Data Tarif
+	- Create / Add Data Tarif
+	- Update Data Tarif
+	- Delete Data Tarif
+	- Search Data Tarif
+3. User
+	- List Data User
+	- Create / Add Data User
+	- Update Data User
+	- Delete Data User
+	- Search Data User
+	- Active / Deactive User
+4. Feedback
+	- List Feedback
+	- Search Feedback
+5. Slideshow
+	- List Slideshow
+	- Create / Add Slideshow
+	- Update Slideshow
+	- Delete Slideshow
+	- Active / Deactive Slideshow
+6. Perusahaan
+	- List Data Perusahaan
+	- Create / Add Data Perusahaan
+	- Update Data Perusahaan
+	- Delete Data Perusahaan
+	- Search Data Perusahaan
+7. Pengujian
+	- List Data Dummy Pengujian
+
+Untuk detail report bisa di lihat di
+https://docs.google.com/spreadsheets/d/1xRonAYOlbXRzTSHa3lvbYhtFhHTPv3EezyXP-TY8Bdc
+
+Terima Kasih,
+
+Rully Primangesta
