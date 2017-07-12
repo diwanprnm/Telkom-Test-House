@@ -55,6 +55,68 @@
 
     </div><!-- #wrapper end -->
 
+    <div id="myModal" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
+      <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Survey Kepuasan Kastamer Eksternal</h4>
+          </div>
+          <div class="modal-body">
+            <form>
+                <div class="row">
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label>Tanggal</label>
+                            <input type="text" name="tanggal" placeholder="DD/MM/YYYY" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Nama</label>
+                            <input type="text" name="nama" placeholder="John Doe" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Perusahaan</label>
+                            <input type="text" name="company" placeholder="PT. ABCD" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>No. Telepon</label>
+                            <input type="text" name="no_tlp" placeholder="0812345678" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label>Jenis Pengujian</label>
+                            <input type="text" name="tanggal" placeholder="Nama Pengujian" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>E-mail</label>
+                            <input type="text" name="nama" placeholder="user@mail.com" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Mobile</label>
+                            <input type="text" name="company" placeholder="0812345678" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <h2>Harap isikan penilaian anda terhadap Layanan QA/TA/VT</h2>
+                    <p>Kustomer diharapkan dapat untuk beberapa kriteria yang diajukan. Nilai tersebut merupakan nilai kustomer  berikan mengenai ekspetasi setuju dan PT. Telkom.
+
+                    Skala pemberian nilai adalah 1 - 7 dengan nilai 7 adalah penilaian Sangat Tidak Baik atau Tenaga dengan
+                    </p>
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
     <!-- Go To Top
     ============================================= -->
     <div id="gotoTop" class="icon-angle-up"></div>

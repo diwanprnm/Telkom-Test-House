@@ -132,6 +132,9 @@
               <?php
               }
               ?> 
+
+              <li><a href="#myModal" data-toggle="modal" data-target="#myModal">Open Modal</a></li>
+
               <div id="top-cart" style="float:left">
                 <a href="#" id="top-cart-trigger"><i class="icon-shopping-cart"></i><span>{{Cart::count()}}</span></a>
                  @if(Cart::count() >= 1)
