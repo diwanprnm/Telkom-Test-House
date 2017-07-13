@@ -37,8 +37,11 @@
 				<div class="hpadding20">
 					<!-- Top filters -->
 					<div class="topsortby">
-						<div class="col-md-4 offset-0">
-
+						<div class="col-md-4 offset-0"> 
+							<span class="input-icon input-icon-right search-table"> 
+								<input id="search_stel_product" type="text" placeholder="{{ trans('translate.search_STEL') }}" id="form-field-17" class="form-control " value="{{ $search }}">
+								<i class="ti-search"></i>
+							</span> 
 						</div>			
 						<div class="col-md-4">
 						</div>
@@ -129,7 +132,11 @@
 				</div>
 				
 				<div class="list-cart padding20">
+				<?php if(Cart::count() > 0){?>
 					<a class="button button-3d nomargin full btn-sky" href="#myModal1"  data-lightbox="inline" >Checkout</a>
+				<?php }else{?>
+					<a class="button button-3d nomargin full btn-sky"  >Checkout</a>
+				<?php }?>
 				</div> 
 
 					<!-- Modal -->

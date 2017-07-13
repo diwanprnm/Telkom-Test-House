@@ -25,16 +25,21 @@ class ProductsController extends Controller
 {
     public function index(Request $request)
     {   
-         $currentUser = Auth::user();
-
+        $currentUser = Auth::user();
+        $search = trim($request->input('search'));
         if($currentUser){
             $paginate = 10;
-            $stels = STEL::whereNotNull('created_at')
-                ->paginate($paginate);
-      
+            $stels = STEL::whereNotNull('created_at');
+            if ($search != null){
+                $stels->where("name",$search);
+                $stels->orWhere("code",$search);
+            }
+
+            $stels = $stels->paginate($paginate);
             $page = "products";
             return view('client.STEL.products') 
                 ->with('page', $page)
+                ->with('search', $search)
                 ->with('stels', $stels);
         }else{
            return  redirect('login');

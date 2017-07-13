@@ -29,13 +29,7 @@
 
 			<div class="container clearfix">
 				<div class="container-fluid container-fullw bg-white">
-					<div class="row">  
-						<div class="col-md-6 col-xs-12">
-							<span class="input-icon input-icon-right search-table"> 
-								<input id="search_stel_product" type="text" placeholder="{{ trans('translate.search_STEL') }}" id="form-field-17" class="form-control " value="{{ $search }}">
-								<i class="ti-search"></i>
-							</span>
-						</div>
+					<div class="row">   
 						<br><br>
 						<div class="col-md-12">
 							<div class="table-responsive">
@@ -50,6 +44,7 @@
 											<th>Total</th> 
 											<th>Status</th>
 											<th>{{ trans('translate.stel_payment_status_complete_time') }}</th>  
+											<th>#</th>
 										</tr>
 									</thead>
 									<tbody>

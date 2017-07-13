@@ -98,6 +98,7 @@ return [
 	'stel_version'     	=> 'Versi',
 	'stel_category'     => 'Kategori',
 	'stel_choose_category'	=> 'Pilih Kategori',
+	'stel_tax'     	=> 'Pajak',
     
 	'charge'     		=> 'Tarif', // tariff
 	'charge_no'     	=> 'No',
