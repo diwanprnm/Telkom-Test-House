@@ -2896,6 +2896,7 @@ Route::resource('/pengujian', 'PengujianController');
 Route::get('/pengujian', 'PengujianController@index');
 Route::get('/pengujian/{id}/detail', 'PengujianController@detail');
 Route::post('/testimonial', 'PengujianController@testimonial');
+Route::post('/cekAmbilBarang', 'PengujianController@cekAmbilBarang');
 Route::resource('/STELclient', 'STELClientController');
 Route::get('/STELclient', 'STELClientController@index');
 Route::resource('/STSELclient', 'STSELClientController');

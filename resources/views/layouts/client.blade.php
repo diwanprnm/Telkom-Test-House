@@ -61,7 +61,7 @@
         <!-- Modal content-->
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
             <h4 class="modal-title">Survey Kepuasan Kastamer Eksternal</h4>
           </div>
           <div class="modal-body pre-scrollable">
@@ -69,34 +69,35 @@
                 <div class="row">
                     <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
                         <div class="form-group">
+                            <input type="hidden" name="exam_id" name="exam_id">
                             <label>Tanggal</label>
-                            <input type="text" name="tanggal" placeholder="DD/MM/YYYY" class="form-control">
+                            <input type="text" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label>Nama</label>
-                            <input type="text" name="nama" placeholder="John Doe" class="form-control">
+                            <input type="text" id="user_name" name="user_name" placeholder="John Doe" class="form-control" readonly>
                         </div>
                         <div class="form-group">
                             <label>Perusahaan</label>
-                            <input type="text" name="company" placeholder="PT. ABCD" class="form-control">
+                            <input type="text" id="company_name" name="company_name" placeholder="PT. ABCD" class="form-control" readonly>
                         </div>
                         <div class="form-group">
                             <label>No. Telepon</label>
-                            <input type="text" name="no_tlp" placeholder="0812345678" class="form-control">
+                            <input type="text" id="company_phone" name="company_phone" placeholder="0812345678" class="form-control" readonly>
                         </div>
                     </div>
                     <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
                         <div class="form-group">
                             <label>Jenis Pengujian</label>
-                            <input type="text" name="tanggal" placeholder="Nama Pengujian" class="form-control">
+                            <input type="text" id="exam_type" name="exam_type" placeholder="Nama Pengujian" class="form-control" readonly>
                         </div>
                         <div class="form-group">
                             <label>E-mail</label>
-                            <input type="text" name="nama" placeholder="user@mail.com" class="form-control">
+                            <input type="email" id="user_email" name="user_email" placeholder="user@mail.com" class="form-control" readonly>
                         </div>
                         <div class="form-group">
                             <label>Mobile</label>
-                            <input type="text" name="company" placeholder="0812345678" class="form-control">
+                            <input type="text" id="user_phone" name="user_phone" placeholder="0812345678" class="form-control" readonly>
                         </div>
                     </div>
                 </div>
@@ -118,38 +119,38 @@
                       <tr>
                         <td>1</td>
                         <td>Pihak UREL (User Relation) mampu menjadi jembatan antara Kastamer dan Yesy Engineer Telkom.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest1_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest1_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                       <tr>
                         <td>2</td>
                         <td>Proses pelayanan pengujian secara keseluruhan (sejak pengajuan hingga pelaporan) mudah dimengerti oleh Kastemer.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest2_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest2_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                       <tr>
                         <td>3</td>
                         <td>Pihak UREL memberika informasi serta melakukan pengecekan kelengkapan mengenai berkas-berkas yang harus disiapkan.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest3_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest3_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                       <tr>
                         <td>4</td>
                         <td>Setiap lini proses (sejak pengajuan hingga pelaporan) dilakukan dengan cepat.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest4_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest4_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                       <tr>
                         <td>5</td>
                         <td>Pihak UREL memberikan informasi yang dibutuhkan oleh Kastamer.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest5_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest5_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                     </table>
                 </div>
                 <div class="row">
                     <p>Menurut Anda, dalam proses pengajuan hingga pelaporan, tahap apa yang sebaiknya ditingkatkan oleh PT. Telkom? Dan mengapa harus ditingkatkan?</p>
-                    <textarea class="form-control" placeholder="Jawaban"></textarea>
+                    <textarea name="quest6" class="form-control" placeholder="Jawaban"></textarea>
                 </div>
                 <div class="row">
                     <p>Pada tahap ini, silahkan mengisi nilai dengan sekala 1-7 untuk nilai ekspetasi awal dan nilai performansi. Kastemer diharapkan mengisi kolom nilai dan setiap kriteria, serta nilai performansi/kenyataan dari setiap kriteria</p>
@@ -164,129 +165,124 @@
                       <tr>
                         <td>7</td>
                         <td>Kastemer percaya pada kualitas pengujian yang dilakukan oleh Telkom.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest7_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest7_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                       <tr>
                         <td>8</td>
                         <td>Kastemer merasa pihak UREL faham dan terpercaya.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest8_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest8_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                       <tr>
                         <td>9</td>
                         <td>Kastemer merasa pihak UREL sudah melakukan pemeriksaan kelengkapan administrasi dengan kinerja yang baik.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest9_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest9_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                       <tr>
                         <td>10</td>
                         <td>Kastemer measa aman sewaktu melakukan transaksi dengan pihak Telkom terutama pihak UREL.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest10_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest10_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                       <tr>
                         <td>11</td>
                         <td>Kastemer merasa Engineer Telkom sudah berpengalaman.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest11_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest11_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                       <tr>
                         <td>12</td>
                         <td>Alat ukur yang digunakan oleh pihak Telkom berkualitas, baik, dan akurat.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest12_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest12_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                       <tr>
                         <td>13</td>
                         <td>Laboratorium yang digunakan oleh pihak Telkom dalam keadaan bersih dan memenuhi Standar Laboratorium.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest13_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest13_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                       <tr>
                         <td>14</td>
                         <td>Tarif Pengujian yang ditetapkan oleh pihak PT. Telkom sesuai dan bersaing dengan harga pasar.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest14_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest14_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                       <tr>
                         <td>15</td>
                         <td>Pihak UREL yang melayani kastamer berpakaian rapih dan sopan.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest15_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest15_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                       <tr>
                         <td>16</td>
                         <td>Kontor Telkom DDS dalam kondisi nyaman, bersih dan sudah sesuai kondisi keseluruhannya.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest16_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest16_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                       <tr>
                         <td>17</td>
                         <td>Pihak Telkom mengembalikan barang/perangkat yang diujikan dalam keadaan baik seperti awal.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest17_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest17_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                       <tr>
                         <td>18</td>
                         <td>Sertifikat yang diterima oleh kastemer tidak mengalami kesalahan informasi.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest18_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest18_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                       <tr>
                         <td>19</td>
                         <td>Pihak Telkom DDS terutama pihak UREL yang melayani proses pengajuan hingga pelaporan sudah memahami kebutuhan kastamer.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest19_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest19_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                       <tr>
                         <td>20</td>
                         <td>Proses pengujian secara keseluruhan tidak memakan durasi waktu yang lama.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest20_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest20_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                       <tr>
                         <td>21</td>
                         <td>Pihak UREL cepat dan tepat dalam merespon keluhan yang diberikan kastamer.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
-                      </tr>
-                      <tr>
-                        <td>11</td>
-                        <td>Kastemer merasa Engineer Telkom sudah berpengalaman.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest21_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest21_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                       <tr>
                         <td>22</td>
                         <td>Pihak UREL tanggapan dalam membantu permasalahan kastamer.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest22_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest22_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                       <tr>
                         <td>23</td>
                         <td>Engineer tanggapan pada permasalahan yang dihadapi kastamer selama proses pengajuan hingga pelaporan.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest23_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest23_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                       <tr>
                         <td>24</td>
                         <td>Pihak UREL mudah dihubungi dan tanggap pada segala pertanyaan yang diajukan kastamer terkait pengujian perangkat.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest24_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest24_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                       <tr>
                         <td>25</td>
                         <td>Pihak UREL bersikap ramah dan profesional terhadap kastamer.</td> 
-                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
-                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                        <td><input type="number" min="1" max="7" name="quest25_eks" class="form-control" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest25_perf" class="form-control" placeholder="1-7" required></td>
                       </tr>
                     </table>
                 </div>
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="button button3d btn-sky" data-dismiss="modal">Lanjut</button>
+            <!-- <button type="submit" class="button button3d btn-sky" data-dismiss="modal">Simpan</button> -->
+			<button type="button" id="submit-kuisioner" class="button button3d btn-sky">Simpan</button>
           </div>
         </div>
 
@@ -386,7 +382,29 @@
                 </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="button button3d btn-sky" data-dismiss="modal">Simpan</button>
+            <button type="button" id="submit-complain" class="button button3d btn-sky">Simpan</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="modal_status_barang" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
+      <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Status Barang</h4>
+          </div>
+          <div class="modal-body pre-scrollable">
+               <div class="row">
+                    <h2>Silakan Ambil Barang di Gudang DDS Telkom, Sebelum mengunduh Sertifikat. Terima Kasih</h2>
+                </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
           </div>
         </div>
 

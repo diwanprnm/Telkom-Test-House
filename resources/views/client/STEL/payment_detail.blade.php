@@ -66,7 +66,9 @@
 					</table>
 
 				</div>
-
+				<div class="col-md-12">
+					<a class="button button-3d btn-sky nomargin" href="{{url('/payment_status')}}">{{ trans('translate.back') }}</a>
+				</div>
 			</div>
 
 

@@ -323,4 +323,8 @@ return [
 	'an_email_has_been_sent' => 'An Email has been sent to your email address,',
 	'follow_the_direction' => 'Follow the directions in the email to reset your password.',
 	'done' => 'Done',
+	'back' => 'Back',
+	'certificate' => 'Certificate',
+	'from_customer' => 'from Customer',
+	'from_urel' => 'from URel',
 ];

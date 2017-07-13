@@ -20,6 +20,7 @@ use App\ExaminationAttach;
 use App\ExaminationType;
 use App\Testimonial;
 use App\ExaminationHistory;
+use App\EquipmentHistory;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -1016,6 +1017,13 @@ class PengujianController extends Controller
 		}else{
 			echo 0;
 		}
+	}
+	
+	public function cekAmbilBarang(Request $request)
+    {
+		$currentUser = Auth::user();
+		$equip = EquipmentHistory::where("examination_id", "=", $request->input('exam_id'))->where("location", "=", "1");
+		return(count($equip->get()));
 	}
 	
 	public function autocomplete($query) {
