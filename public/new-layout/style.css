@@ -14090,3 +14090,14 @@ body.loading {
 body.loading .overlay {
     display: block;
 }
+
+#modal_kuisioner .modal-body, .pre-scrollable {
+    padding: 30px; 
+    max-height: 80%;
+}
+#modal_kuisioner .modal-content {
+    height: 90%;
+}
+#table_kuisioner tr th, tr td{
+	padding: 5px;
+}
