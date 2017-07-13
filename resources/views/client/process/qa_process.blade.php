@@ -546,9 +546,7 @@
 	       	console.log(currentIndex); 
 	       	if(newIndex == 4){ 
 	       		 $('.actions > ul > li:nth-child(2) a').text("Save");
-	       	} 
-
-	       	$('.actions > ul > li:nth-child(2) a').text("Next");
+	       	}  
 	        if(newIndex == 5){
 	        	var formData = new FormData($('#form-permohonan')[0]);
 	        	var error = false;
@@ -615,6 +613,21 @@
 					}
 				});
 	        }  
+
+	        
+	        if(newIndex < currentIndex ){ 
+		        if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
+		        $( ".number li:eq("+(newIndex)+" ) button" ).removeClass("done").addClass("active");
+		        $( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active");
+	        	return true;
+	        }else{
+	        	if(form.valid()){
+	        		if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
+			        $( ".number li:eq("+(newIndex)+" ) button" ).removeClass("done").addClass("active");
+			        $( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active");
+	        	}
+	        	return form.valid();	
+	        }
 	    },
 	    onFinishing: function (event, currentIndex)
 	    {
