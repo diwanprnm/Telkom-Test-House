@@ -319,4 +319,10 @@ return [
 	'upload'  	=> 'Unggah',
 	'sign_up'  => 'Daftar',
 	'reset_pass' => 'Ubah Password',
+	'notification_after_register' => 'Permintaan aktivasi akun baru telah dikirim. Mohon menunggu konfirmasi pengaktifan akun dari Petugas URel DDS TELKOM.',
+	'sending' => 'Mengirimkan...',
+	'pass_reset_email_sent' => 'Email Aktivasi Password Baru',
+	'an_email_has_been_sent' => 'Email Aktivasi telah dikirim ke email anda,',
+	'follow_the_direction' => 'Ikuti link pada email tersebut, untuk mengatur ulang password anda.',
+	'done' => 'OK',
 ];

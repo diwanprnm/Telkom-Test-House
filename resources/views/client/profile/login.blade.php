@@ -9,8 +9,13 @@
 			<div class="content-wrap"> 
 				<div class="container clearfix">  
 					@if(session()->has('send_new_user'))
-						<div id="msg_box" class="msg_sent">
-							Permintaan aktivasi akun baru telah dikirim. Mohon menunggu konfirmasi pengaktifan akun dari Petugas URel DDS TELKOM.
+						<div class="alert alert-info" role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							  <span aria-hidden="true">&times;</span>
+							</button>
+							<div style="text-align:center">
+								{{ trans('translate.notification_after_register') }}
+							</div>
 						</div>
 					@endif
 					<div class="panel panel-default nobottommargin divcenter" style="max-width: 500px;">
