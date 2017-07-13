@@ -3,6 +3,7 @@
 @section('content')
  <link rel="stylesheet" href="{{url('vendor/jquerystep/main.css')}}" type="text/css" />
   <link rel="stylesheet" href="{{url('vendor/jquerystep/jquery.steps.css')}}" type="text/css" />
+  <link rel="stylesheet" href="{{url('vendor/chosen/chosen.css')}}">
   <style type="text/css">
   	ul[role="tablist"] {
     display: none;
@@ -198,7 +199,7 @@
 					            <fieldset>
 					                <div class="form-group">
 											<!-- <label>{{ trans('translate.service_upload_siupp') }}<span class="text-danger">*</span></label> -->
-											<input   id="fileInput-SIUPP" name="fuploadsiupp" type="file" accept="application/pdf,image/*">
+											<input   id="fileInput-SIUPP" name="fuploadsiupp" type="file" accept="application/pdf,image/*" class="required">
 											<input type="hidden" name="hide_siupp_file" id="hide_siupp_file" value="{{$userData->fileSIUPP}}"/>
 											<a id="siupp-file" class="btn btn-link" style="color:black !important;" >{{$userData->fileSIUPP}}</a>
 											<div id="attachment-file">
@@ -525,7 +526,7 @@
 	    	form.trigger("focus"); 
 	        form.validate().settings.ignore = ":disabled,:hidden"; 
 	       	console.log(newIndex);
-	        if(newIndex == 5){
+	        if(newIndex == 4  && form.valid()){
 	        	console.log("save");
 	        	var formData = new FormData($('#form-permohonan')[0]);
 				$.ajax({
@@ -553,7 +554,7 @@
 				$(".actions").hide();
 	        }
 
-	        if(newIndex == 4){
+	        if(newIndex == 3){
 	        	$("#f3-preview-1").html($("#f1-nama-perangkat").val());
 				$("#f3-preview-2").html($("#f1-merek-perangkat").val());
 				$("#f3-preview-3").html($("#f1-model-perangkat").val());
@@ -579,9 +580,7 @@
 					}
 				});
 	        }
-	        if(newIndex == 3){
-	        	console.log($(".material-select span").html());
-	        }
+	        
 
 	        if(newIndex < currentIndex ){ 
 		        if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");

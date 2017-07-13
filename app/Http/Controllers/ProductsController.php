@@ -133,19 +133,19 @@ class ProductsController extends Controller
         // A very simple PHP example that sends a HTTP POST to a remote site
         //
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded' ,'Authorization: Bearer 8a2677ce150bb2b9b2b7c801479618d2' ,'Accept: application/json'));
-        curl_setopt($ch, CURLOPT_URL,config('app.main_api_server').'/transactions');
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS,
-                    "merchant_id=".config('app.merchant_id')."&merchant_secret=".config('app.merchant_secret')."&invoice=".$request->input("invoice_number")."&amount=".Cart::total()."&add_info1=tax(10%)&timeout=3000&return_url=https://www.mainapi.net/store/client/#/api");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // $ch = curl_init();
+        // curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded' ,'Authorization: Bearer 8a2677ce150bb2b9b2b7c801479618d2' ,'Accept: application/json'));
+        // curl_setopt($ch, CURLOPT_URL,config('app.main_api_server').'/transactions');
+        // curl_setopt($ch, CURLOPT_POST, 1);
+        // curl_setopt($ch, CURLOPT_POSTFIELDS,
+        //             "merchant_id=".config('app.merchant_id')."&merchant_secret=".config('app.merchant_secret')."&invoice=".$request->input("invoice_number")."&amount=".Cart::total()."&add_info1=tax(10%)&timeout=3000&return_url=https://www.mainapi.net/store/client/#/api");
+        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        $server_result = curl_exec ($ch);
+        // $server_result = curl_exec ($ch);
 
-        curl_close ($ch);
-        $result =  json_decode($server_result); 
-       
+        // curl_close ($ch);
+        // $result =  json_decode($server_result); 
+        
         $currentUser = Auth::user();
         $STELSales = new STELSales;
         if($currentUser){ 
@@ -171,7 +171,7 @@ class ProductsController extends Controller
            $STELSales->total = Cart::total();
            $STELSales->created_by =$currentUser->id;
            $STELSales->created_at = date("Y-m-d H:i:s");
-            $STELSales->payment_code =  $result->payment_code;
+            // $STELSales->payment_code =  $result->payment_code;
             try{
                 $save = $STELSales->save();
                     try{  

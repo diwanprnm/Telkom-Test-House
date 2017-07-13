@@ -571,7 +571,7 @@
 						$("#f3-preview-2").html($("#f1-merek-perangkat").val());
 						$("#f3-preview-3").html($("#f1-model-perangkat").val());
 						$("#f3-preview-4").html($("#f1-kapasitas-perangkat").val());
-						$("#f3-preview-5").html($("#f1-referensi-perangkat").val());
+						$("#f3-preview-5").html($("#f1-cmb-ref-perangkat").val());
 						$("#f3-preview-6").html($("#f1-pembuat-perangkat").val());
 						$("#f3-preview-7").html($("#f1-serialNumber-perangkat").val());
 
