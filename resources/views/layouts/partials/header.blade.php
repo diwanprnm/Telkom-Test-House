@@ -133,7 +133,8 @@
               }
               ?> 
 
-              <li><a href="#myModal" data-toggle="modal" data-target="#myModal">Open Modal</a></li>
+              <li><a href="#modal_kuisioner" data-toggle="modal" data-target="#modal_kuisioner">Modal 1</a></li>
+              <li><a href="#modal_complain" data-toggle="modal" data-target="#modal_complain">Modal 2</a></li>
 
               <div id="top-cart" style="float:left">
                 <a href="#" id="top-cart-trigger"><i class="icon-shopping-cart"></i><span>{{Cart::count()}}</span></a>

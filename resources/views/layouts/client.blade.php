@@ -55,7 +55,7 @@
 
     </div><!-- #wrapper end -->
 
-    <div id="myModal" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
+    <div id="modal_kuisioner" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
       <div class="modal-dialog modal-lg">
 
         <!-- Modal content-->
@@ -64,7 +64,7 @@
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h4 class="modal-title">Survey Kepuasan Kastamer Eksternal</h4>
           </div>
-          <div class="modal-body">
+          <div class="modal-body pre-scrollable">
             <form>
                 <div class="row">
                     <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
@@ -104,13 +104,289 @@
                     <h2>Harap isikan penilaian anda terhadap Layanan QA/TA/VT</h2>
                     <p>Kustomer diharapkan dapat untuk beberapa kriteria yang diajukan. Nilai tersebut merupakan nilai kustomer  berikan mengenai ekspetasi setuju dan PT. Telkom.
 
-                    Skala pemberian nilai adalah 1 - 7 dengan nilai 7 adalah penilaian Sangat Tidak Baik atau Tenaga dengan
+                    Skala pemberian nilai adalah 1 - 7 dengan nilai 7 adalah penilaian Sangat Tidak Baik atau Sangat Tidak Setuju. Kastemer diharapkan dapat memberikan dengan angka bulat.
                     </p>
+                </div>
+                <div class="row">
+                    <table id="table_kuisioner" style="width:100%; padding: 2px;" border="1">
+                      <tr>
+                        <th>No</th>
+                        <th>Kriteria</th> 
+                        <th>Nilai Ekspetasi</th>
+                        <th>NIlai Performasi</th>
+                      </tr>
+                      <tr>
+                        <td>1</td>
+                        <td>Pihak UREL (User Relation) mampu menjadi jembatan antara Kastamer dan Yesy Engineer Telkom.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                      <tr>
+                        <td>2</td>
+                        <td>Proses pelayanan pengujian secara keseluruhan (sejak pengajuan hingga pelaporan) mudah dimengerti oleh Kastemer.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                      <tr>
+                        <td>3</td>
+                        <td>Pihak UREL memberika informasi serta melakukan pengecekan kelengkapan mengenai berkas-berkas yang harus disiapkan.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                      <tr>
+                        <td>4</td>
+                        <td>Setiap lini proses (sejak pengajuan hingga pelaporan) dilakukan dengan cepat.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                      <tr>
+                        <td>5</td>
+                        <td>Pihak UREL memberikan informasi yang dibutuhkan oleh Kastamer.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                    </table>
+                </div>
+                <div class="row">
+                    <p>Menurut Anda, dalam proses pengajuan hingga pelaporan, tahap apa yang sebaiknya ditingkatkan oleh PT. Telkom? Dan mengapa harus ditingkatkan?</p>
+                    <textarea class="form-control" placeholder="Jawaban"></textarea>
+                </div>
+                <div class="row">
+                    <p>Pada tahap ini, silahkan mengisi nilai dengan sekala 1-7 untuk nilai ekspetasi awal dan nilai performansi. Kastemer diharapkan mengisi kolom nilai dan setiap kriteria, serta nilai performansi/kenyataan dari setiap kriteria</p>
+                    <p>Nilai 7 adalah penilaian Sangat Baik atau Sangat Setuju dan nilai 1 adalah penilaian Sangat Tidak Baik atau Sangat Tidak Setuju. Kastemer diharapkan dapat memberikan nilai dengan angka bulat.</p>
+                    <table id="table_kuisioner" style="width:100%; padding: 2px;" border="1">
+                      <tr>
+                        <th>No</th>
+                        <th>Kriteria</th> 
+                        <th>Nilai Ekspetasi</th>
+                        <th>NIlai Performasi</th>
+                      </tr>
+                      <tr>
+                        <td>7</td>
+                        <td>Kastemer percaya pada kualitas pengujian yang dilakukan oleh Telkom.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                      <tr>
+                        <td>8</td>
+                        <td>Kastemer merasa pihak UREL faham dan terpercaya.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                      <tr>
+                        <td>9</td>
+                        <td>Kastemer merasa pihak UREL sudah melakukan pemeriksaan kelengkapan administrasi dengan kinerja yang baik.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                      <tr>
+                        <td>10</td>
+                        <td>Kastemer measa aman sewaktu melakukan transaksi dengan pihak Telkom terutama pihak UREL.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                      <tr>
+                        <td>11</td>
+                        <td>Kastemer merasa Engineer Telkom sudah berpengalaman.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                      <tr>
+                        <td>12</td>
+                        <td>Alat ukur yang digunakan oleh pihak Telkom berkualitas, baik, dan akurat.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                      <tr>
+                        <td>13</td>
+                        <td>Laboratorium yang digunakan oleh pihak Telkom dalam keadaan bersih dan memenuhi Standar Laboratorium.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                      <tr>
+                        <td>14</td>
+                        <td>Tarif Pengujian yang ditetapkan oleh pihak PT. Telkom sesuai dan bersaing dengan harga pasar.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                      <tr>
+                        <td>15</td>
+                        <td>Pihak UREL yang melayani kastamer berpakaian rapih dan sopan.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                      <tr>
+                        <td>16</td>
+                        <td>Kontor Telkom DDS dalam kondisi nyaman, bersih dan sudah sesuai kondisi keseluruhannya.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                      <tr>
+                        <td>17</td>
+                        <td>Pihak Telkom mengembalikan barang/perangkat yang diujikan dalam keadaan baik seperti awal.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                      <tr>
+                        <td>18</td>
+                        <td>Sertifikat yang diterima oleh kastemer tidak mengalami kesalahan informasi.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                      <tr>
+                        <td>19</td>
+                        <td>Pihak Telkom DDS terutama pihak UREL yang melayani proses pengajuan hingga pelaporan sudah memahami kebutuhan kastamer.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                      <tr>
+                        <td>20</td>
+                        <td>Proses pengujian secara keseluruhan tidak memakan durasi waktu yang lama.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                      <tr>
+                        <td>21</td>
+                        <td>Pihak UREL cepat dan tepat dalam merespon keluhan yang diberikan kastamer.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                      <tr>
+                        <td>11</td>
+                        <td>Kastemer merasa Engineer Telkom sudah berpengalaman.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                      <tr>
+                        <td>22</td>
+                        <td>Pihak UREL tanggapan dalam membantu permasalahan kastamer.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                      <tr>
+                        <td>23</td>
+                        <td>Engineer tanggapan pada permasalahan yang dihadapi kastamer selama proses pengajuan hingga pelaporan.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                      <tr>
+                        <td>24</td>
+                        <td>Pihak UREL mudah dihubungi dan tanggap pada segala pertanyaan yang diajukan kastamer terkait pengujian perangkat.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                      <tr>
+                        <td>25</td>
+                        <td>Pihak UREL bersikap ramah dan profesional terhadap kastamer.</td> 
+                        <td><input type="text" name="nilai_eksp" class="form-control" placeholder="1-7"></td>
+                        <td><input type="text" name="nilai_perfom" class="form-control" placeholder="1-7"></td>
+                      </tr>
+                    </table>
                 </div>
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="button button3d btn-sky" data-dismiss="modal">Lanjut</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="modal_complain" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
+      <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Customer Complaint</h4>
+          </div>
+          <div class="modal-body pre-scrollable">
+                <form>
+                    <table id="table_kuisioner" style="width:100%; padding: 2px;" border="1">
+                        <tr>
+                            <th colspan="2">No</th>
+                            <td colspan="2"><input type="text" name="no" class="form-control"></td>
+                        </tr>
+                        <tr>
+                            <th>Sheet</th>
+                            <td><input type="text" name="no" class="form-control"></td>
+                            <th>of</th>
+                            <td><input type="text" name="no" class="form-control"></td>
+                        </tr>
+                        <tr>
+                            <th colspan="2">
+                                <label>Customer Name and Address</label>
+                                <textarea class="form-control" placeholder="John Doe/ Bandung"></textarea>
+                            </th>
+                            <td colspan="2">
+                                <select class="form-control">
+                                    <option>Walk In</option>
+                                    <option>Call In</option>
+                                    <option>Web In</option>        
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th colspan="2">
+                                <label>Customer Contact</label>
+                                <input type="text" name="no" class="form-control" placeholder="0812345678">
+                            </th>
+                            <td colspan="2">
+                                <label>Date</label>
+                                <input type="text" name="no" class="form-control" placeholder="DD/MM/YYYY">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th colspan="4">
+                                <label>Customer Complaint</label>
+                                <textarea class="form-control" placeholder="Your Complaint"></textarea>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th colspan="4">
+                                <label>Name of Recipient</label>
+                                <input type="text" name="no" class="form-control" placeholder="John Doe">
+                            </th>
+                        </tr>
+                        <tr>
+                            <th colspan="4">
+                                <label>Corrective Action Taken</label>
+                                <textarea class="form-control" placeholder="Your Complaint"></textarea>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th colspan="2">
+                                <label>Completed Date</label>
+                                <input type="text" name="no" class="form-control" placeholder="DD/MM/YYYY">
+                            </th>
+                            <td colspan="2">
+                                <label>CPAR No</label>
+                                <input type="text" name="no" class="form-control" placeholder="12356">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th colspan="4">
+                                <label>Name of Actiones</label>
+                                <input type="text" name="no" class="form-control" placeholder="NAme">
+                            </th>
+                        </tr>
+                        <tr>
+                            <th colspan="2">
+                                <label>USer Relation Manager Signature</label>
+                                <input type="text" name="no" class="form-control" placeholder="John Doe">
+                            </th>
+                            <td colspan="2">
+                                <label>Date</label>
+                                <input type="text" name="no" class="form-control" placeholder="DD/MM/YYYY">
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="button button3d btn-sky" data-dismiss="modal">Simpan</button>
           </div>
         </div>
 
@@ -135,6 +411,7 @@
 
     <script src={{ asset("assets/js/chosen.jquery.min.js") }}></script>
     <script type="text/javascript">
+
     $('#text-carousel').carousel({
         interval: false
     });
