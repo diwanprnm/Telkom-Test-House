@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -127,25 +128,31 @@ class IncomeController extends Controller
      */
     public function store(Request $request)
     {
-        $currentUser = Auth::user();
+		if($this->cekKuitansi($request->input('number')) == 0){
+			$currentUser = Auth::user();
 
-        $kuitansi = new Kuitansi;
-        $kuitansi->id = Uuid::uuid4();
-        $kuitansi->number = $request->input('number');
-        $kuitansi->from = $request->input('from');
-        $kuitansi->price = $request->input('price');
-        $kuitansi->for = $request->input('for');
-        $kuitansi->created_by = $currentUser->id;
-        $kuitansi->updated_by = $currentUser->id;
+			$kuitansi = new Kuitansi;
+			$kuitansi->id = Uuid::uuid4();
+			$kuitansi->number = $request->input('number');
+			$kuitansi->from = $request->input('from');
+			$kuitansi->price = $request->input('price');
+			$kuitansi->for = $request->input('for');
+			$kuitansi->created_by = $currentUser->id;
+			$kuitansi->updated_by = $currentUser->id;
 
-        try{
-            $kuitansi->save();
-            Session::flash('message', 'Kuitansi successfully created');
-            return redirect('/admin/kuitansi');
-        } catch(\Exception $e){
-            Session::flash('error', 'Save failed');
-            return redirect('/admin/kuitansi/create');
-        }
+			try{
+				$kuitansi->save();
+				Session::flash('message', 'Kuitansi successfully created');
+				Session::flash('id', $kuitansi->id);
+				return redirect('/admin/kuitansi');
+			} catch(\Exception $e){
+				Session::flash('error', 'Save failed');
+				return redirect('/admin/kuitansi/create')->withInput($request->all());
+			}
+		}else{
+			Session::flash('error', 'Existing Number');
+			return redirect('/admin/kuitansi/create')->withInput($request->all());
+		}
     }
 
     /**
@@ -197,6 +204,7 @@ class IncomeController extends Controller
 		$currentUser = Auth::user();
 
         if ($currentUser){
+            $id = null;
             $message = null;
             $paginate = 5;
             $search = trim($request->input('search'));
@@ -229,6 +237,7 @@ class IncomeController extends Controller
 			
             return view('admin.income.kuitansi')
                 ->with('message', $message)
+                ->with('id', $id)
                 ->with('search', $search)
                 ->with('data', $data);
         }
@@ -295,6 +304,31 @@ class IncomeController extends Controller
         return response($respons_result);
     }
 	
+	public function generateKuitansiManual() {
+		$thisYear = date('Y');
+		$query = "
+			SELECT SUBSTRING_INDEX(number,'/',1) + 1 AS last_numb
+			FROM kuitansi WHERE SUBSTRING_INDEX(number,'/',-1) = ".$thisYear."
+			ORDER BY last_numb DESC LIMIT 1
+		";
+		$data = DB::select($query);
+		if (count($data) == 0){
+			return '001/DDS-73/'.$thisYear.'';
+		}
+		else{
+			$last_numb = $data[0]->last_numb;
+			if($last_numb < 10){
+				return '00'.$last_numb.'/DDS-73/'.$thisYear.'';
+			}
+			else if($last_numb < 100){
+				return '0'.$last_numb.'/DDS-73/'.$thisYear.'';
+			}
+			else{
+				return ''.$last_numb.'/DDS-73/'.$thisYear.'';
+			}
+		}
+    }
+	
 	public function cetakKuitansi($id, Request $request) {
 		$data = Kuitansi::find($id);
 		    
@@ -307,5 +341,11 @@ class IncomeController extends Controller
 			'jumlah' => urlencode(urlencode($data->price)) ?: '-',
 			'untuk' => urlencode(urlencode($data->for)) ?: '-'
 		]);
+    }
+	
+	function cekKuitansi($number)
+    {
+		$inc = Kuitansi::where('number','=',''.$number.'')->get();
+		return count($inc);
     }
 }

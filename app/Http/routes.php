@@ -941,7 +941,42 @@ class PDF_MC_Table extends FPDF{
 		//Go to the next line
 		$this->Ln($h);
 	}
-
+	
+	function RowRect($data)
+	{
+		//Calculate the height of the row
+		$nb=0;
+		for($i=0;$i<count($data);$i++)
+			$nb=max($nb,$this->NbLines($this->widths[$i],$data[$i]));
+		$h=5*$nb;
+		//Issue a page break first if needed
+		$this->CheckPageBreak($h);
+		//Draw the cells of the row
+		for($i=0;$i<count($data);$i++)
+		{
+			$w=$this->widths[$i];
+			$a=isset($this->aligns[$i]) ? $this->aligns[$i] : 'L';
+			//Save the current position
+			if($i==0){
+				$x = 10.00125;
+			}else{
+				$x=$this->GetX();
+			}
+			$y=$this->GetY();
+			//Draw the border
+			if($i>0){
+				$this->Rect($x,$y,$w,$h);
+			}
+			//Print the text
+			// $this->SetFont('Arial','',10);
+			$this->MultiCell($w,5,$data[$i],0,$a);
+			//Put the position to the right of the cell
+			$this->SetXY($x+$w,$y);
+		}
+		//Go to the next line
+		$this->Ln($h);
+	}
+	
 	function CheckPageBreak($h)
 	{
 		//If the height h would cause an overflow, add a new page immediately
@@ -2603,6 +2638,132 @@ array('as' => 'cetakHasilKuitansi', function(
 	}
 ));
 
+Route::get('/cetakUjiFungsi/{id}', 'ExaminationController@cetakUjiFungsi');
+Route::get('/cetakHasilUjiFungsi/{company_name}/{company_address}/{company_phone}/{company_fax}/{device_name}/{device_mark}/{device_manufactured_by}/{device_model}/{device_serial_number}/{status}/{catatan}', 
+array('as' => 'cetakHasilUjiFungsi', function(
+	$company_name = "asdasdasdashdhgasdghasghdcaghscdhgascghdcasghcdhagsd", $company_address = "asdasdasdashdhgasdghasghdcaghscdhgascghdcasghcdhagsd", $company_phone = "asdasdasdashdhgasdghasghdcaghscdhgascghdcasghcdhagsd", $company_fax = "asdasdasdashdhgasdghasghdcaghscdhgascghdcasghcdhagsd", 
+	$device_name = "asdasdasdashdhgasdghasghdcaghscdhgascghdcasghcdhagsd", $device_mark = "asdasdasdashdhgasdghasghdcaghscdhgascghdcasghcdhagsd", $device_manufactured_by = "asdasdasdashdhgasdghasghdcaghscdhgascghdcasghcdhagsd", $device_model = "asdasdasdashdhgasdghasghdcaghscdhgascghdcasghcdhagsd" , $device_serial_number = "asdasdasdashdhgasdghasghdcaghscdhgascghdcasghcdhagsd", 
+	$status = null, $catatan = "asdasdasdashdhgasdghasghdcaghscdhgascghdcasghcdhagsd" ) {
+	$pdf = new PDF_MC_Table(); 
+	$pdf->judul_kop('FORM UJI FUNGSI','');
+	$pdf->AliasNbPages();
+	$pdf->AddPage();
+	
+	$pdf->Ln(10);
+	$pdf->SetFont('helvetica','',11);
+	$pdf->SetWidths(array(0.00125,50,140));
+	$pdf->SetAligns(array('L','R','L'));
+	// $pdf->SetFont('','BI');
+	$pdf->RowRect(array('','Nama Perusahaan',$company_name));	
+	$pdf->RowRect(array('','Alamat',$company_address));	
+	$pdf->RowRect(array('','Telepon / Fax',$company_phone.' / '.$company_fax));	
+	$pdf->RowRect(array('','Nama Perangkat',$device_name));	
+	$pdf->RowRect(array('','Merek / Buatan',$device_mark.' / '.$device_manufactured_by));	
+	$pdf->RowRect(array('','Tipe / Serial Number',$device_model.' / '.$device_serial_number));	
+	$pdf->Ln(1);
+	$pdf->Rect(10,$pdf->getY(),190,55);	
+	$pdf->SetFont('','B');
+	$pdf->Cell(180,10,'Hasil Uji Fungsi',0,0,'C');
+	$pdf->Ln(1);
+	if($status == 1){
+		$pdf->SetFont('ZapfDingbats','', 10);
+		$pdf->Cell(20);
+		$pdf->Cell(4, 100, "4", 0, 0);
+		$pdf->SetFont('helvetica','',10);
+		$pdf->Cell(18,100,'Memenuhi',0,0,'C');
+		$pdf->SetFont('ZapfDingbats','', 10);
+		$pdf->Cell(30);
+		$pdf->Cell(4, 100, "m", 0, 0);
+		$pdf->SetFont('helvetica','',10);
+		$pdf->Cell(8);
+		$pdf->Cell(18,100,'Tidak Memenuhi',0,0,'C');
+		$pdf->SetFont('ZapfDingbats','', 10);
+		$pdf->Cell(40);
+		$pdf->Cell(4, 100, "m", 0, 0);
+		$pdf->SetFont('helvetica','',10);
+		$pdf->Cell(4);
+		$pdf->Cell(18,100,'Lain-lain',0,0,'C');
+	}
+	else if($status == 2){
+		$pdf->SetFont('ZapfDingbats','', 10);
+		$pdf->Cell(20);
+		$pdf->Cell(4, 100, "m", 0, 0);
+		$pdf->SetFont('helvetica','',10);
+		$pdf->Cell(18,100,'Memenuhi',0,0,'C');
+		$pdf->SetFont('ZapfDingbats','', 10);
+		$pdf->Cell(30);
+		$pdf->Cell(4, 100, "4", 0, 0);
+		$pdf->SetFont('helvetica','',10);
+		$pdf->Cell(8);
+		$pdf->Cell(18,100,'Tidak Memenuhi',0,0,'C');
+		$pdf->SetFont('ZapfDingbats','', 10);
+		$pdf->Cell(40);
+		$pdf->Cell(4, 100, "m", 0, 0);
+		$pdf->SetFont('helvetica','',10);
+		$pdf->Cell(4);
+		$pdf->Cell(18,100,'Lain-lain',0,0,'C');
+	}
+	else if($status == 3){
+		$pdf->SetFont('ZapfDingbats','', 10);
+		$pdf->Cell(20);
+		$pdf->Cell(4, 100, "m", 0, 0);
+		$pdf->SetFont('helvetica','',10);
+		$pdf->Cell(18,100,'Memenuhi',0,0,'C');
+		$pdf->SetFont('ZapfDingbats','', 10);
+		$pdf->Cell(30);
+		$pdf->Cell(4, 100, "m", 0, 0);
+		$pdf->SetFont('helvetica','',10);
+		$pdf->Cell(8);
+		$pdf->Cell(18,100,'Tidak Memenuhi',0,0,'C');
+		$pdf->SetFont('ZapfDingbats','', 10);
+		$pdf->Cell(40);
+		$pdf->Cell(4, 100, "4", 0, 0);
+		$pdf->SetFont('helvetica','',10);
+		$pdf->Cell(4);
+		$pdf->Cell(18,100,'Lain-lain',0,0,'C');
+	}
+	$pdf->Rect(10,$pdf->getY()+55,190,40);	
+	$pdf->Ln(1);
+	$pdf->Cell(180,100+15,'Diketahui oleh:',0,0,'C');
+	$pdf->Rect(10,$pdf->getY()+55+40,190,40);	
+	$pdf->Ln(1);
+	$pdf->Cell(15);
+	$pdf->Cell(18,100+25,'Officer Customer Relationship',0,0,'C');
+	$pdf->Cell(50);
+	$pdf->Cell(18,100+25,'Test Engineer Laboratorium',0,0,'C');
+	$pdf->Cell(45);
+	$pdf->Cell(18,100+25,'Customer',0,0,'C');
+	$pdf->Ln(1);
+	$pdf->Cell(15);
+	$pdf->Cell(18,100+25+40,'____________________________',0,0,'C');
+	$pdf->Cell(50);
+	$pdf->Cell(18,100+25+40,'____________________________',0,0,'C');
+	$pdf->Cell(45);
+	$pdf->Cell(18,100+25+40,'____________________________',0,0,'C');
+	$pdf->Ln(1);
+	$pdf->Cell(18,100+25+40+10,'NIK.',0,0,'L');
+	$pdf->Cell(50);
+	$pdf->Cell(18,100+25+40+10,'NIK.',0,0,'L');
+	$pdf->Ln($pdf->getY()+25);
+	$pdf->SetWidths(array(5.00125,20,160));
+	$pdf->SetAligns(array('L','L','L'));
+	$pdf->Row(array('','Catatan:',$catatan));
+	$pdf->Cell(18,50,'Beri tanda',0,0,'L');
+	$pdf->SetFont('ZapfDingbats','', 10);
+	$pdf->Cell(4, 50, "4", 0, 0);
+	$pdf->SetFont('helvetica','',10);
+	$pdf->Cell(20,50,'pada kolom',0,0,'L');
+	$pdf->SetFont('','B');
+	$pdf->Cell(35,50,'HASIL UJI FUNGSI',0,0,'L');
+
+/*Footer Manual*/
+	
+/*End Footer Manual*/
+	$pdf->Output();
+	exit;
+	}
+));
+
 Route::get('/', 'PermohonanController@createPermohonan');
 Route::get('/health', function (){
 	return 'ok';
@@ -2705,7 +2866,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::resource('/questionpriv', 'QuestionprivController');
 	Route::get('/kuitansi', 'IncomeController@kuitansi');
 	Route::get('/kuitansi/create', 'IncomeController@create');
-	Route::post('/kuitansi/create/generateKuitansi', 'IncomeController@generateKuitansiManual');
+	Route::post('/kuitansi/generateKuitansi', 'IncomeController@generateKuitansiManual');
 	Route::post('/kuitansi', 'IncomeController@store');
 	Route::get('/kuitansi/{id}/detail', 'IncomeController@detail');
 
@@ -2783,6 +2944,7 @@ Route::group(['prefix' => '/v1', 'middlewareGroups' => 'api'], function () {
 	Route::get('/examination/devices', 'v1\ExaminationAPIController@getExaminationByDevice');
 	Route::get('/spk', 'v1\ExaminationAPIController@getSpk');
 	Route::get('/function_test', 'v1\ExaminationAPIController@getFunctionTest');
+	Route::get('/examination_histories', 'v1\ExaminationAPIController@getExaminationHistory');
 	Route::post('/updateFunctionDate', 'v1\ExaminationAPIController@updateFunctionDate');
 	Route::post('/updateEquipLoc', 'v1\ExaminationAPIController@updateEquipLoc');
 	Route::post('/updateDeviceTE', 'v1\ExaminationAPIController@updateDeviceTE');
@@ -2802,4 +2964,4 @@ Route::get('/payment_status', 'ProductsController@payment_status');
 Route::post('/checkout', 'ProductsController@checkout');
 Route::post('/doCheckout', 'ProductsController@doCheckout');
 Route::get('/payment_detail/{id}', 'ProductsController@payment_detail');
-Route::get('/test_notification', 'ProductsController@test_notification');
+Route::get('/test_notifitcation', 'ProductsController@test_notifitcation');

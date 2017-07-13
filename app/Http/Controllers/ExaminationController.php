@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+use App\Company;
 use App\Device;
 use App\Examination;
 use App\ExaminationType;
@@ -16,7 +17,6 @@ use App\ExaminationHistory;
 use App\User;
 use App\Logs;
 use App\Income;
-use App\Events\Notification;
 
 use Auth;
 use File;
@@ -338,19 +338,39 @@ class ExaminationController extends Controller
 				// $exam->keterangan = $request->input('keterangan');
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Registrasi",$request->input('keterangan'));
 			}
-            if(config("app.IS_ENABLED_NOTIFICATION")){
-                $data= array(
-                "from"=>"admin",
-                "to"=>$exam->created_by,
-                "action"=>"pengujian",
-                "message"=>"Approval Pengajuan Uji Fungsi"
-                );
-                event(new Notification($data)); 
-            }
-            
-            
         }
 		if ($request->has('function_status')){
+			if ($request->hasFile('function_file')) {
+				/*$ext_file = $request->file('function_file')->getClientOriginalExtension();
+				$name_file = uniqid().'_function_'.$exam->id.'.'.$ext_file;*/
+				$name_file = 'function_'.$request->file('function_file')->getClientOriginalName();
+				$path_file = public_path().'/media/examination/'.$exam->id;
+				if (!file_exists($path_file)) {
+					mkdir($path_file, 0775);
+				}
+				if($request->file('function_file')->move($path_file,$name_file)){
+					$attach = ExaminationAttach::where('name', 'Laporan Hasil Uji Fungsi')->where('examination_id', ''.$exam->id.'')->first();
+					if ($attach){
+						$attach->attachment = $name_file;
+						$attach->updated_by = $currentUser->id;
+
+						$attach->save();
+					} else{
+						$attach = new ExaminationAttach;
+						$attach->id = Uuid::uuid4();
+						$attach->examination_id = $exam->id; 
+						$attach->name = 'Laporan Hasil Uji Fungsi';
+						$attach->attachment = $name_file;
+						$attach->created_by = $currentUser->id;
+						$attach->updated_by = $currentUser->id;
+
+						$attach->save();
+					}
+				}else{
+					Session::flash('error', 'Save Function Test Report to directory failed');
+					return redirect('/admin/examination/'.$exam->id.'/edit');
+				}
+			}
 			$status = $request->input('function_status');
 			$exam->function_status = $status;
 			if($status == 1){
@@ -359,15 +379,6 @@ class ExaminationController extends Controller
 				// $exam->keterangan = $request->input('keterangan');
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Uji Fungsi",$request->input('keterangan'));
 			}
-            if(config("app.IS_ENABLED_NOTIFICATION")){
-                $data= array(
-                "from"=>"admin",
-                "to"=>$exam->created_by,
-                "action"=>"pengujian",
-                "message"=>"Konfirmasi Pengajuan Uji Fungsi"
-                );
-                event(new Notification($data)); 
-            }
         }
         if ($request->has('contract_status')){
 			if ($request->hasFile('contract_file')) {
@@ -413,16 +424,6 @@ class ExaminationController extends Controller
 				// $exam->keterangan = $request->input('keterangan');
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Tinjauan Pustaka",$request->input('keterangan'));
 			}
-
-            if(config("app.IS_ENABLED_NOTIFICATION")){
-                $data= array(
-                "from"=>"admin",
-                "to"=>$exam->created_by,
-                "action"=>"pengujian",
-                "message"=>"Konfirmasi Contract Pengajuan Uji Fungsi"
-                );
-                event(new Notification($data)); 
-            }
         }
 		if ($request->has('spb_status')){
 			if ($request->hasFile('spb_file')) {
@@ -470,16 +471,6 @@ class ExaminationController extends Controller
 				// $exam->keterangan = $request->input('keterangan');
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","SPB",$request->input('keterangan'));
 			}
-
-            if(config("app.IS_ENABLED_NOTIFICATION")){
-                $data= array(
-                "from"=>"admin",
-                "to"=>$exam->created_by,
-                "action"=>"pengujian",
-                "message"=>"Informasi Status SPB Anda Telah di diperiksa"
-                );
-                event(new Notification($data)); 
-            }
         }
         if ($request->has('payment_status')){
             $status = $request->input('payment_status');
@@ -507,16 +498,6 @@ class ExaminationController extends Controller
 				// $exam->keterangan = $request->input('keterangan');
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Pembayaran",$request->input('keterangan'));
 			}
-
-            if(config("app.IS_ENABLED_NOTIFICATION")){
-                $data= array(
-                "from"=>"admin",
-                "to"=>$exam->created_by,
-                "action"=>"pengujian",
-                "message"=>"Informasi Pembayaran Anda Telah di diperiksa"
-                );
-                event(new Notification($data)); 
-            }
         }
         if ($request->has('spk_status')){
             $status = $request->input('spk_status');
@@ -525,16 +506,6 @@ class ExaminationController extends Controller
 				// $exam->keterangan = $request->input('keterangan');
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Pembuatan SPK",$request->input('keterangan'));
 			}
-
-            if(config("app.IS_ENABLED_NOTIFICATION")){
-                $data= array(
-                "from"=>"admin",
-                "to"=>$exam->created_by,
-                "action"=>"pengujian",
-                "message"=>"Informasi SPK Anda Telah di diperiksa"
-                );
-                event(new Notification($data)); 
-            }
         }
         if ($request->has('examination_status')){
             $status = $request->input('examination_status');
@@ -545,16 +516,6 @@ class ExaminationController extends Controller
 				// $exam->keterangan = $request->input('keterangan');
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Pelaksanaan Uji",$request->input('keterangan'));
 			}
-
-            if(config("app.IS_ENABLED_NOTIFICATION")){
-                $data= array(
-                "from"=>"admin",
-                "to"=>$exam->created_by,
-                "action"=>"pengujian",
-                "message"=>"Informasi Status Uji Anda Telah di diperiksa"
-                );
-                event(new Notification($data)); 
-            }
         }
         if ($request->has('resume_status')){
 			// if ($request->hasFile('lap_uji_file')) {
@@ -594,16 +555,6 @@ class ExaminationController extends Controller
 				// $exam->keterangan = $request->input('keterangan');
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Laporan Uji",$request->input('keterangan'));
 			}
-
-            if(config("app.IS_ENABLED_NOTIFICATION")){
-                $data= array(
-                "from"=>"admin",
-                "to"=>$exam->created_by,
-                "action"=>"pengujian",
-                "message"=>"Informasi Resume Uji Anda Telah di diperiksa"
-                );
-                event(new Notification($data)); 
-            }
         }
         if ($request->has('qa_status')){
             $status = $request->input('qa_status');
@@ -614,16 +565,6 @@ class ExaminationController extends Controller
 				// $exam->keterangan = $request->input('keterangan');
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Sidang QA",$request->input('keterangan'));
 			}
-
-            if(config("app.IS_ENABLED_NOTIFICATION")){
-                $data= array(
-                "from"=>"admin",
-                "to"=>$exam->created_by,
-                "action"=>"pengujian",
-                "message"=>"Informasi QA Uji Anda Telah di diperiksa"
-                );
-                event(new Notification($data)); 
-            }
         }
         if ($request->has('certificate_status')){
             $status = $request->input('certificate_status');
@@ -634,16 +575,6 @@ class ExaminationController extends Controller
 				// $exam->keterangan = $request->input('keterangan');
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Pembuatan Sertifikat",$request->input('keterangan'));
 			}
-
-            if(config("app.IS_ENABLED_NOTIFICATION")){
-                $data= array(
-                "from"=>"admin",
-                "to"=>$exam->created_by,
-                "action"=>"pengujian",
-                "message"=>"Informasi Sertifikat Uji Anda Telah di diperiksa"
-                );
-                event(new Notification($data)); 
-            }
         }
         // if ($request->has('examination_date')){
             // $exam->examination_date = $request->input('examination_date');
@@ -1575,5 +1506,39 @@ class ExaminationController extends Controller
     {
 		$income = Income::where('reference_id','=',''.$exam_id.'')->get();
 		return count($income);
+    }
+	
+	function cetakUjiFungsi($id)
+    {
+		/* $client = new Client([
+			// Base URI is used with relative requests
+			'base_uri' => 'http://ptbsp.ddns.net:13280/RevitalisasiOTR/api/',
+			// 'base_uri' => config("app.url_api_bsp"),
+			// You can set any number of default request options.
+			'timeout'  => 60.0,
+		]);
+		// $res_function_test = $client->get('functionTest/getResultData?id='.$id)->getBody();
+		$res_function_test = $client->get('functionTest/getResultData?id=3babffdd-6af1-4be7-a7bb-07da626c1351')->getBody();
+		$function_test = json_decode($res_function_test);
+		*/
+		$data = Examination::where('id','=',$id)
+		->with('Company')
+		->with('Device')
+		->get();
+		return \Redirect::route('cetakHasilUjiFungsi', [
+			'company_name' => urlencode(urlencode($data[0]->company->name)) ?: '-',
+			'company_address' => urlencode(urlencode($data[0]->company->address)) ?: '-',
+			'company_phone' => urlencode(urlencode($data[0]->company->phone)) ?: '-',
+			'company_fax' => urlencode(urlencode($data[0]->company->fax)) ?: '-',
+			'device_name' => urlencode(urlencode($data[0]->device->name)) ?: '-',
+			'device_mark' => urlencode(urlencode($data[0]->device->mark)) ?: '-',
+			'device_manufactured_by' => urlencode(urlencode($data[0]->device->manufactured_by)) ?: '-',
+			'device_model' => urlencode(urlencode($data[0]->device->model)) ?: '-',
+			'device_serial_number' => urlencode(urlencode($data[0]->device->serial_number)) ?: '-',
+			'status' => urlencode(urlencode(2)) ?: '-',
+			'catatan' => urlencode(urlencode("Tidak Memenuhi")) ?: '-'
+			// 'status' => urlencode(urlencode($function_test->data[0]->result)) ?: '-',
+			// 'catatan' => urlencode(urlencode($function_test->data[0]->note)) ?: '-'
+		]);
     }
 }

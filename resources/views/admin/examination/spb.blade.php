@@ -269,7 +269,7 @@
 					if(response == 1){
 						window.open(APP_URL);
 						pops(total_biaya,spb_number,spb_date);
-						// window.close();
+						window.close();
 					}
 					else if(response == 2){
 						alert("Nomor SPB sudah ada!");

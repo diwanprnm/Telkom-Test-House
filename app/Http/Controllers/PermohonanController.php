@@ -22,7 +22,6 @@ use App\ExaminationAttach;
 use App\ExaminationType;
 use App\Feedback;
 use App\ExaminationHistory;
-use App\Logs;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -427,14 +426,16 @@ class PermohonanController extends Controller
 					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Referensi Uji', 'attachment' => ''.$fuploadrefuji_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
 					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Surat Dukungan Prinsipal', 'attachment' => ''.$fuploadprinsipal_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
 					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Tinjauan Kontrak', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Uji', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').'']
+					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Uji', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
+					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Hasil Uji Fungsi', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').'']
 				]);
 			}else{
 				DB::table('examination_attachments')->insert([
 					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'File Pembayaran', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
 					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Referensi Uji', 'attachment' => ''.$fuploadrefuji_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
 					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Tinjauan Kontrak', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Uji', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').'']
+					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Uji', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
+					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Hasil Uji Fungsi', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').'']
 				]);
 			}
 		}else if($jns_pengujian == 2){
@@ -473,16 +474,7 @@ class PermohonanController extends Controller
 			// DB::table('examinations')->where('id', '=', ''.$exam_id.'')->delete();
 			// DB::table('devices')->where('id', '=', ''.$device_id.'')->delete();
 		// }
-		$logs = new Logs;
-		$currentUser = Auth::user();
-        $logs->user_id = $currentUser->id;
-        $logs->id = Uuid::uuid4();
-        $logs->action = "Create Examination";   
-        $logs->data = "";
-        $logs->created_by = $currentUser->id;
-        $logs->page = "Client Process";
-        $logs->save();
-
+		
 		$exam_hist = new ExaminationHistory;
 		$exam_hist->examination_id = $exam_id;
 		$exam_hist->date_action = date('Y-m-d H:i:s');
@@ -787,16 +779,6 @@ class PermohonanController extends Controller
 		
 		$request->session()->put('key', $data);
 		
-		$logs = new Logs;
-		$currentUser = Auth::user();
-        $logs->user_id = $currentUser->id;
-        $logs->id = Uuid::uuid4();
-        $logs->action = "Update Examination";   
-        $logs->data = "";
-        $logs->created_by = $currentUser->id;
-        $logs->page = "Client Examination";
-        $logs->save();
-
 		$exam_hist = new ExaminationHistory;
 		$exam_hist->examination_id = $exam_id;
 		$exam_hist->date_action = date('Y-m-d H:i:s');
@@ -926,16 +908,6 @@ class PermohonanController extends Controller
 
         try{
             $feedback->save();
-            $logs = new Logs;
-			$currentUser = Auth::user();
-	        $logs->user_id = $currentUser->id;
-	        $logs->id = Uuid::uuid4();
-	        $logs->action = "Send Feedback";   
-	        $logs->data = $feedback;
-	        $logs->created_by = $currentUser->id;
-	        $logs->page = "FEEDBACK";
-	        $logs->save();
-
 			$this->sendFeedbackEmail($request->input('email'),$request->input('subject'),$request->input('message'),$request->input('question'));
             Session::flash('message_feedback', 'Feedback successfully send');
         } catch(Exception $e){

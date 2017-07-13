@@ -24,9 +24,9 @@
 		</section>
 		<!-- end: PAGE TITLE -->
 		<!-- start: RESPONSIVE TABLE -->
-		@if(!empty(Session::get('error_name')) && (Session::get('error_name') == 1))
+		@if(!empty(Session::get('error')))
 			<div class="alert alert-error alert-danger">
-				Nomor Kuitansi sudah ada!
+				{{ (Session::get('error')) }}
 			</div>
 		@endif
 		<div class="container-fluid container-fullw bg-white">
@@ -62,7 +62,7 @@
 									<label>
 										Banyak Uang *
 									</label>
-									<input type="text" name="price" class="form-control" value="{{ old('price') }}" placeholder="Banyak Uang" required>
+									<input type="number" name="price" class="form-control" value="{{ old('price') }}" placeholder="Banyak Uang" required>
 								</div>
 							</div> 
 	                        <div class="col-md-12">
@@ -105,7 +105,7 @@
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script> 
 @endsection
 
-<script>
+<script type="text/javascript">
 	function generateKuitansi(){
 		$.ajax({
 			type: "POST",

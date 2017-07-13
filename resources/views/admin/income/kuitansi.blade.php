@@ -33,7 +33,17 @@
 	                </span>
 	            </div>
 	        </div>
-			
+			@if (Session::get('message'))
+				<div class="alert alert-info">
+					{{ Session::get('message') }}
+				</div>
+				<input type="hidden" id="id_kuitansi" value="{{ Session::get('id') }}">
+				<script type="text/javascript">
+					var baseUrl = "{{URL::to('/')}}";
+					var id = document.getElementById("id_kuitansi").value;
+					window.open(baseUrl+'/cetakKuitansi/'+id);
+				</script>
+			@endif
 			<div class="row">
 				<div class="col-md-6 pull-right" style="margin-bottom:10px">
 					<a style=" color:white !important;" href="{{URL::to('/admin/kuitansi/create')}}">

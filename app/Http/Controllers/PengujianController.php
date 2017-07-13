@@ -20,7 +20,6 @@ use App\ExaminationAttach;
 use App\ExaminationType;
 use App\Testimonial;
 use App\ExaminationHistory;
-use App\Logs;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -892,15 +891,6 @@ class PengujianController extends Controller
 				$exam_hist->created_at = date('Y-m-d H:i:s');
 				$exam_hist->save();
 				
-			 	$logs = new Logs;
-                $logs->user_id = $currentUser->id;
-                $logs->id = Uuid::uuid4();
-                $logs->action = "Update Tanggal Uji";   
-                $logs->data = $exam_hist;
-                $logs->created_by = $currentUser->id;
-                $logs->page = "FUNCTION TEST";
-                $logs->save();
-
 				Session::flash('message', 'Update successfully');
 				// $this->sendProgressEmail("Pengujian atas nama ".$user_name." dengan alamat email ".$user_email.", telah melakukan proses Upload Bukti Pembayaran");
 				// return back();

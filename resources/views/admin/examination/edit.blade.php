@@ -437,7 +437,7 @@
 					</fieldset>
 				{!! Form::close() !!}
 				
-				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'id' => 'form-function-test')) !!}
+				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-function-test')) !!}
 					{!! csrf_field() !!}
 					<input type="hidden" name="status" class="form-control" value="Uji Fungsi"/>
     				<fieldset>
@@ -476,9 +476,30 @@
 								</div>
 							</div>
 							<div class="col-md-12">
+								@if($data->catatan != '')
+									<div class="form-group">
+										<a href="{{URL::to('/cetakUjiFungsi/'.$data->id)}}" target="_blank"> Buatkan Laporan Uji Fungsi</a>
+									</div>
+								@endif
+								<div class="form-group">
+									<label>
+										Hasil Uji Fungsi File *
+									</label>
+									<input type="file" name="function_file" id="function_file" class="form-control" accept="application/pdf"/>
+								</div>
+								<div class="form-group">
+									<?php $function_attach = ''; ?>
+									@foreach($data->media as $item)
+										@if($item->name == 'Laporan Hasil Uji Fungsi' && $item->attachment != '')
+											<?php $function_attach = $item->attachment; ?>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil Uji Fungsi "<?php echo $function_attach; ?>"</a>
+										@endif
+									@endforeach
+									<input type="hidden" id="function_name" value="<?php echo $function_attach; ?>">
+								</div>
 								<div class="form-group">
 									<label for="catatan">Catatan :</label>
-									<textarea class="form-control" rows="5" name="catatan" id="catatan">{{ $data->catatan }}</textarea>
+									<textarea class="form-control" rows="5" name="catatan" id="catatan" readonly>{{ $data->catatan }}</textarea>
 								</div>
 							</div>
 							<div class="col-md-6">
@@ -1555,16 +1576,24 @@
 	
 	$('#form-function-test').submit(function () {
 		var keterangan = document.getElementById('keterangan_function').value;
+		var function_file = document.getElementById('function_file');
+		var function_name = document.getElementById('function_name').value;
 		var $inputs = $('#form-function-test :input');
 		var values = {};
 		$inputs.each(function() {
 			values[this.name] = $(this).val();
 		});
-		if(values['function_status'] == '-1' && keterangan == ''){
-			$('#myModalketerangan_function').modal('show');
-			return false;
+		if(values['function_status'] == '-1'){
+			if(keterangan == ''){
+				$('#myModalketerangan_function').modal('show');
+				return false;
+			}else{
+				$('#myModalketerangan_function').modal('hide');
+			}			
 		}else{
-			$('#myModalketerangan_function').modal('hide');
+			if(function_file.value == '' && function_name == ''){
+				alert("File Laporan Hasil Uji Fungsi harus dipilih");$('.function_file').focus();return false;				
+			}
 		}
 	});
 	

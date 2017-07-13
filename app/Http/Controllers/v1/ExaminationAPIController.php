@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\v1;
- 
+use Illuminate\Support\Facades\DB; 
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -9,6 +9,7 @@ use Response;
 use App\Device;
 use App\EquipmentHistory;
 use App\Examination;
+use App\ExaminationHistory;
 use App\ExaminationAttach;
 
 // UUID
@@ -67,7 +68,8 @@ class ExaminationAPIController extends AppBaseController
 				->where($whereID);
 				
 		if(isset($param->find)){
-			$result = $result->where("examination_types.name", "LIKE", '%'.$param->find .'%')
+			$result->where(function($q) use ($param){
+				return $q->where("examination_types.name", "LIKE", '%'.$param->find .'%')
 							->orWhere("users.name", "LIKE", '%'.$param->find .'%')
 							->orWhere("users.address", "LIKE", '%'.$param->find .'%')
 							->orWhere("users.phone_number", "LIKE", '%'.$param->find .'%')
@@ -86,11 +88,13 @@ class ExaminationAPIController extends AppBaseController
 							->orWhere("devices.manufactured_by", "LIKE", '%'.$param->find .'%')
 							->orWhere("devices.test_reference", "LIKE", '%'.$param->find .'%')
 							->orWhere("examinations.spk_code", "LIKE", '%'.$param->find .'%')
-							->orWhere("examination_labs.name", "LIKE", '%'.$param->find .'%');
-			$rawRangeDate ="date_format(examinations.created_at,'%Y-%m-%d') = '".$param->find."'";
-			$result = $result->orWhere(\DB::raw($rawRangeDate), 1); 
-			$rawRangeSPKDate ="date_format(examinations.spk_date,'%Y-%m-%d') = '".$param->find."'";
-			$result = $result->orWhere(\DB::raw($rawRangeSPKDate), 1); 
+							->orWhere("examination_labs.name", "LIKE", '%'.$param->find .'%')
+					;
+				});
+			// $rawRangeDate ="date_format(examinations.created_at,'%Y-%m-%d') = '".$param->find."'";
+			// $result = $result->orWhere(\DB::raw($rawRangeDate), 1); 
+			// $rawRangeSPKDate ="date_format(examinations.spk_date,'%Y-%m-%d') = '".$param->find."'";
+			// $result = $result->orWhere(\DB::raw($rawRangeSPKDate), 1); 
 		}else{
   
 			if(isset($param->status)){
@@ -357,11 +361,14 @@ class ExaminationAPIController extends AppBaseController
 				->where($condition); 
 
 		if(isset($param->find)){
-			$result = $result->where("examinations.spk_code", "LIKE", '%'.$param->find .'%')
+			$result->where(function($q) use ($param){
+				return $q->where("examinations.spk_code", "LIKE", '%'.$param->find .'%')
 							->orWhere("devices.name", "LIKE", '%'.$param->find .'%')
-							->orWhere("examination_labs.name", "LIKE", '%'.$param->find .'%');
-			$rawRangeDate ="date_format(examinations.spk_date,'%Y-%m-%d') = '".$param->find."'";
-			$result = $result->orWhere(\DB::raw($rawRangeDate), 1); 
+							->orWhere("examination_labs.name", "LIKE", '%'.$param->find .'%')
+					;
+				});
+			// $rawRangeDate ="date_format(examinations.spk_date,'%Y-%m-%d') = '".$param->find."'";
+			// $result = $result->orWhere(\DB::raw($rawRangeDate), 1); 
 		}else{
 			if(isset($param->code)){
 				$result = $result->where("examinations.spk_code", "LIKE", '%'.$param->code .'%');
@@ -452,7 +459,7 @@ class ExaminationAPIController extends AppBaseController
 		}  
 
 		$select = array(
-			"examinations.id","examinations.cust_test_date",
+			"examinations.id","examinations.cust_test_date","examinations.deal_test_date",
 			"examination_labs.name as lab",
 			"examination_labs.lab_code",
 			"companies.name as company_name",
@@ -471,25 +478,26 @@ class ExaminationAPIController extends AppBaseController
 				->join("devices","devices.id","=","examinations.device_id")
 				->join("companies","companies.id","=","examinations.company_id")  
 				->join("examination_labs","examination_labs.id","=","examinations.examination_lab_id")  
-				->where("registration_status", 1)
-				->where("function_status", "!=" ,1)
-				->whereNotNull("cust_test_date")
+				->where("examinations.registration_status", 1)
+				->where("examinations.function_status", "!=" ,1)
+				->whereNotNull("examinations.cust_test_date")
 				->where($condition); 
-
+		
 		if(isset($param->find)){
-			$result = $result->where("companies.name", "LIKE", '%'.$param->find .'%')
-							->orWhere("companies.address", "LIKE", '%'.$param->find .'%')
-							->orWhere("companies.phone_number", "LIKE", '%'.$param->find .'%')
-							->orWhere("companies.fax", "LIKE", '%'.$param->find .'%')
-							->orWhere("devices.name", "LIKE", '%'.$param->find .'%')
-							->orWhere("devices.mark", "LIKE", '%'.$param->find .'%')
-							->orWhere("devices.model", "LIKE", '%'.$param->find .'%')
-							->orWhere("devices.capacity", "LIKE", '%'.$param->find .'%')
-							->orWhere("devices.serial_number", "LIKE", '%'.$param->find .'%')
-							->orWhere("devices.manufactured_by", "LIKE", '%'.$param->find .'%')
-							->orWhere("devices.test_reference", "LIKE", '%'.$param->find .'%');
-			$rawRangeDate ="date_format(examinations.cust_test_date,'%Y-%m-%d') = '".$param->find."'";
-			$result = $result->orWhere(\DB::raw($rawRangeDate), 1); 
+			$result->where(function($q) use ($param){
+				return $q->where("companies.name", "LIKE", '%'.$param->find .'%')
+						->orWhere("companies.address", "LIKE", '%'.$param->find .'%')
+						->orWhere("companies.phone_number", "LIKE", '%'.$param->find .'%')
+						->orWhere("companies.fax", "LIKE", '%'.$param->find .'%')
+						->orWhere("devices.name", "LIKE", '%'.$param->find .'%')
+						->orWhere("devices.mark", "LIKE", '%'.$param->find .'%')
+						->orWhere("devices.model", "LIKE", '%'.$param->find .'%')
+						->orWhere("devices.capacity", "LIKE", '%'.$param->find .'%')
+						->orWhere("devices.serial_number", "LIKE", '%'.$param->find .'%')
+						->orWhere("devices.manufactured_by", "LIKE", '%'.$param->find .'%')
+						->orWhere("devices.test_reference", "LIKE", '%'.$param->find .'%')
+					;
+				});
 		}else{
 			if(isset($param->company_name)){
 				$result = $result->where("companies.name", "LIKE", '%'.$param->company_name .'%');
@@ -497,24 +505,69 @@ class ExaminationAPIController extends AppBaseController
 			if(isset($param->device_name)){
 				$result = $result->where("devices.name", "LIKE", '%'.$param->device_name .'%');
 			}
-			if(isset($param->lab_code)){
-				$result = $result->where("examination_labs.lab_code", "LIKE", '%'.$param->lab_code .'%');
+			if(isset($param->deal_test_date)){
+				$rawRangeDate ="date_format(examinations.deal_test_date,'%Y-%m-%d') = '".$param->deal_test_date."'";
+				$result = $result->where(\DB::raw($rawRangeDate), 1); 
 			}
 		}
+				
+		if(isset($param->lab_code)){
+			$result = $result->where("examination_labs.lab_code", "LIKE", '%'.$param->lab_code .'%');
+		}
+
 		if(isset($param->limit)){
 			$result = $result->limit($param->limit);
 			if(isset($param->offset)){
 				$result = $result->offset($param->offset);
 			}
 		}
-
-		$result = $result->get()->toArray();
 		
-	 
+		$result = $result->get()->toArray();
+	
 		if(!is_array($result) || empty($result)){
-			return $this->sendError('SPK Data Not Found');
+			return $this->sendError('Function Data Not Found');
 		}
-		return $this->sendResponse($result, 'SPK Data Found');
+		return $this->sendResponse($result, 'Function Data Found');
+    }
+	
+	public function getExaminationHistory(Request $param)
+    {
+		$param = (object) $param->all();
+		
+		$condition = array();
+		 
+		
+		if(isset($param->id)){
+			$condition["examination_histories.examination_id"] = $param->id;
+		}  
+
+		$select = array(
+			"examination_histories.examination_id",
+			"examination_histories.tahap as step",
+			"examination_histories.status",
+			"examination_histories.keterangan as note",
+			"examination_histories.created_at as time_action",
+			"users.name"
+		);
+		$result = ExaminationHistory::selectRaw(implode(",", $select)) 
+				->join("users","users.id","=","examination_histories.created_by")
+				->where("examination_histories.status", "!=", 0)
+				->where($condition)
+				->orderBy("examination_id"); 
+		
+		if(isset($param->limit)){
+			$result = $result->limit($param->limit);
+			if(isset($param->offset)){
+				$result = $result->offset($param->offset);
+			}
+		}
+		
+		$result = $result->get()->toArray();
+	
+		if(!is_array($result) || empty($result)){
+			return $this->sendError('History Not Found');
+		}
+		return $this->sendResponse($result, 'History Found');
     }
 	
 	public function updateFunctionDate(Request $param)
@@ -571,33 +624,32 @@ class ExaminationAPIController extends AppBaseController
     		if($examinations){
 				$device = Device::find($examinations->device_id);
 				if($device){
-					$device->deal_test_date = $param->function_test_date;
-					if ($request->has('name')){
-						$device->name = $request->input('name');
+					if (!empty($param->name)){
+						$device->name = $param->name;
 					}
 						
-					if ($request->has('mark')){
-						$device->mark = $request->input('mark');
+					if (!empty($param->mark)){
+						$device->mark = $param->mark;
 					}
 						
-					if ($request->has('capacity')){
-						$device->capacity = $request->input('capacity');
+					if (!empty($param->capacity)){
+						$device->capacity = $param->capacity;
 					}
 						
-					if ($request->has('manufactured_by')){
-						$device->manufactured_by = $request->input('manufactured_by');
+					if (!empty($param->manufactured_by)){
+						$device->manufactured_by = $param->manufactured_by;
 					}
 						
-					if ($request->has('model')){
-						$device->model = $request->input('model');
+					if (!empty($param->model)){
+						$device->model = $param->model;
 					}
 						
-					if ($request->has('serial_number')){
-						$device->serial_number = $request->input('serial_number');
+					if (!empty($param->serial_number)){
+						$device->serial_number = $param->serial_number;
 					}
 						
-					if ($request->has('test_reference')){
-						$device->test_reference = $request->input('test_reference');
+					if (!empty($param->test_reference)){
+						$device->test_reference = $param->test_reference;
 					}
 					
 					$device->updated_by = 1;
