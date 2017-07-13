@@ -1267,11 +1267,74 @@ class PDF_MC_Table extends FPDF{
 	}
 
 }
+
+/**
+* 
+*/
+class WatermakStel extends FPDI
+{
+	
+		var $extgstates = array();
+
+	    // alpha: real value from 0 (transparent) to 1 (opaque)
+	    // bm:    blend mode, one of the following:
+	    //          Normal, Multiply, Screen, Overlay, Darken, Lighten, ColorDodge, ColorBurn,
+	    //          HardLight, SoftLight, Difference, Exclusion, Hue, Saturation, Color, Luminosity
+	    function SetAlpha($alpha, $bm='Normal')
+	    {
+	        // set alpha for stroking (CA) and non-stroking (ca) operations
+	        $gs = $this->AddExtGState(array('ca'=>$alpha, 'CA'=>$alpha, 'BM'=>'/'.$bm));
+	        $this->SetExtGState($gs);
+	    }
+
+	    function AddExtGState($parms)
+	    {
+	        $n = count($this->extgstates)+1;
+	        $this->extgstates[$n]['parms'] = $parms;
+	        return $n;
+	    }
+
+	    function SetExtGState($gs)
+	    {
+	        $this->_out(sprintf('/GS%d gs', $gs));
+	    } 
+
+	    function _putextgstates()
+	    {
+	        for ($i = 1; $i <= count($this->extgstates); $i++)
+	        {
+	            $this->_newobj();
+	            $this->extgstates[$i]['n'] = $this->n;
+	            $this->_out('<</Type /ExtGState');
+	            $parms = $this->extgstates[$i]['parms'];
+	            $this->_out(sprintf('/ca %.3F', $parms['ca']));
+	            $this->_out(sprintf('/CA %.3F', $parms['CA']));
+	            $this->_out('/BM '.$parms['BM']);
+	            $this->_out('>>');
+	            $this->_out('endobj');
+	        }
+	    }
+
+	    function _putresourcedict()
+	    {
+	        parent::_putresourcedict();
+	        $this->_out('/ExtGState <<');
+	        foreach($this->extgstates as $k=>$extgstate)
+	            $this->_out('/GS'.$k.' '.$extgstate['n'].' 0 R');
+	        $this->_out('>>');
+	    }
+
+	    function _putresources()
+	    {
+	        $this->_putextgstates();
+	        parent::_putresources();
+	    }
+}
 Route::get('cetakstel', function(Illuminate\Http\Request $request){
 	$attach = $request->attach;
 	$invoice_id = $request->invoice_id;
 	// $pdf = new Fpdf('P','in',array(8.5,11)); 
-	$pdf = new FPDI();
+	$pdf = new WatermakStel();
  	$path = public_path('media/stel/'.$attach); 
 	$pagecount = $pdf->setSourceFile($path);
 	for ($i=1; $i <= $pagecount ; $i++) { 
@@ -1280,16 +1343,15 @@ Route::get('cetakstel', function(Illuminate\Http\Request $request){
 		$tppl = $pdf->importPage($i); 
 		// use the imported page and place it at point 20,30 with a width of 170 mm
 		$pdf->useTemplate($tppl, 0, 0); 
-		 
+		 $pdf->SetAlpha(0.4);
 		$image_path = public_path('assets/images/Telkom-Indonesia-Corporate-Logo1.jpg');
 		$pdf->Image($image_path,170,3,27);   
-		$pdf->SetY(260);
+		$pdf->SetY(260); 
 		$pdf->SetTextColor(255,0,0);
 		$pdf->SetFont('helvetica','I',18);
 		//Page number
 		$pdf->Cell(0,0.1,'PT. PERCOBAAN INDONESIA',0,0,'C');
-		
-
+		  
 		$pdf->SetY(266);
 		$pdf->SetTextColor(255,0,0);
 		//Arial italic 8

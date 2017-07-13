@@ -56,7 +56,7 @@
 								 
 								<?php  
 								// if($stel->attachment !="" && $stel->payment_status == 1){
-								if($stel->attachment !=""){
+								if($stel->attachment !="" && $stel->payment_status == 1){
 								?>
 								<td><a href="{!! url("cetakstel?invoice_id={$stel->invoice}&attach={$stel->attachment}") !!}">Download File</a></td>
 								<?php }else{?>
