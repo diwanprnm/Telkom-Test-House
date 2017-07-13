@@ -623,7 +623,7 @@
 	    },
 	    onFinished: function (event, currentIndex)
 	    {
-	        window.location.href = '<?php echo url("/process");?>';
+	        window.location.href = '<?php echo url("/pengujian");?>';
 	    }
 	});
   	$('ul[role="tablist"]').hide();  
