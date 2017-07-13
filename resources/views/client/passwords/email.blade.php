@@ -10,13 +10,23 @@
             <div class="content-wrap"> 
                 <div class="container clearfix">  
                        <div class="row">
-                           <!--  <div id="msg_box" class="msg_sent"> Your maessage has been sent</div>
-                            <div id="msg_box" class="msg_loading"> Sending...</div> -->
-                            @if(session()->has('status'))
+                            
+                            
+                           <div class="alert alert-info" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                                Your message has been send!
+                            </div>
+                            
+                            <div id="msg_box" class="msg_loading"> Sending...</div>
+                            
+
+                            {{-- @if(session()->has('status'))
                                 <div id="msg_box" class="msg_sent">
                                     {{ session()->get('status') }}
                                 </div>
-                            @endif
+                            @endif --}}
 
                         <form class="form-horizontal" role="form" method="POST" action="{{ url('/client/password/email') }}">
                             {{ csrf_field() }}
