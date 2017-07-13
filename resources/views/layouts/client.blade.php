@@ -460,7 +460,7 @@
         
     </script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
- <?php if(config('app.IS_ENABLED_NOTIFICATION')){?>
+   <?php if(config('app.IS_ENABLED_NOTIFICATION')){?>
     <script src="{{url('vendor/socket/socket.io.js')}}"></script>
     <script>
         //var socket = io('http://localhost:3000');
