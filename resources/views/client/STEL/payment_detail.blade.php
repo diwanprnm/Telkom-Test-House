@@ -12,7 +12,7 @@
 				
 				<ol class="breadcrumb">
 					<li><a href="#">STEL</a></li>
-					<li><a href="#">{{ trans('translate.payment_status') }}</a></li>
+					<li><a href="{{url('/payment_status')}}">{{ trans('translate.payment_status') }}</a></li>
 				<li class="active">{{ trans('translate.stel_payment_detail') }}</li>
 				</ol>
 		</div>
@@ -36,7 +36,8 @@
 								<th>No</th>
 								<th>{{ trans('translate.stel_name') }}</th>
 								<th>{{ trans('translate.stel_code') }}</th>
-								<th>{{ trans('translate.stel_price') }}</th>  
+								<th>{{ trans('translate.stel_price') }}</th> 
+								<th>{{ trans('translate.stel_tax') }}</th>  
 								<th>#</th>
 							</tr>
 						</thead>
@@ -46,7 +47,9 @@
 								<td>{{++$keys}}</td>
 								<td>{{$stel->name}}</td>
 								<td>{{$stel->code}}</td> 
-								<td>{{$stel->price}}</td> 
+								<td>{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($stel->price), 0, '.', ','); ?></td>
+								<td>{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($stel->price * (config("cart.tax")/100)), 0, '.', ','); ?></td>
+								 
 								<?php  if($stel->attachment){?>
 								<td><a href="{!! url("cetakstel?invoice_id={$stel->invoice}&attach={$stel->attachment}") !!}">Download File</a></td>
 								<?php }else{?>

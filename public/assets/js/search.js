@@ -47,6 +47,6 @@ $('#search_stel_product').keydown(function(event) {
 		var params = {
 			search:document.getElementById("search_stel_product").value
 		};
-		document.location.href = 'payment_status?'+jQuery.param(params);
+		document.location.href = 'products?'+jQuery.param(params);
 	}
 });
