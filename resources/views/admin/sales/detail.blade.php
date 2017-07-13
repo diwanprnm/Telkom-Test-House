@@ -35,18 +35,30 @@
 									<th class="center">Name</th> 
 									<th class="center">Code</th>  
 									<th class="center">Price</th>
+									<th class="center">Tax</th>
+									<th class="center">Total</th>
 								</tr>
 							</thead>
 							<tbody> 
+							<?php $total = 0;?>
 								@foreach($data as $keys => $item)
 									<tr>
 										<td class="center">{{++$keys}}</td> 
 										<td class="center">{{ $item->name }}</td>
 										<td class="center">{{ $item->code }}</td>
 										<td class="center"><?php echo number_format($item->price, 0, '.', ','); ?></td>
+										<td class="center"><?php echo number_format($item->price * (config("cart.tax")/100), 0, '.', ','); ?></td>
+										<td class="center"><?php echo number_format($item->price + $item->price * (config("cart.tax")/100), 0, '.', ','); ?></td>
 									</tr> 
+									<?php $total +=$item->price + $item->price * (config("cart.tax")/100); ?>
 								@endforeach
                             </tbody>
+                            <tfoot>
+                            	<tr>
+                            		<td colspan="5" align="right"> Total</td>
+                            		<td align="center"><?php echo number_format($total, 0, '.', ',');?></td>
+                            	</tr>
+                            </tfoot>
 						</table>
 					</div>
 				</div>

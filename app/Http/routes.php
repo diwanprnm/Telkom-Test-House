@@ -2817,6 +2817,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::post('/user/{id}/softDelete', 'UserController@softDelete');
 	Route::get('/analytic', 'AnalyticController@index');
 	Route::resource('/role', 'RoleController');
+	Route::get('/downloadbukti/{id}', 'SalesController@viewMedia');
 	// Route::get('/analytic', function(){
 		// $visitor = Tracker::currentSession();
 		// echo"<pre>";print_r($visitor);
@@ -2965,3 +2966,5 @@ Route::post('/checkout', 'ProductsController@checkout');
 Route::post('/doCheckout', 'ProductsController@doCheckout');
 Route::get('/payment_detail/{id}', 'ProductsController@payment_detail');
 Route::get('/test_notifitcation', 'ProductsController@test_notifitcation');
+Route::get('/upload_payment/{id}', 'ProductsController@upload_payment');
+Route::post('/pembayaranstel', 'ProductsController@pembayaranstel');

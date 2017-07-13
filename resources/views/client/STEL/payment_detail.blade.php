@@ -38,6 +38,7 @@
 								<th>{{ trans('translate.stel_code') }}</th>
 								<th>{{ trans('translate.stel_price') }}</th> 
 								<th>{{ trans('translate.stel_tax') }}</th>  
+								<th>{{ trans('translate.stel_price_total') }}</th>  
 								<th>#</th>
 							</tr>
 						</thead>
@@ -49,11 +50,14 @@
 								<td>{{$stel->code}}</td> 
 								<td>{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($stel->price), 0, '.', ','); ?></td>
 								<td>{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($stel->price * (config("cart.tax")/100)), 0, '.', ','); ?></td>
+
+								>
+								<td>{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($stel->price + ($stel->price * (config("cart.tax")/100))), 0, '.', ','); ?></td>
 								 
-								<?php  if($stel->attachment){?>
+								<?php  if($stel->attachment =="" && $stel->payment_status == 1){?>
 								<td><a href="{!! url("cetakstel?invoice_id={$stel->invoice}&attach={$stel->attachment}") !!}">Download File</a></td>
 								<?php }else{?>
-								<td> </td>
+								<td> Dokumen Tidak Terdia</td>
 								<?php }?>
 
 							</tr> 

@@ -293,6 +293,7 @@ return [
 	'stel_agree'			=> 'Agree',
 	'stel_not_agree'		=> 'Cancel',
 	'stel_payment_detail'	=> 'Payment Detail',
+	'stel_payment_upload'	=> 'Upload Payment',
 	'stel_qty'				=> 'QTY',
 	'stel_payment_method'	=> 'Choose Payment Method',
 	'stel_payment_method_atm'	=> 'Via ATM',

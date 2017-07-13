@@ -10,12 +10,14 @@ use App\Events\Notification;
 use App\STEL;
 use App\STELSales;
 use App\STELSalesDetail;
+use App\STELSalesAttach;
 use App\Logs; 
 
 use Auth;
 use Session;
 use Cart;
 use Response;
+use File;
 
 
 use Ramsey\Uuid\Uuid;
@@ -90,6 +92,65 @@ class ProductsController extends Controller
         
     } 
 
+    public function upload_payment($id)
+    { 
+        $currentUser = Auth::user();
+        $data = STELSalesAttach::where("stel_sales_id",$id)->first();
+        $page = "upload_payment";
+        return view('client.STEL.upload_payment') 
+        ->with('page', $page) 
+        ->with('data', $data)   
+        ->with('id', $id);    
+    } 
+
+    public function pembayaranstel(Request $request){
+        $currentUser = Auth::user();
+        $user_name = ''.$currentUser['attributes']['name'].'';
+        $user_email = ''.$currentUser['attributes']['email'].'';
+        $path_file = public_path().'/media/stel/'.$request->input('stelsales_id').'';
+        if ($request->hasFile('filePembayaran')) {
+            // $ext_file = $request->file('filePembayaran')->getClientOriginalName();
+            // $name_file = uniqid().'_user_'.$request->input('hide_id_exam').'.'.$ext_file;
+            $name_file = 'stel_payment_'.$request->file('filePembayaran')->getClientOriginalName();
+            if($request->file('filePembayaran')->move($path_file,$name_file)){
+                $fPembayaran = $name_file;
+                if (File::exists(public_path().'\media\stel\\'.$request->input('stelsales_id').'\\'.$request->input('hide_file_pembayaran'))){
+                    File::delete(public_path().'\media\stel\\'.$request->input('stelsales_id').'\\'.$request->input('hide_file_pembayaran'));
+                }
+            }else{
+                Session::flash('error', 'Upload Payment Attachment to directory failed');
+                return redirect('/upload_payment/'.$request->input('stelsales_id'));
+            }
+
+            try{
+                $STELSalesAttach = STELSalesAttach::where("stel_sales_id",$request->input('stelsales_id'))->first();
+                if($STELSalesAttach){
+                    $STELSalesAttach->delete();
+                }  
+                $STELSalesAttach = new STELSalesAttach;
+                $currentUser = Auth::user(); 
+                $STELSalesAttach->id = Uuid::uuid4(); 
+                $STELSalesAttach->created_by = $currentUser->id;
+                $STELSalesAttach->stel_sales_id = $request->input('stelsales_id');
+                $STELSalesAttach->attachment = $name_file;
+                $STELSalesAttach->save();
+                $id = $request->input('stelsales_id');
+                $STELSales = STELSales::find($id);
+                $STELSales->payment_status = 2;
+                $STELSales->save();
+
+                Session::flash('message', 'Upload successfully'); 
+            } catch(Exception $e){
+                Session::flash('error', 'Upload failed');
+                
+            }
+        }else{
+            $fPembayaran = $request->input('hide_file_pembayaran');
+        }
+
+        return back();
+    }
+
     public function store(Request $request){
         Cart::add(['id' => $request->id, 'name' => $request->name,'code' => $request->code, 'qty' => 1, 'price' => $request->price]);
         return redirect('products');
@@ -98,18 +159,19 @@ class ProductsController extends Controller
     public function checkout(Request $request){ 
         $countStelsSales =  STELSales::where(array())->count();
         $invoice_id = 0; 
-        $fill = 6;
+        $fill = 3;
         $STELSales = new STELSales();
-        if(!empty($countStelsSales)){
-          
+        $array_bulan = array(1=>"I","II","III", "IV", "V","VI","VII","VIII","IX","X", "XI","XII");
+        $bulan = $array_bulan[date('n')];
+        if(!empty($countStelsSales)){ 
             $lastInvoiceID = $STELSales->count();   
 
             $number = $lastInvoiceID+1; 
-            $invoice_number = "INV-".str_pad($number, $fill, '0', STR_PAD_LEFT);
+            $invoice_number = "STEL ".str_pad($number, $fill, '0', STR_PAD_LEFT)."/".$bulan.'/'.date('Y');
              
         }else{ 
             $number = 1; 
-            $invoice_number = "INV-".str_pad($number, $fill, '0', STR_PAD_LEFT);
+            $invoice_number = "STEL ".str_pad($number, $fill, '0', STR_PAD_LEFT)."/".$bulan.'/'.date('Y');
         }
 
         if($request->input('agree')){
