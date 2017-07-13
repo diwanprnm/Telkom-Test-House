@@ -47,11 +47,15 @@
 										<td>1</td>
 										<td>{{$row->name}}</td>
 										<td>{{$row->qty}}</td>
-										<td>{{ trans('translate.stel_rupiah') }}. {{number_format($row->price + ($row->price * config('cart.tax'))/100 )}}</td> 
+										<td>{{ trans('translate.stel_rupiah') }}. {{number_format($row->price)}}</td> 
 									</tr> 
 									@endforeach
 								</tbody>
 								<tfoot>
+								<tr class="list-total-harga">
+										<td colspan="3" align="right">{{ trans('translate.stel_taxes_total') }}</td> 
+										<td>{{ trans('translate.stel_rupiah') }}. {{number_format(Cart::tax())}}</td> 
+									</tr> 
 									<tr class="list-total-harga">
 										<td colspan="3" align="right">{{ trans('translate.stel_price_total') }}</td> 
 										<td>{{ trans('translate.stel_rupiah') }}. {{number_format(Cart::total())}}</td> 

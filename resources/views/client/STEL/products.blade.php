@@ -71,7 +71,7 @@
 			                    <div class="row">
 			                        <div class="col-xs-12 col-md-6">
 			                            <p class="lead">
-			                              {{ trans('translate.stel_rupiah') }}. <?php echo number_format($stel->price + ($stel->price * (config('cart.tax')/100)), 0, '.', ','); ?><span style="color:red;font-size: 12px;"> {{ trans('translate.stel_include') }} ppn (10%)</span></p>
+			                              {{ trans('translate.stel_rupiah') }}. <?php echo number_format($stel->price); ?><span style="color:red;font-size: 12px;"> {{ trans('translate.stel_exclude') }} ppn (10%)</span></p>
 			                        </div>
 			                        <div class="col-xs-12 col-md-6">
 			                        <form action="products" method="POST">
@@ -117,14 +117,14 @@
 					<button class="btn btn-transparent btn-xs pull-right" tooltip-placement="top" tooltip="Remove" onclick="return confirm('{{ trans('translate.stel_delete_item') }}')"><i class="fa fa-times fa fa-white"></i></button>
 					{!! Form::close() !!}
 					<p>{{ trans('translate.stel_name') }} : {{$row->name}}</p>
-					<p>{{ trans('translate.stel_price') }} : {{ trans('translate.stel_rupiah') }} <?php echo number_format($row->price + ($row->price * (config('cart.tax')/100)), 0, '.', ','); ?></p>
+					<p>{{ trans('translate.stel_price') }} : {{ trans('translate.stel_rupiah') }} <?php echo number_format($row->price); ?></p>
 				</div>
 			 	@endforeach
 				
 				<!-- TOP TIP -->
 				<div class="filtertip">
 					<div class="padding20" style="background-color: maroon;">
-						<h4>{{ trans('translate.stel_price_total') }}<br>{{ trans('translate.stel_rupiah') }} <?php echo number_format(Cart::total(), 0, '.', ','); ?></h4>
+						<h4>{{ trans('translate.stel_price_total') }}<br>{{ trans('translate.stel_rupiah') }} <?php echo number_format(Cart::subTotal(), 0, '.', ','); ?></h4>
 					</div>
 				</div>
 				
