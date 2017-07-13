@@ -284,9 +284,11 @@ return [
 	
 	'stel_add_to_cart'		=> 'Tambahkan',
 	'stel_include'			=> 'Termasuk',
+	'stel_exclude'			=> 'Belum Termasuk',
 	'stel_total_in_cart'	=> 'Jumlah Item Keranjang',
 	'stel_delete_item'		=> 'Anda yakin menghapus data ini ?',
 	'stel_price_total'		=> 'Total Harga',
+	'stel_taxes_total'		=> 'Total Pajak',
 	'stel_rupiah'			=> 'Rp',
 	'stel_term_condition'	=> 'Persyaratan Dan Ketentuan',
 	'stel_agree_statement'	=> 'Saya Setuju Dengan syarat dan ketentuan diatas',

@@ -205,7 +205,7 @@
             Main.init();
         });
     </script>
-
+    <?php if(config('app.IS_ENABLED_NOTIFICATION')){?>
      <script src="{{url('vendor/socket/socket.io.js')}}"></script>
       <script>
         //var socket = io('http://localhost:3000');
@@ -228,6 +228,7 @@
            
         });
     </script>
+    <?php }?>
     <!-- end: MAIN JAVASCRIPTS -->
 </body>
 </html>

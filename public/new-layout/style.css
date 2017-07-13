@@ -14101,3 +14101,11 @@ body.loading .overlay {
 #table_kuisioner tr th, tr td{
 	padding: 5px;
 }
+.done_sent .done {
+    font-size: 80px;
+    color: #00b500;
+    margin-bottom: 2%;
+}
+.done_sent {
+    text-align: center;
+}

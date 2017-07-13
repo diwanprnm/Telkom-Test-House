@@ -3,6 +3,7 @@
 @section('content')
  <link rel="stylesheet" href="{{url('vendor/jquerystep/main.css')}}" type="text/css" />
   <link rel="stylesheet" href="{{url('vendor/jquerystep/jquery.steps.css')}}" type="text/css" />
+  <link rel="stylesheet" href="{{url('vendor/chosen/chosen.css')}}">
   <style type="text/css">
   	ul[role="tablist"] {
     display: none;
@@ -190,7 +191,7 @@
 										<input type="hidden"   id="f1-fjns-referensi-perangkat" name="f1-jns-referensi-perangkat" value='0'> 
 										 <div class="form-group txt-ref-perangkat">
 											<label for="f1-referensi-perangkat">{{ trans('translate.service_device_test_reference') }} *</label>
-											<input type="text" name="f1-referensi-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}"  id="f1-referensi-perangkat">
+											<input type="text" name="f1-referensi-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}"  id="f1-referensi-perangkat" class="required">
 										</div>
 					            </fieldset>
 
@@ -319,7 +320,7 @@
 										</div>
 										<div class="form-group col-xs-12">
 											<label>{{ trans('translate.service_upload_reference_test') }}<span class="text-danger">*</span></label>
-											<input class="data-upload-berkas f1-file-ref-uji" id="fileInput-ref-uji" name="fuploadrefuji" type="file" accept="application/pdf,image/*">
+											<input class="data-upload-berkas f1-file-ref-uji required" id="fileInput-ref-uji" name="fuploadrefuji" type="file" accept="application/pdf,image/*" >
 											<div id="ref-uji-file"></div>
 											<div id="attachment-file">
 												*ukuran file maksimal 2 mb
@@ -468,7 +469,7 @@
 											</tr>
 											 
 										</table>
-										 
+										 <center><a class="btn btn-success" id="next">next</a></center>
 					            </fieldset>
 					             <h2>Forth Step</h2>
 					            <fieldset>
@@ -516,7 +517,7 @@
 	        required: true,extension: "jpeg|jpg|png|pdf"
 	    }
 	});
-	form.children("div").steps({
+	var formWizard = form.children("div").steps({
 	    headerTag: "h2",
 	    bodyTag: "fieldset",
 	    transitionEffect: "slideLeft",
@@ -525,35 +526,53 @@
 	    	form.trigger("focus"); 
 	        form.validate().settings.ignore = ":disabled,:hidden"; 
 	       	console.log(newIndex);
-	        if(newIndex == 5){
+	       	
+	        if(newIndex == 4 && form.valid()){
 	        	console.log("save");
 	        	var formData = new FormData($('#form-permohonan')[0]);
 				$.ajax({
+					beforeSend: function(){
+						 $("body").addClass("loading");  		
+					},
 					type: "POST",
 					url : "../submitPermohonan",
 					// data: {'_token':"{{ csrf_token() }}", 'nama_pemohon':nama_pemohon, 'nama_pemohons':nama_pemohon},
 					// data:new FormData($("#form-permohonan")[0]),
 					data:formData,
-					// dataType:'json',
-					async:false, 
-					processData: false, 
-					beforeSend: function(){
-						 $("body").addClass("loading");  		
-					},
+					// dataType:'json', 
+					processData: false,  
+					contentType: false, 
 					success: function(data){ 
 						$("body").removeClass("loading");
 						window.open("../cetakPermohonan");
+
+						$(".actions").hide();
+
+						$("#f3-preview-1").html($("#f1-nama-perangkat").val());
+						$("#f3-preview-2").html($("#f1-merek-perangkat").val());
+						$("#f3-preview-3").html($("#f1-model-perangkat").val());
+						$("#f3-preview-4").html($("#f1-kapasitas-perangkat").val());
+						$("#f3-preview-5").html($("#f1-cmb-ref-perangkat").val());
+						$("#f3-preview-6").html($("#f1-pembuat-perangkat").val());
+						$("#f3-preview-7").html($("#f1-serialNumber-perangkat").val());
+
+						$("#f4-preview-1").html($("#f1-no-siupp").val());
+						$("#f4-preview-2").html($('#hide_siupp_file').val());
+						$("#f4-preview-3").html($("#f1-tgl-siupp").val()); 
+						$("#f4-preview-5").html($("#f1-sertifikat-sistem-mutu").val());
+						$("#f4-preview-6").html($("#hide_sertifikat_file").val());
+						$("#f4-preview-7").html($("#f1-batas-waktu").val());
+						$("#f4-preview-11").html($("#hide_npwp_file").val());
 					},
 					error:function(){
 						$("body").removeClass("loading");
 						alert("Gagal mengambil data");
+						formWizard.steps("previous"); 
 					}
-				});
-
-				$(".actions").hide();
+				}); 
 	        }
 
-	        if(newIndex == 4){
+	        if(newIndex == 3){
 	        	$("#f3-preview-1").html($("#f1-nama-perangkat").val());
 				$("#f3-preview-2").html($("#f1-merek-perangkat").val());
 				$("#f3-preview-3").html($("#f1-model-perangkat").val());
@@ -579,9 +598,7 @@
 					}
 				});
 	        }
-	        if(newIndex == 3){
-	        	console.log($(".material-select span").html());
-	        }
+	        
 
 	        if(newIndex < currentIndex ){ 
 		        if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
@@ -642,8 +659,8 @@
 			}
 		});
 	});
-
-	$(".upload_later").on("click",function(){
+  
+	$(".upload_later, #next").on("click",function(){
 		formWizard.steps("next"); 
 	});
 	function downloadFile(file){

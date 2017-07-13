@@ -149,7 +149,7 @@
                       <div class="top-cart-item clearfix"> 
                         <div class="top-cart-item-desc">
                           <a href="#">{{$row->name}}</a>
-                          <span class="top-cart-item-price">Rp. {{number_format($row->price + ($row->price * (config('cart.tax')/100)), 0, '.', ',')}}</span>
+                          <span class="top-cart-item-price">Rp. {{number_format($row->price, 0, '.', ',')}}</span>
                           <span class="top-cart-item-quantity">x {{$row->qty}}</span>
                         </div>
                       </div>
@@ -157,7 +157,7 @@
                     @endforeach
                     
                     <div class="top-cart-action clearfix">
-                      <span class="fleft top-checkout-price">Rp. {{number_format(Cart::total(), 0, '.', ',')}}</span>
+                      <span class="fleft top-checkout-price">Rp. {{number_format(Cart::subTotal(), 0, '.', ',')}}</span>
                       <a class="button button-3d button-small nomargin fright" href="{{url('products')}}">{{ trans('translate.view_cart') }}</a>
                     </div>
                 </div>

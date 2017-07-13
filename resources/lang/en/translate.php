@@ -281,9 +281,11 @@ return [
 	
 	'stel_add_to_cart'		=> 'Add to Cart',
 	'stel_include'			=> 'include',
+	'stel_exclude'			=> 'exclude',
 	'stel_total_in_cart'	=> 'Count Item in Cart',
 	'stel_delete_item'		=> 'Are you sure want to delete ?',
 	'stel_price_total'		=> 'Price of Total',
+	'stel_taxes_total'		=> 'Taxes Total',
 	'stel_rupiah'			=> 'IDR',
 	'stel_term_condition'	=> 'Term and Condition',
 	'stel_agree_statement'	=> 'Im agree with the term and condition',
