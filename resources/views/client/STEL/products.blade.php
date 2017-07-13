@@ -129,7 +129,11 @@
 				</div>
 				
 				<div class="list-cart padding20">
+				<?php if(Cart::count() > 0){?>
 					<a class="button button-3d nomargin full btn-sky" href="#myModal1"  data-lightbox="inline" >Checkout</a>
+				<?php }else{?>
+					<a class="button button-3d nomargin full btn-sky"  >Checkout</a>
+				<?php }?>
 				</div> 
 
 					<!-- Modal -->
