@@ -51,7 +51,6 @@ class StelAPIController extends AppBaseController
 			}
 
 			if(isset($param->category)){ 
-				$param->category = (strtoupper($param->category) == "S-TSEL")?2:1;   
 				$result = $result->where("stels.stel_type", "=", $param->category);
 			}
 		

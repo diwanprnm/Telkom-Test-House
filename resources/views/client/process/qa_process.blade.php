@@ -44,9 +44,6 @@
 				<div class="container">  
 				    <div class="content">
 				    	<div class="col-md-12">
-				    		<a class="button button-3d btn-sky nomargin" href="{{url('/process')}}">Back</a>
-				    	</div>
-				        <div class="col-md-12">
 							<div class="step" style="padding-left:10%;">
 								<div class="garis" style="width:60%;"></div>
 								<ul class="number" style="width: 200%;">
