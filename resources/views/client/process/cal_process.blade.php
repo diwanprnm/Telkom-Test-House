@@ -468,8 +468,7 @@
 												<td> <div id="f4-preview-file-ref-uji"></div></td>
 											</tr>
 											 
-										</table>
-										 <center><a class="btn btn-success" id="next">next</a></center>
+										</table> 
 					            </fieldset>
 					             <h2>Forth Step</h2>
 					            <fieldset>
@@ -519,15 +518,22 @@
 	});
 	var formWizard = form.children("div").steps({
 	    headerTag: "h2",
-	    bodyTag: "fieldset",
+	    bodyTag: "fieldset", 
+	    autoFocus: true,
 	    transitionEffect: "slideLeft",
 	    onStepChanging: function (event, currentIndex, newIndex)
 	    { 
+	    	if(!form.valid()){
+	    		return false;
+	    	}
+
 	    	form.trigger("focus"); 
 	        form.validate().settings.ignore = ":disabled,:hidden"; 
 	       	console.log(newIndex);
-	       	
-	        if(newIndex == 4 && form.valid()){
+	       	if(newIndex == 4){ 
+	       	 	$('.actions > ul > li:nth-child(2) a').text("Save");
+	       	} 
+	        if(newIndex == 5 ){
 	        	console.log("save");
 	        	var formData = new FormData($('#form-permohonan')[0]);
 				$.ajax({
@@ -573,6 +579,7 @@
 	        }
 
 	        if(newIndex == 3){
+	        	$('.actions > ul > li:nth-child(2) a').text("Next");
 	        	$("#f3-preview-1").html($("#f1-nama-perangkat").val());
 				$("#f3-preview-2").html($("#f1-merek-perangkat").val());
 				$("#f3-preview-3").html($("#f1-model-perangkat").val());
@@ -623,7 +630,7 @@
 	    },
 	    onFinished: function (event, currentIndex)
 	    {
-	        window.location.href = '<?php echo url("/process");?>';
+	        window.location.href = '<?php echo url("/pengujian");?>';
 	    }
 	});
   	$('ul[role="tablist"]').hide();  
