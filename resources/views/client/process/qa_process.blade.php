@@ -480,8 +480,7 @@
 											<td> : </td>
 											<td> <div id="f4-preview-file-sp3"></div></td>
 										</tr> -->
-									</table>
-									<center><a class="btn btn-success" id="next">next</a></center>
+									</table> 
 				            </fieldset>
 				            
 				            <h2>Sixth Step</h2>
@@ -534,17 +533,22 @@
 	var formWizard = form.children("div").steps({
 	    headerTag: "h2",
 	    bodyTag: "fieldset",
+	    autoFocus: true,
 	    transitionEffect: "slideLeft",
 	    onStepChanging: function (event, currentIndex, newIndex)
 	    { 
 	    	form.trigger("focus"); 
 	        form.validate().settings.ignore = ":disabled,:hidden"; 
-	       	console.log(newIndex);
-	       
-	        if(newIndex == 4 && form.valid()){ 
+	       	console.log(currentIndex); 
+	       	if(currentIndex == 3){
+	       		console.log($('.actions > ul > li:nth-child(2) a').html());
+	       		 $('.actions > ul > li:nth-child(2) a').text("Save");
+	       	}
+	        if(newIndex == 5){
 	        	var formData = new FormData($('#form-permohonan')[0]);
 	        	var error = false;
-				$.ajax({
+
+	        	$.ajax({
 					beforeSend: function(){ 
 						$("body").addClass("loading");	
 					},
@@ -584,10 +588,8 @@
 						alert("Gagal mengambil data"); 
 						formWizard.steps("previous"); 
 					}
-				});  
-	        	
-				 
-	        } 
+				});   
+	        }
 
 	        if(newIndex == 3){
 	        	var jnsPelanggan = $('#hide_jns_pengujian').val();
