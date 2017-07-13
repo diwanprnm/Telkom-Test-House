@@ -163,7 +163,7 @@
 					            <fieldset>
 					            <div class="form-group cmb-ref-perangkat">
 											<!-- <label for="f1-referensi-perangkat">{{ trans('translate.service_device_test_reference') }}</label> -->
-											<select class="required" id="f1-cmb-ref-perangkat" name="f1-cmb-ref-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}"> 
+											<select  id="f1-cmb-ref-perangkat" name="f1-cmb-ref-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}"> 
 												@foreach($data_stels as $item)
 													<option value="{{ $item->code }}">{{ $item->code }} || {{ $item->name }}</option>
 												@endforeach
@@ -675,6 +675,7 @@
 			},
 			success:function(response){
 				$("body").removeClass("loading");  
+				formWizard.steps("next"); 
 			}
 		});
 	});
