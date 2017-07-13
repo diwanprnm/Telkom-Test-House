@@ -20,7 +20,10 @@
     <link rel="stylesheet" href="{{url('new-layout/css/components/bs-datatable.css')}}" type="text/css" />
     <link rel="stylesheet" href="{{url('new-layout/css/responsive.css')}}" type="text/css" />
     <link rel="stylesheet" href="{{url('new-layout/css/products.css')}}" type="text/css" />
-    <link rel="stylesheet" href="{{url('new-layout/css/material-form.css')}}" type="text/css" />
+    
+    <!-- <link rel="stylesheet" href="{{url('new-layout/css/material-form.css')}}" type="text/css" /> -->
+    <link href="//cdn.muicss.com/mui-0.9.17/css/mui.min.css" rel="stylesheet" type="text/css" />
+
 	<link href={{ asset("assets/css/chosen.min.css") }} rel="stylesheet" type="text/css">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -424,7 +427,10 @@
     ============================================= -->
     <script type="text/javascript" src="{{url('new-layout/js/functions.js')}}"></script>
     <script type="text/javascript" src="{{url('assets/js/search.js')}}"></script>
-    <script type="text/javascript" src="{{url('vendor/jquerymaterial/jquery.material.form.js')}}"></script> <!-- JQUERY MATERIAL FORM PLUGIN -->
+    <!-- <script type="text/javascript" src="{{url('vendor/jquerymaterial/jquery.material.form.js')}}"></script> --> <!-- JQUERY MATERIAL FORM PLUGIN -->
+
+    <script src="//cdn.muicss.com/mui-0.9.17/js/mui.min.js"></script>
+    
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-show-password/1.0.3/bootstrap-show-password.min.js"></script>
 
     <script src={{ asset("assets/js/chosen.jquery.min.js") }}></script>
