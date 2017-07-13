@@ -541,7 +541,7 @@
 	        form.validate().settings.ignore = ":disabled,:hidden"; 
 	       	console.log(newIndex);
 	       
-	        if(newIndex == 4 && form.valid()){ 
+	        if(newIndex == 5 && form.valid()){ 
 	        	var formData = new FormData($('#form-permohonan')[0]);
 	        	var error = false;
 				$.ajax({
