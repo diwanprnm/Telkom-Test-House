@@ -158,7 +158,7 @@
 									<th class="center">Total</th>
 									<th class="center">Status</th>
 									<th class="center">Payment Method</th> 
-									<th class="center">Action</th> 
+									<th class="center" colspan="2">Action</th>  
 								</tr>
 							</thead>
 							<tbody> 
@@ -168,11 +168,37 @@
 										<td class="center">{{ $item->created_at }}</td>
 										<td class="center">{{ $item->invoice }}</td>
 										<td class="center"><?php echo number_format($item->total, 0, '.', ','); ?></td>
-										<td class="center">{{ ($item->payment_status == 1)?'Pending':'Timeout' }}</td>
+										<td class="center">
+											<?php
+												switch ($item->payment_status) {
+													case -1:
+														echo "Paid (decline)";
+														break; 
+													case 0:
+														echo "Unpaid";
+														break; 
+													case 1:
+														echo "Paid (success)";
+														break; 
+													case 2:
+														echo "Paid (waiting confirmation)";
+														break; 
+													default:
+														# code...
+														break;
+												}
+												?>
+
+										</td>
 										<td class="center">{{ ($item->payment_method == 1)?'ATM':'Kartu Kredit'}}</td> 
 										<td class="center">
 											<div>
 												<a href="{{URL::to('admin/sales/'.$item->id)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
+											</div>
+										</td>
+										<td class="center">
+											<div>
+												<a href="{{URL::to('admin/sales/'.$item->id.'/edit')}}" class="btn btn-wide btn-primary btn-margin" tooltip-placement="top" tooltip="Update Status">Update Status </a>
 											</div>
 										</td>
 									</tr> 

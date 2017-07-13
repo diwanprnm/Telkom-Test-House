@@ -296,6 +296,7 @@ return [
 	'stel_agree'			=> 'Setuju',
 	'stel_not_agree'		=> 'Batalkan',
 	'stel_payment_detail'	=> 'Detail Pembayaran',
+	'stel_payment_upload'	=> 'Upload Pembayaran',
 	'stel_qty'				=> 'Jumlah',
 	'stel_payment_method'	=> 'Pilih Metoda Pembayaran',
 	'stel_payment_method_atm'	=> 'Metoda Transfer Melalui ATM',
@@ -325,4 +326,8 @@ return [
 	'an_email_has_been_sent' => 'Email Aktivasi telah dikirim ke email anda,',
 	'follow_the_direction' => 'Ikuti link pada email tersebut, untuk mengatur ulang password anda.',
 	'done' => 'OK',
+	'back' => 'Kembali',
+	'certificate' => 'Sertifikat',
+	'from_customer' => 'dari Kastamer',
+	'from_urel' => 'dari URel',
 ];

@@ -65,9 +65,6 @@
 
 			<div class="content-wrap"> 
 				<div class="container clearfix">
-						<div class="col-md-12">
-				    		<a class="button button-3d btn-sky nomargin" href="{{url('/pengujian')}}">Back</a>
-				    	  </div>
 					<div class="container-fluid container-fullw bg-white">
 						@if(count($exam_schedule->data)>0)
 						<div class="row">
@@ -208,7 +205,7 @@
 											@foreach($data_attach as $item_attach)
 											<tr>
 												<td> 
-													@if($item_attach->name == 'Sertifikat')
+													@if($item_attach->name == 'Sertifikat' && $item_attach->attachment != '')
 														<a class="btn btn-link" href="javascript:void(0)" style="color:black !important;" onclick="return isTestimonial('{{ $item_attach->id_attach }}','{{ $item_attach->attachment }}','{{ $item_attach->jns }}');">{{ $item_attach->name }} </a>
 													@elseif($item_attach->name == 'Laporan Uji' && $item_attach->attachment != '')
 														<a class="btn btn-link" href="#" style="color:black !important;">{{ $item_attach->name }} </a>
@@ -223,7 +220,8 @@
 								</div>
 								<div class="row">
 									<div class=" pull-right col-xs-12">
-										<a class="btn btn-wide btn-danger pull-right col-xs-12 col-lg-1" style="margin-bottom:10px;" 
+										<a class="button button-3d btn-sky nomargin" href="{{url('/pengujian')}}">{{ trans('translate.back') }}</a>
+										<a class="button button-3d btn-sky nomargin pull-right" style="margin-bottom:10px;" 
 											href="{{URL::to('cetakPengujian/'.$item->id.'')}}" target="_blank">
 											{{ trans('translate.examination_print') }}
 										</a>
@@ -287,20 +285,14 @@
 	// 	}
 	// });
 	
-	function isTestimonial(a,b,c){
-		var link = document.getElementById('link');
-			link.value = '/pengujian/download/'+a+'/'+b+'/'+c;
-		var message = document.getElementById('message');
-		$('#myModal_testimonial').modal('show');
-		message.focus();
-	}
 	
 	$('#submit-testimonial').click(function () {
 		var link = document.getElementById('link').value;
-		var message = document.getElementById('message').value;
+		// var message = document.getElementById('message').value;
 		var exam_id = document.getElementById('exam_id').value;
-		if(message == ''){
-			$('#myModal_testimonial').modal('show');
+		window.location.href = '/telkomtesthouse/public'+link;
+		/* if(message == ''){
+			$('#modal_kuisioner').modal('show');
 			return false;
 		}else{
 			$.ajax({
@@ -327,7 +319,7 @@
 					alert("Gagal mengambil data");
 				}
 			});
-		}
+		} */
 	});
 </script>
 @endsection

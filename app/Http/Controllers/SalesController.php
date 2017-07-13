@@ -9,13 +9,14 @@ use App\Http\Requests;
 use App\STEL;
 use App\Logs;
 use App\STELSales;
+use App\STELSalesAttach;
 use App\STELSalesDetail;
 
 use Auth;
 use Session; 
 use Validator;
 use Excel;
-
+use Response;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -188,5 +189,64 @@ class SalesController extends Controller
             });
         })->export('xlsx'); 
     }
+
+    public function edit($id)
+    {
+        $select = array("stels_sales.id","stels_sales_attachment.attachment","stels_sales_attachment.stel_sales_id");  
+        $stel = STELSalesAttach::select($select)->rightJoin("stels_sales","stels_sales.id","=","stels_sales_attachment.stel_sales_id")
+                ->where("stels_sales.id",$id)->first();
+        
+        return view('admin.sales.edit')
+            ->with('data', $stel);
+    }
+
+      public function update(Request $request, $id)
+    {
+        $currentUser = Auth::user();
+
+        $STELSales = STELSales::find($id);
+        $oldStel = $STELSales;  
+        if ($request->has('payment_status')){
+            $STELSales->updated_by = $currentUser->id; 
+            $STELSales->payment_status = $request->input('payment_status');
+
+            try{
+                $STELSales->save();
+
+                $logs = new Logs;
+                $logs->user_id = $currentUser->id;
+                $logs->id = Uuid::uuid4();
+                $logs->action = "Update Status Pembayaran STEL";
+                $logs->data = $oldStel;
+                $logs->created_by = $currentUser->id;
+                $logs->page = "SALES";
+                $logs->save();
+
+                Session::flash('message', 'SALES successfully updated');
+                return redirect('/admin/sales');
+            } catch(Exception $e){
+                Session::flash('error', 'Save failed');
+                return redirect('/admin/sales/'.$STELSales->id.'/edit');
+            }
+        }else{
+            return redirect('/admin/sales');
+        } 
+    }
+
+
+    public function viewMedia($id)
+    {
+        $stel = STELSalesAttach::where("stel_sales_id",$id)->first();
+
+        if ($stel){
+            $file = public_path().'/media/stel/'.$stel->stel_sales_id."/".$stel->attachment;
+            $headers = array(
+              'Content-Type: application/octet-stream',
+            );
+
+            return Response::file($file, $headers);
+        }
+    }
+
 
 }

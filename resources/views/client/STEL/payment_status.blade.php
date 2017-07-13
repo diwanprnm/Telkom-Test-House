@@ -44,7 +44,8 @@
 											<th>Total</th> 
 											<th>Status</th>
 											<th>{{ trans('translate.stel_payment_status_complete_time') }}</th>  
-											<th>#</th>
+											<th>Detail</th>
+											<th>Upload</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -57,9 +58,31 @@
 													<td>{{$stel->payment_code}}</td> 
 													<td>{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($stel->total), 0, '.', ','); ?></td>
 													
-													<td>{{($stel->payment_status==0)?'Unpaid':'Paid'}}</td>
+													<td>
+														<?php
+														switch ($stel->payment_status) {
+															case -1:
+																echo "Paid (decline)";
+																break; 
+															case 0:
+																echo "Unpaid";
+																break; 
+															case 1:
+																echo "Paid (success)";
+																break; 
+															case 2:
+																echo "Paid (waiting confirmation)";
+																break; 
+															default:
+																# code...
+																break;
+														}
+														?>
+
+													</td>
 													<td>{{$stel->update_at}}</td> 
 													<td><a href="{!! url("payment_detail/{$stel->id}") !!}">Detail</a></td> 
+													<td><a href="{!! url("upload_payment/{$stel->id}") !!}">Upload</a></td> 
 												</tr> 
 											@endforeach
 

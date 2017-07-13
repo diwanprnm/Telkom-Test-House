@@ -2817,6 +2817,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::post('/user/{id}/softDelete', 'UserController@softDelete');
 	Route::get('/analytic', 'AnalyticController@index');
 	Route::resource('/role', 'RoleController');
+	Route::get('/downloadbukti/{id}', 'SalesController@viewMedia');
 	// Route::get('/analytic', function(){
 		// $visitor = Tracker::currentSession();
 		// echo"<pre>";print_r($visitor);
@@ -2895,6 +2896,7 @@ Route::resource('/pengujian', 'PengujianController');
 Route::get('/pengujian', 'PengujianController@index');
 Route::get('/pengujian/{id}/detail', 'PengujianController@detail');
 Route::post('/testimonial', 'PengujianController@testimonial');
+Route::post('/cekAmbilBarang', 'PengujianController@cekAmbilBarang');
 Route::resource('/STELclient', 'STELClientController');
 Route::get('/STELclient', 'STELClientController@index');
 Route::resource('/STSELclient', 'STSELClientController');
@@ -2965,3 +2967,5 @@ Route::post('/checkout', 'ProductsController@checkout');
 Route::post('/doCheckout', 'ProductsController@doCheckout');
 Route::get('/payment_detail/{id}', 'ProductsController@payment_detail');
 Route::get('/test_notifitcation', 'ProductsController@test_notifitcation');
+Route::get('/upload_payment/{id}', 'ProductsController@upload_payment');
+Route::post('/pembayaranstel', 'ProductsController@pembayaranstel');

@@ -14101,6 +14101,16 @@ body.loading .overlay {
 #table_kuisioner tr th, tr td{
 	padding: 5px;
 }
+#modal_complain .modal-body, .pre-scrollable {
+    padding: 30px; 
+    max-height: 80%;
+}
+#modal_complain .modal-content {
+    height: 90%;
+}
+#table_kuisioner tr th, tr td{
+	padding: 5px;
+}
 .done_sent .done {
     font-size: 80px;
     color: #00b500;
