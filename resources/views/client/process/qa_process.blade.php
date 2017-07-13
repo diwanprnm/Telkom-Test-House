@@ -537,13 +537,18 @@
 	    transitionEffect: "slideLeft",
 	    onStepChanging: function (event, currentIndex, newIndex)
 	    { 
+	    	if(!form.valid()){
+	    		return false;
+	    	}
+	    	
 	    	form.trigger("focus"); 
 	        form.validate().settings.ignore = ":disabled,:hidden"; 
 	       	console.log(currentIndex); 
-	       	if(currentIndex == 3){
-	       		console.log($('.actions > ul > li:nth-child(2) a').html());
+	       	if(newIndex == 4){ 
 	       		 $('.actions > ul > li:nth-child(2) a').text("Save");
-	       	}
+	       	} 
+
+	       	$('.actions > ul > li:nth-child(2) a').text("Next");
 	        if(newIndex == 5){
 	        	var formData = new FormData($('#form-permohonan')[0]);
 	        	var error = false;
@@ -592,6 +597,8 @@
 	        }
 
 	        if(newIndex == 3){
+	        	$('.actions > ul > li:nth-child(2) a').text("Next");
+
 	        	var jnsPelanggan = $('#hide_jns_pengujian').val();
 				var serialNumber_perangkat = $('#f1-serialNumber-perangkat').val();
 				var nama_perangkat = $('#f1-nama-perangkat').val();
@@ -607,22 +614,7 @@
 						$('#hide_cekSNjnsPengujian').val(data); 
 					}
 				});
-	        }
-	        if(newIndex < currentIndex ){ 
-		        if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
-		        $( ".number li:eq("+(newIndex)+" ) button" ).removeClass("done").addClass("active");
-		        $( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active");
-	        	return true;
-	        }else{
-	        	if(form.valid()){
-	        		if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
-			        $( ".number li:eq("+(newIndex)+" ) button" ).removeClass("done").addClass("active");
-			        $( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active");
-	        	}
-	        	return form.valid();	
-	        }
-
-	        
+	        }  
 	    },
 	    onFinishing: function (event, currentIndex)
 	    {
