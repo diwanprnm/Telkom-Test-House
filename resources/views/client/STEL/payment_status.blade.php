@@ -62,7 +62,7 @@
 													<td>{{$stel->payment_code}}</td> 
 													<td>{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($stel->total), 0, '.', ','); ?></td>
 													
-													<td>{{($stel->status==0)?'Unpaid':'Paid'}}</td>
+													<td>{{($stel->payment_status==0)?'Unpaid':'Paid'}}</td>
 													<td>{{$stel->update_at}}</td> 
 													<td><a href="{!! url("payment_detail/{$stel->id}") !!}">Detail</a></td> 
 												</tr> 

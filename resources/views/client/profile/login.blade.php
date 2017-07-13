@@ -8,6 +8,11 @@
 		<section id="content"> 
 			<div class="content-wrap"> 
 				<div class="container clearfix">  
+					@if(session()->has('send_new_user'))
+						<div id="msg_box" class="msg_sent">
+							Permintaan aktivasi akun baru telah dikirim. Mohon menunggu konfirmasi pengaktifan akun dari Petugas URel DDS TELKOM.
+						</div>
+					@endif
 					<div class="panel panel-default nobottommargin divcenter" style="max-width: 500px;">
 						<div class="panel-body" style="padding: 40px;"> 
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/client/login') }}">

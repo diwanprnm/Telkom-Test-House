@@ -31,6 +31,16 @@
 								<label for="register-form-username">{{ trans('translate.register_email') }}: *</label>
 							<input type="email" id="email" class="form-control input-submit" name="email" placeholder="john@mail.com" value="{{ old('email') }}" required>
 							</div>
+							@if(!empty(Session::get('error_email')) && (Session::get('error_email') == 1))
+								<div class="col_full">
+									<label for="register-form-username">{{ trans('translate.register_email_required') }}</label>
+								</div>
+							@endif
+							@if(!empty(Session::get('error_email')) && (Session::get('error_email') == 2))
+								<div class="col_full">
+									<label for="register-form-username">{{ trans('translate.register_email_exists') }}</label>
+								</div>
+							@endif
 
 							<div class="col_full">
 								<label for="register-form-phone">{{ trans('translate.register_email_alternate') }} :</label>
@@ -56,13 +66,23 @@
 							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.register_confirm_password') }} : *</label>
 								<input type="password" id="confnewPass" class="form-control input-submit" name="confnewPass" placeholder="p@ssw0rd" id="password" data-toggle="password" required>
-							</div>  
+							</div>
+							@if(!empty(Session::get('error_newpass')) && (Session::get('error_newpass') == 2))
+								<div class="col_full">
+									<label for="register-form-repassword">{{ trans('translate.register_password_not_match') }}</label>
+								</div> 
+							@endif							
 							<h3>{{ trans('translate.register_picture') }}</h3>
 							<hr>
 							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.register_picture') }} : </label>
 								<input class="data-upload-user-picture" id="data-upload-user-picture" name="userPicture" type="file" accept="image/*">
 							</div> 
+							@if(!empty(Session::get('error_img_type')) && (Session::get('error_img_type') == 1))
+								<div class="col_full">
+									<label for="register-form-repassword">{{ trans('translate.register_image_type') }}</label>
+								</div> 
+							@endif
 
 							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.register_company') }}:</label>

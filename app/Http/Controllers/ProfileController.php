@@ -346,6 +346,7 @@ class ProfileController extends Controller
 	
 	public function insert(Request $request)
     {
+		// print_r($request->all());exit;
 		$currentUser = Auth::user();
 		$user_id = Uuid::uuid4();
 		
@@ -363,11 +364,11 @@ class ProfileController extends Controller
 					->with('error_email', 2)
 					->withInput($request->all());
 				}
-			if($request->input('newPass') == '' || $request->input('confnewPass') == ''){
-				return redirect()->back()
-				->with('error_newpass', 1)
-				->withInput($request->all());
-			}
+			// if($request->input('newPass') == '' || $request->input('confnewPass') == ''){
+				// return redirect()->back()
+				// ->with('error_newpass', 1)
+				// ->withInput($request->all());
+			// }
 			if($request->input('newPass') == $request->input('confnewPass')){
 				$password = $request->input('newPass');
 			}
@@ -428,18 +429,18 @@ class ProfileController extends Controller
 				]
 			]);
 			$logs = new Logs;
-			$currentUser = Auth::user();
-	        $logs->user_id = $currentUser->id;
+			// $currentUser = Auth::user();
+	        $logs->user_id = $user_id;
 	        $logs->id = Uuid::uuid4();
 	        $logs->action = "Register";   
 	        $logs->data = "";
-	        $logs->created_by = $currentUser->id;
+	        $logs->created_by = $user_id;
 	        $logs->page = "REGISTER";
 	        $logs->save();
 
 			$this->sendRegistrasi($request->input('username'), $request->input('email'), "emails.registrasiCust", "Permintaan Aktivasi Data Akun Baru");
 			
-			return redirect('/login')->with('error_code', 5);
+			return redirect('/login')->with('send_new_user', 5);
 		}else{
 			$company = new Company;
 			$company->id = Uuid::uuid4();
@@ -608,7 +609,7 @@ class ProfileController extends Controller
 					"emails.registrasiCustCompany", "Permintaan Aktivasi Data Perusahaan dan Akun Baru"
 				);
 				
-				return redirect('/login')->with('error_code', 5);
+				return redirect('/login')->with('send_new_user', 5);
 			} catch(Exception $e){
 				Session::flash('error', 'Save failed');
 				return redirect('/admin/company/create');

@@ -171,7 +171,7 @@ class ProductsController extends Controller
            $STELSales->total = Cart::total();
            $STELSales->created_by =$currentUser->id;
            $STELSales->created_at = date("Y-m-d H:i:s");
-            $STELSales->payment_code =  $result->payment_code;
+            // $STELSales->payment_code =  $result->payment_code;
             try{
                 $save = $STELSales->save();
                     try{  

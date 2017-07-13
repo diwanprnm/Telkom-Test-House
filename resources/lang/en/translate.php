@@ -240,7 +240,7 @@ return [
 	'register_email_required'	=> 'Email Must Be Filled',
 	'register_email_exists'		=> 'Email Has Existing',
 	'register_password_required'=> 'Password Must Be Filled',
-	'register_password_not_match'=> 'Password Must Be Filled',
+	'register_password_not_match'=> 'Password Not Match',
 	'register_not_have_account'=> 'Not Have An Account',
 	'register_image_type'		=> 'File Extension Must Be Image!',
 	

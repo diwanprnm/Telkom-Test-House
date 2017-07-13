@@ -106,7 +106,7 @@ class ResetPasswordController extends Controller
             $m->to($request->get('email'))->subject('Update Password Web QA!');
         });
 		
-		return redirect()->back()->with('status', 'Your maessage has been sent');
+		return redirect()->back()->with('status', 'Your message has been sent.');
     }
 
     /**
