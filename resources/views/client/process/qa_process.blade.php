@@ -548,8 +548,7 @@
 	        	var formData = new FormData($('#form-permohonan')[0]);
 	        	var error = false;
 				$.ajax({
-					beforeSend: function(){
-						console.log("BEFORE SEND");
+					beforeSend: function(){ 
 						$("body").addClass("loading");	
 					},
 					type: "POST",
@@ -561,8 +560,7 @@
 					processData: false,  
 					contentType: false,
 					success: function(data){
-						$("body").removeClass("loading");
-						console.log(data);
+						$("body").removeClass("loading"); 
 						window.open("../cetakPermohonan");
 
 						$(".actions").hide();
