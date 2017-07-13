@@ -325,4 +325,8 @@ return [
 	'an_email_has_been_sent' => 'Email Aktivasi telah dikirim ke email anda,',
 	'follow_the_direction' => 'Ikuti link pada email tersebut, untuk mengatur ulang password anda.',
 	'done' => 'OK',
+	'back' => 'Kembali',
+	'certificate' => 'Sertifikat',
+	'from_customer' => 'dari Kastamer',
+	'from_urel' => 'dari URel',
 ];

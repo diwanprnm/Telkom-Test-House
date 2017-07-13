@@ -146,9 +146,9 @@
 											@if($item->deal_test_date != null)
 												{{ $item->deal_test_date }} (FIX)
 											@elseif($item->deal_test_date == null && $item->cust_test_date != null)
-												{{ $item->cust_test_date }} dari Kastamer
+												{{ $item->cust_test_date }} {{ trans('translate.from_customer') }}
 											@else
-												{{ $item->urel_test_date }} dari URel
+												{{ $item->urel_test_date }} {{ trans('translate.from_urel') }}
 											@endif
 										</td>
 									</tr>
@@ -186,14 +186,14 @@
 								
 								<?php if($item->spb_status == 1 and $item->payment_status != 1){ ?>
 									<a class="button button-3d nomargin btn-blue" href="{{URL::to('pengujian/'.$item->id.'/pembayaran')}}">{{ trans('translate.examination_payment') }}</a>
-								<?php } ?>
-								
-								<?php if($item->spb_status == 1){ ?>
 									<a class="button button-3d nomargin btn-blue" href="{{URL::to('pengujian/'.$item->id.'/downloadSPB')}}">{{ trans('translate.download') }} SPB</a>
 								<?php } ?>
 								
 								<?php if($item->registration_status != 1){ ?>
 									<a class="button button-3d nomargin btn-blue"  onclick="return edit('<?php echo $item->id ?>',<?php echo $item->registration_status ?>);">{{ trans('translate.examination_edit') }}</a>
+								<?php } ?>
+								<?php if($item->certificate_status == 1){ ?>
+									<a href="#modal_kuisioner" data-toggle="modal" data-target="#modal_kuisioner" class="button button-3d nomargin btn-blue">{{ trans('translate.download') }} {{ trans('translate.certificate') }}</a>
 								<?php } ?>
 							</div>
 						</div>
@@ -781,7 +781,6 @@
 	});
 </script>
 <script type="text/javascript" >
-	
 	$.ajaxSetup({
 		headers: {
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
