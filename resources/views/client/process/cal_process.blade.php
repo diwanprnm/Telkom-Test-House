@@ -532,6 +532,21 @@
 	       	console.log(newIndex);
 	       	if(newIndex == 4){ 
 	       	 	$('.actions > ul > li:nth-child(2) a').text("Save");
+	       	 	$("#f3-preview-1").html($("#f1-nama-perangkat").val());
+				$("#f3-preview-2").html($("#f1-merek-perangkat").val());
+				$("#f3-preview-3").html($("#f1-model-perangkat").val());
+				$("#f3-preview-4").html($("#f1-kapasitas-perangkat").val());
+				$("#f3-preview-5").html($("#f1-cmb-ref-perangkat").val());
+				$("#f3-preview-6").html($("#f1-pembuat-perangkat").val());
+				$("#f3-preview-7").html($("#f1-serialNumber-perangkat").val());
+
+				$("#f4-preview-1").html($("#f1-no-siupp").val());
+				$("#f4-preview-2").html($('#hide_siupp_file').val());
+				$("#f4-preview-3").html($("#f1-tgl-siupp").val()); 
+				$("#f4-preview-5").html($("#f1-sertifikat-sistem-mutu").val());
+				$("#f4-preview-6").html($("#hide_sertifikat_file").val());
+				$("#f4-preview-7").html($("#f1-batas-waktu").val());
+				$("#f4-preview-11").html($("#hide_npwp_file").val());
 	       	} 
 	        if(newIndex == 5 ){
 	        	console.log("save");
@@ -554,21 +569,7 @@
 
 						$(".actions").hide();
 
-						$("#f3-preview-1").html($("#f1-nama-perangkat").val());
-						$("#f3-preview-2").html($("#f1-merek-perangkat").val());
-						$("#f3-preview-3").html($("#f1-model-perangkat").val());
-						$("#f3-preview-4").html($("#f1-kapasitas-perangkat").val());
-						$("#f3-preview-5").html($("#f1-cmb-ref-perangkat").val());
-						$("#f3-preview-6").html($("#f1-pembuat-perangkat").val());
-						$("#f3-preview-7").html($("#f1-serialNumber-perangkat").val());
-
-						$("#f4-preview-1").html($("#f1-no-siupp").val());
-						$("#f4-preview-2").html($('#hide_siupp_file').val());
-						$("#f4-preview-3").html($("#f1-tgl-siupp").val()); 
-						$("#f4-preview-5").html($("#f1-sertifikat-sistem-mutu").val());
-						$("#f4-preview-6").html($("#hide_sertifikat_file").val());
-						$("#f4-preview-7").html($("#f1-batas-waktu").val());
-						$("#f4-preview-11").html($("#hide_npwp_file").val());
+						
 					},
 					error:function(){
 						$("body").removeClass("loading");

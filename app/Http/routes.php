@@ -1350,14 +1350,15 @@ Route::get('cetakstel', function(Illuminate\Http\Request $request){
 		$pdf->SetTextColor(255,0,0);
 		$pdf->SetFont('helvetica','I',18);
 		//Page number
-		$pdf->Cell(0,0.1,'PT. PERCOBAAN INDONESIA',0,0,'C');
-		  
+		$pdf->Cell(0,0.1,'PT. PERCOBAAN INDONESIA',0,0,'C'); 
 		$pdf->SetY(266);
 		$pdf->SetTextColor(255,0,0);
 		//Arial italic 8
 		$pdf->SetFont('helvetica','I',18);
 		//Page number
 		$pdf->Cell(0,0.1,'STEL '.$invoice_id,0,0,'C');	
+		$pdf->SetFillColor(217,217,217);
+		$pdf->Rect(70, 0, 75, 297, 'F');
 	}
 	  $pdf->Output();
  	exit;
