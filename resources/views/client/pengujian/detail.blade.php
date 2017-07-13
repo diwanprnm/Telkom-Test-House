@@ -284,7 +284,53 @@
 	// 		'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 	// 	}
 	// });
+	function isTestimonial(a,b,c){
+		var link = document.getElementById('link');
+			link.value = '/pengujian/download/'+a+'/'+b+'/'+c;
+		// var message = document.getElementById('message');
+		$('#modal_kuisioner').modal('show');
+		// message.focus();
+	}
 	
+	$('#submit-kuisioner').click(function () {
+		$('#modal_kuisioner').modal('hide');
+		$('#modal_complain').modal('show');
+	});
+
+	$('#submit-complain').click(function () {
+		var link = document.getElementById('link').value;
+		var exam_id = document.getElementById('exam_id').value;
+		$('#modal_complain').modal('hide');
+		$.ajax({
+			type: "POST",
+			url : "{{URL::to('/cekAmbilBarang')}}",
+			data: {'_token':"{{ csrf_token() }}", 'exam_id':exam_id},
+			// data:new FormData($("#form-permohonan")[0]),
+			// data:formData,
+			dataType:'json',
+			// async:false,
+			// type:'post',
+			// processData: false,
+			// contentType: false,
+			beforeSend: function(){
+				// document.getElementById("overlay").style.display="inherit";		
+			},
+			success: function(response){
+				// return false;
+				// document.getElementById("overlay").style.display="none";
+				$('#modal_complain').modal('hide');
+				if(response==0){
+					$('#modal_status_barang').modal('show');
+				}else{
+					window.location.href = '/telkomdds/public'+link;
+				}
+			},
+			error:function(){
+				alert("Gagal mengambil data");
+			}
+		});
+	});
+
 	
 	$('#submit-testimonial').click(function () {
 		var link = document.getElementById('link').value;
