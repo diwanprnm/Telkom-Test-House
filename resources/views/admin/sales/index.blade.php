@@ -193,12 +193,12 @@
 										<td class="center">{{ ($item->payment_method == 1)?'ATM':'Kartu Kredit'}}</td> 
 										<td class="center">
 											<div>
-												<a href="{{URL::to('admin/sales/'.$item->id)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
+												<a href="{{URL::to('admin/sales/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
 											</div>
 										</td>
 										<td class="center">
 											<div>
-												<a href="{{URL::to('admin/sales/'.$item->id.'/edit')}}" class="btn btn-wide btn-primary btn-margin" tooltip-placement="top" tooltip="Update Status">Update Status </a>
+												<a href="{{URL::to('admin/sales/'.$item->id)}}" class="btn btn-wide btn-primary btn-margin" tooltip-placement="top" tooltip="Detail">Detail </a>
 											</div>
 										</td>
 									</tr> 

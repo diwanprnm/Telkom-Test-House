@@ -24,9 +24,6 @@
 		<section id="content"> 
 			<div class="content-wrap"> 
 				<div class="container"> 
-					<div class="col-md-12">
-				    		<a class="button button-3d btn-sky nomargin" href="{{url('/products')}}">Back</a>
-				    	</div>
 					<form id="form-send-feedback" class="nobottommargin"  role="form" method="POST" action="{{ url('doCheckout') }}">
 					<div class="row">    
 						<p> No. Invoice	: {{$invoice_number}} </p> 

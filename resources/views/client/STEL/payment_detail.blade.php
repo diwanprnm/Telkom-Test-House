@@ -54,10 +54,13 @@
 								>
 								<td>{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($stel->price + ($stel->price * (config("cart.tax")/100))), 0, '.', ','); ?></td>
 								 
-								<?php  if($stel->attachment =="" && $stel->payment_status == 1){?>
+								<?php  
+								// if($stel->attachment !="" && $stel->payment_status == 1){
+								if($stel->attachment !="" && $stel->payment_status == 1){
+								?>
 								<td><a href="{!! url("cetakstel?invoice_id={$stel->invoice}&attach={$stel->attachment}") !!}">Download File</a></td>
 								<?php }else{?>
-								<td> Dokumen Tidak Terdia</td>
+								<td> Dokumen Tidak Tersedia</td>
 								<?php }?>
 
 							</tr> 

@@ -546,13 +546,31 @@
 	    transitionEffect: "slideLeft",
 	    onStepChanging: function (event, currentIndex, newIndex)
 	    { 
+	    	if(!form.valid()){
+	    		return false;
+	    	}
+	    	
 	    	form.trigger("focus"); 
 	        form.validate().settings.ignore = ":disabled,:hidden"; 
 	       	console.log(currentIndex); 
-	       	if(currentIndex == 3){
-	       		console.log($('.actions > ul > li:nth-child(2) a').html());
+	       	if(newIndex == 4){ 
 	       		 $('.actions > ul > li:nth-child(2) a').text("Save");
-	       	}
+	       	 	$("#f3-preview-1").html($("#f1-nama-perangkat").val());
+				$("#f3-preview-2").html($("#f1-merek-perangkat").val());
+				$("#f3-preview-3").html($("#f1-model-perangkat").val());
+				$("#f3-preview-4").html($("#f1-kapasitas-perangkat").val());
+				$("#f3-preview-5").html($("#f1-cmb-ref-perangkat").val());
+				$("#f3-preview-6").html($("#f1-pembuat-perangkat").val());
+				$("#f3-preview-7").html($("#f1-serialNumber-perangkat").val());
+
+				$("#f4-preview-1").html($("#f1-no-siupp").val());
+				$("#f4-preview-2").html($('#hide_siupp_file').val());
+				$("#f4-preview-3").html($("#f1-tgl-siupp").val()); 
+				$("#f4-preview-5").html($("#f1-sertifikat-sistem-mutu").val());
+				$("#f4-preview-6").html($("#hide_sertifikat_file").val());
+				$("#f4-preview-7").html($("#f1-batas-waktu").val());
+				$("#f4-preview-11").html($("#hide_npwp_file").val());
+	       	}  
 	        if(newIndex == 5){
 	        	var formData = new FormData($('#form-permohonan')[0]);
 	        	var error = false;
@@ -573,23 +591,7 @@
 						$("body").removeClass("loading"); 
 						window.open("../cetakPermohonan");
 
-						$(".actions").hide();
-
-						$("#f3-preview-1").html($("#f1-nama-perangkat").val());
-						$("#f3-preview-2").html($("#f1-merek-perangkat").val());
-						$("#f3-preview-3").html($("#f1-model-perangkat").val());
-						$("#f3-preview-4").html($("#f1-kapasitas-perangkat").val());
-						$("#f3-preview-5").html($("#f1-cmb-ref-perangkat").val());
-						$("#f3-preview-6").html($("#f1-pembuat-perangkat").val());
-						$("#f3-preview-7").html($("#f1-serialNumber-perangkat").val());
-
-						$("#f4-preview-1").html($("#f1-no-siupp").val());
-						$("#f4-preview-2").html($('#hide_siupp_file').val());
-						$("#f4-preview-3").html($("#f1-tgl-siupp").val()); 
-						$("#f4-preview-5").html($("#f1-sertifikat-sistem-mutu").val());
-						$("#f4-preview-6").html($("#hide_sertifikat_file").val());
-						$("#f4-preview-7").html($("#f1-batas-waktu").val());
-						$("#f4-preview-11").html($("#hide_npwp_file").val());
+						$(".actions").hide(); 
 					},
 					error:function(){
 						$("body").removeClass("loading");
@@ -601,6 +603,8 @@
 	        }
 
 	        if(newIndex == 3){
+	        	$('.actions > ul > li:nth-child(2) a').text("Next");
+
 	        	var jnsPelanggan = $('#hide_jns_pengujian').val();
 				var serialNumber_perangkat = $('#f1-serialNumber-perangkat').val();
 				var nama_perangkat = $('#f1-nama-perangkat').val();
@@ -616,7 +620,9 @@
 						$('#hide_cekSNjnsPengujian').val(data); 
 					}
 				});
-	        }
+	        }  
+
+
 	        if(newIndex < currentIndex ){ 
 		        if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
 		        $( ".number li:eq("+(newIndex)+" ) button" ).removeClass("done").addClass("active");
@@ -630,8 +636,6 @@
 	        	}
 	        	return form.valid();	
 	        }
-
-	        
 	    },
 	    onFinishing: function (event, currentIndex)
 	    {

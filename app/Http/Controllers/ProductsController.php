@@ -77,7 +77,7 @@ class ProductsController extends Controller
         $currentUser = Auth::user();
 
         if($currentUser){
-            $select = array("stels.id", "stels.name","stels.price","stels.code","stels.attachment","stels_sales.invoice"); 
+            $select = array("stels.id", "stels.name","stels.price","stels.code","stels.attachment","stels_sales.invoice","stels_sales.payment_status"); 
             $STELSales = STELSalesDetail::select($select)->where("stels_sales_id",$id)
                         ->join("stels_sales","stels_sales.id","=","stels_sales_detail.stels_sales_id")
                         ->join("stels","stels.id","=","stels_sales_detail.stels_id")

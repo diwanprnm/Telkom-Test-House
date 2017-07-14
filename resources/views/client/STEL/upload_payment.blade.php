@@ -42,8 +42,8 @@
 									<tr>
 										<th colspan="3">
 										<input class="data-upload-pembayaran" id="data-upload-pembayaran" name="filePembayaran" type="file" accept="application/pdf,image/*" required>
-									 	<input type="hidden" name="hide_file_pembayaran" id="hide_file_pembayaran" value="<?php echo $data->attachment?>"/>
-									 	<div id="file-pembayaran"><?php echo $data->attachment ?></div>
+									 	<!-- <input type="hidden" name="hide_file_pembayaran" id="hide_file_pembayaran" value="<?php // echo $data->attachment?>"/> 
+									 	<div id="file-pembayaran"><?php // echo $data->attachment ?></div> -->
 									 	</th>
 									</tr>
 									 
