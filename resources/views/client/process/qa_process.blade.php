@@ -90,7 +90,7 @@
 									<div class="form-group">
 										<label for="f1-nama-pemohon">{{ trans('translate.service_application_name') }}</label>
 										<input type="text" name="f1-nama-pemohon" placeholder="John Doe"   id="f1-nama-pemohon" value="{{$userData->namaPemohon}}" readonly>
-									</div>
+									</div> 
 									<div class="form-group">
 										<label for="f1-alamat-pemohon">{{ trans('translate.service_application_address') }}</label>
 										<input type="text" name="f1-alamat-pemohon" placeholder="Jln. Bandung" id="f1-alamat-pemohon" readonly value="{{$userData->alamatPemohon}}">
@@ -206,8 +206,9 @@
 									</div>
 									<div class="form-group">
 										<label class="sr-only" for="f1-tgl-siupp">{{ trans('translate.service_upload_siupp_date') }}</label>
-										<input type="hidden" name="f1-tgl-siupp" placeholder="{{ trans('translate.service_upload_siupp_date') }}" class="data-upload-berkas f1-tgl-siupp form-control input-submit" id="f1-tgl-siupp" readonly>
-										<div class="col-xs-1 selectContainer">
+										
+										<input type="text" name="f1-tgl-siupp" placeholder="{{ trans('translate.service_upload_siupp_date') }}" class="data-upload-berkas datepicker f1-tgl-siupp  input-submit" id="f1-tgl-siupp" value="{{$userData->tglSIUPP}}">
+										<!-- <div class="col-xs-1 selectContainer">
 											 <select name="daySIUPP" id="daySIUPP" class="form-control" placeholder="Day" style="width:auto;" onchange="setDays(monthSIUPP,this,yearSIUPP,1)">
 												@for($i = 1;$i <= 31; $i++)
 													<?php
@@ -245,13 +246,13 @@
 													@endif
 												@endfor
 											</select>
-										</div>
+										</div> -->
 									</div>
-									<div class="form-group col-xs-12" style="margin-top:35px">
+									<div class="form-group  " style="margin-top:35px">
 										<label>{{ trans('translate.service_upload_certificate') }}<span class="text-danger">*</span></label>
 										<input type="text" name="f1-sertifikat-sistem-mutu" placeholder="{{ trans('translate.service_upload_certificate') }}" id="f1-sertifikat-sistem-mutu" value="{{$userData->noSertifikat}}">
 									</div>
-									<div class="form-group col-xs-12" style="margin-bottom:0.01%">
+									<div class="form-group  " style="margin-bottom:0.01%">
 										<label>{{ trans('translate.service_upload_certificate_file') }}<span class="text-danger">*</span></label>
 										<input   id="fileInput-lampiran" name="fuploadlampiran" type="file" accept="application/pdf,image/*">
 										<input type="hidden" name="hide_sertifikat_file" id="hide_sertifikat_file" value="{{$userData->fileSertifikat}}"/>
@@ -262,8 +263,8 @@
 									</div>
 									<div class="form-group">
 										<label class="sr-only" for="f1-batas-waktu">{{ trans('translate.service_upload_certificate_date') }}</label>
-										<input type="hidden" name="f1-batas-waktu" placeholder="{{ trans('translate.service_upload_certificate_date') }}" class="data-upload-berkas f1-batas-waktu form-control input-submit" id="f1-batas-waktu" readonly>
-										<div class="col-xs-1 selectContainer">
+										<input type="text" name="f1-batas-waktu" placeholder="{{ trans('translate.service_upload_certificate_date') }}" class="datepicker data-upload-berkas f1-batas-waktu  input-submit" id="f1-batas-waktu" value="{{$userData->tglSertifikat}}">
+										<!-- <div class="col-xs-1 selectContainer">
 											 <select name="daySerti" id="daySerti" class="form-control" style="width:auto;"  " placeholder="Day" onchange="setDays(monthSerti,this,yearSerti,0)">
 												@for($i = 1;$i <= 31; $i++)
 													<?php
@@ -301,9 +302,9 @@
 													@endif
 												@endfor
 											</select>
-										</div>
+										</div> -->
 									</div>
-									<div class="form-group col-xs-12" style="margin-top:35px">
+									<div class="form-group  " style="margin-top:35px">
 										<label>{{ trans('translate.service_upload_npwp') }}<span class="text-danger">*</span></label>
 										<input class="data-upload-berkas f1-file-NPWP" id="fileInput-NPWP" name="fuploadnpwp" type="file" accept="application/pdf,image/*">
 										<input type="hidden" name="hide_npwp_file" id="hide_npwp_file" value="{{$userData->fileNPWP}}"/>
@@ -312,7 +313,7 @@
 											*ukuran file maksimal 2 mb
 										</div>
 									</div>
-									<div class="form-group col-xs-12">
+									<div class="form-group  ">
 										<label>{{ trans('translate.service_upload_reference_test') }}<span class="text-danger">*</span></label>
 										<input class="data-upload-berkas f1-file-ref-uji required" id="fileInput-ref-uji" name="fuploadrefuji" type="file" accept="application/pdf,image/*">
 										<div id="ref-uji-file"></div>
@@ -321,7 +322,7 @@
 										</div>
 									</div>
 									<div class="dv-srt-dukungan-prinsipal">
-										<div class="form-group col-xs-12">
+										<div class="form-group  ">
 											<label>{{ trans('translate.service_upload_support_principals') }}<span class="text-danger">*</span></label>
 											<input class="data-upload-berkas f1-file-prinsipal required" id="fileInput-prinsipal" name="fuploadprinsipal" type="file" accept="application/pdf,image/*" >
 											<div id="prinsipal-file"></div>
@@ -561,6 +562,8 @@
 				$("#f4-preview-6").html($("#hide_sertifikat_file").val());
 				$("#f4-preview-7").html($("#f1-batas-waktu").val());
 				$("#f4-preview-11").html($("#hide_npwp_file").val());
+				$("#f4-preview-file-ref-uji").html($(".f1-file-ref-uji").val());
+				$("#f4-preview-8").html($(".f1-file-prinsipal").val());
 	       	}  
 	        if(newIndex == 5){
 	        	var formData = new FormData($('#form-permohonan')[0]);
@@ -705,6 +708,12 @@
 		xhr.open('GET', url);
 		xhr.send();
 	}
+
+	$('.datepicker').datepicker({
+    format: 'yyyy-mm-dd',
+    startDate: '-3d',
+      autoclose: true,
+});
 </script>
 
   <script src="{{url('vendor/chosen/chosen.jquery.js')}}" type="text/javascript"></script> 
