@@ -92,29 +92,29 @@
 					            	<input type="hidden" name="hide_jns_pengujian" id="hide_jns_pengujian" value="4"/>
 					            	<input type="hidden" name="hide_id_user" id="hide_id_user" value="{{$userData->user_id}}">
 									<input type="hidden" name="hide_company_id" id="hide_company_id" value="{{$userData->company_id}}">
-										<div class="form-group">
+										<div class="form-group mui-textfield">
 											<label for="f1-nama-pemohon">{{ trans('translate.service_application_name') }}</label>
 											<input type="text" name="f1-nama-pemohon" placeholder="{{ trans('translate.service_application_name') }}"   id="f1-nama-pemohon" value="{{$userData->namaPemohon}}" readonly>
 										</div>
-										<div class="form-group">
+										<div class="form-group mui-textfield">
 											<label for="f1-alamat-pemohon">{{ trans('translate.service_application_address') }}</label>
 											<input type="text" name="f1-alamat-pemohon" placeholder="{{ trans('translate.service_application_address') }}" id="f1-alamat-pemohon" readonly value="{{$userData->alamatPemohon}}">
 										</div>
-										<div class="form-group">
+										<div class="form-group mui-textfield">
 											<label for="f1-telepon-pemohon">{{ trans('translate.service_application_phone') }}</label>
 											<input type="text" name="f1-telepon-pemohon" placeholder="{{ trans('translate.service_application_phone') }}"  id="f1-telepon-pemohon" readonly value="{{$userData->telpPemohon}}">
 										</div>
-										<div class="form-group">
+										<div class="form-group mui-textfield">
 											<label for="f1-faksimile-pemohon">{{ trans('translate.service_application_fax') }}</label>
 											<input type="text" name="f1-faksimile-pemohon" placeholder="{{ trans('translate.service_application_fax') }}"   id="f1-faksimile-pemohon" readonly
 											value="{{$userData->faxPemohon}}">
 										</div>
-										<div class="form-group">
+										<div class="form-group mui-textfield">
 											<label for="f1-email-pemohon">{{ trans('translate.service_application_email') }}</label>
 											<input type="text" name="f1-email-pemohon" placeholder="{{ trans('translate.service_application_email') }}" id="f1-email-pemohon" readonly
 											value="{{$userData->emailPemohon}}">
 										</div>
-										<div class="form-group">
+										<div class="form-group mui-textfield">
 											<label for="f1-email-pemohon-alternatif">{{ trans('translate.profile_email_alternate') }}</label>
 											<input type="text" name="f1-email-pemohon1" placeholder="{{ trans('translate.profile_email_alternate') }} 1"   id="f1-email-pemohon1" readonly
 											value="{{$userData->emailPemohon2}}">
@@ -125,7 +125,7 @@
 
 					            <h2>Second Step</h2>
 					            <fieldset>
-					               <div class="form-group">
+					               <div class="form-group mui-radio">
 											<label for="f1-jns-perusahaan">{{ trans('translate.service_company_type') }} : </label>
 											<!-- <input type="radio" name="jns_perusahaan"  id="rad-jns_perusahaan1" value="Agen" checked>
 											<input type="radio" name="jns_perusahaan"   id="rad-jns_perusahaan2" value="Pabrikan">
@@ -135,61 +135,61 @@
 											<input type="radio" name="jns_perusahaan" value="Pabrikan" placeholder="{{ trans('translate.service_company_branch') }}">
 											<input type="radio" name="jns_perusahaan" value="Perorangan" placeholder="{{ trans('translate.service_company_individual') }}">
 										</div>
-										<div class="form-group">
+										<div class="form-group mui-textfield">
 											<label for="f1-nama-perusahaan">{{ trans('translate.service_company_name') }}</label>
 											<input type="text" name="f1-nama-perusahaan" placeholder="PT. Maju Jaya" id="f1-nama-perusahaan" readonly value="{{$userData->namaPerusahaan}}">
 										</div>
-										<div class="form-group">
+										<div class="form-group mui-textfield">
 											<label for="f1-alamat-perusahaan">{{ trans('translate.service_company_address') }}</label>
 											<input type="text" name="f1-alamat-perusahaan" placeholder="Jln. Bandung" id="f1-alamat-perusahaan" readonly value="{{$userData->alamatPerusahaan}}">
 										</div>
-										<div class="form-group">
+										<div class="form-group mui-textfield">
 											<label for="f1-telepon-perusahaan">{{ trans('translate.service_company_phone') }}</label>
 											 <input type="text" name="f1-telepon-perusahaan" placeholder="022123456"  id="f1-telepon-perusahaan" readonly value="{{$userData->telpPerusahaan}}">
 										</div>
-										<div class="form-group">
+										<div class="form-grou mui-textfieldp">
 											<label for="f1-faksimile-perusahaan">{{ trans('translate.service_company_fax') }}</label>
 											 <input type="text" name="f1-faksimile-perusahaan" placeholder="022123456"  id="f1-faksimile-perusahaan" readonly
 											  value="{{$userData->faxPerusahaan}}">
 										</div>
-										<div class="form-group">
+										<div class="form-group mui-textfield">
 											<label for="f1-email-perusahaan">{{ trans('translate.service_company_email') }}</label>
 											 <input type="text" name="f1-email-perusahaan" placeholder="company@mail.com" id="f1-email-perusahaan" readonly
 											  value="{{$userData->emailPerusahaan}}">
 										</div>
-										<div class="form-group" style="margin-top:-30px; margin-bottom:30px; height:25px; font-size: 80%;">
+										<div class="form-grou mui-textfieldp" style="margin-top:-30px; margin-bottom:30px; height:25px; font-size: 80%;">
 											{{ trans('translate.service_company_confirm') }}
 										</div> 
 					            </fieldset>
 
 					            <h2>Third Step</h2>
 					            <fieldset> 
-					              		<div class="form-group">
+					              		<div class="form-group mui-textfield">
 											<label for="f1-nama-perangkat">{{ trans('translate.service_device_equipment') }} *</label>
 											<input type="text" name="f1-nama-perangkat" placeholder="Laptop/Phone, Etc." id="f1-nama-perangkat" class="required">
 										</div>
-										<div class="form-group">
+										<div class="form-group mui-textfield">
 											<label for="f1-merek-perangkat">{{ trans('translate.service_device_mark') }} *</label>
 											<input type="text" name="f1-merek-perangkat" placeholder="{{ trans('translate.service_device_mark') }}"  id="f1-merek-perangkat" class="required">
 										</div>
-										<div class="form-group">
+										<div class="form-group mui-textfield">
 											<label for="f1-kapasitas-perangkat">{{ trans('translate.service_device_capacity') }} *</label>
 											<input type="text" name="f1-kapasitas-perangkat" placeholder="Samsung/Huawei/ Etc."   id="f1-kapasitas-perangkat" class="required">
 										</div>
-										<div class="form-group">
+										<div class="form-group mui-textfield">
 											<label for="f1-pembuat-perangkat">{{ trans('translate.service_device_manufactured_by') }} *</label>
 											<input type="text" name="f1-pembuat-perangkat" placeholder="Jakarta" id="f1-pembuat-perangkat" class="required">
 										</div>
-										<div class="form-group">
+										<div class="form-group mui-textfield">
 											<label for="f1-serialNumber-perangkat">{{ trans('translate.service_device_serial_number') }} *</label>
 											<input type="text" name="f1-serialNumber-perangkat" placeholder="123456789456"  id="f1-serialNumber-perangkat" class="required">
 										</div>
-										<div class="form-group">
+										<div class="form-group mui-textfield">
 											<label for="f1-model-perangkat">{{ trans('translate.service_device_model') }} *</label>
 											<input type="text" name="f1-model-perangkat" placeholder="L123456"   id="f1-model-perangkat" class="required">
 										</div>
 										<input type="hidden"   id="f1-fjns-referensi-perangkat" name="f1-jns-referensi-perangkat" value='0'> 
-										 <div class="form-group txt-ref-perangkat">
+										 <div class="form-group mui-textfield txt-ref-perangkat">
 											<label for="f1-referensi-perangkat">{{ trans('translate.service_device_test_reference') }} *</label>
 											<input type="text" name="f1-referensi-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}"  id="f1-referensi-perangkat" class="required">
 										</div>
@@ -197,7 +197,7 @@
 
 					            <h2>Forth Step</h2>
 					            <fieldset>
-					                <div class="form-group">
+					                <div class="form-group mui-textfield">
 											<!-- <label>{{ trans('translate.service_upload_siupp') }}<span class="text-danger">*</span></label> -->
 											<input   id="fileInput-SIUPP" name="fuploadsiupp" type="file" accept="application/pdf,image/*">
 											<input type="hidden" name="hide_siupp_file" id="hide_siupp_file" value="{{$userData->fileSIUPP}}"/>
@@ -206,15 +206,15 @@
 												*ukuran file maksimal 2 mb
 											</div>
 										</div>
-										<div class="form-group" style="margin-bottom:0.01%">
+										<div class="form-group mui-textfield" style="margin-bottom:0.01%">
 											<label class="sr-only" for="f1-no-siupp">{{ trans('translate.service_upload_siupp_no') }}</label>
 											<input type="text" name="f1-no-siupp" placeholder="{{ trans('translate.service_upload_siupp_no') }}"   id="f1-no-siupp" value="{{$userData->noSIUPP}}">
 										</div>
-										<div class="form-group">
+										<div class="form-group mui-select">
 											<label class="sr-only" for="f1-tgl-siupp">{{ trans('translate.service_upload_siupp_date') }}</label>
 											<input type="hidden" name="f1-tgl-siupp" placeholder="{{ trans('translate.service_upload_siupp_date') }}" class="data-upload-berkas f1-tgl-siupp form-control input-submit" id="f1-tgl-siupp" readonly>
 											<div class="col-xs-1 selectContainer">
-												 <select name="daySIUPP" id="daySIUPP" class="form-control" placeholder="Day" style="width:auto;" onchange="setDays(monthSIUPP,this,yearSIUPP,1)">
+												 <select name="daySIUPP" id="daySIUPP" placeholder="Day" style="width:auto;" onchange="setDays(monthSIUPP,this,yearSIUPP,1)">
 													@for($i = 1;$i <= 31; $i++)
 														<?php
 															if($i < 10){
@@ -226,7 +226,7 @@
 												</select>
 											</div>
 											<div class="col-xs-2 selectContainer">
-											 	 <select name="monthSIUPP" id="monthSIUPP" class="form-control" " placeholder="Month" style="width:auto;" onchange="setDays(this,daySIUPP,yearSIUPP,1)">
+											 	 <select name="monthSIUPP" id="monthSIUPP"  placeholder="Month" style="width:auto;" onchange="setDays(this,daySIUPP,yearSIUPP,1)">
 													<option value="01">January</option>
 													<option value="02">February</option>
 													<option value="03">March</option>
@@ -242,7 +242,7 @@
 												</select>
 											</div>
 											<div class="col-xs-2 selectContainer">
-											 	<select name="yearSIUPP" id="yearSIUPP" class="form-control" style="width:auto;" " placeholder="Year" onchange="setDays(monthSIUPP,daySIUPP,this,1)">
+											 	<select name="yearSIUPP" id="yearSIUPP" style="width:auto;" placeholder="Year" onchange="setDays(monthSIUPP,daySIUPP,this,1)">
 													@for($i = date('Y')+100;$i >= 1900; $i--)
 														@if($i == date('Y'))
 															<option value="{{$i}}" selected>{{$i}}</option>
@@ -253,11 +253,11 @@
 												</select>
 											</div>
 										</div>
-										<div class="form-group col-xs-12" style="margin-top:35px">
+										<div class="form-group mui-textfield col-xs-12" style="margin-top:35px">
 											<label>{{ trans('translate.service_upload_certificate') }}<span class="text-danger">*</span></label>
 											<input type="text" name="f1-sertifikat-sistem-mutu" placeholder="{{ trans('translate.service_upload_certificate') }}" id="f1-sertifikat-sistem-mutu" value="{{$userData->noSertifikat}}">
 										</div>
-										<div class="form-group col-xs-12" style="margin-bottom:0.01%">
+										<div class="form-group mui-textfield col-xs-12" style="margin-bottom:0.01%">
 											<label>{{ trans('translate.service_upload_certificate_file') }}<span class="text-danger">*</span></label>
 											<input   id="fileInput-lampiran" name="fuploadlampiran" type="file" accept="application/pdf,image/*">
 											<input type="hidden" name="hide_sertifikat_file" id="hide_sertifikat_file" value="{{$userData->fileSertifikat}}"/>
@@ -266,11 +266,11 @@
 												*ukuran file maksimal 2 mb
 											</div>
 										</div>
-										<div class="form-group">
+										<div class="form-group mui-select">
 											<label class="sr-only" for="f1-batas-waktu">{{ trans('translate.service_upload_certificate_date') }}</label>
 											<input type="hidden" name="f1-batas-waktu" placeholder="{{ trans('translate.service_upload_certificate_date') }}" class="data-upload-berkas f1-batas-waktu form-control input-submit" id="f1-batas-waktu" readonly>
 											<div class="col-xs-1 selectContainer">
-												 <select name="daySerti" id="daySerti" class="form-control" style="width:auto;"  " placeholder="Day" onchange="setDays(monthSerti,this,yearSerti,0)">
+												 <select name="daySerti" id="daySerti" style="width:auto;"  placeholder="Day" onchange="setDays(monthSerti,this,yearSerti,0)">
 													@for($i = 1;$i <= 31; $i++)
 														<?php
 															if($i < 10){
@@ -282,7 +282,7 @@
 												</select>
 											</div>
 											<div class="col-xs-2 selectContainer">
-											 	<select name="monthSerti" id="monthSerti" class="form-control" style="width:auto;"  " placeholder="Month" onchange="setDays(this,daySerti,yearSerti,0)">
+											 	<select name="monthSerti" id="monthSerti" style="width:auto;"  placeholder="Month" onchange="setDays(this,daySerti,yearSerti,0)">
 													<option value="01">January</option>
 													<option value="02">February</option>
 													<option value="03">March</option>
@@ -298,7 +298,7 @@
 												</select>
 											</div>
 											<div class="col-xs-2 selectContainer">
-												 <select name="yearSerti" id="yearSerti" class="form-control" style="width:auto;" " placeholder="Year" onchange="setDays(monthSerti,daySerti,this,0)">
+												 <select name="yearSerti" id="yearSerti" style="width:auto;" placeholder="Year" onchange="setDays(monthSerti,daySerti,this,0)">
 													@for($i = date('Y')+100;$i >= 1900; $i--)
 														@if($i == date('Y'))
 															<option value="{{$i}}" selected>{{$i}}</option>
@@ -309,7 +309,7 @@
 												</select>
 											</div>
 										</div>
-										<div class="form-group col-xs-12" style="margin-top:35px">
+										<div class="form-group mui-textfield col-xs-12" style="margin-top:35px">
 											<label>{{ trans('translate.service_upload_npwp') }}<span class="text-danger">*</span></label>
 											<input class="data-upload-berkas f1-file-NPWP" id="fileInput-NPWP" name="fuploadnpwp" type="file" accept="application/pdf,image/*">
 											<input type="hidden" name="hide_npwp_file" id="hide_npwp_file" value="{{$userData->fileNPWP}}"/>
@@ -318,7 +318,7 @@
 												*ukuran file maksimal 2 mb
 											</div>
 										</div>
-										<div class="form-group col-xs-12">
+										<div class="form-group mui-textfield col-xs-12">
 											<label>{{ trans('translate.service_upload_reference_test') }}<span class="text-danger">*</span></label>
 											<input class="data-upload-berkas f1-file-ref-uji required" id="fileInput-ref-uji" name="fuploadrefuji" type="file" accept="application/pdf,image/*" >
 											<div id="ref-uji-file"></div>
@@ -483,7 +483,7 @@
 											</div>
 										</div>
 										<div class="f1-buttons">
-											<button type="button" class="btn btn-next upload_later">{{ trans('translate.service_upload_later') }}</button>
+											<button type="button" class="button button-3d btn-sky btn-next upload_later">{{ trans('translate.service_upload_later') }}</button>
 											<div id="attachment-file">
 												{{ trans('translate.service_upload_later_alt') }}
 											</div>
@@ -492,7 +492,7 @@
 								<h2>Forth Step</h2>
 					        	<fieldset> 
 									<h4 class="judulselesai">{{ trans('translate.service_thanks') }}</h4> 
-									<a class="btn btn-success" href="<?php echo url('/process');?>">Finish</a>
+									<a class="button button-3d btn-sky" href="<?php echo url('/process');?>">Finish</a>
 								</fieldset>
 						
 				        </div>
