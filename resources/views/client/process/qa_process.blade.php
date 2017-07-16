@@ -89,8 +89,8 @@
 								<input type="hidden" name="hide_company_id" id="hide_company_id" value="{{$userData->company_id}}">
 									<div class="form-group">
 										<label for="f1-nama-pemohon">{{ trans('translate.service_application_name') }}</label>
-										<input type="text" name="f1-nama-pemohon" placeholder="John Doe" id="f1-nama-pemohon" value="{{$userData->namaPemohon}}" readonly>
-									</div>
+										<input type="text" name="f1-nama-pemohon" placeholder="John Doe"   id="f1-nama-pemohon" value="{{$userData->namaPemohon}}" readonly>
+									</div> 
 									<div class="form-group">
 										<label for="f1-alamat-pemohon">{{ trans('translate.service_application_address') }}</label>
 										<input type="text" name="f1-alamat-pemohon" placeholder="Jln. Bandung" id="f1-alamat-pemohon" readonly value="{{$userData->alamatPemohon}}">
@@ -192,7 +192,7 @@
 				            <h2>Forth Step</h2>
 				            <fieldset>
 				                <div class="form-group">
-										<label>{{ trans('translate.service_upload_siupp') }}<span class="text-danger">*</span></label>
+										<!-- <label>{{ trans('translate.service_upload_siupp') }}<span class="text-danger">*</span></label> -->
 										<input   id="fileInput-SIUPP" name="fuploadsiupp" type="file" accept="application/pdf,image/*">
 										<input type="hidden" name="hide_siupp_file" id="hide_siupp_file" value="{{$userData->fileSIUPP}}"/>
 										<a id="siupp-file" class="btn btn-link" style="color:black !important;" >{{$userData->fileSIUPP}}</a>
@@ -201,13 +201,14 @@
 										</div>
 									</div>
 									<div class="form-group" style="margin-bottom:0.01%">
-										<label>{{ trans('translate.service_upload_siupp_no') }}</label>
+										<label class="sr-only" for="f1-no-siupp">{{ trans('translate.service_upload_siupp_no') }}</label>
 										<input type="text" name="f1-no-siupp" placeholder="{{ trans('translate.service_upload_siupp_no') }}"   id="f1-no-siupp" value="{{$userData->noSIUPP}}">
 									</div>
 									<div class="form-group">
 										<label class="sr-only" for="f1-tgl-siupp">{{ trans('translate.service_upload_siupp_date') }}</label>
-										<input type="hidden" name="f1-tgl-siupp" placeholder="{{ trans('translate.service_upload_siupp_date') }}" class="data-upload-berkas f1-tgl-siupp form-control input-submit" id="f1-tgl-siupp" readonly>
-										<div class="col-xs-1 selectContainer">
+										
+										<input type="text" name="f1-tgl-siupp" placeholder="{{ trans('translate.service_upload_siupp_date') }}" class="data-upload-berkas datepicker f1-tgl-siupp  input-submit" id="f1-tgl-siupp" value="{{$userData->tglSIUPP}}">
+										<!-- <div class="col-xs-1 selectContainer">
 											 <select name="daySIUPP" id="daySIUPP" class="form-control" placeholder="Day" style="width:auto;" onchange="setDays(monthSIUPP,this,yearSIUPP,1)">
 												@for($i = 1;$i <= 31; $i++)
 													<?php
@@ -245,13 +246,13 @@
 													@endif
 												@endfor
 											</select>
-										</div>
+										</div> -->
 									</div>
-									<div class="form-group col-xs-12" style="margin-top:35px">
+									<div class="form-group  " style="margin-top:35px">
 										<label>{{ trans('translate.service_upload_certificate') }}<span class="text-danger">*</span></label>
 										<input type="text" name="f1-sertifikat-sistem-mutu" placeholder="{{ trans('translate.service_upload_certificate') }}" id="f1-sertifikat-sistem-mutu" value="{{$userData->noSertifikat}}">
 									</div>
-									<div class="form-group col-xs-12" style="margin-bottom:0.01%">
+									<div class="form-group  " style="margin-bottom:0.01%">
 										<label>{{ trans('translate.service_upload_certificate_file') }}<span class="text-danger">*</span></label>
 										<input   id="fileInput-lampiran" name="fuploadlampiran" type="file" accept="application/pdf,image/*">
 										<input type="hidden" name="hide_sertifikat_file" id="hide_sertifikat_file" value="{{$userData->fileSertifikat}}"/>
@@ -262,8 +263,8 @@
 									</div>
 									<div class="form-group">
 										<label class="sr-only" for="f1-batas-waktu">{{ trans('translate.service_upload_certificate_date') }}</label>
-										<input type="hidden" name="f1-batas-waktu" placeholder="{{ trans('translate.service_upload_certificate_date') }}" class="data-upload-berkas f1-batas-waktu form-control input-submit" id="f1-batas-waktu" readonly>
-										<div class="col-xs-1 selectContainer">
+										<input type="text" name="f1-batas-waktu" placeholder="{{ trans('translate.service_upload_certificate_date') }}" class="datepicker data-upload-berkas f1-batas-waktu  input-submit" id="f1-batas-waktu" value="{{$userData->tglSertifikat}}">
+										<!-- <div class="col-xs-1 selectContainer">
 											 <select name="daySerti" id="daySerti" class="form-control" style="width:auto;"  " placeholder="Day" onchange="setDays(monthSerti,this,yearSerti,0)">
 												@for($i = 1;$i <= 31; $i++)
 													<?php
@@ -301,9 +302,9 @@
 													@endif
 												@endfor
 											</select>
-										</div>
+										</div> -->
 									</div>
-									<div class="form-group col-xs-12" style="margin-top:35px">
+									<div class="form-group  " style="margin-top:35px">
 										<label>{{ trans('translate.service_upload_npwp') }}<span class="text-danger">*</span></label>
 										<input class="data-upload-berkas f1-file-NPWP" id="fileInput-NPWP" name="fuploadnpwp" type="file" accept="application/pdf,image/*">
 										<input type="hidden" name="hide_npwp_file" id="hide_npwp_file" value="{{$userData->fileNPWP}}"/>
@@ -312,7 +313,7 @@
 											*ukuran file maksimal 2 mb
 										</div>
 									</div>
-									<div class="form-group col-xs-12">
+									<div class="form-group  ">
 										<label>{{ trans('translate.service_upload_reference_test') }}<span class="text-danger">*</span></label>
 										<input class="data-upload-berkas f1-file-ref-uji required" id="fileInput-ref-uji" name="fuploadrefuji" type="file" accept="application/pdf,image/*">
 										<div id="ref-uji-file"></div>
@@ -321,7 +322,7 @@
 										</div>
 									</div>
 									<div class="dv-srt-dukungan-prinsipal">
-										<div class="form-group col-xs-12">
+										<div class="form-group  ">
 											<label>{{ trans('translate.service_upload_support_principals') }}<span class="text-danger">*</span></label>
 											<input class="data-upload-berkas f1-file-prinsipal required" id="fileInput-prinsipal" name="fuploadprinsipal" type="file" accept="application/pdf,image/*" >
 											<div id="prinsipal-file"></div>
@@ -337,16 +338,16 @@
 				            		<input type="hidden" name="hide_cekSNjnsPengujian" id="hide_cekSNjnsPengujian">
 									<h4>{{ trans('translate.service_preview') }}</h4>
 									<h3>{{ trans('translate.service_application') }}</h3>
-									<table class="table table-striped preview-field">
+									<table class="table table-striped">
 										<tr>
 											<td>{{ trans('translate.service_application_name') }}</td>
 											<td> : </td>
-											<td colspan="6"> <div id="f1-preview-1">{{$userData->namaPemohon}}</div></td>
+											<td> <div id="f1-preview-1">{{$userData->namaPemohon}}</div></td>
 										</tr>
 										<tr>
 											<td>{{ trans('translate.service_application_address') }}</td>
 											<td> : </td>
-											<td colspan="6"> <div id="f1-preview-2">{{$userData->alamatPemohon}}</div></td>
+											<td> <div id="f1-preview-2">{{$userData->alamatPemohon}}</div></td>
 										</tr>
 										<tr>
 											<td>{{ trans('translate.service_application_phone') }}</td>
@@ -360,21 +361,21 @@
 										<tr>
 											<td>{{ trans('translate.service_application_email') }}</td>
 											<td> : </td>
-											<td colspan="6"> <div id="f1-preview-5">{{$userData->emailPemohon}}</div></td>
+											<td> <div id="f1-preview-5">{{$userData->emailPemohon}}</div></td>
 										</tr>
 									</table>
 									<h3>{{ trans('translate.service_company') }}</h3>
 									<div id="f2-preview-6"></div>
-									<table class="table table-striped preview-field">
+									<table class="table table-striped">
 										<tr>
 											<td>{{ trans('translate.service_company_name') }}</td>
 											<td> : </td>
-											<td colspan="6"> <div id="f2-preview-1">{{$userData->namaPerusahaan}}</div></td>
+											<td> <div id="f2-preview-1">{{$userData->namaPerusahaan}}</div></td>
 										</tr>
 										<tr>
 											<td>{{ trans('translate.service_company_address') }}</td>
 											<td> : </td>
-											<td colspan="6"> <div id="f2-preview-2">{{$userData->alamatPerusahaan}}</div></td>
+											<td> <div id="f2-preview-2">{{$userData->alamatPerusahaan}}</div></td>
 										</tr>
 										<tr>
 											<td>{{ trans('translate.service_company_phone') }}</td>
@@ -388,17 +389,17 @@
 										<tr>
 											<td>{{ trans('translate.service_company_email') }}</td>
 											<td> : </td>
-											<td colspan="6"> <div id="f2-preview-5">{{$userData->emailPerusahaan}}</div></td>
+											<td> <div id="f2-preview-5">{{$userData->emailPerusahaan}}</div></td>
 										</tr>
 									</table>
 									<h3 id="f5-jns-pengujian" class="f5-jns-pengujian">{{ trans('translate.service_preview_exam_type') }} : QA</h3>
 									<br>
 									<h3>{{ trans('translate.service_device') }}</h3>
-									<table class="table table-striped preview-field">
+									<table class="table table-striped">
 										<tr>
 											<td>{{ trans('translate.service_device_equipment') }}</td>
 											<td> : </td>
-											<td colspan="6"> <div id="f3-preview-1"></div></td>
+											<td> <div id="f3-preview-1"></div></td>
 										</tr>
 										<tr>
 											<td>{{ trans('translate.service_device_mark') }}</td>
@@ -429,7 +430,7 @@
 										</tr>
 									</table>
 									<h3>{{ trans('translate.service_upload') }}</h3>
-									<table class="table table-striped preview-field">
+									<table class="table table-striped">
 										<tr>
 											<td>{{ trans('translate.service_upload_siupp') }}</td>
 											<td> : </td>
@@ -561,6 +562,8 @@
 				$("#f4-preview-6").html($("#hide_sertifikat_file").val());
 				$("#f4-preview-7").html($("#f1-batas-waktu").val());
 				$("#f4-preview-11").html($("#hide_npwp_file").val());
+				$("#f4-preview-file-ref-uji").html($(".f1-file-ref-uji").val());
+				$("#f4-preview-8").html($(".f1-file-prinsipal").val());
 	       	}  
 	        if(newIndex == 5){
 	        	var formData = new FormData($('#form-permohonan')[0]);
@@ -705,6 +708,12 @@
 		xhr.open('GET', url);
 		xhr.send();
 	}
+
+	$('.datepicker').datepicker({
+    format: 'yyyy-mm-dd',
+    startDate: '-3d',
+      autoclose: true,
+});
 </script>
 
   <script src="{{url('vendor/chosen/chosen.jquery.js')}}" type="text/javascript"></script> 
