@@ -13782,28 +13782,34 @@ body:not(.no-transition) #wrapper,
     padding-left: 3%;
 }
 .step{
-    padding-left:20%;
-    padding-right:20%;
+    padding-left: 6%;
+    padding-right: 2%;
 }
 
 .step-fill{
     padding:10px;
-    width: 50px;
-    height:50px;
+    width: 70px;
+    height:70px;
     border-radius:50%;
     border:2px solid grey;
     background: white;
+    font-size: 15px;
 }
 
 .number{
     position: relative;
 }
+.number p {
+    font-size: 14px;
+    width: 50px;
+    text-align: center;
+}
 .garis{
     position: absolute;
     height: 3px;
-    width: 55%;
+    width: 70%;
     margin-left: 2%;
-    margin-top: 2%;
+    margin-top: 3%;
     background: grey;
 }
 .step-fill.done {
@@ -14117,5 +14123,12 @@ body.loading .overlay {
     margin-bottom: 2%;
 }
 .done_sent {
+    text-align: center;
+}
+
+.preview-field tr td{
+	font-size: 18px;
+}
+#f5-jns-pengujian {
     text-align: center;
 }

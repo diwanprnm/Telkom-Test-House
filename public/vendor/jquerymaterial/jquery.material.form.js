@@ -18,11 +18,11 @@ $(function(){
 		    	var tagName = $(this).prop("tagName").toLowerCase();
 		    	$wrap.addClass(tagName);
 		    	
-		    	var placeholder = $(this).attr('placeholder');
-		    	if(placeholder){
-		    		$wrap.append("<label for='"+name+"'>"+placeholder+"</label>");
-		    		$(this).removeAttr('placeholder');
-		    	}
+		    	// var placeholder = $(this).attr('placeholder');
+		    	// if(placeholder){
+		    	// 	$wrap.append("<label for='"+name+"'>"+placeholder+"</label>");
+		    	// 	$(this).removeAttr('placeholder');
+		    	// }
 
 		    	addFilled($(this));
 	    	}

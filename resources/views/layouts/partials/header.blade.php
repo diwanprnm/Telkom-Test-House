@@ -132,41 +132,60 @@
               <?php
               }
               ?> 
-              <div id="top-cart" style="float:left">
-                <a href="#" id="top-cart-trigger"><i class="icon-shopping-cart"></i><span>{{Cart::count()}}</span></a>
-                 @if(Cart::count() >= 1)
-                <div class="top-cart-content">
-                    <div class="top-cart-title">
-                      <h4>{{ trans('translate.shopping_cart') }}</h4>
-                    </div>
-                   
-                    @foreach(Cart::content() as $row)
-                    <div class="top-cart-items">
-                      <div class="top-cart-item clearfix"> 
-                        <div class="top-cart-item-desc">
-                          <a href="#">{{$row->name}}</a>
-                          <span class="top-cart-item-price">Rp. {{number_format($row->price, 0, '.', ',')}}</span>
-                          <span class="top-cart-item-quantity">x {{$row->qty}}</span>
-                        </div>
-                      </div>
-                    </div>
-                    @endforeach
-                    
-                    <div class="top-cart-action clearfix">
-                      <span class="fleft top-checkout-price">Rp. {{number_format(Cart::subTotal(), 0, '.', ',')}}</span>
-                      <a class="button button-3d button-small nomargin fright" href="{{url('products')}}">{{ trans('translate.view_cart') }}</a>
-                    </div>
-                </div>
-                @endif
-              </div>
-              <li>  <a href="#" id="top-notification-trigger"><i class="icon-bell"></i><span id="notification-count">{{Cart::count()}}</span></a></li>
-             <div id="top-notification" style="float:left"> 
-                <div class="top-notification-content">
-                    <div class="top-notification-title">
-                      <h4>Notification</h4>
-                    </div> 
-                </div> 
-              </div> 
+
+              <?php
+              $currentUser = Auth::user();
+              if($currentUser){
+              ?> 
+	              <div id="top-cart" style="float:left">
+		                <a href="#" id="top-cart-trigger"><i class="icon-shopping-cart"></i><span>{{Cart::count()}}</span></a>
+		                 @if(Cart::count() >= 1)
+		                <div class="top-cart-content">
+		                    <div class="top-cart-title">
+		                      <h4>{{ trans('translate.shopping_cart') }}</h4>
+		                    </div>
+		                   
+		                    @foreach(Cart::content() as $row)
+		                    <div class="top-cart-items">
+		                      <div class="top-cart-item clearfix"> 
+		                        <div class="top-cart-item-desc">
+		                          <a href="#">{{$row->name}}</a>
+		                          <span class="top-cart-item-price">Rp. {{number_format($row->price, 0, '.', ',')}}</span>
+		                          <span class="top-cart-item-quantity">x {{$row->qty}}</span>
+		                        </div>
+		                      </div>
+		                    </div>
+		                    @endforeach
+		                    
+		                    <div class="top-cart-action clearfix">
+		                      <span class="fleft top-checkout-price">Rp. {{number_format(Cart::subTotal(), 0, '.', ',')}}</span>
+		                      <a class="button button-3d button-small nomargin fright" href="{{url('products')}}">{{ trans('translate.view_cart') }}</a>
+		                    </div>
+		                </div>
+		                @endif
+	              </div>
+	              <li>  <a href="#" id="top-notification-trigger"><i class="icon-bell"></i><span id="notification-count">{{Cart::count()}}</span></a></li>
+	             	<div id="top-notification" style="float:left"> 
+	                	<div class="top-notification-content">
+	                    <div class="top-notification-title">
+	                      <h4>Notification</h4>
+	                    </div> 
+	                	</div> 
+	              	</div> 
+              <?php   
+              }else{
+              ?>
+              	<div id="top-cart" style="float:left">
+	            </div>
+                <li></li>
+              <?php
+              }
+              ?> 
+
+
+              
+
+
             </ul>
 
         </div>
