@@ -710,10 +710,18 @@
 	}
 
 	$('.datepicker').datepicker({
-    format: 'yyyy-mm-dd',
-    startDate: '-3d',
-      autoclose: true,
-});
+	    format: 'yyyy-mm-dd',
+	    startDate: '-3d',
+	    autoclose: true,
+	});
+	$('input[type=radio][name=jns_perusahaan]').change(function() {
+        if (this.value == 'Pabrikan') {
+           $(".dv-srt-dukungan-prinsipal").hide();
+        }
+        else {
+            $(".dv-srt-dukungan-prinsipal").show();
+        }
+    });
 </script>
 
   <script src="{{url('vendor/chosen/chosen.jquery.js')}}" type="text/javascript"></script> 
