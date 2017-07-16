@@ -34,8 +34,7 @@
 									<th class="center">No</th> 
 									<th class="center">Name</th> 
 									<th class="center">Code</th>  
-									<th class="center">Price</th>
-									<th class="center">Tax</th>
+									<th class="center">Price</th> 
 									<th class="center">Total</th>
 								</tr>
 							</thead>
@@ -47,16 +46,20 @@
 										<td class="center">{{ $item->name }}</td>
 										<td class="center">{{ $item->code }}</td>
 										<td class="center"><?php echo number_format($item->price, 0, '.', ','); ?></td>
-										<td class="center"><?php echo number_format($item->price * (config("cart.tax")/100), 0, '.', ','); ?></td>
-										<td class="center"><?php echo number_format($item->price + $item->price * (config("cart.tax")/100), 0, '.', ','); ?></td>
+										<td class="center"><?php echo number_format($item->price * (config("cart.tax")/100), 0, '.', ','); ?></td> 
 									</tr> 
-									<?php $total +=$item->price + $item->price * (config("cart.tax")/100); ?>
+									<?php $total +=$item->price; ?>
 								@endforeach
                             </tbody>
                             <tfoot>
+                           		<tr>
+                            		<td colspan="4" align="right"> Tax</td>
+                            		<td align="center"><?php $tax =  $total * (config("cart.tax")/100);
+                            			echo	number_format($tax, 0, '.', ',');?></td>
+                            	</tr>
                             	<tr>
-                            		<td colspan="5" align="right"> Total</td>
-                            		<td align="center"><?php echo number_format($total, 0, '.', ',');?></td>
+                            		<td colspan="4" align="right"> Total</td>
+                            		<td align="center"><?php echo number_format($total+$tax, 0, '.', ',');?></td>
                             	</tr>
                             </tfoot>
 						</table>

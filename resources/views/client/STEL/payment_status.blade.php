@@ -43,9 +43,9 @@
 											<th>Payment Code</th> 
 											<th>Total</th> 
 											<th>Status</th>
-											<th>{{ trans('translate.stel_payment_status_complete_time') }}</th>  
-											<th>Detail</th>
+											<th>{{ trans('translate.stel_payment_status_complete_time') }}</th>   
 											<th>Upload</th>
+											<th>Detail</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -80,9 +80,9 @@
 														?>
 
 													</td>
-													<td>{{$stel->update_at}}</td> 
-													<td><a href="{!! url("payment_detail/{$stel->id}") !!}">Detail</a></td> 
+													<td>{{$stel->update_at}}</td>  
 													<td><a href="{!! url("upload_payment/{$stel->id}") !!}">Upload</a></td> 
+													<td><a href="{!! url("payment_detail/{$stel->id}") !!}">Detail</a></td> 
 												</tr> 
 											@endforeach
 

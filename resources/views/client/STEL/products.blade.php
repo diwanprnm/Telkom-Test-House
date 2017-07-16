@@ -120,7 +120,7 @@
 					<button class="btn btn-transparent btn-xs pull-right" tooltip-placement="top" tooltip="Remove" onclick="return confirm('{{ trans('translate.stel_delete_item') }}')"><i class="fa fa-times fa fa-white"></i></button>
 					{!! Form::close() !!}
 					<p>{{ trans('translate.stel_name') }} : {{$row->name}}</p>
-					<p>{{ trans('translate.stel_price') }} : {{ trans('translate.stel_rupiah') }} <?php echo number_format($row->price); ?></p>
+					<p>{{ trans('translate.stel_price') }} : {{ trans('translate.stel_rupiah') }} <?php echo number_format($row->qty*$row->price); ?></p>
 				</div>
 			 	@endforeach
 				

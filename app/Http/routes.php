@@ -1333,6 +1333,7 @@ class WatermakStel extends FPDI
 Route::get('cetakstel', function(Illuminate\Http\Request $request){
 	$attach = $request->attach;
 	$invoice_id = $request->invoice_id;
+	$company_name = $request->company_name;
 	// $pdf = new Fpdf('P','in',array(8.5,11)); 
 	$pdf = new WatermakStel();
  	$path = public_path('media/stel/'.$attach); 
@@ -1350,7 +1351,7 @@ Route::get('cetakstel', function(Illuminate\Http\Request $request){
 		$pdf->SetTextColor(255,0,0);
 		$pdf->SetFont('helvetica','I',18);
 		//Page number
-		$pdf->Cell(0,0.1,'PT. PERCOBAAN INDONESIA',0,0,'C'); 
+		$pdf->Cell(0,0.1,$company_name,0,0,'C'); 
 		$pdf->SetY(266);
 		$pdf->SetTextColor(255,0,0);
 		//Arial italic 8

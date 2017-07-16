@@ -36,8 +36,7 @@
 								<th>No</th>
 								<th>{{ trans('translate.stel_name') }}</th>
 								<th>{{ trans('translate.stel_code') }}</th>
-								<th>{{ trans('translate.stel_price') }}</th> 
-								<th>{{ trans('translate.stel_tax') }}</th>  
+								<th>{{ trans('translate.stel_price') }}</th>  
 								<th>{{ trans('translate.stel_price_total') }}</th>  
 								<th>#</th>
 							</tr>
@@ -49,7 +48,7 @@
 								<td>{{$stel->name}}</td>
 								<td>{{$stel->code}}</td> 
 								<td>{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($stel->price), 0, '.', ','); ?></td>
-								<td>{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($stel->price * (config("cart.tax")/100)), 0, '.', ','); ?></td>
+							 
 
 								>
 								<td>{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($stel->price + ($stel->price * (config("cart.tax")/100))), 0, '.', ','); ?></td>
@@ -58,7 +57,7 @@
 								// if($stel->attachment !="" && $stel->payment_status == 1){
 								if($stel->attachment !="" && $stel->payment_status == 1){
 								?>
-								<td><a href="{!! url("cetakstel?invoice_id={$stel->invoice}&attach={$stel->attachment}") !!}">Download File</a></td>
+								<td><a target="_blank" href="{!! url("cetakstel?invoice_id={$stel->invoice}&attach={$stel->attachment}&company_name={$stel->company_name}") !!}">Download File</a></td>
 								<?php }else{?>
 								<td> Dokumen Tidak Tersedia</td>
 								<?php }?>

@@ -25,7 +25,7 @@
 	        <div class="row">
 		        <div class="col-md-6">
 		        <a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><i class="ti-filter"></i> Filter</a>
-					<a class="btn btn-info pull-left" href="{{URL::to('sales/excel')}}"> Export to Excel</a>
+					<!-- <a class="btn btn-info pull-left" href="{{URL::to('sales/excel')}}"> Export to Excel</a> -->
 		        </div>
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table">

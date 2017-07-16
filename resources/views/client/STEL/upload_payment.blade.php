@@ -23,14 +23,16 @@
 	============================================= -->
 	<section id="content">
 
-		<div class="content-wrap">
-
+		<div class="content-wrap"> 
 
 			<div class="container clearfix"> 
 				<form id="form" class="smart-wizard" role="form" method="POST" action="{{ url('/pembayaranstel') }}" enctype="multipart/form-data">
 					{!! csrf_field() !!}
 					<input type="hidden" name="stelsales_id" id="stelsales_id" value="<?php echo $id ?>"/>  
 					<div id="wizard" class="swMain">
+						@if (Session::has('message'))
+				<div class="alert alert-info">{{ Session::get('message') }}</div>
+			@endif
 						<div class="form-group">
 							<table class="table table-condensed">
 								<thead>
@@ -50,8 +52,11 @@
 							</table>
 						</div>
 						<div class="row">
-							<div class=" pull-right col-xs-12">
-								<button type="submit" class="btn btn-wide btn-danger pull-right col-xs-12 col-lg-1" style="margin-bottom:10px;">
+							<div class="col-md-6">
+								<a class="button button-3d btn-sky nomargin" href="{{url('/payment_status')}}">{{ trans('translate.back') }}</a>
+							</div>
+							<div class=" pull-right col-md-6">
+								<button type="submit" class="btn btn-wide btn-danger pull-right" style="margin-bottom:10px;">
 									<i class="fa fa-btn"></i> {{ trans('translate.examination_upload_payment_file') }}
 								</button>
 							</div>

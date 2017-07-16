@@ -59,7 +59,7 @@ class ProductsController extends Controller
                 $STELSales->where("invoice",$search);
                 $STELSales->orWhere("payment_code",$search);
             }
-            
+            $STELSales = $STELSales->orderBy('updated_at', 'desc');
             $STELSales = $STELSales->get();
             $page = "payment_status";
             return view('client.STEL.payment_status') 
@@ -77,10 +77,12 @@ class ProductsController extends Controller
         $currentUser = Auth::user();
 
         if($currentUser){
-            $select = array("stels.id", "stels.name","stels.price","stels.code","stels.attachment","stels_sales.invoice","stels_sales.payment_status"); 
+            $select = array("stels.id", "stels.name","stels.price","stels.code","stels.attachment","stels_sales.invoice","stels_sales.payment_status","companies.name as company_name"); 
             $STELSales = STELSalesDetail::select($select)->where("stels_sales_id",$id)
                         ->join("stels_sales","stels_sales.id","=","stels_sales_detail.stels_sales_id")
                         ->join("stels","stels.id","=","stels_sales_detail.stels_id")
+                         ->join("users","users.id","=","stels_sales.user_id")
+                         ->join("companies","companies.id","=","users.company_id")
                         ->get();
             $page = "payment_detail";
             return view('client.STEL.payment_detail') 
