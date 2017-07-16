@@ -41,13 +41,16 @@ class CustomerAPIController extends AppBaseController
 				->where($whereID); 
 				
 		if(isset($param->find)){
-			$result = $result->where("users.name", "LIKE", '%'.$param->find .'%')
+			$result->where(function($q) use ($param){
+				return $q->where("users.name", "LIKE", '%'.$param->find .'%')
 							->orWhere("users.address", "LIKE", '%'.$param->find .'%')
 							->orWhere("users.email", "LIKE", '%'.$param->find .'%')
 							->orWhere("users.phone_number", "LIKE", '%'.$param->find .'%')
 							->orWhere("companies.fax", "LIKE", '%'.$param->find .'%')
 							->orWhere("companies.npwp_number", "LIKE", '%'.$param->find .'%')
-							->orWhere("companies.name", "LIKE", '%'.$param->find .'%');
+							->orWhere("companies.name", "LIKE", '%'.$param->find .'%')
+					;
+				});
 		}else{
 
 			if(isset($param->name)){

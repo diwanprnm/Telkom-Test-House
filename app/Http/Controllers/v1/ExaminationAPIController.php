@@ -57,7 +57,8 @@ class ExaminationAPIController extends AppBaseController
 			  END as 'step_progress'
 			",
 			"examinations.spk_code",
-			"examinations.spk_date"
+			"examinations.spk_date",
+			"examinations.is_spk_created"
 		);
 		$result = Examination::selectRaw(implode(",", $select))  
 				->join("examination_types","examinations.examination_type_id","=","examination_types.id")
@@ -182,12 +183,20 @@ class ExaminationAPIController extends AppBaseController
 			}
 			
 			if(isset($param->spk_code)){
-				$result = $result->where("examinations.spk_code", "LIKE", '%'.$param->spk_code .'%');
+				if($param->spk_code){
+					// $result = $result->where("examinations.payment_status", "=", 1);
+				}else{
+					$result = $result->where("examinations.spk_code", "LIKE", '%'.$param->spk_code .'%');
+				}
 			}
 			
 			if(isset($param->spk_date)){
 				$rawRangeDate ="date_format(examinations.spk_date,'%Y-%m-%d') = '".$param->spk_date."'";
 				$result = $result->where(\DB::raw($rawRangeDate), 1); 
+			}
+			
+			if(isset($param->is_spk_created)){
+				$result = $result->where("examinations.is_spk_created", "=", $param->is_spk_created);
 			}
 
 		}
@@ -460,6 +469,7 @@ class ExaminationAPIController extends AppBaseController
 
 		$select = array(
 			"examinations.id","examinations.cust_test_date","examinations.deal_test_date",
+			"examinations.function_test_TE as function_result","examinations.function_test_PIC",
 			"examination_labs.name as lab",
 			"examination_labs.lab_code",
 			"companies.name as company_name",
@@ -508,6 +518,9 @@ class ExaminationAPIController extends AppBaseController
 			if(isset($param->deal_test_date)){
 				$rawRangeDate ="date_format(examinations.deal_test_date,'%Y-%m-%d') = '".$param->deal_test_date."'";
 				$result = $result->where(\DB::raw($rawRangeDate), 1); 
+			}
+			if(isset($param->function_result)){
+				$result = $result->where("examinations.function_test_TE", "=", $param->function_result);
 			}
 		}
 				
@@ -574,10 +587,11 @@ class ExaminationAPIController extends AppBaseController
     {
     	$param = (object) $param->all();
 
-    	if(!empty($param->id) && !empty($param->function_test_date)){
+    	if(!empty($param->id) && !empty($param->function_test_date)&& !empty($param->function_test_pic)){
     		$examinations = Examination::find($param->id);
     		if($examinations){
 				$examinations->deal_test_date = $param->function_test_date;
+				$examinations->function_test_PIC = $param->function_test_pic;
     			if($examinations->save()){
     				return $this->sendResponse($examinations, 'Function Date Found');
     			}else{
@@ -587,7 +601,7 @@ class ExaminationAPIController extends AppBaseController
     			return $this->sendError('Success Update Function Date');
     		}
     	}else{
-    		return $this->sendError('ID Examination or Date Is Required');
+    		return $this->sendError('ID Examination or Date or PIC Is Required');
     	}
     }
 	
@@ -675,10 +689,12 @@ class ExaminationAPIController extends AppBaseController
     {
     	$param = (object) $param->all();
 
-    	if(!empty($param->id) && !empty($param->catatan)){
+    	if(!empty($param->id) && !empty($param->catatan) && !empty($param->function_result) && !empty($param->function_test_pic)){
     		$examinations = Examination::find($param->id);
     		if($examinations){
 				$examinations->catatan = $param->catatan;
+				$examinations->function_test_TE = $param->function_result;
+				$examinations->function_test_PIC = $param->function_test_pic;
     			if($examinations->save()){
     				return $this->sendResponse($examinations, 'Examination Found');
     			}else{
@@ -688,7 +704,28 @@ class ExaminationAPIController extends AppBaseController
     			return $this->sendError('Success Update');
     		}
     	}else{
-    		return $this->sendError('ID Examination or Catatan Is Required');
+    		return $this->sendError('ID Examination or Catatan or Function Result or PIC Is Required');
+    	}
+    }
+	
+	public function updateSpkStat(Request $param)
+    {
+    	$param = (object) $param->all();
+
+    	if(!empty($param->id) && !empty($param->status)){
+    		$examinations = Examination::find($param->id);
+    		if($examinations){
+				$examinations->is_created_spk = $param->status;
+    			if($examinations->save()){
+    				return $this->sendResponse($examinations, 'Examination Found');
+    			}else{
+    				return $this->sendError('Failed to Update ');
+    			}
+    		}else{
+    			return $this->sendError('Success Update');
+    		}
+    	}else{
+    		return $this->sendError('ID Examination or Status Is Required');
     	}
     }
 	
@@ -752,32 +789,36 @@ class ExaminationAPIController extends AppBaseController
 						$device = Device::find($examinations->device_id);
 						if($device){
 							$device->deal_test_date = $param->function_test_date;
-							if ($request->has('name')){
-								$device->name = $request->input('name');
+							if (!empty($param->name)){
+								$device->name = $param->name;
 							}
 								
-							if ($request->has('mark')){
-								$device->mark = $request->input('mark');
+							if (!empty($param->mark)){
+								$device->mark = $param->mark;
 							}
 								
-							if ($request->has('capacity')){
-								$device->capacity = $request->input('capacity');
+							if (!empty($param->capacity)){
+								$device->capacity = $param->capacity;
 							}
 								
-							if ($request->has('manufactured_by')){
-								$device->manufactured_by = $request->input('manufactured_by');
+							if (!empty($param->manufactured_by)){
+								$device->manufactured_by = $param->manufactured_by;
 							}
 								
-							if ($request->has('model')){
-								$device->model = $request->input('model');
+							if (!empty($param->model)){
+								$device->model = $param->model;
 							}
 								
-							if ($request->has('serial_number')){
-								$device->serial_number = $request->input('serial_number');
+							if (!empty($param->serial_number)){
+								$device->serial_number = $param->serial_number;
 							}
 								
-							if ($request->has('test_reference')){
-								$device->test_reference = $request->input('test_reference');
+							if (!empty($param->test_reference)){
+								$device->test_reference = $param->test_reference;
+							}
+							
+							if (!empty($param->link)){
+								$device->certificate = $param->link;
 							}
 							
 							$device->updated_by = 1;

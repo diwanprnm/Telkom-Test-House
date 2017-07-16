@@ -3014,6 +3014,7 @@ Route::group(['prefix' => '/v1', 'middlewareGroups' => 'api'], function () {
 	Route::post('/updateEquipLoc', 'v1\ExaminationAPIController@updateEquipLoc');
 	Route::post('/updateDeviceTE', 'v1\ExaminationAPIController@updateDeviceTE');
 	Route::post('/updateFunctionStat', 'v1\ExaminationAPIController@updateFunctionStat');
+	Route::post('/updateSpkStat', 'v1\ExaminationAPIController@updateSpkStat');
 	Route::post('/sendLapUji', 'v1\ExaminationAPIController@sendLapUji');
 	Route::post('/sendSertifikat', 'v1\ExaminationAPIController@sendSertifikat');
 });
@@ -3032,3 +3033,5 @@ Route::get('/payment_detail/{id}', 'ProductsController@payment_detail');
 Route::get('/test_notifitcation', 'ProductsController@test_notifitcation');
 Route::get('/upload_payment/{id}', 'ProductsController@upload_payment');
 Route::post('/pembayaranstel', 'ProductsController@pembayaranstel');
+
+Route::post('/insertKuisioner', 'PengujianController@insertKuisioner');

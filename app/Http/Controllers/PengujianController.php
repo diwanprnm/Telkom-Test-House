@@ -21,6 +21,7 @@ use App\ExaminationType;
 use App\Testimonial;
 use App\ExaminationHistory;
 use App\EquipmentHistory;
+use App\Questioner;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -81,6 +82,7 @@ class PengujianController extends Controller
 						->select(
 								'examinations.id',
 								'examinations.examination_type_id',
+								'examinations.device_id',
 								'devices.name AS nama_perangkat',
 								'devices.mark AS merk_perangkat',
 								'devices.serial_number AS serialNumber',
@@ -120,6 +122,7 @@ class PengujianController extends Controller
 						->select(
 								'examinations.id',
 								'examinations.examination_type_id',
+								'examinations.device_id',
 								'devices.name AS nama_perangkat',
 								'devices.mark AS merk_perangkat',
 								'devices.serial_number AS serialNumber',
@@ -159,6 +162,7 @@ class PengujianController extends Controller
 						->select(
 								'examinations.id',
 								'examinations.examination_type_id',
+								'examinations.device_id',
 								'devices.name AS nama_perangkat',
 								'devices.mark AS merk_perangkat',
 								'devices.serial_number AS serialNumber',
@@ -197,6 +201,7 @@ class PengujianController extends Controller
 						->select(
 								'examinations.id',
 								'examinations.examination_type_id',
+								'examinations.device_id',
 								'devices.name AS nama_perangkat',
 								'devices.mark AS merk_perangkat',
 								'devices.serial_number AS serialNumber',
@@ -237,6 +242,7 @@ class PengujianController extends Controller
 						->select(
 								'examinations.id',
 								'examinations.examination_type_id',
+								'examinations.device_id',
 								'devices.name AS nama_perangkat',
 								'devices.mark AS merk_perangkat',
 								'devices.serial_number AS serialNumber',
@@ -275,6 +281,7 @@ class PengujianController extends Controller
 						->select(
 								'examinations.id',
 								'examinations.examination_type_id',
+								'examinations.device_id',
 								'devices.name AS nama_perangkat',
 								'devices.mark AS merk_perangkat',
 								'devices.serial_number AS serialNumber',
@@ -313,6 +320,7 @@ class PengujianController extends Controller
 						->select(
 								'examinations.id',
 								'examinations.examination_type_id',
+								'examinations.device_id',
 								'devices.name AS nama_perangkat',
 								'devices.mark AS merk_perangkat',
 								'devices.serial_number AS serialNumber',
@@ -350,6 +358,7 @@ class PengujianController extends Controller
 						->select(
 								'examinations.id',
 								'examinations.examination_type_id',
+								'examinations.device_id',
 								'devices.name AS nama_perangkat',
 								'devices.mark AS merk_perangkat',
 								'devices.serial_number AS serialNumber',
@@ -1024,6 +1033,7 @@ class PengujianController extends Controller
 		$currentUser = Auth::user();
 		$equip = EquipmentHistory::where("examination_id", "=", $request->input('exam_id'))->where("location", "=", "1");
 		return(count($equip->get()));
+		//if count 1, masukan ke history download
 	}
 	
 	public function autocomplete($query) {
@@ -1032,4 +1042,49 @@ class PengujianController extends Controller
         $respons_result = Examination::autocomplet_pengujian($query,$company_id);
         return response($respons_result);
     }
+	
+	public function insertKuisioner(Request $request){
+		$currentUser = Auth::user();
+		$tanggal = strtotime($request->input('tanggal'));
+		
+		$quest = new Questioner;
+		$quest->id = Uuid::uuid4();
+		$quest->examination_id = $request->input('exam_id');
+		$quest->questioner_date = date('Y-m-d', $tanggal);
+		$quest->quest1_eks = $request->input('quest1_eks');$quest->quest1_perf = $request->input('quest1_perf');
+		$quest->quest2_eks = $request->input('quest2_eks');$quest->quest2_perf = $request->input('quest2_perf');
+		$quest->quest3_eks = $request->input('quest3_eks');$quest->quest3_perf = $request->input('quest3_perf');
+		$quest->quest4_eks = $request->input('quest3_eks');$quest->quest4_perf = $request->input('quest4_perf');
+		$quest->quest5_eks = $request->input('quest4_eks');$quest->quest5_perf = $request->input('quest5_perf');
+		$quest->quest6 = $request->input('quest6');
+		$quest->quest7_eks = $request->input('quest7_eks');$quest->quest7_perf = $request->input('quest7_perf');
+		$quest->quest8_eks = $request->input('quest8_eks');$quest->quest8_perf = $request->input('quest8_perf');
+		$quest->quest9_eks = $request->input('quest9_eks');$quest->quest9_perf = $request->input('quest9_perf');
+		$quest->quest10_eks = $request->input('quest10_eks');$quest->quest10_perf = $request->input('quest10_perf');
+		$quest->quest11_eks = $request->input('quest11_eks');$quest->quest11_perf = $request->input('quest11_perf');
+		$quest->quest12_eks = $request->input('quest12_eks');$quest->quest12_perf = $request->input('quest12_perf');
+		$quest->quest13_eks = $request->input('quest13_eks');$quest->quest13_perf = $request->input('quest13_perf');
+		$quest->quest14_eks = $request->input('quest14_eks');$quest->quest14_perf = $request->input('quest14_perf');
+		$quest->quest15_eks = $request->input('quest15_eks');$quest->quest15_perf = $request->input('quest15_perf');
+		$quest->quest16_eks = $request->input('quest16_eks');$quest->quest16_perf = $request->input('quest16_perf');
+		$quest->quest17_eks = $request->input('quest17_eks');$quest->quest17_perf = $request->input('quest17_perf');
+		$quest->quest18_eks = $request->input('quest18_eks');$quest->quest18_perf = $request->input('quest18_perf');
+		$quest->quest19_eks = $request->input('quest19_eks');$quest->quest19_perf = $request->input('quest19_perf');
+		$quest->quest20_eks = $request->input('quest20_eks');$quest->quest20_perf = $request->input('quest20_perf');
+		$quest->quest21_eks = $request->input('quest21_eks');$quest->quest21_perf = $request->input('quest21_perf');
+		$quest->quest22_eks = $request->input('quest22_eks');$quest->quest22_perf = $request->input('quest22_perf');
+		$quest->quest23_eks = $request->input('quest23_eks');$quest->quest23_perf = $request->input('quest23_perf');
+		$quest->quest24_eks = $request->input('quest24_eks');$quest->quest24_perf = $request->input('quest24_perf');
+		$quest->quest25_eks = $request->input('quest25_eks');$quest->quest25_perf = $request->input('quest25_perf');
+		
+		$quest->created_by = $currentUser->id;
+		$quest->created_at = date('Y-m-d H:i:s');
+		
+		try{
+			$quest->save();
+			echo 1;
+		} catch(Exception $e){
+			echo 0;
+		}
+	}
 }
