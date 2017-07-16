@@ -77,7 +77,7 @@ class ProductsController extends Controller
         $currentUser = Auth::user();
 
         if($currentUser){
-            $select = array("stels.id", "stels.name","stels.price","stels.code","stels.attachment","stels_sales.invoice","stels_sales.payment_status","companies.name as company_name"); 
+            $select = array("stels.id", "stels.name","stels.price","stels.code","stels.attachment","stels_sales.invoice","stels_sales.payment_status","companies.name as company_name","stels_sales_detail.qty"); 
             $STELSales = STELSalesDetail::select($select)->where("stels_sales_id",$id)
                         ->join("stels_sales","stels_sales.id","=","stels_sales_detail.stels_sales_id")
                         ->join("stels","stels.id","=","stels_sales_detail.stels_id")
@@ -248,6 +248,7 @@ class ProductsController extends Controller
                             $STELSalesDetail = new STELSalesDetail;
                             $STELSalesDetail->stels_sales_id = $STELSales->id;
                             $STELSalesDetail->stels_id = $row->id;
+                            $STELSalesDetail->qty = $row->qty;
                             $STELSalesDetail->save();
                         }
 

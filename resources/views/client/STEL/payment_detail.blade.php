@@ -37,34 +37,56 @@
 								<th>{{ trans('translate.stel_name') }}</th>
 								<th>{{ trans('translate.stel_code') }}</th>
 								<th>{{ trans('translate.stel_price') }}</th>  
-								<th>{{ trans('translate.stel_price_total') }}</th>  
-								<th>#</th>
+								<th>{{ trans('translate.stel_qty') }}</th>  
+								<th>Total</th>  
+								
 							</tr>
 						</thead>
 						<tbody>
+						<?php $total = 0;?>
 						@foreach($stels as $keys => $stel)
 							<tr>
 								<td>{{++$keys}}</td>
 								<td>{{$stel->name}}</td>
 								<td>{{$stel->code}}</td> 
 								<td>{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($stel->price), 0, '.', ','); ?></td>
-							 
+							  	 <td>{{$stel->qty}}</td> 
+								<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($stel->price * $stel->qty), 0, '.', ','); ?></td>
+								
+								
+							</tr> 
+							<?php $total +=$stel->price; ?>
+						@endforeach
+						</tbody>
+						<tfoot> 
+							
+                        	<tr>
+                        		<td colspan="5" align="right"> Total</td>
+                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php 
+                        			echo 	number_format($total, 0, '.', ',');?></td>
+                        	</tr>
+                       		<tr>
+                        		<td colspan="5" align="right"> Tax</td>
+                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php $tax =  $total * (config("cart.tax")/100);
+                        			echo	number_format($tax, 0, '.', ',');?></td>
+                        	</tr>
+                        	<tr>
+                        		<td colspan="5" align="right"> Total</td>
+                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($total+$tax, 0, '.', ',');?></td>
+                        	</tr> 
 
-								>
-								<td>{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($stel->price + ($stel->price * (config("cart.tax")/100))), 0, '.', ','); ?></td>
-								 
-								<?php  
+                        	<tr>
+                        		<?php  
 								// if($stel->attachment !="" && $stel->payment_status == 1){
 								if($stel->attachment !="" && $stel->payment_status == 1){
 								?>
-								<td><a target="_blank" href="{!! url("cetakstel?invoice_id={$stel->invoice}&attach={$stel->attachment}&company_name={$stel->company_name}") !!}">Download File</a></td>
-								<?php }else{?>
-								<td> Dokumen Tidak Tersedia</td>
-								<?php }?>
-
-							</tr> 
-						@endforeach
-						</tbody>
+								<td colspan="6" align="center"><a target="_blank" href="{!! url("cetakstel?invoice_id={$stel->invoice}&attach={$stel->attachment}&company_name={$stel->company_name}") !!}">Download File</a></td>
+								<?php }else{?>	
+									<td colspan="6" align="center"> Dokumen Tidak Tersedia</td>
+								<?php }?> 
+						 	
+							</tr>
+						</tfoot>
 					</table>
 
 				</div>

@@ -34,8 +34,10 @@
 									<tr>
 										<th>No</th>
 										<th>{{ trans('translate.stel_name') }}</th>
-										<th>{{ trans('translate.stel_qty') }}</th>
+ 										<th>{{ trans('translate.stel_code') }}</th>
 										<th>{{ trans('translate.stel_price') }}</th> 
+										<th>{{ trans('translate.stel_qty') }}</th>
+										<th>Total</th> 
 									</tr>
 								</thead>
 								<tbody>
@@ -43,19 +45,25 @@
 									<tr>
 										<td>1</td>
 										<td>{{$row->name}}</td>
-										<td>{{$row->qty}}</td>
-										<td>{{ trans('translate.stel_rupiah') }}. {{number_format($row->price)}}</td> 
+										<td>{{$row->code}}</td>
+										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($row->price)}}</td> 
+										<td align="center">{{$row->qty}}</td> 
+										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($row->price*$row->qty)}}</td> 
 									</tr> 
 									@endforeach
 								</tbody>
 								<tfoot>
-								<tr class="list-total-harga">
-										<td colspan="3" align="right">{{ trans('translate.stel_taxes_total') }}</td> 
-										<td>{{ trans('translate.stel_rupiah') }}. {{number_format(Cart::tax())}}</td> 
+									<tr class="list-total-harga">
+										<td colspan="5" align="right">Total</td> 
+										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format(Cart::subtotal())}}</td> 
 									</tr> 
 									<tr class="list-total-harga">
-										<td colspan="3" align="right">{{ trans('translate.stel_price_total') }}</td> 
-										<td>{{ trans('translate.stel_rupiah') }}. {{number_format(Cart::total())}}</td> 
+										<td colspan="5" align="right">{{ trans('translate.stel_taxes_total') }}</td> 
+										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format(Cart::tax())}}</td> 
+									</tr> 
+									<tr class="list-total-harga">
+										<td colspan="5" align="right">{{ trans('translate.stel_price_total') }}</td> 
+										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format(Cart::total())}}</td> 
 									</tr> 
 								</tfoot>
 							</table> 

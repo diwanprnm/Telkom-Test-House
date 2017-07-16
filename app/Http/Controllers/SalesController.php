@@ -106,7 +106,7 @@ class SalesController extends Controller
         $currentUser = Auth::user();
 
         if($currentUser){
-            $select = array("stels.name","stels.price","stels.code"); 
+            $select = array("stels.name","stels.price","stels.code","stels_sales_detail.qty"); 
             $STELSales = STELSalesDetail::select($select)->where("stels_sales_id",$id)
                         ->join("stels","stels.id","=","stels_sales_detail.stels_id")
                         ->get();
@@ -123,7 +123,7 @@ class SalesController extends Controller
         $currentUser = Auth::user();
 
         if($currentUser){
-            $select = array("stels.name","stels.price","stels.code"); 
+            $select = array("stels.name","stels.price","stels.code","stels_sales_detail.qty"); 
             $STELSales = STELSalesDetail::select($select)->where("stels_sales_id",$id)
                         ->join("stels","stels.id","=","stels_sales_detail.stels_id")
                         ->get();

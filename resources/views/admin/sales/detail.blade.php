@@ -32,9 +32,10 @@
 							<thead>
 								<tr>
 									<th class="center">No</th> 
-									<th class="center">Name</th> 
-									<th class="center">Code</th>  
+									<th class="center">Document Name</th> 
+									<th class="center">Document Code</th>  
 									<th class="center">Price</th> 
+									<th class="center">QTY</th> 
 									<th class="center">Total</th>
 								</tr>
 							</thead>
@@ -45,21 +46,27 @@
 										<td class="center">{{++$keys}}</td> 
 										<td class="center">{{ $item->name }}</td>
 										<td class="center">{{ $item->code }}</td>
-										<td class="center"><?php echo number_format($item->price, 0, '.', ','); ?></td>
-										<td class="center"><?php echo number_format($item->price * (config("cart.tax")/100), 0, '.', ','); ?></td> 
+										<td class="center">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($item->price, 0, '.', ','); ?></td>
+										<td class="center"><?php echo $item->qty; ?></td>
+										<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($item->price * $item->qty, 0, '.', ','); ?></td> 
 									</tr> 
 									<?php $total +=$item->price; ?>
 								@endforeach
                             </tbody>
                             <tfoot>
+                            	<tr>
+                            		<td colspan="5" align="right"> Total</td>
+                            		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php 
+                            			echo	number_format($total, 0, '.', ',');?></td>
+                            	</tr>
                            		<tr>
-                            		<td colspan="4" align="right"> Tax</td>
-                            		<td align="center"><?php $tax =  $total * (config("cart.tax")/100);
+                            		<td colspan="5" align="right"> Tax</td>
+                            		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php $tax =  $total * (config("cart.tax")/100);
                             			echo	number_format($tax, 0, '.', ',');?></td>
                             	</tr>
                             	<tr>
-                            		<td colspan="4" align="right"> Total</td>
-                            		<td align="center"><?php echo number_format($total+$tax, 0, '.', ',');?></td>
+                            		<td colspan="5" align="right"> Total</td>
+                            		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($total+$tax, 0, '.', ',');?></td>
                             	</tr>
                             </tfoot>
 						</table>
