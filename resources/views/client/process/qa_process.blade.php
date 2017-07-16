@@ -568,7 +568,7 @@
 	        if(newIndex == 5){
 	        	var formData = new FormData($('#form-permohonan')[0]);
 	        	var error = false;
-
+	        	
 	        	$.ajax({
 					beforeSend: function(){ 
 						$("body").addClass("loading");	
