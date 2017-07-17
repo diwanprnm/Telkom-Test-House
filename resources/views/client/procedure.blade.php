@@ -43,7 +43,7 @@
 									    <!-- Wrapper for slides -->
 									    <div class="row">
 									        <div class="carousel-inner">
-									                <di class="item active">
+									                <div class="item active">
 									                    <div class="carousel-content">
 									                        <div id="tp_step1" class="col_full">
 																<div  class="col_half">
@@ -74,6 +74,7 @@
 															</div>
 									                    </div>
 									                </div>
+									        
 									                <div class="item">
 									                    <div class="carousel-content">
 									                        <div id="tp_step2" class="col_full">

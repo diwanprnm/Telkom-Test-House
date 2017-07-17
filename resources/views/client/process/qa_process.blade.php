@@ -338,16 +338,16 @@
 				            		<input type="hidden" name="hide_cekSNjnsPengujian" id="hide_cekSNjnsPengujian">
 									<h4>{{ trans('translate.service_preview') }}</h4>
 									<h3>{{ trans('translate.service_application') }}</h3>
-									<table class="table table-striped">
+									<table class="table table-striped" id="preview-field">
 										<tr>
 											<td>{{ trans('translate.service_application_name') }}</td>
 											<td> : </td>
-											<td> <div id="f1-preview-1">{{$userData->namaPemohon}}</div></td>
+											<td colspan="6"> <div id="f1-preview-1">{{$userData->namaPemohon}}</div></td>
 										</tr>
 										<tr>
 											<td>{{ trans('translate.service_application_address') }}</td>
 											<td> : </td>
-											<td> <div id="f1-preview-2">{{$userData->alamatPemohon}}</div></td>
+											<td colspan="6"> <div id="f1-preview-2">{{$userData->alamatPemohon}}</div></td>
 										</tr>
 										<tr>
 											<td>{{ trans('translate.service_application_phone') }}</td>
@@ -361,21 +361,21 @@
 										<tr>
 											<td>{{ trans('translate.service_application_email') }}</td>
 											<td> : </td>
-											<td> <div id="f1-preview-5">{{$userData->emailPemohon}}</div></td>
+											<td colspan="6"> <div id="f1-preview-5">{{$userData->emailPemohon}}</div></td>
 										</tr>
 									</table>
 									<h3>{{ trans('translate.service_company') }}</h3>
 									<div id="f2-preview-6"></div>
-									<table class="table table-striped">
+									<table class="table table-striped" id="preview-field">
 										<tr>
 											<td>{{ trans('translate.service_company_name') }}</td>
 											<td> : </td>
-											<td> <div id="f2-preview-1">{{$userData->namaPerusahaan}}</div></td>
+											<td colspan="6"> <div id="f2-preview-1">{{$userData->namaPerusahaan}}</div></td>
 										</tr>
 										<tr>
 											<td>{{ trans('translate.service_company_address') }}</td>
 											<td> : </td>
-											<td> <div id="f2-preview-2">{{$userData->alamatPerusahaan}}</div></td>
+											<td colspan="6"> <div id="f2-preview-2">{{$userData->alamatPerusahaan}}</div></td>
 										</tr>
 										<tr>
 											<td>{{ trans('translate.service_company_phone') }}</td>
@@ -389,17 +389,17 @@
 										<tr>
 											<td>{{ trans('translate.service_company_email') }}</td>
 											<td> : </td>
-											<td> <div id="f2-preview-5">{{$userData->emailPerusahaan}}</div></td>
+											<td colspan="6"> <div id="f2-preview-5">{{$userData->emailPerusahaan}}</div></td>
 										</tr>
 									</table>
 									<h3 id="f5-jns-pengujian" class="f5-jns-pengujian">{{ trans('translate.service_preview_exam_type') }} : QA</h3>
 									<br>
 									<h3>{{ trans('translate.service_device') }}</h3>
-									<table class="table table-striped">
+									<table class="table table-striped" id="preview-field">
 										<tr>
 											<td>{{ trans('translate.service_device_equipment') }}</td>
 											<td> : </td>
-											<td> <div id="f3-preview-1"></div></td>
+											<td colspan="6"> <div id="f3-preview-1"></div></td>
 										</tr>
 										<tr>
 											<td>{{ trans('translate.service_device_mark') }}</td>
@@ -430,7 +430,7 @@
 										</tr>
 									</table>
 									<h3>{{ trans('translate.service_upload') }}</h3>
-									<table class="table table-striped">
+									<table class="table table-striped" id="preview-field">
 										<tr>
 											<td>{{ trans('translate.service_upload_siupp') }}</td>
 											<td> : </td>
@@ -490,14 +490,14 @@
 										<label>{{ trans('translate.service_upload_now') }}<span class="text-danger">*</span></label>
 										<input class="data-upload-detail-pengujian" id="fileInput-detail-pengujian" name="fuploaddetailpengujian" type="file" accept="application/pdf,image/*">
 										<div id="attachment-file"></div>
-										<button type="button" class="btn btn-next upload-form">{{ trans('translate.service_upload_now') }}</button>
+										<button type="button" class="button button3d btn-green upload-form">{{ trans('translate.service_upload_now') }}</button>
 										<div id="attachment-file">
 											{{ trans('translate.service_upload_if_form') }}
 											<a class="btn btn-link" style="margin-left:-10px; height:37px; color:black !important; font-size: 100%;" href="{{ url('/cetakPermohonan') }}" target="_blank">{{ trans('translate.service_upload_click') }}</a>
 										</div>
 									</div>
 									<div class="f1-buttons">
-										<button type="button" class="btn upload_later">{{ trans('translate.service_upload_later') }}</button>
+										<button type="button" class="button button3d btn-green upload_later">{{ trans('translate.service_upload_later') }}</button>
 										<div id="attachment-file">
 											{{ trans('translate.service_upload_later_alt') }}
 										</div>
@@ -507,7 +507,7 @@
 							<h2>Seventh Step</h2>
 				        	<fieldset> 
 								<h4 class="judulselesai">{{ trans('translate.service_thanks') }}</h4> 
-								<a class="btn btn-success" href="<?php echo url('/process');?>">Finish</a>
+								<a class="button button3d btn-green" href="<?php echo url('/process');?>">Finish</a>
 							</fieldset>
 						
 				        </div>
