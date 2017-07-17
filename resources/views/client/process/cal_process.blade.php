@@ -331,16 +331,16 @@
 					            		<input type="hidden" name="hide_cekSNjnsPengujian" id="hide_cekSNjnsPengujian">
 										<h4>{{ trans('translate.service_preview') }}</h4>
 										<h3>{{ trans('translate.service_application') }}</h3>
-										<table class="table table-striped">
+										<table class="table table-striped" id="preview-field">
 											<tr>
 												<td>{{ trans('translate.service_application_name') }}</td>
 												<td> : </td>
-												<td> <div id="f1-preview-1">{{$userData->namaPemohon}}</div></td>
+												<td colspan="6"> <div id="f1-preview-1">{{$userData->namaPemohon}}</div></td>
 											</tr>
 											<tr>
 												<td>{{ trans('translate.service_application_address') }}</td>
 												<td> : </td>
-												<td> <div id="f1-preview-2">{{$userData->alamatPemohon}}</div></td>
+												<td colspan="6"> <div id="f1-preview-2">{{$userData->alamatPemohon}}</div></td>
 											</tr>
 											<tr>
 												<td>{{ trans('translate.service_application_phone') }}</td>
@@ -354,21 +354,21 @@
 											<tr>
 												<td>{{ trans('translate.service_application_email') }}</td>
 												<td> : </td>
-												<td> <div id="f1-preview-5">{{$userData->emailPemohon}}</div></td>
+												<td colspan="6"> <div id="f1-preview-5">{{$userData->emailPemohon}}</div></td>
 											</tr>
 										</table>
 										<h3>{{ trans('translate.service_company') }}</h3>
 										<div id="f2-preview-6"></div>
-										<table class="table table-striped">
+										<table class="table table-striped" id="preview-field">
 											<tr>
 												<td>{{ trans('translate.service_company_name') }}</td>
 												<td> : </td>
-												<td> <div id="f2-preview-1">{{$userData->namaPerusahaan}}</div></td>
+												<td colspan="6"> <div id="f2-preview-1">{{$userData->namaPerusahaan}}</div></td>
 											</tr>
 											<tr>
 												<td>{{ trans('translate.service_company_address') }}</td>
 												<td> : </td>
-												<td> <div id="f2-preview-2">{{$userData->alamatPerusahaan}}</div></td>
+												<td colspan="6"> <div id="f2-preview-2">{{$userData->alamatPerusahaan}}</div></td>
 											</tr>
 											<tr>
 												<td>{{ trans('translate.service_company_phone') }}</td>
@@ -382,17 +382,17 @@
 											<tr>
 												<td>{{ trans('translate.service_company_email') }}</td>
 												<td> : </td>
-												<td> <div id="f2-preview-5">{{$userData->emailPerusahaan}}</div></td>
+												<td colspan="6"> <div id="f2-preview-5">{{$userData->emailPerusahaan}}</div></td>
 											</tr>
 										</table>
 										<h3 id="f5-jns-pengujian" class="f5-jns-pengujian">{{ trans('translate.service_preview_exam_type') }} : CAL</h3>
 										<br>
 										<h3>{{ trans('translate.service_device') }}</h3>
-										<table class="table table-striped">
+										<table class="table table-striped" id="preview-field">
 											<tr>
 												<td>{{ trans('translate.service_device_equipment') }}</td>
 												<td> : </td>
-												<td> <div id="f3-preview-1"></div></td>
+												<td colspan="6"> <div id="f3-preview-1"></div></td>
 											</tr>
 											<tr>
 												<td>{{ trans('translate.service_device_mark') }}</td>
@@ -423,7 +423,7 @@
 											</tr>
 										</table>
 										<h3>{{ trans('translate.service_upload') }}</h3>
-										<table class="table table-striped">
+										<table class="table table-striped" id="preview-field">
 											<tr>
 												<td>{{ trans('translate.service_upload_siupp') }}</td>
 												<td> : </td>

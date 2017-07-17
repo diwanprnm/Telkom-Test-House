@@ -14126,7 +14126,7 @@ body.loading .overlay {
     text-align: center;
 }
 
-.preview-field tr td{
+#preview-field tr td{
 	font-size: 18px;
 }
 #f5-jns-pengujian {
