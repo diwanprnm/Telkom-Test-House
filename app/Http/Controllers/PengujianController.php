@@ -20,7 +20,7 @@ use App\ExaminationAttach;
 use App\ExaminationType;
 use App\Testimonial;
 use App\ExaminationHistory;
-use App\EquipmentHistory;
+use App\Equipment;
 use App\Questioner;
 
 use Ramsey\Uuid\Uuid;
@@ -1039,7 +1039,7 @@ class PengujianController extends Controller
 	public function cekAmbilBarang(Request $request)
     {
 		$currentUser = Auth::user();
-		$equip = EquipmentHistory::where("examination_id", "=", $request->input('my_exam_id'))->where("location", "=", "1");
+		$equip = Equipment::where("examination_id", "=", $request->input('my_exam_id'))->where("location", "=", "1");
 		$is_location = count($equip->get());
 		// return(count($equip->get()));
 		//if count 1, masukan ke history download
