@@ -14132,3 +14132,13 @@ body.loading .overlay {
 #f5-jns-pengujian {
     text-align: center;
 }
+#fileInput-detail-pengujian {
+    margin-bottom: 20px;
+}
+.btn-green {
+    background-color: #3cb371;
+}
+#attachment-file {
+    font-size: 14px;
+    margin-top: 10px;
+}

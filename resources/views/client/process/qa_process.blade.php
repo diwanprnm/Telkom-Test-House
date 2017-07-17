@@ -490,14 +490,14 @@
 										<label>{{ trans('translate.service_upload_now') }}<span class="text-danger">*</span></label>
 										<input class="data-upload-detail-pengujian" id="fileInput-detail-pengujian" name="fuploaddetailpengujian" type="file" accept="application/pdf,image/*">
 										<div id="attachment-file"></div>
-										<button type="button" class="btn btn-next upload-form">{{ trans('translate.service_upload_now') }}</button>
+										<button type="button" class="button button3d btn-green upload-form">{{ trans('translate.service_upload_now') }}</button>
 										<div id="attachment-file">
 											{{ trans('translate.service_upload_if_form') }}
 											<a class="btn btn-link" style="margin-left:-10px; height:37px; color:black !important; font-size: 100%;" href="{{ url('/cetakPermohonan') }}" target="_blank">{{ trans('translate.service_upload_click') }}</a>
 										</div>
 									</div>
 									<div class="f1-buttons">
-										<button type="button" class="btn upload_later">{{ trans('translate.service_upload_later') }}</button>
+										<button type="button" class="button button3d btn-green upload_later">{{ trans('translate.service_upload_later') }}</button>
 										<div id="attachment-file">
 											{{ trans('translate.service_upload_later_alt') }}
 										</div>
@@ -507,7 +507,7 @@
 							<h2>Seventh Step</h2>
 				        	<fieldset> 
 								<h4 class="judulselesai">{{ trans('translate.service_thanks') }}</h4> 
-								<a class="btn btn-success" href="<?php echo url('/process');?>">Finish</a>
+								<a class="button button3d btn-green" href="<?php echo url('/process');?>">Finish</a>
 							</fieldset>
 						
 				        </div>
