@@ -1,3 +1,6 @@
+<?php
+	$currentUser = Auth::user();
+?>
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
@@ -667,6 +670,11 @@
 
 @section('content_js')
 <script type="text/javascript">
+	$('.date').datepicker({  
+		"format": "dd-mm-yyyy",
+		"setDate": new Date(),
+		"autoclose": true
+	});
 	// jQuery(document).ready(function() {
 		// Main.init();
 		// FormWizard.init();
