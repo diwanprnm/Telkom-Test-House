@@ -566,6 +566,11 @@
 				$("#f4-preview-8").html($(".f1-file-prinsipal").val());
 	       	}  
 	        if(newIndex == 5){
+	        	$( "#formBTNprevious" ).hide();
+	        	$( "#formBTNfinish" ).hide();
+	        	$( "#formBTNnext" ).hide();
+	        	
+
 	        	var formData = new FormData($('#form-permohonan')[0]);
 	        	var error = false;
 

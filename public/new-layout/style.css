@@ -14147,3 +14147,10 @@ body.loading .overlay {
     width: 70px;
     text-align: center;
 }
+
+h4.judulselesai {
+    text-align: center;
+}
+a.button.button3d.btn-green {
+    float: right;
+}
