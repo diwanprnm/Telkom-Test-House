@@ -574,6 +574,9 @@
 				}else{
 					var formData = new FormData($('#form-permohonan')[0]);
 					var error = false;
+					$( "#formBTNprevious" ).hide();
+					$( "#formBTNfinish" ).hide();
+					$( "#formBTNnext" ).hide();
 
 					$.ajax({
 						beforeSend: function(){ 

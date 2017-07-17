@@ -13833,7 +13833,7 @@ ul.radio > li {
 }
 
 .list-progress {
-    padding: 37px;
+    padding: 25px 37px;
     height: 150px; 
     width: 100%;
     background: lightgrey;
@@ -14141,4 +14141,16 @@ body.loading .overlay {
 #attachment-file {
     font-size: 14px;
     margin-top: 10px;
+}
+.list-progress .number p {
+    font-size: 12px;
+    width: 70px;
+    text-align: center;
+}
+
+h4.judulselesai {
+    text-align: center;
+}
+a.button.button3d.btn-green {
+    float: right;
 }

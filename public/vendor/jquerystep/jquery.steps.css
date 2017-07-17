@@ -253,7 +253,7 @@
 .wizard > .actions a:hover,
 .wizard > .actions a:active
 {
-    background: #299ec0;
+    background: #3cb371;
     color: #fff;
     display: block;
     padding: 0.5em 2em;
@@ -269,8 +269,8 @@
 .wizard > .actions .disabled a:hover,
 .wizard > .actions .disabled a:active
 {
-    background: #eee;
-    color: #aaa;
+    background: #757575;
+    color: #fff;
 }
 
 .wizard > .loading
