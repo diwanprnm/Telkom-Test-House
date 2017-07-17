@@ -1,5 +1,7 @@
 @extends('layouts.client')
-
+<!-- Document Title
+    ============================================= -->
+    <title>QA - Telkom DDS</title>
 @section('content')
  	<link rel="stylesheet" href="{{url('vendor/jquerystep/main.css')}}" type="text/css" />
     <link rel="stylesheet" href="{{url('vendor/jquerystep/jquery.steps.css')}}" type="text/css" /> 
@@ -158,7 +160,7 @@
 				            		<label for="f1-nama-perangkat">{{ trans('translate.service_device_test_reference') }} *</label>
 									<select  class="chosen-select" id="f1-cmb-ref-perangkat" name="f1-cmb-ref-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}"> 
 										@foreach($data_stels as $item)
-											<option value="{{ $item->code }}">{{ $item->code }} || {{ $item->name }}</option>
+											<option value="{{ $item->stel }}">{{ $item->stel }} || {{ $item->device_name }}</option>
 										@endforeach
 									</select>
 							 	</div>
@@ -566,34 +568,39 @@
 				$("#f4-preview-8").html($(".f1-file-prinsipal").val());
 	       	}  
 	        if(newIndex == 5){
-	        	var formData = new FormData($('#form-permohonan')[0]);
-	        	var error = false;
+				if($('#hide_cekSNjnsPengujian').val() == 1){
+					alert("Perangkat [Nama dan Model] sudah ada!"); 
+					return false;
+				}else{
+					var formData = new FormData($('#form-permohonan')[0]);
+					var error = false;
 
-	        	$.ajax({
-					beforeSend: function(){ 
-						$("body").addClass("loading");	
-					},
-					type: "POST",
-					url : "../submitPermohonan",
-					// data: {'_token':"{{ csrf_token() }}", 'nama_pemohon':nama_pemohon, 'nama_pemohons':nama_pemohon},
-					// data:new FormData($("#form-permohonan")[0]),
-					data:formData,
-					// dataType:'json', 
-					processData: false,  
-					contentType: false,
-					success: function(data){
-						$("body").removeClass("loading"); 
-						window.open("../cetakPermohonan");
+					$.ajax({
+						beforeSend: function(){ 
+							$("body").addClass("loading");	
+						},
+						type: "POST",
+						url : "../submitPermohonan",
+						// data: {'_token':"{{ csrf_token() }}", 'nama_pemohon':nama_pemohon, 'nama_pemohons':nama_pemohon},
+						// data:new FormData($("#form-permohonan")[0]),
+						data:formData,
+						// dataType:'json', 
+						processData: false,  
+						contentType: false,
+						success: function(data){
+							$("body").removeClass("loading"); 
+							window.open("../cetakPermohonan");
 
-						$(".actions").hide(); 
-					},
-					error:function(){
-						$("body").removeClass("loading");
-						error = true;
-						alert("Gagal mengambil data"); 
-						formWizard.steps("previous"); 
-					}
-				});   
+							$(".actions").hide(); 
+						},
+						error:function(){
+							$("body").removeClass("loading");
+							error = true;
+							alert("Gagal mengambil data"); 
+							formWizard.steps("previous"); 
+						}
+					}); 
+				}
 	        }
 
 	        if(newIndex == 3){

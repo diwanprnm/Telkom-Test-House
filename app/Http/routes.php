@@ -2575,7 +2575,7 @@ Route::get('/cetakHasilKuitansi/{nomor}/{dari}/{jumlah}/{untuk}',
 array('as' => 'cetakHasilKuitansi', function(
 	$nomor = null, $dari = null, $jumlah = null, $untuk = null ) {
 	$pdf = new PDF_MC_Table_Kuitansi('L','mm','A5'); 
-	$terbilang = $pdf->terbilang($jumlah, 3);
+	$terbilang = $pdf->terbilang(urldecode($jumlah), 3);
 	$pdf->AliasNbPages();
 	$pdf->AddPage();
 	
@@ -2589,7 +2589,7 @@ array('as' => 'cetakHasilKuitansi', function(
 	$pdf->Cell(45,5,"Nomor",0,0,'L');
 	$pdf->SetWidths(array(45.00125,25,5,95));
 	$pdf->SetFont('','');
-	$pdf->Row(array("","",":",$nomor));
+	$pdf->Row(array("","",":",urldecode($nomor)));
 	$y2 = $pdf->getY();
 	$pdf->setXY(45.00125,$y + 11);
 	$pdf->SetFont('','I');
@@ -2609,7 +2609,7 @@ array('as' => 'cetakHasilKuitansi', function(
 	$pdf->Cell(45,5,"Sudah diterima dari",0,0,'L');
 	$pdf->SetWidths(array(45.00125,25,5,95));
 	$pdf->SetFont('','');
-	$pdf->Row(array("","",":",$dari));
+	$pdf->Row(array("","",":",urldecode($dari)));
 	$y2 = $pdf->getY();
 	$pdf->setXY(45.00125,$y + 11);
 	$pdf->SetFont('','I');
@@ -2649,7 +2649,7 @@ array('as' => 'cetakHasilKuitansi', function(
 	$pdf->Cell(45,5,"Untuk Pembayaran",0,0,'L');
 	$pdf->SetWidths(array(45.00125,25,5,95));
 	$pdf->SetFont('','');
-	$pdf->Row(array("","",":",$untuk));
+	$pdf->Row(array("","",":",urldecode($untuk)));
 	$y2 = $pdf->getY();
 	$pdf->setXY(45.00125,$y + 11);
 	$pdf->SetFont('','I');
@@ -2703,13 +2703,13 @@ array('as' => 'cetakHasilKuitansi', function(
 ));
 
 Route::get('/cetakUjiFungsi/{id}', 'ExaminationController@cetakUjiFungsi');
-Route::get('/cetakHasilUjiFungsi/{company_name}/{company_address}/{company_phone}/{company_fax}/{device_name}/{device_mark}/{device_manufactured_by}/{device_model}/{device_serial_number}/{status}/{catatan}', 
+Route::get('/cetakHasilUjiFungsi/{function_test_NO}/{company_name}/{company_address}/{company_phone}/{company_fax}/{device_name}/{device_mark}/{device_manufactured_by}/{device_model}/{device_serial_number}/{status}/{catatan}', 
 array('as' => 'cetakHasilUjiFungsi', function(
-	$company_name = "asdasdasdashdhgasdghasghdcaghscdhgascghdcasghcdhagsd", $company_address = "asdasdasdashdhgasdghasghdcaghscdhgascghdcasghcdhagsd", $company_phone = "asdasdasdashdhgasdghasghdcaghscdhgascghdcasghcdhagsd", $company_fax = "asdasdasdashdhgasdghasghdcaghscdhgascghdcasghcdhagsd", 
-	$device_name = "asdasdasdashdhgasdghasghdcaghscdhgascghdcasghcdhagsd", $device_mark = "asdasdasdashdhgasdghasghdcaghscdhgascghdcasghcdhagsd", $device_manufactured_by = "asdasdasdashdhgasdghasghdcaghscdhgascghdcasghcdhagsd", $device_model = "asdasdasdashdhgasdghasghdcaghscdhgascghdcasghcdhagsd" , $device_serial_number = "asdasdasdashdhgasdghasghdcaghscdhgascghdcasghcdhagsd", 
-	$status = null, $catatan = "asdasdasdashdhgasdghasghdcaghscdhgascghdcasghcdhagsd" ) {
+	$function_test_NO = null, $company_name = null, $company_address = null, $company_phone = null, $company_fax = null, 
+	$device_name = null, $device_mark = null, $device_manufactured_by = null, $device_model = null , $device_serial_number = null, 
+	$status = null, $catatan = null ) {
 	$pdf = new PDF_MC_Table(); 
-	$pdf->judul_kop('FORM UJI FUNGSI','');
+	$pdf->judul_kop('FORM UJI FUNGSI',urldecode($function_test_NO));
 	$pdf->AliasNbPages();
 	$pdf->AddPage();
 	
@@ -2718,12 +2718,12 @@ array('as' => 'cetakHasilUjiFungsi', function(
 	$pdf->SetWidths(array(0.00125,50,140));
 	$pdf->SetAligns(array('L','R','L'));
 	// $pdf->SetFont('','BI');
-	$pdf->RowRect(array('','Nama Perusahaan',$company_name));	
-	$pdf->RowRect(array('','Alamat',$company_address));	
-	$pdf->RowRect(array('','Telepon / Fax',$company_phone.' / '.$company_fax));	
-	$pdf->RowRect(array('','Nama Perangkat',$device_name));	
-	$pdf->RowRect(array('','Merek / Buatan',$device_mark.' / '.$device_manufactured_by));	
-	$pdf->RowRect(array('','Tipe / Serial Number',$device_model.' / '.$device_serial_number));	
+	$pdf->RowRect(array('','Nama Perusahaan',urldecode($company_name)));	
+	$pdf->RowRect(array('','Alamat',urldecode($company_address)));	
+	$pdf->RowRect(array('','Telepon / Fax',urldecode($company_phone).' / '.urldecode($company_fax)));	
+	$pdf->RowRect(array('','Nama Perangkat',urldecode($device_name)));	
+	$pdf->RowRect(array('','Merek / Buatan',urldecode($device_mark).' / '.urldecode($device_manufactured_by)));	
+	$pdf->RowRect(array('','Tipe / Serial Number',urldecode($device_model).' / '.urldecode($device_serial_number)));	
 	$pdf->Ln(1);
 	$pdf->Rect(10,$pdf->getY(),190,55);	
 	$pdf->SetFont('','B');
@@ -2798,9 +2798,9 @@ array('as' => 'cetakHasilUjiFungsi', function(
 	$pdf->Cell(45);
 	$pdf->Cell(18,100+25,'Customer',0,0,'C');
 	$pdf->Ln(1);
-	$pdf->Cell(15);
+	$pdf->Cell(16);
 	$pdf->Cell(18,100+25+40,'____________________________',0,0,'C');
-	$pdf->Cell(50);
+	$pdf->Cell(47);
 	$pdf->Cell(18,100+25+40,'____________________________',0,0,'C');
 	$pdf->Cell(45);
 	$pdf->Cell(18,100+25+40,'____________________________',0,0,'C');
@@ -2811,7 +2811,7 @@ array('as' => 'cetakHasilUjiFungsi', function(
 	$pdf->Ln($pdf->getY()+25);
 	$pdf->SetWidths(array(5.00125,20,160));
 	$pdf->SetAligns(array('L','L','L'));
-	$pdf->Row(array('','Catatan:',$catatan));
+	$pdf->Row(array('','Catatan:',urldecode($catatan)));
 	$pdf->Cell(18,50,'Beri tanda',0,0,'L');
 	$pdf->SetFont('ZapfDingbats','', 10);
 	$pdf->Cell(4, 50, "4", 0, 0);

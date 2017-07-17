@@ -269,6 +269,11 @@
 									<div class="form-group">
 										<table class="table table-condensed">
 											<thead>
+											@if($data->keterangan == -1)
+												<tr>
+													<th colspan="3" align="center"><font color="red">Perangkat ini sudah pernah diuji, dengan status "Tidak Lulus Uji"</font></th>
+												</tr>
+											@endif
 												<tr>
 													<th colspan="3">Detail Informasi</th>
 												</tr>

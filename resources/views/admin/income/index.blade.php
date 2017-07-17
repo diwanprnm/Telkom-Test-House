@@ -109,7 +109,7 @@
 								<tr>
 									<th class="center">No</th>
 									<th class="center">Sumber Pendapatan</th>
-									<th class="center">Nama Perusahaan</th>
+									<th class="center">Nama Pemohon Pengujian</th>
 									<th class="center">Tanggal</th>
 									<th class="center">No. Referensi</th>
 									<th class="center">Nilai</th>
@@ -121,11 +121,11 @@
 									<tr>
 										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
 										@if($item->inc_type == 1)
-											<td class="center">Pengujian Perangkat</td>
+											<td class="center">Pengujian Perangkat {{ $item->examination->device->name }}</td>
 										@else
 											<td class="center">Pembelian STEL</td>
 										@endif
-										<td class="center">{{ $item->company->name }}</td>
+										<td class="center">{{ $item->examination->user->name }} ({{ $item->company->name }})</td>
 										<td class="center">{{ $item->tgl }}</td>
 										<td class="center">{{ $item->reference_number }}</td>
 										<td class="center"><?php echo number_format($item->price, 0, '.', ','); ?></td>

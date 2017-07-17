@@ -11,6 +11,7 @@ use App\Income;
 use App\Kuitansi;
 use App\Company;
 use App\Logs;
+use App\Examination;
 
 use Auth;
 use Session;
@@ -53,7 +54,8 @@ class IncomeController extends Controller
             $after = null;
 
             $query = Income::whereNotNull('created_at')
-                                ->with('company');
+                                ->with('company')
+                                ->with('examination');
 			
 			if ($search != null){
                 $query->where(function($qry) use($search){
@@ -335,11 +337,15 @@ class IncomeController extends Controller
 		if (count($data) == 0){
 			$message = 'Data not found';
 		}
+		if( strpos( $data->number, "/" ) !== false ) {$number = urlencode(urlencode($data->number));}else{$number = $data->number?: '-';}
+		if( strpos( $data->from, "/" ) !== false ) {$from = urlencode(urlencode($data->from));}else{$from = $data->from?: '-';}
+		if( strpos( $data->price, "/" ) !== false ) {$price = urlencode(urlencode($data->price));}else{$price = $data->price?: '-';}
+		if( strpos( $data->for, "/" ) !== false ) {$for = urlencode(urlencode($data->for));}else{$for = $data->for?: '-';}
 		return \Redirect::route('cetakHasilKuitansi', [
-			'nomor' => urlencode(urlencode($data->number)) ?: '-',
-			'dari' => urlencode(urlencode($data->from)) ?: '-',
-			'jumlah' => urlencode(urlencode($data->price)) ?: '-',
-			'untuk' => urlencode(urlencode($data->for)) ?: '-'
+			'nomor' => $number,
+			'dari' => $from,
+			'jumlah' => $price,
+			'untuk' => $for
 		]);
     }
 	

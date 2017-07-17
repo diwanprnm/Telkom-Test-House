@@ -9,6 +9,7 @@ use Response;
 use App\Device;
 use App\EquipmentHistory;
 use App\Examination;
+use App\ExaminationType;
 use App\ExaminationHistory;
 use App\ExaminationAttach;
 
@@ -685,6 +686,36 @@ class ExaminationAPIController extends AppBaseController
     	}
     }
 	
+	public function generateFunctionTestNumber($a) {
+		$thisYear = date('Y');
+		$types = ExaminationType::find($a);
+		$query = "
+			SELECT 
+			SUBSTRING_INDEX(function_test_NO,'/',1) + 1 AS last_numb
+			FROM examinations 
+			WHERE 
+			SUBSTRING_INDEX(SUBSTRING_INDEX(function_test_NO,'/',2),'/',-1) = '".$types->name."' AND
+			SUBSTRING_INDEX(function_test_NO,'/',-1) = '".$thisYear."'
+			ORDER BY last_numb DESC LIMIT 1
+		";
+		$data = DB::select($query);
+		if (count($data) == 0){
+			return '001/'.$types->name.'/'.$thisYear.'';
+		}
+		else{
+			$last_numb = $data[0]->last_numb;
+			if($last_numb < 10){
+				return '00'.$last_numb.'/'.$types->name.'/'.$thisYear.'';
+			}
+			else if($last_numb < 100){
+				return '0'.$last_numb.'/'.$types->name.'/'.$thisYear.'';
+			}
+			else{
+				return ''.$last_numb.'/'.$types->name.'/'.$thisYear.'';
+			}
+		}
+    }
+	
 	public function updateFunctionStat(Request $param)
     {
     	$param = (object) $param->all();
@@ -695,6 +726,7 @@ class ExaminationAPIController extends AppBaseController
 				$examinations->catatan = $param->catatan;
 				$examinations->function_test_TE = $param->function_result;
 				$examinations->function_test_PIC = $param->function_test_pic;
+				$examinations->function_test_NO = $this->generateFunctionTestNumber($examinations->examination_type_id);
     			if($examinations->save()){
     				return $this->sendResponse($examinations, 'Examination Found');
     			}else{

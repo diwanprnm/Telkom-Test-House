@@ -56,11 +56,7 @@
 					<label>
 						Nomor SPB *
 					</label>
-					@if($spb_number == '')
-						<input type="text" name="spb_number" id="spb_number" class="form-control" value="/KU000/DDS-73/2017" required/>
-					@else
 						<input type="text" name="spb_number" id="spb_number" class="form-control" value="{{ $spb_number }}" required/>
-					@endif
 				</div>
 			</div>
 			<div class="col-md-6">

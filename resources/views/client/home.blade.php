@@ -3,6 +3,7 @@
     ============================================= -->
     <title>{{ trans('translate.home') }} - Telkom DDS</title>
 @section('content')
+	<link rel="stylesheet" href="{{url('vendor/chosen/chosen.css')}}">
  	<section id="slider" class="slider-parallax swiper_wrapper clearfix" style="height: 600px;">
 
 		<div class="swiper-container swiper-parent">
@@ -126,7 +127,7 @@
 
 							<div class="col-md-8 col-md-offset-2">
 								<label for="template-contactform-name">{{ trans('translate.contact_question') }} <small>*</small></label>
-								<select class="required" id="question" name="question"> 
+								<select class="required chosen-select" id="question" name="question"> 
 										<option value="0">-</option>
 									@foreach($data_question as $item)
 										<option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -177,4 +178,12 @@
 		</div>
 
 	</section><!-- #content end -->
+@endsection
+
+@section('content_js')
+
+<script>
+	$(".chosen-select").chosen(); 
+</script>
+<script src="{{url('vendor/chosen/chosen.jquery.js')}}" type="text/javascript"></script> 
 @endsection

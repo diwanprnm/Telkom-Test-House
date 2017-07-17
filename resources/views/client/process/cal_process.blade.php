@@ -1,5 +1,7 @@
 @extends('layouts.client')
-
+<!-- Document Title
+    ============================================= -->
+    <title>CAL - Telkom DDS</title>
 @section('content')
  <link rel="stylesheet" href="{{url('vendor/jquerystep/main.css')}}" type="text/css" />
   <link rel="stylesheet" href="{{url('vendor/jquerystep/jquery.steps.css')}}" type="text/css" />
@@ -547,33 +549,38 @@
 	       	} 
 	        if(newIndex == 5 ){
 	        	console.log("save");
-	        	var formData = new FormData($('#form-permohonan')[0]);
-				$.ajax({
-					beforeSend: function(){
-						 $("body").addClass("loading");  		
-					},
-					type: "POST",
-					url : "../submitPermohonan",
-					// data: {'_token':"{{ csrf_token() }}", 'nama_pemohon':nama_pemohon, 'nama_pemohons':nama_pemohon},
-					// data:new FormData($("#form-permohonan")[0]),
-					data:formData,
-					// dataType:'json', 
-					processData: false,  
-					contentType: false, 
-					success: function(data){ 
-						$("body").removeClass("loading");
-						window.open("../cetakPermohonan");
+				if($('#hide_cekSNjnsPengujian').val() == 1){
+					alert("Perangkat [Nama dan Model] sudah ada!"); 
+					return false;
+				}else{
+					var formData = new FormData($('#form-permohonan')[0]);
+					$.ajax({
+						beforeSend: function(){
+							 $("body").addClass("loading");  		
+						},
+						type: "POST",
+						url : "../submitPermohonan",
+						// data: {'_token':"{{ csrf_token() }}", 'nama_pemohon':nama_pemohon, 'nama_pemohons':nama_pemohon},
+						// data:new FormData($("#form-permohonan")[0]),
+						data:formData,
+						// dataType:'json', 
+						processData: false,  
+						contentType: false, 
+						success: function(data){ 
+							$("body").removeClass("loading");
+							window.open("../cetakPermohonan");
 
-						$(".actions").hide();
+							$(".actions").hide();
 
-						
-					},
-					error:function(){
-						$("body").removeClass("loading");
-						alert("Gagal mengambil data");
-						formWizard.steps("previous"); 
-					}
-				}); 
+							
+						},
+						error:function(){
+							$("body").removeClass("loading");
+							alert("Gagal mengambil data");
+							formWizard.steps("previous"); 
+						}
+					}); 
+				}
 	        }
 
 	        if(newIndex == 3){

@@ -118,7 +118,7 @@ class HomeController extends Controller
     	$currentUser = Auth::user();
 		
 		if($currentUser){
-			$query_stels = "SELECT * FROM stels WHERE is_active = 1";
+			$query_stels = "SELECT * FROM examination_charges ORDER BY device_name";
 			$data_stels = DB::select($query_stels);
 
 			$query = "SELECT

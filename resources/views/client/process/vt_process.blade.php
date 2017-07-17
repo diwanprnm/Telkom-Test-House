@@ -1,5 +1,7 @@
 @extends('layouts.client')
-
+<!-- Document Title
+    ============================================= -->
+    <title>VT - Telkom DDS</title>
 @section('content')
  <link rel="stylesheet" href="{{url('vendor/jquerystep/main.css')}}" type="text/css" />
   <link rel="stylesheet" href="{{url('vendor/jquerystep/jquery.steps.css')}}" type="text/css" />
@@ -521,31 +523,36 @@
 	       	console.log(newIndex);
 	        if(newIndex == 5){
 	        	console.log("save");
-	        	var formData = new FormData($('#form-permohonan')[0]);
-				$.ajax({
-					type: "POST",
-					url : "../submitPermohonan",
-					// data: {'_token':"{{ csrf_token() }}", 'nama_pemohon':nama_pemohon, 'nama_pemohons':nama_pemohon},
-					// data:new FormData($("#form-permohonan")[0]),
-					data:formData,
-					// dataType:'json',
-					async:false, 
-					processData: false,
-					contentType: false,
-					beforeSend: function(){
-						$("body").addClass("loading");			
-					},
-					success: function(data){
-						$("body").removeClass("loading");
-						console.log(data);
-						window.open("../cetakPermohonan");
-					},
-					error:function(){
-						$("body").removeClass("loading");
-						alert("Gagal mengambil data");
-					}
-				});
-				$(".actions").hide();
+				if($('#hide_cekSNjnsPengujian').val() == 1){
+					alert("Perangkat [Nama dan Model] sudah ada!"); 
+					return false;
+				}else{
+					var formData = new FormData($('#form-permohonan')[0]);
+					$.ajax({
+						type: "POST",
+						url : "../submitPermohonan",
+						// data: {'_token':"{{ csrf_token() }}", 'nama_pemohon':nama_pemohon, 'nama_pemohons':nama_pemohon},
+						// data:new FormData($("#form-permohonan")[0]),
+						data:formData,
+						// dataType:'json',
+						async:false, 
+						processData: false,
+						contentType: false,
+						beforeSend: function(){
+							$("body").addClass("loading");			
+						},
+						success: function(data){
+							$("body").removeClass("loading");
+							console.log(data);
+							window.open("../cetakPermohonan");
+						},
+						error:function(){
+							$("body").removeClass("loading");
+							alert("Gagal mengambil data");
+						}
+					});
+					$(".actions").hide();
+				}
 	        }
 
 	        if(newIndex == 4){

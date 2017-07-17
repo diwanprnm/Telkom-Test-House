@@ -1430,6 +1430,31 @@ class ExaminationController extends Controller
 		}
     }
 	
+	public function generateSPBNumber() {
+		$thisYear = date('Y');
+		$query = "
+			SELECT SUBSTRING_INDEX(spb_number,'/',1) + 1 AS last_numb
+			FROM examinations WHERE SUBSTRING_INDEX(spb_number,'/',-1) = ".$thisYear."
+			ORDER BY last_numb DESC LIMIT 1
+		";
+		$data = DB::select($query);
+		if (count($data) == 0){
+			return '001/KU000/DDS-73/'.$thisYear.'';
+		}
+		else{
+			$last_numb = $data[0]->last_numb;
+			if($last_numb < 10){
+				return '00'.$last_numb.'/KU000/DDS-73/'.$thisYear.'';
+			}
+			else if($last_numb < 100){
+				return '0'.$last_numb.'/KU000/DDS-73/'.$thisYear.'';
+			}
+			else{
+				return ''.$last_numb.'/KU000/DDS-73/'.$thisYear.'';
+			}
+		}
+    }
+	
 	public function generateSPBParam(Request $request) {
 		$request->session()->put('key_exam_id_for_generate_spb', $request->input('exam_id'));
 		$request->session()->put('key_spb_number_for_generate_spb', $request->input('spb_number'));
@@ -1440,12 +1465,22 @@ class ExaminationController extends Controller
 	public function generateSPB(Request $request) {
 		$exam_id = $request->session()->pull('key_exam_id_for_generate_spb');
 		$spb_number = $request->session()->pull('key_spb_number_for_generate_spb');
+		if($spb_number == "" or $spb_number == null){
+			$spb_number = $this->generateSPBNumber();
+		}
 		$spb_date = $request->session()->pull('key_spb_date_for_generate_spb');
 		$exam = Examination::where('id', $exam_id)
 					->with('device')
 					->first()
 		;
-		$query_price = "SELECT price FROM stels WHERE code = '".$exam->device->test_reference."'";
+		if($exam->examination_type_id == 2){
+			$query_price = "SELECT ta_price FROM examination_charges WHERE stel = '".$exam->device->test_reference."'";			
+		}
+		else if($exam->examination_type_id == 3){
+			$query_price = "SELECT vt_price FROM examination_charges WHERE stel = '".$exam->device->test_reference."'";			
+		}else{
+			$query_price = "SELECT price FROM examination_charges WHERE stel = '".$exam->device->test_reference."'";			
+		}
 		$price = DB::select($query_price);
 		if(count($price) == 0){
 			$price = 0;
@@ -1453,7 +1488,7 @@ class ExaminationController extends Controller
 			$price = $price[0]->price;
 		}
 		
-		$query_stels = "SELECT * FROM stels WHERE is_active = 1";
+		$query_stels = "SELECT * FROM examination_charges ORDER BY device_name";
 		$data_stels = DB::select($query_stels);
 			
 		// setlocale(LC_MONETARY, 'it_IT');
@@ -1525,20 +1560,43 @@ class ExaminationController extends Controller
 		->with('Company')
 		->with('Device')
 		->get();
+		if( strpos( $data[0]->function_test_NO, "/" ) !== false ) {$function_test_NO = urlencode(urlencode($data[0]->function_test_NO));}
+			else{$function_test_NO = $data[0]->function_test_NO?: '-';}
+		if( strpos( $data[0]->company->name, "/" ) !== false ) {$company_name = urlencode(urlencode($data[0]->company->name));}
+			else{$company_name = $data[0]->company->name?: '-';}
+		if( strpos( $data[0]->company->address, "/" ) !== false ) {$company_address = urlencode(urlencode($data[0]->company->address));}
+			else{$company_address = $data[0]->company->address?: '-';}
+		if( strpos( $data[0]->company->phone, "/" ) !== false ) {$company_phone = urlencode(urlencode($data[0]->company->phone));}
+			else{$company_phone = $data[0]->company->phone?: '-';}
+		if( strpos( $data[0]->company->fax, "/" ) !== false ) {$company_fax = urlencode(urlencode($data[0]->company->fax));}
+			else{$company_fax = $data[0]->company->fax?: '-';}
+		if( strpos( $data[0]->device->name, "/" ) !== false ) {$device_name = urlencode(urlencode($data[0]->device->name));}
+			else{$device_name = $data[0]->device->name?: '-';}
+		if( strpos( $data[0]->device->mark, "/" ) !== false ) {$device_mark = urlencode(urlencode($data[0]->device->mark));}
+			else{$device_mark = $data[0]->device->mark?: '-';}
+		if( strpos( $data[0]->device->manufactured_by, "/" ) !== false ) {$device_manufactured_by = urlencode(urlencode($data[0]->device->manufactured_by));}
+			else{$device_manufactured_by = $data[0]->device->manufactured_by?: '-';}
+		if( strpos( $data[0]->device->model, "/" ) !== false ) {$device_model = urlencode(urlencode($data[0]->device->model));}
+			else{$device_model = $data[0]->device->model?: '-';}
+		if( strpos( $data[0]->device->serial_number, "/" ) !== false ) {$device_serial_number = urlencode(urlencode($data[0]->device->serial_number));}
+			else{$device_serial_number = $data[0]->device->serial_number?: '-';}
+		if( strpos( $data[0]->function_test_TE, "/" ) !== false ) {$function_test_TE = urlencode(urlencode($data[0]->function_test_TE));}
+			else{$function_test_TE = $data[0]->function_test_TE?: '-';}
+		if( strpos( $data[0]->catatan, "/" ) !== false ) {$catatan = urlencode(urlencode($data[0]->catatan));}
+			else{$catatan = $data[0]->catatan?: '-';}
 		return \Redirect::route('cetakHasilUjiFungsi', [
-			'company_name' => urlencode(urlencode($data[0]->company->name)) ?: '-',
-			'company_address' => urlencode(urlencode($data[0]->company->address)) ?: '-',
-			'company_phone' => urlencode(urlencode($data[0]->company->phone)) ?: '-',
-			'company_fax' => urlencode(urlencode($data[0]->company->fax)) ?: '-',
-			'device_name' => urlencode(urlencode($data[0]->device->name)) ?: '-',
-			'device_mark' => urlencode(urlencode($data[0]->device->mark)) ?: '-',
-			'device_manufactured_by' => urlencode(urlencode($data[0]->device->manufactured_by)) ?: '-',
-			'device_model' => urlencode(urlencode($data[0]->device->model)) ?: '-',
-			'device_serial_number' => urlencode(urlencode($data[0]->device->serial_number)) ?: '-',
-			'status' => urlencode(urlencode(2)) ?: '-',
-			'catatan' => urlencode(urlencode("Tidak Memenuhi")) ?: '-'
-			// 'status' => urlencode(urlencode($function_test->data[0]->result)) ?: '-',
-			// 'catatan' => urlencode(urlencode($function_test->data[0]->note)) ?: '-'
+			'function_test_NO' => $function_test_NO,
+			'company_name' => $company_name,
+			'company_address' => $company_address,
+			'company_phone' => $company_phone,
+			'company_fax' => $company_fax,
+			'device_name' => $device_name,
+			'device_mark' => $device_mark,
+			'device_manufactured_by' => $device_manufactured_by,
+			'device_model' => $device_model,
+			'device_serial_number' => $device_serial_number,
+			'status' => $function_test_TE,
+			'catatan' => $catatan
 		]);
     }
 }

@@ -16,6 +16,11 @@ class Income extends Model
         return $this->belongsTo('App\Company');
     }
 	
+	public function examination()
+    {
+        return $this->belongsTo('App\Examination', 'reference_id');
+    }
+	
 	static function autocomplet($query){
 		$queries = DB::table('incomes')
 				->join('companies', 'incomes.company_id', '=', 'companies.id')

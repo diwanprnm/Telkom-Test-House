@@ -341,6 +341,7 @@ class PermohonanController extends Controller
         $exam->created_at = ''.date('Y-m-d h:i:s').'';
         $exam->updated_at = ''.date('Y-m-d h:i:s').'';
         $exam->jns_perusahaan = ''.$jns_perusahaan.'';
+        $exam->keterangan = ''.$request->input('hide_cekSNjnsPengujian').'';
 
         try{
             $exam->save();
@@ -835,7 +836,15 @@ class PermohonanController extends Controller
 				AND	d.model = '".$request->input('model_perangkat')."'
 				";
 		$data = DB::select($query);
-		echo count($data);
+		if(count($data) == 1){
+			if($data[0]->qa_passed == "-1"){
+				echo -1;
+			}else{
+				echo 1;
+			}			
+		}else{
+			echo 0;
+		}
 	}
 		
 	public function getInfo(Request $request){
