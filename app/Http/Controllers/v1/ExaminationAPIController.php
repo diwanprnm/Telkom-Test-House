@@ -185,7 +185,7 @@ class ExaminationAPIController extends AppBaseController
 			
 			if(isset($param->spk_code)){
 				if($param->spk_code){
-					// $result = $result->where("examinations.payment_status", "=", 1);
+					$result = $result->where("examinations.payment_status", "=", 1);
 				}else{
 					$result = $result->where("examinations.spk_code", "LIKE", '%'.$param->spk_code .'%');
 				}
@@ -747,7 +747,7 @@ class ExaminationAPIController extends AppBaseController
     	if(!empty($param->id) && !empty($param->status)){
     		$examinations = Examination::find($param->id);
     		if($examinations){
-				$examinations->is_created_spk = $param->status;
+				$examinations->is_spk_created = $param->status;
     			if($examinations->save()){
     				return $this->sendResponse($examinations, 'Examination Found');
     			}else{
