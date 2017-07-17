@@ -50,7 +50,7 @@
 										<td class="center"><?php echo $item->qty; ?></td>
 										<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($item->price * $item->qty, 0, '.', ','); ?></td> 
 									</tr> 
-									<?php $total +=$item->price; ?>
+									<?php $total +=($item->price * $item->qty); ?>
 								@endforeach
                             </tbody>
                             <tfoot>
