@@ -43,8 +43,8 @@
 				<div class="container">  
 				    <div class="content">
 				         <div class="col-md-12">
-							<div class="step" style="padding-left:10%;">
-								<div class="garis" style="width:60%;"></div>
+							<div class="step">
+								<div class="garis"></div>
 								<ul class="number" style="width: 200%;">
 									<li>
 										<button class="step-fill active">1</button>
