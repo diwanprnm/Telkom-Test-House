@@ -62,7 +62,7 @@
 									<td colspan="6" align="center"> Dokumen Tidak Tersedia</td>
 								<?php }?> 
 							</tr> 
-							<?php $total +=$stel->price; ?>
+							<?php $total +=($stel->price * $stel->qty); ?>
 						@endforeach
 						</tbody>
 						<tfoot> 
