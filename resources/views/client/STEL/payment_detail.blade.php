@@ -39,6 +39,7 @@
 								<th>{{ trans('translate.stel_price') }}</th>  
 								<th>{{ trans('translate.stel_qty') }}</th>  
 								<th>Total</th>  
+								<th>#</th>  
 								
 							</tr>
 						</thead>
@@ -52,8 +53,14 @@
 								<td>{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($stel->price), 0, '.', ','); ?></td>
 							  	 <td>{{$stel->qty}}</td> 
 								<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($stel->price * $stel->qty), 0, '.', ','); ?></td>
-								
-								
+								<?php  
+								// if($stel->attachment !="" && $stel->payment_status == 1){
+								if($stel->attachment !="" && $stel->payment_status == 1){
+								?>
+								<td colspan="6" align="center"><a target="_blank" href="{!! url("cetakstel?invoice_id={$stel->invoice}&attach={$stel->attachment}&company_name={$stel->company_name}") !!}">Download File</a></td>
+								<?php }else{?>	
+									<td colspan="6" align="center"> Dokumen Tidak Tersedia</td>
+								<?php }?> 
 							</tr> 
 							<?php $total +=$stel->price; ?>
 						@endforeach
@@ -74,18 +81,6 @@
                         		<td colspan="5" align="right"> Total</td>
                         		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($total+$tax, 0, '.', ',');?></td>
                         	</tr> 
-
-                        	<tr>
-                        		<?php  
-								// if($stel->attachment !="" && $stel->payment_status == 1){
-								if($stel->attachment !="" && $stel->payment_status == 1){
-								?>
-								<td colspan="6" align="center"><a target="_blank" href="{!! url("cetakstel?invoice_id={$stel->invoice}&attach={$stel->attachment}&company_name={$stel->company_name}") !!}">Download File</a></td>
-								<?php }else{?>	
-									<td colspan="6" align="center"> Dokumen Tidak Tersedia</td>
-								<?php }?> 
-						 	
-							</tr>
 						</tfoot>
 					</table>
 
