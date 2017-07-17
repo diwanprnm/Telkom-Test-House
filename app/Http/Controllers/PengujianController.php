@@ -652,16 +652,20 @@ class PengujianController extends Controller
 					d.model AS model_perangkat,
 					d.test_reference AS referensi_perangkat,
 					d.serial_number AS serialNumber,
-					e.jns_perusahaan AS jnsPerusahaan
+					e.jns_perusahaan AS jnsPerusahaan,
+					et.name AS jns_pengujian,
+					et.description AS desc_pengujian
 				FROM
 					examinations e,
 					devices d,
 					companies c,
-					users u
+					users u,
+					examination_types et
 				WHERE
 					u.id = e.created_by
 				AND u.company_id = c.id
 				AND	e.device_id = d.id
+				AND	e.examination_type_id = et.id
 				AND e.id = '".$id."'
 				-- AND u.id = '".$user_id."'
 				";
@@ -683,15 +687,19 @@ class PengujianController extends Controller
 					d.test_reference AS referensi_perangkat,
 					d.serial_number AS serialNumber,
 					e.jns_perusahaan AS jnsPerusahaan
+					et.name AS jns_pengujian,
+					et.description AS desc_pengujian
 				FROM
 					examinations e,
 					devices d,
 					companies c,
-					users u
+					users u,
+					examination_types et
 				WHERE
 					u.id = e.created_by
 				AND u.company_id = c.id
 				AND	e.device_id = d.id
+				AND	e.examination_type_id = et.id
 				AND e.id = '".$id."'
 				-- AND u.id = '".$user_id."'
 				";
@@ -1032,8 +1040,30 @@ class PengujianController extends Controller
     {
 		$currentUser = Auth::user();
 		$equip = EquipmentHistory::where("examination_id", "=", $request->input('exam_id'))->where("location", "=", "1");
-		return(count($equip->get()));
+		$is_location = count($equip->get());
+		// return(count($equip->get()));
 		//if count 1, masukan ke history download
+		if($is_location == 1){
+			$examhist = ExaminationHistory::where("examination_id", "=", $request->input('exam_id'))->where("tahap", "=", "Download Sertifikat");
+			$count_download = count($examhist->get());
+			if($count_download >= 3){
+				return($examhist->get());
+			}else{				
+				$exam_hist = new ExaminationHistory;
+				$exam_hist->examination_id = $id;
+				$exam_hist->date_action = date('Y-m-d H:i:s');
+				$exam_hist->tahap = 'Download Sertifikat';
+				$exam_hist->status = 1;
+				$exam_hist->keterangan = '';
+				$exam_hist->created_by = $currentUser->id;
+				$exam_hist->created_at = date('Y-m-d H:i:s');
+				$exam_hist->save();
+				
+				return 1;
+			}
+		}else{
+			return 0;
+		}
 	}
 	
 	public function autocomplete($query) {

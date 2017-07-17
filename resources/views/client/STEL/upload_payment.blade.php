@@ -56,8 +56,8 @@
 								<a class="button button-3d btn-sky nomargin" href="{{url('/payment_status')}}">{{ trans('translate.back') }}</a>
 							</div>
 							<div class=" pull-right col-md-6">
-								<button type="submit" class="btn btn-wide btn-danger pull-right" style="margin-bottom:10px;">
-									<i class="fa fa-btn"></i> {{ trans('translate.examination_upload_payment_file') }}
+								<button type="submit" class="button button-3d btn-sky nomargin pull-right" style="margin-bottom:10px;">
+									{{ trans('translate.examination_upload_payment_file') }}
 								</button>
 							</div>
 						</div>										

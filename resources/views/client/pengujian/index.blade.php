@@ -388,6 +388,30 @@
 
       </div>
     </div> 
+	
+	<div id="modal_status_download" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
+      <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Status Download</h4>
+          </div>
+          <div class="modal-body pre-scrollable">
+               <div class="row">
+                    <h2>Batas Maksimal Unduh Sertifikat adalah 3 kali. Silakan Hubungi Petugas URel untuk Informasi Lebih Lanjut.</h2>
+					<div id="historiDownload">
+					</div>
+                </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
+          </div>
+        </div>
+
+      </div>
+    </div> 
 @section('content')
  		<!-- Page Title
 		============================================= -->
@@ -1625,12 +1649,17 @@
 			},
 			success:function(response){
 				// document.getElementById("overlay").style.display="none";
-				console.log(response);return false;
+				console.log(response);
 				$('#modal_complain').modal('hide');
-				if(response==0){
+				if(response==1){
+					window.location.href = '/telkomdds/public'+link;
+				}if(response==0){
 					$('#modal_status_barang').modal('show');
 				}else{
-					window.location.href = '/telkomdds/public'+link;
+					$('#modal_status_download').modal('show');
+					// $('#modal_status_download').on('shown.bs.modal', function() {
+						// $("#historiDownload").val(response);
+					// });
 				}
 			}
 		});
