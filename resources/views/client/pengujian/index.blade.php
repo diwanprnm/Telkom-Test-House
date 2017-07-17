@@ -1653,7 +1653,7 @@
 				$('#modal_complain').modal('hide');
 				if(response==1){
 					window.location.href = '/telkomdds/public'+link;
-				}if(response==0){
+				}else if(response==0){
 					$('#modal_status_barang').modal('show');
 				}else{
 					$('#modal_status_download').modal('show');

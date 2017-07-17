@@ -701,7 +701,7 @@
 	$('#submit-kuisioner').click(function () {
 		$("#my_exam_id").val(document.getElementById('exam_id').value);
 		$.ajax({
-			url : "insertKuisioner",
+			url : "{{URL::to('insertKuisioner')}}",
 			data:new FormData($("#form-kuisioner")[0]),
 			// dataType:'json',
 			async:false,
@@ -728,7 +728,7 @@
 	$('#submit-complain').click(function () {
 		var link = document.getElementById('link').value;
 		$.ajax({
-			url : "cekAmbilBarang",
+			url : "{{URL::to('cekAmbilBarang')}}",
 			data:new FormData($("#form-complain")[0]),
 			// dataType:'json',
 			async:false,
@@ -744,7 +744,7 @@
 				$('#modal_complain').modal('hide');
 				if(response==1){
 					window.location.href = '/telkomdds/public'+link;
-				}if(response==0){
+				}else if(response==0){
 					$('#modal_status_barang').modal('show');
 				}else{
 					$('#modal_status_download').modal('show');

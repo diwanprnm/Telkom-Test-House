@@ -1039,18 +1039,18 @@ class PengujianController extends Controller
 	public function cekAmbilBarang(Request $request)
     {
 		$currentUser = Auth::user();
-		$equip = EquipmentHistory::where("examination_id", "=", $request->input('exam_id'))->where("location", "=", "1");
+		$equip = EquipmentHistory::where("examination_id", "=", $request->input('my_exam_id'))->where("location", "=", "1");
 		$is_location = count($equip->get());
 		// return(count($equip->get()));
 		//if count 1, masukan ke history download
-		if($is_location == 1){
-			$examhist = ExaminationHistory::where("examination_id", "=", $request->input('exam_id'))->where("tahap", "=", "Download Sertifikat");
+		if($is_location > 0){
+			$examhist = ExaminationHistory::where("examination_id", "=", $request->input('my_exam_id'))->where("tahap", "=", "Download Sertifikat");
 			$count_download = count($examhist->get());
 			if($count_download >= 3){
 				return($examhist->get());
 			}else{				
 				$exam_hist = new ExaminationHistory;
-				$exam_hist->examination_id = $id;
+				$exam_hist->examination_id = $request->input('my_exam_id');
 				$exam_hist->date_action = date('Y-m-d H:i:s');
 				$exam_hist->tahap = 'Download Sertifikat';
 				$exam_hist->status = 1;
