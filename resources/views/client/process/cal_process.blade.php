@@ -197,7 +197,7 @@
 					            <h2>Forth Step</h2>
 					            <fieldset>
 					                <div class="form-group">
-											<!-- <label>{{ trans('translate.service_upload_siupp') }}<span class="text-danger">*</span></label> -->
+											<label>{{ trans('translate.service_upload_siupp') }}<span class="text-danger">*</span></label>
 											<input   id="fileInput-SIUPP" name="fuploadsiupp" type="file" accept="application/pdf,image/*">
 											<input type="hidden" name="hide_siupp_file" id="hide_siupp_file" value="{{$userData->fileSIUPP}}"/>
 											<a id="siupp-file" class="btn btn-link" style="color:black !important;" >{{$userData->fileSIUPP}}</a>
@@ -206,12 +206,14 @@
 											</div>
 										</div>
 										<div class="form-group" style="margin-bottom:0.01%">
-											<label class="sr-only" for="f1-no-siupp">{{ trans('translate.service_upload_siupp_no') }}</label>
+											<label>{{ trans('translate.service_upload_siupp_no') }}</label>
 											<input type="text" name="f1-no-siupp" placeholder="{{ trans('translate.service_upload_siupp_no') }}"   id="f1-no-siupp" value="{{$userData->noSIUPP}}">
 										</div>
 										<div class="form-group">
-											<label class="sr-only" for="f1-tgl-siupp">{{ trans('translate.service_upload_siupp_date') }}</label>
-											<input type="hidden" name="f1-tgl-siupp" placeholder="{{ trans('translate.service_upload_siupp_date') }}" class="data-upload-berkas f1-tgl-siupp form-control input-submit" id="f1-tgl-siupp" readonly>
+											<label>{{ trans('translate.service_upload_siupp_date') }}</label>
+
+											<input type="text" name="f1-tgl-siupp" placeholder="{{ trans('translate.service_upload_siupp_date') }}" class="data-upload-berkas datepicker f1-tgl-siupp  input-submit" id="f1-tgl-siupp" value="{{$userData->tglSIUPP}}">
+											<!-- <input type="hidden" name="f1-tgl-siupp" placeholder="{{ trans('translate.service_upload_siupp_date') }}" class="data-upload-berkas f1-tgl-siupp form-control input-submit" id="f1-tgl-siupp" readonly>
 											<div class="col-xs-1 selectContainer">
 												 <select name="daySIUPP" id="daySIUPP" class="form-control" placeholder="Day" style="width:auto;" onchange="setDays(monthSIUPP,this,yearSIUPP,1)">
 													@for($i = 1;$i <= 31; $i++)
@@ -250,7 +252,7 @@
 														@endif
 													@endfor
 												</select>
-											</div>
+											</div> -->
 										</div>
 										<div class="form-group col-xs-12" style="margin-top:35px">
 											<label>{{ trans('translate.service_upload_certificate') }}<span class="text-danger">*</span></label>
@@ -266,8 +268,9 @@
 											</div>
 										</div>
 										<div class="form-group">
-											<label class="sr-only" for="f1-batas-waktu">{{ trans('translate.service_upload_certificate_date') }}</label>
-											<input type="hidden" name="f1-batas-waktu" placeholder="{{ trans('translate.service_upload_certificate_date') }}" class="data-upload-berkas f1-batas-waktu form-control input-submit" id="f1-batas-waktu" readonly>
+											<label>{{ trans('translate.service_upload_certificate_date') }}</label>
+											<input type="text" name="f1-batas-waktu" placeholder="{{ trans('translate.service_upload_certificate_date') }}" class="datepicker data-upload-berkas f1-batas-waktu  input-submit" id="f1-batas-waktu" value="{{$userData->tglSertifikat}}">
+											<!-- <input type="hidden" name="f1-batas-waktu" placeholder="{{ trans('translate.service_upload_certificate_date') }}" class="data-upload-berkas f1-batas-waktu form-control input-submit" id="f1-batas-waktu" readonly>
 											<div class="col-xs-1 selectContainer">
 												 <select name="daySerti" id="daySerti" class="form-control" style="width:auto;"  " placeholder="Day" onchange="setDays(monthSerti,this,yearSerti,0)">
 													@for($i = 1;$i <= 31; $i++)
@@ -306,7 +309,7 @@
 														@endif
 													@endfor
 												</select>
-											</div>
+											</div> -->
 										</div>
 										<div class="form-group col-xs-12" style="margin-top:35px">
 											<label>{{ trans('translate.service_upload_npwp') }}<span class="text-danger">*</span></label>
@@ -482,7 +485,7 @@
 											</div>
 										</div>
 										<div class="f1-buttons">
-											<button type="button" class="button button3d btn-green upload_later">{{ trans('translate.service_upload_later') }}</button>
+											<a href="#next" class="button button3d btn-green upload_later">{{ trans('translate.service_upload_later') }}</a>
 											<div id="attachment-file">
 												{{ trans('translate.service_upload_later_alt') }}
 											</div>
@@ -524,6 +527,13 @@
 	    { 
 	    	if(!form.valid()){
 	    		return false;
+	    	}
+
+	    	if(newIndex == 0 || newIndex == null){ 
+	    		$( '#formBTNprevious' ).hide();
+	    	}
+	    	if(newIndex >= 1){ 
+	    		$( '#formBTNprevious' ).show();
 	    	}
 
 	    	form.trigger("focus"); 
@@ -701,5 +711,11 @@
 		xhr.open('GET', url);
 		xhr.send();
 	}
+
+	$('.datepicker').datepicker({
+    format: 'yyyy-mm-dd',
+	    startDate: '-3d',
+	    autoclose: true,
+	});
 </script>
 @endsection

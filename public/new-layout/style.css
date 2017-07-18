@@ -14151,6 +14151,14 @@ body.loading .overlay {
 h4.judulselesai {
     text-align: center;
 }
-a.button.button3d.btn-green {
+.lastFieldset a.button.button3d.btn-green {
     float: right;
+}
+.f1-buttons a.button.button3d.btn-green {
+	float: none;
+}
+#formBTNprevious{
+    display: none;
+	background: #757575;
+    color: #fff;
 }
