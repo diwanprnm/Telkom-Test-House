@@ -820,37 +820,16 @@ class ExaminationAPIController extends AppBaseController
 					if($examinations->save()){
 						$device = Device::find($examinations->device_id);
 						if($device){
-							$device->deal_test_date = $param->function_test_date;
-							if (!empty($param->name)){
-								$device->name = $param->name;
-							}
-								
-							if (!empty($param->mark)){
-								$device->mark = $param->mark;
-							}
-								
-							if (!empty($param->capacity)){
-								$device->capacity = $param->capacity;
-							}
-								
-							if (!empty($param->manufactured_by)){
-								$device->manufactured_by = $param->manufactured_by;
-							}
-								
-							if (!empty($param->model)){
-								$device->model = $param->model;
-							}
-								
-							if (!empty($param->serial_number)){
-								$device->serial_number = $param->serial_number;
-							}
-								
-							if (!empty($param->test_reference)){
-								$device->test_reference = $param->test_reference;
-							}
-							
 							if (!empty($param->link)){
 								$device->certificate = $param->link;
+							}
+							
+							if (!empty($param->cert_valid_from)){
+								$device->valid_from = $param->cert_valid_from;
+							}
+							
+							if (!empty($param->cert_valid_thru)){
+								$device->valid_thru = $param->cert_valid_thru;
 							}
 							
 							$device->updated_by = 1;
