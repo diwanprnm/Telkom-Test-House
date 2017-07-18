@@ -194,7 +194,7 @@
 				            <h2>Forth Step</h2>
 				            <fieldset>
 				                <div class="form-group">
-										<!-- <label>{{ trans('translate.service_upload_siupp') }}<span class="text-danger">*</span></label> -->
+										<label>{{ trans('translate.service_upload_siupp') }}<span class="text-danger">*</span></label>
 										<input   id="fileInput-SIUPP" name="fuploadsiupp" type="file" accept="application/pdf,image/*">
 										<input type="hidden" name="hide_siupp_file" id="hide_siupp_file" value="{{$userData->fileSIUPP}}"/>
 										<a id="siupp-file" class="btn btn-link" style="color:black !important;" >{{$userData->fileSIUPP}}</a>
@@ -203,11 +203,11 @@
 										</div>
 									</div>
 									<div class="form-group" style="margin-bottom:0.01%">
-										<label class="sr-only" for="f1-no-siupp">{{ trans('translate.service_upload_siupp_no') }}</label>
+										<label>{{ trans('translate.service_upload_siupp_no') }}</label>
 										<input type="text" name="f1-no-siupp" placeholder="{{ trans('translate.service_upload_siupp_no') }}"   id="f1-no-siupp" value="{{$userData->noSIUPP}}">
 									</div>
 									<div class="form-group">
-										<label class="sr-only" for="f1-tgl-siupp">{{ trans('translate.service_upload_siupp_date') }}</label>
+										<label>{{ trans('translate.service_upload_siupp_date') }}</label>
 										
 										<input type="text" name="f1-tgl-siupp" placeholder="{{ trans('translate.service_upload_siupp_date') }}" class="data-upload-berkas datepicker f1-tgl-siupp  input-submit" id="f1-tgl-siupp" value="{{$userData->tglSIUPP}}">
 										<!-- <div class="col-xs-1 selectContainer">
@@ -264,7 +264,7 @@
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="sr-only" for="f1-batas-waktu">{{ trans('translate.service_upload_certificate_date') }}</label>
+										<label>{{ trans('translate.service_upload_certificate_date') }}</label>
 										<input type="text" name="f1-batas-waktu" placeholder="{{ trans('translate.service_upload_certificate_date') }}" class="datepicker data-upload-berkas f1-batas-waktu  input-submit" id="f1-batas-waktu" value="{{$userData->tglSertifikat}}">
 										<!-- <div class="col-xs-1 selectContainer">
 											 <select name="daySerti" id="daySerti" class="form-control" style="width:auto;"  " placeholder="Day" onchange="setDays(monthSerti,this,yearSerti,0)">
@@ -499,7 +499,7 @@
 										</div>
 									</div>
 									<div class="f1-buttons">
-										<button type="button" class="button button3d btn-green upload_later">{{ trans('translate.service_upload_later') }}</button>
+										<a href="#next" class="button button3d btn-green upload_later">{{ trans('translate.service_upload_later') }}</a>
 										<div id="attachment-file">
 											{{ trans('translate.service_upload_later_alt') }}
 										</div>
@@ -507,7 +507,7 @@
 				            </fieldset>
 
 							<h2>Seventh Step</h2>
-				        	<fieldset> 
+				        	<fieldset class="lastFieldset"> 
 								<h4 class="judulselesai">{{ trans('translate.service_thanks') }}</h4> 
 								<a class="button button3d btn-green" href="<?php echo url('/process');?>">Finish</a>
 							</fieldset>
@@ -526,6 +526,7 @@
 
  <script type="text/javascript" src="{{url('vendor/jquerystep/jquery.steps.js')}}"></script>
  <script> 
+ 
   	var form = $("#form-permohonan");
 	form.validate({
 	    errorPlacement: function errorPlacement(error, element) { element.before(error); },
@@ -540,13 +541,22 @@
 	    transitionEffect: "slideLeft",
 	    onStepChanging: function (event, currentIndex, newIndex)
 	    { 
+	    	console.log(newIndex);
 	    	if(!form.valid()){
 	    		return false;
 	    	}
-	    	
+
+	    	if(newIndex == 0 || newIndex == null){ 
+	    		$( '#formBTNprevious' ).hide();
+	    	}
+	    	if(newIndex >= 1){ 
+	    		$( '#formBTNprevious' ).show();
+	    	}
+
 	    	form.trigger("focus"); 
 	        form.validate().settings.ignore = ":disabled,:hidden"; 
-	       	console.log(currentIndex); 
+	       	console.log(currentIndex);
+
 	       	if(newIndex == 4){ 
 	       		 $('.actions > ul > li:nth-child(2) a').text("Save");
 	       	 	$("#f3-preview-1").html($("#f1-nama-perangkat").val());
@@ -600,7 +610,7 @@
 							$("body").removeClass("loading");
 							error = true;
 							alert("Gagal mengambil data"); 
-							formWizard.steps("previous"); 
+							// formWizard.steps("previous"); 
 						}
 					}); 
 				}
