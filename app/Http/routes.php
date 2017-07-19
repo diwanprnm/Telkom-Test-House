@@ -2187,7 +2187,7 @@ Route::get('cetakSPB', function(Illuminate\Http\Request $request){
 		$pdf->Ln();
 	$pdf->Row(array('','d. ','Apabila dalam waktu 1 (satu) minggu setelah pembayaran, Saudara belum melengkapi nomor NPWP maka kami anggap Saudara tidak membutuhkan Faktur Pajak Standar.'));	
 	$pdf->Row(array('','e. ','Perangkat sampel Uji harus sudah diambil paling lama 2(dua) minggu setelah selesai pengujian, apabila sampai batas waktu yang ditetapkan perangkat uji belum diambil, maka penyimpanan perangkat & segala akibatnya menjadi tanggung jawab Saudara.'));	
-	$pdf->Row(array('','f. ','Estimasi pengujian dilaksanakan paling lambat bulan Juli 2017'));	
+	// $pdf->Row(array('','f. ','Estimasi pengujian dilaksanakan paling lambat bulan Juli 2017'));	
 	
 	$pdf->Ln(3);
 	$pdf->SetFont('helvetica','',10);

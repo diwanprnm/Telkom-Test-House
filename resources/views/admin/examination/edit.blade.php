@@ -232,7 +232,7 @@
 											<span class="stepDesc"><small> Laporan Uji </small></span>
 										</a>
 									</li>
-									@if($data->examination_type_id !='2' && $data->examination_type_id !='3')
+									@if($data->examination_type_id !='2' && $data->examination_type_id !='3' && $data->examination_type_id !='4')
 										<li>
 											@if($data->resume_status == '1' && $data->qa_status != '1')
 												<a href="#step-9" class="done wait">
@@ -1699,7 +1699,7 @@
 		}
 	});
 </script>
-@if($data->examination_type_id =='2' || $data->examination_type_id =='3')
+@if($data->examination_type_id =='2' || $data->examination_type_id =='3' || $data->examination_type_id =='4')
 <script type="text/javascript">
 	$('#form-lap-uji').submit(function () {
 		var keterangan = document.getElementById('keterangan_lap_uji').value;
@@ -1742,7 +1742,7 @@
 	});
 </script>
 @endif
-@if($data->examination_type_id !='2' && $data->examination_type_id !='3')
+@if($data->examination_type_id !='2' && $data->examination_type_id !='3' && $data->examination_type_id !='4')
 <script type="text/javascript">	
 	$('#form-sidang').submit(function () {
 		var keterangan = document.getElementById('keterangan_sidang_qa').value;

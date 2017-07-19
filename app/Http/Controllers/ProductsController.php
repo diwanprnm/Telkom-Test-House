@@ -47,8 +47,8 @@ class ProductsController extends Controller
                     ->groupBy('stels.id');
 
             if ($search != null){
-                $stels->where("name",$search);
-                $stels->orWhere("code",$search);
+                $stels->where("stels.name",$search);
+                $stels->orWhere("stels.code",$search);
             }
             
             $stels = $stels->paginate($paginate);

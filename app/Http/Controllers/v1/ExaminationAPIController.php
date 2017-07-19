@@ -717,7 +717,7 @@ class ExaminationAPIController extends AppBaseController
     	if(!empty($param->id) && !empty($param->status)){
     		$examinations = Examination::find($param->id);
     		if($examinations){
-				$examinations->is_created_spk = $param->status;
+				$examinations->is_spk_created = $param->status;
     			if($examinations->save()){
     				return $this->sendResponse($examinations, 'Examination Found');
     			}else{

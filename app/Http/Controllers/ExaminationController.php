@@ -17,6 +17,9 @@ use App\ExaminationHistory;
 use App\User;
 use App\Logs;
 use App\Income;
+use App\Questioner;
+use App\Equipment;
+use App\EquipmentHistory;
 
 use Auth;
 use File;
@@ -1369,6 +1372,9 @@ class ExaminationController extends Controller
 		$device = Device::find($device_id);
 		if ($exam_attach && $exam && $device){
 			try{
+				Questioner::where('examination_id', '=' ,''.$id.'')->delete();
+				Equipment::where('examination_id', '=' ,''.$id.'')->delete();
+				EquipmentHistory::where('examination_id', '=' ,''.$id.'')->delete();
 				ExaminationHistory::where('examination_id', '=' ,''.$id.'')->delete();
 				ExaminationAttach::where('examination_id', '=' ,''.$id.'')->delete();
 				$exam->delete();

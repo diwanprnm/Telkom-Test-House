@@ -771,13 +771,9 @@
 	function checkAmbilBarang(a){
 		var link = document.getElementById('link').value;
 		$.ajax({
-			url : "{{URL::to('cekAmbilBarang')}}",
+			type: "POST",
+			url : "cekAmbilBarang",
 			data: {'_token':"{{ csrf_token() }}", 'my_exam_id':a},
-			// dataType:'json',
-			async:false,
-			type:'post',
-			processData: false,
-			contentType: false,
 			beforeSend: function(){
 				// document.getElementById("overlay").style.display="inherit";
 			},
