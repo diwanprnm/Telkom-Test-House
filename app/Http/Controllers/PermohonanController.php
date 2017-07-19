@@ -206,6 +206,7 @@ class PermohonanController extends Controller
 		$batas_waktu_sistem = 
 			// $request->input('batas_waktu_sistem');
 			$request->input('f1-batas-waktu');
+		$no_reg = $this->generateFunctionTestNumber($jns_pengujian_name);
 			
 		if($request->ajax()){
 			$data = Array([
@@ -228,7 +229,8 @@ class PermohonanController extends Controller
 				'pembuat_perangkat' => $pembuat_perangkat,
 				'jnsPengujian' => $jns_pengujian,
 				'initPengujian' => $jns_pengujian_name,
-				'descPengujian' => $jns_pengujian_desc
+				'descPengujian' => $jns_pengujian_desc,
+				'no_reg' => $no_reg
 			]);
 		}
 		
@@ -342,6 +344,7 @@ class PermohonanController extends Controller
         $exam->updated_at = ''.date('Y-m-d h:i:s').'';
         $exam->jns_perusahaan = ''.$jns_perusahaan.'';
         $exam->keterangan = ''.$request->input('hide_cekSNjnsPengujian').'';
+        $exam->function_test_NO = ''.$no_reg.'';
 
         try{
             $exam->save();
@@ -958,5 +961,34 @@ class PermohonanController extends Controller
 
         return true;		
 		// return redirect()->back()->with('status', '');
+    }
+	
+	public function generateFunctionTestNumber($a) {
+		$thisYear = date('Y');
+		$query = "
+			SELECT 
+			SUBSTRING_INDEX(function_test_NO,'/',1) + 1 AS last_numb
+			FROM examinations 
+			WHERE 
+			SUBSTRING_INDEX(SUBSTRING_INDEX(function_test_NO,'/',2),'/',-1) = '".$a."' AND
+			SUBSTRING_INDEX(function_test_NO,'/',-1) = '".$thisYear."'
+			ORDER BY last_numb DESC LIMIT 1
+		";
+		$data = DB::select($query);
+		if (count($data) == 0){
+			return '001/'.$a.'/'.$thisYear.'';
+		}
+		else{
+			$last_numb = $data[0]->last_numb;
+			if($last_numb < 10){
+				return '00'.$last_numb.'/'.$a.'/'.$thisYear.'';
+			}
+			else if($last_numb < 100){
+				return '0'.$last_numb.'/'.$a.'/'.$thisYear.'';
+			}
+			else{
+				return ''.$last_numb.'/'.$a.'/'.$thisYear.'';
+			}
+		}
     }
 }
