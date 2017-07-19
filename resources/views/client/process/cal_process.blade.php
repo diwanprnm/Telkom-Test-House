@@ -412,7 +412,7 @@
 										</div>
 					            </fieldset>
 								<h2>Forth Step</h2>
-					        	<fieldset> 
+					        	<fieldset class="lastFieldset"> 
 									<h4 class="judulselesai">{{ trans('translate.service_thanks') }}</h4> 
 									<a class="button button3d btn-green" href="<?php echo url('/process');?>">Finish</a>
 								</fieldset>
@@ -475,7 +475,8 @@
 				$("#f4-preview-5").html($("#f1-sertifikat-sistem-mutu").val());
 				$("#f4-preview-6").html($("#hide_sertifikat_file").val());
 				$("#f4-preview-7").html($("#f1-batas-waktu").val());
-				$("#f4-preview-11").html($("#hide_npwp_file").val());
+				$("#f4-preview-11").html($("#hide_npwp_file").val()); 
+				$("#f4-preview-file-ref-uji").html($(".f1-file-ref-uji").val());
 	       	} 
 	        if(newIndex == 5 ){
 	        	console.log("save");
