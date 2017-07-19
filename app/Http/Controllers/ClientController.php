@@ -311,6 +311,8 @@ class ClientController extends Controller
 			$q->where('companies.is_active', '=' , 0);
 		});
 		$user = $query->get();
+		// $user = $query->toSql();
+		// dd($user);exit;
 		
 		return count($user);
     }
