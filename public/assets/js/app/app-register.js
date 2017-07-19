@@ -30,5 +30,19 @@ $( document ).ready(function() {
 		isCompanyFormActive = !isCompanyFormActive;
 	
 	});
+ 	$("#register-form-submit").on("click",function(){
+ 		var password = $("#newPass").val();
+ 		var confirmPassword = $("#confnewPass").val();
+ 		if(password != confirmPassword){
+ 			alert("Password dan Confirmation Password Don't Match")
+ 			return false;
+ 		}else{
+ 			return true;
+ 		}
+ 	});
+
+ 	 $('#newPass, #confnewPass').bind("cut copy paste",function(e) {
+	     e.preventDefault();
+	 });
 }); 
  

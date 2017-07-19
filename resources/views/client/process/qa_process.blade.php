@@ -196,7 +196,7 @@
 				                <div class="form-group">
 										<label>{{ trans('translate.service_upload_siupp') }}<span class="text-danger">*</span></label>
 										<input   id="fileInput-SIUPP" name="fuploadsiupp" type="file" accept="application/pdf,image/*">
-										<input type="hidden" name="hide_siupp_file" id="hide_siupp_file" value="{{$userData->fileSIUPP}}"/>
+										<input type="hidden" name="hide_siupp_file" class="required" id="hide_siupp_file" value="{{$userData->fileSIUPP}}"/>
 										<a id="siupp-file" class="btn btn-link" style="color:black !important;" >{{$userData->fileSIUPP}}</a>
 										<div id="attachment-file">
 											*ukuran file maksimal 2 mb
@@ -204,60 +204,22 @@
 									</div>
 									<div class="form-group" style="margin-bottom:0.01%">
 										<label>{{ trans('translate.service_upload_siupp_no') }}</label>
-										<input type="text" name="f1-no-siupp" placeholder="{{ trans('translate.service_upload_siupp_no') }}"   id="f1-no-siupp" value="{{$userData->noSIUPP}}">
+										<input type="text" name="f1-no-siupp" placeholder="{{ trans('translate.service_upload_siupp_no') }}"   id="f1-no-siupp" value="{{$userData->noSIUPP}}" class="required">
 									</div>
 									<div class="form-group">
 										<label>{{ trans('translate.service_upload_siupp_date') }}</label>
 										
-										<input type="text" name="f1-tgl-siupp" placeholder="{{ trans('translate.service_upload_siupp_date') }}" class="data-upload-berkas datepicker f1-tgl-siupp  input-submit" id="f1-tgl-siupp" value="{{$userData->tglSIUPP}}">
-										<!-- <div class="col-xs-1 selectContainer">
-											 <select name="daySIUPP" id="daySIUPP" class="form-control" placeholder="Day" style="width:auto;" onchange="setDays(monthSIUPP,this,yearSIUPP,1)">
-												@for($i = 1;$i <= 31; $i++)
-													<?php
-														if($i < 10){
-															$i = '0'.$i;
-														}
-													?>
-													<option value="{{$i}}">{{$i}}</option>
-												@endfor
-											</select>
-										</div>
-										<div class="col-xs-2 selectContainer">
-										 	 <select name="monthSIUPP" id="monthSIUPP" class="form-control" " placeholder="Month" style="width:auto;" onchange="setDays(this,daySIUPP,yearSIUPP,1)">
-												<option value="01">January</option>
-												<option value="02">February</option>
-												<option value="03">March</option>
-												<option value="04">April</option>
-												<option value="05">May</option>
-												<option value="06">June</option>
-												<option value="07">July</option>
-												<option value="08">August</option>
-												<option value="09">September</option>
-												<option value="10">October</option>
-												<option value="11">November</option>
-												<option value="12">December</option>
-											</select>
-										</div>
-										<div class="col-xs-2 selectContainer">
-										 	<select name="yearSIUPP" id="yearSIUPP" class="form-control" style="width:auto;" " placeholder="Year" onchange="setDays(monthSIUPP,daySIUPP,this,1)">
-												@for($i = date('Y')+100;$i >= 1900; $i--)
-													@if($i == date('Y'))
-														<option value="{{$i}}" selected>{{$i}}</option>
-													@else
-														<option value="{{$i}}">{{$i}}</option>
-													@endif
-												@endfor
-											</select>
-										</div> -->
+										<input type="text" name="f1-tgl-siupp" placeholder="{{ trans('translate.service_upload_siupp_date') }}" class="data-upload-berkas datepicker f1-tgl-siupp input-submit required" id="f1-tgl-siupp" value="{{$userData->tglSIUPP}}">
+										 
 									</div>
 									<div class="form-group  " style="margin-top:35px">
 										<label>{{ trans('translate.service_upload_certificate') }}<span class="text-danger">*</span></label>
-										<input type="text" name="f1-sertifikat-sistem-mutu" placeholder="{{ trans('translate.service_upload_certificate') }}" id="f1-sertifikat-sistem-mutu" value="{{$userData->noSertifikat}}">
+										<input type="text" name="f1-sertifikat-sistem-mutu" placeholder="{{ trans('translate.service_upload_certificate') }}" id="f1-sertifikat-sistem-mutu" value="{{$userData->noSertifikat}}" class="required">
 									</div>
 									<div class="form-group  " style="margin-bottom:0.01%">
 										<label>{{ trans('translate.service_upload_certificate_file') }}<span class="text-danger">*</span></label>
-										<input   id="fileInput-lampiran" name="fuploadlampiran" type="file" accept="application/pdf,image/*">
-										<input type="hidden" name="hide_sertifikat_file" id="hide_sertifikat_file" value="{{$userData->fileSertifikat}}"/>
+										<input   id="fileInput-lampiran" name="fuploadlampiran" type="file" accept="application/pdf,image/*" >
+										<input type="hidden" name="hide_sertifikat_file" id="hide_sertifikat_file" value="{{$userData->fileSertifikat}}" class="required"/>
 										<a id="sertifikat-file" class="btn btn-link" style="color:black !important;" >{{$userData->fileSertifikat}}</a>
 										<div id="attachment-file">
 											*ukuran file maksimal 2 mb
@@ -265,51 +227,12 @@
 									</div>
 									<div class="form-group">
 										<label>{{ trans('translate.service_upload_certificate_date') }}</label>
-										<input type="text" name="f1-batas-waktu" placeholder="{{ trans('translate.service_upload_certificate_date') }}" class="datepicker data-upload-berkas f1-batas-waktu  input-submit" id="f1-batas-waktu" value="{{$userData->tglSertifikat}}">
-										<!-- <div class="col-xs-1 selectContainer">
-											 <select name="daySerti" id="daySerti" class="form-control" style="width:auto;"  " placeholder="Day" onchange="setDays(monthSerti,this,yearSerti,0)">
-												@for($i = 1;$i <= 31; $i++)
-													<?php
-														if($i < 10){
-															$i = '0'.$i;
-														}
-													?>
-													<option value="{{$i}}">{{$i}}</option>
-												@endfor
-											</select>
-										</div>
-										<div class="col-xs-2 selectContainer">
-										 	<select name="monthSerti" id="monthSerti" class="form-control" style="width:auto;"  " placeholder="Month" onchange="setDays(this,daySerti,yearSerti,0)">
-												<option value="01">January</option>
-												<option value="02">February</option>
-												<option value="03">March</option>
-												<option value="04">April</option>
-												<option value="05">May</option>
-												<option value="06">June</option>
-												<option value="07">July</option>
-												<option value="08">August</option>
-												<option value="09">September</option>
-												<option value="10">October</option>
-												<option value="11">November</option>
-												<option value="12">December</option>
-											</select>
-										</div>
-										<div class="col-xs-2 selectContainer">
-											 <select name="yearSerti" id="yearSerti" class="form-control" style="width:auto;" " placeholder="Year" onchange="setDays(monthSerti,daySerti,this,0)">
-												@for($i = date('Y')+100;$i >= 1900; $i--)
-													@if($i == date('Y'))
-														<option value="{{$i}}" selected>{{$i}}</option>
-													@else
-														<option value="{{$i}}">{{$i}}</option>
-													@endif
-												@endfor
-											</select>
-										</div> -->
+										<input type="text" name="f1-batas-waktu" placeholder="{{ trans('translate.service_upload_certificate_date') }}" class="datepicker data-upload-berkas f1-batas-waktu  input-submit required" id="f1-batas-waktu" value="{{$userData->tglSertifikat}}"> 
 									</div>
 									<div class="form-group  " style="margin-top:35px">
 										<label>{{ trans('translate.service_upload_npwp') }}<span class="text-danger">*</span></label>
-										<input class="data-upload-berkas f1-file-NPWP" id="fileInput-NPWP" name="fuploadnpwp" type="file" accept="application/pdf,image/*">
-										<input type="hidden" name="hide_npwp_file" id="hide_npwp_file" value="{{$userData->fileNPWP}}"/>
+										<input class="data-upload-berkas f1-file-NPWP " id="fileInput-NPWP" name="fuploadnpwp" type="file" accept="application/pdf,image/*">
+										<input type="hidden" name="hide_npwp_file" class="required" id="hide_npwp_file" value="{{$userData->fileNPWP}}"/>
 										<a id="npwp-file" class="btn btn-link" style="color:black !important;" >{{$userData->fileNPWP}}</a>
 										<div id="attachment-file">
 											*ukuran file maksimal 2 mb
@@ -525,8 +448,7 @@
 @section('content_js')
 
  <script type="text/javascript" src="{{url('vendor/jquerystep/jquery.steps.js')}}"></script>
- <script> 
- 
+ <script>  
   	var form = $("#form-permohonan");
 	form.validate({
 	    errorPlacement: function errorPlacement(error, element) { element.before(error); },
@@ -540,7 +462,7 @@
 	    autoFocus: true,
 	    transitionEffect: "slideLeft",
 	    onStepChanging: function (event, currentIndex, newIndex)
-	    { 
+	    {  
 	    	console.log(newIndex);
 	    	if(!form.valid()){
 	    		return false;
@@ -644,12 +566,13 @@
 	        	return true;
 	        }else{
 	        	if(form.valid()){
+	        		$('body').scrollTop(10);
 	        		if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
 			        $( ".number li:eq("+(newIndex)+" ) button" ).removeClass("done").addClass("active");
 			        $( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active");
 	        	}
 	        	return form.valid();	
-	        }
+	        } 
 	    },
 	    onFinishing: function (event, currentIndex)
 	    {
