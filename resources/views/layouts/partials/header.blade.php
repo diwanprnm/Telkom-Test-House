@@ -36,16 +36,16 @@
                 <a href="{{url('/')}}">{{ trans('translate.home') }}</a>
               </li>  
               <li class="{{ (!empty($page) && ($page == 'about' || $page == 'sertifikasi' || $page == 'contact'))?'current':''}}">
-                <a href="#" >{{ trans('translate.menu_company') }}  <i class="icon-angle-down"></i></a>
-                <ul>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" >{{ trans('translate.menu_company') }}  <i class="icon-angle-down"></i></a>
+                <ul class="dropdown-menu" role="menu">
                    <li><a href="{{url('about')}}">{{ trans('translate.about') }} {{ trans('translate.about_us') }}</a></li>
                   <li><a href="{{url('sertifikasi')}}">{{ trans('translate.certification') }}</a></li>
                   <li><a href="{{url('contact')}}">{{ trans('translate.contact') }}</a></li>
                 </ul>
               </li>
               <li class="{{ (!empty($page) && ($page == 'STELclient' || $page == 'STSELclient' || $page == 'Chargeclient' || $page == 'procedure' || $page == 'pengujian' || $page == 'process'))?'current':''}}">
-                <a href="#">{{ trans('translate.menu_testing') }} <i class="icon-angle-down"></i></a>
-                <ul>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ trans('translate.menu_testing') }} <i class="icon-angle-down"></i></a>
+                <ul class="dropdown-menu" role="menu">
                   <li><a href="{{url('procedure')}}">{{ trans('translate.procedure') }}</a></li>
                   <li><a href="{{url('process')}}">{{ trans('translate.process') }}</a></li>
                   <?php
@@ -61,7 +61,7 @@
                   }
                   ?>
                   <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ trans('translate.menu_ref') }}</a>
-                      <ul>
+                      <ul class="dropdown-menu" role="menu">
                           <li><a href="{{url('STELclient')}}">{{ trans('translate.stel') }}</a></li>
                           <li><a href="{{url('STSELclient')}}">{{ trans('translate.stels') }}</a></li>
                       </ul>
