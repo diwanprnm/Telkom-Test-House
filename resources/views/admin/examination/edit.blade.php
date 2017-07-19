@@ -34,7 +34,7 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Testing From *
+										Tanggal Mulai Pengujian *
 									</label>
 									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
 										<input type="text" name="testing_start" id="testing_start" class="form-control"/>
@@ -49,7 +49,7 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Testing Thru *
+										Tanggal Selesai Pengujian *
 									</label>
 									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
 										<input type="text" name="testing_end" id="testing_end" class="form-control"/>
@@ -316,7 +316,7 @@
 													</td>
 												</tr>	
 												<tr>
-													<td>Model:</td>
+													<td>Model/Tipe:</td>
 													<td>
 														{{ $data->device->model }}
 													</td>
@@ -1355,7 +1355,7 @@
 									<div class="col-md-6">
 										<div class="form-group">
 											<label>
-												Valid From *
+												Tanggal Mulai Berlaku *
 											</label>
 											<p id="validFrom" class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
 												<input type="text" name="valid_from" id="valid_from" class="form-control" value="{{ $data->device->valid_from }}"/>
@@ -1370,7 +1370,7 @@
 									<div class="col-md-6">
 										<div class="form-group">
 											<label>
-												Valid Thru *
+												Tanggal Akhir Berlaku *
 											</label>
 											<p id="validThru" class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
 												<input type="text" name="valid_thru" id="valid_thru" class="form-control" value="{{ $data->device->valid_thru }}"/>

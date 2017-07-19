@@ -51,7 +51,7 @@
 		<br><br>
 	</p>
 	<p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-		Dokumen pengajuan Uji {!! $exam_type !!} ({!! $exam_type_desc !!}) Anda telah diperiksa oleh staff User Relation Lab Infrastructure Assurance DDS Telkom. Proses selanjutnya adalah Uji Fungsi (pre-test) perangkat	yang akan dilakukan oleh test engineer kedua belah pihak di Lab IAS dengan alamat sbb:
+		Dokumen pengajuan Uji {!! $exam_type !!} ({!! $exam_type_desc !!}) Anda telah diperiksa oleh staff User Relation Lab Infrastructure Assurance DDS Telkom. Proses selanjutnya adalah Uji Fungsi (pre-test) perangkat	di Lab IAS dengan alamat sbb:
 		<br><br>
 		Lab Pengujian Infrastructure Assurance DDS
 		<br>
