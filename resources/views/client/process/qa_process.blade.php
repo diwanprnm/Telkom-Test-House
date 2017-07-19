@@ -30,8 +30,8 @@
 				<h1>Quality Assurance Testing Process</h1>
 				
 				<ol class="breadcrumb">
-					<li><a href="#">Home</a></li>
-					<li><a href="#">Testing</a></li>
+					<li><a href="{{ url('/') }}">Home</a></li>
+					<li>Testing</li>
 					<li class="active">Process</li>
 				</ol>
 			</div>
