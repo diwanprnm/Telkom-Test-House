@@ -308,8 +308,7 @@ class ClientController extends Controller
 				->orWhere('users.is_active', '=' , 0);
 		});
 		$query->orWhere(function($q){
-			$q->where('companies.is_deleted', '=' , 1)
-				->orWhere('companies.is_active', '=' , 0);
+			$q->where('companies.is_active', '=' , 0);
 		});
 		$user = $query->get();
 		

@@ -1375,6 +1375,9 @@ Route::get('cetakPermohonan', function(Illuminate\Http\Request $request){
 	$pdf->AliasNbPages();
 	$pdf->AddPage();
 /*Data Pemohon*/
+	$pdf->SetFont('helvetica','B',9);
+	$pdf->Cell(190,1,"No. Reg ".$data[0]['no_reg'],0,0,'R');
+	$pdf->Ln(1);
 	$pdf->SetFont('helvetica','B',11);
 	$pdf->Cell(27,5,"Data Pemohon ",0,0,'L');
 	$pdf->SetFont('helvetica','',11);
@@ -2223,19 +2226,24 @@ Route::get('/products/{id}/stel', 'ProductsController@downloadStel');
 Route::post('/pengujian/pembayaran', 'PengujianController@uploadPembayaran');
 Route::post('/pengujian/tanggaluji', 'PengujianController@updateTanggalUji');
 Route::get('/cetakPengujian/{id}', 'PengujianController@details');
-Route::get('/cetak/{namaPemohon}/{alamatPemohon}/{telpPemohon}/{faxPemohon}/{emailPemohon}/{jnsPerusahaan}/{namaPerusahaan}/{alamatPerusahaan}/{telpPerusahaan}/{faxPerusahaan}/{emailPerusahaan}/{nama_perangkat}/{merk_perangkat}/{kapasitas_perangkat}/{pembuat_perangkat}/{model_perangkat}/{referensi_perangkat}/{serialNumber}/{jnsPengujian}/{initPengujian}/{descPengujian}/{namaFile}', 
+Route::get('/cetak/{namaPemohon}/{alamatPemohon}/{telpPemohon}/{faxPemohon}/{emailPemohon}/{jnsPerusahaan}/{namaPerusahaan}/{alamatPerusahaan}/{telpPerusahaan}/{faxPerusahaan}/{emailPerusahaan}/{nama_perangkat}/{merk_perangkat}/{kapasitas_perangkat}/{pembuat_perangkat}/{model_perangkat}/{referensi_perangkat}/{serialNumber}/{jnsPengujian}/{initPengujian}/{descPengujian}/{namaFile}/{no_reg}', 
 array('as' => 'cetak', function(
 	$namaPemohon = null, $alamatPemohon = null, $telpPemohon = null, $faxPemohon = null, $emailPemohon = null, 
 	$jnsPerusahaan = null, $namaPerusahaan = null, $alamatPerusahaan = null,
 	$telpPerusahaan = null, $faxPerusahaan = null,$emailPerusahaan = null,$nama_perangkat = null,
 	$merk_perangkat = null,$kapasitas_perangkat = null,$pembuat_perangkat = null,$model_perangkat = null,
 	$referensi_perangkat = null,$serialNumber = null,$jnsPengujian = null,$initPengujian = null,$descPengujian = null,
-	$namaFile = null ) {
+	$namaFile = null,$no_reg = null ) {
 		$pdf = new PDF_MC_Table();
-		$pdf->jns_pengujian(urldecode($initPengujian),urldecode($descPengujian));
+		$pdf->judul_kop(
+		'PERMOHONAN UJI MUTU ('.urldecode($initPengujian).')',
+		'Applicant Form '.urldecode($initPengujian).' ('.urldecode($descPengujian).')');
 		$pdf->AliasNbPages();
 		$pdf->AddPage();
 	/*Data Pemohon*/
+		$pdf->SetFont('helvetica','B',9);
+		$pdf->Cell(190,1,"No. Reg ".urldecode($no_reg),0,0,'R');
+		$pdf->Ln(1);
 		$pdf->SetFont('helvetica','B',11);
 		$pdf->Cell(27,5,"Data Pemohon ",0,0,'L');
 		$pdf->SetFont('helvetica','',11);
@@ -2703,13 +2711,13 @@ array('as' => 'cetakHasilKuitansi', function(
 ));
 
 Route::get('/cetakUjiFungsi/{id}', 'ExaminationController@cetakUjiFungsi');
-Route::get('/cetakHasilUjiFungsi/{function_test_NO}/{company_name}/{company_address}/{company_phone}/{company_fax}/{device_name}/{device_mark}/{device_manufactured_by}/{device_model}/{device_serial_number}/{status}/{catatan}', 
+Route::get('/cetakHasilUjiFungsi/{company_name}/{company_address}/{company_phone}/{company_fax}/{device_name}/{device_mark}/{device_manufactured_by}/{device_model}/{device_serial_number}/{status}/{catatan}', 
 array('as' => 'cetakHasilUjiFungsi', function(
-	$function_test_NO = null, $company_name = null, $company_address = null, $company_phone = null, $company_fax = null, 
+	$company_name = null, $company_address = null, $company_phone = null, $company_fax = null, 
 	$device_name = null, $device_mark = null, $device_manufactured_by = null, $device_model = null , $device_serial_number = null, 
 	$status = null, $catatan = null ) {
 	$pdf = new PDF_MC_Table(); 
-	$pdf->judul_kop('FORM UJI FUNGSI',urldecode($function_test_NO));
+	$pdf->judul_kop('FORM UJI FUNGSI','');
 	$pdf->AliasNbPages();
 	$pdf->AddPage();
 	
@@ -3036,4 +3044,6 @@ Route::get('/test_notifitcation', 'ProductsController@test_notifitcation');
 Route::get('/upload_payment/{id}', 'ProductsController@upload_payment');
 Route::post('/pembayaranstel', 'ProductsController@pembayaranstel');
 
+Route::post('/checkKuisioner', 'PengujianController@checkKuisioner');
 Route::post('/insertKuisioner', 'PengujianController@insertKuisioner');
+Route::post('/insertComplaint', 'PengujianController@insertComplaint');

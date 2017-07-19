@@ -1560,8 +1560,6 @@ class ExaminationController extends Controller
 		->with('Company')
 		->with('Device')
 		->get();
-		if( strpos( $data[0]->function_test_NO, "/" ) !== false ) {$function_test_NO = urlencode(urlencode($data[0]->function_test_NO));}
-			else{$function_test_NO = $data[0]->function_test_NO?: '-';}
 		if( strpos( $data[0]->company->name, "/" ) !== false ) {$company_name = urlencode(urlencode($data[0]->company->name));}
 			else{$company_name = $data[0]->company->name?: '-';}
 		if( strpos( $data[0]->company->address, "/" ) !== false ) {$company_address = urlencode(urlencode($data[0]->company->address));}
@@ -1585,7 +1583,6 @@ class ExaminationController extends Controller
 		if( strpos( $data[0]->catatan, "/" ) !== false ) {$catatan = urlencode(urlencode($data[0]->catatan));}
 			else{$catatan = $data[0]->catatan?: '-';}
 		return \Redirect::route('cetakHasilUjiFungsi', [
-			'function_test_NO' => $function_test_NO,
 			'company_name' => $company_name,
 			'company_address' => $company_address,
 			'company_phone' => $company_phone,

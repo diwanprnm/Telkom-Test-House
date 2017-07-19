@@ -118,8 +118,17 @@ class HomeController extends Controller
     	$currentUser = Auth::user();
 		
 		if($currentUser){
-			$query_stels = "SELECT * FROM examination_charges ORDER BY device_name";
+			
+			$query_stels = "SELECT DISTINCT s.code as stel ,s.name as device_name
+			FROM stels s,stels_sales ss,stels_sales_detail ssd, companies c , users u
+			WHERE s.id = ssd.stels_id AND ss.id = ssd.stels_sales_id AND ss.user_id = u.id AND u.company_id = c.id
+			AND c.id = '".$currentUser->company->id."'";
 			$data_stels = DB::select($query_stels);
+			
+			if(count($data_stels) == 0){
+				$query_stels = "SELECT * FROM examination_charges ORDER BY device_name";
+				$data_stels = DB::select($query_stels);				
+			}
 
 			$query = "SELECT
 					u.id AS user_id, u.`name` AS namaPemohon, u.address AS alamatPemohon, u.phone_number AS telpPemohon, u.fax AS faxPemohon, u.email AS emailPemohon, u.email2 AS emailPemohon2, u.email3 AS emailPemohon3, u.company_id AS company_id,

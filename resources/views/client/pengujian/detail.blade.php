@@ -21,14 +21,14 @@
                         <div class="form-group">
                             <input type="hidden" id="exam_id" name="exam_id">
                             <label>Tanggal</label>
-							<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-								<input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" readonly required>
-								<span class="input-group-btn">
+							<!--<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">-->
+								<input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo date('d-m-Y');?>" readonly required>
+								<!--<span class="input-group-btn">
 									<button type="button" class="btn btn-default">
 										<i class="glyphicon glyphicon-calendar"></i>
 									</button>
-								</span>
-							</p>
+								</span>-->
+							<!--</p>-->
                         </div>
                         <div class="form-group">
                             <label>Nama</label>
@@ -289,20 +289,20 @@
                             <td colspan="2">
 								<input type="hidden" id="my_exam_id" name="my_exam_id">
 								<label>Date</label>
-								<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-									<input type="text" id="tanggal_complaint" name="tanggal_complaint" placeholder="DD/MM/YYYY" class="form-control" readonly required>
-									<span class="input-group-btn">
+								<!--<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">-->
+									<input type="text" id="tanggal_complaint" name="tanggal_complaint" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo date('d-m-Y');?>" readonly required>
+									<!--<span class="input-group-btn">
 										<button type="button" class="btn btn-default">
 											<i class="glyphicon glyphicon-calendar"></i>
 										</button>
-									</span>
-								</p>
+									</span>-->
+								<!--</p>-->
                             </td>
                         </tr>
                         <tr>
                             <th colspan="4">
                                 <label>Customer Complaint</label>
-                                <textarea class="form-control" placeholder="Your Complaint"></textarea>
+                                <textarea name="complaint" class="form-control" placeholder="Your Complaint"></textarea>
                             </th>
                         </tr>
                         <tr>
@@ -688,14 +688,37 @@
 	function isTestimonial(a,b,c,d,e){
 		var link = document.getElementById('link');
 			link.value = '/pengujian/download/'+a+'/'+b+'/'+c;
-		// var message = document.getElementById('message');
-		$('#modal_kuisioner').modal('show');
-		$('#modal_kuisioner').on('shown.bs.modal', function() {
-			$("#exam_type").val(d);
-			$("#exam_id").val(e);
-			$("#tanggal").focus();
+		
+		$.ajax({
+			type: "POST",
+			url : "{{URL::to('checkKuisioner')}}",
+			data: {'_token':"{{ csrf_token() }}", 'id':e},
+			type:'post',
+			beforeSend: function(){
+				// document.getElementById("overlay").style.display="inherit";
+			},
+			success:function(response){
+				// document.getElementById("overlay").style.display="none";
+				console.log(response);
+				if(response=='0'){
+					$('#modal_kuisioner').modal('show');
+					$('#modal_kuisioner').on('shown.bs.modal', function() {
+						$("#exam_type").val(d);
+						$("#exam_id").val(e);
+						$("#tanggal").focus();
+					});
+				}else if(response=='' || response==undefined || response==undefined){
+					$("#my_exam_id").val(e);
+					$('#modal_kuisioner').modal('hide');
+					$('#modal_complain').modal('show');	
+					$('#modal_complain').on('shown.bs.modal', function() {
+						$("#tanggal_complaint").focus();
+					});	
+				}else{
+					checkAmbilBarang(e);
+				}
+			}
 		});
-		// message.focus();
 	}
 	
 	$('#submit-kuisioner').click(function () {
@@ -726,10 +749,30 @@
 	});
 
 	$('#submit-complain').click(function () {
+		$.ajax({
+			url : "{{URL::to('insertComplaint')}}",
+			data:new FormData($("#form-complain")[0]),
+			// dataType:'json',
+			async:false,
+			type:'post',
+			processData: false,
+			contentType: false,
+			beforeSend: function(){
+				// document.getElementById("overlay").style.display="inherit";
+			},
+			success:function(response){
+				// document.getElementById("overlay").style.display="none";
+				console.log(response);
+				checkAmbilBarang(document.getElementById('my_exam_id').value);
+			}
+		});
+	});
+	
+	function checkAmbilBarang(a){
 		var link = document.getElementById('link').value;
 		$.ajax({
 			url : "{{URL::to('cekAmbilBarang')}}",
-			data:new FormData($("#form-complain")[0]),
+			data: {'_token':"{{ csrf_token() }}", 'my_exam_id':a},
 			// dataType:'json',
 			async:false,
 			type:'post',
@@ -744,17 +787,12 @@
 				$('#modal_complain').modal('hide');
 				if(response==1){
 					window.location.href = '/telkomdds/public'+link;
-				}else if(response==0){
-					$('#modal_status_barang').modal('show');
 				}else{
-					$('#modal_status_download').modal('show');
-					// $('#modal_status_download').on('shown.bs.modal', function() {
-						// $("#historiDownload").val(response);
-					// });
+					$('#modal_status_barang').modal('show');
 				}
 			}
 		});
-	});
+	}
 	
 	$('#submit-testimonial').click(function () {
 		var link = document.getElementById('link').value;

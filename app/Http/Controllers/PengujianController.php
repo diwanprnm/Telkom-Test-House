@@ -955,7 +955,8 @@ class PengujianController extends Controller
 			d.model AS model_perangkat,
 			d.test_reference AS referensi_perangkat,
 			d.serial_number AS serialNumber,
-			e.jns_perusahaan AS jnsPerusahaan
+			e.jns_perusahaan AS jnsPerusahaan,
+			e.function_test_NO
 		FROM
 			examinations e,
 			devices d,
@@ -999,7 +1000,8 @@ class PengujianController extends Controller
 			'jnsPengujian' => urlencode(urlencode($data[0]->jnsPengujian)) ?: '-',
 			'initPengujian' => urlencode(urlencode($data[0]->initPengujian)) ?: '-',
 			'descPengujian' => urlencode(urlencode($data[0]->descPengujian)) ?: '-',
-			'namaFile' => 'Pengujian '.urlencode(urlencode($data[0]->descPengujian)) ?: '-'
+			'namaFile' => 'Pengujian '.urlencode(urlencode($data[0]->descPengujian)) ?: '-',
+			'no_reg' => urlencode(urlencode($data[0]->function_test_NO)) ?: '-'
 		]);
     }
 	
@@ -1046,21 +1048,21 @@ class PengujianController extends Controller
 		if($is_location > 0){
 			$examhist = ExaminationHistory::where("examination_id", "=", $request->input('my_exam_id'))->where("tahap", "=", "Download Sertifikat");
 			$count_download = count($examhist->get());
-			if($count_download >= 3){
-				return($examhist->get());
-			}else{				
+			// if($count_download > 0){
+				// return($examhist->get());
+			// }else{				
 				$exam_hist = new ExaminationHistory;
 				$exam_hist->examination_id = $request->input('my_exam_id');
 				$exam_hist->date_action = date('Y-m-d H:i:s');
 				$exam_hist->tahap = 'Download Sertifikat';
 				$exam_hist->status = 1;
-				$exam_hist->keterangan = '';
+				$exam_hist->keterangan = 'Download ke-'.($count_download+1);
 				$exam_hist->created_by = $currentUser->id;
 				$exam_hist->created_at = date('Y-m-d H:i:s');
 				$exam_hist->save();
 				
 				return 1;
-			}
+			// }
 		}else{
 			return 0;
 		}
@@ -1071,6 +1073,16 @@ class PengujianController extends Controller
 		$company_id = ''.$currentUser['attributes']['company_id'].'';
         $respons_result = Examination::autocomplet_pengujian($query,$company_id);
         return response($respons_result);
+    }
+	
+	public function checkKuisioner(Request $request) {
+		$quest = Questioner::where("examination_id", "=", $request->input('id'))->select('complaint')->get();
+		$is_exists = count($quest);
+		if($is_exists > 0){
+			echo $quest[0]->complaint;
+		}else{
+			echo 0;
+		}
     }
 	
 	public function insertKuisioner(Request $request){
@@ -1084,8 +1096,8 @@ class PengujianController extends Controller
 		$quest->quest1_eks = $request->input('quest1_eks');$quest->quest1_perf = $request->input('quest1_perf');
 		$quest->quest2_eks = $request->input('quest2_eks');$quest->quest2_perf = $request->input('quest2_perf');
 		$quest->quest3_eks = $request->input('quest3_eks');$quest->quest3_perf = $request->input('quest3_perf');
-		$quest->quest4_eks = $request->input('quest3_eks');$quest->quest4_perf = $request->input('quest4_perf');
-		$quest->quest5_eks = $request->input('quest4_eks');$quest->quest5_perf = $request->input('quest5_perf');
+		$quest->quest4_eks = $request->input('quest4_eks');$quest->quest4_perf = $request->input('quest4_perf');
+		$quest->quest5_eks = $request->input('quest5_eks');$quest->quest5_perf = $request->input('quest5_perf');
 		$quest->quest6 = $request->input('quest6');
 		$quest->quest7_eks = $request->input('quest7_eks');$quest->quest7_perf = $request->input('quest7_perf');
 		$quest->quest8_eks = $request->input('quest8_eks');$quest->quest8_perf = $request->input('quest8_perf');
@@ -1109,6 +1121,25 @@ class PengujianController extends Controller
 		
 		$quest->created_by = $currentUser->id;
 		$quest->created_at = date('Y-m-d H:i:s');
+		
+		try{
+			$quest->save();
+			echo 1;
+		} catch(Exception $e){
+			echo 0;
+		}
+	}
+	
+	public function insertComplaint(Request $request){
+		$currentUser = Auth::user();
+		$tanggal = strtotime($request->input('tanggal_complaint'));
+		
+		$quest = Questioner::where('examination_id','=',$request->input('my_exam_id'))->first();
+		
+		$quest->complaint_date = date('Y-m-d', $tanggal);
+		$quest->complaint = $request->input('complaint');
+		$quest->updated_by = $currentUser->id;
+		$quest->updated_at = date('Y-m-d H:i:s');
 		
 		try{
 			$quest->save();
