@@ -504,7 +504,33 @@
            $("#top-notification").removeClass("top-notification-open"); 
         });
     });
-        
+        $(window).scroll(function (event) {
+          var sc = $(window).scrollTop();
+          $( ".linkLang" ).click(function() {
+             localStorage.sc = sc;
+          });
+
+      });
+
+          $( ".menuUtama" ).click(function() {
+             localStorage.sc = "";
+          });
+
+          $( ".loginMenu" ).click(function() {
+             localStorage.sc = "";
+          });
+
+          $( "#logo" ).click(function() {
+             localStorage.sc = "";
+          });
+
+          $( "#footer" ).click(function() {
+             localStorage.sc = "";
+          });
+
+          window.onload = function () { 
+            $( window ).scrollTop( localStorage.sc );
+          }
     </script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
    <?php if(config('app.IS_ENABLED_NOTIFICATION')){?>

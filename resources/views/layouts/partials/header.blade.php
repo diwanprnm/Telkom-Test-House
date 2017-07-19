@@ -31,7 +31,7 @@
 
           <div id="primary-menu-trigger"><i class="icon-reorder"></i></div>
 
-            <ul>
+            <ul class="menuUtama">
               <li class="{{ (empty($page)) ?'current':''}}">
                 <a href="{{url('/')}}">{{ trans('translate.home') }}</a>
               </li>  
@@ -92,13 +92,13 @@
               @if( Config::get('app.locale') == 'in')
                 <li> <a href="#" class="dropdown-toggle" data-toggle="dropdown">INA <i class="icon-angle-down"></i></a>
                 <ul class="dropdown-menu" role="menu">
-                  <li><a href="{!! url('language') !!}/en">ENG</a></li>
+                  <li><a class="linkLang" href="{!! url('language') !!}/en">ENG</a></li>
                 </ul>
                 </li>
               @else
                 <li> <a href="#" class="dropdown-toggle" data-toggle="dropdown">ENG  <i class="icon-angle-down"></i></a>
                 <ul class="dropdown-menu" role="menu">
-                  <li><a href="{!! url('language') !!}/in">INA</a></li>
+                  <li><a class="linkLang" href="{!! url('language') !!}/in">INA</a></li>
                 </ul></li>
               @endif 
 
@@ -119,7 +119,7 @@
               $currentUser = Auth::user();
               if($currentUser){
               ?> 
-                <li><a href="#"><?php echo substr($currentUser['attributes']['name'],0,7)."...";?>  <i class="icon-angle-down"></i></a>
+                <li class="loginMenu"><a href="#"><?php echo substr($currentUser['attributes']['name'],0,7)."...";?>  <i class="icon-angle-down"></i></a>
                   <ul>
                     <li><a href="{{url('/client/profile')}}">{{ trans('translate.profile') }}</a></li>
                     <li><a href="{{url('/client/logout')}}">{{ trans('translate.logout') }}</a></li>
@@ -128,7 +128,7 @@
               <?php   
               }else{
               ?>
-                <li><a href="{{ url('login')}}">{{ trans('translate.login') }}</a></li>
+                <li class="loginMenu"><a href="{{ url('login')}}">{{ trans('translate.login') }}</a></li>
               <?php
               }
               ?> 
