@@ -9,6 +9,16 @@
 
 	<div class="content-wrap"> 
 		<div class="container clearfix">  
+		@if(session()->has('error'))
+						<div class="alert alert-info" role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							  <span aria-hidden="true">&times;</span>
+							</button>
+							<div style="text-align:center">
+							 error
+							</div>
+						</div>
+					@endif
 			<div class="tab-content clearfix" id="tab-register">
 				<div class="panel panel-default nobottommargin">
 					<div class="panel-body" style="padding: 40px;">
@@ -190,6 +200,10 @@
 		$('#cmb-perusahaan').chosen();
 		// $('#cmb-ref-perangkat').val(0);
 		$('#cmb-perusahaan').trigger("chosen:updated");
+		$('.date').datepicker({
+	    	format: 'dd-mm-yyyy', 
+		    autoclose: true,
+		});
 	</script>
 	<script src="{{ asset('assets/js/app/app-register.js') }}"></script>
 @endsection

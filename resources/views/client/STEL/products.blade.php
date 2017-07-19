@@ -60,7 +60,7 @@
 				<!-- End of padding --> 
 				<div class="clearfix"></div> 
 				<div id="products" class=" list-group">
-				 	@foreach($stels as $stel)
+				 	@foreach($stels as $stel) 
 			        <div class="item  col-xs-4 col-lg-4 list-group-item">
 			            <div class="thumbnail">
 			                <img class="group list-group-image" src="images/product/note.png" width="240px" alt="" />
@@ -78,12 +78,16 @@
 			                        </div>
 			                        <div class="col-xs-12 col-md-6">
 			                        <form action="products" method="POST">
-									  {!! csrf_field() !!}
-									  <input type="hidden" name="id" value="{{ $stel->id }}">
-									  <input type="hidden" name="name" value="{{ $stel->name }}">
-									  <input type="hidden" name="code" value="{{ $stel->code }}">
-									  <input type="hidden" name="price" value="{{ $stel->price }}">
-									  <input type="submit" class="btn btn-success" value="{{ trans('translate.stel_add_to_cart') }}">
+										{!! csrf_field() !!}
+										<input type="hidden" name="id" value="{{ $stel->id }}">
+										<input type="hidden" name="name" value="{{ $stel->name }}">
+										<input type="hidden" name="code" value="{{ $stel->code }}">
+										<input type="hidden" name="price" value="{{ $stel->price }}">
+									  	@if($stel->is_buyed == 0)
+									  	<input type="submit" class="btn btn-success" value="{{ trans('translate.stel_add_to_cart') }}">
+										@else
+										<label style="color:red;">Sudah dibeli</label>
+										@endif
 									</form>
 			                            
 			                        </div>

@@ -31,12 +31,26 @@ class ProductsController extends Controller
         $search = trim($request->input('search'));
         if($currentUser){
             $paginate = 10;
-            $stels = STEL::whereNotNull('created_at');
+            $select = array("stels.*",\DB::raw("count(stels_sales_detail.stels_id) as is_buyed")); 
+            
+            $stels = STEL::select($select)
+                    ->leftJoin("stels_sales_detail","stels.id","=","stels_sales_detail.stels_id")
+                    ->leftJoin("stels_sales","stels_sales.id","=","stels_sales_detail.stels_sales_id")
+                    // ->leftJoin("users","users.id","=","stels_sales.user_id")
+                    ->leftJoin('users', function($q) use ($currentUser)
+                    {
+                        $q->on('users.id', '=', 'stels_sales.user_id')
+                            ->where('users.company_id', '=', "$currentUser->company_id");
+                    })
+                    ->where("stels.is_active",1)
+                    ->where("stels.stel_type",1) 
+                    ->groupBy('stels.id');
+
             if ($search != null){
                 $stels->where("name",$search);
                 $stels->orWhere("code",$search);
             }
-
+            
             $stels = $stels->paginate($paginate);
             $page = "products";
             return view('client.STEL.products') 
