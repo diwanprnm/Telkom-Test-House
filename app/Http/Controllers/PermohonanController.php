@@ -510,68 +510,68 @@ class PermohonanController extends Controller
 		$company_id = ''.$currentUser['attributes']['company_id'].'';
 		$exam_id = 
 			// $request->input('nama_pemohon');
-			$request->input('hide_exam_id_edit');
-				$request->session()->put('exam_id_edit', $exam_id);
+			$request->input('hide_exam_id');
+				$request->session()->put('hide_exam_id', $exam_id);
 		$device_id = 
 			// $request->input('nama_pemohon');
-			$request->input('hide_device_id_edit');
+			$request->input('hide_device_id');
 		$nama_pemohon = 
 			// $request->input('nama_pemohon');
-			$request->input('f1-nama-pemohon-edit');
+			$request->input('f1-nama-pemohon');
 		$alamat_pemohon = 
 			// $request->input('alamat_pemohon');
-			$request->input('f1-alamat-pemohon-edit');
+			$request->input('f1-alamat-pemohon');
 		$telepon_pemohon = 
 			// $request->input('telepon_pemohon');
-			$request->input('f1-telepon-pemohon-edit');
+			$request->input('f1-telepon-pemohon');
 		$faksimile_pemohon = 
 			// $request->input('faksimile_pemohon');
-			$request->input('f1-faksimile-pemohon-edit');
+			$request->input('f1-faksimile-pemohon');
 		$email_pemohon = 
 			// $request->input('email_pemohon');
-			$request->input('f1-email-pemohon-edit');
+			$request->input('f1-email-pemohon');
 		$jns_perusahaan = 
 			// $request->input('jns_perusahaan');
 			$request->input('jns_perusahaan');
 		$nama_perusahaan = 
 			// $request->input('nama_perusahaan');
-			$request->input('f1-nama-perusahaan-edit');
+			$request->input('f1-nama-perusahaan');
 		$alamat_perusahaan = 
 			// $request->input('alamat_perusahaan');
-			$request->input('f1-alamat-perusahaan-edit');
+			$request->input('f1-alamat-perusahaan');
 		$telepon_perusahaan = 
 			// $request->input('telepon_perusahaan');
-			$request->input('f1-telepon-perusahaan-edit');
+			$request->input('f1-telepon-perusahaan');
 		$faksimile_perusahaan = 
 			// $request->input('faksimile_perusahaan');
-			$request->input('f1-faksimile-perusahaan-edit');
+			$request->input('f1-faksimile-perusahaan');
 		$email_perusahaan = 
 			// $request->input('email_perusahaan');
-			$request->input('f1-email-perusahaan-edit');
+			$request->input('f1-email-perusahaan');
 		$jns_pengujian = 
 			// $request->input('hide_jns_pengujian');
-			$request->input('hide_jns_pengujian_edit');
+			$request->input('hide_jns_pengujian');
 				$exam_type = DB::table('examination_types')->where('id', ''.$jns_pengujian.'')->first();
 			$jns_pengujian_name = ''.$exam_type->name.'';
 			$jns_pengujian_desc = ''.$exam_type->description.'';
 		$nama_perangkat = 
 			// $request->input('nama_perangkat');
-			$request->input('f1-nama-perangkat-edit');
+			$request->input('f1-nama-perangkat');
 		$merek_perangkat = 
 			// $request->input('merek_perangkat');
-			$request->input('f1-merek-perangkat-edit');
+			$request->input('f1-merek-perangkat');
 		$kapasitas_perangkat = 
 			// $request->input('kapasitas_perangkat');
-			$request->input('f1-kapasitas-perangkat-edit');
+			$request->input('f1-kapasitas-perangkat');
 		$pembuat_perangkat = 
 			// $request->input('pembuat_perangkat');
-			$request->input('f1-pembuat-perangkat-edit');
+			$request->input('f1-pembuat-perangkat');
 		$serialNumber_perangkat = 
 			// $request->input('serialNumber_perangkat');
-			$request->input('f1-serialNumber-perangkat-edit');
+			$request->input('f1-serialNumber-perangkat');
 		$model_perangkat = 
 			// $request->input('model_perangkat');
-			$request->input('f1-model-perangkat-edit');
+			$request->input('f1-model-perangkat');
 		if($request->input('f1-jns-referensi-perangkat') == 1){
 			$referensi_perangkat = 
 				// $request->input('referensi_perangkat');
@@ -579,115 +579,115 @@ class PermohonanController extends Controller
 		}else{
 			$referensi_perangkat = 
 				// $request->input('referensi_perangkat');
-				$request->input('f1-referensi-perangkat-edit');
+				$request->input('f1-referensi-perangkat');
 		}
 		$no_siupp = 
 			// $request->input('no_siupp');
-			$request->input('f1-no-siupp-edit');
+			$request->input('f1-no-siupp');
 		$tgl_siupp = 
 			// $request->input('tgl_siupp');
-			$request->input('f1-tgl-siupp-edit');
+			$request->input('f1-tgl-siupp');
 		$sertifikat_sistem_mutu = 
 			// $request->input('sertifikat_sistem_mutu');
-			$request->input('f1-sertifikat-sistem-mutu-edit');
+			$request->input('f1-sertifikat-sistem-mutu');
 		$batas_waktu_sistem = 
 			// $request->input('batas_waktu_sistem');
-			$request->input('f1-batas-waktu-edit');
+			$request->input('f1-batas-waktu');
 		
 		$path_file = public_path().'/media/examination/'.$exam_id.'';
 		$path_file_company = public_path().'/media/company/'.$company_id.'';
 		
-		if ($request->hasFile('fuploadsiupp_edit')) {
+		if ($request->hasFile('fuploadsiupp')) {
 			/*$ext_file = $request->file('fuploadsiupp_edit')->getClientOriginalName();
 			$name_file = uniqid().'_file_.'.$ext_file;*/
-			$name_file = 'siupp_'.$request->file('fuploadsiupp_edit')->getClientOriginalName();
-			if($request->file('fuploadsiupp_edit')->move($path_file_company, $name_file)){
+			$name_file = 'siupp_'.$request->file('fuploadsiupp')->getClientOriginalName();
+			if($request->file('fuploadsiupp')->move($path_file_company, $name_file)){
                 $fuploadsiupp_name = $name_file;
-				if (File::exists(public_path().'\media\\company\\'.$company_id.'\\'.$request->input('hide_siupp_file_edit'))){
-					File::delete(public_path().'\media\\company\\'.$company_id.'\\'.$request->input('hide_siupp_file_edit'));
+				if (File::exists(public_path().'\media\\company\\'.$company_id.'\\'.$request->input('hide_siupp_file'))){
+					File::delete(public_path().'\media\\company\\'.$company_id.'\\'.$request->input('hide_siupp_file'));
 				}
             }else{
-                $fuploadsiupp_name = $request->input('hide_siupp_file_edit');
+                $fuploadsiupp_name = $request->input('hide_siupp_file');
             }
 		}else{
-			$fuploadsiupp_name = $request->input('hide_siupp_file_edit');
+			$fuploadsiupp_name = $request->input('hide_siupp_file');
 		}
-		if ($request->hasFile('fuploadlampiran_edit')) {
+		if ($request->hasFile('fuploadlampiran')) {
 			/*$ext_file = $request->file('fuploadlampiran_edit')->getClientOriginalName();
 			$name_file = uniqid().'_file_.'.$ext_file;*/
-			$name_file = 'serti_uji_mutu_'.$request->file('fuploadlampiran_edit')->getClientOriginalName();
-			if($request->file('fuploadlampiran_edit')->move($path_file_company, $name_file)){
+			$name_file = 'serti_uji_mutu_'.$request->file('fuploadlampiran')->getClientOriginalName();
+			if($request->file('fuploadlampiran')->move($path_file_company, $name_file)){
                 $fuploadlampiran_name = $name_file;
-				if (File::exists(public_path().'\media\\company\\'.$company_id.'\\'.$request->input('hide_sertifikat_file_edit'))){
-					File::delete(public_path().'\media\\company\\'.$company_id.'\\'.$request->input('hide_sertifikat_file_edit'));
+				if (File::exists(public_path().'\media\\company\\'.$company_id.'\\'.$request->input('hide_sertifikat_file'))){
+					File::delete(public_path().'\media\\company\\'.$company_id.'\\'.$request->input('hide_sertifikat_file'));
 				}
             }else{
-                $fuploadlampiran_name = $request->input('hide_sertifikat_file_edit');
+                $fuploadlampiran_name = $request->input('hide_sertifikat_file');
             }
 		}else{
-			$fuploadlampiran_name = $request->input('hide_sertifikat_file_edit');
+			$fuploadlampiran_name = $request->input('hide_sertifikat_file');
 		}
-		if ($request->hasFile('fuploadnpwp_edit')) {
+		if ($request->hasFile('fuploadnpwp')) {
 			/*$ext_file = $request->file('fuploadnpwp_edit')->getClientOriginalName();
 			$name_file = uniqid().'_file_.'.$ext_file;*/
-			$name_file = 'npwp_'.$request->file('fuploadnpwp_edit')->getClientOriginalName();
-			if($request->file('fuploadnpwp_edit')->move($path_file_company, $name_file)){
+			$name_file = 'npwp_'.$request->file('fuploadnpwp')->getClientOriginalName();
+			if($request->file('fuploadnpwp')->move($path_file_company, $name_file)){
                 $fuploadnpwp_name = $name_file;
-				if (File::exists(public_path().'\media\\company\\'.$company_id.'\\'.$request->input('hide_npwp_file_edit'))){
-					File::delete(public_path().'\media\\company\\'.$company_id.'\\'.$request->input('hide_npwp_file_edit'));
+				if (File::exists(public_path().'\media\\company\\'.$company_id.'\\'.$request->input('hide_npwp_file'))){
+					File::delete(public_path().'\media\\company\\'.$company_id.'\\'.$request->input('hide_npwp_file'));
 				}
             }else{
-                $fuploadnpwp_name = $request->input('hide_npwp_file_edit');
+                $fuploadnpwp_name = $request->input('hide_npwp_file');
             }
 		}else{
-			$fuploadnpwp_name = $request->input('hide_npwp_file_edit');
+			$fuploadnpwp_name = $request->input('hide_npwp_file');
 		}
-		if ($request->hasFile('fuploadrefuji_edit')) {
+		if ($request->hasFile('fuploadrefuji')) {
 			/*$ext_file = $request->file('fuploadrefuji_edit')->getClientOriginalName();
 			$name_file = uniqid().'_file_.'.$ext_file;*/
-			$name_file = 'ref_uji_'.$request->file('fuploadrefuji_edit')->getClientOriginalName();
-			if($request->file('fuploadrefuji_edit')->move($path_file, $name_file)){
+			$name_file = 'ref_uji_'.$request->file('fuploadrefuji')->getClientOriginalName();
+			if($request->file('fuploadrefuji')->move($path_file, $name_file)){
                 $fuploadrefuji_name = $name_file;
-				if (File::exists(public_path().'\media\\examination\\'.$exam_id.'\\'.$request->input('hide_ref_uji_file_edit'))){
-					File::delete(public_path().'\media\\examination\\'.$exam_id.'\\'.$request->input('hide_ref_uji_file_edit'));
+				if (File::exists(public_path().'\media\\examination\\'.$exam_id.'\\'.$request->input('hide_ref_uji_file'))){
+					File::delete(public_path().'\media\\examination\\'.$exam_id.'\\'.$request->input('hide_ref_uji_file'));
 				}
             }else{
-                $fuploadrefuji_name = $request->input('hide_ref_uji_file_edit');
+                $fuploadrefuji_name = $request->input('hide_ref_uji_file');
             }
 		}else{
-			$fuploadrefuji_name = $request->input('hide_ref_uji_file_edit');
+			$fuploadrefuji_name = $request->input('hide_ref_uji_file');
 		}
 		if($jns_pengujian == 1 and $jns_perusahaan !='Pabrikan'){
-			if ($request->hasFile('fuploadprinsipal_edit')) {
+			if ($request->hasFile('fuploadprinsipal')) {
 				/*$ext_file = $request->file('fuploadprinsipal_edit')->getClientOriginalName();
 				$name_file = uniqid().'_file_.'.$ext_file;*/
-				$name_file = 'prinsipal_'.$request->file('fuploadprinsipal_edit')->getClientOriginalName();
-				if($request->file('fuploadprinsipal_edit')->move($path_file, $name_file)){
+				$name_file = 'prinsipal_'.$request->file('fuploadprinsipal')->getClientOriginalName();
+				if($request->file('fuploadprinsipal')->move($path_file, $name_file)){
 					$fuploadprinsipal_name = $name_file;
-					if (File::exists(public_path().'\media\\examination\\'.$exam_id.'\\'.$request->input('hide_prinsipal_file_edit'))){
-						File::delete(public_path().'\media\\examination\\'.$exam_id.'\\'.$request->input('hide_prinsipal_file_edit'));
+					if (File::exists(public_path().'\media\\examination\\'.$exam_id.'\\'.$request->input('hide_prinsipal_file'))){
+						File::delete(public_path().'\media\\examination\\'.$exam_id.'\\'.$request->input('hide_prinsipal_file'));
 					}
 				}else{
-					$fuploadprinsipal_name = $request->input('hide_prinsipal_file_edit');
+					$fuploadprinsipal_name = $request->input('hide_prinsipal_file');
 				}
 			}else{
-				$fuploadprinsipal_name = $request->input('hide_prinsipal_file_edit');
+				$fuploadprinsipal_name = $request->input('hide_prinsipal_file');
 			}
 		}else if($jns_pengujian == 2){
-			if ($request->hasFile('fuploadsp3_edit')) {
+			if ($request->hasFile('fuploadsp3')) {
 				/*$ext_file = $request->file('fuploadsp3_edit')->getClientOriginalName();
 				$name_file = uniqid().'_file_.'.$ext_file;*/
-				$name_file = 'sp3_'.$request->file('fuploadsp3_edit')->getClientOriginalName();
-				if($request->file('fuploadsp3_edit')->move($path_file, $name_file)){
+				$name_file = 'sp3_'.$request->file('fuploadsp3')->getClientOriginalName();
+				if($request->file('fuploadsp3')->move($path_file, $name_file)){
 					$fuploadsp3_name = $name_file;
-					if (File::exists(public_path().'\media\\examination\\'.$exam_id.'\\'.$request->input('hide_sp3_file_edit'))){
-						File::delete(public_path().'\media\\examination\\'.$exam_id.'\\'.$request->input('hide_sp3_file_edit'));
+					if (File::exists(public_path().'\media\\examination\\'.$exam_id.'\\'.$request->input('hide_sp3_file'))){
+						File::delete(public_path().'\media\\examination\\'.$exam_id.'\\'.$request->input('hide_sp3_file'));
 					}
 				}else{
-					$fuploadsp3_name = $request->input('hide_sp3_file_edit');
+					$fuploadsp3_name = $request->input('hide_sp3_file');
 				}
 			}else{
-				$fuploadsp3_name = $request->input('hide_sp3_file_edit');
+				$fuploadsp3_name = $request->input('hide_sp3_file');
 			}
 		}
 		

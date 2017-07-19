@@ -490,7 +490,7 @@
 								<h2>Forth Step</h2>
 					        	<fieldset class="lastFieldset"> 
 									<h4 class="judulselesai">{{ trans('translate.service_thanks') }}</h4> 
-									<a class="button button3d btn-green" href="<?php echo url('/process');?>">Finish</a>
+									<a class="button button3d btn-green" href="<?php echo url('/pengujian');?>">Finish</a>
 								</fieldset>
 						
 				        </div>

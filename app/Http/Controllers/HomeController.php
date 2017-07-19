@@ -149,6 +149,73 @@ class HomeController extends Controller
 		}
 		
     }
+
+    public function edit_process($category,$id)
+    {
+    	$category = strtolower($category);
+    	$currentUser = Auth::user();
+		
+		if($currentUser){
+			$query_stels = "SELECT * FROM examination_charges ORDER BY device_name";
+			$data_stels = DB::select($query_stels);
+
+			$query = "SELECT
+				e.id,
+				e.device_id,
+				e.examination_type_id,
+				e.attachment,
+				u.id AS user_id, u.`name` AS namaPemohon, u.email AS emailPemohon,u.email2 AS emailPemohon2,u.email3 AS emailPemohon3, u.address AS alamatPemohon, u.phone_number AS telpPemohon, u.fax AS faxPemohon, 
+				u.company_id AS company_id,
+				d.`name` AS nama_perangkat,
+				d.mark AS merk_perangkat,
+				d.capacity AS kapasitas_perangkat,
+				d.manufactured_by AS pembuat_perangkat,
+				d.model AS model_perangkat,
+				d.test_reference AS referensi_perangkat,
+				d.serial_number AS serialNumber,
+				c.`name` AS namaPerusahaan,	e.jns_perusahaan AS jnsPerusahaan, c.address AS alamatPerusahaan, c.phone_number AS telpPerusahaan, c.fax AS faxPerusahaan, c.email AS emailPerusahaan,
+				c.qs_certificate_number AS noSertifikat, c.qs_certificate_file AS fileSertifikat, c.qs_certificate_date AS tglSertifikat,
+				c.siup_number AS noSIUPP, c.siup_file AS fileSIUPP, c.siup_date AS tglSIUPP, c.npwp_file AS fileNPWP,
+				(SELECT attachment FROM examination_attachments WHERE examination_id = '".$id."' AND `name` = 'Referensi Uji') AS fileref_uji,
+				(SELECT `no` FROM examination_attachments WHERE examination_id = '".$id."' AND `name` = 'Referensi Uji') AS noref_uji,
+				(SELECT tgl FROM examination_attachments WHERE examination_id = '".$id."' AND `name` = 'Referensi Uji') AS tglref_uji,
+				(SELECT attachment FROM examination_attachments WHERE examination_id = '".$id."' AND `name` = 'Surat Dukungan Prinsipal') AS filesrt_prinsipal,
+				(SELECT `no` FROM examination_attachments WHERE examination_id = '".$id."' AND `name` = 'Surat Dukungan Prinsipal') AS nosrt_prinsipal,
+				(SELECT tgl FROM examination_attachments WHERE examination_id = '".$id."' AND `name` = 'Surat Dukungan Prinsipal') AS tglsrt_prinsipal,
+				(SELECT attachment FROM examination_attachments WHERE examination_id = '".$id."' AND `name` = 'SP3') AS filesrt_sp3,
+				(SELECT `no` FROM examination_attachments WHERE examination_id = '".$id."' AND `name` = 'SP3') AS nosrt_sp3,
+				(SELECT tgl FROM examination_attachments WHERE examination_id = '".$id."' AND `name` = 'SP3') AS tglsrt_sp3
+			FROM
+				examinations e,
+				devices d,
+				companies c,
+				users u
+			WHERE
+				u.id = e.created_by
+			AND u.company_id = c.id
+			AND	e.device_id = d.id
+			AND e.id = '".$id."'
+			";
+			$userData = DB::select($query);
+
+			// print_r($userData);
+			$data =  array();
+
+			if(count($userData) <= 0){	
+				return redirect("/process");
+			}
+	    	$page = "process";
+			return view('client.process.'.$category.'_edit_process')
+				->with('data', $data)
+				->with('userData', $userData[0])
+				->with('jns_pengujian', $category)
+				->with('data_stels', $data_stels)
+				->with('page', $page);   
+		}else{ 
+			return redirect("/login");
+		}
+		
+    }
 	
 	public function language($lang, ChangeLocale $changeLocale){		
 		$lang = in_array($lang, config('app.languages')) ? $lang : config('app.fallback_locale');

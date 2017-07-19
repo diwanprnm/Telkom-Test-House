@@ -1,33 +1,32 @@
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
-    <title>TA - Telkom DDS</title>
+    <title>VT - Telkom DDS</title>
 @section('content')
- 	<link rel="stylesheet" href="{{url('vendor/jquerystep/main.css')}}" type="text/css" />
-    <link rel="stylesheet" href="{{url('vendor/jquerystep/jquery.steps.css')}}" type="text/css" /> 
-  	<link rel="stylesheet" href="{{url('vendor/chosen/chosen.css')}}">
-  	<style type="text/css">
-	  	ul[role="tablist"] {
-	    	display: none;
-		}
+ <link rel="stylesheet" href="{{url('vendor/jquerystep/main.css')}}" type="text/css" />
+  <link rel="stylesheet" href="{{url('vendor/jquerystep/jquery.steps.css')}}" type="text/css" />
+  <style type="text/css">
+  	ul[role="tablist"] {
+    display: none;
+}
 
-		.wizard .content {
-		    min-height: 100px;
-		}
-		.wizard .content > .body {
-		    width: 100%;
-		    height: auto;
-		    padding: 15px;
-		    position: relative;
-		}
-	 </style>
-  <div class="overlay"></div>
+.wizard .content {
+    min-height: 100px;
+}
+.wizard .content > .body {
+    width: 100%;
+    height: auto;
+    padding: 15px;
+    position: relative;
+}
+  </style>
+   <div class="overlay"></div>
 <!-- Page Title
 		============================================= -->
 		<section id="page-title">
 
 			<div class="container clearfix">
-				<h1>Type Approval Testing Process</h1>
+				<h1>Voluntary Test Testing Process</h1>
 				
 				<ol class="breadcrumb">
 					<li><a href="{{ url('/') }}">Home</a></li>
@@ -45,7 +44,7 @@
 			<div class="content-wrap">  
 				<div class="container">  
 				    <div class="content">
-				         <div class="col-md-12">
+				          <div class="col-md-12">
 							<div class="step">
 								<div class="garis"></div>
 								<ul class="number" style="width: 200%;">
@@ -86,7 +85,9 @@
 				        	
 					            <h2>First Step</h2>
 					            <fieldset > 		
-					            	<input type="hidden" name="hide_jns_pengujian" id="hide_jns_pengujian" value="2"/>
+					            	<input type="hidden" name="hide_jns_pengujian" id="hide_jns_pengujian" value="3"/>
+ 									<input type="hidden" name="hide_exam_id" id="hide_exam_id" value="{{$userData->id}}"/>
+									<input type="hidden" name="hide_device_id" id="hide_device_id" value="{{$userData->device_id}}"/> 
 					            	<input type="hidden" name="hide_id_user" id="hide_id_user" value="{{$userData->user_id}}">
 									<input type="hidden" name="hide_company_id" id="hide_company_id" value="{{$userData->company_id}}">
 										<div class="form-group">
@@ -138,7 +139,7 @@
 										</div>
 										<div class="form-group">
 											<label for="f1-alamat-perusahaan">{{ trans('translate.service_company_address') }}</label>
-											<input type="text" name="f1-alamat-perusahaan" placeholder="PT. Maju Jaya" id="f1-alamat-perusahaan" readonly value="{{$userData->alamatPerusahaan}}">
+											<input type="text" name="f1-alamat-perusahaan" placeholder="Jln. Bandung" id="f1-alamat-perusahaan" readonly value="{{$userData->alamatPerusahaan}}">
 										</div>
 										<div class="form-group">
 											<label for="f1-telepon-perusahaan">{{ trans('translate.service_company_phone') }}</label>
@@ -163,32 +164,35 @@
 					            <fieldset> 
 					              		<div class="form-group">
 											<label for="f1-nama-perangkat">{{ trans('translate.service_device_equipment') }} *</label>
-											<input type="text" name="f1-nama-perangkat" placeholder="Laptop/Phone, Etc." id="f1-nama-perangkat" class="required">
+											<input type="text" name="f1-nama-perangkat" placeholder="Laptop/Phone, Etc." id="f1-nama-perangkat" class="required" value="{{$userData->nama_perangkat}}">
+
+											<input type="hidden" name="hide_name" id="hide_name" value="{{$userData->nama_perangkat}}"/>
+											<input type="hidden" name="hide_model" id="hide_model" value="{{$userData->model_perangkat}}" />
 										</div>
 										<div class="form-group">
 											<label for="f1-merek-perangkat">{{ trans('translate.service_device_mark') }} *</label>
-											<input type="text" name="f1-merek-perangkat" placeholder="{{ trans('translate.service_device_mark') }}"  id="f1-merek-perangkat" class="required">
+											<input type="text" name="f1-merek-perangkat" placeholder="{{ trans('translate.service_device_mark') }}"  id="f1-merek-perangkat" class="required"  value="{{$userData->merk_perangkat}}">
 										</div>
 										<div class="form-group">
 											<label for="f1-kapasitas-perangkat">{{ trans('translate.service_device_capacity') }} *</label>
-											<input type="text" name="f1-kapasitas-perangkat" placeholder="Samsung/Huawei/ Etc."   id="f1-kapasitas-perangkat" class="required">
+											<input type="text" name="f1-kapasitas-perangkat" placeholder="Samsung/Huawei/ Etc."   id="f1-kapasitas-perangkat" class="required" value="{{$userData->kapasitas_perangkat}}">
 										</div>
 										<div class="form-group">
 											<label for="f1-pembuat-perangkat">{{ trans('translate.service_device_manufactured_by') }} *</label>
-											<input type="text" name="f1-pembuat-perangkat" placeholder="Jakarta" id="f1-pembuat-perangkat" class="required">
+											<input type="text" name="f1-pembuat-perangkat" placeholder="Jakarta" id="f1-pembuat-perangkat" class="required" value="{{$userData->pembuat_perangkat}}">
 										</div>
 										<div class="form-group">
 											<label for="f1-serialNumber-perangkat">{{ trans('translate.service_device_serial_number') }} *</label>
-											<input type="text" name="f1-serialNumber-perangkat" placeholder="123456789456"  id="f1-serialNumber-perangkat" class="required">
+											<input type="text" name="f1-serialNumber-perangkat" placeholder="123456789456"  id="f1-serialNumber-perangkat" class="required" value="{{$userData->serialNumber}}">
 										</div>
 										<div class="form-group">
 											<label for="f1-model-perangkat">{{ trans('translate.service_device_model') }} *</label>
-											<input type="text" name="f1-model-perangkat" placeholder="L123456"   id="f1-model-perangkat" class="required">
+											<input type="text" name="f1-model-perangkat" placeholder="L123456"   id="f1-model-perangkat" class="required" value="{{$userData->model_perangkat}}">
 										</div>
 										<input type="hidden"   id="f1-fjns-referensi-perangkat" name="f1-jns-referensi-perangkat" value='0'> 
 										 <div class="form-group txt-ref-perangkat">
 											<label for="f1-referensi-perangkat">{{ trans('translate.service_device_test_reference') }}</label>
-											<input type="text" name="f1-referensi-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}"  id="f1-referensi-perangkat" class="required">
+											<input type="text" name="f1-referensi-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}"  id="f1-referensi-perangkat" class="required" value="{{$userData->referensi_perangkat}}">
 										</div>
 					            </fieldset>
 
@@ -199,19 +203,21 @@
 											<input   id="fileInput-SIUPP" name="fuploadsiupp" type="file" accept="application/pdf,image/*">
 											<input type="hidden" name="hide_siupp_file" id="hide_siupp_file" value="{{$userData->fileSIUPP}}"/>
 											<a id="siupp-file" class="btn btn-link" style="color:black !important;" >{{$userData->fileSIUPP}}</a>
+											<div id="attachment-file">
+												*ukuran file maksimal 2 mb
+											</div>
 										</div>
 										<div class="form-group" style="margin-bottom:0.01%">
 											<label>{{ trans('translate.service_upload_siupp_no') }}</label>
-											<input type="text" name="f1-no-siupp" placeholder="{{ trans('translate.service_upload_siupp_no') }}"   id="f1-no-siupp" value="{{$userData->noSIUPP}}" class="required">
+											<input type="text" name="f1-no-siupp" placeholder="{{ trans('translate.service_upload_siupp_no') }}"   id="f1-no-siupp" value="{{$userData->noSIUPP}}">
 										</div>
 										<div class="form-group">
 											<label>{{ trans('translate.service_upload_siupp_date') }}</label>
-
-											<input type="text" name="f1-tgl-siupp" placeholder="{{ trans('translate.service_upload_siupp_date') }}" class="data-upload-berkas datepicker f1-tgl-siupp required input-submit" id="f1-tgl-siupp" value="{{$userData->tglSIUPP}}"> 
+											<input type="text" name="f1-tgl-siupp" placeholder="{{ trans('translate.service_upload_siupp_date') }}" class="data-upload-berkas datepicker f1-tgl-siupp  input-submit" id="f1-tgl-siupp" value="{{$userData->tglSIUPP}}"> 
 										</div>
 										<div class="form-group col-xs-12" style="margin-top:35px">
 											<label>{{ trans('translate.service_upload_certificate') }}<span class="text-danger">*</span></label>
-											<input type="text" name="f1-sertifikat-sistem-mutu" placeholder="{{ trans('translate.service_upload_certificate') }}" id="f1-sertifikat-sistem-mutu" value="{{$userData->noSertifikat}}" class="required">
+											<input type="text" name="f1-sertifikat-sistem-mutu" placeholder="{{ trans('translate.service_upload_certificate') }}" id="f1-sertifikat-sistem-mutu" value="{{$userData->noSertifikat}}">
 										</div>
 										<div class="form-group col-xs-12" style="margin-bottom:0.01%">
 											<label>{{ trans('translate.service_upload_certificate_file') }}<span class="text-danger">*</span></label>
@@ -224,7 +230,7 @@
 										</div>
 										<div class="form-group">
 											<label>{{ trans('translate.service_upload_certificate_date') }}</label>
-											<input type="text" name="f1-batas-waktu" placeholder="{{ trans('translate.service_upload_certificate_date') }}" class="datepicker data-upload-berkas f1-batas-waktu input-submit required" id="f1-batas-waktu" value="{{$userData->tglSertifikat}}"> 
+											<input type="text" name="f1-batas-waktu" placeholder="{{ trans('translate.service_upload_certificate_date') }}" class="datepicker data-upload-berkas f1-batas-waktu  input-submit" id="f1-batas-waktu" value="{{$userData->tglSertifikat}}"> 
 										</div>
 										<div class="form-group col-xs-12" style="margin-top:35px">
 											<label>{{ trans('translate.service_upload_npwp') }}<span class="text-danger">*</span></label>
@@ -238,19 +244,11 @@
 										<div class="form-group col-xs-12">
 											<label>{{ trans('translate.service_upload_reference_test') }}<span class="text-danger">*</span></label>
 											<input class="data-upload-berkas f1-file-ref-uji required" id="fileInput-ref-uji" name="fuploadrefuji" type="file" accept="application/pdf,image/*">
+												<input type="hidden" name="hide_ref_uji_file" class="required" id="hide_ref_uji_file" value="{{$userData->fileref_uji}}"/>
+											<a id="sertifikat-file" class="btn btn-link" style="color:black !important;" >{{$userData->fileref_uji}}</a>
 											<div id="ref-uji-file"></div>
 											<div id="attachment-file">
 												*ukuran file maksimal 2 mb
-											</div>
-										</div> 
-										<div class="dv-srt-sp3">
-											<div class="form-group col-xs-12">
-												<label>{{ trans('translate.service_upload_sp3') }}<span class="text-danger">*</span></label>
-												<input class="data-upload-berkas f1-file-sp3 required" id="fileInput-sp3" name="fuploadsp3" type="file" accept="application/pdf,image/*">
-												<div id="sp3-file"></div>
-												<div id="attachment-file">
-													*ukuran file maksimal 2 mb
-												</div>
 											</div>
 										</div> 
 					            </fieldset>
@@ -261,7 +259,7 @@
 					            		<input type="hidden" name="hide_cekSNjnsPengujian" id="hide_cekSNjnsPengujian">
 										<h4>{{ trans('translate.service_preview') }}</h4>
 										<h3>{{ trans('translate.service_application') }}</h3>
-										<table class="table table-striped" id="preview-field">
+										<table id="preview-field" class="table table-striped">
 											<tr>
 												<td>{{ trans('translate.service_application_name') }}</td>
 												<td> : </td>
@@ -289,7 +287,7 @@
 										</table>
 										<h3>{{ trans('translate.service_company') }}</h3>
 										<div id="f2-preview-6"></div>
-										<table class="table table-striped" id="preview-field">
+										<table id="preview-field" class="table table-striped">
 											<tr>
 												<td>{{ trans('translate.service_company_name') }}</td>
 												<td> : </td>
@@ -315,10 +313,10 @@
 												<td colspan="6"> <div id="f2-preview-5">{{$userData->emailPerusahaan}}</div></td>
 											</tr>
 										</table>
-										<h3 id="f5-jns-pengujian" class="f5-jns-pengujian">{{ trans('translate.service_preview_exam_type') }} : TA</h3>
+										<h3 id="f5-jns-pengujian" class="f5-jns-pengujian">{{ trans('translate.service_preview_exam_type') }} : VT</h3>
 										<br>
 										<h3>{{ trans('translate.service_device') }}</h3>
-										<table class="table table-striped" id="preview-field">
+										<table id="preview-field" class="table table-striped">
 											<tr>
 												<td>{{ trans('translate.service_device_equipment') }}</td>
 												<td> : </td>
@@ -353,7 +351,7 @@
 											</tr>
 										</table>
 										<h3>{{ trans('translate.service_upload') }}</h3>
-										<table class="table table-striped" id="preview-field">
+										<table id="preview-field" class="table table-striped">
 											<tr>
 												<td>{{ trans('translate.service_upload_siupp') }}</td>
 												<td> : </td>
@@ -393,13 +391,7 @@
 												<td>{{ trans('translate.service_upload_reference_test') }}</td>
 												<td> : </td>
 												<td> <div id="f4-preview-file-ref-uji"></div></td>
-											</tr>
-										 
-											<tr class="dv-srt-sp3">
-												<td>{{ trans('translate.service_upload_sp3') }}</td>
-												<td> : </td>
-												<td> <div id="f4-preview-file-sp3"></div></td>
-											</tr>
+											</tr> 
 										</table>
 										 
 					            </fieldset>
@@ -441,7 +433,7 @@
 @section('content_js')
 
  <script type="text/javascript" src="{{url('vendor/jquerystep/jquery.steps.js')}}"></script>
- <script>  
+ <script>
   	var form = $("#form-permohonan");
 	form.validate({
 	    errorPlacement: function errorPlacement(error, element) { element.before(error); },
@@ -482,19 +474,26 @@
 				$("#f3-preview-6").html($("#f1-pembuat-perangkat").val());
 				$("#f3-preview-7").html($("#f1-serialNumber-perangkat").val());
 
-				$("#f4-preview-2").html($("#f1-no-siupp").val());
-				$("#f4-preview-1").html($('#hide_siupp_file').val());
+				$("#f4-preview-1").html($("#f1-no-siupp").val());
+				$("#f4-preview-2").html($('#hide_siupp_file').val());
 				$("#f4-preview-3").html($("#f1-tgl-siupp").val()); 
 				$("#f4-preview-5").html($("#f1-sertifikat-sistem-mutu").val());
 				$("#f4-preview-6").html($("#hide_sertifikat_file").val());
 				$("#f4-preview-7").html($("#f1-batas-waktu").val());
 				$("#f4-preview-11").html($("#hide_npwp_file").val());
-				$("#f4-preview-file-ref-uji").html($(".f1-file-ref-uji").val());
-				$("#f4-preview-file-sp3").html($(".f1-file-sp3").val());
+				var ref_uji_file = $("#fileInput-ref-uji").val();
+				if(ref_uji_file === "") ref_uji_file = $("#hide_ref_uji_file").val();
+
+				$("#f4-preview-file-ref-uji").html(ref_uji_file);
+
+				var prinsipalFile = $("#fileInput-prinsipal").val();
+				if(prinsipalFile === "") prinsipalFile = $("#hide_prinsipal_file").val();
+
+				$("#f4-preview-8").html((prinsipalFile));
 	       	}  
 	        if(newIndex == 5){
 				if($('#hide_cekSNjnsPengujian').val() == 1){
-					alert("Perangkat [Nama dan Model] sudah ada!"); 
+					alert("Perangkat[Nama, Model] dan Jenis Pengujian sudah ada!"); 
 					return false;
 				}else{
 					var formData = new FormData($('#form-permohonan')[0]);
@@ -502,13 +501,14 @@
 					$( "#formBTNprevious" ).hide();
 					$( "#formBTNfinish" ).hide();
 					$( "#formBTNnext" ).hide();
-
+					var nama_perangkat = $('#f1-nama-perangkat').val();
+					var model_perangkat = $('#f1-model-perangkat').val();
 					$.ajax({
 						beforeSend: function(){ 
 							$("body").addClass("loading");	
 						},
 						type: "POST",
-						url : "../submitPermohonan",
+						url : "../../updatePermohonan",
 						// data: {'_token':"{{ csrf_token() }}", 'nama_pemohon':nama_pemohon, 'nama_pemohons':nama_pemohon},
 						// data:new FormData($("#form-permohonan")[0]),
 						data:formData,
@@ -517,7 +517,7 @@
 						contentType: false,
 						success: function(data){
 							$("body").removeClass("loading"); 
-							window.open("../cetakPermohonan");
+							window.open("../../cetakPermohonan");
 
 							$(".actions").hide(); 
 						},
@@ -525,7 +525,7 @@
 							$("body").removeClass("loading");
 							error = true;
 							alert("Gagal mengambil data"); 
-							// formWizard.steps("previous"); 
+							formWizard.steps("previous"); 
 						}
 					}); 
 				}
@@ -538,17 +538,21 @@
 				var serialNumber_perangkat = $('#f1-serialNumber-perangkat').val();
 				var nama_perangkat = $('#f1-nama-perangkat').val();
 				var model_perangkat = $('#f1-model-perangkat').val();
-				$.ajax({
-					type: "POST",
-					url : "../cekPermohonan",
-					data: {'_token':"{{ csrf_token() }}", 'jnsPelanggan':jnsPelanggan, 'serialNumber_perangkat':serialNumber_perangkat, 'nama_perangkat':nama_perangkat, 'model_perangkat':model_perangkat},
-					// dataType:'json',
-					type:'post',
-					success: function(data){
-						console.log(data);
-						$('#hide_cekSNjnsPengujian').val(data); 
-					}
-				});
+				var true_nama_perangkat = $('#hide_name').val();
+				var true_model_perangkat = $('#hide_model').val();
+				if((true_nama_perangkat != nama_perangkat) && (true_model_perangkat != model_perangkat)){
+					$.ajax({
+						type: "POST",
+						url : "../../cekPermohonan",
+						data: {'_token':"{{ csrf_token() }}", 'jnsPelanggan':jnsPelanggan, 'serialNumber_perangkat':serialNumber_perangkat, 'nama_perangkat':nama_perangkat, 'model_perangkat':model_perangkat},
+						// dataType:'json',
+						type:'post',
+						success: function(data){
+							console.log(data);
+							$('#hide_cekSNjnsPengujian').val(data); 
+						}
+					});
+				}
 	        }  
 
 
@@ -596,7 +600,7 @@
 		});
 	$('.upload-form').click(function(){
 		$.ajax({
-			url : "../uploadPermohonan",
+			url : "../../uploadPermohonan",
 			data:new FormData($("#form-permohonan")[0]),
 			// dataType:'json', 
 			type:'post',
@@ -618,7 +622,6 @@
 	$(".upload_later, #next").on("click",function(){
 		formWizard.steps("next"); 
 	});
-
 	function downloadFile(file){
 		var path = "{{ URL::asset('media/company') }}";
 		// var id_user = $('#hide_id_user').val();
@@ -652,6 +655,4 @@
 	    autoclose: true,
 	});
 </script>
-
-  <script src="{{url('vendor/chosen/chosen.jquery.js')}}" type="text/javascript"></script> 
 @endsection

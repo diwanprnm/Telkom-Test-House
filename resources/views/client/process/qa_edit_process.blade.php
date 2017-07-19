@@ -87,6 +87,8 @@
 				            <h2>First Step</h2>
 				            <fieldset > 	 
 				            	<input type="hidden" name="hide_jns_pengujian" id="hide_jns_pengujian" value="1"/>
+				        		<input type="hidden" name="hide_exam_id" id="hide_exam_id" value="{{$userData->id}}"/>
+								<input type="hidden" name="hide_device_id" id="hide_device_id" value="{{$userData->device_id}}"/> 
 				            	<input type="hidden" name="hide_id_user" id="hide_id_user" value="{{$userData->user_id}}">
 								<input type="hidden" name="hide_company_id" id="hide_company_id" value="{{$userData->company_id}}">
 									<div class="form-group">
@@ -163,30 +165,33 @@
 											<option value="{{ $item->stel }}">{{ $item->stel }} || {{ $item->device_name }}</option>
 										@endforeach
 									</select>
+
+									<input type="hidden" name="hide_name" id="hide_name" value="{{$userData->nama_perangkat}}"/>
+									<input type="hidden" name="hide_model" id="hide_model" value="{{$userData->model_perangkat}}" />
 							 	</div>
 				              	<div class="form-group">
 									<label for="f1-nama-perangkat">{{ trans('translate.service_device_equipment') }} *</label>
-									<input type="text" name="f1-nama-perangkat" placeholder="Laptop/Phone, Etc." id="f1-nama-perangkat" class="required">
+									<input type="text" name="f1-nama-perangkat" placeholder="Laptop/Phone, Etc." id="f1-nama-perangkat" class="required" value="{{$userData->nama_perangkat}}">
 								</div>
 								<div class="form-group">
 									<label for="f1-merek-perangkat">{{ trans('translate.service_device_mark') }} *</label>
-									<input type="text" name="f1-merek-perangkat" placeholder="Samsung/Huawei/ Etc."  id="f1-merek-perangkat" class="required">
+									<input type="text" name="f1-merek-perangkat" placeholder="Samsung/Huawei/ Etc."  id="f1-merek-perangkat" class="required" value="{{$userData->merk_perangkat}}">
 								</div>
 								<div class="form-group">
 									<label for="f1-kapasitas-perangkat">{{ trans('translate.service_device_capacity') }} *</label>
-									<input type="text" name="f1-kapasitas-perangkat" placeholder="3.0"   id="f1-kapasitas-perangkat" class="required">
+									<input type="text" name="f1-kapasitas-perangkat" placeholder="3.0"   id="f1-kapasitas-perangkat" class="required" value="{{$userData->kapasitas_perangkat}}">
 								</div>
 								<div class="form-group">
 									<label for="f1-pembuat-perangkat">{{ trans('translate.service_device_manufactured_by') }} *</label>
-									<input type="text" name="f1-pembuat-perangkat" placeholder="Jakarta" id="f1-pembuat-perangkat" class="required">
+									<input type="text" name="f1-pembuat-perangkat" placeholder="Jakarta" id="f1-pembuat-perangkat" class="required" value="{{$userData->pembuat_perangkat}}">
 								</div>
 								<div class="form-group">
 									<label for="f1-serialNumber-perangkat">{{ trans('translate.service_device_serial_number') }} *</label>
-									<input type="text" name="f1-serialNumber-perangkat" placeholder="123456789456"  id="f1-serialNumber-perangkat" class="required">
+									<input type="text" name="f1-serialNumber-perangkat" placeholder="123456789456"  id="f1-serialNumber-perangkat" class="required" value="{{$userData->serialNumber}}">
 								</div>
 								<div class="form-group">
 									<label for="f1-model-perangkat">{{ trans('translate.service_device_model') }} *</label>
-									<input type="text" name="f1-model-perangkat" placeholder="L123456"   id="f1-model-perangkat" class="required">
+									<input type="text" name="f1-model-perangkat" placeholder="L123456"   id="f1-model-perangkat" class="required" value="{{$userData->model_perangkat}}">
 								</div>
 								<input type="hidden"   id="f1-fjns-referensi-perangkat" name="f1-jns-referensi-perangkat" value='1'>  
 				            </fieldset>
@@ -240,7 +245,10 @@
 									</div>
 									<div class="form-group  ">
 										<label>{{ trans('translate.service_upload_reference_test') }}<span class="text-danger">*</span></label>
-										<input class="data-upload-berkas f1-file-ref-uji required" id="fileInput-ref-uji" name="fuploadrefuji" type="file" accept="application/pdf,image/*">
+										<input class="data-upload-berkas f1-file-ref-uji" id="fileInput-ref-uji" name="fuploadrefuji" type="file" accept="application/pdf,image/*" value="{{$userData->fileref_uji}}">
+										<input type="hidden" name="hide_ref_uji_file" class="required" id="hide_ref_uji_file" value="{{$userData->fileref_uji}}"/>
+										<a id="sertifikat-file" class="btn btn-link" style="color:black !important;" >{{$userData->fileref_uji}}</a>
+										  
 										<div id="ref-uji-file"></div>
 										<div id="attachment-file">
 											*ukuran file maksimal 2 mb
@@ -249,7 +257,10 @@
 									<div class="dv-srt-dukungan-prinsipal">
 										<div class="form-group  ">
 											<label>{{ trans('translate.service_upload_support_principals') }}<span class="text-danger">*</span></label>
-											<input class="data-upload-berkas f1-file-prinsipal required" id="fileInput-prinsipal" name="fuploadprinsipal" type="file" accept="application/pdf,image/*" >
+											<input class="data-upload-berkas f1-file-prinsipal" id="fileInput-prinsipal" name="fuploadprinsipal" type="file" accept="application/pdf,image/*" >
+											<input type="hidden" name="hide_prinsipal_file" class="required" id="hide_prinsipal_file" value="{{$userData->filesrt_prinsipal}}"/>
+											<a id="sertifikat-file" class="btn btn-link" style="color:black !important;" >{{$userData->filesrt_prinsipal}}</a>
+										  
 											<div id="prinsipal-file"></div>
 											<div id="attachment-file">
 												*ukuran file maksimal 2 mb
@@ -496,8 +507,15 @@
 				$("#f4-preview-6").html($("#hide_sertifikat_file").val());
 				$("#f4-preview-7").html($("#f1-batas-waktu").val());
 				$("#f4-preview-11").html($("#hide_npwp_file").val());
-				$("#f4-preview-file-ref-uji").html($(".f1-file-ref-uji").val());
-				$("#f4-preview-8").html($(".f1-file-prinsipal").val());
+				var ref_uji_file = $("#fileInput-ref-uji").val();
+				if(ref_uji_file === "") ref_uji_file = $("#hide_ref_uji_file").val();
+
+				$("#f4-preview-file-ref-uji").html(ref_uji_file);
+
+				var prinsipalFile = $("#fileInput-prinsipal").val();
+				if(prinsipalFile === "") prinsipalFile = $("#hide_prinsipal_file").val();
+
+				$("#f4-preview-8").html((prinsipalFile));
 	       	}  
 	        if(newIndex == 5){
 				if($('#hide_cekSNjnsPengujian').val() == 1){
@@ -509,13 +527,14 @@
 					$( "#formBTNprevious" ).hide();
 					$( "#formBTNfinish" ).hide();
 					$( "#formBTNnext" ).hide();
-
+					var nama_perangkat = $('#f1-nama-perangkat').val();
+					var model_perangkat = $('#f1-model-perangkat').val();
 					$.ajax({
 						beforeSend: function(){ 
 							$("body").addClass("loading");	
 						},
 						type: "POST",
-						url : "../submitPermohonan",
+						url : "../../updatePermohonan",
 						// data: {'_token':"{{ csrf_token() }}", 'nama_pemohon':nama_pemohon, 'nama_pemohons':nama_pemohon},
 						// data:new FormData($("#form-permohonan")[0]),
 						data:formData,
@@ -524,13 +543,14 @@
 						contentType: false,
 						success: function(data){
 							$("body").removeClass("loading"); 
-							window.open("../cetakPermohonan");
+							window.open("../../cetakPermohonan");
 
 							$(".actions").hide(); 
 						},
 						error:function(){
 							$("body").removeClass("loading");
-							alert("Gagal mengambil data");
+							error = true;
+							alert("Gagal mengambil data"); 
 							formWizard.steps("previous"); 
 						}
 					}); 
@@ -544,17 +564,21 @@
 				var serialNumber_perangkat = $('#f1-serialNumber-perangkat').val();
 				var nama_perangkat = $('#f1-nama-perangkat').val();
 				var model_perangkat = $('#f1-model-perangkat').val();
-				$.ajax({
-					type: "POST",
-					url : "../cekPermohonan",
-					data: {'_token':"{{ csrf_token() }}", 'jnsPelanggan':jnsPelanggan, 'serialNumber_perangkat':serialNumber_perangkat, 'nama_perangkat':nama_perangkat, 'model_perangkat':model_perangkat},
-					// dataType:'json',
-					type:'post',
-					success: function(data){
-						console.log(data);
-						$('#hide_cekSNjnsPengujian').val(data); 
-					}
-				});
+				var true_nama_perangkat = $('#hide_name').val();
+				var true_model_perangkat = $('#hide_model').val();
+				if((true_nama_perangkat != nama_perangkat) && (true_model_perangkat != model_perangkat)){
+					$.ajax({
+						type: "POST",
+						url : "../../cekPermohonan",
+						data: {'_token':"{{ csrf_token() }}", 'jnsPelanggan':jnsPelanggan, 'serialNumber_perangkat':serialNumber_perangkat, 'nama_perangkat':nama_perangkat, 'model_perangkat':model_perangkat},
+						// dataType:'json',
+						type:'post',
+						success: function(data){
+							console.log(data);
+							$('#hide_cekSNjnsPengujian').val(data); 
+						}
+					});
+				}
 	        }  
 
 
@@ -602,7 +626,7 @@
 		});
 	$('.upload-form').click(function(){
 		$.ajax({
-			url : "../uploadPermohonan",
+			url : "../../uploadPermohonan",
 			data:new FormData($("#form-permohonan")[0]),
 			// dataType:'json', 
 			type:'post',
