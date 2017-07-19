@@ -187,7 +187,7 @@
 										<input type="hidden"   id="f1-fjns-referensi-perangkat" name="f1-jns-referensi-perangkat" value='0'> 
 										 <div class="form-group txt-ref-perangkat">
 											<label for="f1-referensi-perangkat">{{ trans('translate.service_device_test_reference') }}</label>
-											<input type="text" name="f1-referensi-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}"  id="f1-referensi-perangkat">
+											<input type="text" name="f1-referensi-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}"  id="f1-referensi-perangkat" class="required">
 										</div>
 					            </fieldset>
 
@@ -318,7 +318,7 @@
 										</div>
 										<div class="form-group col-xs-12">
 											<label>{{ trans('translate.service_upload_reference_test') }}<span class="text-danger">*</span></label>
-											<input class="data-upload-berkas f1-file-ref-uji" id="fileInput-ref-uji" name="fuploadrefuji" type="file" accept="application/pdf,image/*">
+											<input class="data-upload-berkas f1-file-ref-uji required" id="fileInput-ref-uji" name="fuploadrefuji" type="file" accept="application/pdf,image/*">
 											<div id="ref-uji-file"></div>
 											<div id="attachment-file">
 												*ukuran file maksimal 2 mb
@@ -488,9 +488,9 @@
 										</div>
 					            </fieldset>
 								<h2>Forth Step</h2>
-					        	<fieldset> 
+					        	<fieldset class="lastFieldset"> 
 									<h4 class="judulselesai">{{ trans('translate.service_thanks') }}</h4> 
-									<a class="button button3d btn-green" href="<?php echo url('/process');?>">Finish</a>
+									<a class="button button3d btn-green" href="<?php echo url('/pengujian');?>">Finish</a>
 								</fieldset>
 						
 				        </div>
@@ -514,65 +514,90 @@
 	        required: true,extension: "jpeg|jpg|png|pdf"
 	    }
 	});
-	form.children("div").steps({
+	var formWizard = form.children("div").steps({
 	    headerTag: "h2",
 	    bodyTag: "fieldset",
+	    autoFocus: true,
 	    transitionEffect: "slideLeft",
 	    onStepChanging: function (event, currentIndex, newIndex)
-	    { 
-	    	form.trigger("focus"); 
-	        form.validate().settings.ignore = ":disabled,:hidden"; 
-	       	console.log(newIndex);
-	        if(newIndex == 5){
-	        	console.log("save");
-				if($('#hide_cekSNjnsPengujian').val() == 1){
-					alert("Perangkat [Nama dan Model] sudah ada!"); 
-					return false;
-				}else{
-					var formData = new FormData($('#form-permohonan')[0]);
-					$.ajax({
-						type: "POST",
-						url : "../submitPermohonan",
-						// data: {'_token':"{{ csrf_token() }}", 'nama_pemohon':nama_pemohon, 'nama_pemohons':nama_pemohon},
-						// data:new FormData($("#form-permohonan")[0]),
-						data:formData,
-						// dataType:'json',
-						async:false, 
-						processData: false,
-						contentType: false,
-						beforeSend: function(){
-							$("body").addClass("loading");			
-						},
-						success: function(data){
-							$("body").removeClass("loading");
-							console.log(data);
-							window.open("../cetakPermohonan");
-						},
-						error:function(){
-							$("body").removeClass("loading");
-							alert("Gagal mengambil data");
-						}
-					});
-					$(".actions").hide();
-				}
-	        }
+	    {  
+	    	console.log(newIndex);
+	    	if(!form.valid()){
+	    		return false;
+	    	}
 
-	        if(newIndex == 0 || newIndex == null){ 
+	    	if(newIndex == 0 || newIndex == null){ 
 	    		$( '#formBTNprevious' ).hide();
 	    	}
 	    	if(newIndex >= 1){ 
 	    		$( '#formBTNprevious' ).show();
 	    	}
 
-	        if(newIndex == 4){
-	        	$("#f3-preview-1").html($("#f1-nama-perangkat").val());
+	    	form.trigger("focus"); 
+	        form.validate().settings.ignore = ":disabled,:hidden"; 
+	       	console.log(currentIndex);
+
+	       	if(newIndex == 4){ 
+	       		 $('.actions > ul > li:nth-child(2) a').text("Save");
+	       	 	$("#f3-preview-1").html($("#f1-nama-perangkat").val());
 				$("#f3-preview-2").html($("#f1-merek-perangkat").val());
 				$("#f3-preview-3").html($("#f1-model-perangkat").val());
 				$("#f3-preview-4").html($("#f1-kapasitas-perangkat").val());
-				// $("#f3-preview-5").html($(".material-select span").html());
 				$("#f3-preview-5").html($("#f1-referensi-perangkat").val());
 				$("#f3-preview-6").html($("#f1-pembuat-perangkat").val());
 				$("#f3-preview-7").html($("#f1-serialNumber-perangkat").val());
+
+				$("#f4-preview-1").html($("#f1-no-siupp").val());
+				$("#f4-preview-2").html($('#hide_siupp_file').val());
+				$("#f4-preview-3").html($("#f1-tgl-siupp").val()); 
+				$("#f4-preview-5").html($("#f1-sertifikat-sistem-mutu").val());
+				$("#f4-preview-6").html($("#hide_sertifikat_file").val());
+				$("#f4-preview-7").html($("#f1-batas-waktu").val());
+				$("#f4-preview-11").html($("#hide_npwp_file").val());
+				$("#f4-preview-file-ref-uji").html($(".f1-file-ref-uji").val());
+				$("#f4-preview-8").html($(".f1-file-prinsipal").val());
+	       	}  
+	        if(newIndex == 5){
+				if($('#hide_cekSNjnsPengujian').val() == 1){
+					alert("Perangkat[Nama, Model] dan Jenis Pengujian sudah ada!"); 
+					return false;
+				}else{
+					var formData = new FormData($('#form-permohonan')[0]);
+					var error = false;
+					$( "#formBTNprevious" ).hide();
+					$( "#formBTNfinish" ).hide();
+					$( "#formBTNnext" ).hide();
+
+					$.ajax({
+						beforeSend: function(){ 
+							$("body").addClass("loading");	
+						},
+						type: "POST",
+						url : "../submitPermohonan",
+						// data: {'_token':"{{ csrf_token() }}", 'nama_pemohon':nama_pemohon, 'nama_pemohons':nama_pemohon},
+						// data:new FormData($("#form-permohonan")[0]),
+						data:formData,
+						// dataType:'json', 
+						processData: false,  
+						contentType: false,
+						success: function(data){
+							$("body").removeClass("loading"); 
+							window.open("../cetakPermohonan");
+
+							$(".actions").hide(); 
+						},
+						error:function(){
+							$("body").removeClass("loading");
+							error = true;
+							alert("Gagal mengambil data"); 
+							// formWizard.steps("previous"); 
+						}
+					}); 
+				}
+	        }
+
+	        if(newIndex == 3){
+	        	$('.actions > ul > li:nth-child(2) a').text("Next");
 
 	        	var jnsPelanggan = $('#hide_jns_pengujian').val();
 				var serialNumber_perangkat = $('#f1-serialNumber-perangkat').val();
@@ -586,13 +611,11 @@
 					type:'post',
 					success: function(data){
 						console.log(data);
-						$('#hide_cekSNjnsPengujian').val(data);
+						$('#hide_cekSNjnsPengujian').val(data); 
 					}
 				});
-	        }
-	        if(newIndex == 3){
-	        	console.log($(".material-select span").html());
-	        }
+	        }  
+
 
 	        if(newIndex < currentIndex ){ 
 		        if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
@@ -601,14 +624,13 @@
 	        	return true;
 	        }else{
 	        	if(form.valid()){
+	        		$('body').scrollTop(10);
 	        		if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
 			        $( ".number li:eq("+(newIndex)+" ) button" ).removeClass("done").addClass("active");
 			        $( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active");
 	        	}
 	        	return form.valid();	
-	        }
-
-	        
+	        } 
 	    },
 	    onFinishing: function (event, currentIndex)
 	    {
@@ -650,11 +672,15 @@
 			},
 			success:function(response){
 				$("body").removeClass("loading");  
+				formWizard.steps("next"); 
+			},
+			error:function(response){
+				$("body").removeClass("loading");   
 			}
 		});
 	});
-
-	$(".upload_later").on("click",function(){
+	$(".chosen-select").chosen({width: "95%"}); 
+	$(".upload_later, #next").on("click",function(){
 		formWizard.steps("next"); 
 	});
 	function downloadFile(file){

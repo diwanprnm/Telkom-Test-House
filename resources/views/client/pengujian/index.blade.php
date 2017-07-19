@@ -589,7 +589,7 @@
 								<?php } ?>
 								
 								<?php if($item->registration_status != 1){ ?>
-									<a class="button button-3d nomargin btn-blue"  onclick="return edit('<?php echo $item->id ?>',<?php echo $item->registration_status ?>);">{{ trans('translate.examination_edit') }}</a>
+									<a class="button button-3d nomargin btn-blue" href="{{url('editprocess/'.$item->jns_pengujian.'/'.$item->id)}}">{{ trans('translate.examination_edit') }}</a>
 								<?php } ?>
 								<?php if($item->certificate_status == 1){ ?>
 									<a class="button button-3d nomargin btn-blue" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->device_id }}','{{ $item->sistem_mutuPerangkat }}','device', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})', '{{$item->id}}');">{{ trans('translate.download') }} {{ trans('translate.certificate') }}</a>

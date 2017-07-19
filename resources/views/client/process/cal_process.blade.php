@@ -412,9 +412,9 @@
 										</div>
 					            </fieldset>
 								<h2>Forth Step</h2>
-					        	<fieldset> 
+					        	<fieldset class="lastFieldset"> 
 									<h4 class="judulselesai">{{ trans('translate.service_thanks') }}</h4> 
-									<a class="button button3d btn-green" href="<?php echo url('/process');?>">Finish</a>
+									<a class="button button3d btn-green" href="<?php echo url('/pengujian');?>">Finish</a>
 								</fieldset>
 						
 				        </div>
@@ -465,7 +465,7 @@
 				$("#f3-preview-2").html($("#f1-merek-perangkat").val());
 				$("#f3-preview-3").html($("#f1-model-perangkat").val());
 				$("#f3-preview-4").html($("#f1-kapasitas-perangkat").val());
-				$("#f3-preview-5").html($("#f1-cmb-ref-perangkat").val());
+				$("#f3-preview-5").html($("#f1-referensi-perangkat").val());
 				$("#f3-preview-6").html($("#f1-pembuat-perangkat").val());
 				$("#f3-preview-7").html($("#f1-serialNumber-perangkat").val());
 
@@ -475,18 +475,24 @@
 				$("#f4-preview-5").html($("#f1-sertifikat-sistem-mutu").val());
 				$("#f4-preview-6").html($("#hide_sertifikat_file").val());
 				$("#f4-preview-7").html($("#f1-batas-waktu").val());
-				$("#f4-preview-11").html($("#hide_npwp_file").val());
+				$("#f4-preview-11").html($("#hide_npwp_file").val()); 
+				$("#f4-preview-file-ref-uji").html($(".f1-file-ref-uji").val());
 	       	} 
 	        if(newIndex == 5 ){
 	        	console.log("save");
 				if($('#hide_cekSNjnsPengujian').val() == 1){
-					alert("Perangkat [Nama dan Model] sudah ada!"); 
+					alert("Perangkat[Nama, Model] dan Jenis Pengujian sudah ada!"); 
 					return false;
 				}else{
 					var formData = new FormData($('#form-permohonan')[0]);
+					var error = false;
+					$( "#formBTNprevious" ).hide();
+					$( "#formBTNfinish" ).hide();
+					$( "#formBTNnext" ).hide();
+
 					$.ajax({
-						beforeSend: function(){
-							 $("body").addClass("loading");  		
+						beforeSend: function(){ 
+							$("body").addClass("loading");	
 						},
 						type: "POST",
 						url : "../submitPermohonan",
@@ -495,14 +501,12 @@
 						data:formData,
 						// dataType:'json', 
 						processData: false,  
-						contentType: false, 
-						success: function(data){ 
-							$("body").removeClass("loading");
+						contentType: false,
+						success: function(data){
+							$("body").removeClass("loading"); 
 							window.open("../cetakPermohonan");
 
-							$(".actions").hide();
-
-							
+							$(".actions").hide(); 
 						},
 						error:function(){
 							$("body").removeClass("loading");
@@ -515,14 +519,6 @@
 
 	        if(newIndex == 3){
 	        	$('.actions > ul > li:nth-child(2) a').text("Next");
-	        	$("#f3-preview-1").html($("#f1-nama-perangkat").val());
-				$("#f3-preview-2").html($("#f1-merek-perangkat").val());
-				$("#f3-preview-3").html($("#f1-model-perangkat").val());
-				$("#f3-preview-4").html($("#f1-kapasitas-perangkat").val());
-				// $("#f3-preview-5").html($(".material-select span").html());
-				$("#f3-preview-5").html($("#f1-referensi-perangkat").val());
-				$("#f3-preview-6").html($("#f1-pembuat-perangkat").val());
-				$("#f3-preview-7").html($("#f1-serialNumber-perangkat").val());
 
 	        	var jnsPelanggan = $('#hide_jns_pengujian').val();
 				var serialNumber_perangkat = $('#f1-serialNumber-perangkat').val();
@@ -536,11 +532,11 @@
 					type:'post',
 					success: function(data){
 						console.log(data);
-						$('#hide_cekSNjnsPengujian').val(data);
+						$('#hide_cekSNjnsPengujian').val(data); 
 					}
 				});
-	        }
-	        
+	        }  
+
 
 	        if(newIndex < currentIndex ){ 
 		        if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
@@ -549,14 +545,13 @@
 	        	return true;
 	        }else{
 	        	if(form.valid()){
+	        		$('body').scrollTop(10);
 	        		if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
 			        $( ".number li:eq("+(newIndex)+" ) button" ).removeClass("done").addClass("active");
 			        $( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active");
 	        	}
 	        	return form.valid();	
-	        }
-
-	        
+	        } 
 	    },
 	    onFinishing: function (event, currentIndex)
 	    {
@@ -598,6 +593,10 @@
 			},
 			success:function(response){
 				$("body").removeClass("loading");  
+				formWizard.steps("next"); 
+			},
+			error:function(response){
+				$("body").removeClass("loading");   
 			}
 		});
 	});

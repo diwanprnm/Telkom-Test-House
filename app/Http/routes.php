@@ -2849,6 +2849,7 @@ Route::get('/contact', 'HomeController@contact');
 Route::get('/procedure', 'HomeController@procedure');
 Route::get('/process', 'HomeController@process');
 Route::get('/detailprocess/{id}', 'HomeController@detail_process');
+Route::get('/editprocess/{jenis_uji}/{id}', 'HomeController@edit_process');
 Route::get('/faq', 'HomeController@faq');
 
 Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
