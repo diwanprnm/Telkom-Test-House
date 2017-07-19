@@ -161,7 +161,7 @@ return [
 	'examination_number_payment'=> 'SPB Number',
 	'examination_date_payment'=> 'Payment Date',
 	'examination_upload_payment_file'=> 'Upload',
-	'examination_model'=> 'Model',
+	'examination_model'=> 'Model/Type',
 	'examination_capacity'=> 'Capacity',
 	'form_not_show' => 'If form not automatically open in new tab,',
     

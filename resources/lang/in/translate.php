@@ -162,7 +162,7 @@ return [
 	'examination_number_payment'=> 'No. SPB',
 	'examination_date_payment'=> 'Tanggal Pembayaran',
 	'examination_upload_payment_file'=> 'Unggah',
-	'examination_model'=> 'Model',
+	'examination_model'=> 'Model/Tipe',
 	'examination_capacity'=> 'Kapasitas',
 	'form_not_show' => 'Jika form tidak muncul secara otomatis,',
 	

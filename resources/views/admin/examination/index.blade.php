@@ -405,7 +405,7 @@
 															</td>
 														</tr>	
 														<tr>
-															<td>Model:</td>
+															<td>Model / Tipe:</td>
 															<td>
 																{{ $item->device->model }}
 															</td>

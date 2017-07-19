@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -297,12 +298,21 @@ class ClientController extends Controller
 	
 	function cekDeleted($email)
     {
-		$query = User::where('email','=',''.$email.'');
+		$query = DB::table('users')
+        ->join('companies', function ($join) use ($email){
+            $join->on('users.company_id', '=', 'companies.id')
+                 ->where('users.email','=',''.$email.'');
+        });
 		$query->where(function($q){
-			$q->where('is_deleted', '=' , 1)
-				->orWhere('is_active', '=' , 0);
+			$q->where('users.is_deleted', '=' , 1)
+				->orWhere('users.is_active', '=' , 0);
+		});
+		$query->orWhere(function($q){
+			$q->where('companies.is_deleted', '=' , 1)
+				->orWhere('companies.is_active', '=' , 0);
 		});
 		$user = $query->get();
+		
 		return count($user);
     }
 }
