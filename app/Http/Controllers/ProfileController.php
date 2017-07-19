@@ -347,7 +347,7 @@ class ProfileController extends Controller
 	public function insert(Request $request)
     {
 		// print_r($request->all());exit;
-		$currentUser = Auth::user();
+		// $currentUser = Auth::user();
 		$user_id = Uuid::uuid4();
 		
 		if($request->input('hide_is_company_too') == 0){
@@ -590,11 +590,11 @@ class ProfileController extends Controller
 
 				$logs = new Logs;
 				$currentUser = Auth::user();
-		        $logs->user_id = $currentUser->id;
+		        $logs->user_id = $user_id;
 		        $logs->id = Uuid::uuid4();
 		        $logs->action = "Create Company";   
 		        $logs->data = "";
-		        $logs->created_by = $currentUser->id;
+		        $logs->created_by = $user_id;
 		        $logs->page = "REGISTER";
 		        $logs->save();
 
