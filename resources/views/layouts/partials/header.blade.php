@@ -75,8 +75,8 @@
               </li>
 
               <li class=" {{ (!empty($page) && ($page == 'payment_status' || $page == 'products' || $page == 'checkout')) ?'current':''}}">
-                  <a href="#">Stel <i class="icon-angle-down"></i></a>
-                   <ul>
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Stel <i class="icon-angle-down"></i></a>
+                   <ul class="dropdown-menu" role="menu">
                     <li>
                       <a href="{{url('/products')}}">{{ trans('translate.see_product') }}</a>
                     </li>
@@ -119,8 +119,8 @@
               $currentUser = Auth::user();
               if($currentUser){
               ?> 
-                <li class="loginMenu"><a href="#"><?php echo substr($currentUser['attributes']['name'],0,7)."...";?>  <i class="icon-angle-down"></i></a>
-                  <ul>
+                <li class="loginMenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo substr($currentUser['attributes']['name'],0,7)."...";?>  <i class="icon-angle-down"></i></a>
+                  <ul class="dropdown-menu" role="menu">
                     <li><a href="{{url('/client/profile')}}">{{ trans('translate.profile') }}</a></li>
                     <li><a href="{{url('/client/logout')}}">{{ trans('translate.logout') }}</a></li>
                   </ul> 
