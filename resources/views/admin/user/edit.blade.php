@@ -14,7 +14,7 @@
 		top: 2px;
 		left: -5px;
 		}
-</style>>
+</style>
 <div class="main-content" >
 	<div class="wrap-content container" id="container">
 		<!-- start: PAGE TITLE -->
@@ -60,7 +60,7 @@
 									<label>
 										Perusahaan *
 									</label>
-									<select name="company_id" class="cs-select cs-skin-elastic" required>
+									<select class="form-control" id="company_id" name="company_id" required>
 										@if ($company)
 											@foreach($company as $item)
 												@if($item->id == $data->company->id)
@@ -244,11 +244,14 @@
 <script src={{ asset("vendor/bootstrap-timepicker/bootstrap-timepicker.min.js") }}></script>
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
 <script src={{ asset("assets/js/form-elements.js") }}></script>
-<script src="{{ asset("assets/js/jquery-checktree.js") }}"></script>
+<script src={{ asset("assets/js/jquery-checktree.js") }}></script>
 <script type="text/javascript">
 	jQuery(document).ready(function() {
 		FormElements.init();
 		$('#tree').checktree();
 	});
+	
+	$('#company_id').chosen();
+	$('#company_id').trigger("chosen:updated");
 </script>
 @endsection

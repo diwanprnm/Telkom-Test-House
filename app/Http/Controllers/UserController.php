@@ -350,7 +350,7 @@ class UserController extends Controller
     {
         $user = User::find($id);
         $roles = Role::all();
-        $companies = Company::where('id', '<>', '1')->get();
+        $companies = Company::where('id', '<>', '1')->orderBy('name')->get();
         $currentUser = Auth::user();
         
     
