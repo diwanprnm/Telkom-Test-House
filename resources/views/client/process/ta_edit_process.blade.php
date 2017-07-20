@@ -466,7 +466,7 @@
 	    onStepChanging: function (event, currentIndex, newIndex)
 	    {  
 	    	console.log(newIndex);
-	    	if(!form.valid()){
+	    	if(!form.valid() && (newIndex > currentIndex)){ 
 	    		return false;
 	    	}
 
@@ -576,6 +576,11 @@
 		        if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
 		        $( ".number li:eq("+(newIndex)+" ) button" ).removeClass("done").addClass("active");
 		        $( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active");
+
+		        $(".form-group input").removeClass("error");
+		        $(".form-group span").removeClass("material-bar");
+		        $('body').scrollTop(10);
+
 	        	return true;
 	        }else{
 	        	if(form.valid()){
