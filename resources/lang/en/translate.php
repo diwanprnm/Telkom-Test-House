@@ -312,6 +312,7 @@ return [
 	
 	'stel_payment_status_order_date'  => 'Order Date',
 	'stel_payment_status_complete_time'  => 'Complete Time',
+	'stel_payment_code' => 'Payment Code',
 
 	'download'  => 'Download',
 	'upload'  	=> 'Upload',
@@ -327,4 +328,7 @@ return [
 	'certificate' => 'Certificate',
 	'from_customer' => 'from Customer',
 	'from_urel' => 'from URel',
+	
+	'document_not_found'	=> 'Document Not Found',
+	'tax'  	=> 'Tax',
 ];

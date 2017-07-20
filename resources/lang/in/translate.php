@@ -315,6 +315,7 @@ return [
 	
 	'stel_payment_status_order_date'  => 'Tanggal Order',
 	'stel_payment_status_complete_time'  => 'Waktu Selesai',
+	'stel_payment_code' => 'Kode Pembayaran',
 	
 	'download'  => 'Unduh',
 	'upload'  	=> 'Unggah',
@@ -330,4 +331,7 @@ return [
 	'certificate' => 'Sertifikat',
 	'from_customer' => 'dari Kastamer',
 	'from_urel' => 'dari URel',
+	
+	'document_not_found'	=> 'Dokumen Tidak Ditemukan',
+	'tax'  	=> 'Pajak',
 ];

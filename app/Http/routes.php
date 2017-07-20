@@ -2222,6 +2222,8 @@ Route::get('/pengujian/{id}/detail', 'PengujianController@detail');
 Route::get('/pengujian/{id}/pembayaran', 'PengujianController@pembayaran');
 Route::get('/pengujian/download/{id}/{attach}/{jns}', 'PengujianController@download');
 Route::get('/pengujian/{id}/downloadSPB', 'PengujianController@downloadSPB');
+Route::get('/pengujian/{id}/downloadLaporanPengujian', 'PengujianController@downloadLaporanPengujian');
+Route::get('/pengujian/{id}/downloadSertifikat', 'PengujianController@downloadSertifikat');
 Route::get('/products/{id}/stel', 'ProductsController@downloadStel');
 Route::post('/pengujian/pembayaran', 'PengujianController@uploadPembayaran');
 Route::post('/pengujian/tanggaluji', 'PengujianController@updateTanggalUji');

@@ -40,12 +40,12 @@
 											<th>No</th>
 											<th>{{ trans('translate.stel_payment_status_order_date') }}</th>
 											<th>Invoice</th>
-											<th>Payment Code</th> 
+											<th>{{ trans('translate.stel_payment_code') }}</th> 
 											<th>Total</th> 
 											<th>Status</th>
 											<th>{{ trans('translate.stel_payment_status_complete_time') }}</th>   
-											<th>Upload</th>
-											<th>Detail</th>
+											<th>{{ trans('translate.upload') }}</th>   
+											<th>{{ trans('translate.examination_detail') }}</th>   
 										</tr>
 									</thead>
 									<tbody>
@@ -81,8 +81,8 @@
 
 													</td>
 													<td>{{$stel->update_at}}</td>  
-													<td><a href="{!! url("upload_payment/{$stel->id}") !!}">Upload</a></td> 
-													<td><a href="{!! url("payment_detail/{$stel->id}") !!}">Detail</a></td> 
+													<td><a href="{!! url("upload_payment/{$stel->id}") !!}">{{ trans('translate.upload') }}</a></td> 
+													<td><a href="{!! url("payment_detail/{$stel->id}") !!}">{{ trans('translate.examination_detail') }}</a></td> 
 												</tr> 
 											@endforeach
 

@@ -43,15 +43,20 @@ class ProductsController extends Controller
                             ->where('users.company_id', '=', "$currentUser->company_id");
                     })
                     ->where("stels.is_active",1)
-                    ->where("stels.stel_type",1) 
-                    ->groupBy('stels.id');
+                    ->where("stels.stel_type",1);
 
             if ($search != null){
-                $stels->where("stels.name",$search);
-                $stels->orWhere("stels.code",$search);
+				$stels->where(function($q){
+					return $q->where('stels.name','like','%'.$search.'%')
+						->orWhere('stels.code','like','%'.$search.'%')
+						;
+					});
             }
+            $stels = $stels->groupBy('stels.id');
             
-            $stels = $stels->paginate($paginate);
+            // $stels = $stels->paginate($paginate);
+            $stels = $stels->toSql();
+			dd($stels);exit;
             $page = "products";
             return view('client.STEL.products') 
                 ->with('page', $page)

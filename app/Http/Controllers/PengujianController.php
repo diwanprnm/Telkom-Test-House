@@ -413,7 +413,7 @@ class PengujianController extends Controller
                 ->with('status', $status)
                 ->with('data_stels', $data_stels);
         }else{
-			return back()->with('error_code', 5);
+			return  redirect('login');
 		}
     }
 	 
@@ -784,6 +784,79 @@ class PengujianController extends Controller
 			$exam_hist->created_at = date('Y-m-d H:i:s');
 			$exam_hist->save();
 
+			return Response::download($file, $attach, $headers);
+		}
+    }
+	
+	public function downloadLaporanPengujian($id)
+    {
+    	$currentUser = Auth::user();
+		$query_attach = "
+			SELECT attachment FROM examination_attachments WHERE examination_id = '".$id."' AND name = 'Laporan Uji' AND attachment != ''
+		";
+		$data_attach = DB::select($query_attach);
+		if (count($data_attach) == 0){
+			$message = 'Data not found';
+			$attach = NULL;
+			Session::flash('error_download_resume', 'Download Failed');
+			return back();
+		}
+		else{
+			$attach = $data_attach[0]->name; //name
+			$file = $data_attach[0]->attachment; //link here
+			$headers = array(
+			  'Content-Type: application/octet-stream',
+			);
+			
+			$exam_hist = new ExaminationHistory;
+			$exam_hist->examination_id = $id;
+			$exam_hist->date_action = date('Y-m-d H:i:s');
+			$exam_hist->tahap = 'Download Laporan Uji';
+			$exam_hist->status = 1;
+			$exam_hist->keterangan = '';
+			$exam_hist->created_by = $currentUser->id;
+			$exam_hist->created_at = date('Y-m-d H:i:s');
+			$exam_hist->save();
+
+			return Response::download($file, $attach, $headers);
+		}
+    }
+	
+	public function downloadSertifikat($id)
+    {
+    	$currentUser = Auth::user();
+		$query_attach = "
+			SELECT attachment FROM examination_attachments WHERE examination_id = '".$id."' AND name LIKE '%Sertifikat%' AND attachment != ''
+		";
+		$data_attach = DB::select($query_attach);
+		if (count($data_attach) == 0){
+			$message = 'Data not found';
+			$attach = NULL;
+			Session::flash('error_download_certificate', 'Download Failed');
+			return back();
+		}
+		else{
+			$attach = $data_attach[0]->name; //name
+			$file = $data_attach[0]->attachment; //link here
+			$headers = array(
+			  'Content-Type: application/octet-stream',
+			);
+			
+			$examhist = ExaminationHistory::where("examination_id", "=", $id)->where("tahap", "=", "Download Sertifikat");
+			$count_download = count($examhist->get());
+			// if($count_download > 0){
+				// return($examhist->get());
+			// }else{				
+				$exam_hist = new ExaminationHistory;
+				$exam_hist->examination_id = $id;
+				$exam_hist->date_action = date('Y-m-d H:i:s');
+				$exam_hist->tahap = 'Download Sertifikat';
+				$exam_hist->status = 1;
+				$exam_hist->keterangan = 'Download ke-'.($count_download+1);
+				$exam_hist->created_by = $currentUser->id;
+				$exam_hist->created_at = date('Y-m-d H:i:s');
+				$exam_hist->save();
+			
 			return Response::download($file, $attach, $headers);
 		}
     }

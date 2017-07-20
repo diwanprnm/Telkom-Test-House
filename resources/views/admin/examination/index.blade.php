@@ -424,7 +424,7 @@
 													@endif
 												@endforeach
 												
-					                        	@if($item->examination_type_id !='2' && $item->examination_type_id !='3')
+					                        	@if($item->examination_type_id !='2' && $item->examination_type_id !='3' && $item->examination_type_id !='4')
 					                        		@if($item->device->certificate != '')
 						                        		<a class="btn btn-wide btn-primary pull-left" style="margin-left:10px" href="{{URL::to('/admin/examination/media/download/'.$item->device_id.'/certificate')}}"><i class="ti-download"></i> Sertifikat</a>
 						                        	@endif

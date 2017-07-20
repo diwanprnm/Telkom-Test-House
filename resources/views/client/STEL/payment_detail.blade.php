@@ -57,9 +57,9 @@
 								// if($stel->attachment !="" && $stel->payment_status == 1){
 								if($stel->attachment !="" && $stel->payment_status == 1){
 								?>
-								<td colspan="6" align="center"><a target="_blank" href="{!! url("cetakstel?invoice_id={$stel->invoice}&attach={$stel->attachment}&company_name={$stel->company_name}") !!}">Download File</a></td>
+								<td colspan="6" align="center"><a target="_blank" href="{!! url("cetakstel?invoice_id={$stel->invoice}&attach={$stel->attachment}&company_name={$stel->company_name}") !!}">{{ trans('translate.download') }} File</a></td>
 								<?php }else{?>	
-									<td colspan="6" align="center"> Dokumen Tidak Tersedia</td>
+									<td colspan="6" align="center">{{ trans('translate.document_not_found') }}</td>
 								<?php }?> 
 							</tr> 
 							<?php $total +=($stel->price * $stel->qty); ?>
@@ -68,12 +68,12 @@
 						<tfoot> 
 							
                         	<tr>
-                        		<td colspan="5" align="right"> Total</td>
+                        		<td colspan="5" align="right"> </td>
                         		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php 
                         			echo 	number_format($total, 0, '.', ',');?></td>
                         	</tr>
                        		<tr>
-                        		<td colspan="5" align="right"> Tax</td>
+                        		<td colspan="5" align="right"> {{ trans('translate.tax') }}</td>
                         		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php $tax =  $total * (config("cart.tax")/100);
                         			echo	number_format($tax, 0, '.', ',');?></td>
                         	</tr>

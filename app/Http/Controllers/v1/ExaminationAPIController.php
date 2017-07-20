@@ -471,6 +471,7 @@ class ExaminationAPIController extends AppBaseController
 		$select = array(
 			"examinations.id","examinations.cust_test_date","examinations.deal_test_date",
 			"examinations.function_test_TE as function_result","examinations.function_test_PIC",
+			"examinations.catatan",
 			"examination_labs.name as lab",
 			"examination_labs.lab_code",
 			"companies.name as company_name",
