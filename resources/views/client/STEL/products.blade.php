@@ -90,10 +90,15 @@
 										 } 
 										?>
 
-									  	@if($stel->has_bu == 0 && !$is_exist)
-									  	<input type="submit" class="btn btn-success" value="{{ trans('translate.stel_add_to_cart') }}">
+									  	@if(($stel->is_buyed == 0) && !$is_exist )
+									  		<input type="submit" class="btn btn-success" value="{{ trans('translate.stel_add_to_cart') }}">
 										@else
-										<label style="color:red;">Sudah dibeli</label>
+											@if($is_exist)
+												<label style="color:red;">Sudah Dikeranjang</label>
+											@else
+												<label style="color:red;">Sudah dibeli</label>
+											@endif
+										
 										@endif
 									</form>
 			                            

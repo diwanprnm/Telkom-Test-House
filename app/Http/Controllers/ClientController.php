@@ -14,7 +14,7 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Mail;
 use Hash;
 use Auth;
-
+use Cart;
 use App\Logs;
 
 // UUID
@@ -63,7 +63,7 @@ class ClientController extends Controller
         $logs->created_by = $currentUser->id;
         $logs->page = "LOGOUT";
         $logs->save();
-
+        Cart::destroy();
 		Auth::logout();
 		return redirect('/');
 	}
