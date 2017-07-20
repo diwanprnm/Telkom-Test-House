@@ -589,11 +589,12 @@ class ExaminationAPIController extends AppBaseController
     {
     	$param = (object) $param->all();
 
-    	if(!empty($param->id) && !empty($param->function_test_date)&& !empty($param->function_test_pic)){
+    	if(!empty($param->id) && !empty($param->function_test_date)&& !empty($param->function_test_pic)&& !empty($param->reason)){
     		$examinations = Examination::find($param->id);
     		if($examinations){
 				$examinations->deal_test_date = $param->function_test_date;
 				$examinations->function_test_PIC = $param->function_test_pic;
+				$examinations->function_test_reason = $param->reason;
     			if($examinations->save()){
     				return $this->sendResponse($examinations, 'Function Date Found');
     			}else{
