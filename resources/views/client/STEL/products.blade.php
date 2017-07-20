@@ -83,7 +83,14 @@
 										<input type="hidden" name="name" value="{{ $stel->name }}">
 										<input type="hidden" name="code" value="{{ $stel->code }}">
 										<input type="hidden" name="price" value="{{ $stel->price }}">
-									  	@if($stel->is_buyed == 0)
+										<?php  
+										$is_exist = false;
+										 foreach (Cart::content() as $item) {
+										 	if($item->id == $stel->id) $is_exist = true;
+										 } 
+										?>
+
+									  	@if($stel->has_bu == 0 && !$is_exist)
 									  	<input type="submit" class="btn btn-success" value="{{ trans('translate.stel_add_to_cart') }}">
 										@else
 										<label style="color:red;">Sudah dibeli</label>
