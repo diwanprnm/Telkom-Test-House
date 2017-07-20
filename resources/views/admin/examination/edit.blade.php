@@ -450,17 +450,7 @@
 							Step Uji Fungsi
 						</legend>
 						<div class="row">
-							<div class="col-md-4">
-								<div class="form-group">
-									<label>
-										Pengajuan Tanggal dari URel
-									</label>
-									<label>
-										: <?php echo $data->urel_test_date; ?>
-									</label>
-								</div>
-							</div>
-							<div class="col-md-4">
+							<div class="col-md-6">
 								<div class="form-group">
 									<label>
 										Pengajuan Tanggal dari Customer
@@ -470,7 +460,7 @@
 									</label>
 								</div>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-6">
 								<div class="form-group">
 									<label>
 										Penetapan Tanggal Akhir
@@ -480,6 +470,12 @@
 									</label>
 								</div>
 							</div>
+							@if($data->function_test_reason != '')
+								<div class="form-group">
+									<label for="alasan">Alasan :</label>
+									<textarea class="form-control" rows="2" name="reason" id="reason" readonly>{{ $data->function_test_reason }}</textarea>
+								</div>
+							@endif
 							<div class="col-md-12">
 								@if($data->catatan != '')
 									<div class="form-group">

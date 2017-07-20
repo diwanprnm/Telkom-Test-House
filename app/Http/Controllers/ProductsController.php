@@ -54,9 +54,9 @@ class ProductsController extends Controller
             }
             $stels = $stels->groupBy('stels.id');
             
-            // $stels = $stels->paginate($paginate);
-            $stels = $stels->toSql();
-			dd($stels);exit;
+            $stels = $stels->paginate($paginate);
+            // $stels = $stels->toSql();
+			// dd($stels);exit;
             $page = "products";
             return view('client.STEL.products') 
                 ->with('page', $page)

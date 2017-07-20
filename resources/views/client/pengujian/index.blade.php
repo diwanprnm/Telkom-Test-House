@@ -543,7 +543,7 @@
 										<td>{{ trans('translate.examination_function_test_date') }}</td>
 										<td colspan="2"> :
 											@if($item->deal_test_date != null)
-												{{ $item->deal_test_date }} (FIX)
+												{{ $item->deal_test_date }} (FIX) {{ $data->function_test_reason }}
 											@elseif($item->deal_test_date == null && $item->cust_test_date != null)
 												{{ $item->cust_test_date }} {{ trans('translate.from_customer') }}
 											@else

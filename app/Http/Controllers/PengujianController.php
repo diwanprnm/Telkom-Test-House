@@ -104,7 +104,8 @@ class PengujianController extends Controller
 								'examinations.deal_test_date',
 								'examination_types.name AS jns_pengujian',
 								'examination_types.description AS desc_pengujian',
-								'users.name AS userName'
+								'users.name AS userName',
+								'examinations.function_test_reason'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
@@ -144,7 +145,8 @@ class PengujianController extends Controller
 								'examinations.deal_test_date',
 								'examination_types.name AS jns_pengujian',
 								'examination_types.description AS desc_pengujian',
-								'users.name AS userName'
+								'users.name AS userName',
+								'examinations.function_test_reason'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
@@ -184,7 +186,8 @@ class PengujianController extends Controller
 								'examinations.deal_test_date',
 								'examination_types.name AS jns_pengujian',
 								'examination_types.description AS desc_pengujian',
-								'users.name AS userName'
+								'users.name AS userName',
+								'examinations.function_test_reason'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
@@ -223,7 +226,8 @@ class PengujianController extends Controller
 								'examinations.deal_test_date',
 								'examination_types.name AS jns_pengujian',
 								'examination_types.description AS desc_pengujian',
-								'users.name AS userName'
+								'users.name AS userName',
+								'examinations.function_test_reason'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
@@ -264,7 +268,8 @@ class PengujianController extends Controller
 								'examinations.deal_test_date',
 								'examination_types.name AS jns_pengujian',
 								'examination_types.description AS desc_pengujian',
-								'users.name AS userName'
+								'users.name AS userName',
+								'examinations.function_test_reason'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
@@ -303,7 +308,8 @@ class PengujianController extends Controller
 								'examinations.deal_test_date',
 								'examination_types.name AS jns_pengujian',
 								'examination_types.description AS desc_pengujian',
-								'users.name AS userName'
+								'users.name AS userName',
+								'examinations.function_test_reason'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
@@ -342,7 +348,8 @@ class PengujianController extends Controller
 								'examinations.deal_test_date',
 								'examination_types.name AS jns_pengujian',
 								'examination_types.description AS desc_pengujian',
-								'users.name AS userName'
+								'users.name AS userName',
+								'examinations.function_test_reason'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
@@ -380,7 +387,8 @@ class PengujianController extends Controller
 								'examinations.deal_test_date',
 								'examination_types.name AS jns_pengujian',
 								'examination_types.description AS desc_pengujian',
-								'users.name AS userName'
+								'users.name AS userName',
+								'examinations.function_test_reason'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
