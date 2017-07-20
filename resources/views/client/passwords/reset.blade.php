@@ -17,7 +17,7 @@
                             <label for="email" class="col-md-4 control-label">{{ trans('translate.reset_password_email') }}</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ $email or old('email') }}">
+                                <input id="email" type="email" class="form-control" name="email" value="{{ $email or old('email') }}" readonly>
 
                                 @if ($errors->has('email'))
                                     <span class="help-block">

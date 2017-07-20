@@ -72,18 +72,9 @@
 				</div>
 
 				<div id="oc-clients" class="owl-carousel image-carousel carousel-widget" data-margin="20" data-nav="false" data-pagi="true" data-items-xxs="2" data-items-xs="3" data-items-sm="4" data-items-md="5" data-items-lg="6">
-
-					<div class="oc-item"><a href="#"><img src="images/clients/1.png" alt="Clients"></a></div>
-					<div class="oc-item"><a href="#"><img src="images/clients/2.png" alt="Clients"></a></div>
-					<div class="oc-item"><a href="#"><img src="images/clients/3.png" alt="Clients"></a></div>
-					<div class="oc-item"><a href="#"><img src="images/clients/4.png" alt="Clients"></a></div>
-					<div class="oc-item"><a href="#"><img src="images/clients/5.png" alt="Clients"></a></div>
-					<div class="oc-item"><a href="#"><img src="images/clients/6.png" alt="Clients"></a></div>
-					<div class="oc-item"><a href="#"><img src="images/clients/7.png" alt="Clients"></a></div>
-					<div class="oc-item"><a href="#"><img src="images/clients/8.png" alt="Clients"></a></div>
-					<div class="oc-item"><a href="#"><img src="images/clients/9.png" alt="Clients"></a></div>
-					<div class="oc-item"><a href="#"><img src="images/clients/10.png" alt="Clients"></a></div>
-
+				@foreach($data_footers as $client)
+					<div class="oc-item"><a href="#"><img src="{{url('media/footer/'.$client->image)}}" alt="Clients"></a></div> 
+				@endforeach
 				</div>
 
 				<div class="clear"></div>

@@ -108,18 +108,18 @@ class ClientController extends Controller
 					->with('type_url', 1)
 					->with('error_code', 5)
 					->withInput($request->all())
-					->withErrors('User not found or User Banned by admin');
+					->withErrors('Email or Password Not Match');
 				}else if($request->input('type_url') == 2){
 					return redirect('/')->with('error_code', 5)
 					->with('type_url', 2)
 					->with('error_code', 5)
 					->withInput($request->all())
-					->withErrors('User not found or User Banned by admin');
+					->withErrors('Email or Password Not Match');
 				}else{
 					return back()->with('error_code', 5)
 					->with('error_code', 5)
 					->withInput($request->all())
-					->withErrors('User not found or User Banned by admin');;
+					->withErrors('Email or Password Not Match');;
 				}
 			}
 		}else{
