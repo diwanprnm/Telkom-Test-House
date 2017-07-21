@@ -9285,8 +9285,8 @@ nav.links a {
 }
 
 .swMain ul li > a.done .stepNumber, .swMain > ul li:last-child > a.selected .stepNumber {
-  border-color: #ff3e41;
-  background-color: #ff3e41;
+  border-color: #339b54;
+  background-color: #339b54;
   color: #fff;
   text-indent: -9999px;
 }
@@ -11415,7 +11415,7 @@ span.error_text {
     background-color: #f9d7d7;
     /* color: white; */
 }
-#newPass.error, #confnewPass:focus.error {
-    background-color: #f9d7d7;
+#confnewPass.error, #confnewPass:focus.error {
+    background-color: #f9d7d7 !important;
     /* color: white; */
 }
