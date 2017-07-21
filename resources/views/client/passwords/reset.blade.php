@@ -1,7 +1,11 @@
 @extends('layouts.login')
 
 @section('content')
-
+<style>
+    i.icon-eye-open, i.icon-eye-close {
+        color: #636363;
+    }
+</style>
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -32,7 +36,7 @@
                             <label for="password" class="col-md-4 control-label">{{ trans('translate.reset_password_new_pass') }}</label>
 
                             <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password" required>
+                                <input id="password" type="password" class="form-control" name="password" data-toggle="password" required>
 
                                 @if ($errors->has('password'))
                                     <span class="help-block">
@@ -45,7 +49,7 @@
                         <div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
                             <label for="password-confirm" class="col-md-4 control-label">{{ trans('translate.reset_password_confirm_pass') }}</label>
                             <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control pass" name="password_confirmation" required>
+                                <input id="password-confirm" type="password" class="form-control pass" name="password_confirmation" data-toggle="password" required>
 
                                 @if ($errors->has('password_confirmation'))
                                     <span class="help-block">

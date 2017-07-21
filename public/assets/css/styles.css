@@ -11411,8 +11411,8 @@ span.error_text {
     color: #fd0000;
     font-weight: 600;
 }
-#password-confirm.error, #password-confirm:focus.error {
-    background-color: #f9d7d7;
+#password-confirm.error, #password-confirm.error:focus {
+    background-color: #f9d7d7 !important;
     /* color: white; */
 }
 #confnewPass.error, #confnewPass:focus.error {
