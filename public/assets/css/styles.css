@@ -9285,8 +9285,8 @@ nav.links a {
 }
 
 .swMain ul li > a.done .stepNumber, .swMain > ul li:last-child > a.selected .stepNumber {
-  border-color: #FF3E41;
-  background-color: #FF3E41;
+  border-color: #ff3e41;
+  background-color: #ff3e41;
   color: #fff;
   text-indent: -9999px;
 }
@@ -9305,9 +9305,9 @@ nav.links a {
 
 .swMain ul li > a.done.wait .stepNumber {
   background-color: #F6F6F6 !important;
-  color: #339b54 !important;
+  color: #ff3e41 !important;
   text-indent: -0px !important;
-  border-color: #339b54 !important;
+  border-color: #ff3e41 !important;
 }
 
 .swMain ul li > a.done.wait .stepNumber:before {
