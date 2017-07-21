@@ -97,7 +97,9 @@ return [
 	'stel_version'     	=> 'Version',
 	'stel_category'     => 'Category',
 	'stel_choose_category'	=> 'Choose Category',
-	'stel_tax'     	=> 'Tax',
+	'stel_tax'     		=> 'Tax',
+	'stel_in_cart'     	=> 'Already in Cart',
+	'stel_buyed'     	=> 'Buyed',
     
 	'charge'     		=> 'Tariff',
 	'charge_no'     	=> 'No',

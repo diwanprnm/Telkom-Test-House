@@ -99,6 +99,8 @@ return [
 	'stel_category'     => 'Kategori',
 	'stel_choose_category'	=> 'Pilih Kategori',
 	'stel_tax'     	=> 'Pajak',
+	'stel_in_cart'     	=> 'Sudah ada di Keranjang Belanja',
+	'stel_buyed'     	=> 'Sudah dibeli',
     
 	'charge'     		=> 'Tarif', // tariff
 	'charge_no'     	=> 'No',
