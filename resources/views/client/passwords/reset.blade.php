@@ -9,7 +9,7 @@
                 <div class="panel-heading">{{ trans('translate.reset_password') }}</div>
 
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/client/password/reset') }}">
+                    <form id="form-reset" class="form-horizontal" role="form" method="POST" action="{{ url('/client/password/reset') }}">
                         {{ csrf_field() }}
 
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -32,7 +32,7 @@
                             <label for="password" class="col-md-4 control-label">{{ trans('translate.reset_password_new_pass') }}</label>
 
                             <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password">
+                                <input id="password" type="password" class="form-control" name="password" required>
 
                                 @if ($errors->has('password'))
                                     <span class="help-block">
@@ -45,15 +45,17 @@
                         <div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
                             <label for="password-confirm" class="col-md-4 control-label">{{ trans('translate.reset_password_confirm_pass') }}</label>
                             <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control pass" name="password_confirmation">
+                                <input id="password-confirm" type="password" class="form-control pass" name="password_confirmation" required>
 
                                 @if ($errors->has('password_confirmation'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('password_confirmation') }}</strong>
                                     </span>
                                 @endif
+								<span class="help-block error_text" style="display: none;">
+									<strong>{{ trans('translate.register_password_not_match') }}</strong>
+								</span>
                             </div>
-                    		<p class="error_text" style="display: none;">Password tidak sama!!!</p>
                         </div>
 
                         <div class="form-group">
@@ -88,5 +90,22 @@
 	  	$("#password-confirm").removeClass("error");
 	  }
 	});
+	
+	$( document ).ready(function() {
+		$("#form-reset").on("click",function(){
+			var password = $("#password").val();
+			var confirmPassword = $("#password-confirm").val();
+			if(password != confirmPassword){
+				return false;
+			}else{
+				return true;
+			}
+		});
+
+		 $('#password, #password-confirm').bind("cut copy paste",function(e) {
+			 e.preventDefault();
+		 });
+	 
+	 }); 
 </script>
 @endsection

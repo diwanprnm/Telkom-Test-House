@@ -255,7 +255,7 @@ class ResetPasswordController extends Controller
             ->withInput($request->only('email'))
             ->withErrors(['password' => 'The password field is required.']);
 		}
-		if($request->input('password') == '' || $request->input('password_confirmation') == ''){
+		if($request->input('password') == $request->input('password_confirmation')){
 			return redirect()->back()
             ->withInput($request->only('email'))
             ->withErrors(['password_confirmation' => 'The password confirmation does not match.']);
