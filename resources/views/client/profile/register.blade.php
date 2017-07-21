@@ -159,7 +159,7 @@
 								</div>
 								<div class="col_full">
 									<label for="register-form-repassword">{{ trans('translate.company_siup_date') }} : *</label>
-									<input disabled="disabled" type="text" id="comp_siup_date" class="date form-control input-submit new-company-field" name="comp_siup_date" placeholder="DD-MM-YYYY" value="{{ old('comp_siup_date') }}" readonly required>
+									<input disabled="disabled" type="text" id="comp_siup_date" class="date form-control input-submit new-company-field" name="comp_siup_date" placeholder="YYYY-MM-DD" value="{{ old('comp_siup_date') }}" readonly required>
 								</div>
 								<div class="col_full">
 									<label for="register-form-repassword">{{ trans('translate.company_siup_file') }} : *</label>
@@ -171,7 +171,7 @@
 								</div>
 								<div class="col_full">
 									<label for="register-form-repassword">{{ trans('translate.company_certificate_date') }} : *</label>
-									<input disabled="disabled" type="text" id="comp_qs_certificate_date" class="date form-control input-submit new-company-field" name="comp_qs_certificate_date" placeholder="DD-MM-YYYY" value="{{ old('comp_qs_certificate_date') }}" readonly required>
+									<input disabled="disabled" type="text" id="comp_qs_certificate_date" class="date form-control input-submit new-company-field" name="comp_qs_certificate_date" placeholder="YYYY-MM-DD" value="{{ old('comp_qs_certificate_date') }}" readonly required>
 								</div>
 								<div class="col_full">
 									<label for="register-form-repassword">{{ trans('translate.company_certificate_file') }} : *</label>
@@ -201,7 +201,7 @@
 		// $('#cmb-ref-perangkat').val(0);
 		$('#cmb-perusahaan').trigger("chosen:updated");
 		$('.date').datepicker({
-	    	format: 'dd-mm-yyyy', 
+	    	format: 'yyyy-mm-dd', 
 		    autoclose: true,
 		});
 	</script>
