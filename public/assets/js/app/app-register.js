@@ -30,11 +30,29 @@ $( document ).ready(function() {
 		isCompanyFormActive = !isCompanyFormActive;
 	
 	});
+	
+	$( ".pass" ).keyup(function() {
+		if ($(".pass").val() == null || $(".pass").val() == "") {
+	  	// alert("Wrong Type");
+	  	$(".error_text").hide();
+	  	$("#confnewPass").removeClass("error");
+	  }
+	  if ($(".pass").val() != $("#newPass").val()) {
+	  	// alert("Wrong Type");
+	  	$(".error_text").show();
+	  	$("#confnewPass").addClass("error");
+	  }
+	  if ($(".pass").val() == $("#newPass").val()) {
+	  	// alert("Wrong Type");
+	  	$(".error_text").hide();
+	  	$("#confnewPass").removeClass("error");
+	  }
+	});
+	
  	$("#register-form-submit").on("click",function(){
  		var password = $("#newPass").val();
  		var confirmPassword = $("#confnewPass").val();
  		if(password != confirmPassword){
- 			alert("Password dan Confirmation Password Don't Match")
  			return false;
  		}else{
  			return true;

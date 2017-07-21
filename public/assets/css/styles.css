@@ -11407,11 +11407,15 @@ td.small-width {
 	margin-bottom:10px;
 	
 	}
-p.error_text {
+span.error_text {
     color: #fd0000;
     font-weight: 600;
 }
 #password-confirm.error, #password-confirm:focus.error {
+    background-color: #f9d7d7;
+    /* color: white; */
+}
+#newPass.error, #confnewPass:focus.error {
     background-color: #f9d7d7;
     /* color: white; */
 }

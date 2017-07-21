@@ -75,13 +75,16 @@
 							</div> 
 							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.register_confirm_password') }} : *</label>
-								<input type="password" id="confnewPass" class="form-control input-submit" name="confnewPass" placeholder="p@ssw0rd" id="password" data-toggle="password" required>
+								<input type="password" id="confnewPass" class="form-control input-submit pass" name="confnewPass" placeholder="p@ssw0rd" id="password" data-toggle="password" required>
 							</div>
 							@if(!empty(Session::get('error_newpass')) && (Session::get('error_newpass') == 2))
 								<div class="col_full">
 									<label for="register-form-repassword">{{ trans('translate.register_password_not_match') }}</label>
 								</div> 
 							@endif							
+								<div class="col_full error_text" style="display: none;">
+									<label for="register-form-repassword">{{ trans('translate.register_password_not_match') }}</label>
+								</div> 
 							<h3>{{ trans('translate.register_picture') }}</h3>
 							<hr>
 							<div class="col_full">
