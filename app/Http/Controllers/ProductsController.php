@@ -43,7 +43,7 @@ class ProductsController extends Controller
                 ->where("stels.stel_type",1) ;
 
             if ($search != null){
-				$stels->where(function($q){
+				$stels->where(function($q) use ($search){
 					return $q->where('stels.name','like','%'.$search.'%')
 						->orWhere('stels.code','like','%'.$search.'%')
 						;
