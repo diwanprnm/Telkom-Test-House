@@ -1059,7 +1059,7 @@
 						@if(count($exam_schedule)>0)
 							<?php
 								$start_date = new DateTime($exam_schedule->data[0]->finishTestDt);
-								$end_date = date('Y-m-d');
+								$end_date = new DateTime(date('Y-m-d'));
 								$interval = $start_date->diff($end_date);
 							?>
 							<div class="col-md-12">
