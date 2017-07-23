@@ -555,7 +555,7 @@ class PermohonanController extends Controller
 			// $request->input('hide_jns_pengujian');
 			$request->input('hide_jns_pengujian');
 				$exam_type = DB::table('examination_types')->where('id', ''.$jns_pengujian.'')->first();
-				$exam_no_reg = DB::table('examination')->where('id', ''.$exam_id.'')->first();
+				$exam_no_reg = DB::table('examinations')->where('id', ''.$exam_id.'')->first();
 			$jns_pengujian_name = ''.$exam_type->name.'';
 			$jns_pengujian_desc = ''.$exam_type->description.'';
 		$nama_perangkat = 
@@ -717,7 +717,7 @@ class PermohonanController extends Controller
 				'jnsPengujian' => $jns_pengujian,
 				'initPengujian' => $jns_pengujian_name,
 				'descPengujian' => $jns_pengujian_desc,
-				'no_reg' => $exam_no_reg->no_reg
+				'no_reg' => $exam_no_reg->function_test_NO
 			]);
 		}
 		
