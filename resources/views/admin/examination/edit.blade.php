@@ -1178,7 +1178,7 @@
 												: Tersedia
 											</label>
 											<div class="form-group">
-												<a href=""> Download Laporan </a>
+												<a href="{{ $item->attachment }}"> Download Laporan </a>
 											</div>
 											@else
 											<label>
@@ -1198,7 +1198,11 @@
 										Tanggal *
 									</label>
 									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
+									@if(count($exam_schedule)>0)
+										<input type="text" name="resume_date" class="form-control" value="{{ $exam_schedule->data[0]->reportClosingDt }}" required/>
+									@else
 										<input type="text" name="resume_date" class="form-control" value="{{ $data->resume_date }}" required/>
+									@endif
 										<span class="input-group-btn">
 											<button type="button" class="btn btn-default">
 												<i class="glyphicon glyphicon-calendar"></i>
@@ -1454,21 +1458,28 @@
 								</div>
 								@if($data->qa_passed == 1)
 								<div>
-									<div class="col-md-12">
-										<div class="form-group">
+									@foreach($data->media as $item)
+										@if($item->name == 'Sertifikat')
+											@if($item->attachment != '')
 											<label>
-												Sertifikat File *
+												Sertifikat
 											</label>
-											<input type="file" name="certificate_file" class="form-control" accept="application/pdf, image/*"/>
-										</div>
-										<div class="form-group">
-										@if($data->certificate_status)
-											@if($data->device->certificate)
-												<a href="{{URL::to('/admin/examination/media/download/'.$data->device_id.'/certificate')}}"> Download Certificate</a>
+											<label>
+												: Tersedia
+											</label>
+											<div class="form-group">
+												<a href="{{ $item->attachment }}"> Download Sertifikat </a>
+											</div>
+											@else
+											<label>
+												Sertifikat
+											</label>
+											<label>
+												: Belum Tersedia
+											</label>
 											@endif
 										@endif
-										</div>
-									</div>
+									@endforeach
 									<div class="col-md-6">
 										<div class="form-group">
 											<label>

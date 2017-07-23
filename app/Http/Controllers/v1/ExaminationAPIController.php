@@ -754,7 +754,8 @@ class ExaminationAPIController extends AppBaseController
 				$attach = new ExaminationAttach;
 				$attach->id = Uuid::uuid4();
 				$attach->examination_id = $param->id; 
-				$attach->name = 'Laporan Uji'. $param->name;
+				// $attach->name = 'Laporan Uji'. $param->name;
+				$attach->name = 'Laporan Uji';
 				$attach->attachment = $param->link;
 				$attach->no = $param->no;
 				$attach->created_by = 1;
@@ -779,7 +780,8 @@ class ExaminationAPIController extends AppBaseController
 			$attach = new ExaminationAttach;
 			$attach->id = Uuid::uuid4();
 			$attach->examination_id = $param->id; 
-			$attach->name = 'Sertifikat'. $param->name;
+			// $attach->name = 'Sertifikat'. $param->name;
+			$attach->name = 'Sertifikat';
 			$attach->attachment = $param->link;
 			$attach->no = $param->no;
 			$attach->created_by = 1;
