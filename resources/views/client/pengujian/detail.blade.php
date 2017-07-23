@@ -605,7 +605,7 @@
 													@if($item_attach->name == 'Sertifikat' && $item_attach->attachment != '')
 														<a class="btn btn-link" href="javascript:void(0)" style="color:black !important;" onclick="return isTestimonial('{{ $item_attach->id_attach }}','{{ $item_attach->attachment }}','{{ $item_attach->jns }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">{{ $item_attach->name }} </a>
 													@elseif($item_attach->name == 'Laporan Uji' && $item_attach->attachment != '')
-														<a class="btn btn-link" href="#" style="color:black !important;">{{ $item_attach->name }} </a>
+														<a class="btn btn-link" href="{{$item_attach->attachment}}" style="color:black !important;">{{ $item_attach->name }} </a>
 													@else	
 														<a class="btn btn-link" href="{{URL::to('/pengujian/download/'.$item_attach->id_attach.'/'.$item_attach->attachment.'/'.$item_attach->jns)}}" style="color:black !important;">{{ $item_attach->name }} </a>
 													@endif
