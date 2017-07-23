@@ -154,6 +154,11 @@
 	<script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
 	<script src={{ asset("assets/js/form-elements.js") }}></script>
 	<script type="text/javascript">
+	$('.date').datepicker({  
+			"format": "dd-mm-yyyy",
+			"setDate": new Date(),
+			"autoclose": true
+		});
 	jQuery(document).ready(function() {
 		FormElements.init();
 		
