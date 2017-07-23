@@ -579,7 +579,7 @@
 								<a class="button button-3d nomargin btn-blue" href="{{URL::to('cetakPengujian/'.$item->id.'')}}" target="_blank">{{ trans('translate.examination_print') }}</a>
 								<a class="button button-3d nomargin btn-blue " href="{{URL::to('pengujian/'.$item->id.'/detail')}}">{{ trans('translate.examination_detail') }}</a>
 								
-								@if($item->registration_status <= '1' && $item->function_status != '1' && $item->deal_test_date == NULL)
+								@if($item->registration_status != '0' && $item->function_status != '1' && $item->deal_test_date == NULL)
 									<a class="button button-3d nomargin btn-blue" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->urel_test_date ?>')">{{ trans('translate.examination_reschedule_test_date') }}</a>
 								@endif
 								

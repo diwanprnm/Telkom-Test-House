@@ -96,8 +96,9 @@ class EquipmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+		$exam_id = $request->session()->pull('key_exam_id_for_generate_equip_masuk');
 		$examination = DB::table('examinations')
 			->join('devices', 'examinations.device_id', '=', 'devices.id')
 			->select(
@@ -109,6 +110,7 @@ class EquipmentController extends Controller
 			->get();
 		
         return view('admin.equipment.create')
+            ->with('exam_id', $exam_id)
             ->with('examination', $examination);
     }
 

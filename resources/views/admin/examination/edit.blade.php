@@ -476,6 +476,27 @@
 									<textarea class="form-control" rows="2" name="reason" id="reason" readonly>{{ $data->function_test_reason }}</textarea>
 								</div>
 							@endif
+							@if($data->deal_test_date != '')
+								<div class="col-md-12">
+									<div class="form-group">
+										<label for="form-field-select-2">
+											Lokasi Barang Sebelum Uji Fungsi
+										</label>
+										<select name="masukkan_barang" class="cs-select cs-skin-elastic">
+											@if(count($data->equipment)==0)
+												<option value="1" selected>Customer (Applicant)</option>
+											@else
+												<option value="2" selected>URel (Store)</option>
+											@endif
+										</select>
+									</div>
+								</div>
+								@if(count($data->equipment)==0)
+									<div class="form-group">
+										<a onclick="masukkanBarang('{{ $data->id }}')"> Masukkan Barang</a>
+									</div>									
+								@endif
+							@endif
 							<div class="col-md-12">
 								@if($data->catatan != '')
 									<div class="form-group">
@@ -502,6 +523,11 @@
 									<label for="catatan">Catatan :</label>
 									<textarea class="form-control" rows="5" name="catatan" id="catatan" readonly>{{ $data->catatan }}</textarea>
 								</div>
+								@if($data->catatan != '')
+									<div class="form-group">
+										<a onclick="updateBarang('{{ $data->id }}')"> Update Lokasi Barang (bila perlu)</a>
+									</div>	
+								@endif
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
@@ -596,6 +622,27 @@
 									@endforeach
 									<input type="hidden" id="contract_name" value="<?php echo $contract_attach; ?>">
 								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Lokasi Barang Sekarang
+									</label>
+									<select name="update_barang" class="cs-select cs-skin-elastic">
+										@if(count($data->equipment)==0)
+											<option value="2" selected>URel (Store)</option>
+										@elseif($data->equipment[0]->location==1)
+											<option value="1" selected>Customer (Applicant)</option>
+										@elseif($data->equipment[0]->location==2)
+											<option value="2" selected>URel (Store)</option>
+										@elseif($data->equipment[0]->location==3)
+											<option value="3" selected>Lab (Laboratory)</option>
+										@endif
+									</select>
+								</div>
+								<div class="form-group">
+									<a onclick="updateBarang('{{ $data->id }}')"> Update Lokasi Barang</a>
+								</div>	
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
@@ -766,7 +813,7 @@
 					</fieldset>
 				{!! Form::close() !!}
 
-				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'id' => 'form-pembayaran')) !!}
+				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-pembayaran')) !!}
 					{!! csrf_field() !!}
 					<input type="hidden" name="status" class="form-control" value="Pembayaran"/>
     				<fieldset>
@@ -801,6 +848,29 @@
 										</label>
 										</div>
 									@endif
+								<div class="col-md-12">
+									<div class="form-group">
+										<a onclick="makeKuitansi('<?php echo $data->id ?>')"> Buatkan File Kuitansi</a>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Kuitansi File *
+										</label>
+										<input type="file" name="kuitansi_file" id="kuitansi_file" class="form-control" accept="application/pdf, image/*">
+									</div>
+									<div class="form-group">
+										<?php $kuitansi_attach = ''; ?>
+										@foreach($data->media as $item)
+											@if($item->name == 'Kuitansi' && $item->attachment != '')
+												<?php $kuitansi_attach = $item->attachment; ?>
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/kuitansi')}}"> Download Kuitansi "<?php echo $kuitansi_attach; ?>"</a>
+											@endif
+										@endforeach
+										<input type="hidden" id="kuitansi_name" value="<?php echo $kuitansi_attach; ?>">
+									</div>
+								</div>
 							</div>
 	                        <div class="col-md-6">
 								<div class="form-group">
@@ -1113,7 +1183,28 @@
 									</p>
 								</div>
 							</div>
-	                        <div class="col-md-6">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Lokasi Barang Sekarang
+									</label>
+									<select name="update_barang" class="cs-select cs-skin-elastic">
+										@if(count($data->equipment)==0)
+											<option value="2" selected>Lab (Laboratory)</option>
+										@elseif($data->equipment[0]->location==1)
+											<option value="1" selected>Customer (Applicant)</option>
+										@elseif($data->equipment[0]->location==2)
+											<option value="2" selected>URel (Store)</option>
+										@elseif($data->equipment[0]->location==3)
+											<option value="3" selected>Lab (Laboratory)</option>
+										@endif
+									</select>
+								</div>
+								<div class="form-group">
+									<a onclick="updateBarang('{{ $data->id }}')"> Update Lokasi Barang</a>
+								</div>	
+							</div>
+	                        <div class="col-md-12">
 								<div class="form-group">
 									<label for="form-field-select-2">
 										Status *
@@ -1316,6 +1407,27 @@
 								Step Penerbitan Sertifikat
 							</legend>
 							<div class="row">
+								<div class="col-md-12">
+									<div class="form-group">
+										<label for="form-field-select-2">
+											Lokasi Barang Sekarang
+										</label>
+										<select name="update_barang" class="cs-select cs-skin-elastic">
+											@if(count($data->equipment)==0)
+												<option value="2" selected>URel (Store)</option>
+											@elseif($data->equipment[0]->location==1)
+												<option value="1" selected>Customer (Applicant)</option>
+											@elseif($data->equipment[0]->location==2)
+												<option value="2" selected>URel (Store)</option>
+											@elseif($data->equipment[0]->location==3)
+												<option value="3" selected>Lab (Laboratory)</option>
+											@endif
+										</select>
+									</div>
+									<div class="form-group">
+										<a onclick="updateBarang('{{ $data->id }}')"> Update Lokasi Barang</a>
+									</div>	
+								</div>
 								@if($data->qa_passed == 1)
 								<div>
 									<div class="col-md-12">
@@ -1528,6 +1640,76 @@
 		}); */
 	}
 	
+	function makeKuitansi(a){
+		var APP_URL = {!! json_encode(url('/admin/kuitansi/create')) !!};		
+		$.ajax({
+			type: "POST",
+			url : "generateKuitansiParam",
+			data: {'_token':"{{ csrf_token() }}", 'exam_id':a},
+			beforeSend: function(){
+				
+			},
+			success: function(response){
+				if(response == 1){
+					window.open(APP_URL, 'mywin','status=0,toolbar=0,location=0,menubar=0,directories=0,resizable=0,scrollbars=0,width=720,height=500');
+				}else{
+					alert("Gagal mengambil data");
+				}
+			},
+			error:function(){
+				alert("Gagal mengambil data");
+			}
+		});
+		
+		/* $("#1").load("../loadDataKet",{pgw_id6:res[3]}, function() {
+			document.getElementById("overlay").style.display="none";
+		}); */
+	}
+	
+	function masukkanBarang(a){
+		var APP_URL = {!! json_encode(url('/admin/equipment/create')) !!};		
+		$.ajax({
+			type: "POST",
+			url : "generateEquipParam",
+			data: {'_token':"{{ csrf_token() }}", 'exam_id':a},
+			beforeSend: function(){
+				
+			},
+			success: function(response){
+				if(response == 1){
+					window.open(APP_URL, 'mywin','status=0,toolbar=0,location=0,menubar=0,directories=0,resizable=0,scrollbars=1,width=720,height=500');
+				}else{
+					alert("Gagal mengambil data");
+				}
+			},
+			error:function(){
+				alert("Gagal mengambil data");
+			}
+		});
+	}
+	
+	function updateBarang(a){
+		var APP_URL = {!! json_encode(url('/admin/examination/generateEquip')) !!}
+		$.ajax({
+			type: "POST",
+			url : "generateEquipParam",
+			data: {'_token':"{{ csrf_token() }}", 'exam_id':a},
+			beforeSend: function(){
+				
+			},
+			success: function(response){
+				if(response == 1){
+					window.open(APP_URL, 'mywin','status=0,toolbar=0,location=0,menubar=0,directories=0,resizable=0,scrollbars=1,width=720,height=500');
+				}else{
+					alert("Gagal mengambil data");
+				}
+			},
+			error:function(){
+				alert("Gagal mengambil data");
+			}
+		});
+	}
+	
 	$('.btn-tgl-kontrak').click(function () {
 		var a = document.getElementById('hide_id_exam').value;
 		var b = document.getElementById('contract_date').value;
@@ -1652,17 +1834,31 @@
 	
 	$('#form-pembayaran').submit(function () {
 		var keterangan = document.getElementById('keterangan_pembayaran').value;
+		var kuitansi_file = document.getElementById('kuitansi_file');
+		var kuitansi_name = document.getElementById('kuitansi_name').value;
 		var $inputs = $('#form-pembayaran :input');
 		var values = {};
 		$inputs.each(function() {
 			values[this.name] = $(this).val();
 		});
-		if(values['payment_status'] == '-1' && keterangan == ''){
+		if(values['payment_status'] == '-1'){
+			if(keterangan == ''){
+				$('#myModalketerangan_pembayaran').modal('show');
+				return false;
+			}else{
+				$('#myModalketerangan_pembayaran').modal('hide');
+			}			
+		}else{
+			if(spb_file.value == '' && spb_name == ''){
+				alert("File Kuitansi harus dipilih");$('.kuitansi_file').focus();return false;				
+			}
+		}
+		/* if(values['payment_status'] == '-1' && keterangan == ''){
 			$('#myModalketerangan_pembayaran').modal('show');
 			return false;
 		}else{
 			$('#myModalketerangan_pembayaran').modal('hide');
-		}
+		} */
 	});
 	
 	$('#form-spk').submit(function () {

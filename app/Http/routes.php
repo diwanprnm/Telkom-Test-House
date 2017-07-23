@@ -2871,6 +2871,9 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::post('/examination/revisi', 'ExaminationController@updaterevisi');
 	Route::post('/examination/{id}/tanggalkontrak', 'ExaminationController@tanggalkontrak');
 	Route::post('/examination/{id}/generateSPBParam', 'ExaminationController@generateSPBParam');
+	Route::post('/examination/{id}/generateEquipParam', 'ExaminationController@generateEquipParam');
+	Route::post('/examination/{id}/generateKuitansiParam', 'ExaminationController@generateKuitansiParam');
+	Route::get('/examination/generateEquip', 'ExaminationController@generateEquip');
 	Route::get('/examination/generateSPB', 'ExaminationController@generateSPB');
 	Route::post('/examination/generateSPB', 'ExaminationController@generateSPBData');
 	Route::put('/user/profile/{id}', 'UserController@updateProfile');

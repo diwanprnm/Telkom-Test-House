@@ -284,6 +284,7 @@ class ExaminationController extends Controller
                             ->with('examinationLab')
                             ->with('device')
                             ->with('media')
+                            ->with('equipment')
                             ->first();
 
         $labs = ExaminationLab::all();
@@ -476,8 +477,39 @@ class ExaminationController extends Controller
 			}
         }
         if ($request->has('payment_status')){
+			if ($request->hasFile('kuitansi_file')) {
+				$name_file = 'kuitansi_'.$request->file('kuitansi_file')->getClientOriginalName();
+				$path_file = public_path().'/media/examination/'.$exam->id;
+				if (!file_exists($path_file)) {
+					mkdir($path_file, 0775);
+				}
+				if($request->file('kuitansi_file')->move($path_file,$name_file)){
+					$attach = ExaminationAttach::where('name', 'Kuitansi')->where('examination_id', ''.$exam->id.'')->first();
+
+					if ($attach){
+						$attach->attachment = $name_file;
+						$attach->updated_by = $currentUser->id;
+
+						$attach->save();
+					} else{
+						$attach = new ExaminationAttach;
+						$attach->id = Uuid::uuid4();
+						$attach->examination_id = $exam->id; 
+						$attach->name = 'Kuitansi';
+						$attach->attachment = $name_file;
+						$attach->created_by = $currentUser->id;
+						$attach->updated_by = $currentUser->id;
+
+						$attach->save();
+					}					
+				}else{
+					Session::flash('error', 'Save kuitansi to directory failed');
+					return redirect('/admin/examination/'.$exam->id.'/edit');
+				}
+			}
             $status = $request->input('payment_status');
             $exam->payment_status = $status;
+			$exam->spk_status = $status;
 			if($status == 1){
 				if($this->cekRefID($exam->id) == 0){
 					$income = new Income;
@@ -495,7 +527,10 @@ class ExaminationController extends Controller
 					$income->price = $request->input('exam_price');
 					$income->updated_by = $currentUser->id;
 					$income->save();
-				$this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.pembayaran", "ACC Pembayaran");
+				$path_file = public_path().'/media/examination/'.$id;
+				$attach = ExaminationAttach::where('name', 'Kuitansi')->where('examination_id', ''.$id.'')->first();
+					$attach_name = $attach->attachment;
+				$this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.pembayaran", "ACC Pembayaran",$path_file."/".$attach_name);
 			}else if($status == -1){
 				Income::where('reference_id', '=' ,''.$exam->id.'')->delete();
 				// $exam->keterangan = $request->input('keterangan');
@@ -1468,6 +1503,25 @@ class ExaminationController extends Controller
 		echo 1;
     }
 	
+	public function generateEquipParam(Request $request) {
+		$request->session()->put('key_exam_id_for_generate_equip_masuk', $request->input('exam_id'));
+		echo 1;
+    }
+	
+	public function generateKuitansiParam(Request $request) {
+		$kode = $this->generateKuitansiManual();
+		$exam_id = $request->input('exam_id');
+		$exam = Examination::where('id', $exam_id)
+					->with('device')
+					->with('user')
+					->first();
+		$request->session()->put('key_kode_for_kuitansi', $kode);
+		$request->session()->put('key_from_for_kuitansi', $exam->user->name);
+		$request->session()->put('key_price_for_kuitansi', $exam->price?: '0');
+		$request->session()->put('key_for_for_kuitansi', "Pengujian Perangkat ".$exam->device->name);
+		echo 1;
+    }
+	
 	public function generateSPB(Request $request) {
 		$exam_id = $request->session()->pull('key_exam_id_for_generate_spb');
 		$spb_number = $request->session()->pull('key_spb_number_for_generate_spb');
@@ -1601,5 +1655,52 @@ class ExaminationController extends Controller
 			'status' => $function_test_TE,
 			'catatan' => $catatan
 		]);
+    }
+	
+	public function generateEquip(Request $request)
+    {
+		$exam_id = $request->session()->pull('key_exam_id_for_generate_equip_masuk');
+		$equipment = Equipment::where('examination_id', $exam_id)->get();
+        $location = Equipment::where('examination_id', $exam_id)->first();
+        $examination = DB::table('examinations')
+			->join('devices', 'examinations.device_id', '=', 'devices.id')
+			->select(
+					'examinations.id',
+					'devices.name',
+					'devices.model'
+					)
+            ->where('examinations.id', $exam_id)
+			->orderBy('devices.name')
+			->first();
+
+        return view('admin.equipment.edit')
+            ->with('item', $examination)
+            ->with('location', $location)
+            ->with('data', $equipment);
+    }
+	
+	public function generateKuitansiManual() {
+		$thisYear = date('Y');
+		$query = "
+			SELECT SUBSTRING_INDEX(number,'/',1) + 1 AS last_numb
+			FROM kuitansi WHERE SUBSTRING_INDEX(number,'/',-1) = ".$thisYear."
+			ORDER BY last_numb DESC LIMIT 1
+		";
+		$data = DB::select($query);
+		if (count($data) == 0){
+			return '001/DDS-73/'.$thisYear.'';
+		}
+		else{
+			$last_numb = $data[0]->last_numb;
+			if($last_numb < 10){
+				return '00'.$last_numb.'/DDS-73/'.$thisYear.'';
+			}
+			else if($last_numb < 100){
+				return '0'.$last_numb.'/DDS-73/'.$thisYear.'';
+			}
+			else{
+				return ''.$last_numb.'/DDS-73/'.$thisYear.'';
+			}
+		}
     }
 }

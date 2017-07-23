@@ -34,6 +34,9 @@
 	            </div>
 	        </div>
 			@if (Session::get('message'))
+				<script>
+					window.close();
+				</script>
 				<div class="alert alert-info">
 					{{ Session::get('message') }}
 				</div>
@@ -46,11 +49,11 @@
 			@endif
 			<div class="row">
 				<div class="col-md-6 pull-right" style="margin-bottom:10px">
-					<a style=" color:white !important;" href="{{URL::to('/admin/kuitansi/create')}}">
+					<!--<a style=" color:white !important;" href="{{URL::to('/admin/kuitansi/create')}}">
 						<button type="button" class="btn btn-wide btn-green btn-squared pull-right" >
 						Tambah Kuitansi
 						</button>         
-					</a>
+					</a>-->
 		        </div>
 				<div class="col-md-12">
 					<div class="table-responsive">

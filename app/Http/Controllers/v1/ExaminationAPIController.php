@@ -184,8 +184,8 @@ class ExaminationAPIController extends AppBaseController
 			}
 			
 			if(isset($param->spk_code)){
-				if($param->spk_code){
-					// $result = $result->where("examinations.payment_status", "=", 1);
+				if($param->spk_code == ''){
+					$result = $result->where("examinations.payment_status", "=", 1);
 				}else{
 					$result = $result->where("examinations.spk_code", "LIKE", '%'.$param->spk_code .'%');
 				}

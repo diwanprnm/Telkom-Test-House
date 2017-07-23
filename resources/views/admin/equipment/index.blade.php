@@ -34,25 +34,31 @@
 	        </div>
 
 	        @if (Session::get('error'))
+				<script>
+					window.close();
+				</script>
 				<div class="alert alert-error alert-danger">
 					{{ Session::get('error') }}
 				</div>
 			@endif
 			
 			@if (Session::get('message'))
+				<script>
+					window.close();
+				</script>
 				<div class="alert alert-info">
 					{{ Session::get('message') }}
 				</div>
 			@endif
 			
 			<div class="row">
-				<div class="col-md-6 pull-right" style="margin-bottom:10px">
+				<!-- <div class="col-md-6 pull-right" style="margin-bottom:10px">
 		            <a style=" color:white !important;" href="{{URL::to('/admin/equipment/create')}}">
 						<button type="button" class="btn btn-wide btn-green btn-squared pull-right" >
 							Add Equipment
 						</button>
 					</a>
-		        </div>
+		        </div> -->
 				<div class="col-md-12">
 					<div class="table-responsive">
 						@foreach($data as $item)

@@ -117,9 +117,18 @@ class IncomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-		return view('admin.income.create_kuitansi');
+		$number = $request->session()->pull('key_kode_for_kuitansi');
+		$from = $request->session()->pull('key_from_for_kuitansi');
+		$price = $request->session()->pull('key_price_for_kuitansi');
+		$for = $request->session()->pull('key_for_for_kuitansi');
+		return view('admin.income.create_kuitansi')
+			->with('number', $number)
+			->with('from', $from)
+			->with('price', $price)
+			->with('for', $for)
+		;
     }
 
     /**
@@ -130,7 +139,7 @@ class IncomeController extends Controller
      */
     public function store(Request $request)
     {
-		if($this->cekKuitansi($request->input('number')) == 0){
+		// if($this->cekKuitansi($request->input('number')) == 0){
 			$currentUser = Auth::user();
 
 			$kuitansi = new Kuitansi;
@@ -151,10 +160,10 @@ class IncomeController extends Controller
 				Session::flash('error', 'Save failed');
 				return redirect('/admin/kuitansi/create')->withInput($request->all());
 			}
-		}else{
-			Session::flash('error', 'Existing Number');
-			return redirect('/admin/kuitansi/create')->withInput($request->all());
-		}
+		// }else{
+			// Session::flash('error', 'Existing Number');
+			// return redirect('/admin/kuitansi/create')->withInput($request->all());
+		// }
     }
 
     /**

@@ -36,6 +36,11 @@ class Examination extends Model
         return $this->belongsTo('App\User', 'created_by');
     }
 
+    public function equipment()
+    {
+        return $this->hasMany('App\Equipment');
+    }
+
     public function media()
     {
         return $this->hasMany('App\ExaminationAttach');

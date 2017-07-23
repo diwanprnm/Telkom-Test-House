@@ -94,9 +94,9 @@
 									  		<input type="submit" class="btn btn-success" value="{{ trans('translate.stel_add_to_cart') }}">
 										@else
 											@if($is_exist)
-												<label style="color:red;">{{ trans('translate.stel_in_cart') }}Sudah Dikeranjang</label>
+												<label style="color:red;">{{ trans('translate.stel_in_cart') }}</label>
 											@else
-												<label style="color:red;">{{ trans('translate.stel_buyed') }}Sudah dibeli</label>
+												<label style="color:red;">{{ trans('translate.stel_buyed') }}</label>
 											@endif
 										
 										@endif
