@@ -601,7 +601,7 @@ class ExaminationAPIController extends AppBaseController
     				return $this->sendError('Failed to Update Function Date ');
     			}
     		}else{
-    			return $this->sendError('Success Update Function Date');
+    			return $this->sendError('Failed to Update Function Date');
     		}
     	}else{
     		return $this->sendError('ID Examination or Date or PIC Is Required');

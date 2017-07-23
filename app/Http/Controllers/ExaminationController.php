@@ -649,9 +649,9 @@ class ExaminationController extends Controller
         if ($request->has('certificate_date')){
             $exam->certificate_date = $request->input('certificate_date');
         }
-		if ($request->has('spk_date')){
-            $exam->spk_date = $request->input('spk_date');
-        }
+		// if ($request->has('spk_date')){
+            // $exam->spk_date = $request->input('spk_date');
+        // }
 		// if ($request->has('function_date')){
             // $exam->function_date = $request->input('function_date');
         // }

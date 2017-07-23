@@ -37,7 +37,7 @@
 										Tanggal Mulai Pengujian *
 									</label>
 									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
-									@if(count($exam_schedule)>0)
+									@if($exam_schedule->code != 'MSTD0059AERR')
 										<input type="text" name="testing_start" id="testing_start" value="{{$exam_schedule->data[0]->startTestDt}}" class="form-control"/>
 									@else
 										<input type="text" name="testing_start" id="testing_start" class="form-control"/>
@@ -56,7 +56,7 @@
 										Tanggal Selesai Pengujian *
 									</label>
 									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
-									@if(count($exam_schedule)>0)
+									@if($exam_schedule->code != 'MSTD0059AERR')
 										<input type="text" name="testing_end" id="testing_end" value="{{$exam_schedule->data[0]->finishTestDt}}" class="form-control"/>
 									@else
 										<input type="text" name="testing_end" id="testing_end" class="form-control"/>
@@ -1056,7 +1056,7 @@
 							Step Pelaksanaan Uji
 						</legend>
 						<div class="row">
-						@if(count($exam_schedule)>0)
+						@if($exam_schedule->code != 'MSTD0059AERR')
 							<?php
 								$start_date = new DateTime($exam_schedule->data[0]->finishTestDt);
 								$end_date = new DateTime(date('Y-m-d'));
@@ -1638,9 +1638,9 @@
 		$('#contract-modal-content').modal('show');
 		$('#hide_id_exam').val(a);
 		$('#contract-modal-content').on('shown.bs.modal', function() {
-			$('#contract_date').val(b);
-			$('#testing_start').val(c);
-			$('#testing_end').val(d);
+			// $('#contract_date').val(b);
+			// $('#testing_start').val(c);
+			// $('#testing_end').val(d);
 			// $("#cust_test_date").focus();
 		})
 	}
