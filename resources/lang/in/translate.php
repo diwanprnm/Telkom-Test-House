@@ -44,7 +44,7 @@ return [
 	'service_device_document'		=> 'Dokumen Pendukung',
 	
 	'service_upload'					=> 'Unggah Berkas',
-	'service_upload_siupp'				=> 'SIUPP',
+	'service_upload_siupp'				=> 'Lampiran SIUPP',
 	'service_upload_siupp_no'			=> 'No SIUPP',
 	'service_upload_siupp_date'			=> 'Tanggal SIUPP',
 	'service_upload_certificate'		=> 'Sertifikat Sistem Mutu',

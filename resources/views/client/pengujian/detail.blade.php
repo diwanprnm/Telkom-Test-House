@@ -347,6 +347,7 @@
                 </form>
           </div>
           <div class="modal-footer">
+            <button type="button" id="submit-complain" class="button button3d btn-sky">Lewati</button>
             <button type="button" id="submit-complain" class="button button3d btn-sky">Simpan</button>
           </div>
         </div>
@@ -462,7 +463,7 @@
 			<div class="content-wrap"> 
 				<div class="container clearfix">
 					<div class="container-fluid container-fullw bg-white">
-						@if(count($exam_schedule->data)>0)
+						@if(count($exam_schedule)>0)
 						<div class="row">
 							<div class="col-md-12">
 								<div class="panel panel-white" id="panel1">
@@ -479,8 +480,8 @@
 														</thead>
 														<tbody>
 															<tr>
-																<td class="center">{{ trans('translate.examination_date_begin') }} : {{ $exam_schedule->data[0]->testing_type }}</td>
-																<td class="center">{{ trans('translate.examination_date_end') }} : {{ $exam_schedule->data[0]->testing_type }}</td>
+																<td class="center">{{ trans('translate.examination_date_begin') }} : {{ $exam_schedule->data[0]->startTestDt }}</td>
+																<td class="center">{{ trans('translate.examination_date_end') }} : {{ $exam_schedule->data[0]->finishTestDt }}</td>
 															</tr>
 														</tbody>
 													</table>

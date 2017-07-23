@@ -14,7 +14,7 @@ return [
     */
 
     'env' => env('APP_ENV', 'production'),
-    'url_api_bsp' => env('url_api_bsp', 'http://localhost:8008/telkomdds/public/v1/'),
+    'url_api_bsp' => env('url_api_bsp', 'http://ptbsp.ddns.net:13280/RevitalisasiOTR/api/'),
     'IS_ENABLED_NOTIFICATION' => env('IS_ENABLED_NOTIFICATION', false),
 
     /*

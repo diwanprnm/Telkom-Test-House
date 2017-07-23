@@ -730,7 +730,13 @@ class PengujianController extends Controller
                     ->orderBy('created_at', 'DESC')
                     ->get();
 					
+			$examfromOTR = Examination::where('id', $id)
+                            ->with('examinationType')
+                            ->with('examinationLab')
+                            ->first();
+					
 			$client = new Client([
+				'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
 				// Base URI is used with relative requests
 				// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
 				'base_uri' => config("app.url_api_bsp"),
@@ -738,7 +744,7 @@ class PengujianController extends Controller
 				'timeout'  => 60.0,
 			]);
 			
-			$res_exam_schedule = $client->get('examination?id='.$id)->getBody();
+			$res_exam_schedule = $client->get('spk/searchData?spkNumber='.$examfromOTR->spk_code)->getBody();
 			$exam_schedule = json_decode($res_exam_schedule);
 					
             return view('client.pengujian.detail')
@@ -968,6 +974,10 @@ class PengujianController extends Controller
 	
 	public function updateTanggalUji(Request $request)
     {
+		$exam = Examination::where('id', $request->input('hide_id_exam'))
+		->with('examinationLab')
+		->first()
+		;
 		$currentUser = Auth::user();
 			$cust_test_date = strtotime($request->input('cust_test_date'));
 			try{
@@ -991,6 +1001,19 @@ class PengujianController extends Controller
 				$exam_hist->save();
 				
 				Session::flash('message', 'Update successfully');
+				$client = new Client([
+					'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+					// Base URI is used with relative requests
+					// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+					'base_uri' => config("app.url_api_bsp"),
+					// You can set any number of default request options.
+					'timeout'  => 60.0,
+				]);
+				
+				// $res_exam_schedule = $client->post('notification/notifToTE?lab='.$exam->examinationLab->lab_code)->getBody();
+				$res_exam_schedule = $client->post('notification/notifToTE?lab='.$exam->examinationLab->lab_code);
+				// $exam_schedule = json_decode($res_exam_schedule);
+				
 				// $this->sendProgressEmail("Pengujian atas nama ".$user_name." dengan alamat email ".$user_email.", telah melakukan proses Upload Bukti Pembayaran");
 				// return back();
 			} catch(Exception $e){

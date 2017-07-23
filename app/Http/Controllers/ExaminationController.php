@@ -291,6 +291,7 @@ class ExaminationController extends Controller
 		// $gen_spk_code = $this->generateSPKCOde($exam->examinationLab->lab_code,$exam->examinationType->name,date('Y'));
 		
 		$client = new Client([
+			'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
 			// Base URI is used with relative requests
 			// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
 			'base_uri' => config("app.url_api_bsp"),
@@ -298,7 +299,8 @@ class ExaminationController extends Controller
 			'timeout'  => 60.0,
 		]);
 		
-		$res_exam_schedule = $client->get('examination?id='.$id)->getBody();
+		// $res_exam_schedule = $client->post('notification/notifToTE?lab='.$exam->examinationLab->lab_code)->getBody();
+		$res_exam_schedule = $client->get('spk/searchData?spkNumber='.$exam->spk_code)->getBody();
 		$exam_schedule = json_decode($res_exam_schedule);
 
         return view('admin.examination.edit')
@@ -531,6 +533,27 @@ class ExaminationController extends Controller
 				$attach = ExaminationAttach::where('name', 'Kuitansi')->where('examination_id', ''.$id.'')->first();
 					$attach_name = $attach->attachment;
 				$this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.pembayaran", "ACC Pembayaran",$path_file."/".$attach_name);
+				
+				$client = new Client([
+					'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+					// Base URI is used with relative requests
+					// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+					'base_uri' => config("app.url_api_bsp"),
+					// You can set any number of default request options.
+					'timeout'  => 60.0,
+				]);
+				
+				$exam_forOTR = Examination::where('id', $exam->id)
+				->with('examinationType')
+				->with('examinationLab')
+				->first()
+				;
+				$spk_number_forOTR = $this->generateSPKCOde($exam_forOTR->examinationLab->lab_code,$exam_forOTR->examinationType->name,date('Y'));
+				$exam->spk_code = $spk_number_forOTR;
+				$exam->spk_date = date('Y-m-d');
+				// $res_exam_schedule = $client->post('notification/notifToTE?lab=?'.$exam->examinationLab->lab_code)->getBody();
+				$res_exam_schedule = $client->get('spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR);
+				// $exam_schedule = json_decode($res_exam_schedule);
 			}else if($status == -1){
 				Income::where('reference_id', '=' ,''.$exam->id.'')->delete();
 				// $exam->keterangan = $request->input('keterangan');

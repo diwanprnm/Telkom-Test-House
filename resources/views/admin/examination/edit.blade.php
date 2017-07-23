@@ -22,7 +22,7 @@
 										Tanggal *
 									</label>
 									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-										<input type="text" name="contract_date" id="contract_date" class="form-control"/>
+										<input type="text" name="contract_date" id="contract_date" value="<?php echo date('Y-m-d');?>" class="form-control"/>
 										<span class="input-group-btn">
 											<button type="button" class="btn btn-default">
 												<i class="glyphicon glyphicon-calendar"></i>
@@ -37,7 +37,11 @@
 										Tanggal Mulai Pengujian *
 									</label>
 									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
+									@if(count($exam_schedule)>0)
+										<input type="text" name="testing_start" id="testing_start" value="{{$exam_schedule->data[0]->startTestDt}}" class="form-control"/>
+									@else
 										<input type="text" name="testing_start" id="testing_start" class="form-control"/>
+									@endif
 										<span class="input-group-btn">
 											<button type="button" class="btn btn-default">
 												<i class="glyphicon glyphicon-calendar"></i>
@@ -52,7 +56,11 @@
 										Tanggal Selesai Pengujian *
 									</label>
 									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
+									@if(count($exam_schedule)>0)
+										<input type="text" name="testing_end" id="testing_end" value="{{$exam_schedule->data[0]->finishTestDt}}" class="form-control"/>
+									@else
 										<input type="text" name="testing_end" id="testing_end" class="form-control"/>
+									@endif
 										<span class="input-group-btn">
 											<button type="button" class="btn btn-default">
 												<i class="glyphicon glyphicon-calendar"></i>
@@ -826,11 +834,10 @@
 									<label>
 										Status Pembayaran
 									</label>
+										<?php $status = 0 ?>
 									@foreach($data->media as $item)
 										@if($item->name == 'File Pembayaran' && $item->attachment !='')
 											<?php $status = 1; break; ?>
-										@else
-											<?php $status = 0 ?>
 										@endif
 									@endforeach
 
@@ -1049,15 +1056,22 @@
 							Step Pelaksanaan Uji
 						</legend>
 						<div class="row">
-						@if(count($exam_schedule->data)>0)
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>
-										Tanggal Mulai
-									</label>
-									<label>
-										: {{ $exam_schedule->data[0]->testing_type }}
-									</label>
+						@if(count($exam_schedule)>0)
+							<?php
+								$start_date = new DateTime($exam_schedule->data[0]->finishTestDt);
+								$end_date = date('Y-m-d');
+								$interval = $start_date->diff->($end_date);
+							?>
+							<div class="col-md-12">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Tanggal Mulai
+										</label>
+										<label>
+											: {{ $exam_schedule->data[0]->startTestDt }}
+										</label>
+									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
@@ -1065,9 +1079,19 @@
 											Tanggal Selesai
 										</label>
 										<label>
-											: {{ $exam_schedule->data[0]->testing_type }}
+											: {{ $exam_schedule->data[0]->finishTestDt }}
 										</label>
 									</div>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										Sisa SPK
+									</label>
+									<label>
+										: {{ $interval->days }} hari
+									</label>
 								</div>
 							</div>
 						@endif
