@@ -688,7 +688,8 @@
 	// });
 	function isTestimonial(a,b,c,d,e){
 		var link = document.getElementById('link');
-			link.value = '/pengujian/download/'+a+'/'+b+'/'+c;
+			// link.value = '/pengujian/download/'+a+'/'+b+'/'+c;
+			link.value = b;
 		
 		$.ajax({
 			type: "POST",
@@ -783,7 +784,8 @@
 				console.log(response);
 				$('#modal_complain').modal('hide');
 				if(response==1){
-					window.location.href = '/telkomdds/public'+link;
+					// window.location.href = '/telkomdds/public'+link;
+					window.location.href = link;
 				}else{
 					$('#modal_status_barang').modal('show');
 				}
@@ -795,7 +797,8 @@
 		var link = document.getElementById('link').value;
 		// var message = document.getElementById('message').value;
 		var exam_id = document.getElementById('exam_id').value;
-		window.location.href = '/telkomtesthouse/public'+link;
+		// window.location.href = '/telkomtesthouse/public'+link;
+		window.location.href = link;
 		/* if(message == ''){
 			$('#modal_kuisioner').modal('show');
 			return false;

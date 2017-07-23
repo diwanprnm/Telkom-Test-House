@@ -592,9 +592,6 @@
 								<?php if($item->registration_status != 1){ ?>
 									<a class="button button-3d nomargin btn-blue" href="{{url('editprocess/'.$item->jns_pengujian.'/'.$item->id)}}">{{ trans('translate.examination_edit') }}</a>
 								<?php } ?>
-								<?php if($item->resume_status == 1){ ?>
-									<a class="button button-3d nomargin btn-blue" href="{{URL::to('pengujian/'.$item->id.'/downloadLaporanPengujian')}}">{{ trans('translate.examination_report') }}</a>
-								<?php } ?>
 								<?php if($item->certificate_status == 1){ ?>
 									<a class="button button-3d nomargin btn-blue" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->device_id }}','{{ $item->sistem_mutuPerangkat }}','device', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})', '{{$item->id}}');">{{ trans('translate.download') }} {{ trans('translate.certificate') }}</a>
 								<?php } ?>
@@ -1600,7 +1597,8 @@
 	
 	function isTestimonial(a,b,c,d,e){
 		var link = document.getElementById('link');
-			link.value = '/pengujian/download/'+a+'/'+b+'/'+c;
+			// link.value = '/pengujian/download/'+a+'/'+b+'/'+c;
+			link.value = b;
 		
 		$.ajax({
 			type: "POST",
@@ -1695,7 +1693,8 @@
 				console.log(response);
 				$('#modal_complain').modal('hide');
 				if(response==1){
-					window.location.href = '/telkomdds/public'+link;
+					// window.location.href = '/telkomdds/public'+link;
+					window.location.href = link;
 				}else{
 					$('#modal_status_barang').modal('show');
 				}

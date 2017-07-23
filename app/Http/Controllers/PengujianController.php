@@ -806,7 +806,7 @@ class PengujianController extends Controller
     {
     	$currentUser = Auth::user();
 		$query_attach = "
-			SELECT attachment FROM examination_attachments WHERE examination_id = '".$id."' AND name = 'Laporan Uji' AND attachment != ''
+			SELECT name,attachment FROM examination_attachments WHERE examination_id = '".$id."' AND name = 'Laporan Uji' AND attachment != ''
 		";
 		$data_attach = DB::select($query_attach);
 		if (count($data_attach) == 0){
