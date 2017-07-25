@@ -6,7 +6,7 @@
 <!-- Content
 ============================================= -->
 <section id="content">
-
+  <div class="overlay"></div>
 	<div class="content-wrap"> 
 		<div class="container clearfix">  
 		@if(session()->has('error'))
@@ -46,11 +46,11 @@
 									<label for="register-form-username">{{ trans('translate.register_email_required') }}</label>
 								</div>
 							@endif
-							@if(!empty(Session::get('error_email')) && (Session::get('error_email') == 2))
-								<div class="col_full">
-									<label for="register-form-username">{{ trans('translate.register_email_exists') }}</label>
-								</div>
-							@endif
+							 
+							<div class="col_full" id="emailError" style="display: none;">
+								<label for="register-form-username">{{ trans('translate.register_email_exists') }}</label>
+							</div>
+							 
 
 							<div class="col_full">
 								<label for="register-form-phone">{{ trans('translate.register_email_alternate') }} :</label>

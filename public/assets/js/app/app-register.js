@@ -49,14 +49,50 @@ $( document ).ready(function() {
 	  }
 	});
 	
- 	$("#register-form-submit").on("click",function(){
+ 	$("#register-form-submit").on("click",function(e){  
  		var password = $("#newPass").val();
  		var confirmPassword = $("#confnewPass").val();
+ 		var emailStatus = false;
  		if(password != confirmPassword){
+ 			console.log("password TIDAK SAMA");
  			return false;
- 		}else{
- 			return true;
- 		}
+ 		}else{ 
+ 			if(!$(this).attr('validated'))
+    		{
+				$.ajax({
+				   url: 'checkRegisterEmail',
+				   type: 'POST',
+				   data: {
+				      email: $("#email").val()
+				   },
+				   beforeSend: function(){ 
+						$("body").addClass("loading");	
+					},
+				   error: function() { 
+				   		return false; 
+				   },
+				   	success: function(response) {
+					   	console.log(response.status); 
+				   		if(response.status){ 
+				   			$("body").removeClass("loading");	
+				   			console.log("REDIRECT");
+				   		 	$('#register-form-submit').attr('validated',true);
+		                   	$('#register-form-submit').trigger("click");
+					   	} else{
+					   		$("body").removeClass("loading");	
+					   		$("#email").focus();
+					   		$("#emailError").css("display","block");
+					   	}
+				   	} 
+				});  
+				return false;  
+			}else{
+				return true;
+			}
+			console.log("oke");
+ 		}   
+ 		return true;
+ 		
  	});
 
  	 $('#newPass, #confnewPass').bind("cut copy paste",function(e) {

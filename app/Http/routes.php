@@ -2998,6 +2998,7 @@ Route::post('/filterSTEL', 'STELClientController@filter');
 Route::post('/filterCharge', 'ExaminationChargeClientController@filter');
 Route::get('/register', 'ProfileController@register');
 Route::post('/client/register', 'ProfileController@insert');
+Route::post('/checkRegisterEmail', 'ProfileController@checkRegisterEmail');
 
 Route::post('/global/search', 'HomeController@search');
 Route::post('/client/feedback', 'PermohonanController@feedback');

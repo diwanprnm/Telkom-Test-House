@@ -680,4 +680,19 @@ class ProfileController extends Controller
 				->with('data', $data);
 		}
     }
+
+    public function checkRegisterEmail(Request $request){
+    	$email = $request->input('email');
+    	if(isset($email)){
+    		$email_exists = $this->cekEmail($email);
+		 	if($email_exists == 1){ 
+    			return response()->json(['status'=>false,'message'=>'Email Already Exist']);	
+    		}else{
+    			return response()->json(['status'=>true,'message'=>'Email is Available']);
+    		}
+    		
+    	}else{
+    		return response()->json(['status'=>false,'message'=>'Email Is Required']);
+    	}
+    }
 }
