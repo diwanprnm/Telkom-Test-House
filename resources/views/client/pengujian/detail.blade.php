@@ -347,8 +347,8 @@
                 </form>
           </div>
           <div class="modal-footer">
-            <button type="button" id="submit-complain" class="button button3d btn-sky">Lewati</button>
-            <button type="button" id="submit-complain" class="button button3d btn-sky">Simpan</button>
+            <button type="button" id="submit-complain" class="button button3d btn-sky submit-complain">Lewati</button>
+            <button type="button" id="submit-complain2" class="button button3d btn-sky submit-complain">Simpan</button>
           </div>
         </div>
 
@@ -753,7 +753,7 @@
 		});
 	});
 
-	$('#submit-complain').click(function () {
+	$('.submit-complain').click(function () {
 		$.ajax({
 			url : "{{URL::to('insertComplaint')}}",
 			data:new FormData($("#form-complain")[0]),
