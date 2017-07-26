@@ -105,7 +105,8 @@ class PengujianController extends Controller
 								'examination_types.name AS jns_pengujian',
 								'examination_types.description AS desc_pengujian',
 								'users.name AS userName',
-								'examinations.function_test_reason'
+								'examinations.function_test_reason',
+								'examinations.function_date'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
@@ -146,7 +147,8 @@ class PengujianController extends Controller
 								'examination_types.name AS jns_pengujian',
 								'examination_types.description AS desc_pengujian',
 								'users.name AS userName',
-								'examinations.function_test_reason'
+								'examinations.function_test_reason',
+								'examinations.function_date'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
@@ -187,7 +189,8 @@ class PengujianController extends Controller
 								'examination_types.name AS jns_pengujian',
 								'examination_types.description AS desc_pengujian',
 								'users.name AS userName',
-								'examinations.function_test_reason'
+								'examinations.function_test_reason',
+								'examinations.function_date'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
@@ -227,7 +230,8 @@ class PengujianController extends Controller
 								'examination_types.name AS jns_pengujian',
 								'examination_types.description AS desc_pengujian',
 								'users.name AS userName',
-								'examinations.function_test_reason'
+								'examinations.function_test_reason',
+								'examinations.function_date'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
@@ -269,7 +273,8 @@ class PengujianController extends Controller
 								'examination_types.name AS jns_pengujian',
 								'examination_types.description AS desc_pengujian',
 								'users.name AS userName',
-								'examinations.function_test_reason'
+								'examinations.function_test_reason',
+								'examinations.function_date'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
@@ -309,7 +314,8 @@ class PengujianController extends Controller
 								'examination_types.name AS jns_pengujian',
 								'examination_types.description AS desc_pengujian',
 								'users.name AS userName',
-								'examinations.function_test_reason'
+								'examinations.function_test_reason',
+								'examinations.function_date'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
@@ -349,7 +355,8 @@ class PengujianController extends Controller
 								'examination_types.name AS jns_pengujian',
 								'examination_types.description AS desc_pengujian',
 								'users.name AS userName',
-								'examinations.function_test_reason'
+								'examinations.function_test_reason',
+								'examinations.function_date'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
@@ -388,7 +395,8 @@ class PengujianController extends Controller
 								'examination_types.name AS jns_pengujian',
 								'examination_types.description AS desc_pengujian',
 								'users.name AS userName',
-								'examinations.function_test_reason'
+								'examinations.function_test_reason',
+								'examinations.function_date'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
@@ -979,7 +987,8 @@ class PengujianController extends Controller
 		->first()
 		;
 		$currentUser = Auth::user();
-			$cust_test_date = strtotime($request->input('cust_test_date'));
+		$cust_test_date = strtotime($request->input('cust_test_date'));
+		if($request->input('hide_date_type') == 1){
 			try{
 				$query_update = "UPDATE examinations
 					SET 
@@ -1020,7 +1029,48 @@ class PengujianController extends Controller
 				Session::flash('error', 'Update failed');
 				// return back();
 			}
-		
+		}else{
+			try{
+				$query_update = "UPDATE examinations
+					SET 
+						urel_test_date = '".date('Y-m-d', $cust_test_date)."',
+						updated_by = '".$currentUser['attributes']['id']."',
+						updated_at = '".date('Y-m-d h:i:s')."'
+					WHERE id = '".$request->input('hide_id_exam')."'
+				";
+				$data_update = DB::update($query_update);
+				
+				$exam_hist = new ExaminationHistory;
+				$exam_hist->examination_id = $request->input('hide_id_exam');
+				$exam_hist->date_action = date('Y-m-d H:i:s');
+				$exam_hist->tahap = 'Update Tanggal Uji';
+				$exam_hist->status = 1;
+				$exam_hist->keterangan = '';
+				$exam_hist->created_by = $currentUser->id;
+				$exam_hist->created_at = date('Y-m-d H:i:s');
+				$exam_hist->save();
+				
+				Session::flash('message', 'Update successfully');
+				$client = new Client([
+					'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+					// Base URI is used with relative requests
+					// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+					'base_uri' => config("app.url_api_bsp"),
+					// You can set any number of default request options.
+					'timeout'  => 60.0,
+				]);
+				
+				// $res_exam_schedule = $client->post('notification/notifRescheduleToTE?lab='.$exam->examinationLab->lab_code)->getBody();
+				$res_exam_schedule = $client->post('notification/notifRescheduleToTE?id='.$exam->id);
+				// $exam_schedule = json_decode($res_exam_schedule);
+				
+				// $this->sendProgressEmail("Pengujian atas nama ".$user_name." dengan alamat email ".$user_email.", telah melakukan proses Upload Bukti Pembayaran");
+				// return back();
+			} catch(Exception $e){
+				Session::flash('error', 'Update failed');
+				// return back();
+			}
+		}
 		return back();
     }
 	

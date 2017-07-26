@@ -471,10 +471,30 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Penetapan Tanggal Akhir
+										Penetapan Tanggal dari Test Enginner
 									</label>
 									<label>
 										: <?php echo $data->deal_test_date; ?>
+									</label>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Pengajuan Tanggal Akhir dari Customer
+									</label>
+									<label>
+										: <?php echo $data->urel_test_date; ?>
+									</label>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Penetapan Tanggal Akhir dari Test Enginner
+									</label>
+									<label>
+										: <?php echo $data->function_date; ?>
 									</label>
 								</div>
 							</div>
@@ -484,7 +504,6 @@
 									<textarea class="form-control" rows="2" name="reason" id="reason" readonly>{{ $data->function_test_reason }}</textarea>
 								</div>
 							@endif
-							@if($data->deal_test_date != '')
 								<div class="col-md-12">
 									<div class="form-group">
 										<label for="form-field-select-2">
@@ -504,9 +523,24 @@
 										<a onclick="masukkanBarang('{{ $data->id }}')"> Masukkan Barang</a>
 									</div>									
 								@endif
-							@endif
 							<div class="col-md-12">
-								@if($data->catatan != '')
+								@if($data->function_test_TE != 0)
+									<div class="form-group">
+										<label>
+											Hasil Uji Fungsi
+										</label>
+										<label>
+											: @if($data->function_test_TE == 1)
+												Memenuhi
+											@elseif($data->function_test_TE == 2)
+												Tidak Memenuhi
+											@elseif($data->function_test_TE == 3)
+												dll
+											@else
+												Tidak Ada
+											@endif
+										</label>
+									</div>
 									<div class="form-group">
 										<a href="{{URL::to('/cetakUjiFungsi/'.$data->id)}}" target="_blank"> Buatkan Laporan Uji Fungsi</a>
 									</div>
@@ -531,11 +565,6 @@
 									<label for="catatan">Catatan :</label>
 									<textarea class="form-control" rows="5" name="catatan" id="catatan" readonly>{{ $data->catatan }}</textarea>
 								</div>
-								@if($data->catatan != '')
-									<div class="form-group">
-										<a onclick="updateBarang('{{ $data->id }}')"> Update Lokasi Barang (bila perlu)</a>
-									</div>	
-								@endif
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
@@ -630,27 +659,6 @@
 									@endforeach
 									<input type="hidden" id="contract_name" value="<?php echo $contract_attach; ?>">
 								</div>
-							</div>
-							<div class="col-md-12">
-								<div class="form-group">
-									<label for="form-field-select-2">
-										Lokasi Barang Sekarang
-									</label>
-									<select name="update_barang" class="cs-select cs-skin-elastic">
-										@if(count($data->equipment)==0)
-											<option value="2" selected>URel (Store)</option>
-										@elseif($data->equipment[0]->location==1)
-											<option value="1" selected>Customer (Applicant)</option>
-										@elseif($data->equipment[0]->location==2)
-											<option value="2" selected>URel (Store)</option>
-										@elseif($data->equipment[0]->location==3)
-											<option value="3" selected>Lab (Laboratory)</option>
-										@endif
-									</select>
-								</div>
-								<div class="form-group">
-									<a onclick="updateBarang('{{ $data->id }}')"> Update Lokasi Barang</a>
-								</div>	
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">

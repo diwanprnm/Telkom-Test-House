@@ -152,6 +152,7 @@ class EquipmentController extends Controller
 			$equipmenth = new EquipmentHistory;
 			$equipmenth->id = Uuid::uuid4();
 			$equipmenth->examination_id = $equipment->examination_id;
+			$equipmenth->action_date = $request->input('equip_date');
 			$equipmenth->location = 2;
 			
 			$equipmenth->created_by = $currentUser->id;
@@ -258,6 +259,7 @@ class EquipmentController extends Controller
 				$equipmenth = new EquipmentHistory;
 				$equipmenth->id = Uuid::uuid4();
 				$equipmenth->examination_id = $id;
+				$equipmenth->action_date = $request->input('equip_date');
 				$equipmenth->location = $request->input('location');
 				
 				$equipmenth->updated_by = $currentUser->id;

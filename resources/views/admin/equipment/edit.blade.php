@@ -148,6 +148,21 @@
 								<div class="col-md-12">
 									<div class="form-group">
 										<label>
+											Tanggal
+										</label>
+										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
+											<input type="text" name="equip_date" class="form-control">
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-default">
+													<i class="glyphicon glyphicon-calendar"></i>
+												</button>
+											</span>
+										</p>
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<label>
 											Lokasi Barang *
 										</label>
 										<input type="hidden" name="location_id" value="{{ $location->location }}">

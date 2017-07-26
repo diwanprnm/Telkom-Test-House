@@ -539,16 +539,18 @@
 									<tr>
 										<th colspan="3">{{ trans('translate.examination_status') }}</th>
 									</tr>
-									@if($item->registration_status == '1' && $item->function_status != '1')
+									@if($item->registration_status != '0' && $item->function_status != '1')
 									<tr>
 										<td>{{ trans('translate.examination_function_test_date') }}</td>
 										<td colspan="2"> :
-											@if($item->deal_test_date != null)
-												{{ $item->deal_test_date }} (FIX) {{ $item->function_test_reason }}
-											@elseif($item->deal_test_date == null && $item->cust_test_date != null)
-												{{ $item->cust_test_date }} {{ trans('translate.from_customer') }}
+											@if($item->function_date != null)
+												{{ $item->function_date }} (FIX) {{ $item->function_test_reason }}
+											@elseif($item->function_date == null && $item->urel_test_date != null)
+												{{ $item->urel_test_date }} {{ trans('translate.from_customer') }}
+											@elseif($item->urel_test_date == null && $item->deal_test_date != null)
+												{{ $item->deal_test_date }} {{ trans('translate.from_te') }}
 											@else
-												{{ $item->urel_test_date }} {{ trans('translate.from_urel') }}
+												{{ $item->cust_test_date }} {{ trans('translate.from_customer') }}
 											@endif
 										</td>
 									</tr>
@@ -580,8 +582,12 @@
 								<a class="button button-3d nomargin btn-blue" href="{{URL::to('cetakPengujian/'.$item->id.'')}}" target="_blank">{{ trans('translate.examination_print') }}</a>
 								<a class="button button-3d nomargin btn-blue " href="{{URL::to('pengujian/'.$item->id.'/detail')}}">{{ trans('translate.examination_detail') }}</a>
 								
-								@if($item->registration_status != '0' && $item->function_status != '1' && $item->deal_test_date == NULL)
-									<a class="button button-3d nomargin btn-blue" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->urel_test_date ?>')">{{ trans('translate.examination_reschedule_test_date') }}</a>
+								@if($item->registration_status != '0' && $item->function_status != '1')
+									@if($item->deal_test_date == NULL)
+									<a class="button button-3d nomargin btn-blue" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->cust_test_date ?>','1')">{{ trans('translate.examination_reschedule_test_date') }}</a>
+									@elseif($item->deal_test_date != NULL && $item->function_date == NULL)
+									<a class="button button-3d nomargin btn-blue" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->urel_test_date ?>','2')">{{ trans('translate.examination_reschedule_test_date') }}</a>
+									@endif
 								@endif
 								
 								<?php if($item->spb_status == 1 and $item->payment_status != 1){ ?>
@@ -1099,6 +1105,7 @@
 <form id="form" role="form" method="POST" action="{{ url('/pengujian/tanggaluji') }}">
 {!! csrf_field() !!}
 <input type="hidden" name="hide_id_exam" id="hide_id_exam"/>
+<input type="hidden" name="hide_date_type" id="hide_date_type"/>
 <div class="modal fade" id="reschedule-modal-content" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -1564,9 +1571,10 @@
 			"setDate": new Date(),
 			"autoclose": true
 		});
-	function reSchedule(a,b){
+	function reSchedule(a,b,c){
 			$('#reschedule-modal-content').modal('show');
 			$('#hide_id_exam').val(a);
+			$('#hide_date_type').val(c);
 			$('#reschedule-modal-content').on('shown.bs.modal', function() {
 				$('#cust_test_date').val(b);
 				$("#cust_test_date").focus();

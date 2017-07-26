@@ -13,6 +13,9 @@ use App\ExaminationType;
 use App\ExaminationHistory;
 use App\ExaminationAttach;
 
+use App\User;
+use Mail;
+
 // UUID
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -470,6 +473,7 @@ class ExaminationAPIController extends AppBaseController
 
 		$select = array(
 			"examinations.id","examinations.cust_test_date","examinations.deal_test_date",
+			"examinations.urel_test_date as cust_test_date2","examinations.function_date as deal_test_date2",
 			"examinations.function_test_TE as function_result","examinations.function_test_PIC",
 			"examinations.catatan",
 			"examination_labs.name as lab",
@@ -589,10 +593,14 @@ class ExaminationAPIController extends AppBaseController
     {
     	$param = (object) $param->all();
 
-    	if(!empty($param->id) && !empty($param->function_test_date)&& !empty($param->function_test_pic)&& !empty($param->reason)){
+    	if(!empty($param->id) && !empty($param->function_test_date)&& !empty($param->function_test_pic)&& !empty($param->reason)&& !empty($param->date_type)){
     		$examinations = Examination::find($param->id);
     		if($examinations){
-				$examinations->deal_test_date = $param->function_test_date;
+				if($param->date_type == 1){
+					$examinations->deal_test_date = $param->function_test_date;
+				}else{
+					$examinations->function_date = $param->function_test_date;
+				}
 				$examinations->function_test_PIC = $param->function_test_pic;
 				$examinations->function_test_reason = $param->reason;
     			if($examinations->save()){
@@ -604,7 +612,7 @@ class ExaminationAPIController extends AppBaseController
     			return $this->sendError('Failed to Update Function Date');
     		}
     	}else{
-    		return $this->sendError('ID Examination or Date or PIC Is Required');
+    		return $this->sendError('ID Examination or Date or PIC or Date Type Is Required');
     	}
     }
 	
@@ -612,15 +620,16 @@ class ExaminationAPIController extends AppBaseController
     {
     	$param = (object) $param->all();
 
-    	if(!empty($param->id) && !empty($param->date)){
+    	if(!empty($param->id) && !empty($param->date) && !empty($param->location)){
 			$equip_hist = new EquipmentHistory;
 			$equip_hist->id = Uuid::uuid4();
-			$equip_hist->location = 2;
+			$equip_hist->location = $param->location;
 			$equip_hist->created_by = 1;
 			$equip_hist->updated_by = 1;
-			$equip_hist->created_at = $param->date;
-			$equip_hist->updated_at = $param->date;
+			$equip_hist->created_at = date("Y-m-d h:i:s");
+			$equip_hist->updated_at = date("Y-m-d h:i:s");
 			$equip_hist->examination_id = $param->id;
+			$equip_hist->action_date = $param->date;
 
 			if($equip_hist->save()){
 				return $this->sendResponse($equip_hist, 'History Found');
@@ -628,7 +637,7 @@ class ExaminationAPIController extends AppBaseController
 				return $this->sendError('Failed to Input History');
 			}
     	}else{
-    		return $this->sendError('ID Examination or Date Is Required');
+    		return $this->sendError('ID Examination or Date or Location Is Required');
     	}
     }
 	
@@ -637,9 +646,10 @@ class ExaminationAPIController extends AppBaseController
     	$param = (object) $param->all();
 
     	if(!empty($param->id) && (!empty($param->name) || !empty($param->mark) || !empty($param->capacity) || !empty($param->manufactured_by) || !empty($param->model) || !empty($param->serial_number) || !empty($param->test_reference))){
-    		$examinations = Examination::find($param->id);
-    		if($examinations){
+    		$examinations = Examination::where("id",$param->id)->with('examinationType')->first();
+			if($examinations){
 				$device = Device::find($examinations->device_id);
+				$a = Device::find($examinations->device_id);
 				if($device){
 					if (!empty($param->name)){
 						$device->name = $param->name;
@@ -673,6 +683,7 @@ class ExaminationAPIController extends AppBaseController
 					$device->updated_at = date("Y-m-d h:i:s");
 					
 					if($device->save()){
+						$this->updaterevisi($a,$param,$examinations);
 						return $this->sendResponse($device, 'Device Found');
 					}else{
 						return $this->sendError('Failed to Update Device ');
@@ -686,6 +697,122 @@ class ExaminationAPIController extends AppBaseController
     	}else{
     		return $this->sendError('ID Examination Is Required Or Nothing to Update');
     	}
+    }
+	
+	public function updaterevisi($a,$b,$c)
+    {
+		if (!empty($b->name)){
+			$rev_name = $b->name;
+		}else{
+			$rev_name = $a->name;
+		}
+		
+		if (!empty($b->mark)){
+			$rev_mark = $b->mark;
+		}else{
+			$rev_mark = $a->mark;
+		}
+		
+		if (!empty($b->capacity)){
+			$rev_capacity = $b->capacity;
+		}else{
+			$rev_capacity = $a->capacity;
+		}
+		
+		if (!empty($b->manufactured_by)){
+			$rev_manufactured_by = $b->manufactured_by;
+		}else{
+			$rev_manufactured_by = $a->manufactured_by;
+		}
+		
+		if (!empty($b->model)){
+			$rev_model = $b->model;
+		}else{
+			$rev_model = $a->model;
+		}
+		
+		if (!empty($b->serial_number)){
+			$rev_serial_number = $b->serial_number;
+		}else{
+			$rev_serial_number = $a->serial_number;
+		}
+		
+		if (!empty($b->test_reference)){
+			$rev_test_reference = $b->test_reference;
+		}else{
+			$rev_test_reference = $a->test_reference;
+		}
+		
+		$this->sendEmailRevisi(
+			$c->created_by,
+			$c->examinationType->name,
+			$c->examinationType->description,
+			$a->name,
+			$rev_name,
+			$a->mark,
+			$rev_mark,
+			$a->capacity,
+			$rev_capacity,
+			$a->manufactured_by,
+			$rev_manufactured_by,
+			$a->model,
+			$rev_model,
+			$a->test_reference,
+			$rev_test_reference,
+			$a->serial_number,
+			$rev_serial_number,
+			"emails.revisi", 
+			"Revisi Data Permohonan Uji"
+		);
+    }
+	
+	public function sendEmailRevisi(
+		$user, 
+		$exam_type, 
+		$exam_type_desc, 
+		$perangkat1, 
+		$perangkat2, 
+		$merk_perangkat1, 
+		$merk_perangkat2, 
+		$kapasitas_perangkat1, 
+		$kapasitas_perangkat2, 
+		$pembuat_perangkat1, 
+		$pembuat_perangkat2, 
+		$model_perangkat1, 
+		$model_perangkat2, 
+		$ref_perangkat1, 
+		$ref_perangkat2, 
+		$sn_perangkat1, 
+		$sn_perangkat2, 
+		$message,
+		$subject
+	)
+    {
+        $data = User::findOrFail($user);
+		
+        Mail::send($message, array(
+			'user_name' => $data->name,
+			'exam_type' => $exam_type,
+			'exam_type_desc' => $exam_type_desc,
+			'perangkat1' => $perangkat1,
+			'perangkat2' => $perangkat2,
+			'merk_perangkat1' => $merk_perangkat1,
+			'merk_perangkat2' => $merk_perangkat2,
+			'kapasitas_perangkat1' => $kapasitas_perangkat1,
+			'kapasitas_perangkat2' => $kapasitas_perangkat2,
+			'pembuat_perangkat1' => $pembuat_perangkat1,
+			'pembuat_perangkat2' => $pembuat_perangkat2,
+			'model_perangkat1' => $model_perangkat1,
+			'model_perangkat2' => $model_perangkat2,
+			'ref_perangkat1' => $ref_perangkat1,
+			'ref_perangkat2' => $ref_perangkat2,
+			'sn_perangkat1' => $sn_perangkat1,
+			'sn_perangkat2' => $sn_perangkat2
+			), function ($m) use ($data,$subject) {
+            $m->to($data->email)->subject($subject);
+        });
+
+        return true;
     }
 	
 	public function updateFunctionStat(Request $param)

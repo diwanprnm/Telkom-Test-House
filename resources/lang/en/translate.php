@@ -329,7 +329,7 @@ return [
 	'back' => 'Back',
 	'certificate' => 'Certificate',
 	'from_customer' => 'from Customer',
-	'from_urel' => 'from URel',
+	'from_te' => 'from Test Enginner',
 	
 	'document_not_found'	=> 'Document Not Found',
 	'tax'  	=> 'Tax',

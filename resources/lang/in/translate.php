@@ -332,7 +332,7 @@ return [
 	'back' => 'Kembali',
 	'certificate' => 'Sertifikat',
 	'from_customer' => 'dari Kastamer',
-	'from_urel' => 'dari URel',
+	'from_te' => 'dari Test Enginner',
 	
 	'document_not_found'	=> 'Dokumen Tidak Ditemukan',
 	'tax'  	=> 'Pajak',

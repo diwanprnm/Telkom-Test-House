@@ -76,6 +76,21 @@
 							<div class="col-md-12" style="margin-bottom:10px">
 								<div class="form-group">
 									<label>
+										Tanggal
+									</label>
+									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
+										<input type="text" name="equip_date" class="form-control">
+										<span class="input-group-btn">
+											<button type="button" class="btn btn-default">
+												<i class="glyphicon glyphicon-calendar"></i>
+											</button>
+										</span>
+									</p>
+								</div>
+							</div>
+							<div class="col-md-12" style="margin-bottom:10px">
+								<div class="form-group">
+									<label>
 										Perangkat Pengujian *
 									</label>
 									<select class="form-control" id="examination_id" name="examination_id" required>
@@ -88,7 +103,7 @@
 									</select>
 								</div>
 							</div>
-
+							
 							<fieldset>
 								<legend>
 									Tambah Unit
