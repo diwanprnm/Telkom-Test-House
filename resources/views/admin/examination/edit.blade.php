@@ -1296,7 +1296,7 @@
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
-				@if($data->examination_type_id !='2' && $data->examination_type_id !='3')
+				@if($data->examination_type_id !='2' && $data->examination_type_id !='3' && $data->examination_type_id !='4')
 					{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'id' => 'form-sidang')) !!}
 					{!! csrf_field() !!}
 						<input type="hidden" name="status" class="form-control" value="Sidang QA"/>
@@ -1427,7 +1427,7 @@
 							</div>
 						</fieldset>
 					{!! Form::close() !!}
-					
+				@endif	
 					<fieldset>
 						<legend>
 							Edit Lokasi Barang
@@ -1456,7 +1456,7 @@
 							</div>
 						</div>
 					</fieldset>
-				
+				@if($data->examination_type_id !='2' && $data->examination_type_id !='3' && $data->examination_type_id !='4')
 					{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-sertifikat')) !!}
 						{!! csrf_field() !!}
 						<input type="hidden" name="status" class="form-control" value="Penerbitan Sertifikat"/>
