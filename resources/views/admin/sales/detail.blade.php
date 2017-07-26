@@ -74,8 +74,13 @@
 				</div>
 				<div class="col-md-12">
 					<a href="{{URL::to('/admin/sales')}}">
-                    	<button type="button" class="btn btn-wide btn-red btn-squared pull-right" style="margin-right: 1%;">Kembali</button>
+                    	<button type="button" class="btn btn-wide btn-red btn-squared pull-left" style="margin-right: 1%;">Kembali</button>
                     </a>
+					@if($id_kuitansi != '')
+					<a href="{{ URL::to('/admin/downloadkuitansistel/'.$id_kuitansi) }}" target="_blank">
+                    	<button type="button" class="btn btn-wide btn-red btn-squared pull-right" style="margin-right: 1%;">Lihat Kuitansi</button>
+                    </a>
+					@endif
                 </div>
 			</div>
 		</div>

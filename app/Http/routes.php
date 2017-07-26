@@ -2873,6 +2873,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::post('/examination/{id}/generateSPBParam', 'ExaminationController@generateSPBParam');
 	Route::post('/examination/{id}/generateEquipParam', 'ExaminationController@generateEquipParam');
 	Route::post('/examination/{id}/generateKuitansiParam', 'ExaminationController@generateKuitansiParam');
+	Route::post('/sales/{id}/generateKuitansiParamSTEL', 'ExaminationController@generateKuitansiParamSTEL');
 	Route::get('/examination/generateEquip', 'ExaminationController@generateEquip');
 	Route::get('/examination/generateSPB', 'ExaminationController@generateSPB');
 	Route::post('/examination/generateSPB', 'ExaminationController@generateSPBData');
@@ -2948,6 +2949,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::post('/kuitansi/generateKuitansi', 'IncomeController@generateKuitansiManual');
 	Route::post('/kuitansi', 'IncomeController@store');
 	Route::get('/kuitansi/{id}/detail', 'IncomeController@detail');
+	Route::get('/downloadkuitansistel/{id}', 'SalesController@downloadkuitansistel');
 
 });
 	Route::get('/adm_dashboard_autocomplete/{query}', 'DashboardController@autocomplete')->name('adm_dashboard_autocomplete');
@@ -3053,3 +3055,5 @@ Route::post('/pembayaranstel', 'ProductsController@pembayaranstel');
 Route::post('/checkKuisioner', 'PengujianController@checkKuisioner');
 Route::post('/insertKuisioner', 'PengujianController@insertKuisioner');
 Route::post('/insertComplaint', 'PengujianController@insertComplaint');
+
+Route::get('/client/downloadkuitansistel/{id}', 'ProductsController@downloadkuitansistel');

@@ -34,9 +34,6 @@
 	            </div>
 	        </div>
 			@if (Session::get('message'))
-				<script>
-					window.close();
-				</script>
 				<div class="alert alert-info">
 					{{ Session::get('message') }}
 				</div>
@@ -45,6 +42,9 @@
 					var baseUrl = "{{URL::to('/')}}";
 					var id = document.getElementById("id_kuitansi").value;
 					window.open(baseUrl+'/cetakKuitansi/'+id);
+				</script>
+				<script>
+					window.close();
 				</script>
 			@endif
 			<div class="row">

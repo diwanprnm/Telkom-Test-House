@@ -85,8 +85,17 @@
 					</table>
 
 				</div>
-				<div class="col-md-12">
-					<a class="button button-3d btn-sky nomargin" href="{{url('/payment_status')}}">{{ trans('translate.back') }}</a>
+				<div class="row">
+					<div class="col-md-6">
+						<a class="button button-3d btn-sky nomargin" href="{{url('/payment_status')}}">{{ trans('translate.back') }}</a>
+					</div>
+					@if($stels[0]->id_kuitansi != '')
+						<div class=" pull-right col-md-6">
+							<a class="button button-3d btn-sky nomargin pull-right" href="{{ URL::to('/client/downloadkuitansistel/'.$stels[0]->id_kuitansi) }}" target="_blank">
+								{{ trans('translate.see_receipt') }}
+							</a>
+						</div>
+					@endif
 				</div>
 			</div>
 

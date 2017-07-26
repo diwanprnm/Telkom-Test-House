@@ -156,6 +156,7 @@ return [
 	'examination_date' 			=> 'Tanggal Pengujian',
 	'examination_date_begin'	=> 'Mulai',
 	'examination_date_end' 		=> 'Selesai',
+	'examination_spk_code' 		=> 'Nomor SPK',
 	
 	'examination_function_test_date'=> 'Tanggal Uji Fungsi',
 	'examination_reschedule_test_date'=> 'Uji Fungsi',
@@ -163,6 +164,7 @@ return [
 	'examination_file_payment'=> 'File Pembayaran',
 	'examination_number_payment'=> 'No. SPB',
 	'examination_date_payment'=> 'Tanggal Pembayaran',
+	'examination_price_payment'=> 'Sejumlah',
 	'examination_upload_payment_file'=> 'Unggah',
 	'examination_model'=> 'Model/Tipe',
 	'examination_capacity'=> 'Kapasitas',
@@ -336,4 +338,5 @@ return [
 	
 	'document_not_found'	=> 'Dokumen Tidak Ditemukan',
 	'tax'  	=> 'Pajak',
+	'see_receipt'  	=> 'Lihat Kuitansi',
 ];

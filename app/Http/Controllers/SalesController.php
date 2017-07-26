@@ -110,8 +110,11 @@ class SalesController extends Controller
             $STELSales = STELSalesDetail::select($select)->where("stels_sales_id",$id)
                         ->join("stels","stels.id","=","stels_sales_detail.stels_id")
                         ->get();
-            return view('admin.sales.detail')
-            ->with('data', $STELSales) ;     
+			$STELSales_idKuitansi = STELSales::find($id);
+			return view('admin.sales.detail')
+            ->with('data', $STELSales) 
+            ->with('id_kuitansi', $STELSales_idKuitansi->id_kuitansi) 
+			;     
         }else{
             redirect("login");
         }
@@ -207,8 +210,22 @@ class SalesController extends Controller
         $STELSales = STELSales::find($id);
         $oldStel = $STELSales;  
         if ($request->has('payment_status')){
+			if ($request->hasFile('kuitansi_file')) {
+				$name_file = 'kuitansi_stel_'.$request->file('kuitansi_file')->getClientOriginalName();
+				$path_file = public_path().'/media/stel/'.$STELSales->id;
+				if (!file_exists($path_file)) {
+					mkdir($path_file, 0775);
+				}
+				if($request->file('kuitansi_file')->move($path_file,$name_file)){
+					
+				}else{
+					Session::flash('error', 'Save Receipt to directory failed');
+					return redirect('/admin/sales/'.$STELSales->id.'/edit');
+				}
+			}
             $STELSales->updated_by = $currentUser->id; 
             $STELSales->payment_status = $request->input('payment_status');
+            $STELSales->id_kuitansi = $name_file;
 
             try{
                 $STELSales->save();
@@ -240,6 +257,20 @@ class SalesController extends Controller
 
         if ($stel){
             $file = public_path().'/media/stel/'.$stel->stel_sales_id."/".$stel->attachment;
+            $headers = array(
+              'Content-Type: application/octet-stream',
+            );
+
+            return Response::file($file, $headers);
+        }
+    }
+
+    public function downloadkuitansistel($id)
+    {
+        $stel = STELSales::where("id_kuitansi",$id)->first();
+
+        if ($stel){
+            $file = public_path().'/media/stel/'.$stel->id."/".$stel->id_kuitansi;
             $headers = array(
               'Content-Type: application/octet-stream',
             );

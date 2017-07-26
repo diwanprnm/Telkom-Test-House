@@ -65,11 +65,14 @@
 						Tanggal SPB *
 					</label>
 					<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-						@if($spb_number == '')
-							<input type="text" name="spb_date" id="spb_date" class="form-control" value="<?php echo date('Y-m-d')?>" required readonly/>
-						@else
-							<input type="text" name="spb_date" id="spb_date" class="form-control" value="<?php echo $spb_date?>" required readonly/>
-						@endif
+					<?php
+						if($spb_date == '' or $spb_date == '0000-00-00' or $spb_date == NULL){
+							$timestamp = date('Y-m-d');
+						}else{
+							$timestamp = date('Y-m-d', strtotime($spb_date));
+						}
+					?>
+						<input type="text" name="spb_date" id="spb_date" class="form-control" value="<?php echo $timestamp;?>" required readonly/>
 						<span class="input-group-btn">
 							<button type="button" class="btn btn-default">
 								<i class="glyphicon glyphicon-calendar"></i>
@@ -155,7 +158,7 @@
 	<script src={{ asset("assets/js/form-elements.js") }}></script>
 	<script type="text/javascript">
 	$('.date').datepicker({  
-			"format": "dd-mm-yyyy",
+			"format": "yyyy-mm-dd",
 			"setDate": new Date(),
 			"autoclose": true
 		});

@@ -1536,12 +1536,49 @@ class ExaminationController extends Controller
 		$exam_id = $request->input('exam_id');
 		$exam = Examination::where('id', $exam_id)
 					->with('device')
-					->with('user')
+					->with('company')
 					->first();
+		$request->session()->put('key_jenis_for_kuitansi', 1);
+		$request->session()->put('key_id_for_kuitansi', $exam_id);
 		$request->session()->put('key_kode_for_kuitansi', $kode);
-		$request->session()->put('key_from_for_kuitansi', $exam->user->name);
-		$request->session()->put('key_price_for_kuitansi', $exam->price?: '0');
+		$request->session()->put('key_from_for_kuitansi', $exam->company->name);
+		$request->session()->put('key_price_for_kuitansi', $exam->cust_price_payment?: '0');
 		$request->session()->put('key_for_for_kuitansi', "Pengujian Perangkat ".$exam->device->name);
+		echo 1;
+    }
+	
+	public function generateKuitansiParamSTEL(Request $request) {
+		$kode = $this->generateKuitansiManual();
+		$exam_id = $request->input('exam_id');
+		$query_stels = "SELECT DISTINCT
+				s. code AS stel,
+				ss. cust_price_payment,
+				c. name
+			FROM
+				stels s,
+				stels_sales ss,
+				stels_sales_detail ssd,
+				companies c,
+				users u
+			WHERE
+				s.id = ssd.stels_id
+			AND ss.id = ssd.stels_sales_id
+			AND ss.user_id = u.id
+			AND u.company_id = c.id
+			AND ss.id = '".$exam_id."'
+			ORDER BY s.code";
+		$data_stels = DB::select($query_stels);
+			$stel = $data_stels[0]->stel;
+		for ($i=1;$i<count($data_stels);$i++) {
+			$stel = $stel.", ".$data_stels[$i]->stel;
+		}
+			$stel = $stel.".";
+		$request->session()->put('key_jenis_for_kuitansi', 2);
+		$request->session()->put('key_id_for_kuitansi', $exam_id);
+		$request->session()->put('key_kode_for_kuitansi', $kode);
+		$request->session()->put('key_from_for_kuitansi', $data_stels[0]->name);
+		$request->session()->put('key_price_for_kuitansi', $data_stels[0]->cust_price_payment?: '0');
+		$request->session()->put('key_for_for_kuitansi', $stel);
 		echo 1;
     }
 	
@@ -1557,10 +1594,10 @@ class ExaminationController extends Controller
 					->first()
 		;
 		if($exam->examination_type_id == 2){
-			$query_price = "SELECT ta_price FROM examination_charges WHERE stel = '".$exam->device->test_reference."'";			
+			$query_price = "SELECT ta_price as price FROM examination_charges WHERE stel = '".$exam->device->test_reference."'";			
 		}
 		else if($exam->examination_type_id == 3){
-			$query_price = "SELECT vt_price FROM examination_charges WHERE stel = '".$exam->device->test_reference."'";			
+			$query_price = "SELECT vt_price as price FROM examination_charges WHERE stel = '".$exam->device->test_reference."'";			
 		}else{
 			$query_price = "SELECT price FROM examination_charges WHERE stel = '".$exam->device->test_reference."'";			
 		}

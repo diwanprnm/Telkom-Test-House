@@ -463,7 +463,7 @@
 			<div class="content-wrap"> 
 				<div class="container clearfix">
 					<div class="container-fluid container-fullw bg-white">
-						@if(count($exam_schedule)>0)
+						@if($exam_schedule->code != 'MSTD0059AERR')
 						<div class="row">
 							<div class="col-md-12">
 								<div class="panel panel-white" id="panel1">
@@ -482,6 +482,9 @@
 															<tr>
 																<td class="center">{{ trans('translate.examination_date_begin') }} : {{ $exam_schedule->data[0]->startTestDt }}</td>
 																<td class="center">{{ trans('translate.examination_date_end') }} : {{ $exam_schedule->data[0]->finishTestDt }}</td>
+															</tr>
+															<tr>
+																<td class="center">{{ trans('translate.examination_spk_code') }} : {{ $data[0]->spk_code }}</td>
 															</tr>
 														</tbody>
 													</table>
@@ -605,7 +608,7 @@
 													@if($item_attach->name == 'Sertifikat' && $item_attach->attachment != '')
 														<a class="btn btn-link" href="javascript:void(0)" style="color:black !important;" onclick="return isTestimonial('{{ $item_attach->id_attach }}','{{ $item_attach->attachment }}','{{ $item_attach->jns }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">{{ $item_attach->name }} </a>
 													@elseif($item_attach->name == 'Laporan Uji' && $item_attach->attachment != '')
-														<a class="btn btn-link" href="{{$item_attach->attachment}}" style="color:black !important;">{{ $item_attach->name }} </a>
+														<a class="btn btn-link" href="{{$item_attach->attachment}}" target="_blank" style="color:black !important;">{{ $item_attach->name }} </a>
 													@else	
 														<a class="btn btn-link" href="{{URL::to('/pengujian/download/'.$item_attach->id_attach.'/'.$item_attach->attachment.'/'.$item_attach->jns)}}" style="color:black !important;">{{ $item_attach->name }} </a>
 													@endif
@@ -785,7 +788,7 @@
 				$('#modal_complain').modal('hide');
 				if(response==1){
 					// window.location.href = '/telkomdds/public'+link;
-					window.location.href = link;
+					window.open = link;
 				}else{
 					$('#modal_status_barang').modal('show');
 				}

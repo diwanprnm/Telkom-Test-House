@@ -69,6 +69,9 @@
 														?>
 														<td>{{ trans('translate.examination_date_payment') }} : <input type="text" id="tgl-pembayaran" class="date tgl-pembayaran" name="tgl-pembayaran" placeholder="Tanggal ..." value="<?php echo $timestamp; ?>" readonly required></td>
 													</tr>
+													<tr>
+														<td>{{ trans('translate.examination_price_payment') }} : <input type="number" id="jml-pembayaran" class="jml-pembayaran" name="jml-pembayaran" placeholder="<?php echo $cust_price_payment ?>" value="<?php echo $cust_price_payment ?>" required></td>
+													</tr>
 											</table>
 										</div>
 										<div class="row">

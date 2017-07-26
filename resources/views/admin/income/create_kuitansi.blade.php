@@ -86,7 +86,7 @@
 									<label>
 										Nomor *
 									</label>
-									<input type="text" id="number" name="number" class="form-control" value="{{ $number }}" placeholder="Nomor" required readonly>
+									<input type="text" id="number" name="number" class="form-control" value="{{ $number }}" placeholder="Nomor" required>
 									<!-- <button type="button" class="btn btn-wide btn-green btn-squared pull-right" onclick="generateKuitansi()">
 										Generate
 									</button> -->

@@ -43,7 +43,20 @@
 									@endif
 								</div>
 							</div>
-	                        <div class="col-md-6">
+							<div class="col-md-12">
+								<div class="form-group">
+									<a onclick="makeKuitansi('<?php echo $data->id ?>')"> Buatkan File Kuitansi</a>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Kuitansi File *
+									</label>
+									<input type="file" name="kuitansi_file" id="kuitansi_file" class="form-control" accept="application/pdf, image/*">
+								</div>
+							</div>
+	                        <div class="col-md-12">
 								<div class="form-group">
 									<label for="form-field-select-2">
 										Status *
@@ -98,5 +111,31 @@
 		clearPrefix: true,
 		centsLimit: 0
 	}); 
+	
+	function makeKuitansi(a){
+		var APP_URL = {!! json_encode(url('/admin/kuitansi/create')) !!};		
+		$.ajax({
+			type: "POST",
+			url : "generateKuitansiParamSTEL",
+			data: {'_token':"{{ csrf_token() }}", 'exam_id':a},
+			beforeSend: function(){
+				
+			},
+			success: function(response){
+				if(response == 1){
+					window.open(APP_URL, 'mywin','status=0,toolbar=0,location=0,menubar=0,directories=0,resizable=0,scrollbars=0,width=720,height=500');
+				}else{
+					alert("Gagal mengambil data");
+				}
+			},
+			error:function(){
+				alert("Gagal mengambil data");
+			}
+		});
+		
+		/* $("#1").load("../loadDataKet",{pgw_id6:res[3]}, function() {
+			document.getElementById("overlay").style.display="none";
+		}); */
+	}
 </script>
 @endsection

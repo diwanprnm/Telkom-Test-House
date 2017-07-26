@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+use App\STELSales;
 use App\Income;
 use App\Kuitansi;
 use App\Company;
@@ -139,7 +140,7 @@ class IncomeController extends Controller
      */
     public function store(Request $request)
     {
-		// if($this->cekKuitansi($request->input('number')) == 0){
+		if($this->cekKuitansi($request->input('number')) == 0){
 			$currentUser = Auth::user();
 
 			$kuitansi = new Kuitansi;
@@ -152,7 +153,6 @@ class IncomeController extends Controller
 			$kuitansi->updated_by = $currentUser->id;
 
 			try{
-				$kuitansi->save();
 				Session::flash('message', 'Kuitansi successfully created');
 				Session::flash('id', $kuitansi->id);
 				return redirect('/admin/kuitansi');
@@ -160,10 +160,10 @@ class IncomeController extends Controller
 				Session::flash('error', 'Save failed');
 				return redirect('/admin/kuitansi/create')->withInput($request->all());
 			}
-		// }else{
-			// Session::flash('error', 'Existing Number');
-			// return redirect('/admin/kuitansi/create')->withInput($request->all());
-		// }
+		}else{
+			Session::flash('error', 'Existing Number');
+			return redirect('/admin/kuitansi/create')->withInput($request->all());
+		}
     }
 
     /**

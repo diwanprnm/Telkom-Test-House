@@ -93,7 +93,7 @@ class ProductsController extends Controller
         $currentUser = Auth::user();
 
         if($currentUser){
-            $select = array("stels.id", "stels.name","stels.price","stels.code","stels.attachment","stels_sales.invoice","stels_sales.payment_status","companies.name as company_name","stels_sales_detail.qty"); 
+            $select = array("stels.id", "stels.name","stels.price","stels.code","stels.attachment","stels_sales.invoice","stels_sales.payment_status","companies.name as company_name","stels_sales_detail.qty","stels_sales.id_kuitansi"); 
             $STELSales = STELSalesDetail::select($select)->where("stels_sales_id",$id)
                         ->join("stels_sales","stels_sales.id","=","stels_sales_detail.stels_sales_id")
                         ->join("stels","stels.id","=","stels_sales_detail.stels_id")
@@ -155,6 +155,7 @@ class ProductsController extends Controller
                 $id = $request->input('stelsales_id');
                 $STELSales = STELSales::find($id);
                 $STELSales->payment_status = 2;
+                $STELSales->cust_price_payment = $request->input('jml-pembayaran');
                 $STELSales->save();
 
                 Session::flash('message', 'Upload successfully'); 
@@ -264,7 +265,7 @@ class ProductsController extends Controller
                             $STELSalesDetail = new STELSalesDetail;
                             $STELSalesDetail->stels_sales_id = $STELSales->id;
                             $STELSalesDetail->stels_id = $row->id;
-                            $STELSalesDetail->qty = $row->qty;
+                            $STELSalesDetail->qty = 1;
                             $STELSalesDetail->save();
                         }
 
@@ -326,6 +327,20 @@ class ProductsController extends Controller
                 );
           event(new Notification($data));
      return "event fired";
+    }
+	
+	public function downloadkuitansistel($id)
+    {
+        $stel = STELSales::where("id_kuitansi",$id)->first();
+
+        if ($stel){
+            $file = public_path().'/media/stel/'.$stel->id."/".$stel->id_kuitansi;
+            $headers = array(
+              'Content-Type: application/octet-stream',
+            );
+
+            return Response::file($file, $headers);
+        }
     }
 
 }

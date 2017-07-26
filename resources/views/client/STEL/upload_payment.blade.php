@@ -48,7 +48,9 @@
 									 	<div id="file-pembayaran"><?php // echo $data->attachment ?></div> -->
 									 	</th>
 									</tr>
-									 
+									 <tr>
+										<th colspan="3">{{ trans('translate.examination_price_payment') }} : <input type="number" id="jml-pembayaran" class="jml-pembayaran" name="jml-pembayaran" placeholder="0" value="0" required></th>
+									</tr>
 							</table>
 						</div>
 						<div class="row">

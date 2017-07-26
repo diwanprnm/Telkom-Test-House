@@ -1103,6 +1103,25 @@
 								</div>
 							</div>
 						@endif
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Lokasi Barang Sekarang
+									</label>
+									<label>
+										: 
+										@if(count($data->equipment)==0)
+											Lab (Laboratory)
+										@elseif($data->equipment[0]->location==1)
+											Customer (Applicant)
+										@elseif($data->equipment[0]->location==2)
+											URel (Store)
+										@elseif($data->equipment[0]->location==3)
+											Lab (Laboratory)
+										@endif
+									</label>
+								</div>
+							</div>
 	                        <div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
@@ -1214,27 +1233,6 @@
 										</span>
 									</p>
 								</div>
-							</div>
-							<div class="col-md-12">
-								<div class="form-group">
-									<label for="form-field-select-2">
-										Lokasi Barang Sekarang
-									</label>
-									<select name="update_barang" class="cs-select cs-skin-elastic">
-										@if(count($data->equipment)==0)
-											<option value="2" selected>Lab (Laboratory)</option>
-										@elseif($data->equipment[0]->location==1)
-											<option value="1" selected>Customer (Applicant)</option>
-										@elseif($data->equipment[0]->location==2)
-											<option value="2" selected>URel (Store)</option>
-										@elseif($data->equipment[0]->location==3)
-											<option value="3" selected>Lab (Laboratory)</option>
-										@endif
-									</select>
-								</div>
-								<div class="form-group">
-									<a onclick="updateBarang('{{ $data->id }}')"> Update Lokasi Barang</a>
-								</div>	
 							</div>
 	                        <div class="col-md-12">
 								<div class="form-group">
@@ -1432,7 +1430,7 @@
 					
 					<fieldset>
 						<legend>
-							Edit Barang Lokasi Barang
+							Edit Lokasi Barang
 						</legend>
 						<div class="row">
 							<div class="col-md-12">

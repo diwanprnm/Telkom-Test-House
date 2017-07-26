@@ -670,7 +670,8 @@ class PengujianController extends Controller
 					d.serial_number AS serialNumber,
 					e.jns_perusahaan AS jnsPerusahaan,
 					et.name AS jns_pengujian,
-					et.description AS desc_pengujian
+					et.description AS desc_pengujian,
+					e.spk_code
 				FROM
 					examinations e,
 					devices d,
@@ -704,7 +705,8 @@ class PengujianController extends Controller
 					d.serial_number AS serialNumber,
 					e.jns_perusahaan AS jnsPerusahaan,
 					et.name AS jns_pengujian,
-					et.description AS desc_pengujian
+					et.description AS desc_pengujian,
+					e.spk_code
 				FROM
 					examinations e,
 					devices d,
@@ -908,6 +910,7 @@ class PengujianController extends Controller
             return view('client.pengujian.pembayaran')
                 ->with('message', $message)
                 ->with('spb_number', $examination->spb_number)
+                ->with('cust_price_payment', $examination->cust_price_payment)
                 ->with('data', $data);
                 // ->with('search', $search);
         }
@@ -936,6 +939,7 @@ class PengujianController extends Controller
 			$fPembayaran = $request->input('hide_file_pembayaran');
 		}
 			$timestamp = strtotime($request->input('tgl-pembayaran'));
+			$jumlah = $request->input('jml-pembayaran');
 			
 			try{
 				$query_update_attach = "UPDATE examination_attachments
@@ -948,6 +952,10 @@ class PengujianController extends Controller
 					WHERE id = '".$request->input('hide_id_attach')."'
 				";
 				$data_update_attach = DB::update($query_update_attach);
+				
+				$examination = Examination::find($request->input('hide_id_exam'));
+				$examination->cust_price_payment = $jumlah;
+				$examination->save();
 				
 				$exam_hist = new ExaminationHistory;
 				$exam_hist->examination_id = $request->input('hide_id_exam');
