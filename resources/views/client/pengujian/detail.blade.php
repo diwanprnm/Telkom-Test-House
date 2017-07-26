@@ -777,7 +777,7 @@
 		var link = document.getElementById('link').value;
 		$.ajax({
 			type: "POST",
-			url : "cekAmbilBarang",
+			url : "{{URL::to('cekAmbilBarang')}}",
 			data: {'_token':"{{ csrf_token() }}", 'my_exam_id':a},
 			beforeSend: function(){
 				// document.getElementById("overlay").style.display="inherit";
