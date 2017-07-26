@@ -153,6 +153,7 @@ class IncomeController extends Controller
 			$kuitansi->updated_by = $currentUser->id;
 
 			try{
+				$kuitansi->save();
 				Session::flash('message', 'Kuitansi successfully created');
 				Session::flash('id', $kuitansi->id);
 				return redirect('/admin/kuitansi');
