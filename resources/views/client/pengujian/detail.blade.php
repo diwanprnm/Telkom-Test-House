@@ -484,7 +484,7 @@
 																<td class="center">{{ trans('translate.examination_date_end') }} : {{ $exam_schedule->data[0]->finishTestDt }}</td>
 															</tr>
 															<tr>
-																<td class="center">{{ trans('translate.examination_spk_code') }} : {{ $data[0]->spk_code }}</td>
+																<td class="left">{{ trans('translate.examination_spk_code') }} : {{ $data[0]->spk_code }}</td>
 															</tr>
 														</tbody>
 													</table>

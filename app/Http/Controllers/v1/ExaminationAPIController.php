@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Response;
 use App\Device;
+use App\Equipment;
 use App\EquipmentHistory;
 use App\Examination;
 use App\ExaminationType;
@@ -632,6 +633,8 @@ class ExaminationAPIController extends AppBaseController
 			$equip_hist->action_date = $param->date;
 
 			if($equip_hist->save()){
+				$equip = Equipment::where("examination_id",$param->id)->first();
+				$equip->location = $param->location;
 				return $this->sendResponse($equip_hist, 'History Found');
 			}else{
 				return $this->sendError('Failed to Input History');
