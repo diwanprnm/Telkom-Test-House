@@ -635,6 +635,7 @@ class ExaminationAPIController extends AppBaseController
 			if($equip_hist->save()){
 				$equip = Equipment::where("examination_id",$param->id)->first();
 				$equip->location = $param->location;
+				$equip->save();
 				return $this->sendResponse($equip_hist, 'History Found');
 			}else{
 				return $this->sendError('Failed to Input History');
