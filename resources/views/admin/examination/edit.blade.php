@@ -1103,6 +1103,17 @@
 								</div>
 							</div>
 						@endif
+						@if($exam_approve_date->code != 'MSTD0059AERR')
+							@foreach($exam_approve_date->data as $item)
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										{{ $item->createdBy }} {{ $item->action }} pada {{ $item->createdDt }}
+									</label>
+								</div>
+							</div>
+							@endforeach
+						@endif
 							<div class="col-md-12">
 								<div class="form-group">
 									<label for="form-field-select-2">
