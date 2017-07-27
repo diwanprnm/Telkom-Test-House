@@ -908,7 +908,7 @@ class ExaminationAPIController extends AppBaseController
     	$param = (object) $param->all();
 
     	if(!empty($param->id) && !empty($param->name) && !empty($param->link) && !empty($param->no) && !empty($param->cert_date) && !empty($param->cert_valid_from) && !empty($param->cert_valid_thru)){
-			$attach = ExaminationAttach::where('name', 'Laporan Uji')->where('examination_id', ''.$param->id.'')->first();
+			$attach = ExaminationAttach::where('name', 'Sertifikat')->where('examination_id', ''.$param->id.'')->first();
 
 			if ($attach){
 				$attach->attachment = $param->link;
