@@ -108,11 +108,19 @@
 @section('content_js')
 
  		<script type="text/javascript">	
- 			$('.date').datepicker({  
-			"format": "dd-mm-yyyy",
-			"setDate": new Date(),
-			"autoclose": true
-		});		
+ 	// 		$('.date').datepicker({  
+		// 	"format": "dd-mm-yyyy",
+		// 	"setDate": new Date(),
+		// 	"autoclose": true
+		// });		
+
+		$('.date').datepicker({
+      dateFormat: 'yy-mm-dd', 
+      autoclose: true,
+      numberOfMonths: 2,
+      showButtonPanel: true
+
+  });
 			$("#file-pembayaran").click(function() {
 				var file = $('#hide_file_pembayaran').val();
 				downloadFile(file);
