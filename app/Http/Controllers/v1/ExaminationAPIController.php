@@ -869,19 +869,19 @@ class ExaminationAPIController extends AppBaseController
     	$param = (object) $param->all();
 
     	if(!empty($param->id) && !empty($param->name) && !empty($param->link) && !empty($param->no)){
-    		// $attach = ExaminationAttach::where('name', 'Laporan Uji')->where('examination_id', ''.$param->id.'')->first();
+    		$attach = ExaminationAttach::where('name', 'Laporan Uji')->where('examination_id', ''.$param->id.'')->first();
 
-			// if ($attach){
-				// $attach->attachment = $param->link;
-				// $attach->no = $param->no;
-				// $attach->updated_by = 1;
+			if ($attach){
+				$attach->attachment = $param->link;
+				$attach->no = $param->no;
+				$attach->updated_by = 1;
 				
-				// if($attach->save()){
-    				// return $this->sendResponse($attach, 'Resume Found');
-    			// }else{
-    				// return $this->sendError('Failed to Input Resume');
-    			// }
-			// } else{
+				if($attach->save()){
+    				return $this->sendResponse($attach, 'Resume Found');
+    			}else{
+    				return $this->sendError('Failed to Input Resume');
+    			}
+			} else{
 				$attach = new ExaminationAttach;
 				$attach->id = Uuid::uuid4();
 				$attach->examination_id = $param->id; 
@@ -897,7 +897,7 @@ class ExaminationAPIController extends AppBaseController
     			}else{
     				return $this->sendError('Failed to Input Resume');
     			}
-			// }
+			}
     	}else{
     		return $this->sendError('ID Examination or name or attachment or Ref. No link Is Required');
     	}
@@ -908,54 +908,102 @@ class ExaminationAPIController extends AppBaseController
     	$param = (object) $param->all();
 
     	if(!empty($param->id) && !empty($param->name) && !empty($param->link) && !empty($param->no) && !empty($param->cert_date) && !empty($param->cert_valid_from) && !empty($param->cert_valid_thru)){
-			$attach = new ExaminationAttach;
-			$attach->id = Uuid::uuid4();
-			$attach->examination_id = $param->id; 
-			// $attach->name = 'Sertifikat'. $param->name;
-			$attach->name = 'Sertifikat';
-			$attach->attachment = $param->link;
-			$attach->no = $param->no;
-			$attach->created_by = 1;
-			$attach->updated_by = 1;
+			$attach = ExaminationAttach::where('name', 'Laporan Uji')->where('examination_id', ''.$param->id.'')->first();
 
-			if($attach->save()){
-				$examinations = Examination::find($param->id);
-				if($examinations){
-					$examinations->certificate_date = $param->cert_date;
-					if($examinations->save()){
-						$device = Device::find($examinations->device_id);
-						if($device){
-							if (!empty($param->link)){
-								$device->certificate = $param->link;
-							}
-							
-							if (!empty($param->cert_valid_from)){
-								$device->valid_from = $param->cert_valid_from;
-							}
-							
-							if (!empty($param->cert_valid_thru)){
-								$device->valid_thru = $param->cert_valid_thru;
-							}
-							
-							$device->updated_by = 1;
-							$device->updated_at = date("Y-m-d h:i:s");
-							
-							if($device->save()){
-								return $this->sendResponse($device, 'Device Found');
+			if ($attach){
+				$attach->attachment = $param->link;
+				$attach->no = $param->no;
+				$attach->updated_by = 1;
+				
+				if($attach->save()){
+    				$examinations = Examination::find($param->id);
+					if($examinations){
+						$examinations->certificate_date = $param->cert_date;
+						if($examinations->save()){
+							$device = Device::find($examinations->device_id);
+							if($device){
+								if (!empty($param->link)){
+									$device->certificate = $param->link;
+								}
+								
+								if (!empty($param->cert_valid_from)){
+									$device->valid_from = $param->cert_valid_from;
+								}
+								
+								if (!empty($param->cert_valid_thru)){
+									$device->valid_thru = $param->cert_valid_thru;
+								}
+								
+								$device->updated_by = 1;
+								$device->updated_at = date("Y-m-d h:i:s");
+								
+								if($device->save()){
+									return $this->sendResponse($device, 'Device Found');
+								}else{
+									return $this->sendError('Failed to Update Device ');
+								}
 							}else{
-								return $this->sendError('Failed to Update Device ');
+								return $this->sendError('Device Not Found');
 							}
 						}else{
-							return $this->sendError('Device Not Found');
+							return $this->sendError('Failed to Update Certificate Date ');
 						}
 					}else{
-						return $this->sendError('Failed to Update Certificate Date ');
+						return $this->sendError('Examination Not Found');
+					}
+    			}else{
+    				return $this->sendError('Failed to Input Certificate');
+    			}
+			} else{
+					$attach = new ExaminationAttach;
+				$attach->id = Uuid::uuid4();
+				$attach->examination_id = $param->id; 
+				// $attach->name = 'Sertifikat'. $param->name;
+				$attach->name = 'Sertifikat';
+				$attach->attachment = $param->link;
+				$attach->no = $param->no;
+				$attach->created_by = 1;
+				$attach->updated_by = 1;
+
+				if($attach->save()){
+					$examinations = Examination::find($param->id);
+					if($examinations){
+						$examinations->certificate_date = $param->cert_date;
+						if($examinations->save()){
+							$device = Device::find($examinations->device_id);
+							if($device){
+								if (!empty($param->link)){
+									$device->certificate = $param->link;
+								}
+								
+								if (!empty($param->cert_valid_from)){
+									$device->valid_from = $param->cert_valid_from;
+								}
+								
+								if (!empty($param->cert_valid_thru)){
+									$device->valid_thru = $param->cert_valid_thru;
+								}
+								
+								$device->updated_by = 1;
+								$device->updated_at = date("Y-m-d h:i:s");
+								
+								if($device->save()){
+									return $this->sendResponse($device, 'Device Found');
+								}else{
+									return $this->sendError('Failed to Update Device ');
+								}
+							}else{
+								return $this->sendError('Device Not Found');
+							}
+						}else{
+							return $this->sendError('Failed to Update Certificate Date ');
+						}
+					}else{
+						return $this->sendError('Examination Not Found');
 					}
 				}else{
-					return $this->sendError('Examination Not Found');
+					return $this->sendError('Failed to Input Certificate');
 				}
-			}else{
-				return $this->sendError('Failed to Input Certificate');
 			}
     	}else{
     		return $this->sendError('ID Examination or name or attachment or Ref. No link or Date of Cert Is Required');
