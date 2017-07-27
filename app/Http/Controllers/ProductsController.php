@@ -34,9 +34,10 @@ class ProductsController extends Controller
             $stels = \DB::table('stels')
                 ->selectRaw('stels.*,(SELECT count(*) FROM stels_sales 
                             join stels_sales_detail on (stels_sales.id = stels_sales_detail.stels_sales_id) 
-                            where stels_sales.user_id ="'.$currentUser->id.'"
+                            join users on(stels_sales.user_id = users.id)
+                            where users.company_id ="'.$currentUser->company_id.'" 
                             and stels_sales_detail.stels_id = stels.id 
-                            group by stels_sales.user_id
+                            group by users.company_id
                             ) as is_buyed'
                 )
                 ->where("stels.is_active",1)
