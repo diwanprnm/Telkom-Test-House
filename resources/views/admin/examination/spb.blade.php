@@ -90,7 +90,7 @@
 						<select class="form-control" id="cmb-ref-perangkat" name="cmb-ref-perangkat">
 								<option value="">- Pilih STEL -</option>
 							@foreach($data_stels as $item)
-								<option value="{{ $item->price }}">{{ $item->code }} || {{ $item->price }}</option>
+								<option value="{{ $item->price }}">{{ $item->stel }} || {{ $item->price }}</option>
 							@endforeach
 						</select>
 					</div>
