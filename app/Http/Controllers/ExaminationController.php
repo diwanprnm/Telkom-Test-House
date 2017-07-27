@@ -302,11 +302,15 @@ class ExaminationController extends Controller
 		// $res_exam_schedule = $client->post('notification/notifToTE?lab='.$exam->examinationLab->lab_code)->getBody();
 		$res_exam_schedule = $client->get('spk/searchData?spkNumber='.$exam->spk_code)->getBody();
 		$exam_schedule = json_decode($res_exam_schedule);
+		
+		$res_exam_approve_date = $client->get('spk/searchHistoryData?spkNumber='.$exam->spk_code)->getBody();
+		$exam_approve_date = json_decode($res_exam_approve_date);
 
         return view('admin.examination.edit')
             ->with('data', $exam)
             // ->with('gen_spk_code', $gen_spk_code)
             ->with('labs', $labs)
+			->with('exam_approve_date', $exam_approve_date)
 			->with('exam_schedule', $exam_schedule);
     }
 
