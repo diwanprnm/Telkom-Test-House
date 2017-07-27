@@ -429,7 +429,9 @@
 
 @section('content_js')
 
+
  <script type="text/javascript" src="{{url('vendor/jquerystep/jquery.steps.js')}}"></script>
+ 
  <script> 
   	var form = $("#form-permohonan");
 	form.validate({
@@ -636,9 +638,11 @@
 	}
 
 	$('.datepicker').datepicker({
-    format: 'yyyy-mm-dd',
-	    startDate: '-3d',
+    	dateFormat: 'yy-mm-dd', 
 	    autoclose: true,
+	    numberOfMonths: 2 ,
+	    showButtonPanel: true
+
 	});
 </script>
 @endsection

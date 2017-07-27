@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="{{url('new-layout/css/responsive.css')}}" type="text/css" />
     <link rel="stylesheet" href="{{url('new-layout/css/products.css')}}" type="text/css" />
 
-    
+    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="{{url('new-layout/css/material-form.css')}}" type="text/css" />
 
 	<link href={{ asset("assets/css/chosen.min.css") }} rel="stylesheet" type="text/css">
@@ -533,6 +533,7 @@
           }
     </script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
    <?php if(config('app.IS_ENABLED_NOTIFICATION')){?>
     <script src="{{url('vendor/socket/socket.io.js')}}"></script>
     <script>
@@ -556,6 +557,7 @@
            
         });
     </script>
+
     <?php }?>
      @yield('content_js')
 </body>

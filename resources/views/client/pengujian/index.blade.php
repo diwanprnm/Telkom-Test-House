@@ -1122,14 +1122,14 @@
 									<label>
 										{{ trans('translate.reschedule_date') }} *
 									</label>
-									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-										<input type="text" id="cust_test_date" class="form-control" name="cust_test_date" placeholder="Tanggal ..." readonly>
+									<!-- <p class="input-group input-append"> -->
+										<input type="text" id="cust_test_date" class="form-control datepicker" name="cust_test_date" placeholder="Tanggal ..." readonly>
 										<span class="input-group-btn">
-											<button type="button" class="btn btn-default">
+											<!-- <button type="button" class="btn btn-default"> -->
 												<i class="glyphicon glyphicon-calendar"></i>
-											</button>
+											<!-- </button> -->
 										</span>
-									</p>
+									<!-- </p> -->
 								</div>
 						</td>
 					</tr>
@@ -1566,11 +1566,13 @@
 		});
 	});
 
-	$('.date').datepicker({  
-			"format": "dd-mm-yyyy",
-			"setDate": new Date(),
-			"autoclose": true
-		});
+	$('.datepicker').datepicker({
+      dateFormat: 'yy-mm-dd', 
+      autoclose: true,
+      numberOfMonths: 2 ,
+      showButtonPanel: true
+
+  });
 	function reSchedule(a,b,c){
 			$('#reschedule-modal-content').modal('show');
 			$('#hide_id_exam').val(a);

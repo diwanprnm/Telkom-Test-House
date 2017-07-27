@@ -198,14 +198,17 @@
 
 @endsection
 
-@section('content_js')
+@section('content_js') 
 	<script type="text/javascript">
 		$('#cmb-perusahaan').chosen();
 		// $('#cmb-ref-perangkat').val(0);
 		$('#cmb-perusahaan').trigger("chosen:updated");
 		$('.date').datepicker({
-	    	format: 'yyyy-mm-dd', 
+	    	dateFormat: 'yy-mm-dd', 
 		    autoclose: true,
+		    numberOfMonths: 2 ,
+		    showButtonPanel: true
+
 		});
 	</script>
 	<script src="{{ asset('assets/js/app/app-register.js') }}"></script>
