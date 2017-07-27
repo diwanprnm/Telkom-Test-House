@@ -1570,7 +1570,8 @@
       dateFormat: 'yy-mm-dd', 
       autoclose: true,
       numberOfMonths: 2 ,
-      showButtonPanel: true
+      showButtonPanel: true,
+       beforeShowDay: $.datepicker.noWeekends,
 
   });
 	function reSchedule(a,b,c){
