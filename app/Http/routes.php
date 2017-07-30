@@ -3058,3 +3058,123 @@ Route::post('/insertKuisioner', 'PengujianController@insertKuisioner');
 Route::post('/insertComplaint', 'PengujianController@insertComplaint');
 
 Route::get('/client/downloadkuitansistel/{id}', 'ProductsController@downloadkuitansistel');
+
+
+Route::get('/cetakBuktiUji', function() 
+	{ 
+		$pdf = new PDF_MC_Table(); 
+		$pdf->judul_kop('Bukti Penerimaan & Pengeluaran Perangakat Uji','');
+		$pdf->AliasNbPages();
+		$pdf->AddPage();
+		 
+		$y = $pdf->getY();
+	 
+		$pdf->SetFont('helvetica','',10);
+		$pdf->setXY(55.00125,$y + 3);
+		$pdf->SetFont('','U');
+		$pdf->Cell(10,5,"Nama Perangkat",0,0,'L');
+		$pdf->SetWidths(array(0.00125,80,85,160));
+		$pdf->Row(array("","",":","................................................................")); 
+		/*Pemilik Perangkat*/
+		$y = $pdf->getY(); 
+		$pdf->SetFont('helvetica','',10);
+		$pdf->setXY(55.00125,$y + 1);
+		$pdf->SetFont('','U');
+		$pdf->Cell(10,5,"Pemilik Perangkat",0,0,'L');
+		$pdf->SetWidths(array(0.00125,80,85,160));
+		$pdf->Row(array("","",":","................................................................"));
+		/*Alamat*/ 
+		$y = $pdf->getY(); 
+		$pdf->SetFont('helvetica','',10);
+		$pdf->setXY(55.00125,$y + 1);
+		$pdf->SetFont('','U');
+		$pdf->Cell(10,5,"Alamat",0,0,'L');
+		$pdf->SetWidths(array(0.00125,80,85,160));
+		$pdf->Row(array("","",":","................................................................"));
+		/*Alamat*/ 
+		$y = $pdf->getY(); 
+		$pdf->SetFont('helvetica','',10);
+		$pdf->setXY(55.00125,$y + 1);
+		$pdf->SetFont('','U');
+		$pdf->Cell(10,5,"",0,0,'L');
+		$pdf->SetWidths(array(0.00125,80,85,160));
+		$pdf->Row(array("","","","................................................................"));
+
+		/*Phone & Fax*/
+		$y = $pdf->getY(); 
+		$pdf->SetFont('helvetica','',10);
+		$pdf->setXY(95.00125,$y + 1);
+		$pdf->SetFont('','U');
+		$pdf->Cell(10,5,"Phone & Fax",0,0,'L');
+		$pdf->SetWidths(array(0.00125,110,115,100));
+		$pdf->Row(array("","",":",".................................")); 
+
+		/*Jenis Pengujian*/ 
+		$y = $pdf->getY(); 
+		$pdf->SetFont('helvetica','',10);
+		$pdf->setXY(55.00125,$y + 1);
+		$pdf->SetFont('','U');
+		$pdf->Cell(10,5,"Jenis Pengujian",0,0,'L');
+		$pdf->SetWidths(array(0.00125,80,85,160));
+		$pdf->Row(array("","",":","QA / TA / UP / Calibration /.....................")); 
+	 	
+
+	 	//LIST Perangkat
+		$pdf->Ln(2); 
+		$pdf->SetWidths(array(0.00125,20,30,30,50,60));
+		$pdf->SetAligns(array('L','C','C','C','C','C')); 
+ 		$pdf->RowRect(array('','No','Jumlah','Satuan','Uraian Perangkat','Keterangan'));
+ 		for ($i=0; $i <20 ; $i++) { 
+		 	$pdf->RowRect(array('','No','Jumlah','Satuan','Uraian Perangkat','Keterangan'));
+		}	  
+
+		$pdf->Ln(2);  
+	 	$pdf->SetFont('helvetica','',10); 
+	 	$pdf->SetFillColor(976,245,458);
+		$pdf->setX(10.00125);
+		$pdf->Cell(80, 4, 'Penerimaan Perangkat', 1, 0, 'C',true); 
+		$pdf->setX(120);
+		$pdf->Cell(80, 4, 'Pengambilan Perangkat', 1, 0, 'C',true); 
+
+		//TTD PENERIMAAN PERANGKAT
+
+		$pdf->Ln(6); 
+	 	$pdf->SetFont('helvetica','',10); 
+		$pdf->setX(10.00125);
+		$pdf->Cell(40, 4, 'Pemilik', 1, 0, 'C');
+		$pdf->Cell(40, 4, 'IDeC', 1, 0, 'C');
+		 
+		$pdf->setX(10.00125);
+		$pdf->drawTextBox('(...............................)', 40, 25, 'C', 'B', 1);
+		$pdf->setXY(50,$pdf->getY()-25);
+		$pdf->drawTextBox('(...............................)', 40, 25, 'C', 'B', 1); 
+		 
+		//TTD PENGAMBILAN PERANGKAT 
+	  	$pdf->SetFont('helvetica','',10); 
+	 	$pdf->setXY(120,$pdf->getY()-25);
+		$pdf->Cell(40, 4, 'Pemilik', 1, 0, 'C');
+		$pdf->Cell(40, 4, 'IDeC', 1, 0, 'C'); 
+		$pdf->setX(120);
+		$pdf->drawTextBox('(...............................)', 40, 25, 'C', 'B', 1);
+		$pdf->setXY(160,$pdf->getY() -25);
+		$pdf->drawTextBox('(...............................)', 40, 25, 'C', 'B', 1);  
+
+		//TANGGAL PENERIMAAN & PENGEMBALIAN
+		$pdf->setXY(13,$pdf->getY() - 22);
+		$pdf->Cell(18,10,'TGL ..................',0,0,'L');  
+		$pdf->setX(53);
+		$pdf->Cell(18,10,'TGL ..................',0,0,'L'); 
+		$pdf->setX(123);
+		$pdf->Cell(18,10,'TGL ..................',0,0,'L'); 
+		$pdf->setX(163);
+		$pdf->Cell(18,10,'TGL ..................',0,0,'L'); 
+
+
+		$y = $pdf->getY();  
+		$pdf->setXY(13,$pdf->getY() + 50);
+		$pdf->Cell(18,10,'Dokumen ini tidak terkendali apabila diunduh',0,0,'L'); 
+		$pdf->Output();
+		exit;
+		
+	}
+);
