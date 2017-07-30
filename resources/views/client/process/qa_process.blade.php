@@ -448,8 +448,9 @@
 @section('content_js')
 
  <script type="text/javascript" src="{{url('vendor/jquerystep/jquery.steps.js')}}"></script>
+ 
  <script>  
-  	var form = $("#form-permohonan");
+	var form = $("#form-permohonan");
 	form.validate({
 	    errorPlacement: function errorPlacement(error, element) { element.before(error); },
 	    rules: { 
@@ -674,4 +675,12 @@
 </script>
 
   <script src="{{url('vendor/chosen/chosen.jquery.js')}}" type="text/javascript"></script> 
+  <script type="text/javascript">
+	$("#f1-cmb-ref-perangkat").change(function(){
+		var e = document.getElementById("f1-cmb-ref-perangkat");
+		var strUser = e.options[e.selectedIndex].text;
+		var res = strUser.split('||');
+		$('#f1-nama-perangkat').val(res[1]);
+	});
+ </script>
 @endsection

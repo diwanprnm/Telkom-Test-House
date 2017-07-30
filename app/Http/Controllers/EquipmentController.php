@@ -148,6 +148,9 @@ class EquipmentController extends Controller
         }
 
         try{
+			$examination = Examination::where('id', $equipment->examination_id)->first();
+			$examination->location = 2;
+			$examination->save();
 
 			$equipmenth = new EquipmentHistory;
 			$equipmenth->id = Uuid::uuid4();
@@ -266,6 +269,10 @@ class EquipmentController extends Controller
 				$equipmenth->updated_at = ''.date('Y-m-d h:i:s').'';
 
 				$equipmenth->save();
+				
+				$examination = Examination::where('id', $id)->first();
+				$examination->location = $request->input('location');
+				$examination->save();
 			}
             
             $logs = new Logs;

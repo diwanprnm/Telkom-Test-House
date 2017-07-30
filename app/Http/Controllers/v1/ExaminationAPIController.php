@@ -633,6 +633,10 @@ class ExaminationAPIController extends AppBaseController
 			$equip_hist->action_date = $param->date;
 
 			if($equip_hist->save()){
+				$examination = Examination::where('id', $param->id)->first();
+				$examination->location = $param->location;
+				$examination->save();
+				
 				$equip = Equipment::where("examination_id",$param->id)->first();
 				$equip->location = $param->location;
 				$equip->save();

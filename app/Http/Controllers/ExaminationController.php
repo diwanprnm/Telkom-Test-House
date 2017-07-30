@@ -75,6 +75,7 @@ class ExaminationController extends Controller
                                 ->with('examinationType')
                                 ->with('media')
                                 ->with('device');
+			$query->where('location', '!=', '1');
 			$query->where(function($qry){
 				$qry->where(function($q){
 					return $q->where('registration_status', '!=', '1')
@@ -350,6 +351,36 @@ class ExaminationController extends Controller
 			}
         }
 		if ($request->has('function_status')){
+			if ($request->hasFile('barang_file')) {
+				$name_file = 'form_penerimaan_barang_'.$request->file('barang_file')->getClientOriginalName();
+				$path_file = public_path().'/media/examination/'.$exam->id;
+				if (!file_exists($path_file)) {
+					mkdir($path_file, 0775);
+				}
+				if($request->file('barang_file')->move($path_file,$name_file)){
+					$attach = ExaminationAttach::where('name', 'Bukti Penerimaan & Pengeluaran Perangkat Uji1')->where('examination_id', ''.$exam->id.'')->first();
+					if ($attach){
+						$attach->attachment = $name_file;
+						$attach->updated_by = $currentUser->id;
+
+						$attach->save();
+					} else{
+						$attach = new ExaminationAttach;
+						$attach->id = Uuid::uuid4();
+						$attach->examination_id = $exam->id; 
+						$attach->name = 'Bukti Penerimaan & Pengeluaran Perangkat Uji1';
+						$attach->attachment = $name_file;
+						$attach->created_by = $currentUser->id;
+						$attach->updated_by = $currentUser->id;
+
+						$attach->save();
+					}
+					return redirect('/admin/examination/'.$exam->id.'/edit');
+				}else{
+					Session::flash('error', 'Save Bukti Penerimaan & Pengeluaran Perangkat Uji to directory failed');
+					return redirect('/admin/examination/'.$exam->id.'/edit');
+				}
+			}
 			if ($request->hasFile('function_file')) {
 				/*$ext_file = $request->file('function_file')->getClientOriginalExtension();
 				$name_file = uniqid().'_function_'.$exam->id.'.'.$ext_file;*/
@@ -622,6 +653,36 @@ class ExaminationController extends Controller
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Laporan Uji",$request->input('keterangan'));
 			}
         }
+		if ($request->hasFile('barang_file2')) {
+			$name_file = 'form_penerimaan_barang2_'.$request->file('barang_file2')->getClientOriginalName();
+			$path_file = public_path().'/media/examination/'.$exam->id;
+			if (!file_exists($path_file)) {
+				mkdir($path_file, 0775);
+			}
+			if($request->file('barang_file2')->move($path_file,$name_file)){
+				$attach = ExaminationAttach::where('name', 'Bukti Penerimaan & Pengeluaran Perangkat Uji2')->where('examination_id', ''.$exam->id.'')->first();
+				if ($attach){
+					$attach->attachment = $name_file;
+					$attach->updated_by = $currentUser->id;
+
+					$attach->save();
+				} else{
+					$attach = new ExaminationAttach;
+					$attach->id = Uuid::uuid4();
+					$attach->examination_id = $exam->id; 
+					$attach->name = 'Bukti Penerimaan & Pengeluaran Perangkat Uji2';
+					$attach->attachment = $name_file;
+					$attach->created_by = $currentUser->id;
+					$attach->updated_by = $currentUser->id;
+
+					$attach->save();
+				}
+				return redirect('/admin/examination/'.$exam->id.'/edit');
+			}else{
+				Session::flash('error', 'Save Bukti Penerimaan & Pengeluaran Perangkat Uji to directory failed');
+				return redirect('/admin/examination/'.$exam->id.'/edit');
+			}
+		}
         if ($request->has('qa_status')){
             $status = $request->input('qa_status');
             $passed = $request->input('passed');
@@ -1722,6 +1783,68 @@ class ExaminationController extends Controller
 		]);
     }
 	
+	function cetakFormBarang($id, Request $request)
+    {
+		/* $client = new Client([
+			// Base URI is used with relative requests
+			'base_uri' => 'http://ptbsp.ddns.net:13280/RevitalisasiOTR/api/',
+			// 'base_uri' => config("app.url_api_bsp"),
+			// You can set any number of default request options.
+			'timeout'  => 60.0,
+		]);
+		// $res_function_test = $client->get('functionTest/getResultData?id='.$id)->getBody();
+		$res_function_test = $client->get('functionTest/getResultData?id=3babffdd-6af1-4be7-a7bb-07da626c1351')->getBody();
+		$function_test = json_decode($res_function_test);
+		*/
+		$data = Examination::where('id','=',$id)
+		->with('ExaminationType')
+		->with('ExaminationLab')
+		->with('Company')
+		->with('Device')
+		->with('Equipment')
+		->get();
+		$kode_barang = $this->generateKodeBarang($data[0]->ExaminationLab->name,$this->romawi(date('n')),date('Y'));
+		$kode_barang = urlencode(urlencode($kode_barang));
+		if( strpos( $data[0]->company->name, "/" ) !== false ) {$company_name = urlencode(urlencode($data[0]->company->name));}
+			else{$company_name = $data[0]->company->name?: '-';}
+		if( strpos( $data[0]->company->address, "/" ) !== false ) {$company_address = urlencode(urlencode($data[0]->company->address));}
+			else{$company_address = $data[0]->company->address?: '-';}
+		if( strpos( $data[0]->company->phone, "/" ) !== false ) {$company_phone = urlencode(urlencode($data[0]->company->phone));}
+			else{$company_phone = $data[0]->company->phone?: '-';}
+		if( strpos( $data[0]->company->fax, "/" ) !== false ) {$company_fax = urlencode(urlencode($data[0]->company->fax));}
+			else{$company_fax = $data[0]->company->fax?: '-';}
+		if( strpos( $data[0]->device->name, "/" ) !== false ) {$device_name = urlencode(urlencode($data[0]->device->name));}
+			else{$device_name = $data[0]->device->name?: '-';}
+		if( strpos( $data[0]->device->mark, "/" ) !== false ) {$device_mark = urlencode(urlencode($data[0]->device->mark));}
+			else{$device_mark = $data[0]->device->mark?: '-';}
+		if( strpos( $data[0]->device->manufactured_by, "/" ) !== false ) {$device_manufactured_by = urlencode(urlencode($data[0]->device->manufactured_by));}
+			else{$device_manufactured_by = $data[0]->device->manufactured_by?: '-';}
+		if( strpos( $data[0]->device->model, "/" ) !== false ) {$device_model = urlencode(urlencode($data[0]->device->model));}
+			else{$device_model = $data[0]->device->model?: '-';}
+		if( strpos( $data[0]->device->serial_number, "/" ) !== false ) {$device_serial_number = urlencode(urlencode($data[0]->device->serial_number));}
+			else{$device_serial_number = $data[0]->device->serial_number?: '-';}
+		if( strpos( $data[0]->ExaminationType->name, "/" ) !== false ) {$exam_type = urlencode(urlencode($data[0]->ExaminationType->name));}
+			else{$exam_type = $data[0]->ExaminationType->name?: '-';}
+		if( strpos( $data[0]->ExaminationType->description, "/" ) !== false ) {$exam_type_desc = urlencode(urlencode($data[0]->ExaminationType->description));}
+			else{$exam_type_desc = $data[0]->ExaminationType->description?: '-';}
+		
+		$request->session()->put('key_exam_for_equipment', $data[0]->equipment);
+		return \Redirect::route('cetakBuktiPenerimaanPerangkat', [
+			'kode_barang' => $kode_barang,
+			'company_name' => $company_name,
+			'company_address' => $company_address,
+			'company_phone' => $company_phone,
+			'company_fax' => $company_fax,
+			'device_name' => $device_name,
+			'device_mark' => $device_mark,
+			'device_manufactured_by' => $device_manufactured_by,
+			'device_model' => $device_model,
+			'device_serial_number' => $device_serial_number,
+			'exam_type' => $exam_type,
+			'exam_type_desc' => $exam_type_desc
+		]);
+    }
+	
 	public function generateEquip(Request $request)
     {
 		$exam_id = $request->session()->pull('key_exam_id_for_generate_equip_masuk');
@@ -1768,4 +1891,48 @@ class ExaminationController extends Controller
 			}
 		}
     }
+	
+	public function generateKodeBarang($a,$b,$c) {
+		$query = "
+			SELECT
+				SUBSTRING_INDEX(no, '/', 1) + 1 AS last_numb
+			FROM
+				equipments
+			WHERE
+			SUBSTRING_INDEX(
+				SUBSTRING_INDEX(no, '/', 2),
+				'/' ,- 1
+			) = '".$a."' AND
+			SUBSTRING_INDEX(
+				SUBSTRING_INDEX(no, '/', 3),
+				'/' ,- 1
+			) = '".$b."' AND
+			SUBSTRING_INDEX(no, '/', -1) = ".$c."
+			ORDER BY
+				last_numb DESC
+			LIMIT 1
+		";
+		$data = DB::select($query);
+		if (count($data) == 0){
+			return '001/'.$a.'/'.$b.'/'.$c.'';
+		}
+		else{
+			$last_numb = $data[0]->last_numb;
+			if($last_numb < 10){
+				return '00'.$last_numb.'/'.$a.'/'.$b.'/'.$c.'';
+			}
+			else if($last_numb < 100){
+				return '0'.$last_numb.'/'.$a.'/'.$b.'/'.$c.'';
+			}
+			else{
+				return ''.$last_numb.'/'.$a.'/'.$b.'/'.$c.'';
+			}
+		}
+    }
+	
+	function romawi($bln){
+		$array_bulan = array(1=>"I","II","III", "IV", "V","VI","VII","VIII","IX","X", "XI","XII");
+		$bulan = $array_bulan[$bln];
+		return $bulan;
+	}
 }

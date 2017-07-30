@@ -523,6 +523,27 @@
 										<a onclick="masukkanBarang('{{ $data->id }}')"> Masukkan Barang</a>
 									</div>									
 								@endif
+							
+								<div class="form-group">
+									<a href="{{URL::to('/cetakFormBarang/'.$data->id)}}" target="_blank"> Buatkan Bukti Penerimaan & Pengeluaran Perangkat Uji</a>
+								</div>
+								<div class="form-group">
+									<label>
+										Bukti Penerimaan & Pengeluaran Perangkat Uji File *
+									</label>
+									<input type="file" name="barang_file" id="barang_file" class="form-control" accept="application/pdf"/>
+									<button class="btn btn-wide btn-green btn-squared pull-right">
+										Upload
+									</button>
+								</div>
+								<div class="form-group">
+									@foreach($data->media as $item)
+										@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan & Pengeluaran Perangkat Uji</a>
+										@endif
+									@endforeach
+								</div>
+							
 							<div class="col-md-12">
 								@if($data->function_test_TE != 0)
 									<div class="form-group">
@@ -1446,11 +1467,38 @@
 						</fieldset>
 					{!! Form::close() !!}
 				@endif	
+				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-barang')) !!}
+					{!! csrf_field() !!}
+					<input type="hidden" name="status" class="form-control" value=""/>
+					<input type="hidden" name="keterangan" class="form-control" value=""/>
 					<fieldset>
 						<legend>
 							Edit Lokasi Barang
 						</legend>
 						<div class="row">
+							<div class="form-group">
+								@foreach($data->media as $item)
+									@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
+										<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan Perangkat Uji</a>
+									@endif
+								@endforeach
+							</div>
+							<div class="form-group">
+								<label>
+									Bukti Penerimaan & Pengeluaran Perangkat Uji File *
+								</label>
+								<input type="file" name="barang_file2" id="barang_file2" class="form-control" accept="application/pdf"/>
+								<button class="btn btn-wide btn-green btn-squared pull-right">
+									Upload
+								</button>
+							</div>
+							<div class="form-group">
+								@foreach($data->media as $item)
+									@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji2' && $item->attachment != '')
+										<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji2')}}"> Download Bukti Pengeluaran Perangkat Uji</a>
+									@endif
+								@endforeach
+							</div>
 							<div class="col-md-12">
 								<div class="form-group">
 									<label for="form-field-select-2">
@@ -1474,6 +1522,7 @@
 							</div>
 						</div>
 					</fieldset>
+				{!! Form::close() !!}
 				@if($data->examination_type_id !='2' && $data->examination_type_id !='3' && $data->examination_type_id !='4')
 					{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-sertifikat')) !!}
 						{!! csrf_field() !!}
@@ -1821,6 +1870,7 @@
 	
 	$('#form-function-test').submit(function () {
 		var keterangan = document.getElementById('keterangan_function').value;
+		var barang_file = document.getElementById('barang_file');
 		var function_file = document.getElementById('function_file');
 		var function_name = document.getElementById('function_name').value;
 		var $inputs = $('#form-function-test :input');
@@ -1828,16 +1878,18 @@
 		$inputs.each(function() {
 			values[this.name] = $(this).val();
 		});
-		if(values['function_status'] == '-1'){
-			if(keterangan == ''){
-				$('#myModalketerangan_function').modal('show');
-				return false;
+		if(barang_file.value ==''){
+			if(values['function_status'] == '-1'){
+				if(keterangan == ''){
+					$('#myModalketerangan_function').modal('show');
+					return false;
+				}else{
+					$('#myModalketerangan_function').modal('hide');
+				}			
 			}else{
-				$('#myModalketerangan_function').modal('hide');
-			}			
-		}else{
-			if(function_file.value == '' && function_name == ''){
-				alert("File Laporan Hasil Uji Fungsi harus dipilih");$('.function_file').focus();return false;				
+				if(function_file.value == '' && function_name == ''){
+					alert("File Laporan Hasil Uji Fungsi harus dipilih");$('.function_file').focus();return false;				
+				}
 			}
 		}
 	});

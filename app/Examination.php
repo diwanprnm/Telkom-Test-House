@@ -41,6 +41,11 @@ class Examination extends Model
         return $this->hasMany('App\Equipment');
     }
 
+    public function examinationHistory()
+    {
+        return $this->hasMany('App\ExaminationHistory');
+    }
+
     public function media()
     {
         return $this->hasMany('App\ExaminationAttach');
