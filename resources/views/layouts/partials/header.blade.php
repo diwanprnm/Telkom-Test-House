@@ -89,6 +89,8 @@
             </ul>
 
             <ul class="menu-right">
+              <li><a href="#modal_kuisioner2" data-toggle="modal">Kuisioner</a></li>
+            
               @if( Config::get('app.locale') == 'in')
                 <li> <a href="#" class="dropdown-toggle" data-toggle="dropdown">INA <i class="icon-angle-down"></i></a>
                 <ul class="dropdown-menu" role="menu">
