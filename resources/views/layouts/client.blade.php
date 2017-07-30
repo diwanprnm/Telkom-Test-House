@@ -293,6 +293,747 @@
       </div>
     </div>
 
+    <div id="modal_kuisioner2" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
+      <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Kuisioner Kepuasan Customer</h4>
+          </div>
+          <div class="modal-body pre-scrollable">
+            <form>
+                <div class="row">
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label>Nama Responden</label>
+                            <input type="text" placeholder="John Doe" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Nama Perusahaan</label>
+                            <input type="text" placeholder="John Doe" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>No. Tlp / HP</label>
+                            <input type="text" placeholder="0812345679" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label>Jenis Pengujian</label>
+                            <select class="sm-form-control">
+                              <option>QA</option>
+                              <option>TA</option>
+                              <option>VT</option>
+                              <option>CAL</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Nama Perangkat</label>
+                            <input type="text" placeholder="Smartphone" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Tanggal</label>
+                            <input type="text" placeholder="DD/MM/YYYY" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <p>Survey ini terdiri dari dua bagian, yaitu tingkat kepentingan dan tingkat kepuasan Anda. Tingkat kepentingan menunjukan seberapa penting sebuah pernyataan bagi Anda. Sedangkan, tingkat kepuasan menunjukkan seberapa puas pengalaman Anda setelah melakukan pengujian di Infrasutructure Assurance (IAS) Divisi Digital Service (DDS) PT. Telekomuniasi Indonesia, Tbk.
+                    </p>
+                    <p>Besar pengharapan kami agar pengisian survey ini dapat dikerjakan dengan sebaik-baiknya. Atas kerja samanya, kami ucaokan terimakasih.</p>
+                    <p><strong>Berilah tanda centang untuk skala penilaian yang Anda pilih!</strong></p>
+                </div>
+                <div class="row">
+                    <table id="table_kuisioner" style="width:100%; padding: 2px;" border="1">
+                      <tr>
+                        <th rowspan="2">NO</th>
+                        <th rowspan="2">PERTANYAAN</th>
+                        <th colspan="5">TINGKAT KEPENTINGAN</th>
+                        <th colspan="5">TINGKAT KEPUASAN</th>
+                      </tr>
+                      <tr>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                      </tr>
+                      <tbody>
+                        <tr>
+                          <td>1</td>
+                          <td>Pengajuan <strong>pendaftaran</strong> pengujian dapat dengan mudah dilakukan.</td>
+                          <td>
+                            <input type="checkbox" name="tp1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp5" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts5" class="form-control">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>2</td>
+                          <td>Pelaksanaan <strong>uji fungsi</strong> sebelum barang diterima terlaksana dengan <strong>baik</strong>.</td>
+                          <td>
+                            <input type="checkbox" name="tp1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp5" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts5" class="form-control">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>3</td>
+                          <td>Biaya/<strong>tarif</strong> pengujian perangkat sudah sesuai.</td>
+                          <td>
+                            <input type="checkbox" name="tp1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp5" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts5" class="form-control">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>4</td>
+                          <td><strong>Prosedur</strong> pembayaran dilakukan dengan <strong>mudah</strong>.</td>
+                          <td>
+                            <input type="checkbox" name="tp1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp5" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts5" class="form-control">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>5</td>
+                          <td>Perangkat uji <strong>diterima</strong> dengan <strong>baik</strong> oleh petugas.</td>
+                          <td>
+                            <input type="checkbox" name="tp1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp5" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts5" class="form-control">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>6</td>
+                          <td><strong>Pelaksanaan</strong> pengujian sesuai dengan <strong>jadwal</strong> yang sudah disepakati.</td>
+                          <td>
+                            <input type="checkbox" name="tp1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp5" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts5" class="form-control">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>7</td>
+                          <td>Perangkat uji setelah pengujian <strong>selesai</strong> ditangani dengan <strong>baik</strong>.</td>
+                          <td>
+                            <input type="checkbox" name="tp1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp5" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts5" class="form-control">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>8</td>
+                          <td><strong>Lama pengujian</strong> diselesaikan dengan informasi/kesepakatan yang telah ditentukan.</td>
+                          <td>
+                            <input type="checkbox" name="tp1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp5" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts5" class="form-control">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>9</td>
+                          <td><strong>Komunikasi</strong> antara test engineer Lab. QA DDS Telkom dengan test engineer kami terjalin dengan baik untuk kelancaran pengujian.</td>
+                          <td>
+                            <input type="checkbox" name="tp1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp5" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts5" class="form-control">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>10</td>
+                          <td><strong>Alat ukur</strong> yang digunakan sudah terjamin kualitas dan akurasinya.</td>
+                          <td>
+                            <input type="checkbox" name="tp1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp5" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts5" class="form-control">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>11</td>
+                          <td><strong>Ruang</strong> laboratorium terkondisi dengan baik.</td>
+                          <td>
+                            <input type="checkbox" name="tp1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp5" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts5" class="form-control">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>12</td>
+                          <td><strong>Kapabilitas dan pengalaman</strong> test engineer Lab. QA DDS Telkom sudah sesuai dengan kompetensinya.</td>
+                          <td>
+                            <input type="checkbox" name="tp1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp5" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts5" class="form-control">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>13</td>
+                          <td>Test engineer Lab. QA DDS Telkom memiliki <strong>pemahaman</strong> terhadap materi item uji.</td>
+                          <td>
+                            <input type="checkbox" name="tp1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp5" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts5" class="form-control">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>14</td>
+                          <td>Petugas memberikan <strong>pelayanan</strong> dengan <strong>ramah</strong> dan profesional.</td>
+                          <td>
+                            <input type="checkbox" name="tp1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp5" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts5" class="form-control">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>15</td>
+                          <td>Petugas memberikan <strong>informasi</strong> tentang <strong>tarif</strong> yang jelas kepada kastamer.</td>
+                          <td>
+                            <input type="checkbox" name="tp1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp5" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts5" class="form-control">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>16</td>
+                          <td>Petugas memberikan <strong>informasi</strong> tentang <strong>prosedur</strong> pengujian dengan jelas.</td>
+                          <td>
+                            <input type="checkbox" name="tp1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp5" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts5" class="form-control">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>17</td>
+                          <td>Petugas selalu <strong>tanggap</strong> dengan apa yang diinginkan kastamer.</td>
+                          <td>
+                            <input type="checkbox" name="tp1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp5" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts5" class="form-control">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>18</td>
+                          <td>Petugas memberikan <strong>perlakuan</strong> yang sama kepada semua kastamer.</td>
+                          <td>
+                            <input type="checkbox" name="tp1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp5" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts5" class="form-control">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>19</td>
+                          <td>Petugas memberikan <strong>laporan</strong> hasil pengujian dengan cepat dan tepat.</td>
+                          <td>
+                            <input type="checkbox" name="tp1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="tp5" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="checkbox" name="ts5" class="form-control">
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <p>Kritik dan Saran Anda untuk meningkatkan kualitas pelayanan kami:
+                    </p>
+                    <div class="form-group">
+                      <textarea class="form-control" placeholder="Komentar disini">
+                      </textarea>
+                    </div>
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <!-- <button type="submit" class="button button3d btn-sky" data-dismiss="modal">Simpan</button> -->
+      <button type="button" id="submit-kuisioner" class="button button3d btn-sky">Simpan</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
     <div id="modal_complain" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
       <div class="modal-dialog modal-lg">
 
