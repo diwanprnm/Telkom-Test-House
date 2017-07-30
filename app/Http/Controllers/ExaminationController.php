@@ -382,6 +382,7 @@ class ExaminationController extends Controller
 				}
 			}
 			$status = $request->input('function_status');
+			$exam->contract_date = date('Y-m-d');
 			$exam->function_status = $status;
 			if($status == 1){
 				// $this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.function", "Acc Uji Fungsi");

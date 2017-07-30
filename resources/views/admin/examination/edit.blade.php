@@ -19,10 +19,10 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Tanggal *
+										Tanggal Surat *
 									</label>
 									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-										<input type="text" name="contract_date" id="contract_date" value="<?php echo date('Y-m-d');?>" class="form-control"/>
+										<input type="text" name="contract_date" id="contract_date" value="{{$data->contract_date}}" class="form-control"/>
 										<span class="input-group-btn">
 											<button type="button" class="btn btn-default">
 												<i class="glyphicon glyphicon-calendar"></i>
@@ -57,7 +57,7 @@
 									</label>
 									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
 									@if($exam_schedule->code != 'MSTD0059AERR')
-										<input type="text" name="testing_end" id="testing_end" value="{{$exam_schedule->data[0]->finishTestDt}}" class="form-control"/>
+										<input type="text" name="testing_end" id="testing_end" value="{{$exam_schedule->data[0]->targetDt}}" class="form-control"/>
 									@else
 										<input type="text" name="testing_end" id="testing_end" class="form-control"/>
 									@endif
@@ -1216,7 +1216,10 @@
 												: Tersedia
 											</label>
 											<div class="form-group">
-												<a href="{{ $item->attachment }}"> Download Laporan </a>
+												<a href="http://ptbsp.ddns.net:13280/RevitalisasiOTR/generateQaTestReport?no=001/TRA/L/CAL/2017&isCover=true&isIsi=false"> Download Sampul/Judul Laporan </a>
+											</div>
+											<div class="form-group">
+												<a href="http://ptbsp.ddns.net:13280/RevitalisasiOTR/generateQaTestReport?no=001/TRA/L/CAL/2017&isCover=false&isIsi=true"> Download Isi Laporan </a>
 											</div>
 											@else
 											<label>
@@ -1236,7 +1239,11 @@
 										Tanggal *
 									</label>
 									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
+									@if($exam_schedule->code != 'MSTD0059AERR')
+										<input type="text" name="resume_date" class="form-control" value="{{$exam_schedule->data[0]->finishReportDt}}" required/>
+									@else
 										<input type="text" name="resume_date" class="form-control" value="{{ $data->resume_date }}" required/>
+									@endif
 										<span class="input-group-btn">
 											<button type="button" class="btn btn-default">
 												<i class="glyphicon glyphicon-calendar"></i>

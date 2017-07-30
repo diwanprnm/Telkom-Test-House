@@ -2172,7 +2172,7 @@ Route::get('cetakSPB', function(Illuminate\Http\Request $request){
 		$pdf->SetX(37.00125);
 		$pdf->Cell(0,5,'memudahkan penerbitan faktur pajak).',0,0,'L');
 		$pdf->Ln();
-	$pdf->Row(array('','c. ','Untuk memudahkan proses Administrasi keuangan dan penerbitan faktur pajak, mohon dapat dikirimkan'));	
+	$pdf->Row(array('','c. ','Untuk memudahkan proses Administrasi keuangan dan penerbitan faktur pajak, mohon dapat diunggah'));	
 		$pdf->SetFont('helvetica','B',10);
 		$pdf->SetXY(54.00125,$pdf->GetY()-5);
 		$pdf->Cell(0,5,'copy Bukti Transfer dari Bank yang mencantumkan nomor SPB yang dibayar',0,0,'L');
