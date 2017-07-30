@@ -2897,6 +2897,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::get('/analytic', 'AnalyticController@index');
 	Route::resource('/role', 'RoleController');
 	Route::get('/downloadbukti/{id}', 'SalesController@viewMedia');
+	Route::get('/downloadstelwatermark/{id}', 'SalesController@viewWatermark');
 	// Route::get('/analytic', function(){
 		// $visitor = Tracker::currentSession();
 		// echo"<pre>";print_r($visitor);

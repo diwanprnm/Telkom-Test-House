@@ -54,13 +54,21 @@
 							  	 <td>{{$stel->qty}}</td> 
 								<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($stel->price * $stel->qty), 0, '.', ','); ?></td>
 								<?php  
-								// if($stel->attachment !="" && $stel->payment_status == 1){
-								if($stel->attachment !="" && $stel->payment_status == 1){
+									if($stel->manual_attachment !="" && $stel->payment_status == 1){
 								?>
-								<td colspan="6" align="center"><a target="_blank" href="{!! url("cetakstel?invoice_id={$stel->invoice}&attach={$stel->attachment}&company_name={$stel->company_name}") !!}">{{ trans('translate.download') }} File</a></td>
-								<?php }else{?>	
-									<td colspan="6" align="center">{{ trans('translate.document_not_found') }}</td>
-								<?php }?> 
+										<td colspan="6" align="center"><a target="_blank" href="{{ URL::to('/admin/downloadstelwatermark/'.$stel->manual_id) }}">{{ trans('translate.download') }} File</a></td>
+								<?php }
+								else if($stel->attachment !="" && $stel->payment_status == 1){
+								?>
+									<td colspan="6" align="center"><a target="_blank" href="{!! url("cetakstel?invoice_id={$stel->invoice}&attach={$stel->attachment}&company_name={$stel->company_name}") !!}">{{ trans('translate.download') }} File</a></td>
+								<?php
+								}
+									else{
+								?>	
+										<td colspan="6" align="center">{{ trans('translate.document_not_found') }}</td>
+								<?php 
+									}
+								?> 
 							</tr> 
 							<?php $total +=($stel->price * $stel->qty); ?>
 						@endforeach

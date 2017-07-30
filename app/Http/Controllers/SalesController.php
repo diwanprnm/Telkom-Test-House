@@ -106,7 +106,7 @@ class SalesController extends Controller
         $currentUser = Auth::user();
 
         if($currentUser){
-            $select = array("stels.name","stels.price","stels.code","stels_sales_detail.qty"); 
+            $select = array("stels.name","stels.price","stels.code","stels_sales_detail.qty","stels_sales_detail.id","stels_sales_detail.attachment"); 
             $STELSales = STELSalesDetail::select($select)->where("stels_sales_id",$id)
                         ->join("stels","stels.id","=","stels_sales_detail.stels_id")
                         ->get();
@@ -198,18 +198,40 @@ class SalesController extends Controller
         $select = array("stels_sales.id","stels_sales_attachment.attachment","stels_sales_attachment.stel_sales_id");  
         $stel = STELSalesAttach::select($select)->rightJoin("stels_sales","stels_sales.id","=","stels_sales_attachment.stel_sales_id")
                 ->where("stels_sales.id",$id)->first();
-        
+				
+		$select = array("stels.name","stels.price","stels.code","stels_sales_detail.qty","stels_sales_detail.id","stels_sales_detail.attachment"); 
+		$STELSales = STELSalesDetail::select($select)->where("stels_sales_id",$id)
+					->join("stels","stels.id","=","stels_sales_detail.stels_id")
+					->get();
         return view('admin.sales.edit')
-            ->with('data', $stel);
+            ->with('data', $stel)
+            ->with('dataStel', $STELSales);
     }
 
       public function update(Request $request, $id)
     {
-        $currentUser = Auth::user();
+		$currentUser = Auth::user();
 
         $STELSales = STELSales::find($id);
         $oldStel = $STELSales;  
         if ($request->has('payment_status')){
+			for($i=0;$i<count($request->input('stels_sales_detail_id'));$i++){
+				if ($request->file('stel_file')[$i]) {
+					$name_file = 'stel_file_'.$request->file('stel_file')[$i]->getClientOriginalName();
+					$path_file = public_path().'/media/stelAttach/'.$request->input('stels_sales_detail_id')[$i];
+					if (!file_exists($path_file)) {
+						mkdir($path_file, 0775);
+					}
+					if($request->file('stel_file')[$i]->move($path_file,$name_file)){
+						$STELSalesDetail = STELSalesDetail::find($request->input('stels_sales_detail_id')[$i]);
+						$STELSalesDetail->attachment = $name_file;
+						$STELSalesDetail->save();
+					}else{
+						Session::flash('error', 'Save STEL to directory failed');
+						return redirect('/admin/sales/'.$STELSales->id.'/edit');
+					}
+				}
+			}
 			if ($request->hasFile('kuitansi_file')) {
 				$name_file = 'kuitansi_stel_'.$request->file('kuitansi_file')->getClientOriginalName();
 				$path_file = public_path().'/media/stel/'.$STELSales->id;
@@ -217,7 +239,7 @@ class SalesController extends Controller
 					mkdir($path_file, 0775);
 				}
 				if($request->file('kuitansi_file')->move($path_file,$name_file)){
-					
+					$STELSales->id_kuitansi = $name_file;					
 				}else{
 					Session::flash('error', 'Save Receipt to directory failed');
 					return redirect('/admin/sales/'.$STELSales->id.'/edit');
@@ -225,7 +247,6 @@ class SalesController extends Controller
 			}
             $STELSales->updated_by = $currentUser->id; 
             $STELSales->payment_status = $request->input('payment_status');
-            $STELSales->id_kuitansi = $name_file;
 
             try{
                 $STELSales->save();
@@ -257,6 +278,20 @@ class SalesController extends Controller
 
         if ($stel){
             $file = public_path().'/media/stel/'.$stel->stel_sales_id."/".$stel->attachment;
+            $headers = array(
+              'Content-Type: application/octet-stream',
+            );
+
+            return Response::file($file, $headers);
+        }
+    }
+
+    public function viewWatermark($id)
+    {
+        $stel = STELSalesDetail::where("id",$id)->first();
+
+        if ($stel){
+            $file = public_path().'/media/stelAttach/'.$stel->id."/".$stel->attachment;
             $headers = array(
               'Content-Type: application/octet-stream',
             );

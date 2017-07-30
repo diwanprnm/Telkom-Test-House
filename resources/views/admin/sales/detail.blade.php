@@ -37,6 +37,7 @@
 									<th class="center">Price</th> 
 									<th class="center">QTY</th> 
 									<th class="center">Total</th>
+									<th class="center">Attachment</th>
 								</tr>
 							</thead>
 							<tbody> 
@@ -49,6 +50,7 @@
 										<td class="center">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($item->price, 0, '.', ','); ?></td>
 										<td class="center"><?php echo $item->qty; ?></td>
 										<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($item->price * $item->qty, 0, '.', ','); ?></td> 
+										<td class="center"><a href="{{ URL::to('/admin/downloadstelwatermark/'.$item->id) }}" target="_blank">{{ $item->attachment }}</a></td>
 									</tr> 
 									<?php $total +=($item->price * $item->qty); ?>
 								@endforeach
