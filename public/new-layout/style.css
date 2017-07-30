@@ -13818,8 +13818,8 @@ body:not(.no-transition) #wrapper,
     color: #fff;
 }
 .step-fill.active {
-    border-color: mediumseagreen;
-    color: mediumaquamarine;
+    border: 5px solid #dd2a16;
+    color: #df2800;
 }
 
 /*FORM MATERIAL*/
