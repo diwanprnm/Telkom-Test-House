@@ -1237,7 +1237,7 @@
 										<?php $count = 0; ?>
 										@foreach($data->examinationHistory as $item)
 										<?php
-											if( strpos( $item->name, "Download Sertifikat" ) !== false ) 
+											if( strpos( $item->tahap, "Sertifikat" ) !== false ) 
 											{
 												$count++;
 											}

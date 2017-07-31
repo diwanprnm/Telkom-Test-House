@@ -28,11 +28,10 @@
             <h4 class="modal-title">Survey Kepuasan Kastamer Eksternal</h4>
           </div>
           <div class="modal-body pre-scrollable">
-            <form id="form-kuisioner">
+            <form id="form-kuisioner1">
                 <div class="row">
                     <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
                         <div class="form-group">
-                            <input type="hidden" id="exam_id" name="exam_id">
                             <label>Tanggal</label>
 							<!--<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">-->
 								<input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo date('d-m-Y');?>" readonly required>
@@ -247,6 +246,742 @@
                         <td><input type="number" min="1" max="7" name="quest25_perf" class="form-control" value="1" placeholder="1-7" required></td>
                       </tr>
                     </table>
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <!-- <button type="submit" class="button button3d btn-sky" data-dismiss="modal">Simpan</button> -->
+			<button type="button" id="submit-kuisioner1" class="button button3d btn-sky">Simpan</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+	
+	<div id="modal_kuisioner2" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
+      <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Kuisioner Kepuasan Customer</h4>
+          </div>
+          <div class="modal-body pre-scrollable">
+            <form id="form-kuisioner">
+                <div class="row">
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+							<input type="hidden" id="exam_id" name="exam_id">
+                            <label>Nama Responden</label>
+							<input type="text" id="user_name" name="user_name" placeholder="-" class="form-control" value="{{ $currentUser->name }}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Nama Perusahaan</label>
+                            <input type="text" id="company_name" name="company_name" placeholder="-" class="form-control" value="{{ $currentUser->company->name }}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>No. Tlp / HP</label>
+                            <input type="text" id="company_phone" name="company_phone" placeholder="-" value="{{ $currentUser->company->phone }}" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label>Jenis Pengujian</label>
+                            <input type="text" id="exam_type" name="exam_type" placeholder="-" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Nama Perangkat</label>
+                            <input type="text" placeholder="Smartphone" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Tanggal</label>
+                            <input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo date('d-m-Y');?>" readonly required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <p>Survey ini terdiri dari dua bagian, yaitu tingkat kepentingan dan tingkat kepuasan Anda. Tingkat kepentingan menunjukan seberapa penting sebuah pernyataan bagi Anda. Sedangkan, tingkat kepuasan menunjukkan seberapa puas pengalaman Anda setelah melakukan pengujian di Infrasutructure Assurance (IAS) Divisi Digital Service (DDS) PT. Telekomuniasi Indonesia, Tbk.
+                    </p>
+                    <p>Besar pengharapan kami agar pengisian survey ini dapat dikerjakan dengan sebaik-baiknya. Atas kerja samanya, kami ucaokan terimakasih.</p>
+                    <p><strong>Berilah tanda centang untuk skala penilaian yang Anda pilih!</strong></p>
+                </div>
+                <div class="row">
+                    <table id="table_kuisioner" style="width:100%; padding: 2px;" border="1">
+                      <tr>
+                        <th rowspan="2">NO</th>
+                        <th rowspan="2">PERTANYAAN</th>
+                        <th colspan="5">TINGKAT KEPENTINGAN</th>
+                        <th colspan="5">TINGKAT KEPUASAN</th>
+                      </tr>
+                      <tr>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                      </tr>
+                      <tbody>
+                        <tr>
+                          <td>1</td>
+                          <td>Pengajuan <strong>pendaftaran</strong> pengujian dapat dengan mudah dilakukan.</td>
+                          <td>
+                            <input type="radio" name="quest1_eks" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest1_eks" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest1_eks" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest1_eks" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest1_eks" value="5" class="form-control" checked>
+                          </td>
+                          <td>
+                            <input type="radio" name="quest1_perf" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest1_perf" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest1_perf" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest1_perf" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest1_perf" value="5" class="form-control" checked>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>2</td>
+                          <td>Pelaksanaan <strong>uji fungsi</strong> sebelum barang diterima terlaksana dengan <strong>baik</strong>.</td>
+                          <td>
+                            <input type="radio" name="quest2_eks" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest2_eks" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest2_eks" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest2_eks" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest2_eks" value="5" class="form-control" checked>
+                          </td>
+                          <td>
+                            <input type="radio" name="quest2_perf" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest2_perf" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest2_perf" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest2_perf" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest2_perf" value="5" class="form-control" checked>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>3</td>
+                          <td>Biaya/<strong>tarif</strong> pengujian perangkat sudah sesuai.</td>
+                          <td>
+                            <input type="radio" name="quest3_eks" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest3_eks" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest3_eks" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest3_eks" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest3_eks" value="5" class="form-control" checked>
+                          </td>
+                          <td>
+                            <input type="radio" name="quest3_perf" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest3_perf" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest3_perf" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest3_perf" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest3_perf" value="5" class="form-control" checked>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>4</td>
+                          <td><strong>Prosedur</strong> pembayaran dilakukan dengan <strong>mudah</strong>.</td>
+                          <td>
+                            <input type="radio" name="quest4_eks" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest4_eks" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest4_eks" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest4_eks" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest4_eks" value="5" class="form-control" checked>
+                          </td>
+                          <td>
+                            <input type="radio" name="quest4_perf" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest4_perf" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest4_perf" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest4_perf" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest4_perf" value="5" class="form-control" checked>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>5</td>
+                          <td>Perangkat uji <strong>diterima</strong> dengan <strong>baik</strong> oleh petugas.</td>
+                          <td>
+                            <input type="radio" name="quest5_eks" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest5_eks" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest5_eks" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest5_eks" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest5_eks" value="5" class="form-control" checked>
+                          </td>
+                          <td>
+                            <input type="radio" name="quest5_perf" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest5_perf" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest5_perf" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest5_perf" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest5_perf" value="5" class="form-control" checked>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>6</td>
+                          <td><strong>Pelaksanaan</strong> pengujian sesuai dengan <strong>jadwal</strong> yang sudah disepakati.</td>
+                          <td>
+                            <input type="radio" name="quest7_eks" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest7_eks" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest7_eks" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest7_eks" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest7_eks" value="5" class="form-control" checked>
+                          </td>
+                          <td>
+                            <input type="radio" name="quest7_perf" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest7_perf" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest7_perf" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest7_perf" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest7_perf" value="5" class="form-control" checked>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>7</td>
+                          <td>Perangkat uji setelah pengujian <strong>selesai</strong> ditangani dengan <strong>baik</strong>.</td>
+                          <td>
+                            <input type="radio" name="quest8_eks" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest8_eks" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest8_eks" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest8_eks" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest8_eks" value="5" class="form-control" checked>
+                          </td>
+                          <td>
+                            <input type="radio" name="quest8_perf" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest8_perf" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest8_perf" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest8_perf" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest8_perf" value="5" class="form-control" checked>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>8</td>
+                          <td><strong>Lama pengujian</strong> diselesaikan dengan informasi/kesepakatan yang telah ditentukan.</td>
+                          <td>
+                            <input type="radio" name="quest9_eks" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest9_eks" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest9_eks" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest9_eks" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest9_eks" value="5" class="form-control" checked>
+                          </td>
+                          <td>
+                            <input type="radio" name="quest9_perf" value="1"  class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest9_perf" value="2"  class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest9_perf" value="3"  class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest9_perf" value="4"  class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest9_perf" value="5"  class="form-control" checked>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>9</td>
+                          <td><strong>Komunikasi</strong> antara test engineer Lab. QA DDS Telkom dengan test engineer kami terjalin dengan baik untuk kelancaran pengujian.</td>
+                          <td>
+                            <input type="radio" name="quest10_eks" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest10_eks" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest10_eks" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest10_eks" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest10_eks" value="5" class="form-control" checked>
+                          </td>
+                          <td>
+                            <input type="radio" name="quest10_perf" value="1"  class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest10_perf" value="2"  class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest10_perf" value="3"  class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest10_perf" value="4"  class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest10_perf" value="5"  class="form-control" checked>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>10</td>
+                          <td><strong>Alat ukur</strong> yang digunakan sudah terjamin kualitas dan akurasinya.</td>
+                          <td>
+                            <input type="radio" name="quest11_eks" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest11_eks" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest11_eks" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest11_eks" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest11_eks" value="5" class="form-control" checked>
+                          </td>
+                          <td>
+                            <input type="radio" name="quest11_perf" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest11_perf" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest11_perf" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest11_perf" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest11_perf" value="5" class="form-control" checked>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>11</td>
+                          <td><strong>Ruang</strong> laboratorium terkondisi dengan baik.</td>
+                          <td>
+                            <input type="radio" name="quest12_eks" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest12_eks" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest12_eks" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest12_eks" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest12_eks" value="5" class="form-control" checked>
+                          </td>
+                          <td>
+                            <input type="radio" name="quest12_perf" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest12_perf" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest12_perf" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest12_perf" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest12_perf" value="5" class="form-control" checked>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>12</td>
+                          <td><strong>Kapabilitas dan pengalaman</strong> test engineer Lab. QA DDS Telkom sudah sesuai dengan kompetensinya.</td>
+                          <td>
+                            <input type="radio" name="quest13_eks" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest13_eks" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest13_eks" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest13_eks" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest13_eks" value="5" class="form-control" checked>
+                          </td>
+                          <td>
+                            <input type="radio" name="quest13_perf" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest13_perf" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest13_perf" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest13_perf" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest13_perf" value="5" class="form-control" checked>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>13</td>
+                          <td>Test engineer Lab. QA DDS Telkom memiliki <strong>pemahaman</strong> terhadap materi item uji.</td>
+                          <td>
+                            <input type="radio" name="quest14_eks" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest14_eks" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest14_eks" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest14_eks" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest14_eks" value="5" class="form-control" checked>
+                          </td>
+                          <td>
+                            <input type="radio" name="quest14_perf" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest14_perf" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest14_perf" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest14_perf" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest14_perf" value="5" class="form-control" checked>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>14</td>
+                          <td>Petugas memberikan <strong>pelayanan</strong> dengan <strong>ramah</strong> dan profesional.</td>
+                          <td>
+                            <input type="radio" name="quest15_eks" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest15_eks" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest15_eks" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest15_eks" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest15_eks" value="5" class="form-control" checked>
+                          </td>
+                          <td>
+                            <input type="radio" name="quest15_perf" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest15_perf" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest15_perf" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest15_perf" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest15_perf" value="5" class="form-control" checked>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>15</td>
+                          <td>Petugas memberikan <strong>informasi</strong> tentang <strong>tarif</strong> yang jelas kepada kastamer.</td>
+                          <td>
+                            <input type="radio" name="quest16_eks" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest16_eks" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest16_eks" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest16_eks" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest16_eks" value="5" class="form-control" checked>
+                          </td>
+                          <td>
+                            <input type="radio" name="quest16_perf" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest16_perf" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest16_perf" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest16_perf" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest16_perf" value="5" class="form-control" checked>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>16</td>
+                          <td>Petugas memberikan <strong>informasi</strong> tentang <strong>prosedur</strong> pengujian dengan jelas.</td>
+                          <td>
+                            <input type="radio" name="quest17_eks" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest17_eks" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest17_eks" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest17_eks" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest17_eks" value="5" class="form-control" checked>
+                          </td>
+                          <td>
+                            <input type="radio" name="quest17_perf" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest17_perf" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest17_perf" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest17_perf" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest17_perf" value="5" class="form-control" checked>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>17</td>
+                          <td>Petugas selalu <strong>tanggap</strong> dengan apa yang diinginkan kastamer.</td>
+                          <td>
+                            <input type="radio" name="quest18_eks" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest18_eks" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest18_eks" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest18_eks" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest18_eks" value="5" class="form-control" checked>
+                          </td>
+                          <td>
+                            <input type="radio" name="quest18_perf" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest18_perf" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest18_perf" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest18_perf" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest18_perf" value="5" class="form-control" checked>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>18</td>
+                          <td>Petugas memberikan <strong>perlakuan</strong> yang sama kepada semua kastamer.</td>
+                          <td>
+                            <input type="radio" name="quest19_eks" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest19_eks" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest19_eks" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest19_eks" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest19_eks" value="5" class="form-control" checked>
+                          </td>
+                          <td>
+                            <input type="radio" name="quest19_perf" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest19_perf" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest19_perf" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest19_perf" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest19_perf" value="5" class="form-control" checked>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>19</td>
+                          <td>Petugas memberikan <strong>laporan</strong> hasil pengujian dengan cepat dan tepat.</td>
+                          <td>
+                            <input type="radio" name="quest20_eks" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest20_eks" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest20_eks" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest20_eks" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest20_eks" value="5" class="form-control" checked>
+                          </td>
+                          <td>
+                            <input type="radio" name="quest20_perf" value="1" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest20_perf" value="2" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest20_perf" value="3" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest20_perf" value="4" class="form-control">
+                          </td>
+                          <td>
+                            <input type="radio" name="quest20_perf" value="5" class="form-control" checked>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <p>Kritik dan Saran Anda untuk meningkatkan kualitas pelayanan kami:
+                    </p>
+                    <div class="form-group">
+                      <textarea name="quest6" class="form-control" placeholder="Komentar disini"></textarea>
+                    </div>
                 </div>
             </form>
           </div>
@@ -1681,15 +2416,15 @@
 				// document.getElementById("overlay").style.display="none";
 				console.log(response);
 				if(response=='0'){
-					$('#modal_kuisioner').modal('show');
-					$('#modal_kuisioner').on('shown.bs.modal', function() {
+					$('#modal_kuisioner2').modal('show');
+					$('#modal_kuisioner2').on('shown.bs.modal', function() {
 						$("#exam_type").val(d);
 						$("#exam_id").val(e);
 						$("#tanggal").focus();
 					});
 				}else if(response=='' || response==undefined || response==undefined){
 					$("#my_exam_id").val(e);
-					$('#modal_kuisioner').modal('hide');
+					$('#modal_kuisioner2').modal('hide');
 					$('#modal_complain').modal('show');	
 					$('#modal_complain').on('shown.bs.modal', function() {
 						$("#tanggal_complaint").focus();
@@ -1718,7 +2453,7 @@
 				// document.getElementById("overlay").style.display="none";
 				console.log(response);
 				// if(response==1){
-					$('#modal_kuisioner').modal('hide');
+					$('#modal_kuisioner2').modal('hide');
 					$('#modal_complain').modal('show');	
 					$('#modal_complain').on('shown.bs.modal', function() {
 						$("#tanggal_complaint").focus();
