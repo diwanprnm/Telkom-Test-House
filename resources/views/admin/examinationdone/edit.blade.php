@@ -990,7 +990,8 @@
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
-				@if($data->examination_type_id !='2' && $data->examination_type_id !='3')
+				
+				@if($data->examination_type_id !='2' && $data->examination_type_id !='3' && $data->examination_type_id !='4')
 					{!! Form::open() !!}
 						<fieldset>
 							<legend>
@@ -1095,6 +1096,17 @@
 										</div>
 									</div><!-- /.modal-dialog -->
 								</div><!-- /.modal -->
+							</div>
+						</fieldset>
+					{!! Form::close() !!}
+					
+					{!! Form::open() !!}
+						<fieldset>
+							<legend>
+								Feedback
+							</legend>
+							<div class="form-group">
+								<a href="{{URL::to('/cetakKepuasanKonsumen')}}" target="_blank"> Download Feedback</a>
 							</div>
 						</fieldset>
 					{!! Form::close() !!}
@@ -1225,7 +1237,6 @@
 							</div>
 						</fieldset>
 					{!! Form::close() !!}
-				@endif
 					{!! Form::open() !!}
 						<fieldset>
 							<legend>
@@ -1249,6 +1260,7 @@
 							</div>
 						</fieldset>
 					{!! Form::close() !!}
+				@endif
 			</div>
 		</div>
 		<!-- end: RESPONSIVE TABLE -->
