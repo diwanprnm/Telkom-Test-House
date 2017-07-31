@@ -75,7 +75,6 @@ class ExaminationController extends Controller
                                 ->with('examinationType')
                                 ->with('media')
                                 ->with('device');
-			$query->where('location', '!=', '1');
 			$query->where(function($qry){
 				$qry->where(function($q){
 					return $q->where('registration_status', '!=', '1')
@@ -91,6 +90,7 @@ class ExaminationController extends Controller
 						;
 					})
 					->where('examination_type_id', '=', '1')
+					->where('location', '!=', '1')
 				->orWhere(function($q){
 					return $q->where('registration_status', '!=', '1')
 						->orWhere('function_status', '!=', '1')
@@ -102,6 +102,7 @@ class ExaminationController extends Controller
 						->orWhere('resume_status', '!=', '1')
 						;
 					})->where('examination_type_id', '!=', '1')
+					->where('location', '!=', '1')
 					;
 			});
 			if ($search != null){
