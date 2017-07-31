@@ -56,7 +56,7 @@
 								<?php  
 									if($stel->manual_attachment !="" && $stel->payment_status == 1){
 								?>
-										<td colspan="6" align="center"><a target="_blank" href="{{ URL::to('/admin/downloadstelwatermark/'.$stel->manual_id) }}">{{ trans('translate.download') }} File</a></td>
+										<td colspan="6" align="center"><a target="_blank" href="{{ URL::to('/client/downloadstelwatermark/'.$stel->manual_id) }}">{{ trans('translate.download') }} File</a></td>
 								<?php }
 								else if($stel->attachment !="" && $stel->payment_status == 1){
 								?>
