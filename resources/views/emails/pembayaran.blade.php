@@ -53,7 +53,7 @@
 	<p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
 		Terima kasih telah melakukan pembayaran pengujian sesuai dengan SPB (Surat Pemberitahuan Biaya). Proses penerbitan SPK (Surat Perintah Kerja) untuk test engineer akan segera kami proses.
 		<br>
-		Permohonan kuitansi atau faktur pajak dapat dialamatkan ke urelddstelkom@gmail.com atau melalui telp ke 022 - 4571145.
+		Terlampir kami sampaikan kuitansi atau faktur pajak bukti pembayaran pengujian.
 		<br><br>
 		Salam hangat,
 		<br>

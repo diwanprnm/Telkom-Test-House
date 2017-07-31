@@ -28,6 +28,33 @@
 			<div class="col-md-12">
 				{!! Form::open(array('url' => 'admin/sales/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data')) !!}
 					{!! csrf_field() !!}
+					<div class="table-responsive">
+						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+							<thead>
+								<tr>
+									<th class="center">No</th> 
+									<th class="center">Document Name</th> 
+									<th class="center">Document Code</th> 
+									<th class="center">Attachment</th> 
+									<th class="center">Upload File</th> 
+								</tr>
+							</thead>
+							<tbody>
+								@foreach($dataStel as $keys => $item)
+									<tr>
+										<td class="center">{{++$keys}}</td> 
+										<td class="center">{{ $item->name }}</td>
+										<td class="center">{{ $item->code }}</td>
+										<td class="center"><a href="{{ URL::to('/admin/downloadstelwatermark/'.$item->id) }}" target="_blank">{{ $item->attachment }}</a></td>
+										<td class="center">
+											<input type="file" name="stel_file[]" class="form-control" accept="application/pdf">
+											<input type="hidden" name="stels_sales_detail_id[]" value="{{ $item->id }}">
+										</td>
+									</tr>
+								@endforeach
+							</tbody>
+						</table>
+					</div>
     				<fieldset>
 						<legend>
 							Update Status Sales
@@ -37,9 +64,9 @@
 								<div class="form-group">
 									 
 									@if($data->attachment != '')
-										<a href="{{ URL::to('/admin/downloadbukti/'.$data->id) }}" target="_blank">Lihat File</a>
+										<a href="{{ URL::to('/admin/downloadbukti/'.$data->id) }}" target="_blank">Lihat Bukti Pembayaran</a>
 									@else
-										File Not Found
+										Belum ada Bukti Pembayaran
 									@endif
 								</div>
 							</div>

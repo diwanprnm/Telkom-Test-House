@@ -65,7 +65,8 @@ class ExaminationDoneController extends Controller
                                 ->with('company')
                                 ->with('examinationType')
                                 ->with('media')
-                                ->with('device');
+                                ->with('device')
+								;
 			$query->where(function($qry){
 				$qry->where(function($q){
 					return $q->where('examination_type_id', '=', '1')
@@ -209,6 +210,7 @@ class ExaminationDoneController extends Controller
                             ->with('examinationLab')
                             ->with('device')
                             ->with('media')
+							->with('examinationHistory')
                             ->first();
 
         $labs = ExaminationLab::all();

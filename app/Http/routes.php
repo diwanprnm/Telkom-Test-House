@@ -2172,7 +2172,7 @@ Route::get('cetakSPB', function(Illuminate\Http\Request $request){
 		$pdf->SetX(37.00125);
 		$pdf->Cell(0,5,'memudahkan penerbitan faktur pajak).',0,0,'L');
 		$pdf->Ln();
-	$pdf->Row(array('','c. ','Untuk memudahkan proses Administrasi keuangan dan penerbitan faktur pajak, mohon dapat dikirimkan'));	
+	$pdf->Row(array('','c. ','Untuk memudahkan proses Administrasi keuangan dan penerbitan faktur pajak, mohon dapat diunggah'));	
 		$pdf->SetFont('helvetica','B',10);
 		$pdf->SetXY(54.00125,$pdf->GetY()-5);
 		$pdf->Cell(0,5,'copy Bukti Transfer dari Bank yang mencantumkan nomor SPB yang dibayar',0,0,'L');
@@ -2897,6 +2897,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::get('/analytic', 'AnalyticController@index');
 	Route::resource('/role', 'RoleController');
 	Route::get('/downloadbukti/{id}', 'SalesController@viewMedia');
+	Route::get('/downloadstelwatermark/{id}', 'SalesController@viewWatermark');
 	// Route::get('/analytic', function(){
 		// $visitor = Tracker::currentSession();
 		// echo"<pre>";print_r($visitor);
@@ -2951,6 +2952,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::get('/kuitansi/{id}/detail', 'IncomeController@detail');
 	Route::get('/downloadkuitansistel/{id}', 'SalesController@downloadkuitansistel');
 
+	Route::resource('/spk', 'SPKController');
 });
 	Route::get('/adm_dashboard_autocomplete/{query}', 'DashboardController@autocomplete')->name('adm_dashboard_autocomplete');
 	
@@ -3057,3 +3059,132 @@ Route::post('/insertKuisioner', 'PengujianController@insertKuisioner');
 Route::post('/insertComplaint', 'PengujianController@insertComplaint');
 
 Route::get('/client/downloadkuitansistel/{id}', 'ProductsController@downloadkuitansistel');
+
+Route::get('/cetakFormBarang/{id}', 'ExaminationController@cetakFormBarang');
+Route::get('/cetakBuktiPenerimaanPerangkat/{kode_barang}/{company_name}/{company_address}/{company_phone}/{company_fax}/{device_name}/{device_mark}/{device_manufactured_by}/{device_model}/{device_serial_number}/{exam_type}/{exam_type_desc}', 
+array('as' => 'cetakBuktiPenerimaanPerangkat', function(
+	Illuminate\Http\Request $request, $kode_barang = null, $company_name = null, $company_address = null, $company_phone = null, $company_fax = null, 
+	$device_name = null, $device_mark = null, $device_manufactured_by = null, $device_model = null , $device_serial_number = null, 
+	$exam_type = null, $exam_type_desc = null) {
+		$equipment = $request->session()->pull('key_exam_for_equipment');
+		$pdf = new PDF_MC_Table(); 
+		$pdf->judul_kop('Bukti Penerimaan & Pengeluaran Perangkat Uji','Nomor: '.urldecode($kode_barang));
+		$pdf->AliasNbPages();
+		$pdf->AddPage();
+		 
+		$y = $pdf->getY();
+	 
+		$pdf->SetFont('helvetica','',10);
+		$pdf->setXY(55.00125,$y + 3);
+		$pdf->SetFont('','U');
+		$pdf->Cell(10,5,"Nama Perangkat",0,0,'L');
+		$pdf->SetWidths(array(0.00125,80,85,160));
+		$pdf->Row(array("","",":",urldecode($device_name))); 
+		/*Pemilik Perangkat*/
+		$y = $pdf->getY(); 
+		$pdf->SetFont('helvetica','',10);
+		$pdf->setXY(55.00125,$y + 1);
+		$pdf->SetFont('','U');
+		$pdf->Cell(10,5,"Pemilik Perangkat",0,0,'L');
+		$pdf->SetWidths(array(0.00125,80,85,160));
+		$pdf->Row(array("","",":",urldecode($company_name)));
+		/*Alamat*/ 
+		$y = $pdf->getY(); 
+		$pdf->SetFont('helvetica','',10);
+		$pdf->setXY(55.00125,$y + 1);
+		$pdf->SetFont('','U');
+		$pdf->Cell(10,5,"Alamat",0,0,'L');
+		$pdf->SetWidths(array(0.00125,80,85,160));
+		$pdf->Row(array("","",":",urldecode($company_address)));
+		
+		/*Phone & Fax*/
+		$y = $pdf->getY(); 
+		$pdf->SetFont('helvetica','',10);
+		$pdf->setXY(95.00125,$y + 1);
+		$pdf->SetFont('','U');
+		$pdf->Cell(10,5,"Phone & Fax",0,0,'L');
+		$pdf->SetWidths(array(0.00125,110,115,100));
+		$pdf->Row(array("","",":",urldecode($company_phone).'/'.urldecode($company_fax))); 
+
+		/*Jenis Pengujian*/ 
+		$y = $pdf->getY(); 
+		$pdf->SetFont('helvetica','',10);
+		$pdf->setXY(55.00125,$y + 1);
+		$pdf->SetFont('','U');
+		$pdf->Cell(10,5,"Jenis Pengujian",0,0,'L');
+		$pdf->SetWidths(array(0.00125,80,85,160));
+		$pdf->Row(array("","",":",urldecode($exam_type).'/'.urldecode($exam_type_desc))); 
+	 	
+
+	 	//LIST Perangkat
+		$pdf->Ln(2); 
+		$pdf->SetWidths(array(0.00125,20,30,30,50,60));
+		$pdf->SetAligns(array('L','C','C','C','C','C')); 
+		$pdf->SetFont('helvetica','B',10);
+ 		$pdf->RowRect(array('','No','Jumlah','Satuan','Uraian Perangkat','Keterangan'));
+		$pdf->SetFont('helvetica','',10);
+		if(count($equipment)>0){
+			$no = 1;
+			foreach($equipment as $data){
+				$pdf->RowRect(array('',$no,$data->qty,$data->unit,$data->description,$data->remarks));
+				$no++;
+			}
+			for ($i=count($equipment); $i <24 ; $i++) { 
+				$pdf->RowRect(array('','','','','',''));
+			}
+		}else{
+			for ($i=0; $i <24 ; $i++) { 
+				$pdf->RowRect(array('','','','','',''));
+			}	  			
+		}
+
+		$pdf->Ln(2);  
+	 	$pdf->SetFont('helvetica','',10); 
+	 	$pdf->SetFillColor(976,245,458);
+		$pdf->setX(10.00125);
+		$pdf->Cell(80, 4, 'Penerimaan Perangkat', 1, 0, 'C',true); 
+		$pdf->setX(120);
+		$pdf->Cell(80, 4, 'Pengambilan Perangkat', 1, 0, 'C',true); 
+
+		//TTD PENERIMAAN PERANGKAT
+
+		$pdf->Ln(6); 
+	 	$pdf->SetFont('helvetica','',10); 
+		$pdf->setX(10.00125);
+		$pdf->Cell(40, 4, 'Pemilik', 1, 0, 'C');
+		$pdf->Cell(40, 4, 'IDeC', 1, 0, 'C');
+		 
+		$pdf->setX(10.00125);
+		$pdf->drawTextBox('(...............................)', 40, 25, 'C', 'B', 1);
+		$pdf->setXY(50,$pdf->getY()-25);
+		$pdf->drawTextBox('(...............................)', 40, 25, 'C', 'B', 1); 
+		 
+		//TTD PENGAMBILAN PERANGKAT 
+	  	$pdf->SetFont('helvetica','',10); 
+	 	$pdf->setXY(120,$pdf->getY()-25);
+		$pdf->Cell(40, 4, 'Pemilik', 1, 0, 'C');
+		$pdf->Cell(40, 4, 'IDeC', 1, 0, 'C'); 
+		$pdf->setX(120);
+		$pdf->drawTextBox('(...............................)', 40, 25, 'C', 'B', 1);
+		$pdf->setXY(160,$pdf->getY() -25);
+		$pdf->drawTextBox('(...............................)', 40, 25, 'C', 'B', 1);  
+
+		//TANGGAL PENERIMAAN & PENGEMBALIAN
+		$pdf->setXY(13,$pdf->getY() - 22);
+		$pdf->Cell(18,10,'TGL ..................',0,0,'L');  
+		$pdf->setX(53);
+		$pdf->Cell(18,10,'TGL ..................',0,0,'L'); 
+		$pdf->setX(123);
+		$pdf->Cell(18,10,'TGL ..................',0,0,'L'); 
+		$pdf->setX(163);
+		$pdf->Cell(18,10,'TGL ..................',0,0,'L'); 
+
+
+		$y = $pdf->getY();  
+		$pdf->setXY(13,$pdf->getY() + 50);
+		$pdf->Cell(18,10,'Dokumen ini tidak terkendali apabila diunduh',0,0,'L'); 
+		$pdf->Output();
+		exit;
+		
+	}
+));

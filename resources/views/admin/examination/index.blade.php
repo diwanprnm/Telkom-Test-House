@@ -433,7 +433,7 @@
 					                        <div class=" pull-right">
 					                        	<a class="btn btn-wide btn-primary btn-margin" href="{{URL::to('admin/examination/'.$item->id.'/edit')}}">Change Status</a>
 												@if($is_super == '1')
-													<a class="btn btn-wide btn-primary pull-right" style="margin-left:10px" href="{{URL::to('admin/examination/harddelete/'.$item->id)}}">Delete</a>
+													<a class="btn btn-wide btn-primary pull-right" style="margin-left:10px" href="{{URL::to('admin/examination/harddelete/'.$item->id)}}" onclick="return confirm('Are you sure want to delete ?')">Delete</a>
 												@endif
 					                        	<a class="btn btn-wide btn-primary pull-right" style="margin-left:10px" href="{{URL::to('admin/examination/'.$item->id)}}">Detail</a>
 					                        </div>

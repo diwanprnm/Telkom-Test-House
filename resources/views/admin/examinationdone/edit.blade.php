@@ -1226,6 +1226,20 @@
 						</fieldset>
 					{!! Form::close() !!}
 				@endif
+					{!! Form::open() !!}
+						<fieldset>
+							<legend>
+								Histori Download Sertifikat
+							</legend>
+							<div class="row">
+								<div class="col-md-12">
+									<div class="form-group">
+										Sertifikat Sudah terdownload sebanyak {{ count($data->examinationHistory) }} kali
+									</div>
+								</div>
+							</div>
+						</fieldset>
+					{!! Form::close() !!}
 			</div>
 		</div>
 		<!-- end: RESPONSIVE TABLE -->
