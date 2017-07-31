@@ -1261,7 +1261,7 @@
 									</label>
 									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
 									@if($exam_schedule->code != 'MSTD0059AERR')
-										<input type="text" name="resume_date" class="form-control" value="{{$exam_schedule->data[0]->finishReportDt}}" required/>
+										<input type="text" name="resume_date" class="form-control" value="{{$exam_schedule->data[0]->reportClosingDt}}" required/>
 									@else
 										<input type="text" name="resume_date" class="form-control" value="{{ $data->resume_date }}" required/>
 									@endif
