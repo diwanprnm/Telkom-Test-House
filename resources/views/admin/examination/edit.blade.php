@@ -1124,17 +1124,6 @@
 								</div>
 							</div>
 						@endif
-						@if($exam_approve_date->code != 'MSTD0059AERR')
-							@foreach($exam_approve_date->data as $item)
-							<div class="col-md-12">
-								<div class="form-group">
-									<label>
-										{{ $item->createdBy }} {{ $item->action }} pada {{ $item->createdDt }}
-									</label>
-								</div>
-							</div>
-							@endforeach
-						@endif
 							<div class="col-md-12">
 								<div class="form-group">
 									<label for="form-field-select-2">
@@ -1237,10 +1226,10 @@
 												: Tersedia
 											</label>
 											<div class="form-group">
-												<a href="http://ptbsp.ddns.net:13280/RevitalisasiOTR/generateQaTestReport?no=001/TRA/L/CAL/2017&isCover=true&isIsi=false"> Download Sampul/Judul Laporan </a>
+												<a href="http://ptbsp.ddns.net:13280/RevitalisasiOTR/generateQaTestReport?noRep=001/TRA/L/CAL/2017&isCover=true&isIsi=false"> Download Sampul/Judul Laporan </a>
 											</div>
 											<div class="form-group">
-												<a href="http://ptbsp.ddns.net:13280/RevitalisasiOTR/generateQaTestReport?no=001/TRA/L/CAL/2017&isCover=false&isIsi=true"> Download Isi Laporan </a>
+												<a href="http://ptbsp.ddns.net:13280/RevitalisasiOTR/generateQaTestReport?noRep=001/TRA/L/CAL/2017&isCover=false&isIsi=true"> Download Isi Laporan </a>
 											</div>
 											@else
 											<label>
