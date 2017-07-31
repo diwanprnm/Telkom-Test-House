@@ -87,10 +87,10 @@ class ExaminationController extends Controller
 						->orWhere('resume_status', '!=', '1')
 						->orWhere('qa_status', '!=', '1')
 						->orWhere('certificate_status', '!=', '1')
+						->orWhere('location', '!=', '1')
 						;
 					})
 					->where('examination_type_id', '=', '1')
-					->where('location', '!=', '1')
 				->orWhere(function($q){
 					return $q->where('registration_status', '!=', '1')
 						->orWhere('function_status', '!=', '1')
@@ -100,9 +100,9 @@ class ExaminationController extends Controller
 						->orWhere('spk_status', '!=', '1')
 						->orWhere('examination_status', '!=', '1')
 						->orWhere('resume_status', '!=', '1')
+						->orWhere('location', '!=', '1')
 						;
 					})->where('examination_type_id', '!=', '1')
-					->where('location', '!=', '1')
 					;
 			});
 			if ($search != null){
