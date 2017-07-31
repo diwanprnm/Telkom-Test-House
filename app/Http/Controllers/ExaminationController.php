@@ -1660,12 +1660,12 @@ class ExaminationController extends Controller
 					->first()
 		;
 		if($exam->examination_type_id == 2){
-			$query_price = "SELECT ta_price as price FROM examination_charges WHERE stel = '".$exam->device->test_reference."'";			
+			$query_price = "SELECT ta_price as price FROM examination_charges WHERE stel LIKE '%".$exam->device->test_reference."%'";
 		}
 		else if($exam->examination_type_id == 3){
-			$query_price = "SELECT vt_price as price FROM examination_charges WHERE stel = '".$exam->device->test_reference."'";			
+			$query_price = "SELECT vt_price as price FROM examination_charges WHERE stel LIKE '%".$exam->device->test_reference."%'";
 		}else{
-			$query_price = "SELECT price FROM examination_charges WHERE stel = '".$exam->device->test_reference."'";			
+			$query_price = "SELECT price FROM examination_charges WHERE stel LIKE '%".$exam->device->test_reference."%'";
 		}
 		$price = DB::select($query_price);
 		if(count($price) == 0){
