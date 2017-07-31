@@ -370,646 +370,646 @@
                           <td>1</td>
                           <td>Pengajuan <strong>pendaftaran</strong> pengujian dapat dengan mudah dilakukan.</td>
                           <td>
-                            <input type="checkbox" name="tp1" class="form-control">
+                            <input type="radio" name="tp1" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp2" class="form-control">
+                            <input type="radio" name="tp1" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp3" class="form-control">
+                            <input type="radio" name="tp1" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp4" class="form-control">
+                            <input type="radio" name="tp1" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp5" class="form-control">
+                            <input type="radio" name="tp1" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts1" class="form-control">
+                            <input type="radio" name="ts1" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts2" class="form-control">
+                            <input type="radio" name="ts1" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts3" class="form-control">
+                            <input type="radio" name="ts1" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts4" class="form-control">
+                            <input type="radio" name="ts1" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts5" class="form-control">
+                            <input type="radio" name="ts1" class="form-control">
                           </td>
                         </tr>
                         <tr>
                           <td>2</td>
                           <td>Pelaksanaan <strong>uji fungsi</strong> sebelum barang diterima terlaksana dengan <strong>baik</strong>.</td>
                           <td>
-                            <input type="checkbox" name="tp1" class="form-control">
+                            <input type="radio" name="tp2" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp2" class="form-control">
+                            <input type="radio" name="tp2" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp3" class="form-control">
+                            <input type="radio" name="tp2" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp4" class="form-control">
+                            <input type="radio" name="tp2" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp5" class="form-control">
+                            <input type="radio" name="tp2" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts1" class="form-control">
+                            <input type="radio" name="ts2" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts2" class="form-control">
+                            <input type="radio" name="ts2" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts3" class="form-control">
+                            <input type="radio" name="ts2" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts4" class="form-control">
+                            <input type="radio" name="ts2" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts5" class="form-control">
+                            <input type="radio" name="ts2" class="form-control">
                           </td>
                         </tr>
                         <tr>
                           <td>3</td>
                           <td>Biaya/<strong>tarif</strong> pengujian perangkat sudah sesuai.</td>
                           <td>
-                            <input type="checkbox" name="tp1" class="form-control">
+                            <input type="radio" name="tp3" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp2" class="form-control">
+                            <input type="radio" name="tp3" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp3" class="form-control">
+                            <input type="radio" name="tp3" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp4" class="form-control">
+                            <input type="radio" name="tp3" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp5" class="form-control">
+                            <input type="radio" name="tp3" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts1" class="form-control">
+                            <input type="radio" name="ts3" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts2" class="form-control">
+                            <input type="radio" name="ts3" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts3" class="form-control">
+                            <input type="radio" name="ts3" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts4" class="form-control">
+                            <input type="radio" name="ts3" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts5" class="form-control">
+                            <input type="radio" name="ts3" class="form-control">
                           </td>
                         </tr>
                         <tr>
                           <td>4</td>
                           <td><strong>Prosedur</strong> pembayaran dilakukan dengan <strong>mudah</strong>.</td>
                           <td>
-                            <input type="checkbox" name="tp1" class="form-control">
+                            <input type="radio" name="tp4" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp2" class="form-control">
+                            <input type="radio" name="tp4" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp3" class="form-control">
+                            <input type="radio" name="tp4" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp4" class="form-control">
+                            <input type="radio" name="tp4" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp5" class="form-control">
+                            <input type="radio" name="tp4" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts1" class="form-control">
+                            <input type="radio" name="ts4" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts2" class="form-control">
+                            <input type="radio" name="ts4" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts3" class="form-control">
+                            <input type="radio" name="ts4" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts4" class="form-control">
+                            <input type="radio" name="ts4" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts5" class="form-control">
+                            <input type="radio" name="ts4" class="form-control">
                           </td>
                         </tr>
                         <tr>
                           <td>5</td>
                           <td>Perangkat uji <strong>diterima</strong> dengan <strong>baik</strong> oleh petugas.</td>
                           <td>
-                            <input type="checkbox" name="tp1" class="form-control">
+                            <input type="radio" name="tp5" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp2" class="form-control">
+                            <input type="radio" name="tp5" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp3" class="form-control">
+                            <input type="radio" name="tp5" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp4" class="form-control">
+                            <input type="radio" name="tp5" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp5" class="form-control">
+                            <input type="radio" name="tp5" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts1" class="form-control">
+                            <input type="radio" name="ts5" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts2" class="form-control">
+                            <input type="radio" name="ts5" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts3" class="form-control">
+                            <input type="radio" name="ts5" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts4" class="form-control">
+                            <input type="radio" name="ts5" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts5" class="form-control">
+                            <input type="radio" name="ts5" class="form-control">
                           </td>
                         </tr>
                         <tr>
                           <td>6</td>
                           <td><strong>Pelaksanaan</strong> pengujian sesuai dengan <strong>jadwal</strong> yang sudah disepakati.</td>
                           <td>
-                            <input type="checkbox" name="tp1" class="form-control">
+                            <input type="radio" name="tp6" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp2" class="form-control">
+                            <input type="radio" name="tp6" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp3" class="form-control">
+                            <input type="radio" name="tp6" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp4" class="form-control">
+                            <input type="radio" name="tp6" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp5" class="form-control">
+                            <input type="radio" name="tp6" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts1" class="form-control">
+                            <input type="radio" name="ts6" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts2" class="form-control">
+                            <input type="radio" name="ts6" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts3" class="form-control">
+                            <input type="radio" name="ts6" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts4" class="form-control">
+                            <input type="radio" name="ts6" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts5" class="form-control">
+                            <input type="radio" name="ts6" class="form-control">
                           </td>
                         </tr>
                         <tr>
                           <td>7</td>
                           <td>Perangkat uji setelah pengujian <strong>selesai</strong> ditangani dengan <strong>baik</strong>.</td>
                           <td>
-                            <input type="checkbox" name="tp1" class="form-control">
+                            <input type="radio" name="tp7" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp2" class="form-control">
+                            <input type="radio" name="tp7" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp3" class="form-control">
+                            <input type="radio" name="tp7" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp4" class="form-control">
+                            <input type="radio" name="tp7 class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp5" class="form-control">
+                            <input type="radio" name="tp7" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts1" class="form-control">
+                            <input type="radio" name="ts7" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts2" class="form-control">
+                            <input type="radio" name="ts7" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts3" class="form-control">
+                            <input type="radio" name="ts7" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts4" class="form-control">
+                            <input type="radio" name="ts7" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts5" class="form-control">
+                            <input type="radio" name="ts7" class="form-control">
                           </td>
                         </tr>
                         <tr>
                           <td>8</td>
                           <td><strong>Lama pengujian</strong> diselesaikan dengan informasi/kesepakatan yang telah ditentukan.</td>
                           <td>
-                            <input type="checkbox" name="tp1" class="form-control">
+                            <input type="radio" name="tp8" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp2" class="form-control">
+                            <input type="radio" name="tp8" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp3" class="form-control">
+                            <input type="radio" name="tp8" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp4" class="form-control">
+                            <input type="radio" name="tp8" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp5" class="form-control">
+                            <input type="radio" name="tp8" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts1" class="form-control">
+                            <input type="radio" name="ts8" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts2" class="form-control">
+                            <input type="radio" name="ts8" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts3" class="form-control">
+                            <input type="radio" name="ts8" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts4" class="form-control">
+                            <input type="radio" name="ts8" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts5" class="form-control">
+                            <input type="radio" name="ts8" class="form-control">
                           </td>
                         </tr>
                         <tr>
                           <td>9</td>
                           <td><strong>Komunikasi</strong> antara test engineer Lab. QA DDS Telkom dengan test engineer kami terjalin dengan baik untuk kelancaran pengujian.</td>
                           <td>
-                            <input type="checkbox" name="tp1" class="form-control">
+                            <input type="radio" name="tp9" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp2" class="form-control">
+                            <input type="radio" name="tp9" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp3" class="form-control">
+                            <input type="radio" name="tp9" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp4" class="form-control">
+                            <input type="radio" name="tp9" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp5" class="form-control">
+                            <input type="radio" name="tp9" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts1" class="form-control">
+                            <input type="radio" name="ts9" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts2" class="form-control">
+                            <input type="radio" name="ts9" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts3" class="form-control">
+                            <input type="radio" name="ts9" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts4" class="form-control">
+                            <input type="radio" name="ts9" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts5" class="form-control">
+                            <input type="radio" name="ts9" class="form-control">
                           </td>
                         </tr>
                         <tr>
                           <td>10</td>
                           <td><strong>Alat ukur</strong> yang digunakan sudah terjamin kualitas dan akurasinya.</td>
                           <td>
-                            <input type="checkbox" name="tp1" class="form-control">
+                            <input type="radio" name="tp10" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp2" class="form-control">
+                            <input type="radio" name="tp10" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp3" class="form-control">
+                            <input type="radio" name="tp10" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp4" class="form-control">
+                            <input type="radio" name="tp10" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp5" class="form-control">
+                            <input type="radio" name="tp10" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts1" class="form-control">
+                            <input type="radio" name="ts10" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts2" class="form-control">
+                            <input type="radio" name="ts10" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts3" class="form-control">
+                            <input type="radio" name="ts10" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts4" class="form-control">
+                            <input type="radio" name="ts10" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts5" class="form-control">
+                            <input type="radio" name="ts10" class="form-control">
                           </td>
                         </tr>
                         <tr>
                           <td>11</td>
                           <td><strong>Ruang</strong> laboratorium terkondisi dengan baik.</td>
                           <td>
-                            <input type="checkbox" name="tp1" class="form-control">
+                            <input type="radio" name="tp11" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp2" class="form-control">
+                            <input type="radio" name="tp11" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp3" class="form-control">
+                            <input type="radio" name="tp11" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp4" class="form-control">
+                            <input type="radio" name="tp11" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp5" class="form-control">
+                            <input type="radio" name="tp11" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts1" class="form-control">
+                            <input type="radio" name="ts11" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts2" class="form-control">
+                            <input type="radio" name="ts11" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts3" class="form-control">
+                            <input type="radio" name="ts11" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts4" class="form-control">
+                            <input type="radio" name="ts11" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts5" class="form-control">
+                            <input type="radio" name="ts11" class="form-control">
                           </td>
                         </tr>
                         <tr>
                           <td>12</td>
                           <td><strong>Kapabilitas dan pengalaman</strong> test engineer Lab. QA DDS Telkom sudah sesuai dengan kompetensinya.</td>
                           <td>
-                            <input type="checkbox" name="tp1" class="form-control">
+                            <input type="radio" name="tp12" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp2" class="form-control">
+                            <input type="radio" name="tp12" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp3" class="form-control">
+                            <input type="radio" name="tp12" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp4" class="form-control">
+                            <input type="radio" name="tp12" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp5" class="form-control">
+                            <input type="radio" name="tp12" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts1" class="form-control">
+                            <input type="radio" name="ts12" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts2" class="form-control">
+                            <input type="radio" name="ts12" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts3" class="form-control">
+                            <input type="radio" name="ts12" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts4" class="form-control">
+                            <input type="radio" name="ts12" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts5" class="form-control">
+                            <input type="radio" name="ts12" class="form-control">
                           </td>
                         </tr>
                         <tr>
                           <td>13</td>
                           <td>Test engineer Lab. QA DDS Telkom memiliki <strong>pemahaman</strong> terhadap materi item uji.</td>
                           <td>
-                            <input type="checkbox" name="tp1" class="form-control">
+                            <input type="radio" name="tp13" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp2" class="form-control">
+                            <input type="radio" name="tp13" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp3" class="form-control">
+                            <input type="radio" name="tp13" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp4" class="form-control">
+                            <input type="radio" name="tp13" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp5" class="form-control">
+                            <input type="radio" name="tp13" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts1" class="form-control">
+                            <input type="radio" name="ts13" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts2" class="form-control">
+                            <input type="radio" name="ts13" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts3" class="form-control">
+                            <input type="radio" name="ts13" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts4" class="form-control">
+                            <input type="radio" name="ts13" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts5" class="form-control">
+                            <input type="radio" name="ts13" class="form-control">
                           </td>
                         </tr>
                         <tr>
                           <td>14</td>
                           <td>Petugas memberikan <strong>pelayanan</strong> dengan <strong>ramah</strong> dan profesional.</td>
                           <td>
-                            <input type="checkbox" name="tp1" class="form-control">
+                            <input type="radio" name="tp14" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp2" class="form-control">
+                            <input type="radio" name="tp14" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp3" class="form-control">
+                            <input type="radio" name="tp14" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp4" class="form-control">
+                            <input type="radio" name="tp14" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp5" class="form-control">
+                            <input type="radio" name="tp14" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts1" class="form-control">
+                            <input type="radio" name="ts14" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts2" class="form-control">
+                            <input type="radio" name="ts14" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts3" class="form-control">
+                            <input type="radio" name="ts14" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts4" class="form-control">
+                            <input type="radio" name="ts14" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts5" class="form-control">
+                            <input type="radio" name="ts14" class="form-control">
                           </td>
                         </tr>
                         <tr>
                           <td>15</td>
                           <td>Petugas memberikan <strong>informasi</strong> tentang <strong>tarif</strong> yang jelas kepada kastamer.</td>
                           <td>
-                            <input type="checkbox" name="tp1" class="form-control">
+                            <input type="radio" name="tp15" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp2" class="form-control">
+                            <input type="radio" name="tp15" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp3" class="form-control">
+                            <input type="radio" name="tp15" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp4" class="form-control">
+                            <input type="radio" name="tp15" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp5" class="form-control">
+                            <input type="radio" name="tp15" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts1" class="form-control">
+                            <input type="radio" name="ts15" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts2" class="form-control">
+                            <input type="radio" name="ts15" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts3" class="form-control">
+                            <input type="radio" name="ts15" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts4" class="form-control">
+                            <input type="radio" name="ts15" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts5" class="form-control">
+                            <input type="radio" name="ts15" class="form-control">
                           </td>
                         </tr>
                         <tr>
                           <td>16</td>
                           <td>Petugas memberikan <strong>informasi</strong> tentang <strong>prosedur</strong> pengujian dengan jelas.</td>
                           <td>
-                            <input type="checkbox" name="tp1" class="form-control">
+                            <input type="radio" name="tp16" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp2" class="form-control">
+                            <input type="radio" name="tp16" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp3" class="form-control">
+                            <input type="radio" name="tp16" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp4" class="form-control">
+                            <input type="radio" name="tp16" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp5" class="form-control">
+                            <input type="radio" name="tp16" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts1" class="form-control">
+                            <input type="radio" name="ts16" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts2" class="form-control">
+                            <input type="radio" name="ts16" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts3" class="form-control">
+                            <input type="radio" name="ts16" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts4" class="form-control">
+                            <input type="radio" name="ts16" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts5" class="form-control">
+                            <input type="radio" name="ts16" class="form-control">
                           </td>
                         </tr>
                         <tr>
                           <td>17</td>
                           <td>Petugas selalu <strong>tanggap</strong> dengan apa yang diinginkan kastamer.</td>
                           <td>
-                            <input type="checkbox" name="tp1" class="form-control">
+                            <input type="radio" name="tp17" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp2" class="form-control">
+                            <input type="radio" name="tp17" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp3" class="form-control">
+                            <input type="radio" name="tp17" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp4" class="form-control">
+                            <input type="radio" name="tp17" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp5" class="form-control">
+                            <input type="radio" name="tp17" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts1" class="form-control">
+                            <input type="radio" name="ts17" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts2" class="form-control">
+                            <input type="radio" name="ts17" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts3" class="form-control">
+                            <input type="radio" name="ts17" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts4" class="form-control">
+                            <input type="radio" name="ts17" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts5" class="form-control">
+                            <input type="radio" name="ts17" class="form-control">
                           </td>
                         </tr>
                         <tr>
                           <td>18</td>
                           <td>Petugas memberikan <strong>perlakuan</strong> yang sama kepada semua kastamer.</td>
                           <td>
-                            <input type="checkbox" name="tp1" class="form-control">
+                            <input type="radio" name="tp18" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp2" class="form-control">
+                            <input type="radio" name="tp18" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp3" class="form-control">
+                            <input type="radio" name="tp18" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp4" class="form-control">
+                            <input type="radio" name="tp18" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp5" class="form-control">
+                            <input type="radio" name="tp18" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts1" class="form-control">
+                            <input type="radio" name="ts18" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts2" class="form-control">
+                            <input type="radio" name="ts18" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts3" class="form-control">
+                            <input type="radio" name="ts18" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts4" class="form-control">
+                            <input type="radio" name="ts18" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts5" class="form-control">
+                            <input type="radio" name="ts18" class="form-control">
                           </td>
                         </tr>
                         <tr>
                           <td>19</td>
                           <td>Petugas memberikan <strong>laporan</strong> hasil pengujian dengan cepat dan tepat.</td>
                           <td>
-                            <input type="checkbox" name="tp1" class="form-control">
+                            <input type="radio" name="tp19" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp2" class="form-control">
+                            <input type="radio" name="tp19" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp3" class="form-control">
+                            <input type="radio" name="tp19" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp4" class="form-control">
+                            <input type="radio" name="tp19" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="tp5" class="form-control">
+                            <input type="radio" name="tp19" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts1" class="form-control">
+                            <input type="radio" name="ts19" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts2" class="form-control">
+                            <input type="radio" name="ts19" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts3" class="form-control">
+                            <input type="radio" name="ts19" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts4" class="form-control">
+                            <input type="radio" name="ts19" class="form-control">
                           </td>
                           <td>
-                            <input type="checkbox" name="ts5" class="form-control">
+                            <input type="radio" name="ts19" class="form-control">
                           </td>
                         </tr>
                       </tbody>
