@@ -491,44 +491,102 @@
 								<div class="garis garis-progress" style="{{($item->examination_type_id == '1')?'width:83%':'width:70%'}}"></div>
 								<ul class="number" style="width:100%;">
 									<li>
-										<button class="step-fill {{($item->registration_status > 0)?'done':'active'}}">1</button>
+									@if($item->registration_status == '1')
+										<button class="step-fill done">1</button>
+									@else
+										<button class="step-fill active">1</button>
+									@endif
 										<p>{{ trans('translate.examination_reg')}}</p>
 									</li>
 									<li>
-										<button class="step-fill {{($item->function_status > 0)?'done':'active'}}">2</button>
+									@if($item->registration_status == '1' && $item->function_status != '1')
+										<button class="step-fill active">2</button>
+									@elseif($item->function_status == '1')
+										<button class="step-fill done">2</button>
+									@else
+										<button class="step-fill">2</button>
+									@endif
 										<p> {{ trans('translate.examination_function') }}</p>
 									</li>
 									<li>
-										<button class="step-fill {{($item->contract_status > 0)?'done':'active'}}">3</button>
+									@if($item->function_status == '1' && $item->contract_status != '1')
+										<button class="step-fill active">3</button>
+									@elseif($item->contract_status == '1')
+										<button class="step-fill done">3</button>
+									@else
+										<button class="step-fill">3</button>
+									@endif
 										<p> {{ trans('translate.examination_contract') }}</p>
 									</li>
 									<li>
-										<button class="step-fill {{($item->spb_status > 0)?'done':'active'}}">4</button>
+									@if($item->contract_status == '1' && $item->spb_status != '1')
+										<button class="step-fill active">4</button>
+									@elseif($item->spb_status == '1')
+										<button class="step-fill done">4</button>
+									@else
+										<button class="step-fill">4</button>
+									@endif
 										<p>{{ trans('translate.examination_spb') }}</p>
 									</li>
 									<li>
-										<button class="step-fill {{($item->payment_status > 0)?'done':'active'}}">5</button>
+									@if($item->spb_status == '1' && $item->payment_status != '1')
+										<button class="step-fill active">5</button>
+									@elseif($item->payment_status == '1')
+										<button class="step-fill done">5</button>
+									@else
+										<button class="step-fill">5</button>
+									@endif
 										<p>{{ trans('translate.examination_payment') }} </p>
 									</li>
 									<li>
-										<button class="step-fill {{($item->spk_status > 0)?'done':'active'}}">6</button>
+									@if($item->payment_status == '1' && $item->spk_status != '1')
+										<button class="step-fill active">6</button>
+									@elseif($item->spk_status == '1')
+										<button class="step-fill done">6</button>
+									@else
+										<button class="step-fill">6</button>
+									@endif
 										<p> {{ trans('translate.examination_spk') }}</p>
 									</li>
 									<li>
-										<button class="step-fill {{($item->examination_status > 0)?'done':'active'}}">7</button>
+									@if($item->spk_status == '1' && $item->examination_status != '1')
+										<button class="step-fill active">7</button>
+									@elseif($item->examination_status == '1')
+										<button class="step-fill done">7</button>
+									@else
+										<button class="step-fill">7</button>
+									@endif
 										<p>{{ trans('translate.examination_exam') }} </p>
 									</li>
 									<li>
-										<button class="step-fill {{($item->resume_status > 0)?'done':'active'}}">8</button>
+									@if($item->examination_status == '1' && $item->resume_status != '1')
+										<button class="step-fill active">8</button>
+									@elseif($item->resume_status == '1')
+										<button class="step-fill done">8</button>
+									@else
+										<button class="step-fill">8</button>
+									@endif
 										<p>{{ trans('translate.examination_report') }} </p>
 									</li>
 									@if($item->examination_type_id == '1')
 									<li>
-										<button class="step-fill {{($item->qa_status > 0)?'done':'active'}}">9</button>
+									@if($item->resume_status == '1' && $item->qa_status != '1')
+										<button class="step-fill active">9</button>
+									@elseif($item->qa_status == '1')
+										<button class="step-fill done">9</button>
+									@else
+										<button class="step-fill">9</button>
+									@endif
 										<p>{{ trans('translate.examination_qa') }} </p>
 									</li>
 									<li>
-										<button class="step-fill {{($item->certificate_status > 0)?'done':'active'}}">10</button>
+									@if($item->qa_status == '1' && $item->certificate_status != '1')
+										<button class="step-fill active">10</button>
+									@elseif($item->certificate_status == '1')
+										<button class="step-fill done">10</button>
+									@else
+										<button class="step-fill">10</button>
+									@endif
 										<p>{{ trans('translate.examination_certificate') }} </p>
 									</li> 
 									@endif
