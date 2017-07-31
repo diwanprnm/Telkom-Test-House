@@ -3059,7 +3059,6 @@ Route::post('/insertKuisioner', 'PengujianController@insertKuisioner');
 Route::post('/insertComplaint', 'PengujianController@insertComplaint');
 
 Route::get('/client/downloadkuitansistel/{id}', 'ProductsController@downloadkuitansistel');
-Route::get('/client/downloadstelwatermark/{id}', 'ProductsController@viewWatermark');
 
 Route::get('/cetakFormBarang/{id}', 'ExaminationController@cetakFormBarang');
 Route::get('/cetakBuktiPenerimaanPerangkat/{kode_barang}/{company_name}/{company_address}/{company_phone}/{company_fax}/{device_name}/{device_mark}/{device_manufactured_by}/{device_model}/{device_serial_number}/{exam_type}/{exam_type_desc}', 
@@ -3184,6 +3183,192 @@ array('as' => 'cetakBuktiPenerimaanPerangkat', function(
 		$y = $pdf->getY();  
 		$pdf->setXY(13,$pdf->getY() + 50);
 		$pdf->Cell(18,10,'Dokumen ini tidak terkendali apabila diunduh',0,0,'L'); 
+		$pdf->Output();
+		exit;
+		
+	}
+));
+
+Route::get('/cetakKepuasanKonsumen', array('as' => 'cetakKepuasanKonsumen', function(
+	Illuminate\Http\Request $request, $kode_barang = null, $company_name = null, $company_address = null, $company_phone = null, $company_fax = null, 
+	$device_name = null, $device_mark = null, $device_manufactured_by = null, $device_model = null , $device_serial_number = null, 
+	$exam_type = null, $exam_type_desc = null) {
+	$pdf = new PDF_MC_Table(); 
+	 
+	// $pdf->AliasNbPages();
+	$pdf->AddPage();
+	 
+	$y = $pdf->getY();
+	$pdf->SetFont('helvetica','B',11);
+		$pdf->Cell(28,5,"Survey Kepuasaan Kastamer Eksternal",0,0,'L');
+		$pdf->SetFont('helvetica','',11);
+		$pdf->SetFont('','I');
+	 
+		/*Nama Perangkat*/
+		$y = $pdf->getY();
+		$pdf->Ln(6);
+		$pdf->SetFont('helvetica','',10);
+		$pdf->setXY(10.00125,$y + 6);
+		$pdf->SetFont('','U');
+		$pdf->Cell(10,5,"Tanggal",0,0,'L');
+		$pdf->SetWidths(array(0.00125,40,45,145));
+		$pdf->Row(array("","",":","")); 
+	 
+		/*Merek dan Model Perangkat*/
+		$y = $pdf->getY(); 
+		$pdf->SetFont('helvetica','',10);
+		$pdf->setXY(10.00125,$y + 1);
+		$pdf->SetFont('','U');
+		$pdf->Cell(10,5,"Nama",0,0,'L');
+		$pdf->SetWidths(array(0.00125,40,45,50));
+		$pdf->Row(array("","",":",""));
+		$y2 = $pdf->getY();
+		$pdf->setXY(110.00125,$y + 1);
+		$pdf->SetFont('','U');
+		$pdf->Cell(10,5,"Jenis Pengujian",0,0,'L');
+		$pdf->SetWidths(array(0.00125,135,140,50));
+		$pdf->Row(array("","",":",""));
+		$y3 = $pdf->getY();
+		$pdf->setXY(10.00125,$y + 11);
+		$pdf->SetFont('','I');
+		 
+		$yNow = max($y,$y2,$y3);
+		if($y2 == $y3){
+			/* // $yNow; */
+		}else{
+			$yNow = $yNow - 1;
+		}
+		$pdf->setXY(10.00125,$yNow);
+		/*Kapasitas dan Referensi Uji Perangkat*/
+		$y = $pdf->getY(); 
+		$pdf->SetFont('helvetica','',10);
+		$pdf->setXY(10.00125,$y + 1);
+		$pdf->SetFont('','U');
+		$pdf->Cell(10,5,"Perusahaan",0,0,'L');
+		$pdf->SetWidths(array(0.00125,40,45,50));
+		$pdf->Row(array("","",":",""));
+	 
+		$pdf->setXY(110.00125,$y + 1);
+		$pdf->SetFont('','U');
+		$pdf->Cell(10,5,"Email",0,0,'L');
+		$pdf->SetWidths(array(0.00125,135,140,50));
+		$pdf->Row(array("","",":",""));
+		$y3 = $pdf->getY();
+		$pdf->setXY(10.00125,$y + 1);
+		 
+		  
+		/*Negara Pembuat Perangkat*/
+		$y = $pdf->getY(); 
+		$pdf->SetFont('helvetica','',10);
+		$pdf->setXY(10.00125,$y + 6);
+		$pdf->SetFont('','U');
+		$pdf->Cell(10,5,"No Telepon",0,0,'L');
+		$pdf->SetWidths(array(0.00125,40,45,145));
+		$pdf->Row(array("","",":","..."));
+		
+		$pdf->setXY(110.00125,$y + 6);
+		$pdf->SetFont('','U');
+		$pdf->Cell(10,5,"Mobile",0,0,'L');
+		$pdf->SetWidths(array(0.00125,135,140,50));
+		$pdf->Row(array("","",":","")); 
+	 	 
+		$pdf->SetFont('helvetica','B',14);
+		$pdf->setXY(10.00125, $pdf->getY() + 4); 
+		$pdf->Cell(10,4,"Harap Diisikan penilaian anda terhadap layanan QT/TA/VT - Telkom DDS.",0,0,'L');
+
+
+		$pdf->SetFont('helvetica','',10);
+		$pdf->setXY(10.00125, $pdf->getY() + 6); 
+		$pdf->Cell(10,4,"Kastamer diharapkan dapat memberikan nilai untuk beberapa kriteria yang diajukan. nilai tersebut",0,0,'L');
+		 
+		$pdf->setXY(10.00125, $pdf->getY() + 4); 
+		$pdf->Cell(10,4,"Merupakan nilai yang kastamer berikan mengenai ekspektasi kastamer terhadap PT. Telkom serta realita ",0,0,'L');
+ 
+		$pdf->setXY(10.00125, $pdf->getY() + 4); 
+		$pdf->Cell(10,4,"performansi data PT Telkom.",0,0,'L');
+		 
+		$pdf->setXY(10.00125, $pdf->getY() + 6); 
+		$pdf->Cell(10,4,"Skala pemberian nilai adalah 1-7 dengan nilai 7 adalah penilaian Sangat Baik atau Sangat Setuju dan ",0,0,'L');
+	 
+		$pdf->setXY(10.00125, $pdf->getY() + 4); 
+		$pdf->Cell(10,4,"Nilai 1 adalah penilaian sangat tidak baik atau sangat tidak setuju.kastamer diharapkan dapat",0,0,'L');
+
+		$pdf->setXY(10.00125, $pdf->getY() + 4); 
+		$pdf->Cell(10,4,"memberikan nilai dengan angka bulat.",0,0,'L');
+
+
+
+		$pdf->Ln(8); 
+		$pdf->SetWidths(array(0.00125,10,100,30,50));
+		$pdf->SetAligns(array('L','C','C','C','C')); 
+		$pdf->SetFont('helvetica','',10);
+ 		$pdf->RowRect(array('','No','Kriteria','Nilai Ekspektasi','Nilai Performansi')); 
+	 	
+	 	$pdf->RowRect(array('','1','Pihak UREL(User Relation) mampu menjadi jembatan antara kastamer dan test Engineer telkom','',''));
+	 	$pdf->RowRect(array('','2','Proses pelayanan pengujian secara keseluruhan (sejak pengajuan hingga pelaporan) mudah dimengerti oleh kastamer','',''));
+	 	$pdf->RowRect(array('','3','Pihak UREL memberikan informasi serta melakukan pengecekan kelengkapan mengenai berkas-berkas yang harus disiapkan','',''));
+	 	$pdf->RowRect(array('','4','setiap lini proses (pengujian hingga pelaporan) dilakukan dengan cepat.','',''));
+	 	$pdf->RowRect(array('','5','pihak UREL sudah memberikan informasi yang dibutuhkan oleh kastamer','',''));
+		
+
+	 	$pdf->setXY(10.00125, $pdf->getY() + 6); 
+		$pdf->Cell(10,4,"Menurut anda, dalam proses pengajuan hingga pelaporan, tahap apa yang sebaiknya ditingkatkan oleh PT Telkom ?",0,0,'L');
+
+		$pdf->setXY(10.00125, $pdf->getY() + 6); 
+		$pdf->Cell(10,4,"dan mengapa harus ditingkatkan?",0,0,'L');
+
+		$pdf->setXY(10.00125, $pdf->getY() + 6); 
+		$pdf->Cell(10,4,".........................................................................................................................",0,0,'L');
+
+		$pdf->setXY(10.00125, $pdf->getY() + 6); 
+		$pdf->Cell(10,4,".........................................................................................................................",0,0,'L');
+
+		$pdf->setXY(10.00125, $pdf->getY() + 6); 
+		$pdf->Cell(10,4,".........................................................................................................................",0,0,'L');
+
+
+		$pdf->setXY(10.00125, $pdf->getY() + 6); 
+		$pdf->Cell(10,4,"Pada Tahap Ini, silahkan mengisi nilai dengan skala 1-7 untuk nilai ekspektasi awal dan nilai performansi.",0,0,'L');
+
+		$pdf->setXY(10.00125, $pdf->getY() + 6); 
+		$pdf->Cell(10,4,"Kastamer diharapkan mengisi kolom nilai ekspektasi dari setiap kriteria, serta nilai performansi/kenyataan dari setiap kriteria.",0,0,'L');
+
+		$pdf->setXY(10.00125, $pdf->getY() + 8); 
+		$pdf->Cell(10,4,"nilai 7 adalah penilaian Sangat Baik atau Sangat Setuju dan Nilai 1 adalah penilaian sangat tidak baik atau",0,0,'L');
+
+		$pdf->setXY(10.00125, $pdf->getY() + 8); 
+		$pdf->Cell(10,4,"sangat tidak setuju.kastamer diharapkan dapat memberikan nilai dengan angka bulat.",0,0,'L');
+
+
+		$pdf->Ln(8); 
+		$pdf->SetWidths(array(0.00125,10,100,30,50));
+		$pdf->SetAligns(array('L','C','C','C','C')); 
+		$pdf->SetFont('helvetica','',10);
+ 		$pdf->RowRect(array('','No','Kriteria','Nilai Ekspektasi','Nilai Performansi')); 
+	 	
+	 	$pdf->RowRect(array('','7','Kastamer percaya pada kualitas pengujian yang dilakukan','',''));
+	 	$pdf->RowRect(array('','8','kastamer merasa pihak UREL faham dan terpercaya','',''));
+	 	$pdf->RowRect(array('','9','kastamer merasa pihak UREL sudah melakukan pemeriksaan kelengkapan administrasi dengan kinerja yang baik','',''));
+	 	$pdf->RowRect(array('','10','Kastamer merasa aman sewaktu melakukan transaksi dengan pihak telkom terutaman pihak UREL','',''));
+	 	$pdf->RowRect(array('','11','Kastamer merasa Engineer Telkom sudah berpengalaman','',''));
+	 	$pdf->RowRect(array('','12','Alat ukur yang digunakan oleh pihak telkom berkualitas, baik, dan akurat','',''));
+	 	$pdf->RowRect(array('','13','Laboratorium yang digunakan oleh Telkom dalam keadaan bersih dan memenuhi standar Laboratorium','',''));
+	 	$pdf->RowRect(array('','14','tarif pengujian yang ditetapkan oleh pihak PT. Telkom sesuai dan bersaing dengan harga pasar','',''));
+	 	$pdf->RowRect(array('','15','Pihak UREL yang melayani kastamer berpakaian rapih dan sopan','',''));
+
+	 	$pdf->RowRect(array('','16','Kantor Telkom DDS dalam kondisi nyaman, bersih dan sesuai kondisi keseluruhannya.','',''));
+	 	$pdf->RowRect(array('','17','Pihak Telkom mengembalikan barang/perangkat yang diujikan dalam keadaan baik seperti awal','',''));
+	 	$pdf->RowRect(array('','18','Sertifikat yang diterima oleh kastamer tidak mengalami kesalahan informasi','',''));
+	 	$pdf->RowRect(array('','19','Pihak Telkom DDS terutama pihak UREL yang melayani proses pengajuan hingga pelaporan sudah memahami kebutuhan kastamer','',''));
+	 	$pdf->RowRect(array('','20','Proses pengujian secara keseluruhan tidak memakan durasi waktu yang lama.','',''));
+	 	$pdf->RowRect(array('','21','Pihak UREL cepat dan tepat dalam merespon keluhan yang diberikan oleh kastamer.','',''));
+	 	$pdf->RowRect(array('','22','Pihak UREL tanggap dalam membantu permasalahan kastamer','',''));
+	 	$pdf->RowRect(array('','23','Engineer Tanggap pada permasalahan yang dihadapi kastamer selama proses pengajuan hingga pelaporan','',''));
+	 	$pdf->RowRect(array('','24','Pihak UREL mudah dihubungi dan tanggap pada segala pertanyaan yang diajukan kastamer terkait pengujian preangkat','',''));
+
+	 	$pdf->RowRect(array('','25','Pihak UREL bersikap ramah dan profesional terhadap kastamer','',''));
+
+
 		$pdf->Output();
 		exit;
 		
