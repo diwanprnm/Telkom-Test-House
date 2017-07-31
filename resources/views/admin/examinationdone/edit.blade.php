@@ -1234,7 +1234,16 @@
 							<div class="row">
 								<div class="col-md-12">
 									<div class="form-group">
-										Sertifikat Sudah terdownload sebanyak {{ count($data->examinationHistory) }} kali
+										<?php $count = 0; ?>
+										@foreach($data->examinationHistory as $item)
+										<?php
+											if( strpos( $item->name, "Download Sertifikat" ) !== false ) 
+											{
+												$count++;
+											}
+										?>
+										@endforeach
+										Sertifikat Sudah terdownload sebanyak {{ $count }} kali
 									</div>
 								</div>
 							</div>
