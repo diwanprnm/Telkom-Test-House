@@ -61,8 +61,24 @@ class ExaminationAPIController extends AppBaseController
 			  ELSE NULL
 			  END as 'step_progress'
 			",
+			"examinations.spb_number",
+			"examinations.function_test_NO as no_form_uji",
+			"examinations.spb_date",
 			"examinations.spk_code",
 			"examinations.spk_date",
+			"(
+				SELECT
+					action_date AS tgl_masuk_gudang
+				FROM
+					equipment_histories
+				WHERE
+					examination_id = examinations.id
+				AND
+					location = 2
+				ORDER BY
+					created_at DESC
+				LIMIT 1
+			) AS tgl_masuk_barang",
 			"examinations.is_spk_created"
 		);
 		$result = Examination::selectRaw(implode(",", $select))  

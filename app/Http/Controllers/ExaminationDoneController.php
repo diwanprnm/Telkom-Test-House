@@ -211,6 +211,7 @@ class ExaminationDoneController extends Controller
                             ->with('device')
                             ->with('media')
 							->with('examinationHistory')
+							->with('questioner')
                             ->first();
 
         $labs = ExaminationLab::all();

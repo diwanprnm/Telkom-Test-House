@@ -1275,11 +1275,16 @@ class PengujianController extends Controller
 		$quest->quest18_eks = $request->input('quest18_eks');$quest->quest18_perf = $request->input('quest18_perf');
 		$quest->quest19_eks = $request->input('quest19_eks');$quest->quest19_perf = $request->input('quest19_perf');
 		$quest->quest20_eks = $request->input('quest20_eks');$quest->quest20_perf = $request->input('quest20_perf');
-		$quest->quest21_eks = $request->input('quest21_eks');$quest->quest21_perf = $request->input('quest21_perf');
-		$quest->quest22_eks = $request->input('quest22_eks');$quest->quest22_perf = $request->input('quest22_perf');
-		$quest->quest23_eks = $request->input('quest23_eks');$quest->quest23_perf = $request->input('quest23_perf');
-		$quest->quest24_eks = $request->input('quest24_eks');$quest->quest24_perf = $request->input('quest24_perf');
-		$quest->quest25_eks = $request->input('quest25_eks');$quest->quest25_perf = $request->input('quest25_perf');
+		// $quest->quest21_eks = $request->input('quest21_eks');$quest->quest21_perf = $request->input('quest21_perf');
+		// $quest->quest22_eks = $request->input('quest22_eks');$quest->quest22_perf = $request->input('quest22_perf');
+		// $quest->quest23_eks = $request->input('quest23_eks');$quest->quest23_perf = $request->input('quest23_perf');
+		// $quest->quest24_eks = $request->input('quest24_eks');$quest->quest24_perf = $request->input('quest24_perf');
+		// $quest->quest25_eks = $request->input('quest25_eks');$quest->quest25_perf = $request->input('quest25_perf');
+		$quest->quest21_eks = 0;$quest->quest21_perf = 0;
+		$quest->quest22_eks = 0;$quest->quest22_perf = 0;
+		$quest->quest23_eks = 0;$quest->quest23_perf = 0;
+		$quest->quest24_eks = 0;$quest->quest24_perf = 0;
+		$quest->quest25_eks = 0;$quest->quest25_perf = 0;
 		
 		$quest->created_by = $currentUser->id;
 		$quest->created_at = date('Y-m-d H:i:s');
