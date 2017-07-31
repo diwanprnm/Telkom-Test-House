@@ -1,5 +1,5 @@
 {
-  "name": "TELKOM DDS",
+  "name": "telkomdds",
   "version": "1.0.0",
   "description": "TELKOM DDS",
   "main": "server.js",

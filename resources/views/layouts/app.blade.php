@@ -209,7 +209,7 @@
      <script src="{{url('vendor/socket/socket.io.js')}}"></script>
       <script>
         //var socket = io('http://localhost:3000');
-        var socket = io('http://localhost:3000');
+        var socket = io('http://37.72.172.144:3000');
         socket.on("notification-channel:App\\Events\\Notification", function(message){ 
             var userId = $("#user_id").val();
             console.log(message.data);
