@@ -343,5 +343,20 @@ class ProductsController extends Controller
             return Response::file($file, $headers);
         }
     }
+	
+    public function viewWatermark($id)
+    {
+        $stel = STELSalesDetail::where("id",$id)->first();
+
+        if ($stel){
+            $file = public_path().'/media/stelAttach/'.$stel->id."/".$stel->attachment;
+            $headers = array(
+              'Content-Type: application/octet-stream',
+            );
+
+            return Response::file($file, $headers);
+        }
+    }
+
 
 }
