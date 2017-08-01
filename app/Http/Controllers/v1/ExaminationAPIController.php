@@ -20,6 +20,8 @@ use Mail;
 // UUID
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
+use App\Events\Notification;
+use App\NotificationTable;
  
 class ExaminationAPIController extends AppBaseController
 {
@@ -656,6 +658,49 @@ class ExaminationAPIController extends AppBaseController
 				$equip = Equipment::where("examination_id",$param->id)->first();
 				$equip->location = $param->location;
 				$equip->save();
+				if($param->location == 3){
+					$data= array(
+		                "from"=>"user",
+		                "to"=>"admin",
+		                "message"=>"Test Engginer mengambil barang dari Gudang",
+		                "url"=>"examination/".$param->id.'/edit',
+		                "is_read"=>0,
+		                "created_at"=>date("Y-m-d H:i:s"),
+		                "updated_at"=>date("Y-m-d H:i:s")
+		                );
+
+				  	$notification = new NotificationTable();
+			      	$notification->from = $data['from'];
+			      	$notification->to = $data['to'];
+			      	$notification->message = $data['message'];
+			      	$notification->url = $data['url'];
+			      	$notification->is_read = $data['is_read'];
+			      	$notification->created_at = $data['created_at'];
+			      	$notification->updated_at = $data['updated_at'];
+			      	$notification->save();
+				}else if($param->location == 2){
+					$data= array(
+		                "from"=>"user",
+		                "to"=>"admin",
+		                "message"=>"Test Engginer mengembalikan barang ke Gudang",
+		                "url"=>"examination/".$param->id.'/edit',
+		                "is_read"=>0,
+		                "created_at"=>date("Y-m-d H:i:s"),
+		                "updated_at"=>date("Y-m-d H:i:s")
+		                );
+
+				  	$notification = new NotificationTable();
+			      	$notification->from = $data['from'];
+			      	$notification->to = $data['to'];
+			      	$notification->message = $data['message'];
+			      	$notification->url = $data['url'];
+			      	$notification->is_read = $data['is_read'];
+			      	$notification->created_at = $data['created_at'];
+			      	$notification->updated_at = $data['updated_at'];
+			      	$notification->save();
+				}
+				
+		        event(new Notification($data));
 				return $this->sendResponse($equip_hist, 'History Found');
 			}else{
 				return $this->sendError('Failed to Input History');

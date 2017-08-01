@@ -29,6 +29,9 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 
+use App\Events\Notification;
+use App\NotificationTable;
+
 class PengujianController extends Controller
 {
     /**
@@ -968,6 +971,28 @@ class PengujianController extends Controller
 				$exam_hist->created_by = $currentUser->id;
 				$exam_hist->created_at = date('Y-m-d H:i:s');
 				$exam_hist->save();
+
+				$data= array(
+	                "from"=>"user",
+	                "to"=>"admin",
+	                "message"=>$currentUser->name." membayar SPB nomor".$examination->spb_number,
+	                "url"=>"examination/".$request->input('hide_id_exam').'/edit',
+	                "is_read"=>0,
+	                "created_at"=>date("Y-m-d H:i:s"),
+	                "updated_at"=>date("Y-m-d H:i:s")
+	                );
+
+			  	$notification = new NotificationTable();
+		      	$notification->from = $data['from'];
+		      	$notification->to = $data['to'];
+		      	$notification->message = $data['message'];
+		      	$notification->url = $data['url'];
+		      	$notification->is_read = $data['is_read'];
+		      	$notification->created_at = $data['created_at'];
+		      	$notification->updated_at = $data['updated_at'];
+		      	$notification->save();
+		        event(new Notification($data));
+
 				Session::flash('message', 'Upload successfully');
 				// $this->sendProgressEmail("Pengujian atas nama ".$user_name." dengan alamat email ".$user_email.", telah melakukan proses Upload Bukti Pembayaran");
 				// return back();
@@ -1081,6 +1106,27 @@ class PengujianController extends Controller
 				// return back();
 			}
 		}
+		/* push notif*/
+		$data= array(
+                "from"=>"user",
+                "to"=>"admin",
+                "message"=>$currentUser->id." mengedit data pengujian",
+                "url"=>"examination/".$request->input('hide_id_exam'),
+                "is_read"=>0,
+                "created_at"=>date("Y-m-d H:i:s"),
+                "updated_at"=>date("Y-m-d H:i:s")
+                );
+
+		  $notification = new NotificationTable();
+	      $notification->from = $data['from'];
+	      $notification->to = $data['to'];
+	      $notification->message = $data['message'];
+	      $notification->url = $data['url'];
+	      $notification->is_read = $data['is_read'];
+	      $notification->created_at = $data['created_at'];
+	      $notification->updated_at = $data['updated_at'];
+	      $notification->save();
+	      event(new Notification($data));
 		return back();
     }
 	
