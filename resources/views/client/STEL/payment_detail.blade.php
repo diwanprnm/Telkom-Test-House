@@ -97,7 +97,7 @@
 					<div class="col-md-6">
 						<a class="button button-3d btn-sky nomargin" href="{{url('/payment_status')}}">{{ trans('translate.back') }}</a>
 					</div>
-						<div class=" pull-right col-md-12">
+						<div class="col-md-6 invoice-group-button">
 					@if($stels[0]->id_kuitansi != '')
 							<a class="button button-3d btn-sky nomargin pull-right" href="{{ URL::to('/client/downloadkuitansistel/'.$stels[0]->id_kuitansi) }}" target="_blank">
 								{{ trans('translate.see_receipt') }}
