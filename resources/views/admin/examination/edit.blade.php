@@ -518,9 +518,18 @@
 										</select>
 									</div>
 								</div>
+								@if($data->function_date != null)
+									<?php $in_equip_date = $data->function_date; ?>
+								@elseif($data->function_date == null && $data->urel_test_date != null)
+									<?php $in_equip_date = $data->urel_test_date; ?>
+								@elseif($data->urel_test_date == null && $data->deal_test_date != null)
+									<?php $in_equip_date = $data->deal_test_date; ?>
+								@else
+									<?php $in_equip_date = $data->cust_test_date; ?>
+								@endif
 								@if(count($data->equipment)==0)
 									<div class="form-group">
-										<a onclick="masukkanBarang('{{ $data->id }}')"> Masukkan Barang</a>
+										<a onclick="masukkanBarang('{{ $data->id }}','{{ $in_equip_date }}')"> Masukkan Barang</a>
 									</div>									
 								@endif
 							
@@ -802,7 +811,7 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Total Biaya (Biaya Belum Termasuk PPN)*
+										Total Biaya (Belum Termasuk PPN)*
 									</label>
 									<input type="text" name="exam_price" id="exam_price" class="form-control" placeholder="Total Biaya" value="{{ $data->price }}" readonly required>
 								</div>
@@ -905,6 +914,24 @@
 											@endif
 										@endforeach
 										<input type="hidden" id="kuitansi_name" value="<?php echo $kuitansi_attach; ?>">
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Faktur Pajak File *
+										</label>
+										<input type="file" name="faktur_file" id="faktur_file" class="form-control" accept="application/pdf">
+									</div>
+									<div class="form-group">
+										<?php $faktur_attach = ''; ?>
+										@foreach($data->media as $item)
+											@if($item->name == 'Faktur Pajak' && $item->attachment != '')
+												<?php $faktur_attach = $item->attachment; ?>
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/faktur')}}"> Download Faktur Pajak "<?php echo $faktur_attach; ?>"</a>
+											@endif
+										@endforeach
+										<input type="hidden" id="faktur_name" value="<?php echo $faktur_attach; ?>">
 									</div>
 								</div>
 							</div>
@@ -1024,9 +1051,9 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Kode SPK *
+										Nomor SPK *
 									</label>
-										<input type="text" name="spk_code" id="spk_code" class="form-control" placeholder="Kode SPK" value="{{ $data->spk_code }}" required 
+										<input type="text" name="spk_code" id="spk_code" class="form-control" placeholder="Nomor SPK" value="{{ $data->spk_code }}" required 
 										<?php if($data->spk_code != null){echo "readonly";}?>
 										>
 									@if($data->examination_lab_id != null && $data->spk_code == null)
@@ -1205,7 +1232,66 @@
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
-
+				
+				@if($data->examination_type_id !='1')
+				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-barang')) !!}
+					{!! csrf_field() !!}
+					<input type="hidden" name="status" class="form-control" value=""/>
+					<input type="hidden" name="keterangan" class="form-control" value=""/>
+					<fieldset>
+						<legend>
+							Edit Lokasi Barang
+						</legend>
+						<div class="row">
+							<div class="form-group">
+								@foreach($data->media as $item)
+									@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
+										<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan Perangkat Uji</a>
+									@endif
+								@endforeach
+							</div>
+							<div class="form-group">
+								<label>
+									Bukti Penerimaan & Pengeluaran Perangkat Uji File *
+								</label>
+								<input type="file" name="barang_file2" id="barang_file2" class="form-control" accept="application/pdf"/>
+								<button class="btn btn-wide btn-green btn-squared pull-right">
+									Upload
+								</button>
+							</div>
+							<div class="form-group">
+								@foreach($data->media as $item)
+									@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji2' && $item->attachment != '')
+										<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji2')}}"> Download Bukti Pengeluaran Perangkat Uji</a>
+									@endif
+								@endforeach
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Lokasi Barang Sekarang
+									</label>
+									<select name="update_barang" class="cs-select cs-skin-elastic">
+										@if(count($data->equipment)==0)
+											<option value="2" selected>URel (Store)</option>
+										@elseif($data->equipment[0]->location==1)
+											<option value="1" selected>Customer (Applicant)</option>
+										@elseif($data->equipment[0]->location==2)
+											<option value="2" selected>URel (Store)</option>
+										@elseif($data->equipment[0]->location==3)
+											<option value="3" selected>Lab (Laboratory)</option>
+										@endif
+									</select>
+								</div>
+								<div class="form-group">
+									<a onclick="updateBarang('{{ $data->id }}')"> Update Lokasi Barang</a>
+								</div>	
+							</div>
+						</div>
+					</fieldset>
+				{!! Form::close() !!}
+				@endif
+				
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-lap-uji')) !!}
 					{!! csrf_field() !!}
 					<input type="hidden" name="status" class="form-control" value="Laporan Uji"/>
@@ -1451,64 +1537,64 @@
 							</div>
 						</fieldset>
 					{!! Form::close() !!}
-				@endif	
-				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-barang')) !!}
-					{!! csrf_field() !!}
-					<input type="hidden" name="status" class="form-control" value=""/>
-					<input type="hidden" name="keterangan" class="form-control" value=""/>
-					<fieldset>
-						<legend>
-							Edit Lokasi Barang
-						</legend>
-						<div class="row">
-							<div class="form-group">
-								@foreach($data->media as $item)
-									@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
-										<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan Perangkat Uji</a>
-									@endif
-								@endforeach
-							</div>
-							<div class="form-group">
-								<label>
-									Bukti Penerimaan & Pengeluaran Perangkat Uji File *
-								</label>
-								<input type="file" name="barang_file2" id="barang_file2" class="form-control" accept="application/pdf"/>
-								<button class="btn btn-wide btn-green btn-squared pull-right">
-									Upload
-								</button>
-							</div>
-							<div class="form-group">
-								@foreach($data->media as $item)
-									@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji2' && $item->attachment != '')
-										<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji2')}}"> Download Bukti Pengeluaran Perangkat Uji</a>
-									@endif
-								@endforeach
-							</div>
-							<div class="col-md-12">
+					
+					{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-barang')) !!}
+						{!! csrf_field() !!}
+						<input type="hidden" name="status" class="form-control" value=""/>
+						<input type="hidden" name="keterangan" class="form-control" value=""/>
+						<fieldset>
+							<legend>
+								Edit Lokasi Barang
+							</legend>
+							<div class="row">
 								<div class="form-group">
-									<label for="form-field-select-2">
-										Lokasi Barang Sekarang
-									</label>
-									<select name="update_barang" class="cs-select cs-skin-elastic">
-										@if(count($data->equipment)==0)
-											<option value="2" selected>URel (Store)</option>
-										@elseif($data->equipment[0]->location==1)
-											<option value="1" selected>Customer (Applicant)</option>
-										@elseif($data->equipment[0]->location==2)
-											<option value="2" selected>URel (Store)</option>
-										@elseif($data->equipment[0]->location==3)
-											<option value="3" selected>Lab (Laboratory)</option>
+									@foreach($data->media as $item)
+										@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan Perangkat Uji</a>
 										@endif
-									</select>
+									@endforeach
 								</div>
 								<div class="form-group">
-									<a onclick="updateBarang('{{ $data->id }}')"> Update Lokasi Barang</a>
-								</div>	
+									<label>
+										Bukti Penerimaan & Pengeluaran Perangkat Uji File *
+									</label>
+									<input type="file" name="barang_file2" id="barang_file2" class="form-control" accept="application/pdf"/>
+									<button class="btn btn-wide btn-green btn-squared pull-right">
+										Upload
+									</button>
+								</div>
+								<div class="form-group">
+									@foreach($data->media as $item)
+										@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji2' && $item->attachment != '')
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji2')}}"> Download Bukti Pengeluaran Perangkat Uji</a>
+										@endif
+									@endforeach
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<label for="form-field-select-2">
+											Lokasi Barang Sekarang
+										</label>
+										<select name="update_barang" class="cs-select cs-skin-elastic">
+											@if(count($data->equipment)==0)
+												<option value="2" selected>URel (Store)</option>
+											@elseif($data->equipment[0]->location==1)
+												<option value="1" selected>Customer (Applicant)</option>
+											@elseif($data->equipment[0]->location==2)
+												<option value="2" selected>URel (Store)</option>
+											@elseif($data->equipment[0]->location==3)
+												<option value="3" selected>Lab (Laboratory)</option>
+											@endif
+										</select>
+									</div>
+									<div class="form-group">
+										<a onclick="updateBarang('{{ $data->id }}')"> Update Lokasi Barang</a>
+									</div>	
+								</div>
 							</div>
-						</div>
-					</fieldset>
-				{!! Form::close() !!}
-				@if($data->examination_type_id !='2' && $data->examination_type_id !='3' && $data->examination_type_id !='4')
+						</fieldset>
+					{!! Form::close() !!}
+					
 					{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-sertifikat')) !!}
 						{!! csrf_field() !!}
 						<input type="hidden" name="status" class="form-control" value="Penerbitan Sertifikat"/>
@@ -1762,12 +1848,12 @@
 		}); */
 	}
 	
-	function masukkanBarang(a){
+	function masukkanBarang(a,b){
 		var APP_URL = {!! json_encode(url('/admin/equipment/create')) !!};		
 		$.ajax({
 			type: "POST",
 			url : "generateEquipParam",
-			data: {'_token':"{{ csrf_token() }}", 'exam_id':a},
+			data: {'_token':"{{ csrf_token() }}", 'exam_id':a, 'in_equip_date':b},
 			beforeSend: function(){
 				
 			},

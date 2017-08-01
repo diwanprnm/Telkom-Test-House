@@ -546,6 +546,36 @@ class ExaminationController extends Controller
 					return redirect('/admin/examination/'.$exam->id.'/edit');
 				}
 			}
+			if ($request->hasFile('faktur_file')) {
+				$name_file = 'faktur_'.$request->file('faktur_file')->getClientOriginalName();
+				$path_file = public_path().'/media/examination/'.$exam->id;
+				if (!file_exists($path_file)) {
+					mkdir($path_file, 0775);
+				}
+				if($request->file('faktur_file')->move($path_file,$name_file)){
+					$attach = ExaminationAttach::where('name', 'Faktur Pajak')->where('examination_id', ''.$exam->id.'')->first();
+
+					if ($attach){
+						$attach->attachment = $name_file;
+						$attach->updated_by = $currentUser->id;
+
+						$attach->save();
+					} else{
+						$attach = new ExaminationAttach;
+						$attach->id = Uuid::uuid4();
+						$attach->examination_id = $exam->id; 
+						$attach->name = 'Faktur Pajak';
+						$attach->attachment = $name_file;
+						$attach->created_by = $currentUser->id;
+						$attach->updated_by = $currentUser->id;
+
+						$attach->save();
+					}					
+				}else{
+					Session::flash('error', 'Save Faktur Pajak to directory failed');
+					return redirect('/admin/examination/'.$exam->id.'/edit');
+				}
+			}
             $status = $request->input('payment_status');
             $exam->payment_status = $status;
 			$exam->spk_status = $status;
@@ -1008,7 +1038,7 @@ class ExaminationController extends Controller
 			'Model/Tipe Perangkat',
 			'Referensi Uji Perangkat',
 			'Tanggal Berlaku Perangkat',
-			'Kode SPK',
+			'Nomor SPK',
 			'Tanggal SPK',
 			'Status Pengujian',
 			'Registrasi',
@@ -1595,6 +1625,7 @@ class ExaminationController extends Controller
 	
 	public function generateEquipParam(Request $request) {
 		$request->session()->put('key_exam_id_for_generate_equip_masuk', $request->input('exam_id'));
+		$request->session()->put('key_in_equip_date_for_generate_equip_masuk', $request->input('in_equip_date'));
 		echo 1;
     }
 	
@@ -1697,6 +1728,8 @@ class ExaminationController extends Controller
 			$spb_date = $request->input('spb_date');
 			$arr_nama_perangkat = $request->input('arr_nama_perangkat');
 			$arr_biaya = $request->input('arr_biaya');
+			$arr_nama_perangkat2 = $request->input('arr_nama_perangkat2');
+			$arr_biaya2 = $request->input('arr_biaya2');
 			$exam = Examination::where('id', $exam_id)
 						->with('user')
 						->with('company')
@@ -1709,6 +1742,8 @@ class ExaminationController extends Controller
 				'spb_date' => $spb_date,
 				'arr_nama_perangkat' => $arr_nama_perangkat,
 				'arr_biaya' => $arr_biaya,
+				'arr_nama_perangkat2' => $arr_nama_perangkat2,
+				'arr_biaya2' => $arr_biaya2,
 				'exam' => $exam
 			];
 			$request->session()->put('key_exam_for_spb', $data);
@@ -1828,6 +1863,8 @@ class ExaminationController extends Controller
 			else{$exam_type = $data[0]->ExaminationType->name?: '-';}
 		if( strpos( $data[0]->ExaminationType->description, "/" ) !== false ) {$exam_type_desc = urlencode(urlencode($data[0]->ExaminationType->description));}
 			else{$exam_type_desc = $data[0]->ExaminationType->description?: '-';}
+		if( strpos( $data[0]->contract_date, "/" ) !== false ) {$timestamp = strtotime($data[0]->contract_date);$contract_date = urlencode(urlencode(date('d-m-Y', $timestamp)));}
+			else{$timestamp = strtotime($data[0]->contract_date);$contract_date = date('d-m-Y', $timestamp)?: '-';}
 		
 		$request->session()->put('key_exam_for_equipment', $data[0]->equipment);
 		return \Redirect::route('cetakBuktiPenerimaanPerangkat', [
@@ -1842,7 +1879,8 @@ class ExaminationController extends Controller
 			'device_model' => $device_model,
 			'device_serial_number' => $device_serial_number,
 			'exam_type' => $exam_type,
-			'exam_type_desc' => $exam_type_desc
+			'exam_type_desc' => $exam_type_desc,
+			'contract_date' => $contract_date
 		]);
     }
 	

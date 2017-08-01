@@ -2080,8 +2080,12 @@ Route::get('cetakSPB', function(Illuminate\Http\Request $request){
 		for($i=0;$i<count($data[0]['arr_nama_perangkat']);$i++){
 			$biaya = $biaya + $data[0]['arr_biaya'][$i];
 		}
+		$biaya2 = 0;
+		for($i=0;$i<count($data[0]['arr_nama_perangkat2']);$i++){
+			$biaya2 = $biaya2 + $data[0]['arr_biaya2'][$i];
+		}
 		$ppn = 0.1*$biaya;
-		$total_biaya = $biaya + $ppn;
+		$total_biaya = $biaya + $biaya2 + $ppn;
 		$terbilang = $pdf->terbilang($total_biaya, 3);
 		$spb_date = date('j', strtotime($data[0]['spb_date']))." ".strftime('%B %Y', strtotime($data[0]['spb_date']));
 	// $pdf->judul_kop('FORM TINJAUAN KONTRAK','Contract Review Form');
@@ -2135,6 +2139,9 @@ Route::get('cetakSPB', function(Illuminate\Http\Request $request){
 		$pdf->RowRect(array('',($i+1).'.',$data[0]['arr_nama_perangkat'][$i],number_format($data[0]['arr_biaya'][$i],0,",",".").",-"));	
 	}
 	$pdf->RowRect(array('','','PPN 10 %',number_format($ppn,0,",",".").",-"));	
+	for($i=0;$i<count($data[0]['arr_nama_perangkat2']);$i++){
+		$pdf->RowRect(array('',($i+1).'.',$data[0]['arr_nama_perangkat2'][$i],number_format($data[0]['arr_biaya2'][$i],0,",",".").",-"));	
+	}
 	$pdf->SetFont('helvetica','B',10);
 	$pdf->RowRect(array('','','Total Biaya Pengujian',number_format($total_biaya,0,",",".").",-"));	
 	$pdf->SetWidths(array(17,160));
@@ -2691,7 +2698,7 @@ array('as' => 'cetakHasilKuitansi', function(
 	$pdf->Cell(0,5,"Rp. ".number_format($jumlah, 0, '.', ','),0,0,'L');
 	$pdf->SetFont('helvetica','',9);
 	$pdf->setXY(110,$pdf->getY());
-	$pdf->Cell(0,5,"Sub Coord Product & Infrastructure User Relation",0,0,'C');
+	$pdf->Cell(0,5,"MANAGER USER RELATION",0,0,'C');
 	// $pdf->SetFont('','U');
 	// $pdf->Cell(185,5,"NAMA PEMOHON & CAP PERUSAHAAN",0,0,'R');
 	// $pdf->Ln(4);
@@ -2885,6 +2892,8 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::resource('/calibration', 'CalibrationChargeController');
 	Route::resource('/company', 'CompanyController');
 	Route::resource('/user', 'UserController');
+	Route::resource('/userin', 'UserinController');
+	Route::resource('/usereks', 'UsereksController');
 	Route::resource('/slideshow', 'SlideshowController');
 	Route::resource('/footer', 'FooterController');
 	Route::resource('/labs', 'ExaminationLabController');
@@ -2894,6 +2903,8 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::get('/feedback', 'FeedbackController@index');
 	Route::get('/downloadUsman', 'DashboardController@downloadUsman');
 	Route::post('/user/{id}/softDelete', 'UserController@softDelete');
+	Route::post('/userin/{id}/softDelete', 'UserinController@softDelete');
+	Route::post('/usereks/{id}/softDelete', 'UsereksController@softDelete');
 	Route::get('/analytic', 'AnalyticController@index');
 	Route::resource('/role', 'RoleController');
 	Route::get('/downloadbukti/{id}', 'SalesController@viewMedia');
@@ -2951,6 +2962,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::post('/kuitansi', 'IncomeController@store');
 	Route::get('/kuitansi/{id}/detail', 'IncomeController@detail');
 	Route::get('/downloadkuitansistel/{id}', 'SalesController@downloadkuitansistel');
+	Route::get('/downloadfakturstel/{id}', 'SalesController@downloadfakturstel');
 
 	Route::resource('/spk', 'SPKController');
 });
@@ -3059,13 +3071,14 @@ Route::post('/insertKuisioner', 'PengujianController@insertKuisioner');
 Route::post('/insertComplaint', 'PengujianController@insertComplaint');
 
 Route::get('/client/downloadkuitansistel/{id}', 'ProductsController@downloadkuitansistel');
+Route::get('/client/downloadfakturstel/{id}', 'ProductsController@downloadfakturstel');
 
 Route::get('/cetakFormBarang/{id}', 'ExaminationController@cetakFormBarang');
-Route::get('/cetakBuktiPenerimaanPerangkat/{kode_barang}/{company_name}/{company_address}/{company_phone}/{company_fax}/{device_name}/{device_mark}/{device_manufactured_by}/{device_model}/{device_serial_number}/{exam_type}/{exam_type_desc}', 
+Route::get('/cetakBuktiPenerimaanPerangkat/{kode_barang}/{company_name}/{company_address}/{company_phone}/{company_fax}/{device_name}/{device_mark}/{device_manufactured_by}/{device_model}/{device_serial_number}/{exam_type}/{exam_type_desc}/{contract_date}', 
 array('as' => 'cetakBuktiPenerimaanPerangkat', function(
 	Illuminate\Http\Request $request, $kode_barang = null, $company_name = null, $company_address = null, $company_phone = null, $company_fax = null, 
 	$device_name = null, $device_mark = null, $device_manufactured_by = null, $device_model = null , $device_serial_number = null, 
-	$exam_type = null, $exam_type_desc = null) {
+	$exam_type = null, $exam_type_desc = null, $contract_date = null) {
 		$equipment = $request->session()->pull('key_exam_for_equipment');
 		$pdf = new PDF_MC_Table(); 
 		$pdf->judul_kop('Bukti Penerimaan & Pengeluaran Perangkat Uji','Nomor: '.urldecode($kode_barang));
@@ -3171,9 +3184,9 @@ array('as' => 'cetakBuktiPenerimaanPerangkat', function(
 
 		//TANGGAL PENERIMAAN & PENGEMBALIAN
 		$pdf->setXY(13,$pdf->getY() - 22);
-		$pdf->Cell(18,10,'TGL ..................',0,0,'L');  
+		$pdf->Cell(18,10,'TGL '.urldecode($contract_date),0,0,'L');  
 		$pdf->setX(53);
-		$pdf->Cell(18,10,'TGL ..................',0,0,'L'); 
+		$pdf->Cell(18,10,'TGL '.urldecode($contract_date),0,0,'L'); 
 		$pdf->setX(123);
 		$pdf->Cell(18,10,'TGL ..................',0,0,'L'); 
 		$pdf->setX(163);

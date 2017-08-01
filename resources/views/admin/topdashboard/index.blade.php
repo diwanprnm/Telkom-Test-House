@@ -113,6 +113,7 @@
 			</div>
 			<div style="margin-bottom:5%"></div>
 			<div class="row">
+				<!--
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<div class="center"> <strong>Summary </strong></div>
@@ -203,6 +204,7 @@
 						</table>
 					</div>
 				</div>
+				-->
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<div class="center"> <strong>Summary </strong></div>

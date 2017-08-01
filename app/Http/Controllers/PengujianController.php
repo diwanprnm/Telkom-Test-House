@@ -669,6 +669,7 @@ class PengujianController extends Controller
 					d.test_reference AS referensi_perangkat,
 					d.serial_number AS serialNumber,
 					e.jns_perusahaan AS jnsPerusahaan,
+					et.id AS id_jns_pengujian,
 					et.name AS jns_pengujian,
 					et.description AS desc_pengujian,
 					e.spk_code
@@ -704,6 +705,7 @@ class PengujianController extends Controller
 					d.test_reference AS referensi_perangkat,
 					d.serial_number AS serialNumber,
 					e.jns_perusahaan AS jnsPerusahaan,
+					et.id AS id_jns_pengujian,
 					et.name AS jns_pengujian,
 					et.description AS desc_pengujian,
 					e.spk_code

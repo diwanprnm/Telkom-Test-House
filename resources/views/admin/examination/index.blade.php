@@ -410,6 +410,12 @@
 																{{ $item->device->model }}
 															</td>
 														</tr>	
+														<tr>
+															<td>Nomor Form Uji:</td>
+															<td>
+																{{ $item->function_test_NO }}
+															</td>
+														</tr>
 													</tbody>
 												</table>
 											</div>

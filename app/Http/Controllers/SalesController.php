@@ -113,7 +113,9 @@ class SalesController extends Controller
 			$STELSales_idKuitansi = STELSales::find($id);
 			return view('admin.sales.detail')
             ->with('data', $STELSales) 
+            ->with('id_sales', $id) 
             ->with('id_kuitansi', $STELSales_idKuitansi->id_kuitansi) 
+            ->with('faktur_file', $STELSales_idKuitansi->faktur_file) 
 			;     
         }else{
             redirect("login");
@@ -199,9 +201,12 @@ class SalesController extends Controller
         $stel = STELSalesAttach::select($select)->rightJoin("stels_sales","stels_sales.id","=","stels_sales_attachment.stel_sales_id")
                 ->where("stels_sales.id",$id)->first();
 				
-		$select = array("stels.name","stels.price","stels.code","stels_sales_detail.qty","stels_sales_detail.id","stels_sales_detail.attachment"); 
+		$select = array("stels.name","stels.price","stels.code","stels_sales_detail.qty","stels_sales_detail.id","stels_sales_detail.attachment","stels.attachment as stelAttach","stels_sales.invoice","companies.name as company_name"); 
 		$STELSales = STELSalesDetail::select($select)->where("stels_sales_id",$id)
+					->join("stels_sales","stels_sales.id","=","stels_sales_detail.stels_sales_id")
 					->join("stels","stels.id","=","stels_sales_detail.stels_id")
+					->join("users","users.id","=","stels_sales.user_id")
+					->join("companies","companies.id","=","users.company_id")
 					->get();
         return view('admin.sales.edit')
             ->with('data', $stel)
@@ -242,6 +247,19 @@ class SalesController extends Controller
 					$STELSales->id_kuitansi = $name_file;					
 				}else{
 					Session::flash('error', 'Save Receipt to directory failed');
+					return redirect('/admin/sales/'.$STELSales->id.'/edit');
+				}
+			}
+			if ($request->hasFile('faktur_file')) {
+				$name_file = 'faktur_stel_'.$request->file('faktur_file')->getClientOriginalName();
+				$path_file = public_path().'/media/stel/'.$STELSales->id;
+				if (!file_exists($path_file)) {
+					mkdir($path_file, 0775);
+				}
+				if($request->file('faktur_file')->move($path_file,$name_file)){
+					$STELSales->faktur_file = $name_file;					
+				}else{
+					Session::flash('error', 'Save Invoice to directory failed');
 					return redirect('/admin/sales/'.$STELSales->id.'/edit');
 				}
 			}
@@ -306,6 +324,20 @@ class SalesController extends Controller
 
         if ($stel){
             $file = public_path().'/media/stel/'.$stel->id."/".$stel->id_kuitansi;
+            $headers = array(
+              'Content-Type: application/octet-stream',
+            );
+
+            return Response::file($file, $headers);
+        }
+    }
+
+    public function downloadfakturstel($id)
+    {
+        $stel = STELSales::where("id",$id)->first();
+
+        if ($stel){
+            $file = public_path().'/media/stel/'.$stel->id."/".$stel->faktur_file;
             $headers = array(
               'Content-Type: application/octet-stream',
             );

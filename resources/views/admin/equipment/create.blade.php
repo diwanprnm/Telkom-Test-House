@@ -76,10 +76,10 @@
 							<div class="col-md-12" style="margin-bottom:10px">
 								<div class="form-group">
 									<label>
-										Tanggal
+										Tanggal 
 									</label>
 									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-										<input type="text" name="equip_date" class="form-control">
+										<input type="text" name="equip_date" class="form-control" value="{{ $in_equip_date }}">
 										<span class="input-group-btn">
 											<button type="button" class="btn btn-default">
 												<i class="glyphicon glyphicon-calendar"></i>

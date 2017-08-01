@@ -99,6 +99,7 @@ class EquipmentController extends Controller
     public function create(Request $request)
     {
 		$exam_id = $request->session()->pull('key_exam_id_for_generate_equip_masuk');
+		$in_equip_date = $request->session()->pull('key_in_equip_date_for_generate_equip_masuk');
 		$examination = DB::table('examinations')
 			->join('devices', 'examinations.device_id', '=', 'devices.id')
 			->select(
@@ -111,6 +112,7 @@ class EquipmentController extends Controller
 		
         return view('admin.equipment.create')
             ->with('exam_id', $exam_id)
+            ->with('in_equip_date', $in_equip_date)
             ->with('examination', $examination);
     }
 
@@ -149,6 +151,7 @@ class EquipmentController extends Controller
 
         try{
 			$examination = Examination::where('id', $equipment->examination_id)->first();
+			$examination->contract_date = $request->input('equip_date');
 			$examination->location = 2;
 			$examination->save();
 
