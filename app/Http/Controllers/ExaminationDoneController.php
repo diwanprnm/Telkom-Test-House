@@ -259,7 +259,7 @@ class ExaminationDoneController extends Controller
 			'Model/Tipe Perangkat',
 			'Referensi Uji Perangkat',
 			'Tanggal Berlaku Perangkat',
-			'Kode SPK',
+			'Nomor SPK',
 			'Tanggal SPK',
 			'Total Biaya'
 		]; 

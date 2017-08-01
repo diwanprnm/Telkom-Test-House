@@ -929,12 +929,12 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
-											Kode SPK *
+											Nomor SPK *
 										</label>
 										@if($data->spk_code == '') 
-											<input type="text" name="spk_code" id="spk_code" class="form-control" placeholder="Kode SPK" value="{{ $gen_spk_code }}" required>
+											<input type="text" name="spk_code" id="spk_code" class="form-control" placeholder="Nomor SPK" value="{{ $gen_spk_code }}" required>
 										@else
-											<input type="text" name="spk_code" id="spk_code" class="form-control" placeholder="Kode SPK" value="{{ $data->spk_code }}" required>
+											<input type="text" name="spk_code" id="spk_code" class="form-control" placeholder="Nomor SPK" value="{{ $data->spk_code }}" required>
 										@endif
 										<button type="button" class="btn btn-wide btn-green btn-squared pull-right" onclick="generateSPKCode('<?php echo $data->examinationLab->lab_code ?>','<?php echo $data->examinationType->name ?>','<?php echo date('Y') ?>')">
 											Generate

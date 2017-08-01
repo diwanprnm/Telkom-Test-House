@@ -104,7 +104,7 @@
 						<label for="nama_perangkat">Nama Perangkat *</label>
 					</td>
 					<td align="center">
-						<label for="biaya">Biaya (Rp.) *</label>
+						<label for="biaya">Biaya (tanpa PPN) *</label>
 					</td>
 					<td style="width:40px;"><a  style="width:40px;" value='Add More' class='del btn btn-success btn-flat' onclick='addAppend()'><i id='icon_add' class='fa fa-plus'/></a></td>
 				</tr>
@@ -125,6 +125,24 @@
 			</tbody>
 			<tbody class="tes_append"></tbody>
 		</table>
+		<table width=100%>
+			<thead>
+				<label for="nama_perangkat">Tambahkan Biaya diluar PPN *bila perlu</label>
+			</thead>
+			<tbody border="1">
+				<tr>
+					<td align="center">
+						<label for="nama_perangkat">Nama *</label>
+					</td>
+					<td align="center">
+						<label for="biaya">Biaya (tanpa PPN) *</label>
+					</td>
+					<td style="width:40px;"><a  style="width:40px;" value='Add More' class='del btn btn-success btn-flat' onclick='addAppend2()'><i id='icon_add' class='fa fa-plus'/></a></td>
+				</tr>
+			</tbody>
+			<tbody class="tes_append2"></tbody>
+		</table>
+	</fieldset>
 		<div class="row">
 			<div class="col-md-12">
 				<button type="button" class="btn btn-wide btn-green btn-squared pull-right generate-button">
@@ -132,7 +150,6 @@
 				</button>
 			</div>
 		</div>
-	</fieldset>
 	
 	<!-- start: MAIN JAVASCRIPTS -->
     <!-- <script src={{ asset("vendor/jquery/jquery.min.js") }}></script> -->
@@ -242,9 +259,35 @@
 			$("#hapus_"+a+"").remove();
 		}
 		
+			var hitung2 = 0;
+			function addAppend2(){
+				hitung2 += 1;
+				var bahan_append = '<tr id="hapus2_'+hitung2+'">';
+						bahan_append += '<td>'
+						bahan_append += '<div class="form-group">'
+							bahan_append += '<input type="text" class="form-control" name="nama_perangkat2[]" required>'
+						bahan_append += '</div>'
+						bahan_append += '</td>'
+						bahan_append += '<td>'
+						bahan_append += '<div class="form-group">'
+							bahan_append += '<input type="number" class="form-control" name="biaya2[]" required>'
+						bahan_append += '</div>'
+						bahan_append += '</td>'
+						bahan_append += '<td style="width:40px;"><a  style="width:40px;" value="Delete" class="del btn btn-danger btn-flat" onclick="destroy2('+hitung2+')"><i id="icon_add" class="fa-cross fa fa-remove"/></a></td>'
+				bahan_append += '</tr>'
+
+				$('.tes_append2').append(bahan_append);
+			}
+			function destroy2(a)
+			{
+				$("#hapus2_"+a+"").remove();
+			}
+			
 		$('.generate-button').click(function () {
 			arr_nama_perangkat = [];
 			arr_biaya = [];
+			arr_nama_perangkat2 = [];
+			arr_biaya2 = [];
 			total_biaya = 0;
 			var exam_id = document.getElementsByName("exam_id")[0].value;
 			var spb_number = document.getElementsByName("spb_number")[0].value;
@@ -259,13 +302,23 @@
 					arr_biaya[i] = biaya[i].value
 					total_biaya += Number(arr_biaya[i]);
 				}
+			var nama_perangkat2 = document.getElementsByName("nama_perangkat2[]");
+				var i;
+				for (i = 0; i < nama_perangkat2.length; i++) {
+					arr_nama_perangkat2[i] = nama_perangkat2[i].value;
+				}
+			var biaya2 = document.getElementsByName("biaya2[]");
+				for (i = 0; i < biaya2.length; i++) {
+					arr_biaya2[i] = biaya2[i].value
+					total_biaya += Number(arr_biaya2[i]);
+				}
 			
 			var APP_URL = {!! json_encode(url('/cetakSPB')) !!};
 			
 			$.ajax({
 				type: "POST",
 				url : "generateSPB",
-				data: {'_token':"{{ csrf_token() }}", 'exam_id':exam_id, 'spb_number':spb_number, 'spb_date':spb_date, 'arr_nama_perangkat':arr_nama_perangkat, 'arr_biaya':arr_biaya},
+				data: {'_token':"{{ csrf_token() }}", 'exam_id':exam_id, 'spb_number':spb_number, 'spb_date':spb_date, 'arr_nama_perangkat':arr_nama_perangkat, 'arr_biaya':arr_biaya, 'arr_nama_perangkat2':arr_nama_perangkat2, 'arr_biaya2':arr_biaya2},
 				beforeSend: function(){
 					
 				},

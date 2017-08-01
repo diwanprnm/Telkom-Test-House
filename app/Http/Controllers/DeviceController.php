@@ -208,7 +208,7 @@ class DeviceController extends Controller
 			'Referensi Uji',
 			'Berlaku Dari',
 			'Berlaku Sampai',
-			'Kode SPK',
+			'Nomor SPK',
 			'Total Biaya'
 		]; 
 		

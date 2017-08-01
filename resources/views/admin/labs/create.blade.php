@@ -52,6 +52,14 @@
 	                        <div class="col-md-12">
 								<div class="form-group">
 									<label>
+										Inisial *
+									</label>
+									<input type="text" name="lab_init" class="form-control" placeholder="Inisial Lab" required>
+								</div>
+							</div>
+	                        <div class="col-md-12">
+								<div class="form-group">
+									<label>
 										Deskripsi *
 									</label>
 									<textarea type="text" name="description" class="form-control" placeholder="Deskripsi Lab" required></textarea>

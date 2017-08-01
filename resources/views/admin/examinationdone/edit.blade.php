@@ -784,9 +784,9 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Kode SPK *
+										Nomor SPK *
 									</label>
-										<input type="text" name="spk_code" id="spk_code" class="form-control" placeholder="Kode SPK" value="{{ $data->spk_code }}" readonly>
+										<input type="text" name="spk_code" id="spk_code" class="form-control" placeholder="Nomor SPK" value="{{ $data->spk_code }}" readonly>
 								</div>
 							</div>
 	                    </div>

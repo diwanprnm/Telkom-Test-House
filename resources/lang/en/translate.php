@@ -163,7 +163,7 @@ return [
 	'examination_file_payment'=> 'Payment Attachment',
 	'examination_number_payment'=> 'SPB Number',
 	'examination_date_payment'=> 'Payment Date',
-	'examination_price_payment'=> 'Total',
+	'examination_price_payment'=> 'Amount of Transfer',
 	'examination_upload_payment_file'=> 'Upload',
 	'examination_model'=> 'Model/Type',
 	'examination_capacity'=> 'Capacity',
@@ -336,4 +336,5 @@ return [
 	'document_not_found'	=> 'Document Not Found',
 	'tax'  	=> 'Tax',
 	'see_receipt'  	=> 'See Receipt',
+	'see_invoice'  	=> 'See Tax Invoice',
 ];

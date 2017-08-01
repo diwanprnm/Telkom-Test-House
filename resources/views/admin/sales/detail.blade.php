@@ -83,6 +83,11 @@
                     	<button type="button" class="btn btn-wide btn-red btn-squared pull-right" style="margin-right: 1%;">Lihat Kuitansi</button>
                     </a>
 					@endif
+					@if($faktur_file != '')
+					<a href="{{ URL::to('/admin/downloadfakturstel/'.$id_sales) }}" target="_blank">
+                    	<button type="button" class="btn btn-wide btn-red btn-squared pull-right" style="margin-right: 1%;">Lihat Faktur Pajak</button>
+                    </a>
+					@endif
                 </div>
 			</div>
 		</div>
