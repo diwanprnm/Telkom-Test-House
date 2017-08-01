@@ -905,6 +905,11 @@ class PengujianController extends Controller
 				->where('created_by', '=', ''.$user_id.'')
 				->where('name', '=', 'File Pembayaran')
 				->first();
+
+
+		 	$examinationsData = DB::table('examinations')
+				->where('id', '=', ''.$id.'') 
+				->first();
 			
             // print_r($data);exit;
             if (count($data) == 0){
@@ -916,7 +921,8 @@ class PengujianController extends Controller
                 ->with('message', $message)
                 ->with('spb_number', $examination->spb_number)
                 ->with('cust_price_payment', $examination->cust_price_payment)
-                ->with('data', $data);
+                ->with('data', $data)
+                ->with('examinationsData', $examinationsData);
                 // ->with('search', $search);
         }
     }

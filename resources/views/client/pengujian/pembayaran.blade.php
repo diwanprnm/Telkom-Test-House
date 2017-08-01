@@ -95,7 +95,7 @@
 				</div>
 
 
-
+				<input type="hidden" name="spb_date" id="spd_date" value="<?php echo $examinationsData->spb_date;?>">
 				</div>
 
 			</div>
@@ -114,10 +114,17 @@
 		// 	"autoclose": true
 		// });		
 
+		var spb_date = $("#spd_date").val();
+
+		var year = spb_date.split("-")[0];
+		var month = spb_date.split("-")[1];
+		var day = spb_date.split("-")[2];
+
 		$('.date').datepicker({
       dateFormat: 'yy-mm-dd', 
       autoclose: true,
       numberOfMonths: 2,
+      minDate: new Date(year+'/'+month+'/'+day),
       showButtonPanel: true
 
   });
