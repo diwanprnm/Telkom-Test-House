@@ -181,16 +181,17 @@ class EquipmentController extends Controller
             $logs->save();
 
             /* push notif*/
-            $data= array(
-                    "from"=>"admin",
-                    "to"=>"user",
-                    "message"=>"Perangkat yang akan diuji, sudah masuk Gudang Urel",
-                    "url"=>"pengujian/".$equipment->examination_id,
-                    "is_read"=>0,
-                    "created_at"=>date("Y-m-d H:i:s"),
-                    "updated_at"=>date("Y-m-d H:i:s")
-                    );
-
+            
+              $data= array( 
+              "from"=>"admin",
+              "to"=>$currentUser->id,
+              "message"=>"Perangkat yang akan diuji, sudah masuk Gudang Urel",
+              "url"=>"pengujian/".$equipment->examination_id,
+              "is_read"=>0,
+              "created_at"=>date("Y-m-d H:i:s"),
+              "updated_at"=>date("Y-m-d H:i:s")
+              );
+              
               $notification = new NotificationTable();
               $notification->from = $data['from'];
               $notification->to = $data['to'];
@@ -200,6 +201,8 @@ class EquipmentController extends Controller
               $notification->created_at = $data['created_at'];
               $notification->updated_at = $data['updated_at'];
               $notification->save();
+
+              $data['id'] = $notification->id;  
               event(new Notification($data));
 
             Session::flash('message', 'Equipment successfully created');

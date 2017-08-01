@@ -15,7 +15,7 @@ return [
 
     'env' => env('APP_ENV', 'production'),
     'url_api_bsp' => env('url_api_bsp', 'http://ptbsp.ddns.net:13280/RevitalisasiOTR/api/'),
-    'IS_ENABLED_NOTIFICATION' => env('IS_ENABLED_NOTIFICATION', false),
+    'IS_ENABLED_NOTIFICATION' => env('IS_ENABLED_NOTIFICATION', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -28,7 +28,7 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', false),
+    'debug' => env('APP_DEBUG', true),
 
     /*
     |--------------------------------------------------------------------------

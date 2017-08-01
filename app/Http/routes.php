@@ -12,7 +12,10 @@
 */
 // use Anouar\Fpdf\Fpdf as FPDF;
 
-
+Route::get('/clear-cache', function() {
+    $exitCode = Artisan::call('cache:clear');
+    return '<h1>Cache facade value cleared</h1>';
+});
 class PDF_MC_Table_Kuitansi extends FPDF{
 	var $widths;
 	var $aligns;
@@ -2965,6 +2968,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::get('/downloadfakturstel/{id}', 'SalesController@downloadfakturstel');
 
 	Route::resource('/spk', 'SPKController');
+
 });
 	Route::get('/adm_dashboard_autocomplete/{query}', 'DashboardController@autocomplete')->name('adm_dashboard_autocomplete');
 	
@@ -3062,7 +3066,7 @@ Route::get('/payment_status', 'ProductsController@payment_status');
 Route::post('/checkout', 'ProductsController@checkout');
 Route::post('/doCheckout', 'ProductsController@doCheckout');
 Route::get('/payment_detail/{id}', 'ProductsController@payment_detail');
-Route::get('/test_notifitcation', 'ProductsController@test_notifitcation');
+Route::get('/test_notification', 'ProductsController@test_notification');
 Route::get('/upload_payment/{id}', 'ProductsController@upload_payment');
 Route::post('/pembayaranstel', 'ProductsController@pembayaranstel');
 
@@ -3386,4 +3390,9 @@ Route::get('/cetakKepuasanKonsumen', array('as' => 'cetakKepuasanKonsumen', func
 		exit;
 		
 	}
+
+
 ));
+
+
+	Route::post('/updateNotif', 'NotificationController@updateNotif');

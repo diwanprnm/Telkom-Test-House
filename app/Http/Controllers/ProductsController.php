@@ -321,9 +321,10 @@ class ProductsController extends Controller
 
     public function test_notification(){
         $data= array(
-                "from"=>"35a35ea3-6fd5-43ae-8b97-ddf7525e94d1",
-                "to"=>"admin",
-                "action"=>"sales",
+            "id"=>1,
+                "from"=>"admin",
+                "to"=>"35a35ea3-6fd5-43ae-8b97-ddf7525e94d1",
+                "url"=>"sales",
                 "message"=>"Notification Message"
                 );
           event(new Notification($data));

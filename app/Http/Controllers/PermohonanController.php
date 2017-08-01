@@ -494,28 +494,28 @@ class PermohonanController extends Controller
 
 
 		/* push notif*/
-		$data= array(
-                "from"=>"user",
-                "to"=>"admin",
-                "message"=>"Permohonan Baru",
-                "url"=>"examination/".$exam_id."/edit",
-                "is_read"=>0,
-                "created_at"=>date("Y-m-d H:i:s"),
-                "updated_at"=>date("Y-m-d H:i:s")
-                );
+		
+	  $data= array( 
+        "from"=>$currentUser->id,
+        "to"=>"admin",
+        "message"=>"Permohonan Baru",
+        "url"=>"examination/".$exam_id."/edit",
+        "is_read"=>0,
+        "created_at"=>date("Y-m-d H:i:s"),
+        "updated_at"=>date("Y-m-d H:i:s")
+      );
+	  $notification = new NotificationTable();
+      $notification->from = $data['from'];
+      $notification->to = $data['to'];
+      $notification->message = $data['message'];
+      $notification->url = $data['url'];
+      $notification->is_read = $data['is_read'];
+      $notification->created_at = $data['created_at'];
+      $notification->updated_at = $data['updated_at'];
+      $notification->save();
 
-		  $notification = new NotificationTable();
-	      $notification->from = $data['from'];
-	      $notification->to = $data['to'];
-	      $notification->message = $data['message'];
-	      $notification->url = $data['url'];
-	      $notification->is_read = $data['is_read'];
-	      $notification->created_at = $data['created_at'];
-	      $notification->updated_at = $data['updated_at'];
-	      $notification->save();
-	      event(new Notification($data));
-
-        
+      $data['id'] = $notification->id;
+      event(new Notification($data)); 
 
 	}
 	

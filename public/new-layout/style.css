@@ -14168,3 +14168,8 @@ h4.judulselesai {
 .invoice-group-button a {
     margin-left: 20px !important;
 }
+
+.notification>.open>.dropdown-menu{
+	top: 56px !important;
+    left: -90px !important;
+}

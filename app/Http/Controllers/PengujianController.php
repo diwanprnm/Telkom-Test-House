@@ -972,16 +972,16 @@ class PengujianController extends Controller
 				$exam_hist->created_at = date('Y-m-d H:i:s');
 				$exam_hist->save();
 
-				$data= array(
-	                "from"=>"user",
-	                "to"=>"admin",
-	                "message"=>$currentUser->name." membayar SPB nomor".$examination->spb_number,
-	                "url"=>"examination/".$request->input('hide_id_exam').'/edit',
-	                "is_read"=>0,
-	                "created_at"=>date("Y-m-d H:i:s"),
-	                "updated_at"=>date("Y-m-d H:i:s")
-	                );
-
+				
+				$data= array( 
+                "from"=>$currentUser->id,
+                "to"=>"admin",
+                "message"=>$currentUser->name." membayar SPB nomor".$examination->spb_number,
+                "url"=>"examination/".$request->input('hide_id_exam').'/edit',
+                "is_read"=>0,
+                "created_at"=>date("Y-m-d H:i:s"),
+                "updated_at"=>date("Y-m-d H:i:s")
+                );
 			  	$notification = new NotificationTable();
 		      	$notification->from = $data['from'];
 		      	$notification->to = $data['to'];
@@ -991,6 +991,7 @@ class PengujianController extends Controller
 		      	$notification->created_at = $data['created_at'];
 		      	$notification->updated_at = $data['updated_at'];
 		      	$notification->save();
+		      	$data['id'] = $notification->id; 
 		        event(new Notification($data));
 
 				Session::flash('message', 'Upload successfully');
@@ -1107,15 +1108,15 @@ class PengujianController extends Controller
 			}
 		}
 		/* push notif*/
-		$data= array(
-                "from"=>"user",
-                "to"=>"admin",
-                "message"=>$currentUser->id." mengedit data pengujian",
-                "url"=>"examination/".$request->input('hide_id_exam'),
-                "is_read"=>0,
-                "created_at"=>date("Y-m-d H:i:s"),
-                "updated_at"=>date("Y-m-d H:i:s")
-                );
+			$data= array(
+	        "from"=>$currentUser->id,
+	        "to"=>"admin",
+	        "message"=>$currentUser->name." Mengajukan Tanggal Uji Fungsi",
+	        "url"=>"examination/".$request->input('hide_id_exam'),
+	        "is_read"=>0,
+	        "created_at"=>date("Y-m-d H:i:s"),
+	        "updated_at"=>date("Y-m-d H:i:s")
+	        );
 
 		  $notification = new NotificationTable();
 	      $notification->from = $data['from'];
@@ -1126,6 +1127,7 @@ class PengujianController extends Controller
 	      $notification->created_at = $data['created_at'];
 	      $notification->updated_at = $data['updated_at'];
 	      $notification->save();
+	      $data['id'] = $notification->id;
 	      event(new Notification($data));
 		return back();
     }
