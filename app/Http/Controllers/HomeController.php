@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Jobs\ChangeLocale;
 use Auth;
 use Response;
+use App\Events\Notification;
+use App\NotificationTable;
 
 class HomeController extends Controller
 {

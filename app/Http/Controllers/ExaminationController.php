@@ -34,6 +34,8 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
+use App\Events\Notification;
+use App\NotificationTable;
 
 class ExaminationController extends Controller
 {
@@ -345,9 +347,51 @@ class ExaminationController extends Controller
 			$status = $request->input('registration_status');
 			$exam->registration_status = $status;
 			if($status == 1){
+				/* push notif*/
+				$data= array(
+		                "from"=>"admin",
+		                "to"=>"user",
+		                "message"=>"Registrasi Completed",
+		                "url"=>"pengujian/".$exam_id,
+		                "is_read"=>0,
+		                "created_at"=>date("Y-m-d H:i:s"),
+		                "updated_at"=>date("Y-m-d H:i:s")
+		                );
+
+				  $notification = new NotificationTable();
+			      $notification->from = $data['from'];
+			      $notification->to = $data['to'];
+			      $notification->message = $data['message'];
+			      $notification->url = $data['url'];
+			      $notification->is_read = $data['is_read'];
+			      $notification->created_at = $data['created_at'];
+			      $notification->updated_at = $data['updated_at'];
+			      $notification->save();
+			      event(new Notification($data));
 				$this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.registrasi", "Acc Registrasi");
 			}else if($status == -1){
 				// $exam->keterangan = $request->input('keterangan');
+				/* push notif*/
+				$data= array(
+		                "from"=>"admin",
+		                "to"=>"user",
+		                "message"=>"Registrasi Not Completed",
+		                "url"=>"pengujian/".$exam_id,
+		                "is_read"=>0,
+		                "created_at"=>date("Y-m-d H:i:s"),
+		                "updated_at"=>date("Y-m-d H:i:s")
+		                );
+
+				  $notification = new NotificationTable();
+			      $notification->from = $data['from'];
+			      $notification->to = $data['to'];
+			      $notification->message = $data['message'];
+			      $notification->url = $data['url'];
+			      $notification->is_read = $data['is_read'];
+			      $notification->created_at = $data['created_at'];
+			      $notification->updated_at = $data['updated_at'];
+			      $notification->save();
+			      event(new Notification($data));
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Registrasi",$request->input('keterangan'));
 			}
         }
@@ -376,9 +420,10 @@ class ExaminationController extends Controller
 
 						$attach->save();
 					}
-					return redirect('/admin/examination/'.$exam->id.'/edit');
+					
+					 return redirect('/admin/examination/'.$exam->id.'/edit');
 				}else{
-					Session::flash('error', 'Save Bukti Penerimaan & Pengeluaran Perangkat Uji to directory failed');
+					
 					return redirect('/admin/examination/'.$exam->id.'/edit');
 				}
 			}
@@ -408,6 +453,7 @@ class ExaminationController extends Controller
 
 						$attach->save();
 					}
+
 				}else{
 					Session::flash('error', 'Save Function Test Report to directory failed');
 					return redirect('/admin/examination/'.$exam->id.'/edit');
@@ -417,8 +463,49 @@ class ExaminationController extends Controller
 			$exam->contract_date = date('Y-m-d');
 			$exam->function_status = $status;
 			if($status == 1){
+				/* push notif*/
+	            $data= array(
+	                    "from"=>"admin",
+	                    "to"=>"user",
+	                    "message"=>"Uji Fungsi Completed",
+	                    "url"=>"pengujian/".$exam->id,
+	                    "is_read"=>0,
+	                    "created_at"=>date("Y-m-d H:i:s"),
+	                    "updated_at"=>date("Y-m-d H:i:s")
+	                    );
+
+	              $notification = new NotificationTable();
+	              $notification->from = $data['from'];
+	              $notification->to = $data['to'];
+	              $notification->message = $data['message'];
+	              $notification->url = $data['url'];
+	              $notification->is_read = $data['is_read'];
+	              $notification->created_at = $data['created_at'];
+	              $notification->updated_at = $data['updated_at'];
+	              $notification->save();
 				// $this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.function", "Acc Uji Fungsi");
 			}else if($status == -1){
+				/* push notif*/
+		            $data= array(
+		                    "from"=>"admin",
+		                    "to"=>"user",
+		                    "message"=>"Uji Fungsi Not Completed",
+		                    "url"=>"pengujian/".$exam->id,
+		                    "is_read"=>0,
+		                    "created_at"=>date("Y-m-d H:i:s"),
+		                    "updated_at"=>date("Y-m-d H:i:s")
+		                    );
+
+		              $notification = new NotificationTable();
+		              $notification->from = $data['from'];
+		              $notification->to = $data['to'];
+		              $notification->message = $data['message'];
+		              $notification->url = $data['url'];
+		              $notification->is_read = $data['is_read'];
+		              $notification->created_at = $data['created_at'];
+		              $notification->updated_at = $data['updated_at'];
+		              $notification->save();
+					Session::flash('error', 'Save Bukti Penerimaan & Pengeluaran Perangkat Uji to directory failed');
 				// $exam->keterangan = $request->input('keterangan');
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Uji Fungsi",$request->input('keterangan'));
 			}
@@ -463,8 +550,54 @@ class ExaminationController extends Controller
 				$attach = ExaminationAttach::where('name', 'Tinjauan Kontrak')->where('examination_id', ''.$id.'')->first();
 					$attach_name = $attach->attachment;
 				// $this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.contract", "Upload Tinjauan Pustaka",$path_file."/".$attach_name);
+				if($exam->contract_status){
+					/* push notif*/
+		            $data= array(
+		                    "from"=>"admin",
+		                    "to"=>"user",
+		                    "message"=>"Tinjauan Kontrak Completed",
+		                    "url"=>"pengujian/".$id,
+		                    "is_read"=>0,
+		                    "created_at"=>date("Y-m-d H:i:s"),
+		                    "updated_at"=>date("Y-m-d H:i:s")
+		                    );
+
+		              $notification = new NotificationTable();
+		              $notification->from = $data['from'];
+		              $notification->to = $data['to'];
+		              $notification->message = $data['message'];
+		              $notification->url = $data['url'];
+		              $notification->is_read = $data['is_read'];
+		              $notification->created_at = $data['created_at'];
+		              $notification->updated_at = $data['updated_at'];
+		              $notification->save();
+				}else{
+					/* push notif*/
+		            $data= array(
+		                    "from"=>"admin",
+		                    "to"=>"user",
+		                    "message"=>"Tinjauan Kontrak Not Completed",
+		                    "url"=>"pengujian/".$id,
+		                    "is_read"=>0,
+		                    "created_at"=>date("Y-m-d H:i:s"),
+		                    "updated_at"=>date("Y-m-d H:i:s")
+		                    );
+
+		              $notification = new NotificationTable();
+		              $notification->from = $data['from'];
+		              $notification->to = $data['to'];
+		              $notification->message = $data['message'];
+		              $notification->url = $data['url'];
+		              $notification->is_read = $data['is_read'];
+		              $notification->created_at = $data['created_at'];
+		              $notification->updated_at = $data['updated_at'];
+		              $notification->save();
+				}
+				
 			}else if($status == -1){
 				// $exam->keterangan = $request->input('keterangan');
+				
+				
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Tinjauan Pustaka",$request->input('keterangan'));
 			}
         }
@@ -508,6 +641,27 @@ class ExaminationController extends Controller
 				$path_file = public_path().'/media/examination/'.$id;
 				$attach = ExaminationAttach::where('name', 'SPB')->where('examination_id', ''.$id.'')->first();
 					$attach_name = $attach->attachment;
+
+				/* push notif*/
+	            $data= array(
+	                    "from"=>"admin",
+	                    "to"=>"user",
+	                    "message"=>"URel mengirimkan SPB untuk dibayar",
+	                    "url"=>"pengujian/".$exam->id."/pembayaran",
+	                    "is_read"=>0,
+	                    "created_at"=>date("Y-m-d H:i:s"),
+	                    "updated_at"=>date("Y-m-d H:i:s")
+	                    );
+
+	              $notification = new NotificationTable();
+	              $notification->from = $data['from'];
+	              $notification->to = $data['to'];
+	              $notification->message = $data['message'];
+	              $notification->url = $data['url'];
+	              $notification->is_read = $data['is_read'];
+	              $notification->created_at = $data['created_at'];
+	              $notification->updated_at = $data['updated_at'];
+	              $notification->save();
 				$this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.spb", "Upload SPB",$path_file."/".$attach_name);
 			}else if($status == -1){
 				$exam->price = $request->input('exam_price');
@@ -620,10 +774,56 @@ class ExaminationController extends Controller
 				$exam->spk_date = date('Y-m-d');
 				// $res_exam_schedule = $client->post('notification/notifToTE?lab=?'.$exam->examinationLab->lab_code)->getBody();
 				$res_exam_schedule = $client->get('spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR);
+				if($exam->payment_status){
+					$data= array(
+		                "from"=>"admin",
+		                "to"=>"user",
+		                "message"=>"Pembayaran Completed",
+		                "url"=>"pengujian/".$exam->id,
+		                "is_read"=>0,
+		                "created_at"=>date("Y-m-d H:i:s"),
+		                "updated_at"=>date("Y-m-d H:i:s")
+		                );
+
+				  	$notification = new NotificationTable();
+			      	$notification->from = $data['from'];
+			      	$notification->to = $data['to'];
+			      	$notification->message = $data['message'];
+			      	$notification->url = $data['url'];
+			      	$notification->is_read = $data['is_read'];
+			      	$notification->created_at = $data['created_at'];
+			      	$notification->updated_at = $data['updated_at'];
+			      	$notification->save();
+			        event(new Notification($data));
+				}else{
+					$data= array(
+		                "from"=>"admin",
+		                "to"=>"user",
+		                "message"=>"Pembayaran Not Completed",
+		                "url"=>"pengujian/".$exam->id,
+		                "is_read"=>0,
+		                "created_at"=>date("Y-m-d H:i:s"),
+		                "updated_at"=>date("Y-m-d H:i:s")
+	                );
+
+				  	$notification = new NotificationTable();
+			      	$notification->from = $data['from'];
+			      	$notification->to = $data['to'];
+			      	$notification->message = $data['message'];
+			      	$notification->url = $data['url'];
+			      	$notification->is_read = $data['is_read'];
+			      	$notification->created_at = $data['created_at'];
+			      	$notification->updated_at = $data['updated_at'];
+			      	$notification->save();
+			        event(new Notification($data));
+				}
+				
 				// $exam_schedule = json_decode($res_exam_schedule);
 			}else if($status == -1){
 				Income::where('reference_id', '=' ,''.$exam->id.'')->delete();
 				// $exam->keterangan = $request->input('keterangan');
+				
+				
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Pembayaran",$request->input('keterangan'));
 			}
         }
@@ -638,11 +838,53 @@ class ExaminationController extends Controller
         if ($request->has('examination_status')){
             $status = $request->input('examination_status');
             $exam->examination_status = $status;
-			if($status == 1){
-				$this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.uji", "Pelaksanaan Uji");
-			}else if($status == -1){
+			if($status == -1){
+			
 				// $exam->keterangan = $request->input('keterangan');
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Pelaksanaan Uji",$request->input('keterangan'));
+			}else{
+				if($status ){
+					$data= array(
+		                "from"=>"admin",
+		                "to"=>"user",
+		                "message"=>"Pelaksanaan Uji Completed",
+		                "url"=>"pengujian/".$exam->id,
+		                "is_read"=>0,
+		                "created_at"=>date("Y-m-d H:i:s"),
+		                "updated_at"=>date("Y-m-d H:i:s")
+		                );
+
+				  	$notification = new NotificationTable();
+			      	$notification->from = $data['from'];
+			      	$notification->to = $data['to'];
+			      	$notification->message = $data['message'];
+			      	$notification->url = $data['url'];
+			      	$notification->is_read = $data['is_read'];
+			      	$notification->created_at = $data['created_at'];
+			      	$notification->updated_at = $data['updated_at'];
+			      	$notification->save();
+				}else{
+					$data= array(
+		                "from"=>"admin",
+		                "to"=>"user",
+		                "message"=>"Pelaksanaan Uji Not Completed",
+		                "url"=>"pengujian/".$exam->id,
+		                "is_read"=>0,
+		                "created_at"=>date("Y-m-d H:i:s"),
+		                "updated_at"=>date("Y-m-d H:i:s")
+		                );
+
+				  	$notification = new NotificationTable();
+			      	$notification->from = $data['from'];
+			      	$notification->to = $data['to'];
+			      	$notification->message = $data['message'];
+			      	$notification->url = $data['url'];
+			      	$notification->is_read = $data['is_read'];
+			      	$notification->created_at = $data['created_at'];
+			      	$notification->updated_at = $data['updated_at'];
+			      	$notification->save();
+				}
+				
 			}
         }
         if ($request->has('resume_status')){
@@ -679,9 +921,54 @@ class ExaminationController extends Controller
 			// }
             $status = $request->input('resume_status');
             $exam->resume_status = $status;
+			
 			if($status == -1){
 				// $exam->keterangan = $request->input('keterangan');
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Laporan Uji",$request->input('keterangan'));
+			
+			}else{
+				if($status ){
+					$data= array(
+		                "from"=>"admin",
+		                "to"=>"user",
+		                "message"=>"Laporan Uji Completed",
+		                "url"=>"pengujian/".$exam->id,
+		                "is_read"=>0,
+		                "created_at"=>date("Y-m-d H:i:s"),
+		                "updated_at"=>date("Y-m-d H:i:s")
+		                );
+
+				  	$notification = new NotificationTable();
+			      	$notification->from = $data['from'];
+			      	$notification->to = $data['to'];
+			      	$notification->message = $data['message'];
+			      	$notification->url = $data['url'];
+			      	$notification->is_read = $data['is_read'];
+			      	$notification->created_at = $data['created_at'];
+			      	$notification->updated_at = $data['updated_at'];
+			      	$notification->save();
+				}else{
+					$data= array(
+		                "from"=>"admin",
+		                "to"=>"user",
+		                "message"=>"Laporan Uji Not Completed",
+		                "url"=>"pengujian/".$exam->id,
+		                "is_read"=>0,
+		                "created_at"=>date("Y-m-d H:i:s"),
+		                "updated_at"=>date("Y-m-d H:i:s")
+		                );
+
+				  	$notification = new NotificationTable();
+			      	$notification->from = $data['from'];
+			      	$notification->to = $data['to'];
+			      	$notification->message = $data['message'];
+			      	$notification->url = $data['url'];
+			      	$notification->is_read = $data['is_read'];
+			      	$notification->created_at = $data['created_at'];
+			      	$notification->updated_at = $data['updated_at'];
+			      	$notification->save();
+				}
+				
 			}
         }
 		if ($request->hasFile('barang_file2')) {
@@ -719,6 +1006,48 @@ class ExaminationController extends Controller
             $passed = $request->input('passed');
             $exam->qa_status = $status;
             $exam->qa_passed = $passed;
+            if($exam->qa_passed){
+            	 $data= array(
+		                "from"=>"admin",
+		                "to"=>"user",
+		                "message"=>"Sidang QA Completed",
+		                "url"=>"pengujian/".$exam->id,
+		                "is_read"=>0,
+		                "created_at"=>date("Y-m-d H:i:s"),
+		                "updated_at"=>date("Y-m-d H:i:s")
+		                );
+
+				  	$notification = new NotificationTable();
+			      	$notification->from = $data['from'];
+			      	$notification->to = $data['to'];
+			      	$notification->message = $data['message'];
+			      	$notification->url = $data['url'];
+			      	$notification->is_read = $data['is_read'];
+			      	$notification->created_at = $data['created_at'];
+			      	$notification->updated_at = $data['updated_at'];
+			      	$notification->save();
+            }else{
+            	 $data= array(
+		                "from"=>"admin",
+		                "to"=>"user",
+		                "message"=>"Sidang QA Completed",
+		                "url"=>"pengujian/".$exam->id,
+		                "is_read"=>0,
+		                "created_at"=>date("Y-m-d H:i:s"),
+		                "updated_at"=>date("Y-m-d H:i:s")
+		                );
+
+				  	$notification = new NotificationTable();
+			      	$notification->from = $data['from'];
+			      	$notification->to = $data['to'];
+			      	$notification->message = $data['message'];
+			      	$notification->url = $data['url'];
+			      	$notification->is_read = $data['is_read'];
+			      	$notification->created_at = $data['created_at'];
+			      	$notification->updated_at = $data['updated_at'];
+			      	$notification->save();
+            }
+           
 			if($status == -1){
 				// $exam->keterangan = $request->input('keterangan');
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Sidang QA",$request->input('keterangan'));
@@ -727,6 +1056,47 @@ class ExaminationController extends Controller
         if ($request->has('certificate_status')){
             $status = $request->input('certificate_status');
             $exam->certificate_status = $status;
+            if($exam->certificate_status){
+            	 $data= array(
+		                "from"=>"admin",
+		                "to"=>"user",
+		                "message"=>"Sertifikat Completed",
+		                "url"=>"pengujian/".$exam->id,
+		                "is_read"=>0,
+		                "created_at"=>date("Y-m-d H:i:s"),
+		                "updated_at"=>date("Y-m-d H:i:s")
+		                );
+
+				  	$notification = new NotificationTable();
+			      	$notification->from = $data['from'];
+			      	$notification->to = $data['to'];
+			      	$notification->message = $data['message'];
+			      	$notification->url = $data['url'];
+			      	$notification->is_read = $data['is_read'];
+			      	$notification->created_at = $data['created_at'];
+			      	$notification->updated_at = $data['updated_at'];
+			      	$notification->save();
+            }else{
+            	 $data= array(
+		                "from"=>"admin",
+		                "to"=>"user",
+		                "message"=>"Sertifikat Not Completed",
+		                "url"=>"pengujian/".$exam->id,
+		                "is_read"=>0,
+		                "created_at"=>date("Y-m-d H:i:s"),
+		                "updated_at"=>date("Y-m-d H:i:s")
+		                );
+
+				  	$notification = new NotificationTable();
+			      	$notification->from = $data['from'];
+			      	$notification->to = $data['to'];
+			      	$notification->message = $data['message'];
+			      	$notification->url = $data['url'];
+			      	$notification->is_read = $data['is_read'];
+			      	$notification->created_at = $data['created_at'];
+			      	$notification->updated_at = $data['updated_at'];
+			      	$notification->save();
+            }
 			if($status == 1){
 				$this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.sertifikat", "Penerbitan Sertfikat");
 			}else if($status == -1){
@@ -1356,12 +1726,35 @@ class ExaminationController extends Controller
             $device->save();
 
             $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
+            $logs->user_id = $currentUser->id;
+            $logs->id = Uuid::uuid4();
             $logs->action = "update";   
             $logs->data = $device;
             $logs->created_by = $currentUser->id;
             $logs->page = "REVISI";
             $logs->save();
+
+            /* push notif*/
+			$data= array(
+	                "from"=>"admin",
+	                "to"=>"user",
+	                "message"=>"Urel mengedit data pengujian",
+	                "url"=>"pengujian/".$request->input('id_exam'),
+	                "is_read"=>0,
+	                "created_at"=>date("Y-m-d H:i:s"),
+	                "updated_at"=>date("Y-m-d H:i:s")
+	                );
+
+			  $notification = new NotificationTable();
+		      $notification->from = $data['from'];
+		      $notification->to = $data['to'];
+		      $notification->message = $data['message'];
+		      $notification->url = $data['url'];
+		      $notification->is_read = $data['is_read'];
+		      $notification->created_at = $data['created_at'];
+		      $notification->updated_at = $data['updated_at'];
+		      $notification->save();
+		      event(new Notification($data));
 
 
             Session::flash('message', 'Examination successfully updated');
