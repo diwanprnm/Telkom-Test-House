@@ -96,6 +96,7 @@ class ExaminationLabController extends Controller
         $labs->id = Uuid::uuid4();
         $labs->name = $request->input('name');
         $labs->lab_code = $request->input('lab_code');
+        $labs->lab_init = $request->input('lab_init');
         $labs->description = $request->input('description');
         $labs->is_active = $request->input('is_active');
         $labs->created_by = $currentUser->id;
@@ -164,6 +165,9 @@ class ExaminationLabController extends Controller
         }
         if ($request->has('lab_code')){
             $labs->lab_code = $request->input('lab_code');
+        }
+        if ($request->has('lab_init')){
+            $labs->lab_init = $request->input('lab_init');
         }
         if ($request->has('description')){
             $labs->description = $request->input('description');

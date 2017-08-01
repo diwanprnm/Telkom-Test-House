@@ -1839,7 +1839,7 @@ class ExaminationController extends Controller
 		->with('Device')
 		->with('Equipment')
 		->get();
-		$kode_barang = $this->generateKodeBarang($data[0]->ExaminationLab->name,$this->romawi(date('n')),date('Y'));
+		$kode_barang = $this->generateKodeBarang($data[0]->ExaminationLab->lab_init,$this->romawi(date('n')),date('Y'));
 		$kode_barang = urlencode(urlencode($kode_barang));
 		if( strpos( $data[0]->company->name, "/" ) !== false ) {$company_name = urlencode(urlencode($data[0]->company->name));}
 			else{$company_name = $data[0]->company->name?: '-';}
