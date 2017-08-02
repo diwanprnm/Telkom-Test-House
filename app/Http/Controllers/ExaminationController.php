@@ -352,7 +352,7 @@ class ExaminationController extends Controller
 	                "from"=>"admin",
 	                "to"=>$currentUser->id,
 	                "message"=>"Registrasi Completed",
-	                "url"=>"pengujian/".$exam_id,
+	                "url"=>"pengujian/".$exam->id,
 	                "is_read"=>0,
 	                "created_at"=>date("Y-m-d H:i:s"),
 	                "updated_at"=>date("Y-m-d H:i:s")
@@ -381,7 +381,7 @@ $notification->id = Uuid::uuid4();
                 "from"=>"admin",
                 "to"=>$currentUser->id,
                 "message"=>"Registrasi Not Completed",
-                "url"=>"pengujian/".$exam_id,
+                "url"=>"pengujian/".$exam->id,
                 "is_read"=>0,
                 "created_at"=>date("Y-m-d H:i:s"),
                 "updated_at"=>date("Y-m-d H:i:s")
