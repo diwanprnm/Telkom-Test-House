@@ -153,7 +153,7 @@ return [
 	'examination_history_notes' => 'Keterangan',
 	'examination_history_date' 	=> 'Tanggal',
 	
-	'examination_date' 			=> 'Tanggal Pengujian',
+	'examination_date' 			=> 'Tanggal Uji',
 	'examination_date_begin'	=> 'Mulai',
 	'examination_date_end' 		=> 'Selesai',
 	'examination_spk_code' 		=> 'Nomor SPK',
