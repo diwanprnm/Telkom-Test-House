@@ -14165,10 +14165,9 @@ h4.judulselesai {
 #formBTNnext {
     margin-top: -7px;
 }
-.invoice-group-button a {
+.invoice-group-button {
     margin-left: 20px !important;
 }
-
 .notification>.open>.dropdown-menu{
 	top: 56px !important;
     left: -90px !important;
