@@ -612,8 +612,10 @@ class ExaminationAPIController extends AppBaseController
     {
     	$param = (object) $param->all();
 		$currentUser = Auth::user();
-		if(!$currentUser){
-			$currentUser->id = 1;
+		if($currentUser){
+			$id_user = $currentUser->id;
+		}else{
+			$id_user = 1;
 		}
 
     	if(!empty($param->id) && !empty($param->function_test_date)&& !empty($param->function_test_pic)&& !empty($param->reason)&& !empty($param->date_type)){
@@ -629,7 +631,7 @@ class ExaminationAPIController extends AppBaseController
     			if($examinations->save()){
     				
     				 $data= array( 
-	                "from"=>$currentUser->id,
+	                "from"=>$id_user,
 	                "to"=>"admin",
 	                "message"=>"Test Enginner memberikan Tanggal Uji Fungsi",
 	                "url"=>"examination/".$param->id."/edit",
@@ -653,7 +655,7 @@ $notification->id = Uuid::uuid4();
 			      
 			      $data= array( 
 	                "from"=>"admin",
-	                "to"=>$currentUser->id,
+	                "to"=>$id_user,
 	                "message"=>"Test Enginner mengajukan Tanggal Uji Fungsi",
 	                "url"=>"pengujian",
 	                "is_read"=>0,
@@ -690,8 +692,10 @@ $notification->id = Uuid::uuid4();
     {
     	$param = (object) $param->all();
     	$currentUser = Auth::user();
-		if(!$currentUser){
-			$currentUser->id = 1;
+		if($currentUser){
+			$id_user = $currentUser->id;
+		}else{
+			$id_user = 1;
 		}
     	if(!empty($param->id) && !empty($param->date) && !empty($param->location)){
 			$equip_hist = new EquipmentHistory;
@@ -718,7 +722,7 @@ $notification->id = Uuid::uuid4();
 					
 
 			      	$data= array( 
-	                "from"=>$currentUser->id,
+	                "from"=>$id_user,
 	                "to"=>"admin",
 	                "message"=>"Test Engginer mengambil barang dari Gudang",
 	                "url"=>"examination/".$param->id.'/edit',
@@ -743,7 +747,7 @@ $notification->id = Uuid::uuid4();
 				}else if($param->location == 2){
 
 					$data= array( 
-	                "from"=>$currentUser->id,
+	                "from"=>$id_user,
 	                "to"=>"admin",
 	                "message"=>"Test Engginer mengembalikan barang ke Gudang",
 	                "url"=>"examination/".$param->id.'/edit',
@@ -781,8 +785,10 @@ $notification->id = Uuid::uuid4();
     {
     	$param = (object) $param->all();
     	$currentUser = Auth::user();
-		if(!$currentUser){
-			$currentUser->id = 1;
+		if($currentUser){
+			$id_user = $currentUser->id;
+		}else{
+			$id_user = 1;
 		}
     	if(!empty($param->id) && (!empty($param->name) || !empty($param->mark) || !empty($param->capacity) || !empty($param->manufactured_by) || !empty($param->model) || !empty($param->serial_number) || !empty($param->test_reference))){
     		$examinations = Examination::where("id",$param->id)->with('examinationType')->first();
@@ -825,7 +831,7 @@ $notification->id = Uuid::uuid4();
 
 					
 						 $data= array( 
-		                "from"=>$currentUser->id,
+		                "from"=>$id_user,
 		                "to"=>"admin",
 		                "message"=>"Test Enginner mengedit data Pengujian",
 		                "url"=>"examination/".$param->id,
@@ -851,7 +857,7 @@ $notification->id = Uuid::uuid4();
 				      $data= array(
 				        
 			                "from"=>"admin",
-			                "to"=>$currentUser->id,
+			                "to"=>$id_user,
 			                "message"=>"Test Enginner mengedit data Pengujian",
 			                "url"=>"pengujian".$param->id,
 			                "is_read"=>0,
@@ -1010,8 +1016,10 @@ $notification->id = Uuid::uuid4();
     {
     	$param = (object) $param->all();
     	$currentUser = Auth::user();
-		if(!$currentUser){
-			$currentUser->id = 1;
+		if($currentUser){
+			$id_user = $currentUser->id;
+		}else{
+			$id_user = 1;
 		}
     	if(!empty($param->id) && !empty($param->catatan) && !empty($param->function_result) && !empty($param->function_test_pic)){
     		$examinations = Examination::find($param->id);
@@ -1022,7 +1030,7 @@ $notification->id = Uuid::uuid4();
 				// $examinations->function_test_NO = $this->generateFunctionTestNumber($examinations->examination_type_id);
     			if($examinations->save()){
     				 $data= array( 
-		                "from"=>$currentUser->id,
+		                "from"=>$id_user,
 		                "to"=>"admin",
 		                "message"=>"Test Enginner memberikan Hasil Uji Fungsi",
 		                "url"=>"examination/".$param->id."/edit",
@@ -1047,7 +1055,7 @@ $notification->id = Uuid::uuid4();
 
 				       $data= array( 
 		                "from"=>"admin",
-		                "to"=>$currentUser->id,
+		                "to"=>$id_user,
 		                "message"=>"Test Enginner memberikan Hasil Uji Fungsi",
 		                "url"=>"examination/".$param->id."/edit",
 		                "is_read"=>0,

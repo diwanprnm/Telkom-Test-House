@@ -3077,6 +3077,7 @@ Route::post('/insertComplaint', 'PengujianController@insertComplaint');
 
 Route::get('/client/downloadkuitansistel/{id}', 'ProductsController@downloadkuitansistel');
 Route::get('/client/downloadfakturstel/{id}', 'ProductsController@downloadfakturstel');
+Route::get('/client/downloadstelwatermark/{id}', 'ProductsController@viewWatermark');
 
 Route::get('/cetakFormBarang/{id}', 'ExaminationController@cetakFormBarang');
 Route::get('/cetakBuktiPenerimaanPerangkat/{kode_barang}/{company_name}/{company_address}/{company_phone}/{company_fax}/{device_name}/{device_mark}/{device_manufactured_by}/{device_model}/{device_serial_number}/{exam_type}/{exam_type_desc}/{contract_date}', 

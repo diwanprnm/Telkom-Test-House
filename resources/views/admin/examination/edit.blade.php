@@ -1399,7 +1399,7 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Tanggal *
+										Tanggal Laporan Diterbitkan*
 									</label>
 									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
 										<input type="text" name="resume_date" class="form-control" value="{{ $data->resume_date }}" required/>
