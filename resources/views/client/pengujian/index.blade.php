@@ -305,7 +305,7 @@
                     </p>
                     <p>Besar pengharapan kami agar pengisian survey ini dapat dikerjakan dengan sebaik-baiknya. Atas kerja samanya, kami ucapkan terimakasih.</p>
                     <p>
-                    Skala pemberian nilai adalah 1 - 10 dengan nilai 10 adalah penilaian Sangat Tidak Baik atau Sangat Tidak Setuju. Kastemer diharapkan dapat memberikan dengan angka bulat.
+                    Skala pemberian nilai adalah 1 - 10 dengan nilai 1 adalah penilaian Sangat Tidak Baik atau Sangat Tidak Setuju. Kastemer diharapkan dapat memberikan dengan angka bulat.
                     </p>
                 </div>
                 <div class="row">
@@ -371,25 +371,15 @@
                           <td>6</td>
                           <td><strong>Pelaksanaan</strong> pengujian sesuai dengan <strong>jadwal</strong> yang sudah disepakati.</td>
                           <td>
-                            <input type="number" name="quest6_eks" value="10" min="1" max="10" placeholder="1-10" class="form-control">
+                            <input type="number" name="quest7_eks" value="10" min="1" max="10" placeholder="1-10" class="form-control">
                           </td>
                           <td>
-                            <input type="number" name="quest6_perf" value="10" min="1" max="10" placeholder="1-10" class="form-control">
+                            <input type="number" name="quest7_perf" value="10" min="1" max="10" placeholder="1-10" class="form-control">
                           </td>
                         </tr>
                         <tr>
                           <td>7</td>
                           <td>Perangkat uji setelah pengujian <strong>selesai</strong> ditangani dengan <strong>baik</strong>.</td>
-                          <td>
-                            <input type="number" name="quest7_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest7_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>8</td>
-                          <td><strong>Lama pengujian</strong> diselesaikan dengan informasi/kesepakatan yang telah ditentukan.</td>
                           <td>
                             <input type="number" name="quest8_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
                           </td>
@@ -398,8 +388,8 @@
                           </td>
                         </tr>
                         <tr>
-                          <td>9</td>
-                          <td><strong>Komunikasi</strong> antara test engineer Lab. QA DDS Telkom dengan test engineer kami terjalin dengan baik untuk kelancaran pengujian.</td>
+                          <td>8</td>
+                          <td><strong>Lama pengujian</strong> diselesaikan dengan informasi/kesepakatan yang telah ditentukan.</td>
                           <td>
                             <input type="number" name="quest9_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
                           </td>
@@ -408,8 +398,8 @@
                           </td>
                         </tr>
                         <tr>
-                          <td>10</td>
-                          <td><strong>Alat ukur</strong> yang digunakan sudah terjamin kualitas dan akurasinya.</td>
+                          <td>9</td>
+                          <td><strong>Komunikasi</strong> antara test engineer Lab. QA DDS Telkom dengan test engineer kami terjalin dengan baik untuk kelancaran pengujian.</td>
                           <td>
                             <input type="number" name="quest10_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
                           </td>
@@ -418,8 +408,8 @@
                           </td>
                         </tr>
                         <tr>
-                          <td>11</td>
-                          <td><strong>Ruang</strong> laboratorium terkondisi dengan baik.</td>
+                          <td>10</td>
+                          <td><strong>Alat ukur</strong> yang digunakan sudah terjamin kualitas dan akurasinya.</td>
                           <td>
                             <input type="number" name="quest11_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
                           </td>
@@ -428,8 +418,8 @@
                           </td>
                         </tr>
                         <tr>
-                          <td>12</td>
-                          <td><strong>Kapabilitas dan pengalaman</strong> test engineer Lab. QA DDS Telkom sudah sesuai dengan kompetensinya.</td>
+                          <td>11</td>
+                          <td><strong>Ruang</strong> laboratorium terkondisi dengan baik.</td>
                           <td>
                             <input type="number" name="quest12_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
                           </td>
@@ -438,8 +428,8 @@
                           </td>
                         </tr>
                         <tr>
-                          <td>13</td>
-                          <td>Test engineer Lab. QA DDS Telkom memiliki <strong>pemahaman</strong> terhadap materi item uji.</td>
+                          <td>12</td>
+                          <td><strong>Kapabilitas dan pengalaman</strong> test engineer Lab. QA DDS Telkom sudah sesuai dengan kompetensinya.</td>
                           <td>
                             <input type="number" name="quest13_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
                           </td>
@@ -448,8 +438,8 @@
                           </td>
                         </tr>
                         <tr>
-                          <td>14</td>
-                          <td>Petugas memberikan <strong>pelayanan</strong> dengan <strong>ramah</strong> dan profesional.</td>
+                          <td>13</td>
+                          <td>Test engineer Lab. QA DDS Telkom memiliki <strong>pemahaman</strong> terhadap materi item uji.</td>
                           <td>
                             <input type="number" name="quest14_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
                           </td>
@@ -458,8 +448,8 @@
                           </td>
                         </tr>
                         <tr>
-                          <td>15</td>
-                          <td>Petugas memberikan <strong>informasi</strong> tentang <strong>tarif</strong> yang jelas kepada kastamer.</td>
+                          <td>14</td>
+                          <td>Petugas memberikan <strong>pelayanan</strong> dengan <strong>ramah</strong> dan profesional.</td>
                           <td>
                             <input type="number" name="quest15_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
                           </td>
@@ -468,8 +458,8 @@
                           </td>
                         </tr>
                         <tr>
-                          <td>16</td>
-                          <td>Petugas memberikan <strong>informasi</strong> tentang <strong>prosedur</strong> pengujian dengan jelas.</td>
+                          <td>15</td>
+                          <td>Petugas memberikan <strong>informasi</strong> tentang <strong>tarif</strong> yang jelas kepada kastamer.</td>
                           <td>
                             <input type="number" name="quest16_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
                           </td>
@@ -478,8 +468,8 @@
                           </td>
                         </tr>
                         <tr>
-                          <td>17</td>
-                          <td>Petugas selalu <strong>tanggap</strong> dengan apa yang diinginkan kastamer.</td>
+                          <td>16</td>
+                          <td>Petugas memberikan <strong>informasi</strong> tentang <strong>prosedur</strong> pengujian dengan jelas.</td>
                           <td>
                             <input type="number" name="quest17_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
                           </td>
@@ -488,8 +478,8 @@
                           </td>
                         </tr>
                         <tr>
-                          <td>18</td>
-                          <td>Petugas memberikan <strong>perlakuan</strong> yang sama kepada semua kastamer.</td>
+                          <td>17</td>
+                          <td>Petugas selalu <strong>tanggap</strong> dengan apa yang diinginkan kastamer.</td>
                           <td>
                             <input type="number" name="quest18_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
                           </td>
@@ -498,13 +488,23 @@
                           </td>
                         </tr>
                         <tr>
-                          <td>19</td>
-                          <td>Petugas memberikan <strong>laporan</strong> hasil pengujian dengan cepat dan tepat.</td>
+                          <td>18</td>
+                          <td>Petugas memberikan <strong>perlakuan</strong> yang sama kepada semua kastamer.</td>
                           <td>
                             <input type="number" name="quest19_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
                           </td>
                           <td>
                             <input type="number" name="quest19_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>19</td>
+                          <td>Petugas memberikan <strong>laporan</strong> hasil pengujian dengan cepat dan tepat.</td>
+                          <td>
+                            <input type="number" name="quest20_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
+                          </td>
+                          <td>
+                            <input type="number" name="quest20_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
                           </td>
                         </tr>
                       </tbody>
