@@ -3391,9 +3391,5 @@ Route::get('/cetakKepuasanKonsumen', array('as' => 'cetakKepuasanKonsumen', func
 		exit;
 		
 	}
-
-
 ));
-
-
 	Route::post('/updateNotif', 'NotificationController@updateNotif');

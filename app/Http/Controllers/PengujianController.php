@@ -990,6 +990,7 @@ class PengujianController extends Controller
                 "updated_at"=>date("Y-m-d H:i:s")
                 );
 			  	$notification = new NotificationTable();
+$notification->id = Uuid::uuid4();
 		      	$notification->from = $data['from'];
 		      	$notification->to = $data['to'];
 		      	$notification->message = $data['message'];
@@ -1126,6 +1127,7 @@ class PengujianController extends Controller
 	        );
 
 		  $notification = new NotificationTable();
+$notification->id = Uuid::uuid4();
 	      $notification->from = $data['from'];
 	      $notification->to = $data['to'];
 	      $notification->message = $data['message'];

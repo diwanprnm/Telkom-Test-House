@@ -193,6 +193,7 @@ class EquipmentController extends Controller
               );
               
               $notification = new NotificationTable();
+              $notification->id = Uuid::uuid4();
               $notification->from = $data['from'];
               $notification->to = $data['to'];
               $notification->message = $data['message'];

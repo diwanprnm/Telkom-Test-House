@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 use App\Jobs\ChangeLocale;
 use Auth;
 use Response;
+
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
+
 use App\Events\Notification;
 use App\NotificationTable;
 
@@ -227,6 +231,7 @@ class HomeController extends Controller
             "updated_at"=>date("Y-m-d H:i:s")
         	);
 			  $notification = new NotificationTable();
+$notification->id = Uuid::uuid4();
 		      $notification->from = $data['from'];
 		      $notification->to = $data['to'];
 		      $notification->message = $data['message'];

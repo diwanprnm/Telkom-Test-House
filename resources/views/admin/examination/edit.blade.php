@@ -34,7 +34,7 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Tanggal Mulai Pengujian *
+										Tanggal Mulai Uji *
 									</label>
 									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
 									@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
@@ -53,7 +53,7 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Tanggal Selesai Pengujian *
+										Tanggal Selesai Uji *
 									</label>
 									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
 									@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
@@ -1114,7 +1114,7 @@
 						<div class="row">
 						@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
 							<?php
-								$start_date = new DateTime($exam_schedule->data[0]->finishTestDt);
+								$start_date = new DateTime($exam_schedule->data[0]->targetDt);
 								$end_date = new DateTime(date('Y-m-d'));
 								$interval = $start_date->diff($end_date);
 							?>
@@ -1122,7 +1122,7 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
-											Tanggal Mulai
+											Tanggal Mulai Uji
 										</label>
 										<label>
 											: {{ $exam_schedule->data[0]->startTestDt }}
@@ -1132,10 +1132,10 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
-											Tanggal Selesai
+											Tanggal Selesai Uji
 										</label>
 										<label>
-											: {{ $exam_schedule->data[0]->finishTestDt }}
+											: {{ $exam_schedule->data[0]->targetDt }}
 										</label>
 									</div>
 								</div>
@@ -1148,6 +1148,28 @@
 									<label>
 										: {{ $interval->days }} hari
 									</label>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Mulai Uji
+										</label>
+										<label>
+											: {{ $exam_schedule->data[0]->actualStartTestDt }}
+										</label>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Selesai Uji
+										</label>
+										<label>
+											: {{ $exam_schedule->data[0]->actualFinishTestDt }}
+										</label>
+									</div>
 								</div>
 							</div>
 						@endif
@@ -1305,6 +1327,20 @@
 									@foreach($data->media as $item)
 										@if($item->name == 'Laporan Uji')
 											@if($item->attachment != '')
+												@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
+												<label>
+													Mulai Pembuatan Laporan
+												</label>
+												<label>
+													: {{ $exam_schedule->data[0]->startReportDt }}
+												</label>
+												<label>
+													Selesai Pembuatan Laporan
+												</label>
+												<label>
+													: {{ $exam_schedule->data[0]->finishReportDt }}
+												</label>
+											@endif
 											<label>
 												Laporan Hasil Pengujian
 											</label>
