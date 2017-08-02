@@ -612,6 +612,9 @@ class ExaminationAPIController extends AppBaseController
     {
     	$param = (object) $param->all();
 		$currentUser = Auth::user();
+		if(!$currentUser){
+			$currentUser->id = 1;
+		}
 
     	if(!empty($param->id) && !empty($param->function_test_date)&& !empty($param->function_test_pic)&& !empty($param->reason)&& !empty($param->date_type)){
     		$examinations = Examination::find($param->id);
@@ -687,6 +690,9 @@ $notification->id = Uuid::uuid4();
     {
     	$param = (object) $param->all();
     	$currentUser = Auth::user();
+		if(!$currentUser){
+			$currentUser->id = 1;
+		}
     	if(!empty($param->id) && !empty($param->date) && !empty($param->location)){
 			$equip_hist = new EquipmentHistory;
 			$equip_hist->id = Uuid::uuid4();
@@ -775,6 +781,9 @@ $notification->id = Uuid::uuid4();
     {
     	$param = (object) $param->all();
     	$currentUser = Auth::user();
+		if(!$currentUser){
+			$currentUser->id = 1;
+		}
     	if(!empty($param->id) && (!empty($param->name) || !empty($param->mark) || !empty($param->capacity) || !empty($param->manufactured_by) || !empty($param->model) || !empty($param->serial_number) || !empty($param->test_reference))){
     		$examinations = Examination::where("id",$param->id)->with('examinationType')->first();
 			if($examinations){
@@ -1001,6 +1010,9 @@ $notification->id = Uuid::uuid4();
     {
     	$param = (object) $param->all();
     	$currentUser = Auth::user();
+		if(!$currentUser){
+			$currentUser->id = 1;
+		}
     	if(!empty($param->id) && !empty($param->catatan) && !empty($param->function_result) && !empty($param->function_test_pic)){
     		$examinations = Examination::find($param->id);
     		if($examinations){
