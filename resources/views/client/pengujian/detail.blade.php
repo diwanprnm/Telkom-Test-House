@@ -750,7 +750,7 @@
 														<tbody>
 															<tr>
 																<td class="center">{{ trans('translate.examination_date_begin') }} : {{ $exam_schedule->data[0]->startTestDt }}</td>
-																<td class="center">{{ trans('translate.examination_date_end') }} : {{ $exam_schedule->data[0]->finishTestDt }}</td>
+																<td class="center">{{ trans('translate.examination_date_end') }} : {{ $exam_schedule->data[0]->targetDt }}</td>
 															</tr>
 															<tr>
 																<td class="left">{{ trans('translate.examination_spk_code') }} : {{ $data[0]->spk_code }}</td>
