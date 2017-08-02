@@ -303,8 +303,14 @@ class ExaminationController extends Controller
 			'timeout'  => 60.0,
 		]);
 		
+		$query_lab = "SELECT action_date FROM equipment_histories WHERE location = 3 AND examination_id = '".$id."' ORDER BY created_at DESC LIMIT 1";
+		$data_lab = DB::select($query_lab);
+		
+		$query_gudang = "SELECT action_date FROM equipment_histories WHERE location = 2 AND examination_id = '".$id."' ORDER BY created_at DESC LIMIT 1";
+		$data_gudang = DB::select($query_gudang);
+		
 		// $res_exam_schedule = $client->post('notification/notifToTE?lab='.$exam->examinationLab->lab_code)->getBody();
-		$res_exam_schedule = $client->get('spk/searchData?spkNumber='.$exam->spk_code)->getBody();
+		$res_exam_schedule = $client->get('spk/searchData?spkNumber=022/002/TA/2017')->getBody();
 		$exam_schedule = json_decode($res_exam_schedule);
 		
 		$res_exam_approve_date = $client->get('spk/searchHistoryData?spkNumber='.$exam->spk_code)->getBody();
@@ -314,6 +320,8 @@ class ExaminationController extends Controller
             ->with('data', $exam)
             // ->with('gen_spk_code', $gen_spk_code)
             ->with('labs', $labs)
+            ->with('data_lab', $data_lab)
+            ->with('data_gudang', $data_gudang)
 			->with('exam_approve_date', $exam_approve_date)
 			->with('exam_schedule', $exam_schedule);
     }
@@ -1994,6 +2002,7 @@ $notification->id = Uuid::uuid4();
 		$device = Device::find($device_id);
 		if ($exam_attach && $exam && $device){
 			try{
+				Income::where('reference_id', '=' ,''.$id.'')->delete();
 				Questioner::where('examination_id', '=' ,''.$id.'')->delete();
 				Equipment::where('examination_id', '=' ,''.$id.'')->delete();
 				EquipmentHistory::where('examination_id', '=' ,''.$id.'')->delete();
