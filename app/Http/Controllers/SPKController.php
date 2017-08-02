@@ -54,7 +54,7 @@ class SPKController extends Controller
 				]);
 				
 				// $res_exam_schedule = $client->post('notification/notifToTE?lab='.$exam->examinationLab->lab_code)->getBody();
-				$res_exam_schedule = $client->get('spk/searchData?spkNumber='.$search)->getBody();
+				$res_exam_schedule = $client->get('spk/searchData?find='.$search)->getBody();
 				$exam_schedule = json_decode($res_exam_schedule);
             }else{
                 $client = new Client([

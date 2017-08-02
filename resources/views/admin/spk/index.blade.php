@@ -84,7 +84,7 @@
 									@endforeach
 								@else
 									<tr>
-										<td colspan=7 class="center">
+										<td colspan=8 class="center">
 											Data Not Found
 										</td>
 									</tr>
