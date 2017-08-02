@@ -1327,20 +1327,6 @@
 									@foreach($data->media as $item)
 										@if($item->name == 'Laporan Uji')
 											@if($item->attachment != '')
-												@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
-												<label>
-													Mulai Pembuatan Laporan
-												</label>
-												<label>
-													: {{ $exam_schedule->data[0]->startReportDt }}
-												</label>
-												<label>
-													Selesai Pembuatan Laporan
-												</label>
-												<label>
-													: {{ $exam_schedule->data[0]->finishReportDt }}
-												</label>
-											@endif
 											<label>
 												Laporan Hasil Pengujian
 											</label>
@@ -1364,6 +1350,30 @@
 										@endif
 									@endforeach
 								</div>
+							</div>
+							<div class="col-md-12">
+								@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Mulai Pembuatan Laporan
+										</label>
+										<label>
+											: {{ $exam_schedule->data[0]->startReportDt }}
+										</label>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Selesai Pembuatan Laporan
+										</label>
+										<label>
+											: {{ $exam_schedule->data[0]->finishReportDt }}
+										</label>
+									</div>
+								</div>
+								@endif
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
