@@ -697,7 +697,9 @@ class ExaminationAPIController extends AppBaseController
 			$equip_hist->action_date = $param->date;
 
 			if($equip_hist->save()){
+				if($param->location == 2){$examination_status = 1;}else{$examination_status = 0;}
 				$examination = Examination::where('id', $param->id)->first();
+				$examination->examination_status = $examination_status;
 				$examination->location = $param->location;
 				$examination->save();
 				
@@ -1115,6 +1117,28 @@ class ExaminationAPIController extends AppBaseController
 			}
     	}else{
     		return $this->sendError('ID Examination or name or attachment or Ref. No link Is Required');
+    	}
+    }
+	
+	public function updateSidangQa(Request $param)
+    {
+    	$param = (object) $param->all();
+
+    	if(!empty($param->id) && !empty($param->status) && !empty($param->date)){
+    		$examinations = Examination::find($param->id);
+    		if($examinations){
+				$examinations->qa_passed = $param->status;
+				$examinations->qa_date = $param->date;
+    			if($examinations->save()){
+    				return $this->sendResponse($examinations, 'Examination Found');
+    			}else{
+    				return $this->sendError('Failed to Update ');
+    			}
+    		}else{
+    			return $this->sendError('Success Update');
+    		}
+    	}else{
+    		return $this->sendError('ID Examination or Status or Date Is Required');
     	}
     }
 	

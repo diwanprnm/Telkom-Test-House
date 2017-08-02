@@ -37,7 +37,7 @@
 										Tanggal Mulai Pengujian *
 									</label>
 									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
-									@if($exam_schedule->code != 'MSTD0059AERR')
+									@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
 										<input type="text" name="testing_start" id="testing_start" value="{{$exam_schedule->data[0]->startTestDt}}" class="form-control"/>
 									@else
 										<input type="text" name="testing_start" id="testing_start" class="form-control"/>
@@ -56,7 +56,7 @@
 										Tanggal Selesai Pengujian *
 									</label>
 									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
-									@if($exam_schedule->code != 'MSTD0059AERR')
+									@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
 										<input type="text" name="testing_end" id="testing_end" value="{{$exam_schedule->data[0]->targetDt}}" class="form-control"/>
 									@else
 										<input type="text" name="testing_end" id="testing_end" class="form-control"/>
@@ -1112,7 +1112,7 @@
 							Step Pelaksanaan Uji
 						</legend>
 						<div class="row">
-						@if($exam_schedule->code != 'MSTD0059AERR')
+						@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
 							<?php
 								$start_date = new DateTime($exam_schedule->data[0]->finishTestDt);
 								$end_date = new DateTime(date('Y-m-d'));

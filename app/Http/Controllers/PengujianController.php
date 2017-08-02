@@ -920,6 +920,7 @@ class PengujianController extends Controller
             return view('client.pengujian.pembayaran')
                 ->with('message', $message)
                 ->with('spb_number', $examination->spb_number)
+                ->with('spb_date', $examination->spb_date)
                 ->with('cust_price_payment', $examination->cust_price_payment)
                 ->with('data', $data)
                 ->with('examinationsData', $examinationsData);

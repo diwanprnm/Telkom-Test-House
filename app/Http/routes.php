@@ -3052,6 +3052,7 @@ Route::group(['prefix' => '/v1', 'middlewareGroups' => 'api'], function () {
 	Route::post('/updateFunctionStat', 'v1\ExaminationAPIController@updateFunctionStat');
 	Route::post('/updateSpkStat', 'v1\ExaminationAPIController@updateSpkStat');
 	Route::post('/sendLapUji', 'v1\ExaminationAPIController@sendLapUji');
+	Route::post('/updateSidangQa', 'v1\ExaminationAPIController@updateSidangQa');
 	Route::post('/sendSertifikat', 'v1\ExaminationAPIController@sendSertifikat');
 });
 

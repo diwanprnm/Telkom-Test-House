@@ -62,9 +62,11 @@
 													<tr>
 														<?php 
 															if($data->tgl == '' or $data->tgl == '0000-00-00' or $data->tgl == NULL){
-																$timestamp = date('d-m-Y');
+																// $timestamp = date('d-m-Y');
+																$timestamp = $spb_date;
 															}else{
-																$timestamp = date('d-m-Y', strtotime($data->tgl));
+																// $timestamp = date('d-m-Y', strtotime($data->tgl));
+																$timestamp = $data->tgl;
 															}
 														?>
 														<td>{{ trans('translate.examination_date_payment') }} : <input type="text" id="tgl-pembayaran" class="date tgl-pembayaran" name="tgl-pembayaran" placeholder="Tanggal ..." value="<?php echo $timestamp; ?>" readonly required></td>
