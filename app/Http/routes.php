@@ -3067,11 +3067,7 @@ Route::get('/payment_status', 'ProductsController@payment_status');
 Route::post('/checkout', 'ProductsController@checkout');
 Route::post('/doCheckout', 'ProductsController@doCheckout');
 Route::get('/payment_detail/{id}', 'ProductsController@payment_detail');
-<<<<<<< HEAD
-Route::get('/test_notifitcation', 'ProductsController@test_notification');
-=======
 Route::get('/test_notification', 'ProductsController@test_notification');
->>>>>>> 838a67fd546e0ebfe4fd61ac3e81805302922053
 Route::get('/upload_payment/{id}', 'ProductsController@upload_payment');
 Route::post('/pembayaranstel', 'ProductsController@pembayaranstel');
 
