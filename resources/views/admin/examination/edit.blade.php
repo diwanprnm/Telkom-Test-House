@@ -1150,6 +1150,15 @@
 									</label>
 								</div>
 							</div>
+							@if(count($data_lab)>0)
+								<div class="col-md-12">
+									<div class="form-group">
+										<label>
+											Barang pindah dari Gudang ke Lab tanggal : {{ $data_lab[0]->action_date }}
+										</label>
+									</div>
+								</div>
+							@endif
 							<div class="col-md-12">
 								<div class="col-md-6">
 									<div class="form-group">
@@ -1171,6 +1180,15 @@
 										</label>
 									</div>
 								</div>
+								@if(count($data_gudang)>0)
+								<div class="col-md-12">
+									<div class="form-group">
+										<label>
+											Barang pindah dari Lab ke Gudang tanggal : {{ $data_gudang[0]->action_date }}
+										</label>
+									</div>
+								</div>
+								@endif
 							</div>
 						@endif
 							<div class="col-md-12">
@@ -1327,17 +1345,20 @@
 									@foreach($data->media as $item)
 										@if($item->name == 'Laporan Uji')
 											@if($item->attachment != '')
-											<label>
-												Laporan Hasil Pengujian
-											</label>
-											<label>
-												: Tersedia
-											</label>
-											<div class="form-group">
-												<a href="http://ptbsp.ddns.net:13280/RevitalisasiOTR/generateQaTestReport?noRep=001/TRA/L/CAL/2017&isCover=true&isIsi=false"> Download Sampul/Judul Laporan </a>
+											<div class="col-md-4">
+												<div class="form-group">
+													<a href="http://ptbsp.ddns.net:13280/RevitalisasiOTR/generateQaTestReport?noRep={{$item->no}}&isCover=true&isIsi=false"> Download Sampul/Judul Laporan </a>
+												</div>
 											</div>
-											<div class="form-group">
-												<a href="http://ptbsp.ddns.net:13280/RevitalisasiOTR/generateQaTestReport?noRep=001/TRA/L/CAL/2017&isCover=false&isIsi=true"> Download Isi Laporan </a>
+											<div class="col-md-4">
+												<div class="form-group">
+													<a href="http://ptbsp.ddns.net:13280/RevitalisasiOTR/generateQaTestReport?noRep={{$item->no}}&isCover=false&isIsi=true"> Download Isi Laporan </a>
+												</div>
+											</div>
+											<div class="col-md-4">
+												<div class="form-group">
+													<a href="http://ptbsp.ddns.net:13280/RevitalisasiOTR/generateQaTestReport?noRep={{$item->no}}&isCover=true&isIsi=true"> Download Keseluruhan Laporan </a>
+												</div>
 											</div>
 											@else
 											<label>
