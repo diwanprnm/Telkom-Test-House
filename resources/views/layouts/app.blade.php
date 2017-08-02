@@ -43,7 +43,7 @@
 	<script src={{ asset("assets/js/jquery-ui-1_12_1.js") }}></script>
     <style type="text/css">
         .notification-count{
-            margin-top: -12px;
+            margin-top: -24px;
             position: absolute;
             background: rgb(214, 0, 0);
             color: white;
@@ -51,6 +51,10 @@
             border-radius: 14px;
             font-family: 'Raleway', sans-serif;
             font-size: 12px;
+        }
+        .notification ul{
+            top: 56px !important;
+            left: -90px !important;
         }
     </style>
 </head>
@@ -143,7 +147,21 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-right">
                         <!-- start: USER OPTIONS DROPDOWN -->
-                        <li><a href="#" style="top:10px;"><i class="ti-bell"><span class="notification-count">0</span></i></a></li>
+                        <li class="dropdown notification">
+                            <a href="#" style="top:10px;" class="dropdown-toggle" data-toggle="dropdown"><i class="ti-bell">
+                            <span class="notification-count"><?php echo $notification_count;?></span></i></a> 
+                            <ul class="dropdown-menu dropdown-dark">
+                            <?php
+                            foreach ($notification_data as $notif) { ?>
+                                 <li>
+                                    <a data-url="{{ url('admin/'.$notif['url']) }}" data-id="{{$notif['id']}}" class="notifData">
+                                     <?php echo $notif['message'];?>
+                                    </a>
+                                </li>
+                           <?php }
+                            ?> 
+                            </ul>
+                        </li>
                         <li class="dropdown current-user">
                             <a href class="dropdown-toggle" data-toggle="dropdown">
                                 <img src='{{ asset("media/user/".Auth::user()->id."/".Auth::user()->picture) }}' alt="{{ Auth::user()->name }}" width="32" height="32"> <span class="username">{{ Auth::user()->name }} <i class="ti-angle-down"></i></i></span>
@@ -215,18 +233,36 @@
             console.log(message.data);
             if(message.data.to === "admin"){ 
                 var notificationCount = parseInt($(".notification-count").html());
-                 var html = '<div class="top-notification-items">'+
-                    '<div class="top-notification-item clearfix"> '+
-                     ' <div class="top-notification-item-desc">'+
-                        '<a href="'+message.data.action+'">'+message.data.message+'</a> '+
-                      '</div>'+
-                    '</div>'+
-                  '</div>';
-                $("#notification-item").append(html);
-                $(".notification-count").html(notificationCount+1); 
+                 var html =  '<li>'+
+                                    '<a data-url="'+message.data.url+'" data-id="'+message.data.id+'" class="notifData">'+ message.data.message
+                                   '</a>'+
+                                '</li>';
+                $(".dropdown-menu").append(html);
+                $(".notification-count").html(notificationCount+1);
+                initClickNotif();
             }
            
         });
+        initClickNotif();
+        function initClickNotif(){
+            $(".notifData").on("click",function(){ 
+                var notifID = $(this).attr("data-id");
+                var notifURL = $(this).attr("data-url");
+                $.ajax({ 
+                    type: "POST",
+                    url : "<?php echo URL::to('/'); ?>/updateNotif", 
+                    data:{
+                        "notif_id":notifID
+                    }, 
+                    success: function(data){ 
+                        console.log(data);
+                        $(".notification-count").html(data); 
+                        window.location.href = notifURL; 
+                    }
+                }); 
+            });
+        }
+        
     </script>
     <?php }?>
     <!-- end: MAIN JAVASCRIPTS -->

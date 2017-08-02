@@ -15,7 +15,8 @@ use App\UsersMenus;
  
  use View;
 use Session;
-use Hash;
+use Hash; 
+use App\NotificationTable;
 
 // UUID
 use Ramsey\Uuid\Uuid;
@@ -74,7 +75,12 @@ class AdminOnly
             $tree[] = $this->createTree($new, array($value));
         } 
 
+        
+        $dataNotification = NotificationTable::where("is_read",0)->where("to","admin")->orderBy("created_at","desc")->get();
+
        View::share('tree_menus', $tree);
+       View::share('notification_data', $dataNotification->toArray());
+       View::share('notification_count', $dataNotification->count());
     }
     
     public function createTree(&$list, $parent){

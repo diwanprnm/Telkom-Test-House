@@ -62,9 +62,11 @@
 													<tr>
 														<?php 
 															if($data->tgl == '' or $data->tgl == '0000-00-00' or $data->tgl == NULL){
-																$timestamp = date('d-m-Y');
+																// $timestamp = date('d-m-Y');
+																$timestamp = $spb_date;
 															}else{
-																$timestamp = date('d-m-Y', strtotime($data->tgl));
+																// $timestamp = date('d-m-Y', strtotime($data->tgl));
+																$timestamp = $data->tgl;
 															}
 														?>
 														<td>{{ trans('translate.examination_date_payment') }} : <input type="text" id="tgl-pembayaran" class="date tgl-pembayaran" name="tgl-pembayaran" placeholder="Tanggal ..." value="<?php echo $timestamp; ?>" readonly required></td>
@@ -95,7 +97,7 @@
 				</div>
 
 
-
+				<input type="hidden" name="spb_date" id="spd_date" value="<?php echo $examinationsData->spb_date;?>">
 				</div>
 
 			</div>
@@ -114,10 +116,17 @@
 		// 	"autoclose": true
 		// });		
 
+		var spb_date = $("#spd_date").val();
+
+		var year = spb_date.split("-")[0];
+		var month = spb_date.split("-")[1];
+		var day = spb_date.split("-")[2];
+
 		$('.date').datepicker({
       dateFormat: 'yy-mm-dd', 
       autoclose: true,
       numberOfMonths: 2,
+      minDate: new Date(year+'/'+month+'/'+day),
       showButtonPanel: true
 
   });

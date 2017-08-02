@@ -29,6 +29,9 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 
+use App\Events\Notification;
+use App\NotificationTable;
+
 class PengujianController extends Controller
 {
     /**
@@ -902,6 +905,11 @@ class PengujianController extends Controller
 				->where('created_by', '=', ''.$user_id.'')
 				->where('name', '=', 'File Pembayaran')
 				->first();
+
+
+		 	$examinationsData = DB::table('examinations')
+				->where('id', '=', ''.$id.'') 
+				->first();
 			
             // print_r($data);exit;
             if (count($data) == 0){
@@ -912,8 +920,10 @@ class PengujianController extends Controller
             return view('client.pengujian.pembayaran')
                 ->with('message', $message)
                 ->with('spb_number', $examination->spb_number)
+                ->with('spb_date', $examination->spb_date)
                 ->with('cust_price_payment', $examination->cust_price_payment)
-                ->with('data', $data);
+                ->with('data', $data)
+                ->with('examinationsData', $examinationsData);
                 // ->with('search', $search);
         }
     }
@@ -968,6 +978,29 @@ class PengujianController extends Controller
 				$exam_hist->created_by = $currentUser->id;
 				$exam_hist->created_at = date('Y-m-d H:i:s');
 				$exam_hist->save();
+
+				
+				$data= array( 
+                "from"=>$currentUser->id,
+                "to"=>"admin",
+                "message"=>$currentUser->name." membayar SPB nomor".$examination->spb_number,
+                "url"=>"examination/".$request->input('hide_id_exam').'/edit',
+                "is_read"=>0,
+                "created_at"=>date("Y-m-d H:i:s"),
+                "updated_at"=>date("Y-m-d H:i:s")
+                );
+			  	$notification = new NotificationTable();
+		      	$notification->from = $data['from'];
+		      	$notification->to = $data['to'];
+		      	$notification->message = $data['message'];
+		      	$notification->url = $data['url'];
+		      	$notification->is_read = $data['is_read'];
+		      	$notification->created_at = $data['created_at'];
+		      	$notification->updated_at = $data['updated_at'];
+		      	$notification->save();
+		      	$data['id'] = $notification->id; 
+		        event(new Notification($data));
+
 				Session::flash('message', 'Upload successfully');
 				// $this->sendProgressEmail("Pengujian atas nama ".$user_name." dengan alamat email ".$user_email.", telah melakukan proses Upload Bukti Pembayaran");
 				// return back();
@@ -1081,6 +1114,28 @@ class PengujianController extends Controller
 				// return back();
 			}
 		}
+		/* push notif*/
+			$data= array(
+	        "from"=>$currentUser->id,
+	        "to"=>"admin",
+	        "message"=>$currentUser->name." Mengajukan Tanggal Uji Fungsi",
+	        "url"=>"examination/".$request->input('hide_id_exam'),
+	        "is_read"=>0,
+	        "created_at"=>date("Y-m-d H:i:s"),
+	        "updated_at"=>date("Y-m-d H:i:s")
+	        );
+
+		  $notification = new NotificationTable();
+	      $notification->from = $data['from'];
+	      $notification->to = $data['to'];
+	      $notification->message = $data['message'];
+	      $notification->url = $data['url'];
+	      $notification->is_read = $data['is_read'];
+	      $notification->created_at = $data['created_at'];
+	      $notification->updated_at = $data['updated_at'];
+	      $notification->save();
+	      $data['id'] = $notification->id;
+	      event(new Notification($data));
 		return back();
     }
 	

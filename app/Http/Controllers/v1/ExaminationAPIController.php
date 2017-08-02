@@ -20,6 +20,8 @@ use Mail;
 // UUID
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
+use App\Events\Notification;
+use App\NotificationTable;
  
 class ExaminationAPIController extends AppBaseController
 {
@@ -609,6 +611,7 @@ class ExaminationAPIController extends AppBaseController
 	public function updateFunctionDate(Request $param)
     {
     	$param = (object) $param->all();
+		$currentUser = Auth::user();
 
     	if(!empty($param->id) && !empty($param->function_test_date)&& !empty($param->function_test_pic)&& !empty($param->reason)&& !empty($param->date_type)){
     		$examinations = Examination::find($param->id);
@@ -621,6 +624,51 @@ class ExaminationAPIController extends AppBaseController
 				$examinations->function_test_PIC = $param->function_test_pic;
 				$examinations->function_test_reason = $param->reason;
     			if($examinations->save()){
+    				
+    				 $data= array( 
+	                "from"=>$currentUser->id,
+	                "to"=>"admin",
+	                "message"=>"Test Enginner memberikan Tanggal Uji Fungsi",
+	                "url"=>"examination/".$param->id."/edit",
+	                "is_read"=>0,
+	                "created_at"=>date("Y-m-d H:i:s"),
+	                "updated_at"=>date("Y-m-d H:i:s")
+	             );
+				  $notification = new NotificationTable();
+			      $notification->from = $data['from'];
+			      $notification->to = $data['to'];
+			      $notification->message = $data['message'];
+			      $notification->url = $data['url'];
+			      $notification->is_read = $data['is_read'];
+			      $notification->created_at = $data['created_at'];
+			      $notification->updated_at = $data['updated_at'];
+			      $notification->save();
+
+			      $data['id'] = $notification->id;
+			      event(new Notification($data));  
+			      
+			      $data= array( 
+	                "from"=>"admin",
+	                "to"=>$currentUser->id,
+	                "message"=>"Test Enginner mengajukan Tanggal Uji Fungsi",
+	                "url"=>"pengujian",
+	                "is_read"=>0,
+	                "created_at"=>date("Y-m-d H:i:s"),
+	                "updated_at"=>date("Y-m-d H:i:s")
+	             );
+				  $notification = new NotificationTable();
+			      $notification->from = $data['from'];
+			      $notification->to = $data['to'];
+			      $notification->message = $data['message'];
+			      $notification->url = $data['url'];
+			      $notification->is_read = $data['is_read'];
+			      $notification->created_at = $data['created_at'];
+			      $notification->updated_at = $data['updated_at'];
+			      $notification->save();
+
+			     $data['id'] = $notification->id;
+			      event(new Notification($data));
+
     				return $this->sendResponse($examinations, 'Function Date Found');
     			}else{
     				return $this->sendError('Failed to Update Function Date ');
@@ -636,7 +684,7 @@ class ExaminationAPIController extends AppBaseController
 	public function updateEquipLoc(Request $param)
     {
     	$param = (object) $param->all();
-
+    	$currentUser = Auth::user();
     	if(!empty($param->id) && !empty($param->date) && !empty($param->location)){
 			$equip_hist = new EquipmentHistory;
 			$equip_hist->id = Uuid::uuid4();
@@ -649,13 +697,67 @@ class ExaminationAPIController extends AppBaseController
 			$equip_hist->action_date = $param->date;
 
 			if($equip_hist->save()){
+				if($param->location == 2){$examination_status = 1;}else{$examination_status = 0;}
 				$examination = Examination::where('id', $param->id)->first();
+				$examination->examination_status = $examination_status;
 				$examination->location = $param->location;
 				$examination->save();
 				
 				$equip = Equipment::where("examination_id",$param->id)->first();
 				$equip->location = $param->location;
 				$equip->save();
+				if($param->location == 3){
+					
+
+			      	$data= array( 
+	                "from"=>$currentUser->id,
+	                "to"=>"admin",
+	                "message"=>"Test Engginer mengambil barang dari Gudang",
+	                "url"=>"examination/".$param->id.'/edit',
+	                "is_read"=>0,
+	                "created_at"=>date("Y-m-d H:i:s"),
+	                "updated_at"=>date("Y-m-d H:i:s")
+	                );
+				  	$notification = new NotificationTable();
+			      	$notification->from = $data['from'];
+			      	$notification->to = $data['to'];
+			      	$notification->message = $data['message'];
+			      	$notification->url = $data['url'];
+			      	$notification->is_read = $data['is_read'];
+			      	$notification->created_at = $data['created_at'];
+			      	$notification->updated_at = $data['updated_at'];
+			      	$notification->save();
+
+
+	                 $data['id'] = $notification->id;
+			      	event(new Notification($data));
+				}else if($param->location == 2){
+
+					$data= array( 
+	                "from"=>$currentUser->id,
+	                "to"=>"admin",
+	                "message"=>"Test Engginer mengembalikan barang ke Gudang",
+	                "url"=>"examination/".$param->id.'/edit',
+	                "is_read"=>0,
+	                "created_at"=>date("Y-m-d H:i:s"),
+	                "updated_at"=>date("Y-m-d H:i:s")
+	                );
+				  	$notification = new NotificationTable();
+			      	$notification->from = $data['from'];
+			      	$notification->to = $data['to'];
+			      	$notification->message = $data['message'];
+			      	$notification->url = $data['url'];
+			      	$notification->is_read = $data['is_read'];
+			      	$notification->created_at = $data['created_at'];
+			      	$notification->updated_at = $data['updated_at'];
+			      	$notification->save();
+
+			      	 $data['id'] = $notification->id;
+
+	                event(new Notification($data));
+				}
+				
+		        event(new Notification($data));
 				return $this->sendResponse($equip_hist, 'History Found');
 			}else{
 				return $this->sendError('Failed to Input History');
@@ -668,7 +770,7 @@ class ExaminationAPIController extends AppBaseController
 	public function updateDeviceTE(Request $param)
     {
     	$param = (object) $param->all();
-
+    	$currentUser = Auth::user();
     	if(!empty($param->id) && (!empty($param->name) || !empty($param->mark) || !empty($param->capacity) || !empty($param->manufactured_by) || !empty($param->model) || !empty($param->serial_number) || !empty($param->test_reference))){
     		$examinations = Examination::where("id",$param->id)->with('examinationType')->first();
 			if($examinations){
@@ -707,6 +809,56 @@ class ExaminationAPIController extends AppBaseController
 					$device->updated_at = date("Y-m-d h:i:s");
 					
 					if($device->save()){
+
+					
+						 $data= array( 
+		                "from"=>$currentUser->id,
+		                "to"=>"admin",
+		                "message"=>"Test Enginner mengedit data Pengujian",
+		                "url"=>"examination/".$param->id,
+		                "is_read"=>0,
+		                "created_at"=>date("Y-m-d H:i:s"),
+		                "updated_at"=>date("Y-m-d H:i:s")
+		             );
+					  $notification = new NotificationTable();
+				      $notification->from = $data['from'];
+				      $notification->to = $data['to'];
+				      $notification->message = $data['message'];
+				      $notification->url = $data['url'];
+				      $notification->is_read = $data['is_read'];
+				      $notification->created_at = $data['created_at'];
+				      $notification->updated_at = $data['updated_at'];
+				      $notification->save();
+				     $data['id'] = $notification->id;
+				     
+				      event(new Notification($data));
+
+
+				      $data= array(
+				        
+			                "from"=>"admin",
+			                "to"=>$currentUser->id,
+			                "message"=>"Test Enginner mengedit data Pengujian",
+			                "url"=>"pengujian".$param->id,
+			                "is_read"=>0,
+			                "created_at"=>date("Y-m-d H:i:s"),
+			                "updated_at"=>date("Y-m-d H:i:s")
+			             );
+
+					  $notification = new NotificationTable();
+				      $notification->from = $data['from'];
+				      $notification->to = $data['to'];
+				      $notification->message = $data['message'];
+				      $notification->url = $data['url'];
+				      $notification->is_read = $data['is_read'];
+				      $notification->created_at = $data['created_at'];
+				      $notification->updated_at = $data['updated_at'];
+				      $notification->save();
+
+				      $data['id'] = $notification->id;
+				      
+
+				      event(new Notification($data));
 						$this->updaterevisi($a,$param,$examinations);
 						return $this->sendResponse($device, 'Device Found');
 					}else{
@@ -842,7 +994,7 @@ class ExaminationAPIController extends AppBaseController
 	public function updateFunctionStat(Request $param)
     {
     	$param = (object) $param->all();
-
+    	$currentUser = Auth::user();
     	if(!empty($param->id) && !empty($param->catatan) && !empty($param->function_result) && !empty($param->function_test_pic)){
     		$examinations = Examination::find($param->id);
     		if($examinations){
@@ -851,6 +1003,51 @@ class ExaminationAPIController extends AppBaseController
 				$examinations->function_test_PIC = $param->function_test_pic;
 				// $examinations->function_test_NO = $this->generateFunctionTestNumber($examinations->examination_type_id);
     			if($examinations->save()){
+    				 $data= array( 
+		                "from"=>$currentUser->id,
+		                "to"=>"admin",
+		                "message"=>"Test Enginner memberikan Hasil Uji Fungsi",
+		                "url"=>"examination/".$param->id."/edit",
+		                "is_read"=>0,
+		                "created_at"=>date("Y-m-d H:i:s"),
+		                "updated_at"=>date("Y-m-d H:i:s")
+		             );
+					  $notification = new NotificationTable();
+				      $notification->from = $data['from'];
+				      $notification->to = $data['to'];
+				      $notification->message = $data['message'];
+				      $notification->url = $data['url'];
+				      $notification->is_read = $data['is_read'];
+				      $notification->created_at = $data['created_at'];
+				      $notification->updated_at = $data['updated_at'];
+				      $notification->save();
+				     
+				      $data['id'] = $notification->id;
+				      event(new Notification($data));
+
+
+				       $data= array( 
+		                "from"=>"admin",
+		                "to"=>$currentUser->id,
+		                "message"=>"Test Enginner memberikan Hasil Uji Fungsi",
+		                "url"=>"examination/".$param->id."/edit",
+		                "is_read"=>0,
+		                "created_at"=>date("Y-m-d H:i:s"),
+		                "updated_at"=>date("Y-m-d H:i:s")
+		             );
+					  $notification = new NotificationTable();
+				      $notification->from = $data['from'];
+				      $notification->to = $data['to'];
+				      $notification->message = $data['message'];
+				      $notification->url = $data['url'];
+				      $notification->is_read = $data['is_read'];
+				      $notification->created_at = $data['created_at'];
+				      $notification->updated_at = $data['updated_at'];
+				      $notification->save();
+
+				     
+				      $data['id'] = $notification->id;
+				      event(new Notification($data));
     				return $this->sendResponse($examinations, 'Examination Found');
     			}else{
     				return $this->sendError('Failed to Update ');
@@ -920,6 +1117,28 @@ class ExaminationAPIController extends AppBaseController
 			}
     	}else{
     		return $this->sendError('ID Examination or name or attachment or Ref. No link Is Required');
+    	}
+    }
+	
+	public function updateSidangQa(Request $param)
+    {
+    	$param = (object) $param->all();
+
+    	if(!empty($param->id) && !empty($param->status) && !empty($param->date)){
+    		$examinations = Examination::find($param->id);
+    		if($examinations){
+				$examinations->qa_passed = $param->status;
+				$examinations->qa_date = $param->date;
+    			if($examinations->save()){
+    				return $this->sendResponse($examinations, 'Examination Found');
+    			}else{
+    				return $this->sendError('Failed to Update ');
+    			}
+    		}else{
+    			return $this->sendError('Success Update');
+    		}
+    	}else{
+    		return $this->sendError('ID Examination or Status or Date Is Required');
     	}
     }
 	

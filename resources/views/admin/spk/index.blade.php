@@ -58,27 +58,37 @@
 									<th class="center">Tipe Pengujian</th>
                                     <th class="center">Perusahaan</th>
                                     <th class="center">Perangkat</th>
+                                    <th class="center">Status</th>
                                     <th class="center">Aksi</th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php $no=1; ?>
-								@foreach($data->data as $item)
+								@if(($data->code != 'MSTD0059AERR' && $data->code != 'MSTD0000AERR'))
+									@foreach($data->data as $item)
+										<tr>
+											<td class="center">{{$no}}</td>
+											<td class="center">{{ $item->spkNumber }}</td>
+											<td class="center">{{ $item->labName }}</td>
+											<td class="center">{{ $item->testingTypeName }}</td>
+											<td class="center">{{ $item->companyName }}</td>
+											<td class="center">{{ $item->deviceName }}</td>
+											<td class="center">{{ $item->flowStatusName }}</td>
+											<td class="center">
+												<div>
+													<a href="{{URL::to('admin/spk/'.$item->id.'')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
+												</div>
+											</td>
+										</tr>
+									<?php $no++ ?>
+									@endforeach
+								@else
 									<tr>
-										<td class="center">{{$no}}</td>
-										<td class="center">{{ $item->spkNumber }}</td>
-										<td class="center">{{ $item->labName }}</td>
-										<td class="center">{{ $item->testingTypeName }}</td>
-										<td class="center">{{ $item->companyName }}</td>
-										<td class="center">{{ $item->deviceName }}</td>
-	                                    <td class="center">
-											<div>
-												<a href="{{URL::to('admin/spk/'.$item->id.'')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
-											</div>
+										<td colspan=7 class="center">
+											Data Not Found
 										</td>
 									</tr>
-								<?php $no++ ?>
-								@endforeach
+								@endif
                             </tbody>
 						</table>
 					</div>

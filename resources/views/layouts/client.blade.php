@@ -191,15 +191,37 @@
                  var html = '<div class="top-notification-items">'+
                     '<div class="top-notification-item clearfix"> '+
                      ' <div class="top-notification-item-desc">'+
-                        '<a href="'+message.data.action+'">'+message.data.message+'</a> '+
+                        '<a data-id="'+message.data.id+'" data-url="'+message.data.url+'" class="notifData">'+message.data.message+'</a> '+
                       '</div>'+
                     '</div>'+
                   '</div>';
-                $("#notification-item").append(html);
+                $(".top-notification-content").append(html);
                 $("#notification-count").html(notificationCount+1); 
+
+                initClickNotif();
             }
            
         });
+
+        initClickNotif();
+        function initClickNotif(){
+            $(".notifData").on("click",function(){ 
+                var notifID = $(this).attr("data-id");
+                var notifURL = $(this).attr("data-url");
+                $.ajax({ 
+                    type: "POST",
+                    url : "<?php echo URL::to('/'); ?>/updateNotif", 
+                    data:{
+                        "notif_id":notifID
+                    }, 
+                    success: function(data){ 
+                        console.log(data);
+                        $(".notification-count").html(data); 
+                        window.location.href = notifURL; 
+                    }
+                }); 
+            });
+        }
     </script>
 
     <?php }?>

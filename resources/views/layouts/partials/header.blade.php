@@ -164,12 +164,24 @@
 		                </div>
 		                @endif
 	              </div>
-	              <li>  <a href="#" id="top-notification-trigger"><i class="icon-bell"></i><span id="notification-count">{{Cart::count()}}</span></a></li>
+	              <li>  <a href="#" id="top-notification-trigger"><i class="icon-bell"></i><span id="notification-count"><?php echo $notification_count;?></span></a></li>
 	             	<div id="top-notification" style="float:left"> 
 	                	<div class="top-notification-content">
 	                    <div class="top-notification-title">
 	                      <h4>Notification</h4>
 	                    </div> 
+
+                      <?php
+                      foreach ($notification_data as $notif) { ?> 
+                      <div class="top-notification-items">
+                        <div class="top-notification-item clearfix">
+                          <div class="top-notification-item-desc">
+                            <a data-id="{{$notif['id']}}" data-url="{{$notif['url']}}" class="notifData">{{$notif['message']}}</a> 
+                          </div>
+                        </div>
+                      </div>
+
+                    <?php }?>
 	                	</div> 
 	              	</div> 
               <?php   

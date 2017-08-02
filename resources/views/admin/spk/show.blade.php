@@ -40,16 +40,24 @@
 							</thead>
 							<tbody>
 								<?php $no=1; ?>
-								@foreach($data->data as $item)
+								@if(($data->code != 'MSTD0059AERR' && $data->code != 'MSTD0000AERR'))
+									@foreach($data->data as $item)
+										<tr>
+											<td class="center">{{$no}}</td>
+											<td class="center">{{ $item->action }}</td>
+											<td class="center">{{ $item->remark }}</td>
+											<td class="center">{{ $item->createdBy }}</td>
+											<td class="center">{{ $item->createdDt }}</td>
+										</tr>
+									<?php $no++ ?>
+									@endforeach
+								@else
 									<tr>
-										<td class="center">{{$no}}</td>
-										<td class="center">{{ $item->action }}</td>
-										<td class="center">{{ $item->remark }}</td>
-										<td class="center">{{ $item->createdBy }}</td>
-										<td class="center">{{ $item->createdDt }}</td>
+										<td colspan=7 class="center">
+											Data Not Found
+										</td>
 									</tr>
-								<?php $no++ ?>
-								@endforeach
+								@endif
                             </tbody>
 						</table>
 					</div>

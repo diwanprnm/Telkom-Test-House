@@ -8,6 +8,8 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesResources;
 use Illuminate\Support\Facades\DB;
+use App\NotificationTable;
+use Auth;
 
 class Controller extends BaseController
 {
@@ -20,8 +22,14 @@ class Controller extends BaseController
 		if (count($data_footers) == 0){
 			$message_footers = "Data Not Found";
 		}
+			$currentUser = Auth::user(); 
+			if ($currentUser){				
+				// Sharing is caring
+				View()->share('data_footers', $data_footers);
 
-		// Sharing is caring
-		View()->share('data_footers', $data_footers);
+				$dataNotification = NotificationTable::where("is_read",0)->where("to",$currentUser->id)->orderBy("created_at","desc")->get();
+				View()->share('notification_data', $dataNotification->toArray());
+				View()->share('notification_count', $dataNotification->count());
+			}
 	}
 }
