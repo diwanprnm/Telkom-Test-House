@@ -168,6 +168,9 @@ return [
 	'examination_upload_payment_file'=> 'Unggah',
 	'examination_model'=> 'Model/Tipe',
 	'examination_capacity'=> 'Kapasitas',
+	'examination_company'=> 'Perusahaan',
+	'examination_date_regist'=> 'Tanggal Pengajuan',
+	'examination_number_exam_form'=> 'Nomor Form Uji',
 	'form_not_show' => 'Jika form tidak muncul secara otomatis,',
 	
 	'search'			=> 'Cari',

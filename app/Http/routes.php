@@ -1974,7 +1974,7 @@ Route::get('cetakKontrak', function(Illuminate\Http\Request $request){
 	$pdf->setXY(73.00125,$pdf->getY()-18);
 	$pdf->drawTextBox('(...............................)', 63, 18, 'C', 'B', 1);
 	$pdf->setXY(136.00125,$pdf->getY()-18);
-	$pdf->drawTextBox('(...............................)', 63, 18, 'C', 'B', 1);
+	$pdf->drawTextBox('('.$data[0]['pic'].')', 63, 18, 'C', 'B', 1);
 	$pdf->Ln(2);
 	$pdf->setX(10.00125);
 	$pdf->Cell(10,4,"Catatan Kelengkapan Administrasi:",0,0,'L');
@@ -2723,11 +2723,17 @@ array('as' => 'cetakHasilKuitansi', function(
 ));
 
 Route::get('/cetakUjiFungsi/{id}', 'ExaminationController@cetakUjiFungsi');
-Route::get('/cetakHasilUjiFungsi/{company_name}/{company_address}/{company_phone}/{company_fax}/{device_name}/{device_mark}/{device_manufactured_by}/{device_model}/{device_serial_number}/{status}/{catatan}', 
+Route::get('/cetakHasilUjiFungsi/{company_name}/{company_address}/{company_phone}/{company_fax}/{device_name}/{device_mark}/{device_manufactured_by}/{device_model}/{device_serial_number}/{status}/{catatan}/{nik_te}/{name_te}/{pic}', 
 array('as' => 'cetakHasilUjiFungsi', function(
 	$company_name = null, $company_address = null, $company_phone = null, $company_fax = null, 
 	$device_name = null, $device_mark = null, $device_manufactured_by = null, $device_model = null , $device_serial_number = null, 
-	$status = null, $catatan = null ) {
+	$status = null, $catatan = null, $nik_te = null, $name_te = null , $pic = null ) {
+		$currentUser = Auth::user();
+		if($currentUser){
+			$pic_urel = $currentUser->name;
+		}else{
+			$pic_urel = '____________________________';
+		}
 	$pdf = new PDF_MC_Table(); 
 	$pdf->judul_kop('FORM UJI FUNGSI','');
 	$pdf->AliasNbPages();
@@ -2819,15 +2825,17 @@ array('as' => 'cetakHasilUjiFungsi', function(
 	$pdf->Cell(18,100+25,'Customer',0,0,'C');
 	$pdf->Ln(1);
 	$pdf->Cell(16);
-	$pdf->Cell(18,100+25+40,'____________________________',0,0,'C');
+	$pdf->SetFont('','U');
+	$pdf->Cell(18,100+25+40,$pic_urel,0,0,'C');
 	$pdf->Cell(47);
-	$pdf->Cell(18,100+25+40,'____________________________',0,0,'C');
+	$pdf->Cell(18,100+25+40,$name_te,0,0,'C');
 	$pdf->Cell(45);
-	$pdf->Cell(18,100+25+40,'____________________________',0,0,'C');
+	$pdf->Cell(18,100+25+40,$pic,0,0,'C');
+	$pdf->SetFont('','');
 	$pdf->Ln(1);
 	$pdf->Cell(18,100+25+40+10,'NIK.',0,0,'L');
 	$pdf->Cell(50);
-	$pdf->Cell(18,100+25+40+10,'NIK.',0,0,'L');
+	$pdf->Cell(18,100+25+40+10,'NIK. '.$nik_te,0,0,'L');
 	$pdf->Ln($pdf->getY()+25);
 	$pdf->SetWidths(array(5.00125,20,160));
 	$pdf->SetAligns(array('L','L','L'));
@@ -3085,6 +3093,12 @@ array('as' => 'cetakBuktiPenerimaanPerangkat', function(
 	Illuminate\Http\Request $request, $kode_barang = null, $company_name = null, $company_address = null, $company_phone = null, $company_fax = null, 
 	$device_name = null, $device_mark = null, $device_manufactured_by = null, $device_model = null , $device_serial_number = null, 
 	$exam_type = null, $exam_type_desc = null, $contract_date = null) {
+		$currentUser = Auth::user();
+		if($currentUser){
+			$pic_urel = $currentUser->name;
+		}else{
+			$pic_urel = '...............................';
+		}
 		$equipment = $request->session()->pull('key_exam_for_equipment');
 		$pdf = new PDF_MC_Table(); 
 		$pdf->judul_kop('Bukti Penerimaan & Pengeluaran Perangkat Uji','Nomor: '.urldecode($kode_barang));
@@ -3143,6 +3157,7 @@ array('as' => 'cetakBuktiPenerimaanPerangkat', function(
  		$pdf->RowRect(array('','No','Jumlah','Satuan','Uraian Perangkat','Keterangan'));
 		$pdf->SetFont('helvetica','',10);
 		if(count($equipment)>0){
+			$pic = $equipment[0]->pic;
 			$no = 1;
 			foreach($equipment as $data){
 				$pdf->RowRect(array('',$no,$data->qty,$data->unit,$data->description,$data->remarks));
@@ -3152,6 +3167,7 @@ array('as' => 'cetakBuktiPenerimaanPerangkat', function(
 				$pdf->RowRect(array('','','','','',''));
 			}
 		}else{
+			$pic = '...............................';
 			for ($i=0; $i <24 ; $i++) { 
 				$pdf->RowRect(array('','','','','',''));
 			}	  			
@@ -3174,9 +3190,9 @@ array('as' => 'cetakBuktiPenerimaanPerangkat', function(
 		$pdf->Cell(40, 4, 'IDeC', 1, 0, 'C');
 		 
 		$pdf->setX(10.00125);
-		$pdf->drawTextBox('(...............................)', 40, 25, 'C', 'B', 1);
+		$pdf->drawTextBox('('.$pic.')', 40, 25, 'C', 'B', 1);
 		$pdf->setXY(50,$pdf->getY()-25);
-		$pdf->drawTextBox('(...............................)', 40, 25, 'C', 'B', 1); 
+		$pdf->drawTextBox('('.$pic_urel.')', 40, 25, 'C', 'B', 1); 
 		 
 		//TTD PENGAMBILAN PERANGKAT 
 	  	$pdf->SetFont('helvetica','',10); 

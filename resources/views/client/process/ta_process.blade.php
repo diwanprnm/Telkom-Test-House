@@ -161,6 +161,15 @@
 
 					            <h2>Third Step</h2>
 					            <fieldset> 
+										<input type="hidden"   id="f1-fjns-referensi-perangkat" name="f1-jns-referensi-perangkat" value='0'> 
+										<div class="form-group txt-ref-perangkat">
+											<label for="f1-referensi-perangkat">{{ trans('translate.service_device_test_reference') }} *</label>
+											<select  class="chosen-select" id="f1-referensi-perangkat" name="f1-referensi-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}"> 
+												@foreach($data_stels as $item)
+													<option value="{{ $item->stel }}">{{ $item->stel }} || {{ $item->device_name }}</option>
+												@endforeach
+											</select>
+										</div>
 					              		<div class="form-group">
 											<label for="f1-nama-perangkat">{{ trans('translate.service_device_equipment') }} *</label>
 											<input type="text" name="f1-nama-perangkat" placeholder="Laptop/Phone, Etc." id="f1-nama-perangkat" class="required">
@@ -184,11 +193,6 @@
 										<div class="form-group">
 											<label for="f1-model-perangkat">{{ trans('translate.service_device_model') }} *</label>
 											<input type="text" name="f1-model-perangkat" placeholder="L123456"   id="f1-model-perangkat" class="required">
-										</div>
-										<input type="hidden"   id="f1-fjns-referensi-perangkat" name="f1-jns-referensi-perangkat" value='0'> 
-										 <div class="form-group txt-ref-perangkat">
-											<label for="f1-referensi-perangkat">{{ trans('translate.service_device_test_reference') }}</label>
-											<input type="text" name="f1-referensi-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}"  id="f1-referensi-perangkat" class="required">
 										</div>
 					            </fieldset>
 
@@ -659,5 +663,13 @@
 	});
 </script>
 
-  <script src="{{url('vendor/chosen/chosen.jquery.js')}}" type="text/javascript"></script> 
+  <script src="{{url('vendor/chosen/chosen.jquery.js')}}" type="text/javascript"></script>
+  <script type="text/javascript">
+	$("#f1-referensi-perangkat").change(function(){
+		var e = document.getElementById("f1-referensi-perangkat");
+		var strUser = e.options[e.selectedIndex].text;
+		var res = strUser.split('||');
+		$('#f1-nama-perangkat').val(res[1]);
+	});
+ </script>
 @endsection

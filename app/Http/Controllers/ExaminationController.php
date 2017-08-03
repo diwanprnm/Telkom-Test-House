@@ -310,7 +310,7 @@ class ExaminationController extends Controller
 		$data_gudang = DB::select($query_gudang);
 		
 		// $res_exam_schedule = $client->post('notification/notifToTE?lab='.$exam->examinationLab->lab_code)->getBody();
-		$res_exam_schedule = $client->get('spk/searchData?spkNumber=022/002/TA/2017')->getBody();
+		$res_exam_schedule = $client->get('spk/searchData?spkNumber='.$exam->spk_code)->getBody();
 		$exam_schedule = json_decode($res_exam_schedule);
 		
 		$res_exam_approve_date = $client->get('spk/searchHistoryData?spkNumber='.$exam->spk_code)->getBody();
@@ -1886,6 +1886,7 @@ $notification->id = Uuid::uuid4();
 		$exam = Examination::where('id', $exam_id)
 				->with('user')
 				->with('device')
+				->with('Equipment')
 				->first();
 			
 			try{
@@ -1900,6 +1901,13 @@ $notification->id = Uuid::uuid4();
 				";
 				$data_update = DB::update($query_update);
 				
+				if(count($exam->equipment)>0){
+					if( strpos( $exam->equipment[0]->pic, "/" ) !== false ) {$pic = urlencode(urlencode($exam->equipment[0]->pic));}
+						else{$pic = $exam->equipment[0]->pic?: '-';}
+				}else{
+					$pic = '...............................';
+				}
+				
 				$data = Array([
 					'nama_pemohon' => $exam->user->name,
 					'alamat_pemohon' => $exam->user->address,
@@ -1911,7 +1919,8 @@ $notification->id = Uuid::uuid4();
 					'pembuat_perangkat' => $exam->device->manufactured_by,
 					'testing_start' => $testing_start_ina,
 					'testing_end' => $testing_end_ina,
-					'contract_date' => $contract_date_ina
+					'contract_date' => $contract_date_ina,
+					'pic' => $pic
 				]);
 				
 				$request->session()->put('key_contract', $data);
@@ -2243,20 +2252,22 @@ $notification->id = Uuid::uuid4();
 	
 	function cetakUjiFungsi($id)
     {
-		/* $client = new Client([
+		$client = new Client([
+			'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
 			// Base URI is used with relative requests
-			'base_uri' => 'http://ptbsp.ddns.net:13280/RevitalisasiOTR/api/',
-			// 'base_uri' => config("app.url_api_bsp"),
+			// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+			'base_uri' => config("app.url_api_bsp"),
 			// You can set any number of default request options.
 			'timeout'  => 60.0,
 		]);
 		// $res_function_test = $client->get('functionTest/getResultData?id='.$id)->getBody();
-		$res_function_test = $client->get('functionTest/getResultData?id=3babffdd-6af1-4be7-a7bb-07da626c1351')->getBody();
+		$res_function_test = $client->get('functionTest/getFunctionTestInfo?id='.$id)->getBody();
 		$function_test = json_decode($res_function_test);
-		*/
+		
 		$data = Examination::where('id','=',$id)
 		->with('Company')
 		->with('Device')
+		->with('Equipment')
 		->get();
 		if( strpos( $data[0]->company->name, "/" ) !== false ) {$company_name = urlencode(urlencode($data[0]->company->name));}
 			else{$company_name = $data[0]->company->name?: '-';}
@@ -2280,6 +2291,21 @@ $notification->id = Uuid::uuid4();
 			else{$function_test_TE = $data[0]->function_test_TE?: '-';}
 		if( strpos( $data[0]->catatan, "/" ) !== false ) {$catatan = urlencode(urlencode($data[0]->catatan));}
 			else{$catatan = $data[0]->catatan?: '-';}
+			if($function_test->code != 'MSTD0059AERR' && $function_test->code != 'MSTD0000AERR'){
+				if( strpos( $function_test->data[0]->nik, "/" ) !== false ) {$nik_te = urlencode(urlencode($function_test->data[0]->nik));}
+					else{$nik_te = $function_test->data[0]->nik?: '-';}
+				if( strpos( $function_test->data[0]->name, "/" ) !== false ) {$name_te = urlencode(urlencode($function_test->data[0]->name));}
+					else{$name_te = $function_test->data[0]->name?: '-';}
+			}else{
+				$nik_te = "-";
+				$name_te = "____________________________";
+			}
+		if(count($data[0]->equipment)>0){
+			if( strpos( $data[0]->equipment[0]->pic, "/" ) !== false ) {$pic = urlencode(urlencode($data[0]->equipment[0]->pic));}
+				else{$pic = $data[0]->equipment[0]->pic?: '-';}
+		}else{
+			$pic = '____________________________';
+		}
 		return \Redirect::route('cetakHasilUjiFungsi', [
 			'company_name' => $company_name,
 			'company_address' => $company_address,
@@ -2291,7 +2317,10 @@ $notification->id = Uuid::uuid4();
 			'device_model' => $device_model,
 			'device_serial_number' => $device_serial_number,
 			'status' => $function_test_TE,
-			'catatan' => $catatan
+			'catatan' => $catatan,
+			'nik_te' => $nik_te,
+			'name_te' => $name_te,
+			'pic' => $pic
 		]);
     }
 	

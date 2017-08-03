@@ -513,7 +513,7 @@ class ExaminationAPIController extends AppBaseController
 				->join("devices","devices.id","=","examinations.device_id")
 				->join("companies","companies.id","=","examinations.company_id")  
 				->join("examination_labs","examination_labs.id","=","examinations.examination_lab_id")  
-				->where("examinations.registration_status", 1)
+				->where("examinations.registration_status", "!=", 0)
 				->where("examinations.function_status", "!=" ,1)
 				->whereNotNull("examinations.cust_test_date")
 				->where($condition); 

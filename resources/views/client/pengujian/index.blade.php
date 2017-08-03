@@ -883,10 +883,6 @@
 									</tr>
 									@endif
 									<tr>
-										<td>{{ trans('translate.examination_equipment') }}</td>
-										<td colspan="2">: {{ $item->nama_perangkat }}</td>
-									</tr>
-									<tr>
 										<td>{{ trans('translate.examination_type') }}</td>
 										<td colspan="2">: {{ $item->jns_pengujian }} ( {{ $item->desc_pengujian }} )</td>
 									</tr>
@@ -895,12 +891,28 @@
 										<td colspan="2">: {{ $item->userName }}</td>
 									</tr>
 									<tr>
-										<td>{{ trans('translate.examination_model') }}</td>
-										<td colspan="2">: {{ $item->model_perangkat }}</td>
+										<td>{{ trans('translate.examination_company') }}</td>
+										<td colspan="2">: {{ $item->companiesName }}</td>
+									</tr>
+									<tr>
+										<td>{{ trans('translate.examination_date_regist') }}</td>
+										<td colspan="2">: {{ $item->created_at }}</td>
+									</tr>
+									<tr>
+										<td>{{ trans('translate.examination_equipment') }}</td>
+										<td colspan="2">: {{ $item->nama_perangkat }}</td>
 									</tr>
 									<tr>
 										<td>{{ trans('translate.examination_capacity') }}</td>
 										<td colspan="2">: {{ $item->kapasitas_perangkat }}</td>
+									</tr>
+									<tr>
+										<td>{{ trans('translate.examination_model') }}</td>
+										<td colspan="2">: {{ $item->model_perangkat }}</td>
+									</tr>
+									<tr>
+										<td>{{ trans('translate.examination_number_exam_form') }}</td>
+										<td colspan="2">: {{ $item->function_test_NO }}</td>
 									</tr>
 								</table>
 							</div>
