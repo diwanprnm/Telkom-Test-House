@@ -765,6 +765,30 @@
 								</div>
 							</div>
 						</div>
+						@else
+						<div class="row">
+							<div class="col-md-12">
+								<div class="panel panel-white" id="panel1">
+									<div class="panel-body">
+										<div class="col-md-12">
+										<!-- start: WIZARD FORM -->
+											<div id="wizard" class="swMain">
+												<div class="form-group">
+													<table class="table table-condensed">
+														<tbody>
+															<tr>
+																<td class="left">{{ trans('translate.examination_spk_code') }} : {{ $data[0]->spk_code }}</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										<!-- end: WIZARD FORM -->
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 						@endif
 						 <!-- start: WIZARD FORM -->
 						<?php $no=1; //print_r($data);exit;
