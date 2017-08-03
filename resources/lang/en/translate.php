@@ -167,6 +167,9 @@ return [
 	'examination_upload_payment_file'=> 'Upload',
 	'examination_model'=> 'Model/Type',
 	'examination_capacity'=> 'Capacity',
+	'examination_company'=> 'Company Name',
+	'examination_date_regist'=> 'Register Date',
+	'examination_number_exam_form'=> 'Number of Function Test',
 	'form_not_show' => 'If form not automatically open in new tab,',
     
 	'search'			=> 'Search',

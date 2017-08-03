@@ -162,7 +162,11 @@
 				            		<label for="f1-nama-perangkat">{{ trans('translate.service_device_test_reference') }} *</label>
 									<select  class="chosen-select" id="f1-cmb-ref-perangkat" name="f1-cmb-ref-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}"> 
 										@foreach($data_stels as $item)
-											<option value="{{ $item->stel }}">{{ $item->stel }} || {{ $item->device_name }}</option>
+											@if($item->stel == $userData->referensi_perangkat)
+												<option value="{{ $item->stel }}" selected>{{ $item->stel }} || {{ $item->device_name }}</option>
+											@else
+												<option value="{{ $item->stel }}">{{ $item->stel }} || {{ $item->device_name }}</option>
+											@endif
 										@endforeach
 									</select>
 
