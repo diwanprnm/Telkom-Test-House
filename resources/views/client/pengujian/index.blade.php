@@ -937,6 +937,15 @@
 								<?php if($item->registration_status != 1){ ?>
 									<a class="button button-3d nomargin btn-blue" href="{{url('editprocess/'.$item->jns_pengujian.'/'.$item->id)}}">{{ trans('translate.examination_edit') }}</a>
 								<?php } ?>
+								
+								<?php if($item->resume_status == 1){ ?>
+									@if($item->examination_type_id == 1)
+										<a class="button button-3d nomargin btn-blue" href="{{URL::to('pengujian/'.$item->id.'/downloadLaporanPengujian')}}">{{ trans('translate.download') }} {{ trans('translate.examination_report') }}</a>
+									@else
+										<a class="button button-3d nomargin btn-blue" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->device_id }}','{{ URL::to('pengujian/'.$item->id.'/downloadLaporanPengujian') }}','device', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})', '{{$item->id}}');">{{ trans('translate.download') }} {{ trans('translate.examination_report') }}</a>
+									@endif
+								<?php } ?>
+								
 								<?php if($item->certificate_status == 1){ ?>
 									<a class="button button-3d nomargin btn-blue" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->device_id }}','{{ $item->sistem_mutuPerangkat }}','device', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})', '{{$item->id}}');">{{ trans('translate.download') }} {{ trans('translate.certificate') }}</a>
 								<?php } ?>
