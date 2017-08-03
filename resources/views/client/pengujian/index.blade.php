@@ -883,10 +883,6 @@
 									</tr>
 									@endif
 									<tr>
-										<td>{{ trans('translate.examination_equipment') }}</td>
-										<td colspan="2">: {{ $item->nama_perangkat }}</td>
-									</tr>
-									<tr>
 										<td>{{ trans('translate.examination_type') }}</td>
 										<td colspan="2">: {{ $item->jns_pengujian }} ( {{ $item->desc_pengujian }} )</td>
 									</tr>
@@ -895,12 +891,28 @@
 										<td colspan="2">: {{ $item->userName }}</td>
 									</tr>
 									<tr>
-										<td>{{ trans('translate.examination_model') }}</td>
-										<td colspan="2">: {{ $item->model_perangkat }}</td>
+										<td>{{ trans('translate.examination_company') }}</td>
+										<td colspan="2">: {{ $item->companiesName }}</td>
+									</tr>
+									<tr>
+										<td>{{ trans('translate.examination_date_regist') }}</td>
+										<td colspan="2">: {{ $item->created_at }}</td>
+									</tr>
+									<tr>
+										<td>{{ trans('translate.examination_equipment') }}</td>
+										<td colspan="2">: {{ $item->nama_perangkat }}</td>
 									</tr>
 									<tr>
 										<td>{{ trans('translate.examination_capacity') }}</td>
 										<td colspan="2">: {{ $item->kapasitas_perangkat }}</td>
+									</tr>
+									<tr>
+										<td>{{ trans('translate.examination_model') }}</td>
+										<td colspan="2">: {{ $item->model_perangkat }}</td>
+									</tr>
+									<tr>
+										<td>{{ trans('translate.examination_number_exam_form') }}</td>
+										<td colspan="2">: {{ $item->function_test_NO }}</td>
 									</tr>
 								</table>
 							</div>
@@ -925,6 +937,15 @@
 								<?php if($item->registration_status != 1){ ?>
 									<a class="button button-3d nomargin btn-blue" href="{{url('editprocess/'.$item->jns_pengujian.'/'.$item->id)}}">{{ trans('translate.examination_edit') }}</a>
 								<?php } ?>
+								
+								<?php if($item->resume_status == 1){ ?>
+									@if($item->examination_type_id == 1)
+										<a class="button button-3d nomargin btn-blue" href="{{URL::to('pengujian/'.$item->id.'/downloadLaporanPengujian')}}">{{ trans('translate.download') }} {{ trans('translate.examination_report') }}</a>
+									@else
+										<a class="button button-3d nomargin btn-blue" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->device_id }}','{{ URL::to('pengujian/'.$item->id.'/downloadLaporanPengujian') }}','device', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})', '{{$item->id}}');">{{ trans('translate.download') }} {{ trans('translate.examination_report') }}</a>
+									@endif
+								<?php } ?>
+								
 								<?php if($item->certificate_status == 1){ ?>
 									<a class="button button-3d nomargin btn-blue" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->device_id }}','{{ $item->sistem_mutuPerangkat }}','device', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})', '{{$item->id}}');">{{ trans('translate.download') }} {{ trans('translate.certificate') }}</a>
 								<?php } ?>

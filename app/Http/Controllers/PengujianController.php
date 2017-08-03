@@ -81,6 +81,7 @@ class PengujianController extends Controller
 						$data = DB::table('examinations')
 						->join('devices', 'examinations.device_id', '=', 'devices.id')
 						->join('users', 'examinations.created_by', '=', 'users.id')
+						->join('companies', 'users.company_id', '=', 'companies.id')
 						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
 						->select(
 								'examinations.id',
@@ -109,7 +110,10 @@ class PengujianController extends Controller
 								'examination_types.description AS desc_pengujian',
 								'users.name AS userName',
 								'examinations.function_test_reason',
-								'examinations.function_date'
+								'companies.name AS companiesName',
+								'examinations.function_date',
+								'examinations.function_test_NO',
+								'examinations.created_at'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
@@ -123,6 +127,7 @@ class PengujianController extends Controller
 						$data = DB::table('examinations')
 						->join('devices', 'examinations.device_id', '=', 'devices.id')
 						->join('users', 'examinations.created_by', '=', 'users.id')
+						->join('companies', 'users.company_id', '=', 'companies.id')
 						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
 						->select(
 								'examinations.id',
@@ -151,7 +156,10 @@ class PengujianController extends Controller
 								'examination_types.description AS desc_pengujian',
 								'users.name AS userName',
 								'examinations.function_test_reason',
-								'examinations.function_date'
+								'companies.name AS companiesName',
+								'examinations.function_date',
+								'examinations.function_test_NO',
+								'examinations.created_at'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
@@ -165,6 +173,7 @@ class PengujianController extends Controller
 						$data = DB::table('examinations')
 						->join('devices', 'examinations.device_id', '=', 'devices.id')
 						->join('users', 'examinations.created_by', '=', 'users.id')
+						->join('companies', 'users.company_id', '=', 'companies.id')
 						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
 						->select(
 								'examinations.id',
@@ -193,7 +202,10 @@ class PengujianController extends Controller
 								'examination_types.description AS desc_pengujian',
 								'users.name AS userName',
 								'examinations.function_test_reason',
-								'examinations.function_date'
+								'companies.name AS companiesName',
+								'examinations.function_date',
+								'examinations.function_test_NO',
+								'examinations.created_at'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
@@ -206,6 +218,7 @@ class PengujianController extends Controller
 						$data = DB::table('examinations')
 						->join('devices', 'examinations.device_id', '=', 'devices.id')
 						->join('users', 'examinations.created_by', '=', 'users.id')
+						->join('companies', 'users.company_id', '=', 'companies.id')
 						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
 						->select(
 								'examinations.id',
@@ -234,7 +247,10 @@ class PengujianController extends Controller
 								'examination_types.description AS desc_pengujian',
 								'users.name AS userName',
 								'examinations.function_test_reason',
-								'examinations.function_date'
+								'companies.name AS companiesName',
+								'examinations.function_date',
+								'examinations.function_test_NO',
+								'examinations.created_at'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
@@ -249,6 +265,7 @@ class PengujianController extends Controller
 						$data = DB::table('examinations')
 						->join('devices', 'examinations.device_id', '=', 'devices.id')
 						->join('users', 'examinations.created_by', '=', 'users.id')
+						->join('companies', 'users.company_id', '=', 'companies.id')
 						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
 						->select(
 								'examinations.id',
@@ -277,7 +294,10 @@ class PengujianController extends Controller
 								'examination_types.description AS desc_pengujian',
 								'users.name AS userName',
 								'examinations.function_test_reason',
-								'examinations.function_date'
+								'companies.name AS companiesName',
+								'examinations.function_date',
+								'examinations.function_test_NO',
+								'examinations.created_at'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
@@ -290,6 +310,7 @@ class PengujianController extends Controller
 						$data = DB::table('examinations')
 						->join('devices', 'examinations.device_id', '=', 'devices.id')
 						->join('users', 'examinations.created_by', '=', 'users.id')
+						->join('companies', 'users.company_id', '=', 'companies.id')
 						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
 						->select(
 								'examinations.id',
@@ -318,7 +339,10 @@ class PengujianController extends Controller
 								'examination_types.description AS desc_pengujian',
 								'users.name AS userName',
 								'examinations.function_test_reason',
-								'examinations.function_date'
+								'companies.name AS companiesName',
+								'examinations.function_date',
+								'examinations.function_test_NO',
+								'examinations.created_at'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
@@ -331,6 +355,7 @@ class PengujianController extends Controller
 						$data = DB::table('examinations')
 						->join('devices', 'examinations.device_id', '=', 'devices.id')
 						->join('users', 'examinations.created_by', '=', 'users.id')
+						->join('companies', 'users.company_id', '=', 'companies.id')
 						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
 						->select(
 								'examinations.id',
@@ -359,7 +384,10 @@ class PengujianController extends Controller
 								'examination_types.description AS desc_pengujian',
 								'users.name AS userName',
 								'examinations.function_test_reason',
-								'examinations.function_date'
+								'companies.name AS companiesName',
+								'examinations.function_date',
+								'examinations.function_test_NO',
+								'examinations.created_at'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
@@ -371,6 +399,7 @@ class PengujianController extends Controller
 						$data = DB::table('examinations')
 						->join('devices', 'examinations.device_id', '=', 'devices.id')
 						->join('users', 'examinations.created_by', '=', 'users.id')
+						->join('companies', 'users.company_id', '=', 'companies.id')
 						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
 						->select(
 								'examinations.id',
@@ -399,7 +428,10 @@ class PengujianController extends Controller
 								'examination_types.description AS desc_pengujian',
 								'users.name AS userName',
 								'examinations.function_test_reason',
-								'examinations.function_date'
+								'companies.name AS companiesName',
+								'examinations.function_date',
+								'examinations.function_test_NO',
+								'examinations.created_at'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
 						->where('examinations.created_by','=',''.$user_id.'')
@@ -675,7 +707,9 @@ class PengujianController extends Controller
 					et.id AS id_jns_pengujian,
 					et.name AS jns_pengujian,
 					et.description AS desc_pengujian,
-					e.spk_code
+					e.spk_code,
+					e.resume_status,
+					e.certificate_status
 				FROM
 					examinations e,
 					devices d,
@@ -711,7 +745,9 @@ class PengujianController extends Controller
 					et.id AS id_jns_pengujian,
 					et.name AS jns_pengujian,
 					et.description AS desc_pengujian,
-					e.spk_code
+					e.spk_code,
+					e.resume_status,
+					e.certificate_status
 				FROM
 					examinations e,
 					devices d,
@@ -847,7 +883,8 @@ class PengujianController extends Controller
 			$exam_hist->created_at = date('Y-m-d H:i:s');
 			$exam_hist->save();
 
-			return Response::download($file, $attach, $headers);
+			// return Response::download($file, $attach, $headers);
+			return  redirect($file);
 		}
     }
 	

@@ -329,6 +329,12 @@
 														{{ $data->device->model }}
 													</td>
 												</tr>	
+												<tr>
+													<td>Nomor Form Uji:</td>
+													<td>
+														{{ $data->function_test_NO }}
+													</td>
+												</tr>
 											</tbody>
 										</table>
 									</div>
@@ -1063,11 +1069,13 @@
 									@endif
 								</div>
 							</div>
+							<!--
 	                        <div class="col-md-12">
 	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 	                                Update
 	                            </button>
 	                        </div>
+							-->
 	                    </div>
 						<div class="modal fade" id="myModalketerangan_spk" tabindex="-1" role="dialog" aria-hidden="true">
 							<div class="modal-dialog">

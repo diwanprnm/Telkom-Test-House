@@ -765,6 +765,30 @@
 								</div>
 							</div>
 						</div>
+						@else
+						<div class="row">
+							<div class="col-md-12">
+								<div class="panel panel-white" id="panel1">
+									<div class="panel-body">
+										<div class="col-md-12">
+										<!-- start: WIZARD FORM -->
+											<div id="wizard" class="swMain">
+												<div class="form-group">
+													<table class="table table-condensed">
+														<tbody>
+															<tr>
+																<td class="left">{{ trans('translate.examination_spk_code') }} : {{ $data[0]->spk_code }}</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										<!-- end: WIZARD FORM -->
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 						@endif
 						 <!-- start: WIZARD FORM -->
 						<?php $no=1; //print_r($data);exit;
@@ -874,16 +898,22 @@
 											@foreach($data_attach as $item_attach)
 											<tr>
 												<td> 
-													@if($item_attach->name == 'Sertifikat' && $item_attach->attachment != '')
-														<a class="btn btn-link" href="javascript:void(0)" style="color:black !important;" onclick="return isTestimonial('{{ $item_attach->id_attach }}','{{ $item_attach->attachment }}','{{ $item_attach->jns }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">{{ $item_attach->name }} </a>
-													@elseif($item_attach->name == 'Laporan Uji' && $item_attach->attachment != '')
-														@if($item->id_jns_pengujian == 1)
-															<a class="btn btn-link" href="{{$item_attach->attachment}}" target="_blank" style="color:black !important;">{{ $item_attach->name }} </a>
-														@else
-															<a class="btn btn-link" href="javascript:void(0)" style="color:black !important;" onclick="return isTestimonial('{{ $item_attach->id_attach }}','{{ $item_attach->attachment }}','{{ $item_attach->jns }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">{{ $item_attach->name }} </a>
+													@if($item_attach->attachment != '')
+														@if($item_attach->name == 'Sertifikat')
+															@if($item->certificate_status == 1)
+																<a class="btn btn-link" href="javascript:void(0)" style="color:black !important;" onclick="return isTestimonial('{{ $item_attach->id_attach }}','{{ $item_attach->attachment }}','{{ $item_attach->jns }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">{{ $item_attach->name }} </a>
+															@endif
+														@elseif($item_attach->name == 'Laporan Uji')
+															@if($item->resume_status == 1)
+																@if($item->id_jns_pengujian == 1)
+																	<a class="btn btn-link" href="{{$item_attach->attachment}}" target="_blank" style="color:black !important;">{{ $item_attach->name }} </a>
+																@else
+																	<a class="btn btn-link" href="javascript:void(0)" style="color:black !important;" onclick="return isTestimonial('{{ $item_attach->id_attach }}','{{ $item_attach->attachment }}','{{ $item_attach->jns }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">{{ $item_attach->name }} </a>
+																@endif
+															@endif
+														@else	
+															<a class="btn btn-link" href="{{URL::to('/pengujian/download/'.$item_attach->id_attach.'/'.$item_attach->attachment.'/'.$item_attach->jns)}}" style="color:black !important;">{{ $item_attach->name }} </a>
 														@endif
-													@else	
-														<a class="btn btn-link" href="{{URL::to('/pengujian/download/'.$item_attach->id_attach.'/'.$item_attach->attachment.'/'.$item_attach->jns)}}" style="color:black !important;">{{ $item_attach->name }} </a>
 													@endif
 												</td>
 											</tr>
