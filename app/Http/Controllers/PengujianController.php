@@ -707,7 +707,9 @@ class PengujianController extends Controller
 					et.id AS id_jns_pengujian,
 					et.name AS jns_pengujian,
 					et.description AS desc_pengujian,
-					e.spk_code
+					e.spk_code,
+					e.resume_status,
+					e.certificate_status
 				FROM
 					examinations e,
 					devices d,
@@ -743,7 +745,9 @@ class PengujianController extends Controller
 					et.id AS id_jns_pengujian,
 					et.name AS jns_pengujian,
 					et.description AS desc_pengujian,
-					e.spk_code
+					e.spk_code,
+					e.resume_status,
+					e.certificate_status
 				FROM
 					examinations e,
 					devices d,
@@ -879,7 +883,8 @@ class PengujianController extends Controller
 			$exam_hist->created_at = date('Y-m-d H:i:s');
 			$exam_hist->save();
 
-			return Response::download($file, $attach, $headers);
+			// return Response::download($file, $attach, $headers);
+			return  redirect($file);
 		}
     }
 	
