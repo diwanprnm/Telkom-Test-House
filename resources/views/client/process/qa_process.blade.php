@@ -162,7 +162,8 @@
 								</div>
 				            	<div class="form-group">
 				            		<label for="f1-nama-perangkat">{{ trans('translate.service_device_test_reference') }} *</label>
-									<select  class="chosen-select" id="f1-cmb-ref-perangkat" name="f1-cmb-ref-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}"> 
+									<select  class="chosen-select" id="f1-cmb-ref-perangkat" name="f1-cmb-ref-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}" class="required"> 
+											<option value="" selected>{{ trans('translate.examination_choose_stel') }}</option>
 										@foreach($data_stels as $item)
 											<option value="{{ $item->stel }}">{{ $item->stel }} || {{ $item->device_name }}</option>
 										@endforeach
