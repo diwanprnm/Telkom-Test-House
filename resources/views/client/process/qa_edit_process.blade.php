@@ -277,7 +277,7 @@
 									</div> 
 									<div class="dv-dll">
 										<div class="form-group  ">
-											<label>{{ trans('translate.service_upload_another_file') }}<span class="text-danger">*</span></label>
+											<label>{{ trans('translate.service_upload_another_file') }}</label>
 											<input class="data-upload-berkas f1-file-dll" id="fileInput-dll" name="fuploaddll" type="file" accept="application/pdf,image/*" >
 											<input type="hidden" name="hide_dll_file" id="hide_dll_file" value="{{$userData->filedll}}"/>
 											<a id="dll-file" class="btn btn-link" style="color:black !important;" >{{$userData->filedll}}</a>

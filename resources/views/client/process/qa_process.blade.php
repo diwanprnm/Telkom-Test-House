@@ -262,7 +262,7 @@
 									</div> 
 									<div class="dv-dll">
 										<div class="form-group  ">
-											<label>{{ trans('translate.service_upload_another_file') }}<span class="text-danger">*</span></label>
+											<label>{{ trans('translate.service_upload_another_file') }}</label>
 											<input class="data-upload-berkas f1-file-dll" id="fileInput-dll" name="fuploaddll" type="file" accept="application/pdf,image/*" >
 											<div id="dll-file"></div>
 											<div id="attachment-file">
@@ -303,7 +303,7 @@
 											<td colspan="6"> <div id="f1-preview-5">{{$userData->emailPemohon}}</div></td>
 										</tr>
 									</table>
-									<h3>{{ trans('translate.service_company') }}</h3>
+									<h3 id="company_type"></h3>
 									<div id="f2-preview-6"></div>
 									<table class="table table-striped" id="preview-field">
 										<tr>
@@ -333,12 +333,9 @@
 									</table>
 									<h3 id="f5-jns-pengujian" class="f5-jns-pengujian">{{ trans('translate.service_preview_exam_type') }} : QA</h3>
 									<br>
-									<h3>{{ trans('translate.service_device') }}</h3>
+									<h3 class="telkom_test">{{ trans('translate.service_device') }} ({{ trans('translate.service_lab_testing') }})</h3>
+									<h3 class="location_test">{{ trans('translate.service_device') }} ({{ trans('translate.service_loc_testing') }})</h3>
 									<table class="table table-striped" id="preview-field">
-										<tr>
-											<td class="telkom_test">{{ trans('translate.service_lab_testing') }}</td>
-											<td class="location_test">{{ trans('translate.service_loc_testing') }}</td>
-										</tr>
 										<tr>
 											<td>{{ trans('translate.service_device_equipment') }}</td>
 											<td> : </td>
@@ -682,7 +679,9 @@
 	    showButtonPanel: true
 
 	});
+	$('#company_type').html("{{ trans('translate.service_company') }} (Agen)");
 	$('input[type=radio][name=jns_perusahaan]').change(function() {
+		$('#company_type').html("{{ trans('translate.service_company') }} ("+this.value+")");
         if (this.value == 'Pabrikan') {
            $(".dv-srt-dukungan-prinsipal").hide();
         }
