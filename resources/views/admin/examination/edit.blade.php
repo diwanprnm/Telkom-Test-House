@@ -1188,7 +1188,7 @@
 										</label>
 									</div>
 								</div>
-								@if(count($data_gudang)>0)
+								@if(count($data_gudang)>1)
 								<div class="col-md-12">
 									<div class="form-group">
 										<label>
