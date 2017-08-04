@@ -353,8 +353,11 @@
 									</table>
 									<h3 id="f5-jns-pengujian" class="f5-jns-pengujian">{{ trans('translate.service_preview_exam_type') }} : QA</h3>
 									<br>
-									<h3 class="telkom_test">{{ trans('translate.service_device') }} ({{ trans('translate.service_lab_testing') }})</h3>
-									<h3 class="location_test">{{ trans('translate.service_device') }} ({{ trans('translate.service_loc_testing') }})</h3>
+									@if($userData->is_loc_test == 0)
+										<h3 class="telkom_test">{{ trans('translate.service_device') }} ({{ trans('translate.service_lab_testing') }})</h3>
+									@else
+										<h3 class="location_test">{{ trans('translate.service_device') }} ({{ trans('translate.service_loc_testing') }})</h3>
+									@endif
 									<table class="table table-striped" id="preview-field">
 										<tr>
 											<td>{{ trans('translate.service_device_equipment') }}</td>
@@ -450,7 +453,7 @@
 										<label>{{ trans('translate.service_upload_now') }}<span class="text-danger">*</span></label>
 										<input class="data-upload-detail-pengujian" id="fileInput-detail-pengujian" name="fuploaddetailpengujian" type="file" accept="application/pdf,image/*">
 										<input type="hidden" name="hide_attachment_file_edit" id="hide_attachment_file" value="{{ $userData->attachment }}"/>
-										<a id="attachment-file" class="btn btn-link attachment-file-edit" style="color:black !important;" >{{ $userData->attachment }}</a>
+										<a id="attachments-file" class="btn btn-link" style="color:black !important;" >{{ $userData->attachment }}</a>
 										<div id="attachment-file"></div>
 										<button type="button" class="button button3d btn-green upload-form">{{ trans('translate.service_upload_now') }}</button>
 										<div id="attachment-file">
@@ -684,7 +687,7 @@
 		downloadFile(file);
 	});
 	
-	$("#attachment-file").click(function() {
+	$("#attachments-file").click(function() {
 		var file = $('#hide_attachment_file').val();
 		downloadFile(file);
 	});

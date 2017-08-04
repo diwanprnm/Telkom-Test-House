@@ -146,6 +146,7 @@ return [
 	'examination_detail' 		=> 'Detail',
 	'examination_choose_type' 	=> 'Choose Testing Type',
 	'examination_choose_status'	=> 'Choose Status',
+	'examination_choose_stel'	=> 'Choose STEL',
 	
 	'examination_type'	=> 'Device Type',
 	'examination_user'	=> 'User Name',

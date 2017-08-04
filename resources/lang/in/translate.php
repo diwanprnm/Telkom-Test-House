@@ -147,6 +147,7 @@ return [
 	'examination_detail' 		=> 'Rincian',
     'examination_choose_type' 	=> 'Pilih Tipe Pengujian',
 	'examination_choose_status'	=> 'Pilih Status',
+	'examination_choose_stel'	=> 'Pilih STEL',
 	
 	'examination_type'	=> 'Tipe Pengujian',
 	'examination_user'	=> 'Pemohon',
