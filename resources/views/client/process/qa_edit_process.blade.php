@@ -262,7 +262,7 @@
 											*ukuran file maksimal 2 mb
 										</div>
 									</div>
-									@if(jnsPerusahaan != "Pabrikan")
+									@if($userData->jnsPerusahaan != "Pabrikan")
 										<div class="dv-srt-dukungan-prinsipal">
 											<div class="form-group  ">
 												<label>{{ trans('translate.service_upload_support_principals') }}<span class="text-danger">*</span></label>
