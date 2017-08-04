@@ -186,6 +186,7 @@ class HomeController extends Controller
 				e.device_id,
 				e.examination_type_id,
 				e.attachment,
+				e.is_loc_test,
 				u.id AS user_id, u.`name` AS namaPemohon, u.email AS emailPemohon,u.email2 AS emailPemohon2,u.email3 AS emailPemohon3, u.address AS alamatPemohon, u.phone_number AS telpPemohon, u.fax AS faxPemohon, 
 				u.company_id AS company_id,
 				d.`name` AS nama_perangkat,
