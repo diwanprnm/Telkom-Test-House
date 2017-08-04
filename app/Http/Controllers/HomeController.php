@@ -206,7 +206,8 @@ class HomeController extends Controller
 				(SELECT tgl FROM examination_attachments WHERE examination_id = '".$id."' AND `name` = 'Surat Dukungan Prinsipal') AS tglsrt_prinsipal,
 				(SELECT attachment FROM examination_attachments WHERE examination_id = '".$id."' AND `name` = 'SP3') AS filesrt_sp3,
 				(SELECT `no` FROM examination_attachments WHERE examination_id = '".$id."' AND `name` = 'SP3') AS nosrt_sp3,
-				(SELECT tgl FROM examination_attachments WHERE examination_id = '".$id."' AND `name` = 'SP3') AS tglsrt_sp3
+				(SELECT tgl FROM examination_attachments WHERE examination_id = '".$id."' AND `name` = 'SP3') AS tglsrt_sp3,
+				(SELECT attachment FROM examination_attachments WHERE examination_id = '".$id."' AND `name` = 'File Lainnya') AS filedll
 			FROM
 				examinations e,
 				devices d,

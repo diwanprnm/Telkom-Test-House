@@ -158,6 +158,10 @@
 
 				            <h2>Third Step</h2>
 				            <fieldset>
+								<div class="form-group"> 
+									<input type="radio" name="lokasi_pengujian" value="0" placeholder="{{ trans('translate.service_lab_testing') }}" checked>
+									<input type="radio" name="lokasi_pengujian" value="1" placeholder="{{ trans('translate.service_loc_testing') }}">
+								</div>
 				            	<div class="form-group">
 				            		<label for="f1-nama-perangkat">{{ trans('translate.service_device_test_reference') }} *</label>
 									<select  class="chosen-select" id="f1-cmb-ref-perangkat" name="f1-cmb-ref-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}"> 
@@ -251,7 +255,7 @@
 										<label>{{ trans('translate.service_upload_reference_test') }}<span class="text-danger">*</span></label>
 										<input class="data-upload-berkas f1-file-ref-uji" id="fileInput-ref-uji" name="fuploadrefuji" type="file" accept="application/pdf,image/*" value="{{$userData->fileref_uji}}">
 										<input type="hidden" name="hide_ref_uji_file" class="required" id="hide_ref_uji_file" value="{{$userData->fileref_uji}}"/>
-										<a id="sertifikat-file" class="btn btn-link" style="color:black !important;" >{{$userData->fileref_uji}}</a>
+										<a id="ref-uji-file" class="btn btn-link" style="color:black !important;" >{{$userData->fileref_uji}}</a>
 										  
 										<div id="ref-uji-file"></div>
 										<div id="attachment-file">
@@ -263,9 +267,22 @@
 											<label>{{ trans('translate.service_upload_support_principals') }}<span class="text-danger">*</span></label>
 											<input class="data-upload-berkas f1-file-prinsipal" id="fileInput-prinsipal" name="fuploadprinsipal" type="file" accept="application/pdf,image/*" >
 											<input type="hidden" name="hide_prinsipal_file" class="required" id="hide_prinsipal_file" value="{{$userData->filesrt_prinsipal}}"/>
-											<a id="sertifikat-file" class="btn btn-link" style="color:black !important;" >{{$userData->filesrt_prinsipal}}</a>
+											<a id="prinsipal-file" class="btn btn-link" style="color:black !important;" >{{$userData->filesrt_prinsipal}}</a>
 										  
 											<div id="prinsipal-file"></div>
+											<div id="attachment-file">
+												*ukuran file maksimal 2 mb
+											</div>
+										</div>
+									</div> 
+									<div class="dv-dll">
+										<div class="form-group  ">
+											<label>{{ trans('translate.service_upload_another_file') }}</label>
+											<input class="data-upload-berkas f1-file-dll" id="fileInput-dll" name="fuploaddll" type="file" accept="application/pdf,image/*" >
+											<input type="hidden" name="hide_dll_file" id="hide_dll_file" value="{{$userData->filedll}}"/>
+											<a id="dll-file" class="btn btn-link" style="color:black !important;" >{{$userData->filedll}}</a>
+											
+											<div id="dll-file"></div>
 											<div id="attachment-file">
 												*ukuran file maksimal 2 mb
 											</div>
@@ -336,6 +353,10 @@
 									<br>
 									<h3>{{ trans('translate.service_device') }}</h3>
 									<table class="table table-striped" id="preview-field">
+										<tr>
+											<td class="telkom_test">{{ trans('translate.service_lab_testing') }}</td>
+											<td class="location_test">{{ trans('translate.service_loc_testing') }}</td>
+										</tr>
 										<tr>
 											<td>{{ trans('translate.service_device_equipment') }}</td>
 											<td> : </td>
@@ -416,11 +437,11 @@
 											<td> : </td>
 											<td> <div id="f4-preview-8"></div></td>
 										</tr>
-										<!-- <tr class="dv-srt-sp3">
-											<td>{{ trans('translate.service_upload_sp3') }}</td>
+										<tr class="dv-dll">
+											<td>{{ trans('translate.service_upload_another_file') }}</td>
 											<td> : </td>
-											<td> <div id="f4-preview-file-sp3"></div></td>
-										</tr> -->
+											<td> <div id="f4-preview-12"></div></td>
+										</tr>
 									</table> 
 				            </fieldset>
 				            
@@ -429,6 +450,8 @@
 				            	<div class="form-group">
 										<label>{{ trans('translate.service_upload_now') }}<span class="text-danger">*</span></label>
 										<input class="data-upload-detail-pengujian" id="fileInput-detail-pengujian" name="fuploaddetailpengujian" type="file" accept="application/pdf,image/*">
+										<input type="hidden" name="hide_attachment_file_edit" id="hide_attachment_file" value="{{ $userData->attachment }}"/>
+										<a id="attachment-file" class="btn btn-link attachment-file-edit" style="color:black !important;" ></a>
 										<div id="attachment-file"></div>
 										<button type="button" class="button button3d btn-green upload-form">{{ trans('translate.service_upload_now') }}</button>
 										<div id="attachment-file">
@@ -520,6 +543,11 @@
 				if(prinsipalFile === "") prinsipalFile = $("#hide_prinsipal_file").val();
 
 				$("#f4-preview-8").html((prinsipalFile));
+				
+				var dllFile = $("#fileInput-dll").val();
+				if(dllFile === "") dllFile = $("#hide_dll_file").val();
+
+				$("#f4-preview-12").html((dllFile));
 	       	}  
 	        if(newIndex == 5){
 				if($('#hide_cekSNjnsPengujian').val() == 1){
@@ -618,20 +646,98 @@
   	$('ul[role="tablist"]').hide();  
 
 
+	$("#siupp-file").click(function() {
+		var file = $('#hide_siupp_file').val();
+		downloadFileCompany(file);
+	});
+	
 	$("#sertifikat-file").click(function() {
 		var file = $('#hide_sertifikat_file').val();
-		downloadFile(file);
+		downloadFileCompany(file);
 	});
 	
 	$("#npwp-file").click(function() {
 		var file = $('#hide_npwp_file').val();
+		downloadFileCompany(file);
+	});
+	
+	$("#ref-uji-file").click(function() {
+		var file = $('#hide_ref_uji_file').val();
 		downloadFile(file);
 	});
-
-	$("#siupp-file").click(function() {
-			var file = $('#hide_siupp_file').val();
-			downloadFile(file);
-		});
+	
+	$("#prinsipal-file").click(function() {
+		var file = $('#hide_prinsipal_file').val();
+		downloadFile(file);
+	});
+	
+	$("#sp3-file").click(function() {
+		var file = $('#hide_sp3_file').val();
+		downloadFile(file);
+	});
+	
+	$("#dll-file").click(function() {
+		var file = $('#hide_dll_file').val();
+		downloadFile(file);
+	});
+	
+	$("#attachment-file").click(function() {
+		var file = $('#hide_attachment_file').val();
+		downloadFile(file);
+	});
+	
+	function downloadFile(file){
+		var path = "{{ URL::asset('media/examination') }}";
+		var id_exam = $('#hide_exam_id_edit').val();
+		//Get file name from url.
+		var url = path+'/'+id_exam+'/'+file;
+		var filename = url.substring(url.lastIndexOf("/") + 1).split("?")[0];
+		var xhr = new XMLHttpRequest();
+		xhr.responseType = 'blob';
+		xhr.onload = function() {
+			if (this.status === 404) {
+			   // not found, add some error handling
+			   alert("File Tidak Ada!");
+			   return false;
+			}
+			var a = document.createElement('a');
+			a.href = window.URL.createObjectURL(xhr.response); // xhr.response is a blob
+			a.download = filename; // Set the file name.
+			a.style.display = 'none';
+			document.body.appendChild(a);
+			a.click();
+			delete a;
+		};
+		xhr.open('GET', url);
+		xhr.send();
+	}
+	
+	function downloadFileCompany(file){
+		var path = "{{ URL::asset('media/company') }}";
+		var company_id = $('#hide_company_id').val();
+		//Get file name from url.
+		var url = path+'/'+company_id+'/'+file;
+		var filename = url.substring(url.lastIndexOf("/") + 1).split("?")[0];
+		var xhr = new XMLHttpRequest();
+		xhr.responseType = 'blob';
+		xhr.onload = function() {
+			if (this.status === 404) {
+			   // not found, add some error handling
+			   alert("File Tidak Ada!");
+			   return false;
+			}
+			var a = document.createElement('a');
+			a.href = window.URL.createObjectURL(xhr.response); // xhr.response is a blob
+			a.download = filename; // Set the file name.
+			a.style.display = 'none';
+			document.body.appendChild(a);
+			a.click();
+			delete a;
+		};
+		xhr.open('GET', url);
+		xhr.send();
+	}
+			
 	$('.upload-form').click(function(){
 		$.ajax({
 			url : "../../uploadPermohonan",
@@ -656,33 +762,7 @@
 	$(".upload_later, #next").on("click",function(){
 		formWizard.steps("next"); 
 	});
-	function downloadFile(file){
-		var path = "{{ URL::asset('media/company') }}";
-		// var id_user = $('#hide_id_user').val();
-		var company_id = $('#hide_company_id').val();
-		//Get file name from url.
-		var url = path+'/'+company_id+'/'+file;
-		var filename = url.substring(url.lastIndexOf("/") + 1).split("?")[0];
-		var xhr = new XMLHttpRequest();
-		xhr.responseType = 'blob';
-		xhr.onload = function() {
-			if (this.status === 404) {
-			   // not found, add some error handling
-			   alert("File Tidak Ada!");
-			   return false;
-			}
-			var a = document.createElement('a');
-			a.href = window.URL.createObjectURL(xhr.response); // xhr.response is a blob
-			a.download = filename; // Set the file name.
-			a.style.display = 'none';
-			document.body.appendChild(a);
-			a.click();
-			delete a;
-		};
-		xhr.open('GET', url);
-		xhr.send();
-	}
-
+	
 	$('.datepicker').datepicker({
     	dateFormat: 'yy-mm-dd', 
 	    autoclose: true,
@@ -696,6 +776,18 @@
         }
         else {
             $(".dv-srt-dukungan-prinsipal").show();
+        }
+    });
+	$(".telkom_test").show();
+    $(".location_test").hide();
+	$('input[type=radio][name=lokasi_pengujian]').change(function() {
+        if (this.value == '1') {
+           $(".location_test").show();
+           $(".telkom_test").hide();
+        }
+        else {
+			$(".telkom_test").show();
+            $(".location_test").hide();
         }
     });
 

@@ -39,6 +39,7 @@ class ExaminationAPIController extends AppBaseController
 
 		$select = array(
 			"examinations.id",
+			"examinations.is_loc_test",
 			"examinations.device_id",
 			"examinations.created_at as registered_date", "examination_types.name as testing_type",
 			"examination_labs.name as lab",
@@ -112,6 +113,7 @@ class ExaminationAPIController extends AppBaseController
 							->orWhere("devices.manufactured_by", "LIKE", '%'.$param->find .'%')
 							->orWhere("devices.test_reference", "LIKE", '%'.$param->find .'%')
 							->orWhere("examinations.spk_code", "LIKE", '%'.$param->find .'%')
+							->orWhere("examinations.is_loc_tes", "=", $param->find)
 							->orWhere("examination_labs.name", "LIKE", '%'.$param->find .'%')
 					;
 				});
@@ -560,7 +562,7 @@ class ExaminationAPIController extends AppBaseController
 			}
 		}
 		
-		$result = $result->get()->toArray();
+		$result = $result->orderBy('created_at', 'desc')->get()->toArray();
 	
 		if(!is_array($result) || empty($result)){
 			return $this->sendError('Function Data Not Found');

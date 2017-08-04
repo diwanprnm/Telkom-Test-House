@@ -1027,7 +1027,7 @@ class PengujianController extends Controller
                 "updated_at"=>date("Y-m-d H:i:s")
                 );
 			  	$notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
+				$notification->id = Uuid::uuid4();
 		      	$notification->from = $data['from'];
 		      	$notification->to = $data['to'];
 		      	$notification->message = $data['message'];
@@ -1387,6 +1387,29 @@ $notification->id = Uuid::uuid4();
 		
 		try{
 			$quest->save();
+
+			$data= array( 
+	        "from"=>$currentUser->id,
+	        "to"=>"admin",
+	        "message"=>$currentUser->name." Mengisi Kuisioner",
+	        "url"=>"examinationdone/".$request->input('exam_id').'/edit',
+	        "is_read"=>0,
+	        "created_at"=>date("Y-m-d H:i:s"),
+	        "updated_at"=>date("Y-m-d H:i:s")
+	        );
+		  	$notification = new NotificationTable();
+			$notification->id = Uuid::uuid4();
+	      	$notification->from = $data['from'];
+	      	$notification->to = $data['to'];
+	      	$notification->message = $data['message'];
+	      	$notification->url = $data['url'];
+	      	$notification->is_read = $data['is_read'];
+	      	$notification->created_at = $data['created_at'];
+	      	$notification->updated_at = $data['updated_at'];
+	      	$notification->save();
+	      	$data['id'] = $notification->id; 
+	        event(new Notification($data));
+
 			echo 1;
 		} catch(Exception $e){
 			echo 0;
@@ -1406,6 +1429,31 @@ $notification->id = Uuid::uuid4();
 		
 		try{
 			$quest->save();
+
+
+			$data= array( 
+	        "from"=>$currentUser->id,
+	        "to"=>"admin",
+	        "message"=>$currentUser->name." Mengajukan Complaint",
+	        "url"=>"examinationdone/".$request->input('my_exam_id').'/edit',
+	        "is_read"=>0,
+	        "created_at"=>date("Y-m-d H:i:s"),
+	        "updated_at"=>date("Y-m-d H:i:s")
+	        );
+		  	$notification = new NotificationTable();
+			$notification->id = Uuid::uuid4();
+	      	$notification->from = $data['from'];
+	      	$notification->to = $data['to'];
+	      	$notification->message = $data['message'];
+	      	$notification->url = $data['url'];
+	      	$notification->is_read = $data['is_read'];
+	      	$notification->created_at = $data['created_at'];
+	      	$notification->updated_at = $data['updated_at'];
+	      	$notification->save();
+	      	$data['id'] = $notification->id; 
+	        event(new Notification($data));
+
+
 			echo 1;
 		} catch(Exception $e){
 			echo 0;

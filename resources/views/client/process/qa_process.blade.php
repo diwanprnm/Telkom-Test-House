@@ -156,6 +156,10 @@
 
 				            <h2>Third Step</h2>
 				            <fieldset>
+								<div class="form-group"> 
+									<input type="radio" name="lokasi_pengujian" value="0" placeholder="{{ trans('translate.service_lab_testing') }}" checked>
+									<input type="radio" name="lokasi_pengujian" value="1" placeholder="{{ trans('translate.service_loc_testing') }}">
+								</div>
 				            	<div class="form-group">
 				            		<label for="f1-nama-perangkat">{{ trans('translate.service_device_test_reference') }} *</label>
 									<select  class="chosen-select" id="f1-cmb-ref-perangkat" name="f1-cmb-ref-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}"> 
@@ -256,6 +260,16 @@
 											</div>
 										</div>
 									</div> 
+									<div class="dv-dll">
+										<div class="form-group  ">
+											<label>{{ trans('translate.service_upload_another_file') }}</label>
+											<input class="data-upload-berkas f1-file-dll" id="fileInput-dll" name="fuploaddll" type="file" accept="application/pdf,image/*" >
+											<div id="dll-file"></div>
+											<div id="attachment-file">
+												*ukuran file maksimal 2 mb
+											</div>
+										</div>
+									</div> 
 				            </fieldset>
 
 				            <h2>Fifth Step</h2>
@@ -289,7 +303,7 @@
 											<td colspan="6"> <div id="f1-preview-5">{{$userData->emailPemohon}}</div></td>
 										</tr>
 									</table>
-									<h3>{{ trans('translate.service_company') }}</h3>
+									<h3 id="company_type"></h3>
 									<div id="f2-preview-6"></div>
 									<table class="table table-striped" id="preview-field">
 										<tr>
@@ -319,7 +333,8 @@
 									</table>
 									<h3 id="f5-jns-pengujian" class="f5-jns-pengujian">{{ trans('translate.service_preview_exam_type') }} : QA</h3>
 									<br>
-									<h3>{{ trans('translate.service_device') }}</h3>
+									<h3 class="telkom_test">{{ trans('translate.service_device') }} ({{ trans('translate.service_lab_testing') }})</h3>
+									<h3 class="location_test">{{ trans('translate.service_device') }} ({{ trans('translate.service_loc_testing') }})</h3>
 									<table class="table table-striped" id="preview-field">
 										<tr>
 											<td>{{ trans('translate.service_device_equipment') }}</td>
@@ -401,11 +416,11 @@
 											<td> : </td>
 											<td> <div id="f4-preview-8"></div></td>
 										</tr>
-										<!-- <tr class="dv-srt-sp3">
-											<td>{{ trans('translate.service_upload_sp3') }}</td>
+										<tr class="dv-dll">
+											<td>{{ trans('translate.service_upload_another_file') }}</td>
 											<td> : </td>
-											<td> <div id="f4-preview-file-sp3"></div></td>
-										</tr> -->
+											<td> <div id="f4-preview-12"></div></td>
+										</tr>
 									</table> 
 				            </fieldset>
 				            
@@ -499,6 +514,7 @@
 				$("#f4-preview-11").html($("#hide_npwp_file").val());
 				$("#f4-preview-file-ref-uji").html($(".f1-file-ref-uji").val());
 				$("#f4-preview-8").html($(".f1-file-prinsipal").val());
+				$("#f4-preview-12").html($(".f1-file-dll").val());
 	       	}  
 	        if(newIndex == 5){
 				if($('#hide_cekSNjnsPengujian').val() == 1){
@@ -663,12 +679,26 @@
 	    showButtonPanel: true
 
 	});
+	$('#company_type').html("{{ trans('translate.service_company') }} (Agen)");
 	$('input[type=radio][name=jns_perusahaan]').change(function() {
+		$('#company_type').html("{{ trans('translate.service_company') }} ("+this.value+")");
         if (this.value == 'Pabrikan') {
            $(".dv-srt-dukungan-prinsipal").hide();
         }
         else {
             $(".dv-srt-dukungan-prinsipal").show();
+        }
+    });
+	$(".telkom_test").show();
+    $(".location_test").hide();
+	$('input[type=radio][name=lokasi_pengujian]').change(function() {
+        if (this.value == '1') {
+           $(".location_test").show();
+           $(".telkom_test").hide();
+        }
+        else {
+			$(".telkom_test").show();
+            $(".location_test").hide();
         }
     });
 

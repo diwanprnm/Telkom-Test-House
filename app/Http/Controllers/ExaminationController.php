@@ -306,7 +306,7 @@ class ExaminationController extends Controller
 		$query_lab = "SELECT action_date FROM equipment_histories WHERE location = 3 AND examination_id = '".$id."' ORDER BY created_at DESC LIMIT 1";
 		$data_lab = DB::select($query_lab);
 		
-		$query_gudang = "SELECT action_date FROM equipment_histories WHERE location = 2 AND examination_id = '".$id."' ORDER BY created_at DESC LIMIT 1";
+		$query_gudang = "SELECT action_date FROM equipment_histories WHERE location = 2 AND examination_id = '".$id."' ORDER BY created_at DESC LIMIT 2";
 		$data_gudang = DB::select($query_gudang);
 		
 		// $res_exam_schedule = $client->post('notification/notifToTE?lab='.$exam->examinationLab->lab_code)->getBody();
@@ -358,9 +358,9 @@ class ExaminationController extends Controller
 				/* push notif*/ 
 					$data= array( 
 	                "from"=>"admin",
-	                "to"=>$currentUser->id,
+	                "to"=>$exam->created_by,
 	                "message"=>"Registrasi Completed",
-	                "url"=>"pengujian/".$exam->id,
+	                "url"=>"pengujian/".$exam->id."/detail",
 	                "is_read"=>0,
 	                "created_at"=>date("Y-m-d H:i:s"),
 	                "updated_at"=>date("Y-m-d H:i:s")
@@ -387,9 +387,9 @@ $notification->id = Uuid::uuid4();
 				
 			     $data= array( 
                 "from"=>"admin",
-                "to"=>$currentUser->id,
+                "to"=>$exam->created_by,
                 "message"=>"Registrasi Not Completed",
-                "url"=>"pengujian/".$exam->id,
+                "url"=>"pengujian/".$exam->id."/detail",
                 "is_read"=>0,
                 "created_at"=>date("Y-m-d H:i:s"),
                 "updated_at"=>date("Y-m-d H:i:s")
@@ -482,9 +482,9 @@ $notification->id = Uuid::uuid4();
 	            
 				$data= array( 
                     "from"=>"admin",
-                    "to"=>$currentUser->id,
+                    "to"=>$exam->created_by,
                     "message"=>"Uji Fungsi Completed",
-                    "url"=>"pengujian/".$exam->id,
+                    "url"=>"pengujian/".$exam->id."/detail",
                     "is_read"=>0,
                     "created_at"=>date("Y-m-d H:i:s"),
                     "updated_at"=>date("Y-m-d H:i:s")
@@ -509,9 +509,9 @@ $notification->id = Uuid::uuid4();
 		            
 					$data= array( 
 	                    "from"=>"admin",
-	                    "to"=>$currentUser->id,
+	                    "to"=>$exam->created_by,
 	                    "message"=>"Uji Fungsi Not Completed",
-	                    "url"=>"pengujian/".$exam->id,
+	                    "url"=>"pengujian/".$exam->id."/detail",
 	                    "is_read"=>0,
 	                    "created_at"=>date("Y-m-d H:i:s"),
 	                    "updated_at"=>date("Y-m-d H:i:s")
@@ -582,9 +582,9 @@ $notification->id = Uuid::uuid4();
 
 		              $data= array( 
 		                    "from"=>"admin",
-		                    "to"=>$currentUser->id,
+		                    "to"=>$exam->created_by,
 		                    "message"=>"Tinjauan Kontrak Completed",
-		                    "url"=>"pengujian/".$id,
+		                    "url"=>"pengujian/".$id."/detail",
 		                    "is_read"=>0,
 		                    "created_at"=>date("Y-m-d H:i:s"),
 		                    "updated_at"=>date("Y-m-d H:i:s")
@@ -606,9 +606,9 @@ $notification->id = Uuid::uuid4();
 					/* push notif*/
 		            $data= array( 
 		                    "from"=>"admin",
-		                    "to"=>$currentUser->id,
+		                    "to"=>$exam->created_by,
 		                    "message"=>"Tinjauan Kontrak Not Completed",
-		                    "url"=>"pengujian/".$id,
+		                    "url"=>"pengujian/".$id."/detail",
 		                    "is_read"=>0,
 		                    "created_at"=>date("Y-m-d H:i:s"),
 		                    "updated_at"=>date("Y-m-d H:i:s")
@@ -681,7 +681,7 @@ $notification->id = Uuid::uuid4();
 				/* push notif*/
 	           	$data= array( 
 	                    "from"=>"admin",
-	                    "to"=>$currentUser->id,
+	                    "to"=>$exam->created_by,
 	                    "message"=>"URel mengirimkan SPB untuk dibayar",
 	                    "url"=>"pengujian/".$exam->id."/pembayaran",
 	                    "is_read"=>0,
@@ -818,9 +818,9 @@ $notification->id = Uuid::uuid4();
 					
 						$data= array( 
 		                "from"=>"admin",
-		                "to"=>$currentUser->id,
+		                "to"=>$exam->created_by,
 		                "message"=>"Pembayaran Completed",
-		                "url"=>"pengujian/".$exam->id,
+		                "url"=>"pengujian/".$exam->id."/detail",
 		                "is_read"=>0,
 		                "created_at"=>date("Y-m-d H:i:s"),
 		                "updated_at"=>date("Y-m-d H:i:s")
@@ -841,9 +841,9 @@ $notification->id = Uuid::uuid4();
 				}else{
 						$data= array( 
 		                "from"=>"admin",
-		                "to"=>$currentUser->id,
+		                "to"=>$exam->created_by,
 		                "message"=>"Pembayaran Not Completed",
-		                "url"=>"pengujian/".$exam->id,
+		                "url"=>"pengujian/".$exam->id."/detail",
 		                "is_read"=>0,
 		                "created_at"=>date("Y-m-d H:i:s"),
 		                "updated_at"=>date("Y-m-d H:i:s")
@@ -894,9 +894,9 @@ $notification->id = Uuid::uuid4();
 					
 					$data= array( 
 		                "from"=>"admin",
-		                "to"=>$currentUser->id,
+		                "to"=>$exam->created_by,
 		                "message"=>"Pelaksanaan Uji Completed",
-		                "url"=>"pengujian/".$exam->id,
+		                "url"=>"pengujian/".$exam->id."/detail",
 		                "is_read"=>0,
 		                "created_at"=>date("Y-m-d H:i:s"),
 		                "updated_at"=>date("Y-m-d H:i:s")
@@ -918,9 +918,9 @@ $notification->id = Uuid::uuid4();
 				}else{ 
 					$data= array( 
 		                "from"=>"admin",
-		                "to"=>$currentUser->id,
+		                "to"=>$exam->created_by,
 		                "message"=>"Pelaksanaan Uji Not Completed",
-		                "url"=>"pengujian/".$exam->id,
+		                "url"=>"pengujian/".$exam->id."/detail",
 		                "is_read"=>0,
 		                "created_at"=>date("Y-m-d H:i:s"),
 		                "updated_at"=>date("Y-m-d H:i:s")
@@ -985,9 +985,9 @@ $notification->id = Uuid::uuid4();
 					
 					$data= array( 
 		                "from"=>"admin",
-		                "to"=>$currentUser->id,
+		                "to"=>$exam->created_by,
 		                "message"=>"Laporan Uji Completed",
-		                "url"=>"pengujian/".$exam->id,
+		                "url"=>"pengujian/".$exam->id."/detail",
 		                "is_read"=>0,
 		                "created_at"=>date("Y-m-d H:i:s"),
 	                	"updated_at"=>date("Y-m-d H:i:s")
@@ -1010,9 +1010,9 @@ $notification->id = Uuid::uuid4();
 				}else{ 
 					$data= array( 
 		                "from"=>"admin",
-		                "to"=>$currentUser->id,
+		                "to"=>$exam->created_by,
 		                "message"=>"Laporan Uji Not Completed",
-		                "url"=>"pengujian/".$exam->id,
+		                "url"=>"pengujian/".$exam->id."/detail",
 		                "is_read"=>0,
 		                "created_at"=>date("Y-m-d H:i:s"),
 		                "updated_at"=>date("Y-m-d H:i:s")
@@ -1073,9 +1073,9 @@ $notification->id = Uuid::uuid4();
             if($exam->qa_passed){  
             	$data= array( 
 	                "from"=>"admin",
-	                "to"=>$currentUser->id,
+	                "to"=>$exam->created_by,
 	                "message"=>"Sidang QA Completed",
-	                "url"=>"pengujian/".$exam->id,
+	                "url"=>"pengujian/".$exam->id."/detail",
 	                "is_read"=>0,
 	                "created_at"=>date("Y-m-d H:i:s"),
 	                "updated_at"=>date("Y-m-d H:i:s")
@@ -1097,9 +1097,9 @@ $notification->id = Uuid::uuid4();
 
 		      	$data= array( 
 	                "from"=>"admin",
-	                "to"=>$currentUser->id,
+	                "to"=>$exam->created_by,
 	                "message"=>"Sidang QA Completed",
-	                "url"=>"pengujian/".$exam->id,
+	                "url"=>"pengujian/".$exam->id."/detail",
 	                "is_read"=>0,
 	                "created_at"=>date("Y-m-d H:i:s"),
 	                "updated_at"=>date("Y-m-d H:i:s")
@@ -1130,9 +1130,9 @@ $notification->id = Uuid::uuid4();
             if($exam->certificate_status){ 
             	$data= array(  
                 "from"=>"admin",
-                "to"=>$currentUser->id,
+                "to"=>$exam->created_by,
                 "message"=>"Sertifikat Completed",
-                "url"=>"pengujian/".$exam->id,
+                "url"=>"pengujian/".$exam->id."/detail",
                 "is_read"=>0,
                 "created_at"=>date("Y-m-d H:i:s"),
                 "updated_at"=>date("Y-m-d H:i:s")
@@ -1154,9 +1154,9 @@ $notification->id = Uuid::uuid4();
 
             	$data= array( 
                 "from"=>"admin",
-                "to"=>$currentUser->id,
+                "to"=>$exam->created_by,
                 "message"=>"Sertifikat Not Completed",
-                "url"=>"pengujian/".$exam->id,
+                "url"=>"pengujian/".$exam->id."/detail",
                 "is_read"=>0,
                 "created_at"=>date("Y-m-d H:i:s"),
                 "updated_at"=>date("Y-m-d H:i:s")
@@ -1816,9 +1816,9 @@ $notification->id = Uuid::uuid4();
             /* push notif*/
 			$data= array( 
             	"from"=>"admin",
-            	"to"=>$currentUser->id,
+            	"to"=>$device->created_by,
             	"message"=>"Urel mengedit data pengujian",
-            	"url"=>"pengujian/".$request->input('id_exam'),
+            	"url"=>"pengujian/".$request->input('id_exam')."/detail",
             	"is_read"=>0,
             	"created_at"=>date("Y-m-d H:i:s"),
             	"updated_at"=>date("Y-m-d H:i:s")
