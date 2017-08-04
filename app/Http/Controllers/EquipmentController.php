@@ -184,7 +184,7 @@ class EquipmentController extends Controller
             
               $data= array( 
               "from"=>"admin",
-              "to"=>$currentUser->id,
+              "to"=>$examination->created_by,
               "message"=>"Perangkat yang akan diuji, sudah masuk Gudang Urel",
               "url"=>"pengujian/".$equipment->examination_id,
               "is_read"=>0,

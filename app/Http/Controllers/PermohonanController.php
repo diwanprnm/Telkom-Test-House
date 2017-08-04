@@ -971,6 +971,31 @@ $notification->id = Uuid::uuid4();
 
         try{
             $feedback->save();
+
+            $currentUser = Auth::user();
+			$data= array( 
+	        "from"=>$currentUser->id,
+	        "to"=>"admin",
+	        "message"=>$email." mengirim feedback ",
+	        "url"=>"feedback/".$feedback->id.'/reply',
+	        "is_read"=>0,
+	        "created_at"=>date("Y-m-d H:i:s"),
+	        "updated_at"=>date("Y-m-d H:i:s")
+	        );
+		  	$notification = new NotificationTable();
+			$notification->id = Uuid::uuid4();
+	      	$notification->from = $data['from'];
+	      	$notification->to = $data['to'];
+	      	$notification->message = $data['message'];
+	      	$notification->url = $data['url'];
+	      	$notification->is_read = $data['is_read'];
+	      	$notification->created_at = $data['created_at'];
+	      	$notification->updated_at = $data['updated_at'];
+	      	$notification->save();
+	      	$data['id'] = $notification->id; 
+	        event(new Notification($data));
+
+
 			$this->sendFeedbackEmail($request->input('email'),$request->input('subject'),$request->input('message'),$request->input('question'));
             Session::flash('message_feedback', 'Feedback successfully send');
         } catch(Exception $e){
@@ -1008,7 +1033,7 @@ $notification->id = Uuid::uuid4();
 			Mail::send('client.permohonan.email', array('data' => $message. ". This message from ".$email.""), function ($m) use ($emails,$subject) {
 				$m->to($emails)->subject($subject);
 			});
-		}
+		} 
 
         return true;		
 		// return redirect()->back()->with('status', '');
