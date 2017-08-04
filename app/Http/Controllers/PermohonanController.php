@@ -835,6 +835,13 @@ $notification->id = Uuid::uuid4();
 			$data_update_attach = DB::update($query_update_attach);
 		}
 		
+		$query_update_dll = "UPDATE examination_attachments
+			SET 
+				attachment = '".$fuploaddll_name."'
+			WHERE examination_id = '".$exam_id."' AND `name` = 'File Lainnya'
+		";
+		$data_update_dll = DB::update($query_update_dll);
+		
 		$query_update_companie = "UPDATE companies
 			SET 
 				npwp_file = '".$fuploadnpwp_name."',
