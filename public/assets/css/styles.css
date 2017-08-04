@@ -568,21 +568,20 @@ h5.over-title {
 }
 .navbar .navbar-right .dot-badge {
   border-radius: 100%;
-  border-style: solid;
-  border-width: 2px;
-  height: 10px;
-  margin: 2px;
-  position: absolute !important;
-  border-color: #ffffff;
-  top: 6px;
-  width: 10px;
-  left: 50%;
-  -moz-transform: translateX(-50%);
-  -ms-transform: translateX(-50%);
-  -webkit-transform: translateX(-50%);
-  transform: translateX(-50%);
-  right: auto;
-  margin-left: 10px;
+    border-style: solid; 
+    height: 30px; 
+    position: absolute !important;
+    border-color: #ffffff;
+    top: 20px;
+    width: 30px;
+    left: 50%;
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    right: auto;
+    margin-left: 25px;
+    font-size: 8px;
 }
 .navbar .navbar-right .view-all {
   text-align: center;

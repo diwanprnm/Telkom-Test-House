@@ -899,6 +899,412 @@ class PDF_MC_Tables extends FPDF{
 	}
 }
 
+
+class PDF_MC_TablesKonsumen extends FPDF{
+	var $widths;
+	var $aligns;
+	
+	function SetWidths($w)
+	{
+		//Set the array of column widths
+		$this->widths=$w;
+	}
+
+	function SetAligns($a)
+	{
+		//Set the array of column alignments
+		$this->aligns=$a;
+	}
+
+	function Row($data)
+	{
+		//Calculate the height of the row
+		$nb=0;
+		for($i=0;$i<count($data);$i++)
+			$nb=max($nb,$this->NbLines($this->widths[$i],$data[$i]));
+		$h=5*$nb;
+		//Issue a page break first if needed
+		$this->CheckPageBreak($h);
+		//Draw the cells of the row
+		for($i=0;$i<count($data);$i++)
+		{
+			$w=$this->widths[$i];
+			$a=isset($this->aligns[$i]) ? $this->aligns[$i] : 'L';
+			//Save the current position
+			if($i==0){
+				$x = 10.00125;
+			}else{
+				$x=$this->GetX();
+			}
+			$y=$this->GetY();
+			//Print the text
+			// $this->SetFont('Arial','',10);
+			$this->MultiCell($w,5,$data[$i],0,$a);
+			//Put the position to the right of the cell
+			$this->SetXY($x+$w,$y);
+		}
+		//Go to the next line
+		$this->Ln($h);
+	}
+	
+	function RowRect($data)
+	{
+		//Calculate the height of the row
+		$nb=0;
+		for($i=0;$i<count($data);$i++)
+			$nb=max($nb,$this->NbLines($this->widths[$i],$data[$i]));
+		$h=5*$nb;
+		//Issue a page break first if needed
+		$this->CheckPageBreak($h);
+		//Draw the cells of the row
+		for($i=0;$i<count($data);$i++)
+		{
+			$w=$this->widths[$i];
+			$a=isset($this->aligns[$i]) ? $this->aligns[$i] : 'L';
+			//Save the current position
+			if($i==0){
+				$x = 10.00125;
+			}else{
+				$x=$this->GetX();
+			}
+			$y=$this->GetY();
+			//Draw the border
+			if($i>0){
+				$this->Rect($x,$y,$w,$h);
+			}
+			//Print the text
+			// $this->SetFont('Arial','',10);
+			$this->MultiCell($w,5,$data[$i],0,$a);
+			//Put the position to the right of the cell
+			$this->SetXY($x+$w,$y);
+		}
+		//Go to the next line
+		$this->Ln($h);
+	}
+
+	function CheckPageBreak($h)
+	{
+		//If the height h would cause an overflow, add a new page immediately
+		if($this->GetY()+$h>$this->PageBreakTrigger)
+			$this->AddPage($this->CurOrientation);
+			$this->setLeftMargin(15);
+	}
+
+	function NbLines($w,$txt)
+	{
+		//Computes the number of lines a MultiCell of width w will take
+		$cw=&$this->CurrentFont['cw'];
+		if($w==0)
+			$w=$this->w-$this->rMargin-$this->x;
+		$wmax=($w-2*$this->cMargin)*1000/$this->FontSize;
+		$s=str_replace("\r",'',$txt);
+		$nb=strlen($s);
+		if($nb>0 and $s[$nb-1]=="\n")
+			$nb--;
+		$sep=-1;
+		$i=0;
+		$j=0;
+		$l=0;
+		$nl=1;
+		while($i<$nb)
+		{
+			$c=$s[$i];
+			if($c=="\n")
+			{
+				$i++;
+				$sep=-1;
+				$j=$i;
+				$l=0;
+				$nl++;
+				continue;
+			}
+			if($c==' ')
+				$sep=$i;
+			$l+=$cw[$c];
+			if($l>$wmax)
+			{
+				if($sep==-1)
+				{
+					if($i==$j)
+						$i++;
+				}
+				else
+					$i=$sep+1;
+				$sep=-1;
+				$j=$i;
+				$l=0;
+				$nl++;
+			}
+			else
+				$i++;
+		}
+		return $nl;
+	}
+	
+	public $param1;
+	public $param2;
+	function jns_pengujian($param1,$param2) {
+		$this->param1 = $param1;
+		$this->param2 = $param2;
+	}
+	
+	public $judul;
+	public $title;
+	function judul_kop($judul,$title) {
+		$this->judul = $judul;
+		$this->title = $title;
+	}
+	
+	function Header()
+	{
+		 
+	}
+	//Page footer
+	function Footer()
+	{
+		//Position at 1.5 cm from bottom
+		$this->SetY(-6);
+		//Arial italic 8
+		$this->SetFont('helvetica','I',11);
+		//Page number
+		$this->Cell(0,0.1,'Page '.$this->PageNo().'/{nb}',0,0,'C');
+		
+		// $this->Cell(130,0.1,'Bandung',0,0,'R');
+		
+	}
+	
+	/**
+	 * Draws text within a box defined by width = w, height = h, and aligns
+	 * the text vertically within the box ($valign = M/B/T for middle, bottom, or top)
+	 * Also, aligns the text horizontally ($align = L/C/R/J for left, centered, right or justified)
+	 * drawTextBox uses drawRows
+	 *
+	 * This function is provided by TUFaT.com
+	 */
+	function drawTextBox($strText, $w, $h, $align='L', $valign='T', $border=true)
+	{
+		$xi=$this->GetX();
+		$yi=$this->GetY();
+		
+		$hrow=$this->FontSize;
+		$textrows=$this->drawRows($w, $hrow, $strText, 0, $align, 0, 0, 0);
+		$maxrows=floor($h/$this->FontSize);
+		$rows=min($textrows, $maxrows);
+
+		$dy=0;
+		if (strtoupper($valign)=='M')
+			$dy=($h-$rows*$this->FontSize)/2;
+		if (strtoupper($valign)=='B')
+			$dy=$h-$rows*$this->FontSize;
+
+		$this->SetY($yi+$dy);
+		$this->SetX($xi);
+
+		$this->drawRows($w, $hrow, $strText, 0, $align, false, $rows, 1);
+
+		if ($border)
+			$this->Rect($xi, $yi, $w, $h);
+	}
+
+	function drawRows($w, $h, $txt, $border=0, $align='J', $fill=false, $maxline=0, $prn=0)
+	{
+		$cw=&$this->CurrentFont['cw'];
+		if($w==0)
+			$w=$this->w-$this->rMargin-$this->x;
+		$wmax=($w-2*$this->cMargin)*1000/$this->FontSize;
+		$s=str_replace("\r", '', $txt);
+		$nb=strlen($s);
+		if($nb>0 && $s[$nb-1]=="\n")
+			$nb--;
+		$b=0;
+		if($border)
+		{
+			if($border==1)
+			{
+				$border='LTRB';
+				$b='LRT';
+				$b2='LR';
+			}
+			else
+			{
+				$b2='';
+				if(is_int(strpos($border, 'L')))
+					$b2.='L';
+				if(is_int(strpos($border, 'R')))
+					$b2.='R';
+				$b=is_int(strpos($border, 'T')) ? $b2.'T' : $b2;
+			}
+		}
+		$sep=-1;
+		$i=0;
+		$j=0;
+		$l=0;
+		$ns=0;
+		$nl=1;
+		while($i<$nb)
+		{
+			//Get next character
+			$c=$s[$i];
+			if($c=="\n")
+			{
+				//Explicit line break
+				if($this->ws>0)
+				{
+					$this->ws=0;
+					if ($prn==1) $this->_out('0 Tw');
+				}
+				if ($prn==1) {
+					$this->Cell($w, $h, substr($s, $j, $i-$j), $b, 2, $align, $fill);
+				}
+				$i++;
+				$sep=-1;
+				$j=$i;
+				$l=0;
+				$ns=0;
+				$nl++;
+				if($border && $nl==2)
+					$b=$b2;
+				if ( $maxline && $nl > $maxline )
+					return substr($s, $i);
+				continue;
+			}
+			if($c==' ')
+			{
+				$sep=$i;
+				$ls=$l;
+				$ns++;
+			}
+			$l+=$cw[$c];
+			if($l>$wmax)
+			{
+				//Automatic line break
+				if($sep==-1)
+				{
+					if($i==$j)
+						$i++;
+					if($this->ws>0)
+					{
+						$this->ws=0;
+						if ($prn==1) $this->_out('0 Tw');
+					}
+					if ($prn==1) {
+						$this->Cell($w, $h, substr($s, $j, $i-$j), $b, 2, $align, $fill);
+					}
+				}
+				else
+				{
+					if($align=='J')
+					{
+						$this->ws=($ns>1) ? ($wmax-$ls)/1000*$this->FontSize/($ns-1) : 0;
+						if ($prn==1) $this->_out(sprintf('%.3F Tw', $this->ws*$this->k));
+					}
+					if ($prn==1){
+						$this->Cell($w, $h, substr($s, $j, $sep-$j), $b, 2, $align, $fill);
+					}
+					$i=$sep+1;
+				}
+				$sep=-1;
+				$j=$i;
+				$l=0;
+				$ns=0;
+				$nl++;
+				if($border && $nl==2)
+					$b=$b2;
+				if ( $maxline && $nl > $maxline )
+					return substr($s, $i);
+			}
+			else
+				$i++;
+		}
+		//Last chunk
+		if($this->ws>0)
+		{
+			$this->ws=0;
+			if ($prn==1) $this->_out('0 Tw');
+		}
+		if($border && is_int(strpos($border, 'B')))
+			$b.='B';
+		if ($prn==1) {
+			$this->Cell($w, $h, substr($s, $j, $i-$j), $b, 2, $align, $fill);
+		}
+		$this->x=$this->lMargin;
+		return $nl;
+	}
+	
+	/* function terbilang($satuan)
+	{    
+		$huruf = array ("", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh","Sebelas"); 
+			if ($satuan < 12)   
+				return " ".$huruf[$satuan];
+			elseif ($satuan < 20)   
+				return $this->terbilang($satuan - 10)." Belas ";  
+			elseif ($satuan < 100)    
+				return $this->terbilang($satuan / 10)." Puluh ".$this->terbilang($satuan % 10);  
+			elseif ($satuan < 200)    
+				return " Seratus".$this->terbilang($satuan - 100);
+			elseif ($satuan < 1000)    
+				return $this->terbilang($satuan / 100)." Ratus ".$this->terbilang($satuan % 100);   
+			elseif ($satuan < 2000)    
+				return "Seribu ".$this->terbilang($satuan - 1000);  
+			elseif ($satuan < 1000000)  
+				return $this->terbilang($satuan / 1000)." Ribu ".$this->terbilang($satuan % 1000); 
+			elseif ($satuan < 1000000000)    
+				return $this->terbilang($satuan / 1000000)." Juta ".$this->terbilang($satuan % 1000000);  
+			//elseif ($satuan >= 1000000000)   
+	} */
+	function kekata($x) {
+		$x = abs($x);
+		$angka = array("", "satu", "dua", "tiga", "empat", "lima",
+		"enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
+		$temp = "";
+		if ($x <12) {
+		// $temp = " ". $angka&#91;$x&#93;;
+		$temp = " ". $angka[$x];
+		} else if ($x <20) {
+		$temp = $this->kekata($x - 10). " belas";
+		} else if ($x <100) {
+		$temp = $this->kekata($x/10)." puluh". $this->kekata($x % 10);
+		} else if ($x <200) {
+		$temp = " seratus" . $this->kekata($x - 100);
+		} else if ($x <1000) {
+		$temp = $this->kekata($x/100) . " ratus" . $this->kekata($x % 100);
+		} else if ($x <2000) {
+		$temp = " seribu" . $this->kekata($x - 1000);
+		} else if ($x <1000000) {
+		$temp = $this->kekata($x/1000) . " ribu" . $this->kekata($x % 1000);
+		} else if ($x <1000000000) {
+		$temp = $this->kekata($x/1000000) . " juta" . $this->kekata($x % 1000000);
+		} else if ($x <1000000000000) {
+		$temp = $this->kekata($x/1000000000) . " milyar" . $this->kekata(fmod($x,1000000000));
+		} else if ($x <1000000000000000) {
+		$temp = $this->kekata($x/1000000000000) . " trilyun" . $this->kekata(fmod($x,1000000000000));
+		}
+		return $temp;
+	}
+	
+	function terbilang($x, $style=4) {
+		if($x<0) {
+		$hasil = "minus ". trim($this->kekata($x));
+		} else {
+		$hasil = trim($this->kekata($x));
+		}
+		switch ($style) {
+			case 1:
+			$hasil = strtoupper($hasil);
+			break;
+			case 2:
+			$hasil = strtolower($hasil);
+			break;
+			case 3:
+			$hasil = ucwords($hasil);
+			break;
+			default:
+			$hasil = ucfirst($hasil);
+			break;
+		}
+		return $hasil;
+	}
+}
 class PDF_MC_Table extends FPDF{
 	var $widths;
 	var $aligns;
@@ -3228,7 +3634,7 @@ Route::get('/cetakKepuasanKonsumen', array('as' => 'cetakKepuasanKonsumen', func
 	Illuminate\Http\Request $request, $kode_barang = null, $company_name = null, $company_address = null, $company_phone = null, $company_fax = null, 
 	$device_name = null, $device_mark = null, $device_manufactured_by = null, $device_model = null , $device_serial_number = null, 
 	$exam_type = null, $exam_type_desc = null) {
-	$pdf = new PDF_MC_Table(); 
+	$pdf = new PDF_MC_TablesKonsumen(); 
 	 
 	// $pdf->AliasNbPages();
 	$pdf->AddPage();
@@ -3241,20 +3647,14 @@ Route::get('/cetakKepuasanKonsumen', array('as' => 'cetakKepuasanKonsumen', func
 	 
 		/*Nama Perangkat*/
 		$y = $pdf->getY();
-		$pdf->Ln(6);
-		$pdf->SetFont('helvetica','',10);
-		$pdf->setXY(10.00125,$y + 6);
-		$pdf->SetFont('','U');
-		$pdf->Cell(10,5,"Tanggal",0,0,'L');
-		$pdf->SetWidths(array(0.00125,40,45,145));
-		$pdf->Row(array("","",":","")); 
+	 	$pdf->Ln(6); 
 	 
 		/*Merek dan Model Perangkat*/
 		$y = $pdf->getY(); 
-		$pdf->SetFont('helvetica','',10);
+		$pdf->SetFont('helvetica','',8);
 		$pdf->setXY(10.00125,$y + 1);
 		$pdf->SetFont('','U');
-		$pdf->Cell(10,5,"Nama",0,0,'L');
+		$pdf->Cell(10,5,"Nama Responden",0,0,'L');
 		$pdf->SetWidths(array(0.00125,40,45,50));
 		$pdf->Row(array("","",":",""));
 		$y2 = $pdf->getY();
@@ -3276,16 +3676,16 @@ Route::get('/cetakKepuasanKonsumen', array('as' => 'cetakKepuasanKonsumen', func
 		$pdf->setXY(10.00125,$yNow);
 		/*Kapasitas dan Referensi Uji Perangkat*/
 		$y = $pdf->getY(); 
-		$pdf->SetFont('helvetica','',10);
+		$pdf->SetFont('helvetica','',8);
 		$pdf->setXY(10.00125,$y + 1);
 		$pdf->SetFont('','U');
-		$pdf->Cell(10,5,"Perusahaan",0,0,'L');
+		$pdf->Cell(10,5,"Nama Perusahaan",0,0,'L');
 		$pdf->SetWidths(array(0.00125,40,45,50));
 		$pdf->Row(array("","",":",""));
 	 
 		$pdf->setXY(110.00125,$y + 1);
 		$pdf->SetFont('','U');
-		$pdf->Cell(10,5,"Email",0,0,'L');
+		$pdf->Cell(10,5,"Nama Perangkat",0,0,'L');
 		$pdf->SetWidths(array(0.00125,135,140,50));
 		$pdf->Row(array("","",":",""));
 		$y3 = $pdf->getY();
@@ -3294,118 +3694,122 @@ Route::get('/cetakKepuasanKonsumen', array('as' => 'cetakKepuasanKonsumen', func
 		  
 		/*Negara Pembuat Perangkat*/
 		$y = $pdf->getY(); 
-		$pdf->SetFont('helvetica','',10);
+		$pdf->SetFont('helvetica','',8);
 		$pdf->setXY(10.00125,$y + 6);
 		$pdf->SetFont('','U');
-		$pdf->Cell(10,5,"No Telepon",0,0,'L');
+		$pdf->Cell(10,5,"No. TELP/HP",0,0,'L');
 		$pdf->SetWidths(array(0.00125,40,45,145));
-		$pdf->Row(array("","",":","..."));
+		$pdf->Row(array("","",":",""));
 		
 		$pdf->setXY(110.00125,$y + 6);
 		$pdf->SetFont('','U');
-		$pdf->Cell(10,5,"Mobile",0,0,'L');
+		$pdf->Cell(10,5,"Tanggal",0,0,'L');
 		$pdf->SetWidths(array(0.00125,135,140,50));
 		$pdf->Row(array("","",":","")); 
 	 	 
-		$pdf->SetFont('helvetica','B',14);
-		$pdf->setXY(10.00125, $pdf->getY() + 4); 
-		$pdf->Cell(10,4,"Harap Diisikan penilaian anda terhadap layanan QT/TA/VT - Telkom DDS.",0,0,'L');
+		// $pdf->SetFont('helvetica','B',14);
+		// $pdf->setXY(10.00125, $pdf->getY() + 4); 
+		// $pdf->Cell(10,4,"Harap Diisikan penilaian anda terhadap layanan QT/TA/VT - Telkom DDS.",0,0,'L');
 
 
-		$pdf->SetFont('helvetica','',10);
+		$pdf->SetFont('helvetica','',8);
 		$pdf->setXY(10.00125, $pdf->getY() + 6); 
-		$pdf->Cell(10,4,"Kastamer diharapkan dapat memberikan nilai untuk beberapa kriteria yang diajukan. nilai tersebut",0,0,'L');
+		$pdf->Cell(10,4,"Survey ini terdiri dari dua bagian, yaitu tingkat kepentingan dan tingkat kepuasan Anda. Tingkat kepentingan menunjukan seberapa penting ",0,0,'L');
 		 
 		$pdf->setXY(10.00125, $pdf->getY() + 4); 
-		$pdf->Cell(10,4,"Merupakan nilai yang kastamer berikan mengenai ekspektasi kastamer terhadap PT. Telkom serta realita ",0,0,'L');
+		$pdf->Cell(10,4,"sebuah pernyataan bagi Anda. Sedangkan, tingkat kepuasan menunjukkan seberapa puas pengalaman Anda setelah melakukan pengujian di ",0,0,'L');
  
 		$pdf->setXY(10.00125, $pdf->getY() + 4); 
-		$pdf->Cell(10,4,"performansi data PT Telkom.",0,0,'L');
+		$pdf->Cell(10,4,"Infrasutructure Assurance (IAS) Divisi Digital Service (DDS) PT. Telekomuniasi Indonesia, Tbk.",0,0,'L');
 		 
 		$pdf->setXY(10.00125, $pdf->getY() + 6); 
-		$pdf->Cell(10,4,"Skala pemberian nilai adalah 1-7 dengan nilai 7 adalah penilaian Sangat Baik atau Sangat Setuju dan ",0,0,'L');
+		$pdf->Cell(10,4,"Besar pengharapan kami agar pengisian survey ini dapat dikerjakan dengan sebaik-baiknya. Atas kerja samanya, kami ucapkan terimakasih. ",0,0,'L');
 	 
-		$pdf->setXY(10.00125, $pdf->getY() + 4); 
-		$pdf->Cell(10,4,"Nilai 1 adalah penilaian sangat tidak baik atau sangat tidak setuju.kastamer diharapkan dapat",0,0,'L');
+		$pdf->setXY(10.00125, $pdf->getY() + 6); 
+		$pdf->Cell(10,4,"Skala pemberian nilai adalah 1 - 10 dengan nilai 1 adalah penilaian Sangat Tidak Baik atau Sangat Tidak Setuju. Kastemer diharapkan dapat ",0,0,'L');
 
 		$pdf->setXY(10.00125, $pdf->getY() + 4); 
-		$pdf->Cell(10,4,"memberikan nilai dengan angka bulat.",0,0,'L');
+		$pdf->Cell(10,4,"memberikan dengan angka bulat.",0,0,'L');
 
 
 
 		$pdf->Ln(8); 
 		$pdf->SetWidths(array(0.00125,10,100,30,50));
-		$pdf->SetAligns(array('L','C','C','C','C')); 
-		$pdf->SetFont('helvetica','',10);
- 		$pdf->RowRect(array('','No','Kriteria','Nilai Ekspektasi','Nilai Performansi')); 
+		$pdf->SetAligns(array('L','C','L','C','C')); 
+		$pdf->SetFont('helvetica','',8);
+ 		$pdf->RowRect(array('','NO','PERTANYAAN','TINGKAT KEPENTINGAN','TINGKAT KEPUASAN')); 
 	 	
-	 	$pdf->RowRect(array('','1','Pihak UREL(User Relation) mampu menjadi jembatan antara kastamer dan test Engineer telkom','',''));
-	 	$pdf->RowRect(array('','2','Proses pelayanan pengujian secara keseluruhan (sejak pengajuan hingga pelaporan) mudah dimengerti oleh kastamer','',''));
-	 	$pdf->RowRect(array('','3','Pihak UREL memberikan informasi serta melakukan pengecekan kelengkapan mengenai berkas-berkas yang harus disiapkan','',''));
-	 	$pdf->RowRect(array('','4','setiap lini proses (pengujian hingga pelaporan) dilakukan dengan cepat.','',''));
-	 	$pdf->RowRect(array('','5','pihak UREL sudah memberikan informasi yang dibutuhkan oleh kastamer','',''));
-		
-
-	 	$pdf->setXY(10.00125, $pdf->getY() + 6); 
-		$pdf->Cell(10,4,"Menurut anda, dalam proses pengajuan hingga pelaporan, tahap apa yang sebaiknya ditingkatkan oleh PT Telkom ?",0,0,'L');
-
-		$pdf->setXY(10.00125, $pdf->getY() + 6); 
-		$pdf->Cell(10,4,"dan mengapa harus ditingkatkan?",0,0,'L');
-
-		$pdf->setXY(10.00125, $pdf->getY() + 6); 
-		$pdf->Cell(10,4,".........................................................................................................................",0,0,'L');
-
-		$pdf->setXY(10.00125, $pdf->getY() + 6); 
-		$pdf->Cell(10,4,".........................................................................................................................",0,0,'L');
-
-		$pdf->setXY(10.00125, $pdf->getY() + 6); 
-		$pdf->Cell(10,4,".........................................................................................................................",0,0,'L');
-
-
-		$pdf->setXY(10.00125, $pdf->getY() + 6); 
-		$pdf->Cell(10,4,"Pada Tahap Ini, silahkan mengisi nilai dengan skala 1-7 untuk nilai ekspektasi awal dan nilai performansi.",0,0,'L');
-
-		$pdf->setXY(10.00125, $pdf->getY() + 6); 
-		$pdf->Cell(10,4,"Kastamer diharapkan mengisi kolom nilai ekspektasi dari setiap kriteria, serta nilai performansi/kenyataan dari setiap kriteria.",0,0,'L');
-
-		$pdf->setXY(10.00125, $pdf->getY() + 8); 
-		$pdf->Cell(10,4,"nilai 7 adalah penilaian Sangat Baik atau Sangat Setuju dan Nilai 1 adalah penilaian sangat tidak baik atau",0,0,'L');
-
-		$pdf->setXY(10.00125, $pdf->getY() + 8); 
-		$pdf->Cell(10,4,"sangat tidak setuju.kastamer diharapkan dapat memberikan nilai dengan angka bulat.",0,0,'L');
-
-
-		$pdf->Ln(8); 
-		$pdf->SetWidths(array(0.00125,10,100,30,50));
-		$pdf->SetAligns(array('L','C','C','C','C')); 
-		$pdf->SetFont('helvetica','',10);
- 		$pdf->RowRect(array('','No','Kriteria','Nilai Ekspektasi','Nilai Performansi')); 
-	 	
-	 	$pdf->RowRect(array('','7','Kastamer percaya pada kualitas pengujian yang dilakukan','',''));
-	 	$pdf->RowRect(array('','8','kastamer merasa pihak UREL faham dan terpercaya','',''));
-	 	$pdf->RowRect(array('','9','kastamer merasa pihak UREL sudah melakukan pemeriksaan kelengkapan administrasi dengan kinerja yang baik','',''));
-	 	$pdf->RowRect(array('','10','Kastamer merasa aman sewaktu melakukan transaksi dengan pihak telkom terutaman pihak UREL','',''));
-	 	$pdf->RowRect(array('','11','Kastamer merasa Engineer Telkom sudah berpengalaman','',''));
-	 	$pdf->RowRect(array('','12','Alat ukur yang digunakan oleh pihak telkom berkualitas, baik, dan akurat','',''));
-	 	$pdf->RowRect(array('','13','Laboratorium yang digunakan oleh Telkom dalam keadaan bersih dan memenuhi standar Laboratorium','',''));
-	 	$pdf->RowRect(array('','14','tarif pengujian yang ditetapkan oleh pihak PT. Telkom sesuai dan bersaing dengan harga pasar','',''));
-	 	$pdf->RowRect(array('','15','Pihak UREL yang melayani kastamer berpakaian rapih dan sopan','',''));
-
-	 	$pdf->RowRect(array('','16','Kantor Telkom DDS dalam kondisi nyaman, bersih dan sesuai kondisi keseluruhannya.','',''));
-	 	$pdf->RowRect(array('','17','Pihak Telkom mengembalikan barang/perangkat yang diujikan dalam keadaan baik seperti awal','',''));
-	 	$pdf->RowRect(array('','18','Sertifikat yang diterima oleh kastamer tidak mengalami kesalahan informasi','',''));
-	 	$pdf->RowRect(array('','19','Pihak Telkom DDS terutama pihak UREL yang melayani proses pengajuan hingga pelaporan sudah memahami kebutuhan kastamer','',''));
-	 	$pdf->RowRect(array('','20','Proses pengujian secara keseluruhan tidak memakan durasi waktu yang lama.','',''));
-	 	$pdf->RowRect(array('','21','Pihak UREL cepat dan tepat dalam merespon keluhan yang diberikan oleh kastamer.','',''));
-	 	$pdf->RowRect(array('','22','Pihak UREL tanggap dalam membantu permasalahan kastamer','',''));
-	 	$pdf->RowRect(array('','23','Engineer Tanggap pada permasalahan yang dihadapi kastamer selama proses pengajuan hingga pelaporan','',''));
-	 	$pdf->RowRect(array('','24','Pihak UREL mudah dihubungi dan tanggap pada segala pertanyaan yang diajukan kastamer terkait pengujian preangkat','',''));
-
-	 	$pdf->RowRect(array('','25','Pihak UREL bersikap ramah dan profesional terhadap kastamer','',''));
-
+	 	$pdf->RowRect(array('','1','Pengajuan pendaftaran pengujian dapat dengan mudah dilakukan.','',''));
+	 	$pdf->RowRect(array('','2','Pelaksanaan uji fungsi sebelum barang diterima terlaksana dengan baik.','',''));
+	 	$pdf->RowRect(array('','3','Biaya/tarif pengujian perangkat sudah sesuai.','',''));
+	 	$pdf->RowRect(array('','4','Prosedur pembayaran dilakukan dengan mudah.','',''));
+	 	$pdf->RowRect(array('','5','Perangkat uji diterima dengan baik oleh petugas.','',''));
+	 	$pdf->RowRect(array('','6','Pelaksanaan pengujian sesuai dengan jadwal yang sudah disepakati.','',''));
+	 	$pdf->RowRect(array('','7','Perangkat uji setelah pengujian selesai ditangani dengan baik.','',''));
+	 	$pdf->RowRect(array('','8','Lama pengujian diselesaikan dengan informasi/kesepakatan yang telah ditentukan.','',''));
+	 	$pdf->RowRect(array('','9','Komunikasi antara test engineer Lab. QA DDS Telkom dengan test engineer kami terjalin dengan baik untuk kelancaran pengujian.','',''));
+	 	$pdf->RowRect(array('','10','Alat ukur yang digunakan sudah terjamin kualitas dan akurasinya.','',''));
+	 	$pdf->RowRect(array('','11','Ruang laboratorium terkondisi dengan baik.','',''));
+	 	$pdf->RowRect(array('','12','Kapabilitas dan pengalaman test engineer Lab. QA DDS Telkom sudah sesuai dengan kompetensinya.','',''));
+	 	$pdf->RowRect(array('','13','Test engineer Lab. QA DDS Telkom memiliki pemahaman terhadap materi item uji.','',''));
+	 	$pdf->RowRect(array('','14','Petugas memberikan pelayanan dengan ramah dan profesional.','',''));
+	 	$pdf->RowRect(array('','15','Petugas memberikan informasi tentang tarif yang jelas kepada kastamer.','',''));
+	 	$pdf->RowRect(array('','16','Petugas memberikan informasi tentang prosedur pengujian dengan jelas.','',''));
+	 	$pdf->RowRect(array('','17','Petugas selalu tanggap dengan apa yang diinginkan kastamer.','',''));
+	 	$pdf->RowRect(array('','18','Petugas memberikan perlakuan yang sama kepada semua kastamer.','',''));
+	 	$pdf->RowRect(array('','19','Petugas memberikan laporan hasil pengujian dengan cepat dan tepat.','','')); 
+ 
+ 		$pdf->setXY(10.00125, $pdf->getY() + 4); 
+		$pdf->Cell(10,4,"Kritik dan Saran Anda untuk meningkatkan kualitas pelayanan kami:",0,0,'L');
+		$pdf->Ln(6); 
+		$pdf->setX(10.00125); 
+ 		$pdf->drawTextBox('Komentar', 120, 18, 'L', 'T', 1);
 
 		$pdf->Output();
 		exit;
+		
+	}
+));
+
+Route::get('/cetakComplaint', array('as' => 'cetakComplaint', function(
+	Illuminate\Http\Request $request, $kode_barang = null, $company_name = null, $company_address = null, $company_phone = null, $company_fax = null, 
+	$device_name = null, $device_mark = null, $device_manufactured_by = null, $device_model = null , $device_serial_number = null, 
+	$exam_type = null, $exam_type_desc = null) {
+	$pdf = new PDF_MC_TablesKonsumen();  
+
+	// $pdf->AliasNbPages();
+	$pdf->AddPage(); 
+	 
+	$pdf->Ln(6); 
+ 	$pdf->SetFont('helvetica','',10); 
+	$pdf->setX(10.00125);
+	$pdf->Cell(140, 15, 'CUSTOMER COMPLAINT', 1, 0, 'C');
+	$pdf->Cell(40, 15, '', 1, 0, 'C'); 
+
+	$y2= $pdf->getY();
+	$pdf->setXY(10.00125,$y2+15);
+	$pdf->Cell(140, 40, 'Customer Name & Address', 1, 0, 'L');
+	$pdf->Cell(40, 40, '', 1, 0, 'C'); 
+
+	$y3 = $pdf->getY();
+	$pdf->setXY(10.00125,$y3+40);
+ 	$pdf->SetFont('helvetica','',10); 
+	$pdf->setX(10.00125);
+	$pdf->Cell(140, 10, 'Customer Contact :', 1, 0, 'L');
+	$pdf->Cell(40, 10, 'Date : ', 1, 0, 'L'); 
+
+	$y = $pdf->getY();
+	$pdf->setXY(10.00125,$y+10);
+	$pdf->Cell(180, 50, 'Complaint', 1, 0, 'L'); 
+
+	$y = $pdf->getY();
+	$pdf->setXY(10.00125,$y+50);
+	$pdf->SetMargins(0,0,0);
+	$pdf->Cell(90, 40, 'Signature Of Receipt :', 1, 0, 'L');
+	$pdf->Cell(90, 40, 'Name Of Receipt', 1, 0, 'LT'); 
+
+	$pdf->Output();
+	exit;
 		
 	}
 ));

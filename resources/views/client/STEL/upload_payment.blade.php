@@ -43,13 +43,12 @@
 								<tbody>
 									<tr>
 										<th colspan="3">
-										<input class="data-upload-pembayaran" id="data-upload-pembayaran" name="filePembayaran" type="file" accept="application/pdf,image/*" required>
-									 	<!-- <input type="hidden" name="hide_file_pembayaran" id="hide_file_pembayaran" value="<?php // echo $data->attachment?>"/> 
-									 	<div id="file-pembayaran"><?php // echo $data->attachment ?></div> -->
+										<input class="data-upload-pembayaran" id="data-upload-pembayaran" name="filePembayaran" type="file" accept="application/pdf,image/*" required> 
 									 	</th>
 									</tr>
 									 <tr>
-										<th colspan="3">{{ trans('translate.examination_price_payment') }} : <input type="number" id="jml-pembayaran" class="jml-pembayaran" name="jml-pembayaran" placeholder="0" value="0" required></th>
+										<th colspan="3">{{ trans('translate.examination_price_payment') }} : 
+										<input type="text" id="jml-pembayaran" class="jml-pembayaran" name="jml-pembayaran" placeholder="0"  required></th>
 									</tr>
 							</table>
 						</div>
@@ -78,7 +77,36 @@
 @endsection
 @section('content_js')
 <script type="text/javascript">	
- 			 
+			 
+	 
+	/* Dengan Rupiah */
+	var jml_pembayaran = document.getElementById('jml-pembayaran');
+	jml_pembayaran.addEventListener('keyup', function(e)
+	{
+		jml_pembayaran.value = formatRupiah(this.value, 'Rp. ');
+	});
+	
+	/* Fungsi */
+	function formatRupiah(angka, prefix)
+	{
+		var number_string = angka.replace(/[^,\d]/g, '').toString(),
+			split	= number_string.split(','),
+			sisa 	= split[0].length % 3,
+			rupiah 	= split[0].substr(0, sisa),
+			ribuan 	= split[0].substr(sisa).match(/\d{3}/gi);
+			
+		if (ribuan) {
+			separator = sisa ? '.' : '';
+			rupiah += separator + ribuan.join('.');
+		}
+		
+		rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+		return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+	}
+
+
+
+
 			$("#file-pembayaran").click(function() {
 				var file = $('#hide_file_pembayaran').val();
 				downloadFile(file);

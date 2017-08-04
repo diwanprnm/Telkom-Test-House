@@ -186,6 +186,7 @@
         socket.on("notification-channel:App\\Events\\Notification", function(message){ 
             var userId = $("#user_id").val();
             console.log(message.data);
+            console.log(userId+" "+message.data.to);
             if(message.data.to === userId){ 
                 var notificationCount = parseInt($("#notification-count").html());
                  var html = '<div class="top-notification-items">'+

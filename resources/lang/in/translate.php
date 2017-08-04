@@ -43,6 +43,9 @@ return [
 	'service_device_test_reference'	=> 'Referensi Uji',
 	'service_device_document'		=> 'Dokumen Pendukung',
 	
+	'service_lab_testing'				=> "Uji Lab Telkom",
+	'service_loc_testing'				=> "Uji Lokasi",
+	
 	'service_upload'					=> 'Unggah Berkas',
 	'service_upload_siupp'				=> 'Lampiran SIUPP',
 	'service_upload_siupp_no'			=> 'No SIUPP',
@@ -55,6 +58,7 @@ return [
 	'service_upload_reference_test_no'	=> 'No Referensi Uji',
 	'service_upload_reference_test_date'=> 'Tanggal Referensi Uji',
 	'service_upload_support_principals'	=> 'Surat Dukungan Prinsipal',
+	'service_upload_another_file'		=> 'File Lainnya',
 	'service_upload_support_principals_no'	=> 'No Surat Dukungan Prinsipal',
 	'service_upload_support_principals_date'=> 'Tanggal Surat Dukungan Prinsipal',
 	'service_upload_sp3'				=> 'SP3',

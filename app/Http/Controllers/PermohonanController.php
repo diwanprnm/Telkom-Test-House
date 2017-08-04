@@ -170,6 +170,9 @@ class PermohonanController extends Controller
 				$exam_type = DB::table('examination_types')->where('id', ''.$jns_pengujian.'')->first();
 			$jns_pengujian_name = ''.$exam_type->name.'';
 			$jns_pengujian_desc = ''.$exam_type->description.'';
+		$lokasi_pengujian = 
+			// $request->input('lokasi_pengujian');
+			$request->input('lokasi_pengujian');
 		$nama_perangkat = 
 			// $request->input('nama_perangkat');
 			$request->input('f1-nama-perangkat');
@@ -346,6 +349,7 @@ class PermohonanController extends Controller
         $exam->created_at = ''.date('Y-m-d h:i:s').'';
         $exam->updated_at = ''.date('Y-m-d h:i:s').'';
         $exam->jns_perusahaan = ''.$jns_perusahaan.'';
+        $exam->is_loc_test = $lokasi_pengujian;
         $exam->keterangan = ''.$request->input('hide_cekSNjnsPengujian').'';
         $exam->function_test_NO = ''.$no_reg.'';
 
@@ -426,6 +430,17 @@ class PermohonanController extends Controller
 			}
 		}
 		
+		if ($request->hasFile('fuploaddll')) {
+			$name_file = 'dll_'.$request->file('fuploaddll')->getClientOriginalName();
+			if($request->file('fuploaddll')->move($path_file,$name_file)){
+				$fuploaddll_name = $name_file;
+			}else{
+				$fuploaddll_name = '';
+			}
+		}else{
+			$fuploaddll_name = '';
+		}
+		
 		if($jns_pengujian == 1){
 			if($jns_perusahaan != 'Pabrikan'){
 				DB::table('examination_attachments')->insert([
@@ -434,6 +449,7 @@ class PermohonanController extends Controller
 					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Surat Dukungan Prinsipal', 'attachment' => ''.$fuploadprinsipal_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
 					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Tinjauan Kontrak', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
 					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Uji', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
+					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'File Lainnya', 'attachment' => ''.$fuploaddll_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
 					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Hasil Uji Fungsi', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').'']
 				]);
 			}else{
@@ -442,6 +458,7 @@ class PermohonanController extends Controller
 					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Referensi Uji', 'attachment' => ''.$fuploadrefuji_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
 					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Tinjauan Kontrak', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
 					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Uji', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
+					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'File Lainnya', 'attachment' => ''.$fuploaddll_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
 					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Hasil Uji Fungsi', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').'']
 				]);
 			}
@@ -451,6 +468,7 @@ class PermohonanController extends Controller
 				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Referensi Uji', 'attachment' => ''.$fuploadrefuji_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
 				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'SP3', 'attachment' => ''.$fuploadsp3_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
 				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Tinjauan Kontrak', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
+				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'File Lainnya', 'attachment' => ''.$fuploaddll_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
 				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Uji', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').'']
 			]);
 		}else{
@@ -458,6 +476,7 @@ class PermohonanController extends Controller
 				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'File Pembayaran', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
 				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Referensi Uji', 'attachment' => ''.$fuploadrefuji_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
 				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Tinjauan Kontrak', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
+				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'File Lainnya', 'attachment' => ''.$fuploaddll_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
 				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Uji', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').'']
 			]);
 		}
@@ -952,6 +971,31 @@ $notification->id = Uuid::uuid4();
 
         try{
             $feedback->save();
+
+            $currentUser = Auth::user();
+			$data= array( 
+	        "from"=>$currentUser->id,
+	        "to"=>"admin",
+	        "message"=>$email." mengirim feedback ",
+	        "url"=>"feedback/".$feedback->id.'/reply',
+	        "is_read"=>0,
+	        "created_at"=>date("Y-m-d H:i:s"),
+	        "updated_at"=>date("Y-m-d H:i:s")
+	        );
+		  	$notification = new NotificationTable();
+			$notification->id = Uuid::uuid4();
+	      	$notification->from = $data['from'];
+	      	$notification->to = $data['to'];
+	      	$notification->message = $data['message'];
+	      	$notification->url = $data['url'];
+	      	$notification->is_read = $data['is_read'];
+	      	$notification->created_at = $data['created_at'];
+	      	$notification->updated_at = $data['updated_at'];
+	      	$notification->save();
+	      	$data['id'] = $notification->id; 
+	        event(new Notification($data));
+
+
 			$this->sendFeedbackEmail($request->input('email'),$request->input('subject'),$request->input('message'),$request->input('question'));
             Session::flash('message_feedback', 'Feedback successfully send');
         } catch(Exception $e){
@@ -970,7 +1014,7 @@ $notification->id = Uuid::uuid4();
 		$data = DB::table('users')
 				->join('question_privileges', 'users.id', '=', 'question_privileges.user_id')
 				->select('users.email')
-				->where('question_privileges.question_id', '=', $request->input('question'))
+				->where('question_privileges.question_id', '=', $question)
 				->where('users.is_active', 1)
 				->get();
 		if(count($data)>0){
@@ -989,7 +1033,7 @@ $notification->id = Uuid::uuid4();
 			Mail::send('client.permohonan.email', array('data' => $message. ". This message from ".$email.""), function ($m) use ($emails,$subject) {
 				$m->to($emails)->subject($subject);
 			});
-		}
+		} 
 
         return true;		
 		// return redirect()->back()->with('status', '');
