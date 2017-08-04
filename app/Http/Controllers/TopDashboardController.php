@@ -8,6 +8,8 @@ use Auth;
 use Illuminate\Support\Facades\DB;
 use App\TrackerLog;
 use App\TrackerSessions;
+use App\StelSales;
+use App\Income;
 
 class TopDashboardController extends Controller
 {
@@ -21,7 +23,6 @@ class TopDashboardController extends Controller
 		$message = null;
 		$search = null;
         $currentUser = Auth::user();
-		$now = date('Y-m-d H:i:s');
 		$datenow = date('Y-m-d');
 		$dateyesterday = date('Y-m-d',strtotime("-1 days"));
 		$datelastweek = date('Y-m-d',strtotime("-7 days"));
@@ -36,92 +37,6 @@ class TopDashboardController extends Controller
 		$d=cal_days_in_month(CAL_GREGORIAN,$thisMonth,$thisYear);
 
         if ($currentUser){
-			/*TODAY*/
-            $log = DB::select("
-				SELECT * FROM tracker_log l, tracker_route_paths rp 
-				WHERE l.route_path_id = rp.id 
-				AND rp.path NOT LIKE '%admin%' AND rp.path NOT LIKE '%mylogsbl%'
-				AND DATE(l.created_at) = '".$datenow."'
-			");
-				$log_now = count($log);
-			$sess = DB::select("
-				SELECT DISTINCT(client_ip) FROM tracker_sessions WHERE DATE(created_at) = '".$datenow."'
-			");
-				// $sess_now_old = $this->temp_sess_today($sess,$datenow);
-				$sess_now_old = $this->temp_sess_today($datenow);
-				$sess_now = count($sess) - $sess_now_old;
-            /*YESTERDAY*/
-			$log = DB::select("
-				SELECT * FROM tracker_log l, tracker_route_paths rp 
-				WHERE l.route_path_id = rp.id 
-				AND rp.path NOT LIKE '%admin%' AND rp.path NOT LIKE '%mylogsbl%'
-				AND DATE(l.created_at) = '".$dateyesterday."'
-			");
-				$log_yesterday = count($log);
-            $sess = DB::select("SELECT DISTINCT(client_ip) FROM tracker_sessions WHERE DATE(created_at) = '".$dateyesterday."'");
-				$sess_yesterday_old = $this->temp_sess_today($dateyesterday);
-				$sess_yesterday = count($sess) - $sess_yesterday_old;
-            /*LAST WEEK*/
-            $log = DB::select("
-				SELECT * FROM tracker_log l, tracker_route_paths rp 
-				WHERE l.route_path_id = rp.id 
-				AND rp.path NOT LIKE '%admin%' AND rp.path NOT LIKE '%mylogsbl%'
-				AND DATE(l.created_at) BETWEEN '".$datelastweek."' AND '".$datenow."'
-			");
-				$log_lastweek = count($log);
-            $sess = DB::select("SELECT DISTINCT(client_ip) FROM tracker_sessions WHERE DATE(created_at) BETWEEN '".$datelastweek."' AND '".$datenow."'");
-				$sess_lastweek_old = $this->temp_sess_today($datelastweek);
-				$sess_lastweek = count($sess) - $sess_lastweek_old;
-            /*THIS MONTH*/
-			$log = DB::select("
-				SELECT * FROM tracker_log l, tracker_route_paths rp 
-				WHERE l.route_path_id = rp.id 
-				AND rp.path NOT LIKE '%admin%' AND rp.path NOT LIKE '%mylogsbl%'
-				AND MONTH(l.created_at) = ".$thisMonth." AND YEAR(l.created_at) = ".$thisYear."
-			");
-				$log_thismonth = count($log);
-			$sess = DB::select("SELECT DISTINCT(client_ip) FROM tracker_sessions WHERE MONTH(created_at) = '".$thisMonth."' AND YEAR(created_at) = '".$thisYear."'");
-				$sess_thismonth_old = $this->temp_sess_today('".$thisYear."-".$thisMonth."-01');
-				$sess_thismonth = count($sess) - $sess_thismonth_old;
-            /*LAST MONTH*/
-            $log = DB::select("
-				SELECT * FROM tracker_log l, tracker_route_paths rp 
-				WHERE l.route_path_id = rp.id 
-				AND rp.path NOT LIKE '%admin%' AND rp.path NOT LIKE '%mylogsbl%'
-				AND MONTH(l.created_at) = ".$lastMonth." AND YEAR(l.created_at) = ".$lastYear."
-			");
-				$log_lastmonth = count($log);
-			$sess = DB::select("SELECT DISTINCT(client_ip) FROM tracker_sessions WHERE MONTH(created_at) = '".$lastMonth."' AND YEAR(created_at) = '".$lastYear."'");
-				$sess_lastmonth_old = $this->temp_sess_today('".$lastMonth."-".$lastYear."-01');
-				$sess_lastmonth = count($sess) - $sess_lastmonth_old;
-            /*SITE HISTORY*/
-			$log = DB::select("
-				SELECT l.created_at FROM tracker_log l, tracker_route_paths rp 
-				WHERE l.route_path_id = rp.id 
-				AND rp.path NOT LIKE '%admin%' AND rp.path NOT LIKE '%mylogsbl%' ORDER BY l.created_at LIMIT 1
-			");
-				$first_log = $log[0]->created_at;
-            $log = DB::select("
-				SELECT l.created_at FROM tracker_log l, tracker_route_paths rp 
-				WHERE l.route_path_id = rp.id 
-				AND rp.path NOT LIKE '%admin%' AND rp.path NOT LIKE '%mylogsbl%' ORDER BY l.created_at DESC LIMIT 1
-			");
-				$last_log = $log[0]->created_at;
-			$log = DB::select("
-				SELECT COUNT(*) as jml FROM tracker_log l, tracker_route_paths rp 
-				WHERE l.route_path_id = rp.id 
-				AND rp.path NOT LIKE '%admin%' AND rp.path NOT LIKE '%mylogsbl%'
-			");
-				$log_count = $log[0]->jml;
-            $sess = DB::select("SELECT COUNT(DISTINCT(client_ip)) as jml FROM tracker_sessions");
-				$sess_count = $sess[0]->jml;
-			$log = DB::select("
-				SELECT DATE(l.created_at) AS created_at, COUNT(l.created_at) AS jml FROM tracker_log l, tracker_route_paths rp 
-				WHERE l.route_path_id = rp.id 
-				AND rp.path NOT LIKE '%admin%' AND rp.path NOT LIKE '%mylogsbl%' GROUP BY DATE(l.created_at) ORDER BY jml DESC LIMIT 1
-			");
-            	$log_max_date = $log[0]->created_at;
-				$log_max_count = $log[0]->jml;
 				
 			$pemohon = DB::select("
 				select created_by, count(distinct created_by) as jml
@@ -144,19 +59,19 @@ class TopDashboardController extends Controller
 				AND spb_status = 1 AND payment_status = 1 AND spk_status = 1 AND examination_status = 1
 				AND resume_status = 1 AND qa_status = 1 AND certificate_status = 1;
 			");
-				$jmlperangkatlulus = $perangkat_lulus[0]->jml;
+			$jmlperangkatlulus = $perangkat_lulus[0]->jml;
             
-				$count_reg = 0;
-				$count_func = 0;
-				$count_cont = 0;
-				$count_spb = 0;
-				$count_pay = 0;
-				$count_spk = 0;
-				$count_exam = 0;
-				$count_resu = 0;
-				$count_qa = 0;
-				$count_cert = 0;
-				$pengujian = Examination::all();
+			$count_reg = 0;
+			$count_func = 0;
+			$count_cont = 0;
+			$count_spb = 0;
+			$count_pay = 0;
+			$count_spk = 0;
+			$count_exam = 0;
+			$count_resu = 0;
+			$count_qa = 0;
+			$count_cert = 0;
+			$pengujian = Examination::all();
 			foreach ($pengujian as $row) {
 				if($row->registration_status < 1){$count_reg = $count_reg + 1;}
 				else if($row->registration_status == 1 and $row->function_status < 1){$count_func = $count_func + 1;}
@@ -169,39 +84,10 @@ class TopDashboardController extends Controller
 				else if($row->resume_status == 1 and $row->qa_status < 1){$count_qa = $count_qa + 1;}
 				else if($row->qa_status == 1 and $row->certificate_status < 1){$count_cert = $count_cert + 1;}
 			}
+
+			$deviceNotComp = Examination::where('qa_passed', -1)->count();
             
 			$data = [
-				'now' => $now,
-				'log_now' => $log_now,
-				'sess_now' => $sess_now,
-				'sess_now_old' => $sess_now_old,
-				'sess_now_total' => ($sess_now + $sess_now_old),
-				'log_yesterday' => $log_yesterday,
-				'sess_yesterday' => $sess_yesterday,
-				'sess_yesterday_old' => $sess_yesterday_old,
-				'sess_yesterday_total' => ($sess_yesterday + $sess_yesterday_old),
-				'log_lastweek' => $log_lastweek,
-				'sess_lastweek' => $sess_lastweek,
-				'sess_lastweek_old' => $sess_lastweek_old,
-				'sess_lastweek_total' => ($sess_lastweek + $sess_lastweek_old),
-				'log_thismonthavg' => (number_format(($log_thismonth/$thisDay), 2, '.', '')),
-				'sess_thismonthavg' => (number_format(($sess_thismonth/$thisDay), 2, '.', '')),
-				'sess_thismonth_old' => (number_format(($sess_thismonth_old/$thisDay), 2, '.', '')),
-				'sess_thismonthavg_total' => (number_format((($sess_thismonth/$thisDay) + ($sess_thismonth_old/$thisDay)), 2, '.', '')),
-				'log_thismonth' => $log_thismonth,
-				'sess_thismonth' => $sess_thismonth,
-				'sess_thismonth_old' => $sess_thismonth_old,
-				'sess_thismonth_total' => ($sess_thismonth + $sess_thismonth_old),
-				'log_lastmonth' => $log_lastmonth,
-				'sess_lastmonth' => $sess_lastmonth,
-				'sess_lastmonth_old' => $sess_lastmonth_old,
-				'sess_lastmonth_total' => ($sess_lastmonth + $sess_lastmonth_old),
-				'first_log' => $first_log,
-				'last_log' => $last_log,
-				'log_count' => $log_count,
-				'sess_count' => $sess_count,
-				'log_max_date' => $log_max_date,
-				'log_max_count' => $log_max_count,
 				'jml_pemohon' => $jmlpemohon,
 				'jml_perusahaan' => $jmlperusahaan,
 				'jml_perangkatlulus' => $jmlperangkatlulus,
@@ -215,16 +101,14 @@ class TopDashboardController extends Controller
 				'count_resu' => $count_resu,
 				'count_qa' => $count_qa,
 				'count_cert' => $count_cert,
-				'count_exam_all' => count($pengujian)
+				'count_exam_all' => count($pengujian),
+				'count_dev_notComp' => $deviceNotComp
 			];
 			// echo"<pre>";print_r($data);exit;
 			
             if (count($data) == 0){
                 $message = 'Data not found';
             }
-			
-			$count_stel = 0;
-			$count_device = 0;
 			
 			for($i=0;$i<12;$i++){
 				$jml_stel = DB::select("
@@ -233,7 +117,40 @@ class TopDashboardController extends Controller
 					AND YEAR(created_at) = ".$thisYear."
 					AND MONTH(created_at) = ".($i+1)."
 					;
-				");				
+				");
+
+				$jml_device_qa = Income::whereHas('examination', function ($q){
+						return $q->where('examination_type_id', 1);
+					})
+		        ->whereYear('created_at', '=', $thisYear)
+		        ->whereMonth('created_at', '=', $i+1)
+		        ->select('price')
+		        ->sum('price');
+
+		        $jml_device_vt = Income::whereHas('examination', function ($q){
+						return $q->where('examination_type_id', 3);
+					})
+		        ->whereYear('created_at', '=', $thisYear)
+		        ->whereMonth('created_at', '=', $i+1)
+		        ->select('price')
+		        ->sum('price');
+
+		        $jml_device_ta = Income::whereHas('examination', function ($q){
+						return $q->where('examination_type_id', 2);
+					})
+		        ->whereYear('created_at', '=', $thisYear)
+		        ->whereMonth('created_at', '=', $i+1)
+		        ->select('price')
+		        ->sum('price');
+
+		        $jml_device_cal = Income::whereHas('examination', function ($q){
+						return $q->where('examination_type_id', 4);
+					})
+		        ->whereYear('created_at', '=', $thisYear)
+		        ->whereMonth('created_at', '=', $i+1)
+		        ->select('price')
+		        ->sum('price');
+
 				$jml_device = DB::select("
 					SELECT sum(price) AS jml
 					from incomes where YEAR(tgl) = ".$thisYear."
@@ -241,9 +158,11 @@ class TopDashboardController extends Controller
 					;
 				");				
 				$chart['stel'][$i]=(float)$jml_stel[0]->jml;
-					$count_stel = $count_stel + $jml_stel[0]->jml;
 				$chart['device'][$i]=(float)$jml_device[0]->jml;
-					$count_device = $count_device + $jml_device[0]->jml;
+				$chart['device_qa'][$i] = (float)$jml_device_qa;
+				$chart['device_vt'][$i] = (float)$jml_device_vt;
+				$chart['device_ta'][$i] = (float)$jml_device_ta;
+				$chart['device_cal'][$i] = (float)$jml_device_cal;
 			}
 			
             return view('admin.topdashboard.index')
@@ -253,9 +172,10 @@ class TopDashboardController extends Controller
                 ->with('data', $data)
                 ->with('stel', $chart['stel'])
                 ->with('device', $chart['device'])
-                ->with('count_stel', $count_stel)
-                ->with('count_device', $count_device)
-				;
+                ->with('device_qa', $chart['device_qa'])
+                ->with('device_vt', $chart['device_vt'])
+                ->with('device_ta', $chart['device_ta'])
+                ->with('device_cal', $chart['device_cal']);
         }
     }
 	
