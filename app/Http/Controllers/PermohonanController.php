@@ -607,6 +607,9 @@ $notification->id = Uuid::uuid4();
 				$exam_no_reg = DB::table('examinations')->where('id', ''.$exam_id.'')->first();
 			$jns_pengujian_name = ''.$exam_type->name.'';
 			$jns_pengujian_desc = ''.$exam_type->description.'';
+		$lokasi_pengujian = 
+			// $request->input('lokasi_pengujian');
+			$request->input('lokasi_pengujian');
 		$nama_perangkat = 
 			// $request->input('nama_perangkat');
 			$request->input('f1-nama-perangkat');
@@ -744,6 +747,20 @@ $notification->id = Uuid::uuid4();
 			}
 		}
 		
+		if ($request->hasFile('fuploaddll')) {
+			$name_file = 'dll_'.$request->file('fuploaddll')->getClientOriginalName();
+			if($request->file('fuploaddll')->move($path_file,$name_file)){
+				$fuploaddll_name = $name_file;
+				if (File::exists(public_path().'\media\\examination\\'.$exam_id.'\\'.$request->input('hide_dll_file'))){
+					File::delete(public_path().'\media\\examination\\'.$exam_id.'\\'.$request->input('hide_dll_file'));
+				}
+			}else{
+				$fuploaddll_name = $request->input('hide_dll_file');
+			}
+		}else{
+			$fuploaddll_name = $request->input('hide_dll_file');
+		}
+		
 		if($request->ajax()){
 			$data = Array([
 				'nama_pemohon' => $nama_pemohon,
@@ -773,6 +790,7 @@ $notification->id = Uuid::uuid4();
 		$query_update_company = "UPDATE examinations
 			SET 
 				jns_perusahaan = '".$jns_perusahaan."',
+				is_loc_test = '".$lokasi_pengujian."',
 				updated_by = '".$user_id."',
 				updated_at = '".date('Y-m-d h:i:s')."'
 			WHERE id = '".$exam_id."'
