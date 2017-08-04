@@ -52,10 +52,7 @@
             font-family: 'Raleway', sans-serif;
             font-size: 12px;
         }
-        .notification ul{
-            top: 56px !important;
-            left: -90px !important;
-        }
+       
     </style>
 </head>
 
@@ -162,6 +159,17 @@
                             ?> 
                             </ul>
                         </li>
+
+                       <li class="dropdown notification">
+                          <a href class="dropdown-toggle" data-toggle="dropdown">
+                                <span class="dot-badge partition-red notification-count"><?php echo $notification_count;?></span> 
+                                <i class="ti-comment"></i> 
+                                <span translate="topbar.messages.MAIN" class="ng-scope ">Notification</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-light dropdown-messages dropdown-large"> 
+                                
+                            </ul>
+                        </li>
                         <li class="dropdown current-user">
                             <a href class="dropdown-toggle" data-toggle="dropdown">
                                 <img src='{{ asset("media/user/".Auth::user()->id."/".Auth::user()->picture) }}' alt="{{ Auth::user()->name }}" width="32" height="32"> <span class="username">{{ Auth::user()->name }} <i class="ti-angle-down"></i></i></span>
@@ -237,7 +245,7 @@
                                     '<a data-url="'+message.data.url+'" data-id="'+message.data.id+'" class="notifData">'+ message.data.message
                                    '</a>'+
                                 '</li>';
-                $(".dropdown-menu").append(html);
+                $(".dropdown-messages").append(html);
                 $(".notification-count").html(notificationCount+1);
                 initClickNotif();
             }
