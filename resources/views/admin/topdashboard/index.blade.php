@@ -7,10 +7,6 @@
 		<!-- start: PAGE TITLE -->
 		<section id="page-title">
 			<div class="row">
-				<div class="col-sm-8">
-					<!-- <h1 class="mainTitle">General Summary Report</h1> -->
-					<h2 class="mainTitle">Report Generated On: {{ $data['now'] }}</h2>
-				</div>
 				<ol class="breadcrumb">
 					<li>
 						<span>Beranda</span>
@@ -23,76 +19,168 @@
 		</section>
 		<!-- end: PAGE TITLE -->
 		<!-- start: RESPONSIVE TABLE -->
-		<div class="container-fluid container-fullw bg-white">
-			<!--
-	        <div class="row">
-		        <div class="col-md-6">
-	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1"><i class="ti-filter"></i> Filter</a>
-				</div>
-				<div class="col-md-6">
-	                <span class="input-icon input-icon-right search-table">
-	                    <input id="search_value" type="text" placeholder="Search" id="form-field-17" class="form-control " value="{{ $search }}">
-	                    <i class="ti-search"></i>
-	                </span>
-	            </div>
-	        </div>
-			-->
-
-	        @if (Session::get('error'))
-				<div class="alert alert-error alert-danger">
-					{{ Session::get('error') }}
-				</div>
-			@endif
-			
-			@if (Session::get('message'))
-				<div class="alert alert-info">
-					{{ Session::get('message') }}
-				</div>
-			@endif
-			
+		<div class="container-fluid container-fullw bg-white">			
 			<div class="row">
-            
-			<div class="col-lg-4 col-xs-6">
-              <!-- small box -->
-              <div class="small-box bg-blue">
-                <div class="inner">
-                  <h3><?php echo number_format($data['jml_perusahaan'], 0, ',', '.'); ?></h3>
-                  <p>Jumlah Perusahaan</p>
-                </div>
-                <div class="icon">
-                  <i class="ion ion-bag"></i>
-                </div>
-                
-              </div>
-            </div><!-- ./col -->
-            <div class="col-lg-4 col-xs-6">
-              <!-- small box -->
-              <div class="small-box bg-green">
-                <div class="inner">
-                  <h3><?php echo number_format($data['jml_pemohon'], 0, ',', '.'); ?></h3>
-                  <p>Jumlah Pemohon</p>
-                </div>
-                <div class="icon">
-                  <i class="ion ion-bag"></i>
-                </div>
-                
-              </div>
-            </div><!-- ./col -->
-            <div class="col-lg-4 col-xs-6">
-              <!-- small box -->
-              <div class="small-box bg-yellow">
-                <div class="inner">
-                  <h3><?php echo number_format($data['jml_perangkatlulus'], 0, ',', '.'); ?></h3>
-                  <p>Jumlah Perangkat Lulus Uji</p>
-                </div>
-                <div class="icon">
-                  <i class="ion ion-stats-bars"></i>
-                </div>
-                
-              </div>
-            </div><!-- ./col -->
-          </div><!-- /.row -->
-			<div style="margin-bottom:5%"></div>
+				<div class="col-sm-3">
+	            	<div class="panel panel-white no-radius text-center">
+	            		<div class="panel-body">
+	            			<span class="fa-stack fa-2x">
+	            				<i class="fa fa-square fa-stack-2x text-primary"></i>	
+	            				<i class="fa fa-building-o fa-stack-1x fa-inverse"></i>
+	            			</span>
+	            			<h2 class="StepTitle">
+	            				<?php echo number_format($data['jml_perusahaan'], 0, ',', '.'); ?> Perusahaan
+	            			</h2>
+	            			<p class="text-small">Jumlah mitra perusahaan yang terdaftar</p>
+	            		</div>
+	              	</div>
+	            </div><!-- ./col -->
+
+	            <div class="col-sm-3">
+	            	<div class="panel panel-white no-radius text-center">
+	            		<div class="panel-body">
+	            			<span class="fa-stack fa-2x">
+	            				<i class="fa fa-square fa-stack-2x text-primary"></i>	
+	            				<i class="fa fa-user fa-stack-1x fa-inverse"></i>
+	            			</span>
+	            			<h2 class="StepTitle">
+	            				<?php echo number_format($data['jml_pemohon'], 0, ',', '.'); ?> Pemohon
+	            			</h2>
+	            			<p class="text-small">Jumlah pemohon pengujian yang terdaftar</p>
+	            		</div>
+	              	</div>
+	            </div><!-- ./col -->
+
+	            <div class="col-sm-3">
+	            	<div class="panel panel-white no-radius text-center">
+	            		<div class="panel-body">
+	            			<span class="fa-stack fa-2x">
+	            				<i class="fa fa-square fa-stack-2x text-primary"></i>	
+	            				<i class="fa fa-check-circle-o fa-stack-1x fa-inverse"></i>
+	            			</span>
+	            			<h2 class="StepTitle">
+	            				<?php echo number_format($data['jml_perangkatlulus'], 0, ',', '.'); ?> Perangkat
+	            			</h2>
+	            			<p class="text-small">Jumlah perangkat lulus uji yang terdaftar</p>
+	            		</div>
+	              	</div>
+	            </div><!-- ./col -->
+
+	            <div class="col-sm-3">
+	            	<div class="panel panel-white no-radius text-center">
+	            		<div class="panel-body">
+	            			<span class="fa-stack fa-2x">
+	            				<i class="fa fa-square fa-stack-2x text-primary"></i>	
+	            				<i class="fa fa-times-circle-o fa-stack-1x fa-inverse"></i>
+	            			</span>
+	            			<h2 class="StepTitle">
+	            				<?php echo number_format($data['count_dev_notComp'], 0, ',', '.'); ?> Perangkat
+	            			</h2>
+	            			<p class="text-small">Jumlah perangkat tidak lulus uji yang terdaftar</p>
+	            		</div>
+	              	</div>
+	            </div><!-- ./col -->
+          	</div><!-- /.row -->
+
+			<div class="table-responsive">
+				<div class="panel panel-default">
+					<fieldset>
+						<legend>
+							Rekap Status Pengujian (Ongoing)
+						</legend>
+						<div class="panel-body">
+							<div id="wizard" class="swMain">
+								<!-- start: WIZARD SEPS -->
+								<ul>
+									<li>
+										<a href="#step-1">
+											<div class="stepNumber">
+												{{ $data['count_reg'] }}
+											</div>
+											<span class="stepDesc"><small> Registrasi </small></span>
+										</a>
+									</li>
+									<li>
+										<a href="#step-2">
+											<div class="stepNumber">
+												{{ $data['count_func'] }}
+											</div>
+											<span class="stepDesc"><small> Uji Fungsi </small></span>
+										</a>
+									</li>
+									<li>
+										<a href="#step-3">
+											<div class="stepNumber">
+												{{ $data['count_cont'] }}
+											</div>
+											<span class="stepDesc"><small> Tinjauan Kontrak </small></span>
+										</a>
+									</li>
+									<li>
+										<a href="#step-4">
+											<div class="stepNumber">
+												{{ $data['count_spb'] }}
+											</div>
+											<span class="stepDesc"><small> SPB </small></span>
+										</a>
+									</li>
+									<li>
+										<a href="#step-5">
+											<div class="stepNumber">
+												{{ $data['count_pay'] }}
+											</div>
+											<span class="stepDesc"><small> Pembayaran </small></span>
+										</a>
+									</li>
+									<li>
+										<a href="#step-6">
+											<div class="stepNumber">
+												{{ $data['count_pay'] }}
+											</div>
+											<span class="stepDesc"><small> Pembuatan SPK </small></span>
+										</a>
+									</li>
+									<li>
+										<a href="#step-7">
+											<div class="stepNumber">
+												{{ $data['count_exam'] }}
+											</div>
+											<span class="stepDesc"><small> Pelaksanaan Uji </small></span>
+										</a>
+									</li>
+									<li>
+										<a href="#step-8">
+											<div class="stepNumber">
+												{{ $data['count_resu'] }}
+											</div>
+											<span class="stepDesc"><small> Laporan Uji </small></span>
+										</a>
+									</li>
+									
+									<li>
+										<a href="#step-9">
+											<div class="stepNumber">
+												{{ $data['count_qa'] }}
+											</div>
+											<span class="stepDesc"><small> Sidang QA </small></span>
+										</a>
+									</li>
+									
+									<li>
+										<a href="#step-10">
+											<div class="stepNumber">
+												{{ $data['count_cert'] }}
+											</div>
+											<span class="stepDesc"><small> Penerbitan Sertifikat </small></span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+			</div>
+			
 			<div class="row">
 				<div class="col-md-6">
 					<div class="table-responsive">
@@ -108,155 +196,6 @@
 						<input type="number" id="txt-keyword-2" value="<?php echo date('Y')?>" style="padding:3px 4px 4px 4px;border:1px solid #ccc" placeholder="Input Tahun ...">
 						<button class="btn btn-default btn-flat" id="sendEmail" data-toggle="modal" onclick="doSearch2()">Search <i class="fa fa-search"></i></button>
 						<div id="chart2" style="z-index:-10;"></div>
-					</div>
-				</div>
-			</div>
-			<div style="margin-bottom:5%"></div>
-			<div class="row">
-				<!--
-				<div class="col-md-12">
-					<div class="table-responsive">
-						<div class="center"> <strong>Summary </strong></div>
-						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
-							<thead>
-								<tr>
-									<th class="center">Time Period</th>
-									<th class="center">Page Views</th>
-									<th class="center">New Visitors</th>
-									<th class="center">Return Visitors</th>
-									<th class="center">Total Visitors</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td class="left">Today</td>
-									<td class="right">{{ $data['log_now'] }}</td>
-									<td class="right">{{ $data['sess_now'] }}</td>
-									<td class="right">{{ $data['sess_now_old'] }}</td>
-									<td class="right">{{ $data['sess_now_total'] }}</td>
-								</tr>
-								<tr>
-									<td class="left">Yesterday</td>
-									<td class="right">{{ $data['log_yesterday'] }}</td>
-									<td class="right">{{ $data['sess_yesterday'] }}</td>
-									<td class="right">{{ $data['sess_yesterday_old'] }}</td>
-									<td class="right">{{ $data['sess_yesterday_total'] }}</td>
-								</tr>
-								<tr>
-									<td class="left">Last Seven Days</td>
-									<td class="right">{{ $data['log_lastweek'] }}</td>
-									<td class="right">{{ $data['sess_lastweek'] }}</td>
-									<td class="right">{{ $data['sess_lastweek_old'] }}</td>
-									<td class="right">{{ $data['sess_lastweek_total'] }}</td>
-								</tr>
-								<tr>
-									<td class="left">This Month's Daily Avgs</td>
-									<td class="right">{{ $data['log_thismonthavg'] }}</td>
-									<td class="right">{{ $data['sess_thismonthavg'] }}</td>
-									<td class="right">{{ $data['sess_thismonth_old'] }}</td>
-									<td class="right">{{ $data['sess_thismonthavg_total'] }}</td>
-								</tr>
-								<tr>
-									<td class="left">This Month's Totals</td>
-									<td class="right">{{ $data['log_thismonth'] }}</td>
-									<td class="right">{{ $data['sess_thismonth'] }}</td>
-									<td class="right">{{ $data['sess_thismonth_old'] }}</td>
-									<td class="right">{{ $data['sess_thismonth_total'] }}</td>
-								</tr>
-								<tr>
-									<td class="left">Last Month's Totals</td>
-									<td class="right">{{ $data['log_lastmonth'] }}</td>
-									<td class="right">{{ $data['sess_lastmonth'] }}</td>
-									<td class="right">{{ $data['sess_lastmonth_old'] }}</td>
-									<td class="right">{{ $data['sess_lastmonth_total'] }}</td>
-								</tr>
-                            </tbody>
-						</table>
-						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
-							<thead>
-								<tr>
-									<th class="center" style="width:20%"></th>
-									<th class="center" colspan="4">Site History</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td class="left">First Page View</td>
-									<td class="center" colspan="4">{{ $data['first_log'] }}</td>
-								</tr>
-								<tr>
-									<td class="left">Last Page View</td>
-									<td class="center" colspan="4">{{ $data['last_log'] }}</td>
-								</tr>
-								<tr>
-									<td class="left">Total Page Views To Date</td>
-									<td class="center" colspan="4">{{ $data['log_count'] }}</td>
-								</tr>
-								<tr>
-									<td class="left">Total Visitors To Date</td>
-									<td class="center" colspan="4">{{ $data['sess_count'] }}</td>
-								</tr>
-								<tr>
-									<td class="left">Date of Highest Page Views</td>
-									<td class="center" colspan="4">{{ $data['log_max_count'] }} ({{ $data['log_max_date'] }})</td>
-								</tr>
-                            </tbody>
-						</table>
-					</div>
-				</div>
-				-->
-				<div class="col-md-12">
-					<div class="table-responsive">
-						<div class="center"> <strong>Summary </strong></div>
-						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
-							<thead>
-								<tr>
-									<th class="center" colspan="2">Rekap Perangkat Pengujian (Ongoing)</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td class="center">Registrasi</td>
-									<td class="center">{{ $data['count_reg'] }}</td>
-								</tr>
-								<tr>
-									<td class="center">Uji Fungsi</td>
-									<td class="center">{{ $data['count_func'] }}</td>
-								</tr>
-								<tr>
-									<td class="center">Tinjauan Kontrak</td>
-									<td class="center">{{ $data['count_func'] }}</td>
-								</tr>
-								<tr>
-									<td class="center">SPB</td>
-									<td class="center">{{ $data['count_spb'] }}</td>
-								</tr>
-								<tr>
-									<td class="center">Pembayaran</td>
-									<td class="center">{{ $data['count_pay'] }}</td>
-								</tr>
-								<tr>
-									<td class="center">Pembuatan SPK</td>
-									<td class="center">{{ $data['count_spk'] }}</td>
-								</tr>
-								<tr>
-									<td class="center">Pengujian</td>
-									<td class="center">{{ $data['count_exam'] }}</td>
-								</tr>
-								<tr>
-									<td class="center">Laporan Uji</td>
-									<td class="center">{{ $data['count_resu'] }}</td>
-								</tr>
-								<tr>
-									<td class="center">Sidang QA</td>
-									<td class="center">{{ $data['count_qa'] }}</td>
-								</tr>
-								<tr>
-									<td class="center">Pembuatan Sertifikat</td>
-									<td class="center">{{ $data['count_cert'] }}</td>
-								</tr>
-                            </tbody>
-						</table>
 					</div>
 				</div>
 			</div>
@@ -428,7 +367,7 @@ if(event.keyCode == 13){
  new Highcharts.Chart({
   chart: {
    renderTo: 'chart',
-   type: 'column',
+   type: 'line',
   },
   title: {
    text: 'Pembelian STEL <?php echo $tahun ?>',
@@ -445,10 +384,26 @@ if(event.keyCode == 13){
   yAxis: {
    title: {
     text: 'Pendapatan (Rupiah)'
-   }
+   },
+   min:0
   },
   series: [{
-   name: 'Total <?php echo $tahun ?> <?php echo "Rp. ".number_format($count_stel, 0, ',', '.').",-"; ?>',
+   name: 'Semua',
+   data: <?php echo json_encode($stel) ?>
+  },{
+   name: 'Lab Kabel',
+   data: <?php echo json_encode($stel) ?>
+  },{
+   name: 'Lab Transmisi',
+   data: <?php echo json_encode($stel) ?>
+  },{
+   name: 'Lab CPE',
+   data: <?php echo json_encode($stel) ?>
+  },{
+   name: 'Lab Energi',
+   data: <?php echo json_encode($stel) ?>
+  },{
+   name: 'Lab Kalibrasi',
    data: <?php echo json_encode($stel) ?>
   }]
  });
@@ -456,7 +411,7 @@ if(event.keyCode == 13){
  new Highcharts.Chart({
   chart: {
    renderTo: 'chart2',
-   type: 'column',
+   type: 'line',
   },
   title: {
    text: 'Pengujian Perangkat <?php echo $tahun ?>',
@@ -476,8 +431,20 @@ if(event.keyCode == 13){
    }
   },
   series: [{
-   name: 'Total <?php echo $tahun ?> <?php echo "Rp. ".number_format($count_device, 0, ',', '.').",-"; ?>',
+   name: 'Semua',
    data: <?php echo json_encode($device) ?>
+  },{
+   name: 'QA',
+   data: <?php echo json_encode($device_qa) ?>
+  },{
+   name: 'TA',
+   data: <?php echo json_encode($device_ta) ?>
+  },{
+   name: 'VT',
+   data: <?php echo json_encode($device_vt) ?>
+  },{
+   name: 'CAL',
+   data: <?php echo json_encode($device_cal) ?>
   }]
  });
  
