@@ -173,7 +173,7 @@ return [
 	'examination_capacity'=> 'Capacity',
 	'examination_company'=> 'Company Name',
 	'examination_date_regist'=> 'Register Date',
-	'examination_number_exam_form'=> 'Number of Function Test',
+	'examination_number_exam_form'=> 'Number of Testing Process',
 	'form_not_show' => 'If form not automatically open in new tab,',
     
 	'search'			=> 'Search',

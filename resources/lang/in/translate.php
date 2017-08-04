@@ -174,7 +174,7 @@ return [
 	'examination_capacity'=> 'Kapasitas',
 	'examination_company'=> 'Perusahaan',
 	'examination_date_regist'=> 'Tanggal Pengajuan',
-	'examination_number_exam_form'=> 'Nomor Form Uji',
+	'examination_number_exam_form'=> 'Nomor Form Permohonan Uji',
 	'form_not_show' => 'Jika form tidak muncul secara otomatis,',
 	
 	'search'			=> 'Cari',

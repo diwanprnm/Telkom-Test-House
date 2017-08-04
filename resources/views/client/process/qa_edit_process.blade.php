@@ -262,7 +262,7 @@
 											*ukuran file maksimal 2 mb
 										</div>
 									</div>
-									@if($userData->jnsPerusahaan != "Pabrikan")
+									
 										<div class="dv-srt-dukungan-prinsipal">
 											<div class="form-group  ">
 												<label>{{ trans('translate.service_upload_support_principals') }}<span class="text-danger">*</span></label>
@@ -276,7 +276,7 @@
 												</div>
 											</div>
 										</div> 
-									@endif
+									
 									<div class="dv-dll">
 										<div class="form-group  ">
 											<label>{{ trans('translate.service_upload_another_file') }}</label>
@@ -483,7 +483,11 @@
 @endsection 
 
 @section('content_js')
-
+@if($userData->jnsPerusahaan == "Pabrikan")
+	<script> $(".dv-srt-dukungan-prinsipal").hide(); </script>
+@else
+	<script> $(".dv-srt-dukungan-prinsipal").show(); </script>
+@endif
  <script type="text/javascript" src="{{url('vendor/jquerystep/jquery.steps.js')}}"></script>
  <script>  
   	var form = $("#form-permohonan");
