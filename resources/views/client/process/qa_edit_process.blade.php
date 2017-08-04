@@ -125,7 +125,7 @@
 				            <h2>Second Step</h2>
 				            <fieldset>
 				               <div class="form-group"> 
-									<input type="radio" name="jns_perusahaan" value="Agen" placeholder="{{ trans('translate.service_company_agent') }}" checked>
+									<input type="radio" name="jns_perusahaan" value="Agen" placeholder="{{ trans('translate.service_company_agent') }}">
 									<input type="radio" name="jns_perusahaan" value="Pabrikan" placeholder="{{ trans('translate.service_company_branch') }}">
 									<input type="radio" name="jns_perusahaan" value="Perorangan" placeholder="{{ trans('translate.service_company_individual') }}">
 								</div>
@@ -159,7 +159,7 @@
 				            <h2>Third Step</h2>
 				            <fieldset>
 								<div class="form-group"> 
-									<input type="radio" name="lokasi_pengujian" value="0" placeholder="{{ trans('translate.service_lab_testing') }}" checked>
+									<input type="radio" name="lokasi_pengujian" value="0" placeholder="{{ trans('translate.service_lab_testing') }}">
 									<input type="radio" name="lokasi_pengujian" value="1" placeholder="{{ trans('translate.service_loc_testing') }}">
 								</div>
 				            	<div class="form-group">
@@ -262,19 +262,21 @@
 											*ukuran file maksimal 2 mb
 										</div>
 									</div>
-									<div class="dv-srt-dukungan-prinsipal">
-										<div class="form-group  ">
-											<label>{{ trans('translate.service_upload_support_principals') }}<span class="text-danger">*</span></label>
-											<input class="data-upload-berkas f1-file-prinsipal" id="fileInput-prinsipal" name="fuploadprinsipal" type="file" accept="application/pdf,image/*" >
-											<input type="hidden" name="hide_prinsipal_file" class="required" id="hide_prinsipal_file" value="{{$userData->filesrt_prinsipal}}"/>
-											<a id="prinsipal-file" class="btn btn-link" style="color:black !important;" >{{$userData->filesrt_prinsipal}}</a>
-										  
-											<div id="prinsipal-file"></div>
-											<div id="attachment-file">
-												*ukuran file maksimal 2 mb
+									@if(jnsPerusahaan != "Pabrikan")
+										<div class="dv-srt-dukungan-prinsipal">
+											<div class="form-group  ">
+												<label>{{ trans('translate.service_upload_support_principals') }}<span class="text-danger">*</span></label>
+												<input class="data-upload-berkas f1-file-prinsipal" id="fileInput-prinsipal" name="fuploadprinsipal" type="file" accept="application/pdf,image/*" >
+												<input type="hidden" name="hide_prinsipal_file" class="required" id="hide_prinsipal_file" value="{{$userData->filesrt_prinsipal}}"/>
+												<a id="prinsipal-file" class="btn btn-link" style="color:black !important;" >{{$userData->filesrt_prinsipal}}</a>
+											  
+												<div id="prinsipal-file"></div>
+												<div id="attachment-file">
+													*ukuran file maksimal 2 mb
+												</div>
 											</div>
-										</div>
-									</div> 
+										</div> 
+									@endif
 									<div class="dv-dll">
 										<div class="form-group  ">
 											<label>{{ trans('translate.service_upload_another_file') }}</label>
@@ -354,8 +356,11 @@
 									<h3>{{ trans('translate.service_device') }}</h3>
 									<table class="table table-striped" id="preview-field">
 										<tr>
-											<td class="telkom_test">{{ trans('translate.service_lab_testing') }}</td>
-											<td class="location_test">{{ trans('translate.service_loc_testing') }}</td>
+											@if($userData->is_loc_test == 0)
+												<td class="telkom_test">{{ trans('translate.service_lab_testing') }}</td>
+											@else
+												<td class="location_test">{{ trans('translate.service_loc_testing') }}</td>
+											@endif
 										</tr>
 										<tr>
 											<td>{{ trans('translate.service_device_equipment') }}</td>
@@ -688,7 +693,7 @@
 	
 	function downloadFile(file){
 		var path = "{{ URL::asset('media/examination') }}";
-		var id_exam = $('#hide_exam_id_edit').val();
+		var id_exam = $('#hide_exam_id').val();
 		//Get file name from url.
 		var url = path+'/'+id_exam+'/'+file;
 		var filename = url.substring(url.lastIndexOf("/") + 1).split("?")[0];
@@ -770,6 +775,7 @@
 	    showButtonPanel: true
 
 	});
+	$('input[name="jns_perusahaan"][value="' + "{{$userData->jnsPerusahaan}}" + '"]').prop('checked', true);
 	$('input[type=radio][name=jns_perusahaan]').change(function() {
         if (this.value == 'Pabrikan') {
            $(".dv-srt-dukungan-prinsipal").hide();
@@ -778,8 +784,7 @@
             $(".dv-srt-dukungan-prinsipal").show();
         }
     });
-	$(".telkom_test").show();
-    $(".location_test").hide();
+	$('input[name="lokasi_pengujian"][value="' + "{{$userData->is_loc_test}}" + '"]').prop('checked', true);
 	$('input[type=radio][name=lokasi_pengujian]').change(function() {
         if (this.value == '1') {
            $(".location_test").show();
