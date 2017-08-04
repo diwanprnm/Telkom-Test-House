@@ -25,6 +25,10 @@ use Session;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
+
+use App\Events\Notification;
+use App\NotificationTable;
+
 class ProfileController extends Controller
 {
     /**
@@ -322,6 +326,32 @@ class ProfileController extends Controller
 	        $logs->page = "PROFILE";
 	        $logs->save();
 
+
+	        $currentUser = Auth::user();
+			$data= array( 
+	        "from"=>$currentUser->id,
+	        "to"=>"admin",
+	        "message"=>$currentUser->id." mengedit data Perusahaan ",
+	        "url"=>"tempcompany/".$temp->id.'/edit',
+	        "is_read"=>0,
+	        "created_at"=>date("Y-m-d H:i:s"),
+	        "updated_at"=>date("Y-m-d H:i:s")
+	        );
+		  	$notification = new NotificationTable();
+			$notification->id = Uuid::uuid4();
+	      	$notification->from = $data['from'];
+	      	$notification->to = $data['to'];
+	      	$notification->message = $data['message'];
+	      	$notification->url = $data['url'];
+	      	$notification->is_read = $data['is_read'];
+	      	$notification->created_at = $data['created_at'];
+	      	$notification->updated_at = $data['updated_at'];
+	      	$notification->save();
+	      	$data['id'] = $notification->id; 
+	        event(new Notification($data));
+
+
+
 			$this->sendEmail($currentUser->id, $description, "emails.editCompany", "Permintaan Edit Data Perusahaan");
             Session::flash('message_company', 'Company Data Has Been Commited');
         } catch(Exception $e){
@@ -436,7 +466,30 @@ class ProfileController extends Controller
 	        $logs->data = "";
 	        $logs->created_by = $user_id;
 	        $logs->page = "REGISTER";
-	        $logs->save();
+	        $logs->save(); 
+
+
+			$data= array( 
+	        "from"=>$user_id,
+	        "to"=>"admin",
+	        "message"=>"Permohonan Aktivasi Akun Baru",
+	        "url"=>"usereks/".$user_id.'/edit',
+	        "is_read"=>0,
+	        "created_at"=>date("Y-m-d H:i:s"),
+	        "updated_at"=>date("Y-m-d H:i:s")
+	        );
+		  	$notification = new NotificationTable();
+			$notification->id = Uuid::uuid4();
+	      	$notification->from = $data['from'];
+	      	$notification->to = $data['to'];
+	      	$notification->message = $data['message'];
+	      	$notification->url = $data['url'];
+	      	$notification->is_read = $data['is_read'];
+	      	$notification->created_at = $data['created_at'];
+	      	$notification->updated_at = $data['updated_at'];
+	      	$notification->save();
+	      	$data['id'] = $notification->id; 
+	        event(new Notification($data)); 
 
 			$this->sendRegistrasi($request->input('username'), $request->input('email'), "emails.registrasiCust", "Permintaan Aktivasi Data Akun Baru");
 			
@@ -598,6 +651,27 @@ class ProfileController extends Controller
 		        $logs->page = "REGISTER";
 		        $logs->save();
 
+		        $data= array( 
+		        "from"=>$user_id,
+		        "to"=>"admin",
+		        "message"=>"Permohonan Aktivasi Akun Baru dan Perusahaan Baru",
+		        "url"=>"company/".$user_id.'/edit',
+		        "is_read"=>0,
+		        "created_at"=>date("Y-m-d H:i:s"),
+		        "updated_at"=>date("Y-m-d H:i:s")
+		        );
+			  	$notification = new NotificationTable();
+				$notification->id = Uuid::uuid4();
+		      	$notification->from = $data['from'];
+		      	$notification->to = $data['to'];
+		      	$notification->message = $data['message'];
+		      	$notification->url = $data['url'];
+		      	$notification->is_read = $data['is_read'];
+		      	$notification->created_at = $data['created_at'];
+		      	$notification->updated_at = $data['updated_at'];
+		      	$notification->save();
+		      	$data['id'] = $notification->id; 
+		        event(new Notification($data)); 
 
 				$this->sendRegistrasiwCompany(
 					$request->input('username'), 

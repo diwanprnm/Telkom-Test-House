@@ -1816,7 +1816,7 @@ $notification->id = Uuid::uuid4();
             /* push notif*/
 			$data= array( 
             	"from"=>"admin",
-            	"to"=>$exam->created_by,
+            	"to"=>$device->created_by,
             	"message"=>"Urel mengedit data pengujian",
             	"url"=>"pengujian/".$request->input('id_exam')."/detail",
             	"is_read"=>0,
