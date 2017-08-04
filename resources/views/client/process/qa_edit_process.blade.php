@@ -450,7 +450,7 @@
 										<label>{{ trans('translate.service_upload_now') }}<span class="text-danger">*</span></label>
 										<input class="data-upload-detail-pengujian" id="fileInput-detail-pengujian" name="fuploaddetailpengujian" type="file" accept="application/pdf,image/*">
 										<input type="hidden" name="hide_attachment_file_edit" id="hide_attachment_file" value="{{ $userData->attachment }}"/>
-										<a id="attachment-file" class="btn btn-link attachment-file-edit" style="color:black !important;" ></a>
+										<a id="attachment-file" class="btn btn-link attachment-file-edit" style="color:black !important;" >{{ $userData->attachment }}</a>
 										<div id="attachment-file"></div>
 										<button type="button" class="button button3d btn-green upload-form">{{ trans('translate.service_upload_now') }}</button>
 										<div id="attachment-file">
