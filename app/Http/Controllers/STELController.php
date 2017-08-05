@@ -9,6 +9,7 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Http\Requests;
 
 use App\STEL;
+use App\examinationLab;
 use App\Logs;
 
 use Auth;
@@ -44,10 +45,14 @@ class STELController extends Controller
             $search = trim($request->input('search'));
             $category = '';
             $status = -1;
+
+            $examLab = examinationLab::all();
             
             if ($search != null){
                 $stels = STEL::whereNotNull('created_at')
+                    ->with('examinationLab')
                     ->where('name','like','%'.$search.'%')
+                    ->orWhere('code','like','%'.$search.'%')
                     ->orderBy('code')
                     ->paginate($paginate);
 
@@ -60,12 +65,14 @@ class STELController extends Controller
                     $logs->page = "STEL";
                     $logs->save();
             }else{
-                $query = STEL::whereNotNull('created_at');
+                $query = STEL::whereNotNull('created_at')->with('examinationLab');
 
                 if ($request->has('category')){
                     $category = $request->get('category');
 					if($request->input('category') != 'all'){
-						$query->where('type', $request->get('category'));
+						$query->whereHas('examinationLab', function ($q) use ($category){
+                            return $q->where('id', $category);
+                        });
 					}
                 }
 
@@ -85,6 +92,7 @@ class STELController extends Controller
             }
             
             return view('admin.STEL.index')
+                ->with('examLab', $examLab)
                 ->with('message', $message)
                 ->with('data', $stels)
                 ->with('search', $search)
@@ -100,7 +108,10 @@ class STELController extends Controller
      */
     public function create()
     {
-        return view('admin.STEL.create');
+        $examLab = examinationLab::all();
+        return view('admin.STEL.create')
+            ->with('examLab',$examLab)
+        ;
     }
 
     /**
@@ -189,10 +200,13 @@ class STELController extends Controller
      */
     public function edit($id)
     {
+        $examLab = examinationLab::all();
         $stel = STEL::find($id);
 
         return view('admin.STEL.edit')
-            ->with('data', $stel);
+            ->with('examLab', $examLab)
+            ->with('data', $stel)
+        ;
     }
 
     /**

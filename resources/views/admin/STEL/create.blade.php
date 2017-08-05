@@ -81,33 +81,14 @@
 										Tipe Dokumen*
 									</label>
 									<select name="type" class="cs-select cs-skin-elastic" required>
-										@if( old('type') == 'Lab Kabel' )
-											<option value="Lab Kabel" selected>Lab Kabel</option>
-											<option value="Lab Transmisi">Lab Transmisi</option>
-											<option value="Lab CPE">Lab CPE</option>
-											<option value="Lab Energi">Lab Energi</option>
-										@elseif( old('type') == 'Lab Transmisi' )
-											<option value="Lab Kabel">Lab Kabel</option>
-											<option value="Lab Transmisi" selected>Lab Transmisi</option>
-											<option value="Lab CPE">Lab CPE</option>
-											<option value="Lab Energi">Lab Energi</option>
-										@elseif( old('type') == 'Lab CPE' )
-											<option value="Lab Kabel">Lab Kabel</option>
-											<option value="Lab Transmisi">Lab Transmisi</option>
-											<option value="Lab CPE" selected>Lab CPE</option>
-											<option value="Lab Energi">Lab Energi</option>
-										@elseif( old('type') == 'Lab Energi' )
-											<option value="Lab Kabel">Lab Kabel</option>
-											<option value="Lab Transmisi">Lab Transmisi</option>
-											<option value="Lab CPE">Lab CPE</option>
-											<option value="Lab Energi" selected>Lab Energi</option>
-										@else
+										@foreach ($examLab as $dataLab)
 											<option value="" disabled selected>Select...</option>
-											<option value="Lab Kabel">Lab Kabel</option>
-											<option value="Lab Transmisi">Lab Transmisi</option>
-											<option value="Lab CPE">Lab CPE</option>
-											<option value="Lab Energi">Lab Energi</option>
-										@endif
+                                        	@if (old('type') == $dataLab->id)
+												<option value="{{$dataLab->id}}" selected>{{$dataLab->name}}</option>
+											@else
+												<option value="{{$dataLab->id}}">{{$dataLab->name}}</option>
+											@endif
+										@endforeach
 									</select>
 								</div>
 							</div>

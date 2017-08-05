@@ -938,7 +938,7 @@
 									<a class="button button-3d nomargin btn-blue" href="{{url('editprocess/'.$item->jns_pengujian.'/'.$item->id)}}">{{ trans('translate.examination_edit') }}</a>
 								<?php } ?>
 								
-								<?php if($item->resume_status == 1){ ?>
+								<?php if($item->resume_status == 1 && date('Y-m-d') >= $item->resume_date){ ?>
 									@if($item->examination_type_id == 1)
 										<a class="button button-3d nomargin btn-blue" href="{{URL::to('pengujian/'.$item->id.'/downloadLaporanPengujian')}}">{{ trans('translate.download') }} {{ trans('translate.examination_report') }}</a>
 									@else
@@ -946,7 +946,18 @@
 									@endif
 								<?php } ?>
 								
-								<?php if($item->certificate_status == 1){ ?>
+								<?php if(
+                  $item->registration_status == 1 &&
+                  $item->function_status == 1 &&
+                  $item->contract_status == 1 &&
+                  $item->spb_status == 1 &&
+                  $item->payment_status == 1 &&
+                  $item->spk_status == 1 &&
+                  $item->examination_status == 1 &&
+                  $item->resume_status == 1 &&
+                  $item->qa_status == 1 &&
+                  $item->certificate_status == 1
+                ){ ?>
 									<a class="button button-3d nomargin btn-blue" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->device_id }}','{{ $item->sistem_mutuPerangkat }}','device', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})', '{{$item->id}}');">{{ trans('translate.download') }} {{ trans('translate.certificate') }}</a>
 								<?php } ?>
 							</div>

@@ -160,7 +160,7 @@ return [
 	'examination_date' 			=> 'Date of Examination',
 	'examination_date_begin'	=> 'Start',
 	'examination_date_end' 		=> 'End',
-	'examination_spk_code' 		=> 'SPK Code',
+	'examination_spk_code' 		=> 'SPK Number',
 	
 	'examination_function_test_date'=> 'Function Test Date',
 	'examination_reschedule_test_date'=> 'Function Test',

@@ -726,7 +726,7 @@ class MyExaminationController extends Controller
         if ($request->has('spk_code')){
             $exam->spk_code = $request->input('spk_code');
 			if($this->checkSPKCode($request->input('spk_code')) > 0){
-				Session::flash('error', 'SPK Code must be unique, please Re-Generate');
+				Session::flash('error', 'SPK Number must be unique, please Re-Generate');
                 return redirect('/admin/myexam/'.$exam->id.'/edit');
 			}
         }

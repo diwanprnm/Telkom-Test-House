@@ -113,6 +113,7 @@ class PengujianController extends Controller
 								'companies.name AS companiesName',
 								'examinations.function_date',
 								'examinations.function_test_NO',
+								'examinations.resume_date',
 								'examinations.created_at'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
@@ -159,6 +160,7 @@ class PengujianController extends Controller
 								'companies.name AS companiesName',
 								'examinations.function_date',
 								'examinations.function_test_NO',
+								'examinations.resume_date',
 								'examinations.created_at'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
@@ -205,6 +207,7 @@ class PengujianController extends Controller
 								'companies.name AS companiesName',
 								'examinations.function_date',
 								'examinations.function_test_NO',
+								'examinations.resume_date',
 								'examinations.created_at'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
@@ -250,6 +253,7 @@ class PengujianController extends Controller
 								'companies.name AS companiesName',
 								'examinations.function_date',
 								'examinations.function_test_NO',
+								'examinations.resume_date',
 								'examinations.created_at'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
@@ -297,6 +301,7 @@ class PengujianController extends Controller
 								'companies.name AS companiesName',
 								'examinations.function_date',
 								'examinations.function_test_NO',
+								'examinations.resume_date',
 								'examinations.created_at'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
@@ -342,6 +347,7 @@ class PengujianController extends Controller
 								'companies.name AS companiesName',
 								'examinations.function_date',
 								'examinations.function_test_NO',
+								'examinations.resume_date',
 								'examinations.created_at'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
@@ -387,6 +393,7 @@ class PengujianController extends Controller
 								'companies.name AS companiesName',
 								'examinations.function_date',
 								'examinations.function_test_NO',
+								'examinations.resume_date',
 								'examinations.created_at'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
@@ -431,6 +438,7 @@ class PengujianController extends Controller
 								'companies.name AS companiesName',
 								'examinations.function_date',
 								'examinations.function_test_NO',
+								'examinations.resume_date',
 								'examinations.created_at'
 								)
 						// ->where('examinations.company_id','=',''.$company_id.'')
@@ -709,7 +717,14 @@ class PengujianController extends Controller
 					et.description AS desc_pengujian,
 					e.spk_code,
 					e.resume_status,
-					e.certificate_status
+					e.resume_date,
+					e.certificate_status,
+					SUM(
+                        e.registration_status + e.function_status + e.contract_status + e.spb_status +
+                        e.payment_status + e.spk_status + e.examination_status + e.resume_status +
+                        e.qa_status + e.certificate_status
+                    ) 
+					AS count_status
 				FROM
 					examinations e,
 					devices d,
@@ -747,7 +762,14 @@ class PengujianController extends Controller
 					et.description AS desc_pengujian,
 					e.spk_code,
 					e.resume_status,
-					e.certificate_status
+					e.resume_date,
+					e.certificate_status,
+					SUM(
+                        e.registration_status + e.function_status + e.contract_status + e.spb_status +
+                        e.payment_status + e.spk_status + e.examination_status + e.resume_status +
+                        e.qa_status + e.certificate_status
+                    ) 
+					AS count_status
 				FROM
 					examinations e,
 					devices d,
@@ -797,7 +819,7 @@ class PengujianController extends Controller
 			
 			$res_exam_schedule = $client->get('spk/searchData?spkNumber='.$examfromOTR->spk_code)->getBody();
 			$exam_schedule = json_decode($res_exam_schedule);
-					
+			
             return view('client.pengujian.detail')
                 // ->with('message', $message)
                 ->with('data', $data)
@@ -1101,7 +1123,7 @@ class PengujianController extends Controller
 				]);
 				
 				// $res_exam_schedule = $client->post('notification/notifToTE?lab='.$exam->examinationLab->lab_code)->getBody();
-				$res_exam_schedule = $client->post('notification/notifToTE?lab='.$exam->examinationLab->lab_code);
+				$res_exam_schedule = $client->post('notification/notifToTE?lab='.$exam->examinationLab->lab_code.'&id='.$exam->id);
 				// $exam_schedule = json_decode($res_exam_schedule);
 				
 				// $this->sendProgressEmail("Pengujian atas nama ".$user_name." dengan alamat email ".$user_email.", telah melakukan proses Upload Bukti Pembayaran");

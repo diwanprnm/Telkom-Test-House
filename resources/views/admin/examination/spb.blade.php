@@ -139,6 +139,20 @@
 					</td>
 					<td style="width:40px;"><a  style="width:40px;" value='Add More' class='del btn btn-success btn-flat' onclick='addAppend2()'><i id='icon_add' class='fa fa-plus'/></a></td>
 				</tr>
+				@if($data->is_loc_test == 1)
+					<tr>
+						<td>
+							<div class="form-group">
+								<input type="text" class="form-control" name="nama_perangkat2[]" value="Uji Lokasi" required>
+							</div>
+						</td>
+						<td>
+							<div class="form-group">
+								<input type="number" class="form-control" name="biaya2[]" id="biaya2" value="0" required>
+							</div>
+						</td>
+					</tr>
+				@endif
 			</tbody>
 			<tbody class="tes_append2"></tbody>
 		</table>

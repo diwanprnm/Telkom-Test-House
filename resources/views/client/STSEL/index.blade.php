@@ -31,10 +31,9 @@
 							<div class="col-md-3 form-group">
 								<select onchange="filter()" class="form-control cs-select cs-skin-elastic" id="cmb-category">
 									<option value="">{{ trans('translate.stel_choose_category') }}</option>
-									<option value="Lab Kabel">Lab Kabel</option>
-									<option value="Lab Transmisi">Lab Transmisi</option>
-									<option value="Lab CPE">Lab CPE</option>
-									<option value="Lab Energi">Lab Energi</option>
+									@foreach ($examLab as $dataLab)
+										<option value="{{$dataLab->id}}">{{$dataLab->name}}</option>
+									@endforeach
 								</select>
 							</div>
 							  
@@ -85,7 +84,7 @@
 												<td class="left">{{ $item->code }}</td>
 												<td class="center"><?php echo number_format($item->price, 0, '.', ','); ?></td>
 												<td class="center">{{ $item->version }}</td>
-												<td class="center">{{ $item->type }}</td>
+												<td class="center">{{ $item->examinationLab->name }}</td>
 											</tr>
 											<?php $no++ ?>
 											@endforeach

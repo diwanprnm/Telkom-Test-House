@@ -3088,7 +3088,7 @@ array('as' => 'cetakHasilKuitansi', function(
 	$pdf->setXY(45.00125,$yNow);
 
 /*Footer Manual*/
-	$pdf->Ln(22);
+	$pdf->Ln(18);
 	$pdf->SetFont('helvetica','',10);
 	$now = date('Y-m-d');
 	setlocale(LC_ALL, 'IND');
@@ -3096,7 +3096,7 @@ array('as' => 'cetakHasilKuitansi', function(
 	$pdf->Cell(280,5,"Bandung, ".$date,0,0,'C');
 	$pdf->Ln();
 	$pdf->Cell(280,5,"DIVISI DIGITAL SERVICE",0,0,'C');
-	$pdf->Ln(25);
+	$pdf->Ln(20);
 	$pdf->Cell(280,5,"                                        ",0,0,'C');
 	$pdf->Ln();
 	$pdf->SetFont('','BU');
@@ -3517,7 +3517,7 @@ array('as' => 'cetakBuktiPenerimaanPerangkat', function(
 		$pdf->setXY(55.00125,$y + 3);
 		$pdf->SetFont('','U');
 		$pdf->Cell(10,5,"Nama Perangkat",0,0,'L');
-		$pdf->SetWidths(array(0.00125,80,85,160));
+		$pdf->SetWidths(array(0.00125,80,85,110));
 		$pdf->Row(array("","",":",urldecode($device_name))); 
 		/*Pemilik Perangkat*/
 		$y = $pdf->getY(); 
@@ -3525,7 +3525,7 @@ array('as' => 'cetakBuktiPenerimaanPerangkat', function(
 		$pdf->setXY(55.00125,$y + 1);
 		$pdf->SetFont('','U');
 		$pdf->Cell(10,5,"Pemilik Perangkat",0,0,'L');
-		$pdf->SetWidths(array(0.00125,80,85,160));
+		$pdf->SetWidths(array(0.00125,80,85,110));
 		$pdf->Row(array("","",":",urldecode($company_name)));
 		/*Alamat*/ 
 		$y = $pdf->getY(); 
@@ -3533,7 +3533,7 @@ array('as' => 'cetakBuktiPenerimaanPerangkat', function(
 		$pdf->setXY(55.00125,$y + 1);
 		$pdf->SetFont('','U');
 		$pdf->Cell(10,5,"Alamat",0,0,'L');
-		$pdf->SetWidths(array(0.00125,80,85,160));
+		$pdf->SetWidths(array(0.00125,80,85,110));
 		$pdf->Row(array("","",":",urldecode($company_address)));
 		
 		/*Phone & Fax*/
@@ -3551,7 +3551,7 @@ array('as' => 'cetakBuktiPenerimaanPerangkat', function(
 		$pdf->setXY(55.00125,$y + 1);
 		$pdf->SetFont('','U');
 		$pdf->Cell(10,5,"Jenis Pengujian",0,0,'L');
-		$pdf->SetWidths(array(0.00125,80,85,160));
+		$pdf->SetWidths(array(0.00125,80,85,110));
 		$pdf->Row(array("","",":",urldecode($exam_type).'/'.urldecode($exam_type_desc))); 
 	 	
 

@@ -349,7 +349,7 @@ class IncomeController extends Controller
 		}
 		if( strpos( $data->number, "/" ) !== false ) {$number = urlencode(urlencode($data->number));}else{$number = $data->number?: '-';}
 		if( strpos( $data->from, "/" ) !== false ) {$from = urlencode(urlencode($data->from));}else{$from = $data->from?: '-';}
-		if( strpos( $data->price, "/" ) !== false ) {$price = urlencode(urlencode($data->price));}else{$price = $data->price?: '-';}
+		if( strpos( $data->price, "/" ) !== false ) {$price = urlencode(urlencode($data->price));}else{$price = $data->price?: '0';}
 		if( strpos( $data->for, "/" ) !== false ) {$for = urlencode(urlencode($data->for));}else{$for = $data->for?: '-';}
 		return \Redirect::route('cetakHasilKuitansi', [
 			'nomor' => $number,

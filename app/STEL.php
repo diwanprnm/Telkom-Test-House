@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\DB;
 class STEL extends Model
 {
     protected $table = "stels";
+
+    public function examinationLab()
+    {
+        return $this->belongsTo('App\ExaminationLab', 'type');
+    }
 	
 	static function autocomplet_stel($query){
         $data1 = DB::table('stels')

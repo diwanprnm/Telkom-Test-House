@@ -325,14 +325,20 @@ class PermohonanController extends Controller
             // Session::flash('error', 'Save failed');
             // return redirect('/device/create');
         }
-		
+
         $exam = new Examination;
         $exam_id = Uuid::uuid4();
         $exam->id = $exam_id;
         $exam->examination_type_id = ''.$jns_pengujian.'';
         $exam->company_id = ''.$company_id.'';
         $exam->device_id = ''.$device_id.'';
-        $exam->examination_lab_id = NULL;
+	        $examLab = DB::table('stels')->where('code', ''.$referensi_perangkat.'')->first();
+	        if(count($examLab)==0){
+	        	$exam->examination_lab_id = NULL;
+	        }
+	        else{
+	        	$exam->examination_lab_id = $examLab->type;
+	        }
         $exam->spk_code = NULL;
         $exam->registration_status = 0;
         $exam->function_status = 0;
@@ -786,9 +792,10 @@ $notification->id = Uuid::uuid4();
 				'no_reg' => $exam_no_reg->function_test_NO
 			]);
 		}
-		
-		$query_update_company = "UPDATE examinations
+		$examLab = DB::table('stels')->where('code', ''.$referensi_perangkat.'')->first();
+        $query_update_company = "UPDATE examinations
 			SET 
+				examination_lab_id = '".$examLab->type."',
 				jns_perusahaan = '".$jns_perusahaan."',
 				is_loc_test = '".$lokasi_pengujian."',
 				updated_by = '".$user_id."',

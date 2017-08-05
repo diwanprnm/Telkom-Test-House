@@ -900,11 +900,11 @@
 												<td> 
 													@if($item_attach->attachment != '')
 														@if($item_attach->name == 'Sertifikat')
-															@if($item->certificate_status == 1)
+															@if($item->count_status == 10)
 																<a class="btn btn-link" href="javascript:void(0)" style="color:black !important;" onclick="return isTestimonial('{{ $item_attach->id_attach }}','{{ $item_attach->attachment }}','{{ $item_attach->jns }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">{{ $item_attach->name }} </a>
 															@endif
 														@elseif($item_attach->name == 'Laporan Uji')
-															@if($item->resume_status == 1)
+															@if($item->resume_status == 1 && date('Y-m-d') >= $item->resume_date)
 																@if($item->id_jns_pengujian == 1)
 																	<a class="btn btn-link" href="{{$item_attach->attachment}}" target="_blank" style="color:black !important;">{{ $item_attach->name }} </a>
 																@else
