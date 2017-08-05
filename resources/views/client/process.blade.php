@@ -40,7 +40,7 @@
 			<div class="row">
 				<div class="col-md-12 container-list">
 					<div class="col-md-4">
-						<img src="{{url('images/item7.jpg')}}">
+						<img src="{{asset('template-assets/img/portfolio/LabCPE.jpg')}}">
 					</div>
 					<div class="col-md-8">
 						<h4>Quality Assurance (QA)</h4>
@@ -56,7 +56,7 @@
 
 				<div class="col-md-12 container-list">
 					<div class="col-md-4">
-						<img src="{{url('images/item7.jpg')}}">
+						<img src="{{asset('template-assets/img/portfolio/LabEnergi.jpg')}}">
 					</div>
 					<div class="col-md-8">
 						<h4>Type Approval (TA)</h4>
@@ -72,7 +72,7 @@
 
 				<div class="col-md-12 container-list">
 					<div class="col-md-4">
-						<img src="{{url('images/item7.jpg')}}">
+						<img src="{{asset('template-assets/img/portfolio/LabKabel.jpg')}}">
 					</div>
 					<div class="col-md-8">
 						<h4>Voluntary Test (VT)</h4>
@@ -88,7 +88,7 @@
 
 				<div class="col-md-12 container-list">
 					<div class="col-md-4">
-						<img src="{{url('images/item7.jpg')}}">
+						<img src="{{asset('template-assets/img/portfolio/LabTransmisi.jpg')}}">
 					</div>
 					<div class="col-md-8">
 						<h4>Calibration (CAL)</h4>

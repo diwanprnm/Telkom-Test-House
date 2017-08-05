@@ -296,6 +296,7 @@ return [
 	'reschedule_date'		=> 'Tanggal',
 	
 	'stel_add_to_cart'		=> 'Tambahkan',
+	'stel_checkout'			=> 'Beli',
 	'stel_include'			=> 'Termasuk',
 	'stel_exclude'			=> 'Belum Termasuk',
 	'stel_total_in_cart'	=> 'Jumlah Item Keranjang',

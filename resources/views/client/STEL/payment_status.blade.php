@@ -44,8 +44,7 @@
 											<th>Total</th> 
 											<th>Status</th>
 											<th>{{ trans('translate.stel_payment_status_complete_time') }}</th>   
-											<th>{{ trans('translate.upload') }}</th>   
-											<th>{{ trans('translate.examination_detail') }}</th>   
+											<th colspan="2" class="center">Action</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -81,7 +80,7 @@
 
 													</td>
 													<td>{{$stel->update_at}}</td>  
-													<td><a href="{!! url("upload_payment/{$stel->id}") !!}">{{ trans('translate.upload') }}</a></td> 
+													<td><a href="{!! url("upload_payment/{$stel->id}") !!}">{{ trans('translate.examination_upload_payment') }}</a></td> 
 													<td><a href="{!! url("payment_detail/{$stel->id}") !!}">{{ trans('translate.examination_detail') }}</a></td> 
 												</tr> 
 											@endforeach
