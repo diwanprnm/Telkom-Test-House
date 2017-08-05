@@ -73,6 +73,11 @@
 											@endforeach
 										</tbody>
 									</table>
+									<div>
+										<button class="btn btn-wide btn-green btn-squared pull-right">
+											Upload
+										</button>
+									</div>
 								</div>
 							</div>
 							<div class="col-md-12">
@@ -102,8 +107,19 @@
 										Status *
 									</label>
 									<select name="payment_status" class="cs-select cs-skin-elastic" required> 
-											<option value="1" >Success</option>
-											<option value="-1" >Decline</option> 
+										@if($dataStel[0]->payment_status == 0)
+											<option value="0" selected>Choose Status</option>
+											<option value="1">Success</option>
+											<option value="-1">Decline</option>
+										@elseif($dataStel[0]->payment_status == 1)
+											<option value="0">Choose Status</option>
+											<option value="1" selected>Success</option>
+											<option value="-1">Decline</option>
+										@else
+											<option value="0">Choose Status</option>
+											<option value="1">Success</option>
+											<option value="-1" selected>Decline</option>
+										@endif
 									</select>
 								</div>
 							</div>

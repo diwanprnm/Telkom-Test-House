@@ -22,7 +22,11 @@
 										Tanggal Surat *
 									</label>
 									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-										<input type="text" name="contract_date" id="contract_date" value="{{$data->contract_date}}" class="form-control"/>
+										@if($data->contract_date)
+											<input type="text" name="contract_date" id="contract_date" value="{{$data->contract_date}}" class="form-control"/>
+										@else
+											<input type="text" name="contract_date" id="contract_date" value="{{date('Y-m-d')}}" class="form-control"/>
+										@endif
 										<span class="input-group-btn">
 											<button type="button" class="btn btn-default">
 												<i class="glyphicon glyphicon-calendar"></i>
@@ -389,6 +393,22 @@
 											@foreach($labs as $item)
 												<option value="{{$item->id}}">{{$item->name}}</option>
 											@endforeach
+										@endif
+									</select>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Lokasi Pengujian
+									</label>
+									<select name="is_loc_test" class="cs-select cs-skin-elastic">
+										@if($data->is_loc_test == 1)
+											<option value="0">Uji Lab Telkom</option>
+											<option value="1" selected>Uji Lokasi</option>
+										@else
+											<option value="0" selected>Uji Lab Telkom</option>
+											<option value="1">Uji Lokasi</option>
 										@endif
 									</select>
 								</div>
@@ -1538,7 +1558,7 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
-											Tanggal *
+											Tanggal Verifikasi *
 										</label>
 										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
 											<input type="text" name="qa_date" class="form-control" value="{{ $data->qa_date }}" required/>

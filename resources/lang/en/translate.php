@@ -160,7 +160,7 @@ return [
 	'examination_date' 			=> 'Date of Examination',
 	'examination_date_begin'	=> 'Start',
 	'examination_date_end' 		=> 'End',
-	'examination_spk_code' 		=> 'SPK Code',
+	'examination_spk_code' 		=> 'SPK Number',
 	
 	'examination_function_test_date'=> 'Function Test Date',
 	'examination_reschedule_test_date'=> 'Function Test',
@@ -293,6 +293,7 @@ return [
 	'reschedule_date'		=> 'Date',
 	
 	'stel_add_to_cart'		=> 'Add to Cart',
+	'stel_checkout'			=> 'Purchase',
 	'stel_include'			=> 'include',
 	'stel_exclude'			=> 'exclude',
 	'stel_total_in_cart'	=> 'Count Item in Cart',
@@ -308,7 +309,7 @@ return [
 	'stel_payment_upload'	=> 'Upload Payment',
 	'stel_qty'				=> 'QTY',
 	'stel_payment_method'	=> 'Choose Payment Method',
-	'stel_payment_method_atm'	=> 'Via ATM',
+	'stel_payment_method_atm'	=> 'Via ATM/Transfer',
 	'stel_payment_method_credit'=> 'Via Credit Card',
 	'stel_payment_method_bank'  => 'This is list of bank if you take this method',
 	

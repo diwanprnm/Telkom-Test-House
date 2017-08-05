@@ -113,7 +113,7 @@ class ExaminationAPIController extends AppBaseController
 							->orWhere("devices.manufactured_by", "LIKE", '%'.$param->find .'%')
 							->orWhere("devices.test_reference", "LIKE", '%'.$param->find .'%')
 							->orWhere("examinations.spk_code", "LIKE", '%'.$param->find .'%')
-							->orWhere("examinations.is_loc_tes", "=", $param->find)
+							->orWhere("examinations.is_loc_test", "=", $param->find)
 							->orWhere("examination_labs.name", "LIKE", '%'.$param->find .'%')
 					;
 				});

@@ -75,29 +75,13 @@
 										Tipe Dokumen *
 									</label>
 									<select name="type" class="cs-select cs-skin-elastic" required>
-										@if($data->type == 'Lab Kabel')
-											<option value="Lab Kabel" selected>Lab Kabel</option>
-										@else
-											<option value="Lab Kabel">Lab Kabel</option>
-										@endif
-
-										@if($data->type == 'Lab Transmisi')
-											<option value="Lab Transmisi" selected>Lab Transmisi</option>
-										@else
-											<option value="Lab Transmisi">Lab Transmisi</option>
-										@endif
-
-										@if($data->type == 'Lab Device')
-											<option value="Lab Device" selected>Lab Device</option>
-										@else
-											<option value="Lab Device">Lab Device</option>
-										@endif
-
-										@if($data->type == 'Lab Energi')
-											<option value="Lab Energi" selected>Lab Energi</option>
-										@else
-											<option value="Lab Energi">Lab Energi</option>
-										@endif
+										@foreach ($examLab as $dataLab)
+											@if ($data->type == $dataLab->id)
+												<option value="{{$dataLab->id}}" selected>{{$dataLab->name}}</option>
+											@else
+												<option value="{{$dataLab->id}}">{{$dataLab->name}}</option>
+											@endif
+										@endforeach
 									</select>
 								</div>
 							</div>

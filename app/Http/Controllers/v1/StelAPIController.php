@@ -23,9 +23,11 @@ class StelAPIController extends AppBaseController
 		}  
 
 		$select = array(
-			"stels.id","stels.name","stels.code","stels.price","stels.version","stels.type as category","stels.stel_type as type"
+			"stels.id","stels.name","stels.code","stels.price","stels.version","examination_labs.name as category","stels.stel_type as type"
 		);
+		
 		$result = STEL::selectRaw(implode(",", $select))   
+				->join("examination_labs","stels.type","=","examination_labs.id")
 				->where("stels.is_active","=",1)
 				->where($whereID);
 				
@@ -33,7 +35,7 @@ class StelAPIController extends AppBaseController
 			$result = $result->where("stels.code", "LIKE", '%'.$param->find .'%')
 							->orWhere("stels.name", "LIKE", '%'.$param->find .'%')
 							->orWhere("stels.price", "LIKE", '%'.$param->find .'%')
-							->orWhere("stels.type", "LIKE", '%'.$param->find .'%')
+							->orWhere("examination_labs.name", "LIKE", '%'.$param->find .'%')
 							->orWhere("stels.version", "LIKE", '%'.$param->find .'%');
 			// $param->find = (strtoupper($param->find) == "S-TSEL")?2:1;   
 			// $result = $result->orWhere("stels.stel_type", "=", $param->find);
@@ -56,7 +58,7 @@ class StelAPIController extends AppBaseController
 			}
 		
 			if(isset($param->category)){ 
-				$result = $result->where("stels.type", "LIKE", '%'.$param->category .'%');
+				$result = $result->where("examination_labs.name", "LIKE", '%'.$param->category .'%');
 			}
 		}
 

@@ -53,29 +53,13 @@
 											@else
                                                 <option value="all">All</option>
                                             @endif
-											@if ($category == 'Lab Kabel')
-												<option value="Lab Kabel" selected>Lab Kabel</option>
-											@else
-												<option value="Lab Kabel">Lab Kabel</option>
-											@endif
-
-											@if ($category == 'Lab Transmisi')
-												<option value="Lab Transmisi" selected>Lab Transmisi</option>
-											@else
-												<option value="Lab Transmisi">Lab Transmisi</option>
-											@endif
-
-											@if ($category == 'Lab Device')
-												<option value="Lab Device" selected>Lab Device</option>
-											@else
-												<option value="Lab Device">Lab Device</option>
-											@endif
-
-											@if ($category == 'Lab Energi')
-												<option value="Lab Energi" selected>Lab Energi</option>
-											@else
-												<option value="Lab Energi">Lab Energi</option>
-											@endif
+                                            @foreach ($examLab as $dataLab)
+                                            	@if ($category == $dataLab->id)
+													<option value="{{$dataLab->id}}" selected>{{$dataLab->name}}</option>
+												@else
+													<option value="{{$dataLab->id}}">{{$dataLab->name}}</option>
+												@endif
+											@endforeach
 									</select>
 									</div>
 								</div>
@@ -162,7 +146,7 @@
 										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
 										<td class="center">{{ $item->code }}</td>
 										<td class="center">{{ $item->name }}</td>
-										<td class="center">{{ $item->type }}</td>
+										<td class="center">{{ $item->examinationLab->name }}</td>
 										<td class="center">{{ $item->version }}</td>
 										<td class="center">{{ $item->year }}</td>
 	                                    <td class="center"><?php echo number_format($item->price, 0, '.', ','); ?></td>

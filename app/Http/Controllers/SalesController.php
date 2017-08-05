@@ -201,7 +201,7 @@ class SalesController extends Controller
         $stel = STELSalesAttach::select($select)->rightJoin("stels_sales","stels_sales.id","=","stels_sales_attachment.stel_sales_id")
                 ->where("stels_sales.id",$id)->first();
 				
-		$select = array("stels.name","stels.price","stels.code","stels_sales_detail.qty","stels_sales_detail.id","stels_sales_detail.attachment","stels.attachment as stelAttach","stels_sales.invoice","companies.name as company_name"); 
+		$select = array("stels.name","stels.price","stels.code","stels_sales_detail.qty","stels_sales_detail.id","stels_sales_detail.attachment","stels.attachment as stelAttach","stels_sales.invoice","companies.name as company_name","stels_sales.payment_status"); 
 		$STELSales = STELSalesDetail::select($select)->where("stels_sales_id",$id)
 					->join("stels_sales","stels_sales.id","=","stels_sales_detail.stels_sales_id")
 					->join("stels","stels.id","=","stels_sales_detail.stels_id")
@@ -213,7 +213,7 @@ class SalesController extends Controller
             ->with('dataStel', $STELSales);
     }
 
-      public function update(Request $request, $id)
+    public function update(Request $request, $id)
     {
 		$currentUser = Auth::user();
 

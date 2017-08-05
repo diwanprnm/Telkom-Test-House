@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 
 use App\STEL;
+use App\examinationLab;
 use App\Logs;
 use Ramsey\Uuid\Uuid;
 
@@ -39,14 +40,19 @@ class STSELClientController extends Controller
             $paginate = 10;
             $search = trim($request->input('search'));
             $type = '';
+
+            $examLab = examinationLab::all();
             
             if ($search != null){
                 $query = STEL::whereNotNull('created_at')
                     ->where('stel_type','=','2')
-                    ->where('code','like','%'.$search.'%')
-                    ->orWhere('name','like','%'.$search.'%')
-                    ->where('type','like','%'.$type.'%');
-
+                    ->where(function($q) use ($search){
+                        return $q->where('code','like','%'.$search.'%')
+                        ->orWhere('name','like','%'.$search.'%')
+                        ;
+                    })
+                    ->with('examinationLab')
+                    ;
                     $logs = new Logs;
                     $currentUser = Auth::user();
                     $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
@@ -58,13 +64,17 @@ class STSELClientController extends Controller
                     $logs->save();
             }else{
                 $query = STEL::whereNotNull('created_at')
-					->where('stel_type','=','2');
+					->where('stel_type','=','2')
+                    ->with('examinationLab')
+                    ;
             }
             
 			if ($request->has('type')){
-				$query->where('type', $request->get('type'));
-				$type = $request->input('type');
-			}
+                $type = $request->get('type');
+                $query->whereHas('examinationLab', function ($q) use ($type){
+                    return $q->where('id', $type);
+                });
+            }
 				$stels = $query->orderBy('updated_at', 'desc')
                          ->paginate($paginate);
             
@@ -73,6 +83,7 @@ class STSELClientController extends Controller
             }
             $page = "STSELclient";
             return view('client.STSEL.index')
+                ->with('examLab', $examLab)
                 ->with('message', $message)
                 ->with('data', $stels)
                 ->with('page', $page)

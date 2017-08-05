@@ -347,13 +347,14 @@ class ExaminationController extends Controller
         if ($request->has('spk_code')){
             $exam->spk_code = $request->input('spk_code');
 			if($this->checkSPKCode($request->input('spk_code')) > 0){
-				Session::flash('error', 'SPK Code must be unique, please Re-Generate');
+				Session::flash('error', 'SPK Number must be unique, please Re-Generate');
                 return redirect('/admin/examination/'.$exam->id.'/edit');
 			}
         }
         if ($request->has('registration_status')){
 			$status = $request->input('registration_status');
-			$exam->registration_status = $status;
+            $exam->registration_status = $status;
+			$exam->is_loc_test = $request->input('is_loc_test');
 			if($status == 1){
 				/* push notif*/ 
 					$data= array( 
@@ -1815,7 +1816,7 @@ $notification->id = Uuid::uuid4();
 
             /* push notif*/
 			$data= array( 
-            	"from"=>"admin",
+            	"from"=>$currentUser->id,
             	"to"=>$device->created_by,
             	"message"=>"Urel mengedit data pengujian",
             	"url"=>"pengujian/".$request->input('id_exam')."/detail",
@@ -1874,11 +1875,17 @@ $notification->id = Uuid::uuid4();
 		
 		$exam_id = $request->input('hide_id_exam');
 		$testing_start = $request->input('testing_start');
-			$testing_start_ina_temp = strtotime($testing_start);
-			$testing_start_ina = date('d-m-Y', $testing_start_ina_temp);
+        if($request->input('testing_start') == '' or $request->input('testing_start') == '0000-00-00' or $request->input('testing_start') == NULL){
+            $testing_start_ina = '_ _ - _ _ - _ _ _ _';
+        }else{
+            $testing_start_ina = date('d-m-Y', strtotime($request->input('testing_start')));
+        }
 		$testing_end = $request->input('testing_end');
-			$testing_end_ina_temp = strtotime($testing_end);
-			$testing_end_ina = date('d-m-Y', $testing_end_ina_temp);
+        if($request->input('testing_end') == '' or $request->input('testing_end') == '0000-00-00' or $request->input('testing_start') == NULL){
+            $testing_end_ina = '_ _ - _ _ - _ _ _ _';
+        }else{
+            $testing_end_ina = date('d-m-Y', strtotime($request->input('testing_end')));
+        }
 		$contract_date = $request->input('contract_date');
 			$contract_date_ina_temp = strtotime($contract_date);
 			$contract_date_ina = date('d-m-Y', $contract_date_ina_temp);
