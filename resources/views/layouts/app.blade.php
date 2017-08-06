@@ -143,23 +143,7 @@
                 <!-- start: NAVBAR COLLAPSE -->
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-right">
-                        <!-- start: USER OPTIONS DROPDOWN -->
-                        <li class="dropdown notification">
-                            <a href="#" style="top:10px;" class="dropdown-toggle" data-toggle="dropdown"><i class="ti-bell">
-                            <span class="notification-count"><?php echo $notification_count;?></span></i></a> 
-                            <ul class="dropdown-menu dropdown-dark">
-                            <?php
-                            foreach ($notification_data as $notif) { ?>
-                                 <li>
-                                    <a data-url="{{ url('admin/'.$notif['url']) }}" data-id="{{$notif['id']}}" class="notifData">
-                                     <?php echo $notif['message'];?>
-                                    </a>
-                                </li>
-                           <?php }
-                            ?> 
-                            </ul>
-                        </li>
-
+                      
                        <li class="dropdown notification">
                           <a href class="dropdown-toggle" data-toggle="dropdown">
                                 <span class="dot-badge partition-red notification-count"><?php echo $notification_count;?></span> 
@@ -265,7 +249,7 @@
                     success: function(data){ 
                         console.log(data);
                         $(".notification-count").html(data); 
-                        window.location.href = notifURL; 
+                        window.location.href = "<?php echo URL::to('/'); ?>/admin/"+notifURL; 
                     }
                 }); 
             });
