@@ -8,7 +8,7 @@ use Auth;
 use Illuminate\Support\Facades\DB;
 use App\TrackerLog;
 use App\TrackerSessions;
-use App\StelSales;
+use App\STELSales;
 use App\Income;
 use App\STEL;
 use App\ExaminationLab;
@@ -116,7 +116,7 @@ class TopDashboardController extends Controller
 
 				$sum_stel_kab = 0;
 				$id_kab = ExaminationLab::where('name', 'like', '%kabel%')->select('id')->first();
-				$jml_stel_kab = StelSales::with(['sales_detail' => function ($query) use ($id_kab) {
+				$jml_stel_kab = STELSales::with(['sales_detail' => function ($query) use ($id_kab) {
 		            $query->with('stel')->whereHas('stel', function ($q) use ($id_kab) {
 		                return $q->where('type', $id_kab->id);
 		            })->get();
@@ -135,7 +135,7 @@ class TopDashboardController extends Controller
 
 		        $sum_stel_ene = 0;
 				$id_ene = ExaminationLab::where('name', 'like', '%energi%')->select('id')->first();
-				$jml_stel_ene = StelSales::with(['sales_detail' => function ($query) use ($id_ene) {
+				$jml_stel_ene = STELSales::with(['sales_detail' => function ($query) use ($id_ene) {
 		            $query->with('stel')->whereHas('stel', function ($q) use ($id_ene) {
 		                return $q->where('type', $id_ene->id);
 		            })->get();
@@ -154,7 +154,7 @@ class TopDashboardController extends Controller
 
 		        $sum_stel_tra = 0;
 				$id_tra = ExaminationLab::where('name', 'like', '%transmisi%')->select('id')->first();
-				$jml_stel_tra = StelSales::with(['sales_detail' => function ($query) use ($id_tra) {
+				$jml_stel_tra = STELSales::with(['sales_detail' => function ($query) use ($id_tra) {
 		            $query->with('stel')->whereHas('stel', function ($q) use ($id_tra) {
 		                return $q->where('type', $id_tra->id);
 		            })->get();
@@ -173,7 +173,7 @@ class TopDashboardController extends Controller
 
 		        $sum_stel_cpe = 0;
 				$id_cpe = ExaminationLab::where('name', 'like', '%cpe%')->select('id')->first();
-				$jml_stel_cpe = StelSales::with(['sales_detail' => function ($query) use ($id_cpe) {
+				$jml_stel_cpe = STELSales::with(['sales_detail' => function ($query) use ($id_cpe) {
 		            $query->with('stel')->whereHas('stel', function ($q) use ($id_cpe) {
 		                return $q->where('type', $id_cpe->id);
 		            })->get();
