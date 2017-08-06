@@ -218,7 +218,7 @@
                     success: function(data){ 
                         console.log(data);
                         $(".notification-count").html(data); 
-                        window.location.href = notifURL; 
+                        window.location.href =  "<?php echo URL::to('/'); ?>/"+notifURL; 
                     }
                 }); 
             });

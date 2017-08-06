@@ -392,16 +392,16 @@ if(event.keyCode == 13){
    data: <?php echo json_encode($stel) ?>
   },{
    name: 'Lab Kabel',
-   data: <?php echo json_encode($stel) ?>
+   data: <?php echo json_encode($stel_kab) ?>
   },{
    name: 'Lab Transmisi',
-   data: <?php echo json_encode($stel) ?>
+   data: <?php echo json_encode($stel_tra) ?>
   },{
    name: 'Lab CPE',
-   data: <?php echo json_encode($stel) ?>
+   data: <?php echo json_encode($stel_cpe) ?>
   },{
    name: 'Lab Energi',
-   data: <?php echo json_encode($stel) ?>
+   data: <?php echo json_encode($stel_ene) ?>
   },{
    name: 'Lab Kalibrasi',
    data: <?php echo json_encode($stel) ?>

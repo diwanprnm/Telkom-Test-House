@@ -10,6 +10,8 @@ use App\TrackerLog;
 use App\TrackerSessions;
 use App\StelSales;
 use App\Income;
+use App\STEL;
+use App\ExaminationLab;
 
 class TopDashboardController extends Controller
 {
@@ -111,6 +113,83 @@ class TopDashboardController extends Controller
             }
 			
 			for($i=0;$i<12;$i++){
+
+				$sum_stel_kab = 0;
+				$id_kab = ExaminationLab::where('name', 'like', '%kabel%')->select('id')->first();
+				$jml_stel_kab = StelSales::with(['sales_detail' => function ($query) use ($id_kab) {
+		            $query->with('stel')->whereHas('stel', function ($q) use ($id_kab) {
+		                return $q->where('type', $id_kab->id);
+		            })->get();
+		        }])
+		        ->whereYear('created_at', '=', $thisYear)
+		        ->whereMonth('created_at', '=', $i+1)
+		        ->get();
+
+		        foreach($jml_stel_kab as $item_sales){
+		        	if ($item_sales->sales_detail != []){
+			        	foreach($item_sales->sales_detail as $item){
+			        		$sum_stel_kab = $sum_stel_kab + $item->stel->price;
+			        	}
+			        }
+		        }
+
+		        $sum_stel_ene = 0;
+				$id_ene = ExaminationLab::where('name', 'like', '%energi%')->select('id')->first();
+				$jml_stel_ene = StelSales::with(['sales_detail' => function ($query) use ($id_ene) {
+		            $query->with('stel')->whereHas('stel', function ($q) use ($id_ene) {
+		                return $q->where('type', $id_ene->id);
+		            })->get();
+		        }])
+		        ->whereYear('created_at', '=', $thisYear)
+		        ->whereMonth('created_at', '=', $i+1)
+		        ->get();
+
+		        foreach($jml_stel_ene as $item_sales){
+		        	if ($item_sales->sales_detail != []){
+			        	foreach($item_sales->sales_detail as $item){
+			        		$sum_stel_ene = $sum_stel_ene + $item->stel->price;
+			        	}
+			        }
+		        }
+
+		        $sum_stel_tra = 0;
+				$id_tra = ExaminationLab::where('name', 'like', '%transmisi%')->select('id')->first();
+				$jml_stel_tra = StelSales::with(['sales_detail' => function ($query) use ($id_tra) {
+		            $query->with('stel')->whereHas('stel', function ($q) use ($id_tra) {
+		                return $q->where('type', $id_tra->id);
+		            })->get();
+		        }])
+		        ->whereYear('created_at', '=', $thisYear)
+		        ->whereMonth('created_at', '=', $i+1)
+		        ->get();
+
+		        foreach($jml_stel_tra as $item_sales){
+		        	if ($item_sales->sales_detail != []){
+			        	foreach($item_sales->sales_detail as $item){
+			        		$sum_stel_tra = $sum_stel_tra + $item->stel->price;
+			        	}
+			        }
+		        }
+
+		        $sum_stel_cpe = 0;
+				$id_cpe = ExaminationLab::where('name', 'like', '%cpe%')->select('id')->first();
+				$jml_stel_cpe = StelSales::with(['sales_detail' => function ($query) use ($id_cpe) {
+		            $query->with('stel')->whereHas('stel', function ($q) use ($id_cpe) {
+		                return $q->where('type', $id_cpe->id);
+		            })->get();
+		        }])
+		        ->whereYear('created_at', '=', $thisYear)
+		        ->whereMonth('created_at', '=', $i+1)
+		        ->get();
+
+		        foreach($jml_stel_cpe as $item_sales){
+		        	if ($item_sales->sales_detail != []){
+			        	foreach($item_sales->sales_detail as $item){
+			        		$sum_stel_cpe = $sum_stel_cpe + $item->stel->price;
+			        	}
+			        }
+		        }
+
 				$jml_stel = DB::select("
 					SELECT sum(total) AS jml
 					from stels_sales where payment_status = 1
@@ -158,6 +237,11 @@ class TopDashboardController extends Controller
 					;
 				");				
 				$chart['stel'][$i]=(float)$jml_stel[0]->jml;
+				$chart['stel_kab'][$i]=(float)$sum_stel_kab;
+				$chart['stel_ene'][$i]=(float)$sum_stel_ene;
+				$chart['stel_tra'][$i]=(float)$sum_stel_tra;
+				$chart['stel_cpe'][$i]=(float)$sum_stel_cpe;
+
 				$chart['device'][$i]=(float)$jml_device[0]->jml;
 				$chart['device_qa'][$i] = (float)$jml_device_qa;
 				$chart['device_vt'][$i] = (float)$jml_device_vt;
@@ -171,6 +255,10 @@ class TopDashboardController extends Controller
                 ->with('tahun', $thisYear)
                 ->with('data', $data)
                 ->with('stel', $chart['stel'])
+                ->with('stel_kab', $chart['stel_kab'])
+                ->with('stel_ene', $chart['stel_ene'])
+                ->with('stel_tra', $chart['stel_tra'])
+                ->with('stel_cpe', $chart['stel_cpe'])
                 ->with('device', $chart['device'])
                 ->with('device_qa', $chart['device_qa'])
                 ->with('device_vt', $chart['device_vt'])
