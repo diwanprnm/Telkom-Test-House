@@ -9,7 +9,7 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Http\Requests;
 
 use App\STEL;
-use App\examinationLab;
+use App\ExaminationLab;
 use App\Logs;
 
 use Auth;
@@ -108,7 +108,7 @@ class STELController extends Controller
      */
     public function create()
     {
-        $examLab = examinationLab::all();
+        $examLab = ExaminationLab::all();
         return view('admin.STEL.create')
             ->with('examLab',$examLab)
         ;
