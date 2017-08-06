@@ -707,6 +707,11 @@
 			}
 		});
 	});
+	
+	var strUser = "{{ $userData->referensi_perangkat }}";
+	var stel = strUser.split(',');
+	$('.chosen-select').val(stel);
+	$(".chosen-select").trigger("chosen:updated");
 	$(".chosen-select").chosen({width: "95%"}); 
 	$(".upload_later, #next").on("click",function(){
 		formWizard.steps("next"); 
