@@ -758,10 +758,10 @@
 			}
 		});
 	});
-	// {{ $userData->referensi_perangkat }}
-	// var strUser = "asd,asds,qweasdasdasdsada";
-	// var res = strUser.split(',');
-	$('.chosen-select').val(['asd','asds','qweasdasdasdsada']);
+	
+	var strUser = "{{ $userData->referensi_perangkat }}";
+	var stel = strUser.split(',');
+	$('.chosen-select').val(stel);
 	$(".chosen-select").trigger("chosen:updated");
 	$(".chosen-select").chosen({width: "95%"}); 
 	$(".upload_later, #next").on("click",function(){
