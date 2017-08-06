@@ -775,6 +775,8 @@
 		var strUser = e.options[e.selectedIndex].text;
 		var res = strUser.split('||');
 		$('#f1-nama-perangkat').val(res[1]);
+		var stel = $(".chosen-select").val().join(",");
+		$('#f1-referensi-perangkat').val(stel);
 	});
  </script>
 @endsection

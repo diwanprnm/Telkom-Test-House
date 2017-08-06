@@ -36,6 +36,7 @@
 	        @if (Session::get('error'))
 				<script>
 					window.close();
+				    window.opener.location.reload();
 				</script>
 				<div class="alert alert-error alert-danger">
 					{{ Session::get('error') }}
@@ -45,6 +46,7 @@
 			@if (Session::get('message'))
 				<script>
 					window.close();
+					window.opener.location.reload();
 				</script>
 				<div class="alert alert-info">
 					{{ Session::get('message') }}
