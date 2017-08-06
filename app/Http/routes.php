@@ -3394,6 +3394,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::get('/downloadfakturstel/{id}', 'SalesController@downloadfakturstel');
 
 	Route::resource('/spk', 'SPKController');
+	Route::resource('/faq', 'FaqController');
 
 });
 	Route::get('/adm_dashboard_autocomplete/{query}', 'DashboardController@autocomplete')->name('adm_dashboard_autocomplete');

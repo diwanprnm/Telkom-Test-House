@@ -7,7 +7,7 @@
 		<section id="page-title">
 			<div class="row">
 				<div class="col-sm-8">
-					<h1 class="mainTitle">Edit Role</h1>
+					<h1 class="mainTitle">Edit FAQ</h1>
 				</div>
 				<ol class="breadcrumb">
 					<li>
@@ -26,20 +26,29 @@
 		<!-- start: RESPONSIVE TABLE -->
 		<div class="container-fluid container-fullw bg-white">
 			<div class="col-md-12">
-				{!! Form::open(array('url' => 'admin/role/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data')) !!}
+				{!! Form::open(array('url' => 'admin/faq/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data')) !!}
 					{!! csrf_field() !!}
     				<fieldset>
 						<legend>
-							Edit Role
+							Edit FAQ
 						</legend>
 						<div class="row">
 						 
 	                        <div class="col-md-12">
 								<div class="form-group">
 									<label>
-										Nama Role *
+										Pertanyaan *
 									</label>
-									<input type="text" name="name" class="form-control" placeholder="Nama Role" value="{{$data->name}}" required>
+									<input type="text" name="question" class="form-control" placeholder="Pertanyaan" value="{{$data->question}}" required>
+								</div>
+							</div>
+
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										Jawaban *
+									</label>
+									<input type="text" name="answer" class="form-control" placeholder="Jawaban" value="{{$data->answer}}" required>
 								</div>
 							</div>
 	                      
@@ -47,7 +56,7 @@
 	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
 	                                Submit
 	                            </button>
-	                            <a style=" color:white !important;" href="{{URL::to('/admin/role')}}">
+	                            <a style=" color:white !important;" href="{{URL::to('/admin/faq')}}">
 									<button type="button" class="btn btn-wide btn-red btn-squared btn-marginleft pull-left">
 									Cancel
 									</button>
