@@ -177,7 +177,7 @@ class HomeController extends Controller
 				AND ss.payment_status = 1 AND c.id = '".$currentUser->company->id."'";
 				$data_stels = DB::select($query_stels);				
 			}else{
-				$query_stels = "SELECT code as stel, name as device_name FROM stels ORDER BY name";
+				$query_stels = "SELECT code as stel, name as device_name FROM stels WHERE stel_type = 1 AND is_active = 1 ORDER BY name";
 				$data_stels = DB::select($query_stels);
 			}
 			

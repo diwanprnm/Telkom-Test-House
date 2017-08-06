@@ -520,7 +520,7 @@
 				$("#f3-preview-2").html($("#f1-merek-perangkat").val());
 				$("#f3-preview-3").html($("#f1-model-perangkat").val());
 				$("#f3-preview-4").html($("#f1-kapasitas-perangkat").val());
-				$("#f3-preview-5").html($("#f1-referensi-perangkat").val());
+				$("#f3-preview-5").html($(".chosen-select").val());
 				$("#f3-preview-6").html($("#f1-pembuat-perangkat").val());
 				$("#f3-preview-7").html($("#f1-serialNumber-perangkat").val());
 
@@ -805,6 +805,7 @@
 		var strUser = e.options[e.selectedIndex].text;
 		var res = strUser.split('||');
 		$('#f1-nama-perangkat').val(res[1]);
+		$('#f1-referensi-perangkat').val($('.chosen-select').val());
 	});
  </script>
 @endsection
