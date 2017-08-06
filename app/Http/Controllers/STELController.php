@@ -46,7 +46,7 @@ class STELController extends Controller
             $category = '';
             $status = -1;
 
-            $examLab = examinationLab::all();
+            $examLab = ExaminationLab::all();
             
             if ($search != null){
                 $stels = STEL::whereNotNull('created_at')
@@ -200,7 +200,7 @@ class STELController extends Controller
      */
     public function edit($id)
     {
-        $examLab = examinationLab::all();
+        $examLab = ExaminationLab::all();
         $stel = STEL::find($id);
 
         return view('admin.STEL.edit')
