@@ -404,6 +404,9 @@
 					<a href="{{URL::to('admin/examination/revisi/'.$data->id)}}">
                     	<button type="button" class="btn btn-wide btn-red btn-squared pull-left">Edit</button>
                     </a>
+                    <a class="btn btn-wide btn-primary btn-margin" href="{{URL::to('admin/examination/'.$data->id.'/edit')}}">
+                    	<button type="button" class="btn btn-wide btn-red btn-squared pull-left">Change Status</button>
+                    </a>
 					@if($is_super == '1')
 						<a href="{{URL::to('admin/examination/harddelete/'.$data->id)}}">
 							<button type="button" class="btn btn-wide btn-red btn-squared pull-right">Delete</button>
