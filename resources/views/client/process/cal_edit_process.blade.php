@@ -132,7 +132,7 @@
 											<input type="radio" name="jns_perusahaan"   id="rad-jns_perusahaan2" value="Pabrikan">
 											<input type="radio" name="jns_perusahaan"  id="rad-jns_perusahaan3" value="Perorangan"> -->
  
-											<input type="radio" name="jns_perusahaan" value="Agen" placeholder="{{ trans('translate.service_company_agent') }}" checked>
+											<input type="radio" name="jns_perusahaan" value="Agen" placeholder="{{ trans('translate.service_company_agent') }}">
 											<input type="radio" name="jns_perusahaan" value="Pabrikan" placeholder="{{ trans('translate.service_company_branch') }}">
 											<input type="radio" name="jns_perusahaan" value="Perorangan" placeholder="{{ trans('translate.service_company_individual') }}">
 										</div>
@@ -165,15 +165,15 @@
 
 					            <h2>Third Step</h2>
 					            <fieldset> 
+										<div class="form-group"> 
+											<input type="radio" name="lokasi_pengujian" value="0" placeholder="{{ trans('translate.service_lab_testing') }}">
+											<input type="radio" name="lokasi_pengujian" value="1" placeholder="{{ trans('translate.service_loc_testing') }}">
+										</div>
 										<div class="form-group txt-ref-perangkat">
 											<label for="f1-referensi-perangkat">{{ trans('translate.service_device_test_reference') }} *</label>
-											<select class="chosen-select" id="f1-referensi-perangkat" name="f1-referensi-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}"> 
+											<select multiple class="chosen-select" id="f1-referensi-perangkat" name="f1-referensi-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}"> 
 												@foreach($data_stels as $item)
-													@if($item->stel == $userData->referensi_perangkat)
-														<option value="{{ $item->stel }}" selected>{{ $item->stel }} || {{ $item->device_name }}</option>
-													@else
-														<option value="{{ $item->stel }}">{{ $item->stel }} || {{ $item->device_name }}</option>
-													@endif
+													<option value="{{ $item->stel }}">{{ $item->stel }} || {{ $item->device_name }}</option>
 												@endforeach
 											</select>
 										</div>
@@ -258,13 +258,26 @@
 											<input class="data-upload-berkas f1-file-ref-uji" id="fileInput-ref-uji" name="fuploadrefuji" type="file" accept="application/pdf,image/*" >
 
 											<input type="hidden" name="hide_ref_uji_file" class="required" id="hide_ref_uji_file" value="{{$userData->fileref_uji}}"/>
-											<a id="sertifikat-file" class="btn btn-link" style="color:black !important;" >{{$userData->fileref_uji}}</a>
+											<a id="ref-uji-file" class="btn btn-link" style="color:black !important;" >{{$userData->fileref_uji}}</a>
 										  
 											<div id="ref-uji-file"></div>
 											<div id="attachment-file">
 												*ukuran file maksimal 2 mb
 											</div>
 										</div>  
+										<div class="dv-dll">
+											<div class="form-group col-xs-12">
+												<label>{{ trans('translate.service_upload_another_file') }}</label>
+												<input class="data-upload-berkas f1-file-dll" id="fileInput-dll" name="fuploaddll" type="file" accept="application/pdf,image/*" >
+												<input type="hidden" name="hide_dll_file" id="hide_dll_file" value="{{$userData->filedll}}"/>
+												<a id="dll-file" class="btn btn-link" style="color:black !important;" >{{$userData->filedll}}</a>
+												
+												<div id="dll-file"></div>
+												<div id="attachment-file">
+													*ukuran file maksimal 2 mb
+												</div>
+											</div>
+										</div> 
 					            </fieldset>
 
 					            <h2>Forth Step</h2>
@@ -299,7 +312,7 @@
 												<td colspan="6"> <div id="f1-preview-5">{{$userData->emailPemohon}}</div></td>
 											</tr>
 										</table>
-										<h3>{{ trans('translate.service_company') }}</h3>
+										<h3 id="company_type"></h3>
 										<div id="f2-preview-6"></div>
 										<table class="table table-striped" id="preview-field">
 											<tr>
@@ -329,7 +342,11 @@
 										</table>
 										<h3 id="f5-jns-pengujian" class="f5-jns-pengujian">{{ trans('translate.service_preview_exam_type') }} : CAL</h3>
 										<br>
-										<h3>{{ trans('translate.service_device') }}</h3>
+										@if($userData->is_loc_test == 0)
+											<h3 class="telkom_test">{{ trans('translate.service_device') }} ({{ trans('translate.service_lab_testing') }})</h3>
+										@else
+											<h3 class="location_test">{{ trans('translate.service_device') }} ({{ trans('translate.service_loc_testing') }})</h3>
+										@endif
 										<table class="table table-striped" id="preview-field">
 											<tr>
 												<td>{{ trans('translate.service_device_equipment') }}</td>
@@ -406,7 +423,11 @@
 												<td> : </td>
 												<td> <div id="f4-preview-file-ref-uji"></div></td>
 											</tr>
-											 
+											<tr>
+												<td>{{ trans('translate.service_upload_another_file') }}</td>
+												<td> : </td>
+												<td> <div id="f4-preview-12"></div></td>
+											</tr>
 										</table> 
 					            </fieldset>
 					             <h2>Forth Step</h2>
@@ -414,6 +435,8 @@
 					            	<div class="form-group">
 											<label>{{ trans('translate.service_upload_now') }}<span class="text-danger">*</span></label>
 											<input class="data-upload-detail-pengujian" id="fileInput-detail-pengujian" name="fuploaddetailpengujian" type="file" accept="application/pdf,image/*">
+											<input type="hidden" name="hide_attachment_file_edit" id="hide_attachment_file" value="{{ $userData->attachment }}"/>
+											<a id="attachments-file" class="btn btn-link" style="color:black !important;" >{{ $userData->attachment }}</a>
 											<div id="attachment-file"></div>
 											<button type="button" class="button button3d btn-green upload-form">{{ trans('translate.service_upload_now') }}</button>
 											<div id="attachment-file">
@@ -504,6 +527,11 @@
 				if(prinsipalFile === "") prinsipalFile = $("#hide_prinsipal_file").val();
 
 				$("#f4-preview-8").html((prinsipalFile));
+				
+				var dllFile = $("#fileInput-dll").val();
+				if(dllFile === "") dllFile = $("#hide_dll_file").val();
+
+				$("#f4-preview-12").html((dllFile)); 
 	       	}  
 	        if(newIndex == 5){
 				if($('#hide_cekSNjnsPengujian').val() == 1){
@@ -601,48 +629,74 @@
 	});
   	$('ul[role="tablist"]').hide();  
 
-
+$("#siupp-file").click(function() {
+		var file = $('#hide_siupp_file').val();
+		downloadFileCompany(file);
+	});
+	
 	$("#sertifikat-file").click(function() {
 		var file = $('#hide_sertifikat_file').val();
-		downloadFile(file);
+		downloadFileCompany(file);
 	});
 	
 	$("#npwp-file").click(function() {
 		var file = $('#hide_npwp_file').val();
+		downloadFileCompany(file);
+	});
+	
+	$("#ref-uji-file").click(function() {
+		var file = $('#hide_ref_uji_file').val();
 		downloadFile(file);
 	});
-
-	$("#siupp-file").click(function() {
-			var file = $('#hide_siupp_file').val();
-			downloadFile(file);
-		});
-	$('.upload-form').click(function(){
-		$.ajax({
-			url : "../../uploadPermohonan",
-			data:new FormData($("#form-permohonan")[0]),
-			// dataType:'json', 
-			type:'post',
-			processData: false,
-			contentType: false,
-			beforeSend: function(){
-				$("body").addClass("loading");  
-			},
-			success:function(response){
-				$("body").removeClass("loading");  
-				formWizard.steps("next"); 
-			},
-			error:function(response){
-				$("body").removeClass("loading");   
-			}
-		});
+	
+	$("#prinsipal-file").click(function() {
+		var file = $('#hide_prinsipal_file').val();
+		downloadFile(file);
 	});
-  
-	$(".upload_later, #next").on("click",function(){
-		formWizard.steps("next"); 
+	
+	$("#sp3-file").click(function() {
+		var file = $('#hide_sp3_file').val();
+		downloadFile(file);
 	});
+	
+	$("#dll-file").click(function() {
+		var file = $('#hide_dll_file').val();
+		downloadFile(file);
+	});
+	
+	$("#attachments-file").click(function() {
+		var file = $('#hide_attachment_file').val();
+		downloadFile(file);
+	});
+	
 	function downloadFile(file){
+		var path = "{{ URL::asset('media/examination') }}";
+		var id_exam = $('#hide_exam_id').val();
+		//Get file name from url.
+		var url = path+'/'+id_exam+'/'+file;
+		var filename = url.substring(url.lastIndexOf("/") + 1).split("?")[0];
+		var xhr = new XMLHttpRequest();
+		xhr.responseType = 'blob';
+		xhr.onload = function() {
+			if (this.status === 404) {
+			   // not found, add some error handling
+			   alert("File Tidak Ada!");
+			   return false;
+			}
+			var a = document.createElement('a');
+			a.href = window.URL.createObjectURL(xhr.response); // xhr.response is a blob
+			a.download = filename; // Set the file name.
+			a.style.display = 'none';
+			document.body.appendChild(a);
+			a.click();
+			delete a;
+		};
+		xhr.open('GET', url);
+		xhr.send();
+	}
+	
+	function downloadFileCompany(file){
 		var path = "{{ URL::asset('media/company') }}";
-		// var id_user = $('#hide_id_user').val();
 		var company_id = $('#hide_company_id').val();
 		//Get file name from url.
 		var url = path+'/'+company_id+'/'+file;
@@ -666,6 +720,32 @@
 		xhr.open('GET', url);
 		xhr.send();
 	}
+	
+	$('.upload-form').click(function(){
+		$.ajax({
+			url : "../../uploadPermohonan",
+			data:new FormData($("#form-permohonan")[0]),
+			// dataType:'json', 
+			type:'post',
+			processData: false,
+			contentType: false,
+			beforeSend: function(){
+				$("body").addClass("loading");  
+			},
+			success:function(response){
+				$("body").removeClass("loading");  
+				formWizard.steps("next"); 
+			},
+			error:function(response){
+				$("body").removeClass("loading");   
+			}
+		});
+	});
+  
+	$(".chosen-select").chosen({width: "95%"}); 
+	$(".upload_later, #next").on("click",function(){
+		formWizard.steps("next"); 
+	});
 
 	$('.datepicker').datepicker({
     	dateFormat: 'yy-mm-dd', 
@@ -674,6 +754,23 @@
 	    showButtonPanel: true
 
 	});
+	
+	$('input[name="jns_perusahaan"][value="' + "{{$userData->jnsPerusahaan}}" + '"]').prop('checked', true);
+	$('#company_type').html("{{ trans('translate.service_company') }} ({{$userData->jnsPerusahaan}})");
+	$('input[type=radio][name=jns_perusahaan]').change(function() {
+		$('#company_type').html("{{ trans('translate.service_company') }} ("+this.value+")");
+    });
+	$('input[name="lokasi_pengujian"][value="' + "{{$userData->is_loc_test}}" + '"]').prop('checked', true);
+	$('input[type=radio][name=lokasi_pengujian]').change(function() {
+        if (this.value == '1') {
+           $(".location_test").show();
+           $(".telkom_test").hide();
+        }
+        else {
+			$(".telkom_test").show();
+            $(".location_test").hide();
+        }
+    });
 </script>
 <script src="{{url('vendor/chosen/chosen.jquery.js')}}" type="text/javascript"></script> 
   <script type="text/javascript">

@@ -161,9 +161,13 @@
 
 					            <h2>Third Step</h2>
 					            <fieldset> 
+										<div class="form-group"> 
+											<input type="radio" name="lokasi_pengujian" value="0" placeholder="{{ trans('translate.service_lab_testing') }}" checked>
+											<input type="radio" name="lokasi_pengujian" value="1" placeholder="{{ trans('translate.service_loc_testing') }}">
+										</div>
 										<div class="form-group txt-ref-perangkat">
 											<label for="f1-referensi-perangkat">{{ trans('translate.service_device_test_reference') }} *</label>
-											<select  class="chosen-select" id="f1-referensi-perangkat" name="f1-referensi-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}"> 
+											<select multiple class="chosen-select" id="f1-referensi-perangkat" name="f1-referensi-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}"> 
 												@foreach($data_stels as $item)
 													<option value="{{ $item->stel }}">{{ $item->stel }} || {{ $item->device_name }}</option>
 												@endforeach
@@ -329,6 +333,14 @@
 												*ukuran file maksimal 2 mb
 											</div>
 										</div> 
+										<div class="form-group col-xs-12">
+											<label>{{ trans('translate.service_upload_another_file') }}</label>
+											<input class="data-upload-berkas f1-file-dll" id="fileInput-dll" name="fuploaddll" type="file" accept="application/pdf,image/*" >
+											<div id="dll-file"></div>
+											<div id="attachment-file">
+												*ukuran file maksimal 2 mb
+											</div>
+										</div>
 					            </fieldset>
 
 					            <h2>Forth Step</h2>
@@ -363,7 +375,7 @@
 												<td colspan="6"> <div id="f1-preview-5">{{$userData->emailPemohon}}</div></td>
 											</tr>
 										</table>
-										<h3>{{ trans('translate.service_company') }}</h3>
+										<h3 id="company_type"></h3>
 										<div id="f2-preview-6"></div>
 										<table id="preview-field" class="table table-striped">
 											<tr>
@@ -393,7 +405,8 @@
 										</table>
 										<h3 id="f5-jns-pengujian" class="f5-jns-pengujian">{{ trans('translate.service_preview_exam_type') }} : VT</h3>
 										<br>
-										<h3>{{ trans('translate.service_device') }}</h3>
+										<h3 class="telkom_test">{{ trans('translate.service_device') }} ({{ trans('translate.service_lab_testing') }})</h3>
+										<h3 class="location_test">{{ trans('translate.service_device') }} ({{ trans('translate.service_loc_testing') }})</h3>
 										<table id="preview-field" class="table table-striped">
 											<tr>
 												<td>{{ trans('translate.service_device_equipment') }}</td>
@@ -470,6 +483,11 @@
 												<td> : </td>
 												<td> <div id="f4-preview-file-ref-uji"></div></td>
 											</tr> 
+											<tr>
+												<td>{{ trans('translate.service_upload_another_file') }}</td>
+												<td> : </td>
+												<td> <div id="f4-preview-12"></div></td>
+											</tr>
 										</table>
 										 
 					            </fieldset>
@@ -561,6 +579,7 @@
 				$("#f4-preview-11").html($("#hide_npwp_file").val());
 				$("#f4-preview-file-ref-uji").html($(".f1-file-ref-uji").val());
 				$("#f4-preview-8").html($(".f1-file-prinsipal").val());
+				$("#f4-preview-12").html($(".f1-file-dll").val());
 	       	}  
 	        if(newIndex == 5){
 				if($('#hide_cekSNjnsPengujian').val() == 1){
@@ -726,6 +745,23 @@
 	    showButtonPanel: true
 
 	});
+	
+	$('#company_type').html("{{ trans('translate.service_company') }} (Agen)");
+	$('input[type=radio][name=jns_perusahaan]').change(function() {
+		$('#company_type').html("{{ trans('translate.service_company') }} ("+this.value+")");
+    });
+	$(".telkom_test").show();
+    $(".location_test").hide();
+	$('input[type=radio][name=lokasi_pengujian]').change(function() {
+        if (this.value == '1') {
+           $(".location_test").show();
+           $(".telkom_test").hide();
+        }
+        else {
+			$(".telkom_test").show();
+            $(".location_test").hide();
+        }
+    });
 </script>
 <script src="{{url('vendor/chosen/chosen.jquery.js')}}" type="text/javascript"></script>
 <script type="text/javascript">
