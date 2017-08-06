@@ -11,6 +11,8 @@
 |
 */
 // use Anouar\Fpdf\Fpdf as FPDF;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Client;
 
 Route::get('/clear-cache', function() {
     $exitCode = Artisan::call('cache:clear');
@@ -2125,6 +2127,16 @@ Route::get('cetakPermohonan', function(Illuminate\Http\Request $request){
 });
 
 Route::get('cetakKontrak', function(Illuminate\Http\Request $request){
+	/*$client = new Client([
+		'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+		// Base URI is used with relative requests
+		'base_uri' => config("app.url_api_bsp"),
+		// You can set any number of default request options.
+		'timeout'  => 60.0,
+	]);
+		$res_user_info = $client->get('user/userInfo')->getBody();
+		$user_info = json_decode($res_user_info);*/
+
 	// Instanciation of inherited class
 		$data = $request->session()->get('key_contract');
 	$pdf = new PDF_MC_Table();
@@ -2376,7 +2388,7 @@ Route::get('cetakKontrak', function(Illuminate\Http\Request $request){
 	$pdf->Cell(63, 4, 'Laboratorium', 1, 0, 'C');
 	$pdf->Cell(63, 4, 'Kastamer', 1, 1, 'C');
 	$pdf->setX(10.00125);
-	$pdf->drawTextBox('(...............................)', 63, 18, 'C', 'B', 1);
+	$pdf->drawTextBox('(SONTANG HUTAPEA)', 63, 18, 'C', 'B', 1);
 	$pdf->setXY(73.00125,$pdf->getY()-18);
 	$pdf->drawTextBox('(...............................)', 63, 18, 'C', 'B', 1);
 	$pdf->setXY(136.00125,$pdf->getY()-18);
@@ -3734,8 +3746,8 @@ Route::get('/cetakKepuasanKonsumen', array('as' => 'cetakKepuasanKonsumen', func
 
 
 		$pdf->Ln(8); 
-		$pdf->SetWidths(array(0.00125,10,100,30,50));
-		$pdf->SetAligns(array('L','C','L','C','C')); 
+		$pdf->SetWidths(array(0.00125,10,100,30,30));
+		$pdf->SetAligns(array('L','C','C','C','C')); 
 		$pdf->SetFont('helvetica','',8);
  		$pdf->RowRect(array('','NO','PERTANYAAN','TINGKAT KEPENTINGAN','TINGKAT KEPUASAN')); 
 	 	
@@ -3763,7 +3775,9 @@ Route::get('/cetakKepuasanKonsumen', array('as' => 'cetakKepuasanKonsumen', func
 		$pdf->Cell(10,4,"Kritik dan Saran Anda untuk meningkatkan kualitas pelayanan kami:",0,0,'L');
 		$pdf->Ln(6); 
 		$pdf->setX(10.00125); 
- 		$pdf->drawTextBox('Komentar', 120, 18, 'L', 'T', 1);
+		$pdf->SetWidths(array(0.00125,170));
+		$pdf->SetAligns(array('L','L')); 
+		$pdf->RowRect(array('','')); 
 
 		$pdf->Output();
 		exit;
@@ -3787,8 +3801,8 @@ Route::get('/cetakComplaint', array('as' => 'cetakComplaint', function(
 	$pdf->Cell(40, 15, '', 1, 0, 'C'); 
 
 	$y2= $pdf->getY();
-	$pdf->setXY(10.00125,$y2+15);
-	$pdf->Cell(140, 40, 'Customer Name & Address', 1, 0, 'L');
+	$pdf->setXY(10.00125,$y2);
+	$pdf->Cell(140, 40, 'Customer Name and Address', 1, 0, 'L');
 	$pdf->Cell(40, 40, '', 1, 0, 'C'); 
 
 	$y3 = $pdf->getY();
