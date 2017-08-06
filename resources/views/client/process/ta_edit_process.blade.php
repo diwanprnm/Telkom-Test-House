@@ -350,11 +350,8 @@
 										</table>
 										<h3 id="f5-jns-pengujian" class="f5-jns-pengujian">{{ trans('translate.service_preview_exam_type') }} : TA</h3>
 										<br>
-										@if($userData->is_loc_test == 0)
-											<h3 class="telkom_test">{{ trans('translate.service_device') }} ({{ trans('translate.service_lab_testing') }})</h3>
-										@else
-											<h3 class="location_test">{{ trans('translate.service_device') }} ({{ trans('translate.service_loc_testing') }})</h3>
-										@endif
+										<h3 class="telkom_test">{{ trans('translate.service_device') }} ({{ trans('translate.service_lab_testing') }})</h3>
+										<h3 class="location_test">{{ trans('translate.service_device') }} ({{ trans('translate.service_loc_testing') }})</h3>
 										<table class="table table-striped" id="preview-field">
 											<tr>
 												<td>{{ trans('translate.service_device_equipment') }}</td>
@@ -782,6 +779,13 @@
 		$('#company_type').html("{{ trans('translate.service_company') }} ("+this.value+")");
     });
 	$('input[name="lokasi_pengujian"][value="' + "{{$userData->is_loc_test}}" + '"]').prop('checked', true);
+	if("{{$userData->is_loc_test}}" == 0){
+		$(".location_test").show();
+        $(".telkom_test").hide();
+	}else{
+		$(".telkom_test").show();
+        $(".location_test").hide();
+	}
 	$('input[type=radio][name=lokasi_pengujian]').change(function() {
         if (this.value == '1') {
            $(".location_test").show();
