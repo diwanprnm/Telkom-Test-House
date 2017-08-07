@@ -171,12 +171,12 @@
 	                      <h4>Notification</h4>
 	                    </div> 
 
-                      <?php
-                      foreach ($notification_data as $notif) { ?> 
+                      <?php 
+                      foreach ($notification_data_user as $notif) { ?> 
                       <div class="top-notification-items">
                         <div class="top-notification-item clearfix">
                           <div class="top-notification-item-desc">
-                            <a data-id="{{$notif['id']}}" data-url="{{$notif['url']}}" class="notifData">{{$notif['message']}}</a> 
+                            <a data-id="<?php echo $notif['id'];?>" data-url="{{$notif['url']}}" class="notifData">{{$notif['message']}}</a> 
                           </div>
                         </div>
                       </div>
