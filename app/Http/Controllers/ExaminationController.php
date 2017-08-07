@@ -357,7 +357,7 @@ class ExaminationController extends Controller
 			$exam->is_loc_test = $request->input('is_loc_test');
 			if($status == 1){
 				/* push notif*/ 
-					$data= array( 
+				$data= array( 
 	                "from"=>"admin",
 	                "to"=>$exam->created_by,
 	                "message"=>"Registrasi Completed",
@@ -366,9 +366,9 @@ class ExaminationController extends Controller
 	                "created_at"=>date("Y-m-d H:i:s"),
 	                "updated_at"=>date("Y-m-d H:i:s")
                 );
-				  $notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
-			      $notification->from = $data['from'];
+				$notification = new NotificationTable();
+                $notification->id = Uuid::uuid4();
+			    $notification->from = $data['from'];
 			      $notification->to = $data['to'];
 			      $notification->message = $data['message'];
 			      $notification->url = $data['url'];
