@@ -43,12 +43,12 @@ class NotificationController extends Controller
     }
 
     public function updateNotif(Request $request) {
-        $data = NotificationTable::find($request->notif_id);
+        $data = NotificationTable::find($request->notif_id); 
         $respons_result = array();
         if($data){
             $data->is_read = 1;
             $data->update();    
-            $respons_result['data'] = NotificationTable::where("is_read",0)->where("to","admin")->orderBy("created_at","desc")->get();
+            $respons_result['data'] = "";
             $respons_result['status'] = true;
             $respons_result['msg'] = "";
         }else{

@@ -186,7 +186,7 @@ class EquipmentController extends Controller
               "from"=>"admin",
               "to"=>$examination->created_by,
               "message"=>"Perangkat yang akan diuji, sudah masuk Gudang Urel",
-              "url"=>"pengujian/".$equipment->examination_id,
+              "url"=>"pengujian/".$equipment->examination_id."/detail",
               "is_read"=>0,
               "created_at"=>date("Y-m-d H:i:s"),
               "updated_at"=>date("Y-m-d H:i:s")
