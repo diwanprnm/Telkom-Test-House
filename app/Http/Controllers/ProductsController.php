@@ -126,6 +126,10 @@ class ProductsController extends Controller
 
     public function pembayaranstel(Request $request){
         $currentUser = Auth::user();
+     
+        $jml_pembayaran = str_replace(".",'',$request->input('jml-pembayaran'));
+        $jml_pembayaran = str_replace("Rp",'',$jml_pembayaran);
+        
         $user_name = ''.$currentUser['attributes']['name'].'';
         $user_email = ''.$currentUser['attributes']['email'].'';
         $path_file = public_path().'/media/stel/'.$request->input('stelsales_id').'';
@@ -158,7 +162,7 @@ class ProductsController extends Controller
                 $id = $request->input('stelsales_id');
                 $STELSales = STELSales::find($id);
                 $STELSales->payment_status = 2;
-                $STELSales->cust_price_payment = $request->input('jml-pembayaran');
+                $STELSales->cust_price_payment = $jml_pembayaran;
                 $STELSales->save();
 
                  $data= array( 
