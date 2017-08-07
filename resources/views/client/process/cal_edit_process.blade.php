@@ -171,7 +171,7 @@
 										</div>
 										<div class="form-group txt-ref-perangkat">
 											<label for="f1-referensi-perangkat">{{ trans('translate.service_device_test_reference') }} *</label>
-											<select multiple class="chosen-select" id="f1-referensi-perangkat" name="f1-referensi-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}"> 
+											<select multiple class="chosen-select" id="f1-referensi-perangkat" name="f1-referensi-perangkat[]" placeholder="{{ trans('translate.service_device_test_reference') }}"> 
 												@foreach($data_stels as $item)
 													<option value="{{ $item->stel }}">{{ $item->stel }} || {{ $item->device_name }}</option>
 												@endforeach
@@ -504,7 +504,9 @@
 				$("#f3-preview-2").html($("#f1-merek-perangkat").val());
 				$("#f3-preview-3").html($("#f1-model-perangkat").val());
 				$("#f3-preview-4").html($("#f1-kapasitas-perangkat").val());
-				$("#f3-preview-5").html($("#f1-referensi-perangkat").val());
+					var stel = $(".chosen-select").val().join(",");
+				$("#f3-preview-5").html(stel);
+				// $("#f3-preview-5").html($("#f1-referensi-perangkat").val());
 				$("#f3-preview-6").html($("#f1-pembuat-perangkat").val());
 				$("#f3-preview-7").html($("#f1-serialNumber-perangkat").val());
 
@@ -787,8 +789,6 @@ $("#siupp-file").click(function() {
 		var strUser = e.options[e.selectedIndex].text;
 		var res = strUser.split('||');
 		$('#f1-nama-perangkat').val(res[1]);
-		var stel = $(".chosen-select").val().join(",");
-		$('#f1-referensi-perangkat').val(stel);
 	});
  </script>
 @endsection

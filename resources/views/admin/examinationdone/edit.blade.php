@@ -991,6 +991,26 @@
 					</fieldset>
 				{!! Form::close() !!}
 				
+					{!! Form::open() !!}
+					@if(count($data->questioner)>0)
+						<fieldset>
+							<legend>
+								Feedback & Complaint
+							</legend>
+							<div class="col-md-6">
+								<div class="form-group">
+									<a href="{{URL::to('/cetakKepuasanKonsumen/'.$data->id)}}" target="_blank"> Download Feedback</a>
+								</div>
+							</div>	
+							<div class="col-md-6">
+								<div class="form-group">
+									<a href="{{URL::to('/cetakComplaint/'.$data->id)}}" target="_blank"> Download Complaint</a>
+								</div>
+							</div>	
+						</fieldset>
+					@endif
+					{!! Form::close() !!}
+
 				@if($data->examination_type_id !='2' && $data->examination_type_id !='3' && $data->examination_type_id !='4')
 					{!! Form::open() !!}
 						<fieldset>
@@ -1100,17 +1120,6 @@
 						</fieldset>
 					{!! Form::close() !!}
 					
-					{!! Form::open() !!}
-						<fieldset>
-							<legend>
-								Feedback
-							</legend>
-							<div class="form-group">
-								<a href="{{URL::to('/cetakKepuasanKonsumen')}}" target="_blank"> Download Feedback</a>
-							</div>
-						</fieldset>
-					{!! Form::close() !!}
-
 					{!! Form::open() !!}
 						<fieldset>
 							<legend>

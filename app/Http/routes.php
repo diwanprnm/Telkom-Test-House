@@ -3643,10 +3643,9 @@ array('as' => 'cetakBuktiPenerimaanPerangkat', function(
 	}
 ));
 
-Route::get('/cetakKepuasanKonsumen', array('as' => 'cetakKepuasanKonsumen', function(
-	Illuminate\Http\Request $request, $kode_barang = null, $company_name = null, $company_address = null, $company_phone = null, $company_fax = null, 
-	$device_name = null, $device_mark = null, $device_manufactured_by = null, $device_model = null , $device_serial_number = null, 
-	$exam_type = null, $exam_type_desc = null) {
+Route::get('/cetakKepuasanKonsumen/{id}', 'ExaminationDoneController@cetakKepuasanKonsumen');
+Route::get('/cetakKuisioner', array('as' => 'cetakKuisioner', function(Illuminate\Http\Request $request) {
+	$questioner = $request->session()->pull('key_exam_for_questioner');
 	$pdf = new PDF_MC_TablesKonsumen(); 
 	 
 	// $pdf->AliasNbPages();
@@ -3666,19 +3665,14 @@ Route::get('/cetakKepuasanKonsumen', array('as' => 'cetakKepuasanKonsumen', func
 		$y = $pdf->getY(); 
 		$pdf->SetFont('helvetica','',8);
 		$pdf->setXY(10.00125,$y + 1);
-		$pdf->SetFont('','U');
-		$pdf->Cell(10,5,"Nama Responden",0,0,'L');
-		$pdf->SetWidths(array(0.00125,40,45,50));
-		$pdf->Row(array("","",":",""));
+		$pdf->SetWidths(array(0.00125,40,3,50));
+		$pdf->Row(array("","Nama Responden",":",urldecode($questioner[0]->user->name)));
 		$y2 = $pdf->getY();
-		$pdf->setXY(110.00125,$y + 1);
-		$pdf->SetFont('','U');
-		$pdf->Cell(10,5,"Jenis Pengujian",0,0,'L');
-		$pdf->SetWidths(array(0.00125,135,140,50));
-		$pdf->Row(array("","",":",""));
+		$pdf->setY($y + 1);
+		$pdf->SetWidths(array(100.00125,35,3,50));
+		$pdf->Row(array("","Jenis Pengujian",":",urldecode($questioner[0]->examinationType->name)." (".urldecode($questioner[0]->examinationType->description).")"));
 		$y3 = $pdf->getY();
 		$pdf->setXY(10.00125,$y + 11);
-		$pdf->SetFont('','I');
 		 
 		$yNow = max($y,$y2,$y3);
 		if($y2 == $y3){
@@ -3691,16 +3685,12 @@ Route::get('/cetakKepuasanKonsumen', array('as' => 'cetakKepuasanKonsumen', func
 		$y = $pdf->getY(); 
 		$pdf->SetFont('helvetica','',8);
 		$pdf->setXY(10.00125,$y + 1);
-		$pdf->SetFont('','U');
-		$pdf->Cell(10,5,"Nama Perusahaan",0,0,'L');
-		$pdf->SetWidths(array(0.00125,40,45,50));
-		$pdf->Row(array("","",":",""));
+		$pdf->SetWidths(array(0.00125,40,3,50));
+		$pdf->Row(array("","Nama Perusahaan",":",urldecode($questioner[0]->company->name)));
 	 
-		$pdf->setXY(110.00125,$y + 1);
-		$pdf->SetFont('','U');
-		$pdf->Cell(10,5,"Nama Perangkat",0,0,'L');
-		$pdf->SetWidths(array(0.00125,135,140,50));
-		$pdf->Row(array("","",":",""));
+		$pdf->setY($y + 1);
+		$pdf->SetWidths(array(100.00125,35,3,50));
+		$pdf->Row(array("","Nama Perangkat",":",urldecode($questioner[0]->device->name)));
 		$y3 = $pdf->getY();
 		$pdf->setXY(10.00125,$y + 1);
 		 
@@ -3709,16 +3699,12 @@ Route::get('/cetakKepuasanKonsumen', array('as' => 'cetakKepuasanKonsumen', func
 		$y = $pdf->getY(); 
 		$pdf->SetFont('helvetica','',8);
 		$pdf->setXY(10.00125,$y + 6);
-		$pdf->SetFont('','U');
-		$pdf->Cell(10,5,"No. TELP/HP",0,0,'L');
-		$pdf->SetWidths(array(0.00125,40,45,145));
-		$pdf->Row(array("","",":",""));
+		$pdf->SetWidths(array(0.00125,40,3,50));
+		$pdf->Row(array("","No. Telp/HP",":",urldecode($questioner[0]->user->phone_number)));
 		
 		$pdf->setXY(110.00125,$y + 6);
-		$pdf->SetFont('','U');
-		$pdf->Cell(10,5,"Tanggal",0,0,'L');
-		$pdf->SetWidths(array(0.00125,135,140,50));
-		$pdf->Row(array("","",":","")); 
+		$pdf->SetWidths(array(100.00125,35,3,50));
+		$pdf->Row(array("","Tanggal",":",urldecode($questioner[0]->questioner[0]->questioner_date)));
 	 	 
 		// $pdf->SetFont('helvetica','B',14);
 		// $pdf->setXY(10.00125, $pdf->getY() + 4); 
@@ -3748,29 +3734,29 @@ Route::get('/cetakKepuasanKonsumen', array('as' => 'cetakKepuasanKonsumen', func
 
 		$pdf->Ln(8); 
 		$pdf->SetWidths(array(0.00125,10,100,30,30));
-		$pdf->SetAligns(array('L','C','C','C','C')); 
+		$pdf->SetAligns(array('L','C','L','C','C')); 
 		$pdf->SetFont('helvetica','',8);
  		$pdf->RowRect(array('','NO','PERTANYAAN','TINGKAT KEPENTINGAN','TINGKAT KEPUASAN')); 
 	 	
-	 	$pdf->RowRect(array('','1','Pengajuan pendaftaran pengujian dapat dengan mudah dilakukan.','',''));
-	 	$pdf->RowRect(array('','2','Pelaksanaan uji fungsi sebelum barang diterima terlaksana dengan baik.','',''));
-	 	$pdf->RowRect(array('','3','Biaya/tarif pengujian perangkat sudah sesuai.','',''));
-	 	$pdf->RowRect(array('','4','Prosedur pembayaran dilakukan dengan mudah.','',''));
-	 	$pdf->RowRect(array('','5','Perangkat uji diterima dengan baik oleh petugas.','',''));
-	 	$pdf->RowRect(array('','6','Pelaksanaan pengujian sesuai dengan jadwal yang sudah disepakati.','',''));
-	 	$pdf->RowRect(array('','7','Perangkat uji setelah pengujian selesai ditangani dengan baik.','',''));
-	 	$pdf->RowRect(array('','8','Lama pengujian diselesaikan dengan informasi/kesepakatan yang telah ditentukan.','',''));
-	 	$pdf->RowRect(array('','9','Komunikasi antara test engineer Lab. QA DDS Telkom dengan test engineer kami terjalin dengan baik untuk kelancaran pengujian.','',''));
-	 	$pdf->RowRect(array('','10','Alat ukur yang digunakan sudah terjamin kualitas dan akurasinya.','',''));
-	 	$pdf->RowRect(array('','11','Ruang laboratorium terkondisi dengan baik.','',''));
-	 	$pdf->RowRect(array('','12','Kapabilitas dan pengalaman test engineer Lab. QA DDS Telkom sudah sesuai dengan kompetensinya.','',''));
-	 	$pdf->RowRect(array('','13','Test engineer Lab. QA DDS Telkom memiliki pemahaman terhadap materi item uji.','',''));
-	 	$pdf->RowRect(array('','14','Petugas memberikan pelayanan dengan ramah dan profesional.','',''));
-	 	$pdf->RowRect(array('','15','Petugas memberikan informasi tentang tarif yang jelas kepada kastamer.','',''));
-	 	$pdf->RowRect(array('','16','Petugas memberikan informasi tentang prosedur pengujian dengan jelas.','',''));
-	 	$pdf->RowRect(array('','17','Petugas selalu tanggap dengan apa yang diinginkan kastamer.','',''));
-	 	$pdf->RowRect(array('','18','Petugas memberikan perlakuan yang sama kepada semua kastamer.','',''));
-	 	$pdf->RowRect(array('','19','Petugas memberikan laporan hasil pengujian dengan cepat dan tepat.','','')); 
+	 	$pdf->RowRect(array('','1','Pengajuan pendaftaran pengujian dapat dengan mudah dilakukan.',$questioner[0]->questioner[0]->quest1_eks,$questioner[0]->questioner[0]->quest1_perf));
+	 	$pdf->RowRect(array('','2','Pelaksanaan uji fungsi sebelum barang diterima terlaksana dengan baik.',$questioner[0]->questioner[0]->quest2_eks,$questioner[0]->questioner[0]->quest2_perf));
+	 	$pdf->RowRect(array('','3','Biaya/tarif pengujian perangkat sudah sesuai.',$questioner[0]->questioner[0]->quest3_eks,$questioner[0]->questioner[0]->quest3_perf));
+	 	$pdf->RowRect(array('','4','Prosedur pembayaran dilakukan dengan mudah.',$questioner[0]->questioner[0]->quest4_eks,$questioner[0]->questioner[0]->quest4_perf));
+	 	$pdf->RowRect(array('','5','Perangkat uji diterima dengan baik oleh petugas.',$questioner[0]->questioner[0]->quest5_eks,$questioner[0]->questioner[0]->quest5_perf));
+	 	$pdf->RowRect(array('','6','Pelaksanaan pengujian sesuai dengan jadwal yang sudah disepakati.',$questioner[0]->questioner[0]->quest7_eks,$questioner[0]->questioner[0]->quest7_perf));
+	 	$pdf->RowRect(array('','7','Perangkat uji setelah pengujian selesai ditangani dengan baik.',$questioner[0]->questioner[0]->quest8_eks,$questioner[0]->questioner[0]->quest8_perf));
+	 	$pdf->RowRect(array('','8','Lama pengujian diselesaikan dengan informasi/kesepakatan yang telah ditentukan.',$questioner[0]->questioner[0]->quest9_eks,$questioner[0]->questioner[0]->quest9_perf));
+	 	$pdf->RowRect(array('','9','Komunikasi antara test engineer Lab. QA DDS Telkom dengan test engineer kami terjalin dengan baik untuk kelancaran pengujian.',$questioner[0]->questioner[0]->quest10_eks,$questioner[0]->questioner[0]->quest10_perf));
+	 	$pdf->RowRect(array('','10','Alat ukur yang digunakan sudah terjamin kualitas dan akurasinya.',$questioner[0]->questioner[0]->quest11_eks,$questioner[0]->questioner[0]->quest11_perf));
+	 	$pdf->RowRect(array('','11','Ruang laboratorium terkondisi dengan baik.',$questioner[0]->questioner[0]->quest12_eks,$questioner[0]->questioner[0]->quest12_perf));
+	 	$pdf->RowRect(array('','12','Kapabilitas dan pengalaman test engineer Lab. QA DDS Telkom sudah sesuai dengan kompetensinya.',$questioner[0]->questioner[0]->quest13_eks,$questioner[0]->questioner[0]->quest13_perf));
+	 	$pdf->RowRect(array('','13','Test engineer Lab. QA DDS Telkom memiliki pemahaman terhadap materi item uji.',$questioner[0]->questioner[0]->quest14_eks,$questioner[0]->questioner[0]->quest14_perf));
+	 	$pdf->RowRect(array('','14','Petugas memberikan pelayanan dengan ramah dan profesional.',$questioner[0]->questioner[0]->quest15_eks,$questioner[0]->questioner[0]->quest15_perf));
+	 	$pdf->RowRect(array('','15','Petugas memberikan informasi tentang tarif yang jelas kepada kastamer.',$questioner[0]->questioner[0]->quest16_eks,$questioner[0]->questioner[0]->quest16_perf));
+	 	$pdf->RowRect(array('','16','Petugas memberikan informasi tentang prosedur pengujian dengan jelas.',$questioner[0]->questioner[0]->quest17_eks,$questioner[0]->questioner[0]->quest17_perf));
+	 	$pdf->RowRect(array('','17','Petugas selalu tanggap dengan apa yang diinginkan kastamer.',$questioner[0]->questioner[0]->quest18_eks,$questioner[0]->questioner[0]->quest18_perf));
+	 	$pdf->RowRect(array('','18','Petugas memberikan perlakuan yang sama kepada semua kastamer.',$questioner[0]->questioner[0]->quest19_eks,$questioner[0]->questioner[0]->quest19_perf));
+	 	$pdf->RowRect(array('','19','Petugas memberikan laporan hasil pengujian dengan cepat dan tepat.',$questioner[0]->questioner[0]->quest20_eks,$questioner[0]->questioner[0]->quest20_perf)); 
  
  		$pdf->setXY(10.00125, $pdf->getY() + 4); 
 		$pdf->Cell(10,4,"Kritik dan Saran Anda untuk meningkatkan kualitas pelayanan kami:",0,0,'L');
@@ -3778,7 +3764,7 @@ Route::get('/cetakKepuasanKonsumen', array('as' => 'cetakKepuasanKonsumen', func
 		$pdf->setX(10.00125); 
 		$pdf->SetWidths(array(0.00125,170));
 		$pdf->SetAligns(array('L','L')); 
-		$pdf->RowRect(array('','')); 
+		$pdf->RowRect(array('',$questioner[0]->questioner[0]->quest6)); 
 
 		$pdf->Output();
 		exit;
@@ -3786,10 +3772,9 @@ Route::get('/cetakKepuasanKonsumen', array('as' => 'cetakKepuasanKonsumen', func
 	}
 ));
 
-Route::get('/cetakComplaint', array('as' => 'cetakComplaint', function(
-	Illuminate\Http\Request $request, $kode_barang = null, $company_name = null, $company_address = null, $company_phone = null, $company_fax = null, 
-	$device_name = null, $device_mark = null, $device_manufactured_by = null, $device_model = null , $device_serial_number = null, 
-	$exam_type = null, $exam_type_desc = null) {
+Route::get('/cetakComplaint/{id}', 'ExaminationDoneController@cetakComplaint');
+Route::get('/cetakComplaints', array('as' => 'cetakComplaints', function(Illuminate\Http\Request $request) {
+	$questioner = $request->session()->pull('key_exam_for_complaint');
 	$pdf = new PDF_MC_TablesKonsumen();  
 
 	// $pdf->AliasNbPages();
@@ -3803,22 +3788,29 @@ Route::get('/cetakComplaint', array('as' => 'cetakComplaint', function(
 
 	$y2= $pdf->getY();
 	$pdf->setXY(10.00125,$y2);
-	$pdf->Cell(140, 40, 'Customer Name and Address', 1, 0, 'L');
+	$pdf->SetWidths(array(0.00125,140));
+	$pdf->SetAligns(array('L','L')); 
+	$pdf->Cell(140, 40, '', 1, 0, 'L');
 	$pdf->Cell(40, 40, '', 1, 0, 'C'); 
+	$pdf->setY($pdf->getY()+15);
+	$pdf->Row(array('','Customer Name and Address : '. $questioner[0]->user->name.' - '.$questioner[0]->user->address)); 
 
 	$y3 = $pdf->getY();
-	$pdf->setXY(10.00125,$y3+40);
+	$pdf->setXY(10.00125,$y3+20);
  	$pdf->SetFont('helvetica','',10); 
 	$pdf->setX(10.00125);
-	$pdf->Cell(140, 10, 'Customer Contact :', 1, 0, 'L');
-	$pdf->Cell(40, 10, 'Date : ', 1, 0, 'L'); 
+	$pdf->Cell(140, 10, 'Customer Contact : '. $questioner[0]->user->phone_number, 1, 0, 'L');
+	$pdf->Cell(40, 10, 'Date : '. $questioner[0]->questioner[0]->complaint_date, 1, 0, 'L'); 
 
 	$y = $pdf->getY();
 	$pdf->setXY(10.00125,$y+10);
-	$pdf->Cell(180, 50, 'Complaint', 1, 0, 'L'); 
+	$pdf->Cell(180, 50, '', 1, 0, 'L'); 
+	$pdf->SetWidths(array(0.00125,140));
+	$pdf->SetAligns(array('L','L')); 
+	$pdf->Row(array('','Complaint : '. $questioner[0]->questioner[0]->complaint)); 
 
 	$y = $pdf->getY();
-	$pdf->setXY(10.00125,$y+50);
+	$pdf->setXY(10.00125,$y+45);
 	$pdf->SetMargins(0,0,0);
 	$pdf->Cell(90, 40, 'Signature Of Receipt :', 1, 0, 'L');
 	$pdf->Cell(90, 40, 'Name Of Receipt', 1, 0, 'LT'); 
