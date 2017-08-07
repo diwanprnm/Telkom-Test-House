@@ -794,9 +794,14 @@ $notification->id = Uuid::uuid4();
 			]);
 		}
 		$examLab = DB::table('stels')->where('code', ''.$referensi_perangkat.'')->first();
+		if(count($examLab)>0){
+			$idLab = $examLab->type;
+		}else{
+			$idLab = "";
+		}
         $query_update_company = "UPDATE examinations
 			SET 
-				examination_lab_id = '".$examLab->type."',
+				examination_lab_id = '".$idLab."',
 				jns_perusahaan = '".$jns_perusahaan."',
 				is_loc_test = '".$lokasi_pengujian."',
 				updated_by = '".$user_id."',

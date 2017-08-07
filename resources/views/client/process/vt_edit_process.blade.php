@@ -252,8 +252,7 @@
 										</div>
 										<div class="form-group col-xs-12">
 											<label>{{ trans('translate.service_upload_reference_test') }}<span class="text-danger">*</span></label>
-											<input class="data-upload-berkas f1-file-ref-uji required" id="fileInput-ref-uji" name="fuploadrefuji" type="file" accept="application/pdf,image/*">
-
+											<input class="data-upload-berkas f1-file-ref-uji" id="fileInput-ref-uji" name="fuploadrefuji" type="file" accept="application/pdf,image/*">
 											<input type="hidden" name="hide_ref_uji_file" class="required" id="hide_ref_uji_file" value="{{$userData->fileref_uji}}"/>
 											<a id="ref-uji-file" class="btn btn-link" style="color:black !important;" >{{$userData->fileref_uji}}</a>
 											<div id="ref-uji-file"></div>
