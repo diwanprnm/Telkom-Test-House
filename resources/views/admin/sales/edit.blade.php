@@ -107,18 +107,18 @@
 										Status *
 									</label>
 									<select name="payment_status" class="cs-select cs-skin-elastic" required> 
-										@if($dataStel[0]->payment_status == 0)
-											<option value="0" selected>Choose Status</option>
-											<option value="1">Success</option>
-											<option value="-1">Decline</option>
-										@elseif($dataStel[0]->payment_status == 1)
+										@if($dataStel[0]->payment_status == 1)
 											<option value="0">Choose Status</option>
 											<option value="1" selected>Success</option>
 											<option value="-1">Decline</option>
-										@else
+										@elseif($dataStel[0]->payment_status == -1)
 											<option value="0">Choose Status</option>
 											<option value="1">Success</option>
 											<option value="-1" selected>Decline</option>
+										@else
+											<option value="0" selected>Choose Status</option>
+											<option value="1">Success</option>
+											<option value="-1">Decline</option>
 										@endif
 									</select>
 								</div>
