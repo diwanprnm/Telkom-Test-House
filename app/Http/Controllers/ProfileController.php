@@ -655,7 +655,7 @@ class ProfileController extends Controller
 		        "from"=>$user_id,
 		        "to"=>"admin",
 		        "message"=>"Permohonan Aktivasi Akun Baru dan Perusahaan Baru",
-		        "url"=>"company/".$user_id.'/edit',
+		        "url"=>"usereks/".$user_id.'/edit',
 		        "is_read"=>0,
 		        "created_at"=>date("Y-m-d H:i:s"),
 		        "updated_at"=>date("Y-m-d H:i:s")

@@ -47,11 +47,12 @@ class CompanyController extends Controller
             $status = '';
             
             if ($search != null){
-                $companies = Company::whereNotNull('created_at')
+                $query = Company::whereNotNull('created_at')
 					->where('id', '<>', '1')
-                    ->where('name','like','%'.$search.'%')
-                    ->orderBy('name')
-                    ->paginate($paginate);
+                    ->where('name','like','%'.$search.'%');
+				
+				$companies = $query->orderBy('name')
+                                ->paginate($paginate);
 
                     $logs = new Logs;
                     $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
