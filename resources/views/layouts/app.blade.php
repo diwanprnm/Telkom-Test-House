@@ -154,7 +154,17 @@
                              <?php
                       foreach ($notification_data as $notif) { ?> 
                                 <li>
-                                    <a data-url="<?php echo $notif['url']?>" data-id="<?php echo $notif['id']?>" class="notifData"><?php echo $notif['message']?></a>
+                                    <a data-url="<?php echo $notif['url']?>" data-id="<?php echo $notif['id']?>" class="notifData"><?php 
+                                    $string =  $notif['message'];
+                                        if (strlen($string) > 35) {
+
+                                                // truncate string
+                                                $stringCut = substr($string, 0, 35);
+
+                                                // make sure it ends in a word so assassinate doesn't become ass...
+                                                $string = substr($stringCut, 0, strrpos($stringCut, ' ')).'...'; 
+                                            }
+                                    echo $string;?></a>
                                 </li>
                                  <?php }?>
                             </ul>
