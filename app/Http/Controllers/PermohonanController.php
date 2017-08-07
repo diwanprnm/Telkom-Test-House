@@ -125,7 +125,6 @@ class PermohonanController extends Controller
 	
 	public function submit(Request $request)
 	{
-		// print_r($request->all());
 		$currentUser = Auth::user();
 		$user_id = ''.$currentUser['attributes']['id'].'';
 		$user_name = ''.$currentUser['attributes']['name'].'';
@@ -199,6 +198,7 @@ class PermohonanController extends Controller
 			$referensi_perangkat = 
 				// $request->input('referensi_perangkat');
 				$request->input('f1-referensi-perangkat');
+				$referensi_perangkat = implode(",", $referensi_perangkat);
 		}
 		$no_siupp = 
 			// $request->input('no_siupp');
@@ -642,6 +642,7 @@ $notification->id = Uuid::uuid4();
 			$referensi_perangkat = 
 				// $request->input('referensi_perangkat');
 				$request->input('f1-referensi-perangkat');
+				$referensi_perangkat = implode(",", $referensi_perangkat);
 		}
 		$no_siupp = 
 			// $request->input('no_siupp');
