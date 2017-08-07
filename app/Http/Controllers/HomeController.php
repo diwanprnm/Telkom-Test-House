@@ -226,7 +226,7 @@ class HomeController extends Controller
             "from"=>$currentUser->id,
             "to"=>"admin",
             "message"=>$currentUser->name." Mengedit data Pengujian",
-            "url"=>"examination/".$id,
+            "url"=>"examination/".$id."/edit",
             "is_read"=>0,
             "created_at"=>date("Y-m-d H:i:s"),
             "updated_at"=>date("Y-m-d H:i:s")
