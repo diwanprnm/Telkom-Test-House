@@ -151,7 +151,12 @@
                                 <span translate="topbar.messages.MAIN" class="ng-scope ">Notification</span>
                             </a>
                             <ul class="dropdown-menu dropdown-light dropdown-messages dropdown-large"> 
-                                
+                             <?php
+                      foreach ($notification_data as $notif) { ?> 
+                                <li>
+                                    <a data-url="<?php echo $notif['url']?>" data-id="<?php echo $notif['id']?>" class="notifData"><?php echo $notif['message']?></a>
+                                </li>
+                                 <?php }?>
                             </ul>
                         </li>
                         <li class="dropdown current-user">
