@@ -76,7 +76,7 @@ class AdminOnly
         } 
 
         
-        $dataNotification = NotificationTable::where("is_read",0)->where("to","admin")->orderBy("created_at","desc")->get();
+        $dataNotification = NotificationTable::where("is_read",0)->where("to","admin")->orderBy("created_at","desc")->limit(10)->get();
 
        View::share('tree_menus', $tree);
        View::share('notification_data', $dataNotification->toArray());

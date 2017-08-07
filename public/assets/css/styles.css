@@ -11418,3 +11418,18 @@ span.error_text {
     background-color: #f9d7d7 !important;
     /* color: white; */
 }
+ 
+
+.dropdown-messages ul {
+    margin:0px 0;
+    padding:0;
+    list-style: decimal inside none;
+}
+
+.dropdown-messages ul li 
+{
+    margin: 0px;
+    padding: 0px;
+    text-indent: -1.7em;
+    margin-left: 1.7em;
+}
