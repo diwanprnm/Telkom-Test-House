@@ -562,7 +562,7 @@ class ExaminationAPIController extends AppBaseController
 			}
 		}
 		
-		$result = $result->orderBy('created_at', 'desc')->get()->toArray();
+		$result = $result->orderBy('examinations.created_at', 'desc')->get()->toArray();
 	
 		if(!is_array($result) || empty($result)){
 			return $this->sendError('Function Data Not Found');
