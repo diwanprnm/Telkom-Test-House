@@ -23,6 +23,8 @@ use File;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
+use App\NotificationTable;
+
 class ProductsController extends Controller
 {
     public function index(Request $request)
@@ -159,6 +161,30 @@ class ProductsController extends Controller
                 $STELSales->cust_price_payment = $request->input('jml-pembayaran');
                 $STELSales->save();
 
+                 $data= array( 
+                    "from"=>$currentUser->name,
+                    "to"=>"admin",
+                    "message"=>$currentUser->name." Upload pembayaran STEL",
+                    "url"=>"sales/".$STELSales->id."/edit",
+                    "is_read"=>0,
+                    "created_at"=>date("Y-m-d H:i:s"),
+                    "updated_at"=>date("Y-m-d H:i:s")
+                );
+                $notification = new NotificationTable();
+                $notification->id = Uuid::uuid4();
+                $notification->from = $data['from'];
+                  $notification->to = $data['to'];
+                  $notification->message = $data['message'];
+                  $notification->url = $data['url'];
+                  $notification->is_read = $data['is_read'];
+                  $notification->created_at = $data['created_at'];
+                  $notification->updated_at = $data['updated_at'];
+                  $notification->save();
+
+                    $data['id'] = $notification->id;
+
+                event(new Notification($data));
+
                 Session::flash('message', 'Upload successfully'); 
             } catch(Exception $e){
                 Session::flash('error', 'Upload failed');
@@ -214,24 +240,7 @@ class ProductsController extends Controller
         } 
     }
 
-    public function doCheckout(Request $request){ 
-
-        //
-        // A very simple PHP example that sends a HTTP POST to a remote site
-        //
-
-        // $ch = curl_init();
-        // curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded' ,'Authorization: Bearer 8a2677ce150bb2b9b2b7c801479618d2' ,'Accept: application/json'));
-        // curl_setopt($ch, CURLOPT_URL,config('app.main_api_server').'/transactions');
-        // curl_setopt($ch, CURLOPT_POST, 1);
-        // curl_setopt($ch, CURLOPT_POSTFIELDS,
-        //             "merchant_id=".config('app.merchant_id')."&merchant_secret=".config('app.merchant_secret')."&invoice=".$request->input("invoice_number")."&amount=".Cart::total()."&add_info1=tax(10%)&timeout=3000&return_url=https://www.mainapi.net/store/client/#/api");
-        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-        // $server_result = curl_exec ($ch);
-
-        // curl_close ($ch);
-        // $result =  json_decode($server_result); 
+    public function doCheckout(Request $request){  
         
         $currentUser = Auth::user();
         $STELSales = new STELSales;
@@ -261,6 +270,32 @@ class ProductsController extends Controller
             // $STELSales->payment_code =  $result->payment_code;
             try{
                 $save = $STELSales->save();
+
+                $data= array( 
+                    "from"=>$currentUser->name,
+                    "to"=>"admin",
+                    "message"=>"Permohonan Pembelian STEL",
+                    "url"=>"sales/".$STELSales->id."/edit",
+                    "is_read"=>0,
+                    "created_at"=>date("Y-m-d H:i:s"),
+                    "updated_at"=>date("Y-m-d H:i:s")
+                );
+                $notification = new NotificationTable();
+                $notification->id = Uuid::uuid4();
+                $notification->from = $data['from'];
+                  $notification->to = $data['to'];
+                  $notification->message = $data['message'];
+                  $notification->url = $data['url'];
+                  $notification->is_read = $data['is_read'];
+                  $notification->created_at = $data['created_at'];
+                  $notification->updated_at = $data['updated_at'];
+                  $notification->save();
+
+                    $data['id'] = $notification->id;
+
+                event(new Notification($data));
+
+
                     try{  
                         foreach(Cart::content() as $row){ 
                             $STELSalesDetail = new STELSalesDetail;
