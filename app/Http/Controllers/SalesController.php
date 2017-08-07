@@ -21,6 +21,10 @@ use Response;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
+
+use App\Events\Notification;
+use App\NotificationTable;
+
 class SalesController extends Controller
 { 
      public function __construct()
@@ -268,6 +272,28 @@ class SalesController extends Controller
 
             try{
                 $STELSales->save();
+
+                $data= array( 
+                "from"=>"admin",
+                "to"=>$STELSales->created_by,
+                "message"=>"Pembayaran Stel",
+                "url"=>"payment_detail/".$STELSales->id,
+                "is_read"=>0,
+                "created_at"=>date("Y-m-d H:i:s"),
+                "updated_at"=>date("Y-m-d H:i:s")
+                );
+                $notification = new NotificationTable();
+                $notification->id = Uuid::uuid4();
+                $notification->from = $data['from'];
+                $notification->to = $data['to'];
+                $notification->message = $data['message'];
+                $notification->url = $data['url'];
+                $notification->is_read = $data['is_read'];
+                $notification->created_at = $data['created_at'];
+                $notification->updated_at = $data['updated_at'];
+                $notification->save();
+                $data['id'] = $notification->id; 
+                event(new Notification($data));
 
                 $logs = new Logs;
                 $logs->user_id = $currentUser->id;
