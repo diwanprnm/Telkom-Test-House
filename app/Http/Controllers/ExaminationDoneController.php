@@ -353,4 +353,55 @@ class ExaminationDoneController extends Controller
         return response($respons_result);
     }
 	
+	function cetakKepuasanKonsumen($id, Request $request)
+    {
+		/* $client = new Client([
+			// Base URI is used with relative requests
+			'base_uri' => 'http://ptbsp.ddns.net:13280/RevitalisasiOTR/api/',
+			// 'base_uri' => config("app.url_api_bsp"),
+			// You can set any number of default request options.
+			'timeout'  => 60.0,
+		]);
+		// $res_function_test = $client->get('functionTest/getResultData?id='.$id)->getBody();
+		$res_function_test = $client->get('functionTest/getResultData?id=3babffdd-6af1-4be7-a7bb-07da626c1351')->getBody();
+		$function_test = json_decode($res_function_test);
+		*/
+		$data = Examination::where('id','=',$id)
+		->with('User')
+		->with('ExaminationType')
+		->with('ExaminationLab')
+		->with('Company')
+		->with('Device')
+		->with('Questioner')
+		->get();
+		
+		$request->session()->put('key_exam_for_questioner', $data);
+		return \Redirect::route('cetakKuisioner');
+    }
+	
+	function cetakComplaint($id, Request $request)
+    {
+		/* $client = new Client([
+			// Base URI is used with relative requests
+			'base_uri' => 'http://ptbsp.ddns.net:13280/RevitalisasiOTR/api/',
+			// 'base_uri' => config("app.url_api_bsp"),
+			// You can set any number of default request options.
+			'timeout'  => 60.0,
+		]);
+		// $res_function_test = $client->get('functionTest/getResultData?id='.$id)->getBody();
+		$res_function_test = $client->get('functionTest/getResultData?id=3babffdd-6af1-4be7-a7bb-07da626c1351')->getBody();
+		$function_test = json_decode($res_function_test);
+		*/
+		$data = Examination::where('id','=',$id)
+		->with('User')
+		->with('ExaminationType')
+		->with('ExaminationLab')
+		->with('Company')
+		->with('Device')
+		->with('Questioner')
+		->get();
+		
+		$request->session()->put('key_exam_for_complaint', $data);
+		return \Redirect::route('cetakComplaints');
+    }
 }
