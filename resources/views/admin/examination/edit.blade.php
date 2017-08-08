@@ -1544,7 +1544,7 @@
 											</div>
 											<div class="radio">
 												<div class="radio clip-radio radio-primary">
-													<input type="radio" value="0" name="passed" id="notPassed" checked>
+													<input type="radio" value="-1" name="passed" id="notPassed" checked>
 													<label for="notPassed">
 														Tidak Lulus
 													</label>
