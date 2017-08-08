@@ -149,9 +149,9 @@
 				
 				<div class="list-cart padding20">
 				<?php if(Cart::count() > 0){?>
-					<a class="button button-3d nomargin full btn-sky" href="#myModal1"  data-lightbox="inline" >Checkout</a>
+					<a class="button button-3d nomargin full btn-sky" href="#myModal1"  data-lightbox="inline" >{{ trans('translate.stel_checkout') }}</a>
 				<?php }else{?>
-					<a class="button button-3d nomargin full btn-sky"  >Checkout</a>
+					<a class="button button-3d nomargin full btn-sky"  >{{ trans('translate.stel_checkout') }}</a>
 				<?php }?>
 				</div> 
 

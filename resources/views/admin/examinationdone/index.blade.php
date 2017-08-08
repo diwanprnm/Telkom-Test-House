@@ -316,11 +316,25 @@
 															</td>
 														</tr>	
 														<tr>
-															<td>Model:</td>
+															<td>Model / Tipe:</td>
 															<td>
 																{{ $item->device->model }}
 															</td>
 														</tr>	
+														<tr>
+															<td>Nomor Form Uji:</td>
+															<td>
+																{{ $item->function_test_NO }}
+															</td>
+														</tr>
+														<tr>
+															<td>Nama Lab:</td>
+															<td>
+																@if($item->examinationLab)
+																	{{ $item->examinationLab->name }}
+																@endif
+															</td>
+														</tr>
 													</tbody>
 												</table>
 											</div>

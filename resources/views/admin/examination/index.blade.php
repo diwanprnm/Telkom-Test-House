@@ -416,6 +416,14 @@
 																{{ $item->function_test_NO }}
 															</td>
 														</tr>
+														<tr>
+															<td>Nama Lab:</td>
+															<td>
+																@if($item->examinationLab)
+																	{{ $item->examinationLab->name }}
+																@endif
+															</td>
+														</tr>
 													</tbody>
 												</table>
 											</div>

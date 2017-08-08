@@ -914,6 +914,10 @@
 										<td>{{ trans('translate.examination_number_exam_form') }}</td>
 										<td colspan="2">: {{ $item->function_test_NO }}</td>
 									</tr>
+									<tr>
+										<td>{{ trans('translate.examination_labs_name') }}</td>
+										<td colspan="2">: {{ $item->labs_name }}</td>
+									</tr>
 								</table>
 							</div>
 							<div class="option-progress right"> 

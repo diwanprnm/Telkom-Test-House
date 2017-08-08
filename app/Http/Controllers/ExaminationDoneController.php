@@ -64,6 +64,7 @@ class ExaminationDoneController extends Controller
                                 ->with('user')
                                 ->with('company')
                                 ->with('examinationType')
+                                ->with('examinationLab')
                                 ->with('media')
                                 ->with('device')
 								;

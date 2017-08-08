@@ -175,6 +175,7 @@ return [
 	'examination_company'=> 'Company Name',
 	'examination_date_regist'=> 'Register Date',
 	'examination_number_exam_form'=> 'Number of Testing Process',
+	'examination_labs_name'=> 'Lab Name',
 	'form_not_show' => 'If form not automatically open in new tab,',
     
 	'search'			=> 'Search',
