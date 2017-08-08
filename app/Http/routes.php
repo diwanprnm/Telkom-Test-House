@@ -2390,7 +2390,7 @@ Route::get('cetakKontrak', function(Illuminate\Http\Request $request){
 	$pdf->setX(10.00125);
 	$pdf->drawTextBox('(SONTANG HUTAPEA)', 63, 18, 'C', 'B', 1);
 	$pdf->setXY(73.00125,$pdf->getY()-18);
-	$pdf->drawTextBox('(...............................)', 63, 18, 'C', 'B', 1);
+	$pdf->drawTextBox('('.$data[0]['manager_lab'].')', 63, 18, 'C', 'B', 1);
 	$pdf->setXY(136.00125,$pdf->getY()-18);
 	$pdf->drawTextBox('('.$data[0]['pic'].')', 63, 18, 'C', 'B', 1);
 	$pdf->Ln(2);

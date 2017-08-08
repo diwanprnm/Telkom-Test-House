@@ -497,6 +497,7 @@ class ExaminationAPIController extends AppBaseController
 			"examinations.urel_test_date as cust_test_date2","examinations.function_date as deal_test_date2",
 			"examinations.function_test_TE as function_result","examinations.function_test_PIC",
 			"examinations.catatan",
+			"examinations.location",
 			"examination_labs.name as lab",
 			"examination_labs.lab_code",
 			"companies.name as company_name",
@@ -548,6 +549,9 @@ class ExaminationAPIController extends AppBaseController
 			}
 			if(isset($param->function_result)){
 				$result = $result->where("examinations.function_test_TE", "=", $param->function_result);
+			}
+			if(isset($param->location)){
+				$result = $result->where("examinations.location", "=", $param->location);
 			}
 		}
 				

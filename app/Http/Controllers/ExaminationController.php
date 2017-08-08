@@ -1871,6 +1871,15 @@ $notification->id = Uuid::uuid4();
 	
 	public function tanggalkontrak(Request $request)
     {
+		$client = new Client([
+			'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+			// Base URI is used with relative requests
+			// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+			'base_uri' => config("app.url_api_bsp"),
+			// You can set any number of default request options.
+			'timeout'  => 60.0,
+		]);
+		
 		$currentUser = Auth::user();
 		
 		$exam_id = $request->input('hide_id_exam');
@@ -1893,6 +1902,7 @@ $notification->id = Uuid::uuid4();
 		$exam = Examination::where('id', $exam_id)
 				->with('user')
 				->with('device')
+				->with('examinationLab')
 				->with('Equipment')
 				->first();
 			
@@ -1907,6 +1917,16 @@ $notification->id = Uuid::uuid4();
 					WHERE id = '".$exam_id."'
 				";
 				$data_update = DB::update($query_update);
+				
+				$res_manager_lab = $client->get('user/getManagerLabInfo?labCode='.$exam->examinationLab->lab_code)->getBody();
+				$manager_lab = json_decode($res_manager_lab);
+				
+				if(count($manager_lab->data) == 1){
+					if( strpos( $manager_lab->data[0]->name, "/" ) !== false ) {$manager_labs = urlencode(urlencode($manager_lab->data[0]->name));}
+						else{$manager_labs = $manager_lab->data[0]->name?: '-';}
+				}else{
+					$manager_labs = '...............................';
+				}
 				
 				if(count($exam->equipment)>0){
 					if( strpos( $exam->equipment[0]->pic, "/" ) !== false ) {$pic = urlencode(urlencode($exam->equipment[0]->pic));}
@@ -1927,6 +1947,7 @@ $notification->id = Uuid::uuid4();
 					'testing_start' => $testing_start_ina,
 					'testing_end' => $testing_end_ina,
 					'contract_date' => $contract_date_ina,
+					'manager_lab' => $manager_labs,
 					'pic' => $pic
 				]);
 				

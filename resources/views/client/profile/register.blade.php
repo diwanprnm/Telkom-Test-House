@@ -99,19 +99,16 @@
 
 							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.register_company') }}:</label>
+								<div class="form-group" style="margin-bottom:-5px; height:60px; font-size: 90%;">
+									{{ trans('translate.register_message_company') }}
+									<a class="button button-3d button-green nomargin" value="register" id="btn-new-company">{{ trans('translate.company_form_button') }}</a>
+								</div>
 								<select class="form-control input-submit" id="cmb-perusahaan" name="cmb-perusahaan" required>
 										<option value="">{{ trans('translate.register_company_select') }}</option>
 									@foreach($data as $item)
 										<option value="{{ $item->id }}" @if(old('cmb-perusahaan') == $item->id) {{ 'selected' }} @endif>{{ $item->name }}</option>
 									@endforeach
 								</select>
-								<div class="form-group" style="margin-bottom:-5px; height:25px; font-size: 70%;">
-									{{ trans('translate.register_message_company') }}
-								</div>
-							</div>
-
-							<div class="col_full">
-								<a class="button button-3d button-green nomargin pull-right" value="register" id="btn-new-company">{{ trans('translate.company_form_button') }}</a>
 							</div>
 
 							<div class="new-company-form" style="display: none;">
@@ -183,7 +180,7 @@
 							</div>
 
 							<div class="col_full nobottommargin">
-								<button class="button button-3d btn-sky nomargin" id="register-form-submit" name="register-form-submit" value="register">{{ trans('translate.register') }}</button>
+								<button class="button button-3d btn-sky nomargin pull-right" id="register-form-submit" name="register-form-submit" value="register">{{ trans('translate.register') }}</button>
 							</div>
 
 						</form>
