@@ -1095,7 +1095,7 @@ $notification->id = Uuid::uuid4();
             $passed = $request->input('passed');
             $exam->qa_status = $status;
             $exam->qa_passed = $passed;
-            if($exam->qa_passed){  
+            if($exam->qa_passed == 1){  
             	$data= array( 
 	                "from"=>"admin",
 	                "to"=>$exam->created_by,
