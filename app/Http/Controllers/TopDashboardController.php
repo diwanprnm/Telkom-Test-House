@@ -41,16 +41,14 @@ class TopDashboardController extends Controller
         if ($currentUser){
 				
 			$pemohon = DB::select("
-				select created_by, count(distinct created_by) as jml
-				from examinations
-				group by created_by;
+				select count(distinct created_by) as jml
+				from examinations;
 			");
 				$jmlpemohon = $pemohon[0]->jml;
             
 			$perusahaan = DB::select("
-				select company_id, count(distinct company_id) as jml
-				from examinations
-				group by company_id;
+				select count(distinct company_id) as jml
+				from examinations;
 			");
 				$jmlperusahaan = $perusahaan[0]->jml;
             
