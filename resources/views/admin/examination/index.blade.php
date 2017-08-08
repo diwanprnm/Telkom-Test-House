@@ -416,6 +416,12 @@
 																{{ $item->function_test_NO }}
 															</td>
 														</tr>
+														<tr>
+															<td>Nama Lab:</td>
+															<td>
+																{{ $data->examinationLab->name }}
+															</td>
+														</tr>
 													</tbody>
 												</table>
 											</div>

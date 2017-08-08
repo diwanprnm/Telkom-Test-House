@@ -234,11 +234,23 @@
 													</td>
 												</tr>	
 												<tr>
-													<td>Model:</td>
+													<td>Model / Tipe:</td>
 													<td>
 														{{ $data->device->model }}
 													</td>
-												</tr>	
+												</tr>
+												<tr>
+													<td>Nomor Form Uji:</td>
+													<td>
+														{{ $item->function_test_NO }}
+													</td>
+												</tr>
+												<tr>
+													<td>Nama Lab:</td>
+													<td>
+														{{ $data->examinationLab->name }}
+													</td>
+												</tr>												
 											</tbody>
 										</table>
 									</div>
