@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 
 use App\STEL;
-use App\examinationLab;
+use App\ExaminationLab;
 use App\Logs;
 use Ramsey\Uuid\Uuid;
 
@@ -41,7 +41,7 @@ class STSELClientController extends Controller
             $search = trim($request->input('search'));
             $type = '';
 
-            $examLab = examinationLab::all();
+            $examLab = ExaminationLab::all();
             
             if ($search != null){
                 $query = STEL::whereNotNull('created_at')
