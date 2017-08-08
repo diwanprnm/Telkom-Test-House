@@ -482,17 +482,41 @@ $notification->id = Uuid::uuid4();
 			if($status == 1){
 				/* push notif*/
 	            
-				$data= array( 
-                    "from"=>"admin",
-                    "to"=>$exam->created_by,
-                    "message"=>"Uji Fungsi Completed",
-                    "url"=>"pengujian/".$exam->id."/detail",
-                    "is_read"=>0,
-                    "created_at"=>date("Y-m-d H:i:s"),
-                    "updated_at"=>date("Y-m-d H:i:s")
+                if ($exam->function_test_TE == 1){
+                    $data= array( 
+                        "from"=>"admin",
+                        "to"=>$exam->created_by,
+                        "message"=>"Hasil Uji Fungsi Memenuhi",
+                        "url"=>"pengujian/".$exam->id."/detail",
+                        "is_read"=>0,
+                        "created_at"=>date("Y-m-d H:i:s"),
+                        "updated_at"=>date("Y-m-d H:i:s")
                     );
+                }
+                else if ($exam->function_test_TE == 2){
+                    $data= array( 
+                        "from"=>"admin",
+                        "to"=>$exam->created_by,
+                        "message"=>"Hasil Uji Fungsi Tidak Memenuhi",
+                        "url"=>"pengujian/".$exam->id."/detail",
+                        "is_read"=>0,
+                        "created_at"=>date("Y-m-d H:i:s"),
+                        "updated_at"=>date("Y-m-d H:i:s")
+                    );   
+                }
+                else if ($exam->function_test_TE == 3){
+                    $data= array( 
+                        "from"=>"admin",
+                        "to"=>$exam->created_by,
+                        "message"=>"Hasil Uji Fungsi lain-lain",
+                        "url"=>"pengujian/".$exam->id."/detail",
+                        "is_read"=>0,
+                        "created_at"=>date("Y-m-d H:i:s"),
+                        "updated_at"=>date("Y-m-d H:i:s")
+                    );
+                }
 	              $notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
+                  $notification->id = Uuid::uuid4();
 	              $notification->from = $data['from'];
 	              $notification->to = $data['to'];
 	              $notification->message = $data['message'];
@@ -519,7 +543,7 @@ $notification->id = Uuid::uuid4();
 	                    "updated_at"=>date("Y-m-d H:i:s")
 	                    );
 		              $notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
+                      $notification->id = Uuid::uuid4();
 		              $notification->from = $data['from'];
 		              $notification->to = $data['to'];
 		              $notification->message = $data['message'];
@@ -1072,11 +1096,11 @@ $notification->id = Uuid::uuid4();
             $passed = $request->input('passed');
             $exam->qa_status = $status;
             $exam->qa_passed = $passed;
-            if($exam->qa_passed){  
+            if($exam->qa_passed == 1){  
             	$data= array( 
 	                "from"=>"admin",
 	                "to"=>$exam->created_by,
-	                "message"=>"Sidang QA Completed",
+	                "message"=>"Perangkat Lulus Sidang QA",
 	                "url"=>"pengujian/".$exam->id."/detail",
 	                "is_read"=>0,
 	                "created_at"=>date("Y-m-d H:i:s"),
@@ -1084,7 +1108,7 @@ $notification->id = Uuid::uuid4();
 	            );
 
 			  	$notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
+                $notification->id = Uuid::uuid4();
 		      	$notification->from = $data['from'];
 		      	$notification->to = $data['to'];
 		      	$notification->message = $data['message'];
@@ -1100,7 +1124,7 @@ $notification->id = Uuid::uuid4();
 		      	$data= array( 
 	                "from"=>"admin",
 	                "to"=>$exam->created_by,
-	                "message"=>"Sidang QA Completed",
+	                "message"=>"Perangkat tidak lulus Sidang QA",
 	                "url"=>"pengujian/".$exam->id."/detail",
 	                "is_read"=>0,
 	                "created_at"=>date("Y-m-d H:i:s"),
