@@ -1107,7 +1107,7 @@ $notification->id = Uuid::uuid4();
 	            );
 
 			  	$notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
+                $notification->id = Uuid::uuid4();
 		      	$notification->from = $data['from'];
 		      	$notification->to = $data['to'];
 		      	$notification->message = $data['message'];

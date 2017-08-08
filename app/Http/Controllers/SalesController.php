@@ -273,15 +273,28 @@ class SalesController extends Controller
             try{
                 $STELSales->save();
 
-                $data= array( 
-                "from"=>"admin",
-                "to"=>$STELSales->created_by,
-                "message"=>"Pembayaran Stel",
-                "url"=>"payment_detail/".$STELSales->id,
-                "is_read"=>0,
-                "created_at"=>date("Y-m-d H:i:s"),
-                "updated_at"=>date("Y-m-d H:i:s")
-                );
+                if ($STELSales->payment_status == 1) {
+                    $data= array( 
+                    "from"=>"admin",
+                    "to"=>$STELSales->created_by,
+                    "message"=>"Pembayaran Stel Telah diterima",
+                    "url"=>"payment_detail/".$STELSales->id,
+                    "is_read"=>0,
+                    "created_at"=>date("Y-m-d H:i:s"),
+                    "updated_at"=>date("Y-m-d H:i:s")
+                    );
+                } else if($STELSales->payment_status == -1) {
+                    $data= array( 
+                    "from"=>"admin",
+                    "to"=>$STELSales->created_by,
+                    "message"=>"Pembayaran Stel Telah ditolak",
+                    "url"=>"payment_detail/".$STELSales->id,
+                    "is_read"=>0,
+                    "created_at"=>date("Y-m-d H:i:s"),
+                    "updated_at"=>date("Y-m-d H:i:s")
+                    );
+                }
+                
                 $notification = new NotificationTable();
                 $notification->id = Uuid::uuid4();
                 $notification->from = $data['from'];
