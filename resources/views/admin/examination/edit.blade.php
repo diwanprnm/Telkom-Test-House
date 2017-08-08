@@ -342,7 +342,9 @@
 												<tr>
 													<td>Nama Lab:</td>
 													<td>
-														{{ $data->examinationLab->name }}
+														@if($data->examinationLab)
+															{{ $data->examinationLab->name }}
+														@endif
 													</td>
 												</tr>
 											</tbody>
@@ -1522,7 +1524,7 @@
 											Status Pengujian *
 										</label>
 										<div class="radio-list">
-											@if($data->qa_passed)
+											@if($data->qa_passed == 1)
 											<div class="radio">
 												<div class="radio clip-radio radio-primary">
 														<input type="radio" value="1" name="passed" id="passed" checked>

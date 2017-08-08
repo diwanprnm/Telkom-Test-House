@@ -419,7 +419,9 @@
 														<tr>
 															<td>Nama Lab:</td>
 															<td>
-																{{ $data->examinationLab->name }}
+																@if($item->examinationLab)
+																	{{ $item->examinationLab->name }}
+																@endif
 															</td>
 														</tr>
 													</tbody>

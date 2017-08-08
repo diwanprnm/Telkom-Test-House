@@ -242,13 +242,15 @@
 												<tr>
 													<td>Nomor Form Uji:</td>
 													<td>
-														{{ $item->function_test_NO }}
+														{{ $data->function_test_NO }}
 													</td>
 												</tr>
 												<tr>
 													<td>Nama Lab:</td>
 													<td>
-														{{ $data->examinationLab->name }}
+														@if($data->examinationLab)
+															{{ $data->examinationLab->name }}
+														@endif
 													</td>
 												</tr>												
 											</tbody>
