@@ -1093,12 +1093,12 @@ class PengujianController extends Controller
 	
 	public function updateTanggalUji(Request $request)
     {
-		->with('examinationLab')
-		->first()
-		;
 		$currentUser = Auth::user();
 		if($request->input('hide_date_type') == 1){
 		$exam = Examination::where('id', $request->input('hide_id_exam'))
+		->with('examinationLab')
+		->first()
+		;
 		$cust_test_date = strtotime($request->input('cust_test_date'));
 			try{
 				$query_update = "UPDATE examinations
@@ -1142,6 +1142,9 @@ class PengujianController extends Controller
 			}
 		}else{
 			$exam = Examination::where('id', $request->input('hide_id_exam2'))
+			->with('examinationLab')
+			->first()
+			;
 			$urel_test_date = strtotime($request->input('urel_test_date'));
 			try{
 				$query_update = "UPDATE examinations
