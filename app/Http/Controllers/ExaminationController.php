@@ -440,7 +440,7 @@ $notification->id = Uuid::uuid4();
 					
 					 return redirect('/admin/examination/'.$exam->id.'/edit');
 				}else{
-					
+					Session::flash('error', 'Save Bukti Penerimaan & Pengeluaran Perangkat Uji to directory failed');
 					return redirect('/admin/examination/'.$exam->id.'/edit');
 				}
 			}
@@ -580,8 +580,6 @@ $notification->id = Uuid::uuid4();
 		              $data['id'] = $notification->id;
 
 		                event(new Notification($data));
-
-					Session::flash('error', 'Save Bukti Penerimaan & Pengeluaran Perangkat Uji to directory failed');
 				// $exam->keterangan = $request->input('keterangan');
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Uji Fungsi",$request->input('keterangan'));
 			}
