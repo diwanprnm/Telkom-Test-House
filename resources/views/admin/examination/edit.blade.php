@@ -564,9 +564,11 @@
 									<?php $in_equip_date = $data->cust_test_date; ?>
 								@endif
 								@if(count($data->equipment)==0)
+								<div class="col-md-12">
 									<div class="form-group">
 										<a onclick="masukkanBarang('{{ $data->id }}','{{ $in_equip_date }}')"> Masukkan Barang</a>
 									</div>									
+								</div>									
 								@endif
 							<div class="col-md-12">
 								<div class="form-group">
