@@ -1046,6 +1046,7 @@ $notification->id = Uuid::uuid4();
 					$examinations->deal_test_date = NULL;
 					$examinations->urel_test_date = NULL;
 					$examinations->function_date = NULL;
+					$examinations->function_test_reason = NULL;
 					$examinations->function_status = -1;
 				}
 				$examinations->catatan = $param->catatan;
