@@ -755,6 +755,9 @@
 															<tr>
 																<td class="left">{{ trans('translate.examination_spk_code') }} : {{ $data[0]->spk_code }}</td>
 															</tr>
+															<tr>
+																<td class="left">{{ trans('translate.examination_labs_name') }} : {{ $data[0]->labs_name }}</td>
+															</tr>
 														</tbody>
 													</table>
 												</div>
