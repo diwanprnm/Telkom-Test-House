@@ -36,7 +36,7 @@ return [
 	'service_device'					=> 'Device\'s  Data',
 	'service_device_equipment'			=> 'Device',
 	'service_device_mark'				=> 'Brand Name',
-	'service_device_capacity'			=> 'Capacity/Speed',
+	'service_device_capacity'			=> 'Capacity/Speed/Rate',
 	'service_device_manufactured_by'	=> 'Made In',
 	'service_device_serial_number'	 	=> 'Serial Number',
 	'service_device_model'				=> 'Model/Type',
@@ -44,7 +44,7 @@ return [
 	'service_device_document'			=> 'Supporting Documents',
 	
 	'service_lab_testing'				=> "Telkom's Lab Testing",
-	'service_loc_testing'				=> "Location Testing",
+	'service_loc_testing'				=> "Onsite Testing",
 	
 	'service_upload'					=> 'Appendix\'s Document',
 	'service_upload_siupp'				=> 'SIUPP File',

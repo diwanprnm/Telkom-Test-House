@@ -175,7 +175,7 @@
 								</div>
 								<div class="form-group">
 									<label for="f1-merek-perangkat">{{ trans('translate.service_device_mark') }} *</label>
-									<input type="text" name="f1-merek-perangkat" placeholder="Samsung/Huawei/ Etc."  id="f1-merek-perangkat" class="required">
+									<input type="text" name="f1-merek-perangkat" placeholder="{{ trans('translate.service_device_mark') }}"  id="f1-merek-perangkat" class="required">
 								</div>
 								<div class="form-group">
 									<label for="f1-kapasitas-perangkat">{{ trans('translate.service_device_capacity') }} *</label>
