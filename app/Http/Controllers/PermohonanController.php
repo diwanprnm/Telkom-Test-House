@@ -22,6 +22,7 @@ use App\ExaminationAttach;
 use App\ExaminationType;
 use App\Feedback;
 use App\ExaminationHistory;
+use App\Footer;
 
 
 use Ramsey\Uuid\Uuid;
