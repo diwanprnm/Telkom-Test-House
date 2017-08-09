@@ -71,13 +71,11 @@
 					<h2>{{ trans('translate.our_partner') }}</h2>
 				</div>
 
-				<div id="oc-clients" class="owl-carousel image-carousel carousel-widget" data-margin="20" data-nav="false" data-pagi="true" data-items-xxs="2" data-items-xs="3" data-items-sm="4" data-items-md="5" data-items-lg="6">
-
+				<ul class="clients-grid grid-4 nobottommargin clearfix">
 					@foreach($partners as $item)
-						<div class="oc-item"><a href="#"><img src="{{asset('media/footer/'.$item->image)}}" alt="Clients"></a></div>
+						<li><a href="#"><img src="{{asset('media/footer/'.$item->image)}}" alt="partners"></a></li>
 					@endforeach
-				
-				</div>
+				</ul>
 
 				<div class="clear"></div>
 
