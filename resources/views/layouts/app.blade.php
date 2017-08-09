@@ -129,7 +129,7 @@
                         <i class="ti-align-justify"></i>
                     </a>
                     <a class="navbar-brand" href="{{URL::to('/admin')}}">
-                        <img src='{{ asset("images/logo_telkom.png") }}' width="120"/>
+                        <img src='{{ asset("images/logo_telkom.png") }}' width="100"/>
                     </a>
                     <a href="#" class="sidebar-toggler pull-right visible-md visible-lg" data-toggle-class="app-sidebar-closed" data-toggle-target="#app">
                         <i class="ti-align-justify"></i>
@@ -203,7 +203,7 @@
         <footer>
             <div class="footer-inner">
                 <div class="pull-left">
-                    &copy; <span class="current-year"></span><span class="text-bold text-uppercase"> TELKOM DDS</span>. <span>All rights reserved</span>
+                    &copy; <span class="current-year"></span><span class="text-bold text-uppercase"> PT. TELEKOMUNIKASI INDONESIA</span>. <span>All rights reserved</span>
                 </div>
                 <div class="pull-right">
                     <span class="go-top"><i class="ti-angle-up"></i></span>
