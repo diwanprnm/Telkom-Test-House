@@ -3632,11 +3632,12 @@ array('as' => 'cetakBuktiPenerimaanPerangkat', function(
 		$pdf->Cell(18,10,'TGL ..................',0,0,'L'); 
 		$pdf->setX(163);
 		$pdf->Cell(18,10,'TGL ..................',0,0,'L'); 
-
-
+		
 		$y = $pdf->getY();  
-		$pdf->setXY(13,$pdf->getY() + 50);
-		$pdf->Cell(18,10,'Dokumen ini tidak terkendali apabila diunduh',0,0,'L'); 
+		$pdf->setY($pdf->getY() + 50);
+		$pdf->Cell(180,10,'IAS02/F/007 Versi 01',0,0,'R'); 
+
+		// $pdf->Cell(18,10,'Dokumen ini tidak terkendali apabila diunduh',0,0,'L'); 
 		$pdf->Output();
 		exit;
 		

@@ -77,6 +77,14 @@
 
     <script src={{ asset("assets/js/chosen.jquery.min.js") }}></script>
     <script type="text/javascript">
+    if ($( window ).width() <= 425) {
+      if (!$( ".step" ).hasClass("pre-scrollable")) {
+        $( ".step" ).addClass( "pre-scrollable" );
+      }
+    }
+    if ($( window ).width() >= 426) {
+        $( ".step" ).removeClass( "pre-scrollable" );
+    }
       
     $('#text-carousel').carousel({
         interval: false
