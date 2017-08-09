@@ -292,6 +292,9 @@ return [
 	
 	'reschedule_message'	=> 'Select Date to do Function Test!',
 	'reschedule_date'		=> 'Date',
+	'reschedule_date_cust1'	=> 'First Request from Customer',
+	'reschedule_date_te1'	=> 'Date from TE',
+	'reschedule_reason'		=> 'Reason',
 	
 	'stel_add_to_cart'		=> 'Add to Cart',
 	'stel_checkout'			=> 'Purchase',

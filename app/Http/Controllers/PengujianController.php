@@ -1098,8 +1098,8 @@ class PengujianController extends Controller
 		->first()
 		;
 		$currentUser = Auth::user();
-		$cust_test_date = strtotime($request->input('cust_test_date'));
 		if($request->input('hide_date_type') == 1){
+		$cust_test_date = strtotime($request->input('cust_test_date'));
 			try{
 				$query_update = "UPDATE examinations
 					SET 
@@ -1141,18 +1141,20 @@ class PengujianController extends Controller
 				// return back();
 			}
 		}else{
+			$urel_test_date = strtotime($request->input('urel_test_date'));
 			try{
 				$query_update = "UPDATE examinations
 					SET 
-						urel_test_date = '".date('Y-m-d', $cust_test_date)."',
+						urel_test_date = '".date('Y-m-d', $urel_test_date)."',
+						function_test_reason = '".$request->input('alasan')."',
 						updated_by = '".$currentUser['attributes']['id']."',
 						updated_at = '".date('Y-m-d h:i:s')."'
-					WHERE id = '".$request->input('hide_id_exam')."'
+					WHERE id = '".$request->input('hide_id_exam2')."'
 				";
 				$data_update = DB::update($query_update);
 				
 				$exam_hist = new ExaminationHistory;
-				$exam_hist->examination_id = $request->input('hide_id_exam');
+				$exam_hist->examination_id = $request->input('hide_id_exam2');
 				$exam_hist->date_action = date('Y-m-d H:i:s');
 				$exam_hist->tahap = 'Update Tanggal Uji';
 				$exam_hist->status = 1;

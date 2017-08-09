@@ -295,6 +295,9 @@ return [
 	
 	'reschedule_message'	=> 'Silakan Berikan Ajuan Tanggal Uji Fungsi!',
 	'reschedule_date'		=> 'Tanggal',
+	'reschedule_date_cust1'	=> 'Tanggal Pengajuan Awal Kastamer',
+	'reschedule_date_te1'	=> 'Tanggal dari TE',
+	'reschedule_reason'		=> 'Alasan',
 	
 	'stel_add_to_cart'		=> 'Tambahkan',
 	'stel_checkout'			=> 'Beli',
