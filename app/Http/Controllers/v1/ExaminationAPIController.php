@@ -652,7 +652,7 @@ class ExaminationAPIController extends AppBaseController
 				$exam_hist->tahap = 'Update Tanggal Uji';
 				$exam_hist->status = 1;
 				$exam_hist->keterangan = $param->function_test_date.' dari Test Enginner ('.$param->reason.')';
-				$exam_hist->created_by = $id_user;
+				$exam_hist->created_by = $examinations->created_by;
 				$exam_hist->created_at = date('Y-m-d H:i:s');
 				$exam_hist->save();
 				 
@@ -672,7 +672,7 @@ $notification->id = Uuid::uuid4();
 			      
 			      $data= array( 
 	                "from"=>"admin",
-	                "to"=>$id_user,
+	                "to"=>$examinations->created_by,
 	                "message"=>"Test Enginner mengajukan Tanggal Uji Fungsi",
 	                "url"=>"pengujian",
 	                "is_read"=>0,
@@ -1041,6 +1041,13 @@ $notification->id = Uuid::uuid4();
     	if(!empty($param->id) && !empty($param->catatan) && !empty($param->function_result) && !empty($param->function_test_pic)){
     		$examinations = Examination::find($param->id);
     		if($examinations){
+				if($param->function_result == 2){
+					$examinations->cust_test_date = NULL;
+					$examinations->deal_test_date = NULL;
+					$examinations->urel_test_date = NULL;
+					$examinations->function_date = NULL;
+					$examinations->function_status = -1;
+				}
 				$examinations->catatan = $param->catatan;
 				$examinations->function_test_TE = $param->function_result;
 				$examinations->function_test_PIC = $param->function_test_pic;
