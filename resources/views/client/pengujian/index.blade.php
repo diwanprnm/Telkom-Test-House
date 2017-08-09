@@ -873,7 +873,7 @@
 											@if($item->function_date != null)
 												{{ $item->function_date }} (FIX) {{ $item->function_test_reason }}
 											@elseif($item->function_date == null && $item->urel_test_date != null)
-												{{ $item->urel_test_date }} {{ trans('translate.from_customer') }} {{ $item->function_test_reason }}
+												{{ $item->urel_test_date }} ({{ trans('translate.from_customer') }}) {{ $item->function_test_reason }}
 											@elseif($item->urel_test_date == null && $item->deal_test_date != null)
 												{{ $item->deal_test_date }} ({{ trans('translate.from_te') }}) {{ $item->function_test_reason }}
 											@else

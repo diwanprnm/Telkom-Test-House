@@ -645,6 +645,17 @@ class ExaminationAPIController extends AppBaseController
 	                "created_at"=>date("Y-m-d H:i:s"),
 	                "updated_at"=>date("Y-m-d H:i:s")
 	             );
+				 
+				$exam_hist = new ExaminationHistory;
+				$exam_hist->examination_id = $param->id;
+				$exam_hist->date_action = date('Y-m-d H:i:s');
+				$exam_hist->tahap = 'Update Tanggal Uji';
+				$exam_hist->status = 1;
+				$exam_hist->keterangan = $param->function_test_date.' dari Test Enginner ('.$param->reason.')';
+				$exam_hist->created_by = $id_user;
+				$exam_hist->created_at = date('Y-m-d H:i:s');
+				$exam_hist->save();
+				 
 				  $notification = new NotificationTable();
 $notification->id = Uuid::uuid4();
 			      $notification->from = $data['from'];
