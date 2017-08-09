@@ -65,6 +65,8 @@ class PermohonanController extends Controller
 		$query = "SELECT * FROM examination_types";
 		$page = "";
 		$data = DB::select($query);
+
+		$partners = Footer::where('is_active', true)->get();
             
 		if (count($data) == 0){
 			$message = 'Data not found';
@@ -119,6 +121,7 @@ class PermohonanController extends Controller
 			->with('data_procedure', $data_procedure)
 			->with('data_stels', $data_stels)
 			->with('data_question', $data_question)
+			->with('partners', $partners)
 			->with('page', $page);
 			// ->with('data_footers', $data_footers);
 	}
