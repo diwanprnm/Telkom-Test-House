@@ -1575,7 +1575,7 @@
 										<label>
 											{{ trans('translate.reschedule_reason') }} *
 										</label>
-										<textarea name="alasan" class="form-control" placeholder="Alasan ..."></textarea>
+										<textarea name="alasan" class="form-control" placeholder="{{ trans('translate.reschedule_reason') }} ..."></textarea>
 									</div>
 								</div>
 							</div>
