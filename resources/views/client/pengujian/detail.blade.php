@@ -903,16 +903,33 @@
 												<td> 
 													@if($item_attach->attachment != '')
 														@if($item_attach->name == 'Sertifikat')
-															@if($item->count_status == 10)
+															@if(
+																$item->registration_status == 1 &&
+																$item->function_status == 1 &&
+																$item->contract_status == 1 &&
+																$item->spb_status == 1 &&
+																$item->payment_status == 1 &&
+																$item->spk_status == 1 &&
+																$item->examination_status == 1 &&
+																$item->resume_status == 1 &&
+																$item->qa_status == 1 &&
+																$item->certificate_status == 1
+															)
 																<a class="btn btn-link" href="javascript:void(0)" style="color:black !important;" onclick="return isTestimonial('{{ $item_attach->id_attach }}','{{ $item_attach->attachment }}','{{ $item_attach->jns }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">{{ $item_attach->name }} </a>
 															@endif
 														@elseif($item_attach->name == 'Laporan Uji')
-															@if($item->resume_status == 1 && date('Y-m-d') >= $item->resume_date)
-																@if($item->id_jns_pengujian == 1)
-																	<a class="btn btn-link" href="{{$item_attach->attachment}}" target="_blank" style="color:black !important;">{{ $item_attach->name }} </a>
-																@else
-																	<a class="btn btn-link" href="javascript:void(0)" style="color:black !important;" onclick="return isTestimonial('{{ $item_attach->id_attach }}','{{ $item_attach->attachment }}','{{ $item_attach->jns }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">{{ $item_attach->name }} </a>
-																@endif
+															@if(
+																$item->registration_status == 1 &&
+																$item->function_status == 1 &&
+																$item->contract_status == 1 &&
+																$item->spb_status == 1 &&
+																$item->payment_status == 1 &&
+																$item->spk_status == 1 &&
+																$item->examination_status == 1 &&
+																$item->resume_status == 1 &&
+																date('Y-m-d') >= $item->resume_date
+															)
+																<a class="btn btn-link" href="javascript:void(0)" style="color:black !important;" onclick="return isTestimonial('{{ $item_attach->id_attach }}','{{ $item_attach->attachment }}','{{ $item_attach->jns }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">{{ $item_attach->name }} </a>
 															@endif
 														@else	
 															<a class="btn btn-link" href="{{URL::to('/pengujian/download/'.$item_attach->id_attach.'/'.$item_attach->attachment.'/'.$item_attach->jns)}}" style="color:black !important;">{{ $item_attach->name }} </a>

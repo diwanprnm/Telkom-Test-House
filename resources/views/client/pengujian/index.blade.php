@@ -953,11 +953,7 @@
                   $item->resume_status == 1 &&
 					date('Y-m-d') >= $item->resume_date
 					){ ?>
-									@if($item->examination_type_id == 1)
-										<a class="button button-3d nomargin btn-blue" href="{{URL::to('pengujian/'.$item->id.'/downloadLaporanPengujian')}}">{{ trans('translate.download') }} {{ trans('translate.examination_report') }}</a>
-									@else
-										<a class="button button-3d nomargin btn-blue" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->device_id }}','{{ URL::to('pengujian/'.$item->id.'/downloadLaporanPengujian') }}','device', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})', '{{$item->id}}');">{{ trans('translate.download') }} {{ trans('translate.examination_report') }}</a>
-									@endif
+									<a class="button button-3d nomargin btn-blue" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->device_id }}','{{ URL::to('pengujian/'.$item->id.'/downloadLaporanPengujian') }}','device', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})', '{{$item->id}}');">{{ trans('translate.download') }} {{ trans('translate.examination_report') }}</a>
 								<?php } ?>
 								
 								<?php if(
