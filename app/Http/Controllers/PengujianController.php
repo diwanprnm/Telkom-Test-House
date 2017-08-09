@@ -1115,7 +1115,7 @@ class PengujianController extends Controller
 				$exam_hist->date_action = date('Y-m-d H:i:s');
 				$exam_hist->tahap = 'Update Tanggal Uji';
 				$exam_hist->status = 1;
-				$exam_hist->keterangan = '';
+				$exam_hist->keterangan = date('Y-m-d', $cust_test_date).' dari Kastamer ('.$request->input('alasan').')';
 				$exam_hist->created_by = $currentUser->id;
 				$exam_hist->created_at = date('Y-m-d H:i:s');
 				$exam_hist->save();
@@ -1162,7 +1162,7 @@ class PengujianController extends Controller
 				$exam_hist->date_action = date('Y-m-d H:i:s');
 				$exam_hist->tahap = 'Update Tanggal Uji';
 				$exam_hist->status = 1;
-				$exam_hist->keterangan = '';
+				$exam_hist->keterangan = date('Y-m-d', $urel_test_date).' dari Kastamer ('.$request->input('alasan').')';
 				$exam_hist->created_by = $currentUser->id;
 				$exam_hist->created_at = date('Y-m-d H:i:s');
 				$exam_hist->save();
