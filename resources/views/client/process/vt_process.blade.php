@@ -183,7 +183,7 @@
 										</div>
 										<div class="form-group">
 											<label for="f1-kapasitas-perangkat">{{ trans('translate.service_device_capacity') }} *</label>
-											<input type="text" name="f1-kapasitas-perangkat" placeholder="Samsung/Huawei/ Etc."   id="f1-kapasitas-perangkat" class="required">
+											<input type="text" name="f1-kapasitas-perangkat" placeholder="10 GHz"   id="f1-kapasitas-perangkat" class="required">
 										</div>
 										<div class="form-group">
 											<label for="f1-pembuat-perangkat">{{ trans('translate.service_device_manufactured_by') }} *</label>
