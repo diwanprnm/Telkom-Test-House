@@ -495,47 +495,49 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Pengajuan Tanggal dari Customer
+										<strong>Pengajuan Tanggal dari Customer</strong>
 									</label>
 									<label>
-										: <?php echo $data->cust_test_date; ?>
-									</label>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>
-										Penetapan Tanggal dari Test Enginner
-									</label>
-									<label>
-										: <?php echo $data->deal_test_date; ?>
+										<strong>: <?php echo $data->cust_test_date; ?></strong>
 									</label>
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Pengajuan Tanggal Akhir dari Customer
+										<strong>Penetapan Tanggal dari Test Enginner</strong>
 									</label>
 									<label>
-										: <?php echo $data->urel_test_date; ?>
+										<strong>: <?php echo $data->deal_test_date; ?></strong>
 									</label>
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Penetapan Tanggal Akhir dari Test Enginner
+										<strong>Pengajuan Tanggal Akhir dari Customer</strong>
 									</label>
 									<label>
-										: <?php echo $data->function_date; ?>
+										<strong>: <?php echo $data->urel_test_date; ?></strong>
+									</label>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										<strong>Penetapan Tanggal Akhir dari Test Enginner</strong>
+									</label>
+									<label>
+										<strong>: <?php echo $data->function_date; ?></strong>
 									</label>
 								</div>
 							</div>
 							@if($data->function_test_reason != '')
-								<div class="form-group">
-									<label for="alasan">Alasan :</label>
-									<textarea class="form-control" rows="2" name="reason" id="reason" readonly>{{ $data->function_test_reason }}</textarea>
+								<div class="col-md-12">
+									<div class="form-group">
+										<label for="alasan">Alasan :</label>
+										<textarea class="form-control" rows="2" name="reason" id="reason" readonly>{{ $data->function_test_reason }}</textarea>
+									</div>
 								</div>
 							@endif
 								<div class="col-md-12">
@@ -562,11 +564,13 @@
 									<?php $in_equip_date = $data->cust_test_date; ?>
 								@endif
 								@if(count($data->equipment)==0)
+								<div class="col-md-12">
 									<div class="form-group">
 										<a onclick="masukkanBarang('{{ $data->id }}','{{ $in_equip_date }}')"> Masukkan Barang</a>
 									</div>									
+								</div>									
 								@endif
-							
+							<div class="col-md-12">
 								<div class="form-group">
 									<a href="{{URL::to('/cetakFormBarang/'.$data->id)}}" target="_blank"> Buatkan Bukti Penerimaan & Pengeluaran Perangkat Uji</a>
 								</div>
@@ -586,6 +590,7 @@
 										@endif
 									@endforeach
 								</div>
+							</div>
 							
 							<div class="col-md-12">
 								@if($data->function_test_TE != 0)
@@ -1319,29 +1324,31 @@
 							Edit Lokasi Barang
 						</legend>
 						<div class="row">
-							<div class="form-group">
-								@foreach($data->media as $item)
-									@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
-										<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan Perangkat Uji</a>
-									@endif
-								@endforeach
-							</div>
-							<div class="form-group">
-								<label>
-									Bukti Penerimaan & Pengeluaran Perangkat Uji File *
-								</label>
-								<input type="file" name="barang_file2" id="barang_file2" class="form-control" accept="application/pdf"/>
-								<button class="btn btn-wide btn-green btn-squared pull-right">
-									Upload
-								</button>
-							</div>
-							<div class="form-group">
-								@foreach($data->media as $item)
-									@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji2' && $item->attachment != '')
-										<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji2')}}"> Download Bukti Pengeluaran Perangkat Uji</a>
-									@endif
-								@endforeach
-							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									@foreach($data->media as $item)
+										@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan Perangkat Uji</a>
+										@endif
+									@endforeach
+								</div>
+								<div class="form-group">
+									<label>
+										Bukti Penerimaan & Pengeluaran Perangkat Uji File *
+									</label>
+									<input type="file" name="barang_file2" id="barang_file2" class="form-control" accept="application/pdf"/>
+									<button class="btn btn-wide btn-green btn-squared pull-right">
+										Upload
+									</button>
+								</div>
+								<div class="form-group">
+									@foreach($data->media as $item)
+										@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji2' && $item->attachment != '')
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji2')}}"> Download Bukti Pengeluaran Perangkat Uji</a>
+										@endif
+									@endforeach
+								</div>
+								</div>
 							<div class="col-md-12">
 								<div class="form-group">
 									<label for="form-field-select-2">
