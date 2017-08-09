@@ -15,6 +15,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 use App\Events\Notification;
 use App\NotificationTable;
+use App\Footer;
 
 class HomeController extends Controller
 {
@@ -36,9 +37,11 @@ class HomeController extends Controller
     public function index()
     { 
 		$data = array();
+		$partners = Footer::where('is_active', true)->get();
     	$page = "home";
 		return view('client.home')
 			->with('data', $data)
+			->with('partners', $partners)
 			->with('page', $page);
     }
 
