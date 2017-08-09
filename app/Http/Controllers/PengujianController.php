@@ -771,15 +771,18 @@ class PengujianController extends Controller
 					et.name AS jns_pengujian,
 					et.description AS desc_pengujian,
 					e.spk_code,
-					e.resume_status,
 					e.resume_date,
-					e.certificate_status,
-					SUM(
-                        e.registration_status + e.function_status + e.contract_status + e.spb_status +
-                        e.payment_status + e.spk_status + e.examination_status + e.resume_status +
-                        e.qa_status + e.certificate_status
-                    ) 
-					AS count_status
+					e.resume_date,
+					e.registration_status,
+					e.function_status,
+					e.contract_status,
+					e.spb_status,
+					e.payment_status,
+					e.spk_status,
+					e.examination_status,
+					e.resume_status,
+					e.qa_status,
+					e.certificate_status
 				FROM
 					examinations e,
 					devices d,
