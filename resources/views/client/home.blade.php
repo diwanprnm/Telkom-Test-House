@@ -71,11 +71,19 @@
 					<h2>{{ trans('translate.our_partner') }}</h2>
 				</div>
 
-				<ul class="clients-grid grid-4 nobottommargin clearfix">
-					@foreach($partners as $item)
-						<li><a href="#"><img src="{{asset('media/footer/'.$item->image)}}" alt="partners"></a></li>
-					@endforeach
-				</ul>
+				@if ($count_partners > 5)
+					<ul class="clients-grid grid-6 nobottommargin clearfix">
+						@foreach($partners as $item)
+							<li><a href="#"><img src="{{asset('media/footer/'.$item->image)}}" alt="partners"></a></li>
+						@endforeach
+					</ul>
+				@else
+					<ul class="clients-grid grid-{{$count_partners}} nobottommargin clearfix">
+						@foreach($partners as $item)
+							<li><a href="#"><img src="{{asset('media/footer/'.$item->image)}}" alt="partners"></a></li>
+						@endforeach
+					</ul>
+				@endif
 
 				<div class="clear"></div>
 

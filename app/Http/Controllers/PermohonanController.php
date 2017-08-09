@@ -123,6 +123,7 @@ class PermohonanController extends Controller
 			->with('data_stels', $data_stels)
 			->with('data_question', $data_question)
 			->with('partners', $partners)
+			->with('count_partners', sizeof($partners))
 			->with('page', $page);
 			// ->with('data_footers', $data_footers);
 	}
