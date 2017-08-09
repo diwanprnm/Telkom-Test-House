@@ -1093,12 +1093,12 @@ class PengujianController extends Controller
 	
 	public function updateTanggalUji(Request $request)
     {
+		$currentUser = Auth::user();
+		if($request->input('hide_date_type') == 1){
 		$exam = Examination::where('id', $request->input('hide_id_exam'))
 		->with('examinationLab')
 		->first()
 		;
-		$currentUser = Auth::user();
-		if($request->input('hide_date_type') == 1){
 		$cust_test_date = strtotime($request->input('cust_test_date'));
 			try{
 				$query_update = "UPDATE examinations
@@ -1115,7 +1115,7 @@ class PengujianController extends Controller
 				$exam_hist->date_action = date('Y-m-d H:i:s');
 				$exam_hist->tahap = 'Update Tanggal Uji';
 				$exam_hist->status = 1;
-				$exam_hist->keterangan = '';
+				$exam_hist->keterangan = date('Y-m-d', $cust_test_date).' dari Kastamer';
 				$exam_hist->created_by = $currentUser->id;
 				$exam_hist->created_at = date('Y-m-d H:i:s');
 				$exam_hist->save();
@@ -1141,6 +1141,10 @@ class PengujianController extends Controller
 				// return back();
 			}
 		}else{
+			$exam = Examination::where('id', $request->input('hide_id_exam2'))
+			->with('examinationLab')
+			->first()
+			;
 			$urel_test_date = strtotime($request->input('urel_test_date'));
 			try{
 				$query_update = "UPDATE examinations
@@ -1158,7 +1162,7 @@ class PengujianController extends Controller
 				$exam_hist->date_action = date('Y-m-d H:i:s');
 				$exam_hist->tahap = 'Update Tanggal Uji';
 				$exam_hist->status = 1;
-				$exam_hist->keterangan = '';
+				$exam_hist->keterangan = date('Y-m-d', $urel_test_date).' dari Kastamer ('.$request->input('alasan').')';
 				$exam_hist->created_by = $currentUser->id;
 				$exam_hist->created_at = date('Y-m-d H:i:s');
 				$exam_hist->save();
