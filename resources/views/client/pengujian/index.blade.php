@@ -939,7 +939,7 @@
 								<?php } ?>
 								
 								<?php if($item->registration_status != 1){ ?>
-									<a class="button button-3d nomargin btn-blue" href="{{url('editprocess/'.$item->jns_pengujian.'/'.$item->id)}}">{{ trans('translate.examination_edit') }}</a>
+									<a class="button edit_btn button-3d nomargin btn-blue" href="{{url('editprocess/'.$item->jns_pengujian.'/'.$item->id)}}">{{ trans('translate.examination_edit') }}</a>
 								<?php } ?>
 								
 								<?php if(
