@@ -873,7 +873,7 @@
 											@if($item->function_date != null)
 												{{ $item->function_date }} (FIX) {{ $item->function_test_reason }}
 											@elseif($item->function_date == null && $item->urel_test_date != null)
-												{{ $item->urel_test_date }} {{ trans('translate.from_customer') }}
+												{{ $item->urel_test_date }} {{ trans('translate.from_customer') }} {{ $item->function_test_reason }}
 											@elseif($item->urel_test_date == null && $item->deal_test_date != null)
 												{{ $item->deal_test_date }} ({{ trans('translate.from_te') }}) {{ $item->function_test_reason }}
 											@else
@@ -927,9 +927,9 @@
 								
 								@if($item->registration_status != '0' && $item->function_status != '1')
 									@if($item->deal_test_date == NULL)
-									<a class="button button-3d nomargin btn-blue" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->cust_test_date ?>','1')">{{ trans('translate.examination_reschedule_test_date') }}</a>
+									<a class="button button-3d nomargin btn-blue" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->cust_test_date ?>','1','<?php echo $item->deal_test_date ?>','<?php echo $item->urel_test_date ?>')">{{ trans('translate.examination_reschedule_test_date') }}</a>
 									@elseif($item->deal_test_date != NULL && $item->function_date == NULL)
-									<a class="button button-3d nomargin btn-blue" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->urel_test_date ?>','2')">{{ trans('translate.examination_reschedule_test_date') }}</a>
+									<a class="button button-3d nomargin btn-blue" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->cust_test_date ?>','2','<?php echo $item->deal_test_date ?>','<?php echo $item->urel_test_date ?>')">{{ trans('translate.examination_reschedule_test_date') }}</a>
 									@endif
 								@endif
 								
@@ -942,7 +942,17 @@
 									<a class="button button-3d nomargin btn-blue" href="{{url('editprocess/'.$item->jns_pengujian.'/'.$item->id)}}">{{ trans('translate.examination_edit') }}</a>
 								<?php } ?>
 								
-								<?php if($item->resume_status == 1 && date('Y-m-d') >= $item->resume_date){ ?>
+								<?php if(
+				  $item->registration_status == 1 &&
+                  $item->function_status == 1 &&
+                  $item->contract_status == 1 &&
+                  $item->spb_status == 1 &&
+                  $item->payment_status == 1 &&
+                  $item->spk_status == 1 &&
+                  $item->examination_status == 1 &&
+                  $item->resume_status == 1 &&
+					date('Y-m-d') >= $item->resume_date
+					){ ?>
 									@if($item->examination_type_id == 1)
 										<a class="button button-3d nomargin btn-blue" href="{{URL::to('pengujian/'.$item->id.'/downloadLaporanPengujian')}}">{{ trans('translate.download') }} {{ trans('translate.examination_report') }}</a>
 									@else
@@ -1511,6 +1521,81 @@
 	</div><!-- /.modal -->
 </div>
 </form>
+
+<form id="form" role="form" method="POST" action="{{ url('/pengujian/tanggaluji') }}">
+{!! csrf_field() !!}
+<input type="hidden" name="hide_id_exam2" id="hide_id_exam2"/>
+<input type="hidden" name="hide_date_type2" id="hide_date_type2"/>
+<div class="modal fade" id="reschedule-modal-content2" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title"><i class="fa fa-eyes-open"></i> {{ trans('translate.reschedule_message') }}</h4>
+			</div>
+			
+			<div class="modal-body">
+				<table width=100%>
+					<tr>
+						<td>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											{{ trans('translate.reschedule_date_te1') }} *
+										</label>
+											<input type="text" id="deal_test_date2" class="form-control" placeholder="Tanggal ..." readonly>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											{{ trans('translate.reschedule_date_cust1') }} *
+										</label>
+											<input type="text" id="cust_test_date2" class="form-control" placeholder="Tanggal ..." readonly>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											{{ trans('translate.reschedule_date') }} *
+										</label>
+										<!-- <p class="input-group input-append"> -->
+											<input type="text" id="urel_test_date2" class="form-control datepicker" name="urel_test_date" placeholder="Tanggal ..." readonly>
+											<span class="input-group-btn">
+												<!-- <button type="button" class="btn btn-default"> -->
+													<i class="glyphicon glyphicon-calendar"></i>
+												<!-- </button> -->
+											</span>
+										<!-- </p> -->
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<label>
+											{{ trans('translate.reschedule_reason') }} *
+										</label>
+										<textarea name="alasan" class="form-control" placeholder="Alasan ..."></textarea>
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<table width=100%>
+					<tr>
+						<td>
+							<button type="submit" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>
+</form>
 @endsection
  
 @section('content_js')
@@ -1937,15 +2022,27 @@
        beforeShowDay: $.datepicker.noWeekends,
 
   });
-	function reSchedule(a,b,c){
+	function reSchedule(a,b,c,d,e){
+		if(c==1){
 			$('#reschedule-modal-content').modal('show');
 			$('#hide_id_exam').val(a);
 			$('#hide_date_type').val(c);
 			$('#reschedule-modal-content').on('shown.bs.modal', function() {
 				$('#cust_test_date').val(b);
 				$("#cust_test_date").focus();
-			})
+			});
+		}else if(c==2){
+			$('#reschedule-modal-content2').modal('show');
+			$('#hide_id_exam2').val(a);
+			$('#hide_date_type2').val(c);
+			$('#reschedule-modal-content2').on('shown.bs.modal', function() {
+				$('#cust_test_date2').val(b);
+				$('#deal_test_date2').val(d);
+				$('#urel_test_date2').val(e);
+				$("#urel_test_date2").focus();
+			});
 		}
+	}
 	$('.btn-submit').click(function(){
 		var APP_URL = {!! json_encode(url('/pengujian')) !!};
 		location.reload(APP_URL);
