@@ -1023,7 +1023,8 @@ class PengujianController extends Controller
 			$fPembayaran = $request->input('hide_file_pembayaran');
 		}
 			$timestamp = strtotime($request->input('tgl-pembayaran'));
-			$jumlah = $request->input('jml-pembayaran');
+			$jumlah = str_replace(".",'',$request->input('jml-pembayaran'));
+        	$jumlah = str_replace("Rp",'',$jumlah);
 			
 			try{
 				$query_update_attach = "UPDATE examination_attachments
