@@ -77,10 +77,11 @@ class AdminOnly
 
         
         $dataNotification = NotificationTable::where("is_read",0)->where("to","admin")->orderBy("created_at","desc")->limit(10)->get();
+        $dataNotificationCount = NotificationTable::where("is_read",0)->where("to","admin")->orderBy("created_at","desc")->count();
 
        View::share('tree_menus', $tree);
        View::share('notification_data', $dataNotification->toArray());
-       View::share('notification_count', $dataNotification->count());
+       View::share('notification_count', $dataNotificationCount);
     }
     
     public function createTree(&$list, $parent){
