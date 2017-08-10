@@ -75,12 +75,21 @@ class AdminOnly
             $tree[] = $this->createTree($new, array($value));
         } 
 
-        
-        $dataNotification = NotificationTable::where("is_read",0)->where("to","admin")->orderBy("created_at","desc")->limit(10)->get();
+        if($currentUser){
+            $dataNotification = NotificationTable::where("is_read",0)
+                            ->where("to","admin")->orderBy("created_at","desc")
+                            ->limit(10)->get()->toArray();
 
+            $countNotification = NotificationTable::where("is_read",0)
+                            ->where("to",$currentUser->id)->orderBy("created_at","desc")
+                            ->get()->count();
+        }else{
+            $dataNotification = array();
+            $countNotification = 0;
+        }
        View::share('tree_menus', $tree);
-       View::share('notification_data', $dataNotification->toArray());
-       View::share('notification_count', $dataNotification->count());
+       View::share('notification_data', $dataNotification);
+       View::share('notification_count', $countNotification);
     }
     
     public function createTree(&$list, $parent){

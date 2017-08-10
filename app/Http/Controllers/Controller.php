@@ -28,8 +28,9 @@ class Controller extends BaseController
 				View()->share('data_footers', $data_footers);
 
 				$dataNotification = NotificationTable::where("is_read",0)->where("to",$currentUser->id)->orderBy("created_at","desc")->limit(10)->get();
+				$countNotification = NotificationTable::where("is_read",0)->where("to",$currentUser->id)->orderBy("created_at","desc")->get()->count();
 				View()->share('notification_data_user', $dataNotification->toArray());
-				View()->share('notification_count', $dataNotification->count());
+				View()->share('notification_count', $countNotification);
 			}
 	}
 }
