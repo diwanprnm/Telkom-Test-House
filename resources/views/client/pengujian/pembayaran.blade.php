@@ -72,7 +72,7 @@
 														<td>{{ trans('translate.examination_date_payment') }} : <input type="text" id="tgl-pembayaran" class="date tgl-pembayaran" name="tgl-pembayaran" placeholder="Tanggal ..." value="<?php echo $timestamp; ?>" readonly required></td>
 													</tr>
 													<tr>
-														<td>{{ trans('translate.examination_price_payment') }} : <input type="number" id="jml-pembayaran" class="jml-pembayaran" name="jml-pembayaran" placeholder="<?php echo $cust_price_payment ?>" value="<?php echo $cust_price_payment ?>" required></td>
+														<td>{{ trans('translate.examination_price_payment') }} : <input type="text" id="jml-pembayaran" class="jml-pembayaran" name="jml-pembayaran" placeholder="<?php echo $cust_price_payment ?>" value="<?php echo $cust_price_payment ?>" required></td>
 													</tr>
 											</table>
 										</div>
@@ -114,7 +114,32 @@
 		// 	"format": "dd-mm-yyyy",
 		// 	"setDate": new Date(),
 		// 	"autoclose": true
-		// });		
+		// });
+
+		/* Dengan Rupiah */
+		 var jml_pembayaran = document.getElementById('jml-pembayaran');
+		jml_pembayaran.addEventListener('keyup', function(e)
+		{
+			jml_pembayaran.value = formatRupiah(this.value, 'Rp. ');
+		}); 
+		
+		/* Fungsi */
+		function formatRupiah(angka, prefix)
+		{
+			var number_string = angka.replace(/[^,\d]/g, '').toString(),
+				split	= number_string.split(','),
+				sisa 	= split[0].length % 3,
+				rupiah 	= split[0].substr(0, sisa),
+				ribuan 	= split[0].substr(sisa).match(/\d{3}/gi);
+				
+			if (ribuan) {
+				separator = sisa ? '.' : '';
+				rupiah += separator + ribuan.join('.');
+			}
+			
+			rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+			return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+		}		
 
 		var spb_date = $("#spd_date").val();
 
