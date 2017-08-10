@@ -241,8 +241,8 @@
             if(message.data.to === "admin"){ 
                 var notificationCount = parseInt($(".notification-count").html());
                  var html =  '<li>'+
-                                    '<a data-url="'+message.data.url+'" data-id="'+message.data.id+'" class="notifData">'+ message.data.message
-                                   '</a>'+
+                                    '<a data-url="'+message.data.url+'" data-id="'+message.data.id+'" class="notifData">'+ message.data.message.length > 35 ? message.data.message.substr(0, 35)+'...' : message.data.message
+                                   +'</a>'+
                                 '</li>';
                 $(".dropdown-messages").append(html);
                 $(".notification-count").html(notificationCount+1);
