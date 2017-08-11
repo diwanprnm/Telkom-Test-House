@@ -14,6 +14,10 @@
 	.edit_btn {
     	margin-top: 0;
 	}
+	p.text-company-email-caption {
+    	margin-top: 40px;
+    	font-size: 14px;
+	}
 }
 @media (max-width: 768px){
 	.garis{
@@ -27,6 +31,15 @@
     	width: 50px !important;
     	height: 50px !important;
     	font-size: 10px !important;
+	}
+	p.text-company-email-caption {
+    	font-size: 10px;
+	}
+	#table_kuisioner tr th, tr td {
+    	font-size: 60%;
+	}
+	.table-responsive tr th, tr td {
+    	font-size: 60%;
 	}
 }
 
@@ -42,5 +55,17 @@
 	 }
 	 .edit_btn {
     	margin-top: 2% !important;
+	}
+	ul.tab-nav:not(.tab-nav-lg) li:first-child{
+		margin-left: 0px
+	}
+	ul.tab-nav:not(.tab-nav-lg) li a{
+		font-size: 11px;
+	}
+	h3 {
+    	text-align: center;
+	}
+	.login-link{
+		margin-top:20px;
 	}
 }

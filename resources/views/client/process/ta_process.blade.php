@@ -155,7 +155,7 @@
 											  value="{{$userData->emailPerusahaan}}">
 										</div>
 										<div class="form-group" style="margin-top:-30px; margin-bottom:30px; height:25px; font-size: 80%;">
-											{{ trans('translate.service_company_confirm') }}
+											<p class="text-company-email-caption">{{ trans('translate.service_company_confirm') }}</p>
 										</div> 
 					            </fieldset>
 
