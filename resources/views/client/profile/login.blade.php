@@ -50,9 +50,13 @@
 								</div>
 
 								<div class="col_full form-group">
-									<button class="button button-3d btn-sky nomargin" id="login-form-submit" name="login-form-submit" value="login">{{ trans('translate.login') }}</button>
-									<a href="{{ url('/client/password/resetPass') }}" class="fright">{{ trans('translate.forgot') }}</a><br>
-									<a href="{{ url('/register') }}" class="fright">{{ trans('translate.have_not_account') }}</a>
+									<button class="button button-3d btn-sky nomargin hidden-xs hidden-sm show-md show-lg " id="login-form-submit" name="login-form-submit" value="login">{{ trans('translate.login') }}</button>
+									<button class="button button-3d btn-sky btn-login-lg hidden-md hidden-lg show-xs show-sm nomargin" id="login-form-submit" name="login-form-submit" value="login">{{ trans('translate.login') }}</button>
+
+									<div class="login-link">
+										<a href="{{ url('/client/password/resetPass') }}" class="fright">{{ trans('translate.forgot') }}</a><br>
+										<a href="{{ url('/register') }}" class="fright">{{ trans('translate.have_not_account') }}</a>	
+									</div>
 								</div>
 
 							</form>

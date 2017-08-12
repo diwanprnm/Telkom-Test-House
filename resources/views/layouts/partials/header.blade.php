@@ -231,17 +231,9 @@
         <nav id="primary-menu">
 
             <ul>
-             <li>  
-               <form  role="form" method="POST" action="{{ url('/global/search') }}">
-                {{ csrf_field() }}
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                
-                  <input type="text" class="form-control search_data" placeholder="{{ trans('translate.search') }}" name="globalSearch"> 
-              </form>
-              </li>
               <li class="{{ (empty($page)) ?'current':''}}">
                 <a href="{{url('/')}}">{{ trans('translate.home') }}</a>
-              </li>  
+              </li> 
               <li class="{{ (!empty($page) && ($page == 'about' || $page == 'sertifikasi' || $page == 'contact'))?'current':''}}">
                 <a href="#" >{{ trans('translate.menu_company') }}  <i class="icon-angle-down"></i></a>
                 <ul>
@@ -272,7 +264,7 @@
                           <li><a href="{{url('STSELclient')}}">{{ trans('translate.stels') }}</a></li>
                       </ul>
                   </li>
-                  <li><a href="#">{{ trans('translate.process') }}</a></li>
+                  <li><a href="{{url('process')}}">{{ trans('translate.process') }}</a></li>
                   <li><a href="{{url('Chargeclient')}}">{{ trans('translate.charge') }}</a></li>
                 </ul>
               </li> 
