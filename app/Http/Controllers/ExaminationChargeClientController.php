@@ -46,16 +46,16 @@ class ExaminationChargeClientController extends Controller
                 $query = ExaminationCharge::whereNotNull('created_at')
                     ->where('device_name','like','%'.$search.'%');
 
-                    $logs = new Logs;
-                    $currentUser = Auth::user();
-                    $logs->user_id = $currentUser->id;
-                    $logs->id = Uuid::uuid4();
-                    $logs->action = "Search Charge";
-                    $datasearch = array("search"=>$search);
-                    $logs->data = json_encode($datasearch);
-                    $logs->created_by = $currentUser->id;
-                    $logs->page = "CHARGE";
-                    $logs->save();
+                    //$logs = new Logs;
+                    //$currentUser = Auth::user();
+                    //$logs->user_id = $currentUser->id;
+                    //$logs->id = Uuid::uuid4();
+                    //$logs->action = "Search Charge";
+                    //$datasearch = array("search"=>$search);
+                    //$logs->data = json_encode($datasearch);
+                    //$logs->created_by = $currentUser->id;
+                    //$logs->page = "CHARGE";
+                    //$logs->save();
 
             }else{
                 $query = ExaminationCharge::whereNotNull('created_at');

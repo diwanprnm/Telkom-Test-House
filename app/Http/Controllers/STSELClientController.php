@@ -53,15 +53,15 @@ class STSELClientController extends Controller
                     })
                     ->with('examinationLab')
                     ;
-                    $logs = new Logs;
-                    $currentUser = Auth::user();
-                    $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                    $logs->action = "Search STSEL";
-                    $datasearch = array("search"=>$search,"type"=>$type);
-                    $logs->data = json_encode($datasearch);
-                    $logs->created_by = $currentUser->id;
-                    $logs->page = "STSEL";
-                    $logs->save();
+                    //$logs = new Logs;
+                    //$currentUser = Auth::user();
+                    //$logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
+                    //$logs->action = "Search STSEL";
+                    //$datasearch = array("search"=>$search,"type"=>$type);
+                    //$logs->data = json_encode($datasearch);
+                    //$logs->created_by = $currentUser->id;
+                    //$logs->page = "STSEL";
+                    //$logs->save();
             }else{
                 $query = STEL::whereNotNull('created_at')
 					->where('stel_type','=','2')

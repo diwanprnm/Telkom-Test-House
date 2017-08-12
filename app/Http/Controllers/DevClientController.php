@@ -77,16 +77,16 @@ class DevClientController extends Controller
 				->orderBy('devices.valid_thru', 'desc')
 				->paginate($paginate);
 
-					$logs = new Logs;
-                $currentUser = Auth::user();
-                $logs->user_id = $currentUser->id;
-                $logs->id = Uuid::uuid4();
-                $logs->action = "Search Certified Device";
-                $datasearch = array("search"=>$search);
-                $logs->data = json_encode($datasearch);
-                $logs->created_by = $currentUser->id;
-                $logs->page = "CERTIFIED DEVICE";
-                $logs->save();
+//					$logs = new Logs;
+//                $currentUser = Auth::user();
+               // $logs->user_id = $currentUser->id;
+                //$logs->id = Uuid::uuid4();
+                //$logs->action = "Search Certified Device";
+                //$datasearch = array("search"=>$search);
+                //$logs->data = json_encode($datasearch);
+                //$logs->created_by = $currentUser->id;
+                //$logs->page = "CERTIFIED DEVICE";
+                //$logs->save();
             }else{
 				$dev = DB::table('examinations')
 				->join('devices', 'examinations.device_id', '=', 'devices.id')
