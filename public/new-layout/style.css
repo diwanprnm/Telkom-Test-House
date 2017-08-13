@@ -13798,6 +13798,7 @@ body:not(.no-transition) #wrapper,
 
 .number{
     position: relative;
+    width: 200%;
 }
 .number p {
     font-size: 14px;
