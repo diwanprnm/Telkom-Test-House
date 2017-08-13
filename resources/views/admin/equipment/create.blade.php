@@ -140,9 +140,9 @@
 									<div class="col-md-3">
 										<div class="form-group">
 											<label>
-												Deskripsi
+												Uraian Perangkat
 											</label>
-											<textarea type="text" name="description[]" class="form-control" placeholder="Deskripsi"></textarea>
+											<textarea type="text" name="description[]" class="form-control" placeholder="Uraian Perangkat"></textarea>
 										</div>
 									</div>
 									
