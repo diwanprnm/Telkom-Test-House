@@ -511,7 +511,7 @@ class UserController extends Controller
             try{
 				$user->is_deleted = 1;
 				$user->deleted_by = $currentUser->id;
-				$user->deleted_at = ''.date('Y-m-d h:i:s').'';
+				$user->deleted_at = ''.date('Y-m-d H:i:s').'';
                 $user->save();
 
                 $logs = new Logs;

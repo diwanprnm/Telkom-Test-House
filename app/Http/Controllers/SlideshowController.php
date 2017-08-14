@@ -151,8 +151,8 @@ class SlideshowController extends Controller
         $slideshow->is_active = $request->input('is_active');
         $slideshow->created_by = $currentUser->id;
         // $slideshow->updated_by = $currentUser->id;
-		$slideshow->created_at = ''.date('Y-m-d h:i:s').'';
-        // $slideshow->updated_at = ''.date('Y-m-d h:i:s').'';
+		$slideshow->created_at = ''.date('Y-m-d H:i:s').'';
+        // $slideshow->updated_at = ''.date('Y-m-d H:i:s').'';
 
         try{
             $slideshow->save();
@@ -240,7 +240,7 @@ class SlideshowController extends Controller
         }
 
         $slideshow->updated_by = $currentUser->id;
-		$slideshow->updated_at = ''.date('Y-m-d h:i:s').'';
+		$slideshow->updated_at = ''.date('Y-m-d H:i:s').'';
 
         try{
             $slideshow->save();

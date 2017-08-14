@@ -491,7 +491,7 @@ class CompanyController extends Controller
 		if($request->hasFile('import_file')){
 			$path = $request->file('import_file')->getRealPath();
 			$data = Excel::load($path, function($reader) {})->get();
-			$datenow = date('Y-m-d h:i:s');
+			$datenow = date('Y-m-d H:i:s');
 			if(!empty($data) && $data->count()){
 				foreach ($data->toArray() as $key => $value) {
 					// if(!empty($value)){
