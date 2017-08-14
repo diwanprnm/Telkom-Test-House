@@ -243,8 +243,8 @@
 
                  if (message.data.message.length > 35){
                     var html =  '<li>'+
-                                    '<a data-url="'+message.data.url+'" data-id="'+message.data.id+'" class="notifData">'+ message.data.message.substring(0, 35)
-                                   '...</a>'+
+                                    '<a data-url="'+message.data.url+'" data-id="'+message.data.id+'" class="notifData">'+ message.data.message.substring(0, 30)+'...'
+                                   '</a>'+
                                 '</li>';
                  } else {
                     var html =  '<li>'+
