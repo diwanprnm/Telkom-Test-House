@@ -1160,6 +1160,20 @@ class PengujianController extends Controller
 					"created_at"=>date("Y-m-d H:i:s"),
 					"updated_at"=>date("Y-m-d H:i:s")
 					);
+					
+					$notification = new NotificationTable();
+					$notification->id = Uuid::uuid4();
+					  $notification->from = $data['from'];
+					  $notification->to = $data['to'];
+					  $notification->message = $data['message'];
+					  $notification->url = $data['url'];
+					  $notification->is_read = $data['is_read'];
+					  $notification->created_at = $data['created_at'];
+					  $notification->updated_at = $data['updated_at'];
+					  $notification->save();
+					  $data['id'] = $notification->id;
+					  event(new Notification($data));
+					return back();
 
 			} catch(Exception $e){
 				Session::flash('error', 'Update failed');
@@ -1219,6 +1233,21 @@ class PengujianController extends Controller
 					"created_at"=>date("Y-m-d H:i:s"),
 					"updated_at"=>date("Y-m-d H:i:s")
 					);
+					
+					$notification = new NotificationTable();
+					$notification->id = Uuid::uuid4();
+					  $notification->from = $data['from'];
+					  $notification->to = $data['to'];
+					  $notification->message = $data['message'];
+					  $notification->url = $data['url'];
+					  $notification->is_read = $data['is_read'];
+					  $notification->created_at = $data['created_at'];
+					  $notification->updated_at = $data['updated_at'];
+					  $notification->save();
+					  $data['id'] = $notification->id;
+					  event(new Notification($data));
+					return back();
+					
 			} catch(Exception $e){
 				Session::flash('error', 'Update failed');
 				// return back();
@@ -1260,25 +1289,25 @@ class PengujianController extends Controller
 					"created_at"=>date("Y-m-d H:i:s"),
 					"updated_at"=>date("Y-m-d H:i:s")
 					);
+					
+					 $notification = new NotificationTable();
+					$notification->id = Uuid::uuid4();
+					  $notification->from = $data['from'];
+					  $notification->to = $data['to'];
+					  $notification->message = $data['message'];
+					  $notification->url = $data['url'];
+					  $notification->is_read = $data['is_read'];
+					  $notification->created_at = $data['created_at'];
+					  $notification->updated_at = $data['updated_at'];
+					  $notification->save();
+					  $data['id'] = $notification->id;
+					  event(new Notification($data));
+					return back();
 				
 			} catch(Exception $e){
 				Session::flash('error', 'Update failed');
 			}
 		}
-		
-		  $notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
-	      $notification->from = $data['from'];
-	      $notification->to = $data['to'];
-	      $notification->message = $data['message'];
-	      $notification->url = $data['url'];
-	      $notification->is_read = $data['is_read'];
-	      $notification->created_at = $data['created_at'];
-	      $notification->updated_at = $data['updated_at'];
-	      $notification->save();
-	      $data['id'] = $notification->id;
-	      event(new Notification($data));
-		return back();
     }
 	
 	public function sendProgressEmail($message)
