@@ -240,10 +240,18 @@
             console.log(message.data);
             if(message.data.to === "admin"){ 
                 var notificationCount = parseInt($(".notification-count").html());
-                 var html =  '<li>'+
+
+                 if (message.data.message.length > 35){
+                    var html =  '<li>'+
+                                    '<a data-url="'+message.data.url+'" data-id="'+message.data.id+'" class="notifData">'+ message.data.message.substring(0, 35)
+                                   '...</a>'+
+                                '</li>';
+                 } else {
+                    var html =  '<li>'+
                                     '<a data-url="'+message.data.url+'" data-id="'+message.data.id+'" class="notifData">'+ message.data.message
                                    '</a>'+
                                 '</li>';
+                 }
                 $(".dropdown-messages").prepend(html);
                 $(".notification-count").html(notificationCount+1);
                 initClickNotif();
