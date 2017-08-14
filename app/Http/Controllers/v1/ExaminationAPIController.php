@@ -624,7 +624,7 @@ class ExaminationAPIController extends AppBaseController
 			$id_user = 1;
 		}
 
-    	if(!empty($param->id) && !empty($param->function_test_date)&& !empty($param->function_test_pic)&& !empty($param->reason)&& !empty($param->date_type)&& !empty($param->is_agree)){
+    	if(!empty($param->id) && !empty($param->function_test_date)&& !empty($param->function_test_pic)&& !empty($param->reason)&& !empty($param->date_type)){
     		$examinations = Examination::find($param->id);
     		if($examinations){
 				if($param->date_type == 1){
