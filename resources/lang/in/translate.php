@@ -39,7 +39,7 @@ return [
 	'service_device_capacity'		=> 'Kapasitas/Kecepatan', // Capacity
 	'service_device_manufactured_by'=> 'Negara Pembuat', // Made in
 	'service_device_serial_number'	=> 'Nomor Seri',
-	'service_device_model'			=> 'Model/Tipe',
+	'service_device_model'			=> 'Model/Type',
 	'service_device_test_reference'	=> 'Referensi Uji',
 	'service_device_document'		=> 'Dokumen Pendukung',
 	
@@ -171,7 +171,7 @@ return [
 	'examination_date_payment'=> 'Tanggal Pembayaran',
 	'examination_price_payment'=> 'Jumlah Biaya yang ditransfer',
 	'examination_upload_payment_file'=> 'Unggah',
-	'examination_model'=> 'Model/Tipe',
+	'examination_model'=> 'Model/Type',
 	'examination_capacity'=> 'Kapasitas',
 	'examination_company'=> 'Perusahaan',
 	'examination_date_regist'=> 'Tanggal Pengajuan',

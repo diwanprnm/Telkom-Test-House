@@ -204,7 +204,7 @@
                       '</div>'+
                     '</div>'+
                   '</div>';
-                $(".top-notification-content").append(html);
+                $(".top-notification-content").prepend(html);
                 $("#notification-count").html(notificationCount+1); 
 
                 initClickNotif();

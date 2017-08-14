@@ -244,7 +244,7 @@
                                     '<a data-url="'+message.data.url+'" data-id="'+message.data.id+'" class="notifData">'+ message.data.message
                                    '</a>'+
                                 '</li>';
-                $(".dropdown-messages").append(html);
+                $(".dropdown-messages").prepend(html);
                 $(".notification-count").html(notificationCount+1);
                 initClickNotif();
             }

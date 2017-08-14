@@ -29,7 +29,7 @@ return [
 	'service_company_fax'		=> 'Facsimile',
 	'service_company_email'		=> 'Email',
 	'service_company_agent'		=> 'Agent',
-	'service_company_branch'	=> 'Branch',
+	'service_company_branch'	=> 'Factory',
 	'service_company_individual'=> 'Individual',
 	'service_company_confirm'	=> "*If there is any change in the company's data, please send email to Admin urelddstelkom@gmail.com",
 	
