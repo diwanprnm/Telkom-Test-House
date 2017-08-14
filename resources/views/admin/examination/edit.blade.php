@@ -503,9 +503,9 @@
 										<tbody>
 											<tr>
 												<td>Pengajuan Tanggal Customer</td>
-												<td>Jadwal Ulang dari Test Enginner</td>
-												<td>Pengajuan Tanggal Akhir Customer</td>
-												<td>Penetapan Tanggal Uji Fungsi</td>
+												<td>Jadwal dari Test Enginner</td>
+												<td>Pengajuan Ulang dari Customer</td>
+												<td>Jadwal dari Test Enginner</td>
 											</tr>
 											<tr>
 												<td>
@@ -523,12 +523,17 @@
 											</tr>
 										</tbody>
 									</table>
+
+									@if($data->function_test_reason != '')
+										<label for="alasan">Alasan Jadwal Ulang:</label>
+										<textarea class="form-control" rows="2" name="reason" id="reason" readonly>{{ $data->function_test_reason }}</textarea>
+									@endif
 								</div>
 								@if($data->function_test_date_approval == 1)
 									<div class="col-md-4"></div>
 									<div class="col-md-4">
 										<div class="form-group">
-											<h4 style="display:inline">Jadwal Uji Fungsi</h4>
+											<h4 style="display:inline">Jadwal FIX Uji Fungsi</h4>
 											@if($data->function_date != null)		
 												<h4 style="display:inline">: <?php echo $data->function_date; ?></h4>
 											@else
@@ -539,28 +544,21 @@
 									<div class="col-md-4"></div>
 								@endif
 							</div>							
-							@if($data->function_test_reason != '')
-								<div class="col-md-12">
-									<div class="form-group">
-										<label for="alasan">Alasan :</label>
-										<textarea class="form-control" rows="2" name="reason" id="reason" readonly>{{ $data->function_test_reason }}</textarea>
-									</div>
+
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Lokasi Barang Sebelum Uji Fungsi
+									</label>
+									<select name="masukkan_barang" class="cs-select cs-skin-elastic">
+										@if(count($data->equipment)==0)
+											<option value="1" selected>Customer (Applicant)</option>
+										@else
+											<option value="2" selected>URel (Store)</option>
+										@endif
+									</select>
 								</div>
-							@endif
-								<div class="col-md-12">
-									<div class="form-group">
-										<label for="form-field-select-2">
-											Lokasi Barang Sebelum Uji Fungsi
-										</label>
-										<select name="masukkan_barang" class="cs-select cs-skin-elastic">
-											@if(count($data->equipment)==0)
-												<option value="1" selected>Customer (Applicant)</option>
-											@else
-												<option value="2" selected>URel (Store)</option>
-											@endif
-										</select>
-									</div>
-								</div>
+							</div>
 								@if($data->function_date != null)
 									<?php $in_equip_date = $data->function_date; ?>
 								@elseif($data->function_date == null && $data->urel_test_date != null)
