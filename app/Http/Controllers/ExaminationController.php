@@ -757,6 +757,7 @@ $notification->id = Uuid::uuid4();
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","SPB",$request->input('keterangan'));
 			}
         }
+		$spk_created = 0;
         if ($request->has('payment_status')){
 			if ($request->hasFile('kuitansi_file')) {
 				$name_file = 'kuitansi_'.$request->file('kuitansi_file')->getClientOriginalName();
@@ -860,8 +861,9 @@ $notification->id = Uuid::uuid4();
 				$spk_number_forOTR = $this->generateSPKCOde($exam_forOTR->examinationLab->lab_code,$exam_forOTR->examinationType->name,date('Y'));
 				$exam->spk_code = $spk_number_forOTR;
 				$exam->spk_date = date('Y-m-d');
+					$spk_created = 1;
 				// $res_exam_schedule = $client->post('notification/notifToTE?lab=?'.$exam->examinationLab->lab_code)->getBody();
-				$res_exam_schedule = $client->get('spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR);
+				// $res_exam_schedule = $client->get('spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR);
 				if($exam->payment_status){
 					
 						$data= array( 
@@ -1336,6 +1338,9 @@ $notification->id = Uuid::uuid4();
 
         try{
             $exam->save();
+			if($spk_created == 1){
+				$res_exam_schedule = $client->get('spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR);				
+			}
              
 				$exam_hist = new ExaminationHistory;
 				$exam_hist->examination_id = $exam->id;

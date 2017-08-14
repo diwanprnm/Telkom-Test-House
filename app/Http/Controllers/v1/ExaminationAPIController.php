@@ -1047,12 +1047,10 @@ $notification->id = Uuid::uuid4();
 					$examinations->urel_test_date = NULL;
 					$examinations->function_date = NULL;
 					$examinations->function_test_reason = NULL;
-					$examinations->function_status = -1;
 				}
 				$examinations->catatan = $param->catatan;
 				$examinations->function_test_TE = $param->function_result;
 				$examinations->function_test_PIC = $param->function_test_pic;
-				// $examinations->function_test_NO = $this->generateFunctionTestNumber($examinations->examination_type_id);
     			if($examinations->save()){
     				 $data= array( 
 		                "from"=>$id_user,

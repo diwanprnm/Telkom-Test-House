@@ -3265,6 +3265,9 @@ array('as' => 'cetakHasilUjiFungsi', function(
 	$pdf->Cell(20,50,'pada kolom',0,0,'L');
 	$pdf->SetFont('','B');
 	$pdf->Cell(35,50,'HASIL UJI FUNGSI',0,0,'L');
+	$pdf->Ln(40);
+	$pdf->SetFont('helvetica','',8);
+	$pdf->Cell(185,5,"IASO2/F/005 Versi 01",0,0,'R');
 
 /*Footer Manual*/
 	
@@ -3766,7 +3769,9 @@ Route::get('/cetakKuisioner', array('as' => 'cetakKuisioner', function(Illuminat
 		$pdf->SetWidths(array(0.00125,170));
 		$pdf->SetAligns(array('L','L')); 
 		$pdf->RowRect(array('',$questioner[0]->questioner[0]->quest6)); 
-
+		$pdf->Ln(6);
+		$pdf->SetFont('helvetica','',8);
+		$pdf->Cell(185,5,"IASO6/F/002 Versi 03",0,0,'R');
 		$pdf->Output();
 		exit;
 		
@@ -3815,6 +3820,9 @@ Route::get('/cetakComplaints', array('as' => 'cetakComplaints', function(Illumin
 	$pdf->SetMargins(0,0,0);
 	$pdf->Cell(90, 40, 'Signature Of Receipt :', 1, 0, 'L');
 	$pdf->Cell(90, 40, 'Name Of Receipt', 1, 0, 'LT'); 
+	$pdf->Ln(6);
+	$pdf->SetFont('helvetica','',8);
+	$pdf->Cell(185,5,"IASO4/F/001 Versi 01",0,0,'R');
 
 	$pdf->Output();
 	exit;
