@@ -492,46 +492,53 @@
 							Step Uji Fungsi
 						</legend>
 						<div class="row">
-							<div class="col-md-6">
+							<div class="col-md-12">
 								<div class="form-group">
-									<label>
-										<strong>Pengajuan Tanggal dari Customer</strong>
-									</label>
-									<label>
-										<strong>: <?php echo $data->cust_test_date; ?></strong>
-									</label>
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th colspan="4">Riwayat Pengajuan Tanggal Uji Fungsi</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>Pengajuan Tanggal Customer</td>
+												<td>Jadwal Ulang dari Test Enginner</td>
+												<td>Pengajuan Tanggal Akhir Customer</td>
+												<td>Penetapan Tanggal Uji Fungsi</td>
+											</tr>
+											<tr>
+												<td>
+													<strong><?php echo $data->cust_test_date; ?></strong>
+												</td>
+												<td>
+													<strong><?php echo $data->deal_test_date; ?></strong>
+												</td>
+												<td>
+													<strong><?php echo $data->urel_test_date; ?></strong>
+												</td>
+												<td>
+													<strong><?php echo $data->function_date; ?></strong>
+												</td>
+											</tr>
+										</tbody>
+									</table>
 								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>
-										<strong>Penetapan Tanggal dari Test Enginner</strong>
-									</label>
-									<label>
-										<strong>: <?php echo $data->deal_test_date; ?></strong>
-									</label>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>
-										<strong>Pengajuan Tanggal Akhir dari Customer</strong>
-									</label>
-									<label>
-										<strong>: <?php echo $data->urel_test_date; ?></strong>
-									</label>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>
-										<strong>Penetapan Tanggal Akhir dari Test Enginner</strong>
-									</label>
-									<label>
-										<strong>: <?php echo $data->function_date; ?></strong>
-									</label>
-								</div>
-							</div>
+								@if($data->function_test_date_approval == 1)
+									<div class="col-md-4"></div>
+									<div class="col-md-4">
+										<div class="form-group">
+											<h4 style="display:inline">Jadwal Uji Fungsi</h4>
+											@if($data->function_date != null)		
+												<h4 style="display:inline">: <?php echo $data->function_date; ?></h4>
+											@else
+												<h4 style="display:inline">: <?php echo $data->deal_test_date; ?></h4>
+											@endif
+										</div>
+									</div>
+									<div class="col-md-4"></div>
+								@endif
+							</div>							
 							@if($data->function_test_reason != '')
 								<div class="col-md-12">
 									<div class="form-group">
