@@ -164,6 +164,7 @@ return [
 	
 	'examination_function_test_date'=> 'Function Test Date',
 	'examination_reschedule_test_date'=> 'Function Test',
+	'examination_approve_test_date'=> 'Approve Function Test',
 	'examination_upload_payment'=> 'Upload Payment Attachment',
 	'examination_file_payment'=> 'Payment Attachment',
 	'examination_number_payment'=> 'SPB Number',
@@ -291,6 +292,7 @@ return [
 	'download_certificate_message'		=> 'Certificate will automaticly downloaded, Please give testimonial first!',
 	
 	'reschedule_message'	=> 'Select Date to do Function Test!',
+	'reschedule_message_agree'	=> 'Approval Date to do Function Test',
 	'reschedule_date'		=> 'Date',
 	'reschedule_date_cust1'	=> 'First Request from Customer',
 	'reschedule_date_te1'	=> 'Date from TE',
@@ -345,6 +347,7 @@ return [
 	'certificate' => 'Certificate',
 	'from_customer' => 'from Customer',
 	'from_te' => 'from Test Enginner',
+	'approved' => 'APPRVOED',
 	
 	'document_not_found'	=> 'Document Not Found',
 	'tax'  	=> 'Tax',

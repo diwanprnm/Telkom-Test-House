@@ -318,8 +318,8 @@ class PermohonanController extends Controller
         $device->is_active = 1;
         $device->created_by = ''.$user_id.'';
         $device->updated_by = ''.$user_id.'';
-        $device->created_at = ''.date('Y-m-d h:i:s').'';
-        $device->updated_at = ''.date('Y-m-d h:i:s').'';
+        $device->created_at = ''.date('Y-m-d H:i:s').'';
+        $device->updated_at = ''.date('Y-m-d H:i:s').'';
 
         try{
             $device->save();
@@ -357,8 +357,8 @@ class PermohonanController extends Controller
         $exam->certificate_status = 0;
 		$exam->created_by = ''.$user_id.'';
         $exam->updated_by = ''.$user_id.'';
-        $exam->created_at = ''.date('Y-m-d h:i:s').'';
-        $exam->updated_at = ''.date('Y-m-d h:i:s').'';
+        $exam->created_at = ''.date('Y-m-d H:i:s').'';
+        $exam->updated_at = ''.date('Y-m-d H:i:s').'';
         $exam->jns_perusahaan = ''.$jns_perusahaan.'';
         $exam->is_loc_test = $lokasi_pengujian;
         $exam->keterangan = ''.$request->input('hide_cekSNjnsPengujian').'';
@@ -379,8 +379,8 @@ class PermohonanController extends Controller
 		// if($jns_pengujian == 1){
 			// try{
 				// DB::table('examination_attachments')->insert([
-					// ['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Referensi Uji', 'attachment' => ''.$fuploadrefuji_name.'', 'no' => ''.$no_ref_uji.'', 'tgl' => ''.$tgl_ref_uji.'', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-					// ['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Surat Dukungan Prinsipal', 'attachment' => ''.$fuploadprinsipal_name.'', 'no' => ''.$no_surat_prinsipal.'', 'tgl' => ''.$tgl_surat_prinsipal.'', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').'']
+					// ['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Referensi Uji', 'attachment' => ''.$fuploadrefuji_name.'', 'no' => ''.$no_ref_uji.'', 'tgl' => ''.$tgl_ref_uji.'', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').''],
+					// ['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Surat Dukungan Prinsipal', 'attachment' => ''.$fuploadprinsipal_name.'', 'no' => ''.$no_surat_prinsipal.'', 'tgl' => ''.$tgl_surat_prinsipal.'', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').'']
 				// ]);
 			// } catch(Exception $e){
 				// DB::table('examinations')->where('id', '=', ''.$exam_id.'')->delete();
@@ -389,8 +389,8 @@ class PermohonanController extends Controller
 		// }else if($jns_pengujian == 2){
 			// try{
 				// DB::table('examination_attachments')->insert([
-					// ['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Referensi Uji', 'attachment' => ''.$fuploadrefuji_name.'', 'no' => ''.$no_ref_uji.'', 'tgl' => ''.$tgl_ref_uji.'', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-					// ['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'SP3', 'attachment' => ''.$fuploadsp3_name.'', 'no' => ''.$no_sp3.'', 'tgl' => ''.$tgl_sp3.'', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').'']
+					// ['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Referensi Uji', 'attachment' => ''.$fuploadrefuji_name.'', 'no' => ''.$no_ref_uji.'', 'tgl' => ''.$tgl_ref_uji.'', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').''],
+					// ['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'SP3', 'attachment' => ''.$fuploadsp3_name.'', 'no' => ''.$no_sp3.'', 'tgl' => ''.$tgl_sp3.'', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').'']
 				// ]);
 			// } catch(Exception $e){
 				// DB::table('examinations')->where('id', '=', ''.$exam_id.'')->delete();
@@ -399,7 +399,7 @@ class PermohonanController extends Controller
 		// }else{
 			// try{
 				// DB::table('examination_attachments')->insert([
-					// ['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Referensi Uji', 'attachment' => ''.$fuploadrefuji_name.'', 'no' => ''.$no_ref_uji.'', 'tgl' => ''.$tgl_ref_uji.'', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').'']
+					// ['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Referensi Uji', 'attachment' => ''.$fuploadrefuji_name.'', 'no' => ''.$no_ref_uji.'', 'tgl' => ''.$tgl_ref_uji.'', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').'']
 				// ]);
 			// } catch(Exception $e){
 				// DB::table('examinations')->where('id', '=', ''.$exam_id.'')->delete();
@@ -455,40 +455,40 @@ class PermohonanController extends Controller
 		if($jns_pengujian == 1){
 			if($jns_perusahaan != 'Pabrikan'){
 				DB::table('examination_attachments')->insert([
-					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'File Pembayaran', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Referensi Uji', 'attachment' => ''.$fuploadrefuji_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Surat Dukungan Prinsipal', 'attachment' => ''.$fuploadprinsipal_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Tinjauan Kontrak', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Uji', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'File Lainnya', 'attachment' => ''.$fuploaddll_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Hasil Uji Fungsi', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').'']
+					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'File Pembayaran', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').''],
+					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Referensi Uji', 'attachment' => ''.$fuploadrefuji_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').''],
+					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Surat Dukungan Prinsipal', 'attachment' => ''.$fuploadprinsipal_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').''],
+					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Tinjauan Kontrak', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').''],
+					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Uji', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').''],
+					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'File Lainnya', 'attachment' => ''.$fuploaddll_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').''],
+					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Hasil Uji Fungsi', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').'']
 				]);
 			}else{
 				DB::table('examination_attachments')->insert([
-					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'File Pembayaran', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Referensi Uji', 'attachment' => ''.$fuploadrefuji_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Tinjauan Kontrak', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Uji', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'File Lainnya', 'attachment' => ''.$fuploaddll_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Hasil Uji Fungsi', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').'']
+					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'File Pembayaran', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').''],
+					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Referensi Uji', 'attachment' => ''.$fuploadrefuji_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').''],
+					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Tinjauan Kontrak', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').''],
+					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Uji', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').''],
+					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'File Lainnya', 'attachment' => ''.$fuploaddll_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').''],
+					['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Hasil Uji Fungsi', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').'']
 				]);
 			}
 		}else if($jns_pengujian == 2){
 			DB::table('examination_attachments')->insert([
-				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'File Pembayaran', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Referensi Uji', 'attachment' => ''.$fuploadrefuji_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'SP3', 'attachment' => ''.$fuploadsp3_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Tinjauan Kontrak', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'File Lainnya', 'attachment' => ''.$fuploaddll_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Uji', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').'']
+				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'File Pembayaran', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').''],
+				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Referensi Uji', 'attachment' => ''.$fuploadrefuji_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').''],
+				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'SP3', 'attachment' => ''.$fuploadsp3_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').''],
+				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Tinjauan Kontrak', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').''],
+				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'File Lainnya', 'attachment' => ''.$fuploaddll_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').''],
+				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Uji', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').'']
 			]);
 		}else{
 			DB::table('examination_attachments')->insert([
-				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'File Pembayaran', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Referensi Uji', 'attachment' => ''.$fuploadrefuji_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Tinjauan Kontrak', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'File Lainnya', 'attachment' => ''.$fuploaddll_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').''],
-				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Uji', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d h:i:s').'', 'updated_at' => ''.date('Y-m-d h:i:s').'']
+				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'File Pembayaran', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').''],
+				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Referensi Uji', 'attachment' => ''.$fuploadrefuji_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').''],
+				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Tinjauan Kontrak', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').''],
+				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'File Lainnya', 'attachment' => ''.$fuploaddll_name.'', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').''],
+				['id' => Uuid::uuid4(), 'examination_id' => ''.$exam_id.'', 'name' => 'Laporan Uji', 'attachment' => '', 'no' => '', 'tgl' => '', 'created_by' => ''.$user_id.'', 'updated_by' => ''.$user_id.'', 'created_at' => ''.date('Y-m-d H:i:s').'', 'updated_at' => ''.date('Y-m-d H:i:s').'']
 			]);
 		}
 		
@@ -502,7 +502,7 @@ class PermohonanController extends Controller
 				qs_certificate_file = '".$fuploadlampiran_name."',
 				qs_certificate_date = '".date("Y-m-d", strtotime($batas_waktu_sistem))."',
 				updated_by = '".$user_id."',
-				updated_at = '".date('Y-m-d h:i:s')."'
+				updated_at = '".date('Y-m-d H:i:s')."'
 			WHERE id = (SELECT company_id FROM users WHERE id = '".$user_id."')
 		";
 		$data_update = DB::update($query_update);
@@ -810,7 +810,7 @@ $notification->id = Uuid::uuid4();
 				jns_perusahaan = '".$jns_perusahaan."',
 				is_loc_test = '".$lokasi_pengujian."',
 				updated_by = '".$user_id."',
-				updated_at = '".date('Y-m-d h:i:s')."'
+				updated_at = '".date('Y-m-d H:i:s')."'
 			WHERE id = '".$exam_id."'
 		";
 		$data_update_company = DB::update($query_update_company);
@@ -825,7 +825,7 @@ $notification->id = Uuid::uuid4();
 				model = '".$model_perangkat."',
 				test_reference = '".$referensi_perangkat."',
 				updated_by = '".$user_id."',
-				updated_at = '".date('Y-m-d h:i:s')."'
+				updated_at = '".date('Y-m-d H:i:s')."'
 			WHERE id = '".$device_id."'
 		";
 		$data_update_device = DB::update($query_update_device);
@@ -870,7 +870,7 @@ $notification->id = Uuid::uuid4();
 				qs_certificate_file = '".$fuploadlampiran_name."',
 				qs_certificate_date = '".date("Y-m-d", strtotime($batas_waktu_sistem))."',
 				updated_by = '".$user_id."',
-				updated_at = '".date('Y-m-d h:i:s')."'
+				updated_at = '".date('Y-m-d H:i:s')."'
 			WHERE id = (SELECT company_id FROM users WHERE id = '".$user_id."')
 		";
 		$data_update_companie = DB::update($query_update_companie);
@@ -1009,8 +1009,8 @@ $notification->id = Uuid::uuid4();
         $feedback->email = ''.$request->input('email').'';
         $feedback->subject = ''.$request->input('subject').'';
         $feedback->message = ''.$request->input('message').'';
-        $feedback->created_at = ''.date('Y-m-d h:i:s').'';
-        $feedback->updated_at = ''.date('Y-m-d h:i:s').'';
+        $feedback->created_at = ''.date('Y-m-d H:i:s').'';
+        $feedback->updated_at = ''.date('Y-m-d H:i:s').'';
 
         try{
             $feedback->save();

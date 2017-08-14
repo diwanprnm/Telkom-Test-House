@@ -146,8 +146,8 @@ class EquipmentController extends Controller
             $equipment->created_by = $currentUser->id;
             $equipment->updated_by = $currentUser->id;
             
-            $equipment->created_at = ''.date('Y-m-d h:i:s').'';
-            $equipment->updated_at = ''.date('Y-m-d h:i:s').'';
+            $equipment->created_at = ''.date('Y-m-d H:i:s').'';
+            $equipment->updated_at = ''.date('Y-m-d H:i:s').'';
 
             $equipment->save();
         }
@@ -166,8 +166,8 @@ class EquipmentController extends Controller
 			
 			$equipmenth->created_by = $currentUser->id;
 			$equipmenth->updated_by = $currentUser->id;
-			$equipmenth->created_at = ''.date('Y-m-d h:i:s').'';
-			$equipmenth->updated_at = ''.date('Y-m-d h:i:s').'';
+			$equipmenth->created_at = ''.date('Y-m-d H:i:s').'';
+			$equipmenth->updated_at = ''.date('Y-m-d H:i:s').'';
 
 			$equipmenth->save();
             
@@ -298,7 +298,7 @@ class EquipmentController extends Controller
 				$equipmenth->location = $request->input('location');
 				
 				$equipmenth->updated_by = $currentUser->id;
-				$equipmenth->updated_at = ''.date('Y-m-d h:i:s').'';
+				$equipmenth->updated_at = ''.date('Y-m-d H:i:s').'';
 
 				$equipmenth->save();
 				

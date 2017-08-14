@@ -165,6 +165,7 @@ return [
 	
 	'examination_function_test_date'=> 'Tanggal Uji Fungsi',
 	'examination_reschedule_test_date'=> 'Uji Fungsi',
+	'examination_approve_test_date'=> 'Setujui Uji Fungsi',
 	'examination_upload_payment'=> 'Unggah File Pembayaran',
 	'examination_file_payment'=> 'File Pembayaran',
 	'examination_number_payment'=> 'No. SPB',
@@ -294,6 +295,7 @@ return [
 	'download_certificate_message'		=> 'Sertifikat akan terdownload, Silakan Berikan Testimoni!',
 	
 	'reschedule_message'	=> 'Silakan Berikan Ajuan Tanggal Uji Fungsi!',
+	'reschedule_message_agree'	=> 'Tanggal Uji Fungsi Disetujui',
 	'reschedule_date'		=> 'Tanggal',
 	'reschedule_date_cust1'	=> 'Tanggal Pengajuan Awal Kastamer',
 	'reschedule_date_te1'	=> 'Tanggal dari TE',
@@ -348,6 +350,7 @@ return [
 	'certificate' => 'Sertifikat',
 	'from_customer' => 'dari Kastamer',
 	'from_te' => 'dari Test Enginner',
+	'approved' => 'DISETUJUI',
 	
 	'document_not_found'	=> 'Dokumen Tidak Ditemukan',
 	'tax'  	=> 'Pajak',

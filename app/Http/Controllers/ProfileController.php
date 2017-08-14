@@ -126,7 +126,7 @@ class ProfileController extends Controller
 					email2 = '".$request->input('email2')."',
 					email3 = '".$request->input('email3')."',
 					updated_by = '".$currentUser['attributes']['id']."',
-					updated_at = '".date('Y-m-d h:i:s')."'
+					updated_at = '".date('Y-m-d H:i:s')."'
 				WHERE id = '".$request->input('hide_id_user')."'
 			";
 
@@ -451,8 +451,8 @@ class ProfileController extends Controller
 					'remember_token' => ''.Str::random(60).'', 
 					'created_by' => ''.$user_id.'', 
 					'updated_by' => ''.$user_id.'', 
-					'created_at' => ''.date('Y-m-d h:i:s').'', 
-					'updated_at' => ''.date('Y-m-d h:i:s').'',
+					'created_at' => ''.date('Y-m-d H:i:s').'', 
+					'updated_at' => ''.date('Y-m-d H:i:s').'',
 					'picture' => ''.$fuserPicture.'',
 					'email2' => ''.$request->input('email2').'', 
 					'email3' => ''.$request->input('email3').'', 
@@ -633,8 +633,8 @@ class ProfileController extends Controller
 						'remember_token' => ''.Str::random(60).'', 
 						'created_by' => ''.$user_id.'', 
 						'updated_by' => ''.$user_id.'', 
-						'created_at' => ''.date('Y-m-d h:i:s').'', 
-						'updated_at' => ''.date('Y-m-d h:i:s').'',
+						'created_at' => ''.date('Y-m-d H:i:s').'', 
+						'updated_at' => ''.date('Y-m-d H:i:s').'',
 						'picture' => ''.$fuserPicture.'',
 						'email2' => ''.$request->input('email2').'', 
 						'email3' => ''.$request->input('email3').'', 

@@ -1175,7 +1175,7 @@ class MyExaminationController extends Controller
 						testing_start = '".$testing_start."',
 						testing_end = '".$testing_end."',
 						updated_by = '".$currentUser['attributes']['id']."',
-						updated_at = '".date('Y-m-d h:i:s')."'
+						updated_at = '".date('Y-m-d H:i:s')."'
 					WHERE id = '".$exam_id."'
 				";
 				$data_update = DB::update($query_update);

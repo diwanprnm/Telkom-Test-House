@@ -1033,7 +1033,7 @@ class PengujianController extends Controller
 						no = '".$request->input('no-pembayaran')."',
 						tgl = '".date('Y-m-d', $timestamp)."',
 						updated_by = '".$currentUser['attributes']['id']."',
-						updated_at = '".date('Y-m-d h:i:s')."'
+						updated_at = '".date('Y-m-d H:i:s')."'
 					WHERE id = '".$request->input('hide_id_attach')."'
 				";
 				$data_update_attach = DB::update($query_update_attach);
@@ -1089,7 +1089,7 @@ class PengujianController extends Controller
 				// no = '".$request->input('no-pembayaran')."',
 				// tgl = '".date('Y-m-d', $timestamp)."',
 				// updated_by = '".$currentUser['attributes']['id']."',
-				// updated_at = '".date('Y-m-d h:i:s')."'
+				// updated_at = '".date('Y-m-d H:i:s')."'
 			// WHERE id = '".$request->input('hide_id_attach')."'
 		// ";
 		// $data_update_attach = DB::update($query_update_attach);
@@ -1111,7 +1111,7 @@ class PengujianController extends Controller
 					SET 
 						cust_test_date = '".date('Y-m-d', $cust_test_date)."',
 						updated_by = '".$currentUser['attributes']['id']."',
-						updated_at = '".date('Y-m-d h:i:s')."'
+						updated_at = '".date('Y-m-d H:i:s')."'
 					WHERE id = '".$request->input('hide_id_exam')."'
 				";
 				$data_update = DB::update($query_update);
@@ -1146,7 +1146,7 @@ class PengujianController extends Controller
 				Session::flash('error', 'Update failed');
 				// return back();
 			}
-		}else{
+		}else if($request->input('hide_date_type') == 2){
 			$exam = Examination::where('id', $request->input('hide_id_exam2'))
 			->with('examinationLab')
 			->first()
@@ -1158,7 +1158,7 @@ class PengujianController extends Controller
 						urel_test_date = '".date('Y-m-d', $urel_test_date)."',
 						function_test_reason = '".$request->input('alasan')."',
 						updated_by = '".$currentUser['attributes']['id']."',
-						updated_at = '".date('Y-m-d h:i:s')."'
+						updated_at = '".date('Y-m-d H:i:s')."'
 					WHERE id = '".$request->input('hide_id_exam2')."'
 				";
 				$data_update = DB::update($query_update);
@@ -1193,12 +1193,42 @@ class PengujianController extends Controller
 				Session::flash('error', 'Update failed');
 				// return back();
 			}
+		}else if($request->input('hide_date_type') == 3){
+			$exam = Examination::where('id', $request->input('hide_id_exam3'))
+			->with('examinationLab')
+			->first()
+			;
+			try{
+				$query_update = "UPDATE examinations
+					SET 
+						function_test_date_approval = '1',
+						updated_by = '".$currentUser['attributes']['id']."',
+						updated_at = '".date('Y-m-d H:i:s')."'
+					WHERE id = '".$request->input('hide_id_exam3')."'
+				";
+				$data_update = DB::update($query_update);
+				
+				$deal_test_date = strtotime($request->input('deal_test_date3'));
+				
+				$exam_hist = new ExaminationHistory;
+				$exam_hist->examination_id = $request->input('hide_id_exam3');
+				$exam_hist->date_action = date('Y-m-d H:i:s');
+				$exam_hist->tahap = 'Menyetujui Tanggal Uji';
+				$exam_hist->status = 1;
+				$exam_hist->keterangan = date('Y-m-d', $deal_test_date).' dari Kastamer (DISETUJUI)';
+				$exam_hist->created_by = $currentUser->id;
+				$exam_hist->created_at = date('Y-m-d H:i:s');
+				$exam_hist->save();
+				
+			} catch(Exception $e){
+				Session::flash('error', 'Update failed');
+			}
 		}
 		/* push notif*/
 			$data= array(
 	        "from"=>$currentUser->id,
 	        "to"=>"admin",
-	        "message"=>$currentUser->name." Mengajukan Tanggal Uji Fungsi",
+	        "message"=>$currentUser->name." Menyetujui Tanggal Uji Fungsi",
 	        "url"=>"examination/".$request->input('hide_id_exam')."/edit",
 	        "is_read"=>0,
 	        "created_at"=>date("Y-m-d H:i:s"),
@@ -1308,7 +1338,7 @@ $notification->id = Uuid::uuid4();
 	public function testimonial(Request $request)
     {
 		$currentUser = Auth::user();
-		$datenow = date('Y-m-d h:i:s');
+		$datenow = date('Y-m-d H:i:s');
 		
 		$testimonial = new Testimonial;
         $testimonial->id = Uuid::uuid4();

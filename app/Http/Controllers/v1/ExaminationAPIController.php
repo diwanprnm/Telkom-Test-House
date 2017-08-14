@@ -624,7 +624,7 @@ class ExaminationAPIController extends AppBaseController
 			$id_user = 1;
 		}
 
-    	if(!empty($param->id) && !empty($param->function_test_date)&& !empty($param->function_test_pic)&& !empty($param->reason)&& !empty($param->date_type)){
+    	if(!empty($param->id) && !empty($param->function_test_date)&& !empty($param->function_test_pic)&& !empty($param->reason)&& !empty($param->date_type)&& !empty($param->is_agree)){
     		$examinations = Examination::find($param->id);
     		if($examinations){
 				if($param->date_type == 1){
@@ -632,76 +632,144 @@ class ExaminationAPIController extends AppBaseController
 				}else{
 					$examinations->function_date = $param->function_test_date;
 				}
+				$examinations->function_test_date_approval = $param->is_agree;
 				$examinations->function_test_PIC = $param->function_test_pic;
 				$examinations->function_test_reason = $param->reason;
-    			if($examinations->save()){
-    				
-    				 $data= array( 
-	                "from"=>$id_user,
-	                "to"=>"admin",
-	                "message"=>"Test Enginner memberikan Tanggal Uji Fungsi",
-	                "url"=>"examination/".$param->id."/edit",
-	                "is_read"=>0,
-	                "created_at"=>date("Y-m-d H:i:s"),
-	                "updated_at"=>date("Y-m-d H:i:s")
-	             );
-				 
-				$exam_hist = new ExaminationHistory;
-				$exam_hist->examination_id = $param->id;
-				$exam_hist->date_action = date('Y-m-d H:i:s');
-				$exam_hist->tahap = 'Update Tanggal Uji';
-				$exam_hist->status = 1;
-				$exam_hist->keterangan = $param->function_test_date.' dari Test Enginner ('.$param->reason.')';
-				$exam_hist->created_by = $examinations->created_by;
-				$exam_hist->created_at = date('Y-m-d H:i:s');
-				$exam_hist->save();
-				 
-				  $notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
-			      $notification->from = $data['from'];
-			      $notification->to = $data['to'];
-			      $notification->message = $data['message'];
-			      $notification->url = $data['url'];
-			      $notification->is_read = $data['is_read'];
-			      $notification->created_at = $data['created_at'];
-			      $notification->updated_at = $data['updated_at'];
-			      $notification->save();
+				if($param->is_agree == 1){
+					if($examinations->save()){
+						
+						 $data= array( 
+						"from"=>$id_user,
+						"to"=>"admin",
+						"message"=>"Test Enginner menyetujui Tanggal Uji Fungsi",
+						"url"=>"examination/".$param->id."/edit",
+						"is_read"=>0,
+						"created_at"=>date("Y-m-d H:i:s"),
+						"updated_at"=>date("Y-m-d H:i:s")
+					 );
+					 
+					$exam_hist = new ExaminationHistory;
+					$exam_hist->examination_id = $param->id;
+					$exam_hist->date_action = date('Y-m-d H:i:s');
+					$exam_hist->tahap = 'Menyetujui Tanggal Uji';
+					$exam_hist->status = 1;
+					$exam_hist->keterangan = $param->function_test_date.' dari Test Enginner ('.$param->reason.')';
+					$exam_hist->created_by = $examinations->created_by;
+					$exam_hist->created_at = date('Y-m-d H:i:s');
+					$exam_hist->save();
+					 
+					  $notification = new NotificationTable();
+	$notification->id = Uuid::uuid4();
+					  $notification->from = $data['from'];
+					  $notification->to = $data['to'];
+					  $notification->message = $data['message'];
+					  $notification->url = $data['url'];
+					  $notification->is_read = $data['is_read'];
+					  $notification->created_at = $data['created_at'];
+					  $notification->updated_at = $data['updated_at'];
+					  $notification->save();
 
-			      $data['id'] = $notification->id;
-			      event(new Notification($data));  
-			      
-			      $data= array( 
-	                "from"=>"admin",
-	                "to"=>$examinations->created_by,
-	                "message"=>"Test Enginner mengajukan Tanggal Uji Fungsi",
-	                "url"=>"pengujian",
-	                "is_read"=>0,
-	                "created_at"=>date("Y-m-d H:i:s"),
-	                "updated_at"=>date("Y-m-d H:i:s")
-	             );
-				  $notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
-			      $notification->from = $data['from'];
-			      $notification->to = $data['to'];
-			      $notification->message = $data['message'];
-			      $notification->url = $data['url'];
-			      $notification->is_read = $data['is_read'];
-			      $notification->created_at = $data['created_at'];
-			      $notification->updated_at = $data['updated_at'];
-			      $notification->save();
+					  $data['id'] = $notification->id;
+					  event(new Notification($data));  
+					  
+					  $data= array( 
+						"from"=>"admin",
+						"to"=>$examinations->created_by,
+						"message"=>"Test Enginner menyetujui Tanggal Uji Fungsi",
+						"url"=>"pengujian",
+						"is_read"=>0,
+						"created_at"=>date("Y-m-d H:i:s"),
+						"updated_at"=>date("Y-m-d H:i:s")
+					 );
+					  $notification = new NotificationTable();
+	$notification->id = Uuid::uuid4();
+					  $notification->from = $data['from'];
+					  $notification->to = $data['to'];
+					  $notification->message = $data['message'];
+					  $notification->url = $data['url'];
+					  $notification->is_read = $data['is_read'];
+					  $notification->created_at = $data['created_at'];
+					  $notification->updated_at = $data['updated_at'];
+					  $notification->save();
 
-			     $data['id'] = $notification->id;
-			      event(new Notification($data));
+					 $data['id'] = $notification->id;
+					  event(new Notification($data));
 
-    				return $this->sendResponse($examinations, 'Function Date Found');
-    			}else{
-    				return $this->sendError('Failed to Update Function Date ');
-    			}
+						return $this->sendResponse($examinations, 'Function Date Found');
+					}else{
+						return $this->sendError('Failed to Update Function Date ');
+					}
+				}
+				else{
+					if($examinations->save()){
+						
+						 $data= array( 
+						"from"=>$id_user,
+						"to"=>"admin",
+						"message"=>"Test Enginner memberikan Tanggal Uji Fungsi",
+						"url"=>"examination/".$param->id."/edit",
+						"is_read"=>0,
+						"created_at"=>date("Y-m-d H:i:s"),
+						"updated_at"=>date("Y-m-d H:i:s")
+					 );
+					 
+					$exam_hist = new ExaminationHistory;
+					$exam_hist->examination_id = $param->id;
+					$exam_hist->date_action = date('Y-m-d H:i:s');
+					$exam_hist->tahap = 'Update Tanggal Uji';
+					$exam_hist->status = 1;
+					$exam_hist->keterangan = $param->function_test_date.' dari Test Enginner ('.$param->reason.')';
+					$exam_hist->created_by = $examinations->created_by;
+					$exam_hist->created_at = date('Y-m-d H:i:s');
+					$exam_hist->save();
+					 
+					  $notification = new NotificationTable();
+	$notification->id = Uuid::uuid4();
+					  $notification->from = $data['from'];
+					  $notification->to = $data['to'];
+					  $notification->message = $data['message'];
+					  $notification->url = $data['url'];
+					  $notification->is_read = $data['is_read'];
+					  $notification->created_at = $data['created_at'];
+					  $notification->updated_at = $data['updated_at'];
+					  $notification->save();
+
+					  $data['id'] = $notification->id;
+					  event(new Notification($data));  
+					  
+					  $data= array( 
+						"from"=>"admin",
+						"to"=>$examinations->created_by,
+						"message"=>"Test Enginner mengajukan Tanggal Uji Fungsi",
+						"url"=>"pengujian",
+						"is_read"=>0,
+						"created_at"=>date("Y-m-d H:i:s"),
+						"updated_at"=>date("Y-m-d H:i:s")
+					 );
+					  $notification = new NotificationTable();
+	$notification->id = Uuid::uuid4();
+					  $notification->from = $data['from'];
+					  $notification->to = $data['to'];
+					  $notification->message = $data['message'];
+					  $notification->url = $data['url'];
+					  $notification->is_read = $data['is_read'];
+					  $notification->created_at = $data['created_at'];
+					  $notification->updated_at = $data['updated_at'];
+					  $notification->save();
+
+					 $data['id'] = $notification->id;
+					  event(new Notification($data));
+
+						return $this->sendResponse($examinations, 'Function Date Found');
+					}else{
+						return $this->sendError('Failed to Update Function Date ');
+					}
+				}
     		}else{
     			return $this->sendError('Failed to Update Function Date');
     		}
     	}else{
-    		return $this->sendError('ID Examination or Date or PIC or Date Type Is Required');
+    		return $this->sendError('ID Examination or Date or PIC or Date Type or Approval Status Is Required');
     	}
     }
 	
@@ -720,8 +788,8 @@ $notification->id = Uuid::uuid4();
 			$equip_hist->location = $param->location;
 			$equip_hist->created_by = 1;
 			$equip_hist->updated_by = 1;
-			$equip_hist->created_at = date("Y-m-d h:i:s");
-			$equip_hist->updated_at = date("Y-m-d h:i:s");
+			$equip_hist->created_at = date("Y-m-d H:i:s");
+			$equip_hist->updated_at = date("Y-m-d H:i:s");
 			$equip_hist->examination_id = $param->id;
 			$equip_hist->action_date = $param->date;
 
@@ -842,7 +910,7 @@ $notification->id = Uuid::uuid4();
 					}
 					
 					$device->updated_by = 1;
-					$device->updated_at = date("Y-m-d h:i:s");
+					$device->updated_at = date("Y-m-d H:i:s");
 					
 					if($device->save()){
 
@@ -1225,7 +1293,7 @@ $notification->id = Uuid::uuid4();
 								}
 								
 								$device->updated_by = 1;
-								$device->updated_at = date("Y-m-d h:i:s");
+								$device->updated_at = date("Y-m-d H:i:s");
 								
 								if($device->save()){
 									return $this->sendResponse($device, 'Device Found');
@@ -1275,7 +1343,7 @@ $notification->id = Uuid::uuid4();
 								}
 								
 								$device->updated_by = 1;
-								$device->updated_at = date("Y-m-d h:i:s");
+								$device->updated_at = date("Y-m-d H:i:s");
 								
 								if($device->save()){
 									return $this->sendResponse($device, 'Device Found');

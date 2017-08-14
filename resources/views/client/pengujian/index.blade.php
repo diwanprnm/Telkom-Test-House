@@ -874,7 +874,9 @@
 												{{ $item->function_date }} (FIX) {{ $item->function_test_reason }}
 											@elseif($item->function_date == null && $item->urel_test_date != null)
 												{{ $item->urel_test_date }} ({{ trans('translate.from_customer') }}) {{ $item->function_test_reason }}
-											@elseif($item->urel_test_date == null && $item->deal_test_date != null)
+											@elseif($item->urel_test_date == null && $item->deal_test_date != null && $item->function_test_date_approval == 1)
+												{{ $item->deal_test_date }} ({{ trans('translate.from_te') }}) (FIX) {{ $item->function_test_reason }}
+											@elseif($item->urel_test_date == null && $item->deal_test_date != null && $item->function_test_date_approval == 0)
 												{{ $item->deal_test_date }} ({{ trans('translate.from_te') }}) {{ $item->function_test_reason }}
 											@else
 												{{ $item->cust_test_date }} {{ trans('translate.from_customer') }}
@@ -930,6 +932,7 @@
 									<a class="button button-3d nomargin btn-blue" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->cust_test_date ?>','1','<?php echo $item->deal_test_date ?>','<?php echo $item->urel_test_date ?>')">{{ trans('translate.examination_reschedule_test_date') }}</a>
 									@elseif($item->deal_test_date != NULL && $item->function_date == NULL)
 									<a class="button button-3d nomargin btn-blue" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->cust_test_date ?>','2','<?php echo $item->deal_test_date ?>','<?php echo $item->urel_test_date ?>')">{{ trans('translate.examination_reschedule_test_date') }}</a>
+									<a class="button button-3d nomargin btn-blue" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->cust_test_date ?>','3','<?php echo $item->deal_test_date ?>','<?php echo $item->urel_test_date ?>')">{{ trans('translate.examination_approve_test_date') }}</a>
 									@endif
 								@endif
 								
@@ -1592,6 +1595,58 @@
 	</div><!-- /.modal -->
 </div>
 </form>
+
+<form id="form" role="form" method="POST" action="{{ url('/pengujian/tanggaluji') }}">
+{!! csrf_field() !!}
+<input type="hidden" name="hide_id_exam3" id="hide_id_exam3"/>
+<input type="hidden" name="hide_date_type3" id="hide_date_type3"/>
+<div class="modal fade" id="reschedule-modal-content3" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title"><i class="fa fa-eyes-open"></i> {{ trans('translate.reschedule_message_agree') }}</h4>
+			</div>
+			
+			<div class="modal-body">
+				<table width=100%>
+					<tr>
+						<td>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											{{ trans('translate.reschedule_date_te1') }} *
+										</label>
+											<input type="text" id="deal_test_date3" class="form-control" placeholder="Tanggal ..." readonly>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											{{ trans('translate.reschedule_date_cust1') }} *
+										</label>
+											<input type="text" id="cust_test_date3" class="form-control" placeholder="Tanggal ..." readonly>
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<table width=100%>
+					<tr>
+						<td>
+							<button type="submit" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>
+</form>
 @endsection
  
 @section('content_js')
@@ -2036,6 +2091,14 @@
 				$('#deal_test_date2').val(d);
 				$('#urel_test_date2').val(e);
 				$("#urel_test_date2").focus();
+			});
+		}else if(c==3){
+			$('#reschedule-modal-content3').modal('show');
+			$('#hide_id_exam3').val(a);
+			$('#hide_date_type3').val(c);
+			$('#reschedule-modal-content3').on('shown.bs.modal', function() {
+				$('#cust_test_date3').val(b);
+				$('#deal_test_date3').val(d);
 			});
 		}
 	}
