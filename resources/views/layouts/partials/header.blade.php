@@ -167,10 +167,6 @@
 	              <li>  <a href="#" id="top-notification-trigger"><i class="icon-bell"></i><span id="notification-count"><?php echo $notification_count;?></span></a></li>
 	             	<div id="top-notification" style="float:left"> 
 	                	<div class="top-notification-content">
-	                    <div class="top-notification-title">
-	                      <h4>Notification</h4>
-	                    </div> 
-
                       <?php 
                       foreach ($notification_data_user as $notif) { ?> 
                       <div class="top-notification-items">
