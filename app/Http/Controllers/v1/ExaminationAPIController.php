@@ -700,7 +700,7 @@ class ExaminationAPIController extends AppBaseController
 						return $this->sendError('Failed to Update Function Date ');
 					}
 				}
-				else{
+				else if($param->is_agree == 0 || $param->date_type == 2){
 					if($examinations->save()){
 						
 						 $data= array( 
