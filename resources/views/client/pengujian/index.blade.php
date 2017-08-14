@@ -630,7 +630,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" id="submit-complain" class="button button3d btn-sky submit-complain">Lewati</button>
-            <button type="button" id="submit-complain2" class="button button3d btn-sky submit-complain">Simpan</button>
+            <button type="button" id="submit-complain2" class="button button3d btn-sky submit-complain2">Simpan</button>
           </div>
         </div>
 
@@ -2192,6 +2192,10 @@
 	});
 
 	$('.submit-complain').click(function () {
+		checkAmbilBarang(document.getElementById('my_exam_id').value);
+	});
+	
+	$('.submit-complain2').click(function () {
 		$.ajax({
 			url : "insertComplaint",
 			data:new FormData($("#form-complain")[0]),
