@@ -56,6 +56,9 @@
 	 .edit_btn {
     	margin-top: 2% !important;
 	}
+	.download_progress_btn{
+		font-size: 12px;
+	}
 	ul.tab-nav:not(.tab-nav-lg) li:first-child{
 		margin-left: 0px
 	}

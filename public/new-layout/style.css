@@ -13779,7 +13779,7 @@ body:not(.no-transition) #wrapper,
 }
 
 .step >  ul > li:not(:first-child){
-    padding-left: 3%;
+    margin-left: 3% !important;
 }
 .step{
     padding-left: 6%;
@@ -13787,7 +13787,6 @@ body:not(.no-transition) #wrapper,
 }
 
 .step-fill{
-    padding:10px;
     width: 70px;
     height:70px;
     border-radius:50%;
