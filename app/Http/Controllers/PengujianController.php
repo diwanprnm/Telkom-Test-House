@@ -1284,7 +1284,7 @@ class PengujianController extends Controller
 					"from"=>$currentUser->id,
 					"to"=>"admin",
 					"message"=>$currentUser->name." Menyetujui Tanggal Uji Fungsi",
-					"url"=>"examination/".$request->input('hide_id_exam2')."/edit",
+					"url"=>"examination/".$request->input('hide_id_exam3')."/edit",
 					"is_read"=>0,
 					"created_at"=>date("Y-m-d H:i:s"),
 					"updated_at"=>date("Y-m-d H:i:s")

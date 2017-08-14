@@ -1526,7 +1526,7 @@
 <form id="form" role="form" method="POST" action="{{ url('/pengujian/tanggaluji') }}">
 {!! csrf_field() !!}
 <input type="hidden" name="hide_id_exam2" id="hide_id_exam2"/>
-<input type="hidden" name="hide_date_type2" id="hide_date_type2"/>
+<input type="hidden" name="hide_date_type" id="hide_date_type2"/>
 <div class="modal fade" id="reschedule-modal-content2" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -1601,7 +1601,7 @@
 <form id="form" role="form" method="POST" action="{{ url('/pengujian/tanggaluji') }}">
 {!! csrf_field() !!}
 <input type="hidden" name="hide_id_exam3" id="hide_id_exam3"/>
-<input type="hidden" name="hide_date_type3" id="hide_date_type3"/>
+<input type="hidden" name="hide_date_type" id="hide_date_type3"/>
 <div class="modal fade" id="reschedule-modal-content3" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
