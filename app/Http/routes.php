@@ -3303,7 +3303,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::get('/examination/media/print/{id}/{name}', 'ExaminationController@printMedia');
 	Route::get('/stel/media/{id}', 'STELController@viewMedia');
 	Route::get('/company/media/{id}/{name}', 'CompanyController@viewMedia');
-	Route::get('/device', 'DeviceController@index');
+	Route::resource('/device', 'DeviceController');
 	Route::get('/devicenc', 'DevicencController@index');
 	Route::get('/examination/revisi/{id}', 'ExaminationController@revisi');
 	Route::get('/examination/harddelete/{id}', 'ExaminationController@destroy');

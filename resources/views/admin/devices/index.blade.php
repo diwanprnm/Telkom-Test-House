@@ -89,6 +89,7 @@
 									<th class="center">Referensi Uji</th>
 									<th class="center">Berlaku Dari</th>
 									<th class="center">Berlaku Sampai</th>
+									<th class="center">Aksi</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -104,6 +105,11 @@
 										<td class="center">{{ $item->standarisasi }}</td>
 										<td class="center">{{ $item->valid_from }}</td>
 										<td class="center">{{ $item->valid_thru }}</td>
+										<td class="center">
+											<div>
+												<a href="{{URL::to('admin/device/'.$item->deviceId.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
+											</div>
+										</td>
 									</tr>
 								<?php $no++ ?>
 								@endforeach

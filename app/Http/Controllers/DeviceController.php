@@ -15,6 +15,7 @@ use App\Logs;
 use Auth;
 use Session;
 use Excel;
+use Ramsey\Uuid\Uuid;
 
 class DeviceController extends Controller
 {
@@ -54,6 +55,7 @@ class DeviceController extends Controller
 						'examinations.spk_code',
 						'examinations.jns_perusahaan',
 						'companies.name AS namaPerusahaan',
+						'devices.id AS deviceId',
 						'devices.name AS namaPerangkat',
 						'devices.mark AS merk',
 						'devices.model AS tipe',
@@ -117,6 +119,7 @@ class DeviceController extends Controller
 						'examinations.spk_code',
 						'examinations.jns_perusahaan',
 						'companies.name AS namaPerusahaan',
+						'devices.id AS deviceId',
 						'devices.name AS namaPerangkat',
 						'devices.mark AS merk',
 						'devices.model AS tipe',
@@ -276,5 +279,74 @@ class DeviceController extends Controller
 				$sheet->fromArray($examsArray, null, 'A1', false, false);
 			});
 		})->export('xlsx');
+	}
+
+	public function edit($id)
+    {
+        $device = Device::find($id);
+
+        return view('admin.devices.edit')
+            ->with('data', $device)
+        ;
+    }
+
+	public function update(Request $request, $id)
+	{
+		$currentUser = Auth::user();
+
+        $device = Device::find($id);
+        $oldDevice = $device;
+
+        if ($request->has('name')){
+            $device->name = $request->input('name');
+        }
+        if ($request->has('mark')){
+            $device->mark = $request->input('mark');
+        }
+        if ($request->has('capacity')){
+            $device->capacity = $request->input('capacity');
+        }
+        if ($request->has('manufactured_by')){
+            $device->manufactured_by = $request->input('manufactured_by');
+        }
+        if ($request->has('manufactured_by')){
+            $device->manufactured_by = $request->input('manufactured_by');
+        }
+        if ($request->has('serial_number')){
+            $device->serial_number = $request->input('serial_number');
+        }
+        if ($request->has('model')){
+            $device->model = $request->input('model');
+        }
+        if ($request->has('test_reference')){
+            $device->test_reference = $request->input('test_reference');
+        }
+        if ($request->has('valid_from')){
+            $device->valid_from = $request->input('valid_from');
+        }
+        if ($request->has('valid_thru')){
+            $device->valid_thru = $request->input('valid_thru');
+        }
+
+        $device->updated_by = $currentUser->id;
+       
+
+        try{
+            $device->save();
+
+            $logs = new Logs;
+            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
+            $logs->action = "Update Perangkat Lulus Uji";
+            $logs->data = $oldDevice;
+            $logs->created_by = $currentUser->id;
+            $logs->page = "Perangkat Lulus Uji";
+            $logs->save();
+
+            Session::flash('message', 'Perangkat Lulus Uji successfully updated');
+            return redirect('/admin/device');
+        } catch(Exception $e){
+            Session::flash('error', 'Save failed');
+            return redirect('/admin/device/'.$device->id.'/edit');
+        }
 	}
 }
