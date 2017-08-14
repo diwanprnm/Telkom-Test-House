@@ -113,6 +113,7 @@ class PengujianController extends Controller
 								companies.name AS companiesName,
 								examinations.function_date,
 								examinations.function_test_NO,
+								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
@@ -161,6 +162,7 @@ class PengujianController extends Controller
 								companies.name AS companiesName,
 								examinations.function_date,
 								examinations.function_test_NO,
+								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
@@ -209,6 +211,7 @@ class PengujianController extends Controller
 								companies.name AS companiesName,
 								examinations.function_date,
 								examinations.function_test_NO,
+								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
@@ -256,6 +259,7 @@ class PengujianController extends Controller
 								companies.name AS companiesName,
 								examinations.function_date,
 								examinations.function_test_NO,
+								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
@@ -305,6 +309,7 @@ class PengujianController extends Controller
 								companies.name AS companiesName,
 								examinations.function_date,
 								examinations.function_test_NO,
+								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
@@ -352,6 +357,7 @@ class PengujianController extends Controller
 								companies.name AS companiesName,
 								examinations.function_date,
 								examinations.function_test_NO,
+								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
@@ -399,6 +405,7 @@ class PengujianController extends Controller
 								companies.name AS companiesName,
 								examinations.function_date,
 								examinations.function_test_NO,
+								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
@@ -445,6 +452,7 @@ class PengujianController extends Controller
 								companies.name AS companiesName,
 								examinations.function_date,
 								examinations.function_test_NO,
+								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
@@ -1142,6 +1150,17 @@ class PengujianController extends Controller
 				
 				// $this->sendProgressEmail("Pengujian atas nama ".$user_name." dengan alamat email ".$user_email.", telah melakukan proses Upload Bukti Pembayaran");
 				// return back();
+				/* push notif*/
+					$data= array(
+					"from"=>$currentUser->id,
+					"to"=>"admin",
+					"message"=>$currentUser->name." Update Tanggal Uji Fungsi",
+					"url"=>"examination/".$request->input('hide_id_exam')."/edit",
+					"is_read"=>0,
+					"created_at"=>date("Y-m-d H:i:s"),
+					"updated_at"=>date("Y-m-d H:i:s")
+					);
+
 			} catch(Exception $e){
 				Session::flash('error', 'Update failed');
 				// return back();
@@ -1189,6 +1208,17 @@ class PengujianController extends Controller
 				
 				// $this->sendProgressEmail("Pengujian atas nama ".$user_name." dengan alamat email ".$user_email.", telah melakukan proses Upload Bukti Pembayaran");
 				// return back();
+				
+				/* push notif*/
+					$data= array(
+					"from"=>$currentUser->id,
+					"to"=>"admin",
+					"message"=>$currentUser->name." Update Tanggal Uji Fungsi",
+					"url"=>"examination/".$request->input('hide_id_exam2')."/edit",
+					"is_read"=>0,
+					"created_at"=>date("Y-m-d H:i:s"),
+					"updated_at"=>date("Y-m-d H:i:s")
+					);
 			} catch(Exception $e){
 				Session::flash('error', 'Update failed');
 				// return back();
@@ -1220,21 +1250,22 @@ class PengujianController extends Controller
 				$exam_hist->created_at = date('Y-m-d H:i:s');
 				$exam_hist->save();
 				
+				/* push notif*/
+					$data= array(
+					"from"=>$currentUser->id,
+					"to"=>"admin",
+					"message"=>$currentUser->name." Menyetujui Tanggal Uji Fungsi",
+					"url"=>"examination/".$request->input('hide_id_exam2')."/edit",
+					"is_read"=>0,
+					"created_at"=>date("Y-m-d H:i:s"),
+					"updated_at"=>date("Y-m-d H:i:s")
+					);
+				
 			} catch(Exception $e){
 				Session::flash('error', 'Update failed');
 			}
 		}
-		/* push notif*/
-			$data= array(
-	        "from"=>$currentUser->id,
-	        "to"=>"admin",
-	        "message"=>$currentUser->name." Menyetujui Tanggal Uji Fungsi",
-	        "url"=>"examination/".$request->input('hide_id_exam')."/edit",
-	        "is_read"=>0,
-	        "created_at"=>date("Y-m-d H:i:s"),
-	        "updated_at"=>date("Y-m-d H:i:s")
-	        );
-
+		
 		  $notification = new NotificationTable();
 $notification->id = Uuid::uuid4();
 	      $notification->from = $data['from'];

@@ -875,7 +875,7 @@
 											@elseif($item->function_date == null && $item->urel_test_date != null)
 												{{ $item->urel_test_date }} ({{ trans('translate.from_customer') }}) {{ $item->function_test_reason }}
 											@elseif($item->urel_test_date == null && $item->deal_test_date != null && $item->function_test_date_approval == 1)
-												{{ $item->deal_test_date }} ({{ trans('translate.from_te') }}) (FIX) {{ $item->function_test_reason }}
+												{{ $item->deal_test_date }} (FIX) {{ $item->function_test_reason }}
 											@elseif($item->urel_test_date == null && $item->deal_test_date != null && $item->function_test_date_approval == 0)
 												{{ $item->deal_test_date }} ({{ trans('translate.from_te') }}) {{ $item->function_test_reason }}
 											@else
@@ -930,9 +930,11 @@
 								@if($item->registration_status != '0' && $item->function_status != '1')
 									@if($item->deal_test_date == NULL)
 									<a class="button button-3d edit_btn nomargin btn-blue" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->cust_test_date ?>','1','<?php echo $item->deal_test_date ?>','<?php echo $item->urel_test_date ?>')">{{ trans('translate.examination_reschedule_test_date') }}</a>
-									@elseif($item->deal_test_date != NULL && $item->function_date == NULL)
+									@elseif($item->deal_test_date != NULL && $item->urel_test_date == NULL && $item->function_test_date_approval == 0)
 									<a class="button button-3d nomargin btn-blue" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->cust_test_date ?>','2','<?php echo $item->deal_test_date ?>','<?php echo $item->urel_test_date ?>')">{{ trans('translate.examination_reschedule_test_date') }}</a>
 									<a class="button button-3d nomargin btn-blue" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->cust_test_date ?>','3','<?php echo $item->deal_test_date ?>','<?php echo $item->urel_test_date ?>')">{{ trans('translate.examination_approve_test_date') }}</a>
+									@elseif($item->urel_test_date != NULL && $item->function_date == NULL)
+									<a class="button button-3d nomargin btn-blue" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->cust_test_date ?>','2','<?php echo $item->deal_test_date ?>','<?php echo $item->urel_test_date ?>')">{{ trans('translate.examination_reschedule_test_date') }}</a>
 									@endif
 								@endif
 								
