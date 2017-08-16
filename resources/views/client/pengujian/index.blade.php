@@ -2067,11 +2067,14 @@
 		});
 	});
 
+  var dateToday = new Date();
+
 	$('.datepicker').datepicker({
       dateFormat: 'yy-mm-dd', 
       autoclose: true,
       numberOfMonths: 2 ,
       showButtonPanel: true,
+      minDate: dateToday,
        beforeShowDay: $.datepicker.noWeekends,
 
   });

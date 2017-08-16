@@ -82,25 +82,11 @@
 					<div class="row metoda">
 						<div class="col-md-12 bank-list-header">{{ trans('translate.stel_payment_method_bank') }}</div>
 						<div class="col-md-4 bank-list-main">
-							<img src="{{url('images/bank/bca.png')}}">
-							<h4>BANK BCA</h4>
-							Cab. Bandung
-							12 456 7890
-							a/n Telkom
-						</div>
-						<div class="col-md-4 bank-list-main">
-							<img src="{{url('images/bank/bjb.png')}}">
-							<h4>BANK BJB</h4>
-							Cab. Bandung
-							12 456 7890
-							a/n Telkom
-						</div>
-						<div class="col-md-4 bank-list-main">
-							<img src="{{url('images/bank/btn.png')}}">
-							<h4>BANK BTN</h4>
-							Cab. Bandung
-							12 456 7890
-							a/n Telkom
+							<img src="{{url('images/bank/mandiri.png')}}">
+							<h4>BANK MANDIRI</h4>
+							KCP KAMPUS TELKOM BANDUNG
+							131-0096022712
+							a/n Divisi RisTI TELKOM
 						</div>
 					</div> 	
 					<div class="row metodb" style="display: none;"> 
