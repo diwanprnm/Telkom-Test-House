@@ -81,7 +81,7 @@ class AdminOnly
                             ->limit(10)->get()->toArray();
 
             $countNotification = NotificationTable::where("is_read",0)
-                            ->where("to",$currentUser->id)->orderBy("created_at","desc")
+                            ->where("to","admin")->orderBy("created_at","desc")
                             ->get()->count();
         }else{
             $dataNotification = array();

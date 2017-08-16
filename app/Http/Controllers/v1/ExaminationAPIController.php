@@ -496,6 +496,7 @@ class ExaminationAPIController extends AppBaseController
 			"examinations.id","examinations.cust_test_date","examinations.deal_test_date",
 			"examinations.urel_test_date as cust_test_date2","examinations.function_date as deal_test_date2",
 			"examinations.function_test_TE as function_result","examinations.function_test_PIC","examinations.function_test_reason",
+			"examinations.function_test_date_approval",
 			"examinations.catatan",
 			"examinations.location",
 			"examinations.function_test_date_approval",
@@ -701,7 +702,7 @@ class ExaminationAPIController extends AppBaseController
 						return $this->sendError('Failed to Update Function Date ');
 					}
 				}
-				else{
+				else if($param->is_agree == 0 || $param->date_type == 2){
 					if($examinations->save()){
 						
 						 $data= array( 
