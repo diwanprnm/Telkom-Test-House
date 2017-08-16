@@ -599,6 +599,8 @@
 							
 							<div class="col-md-12">
 								@if($data->function_test_TE != 0)
+									<div class="col-md-4"></div>
+									<div class="col-md-4">
 									<div class="form-group">
 										<h4 style="display:inline">
 											Hasil Uji Fungsi
@@ -615,10 +617,15 @@
 											@endif
 										</h4>
 									</div>
+									</div>
+									<div class="col-md-4"></div>
+									<div class="col-md-12">
 									<div class="form-group">
 										<a href="{{URL::to('/cetakUjiFungsi/'.$data->id)}}" target="_blank"> Buatkan Laporan Uji Fungsi</a>
 									</div>
+									</div>
 								@endif
+								<div class="col-md-12">
 								<div class="form-group">
 									<label>
 										Hasil Uji Fungsi File *
@@ -638,6 +645,7 @@
 								<div class="form-group">
 									<label for="catatan">Catatan :</label>
 									<textarea class="form-control" rows="5" name="catatan" id="catatan" readonly>{{ $data->catatan }}</textarea>
+								</div>
 								</div>
 							</div>
 							<div class="col-md-6">

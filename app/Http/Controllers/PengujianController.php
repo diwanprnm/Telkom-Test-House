@@ -1278,7 +1278,18 @@ class PengujianController extends Controller
 				$exam_hist->created_by = $currentUser->id;
 				$exam_hist->created_at = date('Y-m-d H:i:s');
 				$exam_hist->save();
+
+				$client = new Client([
+					'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+					// Base URI is used with relative requests
+					// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+					'base_uri' => config("app.url_api_bsp"),
+					// You can set any number of default request options.
+					'timeout'  => 60.0,
+				]);
 				
+				$res_exam_schedule = $client->get('notification/notifApproveToTE?id='.$exam->id.'&lab='.$exam->examinationLab->lab_code);
+
 				/* push notif*/
 					$data= array(
 					"from"=>$currentUser->id,
