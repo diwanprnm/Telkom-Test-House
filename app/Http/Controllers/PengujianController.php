@@ -1261,6 +1261,7 @@ class PengujianController extends Controller
 				$query_update = "UPDATE examinations
 					SET 
 						function_test_date_approval = '1',
+						function_test_reason = '',
 						updated_by = '".$currentUser['attributes']['id']."',
 						updated_at = '".date('Y-m-d H:i:s')."'
 					WHERE id = '".$request->input('hide_id_exam3')."'

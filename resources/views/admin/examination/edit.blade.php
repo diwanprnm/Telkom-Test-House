@@ -524,7 +524,7 @@
 										</tbody>
 									</table>
 
-									@if($data->function_test_reason != '')
+									@if($data->function_test_reason != '' && $data->function_test_date_approval != 1)
 										<label for="alasan">Alasan Jadwal Ulang:</label>
 										<textarea class="form-control" rows="2" name="reason" id="reason" readonly>{{ $data->function_test_reason }}</textarea>
 									@endif
