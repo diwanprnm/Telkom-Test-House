@@ -599,22 +599,26 @@
 							
 							<div class="col-md-12">
 								@if($data->function_test_TE != 0)
-									<div class="form-group">
-										<h4 style="display:inline">
-											Hasil Uji Fungsi
-										</h4>
-										<h4 style="display:inline">
-											: @if($data->function_test_TE == 1)
-												Memenuhi
-											@elseif($data->function_test_TE == 2)
-												Tidak Memenuhi
-											@elseif($data->function_test_TE == 3)
-												dll
-											@else
-												Tidak Ada
-											@endif
-										</h4>
+									<div class="col-md-4"></div>
+									<div class="col-md-4">
+										<div class="form-group">
+											<h4 style="display:inline">
+												Hasil Uji Fungsi
+											</h4>
+											<h4 style="display:inline">
+												: @if($data->function_test_TE == 1)
+													Memenuhi
+												@elseif($data->function_test_TE == 2)
+													Tidak Memenuhi
+												@elseif($data->function_test_TE == 3)
+													dll
+												@else
+													Tidak Ada
+												@endif
+											</h4>
+										</div>
 									</div>
+									<div class="col-md-4"></div>
 									<div class="form-group">
 										<a href="{{URL::to('/cetakUjiFungsi/'.$data->id)}}" target="_blank"> Buatkan Laporan Uji Fungsi</a>
 									</div>

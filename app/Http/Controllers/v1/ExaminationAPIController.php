@@ -498,6 +498,7 @@ class ExaminationAPIController extends AppBaseController
 			"examinations.function_test_TE as function_result","examinations.function_test_PIC","examinations.function_test_reason",
 			"examinations.catatan",
 			"examinations.location",
+			"examinations.function_test_date_approval",
 			"examination_labs.name as lab",
 			"examination_labs.lab_code",
 			"companies.name as company_name",
@@ -1115,6 +1116,7 @@ $notification->id = Uuid::uuid4();
 					$examinations->urel_test_date = NULL;
 					$examinations->function_date = NULL;
 					$examinations->function_test_reason = NULL;
+					$examinations->function_test_date_approval = 0;
 				}
 				$examinations->catatan = $param->catatan;
 				$examinations->function_test_TE = $param->function_result;
