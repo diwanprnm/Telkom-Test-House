@@ -2120,7 +2120,18 @@ Route::get('cetakPermohonan', function(Illuminate\Http\Request $request){
 	$pdf->Cell(10,5,"Divisi Digital Service, User Relation, Phone. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
 	$pdf->Ln(6);
 	$pdf->SetFont('helvetica','',8);
-	$pdf->Cell(185,5,"IASO2/F/002 Versi 01",0,0,'R');
+	if($data[0]['initPengujian'] == 'QA'){
+		$pdf->Cell(185,5,"IASO2/F/002 Versi 01",0,0,'R');		
+	}
+	else if($data[0]['initPengujian'] == 'TA'){
+		$pdf->Cell(185,5,"IASO2/F/003 Versi 01",0,0,'R');		
+	}
+	else if($data[0]['initPengujian'] == 'VT'){
+		$pdf->Cell(185,5,"IASO2/F/001 Versi 01",0,0,'R');		
+	}
+	else if($data[0]['initPengujian'] == 'CAL'){
+		$pdf->Cell(185,5,"IASO2/F/004 Versi 01",0,0,'R');		
+	}
 /*End Footer Manual*/
 	$pdf->Output();
 	exit;
@@ -3001,7 +3012,18 @@ array('as' => 'cetak', function(
 		$pdf->Cell(10,5,"Divisi Digital Service, User Relation, Phone. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
 		$pdf->Ln(6);
 		$pdf->SetFont('helvetica','',8);
-		$pdf->Cell(185,5,"IASO2/F/002 Versi 01",0,0,'R');
+		if($initPengujian == 'QA'){
+			$pdf->Cell(185,5,"IASO2/F/002 Versi 01",0,0,'R');		
+		}
+		else if($initPengujian == 'TA'){
+			$pdf->Cell(185,5,"IASO2/F/003 Versi 01",0,0,'R');		
+		}
+		else if($initPengujian == 'VT'){
+			$pdf->Cell(185,5,"IASO2/F/001 Versi 01",0,0,'R');		
+		}
+		else if($initPengujian == 'CAL'){
+			$pdf->Cell(185,5,"IASO2/F/004 Versi 01",0,0,'R');		
+		}
 	/*End Footer Manual*/
 		$pdf->Output();
 		exit;
