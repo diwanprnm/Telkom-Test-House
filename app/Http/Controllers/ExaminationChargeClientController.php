@@ -9,6 +9,7 @@ use App\Http\Requests;
 use Auth;
 use Session;
 use App\Logs;
+use App\ExaminationLab;
 
 use App\ExaminationCharge;
 
@@ -41,6 +42,8 @@ class ExaminationChargeClientController extends Controller
             $paginate = 10;
             $search = trim($request->input('search'));
 			$category = trim($request->input('category'));
+
+            $examLab = ExaminationLab::all();
             
             if ($search != null){
                 $query = ExaminationCharge::whereNotNull('created_at')
@@ -74,6 +77,7 @@ class ExaminationChargeClientController extends Controller
             }
 			 $page = "Chargeclient";
             return view('client.charge.index')
+                ->with('examLab', $examLab)
                 ->with('message', $message)
                 ->with('data', $examinationCharge)
                 ->with('search', $search)

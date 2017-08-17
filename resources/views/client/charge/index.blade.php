@@ -30,10 +30,9 @@
 						<div class="col-md-3 form-group">
 							<select onchange="filter()" class="form-control" id="cmb-category">
 								<option value="">{{ trans('translate.charge_choose_category') }}</option>
-								<option value="Lab Kabel">Lab Kabel</option>
-								<option value="Lab Transmisi">Lab Transmisi</option>
-								<option value="Lab CPE">Lab CPE</option>
-								<option value="Lab Energi">Lab Energi</option>
+								@foreach ($examLab as $dataLab)
+									<option value="{{$dataLab->name}}">{{$dataLab->name}}</option>
+								@endforeach
 							</select>
 						</div>
 						
@@ -130,3 +129,6 @@
 
 @endsection
  
+@section('content_js')
+	<script type="text/javascript" src="{{url('assets/js/search/charge.js')}}"></script>
+@endsection

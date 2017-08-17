@@ -128,3 +128,6 @@
 
 @endsection
  
+@section('content_js')
+	<script type="text/javascript" src="{{url('assets/js/search/stsel.js')}}"></script>
+@endsection

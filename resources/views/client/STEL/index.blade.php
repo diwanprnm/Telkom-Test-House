@@ -126,3 +126,6 @@
 		
 @endsection
  
+@section('content_js')
+	<script type="text/javascript" src="{{url('assets/js/search/stel.js')}}"></script>
+@endsection
