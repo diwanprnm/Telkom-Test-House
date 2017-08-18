@@ -769,6 +769,7 @@
 <script src="{{url('vendor/chosen/chosen.jquery.js')}}" type="text/javascript"></script>
 <script type="text/javascript">
 	$("#f1-referensi-perangkat").change(function(){
+		$(".chosen-select").trigger("chosen:updated");
 		var e = document.getElementById("f1-referensi-perangkat");
 		var strUser = e.options[e.selectedIndex].text;
 		var res = strUser.split('||');
