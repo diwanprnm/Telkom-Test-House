@@ -97,6 +97,7 @@
 							<thead>
 								<tr>
 									<th class="center">No</th>
+									<th class="center">Category</th>
 									<th class="center">Email</th>
 									<th class="center">Subject</th>
 									<th class="center">Pesan</th>
@@ -109,6 +110,7 @@
 								@foreach($data as $item)
 									<tr>
 										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
+										<td class="center">{{ $item->category }}</td>
 										<td class="center">{{ $item->email }}</td>
 										<td class="center">{{ $item->subject }}</td>
 										<td class="center">{{ $item->message }}</td>

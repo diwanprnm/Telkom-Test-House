@@ -1004,8 +1004,15 @@ $notification->id = Uuid::uuid4();
 	public function feedback(Request $request)
 	{
 		// print_r($request->all());exit;
+		$quest = Question::find($request->input('question'));
+		if(count($quest)>0){
+			$category = $quest->name;
+		}else{
+			$category = '-';
+		}
 		$feedback = new Feedback;
         $feedback->id = Uuid::uuid4();
+        $feedback->category = $category;
         $feedback->email = ''.$request->input('email').'';
         $feedback->subject = ''.$request->input('subject').'';
         $feedback->message = ''.$request->input('message').'';

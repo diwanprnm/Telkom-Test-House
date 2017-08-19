@@ -742,7 +742,8 @@ class PengujianController extends Controller
 					e.examination_status,
 					e.resume_status,
 					e.qa_status,
-					e.certificate_status
+					e.certificate_status,
+					(SELECT name FROM examination_labs WHERE examination_labs.id=e.examination_lab_id) AS labs_name
 				FROM
 					examinations e,
 					devices d,
@@ -790,7 +791,8 @@ class PengujianController extends Controller
 					e.examination_status,
 					e.resume_status,
 					e.qa_status,
-					e.certificate_status
+					e.certificate_status,
+					(SELECT name FROM examination_labs WHERE examination_labs.id=e.examination_lab_id) AS labs_name
 				FROM
 					examinations e,
 					devices d,
@@ -934,10 +936,12 @@ class PengujianController extends Controller
 	public function downloadSertifikat($id)
     {
     	$currentUser = Auth::user();
-		$query_attach = "
-			SELECT attachment FROM examination_attachments WHERE examination_id = '".$id."' AND name LIKE '%Sertifikat%' AND attachment != ''
-		";
-		$data_attach = DB::select($query_attach);
+		$examination = Examination::where('id', $id)->with('device')->get();
+		// $query_attach = "
+			// SELECT attachment FROM examination_attachments WHERE examination_id = '".$id."' AND name LIKE '%Sertifikat%' AND attachment != ''
+		// ";
+		// $data_attach = DB::select($query_attach);
+		$data_attach = $examination[0]->device;
 		if (count($data_attach) == 0){
 			$message = 'Data not found';
 			$attach = NULL;
@@ -945,11 +949,11 @@ class PengujianController extends Controller
 			return back();
 		}
 		else{
-			$attach = $data_attach[0]->name; //name
-			$file = $data_attach[0]->attachment; //link here
-			$headers = array(
-			  'Content-Type: application/octet-stream',
-			);
+			// $attach = $data_attach[0]->name; //name
+			// $file = $data_attach[0]->attachment; //link here
+			// $headers = array(
+			  // 'Content-Type: application/octet-stream',
+			// );
 			
 			$examhist = ExaminationHistory::where("examination_id", "=", $id)->where("tahap", "=", "Download Sertifikat");
 			$count_download = count($examhist->get());
@@ -966,6 +970,15 @@ class PengujianController extends Controller
 				$exam_hist->created_at = date('Y-m-d H:i:s');
 				$exam_hist->save();
 			
+			// return Response::download($file, $attach, $headers);
+			$jns = 'device';
+			$id = $data_attach->id;
+			$attach = $data_attach->certificate;
+			$file = public_path().'/media/'.$jns.'/'.$id.'/'.$attach;
+			$headers = array(
+			  'Content-Type: application/octet-stream',
+			);
+
 			return Response::download($file, $attach, $headers);
 		}
     }

@@ -109,9 +109,6 @@
 									Tambah Unit
 								</legend>
 
-								<div id="equip_fields">
-								</div>
-
 								<div class="row">
 									<div class="col-md-1">
 										<div class="form-group">
@@ -129,14 +126,6 @@
 											<input type="text" name="unit[]" class="form-control" placeholder="mis: meter, dll ..." required>
 										</div>
 									</div>
-									<div class="col-md-2">
-										<div class="form-group">
-											<label>
-												PIC *
-											</label>
-											<input type="text" name="pic[]" class="form-control" placeholder="Nama penanggung jawab ..." required>
-										</div>
-									</div>
 									<div class="col-md-3">
 										<div class="form-group">
 											<label>
@@ -145,7 +134,6 @@
 											<textarea type="text" name="description[]" class="form-control" placeholder="Uraian Perangkat"></textarea>
 										</div>
 									</div>
-									
 									<div class="col-md-3">
 										<div class="form-group">
 											<label>
@@ -161,6 +149,20 @@
 												Aksi
 											</label>
 											<button class="btn btn-success" type="button"  onclick="equip_fields();"> <span class="glyphicon glyphicon-plus" style="float:right"></span></button>
+										</div>
+									</div>
+								</div>
+								
+								<div id="equip_fields">
+								</div>
+								
+								<div class="row">
+									<div class="col-md-2">
+										<div class="form-group">
+											<label>
+												PIC *
+											</label>
+											<input type="text" name="pic[]" class="form-control" placeholder="Nama penanggung jawab ..." required>
 										</div>
 									</div>
 								</div>
@@ -224,7 +226,7 @@
 	    var divtest = document.createElement("div");
 		divtest.setAttribute("class", "form-group removeclass"+equip);
 		var rdiv = 'removeclass'+equip;
-	    divtest.innerHTML = '<div class="row"><div class="col-md-1"><div class="form-group"><label>Jumlah *</label><input type="number" name="qty[]" class="form-control" placeholder="Jumlah" required></div></div><div class="col-md-2"><div class="form-group"><label>Unit/Satuan *</label><input type="text" name="unit[]" class="form-control" placeholder="mis: meter, dll ..." required></div></div><div class="col-md-2"><div class="form-group"><label>PIC *</label><input type="text" name="pic[]" class="form-control" placeholder="Nama penanggung jawab ..." required></div></div><div class="col-md-3"><div class="form-group"><label>Deskripsi</label><textarea type="text" name="description[]" class="form-control" placeholder="Deskripsi"></textarea></div></div><div class="col-md-3"><div class="form-group"><label>Keterangan</label><textarea type="text" name="remarks[]" class="form-control" placeholder="Keterangan"></textarea></div></div><div class="col-md-1"><div class="form-group"><label>Aksi</label><button class="btn btn-danger" type="button"  onclick="remove_equip_fields('+ equip +');"> <span class="glyphicon glyphicon-minus" style="float:right"></span></button></div></div></div>';
+	    divtest.innerHTML = '<div class="row"><div class="col-md-1"><div class="form-group"><label>Jumlah *</label><input type="number" name="qty[]" class="form-control" placeholder="Jumlah" required></div></div><div class="col-md-2"><div class="form-group"><label>Unit/Satuan *</label><input type="text" name="unit[]" class="form-control" placeholder="mis: meter, dll ..." required></div></div><div class="col-md-3"><div class="form-group"><label>Uraian Perangkat</label><textarea type="text" name="description[]" class="form-control" placeholder="Deskripsi"></textarea></div></div><div class="col-md-3"><div class="form-group"><label>Keterangan</label><textarea type="text" name="remarks[]" class="form-control" placeholder="Keterangan"></textarea></div></div><div class="col-md-1"><div class="form-group"><label>Aksi </label><button class="btn btn-danger" type="button"  onclick="remove_equip_fields('+ equip +');"> <span class="glyphicon glyphicon-minus" style="float:right"></span></button></div></div></div>';
 	    
 	    objTo.appendChild(divtest)
 	}

@@ -477,7 +477,14 @@ $notification->id = Uuid::uuid4();
 				}
 			}
 			$status = $request->input('function_status');
-			$exam->contract_date = date('Y-m-d');
+			if($exam->function_date != null){
+				$exam->contract_date = $exam->function_date;
+			}
+			else if($exam->deal_test_date != null){
+				$exam->contract_date = $exam->deal_test_date;
+			}else{
+				$exam->contract_date = date('Y-m-d');				
+			}
 			$exam->function_status = $status;
 			if($status == 1){
 				/* push notif*/

@@ -116,7 +116,7 @@
 											<option value="1">Success</option>
 											<option value="-1" selected>Decline</option>
 										@else
-											<option value="0" selected>Choose Status</option>
+											<option value="{{ $dataStel[0]->payment_status }}" selected>Choose Status</option>
 											<option value="1">Success</option>
 											<option value="-1">Decline</option>
 										@endif

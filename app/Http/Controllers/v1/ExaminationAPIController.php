@@ -1112,12 +1112,16 @@ $notification->id = Uuid::uuid4();
     		$examinations = Examination::find($param->id);
     		if($examinations){
 				if($param->function_result == 2){
+					Equipment::where('examination_id', '=' ,''.$examinations->id.'')->delete();
+					EquipmentHistory::where('examination_id', '=' ,''.$examinations->id.'')->delete();
+					
 					$examinations->cust_test_date = NULL;
 					$examinations->deal_test_date = NULL;
 					$examinations->urel_test_date = NULL;
 					$examinations->function_date = NULL;
 					$examinations->function_test_reason = NULL;
 					$examinations->function_test_date_approval = 0;
+					$examinations->location = 0;
 				}
 				$examinations->catatan = $param->catatan;
 				$examinations->function_test_TE = $param->function_result;

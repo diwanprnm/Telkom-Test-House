@@ -149,7 +149,7 @@
 									<label>
 										File *
 									</label>
-									<input type="file" name="attachment" class="form-control"  required>
+									<input type="file" name="attachment" class="form-control">
 								</div>
 							</div>
 	                        <div class="col-md-12">

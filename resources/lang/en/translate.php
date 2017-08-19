@@ -103,7 +103,7 @@ return [
 	'stel_choose_category'	=> 'Choose Category',
 	'stel_tax'     		=> 'Tax',
 	'stel_in_cart'     	=> 'Already in Cart',
-	'stel_buyed'     	=> 'Buyed',
+	'stel_buyed'     	=> 'Item Bought',
     
 	'charge'     		=> 'Tariff',
 	'charge_no'     	=> 'No',
@@ -175,7 +175,7 @@ return [
 	'examination_capacity'=> 'Capacity',
 	'examination_company'=> 'Company Name',
 	'examination_date_regist'=> 'Register Date',
-	'examination_number_exam_form'=> 'Number of Testing Process',
+	'examination_number_exam_form'=> 'Registration Number',
 	'examination_labs_name'=> 'Lab Name',
 	'form_not_show' => 'If form not automatically open in new tab,',
     

@@ -176,7 +176,7 @@ return [
 	'examination_capacity'=> 'Kapasitas',
 	'examination_company'=> 'Perusahaan',
 	'examination_date_regist'=> 'Tanggal Pengajuan',
-	'examination_number_exam_form'=> 'Nomor Form Permohonan Uji',
+	'examination_number_exam_form'=> 'No. Reg',
 	'examination_labs_name'=> 'Nama Lab',
 	'form_not_show' => 'Jika form tidak muncul secara otomatis,',
 	

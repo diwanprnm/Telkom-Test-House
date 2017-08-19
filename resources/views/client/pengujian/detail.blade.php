@@ -898,25 +898,30 @@
 											</tr>
 										</thead>
 										<tbody>
+											@if(
+												$item->registration_status == 1 &&
+												$item->function_status == 1 &&
+												$item->contract_status == 1 &&
+												$item->spb_status == 1 &&
+												$item->payment_status == 1 &&
+												$item->spk_status == 1 &&
+												$item->examination_status == 1 &&
+												$item->resume_status == 1 &&
+												$item->qa_status == 1 &&
+												$item->certificate_status == 1
+											)
+											<tr>
+												<td> 
+													<a class="btn btn-link" href="javascript:void(0)" style="color:black !important;" onclick="return isTestimonial('{{ $item_attach->id_attach }}','{{ URL::to('pengujian/'.$item->id.'/downloadSertifikat') }}','{{ $item_attach->jns }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">{{ $item_attach->name }} </a>
+												</td> 
+											</tr>
+											@endif
 											@foreach($data_attach as $item_attach)
 											<tr>
 												<td> 
 													@if($item_attach->attachment != '')
 														@if($item_attach->name == 'Sertifikat')
-															@if(
-																$item->registration_status == 1 &&
-																$item->function_status == 1 &&
-																$item->contract_status == 1 &&
-																$item->spb_status == 1 &&
-																$item->payment_status == 1 &&
-																$item->spk_status == 1 &&
-																$item->examination_status == 1 &&
-																$item->resume_status == 1 &&
-																$item->qa_status == 1 &&
-																$item->certificate_status == 1
-															)
-																<a class="btn btn-link" href="javascript:void(0)" style="color:black !important;" onclick="return isTestimonial('{{ $item_attach->id_attach }}','{{ $item_attach->attachment }}','{{ $item_attach->jns }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">{{ $item_attach->name }} </a>
-															@endif
+															
 														@elseif($item_attach->name == 'Laporan Uji')
 															@if(
 																$item->registration_status == 1 &&
@@ -1014,7 +1019,6 @@
 	// });
 	function isTestimonial(a,b,c,d,e){
 		var link = document.getElementById('link');
-			// link.value = '/pengujian/download/'+a+'/'+b+'/'+c;
 			link.value = b;
 		
 		$.ajax({

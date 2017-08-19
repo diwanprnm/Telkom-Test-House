@@ -16,62 +16,22 @@
 				<table width=100%>
 					<tr>
 						<td>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>
-										Tanggal Surat *
-									</label>
-									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-										@if($data->contract_date)
-											<input type="text" name="contract_date" id="contract_date" value="{{$data->contract_date}}" class="form-control"/>
-										@else
-											<input type="text" name="contract_date" id="contract_date" value="{{date('Y-m-d')}}" class="form-control"/>
-										@endif
-										<span class="input-group-btn">
-											<button type="button" class="btn btn-default">
-												<i class="glyphicon glyphicon-calendar"></i>
-											</button>
-										</span>
-									</p>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>
-										Tanggal Mulai Uji *
-									</label>
-									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
-									@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
-										<input type="text" name="testing_start" id="testing_start" value="{{$exam_schedule->data[0]->startTestDt}}" class="form-control"/>
+							<div class="form-group">
+								<label>
+									Tanggal Surat *
+								</label>
+								<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
+									@if($data->contract_date)
+										<input type="text" name="contract_date" id="contract_date" value="{{$data->contract_date}}" class="form-control"/>
 									@else
-										<input type="text" name="testing_start" id="testing_start" class="form-control"/>
+										<input type="text" name="contract_date" id="contract_date" value="{{date('Y-m-d')}}" class="form-control"/>
 									@endif
-										<span class="input-group-btn">
-											<button type="button" class="btn btn-default">
-												<i class="glyphicon glyphicon-calendar"></i>
-											</button>
-										</span>
-									</p>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>
-										Tanggal Selesai Uji *
-									</label>
-									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
-									@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
-										<input type="text" name="testing_end" id="testing_end" value="{{$exam_schedule->data[0]->targetDt}}" class="form-control"/>
-									@else
-										<input type="text" name="testing_end" id="testing_end" class="form-control"/>
-									@endif
-										<span class="input-group-btn">
-											<button type="button" class="btn btn-default">
-												<i class="glyphicon glyphicon-calendar"></i>
-											</button>
-										</span>
-									</p>
-								</div>
+									<span class="input-group-btn">
+										<button type="button" class="btn btn-default">
+											<i class="glyphicon glyphicon-calendar"></i>
+										</button>
+									</span>
+								</p>
 							</div>
 						</td>
 					</tr>
@@ -1730,28 +1690,21 @@
 							<div class="row">
 								@if($data->qa_passed == 1)
 								<div>
-									@foreach($data->media as $item)
-										@if($item->name == 'Sertifikat')
-											@if($item->attachment != '')
+									<div class="col-md-12">
+										<div class="form-group">
 											<label>
-												Sertifikat
+												Sertifikat File *
 											</label>
-											<label>
-												: Tersedia
-											</label>
-											<div class="form-group">
-												<a href="{{ $item->attachment }}"> Download Sertifikat </a>
-											</div>
-											@else
-											<label>
-												Sertifikat
-											</label>
-											<label>
-												: Belum Tersedia
-											</label>
+											<input type="file" name="certificate_file" class="form-control" accept="application/pdf, image/*"/>
+										</div>
+										<div class="form-group">
+										@if($data->certificate_status)
+											@if($data->device->certificate)
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->device_id.'/certificate')}}"> Download Certificate</a>
 											@endif
 										@endif
-									@endforeach
+										</div>
+									</div>
 									<div class="col-md-6">
 										<div class="form-group">
 											<label>
