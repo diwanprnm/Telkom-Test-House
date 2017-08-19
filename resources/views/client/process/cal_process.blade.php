@@ -692,7 +692,7 @@
 			var e = document.getElementById("f1-referensi-perangkat");
 			var strUser = e.options[e.selectedIndex].text;
 			var res = strUser.split('||');
-			var deviceName = res[1].replace(/spesifikasi telekomunikasi |telecommunication specification /gi,"");
+			var deviceName = res[1].replace(/spesifikasi telekomunikasi |spesifikasi telekomunikasi perangkat |telecommunication specification |spesifikasi perangkat |perangkat /gi,"");
 			$('#f1-nama-perangkat').val(deviceName);
 		});
 	 </script>

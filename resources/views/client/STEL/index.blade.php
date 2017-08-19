@@ -32,7 +32,11 @@
 								<select onchange="filter()" class="form-control cs-select cs-skin-elastic" id="cmb-category">
 									<option value="">{{ trans('translate.stel_choose_category') }}</option>
 									@foreach ($examLab as $dataLab)
-										<option value="{{$dataLab->id}}">{{$dataLab->name}}</option>
+										@if ($dataLab->id == $type)
+											<option value="{{$dataLab->id}}" selected>{{$dataLab->name}}</option>
+										@else
+											<option value="{{$dataLab->id}}">{{$dataLab->name}}</option>
+										@endif
 									@endforeach
 								</select>
 							</div>

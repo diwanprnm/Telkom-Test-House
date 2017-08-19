@@ -1674,6 +1674,7 @@
 	jQuery(document).ready(function() {
 		// Main.init();
 		// FormWizard.init();
+    // doCalendar();
 		$(".rad-jns_perusahaan-edit").change(function(){
 			var jns_perusahaan = $('input[name="jns_perusahaan"]:checked').val();
 			var jns_pengujian = $('.hide_jns_pengujian_edit').val();
@@ -1686,6 +1687,66 @@
 				}
 			}
 		});
+
+    var dateToday = new Date();
+
+    $('.datepicker').datepicker({
+        dateFormat: 'yy-mm-dd', 
+        autoclose: true,
+        numberOfMonths: 2 ,
+        showButtonPanel: true,
+        minDate: dateToday,
+        beforeShowDay: $.datepicker.noWeekends,
+
+    });
+
+    // function doCalendar(){
+    //   $.ajax({
+    //     url : "http://79.143.185.157:8080/RevitalisasiOTR/api/holiday/calendar",
+    //     type : "post",
+    //     contentType:"application/x-www-form-urlencoded",
+    //     dataType : "json",
+    //     data : {},
+    //     success : function(response) {
+    //       var holidays = response.data;
+    //       if(holidays != null && holidays.length > 0){
+    //         var dateToday = new Date();
+
+    //         $('.datepicker').datepicker({
+    //             dateFormat: 'yy-mm-dd', 
+    //             autoclose: true,
+    //             numberOfMonths: 2 ,
+    //             showButtonPanel: true,
+    //             minDate: dateToday,
+    //             daysOfWeekDisabled: [0,6],
+    //             beforeShowDay: function(date){
+    //                   var d1 = jQuery.datepicker.formatDate('yy-mm-dd', date);
+    //                   if (holidays.indexOf(d1) == -1) {
+    //                       return true;
+    //                     } else {
+    //                       return false;
+    //                     }
+    //             }
+    //         });
+    //       }else{
+    //         var dateToday = new Date();
+
+    //         $('.datepicker').datepicker({
+    //             dateFormat: 'yy-mm-dd', 
+    //             autoclose: true,
+    //             numberOfMonths: 2 ,
+    //             showButtonPanel: true,
+    //             minDate: dateToday,
+    //             beforeShowDay: $.datepicker.noWeekends,
+
+    //         });
+    //       }
+    //     },
+    //     error : function(jqXHR, textStatus, errorThrown) {
+    //           console.log(textStatus, errorThrown);
+    //         }
+    //     });
+    // }
 	});
 </script>
 <script type="text/javascript" >
@@ -2067,17 +2128,6 @@
 		});
 	});
 
-  var dateToday = new Date();
-
-	$('.datepicker').datepicker({
-      dateFormat: 'yy-mm-dd', 
-      autoclose: true,
-      numberOfMonths: 2 ,
-      showButtonPanel: true,
-      minDate: dateToday,
-       beforeShowDay: $.datepicker.noWeekends,
-
-  });
 	function reSchedule(a,b,c,d,e){
 		if(c==1){
 			$('#reschedule-modal-content').modal('show');
