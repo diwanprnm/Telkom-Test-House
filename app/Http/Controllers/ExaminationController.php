@@ -1942,18 +1942,18 @@ $notification->id = Uuid::uuid4();
 		$currentUser = Auth::user();
 		
 		$exam_id = $request->input('hide_id_exam');
-		$testing_start = $request->input('testing_start');
-        if($request->input('testing_start') == '' or $request->input('testing_start') == '0000-00-00' or $request->input('testing_start') == NULL){
-            $testing_start_ina = '_ _ - _ _ - _ _ _ _';
-        }else{
-            $testing_start_ina = date('d-m-Y', strtotime($request->input('testing_start')));
-        }
-		$testing_end = $request->input('testing_end');
-        if($request->input('testing_end') == '' or $request->input('testing_end') == '0000-00-00' or $request->input('testing_start') == NULL){
-            $testing_end_ina = '_ _ - _ _ - _ _ _ _';
-        }else{
-            $testing_end_ina = date('d-m-Y', strtotime($request->input('testing_end')));
-        }
+		// $testing_start = $request->input('testing_start');
+        // if($request->input('testing_start') == '' or $request->input('testing_start') == '0000-00-00' or $request->input('testing_start') == NULL){
+            // $testing_start_ina = '_ _ - _ _ - _ _ _ _';
+        // }else{
+            // $testing_start_ina = date('d-m-Y', strtotime($request->input('testing_start')));
+        // }
+		// $testing_end = $request->input('testing_end');
+        // if($request->input('testing_end') == '' or $request->input('testing_end') == '0000-00-00' or $request->input('testing_start') == NULL){
+            // $testing_end_ina = '_ _ - _ _ - _ _ _ _';
+        // }else{
+            // $testing_end_ina = date('d-m-Y', strtotime($request->input('testing_end')));
+        // }
 		$contract_date = $request->input('contract_date');
 			$contract_date_ina_temp = strtotime($contract_date);
 			$contract_date_ina = date('d-m-Y', $contract_date_ina_temp);
@@ -1969,8 +1969,6 @@ $notification->id = Uuid::uuid4();
 				$query_update = "UPDATE examinations
 					SET 
 						contract_date = '".$contract_date."',
-						testing_start = '".$testing_start."',
-						testing_end = '".$testing_end."',
 						updated_by = '".$currentUser['attributes']['id']."',
 						updated_at = '".date('Y-m-d H:i:s')."'
 					WHERE id = '".$exam_id."'
@@ -2003,8 +2001,6 @@ $notification->id = Uuid::uuid4();
 					'kapasitas_perangkat' => $exam->device->capacity,
 					'referensi_perangkat' => $exam->device->test_reference,
 					'pembuat_perangkat' => $exam->device->manufactured_by,
-					'testing_start' => $testing_start_ina,
-					'testing_end' => $testing_end_ina,
 					'contract_date' => $contract_date_ina,
 					'manager_lab' => $manager_labs,
 					'pic' => $pic
