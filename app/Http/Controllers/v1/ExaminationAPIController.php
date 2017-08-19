@@ -1216,6 +1216,29 @@ $notification->id = Uuid::uuid4();
 				$attach->updated_by = 1;
 				
 				if($attach->save()){
+					$data= array( 
+						"from"=>1,
+						"to"=>"admin",
+						"message"=>"Test Enginner mengirimkan laporan uji",
+						"url"=>"pengujian",
+						"is_read"=>0,
+						"created_at"=>date("Y-m-d H:i:s"),
+						"updated_at"=>date("Y-m-d H:i:s")
+					);
+					  $notification = new NotificationTable();
+					  $notification->id = Uuid::uuid4();
+					  $notification->from = $data['from'];
+					  $notification->to = $data['to'];
+					  $notification->message = $data['message'];
+					  $notification->url = $data['url'];
+					  $notification->is_read = $data['is_read'];
+					  $notification->created_at = $data['created_at'];
+					  $notification->updated_at = $data['updated_at'];
+					  $notification->save();
+
+					  $data['id'] = $notification->id;
+					  event(new Notification($data));
+
     				return $this->sendResponse($attach, 'Resume Found');
     			}else{
     				return $this->sendError('Failed to Input Resume');
@@ -1232,6 +1255,29 @@ $notification->id = Uuid::uuid4();
 				$attach->updated_by = 1;
 
 				if($attach->save()){
+					$data= array( 
+						"from"=>1,
+						"to"=>"admin",
+						"message"=>"Test Enginner mengirimkan laporan uji",
+						"url"=>"pengujian",
+						"is_read"=>0,
+						"created_at"=>date("Y-m-d H:i:s"),
+						"updated_at"=>date("Y-m-d H:i:s")
+					);
+					  $notification = new NotificationTable();
+					  $notification->id = Uuid::uuid4();
+					  $notification->from = $data['from'];
+					  $notification->to = $data['to'];
+					  $notification->message = $data['message'];
+					  $notification->url = $data['url'];
+					  $notification->is_read = $data['is_read'];
+					  $notification->created_at = $data['created_at'];
+					  $notification->updated_at = $data['updated_at'];
+					  $notification->save();
+
+					  $data['id'] = $notification->id;
+					  event(new Notification($data));
+					  
     				return $this->sendResponse($attach, 'Resume Found');
     			}else{
     				return $this->sendError('Failed to Input Resume');

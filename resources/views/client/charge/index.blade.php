@@ -30,9 +30,31 @@
 						<div class="col-md-3 form-group">
 							<select onchange="filter()" class="form-control" id="cmb-category">
 								<option value="">{{ trans('translate.charge_choose_category') }}</option>
-								@foreach ($examLab as $dataLab)
-									<option value="{{$dataLab->name}}">{{$dataLab->name}}</option>
-								@endforeach
+								@if ($category == 'Lab Kalibrasi')
+									<option value="Lab Kalibrasi" selected>Lab Kalibrasi</option>
+								@else
+									<option value="Lab Kalibrasi">Lab Kalibrasi</option>
+								@endif
+								@if ($category == 'Lab Kabel')
+									<option value="Lab Kabel" selected>Lab Kabel</option>
+								@else
+									<option value="Lab Kabel">Lab Kabel</option>
+								@endif
+								@if ($category == 'Lab Energi')
+									<option value="Lab Energi" selected>Lab Energi</option>
+								@else
+									<option value="Lab Energi">Lab Energi</option>
+								@endif
+								@if ($category == 'Lab Transmisi')
+									<option value="Lab Transmisi" selected>Lab Transmisi</option>
+								@else
+									<option value="Lab Transmisi">Lab Transmisi</option>
+								@endif
+								@if ($category == 'Lab CPE')
+									<option value="Lab CPE" selected>Lab CPE</option>
+								@else
+									<option value="Lab CPE">Lab CPE</option>
+								@endif
 							</select>
 						</div>
 						

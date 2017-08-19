@@ -530,8 +530,7 @@
 									@endif
 								</div>
 								@if($data->function_test_date_approval == 1)
-									<div class="col-md-4"></div>
-									<div class="col-md-4">
+									<div class="col-md-12 center">
 										<div class="form-group">
 											<h4 style="display:inline">Jadwal FIX Uji Fungsi</h4>
 											@if($data->function_date != null)		
@@ -541,7 +540,6 @@
 											@endif
 										</div>
 									</div>
-									<div class="col-md-4"></div>
 								@endif
 							</div>							
 
@@ -599,8 +597,7 @@
 							
 							<div class="col-md-12">
 								@if($data->function_test_TE != 0)
-									<div class="col-md-4"></div>
-									<div class="col-md-4">
+									<div class="col-md-12 center">
 									<div class="form-group">
 										<h4 style="display:inline">
 											Hasil Uji Fungsi
@@ -618,7 +615,6 @@
 										</h4>
 									</div>
 									</div>
-									<div class="col-md-4"></div>
 									<div class="col-md-12">
 									<div class="form-group">
 										<a href="{{URL::to('/cetakUjiFungsi/'.$data->id)}}" target="_blank"> Buatkan Laporan Uji Fungsi</a>
