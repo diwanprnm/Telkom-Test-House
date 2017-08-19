@@ -23,6 +23,7 @@ use App\ExaminationType;
 use App\Feedback;
 use App\ExaminationHistory;
 use App\Footer;
+use App\Question;
 
 
 use Ramsey\Uuid\Uuid;
