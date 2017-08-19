@@ -557,6 +557,13 @@
 
 	        if(newIndex == 3){
 	        	$('.actions > ul > li:nth-child(2) a').text("Next");
+				
+				var e = document.getElementById("f1-cmb-ref-perangkat");
+				if(e.value==''){
+					alert("Choose STEL");
+					e.focus();
+					return false;
+				}
 
 	        	var jnsPelanggan = $('#hide_jns_pengujian').val();
 				var serialNumber_perangkat = $('#f1-serialNumber-perangkat').val();
@@ -573,7 +580,7 @@
 						$('#hide_cekSNjnsPengujian').val(data); 
 					}
 				});
-	        }  
+	        } 
 
 
 	        if(newIndex < currentIndex ){ 
