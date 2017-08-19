@@ -677,7 +677,7 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="form-group">
-									<a onclick="makeContract('<?php echo $data->id ?>','<?php echo $data->contract_date ?>','<?php echo $data->testing_start ?>','<?php echo $data->testing_end ?>')"> Buatkan File Kontrak</a>
+									<a onclick="makeContract('<?php echo $data->id ?>','<?php echo $data->contract_date ?>','','')"> Buatkan File Kontrak</a>
 								</div>
 							</div>
 							<div class="col-md-12">
