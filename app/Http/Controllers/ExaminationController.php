@@ -1316,9 +1316,11 @@ $notification->id = Uuid::uuid4();
         // }
 
         if ($request->hasFile('certificate_file')) {
-            $ext_file = $request->file('certificate_file')->getClientOriginalExtension();
-            $name_file = uniqid().'_certificate_'.$exam->device_id.'.'.$ext_file;
-            $path_file = public_path().'/media/device/'.$exam->device_id;
+			$name_file = 'sertifikat_'.$request->file('certificate_file')->getClientOriginalName();
+			$path_file = public_path().'/media/device/'.$exam->device_id;
+            // $ext_file = $request->file('certificate_file')->getClientOriginalExtension();
+            // $name_file = uniqid().'_certificate_'.$exam->device_id.'.'.$ext_file;
+            // $path_file = public_path().'/media/device/'.$exam->device_id;
             if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
