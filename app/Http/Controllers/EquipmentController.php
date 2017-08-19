@@ -140,7 +140,7 @@ class EquipmentController extends Controller
             $equipment->unit = $request->input('unit.'.$key);
             $equipment->description = $request->input('description.'.$key);
             $equipment->location = 2;
-            $equipment->pic = $request->input('pic.'.$key);
+            $equipment->pic = $request->input('pic');
             $equipment->remarks = $request->input('remarks.'.$key);
 
             $equipment->created_by = $currentUser->id;

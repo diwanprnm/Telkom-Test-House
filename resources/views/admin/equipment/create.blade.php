@@ -162,7 +162,7 @@
 											<label>
 												PIC *
 											</label>
-											<input type="text" name="pic[]" class="form-control" placeholder="Nama penanggung jawab ..." required>
+											<input type="text" name="pic" class="form-control" placeholder="Nama penanggung jawab ..." required>
 										</div>
 									</div>
 								</div>
