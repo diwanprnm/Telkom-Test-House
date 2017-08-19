@@ -677,7 +677,7 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="form-group">
-									<a onclick="makeContract('<?php echo $data->id ?>','<?php echo $data->contract_date ?>','','')"> Buatkan File Kontrak</a>
+									<a onclick="makeContract('<?php echo $data->id ?>','<?php echo $data->contract_date ?>')"> Buatkan File Kontrak</a>
 								</div>
 							</div>
 							<div class="col-md-12">
@@ -1859,14 +1859,14 @@
 		});
 	}
 	
-	function makeContract(a,b,c,d){
+	function makeContract(a,b){
 		$('#contract-modal-content').modal('show');
 		$('#hide_id_exam').val(a);
 		$('#contract-modal-content').on('shown.bs.modal', function() {
 			// $('#contract_date').val(b);
 			// $('#testing_start').val(c);
 			// $('#testing_end').val(d);
-			// $("#cust_test_date").focus();
+			$("#contract_date").focus();
 		})
 	}
 	
@@ -1969,15 +1969,13 @@
 	$('.btn-tgl-kontrak').click(function () {
 		var a = document.getElementById('hide_id_exam').value;
 		var b = document.getElementById('contract_date').value;
-		var c = document.getElementById('testing_start').value;
-		var d = document.getElementById('testing_end').value;
 		
 		var APP_URL = {!! json_encode(url('/cetakKontrak')) !!};
 		
 		$.ajax({
 			type: "POST",
 			url : "tanggalkontrak",
-			data: {'_token':"{{ csrf_token() }}", 'hide_id_exam':a, 'contract_date':b, 'testing_start':c, 'testing_end':d},
+			data: {'_token':"{{ csrf_token() }}", 'hide_id_exam':a, 'contract_date':b},
 			beforeSend: function(){
 				
 			},
