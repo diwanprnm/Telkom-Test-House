@@ -57,7 +57,8 @@
 														</td>
 													</tr>
 													<tr>
-														<td>{{ trans('translate.examination_number_payment') }} : <input type="text" id="no-pembayaran" class="no-pembayaran" name="no-pembayaran" placeholder="<?php echo $spb_number ?>" value="<?php echo $spb_number ?>" readonly></td>
+														<td>{{ trans('translate.examination_number_payment') }} : 
+														<input type="text" id="no-pembayaran" class="no-pembayaran form-control" name="no-pembayaran" placeholder="<?php echo $spb_number ?>" value="<?php echo $spb_number ?>" readonly></td>
 													</tr>
 													<tr>
 														<?php 
@@ -69,17 +70,19 @@
 																$timestamp = $data->tgl;
 															}
 														?>
-														<td>{{ trans('translate.examination_date_payment') }} : <input type="text" id="tgl-pembayaran" class="date tgl-pembayaran" name="tgl-pembayaran" placeholder="Tanggal ..." value="<?php echo $timestamp; ?>" readonly required></td>
+														<td>{{ trans('translate.examination_date_payment') }} : 
+														<input type="text" id="tgl-pembayaran" class="date tgl-pembayaran form-control" name="tgl-pembayaran" placeholder="Tanggal ..." value="<?php echo $timestamp; ?>" readonly required></td>
 													</tr>
 													<tr>
-														<td>{{ trans('translate.examination_price_payment') }} : <input type="text" id="jml-pembayaran" class="jml-pembayaran" name="jml-pembayaran" placeholder="<?php echo $cust_price_payment ?>" value="<?php echo $cust_price_payment ?>" required></td>
+														<td>{{ trans('translate.examination_price_payment') }} : 
+														<input type="text" id="jml-pembayaran" class="jml-pembayaran form-control" name="jml-pembayaran" placeholder="<?php echo $cust_price_payment ?>" value="<?php echo $cust_price_payment ?>" required></td>
 													</tr>
 											</table>
 										</div>
 										<div class="row">
 											<div class=" pull-right col-xs-12">
-												<a class="btn btn-wide btn-sky col-xs-12 col-lg-1" href="{{url('/pengujian')}}">{{ trans('translate.back') }}</a>
-												<button type="submit" class="btn btn-wide btn-sky pull-right col-xs-12 col-lg-1" style="margin-bottom:10px;">
+												<a class="button button-3d btn-sky col-xs-12 col-lg-1" href="{{url('/pengujian')}}">{{ trans('translate.back') }}</a>
+												<button type="submit" class="button button-3d btn-sky pull-right col-xs-12 col-lg-1" style="margin-bottom:10px;">
 													<i class="fa fa-btn"></i> {{ trans('translate.examination_upload_payment_file') }}
 												</button>
 											</div>
