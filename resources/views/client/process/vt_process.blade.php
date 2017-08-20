@@ -206,7 +206,7 @@
 											<label>{{ trans('translate.service_upload_siupp') }}<span class="text-danger">*</span></label>
 											<input   id="fileInput-SIUPP" name="fuploadsiupp" type="file" accept="application/pdf,image/*">
 											<input type="hidden" name="hide_siupp_file" id="hide_siupp_file" value="{{$userData->fileSIUPP}}"/>
-											<a id="siupp-file" class="btn btn-link" style="color:black !important;" >{{$userData->fileSIUPP}}</a>
+											<a id="siupp-file" class="btn btn-link" >{{$userData->fileSIUPP}}</a>
 											<div id="attachment-file">
 												*ukuran file maksimal 2 mb
 											</div>
@@ -267,7 +267,7 @@
 											<label>{{ trans('translate.service_upload_certificate_file') }}<span class="text-danger">*</span></label>
 											<input   id="fileInput-lampiran" name="fuploadlampiran" type="file" accept="application/pdf,image/*">
 											<input type="hidden" name="hide_sertifikat_file" id="hide_sertifikat_file" value="{{$userData->fileSertifikat}}"/>
-											<a id="sertifikat-file" class="btn btn-link" style="color:black !important;" >{{$userData->fileSertifikat}}</a>
+											<a id="sertifikat-file" class="btn btn-link" >{{$userData->fileSertifikat}}</a>
 											<div id="attachment-file">
 												*ukuran file maksimal 2 mb
 											</div>
@@ -320,7 +320,7 @@
 											<label>{{ trans('translate.service_upload_npwp') }}<span class="text-danger">*</span></label>
 											<input class="data-upload-berkas f1-file-NPWP" id="fileInput-NPWP" name="fuploadnpwp" type="file" accept="application/pdf,image/*">
 											<input type="hidden" name="hide_npwp_file" id="hide_npwp_file" value="{{$userData->fileNPWP}}"/>
-											<a id="npwp-file" class="btn btn-link" style="color:black !important;" >{{$userData->fileNPWP}}</a>
+											<a id="npwp-file" class="btn btn-link" >{{$userData->fileNPWP}}</a>
 											<div id="attachment-file">
 												*ukuran file maksimal 2 mb
 											</div>
@@ -500,7 +500,7 @@
 											<button type="button" class="button button3d btn-green upload-form">{{ trans('translate.service_upload_now') }}</button>
 											<div id="attachment-file">
 												{{ trans('translate.service_upload_if_form') }}
-												<a class="btn btn-link" style="margin-left:-10px; height:37px; color:black !important; font-size: 100%;" href="{{ url('/cetakPermohonan') }}" target="_blank">{{ trans('translate.service_upload_click') }}</a>
+												<a class="btn btn-link" style="margin-left:-10px; height:37px; font-size: 100%;" href="{{ url('/cetakPermohonan') }}" target="_blank">{{ trans('translate.service_upload_click') }}</a>
 											</div>
 										</div>
 										<div class="f1-buttons">
