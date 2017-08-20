@@ -59,8 +59,7 @@ html {
 }
 
 body {
-  color: #8e8e93;
-  color:
+  color: #333333;
   direction: ltr;
   overflow-x: hidden;
   height: 100%;
@@ -4769,7 +4768,7 @@ select[multiple="multiple"]:focus option {
 
 label {
   font-weight: normal;
-  color: #858585;
+  color: #333333;
 }
 
 span.input-icon, span.input-help {
