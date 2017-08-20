@@ -416,12 +416,21 @@ class PermohonanController extends Controller
 		
 		/*$ext_file = $request->file('fuploadrefuji')->getClientOriginalName();
 		$name_file = uniqid().'_file_.'.$ext_file;*/
-		$name_file = 'ref_uji_'.$request->file('fuploadrefuji')->getClientOriginalName();
-		if($request->file('fuploadrefuji')->move($path_file,$name_file)){
-            $fuploadrefuji_name = $name_file;
-		}else{
-			$fuploadrefuji_name = '';
+
+		if ($request->hasFile('fuploadrefuji')){
+			$name_file = 'ref_uji_'.$request->file('fuploadrefuji')->getClientOriginalName();
+			if($request->file('fuploadrefuji')->move($path_file,$name_file)){
+	            $fuploadrefuji_name = $name_file;
+			}else{
+				$fuploadrefuji_name = '';
+			}
+		} else{
+			// case QA
+			$res = explode('/',$request->input('path_ref'));   
+			$fuploadrefuji_name = $res[count($res)-1];
+			file_put_contents($path_file.'/'.$fuploadrefuji_name, file_get_contents($request->input('path_ref')));
 		}
+		
 		if($jns_pengujian == 1 and $jns_perusahaan !='Pabrikan'){
 			/*$ext_file = $request->file('fuploadprinsipal')->getClientOriginalName();
 			$name_file = uniqid().'_file_.'.$ext_file;*/

@@ -168,6 +168,9 @@
 											<option value="{{ $item->stel }}">{{ $item->stel }} || {{ $item->device_name }}</option>
 										@endforeach
 									</select>
+									@foreach($data_stels as $item)
+										<input type="hidden" id="{{$item->stel}}" name="{{$item->stel}}" value="{{URL::to('/media/stelAttach/'.$item->id_folder.'/'.$item->file)}}">
+									@endforeach
 							 	</div>
 				              	<div class="form-group">
 									<label for="f1-nama-perangkat">{{ trans('translate.service_device_equipment') }} *</label>
@@ -244,9 +247,11 @@
 										</div>
 									</div>
 									<div class="form-group  ">
-										<label>{{ trans('translate.service_upload_reference_test') }}<span class="text-danger">*</span></label>
-										<input class="data-upload-berkas f1-file-ref-uji required" id="fileInput-ref-uji" name="fuploadrefuji" type="file" accept="application/pdf,image/*">
+										<label>{{ trans('translate.service_upload_reference_test') }}</label>
+										<input class="data-upload-berkas f1-file-ref-uji" id="fileInput-ref-uji" name="fuploadrefuji" type="file" accept="application/pdf,image/*">
 										<div id="ref-uji-file"></div>
+										<input type="hidden" name="path_ref" id="path_ref">
+										<a id="4-stel-file" target="_blank" class="btn btn-link" style="color:black !important;" >Download Test Reference File</a>
 										<div id="attachment-file">
 											*ukuran file maksimal 2 mb
 										</div>
@@ -560,9 +565,17 @@
 				
 				var e = document.getElementById("f1-cmb-ref-perangkat");
 				if(e.value==''){
-					alert("Choose STEL");
+					alert("Please Choose Test Reference");
 					e.focus();
 					return false;
+				} else {
+					var file = document.getElementById(e.value);
+					
+					var link = document.getElementById('4-stel-file');
+					var path = document.getElementById('path_ref');
+
+					link.href = file.value
+					path.value = file.value
 				}
 
 	        	var jnsPelanggan = $('#hide_jns_pengujian').val();

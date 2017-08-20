@@ -627,7 +627,7 @@
 				
 				var e = document.getElementById("f1-referensi-perangkat");
 				if(e.value==''){
-					alert("Choose STEL");
+					alert("Please Choose Test Reference");
 					e.focus();
 					return false;
 				}
