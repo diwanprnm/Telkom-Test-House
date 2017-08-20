@@ -1674,7 +1674,7 @@
 	jQuery(document).ready(function() {
 		// Main.init();
 		// FormWizard.init();
-    // doCalendar();
+    doCalendar();
 		$(".rad-jns_perusahaan-edit").change(function(){
 			var jns_perusahaan = $('input[name="jns_perusahaan"]:checked').val();
 			var jns_pengujian = $('.hide_jns_pengujian_edit').val();
@@ -1688,65 +1688,68 @@
 			}
 		});
 
-    var dateToday = new Date();
+    // var dateToday = new Date();
 
-    $('.datepicker').datepicker({
-        dateFormat: 'yy-mm-dd', 
-        autoclose: true,
-        numberOfMonths: 2 ,
-        showButtonPanel: true,
-        minDate: dateToday,
-        beforeShowDay: $.datepicker.noWeekends,
+    // $('.datepicker').datepicker({
+    //     dateFormat: 'yy-mm-dd', 
+    //     autoclose: true,
+    //     numberOfMonths: 2 ,
+    //     showButtonPanel: true,
+    //     minDate: dateToday,
+    //     beforeShowDay: $.datepicker.noWeekends,
 
-    });
+    // });
 
-    // function doCalendar(){
-    //   $.ajax({
-    //     url : "http://79.143.185.157:8080/RevitalisasiOTR/api/holiday/calendar",
-    //     type : "post",
-    //     contentType:"application/x-www-form-urlencoded",
-    //     dataType : "json",
-    //     data : {},
-    //     success : function(response) {
-    //       var holidays = response.data;
-    //       if(holidays != null && holidays.length > 0){
-    //         var dateToday = new Date();
+    function doCalendar(){
+      $.ajax({
+        url : "http://79.143.185.157:8080/RevitalisasiOTR/api/holiday/getCalendar",
+        type : "get",
+        contentType:"application/x-www-form-urlencoded",
+        // headers: {
+        //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        // },
+        dataType : "json",
+        data : {},
+        success : function(response) {
+          var holidays = response.data;
+          if(holidays != null && holidays.length > 0){
+            var dateToday = new Date();
 
-    //         $('.datepicker').datepicker({
-    //             dateFormat: 'yy-mm-dd', 
-    //             autoclose: true,
-    //             numberOfMonths: 2 ,
-    //             showButtonPanel: true,
-    //             minDate: dateToday,
-    //             daysOfWeekDisabled: [0,6],
-    //             beforeShowDay: function(date){
-    //                   var d1 = jQuery.datepicker.formatDate('yy-mm-dd', date);
-    //                   if (holidays.indexOf(d1) == -1) {
-    //                       return true;
-    //                     } else {
-    //                       return false;
-    //                     }
-    //             }
-    //         });
-    //       }else{
-    //         var dateToday = new Date();
+            $('.datepicker').datepicker({
+                dateFormat: 'yy-mm-dd', 
+                autoclose: true,
+                numberOfMonths: 2 ,
+                showButtonPanel: true,
+                minDate: dateToday,
+                beforeShowDay: function(date){
+                 var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
+                 var noWeekend = $.datepicker.noWeekends(date);
+                     if (noWeekend[0]) {
+                      return  [$.inArray(string, holidays) == -1];
+                     }
+                     else
+                      return noWeekend;
+                }
+            });
+          }else{
+            var dateToday = new Date();
 
-    //         $('.datepicker').datepicker({
-    //             dateFormat: 'yy-mm-dd', 
-    //             autoclose: true,
-    //             numberOfMonths: 2 ,
-    //             showButtonPanel: true,
-    //             minDate: dateToday,
-    //             beforeShowDay: $.datepicker.noWeekends,
+            $('.datepicker').datepicker({
+                dateFormat: 'yy-mm-dd', 
+                autoclose: true,
+                numberOfMonths: 2 ,
+                showButtonPanel: true,
+                minDate: dateToday,
+                beforeShowDay: $.datepicker.noWeekends,
 
-    //         });
-    //       }
-    //     },
-    //     error : function(jqXHR, textStatus, errorThrown) {
-    //           console.log(textStatus, errorThrown);
-    //         }
-    //     });
-    // }
+            });
+          }
+        },
+        error : function(jqXHR, textStatus, errorThrown) {
+              console.log(textStatus, errorThrown);
+            }
+        });
+    }
 	});
 </script>
 <script type="text/javascript" >
