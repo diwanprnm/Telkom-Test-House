@@ -83,7 +83,7 @@
 											<div class=" pull-right col-xs-12">
 												<a class="button button-3d btn-sky" href="{{url('/pengujian')}}">{{ trans('translate.back') }}</a>
 												<button type="submit" class="button button-3d btn-sky pull-right" style="margin-bottom:10px;">
-													<i class="fa fa-btn"></i> {{ trans('translate.examination_upload_payment_file') }}
+													{{ trans('translate.examination_upload_payment_file') }}
 												</button>
 											</div>
 										</div>										
