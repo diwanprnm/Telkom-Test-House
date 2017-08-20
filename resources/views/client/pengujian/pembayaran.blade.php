@@ -78,8 +78,8 @@
 										</div>
 										<div class="row">
 											<div class=" pull-right col-xs-12">
-												<a class="btn btn-wide btn-danger col-xs-12 col-lg-1" href="{{url('/pengujian')}}">{{ trans('translate.back') }}</a>
-												<button type="submit" class="btn btn-wide btn-danger pull-right col-xs-12 col-lg-1" style="margin-bottom:10px;">
+												<a class="btn btn-wide btn-sky col-xs-12 col-lg-1" href="{{url('/pengujian')}}">{{ trans('translate.back') }}</a>
+												<button type="submit" class="btn btn-wide btn-sky pull-right col-xs-12 col-lg-1" style="margin-bottom:10px;">
 													<i class="fa fa-btn"></i> {{ trans('translate.examination_upload_payment_file') }}
 												</button>
 											</div>

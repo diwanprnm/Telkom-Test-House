@@ -64,7 +64,7 @@ body {
   direction: ltr;
   overflow-x: hidden;
   height: 100%;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: "Ralewayhttp://localhost/telkomdds/publi", sans-serif;
   font-size: 13px;
   padding: 0;
   margin: 0;
@@ -117,7 +117,7 @@ a:hover, a:focus, a:active {
 }
 
 h1, h2 {
-  font-family: "Raleway", sans-serif;
+  font-family: "Lato", sans-serif;
 }
 
 h3, h4, h5 {
@@ -11432,4 +11432,6 @@ span.error_text {
     padding: 0px;
     text-indent: -1.7em;
     margin-left: 1.7em;
+}input, button, select, textarea{
+  font-family: inherit;
 }
