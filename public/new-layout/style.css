@@ -12508,7 +12508,7 @@ body:not(.device-touch) .tagcloud a {
 }
 
 .btn-link:hover,
-.btn-link:focus { color: #222; }
+.btn-link:focus { color: #222; text-decoration: none;}
 
 .boot-tabs { margin-bottom: 20px !important; }
 
