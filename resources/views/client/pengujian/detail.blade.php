@@ -912,7 +912,7 @@
 											)
 											<tr>
 												<td> 
-													<a class="btn btn-link" href="javascript:void(0)" style="color:black !important;" onclick="return isTestimonial('{{ $item_attach->id_attach }}','{{ URL::to('pengujian/'.$item->id.'/downloadSertifikat') }}','{{ $item_attach->jns }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">{{ $item_attach->name }} </a>
+													<a class="btn btn-link" href="javascript:void(0)" onclick="return isTestimonial('{{ $item_attach->id_attach }}','{{ URL::to('pengujian/'.$item->id.'/downloadSertifikat') }}','{{ $item_attach->jns }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">{{ $item_attach->name }} </a>
 												</td> 
 											</tr>
 											@endif
@@ -934,10 +934,10 @@
 																$item->resume_status == 1 &&
 																date('Y-m-d') >= $item->resume_date
 															)
-																<a class="btn btn-link" href="javascript:void(0)" style="color:black !important;" onclick="return isTestimonial('{{ $item_attach->id_attach }}','{{ $item_attach->attachment }}','{{ $item_attach->jns }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">{{ $item_attach->name }} </a>
+																<a class="btn btn-link" href="javascript:void(0)" onclick="return isTestimonial('{{ $item_attach->id_attach }}','{{ $item_attach->attachment }}','{{ $item_attach->jns }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">{{ $item_attach->name }} </a>
 															@endif
 														@else	
-															<a class="btn btn-link" href="{{URL::to('/pengujian/download/'.$item_attach->id_attach.'/'.$item_attach->attachment.'/'.$item_attach->jns)}}" style="color:black !important;">{{ $item_attach->name }} </a>
+															<a class="btn btn-link" href="{{URL::to('/pengujian/download/'.$item_attach->id_attach.'/'.$item_attach->attachment.'/'.$item_attach->jns)}}">{{ $item_attach->name }} </a>
 														@endif
 													@endif
 												</td>

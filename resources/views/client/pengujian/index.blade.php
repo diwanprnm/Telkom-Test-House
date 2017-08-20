@@ -924,27 +924,27 @@
 							</div>
 							<div class="option-progress right"> 
 
-								<a class="button button-3d nomargin btn-blue" href="{{URL::to('cetakPengujian/'.$item->id.'')}}" target="_blank">{{ trans('translate.examination_print') }}</a>
-								<a class="button button-3d nomargin btn-blue " href="{{URL::to('pengujian/'.$item->id.'/detail')}}">{{ trans('translate.examination_detail') }}</a>
+								<a class="button button-3d nomargin btn-blue btn-sky" href="{{URL::to('cetakPengujian/'.$item->id.'')}}" target="_blank">{{ trans('translate.examination_print') }}</a>
+								<a class="button button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/detail')}}">{{ trans('translate.examination_detail') }}</a>
 								
 								@if($item->registration_status != '0' && $item->function_status != '1')
 									@if($item->deal_test_date == NULL)
-									<a class="button button-3d edit_btn nomargin btn-blue" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->cust_test_date ?>','1','<?php echo $item->deal_test_date ?>','<?php echo $item->urel_test_date ?>')">{{ trans('translate.examination_reschedule_test_date') }}</a>
+									<a class="button button-3d download_progress_btn edit_btn nomargin btn-blue btn-sky" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->cust_test_date ?>','1','<?php echo $item->deal_test_date ?>','<?php echo $item->urel_test_date ?>')">{{ trans('translate.examination_reschedule_test_date') }}</a>
 									@elseif($item->deal_test_date != NULL && $item->urel_test_date == NULL && $item->function_test_date_approval == 0)
-									<a class="button button-3d nomargin btn-blue" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->cust_test_date ?>','2','<?php echo $item->deal_test_date ?>','<?php echo $item->urel_test_date ?>')">{{ trans('translate.examination_reschedule_test_date') }}</a>
-									<a class="button button-3d nomargin btn-blue" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->cust_test_date ?>','3','<?php echo $item->deal_test_date ?>','<?php echo $item->urel_test_date ?>')">{{ trans('translate.examination_approve_test_date') }}</a>
+									<a class="button button-3d download_progress_btn edit_btn nomargin btn-blue btn-sky" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->cust_test_date ?>','2','<?php echo $item->deal_test_date ?>','<?php echo $item->urel_test_date ?>')">{{ trans('translate.examination_reschedule_test_date') }}</a>
+									<a class="button button-3d download_progress_btn edit_btn nomargin btn-blue btn-sky" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->cust_test_date ?>','3','<?php echo $item->deal_test_date ?>','<?php echo $item->urel_test_date ?>')">{{ trans('translate.examination_approve_test_date') }}</a>
 									@elseif($item->urel_test_date != NULL && $item->function_date == NULL)
-									<a class="button button-3d nomargin btn-blue" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->cust_test_date ?>','2','<?php echo $item->deal_test_date ?>','<?php echo $item->urel_test_date ?>')">{{ trans('translate.examination_reschedule_test_date') }}</a>
+									<a class="button button-3d download_progress_btn edit_btn nomargin btn-blue btn-sky" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->cust_test_date ?>','2','<?php echo $item->deal_test_date ?>','<?php echo $item->urel_test_date ?>')">{{ trans('translate.examination_reschedule_test_date') }}</a>
 									@endif
 								@endif
 								
 								<?php if($item->spb_status == 1 and $item->payment_status != 1){ ?>
-									<a class="button edit_btn button-3d nomargin btn-blue" href="{{URL::to('pengujian/'.$item->id.'/pembayaran')}}">{{ trans('translate.examination_payment') }}</a>
-									<a class="button edit_btn button-3d nomargin btn-blue" href="{{URL::to('pengujian/'.$item->id.'/downloadSPB')}}">{{ trans('translate.download') }} SPB</a>
+									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/pembayaran')}}">{{ trans('translate.examination_payment') }}</a>
+									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/downloadSPB')}}">{{ trans('translate.download') }} SPB</a>
 								<?php } ?>
 								
 								<?php if($item->registration_status != 1){ ?>
-									<a class="button edit_btn button-3d nomargin btn-blue" href="{{url('editprocess/'.$item->jns_pengujian.'/'.$item->id)}}">{{ trans('translate.examination_edit') }}</a>
+									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{url('editprocess/'.$item->jns_pengujian.'/'.$item->id)}}">{{ trans('translate.examination_edit') }}</a>
 								<?php } ?>
 								
 								<?php if(
@@ -958,7 +958,7 @@
                   $item->resume_status == 1 &&
 					date('Y-m-d') >= $item->resume_date
 					){ ?>
-									<a class="button button-3d edit_btn download_progress_btn nomargin btn-blue" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->device_id }}','{{ URL::to('pengujian/'.$item->id.'/downloadLaporanPengujian') }}','device', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})', '{{$item->id}}');">{{ trans('translate.download') }} {{ trans('translate.examination_report') }}</a>
+									<a class="button button-3d edit_btn download_progress_btn nomargin btn-blue btn-sky" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->device_id }}','{{ URL::to('pengujian/'.$item->id.'/downloadLaporanPengujian') }}','device', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})', '{{$item->id}}');">{{ trans('translate.download') }} {{ trans('translate.examination_report') }}</a>
 								<?php } ?>
 								
 								<?php if(
@@ -973,7 +973,7 @@
                   $item->qa_status == 1 &&
                   $item->certificate_status == 1
                 ){ ?>
-									<a class="button button-3d edit_btn download_progress_btn nomargin btn-blue" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->device_id }}','{{ URL::to('pengujian/'.$item->id.'/downloadSertifikat') }}','device', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})', '{{$item->id}}');">{{ trans('translate.download') }} {{ trans('translate.certificate') }}</a>
+									<a class="button button-3d edit_btn download_progress_btn nomargin btn-blue btn-sky" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->device_id }}','{{ URL::to('pengujian/'.$item->id.'/downloadSertifikat') }}','device', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})', '{{$item->id}}');">{{ trans('translate.download') }} {{ trans('translate.certificate') }}</a>
 								<?php } ?>
 							</div>
 						</div>
