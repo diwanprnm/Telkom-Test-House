@@ -129,7 +129,7 @@ class HomeController extends Controller
 		if($currentUser){
 			if($category == 'qa'){
 				$query_stels = "SELECT DISTINCT s.code as stel ,s.name as device_name, ssd.attachment as file, ssd.id as id_folder
-				FROM stels s,stels_sales ss,stels_sales_detail ssd, companies c , users u, stels_sales_attachment attach
+				FROM stels s,stels_sales ss,stels_sales_detail ssd, companies c , users u
 				WHERE s.id = ssd.stels_id AND ss.id = ssd.stels_sales_id AND ss.user_id = u.id AND u.company_id = c.id
 				AND ss.payment_status = 1 AND c.id = '".$currentUser->company->id."'";
 				$data_stels = DB::select($query_stels);				
@@ -174,7 +174,7 @@ class HomeController extends Controller
 		
 		if($currentUser){
 			if($category == 'qa'){
-				$query_stels = "SELECT DISTINCT s.code as stel ,s.name as device_name
+				$query_stels = "SELECT DISTINCT s.code as stel ,s.name as device_name, ssd.attachment as file, ssd.id as id_folder
 				FROM stels s,stels_sales ss,stels_sales_detail ssd, companies c , users u
 				WHERE s.id = ssd.stels_id AND ss.id = ssd.stels_sales_id AND ss.user_id = u.id AND u.company_id = c.id
 				AND ss.payment_status = 1 AND c.id = '".$currentUser->company->id."'";

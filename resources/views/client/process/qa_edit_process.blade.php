@@ -164,7 +164,8 @@
 								</div>
 				            	<div class="form-group">
 				            		<label for="f1-nama-perangkat">{{ trans('translate.service_device_test_reference') }} *</label>
-									<select  class="chosen-select" id="f1-cmb-ref-perangkat" name="f1-cmb-ref-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}"> 
+				            		<input type="hidden" name="old_ref" id="old_ref" value="{{ $userData->referensi_perangkat }}" >
+									<select  class="chosen-select" id="f1-cmb-ref-perangkat" name="f1-cmb-ref-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}">
 										@foreach($data_stels as $item)
 											@if($item->stel == $userData->referensi_perangkat)
 												<option value="{{ $item->stel }}" selected>{{ $item->stel }} || {{ $item->device_name }}</option>
@@ -173,6 +174,9 @@
 											@endif
 										@endforeach
 									</select>
+									@foreach($data_stels as $item)
+										<input type="hidden" id="{{$item->stel}}" name="{{$item->stel}}" value="{{URL::to('/media/stelAttach/'.$item->id_folder.'/'.$item->file)}}">
+									@endforeach
 
 									<input type="hidden" name="hide_name" id="hide_name" value="{{$userData->nama_perangkat}}"/>
 									<input type="hidden" name="hide_model" id="hide_model" value="{{$userData->model_perangkat}}" />
@@ -255,6 +259,7 @@
 										<label>{{ trans('translate.service_upload_reference_test') }}<span class="text-danger">*</span></label>
 										<input class="data-upload-berkas f1-file-ref-uji" id="fileInput-ref-uji" name="fuploadrefuji" type="file" accept="application/pdf,image/*" value="{{$userData->fileref_uji}}">
 										<input type="hidden" name="hide_ref_uji_file" class="required" id="hide_ref_uji_file" value="{{$userData->fileref_uji}}"/>
+										<input type="hidden" name="path_ref" id="path_ref">
 										<a id="ref-uji-file" class="btn btn-link">{{$userData->fileref_uji}}</a>
 										  
 										<div id="ref-uji-file"></div>
@@ -600,6 +605,18 @@
 					alert("Please Choose Test Reference");
 					e.focus();
 					return false;
+				} else{
+
+					var oldRef = document.getElementById('old_ref');
+
+					if (oldRef.value.indexOf(e.value) == -1){
+						var file = document.getElementById(e.value);
+					
+						var path = document.getElementById('path_ref');
+
+						path.value = file.value;
+						alert(path.value);
+					}
 				}
 
 	        	var jnsPelanggan = $('#hide_jns_pengujian').val();

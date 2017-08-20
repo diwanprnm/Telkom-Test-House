@@ -733,7 +733,14 @@ $notification->id = Uuid::uuid4();
                 $fuploadrefuji_name = $request->input('hide_ref_uji_file');
             }
 		}else{
-			$fuploadrefuji_name = $request->input('hide_ref_uji_file');
+
+			if ($request->input('old_ref') != $referensi_perangkat) {
+				$res = explode('/',$request->input('path_ref'));
+				$fuploadrefuji_name = $res[count($res)-1];
+				file_put_contents($path_file.'/'.$fuploadrefuji_name, file_get_contents($request->input('path_ref')));
+			} else{
+				$fuploadrefuji_name = $request->input('hide_ref_uji_file');
+			}
 		}
 		if($jns_pengujian == 1 and $jns_perusahaan !='Pabrikan'){
 			if ($request->hasFile('fuploadprinsipal')) {
