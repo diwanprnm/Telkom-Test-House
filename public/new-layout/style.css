@@ -13631,6 +13631,7 @@ body:not(.no-transition) #wrapper,
 }
 .btn-sky{
 	background-color: #299ec0;
+	color: #fff;
 	text-align: center;
 }
 .btn-grey{
@@ -14174,4 +14175,7 @@ h4.judulselesai {
 }
 .btn-login-lg{
 	width: 100%;
+}
+#file-pembayaran{
+	margin-top: 2%;
 }
