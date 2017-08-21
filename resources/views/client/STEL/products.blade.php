@@ -160,11 +160,16 @@
 						<div class="block divcenter" style="background-color: #FFF; max-width: 500px;">
 							<div  style="padding: 50px;">
 								<h3>{{ trans('translate.stel_term_condition') }}</h3>
+								<!--
 								<p class="nobottommargin">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum delectus, tenetur obcaecati porro! Expedita nostrum tempora quia provident perspiciatis inventore, autem eaque, quod explicabo, ipsum, facilis aliquid! Sapiente, possimus quo!</p> 
+								-->
 								<ul>
-									<li> 1. Pela</li>
-									<li> 1. Pela</li>
-									<li> 1. Pela</li>
+									<li> 1. {{ trans('translate.stel_term_condition_num1') }}</li>
+									<li> 2. {{ trans('translate.stel_term_condition_num2') }}</li>
+									<li> 3. {{ trans('translate.stel_term_condition_num3') }}</li>
+									<li> 4. {{ trans('translate.stel_term_condition_num4') }}</li>
+									<li> 5. {{ trans('translate.stel_term_condition_num5') }}</li>
+									<li> 6. {{ trans('translate.stel_term_condition_num6') }}</li>
 								</ul>
 							</div>
 							   <form class="form-horizontal" role="form" method="POST" action="{{ url('checkout') }}">
