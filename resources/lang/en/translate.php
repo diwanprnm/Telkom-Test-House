@@ -353,4 +353,16 @@ return [
 	'tax'  	=> 'Tax',
 	'see_receipt'  	=> 'See Receipt',
 	'see_invoice'  	=> 'See Tax Invoice',
+	
+	'subtitle_qa_process' => 'Quality assurance testing of telecomunication device that is conducted based on Telecommunication Spesification (STEL) reference, and a certificate is issued by PT. Telkom Indonesia, Tbk to any comply devices with validity period.',
+	'subtitle_ta_process' => 'Telecommunication device testing that is conducted based on covering letter of device testing (known as SP3) issued by Directorate General of Resources and Equipment of Post and Information Technology (DitjenSDPPI). This test uses reference such as Ministry of Communication and Informatics decree (Permenkominfo), regulation of Ditjen SDPPI (Perdirjen), or other references defined by them.',
+	'subtitle_vt_process' => 'Telecommunication device testing that is order-based by customer. Test is conducted based upon mutually agreed reference among user (Operational Division/Headquarter/Telkom Group) and Divisi Digital Service (DDS) accompanied by office memo.',
+	'subtitle_cal_process' => 'Calibration of measurement tools.',
+	
+	'stel_term_condition_num1'	=> 'Total price listed on shopping cart is/are 10 % tax excluded.',
+	'stel_term_condition_num2'	=> 'Document(s) you bought will be given a watermark represent your company name, and cannot be used by another company.',
+	'stel_term_condition_num3'	=> 'Document(s) you bought doesn’t/don’t have validity period till the new version is released, and contact immediately our staff if there has/have been changed of document version.',
+	'stel_term_condition_num4'	=> 'In case the STEL document(s) had been issued and turns out that the item was purchased by customer mistake is not responsibility of PT. Telkom Indonesia, Tbk.',
+	'stel_term_condition_num5'	=> 'As you had the document(s), we assume that your company had understood its content as you apply for device testing.',
+	'stel_term_condition_num6'	=> 'By clicking ‘OK’, you are agree with the explained point above.',
 ];

@@ -356,4 +356,16 @@ return [
 	'tax'  	=> 'Pajak',
 	'see_receipt'  	=> 'Lihat Kuitansi',
 	'see_invoice'  	=> 'Lihat Faktur Pajak',
+	
+	'subtitle_qa_process' => 'Pengujian penjaminan mutu perangkat telekomunikasi yang dilakukan berdasarkan referensi Spesifikasi Telekomunikasi (STEL), dan sertifikat akan dikeluarkan untuk perangkat yang lulus uji dengan masa berlaku.',
+	'subtitle_ta_process' => 'Pengujian perangkat telekomunikasi yang dilakukan berdasarkan SP3 (Surat Pengantar Pengujian Perangkat) yang dikeluarkan oleh Ditjen SDPPI (Sumber daya dan Pengembangan dan Peningkatan Informasi). Referensi TA yaitu Permen, Perdirjen, atau referensi uji lain yang ditetapkan oleh Sumber Daya dan Perangkat Pos dan Informatika (SDPPI).',
+	'subtitle_vt_process' => 'Pengujian perangkat telekomunikasi yang sifatnya berdasarkan pesanan oleh customer. Pengujian dilakukan berdasarkan referensi yang disepakati bersama antara user (Divisi Operasional/Kantor Pusat/Telkom Group) dan Divisi Digital Service (DDS) disertai Nota Dinas.',
+	'subtitle_cal_process' => 'Kalibrasi alat pengukuran',
+	
+	'stel_term_condition_num1'	=> 'Harga total yang tercantum pada keranjang belanja belum termasuk PPn 10%.',
+	'stel_term_condition_num2'	=> 'Dokumen STEL yang dibeli akan dibubuhi watermark sesuai dengan nama perusahaan yang membeli, dan tidak dapat digunakan pada perusahaan lain.',
+	'stel_term_condition_num3'	=> 'Dokumen STEL yang anda beli tidak memiliki masa berlaku hingga dikeluarkan versi yang terbaru, dan segera hubungi staff kami jika terjadi perubahan versi.',
+	'stel_term_condition_num4'	=> 'Jika dokumen STEL sudah diberikan dan ternyata terjadi kesalahan pembelian karena kelalaian customer bukan menjadi tanggung jawab PT. Telkom Indonesia, Tbk.',
+	'stel_term_condition_num5'	=> 'Ketika dokumen STEL sudah anda peroleh, kami anggap bahwa perusahaan anda sudah paham isi dari dokumen STEL tersebut ketika mengajukan permohonan pengujian perangkat.',
+	'stel_term_condition_num6'	=> 'Ketika anda menekan tombol setuju, maka anda setuju dengan poin-poin yang sudah dijelaskan di atas.',
 ];
