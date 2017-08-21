@@ -1361,17 +1361,17 @@
 											@if($item->attachment != '')
 											<div class="col-md-4">
 												<div class="form-group">
-													<a href="http://ptbsp.ddns.net:13280/RevitalisasiOTR/generateQaTestReport?noRep={{$item->no}}&isCover=true&isIsi=false"> Download Sampul/Judul Laporan </a>
+													<a href="{{$item->attachment}}&isCover=true&isIsi=false"> Download Sampul/Judul Laporan </a>
 												</div>
 											</div>
 											<div class="col-md-4">
 												<div class="form-group">
-													<a href="http://ptbsp.ddns.net:13280/RevitalisasiOTR/generateQaTestReport?noRep={{$item->no}}&isCover=false&isIsi=true"> Download Isi Laporan </a>
+													<a href="{{$item->attachment}}&isCover=false&isIsi=true"> Download Isi Laporan </a>
 												</div>
 											</div>
 											<div class="col-md-4">
 												<div class="form-group">
-													<a href="http://ptbsp.ddns.net:13280/RevitalisasiOTR/generateQaTestReport?noRep={{$item->no}}&isCover=true&isIsi=true"> Download Keseluruhan Laporan </a>
+													<a href="{{$item->attachment}}"> Download Keseluruhan Laporan </a>
 												</div>
 											</div>
 											@else
