@@ -281,10 +281,10 @@ return [
 	'view_cart'			=> 'Lihat Keranjang',
 	
 	'header_services'		=> 'KAMI MENYEDIAKAN PENGUJIAN PERANGKAT TELEKOMUNIKASI BERKUALITAS DENGAN STANDAR INTERNASIONAL',
-	'subtitle_service'		=> 'tidak diketahui tidak diketahui',
+	'subtitle_service'		=> 'Pilih Jenis Pengujian yang sesuai dengan kebutuhan perusahaan anda, Quality Assurance (QA), Type Approval (TA), Voluntary Test (VT), Calibration (CAL)',
 	'see_service'		=> 'lihat layanan',
 	'buy_stel'		=> 'Pembelian STEL',
-	'subtitle_buy_stel'		=> 'tidak diketahui tidak diketahui',
+	'subtitle_buy_stel'		=> 'Cukup klik tombol di bawah, dan anda akan merasakan betapa mudahnya membeli dokumen STEL',
 	'our_partner'		=> 'Partner Kami',
 	'contact_description'		=> 'Masih ada pertanyaan? Hubungi kami melalui form yang ada di bawah ini',
 	'contact_subject_example'		=> 'Konfirmasi Registrasi',

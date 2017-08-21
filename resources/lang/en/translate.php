@@ -279,10 +279,10 @@ return [
 	'view_cart'			=> 'View Cart',
 	
 	'header_services'		=> 'WE ARE SERVING TELECOMMUNICATION DEVICE TESTING WITH INTERNATIONAL QUALITY STANDARD',
-	'subtitle_service'		=> 'unknown unknown unknown',
+	'subtitle_service'		=> 'Choose your type of testing that suits your company needs, Quality Assurance (QA), Type Approval (TA), Voluntary Test (VT), Calibration (CAL)',
 	'see_service'		=> 'see more',
 	'buy_stel'		=> 'Buy STEL Document(s)',
-	'subtitle_buy_stel'		=> 'unknown unknown unknown',
+	'subtitle_buy_stel'		=> 'Click button below, and you’ll find out how easy it is to buy STEL Document(s)',
 	'our_partner'		=> 'Our Partner',
 	'contact_description'		=> 'Have any question? Fill this form below',
 	'contact_subject_example'		=> 'Registration Confirmation',

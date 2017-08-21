@@ -912,7 +912,7 @@
 											)
 											<tr>
 												<td> 
-													<a class="btn btn-link" href="javascript:void(0)" onclick="return isTestimonial('{{ $item_attach->id_attach }}','{{ URL::to('pengujian/'.$item->id.'/downloadSertifikat') }}','{{ $item_attach->jns }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">{{ $item_attach->name }} </a>
+													<a class="btn btn-link" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->id }}','{{ URL::to('pengujian/'.$item->id.'/downloadSertifikat') }}','{{ $item->id }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">{{ $item_attach->name }} </a>
 												</td> 
 											</tr>
 											@endif

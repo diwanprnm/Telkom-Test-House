@@ -50,7 +50,7 @@
 						consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
 						cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
 						proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-						<a href="{{url('detailprocess/qa')}}" class="button button-3d nomargin btn-sky">Process</a>
+						<a href="{{url('detailprocess/qa')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
 					</div>
 				</div>
 
@@ -66,7 +66,7 @@
 						consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
 						cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
 						proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-						<a href="{{url('detailprocess/ta')}}" class="button button-3d nomargin btn-sky">Process</a>
+						<a href="{{url('detailprocess/ta')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
 					</div>
 				</div>
 
@@ -82,7 +82,7 @@
 						consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
 						cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
 						proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-						<a href="{{url('detailprocess/vt')}}" class="button button-3d nomargin btn-sky">Process</a>
+						<a href="{{url('detailprocess/vt')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
 					</div>
 				</div>
 
@@ -98,7 +98,7 @@
 						consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
 						cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
 						proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-						<a href="{{url('detailprocess/cal')}}" class="button button-3d nomargin btn-sky">Process</a>
+						<a href="{{url('detailprocess/cal')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
 					</div>
 				</div>
 
