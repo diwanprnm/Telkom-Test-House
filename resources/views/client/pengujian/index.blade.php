@@ -1701,54 +1701,43 @@
     // });
 
     function doCalendar(){
-      $.ajax({
-        url : "http://79.143.185.157:8080/RevitalisasiOTR/api/holiday/getCalendar",
-        type : "get",
-        contentType:"application/x-www-form-urlencoded",
-        // headers: {
-        //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        // },
-        dataType : "json",
-        data : {},
-        success : function(response) {
-          var holidays = response.data;
-          if(holidays != null && holidays.length > 0){
-            var dateToday = new Date();
+      var holidays = [
+        "2017-08-17",
+        "2017-09-01",
+        "2017-09-21"
+        ];
+        if(holidays != null && holidays.length > 0){
+          var dateToday = new Date();
 
-            $('.datepicker').datepicker({
-                dateFormat: 'yy-mm-dd', 
-                autoclose: true,
-                numberOfMonths: 2 ,
-                showButtonPanel: true,
-                minDate: dateToday,
-                beforeShowDay: function(date){
-                 var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
-                 var noWeekend = $.datepicker.noWeekends(date);
-                     if (noWeekend[0]) {
-                      return  [$.inArray(string, holidays) == -1];
-                     }
-                     else
-                      return noWeekend;
-                }
-            });
-          }else{
-            var dateToday = new Date();
+          $('.datepicker').datepicker({
+              dateFormat: 'yy-mm-dd', 
+              autoclose: true,
+              numberOfMonths: 2 ,
+              showButtonPanel: true,
+              minDate: dateToday,
+              beforeShowDay: function(date){
+               var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
+               var noWeekend = $.datepicker.noWeekends(date);
+                   if (noWeekend[0]) {
+                    return  [$.inArray(string, holidays) == -1];
+                   }
+                   else
+                    return noWeekend;
+              }
+          });
+        }else{
+          var dateToday = new Date();
 
-            $('.datepicker').datepicker({
-                dateFormat: 'yy-mm-dd', 
-                autoclose: true,
-                numberOfMonths: 2 ,
-                showButtonPanel: true,
-                minDate: dateToday,
-                beforeShowDay: $.datepicker.noWeekends,
+          $('.datepicker').datepicker({
+              dateFormat: 'yy-mm-dd', 
+              autoclose: true,
+              numberOfMonths: 2 ,
+              showButtonPanel: true,
+              minDate: dateToday,
+              beforeShowDay: $.datepicker.noWeekends,
 
-            });
-          }
-        },
-        error : function(jqXHR, textStatus, errorThrown) {
-              console.log(textStatus, errorThrown);
-            }
-        });
+          });
+        }
     }
 	});
 </script>
