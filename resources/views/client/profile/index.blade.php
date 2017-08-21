@@ -71,16 +71,12 @@
 														<?php }?>
 													@endforeach
 												</select>
-												<div class="form-group" style="margin-bottom:-5px; height:25px; font-size: 70%;">
-													*Apabila perusahaan Anda belum terdaftar di Web ini, silakan hubungi petugas User Relations DDS 022 - 4571145. 
-													Atau Daftarkan juga perusahaan Anda dengan mengisi Form di bawah!
-												</div>
 											</div> 
 
 											<h3>{{ trans('translate.profile_title_password') }}</h3>
 											<div class="col_full">
 												<label for="register-form-repassword">{{ trans('translate.profile_old_password') }} : </label>
-												<input type="password" id="currPass" class="form-control input-submit" name="currPass" data-toggle="password" placeholder="p@ssw0rd">
+												<input type="password" id="currPass" class="form-control input-submit" name="currPass" data-toggle="password" placeholder="p@ssw0rd" required>
 											</div> 
 											<div class="col_full">
 												<label for="register-form-repassword">{{ trans('translate.profile_new_password') }} : </label>
