@@ -521,7 +521,17 @@ $notification->id = Uuid::uuid4();
                         "created_at"=>date("Y-m-d H:i:s"),
                         "updated_at"=>date("Y-m-d H:i:s")
                     );
-                }
+                }else{
+					$data= array( 
+						"from"=>"admin",
+						"to"=>$exam->created_by,
+						"message"=>"Tahap Uji Fungsi Completed",
+						"url"=>"pengujian/".$exam->id."/detail",
+						"is_read"=>0,
+						"created_at"=>date("Y-m-d H:i:s"),
+						"updated_at"=>date("Y-m-d H:i:s")
+					);
+				}
 	              $notification = new NotificationTable();
                   $notification->id = Uuid::uuid4();
 	              $notification->from = $data['from'];
@@ -572,7 +582,17 @@ $notification->id = Uuid::uuid4();
                             "created_at"=>date("Y-m-d H:i:s"),
                             "updated_at"=>date("Y-m-d H:i:s")
                         );
-                    }
+                    }else{
+						$data= array( 
+                            "from"=>"admin",
+                            "to"=>$exam->created_by,
+                            "message"=>"Tahap Uji Fungsi Not Completed",
+                            "url"=>"pengujian/".$exam->id."/detail",
+                            "is_read"=>0,
+                            "created_at"=>date("Y-m-d H:i:s"),
+                            "updated_at"=>date("Y-m-d H:i:s")
+						);
+					}
 		              $notification = new NotificationTable();
                       $notification->id = Uuid::uuid4();
 		              $notification->from = $data['from'];
