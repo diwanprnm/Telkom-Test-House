@@ -28,6 +28,9 @@ use Excel;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Client;
+
 class ExaminationDoneController extends Controller
 {
 	/**
@@ -192,8 +195,15 @@ class ExaminationDoneController extends Controller
                             ->with('device')
                             ->with('media')
                             ->first();
+							
+		$exam_history = ExaminationHistory::whereNotNull('created_at')
+					->with('user')
+                    ->where('examination_id', $id)
+                    ->orderBy('created_at', 'DESC')
+                    ->get();
 
         return view('admin.examinationdone.show')
+			->with('exam_history', $exam_history)
             ->with('data', $exam);
     }
 	
@@ -217,9 +227,35 @@ class ExaminationDoneController extends Controller
 
         $labs = ExaminationLab::all();
 		
+		$client = new Client([
+			'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+			// Base URI is used with relative requests
+			// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+			'base_uri' => config("app.url_api_bsp"),
+			// You can set any number of default request options.
+			'timeout'  => 60.0,
+		]);
+		
+		$query_lab = "SELECT action_date FROM equipment_histories WHERE location = 3 AND examination_id = '".$id."' ORDER BY created_at DESC LIMIT 1";
+		$data_lab = DB::select($query_lab);
+		
+		$query_gudang = "SELECT action_date FROM equipment_histories WHERE location = 2 AND examination_id = '".$id."' ORDER BY created_at DESC LIMIT 2";
+		$data_gudang = DB::select($query_gudang);
+		
+		// $res_exam_schedule = $client->post('notification/notifToTE?lab='.$exam->examinationLab->lab_code)->getBody();
+		$res_exam_schedule = $client->get('spk/searchData?spkNumber='.$exam->spk_code)->getBody();
+		$exam_schedule = json_decode($res_exam_schedule);
+		
+		$res_exam_approve_date = $client->get('spk/searchHistoryData?spkNumber='.$exam->spk_code)->getBody();
+		$exam_approve_date = json_decode($res_exam_approve_date);
+		
         return view('admin.examinationdone.edit')
             ->with('data', $exam)
-            ->with('labs', $labs);
+            ->with('labs', $labs)
+			->with('data_lab', $data_lab)
+            ->with('data_gudang', $data_gudang)
+			->with('exam_approve_date', $exam_approve_date)
+			->with('exam_schedule', $exam_schedule);
     }
 	
 	public function excel(Request $request) 
@@ -230,7 +266,7 @@ class ExaminationDoneController extends Controller
 		// the user's e-mail address, the amount paid, and the payment
 		// timestamp.
 		
-		$data = $request->session()->get('excel_pengujian');
+		$data = $request->session()->get('excel_pengujian_lulus');
 		$examsArray = []; 
 
 		// Define the Excel spreadsheet headers
@@ -374,6 +410,7 @@ class ExaminationDoneController extends Controller
 		->with('Company')
 		->with('Device')
 		->with('Questioner')
+		->with('QuestionerDynamic.qq')
 		->get();
 		
 		$request->session()->put('key_exam_for_questioner', $data);

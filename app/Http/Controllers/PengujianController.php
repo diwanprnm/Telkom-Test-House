@@ -22,6 +22,8 @@ use App\Testimonial;
 use App\ExaminationHistory;
 use App\Equipment;
 use App\Questioner;
+use App\QuestionerQuestion;
+use App\QuestionerDynamic;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -31,6 +33,7 @@ use GuzzleHttp\Client;
 
 use App\Events\Notification;
 use App\NotificationTable;
+use App\AdminRole;
 
 class PengujianController extends Controller
 {
@@ -93,6 +96,7 @@ class PengujianController extends Controller
 								devices.model AS model_perangkat,
 								devices.certificate AS sistem_mutuPerangkat,
 								devices.capacity AS kapasitas_perangkat,
+								devices.cert_number,
 								examinations.registration_status,
 								examinations.function_status,
 								examinations.contract_status,
@@ -102,6 +106,7 @@ class PengujianController extends Controller
 								examinations.examination_status,
 								examinations.resume_status,
 								examinations.qa_status,
+								examinations.qa_passed,
 								examinations.certificate_status,
 								examinations.urel_test_date,
 								examinations.cust_test_date,
@@ -112,14 +117,15 @@ class PengujianController extends Controller
 								examinations.function_test_reason,
 								companies.name AS companiesName,
 								examinations.function_date,
+								examinations.function_test_PIC,
 								examinations.function_test_NO,
 								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
 								))
-						// ->where('examinations.company_id','=',''.$company_id.'')
-						->where('examinations.created_by','=',''.$user_id.'')
+						->where('examinations.company_id','=',''.$company_id.'')
+						// ->where('examinations.created_by','=',''.$user_id.'')
 						->where('devices.name','like','%'.$search.'%')
 						->where('examinations.'.$arr_status[$status-1].'','=','1')
 						->where('examinations.'.$arr_status[$status].'','<','1')
@@ -142,6 +148,7 @@ class PengujianController extends Controller
 								devices.model AS model_perangkat,
 								devices.certificate AS sistem_mutuPerangkat,
 								devices.capacity AS kapasitas_perangkat,
+								devices.cert_number,
 								examinations.registration_status,
 								examinations.function_status,
 								examinations.contract_status,
@@ -151,6 +158,7 @@ class PengujianController extends Controller
 								examinations.examination_status,
 								examinations.resume_status,
 								examinations.qa_status,
+								examinations.qa_passed,
 								examinations.certificate_status,
 								examinations.urel_test_date,
 								examinations.cust_test_date,
@@ -161,14 +169,15 @@ class PengujianController extends Controller
 								examinations.function_test_reason,
 								companies.name AS companiesName,
 								examinations.function_date,
+								examinations.function_test_PIC,
 								examinations.function_test_NO,
 								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
 								))
-						// ->where('examinations.company_id','=',''.$company_id.'')
-						->where('examinations.created_by','=',''.$user_id.'')
+						->where('examinations.company_id','=',''.$company_id.'')
+						// ->where('examinations.created_by','=',''.$user_id.'')
 						->where('devices.name','like','%'.$search.'%')
 						->where('examinations.examination_type_id','=',''.$request->input('jns').'')
 						->orderBy('examinations.updated_at', 'desc')
@@ -191,6 +200,7 @@ class PengujianController extends Controller
 								devices.model AS model_perangkat,
 								devices.certificate AS sistem_mutuPerangkat,
 								devices.capacity AS kapasitas_perangkat,
+								devices.cert_number,
 								examinations.registration_status,
 								examinations.function_status,
 								examinations.contract_status,
@@ -200,6 +210,7 @@ class PengujianController extends Controller
 								examinations.examination_status,
 								examinations.resume_status,
 								examinations.qa_status,
+								examinations.qa_passed,
 								examinations.certificate_status,
 								examinations.urel_test_date,
 								examinations.cust_test_date,
@@ -210,14 +221,15 @@ class PengujianController extends Controller
 								examinations.function_test_reason,
 								companies.name AS companiesName,
 								examinations.function_date,
+								examinations.function_test_PIC,
 								examinations.function_test_NO,
 								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
 								))
-						// ->where('examinations.company_id','=',''.$company_id.'')
-						->where('examinations.created_by','=',''.$user_id.'')
+						->where('examinations.company_id','=',''.$company_id.'')
+						// ->where('examinations.created_by','=',''.$user_id.'')
 						->where('devices.name','like','%'.$search.'%')
 						->where('examinations.'.$arr_status[$status-1].'','=','1')
 						->where('examinations.'.$arr_status[$status].'','<','1')
@@ -239,6 +251,7 @@ class PengujianController extends Controller
 								devices.model AS model_perangkat,
 								devices.certificate AS sistem_mutuPerangkat,
 								devices.capacity AS kapasitas_perangkat,
+								devices.cert_number,
 								examinations.registration_status,
 								examinations.function_status,
 								examinations.contract_status,
@@ -248,6 +261,7 @@ class PengujianController extends Controller
 								examinations.examination_status,
 								examinations.resume_status,
 								examinations.qa_status,
+								examinations.qa_passed,
 								examinations.certificate_status,
 								examinations.urel_test_date,
 								examinations.cust_test_date,
@@ -258,14 +272,15 @@ class PengujianController extends Controller
 								examinations.function_test_reason,
 								companies.name AS companiesName,
 								examinations.function_date,
+								examinations.function_test_PIC,
 								examinations.function_test_NO,
 								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
 								))
-						// ->where('examinations.company_id','=',''.$company_id.'')
-						->where('examinations.created_by','=',''.$user_id.'')
+						->where('examinations.company_id','=',''.$company_id.'')
+						// ->where('examinations.created_by','=',''.$user_id.'')
 						->where('devices.name','like','%'.$search.'%')
 						->orderBy('examinations.updated_at', 'desc')
 						->paginate($paginate);
@@ -289,6 +304,7 @@ class PengujianController extends Controller
 								devices.model AS model_perangkat,
 								devices.certificate AS sistem_mutuPerangkat,
 								devices.capacity AS kapasitas_perangkat,
+								devices.cert_number,
 								examinations.registration_status,
 								examinations.function_status,
 								examinations.contract_status,
@@ -298,6 +314,7 @@ class PengujianController extends Controller
 								examinations.examination_status,
 								examinations.resume_status,
 								examinations.qa_status,
+								examinations.qa_passed,
 								examinations.certificate_status,
 								examinations.urel_test_date,
 								examinations.cust_test_date,
@@ -308,14 +325,15 @@ class PengujianController extends Controller
 								examinations.function_test_reason,
 								companies.name AS companiesName,
 								examinations.function_date,
+								examinations.function_test_PIC,
 								examinations.function_test_NO,
 								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
 								))
-						// ->where('examinations.company_id','=',''.$company_id.'')
-						->where('examinations.created_by','=',''.$user_id.'')
+						->where('examinations.company_id','=',''.$company_id.'')
+						// ->where('examinations.created_by','=',''.$user_id.'')
 						->where('examinations.'.$arr_status[$status-1].'','=','1')
 						->where('examinations.'.$arr_status[$status].'','<','1')
 						->where('examinations.examination_type_id','=',''.$request->input('jns').'')
@@ -337,6 +355,7 @@ class PengujianController extends Controller
 								devices.model AS model_perangkat,
 								devices.certificate AS sistem_mutuPerangkat,
 								devices.capacity AS kapasitas_perangkat,
+								devices.cert_number,
 								examinations.registration_status,
 								examinations.function_status,
 								examinations.contract_status,
@@ -346,6 +365,7 @@ class PengujianController extends Controller
 								examinations.examination_status,
 								examinations.resume_status,
 								examinations.qa_status,
+								examinations.qa_passed,
 								examinations.certificate_status,
 								examinations.urel_test_date,
 								examinations.cust_test_date,
@@ -356,14 +376,15 @@ class PengujianController extends Controller
 								examinations.function_test_reason,
 								companies.name AS companiesName,
 								examinations.function_date,
+								examinations.function_test_PIC,
 								examinations.function_test_NO,
 								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
 								))
-						// ->where('examinations.company_id','=',''.$company_id.'')
-						->where('examinations.created_by','=',''.$user_id.'')
+						->where('examinations.company_id','=',''.$company_id.'')
+						// ->where('examinations.created_by','=',''.$user_id.'')
 						->where('examinations.examination_type_id','=',''.$request->input('jns').'')
 						->orderBy('examinations.updated_at', 'desc')
 						->paginate($paginate);
@@ -385,6 +406,7 @@ class PengujianController extends Controller
 								devices.model AS model_perangkat,
 								devices.certificate AS sistem_mutuPerangkat,
 								devices.capacity AS kapasitas_perangkat,
+								devices.cert_number,
 								examinations.registration_status,
 								examinations.function_status,
 								examinations.contract_status,
@@ -394,6 +416,7 @@ class PengujianController extends Controller
 								examinations.examination_status,
 								examinations.resume_status,
 								examinations.qa_status,
+								examinations.qa_passed,
 								examinations.certificate_status,
 								examinations.urel_test_date,
 								examinations.cust_test_date,
@@ -404,14 +427,15 @@ class PengujianController extends Controller
 								examinations.function_test_reason,
 								companies.name AS companiesName,
 								examinations.function_date,
+								examinations.function_test_PIC,
 								examinations.function_test_NO,
 								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
 								))
-						// ->where('examinations.company_id','=',''.$company_id.'')
-						->where('examinations.created_by','=',''.$user_id.'')
+						->where('examinations.company_id','=',''.$company_id.'')
+						// ->where('examinations.created_by','=',''.$user_id.'')
 						->where('examinations.'.$arr_status[$status-1].'','=','1')
 						->where('examinations.'.$arr_status[$status].'','<','1')
 						->orderBy('examinations.updated_at', 'desc')
@@ -432,6 +456,7 @@ class PengujianController extends Controller
 								devices.model AS model_perangkat,
 								devices.certificate AS sistem_mutuPerangkat,
 								devices.capacity AS kapasitas_perangkat,
+								devices.cert_number,
 								examinations.registration_status,
 								examinations.function_status,
 								examinations.contract_status,
@@ -441,6 +466,7 @@ class PengujianController extends Controller
 								examinations.examination_status,
 								examinations.resume_status,
 								examinations.qa_status,
+								examinations.qa_passed,
 								examinations.certificate_status,
 								examinations.urel_test_date,
 								examinations.cust_test_date,
@@ -451,14 +477,15 @@ class PengujianController extends Controller
 								examinations.function_test_reason,
 								companies.name AS companiesName,
 								examinations.function_date,
+								examinations.function_test_PIC,
 								examinations.function_test_NO,
 								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
 								))
-						// ->where('examinations.company_id','=',''.$company_id.'')
-						->where('examinations.created_by','=',''.$user_id.'')
+						->where('examinations.company_id','=',''.$company_id.'')
+						// ->where('examinations.created_by','=',''.$user_id.'')
 						->orderBy('examinations.updated_at', 'desc')
 						->paginate($paginate);
 					}
@@ -477,6 +504,8 @@ class PengujianController extends Controller
 			if (count($data_stels) == 0){
 				$message_stels = "Data Not Found";
 			}
+			
+			$data_kuisioner = QuestionerQuestion::where("is_active",1)->orderBy('order_question')->get();
             	
             return view('client.pengujian.index')
                 ->with('message', $message)
@@ -486,7 +515,8 @@ class PengujianController extends Controller
                 ->with('jns', $jns)
                 ->with('page', "pengujian")
                 ->with('status', $status)
-                ->with('data_stels', $data_stels);
+                ->with('data_stels', $data_stels)
+                ->with('data_kuisioner', $data_kuisioner);
         }else{
 			return  redirect('login');
 		}
@@ -633,7 +663,8 @@ class PengujianController extends Controller
 			d.model AS model_perangkat,
 			d.test_reference AS referensi_perangkat,
 			d.serial_number AS serialNumber,
-			c.`name` AS namaPerusahaan,	e.jns_perusahaan AS jnsPerusahaan, c.address AS alamatPerusahaan, c.phone_number AS telpPerusahaan, c.fax AS faxPerusahaan, c.email AS emailPerusahaan,
+			c.`name` AS namaPerusahaan,	e.jns_perusahaan AS jnsPerusahaan, c.address AS alamatPerusahaan, 
+			c.plg_id AS plg_idPerusahaan, c.nib AS nibPerusahaan, c.phone_number AS telpPerusahaan, c.fax AS faxPerusahaan, c.email AS emailPerusahaan,
 			c.qs_certificate_number AS noSertifikat, c.qs_certificate_file AS fileSertifikat, c.qs_certificate_date AS tglSertifikat,
 			c.siup_number AS noSIUPP, c.siup_file AS fileSIUPP, c.siup_date AS tglSIUPP, c.npwp_file AS fileNPWP,
 			(SELECT attachment FROM examination_attachments WHERE examination_id = '".$request->input('id')."' AND `name` = 'Referensi Uji') AS fileref_uji,
@@ -698,6 +729,8 @@ class PengujianController extends Controller
 			echo $data[0]->alamatPemohon."|token|"; #37
 			echo $data[0]->telpPemohon."|token|"; #38
 			echo $data[0]->faxPemohon."|token|"; #39
+			echo $data[0]->plg_idPerusahaan."|token|"; #40
+			echo $data[0]->nibPerusahaan."|token|"; #41
 		}else{
 			echo 0; //Tidak Ada Data
 		}
@@ -717,6 +750,8 @@ class PengujianController extends Controller
 					u.`name` AS namaPemohon, u.email AS emailPemohon,
 					c.`name` AS namaPerusahaan,
 					c.address AS alamatPerusahaan,
+					c.plg_id AS plg_idPerusahaan, 
+					c.nib AS nibPerusahaan,
 					c.phone_number AS telpPerusahaan,
 					c.fax AS faxPerusahaan,
 					c.email AS emailPerusahaan,
@@ -732,6 +767,7 @@ class PengujianController extends Controller
 					et.name AS jns_pengujian,
 					et.description AS desc_pengujian,
 					e.spk_code,
+					e.function_test_PIC,
 					e.resume_date,
 					e.registration_status,
 					e.function_status,
@@ -742,6 +778,7 @@ class PengujianController extends Controller
 					e.examination_status,
 					e.resume_status,
 					e.qa_status,
+					e.qa_passed,
 					e.certificate_status,
 					(SELECT name FROM examination_labs WHERE examination_labs.id=e.examination_lab_id) AS labs_name
 				FROM
@@ -765,6 +802,8 @@ class PengujianController extends Controller
 					u.`name` AS namaPemohon, u.address AS alamatPemohon, u.phone_number AS telpPemohon, u.fax AS faxPemohon, u.email AS emailPemohon,
 					c.`name` AS namaPerusahaan,
 					c.address AS alamatPerusahaan,
+					c.plg_id AS plg_idPerusahaan, 
+					c.nib AS nibPerusahaan,
 					c.phone_number AS telpPerusahaan,
 					c.fax AS faxPerusahaan,
 					c.email AS emailPerusahaan,
@@ -780,6 +819,7 @@ class PengujianController extends Controller
 					et.name AS jns_pengujian,
 					et.description AS desc_pengujian,
 					e.spk_code,
+					e.function_test_PIC,
 					e.resume_date,
 					e.resume_date,
 					e.registration_status,
@@ -791,6 +831,7 @@ class PengujianController extends Controller
 					e.examination_status,
 					e.resume_status,
 					e.qa_status,
+					e.qa_passed,
 					e.certificate_status,
 					(SELECT name FROM examination_labs WHERE examination_labs.id=e.examination_lab_id) AS labs_name
 				FROM
@@ -822,6 +863,7 @@ class PengujianController extends Controller
 			$data_attach = DB::select($query_attach);
 			
 			$exam_history = ExaminationHistory::whereNotNull('created_at')
+					->with('user')
                     ->where('examination_id', $id)
                     ->orderBy('created_at', 'DESC')
                     ->get();
@@ -843,13 +885,16 @@ class PengujianController extends Controller
 			$res_exam_schedule = $client->get('spk/searchData?spkNumber='.$examfromOTR->spk_code)->getBody();
 			$exam_schedule = json_decode($res_exam_schedule);
 			
+			$data_kuisioner = QuestionerQuestion::where("is_active",1)->orderBy('order_question')->get();
+			
             return view('client.pengujian.detail')
                 // ->with('message', $message)
                 ->with('data', $data)
                 ->with('exam_history', $exam_history)
                 ->with('exam_schedule', $exam_schedule)
                 ->with('page', "pengujian")
-                ->with('data_attach', $data_attach);
+                ->with('data_attach', $data_attach)
+                ->with('data_kuisioner', $data_kuisioner);
                 // ->with('search', $search);
         }
     }
@@ -1073,29 +1118,30 @@ class PengujianController extends Controller
 				$exam_hist->created_at = date('Y-m-d H:i:s');
 				$exam_hist->save();
 
-				
-				$data= array( 
-                "from"=>$currentUser->id,
-                "to"=>"admin",
-                "message"=>$currentUser->name." membayar SPB nomor".$examination->spb_number,
-                "url"=>"examination/".$request->input('hide_id_exam').'/edit',
-                "is_read"=>0,
-                "created_at"=>date("Y-m-d H:i:s"),
-                "updated_at"=>date("Y-m-d H:i:s")
-                );
-			  	$notification = new NotificationTable();
-				$notification->id = Uuid::uuid4();
-		      	$notification->from = $data['from'];
-		      	$notification->to = $data['to'];
-		      	$notification->message = $data['message'];
-		      	$notification->url = $data['url'];
-		      	$notification->is_read = $data['is_read'];
-		      	$notification->created_at = $data['created_at'];
-		      	$notification->updated_at = $data['updated_at'];
-		      	$notification->save();
-		      	$data['id'] = $notification->id; 
-		        event(new Notification($data));
-
+				$admins = AdminRole::where('payment_status',1)->get()->toArray();
+				foreach ($admins as $admin) {  
+					$data= array( 
+		                "from"=>$currentUser->id,
+		                "to"=>$admin['user_id'],
+		                "message"=>$currentUser->company->name." membayar SPB nomor".$examination->spb_number,
+		                "url"=>"examination/".$request->input('hide_id_exam').'/edit',
+		                "is_read"=>0,
+		                "created_at"=>date("Y-m-d H:i:s"),
+		                "updated_at"=>date("Y-m-d H:i:s")
+	                );
+				  	$notification = new NotificationTable();
+					$notification->id = Uuid::uuid4();
+			      	$notification->from = $data['from'];
+			      	$notification->to = $data['to'];
+			      	$notification->message = $data['message'];
+			      	$notification->url = $data['url'];
+			      	$notification->is_read = $data['is_read'];
+			      	$notification->created_at = $data['created_at'];
+			      	$notification->updated_at = $data['updated_at'];
+			      	$notification->save();
+			      	$data['id'] = $notification->id; 
+			        event(new Notification($data));
+		    	}
 				Session::flash('message', 'Upload successfully');
 				// $this->sendProgressEmail("Pengujian atas nama ".$user_name." dengan alamat email ".$user_email.", telah melakukan proses Upload Bukti Pembayaran");
 				// return back();
@@ -1132,7 +1178,8 @@ class PengujianController extends Controller
 					SET 
 						cust_test_date = '".date('Y-m-d', $cust_test_date)."',
 						updated_by = '".$currentUser['attributes']['id']."',
-						updated_at = '".date('Y-m-d H:i:s')."'
+						updated_at = '".date('Y-m-d H:i:s')."',
+						function_test_status_detail = 'Pengajuan uji fungsi baru'
 					WHERE id = '".$request->input('hide_id_exam')."'
 				";
 				$data_update = DB::update($query_update);
@@ -1164,28 +1211,31 @@ class PengujianController extends Controller
 				// $this->sendProgressEmail("Pengujian atas nama ".$user_name." dengan alamat email ".$user_email.", telah melakukan proses Upload Bukti Pembayaran");
 				// return back();
 				/* push notif*/
+				$admins = AdminRole::where('function_status',1)->get()->toArray();
+				foreach ($admins as $admin) { 
 					$data= array(
-					"from"=>$currentUser->id,
-					"to"=>"admin",
-					"message"=>$currentUser->name." Update Tanggal Uji Fungsi",
-					"url"=>"examination/".$request->input('hide_id_exam')."/edit",
-					"is_read"=>0,
-					"created_at"=>date("Y-m-d H:i:s"),
-					"updated_at"=>date("Y-m-d H:i:s")
+						"from"=>$currentUser->id,
+						"to"=>$admin['user_id'],
+						"message"=>$currentUser->company->name." Update Tanggal Uji Fungsi",
+						"url"=>"examination/".$request->input('hide_id_exam')."/edit",
+						"is_read"=>0,
+						"created_at"=>date("Y-m-d H:i:s"),
+						"updated_at"=>date("Y-m-d H:i:s")
 					);
 					
 					$notification = new NotificationTable();
 					$notification->id = Uuid::uuid4();
-					  $notification->from = $data['from'];
-					  $notification->to = $data['to'];
-					  $notification->message = $data['message'];
-					  $notification->url = $data['url'];
-					  $notification->is_read = $data['is_read'];
-					  $notification->created_at = $data['created_at'];
-					  $notification->updated_at = $data['updated_at'];
-					  $notification->save();
-					  $data['id'] = $notification->id;
-					  event(new Notification($data));
+					$notification->from = $data['from'];
+					$notification->to = $data['to'];
+					$notification->message = $data['message'];
+					$notification->url = $data['url'];
+					$notification->is_read = $data['is_read'];
+					$notification->created_at = $data['created_at'];
+					$notification->updated_at = $data['updated_at'];
+					$notification->save();
+					$data['id'] = $notification->id;
+					event(new Notification($data));
+				}
 					return back();
 
 			} catch(Exception $e){
@@ -1198,28 +1248,31 @@ class PengujianController extends Controller
 			->first()
 			;
 			$urel_test_date = strtotime($request->input('urel_test_date'));
-			try{
+			if($request->input('urel_test_date') == $request->input('deal_test_date2')){
+				try{
 				$query_update = "UPDATE examinations
 					SET 
-						urel_test_date = '".date('Y-m-d', $urel_test_date)."',
-						function_test_reason = '".$request->input('alasan')."',
+						function_test_date_approval = '1',
+						function_test_reason = '',
 						updated_by = '".$currentUser['attributes']['id']."',
-						updated_at = '".date('Y-m-d H:i:s')."'
+						updated_at = '".date('Y-m-d H:i:s')."',
+						function_test_status_detail = 'Tanggal uji fungsi fix'
 					WHERE id = '".$request->input('hide_id_exam2')."'
 				";
 				$data_update = DB::update($query_update);
 				
+				$deal_test_date = strtotime($request->input('deal_test_date2'));
+				
 				$exam_hist = new ExaminationHistory;
 				$exam_hist->examination_id = $request->input('hide_id_exam2');
 				$exam_hist->date_action = date('Y-m-d H:i:s');
-				$exam_hist->tahap = 'Update Tanggal Uji';
+				$exam_hist->tahap = 'Menyetujui Tanggal Uji';
 				$exam_hist->status = 1;
-				$exam_hist->keterangan = date('Y-m-d', $urel_test_date).' dari Kastamer ('.$request->input('alasan').')';
+				$exam_hist->keterangan = date('Y-m-d', $deal_test_date).' dari Kastamer (DISETUJUI)';
 				$exam_hist->created_by = $currentUser->id;
 				$exam_hist->created_at = date('Y-m-d H:i:s');
 				$exam_hist->save();
-				
-				Session::flash('message', 'Update successfully');
+
 				$client = new Client([
 					'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
 					// Base URI is used with relative requests
@@ -1229,25 +1282,20 @@ class PengujianController extends Controller
 					'timeout'  => 60.0,
 				]);
 				
-				// $res_exam_schedule = $client->post('notification/notifRescheduleToTE?lab='.$exam->examinationLab->lab_code)->getBody();
-				$res_exam_schedule = $client->post('notification/notifRescheduleToTE?id='.$exam->id);
-				// $exam_schedule = json_decode($res_exam_schedule);
-				
-				// $this->sendProgressEmail("Pengujian atas nama ".$user_name." dengan alamat email ".$user_email.", telah melakukan proses Upload Bukti Pembayaran");
-				// return back();
-				
+				$res_exam_schedule = $client->get('notification/notifApproveToTE?id='.$exam->id.'&lab='.$exam->examinationLab->lab_code);
+
 				/* push notif*/
 					$data= array(
 					"from"=>$currentUser->id,
 					"to"=>"admin",
-					"message"=>$currentUser->name." Update Tanggal Uji Fungsi",
+					"message"=>$currentUser->company->name." Menyetujui Tanggal Uji Fungsi",
 					"url"=>"examination/".$request->input('hide_id_exam2')."/edit",
 					"is_read"=>0,
 					"created_at"=>date("Y-m-d H:i:s"),
 					"updated_at"=>date("Y-m-d H:i:s")
 					);
 					
-					$notification = new NotificationTable();
+					 $notification = new NotificationTable();
 					$notification->id = Uuid::uuid4();
 					  $notification->from = $data['from'];
 					  $notification->to = $data['to'];
@@ -1260,10 +1308,79 @@ class PengujianController extends Controller
 					  $data['id'] = $notification->id;
 					  event(new Notification($data));
 					return back();
+				
+				} catch(Exception $e){
+					Session::flash('error', 'Update failed');
+				}
+			}else{
+				try{
+					$query_update = "UPDATE examinations
+						SET 
+							urel_test_date = '".date('Y-m-d', $urel_test_date)."',
+							function_test_reason = '".$request->input('alasan')."',
+							updated_by = '".$currentUser['attributes']['id']."',
+							updated_at = '".date('Y-m-d H:i:s')."',
+							function_test_status_detail = 'Pengajuan ulang uji fungsi'
+						WHERE id = '".$request->input('hide_id_exam2')."'
+					";
+					$data_update = DB::update($query_update);
 					
-			} catch(Exception $e){
-				Session::flash('error', 'Update failed');
-				// return back();
+					$exam_hist = new ExaminationHistory;
+					$exam_hist->examination_id = $request->input('hide_id_exam2');
+					$exam_hist->date_action = date('Y-m-d H:i:s');
+					$exam_hist->tahap = 'Update Tanggal Uji';
+					$exam_hist->status = 1;
+					$exam_hist->keterangan = date('Y-m-d', $urel_test_date).' dari Kastamer ('.$request->input('alasan').')';
+					$exam_hist->created_by = $currentUser->id;
+					$exam_hist->created_at = date('Y-m-d H:i:s');
+					$exam_hist->save();
+					
+					Session::flash('message', 'Update successfully');
+					$client = new Client([
+						'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+						// Base URI is used with relative requests
+						// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+						'base_uri' => config("app.url_api_bsp"),
+						// You can set any number of default request options.
+						'timeout'  => 60.0,
+					]);
+					
+					// $res_exam_schedule = $client->post('notification/notifRescheduleToTE?lab='.$exam->examinationLab->lab_code)->getBody();
+					$res_exam_schedule = $client->post('notification/notifRescheduleToTE?id='.$exam->id);
+					// $exam_schedule = json_decode($res_exam_schedule);
+					
+					// $this->sendProgressEmail("Pengujian atas nama ".$user_name." dengan alamat email ".$user_email.", telah melakukan proses Upload Bukti Pembayaran");
+					// return back();
+					
+					/* push notif*/
+						$data= array(
+						"from"=>$currentUser->id,
+						"to"=>"admin",
+						"message"=>$currentUser->company->name." Update Tanggal Uji Fungsi",
+						"url"=>"examination/".$request->input('hide_id_exam2')."/edit",
+						"is_read"=>0,
+						"created_at"=>date("Y-m-d H:i:s"),
+						"updated_at"=>date("Y-m-d H:i:s")
+						);
+						
+						$notification = new NotificationTable();
+						$notification->id = Uuid::uuid4();
+						  $notification->from = $data['from'];
+						  $notification->to = $data['to'];
+						  $notification->message = $data['message'];
+						  $notification->url = $data['url'];
+						  $notification->is_read = $data['is_read'];
+						  $notification->created_at = $data['created_at'];
+						  $notification->updated_at = $data['updated_at'];
+						  $notification->save();
+						  $data['id'] = $notification->id;
+						  event(new Notification($data));
+						return back();
+						
+				} catch(Exception $e){
+					Session::flash('error', 'Update failed');
+					// return back();
+				}
 			}
 		}else if($request->input('hide_date_type') == 3){
 			$exam = Examination::where('id', $request->input('hide_id_exam3'))
@@ -1276,7 +1393,8 @@ class PengujianController extends Controller
 						function_test_date_approval = '1',
 						function_test_reason = '',
 						updated_by = '".$currentUser['attributes']['id']."',
-						updated_at = '".date('Y-m-d H:i:s')."'
+						updated_at = '".date('Y-m-d H:i:s')."',
+						function_test_status_detail = 'Tanggal uji fungsi fix'
 					WHERE id = '".$request->input('hide_id_exam3')."'
 				";
 				$data_update = DB::update($query_update);
@@ -1308,7 +1426,7 @@ class PengujianController extends Controller
 					$data= array(
 					"from"=>$currentUser->id,
 					"to"=>"admin",
-					"message"=>$currentUser->name." Menyetujui Tanggal Uji Fungsi",
+					"message"=>$currentUser->company->name." Menyetujui Tanggal Uji Fungsi",
 					"url"=>"examination/".$request->input('hide_id_exam3')."/edit",
 					"is_read"=>0,
 					"created_at"=>date("Y-m-d H:i:s"),
@@ -1360,6 +1478,8 @@ class PengujianController extends Controller
 			u.`name` AS namaPemohon, u.email AS emailPemohon, u.address AS alamatPemohon, u.phone_number AS telpPemohon, u.fax AS faxPemohon, 
 			c.`name` AS namaPerusahaan,
 			c.address AS alamatPerusahaan,
+			c.plg_id AS plg_idPerusahaan, 
+			c.nib AS nibPerusahaan,
 			c.phone_number AS telpPerusahaan,
 			c.fax AS faxPerusahaan,
 			c.email AS emailPerusahaan,
@@ -1416,7 +1536,9 @@ class PengujianController extends Controller
 			'initPengujian' => urlencode(urlencode($data[0]->initPengujian)) ?: '-',
 			'descPengujian' => urlencode(urlencode($data[0]->descPengujian)) ?: '-',
 			'namaFile' => 'Pengujian '.urlencode(urlencode($data[0]->descPengujian)) ?: '-',
-			'no_reg' => urlencode(urlencode($data[0]->function_test_NO)) ?: '-'
+			'no_reg' => urlencode(urlencode($data[0]->function_test_NO)) ?: '-',
+			'plg_idPerusahaan' => urlencode(urlencode($data[0]->plg_idPerusahaan)) ?: '-',
+			'nibPerusahaan' => urlencode(urlencode($data[0]->nibPerusahaan)) ?: '-'
 		]);
     }
 	
@@ -1461,12 +1583,12 @@ class PengujianController extends Controller
 		// return(count($equip->get()));
 		//if count 1, masukan ke history download
 		if($is_location > 0){
-			$examhist = ExaminationHistory::where("examination_id", "=", $request->input('my_exam_id'))->where("tahap", "=", "Download Sertifikat");
-			$count_download = count($examhist->get());
+			/* $examhist = ExaminationHistory::where("examination_id", "=", $request->input('my_exam_id'))->where("tahap", "=", "Download Sertifikat");
+			$count_download = count($examhist->get()); */
 			// if($count_download > 0){
 				// return($examhist->get());
 			// }else{				
-				$exam_hist = new ExaminationHistory;
+				/* $exam_hist = new ExaminationHistory;
 				$exam_hist->examination_id = $request->input('my_exam_id');
 				$exam_hist->date_action = date('Y-m-d H:i:s');
 				$exam_hist->tahap = 'Download Sertifikat';
@@ -1474,7 +1596,7 @@ class PengujianController extends Controller
 				$exam_hist->keterangan = 'Download ke-'.($count_download+1);
 				$exam_hist->created_by = $currentUser->id;
 				$exam_hist->created_at = date('Y-m-d H:i:s');
-				$exam_hist->save();
+				$exam_hist->save(); */
 				
 				return 1;
 			// }
@@ -1508,7 +1630,7 @@ class PengujianController extends Controller
 		$quest->id = Uuid::uuid4();
 		$quest->examination_id = $request->input('exam_id');
 		$quest->questioner_date = date('Y-m-d', $tanggal);
-		$quest->quest1_eks = $request->input('quest1_eks');$quest->quest1_perf = $request->input('quest1_perf');
+		/* $quest->quest1_eks = $request->input('quest1_eks');$quest->quest1_perf = $request->input('quest1_perf');
 		$quest->quest2_eks = $request->input('quest2_eks');$quest->quest2_perf = $request->input('quest2_perf');
 		$quest->quest3_eks = $request->input('quest3_eks');$quest->quest3_perf = $request->input('quest3_perf');
 		$quest->quest4_eks = $request->input('quest4_eks');$quest->quest4_perf = $request->input('quest4_perf');
@@ -1527,28 +1649,54 @@ class PengujianController extends Controller
 		$quest->quest17_eks = $request->input('quest17_eks');$quest->quest17_perf = $request->input('quest17_perf');
 		$quest->quest18_eks = $request->input('quest18_eks');$quest->quest18_perf = $request->input('quest18_perf');
 		$quest->quest19_eks = $request->input('quest19_eks');$quest->quest19_perf = $request->input('quest19_perf');
-		$quest->quest20_eks = $request->input('quest20_eks');$quest->quest20_perf = $request->input('quest20_perf');
+		$quest->quest20_eks = $request->input('quest20_eks');$quest->quest20_perf = $request->input('quest20_perf'); */
 		// $quest->quest21_eks = $request->input('quest21_eks');$quest->quest21_perf = $request->input('quest21_perf');
 		// $quest->quest22_eks = $request->input('quest22_eks');$quest->quest22_perf = $request->input('quest22_perf');
 		// $quest->quest23_eks = $request->input('quest23_eks');$quest->quest23_perf = $request->input('quest23_perf');
 		// $quest->quest24_eks = $request->input('quest24_eks');$quest->quest24_perf = $request->input('quest24_perf');
 		// $quest->quest25_eks = $request->input('quest25_eks');$quest->quest25_perf = $request->input('quest25_perf');
-		$quest->quest21_eks = 0;$quest->quest21_perf = 0;
+		/* $quest->quest21_eks = 0;$quest->quest21_perf = 0;
 		$quest->quest22_eks = 0;$quest->quest22_perf = 0;
 		$quest->quest23_eks = 0;$quest->quest23_perf = 0;
 		$quest->quest24_eks = 0;$quest->quest24_perf = 0;
-		$quest->quest25_eks = 0;$quest->quest25_perf = 0;
+		$quest->quest25_eks = 0;$quest->quest25_perf = 0; */
 		
 		$quest->created_by = $currentUser->id;
 		$quest->created_at = date('Y-m-d H:i:s');
 		
 		try{
 			$quest->save();
+			
+			/* ====== */
+			for($i=0;$i<count($request->input('question_id'));$i++){
+				$questioner_dyn = new QuestionerDynamic;
+				$questioner_dyn->question_id = $request->input('question_id')[$i];
+				$questioner_dyn->examination_id = $request->input('exam_id');
+				$questioner_dyn->order_question = ($i+1);
+				$questioner_dyn->is_essay = $request->input('is_essay')[$i];
+				$questioner_dyn->questioner_date = date('Y-m-d', $tanggal);
+				$questioner_dyn->eks_answer = $request->input('eks')[$i];
+				if(isset($request->input('pref')[$i])){
+					$questioner_dyn->perf_answer = $request->input('pref')[$i];
+				}else{
+					$questioner_dyn->perf_answer = 0;
+				}
+				
+				$questioner_dyn->created_by = $currentUser->id;
+				$questioner_dyn->created_at = date('Y-m-d H:i:s');
+
+				try{
+					$questioner_dyn->save();
+				} catch(\Exception $e){
+					
+				}
+			}
+			/* ====== */
 
 			$data= array( 
 	        "from"=>$currentUser->id,
 	        "to"=>"admin",
-	        "message"=>$currentUser->name." Mengisi Kuisioner",
+	        "message"=>$currentUser->company->name." Mengisi Kuisioner",
 	        "url"=>"examinationdone/".$request->input('exam_id').'/edit',
 	        "is_read"=>0,
 	        "created_at"=>date("Y-m-d H:i:s"),
@@ -1591,7 +1739,7 @@ class PengujianController extends Controller
 			$data= array( 
 	        "from"=>$currentUser->id,
 	        "to"=>"admin",
-	        "message"=>$currentUser->name." Mengajukan Complaint",
+	        "message"=>$currentUser->company->name." Mengajukan Complaint",
 	        "url"=>"examinationdone/".$request->input('my_exam_id').'/edit',
 	        "is_read"=>0,
 	        "created_at"=>date("Y-m-d H:i:s"),

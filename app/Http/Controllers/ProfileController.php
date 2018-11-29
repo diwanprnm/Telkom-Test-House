@@ -175,6 +175,18 @@ class ProfileController extends Controller
 			$description = $description.'Alamat, ';
 		}	
 			
+		if($request->input('plg_id') != $request->input('hide_plg_id')){
+			$temp->plg_id = $request->input('plg_id');
+			$count_commit ++ ;
+			$description = $description.'PLG_ID, ';
+		}	
+			
+		if($request->input('nib') != $request->input('hide_nib')){
+			$temp->nib = $request->input('nib');
+			$count_commit ++ ;
+			$description = $description.'NIB, ';
+		}	
+			
 		if($request->input('city') != $request->input('hide_city')){
 			$temp->city = $request->input('city');
 			$count_commit ++ ;
@@ -331,7 +343,7 @@ class ProfileController extends Controller
 			$data= array( 
 	        "from"=>$currentUser->id,
 	        "to"=>"admin",
-	        "message"=>$currentUser->id." mengedit data Perusahaan ",
+	        "message"=>$currentUser->company->name." mengedit data Perusahaan ",
 	        "url"=>"tempcompany/".$temp->id.'/edit',
 	        "is_read"=>0,
 	        "created_at"=>date("Y-m-d H:i:s"),
@@ -499,6 +511,8 @@ class ProfileController extends Controller
 			$company->id = Uuid::uuid4();
 			$company->name = $request->input('comp_name');
 			$company->address = $request->input('comp_address');
+			$company->plg_id = $request->input('comp_plg_id');
+			$company->nib = $request->input('comp_nib');
 			$company->city = $request->input('comp_city');
 			$company->email = $request->input('comp_email');
 			$company->postal_code = $request->input('comp_postal_code');

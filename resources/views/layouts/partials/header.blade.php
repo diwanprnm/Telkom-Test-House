@@ -60,13 +60,6 @@
                   <?php
                   }
                   ?>
-                  <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ trans('translate.menu_ref') }}</a>
-                      <ul class="dropdown-menu" role="menu">
-                          <li><a href="{{url('STELclient')}}">{{ trans('translate.stel') }}</a></li>
-                          <li><a href="{{url('STSELclient')}}">{{ trans('translate.stels') }}</a></li>
-                      </ul>
-                  </li>
-                   
                   <li><a href="{{url('Chargeclient')}}">{{ trans('translate.charge') }}</a></li>
                 </ul>
               </li> 
@@ -77,6 +70,12 @@
               <li class=" {{ (!empty($page) && ($page == 'payment_status' || $page == 'products' || $page == 'checkout')) ?'current':''}}">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">Stel <i class="icon-angle-down"></i></a>
                    <ul class="dropdown-menu" role="menu">
+                    <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ trans('translate.menu_ref') }}</a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="{{url('STELclient')}}">{{ trans('translate.stel') }}</a></li>
+                            <li><a href="{{url('STSELclient')}}">{{ trans('translate.stels') }}</a></li>
+                        </ul>
+                    </li>
                     <li>
                       <a href="{{url('/products')}}">{{ trans('translate.see_product') }}</a>
                     </li>
@@ -172,12 +171,19 @@
                       <div class="top-notification-items">
                         <div class="top-notification-item clearfix">
                           <div class="top-notification-item-desc">
-                            <a data-id="<?php echo $notif['id'];?>" data-url="{{$notif['url']}}" class="notifData">{{$notif['message']}}</a> 
+                            <a data-url="<?php echo $notif['url']?>" data-id="<?php echo $notif['id']?>" class="notifData">{{$notif['message']}}</a> 
                           </div>
                         </div>
                       </div>
 
                     <?php }?>
+						<div class="top-notification-items">
+							<div class="top-notification-item clearfix">
+							  <div class="top-notification-item-desc">
+								<a href="{{url('/all_notifications')}}">{{ trans('translate.see_all_notifications') }}</a> 
+							  </div>
+							</div>
+						  </div>
 	                	</div> 
 	              	</div> 
               <?php   

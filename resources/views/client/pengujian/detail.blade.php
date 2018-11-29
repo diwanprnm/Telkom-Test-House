@@ -5,7 +5,349 @@
 <!-- Document Title
     ============================================= -->
     <title>{{ trans('translate.examination_detail') }} - Telkom DDS</title>
-	<div id="modal_kuisioner" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
+	
+@section('content')
+ 	<!-- Page Title
+		============================================= -->
+		<section id="page-title">
+
+			<div class="container clearfix">
+				<h1>Detail {{ trans('translate.examination') }}</h1>
+				
+				<ol class="breadcrumb">
+					<li><a href="{{ url('/') }}">{{ trans('translate.home') }}</a></li>
+					<li>{{ trans('translate.menu_testing') }}</li>
+					<li><a href="{{ url('/pengujian') }}"></a>{{ trans('translate.examination') }}</li>
+					<li class="active">Detail</li>
+				</ol>
+			</div>
+
+		</section><!-- #page-title end -->
+
+
+
+	<input type="hidden" name="exam_id" id="exam_id" value="<?php echo $data[0]->id ?>">
+	<input type="hidden" name="link" id="link">
+	<div class="modal fade" id="myModal_testimonial" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title"><i class="fa fa-eyes-open"></i> {{ trans('translate.download_certificate_message') }} </h4>
+				</div>
+				
+				<div class="modal-body">
+					<table width=100%>
+						<tr>
+							<td>
+								<div class="form-group">
+									<label for="message">{{ trans('translate.contact_message') }}:</label>
+									<textarea class="form-control" rows="5" name="message" id="message"></textarea>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div><!-- /.modal-content -->
+				<div class="modal-footer">
+					<table width=100%>
+						<tr>
+							<td>
+								<button type="button" id="submit-testimonial" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+	</div>
+		
+		<!-- Content
+		============================================= -->
+		<section id="content">
+
+			<div class="content-wrap"> 
+				<div class="container clearfix">
+					<div class="container-fluid container-fullw bg-white">
+						@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
+						<div class="row">
+							<div class="col-md-12">
+								<div class="panel panel-white" id="panel1">
+									<div class="panel-body">
+										<div class="col-md-12">
+										<!-- start: WIZARD FORM -->
+											<div id="wizard" class="swMain">
+												<div class="form-group">
+													<table class="table table-condensed">
+														<thead>
+															<tr>
+																<th colspan="2">{{ trans('translate.examination_date') }}</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr>
+																<td class="center">{{ trans('translate.examination_date_begin') }} : {{ $exam_schedule->data[0]->startTestDt }}</td>
+																<td class="center">{{ trans('translate.examination_date_end') }} : {{ $exam_schedule->data[0]->targetDt }}</td>
+															</tr>
+															<tr>
+																<td class="left">{{ trans('translate.examination_spk_code') }} : {{ $data[0]->spk_code }}</td>
+																<td class="left">Test Engineer : {{ $data[0]->function_test_PIC }}</td>
+															</tr>
+															<tr>
+																<td class="left">{{ trans('translate.examination_labs_name') }} : {{ $data[0]->labs_name }}</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										<!-- end: WIZARD FORM -->
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						@else
+						<div class="row">
+							<div class="col-md-12">
+								<div class="panel panel-white" id="panel1">
+									<div class="panel-body">
+										<div class="col-md-12">
+										<!-- start: WIZARD FORM -->
+											<div id="wizard" class="swMain">
+												<div class="form-group">
+													<table class="table table-condensed">
+														<tbody>
+															<tr>
+																<td class="left">{{ trans('translate.examination_spk_code') }} : {{ $data[0]->spk_code }}</td>
+																<td class="left">Test Engineer : {{ $data[0]->function_test_PIC }}</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										<!-- end: WIZARD FORM -->
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						@endif
+						 <!-- start: WIZARD FORM -->
+						<?php $no=1; //print_r($data);exit;
+						//foreach($data as $item){
+						?>
+						<form action="#" role="form" class="smart-wizard" id="form">
+							{!! csrf_field() !!}
+							<div id="wizard" class="swMain">
+							@foreach($data as $item)
+								<div class="form-group">
+									<table class="table table-condensed">
+										<thead>
+											<tr>
+												<th colspan="3">{{ trans('translate.service_application') }}</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>{{ trans('translate.service_application_name') }}</td>
+												<td> : {{ $item->namaPemohon }}</td>
+											</tr>
+											<tr>
+												<td>{{ trans('translate.service_application_address') }}</td>
+												<td> : {{ $item->alamatPemohon }}</td>
+											</tr>
+											<tr>
+												<td>{{ trans('translate.service_application_phone') }}</td>
+												<td> : {{ $item->telpPemohon }}</td>
+											</tr>
+											<tr>
+												<td>{{ trans('translate.service_application_fax') }}</td>
+												<td> : {{ $item->faxPemohon }}</td>
+											</tr>
+											<tr>
+												<td>{{ trans('translate.service_application_email') }}</td>
+												<td> : {{ $item->emailPemohon }}</td>
+											</tr>
+										</tbody>
+										<thead>
+											<tr>
+												<th colspan="3">{{ trans('translate.service_company') }} [{{ $item->jnsPerusahaan }}]</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>{{ trans('translate.service_company_name') }}</td>
+												<td> : {{ $item->namaPerusahaan }}</td>
+											</tr>
+											<tr>
+												<td>{{ trans('translate.service_company_address') }}</td>
+												<td> : {{ $item->alamatPerusahaan }}</td>
+											</tr>
+											@if($item->id_jns_pengujian == 2)
+											<tr>
+												<td>{{ trans('translate.service_company_plg_id') }}</td>
+												<td> : {{ $item->plg_idPerusahaan }}</td>
+											</tr>
+											<tr>
+												<td>{{ trans('translate.service_company_nib') }}</td>
+												<td> : {{ $item->nibPerusahaan }}</td>
+											</tr>
+											@endif
+											<tr>
+												<td>{{ trans('translate.service_company_phone') }}</td>
+												<td> : {{ $item->telpPerusahaan }}</td>
+											</tr>
+											<tr>
+												<td>{{ trans('translate.service_company_fax') }}</td>
+												<td> : {{ $item->faxPerusahaan }}</td>
+											</tr>
+											<tr>
+												<td>{{ trans('translate.service_company_email') }}</td>
+												<td> : {{ $item->emailPerusahaan }}</td>
+											</tr>
+										</tbody>
+										<thead>
+											<tr>
+												<th colspan="3">{{ trans('translate.service_device') }}</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>{{ trans('translate.service_device_serial_number') }}</td>
+												<td> : {{ $item->serialNumber }}</td>
+											</tr>
+											<tr>
+												<td>{{ trans('translate.service_device_equipment') }}</td>
+												<td> : {{ $item->nama_perangkat }}</td>
+											</tr>
+											<tr>
+												<td>{{ trans('translate.service_device_mark') }}</td>
+												<td> : {{ $item->merk_perangkat }}</td>
+											</tr>
+											<tr>
+												<td>{{ trans('translate.service_device_model') }}</td>
+												<td> : {{ $item->model_perangkat }}</td>
+											</tr>
+											<tr>
+												<td>{{ trans('translate.service_device_capacity') }}</td>
+												<td> : {{ $item->kapasitas_perangkat }}</td>
+											</tr>
+											<tr>
+												<td>{{ trans('translate.service_device_manufactured_by') }}</td>
+												<td> : {{ $item->pembuat_perangkat }}</td>
+											</tr>
+											<tr>
+												<td>{{ trans('translate.service_device_test_reference') }}</td>
+												<td> : {{ $item->referensi_perangkat }}</td>
+											</tr>
+										</tbody>
+										<thead>
+											<tr>
+												<th colspan="3">{{ trans('translate.service_device_document') }}</th>
+											</tr>
+										</thead>
+										<tbody>
+											@if(
+												$item->registration_status == 1 &&
+												$item->function_status == 1 &&
+												$item->contract_status == 1 &&
+												$item->spb_status == 1 &&
+												$item->payment_status == 1 &&
+												$item->spk_status == 1 &&
+												$item->examination_status == 1 &&
+												$item->resume_status == 1 &&
+												$item->qa_status == 1 &&
+												$item->certificate_status == 1
+											)
+											<tr>
+												<td> 
+													<a class="btn btn-link" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->nama_perangkat }}','{{ URL::to('pengujian/'.$item->id.'/downloadSertifikat') }}','{{ $item->id }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">Sertifikat </a>
+												</td> 
+											</tr>
+											@endif
+											@foreach($data_attach as $item_attach)
+											<tr>
+												<td> 
+													@if($item_attach->attachment != '')
+														@if($item_attach->name == 'Sertifikat')
+															
+														@elseif($item_attach->name == 'Laporan Uji')
+															@if(
+																$item->registration_status == 1 &&
+																$item->function_status == 1 &&
+																$item->contract_status == 1 &&
+																$item->spb_status == 1 &&
+																$item->payment_status == 1 &&
+																$item->spk_status == 1 &&
+																$item->examination_status == 1 &&
+																$item->resume_status == 1 &&
+																date('Y-m-d') >= $item->resume_date
+															)
+																<a class="btn btn-link" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->nama_perangkat }}','{{ $item_attach->attachment }}','{{ $item_attach->jns }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">{{ $item_attach->name }} </a>
+															@endif
+														@else	
+															<a class="btn btn-link" href="{{URL::to('/pengujian/download/'.$item_attach->id_attach.'/'.$item_attach->attachment.'/'.$item_attach->jns)}}">{{ $item_attach->name }} </a>
+														@endif
+													@endif
+												</td>
+											</tr>
+											@endforeach
+										</tbody>
+									</table>
+								</div>
+								<div class="row">
+									<div class=" pull-right col-xs-12">
+										<a class="button button-3d btn-sky nomargin" href="{{url('/pengujian')}}">{{ trans('translate.back') }}</a>
+										<a class="button button-3d btn-sky nomargin pull-right" style="margin-bottom:10px;" 
+											href="{{URL::to('cetakPengujian/'.$item->id.'')}}" target="_blank">
+											{{ trans('translate.examination_print') }}
+										</a>
+									</div>
+								</div>										
+							</div>
+							<?php 
+							$no++;
+							//}
+							?>
+							@endforeach
+						</form>
+						<!-- end: WIZARD FORM -->
+						<div id="wizard" class="swMain">
+							<div class="form-group">
+								<table class="table table-condensed">
+									<thead>
+										<tr>
+											<th colspan="4">{{ trans('translate.examination_history') }}</th>
+										</tr>
+										<tr>
+											<td class="center">{{ trans('translate.examination_history_step') }}</td>
+											<td class="center">{{ trans('translate.examination_history_status') }}</td>
+											<td class="center">{{ trans('translate.examination_history_notes') }}</td>
+											<td class="center">{{ trans('translate.examination_history_date') }}</td>
+										</tr>
+									</thead>
+									<tbody>
+									@foreach($exam_history as $item)
+										<tr>
+											<td class="center">{{ $item->tahap }}</td>
+											@if($item->status == 1)
+												<td class="center">Completed</td>
+											@else
+												<td class="center">Not Completed</td>
+											@endif
+											<td>{{ $item->keterangan }} {{ trans('translate.by') }} {{ $item->user->name }}</td>
+											<td class="center">{{ $item->date_action }}</td>
+										</tr>
+									@endforeach
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section><!-- #content end -->
+		
+		<div id="modal_kuisioner" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
       <div class="modal-dialog modal-lg">
 
         <!-- Modal content-->
@@ -45,7 +387,7 @@
                     <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
                         <div class="form-group">
                             <label>Jenis Pengujian</label>
-                            <input type="text" id="exam_type" name="exam_type" placeholder="-" class="form-control" readonly>
+                            <input type="text" id="exam_type1" name="exam_type" placeholder="-" class="form-control" readonly>
                         </div>
                         <div class="form-group">
                             <label>E-mail</label>
@@ -279,7 +621,7 @@
                         </div>
                         <div class="form-group">
                             <label>Nama Perangkat</label>
-                            <input type="text" placeholder="Smartphone" class="form-control">
+                            <input type="text" id="device_name" placeholder="Smartphone" class="form-control">
                         </div>
                         <div class="form-group">
                             <label>Tanggal</label>
@@ -304,205 +646,31 @@
                         <th>TINGKAT KEPUASAN</th>
                       </tr>
                       <tbody>
-                        <tr>
-                          <td>1</td>
-                          <td>Pengajuan <strong>pendaftaran</strong> pengujian dapat dengan mudah dilakukan.</td>
-                          <td>
-                            <input type="number" name="quest1_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest1_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>2</td>
-                          <td>Pelaksanaan <strong>uji fungsi</strong> sebelum barang diterima terlaksana dengan <strong>baik</strong>.</td>
-                          <td>
-                            <input type="number" name="quest2_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest2_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>3</td>
-                          <td>Biaya/<strong>tarif</strong> pengujian perangkat sudah sesuai.</td>
-                          <td>
-                            <input type="number" name="quest3_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest3_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>4</td>
-                          <td><strong>Prosedur</strong> pembayaran dilakukan dengan <strong>mudah</strong>.</td>
-                         <td>
-                            <input type="number" name="quest4_eks" value="10" min="1" max="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest4_perf" value="10" min="1" max="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>5</td>
-                          <td>Perangkat uji <strong>diterima</strong> dengan <strong>baik</strong> oleh petugas.</td>
-                          <td>
-                            <input type="number" name="quest5_eks" value="10" min="1" max="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest5_perf" value="10" min="1" max="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>6</td>
-                          <td><strong>Pelaksanaan</strong> pengujian sesuai dengan <strong>jadwal</strong> yang sudah disepakati.</td>
-                          <td>
-                            <input type="number" name="quest7_eks" value="10" min="1" max="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest7_perf" value="10" min="1" max="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>7</td>
-                          <td>Perangkat uji setelah pengujian <strong>selesai</strong> ditangani dengan <strong>baik</strong>.</td>
-                          <td>
-                            <input type="number" name="quest8_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest8_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>8</td>
-                          <td><strong>Lama pengujian</strong> diselesaikan dengan informasi/kesepakatan yang telah ditentukan.</td>
-                          <td>
-                            <input type="number" name="quest9_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest9_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>9</td>
-                          <td><strong>Komunikasi</strong> antara test engineer Lab. QA DDS Telkom dengan test engineer kami terjalin dengan baik untuk kelancaran pengujian.</td>
-                          <td>
-                            <input type="number" name="quest10_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest10_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>10</td>
-                          <td><strong>Alat ukur</strong> yang digunakan sudah terjamin kualitas dan akurasinya.</td>
-                          <td>
-                            <input type="number" name="quest11_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest11_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>11</td>
-                          <td><strong>Ruang</strong> laboratorium terkondisi dengan baik.</td>
-                          <td>
-                            <input type="number" name="quest12_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest12_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>12</td>
-                          <td><strong>Kapabilitas dan pengalaman</strong> test engineer Lab. QA DDS Telkom sudah sesuai dengan kompetensinya.</td>
-                          <td>
-                            <input type="number" name="quest13_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest13_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>13</td>
-                          <td>Test engineer Lab. QA DDS Telkom memiliki <strong>pemahaman</strong> terhadap materi item uji.</td>
-                          <td>
-                            <input type="number" name="quest14_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest14_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>14</td>
-                          <td>Petugas memberikan <strong>pelayanan</strong> dengan <strong>ramah</strong> dan profesional.</td>
-                          <td>
-                            <input type="number" name="quest15_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest15_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>15</td>
-                          <td>Petugas memberikan <strong>informasi</strong> tentang <strong>tarif</strong> yang jelas kepada kastamer.</td>
-                          <td>
-                            <input type="number" name="quest16_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest16_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>16</td>
-                          <td>Petugas memberikan <strong>informasi</strong> tentang <strong>prosedur</strong> pengujian dengan jelas.</td>
-                          <td>
-                            <input type="number" name="quest17_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest17_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>17</td>
-                          <td>Petugas selalu <strong>tanggap</strong> dengan apa yang diinginkan kastamer.</td>
-                          <td>
-                            <input type="number" name="quest18_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest18_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>18</td>
-                          <td>Petugas memberikan <strong>perlakuan</strong> yang sama kepada semua kastamer.</td>
-                          <td>
-                            <input type="number" name="quest19_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest19_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>19</td>
-                          <td>Petugas memberikan <strong>laporan</strong> hasil pengujian dengan cepat dan tepat.</td>
-                          <td>
-                            <input type="number" name="quest20_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest20_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
+						<?php $no = 0; ?>
+						@foreach($data_kuisioner as $item)
+							<input type="hidden" name="question_id[]" value="{{ $item->id }}">
+							<input type="hidden" name="is_essay[]" value="{{ $item->is_essay }}">
+							<?php $no++; ?>
+							<tr>
+							  @if($item->is_essay)
+								<td colspan = 2>{{ $item->question }}</td>
+								<td colspan = 2>
+									<textarea name="eks[]" class="form-control" placeholder="..."></textarea>
+								</td>
+							  @else
+								<td>{{ $no }}</td>
+								<td>{{ $item->question }}</td>
+								<td>
+									<input type="number" name="eks[]" min="1" max="10" value="10" placeholder="1-10" class="form-control">
+								</td>
+								<td>
+									<input type="number" name="pref[]" min="1" max="10" value="10" placeholder="1-10" class="form-control">
+								</td>
+							  @endif
+							</tr>
+						@endforeach
                       </tbody>
                     </table>
-                </div>
-                <div class="row">
-                    <p>Kritik dan Saran Anda untuk meningkatkan kualitas pelayanan kami:
-                    </p>
-                    <div class="form-group">
-                      <textarea name="quest6" class="form-control" placeholder="Komentar disini"></textarea>
-                    </div>
                 </div>
             </form>
           </div>
@@ -669,335 +837,6 @@
 
       </div>
     </div> 
-	
-@section('content')
- 	<!-- Page Title
-		============================================= -->
-		<section id="page-title">
-
-			<div class="container clearfix">
-				<h1>Detail {{ trans('translate.examination') }}</h1>
-				
-				<ol class="breadcrumb">
-					<li><a href="{{ url('/') }}">{{ trans('translate.home') }}</a></li>
-					<li>{{ trans('translate.menu_testing') }}</li>
-					<li><a href="{{ url('/pengujian') }}"></a>{{ trans('translate.examination') }}</li>
-					<li class="active">Detail</li>
-				</ol>
-			</div>
-
-		</section><!-- #page-title end -->
-
-
-
-	<input type="hidden" name="exam_id" id="exam_id" value="<?php echo $data[0]->id ?>">
-	<input type="hidden" name="link" id="link">
-	<div class="modal fade" id="myModal_testimonial" tabindex="-1" role="dialog" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title"><i class="fa fa-eyes-open"></i> {{ trans('translate.download_certificate_message') }} </h4>
-				</div>
-				
-				<div class="modal-body">
-					<table width=100%>
-						<tr>
-							<td>
-								<div class="form-group">
-									<label for="message">{{ trans('translate.contact_message') }}:</label>
-									<textarea class="form-control" rows="5" name="message" id="message"></textarea>
-								</div>
-							</td>
-						</tr>
-					</table>
-				</div><!-- /.modal-content -->
-				<div class="modal-footer">
-					<table width=100%>
-						<tr>
-							<td>
-								<button type="button" id="submit-testimonial" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
-							</td>
-						</tr>
-					</table>
-				</div>
-			</div><!-- /.modal-dialog -->
-		</div><!-- /.modal -->
-	</div>
-		
-		<!-- Content
-		============================================= -->
-		<section id="content">
-
-			<div class="content-wrap"> 
-				<div class="container clearfix">
-					<div class="container-fluid container-fullw bg-white">
-						@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
-						<div class="row">
-							<div class="col-md-12">
-								<div class="panel panel-white" id="panel1">
-									<div class="panel-body">
-										<div class="col-md-12">
-										<!-- start: WIZARD FORM -->
-											<div id="wizard" class="swMain">
-												<div class="form-group">
-													<table class="table table-condensed">
-														<thead>
-															<tr>
-																<th colspan="2">{{ trans('translate.examination_date') }}</th>
-															</tr>
-														</thead>
-														<tbody>
-															<tr>
-																<td class="center">{{ trans('translate.examination_date_begin') }} : {{ $exam_schedule->data[0]->startTestDt }}</td>
-																<td class="center">{{ trans('translate.examination_date_end') }} : {{ $exam_schedule->data[0]->targetDt }}</td>
-															</tr>
-															<tr>
-																<td class="left">{{ trans('translate.examination_spk_code') }} : {{ $data[0]->spk_code }}</td>
-															</tr>
-															<tr>
-																<td class="left">{{ trans('translate.examination_labs_name') }} : {{ $data[0]->labs_name }}</td>
-															</tr>
-														</tbody>
-													</table>
-												</div>
-											</div>
-										<!-- end: WIZARD FORM -->
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						@else
-						<div class="row">
-							<div class="col-md-12">
-								<div class="panel panel-white" id="panel1">
-									<div class="panel-body">
-										<div class="col-md-12">
-										<!-- start: WIZARD FORM -->
-											<div id="wizard" class="swMain">
-												<div class="form-group">
-													<table class="table table-condensed">
-														<tbody>
-															<tr>
-																<td class="left">{{ trans('translate.examination_spk_code') }} : {{ $data[0]->spk_code }}</td>
-															</tr>
-														</tbody>
-													</table>
-												</div>
-											</div>
-										<!-- end: WIZARD FORM -->
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						@endif
-						 <!-- start: WIZARD FORM -->
-						<?php $no=1; //print_r($data);exit;
-						//foreach($data as $item){
-						?>
-						<form action="#" role="form" class="smart-wizard" id="form">
-							{!! csrf_field() !!}
-							<div id="wizard" class="swMain">
-							@foreach($data as $item)
-								<div class="form-group">
-									<table class="table table-condensed">
-										<thead>
-											<tr>
-												<th colspan="3">{{ trans('translate.service_application') }}</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>{{ trans('translate.service_application_name') }}</td>
-												<td> : {{ $item->namaPemohon }}</td>
-											</tr>
-											<tr>
-												<td>{{ trans('translate.service_application_address') }}</td>
-												<td> : {{ $item->alamatPemohon }}</td>
-											</tr>
-											<tr>
-												<td>{{ trans('translate.service_application_phone') }}</td>
-												<td> : {{ $item->telpPemohon }}</td>
-											</tr>
-											<tr>
-												<td>{{ trans('translate.service_application_fax') }}</td>
-												<td> : {{ $item->faxPemohon }}</td>
-											</tr>
-											<tr>
-												<td>{{ trans('translate.service_application_email') }}</td>
-												<td> : {{ $item->emailPemohon }}</td>
-											</tr>
-										</tbody>
-										<thead>
-											<tr>
-												<th colspan="3">{{ trans('translate.service_company') }} [{{ $item->jnsPerusahaan }}]</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>{{ trans('translate.service_company_name') }}</td>
-												<td> : {{ $item->namaPerusahaan }}</td>
-											</tr>
-											<tr>
-												<td>{{ trans('translate.service_company_address') }}</td>
-												<td> : {{ $item->alamatPerusahaan }}</td>
-											</tr>
-											<tr>
-												<td>{{ trans('translate.service_company_phone') }}</td>
-												<td> : {{ $item->telpPerusahaan }}</td>
-											</tr>
-											<tr>
-												<td>{{ trans('translate.service_company_fax') }}</td>
-												<td> : {{ $item->faxPerusahaan }}</td>
-											</tr>
-											<tr>
-												<td>{{ trans('translate.service_company_email') }}</td>
-												<td> : {{ $item->emailPerusahaan }}</td>
-											</tr>
-										</tbody>
-										<thead>
-											<tr>
-												<th colspan="3">{{ trans('translate.service_device') }}</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>{{ trans('translate.service_device_serial_number') }}</td>
-												<td> : {{ $item->serialNumber }}</td>
-											</tr>
-											<tr>
-												<td>{{ trans('translate.service_device_equipment') }}</td>
-												<td> : {{ $item->nama_perangkat }}</td>
-											</tr>
-											<tr>
-												<td>{{ trans('translate.service_device_mark') }}</td>
-												<td> : {{ $item->merk_perangkat }}</td>
-											</tr>
-											<tr>
-												<td>{{ trans('translate.service_device_capacity') }}</td>
-												<td> : {{ $item->kapasitas_perangkat }}</td>
-											</tr>
-											<tr>
-												<td>{{ trans('translate.service_device_manufactured_by') }}</td>
-												<td> : {{ $item->pembuat_perangkat }}</td>
-											</tr>
-											<tr>
-												<td>{{ trans('translate.service_device_model') }}</td>
-												<td> : {{ $item->model_perangkat }}</td>
-											</tr>
-											<tr>
-												<td>{{ trans('translate.service_device_test_reference') }}</td>
-												<td> : {{ $item->referensi_perangkat }}</td>
-											</tr>
-										</tbody>
-										<thead>
-											<tr>
-												<th colspan="3">{{ trans('translate.service_device_document') }}</th>
-											</tr>
-										</thead>
-										<tbody>
-											@if(
-												$item->registration_status == 1 &&
-												$item->function_status == 1 &&
-												$item->contract_status == 1 &&
-												$item->spb_status == 1 &&
-												$item->payment_status == 1 &&
-												$item->spk_status == 1 &&
-												$item->examination_status == 1 &&
-												$item->resume_status == 1 &&
-												$item->qa_status == 1 &&
-												$item->certificate_status == 1
-											)
-											<tr>
-												<td> 
-													<a class="btn btn-link" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->id }}','{{ URL::to('pengujian/'.$item->id.'/downloadSertifikat') }}','{{ $item->id }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">Sertifikat </a>
-												</td> 
-											</tr>
-											@endif
-											@foreach($data_attach as $item_attach)
-											<tr>
-												<td> 
-													@if($item_attach->attachment != '')
-														@if($item_attach->name == 'Sertifikat')
-															
-														@elseif($item_attach->name == 'Laporan Uji')
-															@if(
-																$item->registration_status == 1 &&
-																$item->function_status == 1 &&
-																$item->contract_status == 1 &&
-																$item->spb_status == 1 &&
-																$item->payment_status == 1 &&
-																$item->spk_status == 1 &&
-																$item->examination_status == 1 &&
-																$item->resume_status == 1 &&
-																date('Y-m-d') >= $item->resume_date
-															)
-																<a class="btn btn-link" href="javascript:void(0)" onclick="return isTestimonial('{{ $item_attach->id_attach }}','{{ $item_attach->attachment }}','{{ $item_attach->jns }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">{{ $item_attach->name }} </a>
-															@endif
-														@else	
-															<a class="btn btn-link" href="{{URL::to('/pengujian/download/'.$item_attach->id_attach.'/'.$item_attach->attachment.'/'.$item_attach->jns)}}">{{ $item_attach->name }} </a>
-														@endif
-													@endif
-												</td>
-											</tr>
-											@endforeach
-										</tbody>
-									</table>
-								</div>
-								<div class="row">
-									<div class=" pull-right col-xs-12">
-										<a class="button button-3d btn-sky nomargin" href="{{url('/pengujian')}}">{{ trans('translate.back') }}</a>
-										<a class="button button-3d btn-sky nomargin pull-right" style="margin-bottom:10px;" 
-											href="{{URL::to('cetakPengujian/'.$item->id.'')}}" target="_blank">
-											{{ trans('translate.examination_print') }}
-										</a>
-									</div>
-								</div>										
-							</div>
-							<?php 
-							$no++;
-							//}
-							?>
-							@endforeach
-						</form>
-						<!-- end: WIZARD FORM -->
-						<div id="wizard" class="swMain">
-							<div class="form-group">
-								<table class="table table-condensed">
-									<thead>
-										<tr>
-											<th colspan="4">{{ trans('translate.examination_history') }}</th>
-										</tr>
-										<tr>
-											<td class="center">{{ trans('translate.examination_history_step') }}</td>
-											<td class="center">{{ trans('translate.examination_history_status') }}</td>
-											<td class="center">{{ trans('translate.examination_history_notes') }}</td>
-											<td class="center">{{ trans('translate.examination_history_date') }}</td>
-										</tr>
-									</thead>
-									<tbody>
-									@foreach($exam_history as $item)
-										<tr>
-											<td class="center">{{ $item->tahap }}</td>
-											@if($item->status == 1)
-												<td class="center">Completed</td>
-											@else
-												<td class="center">Not Completed</td>
-											@endif
-											<td>{{ $item->keterangan }}</td>
-											<td class="center">{{ $item->date_action }}</td>
-										</tr>
-									@endforeach
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section><!-- #content end -->
 @endsection
 
 @section('content_js')
@@ -1035,6 +874,7 @@
 				if(response=='0'){
 					$('#modal_kuisioner2').modal('show');
 					$('#modal_kuisioner2').on('shown.bs.modal', function() {
+						$("#device_name").val(a);
 						$("#exam_type").val(d);
 						$("#exam_id").val(e);
 						$("#tanggal").focus();

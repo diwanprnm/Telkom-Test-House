@@ -16,672 +16,7 @@
 		<link href="{{ asset('template-assets/css/popup.css')}}" rel="stylesheet" type="text/css"/>
 
 		<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">  
-	-->
-	<input type="hidden" name="link" id="link">	
-   <div id="modal_kuisioner" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
-      <div class="modal-dialog modal-lg">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div class="modal-header">
-            <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
-            <h4 class="modal-title">Survey Kepuasan Kastamer Eksternal</h4>
-          </div>
-          <div class="modal-body pre-scrollable">
-            <form id="form-kuisioner1">
-                <div class="row">
-                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
-                        <div class="form-group">
-                            <label>Tanggal</label>
-							<!--<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">-->
-								<input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo date('d-m-Y');?>" readonly required>
-								<!--<span class="input-group-btn">
-									<button type="button" class="btn btn-default">
-										<i class="glyphicon glyphicon-calendar"></i>
-									</button>
-								</span>-->
-							<!--</p>-->
-                        </div>
-                        <div class="form-group">
-                            <label>Nama</label>
-                            <input type="text" id="user_name" name="user_name" placeholder="-" class="form-control" value="{{ $currentUser->name }}" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>Perusahaan</label>
-                            <input type="text" id="company_name" name="company_name" placeholder="-" class="form-control" value="{{ $currentUser->company->name }}" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>No. Telepon</label>
-                            <input type="text" id="company_phone" name="company_phone" placeholder="-" value="{{ $currentUser->company->phone }}" class="form-control" readonly>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
-                        <div class="form-group">
-                            <label>Jenis Pengujian</label>
-                            <input type="text" id="exam_type" name="exam_type" placeholder="-" class="form-control" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>E-mail</label>
-                            <input type="email" id="user_email" name="user_email" placeholder="-" value="{{ $currentUser->email }}" class="form-control" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>Mobile</label>
-                            <input type="text" id="user_phone" name="user_phone" placeholder="-" value="{{ $currentUser->phone }}" class="form-control" readonly>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <h2>Harap isikan penilaian anda terhadap Layanan QA/TA/VT</h2>
-                    <p>Kustomer diharapkan dapat untuk beberapa kriteria yang diajukan. Nilai tersebut merupakan nilai kustomer  berikan mengenai ekspetasi setuju dan PT. Telkom.
-
-                    Skala pemberian nilai adalah 1 - 7 dengan nilai 7 adalah penilaian Sangat Tidak Baik atau Sangat Tidak Setuju. Kastemer diharapkan dapat memberikan dengan angka bulat.
-                    </p>
-                </div>
-                <div class="row">
-                    <table id="table_kuisioner" style="width:100%; padding: 2px;" border="1">
-                      <tr>
-                        <th>No</th>
-                        <th>Kriteria</th> 
-                        <th>Nilai Ekspetasi</th>
-                        <th>NIlai Performasi</th>
-                      </tr>
-                      <tr>
-                        <td>1</td>
-                        <td>Pihak UREL (User Relation) mampu menjadi jembatan antara Kastamer dan Yesy Engineer Telkom.</td> 
-                        <td><input type="number" min="1" max="7" name="quest1_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest1_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>Proses pelayanan pengujian secara keseluruhan (sejak pengajuan hingga pelaporan) mudah dimengerti oleh Kastemer.</td> 
-                        <td><input type="number" min="1" max="7" name="quest2_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest2_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>Pihak UREL memberika informasi serta melakukan pengecekan kelengkapan mengenai berkas-berkas yang harus disiapkan.</td> 
-                        <td><input type="number" min="1" max="7" name="quest3_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest3_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                      <tr>
-                        <td>4</td>
-                        <td>Setiap lini proses (sejak pengajuan hingga pelaporan) dilakukan dengan cepat.</td> 
-                        <td><input type="number" min="1" max="7" name="quest4_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest4_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                      <tr>
-                        <td>5</td>
-                        <td>Pihak UREL memberikan informasi yang dibutuhkan oleh Kastamer.</td> 
-                        <td><input type="number" min="1" max="7" name="quest5_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest5_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                    </table>
-                </div>
-                <div class="row">
-                    <p>Menurut Anda, dalam proses pengajuan hingga pelaporan, tahap apa yang sebaiknya ditingkatkan oleh PT. Telkom? Dan mengapa harus ditingkatkan?</p>
-                    <textarea name="quest6" class="form-control" placeholder="Jawaban"></textarea>
-                </div>
-                <div class="row">
-                    <p>Pada tahap ini, silahkan mengisi nilai dengan sekala 1-7 untuk nilai ekspetasi awal dan nilai performansi. Kastemer diharapkan mengisi kolom nilai dan setiap kriteria, serta nilai performansi/kenyataan dari setiap kriteria</p>
-                    <p>Nilai 7 adalah penilaian Sangat Baik atau Sangat Setuju dan nilai 1 adalah penilaian Sangat Tidak Baik atau Sangat Tidak Setuju. Kastemer diharapkan dapat memberikan nilai dengan angka bulat.</p>
-                    <table id="table_kuisioner" style="width:100%; padding: 2px;" border="1">
-                      <tr>
-                        <th>No</th>
-                        <th>Kriteria</th> 
-                        <th>Nilai Ekspetasi</th>
-                        <th>NIlai Performasi</th>
-                      </tr>
-                      <tr>
-                        <td>7</td>
-                        <td>Kastemer percaya pada kualitas pengujian yang dilakukan oleh Telkom.</td> 
-                        <td><input type="number" min="1" max="7" name="quest7_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest7_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                      <tr>
-                        <td>8</td>
-                        <td>Kastemer merasa pihak UREL faham dan terpercaya.</td> 
-                        <td><input type="number" min="1" max="7" name="quest8_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest8_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                      <tr>
-                        <td>9</td>
-                        <td>Kastemer merasa pihak UREL sudah melakukan pemeriksaan kelengkapan administrasi dengan kinerja yang baik.</td> 
-                        <td><input type="number" min="1" max="7" name="quest9_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest9_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                      <tr>
-                        <td>10</td>
-                        <td>Kastemer measa aman sewaktu melakukan transaksi dengan pihak Telkom terutama pihak UREL.</td> 
-                        <td><input type="number" min="1" max="7" name="quest10_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest10_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                      <tr>
-                        <td>11</td>
-                        <td>Kastemer merasa Engineer Telkom sudah berpengalaman.</td> 
-                        <td><input type="number" min="1" max="7" name="quest11_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest11_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                      <tr>
-                        <td>12</td>
-                        <td>Alat ukur yang digunakan oleh pihak Telkom berkualitas, baik, dan akurat.</td> 
-                        <td><input type="number" min="1" max="7" name="quest12_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest12_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                      <tr>
-                        <td>13</td>
-                        <td>Laboratorium yang digunakan oleh pihak Telkom dalam keadaan bersih dan memenuhi Standar Laboratorium.</td> 
-                        <td><input type="number" min="1" max="7" name="quest13_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest13_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                      <tr>
-                        <td>14</td>
-                        <td>Tarif Pengujian yang ditetapkan oleh pihak PT. Telkom sesuai dan bersaing dengan harga pasar.</td> 
-                        <td><input type="number" min="1" max="7" name="quest14_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest14_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                      <tr>
-                        <td>15</td>
-                        <td>Pihak UREL yang melayani kastamer berpakaian rapih dan sopan.</td> 
-                        <td><input type="number" min="1" max="7" name="quest15_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest15_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                      <tr>
-                        <td>16</td>
-                        <td>Kontor Telkom DDS dalam kondisi nyaman, bersih dan sudah sesuai kondisi keseluruhannya.</td> 
-                        <td><input type="number" min="1" max="7" name="quest16_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest16_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                      <tr>
-                        <td>17</td>
-                        <td>Pihak Telkom mengembalikan barang/perangkat yang diujikan dalam keadaan baik seperti awal.</td> 
-                        <td><input type="number" min="1" max="7" name="quest17_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest17_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                      <tr>
-                        <td>18</td>
-                        <td>Sertifikat yang diterima oleh kastemer tidak mengalami kesalahan informasi.</td> 
-                        <td><input type="number" min="1" max="7" name="quest18_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest18_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                      <tr>
-                        <td>19</td>
-                        <td>Pihak Telkom DDS terutama pihak UREL yang melayani proses pengajuan hingga pelaporan sudah memahami kebutuhan kastamer.</td> 
-                        <td><input type="number" min="1" max="7" name="quest19_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest19_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                      <tr>
-                        <td>20</td>
-                        <td>Proses pengujian secara keseluruhan tidak memakan durasi waktu yang lama.</td> 
-                        <td><input type="number" min="1" max="7" name="quest20_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest20_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                      <tr>
-                        <td>21</td>
-                        <td>Pihak UREL cepat dan tepat dalam merespon keluhan yang diberikan kastamer.</td> 
-                        <td><input type="number" min="1" max="7" name="quest21_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest21_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                      <tr>
-                        <td>22</td>
-                        <td>Pihak UREL tanggapan dalam membantu permasalahan kastamer.</td> 
-                        <td><input type="number" min="1" max="7" name="quest22_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest22_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                      <tr>
-                        <td>23</td>
-                        <td>Engineer tanggapan pada permasalahan yang dihadapi kastamer selama proses pengajuan hingga pelaporan.</td> 
-                        <td><input type="number" min="1" max="7" name="quest23_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest23_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                      <tr>
-                        <td>24</td>
-                        <td>Pihak UREL mudah dihubungi dan tanggap pada segala pertanyaan yang diajukan kastamer terkait pengujian perangkat.</td> 
-                        <td><input type="number" min="1" max="7" name="quest24_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest24_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                      <tr>
-                        <td>25</td>
-                        <td>Pihak UREL bersikap ramah dan profesional terhadap kastamer.</td> 
-                        <td><input type="number" min="1" max="7" name="quest25_eks" class="form-control" value="1" placeholder="1-7" required></td>
-                        <td><input type="number" min="1" max="7" name="quest25_perf" class="form-control" value="1" placeholder="1-7" required></td>
-                      </tr>
-                    </table>
-                </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <!-- <button type="submit" class="button button3d btn-sky" data-dismiss="modal">Simpan</button> -->
-			<button type="button" id="submit-kuisioner1" class="button button3d btn-sky">Simpan</button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-	
-	<div id="modal_kuisioner2" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
-      <div class="modal-dialog modal-lg">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Kuisioner Kepuasan Customer</h4>
-          </div>
-          <div class="modal-body pre-scrollable">
-            <form id="form-kuisioner">
-                <div class="row">
-                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
-                        <div class="form-group">
-							<input type="hidden" id="exam_id" name="exam_id">
-                            <label>Nama Responden</label>
-							<input type="text" id="user_name" name="user_name" placeholder="-" class="form-control" value="{{ $currentUser->name }}" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>Nama Perusahaan</label>
-                            <input type="text" id="company_name" name="company_name" placeholder="-" class="form-control" value="{{ $currentUser->company->name }}" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>No. Tlp / HP</label>
-                            <input type="text" id="company_phone" name="company_phone" placeholder="-" value="{{ $currentUser->company->phone }}" class="form-control" readonly>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
-                        <div class="form-group">
-                            <label>Jenis Pengujian</label>
-                            <input type="text" id="exam_type" name="exam_type" placeholder="-" class="form-control" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>Nama Perangkat</label>
-                            <input type="text" placeholder="Smartphone" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>Tanggal</label>
-                            <input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo date('d-m-Y');?>" readonly required>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <p>Survey ini terdiri dari dua bagian, yaitu tingkat kepentingan dan tingkat kepuasan Anda. Tingkat kepentingan menunjukan seberapa penting sebuah pernyataan bagi Anda. Sedangkan, tingkat kepuasan menunjukkan seberapa puas pengalaman Anda setelah melakukan pengujian di Infrasutructure Assurance (IAS) Divisi Digital Service (DDS) PT. Telekomuniasi Indonesia, Tbk.
-                    </p>
-                    <p>Besar pengharapan kami agar pengisian survey ini dapat dikerjakan dengan sebaik-baiknya. Atas kerja samanya, kami ucapkan terimakasih.</p>
-                    <p>
-                    Skala pemberian nilai adalah 1 - 10 dengan nilai 1 adalah penilaian Sangat Tidak Baik atau Sangat Tidak Setuju. Kastemer diharapkan dapat memberikan dengan angka bulat.
-                    </p>
-                </div>
-                <div class="row">
-                    <table id="table_kuisioner" style="width:100%; padding: 2px;" border="1">
-                      <tr>
-                        <th>NO</th>
-                        <th>PERTANYAAN</th>
-                        <th>TINGKAT KEPENTINGAN</th>
-                        <th>TINGKAT KEPUASAN</th>
-                      </tr>
-                      <tbody>
-                        <tr>
-                          <td>1</td>
-                          <td>Pengajuan <strong>pendaftaran</strong> pengujian dapat dengan mudah dilakukan.</td>
-                          <td>
-                            <input type="number" name="quest1_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest1_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>2</td>
-                          <td>Pelaksanaan <strong>uji fungsi</strong> sebelum barang diterima terlaksana dengan <strong>baik</strong>.</td>
-                          <td>
-                            <input type="number" name="quest2_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest2_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>3</td>
-                          <td>Biaya/<strong>tarif</strong> pengujian perangkat sudah sesuai.</td>
-                          <td>
-                            <input type="number" name="quest3_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest3_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>4</td>
-                          <td><strong>Prosedur</strong> pembayaran dilakukan dengan <strong>mudah</strong>.</td>
-                         <td>
-                            <input type="number" name="quest4_eks" value="10" min="1" max="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest4_perf" value="10" min="1" max="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>5</td>
-                          <td>Perangkat uji <strong>diterima</strong> dengan <strong>baik</strong> oleh petugas.</td>
-                          <td>
-                            <input type="number" name="quest5_eks" value="10" min="1" max="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest5_perf" value="10" min="1" max="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>6</td>
-                          <td><strong>Pelaksanaan</strong> pengujian sesuai dengan <strong>jadwal</strong> yang sudah disepakati.</td>
-                          <td>
-                            <input type="number" name="quest7_eks" value="10" min="1" max="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest7_perf" value="10" min="1" max="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>7</td>
-                          <td>Perangkat uji setelah pengujian <strong>selesai</strong> ditangani dengan <strong>baik</strong>.</td>
-                          <td>
-                            <input type="number" name="quest8_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest8_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>8</td>
-                          <td><strong>Lama pengujian</strong> diselesaikan dengan informasi/kesepakatan yang telah ditentukan.</td>
-                          <td>
-                            <input type="number" name="quest9_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest9_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>9</td>
-                          <td><strong>Komunikasi</strong> antara test engineer Lab. QA DDS Telkom dengan test engineer kami terjalin dengan baik untuk kelancaran pengujian.</td>
-                          <td>
-                            <input type="number" name="quest10_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest10_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>10</td>
-                          <td><strong>Alat ukur</strong> yang digunakan sudah terjamin kualitas dan akurasinya.</td>
-                          <td>
-                            <input type="number" name="quest11_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest11_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>11</td>
-                          <td><strong>Ruang</strong> laboratorium terkondisi dengan baik.</td>
-                          <td>
-                            <input type="number" name="quest12_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest12_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>12</td>
-                          <td><strong>Kapabilitas dan pengalaman</strong> test engineer Lab. QA DDS Telkom sudah sesuai dengan kompetensinya.</td>
-                          <td>
-                            <input type="number" name="quest13_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest13_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>13</td>
-                          <td>Test engineer Lab. QA DDS Telkom memiliki <strong>pemahaman</strong> terhadap materi item uji.</td>
-                          <td>
-                            <input type="number" name="quest14_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest14_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>14</td>
-                          <td>Petugas memberikan <strong>pelayanan</strong> dengan <strong>ramah</strong> dan profesional.</td>
-                          <td>
-                            <input type="number" name="quest15_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest15_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>15</td>
-                          <td>Petugas memberikan <strong>informasi</strong> tentang <strong>tarif</strong> yang jelas kepada kastamer.</td>
-                          <td>
-                            <input type="number" name="quest16_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest16_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>16</td>
-                          <td>Petugas memberikan <strong>informasi</strong> tentang <strong>prosedur</strong> pengujian dengan jelas.</td>
-                          <td>
-                            <input type="number" name="quest17_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest17_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>17</td>
-                          <td>Petugas selalu <strong>tanggap</strong> dengan apa yang diinginkan kastamer.</td>
-                          <td>
-                            <input type="number" name="quest18_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest18_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>18</td>
-                          <td>Petugas memberikan <strong>perlakuan</strong> yang sama kepada semua kastamer.</td>
-                          <td>
-                            <input type="number" name="quest19_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest19_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>19</td>
-                          <td>Petugas memberikan <strong>laporan</strong> hasil pengujian dengan cepat dan tepat.</td>
-                          <td>
-                            <input type="number" name="quest20_eks" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                          <td>
-                            <input type="number" name="quest20_perf" min="1" max="10" value="10" placeholder="1-10" class="form-control">
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                </div>
-                <div class="row">
-                    <p>Kritik dan Saran Anda untuk meningkatkan kualitas pelayanan kami:
-                    </p>
-                    <div class="form-group">
-                      <textarea name="quest6" class="form-control" placeholder="Komentar disini"></textarea>
-                    </div>
-                </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <!-- <button type="submit" class="button button3d btn-sky" data-dismiss="modal">Simpan</button> -->
-			<button type="button" id="submit-kuisioner" class="button button3d btn-sky">Simpan</button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <div id="modal_complain" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
-      <div class="modal-dialog modal-lg">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Customer Complaint</h4>
-          </div>
-          <div class="modal-body pre-scrollable">
-                <form id="form-complain">
-                    <table id="table_kuisioner" style="width:100%; padding: 2px;" border="1">
-                        <tr>
-                            <th colspan="2">No</th>
-                            <td colspan="2"><input type="text" name="no" class="form-control" readonly></td>
-                        </tr>
-                        <tr>
-                            <th>Sheet</th>
-                            <td><input type="text" name="no" class="form-control" readonly></td>
-                            <th>of</th>
-                            <td><input type="text" name="no" class="form-control" readonly></td>
-                        </tr>
-                        <tr>
-                            <th colspan="2">
-                                <label>Customer Name and Address</label>
-                                <textarea class="form-control" placeholder="-" readonly>{{ $currentUser->name }} / {{ $currentUser->address }}</textarea>
-                            </th>
-                            <td colspan="2">
-                                <select class="form-control">
-                                    <option>Walk In</option>
-                                    <option>Call In</option>
-                                    <option>Web In</option>        
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th colspan="2">
-                                <label>Customer Contact</label>
-                                <input type="text" name="no" class="form-control" placeholder="-" value="{{ $currentUser->phone }}" readonly>
-                            </th>
-                            <td colspan="2">
-								<input type="hidden" id="my_exam_id" name="my_exam_id">
-								<label>Date</label>
-								<!--<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">-->
-									<input type="text" id="tanggal_complaint" name="tanggal_complaint" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo date('d-m-Y');?>" readonly required>
-									<!--<span class="input-group-btn">
-										<button type="button" class="btn btn-default">
-											<i class="glyphicon glyphicon-calendar"></i>
-										</button>
-									</span>-->
-								<!--</p>-->
-                            </td>
-                        </tr>
-                        <tr>
-                            <th colspan="4">
-                                <label>Customer Complaint</label>
-                                <textarea name="complaint" class="form-control" placeholder="Your Complaint"></textarea>
-                            </th>
-                        </tr>
-                        <tr>
-                            <th colspan="4">
-                                <label>Name of Recipient</label>
-                                <input type="text" name="no" class="form-control" placeholder="-" readonly>
-                            </th>
-                        </tr>
-                        <tr>
-                            <th colspan="4">
-                                <label>Corrective Action Taken</label>
-                                <textarea class="form-control" placeholder="-" readonly></textarea>
-                            </th>
-                        </tr>
-                        <tr>
-                            <th colspan="2">
-                                <label>Completed Date</label>
-                                <input type="text" name="no" class="form-control" placeholder="DD/MM/YYYY" readonly>
-                            </th>
-                            <td colspan="2">
-                                <label>CPAR No</label>
-                                <input type="text" name="no" class="form-control" placeholder="-" readonly>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th colspan="4">
-                                <label>Name of Actiones</label>
-                                <input type="text" name="no" class="form-control" placeholder="-" readonly>
-                            </th>
-                        </tr>
-                        <tr>
-                            <th colspan="2">
-                                <label>USer Relation Manager Signature</label>
-                                <input type="text" name="no" class="form-control" placeholder="-" readonly>
-                            </th>
-                            <td colspan="2">
-                                <label>Date</label>
-                                <input type="text" name="no" class="form-control" placeholder="DD/MM/YYYY">
-                            </td>
-                        </tr>
-                    </table>
-                </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" id="submit-complain" class="button button3d btn-sky submit-complain">Lewati</button>
-            <button type="button" id="submit-complain2" class="button button3d btn-sky submit-complain2">Simpan</button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <div id="modal_status_barang" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
-      <div class="modal-dialog modal-lg">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Status Barang</h4>
-          </div>
-          <div class="modal-body pre-scrollable">
-               <div class="row">
-                    <h2>Silakan Ambil Barang di Gudang DDS Telkom, Sebelum mengunduh Sertifikat. Terima Kasih</h2>
-                </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
-          </div>
-        </div>
-
-      </div>
-    </div> 
-	
-	<div id="modal_status_download" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
-      <div class="modal-dialog modal-lg">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Status Download</h4>
-          </div>
-          <div class="modal-body pre-scrollable">
-               <div class="row">
-                    <h2>Batas Maksimal Unduh Sertifikat adalah 3 kali. Silakan Hubungi Petugas URel untuk Informasi Lebih Lanjut.</h2>
-					<div id="historiDownload">
-					</div>
-                </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
-          </div>
-        </div>
-
-      </div>
-    </div> 
+	--> 
 @section('content')
  		<!-- Page Title
 		============================================= -->
@@ -708,6 +43,7 @@
 					<div class="col-md-3 form-group">
 						<select onchange="filter()" class="form-control" id="cmb-jns-pengujian">
 							<option value="">{{ trans('translate.examination_choose_type') }}</option>
+							<option value="all">{{ trans('translate.examination_all_type') }}</option>
 							@foreach($data_exam_type as $item)
 								<option value="{{ $item->id }}">{{ $item->name }} ({{ $item->description }})</option>
 							@endforeach
@@ -717,6 +53,7 @@
 					<div class="col-md-3 form-group">
 						<select onchange="filter()" class="form-control" id="cmb-jns-status">
 							<option value="">{{ trans('translate.examination_choose_status') }}</option>
+							<option value="all">{{ trans('translate.examination_all_status') }}</option>
 							<option value="1">{{ trans('translate.examination_reg') }}</option>
 							<option value="2">{{ trans('translate.examination_function') }}</option>
 							<option value="3">{{ trans('translate.examination_contract') }}</option>
@@ -770,7 +107,8 @@
 									<li>
 									@if($item->registration_status == '1' && $item->function_status != '1')
 										<button class="step-fill active">2</button>
-									@elseif($item->function_status == '1')
+									@elseif($item->registration_status == '1' && 
+									$item->function_status == '1')
 										<button class="step-fill done">2</button>
 									@else
 										<button class="step-fill">2</button>
@@ -778,9 +116,11 @@
 										<p> {{ trans('translate.examination_function') }}</p>
 									</li>
 									<li>
-									@if($item->function_status == '1' && $item->contract_status != '1')
+									@if($item->registration_status == '1' && 
+									$item->function_status == '1' && $item->contract_status != '1')
 										<button class="step-fill active">3</button>
-									@elseif($item->contract_status == '1')
+									@elseif($item->registration_status == '1' && $item->function_status == '1' &&
+									$item->contract_status == '1')
 										<button class="step-fill done">3</button>
 									@else
 										<button class="step-fill">3</button>
@@ -788,9 +128,11 @@
 										<p> {{ trans('translate.examination_contract') }}</p>
 									</li>
 									<li>
-									@if($item->contract_status == '1' && $item->spb_status != '1')
+									@if($item->registration_status == '1' && $item->function_status == '1' && 
+									$item->contract_status == '1' && $item->spb_status != '1')
 										<button class="step-fill active">4</button>
-									@elseif($item->spb_status == '1')
+									@elseif($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && 
+									$item->spb_status == '1')
 										<button class="step-fill done">4</button>
 									@else
 										<button class="step-fill">4</button>
@@ -798,9 +140,11 @@
 										<p>{{ trans('translate.examination_spb') }}</p>
 									</li>
 									<li>
-									@if($item->spb_status == '1' && $item->payment_status != '1')
+									@if($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && 
+									$item->spb_status == '1' && $item->payment_status != '1')
 										<button class="step-fill active">5</button>
-									@elseif($item->payment_status == '1')
+									@elseif($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && 
+									$item->payment_status == '1')
 										<button class="step-fill done">5</button>
 									@else
 										<button class="step-fill">5</button>
@@ -808,9 +152,11 @@
 										<p>{{ trans('translate.examination_payment') }} </p>
 									</li>
 									<li>
-									@if($item->payment_status == '1' && $item->spk_status != '1')
+									@if($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && 
+									$item->payment_status == '1' && $item->spk_status != '1')
 										<button class="step-fill active">6</button>
-									@elseif($item->spk_status == '1')
+									@elseif($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && $item->payment_status == '1' && 
+									$item->spk_status == '1')
 										<button class="step-fill done">6</button>
 									@else
 										<button class="step-fill">6</button>
@@ -818,9 +164,11 @@
 										<p> {{ trans('translate.examination_spk') }}</p>
 									</li>
 									<li>
-									@if($item->spk_status == '1' && $item->examination_status != '1')
+									@if($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && $item->payment_status == '1' && 
+									$item->spk_status == '1' && $item->examination_status != '1')
 										<button class="step-fill active">7</button>
-									@elseif($item->examination_status == '1')
+									@elseif($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && $item->payment_status == '1' && $item->spk_status == '1' && 
+									$item->examination_status == '1')
 										<button class="step-fill done">7</button>
 									@else
 										<button class="step-fill">7</button>
@@ -828,9 +176,11 @@
 										<p>{{ trans('translate.examination_exam') }} </p>
 									</li>
 									<li>
-									@if($item->examination_status == '1' && $item->resume_status != '1')
+									@if($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && $item->payment_status == '1' && $item->spk_status == '1' && 
+									$item->examination_status == '1' && $item->resume_status != '1')
 										<button class="step-fill active">8</button>
-									@elseif($item->resume_status == '1')
+									@elseif($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && $item->payment_status == '1' && $item->spk_status == '1' && $item->examination_status == '1' && 
+									$item->resume_status == '1')
 										<button class="step-fill done">8</button>
 									@else
 										<button class="step-fill">8</button>
@@ -839,9 +189,11 @@
 									</li>
 									@if($item->examination_type_id == '1')
 									<li>
-									@if($item->resume_status == '1' && $item->qa_status != '1')
+									@if($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && $item->payment_status == '1' && $item->spk_status == '1' && $item->examination_status == '1' && 
+									$item->resume_status == '1' && $item->qa_status != '1')
 										<button class="step-fill active">9</button>
-									@elseif($item->qa_status == '1')
+									@elseif($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && $item->payment_status == '1' && $item->spk_status == '1' && $item->examination_status == '1' && $item->resume_status == '1' && 
+									$item->qa_status == '1')
 										<button class="step-fill done">9</button>
 									@else
 										<button class="step-fill">9</button>
@@ -849,9 +201,11 @@
 										<p>{{ trans('translate.examination_qa') }} </p>
 									</li>
 									<li>
-									@if($item->qa_status == '1' && $item->certificate_status != '1')
+									@if($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && $item->payment_status == '1' && $item->spk_status == '1' && $item->examination_status == '1' && $item->resume_status == '1' && 
+									$item->qa_status == '1' && $item->certificate_status != '1')
 										<button class="step-fill active">10</button>
-									@elseif($item->certificate_status == '1')
+									@elseif($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && $item->payment_status == '1' && $item->spk_status == '1' && $item->examination_status == '1' && $item->resume_status == '1' && $item->qa_status == '1' &&
+									$item->certificate_status == '1')
 										<button class="step-fill done">10</button>
 									@else
 										<button class="step-fill">10</button>
@@ -871,11 +225,11 @@
 										<td>{{ trans('translate.examination_function_test_date') }}</td>
 										<td colspan="2"> :
 											@if($item->function_date != null)
-												{{ $item->function_date }} (FIX) {{ $item->function_test_reason }}
+												{{ $item->function_date }} (FIX {{ trans('translate.by') }} {{ $item->function_test_PIC}}) {{ $item->function_test_reason }}
 											@elseif($item->function_date == null && $item->urel_test_date != null)
 												{{ $item->urel_test_date }} ({{ trans('translate.from_customer') }}) {{ $item->function_test_reason }}
 											@elseif($item->urel_test_date == null && $item->deal_test_date != null && $item->function_test_date_approval == 1)
-												{{ $item->deal_test_date }} (FIX) {{ $item->function_test_reason }}
+												{{ $item->deal_test_date }} (FIX {{ trans('translate.by') }} {{ $item->function_test_PIC}}) {{ $item->function_test_reason }}
 											@elseif($item->urel_test_date == null && $item->deal_test_date != null && $item->function_test_date_approval == 0)
 												{{ $item->deal_test_date }} ({{ trans('translate.from_te') }}) {{ $item->function_test_reason }}
 											@else
@@ -905,12 +259,20 @@
 										<td colspan="2">: {{ $item->nama_perangkat }}</td>
 									</tr>
 									<tr>
-										<td>{{ trans('translate.examination_capacity') }}</td>
-										<td colspan="2">: {{ $item->kapasitas_perangkat }}</td>
+										<td>{{ trans('translate.examination_mark') }}</td>
+										<td colspan="2">: {{ $item->merk_perangkat }}</td>
 									</tr>
 									<tr>
 										<td>{{ trans('translate.examination_model') }}</td>
 										<td colspan="2">: {{ $item->model_perangkat }}</td>
+									</tr>
+									<tr>
+										<td>{{ trans('translate.examination_capacity') }}</td>
+										<td colspan="2">: {{ $item->kapasitas_perangkat }}</td>
+									</tr>
+									<tr>
+										<td>{{ trans('translate.examination_serial_number') }}</td>
+										<td colspan="2">: {{ $item->serialNumber }}</td>
 									</tr>
 									<tr>
 										<td>{{ trans('translate.examination_number_exam_form') }}</td>
@@ -927,7 +289,7 @@
 								<a class="button button-3d nomargin btn-blue btn-sky" href="{{URL::to('cetakPengujian/'.$item->id.'')}}" target="_blank">{{ trans('translate.examination_print') }}</a>
 								<a class="button button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/detail')}}">{{ trans('translate.examination_detail') }}</a>
 								
-								@if($item->registration_status != '0' && $item->function_status != '1')
+								@if($item->registration_status == '1' && $item->function_status != '1')
 									@if($item->deal_test_date == NULL)
 									<a class="button button-3d download_progress_btn edit_btn nomargin btn-blue btn-sky" onclick="reSchedule('<?php echo $item->id ?>','<?php echo $item->cust_test_date ?>','1','<?php echo $item->deal_test_date ?>','<?php echo $item->urel_test_date ?>')">{{ trans('translate.examination_reschedule_test_date') }}</a>
 									@elseif($item->deal_test_date != NULL && $item->urel_test_date == NULL && $item->function_test_date_approval == 0)
@@ -958,7 +320,7 @@
                   $item->resume_status == 1 &&
 					date('Y-m-d') >= $item->resume_date
 					){ ?>
-									<a class="button button-3d edit_btn download_progress_btn nomargin btn-blue btn-sky" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->device_id }}','{{ URL::to('pengujian/'.$item->id.'/downloadLaporanPengujian') }}','device', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})', '{{$item->id}}');">{{ trans('translate.download') }} {{ trans('translate.examination_report') }}</a>
+									<a class="button button-3d edit_btn download_progress_btn nomargin btn-blue btn-sky" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->nama_perangkat }}','{{ URL::to('pengujian/'.$item->id.'/downloadLaporanPengujian') }}','device', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})', '{{$item->id}}');">{{ trans('translate.download') }} {{ trans('translate.examination_report') }}</a>
 								<?php } ?>
 								
 								<?php if(
@@ -971,9 +333,10 @@
                   $item->examination_status == 1 &&
                   $item->resume_status == 1 &&
                   $item->qa_status == 1 &&
+                  $item->qa_passed == 1 &&
                   $item->certificate_status == 1
                 ){ ?>
-									<a class="button button-3d edit_btn download_progress_btn nomargin btn-blue btn-sky" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->device_id }}','{{ URL::to('pengujian/'.$item->id.'/downloadSertifikat') }}','device', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})', '{{$item->id}}');">{{ trans('translate.download') }} {{ trans('translate.certificate') }}</a>
+									<a class="button button-3d edit_btn download_progress_btn nomargin btn-blue btn-sky" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->nama_perangkat }}','{{ URL::to('pengujian/'.$item->id.'/downloadSertifikat') }}','device', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})', '{{$item->id}}');">{{ trans('translate.download') }} {{ trans('translate.certificate') }}</a>
 								<?php } ?>
 							</div>
 						</div>
@@ -1545,7 +908,7 @@
 										<label>
 											{{ trans('translate.reschedule_date_te1') }} *
 										</label>
-											<input type="text" id="deal_test_date2" class="form-control" placeholder="Tanggal ..." readonly>
+											<input type="text" name="deal_test_date2" id="deal_test_date2" class="form-control" placeholder="Tanggal ..." readonly>
 									</div>
 								</div>
 								<div class="col-md-6">
@@ -1620,7 +983,7 @@
 										<label>
 											{{ trans('translate.reschedule_date_te1') }} *
 										</label>
-											<input type="text" id="deal_test_date3" class="form-control" placeholder="Tanggal ..." readonly>
+											<input type="text" name="deal_test_date3" id="deal_test_date3" class="form-control" placeholder="Tanggal ..." readonly>
 									</div>
 								</div>
 								<div class="col-md-6">
@@ -1649,6 +1012,499 @@
 	</div><!-- /.modal -->
 </div>
 </form>
+
+<input type="hidden" name="link" id="link"> 
+   <div id="modal_kuisioner" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
+      <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+            <h4 class="modal-title">Survey Kepuasan Kastamer Eksternal</h4>
+          </div>
+          <div class="modal-body pre-scrollable">
+            <form id="form-kuisioner1">
+                <div class="row">
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label>Tanggal</label>
+              <!--<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">-->
+                <input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo date('d-m-Y');?>" readonly required>
+                <!--<span class="input-group-btn">
+                  <button type="button" class="btn btn-default">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                  </button>
+                </span>-->
+              <!--</p>-->
+                        </div>
+                        <div class="form-group">
+                            <label>Nama</label>
+                            <input type="text" id="user_name" name="user_name" placeholder="-" class="form-control" value="{{ $currentUser->name }}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Perusahaan</label>
+                            <input type="text" id="company_name" name="company_name" placeholder="-" class="form-control" value="{{ $currentUser->company->name }}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>No. Telepon</label>
+                            <input type="text" id="company_phone" name="company_phone" placeholder="-" value="{{ $currentUser->company->phone }}" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label>Jenis Pengujian</label>
+                            <input type="text" id="exam_type1" name="exam_type" placeholder="-" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>E-mail</label>
+                            <input type="email" id="user_email" name="user_email" placeholder="-" value="{{ $currentUser->email }}" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Mobile</label>
+                            <input type="text" id="user_phone" name="user_phone" placeholder="-" value="{{ $currentUser->phone }}" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <h2>Harap isikan penilaian anda terhadap Layanan QA/TA/VT</h2>
+                    <p>Kustomer diharapkan dapat untuk beberapa kriteria yang diajukan. Nilai tersebut merupakan nilai kustomer  berikan mengenai ekspetasi setuju dan PT. Telkom.
+
+                    Skala pemberian nilai adalah 1 - 7 dengan nilai 7 adalah penilaian Sangat Tidak Baik atau Sangat Tidak Setuju. Kastemer diharapkan dapat memberikan dengan angka bulat.
+                    </p>
+                </div>
+                <div class="row">
+                    <table id="table_kuisioner" style="width:100%; padding: 2px;" border="1">
+                      <tr>
+                        <th>No</th>
+                        <th>Kriteria</th> 
+                        <th>Nilai Ekspetasi</th>
+                        <th>NIlai Performasi</th>
+                      </tr>
+                      <tr>
+                        <td>1</td>
+                        <td>Pihak UREL (User Relation) mampu menjadi jembatan antara Kastamer dan Yesy Engineer Telkom.</td> 
+                        <td><input type="number" min="1" max="7" name="quest1_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest1_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                      <tr>
+                        <td>2</td>
+                        <td>Proses pelayanan pengujian secara keseluruhan (sejak pengajuan hingga pelaporan) mudah dimengerti oleh Kastemer.</td> 
+                        <td><input type="number" min="1" max="7" name="quest2_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest2_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                      <tr>
+                        <td>3</td>
+                        <td>Pihak UREL memberika informasi serta melakukan pengecekan kelengkapan mengenai berkas-berkas yang harus disiapkan.</td> 
+                        <td><input type="number" min="1" max="7" name="quest3_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest3_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                      <tr>
+                        <td>4</td>
+                        <td>Setiap lini proses (sejak pengajuan hingga pelaporan) dilakukan dengan cepat.</td> 
+                        <td><input type="number" min="1" max="7" name="quest4_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest4_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                      <tr>
+                        <td>5</td>
+                        <td>Pihak UREL memberikan informasi yang dibutuhkan oleh Kastamer.</td> 
+                        <td><input type="number" min="1" max="7" name="quest5_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest5_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                    </table>
+                </div>
+                <div class="row">
+                    <p>Menurut Anda, dalam proses pengajuan hingga pelaporan, tahap apa yang sebaiknya ditingkatkan oleh PT. Telkom? Dan mengapa harus ditingkatkan?</p>
+                    <textarea name="quest6" class="form-control" placeholder="Jawaban"></textarea>
+                </div>
+                <div class="row">
+                    <p>Pada tahap ini, silahkan mengisi nilai dengan sekala 1-7 untuk nilai ekspetasi awal dan nilai performansi. Kastemer diharapkan mengisi kolom nilai dan setiap kriteria, serta nilai performansi/kenyataan dari setiap kriteria</p>
+                    <p>Nilai 7 adalah penilaian Sangat Baik atau Sangat Setuju dan nilai 1 adalah penilaian Sangat Tidak Baik atau Sangat Tidak Setuju. Kastemer diharapkan dapat memberikan nilai dengan angka bulat.</p>
+                    <table id="table_kuisioner" style="width:100%; padding: 2px;" border="1">
+                      <tr>
+                        <th>No</th>
+                        <th>Kriteria</th> 
+                        <th>Nilai Ekspetasi</th>
+                        <th>NIlai Performasi</th>
+                      </tr>
+                      <tr>
+                        <td>7</td>
+                        <td>Kastemer percaya pada kualitas pengujian yang dilakukan oleh Telkom.</td> 
+                        <td><input type="number" min="1" max="7" name="quest7_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest7_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                      <tr>
+                        <td>8</td>
+                        <td>Kastemer merasa pihak UREL faham dan terpercaya.</td> 
+                        <td><input type="number" min="1" max="7" name="quest8_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest8_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                      <tr>
+                        <td>9</td>
+                        <td>Kastemer merasa pihak UREL sudah melakukan pemeriksaan kelengkapan administrasi dengan kinerja yang baik.</td> 
+                        <td><input type="number" min="1" max="7" name="quest9_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest9_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                      <tr>
+                        <td>10</td>
+                        <td>Kastemer measa aman sewaktu melakukan transaksi dengan pihak Telkom terutama pihak UREL.</td> 
+                        <td><input type="number" min="1" max="7" name="quest10_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest10_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                      <tr>
+                        <td>11</td>
+                        <td>Kastemer merasa Engineer Telkom sudah berpengalaman.</td> 
+                        <td><input type="number" min="1" max="7" name="quest11_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest11_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                      <tr>
+                        <td>12</td>
+                        <td>Alat ukur yang digunakan oleh pihak Telkom berkualitas, baik, dan akurat.</td> 
+                        <td><input type="number" min="1" max="7" name="quest12_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest12_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                      <tr>
+                        <td>13</td>
+                        <td>Laboratorium yang digunakan oleh pihak Telkom dalam keadaan bersih dan memenuhi Standar Laboratorium.</td> 
+                        <td><input type="number" min="1" max="7" name="quest13_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest13_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                      <tr>
+                        <td>14</td>
+                        <td>Tarif Pengujian yang ditetapkan oleh pihak PT. Telkom sesuai dan bersaing dengan harga pasar.</td> 
+                        <td><input type="number" min="1" max="7" name="quest14_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest14_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                      <tr>
+                        <td>15</td>
+                        <td>Pihak UREL yang melayani kastamer berpakaian rapih dan sopan.</td> 
+                        <td><input type="number" min="1" max="7" name="quest15_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest15_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                      <tr>
+                        <td>16</td>
+                        <td>Kontor Telkom DDS dalam kondisi nyaman, bersih dan sudah sesuai kondisi keseluruhannya.</td> 
+                        <td><input type="number" min="1" max="7" name="quest16_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest16_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                      <tr>
+                        <td>17</td>
+                        <td>Pihak Telkom mengembalikan barang/perangkat yang diujikan dalam keadaan baik seperti awal.</td> 
+                        <td><input type="number" min="1" max="7" name="quest17_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest17_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                      <tr>
+                        <td>18</td>
+                        <td>Sertifikat yang diterima oleh kastemer tidak mengalami kesalahan informasi.</td> 
+                        <td><input type="number" min="1" max="7" name="quest18_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest18_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                      <tr>
+                        <td>19</td>
+                        <td>Pihak Telkom DDS terutama pihak UREL yang melayani proses pengajuan hingga pelaporan sudah memahami kebutuhan kastamer.</td> 
+                        <td><input type="number" min="1" max="7" name="quest19_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest19_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                      <tr>
+                        <td>20</td>
+                        <td>Proses pengujian secara keseluruhan tidak memakan durasi waktu yang lama.</td> 
+                        <td><input type="number" min="1" max="7" name="quest20_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest20_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                      <tr>
+                        <td>21</td>
+                        <td>Pihak UREL cepat dan tepat dalam merespon keluhan yang diberikan kastamer.</td> 
+                        <td><input type="number" min="1" max="7" name="quest21_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest21_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                      <tr>
+                        <td>22</td>
+                        <td>Pihak UREL tanggapan dalam membantu permasalahan kastamer.</td> 
+                        <td><input type="number" min="1" max="7" name="quest22_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest22_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                      <tr>
+                        <td>23</td>
+                        <td>Engineer tanggapan pada permasalahan yang dihadapi kastamer selama proses pengajuan hingga pelaporan.</td> 
+                        <td><input type="number" min="1" max="7" name="quest23_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest23_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                      <tr>
+                        <td>24</td>
+                        <td>Pihak UREL mudah dihubungi dan tanggap pada segala pertanyaan yang diajukan kastamer terkait pengujian perangkat.</td> 
+                        <td><input type="number" min="1" max="7" name="quest24_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest24_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                      <tr>
+                        <td>25</td>
+                        <td>Pihak UREL bersikap ramah dan profesional terhadap kastamer.</td> 
+                        <td><input type="number" min="1" max="7" name="quest25_eks" class="form-control" value="1" placeholder="1-7" required></td>
+                        <td><input type="number" min="1" max="7" name="quest25_perf" class="form-control" value="1" placeholder="1-7" required></td>
+                      </tr>
+                    </table>
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <!-- <button type="submit" class="button button3d btn-sky" data-dismiss="modal">Simpan</button> -->
+      <button type="button" id="submit-kuisioner1" class="button button3d btn-sky">Simpan</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  
+  <div id="modal_kuisioner2" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
+      <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Kuisioner Kepuasan Customer</h4>
+          </div>
+          <div class="modal-body pre-scrollable">
+            <form id="form-kuisioner">
+                <div class="row">
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+              <input type="hidden" id="exam_id" name="exam_id">
+                            <label>Nama Responden</label>
+              <input type="text" id="user_name" name="user_name" placeholder="-" class="form-control" value="{{ $currentUser->name }}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Nama Perusahaan</label>
+                            <input type="text" id="company_name" name="company_name" placeholder="-" class="form-control" value="{{ $currentUser->company->name }}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>No. Tlp / HP</label>
+                            <input type="text" id="company_phone" name="company_phone" placeholder="-" value="{{ $currentUser->company->phone }}" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label>Jenis Pengujian</label>
+                            <input type="text" id="exam_type" name="exam_type" placeholder="-" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Nama Perangkat</label>
+                            <input type="text" id="device_name" placeholder="Smartphone" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Tanggal</label>
+                            <input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo date('d-m-Y');?>" readonly required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <p>Survey ini terdiri dari dua bagian, yaitu tingkat kepentingan dan tingkat kepuasan Anda. Tingkat kepentingan menunjukan seberapa penting sebuah pernyataan bagi Anda. Sedangkan, tingkat kepuasan menunjukkan seberapa puas pengalaman Anda setelah melakukan pengujian di Infrasutructure Assurance (IAS) Divisi Digital Service (DDS) PT. Telekomuniasi Indonesia, Tbk.
+                    </p>
+                    <p>Besar pengharapan kami agar pengisian survey ini dapat dikerjakan dengan sebaik-baiknya. Atas kerja samanya, kami ucapkan terimakasih.</p>
+                    <p>
+                    Skala pemberian nilai adalah 1 - 10 dengan nilai 1 adalah penilaian Sangat Tidak Baik atau Sangat Tidak Setuju. Kastemer diharapkan dapat memberikan dengan angka bulat.
+                    </p>
+                </div>
+                <div class="row">
+                    <table id="table_kuisioner" style="width:100%; padding: 2px;" border="1">
+                      <tr>
+                        <th>NO</th>
+                        <th>PERTANYAAN</th>
+                        <th>TINGKAT KEPENTINGAN</th>
+                        <th>TINGKAT KEPUASAN</th>
+                      </tr>
+                      <tbody>
+            <?php $no = 0; ?>
+            @foreach($data_kuisioner as $item)
+              <input type="hidden" name="question_id[]" value="{{ $item->id }}">
+              <input type="hidden" name="is_essay[]" value="{{ $item->is_essay }}">
+              <?php $no++; ?>
+              <tr>
+                @if($item->is_essay)
+                <td colspan = 2>{{ $item->question }}</td>
+                <td colspan = 2>
+                  <textarea name="eks[]" class="form-control" placeholder="..."></textarea>
+                </td>
+                @else
+                <td>{{ $no }}</td>
+                <td>{{ $item->question }}</td>
+                <td>
+                  <input type="number" name="eks[]" min="1" max="10" value="10" placeholder="1-10" class="form-control">
+                </td>
+                <td>
+                  <input type="number" name="pref[]" min="1" max="10" value="10" placeholder="1-10" class="form-control">
+                </td>
+                @endif
+              </tr>
+            @endforeach
+                      </tbody>
+                    </table>
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <!-- <button type="submit" class="button button3d btn-sky" data-dismiss="modal">Simpan</button> -->
+      <button type="button" id="submit-kuisioner" class="button button3d btn-sky">Simpan</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="modal_complain" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
+      <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Customer Complaint</h4>
+          </div>
+          <div class="modal-body pre-scrollable">
+                <form id="form-complain">
+                    <table id="table_kuisioner" style="width:100%; padding: 2px;" border="1">
+                        <tr>
+                            <th colspan="2">No</th>
+                            <td colspan="2"><input type="text" name="no" class="form-control" readonly></td>
+                        </tr>
+                        <tr>
+                            <th>Sheet</th>
+                            <td><input type="text" name="no" class="form-control" readonly></td>
+                            <th>of</th>
+                            <td><input type="text" name="no" class="form-control" readonly></td>
+                        </tr>
+                        <tr>
+                            <th colspan="2">
+                                <label>Customer Name and Address</label>
+                                <textarea class="form-control" placeholder="-" readonly>{{ $currentUser->name }} / {{ $currentUser->address }}</textarea>
+                            </th>
+                            <td colspan="2">
+                                <select class="form-control">
+                                    <option>Walk In</option>
+                                    <option>Call In</option>
+                                    <option>Web In</option>        
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th colspan="2">
+                                <label>Customer Contact</label>
+                                <input type="text" name="no" class="form-control" placeholder="-" value="{{ $currentUser->phone }}" readonly>
+                            </th>
+                            <td colspan="2">
+                <input type="hidden" id="my_exam_id" name="my_exam_id">
+                <label>Date</label>
+                <!--<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">-->
+                  <input type="text" id="tanggal_complaint" name="tanggal_complaint" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo date('d-m-Y');?>" readonly required>
+                  <!--<span class="input-group-btn">
+                    <button type="button" class="btn btn-default">
+                      <i class="glyphicon glyphicon-calendar"></i>
+                    </button>
+                  </span>-->
+                <!--</p>-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <th colspan="4">
+                                <label>Customer Complaint</label>
+                                <textarea name="complaint" class="form-control" placeholder="Your Complaint"></textarea>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th colspan="4">
+                                <label>Name of Recipient</label>
+                                <input type="text" name="no" class="form-control" placeholder="-" readonly>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th colspan="4">
+                                <label>Corrective Action Taken</label>
+                                <textarea class="form-control" placeholder="-" readonly></textarea>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th colspan="2">
+                                <label>Completed Date</label>
+                                <input type="text" name="no" class="form-control" placeholder="DD/MM/YYYY" readonly>
+                            </th>
+                            <td colspan="2">
+                                <label>CPAR No</label>
+                                <input type="text" name="no" class="form-control" placeholder="-" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th colspan="4">
+                                <label>Name of Actiones</label>
+                                <input type="text" name="no" class="form-control" placeholder="-" readonly>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th colspan="2">
+                                <label>USer Relation Manager Signature</label>
+                                <input type="text" name="no" class="form-control" placeholder="-" readonly>
+                            </th>
+                            <td colspan="2">
+                                <label>Date</label>
+                                <input type="text" name="no" class="form-control" placeholder="DD/MM/YYYY">
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="submit-complain" class="button button3d btn-sky submit-complain">Lewati</button>
+            <button type="button" id="submit-complain2" class="button button3d btn-sky submit-complain2">Simpan</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="modal_status_barang" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
+      <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Status Barang</h4>
+          </div>
+          <div class="modal-body pre-scrollable">
+               <div class="row">
+                    <h2>Silakan Ambil Barang di Gudang DDS Telkom, Sebelum mengunduh Sertifikat. Terima Kasih</h2>
+                </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
+          </div>
+        </div>
+
+      </div>
+    </div> 
+  
+  <div id="modal_status_download" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
+      <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Status Download</h4>
+          </div>
+          <div class="modal-body pre-scrollable">
+               <div class="row">
+                    <h2>Batas Maksimal Unduh Sertifikat adalah 3 kali. Silakan Hubungi Petugas URel untuk Informasi Lebih Lanjut.</h2>
+          <div id="historiDownload">
+          </div>
+                </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    
 @endsection
  
 @section('content_js')
@@ -2191,6 +2047,7 @@
 				if(response=='0'){
 					$('#modal_kuisioner2').modal('show');
 					$('#modal_kuisioner2').on('shown.bs.modal', function() {
+						$("#device_name").val(a);
 						$("#exam_type").val(d);
 						$("#exam_id").val(e);
 						$("#tanggal").focus();

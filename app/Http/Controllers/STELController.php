@@ -12,6 +12,8 @@ use App\STEL;
 use App\ExaminationLab;
 use App\Logs;
 
+use Excel;
+
 use Auth;
 use File;
 use Response;
@@ -344,5 +346,102 @@ class STELController extends Controller
 	public function autocomplete($query) {
         $respons_result = STEL::adm_stel_autocomplet($query);
         return response($respons_result);
+    }
+
+    public function excel(Request $request) 
+    {
+        // Execute the query used to retrieve the data. In this example
+        // we're joining hypothetical users and payments tables, retrieving
+        // the payments table's primary key, the user's first and last name, 
+        // the user's e-mail address, the amount paid, and the payment
+        // timestamp.
+
+        $search = trim($request->input('search'));
+        
+        $category = '';
+        $status = -1;
+
+        if ($search != null){
+            $stels = STEL::whereNotNull('created_at')
+                ->with('examinationLab')
+                ->where('name','like','%'.$search.'%')
+                ->orWhere('code','like','%'.$search.'%')
+                ->orderBy('code');
+        }else{
+            $query = STEL::whereNotNull('created_at')->with('examinationLab');
+
+            if ($request->has('category')){
+                $category = $request->get('category');
+                if($request->input('category') != 'all'){
+                    $query->whereHas('examinationLab', function ($q) use ($category){
+                        return $q->where('id', $category);
+                    });
+                }
+            }
+
+            if ($request->has('is_active')){
+                $status = $request->get('is_active');
+                if ($request->get('is_active') > -1){
+                    $query->where('is_active', $request->get('is_active'));
+                }
+            }
+            
+            $stels = $query->orderBy('name');
+        }
+
+        $data = $stels->get();
+
+        $examsArray = []; 
+
+        // Define the Excel spreadsheet headers
+        $examsArray[] = [
+            'ID',
+            'Kode',
+            'Nama Dokumen',
+            'Tipe',
+            'Versi',
+            'Tahun',
+            'Harga',
+            'Total',
+            'Status'
+        ]; 
+        
+        // Convert each member of the returned collection into an array,
+        // and append it to the payments array.
+        foreach ($data as $row) {
+            $examsArray[] = [
+                $row->id,
+                $row->code,
+                $row->name,
+                $row->examinationLab->name,
+                $row->version,
+                $row->year,
+                number_format($row->price, 0, '.', ','),
+                number_format($row->total, 0, '.', ','),
+                $row->is_active == '1' ? 'Active' : 'Not Active'
+            ];
+        }
+        $currentUser = Auth::user();
+        $logs = new Logs;
+        $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
+        $logs->action = "download_excel";   
+        $logs->data = "";
+        $logs->created_by = $currentUser->id;
+        $logs->page = "STEL/STD";
+        $logs->save();
+
+        // Generate and return the spreadsheet
+        Excel::create('Data STEL/STD', function($excel) use ($examsArray) {
+
+            // Set the spreadsheet title, creator, and description
+            // $excel->setTitle('Payments');
+            // $excel->setCreator('Laravel')->setCompany('WJ Gilmore, LLC');
+            // $excel->setDescription('payments file');
+
+            // Build the spreadsheet, passing in the payments array
+            $excel->sheet('sheet1', function($sheet) use ($examsArray) {
+                $sheet->fromArray($examsArray, null, 'A1', false, false);
+            });
+        })->export('xlsx'); 
     }
 }

@@ -128,17 +128,19 @@
 					<div class="header-cart-icon"><i class="icon-cart"></i></div>
 					<div class="header-cart-text"><h4> {{ trans('translate.stel_total_in_cart') }}<br><span>{{Cart::count()}} Pcs</span></h4></div>
 				</div>
-				@foreach(Cart::content() as $row)
-				<div class="line2"></div>
-				<div class="list-cart padding20">
-					{!! Form::open(array('url' => 'products/'.$row->rowId, 'method' => 'DELETE')) !!}
-													{!! csrf_field() !!}
-					<button class="btn btn-transparent btn-xs pull-right" tooltip-placement="top" tooltip="Remove" onclick="return confirm('{{ trans('translate.stel_delete_item') }}')"><i class="fa fa-times fa fa-white"></i></button>
-					{!! Form::close() !!}
-					<p>{{ trans('translate.stel_name') }} : {{$row->name}}</p>
-					<p>{{ trans('translate.stel_price') }} : {{ trans('translate.stel_rupiah') }} <?php echo number_format($row->qty*$row->price); ?>(<?php echo $row->qty?>)</p>
+				<div style="overflow-y: auto; max-height:750px;">
+					@foreach(Cart::content() as $row)
+					<div class="line2"></div>
+					<div class="list-cart padding20">
+						{!! Form::open(array('url' => 'products/'.$row->rowId, 'method' => 'DELETE')) !!}
+														{!! csrf_field() !!}
+						<button class="btn btn-transparent btn-xs pull-right" tooltip-placement="top" tooltip="Remove" onclick="return confirm('{{ trans('translate.stel_delete_item') }}')"><i class="fa fa-times fa fa-white"></i></button>
+						{!! Form::close() !!}
+						<p>{{ trans('translate.stel_name') }} : {{$row->name}}</p>
+						<p>{{ trans('translate.stel_price') }} : {{ trans('translate.stel_rupiah') }} <?php echo number_format($row->qty*$row->price); ?>(<?php echo $row->qty?>)</p>
+					</div>
+					@endforeach
 				</div>
-			 	@endforeach
 				
 				<!-- TOP TIP -->
 				<div class="filtertip">
@@ -164,12 +166,12 @@
 								<p class="nobottommargin">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum delectus, tenetur obcaecati porro! Expedita nostrum tempora quia provident perspiciatis inventore, autem eaque, quod explicabo, ipsum, facilis aliquid! Sapiente, possimus quo!</p> 
 								-->
 								<ul>
-									<li> 1. {{ trans('translate.stel_term_condition_num1') }}</li>
-									<li> 2. {{ trans('translate.stel_term_condition_num2') }}</li>
-									<li> 3. {{ trans('translate.stel_term_condition_num3') }}</li>
-									<li> 4. {{ trans('translate.stel_term_condition_num4') }}</li>
-									<li> 5. {{ trans('translate.stel_term_condition_num5') }}</li>
-									<li> 6. {{ trans('translate.stel_term_condition_num6') }}</li>
+									<li>{{ trans('translate.stel_term_condition_num1') }}</li>
+									<li>{{ trans('translate.stel_term_condition_num2') }}</li>
+									<li>{{ trans('translate.stel_term_condition_num3') }}</li>
+									<li>{{ trans('translate.stel_term_condition_num4') }}</li>
+									<li>{{ trans('translate.stel_term_condition_num5') }}</li>
+									<li>{{ trans('translate.stel_term_condition_num6') }}</li>
 								</ul>
 							</div>
 							   <form class="form-horizontal" role="form" method="POST" action="{{ url('checkout') }}">

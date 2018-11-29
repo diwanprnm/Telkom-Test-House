@@ -92,6 +92,24 @@
 								<textarea class="form-control" disabled>{{ $data->company->address }}</textarea>
 							</div>
 						</div>
+						@if($data->examination_type_id == 2)
+                        <div class="col-md-6">
+							<div class="form-group">
+								<label>
+									PLG_ID *
+								</label>
+								<input type="text" name="name" class="form-control" value="{{ $data->company->plg_id }}" placeholder="PLG_ID" disabled>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>
+									NIB *
+								</label>
+								<input type="text" name="name" class="form-control" value="{{ $data->company->nib }}" placeholder="NIB" disabled>
+							</div>
+						</div>
+						@endif
                         <div class="col-md-6">
 							<div class="form-group">
 								<label>
@@ -362,6 +380,41 @@
 						</fieldset>
 					</div>
 				</div>
+				<fieldset>
+					<legend>
+						Riwayat Pengujian
+					</legend>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<table class="table table-condensed">
+									<thead>
+										<tr>
+											<td class="center">Tahap</td>
+											<td class="center">Status</td>
+											<td class="center">Keterangan</td>
+											<td class="center">Tanggal</td>
+										</tr>
+									</thead>
+									<tbody>
+									@foreach($exam_history as $item)
+										<tr>
+											<td class="center">{{ $item->tahap }}</td>
+											@if($item->status == 1)
+												<td class="center">Completed</td>
+											@else
+												<td class="center">Not Completed</td>
+											@endif
+											<td>{{ $item->keterangan }} oleh {{ $item->user->name }}</td>
+											<td class="center">{{ $item->date_action }}</td>
+										</tr>
+									@endforeach
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</fieldset>
 				<div class="col-md-12">
 					<a href="{{URL::to('/admin/examinationdone')}}">
                     	<button type="button" class="btn btn-wide btn-red btn-squared pull-left" style="margin-right: 1%;">Kembali</button>

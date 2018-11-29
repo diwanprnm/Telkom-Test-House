@@ -50,10 +50,19 @@
 									<input type="text" name="subject" class="form-control" placeholder="Title" value="{{ $data->subject }}" disabled>
 								</div>
 							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										Pesan *
+									</label>
+									<textarea 
+name="message" class="form-control" height="400px" readonly>{{ $data->message }} </textarea>
+								</div>
+							</div>
 	                        <div class="col-md-12">
 								<div class="form-group">
 									<label>
-										Body *
+										Reply *
 									</label>
 									<textarea id="description" name="description" required></textarea>
 								</div>

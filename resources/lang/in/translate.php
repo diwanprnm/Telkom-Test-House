@@ -20,26 +20,28 @@ return [
 	'service_application_phone'		=> 'Telepon',
 	'service_application_fax'		=> 'Faksimil',
 	'service_application_email'		=> 'Email',
-	'service_company_agent'			=> 'Agen',
+	'service_company_agent'			=> 'Agen/Perwakilan',
 	'service_company_branch'		=> 'Pabrikan',
-	'service_company_individual'	=> 'Perseorangan',
+	'service_company_individual'	=> 'Pengguna/Perorangan',
 	
 	'service_company'			=> 'Data Perusahaan',
 	'service_company_type'		=> 'Jenis Perusahaan',
 	'service_company_name'		=> 'Nama',
 	'service_company_address'	=> 'Alamat',
+	'service_company_plg_id'	=> 'PLG_ID',
+	'service_company_nib'		=> 'NIB',
 	'service_company_phone'		=> 'Telepon',
 	'service_company_fax'		=> 'Faksimil',
 	'service_company_email'		=> 'Email',
 	'service_company_confirm'	=> '*Apabila ada perubahan data perusahaan, silakan email ke Admin urelddstelkom@gmail.com',
 	
 	'service_device'				=> 'Data Perangkat', // Device Information
-	'service_device_equipment'		=> 'Perangkat', // Device
+	'service_device_equipment'		=> 'Nama Perangkat', // Device
 	'service_device_mark'			=> 'Merk/Pabrik', // Merk
 	'service_device_capacity'		=> 'Kapasitas/Kecepatan', // Capacity
 	'service_device_manufactured_by'=> 'Negara Pembuat', // Made in
 	'service_device_serial_number'	=> 'Nomor Seri',
-	'service_device_model'			=> 'Model/Type',
+	'service_device_model'			=> 'Model/Tipe',
 	'service_device_test_reference'	=> 'Referensi Uji',
 	'service_device_document'		=> 'Dokumen Pendukung',
 	
@@ -61,9 +63,9 @@ return [
 	'service_upload_another_file'		=> 'File Lainnya',
 	'service_upload_support_principals_no'	=> 'No Surat Dukungan Prinsipal',
 	'service_upload_support_principals_date'=> 'Tanggal Surat Dukungan Prinsipal',
-	'service_upload_sp3'				=> 'SP3',
-	'service_upload_sp3_no'				=> 'No SP3',
-	'service_upload_sp3_date'			=> 'Tanggal SP3',
+	'service_upload_sp3'				=> 'PLG ID dan NIB',
+	'service_upload_sp3_no'				=> 'No PLG ID dan NIB',
+	'service_upload_sp3_date'			=> 'Tanggal PLG ID dan NIB',
 	
 	'service_preview'			=> 'Pratinjau',
 	'service_preview_exam_type'	=> 'Jenis Pengujian',
@@ -102,6 +104,7 @@ return [
 	'stel_version'     	=> 'Versi',
 	'stel_category'     => 'Kategori',
 	'stel_choose_category'	=> 'Pilih Kategori',
+	'stel_all_category'	=> 'Semua Kategori',
 	'stel_tax'     	=> 'Pajak',
 	'stel_in_cart'     	=> 'Sudah ada di Keranjang Belanja',
 	'stel_buyed'     	=> 'Sudah dibeli',
@@ -111,11 +114,12 @@ return [
 	'charge_stel'     	=> 'STEL',
 	'charge_name'     	=> 'Nama Perangkat',
 	'charge_category'   => 'Kategori',
-	'charge_duration'   => 'Durasi (hari)',
+	'charge_duration'   => 'Durasi (hari kerja)',
 	'charge_cost'     	=> 'Biaya QA',
 	'charge_vt_cost'   	=> 'Biaya VT',
 	'charge_ta_cost'   	=> 'Biaya TA',
 	'charge_choose_category'=> 'Pilih Kategori',
+	'charge_all_category'=> 'Semua Kategori',
     
 	'devic_test_passed' 			=> 'Perangkat Lulus Uji',
 	'devic_test_passed_no' 			=> 'No',
@@ -125,6 +129,7 @@ return [
 	'devic_test_passed_type' 		=> 'Tipe',
 	'devic_test_passed_capacity'	=> 'Kapasitas/Kecepatan',
 	'devic_test_passed_standar'		=> 'Referensi Uji',
+	'devic_test_passed_cert_numb' 	=> 'No Sertifikat',
 	'devic_test_passed_valid_form' 	=> 'Berlaku Dari',
 	'devic_test_passed_valid_thru' 	=> 'Berlaku Sampai',
     
@@ -134,7 +139,7 @@ return [
 	'examination_contract'		=> 'Tinjauan Kontrak', // Contract
 	'examination_spb' 			=> 'SPB', // SPB
 	'examination_payment' 		=> 'Pembayaran', // Payment
-	'examination_spk' 			=> 'Pembuatan SPK', // SPK
+	'examination_spk' 			=> 'Antrian', // SPK
 	'examination_exam' 			=> 'Pelaksanaan Uji', // Testing Process
 	'examination_report' 		=> 'Laporan Uji', // Test Report
 	'examination_qa' 			=> 'Sidang QA', // QA Meeting
@@ -148,6 +153,8 @@ return [
     'examination_choose_type' 	=> 'Pilih Tipe Pengujian',
 	'examination_choose_status'	=> 'Pilih Status',
 	'examination_choose_stel'	=> 'Pilih STEL',
+	'examination_all_type' 		=> 'Semua Tipe Pengujian',
+	'examination_all_status'	=> 'Semua Status',
 	
 	'examination_type'	=> 'Tipe Pengujian',
 	'examination_user'	=> 'Pemohon',
@@ -172,11 +179,13 @@ return [
 	'examination_date_payment'=> 'Tanggal Pembayaran',
 	'examination_price_payment'=> 'Jumlah Biaya yang ditransfer',
 	'examination_upload_payment_file'=> 'Unggah',
-	'examination_model'=> 'Model/Type',
+	'examination_model'=> 'Model/Tipe',
+	'examination_mark'=> 'Merk/Pabrik',
 	'examination_capacity'=> 'Kapasitas',
+	'examination_serial_number'=> 'Nomor Seri',
 	'examination_company'=> 'Perusahaan',
 	'examination_date_regist'=> 'Tanggal Pengajuan',
-	'examination_number_exam_form'=> 'No. Reg',
+	'examination_number_exam_form'=> 'Nomor Registrasi',
 	'examination_labs_name'=> 'Nama Lab',
 	'form_not_show' => 'Jika form tidak muncul secara otomatis,',
 	
@@ -204,13 +213,15 @@ return [
 	'profile_wrong_password'	=> 'Kata Sandi Salah',
 	'profile_password_not_match'=> 'Kata Sandi Tidak Sama',
 	'profile_password_required'	=> 'Kata Sandi Harus Diisi',
-	'profile_picture'			=> 'Foto',
+	'profile_picture'			=> 'Foto Profil',
 	'profile_save'				=> 'Simpan',
 	'my_profile'				=> 'Profil Saya',
 	
 	'company'					=> 'Perusahaan',
 	'company_name'				=> 'Nama',
 	'company_address'			=> 'Alamat',
+	'company_plg_id'			=> 'PLG_ID',
+	'company_nib'				=> 'NIB',
 	'company_email'				=> 'Email',
 	'company_city'				=> 'Kota',
 	'company_postal_code'		=> 'Kode Pos Code',
@@ -221,9 +232,9 @@ return [
 	'company_no_siup'			=> 'No. SIUPP',
 	'company_siup_date'			=> 'Masa Berlaku SIUPP',
 	'company_siup_file'			=> 'File SIUPP',
-	'company_no_certificate'	=> 'No. Sertifikat',
-	'company_certificate_date'	=> 'Masa Berlaku Sertifikat',
-	'company_certificate_file'	=> 'File Sertifikat',
+	'company_no_certificate'	=> 'No. Sertifikat Sistem Mutu',
+	'company_certificate_date'	=> 'Masa Berlaku Sertifikat Sistem Mutu',
+	'company_certificate_file'	=> 'File Sertifikat Sistem Mutu',
 	'company_save'				=> 'Simpan',
 	'company_form_button'		=> 'Form Perusahaan Baru',
 	
@@ -253,7 +264,7 @@ return [
 	'register_company_select'	=> 'Pilih Perusahaan',
 	'register_password'			=> 'Kata Sandi',
 	'register_confirm_password'	=> 'Konfirmasi Kata Sandi',
-	'register_picture'			=> 'Foto',
+	'register_picture'			=> 'Foto Profil',
 	'register_email_required'	=> 'Email Harus Diisi',
 	'register_email_exists'		=> 'Email Sudah Ada',
 	'register_password_required'=> 'Kata Sandi Harus Diisi',
@@ -275,8 +286,8 @@ return [
 	'menu_ref'		=> 'Referensi',
 	
 	'header_title'		=> 'Layanan Pengujian Perangkat Telekomunikasi',
-	'see_product'		=> 'Lihat Produk',
-	'payment_status'	=> 'Status Pembayaran',
+	'see_product'		=> 'Beli Dokumen STEL',
+	'payment_status'	=> 'Riwayat Pembelian',
 	'shopping_cart'		=> 'Keranjang Belanja',
 	'view_cart'			=> 'Lihat Keranjang',
 	
@@ -341,6 +352,7 @@ return [
 	'sign_up'  => 'Daftar',
 	'reset_pass' => 'Ubah Password',
 	'notification_after_register' => 'Permintaan aktivasi akun baru telah dikirim. Mohon menunggu konfirmasi pengaktifan akun dari Petugas URel DDS TELKOM.',
+	'notification_after_reset_password' => 'Password telah diubah. Silakan Login Kembali.',
 	'sending' => 'Mengirimkan...',
 	'pass_reset_email_sent' => 'Email Aktivasi Password Baru',
 	'an_email_has_been_sent' => 'Email Aktivasi telah dikirim ke email anda,',
@@ -349,7 +361,7 @@ return [
 	'back' => 'Kembali',
 	'certificate' => 'Sertifikat',
 	'from_customer' => 'dari Kastamer',
-	'from_te' => 'dari Test Enginner',
+	'from_te' => 'dari Test Engineer',
 	'approved' => 'DISETUJUI',
 	
 	'document_not_found'	=> 'Dokumen Tidak Ditemukan',
@@ -368,4 +380,17 @@ return [
 	'stel_term_condition_num4'	=> 'Jika dokumen STEL sudah diberikan dan ternyata terjadi kesalahan pembelian karena kelalaian customer bukan menjadi tanggung jawab PT. Telkom Indonesia, Tbk.',
 	'stel_term_condition_num5'	=> 'Ketika dokumen STEL sudah anda peroleh, kami anggap bahwa perusahaan anda sudah paham isi dari dokumen STEL tersebut ketika mengajukan permohonan pengujian perangkat.',
 	'stel_term_condition_num6'	=> 'Ketika anda menekan tombol setuju, maka anda setuju dengan poin-poin yang sudah dijelaskan di atas.',
+	
+	'maximum_filesize'	=> 'ukuran file maksimal 2 mb',
+	'file_already_exists'	=> 'File Sudah Ada',
+	'see_all_notifications'	=> 'Lihat Semua Pemberitahuan',
+	'notification'	=> 'Pemberitahuan',
+	
+	'must_be_filled'	=> 'Harus Diisi',
+	'by'	=> 'oleh',
+
+	'bank_account'	=> 'Akun Bank',
+
+	'payment_attach_sent' => 'Berkas Pembayaran Pengujian',
+	'an_email_has_been_sent' => 'Terima kasih, berkas pembayaran anda akan kami proses lebih lanjut.',
 ];

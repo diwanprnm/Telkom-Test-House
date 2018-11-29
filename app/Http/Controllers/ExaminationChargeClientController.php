@@ -47,6 +47,7 @@ class ExaminationChargeClientController extends Controller
             
             if ($search != null){
                 $query = ExaminationCharge::whereNotNull('created_at')
+		    ->where('is_active', 1)
                     ->where('device_name','like','%'.$search.'%');
 
                     //$logs = new Logs;
@@ -61,14 +62,16 @@ class ExaminationChargeClientController extends Controller
                     //$logs->save();
 
             }else{
-                $query = ExaminationCharge::whereNotNull('created_at');
+                $query = ExaminationCharge::whereNotNull('created_at')->where('is_active', 1);
             }
 			
-			if ($request->has('category')){
-				$query->where('category', $request->get('category'));
-				$category = $request->input('category');
-			}
-			
+            if ($request->has('category')){
+                $category = $request->get('category');
+                if($request->input('category') != 'all'){
+                    $query->where('category', $request->get('category'));
+                }
+            }
+
 			$examinationCharge = $query->orderBy('updated_at', 'desc')
                     ->paginate($paginate);
             

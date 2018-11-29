@@ -3172,7 +3172,16 @@ var SEMICOLON = SEMICOLON || {};
 				return false;
 			});
 		},
+		recaptchaCallback:function(){
+			res = $('#g-recaptcha-response').val();
+			console.log(res);
 
+			return false;
+		    if (res == "" || res == undefined || res.length == 0)
+		        return false;
+		    else
+		        return true;
+		},
 		contactForm: function(){
 
 			if( !$().validate ) {
@@ -3196,7 +3205,14 @@ var SEMICOLON = SEMICOLON || {};
 					elementRedirect = element.attr('data-redirect');
 
 				element.find('form').validate({
-					submitHandler: function(form) {
+					submitHandler: function(form) { 
+						var res = $('#g-recaptcha-response').val();
+						console.log(res);  
+						if(res.length <= 0){
+							var alertType = 'alert-danger';
+							elementResult.removeClass( 'alert-danger alert-success' ).addClass( 'alert ' + alertType ).html("Please, Insert Captcha").slideDown( 400 );
+							return;
+						}
 
 						elementResult.hide();
 
@@ -3228,15 +3244,32 @@ var SEMICOLON = SEMICOLON || {};
 									} else {
 										var alertType = 'alert-success';
 									}
-
-									elementResult.removeClass( 'alert-danger alert-success' ).addClass( 'alert ' + alertType ).html( data.message ).slideDown( 400 );
+									$(form).find('.form-process').fadeOut();
+									console.log(data);
+									
+elementResult.removeClass( 'alert-danger alert-success' ).addClass( 'alert ' + alertType ).html( "Feedback successfully send" ).slideDown( 400 );
 								} else {
-									elementResult.attr( 'data-notify-type', data.alert ).attr( 'data-notify-msg', data.message ).html('');
+									$(form).find('.form-process').fadeOut();
+									elementResult.attr( 
+'data-notify-type', data.alert ).attr( 'data-notify-msg', data.message ).html("Feedback successfully send");
 									SEMICOLON.widget.notifications( elementResult );
 								}
 								if( $(form).find('.g-recaptcha').children('div').length > 0 ) { grecaptcha.reset(); }
 								if( data.alert != 'error' ) { $(form).clearForm(); }
-							}
+							},
+							error: function (data) {
+								console.log(data);
+								if( data.alert == 'error' ) {
+										var alertType = 'alert-danger';
+elementResult.removeClass( 'alert-danger alert-success' ).addClass( 'alert ' + alertType ).html("Send failed").slideDown( 400 );
+									} else {
+										var alertType = 'alert-success';
+elementResult.removeClass( 'alert-danger alert-success' ).addClass( 'alert ' + alertType 
+).html("Feedback successfully send").slideDown( 400 );
+									}
+			                	
+			                	$(form).find('.form-process').fadeOut();
+			                }
 						});
 					}
 				});

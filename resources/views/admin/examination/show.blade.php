@@ -73,7 +73,7 @@
 				</fieldset>
 				<fieldset>
 					<legend>
-						Data Perusahaan
+						Data Perusahaan [{{ $data->jns_perusahaan }}]
 					</legend>
 					<div class="row">
 						<div class="col-md-12">
@@ -92,6 +92,24 @@
 								<textarea class="form-control" disabled>{{ $data->company->address }}</textarea>
 							</div>
 						</div>
+						@if($data->examination_type_id == 2)
+                        <div class="col-md-6">
+							<div class="form-group">
+								<label>
+									PLG_ID *
+								</label>
+								<input type="text" name="name" class="form-control" value="{{ $data->company->plg_id }}" placeholder="PLG_ID" disabled>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>
+									NIB *
+								</label>
+								<input type="text" name="name" class="form-control" value="{{ $data->company->nib }}" placeholder="NIB" disabled>
+							</div>
+						</div>
+						@endif
                         <div class="col-md-6">
 							<div class="form-group">
 								<label>
@@ -230,7 +248,8 @@
 										<li>
 											@if($data->registration_status == '1' && $data->function_status != '1')
 												<a href="#step-2" class="done wait">
-											@elseif($data->function_status == '1')
+											@elseif($data->registration_status == '1' && 
+											$data->function_status == '1')
 												<a href="#step-2" class="done">
 											@else
 												<a href="#step-2">
@@ -242,9 +261,11 @@
 											</a>
 										</li>
 										<li>
-											@if($data->function_status == '1' && $data->contract_status != '1')
-												<a href="#step-2" class="done wait">
-											@elseif($data->contract_status == '1')
+											@if($data->registration_status == '1' && 
+											$data->function_status == '1' && $data->contract_status != '1')
+												<a href="#step-3" class="done wait">
+											@elseif($data->registration_status == '1' && $data->function_status == '1' &&
+											$data->contract_status == '1')
 												<a href="#step-3" class="done">
 											@else
 												<a href="#step-3">
@@ -256,9 +277,11 @@
 											</a>
 										</li>
 										<li>
-											@if($data->contract_status == '1' && $data->spb_status != '1')
-												<a href="#step-2" class="done wait">
-											@elseif($data->spb_status == '1')
+											@if($data->registration_status == '1' && $data->function_status == '1' && 
+											$data->contract_status == '1' && $data->spb_status != '1')
+												<a href="#step-4" class="done wait">
+											@elseif($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && 
+											$data->spb_status == '1')
 												<a href="#step-4" class="done">
 											@else
 												<a href="#step-4">
@@ -270,9 +293,11 @@
 											</a>
 										</li>
 										<li>
-											@if($data->spb_status == '1' && $data->payment_status != '1')
-												<a href="#step-2" class="done wait">
-											@elseif($data->payment_status == '1')
+											@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && 
+											$data->spb_status == '1' && $data->payment_status != '1')
+												<a href="#step-5" class="done wait">
+											@elseif($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && 
+											$data->payment_status == '1')
 												<a href="#step-5" class="done">
 											@else
 												<a href="#step-5">
@@ -284,9 +309,11 @@
 											</a>
 										</li>
 										<li>
-											@if($data->payment_status == '1' && $data->spk_status != '1')
-												<a href="#step-2" class="done wait">
-											@elseif($data->spk_status == '1')
+											@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && 
+											$data->payment_status == '1' && $data->spk_status != '1')
+												<a href="#step-6" class="done wait">
+											@elseif($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && 
+											$data->spk_status == '1')
 												<a href="#step-6" class="done">
 											@else
 												<a href="#step-6">
@@ -298,9 +325,11 @@
 											</a>
 										</li>
 										<li>
-											@if($data->spk_status == '1' && $data->examination_status != '1')
-												<a href="#step-2" class="done wait">
-											@elseif($data->examination_status == '1')
+											@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && 
+											$data->spk_status == '1' && $data->examination_status != '1')
+												<a href="#step-7" class="done wait">
+											@elseif($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1' && 
+											$data->examination_status == '1')
 												<a href="#step-7" class="done">
 											@else
 												<a href="#step-7">
@@ -312,9 +341,11 @@
 											</a>
 										</li>
 										<li>
-											@if($data->examination_status == '1' && $data->resume_status != '1')
-												<a href="#step-2" class="done wait">
-											@elseif($data->resume_status == '1')
+											@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1' && 
+											$data->examination_status == '1' && $data->resume_status != '1')
+												<a href="#step-8" class="done wait">
+											@elseif($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1' && $data->examination_status == '1' && 
+											$data->resume_status == '1')
 												<a href="#step-8" class="done">
 											@else
 												<a href="#step-8">
@@ -327,9 +358,11 @@
 										</li>
 										@if($data->examination_type_id !='2' && $data->examination_type_id !='3' && $data->examination_type_id !='4')
 											<li>
-												@if($data->resume_status == '1' && $data->qa_status != '1')
-													<a href="#step-2" class="done wait">
-												@elseif($data->qa_status == '1')
+												@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1' && $data->examination_status == '1' && 
+												$data->resume_status == '1' && $data->qa_status != '1')
+													<a href="#step-9" class="done wait">
+												@elseif($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1' && $data->examination_status == '1' && $data->resume_status == '1' && 
+												$data->qa_status == '1')
 													<a href="#step-9" class="done">
 												@else
 													<a href="#step-9">
@@ -342,9 +375,11 @@
 											</li>
 										
 											<li>
-												@if($data->qa_status == '1' && $data->certificate_status != '1')
-													<a href="#step-2" class="done wait">
-												@elseif($data->certificate_status == '1')
+												@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1' && $data->examination_status == '1' && $data->resume_status == '1' && 
+												$data->qa_status == '1' && $data->certificate_status != '1')
+													<a href="#step-10" class="done wait">
+												@elseif($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1' && $data->examination_status == '1' && $data->resume_status == '1' && $data->qa_status == '1' &&
+												$data->certificate_status == '1')
 													<a href="#step-10" class="done">
 												@else
 													<a href="#step-10">
@@ -387,7 +422,7 @@
 											@else
 												<td class="center">Not Completed</td>
 											@endif
-											<td>{{ $item->keterangan }}</td>
+											<td>{{ $item->keterangan }} oleh {{ $item->user->name }}</td>
 											<td class="center">{{ $item->date_action }}</td>
 										</tr>
 									@endforeach

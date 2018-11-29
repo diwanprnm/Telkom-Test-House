@@ -1,6 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
+
+<?php
+	$currentUser = Auth::user();
+	$is_admin_mail = $currentUser['email'];
+	$is_super = $currentUser['id'];
+?>
+
 <form id="form-tanggal-kontrak" role="form">
 {!! csrf_field() !!}
 <input type="hidden" name="hide_id_exam" id="hide_id_exam"/>
@@ -109,7 +116,8 @@
 									<li>
 										@if($data->registration_status == '1' && $data->function_status != '1')
 											<a href="#step-2" class="done wait">
-										@elseif($data->function_status == '1')
+										@elseif($data->registration_status == '1' && 
+										$data->function_status == '1')
 											<a href="#step-2" class="done">
 										@else
 											<a href="#step-2">
@@ -121,9 +129,11 @@
 										</a>
 									</li>
 									<li>
-										@if($data->function_status == '1' && $data->contract_status != '1')
+										@if($data->registration_status == '1' && 
+										$data->function_status == '1' && $data->contract_status != '1')
 											<a href="#step-3" class="done wait">
-										@elseif($data->contract_status == '1')
+										@elseif($data->registration_status == '1' && $data->function_status == '1' &&
+										$data->contract_status == '1')
 											<a href="#step-3" class="done">
 										@else
 											<a href="#step-3">
@@ -135,9 +145,11 @@
 										</a>
 									</li>
 									<li>
-										@if($data->contract_status == '1' && $data->spb_status != '1')
+										@if($data->registration_status == '1' && $data->function_status == '1' && 
+										$data->contract_status == '1' && $data->spb_status != '1')
 											<a href="#step-4" class="done wait">
-										@elseif($data->spb_status == '1')
+										@elseif($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && 
+										$data->spb_status == '1')
 											<a href="#step-4" class="done">
 										@else
 											<a href="#step-4">
@@ -149,9 +161,11 @@
 										</a>
 									</li>
 									<li>
-										@if($data->spb_status == '1' && $data->payment_status != '1')
+										@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && 
+										$data->spb_status == '1' && $data->payment_status != '1')
 											<a href="#step-5" class="done wait">
-										@elseif($data->payment_status == '1')
+										@elseif($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && 
+										$data->payment_status == '1')
 											<a href="#step-5" class="done">
 										@else
 											<a href="#step-5">
@@ -163,9 +177,11 @@
 										</a>
 									</li>
 									<li>
-										@if($data->payment_status == '1' && $data->spk_status != '1')
+										@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && 
+										$data->payment_status == '1' && $data->spk_status != '1')
 											<a href="#step-6" class="done wait">
-										@elseif($data->spk_status == '1')
+										@elseif($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && 
+										$data->spk_status == '1')
 											<a href="#step-6" class="done">
 										@else
 											<a href="#step-6">
@@ -177,9 +193,11 @@
 										</a>
 									</li>
 									<li>
-										@if($data->spk_status == '1' && $data->examination_status != '1')
+										@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && 
+										$data->spk_status == '1' && $data->examination_status != '1')
 											<a href="#step-7" class="done wait">
-										@elseif($data->examination_status == '1')
+										@elseif($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1' && 
+										$data->examination_status == '1')
 											<a href="#step-7" class="done">
 										@else
 											<a href="#step-7">
@@ -191,9 +209,11 @@
 										</a>
 									</li>
 									<li>
-										@if($data->examination_status == '1' && $data->resume_status != '1')
+										@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1' && 
+										$data->examination_status == '1' && $data->resume_status != '1')
 											<a href="#step-8" class="done wait">
-										@elseif($data->resume_status == '1')
+										@elseif($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1' && $data->examination_status == '1' && 
+										$data->resume_status == '1')
 											<a href="#step-8" class="done">
 										@else
 											<a href="#step-8">
@@ -206,9 +226,11 @@
 									</li>
 									@if($data->examination_type_id !='2' && $data->examination_type_id !='3' && $data->examination_type_id !='4')
 										<li>
-											@if($data->resume_status == '1' && $data->qa_status != '1')
+											@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1' && $data->examination_status == '1' && 
+											$data->resume_status == '1' && $data->qa_status != '1')
 												<a href="#step-9" class="done wait">
-											@elseif($data->qa_status == '1')
+											@elseif($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1' && $data->examination_status == '1' && $data->resume_status == '1' && 
+											$data->qa_status == '1')
 												<a href="#step-9" class="done">
 											@else
 												<a href="#step-9">
@@ -221,9 +243,11 @@
 										</li>
 									
 										<li>
-											@if($data->qa_status == '1' && $data->certificate_status != '1')
+											@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1' && $data->examination_status == '1' && $data->resume_status == '1' && 
+											$data->qa_status == '1' && $data->certificate_status != '1')
 												<a href="#step-10" class="done wait">
-											@elseif($data->certificate_status == '1')
+											@elseif($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1' && $data->examination_status == '1' && $data->resume_status == '1' && $data->qa_status == '1' &&
+											$data->certificate_status == '1')
 												<a href="#step-10" class="done">
 											@else
 												<a href="#step-10">
@@ -282,9 +306,9 @@
 													</td>
 												</tr>	
 												<tr>
-													<td>Kapasitas:</td>
+													<td>Merek:</td>
 													<td>
-														{{ $data->device->capacity }}
+														{{ $data->device->mark }}
 													</td>
 												</tr>	
 												<tr>
@@ -293,6 +317,18 @@
 														{{ $data->device->model }}
 													</td>
 												</tr>	
+												<tr>
+													<td>Kapasitas:</td>
+													<td>
+														{{ $data->device->capacity }}
+													</td>
+												</tr>	
+												<tr>
+													<td>Serial Number:</td>
+													<td>
+														{{ $data->device->serial_number }}
+													</td>
+												</tr>
 												<tr>
 													<td>Nomor Form Uji:</td>
 													<td>
@@ -381,6 +417,16 @@
 									</select>
 								</div>
 							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										Kelengkapan Registrasi
+									</label>
+									<label>
+										: {{ $data->company->keterangan }}
+									</label>
+								</div>
+							</div>
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
@@ -451,6 +497,9 @@
 						<legend>
 							Step Uji Fungsi
 						</legend>
+						@if($is_super == '1' || $is_admin_mail == 'admin@mail.com')
+							<a class="btn btn-wide btn-primary pull-left" style="margin-bottom:10px" href="{{URL::to('admin/examination/resetUjiFungsi/'.$data->id)}}" onclick="return confirm('Are you sure want to reset ?')">Reset Uji Fungsi</a>
+						@endif
 						<div class="row">
 							<div class="col-md-12">
 								<div class="form-group">
@@ -463,9 +512,9 @@
 										<tbody>
 											<tr>
 												<td>Pengajuan Tanggal Customer</td>
-												<td>Jadwal dari Test Enginner</td>
+												<td>Jadwal dari Test Engineer</td>
 												<td>Pengajuan Ulang dari Customer</td>
-												<td>Jadwal dari Test Enginner</td>
+												<td>Jadwal dari Test Engineer</td>
 											</tr>
 											<tr>
 												<td>
@@ -490,14 +539,23 @@
 									@endif
 								</div>
 								@if($data->function_test_date_approval == 1)
-									<div class="col-md-12 center">
+									<div class="col-md-6 center">
 										<div class="form-group">
-											<h4 style="display:inline">Jadwal FIX Uji Fungsi</h4>
-											@if($data->function_date != null)		
-												<h4 style="display:inline">: <?php echo $data->function_date; ?></h4>
-											@else
-												<h4 style="display:inline">: <?php echo $data->deal_test_date; ?></h4>
-											@endif
+											<h4 style="display:inline">
+												Jadwal FIX Uji Fungsi : 
+												@if($data->function_date != null)
+													<?php echo $data->function_date; ?>
+												@else
+													<?php echo $data->deal_test_date; ?>
+												@endif
+											</h4>
+										</div>
+									</div>
+									<div class="col-md-6 center">
+										<div class="form-group">
+											<h4 style="display:inline">
+												Disetujui oleh : {{ $data->function_test_PIC }}
+											</h4>
 										</div>
 									</div>
 								@endif
@@ -533,31 +591,34 @@
 									</div>									
 								</div>									
 								@endif
-							<div class="col-md-12">
-								<div class="form-group">
-									<a href="{{URL::to('/cetakFormBarang/'.$data->id)}}" target="_blank"> Buatkan Bukti Penerimaan & Pengeluaran Perangkat Uji</a>
+							@if($data->function_test_TE == 1)
+								<div class="col-md-12">
+									<div class="form-group">
+										<a href="{{URL::to('/cetakFormBarang/'.$data->id)}}" target="_blank"> Buatkan Bukti Penerimaan & Pengeluaran Perangkat Uji</a>
+									</div>
 								</div>
-								<div class="form-group">
+								<div class="col-md-12">
 									<label>
 										Bukti Penerimaan & Pengeluaran Perangkat Uji File *
 									</label>
 									<input type="file" name="barang_file" id="barang_file" class="form-control" accept="application/pdf"/>
 									<button class="btn btn-wide btn-green btn-squared pull-right">
-										Upload
+										Submit
 									</button>
 								</div>
-								<div class="form-group">
-									@foreach($data->media as $item)
-										@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan & Pengeluaran Perangkat Uji</a>
-										@endif
-									@endforeach
+								<div class="col-md-12">
+									<div class="form-group">
+										@foreach($data->media as $item)
+											@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan & Pengeluaran Perangkat Uji</a>
+											@endif
+										@endforeach
+									</div>
 								</div>
-							</div>
-							
+							@endif
 							<div class="col-md-12">
 								@if($data->function_test_TE != 0)
-									<div class="col-md-12 center">
+								<div class="col-md-12 center">
 									<div class="form-group">
 										<h4 style="display:inline">
 											Hasil Uji Fungsi
@@ -574,14 +635,11 @@
 											@endif
 										</h4>
 									</div>
-									</div>
-									<div class="col-md-12">
-									<div class="form-group">
-										<a href="{{URL::to('/cetakUjiFungsi/'.$data->id)}}" target="_blank"> Buatkan Laporan Uji Fungsi</a>
-									</div>
-									</div>
+								</div>
+								<div class="form-group">
+									<a href="{{URL::to('/cetakUjiFungsi/'.$data->id)}}" target="_blank"> Buatkan Laporan Uji Fungsi</a>
+								</div>
 								@endif
-								<div class="col-md-12">
 								<div class="form-group">
 									<label>
 										Hasil Uji Fungsi File *
@@ -598,11 +656,12 @@
 									@endforeach
 									<input type="hidden" id="function_name" value="<?php echo $function_attach; ?>">
 								</div>
+								@if($data->function_test_TE != 0)
 								<div class="form-group">
 									<label for="catatan">Catatan :</label>
-									<textarea class="form-control" rows="5" name="catatan" id="catatan" readonly>{{ $data->catatan }}</textarea>
+									<textarea class="form-control" rows="5" name="catatan" id="catatan" readonly disabled>{{ $data->catatan }}</textarea>
 								</div>
-								</div>
+								@endif
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
@@ -626,11 +685,13 @@
 									</select>
 								</div>
 							</div>
+							@if($data->registration_status == '1')
 							<div class="col-md-12">
 								<button type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 									Update
 								</button>
 							</div>
+							@endif
 						</div>
 						<div class="modal fade" id="myModalketerangan_function" tabindex="-1" role="dialog" aria-hidden="true">
 							<div class="modal-dialog">
@@ -720,11 +781,13 @@
 									</select>
 								</div>
 							</div>
+							@if($data->registration_status == '1' && $data->function_status == '1')
 							<div class="col-md-12">
 								<button type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 									Update
 								</button>
 							</div>
+							@endif
 						</div>
 						<div class="modal fade" id="myModalketerangan_contract" tabindex="-1" role="dialog" aria-hidden="true">
 							<div class="modal-dialog">
@@ -768,7 +831,7 @@
 						<legend>
 							Step SPB
 						</legend>
-					@if($data->registration_status == 1)
+					@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1')
 						<div class="row">
 							<div class="col-md-12">
 								<div class="form-group">
@@ -821,18 +884,20 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Total Biaya (Belum Termasuk PPN)*
+										Total Biaya *
 									</label>
 									<input type="text" name="exam_price" id="exam_price" class="form-control" placeholder="Total Biaya" value="{{ $data->price }}" readonly required>
 								</div>
 							</div>
 							<input type="hidden" name="spb_number" id="spb_number" value="{{ $data->spb_number }}">
 							<input type="hidden" name="spb_date" id="spb_date" value="{{ $data->spb_date }}">
+							@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1')
 							<div class="col-md-12">
 	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 	                                Update
 	                            </button>
 	                        </div>
+	                        @endif
 						</div>
 						<div class="modal fade" id="myModalketerangan_spb" tabindex="-1" role="dialog" aria-hidden="true">
 							<div class="modal-dialog">
@@ -877,7 +942,7 @@
 							Step Pembayaran
 						</legend>
 						<div class="row">
-							<div class="col-md-12">
+							<div class="col-md-6">
 								<div class="form-group">
 									<label>
 										Status Pembayaran
@@ -891,8 +956,14 @@
 
 									@if($status)
 										<label>
-											: Sudah di bayar
+											: Sudah di bayar, pada {{ $item->updated_at }}
 										</label>
+										</div>
+										<div class="form-group">
+											<label>
+												Banyak Uang *
+											</label>
+											<input type="text" name="cust_price_payment" id="cust_price_payment" class="form-control" placeholder="Banyak Uang" value="{{ $data->cust_price_payment }}" required>
 										</div>
 										<div class="form-group">
 											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/File Pembayaran')}}"> Download Bukti Pembayaran</a>
@@ -901,8 +972,8 @@
 										<label>
 											: Belum di bayar
 										</label>
-										</div>
 									@endif
+							</div>
 								<div class="col-md-12">
 									<div class="form-group">
 										<a onclick="makeKuitansi('<?php echo $data->id ?>')"> Buatkan File Kuitansi</a>
@@ -944,8 +1015,7 @@
 										<input type="hidden" id="faktur_name" value="<?php echo $faktur_attach; ?>">
 									</div>
 								</div>
-							</div>
-	                        <div class="col-md-6">
+							<div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
 										Status *
@@ -966,15 +1036,19 @@
 										@endif
 									</select>
 								</div>
-							</div>
 								<input type="hidden" name="spb_number" id="spb_number" value="{{ $data->spb_number }}">
 								<input type="hidden" name="exam_price" id="exam_price" value="{{ $data->price }}">
 								<input type="hidden" name="spb_date" id="spb_date" value="{{ $data->spb_date }}">
-	                        <div class="col-md-12">
-	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-right">
-	                                Update
-	                            </button>
-	                        </div>
+							</div>
+							@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1')
+							<div class="col-md-12">
+								<div class="form-group">
+									<button type="submit" class="btn btn-wide btn-green btn-squared pull-right">
+										Update
+									</button>
+								</div>
+							</div>
+							@endif
 						</div>
 						<div class="modal fade" id="myModalketerangan_pembayaran" tabindex="-1" role="dialog" aria-hidden="true">
 							<div class="modal-dialog">
@@ -1073,13 +1147,13 @@
 									@endif
 								</div>
 							</div>
-							<!--
-	                        <div class="col-md-12">
+							@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1')
+							<div class="col-md-12">
 	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 	                                Update
 	                            </button>
 	                        </div>
-							-->
+	                        @endif
 	                    </div>
 						<div class="modal fade" id="myModalketerangan_spk" tabindex="-1" role="dialog" aria-hidden="true">
 							<div class="modal-dialog">
@@ -1126,15 +1200,20 @@
 						<div class="row">
 						@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
 							<?php
-								$start_date = new DateTime($exam_schedule->data[0]->targetDt);
-								$end_date = new DateTime(date('Y-m-d'));
-								$interval = $start_date->diff($end_date);
+								$start_date = new DateTime(date('Y-m-d'));
+								$end_date = new DateTime($exam_schedule->data[0]->targetDt);
+								if($start_date>$end_date){
+									$sisa_spk = 0;
+								}else{
+									$interval = $start_date->diff($end_date);
+									$sisa_spk = $interval->days;
+								}
 							?>
 							<div class="col-md-12">
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
-											Tanggal Mulai Uji
+											Tanggal Approve Manager Lab
 										</label>
 										<label>
 											: {{ $exam_schedule->data[0]->startTestDt }}
@@ -1144,7 +1223,7 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
-											Tanggal Selesai Uji
+											Target Selesai Uji
 										</label>
 										<label>
 											: {{ $exam_schedule->data[0]->targetDt }}
@@ -1155,10 +1234,10 @@
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>
-										Sisa SPK
+										Sisa Waktu Pengujian
 									</label>
 									<label>
-										: {{ $interval->days }} hari
+										: {{ $sisa_spk }} hari
 									</label>
 								</div>
 							</div>
@@ -1175,7 +1254,7 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
-											Mulai Uji
+											Mulai Uji oleh Test Engineer
 										</label>
 										<label>
 											: {{ $exam_schedule->data[0]->actualStartTestDt }}
@@ -1185,7 +1264,7 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
-											Selesai Uji
+											Selesai Uji oleh Test Engineer
 										</label>
 										<label>
 											: {{ $exam_schedule->data[0]->actualFinishTestDt }}
@@ -1196,13 +1275,35 @@
 								<div class="col-md-12">
 									<div class="form-group">
 										<label>
-											Barang pindah dari Lab ke Gudang tanggal : {{ $data_gudang[0]->action_date }}
+											Barang pindah dari Lab ke Gudang 
+											@if($data_gudang[0]->action_date != NULL AND $data_gudang[0]->action_date != '0000-00-00')
+												tanggal : {{ $data_gudang[0]->action_date }}
+											@endif
 										</label>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Tanggal Barang Dikembalikan *
+										</label>
+										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
+											@if($data_gudang[0]->action_date != NULL AND $data_gudang[0]->action_date != '0000-00-00')
+												<input type="text" name="lab_to_gudang_date" class="form-control" value="{{ $data_gudang[0]->action_date }}" required/>
+											@else
+												<input type="text" name="lab_to_gudang_date" class="form-control" value="" required/>
+											@endif
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-default">
+													<i class="glyphicon glyphicon-calendar"></i>
+												</button>
+											</span>
+										</p>
 									</div>
 								</div>
 								@endif
 							</div>
-						@endif
+						@endif						
 							<div class="col-md-12">
 								<div class="form-group">
 									<label for="form-field-select-2">
@@ -1244,11 +1345,13 @@
 									</select>
 								</div>
 							</div>
+							@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1')
 	                        <div class="col-md-12">
 	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 	                                Update
 	                            </button>
 	                        </div>
+	                        @endif
 						</div>
 						<div class="modal fade" id="myModalketerangan_form_uji" tabindex="-1" role="dialog" aria-hidden="true">
 							<div class="modal-dialog">
@@ -1309,7 +1412,7 @@
 									</label>
 									<input type="file" name="barang_file2" id="barang_file2" class="form-control" accept="application/pdf"/>
 									<button class="btn btn-wide btn-green btn-squared pull-right">
-										Upload
+										Submit
 									</button>
 								</div>
 								<div class="form-group">
@@ -1345,7 +1448,48 @@
 					</fieldset>
 				{!! Form::close() !!}
 				@endif
-				
+				@if($data->examination_type_id != 1)
+						{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-tanda-terima')) !!}
+							{!! csrf_field() !!}
+							<input type="hidden" name="status" class="form-control" value=""/>
+							<input type="hidden" name="keterangan" class="form-control" value=""/>
+		    				<fieldset>
+								<legend>
+									Tanda Terima Hasil Pengujian
+								</legend>
+								<div class="row">
+									<div class="col-md-12">
+										<div class="form-group">
+											<a onclick="makeTandaTerima('<?php echo $data->id ?>')"> Buatkan File Tanda Terima</a>
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="form-group">
+											<label>
+												File Tanda Terima *
+											</label>
+											<input type="file" name="tanda_terima_file" id="tanda_terima_file" class="form-control" accept="application/pdf"/>
+										</div>
+										<div class="form-group">
+											<?php $tanda_terima_attach = ''; ?>
+											@foreach($data->media as $item)
+												@if($item->name == 'Tanda Terima Hasil Pengujian' && $item->attachment != '')
+													<?php $tanda_terima_attach = $item->attachment; ?>
+													<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tanda Terima Hasil Pengujian')}}"> Download Tanda Terima Hasil Pengujian"<?php echo $tanda_terima_attach; ?>"</a>
+												@endif
+											@endforeach
+											<input type="hidden" id="tanda_terima_name" value="<?php echo $tanda_terima_attach; ?>">
+										</div>
+									</div>
+									<div class="col-md-12">
+										<button type="submit" class="btn btn-wide btn-green btn-squared pull-right">
+											Submit
+										</button>
+									</div>
+								</div>
+							</fieldset>
+						{!! Form::close() !!}
+					@endif
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-lap-uji')) !!}
 					{!! csrf_field() !!}
 					<input type="hidden" name="status" class="form-control" value="Laporan Uji"/>
@@ -1447,11 +1591,13 @@
 									</select>
 								</div>
 							</div>
+							@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1' && $data->examination_status == '1')
 	                        <div class="col-md-12">
 	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 	                                Update
 	                            </button>
 	                        </div>
+	                        @endif
 						</div>
 						<div class="modal fade" id="myModalketerangan_lap_uji" tabindex="-1" role="dialog" aria-hidden="true">
 							<div class="modal-dialog">
@@ -1519,7 +1665,7 @@
 													</label>
 												</div>
 											</div>
-											@else
+											@elseif($data->qa_passed == -1)
 											<div class="radio">
 												<div class="radio clip-radio radio-primary">
 														<input type="radio" value="1" name="passed" id="passed">
@@ -1531,6 +1677,23 @@
 											<div class="radio">
 												<div class="radio clip-radio radio-primary">
 													<input type="radio" value="-1" name="passed" id="notPassed" checked>
+													<label for="notPassed">
+														Tidak Lulus
+													</label>
+												</div>
+											</div>
+											@else
+											<div class="radio">
+												<div class="radio clip-radio radio-primary">
+														<input type="radio" value="1" name="passed" id="passed">
+														<label for="passed">
+															Lulus
+														</label>
+												</div>
+											</div>
+											<div class="radio">
+												<div class="radio clip-radio radio-primary">
+													<input type="radio" value="-1" name="passed" id="notPassed">
 													<label for="notPassed">
 														Tidak Lulus
 													</label>
@@ -1578,11 +1741,13 @@
 										</select>
 									</div>
 								</div>
+								@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1' && $data->examination_status == '1' && $data->resume_status == '1')
 		                        <div class="col-md-12">
 		                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 		                                Update
 		                            </button>
 		                        </div>
+		                       	@endif
 							</div>
 							<div class="modal fade" id="myModalketerangan_sidang_qa" tabindex="-1" role="dialog" aria-hidden="true">
 								<div class="modal-dialog">
@@ -1641,7 +1806,7 @@
 									</label>
 									<input type="file" name="barang_file2" id="barang_file2" class="form-control" accept="application/pdf"/>
 									<button class="btn btn-wide btn-green btn-squared pull-right">
-										Upload
+										Submit
 									</button>
 								</div>
 								<div class="form-group">
@@ -1675,7 +1840,48 @@
 							</div>
 						</fieldset>
 					{!! Form::close() !!}
-					
+					@if($data->examination_type_id == 1)
+						{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-tanda-terima')) !!}
+							{!! csrf_field() !!}
+							<input type="hidden" name="status" class="form-control" value=""/>
+							<input type="hidden" name="keterangan" class="form-control" value=""/>
+		    				<fieldset>
+								<legend>
+									Tanda Terima Hasil Pengujian
+								</legend>
+								<div class="row">
+									<div class="col-md-12">
+										<div class="form-group">
+											<a onclick="makeTandaTerima('<?php echo $data->id ?>')"> Buatkan File Tanda Terima</a>
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="form-group">
+											<label>
+												File Tanda Terima *
+											</label>
+											<input type="file" name="tanda_terima_file" id="tanda_terima_file" class="form-control" accept="application/pdf"/>
+										</div>
+										<div class="form-group">
+											<?php $tanda_terima_attach = ''; ?>
+											@foreach($data->media as $item)
+												@if($item->name == 'Tanda Terima Hasil Pengujian' && $item->attachment != '')
+													<?php $tanda_terima_attach = $item->attachment; ?>
+													<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tanda Terima Hasil Pengujian')}}"> Download Tanda Terima Hasil Pengujian"<?php echo $tanda_terima_attach; ?>"</a>
+												@endif
+											@endforeach
+											<input type="hidden" id="tanda_terima_name" value="<?php echo $tanda_terima_attach; ?>">
+										</div>
+									</div>
+									<div class="col-md-12">
+										<button type="submit" class="btn btn-wide btn-green btn-squared pull-right">
+											Submit
+										</button>
+									</div>
+								</div>
+							</fieldset>
+						{!! Form::close() !!}
+					@endif
 					{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-sertifikat')) !!}
 						{!! csrf_field() !!}
 						<input type="hidden" name="status" class="form-control" value="Penerbitan Sertifikat"/>
@@ -1696,7 +1902,7 @@
 										<div class="form-group">
 										@if($data->certificate_status)
 											@if($data->device->certificate)
-												<a href="{{URL::to('/admin/examination/media/download/'.$data->device_id.'/certificate')}}"> Download Certificate</a>
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->device_id.'/certificate')}}"> Download Certificate {{ $data->device->cert_number }}</a>
 											@endif
 										@endif
 										</div>
@@ -1704,16 +1910,9 @@
 									<div class="col-md-6">
 										<div class="form-group">
 											<label>
-												Tanggal *
+												Tanggal Penerbitan Sertifikat *
 											</label>
-											<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-												<input type="text" name="certificate_date" class="form-control" value="{{ $data->certificate_date }}"/>
-												<span class="input-group-btn">
-													<button type="button" class="btn btn-default">
-														<i class="glyphicon glyphicon-calendar"></i>
-													</button>
-												</span>
-											</p>
+											<input type="text" name="certificate_date" class="form-control" value="{{ $data->certificate_date }}" readonly>
 										</div>
 									</div>
 									<div class="col-md-6">
@@ -1770,11 +1969,13 @@
 										</select>
 									</div>
 								</div>
+								@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1' && $data->examination_status == '1' && $data->resume_status == '1' && $data->qa_status == '1')
 		                        <div class="col-md-12">
 		                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 		                                Update
 		                            </button>
 		                        </div>
+		                        @endif
 							</div>
 							<div class="modal fade" id="myModalketerangan_sertifikat" tabindex="-1" role="dialog" aria-hidden="true">
 								<div class="modal-dialog">
@@ -1965,6 +2166,31 @@
 			}
 		});
 	}
+
+	function makeTandaTerima(a){
+		
+		var APP_URL = {!! json_encode(url('/cetakTandaTerima')) !!};
+		
+		$.ajax({
+			type: "POST",
+			url : "tandaterima",
+			data: {'_token':"{{ csrf_token() }}", 'hide_id_exam':a},
+			beforeSend: function(){
+				
+			},
+			success: function(response){
+				if(response == 1){
+					window.open(APP_URL);
+					// location.reload();
+				}else{
+					alert("Gagal mengambil data");
+				}
+			},
+			error:function(){
+				alert("Gagal mengambil data");
+			}
+		});
+	}
 	
 	$('.btn-tgl-kontrak').click(function () {
 		var a = document.getElementById('hide_id_exam').value;
@@ -2106,7 +2332,7 @@
 				$('#myModalketerangan_pembayaran').modal('hide');
 			}			
 		}else{
-			if(spb_file.value == '' && spb_name == ''){
+			if(kuitansi_file.value == '' && kuitansi_name == ''){
 				alert("File Kuitansi harus dipilih");$('.kuitansi_file').focus();return false;				
 			}
 		}
@@ -2145,6 +2371,19 @@
 			return false;
 		}else{
 			$('#myModalketerangan_form_uji').modal('hide');
+		}
+	});
+
+	$('#form-tanda-terima').submit(function () {
+		var tanda_terima_file = document.getElementById('tanda_terima_file');
+		var tanda_terima_name = document.getElementById('tanda_terima_name').value;
+		var $inputs = $('#form-tanda-terima :input');
+		var values = {};
+		$inputs.each(function() {
+			values[this.name] = $(this).val();
+		});
+		if(tanda_terima_file.value == '' && tanda_terima_name == ''){
+			alert("File Tanda Terima harus dipilih");$('.tanda_terima_file').focus();return false;				
 		}
 	});
 </script>

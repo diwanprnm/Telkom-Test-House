@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -17,6 +18,8 @@ use Session;
 use Validator;
 use Excel;
 use Response;
+
+use File;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -35,8 +38,7 @@ class SalesController extends Controller
     { 
         $currentUser = Auth::user();
         $before = null;
-        $after = null; 
-        $type = '';
+        $after = null;
         $payment_status = '';
         if ($currentUser){
             $message = null;
@@ -45,10 +47,14 @@ class SalesController extends Controller
             $select = array(
                 "logs.action","logs.page","logs.created_at as search_date","users.name"
             );
-            $select = array("stels_sales.id","stels_sales.created_at","stels_sales.invoice","stels_sales.payment_status","stels_sales.payment_method","stels_sales.total"); 
+            $select = array("stels_sales.id","stels_sales.created_at","stels_sales.invoice","stels_sales.payment_status","stels_sales.payment_method","stels_sales.total","stels_sales.cust_price_payment","companies.name as company_name"); 
             if ($search != null){
             
-                $dataSales = STELSales::select($select)->where('invoice','like','%'.$search.'%');
+                $dataSales = STELSales::select($select)
+                			->join("users","users.id","=","stels_sales.user_id")
+                            ->join("companies","users.company_id","=","companies.id")
+                            ->where('invoice','like','%'.$search.'%')
+                            ->orWhere('companies.name', 'like', '%'.$search.'%');
 
                 $logs = new Logs;
                 $logs->id = Uuid::uuid4();
@@ -62,25 +68,23 @@ class SalesController extends Controller
 
             }else{
                 $dataSales = STELSales::select($select)->whereNotNull('stels_sales.created_at')
-                            ->join("users","users.id","=","stels_sales.user_id");
+                            ->join("users","users.id","=","stels_sales.user_id")
+                            ->join("companies","users.company_id","=","companies.id");
             }
              if ($request->has('payment_status')){
                 $payment_status = $request->get('payment_status');
-                if($request->input('type') != 'all'){
+                if($request->input('payment_status') != 'all'){
                     $dataSales->where('payment_status', $request->get('payment_status'));
                 }
             }
 
             if ($request->has('before_date')){  
-                $rawRangeDate = "DATE_FORMAT(stels_sales.created_at,'%Y-%m-%d') >= '".$request->get('before_date')."'";
-                $dataSales = $dataSales->where(\DB::raw($rawRangeDate), 1); 
+                $dataSales->where(DB::raw('DATE(stels_sales.created_at)'), '<=', $request->get('before_date'));
                 $before = $request->get('before_date');
             }
 
             if ($request->has('after_date')){ 
-                $rawRangeDate = "DATE_FORMAT(stels_sales.created_at,'%Y-%m-%d') <= '".$request->get('after_date')."'";
-                $dataSales = $dataSales->where(\DB::raw($rawRangeDate), 1); 
-
+                $dataSales->where(DB::raw('DATE(stels_sales.created_at)'), '>=', $request->get('after_date'));
                 $after = $request->get('after_date');
             }
 
@@ -98,7 +102,6 @@ class SalesController extends Controller
                 ->with('message', $message)
                 ->with('data', $data)
                 ->with('search', $search)
-                ->with('type', $type)
                 ->with('payment_status', $payment_status)
                 ->with('before_date', $before)
                 ->with('after_date', $after);
@@ -223,6 +226,7 @@ class SalesController extends Controller
 
         $STELSales = STELSales::find($id);
         $oldStel = $STELSales;  
+		$notifUploadSTEL = 0;
         if ($request->has('payment_status')){
 			for($i=0;$i<count($request->input('stels_sales_detail_id'));$i++){
 				if ($request->file('stel_file')[$i]) {
@@ -235,12 +239,14 @@ class SalesController extends Controller
 						$STELSalesDetail = STELSalesDetail::find($request->input('stels_sales_detail_id')[$i]);
 						$STELSalesDetail->attachment = $name_file;
 						$STELSalesDetail->save();
+						$notifUploadSTEL = 1;
 					}else{
 						Session::flash('error', 'Save STEL to directory failed');
 						return redirect('/admin/sales/'.$STELSales->id.'/edit');
 					}
 				}
 			}
+			
 			if ($request->hasFile('kuitansi_file')) {
 				$name_file = 'kuitansi_stel_'.$request->file('kuitansi_file')->getClientOriginalName();
 				$path_file = public_path().'/media/stel/'.$STELSales->id;
@@ -272,65 +278,101 @@ class SalesController extends Controller
 
             try{
                 $STELSales->save();
+				
+				if($notifUploadSTEL == 1){
+					$data= array( 
+						"from"=>"admin",
+						"to"=>$STELSales->created_by,
+						"message"=>"STEL telah diupload",
+						"url"=>"payment_detail/".$STELSales->id,
+						"is_read"=>0,
+						"created_at"=>date("Y-m-d H:i:s"),
+						"updated_at"=>date("Y-m-d H:i:s")
+						);
 
-                if ($STELSales->payment_status == 1) {
-                    $data= array( 
-                    "from"=>"admin",
-                    "to"=>$STELSales->created_by,
-                    "message"=>"Pembayaran Stel Telah diterima",
-                    "url"=>"payment_detail/".$STELSales->id,
-                    "is_read"=>0,
-                    "created_at"=>date("Y-m-d H:i:s"),
-                    "updated_at"=>date("Y-m-d H:i:s")
-                    );
+						$notification = new NotificationTable();
+						$notification->id = Uuid::uuid4();
+						$notification->from = $data['from'];
+						$notification->to = $data['to'];
+						$notification->message = $data['message'];
+						$notification->url = $data['url'];
+						$notification->is_read = $data['is_read'];
+						$notification->created_at = $data['created_at'];
+						$notification->updated_at = $data['updated_at'];
+						$notification->save();
+						$data['id'] = $notification->id; 
+						event(new Notification($data));
+						
+						$logs = new Logs;
+						$logs->user_id = $currentUser->id;
+						$logs->id = Uuid::uuid4();
+						$logs->action = "Upload Dokumen Pembelian STEL";
+						$logs->data = $oldStel;
+						$logs->created_by = $currentUser->id;
+						$logs->page = "SALES";
+						$logs->save();
+						
+						Session::flash('message', 'STELS successfully uploaded');
+				}else{
+					if ($STELSales->payment_status == 1) {
+						$data= array( 
+						"from"=>"admin",
+						"to"=>$STELSales->created_by,
+						"message"=>"Pembayaran Stel Telah diterima",
+						"url"=>"payment_detail/".$STELSales->id,
+						"is_read"=>0,
+						"created_at"=>date("Y-m-d H:i:s"),
+						"updated_at"=>date("Y-m-d H:i:s")
+						);
 
-                    $notification = new NotificationTable();
-                    $notification->id = Uuid::uuid4();
-                    $notification->from = $data['from'];
-                    $notification->to = $data['to'];
-                    $notification->message = $data['message'];
-                    $notification->url = $data['url'];
-                    $notification->is_read = $data['is_read'];
-                    $notification->created_at = $data['created_at'];
-                    $notification->updated_at = $data['updated_at'];
-                    $notification->save();
-                    $data['id'] = $notification->id; 
-                    event(new Notification($data));
-                } else if($STELSales->payment_status == -1) {
-                    $data= array( 
-                    "from"=>"admin",
-                    "to"=>$STELSales->created_by,
-                    "message"=>"Pembayaran Stel Telah ditolak",
-                    "url"=>"payment_detail/".$STELSales->id,
-                    "is_read"=>0,
-                    "created_at"=>date("Y-m-d H:i:s"),
-                    "updated_at"=>date("Y-m-d H:i:s")
-                    );
+						$notification = new NotificationTable();
+						$notification->id = Uuid::uuid4();
+						$notification->from = $data['from'];
+						$notification->to = $data['to'];
+						$notification->message = $data['message'];
+						$notification->url = $data['url'];
+						$notification->is_read = $data['is_read'];
+						$notification->created_at = $data['created_at'];
+						$notification->updated_at = $data['updated_at'];
+						$notification->save();
+						$data['id'] = $notification->id; 
+						event(new Notification($data));
+					} else if($STELSales->payment_status == -1) {
+						$data= array( 
+						"from"=>"admin",
+						"to"=>$STELSales->created_by,
+						"message"=>"Pembayaran Stel Telah ditolak",
+						"url"=>"payment_detail/".$STELSales->id,
+						"is_read"=>0,
+						"created_at"=>date("Y-m-d H:i:s"),
+						"updated_at"=>date("Y-m-d H:i:s")
+						);
 
-                    $notification = new NotificationTable();
-                    $notification->id = Uuid::uuid4();
-                    $notification->from = $data['from'];
-                    $notification->to = $data['to'];
-                    $notification->message = $data['message'];
-                    $notification->url = $data['url'];
-                    $notification->is_read = $data['is_read'];
-                    $notification->created_at = $data['created_at'];
-                    $notification->updated_at = $data['updated_at'];
-                    $notification->save();
-                    $data['id'] = $notification->id; 
-                    event(new Notification($data));
-                }
+						$notification = new NotificationTable();
+						$notification->id = Uuid::uuid4();
+						$notification->from = $data['from'];
+						$notification->to = $data['to'];
+						$notification->message = $data['message'];
+						$notification->url = $data['url'];
+						$notification->is_read = $data['is_read'];
+						$notification->created_at = $data['created_at'];
+						$notification->updated_at = $data['updated_at'];
+						$notification->save();
+						$data['id'] = $notification->id; 
+						event(new Notification($data));
+					}
 
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;
-                $logs->id = Uuid::uuid4();
-                $logs->action = "Update Status Pembayaran STEL";
-                $logs->data = $oldStel;
-                $logs->created_by = $currentUser->id;
-                $logs->page = "SALES";
-                $logs->save();
+					$logs = new Logs;
+					$logs->user_id = $currentUser->id;
+					$logs->id = Uuid::uuid4();
+					$logs->action = "Update Status Pembayaran STEL";
+					$logs->data = $oldStel;
+					$logs->created_by = $currentUser->id;
+					$logs->page = "SALES";
+					$logs->save();
+					Session::flash('message', 'SALES successfully updated');
+				}
 
-                Session::flash('message', 'SALES successfully updated');
                 return redirect('/admin/sales');
             } catch(Exception $e){
                 Session::flash('error', 'Save failed');
@@ -341,6 +383,56 @@ class SalesController extends Controller
         } 
     }
 
+    public function upload($id)
+    {
+        $select = array("stels_sales.id","stels_sales_attachment.attachment","stels_sales_attachment.stel_sales_id");  
+        $stel = STELSalesAttach::select($select)->rightJoin("stels_sales","stels_sales.id","=","stels_sales_attachment.stel_sales_id")
+                ->where("stels_sales.id",$id)->first();
+                
+        $select = array("stels.name","stels.price","stels.code","stels_sales_detail.qty","stels_sales_detail.id","stels_sales_detail.attachment","stels.attachment as stelAttach","stels_sales.invoice","companies.name as company_name","stels_sales.payment_status"); 
+        $STELSales = STELSalesDetail::select($select)->where("stels_sales_id",$id)
+                    ->join("stels_sales","stels_sales.id","=","stels_sales_detail.stels_sales_id")
+                    ->join("stels","stels.id","=","stels_sales_detail.stels_id")
+                    ->join("users","users.id","=","stels_sales.user_id")
+                    ->join("companies","companies.id","=","users.company_id")
+                    ->get();
+        return view('admin.sales.upload')
+            ->with('data', $stel)
+            ->with('dataStel', $STELSales);
+    }
+
+	public function deleteProduct($id)
+    {
+        $stel_sales_detail = STELSalesDetail::with('stel')->find($id);
+        if($stel_sales_detail){
+            $stel_sales = STELSales::find($stel_sales_detail->stels_sales_id);
+            
+            // unlink stels_sales_detail.attachment
+            if (File::exists(public_path().'\media\stelAttach\\'.$id)){
+                File::deleteDirectory(public_path().'\media\stelAttach\\'.$id);
+            }
+
+            // update total stels_sales by stels_sales_detail.stels_sales_id
+            if($stel_sales){
+                $qty = $stel_sales_detail->qty;
+                $tax = 0.1;
+                $price = $stel_sales_detail->stel->price;
+                $total = $price+($price*$tax*$qty);
+                $stel_sales->total -= $total;
+                $stel_sales->update();
+            }
+
+            // delete stels_sales_detail
+            $stel_sales_detail->delete();
+
+            Session::flash('message', 'Successfully Delete Data');
+            return redirect('/admin/sales/'.$stel_sales->id);
+        }else{
+            Session::flash('error', 'Undefined Data');
+            return redirect('/admin/sales/'.$stel_sales->id);
+        }
+
+    }
 
     public function viewMedia($id)
     {

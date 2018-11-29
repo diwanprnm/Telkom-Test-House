@@ -13,6 +13,9 @@ use App\Examination;
 use App\ExaminationType;
 use App\ExaminationHistory;
 use App\ExaminationAttach;
+use App\AdminRole;
+use App\TbMSPK;
+use App\TbHSPK;
 
 use App\User;
 use Mail;
@@ -53,14 +56,14 @@ class ExaminationAPIController extends AppBaseController
 			"CASE 
 			  WHEN registration_status != 1 THEN 'Registrasi'
 			  WHEN registration_status = 1 AND function_status != 1 THEN 'Uji Fungsi'
-			  WHEN function_status = 1 AND contract_status != 1 THEN 'Tinjauan Kontrak'
-			  WHEN contract_status = 1 AND spb_status != 1 THEN 'SPB'
-			  WHEN spb_status = 1 AND payment_status != 1 THEN 'Pembayaran'
-			  WHEN payment_status = 1 AND spk_status != 1 THEN 'Pembuatan SPK'
-			  WHEN spk_status = 1 AND examination_status != 1 THEN 'Pelaksanaan Uji'
-			  WHEN examination_status = 1 AND resume_status != 1 THEN 'Laporan Uji'
-			  WHEN resume_status = 1 AND qa_status != 1 THEN 'Sidang QA'
-			  WHEN qa_status = 1 AND certificate_status != 1 THEN 'Penerbitan Sertifikat'
+			  WHEN registration_status = 1 AND function_status = 1 AND contract_status != 1 THEN 'Tinjauan Kontrak'
+			  WHEN registration_status = 1 AND function_status = 1 AND contract_status = 1 AND spb_status != 1 THEN 'SPB'
+			  WHEN registration_status = 1 AND function_status = 1 AND contract_status = 1 AND spb_status = 1 AND payment_status != 1 THEN 'Pembayaran'
+			  WHEN registration_status = 1 AND function_status = 1 AND contract_status = 1 AND spb_status = 1 AND payment_status = 1 AND spk_status != 1 THEN 'Pembuatan SPK'
+			  WHEN registration_status = 1 AND function_status = 1 AND contract_status = 1 AND spb_status = 1 AND payment_status = 1 AND spk_status = 1 AND examination_status != 1 THEN 'Pelaksanaan Uji'
+			  WHEN registration_status = 1 AND function_status = 1 AND contract_status = 1 AND spb_status = 1 AND payment_status = 1 AND spk_status = 1 AND examination_status = 1 AND resume_status != 1 THEN 'Laporan Uji'
+			  WHEN registration_status = 1 AND function_status = 1 AND contract_status = 1 AND spb_status = 1 AND payment_status = 1 AND spk_status = 1 AND examination_status = 1 AND resume_status = 1 AND qa_status != 1 THEN 'Sidang QA'
+			  WHEN registration_status = 1 AND function_status = 1 AND contract_status = 1 AND spb_status = 1 AND payment_status = 1 AND spk_status = 1 AND examination_status = 1 AND qa_status = 1 AND certificate_status != 1 THEN 'Penerbitan Sertifikat'
 			  ELSE NULL
 			  END as 'step_progress'
 			",
@@ -113,10 +116,114 @@ class ExaminationAPIController extends AppBaseController
 							->orWhere("devices.manufactured_by", "LIKE", '%'.$param->find .'%')
 							->orWhere("devices.test_reference", "LIKE", '%'.$param->find .'%')
 							->orWhere("examinations.spk_code", "LIKE", '%'.$param->find .'%')
-							->orWhere("examinations.is_loc_test", "=", $param->find)
 							->orWhere("examination_labs.name", "LIKE", '%'.$param->find .'%')
 					;
 				});
+				switch ($param->find) {
+					case "Registrasi": 
+						$result->orWhere("examinations.registration_status", "!=", '1')
+							;
+						break;
+					case "Uji Fungsi": 
+						$result->orWhere(function($q){
+						return $q->where("examinations.registration_status", "=", '1')
+								->where("examinations.function_status", "!=", '1')
+							;
+						});
+						break;
+					case "Tinjauan Kontrak":
+						$result->orWhere(function($q){
+						return $q->where("examinations.registration_status", "=", '1')
+								->where("examinations.function_status", "=", '1')
+								->where("examinations.contract_status", "!=", '1')
+							;
+						});
+						break;
+					case "SPB": 
+						$result->orWhere(function($q){
+						return $q->where("examinations.registration_status", "=", '1')
+								->where("examinations.function_status", "=", '1')
+								->where("examinations.contract_status", "=", '1')
+								->where("examinations.spb_status", "!=", '1')
+							;
+						});
+						break;
+					case "Pembayaran": 
+						$result->orWhere(function($q){
+						return $q->where("examinations.registration_status", "=", '1')
+								->where("examinations.function_status", "=", '1')
+								->where("examinations.contract_status", "=", '1')
+								->where("examinations.spb_status", "=", '1')
+								->where("examinations.payment_status", "!=", '1')
+							;
+						});
+						break;
+					case "Pembuatan SPK": 
+						$result->orWhere(function($q){
+						return $q->where("examinations.registration_status", "=", '1')
+								->where("examinations.function_status", "=", '1')
+								->where("examinations.contract_status", "=", '1')
+								->where("examinations.spb_status", "=", '1')
+								->where("examinations.payment_status", "=", '1')
+								->where("examinations.spk_status", "!=", '1')
+							;
+						});
+						break;
+					case "Pelaksanaan Uji": 
+						$result->orWhere(function($q){
+						return $q->where("examinations.registration_status", "=", '1')
+								->where("examinations.function_status", "=", '1')
+								->where("examinations.contract_status", "=", '1')
+								->where("examinations.spb_status", "=", '1')
+								->where("examinations.payment_status", "=", '1')
+								->where("examinations.spk_status", "=", '1')
+								->where("examinations.examination_status", "!=", '1')
+							;
+						});
+						break;
+					case "Laporan Uji": 
+						$result->orWhere(function($q){
+						return $q->where("examinations.registration_status", "=", '1')
+								->where("examinations.function_status", "=", '1')
+								->where("examinations.contract_status", "=", '1')
+								->where("examinations.spb_status", "=", '1')
+								->where("examinations.payment_status", "=", '1')
+								->where("examinations.spk_status", "=", '1')
+								->where("examinations.examination_status", "=", '1')
+								->where("examinations.resume_status", "!=", '1')
+							;
+						});
+						break;
+					case "Sidang QA": 
+						$result->orWhere(function($q){
+						return $q->where("examinations.registration_status", "=", '1')
+								->where("examinations.function_status", "=", '1')
+								->where("examinations.contract_status", "=", '1')
+								->where("examinations.spb_status", "=", '1')
+								->where("examinations.payment_status", "=", '1')
+								->where("examinations.spk_status", "=", '1')
+								->where("examinations.examination_status", "=", '1')
+								->where("examinations.resume_status", "=", '1')
+								->where("examinations.qa_status", "!=", '1')
+							;
+						});
+						break;
+					case "Penerbitan Sertifikat": 
+						$result->orWhere(function($q){
+						return $q->where("examinations.registration_status", "=", '1')
+								->where("examinations.function_status", "=", '1')
+								->where("examinations.contract_status", "=", '1')
+								->where("examinations.spb_status", "=", '1')
+								->where("examinations.payment_status", "=", '1')
+								->where("examinations.spk_status", "=", '1')
+								->where("examinations.examination_status", "=", '1')
+								->where("examinations.resume_status", "=", '1')
+								->where("examinations.qa_status", "=", '1')
+								->where("examinations.certificate_status", "!=", '1')
+							;
+						});
+						break;
+				} 
 			// $rawRangeDate ="date_format(examinations.created_at,'%Y-%m-%d') = '".$param->find."'";
 			// $result = $result->orWhere(\DB::raw($rawRangeDate), 1); 
 			// $rawRangeSPKDate ="date_format(examinations.spk_date,'%Y-%m-%d') = '".$param->find."'";
@@ -133,38 +240,83 @@ class ExaminationAPIController extends AppBaseController
 						$result = $result->where("examinations.function_status", "!=", '1'); 
 						break;
 					case 3: 
+						$result = $result->where("examinations.registration_status", "=", '1');
 						$result = $result->where("examinations.function_status", "=", '1'); 
 						$result = $result->where("examinations.contract_status", "!=", '1'); 
 						break;
 					case 4: 
-						$result = $result->where("examinations.contract_status ", "=", '1'); 
+						$result = $result->where("examinations.registration_status", "=", '1');
+						$result = $result->where("examinations.function_status", "=", '1'); 
+						$result = $result->where("examinations.contract_status", "=", '1'); 
 						$result = $result->where("examinations.spb_status", "!=", '1'); 
 						break;
 					case 5: 
+						$result = $result->where("examinations.registration_status", "=", '1');
+						$result = $result->where("examinations.function_status", "=", '1'); 
+						$result = $result->where("examinations.contract_status", "=", '1'); 
 						$result = $result->where("examinations.spb_status", "=", '1'); 
 						$result = $result->where("examinations.payment_status", "!=", '1'); 
 						break;
 					case 6: 
+						$result = $result->where("examinations.registration_status", "=", '1');
+						$result = $result->where("examinations.function_status", "=", '1'); 
+						$result = $result->where("examinations.contract_status", "=", '1'); 
+						$result = $result->where("examinations.spb_status", "=", '1'); 
 						$result = $result->where("examinations.payment_status", "=", '1'); 
 						$result = $result->where("examinations.spk_status", "!=", '1');
 						break;
 					case 7: 
+						$result = $result->where("examinations.registration_status", "=", '1');
+						$result = $result->where("examinations.function_status", "=", '1'); 
+						$result = $result->where("examinations.contract_status", "=", '1'); 
+						$result = $result->where("examinations.spb_status", "=", '1'); 
+						$result = $result->where("examinations.payment_status", "=", '1'); 
 						$result = $result->where("examinations.spk_status", "=", '1'); 
 						$result = $result->where("examinations.examination_status", "!=", '1');
 						break;
 					case 8: 
+						$result = $result->where("examinations.registration_status", "=", '1');
+						$result = $result->where("examinations.function_status", "=", '1'); 
+						$result = $result->where("examinations.contract_status", "=", '1'); 
+						$result = $result->where("examinations.spb_status", "=", '1'); 
+						$result = $result->where("examinations.payment_status", "=", '1'); 
+						$result = $result->where("examinations.spk_status", "=", '1');
 						$result = $result->where("examinations.examination_status", "=", '1'); 
 						$result = $result->where("examinations.resume_status", "!=", '1');
 						break;
 					case 9: 
+						$result = $result->where("examinations.registration_status", "=", '1');
+						$result = $result->where("examinations.function_status", "=", '1'); 
+						$result = $result->where("examinations.contract_status", "=", '1'); 
+						$result = $result->where("examinations.spb_status", "=", '1'); 
+						$result = $result->where("examinations.payment_status", "=", '1'); 
+						$result = $result->where("examinations.spk_status", "=", '1');
+						$result = $result->where("examinations.examination_status", "=", '1'); 
 						$result = $result->where("examinations.resume_status", "=", '1'); 
 						$result = $result->where("examinations.qa_status", "!=", '1');
 						break;
 					case 10: 
-						$result = $result->where("examinations.qa_status", "==", '1'); 
+						$result = $result->where("examinations.registration_status", "=", '1');
+						$result = $result->where("examinations.function_status", "=", '1'); 
+						$result = $result->where("examinations.contract_status", "=", '1'); 
+						$result = $result->where("examinations.spb_status", "=", '1'); 
+						$result = $result->where("examinations.payment_status", "=", '1'); 
+						$result = $result->where("examinations.spk_status", "=", '1');
+						$result = $result->where("examinations.examination_status", "=", '1'); 
+						$result = $result->where("examinations.resume_status", "=", '1'); 
+						$result = $result->where("examinations.qa_status", "=", '1'); 
 						$result = $result->where("examinations.certificate_status", "!=", '1'); 
 						break;
 					default:
+						$result = $result->where("examinations.registration_status", "=", '1');
+						$result = $result->where("examinations.function_status", "=", '1'); 
+						$result = $result->where("examinations.contract_status", "=", '1'); 
+						$result = $result->where("examinations.spb_status", "=", '1'); 
+						$result = $result->where("examinations.payment_status", "=", '1'); 
+						$result = $result->where("examinations.spk_status", "=", '1');
+						$result = $result->where("examinations.examination_status", "=", '1'); 
+						$result = $result->where("examinations.resume_status", "=", '1'); 
+						$result = $result->where("examinations.qa_status", "=", '1'); 
 						$result = $result->where("examinations.certificate_status", "=", '1');
 						break;
 				} 
@@ -224,6 +376,10 @@ class ExaminationAPIController extends AppBaseController
 				$result = $result->where("examinations.is_spk_created", "=", $param->is_spk_created);
 			}
 
+			if(isset($param->is_loc_test)){
+				$result = $result->where("examinations.is_loc_test", "=", $param->is_loc_test);
+			}
+
 		}
 		
 		if(isset($param->limit)){
@@ -232,6 +388,8 @@ class ExaminationAPIController extends AppBaseController
 				$result = $result->offset($param->offset);
 			}
 		}
+		// $result = $result->toSql();
+		// print_r($result);exit;
 		$result = $result->get()->toArray();
 		
 	 
@@ -375,14 +533,14 @@ class ExaminationAPIController extends AppBaseController
 			"CASE 
 			  WHEN registration_status != 1 THEN 'Registrasi'
 			  WHEN registration_status = 1 AND function_status != 1 THEN 'Uji Fungsi'
-			  WHEN function_status = 1 AND contract_status != 1 THEN 'Tinjauan Kontrak'
-			  WHEN contract_status = 1 AND spb_status != 1 THEN 'SPB'
-			  WHEN spb_status = 1 AND payment_status != 1 THEN 'Pembayaran'
-			  WHEN payment_status = 1 AND spk_status != 1 THEN 'Pembuatan SPK'
-			  WHEN spk_status = 1 AND examination_status != 1 THEN 'Pelaksanaan Uji'
-			  WHEN examination_status = 1 AND resume_status != 1 THEN 'Laporan Uji'
-			  WHEN resume_status = 1 AND qa_status != 1 THEN 'Sidang QA'
-			  WHEN qa_status = 1 AND certificate_status != 1 THEN 'Penerbitan Sertifikat'
+			  WHEN registration_status = 1 AND function_status = 1 AND contract_status != 1 THEN 'Tinjauan Kontrak'
+			  WHEN registration_status = 1 AND function_status = 1 AND contract_status = 1 AND spb_status != 1 THEN 'SPB'
+			  WHEN registration_status = 1 AND function_status = 1 AND contract_status = 1 AND spb_status = 1 AND payment_status != 1 THEN 'Pembayaran'
+			  WHEN registration_status = 1 AND function_status = 1 AND contract_status = 1 AND spb_status = 1 AND payment_status = 1 AND spk_status != 1 THEN 'Pembuatan SPK'
+			  WHEN registration_status = 1 AND function_status = 1 AND contract_status = 1 AND spb_status = 1 AND payment_status = 1 AND spk_status = 1 AND examination_status != 1 THEN 'Pelaksanaan Uji'
+			  WHEN registration_status = 1 AND function_status = 1 AND contract_status = 1 AND spb_status = 1 AND payment_status = 1 AND spk_status = 1 AND examination_status = 1 AND resume_status != 1 THEN 'Laporan Uji'
+			  WHEN registration_status = 1 AND function_status = 1 AND contract_status = 1 AND spb_status = 1 AND payment_status = 1 AND spk_status = 1 AND examination_status = 1 AND resume_status = 1 AND qa_status != 1 THEN 'Sidang QA'
+			  WHEN registration_status = 1 AND function_status = 1 AND contract_status = 1 AND spb_status = 1 AND payment_status = 1 AND spk_status = 1 AND examination_status = 1 AND qa_status = 1 AND certificate_status != 1 THEN 'Penerbitan Sertifikat'
 			  ELSE NULL
 			  END as 'step_progress'
 			",
@@ -425,38 +583,83 @@ class ExaminationAPIController extends AppBaseController
 						$result = $result->where("examinations.function_status", "!=", '1'); 
 						break;
 					case 3: 
+						$result = $result->where("examinations.registration_status", "=", '1');
 						$result = $result->where("examinations.function_status", "=", '1'); 
 						$result = $result->where("examinations.contract_status", "!=", '1'); 
 						break;
 					case 4: 
-						$result = $result->where("examinations.contract_status ", "=", '1'); 
+						$result = $result->where("examinations.registration_status", "=", '1');
+						$result = $result->where("examinations.function_status", "=", '1'); 
+						$result = $result->where("examinations.contract_status", "=", '1'); 
 						$result = $result->where("examinations.spb_status", "!=", '1'); 
 						break;
 					case 5: 
+						$result = $result->where("examinations.registration_status", "=", '1');
+						$result = $result->where("examinations.function_status", "=", '1'); 
+						$result = $result->where("examinations.contract_status", "=", '1'); 
 						$result = $result->where("examinations.spb_status", "=", '1'); 
 						$result = $result->where("examinations.payment_status", "!=", '1'); 
 						break;
 					case 6: 
+						$result = $result->where("examinations.registration_status", "=", '1');
+						$result = $result->where("examinations.function_status", "=", '1'); 
+						$result = $result->where("examinations.contract_status", "=", '1'); 
+						$result = $result->where("examinations.spb_status", "=", '1'); 
 						$result = $result->where("examinations.payment_status", "=", '1'); 
 						$result = $result->where("examinations.spk_status", "!=", '1');
 						break;
 					case 7: 
+						$result = $result->where("examinations.registration_status", "=", '1');
+						$result = $result->where("examinations.function_status", "=", '1'); 
+						$result = $result->where("examinations.contract_status", "=", '1'); 
+						$result = $result->where("examinations.spb_status", "=", '1'); 
+						$result = $result->where("examinations.payment_status", "=", '1'); 
 						$result = $result->where("examinations.spk_status", "=", '1'); 
 						$result = $result->where("examinations.examination_status", "!=", '1');
 						break;
 					case 8: 
+						$result = $result->where("examinations.registration_status", "=", '1');
+						$result = $result->where("examinations.function_status", "=", '1'); 
+						$result = $result->where("examinations.contract_status", "=", '1'); 
+						$result = $result->where("examinations.spb_status", "=", '1'); 
+						$result = $result->where("examinations.payment_status", "=", '1'); 
+						$result = $result->where("examinations.spk_status", "=", '1');
 						$result = $result->where("examinations.examination_status", "=", '1'); 
 						$result = $result->where("examinations.resume_status", "!=", '1');
 						break;
 					case 9: 
+						$result = $result->where("examinations.registration_status", "=", '1');
+						$result = $result->where("examinations.function_status", "=", '1'); 
+						$result = $result->where("examinations.contract_status", "=", '1'); 
+						$result = $result->where("examinations.spb_status", "=", '1'); 
+						$result = $result->where("examinations.payment_status", "=", '1'); 
+						$result = $result->where("examinations.spk_status", "=", '1');
+						$result = $result->where("examinations.examination_status", "=", '1'); 
 						$result = $result->where("examinations.resume_status", "=", '1'); 
 						$result = $result->where("examinations.qa_status", "!=", '1');
 						break;
 					case 10: 
-						$result = $result->where("examinations.qa_status", "==", '1'); 
+						$result = $result->where("examinations.registration_status", "=", '1');
+						$result = $result->where("examinations.function_status", "=", '1'); 
+						$result = $result->where("examinations.contract_status", "=", '1'); 
+						$result = $result->where("examinations.spb_status", "=", '1'); 
+						$result = $result->where("examinations.payment_status", "=", '1'); 
+						$result = $result->where("examinations.spk_status", "=", '1');
+						$result = $result->where("examinations.examination_status", "=", '1'); 
+						$result = $result->where("examinations.resume_status", "=", '1'); 
+						$result = $result->where("examinations.qa_status", "=", '1'); 
 						$result = $result->where("examinations.certificate_status", "!=", '1'); 
 						break;
 					default:
+						$result = $result->where("examinations.registration_status", "=", '1');
+						$result = $result->where("examinations.function_status", "=", '1'); 
+						$result = $result->where("examinations.contract_status", "=", '1'); 
+						$result = $result->where("examinations.spb_status", "=", '1'); 
+						$result = $result->where("examinations.payment_status", "=", '1'); 
+						$result = $result->where("examinations.spk_status", "=", '1');
+						$result = $result->where("examinations.examination_status", "=", '1'); 
+						$result = $result->where("examinations.resume_status", "=", '1'); 
+						$result = $result->where("examinations.qa_status", "=", '1'); 
 						$result = $result->where("examinations.certificate_status", "=", '1');
 						break;
 				} 
@@ -499,7 +702,7 @@ class ExaminationAPIController extends AppBaseController
 			"examinations.function_test_date_approval",
 			"examinations.catatan",
 			"examinations.location",
-			"examinations.function_test_date_approval",
+			"examinations.function_test_status_detail as status",
 			"examination_labs.name as lab",
 			"examination_labs.lab_code",
 			"companies.name as company_name",
@@ -536,6 +739,7 @@ class ExaminationAPIController extends AppBaseController
 						->orWhere("devices.serial_number", "LIKE", '%'.$param->find .'%')
 						->orWhere("devices.manufactured_by", "LIKE", '%'.$param->find .'%')
 						->orWhere("devices.test_reference", "LIKE", '%'.$param->find .'%')
+						->orWhere("examinations.function_test_status_detail", "LIKE", '%'.$param->find .'%')
 					;
 				});
 		}else{
@@ -554,6 +758,9 @@ class ExaminationAPIController extends AppBaseController
 			}
 			if(isset($param->location)){
 				$result = $result->where("examinations.location", "=", $param->location);
+			}
+			if(isset($param->status)){
+				$result = $result->where("examinations.function_test_status_detail", "LIKE", '%'.$param->status .'%');
 			}
 		}
 				
@@ -638,77 +845,79 @@ class ExaminationAPIController extends AppBaseController
 				$examinations->function_test_PIC = $param->function_test_pic;
 				$examinations->function_test_reason = $param->reason;
 				if($param->is_agree == 1){
-					if($examinations->save()){
-						
-						 $data= array( 
-						"from"=>$id_user,
-						"to"=>"admin",
-						"message"=>"Test Enginner menyetujui Tanggal Uji Fungsi",
-						"url"=>"examination/".$param->id."/edit",
-						"is_read"=>0,
-						"created_at"=>date("Y-m-d H:i:s"),
-						"updated_at"=>date("Y-m-d H:i:s")
-					 );
+					$examinations->function_test_status_detail = 'Tanggal uji fungsi fix';
+					if($examinations->save()){ 
 					 
-					$exam_hist = new ExaminationHistory;
-					$exam_hist->examination_id = $param->id;
-					$exam_hist->date_action = date('Y-m-d H:i:s');
-					$exam_hist->tahap = 'Menyetujui Tanggal Uji';
-					$exam_hist->status = 1;
-					$exam_hist->keterangan = $param->function_test_date.' dari Test Enginner ('.$param->reason.')';
-					$exam_hist->created_by = $examinations->created_by;
-					$exam_hist->created_at = date('Y-m-d H:i:s');
-					$exam_hist->save();
-					 
-					  $notification = new NotificationTable();
-	$notification->id = Uuid::uuid4();
-					  $notification->from = $data['from'];
-					  $notification->to = $data['to'];
-					  $notification->message = $data['message'];
-					  $notification->url = $data['url'];
-					  $notification->is_read = $data['is_read'];
-					  $notification->created_at = $data['created_at'];
-					  $notification->updated_at = $data['updated_at'];
-					  $notification->save();
+						$exam_hist = new ExaminationHistory;
+						$exam_hist->examination_id = $param->id;
+						$exam_hist->date_action = date('Y-m-d H:i:s');
+						$exam_hist->tahap = 'Menyetujui Tanggal Uji';
+						$exam_hist->status = 1;
+						$exam_hist->keterangan = $param->function_test_date.' dari Test Engineer ('.$param->reason.')';
+						$exam_hist->created_by = $examinations->created_by;
+						$exam_hist->created_at = date('Y-m-d H:i:s');
+						$exam_hist->save();
 
-					  $data['id'] = $notification->id;
-					  event(new Notification($data));  
-					  
-					  $data= array( 
-						"from"=>"admin",
-						"to"=>$examinations->created_by,
-						"message"=>"Test Enginner menyetujui Tanggal Uji Fungsi",
-						"url"=>"pengujian",
-						"is_read"=>0,
-						"created_at"=>date("Y-m-d H:i:s"),
-						"updated_at"=>date("Y-m-d H:i:s")
-					 );
-					  $notification = new NotificationTable();
-	$notification->id = Uuid::uuid4();
-					  $notification->from = $data['from'];
-					  $notification->to = $data['to'];
-					  $notification->message = $data['message'];
-					  $notification->url = $data['url'];
-					  $notification->is_read = $data['is_read'];
-					  $notification->created_at = $data['created_at'];
-					  $notification->updated_at = $data['updated_at'];
-					  $notification->save();
+						$admins = AdminRole::where('function_status',1)->get()->toArray();
+						foreach ($admins as $admin) {  
+							$data= array( 
+								"from"=>$id_user,
+								"to"=>$admin['user_id'],
+								"message"=>"Test Engineer menyetujui Tanggal Uji Fungsi",
+								"url"=>"examination/".$param->id."/edit",
+								"is_read"=>0,
+								"created_at"=>date("Y-m-d H:i:s"),
+								"updated_at"=>date("Y-m-d H:i:s")
+							);
+						  	$notification = new NotificationTable();
+							$notification->id = Uuid::uuid4();
+						  	$notification->from = $data['from'];
+						  	$notification->to = $data['to'];
+						  	$notification->message = $data['message'];
+						  	$notification->url = $data['url'];
+						  	$notification->is_read = $data['is_read'];
+						  	$notification->created_at = $data['created_at'];
+						  	$notification->updated_at = $data['updated_at'];
+						  	$notification->save();
 
-					 $data['id'] = $notification->id;
-					  event(new Notification($data));
+						  $data['id'] = $notification->id;
+						  event(new Notification($data));  
+						}
+					  	$data= array( 
+							"from"=>"admin",
+							"to"=>$examinations->created_by,
+							"message"=>"Test Engineer menyetujui Tanggal Uji Fungsi",
+							"url"=>"pengujian",
+							"is_read"=>0,
+							"created_at"=>date("Y-m-d H:i:s"),
+							"updated_at"=>date("Y-m-d H:i:s")
+					 	);
+						$notification = new NotificationTable();
+						$notification->id = Uuid::uuid4();
+						$notification->from = $data['from'];
+						$notification->to = $data['to'];
+						$notification->message = $data['message'];
+						$notification->url = $data['url'];
+						$notification->is_read = $data['is_read'];
+						$notification->created_at = $data['created_at'];
+						$notification->updated_at = $data['updated_at'];
+						$notification->save();
 
+						$data['id'] = $notification->id;
+						event(new Notification($data));
 						return $this->sendResponse($examinations, 'Function Date Found');
 					}else{
 						return $this->sendError('Failed to Update Function Date ');
 					}
 				}
 				else if($param->is_agree == 0 || $param->date_type == 2){
+					$examinations->function_test_status_detail = 'TE menjadwal ulang tanggal';
 					if($examinations->save()){
 						
 						 $data= array( 
 						"from"=>$id_user,
 						"to"=>"admin",
-						"message"=>"Test Enginner memberikan Tanggal Uji Fungsi",
+						"message"=>"Test Engineer memberikan Tanggal Uji Fungsi",
 						"url"=>"examination/".$param->id."/edit",
 						"is_read"=>0,
 						"created_at"=>date("Y-m-d H:i:s"),
@@ -720,7 +929,7 @@ class ExaminationAPIController extends AppBaseController
 					$exam_hist->date_action = date('Y-m-d H:i:s');
 					$exam_hist->tahap = 'Update Tanggal Uji';
 					$exam_hist->status = 1;
-					$exam_hist->keterangan = $param->function_test_date.' dari Test Enginner ('.$param->reason.')';
+					$exam_hist->keterangan = $param->function_test_date.' dari Test Engineer ('.$param->reason.')';
 					$exam_hist->created_by = $examinations->created_by;
 					$exam_hist->created_at = date('Y-m-d H:i:s');
 					$exam_hist->save();
@@ -742,7 +951,7 @@ class ExaminationAPIController extends AppBaseController
 					  $data= array( 
 						"from"=>"admin",
 						"to"=>$examinations->created_by,
-						"message"=>"Test Enginner mengajukan Tanggal Uji Fungsi",
+						"message"=>"Test Engineer mengajukan Tanggal Uji Fungsi",
 						"url"=>"pengujian",
 						"is_read"=>0,
 						"created_at"=>date("Y-m-d H:i:s"),
@@ -806,56 +1015,55 @@ class ExaminationAPIController extends AppBaseController
 				$equip->location = $param->location;
 				$equip->save();
 				if($param->location == 3){
-					
-
-			      	$data= array( 
-	                "from"=>$id_user,
-	                "to"=>"admin",
-	                "message"=>"Test Engginer mengambil barang dari Gudang",
-	                "url"=>"examination/".$param->id.'/edit',
-	                "is_read"=>0,
-	                "created_at"=>date("Y-m-d H:i:s"),
-	                "updated_at"=>date("Y-m-d H:i:s")
-	                );
-				  	$notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
-			      	$notification->from = $data['from'];
-			      	$notification->to = $data['to'];
-			      	$notification->message = $data['message'];
-			      	$notification->url = $data['url'];
-			      	$notification->is_read = $data['is_read'];
-			      	$notification->created_at = $data['created_at'];
-			      	$notification->updated_at = $data['updated_at'];
-			      	$notification->save();
-
-
-	                 $data['id'] = $notification->id;
+					$admins = AdminRole::where('examination_status',1)->get()->toArray();
+					foreach ($admins as $admin) {  
+				      	$data= array( 
+		                "from"=>$id_user,
+		                "to"=>$admin['user_id'],
+		                "message"=>"Test Engineer mengambil barang dari Gudang",
+		                "url"=>"examination/".$param->id.'/edit',
+		                "is_read"=>0,
+		                "created_at"=>date("Y-m-d H:i:s"),
+		                "updated_at"=>date("Y-m-d H:i:s")
+		                );
+					  	$notification = new NotificationTable();
+						$notification->id = Uuid::uuid4();
+				      	$notification->from = $data['from'];
+				      	$notification->to = $data['to'];
+				      	$notification->message = $data['message'];
+				      	$notification->url = $data['url'];
+				      	$notification->is_read = $data['is_read'];
+				      	$notification->created_at = $data['created_at'];
+				      	$notification->updated_at = $data['updated_at'];
+				      	$notification->save();
+					}
+	                $data['id'] = $notification->id;
 			      	event(new Notification($data));
 				}else if($param->location == 2){
-
-					$data= array( 
-	                "from"=>$id_user,
-	                "to"=>"admin",
-	                "message"=>"Test Engginer mengembalikan barang ke Gudang",
-	                "url"=>"examination/".$param->id.'/edit',
-	                "is_read"=>0,
-	                "created_at"=>date("Y-m-d H:i:s"),
-	                "updated_at"=>date("Y-m-d H:i:s")
-	                );
-				  	$notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
-			      	$notification->from = $data['from'];
-			      	$notification->to = $data['to'];
-			      	$notification->message = $data['message'];
-			      	$notification->url = $data['url'];
-			      	$notification->is_read = $data['is_read'];
-			      	$notification->created_at = $data['created_at'];
-			      	$notification->updated_at = $data['updated_at'];
-			      	$notification->save();
-
-			      	 $data['id'] = $notification->id;
-
-	                event(new Notification($data));
+					$admins = AdminRole::where('examination_status',1)->get()->toArray();
+					foreach ($admins as $admin) {  
+						$data= array( 
+			                "from"=>$id_user,
+			                "to"=>$admin['user_id'],
+			                "message"=>"Test Engineer mengembalikan barang ke Gudang",
+			                "url"=>"examination/".$param->id.'/edit',
+			                "is_read"=>0,
+			                "created_at"=>date("Y-m-d H:i:s"),
+			                "updated_at"=>date("Y-m-d H:i:s")
+		                );
+					  	$notification = new NotificationTable();
+						$notification->id = Uuid::uuid4();
+				      	$notification->from = $data['from'];
+				      	$notification->to = $data['to'];
+				      	$notification->message = $data['message'];
+				      	$notification->url = $data['url'];
+				      	$notification->is_read = $data['is_read'];
+				      	$notification->created_at = $data['created_at'];
+				      	$notification->updated_at = $data['updated_at'];
+				      	$notification->save();
+	 					$data['id'] = $notification->id; 
+		                event(new Notification($data));
+	            	}
 				}
 				
 		        event(new Notification($data));
@@ -914,59 +1122,55 @@ $notification->id = Uuid::uuid4();
 					$device->updated_by = 1;
 					$device->updated_at = date("Y-m-d H:i:s");
 					
-					if($device->save()){
+					if($device->save()){ 
+						$admins = AdminRole::where('function_status',1)->get()->toArray();
+						foreach ($admins as $admin) {  
+							$data= array( 
+				                "from"=>$id_user,
+				                "to"=>$admin['user_id'],
+				                "message"=>"Test Engineer mengedit data Pengujian",
+				                "url"=>"examination/".$param->id,
+				                "is_read"=>0,
+				                "created_at"=>date("Y-m-d H:i:s"),
+				                "updated_at"=>date("Y-m-d H:i:s")
+			             	);
+						  	$notification = new NotificationTable();
+							$notification->id = Uuid::uuid4();
+					      	$notification->from = $data['from'];
+					      	$notification->to = $data['to'];
+					      	$notification->message = $data['message'];
+					      	$notification->url = $data['url'];
+					      	$notification->is_read = $data['is_read'];
+					      	$notification->created_at = $data['created_at'];
+					      	$notification->updated_at = $data['updated_at'];
+					      	$notification->save();
+					     	$data['id'] = $notification->id;
+					     	event(new Notification($data));
+					    }
 
-					
-						 $data= array( 
-		                "from"=>$id_user,
-		                "to"=>"admin",
-		                "message"=>"Test Enginner mengedit data Pengujian",
-		                "url"=>"examination/".$param->id,
-		                "is_read"=>0,
-		                "created_at"=>date("Y-m-d H:i:s"),
-		                "updated_at"=>date("Y-m-d H:i:s")
-		             );
-					  $notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
-				      $notification->from = $data['from'];
-				      $notification->to = $data['to'];
-				      $notification->message = $data['message'];
-				      $notification->url = $data['url'];
-				      $notification->is_read = $data['is_read'];
-				      $notification->created_at = $data['created_at'];
-				      $notification->updated_at = $data['updated_at'];
-				      $notification->save();
-				     $data['id'] = $notification->id;
-				     
-				      event(new Notification($data));
-
-
-				      $data= array(
+				      	$data= array(
 				        
 			                "from"=>"admin",
 			                "to"=>$id_user,
-			                "message"=>"Test Enginner mengedit data Pengujian",
+			                "message"=>"Test Engineer mengedit data Pengujian",
 			                "url"=>"pengujian".$param->id,
 			                "is_read"=>0,
 			                "created_at"=>date("Y-m-d H:i:s"),
 			                "updated_at"=>date("Y-m-d H:i:s")
 			             );
 
-					  $notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
-				      $notification->from = $data['from'];
-				      $notification->to = $data['to'];
-				      $notification->message = $data['message'];
-				      $notification->url = $data['url'];
-				      $notification->is_read = $data['is_read'];
-				      $notification->created_at = $data['created_at'];
-				      $notification->updated_at = $data['updated_at'];
-				      $notification->save();
-
-				      $data['id'] = $notification->id;
-				      
-
-				      event(new Notification($data));
+					  	$notification = new NotificationTable();
+						$notification->id = Uuid::uuid4();
+				      	$notification->from = $data['from'];
+				      	$notification->to = $data['to'];
+				      	$notification->message = $data['message'];
+				      	$notification->url = $data['url'];
+				      	$notification->is_read = $data['is_read'];
+				      	$notification->created_at = $data['created_at'];
+				      	$notification->updated_at = $data['updated_at'];
+				      	$notification->save(); 
+				      	$data['id'] = $notification->id;
+				       	event(new Notification($data));
 						$this->updaterevisi($a,$param,$examinations);
 						return $this->sendResponse($device, 'Device Found');
 					}else{
@@ -1111,50 +1315,41 @@ $notification->id = Uuid::uuid4();
     	if(!empty($param->id) && !empty($param->catatan) && !empty($param->function_result) && !empty($param->function_test_pic)){
     		$examinations = Examination::find($param->id);
     		if($examinations){
-				if($param->function_result == 2){
-					Equipment::where('examination_id', '=' ,''.$examinations->id.'')->delete();
-					EquipmentHistory::where('examination_id', '=' ,''.$examinations->id.'')->delete();
-					
-					$examinations->cust_test_date = NULL;
-					$examinations->deal_test_date = NULL;
-					$examinations->urel_test_date = NULL;
-					$examinations->function_date = NULL;
-					$examinations->function_test_reason = NULL;
-					$examinations->function_test_date_approval = 0;
-					$examinations->location = 0;
-				}
 				$examinations->catatan = $param->catatan;
 				$examinations->function_test_TE = $param->function_result;
 				$examinations->function_test_PIC = $param->function_test_pic;
+				$examinations->function_test_status_detail = 'Perangkat selesai diuji fungsi';
     			if($examinations->save()){
-    				 $data= array( 
-		                "from"=>$id_user,
-		                "to"=>"admin",
-		                "message"=>"Test Enginner memberikan Hasil Uji Fungsi",
-		                "url"=>"examination/".$param->id."/edit",
-		                "is_read"=>0,
-		                "created_at"=>date("Y-m-d H:i:s"),
-		                "updated_at"=>date("Y-m-d H:i:s")
-		             );
-					  $notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
-				      $notification->from = $data['from'];
-				      $notification->to = $data['to'];
-				      $notification->message = $data['message'];
-				      $notification->url = $data['url'];
-				      $notification->is_read = $data['is_read'];
-				      $notification->created_at = $data['created_at'];
-				      $notification->updated_at = $data['updated_at'];
-				      $notification->save();
+    				$admins = AdminRole::where('function_status',1)->get()->toArray();
+					foreach ($admins as $admin) {  
+	    				$data= array( 
+			                "from"=>$id_user,
+			                "to"=>$admin['user_id'],
+			                "message"=>"Test Engineer memberikan Hasil Uji Fungsi",
+			                "url"=>"examination/".$param->id."/edit",
+			                "is_read"=>0,
+			                "created_at"=>date("Y-m-d H:i:s"),
+			                "updated_at"=>date("Y-m-d H:i:s")
+			            );
+					  	$notification = new NotificationTable();
+						$notification->id = Uuid::uuid4();
+				      	$notification->from = $data['from'];
+				      	$notification->to = $data['to'];
+				      	$notification->message = $data['message'];
+				      	$notification->url = $data['url'];
+				      	$notification->is_read = $data['is_read'];
+				      	$notification->created_at = $data['created_at'];
+				      	$notification->updated_at = $data['updated_at'];
+				      	$notification->save();
 				     
-				      $data['id'] = $notification->id;
-				      event(new Notification($data));
-
+				      	$data['id'] = $notification->id;
+				      	event(new Notification($data));
+					}
 
 				       $data= array( 
 		                "from"=>"admin",
 		                "to"=>$id_user,
-		                "message"=>"Test Enginner memberikan Hasil Uji Fungsi",
+		                "message"=>"Test Engineer memberikan Hasil Uji Fungsi",
 		                "url"=>"examination/".$param->id."/edit",
 		                "is_read"=>0,
 		                "created_at"=>date("Y-m-d H:i:s"),
@@ -1207,6 +1402,27 @@ $notification->id = Uuid::uuid4();
     	}
     }
 	
+	public function updateSpk(Request $param)
+    {
+    	$param = (object) $param->all();
+
+    	if(!empty($param->id) && !empty($param->status)){
+    		$examinations = Examination::find($param->id);
+    		if($examinations){
+				$examinations->spk_status = $param->status;
+    			if($examinations->save()){
+    				return $this->sendResponse($examinations, 'Examination Found');
+    			}else{
+    				return $this->sendError('Failed to Update ');
+    			}
+    		}else{
+    			return $this->sendError('Success Update');
+    		}
+    	}else{
+    		return $this->sendError('ID Examination or Status Is Required');
+    	}
+    }
+	
 	public function sendLapUji(Request $param)
     {
     	$param = (object) $param->all();
@@ -1223,7 +1439,7 @@ $notification->id = Uuid::uuid4();
 					$data= array( 
 						"from"=>1,
 						"to"=>"admin",
-						"message"=>"Test Enginner mengirimkan laporan uji",
+						"message"=>"Test Engineer mengirimkan laporan uji",
 						"url"=>"examination/".$param->id."/edit",
 						"is_read"=>0,
 						"created_at"=>date("Y-m-d H:i:s"),
@@ -1262,7 +1478,7 @@ $notification->id = Uuid::uuid4();
 					$data= array( 
 						"from"=>1,
 						"to"=>"admin",
-						"message"=>"Test Enginner mengirimkan laporan uji",
+						"message"=>"Test Engineer mengirimkan laporan uji",
 						"url"=>"pengujian",
 						"is_read"=>0,
 						"created_at"=>date("Y-m-d H:i:s"),
@@ -1345,6 +1561,10 @@ $notification->id = Uuid::uuid4();
 									$device->valid_thru = $param->cert_valid_thru;
 								}
 								
+								if (!empty($param->no)){
+									$device->cert_number = $param->no;
+								}
+								
 								$device->updated_by = 1;
 								$device->updated_at = date("Y-m-d H:i:s");
 								
@@ -1395,6 +1615,10 @@ $notification->id = Uuid::uuid4();
 									$device->valid_thru = $param->cert_valid_thru;
 								}
 								
+								if (!empty($param->no)){
+									$device->cert_number = $param->no;
+								}
+								
 								$device->updated_by = 1;
 								$device->updated_at = date("Y-m-d H:i:s");
 								
@@ -1418,6 +1642,59 @@ $notification->id = Uuid::uuid4();
 			}
     	}else{
     		return $this->sendError('ID Examination or name or attachment or Ref. No link or Date of Cert Is Required');
+    	}
+    }
+
+    public function sendSPK(Request $param)
+    {
+    	$param = (object) $param->all();
+
+    	if(!empty($param->ID) && !empty($param->SPK_NUMBER) && !empty($param->DEVICE_NAME)){
+			$spk = new TbMSPK;
+	        $spk->ID = $param->ID;
+	        $spk->SPK_NUMBER = $param->SPK_NUMBER;
+	        $spk->LAB_CODE = $param->LAB_CODE;
+	        $spk->TESTING_TYPE = $param->TESTING_TYPE;
+	        $spk->DEVICE_NAME = $param->DEVICE_NAME;
+	        $spk->COMPANY_NAME = $param->COMPANY_NAME;
+	        $spk->FLOW_STATUS = $param->FLOW_STATUS;
+	        $spk->CREATED_BY = $param->CREATED_BY;
+	        $spk->CREATED_DT = $param->CREATED_DT;
+	        $spk->UPDATED_DT = $param->UPDATED_DT;
+	        $spk->UPDATED_BY = $param->UPDATED_BY;
+
+			if ($spk->save()){
+				return $this->sendResponse($spk, 'SPK Created');
+			} else{
+				return $this->sendError('Failed to Input SPK');
+			}
+    	}else{
+    		return $this->sendError('ID or SPK_NUMBER or DEVICE_NAME Is Required');
+    	}
+    }
+
+    public function sendSPKHistory(Request $param)
+    {
+    	$param = (object) $param->all();
+
+    	if(!empty($param->ID) && !empty($param->SPK_NUMBER) && !empty($param->ACTION) && !empty($param->REMARK) && !empty($param->CREATED_BY) && !empty($param->CREATED_DT) && !empty($param->UPDATED_BY) && !empty($param->UPDATED_DT)){
+			$spk_hist = new TbHSPK;
+	        $spk_hist->ID = $param->ID;
+	        $spk_hist->SPK_NUMBER = $param->SPK_NUMBER;
+	        $spk_hist->ACTION = $param->ACTION;
+	        $spk_hist->REMARK = $param->REMARK;
+	        $spk_hist->CREATED_BY = $param->CREATED_BY;
+	        $spk_hist->CREATED_DT = $param->CREATED_DT;
+	        $spk_hist->UPDATED_BY = $param->UPDATED_BY;
+	        $spk_hist->UPDATED_DT = $param->UPDATED_DT;
+
+			if ($spk_hist->save()){
+				return $this->sendResponse($spk_hist, 'SPK History Created');
+			} else{
+				return $this->sendError('Failed to Input SPK History');
+			}
+    	}else{
+    		return $this->sendError('ID or SPK_NUMBER or ACTION or REMARK or CREATED_BY or CREATED_DT or UPDATED_BY or UPDATED_DT Is Required');
     	}
     }
 }

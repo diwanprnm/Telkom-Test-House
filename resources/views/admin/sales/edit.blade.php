@@ -44,43 +44,6 @@
 								</div>
 							</div>
 							<div class="col-md-12">
-								<div class="table-responsive">
-									<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
-										<thead>
-											<tr>
-												<th class="center">No</th> 
-												<th class="center">Document Name</th> 
-												<th class="center">Document Code</th> 
-												<th class="center">Attachment</th> 
-												<th class="center">Upload File</th> 
-											</tr>
-										</thead>
-										<tbody>
-											@foreach($dataStel as $keys => $item)
-												<tr>
-													<td class="center">{{++$keys}}</td> 
-													<td class="center">{{ $item->name }}</td>
-													<td class="center">{{ $item->code }}</td>
-													<td class="center"><a href="{{ URL::to('/admin/downloadstelwatermark/'.$item->id) }}" target="_blank">{{ $item->attachment }}</a></td>
-													<td class="center">
-														@if($item->stelAttach !='')
-															<a href="{!! url("cetakstel?invoice_id={$item->invoice}&attach={$item->stelAttach}&company_name={$item->company_name}") !!}" target="_blank"> Generate Watermark</a>
-														@endif
-														<input type="file" name="stel_file[]" class="form-control" accept="application/pdf">
-														<input type="hidden" name="stels_sales_detail_id[]" value="{{ $item->id }}">
-													</td>
-												</tr>
-											@endforeach
-										</tbody>
-									</table>
-									<div>
-										<button class="btn btn-wide btn-green btn-squared pull-right">
-											Upload
-										</button>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-12">
 								<div class="form-group">
 									<a onclick="makeKuitansi('<?php echo $data->id ?>')"> Buatkan File Kuitansi</a>
 								</div>

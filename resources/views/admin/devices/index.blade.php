@@ -87,6 +87,7 @@
 									<th class="center">Tipe</th>
 									<th class="center">Kapasitas/Kecepatan</th>
 									<th class="center">Referensi Uji</th>
+									<th class="center">No Sertifikat</th>
 									<th class="center">Berlaku Dari</th>
 									<th class="center">Berlaku Sampai</th>
 									<th class="center">Aksi</th>
@@ -103,6 +104,7 @@
 										<td class="center">{{ $item->tipe }}</td>
 										<td class="center">{{ $item->kapasitas }}</td>
 										<td class="center">{{ $item->standarisasi }}</td>
+										<td class="center">{{ $item->cert_number }}</td>
 										<td class="center">{{ $item->valid_from }}</td>
 										<td class="center">{{ $item->valid_thru }}</td>
 										<td class="center">

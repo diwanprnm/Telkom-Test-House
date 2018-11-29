@@ -37,7 +37,17 @@
                                             Kota Bandung, Jawa Barat 40152<br>
                                         </address>
                                         <abbr title="Phone Number"><strong>{{ trans('translate.service_company_phone') }}:</strong></abbr> (022) 4571145<br>
-                                        <abbr title="Email Address"><strong>{{ trans('translate.service_company_email') }}:</strong></abbr> urelddstelkom@gmail.com
+                                        <abbr title="Email Address"><strong>{{ trans('translate.service_company_email') }}:</strong></abbr> urelddstelkom@gmail.com<br><br>
+                                        <address>
+                                            <strong>{{ trans('translate.bank_account') }}:</strong><br>
+                                            BANK MANDIRI
+                                            <br>
+                                            KCP KAMPUS TELKOM BANDUNG
+                                            <br>
+                                            131-0096022712
+                                            <br>
+                                            a/n Divisi RisTI TELKOM
+                                        </address>
                                     </div>
 
                                     <div class="row socials">

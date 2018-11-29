@@ -30,6 +30,12 @@
                                             <strong>{{ $errors->first('email') }}</strong>
                                         </span>
                                     @endif
+									
+									<div id="error_msg" class="error_msg">
+                                        <span class="help-block">
+                                            <strong>{{ session()->get('message') }}</strong>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -64,22 +70,32 @@
 @endsection
 
 @section('content_js')
-@if(session()->has('status'))
+@if(session()->has('message'))
 	<script type="text/javascript">
-		$(".done_sent").show();
-		$(".before_sent").hide();
-	</script>
-@else
-	<script type="text/javascript">
-		$(".before_sent").show();
+		$(".error_msg").show();
 		$(".done_sent").hide();
 		$(".send_msg").hide();
-		$('#form-reset').submit(function(ev) {
-			ev.preventDefault(); // to stop the form from submitting
-			/* Validations go here */
-			$(".send_msg").show();
-			this.submit(); // If all the validations succeeded
-		});
 	</script>
+@else
+	@if(session()->has('status'))
+		<script type="text/javascript">
+			$(".done_sent").show();
+			$(".before_sent").hide();
+			$(".error_msg").hide();
+		</script>
+	@else
+		<script type="text/javascript">
+			$(".before_sent").show();
+			$(".done_sent").hide();
+			$(".send_msg").hide();
+			$(".error_msg").hide();
+			$('#form-reset').submit(function(ev) {
+				ev.preventDefault(); // to stop the form from submitting
+				/* Validations go here */
+				$(".send_msg").show();
+				this.submit(); // If all the validations succeeded
+			});
+		</script>
+	@endif
 @endif
 @endsection

@@ -48,6 +48,20 @@
 								<input type="hidden" name="address" value="{{ $data->address }}">
 								@endif
 							</div>
+							<div class="col-md-6">
+								<label><b>-</b> PLG_ID : {{ $data->company->plg_id }}</label>
+								@if($data->plg_id != NULL)
+								<label>, <b>menjadi</b> {{ $data->plg_id }}</label>
+								<input type="hidden" name="plg_id" value="{{ $data->plg_id }}">
+								@endif
+							</div>
+							<div class="col-md-6">
+								<label><b>-</b> NIB : {{ $data->company->nib }}</label>
+								@if($data->nib != NULL)
+								<label>, <b>menjadi</b> {{ $data->nib }}</label>
+								<input type="hidden" name="nib" value="{{ $data->nib }}">
+								@endif
+							</div>
 							<div class="col-md-12">
 								<label><b>-</b> Email : {{ $data->company->email }}</label>
 								@if($data->email != NULL)

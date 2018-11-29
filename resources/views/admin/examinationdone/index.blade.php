@@ -310,15 +310,15 @@
 															</td>
 														</tr>	
 														<tr>
-															<td>Kapasitas:</td>
-															<td>
-																{{ $item->device->capacity }}
-															</td>
-														</tr>	
-														<tr>
 															<td>Model / Tipe:</td>
 															<td>
 																{{ $item->device->model }}
+															</td>
+														</tr>	
+														<tr>
+															<td>Kapasitas:</td>
+															<td>
+																{{ $item->device->capacity }}
 															</td>
 														</tr>	
 														<tr>

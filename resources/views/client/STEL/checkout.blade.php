@@ -80,12 +80,17 @@
 						</div>
 					</div>	 
 					<div class="row metoda">
-						<div class="col-md-12 bank-list-header">{{ trans('translate.stel_payment_method_bank') }}</div>
-						<div class="col-md-4 bank-list-main">
-							<img src="{{url('images/bank/mandiri.png')}}">
-							<h4>BANK MANDIRI</h4>
+						<div class="col-md-12 bank-list-header">This is list of bank if you take this method</div>
+						<div class="col-md-3" style="font-weight: bold;font-size: 175%;">
+							<img src="http://localhost/telkomdds/public/images/bank/mandiri.png">
+							BANK MANDIRI
+						</div>
+						<div class="col-md-9" style="font-weight: bold;font-size: 240%;margin-top: -3%;">
+							<br>
 							KCP KAMPUS TELKOM BANDUNG
+							<br>
 							131-0096022712
+							<br>
 							a/n Divisi RisTI TELKOM
 						</div>
 					</div> 	

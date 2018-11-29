@@ -13,6 +13,9 @@ use App\Kuitansi;
 use App\Company;
 use App\Logs;
 use App\Examination;
+use App\GeneralSetting;
+use App\ExaminationType;
+use App\ExaminationLab;
 
 use Auth;
 use Session;
@@ -23,6 +26,11 @@ use Excel;
 // UUID
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
+
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Client;
+use App\Events\Notification;
+use App\NotificationTable;
 
 class IncomeController extends Controller
 {
@@ -47,16 +55,34 @@ class IncomeController extends Controller
 
         if ($currentUser){
             $message = null;
-            $paginate = 5;
+            $paginate = 10;
             $search = trim($request->input('search'));
             $type = '';
+            $lab = '';
             $status = '';
 			$before = null;
             $after = null;
 
-            $query = Income::whereNotNull('created_at')
-                                ->with('company')
-                                ->with('examination');
+            $examType = ExaminationType::all();
+            $examLab = ExaminationLab::all();
+
+            $query = Income::selectRaw("incomes.*, examinations.examination_type_id, examinations.examination_lab_id,
+			            	examinations.registration_status,
+			            	examinations.function_status,
+							examinations.contract_status,
+							examinations.spb_status,
+							examinations.payment_status,
+							examinations.spk_status,
+							examinations.examination_status,
+							examinations.resume_status,
+							examinations.qa_status,
+							examinations.certificate_status
+            				")
+            				->join("examinations","examinations.id","=","incomes.reference_id")
+        					->whereNotNull('incomes.created_at')
+							->where('incomes.inc_type', 1)
+                            ->with('company')
+                            ->with('examination');
 			
 			if ($search != null){
                 $query->where(function($qry) use($search){
@@ -79,10 +105,111 @@ class IncomeController extends Controller
             if ($request->has('type')){
                 $type = $request->get('type');
                 if($request->input('type') != 'all'){
-					$query->where('inc_type', $request->get('type'));
+					$query->where('examination_type_id', $request->get('type'));
 				}
             }
-			
+
+            if ($request->has('status')){
+                switch ($request->get('status')) {
+                    case 1:
+						$query->where('examinations.registration_status', '!=', 1);
+                        $status = 1;
+                        break;
+                    case 2:
+						$query->where('examinations.registration_status', '=', 1);
+						$query->where('examinations.function_status', '!=', 1);
+                        $status = 2;
+                        break;
+                    case 3:
+						$query->where('examinations.registration_status', '=', 1);
+						$query->where('examinations.function_status', '=', 1);
+						$query->where('examinations.contract_status', '!=', 1);
+                        $status = 3;
+                        break;
+                    case 4:
+						$query->where('examinations.registration_status', '=', 1);
+						$query->where('examinations.function_status', '=', 1);
+						$query->where('examinations.contract_status', '=', 1);
+						$query->where('examinations.spb_status', '!=', 1);
+                        $status = 4;
+                        break;
+                    case 5:
+						$query->where('examinations.registration_status', '=', 1);
+						$query->where('examinations.function_status', '=', 1);
+						$query->where('examinations.contract_status', '=', 1);
+						$query->where('examinations.spb_status', '=', 1);
+						$query->where('examinations.payment_status', '!=', 1);
+                        $status = 5;
+                        break;
+                    case 6:
+						$query->where('examinations.registration_status', '=', 1);
+						$query->where('examinations.function_status', '=', 1);
+						$query->where('examinations.contract_status', '=', 1);
+						$query->where('examinations.spb_status', '=', 1);
+						$query->where('examinations.payment_status', '=', 1);
+						$query->where('examinations.spk_status', '!=', 1);
+                        $status = 6;
+                        break;
+                    case 7:
+						$query->where('examinations.registration_status', '=', 1);
+						$query->where('examinations.function_status', '=', 1);
+						$query->where('examinations.contract_status', '=', 1);
+						$query->where('examinations.spb_status', '=', 1);
+						$query->where('examinations.payment_status', '=', 1);
+						$query->where('examinations.spk_status', '=', 1);
+						$query->where('examinations.examination_status', '!=', 1);
+                        $status = 7;
+                        break;
+                    case 8:
+						$query->where('examinations.registration_status', '=', 1);
+						$query->where('examinations.function_status', '=', 1);
+						$query->where('examinations.contract_status', '=', 1);
+						$query->where('examinations.spb_status', '=', 1);
+						$query->where('examinations.payment_status', '=', 1);
+						$query->where('examinations.spk_status', '=', 1);
+						$query->where('examinations.examination_status', '=', 1);
+						$query->where('examinations.resume_status', '!=', 1);
+                        $status = 8;
+                        break;
+                    case 9:
+						$query->where('examinations.registration_status', '=', 1);
+						$query->where('examinations.function_status', '=', 1);
+						$query->where('examinations.contract_status', '=', 1);
+						$query->where('examinations.spb_status', '=', 1);
+						$query->where('examinations.payment_status', '=', 1);
+						$query->where('examinations.spk_status', '=', 1);
+						$query->where('examinations.examination_status', '=', 1);
+						$query->where('examinations.resume_status', '=', 1);
+						$query->where('examinations.qa_status', '!=', 1);
+                        $status = 9;
+                        break;
+                    case 10:
+						$query->where('examinations.registration_status', '=', 1);
+						$query->where('examinations.function_status', '=', 1);
+						$query->where('examinations.contract_status', '=', 1);
+						$query->where('examinations.spb_status', '=', 1);
+						$query->where('examinations.payment_status', '=', 1);
+						$query->where('examinations.spk_status', '=', 1);
+						$query->where('examinations.examination_status', '=', 1);
+						$query->where('examinations.resume_status', '=', 1);
+						$query->where('examinations.qa_status', '=', 1);
+						$query->where('examinations.certificate_status', '!=', 1);
+                        $status = 10;
+                        break;
+                    
+                    default:
+						$status = 'all';
+                        break;
+                }
+            }
+
+            if ($request->has('lab')){
+                $lab = $request->get('lab');
+                if($request->input('lab') != 'all'){
+					$query->where('examination_lab_id', $request->get('lab'));
+				}
+            }
+
 			if ($request->has('before_date')){
 				$query->where('tgl', '<=', $request->get('before_date'));
 				$before = $request->get('before_date');
@@ -93,12 +220,9 @@ class IncomeController extends Controller
 				$after = $request->get('after_date');
 			}
 
-			$data_excel = $query->orderBy('tgl', 'desc')->get();
-            $data = $query->orderBy('tgl', 'desc')
+			$data = $query->orderBy('tgl', 'desc')
                         ->paginate($paginate);
-						
-			$request->session()->put('excel_income', $data_excel);
-
+			
             if (count($query) == 0){
                 $message = 'Data not found';
             }
@@ -106,8 +230,12 @@ class IncomeController extends Controller
             return view('admin.income.index')
                 ->with('message', $message)
                 ->with('data', $data)
-                ->with('type', $type)
                 ->with('search', $search)
+                ->with('type', $examType)
+                ->with('status', $status)
+                ->with('filterType', $type)
+                ->with('lab', $examLab)
+                ->with('filterLab', $lab)
 				->with('before_date', $before)
                 ->with('after_date', $after);
         }
@@ -120,10 +248,10 @@ class IncomeController extends Controller
      */
     public function create(Request $request)
     {
-		$number = $request->session()->pull('key_kode_for_kuitansi');
-		$from = $request->session()->pull('key_from_for_kuitansi');
-		$price = $request->session()->pull('key_price_for_kuitansi');
-		$for = $request->session()->pull('key_for_for_kuitansi');
+		$number = $request->session()->get('key_kode_for_kuitansi');
+		$from = $request->session()->get('key_from_for_kuitansi');
+		$price = $request->session()->get('key_price_for_kuitansi');
+		$for = $request->session()->get('key_for_for_kuitansi');
 		return view('admin.income.create_kuitansi')
 			->with('number', $number)
 			->with('from', $from)
@@ -149,6 +277,7 @@ class IncomeController extends Controller
 			$kuitansi->from = $request->input('from');
 			$kuitansi->price = $request->input('price');
 			$kuitansi->for = $request->input('for');
+			$kuitansi->kuitansi_date = $request->input('kuitansi_date');
 			$kuitansi->created_by = $currentUser->id;
 			$kuitansi->updated_by = $currentUser->id;
 
@@ -218,8 +347,15 @@ class IncomeController extends Controller
         if ($currentUser){
             $id = null;
             $message = null;
-            $paginate = 5;
+            $paginate = 10;
             $search = trim($request->input('search'));
+
+            $before = null;
+            $after = null;
+            $type = '';
+
+            $sort_by = 'kuitansi_date';
+            $sort_type = 'desc';
 
             $query = Kuitansi::whereNotNull('created_at');
 			
@@ -240,7 +376,31 @@ class IncomeController extends Controller
                 $logs->save();
             }
 
-            $data = $query->orderBy('created_at', 'desc')
+            if ($request->has('before_date')){
+                $query->where('kuitansi_date', '<=', $request->get('before_date'));
+                $before = $request->get('before_date');
+            }
+
+            if ($request->has('after_date')){
+                $query->where('kuitansi_date', '>=', $request->get('after_date'));
+                $after = $request->get('after_date');
+            }
+
+            if ($request->has('type')){
+                $type = $request->get('type');
+                if($request->input('type') != 'all'){
+                	$request->input('type') == 'spb' ? $query->where("for", "like", '%pengujian%') : $query->where("for", "not like", '%pengujian%');
+                }
+            }
+
+            if ($request->has('sort_by')){
+                $sort_by = $request->get('sort_by');
+            }
+            if ($request->has('sort_type')){
+                $sort_type = $request->get('sort_type');
+            }
+
+            $data = $query->orderBy($sort_by, $sort_type)
                         ->paginate($paginate);
 			
             if (count($query) == 0){
@@ -251,6 +411,11 @@ class IncomeController extends Controller
                 ->with('message', $message)
                 ->with('id', $id)
                 ->with('search', $search)
+                ->with('before_date', $before)
+                ->with('after_date', $after)
+                ->with('filterType', $type)
+                ->with('sort_by', $sort_by)
+                ->with('sort_type', $sort_type)
                 ->with('data', $data);
         }
 	}
@@ -262,8 +427,171 @@ class IncomeController extends Controller
 		// the payments table's primary key, the user's first and last name, 
 		// the user's e-mail address, the amount paid, and the payment
 		// timestamp.
+
+        $search = trim($request->input('search'));
+        $type = '';
+        $lab = '';
+        $status = '';
+        $before = null;
+        $after = null;
+
+        $query = Income::selectRaw("incomes.*, examinations.examination_type_id, examinations.examination_lab_id,
+                        examinations.registration_status,
+                        examinations.function_status,
+                        examinations.contract_status,
+                        examinations.spb_status,
+                        examinations.payment_status,
+                        examinations.spk_status,
+                        examinations.examination_status,
+                        examinations.resume_status,
+                        examinations.qa_status,
+                        examinations.certificate_status
+                        ")
+                        ->join("examinations","examinations.id","=","incomes.reference_id")
+                        ->whereNotNull('incomes.created_at')
+                        ->where('incomes.inc_type', 1)
+                        ->with('company')
+                        ->with('examination');
+        
+        if ($search != null){
+            $query->where(function($qry) use($search){
+                $qry->whereHas('company', function ($q) use ($search){
+                    return $q->where('name', 'like', '%'.strtolower($search).'%');
+                });
+            });
+
+            $logs = new Logs;
+            $logs->id = Uuid::uuid4();
+            $logs->user_id = $currentUser->id;
+            $logs->action = "search";  
+            $dataSearch = array('search' => $search);
+            $logs->data = json_encode($dataSearch);
+            $logs->created_by = $currentUser->id;
+            $logs->page = "INCOME";
+            $logs->save();
+        }
+
+        if ($request->has('type')){
+            $type = $request->get('type');
+            if($request->input('type') != 'all'){
+                $query->where('examination_type_id', $request->get('type'));
+            }
+        }
+
+        if ($request->has('status')){
+            switch ($request->get('status')) {
+                case 1:
+                    $query->where('examinations.registration_status', '!=', 1);
+                    $status = 1;
+                    break;
+                case 2:
+                    $query->where('examinations.registration_status', '=', 1);
+                    $query->where('examinations.function_status', '!=', 1);
+                    $status = 2;
+                    break;
+                case 3:
+                    $query->where('examinations.registration_status', '=', 1);
+                    $query->where('examinations.function_status', '=', 1);
+                    $query->where('examinations.contract_status', '!=', 1);
+                    $status = 3;
+                    break;
+                case 4:
+                    $query->where('examinations.registration_status', '=', 1);
+                    $query->where('examinations.function_status', '=', 1);
+                    $query->where('examinations.contract_status', '=', 1);
+                    $query->where('examinations.spb_status', '!=', 1);
+                    $status = 4;
+                    break;
+                case 5:
+                    $query->where('examinations.registration_status', '=', 1);
+                    $query->where('examinations.function_status', '=', 1);
+                    $query->where('examinations.contract_status', '=', 1);
+                    $query->where('examinations.spb_status', '=', 1);
+                    $query->where('examinations.payment_status', '!=', 1);
+                    $status = 5;
+                    break;
+                case 6:
+                    $query->where('examinations.registration_status', '=', 1);
+                    $query->where('examinations.function_status', '=', 1);
+                    $query->where('examinations.contract_status', '=', 1);
+                    $query->where('examinations.spb_status', '=', 1);
+                    $query->where('examinations.payment_status', '=', 1);
+                    $query->where('examinations.spk_status', '!=', 1);
+                    $status = 6;
+                    break;
+                case 7:
+                    $query->where('examinations.registration_status', '=', 1);
+                    $query->where('examinations.function_status', '=', 1);
+                    $query->where('examinations.contract_status', '=', 1);
+                    $query->where('examinations.spb_status', '=', 1);
+                    $query->where('examinations.payment_status', '=', 1);
+                    $query->where('examinations.spk_status', '=', 1);
+                    $query->where('examinations.examination_status', '!=', 1);
+                    $status = 7;
+                    break;
+                case 8:
+                    $query->where('examinations.registration_status', '=', 1);
+                    $query->where('examinations.function_status', '=', 1);
+                    $query->where('examinations.contract_status', '=', 1);
+                    $query->where('examinations.spb_status', '=', 1);
+                    $query->where('examinations.payment_status', '=', 1);
+                    $query->where('examinations.spk_status', '=', 1);
+                    $query->where('examinations.examination_status', '=', 1);
+                    $query->where('examinations.resume_status', '!=', 1);
+                    $status = 8;
+                    break;
+                case 9:
+                    $query->where('examinations.registration_status', '=', 1);
+                    $query->where('examinations.function_status', '=', 1);
+                    $query->where('examinations.contract_status', '=', 1);
+                    $query->where('examinations.spb_status', '=', 1);
+                    $query->where('examinations.payment_status', '=', 1);
+                    $query->where('examinations.spk_status', '=', 1);
+                    $query->where('examinations.examination_status', '=', 1);
+                    $query->where('examinations.resume_status', '=', 1);
+                    $query->where('examinations.qa_status', '!=', 1);
+                    $status = 9;
+                    break;
+                case 10:
+                    $query->where('examinations.registration_status', '=', 1);
+                    $query->where('examinations.function_status', '=', 1);
+                    $query->where('examinations.contract_status', '=', 1);
+                    $query->where('examinations.spb_status', '=', 1);
+                    $query->where('examinations.payment_status', '=', 1);
+                    $query->where('examinations.spk_status', '=', 1);
+                    $query->where('examinations.examination_status', '=', 1);
+                    $query->where('examinations.resume_status', '=', 1);
+                    $query->where('examinations.qa_status', '=', 1);
+                    $query->where('examinations.certificate_status', '!=', 1);
+                    $status = 10;
+                    break;
+                
+                default:
+                    $status = 'all';
+                    break;
+            }
+        }
+
+        if ($request->has('lab')){
+            $lab = $request->get('lab');
+            if($request->input('lab') != 'all'){
+                $query->where('examination_lab_id', $request->get('lab'));
+            }
+        }
+
+        if ($request->has('before_date')){
+            $query->where('tgl', '<=', $request->get('before_date'));
+            $before = $request->get('before_date');
+        }
+
+        if ($request->has('after_date')){
+            $query->where('tgl', '>=', $request->get('after_date'));
+            $after = $request->get('after_date');
+        }
+
+        $data = $query->orderBy('tgl', 'desc')
+                    ->get();
 		
-		$data = $request->session()->get('excel_income');
 		$examsArray = []; 
 
 		// Define the Excel spreadsheet headers
@@ -273,7 +601,8 @@ class IncomeController extends Controller
 			'Nama Perusahaan',
 			'Tanggal',
 			'No. Referensi',
-			'Nilai'
+            'Nilai',
+			'Nomor SPK'
 		]; 
 		
 		// Convert each member of the returned collection into an array,
@@ -288,11 +617,12 @@ class IncomeController extends Controller
 			}
 			$examsArray[] = [
 				$no,
-				$sumber_pendapatan,
-				$row->company->name,
+				$sumber_pendapatan.' '.$row->examination->device->name,
+				$row->examination->user->name.' ('.$row->company->name.')',
 				$row->tgl,
 				"'".$row->reference_number,
-				$row->price
+                $row->price,
+				$row->examination->spk_code
 			];
 			$no++;
 		}
@@ -342,6 +672,50 @@ class IncomeController extends Controller
     }
 	
 	public function cetakKuitansi($id, Request $request) {
+		/*$client = new Client([
+			'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+			// Base URI is used with relative requests
+			// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+			'base_uri' => config("app.url_api_bsp"),
+			// You can set any number of default request options.
+			'timeout'  => 60.0,
+		]);
+		*/
+		/*$res_manager_urel = $client->get('user/getManagerLabInfo?groupId=MU')->getBody();
+		$manager_urel = json_decode($res_manager_urel);
+
+		if(count($manager_urel->data) == 1){
+			if( strpos( $manager_urel->data[0]->name, "/" ) !== false ) {$manager_urels = urlencode(urlencode($manager_urel->data[0]->name));}
+				else{$manager_urels = $manager_urel->data[0]->name?: '-';}
+		}else{
+			$manager_urels = '...............................';
+		}*/
+		$is_poh = 0;
+		$general_setting_poh = GeneralSetting::where('code', 'poh_manager_urel')->first();
+		if($general_setting_poh){
+			if($general_setting_poh->is_active){
+				$is_poh = 1;
+				if( strpos( $general_setting_poh->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting_poh->value));}
+					else{$manager_urels = $general_setting_poh->value?: '-';}
+			}else{
+				$general_setting = GeneralSetting::where('code', 'manager_urel')->first();
+				if($general_setting){
+					if( strpos( $general_setting->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting->value));}
+						else{$manager_urels = $general_setting->value?: '-';}
+				}else{
+					$manager_urels = '...............................';
+				}	
+			}
+		}else{
+			$general_setting = GeneralSetting::where('code', 'manager_urel')->first();
+			if($general_setting){
+				if( strpos( $general_setting->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting->value));}
+					else{$manager_urels = $general_setting->value?: '-';}
+			}else{
+				$manager_urels = '...............................';
+			}
+		}
+		
 		$data = Kuitansi::find($id);
 		    
 		if (count($data) == 0){
@@ -351,11 +725,15 @@ class IncomeController extends Controller
 		if( strpos( $data->from, "/" ) !== false ) {$from = urlencode(urlencode($data->from));}else{$from = $data->from?: '-';}
 		if( strpos( $data->price, "/" ) !== false ) {$price = urlencode(urlencode($data->price));}else{$price = $data->price?: '0';}
 		if( strpos( $data->for, "/" ) !== false ) {$for = urlencode(urlencode($data->for));}else{$for = $data->for?: '-';}
+		if( strpos( $data->kuitansi_date, "/" ) !== false ) {$kuitansi_date = urlencode(urlencode($data->kuitansi_date));}else{$kuitansi_date = $data->kuitansi_date?: '-';}
 		return \Redirect::route('cetakHasilKuitansi', [
 			'nomor' => $number,
 			'dari' => $from,
 			'jumlah' => $price,
-			'untuk' => $for
+			'untuk' => $for,
+			'manager_urel' => $manager_urels,
+			'tanggal' => $kuitansi_date,
+			'is_poh' => $is_poh
 		]);
     }
 	

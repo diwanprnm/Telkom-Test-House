@@ -49,6 +49,22 @@
 									<textarea type="text" name="address" class="form-control" placeholder="Alamat Perusahaan" required>{{ $data->address }}</textarea>
 								</div>
 							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										PLG_ID *
+									</label>
+									<input type="text" name="plg_id" class="form-control" placeholder="PLG_ID" value="{{ $data->plg_id }}" required>
+								</div>
+							</div>
+	                        <div class="col-md-6">
+								<div class="form-group">
+									<label>
+										NIB *
+									</label>
+									<input type="text" name="nib" class="form-control" placeholder="NIB" value="{{ $data->nib }}">
+								</div>
+							</div>
 	                        <div class="col-md-12">
 								<div class="form-group">
 									<label>

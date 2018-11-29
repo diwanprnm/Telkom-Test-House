@@ -20,6 +20,8 @@ use App\Income;
 use App\Questioner;
 use App\Equipment;
 use App\EquipmentHistory;
+use App\QuestionerDynamic;
+use App\GeneralSetting;
 
 use Auth;
 use File;
@@ -91,6 +93,9 @@ class ExaminationController extends Controller
 						->orWhere('qa_status', '!=', '1')
 						->orWhere('certificate_status', '!=', '1')
 						->orWhere('location', '!=', '1')
+						// ->orWhere(function($qa){
+							// return $qa->where('qa_passed', '=', '-1')->where('location', '!=', '1');
+						// })
 						;
 					})
 					->where('examination_type_id', '=', '1')
@@ -115,7 +120,11 @@ class ExaminationController extends Controller
 						})
 					->orWhereHas('company', function ($q) use ($search){
 							return $q->where('name', 'like', '%'.strtolower($search).'%');
-						});
+						})
+					->orWhereHas('examinationLab', function ($q) use ($search){
+							return $q->where('name', 'like', '%'.strtolower($search).'%');
+						})
+					->orWhere('function_test_NO', 'like', '%'.strtolower($search).'%');
                 });
 
                 $logs = new Logs;
@@ -128,24 +137,24 @@ class ExaminationController extends Controller
                 $logs->save();
             }
 
-            if ($request->has('comp_stat')){
-                $comp_stat = $request->get('comp_stat');
-                if($request->input('comp_stat') != 'all'){
-					$query->where(function($q) use($request){
-					return $q->where('registration_status', '=', $request->get('comp_stat'))
-						->orWhere('function_status', '=', $request->get('comp_stat'))
-						->orWhere('contract_status', '=', $request->get('comp_stat'))
-						->orWhere('spb_status', '=', $request->get('comp_stat'))
-						->orWhere('payment_status', '=', $request->get('comp_stat'))
-						->orWhere('spk_status', '=', $request->get('comp_stat'))
-						->orWhere('examination_status', '=', $request->get('comp_stat'))
-						->orWhere('resume_status', '=', $request->get('comp_stat'))
-						->orWhere('qa_status', '=', $request->get('comp_stat'))
-						->orWhere('certificate_status', '=', $request->get('comp_stat'))
-						;
-					});
-				}
-            }
+            // if ($request->has('comp_stat')){
+                // $comp_stat = $request->get('comp_stat');
+                // if($request->input('comp_stat') != 'all'){
+					// $query->where(function($q) use($request){
+					// return $q->where('registration_status', '=', $request->get('comp_stat'))
+						// ->orWhere('function_status', '=', $request->get('comp_stat'))
+						// ->orWhere('contract_status', '=', $request->get('comp_stat'))
+						// ->orWhere('spb_status', '=', $request->get('comp_stat'))
+						// ->orWhere('payment_status', '=', $request->get('comp_stat'))
+						// ->orWhere('spk_status', '=', $request->get('comp_stat'))
+						// ->orWhere('examination_status', '=', $request->get('comp_stat'))
+						// ->orWhere('resume_status', '=', $request->get('comp_stat'))
+						// ->orWhere('qa_status', '=', $request->get('comp_stat'))
+						// ->orWhere('certificate_status', '=', $request->get('comp_stat'))
+						// ;
+					// });
+				// }
+            // }
 
             if ($request->has('type')){
                 $type = $request->get('type');
@@ -169,43 +178,168 @@ class ExaminationController extends Controller
             if ($request->has('status')){
                 switch ($request->get('status')) {
                     case 1:
-                        $query->where('registration_status', 1);
+						/*if ($request->has('comp_stat')){
+							$comp_stat = $request->get('comp_stat');
+							if($request->input('comp_stat') != 'all'){
+								$query->where('registration_status', '=', $request->get('comp_stat'));
+							}else{
+								$query->where('registration_status', '!=', 1);
+							}
+						}*/
+						$query->where('registration_status', '!=', 1);
                         $status = 1;
                         break;
                     case 2:
-                        $query->where('function_status', 1);
+                        /*if ($request->has('comp_stat')){
+							$comp_stat = $request->get('comp_stat');
+							if($request->input('comp_stat') != 'all'){
+								$query->where('function_status', '=', $request->get('comp_stat'));
+							}else{
+								$query->where('function_status', '!=', 1);
+							}
+						}*/
+						$query->where('registration_status', '=', 1);
+						$query->where('function_status', '!=', 1);
                         $status = 2;
                         break;
                     case 3:
-                        $query->where('contract_status', 1);
+                        /*if ($request->has('comp_stat')){
+							$comp_stat = $request->get('comp_stat');
+							if($request->input('comp_stat') != 'all'){
+								$query->where('contract_status', '=', $request->get('comp_stat'));
+							}else{
+								$query->where('contract_status', '!=', 1);
+							}
+						}*/
+						$query->where('registration_status', '=', 1);
+						$query->where('function_status', '=', 1);
+						$query->where('contract_status', '!=', 1);
                         $status = 3;
                         break;
                     case 4:
-                        $query->where('spb_status', 1);
+                        /*if ($request->has('comp_stat')){
+							$comp_stat = $request->get('comp_stat');
+							if($request->input('comp_stat') != 'all'){
+								$query->where('spb_status', '=', $request->get('comp_stat'));
+							}else{
+								$query->where('spb_status', '!=', 1);
+							}
+						}*/
+						$query->where('registration_status', '=', 1);
+						$query->where('function_status', '=', 1);
+						$query->where('contract_status', '=', 1);
+						$query->where('spb_status', '!=', 1);
                         $status = 4;
                         break;
                     case 5:
-                        $query->where('payment_status', 1);
+                        /*if ($request->has('comp_stat')){
+							$comp_stat = $request->get('comp_stat');
+							if($request->input('comp_stat') != 'all'){
+								$query->where('payment_status', '=', $request->get('comp_stat'));
+							}else{
+								$query->where('payment_status', '!=', 1);
+							}
+						}*/
+						$query->where('registration_status', '=', 1);
+						$query->where('function_status', '=', 1);
+						$query->where('contract_status', '=', 1);
+						$query->where('spb_status', '=', 1);
+						$query->where('payment_status', '!=', 1);
                         $status = 5;
                         break;
                     case 6:
-                        $query->where('spk_status', 1);
+                        /*if ($request->has('comp_stat')){
+							$comp_stat = $request->get('comp_stat');
+							if($request->input('comp_stat') != 'all'){
+								$query->where('spk_status', '=', $request->get('comp_stat'));
+							}else{
+								$query->where('spk_status', '!=', 1);
+							}
+						}*/
+						$query->where('registration_status', '=', 1);
+						$query->where('function_status', '=', 1);
+						$query->where('contract_status', '=', 1);
+						$query->where('spb_status', '=', 1);
+						$query->where('payment_status', '=', 1);
+						$query->where('spk_status', '!=', 1);
                         $status = 6;
                         break;
                     case 7:
-                        $query->where('examination_status', 1);
+                        /*if ($request->has('comp_stat')){
+							$comp_stat = $request->get('comp_stat');
+							if($request->input('comp_stat') != 'all'){
+								$query->where('examination_status', '=', $request->get('comp_stat'));
+							}else{
+								$query->where('examination_status', '!=', 0);
+							}
+						}*/
+						$query->where('registration_status', '=', 1);
+						$query->where('function_status', '=', 1);
+						$query->where('contract_status', '=', 1);
+						$query->where('spb_status', '=', 1);
+						$query->where('payment_status', '=', 1);
+						$query->where('spk_status', '=', 1);
+						$query->where('examination_status', '!=', 1);
                         $status = 7;
                         break;
                     case 8:
-                        $query->where('resume_status', 1);
+                        /*if ($request->has('comp_stat')){
+							$comp_stat = $request->get('comp_stat');
+							if($request->input('comp_stat') != 'all'){
+								$query->where('resume_status', '=', $request->get('comp_stat'));
+							}else{
+								$query->where('resume_status', '!=', 0);
+							}
+						}*/
+						$query->where('registration_status', '=', 1);
+						$query->where('function_status', '=', 1);
+						$query->where('contract_status', '=', 1);
+						$query->where('spb_status', '=', 1);
+						$query->where('payment_status', '=', 1);
+						$query->where('spk_status', '=', 1);
+						$query->where('examination_status', '=', 1);
+						$query->where('resume_status', '!=', 1);
                         $status = 8;
                         break;
                     case 9:
-                        $query->where('qa_status', 1);
+                        /*if ($request->has('comp_stat')){
+							$comp_stat = $request->get('comp_stat');
+							if($request->input('comp_stat') != 'all'){
+								$query->where('qa_status', '=', $request->get('comp_stat'));
+							}else{
+								$query->where('qa_status', '!=', 0);
+							}
+						}*/
+						$query->where('registration_status', '=', 1);
+						$query->where('function_status', '=', 1);
+						$query->where('contract_status', '=', 1);
+						$query->where('spb_status', '=', 1);
+						$query->where('payment_status', '=', 1);
+						$query->where('spk_status', '=', 1);
+						$query->where('examination_status', '=', 1);
+						$query->where('resume_status', '=', 1);
+						$query->where('qa_status', '!=', 1);
                         $status = 9;
                         break;
                     case 10:
-                        $query->where('certificate_status', 1);
+                        /*if ($request->has('comp_stat')){
+							$comp_stat = $request->get('comp_stat');
+							if($request->input('comp_stat') != 'all'){
+								$query->where('certificate_status', '=', $request->get('comp_stat'));
+							}else{
+								$query->where('certificate_status', '!=', 0);
+							}
+						}*/
+						$query->where('registration_status', '=', 1);
+						$query->where('function_status', '=', 1);
+						$query->where('contract_status', '=', 1);
+						$query->where('spb_status', '=', 1);
+						$query->where('payment_status', '=', 1);
+						$query->where('spk_status', '=', 1);
+						$query->where('examination_status', '=', 1);
+						$query->where('resume_status', '=', 1);
+						$query->where('qa_status', '=', 1);
+						$query->where('certificate_status', '!=', 1);
                         $status = 10;
                         break;
                     
@@ -225,12 +359,9 @@ class ExaminationController extends Controller
 				$after = $request->get('after_date');
 			}
 
-			$data_excel = $query->orderBy('updated_at', 'desc')->get();
-            $data = $query->orderBy('updated_at', 'desc')
+			$data = $query->orderBy('updated_at', 'desc')
                         ->paginate($paginate);
-						
-			$request->session()->put('excel_pengujian', $data_excel);
-
+			
             if (count($query) == 0){
                 $message = 'Data not found';
             }
@@ -266,6 +397,7 @@ class ExaminationController extends Controller
                             ->first();
 							
 		$exam_history = ExaminationHistory::whereNotNull('created_at')
+					->with('user')
                     ->where('examination_id', $id)
                     ->orderBy('created_at', 'DESC')
                     ->get();
@@ -345,13 +477,13 @@ class ExaminationController extends Controller
         if ($request->has('examination_lab_id')){
             $exam->examination_lab_id = $request->input('examination_lab_id');
         }
-        if ($request->has('spk_code')){
+        /*if ($request->has('spk_code')){
             $exam->spk_code = $request->input('spk_code');
 			if($this->checkSPKCode($request->input('spk_code')) > 0){
 				Session::flash('error', 'SPK Number must be unique, please Re-Generate');
                 return redirect('/admin/examination/'.$exam->id.'/edit');
 			}
-        }
+        }*/
         if ($request->has('registration_status')){
 			$status = $request->input('registration_status');
             $exam->registration_status = $status;
@@ -370,13 +502,13 @@ class ExaminationController extends Controller
 				$notification = new NotificationTable();
                 $notification->id = Uuid::uuid4();
 			    $notification->from = $data['from'];
-			      $notification->to = $data['to'];
-			      $notification->message = $data['message'];
-			      $notification->url = $data['url'];
-			      $notification->is_read = $data['is_read'];
-			      $notification->created_at = $data['created_at'];
-			      $notification->updated_at = $data['updated_at'];
-			      $notification->save();
+		        $notification->to = $data['to'];
+		        $notification->message = $data['message'];
+		        $notification->url = $data['url'];
+		        $notification->is_read = $data['is_read'];
+		        $notification->created_at = $data['created_at'];
+		        $notification->updated_at = $data['updated_at'];
+		        $notification->save();  
 
 			     	$data['id'] = $notification->id;
 
@@ -397,7 +529,7 @@ class ExaminationController extends Controller
                 "updated_at"=>date("Y-m-d H:i:s")
                 );
 				  $notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
+                  $notification->id = Uuid::uuid4();
 			      $notification->from = $data['from'];
 			      $notification->to = $data['to'];
 			      $notification->message = $data['message'];
@@ -486,6 +618,21 @@ $notification->id = Uuid::uuid4();
 				$exam->contract_date = date('Y-m-d');				
 			}
 			$exam->function_status = $status;
+
+            // ketika update status di uji fungsi -> baru di delete history nya ketika hasil tidak memenuhi
+            if($exam->function_test_TE == 2){
+                Equipment::where('examination_id', '=' ,''.$exam->id.'')->delete();
+                EquipmentHistory::where('examination_id', '=' ,''.$exam->id.'')->delete();
+                
+                $exam->cust_test_date = NULL;
+                $exam->deal_test_date = NULL;
+                $exam->urel_test_date = NULL;
+                $exam->function_date = NULL;
+                $exam->function_test_reason = NULL;
+                $exam->function_test_date_approval = 0;
+                $exam->location = 0;
+            }
+
 			if($status == 1){
 				/* push notif*/
 	            
@@ -665,7 +812,7 @@ $notification->id = Uuid::uuid4();
 		                    "updated_at"=>date("Y-m-d H:i:s")
 		                    );
 		              $notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
+                      $notification->id = Uuid::uuid4();
 		              $notification->from = $data['from'];
 		              $notification->to = $data['to'];
 		              $notification->message = $data['message'];
@@ -690,7 +837,7 @@ $notification->id = Uuid::uuid4();
 		                    );
 
 		              $notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
+                      $notification->id = Uuid::uuid4();
 		              $notification->from = $data['from'];
 		              $notification->to = $data['to'];
 		              $notification->message = $data['message'];
@@ -765,7 +912,7 @@ $notification->id = Uuid::uuid4();
 	                    );
 
 	              $notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
+                  $notification->id = Uuid::uuid4();
 	              $notification->from = $data['from'];
 	              $notification->to = $data['to'];
 	              $notification->message = $data['message'];
@@ -786,6 +933,9 @@ $notification->id = Uuid::uuid4();
         }
 		$spk_created = 0;
         if ($request->has('payment_status')){
+			if ($request->has('cust_price_payment')){
+				$exam->cust_price_payment = $request->input('cust_price_payment');
+			}
 			if ($request->hasFile('kuitansi_file')) {
 				$name_file = 'kuitansi_'.$request->file('kuitansi_file')->getClientOriginalName();
 				$path_file = public_path().'/media/examination/'.$exam->id;
@@ -848,7 +998,7 @@ $notification->id = Uuid::uuid4();
 			}
             $status = $request->input('payment_status');
             $exam->payment_status = $status;
-			$exam->spk_status = $status;
+			// $exam->spk_status = $status;
 			if($status == 1){
 				if($this->cekRefID($exam->id) == 0){
 					$income = new Income;
@@ -863,7 +1013,9 @@ $notification->id = Uuid::uuid4();
 				}else{
 					$income = Income::where('reference_id', $exam->id)->first();
 				}
-					$income->price = $request->input('exam_price');
+					// ($item->payment_method == 1)?'ATM':'Kartu Kredit'
+					$income->price = ($request->input('cust_price_payment') != NULL) ? $request->input('cust_price_payment') : 0;
+					// $income->price = $request->input('cust_price_payment');
 					$income->updated_by = $currentUser->id;
 					$income->save();
 				$path_file = public_path().'/media/examination/'.$id;
@@ -883,12 +1035,15 @@ $notification->id = Uuid::uuid4();
 				$exam_forOTR = Examination::where('id', $exam->id)
 				->with('examinationType')
 				->with('examinationLab')
-				->first()
-				;
-				$spk_number_forOTR = $this->generateSPKCOde($exam_forOTR->examinationLab->lab_code,$exam_forOTR->examinationType->name,date('Y'));
-				$exam->spk_code = $spk_number_forOTR;
-				$exam->spk_date = date('Y-m-d');
-					$spk_created = 1;
+				->first();
+
+                if ($exam->spk_code == null){
+                    $spk_number_forOTR = $this->generateSPKCOde($exam_forOTR->examinationLab->lab_code,$exam_forOTR->examinationType->name,date('Y'));
+                    $exam->spk_code = $spk_number_forOTR;
+                    $exam->spk_date = date('Y-m-d');
+                    $spk_created = 1;
+                }
+
 				// $res_exam_schedule = $client->post('notification/notifToTE?lab=?'.$exam->examinationLab->lab_code)->getBody();
 				// $res_exam_schedule = $client->get('spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR);
 				if($exam->payment_status){
@@ -903,7 +1058,7 @@ $notification->id = Uuid::uuid4();
 		                "updated_at"=>date("Y-m-d H:i:s")
 		                );
 				  	$notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
+                    $notification->id = Uuid::uuid4();
 			      	$notification->from = $data['from'];
 			      	$notification->to = $data['to'];
 			      	$notification->message = $data['message'];
@@ -926,7 +1081,7 @@ $notification->id = Uuid::uuid4();
 		                "updated_at"=>date("Y-m-d H:i:s")
 	                );
 				  	$notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
+                    $notification->id = Uuid::uuid4();
 			      	$notification->from = $data['from'];
 			      	$notification->to = $data['to'];
 			      	$notification->message = $data['message'];
@@ -979,7 +1134,7 @@ $notification->id = Uuid::uuid4();
 		                "updated_at"=>date("Y-m-d H:i:s")
 	                );
 				  	$notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
+                    $notification->id = Uuid::uuid4();
 			      	$notification->from = $data['from'];
 			      	$notification->to = $data['to'];
 			      	$notification->message = $data['message'];
@@ -1003,7 +1158,7 @@ $notification->id = Uuid::uuid4();
 		                "updated_at"=>date("Y-m-d H:i:s")
 	                );
 				  	$notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
+                    $notification->id = Uuid::uuid4();
 			      	$notification->from = $data['from'];
 			      	$notification->to = $data['to'];
 			      	$notification->message = $data['message'];
@@ -1016,6 +1171,16 @@ $notification->id = Uuid::uuid4();
 			      	event(new Notification($data));
 				}
 				
+			}
+			if ($request->has('lab_to_gudang_date')){
+				$query_update = "UPDATE equipment_histories
+					SET 
+						action_date = '".$request->input('lab_to_gudang_date')."',
+						updated_by = '".$currentUser->id."',
+						updated_at = '".date('Y-m-d H:i:s')."'
+					WHERE location = 2 AND examination_id = '".$id."'
+				";
+				$data_update = DB::update($query_update);
 			}
         }
         if ($request->has('resume_status')){
@@ -1071,7 +1236,7 @@ $notification->id = Uuid::uuid4();
 	                );
 
 				  	$notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
+                    $notification->id = Uuid::uuid4();
 			      	$notification->from = $data['from'];
 			      	$notification->to = $data['to'];
 			      	$notification->message = $data['message'];
@@ -1095,7 +1260,7 @@ $notification->id = Uuid::uuid4();
 		                "updated_at"=>date("Y-m-d H:i:s")
 	                );
 				  	$notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
+                    $notification->id = Uuid::uuid4();
 			      	$notification->from = $data['from'];
 			      	$notification->to = $data['to'];
 			      	$notification->message = $data['message'];
@@ -1142,6 +1307,37 @@ $notification->id = Uuid::uuid4();
 				return redirect('/admin/examination/'.$exam->id.'/edit');
 			}
 		}
+		if ($request->hasFile('tanda_terima_file')) {
+			$name_file = 'form_tanda_terima_hasil_pengujian_'.$request->file('tanda_terima_file')->getClientOriginalName();
+			$path_file = public_path().'/media/examination/'.$exam->id;
+			if (!file_exists($path_file)) {
+				mkdir($path_file, 0775);
+			}
+			if($request->file('tanda_terima_file')->move($path_file,$name_file)){
+				$attach = ExaminationAttach::where('name', 'Tanda Terima Hasil Pengujian')->where('examination_id', ''.$exam->id.'')->first();
+				if ($attach){
+					$attach->attachment = $name_file;
+					$attach->updated_by = $currentUser->id;
+
+					$attach->save();
+				} else{
+					$attach = new ExaminationAttach;
+					$attach->id = Uuid::uuid4();
+					$attach->examination_id = $exam->id; 
+					$attach->name = 'Tanda Terima Hasil Pengujian';
+					$attach->attachment = $name_file;
+					$attach->created_by = $currentUser->id;
+					$attach->updated_by = $currentUser->id;
+
+					$attach->save();
+				}
+				Session::flash('message', 'Success Save Tanda Terima Hasil Pengujian to directory');
+				return redirect('/admin/examination/'.$exam->id.'/edit');
+			}else{
+				Session::flash('error', 'Save Tanda Terima Hasil Pengujian to directory failed');
+				return redirect('/admin/examination/'.$exam->id.'/edit');
+			}
+		}
         if ($request->has('qa_status')){
             $status = $request->input('qa_status');
             $passed = $request->input('passed');
@@ -1170,6 +1366,8 @@ $notification->id = Uuid::uuid4();
 		      	$notification->save(); 
 		      	$data['id'] = $notification->id;
 	            event(new Notification($data));
+
+                // $this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.sidang_QA", "Hasil Sidang QA");
             }else{ 
 
 		      	$data= array( 
@@ -1182,7 +1380,7 @@ $notification->id = Uuid::uuid4();
 	                "updated_at"=>date("Y-m-d H:i:s")
                 );
 			  	$notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
+                $notification->id = Uuid::uuid4();
 		      	$notification->from = $data['from'];
 		      	$notification->to = $data['to'];
 		      	$notification->message = $data['message'];
@@ -1194,6 +1392,8 @@ $notification->id = Uuid::uuid4();
 
 		      	$data['id'] = $notification->id;
                 event(new Notification($data));
+
+                // $this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.sidang_QA", "Hasil Sidang QA");
             }
            
 			if($status == -1){
@@ -1215,7 +1415,7 @@ $notification->id = Uuid::uuid4();
                 "updated_at"=>date("Y-m-d H:i:s")
                 );
 			  	$notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
+                $notification->id = Uuid::uuid4();
 		      	$notification->from = $data['from'];
 		      	$notification->to = $data['to'];
 		      	$notification->message = $data['message'];
@@ -1239,7 +1439,7 @@ $notification->id = Uuid::uuid4();
                 "updated_at"=>date("Y-m-d H:i:s")
                 );
 			  	$notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
+                $notification->id = Uuid::uuid4();
 		      	$notification->from = $data['from'];
 		      	$notification->to = $data['to'];
 		      	$notification->message = $data['message'];
@@ -1538,13 +1738,299 @@ $notification->id = Uuid::uuid4();
 		// the payments table's primary key, the user's first and last name, 
 		// the user's e-mail address, the amount paid, and the payment
 		// timestamp.
+
+        $search = trim($request->input('search'));
+        $comp_stat = '';
+        $type = '';
+        $status = '';
+		$before = null;
+        $after = null;
+
+        $query = Examination::whereNotNull('created_at')
+                            ->with('user')
+                            ->with('company')
+                            ->with('examinationType')
+                            ->with('examinationLab')
+                            ->with('media')
+                            ->with('device');
+		$query->where(function($qry){
+			$qry->where(function($q){
+				return $q->where('registration_status', '!=', '1')
+					->orWhere('function_status', '!=', '1')
+					->orWhere('contract_status', '!=', '1')
+					->orWhere('spb_status', '!=', '1')
+					->orWhere('payment_status', '!=', '1')
+					->orWhere('spk_status', '!=', '1')
+					->orWhere('examination_status', '!=', '1')
+					->orWhere('resume_status', '!=', '1')
+					->orWhere('qa_status', '!=', '1')
+					->orWhere('certificate_status', '!=', '1')
+					->orWhere('location', '!=', '1')
+					// ->orWhere(function($qa){
+						// return $qa->where('qa_passed', '=', '-1')->where('location', '!=', '1');
+					// })
+					;
+				})
+				->where('examination_type_id', '=', '1')
+			->orWhere(function($q){
+				return $q->where('registration_status', '!=', '1')
+					->orWhere('function_status', '!=', '1')
+					->orWhere('contract_status', '!=', '1')
+					->orWhere('spb_status', '!=', '1')
+					->orWhere('payment_status', '!=', '1')
+					->orWhere('spk_status', '!=', '1')
+					->orWhere('examination_status', '!=', '1')
+					->orWhere('resume_status', '!=', '1')
+					->orWhere('location', '!=', '1')
+					;
+				})->where('examination_type_id', '!=', '1')
+				;
+		});
+		if ($search != null){
+            $query->where(function($qry) use($search){
+                $qry->whereHas('device', function ($q) use ($search){
+						return $q->where('name', 'like', '%'.strtolower($search).'%');
+					})
+				->orWhereHas('company', function ($q) use ($search){
+						return $q->where('name', 'like', '%'.strtolower($search).'%');
+					})
+				->orWhereHas('examinationLab', function ($q) use ($search){
+							return $q->where('name', 'like', '%'.strtolower($search).'%');
+						})
+				->orWhere('function_test_NO', 'like', '%'.strtolower($search).'%');
+            });
+        }
+
+        // if ($request->has('comp_stat')){
+            // $comp_stat = $request->get('comp_stat');
+            // if($request->input('comp_stat') != 'all'){
+				// $query->where(function($q) use($request){
+				// return $q->where('registration_status', '=', $request->get('comp_stat'))
+					// ->orWhere('function_status', '=', $request->get('comp_stat'))
+					// ->orWhere('contract_status', '=', $request->get('comp_stat'))
+					// ->orWhere('spb_status', '=', $request->get('comp_stat'))
+					// ->orWhere('payment_status', '=', $request->get('comp_stat'))
+					// ->orWhere('spk_status', '=', $request->get('comp_stat'))
+					// ->orWhere('examination_status', '=', $request->get('comp_stat'))
+					// ->orWhere('resume_status', '=', $request->get('comp_stat'))
+					// ->orWhere('qa_status', '=', $request->get('comp_stat'))
+					// ->orWhere('certificate_status', '=', $request->get('comp_stat'))
+					// ;
+				// });
+			// }
+        // }
+
+        if ($request->has('type')){
+            $type = $request->get('type');
+            if($request->input('type') != 'all'){
+				$query->where('examination_type_id', $request->get('type'));
+			}
+        }
+
+        if ($request->has('company')){
+            $query->whereHas('company', function ($q) use ($request){
+                return $q->where('name', 'like', '%'.strtolower($request->get('company')).'%');
+            });
+        }
+
+        if ($request->has('device')){
+            $query->whereHas('device', function ($q) use ($request){
+                return $q->where('name', 'like', '%'.strtolower($request->get('device')).'%');
+            });
+        }
+
+        if ($request->has('status')){
+            switch ($request->get('status')) {
+                case 1:
+					/*if ($request->has('comp_stat')){
+						$comp_stat = $request->get('comp_stat');
+						if($request->input('comp_stat') != 'all'){
+							$query->where('registration_status', '=', $request->get('comp_stat'));
+						}else{
+							$query->where('registration_status', '!=', 0);
+						}
+					}*/
+					$query->where('registration_status', '!=', 1);
+                    $status = 1;
+                    break;
+                case 2:
+                    /*if ($request->has('comp_stat')){
+						$comp_stat = $request->get('comp_stat');
+						if($request->input('comp_stat') != 'all'){
+							$query->where('function_status', '=', $request->get('comp_stat'));
+						}else{
+							$query->where('function_status', '!=', 0);
+						}
+					}*/
+					$query->where('registration_status', '=', 1);
+					$query->where('function_status', '!=', 1);
+                    $status = 2;
+                    break;
+                case 3:
+                    /*if ($request->has('comp_stat')){
+						$comp_stat = $request->get('comp_stat');
+						if($request->input('comp_stat') != 'all'){
+							$query->where('contract_status', '=', $request->get('comp_stat'));
+						}else{
+							$query->where('contract_status', '!=', 0);
+						}
+					}*/
+					$query->where('registration_status', '=', 1);
+					$query->where('function_status', '=', 1);
+					$query->where('contract_status', '!=', 1);
+                    $status = 3;
+                    break;
+                case 4:
+                    /*if ($request->has('comp_stat')){
+						$comp_stat = $request->get('comp_stat');
+						if($request->input('comp_stat') != 'all'){
+							$query->where('spb_status', '=', $request->get('comp_stat'));
+						}else{
+							$query->where('spb_status', '!=', 0);
+						}
+					}*/
+					$query->where('registration_status', '=', 1);
+					$query->where('function_status', '=', 1);
+					$query->where('contract_status', '=', 1);
+					$query->where('spb_status', '!=', 1);
+                    $status = 4;
+                    break;
+                case 5:
+                    /*if ($request->has('comp_stat')){
+						$comp_stat = $request->get('comp_stat');
+						if($request->input('comp_stat') != 'all'){
+							$query->where('payment_status', '=', $request->get('comp_stat'));
+						}else{
+							$query->where('payment_status', '!=', 0);
+						}
+					}*/
+					$query->where('registration_status', '=', 1);
+					$query->where('function_status', '=', 1);
+					$query->where('contract_status', '=', 1);
+					$query->where('spb_status', '=', 1);
+					$query->where('payment_status', '!=', 1);
+                    $status = 5;
+                    break;
+                case 6:
+                    /*if ($request->has('comp_stat')){
+						$comp_stat = $request->get('comp_stat');
+						if($request->input('comp_stat') != 'all'){
+							$query->where('spk_status', '=', $request->get('comp_stat'));
+						}else{
+							$query->where('spk_status', '!=', 0);
+						}
+					}*/
+					$query->where('registration_status', '=', 1);
+					$query->where('function_status', '=', 1);
+					$query->where('contract_status', '=', 1);
+					$query->where('spb_status', '=', 1);
+					$query->where('payment_status', '=', 1);
+					$query->where('spk_status', '!=', 1);
+                    $status = 6;
+                    break;
+                case 7:
+                    /*if ($request->has('comp_stat')){
+						$comp_stat = $request->get('comp_stat');
+						if($request->input('comp_stat') != 'all'){
+							$query->where('examination_status', '=', $request->get('comp_stat'));
+						}else{
+							$query->where('examination_status', '!=', 0);
+						}
+					}*/
+					$query->where('registration_status', '=', 1);
+					$query->where('function_status', '=', 1);
+					$query->where('contract_status', '=', 1);
+					$query->where('spb_status', '=', 1);
+					$query->where('payment_status', '=', 1);
+					$query->where('spk_status', '=', 1);
+					$query->where('examination_status', '!=', 1);
+                    $status = 7;
+                    break;
+                case 8:
+                    /*if ($request->has('comp_stat')){
+						$comp_stat = $request->get('comp_stat');
+						if($request->input('comp_stat') != 'all'){
+							$query->where('resume_status', '=', $request->get('comp_stat'));
+						}else{
+							$query->where('resume_status', '!=', 0);
+						}
+					}*/
+					$query->where('registration_status', '=', 1);
+					$query->where('function_status', '=', 1);
+					$query->where('contract_status', '=', 1);
+					$query->where('spb_status', '=', 1);
+					$query->where('payment_status', '=', 1);
+					$query->where('spk_status', '=', 1);
+					$query->where('examination_status', '=', 1);
+					$query->where('resume_status', '!=', 1);
+                    $status = 8;
+                    break;
+                case 9:
+                    /*if ($request->has('comp_stat')){
+						$comp_stat = $request->get('comp_stat');
+						if($request->input('comp_stat') != 'all'){
+							$query->where('qa_status', '=', $request->get('comp_stat'));
+						}else{
+							$query->where('qa_status', '!=', 0);
+						}
+					}*/
+					$query->where('registration_status', '=', 1);
+					$query->where('function_status', '=', 1);
+					$query->where('contract_status', '=', 1);
+					$query->where('spb_status', '=', 1);
+					$query->where('payment_status', '=', 1);
+					$query->where('spk_status', '=', 1);
+					$query->where('examination_status', '=', 1);
+					$query->where('resume_status', '=', 1);
+					$query->where('qa_status', '!=', 1);
+                    $status = 9;
+                    break;
+                case 10:
+                    /*if ($request->has('comp_stat')){
+						$comp_stat = $request->get('comp_stat');
+						if($request->input('comp_stat') != 'all'){
+							$query->where('certificate_status', '=', $request->get('comp_stat'));
+						}else{
+							$query->where('certificate_status', '!=', 0);
+						}
+					}*/
+					$query->where('registration_status', '=', 1);
+					$query->where('function_status', '=', 1);
+					$query->where('contract_status', '=', 1);
+					$query->where('spb_status', '=', 1);
+					$query->where('payment_status', '=', 1);
+					$query->where('spk_status', '=', 1);
+					$query->where('examination_status', '=', 1);
+					$query->where('resume_status', '=', 1);
+					$query->where('qa_status', '=', 1);
+					$query->where('certificate_status', '!=', 1);
+                    $status = 10;
+                    break;
+                
+                default:
+					$status = 'all';
+                    break;
+            }
+        }
 		
-		$data = $request->session()->get('excel_pengujian');
+		if ($request->has('before_date')){
+			$query->where('spk_date', '<=', $request->get('before_date'));
+			$before = $request->get('before_date');
+		}
+
+		if ($request->has('after_date')){
+			$query->where('spk_date', '>=', $request->get('after_date'));
+			$after = $request->get('after_date');
+		}
+
+		$data = $query->orderBy('updated_at', 'desc')->get();
+
 		$examsArray = []; 
 
 		// Define the Excel spreadsheet headers
 		$examsArray[] = [
 			'Tipe Pengujian',
+			'Tahap Pengujian',
 			'Nama Pemohon',
 			'Email Pemohon',
 			'Alamat Pemohon',
@@ -1571,7 +2057,6 @@ $notification->id = Uuid::uuid4();
 			'Tanggal Berlaku Perangkat',
 			'Nomor SPK',
 			'Tanggal SPK',
-			'Status Pengujian',
 			'Registrasi',
 			'Uji Fungsi',
 			'Tinjauan Kontrak',
@@ -1588,203 +2073,317 @@ $notification->id = Uuid::uuid4();
 		// Convert each member of the returned collection into an array,
 		// and append it to the payments array.
 		foreach ($data as $row) {
-			if($row->registration_status < 1){
-				$status_pengujian = 'Belum Terdaftar';
-				$status_reg = 'Tidak';
-				$status_func = 'Tidak';
-				$status_cont = 'Tidak';
-				$status_spb = 'Tidak';
-				$status_pay = 'Tidak';
-				$status_spk = 'Tidak';
-				$status_exam = 'Tidak';
-				$status_resu = 'Tidak';
-				$status_qa = 'Tidak';
-				$status_cert = 'Tidak';
+			if( $row->registration_status == 1) {
+				$status_reg = 'Completed';
+			}else
+				if( $row->registration_status == -1) {
+					$status_reg = 'Not Completed';
+				}else{
+					$status_reg = 'On Progress';
+				}
+				
+			if( $row->function_status == 1) {
+				$status_func = 'Completed';
+			}else
+				if( $row->function_status == -1) {
+					$status_func = 'Not Completed';
+				}else{
+					$status_func = 'On Progress';
+				}
+				
+			if( $row->contract_status == 1) {
+				$status_cont = 'Completed';
+			}else
+				if( $row->contract_status == -1) {
+					$status_cont = 'Not Completed';
+				}else{
+					$status_cont = 'On Progress';
+				}
+				
+			if( $row->spb_status == 1) {
+				$status_spb = 'Completed';
+			}else
+				if( $row->spb_status == -1) {
+					$status_spb = 'Not Completed';
+				}else{
+					$status_spb = 'On Progress';
+				}
+			
+			if( $row->payment_status == 1) {
+				$status_pay = 'Completed';
+			}else
+				if( $row->payment_status == -1) {
+					$status_pay = 'Not Completed';
+				}else{
+					$status_pay = 'On Progress';
+				}
+				
+			if( $row->spk_status == 1) {
+				$status_spk = 'Completed';
+			}else
+				if( $row->spk_status == -1) {
+					$status_spk = 'Not Completed';
+				}else{
+					$status_spk = 'On Progress';
+				}
+				
+			if( $row->examination_status == 1) {
+				$status_exam = 'Completed';
+			}else
+				if( $row->examination_status == -1) {
+					$status_exam = 'Not Completed';
+				}else{
+					$status_exam = 'On Progress';
+				}
+				
+			if( $row->resume_status == 1) {
+				$status_resu = 'Completed';
+			}else
+				if( $row->resume_status == -1) {
+					$status_resu = 'Not Completed';
+				}else{
+					$status_resu = 'On Progress';
+				}
+				
+			if( $row->qa_status == 1) {
+				$status_qa = 'Completed';
+			}else
+				if( $row->qa_status == -1) {
+					$status_qa = 'Not Completed';
+				}else{
+					$status_qa = 'On Progress';
+				}
+				
+			if( $row->certificate_status == 1) {
+				$status_cert = 'Completed';
+			}else
+				if( $row->certificate_status == -1) {
+					$status_cert = 'Not Completed';
+				}else{
+					$status_cert = 'On Progress';
+				}
+
+			/*Tahap Pengujian*/
+
+			if($row->registration_status != 1){
+				$tahap = 'Registrasi';
 			}
-			else if($row->registration_status == 1 and $row->function_status < 1){
-				$status_pengujian = 'Pendaftaran';
-				$status_reg = 'Ya';
-				$status_func = 'Tidak';
-				$status_cont = 'Tidak';
-				$status_spb = 'Tidak';
-				$status_pay = 'Tidak';
-				$status_spk = 'Tidak';
-				$status_exam = 'Tidak';
-				$status_resu = 'Tidak';
-				$status_qa = 'Tidak';
-				$status_cert = 'Tidak';
+			if($row->registration_status == 1 && $row->function_status != 1){
+				$tahap = 'Uji Fungsi';
 			}
-			else if($row->function_status == 1 and $row->contract_status < 1){
-				$status_pengujian = 'Uji Fungsi';
-				$status_reg = 'Ya';
-				$status_func = 'Ya';
-				$status_cont = 'Tidak';
-				$status_spb = 'Tidak';
-				$status_pay = 'Tidak';
-				$status_spk = 'Tidak';
-				$status_exam = 'Tidak';
-				$status_resu = 'Tidak';
-				$status_qa = 'Tidak';
-				$status_cert = 'Tidak';
+			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status != 1){
+				$tahap = 'Tinjauan Kontrak';
 			}
-			else if($row->contract_status == 1 and $row->spb_status < 1){
-				$status_pengujian = 'Tinjauan Kontrak';
-				$status_reg = 'Ya';
-				$status_func = 'Ya';
-				$status_cont = 'Ya';
-				$status_spb = 'Tidak';
-				$status_pay = 'Tidak';
-				$status_spk = 'Tidak';
-				$status_exam = 'Tidak';
-				$status_resu = 'Tidak';
-				$status_qa = 'Tidak';
-				$status_cert = 'Tidak';
+			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status == 1 && $row->spb_status != 1){
+				$tahap = 'SPB';
 			}
-			else if($row->spb_status == 1 and $row->payment_status < 1){
-				$status_pengujian = 'SPB';
-				$status_reg = 'Ya';
-				$status_func = 'Ya';
-				$status_cont = 'Ya';
-				$status_spb = 'Ya';
-				$status_pay = 'Tidak';
-				$status_spk = 'Tidak';
-				$status_exam = 'Tidak';
-				$status_resu = 'Tidak';
-				$status_qa = 'Tidak';
-				$status_cert = 'Tidak';
+			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status == 1 && $row->spb_status == 1 && $row->payment_status != 1){
+				$tahap = 'Pembayaran';
 			}
-			else if($row->payment_status == 1 and $row->spk_status < 1){
-				$status_pengujian = 'Pembayaran';
-				$status_reg = 'Ya';
-				$status_func = 'Ya';
-				$status_cont = 'Ya';
-				$status_spb = 'Ya';
-				$status_pay = 'Ya';
-				$status_spk = 'Tidak';
-				$status_exam = 'Tidak';
-				$status_resu = 'Tidak';
-				$status_qa = 'Tidak';
-				$status_cert = 'Tidak';
+			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status == 1 && $row->spb_status == 1 && $row->payment_status == 1 && $row->spk_status != 1){
+				$tahap = 'Pembuatan SPK';
 			}
-			else if($row->spk_status == 1 and $row->examination_status < 1){
-				$status_pengujian = 'Pembuatan SPK';
-				$status_reg = 'Ya';
-				$status_func = 'Ya';
-				$status_cont = 'Ya';
-				$status_spb = 'Ya';
-				$status_pay = 'Ya';
-				$status_spk = 'Ya';
-				$status_exam = 'Tidak';
-				$status_resu = 'Tidak';
-				$status_qa = 'Tidak';
-				$status_cert = 'Tidak';
+			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status == 1 && $row->spb_status == 1 && $row->payment_status == 1 && $row->spk_status == 1 && $row->examination_status != 1){
+				$tahap = 'Pelaksanaan Uji';
 			}
-			else if($row->examination_status == 1 and $row->resume_status < 1){
-				$status_pengujian = 'Pelaksanaan Uji';
-				$status_reg = 'Ya';
-				$status_func = 'Ya';
-				$status_cont = 'Ya';
-				$status_spb = 'Ya';
-				$status_pay = 'Ya';
-				$status_spk = 'Ya';
-				$status_exam = 'Ya';
-				$status_resu = 'Tidak';
-				$status_qa = 'Tidak';
-				$status_cert = 'Tidak';
+			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status == 1 && $row->spb_status == 1 && $row->payment_status == 1 && $row->spk_status == 1 && $row->examination_status == 1 && $row->resume_status != 1){
+				$tahap = 'Laporan Uji';
 			}
-			else if($row->resume_status == 1 and $row->qa_status < 1){
-				$status_pengujian = 'Laporan Uji';
-				$status_reg = 'Ya';
-				$status_func = 'Ya';
-				$status_cont = 'Ya';
-				$status_spb = 'Ya';
-				$status_pay = 'Ya';
-				$status_spk = 'Ya';
-				$status_exam = 'Ya';
-				$status_resu = 'Ya';
-				$status_qa = 'Tidak';
-				$status_cert = 'Tidak';
+			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status == 1 && $row->spb_status == 1 && $row->payment_status == 1 && $row->spk_status == 1 && $row->examination_status == 1 && $row->resume_status == 1 && $row->qa_status != 1){
+				$tahap = 'Sidang QA';
 			}
-			else if($row->qa_status == 1 and $row->certificate_status < 1){
-				$status_pengujian = 'Sidang QA';
-				$status_reg = 'Ya';
-				$status_func = 'Ya';
-				$status_cont = 'Ya';
-				$status_spb = 'Ya';
-				$status_pay = 'Ya';
-				$status_spk = 'Ya';
-				$status_exam = 'Ya';
-				$status_resu = 'Ya';
-				$status_qa = 'Ya';
-				$status_cert = 'Tidak';
+			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status == 1 && $row->spb_status == 1 && $row->payment_status == 1 && $row->spk_status == 1 && $row->examination_status == 1 && $row->resume_status == 1 && $row->qa_status == 1 && $row->certificate_status != 1){
+				$tahap = 'Penerbitan Sertifikat';
 			}
-			else if($row->certificate_status == 1){
-				$status_pengujian = 'Penerbitan Sertifikat';
-				$status_reg = 'Ya';
-				$status_func = 'Ya';
-				$status_cont = 'Ya';
-				$status_spb = 'Ya';
-				$status_pay = 'Ya';
-				$status_spk = 'Ya';
-				$status_exam = 'Ya';
-				$status_resu = 'Ya';
-				$status_qa = 'Ya';
-				$status_cert = 'Ya';
+
+			/*End Tahap Pengujian*/
+
+			/*ExaminationType*/
+			if(!isset($row->examinationType->name)){
+				$examType_name = '';
+			}else{
+				$examType_name = $row->examinationType->name;
 			}
-			if($row->company->siup_date==''){
+			if(!isset($row->examinationType->description)){
+				$examType_desc = '';
+			}else{
+				$examType_desc = $row->examinationType->description;
+			}
+			/*EndExaminationType*/
+			
+			/*User*/
+			if(!isset($row->user->name)){
+				$user_name = '';
+			}else{
+				$user_name = $row->user->name;
+			}
+			if(!isset($row->user->email)){
+				$user_email = '';
+			}else{
+				$user_email = $row->user->email;
+			}
+			if(!isset($row->user->address)){
+				$user_address = '';
+			}else{
+				$user_address = $row->user->address;
+			}
+			if(!isset($row->user->phone_number)){
+				$user_phone_number = '';
+			}else{
+				$user_phone_number = $row->user->phone_number;
+			}
+			if(!isset($row->user->fax)){
+				$user_fax = '';
+			}else{
+				$user_fax = $row->user->fax;
+			}
+			/*EndUser*/
+			
+			/*Company*/
+			if(!isset($row->company->siup_date)){
 				$siup_date = '';
 			}else{
 				$siup_date = date("d-m-Y", strtotime($row->company->siup_date));
 			}
-			if($row->company->qs_certificate_date==''){
+			if(!isset($row->company->qs_certificate_date)){
 				$qs_certificate_date = '';
 			}else{
 				$qs_certificate_date = date("d-m-Y", strtotime($row->company->qs_certificate_date));
 			}
-			if($row->device->valid_from==''){
+			if(!isset($row->company->name)){
+				$company_name = '';
+			}else{
+				$company_name = $row->company->name;
+			}
+			if(!isset($row->company->address)){
+				$company_address = '';
+			}else{
+				$company_address = $row->company->address;
+			}
+			if(!isset($row->company->city)){
+				$company_city = '';
+			}else{
+				$company_city = $row->company->city;
+			}
+			if(!isset($row->company->postal_code)){
+				$company_postal_code = '';
+			}else{
+				$company_postal_code = $row->company->postal_code;
+			}
+			if(!isset($row->company->email)){
+				$company_email = '';
+			}else{
+				$company_email = $row->company->email;
+			}
+			if(!isset($row->company->phone_number)){
+				$company_phone_number = '';
+			}else{
+				$company_phone_number = $row->company->phone_number;
+			}
+			if(!isset($row->company->fax)){
+				$company_fax = '';
+			}else{
+				$company_fax = $row->company->fax;
+			}
+			if(!isset($row->company->npwp_number)){
+				$company_npwp_number = '';
+			}else{
+				$company_npwp_number = $row->company->npwp_number;
+			}
+			if(!isset($row->company->siup_number)){
+				$company_siup_number = '';
+			}else{
+				$company_siup_number = $row->company->siup_number;
+			}
+			if(!isset($row->company->qs_certificate_number)){
+				$company_qs_certificate_number = '';
+			}else{
+				$company_qs_certificate_number = $row->company->qs_certificate_number;
+			}
+			/*EndCompany*/
+			
+			/*Device*/
+			if(!isset($row->device->valid_from)){
 				$valid_from = '';
 			}else{
 				$valid_from = date("d-m-Y", strtotime($row->device->valid_from));
 			}
-			if($row->device->valid_thru==''){
+			if(!isset($row->device->valid_thru)){
 				$valid_thru = '';
 			}else{
 				$valid_thru = date("d-m-Y", strtotime($row->device->valid_thru));
 			}
+			if(!isset($row->device->name)){
+				$device_name = '';
+			}else{
+				$device_name = $row->device->name;
+			}
+			if(!isset($row->device->mark)){
+				$device_mark = '';
+			}else{
+				$device_mark = $row->device->mark;
+			}
+			if(!isset($row->device->capacity)){
+				$device_capacity = '';
+			}else{
+				$device_capacity = $row->device->capacity;
+			}
+			if(!isset($row->device->manufactured_by)){
+				$device_manufactured_by = '';
+			}else{
+				$device_manufactured_by = $row->device->manufactured_by;
+			}
+			if(!isset($row->device->serial_number)){
+				$device_serial_number = '';
+			}else{
+				$device_serial_number = $row->device->serial_number;
+			}
+			if(!isset($row->device->model)){
+				$device_model = '';
+			}else{
+				$device_model = $row->device->model;
+			}
+			if(!isset($row->device->test_reference)){
+				$device_test_reference = '';
+			}else{
+				$device_test_reference = $row->device->test_reference;
+			}
+			/*EndDevice*/
+			
 			if($row->spk_date==''){
 				$spk_date = '';
 			}else{
 				$spk_date = date("d-m-Y", strtotime($row->spk_date));
 			}
 			$examsArray[] = [
-				"".$row->examinationType->name." (".$row->examinationType->description.")",
-				$row->user->name,
-				$row->user->email,
-				$row->user->address,
-				$row->user->phone_number,
-				$row->user->fax,
+				"".$examType_name." (".$examType_desc.")",
+				$tahap,
+				$user_name,
+				$user_email,
+				$user_address,
+				$user_phone_number,
+				$user_fax,
 				$row->jns_perusahaan,
-				$row->company->name,
-				$row->company->address.", kota".$row->company->city.", kode pos".$row->company->postal_code,
-				$row->company->email,
-				$row->company->phone_number,
-				$row->company->fax,
-				$row->company->npwp_number,
-				$row->company->siup_number,
+				$company_name,
+				$company_address.", kota".$company_city.", kode pos".$company_postal_code,
+				$company_email,
+				$company_phone_number,
+				$company_fax,
+				$company_npwp_number,
+				$company_siup_number,
 				$siup_date,
-				$row->company->qs_certificate_number,
+				$company_qs_certificate_number,
 				$qs_certificate_date,
-				$row->device->name,
-				$row->device->mark,
-				$row->device->capacity,
-				$row->device->manufactured_by,
-				$row->device->serial_number,
-				$row->device->model,
-				$row->device->test_reference,
+				$device_name,
+				$device_mark,
+				$device_capacity,
+				$device_manufactured_by,
+				$device_serial_number,
+				$device_model,
+				$device_test_reference,
 				$valid_from." s.d. ".$valid_thru,
 				$row->spk_code,
 				$spk_date,
-				$status_pengujian,
 				$status_reg,
 				$status_func,
 				$status_cont,
@@ -1982,6 +2581,7 @@ $notification->id = Uuid::uuid4();
 		
 		$exam = Examination::where('id', $exam_id)
 				->with('user')
+				->with('company')
 				->with('device')
 				->with('examinationLab')
 				->with('Equipment')
@@ -2000,11 +2600,47 @@ $notification->id = Uuid::uuid4();
 				$res_manager_lab = $client->get('user/getManagerLabInfo?labCode='.$exam->examinationLab->lab_code)->getBody();
 				$manager_lab = json_decode($res_manager_lab);
 				
+				$res_manager_urel = $client->get('user/getManagerLabInfo?groupId=MU')->getBody();
+				$manager_urel = json_decode($res_manager_urel);
+				
 				if(count($manager_lab->data) == 1){
 					if( strpos( $manager_lab->data[0]->name, "/" ) !== false ) {$manager_labs = urlencode(urlencode($manager_lab->data[0]->name));}
 						else{$manager_labs = $manager_lab->data[0]->name?: '-';}
 				}else{
 					$manager_labs = '...............................';
+				}
+				
+				if(count($manager_urel->data) == 1){
+					if( strpos( $manager_urel->data[0]->name, "/" ) !== false ) {$manager_urels = urlencode(urlencode($manager_urel->data[0]->name));}
+						else{$manager_urels = $manager_urel->data[0]->name?: '-';}
+				}else{
+					$manager_urels = '...............................';
+				}
+
+				$is_poh = 0;
+				$general_setting_poh = GeneralSetting::where('code', 'poh_manager_urel')->first();
+				if($general_setting_poh){
+					if($general_setting_poh->is_active){
+						$is_poh = 1;
+						if( strpos( $general_setting_poh->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting_poh->value));}
+							else{$manager_urels = $general_setting_poh->value?: '-';}
+					}else{
+						$general_setting = GeneralSetting::where('code', 'manager_urel')->first();
+						if($general_setting){
+							if( strpos( $general_setting->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting->value));}
+								else{$manager_urels = $general_setting->value?: '-';}
+						}else{
+							$manager_urels = '...............................';
+						}	
+					}
+				}else{
+					$general_setting = GeneralSetting::where('code', 'manager_urel')->first();
+					if($general_setting){
+						if( strpos( $general_setting->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting->value));}
+							else{$manager_urels = $general_setting->value?: '-';}
+					}else{
+						$manager_urels = '...............................';
+					}
 				}
 				
 				if(count($exam->equipment)>0){
@@ -2015,8 +2651,13 @@ $notification->id = Uuid::uuid4();
 				}
 				
 				$data = Array([
+					'jns_pengujian' => $exam->examination_type_id,
 					'nama_pemohon' => $exam->user->name,
 					'alamat_pemohon' => $exam->user->address,
+					'nama_perusahaan' => $exam->company->name,
+					'alamat_perusahaan' => $exam->company->address,
+					'plg_id' => $exam->company->plg_id,
+					'nib' => $exam->company->nib,
 					'nama_perangkat' => $exam->device->name,
 					'merek_perangkat' => $exam->device->mark,
 					'model_perangkat' => $exam->device->model,
@@ -2025,7 +2666,9 @@ $notification->id = Uuid::uuid4();
 					'pembuat_perangkat' => $exam->device->manufactured_by,
 					'contract_date' => $contract_date_ina,
 					'manager_lab' => $manager_labs,
-					'pic' => $pic
+					'manager_urel' => $manager_urels,
+					'pic' => $pic,
+					'is_poh' => $is_poh
 				]);
 				
 				$request->session()->put('key_contract', $data);
@@ -2036,6 +2679,48 @@ $notification->id = Uuid::uuid4();
 				echo 1;
 			} catch(Exception $e){
 				Session::flash('error', 'Contract failed');
+				// return back();
+				echo 0;
+			}
+    }
+	
+	public function tandaterima(Request $request)
+    {
+		$exam_id = $request->input('hide_id_exam');
+		$exam = Examination::where('id', $exam_id)
+				->with('user')
+				->with('device')
+				->with('media')
+				->first();
+			$no_laporan = '-';
+			foreach ($exam->media as $item) {
+				if($item->name == 'Laporan Uji' && $item->no != ''){
+					$no_laporan = $item->no;
+				}
+			}
+			try{
+				
+				$data = Array([
+					'nama_pemohon' => $exam->user->name,
+					'alamat_pemohon' => $exam->user->address,
+					'nama_perangkat' => $exam->device->name,
+					'merek_perangkat' => $exam->device->mark,
+					'model_perangkat' => $exam->device->model,
+					'kapasitas_perangkat' => $exam->device->capacity,
+					'referensi_perangkat' => $exam->device->test_reference,
+					'pembuat_perangkat' => $exam->device->manufactured_by,
+					'cert_number' => $exam->device->cert_number,
+					'no_laporan' => $no_laporan
+				]);
+				
+				$request->session()->put('key_tanda_terima', $data);
+				
+				Session::flash('message', 'Tanda Terima successfully created');
+				// $this->sendProgressEmail("Pengujian atas nama ".$user_name." dengan alamat email ".$user_email.", telah melakukan proses Upload Bukti Pembayaran");
+				// return back();
+				echo 1;
+			} catch(Exception $e){
+				Session::flash('error', 'Tanda Terima failed');
 				// return back();
 				echo 0;
 			}
@@ -2122,17 +2807,94 @@ $notification->id = Uuid::uuid4();
 				EquipmentHistory::where('examination_id', '=' ,''.$id.'')->delete();
 				ExaminationHistory::where('examination_id', '=' ,''.$id.'')->delete();
 				ExaminationAttach::where('examination_id', '=' ,''.$id.'')->delete();
+				QuestionerDynamic::where('examination_id', '=' ,''.$id.'')->delete();
 				$exam->delete();
 				$device->delete();
 				
 				if (File::exists(public_path().'\media\\examination\\'.$id)){
 					File::deleteDirectory(public_path().'\media\\examination\\'.$id);
 				}
+
+				$client = new Client([
+					'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+					// Base URI is used with relative requests
+					// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+					'base_uri' => config("app.url_api_bsp"),
+					// You can set any number of default request options.
+					'timeout'  => 60.0,
+				]);
+				
+				$res_delete_spk = $client->get('spk/delete?examId='.$exam->id.'&spkNumber='.$exam->spk_code)->getBody();
+				$delete_spk = json_decode($res_delete_spk);
+
 				Session::flash('message', 'Examination successfully deleted');
 				return redirect('/admin/examination');
 			}catch (Exception $e){
 				Session::flash('error', 'Delete failed');
 				return redirect('/admin/examination');
+			}
+		}
+	}
+	
+	public function resetUjiFungsi($id)
+	{
+		$currentUser = Auth::user();
+
+        if ($currentUser){
+			$exam = Examination::find($id);
+			if ($exam){
+				try{
+					Equipment::where('examination_id', '=' ,''.$exam->id.'')->delete();
+					EquipmentHistory::where('examination_id', '=' ,''.$exam->id.'')->delete();
+					
+					$exam->cust_test_date = NULL;
+					$exam->deal_test_date = NULL;
+					$exam->urel_test_date = NULL;
+					$exam->function_date = NULL;
+					$exam->function_test_reason = NULL;
+					$exam->function_test_TE = 0;
+					$exam->function_test_date_approval = 0;
+					$exam->function_test_status_detail = NULL;
+					$exam->updated_by = $currentUser->id;
+					$exam->updated_at = date('Y-m-d H:i:s');
+					$exam->location = 0;
+					
+					$exam->save();
+					
+					$exam_hist = new ExaminationHistory;
+					$exam_hist->examination_id = $exam->id;
+					$exam_hist->date_action = date('Y-m-d H:i:s');
+					$exam_hist->tahap = 'Uji Fungsi';
+					$exam_hist->status = 'Not Completed';
+					$exam_hist->keterangan = 'Data Uji Fungsi direset oleh Super Admin URel';
+					$exam_hist->created_by = $currentUser->id;
+					$exam_hist->created_at = date('Y-m-d H:i:s');
+					$exam_hist->save();
+					
+					// $data= array( 
+						// "from"=>"admin",
+						// "to"=>$exam->created_by,
+						// "message"=>"Hasil Uji Fungsi lain-lain",
+						// "url"=>"pengujian/".$exam->id."/detail",
+						// "is_read"=>0,
+						// "created_at"=>date("Y-m-d H:i:s"),
+						// "updated_at"=>date("Y-m-d H:i:s")
+					// );
+
+					$logs = new Logs;
+					$logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
+					$logs->action = "Reset Uji Fungsi";
+					$logs->data = $exam;
+					$logs->created_by = $currentUser->id;
+					$logs->page = "EXAMINATION";
+					$logs->save();
+					
+					Session::flash('message', 'Function Test successfully reset');
+					return redirect('/admin/examination/'.$exam->id.'/edit');
+				}catch (Exception $e){
+					Session::flash('error', 'Reset failed');
+					return redirect('/admin/examination/'.$exam->id.'/edit');
+				}
 			}
 		}
 	}
@@ -2154,12 +2916,20 @@ $notification->id = Uuid::uuid4();
     }
 	
 	public function generateSPKCode($a,$b,$c) {
+		// $query = "
+			// SELECT 
+			// SUBSTRING_INDEX(SUBSTRING_INDEX(spk_code,'/',2),'/',-1) + 1 AS last_numb
+			// FROM examinations WHERE 
+			// SUBSTRING_INDEX(spk_code,'/',1) = '".$a."' AND
+			// SUBSTRING_INDEX(SUBSTRING_INDEX(spk_code,'/',-2),'/',1) = '".$b."' AND
+			// SUBSTRING_INDEX(spk_code,'/',-1) = '".$c."'
+			// ORDER BY last_numb DESC LIMIT 1
+		// ";
 		$query = "
 			SELECT 
 			SUBSTRING_INDEX(SUBSTRING_INDEX(spk_code,'/',2),'/',-1) + 1 AS last_numb
 			FROM examinations WHERE 
 			SUBSTRING_INDEX(spk_code,'/',1) = '".$a."' AND
-			SUBSTRING_INDEX(SUBSTRING_INDEX(spk_code,'/',-2),'/',1) = '".$b."' AND
 			SUBSTRING_INDEX(spk_code,'/',-1) = '".$c."'
 			ORDER BY last_numb DESC LIMIT 1
 		";
@@ -2231,7 +3001,7 @@ $notification->id = Uuid::uuid4();
 		$request->session()->put('key_kode_for_kuitansi', $kode);
 		$request->session()->put('key_from_for_kuitansi', $exam->company->name);
 		$request->session()->put('key_price_for_kuitansi', $exam->cust_price_payment?: '0');
-		$request->session()->put('key_for_for_kuitansi', "Pengujian Perangkat ".$exam->device->name);
+		$request->session()->put('key_for_for_kuitansi', "Pengujian Perangkat ".$exam->device->name." (".$kode.")");
 		echo 1;
     }
 	
@@ -2271,12 +3041,12 @@ $notification->id = Uuid::uuid4();
     }
 	
 	public function generateSPB(Request $request) {
-		$exam_id = $request->session()->pull('key_exam_id_for_generate_spb');
-		$spb_number = $request->session()->pull('key_spb_number_for_generate_spb');
+		$exam_id = $request->session()->get('key_exam_id_for_generate_spb');
+		$spb_number = $request->session()->get('key_spb_number_for_generate_spb');
 		if($spb_number == "" or $spb_number == null){
 			$spb_number = $this->generateSPBNumber();
 		}
-		$spb_date = $request->session()->pull('key_spb_date_for_generate_spb');
+		$spb_date = $request->session()->get('key_spb_date_for_generate_spb');
 		$exam = Examination::where('id', $exam_id)
 					->with('device')
 					->first()
@@ -2312,6 +3082,50 @@ $notification->id = Uuid::uuid4();
     }
 	
 	public function generateSPBData(Request $request) {
+		/*$client = new Client([
+			'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+			// Base URI is used with relative requests
+			// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+			'base_uri' => config("app.url_api_bsp"),
+			// You can set any number of default request options.
+			'timeout'  => 60.0,
+		]);
+		*/
+		/*$res_manager_urel = $client->get('user/getManagerLabInfo?groupId=MU')->getBody();
+		$manager_urel = json_decode($res_manager_urel);
+
+		if(count($manager_urel->data) == 1){
+			if( strpos( $manager_urel->data[0]->name, "/" ) !== false ) {$manager_urels = urlencode(urlencode($manager_urel->data[0]->name));}
+				else{$manager_urels = $manager_urel->data[0]->name?: '-';}
+		}else{
+			$manager_urels = '...............................';
+		}*/
+		$is_poh = 0;
+		$general_setting_poh = GeneralSetting::where('code', 'poh_manager_urel')->first();
+		if($general_setting_poh){
+			if($general_setting_poh->is_active){
+				$is_poh = 1;
+				if( strpos( $general_setting_poh->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting_poh->value));}
+					else{$manager_urels = $general_setting_poh->value?: '-';}
+			}else{
+				$general_setting = GeneralSetting::where('code', 'manager_urel')->first();
+				if($general_setting){
+					if( strpos( $general_setting->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting->value));}
+						else{$manager_urels = $general_setting->value?: '-';}
+				}else{
+					$manager_urels = '...............................';
+				}	
+			}
+		}else{
+			$general_setting = GeneralSetting::where('code', 'manager_urel')->first();
+			if($general_setting){
+				if( strpos( $general_setting->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting->value));}
+					else{$manager_urels = $general_setting->value?: '-';}
+			}else{
+				$manager_urels = '...............................';
+			}
+		}
+		
 		if($this->cekSPBNumber($request->input('spb_number')) == 0){
 			$exam_id = $request->input('exam_id');
 			$spb_number = $request->input('spb_number');
@@ -2334,7 +3148,9 @@ $notification->id = Uuid::uuid4();
 				'arr_biaya' => $arr_biaya,
 				'arr_nama_perangkat2' => $arr_nama_perangkat2,
 				'arr_biaya2' => $arr_biaya2,
-				'exam' => $exam
+				'exam' => $exam,
+				'manager_urel' => $manager_urels,
+				'is_poh' => $is_poh
 			];
 			$request->session()->put('key_exam_for_spb', $data);
 			echo 1;			
@@ -2446,10 +3262,26 @@ $notification->id = Uuid::uuid4();
 		->with('ExaminationType')
 		->with('ExaminationLab')
 		->with('Company')
+		->with('User')
 		->with('Device')
 		->with('Equipment')
 		->get();
-		$kode_barang = $this->generateKodeBarang($data[0]->ExaminationLab->lab_init,$this->romawi(date('n')),date('Y'));
+		if(isset($data[0]->equipment[0]->no)){
+			if ($data[0]->equipment[0]->no) {
+				$kode_barang = $data[0]->equipment[0]->no;
+			}else{
+				$kode_barang = $this->generateKodeBarang($data[0]->ExaminationLab->lab_init,$this->romawi(date('n')),date('Y'));
+				$query_update = "UPDATE equipments
+					SET no = '".$kode_barang."'
+					WHERE examination_id = '".$id."'
+				";
+				$data_update = DB::update($query_update);
+			}
+		}else{
+			$kode_barang = '';
+			Session::flash('error', 'Undefined Equipment(s), please put equipment(s) first');
+            return redirect('/admin/examination/'.$id.'/edit');
+		}
 		$kode_barang = urlencode(urlencode($kode_barang));
 		if( strpos( $data[0]->company->name, "/" ) !== false ) {$company_name = urlencode(urlencode($data[0]->company->name));}
 			else{$company_name = $data[0]->company->name?: '-';}
@@ -2459,6 +3291,10 @@ $notification->id = Uuid::uuid4();
 			else{$company_phone = $data[0]->company->phone?: '-';}
 		if( strpos( $data[0]->company->fax, "/" ) !== false ) {$company_fax = urlencode(urlencode($data[0]->company->fax));}
 			else{$company_fax = $data[0]->company->fax?: '-';}
+		if( strpos( $data[0]->user->phone_number, "/" ) !== false ) {$user_phone = urlencode(urlencode($data[0]->user->phone_number));}
+			else{$user_phone = $data[0]->user->phone_number?: '-';}
+		if( strpos( $data[0]->user->fax, "/" ) !== false ) {$user_fax = urlencode(urlencode($data[0]->user->fax));}
+			else{$user_fax = $data[0]->user->fax?: '-';}
 		if( strpos( $data[0]->device->name, "/" ) !== false ) {$device_name = urlencode(urlencode($data[0]->device->name));}
 			else{$device_name = $data[0]->device->name?: '-';}
 		if( strpos( $data[0]->device->mark, "/" ) !== false ) {$device_mark = urlencode(urlencode($data[0]->device->mark));}
@@ -2483,6 +3319,8 @@ $notification->id = Uuid::uuid4();
 			'company_address' => $company_address,
 			'company_phone' => $company_phone,
 			'company_fax' => $company_fax,
+			'user_phone' => $user_phone,
+			'user_fax' => $user_fax,
 			'device_name' => $device_name,
 			'device_mark' => $device_mark,
 			'device_manufactured_by' => $device_manufactured_by,
@@ -2496,7 +3334,7 @@ $notification->id = Uuid::uuid4();
 	
 	public function generateEquip(Request $request)
     {
-		$exam_id = $request->session()->pull('key_exam_id_for_generate_equip_masuk');
+		$exam_id = $request->session()->get('key_exam_id_for_generate_equip_masuk');
 		$equipment = Equipment::where('examination_id', $exam_id)->get();
         $location = Equipment::where('examination_id', $exam_id)->first();
         $examination = DB::table('examinations')
@@ -2542,7 +3380,7 @@ $notification->id = Uuid::uuid4();
     }
 	
 	public function generateKodeBarang($a,$b,$c) {
-		$query = "
+		/*$query = "
 			SELECT
 				SUBSTRING_INDEX(no, '/', 1) + 1 AS last_numb
 			FROM
@@ -2556,6 +3394,17 @@ $notification->id = Uuid::uuid4();
 				SUBSTRING_INDEX(no, '/', 3),
 				'/' ,- 1
 			) = '".$b."' AND
+			SUBSTRING_INDEX(no, '/', -1) = ".$c."
+			ORDER BY
+				last_numb DESC
+			LIMIT 1
+		";*/
+		$query = "
+			SELECT
+				SUBSTRING_INDEX(no, '/', 1) + 1 AS last_numb
+			FROM
+				equipments
+			WHERE
 			SUBSTRING_INDEX(no, '/', -1) = ".$c."
 			ORDER BY
 				last_numb DESC

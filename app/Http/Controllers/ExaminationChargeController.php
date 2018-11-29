@@ -14,6 +14,8 @@ use Input;
 use App\Logs;
 use App\ExaminationCharge;
 
+use Excel;
+
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
@@ -48,6 +50,7 @@ class ExaminationChargeController extends Controller
             if ($search != null){
                 $examinationCharge = ExaminationCharge::whereNotNull('created_at')
                     ->where('device_name','like','%'.$search.'%')
+                    ->orWhere('stel','like','%'.$search.'%')
                     ->orderBy('device_name')
                     ->paginate($paginate);
 
@@ -278,5 +281,97 @@ class ExaminationChargeController extends Controller
 	public function autocomplete($query) {
         $respons_result = ExaminationCharge::autocomplet($query);
         return response($respons_result);
+    }
+
+    public function excel(Request $request) 
+    {
+        // Execute the query used to retrieve the data. In this example
+        // we're joining hypothetical users and payments tables, retrieving
+        // the payments table's primary key, the user's first and last name, 
+        // the user's e-mail address, the amount paid, and the payment
+        // timestamp.
+
+        $search = trim($request->input('search'));
+        
+        $category = '';
+        $status = -1;
+
+        if ($search != null){
+            $examinationCharge = ExaminationCharge::whereNotNull('created_at')
+                ->where('device_name','like','%'.$search.'%')
+                ->orWhere('stel','like','%'.$search.'%')
+                ->orderBy('device_name');
+        }else{
+            $query = ExaminationCharge::whereNotNull('created_at');
+
+            if ($request->has('category')){
+                $category = $request->get('category');
+                if($request->input('category') != 'all'){
+                    $query->where('category', $request->get('category'));
+                }
+            }
+
+            if ($request->has('is_active')){
+                $status = $request->get('is_active');
+                if ($request->get('is_active') > -1){
+                    $query->where('is_active', $request->get('is_active'));
+                }
+            }
+
+            $examinationCharge = $query->orderBy('device_name');
+        }
+
+        $data = $examinationCharge->get();
+
+        $examsArray = []; 
+
+        // Define the Excel spreadsheet headers
+        $examsArray[] = [
+            'Nama Perangkat',
+            'Referensi Uji',
+            'Kategori',
+            'Durasi (Hari)',
+            'Biaya QA (Rp.)',
+            'Biaya VT (Rp.)',
+            'Biaya TA (Rp.)',
+            'Status'
+        ]; 
+        
+        // Convert each member of the returned collection into an array,
+        // and append it to the payments array.
+        foreach ($data as $row) {
+            $examsArray[] = [
+                $row->device_name,
+                $row->stel,
+                $row->category,
+                number_format($row->duration, 0, '.', ','),
+                number_format($row->price, 0, '.', ','),
+                number_format($row->vt_price, 0, '.', ','),
+                number_format($row->ta_price, 0, '.', ','),
+                $row->is_active == '1' ? 'Active' : 'Not Active'
+            ];
+        }
+        $currentUser = Auth::user();
+        $logs = new Logs;
+        $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
+        $logs->action = "download_excel";   
+        $logs->data = "";
+        $logs->created_by = $currentUser->id;
+        $logs->page = "Tarif Pengujian";
+        $logs->save();
+
+        // Generate and return the spreadsheet
+        Excel::create('Data Tarif Pengujian', function($excel) use ($examsArray) {
+
+            // Set the spreadsheet title, creator, and description
+            // $excel->setTitle('Payments');
+            // $excel->setCreator('Laravel')->setCompany('WJ Gilmore, LLC');
+            // $excel->setDescription('payments file');
+
+            // Build the spreadsheet, passing in the payments array
+            $excel->sheet('sheet1', function($sheet) use ($examsArray) {
+                $sheet->fromArray($examsArray, null, 'A1', false, false);
+            });
+        })->export('xlsx'); 
     }
 }

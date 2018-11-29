@@ -16,6 +16,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use App\Events\Notification;
 use App\NotificationTable;
 use App\Footer;
+use App\AdminRole;
 
 class HomeController extends Controller
 {
@@ -134,13 +135,13 @@ class HomeController extends Controller
 				AND ss.payment_status = 1 AND c.id = '".$currentUser->company->id."'";
 				$data_stels = DB::select($query_stels);				
 			}else{
-				$query_stels = "SELECT code as stel, name as device_name FROM stels WHERE stel_type = 1 AND is_active = 1 ORDER BY name";
+				$query_stels = "SELECT code as stel, name as device_name FROM stels WHERE is_active = 1 ORDER BY name";
 				$data_stels = DB::select($query_stels);
 			}
 
 			$query = "SELECT
 					u.id AS user_id, u.`name` AS namaPemohon, u.address AS alamatPemohon, u.phone_number AS telpPemohon, u.fax AS faxPemohon, u.email AS emailPemohon, u.email2 AS emailPemohon2, u.email3 AS emailPemohon3, u.company_id AS company_id,
-					c.`name` AS namaPerusahaan, c.address AS alamatPerusahaan, c.phone_number AS telpPerusahaan, c.fax AS faxPerusahaan, c.email AS emailPerusahaan,
+					c.`name` AS namaPerusahaan, c.address AS alamatPerusahaan, c.plg_id AS plg_idPerusahaan, c.nib AS nibPerusahaan, c.phone_number AS telpPerusahaan, c.fax AS faxPerusahaan, c.email AS emailPerusahaan,
 					c.qs_certificate_number AS noSertifikat, c.qs_certificate_file AS fileSertifikat, c.qs_certificate_date AS tglSertifikat,
 					c.siup_number AS noSIUPP, c.siup_file AS fileSIUPP, c.siup_date AS tglSIUPP, c.npwp_file AS fileNPWP
 				FROM
@@ -180,7 +181,7 @@ class HomeController extends Controller
 				AND ss.payment_status = 1 AND c.id = '".$currentUser->company->id."'";
 				$data_stels = DB::select($query_stels);				
 			}else{
-				$query_stels = "SELECT code as stel, name as device_name FROM stels WHERE stel_type = 1 AND is_active = 1 ORDER BY name";
+				$query_stels = "SELECT code as stel, name as device_name FROM stels WHERE is_active = 1 ORDER BY name";
 				$data_stels = DB::select($query_stels);
 			}
 			
@@ -199,7 +200,7 @@ class HomeController extends Controller
 				d.model AS model_perangkat,
 				d.test_reference AS referensi_perangkat,
 				d.serial_number AS serialNumber,
-				c.`name` AS namaPerusahaan,	e.jns_perusahaan AS jnsPerusahaan, c.address AS alamatPerusahaan, c.phone_number AS telpPerusahaan, c.fax AS faxPerusahaan, c.email AS emailPerusahaan,
+				c.`name` AS namaPerusahaan,	e.jns_perusahaan AS jnsPerusahaan, c.address AS alamatPerusahaan, c.plg_id AS plg_idPerusahaan, c.nib AS nibPerusahaan, c.phone_number AS telpPerusahaan, c.fax AS faxPerusahaan, c.email AS emailPerusahaan,
 				c.qs_certificate_number AS noSertifikat, c.qs_certificate_file AS fileSertifikat, c.qs_certificate_date AS tglSertifikat,
 				c.siup_number AS noSIUPP, c.siup_file AS fileSIUPP, c.siup_date AS tglSIUPP, c.npwp_file AS fileNPWP,
 				(SELECT attachment FROM examination_attachments WHERE examination_id = '".$id."' AND `name` = 'Referensi Uji') AS fileref_uji,
@@ -224,30 +225,32 @@ class HomeController extends Controller
 			AND e.id = '".$id."'
 			";
 			$userData = DB::select($query);
-			
-			$data= array( 
-            "from"=>$currentUser->id,
-            "to"=>"admin",
-            "message"=>$currentUser->name." Mengedit data Pengujian",
-            "url"=>"examination/".$id."/edit",
-            "is_read"=>0,
-            "created_at"=>date("Y-m-d H:i:s"),
-            "updated_at"=>date("Y-m-d H:i:s")
-        	);
-			  $notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
-		      $notification->from = $data['from'];
-		      $notification->to = $data['to'];
-		      $notification->message = $data['message'];
-		      $notification->url = $data['url'];
-		      $notification->is_read = $data['is_read'];
-		      $notification->created_at = $data['created_at'];
-		      $notification->updated_at = $data['updated_at'];
-		      $notification->save();
+			$admins = AdminRole::where('registration_status',1)->get()->toArray();
+			foreach ($admins as $admin) { 
+				$data= array( 
+	            "from"=>$currentUser->id,
+	            "to"=>$admin['user_id'],
+	            "message"=>$currentUser->company->name." Mengedit data Pengujian",
+	            "url"=>"examination/".$id."/edit",
+	            "is_read"=>0,
+	            "created_at"=>date("Y-m-d H:i:s"),
+	            "updated_at"=>date("Y-m-d H:i:s")
+	        	);
+			  	$notification = new NotificationTable();
+				$notification->id = Uuid::uuid4();
+		      	$notification->from = $data['from'];
+		      	$notification->to = $data['to'];
+		      	$notification->message = $data['message'];
+		      	$notification->url = $data['url'];
+		      	$notification->is_read = $data['is_read'];
+		      	$notification->created_at = $data['created_at'];
+		      	$notification->updated_at = $data['updated_at'];
+		      	$notification->save();
 
 		      $data['id'] = $notification->id;
 		     
 		      event(new Notification($data));
+		  	}
 			// print_r($userData);
 			$data =  array();
 

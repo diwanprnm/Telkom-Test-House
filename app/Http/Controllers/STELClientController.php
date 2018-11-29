@@ -46,6 +46,7 @@ class STELClientController extends Controller
             if ($search != null){
                 $query = STEL::whereNotNull('created_at')
                     ->where('stel_type','=','1')
+					->where('is_active','=','1')
                     ->where(function($q) use ($search){
                         return $q->where('code','like','%'.$search.'%')
                         ->orWhere('name','like','%'.$search.'%')
@@ -65,16 +66,20 @@ class STELClientController extends Controller
             }else{
                 $query = STEL::whereNotNull('created_at')
 					->where('stel_type','=','1')
+					->where('is_active','=','1')
                     ->with('examinationLab')
                     ;
             }
 
             if ($request->has('type')){
                 $type = $request->get('type');
-                $query->whereHas('examinationLab', function ($q) use ($type){
-                    return $q->where('id', $type);
-                });
+                if($request->input('type') != 'all'){
+                    $query->whereHas('examinationLab', function ($q) use ($type){
+                        return $q->where('id', $type);
+                    });
+                }
             }
+            
 				// $stels = $query->orderBy('updated_at', 'desc')
 				$stels = $query->orderBy('name')
                          ->paginate($paginate);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -44,15 +45,35 @@ class LogController extends Controller
             $message = null;
             $paginate = 10;
             $search = trim($request->input('search'));
+
+            $before = null;
+            $after = null;
+            $filterUsername = '';
+            $filterAction = '';
+
+            $sort_by = 'logs.created_at';
+            $sort_type = 'desc';
+
             $select = array(
             	"logs.action","logs.page","logs.created_at as search_date","users.name"
             );
+            $datalogs = Logs::select($select)->whereNotNull('logs.created_at')->join("users","users.id","=","logs.user_id");
+
+            $select2 = array(
+                "users.name"
+            );
+            $datalogs2 = Logs::select($select2)->whereNotNull('logs.created_at')->join("users","users.id","=","logs.user_id");
+
+            $username = $datalogs2->distinct()->orderBy('users.name')->get();
+
+            $select3 = array(
+                "logs.action"
+            );
+            $datalogs3 = Logs::select($select3)->whereNotNull('logs.created_at')->join("users","users.id","=","logs.user_id");
+            $action = $datalogs3->distinct()->orderBy('logs.action')->get();
+
             if ($search != null){
-            
-                $datalogs = Logs::select($select)->whereNotNull('logs.created_at')
-                ->join("users","users.id","=","logs.user_id")
-                    ->where('action','like','%'.$search.'%')
-                    ;
+                $data->where('action','like','%'.$search.'%');
 
                 $logs = new Logs;
                 $logs->id = Uuid::uuid4();
@@ -64,17 +85,42 @@ class LogController extends Controller
                 $logs->page = "LOG";
                 $logs->save();
 
-            }else{
-                $datalogs = Logs::select($select)->whereNotNull('logs.created_at')
-                	->join("users","users.id","=","logs.user_id")
-                    ;
             }
-				$data_excel = $datalogs->orderBy('logs.created_at', 'desc')->get();
-				$data = $datalogs->orderBy('logs.created_at', 'desc')
-							->paginate($paginate);
-							
-			$request->session()->put('excel_log', $data_excel);
-			
+
+            if ($request->has('before_date')){
+                $datalogs->where(DB::raw('DATE(logs.created_at)'), '<=', $request->get('before_date'));
+                $before = $request->get('before_date');
+            }
+
+            if ($request->has('after_date')){
+                $datalogs->where(DB::raw('DATE(logs.created_at)'), '>=', $request->get('after_date'));
+                $after = $request->get('after_date');
+            }
+
+            if ($request->has('username')){
+                $filterUsername = $request->get('username');
+                if($request->input('username') != 'all'){
+                    $datalogs->where('users.name', $request->get('username'));
+                }
+            }
+
+            if ($request->has('action')){
+                $filterAction = $request->get('action');
+                if($request->input('action') != 'all'){
+                    $datalogs->where('action', $request->get('action'));
+                }
+            }
+
+            if ($request->has('sort_by')){
+                $sort_by = $request->get('sort_by');
+            }
+            if ($request->has('sort_type')){
+                $sort_type = $request->get('sort_type');
+            }
+                
+                $data = $datalogs->orderBy($sort_by, $sort_type)
+                            ->paginate($paginate);
+
             if (count($datalogs) == 0){
                 $message = 'Data not found';
             }
@@ -82,7 +128,15 @@ class LogController extends Controller
             return view('admin.log.index')
                 ->with('message', $message)
                 ->with('data', $data)
-                ->with('search', $search);
+                ->with('search', $search)
+                ->with('before_date', $before)
+                ->with('after_date', $after)
+                ->with('username', $username)
+                ->with('filterUsername', $filterUsername)
+                ->with('action', $action)
+                ->with('filterAction', $filterAction)
+                ->with('sort_by', $sort_by)
+                ->with('sort_type', $sort_type);
         }
     }
 
@@ -102,8 +156,58 @@ class LogController extends Controller
 		// the user's e-mail address, the amount paid, and the payment
 		// timestamp.
 		
-		$data = $request->session()->get('excel_log');
-		$examsArray = []; 
+        $search = trim($request->input('search'));
+        
+        $before = null;
+        $after = null;
+        $filterUsername = '';
+        $filterAction = '';
+
+        $sort_by = 'logs.created_at';
+        $sort_type = 'desc';
+
+        $select = array(
+            "logs.action","logs.page","logs.created_at as search_date","users.name"
+        );
+        $datalogs = Logs::select($select)->whereNotNull('logs.created_at')->join("users","users.id","=","logs.user_id");
+
+        if ($search != null){
+            $data->where('action','like','%'.$search.'%');
+        }
+
+        if ($request->has('before_date')){
+            $datalogs->where(DB::raw('DATE(logs.created_at)'), '<=', $request->get('before_date'));
+            $before = $request->get('before_date');
+        }
+
+        if ($request->has('after_date')){
+            $datalogs->where(DB::raw('DATE(logs.created_at)'), '>=', $request->get('after_date'));
+            $after = $request->get('after_date');
+        }
+
+        if ($request->has('username')){
+            $filterUsername = $request->get('username');
+            if($request->input('username') != 'all'){
+                $datalogs->where('users.name', $request->get('username'));
+            }
+        }
+
+        if ($request->has('action')){
+            $filterAction = $request->get('action');
+            if($request->input('action') != 'all'){
+                $datalogs->where('action', $request->get('action'));
+            }
+        }
+
+        if ($request->has('sort_by')){
+            $sort_by = $request->get('sort_by');
+        }
+        if ($request->has('sort_type')){
+            $sort_type = $request->get('sort_type');
+        }
+
+		$data = $datalogs->orderBy($sort_by, $sort_type)->get();
+        $examsArray = []; 
 
 		// Define the Excel spreadsheet headers
 		$examsArray[] = [

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<!--
+This is a starter template page. Use this page to start your new project from
+scratch. This page gets rid of all links and provides the needed markup only.
+-->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Telkom DDS | Admin</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="bower_components/Ionicons/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/AdminLTE.css">
+  <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
+        page. However, you can choose any other skin. Make sure you
+        apply the skin class to the body tag so the changes take effect. -->
+  <link rel="stylesheet" href="dist/css/skin-red.css">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+  <!-- Google Font -->
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+
+<body class="hold-transition skin-red sidebar-mini">
+<div class="wrapper">
+
+  <!-- Main Header -->
+  <header class="main-header">
+
+    <!-- Logo -->
+    <a href="index.html" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini"><b>DDS</b></span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><img class="logo-telkom" src="dist/img/dds/logo_telkom.png"></span>
+    </a>
+
+    <!-- Header Navbar -->
+    <nav class="navbar navbar-static-top" role="navigation">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
+      <!-- Navbar Right Menu -->
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          
+
+          <!-- Notifications Menu -->
+          <li class="dropdown notifications-menu">
+            <!-- Menu toggle button -->
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-bell-o"></i>
+              <span class="label label-warning">10</span>
+            </a>
+            <ul class="dropdown-menu">
+              <li class="header">You have 10 notifications</li>
+              <li>
+                <!-- Inner Menu: contains the notifications -->
+                <ul class="menu">
+                  <li><!-- start notification -->
+                    <a href="#">
+                      <i class="fa fa-users text-aqua"></i> 5 new members joined today
+                    </a>
+                  </li>
+                  <!-- end notification -->
+                </ul>
+              </li>
+              <li class="footer"><a href="#">View all</a></li>
+            </ul>
+          </li>
+
+          <!-- User Account Menu -->
+          <li class="dropdown user user-menu">
+            <!-- Menu Toggle Button -->
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <!-- The user image in the navbar-->
+              <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+              <!-- hidden-xs hides the username on small devices so only the image appears. -->
+              <span class="hidden-xs">Alexander Pierce</span>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- Menu Body -->
+              <li>
+                <a href="#">Download User Manual</a>
+              </li>
+              <li>
+                <a href="profile.html">Profile</a>
+              </li>
+              <li>
+                <a href="login.html">Sign out</a>
+              </li>
+            </ul>
+          </li>
+
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <!-- Left side column. contains the logo and sidebar -->
+  <aside class="main-sidebar">
+
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+
+      <!-- Sidebar Menu -->
+      <ul class="sidebar-menu" data-widget="tree">
+        <!-- Optionally, you can add icons to the links -->
+        <li><a href="index.html"><i class="fa fa-home"></i> <span>Beranda</span></a></li>
+        <li class="treeview active">
+          <a href="#"><i class="fa fa-file-o"></i> <span>Pengujian</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="pengujian.html">Pengujian</a></li>
+            <li class="active"><a href="spk.html">Riwayat SPK</a></li>
+            <li><a href="pengujian-selesai.html">Riwayat Pengujian Selesai</a></li>
+            <li><a href="lulus-uji.html">Perangkat Lulus Uji</a></li>
+            <li><a href="no-lulus-uji.html">Perangkat Tidak Lulus Uji</a></li>
+          </ul>
+        </li>
+        <li><a href="dashboard.html"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+        <li class="treeview">
+          <a href="#"><i class="fa fa-smile-o"></i> <span>Customer Relation</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="feedback.html">Feedback</a></li>
+            <li ><a href="testimonial.html">Testimonial</a></li>
+          </ul>
+        </li>
+        <li class="treeview ">
+          <a href="#"><i class="fa fa-database"></i> <span>Data Master</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="artikel.html">Artikel</a></li>
+            <li><a href="stel-std.html">STEL/STD</a></li>
+            <li><a href="tarif-pengujian.html">Tarif Pengujian</a></li>
+            <li><a href="tarif-kalibrasi.html">Tarif Kalibrasi</a></li>
+            <li><a href="slideshow.html">Slideshow</a></li>
+            <li><a href="lab-pengujian.html">Lab Pengujian</a></li>
+            <li><a href="perusahaan.html">Perusahaan</a></li>
+            <li><a href="permohonan-edit.html">Permohonan edit Perusahaan</a></li>
+            <li><a href="partner.html">Partner</a></li>
+            <li><a href="kategori-pertanyaan.html">Kategori Pertanyaan</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#"><i class="fa fa-wrench"></i> <span>Tools</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="backup-restore.html">Backup & Restore</a></li>
+            <li><a href="activity-logs.html">Activity Log</a></li>
+            <li><a href="kuitansi.html">Kuitansi</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#"><i class="fa fa-users"></i> <span>User & Role Management</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="user-role.html">User Role</a></li>
+            <li><a href="user-internal.html">User Internal</a></li>
+            <li><a href="user-eksternal.html">User Eksternal</a></li>
+            <li><a href="role-pengujian.html">Role Pengujian</a></li>
+            <li><a href="role-pertanyaan.html">Role Pertanyaan</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#"><i class="fa fa-money"></i> <span>Keuangan</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="rekap-buy-stel.html">Rekap Pembelian STEL</a></li>
+            <li><a href="rekap-uji.html">Rekap Pengujian Perangkat</a></li>
+          </ul>
+        </li>
+        <li><a href="web-static.html"><i class="fa fa-bar-chart-o"></i> <span>Web Statistic</span></a></li>
+      </ul>
+      <!-- /.sidebar-menu -->
+    </section>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        SPK (Surat Perintah Kerja)
+        <!-- <small>Optional description</small> -->
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#">Beranda</a></li>
+        <li class="active">SPK (Surat Perintah Kerja)</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content container-fluid">
+
+    <div class="row search-col">
+      <div class="col-md-12">
+        <div class="has-feedback">
+                      <input type="text" class="form-control input-sm" placeholder="Search...">
+                      <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                  </div>
+      </div>
+    </div>
+
+    <div class="box">
+            <div class="box-body table-responsive">
+              <table id="example2" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Nomor SPK</th>
+                  <th>Laboratorium</th>
+                  <th>Tipe Pengujian</th>
+                  <th>Perusahaan</th>
+                  <th>Perangkat</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1. </td>
+                    <td>022/021/QA/2017</td>
+                    <td>Laboratorium Kabel & Aksesoris</td>
+                    <td>Quality Assurance (QA)</td>
+                    <td>PT. Percobaan ABC</td>
+                    <td>Tiang Telepon Beton Praktekan Penampang Bulat 7 Meter</td>
+                    <td>Draft</td>
+                    <td><a href="#"><i class="fa fa-edit"></i></a></td>
+                  </tr>
+                  <tr>
+                    <td>2. </td>
+                    <td>022/021/QA/2017</td>
+                    <td>Laboratorium Kabel & Aksesoris</td>
+                    <td>Quality Assurance (QA)</td>
+                    <td>PT. Percobaan ABC</td>
+                    <td>Tiang Telepon Beton Praktekan Penampang Bulat 7 Meter</td>
+                    <td>Draft</td>
+                    <td><a href="#"><i class="fa fa-edit"></i></a></td>
+                  </tr>
+                  <tr>
+                    <td>3. </td>
+                    <td>022/021/QA/2017</td>
+                    <td>Laboratorium Kabel & Aksesoris</td>
+                    <td>Quality Assurance (QA)</td>
+                    <td>PT. Percobaan ABC</td>
+                    <td>Tiang Telepon Beton Praktekan Penampang Bulat 7 Meter</td>
+                    <td>Draft</td>
+                    <td><a href="#"><i class="fa fa-edit"></i></a></td>
+                  </tr>
+                  <tr>
+                    <td>4. </td>
+                    <td>022/021/QA/2017</td>
+                    <td>Laboratorium Kabel & Aksesoris</td>
+                    <td>Quality Assurance (QA)</td>
+                    <td>PT. Percobaan ABC</td>
+                    <td>Tiang Telepon Beton Praktekan Penampang Bulat 7 Meter</td>
+                    <td>Draft</td>
+                    <td><a href="#"><i class="fa fa-edit"></i></a></td>
+                  </tr>
+                  <tr>
+                    <td>5. </td>
+                    <td>022/021/QA/2017</td>
+                    <td>Laboratorium Kabel & Aksesoris</td>
+                    <td>Quality Assurance (QA)</td>
+                    <td>PT. Percobaan ABC</td>
+                    <td>Tiang Telepon Beton Praktekan Penampang Bulat 7 Meter</td>
+                    <td>Draft</td>
+                    <td><a href="#"><i class="fa fa-edit"></i></a></td>
+                  </tr>
+                  <tr>
+                    <td>6. </td>
+                    <td>022/021/QA/2017</td>
+                    <td>Laboratorium Kabel & Aksesoris</td>
+                    <td>Quality Assurance (QA)</td>
+                    <td>PT. Percobaan ABC</td>
+                    <td>Tiang Telepon Beton Praktekan Penampang Bulat 7 Meter</td>
+                    <td>Draft</td>
+                    <td><a href="#"><i class="fa fa-edit"></i></a></td>
+                  </tr>
+                  <tr>
+                    <td>7. </td>
+                    <td>022/021/QA/2017</td>
+                    <td>Laboratorium Kabel & Aksesoris</td>
+                    <td>Quality Assurance (QA)</td>
+                    <td>PT. Percobaan ABC</td>
+                    <td>Tiang Telepon Beton Praktekan Penampang Bulat 7 Meter</td>
+                    <td>Draft</td>
+                    <td><a href="#"><i class="fa fa-edit"></i></a></td>
+                  </tr>
+                  <tr>
+                    <td>8. </td>
+                    <td>022/021/QA/2017</td>
+                    <td>Laboratorium Kabel & Aksesoris</td>
+                    <td>Quality Assurance (QA)</td>
+                    <td>PT. Percobaan ABC</td>
+                    <td>Tiang Telepon Beton Praktekan Penampang Bulat 7 Meter</td>
+                    <td>Draft</td>
+                    <td><a href="#"><i class="fa fa-edit"></i></a></td>
+                  </tr>
+                  <tr>
+                    <td>9. </td>
+                    <td>022/021/QA/2017</td>
+                    <td>Laboratorium Kabel & Aksesoris</td>
+                    <td>Quality Assurance (QA)</td>
+                    <td>PT. Percobaan ABC</td>
+                    <td>Tiang Telepon Beton Praktekan Penampang Bulat 7 Meter</td>
+                    <td>Draft</td>
+                    <td><a href="#"><i class="fa fa-edit"></i></a></td>
+                  </tr>
+                  <tr>
+                    <td>10. </td>
+                    <td>022/021/QA/2017</td>
+                    <td>Laboratorium Kabel & Aksesoris</td>
+                    <td>Quality Assurance (QA)</td>
+                    <td>PT. Percobaan ABC</td>
+                    <td>Tiang Telepon Beton Praktekan Penampang Bulat 7 Meter</td>
+                    <td>Draft</td>
+                    <td><a href="#"><i class="fa fa-edit"></i></a></td>
+                  </tr>
+
+                  <tr>
+                    <td>11. </td>
+                    <td>022/021/QA/2017</td>
+                    <td>Laboratorium Kabel & Aksesoris</td>
+                    <td>Quality Assurance (QA)</td>
+                    <td>PT. Percobaan ABC</td>
+                    <td>Tiang Telepon Beton Praktekan Penampang Bulat 7 Meter</td>
+                    <td>Draft</td>
+                    <td><a href="#"><i class="fa fa-edit"></i></a></td>
+                  </tr>
+                  <tr>
+                    <td>12. </td>
+                    <td>022/021/QA/2017</td>
+                    <td>Laboratorium Kabel & Aksesoris</td>
+                    <td>Quality Assurance (QA)</td>
+                    <td>PT. Percobaan ABC</td>
+                    <td>Tiang Telepon Beton Praktekan Penampang Bulat 7 Meter</td>
+                    <td>Draft</td>
+                    <td><a href="#"><i class="fa fa-edit"></i></a></td>
+                  </tr>
+                  <tr>
+                    <td>13. </td>
+                    <td>022/021/QA/2017</td>
+                    <td>Laboratorium Kabel & Aksesoris</td>
+                    <td>Quality Assurance (QA)</td>
+                    <td>PT. Percobaan ABC</td>
+                    <td>Tiang Telepon Beton Praktekan Penampang Bulat 7 Meter</td>
+                    <td>Draft</td>
+                    <td><a href="#"><i class="fa fa-edit"></i></a></td>
+                  </tr>
+                  <tr>
+                    <td>14. </td>
+                    <td>022/021/QA/2017</td>
+                    <td>Laboratorium Kabel & Aksesoris</td>
+                    <td>Quality Assurance (QA)</td>
+                    <td>PT. Percobaan ABC</td>
+                    <td>Tiang Telepon Beton Praktekan Penampang Bulat 7 Meter</td>
+                    <td>Draft</td>
+                    <td><a href="#"><i class="fa fa-edit"></i></a></td>
+                  </tr>
+                  <tr>
+                    <td>15. </td>
+                    <td>022/021/QA/2017</td>
+                    <td>Laboratorium Kabel & Aksesoris</td>
+                    <td>Quality Assurance (QA)</td>
+                    <td>PT. Percobaan ABC</td>
+                    <td>Tiang Telepon Beton Praktekan Penampang Bulat 7 Meter</td>
+                    <td>Draft</td>
+                    <td><a href="#"><i class="fa fa-edit"></i></a></td>
+                  </tr>
+                  <tr>
+                    <td>16. </td>
+                    <td>022/021/QA/2017</td>
+                    <td>Laboratorium Kabel & Aksesoris</td>
+                    <td>Quality Assurance (QA)</td>
+                    <td>PT. Percobaan ABC</td>
+                    <td>Tiang Telepon Beton Praktekan Penampang Bulat 7 Meter</td>
+                    <td>Draft</td>
+                    <td><a href="#"><i class="fa fa-edit"></i></a></td>
+                  </tr>
+                  <tr>
+                    <td>17. </td>
+                    <td>022/021/QA/2017</td>
+                    <td>Laboratorium Kabel & Aksesoris</td>
+                    <td>Quality Assurance (QA)</td>
+                    <td>PT. Percobaan ABC</td>
+                    <td>Tiang Telepon Beton Praktekan Penampang Bulat 7 Meter</td>
+                    <td>Draft</td>
+                    <td><a href="#"><i class="fa fa-edit"></i></a></td>
+                  </tr>
+                  <tr>
+                    <td>18. </td>
+                    <td>022/021/QA/2017</td>
+                    <td>Laboratorium Kabel & Aksesoris</td>
+                    <td>Quality Assurance (QA)</td>
+                    <td>PT. Percobaan ABC</td>
+                    <td>Tiang Telepon Beton Praktekan Penampang Bulat 7 Meter</td>
+                    <td>Draft</td>
+                    <td><a href="#"><i class="fa fa-edit"></i></a></td>
+                  </tr>
+                  <tr>
+                    <td>19. </td>
+                    <td>022/021/QA/2017</td>
+                    <td>Laboratorium Kabel & Aksesoris</td>
+                    <td>Quality Assurance (QA)</td>
+                    <td>PT. Percobaan ABC</td>
+                    <td>Tiang Telepon Beton Praktekan Penampang Bulat 7 Meter</td>
+                    <td>Draft</td>
+                    <td><a href="#"><i class="fa fa-edit"></i></a></td>
+                  </tr>
+                  <tr>
+                    <td>20. </td>
+                    <td>022/021/QA/2017</td>
+                    <td>Laboratorium Kabel & Aksesoris</td>
+                    <td>Quality Assurance (QA)</td>
+                    <td>PT. Percobaan ABC</td>
+                    <td>Tiang Telepon Beton Praktekan Penampang Bulat 7 Meter</td>
+                    <td>Draft</td>
+                    <td><a href="#"><i class="fa fa-edit"></i></a></td>
+                  </tr>
+                  
+                </tbody>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <footer class="main-footer">
+    <!-- To the right -->
+    <div class="pull-right hidden-xs">
+      Anything you want
+    </div>
+    <!-- Default to the left -->
+    <strong>Copyright &copy; 2017 <a href="#">Telkom DDS</a>.</strong> All rights reserved.
+  </footer>
+
+  
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED JS SCRIPTS -->
+
+<!-- jQuery 3 -->
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.min.js"></script>
+<!-- DataTables -->
+<script src="bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- page script -->
+<script>
+  $(function () {
+    $('#example2').DataTable({
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : false,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : false
+    });
+  });
+</script>
+<!-- Optionally, you can add Slimscroll and FastClick plugins.
+     Both of these plugins are recommended to enhance the
+     user experience. -->
+</body>
+</html>

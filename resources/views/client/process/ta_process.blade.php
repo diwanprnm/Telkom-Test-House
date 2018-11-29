@@ -141,6 +141,14 @@
 											<input type="text" name="f1-alamat-perusahaan" placeholder="PT. Maju Jaya" id="f1-alamat-perusahaan" readonly value="{{$userData->alamatPerusahaan}}">
 										</div>
 										<div class="form-group">
+											<label for="f1-plg_id-perusahaan">{{ trans('translate.service_company_plg_id') }}</label>
+											<input type="text" name="f1-plg_id-perusahaan" placeholder="012345678" id="f1-plg_id-perusahaan" value="{{$userData->plg_idPerusahaan}}" required="">
+										</div>
+										<div class="form-group">
+											<label for="f1-nib-perusahaan">{{ trans('translate.service_company_nib') }}</label>
+											<input type="text" name="f1-nib-perusahaan" placeholder="012345678" id="f1-nib-perusahaan" value="{{$userData->nibPerusahaan}}" required="">
+										</div>
+										<div class="form-group">
 											<label for="f1-telepon-perusahaan">{{ trans('translate.service_company_phone') }}</label>
 											 <input type="text" name="f1-telepon-perusahaan" placeholder="022123456"  id="f1-telepon-perusahaan" readonly value="{{$userData->telpPerusahaan}}">
 										</div>
@@ -203,10 +211,18 @@
 					            <h2>Forth Step</h2>
 					            <fieldset>
 					                <div class="form-group">
-											<label>{{ trans('translate.service_upload_siupp') }}<span class="text-danger">*</span></label>
+											<label>{{ trans('translate.service_upload_siupp') }}<span class="text-danger">* 
+												@if($userData->fileSIUPP)
+													({{ trans('translate.file_already_exists') }})
+												@endif
+											</span> 
+											</label>
 											<input   id="fileInput-SIUPP" name="fuploadsiupp" type="file" accept="application/pdf,image/*">
 											<input type="hidden" name="hide_siupp_file" id="hide_siupp_file" value="{{$userData->fileSIUPP}}"/>
 											<a id="siupp-file" class="btn btn-link" >{{$userData->fileSIUPP}}</a>
+											<div id="attachment-file">
+												*{{ trans('translate.maximum_filesize') }}
+											</div>
 										</div>
 										<div class="form-group" style="margin-bottom:0.01%">
 											<label>{{ trans('translate.service_upload_siupp_no') }}</label>
@@ -222,12 +238,17 @@
 											<input type="text" name="f1-sertifikat-sistem-mutu" placeholder="{{ trans('translate.service_upload_certificate') }}" id="f1-sertifikat-sistem-mutu" value="{{$userData->noSertifikat}}" class="required">
 										</div>
 										<div class="form-group col-xs-12" style="margin-bottom:0.01%">
-											<label>{{ trans('translate.service_upload_certificate_file') }}<span class="text-danger">*</span></label>
+											<label>{{ trans('translate.service_upload_certificate_file') }}<span class="text-danger">* 
+												@if($userData->fileSertifikat)
+													({{ trans('translate.file_already_exists') }})
+												@endif
+											</span>
+											</label>
 											<input   id="fileInput-lampiran" name="fuploadlampiran" type="file" accept="application/pdf,image/*">
 											<input type="hidden" name="hide_sertifikat_file" id="hide_sertifikat_file" value="{{$userData->fileSertifikat}}"/>
 											<a id="sertifikat-file" class="btn btn-link" >{{$userData->fileSertifikat}}</a>
 											<div id="attachment-file">
-												*ukuran file maksimal 2 mb
+												*{{ trans('translate.maximum_filesize') }}
 											</div>
 										</div>
 										<div class="form-group">
@@ -235,12 +256,17 @@
 											<input type="text" name="f1-batas-waktu" placeholder="{{ trans('translate.service_upload_certificate_date') }}" class="datepicker data-upload-berkas f1-batas-waktu input-submit required" id="f1-batas-waktu" value="{{$userData->tglSertifikat}}"> 
 										</div>
 										<div class="form-group col-xs-12" style="margin-top:35px">
-											<label>{{ trans('translate.service_upload_npwp') }}<span class="text-danger">*</span></label>
+											<label>{{ trans('translate.service_upload_npwp') }}<span class="text-danger">* 
+												@if($userData->fileNPWP)
+													({{ trans('translate.file_already_exists') }})
+												@endif 
+											</span>
+											</label>
 											<input class="data-upload-berkas f1-file-NPWP" id="fileInput-NPWP" name="fuploadnpwp" type="file" accept="application/pdf,image/*">
 											<input type="hidden" name="hide_npwp_file" id="hide_npwp_file" value="{{$userData->fileNPWP}}"/>
 											<a id="npwp-file" class="btn btn-link" >{{$userData->fileNPWP}}</a>
 											<div id="attachment-file">
-												*ukuran file maksimal 2 mb
+												*{{ trans('translate.maximum_filesize') }}
 											</div>
 										</div>
 										<div class="form-group col-xs-12">
@@ -248,7 +274,7 @@
 											<input class="data-upload-berkas f1-file-ref-uji required" id="fileInput-ref-uji" name="fuploadrefuji" type="file" accept="application/pdf,image/*">
 											<div id="ref-uji-file"></div>
 											<div id="attachment-file">
-												*ukuran file maksimal 2 mb
+												*{{ trans('translate.maximum_filesize') }}
 											</div>
 										</div> 
 										<div class="dv-srt-sp3">
@@ -257,7 +283,7 @@
 												<input class="data-upload-berkas f1-file-sp3 required" id="fileInput-sp3" name="fuploadsp3" type="file" accept="application/pdf,image/*">
 												<div id="sp3-file"></div>
 												<div id="attachment-file">
-													*ukuran file maksimal 2 mb
+													*{{ trans('translate.maximum_filesize') }}
 												</div>
 											</div>
 										</div> 
@@ -267,7 +293,7 @@
 												<input class="data-upload-berkas f1-file-dll" id="fileInput-dll" name="fuploaddll" type="file" accept="application/pdf,image/*" >
 												<div id="dll-file"></div>
 												<div id="attachment-file">
-													*ukuran file maksimal 2 mb
+													*{{ trans('translate.maximum_filesize') }}
 												</div>
 											</div>
 										</div> 
@@ -316,6 +342,15 @@
 												<td>{{ trans('translate.service_company_address') }}</td>
 												<td> : </td>
 												<td colspan="6"> <div id="f2-preview-2">{{$userData->alamatPerusahaan}}</div></td>
+											</tr>
+											<tr>
+												<td>{{ trans('translate.service_company_plg_id') }}</td>
+												<td> : </td>
+												<td> <div id="f2-preview-7">{{$userData->plg_idPerusahaan}}</div></td>
+												<td colspan=2></td>
+												<td>{{ trans('translate.service_company_nib') }}</td>
+												<td> : </td>
+												<td> <div id="f2-preview-8">{{$userData->nibPerusahaan}}</div></td>
 											</tr>
 											<tr>
 												<td>{{ trans('translate.service_company_phone') }}</td>
@@ -464,7 +499,10 @@
 @section('content_js')
 
  <script type="text/javascript" src="{{url('vendor/jquerystep/jquery.steps.js')}}"></script>
- <script>  
+ <script>
+ 	$(window).bind('beforeunload',function(){
+	    return 'are you sure you want to leave and your data will be lost?';
+	});  
   	var form = $("#form-permohonan");
 	form.validate({
 	    errorPlacement: function errorPlacement(error, element) { element.before(error); },
@@ -497,6 +535,9 @@
 
 	       	if(newIndex == 4){ 
 	       		 $('.actions > ul > li:nth-child(2) a').text("Save");
+	       	 	$("#f2-preview-7").html($("#f1-plg_id-perusahaan").val());
+	       	 	$("#f2-preview-8").html($("#f1-nib-perusahaan").val());
+
 	       	 	$("#f3-preview-1").html($("#f1-nama-perangkat").val());
 				$("#f3-preview-2").html($("#f1-merek-perangkat").val());
 				$("#f3-preview-3").html($("#f1-model-perangkat").val());
@@ -520,7 +561,7 @@
 	       	}  
 	        if(newIndex == 5){
 				if($('#hide_cekSNjnsPengujian').val() == 1){
-					alert("Perangkat [Nama dan Model] sudah ada!"); 
+					alert("Perangkat[Nama, Merk, Model] dan Jenis Pengujian sudah ada!"); 
 					return false;
 				}else{
 					var formData = new FormData($('#form-permohonan')[0]);
@@ -548,6 +589,9 @@
 							$(".actions").hide(); 
 						},
 						error:function(){
+							$( "#formBTNprevious" ).show();
+							$( "#formBTNfinish" ).show();
+							$( "#formBTNnext" ).show();
 							$("body").removeClass("loading");
 							error = true;
 							alert("Gagal mengambil data"); 
@@ -571,10 +615,11 @@
 				var serialNumber_perangkat = $('#f1-serialNumber-perangkat').val();
 				var nama_perangkat = $('#f1-nama-perangkat').val();
 				var model_perangkat = $('#f1-model-perangkat').val();
+				var merk_perangkat = $('#f1-merek-perangkat').val();
 				$.ajax({
 					type: "POST",
 					url : "../cekPermohonan",
-					data: {'_token':"{{ csrf_token() }}", 'jnsPelanggan':jnsPelanggan, 'serialNumber_perangkat':serialNumber_perangkat, 'nama_perangkat':nama_perangkat, 'model_perangkat':model_perangkat},
+					data: {'_token':"{{ csrf_token() }}", 'jnsPelanggan':jnsPelanggan, 'serialNumber_perangkat':serialNumber_perangkat, 'nama_perangkat':nama_perangkat, 'model_perangkat':model_perangkat, 'merk_perangkat':merk_perangkat},
 					// dataType:'json',
 					type:'post',
 					success: function(data){
@@ -600,6 +645,10 @@
 	        		if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
 			        $( ".number li:eq("+(newIndex)+" ) button" ).removeClass("done").addClass("active");
 			        $( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active");
+			        if (newIndex == 6) {
+			        	$( ".number li:eq("+(newIndex)+" ) button" ).removeClass("active").addClass("done");
+			        	$( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active").addClass("done");
+			        }
 	        	}
 	        	return form.valid();	
 	        } 

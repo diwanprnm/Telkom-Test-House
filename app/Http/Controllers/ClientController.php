@@ -53,18 +53,20 @@ class ClientController extends Controller
 		return back()->with('error_code', 5);
 	}
 	
-	public function logout() {
-		$logs = new Logs;
+	public function logout(Request $request) {
 		$currentUser = Auth::user();
-        $logs->user_id = $currentUser->id;
-        $logs->id = Uuid::uuid4();
-        $logs->action = "Logout";   
-        $logs->data = "";
-        $logs->created_by = $currentUser->id;
-        $logs->page = "LOGOUT";
-        $logs->save();
+		if ($currentUser){
+			$logs = new Logs;
+	        $logs->user_id = $currentUser->id;
+	        $logs->id = Uuid::uuid4();
+	        $logs->action = "Logout";   
+	        $logs->data = "";
+	        $logs->created_by = $currentUser->id;
+	        $logs->page = "LOGOUT";
+	        $logs->save();
+			Auth::logout();
+        }
         Cart::destroy();
-		Auth::logout();
 		return redirect('/');
 	}
 	

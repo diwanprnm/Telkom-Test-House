@@ -4,6 +4,7 @@
 
 <?php
 	$currentUser = Auth::user();
+	$is_admin_mail = $currentUser['email'];
 	$is_super = $currentUser['id'];
 ?>
 
@@ -31,7 +32,10 @@
 			<div class="row">
 				<div class="col-md-6">
 	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><i class="ti-filter"></i> Filter</a>
-	    			<a class="btn btn-info pull-left" href="{{URL::to('examination/excel')}}"> Export to Excel</a>
+	    			<!--<a class="btn btn-info pull-left" id="excel" href="{{URL::to('examination/excel')}}"> Export to Excel</a> -->
+	    			<button id="excel" type="submit" class="btn btn-info pull-left">
+                        Export to Excel
+                    </button>
 				</div>
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table">
@@ -142,28 +146,6 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
-											Status Pengujian
-										</label>
-										<select id="comp_stat" name="comp_stat" class="cs-select cs-skin-elastic" required>
-											@if($comp_stat == 'all')
-												<option value="all" selected>All</option>
-												<option value="1">Completed</option>
-												<option value="-1">Not Completed</option>
-											@elseif($comp_stat == 1)
-												<option value="all">All</option>
-												<option value="1" selected>Completed</option>
-												<option value="-1">Not Completed</option>
-											@else
-												<option value="all">All</option>
-												<option value="1">Completed</option>
-												<option value="-1" selected>Not Completed</option>
-											@endif
-										</select>
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>
 											Tanggal SPK Dikeluarkan
 										</label>
 										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
@@ -174,6 +156,13 @@
 												</button>
 											</span>
 										</p>
+									</div>
+		                        </div>
+		                        <div class="col-md-6">
+									<div class="form-group">
+										<label>
+											&nbsp;
+										</label>
 										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
 											<input type="text" placeholder="Sampai Tanggal" value="{{ $before_date }}" name="before_date" id="before_date" class="form-control"/>
 											<span class="input-group-btn">
@@ -231,7 +220,8 @@
 											<li>
 												@if($item->registration_status == '1' && $item->function_status != '1')
 													<a href="#step-2" class="done wait">
-												@elseif($item->function_status == '1')
+												@elseif($item->registration_status == '1' && 
+												$item->function_status == '1')
 													<a href="#step-2" class="done">
 												@else
 													<a href="#step-2">
@@ -243,9 +233,11 @@
 												</a>
 											</li>
 											<li>
-												@if($item->function_status == '1' && $item->contract_status != '1')
-													<a href="#step-2" class="done wait">
-												@elseif($item->contract_status == '1')
+												@if($item->registration_status == '1' && 
+												$item->function_status == '1' && $item->contract_status != '1')
+													<a href="#step-3" class="done wait">
+												@elseif($item->registration_status == '1' && $item->function_status == '1' &&
+												$item->contract_status == '1')
 													<a href="#step-3" class="done">
 												@else
 													<a href="#step-3">
@@ -257,9 +249,11 @@
 												</a>
 											</li>
 											<li>
-												@if($item->contract_status == '1' && $item->spb_status != '1')
-													<a href="#step-2" class="done wait">
-												@elseif($item->spb_status == '1')
+												@if($item->registration_status == '1' && $item->function_status == '1' && 
+												$item->contract_status == '1' && $item->spb_status != '1')
+													<a href="#step-4" class="done wait">
+												@elseif($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && 
+												$item->spb_status == '1')
 													<a href="#step-4" class="done">
 												@else
 													<a href="#step-4">
@@ -271,9 +265,11 @@
 												</a>
 											</li>
 											<li>
-												@if($item->spb_status == '1' && $item->payment_status != 1)
-													<a href="#step-2" class="done wait">
-												@elseif($item->payment_status == '1')
+												@if($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && 
+												$item->spb_status == '1' && $item->payment_status != '1')
+													<a href="#step-5" class="done wait">
+												@elseif($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && 
+												$item->payment_status == '1')
 													<a href="#step-5" class="done">
 												@else
 													<a href="#step-5">
@@ -285,9 +281,11 @@
 												</a>
 											</li>
 											<li>
-												@if($item->payment_status == '1' && $item->spk_status != 1)
-													<a href="#step-2" class="done wait">
-												@elseif($item->spk_status == '1')
+												@if($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && 
+												$item->payment_status == '1' && $item->spk_status != '1')
+													<a href="#step-6" class="done wait">
+												@elseif($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && $item->payment_status == '1' && 
+												$item->spk_status == '1')
 													<a href="#step-6" class="done">
 												@else
 													<a href="#step-6">
@@ -299,9 +297,11 @@
 												</a>
 											</li>
 											<li>
-												@if($item->spk_status == '1' && $item->examination_status != '1')
-													<a href="#step-2" class="done wait">
-												@elseif($item->examination_status == '1')
+												@if($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && $item->payment_status == '1' && 
+												$item->spk_status == '1' && $item->examination_status != '1')
+													<a href="#step-7" class="done wait">
+												@elseif($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && $item->payment_status == '1' && $item->spk_status == '1' && 
+												$item->examination_status == '1')
 													<a href="#step-7" class="done">
 												@else
 													<a href="#step-7">
@@ -313,9 +313,11 @@
 												</a>
 											</li>
 											<li>
-												@if($item->examination_status == '1' && $item->resume_status != '1')
-													<a href="#step-2" class="done wait">
-												@elseif($item->resume_status == '1')
+												@if($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && $item->payment_status == '1' && $item->spk_status == '1' && 
+												$item->examination_status == '1' && $item->resume_status != '1')
+													<a href="#step-8" class="done wait">
+												@elseif($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && $item->payment_status == '1' && $item->spk_status == '1' && $item->examination_status == '1' && 
+												$item->resume_status == '1')
 													<a href="#step-8" class="done">
 												@else
 													<a href="#step-8">
@@ -328,9 +330,11 @@
 											</li>
 											@if($item->examination_type_id !='2' && $item->examination_type_id !='3' && $item->examination_type_id !='4')
 												<li>
-													@if($item->resume_status == '1' && $item->qa_status != '1')
-														<a href="#step-2" class="done wait">
-													@elseif($item->qa_status == '1')
+													@if($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && $item->payment_status == '1' && $item->spk_status == '1' && $item->examination_status == '1' && 
+													$item->resume_status == '1' && $item->qa_status != '1')
+														<a href="#step-9" class="done wait">
+													@elseif($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && $item->payment_status == '1' && $item->spk_status == '1' && $item->examination_status == '1' && $item->resume_status == '1' && 
+													$item->qa_status == '1')
 														<a href="#step-9" class="done">
 													@else
 														<a href="#step-9">
@@ -343,9 +347,11 @@
 												</li>
 											
 												<li>
-													@if($item->qa_status == '1' && $item->certificate_status != '1')
-														<a href="#step-2" class="done wait">
-													@elseif($item->certificate_status == '1')
+													@if($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && $item->payment_status == '1' && $item->spk_status == '1' && $item->examination_status == '1' && $item->resume_status == '1' && 
+													$item->qa_status == '1' && $item->certificate_status != '1')
+														<a href="#step-10" class="done wait">
+													@elseif($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && $item->payment_status == '1' && $item->spk_status == '1' && $item->examination_status == '1' && $item->resume_status == '1' && $item->qa_status == '1' &&
+													$item->certificate_status == '1')
 														<a href="#step-10" class="done">
 													@else
 														<a href="#step-10">
@@ -399,9 +405,9 @@
 															</td>
 														</tr>	
 														<tr>
-															<td>Kapasitas:</td>
+															<td>Merek:</td>
 															<td>
-																{{ $item->device->capacity }}
+																{{ $item->device->mark }}
 															</td>
 														</tr>	
 														<tr>
@@ -411,7 +417,19 @@
 															</td>
 														</tr>	
 														<tr>
-															<td>Nomor Form Uji:</td>
+															<td>Kapasitas:</td>
+															<td>
+																{{ $item->device->capacity }}
+															</td>
+														</tr>	
+														<tr>
+															<td>Serial Number:</td>
+															<td>
+																{{ $item->device->serial_number }}
+															</td>
+														</tr>	
+														<tr>
+															<td>Nomor Registrasi:</td>
 															<td>
 																{{ $item->function_test_NO }}
 															</td>
@@ -446,8 +464,8 @@
 					                        </div>
 					                        <div class=" pull-right">
 					                        	<a class="btn btn-wide btn-primary btn-margin" href="{{URL::to('admin/examination/'.$item->id.'/edit')}}">Change Status</a>
-												@if($is_super == '1')
-													<a class="btn btn-wide btn-primary pull-right" style="margin-left:10px" href="{{URL::to('admin/examination/harddelete/'.$item->id)}}" onclick="return confirm('Are you sure want to delete ?')">Delete</a>
+												@if($is_super == '1' || $is_admin_mail == 'admin@mail.com')
+													<a class="btn btn-wide btn-primary pull-right" style="margin-left:10px" href="{{URL::to('admin/examination/harddelete/'.$item->id)}}" onclick="return confirm('Are you sure want to delete ? SPK Data in OTR will be deleted too.')">Delete</a>
 												@endif
 					                        	<a class="btn btn-wide btn-primary pull-right" style="margin-left:10px" href="{{URL::to('admin/examination/'.$item->id)}}">Detail</a>
 					                        </div>
@@ -460,7 +478,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								<?php echo $data->appends(array('search' => $search,'comp_stat' => $comp_stat,'type' => $filterType,'status' => $status,'before_date' => $before_date,'after_date' => $after_date))->links(); ?>
+								<?php echo $data->appends(array('search' => $search,'type' => $filterType,'status' => $status,'before_date' => $before_date,'after_date' => $after_date))->links(); ?>
 							</div>
 						</div>
 					</div>
@@ -547,11 +565,11 @@
             var params = {};
 			var search_value = document.getElementById("search_value").value;
             var status = document.getElementById("status");
-            var comp_stat = document.getElementById("comp_stat");
+            // var comp_stat = document.getElementById("comp_stat");
             var type = document.getElementById("type");
 			var statusValue = status.options[status.selectedIndex].value;
 			var typeValue = type.options[type.selectedIndex].value;
-			var comp_statValue = comp_stat.options[comp_stat.selectedIndex].value;
+			// var comp_statValue = comp_stat.options[comp_stat.selectedIndex].value;
 			var before = document.getElementById("before_date");
             var after = document.getElementById("after_date");
 			var beforeValue = before.value;
@@ -570,11 +588,46 @@
 			if (typeValue != ''){
 				params['type'] = typeValue;
 			}
-			if (comp_statValue != ''){
+			/*if (comp_statValue != ''){
 				params['comp_stat'] = comp_statValue;
-			}
+			}*/
 				params['search'] = search_value;
 			document.location.href = baseUrl+'/admin/examination?'+jQuery.param(params);
+	    };
+
+	    document.getElementById("excel").onclick = function() {
+            var baseUrl = "{{URL::to('/')}}";
+            var params = {};
+			var search_value = document.getElementById("search_value").value;
+            var status = document.getElementById("status");
+            // var comp_stat = document.getElementById("comp_stat");
+            var type = document.getElementById("type");
+			var statusValue = status.options[status.selectedIndex].value;
+			var typeValue = type.options[type.selectedIndex].value;
+			// var comp_statValue = comp_stat.options[comp_stat.selectedIndex].value;
+			var before = document.getElementById("before_date");
+            var after = document.getElementById("after_date");
+			var beforeValue = before.value;
+			var afterValue = after.value;
+			
+			if (beforeValue != ''){
+				params['before_date'] = beforeValue;
+			}
+			if (afterValue != ''){
+				params['after_date'] = afterValue;
+			}
+			
+			if (statusValue != ''){
+				params['status'] = statusValue;
+			}
+			if (typeValue != ''){
+				params['type'] = typeValue;
+			}
+			/*if (comp_statValue != ''){
+				params['comp_stat'] = comp_statValue;
+			}*/
+				params['search'] = search_value;
+			document.location.href = baseUrl+'/examination/excel?'+jQuery.param(params);
 	    };
 	});
 </script>

@@ -154,7 +154,7 @@
     position: relative;
     cursor: pointer;
     z-index: 2;
-    font-weight: 300;
+    font-weight: bold;
 }
 
 .material .material-checkbox,

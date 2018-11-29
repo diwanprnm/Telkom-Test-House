@@ -431,7 +431,7 @@ jQuery(document).ready(function() {
 					if( document.getElementById("fileInput-sp3").files.length == 0 ){
 						var sp3_file = document.getElementById("sp3-file").innerHTML;
 						if(sp3_file == ''){
-							alert("Tidak Ada SP3!");
+							alert("Tidak Ada PLG ID dan NIB!");
 							$(this).addClass('input-error');next_step = false;
 							return false;
 						}

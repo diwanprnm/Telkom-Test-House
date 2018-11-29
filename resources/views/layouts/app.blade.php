@@ -167,6 +167,9 @@
                                     echo $string;?></a>
                                 </li>
                                  <?php }?>
+								 <li>
+									<a href="{{ url('/admin/all_notifications')}}">See All Notifications</a> 
+								 </li>
                             </ul>
                         </li>
                         <li class="dropdown current-user">
@@ -212,7 +215,8 @@
         </footer>
         <!-- end: FOOTER -->
     </div>
-   
+    <?php  $currentUser = Auth::user(); ?>
+    <input type="hidden" id="user_id" value="<?php echo (empty($currentUser))?0:$currentUser['attributes']['id'];?>">
     <!-- start: MAIN JAVASCRIPTS -->
     <!-- <script src={{ asset("vendor/jquery/jquery.min.js") }}></script> -->
     <script src={{ asset("vendor/bootstrap/js/bootstrap.min.js") }}></script>
@@ -233,14 +237,15 @@
     <?php if(config('app.IS_ENABLED_NOTIFICATION')){?>
      <script src="{{url('vendor/socket/socket.io.js')}}"></script>
       <script>
-        //var socket = io('http://localhost:3000');
-        var socket = io('http://37.72.172.144:3000');
+        var socket = io('http://testhouse-notification-telkomtesthouse.apps.playcourt.id:31959');
+        // var socket = io('http://37.72.172.144:3000');
         socket.on("notification-channel:App\\Events\\Notification", function(message){ 
             var userId = $("#user_id").val();
             console.log(message.data);
-            if(message.data.to === "admin"){ 
-                var notificationCount = parseInt($(".notification-count").html());
-
+            console.log(userId+" "+message.data.to);
+            console.log(message.data);
+            if(message.data.to === "admin" || message.data.to === userId){ 
+                var notificationCount = parseInt($(".notification-count").html()); 
                  if (message.data.message.length > 35){
                     var html =  '<li>'+
                                     '<a data-url="'+message.data.url+'" data-id="'+message.data.id+'" class="notifData">'+ message.data.message.substring(0, 30)+'...'
@@ -272,7 +277,8 @@
                     success: function(data){ 
                         console.log(data);
                         $(".notification-count").html(data); 
-                        window.location.href = "<?php echo URL::to('/'); ?>/admin/"+notifURL; 
+                        // window.location.href = "<?php echo URL::to('/'); ?>/admin/"+notifURL; 
+						window.open("<?php echo URL::to('/'); ?>/admin/"+notifURL, '_blank', 'toolbar=yes, location=yes, status=yes, menubar=yes, scrollbars=yes');
                     }
                 }); 
             });

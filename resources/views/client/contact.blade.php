@@ -28,7 +28,7 @@
 
 				<div class="container clearfix">
 
-					<div class="col_two_third">
+					<!-- <div class="col_two_third">
 
 						<div class="contact-widget">
 
@@ -82,6 +82,11 @@
 								<textarea class="required sm-form-control" name="message" rows="3" placeholder="{{ trans('translate.contact_message') }}" rows="6" cols="30"></textarea>
 							</div>
 
+							<div class="col_full">
+								<div class="g-recaptcha" data-sitekey="6Le87jIUAAAAADQF_jaDT4vnN0yiKM8kFoLJdICO" ></div>
+								<input type="hidden" class="hiddenRecaptcha required sm-form-control" name="hiddenRecaptcha" id="hiddenRecaptcha">
+							</div>
+
 							<div class="col_full hidden">
 								<input type="text" id="template-contactform-botcheck" name="template-contactform-botcheck" value="" class="sm-form-control" />
 							</div> 
@@ -93,7 +98,7 @@
 
 						</div>
 						
-					</div>
+					</div> -->
 
 					<div class="col_one_third col_last contact-address">
 							<div class="row">
@@ -122,7 +127,7 @@
  
 
 @section('content_js')
-
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script>
 	$(".chosen-select").chosen(); 
 </script>

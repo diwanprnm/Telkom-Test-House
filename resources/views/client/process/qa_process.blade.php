@@ -123,7 +123,8 @@
 				            <h2>Second Step</h2>
 				            <fieldset>
 				               <div class="form-group"> 
-									<input type="radio" name="jns_perusahaan" value="Agen" placeholder="{{ trans('translate.service_company_agent') }}" checked>
+				               		<label for="f1-jns-perusahaan">{{ trans('translate.service_company_type') }} : </label>
+									<input style="font-weight: bold;" type="radio" name="jns_perusahaan" value="Agen" placeholder="{{ trans('translate.service_company_agent') }}" checked>
 									<input type="radio" name="jns_perusahaan" value="Pabrikan" placeholder="{{ trans('translate.service_company_branch') }}">
 									<input type="radio" name="jns_perusahaan" value="Perorangan" placeholder="{{ trans('translate.service_company_individual') }}">
 								</div>
@@ -202,12 +203,17 @@
 				            <h2>Forth Step</h2>
 				            <fieldset>
 				                <div class="form-group">
-										<label>{{ trans('translate.service_upload_siupp') }}<span class="text-danger">*</span></label>
+										<label>{{ trans('translate.service_upload_siupp') }}<span class="text-danger">* 
+											@if($userData->fileSIUPP)
+												({{ trans('translate.file_already_exists') }})
+											@endif
+										</span> 
+										</label>
 										<input   id="fileInput-SIUPP" name="fuploadsiupp" type="file" accept="application/pdf,image/*">
 										<input type="hidden" name="hide_siupp_file" class="required" id="hide_siupp_file" value="{{$userData->fileSIUPP}}"/>
 										<a id="siupp-file" class="btn btn-link" >{{$userData->fileSIUPP}}</a>
 										<div id="attachment-file">
-											*ukuran file maksimal 2 mb
+											*{{ trans('translate.maximum_filesize') }}
 										</div>
 									</div>
 									<div class="form-group" style="margin-bottom:0.01%">
@@ -225,12 +231,17 @@
 										<input type="text" name="f1-sertifikat-sistem-mutu" placeholder="{{ trans('translate.service_upload_certificate') }}" id="f1-sertifikat-sistem-mutu" value="{{$userData->noSertifikat}}" class="required">
 									</div>
 									<div class="form-group  " style="margin-bottom:0.01%">
-										<label>{{ trans('translate.service_upload_certificate_file') }}<span class="text-danger">*</span></label>
+										<label>{{ trans('translate.service_upload_certificate_file') }}<span class="text-danger">* 
+											@if($userData->fileSertifikat)
+												({{ trans('translate.file_already_exists') }})
+											@endif
+										</span>
+										</label>
 										<input   id="fileInput-lampiran" name="fuploadlampiran" type="file" accept="application/pdf,image/*" >
 										<input type="hidden" name="hide_sertifikat_file" id="hide_sertifikat_file" value="{{$userData->fileSertifikat}}" class="required"/>
 										<a id="sertifikat-file" class="btn btn-link">{{$userData->fileSertifikat}}</a>
 										<div id="attachment-file">
-											*ukuran file maksimal 2 mb
+											*{{ trans('translate.maximum_filesize') }}
 										</div>
 									</div>
 									<div class="form-group">
@@ -238,22 +249,30 @@
 										<input type="text" name="f1-batas-waktu" placeholder="{{ trans('translate.service_upload_certificate_date') }}" class="datepicker data-upload-berkas f1-batas-waktu  input-submit required" id="f1-batas-waktu" value="{{$userData->tglSertifikat}}"> 
 									</div>
 									<div class="form-group  " style="margin-top:35px">
-										<label>{{ trans('translate.service_upload_npwp') }}<span class="text-danger">*</span></label>
+										<label>{{ trans('translate.service_upload_npwp') }}<span class="text-danger">* 
+											@if($userData->fileNPWP)
+												({{ trans('translate.file_already_exists') }})
+											@endif 
+										</span>
+										</label>
 										<input class="data-upload-berkas f1-file-NPWP " id="fileInput-NPWP" name="fuploadnpwp" type="file" accept="application/pdf,image/*">
 										<input type="hidden" name="hide_npwp_file" class="required" id="hide_npwp_file" value="{{$userData->fileNPWP}}"/>
 										<a id="npwp-file" class="btn btn-link">{{$userData->fileNPWP}}</a>
 										<div id="attachment-file">
-											*ukuran file maksimal 2 mb
+											*{{ trans('translate.maximum_filesize') }}
 										</div>
 									</div>
 									<div class="form-group  ">
-										<label>{{ trans('translate.service_upload_reference_test') }}</label>
+										<label>{{ trans('translate.service_upload_reference_test') }}
+											<span class="text-danger already_reference" hidden="true">* ({{ trans('translate.file_already_exists') }})</span>
+											<span class="text-danger notready_reference">*</span>
+										</label>
 										<input class="data-upload-berkas f1-file-ref-uji" id="fileInput-ref-uji" name="fuploadrefuji" type="file" accept="application/pdf,image/*">
 										<div id="ref-uji-file"></div>
 										<input type="hidden" name="path_ref" id="path_ref">
-										<a id="4-stel-file" target="_blank" class="btn btn-link" style="color:black !important;" >Download Test Reference File</a>
+										<a id="4-stel-file" target="_blank" class="btn btn-link"></a>
 										<div id="attachment-file">
-											*ukuran file maksimal 2 mb
+											*{{ trans('translate.maximum_filesize') }}
 										</div>
 									</div>
 									<div class="dv-srt-dukungan-prinsipal">
@@ -262,7 +281,7 @@
 											<input class="data-upload-berkas f1-file-prinsipal required" id="fileInput-prinsipal" name="fuploadprinsipal" type="file" accept="application/pdf,image/*" >
 											<div id="prinsipal-file"></div>
 											<div id="attachment-file">
-												*ukuran file maksimal 2 mb
+												*{{ trans('translate.maximum_filesize') }}
 											</div>
 										</div>
 									</div> 
@@ -272,7 +291,7 @@
 											<input class="data-upload-berkas f1-file-dll" id="fileInput-dll" name="fuploaddll" type="file" accept="application/pdf,image/*" >
 											<div id="dll-file"></div>
 											<div id="attachment-file">
-												*ukuran file maksimal 2 mb
+												*{{ trans('translate.maximum_filesize') }}
 											</div>
 										</div>
 									</div> 
@@ -470,7 +489,11 @@
 
  <script type="text/javascript" src="{{url('vendor/jquerystep/jquery.steps.js')}}"></script>
  
- <script>  
+ <script>
+ 	$(window).bind('beforeunload',function(){
+	    return 'are you sure you want to leave and your data will be lost?';
+	});
+	  
 	var form = $("#form-permohonan");
 	form.validate({
 	    errorPlacement: function errorPlacement(error, element) { element.before(error); },
@@ -518,13 +541,25 @@
 				$("#f4-preview-6").html($("#hide_sertifikat_file").val());
 				$("#f4-preview-7").html($("#f1-batas-waktu").val());
 				$("#f4-preview-11").html($("#hide_npwp_file").val());
-				$("#f4-preview-file-ref-uji").html($(".f1-file-ref-uji").val());
+				if($(".f1-file-ref-uji").val() != '' && $(".f1-file-ref-uji").val() != 'undefined' && $(".f1-file-ref-uji").val() != 'null'){
+					$("#f4-preview-file-ref-uji").html($(".f1-file-ref-uji").val());
+				}else{
+					var e = document.getElementById("f1-cmb-ref-perangkat");
+					var file = document.getElementById(e.value);
+					var str = file.value;
+					var resSlash = str.split("/");
+					var str2 = resSlash[(resSlash.length)-1];
+					var res = str2.split(".");
+					if(res.length > 1){
+						$("#f4-preview-file-ref-uji").html(str2);
+					}					
+				}
 				$("#f4-preview-8").html($(".f1-file-prinsipal").val());
 				$("#f4-preview-12").html($(".f1-file-dll").val());
 	       	}  
 	        if(newIndex == 5){
 				if($('#hide_cekSNjnsPengujian').val() == 1){
-					alert("Perangkat[Nama, Model] dan Jenis Pengujian sudah ada!"); 
+					alert("Perangkat[Nama, Merk, Model] dan Jenis Pengujian sudah ada!"); 
 					return false;
 				}else{
 					var formData = new FormData($('#form-permohonan')[0]);
@@ -552,7 +587,11 @@
 							$(".actions").hide(); 
 						},
 						error:function(){
+							$( "#formBTNprevious" ).show();
+							$( "#formBTNfinish" ).show();
+							$( "#formBTNnext" ).show();
 							$("body").removeClass("loading");
+							error = true;
 							alert("Gagal mengambil data");
 							formWizard.steps("previous"); 
 						}
@@ -570,22 +609,43 @@
 					return false;
 				} else {
 					var file = document.getElementById(e.value);
-					
 					var link = document.getElementById('4-stel-file');
 					var path = document.getElementById('path_ref');
-
-					link.href = file.value
-					path.value = file.value
+						var str = file.value;
+						var resSlash = str.split("/");
+						var str2 = resSlash[(resSlash.length)-1];
+						var res = str2.split(".");
+						if(res.length > 1){
+							link.text = str2;
+							link.href = str.replace(" ","%20");
+							path.value = file.value;
+							$('#4-stel-file').show();
+							$('.already_reference').show();
+							$('.notready_reference').hide();
+							$( ".f1-file-ref-uji" ).removeClass("required");
+							var $el = $('#fileInput-ref-uji');
+							$el.wrap('<form>').closest('form').get(0).reset();
+							$el.unwrap();
+						}else{
+							link.text = '';
+							link.href = '';
+							path.value = '';
+							$('#4-stel-file').hide();
+							$('.already_reference').hide();
+							$('.notready_reference').show();
+							$( ".f1-file-ref-uji" ).addClass("required");
+						}
 				}
 
 	        	var jnsPelanggan = $('#hide_jns_pengujian').val();
 				var serialNumber_perangkat = $('#f1-serialNumber-perangkat').val();
 				var nama_perangkat = $('#f1-nama-perangkat').val();
 				var model_perangkat = $('#f1-model-perangkat').val();
+				var merk_perangkat = $('#f1-merek-perangkat').val();
 				$.ajax({
 					type: "POST",
 					url : "../cekPermohonan",
-					data: {'_token':"{{ csrf_token() }}", 'jnsPelanggan':jnsPelanggan, 'serialNumber_perangkat':serialNumber_perangkat, 'nama_perangkat':nama_perangkat, 'model_perangkat':model_perangkat},
+					data: {'_token':"{{ csrf_token() }}", 'jnsPelanggan':jnsPelanggan, 'serialNumber_perangkat':serialNumber_perangkat, 'nama_perangkat':nama_perangkat, 'model_perangkat':model_perangkat, 'merk_perangkat':merk_perangkat},
 					// dataType:'json',
 					type:'post',
 					success: function(data){
@@ -611,6 +671,10 @@
 	        		if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
 			        $( ".number li:eq("+(newIndex)+" ) button" ).removeClass("done").addClass("active");
 			        $( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active");
+			        if (newIndex == 6) {
+			        	$( ".number li:eq("+(newIndex)+" ) button" ).removeClass("active").addClass("done");
+			        	$( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active").addClass("done");
+			        }
 	        	}
 	        	return form.valid();	
 	        } 

@@ -6,6 +6,7 @@ use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Jobs\ChangeLocale;
 
+use App\Company;
 use App\Device;
 use App\Examination;
 use App\ExaminationType;
@@ -16,6 +17,10 @@ use App\Logs;
 
 use Auth;
 use Response;
+
+// UUID
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 class DashboardController extends Controller
 {
@@ -58,12 +63,22 @@ class DashboardController extends Controller
                             ->with('user')
                             ->with('company')
                             ->with('examinationType')
+                            ->with('examinationLab')
                             ->with('media')
                             ->with('device');
 
         if ($search != null){
-            $query->whereHas('device', function ($q) use ($search){
-                return $q->where('name', 'like', '%'.strtolower($search).'%');
+            $query->where(function($qry) use($search){
+                $qry->whereHas('device', function ($q) use ($search){
+                        return $q->where('name', 'like', '%'.strtolower($search).'%');
+                    })
+                ->orWhereHas('company', function ($q) use ($search){
+                        return $q->where('name', 'like', '%'.strtolower($search).'%');
+                    })
+                ->orWhereHas('examinationLab', function ($q) use ($search){
+                        return $q->where('name', 'like', '%'.strtolower($search).'%');
+                    })
+                ->orWhere('function_test_NO', 'like', '%'.strtolower($search).'%');
             });
 
             $currentUser = Auth::user();
@@ -102,16 +117,25 @@ class DashboardController extends Controller
 					$status = 1;
 					break;
 				case 2:
+                    $query->where('registration_status', 1);
+                    $query->where('function_status', 1);
+                    $query->where('contract_status', 1);
+                    $query->where('spb_status', '!=', 1);
+                    $status = 2;
+                    break;
+                case 3:
 					$query->where('registration_status', 1);
-					$query->where('spb_status', '!=', 1);
-					$status = 2;
-					break;
-				case 3:
+                    $query->where('function_status', 1);
+                    $query->where('contract_status', 1);
+                    $query->where('spb_status', 1);
+                    $query->where('payment_status', '!=', 1);
+                    $status = 3;
+                    break;
+                case 4:
+                    $query->where('registration_status', 1);
+                    $query->where('function_status', 1);
+                    $query->where('contract_status', 1);
 					$query->where('spb_status', 1);
-					$query->where('payment_status', '!=', 1);
-					$status = 3;
-					break;
-				case 4:
 					$query->where('payment_status', 1);
 					$status = 4;
 					break;

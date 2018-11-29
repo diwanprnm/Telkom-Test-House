@@ -238,7 +238,7 @@ function doSearch(){
 		var options = {
 			chart: {
 				renderTo: 'chart',
-				type: 'column',
+				type: 'line',
 			},
 			title: {
 				text: 'Pembelian STEL '+keyword.value,
@@ -273,15 +273,33 @@ function doSearch(){
 				var datas = msg.split("||");
 				a = jQuery.parseJSON(datas[0]);
 				b = jQuery.parseJSON(datas[1]);
-				options.title = {
+				c = jQuery.parseJSON(datas[2]);
+				d = jQuery.parseJSON(datas[3]);
+				e = jQuery.parseJSON(datas[4]);
+				f = jQuery.parseJSON(datas[5]);
+				/*options.title = {
 					text: 'Pembelian STEL '+keyword.value,
 					x: -20
-				}
-				options.series = [
-					{
-						name: 'Total '+keyword.value+' Rp. '+b+',-',
-						data:a
-					}
+				}*/
+				options.series = [{
+				   name: 'Semua',
+				   data: a
+				  },{
+				   name: 'Lab Kabel',
+				   data: b
+				  },{
+				   name: 'Lab Transmisi',
+				   data: c
+				  },{
+				   name: 'Lab CPE',
+				   data: d
+				  },{
+				   name: 'Lab Energi',
+				   data: e
+				  },{
+				   name: 'Lab Kalibrasi',
+				   data: f
+				  }
 				]
 				var chart = new Highcharts.Chart(options);
 			}
@@ -301,7 +319,7 @@ function doSearch2(){
 		var options = {
 			chart: {
 				renderTo: 'chart2',
-				type: 'column',
+				type: 'line',
 			},
 			title: {
 				text: 'Pengujian Perangkat '+keyword.value,
@@ -336,15 +354,30 @@ function doSearch2(){
 				var datas = msg.split("||");
 				a = jQuery.parseJSON(datas[0]);
 				b = jQuery.parseJSON(datas[1]);
-				options.title = {
+				c = jQuery.parseJSON(datas[2]);
+				d = jQuery.parseJSON(datas[3]);
+				e = jQuery.parseJSON(datas[4]);
+
+				/*options.title = {
 					text: 'Pengujian Perangkat '+keyword.value,
 					x: -20
-				}
-				options.series = [
-					{
-						name: 'Total '+keyword.value+' Rp. '+b+',-',
-						data:a
-					}
+				}*/
+				options.series = [{
+				   name: 'Semua',
+				   data: a
+				  },{
+				   name: 'QA',
+				   data: b
+				  },{
+				   name: 'TA',
+				   data: c
+				  },{
+				   name: 'VT',
+				   data: d
+				  },{
+				   name: 'CAL',
+				   data: e
+				  }
 				]
 				var chart = new Highcharts.Chart(options);
 			}
@@ -404,7 +437,7 @@ if(event.keyCode == 13){
    data: <?php echo json_encode($stel_ene) ?>
   },{
    name: 'Lab Kalibrasi',
-   data: <?php echo json_encode($stel) ?>
+   data: <?php echo json_encode($stel_kal) ?>
   }]
  });
  

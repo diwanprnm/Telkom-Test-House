@@ -91,6 +91,24 @@
 								<textarea name="alamat_perusahaan" class="form-control" disabled>{{ $data->company->address }}</textarea>
 							</div>
 						</div>
+						@if($data->examination_type_id == 2)
+                        <div class="col-md-6">
+							<div class="form-group">
+								<label>
+									PLG_ID *
+								</label>
+								<input type="text" name="plg_id_perusahaan" class="form-control" value="{{ $data->company->plg_id }}" placeholder="PLG_ID" disabled>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>
+									NIB *
+								</label>
+								<input type="text" name="nib_perusahaan" class="form-control" value="{{ $data->company->nib }}" placeholder="NIB" disabled>
+							</div>
+						</div>
+						@endif
                         <div class="col-md-6">
 							<div class="form-group">
 								<label>

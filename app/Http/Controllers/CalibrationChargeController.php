@@ -12,6 +12,8 @@ use Session;
 use App\CalibrationCharge;
 use App\Logs;
 
+use Excel;
+
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
@@ -233,5 +235,86 @@ class CalibrationChargeController extends Controller
 	public function autocomplete($query) {
         $respons_result = CalibrationCharge::autocomplet($query);
         return response($respons_result);
+    }
+
+    public function excel(Request $request) 
+    {
+        // Execute the query used to retrieve the data. In this example
+        // we're joining hypothetical users and payments tables, retrieving
+        // the payments table's primary key, the user's first and last name, 
+        // the user's e-mail address, the amount paid, and the payment
+        // timestamp.
+
+        $search = trim($request->input('search'));
+        $status = -1;
+
+        if ($search != null){
+            $charge = CalibrationCharge::whereNotNull('created_at')
+                ->where('device_name','like','%'.$search.'%')
+                ->orderBy('device_name');
+
+                $logs = new Logs;
+                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
+                $logs->action = "Search Calibration Charge";
+                $datasearch = array("search"=>$search);
+                $logs->data = json_encode($datasearch);
+                $logs->created_by = $currentUser->id;
+                $logs->page = "CALIBRATION CHARGE";
+                $logs->save();
+        }else{
+            $query = CalibrationCharge::whereNotNull('created_at');
+
+            if ($request->has('is_active')){
+                $status = $request->get('is_active');
+                if ($request->get('is_active') > -1){
+                    $query->where('is_active', $request->get('is_active'));
+                }
+            }
+
+            $charge = $query->orderBy('device_name');
+        }
+
+        $data = $charge->get();
+
+        $examsArray = []; 
+
+        // Define the Excel spreadsheet headers
+        $examsArray[] = [
+            'Nama Alat Uji',
+            'Biaya (Rp.)',
+            'Status'
+        ]; 
+        
+        // Convert each member of the returned collection into an array,
+        // and append it to the payments array.
+        foreach ($data as $row) {
+            $examsArray[] = [
+                $row->device_name,
+                number_format($row->price, 0, '.', ','),
+                $row->is_active == '1' ? 'Active' : 'Not Active'
+            ];
+        }
+        $currentUser = Auth::user();
+        $logs = new Logs;
+        $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
+        $logs->action = "download_excel";   
+        $logs->data = "";
+        $logs->created_by = $currentUser->id;
+        $logs->page = "Tarif Kalibrasi";
+        $logs->save();
+
+        // Generate and return the spreadsheet
+        Excel::create('Data Tarif Kalibrasi', function($excel) use ($examsArray) {
+
+            // Set the spreadsheet title, creator, and description
+            // $excel->setTitle('Payments');
+            // $excel->setCreator('Laravel')->setCompany('WJ Gilmore, LLC');
+            // $excel->setDescription('payments file');
+
+            // Build the spreadsheet, passing in the payments array
+            $excel->sheet('sheet1', function($sheet) use ($examsArray) {
+                $sheet->fromArray($examsArray, null, 'A1', false, false);
+            });
+        })->export('xlsx'); 
     }
 }

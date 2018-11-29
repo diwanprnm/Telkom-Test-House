@@ -77,11 +77,21 @@ class AdminOnly
 
         if($currentUser){
             $dataNotification = NotificationTable::where("is_read",0)
-                            ->where("to","admin")->orderBy("created_at","desc")
+                            ->where(function($q) use ($currentUser){
+                            return $q->where('to', "admin")
+                                ->orWhere('to', $currentUser->id)
+                                ;
+                            })
+                            ->orderBy("created_at","desc")
                             ->limit(10)->get()->toArray();
 
             $countNotification = NotificationTable::where("is_read",0)
-                            ->where("to","admin")->orderBy("created_at","desc")
+                            ->where(function($q) use ($currentUser){
+                            return $q->where('to', "admin")
+                                ->orWhere('to', $currentUser->id)
+                                ;
+                            })
+                            ->orderBy("created_at","desc")
                             ->get()->count();
         }else{
             $dataNotification = array();

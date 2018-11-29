@@ -104,7 +104,7 @@
 						<label for="nama_perangkat">Nama Perangkat *</label>
 					</td>
 					<td align="center">
-						<label for="biaya">Biaya (tanpa PPN) *</label>
+						<label for="biaya">Biaya (dengan PPN) *</label>
 					</td>
 					<td style="width:40px;"><a  style="width:40px;" value='Add More' class='del btn btn-success btn-flat' onclick='addAppend()'><i id='icon_add' class='fa fa-plus'/></a></td>
 				</tr>
@@ -303,6 +303,7 @@
 			arr_nama_perangkat2 = [];
 			arr_biaya2 = [];
 			total_biaya = 0;
+			ppn = 0;
 			var exam_id = document.getElementsByName("exam_id")[0].value;
 			var spb_number = document.getElementsByName("spb_number")[0].value;
 			var spb_date = document.getElementsByName("spb_date")[0].value;
@@ -316,6 +317,8 @@
 					arr_biaya[i] = biaya[i].value
 					total_biaya += Number(arr_biaya[i]);
 				}
+				ppn = 0.1*total_biaya;
+				total_biaya += ppn;
 			var nama_perangkat2 = document.getElementsByName("nama_perangkat2[]");
 				var i;
 				for (i = 0; i < nama_perangkat2.length; i++) {

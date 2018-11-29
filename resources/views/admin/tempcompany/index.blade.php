@@ -42,6 +42,38 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
+											Tanggal Permohonan
+										</label>
+										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
+											<input type="text" placeholder="Dari Tanggal" value="{{ $after_date }}" name="after_date" id="after_date" class="form-control"/>
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-default">
+													<i class="glyphicon glyphicon-calendar"></i>
+												</button>
+											</span>
+										</p>
+									</div>
+		                        </div>
+		                        <div class="col-md-6">
+									<div class="form-group">
+										<label>
+											&nbsp;
+										</label>
+										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
+											<input type="text" placeholder="Sampai Tanggal" value="{{ $before_date }}" name="before_date" id="before_date" class="form-control"/>
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-default">
+													<i class="glyphicon glyphicon-calendar"></i>
+												</button>
+											</span>
+										</p>
+									</div>
+		                        </div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
 											Status
 										</label>
 										<select id="is_commited" name="is_commited" class="cs-select cs-skin-elastic" required>
@@ -55,19 +87,19 @@
 												<option value="all">All</option>
 											@endif
 											
-											@if ($status == 1)
+											@if ($status == '1')
 												<option value="1" selected>Approve</option>
 											@else
 												<option value="1">Approve</option>
 											@endif
 											
-											@if ($status == -1)
+											@if ($status == '-1')
 												<option value="-1" selected>Decline</option>
 											@else
 												<option value="-1">Decline</option>
 											@endif
 											
-											@if ($status == 0)
+											@if ($status == '0')
 												<option value="0" selected>Not Process</option>
 											@else
 												<option value="0">Not Process</option>
@@ -109,6 +141,7 @@
 									<th class="center">Nama Perusahaan</th>
 									<th class="center">Edit Data Perusahaan yang diminta</th>
                                     <th class="center">Status</th>
+                                    <th class="center">Tanggal</th>
                                     <th class="center">Aksi</th>
 								</tr>
 							</thead>
@@ -122,6 +155,8 @@
 										<td class="center">
 											@if($item->name != NULL)Nama Perusahaan, @endif($item->name != NULL)
 											@if($item->address != NULL)Alamat, @endif($item->address != NULL)
+											@if($item->plg_id != NULL)PLG_ID, @endif($item->plg_id != NULL)
+											@if($item->nib != NULL)NIB, @endif($item->nib != NULL)
 											@if($item->city != NULL)Kota, @endif($item->city != NULL)
 											@if($item->email != NULL)Email, @endif($item->email != NULL)
 											@if($item->postal_code != NULL)Kode POS, @endif($item->postal_code != NULL)
@@ -143,6 +178,7 @@
 										@else
 	                                    	<td class="center"><span class="label label-sm label-warning">Not Process</span></td>
 	                                    @endif
+										<td class="center">{{ $item->created_at }}</td>
 	                                    <td class="center">
 											<div>
 												<a href="{{URL::to('admin/tempcompany/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
@@ -161,7 +197,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								<?php echo $data->appends(array('search' => $search,'is_commited' => $status))->links(); ?>
+								<?php echo $data->appends(array('search' => $search,'is_commited' => $status,'before_date' => $before_date,'after_date' => $after_date,'sort_by' => $sort_by,'sort_type' => $sort_type))->links(); ?>
 							</div>
 						</div>
 					</div>
@@ -183,6 +219,12 @@
 <script src={{ asset("vendor/bootstrap-datepicker/bootstrap-datepicker.min.js") }}></script>
 <script src={{ asset("vendor/bootstrap-timepicker/bootstrap-timepicker.min.js") }}></script>
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
+<script src={{ asset("assets/js/form-elements.js") }}></script>
+<script type="text/javascript">
+	jQuery(document).ready(function() {
+		FormElements.init();
+	});
+</script>
 <script type="text/javascript">
 	$( function() {
 		$( "#search_value" ).autocomplete({
@@ -229,7 +271,13 @@
 	            var baseUrl = "{{URL::to('/')}}";
 				var params = {
 					search:document.getElementById("search_value").value,
-					is_commited:document.getElementById("is_commited").value
+					is_commited:document.getElementById("is_commited").value,
+					after_date:document.getElementById("after_date").value,
+					before_date:document.getElementById("before_date").value,
+/*sorting*/
+					/*sort_by:document.getElementById("sort_by").value,
+					sort_type:document.getElementById("sort_type").value*/
+/*end sorting*/
 				};
 				document.location.href = baseUrl+'/admin/tempcompany?'+jQuery.param(params);
 	        }
@@ -241,11 +289,36 @@
 			var search_value = document.getElementById("search_value").value;
             var status = document.getElementById("is_commited");
 			var statusValue = status.options[status.selectedIndex].value;
+			var before = document.getElementById("before_date");
+            var after = document.getElementById("after_date");
+			var beforeValue = before.value;
+			var afterValue = after.value;
+/*sorting*/
+			/*var sort_by = document.getElementById("sort_by");
+			var sort_byValue = sort_by.options[sort_by.selectedIndex].value;
+			var sort_type = document.getElementById("sort_type");
+			var sort_typeValue = sort_type.options[sort_type.selectedIndex].value;*/
+/*end sorting*/
 			
 			if (statusValue != ''){
 				params['is_commited'] = statusValue;
 				params['search'] = search_value;
 			}
+
+			if (beforeValue != ''){
+				params['before_date'] = beforeValue;
+			}
+			if (afterValue != ''){
+				params['after_date'] = afterValue;
+			}
+/*sorting*/
+			/*if (sort_byValue != ''){
+				params['sort_by'] = sort_byValue;
+			}
+			if (sort_typeValue != ''){
+				params['sort_type'] = sort_typeValue;
+			}*/
+/*end sorting*/
 			document.location.href = baseUrl+'/admin/tempcompany?'+jQuery.param(params);
 	    };
 	});

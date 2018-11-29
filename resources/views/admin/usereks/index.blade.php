@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+<style type="text/css">
+	.chosen-container.chosen-container-single {
+		width: 100% !important;
+	}   
+</style>
 <div class="main-content" >
 	<div class="wrap-content container" id="container">
 		<!-- start: PAGE TITLE -->
@@ -24,7 +29,7 @@
 		<div class="container-fluid container-fullw bg-white">
 	        <div class="row">
 	        	<div class="col-md-6">
-	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1"><i class="ti-filter"></i> Filter</a>
+	    			<a id="btn-filter" class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1"><i class="ti-filter"></i> Filter</a>
 				</div>
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table">
@@ -44,15 +49,15 @@
 										<label>
 											Perusahaan
 										</label>
-										<select id="company" name="company" class="cs-select cs-skin-elastic" required>
-											@if($filterCompany == '')
-												<option value="" disabled selected>Select...</option>
-											@endif
-											@if ($filterCompany == 'all')
-												<option value="all" selected>All</option>
-											@else
-												<option value="all">All</option>
-											@endif
+										<select class="form-control" id="company" name="company" class="chosen-company">
+												@if ($filterCompany == '')
+													<option value="" disabled selected> - Pilih Perusahaan - </option>
+												@endif
+												@if ($filterCompany == 'all')
+													<option value="all" selected>All</option>
+												@else
+													<option value="all">All</option>
+												@endif
 											@foreach($company as $item)
 												@if($item->name == $filterCompany)
 													<option value="{{ $item->name }}" selected>{{ $item->name }}</option>
@@ -195,6 +200,10 @@
 <script src={{ asset("vendor/bootstrap-timepicker/bootstrap-timepicker.min.js") }}></script>
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
 <script type="text/javascript">
+	$('#company').chosen();
+	$('#company').trigger("chosen:updated");
+</script>
+<script type="text/javascript">
 	$( function() {
 		$( "#search_value" ).autocomplete({
 			minLength: 3,
@@ -234,7 +243,7 @@
 		};
 	});
 	
-	jQuery(document).ready(function() {       
+	jQuery(document).ready(function() {  
 		$('#search_value').keydown(function(event) {
 	        if (event.keyCode == 13) {
 	            var baseUrl = "{{URL::to('/')}}";

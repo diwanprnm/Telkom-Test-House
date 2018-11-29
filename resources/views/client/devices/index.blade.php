@@ -11,7 +11,7 @@
 				<h1>{{ trans('translate.devic_test_passed') }}</h1> 
 
 				<ol class="breadcrumb">
-					<li><a href="{{url('/')}}">Home</a></li>
+					<li><a href="{{url('/')}}">{{ trans('translate.home') }}</a></li>
 					<li class="active">{{ trans('translate.devic_test_passed') }}</li>
 				</ol>
 			</div>
@@ -64,6 +64,7 @@
 												<th class="center">{{ trans('translate.devic_test_passed_type') }}</th>
 												<th class="center">{{ trans('translate.devic_test_passed_capacity') }}</th>
 												<th class="center">{{ trans('translate.devic_test_passed_standar') }}</th>
+												<th class="center">{{ trans('translate.devic_test_passed_cert_numb') }}</th>
 												<th class="center">{{ trans('translate.devic_test_passed_valid_form') }}</th>
 												<th class="center">{{ trans('translate.devic_test_passed_valid_thru') }}</th>
 											</tr>
@@ -79,6 +80,7 @@
 												<td class="center">{{ $item->tipe }}</td>
 												<td class="center">{{ $item->kapasitas }}</td>
 												<td class="center">{{ $item->standarisasi }}</td>
+												<td class="center">{{ $item->cert_number }}</td>
 												<td class="center">{{ $item->valid_from }}</td>
 												<td class="center">{{ $item->valid_thru }}</td>
 											</tr>

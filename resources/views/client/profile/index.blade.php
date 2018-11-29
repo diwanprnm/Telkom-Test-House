@@ -134,6 +134,18 @@
 							</div>
 
 							<div class="col_full">
+								<label for="register-form-repassword">{{ trans('translate.company_plg_id') }} : </label>
+								<input type="text" id="plg_id" class="form-control input-submit" name="plg_id" placeholder="012345678" value="<?php echo $myComp['plg_id'] ?>">
+								<input type="hidden" name="hide_plg_id" id="hide_plg_id" value="<?php echo $myComp['plg_id'] ?>"/>
+							</div>
+
+							<div class="col_full">
+								<label for="register-form-repassword">{{ trans('translate.company_nib') }} : </label>
+								<input type="text" id="nib" class="form-control input-submit" name="nib" placeholder="012345678" value="<?php echo $myComp['nib'] ?>">
+								<input type="hidden" name="hide_nib" id="hide_nib" value="<?php echo $myComp['nib'] ?>"/>
+							</div>
+
+							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.company_email') }} : </label>
 								<input type="email" id="email" class="form-control input-submit" name="email" placeholder="comany@mail.com" value="<?php echo $myComp['email'] ?>">
 								<input type="hidden" name="hide_email" id="hide_email" value="<?php echo $myComp['email'] ?>"/>

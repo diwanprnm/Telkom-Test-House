@@ -43,7 +43,7 @@ class ProductsController extends Controller
                             ) as is_buyed'
                 )
                 ->where("stels.is_active",1)
-                ->where("stels.stel_type",1) ;
+                ;
 
             if ($search != null){
 				$stels->where(function($q) use ($search){
@@ -96,7 +96,7 @@ class ProductsController extends Controller
         $currentUser = Auth::user();
 
         if($currentUser){
-            $select = array("stels.id", "stels.name","stels.price","stels.code","stels.attachment","stels_sales.invoice","stels_sales.payment_status","companies.name as company_name","stels_sales_detail.qty","stels_sales.id_kuitansi","stels_sales.faktur_file","stels_sales_detail.attachment as manual_attachment","stels_sales.id as manual_id"); 
+            $select = array("stels.id", "stels.name","stels.price","stels.code","stels.attachment","stels_sales.invoice","stels_sales.payment_status","companies.name as company_name","stels_sales_detail.id as id_attachment_stel","stels_sales_detail.qty","stels_sales.id_kuitansi","stels_sales.faktur_file","stels_sales_detail.attachment as manual_attachment","stels_sales.id as manual_id"); 
             $STELSales = STELSalesDetail::select($select)->where("stels_sales_id",$id)
                         ->join("stels_sales","stels_sales.id","=","stels_sales_detail.stels_sales_id")
                         ->join("stels","stels.id","=","stels_sales_detail.stels_id")
@@ -168,7 +168,7 @@ class ProductsController extends Controller
                  $data= array( 
                     "from"=>$currentUser->name,
                     "to"=>"admin",
-                    "message"=>$currentUser->name." Upload pembayaran STEL",
+                    "message"=>$currentUser->company->name." Upload pembayaran STEL",
                     "url"=>"sales/".$STELSales->id."/edit",
                     "is_read"=>0,
                     "created_at"=>date("Y-m-d H:i:s"),

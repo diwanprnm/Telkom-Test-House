@@ -55,7 +55,8 @@
 																			<ol class="numbering-second-procedure">
 																				<li>Copy SIUP</li>
 																				<li>Copy NPWP</li>
-																				<li>Suran Penunjukan dari Principal (agen distributor/pabrikan)</li>
+																				<li>Copy Sistem Manajemen Mutu</li>
+																				<li>Surat Penunjukan dari Prinsipal (agen distributor/pabrikan)</li>
 																				<li>Data Sheet Perangkat</li>
 																			</ol>
 																		</li>

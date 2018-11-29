@@ -57,6 +57,7 @@ class DevClientController extends Controller
 						'devices.model AS tipe',
 						'devices.capacity AS kapasitas',
 						'devices.test_reference AS standarisasi',
+						'devices.cert_number',
 						'devices.valid_from',
 						'devices.valid_thru'
 						)
@@ -98,6 +99,7 @@ class DevClientController extends Controller
 						'devices.model AS tipe',
 						'devices.capacity AS kapasitas',
 						'devices.test_reference AS standarisasi',
+						'devices.cert_number',
 						'devices.valid_from',
 						'devices.valid_thru'
 						)

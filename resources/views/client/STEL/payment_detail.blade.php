@@ -56,7 +56,7 @@
 								<?php  
 									if($stel->manual_attachment !="" && $stel->payment_status == 1){
 								?>
-										<td colspan="6" align="center"><a target="_blank" href="{{ URL::to('/client/downloadstelwatermark/'.$stel->manual_id) }}">{{ trans('translate.download') }} File</a></td>
+										<td colspan="6" align="center"><a target="_blank" href="{{ URL::to('/client/downloadstelwatermark/'.$stel->id_attachment_stel) }}">{{ trans('translate.download') }} File</a></td>
 								<?php }
 								else if($stel->attachment !="" && $stel->payment_status == 1){
 								?>
@@ -98,6 +98,7 @@
 						<a class="button button-3d btn-sky nomargin" href="{{url('/payment_status')}}">{{ trans('translate.back') }}</a>
 					</div>
 						<div class="col-md-6">
+				@if($stels[0]->payment_status == 1)
 					@if($stels[0]->id_kuitansi != '')
 							<a class="button button-3d btn-sky nomargin pull-right invoice-group-button" href="{{ URL::to('/client/downloadkuitansistel/'.$stels[0]->id_kuitansi) }}" target="_blank">
 								{{ trans('translate.see_receipt') }}
@@ -108,6 +109,7 @@
 								{{ trans('translate.see_invoice') }}
 							</a>
 					@endif
+				@endif
 						</div>
 				</div>
 			</div>

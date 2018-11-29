@@ -87,16 +87,16 @@
 
 				<div class="clear"></div>
 
-				<div class="divider divider-short divider-center"><i class="icon-circle"></i></div>
+				<!-- <div class="divider divider-short divider-center"><i class="icon-circle"></i></div>
 
 				<div id="section-contact" class="heading-block title-center page-section">
 					<h2>{{ trans('translate.contact') }}</h2>
 					<span>{{ trans('translate.contact_description') }}</span>
-				</div>
+				</div> -->
 
 				<!-- Contact Form
 				============================================= -->
-				<div class="col_full">
+				<!-- <div class="col_full">
 
 					<div class="fancy-title">
 						<h3>{{ trans('translate.contact_us') }}</h3>
@@ -157,6 +157,13 @@
 
 							<div class="clear"></div>
 
+							<div class="col-md-8 col-md-offset-2">
+								<div class="g-recaptcha" data-sitekey="6Le87jIUAAAAADQF_jaDT4vnN0yiKM8kFoLJdICO" data-callback="recaptchaCallback"></div>
+								<input type="hidden" class="hiddenRecaptcha required sm-form-control" name="hiddenRecaptcha" id="hiddenRecaptcha">
+							</div>
+
+							<div class="clear"></div>
+
 							<div class="col-md-8 col-md-offset-2" style="margin-top:15px">
 								<button type="submit" class="button button-3d nomargin full btn-sky" type="submit" name="template-contactform-submit" value="submit">{{ trans('translate.contact_send') }}</button>
 							</div>
@@ -166,7 +173,8 @@
 					</div>
 
 
-				</div><!-- Contact Form End -->
+				</div> -->
+				<!-- Contact Form End -->
 
 				</div>
 
@@ -180,7 +188,7 @@
 @endsection
 
 @section('content_js')
-
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script>
 	$(".chosen-select").chosen(); 
 </script>

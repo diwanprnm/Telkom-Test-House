@@ -31,6 +31,11 @@
 							<div class="col-md-3 form-group">
 								<select onchange="filter()" class="form-control cs-select cs-skin-elastic" id="cmb-category">
 									<option value="">{{ trans('translate.stel_choose_category') }}</option>
+									@if ($type == 'all')
+										<option value="all" selected>{{ trans('translate.stel_all_category') }}</option>
+									@else
+										<option value="all">{{ trans('translate.stel_all_category') }}</option>
+									@endif
 									@foreach ($examLab as $dataLab)
 										@if ($dataLab->id == $type)
 											<option value="{{$dataLab->id}}" selected>{{$dataLab->name}}</option>

@@ -39,34 +39,39 @@
 							<legend>
 								Filter
 							</legend>
-							<div class="row"> 
+							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
-											Jenis Pendapatan
+											Tanggal
 										</label>
-										<select id="type" name="type" class="cs-select cs-skin-elastic" required>
-											@if($type == '')
-												<option value="" disabled selected>Select...</option>
-											@endif
-											@if($type == 'all')
-                                                <option value="all" selected>All</option>
-											@else
-                                                <option value="all">All</option>
-                                            @endif
-												@if($type == 1)
-													<option value="1" selected>Pengujian Perangkat</option>
-												@else
-													<option value="1">Pengujian Perangkat</option>
-												@endif
-												@if($type == 2)
-													<option value="2" selected>Pembelian STEL</option>
-												@else
-													<option value="2">Pembelian STEL</option>
-												@endif
-										</select>
+										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
+											<input type="text" placeholder="Dari Tanggal" value="{{ $after_date }}" name="after_date" id="after_date" class="form-control"/>
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-default">
+													<i class="glyphicon glyphicon-calendar"></i>
+												</button>
+											</span>
+										</p>
 									</div>
-								</div>
+		                        </div>
+		                        <div class="col-md-6">
+									<div class="form-group">
+										<label>
+											&nbsp;
+										</label>
+										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
+											<input type="text" placeholder="Sampai Tanggal" value="{{ $before_date }}" name="before_date" id="before_date" class="form-control"/>
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-default">
+													<i class="glyphicon glyphicon-calendar"></i>
+												</button>
+											</span>
+										</p>
+									</div>
+		                        </div>
+							</div>
+							<div class="row"> 
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
@@ -81,48 +86,32 @@
 											@else
                                                 <option value="all">All</option>
                                             @endif
-												@if($payment_status == 1)
-													<option value="1" selected>Pending</option>
+												@if($payment_status == '-1')
+													<option value="-1" selected>Paid (decline)</option>
 												@else
-													<option value="1">Pending</option>
+													<option value="-1">Paid (decline)</option>
 												@endif
-												@if($payment_status == 2)
-													<option value="2" selected>Timeout</option>
+												@if($payment_status == '0')
+													<option value="0" selected>Unpaid</option>
 												@else
-													<option value="2">Timeout</option>
+													<option value="0">Unpaid</option>
 												@endif
 
-												@if($payment_status == 3)
-													<option value="2" selected>Complete</option>
+												@if($payment_status == '1')
+													<option value="1" selected>Paid (success)</option>
 												@else
-													<option value="2">Complete</option>
+													<option value="1">Paid (success)</option>
+												@endif
+												
+												@if($payment_status == '2')
+													<option value="2" selected>Paid (waiting confirmation)</option>
+												@else
+													<option value="2">Paid (waiting confirmation)</option>
 												@endif
 										</select>
 									</div>
 								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>
-											Tanggal
-										</label>
-										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-											<input type="text" placeholder="Sebelum Tanggal" value="{{ $before_date }}" name="before_date" id="before_date" class="form-control"/>
-											<span class="input-group-btn">
-												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
-												</button>
-											</span>
-										</p>
-										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-											<input type="text" placeholder="Sesudah Tanggal" value="{{ $after_date }}" name="after_date" id="after_date" class="form-control"/>
-											<span class="input-group-btn">
-												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
-												</button>
-											</span>
-										</p>
-									</div>
-								</div>
+								
 								<div class="col-md-12">
 		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 		                                Filter
@@ -153,6 +142,7 @@
 							<thead>
 								<tr>
 									<th class="center">No</th> 
+									<th class="center">Company Name</th> 
 									<th class="center">Sales Date</th> 
 									<th class="center">Invoice</th>  
 									<th class="center">Total</th>
@@ -165,9 +155,10 @@
 								@foreach($data as $keys => $item)
 									<tr>
 										<td class="center">{{++$keys}}</td> 
+										<td class="center">{{ $item->company_name }}</td>
 										<td class="center">{{ $item->created_at }}</td>
 										<td class="center">{{ $item->invoice }}</td>
-										<td class="center"><?php echo number_format($item->total, 0, '.', ','); ?></td>
+										<td class="center"><?php echo number_format($item->cust_price_payment, 0, '.', ','); ?></td>
 										<td class="center">
 											<?php
 												switch ($item->payment_status) {
@@ -198,6 +189,13 @@
 										</td>
 										<td class="center">
 											<div>
+												@if($item->payment_status == 1)
+													<a href="{{URL::to('admin/sales/'.$item->id.'/upload')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Upload"><i class="fa fa-upload"></i></a>
+												@endif
+											</div>
+										</td>
+										<td class="center">
+											<div>
 												<a href="{{URL::to('admin/sales/'.$item->id)}}" class="btn btn-wide btn-primary btn-margin" tooltip-placement="top" tooltip="Detail">Detail </a>
 											</div>
 										</td>
@@ -209,7 +207,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								<?php echo $data->appends(array('search' => $search))->links(); ?>
+								<?php echo $data->appends(array('payment_status' => $payment_status,'search' => $search,'before_date' => $before_date,'after_date' => $after_date))->links(); ?>
 							</div>
 						</div>
 					</div>
@@ -256,7 +254,6 @@
 			var search_value = document.getElementById("search_value").value;
             var before = document.getElementById("before_date");
             var after = document.getElementById("after_date");
-            var type = document.getElementById("type").value;
             var payment_status = document.getElementById("payment_status").value;
 			var beforeValue = before.value;
 			var afterValue = after.value;
@@ -270,10 +267,6 @@
 			if (payment_status != ''){
 				params['payment_status'] = payment_status;
 			}
-			if (type != ''){
-				params['type'] = type;
-			}
-			 
 			params['search'] = search_value;
 			document.location.href = baseUrl+'/admin/sales?'+jQuery.param(params);
 	    };

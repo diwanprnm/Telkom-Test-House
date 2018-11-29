@@ -7,7 +7,7 @@
 		<section id="page-title">
 			<div class="row">
 				<div class="col-sm-8">
-					<h1 class="mainTitle">Riwayat SPK</h1>
+					<h1 class="mainTitle">Riwayat SPK @if(count($data)>0) {{ $data[0]->SPK_NUMBER }} @endif</h1>
 				</div>
 				<ol class="breadcrumb">
 					<li>
@@ -40,14 +40,14 @@
 							</thead>
 							<tbody>
 								<?php $no=1; ?>
-								@if(($data->code != 'MSTD0059AERR' && $data->code != 'MSTD0000AERR'))
-									@foreach($data->data as $item)
+								@if(count($data)>0)
+									@foreach($data as $item)
 										<tr>
 											<td class="center">{{$no}}</td>
-											<td class="center">{{ $item->action }}</td>
-											<td class="center">{{ $item->remark }}</td>
-											<td class="center">{{ $item->createdBy }}</td>
-											<td class="center">{{ $item->createdDt }}</td>
+											<td class="center">{{ $item->ACTION }}</td>
+											<td class="center">{{ $item->REMARK }}</td>
+											<td class="center">{{ $item->CREATED_BY }}</td>
+											<td class="center">{{ $item->CREATED_DT }}</td>
 										</tr>
 									<?php $no++ ?>
 									@endforeach

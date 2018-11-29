@@ -46,6 +46,11 @@ class Examination extends Model
         return $this->hasMany('App\Questioner');
     }
 
+    public function questionerdynamic()
+    {
+        return $this->hasMany('App\QuestionerDynamic');
+    }
+
     public function examinationHistory()
     {
         return $this->hasMany('App\ExaminationHistory');

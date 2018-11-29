@@ -1,6 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
+
+<?php
+	$currentUser = Auth::user();
+	$is_admin_mail = $currentUser['email'];
+	$is_super = $currentUser['id'];
+?>
+
 <div class="main-content" >
 	<div class="wrap-content container" id="container">
 		<!-- start: PAGE TITLE -->
@@ -24,6 +31,19 @@
 		</section>
 		<!-- end: PAGE TITLE -->
 		<!-- start: RESPONSIVE TABLE -->
+
+			@if (Session::get('error'))
+				<div class="alert alert-error alert-danger">
+					{{ Session::get('error') }}
+				</div>
+			@endif
+			
+			@if (Session::get('message'))
+				<div class="alert alert-info">
+					{{ Session::get('message') }}
+				</div>
+			@endif
+
 		<div class="container-fluid container-fullw bg-white">
 			<div class="row">
 				<div class="col-md-12">
@@ -38,6 +58,9 @@
 									<th class="center">QTY</th> 
 									<th class="center">Total</th>
 									<th class="center">Attachment</th>
+									@if($is_super == '1' || $is_admin_mail == 'admin@mail.com')
+										<th class="center">Action</th>
+									@endif
 								</tr>
 							</thead>
 							<tbody> 
@@ -51,6 +74,13 @@
 										<td class="center"><?php echo $item->qty; ?></td>
 										<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($item->price * $item->qty, 0, '.', ','); ?></td> 
 										<td class="center"><a href="{{ URL::to('/admin/downloadstelwatermark/'.$item->id) }}" target="_blank">{{ $item->attachment }}</a></td>
+										@if($is_super == '1' || $is_admin_mail == 'admin@mail.com')
+										<td class="center">
+											<div>
+												<a href="{{URL::to('admin/sales/'.$item->id.'/deleteProduct')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Destroy" onclick="return confirm('Are you sure want to delete this data?')"><i class="fa fa-trash"></i></a>
+											</div>
+										</td>
+										@endif
 									</tr> 
 									<?php $total +=($item->price * $item->qty); ?>
 								@endforeach

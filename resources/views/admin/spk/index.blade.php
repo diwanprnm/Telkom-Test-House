@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+<style type="text/css">
+	.chosen-container.chosen-container-single {
+		width: 100% !important;
+	}   
+</style>
 <div class="main-content" >
 	<div class="wrap-content container" id="container">
 		<!-- start: PAGE TITLE -->
@@ -24,7 +29,11 @@
 		<div class="container-fluid container-fullw bg-white">
 	        <div class="row">
 	        	<div class="col-md-6">
-	    			
+	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><i class="ti-filter"></i> Filter</a>
+	    			<!--<a class="btn btn-info pull-left" id="excel" href="{{URL::to('examination/excel')}}"> Export to Excel</a> -->
+	    			<button id="excel" type="submit" class="btn btn-info pull-left">
+                        Export to Excel
+                    </button>
 				</div>
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table">
@@ -32,6 +41,175 @@
 	                    <i class="ti-search"></i>
 	                </span>
 	            </div>
+	            <div class="col-md-12 panel panel-info">
+			    	<div id="collapse1" class="panel-collapse collapse">
+			     		<fieldset>
+							<legend>
+								Filter
+							</legend>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Tanggal SPK Dikeluarkan
+										</label>
+										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
+											<input type="text" placeholder="Dari Tanggal" value="{{ $after_date }}" name="after_date" id="after_date" class="form-control"/>
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-default">
+													<i class="glyphicon glyphicon-calendar"></i>
+												</button>
+											</span>
+										</p>
+									</div>
+		                        </div>
+		                        <div class="col-md-6">
+									<div class="form-group">
+										<label>
+											&nbsp;
+										</label>
+										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
+											<input type="text" placeholder="Sampai Tanggal" value="{{ $before_date }}" name="before_date" id="before_date" class="form-control"/>
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-default">
+													<i class="glyphicon glyphicon-calendar"></i>
+												</button>
+											</span>
+										</p>
+									</div>
+		                        </div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Nomor SPK
+										</label>
+										<select class="form-control" id="spk" name="spk" class="chosen-spk">
+												@if ($filterSpk == '')
+													<option value="" disabled selected> - Pilih Nomor SPK - </option>
+												@endif
+												@if ($filterSpk == 'all')
+													<option value="all" selected>All</option>
+												@else
+													<option value="all">All</option>
+												@endif
+											@foreach($spk as $item)
+												@if($item->SPK_NUMBER == $filterSpk)
+													<option value="{{ $item->SPK_NUMBER }}" selected>{{ $item->SPK_NUMBER }}</option>
+												@else
+													<option value="{{ $item->SPK_NUMBER }}">{{ $item->SPK_NUMBER }}</option>
+												@endif
+											@endforeach
+										</select>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Tipe Pengujian
+										</label>
+										<select id="type" name="type" class="cs-select cs-skin-elastic" required>
+											@if($filterType == '')
+												<option value="" disabled selected>Select...</option>
+											@endif
+											@if($filterType == 'all')
+                                                <option value="all" selected>All</option>
+											@else
+                                                <option value="all">All</option>
+                                            @endif
+											@foreach($type as $item)
+												@if($item->name == $filterType)
+													<option value="{{ $item->name }}" selected>{{ $item->name }}</option>
+												@else
+													<option value="{{ $item->name }}">{{ $item->name }}</option>
+												@endif
+											@endforeach
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Nama Perusahaan
+										</label>
+										<select class="form-control" id="company" name="company" class="chosen-company">
+												@if ($filterCompany == '')
+													<option value="" disabled selected> - Pilih Perusahaan - </option>
+												@endif
+												@if ($filterCompany == 'all')
+													<option value="all" selected>All</option>
+												@else
+													<option value="all">All</option>
+												@endif
+											@foreach($company as $item)
+												@if($item->name == $filterCompany)
+													<option value="{{ $item->name }}" selected>{{ $item->name }}</option>
+												@else
+													<option value="{{ $item->name }}">{{ $item->name }}</option>
+												@endif
+											@endforeach
+										</select>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Sort by :
+										</label>
+										<select id="sort_by" name="sort_by" class="cs-select cs-skin-elastic" required>
+											@if($sort_by == '')
+												<option value="" disabled selected>Select...</option>
+											@endif
+											@if($sort_by == 'spk_date')
+                                                <option value="spk_date" selected>Tanggal SPK Dikeluarkan</option>
+											@else
+                                                <option value="spk_date">Tanggal SPK Dikeluarkan</option>
+                                            @endif
+											@if($sort_by == 'SPK_NUMBER')
+                                                <option value="SPK_NUMBER" selected>Nomor SPK</option>
+											@else
+                                                <option value="SPK_NUMBER">Nomor SPK</option>
+                                            @endif
+                                            @if($sort_by == 'TESTING_TYPE')
+                                                <option value="TESTING_TYPE" selected>Tipe Pengujian</option>
+											@else
+                                                <option value="TESTING_TYPE">Tipe Pengujian</option>
+                                            @endif
+											@if($sort_by == 'COMPANY_NAME')
+                                                <option value="COMPANY_NAME" selected>Nama Perusahaan</option>
+											@else
+                                                <option value="COMPANY_NAME">Nama Perusahaan</option>
+                                            @endif
+										</select>
+										<select id="sort_type" name="sort_type" class="cs-select cs-skin-elastic" required>
+											@if($sort_type == '')
+												<option value="" disabled selected>Select...</option>
+											@endif
+											@if($sort_type == 'asc')
+                                                <option value="asc" selected>ASC</option>
+											@else
+                                                <option value="asc">ASC</option>
+                                            @endif
+											@if($sort_type == 'desc')
+                                                <option value="desc" selected>DESC</option>
+											@else
+                                                <option value="desc">DESC</option>
+                                            @endif
+										</select>
+									</div>
+								</div>
+								<div class="col-md-12">
+		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
+		                                Filter
+		                            </button>
+		                        </div>
+		                    </div>
+						</fieldset>
+			    	</div>
+			    </div>
 	        </div>
 
 	        @if (Session::get('error'))
@@ -64,19 +242,96 @@
 							</thead>
 							<tbody>
 								<?php $no=1; ?>
-								@if(($data->code != 'MSTD0059AERR' && $data->code != 'MSTD0000AERR'))
-									@foreach($data->data as $item)
+								@if(count($data)>0)
+									@foreach($data as $item)
 										<tr>
 											<td class="center">{{$no}}</td>
-											<td class="center">{{ $item->spkNumber }}</td>
-											<td class="center">{{ $item->labName }}</td>
-											<td class="center">{{ $item->testingTypeName }}</td>
-											<td class="center">{{ $item->companyName }}</td>
-											<td class="center">{{ $item->deviceName }}</td>
-											<td class="center">{{ $item->flowStatusName }}</td>
+											<td class="center">{{ $item->SPK_NUMBER }}</td>
+											<td class="center">{{ $item->lab_name }}</td>
+											<td class="center">{{ $item->TESTING_TYPE }} ({{ $item->TESTING_TYPE_DESC }})</td>
+											<td class="center">{{ $item->COMPANY_NAME }}</td>
+											<td class="center">{{ $item->DEVICE_NAME }}</td>
+											<?php
+												switch ($item->FLOW_STATUS) {
+									                case 1:
+									                    $status = 'Draft SPK';
+									                    break;
+									                case 2:
+									                    $status = 'SPK dikirim ke Manajer UREL';
+									                    break;
+									                case 3:
+									                    $status = 'SPK disetujui Manajer UREL';
+									                    break;
+									                case 4:
+									                    $status = 'SPK disetujui SMPIA';
+									                    break;
+									                case 5:
+									                    $status = 'SPK disetujui Manager Lab';
+									                    break;
+									                case 6:
+									                    $status = 'Proses Uji';
+									                    break;
+									                case 7:
+									                    $status = 'SPK ditolak Manajer UREL';
+									                    break;
+									                case 8:
+									                    $status = 'SPK ditolak SMPIA';
+									                    break;
+									                case 9:
+									                    $status = 'SPK ditolak Manager Lab';
+									                    break;
+									                case 10:
+									                    $status = 'TE meminta revisi target uji';
+									                    break;
+									                case 11:
+									                    $status = 'Laporan dikirim ke Manajer Lab';
+									                    break;
+									                case 12:
+									                    $status = 'Laporan disetujui Manajer Lab';
+									                    break;
+									                case 13:
+									                    $status = 'Laporan disetujui SMPIA';
+									                    break;
+									                case 14:
+									                    $status = 'Laporan disetujui Manajer UREL';
+									                    break;
+									                case 15:
+									                    $status = 'Laporan dikembalikan Manajer Lab';
+									                    break;
+									                case 16:
+									                    $status = 'Laporan dikembalikan SMPIA';
+									                    break;
+									                case 17:
+									                    $status = 'Laporan dikembalikan Manajer UREL';
+									                    break;
+									                case 18:
+									                    $status = 'Laporan ditolak EGM';
+									                    break;
+									                case 19:
+									                    $status = 'Selesai SPK';
+									                    break;
+									                case 20:
+									                    $status = 'Selesai Uji';
+									                    break;
+									                case 21:
+									                    $status = 'Selesai Sidang';
+									                    break;
+									                case 22:
+									                    $status = 'Sidang Ditunda';
+									                    break;
+									                case 23:
+									                    $status = 'Draft Laporan';
+									                    break;
+									                
+									                default:
+									                    $status = '';
+									                    break;
+									            }
+											?>
+											<td class="center">{{ $status }}</td>
 											<td class="center">
 												<div>
-													<a href="{{URL::to('admin/spk/'.$item->id.'')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
+													<a href="{{URL::to('admin/spk/'.$item->ID.'')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
 												</div>
 											</td>
 										</tr>
@@ -91,6 +346,13 @@
 								@endif
                             </tbody>
 						</table>
+					</div>
+					<div class="row">
+						<div class="col-md-12 col-sm-12">
+							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
+								<?php echo $data->appends(array('search' => $search,'before_date' => $before_date,'after_date' => $after_date,'type' => $filterType,'spk' => $filterSpk,'company' => $filterCompany,'sort_by' => $sort_by,'sort_type' => $sort_type))->links(); ?>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -110,17 +372,128 @@
 <script src={{ asset("vendor/bootstrap-datepicker/bootstrap-datepicker.min.js") }}></script>
 <script src={{ asset("vendor/bootstrap-timepicker/bootstrap-timepicker.min.js") }}></script>
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
+<script src={{ asset("assets/js/form-elements.js") }}></script>
+<script type="text/javascript">
+	jQuery(document).ready(function() {
+		FormElements.init();
+	});
+	$('#spk').chosen();
+	$('#spk').trigger("chosen:updated");
+	$('#company').chosen();
+	$('#company').trigger("chosen:updated");
+</script>
 <script type="text/javascript">
 	jQuery(document).ready(function() {       
 		$('#search_value').keydown(function(event) {
 	        if (event.keyCode == 13) {
 	            var baseUrl = "{{URL::to('/')}}";
 				var params = {
-					search:document.getElementById("search_value").value
+					search:document.getElementById("search_value").value,
+					type:document.getElementById("type").value,
+					after_date:document.getElementById("after_date").value,
+					before_date:document.getElementById("before_date").value,
+					spk:document.getElementById("spk").value,
+					company:document.getElementById("company").value,
+					sort_by:document.getElementById("sort_by").value,
+					sort_type:document.getElementById("sort_type").value
 				};
 				document.location.href = baseUrl+'/admin/spk?'+jQuery.param(params);
 	        }
 	    });
+
+	    document.getElementById("filter").onclick = function() {
+            var baseUrl = "{{URL::to('/')}}";
+            var params = {};
+			var search_value = document.getElementById("search_value").value;
+			var before = document.getElementById("before_date");
+            var after = document.getElementById("after_date");
+			var beforeValue = before.value;
+			var afterValue = after.value;
+			var spk = document.getElementById("spk");
+			var spkValue = spk.options[spk.selectedIndex].value;
+            var type = document.getElementById("type");
+			var typeValue = type.options[type.selectedIndex].value;
+			var company = document.getElementById("company");
+			var companyValue = company.options[company.selectedIndex].value;
+
+			var sort_by = document.getElementById("sort_by");
+			var sort_byValue = sort_by.options[sort_by.selectedIndex].value;
+			var sort_type = document.getElementById("sort_type");
+			var sort_typeValue = sort_type.options[sort_type.selectedIndex].value;
+
+			params['search'] = search_value;
+			
+			if (beforeValue != ''){
+				params['before_date'] = beforeValue;
+			}
+			if (afterValue != ''){
+				params['after_date'] = afterValue;
+			}
+			if (spkValue != ''){
+				params['spk'] = spkValue;
+			}
+			if (typeValue != ''){
+				params['type'] = typeValue;
+			}
+			if (companyValue != ''){
+				params['company'] = companyValue;
+			}
+			
+			if (sort_byValue != ''){
+				params['sort_by'] = sort_byValue;
+			}
+			if (sort_typeValue != ''){
+				params['sort_type'] = sort_typeValue;
+			}
+			document.location.href = baseUrl+'/admin/spk?'+jQuery.param(params);
+	    };
+
+	    document.getElementById("excel").onclick = function() {
+            var baseUrl = "{{URL::to('/')}}";
+            var params = {};
+			var search_value = document.getElementById("search_value").value;
+			var before = document.getElementById("before_date");
+            var after = document.getElementById("after_date");
+			var beforeValue = before.value;
+			var afterValue = after.value;
+            var spk = document.getElementById("spk");
+			var spkValue = spk.options[spk.selectedIndex].value;
+            var type = document.getElementById("type");
+			var typeValue = type.options[type.selectedIndex].value;
+			var company = document.getElementById("company");
+			var companyValue = company.options[company.selectedIndex].value;
+			
+			var sort_by = document.getElementById("sort_by");
+			var sort_byValue = sort_by.options[sort_by.selectedIndex].value;
+			var sort_type = document.getElementById("sort_type");
+			var sort_typeValue = sort_type.options[sort_type.selectedIndex].value;
+
+			params['search'] = search_value;
+			
+			if (beforeValue != ''){
+				params['before_date'] = beforeValue;
+			}
+			if (afterValue != ''){
+				params['after_date'] = afterValue;
+			}
+			if (spkValue != ''){
+				params['spk'] = spkValue;
+			}
+			if (typeValue != ''){
+				params['type'] = typeValue;
+			}
+			if (companyValue != ''){
+				params['company'] = companyValue;
+			}
+			
+			if (sort_byValue != ''){
+				params['sort_by'] = sort_byValue;
+			}
+			if (sort_typeValue != ''){
+				params['sort_type'] = sort_typeValue;
+			}
+			document.location.href = baseUrl+'/spk/excel?'+jQuery.param(params);
+	    };
 	});
 </script>
 @endsection

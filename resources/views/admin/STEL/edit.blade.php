@@ -141,7 +141,7 @@
 									@if($data->attachment != '')
 										<a href="{{ URL::to('/admin/stel/media/'.$data->id) }}" target="_blank">Lihat File</a>
 									@endif
-									<input type="file" name="attachment" class="form-control">
+									<input type="file" name="attachment" class="form-control" accept="application/pdf">
 								</div>
 							</div>
 	                        <div class="col-md-12">

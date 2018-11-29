@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -45,15 +46,17 @@ class CompanyController extends Controller
             $paginate = 10;
             $search = trim($request->input('search'));
             $status = '';
+            $before = null;
+            $after = null;
+
+            $sort_by = 'name';
+            $sort_type = 'asc';
             
             if ($search != null){
                 $query = Company::whereNotNull('created_at')
 					->where('id', '<>', '1')
                     ->where('name','like','%'.$search.'%');
 				
-				$companies = $query->orderBy('name')
-                                ->paginate($paginate);
-
                     $logs = new Logs;
                     $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
                     $logs->action = "Search Company";
@@ -66,16 +69,34 @@ class CompanyController extends Controller
 
                 if ($request->has('is_active')){
                     $status = $request->get('is_active');
-					if($request->input('is_active') != 'all'){
+					if($request->input('is_active') != '0'){
 						$query->where('is_active', $request->get('is_active'));
 					}
                 }
+            }
 
-                $companies = $query->orderBy('name')
-                                ->paginate($paginate);
+            if ($request->has('before_date')){
+                $query->where(DB::raw('DATE(created_at)'), '<=', $request->get('before_date'));
+                $before = $request->get('before_date');
+            }
+
+            if ($request->has('after_date')){
+                $query->where(DB::raw('DATE(created_at)'), '>=', $request->get('after_date'));
+                $after = $request->get('after_date');
+            }
+
+            if ($request->has('sort_by')){
+            $sort_by = $request->get('sort_by');
+            }
+            if ($request->has('sort_type')){
+                $sort_type = $request->get('sort_type');
             }
             
-			$data_excel = $query->orderBy('updated_at', 'desc')->get();
+            $companies = $query->orderBy($sort_by, $sort_type)
+                        ->paginate($paginate);
+            
+			// $data_excel = $query->orderBy('updated_at', 'desc')->get();
+			$data_excel = Company::whereNotNull('created_at')->where('id', '<>', '1')->orderBy('updated_at', 'desc')->get();
 			$request->session()->put('excel_pengujian', $data_excel);
 			
             if (count($companies) == 0){
@@ -86,7 +107,11 @@ class CompanyController extends Controller
                 ->with('message', $message)
                 ->with('data', $companies)
                 ->with('search', $search)
-                ->with('status', $status);
+                ->with('status', $status)
+                ->with('before_date', $before)
+                ->with('after_date', $after)
+                ->with('sort_by', $sort_by)
+                ->with('sort_type', $sort_type);
         }
     }
 
@@ -114,6 +139,8 @@ class CompanyController extends Controller
         $company->id = Uuid::uuid4();
         $company->name = $request->input('name');
         $company->address = $request->input('address');
+        $company->plg_id = $request->input('plg_id');
+        $company->nib = $request->input('nib');
         $company->city = $request->input('city');
         $company->email = $request->input('email');
         $company->postal_code = $request->input('postal_code');
@@ -242,6 +269,12 @@ class CompanyController extends Controller
         }
         if ($request->has('address')){
             $company->address = $request->input('address');
+        }
+        if ($request->has('plg_id')){
+            $company->plg_id = $request->input('plg_id');
+        }
+        if ($request->has('nib')){
+            $company->nib = $request->input('nib');
         }
         if ($request->has('city')){
             $company->city = $request->input('city');
@@ -386,29 +419,20 @@ class CompanyController extends Controller
             switch ($name) {
                 case 'npwp':
                     $file = public_path().'/media/company/'.$company->id.'/'.$company->npwp_file;
-                    $headers = array(
-                      'Content-Type: application/octet-stream',
-                    );
-
-                    return Response::file($file, $headers);
+                   
+                    return Response::download($file);
                     break;
 
                 case 'siup':
                     $file = public_path().'/media/company/'.$company->id.'/'.$company->siup_file;
-                    $headers = array(
-                      'Content-Type: application/octet-stream',
-                    );
-
-                    return Response::file($file, $headers);
+                    
+                    return Response::download($file);
                     break;
 
                 case 'qs':
                     $file = public_path().'/media/company/'.$company->id.'/'.$company->qs_certificate_file;
-                    $headers = array(
-                      'Content-Type: application/octet-stream',
-                    );
-
-                    return Response::file($file, $headers);
+                    
+                    return Response::download($file);
                     break;
             }
         }

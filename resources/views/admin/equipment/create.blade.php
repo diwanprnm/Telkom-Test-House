@@ -160,7 +160,7 @@
 									<div class="col-md-2">
 										<div class="form-group">
 											<label>
-												PIC *
+												PIC Customer *
 											</label>
 											<input type="text" name="pic" class="form-control" placeholder="Nama penanggung jawab ..." required>
 										</div>

@@ -49,6 +49,22 @@
 									<textarea type="text" name="address" class="form-control" placeholder="Alamat Perusahaan" required></textarea>
 								</div>
 							</div>
+	                        <div class="col-md-6">
+								<div class="form-group">
+									<label>
+										PLG_ID *
+									</label>
+									<input type="text" name="plg_id" class="form-control" placeholder="PLG_ID" required>
+								</div>
+							</div>
+	                        <div class="col-md-6">
+								<div class="form-group">
+									<label>
+										NIB *
+									</label>
+									<input type="text" name="nib" class="form-control" placeholder="NIB" required>
+								</div>
+							</div>
 	                        <div class="col-md-12">
 								<div class="form-group">
 									<label>

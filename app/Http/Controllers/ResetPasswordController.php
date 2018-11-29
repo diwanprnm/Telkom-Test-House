@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Password;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Encryption\DecryptException;
 
+use App\User;
+
 class ResetPasswordController extends Controller
 {
     // use RedirectsUsers;
@@ -66,7 +68,18 @@ class ResetPasswordController extends Controller
      */
     public function postEmail(Request $request)
     {
-		return $this->sendResetLinkEmail($request);
+		$email = $request->input('email');
+    	if(isset($email)){
+    		$email_exists = $this->cekEmail($email);
+		 	if($email_exists == 1){ 
+    			return $this->sendResetLinkEmail($request);
+    		}else{
+				return redirect()->back()->with(['status'=>true,'message'=>"Email Doesn't Exists"]);
+    		}
+    		
+    	}else{
+			return redirect()->back()->with(['status'=>false,'message'=>"Email Is Required"]);
+    	}
     }
 
     /**
@@ -97,14 +110,29 @@ class ResetPasswordController extends Controller
 	
 	public function sendResetLinkEmail(Request $request)
     {
+		$email = $request->input('email');
+		$user = User::where('email','=',''.$email.'')->first();
+		
 		$now = strtotime(date('Ymdhis'));
 		$time = strtotime("+1 hour",$now);
 		$encryptedValue = Crypt::encrypt($time);
 		// /* $this->validateSendResetLinkEmail($request); */
-		Mail::send('client.emails.password', array('token' => $encryptedValue, 'email' => $request->get('email')), function ($m) use ($request){
+		Mail::send('client.emails.password', array('token' => $encryptedValue, 'email' => $request->get('email')), function ($m) use ($user){
         // /* Mail::send('emails.reminder', ['user' => $user], function ($m) use ($user) { */
-            $m->to($request->get('email'))->subject('Update Password Web QA!');
+            $m->to($user->email)->subject('Update Password Web QA!');
         });
+		
+		if($user->email2!=NULL){
+			Mail::send('client.emails.password', array('token' => $encryptedValue, 'email' => $request->get('email')), function ($m) use ($user){
+				$m->to($user->email2)->subject('Update Password Web QA!');
+			});
+		}
+		
+		if($user->email3!=NULL){
+			Mail::send('client.emails.password', array('token' => $encryptedValue, 'email' => $request->get('email')), function ($m) use ($user){
+				$m->to($user->email3)->subject('Update Password Web QA!');
+			});
+		}
 		
 		return redirect()->back()->with('status', $request->get('email'));
     }
@@ -269,7 +297,7 @@ class ResetPasswordController extends Controller
 		";
 		$data_update_user = DB::update($query_update_user);
 		
-		return redirect('/')->with('error_code', 5);
+		return redirect('/login')->with('send_new_password', 5);
     }
 
     /**
@@ -380,5 +408,11 @@ class ResetPasswordController extends Controller
     protected function getGuard()
     {
         return property_exists($this, 'guard') ? $this->guard : null;
+    }
+	
+	function cekEmail($email)
+    {
+		$user = User::where('email','=',''.$email.'')->get();
+		return count($user);
     }
 }

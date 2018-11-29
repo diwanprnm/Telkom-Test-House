@@ -17,6 +17,15 @@
 								{{ trans('translate.notification_after_register') }}
 							</div>
 						</div>
+					@elseif(session()->has('send_new_password'))
+						<div class="alert alert-info" role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							  <span aria-hidden="true">&times;</span>
+							</button>
+							<div style="text-align:center">
+								{{ trans('translate.notification_after_reset_password') }}
+							</div>
+						</div>
 					@endif
 					<div class="panel panel-default nobottommargin divcenter" style="max-width: 500px;">
 						<div class="panel-body" style="padding: 40px;"> 

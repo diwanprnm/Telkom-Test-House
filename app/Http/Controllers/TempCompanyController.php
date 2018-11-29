@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -44,6 +45,11 @@ class TempCompanyController extends Controller
             $paginate = 10;
             $search = trim($request->input('search'));
             $status = '';
+            $before = null;
+            $after = null;
+
+            $sort_by = 'updated_at';
+            $sort_type = 'desc';
 			
 			$query = TempCompany::whereNotNull('created_at')
 						->with('user')
@@ -59,15 +65,32 @@ class TempCompanyController extends Controller
 						// })
 						;
                 });
-            }else{
-                if ($request->has('is_commited')){
-                    $status = $request->get('is_commited');
-					if($request->input('is_commited') != 'all'){
-						$query->where('is_commited', $request->get('is_commited'));
-					}
-                }
             }
-                $companies = $query->orderBy('updated_at', 'desc')->paginate($paginate);
+            if ($request->has('is_commited')){
+                $status = $request->get('is_commited');
+				if($request->input('is_commited') != 'all'){
+					$query->where('is_commited', $request->get('is_commited'));
+				}
+            }
+
+            if ($request->has('before_date')){
+                $query->where(DB::raw('DATE(created_at)'), '<=', $request->get('before_date'));
+                $before = $request->get('before_date');
+            }
+
+            if ($request->has('after_date')){
+                $query->where(DB::raw('DATE(created_at)'), '>=', $request->get('after_date'));
+                $after = $request->get('after_date');
+            }
+
+            if ($request->has('sort_by')){
+                $sort_by = $request->get('sort_by');
+            }
+            if ($request->has('sort_type')){
+                $sort_type = $request->get('sort_type');
+            }
+
+                $companies = $query->orderBy($sort_by, $sort_type)->paginate($paginate);
 			
             if (count($companies) == 0){
                 $message = 'Data not found';
@@ -77,7 +100,11 @@ class TempCompanyController extends Controller
                 ->with('message', $message)
                 ->with('data', $companies)
                 ->with('search', $search)
-                ->with('status', $status);
+                ->with('status', $status)
+                ->with('before_date', $before)
+                ->with('after_date', $after)
+                ->with('sort_by', $sort_by)
+                ->with('sort_type', $sort_type);
         }
     }
 
@@ -156,8 +183,14 @@ class TempCompanyController extends Controller
 			if ($request->has('name')){
 				$company->name = $request->input('name');
 			}
-			if ($request->has('address')){
-				$company->address = $request->input('address');
+            if ($request->has('address')){
+                $company->address = $request->input('address');
+            }
+            if ($request->has('plg_id')){
+                $company->plg_id = $request->input('plg_id');
+            }
+			if ($request->has('nib')){
+				$company->nib = $request->input('nib');
 			}
 			if ($request->has('city')){
 				$company->city = $request->input('city');
@@ -179,9 +212,11 @@ class TempCompanyController extends Controller
 			}
 			if ($request->has('npwp_file')) {
 				$npwp_file = public_path().'/media/company/'.$company->id.'/'.$company->npwp_file;
-				$npwp_file_temp = public_path().'/media/tempcompany/'.$company->id.'/'.$id.'/'.$tempcompany->npwp_file;
+				$npwp_file_temp = 
+public_path().'/media/tempCompany/'.$company->id.'/'.$id.'/'.$tempcompany->npwp_file;
 				$npwp_file_now = public_path().'/media/company/'.$company->id.'/'.$tempcompany->npwp_file;
-				if(copy($npwp_file_temp,$npwp_file_now)){
+				
+if(copy($npwp_file_temp,$npwp_file_now)){
 					$company->npwp_file = $request->input('npwp_file');
 					if (File::exists($npwp_file)){File::delete($npwp_file);}
 				}else{
@@ -197,7 +232,8 @@ class TempCompanyController extends Controller
 			}
 			if ($request->has('siup_file')) {
 				$siup_file = public_path().'/media/company/'.$company->id.'/'.$company->siup_file;
-				$siup_file_temp = public_path().'/media/tempcompany/'.$company->id.'/'.$id.'/'.$tempcompany->siup_file;
+				$siup_file_temp = 
+public_path().'/media/tempCompany/'.$company->id.'/'.$id.'/'.$tempcompany->siup_file;
 				$siup_file_now = public_path().'/media/company/'.$company->id.'/'.$tempcompany->siup_file;
 				if(copy($siup_file_temp,$siup_file_now)){
 					$company->siup_file = $request->input('siup_file');
@@ -215,7 +251,8 @@ class TempCompanyController extends Controller
 			}
 			if ($request->has('qs_certificate_file')) {
 				$qs_certificate_file = public_path().'/media/company/'.$company->id.'/'.$company->qs_certificate_file;
-				$qs_certificate_file_temp = public_path().'/media/tempcompany/'.$company->id.'/'.$id.'/'.$tempcompany->qs_certificate_file;
+				$qs_certificate_file_temp = 
+public_path().'/media/tempCompany/'.$company->id.'/'.$id.'/'.$tempcompany->qs_certificate_file;
 				$qs_certificate_file_now = public_path().'/media/company/'.$company->id.'/'.$tempcompany->qs_certificate_file;
 				if(copy($qs_certificate_file_temp,$qs_certificate_file_now)){
 					$company->qs_certificate_file = $request->input('qs_certificate_file');

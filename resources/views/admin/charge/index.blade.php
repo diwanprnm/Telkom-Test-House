@@ -24,7 +24,12 @@
 		<div class="container-fluid container-fullw bg-white">
 	        <div class="row">
 	        	<div class="col-md-6">
-	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1"><i class="ti-filter"></i> Filter</a>
+	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><i class="ti-filter"></i> Filter</a>
+	    		<!-- excel -->
+					<!-- <button id="excel" type="submit" class="btn btn-info pull-left">
+	                    Export to Excel
+	                </button> -->
+	    		<!-- end excel -->
 				</div>
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table">
@@ -85,21 +90,21 @@
 											Status
 										</label>
 										<select id="is_active" name="is_active" class="cs-select cs-skin-elastic" required>
-											@if ($status == -1)
+											@if ($status == '-1')
 												<option value="-1" disabled selected>Select...</option>
 											@endif
-											@if($status == -2)
+											@if($status == '-2')
                                                 <option value="-2" selected>All</option>
 											@else
                                                 <option value="-2">All</option>
                                             @endif
-											@if ($status == 1)
+											@if ($status == '1')
 												<option value="1" selected>Active</option>
 											@else
 												<option value="1">Active</option>
 											@endif
 											
-											@if ($status == 0)
+											@if ($status == '0')
 												<option value="0" selected>Not Active</option>
 											@else
 												<option value="0">Not Active</option>
@@ -147,8 +152,8 @@
 									<th class="center">Kategori</th>
 									<th class="center">Durasi (Hari)</th>
 									<th class="center">Biaya QA (Rp.)</th>
-									<th class="center">Biaya TA (Rp.)</th>
 									<th class="center">Biaya VT (Rp.)</th>
+									<th class="center">Biaya TA (Rp.)</th>
 									<th class="center">Status</th>
                                     <th class="center">Aksi</th>
 								</tr>
@@ -279,6 +284,24 @@
 			}
 				params['search'] = search_value;
 			document.location.href = baseUrl+'/admin/charge?'+jQuery.param(params);
+	    };
+
+	    document.getElementById("excel").onclick = function() {
+            var baseUrl = "{{URL::to('/')}}";
+            var params = {};
+			var search_value = document.getElementById("search_value").value;
+            var category = document.getElementById("category");
+            var status = document.getElementById("is_active");
+			var catValue = category.options[category.selectedIndex].value;
+			var statusValue = status.options[status.selectedIndex].value;
+			if (catValue != ''){
+				params['category'] = catValue;
+			}
+			if (statusValue != ''){
+				params['is_active'] = statusValue;
+			}
+				params['search'] = search_value;
+			document.location.href = baseUrl+'/charge/excel?'+jQuery.param(params);
 	    };
 	});
 </script>

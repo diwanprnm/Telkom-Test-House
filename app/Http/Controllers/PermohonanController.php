@@ -24,6 +24,7 @@ use App\Feedback;
 use App\ExaminationHistory;
 use App\Footer;
 use App\Question;
+use App\AdminRole;
 
 
 use Ramsey\Uuid\Uuid;
@@ -160,6 +161,12 @@ class PermohonanController extends Controller
 		$alamat_perusahaan = 
 			// $request->input('alamat_perusahaan');
 			$request->input('f1-alamat-perusahaan');
+		$plg_id_perusahaan = 
+			// $request->input('plg_id_perusahaan');
+			$request->input('f1-plg_id-perusahaan');
+		$nib_perusahaan = 
+			// $request->input('nib_perusahaan');
+			$request->input('f1-nib-perusahaan');
 		$telepon_perusahaan = 
 			// $request->input('telepon_perusahaan');
 			$request->input('f1-telepon-perusahaan');
@@ -230,6 +237,8 @@ class PermohonanController extends Controller
 				'jns_perusahaan' => $jns_perusahaan,
 				'nama_perusahaan' => $nama_perusahaan,
 				'alamat_perusahaan' => $alamat_perusahaan,
+				'plg_id_perusahaan' => $plg_id_perusahaan,
+				'nib_perusahaan' => $nib_perusahaan,
 				'telepon_perusahaan' => $telepon_perusahaan,
 				'faksimile_perusahaan' => $faksimile_perusahaan,
 				'email_perusahaan' => $email_perusahaan,
@@ -428,7 +437,8 @@ class PermohonanController extends Controller
 			// case QA
 			$res = explode('/',$request->input('path_ref'));   
 			$fuploadrefuji_name = $res[count($res)-1];
-			file_put_contents($path_file.'/'.$fuploadrefuji_name, file_get_contents($request->input('path_ref')));
+				$url = str_replace(" ", "%20", $request->input('path_ref'));
+			file_put_contents($path_file.'/'.$fuploadrefuji_name, file_get_contents($url));
 		}
 		
 		if($jns_pengujian == 1 and $jns_perusahaan !='Pabrikan'){
@@ -502,9 +512,14 @@ class PermohonanController extends Controller
 			]);
 		}
 		
+		$plg_id = $request->input('f1-plg_id-perusahaan') ? $request->input('f1-plg_id-perusahaan') : '-' ;
+		$nib = $request->input('f1-nib-perusahaan') ? $request->input('f1-nib-perusahaan') : '-' ;
+
 		$query_update = "UPDATE companies
 			SET 
 				npwp_file = '".$fuploadnpwp_name."',
+				plg_id = '".$plg_id."',
+				nib = '".$nib."',
 				siup_number = '".$no_siupp."',
 				siup_file = '".$fuploadsiupp_name."',
 				siup_date = '".date("Y-m-d", strtotime($tgl_siupp))."',
@@ -534,30 +549,31 @@ class PermohonanController extends Controller
 
 
 		/* push notif*/
-		
-	  $data= array( 
-        "from"=>$currentUser->id,
-        "to"=>"admin",
-        "message"=>"Permohonan Baru",
-        "url"=>"examination/".$exam_id."/edit",
-        "is_read"=>0,
-        "created_at"=>date("Y-m-d H:i:s"),
-        "updated_at"=>date("Y-m-d H:i:s")
-      );
-	  $notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
-      $notification->from = $data['from'];
-      $notification->to = $data['to'];
-      $notification->message = $data['message'];
-      $notification->url = $data['url'];
-      $notification->is_read = $data['is_read'];
-      $notification->created_at = $data['created_at'];
-      $notification->updated_at = $data['updated_at'];
-      $notification->save();
+		$admins = AdminRole::where('registration_status',1)->get()->toArray();
+		foreach ($admins as $admin) { 
+			$data= array( 
+		        "from"=>$currentUser->id,
+		        "to"=>$admin['user_id'],
+		        "message"=>"Permohonan Baru",
+		        "url"=>"examination/".$exam_id."/edit",
+		        "is_read"=>0,
+		        "created_at"=>date("Y-m-d H:i:s"),
+		        "updated_at"=>date("Y-m-d H:i:s")
+		    );
+			$notification = new NotificationTable();
+			$notification->id = Uuid::uuid4();
+		    $notification->from = $data['from'];
+		    $notification->to = $data['to'];
+		    $notification->message = $data['message'];
+		    $notification->url = $data['url'];
+		    $notification->is_read = $data['is_read'];
+		    $notification->created_at = $data['created_at'];
+		    $notification->updated_at = $data['updated_at'];
+		    $notification->save();
 
-      $data['id'] = $notification->id;
-      event(new Notification($data)); 
-
+		    $data['id'] = $notification->id;
+		    event(new Notification($data)); 
+		} 
 	}
 	
 	public function sendProgressEmail($message)
@@ -612,6 +628,12 @@ $notification->id = Uuid::uuid4();
 		$alamat_perusahaan = 
 			// $request->input('alamat_perusahaan');
 			$request->input('f1-alamat-perusahaan');
+		$plg_id_perusahaan = 
+			// $request->input('plg_id_perusahaan');
+			$request->input('f1-plg_id-perusahaan');
+		$nib_perusahaan = 
+			// $request->input('nib_perusahaan');
+			$request->input('f1-nib-perusahaan');
 		$telepon_perusahaan = 
 			// $request->input('telepon_perusahaan');
 			$request->input('f1-telepon-perusahaan');
@@ -734,13 +756,17 @@ $notification->id = Uuid::uuid4();
             }
 		}else{
 
-			if ($request->input('old_ref') != $referensi_perangkat) {
+			/*if ($request->input('old_ref') != $referensi_perangkat and $jns_pengujian == 1) {
 				$res = explode('/',$request->input('path_ref'));
 				$fuploadrefuji_name = $res[count($res)-1];
-				file_put_contents($path_file.'/'.$fuploadrefuji_name, file_get_contents($request->input('path_ref')));
-			} else{
+
+				file_put_contents($path_file.'/'.$fuploadrefuji_name, file_get_contents($path_file.'/'.$request->input('path_ref')));
+					
+					// $url = str_replace(" ", "%20", $path_file.'/'.$request->input('path_ref'));
+				// file_put_contents($path_file.'/'.$fuploadrefuji_name, file_get_contents($url));	
+			} else{*/
 				$fuploadrefuji_name = $request->input('hide_ref_uji_file');
-			}
+			// }
 		}
 		if($jns_pengujian == 1 and $jns_perusahaan !='Pabrikan'){
 			if ($request->hasFile('fuploadprinsipal')) {
@@ -800,6 +826,8 @@ $notification->id = Uuid::uuid4();
 				'jns_perusahaan' => $jns_perusahaan,
 				'nama_perusahaan' => $nama_perusahaan,
 				'alamat_perusahaan' => $alamat_perusahaan,
+				'plg_id_perusahaan' => $plg_id_perusahaan,
+				'nib_perusahaan' => $nib_perusahaan,
 				'telepon_perusahaan' => $telepon_perusahaan,
 				'faksimile_perusahaan' => $faksimile_perusahaan,
 				'email_perusahaan' => $email_perusahaan,
@@ -877,9 +905,14 @@ $notification->id = Uuid::uuid4();
 		";
 		$data_update_dll = DB::update($query_update_dll);
 		
+		$plg_id = $request->input('f1-plg_id-perusahaan') ? $request->input('f1-plg_id-perusahaan') : '-' ;
+		$nib = $request->input('f1-nib-perusahaan') ? $request->input('f1-nib-perusahaan') : '-' ;
+
 		$query_update_companie = "UPDATE companies
 			SET 
 				npwp_file = '".$fuploadnpwp_name."',
+				plg_id = '".$plg_id."',
+				nib = '".$nib."',
 				siup_number = '".$no_siupp."',
 				siup_file = '".$fuploadsiupp_name."',
 				siup_date = '".date("Y-m-d", strtotime($tgl_siupp))."',
@@ -924,7 +957,7 @@ $notification->id = Uuid::uuid4();
 	public function uploadEdit(Request $request){
 		$currentUser = Auth::user();
 		$user_id = ''.$currentUser['attributes']['id'].'';
-		$exam_id = $request->session()->get('exam_id_edit');
+		$exam_id = $request->get('hide_exam_id');
 		$path_file = public_path().'/media/examination/'.$exam_id.'';
 		/*$ext_file = $request->file('fuploaddetailpengujian_edit')->getClientOriginalName();
 		$name_file = uniqid().'_file_.'.$ext_file;*/
@@ -948,6 +981,7 @@ $notification->id = Uuid::uuid4();
 				AND	e.examination_type_id = '".$request->input('jnsPelanggan')."'
 				AND	d.name = '".$request->input('nama_perangkat')."'
 				AND	d.model = '".$request->input('model_perangkat')."'
+				AND	d.mark = '".$request->input('merk_perangkat')."'
 				";
 		$data = DB::select($query);
 		if(count($data) == 1){
@@ -1040,10 +1074,16 @@ $notification->id = Uuid::uuid4();
             $feedback->save();
 
             $currentUser = Auth::user();
+			if($currentUser){
+				$id_user = $currentUser->id;
+			}else{
+				$id_user = $feedback->email;
+			}
+			
 			$data= array( 
-	        "from"=>$currentUser->id,
+	        "from"=>$id_user,
 	        "to"=>"admin",
-	        "message"=>$email." mengirim feedback ",
+	        "message"=>$feedback->email." mengirim feedback ",
 	        "url"=>"feedback/".$feedback->id.'/reply',
 	        "is_read"=>0,
 	        "created_at"=>date("Y-m-d H:i:s"),
@@ -1068,7 +1108,7 @@ $notification->id = Uuid::uuid4();
         } catch(Exception $e){
             Session::flash('error_feedback', 'Send failed');
         }
-            return redirect('/#contact1');
+            // return back();
 	}
 	
 	public function sendFeedbackEmail($email,$subject,$message,$question)
