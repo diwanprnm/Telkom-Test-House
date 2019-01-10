@@ -7,14 +7,14 @@
 		<section id="page-title">
 			<div class="row">
 				<div class="col-sm-8">
-					<h1 class="mainTitle">Data Penjualan</h1>
+					<h1 class="mainTitle">Rekap Pembelian STEL</h1>
 				</div>
 				<ol class="breadcrumb">
 					<li>
 						<span>Beranda</span>
 					</li>
 					<li class="active">
-						<span>Data Penjualan</span>
+						<span>Rekap Pembelian STEL</span>
 					</li>
 				</ol>
 			</div>
@@ -148,11 +148,39 @@
 									<th class="center">Total</th>
 									<th class="center">Status</th>
 									<th class="center">Payment Method</th> 
+									<th class="center">Document Code</th> 
 									<th class="center" colspan="2">Action</th>  
 								</tr>
 							</thead>
 							<tbody> 
+								@php $no = 1; $stels_sales_id = array(); @endphp
 								@foreach($data as $keys => $item)
+									@php 
+										$stels_sales_id[$no] = $item->id;
+										$no++;
+									@endphp
+								@endforeach
+								@php 
+									$stels_sales_id[$no] = "";
+									$count = 0;
+									$no = 0;
+									$data_stel_name = "";
+									$data_stel_code = "";
+								@endphp
+								@foreach($data as $keys => $item)
+									@php 
+										$no++; 
+										if($data_stel_name == ""){
+											$data_stel_name = $item->stel_name;
+											$data_stel_code = $item->stel_code;
+										}else{
+											$data_stel_name = $data_stel_name.", ".$item->stel_name;
+											$data_stel_code = $data_stel_code.", ".$item->stel_code;
+										}
+
+										if($item->id != $stels_sales_id[$no+1]){
+											$count++;
+									@endphp
 									<tr>
 										<td class="center">{{++$keys}}</td> 
 										<td class="center">{{ $item->company_name }}</td>
@@ -182,6 +210,7 @@
 
 										</td>
 										<td class="center">{{ ($item->payment_method == 1)?'ATM':'Kartu Kredit'}}</td> 
+										<td class="center">{{ $data_stel_code }}</td>
 										<td class="center">
 											<div>
 												<a href="{{URL::to('admin/sales/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
@@ -199,6 +228,11 @@
 												<a href="{{URL::to('admin/sales/'.$item->id)}}" class="btn btn-wide btn-primary btn-margin" tooltip-placement="top" tooltip="Detail">Detail </a>
 											</div>
 										</td>
+										@php 
+											$data_stel_name = "";
+											$data_stel_code = ""; 
+										}
+										@endphp
 									</tr> 
 								@endforeach
                             </tbody>

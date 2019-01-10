@@ -30,8 +30,7 @@
 	        <div class="row">
 	        	<div class="col-md-6">
 	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><i class="ti-filter"></i> Filter</a>
-	    			<!--<a class="btn btn-info pull-left" id="excel" href="{{URL::to('examination/excel')}}"> Export to Excel</a> -->
-	    			<button id="excel" type="submit" class="btn btn-info pull-left" style="display:none;">
+	    			<button id="excel" type="submit" class="btn btn-info pull-left">
                         Export to Excel
                     </button>
 				</div>

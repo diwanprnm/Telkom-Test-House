@@ -7,14 +7,14 @@
 		<section id="page-title">
 			<div class="row">
 				<div class="col-sm-8">
-					<h1 class="mainTitle">Feedback</h1>
+					<h1 class="mainTitle">Questions and Answers (QnA)</h1>
 				</div>
 				<ol class="breadcrumb">
 					<li>
 						<span>Beranda</span>
 					</li>
 					<li class="active">
-						<span>Feedback</span>
+						<span>Questions and Answers (QnA)</span>
 					</li>
 				</ol>
 			</div>

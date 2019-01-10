@@ -124,7 +124,8 @@ class ExaminationController extends Controller
 					->orWhereHas('examinationLab', function ($q) use ($search){
 							return $q->where('name', 'like', '%'.strtolower($search).'%');
 						})
-					->orWhere('function_test_NO', 'like', '%'.strtolower($search).'%');
+					->orWhere('function_test_NO', 'like', '%'.strtolower($search).'%')
+					->orWhere('spk_code', 'like', '%'.strtolower($search).'%');
                 });
 
                 $logs = new Logs;
@@ -1551,6 +1552,7 @@ class ExaminationController extends Controller
                     $device->status = $request->input('certificate_status');
                     $device->valid_from = $request->input('valid_from');
                     $device->valid_thru = $request->input('valid_thru');
+                    $device->cert_number = $request->input('cert_number');
 
                     $device->save();
                 }

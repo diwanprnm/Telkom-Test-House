@@ -1190,6 +1190,14 @@
 									<div class="col-md-6">
 										<div class="form-group">
 											<label>
+												Nomor Sertifikat *
+											</label>
+												<input type="text" name="cert_number" id="cert_number" class="form-control" placeholder="Nomor Sertifikat" value="{{ $data->device->cert_number }}" readonly/>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>
 												Tanggal *
 											</label>
 											<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">

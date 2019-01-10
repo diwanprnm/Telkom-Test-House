@@ -1897,7 +1897,7 @@
 											<label>
 												Sertifikat File *
 											</label>
-											<input type="file" name="certificate_file" class="form-control" accept="application/pdf, image/*"/>
+											<input type="file" name="certificate_file" class="form-control" accept="application/pdf, image/*" required />
 										</div>
 										<div class="form-group">
 										@if($data->certificate_status)
@@ -1905,6 +1905,14 @@
 												<a href="{{URL::to('/admin/examination/media/download/'.$data->device_id.'/certificate')}}"> Download Certificate {{ $data->device->cert_number }}</a>
 											@endif
 										@endif
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>
+												Nomor Sertifikat *
+											</label>
+												<input type="text" name="cert_number" id="cert_number" class="form-control" placeholder="Nomor Sertifikat" value="{{ $data->device->cert_number }}" required>
 										</div>
 									</div>
 									<div class="col-md-6">

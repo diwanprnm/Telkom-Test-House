@@ -118,7 +118,7 @@
 					<td>
 						<div class="form-group">
 							<!-- <textarea class="form-control" rows="1" name="biaya" required>{{ $price }},-</textarea> -->
-							<input type="number" class="form-control" name="biaya[]" id="biaya1" value="{{ $price }}" required>
+							<input type="number" class="form-control biaya" name="biaya[]" id="biaya1" value="{{ $price }}" required>
 						</div>
 					</td>
 				</tr>
@@ -148,7 +148,7 @@
 						</td>
 						<td>
 							<div class="form-group">
-								<input type="number" class="form-control" name="biaya2[]" id="biaya2" value="0" required>
+								<input type="number" class="form-control biaya" name="biaya2[]" id="biaya2" value="0" required>
 							</div>
 						</td>
 					</tr>
@@ -156,6 +156,16 @@
 			</tbody>
 			<tbody class="tes_append2"></tbody>
 		</table>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group">
+					<label>
+						Total Biaya *
+					</label>
+						<input type="text" name="total_biaya" id="total_biaya" class="form-control" value="{{ $price + ($price*0.1) }}" readonly="" />
+				</div>
+			</div>
+		</div>
 	</fieldset>
 		<div class="row">
 			<div class="col-md-12">
@@ -260,17 +270,38 @@
 					bahan_append += '</td>'
 					bahan_append += '<td>'
 					bahan_append += '<div class="form-group">'
-						bahan_append += '<input type="number" class="form-control" name="biaya[]" required>'
+						bahan_append += '<input type="number" class="form-control biaya" name="biaya[]" required>'
 					bahan_append += '</div>'
 					bahan_append += '</td>'
 					bahan_append += '<td style="width:40px;"><a  style="width:40px;" value="Delete" class="del btn btn-danger btn-flat" onclick="destroy('+hitung+')"><i id="icon_add" class="fa-cross fa fa-remove"/></a></td>'
 			bahan_append += '</tr>'
 
 			$('.tes_append').append(bahan_append);
+			changeTotal();
 		}
 		function destroy(a)
 		{
 			$("#hapus_"+a+"").remove();
+			arr_biaya = [];
+			arr_biaya2 = [];
+			total_biaya = 0;
+			ppn = 0;
+
+    		var biaya = document.getElementsByName("biaya[]");
+            for (i = 0; i < biaya.length; i++) {
+				arr_biaya[i] = biaya[i].value
+				total_biaya += Number(arr_biaya[i]);
+			}
+			ppn = 0.1*total_biaya;
+			total_biaya += ppn;
+
+			var biaya2 = document.getElementsByName("biaya2[]");
+			for (i = 0; i < biaya2.length; i++) {
+				arr_biaya2[i] = biaya2[i].value
+				total_biaya += Number(arr_biaya2[i]);
+			}
+
+            $('#total_biaya').val(total_biaya);
 		}
 		
 			var hitung2 = 0;
@@ -284,17 +315,38 @@
 						bahan_append += '</td>'
 						bahan_append += '<td>'
 						bahan_append += '<div class="form-group">'
-							bahan_append += '<input type="number" class="form-control" name="biaya2[]" required>'
+							bahan_append += '<input type="number" class="form-control biaya" name="biaya2[]" required>'
 						bahan_append += '</div>'
 						bahan_append += '</td>'
 						bahan_append += '<td style="width:40px;"><a  style="width:40px;" value="Delete" class="del btn btn-danger btn-flat" onclick="destroy2('+hitung2+')"><i id="icon_add" class="fa-cross fa fa-remove"/></a></td>'
 				bahan_append += '</tr>'
 
 				$('.tes_append2').append(bahan_append);
+				changeTotal();
 			}
 			function destroy2(a)
 			{
 				$("#hapus2_"+a+"").remove();
+				arr_biaya = [];
+				arr_biaya2 = [];
+				total_biaya = 0;
+				ppn = 0;
+
+        		var biaya = document.getElementsByName("biaya[]");
+	            for (i = 0; i < biaya.length; i++) {
+					arr_biaya[i] = biaya[i].value
+					total_biaya += Number(arr_biaya[i]);
+				}
+				ppn = 0.1*total_biaya;
+				total_biaya += ppn;
+
+				var biaya2 = document.getElementsByName("biaya2[]");
+				for (i = 0; i < biaya2.length; i++) {
+					arr_biaya2[i] = biaya2[i].value
+					total_biaya += Number(arr_biaya2[i]);
+				}
+
+	            $('#total_biaya').val(total_biaya);
 			}
 			
 		$('.generate-button').click(function () {
@@ -359,7 +411,33 @@
 		
         jQuery(document).ready(function() {
             Main.init();
+            changeTotal();
         });
+
+        function changeTotal(){
+        	$('.biaya').on('keyup',function(){
+        		arr_biaya = [];
+				arr_biaya2 = [];
+				total_biaya = 0;
+				ppn = 0;
+
+        		var biaya = document.getElementsByName("biaya[]");
+	            for (i = 0; i < biaya.length; i++) {
+					arr_biaya[i] = biaya[i].value
+					total_biaya += Number(arr_biaya[i]);
+				}
+				ppn = 0.1*total_biaya;
+				total_biaya += ppn;
+
+				var biaya2 = document.getElementsByName("biaya2[]");
+				for (i = 0; i < biaya2.length; i++) {
+					arr_biaya2[i] = biaya2[i].value
+					total_biaya += Number(arr_biaya2[i]);
+				}
+
+	            $('#total_biaya').val(total_biaya);
+	        });
+        }
 		
 		function pops(jumlah,spb_number,spb_date){
 			textcontent=opener.document.getElementById("exam_price").value;

@@ -47,13 +47,17 @@ class SalesController extends Controller
             $select = array(
                 "logs.action","logs.page","logs.created_at as search_date","users.name"
             );
-            $select = array("stels_sales.id","stels_sales.created_at","stels_sales.invoice","stels_sales.payment_status","stels_sales.payment_method","stels_sales.total","stels_sales.cust_price_payment","companies.name as company_name"); 
+            $select = array("stels_sales.id","stels_sales.created_at","stels_sales.invoice","stels_sales.payment_status","stels_sales.payment_method","stels_sales.total","stels_sales.cust_price_payment","companies.name as company_name","stels.name as stel_name","stels.code as stel_code"); 
+
+            $dataSales = STELSales::select($select)->whereNotNull('stels_sales.created_at')
+                        ->join("users","users.id","=","stels_sales.user_id")
+                        ->join("companies","users.company_id","=","companies.id")
+                        ->join("stels_sales_detail","stels_sales_detail.stels_sales_id","=","stels_sales.id")
+                        ->join("stels","stels.id","=","stels_sales_detail.stels_id");
+            
             if ($search != null){
             
-                $dataSales = STELSales::select($select)
-                			->join("users","users.id","=","stels_sales.user_id")
-                            ->join("companies","users.company_id","=","companies.id")
-                            ->where('invoice','like','%'.$search.'%')
+                $dataSales = $dataSales->where('invoice','like','%'.$search.'%')
                             ->orWhere('companies.name', 'like', '%'.$search.'%');
 
                 $logs = new Logs;
@@ -66,11 +70,8 @@ class SalesController extends Controller
                 $logs->page = "Sales";
                 $logs->save();
 
-            }else{
-                $dataSales = STELSales::select($select)->whereNotNull('stels_sales.created_at')
-                            ->join("users","users.id","=","stels_sales.user_id")
-                            ->join("companies","users.company_id","=","companies.id");
             }
+
              if ($request->has('payment_status')){
                 $payment_status = $request->get('payment_status');
                 if($request->input('payment_status') != 'all'){

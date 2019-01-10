@@ -24,11 +24,11 @@
 		<div class="container-fluid container-fullw bg-white">
 			<div class="row">
 			<!-- excel -->
-				<!-- <div class="col-md-6" style="margin-bottom: 10px;">
+				<div class="col-md-6" style="margin-bottom: 10px;">
 	    			<button id="excel" type="submit" class="btn btn-info pull-left">
                         Export to Excel
                     </button>
-				</div> -->
+				</div>
 			<!-- end excel -->
 				<div class="col-md-12">
 					<div class="table-responsive">

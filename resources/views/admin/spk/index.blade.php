@@ -157,6 +157,30 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
+											Lab
+										</label>
+										<select id="lab" name="lab" class="cs-select cs-skin-elastic" required>
+											@if($filterLab == '')
+												<option value="" disabled selected>Select...</option>
+											@endif
+											@if($filterLab == 'all')
+                                                <option value="all" selected>All</option>
+											@else
+                                                <option value="all">All</option>
+                                            @endif
+											@foreach($lab as $item)
+												@if($item->lab_code == $filterLab)
+													<option value="{{ $item->lab_code }}" selected>{{ $item->name }}</option>
+												@else
+													<option value="{{ $item->lab_code }}">{{ $item->name }}</option>
+												@endif
+											@endforeach
+										</select>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
 											Sort by :
 										</label>
 										<select id="sort_by" name="sort_by" class="cs-select cs-skin-elastic" required>
@@ -350,7 +374,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								<?php echo $data->appends(array('search' => $search,'before_date' => $before_date,'after_date' => $after_date,'type' => $filterType,'spk' => $filterSpk,'company' => $filterCompany,'sort_by' => $sort_by,'sort_type' => $sort_type))->links(); ?>
+								<?php echo $data->appends(array('search' => $search,'before_date' => $before_date,'after_date' => $after_date,'type' => $filterType,'spk' => $filterSpk,'company' => $filterCompany,'lab' => $filterLab,'sort_by' => $sort_by,'sort_type' => $sort_type))->links(); ?>
 							</div>
 						</div>
 					</div>
@@ -415,6 +439,8 @@
 			var typeValue = type.options[type.selectedIndex].value;
 			var company = document.getElementById("company");
 			var companyValue = company.options[company.selectedIndex].value;
+			var lab = document.getElementById("lab");
+			var labValue = lab.options[lab.selectedIndex].value;
 
 			var sort_by = document.getElementById("sort_by");
 			var sort_byValue = sort_by.options[sort_by.selectedIndex].value;
@@ -437,6 +463,9 @@
 			}
 			if (companyValue != ''){
 				params['company'] = companyValue;
+			}
+			if (labValue != ''){
+				params['lab'] = labValue;
 			}
 			
 			if (sort_byValue != ''){
@@ -462,6 +491,8 @@
 			var typeValue = type.options[type.selectedIndex].value;
 			var company = document.getElementById("company");
 			var companyValue = company.options[company.selectedIndex].value;
+			var lab = document.getElementById("lab");
+			var labValue = lab.options[lab.selectedIndex].value;
 			
 			var sort_by = document.getElementById("sort_by");
 			var sort_byValue = sort_by.options[sort_by.selectedIndex].value;
@@ -484,6 +515,9 @@
 			}
 			if (companyValue != ''){
 				params['company'] = companyValue;
+			}
+			if (labValue != ''){
+				params['lab'] = labValue;
 			}
 			
 			if (sort_byValue != ''){

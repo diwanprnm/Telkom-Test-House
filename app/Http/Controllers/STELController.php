@@ -46,48 +46,55 @@ class STELController extends Controller
             $paginate = 10;
             $search = trim($request->input('search'));
             $category = '';
+            $year = '';
             $status = -1;
 
             $examLab = ExaminationLab::all();
             
+            $query = STEL::whereNotNull('created_at')->with('examinationLab');
+
+            $tahun = STEL::whereNotNull('created_at')->with('examinationLab')->select('year')->orderBy('year','desc')->distinct()->get();
+
             if ($search != null){
-                $stels = STEL::whereNotNull('created_at')
-                    ->with('examinationLab')
-                    ->where('name','like','%'.$search.'%')
-                    ->orWhere('code','like','%'.$search.'%')
-                    ->orderBy('code')
-                    ->paginate($paginate);
+                $query->where(function($qry) use($search){
+                    $qry->where('name', 'like', '%'.strtolower($search).'%')
+                    ->orWhere('code', 'like', '%'.strtolower($search).'%');
+                });
 
-                    $logs = new Logs;
-                    $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                    $logs->action = "Search STEL";
-                    $datasearch = array("search"=>$search);
-                    $logs->data = json_encode($datasearch);
-                    $logs->created_by = $currentUser->id;
-                    $logs->page = "STEL";
-                    $logs->save();
-            }else{
-                $query = STEL::whereNotNull('created_at')->with('examinationLab');
-
-                if ($request->has('category')){
-                    $category = $request->get('category');
-					if($request->input('category') != 'all'){
-						$query->whereHas('examinationLab', function ($q) use ($category){
-                            return $q->where('id', $category);
-                        });
-					}
-                }
-
-                if ($request->has('is_active')){
-                    $status = $request->get('is_active');
-                    if ($request->get('is_active') > -1){
-						$query->where('is_active', $request->get('is_active'));
-                    }
-                }
-                
-                $stels = $query->orderBy('name')
-                            ->paginate($paginate);
+                $logs = new Logs;
+                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
+                $logs->action = "Search STEL";
+                $datasearch = array("search"=>$search);
+                $logs->data = json_encode($datasearch);
+                $logs->created_by = $currentUser->id;
+                $logs->page = "STEL";
+                $logs->save();
             }
+            
+            if ($request->has('category')){
+                $category = $request->get('category');
+				if($request->input('category') != 'all'){
+					$query->whereHas('examinationLab', function ($q) use ($category){
+                        return $q->where('id', $category);
+                    });
+				}
+            }
+
+            if ($request->has('year')){
+                if($request->input('year') != 'all'){
+                    $year = $request->get('year');
+                    $query->where('year', $request->get('year'));
+                }
+            }
+
+            if ($request->has('is_active')){
+                $status = $request->get('is_active');
+                if ($request->get('is_active') > -1){
+					$query->where('is_active', $request->get('is_active'));
+                }
+            }
+                
+            $stels = $query->orderBy('name')->paginate($paginate);
             
             if (count($stels) == 0){
                 $message = 'Data not found';
@@ -99,6 +106,8 @@ class STELController extends Controller
                 ->with('data', $stels)
                 ->with('search', $search)
                 ->with('category', $category)
+                ->with('tahun', $tahun)
+                ->with('year', $year)
                 ->with('status', $status);
         }
     }

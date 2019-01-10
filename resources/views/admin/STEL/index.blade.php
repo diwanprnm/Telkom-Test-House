@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+<style type="text/css">
+	.chosen-container.chosen-container-single {
+		width: 100% !important;
+	}   
+</style>
 <div class="main-content" >
 	<div class="wrap-content container" id="container">
 		<!-- start: PAGE TITLE -->
@@ -66,6 +71,32 @@
 									</select>
 									</div>
 								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Tahun
+										</label>
+										<select class="form-control" id="year" name="year" class="chosen-year">
+											@if ($year == '')
+												<option value="" disabled selected>Select...</option>
+											@endif
+											@if($year == 'all')
+                                                <option value="all" selected>All</option>
+											@else
+                                                <option value="all">All</option>
+                                            @endif
+                                            @foreach ($tahun as $dataTahun)
+                                            	@if ($year == $dataTahun->year)
+													<option value="{{$dataTahun->year}}" selected>{{$dataTahun->year}}</option>
+												@else
+													<option value="{{$dataTahun->year}}">{{$dataTahun->year}}</option>
+												@endif
+											@endforeach
+									</select>
+									</div>
+								</div>
+							</div>
+							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
@@ -179,7 +210,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								<?php echo $data->appends(array('search' => $search,'category' => $category,'is_active' => $status))->links(); ?>
+								<?php echo $data->appends(array('search' => $search,'category' => $category,'year' => $year,'is_active' => $status))->links(); ?>
 							</div>
 						</div>
 					</div>
@@ -201,6 +232,14 @@
 <script src={{ asset("vendor/bootstrap-datepicker/bootstrap-datepicker.min.js") }}></script>
 <script src={{ asset("vendor/bootstrap-timepicker/bootstrap-timepicker.min.js") }}></script>
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
+<script src={{ asset("assets/js/form-elements.js") }}></script>
+<script type="text/javascript">
+	jQuery(document).ready(function() {
+		FormElements.init();
+	});
+	$('#year').chosen();
+	$('#year').trigger("chosen:updated");
+</script>
 <script type="text/javascript">
 	$( function() {
 		$( "#search_value" ).autocomplete({
@@ -259,11 +298,16 @@
             var params = {};
 			var search_value = document.getElementById("search_value").value;
             var category = document.getElementById("category");
+            var year = document.getElementById("year");
             var status = document.getElementById("is_active");
 			var catValue = category.options[category.selectedIndex].value;
+			var yearValue = year.options[year.selectedIndex].value;
 			var statusValue = status.options[status.selectedIndex].value;
 			if (catValue != ''){
 				params['category'] = catValue;
+			}
+			if (yearValue != ''){
+				params['year'] = yearValue;
 			}
 			if (statusValue != ''){
 				params['is_active'] = statusValue;
@@ -277,6 +321,7 @@
             var params = {};
 			var search_value = document.getElementById("search_value").value;
 			var category = document.getElementById("category");
+			var year = document.getElementById("year");
             var status = document.getElementById("is_active");
 			var catValue = category.options[category.selectedIndex].value;
 			var statusValue = status.options[status.selectedIndex].value;
@@ -285,6 +330,9 @@
 			
 			if (catValue != ''){
 				params['category'] = catValue;
+			}
+			if (yearValue != ''){
+				params['year'] = yearValue;
 			}
 			if (statusValue != ''){
 				params['is_active'] = statusValue;

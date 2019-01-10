@@ -26,9 +26,9 @@
 	        	<div class="col-md-6">
 	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><i class="ti-filter"></i> Filter</a>
 	    		<!-- excel -->
-					<!-- <button id="excel" type="submit" class="btn btn-info pull-left">
+					<button id="excel" type="submit" class="btn btn-info pull-left">
 	                    Export to Excel
-	                </button> -->
+	                </button>
 	    		<!-- end excel -->
 				</div>
 				<div class="col-md-6">

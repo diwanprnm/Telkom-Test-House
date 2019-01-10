@@ -11,6 +11,7 @@ use Auth;
 use Session;
 
 use App\ExaminationType;
+use App\ExaminationLab;
 use App\Company;
 use App\TbMSPK;
 use App\TbHSPK;
@@ -52,12 +53,14 @@ class SPKController extends Controller
             $filterSpk = '';
             $type = '';
             $filterCompany = '';
+            $lab = '';
 
             $sort_by = 'spk_date';
             $sort_type = 'desc';
 
             $examType = ExaminationType::all();
             $companies = Company::where('id','!=', 1)->get();
+            $examLab = ExaminationLab::all();
 
             $query = TbMSPK::select(DB::raw('tb_m_spk.*, examinations.spk_date as spk_date, examination_labs.name as lab_name, examination_types.description as TESTING_TYPE_DESC'))
                         ->join("examinations","examinations.id","=","tb_m_spk.ID")
@@ -115,6 +118,13 @@ class SPKController extends Controller
                 }
             }
 
+            if ($request->has('lab')){
+                $lab = $request->get('lab');
+                if($request->input('lab') != 'all'){
+                    $query->where('tb_m_spk.LAB_CODE', $request->get('lab'));
+                }
+            }
+
             if ($request->has('sort_by')){
                 $sort_by = $request->get('sort_by');
             }
@@ -141,6 +151,8 @@ class SPKController extends Controller
                 ->with('filterType', $type)
                 ->with('company', $companies)
                 ->with('filterCompany', $filterCompany)
+                ->with('lab', $examLab)
+                ->with('filterLab', $lab)
                 ->with('sort_by', $sort_by)
                 ->with('sort_type', $sort_type);
         }

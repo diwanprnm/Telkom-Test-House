@@ -7,14 +7,14 @@
 		<section id="page-title">
 			<div class="row">
 				<div class="col-sm-8">
-					<h1 class="mainTitle">Pendapatan</h1>
+					<h1 class="mainTitle">Rekap Pengujian Perangkat</h1>
 				</div>
 				<ol class="breadcrumb">
 					<li>
 						<span>Beranda</span>
 					</li>
 					<li class="active">
-						<span>Pendapatan</span>
+						<span>Rekap Pengujian Perangkat</span>
 					</li>
 				</ol>
 			</div>
