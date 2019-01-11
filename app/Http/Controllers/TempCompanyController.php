@@ -212,8 +212,7 @@ class TempCompanyController extends Controller
 			}
 			if ($request->has('npwp_file')) {
 				$npwp_file = public_path().'/media/company/'.$company->id.'/'.$company->npwp_file;
-				$npwp_file_temp = 
-public_path().'/media/tempCompany/'.$company->id.'/'.$id.'/'.$tempcompany->npwp_file;
+				$npwp_file_temp = public_path().'/media/tempCompany/'.$company->id.'/'.$id.'/'.$tempcompany->npwp_file;
 				$npwp_file_now = public_path().'/media/company/'.$company->id.'/'.$tempcompany->npwp_file;
 				
 if(copy($npwp_file_temp,$npwp_file_now)){
@@ -232,8 +231,7 @@ if(copy($npwp_file_temp,$npwp_file_now)){
 			}
 			if ($request->has('siup_file')) {
 				$siup_file = public_path().'/media/company/'.$company->id.'/'.$company->siup_file;
-				$siup_file_temp = 
-public_path().'/media/tempCompany/'.$company->id.'/'.$id.'/'.$tempcompany->siup_file;
+				$siup_file_temp = public_path().'/media/tempCompany/'.$company->id.'/'.$id.'/'.$tempcompany->siup_file;
 				$siup_file_now = public_path().'/media/company/'.$company->id.'/'.$tempcompany->siup_file;
 				if(copy($siup_file_temp,$siup_file_now)){
 					$company->siup_file = $request->input('siup_file');
@@ -251,8 +249,7 @@ public_path().'/media/tempCompany/'.$company->id.'/'.$id.'/'.$tempcompany->siup_
 			}
 			if ($request->has('qs_certificate_file')) {
 				$qs_certificate_file = public_path().'/media/company/'.$company->id.'/'.$company->qs_certificate_file;
-				$qs_certificate_file_temp = 
-public_path().'/media/tempCompany/'.$company->id.'/'.$id.'/'.$tempcompany->qs_certificate_file;
+				$qs_certificate_file_temp = public_path().'/media/tempCompany/'.$company->id.'/'.$id.'/'.$tempcompany->qs_certificate_file;
 				$qs_certificate_file_now = public_path().'/media/company/'.$company->id.'/'.$tempcompany->qs_certificate_file;
 				if(copy($qs_certificate_file_temp,$qs_certificate_file_now)){
 					$company->qs_certificate_file = $request->input('qs_certificate_file');
@@ -287,7 +284,7 @@ public_path().'/media/tempCompany/'.$company->id.'/'.$id.'/'.$tempcompany->qs_ce
     public function destroy($id)
     {
         $company = TempCompany::find($id);
-		$file = public_path().'/media/tempcompany/'.$company->company_id.'/'.$id;
+		$file = public_path().'/media/tempCompany/'.$company->company_id.'/'.$id;
 
         if ($company){
             try{
@@ -310,7 +307,7 @@ public_path().'/media/tempCompany/'.$company->id.'/'.$id.'/'.$tempcompany->qs_ce
         if ($company){
             switch ($name) {
                 case 'npwp':
-                    $file = public_path().'/media/tempcompany/'.$company->company_id.'/'.$company->id.'/'.$company->npwp_file;
+                    $file = public_path().'/media/tempCompany/'.$company->company_id.'/'.$company->id.'/'.$company->npwp_file;
                     $headers = array(
                       'Content-Type: application/octet-stream',
                     );
@@ -319,7 +316,7 @@ public_path().'/media/tempCompany/'.$company->id.'/'.$id.'/'.$tempcompany->qs_ce
                     break;
 
                 case 'siup':
-                    $file = public_path().'/media/tempcompany/'.$company->company_id.'/'.$company->id.'/'.$company->siup_file;
+                    $file = public_path().'/media/tempCompany/'.$company->company_id.'/'.$company->id.'/'.$company->siup_file;
                     $headers = array(
                       'Content-Type: application/octet-stream',
                     );
@@ -328,7 +325,7 @@ public_path().'/media/tempCompany/'.$company->id.'/'.$id.'/'.$tempcompany->qs_ce
                     break;
 
                 case 'qs':
-                    $file = public_path().'/media/tempcompany/'.$company->company_id.'/'.$company->id.'/'.$company->qs_certificate_file;
+                    $file = public_path().'/media/tempCompany/'.$company->company_id.'/'.$company->id.'/'.$company->qs_certificate_file;
                     $headers = array(
                       'Content-Type: application/octet-stream',
                     );
