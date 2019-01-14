@@ -1033,14 +1033,17 @@ class PengujianController extends Controller
 		$examination = Examination::find($id);
 		$currentUser = Auth::user();
 		$user_id = ''.$currentUser['attributes']['id'].'';
+		$company_id = ''.$currentUser['attributes']['company_id'].'';
         if ($currentUser){
             $message = null;
             $paginate = 2;
             $search = trim($request->input('search'));
             
 			$data = DB::table('examination_attachments')
+				->join('examinations', 'examination_attachments.examination_id', '=', 'examinations.id')
 				->where('examination_id', '=', ''.$id.'')
-				->where('created_by', '=', ''.$user_id.'')
+				// ->where('created_by', '=', ''.$user_id.'')
+				->where('examinations.company_id', '=', ''.$company_id.'')
 				->where('name', '=', 'File Pembayaran')
 				->first();
 
