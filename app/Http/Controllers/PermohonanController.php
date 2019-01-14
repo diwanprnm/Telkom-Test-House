@@ -438,7 +438,7 @@ class PermohonanController extends Controller
 			$res = explode('/',$request->input('path_ref'));   
 			$fuploadrefuji_name = $res[count($res)-1];
 				$url = str_replace(" ", "%20", $request->input('path_ref'));
-			file_put_contents($path_file.'/'.$fuploadrefuji_name, file_get_contents($url));
+			file_put_contents($path_file.'/'.$fuploadrefuji_name, @fopen($url,'r'));
 		}
 		
 		if($jns_pengujian == 1 and $jns_perusahaan !='Pabrikan'){
