@@ -1040,6 +1040,7 @@ class PengujianController extends Controller
             $search = trim($request->input('search'));
             
 			$data = DB::table('examination_attachments')
+				->select('examination_attachments.*')
 				->join('examinations', 'examination_attachments.examination_id', '=', 'examinations.id')
 				->where('examination_id', '=', ''.$id.'')
 				// ->where('created_by', '=', ''.$user_id.'')
