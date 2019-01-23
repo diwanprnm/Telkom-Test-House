@@ -129,11 +129,9 @@
                                     <td class="center">{{ $item->created_at }}</td>
                                     @if($item->registration_status != 1)
                                         <td class="center"><span class="label label-sm label-warning">Konfirmasi Registrasi oleh Admin</span></td>
-                                    @endif
-                                    @if($item->registration_status == 1 && $item->function_status == 1 && $item->contract_status == 1 && $item->spb_status != 1)
+                                    @elseif($item->registration_status == 1 && $item->function_status == 1 && $item->contract_status == 1 && $item->spb_status != 1)
                                         <td class="center"><span class="label label-sm label-info">Menunggu SPB</span></td>
-                                    @endif
-                                    @if($item->registration_status == 1 && $item->function_status == 1 && $item->contract_status == 1 && $item->spb_status == 1 && $item->payment_status != 1)
+                                    @elseif($item->registration_status == 1 && $item->function_status == 1 && $item->contract_status == 1 && $item->spb_status == 1 && $item->payment_status != 1)
                                         @foreach($item->media as $media)
                                             @if($media->name == 'File Pembayaran' && $media->attachment !='')
                                                 <?php $status_pembayaran = 1; break; ?>
@@ -147,6 +145,8 @@
                                         @else
                                             <td class="center"><span class="label label-sm label-danger">Menunggu Pembayaran oleh User</span></td>
                                         @endif
+                                    @else
+                                        <td class="center"><span class="label label-sm label-primary">Uji Fungsi atau Tinjauan Kontrak</span></td>
                                     @endif
                                     <td class="center">
                                         <div>
