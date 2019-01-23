@@ -417,7 +417,7 @@
 									</select>
 								</div>
 							</div>
-							<div class="col-md-12">
+							<!-- <div class="col-md-12">
 								<div class="form-group">
 									<label>
 										Kelengkapan Registrasi
@@ -426,7 +426,7 @@
 										: {{ $data->company->keterangan }}
 									</label>
 								</div>
-							</div>
+							</div> -->
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
