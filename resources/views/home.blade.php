@@ -130,10 +130,10 @@
                                     @if($item->registration_status != 1)
                                         <td class="center"><span class="label label-sm label-warning">Konfirmasi Registrasi oleh Admin</span></td>
                                     @endif
-                                    @if($item->registration_status == 1 && $item->spb_status != 1)
+                                    @if($item->registration_status == 1 && $item->function_status == 1 && $item->contract_status == 1 && $item->spb_status != 1)
                                         <td class="center"><span class="label label-sm label-info">Menunggu SPB</span></td>
                                     @endif
-                                    @if($item->spb_status == 1 && $item->payment_status != 1)
+                                    @if($item->registration_status == 1 && $item->function_status == 1 && $item->contract_status == 1 && $item->spb_status == 1 && $item->payment_status != 1)
                                         @foreach($item->media as $media)
                                             @if($media->name == 'File Pembayaran' && $media->attachment !='')
                                                 <?php $status_pembayaran = 1; break; ?>
