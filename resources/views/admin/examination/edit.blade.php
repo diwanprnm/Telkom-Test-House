@@ -1210,72 +1210,68 @@
 								}
 							?>
 							<div class="col-md-12">
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>
-											Tanggal Approve Manager Lab
-										</label>
-										<label>
-											: {{ $exam_schedule->data[0]->startTestDt }}
-										</label>
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>
-											Target Selesai Uji
-										</label>
-										<label>
-											: {{ $exam_schedule->data[0]->targetDt }}
-										</label>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-12">
 								<div class="form-group">
-									<label>
-										Sisa Waktu Pengujian
-									</label>
-									<label>
-										: {{ $sisa_spk }} hari
-									</label>
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th colspan="4">Riwayat Pelaksanaan Uji</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>Tanggal Approve Manager Lab</td>
+												<td>Target Selesai Uji</td>
+												<td>Sisa Waktu Pengujian</td>
+											</tr>
+											<tr>
+												<td>
+													<strong>{{ $exam_schedule->data[0]->startTestDt }}</strong>
+												</td>
+												<td>
+													<strong>{{ $exam_schedule->data[0]->targetDt }}</strong>
+												</td>
+												<td>
+													<strong>{{ $sisa_spk }} hari</strong>
+												</td>
+											</tr>
+										</tbody>
+									</table>
 								</div>
-							</div>
+							</div>	
 							@if(count($data_lab)>0)
 								<div class="col-md-12">
 									<div class="form-group">
-										<label>
+										<label for="form-field-select-2">
 											Barang pindah dari Gudang ke Lab tanggal : {{ $data_lab[0]->action_date }}
 										</label>
 									</div>
 								</div>
 							@endif
 							<div class="col-md-12">
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>
-											Mulai Uji oleh Test Engineer
-										</label>
-										<label>
-											: {{ $exam_schedule->data[0]->actualStartTestDt }}
-										</label>
-									</div>
+								<div class="form-group">
+									<table class="table table-bordered">
+										<tbody>
+											<tr>
+												<td>Mulai Uji oleh Test Engineer</td>
+												<td>Selesai Uji oleh Test Engineer</td>
+											</tr>
+											<tr>
+												<td>
+													<strong>{{ $exam_schedule->data[0]->actualStartTestDt }}</strong>
+												</td>
+												<td>
+													<strong>{{ $exam_schedule->data[0]->actualFinishTestDt }}</strong>
+												</td>
+											</tr>
+										</tbody>
+									</table>
 								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>
-											Selesai Uji oleh Test Engineer
-										</label>
-										<label>
-											: {{ $exam_schedule->data[0]->actualFinishTestDt }}
-										</label>
-									</div>
-								</div>
-								@if(count($data_gudang)>1)
+							</div>
+							@if(count($data_gudang)>1)
 								<div class="col-md-12">
 									<div class="form-group">
-										<label>
-											Barang pindah dari Lab ke Gudang 
+										<label for="form-field-select-2"> 
+											Barang pindah dari Lab ke Gudang tanggal : 
 											@if($data_gudang[0]->action_date != NULL AND $data_gudang[0]->action_date != '0000-00-00')
 												tanggal : {{ $data_gudang[0]->action_date }}
 											@endif
@@ -1301,8 +1297,7 @@
 										</p>
 									</div>
 								</div>
-								@endif
-							</div>
+							@endif
 						@endif						
 							<div class="col-md-12">
 								<div class="form-group">

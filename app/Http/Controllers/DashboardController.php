@@ -113,14 +113,14 @@ class DashboardController extends Controller
 		if ($request->has('status')){
 			switch ($request->get('status')) {
 				case 1:
-					$query->where('registration_status', '!=', 1);
+					$query->where('registration_status', '!=', '1');
 					$status = 1;
 					break;
 				case 2:
                     $query->where('registration_status', 1);
                     $query->where('function_status', 1);
                     $query->where('contract_status', 1);
-                    $query->where('spb_status', '!=', 1);
+                    $query->where('spb_status', '!=', '1');
                     $status = 2;
                     break;
                 case 3:
@@ -128,7 +128,7 @@ class DashboardController extends Controller
                     $query->where('function_status', 1);
                     $query->where('contract_status', 1);
                     $query->where('spb_status', 1);
-                    $query->where('payment_status', '!=', 1);
+                    $query->where('payment_status', '!=', '1');
                     $status = 3;
                     break;
                 case 4:
