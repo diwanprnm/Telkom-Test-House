@@ -8,6 +8,7 @@ class TbMSPK extends Model
 {
     protected $table = "tb_m_spk";
     public $incrementing = false;
+    public $timestamps = false;
 
     public function examination()
     {
