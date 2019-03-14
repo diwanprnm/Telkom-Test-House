@@ -2219,16 +2219,16 @@ class PDF_MC_Table_Permohonan extends FPDF{
 		$this->Ln(4);
 		$this->SetFont('helvetica','',8);
 		if($this->param1 == 'QA'){
-			$this->Cell(185,5,"IAS02/F/001 Versi 01",0,0,'R');		
+			$this->Cell(185,5,"TLKM02/F/001 Versi 01",0,0,'R');		
 		}
 		else if($this->param1 == 'TA'){
-			$this->Cell(185,5,"IAS02/F/002 Versi 01",0,0,'R');		
+			$this->Cell(185,5,"TLKM02/F/002 Versi 01",0,0,'R');		
 		}
 		else if($this->param1 == 'VT'){
-			$this->Cell(185,5,"IAS02/F/003 Versi 01",0,0,'R');		
+			$this->Cell(185,5,"TLKM02/F/003 Versi 01",0,0,'R');		
 		}
 		else if($this->param1 == 'CAL'){
-			$this->Cell(185,5,"IAS02/F/004 Versi 01",0,0,'R');		
+			$this->Cell(185,5,"TLKM02/F/004 Versi 01",0,0,'R');		
 		}
 		/*//Position at 1.5 cm from bottom
 		$this->SetY(-6);
