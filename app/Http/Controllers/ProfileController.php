@@ -412,7 +412,8 @@ class ProfileController extends Controller
 				// ->withInput($request->all());
 			// }
 			if($request->input('newPass') == $request->input('confnewPass')){
-				$password = $request->input('newPass');
+				// $password = $request->input('newPass');
+				$hashedPassword = Hash::make($request->input('newPass'));
 			}
 			else{
 				return redirect()->back()
@@ -458,7 +459,7 @@ class ProfileController extends Controller
 					'phone_number' => ''.$request->input('phone').'', 
 					'fax' => ''.$request->input('fax').'', 
 					'email' => ''.$request->input('email').'', 
-					'password' => ''.bcrypt($password).'', 
+					'password' => ''.$hashedPassword.'', 
 					'is_active' => 0, 
 					'remember_token' => ''.Str::random(60).'', 
 					'created_by' => ''.$user_id.'', 
@@ -595,7 +596,8 @@ class ProfileController extends Controller
 					->withInput($request->all());
 				}
 				if($request->input('newPass') == $request->input('confnewPass')){
-					$password = $request->input('newPass');
+					// $password = $request->input('newPass');
+					$hashedPassword = Hash::make($request->input('newPass'));
 				}
 				else{
 					return redirect()->back()
@@ -642,7 +644,7 @@ class ProfileController extends Controller
 						'phone_number' => ''.$request->input('phone').'', 
 						'fax' => ''.$request->input('fax').'', 
 						'email' => ''.$request->input('email').'', 
-						'password' => ''.bcrypt($password).'', 
+						'password' => ''.$hashedPassword.'', 
 						'is_active' => 0, 
 						'remember_token' => ''.Str::random(60).'', 
 						'created_by' => ''.$user_id.'', 
