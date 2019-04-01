@@ -42,7 +42,6 @@ class AdminOnly
                 return $next($request);
             }else{
                 return redirect('admin/login')
-                ->withInput($request->only($this->email()))
                 ->withErrors('email');
             }
         } elseif (Auth::guard($guard)->guest()) {
