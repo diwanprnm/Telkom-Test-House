@@ -58,7 +58,8 @@ class AuthController extends Controller
             return $this->sendLockoutResponse($request);
         }
         
-        $email_deleted = $this->cekDeleted($request->input('email'));
+        $email_deleted = 0;
+        // $email_deleted = $this->cekDeleted($request->input('email'));
         if($email_deleted == 0){
             $credentials = $this->getCredentials($request);
 
