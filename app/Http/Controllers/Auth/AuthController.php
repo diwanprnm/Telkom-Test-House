@@ -41,6 +41,40 @@ class AuthController extends Controller
         $this->middleware($this->guestMiddleware(), ['except' => 'logout']);
     }
 
+    public function login(Request $request)
+    {
+        $this->validateLogin($request);
+
+        // If the class is using the ThrottlesLogins trait, we can automatically throttle
+        // the login attempts for this application. We'll key this by the username and
+        // the IP address of the client making these requests into this application.
+        $throttles = $this->isUsingThrottlesLoginsTrait();
+
+        if ($throttles && $lockedOut = $this->hasTooManyLoginAttempts($request)) {
+            $this->fireLockoutEvent($request);
+
+            return $this->sendLockoutResponse($request);
+        }
+        
+        $email_deleted = $this->cekDeleted($request->input('email'));
+        if($email_deleted == 0){
+            $credentials = $this->getCredentials($request);
+
+            if (Auth::guard($this->getGuard())->attempt($credentials, $request->has('remember'))) {
+                return $this->handleUserWasAuthenticated($request, $throttles);
+            }
+        }
+
+        // If the login attempt was unsuccessful we will increment the number of attempts
+        // to login and redirect the user back to the login form. Of course, when this
+        // user surpasses their maximum number of attempts they will get locked out.
+        if ($throttles && ! $lockedOut) {
+            $this->incrementLoginAttempts($request);
+        }
+
+        return $this->sendFailedLoginResponse($request);
+    }
+
     /**
      * Get a validator for an incoming registration request.
      *
@@ -69,5 +103,26 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+    }
+
+    function cekDeleted($email)
+    {
+        $query = DB::table('users')
+        ->join('companies', function ($join) use ($email){
+            $join->on('users.company_id', '=', 'companies.id')
+                 ->where('users.email','=',''.$email.'');
+        });
+        $query->where(function($q){
+            $q->where('users.is_deleted', '=' , 1)
+                ->orWhere('users.is_active', '=' , 0);
+        });
+        $query->orWhere(function($q){
+            $q->where('companies.is_active', '=' , 0);
+        });
+        $user = $query->get();
+        // $user = $query->toSql();
+        // dd($user);exit;
+        
+        return count($user);
     }
 }
