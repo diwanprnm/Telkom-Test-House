@@ -39,7 +39,7 @@ class AdminOnly
 
 		if (auth()->check() && auth()->user()->role->id != 2) { 
             return $next($request);
-        } elseif (Auth::guard($guard)->guest() || auth()->user()->is_active == 0 || auth()->user()->is_deleted == 0) {
+        } elseif (Auth::guard($guard)->guest() || auth()->user()->is_active == 0 || auth()->user()->is_deleted == 1) {
             return redirect()->guest('admin/login');
         }
         return redirect()->back();
