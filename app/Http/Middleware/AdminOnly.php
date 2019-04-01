@@ -37,7 +37,7 @@ class AdminOnly
 
         $this->initTree();
 
-		if (auth()->check() && auth()->user()->role->id != 2) { 
+		if (auth()->check() && auth()->user()->role->id != 2 && (auth()->user()->is_active == 1 auth()->user()->is_deleted == 1)) { 
             return $next($request);
         } elseif (Auth::guard($guard)->guest()) {
             return redirect()->guest('admin/login');

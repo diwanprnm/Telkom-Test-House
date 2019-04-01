@@ -489,6 +489,7 @@ class UserinController extends Controller
         $oldData = $user;
         if ($user){
             try{
+                $user->is_active = 0;
 				$user->is_deleted = 1;
 				$user->deleted_by = $currentUser->id;
 				$user->deleted_at = ''.date('Y-m-d H:i:s').'';
