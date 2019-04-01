@@ -57,7 +57,8 @@ class UserinController extends Controller
                     ->with('company')
                     ->where('name','like','%'.$search.'%')
 					->where('role_id', '!=', '2')
-					->where('id', '<>', '1')
+                    ->where('id', '<>', '1')
+					->where('email', '<>', 'admin@mail.com')
 					->where('is_deleted', '=', '0')
                     ->orderBy('name')
                     ->paginate($paginate);
@@ -80,6 +81,7 @@ class UserinController extends Controller
                 $query = User::whereNotNull('created_at')
 					->where('role_id', '!=', '2')
 					->where('id', '<>', '1')
+                    ->where('email', '<>', 'admin@mail.com')
 					->where('is_deleted', '=', '0')
                     ->with('role')
                     ->with('company');
