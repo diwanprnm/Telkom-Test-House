@@ -78,7 +78,7 @@ class ExaminationNewChargeClientController extends Controller
                 }
             }
 
-			$examinationCharge = $query->orderBy('examination_charges.updated_at', 'desc')
+			$examinationCharge = $query->orderByRaw('examination_charges.category, examination_charges.device_name')
                     ->paginate($paginate);
             if (count($examinationCharge) == 0){
                 $message = 'Data not found';

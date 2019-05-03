@@ -72,7 +72,7 @@ class ExaminationChargeClientController extends Controller
                 }
             }
 
-			$examinationCharge = $query->orderBy('updated_at', 'desc')
+			$examinationCharge = $query->orderByRaw('category, device_name')
                     ->paginate($paginate);
             
             if (count($examinationCharge) == 0){
