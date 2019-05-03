@@ -48,15 +48,12 @@ class ExaminationNewChargeClientController extends Controller
 
             $newCharge = NewExaminationCharge::where("is_implement",0)->orderBy("valid_from","desc")->limit(1)->get();
             $dateNewCharge = date("j M Y", strtotime($newCharge[0]->valid_from));
-            $query = DB::table('examination_charges')
-                ->join('new_examination_charges_detail', 'examination_charges.id', '=', 'new_examination_charges_detail.examination_charges_id')
+            $query = DB::table('new_examination_charges_detail')
                 ->join('new_examination_charges', 'new_examination_charges_detail.new_exam_charges_id', '=', 'new_examination_charges.id')
-                ->where('examination_charges.is_active','=','1')
-                ->whereNotNull('examination_charges.created_at')
                 ->where('new_examination_charges.id','=',$newCharge[0]->id);
 
             if ($search != null){
-                $query = $query->where('examination_charges.device_name','like','%'.$search.'%');
+                $query = $query->where('new_examination_charges_detail.device_name','like','%'.$search.'%');
 
                     //$logs = new Logs;
                     //$currentUser = Auth::user();
@@ -78,7 +75,7 @@ class ExaminationNewChargeClientController extends Controller
                 }
             }
 
-			$examinationCharge = $query->orderByRaw('examination_charges.category, examination_charges.device_name')
+			$examinationCharge = $query->orderByRaw('new_examination_charges_detail.category, new_examination_charges_detail.device_name')
                     ->paginate($paginate);
             if (count($examinationCharge) == 0){
                 $message = 'Data not found';
