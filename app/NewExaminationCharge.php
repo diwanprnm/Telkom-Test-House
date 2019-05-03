@@ -13,6 +13,6 @@ class NewExaminationCharge extends Model
 
     public function newExaminationChargeDetail()
     {
-        return $this->hasMany('App\newExaminationChargeDetail', 'new_exam_charges_id');
+        return $this->hasMany('App\NewExaminationChargeDetail', 'new_exam_charges_id');
     }
 }
