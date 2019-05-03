@@ -7,7 +7,7 @@
 		<section id="page-title">
 			<div class="row">
 				<div class="col-sm-8">
-					<h1 class="mainTitle">Tambah Tarif Baru</h1>
+					<h1 class="mainTitle">Tambah Tarif</h1>
 				</div>
 				<ol class="breadcrumb">
 					<li>
@@ -35,7 +35,7 @@
 					{{ csrf_field() }}
     				<fieldset>
 						<legend>
-							Tambah Tarif Baru
+							Tambah Tarif
 						</legend>
 						<div class="row">
 							<div class="col-md-12">

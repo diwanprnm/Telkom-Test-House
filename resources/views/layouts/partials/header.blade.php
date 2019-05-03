@@ -60,7 +60,22 @@
                   <?php
                   }
                   ?>
-                  <li><a href="{{url('Chargeclient')}}">{{ trans('translate.charge') }}</a></li>
+                  <?php
+                  if(!empty($new_charge[0])){
+                  ?>
+                    <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ trans('translate.charge') }}</a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="{{url('Chargeclient')}}">{{ trans('translate.charge') }}</a></li>
+                            <li><a href="{{url('NewChargeclient')}}">{{ trans('translate.new_charge') }} <?php echo date("j M Y", strtotime($new_charge[0]->valid_from));?></a></li>
+                        </ul>
+                    </li>
+                  <?php
+                  }else{
+                  ?>
+                    <li><a href="{{url('Chargeclient')}}">{{ trans('translate.charge') }}</a></li>
+                  <?php
+                  }
+                  ?>
                 </ul>
               </li> 
               <li class=" {{ (!empty($page) && $page == 'Devclient') ?'current':''}}">

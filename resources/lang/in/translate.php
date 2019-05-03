@@ -109,6 +109,7 @@ return [
 	'stel_in_cart'     	=> 'Sudah ada di Keranjang Belanja',
 	'stel_buyed'     	=> 'Sudah dibeli',
     
+	'new_charge'   		=> 'Tarif Baru', // tariff
 	'charge'     		=> 'Tarif', // tariff
 	'charge_no'     	=> 'No',
 	'charge_stel'     	=> 'STEL',
@@ -393,4 +394,6 @@ return [
 
 	'payment_attach_sent' => 'Berkas Pembayaran Pengujian',
 	'an_email_has_been_sent' => 'Terima kasih, berkas pembayaran anda akan kami proses lebih lanjut.',
+
+	'charge_client_valid_from'	=> 'Berlaku mulai dari',
 ];

@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesResources;
 use Illuminate\Support\Facades\DB;
 use App\NotificationTable;
+use App\NewExaminationCharge;
 use Auth;
 
 class Controller extends BaseController
@@ -18,8 +19,8 @@ class Controller extends BaseController
 	{
         $query_footers = "SELECT * FROM footers WHERE is_active = 1";
 		$data_footers = DB::select($query_footers);
-            
-		if (count($data_footers) == 0){
+
+        if (count($data_footers) == 0){
 			$message_footers = "Data Not Found";
 		}
 			$currentUser = Auth::user(); 
@@ -32,5 +33,8 @@ class Controller extends BaseController
 				View()->share('notification_data_user', $dataNotification->toArray());
 				View()->share('notification_count', $countNotification);
 			}
+
+		$newCharge = NewExaminationCharge::where("is_implement",0)->orderBy("valid_from","desc")->get();
+		View()->share('new_charge', $newCharge);
 	}
 }

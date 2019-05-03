@@ -20,4 +20,9 @@ class ExaminationCharge extends Model
                 ->get();
         return $auto_complete_result;
     }
+
+    public function newExaminationChargeDetail()
+    {
+        return $this->hasMany('App\newExaminationChargeDetail');
+    }
 }

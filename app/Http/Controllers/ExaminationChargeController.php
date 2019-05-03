@@ -51,7 +51,7 @@ class ExaminationChargeController extends Controller
                 $examinationCharge = ExaminationCharge::whereNotNull('created_at')
                     ->where('device_name','like','%'.$search.'%')
                     ->orWhere('stel','like','%'.$search.'%')
-                    ->orderBy('device_name')
+                    ->orderByRaw('category, device_name')
                     ->paginate($paginate);
 
                     $logs = new Logs;
@@ -79,7 +79,7 @@ class ExaminationChargeController extends Controller
                     }
                 }
 
-                $examinationCharge = $query->orderBy('device_name')
+                $examinationCharge = $query->orderByRaw('category, device_name')
                                            ->paginate($paginate);
             }
             

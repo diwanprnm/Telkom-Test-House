@@ -108,6 +108,7 @@ return [
 	'stel_in_cart'     	=> 'Already in Cart',
 	'stel_buyed'     	=> 'Item Bought',
     
+	'new_charge'  		=> 'New Tariff',
 	'charge'     		=> 'Tariff',
 	'charge_no'     	=> 'No',
 	'charge_stel'     	=> 'STEL',
@@ -390,4 +391,6 @@ return [
 
 	'payment_attach_sent' => 'Upload Payment Attachment Sent',
 	'an_attach_has_been_sent' => 'Thank you, your payment will be processed further.',
+
+	'charge_client_valid_from'	=> 'Valid from',
 ];

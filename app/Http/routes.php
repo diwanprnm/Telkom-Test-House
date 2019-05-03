@@ -4279,6 +4279,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::resource('/examination', 'ExaminationController');
 	Route::resource('/stel', 'STELController');
 	Route::resource('/charge', 'ExaminationChargeController');
+	Route::resource('/newcharge', 'NewExaminationChargeController');
 	Route::resource('/calibration', 'CalibrationChargeController');
 	Route::resource('/company', 'CompanyController');
 	Route::resource('/user', 'UserController');
@@ -4408,6 +4409,8 @@ Route::resource('/STSELclient', 'STSELClientController');
 Route::get('/STSELclient', 'STSELClientController@index');
 Route::resource('/Chargeclient', 'ExaminationChargeClientController');
 Route::get('/Chargeclient', 'ExaminationChargeClientController@index');
+Route::resource('/NewChargeclient', 'ExaminationNewChargeClientController');
+Route::get('/NewChargeclient', 'ExaminationNewChargeClientController@index');
 Route::resource('/Devclient', 'DevClientController');
 Route::get('/Devclient', 'DevClientController@index');
 Route::get('/client/profile', 'ProfileController@index');
@@ -4423,6 +4426,7 @@ Route::post('/client/password/reset', 'ResetPasswordController@postReset');
 Route::post('/filterPengujian', 'PengujianController@filter');
 Route::post('/filterSTEL', 'STELClientController@filter');
 Route::post('/filterCharge', 'ExaminationChargeClientController@filter');
+Route::post('/filterNewCharge', 'ExaminationNewChargeClientController@filter');
 Route::get('/register', 'ProfileController@register');
 Route::post('/client/register', 'ProfileController@insert');
 Route::post('/checkRegisterEmail', 'ProfileController@checkRegisterEmail');
@@ -4437,6 +4441,7 @@ Route::get('mylogsbl', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index'
 Route::get('/stel_autocomplete/{query}', 'STELClientController@autocomplete')->name('stel_autocomplete');
 Route::get('/stsel_autocomplete/{query}', 'STSELClientController@autocomplete')->name('stsel_autocomplete');
 Route::get('/charge_client_autocomplete/{query}', 'ExaminationChargeClientController@autocomplete')->name('charge_client_autocomplete');
+Route::get('/new_charge_client_autocomplete/{query}', 'ExaminationNewChargeClientController@autocomplete')->name('new_charge_client_autocomplete');
 Route::get('/dev_client_autocomplete/{query}', 'DevClientController@autocomplete')->name('dev_client_autocomplete');
 Route::get('/pengujian_autocomplete/{query}', 'PengujianController@autocomplete')->name('pengujian_autocomplete');
  
