@@ -15,7 +15,7 @@ use Input;
 use App\Logs;
 use App\ExaminationCharge;
 use App\NewExaminationCharge;
-use App\newExaminationChargeDetail;
+use App\NewExaminationChargeDetail;
 
 use Excel;
 
