@@ -337,7 +337,7 @@ class NewExaminationChargeController extends Controller
 
         try{
             $charge->save();
-            // if($charge->is_implement == '1'){$this->implementNew($data);}
+            if($charge->is_implement == '1'){$this->implementNew($id);}
             Session::flash('message', 'New Charge successfully updated');
 
             $logs = new Logs;
@@ -484,5 +484,20 @@ class NewExaminationChargeController extends Controller
                 return redirect('/admin/newcharge/'.$id);
             }
         }
+    }
+
+    public function implementNew($id){
+        $newCharge = NewExaminationChargeDetail::where("new_exam_charges_id", $id)->get();
+        dd($newCharge[1]);
+        /* query dulu supaya data old di new_examination_charges_detail keisi */
+
+        /* ini sekarang stel sudah bebas pengisiannya, mau dirombak lagi beberapa data supaya bisa langsung keinput semua STEL dalam 1 row ? Mba Pipin */
+
+        /* lalu implement dengan cek examination_charges.id = new_examination_charges_detail.examination_charges_id */
+
+        /* if exist(){update device_name, stel, duration, category, price, vt_price, dan ta_price, updated_at, updated_by, is_active == 1} */
+        /* else(){insert device_name, stel, duration, category, price, vt_price, dan ta_price, created_at, created_by, updated_at, updated_by, is_active == 1} */
+
+        /* query id examination_charges yang tidak ada di new_examination_charges_detail, lalu dinonaktifkan (is_active == 0) */
     }
 }
