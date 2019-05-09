@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class NewExaminationChargeDetail extends Model
 {
     protected $table = "new_examination_charges_detail";
-    // public $incrementing = false;
+    public $incrementing = false;
 	public $timestamps = false;
 		
     public function newExaminationCharge()

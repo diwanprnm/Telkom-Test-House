@@ -168,7 +168,7 @@
 	                                    @endif
 	                                    <td class="center">
 											<div>
-												<a href="{{URL::to('admin/newcharge/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
+												<a href="{{URL::to('admin/newcharge/'.$item->id.'')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
 												@if($item->is_implement == '0')
 													{!! Form::open(array('url' => 'admin/newcharge/'.$item->id, 'method' => 'DELETE')) !!}
 														{!! csrf_field() !!}

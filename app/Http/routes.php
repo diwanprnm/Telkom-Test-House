@@ -4280,6 +4280,11 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::resource('/stel', 'STELController');
 	Route::resource('/charge', 'ExaminationChargeController');
 	Route::resource('/newcharge', 'NewExaminationChargeController');
+	Route::get('/newcharge/{id}/createDetail', 'NewExaminationChargeController@createDetail');
+	Route::post('/newcharge/{id}/postDetail', 'NewExaminationChargeController@postDetail');
+	Route::get('/newcharge/{id}/editDetail/{exam_id}', 'NewExaminationChargeController@editDetail');
+	Route::post('/newcharge/{id}/updateDetail/{exam_id}', 'NewExaminationChargeController@updateDetail');
+	Route::post('/newcharge/{id}/deleteDetail/{exam_id}', 'NewExaminationChargeController@deleteDetail');
 	Route::resource('/calibration', 'CalibrationChargeController');
 	Route::resource('/company', 'CompanyController');
 	Route::resource('/user', 'UserController');

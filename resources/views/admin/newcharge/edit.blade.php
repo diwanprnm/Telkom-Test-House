@@ -11,10 +11,13 @@
 				</div>
 				<ol class="breadcrumb">
 					<li>
-						<span>Beranda</span>
+						<span>Data Master</span>
 					</li>
 					<li>
-						<span>Tarif</span>
+						<span>Tarif Pengujian Baru</span>
+					</li>
+					<li>
+						<span>Detail</span>
 					</li>
 					<li class="active">
 						<span>Edit</span>
@@ -33,122 +36,113 @@
 							Edit Tarif Baru
 						</legend>
 						<div class="row">
-							<div class="col-md-6">
+							<div class="col-md-12">
 								<div class="form-group">
 									<label>
-										Nama *
+										Nama Perangkat *
 									</label>
-									<input type="text" name="name" class="form-control" placeholder="Nama" value="{{ $data->name }}" required>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>
-										Tanggal Penerapan *
-									</label>
-									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-										<input type="text" name="valid_from" class="form-control" value="{{ $data->valid_from }}" required="">
-										<span class="input-group-btn">
-											<button type="button" class="btn btn-default">
-												<i class="glyphicon glyphicon-calendar"></i>
-											</button>
-										</span>
-									</p>
+									<input type="text" name="device_name" class="form-control" placeholder="Nama Perangkat" value="{{ $data->device_name }}" required>
 								</div>
 							</div>
 	                        <div class="col-md-12">
 								<div class="form-group">
 									<label>
-										Deskripsi
+										Referensi Uji *
 									</label>
-									<textarea type="text" name="description" class="form-control" placeholder="Deskripsi ...">{{ $data->description }}</textarea>
+									<input type="text" name="stel" class="form-control" placeholder="STEL" value="{{ $data->stel }}" required>
 								</div>
 							</div>
-						</div>
-					</fieldset>
-					<fieldset>
-						<legend>
-							Daftar Tarif
-						</legend>
-						<!--  Buat PO Detail disini -->
+	                        <div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Kategori *
+									</label>
+									<select name="category" class="cs-select cs-skin-elastic" required>
+										@if($data->category == 'Lab Kabel')
+											<option value="Lab Kabel" selected>Lab Kabel</option>
+										@else
+											<option value="Lab Kabel">Lab Kabel</option>
+										@endif
 
-						<a class="btn btn-sm btn-primary" id="btn-add-data"><i class="fa fa-plus"></i> Tambah Data</a>
+										@if($data->category == 'Lab Transmisi')
+											<option value="Lab Transmisi" selected>Lab Transmisi</option>
+										@else
+											<option value="Lab Transmisi">Lab Transmisi</option>
+										@endif
 
-						<table class="table table-striped" id="table-data"> 
-							<thead>
-							  <th class="text-center" width="40%">Data</th>
-							  <th class="text-center">Biaya QA (Rp.)</th>
-							  <th class="text-center">Biaya VT (Rp.)</th>
-							  <th class="text-center">Biaya TA (Rp.)</th>
-							  <th class="text-center">Biaya Baru QA (Rp.)</th>
-							  <th class="text-center">Biaya Baru VT (Rp.)</th>
-							  <th class="text-center">Biaya Baru TA (Rp.)</th>
-							  <th class="text-center">Action</th>
-							</thead> 
-							<tbody id="container-data">
-							<?php $i = 0;?>
-							@foreach($data->newExaminationChargeDetail as $row)
-							  <?php $i += 1;?>
-							  <tr id="data_<?php echo $i?>">
-							    <td>
-							      <select name="examination_charges_id[]" class="examination_charges_id form-control" required>
-							        <option value="">Choose Data</option>
-							        @foreach($examinationCharge as $item)
-										<option value="{{$item->id}}" data-price="{{$item->price}}" data-vt_price="{{$item->vt_price}}" data-ta_price="{{$item->ta_price}}" <?php
-											if($row->examination_charges_id == $item->id){echo "selected";}
-										?>>{{$item->device_name}} || {{$item->stel}}</option>
-									@endforeach
-							      </select>
-							    </td>
-							    <td><input type="text" name="price[]" class="form-control txt-price" value="{{ $row->price }}" placeholder="Biaya QA (Rp.)" readonly></td>
-							    <td><input type="text" name="vt_price[]" class="form-control txt-vt_price" value="{{ $row->vt_price }}" placeholder="Biaya VT (Rp.)" readonly></td>
-							    <td><input type="text" name="ta_price[]" class="form-control txt-ta_price" value="{{ $row->ta_price }}" placeholder="Biaya TA (Rp.)" readonly></td>
-							    <td><input type="text" name="new_price[]" class="form-control txt-price" value="{{ $row->new_price }}" placeholder="Biaya Baru QA (Rp.)"></td>
-							    <td><input type="text" name="new_vt_price[]" class="form-control txt-vt_price" value="{{ $row->new_vt_price }}" placeholder="Biaya Baru VT (Rp.)"></td>
-							    <td><input type="text" name="new_ta_price[]" class="form-control txt-ta_price" value="{{ $row->new_ta_price }}" placeholder="Biaya Baru TA (Rp.)"></td>
-							    <td><div class="btn btn-sm btn-primary btn-danger btn-delete-data"><i class="fa fa-trash"></i> Delete</div></td>
-							  </tr>
-							@endforeach
-							</tbody>
-						</table>
+										@if($data->category == 'Lab Device')
+											<option value="Lab Device" selected>Lab Device</option>
+										@else
+											<option value="Lab Device">Lab Device</option>
+										@endif
 
-						<!--  End PO Detail -->
-
-						<div class="col-md-6">
-							<div class="form-group">
-								<label for="form-field-select-2">
-									Status *
-								</label>
-								<select name="is_implement" class="cs-select cs-skin-elastic" required>
-									@if($data->is_implement == '1')
-										<option value="0">Update</option>
-										<option value="1" selected>Implement</option>
-										<option value="-1">Cancel</option>
-									@elseif($data->is_implement == '0')
-										<option value="" disabled>Not Process</option>
-										<option value="0">Update</option>
-										<option value="1">Implement</option>
-										<option value="-1">Cancel</option>
-									@elseif($data->is_implement == '-1')
-										<option value="0">Update</option>
-										<option value="1">Implement</option>
-										<option value="-1" selected>Cancel</option>
-									@endif
-								</select>
+										@if($data->category == 'Lab Energi')
+											<option value="Lab Energi" selected>Lab Energi</option>
+										@else
+											<option value="Lab Energi">Lab Energi</option>
+										@endif
+									</select>
+								</div>
 							</div>
-						</div>
-                        <div class="col-md-12">
-                            @if($data->is_implement == '0')
+	                        <div class="col-md-6">
+								<div class="form-group">
+									<label>
+											Durasi (Hari) *
+									</label>
+									<input type="text" id="txt-duration" name="duration" class="form-control" placeholder="Durasi (Hari)" value="{{ $data->duration }}" required>
+								</div>
+							</div>
+	                        <div class="col-md-6">
+								<div class="form-group">
+									<label>
+											Biaya QA (Rp.) *
+									</label>
+									<input type="text" id="txt-price" name="price" class="form-control" placeholder="Biaya QA (Rp.)" value="{{ $data->price }}" required>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+											Biaya VT (Rp.) *
+									</label>
+									<input type="text" id="txt-vt_price" name="vt_price" class="form-control" placeholder="Biaya VT (Rp.)" value="{{ $data->vt_price }}" required>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+											Biaya TA (Rp.) *
+									</label>
+									<input type="text" id="txt-ta_price" name="ta_price" class="form-control" placeholder="Biaya TA (Rp.)" value="{{ $data->ta_price }}" required>
+								</div>
+							</div>
+	                        <div class="col-md-6">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Status *
+									</label>
+									<select name="is_active" class="cs-select cs-skin-elastic" required>
+										@if($data->is_active)
+											<option value="1" selected>Active</option>
+											<option value="0">Not Active</option>
+										@else
+											<option value="1">Active</option>
+											<option value="0" selected>Not Active</option>
+										@endif
+									</select>
+								</div>
+							</div>
+	                        <div class="col-md-12">
 	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
 	                                Submit
 	                            </button>
-	                        @endif
-							<a style=" color:white !important;" href="{{URL::to('/admin/newcharge')}}">
-								<button type="button" class="btn btn-wide btn-red btn-squared btn-marginleft pull-left">
-								Cancel
-								</button>
-							</a>
-                        </div>
+								<a style=" color:white !important;" href="{{URL::to('/admin/newcharge')}}">
+									<button type="button" class="btn btn-wide btn-red btn-squared btn-marginleft pull-left">
+									Cancel
+									</button>
+								</a>
+	                        </div>
+						</div>
 					</fieldset>
 				{!! Form::close() !!}
 			</div>
@@ -168,86 +162,29 @@
 <script src={{ asset("vendor/bootstrap-datepicker/bootstrap-datepicker.min.js") }}></script>
 <script src={{ asset("vendor/bootstrap-timepicker/bootstrap-timepicker.min.js") }}></script>
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
-<script src={{ asset("assets/js/form-elements.js") }}></script>
 <script type="text/javascript">
-	var examinationCharge = {!! json_encode($examinationCharge) !!};
-	var examinationCharge_value = '';
-	for(i=0;i<examinationCharge.length;i++){
-        examinationCharge_value+= "<option value="+examinationCharge[i].id+" data-price="+examinationCharge[i].price+" data-vt_price="+examinationCharge[i].vt_price+" data-ta_price="+examinationCharge[i].ta_price+" >"+examinationCharge[i].device_name+" || "+examinationCharge[i].stel+"</option>";
-    }
-	var rowCount = ($('#table-data tr').length)-1;
-	jQuery(document).ready(function() {
-		FormElements.init();
-		formatPrice();
-	});
-
-	function formatPrice() {
-	   $('.txt-price').priceFormat({
-			prefix: '',
-			clearPrefix: true,
-			centsLimit: 0
-		}); 
-		
-		$('.txt-vt_price').priceFormat({
-			prefix: '',
-			clearPrefix: true,
-			centsLimit: 0
-		}); 
-		
-		$('.txt-ta_price').priceFormat({
-			prefix: '',
-			clearPrefix: true,
-			centsLimit: 0
-		}); 
-   }
-
-	$('.examination_charges_id').chosen();
-	$('.examination_charges_id').trigger("chosen:updated");
-
-	$('.examination_charges_id').on('change',function(){
-        $(this).parent().parent().find('.txt-price').val($(this).find(':selected').data('price'));
-        $(this).parent().parent().find('.txt-vt_price').val($(this).find(':selected').data('vt_price'));
-        $(this).parent().parent().find('.txt-ta_price').val($(this).find(':selected').data('ta_price'));
-        formatPrice();
-    });
-
-    $('#btn-add-data').on('click',function(){
-    	rowCount++;
-    	html = '<tr id="data_'+rowCount+'">\
-		    <td>\
-		      <select name="examination_charges_id[]" class="examination_charges_id form-control" required>\
-		        <option value="">Choose Data</option>\
-		        	'+examinationCharge_value+'\
-		      </select>\
-		    </td>\
-		    <td><input type="text" name="price[]" class="form-control txt-price" value="{{ old("price") }}" placeholder="Biaya QA (Rp.)" readonly></td>\
-		    <td><input type="text" name="vt_price[]" class="form-control txt-vt_price" value="{{ old("vt_price") }}" placeholder="Biaya VT (Rp.)" readonly></td>\
-		    <td><input type="text" name="ta_price[]" class="form-control txt-ta_price" value="{{ old("ta_price") }}" placeholder="Biaya TA (Rp.)" readonly></td>\
-		    <td><input type="text" name="new_price[]" class="form-control txt-price" value="{{ old("new_price") }}" placeholder="Biaya Baru QA (Rp.)"></td>\
-		    <td><input type="text" name="new_vt_price[]" class="form-control txt-vt_price" value="{{ old("new_vt_price") }}" placeholder="Biaya Baru VT (Rp.)"></td>\
-		    <td><input type="text" name="new_ta_price[]" class="form-control txt-ta_price" value="{{ old("new_ta_price") }}" placeholder="Biaya Baru TA (Rp.)"></td>\
-		    <td><div class="btn btn-sm btn-primary btn-danger btn-delete-data"><i class="fa fa-trash"></i> Delete</div></td>\
-		</tr>';
-
-		$('#container-data').append(html);
-
-		formatPrice();
-		$('.examination_charges_id').chosen();
-		$('.examination_charges_id').trigger("chosen:updated");
-		$('.examination_charges_id').on('change',function(){
-	        $(this).parent().parent().find('.txt-price').val($(this).find(':selected').data('price'));
-	        $(this).parent().parent().find('.txt-vt_price').val($(this).find(':selected').data('vt_price'));
-	        $(this).parent().parent().find('.txt-ta_price').val($(this).find(':selected').data('ta_price'));
-	        formatPrice();
-	    });
-
-		$('.btn-delete-data').on('click',function(){
-	        $(this).parent().parent().remove();
-	    });
-    });
-
-    $('.btn-delete-data').on('click',function(){
-        $(this).parent().parent().remove();
-    });
+	$('#txt-duration').priceFormat({
+		prefix: '',
+		clearPrefix: true,
+		centsLimit: 0
+	}); 
+	
+	$('#txt-price').priceFormat({
+		prefix: '',
+		clearPrefix: true,
+		centsLimit: 0
+	}); 
+	
+	$('#txt-vt_price').priceFormat({
+		prefix: '',
+		clearPrefix: true,
+		centsLimit: 0
+	}); 
+	
+	$('#txt-ta_price').priceFormat({
+		prefix: '',
+		clearPrefix: true,
+		centsLimit: 0
+	}); 
 </script>
 @endsection
