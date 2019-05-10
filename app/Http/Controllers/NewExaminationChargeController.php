@@ -146,7 +146,7 @@ class NewExaminationChargeController extends Controller
             $logs->save();
 
             Session::flash('message', 'New Charge successfully created');
-            return redirect('/admin/newcharge');
+            return redirect('/admin/newcharge/'.$charge->id);
         } catch(Exception $e){
             Session::flash('error', 'Save failed');
             return redirect('/admin/newcharge/create');
@@ -158,11 +158,16 @@ class NewExaminationChargeController extends Controller
         $newCharge = NewExaminationCharge::find($id);
         if($newCharge->is_implement == 0){
             $query = DB::table('examination_charges')
-                    ->leftJoin('new_examination_charges_detail', 'examination_charges.id', '=', 'new_examination_charges_detail.examination_charges_id')
+                    ->leftJoin('new_examination_charges_detail', function($q) use ($id)
+                    {
+                        $q->on('examination_charges.id', '=', 'new_examination_charges_detail.examination_charges_id')
+                            ->where('new_examination_charges_detail.new_exam_charges_id', '=', "$id");
+                    })
                     ->leftJoin('new_examination_charges', 'new_examination_charges_detail.new_exam_charges_id', '=', 'new_examination_charges.id')
-                    ->select('examination_charges.*','new_examination_charges_detail.new_price','new_examination_charges_detail.new_vt_price','new_examination_charges_detail.new_ta_price','new_examination_charges.valid_from','new_examination_charges.is_implement')
+                    ->select('examination_charges.*')
                     ->whereNull('new_examination_charges_detail.examination_charges_id')
                     ->whereNotNull('examination_charges.created_at')->where('examination_charges.is_active', 1);
+
             $examinationCharge = $query->orderByRaw('category, device_name')->get();
 
             return view('admin.newcharge.createDetail')
@@ -298,7 +303,7 @@ class NewExaminationChargeController extends Controller
                 ->whereNotNull('examination_charges.created_at')->where('examination_charges.is_active', 1);
         $examinationCharge = $query->orderByRaw('category, device_name')->get();
 
-        $charge = NewExaminationCharge::with('newExaminationChargeDetail')->find($id);
+        $charge = NewExaminationCharge::find($id);
 
         return view('admin.newcharge.edit')
             ->with('data', $charge)
@@ -361,9 +366,13 @@ class NewExaminationChargeController extends Controller
         $newChargeDetail = NewExaminationChargeDetail::find($exam_id);
         
         $query = DB::table('examination_charges')
-                ->leftJoin('new_examination_charges_detail', 'examination_charges.id', '=', 'new_examination_charges_detail.examination_charges_id')
+                ->leftJoin('new_examination_charges_detail', function($q) use ($id)
+                    {
+                        $q->on('examination_charges.id', '=', 'new_examination_charges_detail.examination_charges_id')
+                            ->where('new_examination_charges_detail.new_exam_charges_id', '=', "$id");
+                    })
                 ->leftJoin('new_examination_charges', 'new_examination_charges_detail.new_exam_charges_id', '=', 'new_examination_charges.id')
-                ->select('examination_charges.*','new_examination_charges_detail.new_price','new_examination_charges_detail.new_vt_price','new_examination_charges_detail.new_ta_price','new_examination_charges.valid_from','new_examination_charges.is_implement')
+                ->select('examination_charges.*')
                 ->whereNull('new_examination_charges_detail.examination_charges_id')
                 ->orWhere('new_examination_charges_detail.id', $exam_id)
                 ->whereNotNull('examination_charges.created_at')->where('examination_charges.is_active', 1);
@@ -487,17 +496,80 @@ class NewExaminationChargeController extends Controller
     }
 
     public function implementNew($id){
-        $newCharge = NewExaminationChargeDetail::where("new_exam_charges_id", $id)->get();
-        dd($newCharge[1]);
-        /* query dulu supaya data old di new_examination_charges_detail keisi */
+        $currentUser = Auth::user();
 
-        /* ini sekarang stel sudah bebas pengisiannya, mau dirombak lagi beberapa data supaya bisa langsung keinput semua STEL dalam 1 row ? Mba Pipin */
+        /* query id examination_charges yang tidak ada di new_examination_charges_detail, lalu dinonaktifkan (is_active == 0) */
 
-        /* lalu implement dengan cek examination_charges.id = new_examination_charges_detail.examination_charges_id */
+        $query = DB::table('examination_charges')
+                ->leftJoin('new_examination_charges_detail', function($q) use ($id)
+                    {
+                        $q->on('examination_charges.id', '=', 'new_examination_charges_detail.examination_charges_id')
+                            ->where('new_examination_charges_detail.new_exam_charges_id', '=', "$id");
+                    })
+                ->leftJoin('new_examination_charges', 'new_examination_charges_detail.new_exam_charges_id', '=', 'new_examination_charges.id')
+                ->select('examination_charges.id')
+                ->whereNull('new_examination_charges_detail.examination_charges_id')
+                ->whereNotNull('examination_charges.created_at')->where('examination_charges.is_active', 1);
+        $examinationCharge = $query->get();
+
+        for ($i=0; $i <count($examinationCharge) ; $i++) {
+            $update = DB::table('examination_charges')
+                ->where('id', $examinationCharge[$i]->id)
+                ->update([
+                    'is_active'     => '0',
+                    'updated_by'    => $currentUser->id
+                ]);
+        }
+
+        /* implement dengan cek examination_charges.id = new_examination_charges_detail.examination_charges_id */
 
         /* if exist(){update device_name, stel, duration, category, price, vt_price, dan ta_price, updated_at, updated_by, is_active == 1} */
         /* else(){insert device_name, stel, duration, category, price, vt_price, dan ta_price, created_at, created_by, updated_at, updated_by, is_active == 1} */
+       
+        $data = NewExaminationChargeDetail::where("new_exam_charges_id", $id)->get();
+        
+        for ($i=0; $i <count($data) ; $i++) {
+            $update = DB::table('examination_charges')
+                ->where('id', $data[$i]['examination_charges_id'])
+                ->update([
+                    'device_name'   => $data[$i]['device_name'],
+                    'stel'          => $data[$i]['stel'],
+                    'category'      => $data[$i]['category'],
+                    'duration'      => $data[$i]['duration'],
+                    'price'         => $data[$i]['new_price'],
+                    'vt_price'      => $data[$i]['new_vt_price'],
+                    'ta_price'      => $data[$i]['new_ta_price'],
+                    'is_active'     => '1',
+                    'updated_by'    => $currentUser->id
+                ]);
+            if(!$update){
+                $charge = new ExaminationCharge;
+                $charge->id = Uuid::uuid4();
+                $charge->device_name = $data[$i]['device_name'];
+                $charge->stel = $data[$i]['stel'];
+                $charge->category = $data[$i]['category'];
+                $charge->duration = $data[$i]['duration'];
+                $charge->price = $data[$i]['new_price'];
+                $charge->vt_price = $data[$i]['vt_price'];
+                $charge->ta_price = $data[$i]['ta_price'];
+                $charge->is_active = '1';
+                $charge->created_by = $currentUser->id;
+                $charge->updated_by = $currentUser->id;
 
-        /* query id examination_charges yang tidak ada di new_examination_charges_detail, lalu dinonaktifkan (is_active == 0) */
+                try{
+                    $charge->save();
+
+                    $logs = new Logs;
+                    $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
+                    $logs->action = "Create Charge";
+                    $logs->data = $charge;
+                    $logs->created_by = $currentUser->id;
+                    $logs->page = "EXAMINATION CHARGE";
+                    $logs->save();
+                } catch(Exception $e){
+                    
+                }
+            }
+        }
     }
 }

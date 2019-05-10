@@ -125,8 +125,8 @@
 										@else
 											<option value="" disabled selected>Select...</option>
 											<option value="Lab CPE">Lab CPE</option>
-											<option value="Lab Energi">Lab Energi</option>
 											<option value="Lab Device">Lab Device</option>
+											<option value="Lab Energi">Lab Energi</option>
 											<option value="Lab Kabel">Lab Kabel</option>
 											<option value="Lab Transmisi">Lab Transmisi</option>
 										@endif
@@ -172,8 +172,8 @@
 										@else
 											<option value="" disabled selected>Select...</option>
 											<option value="Lab CPE">Lab CPE</option>
-											<option value="Lab Energi">Lab Energi</option>
 											<option value="Lab Device">Lab Device</option>
+											<option value="Lab Energi">Lab Energi</option>
 											<option value="Lab Kabel">Lab Kabel</option>
 											<option value="Lab Transmisi">Lab Transmisi</option>
 										@endif

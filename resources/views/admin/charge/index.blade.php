@@ -58,6 +58,25 @@
 											@else
                                                 <option value="all">All</option>
                                             @endif
+											
+											@if ($category == 'Lab CPE')
+												<option value="Lab CPE" selected>Lab CPE</option>
+											@else
+												<option value="Lab CPE">Lab CPE</option>
+											@endif
+											
+											@if ($category == 'Lab Device')
+												<option value="Lab Device" selected>Lab Device</option>
+											@else
+												<option value="Lab Device">Lab Device</option>
+											@endif
+
+											@if ($category == 'Lab Energi')
+												<option value="Lab Energi" selected>Lab Energi</option>
+											@else
+												<option value="Lab Energi">Lab Energi</option>
+											@endif
+											
 											@if ($category == 'Lab Kabel')
 												<option value="Lab Kabel" selected>Lab Kabel</option>
 											@else
@@ -70,17 +89,6 @@
 												<option value="Lab Transmisi">Lab Transmisi</option>
 											@endif
 
-											@if ($category == 'Lab Device')
-												<option value="Lab Device" selected>Lab Device</option>
-											@else
-												<option value="Lab Device">Lab Device</option>
-											@endif
-
-											@if ($category == 'Lab Energi')
-												<option value="Lab Energi" selected>Lab Energi</option>
-											@else
-												<option value="Lab Energi">Lab Energi</option>
-											@endif
 									</select>
 									</div>
 								</div>
