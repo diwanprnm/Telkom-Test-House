@@ -60,32 +60,43 @@
 										Kategori *
 									</label>
 									<select name="category" class="cs-select cs-skin-elastic" required>
-										@if( old('category') == 'Lab Kabel' )
+										@if( old('category') == 'Lab CPE' )
+											<option value="Lab CPE" selected>Lab CPE</option>
+											<option value="Lab Device">Lab Device</option>
+											<option value="Lab Energi">Lab Energi</option>
+											<option value="Lab Kabel">Lab Kabel</option>
+											<option value="Lab Transmisi">Lab Transmisi</option>
+										@elseif( old('category') == 'Lab Device' )
+											<option value="Lab CPE">Lab CPE</option>
+											<option value="Lab Device" selected>Lab Device</option>
+											<option value="Lab Energi">Lab Energi</option>
+											<option value="Lab Kabel">Lab Kabel</option>
+											<option value="Lab Transmisi">Lab Transmisi</option>
+										@elseif( old('category') == 'Lab Energi' )
+											<option value="Lab CPE">Lab CPE</option>
+											<option value="Lab Device">Lab Device</option>
+											<option value="Lab Energi" selected>Lab Energi</option>
+											<option value="Lab Kabel">Lab Kabel</option>
+											<option value="Lab Transmisi">Lab Transmisi</option>
+										@elseif( old('category') == 'Lab Kabel' )
+											<option value="Lab CPE">Lab CPE</option>
+											<option value="Lab Energi">Lab Energi</option>
+											<option value="Lab Device">Lab Device</option>
 											<option value="Lab Kabel" selected>Lab Kabel</option>
 											<option value="Lab Transmisi">Lab Transmisi</option>
+										@elseif( old('category') == 'Lab Transmisi' )
 											<option value="Lab CPE">Lab CPE</option>
 											<option value="Lab Energi">Lab Energi</option>
-										@elseif( old('category') == 'Lab Transmisi' )
+											<option value="Lab Device">Lab Device</option>
 											<option value="Lab Kabel">Lab Kabel</option>
 											<option value="Lab Transmisi" selected>Lab Transmisi</option>
-											<option value="Lab CPE">Lab CPE</option>
-											<option value="Lab Energi">Lab Energi</option>
-										@elseif( old('category') == 'Lab CPE' )
-											<option value="Lab Kabel">Lab Kabel</option>
-											<option value="Lab Transmisi">Lab Transmisi</option>
-											<option value="Lab CPE" selected>Lab CPE</option>
-											<option value="Lab Energi">Lab Energi</option>
-										@elseif( old('category') == 'Lab Energi' )
-											<option value="Lab Kabel">Lab Kabel</option>
-											<option value="Lab Transmisi">Lab Transmisi</option>
-											<option value="Lab CPE">Lab CPE</option>
-											<option value="Lab Energi" selected>Lab Energi</option>
 										@else
 											<option value="" disabled selected>Select...</option>
-											<option value="Lab Kabel">Lab Kabel</option>
-											<option value="Lab Transmisi">Lab Transmisi</option>
 											<option value="Lab CPE">Lab CPE</option>
 											<option value="Lab Energi">Lab Energi</option>
+											<option value="Lab Device">Lab Device</option>
+											<option value="Lab Kabel">Lab Kabel</option>
+											<option value="Lab Transmisi">Lab Transmisi</option>
 										@endif
 									</select>
 								</div>

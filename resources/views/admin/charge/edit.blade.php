@@ -55,18 +55,12 @@
 										Kategori *
 									</label>
 									<select name="category" class="cs-select cs-skin-elastic" required>
-										@if($data->category == 'Lab Kabel')
-											<option value="Lab Kabel" selected>Lab Kabel</option>
+										@if($data->category == 'Lab CPE')
+											<option value="Lab CPE" selected>Lab CPE</option>
 										@else
-											<option value="Lab Kabel">Lab Kabel</option>
+											<option value="Lab CPE">Lab CPE</option>
 										@endif
-
-										@if($data->category == 'Lab Transmisi')
-											<option value="Lab Transmisi" selected>Lab Transmisi</option>
-										@else
-											<option value="Lab Transmisi">Lab Transmisi</option>
-										@endif
-
+										
 										@if($data->category == 'Lab Device')
 											<option value="Lab Device" selected>Lab Device</option>
 										@else
@@ -77,6 +71,18 @@
 											<option value="Lab Energi" selected>Lab Energi</option>
 										@else
 											<option value="Lab Energi">Lab Energi</option>
+										@endif
+
+										@if($data->category == 'Lab Kabel')
+											<option value="Lab Kabel" selected>Lab Kabel</option>
+										@else
+											<option value="Lab Kabel">Lab Kabel</option>
+										@endif
+
+										@if($data->category == 'Lab Transmisi')
+											<option value="Lab Transmisi" selected>Lab Transmisi</option>
+										@else
+											<option value="Lab Transmisi">Lab Transmisi</option>
 										@endif
 									</select>
 								</div>
