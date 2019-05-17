@@ -93,8 +93,8 @@
 											<thead>
 												<tr>
 													<th class="center">{{ trans('translate.charge_no') }}</th>
-													<th class="center">{{ trans('translate.charge_stel') }}</th>
 													<th class="center">{{ trans('translate.charge_name') }}</th>
+													<th class="center">{{ trans('translate.charge_stel') }}</th>
 													<th class="center">{{ trans('translate.charge_category') }}</th>
 													<th class="center">{{ trans('translate.charge_duration') }}</th>
 													<th class="center">{{ trans('translate.charge_cost') }}</th>
@@ -107,8 +107,8 @@
 												@foreach($data as $item)
 												<tr>
 													<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
-													<td class="left">{{ $item->stel }}</td>
 													<td class="left">{{ $item->device_name }}</td>
+													<td class="left">{{ $item->stel }}</td>
 													<td class="center">{{ $item->category }}</td>
 													<td class="center">{{ $item->duration }}</td>
 													<td class="center"><?php echo number_format($item->new_price, 0, '.', ','); ?></td>
