@@ -751,7 +751,7 @@ class ExaminationAPIController extends AppBaseController
 			}
 			if(isset($param->deal_test_date)){
 				$rawRangeDate ="IFNULL( examinations.function_date, examinations.deal_test_date ) = '".$param->deal_test_date."'";
-				$result = $result->where(\DB::raw($rawRangeDate), 1); 
+				$result = $result->where(DB::raw($rawRangeDate)); 
 				/*$result = $result->where('examinations.function_test_date_approval', 1)
 				->where(DB::Raw('IFNULL( examinations.function_date, examinations.deal_test_date ) = "'.$param->deal_test_date.'"'));*/
 			}
