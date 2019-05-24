@@ -753,7 +753,7 @@ class ExaminationAPIController extends AppBaseController
 				/*$rawRangeDate ="date_format(examinations.deal_test_date,'%Y-%m-%d') = '".$param->deal_test_date."'";
 				$result = $result->where(\DB::raw($rawRangeDate), 1); */
 				$result = $result->where('function_test_date_approval', 1)
-				->where(DB::Raw('IFNULL( function_date, deal_test_date )'), '=', $param->deal_test_date);
+				->where(DB::Raw('IFNULL( function_date, deal_test_date )'), '=', ''.$param->deal_test_date.'');
 			}
 			if(isset($param->function_result)){
 				$result = $result->where("examinations.function_test_TE", "=", $param->function_result);
@@ -768,12 +768,12 @@ class ExaminationAPIController extends AppBaseController
 
 		if(isset($param->date_from)){
 			$result = $result->where('function_test_date_approval', 1)
-			->where(DB::Raw('IFNULL( function_date, deal_test_date )'), '>=', $param->date_from);
+			->where(DB::Raw('IFNULL( function_date, deal_test_date )'), '>=', ''.$param->date_from.'');
 		}
 
 		if(isset($param->date_to)){
 			$result = $result->where('function_test_date_approval', 1)
-			->where(DB::Raw('IFNULL( function_date, deal_test_date )'), '<=', $param->date_to);
+			->where(DB::Raw('IFNULL( function_date, deal_test_date )'), '<=', ''.$param->date_to.'');
 		}
 
 		if(isset($param->lab_code)){
@@ -786,6 +786,8 @@ class ExaminationAPIController extends AppBaseController
 				$result = $result->offset($param->offset);
 			}
 		}
+
+		dd($result->toSql());
 		
 		$result = $result->orderBy('examinations.updated_at', 'desc')->get()->toArray();
 	
