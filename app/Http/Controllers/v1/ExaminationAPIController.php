@@ -768,12 +768,12 @@ class ExaminationAPIController extends AppBaseController
 
 		if(isset($param->date_from)){
 			$result = $result->where('function_test_date_approval', 1)
-			->where(DB::Raw('IFNULL( function_date, deal_test_date ) >= "'.$param->date_from.'"');
+			->where(DB::Raw('IFNULL( function_date, deal_test_date ) >= "'.$param->date_from.'"'));
 		}
 
 		if(isset($param->date_to)){
 			$result = $result->where('function_test_date_approval', 1)
-			->where(DB::Raw('IFNULL( function_date, deal_test_date ) <= "'.$param->date_to.'"');
+			->where(DB::Raw('IFNULL( function_date, deal_test_date ) <= "'.$param->date_to.'"'));
 		}
 
 		if(isset($param->lab_code)){
