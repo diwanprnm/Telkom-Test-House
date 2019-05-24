@@ -98,30 +98,42 @@
 											<option value="Lab Energi">Lab Energi</option>
 											<option value="Lab Kabel">Lab Kabel</option>
 											<option value="Lab Transmisi">Lab Transmisi</option>
+											<option value="Lab EMC">Lab EMC</option>
 										@elseif( old('old_category') == 'Lab Device' )
 											<option value="Lab CPE">Lab CPE</option>
 											<option value="Lab Device" selected>Lab Device</option>
 											<option value="Lab Energi">Lab Energi</option>
 											<option value="Lab Kabel">Lab Kabel</option>
 											<option value="Lab Transmisi">Lab Transmisi</option>
+											<option value="Lab EMC">Lab EMC</option>
 										@elseif( old('old_category') == 'Lab Energi' )
 											<option value="Lab CPE">Lab CPE</option>
 											<option value="Lab Device">Lab Device</option>
 											<option value="Lab Energi" selected>Lab Energi</option>
 											<option value="Lab Kabel">Lab Kabel</option>
 											<option value="Lab Transmisi">Lab Transmisi</option>
+											<option value="Lab EMC">Lab EMC</option>
 										@elseif( old('old_category') == 'Lab Kabel' )
 											<option value="Lab CPE">Lab CPE</option>
 											<option value="Lab Device">Lab Device</option>
 											<option value="Lab Energi">Lab Energi</option>
 											<option value="Lab Kabel" selected>Lab Kabel</option>
 											<option value="Lab Transmisi">Lab Transmisi</option>
+											<option value="Lab EMC">Lab EMC</option>
 										@elseif( old('old_category') == 'Lab Transmisi' )
 											<option value="Lab CPE">Lab CPE</option>
 											<option value="Lab Device">Lab Device</option>
 											<option value="Lab Energi">Lab Energi</option>
 											<option value="Lab Kabel">Lab Kabel</option>
 											<option value="Lab Transmisi" selected>Lab Transmisi</option>
+											<option value="Lab EMC">Lab EMC</option>
+										@elseif( old('old_category') == 'Lab EMC' )
+											<option value="Lab CPE">Lab CPE</option>
+											<option value="Lab Device">Lab Device</option>
+											<option value="Lab Energi">Lab Energi</option>
+											<option value="Lab Kabel">Lab Kabel</option>
+											<option value="Lab Transmisi">Lab Transmisi</option>
+											<option value="Lab EMC" selected>Lab EMC</option>
 										@else
 											<option value="" disabled selected>Select...</option>
 											<option value="Lab CPE">Lab CPE</option>
@@ -129,6 +141,7 @@
 											<option value="Lab Energi">Lab Energi</option>
 											<option value="Lab Kabel">Lab Kabel</option>
 											<option value="Lab Transmisi">Lab Transmisi</option>
+											<option value="Lab EMC">Lab EMC</option>
 										@endif
 									</select>
 								</div>
@@ -145,30 +158,42 @@
 											<option value="Lab Energi">Lab Energi</option>
 											<option value="Lab Kabel">Lab Kabel</option>
 											<option value="Lab Transmisi">Lab Transmisi</option>
+											<option value="Lab EMC">Lab EMC</option>
 										@elseif( old('category') == 'Lab Device' )
 											<option value="Lab CPE">Lab CPE</option>
 											<option value="Lab Device" selected>Lab Device</option>
 											<option value="Lab Energi">Lab Energi</option>
 											<option value="Lab Kabel">Lab Kabel</option>
 											<option value="Lab Transmisi">Lab Transmisi</option>
+											<option value="Lab EMC">Lab EMC</option>
 										@elseif( old('category') == 'Lab Energi' )
 											<option value="Lab CPE">Lab CPE</option>
 											<option value="Lab Device">Lab Device</option>
 											<option value="Lab Energi" selected>Lab Energi</option>
 											<option value="Lab Kabel">Lab Kabel</option>
 											<option value="Lab Transmisi">Lab Transmisi</option>
+											<option value="Lab EMC">Lab EMC</option>
 										@elseif( old('category') == 'Lab Kabel' )
 											<option value="Lab CPE">Lab CPE</option>
 											<option value="Lab Device">Lab Device</option>
 											<option value="Lab Energi">Lab Energi</option>
 											<option value="Lab Kabel" selected>Lab Kabel</option>
 											<option value="Lab Transmisi">Lab Transmisi</option>
+											<option value="Lab EMC">Lab EMC</option>
 										@elseif( old('category') == 'Lab Transmisi' )
 											<option value="Lab CPE">Lab CPE</option>
 											<option value="Lab Device">Lab Device</option>
 											<option value="Lab Energi">Lab Energi</option>
 											<option value="Lab Kabel">Lab Kabel</option>
 											<option value="Lab Transmisi" selected>Lab Transmisi</option>
+											<option value="Lab EMC">Lab EMC</option>
+										@elseif( old('category') == 'Lab EMC' )
+											<option value="Lab CPE">Lab CPE</option>
+											<option value="Lab Device">Lab Device</option>
+											<option value="Lab Energi">Lab Energi</option>
+											<option value="Lab Kabel">Lab Kabel</option>
+											<option value="Lab Transmisi">Lab Transmisi</option>
+											<option value="Lab EMC" selected>Lab EMC</option>
 										@else
 											<option value="" disabled selected>Select...</option>
 											<option value="Lab CPE">Lab CPE</option>
@@ -176,6 +201,7 @@
 											<option value="Lab Energi">Lab Energi</option>
 											<option value="Lab Kabel">Lab Kabel</option>
 											<option value="Lab Transmisi">Lab Transmisi</option>
+											<option value="Lab EMC">Lab EMC</option>
 										@endif
 									</select>
 								</div>

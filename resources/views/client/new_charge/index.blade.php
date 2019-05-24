@@ -60,6 +60,11 @@
 									@else
 										<option value="Lab Transmisi">Lab Transmisi</option>
 									@endif
+									@if ($category == 'Lab EMC')
+										<option value="Lab EMC" selected>Lab EMC</option>
+									@else
+										<option value="Lab EMC">Lab EMC</option>
+									@endif
 								</select>
 							</div>
 							
