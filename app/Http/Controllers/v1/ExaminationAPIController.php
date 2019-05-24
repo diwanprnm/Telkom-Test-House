@@ -786,8 +786,6 @@ class ExaminationAPIController extends AppBaseController
 				$result = $result->offset($param->offset);
 			}
 		}
-
-		dd($result->toSql());
 		
 		$result = $result->orderBy('examinations.updated_at', 'desc')->get()->toArray();
 	
