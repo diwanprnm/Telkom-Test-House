@@ -324,6 +324,7 @@
 			var year = document.getElementById("year");
             var status = document.getElementById("is_active");
 			var catValue = category.options[category.selectedIndex].value;
+			var yearValue = year.options[year.selectedIndex].value;
 			var statusValue = status.options[status.selectedIndex].value;
 
 			params['search'] = search_value;
