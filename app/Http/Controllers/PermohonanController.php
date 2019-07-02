@@ -816,7 +816,7 @@ class PermohonanController extends Controller
 			$fuploaddll_name = $request->input('hide_dll_file');
 		}
 		
-		if($request->ajax()){
+		/*if($request->ajax()){
 			$data = Array([
 				'nama_pemohon' => $nama_pemohon,
 				'alamat_pemohon' => $alamat_pemohon,
@@ -898,12 +898,12 @@ class PermohonanController extends Controller
 			$data_update_attach = DB::update($query_update_attach);
 		}
 		
-		/*$query_update_dll = "UPDATE examination_attachments
+		$query_update_dll = "UPDATE examination_attachments
 			SET 
 				attachment = '".$fuploaddll_name."'
 			WHERE examination_id = '".$exam_id."' AND `name` = 'File Lainnya'
 		";
-		$data_update_dll = DB::update($query_update_dll);*/
+		$data_update_dll = DB::update($query_update_dll);
 		
 		$plg_id = $request->input('f1-plg_id-perusahaan') ? $request->input('f1-plg_id-perusahaan') : '-' ;
 		$nib = $request->input('f1-nib-perusahaan') ? $request->input('f1-nib-perusahaan') : '-' ;
@@ -935,7 +935,7 @@ class PermohonanController extends Controller
 		$exam_hist->keterangan = '';
 		$exam_hist->created_by = $currentUser->id;
 		$exam_hist->created_at = date('Y-m-d H:i:s');
-		$exam_hist->save();
+		$exam_hist->save();*/
 	}
 
 	public function upload(Request $request){
