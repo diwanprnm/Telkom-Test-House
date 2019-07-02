@@ -908,7 +908,7 @@ class PermohonanController extends Controller
 		$plg_id = $request->input('f1-plg_id-perusahaan') ? $request->input('f1-plg_id-perusahaan') : '-' ;
 		$nib = $request->input('f1-nib-perusahaan') ? $request->input('f1-nib-perusahaan') : '-' ;
 
-		$query_update_companie = "UPDATE companies
+		/*$query_update_companie = "UPDATE companies
 			SET 
 				npwp_file = '".$fuploadnpwp_name."',
 				plg_id = '".$plg_id."',
@@ -923,7 +923,7 @@ class PermohonanController extends Controller
 				updated_at = '".date('Y-m-d H:i:s')."'
 			WHERE id = (SELECT company_id FROM users WHERE id = '".$user_id."')
 		";
-		// $data_update_companie = DB::update($query_update_companie);
+		$data_update_companie = DB::update($query_update_companie);*/
 		
 		$request->session()->put('key', $data);
 		
