@@ -627,8 +627,7 @@
 
 							$(".actions").hide(); 
 						},
-						error:function(response){
-							console.log(response);
+						error:function(){
 							$( "#formBTNprevious" ).show();
 							$( "#formBTNfinish" ).show();
 							$( "#formBTNnext" ).show();
