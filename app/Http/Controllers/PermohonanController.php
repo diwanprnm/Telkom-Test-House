@@ -843,7 +843,6 @@ class PermohonanController extends Controller
 				'no_reg' => $exam_no_reg->function_test_NO
 			]);
 		}
-		/*
 		$examLab = DB::table('stels')->where('code', ''.$referensi_perangkat.'')->first();
 		if(count($examLab)>0){
 			$idLab = $examLab->type;
@@ -861,6 +860,7 @@ class PermohonanController extends Controller
 		";
 		$data_update_company = DB::update($query_update_company);
 		
+		/*
 		$query_update_device = "UPDATE devices
 			SET 
 				name = '".$nama_perangkat."',
@@ -898,6 +898,7 @@ class PermohonanController extends Controller
 			";
 			$data_update_attach = DB::update($query_update_attach);
 		}
+		*/
 		
 		$query_update_dll = "UPDATE examination_attachments
 			SET 
@@ -925,7 +926,6 @@ class PermohonanController extends Controller
 			WHERE id = (SELECT company_id FROM users WHERE id = '".$user_id."')
 		";
 		$data_update_companie = DB::update($query_update_companie);
-		*/
 		
 		$request->session()->put('key', $data);
 		
