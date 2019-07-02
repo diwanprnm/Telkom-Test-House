@@ -593,7 +593,7 @@ class PermohonanController extends Controller
 
 	public function update(Request $request)
 	{
-		print_r($request->all());exit;
+		print_r($request->all());
 		$currentUser = Auth::user();
 		$user_id = ''.$currentUser['attributes']['id'].'';
 		$company_id = ''.$currentUser['attributes']['company_id'].'';
@@ -815,7 +815,7 @@ class PermohonanController extends Controller
 		}else{
 			$fuploaddll_name = $request->input('hide_dll_file');
 		}
-		
+		print_r(0);exit;
 		if($request->ajax()){
 			$data = Array([
 				'nama_pemohon' => $nama_pemohon,
