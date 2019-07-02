@@ -925,7 +925,7 @@ class PermohonanController extends Controller
 		";
 		$data_update_companie = DB::update($query_update_companie);
 		
-		$request->session()->put('key', $data);
+		$request->session()->put('key', $data);*/
 		
 		$exam_hist = new ExaminationHistory;
 		$exam_hist->examination_id = $exam_id;
@@ -935,7 +935,7 @@ class PermohonanController extends Controller
 		$exam_hist->keterangan = '';
 		$exam_hist->created_by = $currentUser->id;
 		$exam_hist->created_at = date('Y-m-d H:i:s');
-		$exam_hist->save();*/
+		$exam_hist->save();
 	}
 
 	public function upload(Request $request){
