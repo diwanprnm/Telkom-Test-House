@@ -593,7 +593,7 @@ class PermohonanController extends Controller
 
 	public function update(Request $request)
 	{
-		print_r($request->all());
+		print_r(0);
 		$currentUser = Auth::user();
 		$user_id = ''.$currentUser['attributes']['id'].'';
 		$company_id = ''.$currentUser['attributes']['company_id'].'';
@@ -696,7 +696,7 @@ class PermohonanController extends Controller
 		
 		$path_file = public_path().'/media/examination/'.$exam_id.'';
 		$path_file_company = public_path().'/media/company/'.$company_id.'';
-		print_r(0);
+		
 		if ($request->hasFile('fuploadsiupp')) {
 			/*$ext_file = $request->file('fuploadsiupp_edit')->getClientOriginalName();
 			$name_file = uniqid().'_file_.'.$ext_file;*/
@@ -815,7 +815,7 @@ class PermohonanController extends Controller
 		}else{
 			$fuploaddll_name = $request->input('hide_dll_file');
 		}
-		print_r(1);
+		
 		if($request->ajax()){
 			$data = Array([
 				'nama_pemohon' => $nama_pemohon,
@@ -843,7 +843,6 @@ class PermohonanController extends Controller
 				'no_reg' => $exam_no_reg->function_test_NO
 			]);
 		}
-		print_r(2);
 		$examLab = DB::table('stels')->where('code', ''.$referensi_perangkat.'')->first();
 		if(count($examLab)>0){
 			$idLab = $examLab->type;
