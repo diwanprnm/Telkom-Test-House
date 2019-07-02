@@ -815,7 +815,6 @@ class PermohonanController extends Controller
 		}else{
 			$fuploaddll_name = $request->input('hide_dll_file');
 		}
-		print_r(0);exit;
 		if($request->ajax()){
 			$data = Array([
 				'nama_pemohon' => $nama_pemohon,
@@ -844,6 +843,7 @@ class PermohonanController extends Controller
 			]);
 		}
 		$examLab = DB::table('stels')->where('code', ''.$referensi_perangkat.'')->first();
+		print_r(0);exit;
 		if(count($examLab)>0){
 			$idLab = $examLab->type;
 		}else{
