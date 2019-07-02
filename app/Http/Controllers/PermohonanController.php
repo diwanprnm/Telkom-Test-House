@@ -815,6 +815,7 @@ class PermohonanController extends Controller
 		}else{
 			$fuploaddll_name = $request->input('hide_dll_file');
 		}
+		
 		if($request->ajax()){
 			$data = Array([
 				'nama_pemohon' => $nama_pemohon,
@@ -923,10 +924,9 @@ class PermohonanController extends Controller
 			WHERE id = (SELECT company_id FROM users WHERE id = '".$user_id."')
 		";
 		$data_update_companie = DB::update($query_update_companie);
-		
+		print_r($request->all());exit;
 		$request->session()->put('key', $data);
 		
-		print_r(0);exit;
 		$exam_hist = new ExaminationHistory;
 		$exam_hist->examination_id = $exam_id;
 		$exam_hist->date_action = date('Y-m-d H:i:s');
