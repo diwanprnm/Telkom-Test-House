@@ -860,7 +860,6 @@ class PermohonanController extends Controller
 		";
 		$data_update_company = DB::update($query_update_company);
 		
-		/*
 		$query_update_device = "UPDATE devices
 			SET 
 				name = '".$nama_perangkat."',
@@ -875,6 +874,7 @@ class PermohonanController extends Controller
 			WHERE id = '".$device_id."'
 		";
 		$data_update_device = DB::update($query_update_device);
+		/*
 		
 		$query_update_ref_uji = "UPDATE examination_attachments
 			SET 
@@ -883,6 +883,7 @@ class PermohonanController extends Controller
 		";
 		
 		$data_update_ref_uji = DB::update($query_update_ref_uji);
+		*/
 		if($jns_pengujian == 1 and $jns_perusahaan != 'Pabrikan'){
 			$query_update_attach = "UPDATE examination_attachments
 				SET 
@@ -898,7 +899,6 @@ class PermohonanController extends Controller
 			";
 			$data_update_attach = DB::update($query_update_attach);
 		}
-		*/
 		
 		$query_update_dll = "UPDATE examination_attachments
 			SET 
