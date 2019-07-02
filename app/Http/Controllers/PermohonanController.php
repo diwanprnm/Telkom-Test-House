@@ -843,7 +843,6 @@ class PermohonanController extends Controller
 			]);
 		}
 		$examLab = DB::table('stels')->where('code', ''.$referensi_perangkat.'')->first();
-		print_r(0);exit;
 		if(count($examLab)>0){
 			$idLab = $examLab->type;
 		}else{
@@ -927,6 +926,7 @@ class PermohonanController extends Controller
 		
 		$request->session()->put('key', $data);
 		
+		print_r(0);exit;
 		$exam_hist = new ExaminationHistory;
 		$exam_hist->examination_id = $exam_id;
 		$exam_hist->date_action = date('Y-m-d H:i:s');
