@@ -593,7 +593,7 @@ class PermohonanController extends Controller
 
 	public function update(Request $request)
 	{
-		print_r(0);
+		print_r($request->all());exit;
 		$currentUser = Auth::user();
 		$user_id = ''.$currentUser['attributes']['id'].'';
 		$company_id = ''.$currentUser['attributes']['company_id'].'';
