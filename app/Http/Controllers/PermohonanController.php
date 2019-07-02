@@ -816,7 +816,7 @@ class PermohonanController extends Controller
 			$fuploaddll_name = $request->input('hide_dll_file');
 		}
 		
-		/*if($request->ajax()){
+		if($request->ajax()){
 			$data = Array([
 				'nama_pemohon' => $nama_pemohon,
 				'alamat_pemohon' => $alamat_pemohon,
@@ -843,6 +843,7 @@ class PermohonanController extends Controller
 				'no_reg' => $exam_no_reg->function_test_NO
 			]);
 		}
+		/*
 		$examLab = DB::table('stels')->where('code', ''.$referensi_perangkat.'')->first();
 		if(count($examLab)>0){
 			$idLab = $examLab->type;
@@ -924,8 +925,9 @@ class PermohonanController extends Controller
 			WHERE id = (SELECT company_id FROM users WHERE id = '".$user_id."')
 		";
 		$data_update_companie = DB::update($query_update_companie);
+		*/
 		
-		$request->session()->put('key', $data);*/
+		$request->session()->put('key', $data);
 		
 		$exam_hist = new ExaminationHistory;
 		$exam_hist->examination_id = $exam_id;
