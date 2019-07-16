@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 
 use App\Company;
@@ -13,7 +14,7 @@ use App\Logs;
 use App\Menu;
 use App\UsersMenus;
  
- use View;
+use View;
 use Session;
 use Hash; 
 use App\NotificationTable;
@@ -34,11 +35,24 @@ class AdminOnly
      */
     public function handle($request, Closure $next, $guard = null)
     {
+        $string = explode("/", Route::getCurrentRoute()->getPath());
+        $user_id = (!empty(auth()->user())) ? (auth()->user()->id) : '';
+        $link = (!empty($string[1])) ? $string[1] : '';
 
+        $select = array('menus.id','menus.url');
+        $menu = Menu::selectRaw(implode(",", $select))->join("users_menus","menus.id","=","users_menus.menu_id")
+                ->where("user_id",$user_id)
+                ->where("menus.url",$link)
+                ->get()->toArray();
+        // dd($menu);
         $this->initTree();
 
-		if (auth()->check() && auth()->user()->role->id != 2) { 
-            return $next($request);
+		if (auth()->check() && auth()->user()->role->id != 2) {
+            if(count($menu)>0 or $link == '' or $link == 'logout'){
+                return $next($request);
+            } else{
+                return view('errors.401');
+            }
         } elseif (Auth::guard($guard)->guest()) {
             return redirect()->guest('admin/login');
         }

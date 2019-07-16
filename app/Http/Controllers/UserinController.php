@@ -333,12 +333,10 @@ class UserinController extends Controller
         $user = User::find($id);
 		$roles = Role::where('id', '!=', 2)->get();
         $companies = Company::where('id', '=', '1')->orderBy('name')->get();
-        $currentUser = Auth::user();
         
-    
         $select = array('menus.id');
         $menu_user = Menu::selectRaw(implode(",", $select))->join("users_menus","menus.id","=","users_menus.menu_id")
-                ->where("user_id",$currentUser->id)
+                ->where("user_id",$id)
                 ->get()->toArray();
 
         $menu = Menu::get()->toArray();
