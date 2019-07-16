@@ -48,7 +48,7 @@ class AdminOnly
         $this->initTree();
 
 		if (auth()->check() && auth()->user()->role->id != 2) {
-            if(count($menu)>0 or $link == '' or $link == 'logout'){
+            if(count($menu)>0 or $link == '' or $link == 'logout' or $link == 'cetakFormBarang' or $link == 'cetakUjiFungsi'){
                 return $next($request);
             } else{
                 return view('errors.401');
