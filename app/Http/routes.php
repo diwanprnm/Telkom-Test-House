@@ -4262,8 +4262,8 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::resource('/device', 'DeviceController');
 	Route::get('/devicenc', 'DevicencController@index');
 	Route::get('/examination/revisi/{id}', 'ExaminationController@revisi');
-	Route::get('/examination/harddelete/{id}', 'ExaminationController@destroy');
-	Route::get('/examination/resetUjiFungsi/{id}', 'ExaminationController@resetUjiFungsi');
+	Route::get('/examination/harddelete/{id}/{page}/{reason}', 'ExaminationController@destroy');
+	Route::get('/examination/resetUjiFungsi/{id}/{reason}', 'ExaminationController@resetUjiFungsi');
 	Route::post('/examination/revisi', 'ExaminationController@updaterevisi');
 	Route::post('/examination/{id}/tanggalkontrak', 'ExaminationController@tanggalkontrak');
 	Route::post('/examination/{id}/generateSPBParam', 'ExaminationController@generateSPBParam');
@@ -4335,6 +4335,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	
 	Route::post('/examination/{id}/generateSPKCode', 'ExaminationController@generateSPKCodeManual');
 	Route::resource('/log', 'LogController');
+	Route::resource('/log_administrator', 'Log_administratorController');
 	Route::get('/backup', 'BackupController@index');
 	Route::get('/delete/{id}', 'BackupController@destroy');
 	Route::post('/restore', 'BackupController@restore');
@@ -4352,7 +4353,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::resource('/equipment', 'EquipmentController');
 	Route::resource('/sales', 'SalesController');
 	Route::get('/sales/{id}/upload', 'SalesController@upload');
-	Route::get('/sales/{id}/deleteProduct', 'SalesController@deleteProduct');
+	Route::get('/sales/{id}/{reason}/deleteProduct', 'SalesController@deleteProduct');
 	Route::resource('/question', 'QuestionController');
 	Route::resource('/questionerquestion', 'QuestionerQuestionController');
 	Route::resource('/questionpriv', 'QuestionprivController');
@@ -4383,6 +4384,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::post('/company/importExcel', 'CompanyController@importExcel');
 	Route::get('/income/excel', 'IncomeController@excel');
 	Route::get('/log/excel', 'LogController@excel');
+	Route::get('/log_administrator/excel', 'Log_administratorController@excel');
 	Route::get('/examinationdone/excel', 'ExaminationDoneController@excel');
 	Route::get('/sales/excel', 'SalesController@excel');
 

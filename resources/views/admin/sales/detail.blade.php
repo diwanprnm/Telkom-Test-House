@@ -8,6 +8,40 @@
 	$is_super = $currentUser['id'];
 ?>
 
+<input type="hide" id="hide_stel_sales_detail_id" name="hide_stel_sales_detail_id">
+<div class="modal fade" id="myModal_delete_detail" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title"><i class="fa fa-eyes-open"></i> Detail Pembelian STEL Akan Dihapus, Mohon Berikan Keterangan!</h4>
+			</div>
+			
+			<div class="modal-body">
+				<table width=100%>
+					<tr>
+						<td>
+							<div class="form-group">
+								<label for="keterangan">Keterangan:</label>
+								<textarea class="form-control" rows="5" name="keterangan" id="keterangan"></textarea>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<table width=100%>
+					<tr>
+						<td>
+							<button type="button" id="btn-modal-delete_detail" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>
+
 <div class="main-content" >
 	<div class="wrap-content container" id="container">
 		<!-- start: PAGE TITLE -->
@@ -77,7 +111,7 @@
 										@if($is_super == '1' || $is_admin_mail == 'admin@mail.com')
 										<td class="center">
 											<div>
-												<a href="{{URL::to('admin/sales/'.$item->id.'/deleteProduct')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Destroy" onclick="return confirm('Are you sure want to delete this data?')"><i class="fa fa-trash"></i></a>
+												<a class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Destroy" data-toggle="modal" data-target="#myModal_delete_detail" onclick="document.getElementById('hide_stel_sales_detail_id').value = '{{ $item->id }}'"><i class="fa fa-trash"></i></a>
 											</div>
 										</td>
 										@endif
@@ -140,6 +174,26 @@
 <script type="text/javascript">
 	jQuery(document).ready(function() {
 		FormElements.init();
+
+		$('#myModal_delete_detail').on('shown.bs.modal', function () {
+		    $('#keterangan').focus();
+		});
+
+		$('#btn-modal-delete_detail').click(function () {
+		 	var baseUrl = "{{URL::to('/')}}";
+			var keterangan = document.getElementById('keterangan').value;
+			var stel_sales_detail_id = document.getElementById('hide_stel_sales_detail_id').value;
+			if(keterangan == ''){
+				$('#myModal_delete_detail').modal('show');
+				return false;
+			}else{
+				$('#myModal_delete_detail').modal('hide');
+				if (confirm('Are you sure want to delete this data?')) {
+				    document.getElementById("overlay").style.display="inherit";	
+				 	document.location.href = baseUrl+'/admin/sales/'+stel_sales_detail_id+'/'+keterangan+'/deleteProduct';
+				}
+			}
+		});
 	});
 </script>
 @endsection

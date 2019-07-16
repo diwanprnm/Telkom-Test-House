@@ -34,8 +34,9 @@
 				</div>
 			@endif
 			
+			@if($data)
 			<div class="col-md-12">
-				{!! Form::open(array('url' => 'admin/generalSetting/'.$data[0]->id, 'method' => 'PUT')) !!}
+				{!! Form::open(array('url' => 'admin/generalSetting/'.$data[0]->id, 'method' => 'PUT', 'id' => 'form-update')) !!}
 					{!! csrf_field() !!}
     				<fieldset>
 						<legend>
@@ -76,9 +77,42 @@
 								</a>
 	                        </div>
 						</div>
+						<div class="modal fade" id="myModal_update" tabindex="-1" role="dialog" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+										<h4 class="modal-title"><i class="fa fa-eyes-open"></i>Setting Manager URel atau POH Akan Diganti, Mohon Berikan Keterangan!</h4>
+									</div>
+									
+									<div class="modal-body">
+										<table width=100%>
+											<tr>
+												<td>
+													<div class="form-group">
+														<label for="keterangan">Keterangan:</label>
+														<textarea class="form-control" rows="5" name="keterangan" id="keterangan"></textarea>
+													</div>
+												</td>
+											</tr>
+										</table>
+									</div><!-- /.modal-content -->
+									<div class="modal-footer">
+										<table width=100%>
+											<tr>
+												<td>
+													<button type="submit" id="btn-modal-update" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div><!-- /.modal-dialog -->
+							</div><!-- /.modal -->
+						</div>
 					</fieldset>
 				{!! Form::close() !!}
 			</div>
+			@endif
 		</div>
 		<!-- end: RESPONSIVE TABLE -->
 	</div>
@@ -87,6 +121,7 @@
 
 @section('content_js')
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
+@if($data)
 <script type="text/javascript">
 	<?php
 		if($data[1]->is_active){
@@ -113,6 +148,22 @@
 	        	$("#poh_manager_urel-div").hide();
 	        }
 	    });
+
+	    $('#myModal_update').on('shown.bs.modal', function () {
+		    $('#keterangan').focus();
+		});
+	});
+
+	$('#form-update').submit(function () {
+		var keterangan = document.getElementById('keterangan').value;
+		if(keterangan == ''){
+			$('#myModal_update').modal('show');
+			return false;
+		}else{
+			$('#myModal_update').modal('hide');
+			document.getElementById("overlay").style.display="inherit";
+		}
 	});
 </script> 
+@endif
 @endsection

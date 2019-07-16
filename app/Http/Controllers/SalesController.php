@@ -9,6 +9,7 @@ use App\Http\Requests;
 
 use App\STEL;
 use App\Logs;
+use App\Logs_administrator;
 use App\STELSales;
 use App\STELSalesAttach;
 use App\STELSalesDetail;
@@ -402,11 +403,17 @@ class SalesController extends Controller
             ->with('dataStel', $STELSales);
     }
 
-	public function deleteProduct($id)
+	public function deleteProduct($id,$reason)
     {
+        $currentUser = Auth::user();
+        $logs_a_stel_sales = NULL;
+        $logs_a_stel_sales_detail = NULL;
+        
         $stel_sales_detail = STELSalesDetail::with('stel')->find($id);
         if($stel_sales_detail){
             $stel_sales = STELSales::find($stel_sales_detail->stels_sales_id);
+
+            $logs_a_stel_sales_detail = $stel_sales_detail;
             
             // unlink stels_sales_detail.attachment
             if (File::exists(public_path().'\media\stelAttach\\'.$id)){
@@ -415,6 +422,8 @@ class SalesController extends Controller
 
             // update total stels_sales by stels_sales_detail.stels_sales_id
             if($stel_sales){
+                $logs_a_stel_sales = $stel_sales;
+                
                 $qty = $stel_sales_detail->qty;
                 $tax = 0.1;
                 $price = $stel_sales_detail->stel->price;
@@ -425,6 +434,15 @@ class SalesController extends Controller
 
             // delete stels_sales_detail
             $stel_sales_detail->delete();
+
+            $logs = new Logs_administrator;
+            $logs->id = Uuid::uuid4();
+            $logs->user_id = $currentUser->id;
+            $logs->action = "Hapus Data Pembelian STEL";
+            $logs->page = "Detail Pembelian STEL";
+            $logs->reason = $reason;
+            $logs->data = $logs_a_stel_sales.$logs_a_stel_sales_detail;
+            $logs->save();
 
             Session::flash('message', 'Successfully Delete Data');
             return redirect('/admin/sales/'.$stel_sales->id);

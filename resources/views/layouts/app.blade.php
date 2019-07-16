@@ -52,11 +52,40 @@
             font-family: 'Raleway', sans-serif;
             font-size: 12px;
         }
-       
+        #overlay {
+          z-index: 1000;
+          display:none;
+          position: fixed;
+          top: 0px;
+          left: 0px;
+          width: 100%;
+          height: 100%;
+          background: rgba(4, 10, 30, 0.8);
+        }   
+        #tengah{
+            width: 250px;
+            height: 30px;
+            position: absolute;
+            top:0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
     </style>
 </head>
 
 <body>
+    <div id="overlay">
+        <div id="tengah">
+            <center>
+                <br>
+                <span style="color:#ffffff">Please wait ....</span>
+                <img src='{{ asset("images/loading.gif") }}'/>
+            </center>
+        </div>
+    </div>
+
     <div id="app">
         <!-- sidebar -->
         <div class="sidebar app-aside" id="sidebar">

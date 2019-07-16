@@ -73,7 +73,7 @@ class LogController extends Controller
             $action = $datalogs3->distinct()->orderBy('logs.action')->get();
 
             if ($search != null){
-                $data->where('action','like','%'.$search.'%');
+                $datalogs->where('action','like','%'.$search.'%');
 
                 $logs = new Logs;
                 $logs->id = Uuid::uuid4();

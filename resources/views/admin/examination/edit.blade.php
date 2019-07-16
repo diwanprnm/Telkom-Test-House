@@ -8,6 +8,40 @@
 	$is_super = $currentUser['id'];
 ?>
 
+<input type="hide" id="hide_exam_id" name="hide_exam_id">
+<div class="modal fade" id="myModal_reset_uf" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title"><i class="fa fa-eyes-open"></i> Uji Fungsi Akan Direset, Mohon Berikan Keterangan!</h4>
+			</div>
+			
+			<div class="modal-body">
+				<table width=100%>
+					<tr>
+						<td>
+							<div class="form-group">
+								<label for="keterangan">Keterangan:</label>
+								<textarea class="form-control" rows="5" name="keterangan" id="keterangan"></textarea>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<table width=100%>
+					<tr>
+						<td>
+							<button type="button" id="btn-modal-reset_uf" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>
+
 <form id="form-tanggal-kontrak" role="form">
 {!! csrf_field() !!}
 <input type="hidden" name="hide_id_exam" id="hide_id_exam"/>
@@ -498,7 +532,7 @@
 							Step Uji Fungsi
 						</legend>
 						@if($is_super == '1' || $is_admin_mail == 'admin@mail.com')
-							<a class="btn btn-wide btn-primary pull-left" style="margin-bottom:10px" href="{{URL::to('admin/examination/resetUjiFungsi/'.$data->id)}}" onclick="return confirm('Are you sure want to reset ?')">Reset Uji Fungsi</a>
+							<a class="btn btn-wide btn-primary pull-left" style="margin-bottom:10px" data-toggle="modal" data-target="#myModal_reset_uf" onclick="document.getElementById('hide_exam_id').value = '{{ $data->id }}'">Reset Uji Fungsi</a>
 						@endif
 						<div class="row">
 							<div class="col-md-12">
@@ -2040,6 +2074,26 @@
 			var dateThru = $('#validFrom').datepicker('getDate');
 			dateThru.setYear(dateThru.getYear()+1903);
 			$('#validThru').datepicker('setDate', dateThru);
+		});
+
+		$('#myModal_reset_uf').on('shown.bs.modal', function () {
+		    $('#keterangan').focus();
+		});
+
+		$('#btn-modal-reset_uf').click(function () {
+		 	var baseUrl = "{{URL::to('/')}}";
+			var keterangan = document.getElementById('keterangan').value;
+			var exam_id = document.getElementById('hide_exam_id').value;
+			if(keterangan == ''){
+				$('#myModal_reset_uf').modal('show');
+				return false;
+			}else{
+				$('#myModal_reset_uf').modal('hide');
+				if (confirm('Are you sure want to reset ?')) {
+				    document.getElementById("overlay").style.display="inherit";	
+				 	document.location.href = baseUrl+'/admin/examination/resetUjiFungsi/'+exam_id+'/'+keterangan;   
+				}
+			}
 		});
 	});
 	

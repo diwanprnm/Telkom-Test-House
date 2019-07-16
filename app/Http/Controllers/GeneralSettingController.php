@@ -9,6 +9,7 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Http\Requests;
 
 use App\Logs;
+use App\Logs_administrator;
 use App\GeneralSetting;
 
 use Auth;
@@ -171,6 +172,15 @@ class GeneralSettingController extends Controller
             $logs->created_by = $currentUser->id;
             $logs->page = "General Setting";
             $logs->save();
+
+            $logs_a = new Logs_administrator;
+            $logs_a->id = Uuid::uuid4();
+            $logs_a->user_id = $currentUser->id;
+            $logs_a->action = "Update Manager URel atau POH";
+            $logs_a->page = "General Setting";
+            $logs_a->reason = $request->input('keterangan');
+            $logs_a->data = $oldGeneralSetting;
+            $logs_a->save();
 
             Session::flash('message', 'General Setting successfully updated');
             return redirect('/admin/generalSetting');

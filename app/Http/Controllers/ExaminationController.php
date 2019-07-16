@@ -16,6 +16,7 @@ use App\ExaminationLab;
 use App\ExaminationHistory;
 use App\User;
 use App\Logs;
+use App\Logs_administrator;
 use App\Income;
 use App\Questioner;
 use App\Equipment;
@@ -2795,14 +2796,20 @@ $notification->id = Uuid::uuid4();
         return true;
     }
 	
-	public function destroy($id)
+	public function destroy($id,$page,$reason)
 	{
+		$currentUser = Auth::user();
+		$logs_a_exam = NULL;
+		$logs_a_device = NULL;
+		
 		$exam_attach = ExaminationAttach::where('examination_id', '=' ,''.$id.'')->get();
 		$exam = Examination::find($id);
 			$device_id = $exam['device_id'];
 		$device = Device::find($device_id);
 		if ($exam_attach && $exam && $device){
 			try{
+				$logs_a_exam = $exam;
+				$logs_a_device = $device;
 				Income::where('reference_id', '=' ,''.$id.'')->delete();
 				Questioner::where('examination_id', '=' ,''.$id.'')->delete();
 				Equipment::where('examination_id', '=' ,''.$id.'')->delete();
@@ -2829,6 +2836,15 @@ $notification->id = Uuid::uuid4();
 				$res_delete_spk = $client->get('spk/delete?examId='.$exam->id.'&spkNumber='.$exam->spk_code)->getBody();
 				$delete_spk = json_decode($res_delete_spk);
 
+				$logs = new Logs_administrator;
+				$logs->id = Uuid::uuid4();
+				$logs->user_id = $currentUser->id;
+				$logs->action = "Hapus Data Pengujian";
+				$logs->page = $page;
+				$logs->reason = $reason;
+				$logs->data = $logs_a_exam.$logs_a_device;
+				$logs->save();
+
 				Session::flash('message', 'Examination successfully deleted');
 				return redirect('/admin/examination');
 			}catch (Exception $e){
@@ -2838,14 +2854,16 @@ $notification->id = Uuid::uuid4();
 		}
 	}
 	
-	public function resetUjiFungsi($id)
+	public function resetUjiFungsi($id,$reason)
 	{
 		$currentUser = Auth::user();
+		$logs_a_exam = NULL;
 
         if ($currentUser){
 			$exam = Examination::find($id);
 			if ($exam){
 				try{
+					$logs_a_exam = $exam;
 					Equipment::where('examination_id', '=' ,''.$exam->id.'')->delete();
 					EquipmentHistory::where('examination_id', '=' ,''.$exam->id.'')->delete();
 					
@@ -2890,6 +2908,15 @@ $notification->id = Uuid::uuid4();
 					$logs->created_by = $currentUser->id;
 					$logs->page = "EXAMINATION";
 					$logs->save();
+
+					$logs_a = new Logs_administrator;
+					$logs_a->id = Uuid::uuid4();
+					$logs_a->user_id = $currentUser->id;
+					$logs_a->action = "Reset Uji Fungsi";
+					$logs_a->page = "Pengujian -> Change Status";
+					$logs_a->reason = $reason;
+					$logs_a->data = $logs_a_exam;
+					$logs_a->save();
 					
 					Session::flash('message', 'Function Test successfully reset');
 					return redirect('/admin/examination/'.$exam->id.'/edit');
