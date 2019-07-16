@@ -35,7 +35,7 @@ class AdminOnly
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        $string = explode("/", Route::getCurrentRoute()->getPath());
+        /*$string = explode("/", Route::getCurrentRoute()->getPath());
         $user_id = (!empty(auth()->user())) ? (auth()->user()->id) : '';
         $link = (!empty($string[1])) ? $string[1] : '';
 
@@ -43,16 +43,17 @@ class AdminOnly
         $menu = Menu::selectRaw(implode(",", $select))->join("users_menus","menus.id","=","users_menus.menu_id")
                 ->where("user_id",$user_id)
                 ->where("menus.url",$link)
-                ->get()->toArray();
+                ->get()->toArray();*/
         // dd($menu);
         $this->initTree();
 
 		if (auth()->check() && auth()->user()->role->id != 2) {
-            if(count($menu)>0 or $link == '' or $link == 'logout' or $link == 'cetakFormBarang' or $link == 'cetakUjiFungsi'){
+            return $next($request);
+            /*if(count($menu)>0 or $link == '' or $link == 'logout' or $link == 'cetakFormBarang' or $link == 'cetakUjiFungsi'){
                 return $next($request);
             } else{
                 return view('errors.401');
-            }
+            }*/
         } elseif (Auth::guard($guard)->guest()) {
             return redirect()->guest('admin/login');
         }
