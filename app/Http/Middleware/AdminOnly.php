@@ -47,8 +47,13 @@ class AdminOnly
         // dd($menu);
         $this->initTree();
 
+        $free_link = array("","logout","user","downloadUsman","delete","downloadbukti","downloadstelwatermark","downloadkuitansistel","downloadfakturstel",
+            "adm_exam_autocomplete","adm_exam_done_autocomplete","adm_dev_autocomplete","adm_feedback_autocomplete","adm_article_autocomplete","adm_stel_autocomplete",
+            "adm_charge_autocomplete","adm_calibration_autocomplete","adm_slideshow_autocomplete","adm_labs_autocomplete","adm_company_autocomplete",
+            "adm_temp_company_autocomplete","adm_user_autocomplete","adm_footer_autocomplete","adm_inc_autocomplete");
+
 		if (auth()->check() && auth()->user()->role->id != 2) {
-            if(count($menu)>0 or $link == '' or $link == 'logout' or $link == 'user' or $link == 'downloadbukti'){
+            if(count($menu)>0 or in_array($link, $free_link)){
                 return $next($request);
             } else{
                 return view('errors.401');

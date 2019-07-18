@@ -190,7 +190,7 @@
 				$('#myModal_delete_detail').modal('hide');
 				if (confirm('Are you sure want to delete this data?')) {
 				    document.getElementById("overlay").style.display="inherit";	
-				 	document.location.href = baseUrl+'/admin/sales/'+stel_sales_detail_id+'/'+keterangan+'/deleteProduct';
+				 	document.location.href = baseUrl+'/admin/sales/'+stel_sales_detail_id+'/'+encodeURIComponent(encodeURIComponent(keterangan))+'/deleteProduct';
 				}
 			}
 		});

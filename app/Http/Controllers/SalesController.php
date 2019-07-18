@@ -403,7 +403,7 @@ class SalesController extends Controller
             ->with('dataStel', $STELSales);
     }
 
-	public function deleteProduct($id,$reason)
+	public function deleteProduct($id,$reason = null)
     {
         $currentUser = Auth::user();
         $logs_a_stel_sales = NULL;
@@ -440,7 +440,7 @@ class SalesController extends Controller
             $logs->user_id = $currentUser->id;
             $logs->action = "Hapus Data Pembelian STEL";
             $logs->page = "Detail Pembelian STEL";
-            $logs->reason = $reason;
+            $logs->reason = urldecode($reason);
             $logs->data = $logs_a_stel_sales.$logs_a_stel_sales_detail;
             $logs->save();
 

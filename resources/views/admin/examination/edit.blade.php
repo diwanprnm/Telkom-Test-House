@@ -2091,7 +2091,7 @@
 				$('#myModal_reset_uf').modal('hide');
 				if (confirm('Are you sure want to reset ?')) {
 				    document.getElementById("overlay").style.display="inherit";	
-				 	document.location.href = baseUrl+'/admin/examination/resetUjiFungsi/'+exam_id+'/'+keterangan;   
+				 	document.location.href = baseUrl+'/admin/examination/resetUjiFungsi/'+exam_id+'/'+encodeURIComponent(encodeURIComponent(keterangan));   
 				}
 			}
 		});

@@ -513,7 +513,7 @@ jQuery(document).ready(function() {
 			$('#myModal_delete').modal('hide');
 			if (confirm('Are you sure want to delete ? SPK Data in OTR will be deleted too.')) {
 			    document.getElementById("overlay").style.display="inherit";	
-			 	document.location.href = baseUrl+'/admin/examination/harddelete/'+exam_id+'/Pengujian/'+keterangan;   
+			 	document.location.href = baseUrl+'/admin/examination/harddelete/'+exam_id+'/Pengujian/'+encodeURIComponent(encodeURIComponent(keterangan));   
 			}
 		}
 	});

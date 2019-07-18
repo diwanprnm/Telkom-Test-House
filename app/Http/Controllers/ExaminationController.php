@@ -2796,7 +2796,7 @@ $notification->id = Uuid::uuid4();
         return true;
     }
 	
-	public function destroy($id,$page,$reason)
+	public function destroy($id,$page,$reason = null)
 	{
 		$currentUser = Auth::user();
 		$logs_a_exam = NULL;
@@ -2841,7 +2841,7 @@ $notification->id = Uuid::uuid4();
 				$logs->user_id = $currentUser->id;
 				$logs->action = "Hapus Data Pengujian";
 				$logs->page = $page;
-				$logs->reason = $reason;
+				$logs->reason = urldecode($reason);
 				$logs->data = $logs_a_exam.$logs_a_device;
 				$logs->save();
 
@@ -2854,7 +2854,7 @@ $notification->id = Uuid::uuid4();
 		}
 	}
 	
-	public function resetUjiFungsi($id,$reason)
+	public function resetUjiFungsi($id,$reason = null)
 	{
 		$currentUser = Auth::user();
 		$logs_a_exam = NULL;
@@ -2914,7 +2914,7 @@ $notification->id = Uuid::uuid4();
 					$logs_a->user_id = $currentUser->id;
 					$logs_a->action = "Reset Uji Fungsi";
 					$logs_a->page = "Pengujian -> Change Status";
-					$logs_a->reason = $reason;
+					$logs_a->reason = urldecode($reason);
 					$logs_a->data = $logs_a_exam;
 					$logs_a->save();
 					
