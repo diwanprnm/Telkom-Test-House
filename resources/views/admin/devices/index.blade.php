@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="main-content" >
 	<div class="wrap-content container" id="container">
 		<!-- start: PAGE TITLE -->
@@ -46,21 +47,55 @@
 											Masa Berlaku Perangkat
 										</label>
 										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-											<input type="text" placeholder="Sesudah Tanggal" value="{{ $after_date }}" name="after_date" id="after_date" class="form-control"/>
+											<input type="text" placeholder="Dari Tanggal" value="{{ $before_date }}" name="before_date" id="before_date" class="form-control"/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
 													<i class="glyphicon glyphicon-calendar"></i>
 												</button>
 											</span>
 										</p>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											&nbsp;
+										</label>
 										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-											<input type="text" placeholder="Sebelum Tanggal" value="{{ $before_date }}" name="before_date" id="before_date" class="form-control"/>
+											<input type="text" placeholder="Sampai Tanggal" value="{{ $after_date }}" name="after_date" id="after_date" class="form-control"/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
 													<i class="glyphicon glyphicon-calendar"></i>
 												</button>
 											</span>
 										</p>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Kategori
+										</label>
+										<select id="category" name="category" class="cs-select cs-skin-elastic" required>
+											@if($category == '')
+												<option value="" disabled selected>Select...</option>
+											@endif
+											@if($category == 'aktif')
+                                                <option value="aktif" selected>Aktif</option>
+											@else
+                                                <option value="aktif">Aktif</option>
+                                            @endif
+											@if($category == 'aktif1')
+                                                <option value="aktif1" selected>Aktif + 1</option>
+											@else
+                                                <option value="aktif1">Aktif + 1</option>
+                                            @endif
+                                            @if($category == 'all')
+                                                <option value="all" selected>Aktif DAN Aktif + 1</option>
+											@else
+                                                <option value="all">Aktif DAN Aktif + 1</option>
+                                            @endif
+										</select>
 									</div>
 								</div>
 								<div class="col-md-12">
@@ -74,7 +109,7 @@
 			    </div>
 	        </div>
 
-			<div class="row">
+	        <div class="row">
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
@@ -90,6 +125,7 @@
 									<th class="center">No Sertifikat</th>
 									<th class="center">Berlaku Dari</th>
 									<th class="center">Berlaku Sampai</th>
+									<th class="center">Kategori</th>
 									<th class="center">Aksi</th>
 								</tr>
 							</thead>
@@ -107,6 +143,11 @@
 										<td class="center">{{ $item->cert_number }}</td>
 										<td class="center">{{ $item->valid_from }}</td>
 										<td class="center">{{ $item->valid_thru }}</td>
+										@if($item->valid_thru >= date('Y-m-d'))
+											<td class="center"><span class="label label-sm label-success">Aktif</span></td>
+										@else
+											<td class="center"><span class="label label-sm label-warning">Aktif + 1</span></td>
+										@endif
 										<td class="center">
 											<div>
 												<a href="{{URL::to('admin/device/'.$item->deviceId.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
@@ -121,7 +162,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								<?php echo $data->appends(array('search' => $search,'before_date' => $before_date,'after_date' => $after_date))->links(); ?>
+								<?php echo $data->appends(array('search' => $search,'before_date' => $before_date,'after_date' => $after_date,'category' => $category))->links(); ?>
 							</div>
 						</div>
 					</div>
@@ -196,7 +237,8 @@
 				var params = {
 					search:document.getElementById("search_value").value,
 					after_date:document.getElementById("after_date").value,
-					before_date:document.getElementById("before_date").value
+					before_date:document.getElementById("before_date").value,
+					category:document.getElementById("category").value
 				};
 				document.location.href = baseUrl+'/admin/device?'+jQuery.param(params);
 	        }
@@ -208,14 +250,19 @@
 			var search_value = document.getElementById("search_value").value;
             var before = document.getElementById("before_date");
             var after = document.getElementById("after_date");
+            var category = document.getElementById("category");
 			var beforeValue = before.value;
 			var afterValue = after.value;
+			var categoryValue = category.value;
 			
 			if (beforeValue != ''){
 				params['before_date'] = beforeValue;
 			}
 			if (afterValue != ''){
 				params['after_date'] = afterValue;
+			}
+			if (categoryValue != ''){
+				params['category'] = categoryValue;
 			}
 				params['search'] = search_value;
 			document.location.href = baseUrl+'/admin/device?'+jQuery.param(params);

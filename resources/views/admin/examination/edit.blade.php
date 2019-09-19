@@ -1926,17 +1926,20 @@
 											<label>
 												Sertifikat File *
 											</label>
-											<input type="file" name="certificate_file" class="form-control" accept="application/pdf, image/*" required />
+											<input type="file" name="certificate_file" id="certificate_file" class="form-control" accept="application/pdf, image/*">
 										</div>
 										<div class="form-group">
+										<?php $certificate_name = ''; ?>
 										@if($data->certificate_status)
 											@if($data->device->certificate)
+												<?php $certificate_name = $data->device->cert_number; ?>
 												<a href="{{URL::to('/admin/examination/media/download/'.$data->device_id.'/certificate')}}"> Download Certificate {{ $data->device->cert_number }}</a>
 											@endif
 										@endif
+										<input type="hidden" id="certificate_name" value="<?php echo $certificate_name; ?>">
 										</div>
 									</div>
-									<div class="col-md-6">
+									<div class="col-md-7">
 										<div class="form-group">
 											<label>
 												Nomor Sertifikat *
@@ -1944,14 +1947,14 @@
 												<input type="text" name="cert_number" id="cert_number" class="form-control" placeholder="Nomor Sertifikat" value="{{ $data->device->cert_number }}" required>
 										</div>
 									</div>
-									<div class="col-md-6">
+									<!-- <div class="col-md-6">
 										<div class="form-group">
 											<label>
 												Tanggal Penerbitan Sertifikat *
 											</label>
 											<input type="text" name="certificate_date" class="form-control" value="{{ $data->certificate_date }}" readonly>
 										</div>
-									</div>
+									</div> -->
 									<div class="col-md-6">
 										<div class="form-group">
 											<label>
@@ -2314,7 +2317,7 @@
 				}			
 			}else{
 				if(function_file.value == '' && function_name == ''){
-					alert("File Laporan Hasil Uji Fungsi harus dipilih");$('.function_file').focus();return false;				
+					alert("File Laporan Hasil Uji Fungsi harus dipilih");$('#function_file').focus();return false;				
 				}
 			}
 		}
@@ -2338,7 +2341,7 @@
 			}			
 		}else{
 			if(contract_file.value == '' && contract_name == ''){
-				alert("File Tinjauan Kontrak harus dipilih");$('.contract_file').focus();return false;				
+				alert("File Tinjauan Kontrak harus dipilih");$('#contract_file').focus();return false;				
 			}
 		}
 	});
@@ -2367,7 +2370,7 @@
 			}			
 		}else{
 			if(spb_file.value == '' && spb_name == ''){
-				alert("File SPB harus dipilih");$('.spb_file').focus();return false;				
+				alert("File SPB harus dipilih");$('#spb_file').focus();return false;				
 			}
 		}
 	});
@@ -2390,7 +2393,7 @@
 			}			
 		}else{
 			if(kuitansi_file.value == '' && kuitansi_name == ''){
-				alert("File Kuitansi harus dipilih");$('.kuitansi_file').focus();return false;				
+				alert("File Kuitansi harus dipilih");$('#kuitansi_file').focus();return false;				
 			}
 		}
 		/* if(values['payment_status'] == '-1' && keterangan == ''){
@@ -2440,7 +2443,7 @@
 			values[this.name] = $(this).val();
 		});
 		if(tanda_terima_file.value == '' && tanda_terima_name == ''){
-			alert("File Tanda Terima harus dipilih");$('.tanda_terima_file').focus();return false;				
+			alert("File Tanda Terima harus dipilih");$('#tanda_terima_file').focus();return false;				
 		}
 	});
 </script>
@@ -2506,17 +2509,31 @@
 	
 	$('#form-sertifikat').submit(function () {
 		var keterangan = document.getElementById('keterangan_sertifikat').value;
+		var certificate_file = document.getElementById('certificate_file');
+		var certificate_name = document.getElementById('certificate_name').value;
 		var $inputs = $('#form-sertifikat :input');
 		var values = {};
 		$inputs.each(function() {
 			values[this.name] = $(this).val();
 		});
-		if(values['certificate_status'] == '-1' && keterangan == ''){
+		if(values['certificate_status'] == '-1'){
+			if(keterangan == ''){
+				$('#myModalketerangan_sertifikat').modal('show');
+				return false;
+			}else{
+				$('#myModalketerangan_sertifikat').modal('hide');
+			}			
+		}else{
+			if(certificate_file.value == '' && certificate_name == ''){
+				alert("File Sertifikat harus dipilih");$('#certificate_file').focus();return false;				
+			}
+		}
+		/*if(values['certificate_status'] == '-1' && keterangan == ''){
 			$('#myModalketerangan_sertifikat').modal('show');
 			return false;
 		}else{
 			$('#myModalketerangan_sertifikat').modal('hide');
-		}
+		}*/
 	});
 </script>
 @endif

@@ -43,8 +43,10 @@ class DeviceController extends Controller
             $paginate = 10;
             $search = trim($request->input('search'));
 			$datenow = date('Y-m-d');
-            $before = null;
+			$dateMin1Year = date('Y-m-d', strtotime('-1 year'));
+			$before = null;
             $after = null;
+            $category = null;
             
             if ($search != null){
                 $dev = DB::table('examinations')
@@ -82,7 +84,10 @@ class DeviceController extends Controller
 				->where('examinations.qa_status','=','1')
 				->where('examinations.qa_passed','=','1')
 				->where('examinations.certificate_status','=','1')
-				->where('devices.valid_thru', '>=', $datenow)
+				/*->where(function($q) use($datenow,$dateMin1Year){
+					$q->where('devices.valid_thru', '>=', $datenow)
+						->orWhere('devices.valid_thru', '>=', $dateMin1Year);
+				})*/
 				->where(function($q) use($search){
 					$q->where('devices.name','like','%'.$search.'%')
 						->orWhere('companies.name','like','%'.$search.'%')
@@ -91,13 +96,37 @@ class DeviceController extends Controller
 				});
 				
 				if ($request->has('before_date')){
-					$dev->where('devices.valid_thru', '<=', $request->get('before_date'));
+					$dev->where('devices.valid_thru', '>=', $request->get('before_date'));
 					$before = $request->get('before_date');
 				}
 
 				if ($request->has('after_date')){
-					$dev->where('devices.valid_thru', '>=', $request->get('after_date'));
+					$dev->where('devices.valid_thru', '<=', $request->get('after_date'));
 					$after = $request->get('after_date');
+				}
+
+				if ($request->has('category')){
+					switch ($request->get('category')) {
+						case 'aktif':
+							$dev->where('devices.valid_thru', '>=', $datenow);
+							break;
+						
+						case 'aktif1':
+							$dev->where('devices.valid_thru', '>=', $dateMin1Year);
+							$dev->where('devices.valid_thru', '<', $datenow);
+							break;
+						
+						default:
+							$dev->where(function($q) use($datenow,$dateMin1Year){
+								$q->where('devices.valid_thru', '>=', $datenow)
+									->orWhere('devices.valid_thru', '>=', $dateMin1Year);
+							});
+							break;
+					}
+					$category = $request->get('category');
+				}
+				else{
+					$dev->where('devices.valid_thru', '>=', $datenow);
 				}
 
 				$logs = new Logs;
@@ -147,17 +176,43 @@ class DeviceController extends Controller
 				->where('examinations.resume_status','=','1')
 				->where('examinations.qa_status','=','1')
 				->where('examinations.qa_passed','=','1')
-				->where('examinations.certificate_status','=','1')
-				->where('devices.valid_thru', '>=', $datenow);
+				->where('examinations.certificate_status','=','1');
+				/*->where(function($q) use($datenow,$dateMin1Year){
+					$q->where('devices.valid_thru', '>=', $datenow)
+						->orWhere('devices.valid_thru', '>=', $dateMin1Year);
+				});*/
 
 				if ($request->has('before_date')){
-					$dev->where('devices.valid_thru', '<=', $request->get('before_date'));
+					$dev->where('devices.valid_thru', '>=', $request->get('before_date'));
 					$before = $request->get('before_date');
 				}
 
 				if ($request->has('after_date')){
-					$dev->where('devices.valid_thru', '>=', $request->get('after_date'));
+					$dev->where('devices.valid_thru', '<=', $request->get('after_date'));
 					$after = $request->get('after_date');
+				}
+
+				if ($request->has('category')){
+					switch ($request->get('category')) {
+						case 'aktif':
+							$dev->where('devices.valid_thru', '>=', $datenow);
+							break;
+						
+						case 'aktif1':
+							$dev->where('devices.valid_thru', '>=', $dateMin1Year);
+							$dev->where('devices.valid_thru', '<', $datenow);
+							break;
+						
+						default:
+							$dev->where(function($q) use($datenow,$dateMin1Year){
+								$q->where('devices.valid_thru', '>=', $datenow)
+									->orWhere('devices.valid_thru', '>=', $dateMin1Year);
+							});
+							break;
+					}
+					$category = $request->get('category');
+				}else{
+					$dev->where('devices.valid_thru', '>=', $datenow);
 				}
 
 				$data_excel = $dev->orderBy('devices.valid_thru', 'desc')->get();
@@ -175,6 +230,7 @@ class DeviceController extends Controller
                 ->with('data', $data)
                 ->with('search', $search)
                 ->with('before_date', $before)
+                ->with('category', $category)
                 ->with('after_date', $after);
         }
     }
@@ -193,9 +249,9 @@ class DeviceController extends Controller
 		// Define the Excel spreadsheet headers
 		$examsArray[] = [
 			'No',
-			'Jenis Perusahaan',
+			// 'Jenis Perusahaan',
 			'Nama Perusahaan',
-			'Alamat Perusahaan',
+			/*'Alamat Perusahaan',
 			'Email Perusahaan',
 			'Telepon Perusahaan',
 			'Faksimil Perusahaan',
@@ -203,25 +259,27 @@ class DeviceController extends Controller
 			'SIUPP Perusahaan',
 			'Tgl. SIUPP Perusahaan',
 			'Sertifikat Perusahaan',
-			'Tgl. Sertifikat Perusahaan',
+			'Tgl. Sertifikat Perusahaan',*/
 			'Nama Perangkat',
 			'Merk/Pabrik',
 			'Tipe',
 			'Kapasitas/Kecepatan',
-			'Pembuat Perangkat',
-			'Nomor Seri Perangkat',
+			/*'Pembuat Perangkat',
+			'Nomor Seri Perangkat',*/
 			'Referensi Uji',
+			'No Sertifikat',
 			'Berlaku Dari',
 			'Berlaku Sampai',
-			'Nomor SPK',
-			'Total Biaya'
+			/*'Nomor SPK',
+			'Total Biaya'*/
+			'Kategori'
 		]; 
 		
 		// Convert each member of the returned collection into an array,
 		// and append it to the payments array.
 			$no = 1;
 		foreach ($data as $row) {
-			if($row->siup_date==''){
+			/*if($row->siup_date==''){
 				$siup_date = '';
 			}else{
 				$siup_date = date("d-m-Y", strtotime($row->siup_date));
@@ -230,12 +288,17 @@ class DeviceController extends Controller
 				$qs_certificate_date = '';
 			}else{
 				$qs_certificate_date = date("d-m-Y", strtotime($row->qs_certificate_date));
+			}*/
+			if($row->valid_thru >= date('Y-m-d')){
+				$category = 'Aktif';
+			}else{
+				$category = 'Aktif + 1';
 			}
 			$examsArray[] = [
 				$no,
-				$row->jns_perusahaan,
+				// $row->jns_perusahaan,
 				$row->namaPerusahaan,
-				$row->address.", kota".$row->city.", kode pos".$row->postal_code,
+				/*$row->address.", kota".$row->city.", kode pos".$row->postal_code,
 				$row->email,
 				$row->phone_number,
 				$row->fax,
@@ -243,18 +306,20 @@ class DeviceController extends Controller
 				$row->siup_number,
 				$siup_date,
 				$row->qs_certificate_number,
-				$qs_certificate_date,
+				$qs_certificate_date,*/
 				$row->namaPerangkat,
 				$row->merk,
 				$row->tipe,
 				$row->kapasitas,
-				$row->manufactured_by,
-				$row->serial_number,
+				/*$row->manufactured_by,
+				$row->serial_number,*/
 				$row->standarisasi,
+				$row->cert_number,
 				$row->valid_from,
 				$row->valid_thru,
-				$row->spk_code,
-				$row->totalBiaya
+				// $row->spk_code,
+				// $row->totalBiaya
+				$category
 			];
 			$no++;
 		}
@@ -322,6 +387,9 @@ class DeviceController extends Controller
         }
         if ($request->has('test_reference')){
             $device->test_reference = $request->input('test_reference');
+        }
+        if ($request->has('cert_number')){
+            $device->cert_number = $request->input('cert_number');
         }
         if ($request->has('valid_from')){
             $device->valid_from = $request->input('valid_from');

@@ -44,25 +44,25 @@
 	                        <div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Nama Brand *
+										Merk/Pabrik *
 									</label>
-									<input type="text" name="mark" class="form-control" placeholder="Nama Brand" value="{{$data->mark}}" required>
+									<input type="text" name="mark" class="form-control" placeholder="Merk/Pabrik" value="{{$data->mark}}" required>
 								</div>
 							</div>
 	                        <div class="col-md-4">
 								<div class="form-group">
 									<label>
-										Model/Type *
+										Tipe *
 									</label>
-									<input type="text" name="model" class="form-control" placeholder="Model/Type" value="{{$data->model}}" required>
+									<input type="text" name="model" class="form-control" placeholder="Tipe" value="{{$data->model}}" required>
 								</div>
 							</div>
 	                        <div class="col-md-4">
 								<div class="form-group">
 									<label>
-										Kapasitas *
+										Kapasitas/Kecepatan *
 									</label>
-									<input type="text" name="capacity" class="form-control" placeholder="Kapasitas" value="{{$data->capacity}}" required>
+									<input type="text" name="capacity" class="form-control" placeholder="Kapasitas/Kecepatan" value="{{$data->capacity}}" required>
 								</div>
 							</div>
 	                        <div class="col-md-4">
@@ -70,13 +70,21 @@
 									<label>
 										Referensi Uji *
 									</label>
-									<input type="text" id="txt-total" name="test_reference" class="form-control" placeholder="referensi Uji" value="{{$data->test_reference}}" required>
+									<input type="text" name="test_reference" class="form-control" placeholder="Referensi Uji" value="{{$data->test_reference}}" required>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>
+										No Sertifikat *
+									</label>
+									<input type="text" name="cert_number" class="form-control" placeholder="No Sertifikat" value="{{$data->cert_number}}" required>
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Tanggal Mulai Berlaku *
+										Berlaku Dari *
 									</label>
 									<p id="validFrom" class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
 										<input type="text" name="valid_from" id="valid_from" class="form-control" value="{{ $data->valid_from }}"/>
@@ -91,9 +99,9 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Tanggal Akhir Berlaku *
+										Berlaku Sampai *
 									</label>
-									<p id="validFrom" class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
+									<p id="validThru" class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
 										<input type="text" name="valid_thru" id="valid_thru" class="form-control" value="{{ $data->valid_thru }}"/>
 										<span class="input-group-btn">
 											<button type="button" class="btn btn-default">
@@ -138,6 +146,11 @@
 <script type="text/javascript">
 	jQuery(document).ready(function() {
 		FormElements.init();
+		$('#valid_from').change(function() {
+			var dateThru = $('#validFrom').datepicker('getDate');
+			dateThru.setYear(dateThru.getYear()+1903);
+			$('#validThru').datepicker('setDate', dateThru);
+		});
 	});
 </script>
 @endsection
