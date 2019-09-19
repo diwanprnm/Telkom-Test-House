@@ -142,7 +142,7 @@ class DevicencController extends Controller
 				->where('examinations.resume_status','=','1')
 				->where('examinations.qa_status','=','1')
 				->where('examinations.qa_passed','=','-1')
-				->where('examinations.certificate_status','!=','1');
+				->where('examinations.certificate_status','=','1');
 
 				if ($request->has('before_date')){
 					$dev->where('devices.valid_thru', '<=', $request->get('before_date'));
