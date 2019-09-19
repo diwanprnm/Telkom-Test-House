@@ -14,6 +14,8 @@ use App\Logs;
 
 use Auth;
 use Session;
+use Excel;
+use Ramsey\Uuid\Uuid;
 
 class DevicencController extends Controller
 {
@@ -138,7 +140,7 @@ class DevicencController extends Controller
 						)
 				->where('examinations.examination_type_id','=','1')
 				->where('examinations.resume_status','=','1')
-				->where('examinations.qa_status','!=','1')
+				->where('examinations.qa_status','=','1')
 				->where('examinations.qa_passed','=','-1')
 				->where('examinations.certificate_status','!=','1');
 

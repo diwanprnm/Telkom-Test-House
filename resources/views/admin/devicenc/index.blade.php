@@ -143,7 +143,7 @@
 				var params = {
 					search:document.getElementById("search_value").value
 				};
-				document.location.href = baseUrl+'/admin/device?'+jQuery.param(params);
+				document.location.href = baseUrl+'/admin/devicenc?'+jQuery.param(params);
 	        }
 	    });
 	});
