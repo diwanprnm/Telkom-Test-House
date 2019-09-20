@@ -4380,6 +4380,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	
 	Route::get('/examination/excel', 'ExaminationController@excel');
 	Route::get('/device/excel', 'DeviceController@excel');
+	Route::get('/devicenc/excel', 'DevicencController@excel');
 	Route::get('/company/excel', 'CompanyController@excel');
 	Route::post('/company/importExcel', 'CompanyController@importExcel');
 	Route::get('/income/excel', 'IncomeController@excel');
