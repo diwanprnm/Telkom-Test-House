@@ -178,13 +178,13 @@ class DevicencController extends Controller
 				
             }
 
-			$data = $dev->paginate($paginate);
+			$data = $dev->orderBy('qa_date', 'desc')->paginate($paginate);
             
             if (count($data) == 0){
                 $message = 'Data not found';
             }
 			
-			$dataAfter = $afterDev->paginate($paginate);
+			$dataAfter = $afterDev->orderBy('qa_date', 'desc')->paginate($paginate);
 			$dataAfter->setPageName('other_page');
             
             if (count($dataAfter) == 0){

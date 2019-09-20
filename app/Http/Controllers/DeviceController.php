@@ -139,7 +139,7 @@ class DeviceController extends Controller
                 $logs->save();
 				
 				$data_excel = $dev->orderBy('devices.valid_thru', 'desc')->get();
-				$data = $dev->paginate($paginate);
+				$data = $dev->orderBy('devices.valid_thru', 'desc')->paginate($paginate);
             }else{
 				$dev = DB::table('examinations')
 				->join('devices', 'examinations.device_id', '=', 'devices.id')
@@ -216,7 +216,7 @@ class DeviceController extends Controller
 				}
 
 				$data_excel = $dev->orderBy('devices.valid_thru', 'desc')->get();
-				$data = $dev->paginate($paginate);
+				$data = $dev->orderBy('devices.valid_thru', 'desc')->paginate($paginate);
             }
             
             if (count($data) == 0){
