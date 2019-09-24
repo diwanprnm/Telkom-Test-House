@@ -32,6 +32,8 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use App\Events\Notification;
 use App\NotificationTable;
 
+use Carbon\Carbon;
+
 class PermohonanController extends Controller
 {
     /**
@@ -973,20 +975,27 @@ class PermohonanController extends Controller
 	}
 	
 	public function cekSNjnsPengujian(Request $request){
+		$expDate = Carbon::now()->subMonths(6);
 		$query = "SELECT
-					*
+					*, e.id as id_exam, d.status as status_device
 				FROM
 					examinations e, devices d
 				WHERE e.device_id = d.id
 				AND	e.examination_type_id = '".$request->input('jnsPelanggan')."'
-				AND	d.name = '".$request->input('nama_perangkat')."'
-				AND	d.model = '".$request->input('model_perangkat')."'
-				AND	d.mark = '".$request->input('merk_perangkat')."'
+				AND	TRIM(d.name) = '".trim($request->input('nama_perangkat'), " ")."'
+				AND	TRIM(d.model) = '".trim($request->input('model_perangkat'), " ")."'
+				AND	TRIM(d.mark) = '".trim($request->input('merk_perangkat'), " ")."'
+				AND	TRIM(d.capacity) = '".trim($request->input('kapasitas_perangkat')," ")."'
+				ORDER BY qa_date DESC;
 				";
 		$data = DB::select($query);
-		if(count($data) == 1){
+		if(count($data) > 0){
 			if($data[0]->qa_passed == "-1"){
-				echo -1;
+				if($data[0]->qa_date >= $expDate && $data[0]->status_device == 1){
+					echo 2;	
+				}else{
+					echo '-1qa_date'.$data[0]->qa_date.'qa_date'.$data[0]->id_exam;
+				}
 			}else{
 				echo 1;
 			}			

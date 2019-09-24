@@ -299,9 +299,10 @@
 									<div class="form-group">
 										<table class="table table-condensed">
 											<thead>
-											@if($data->keterangan == -1)
+											@if(strpos($data->keterangan, 'qa_date') !== false)
+												<?php $data_ket = explode("qa_date",$data->keterangan); ?>
 												<tr>
-													<th colspan="3" align="center"><font color="red">Perangkat ini sudah pernah diuji, dengan status "Tidak Lulus Uji"</font></th>
+													<th colspan="3" align="center"><font color="red">Perangkat ini sudah pernah diuji, dengan status "Tidak Lulus Uji" berdasarkan keputusan Sidang QA tanggal {{ $data_ket[1] }}</font></th>
 												</tr>
 											@endif
 												<tr>

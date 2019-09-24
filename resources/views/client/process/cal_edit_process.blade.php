@@ -184,6 +184,7 @@
 											<input type="hidden" name="hide_name" id="hide_name" value="{{$userData->nama_perangkat}}"/>
 											<input type="hidden" name="hide_model" id="hide_model" value="{{$userData->model_perangkat}}" />
 											<input type="hidden" name="hide_merk" id="hide_merk" value="{{$userData->merk_perangkat}}" />
+											<input type="hidden" name="hide_capacity" id="hide_capacity" value="{{$userData->kapasitas_perangkat}}" />
 										</div>
 										<div class="form-group">
 											<label for="f1-merek-perangkat">{{ trans('translate.service_device_mark') }} *</label>
@@ -563,7 +564,7 @@
 	       	}  
 	        if(newIndex == 5){
 				if($('#hide_cekSNjnsPengujian').val() == 1){
-					alert("Perangkat[Nama, Merk, Model] dan Jenis Pengujian sudah ada!"); 
+					alert("Perangkat[Nama, Merk, Model, Kapasitas] dan Jenis Pengujian sudah ada!"); 
 					return false;
 				}else{
 					var formData = new FormData($('#form-permohonan')[0]);
@@ -619,14 +620,16 @@
 				var nama_perangkat = $('#f1-nama-perangkat').val();
 				var model_perangkat = $('#f1-model-perangkat').val();
 				var merk_perangkat = $('#f1-merek-perangkat').val();
+				var kapasitas_perangkat = $('#f1-kapasitas-perangkat').val();
 				var true_nama_perangkat = $('#hide_name').val();
 				var true_model_perangkat = $('#hide_model').val();
 				var true_merk_perangkat = $('#hide_merk').val();
-				if((true_nama_perangkat != nama_perangkat) || (true_model_perangkat != model_perangkat) || (true_merk_perangkat != merk_perangkat)){
+				var true_kapasitas_perangkat = $('#hide_capacity').val();
+				if((true_nama_perangkat != nama_perangkat) || (true_model_perangkat != model_perangkat) || (true_merk_perangkat != merk_perangkat) || (true_kapasitas_perangkat != kapasitas_perangkat)){
 					$.ajax({
 						type: "POST",
 						url : "../../cekPermohonan",
-						data: {'_token':"{{ csrf_token() }}", 'jnsPelanggan':jnsPelanggan, 'serialNumber_perangkat':serialNumber_perangkat, 'nama_perangkat':nama_perangkat, 'model_perangkat':model_perangkat, 'merk_perangkat':merk_perangkat},
+						data: {'_token':"{{ csrf_token() }}", 'jnsPelanggan':jnsPelanggan, 'serialNumber_perangkat':serialNumber_perangkat, 'nama_perangkat':nama_perangkat, 'model_perangkat':model_perangkat, 'merk_perangkat':merk_perangkat, 'kapasitas_perangkat':kapasitas_perangkat},
 						// dataType:'json',
 						type:'post',
 						success: function(data){

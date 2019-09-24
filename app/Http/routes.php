@@ -4261,6 +4261,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::get('/company/media/{id}/{name}', 'CompanyController@viewMedia');
 	Route::resource('/device', 'DeviceController');
 	Route::get('/devicenc', 'DevicencController@index');
+	Route::get('/devicenc/{id}/{reason}/moveData', 'DevicencController@moveData');
 	Route::get('/examination/revisi/{id}', 'ExaminationController@revisi');
 	Route::get('/examination/harddelete/{id}/{page}/{reason}', 'ExaminationController@destroy');
 	Route::get('/examination/resetUjiFungsi/{id}/{reason}', 'ExaminationController@resetUjiFungsi');

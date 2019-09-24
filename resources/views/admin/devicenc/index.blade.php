@@ -33,6 +33,45 @@
 	}
 </style>
 
+<?php
+	$currentUser = Auth::user();
+	$is_admin_mail = $currentUser['email'];
+	$is_super = $currentUser['id'];
+?>
+<input type="hide" id="hide_device_id" name="hide_device_id">
+<div class="modal fade" id="myModal_move_data" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title"><i class="fa fa-eyes-open"></i>Perangkat Akan Dipindahkan Menjadi Layak Uji Ulang, Mohon Berikan Keterangan!</h4>
+			</div>
+			
+			<div class="modal-body">
+				<table width=100%>
+					<tr>
+						<td>
+							<div class="form-group">
+								<label for="keterangan">Keterangan:</label>
+								<textarea class="form-control" rows="5" name="keterangan" id="keterangan"></textarea>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<table width=100%>
+					<tr>
+						<td>
+							<button type="button" id="btn-modal-move_data" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>
+
 <div class="main-content" >
 	<div class="wrap-content container" id="container">
 		<!-- start: PAGE TITLE -->
@@ -55,8 +94,8 @@
 		<!-- start: RESPONSIVE TABLE -->
 		<div class="container-fluid container-fullw bg-white">
 	        <ul class="tabs">
-				<li class="btn tab-1" data-tab="tab-1">Masa 6 Bulan</li>
-				<li class="btn tab-2" data-tab="tab-2">Lewat 6 Bulan</li>
+				<li class="btn tab-1" data-tab="tab-1">Belum Layak Uji Ulang</li>
+				<li class="btn tab-2" data-tab="tab-2">Layak Uji Ulang</li>
 			</ul>
 
 			<input type="hidden" name="hidden_tab" id="hidden_tab" value="{{ $tab }}">
@@ -87,7 +126,11 @@
 									<th class="center">Tipe</th>
 									<th class="center">Kapasitas/Kecepatan</th>
 									<th class="center">Referensi Uji</th>
+									<th class="center">Dibuat di</th>
 									<th class="center">Tanggal Sidang</th>
+									@if($is_super == '1' || $is_admin_mail == 'admin@mail.com')
+										<th class="center">Action</th>
+									@endif
 								</tr>
 							</thead>
 							<?php $no=1; ?>
@@ -100,7 +143,15 @@
 									<td class="center">{{ $item->tipe }}</td>
 									<td class="center">{{ $item->kapasitas }}</td>
 									<td class="center">{{ $item->standarisasi }}</td>
+									<td class="center">{{ $item->manufactured_by }}</td>
 									<td class="center">{{ $item->qa_date }}</td>
+									@if($is_super == '1' || $is_admin_mail == 'admin@mail.com')
+										<td class="center">
+											<div>
+												<a class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Destroy" data-toggle="modal" data-target="#myModal_move_data" onclick="document.getElementById('hide_device_id').value = '{{ $item->device_id }}'"><i class="fa fa-repeat"></i></a>
+											</div>
+										</td>
+										@endif
 								</tr>
 							<?php $no++ ?>
 							@endforeach
@@ -142,6 +193,7 @@
 									<th class="center">Tipe</th>
 									<th class="center">Kapasitas/Kecepatan</th>
 									<th class="center">Referensi Uji</th>
+									<th class="center">Dibuat di</th>
 									<th class="center">Tanggal Sidang</th>
 								</tr>
 							</thead>
@@ -155,6 +207,7 @@
 									<td class="center">{{ $item->tipe }}</td>
 									<td class="center">{{ $item->kapasitas }}</td>
 									<td class="center">{{ $item->standarisasi }}</td>
+									<td class="center">{{ $item->manufactured_by }}</td>
 									<td class="center">{{ $item->qa_date }}</td>
 								</tr>
 							<?php $no++ ?>
@@ -213,6 +266,26 @@
 			$(this).addClass('current');
 			$("#"+tab_id).addClass('current');
 		})
+
+		$('#myModal_move_data').on('shown.bs.modal', function () {
+		    $('#keterangan').focus();
+		});
+
+		$('#btn-modal-move_data').click(function () {
+		 	var baseUrl = "{{URL::to('/')}}";
+			var keterangan = document.getElementById('keterangan').value;
+			var device_id = document.getElementById('hide_device_id').value;
+			if(keterangan == ''){
+				$('#myModal_move_data').modal('show');
+				return false;
+			}else{
+				$('#myModal_move_data').modal('hide');
+				if (confirm('Are you sure want to move this data?')) {
+				    document.getElementById("overlay").style.display="inherit";	
+				 	document.location.href = baseUrl+'/admin/devicenc/'+device_id+'/'+encodeURIComponent(encodeURIComponent(keterangan))+'/moveData';
+				}
+			}
+		});
 
 	});
 </script>

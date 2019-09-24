@@ -11,6 +11,7 @@ use App\Examination;
 use App\Device;
 use App\Company;
 use App\Logs;
+use App\Logs_administrator;
 
 use Auth;
 use Session;
@@ -61,6 +62,7 @@ class DevicencController extends Controller
 					'examinations.jns_perusahaan',
 					'examinations.qa_date',
 					'companies.name AS namaPerusahaan',
+					'devices.id as device_id',
 					'devices.name AS namaPerangkat',
 					'devices.mark AS merk',
 					'devices.model AS tipe',
@@ -69,6 +71,7 @@ class DevicencController extends Controller
 					'devices.valid_from',
 					'devices.valid_thru',
 					'devices.serial_number',
+					'devices.manufactured_by',
 					'companies.name',
 					'companies.address',
 					'companies.city',
@@ -88,6 +91,7 @@ class DevicencController extends Controller
 			->where('examinations.qa_passed','=','-1')
 			->where('examinations.certificate_status','=','1')
 			->whereDate('examinations.qa_date','>=',$expDate)
+			->where('devices.status', 1)
 			;
 
 			$afterDev = DB::table('examinations')
@@ -99,6 +103,7 @@ class DevicencController extends Controller
 					'examinations.jns_perusahaan',
 					'examinations.qa_date',
 					'companies.name AS namaPerusahaan',
+					'devices.id as device_id',
 					'devices.name AS namaPerangkat',
 					'devices.mark AS merk',
 					'devices.model AS tipe',
@@ -107,6 +112,7 @@ class DevicencController extends Controller
 					'devices.valid_from',
 					'devices.valid_thru',
 					'devices.serial_number',
+					'devices.manufactured_by',
 					'companies.name',
 					'companies.address',
 					'companies.city',
@@ -125,7 +131,10 @@ class DevicencController extends Controller
 			->where('examinations.qa_status','=','1')
 			->where('examinations.qa_passed','=','-1')
 			->where('examinations.certificate_status','=','1')
-			->whereDate('examinations.qa_date','<',$expDate)
+			->where(function($q) use($expDate){
+					$q->whereDate('examinations.qa_date','<',$expDate)
+						->orWhere('devices.status', '-1');
+				});
 			;
 
 			if ($request->has('before_date')){
@@ -228,6 +237,7 @@ class DevicencController extends Controller
 				'examinations.jns_perusahaan',
 				'examinations.qa_date',
 				'companies.name AS namaPerusahaan',
+				'devices.id as device_id',
 				'devices.name AS namaPerangkat',
 				'devices.mark AS merk',
 				'devices.model AS tipe',
@@ -236,6 +246,7 @@ class DevicencController extends Controller
 				'devices.valid_from',
 				'devices.valid_thru',
 				'devices.serial_number',
+				'devices.manufactured_by',
 				'companies.name',
 				'companies.address',
 				'companies.city',
@@ -255,6 +266,7 @@ class DevicencController extends Controller
 		->where('examinations.qa_passed','=','-1')
 		->where('examinations.certificate_status','=','1')
 		->whereDate('examinations.qa_date','>=',$expDate)
+		->where('devices.status', 1)
 		;
 
 		$afterDev = DB::table('examinations')
@@ -266,6 +278,7 @@ class DevicencController extends Controller
 				'examinations.jns_perusahaan',
 				'examinations.qa_date',
 				'companies.name AS namaPerusahaan',
+				'devices.id as device_id',
 				'devices.name AS namaPerangkat',
 				'devices.mark AS merk',
 				'devices.model AS tipe',
@@ -274,6 +287,7 @@ class DevicencController extends Controller
 				'devices.valid_from',
 				'devices.valid_thru',
 				'devices.serial_number',
+				'devices.manufactured_by',
 				'companies.name',
 				'companies.address',
 				'companies.city',
@@ -292,7 +306,10 @@ class DevicencController extends Controller
 		->where('examinations.qa_status','=','1')
 		->where('examinations.qa_passed','=','-1')
 		->where('examinations.certificate_status','=','1')
-		->whereDate('examinations.qa_date','<',$expDate)
+		->where(function($q) use($expDate){
+					$q->whereDate('examinations.qa_date','<',$expDate)
+						->orWhere('devices.status', '-1');
+				});
 		;
 
 		if ($request->has('before_date')){
@@ -314,7 +331,7 @@ class DevicencController extends Controller
 						->orWhere('devices.model','like','%'.$search.'%');
 				});
 
-				$data = $afterDev->get();
+				$data = $afterDev->orderBy('qa_date', 'desc')->get();
         	}else{
 				$dev->where(function($q) use($search){
 					$q->where('devices.name','like','%'.$search.'%')
@@ -323,10 +340,10 @@ class DevicencController extends Controller
 						->orWhere('devices.model','like','%'.$search.'%');
 				});
 
-				$data = $dev->get();
+				$data = $dev->orderBy('qa_date', 'desc')->get();
         	}			
         }else{
-        	if($tab == 'tab-2'){$data = $afterDev->get();}else{$data = $dev->get();}
+        	if($tab == 'tab-2'){$data = $afterDev->orderBy('qa_date', 'desc')->get();}else{$data = $dev->orderBy('qa_date', 'desc')->get();}
         }
 
         $examsArray = []; 
@@ -349,9 +366,9 @@ class DevicencController extends Controller
 			'Merk/Pabrik',
 			'Tipe',
 			'Kapasitas/Kecepatan',
-			/*'Pembuat Perangkat',
-			'Nomor Seri Perangkat',*/
+			/*'Nomor Seri Perangkat',*/
 			'Referensi Uji',
+			'Dibuat di',
 			/*'Nomor SPK',
 			'Total Biaya'*/
 			'Tanggal Sidang'
@@ -389,9 +406,9 @@ class DevicencController extends Controller
 				$row->merk,
 				$row->tipe,
 				$row->kapasitas,
-				/*$row->manufactured_by,
-				$row->serial_number,*/
+				/*$row->serial_number,*/
 				$row->standarisasi,
+				$row->manufactured_by,
 				// $row->spk_code,
 				// $row->totalBiaya
 				$row->qa_date
@@ -421,5 +438,41 @@ class DevicencController extends Controller
                 $sheet->fromArray($examsArray, null, 'A1', false, false);
             });
         })->export('xlsx'); 
+    }
+
+    public function moveData($id,$reason = null)
+    {
+        $currentUser = Auth::user();
+        $logs_devicenc = NULL;
+
+        $devicenc = Device::find($id);
+
+        if($devicenc){
+        	$devicenc->status = '-1';
+
+        	try{
+        		$devicenc->save();
+        		$logs_devicenc = $devicenc;
+            
+	            $logs = new Logs_administrator;
+	            $logs->id = Uuid::uuid4();
+	            $logs->user_id = $currentUser->id;
+	            $logs->action = "Memindahkan Data Perangkat Menjadi Layak Uji Ulang";
+	            $logs->page = "Perangkat Tidak Lulus Uji";
+	            $logs->reason = urldecode($reason);
+	            $logs->data = $logs_devicenc;
+	            $logs->save();
+
+	            Session::flash('message', 'Successfully Move Data');
+	            return redirect('/admin/devicenc/');
+        	} catch(Exception $e){
+	            Session::flash('error', 'Move failed');
+	            return redirect('/admin/devicenc/');
+		    }
+        }else{
+            Session::flash('error', 'Undefined Data');
+            return redirect('/admin/devicenc/');
+        }
+
     }
 }

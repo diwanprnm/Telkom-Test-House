@@ -1346,6 +1346,22 @@ class ExaminationController extends Controller
             $exam->qa_status = $status;
             $exam->qa_passed = $passed;
             if($exam->qa_passed == 1){  
+
+            	if(strpos($exam->keterangan, 'qa_date') !== false){
+            		$data_ket = explode("qa_date", $exam->keterangan);
+            		$devnc_exam = Examination::find($data_ket[2]);
+
+            		if($devnc_exam){
+			        	$devnc_exam->qa_passed = 0;
+
+			        	try{
+			        		$devnc_exam->save();
+			        	} catch(Exception $e){
+
+					    }
+			        }
+            	}
+
             	$data= array( 
 	                "from"=>"admin",
 	                "to"=>$exam->created_by,
@@ -1371,6 +1387,8 @@ class ExaminationController extends Controller
 
                 // $this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.sidang_QA", "Hasil Sidang QA");
             }else{ 
+
+            	$exam->certificate_status = 1;
 
 		      	$data= array( 
 	                "from"=>"admin",
