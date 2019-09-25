@@ -78,12 +78,12 @@
                         	<tr>
                         		<td colspan="5" align="right"> </td>
                         		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php 
-                        			echo 	number_format($total, 0, '.', ',');?></td>
+                        			echo number_format($total, 0, '.', ',');?></td>
                         	</tr>
                        		<tr>
                         		<td colspan="5" align="right"> {{ trans('translate.tax') }}</td>
                         		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php $tax =  $total * (config("cart.tax")/100);
-                        			echo	number_format($tax, 0, '.', ',');?></td>
+                        			echo number_format($tax, 0, '.', ',');?></td>
                         	</tr>
                         	<tr>
                         		<td colspan="5" align="right"> Total</td>

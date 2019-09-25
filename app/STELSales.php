@@ -13,4 +13,9 @@ class STELSales extends Model
     {
         return $this->hasMany('App\STELSalesDetail', 'stels_sales_id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo('App\User', 'user_id');
+    }
 }

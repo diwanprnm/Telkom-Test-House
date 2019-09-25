@@ -4487,6 +4487,7 @@ Route::get('/login', 'ProfileController@login');
 Route::get('/products', 'ProductsController@index'); 
 Route::resource('/products', 'ProductsController');
 
+Route::get('/purchase_history', 'ProductsController@purchase_history');
 Route::get('/payment_status', 'ProductsController@payment_status');
 Route::post('/checkout', 'ProductsController@checkout');
 Route::post('/doCheckout', 'ProductsController@doCheckout');

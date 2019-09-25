@@ -67,6 +67,30 @@ class ProductsController extends Controller
         }
     }
 
+    public function purchase_history(Request $request)
+    { 
+        $currentUser = Auth::user();
+        if($currentUser){
+            $paginate = 5;
+
+            $query = STELSales::whereHas('user', function ($query) use ($currentUser) {
+                                    $query->where('company_id', $currentUser->company_id);
+                                })
+                                ->with('user')
+                                ->with('user.company')
+                                ->with('sales_detail')
+                                ->with('sales_detail.stel');
+            $data = $query->orderBy('created_at', 'desc')->paginate($paginate);
+            $page = "purchase_history";
+            return view('client.STEL.purchase_history') 
+            ->with('page', $page)
+            ->with('data', $data);     
+        }else{
+          return redirect("login");
+        }
+        
+    } 
+
     public function payment_status(Request $request)
     { 
         $currentUser = Auth::user();
