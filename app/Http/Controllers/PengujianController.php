@@ -1487,6 +1487,7 @@ class PengujianController extends Controller
 			c.phone_number AS telpPerusahaan,
 			c.fax AS faxPerusahaan,
 			c.email AS emailPerusahaan,
+			c.npwp_number AS npwpPerusahaan,
 			d.`name` AS nama_perangkat,
 			d.mark AS merk_perangkat,
 			d.capacity AS kapasitas_perangkat,
@@ -1542,7 +1543,8 @@ class PengujianController extends Controller
 			'namaFile' => 'Pengujian '.urlencode(urlencode($data[0]->descPengujian)) ?: '-',
 			'no_reg' => urlencode(urlencode($data[0]->function_test_NO)) ?: '-',
 			'plg_idPerusahaan' => urlencode(urlencode($data[0]->plg_idPerusahaan)) ?: '-',
-			'nibPerusahaan' => urlencode(urlencode($data[0]->nibPerusahaan)) ?: '-'
+			'nibPerusahaan' => urlencode(urlencode($data[0]->nibPerusahaan)) ?: '-',
+			'npwpPerusahaan' => urlencode(urlencode($data[0]->npwpPerusahaan)) ?: '-'
 		]);
     }
 	

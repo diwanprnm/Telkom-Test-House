@@ -227,6 +227,8 @@ class PermohonanController extends Controller
 		$batas_waktu_sistem = 
 			// $request->input('batas_waktu_sistem');
 			$request->input('f1-batas-waktu');
+		$npwp_perusahaan = 
+			$request->input('hide_npwpPerusahaan');
 		$no_reg = $this->generateFunctionTestNumber($jns_pengujian_name);
 			
 		if($request->ajax()){
@@ -244,6 +246,7 @@ class PermohonanController extends Controller
 				'telepon_perusahaan' => $telepon_perusahaan,
 				'faksimile_perusahaan' => $faksimile_perusahaan,
 				'email_perusahaan' => $email_perusahaan,
+				'npwp_perusahaan' => $npwp_perusahaan,
 				'nama_perangkat' => $nama_perangkat,
 				'merek_perangkat' => $merek_perangkat,
 				'model_perangkat' => $model_perangkat,
@@ -645,6 +648,8 @@ class PermohonanController extends Controller
 		$email_perusahaan = 
 			// $request->input('email_perusahaan');
 			$request->input('f1-email-perusahaan');
+		$npwp_perusahaan = 
+			$request->input('hide_npwpPerusahaan');
 		$jns_pengujian = 
 			// $request->input('hide_jns_pengujian');
 			$request->input('hide_jns_pengujian');
@@ -833,6 +838,7 @@ class PermohonanController extends Controller
 				'telepon_perusahaan' => $telepon_perusahaan,
 				'faksimile_perusahaan' => $faksimile_perusahaan,
 				'email_perusahaan' => $email_perusahaan,
+				'npwp_perusahaan' => $npwp_perusahaan,
 				'nama_perangkat' => $nama_perangkat,
 				'merek_perangkat' => $merek_perangkat,
 				'model_perangkat' => $model_perangkat,

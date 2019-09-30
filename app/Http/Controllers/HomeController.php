@@ -141,7 +141,7 @@ class HomeController extends Controller
 
 			$query = "SELECT
 					u.id AS user_id, u.`name` AS namaPemohon, u.address AS alamatPemohon, u.phone_number AS telpPemohon, u.fax AS faxPemohon, u.email AS emailPemohon, u.email2 AS emailPemohon2, u.email3 AS emailPemohon3, u.company_id AS company_id,
-					c.`name` AS namaPerusahaan, c.address AS alamatPerusahaan, c.plg_id AS plg_idPerusahaan, c.nib AS nibPerusahaan, c.phone_number AS telpPerusahaan, c.fax AS faxPerusahaan, c.email AS emailPerusahaan,
+					c.`name` AS namaPerusahaan, c.address AS alamatPerusahaan, c.plg_id AS plg_idPerusahaan, c.nib AS nibPerusahaan, c.phone_number AS telpPerusahaan, c.fax AS faxPerusahaan, c.email AS emailPerusahaan, c.npwp_number AS npwpPerusahaan,
 					c.qs_certificate_number AS noSertifikat, c.qs_certificate_file AS fileSertifikat, c.qs_certificate_date AS tglSertifikat,
 					c.siup_number AS noSIUPP, c.siup_file AS fileSIUPP, c.siup_date AS tglSIUPP, c.npwp_file AS fileNPWP
 				FROM
@@ -202,7 +202,7 @@ class HomeController extends Controller
 				d.serial_number AS serialNumber,
 				c.`name` AS namaPerusahaan,	e.jns_perusahaan AS jnsPerusahaan, c.address AS alamatPerusahaan, c.plg_id AS plg_idPerusahaan, c.nib AS nibPerusahaan, c.phone_number AS telpPerusahaan, c.fax AS faxPerusahaan, c.email AS emailPerusahaan,
 				c.qs_certificate_number AS noSertifikat, c.qs_certificate_file AS fileSertifikat, c.qs_certificate_date AS tglSertifikat,
-				c.siup_number AS noSIUPP, c.siup_file AS fileSIUPP, c.siup_date AS tglSIUPP, c.npwp_file AS fileNPWP,
+				c.siup_number AS noSIUPP, c.siup_file AS fileSIUPP, c.siup_date AS tglSIUPP, c.npwp_file AS fileNPWP, c.npwp_number AS npwpPerusahaan,
 				(SELECT attachment FROM examination_attachments WHERE examination_id = '".$id."' AND `name` = 'Referensi Uji') AS fileref_uji,
 				(SELECT `no` FROM examination_attachments WHERE examination_id = '".$id."' AND `name` = 'Referensi Uji') AS noref_uji,
 				(SELECT tgl FROM examination_attachments WHERE examination_id = '".$id."' AND `name` = 'Referensi Uji') AS tglref_uji,

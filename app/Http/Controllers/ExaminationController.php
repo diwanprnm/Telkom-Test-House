@@ -2598,7 +2598,7 @@ $notification->id = Uuid::uuid4();
         // }
 		$contract_date = $request->input('contract_date');
 			$contract_date_ina_temp = strtotime($contract_date);
-			$contract_date_ina = date('d-m-Y', $contract_date_ina_temp);
+			$contract_date_ina = date('j F Y', $contract_date_ina_temp);
 		
 		$exam = Examination::where('id', $exam_id)
 				->with('user')
@@ -2672,6 +2672,7 @@ $notification->id = Uuid::uuid4();
 				}
 				
 				$data = Array([
+					'no_reg' => $exam->function_test_NO,
 					'jns_pengujian' => $exam->examination_type_id,
 					'nama_pemohon' => $exam->user->name,
 					'alamat_pemohon' => $exam->user->address,
@@ -2685,6 +2686,7 @@ $notification->id = Uuid::uuid4();
 					'kapasitas_perangkat' => $exam->device->capacity,
 					'referensi_perangkat' => $exam->device->test_reference,
 					'pembuat_perangkat' => $exam->device->manufactured_by,
+					'is_loc_test' => $exam->is_loc_test,
 					'contract_date' => $contract_date_ina,
 					'manager_lab' => $manager_labs,
 					'manager_urel' => $manager_urels,
@@ -3237,6 +3239,8 @@ $notification->id = Uuid::uuid4();
 		->with('Device')
 		->with('Equipment')
 		->get();
+		if( strpos( $data[0]->function_test_NO, "/" ) !== false ) {$no_reg = urlencode(urlencode($data[0]->function_test_NO));}
+			else{$no_reg = $data[0]->function_test_NO?: '-';}
 		if( strpos( $data[0]->company->name, "/" ) !== false ) {$company_name = urlencode(urlencode($data[0]->company->name));}
 			else{$company_name = $data[0]->company->name?: '-';}
 		if( strpos( $data[0]->company->address, "/" ) !== false ) {$company_address = urlencode(urlencode($data[0]->company->address));}
@@ -3274,7 +3278,19 @@ $notification->id = Uuid::uuid4();
 		}else{
 			$pic = '____________________________';
 		}
+		if($data[0]->function_test_date_approval == 1){
+			if($data[0]->function_date != null){
+				if( strpos( $data[0]->function_date, "/" ) !== false ) {$tgl_uji_fungsi = urlencode(urlencode(date("j F Y", strtotime($data[0]->function_date))));}
+					else{$tgl_uji_fungsi = date("j F Y", strtotime($data[0]->function_date))?: '-';}
+			}else{
+				if( strpos( $data[0]->deal_test_date, "/" ) !== false ) {$tgl_uji_fungsi = urlencode(urlencode(date("j F Y", strtotime($data[0]->deal_test_date))));}
+					else{$tgl_uji_fungsi = date("j F Y", strtotime($data[0]->deal_test_date))?: '-';}
+			}
+		}else{
+			$tgl_uji_fungsi = '-';
+		}
 		return \Redirect::route('cetakHasilUjiFungsi', [
+			'no_reg' => $no_reg,
 			'company_name' => $company_name,
 			'company_address' => $company_address,
 			'company_phone' => $company_phone,
@@ -3286,6 +3302,7 @@ $notification->id = Uuid::uuid4();
 			'device_serial_number' => $device_serial_number,
 			'status' => $function_test_TE,
 			'catatan' => $catatan,
+			'tgl_uji_fungsi' => $tgl_uji_fungsi,
 			'nik_te' => $nik_te,
 			'name_te' => $name_te,
 			'pic' => $pic

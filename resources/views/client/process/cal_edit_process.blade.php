@@ -93,6 +93,7 @@
 									<input type="hidden" name="hide_device_id" id="hide_device_id" value="{{$userData->device_id}}"/> 
 					            	<input type="hidden" name="hide_id_user" id="hide_id_user" value="{{$userData->user_id}}">
 									<input type="hidden" name="hide_company_id" id="hide_company_id" value="{{$userData->company_id}}">
+									<input type="hidden" name="hide_npwpPerusahaan" id="hide_npwpPerusahaan" value="{{$userData->npwpPerusahaan}}">
 										<div class="form-group">
 											<label for="f1-nama-pemohon">{{ trans('translate.service_application_name') }}</label>
 											<input type="text" name="f1-nama-pemohon" placeholder="{{ trans('translate.service_application_name') }}"   id="f1-nama-pemohon" value="{{$userData->namaPemohon}}" readonly>
