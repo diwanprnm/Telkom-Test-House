@@ -998,7 +998,8 @@ class PermohonanController extends Controller
 		if(count($data) > 0){
 			if($data[0]->qa_passed == "-1"){
 				if($data[0]->qa_date >= $expDate && $data[0]->status_device == 1){
-					echo 2;	
+					$qa_date = date('Y-m-d', strtotime("+6 months", strtotime($data[0]->qa_date)));
+					echo '2qa_date'.$data[0]->qa_date.'qa_date'.$qa_date;
 				}else{
 					echo '-1qa_date'.$data[0]->qa_date.'qa_date'.$data[0]->id_exam;
 				}

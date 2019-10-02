@@ -126,7 +126,7 @@
 									<th class="center">Tipe</th>
 									<th class="center">Kapasitas/Kecepatan</th>
 									<th class="center">Referensi Uji</th>
-									<th class="center">Dibuat di</th>
+									<th class="center">Buatan</th>
 									<th class="center">Tanggal Sidang</th>
 									@if($is_super == '1' || $is_admin_mail == 'admin@mail.com')
 										<th class="center">Action</th>
@@ -193,7 +193,7 @@
 									<th class="center">Tipe</th>
 									<th class="center">Kapasitas/Kecepatan</th>
 									<th class="center">Referensi Uji</th>
-									<th class="center">Dibuat di</th>
+									<th class="center">Buatan</th>
 									<th class="center">Tanggal Sidang</th>
 								</tr>
 							</thead>

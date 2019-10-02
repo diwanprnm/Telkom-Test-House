@@ -21,6 +21,30 @@
 		    position: relative;
 		}
 	 </style>
+
+<div id="modal_status_sidang_qa" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">PEMBERITAHUAN</h4>
+      </div>
+      <div class="modal-body pre-scrollable">
+           <div class="row">
+                <h2 id="text-1"></h2>
+                <h2 id="text-2"></h2>
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+
+  </div>
+</div> 
+
   <div class="overlay"></div>
 <!-- Page Title
 		============================================= -->
@@ -562,9 +586,6 @@
 				if($('#hide_cekSNjnsPengujian').val() == 1){
 					alert("Perangkat[Nama, Merk, Model, Kapasitas] dan Jenis Pengujian sudah ada!"); 
 					return false;
-				}else if ($('#hide_cekSNjnsPengujian').val() == 2) {
-					alert("Perangkat[Nama, Merk, Model, Kapasitas] belum dilayak diuji ulang!"); 
-					return false;
 				}else{
 					var formData = new FormData($('#form-permohonan')[0]);
 					var error = false;
@@ -656,6 +677,14 @@
 					success: function(data){
 						console.log(data);
 						$('#hide_cekSNjnsPengujian').val(data); 
+						var res = data.split("qa_date");
+						if (res[0] == 2) {
+							$( '#text-1' ).text("Mohon maaf perangkat yang saudara/i daftarkan sudah pernah diuji dan tidak lulus sesuai keputusan Sidang QA tanggal "+res[1]);
+							$( '#text-2' ).text("Saudara/i dapat mendaftarkan kembali perangkat tersebut 6 bulan setelah keputusan sidang QA, yaitu tanggal "+res[2]);
+							$( '#modal_status_sidang_qa' ).modal('show');
+							formWizard.steps("previous"); 
+							return false;
+						}
 					}
 				});
 	        } 
