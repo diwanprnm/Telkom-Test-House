@@ -87,7 +87,7 @@
 											<?php $total = 0; $payment_status = $item->payment_status; $invoice = $item->invoice; $company_name = $item->user->company->name; 
 											if($data[$i]->sales_detail){ ?>
 												@foreach($data[$i]->sales_detail as $keys => $item_detail)
-													if($item_detail){ ?>
+													<?php if($item_detail){ ?>
 														<tr>
 															<td>{{++$keys}}</td>
 															<td>{{$item_detail->stel->name}}</td>
@@ -111,14 +111,14 @@
 															<?php 
 																}
 															?>  
-														</tr>
+														</tr> 
 													<?php $total +=($item_detail->stel->price * $item_detail->qty);?>
 													<?php }else{?> 
 														<tr>
 															<td>{{++$keys}}</td>
-															<td colspan="6" align="center">{{ trans('translate.data_not_found') }}</td>
+															<td colspan="6" align="center">{{ trans('translate.document_not_found') }}</td>
 														</tr> 
-													<?php }?> 
+													<?php }?>
 												@endforeach
 
 											<?php }else{?> 
