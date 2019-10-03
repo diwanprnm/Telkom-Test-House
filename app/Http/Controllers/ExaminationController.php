@@ -3270,13 +3270,13 @@ $notification->id = Uuid::uuid4();
 					else{$name_te = $function_test->data[0]->name?: '-';}
 			}else{
 				$nik_te = "-";
-				$name_te = "____________________________";
+				$name_te = "-";
 			}
 		if(count($data[0]->equipment)>0){
 			if( strpos( $data[0]->equipment[0]->pic, "/" ) !== false ) {$pic = urlencode(urlencode($data[0]->equipment[0]->pic));}
 				else{$pic = $data[0]->equipment[0]->pic?: '-';}
 		}else{
-			$pic = '____________________________';
+			$pic = '-';
 		}
 		if($data[0]->function_test_date_approval == 1){
 			if($data[0]->function_date != null){

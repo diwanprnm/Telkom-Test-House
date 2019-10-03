@@ -29,16 +29,13 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">PEMBERITAHUAN</h4>
+        <h2 class="modal-title">PEMBERITAHUAN</h2>
       </div>
       <div class="modal-body pre-scrollable">
            <div class="row">
-                <h2 id="text-1"></h2>
-                <h2 id="text-2"></h2>
+                <h2 style="text-align: justify;font-weight: normal;">Mohon maaf perangkat yang saudara/i daftarkan <b>sudah pernah diuji dan tidak lulus</b> sesuai keputusan Sidang QA tanggal <text id="text-1"></text>. Saudara/i <b>dapat mendaftarkan kembali</b> perangkat tersebut 6 bulan setelah keputusan sidang QA, yaitu <b>tanggal <text id="text-2"></text></b>.</h2>
+        		<button type="button" class="button button3d btn-sky pull-right" data-dismiss="modal">OK</button>
             </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
       </div>
     </div>
 
@@ -701,8 +698,8 @@
 							$('#hide_cekSNjnsPengujian').val(data); 
 							var res = data.split("qa_date");
 							if (res[0] == 2) {
-								$( '#text-1' ).text("Mohon maaf perangkat yang saudara/i daftarkan sudah pernah diuji dan tidak lulus sesuai keputusan Sidang QA tanggal "+res[1]);
-								$( '#text-2' ).text("Saudara/i dapat mendaftarkan kembali perangkat tersebut 6 bulan setelah keputusan sidang QA, yaitu tanggal "+res[2]);
+								$( '#text-1' ).text(res[1]);
+								$( '#text-2' ).text(res[2]);
 								$( '#modal_status_sidang_qa' ).modal('show'); 
 								formWizard.steps("previous"); 
 								return false;
