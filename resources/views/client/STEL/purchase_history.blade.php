@@ -27,7 +27,7 @@
 			<div class="container clearfix">
 				<div class="container-fluid container-fullw bg-white">
 					<div class="row">   
-						<?php $i = 0; if($data){ ?>
+						<?php $i = 0; if(count($data)>0 && $data != null){ ?>
 							@foreach($data as $item)
 							<div class="col-md-12 list-border-progress">
 								<div class="table-responsive">
@@ -85,7 +85,7 @@
 										</thead>
 										<tbody>
 											<?php $total = 0; $payment_status = $item->payment_status; $invoice = $item->invoice; $company_name = $item->user->company->name; 
-											if($data[$i]->sales_detail){ ?>
+											if(count($data[$i]->sales_detail)>0 && $data[$i]->sales_detail != null){ ?>
 												@foreach($data[$i]->sales_detail as $keys => $item_detail)
 													<tr>
 														<td>{{++$keys}}</td>
