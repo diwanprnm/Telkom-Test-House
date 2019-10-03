@@ -82,7 +82,6 @@ class ProductsController extends Controller
                                 ->with('sales_detail.stel');
             $data = $query->orderBy('created_at', 'desc')->paginate($paginate);
             $page = "purchase_history";
-            dd($data);
             return view('client.STEL.purchase_history') 
             ->with('page', $page)
             ->with('data', $data);     

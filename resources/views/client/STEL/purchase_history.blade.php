@@ -89,7 +89,7 @@
 												@foreach($data[$i]->sales_detail as $keys => $item_detail)
 													<tr>
 														<td>{{++$keys}}</td>
-														<td>{{$item_detail->stel->name}}</td>
+														<td>{{ $item_detail->stel->name}} </td>
 														<td>{{$item_detail->stel->code}}</td>
 														<td>{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($item_detail->stel->price), 0, '.', ','); ?></td> 
 														<td>{{$item_detail->qty}}</td> 
