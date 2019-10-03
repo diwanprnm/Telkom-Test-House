@@ -85,33 +85,40 @@
 										</thead>
 										<tbody>
 											<?php $total = 0; $payment_status = $item->payment_status; $invoice = $item->invoice; $company_name = $item->user->company->name; 
-											if($data[$i]->sales_detail && $data[$i]->sales_detail->stel){ ?>
+											if($data[$i]->sales_detail){ ?>
 												@foreach($data[$i]->sales_detail as $keys => $item_detail)
-													<tr>
-														<td>{{++$keys}}</td>
-														<td>{{$item_detail->stel->name}}</td>
-														<td>{{$item_detail->stel->code}}</td>
-														<td>{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($item_detail->stel->price), 0, '.', ','); ?></td> 
-														<td>{{$item_detail->qty}}</td> 
-														<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($item_detail->stel->price * $item_detail->qty), 0, '.', ','); ?></td>
-														<?php  
-															if($item_detail->attachment !="" && $payment_status == 1){
-														?>
-																<td colspan="6" align="center"><a target="_blank" href="{{ URL::to('/client/downloadstelwatermark/'.$item_detail->id) }}">{{ trans('translate.download') }} File</a></td>
-														<?php }
-														else if($item_detail->attachment !="" && $payment_status == 1){
-														?>
-															<td colspan="6" align="center"><a target="_blank" href="{!! url("cetakstel?invoice_id={$invoice}&attach={$item_detail->stel->attachment}&company_name={$company_name}") !!}">{{ trans('translate.download') }} File</a></td>
-														<?php
-														}
-															else{
-														?>	
-																<td colspan="6" align="center">{{ trans('translate.document_not_found') }}</td>
-														<?php 
+													if($item_detail){ ?>
+														<tr>
+															<td>{{++$keys}}</td>
+															<td>{{$item_detail->stel->name}}</td>
+															<td>{{$item_detail->stel->code}}</td>
+															<td>{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($item_detail->stel->price), 0, '.', ','); ?></td> 
+															<td>{{$item_detail->qty}}</td> 
+															<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($item_detail->stel->price * $item_detail->qty), 0, '.', ','); ?></td>
+															<?php  
+																if($item_detail->attachment !="" && $payment_status == 1){
+															?>
+																	<td colspan="6" align="center"><a target="_blank" href="{{ URL::to('/client/downloadstelwatermark/'.$item_detail->id) }}">{{ trans('translate.download') }} File</a></td>
+															<?php }
+															else if($item_detail->attachment !="" && $payment_status == 1){
+															?>
+																<td colspan="6" align="center"><a target="_blank" href="{!! url("cetakstel?invoice_id={$invoice}&attach={$item_detail->stel->attachment}&company_name={$company_name}") !!}">{{ trans('translate.download') }} File</a></td>
+															<?php
 															}
-														?>  
-													</tr> 
+																else{
+															?>	
+																	<td colspan="6" align="center">{{ trans('translate.document_not_found') }}</td>
+															<?php 
+																}
+															?>  
+														</tr>
 													<?php $total +=($item_detail->stel->price * $item_detail->qty);?>
+													<?php }else{?> 
+														<tr>
+															<td>{{++$keys}}</td>
+															<td colspan="6" align="center">{{ trans('translate.data_not_found') }}</td>
+														</tr> 
+													<?php }?> 
 												@endforeach
 
 											<?php }else{?> 
