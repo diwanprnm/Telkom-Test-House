@@ -87,7 +87,7 @@
 											<?php $total = 0; $payment_status = $item->payment_status; $invoice = $item->invoice; $company_name = $item->user->company->name; 
 											if(count($data[$i]->sales_detail)>0){ ?>
 												@foreach($data[$i]->sales_detail as $keys => $item_detail)
-												<?php dd($item_detail);?>
+												<?php dd($item_detail->stel);?>
 													<tr>
 														<td>{{++$keys}}</td>
 														<td>{{$item_detail->stel->name}}</td>
