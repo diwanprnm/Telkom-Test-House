@@ -42,7 +42,7 @@
 										</tr>
 									</thead>
 									<tbody>
-										<?php $i = 0; if($data){ ?>
+										<?php $no = 1; $i = 0; if($data){ ?>
 										@foreach($data as $keys => $item)
 											<?php if($data[$i]->sales_detail){ $data_stel_name = ""; $data_stel_code = ""; $count = 0 ?>
 												@foreach($data[$i]->sales_detail as $item_detail)
@@ -61,7 +61,7 @@
 												@endforeach
 											<?php } $out = strlen($data_stel_code) > 25 ? substr($data_stel_code,0, 25)."..." : $data_stel_code; ?>
 											<tr>
-												<td>{{++$keys}}</td>
+												<td>{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
 												<td>{{$item->created_at}}</td>
 												<td>{{ $out }}</td>
 												<td>{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($item->total), 0, '.', ','); ?></td>
@@ -166,7 +166,7 @@
 												</td>
 											</tr>
 											<tr class="content" style="display: none;"><td colspan="8"></td></tr>
-										<?php $i++; ?>
+										<?php $no++;$i++; ?>
 										@endforeach
 										<?php }else{?> 
 											<div class="col-md-12">
