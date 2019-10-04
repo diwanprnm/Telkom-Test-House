@@ -71,7 +71,7 @@ class ProductsController extends Controller
     { 
         $currentUser = Auth::user();
         if($currentUser){
-            $paginate = 5;
+            $paginate = 10;
 
             $query = STELSales::whereHas('user', function ($query) use ($currentUser) {
                                     $query->where('company_id', $currentUser->company_id);
