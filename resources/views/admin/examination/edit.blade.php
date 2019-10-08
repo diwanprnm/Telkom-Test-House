@@ -399,11 +399,11 @@
 									<label>
 										Tanda Tangan Form Uji
 									</label>
+									<input type="hidden" id="hide_attachment_form-registrasi" value="{{ $data->attachment }}">
 									@if($data->attachment != null)
 										<label>
 											: Sudah di tanda tangan
 										</label>
-								</div>
 										<div class="form-group">
 											<a href="{{URL::to('/admin/examination/download/'.$data->id)}}"> Download Form Uji</a>
 										</div>
@@ -412,13 +412,14 @@
 											: Belum di tanda tangan
 										</label>
 									@endif
+								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
-										Laboratorium Pengujian
+										Laboratorium Pengujian *
 									</label>
-									<select name="examination_lab_id" class="cs-select cs-skin-elastic" required>
+									<select id="examination_lab_id" name="examination_lab_id" class="cs-select cs-skin-elastic">
 										@if($data->examination_lab_id != null)
 											@foreach($labs as $item)
 												@if($item->id == $data->examination_lab_id)
@@ -439,9 +440,9 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
-										Lokasi Pengujian
+										Lokasi Pengujian *
 									</label>
-									<select name="is_loc_test" class="cs-select cs-skin-elastic">
+									<select name="is_loc_test" class="cs-select cs-skin-elastic" required>
 										@if($data->is_loc_test == 1)
 											<option value="0">Uji Lab Telkom</option>
 											<option value="1" selected>Uji Lokasi</option>
@@ -573,6 +574,7 @@
 										<textarea class="form-control" rows="2" name="reason" id="reason" readonly>{{ $data->function_test_reason }}</textarea>
 									@endif
 								</div>
+								<input type="hidden" id="hide_approval_form-function-test" value="{{ $data->function_test_date_approval }}">
 								@if($data->function_test_date_approval == 1)
 									<div class="col-md-6 center">
 										<div class="form-group">
@@ -601,7 +603,7 @@
 									<label for="form-field-select-2">
 										Lokasi Barang Sebelum Uji Fungsi
 									</label>
-									<select name="masukkan_barang" class="cs-select cs-skin-elastic">
+									<select id="masukkan_barang" name="masukkan_barang" class="cs-select cs-skin-elastic">
 										@if(count($data->equipment)==0)
 											<option value="1" selected>Customer (Applicant)</option>
 										@else
@@ -619,40 +621,17 @@
 								@else
 									<?php $in_equip_date = $data->cust_test_date; ?>
 								@endif
-								@if(count($data->equipment)==0)
+							<input type="hidden" id="hide_count_equipment_form-function-test" value="{{ count($data->equipment) }}">
+								@if(count($data->equipment)==0 && $data->function_test_date_approval == 1)
 								<div class="col-md-12">
 									<div class="form-group">
 										<a onclick="masukkanBarang('{{ $data->id }}','{{ $in_equip_date }}')"> Masukkan Barang</a>
 									</div>									
 								</div>									
 								@endif
-							@if($data->function_test_TE == 1)
-								<div class="col-md-12">
-									<div class="form-group">
-										<a href="{{URL::to('/cetakFormBarang/'.$data->id)}}" target="_blank"> Buatkan Bukti Penerimaan & Pengeluaran Perangkat Uji</a>
-									</div>
-								</div>
-								<div class="col-md-12">
-									<label>
-										Bukti Penerimaan & Pengeluaran Perangkat Uji File *
-									</label>
-									<input type="file" name="barang_file" id="barang_file" class="form-control" accept="application/pdf"/>
-									<button class="btn btn-wide btn-green btn-squared pull-right">
-										Submit
-									</button>
-								</div>
-								<div class="col-md-12">
-									<div class="form-group">
-										@foreach($data->media as $item)
-											@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
-												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan & Pengeluaran Perangkat Uji</a>
-											@endif
-										@endforeach
-									</div>
-								</div>
-							@endif
+							<input type="hidden" id="hide_test_TE_form-function-test" value="{{ $data->function_test_TE }}">
 							<div class="col-md-12">
-								@if($data->function_test_TE != 0)
+								@if($data->function_test_TE != 0 && $data->function_test_date_approval == 1)
 								<div class="col-md-12 center">
 									<div class="form-group">
 										<h4 style="display:inline">
@@ -674,7 +653,6 @@
 								<div class="form-group">
 									<a href="{{URL::to('/cetakUjiFungsi/'.$data->id)}}" target="_blank"> Buatkan Laporan Uji Fungsi</a>
 								</div>
-								@endif
 								<div class="form-group">
 									<label>
 										Hasil Uji Fungsi File *
@@ -691,13 +669,39 @@
 									@endforeach
 									<input type="hidden" id="function_name" value="<?php echo $function_attach; ?>">
 								</div>
-								@if($data->function_test_TE != 0)
 								<div class="form-group">
 									<label for="catatan">Catatan :</label>
 									<textarea class="form-control" rows="5" name="catatan" id="catatan" readonly disabled>{{ $data->catatan }}</textarea>
 								</div>
 								@endif
 							</div>
+							@if($data->function_test_TE == 1 && $data->function_test_date_approval == 1)
+								<div class="col-md-12">
+									<div class="form-group">
+										<a href="{{URL::to('/cetakFormBarang/'.$data->id)}}" target="_blank"> Buatkan Bukti Penerimaan & Pengeluaran Perangkat Uji</a>
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<label>
+											Bukti Penerimaan & Pengeluaran Perangkat Uji File *
+										</label>
+										<input type="file" name="barang_file" id="barang_file" class="form-control" accept="application/pdf"/>
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<?php $barang_attach = ''; ?>
+										@foreach($data->media as $item)
+											@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
+												<?php $barang_attach = $item->attachment; ?>
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan & Pengeluaran Perangkat Uji "<?php echo $barang_attach; ?>"</a>
+											@endif
+										@endforeach
+										<input type="hidden" id="barang_name" value="<?php echo $barang_attach; ?>">
+									</div>
+								</div>
+							@endif
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
@@ -891,7 +895,17 @@
 									<input type="hidden" id="spb_name" value="<?php echo $spb_attach; ?>">
 								</div>
 							</div>
-	                        <div class="col-md-6">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Total Biaya *
+									</label>
+									<input type="text" name="exam_price" id="exam_price" class="form-control" placeholder="Total Biaya" value="{{ $data->price }}" readonly required>
+								</div>
+							</div>
+							<input type="hidden" name="spb_number" id="spb_number" value="{{ $data->spb_number }}">
+							<input type="hidden" name="spb_date" id="spb_date" value="{{ $data->spb_date }}">
+							<div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
 										Status *
@@ -913,27 +927,13 @@
 									</select>
 								</div>
 							</div>
-						</div>
-					@endif
-						<div class="row">
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>
-										Total Biaya *
-									</label>
-									<input type="text" name="exam_price" id="exam_price" class="form-control" placeholder="Total Biaya" value="{{ $data->price }}" readonly required>
-								</div>
-							</div>
-							<input type="hidden" name="spb_number" id="spb_number" value="{{ $data->spb_number }}">
-							<input type="hidden" name="spb_date" id="spb_date" value="{{ $data->spb_date }}">
-							@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1')
 							<div class="col-md-12">
 	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 	                                Update
 	                            </button>
 	                        </div>
-	                        @endif
 						</div>
+					@endif
 						<div class="modal fade" id="myModalketerangan_spb" tabindex="-1" role="dialog" aria-hidden="true">
 							<div class="modal-dialog">
 								<div class="modal-content">
@@ -977,7 +977,7 @@
 							Step Pembayaran
 						</legend>
 						<div class="row">
-							<div class="col-md-6">
+							<div class="col-md-12">
 								<div class="form-group">
 									<label>
 										Status Pembayaran
@@ -988,12 +988,12 @@
 											<?php $status = 1; break; ?>
 										@endif
 									@endforeach
+									<input type="hidden" id="hide_status_form-pembayaran" value="{{ $status }}">
 
 									@if($status)
 										<label>
 											: Sudah di bayar, pada {{ $item->updated_at }}
 										</label>
-										</div>
 										<div class="form-group">
 											<label>
 												Banyak Uang *
@@ -1008,48 +1008,49 @@
 											: Belum di bayar
 										</label>
 									@endif
+								</div>
 							</div>
-								<div class="col-md-12">
-									<div class="form-group">
-										<a onclick="makeKuitansi('<?php echo $data->id ?>')"> Buatkan File Kuitansi</a>
-									</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<a onclick="makeKuitansi('<?php echo $data->id ?>')"> Buatkan File Kuitansi</a>
 								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>
-											Kuitansi File *
-										</label>
-										<input type="file" name="kuitansi_file" id="kuitansi_file" class="form-control" accept="application/pdf, image/*">
-									</div>
-									<div class="form-group">
-										<?php $kuitansi_attach = ''; ?>
-										@foreach($data->media as $item)
-											@if($item->name == 'Kuitansi' && $item->attachment != '')
-												<?php $kuitansi_attach = $item->attachment; ?>
-												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/kuitansi')}}"> Download Kuitansi "<?php echo $kuitansi_attach; ?>"</a>
-											@endif
-										@endforeach
-										<input type="hidden" id="kuitansi_name" value="<?php echo $kuitansi_attach; ?>">
-									</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Kuitansi File *
+									</label>
+									<input type="file" name="kuitansi_file" id="kuitansi_file" class="form-control" accept="application/pdf, image/*">
 								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>
-											Faktur Pajak File *
-										</label>
-										<input type="file" name="faktur_file" id="faktur_file" class="form-control" accept="application/pdf">
-									</div>
-									<div class="form-group">
-										<?php $faktur_attach = ''; ?>
-										@foreach($data->media as $item)
-											@if($item->name == 'Faktur Pajak' && $item->attachment != '')
-												<?php $faktur_attach = $item->attachment; ?>
-												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/faktur')}}"> Download Faktur Pajak "<?php echo $faktur_attach; ?>"</a>
-											@endif
-										@endforeach
-										<input type="hidden" id="faktur_name" value="<?php echo $faktur_attach; ?>">
-									</div>
+								<div class="form-group">
+									<?php $kuitansi_attach = ''; ?>
+									@foreach($data->media as $item)
+										@if($item->name == 'Kuitansi' && $item->attachment != '')
+											<?php $kuitansi_attach = $item->attachment; ?>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/kuitansi')}}"> Download Kuitansi "<?php echo $kuitansi_attach; ?>"</a>
+										@endif
+									@endforeach
+									<input type="hidden" id="kuitansi_name" value="<?php echo $kuitansi_attach; ?>">
 								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Faktur Pajak File
+									</label>
+									<input type="file" name="faktur_file" id="faktur_file" class="form-control" accept="application/pdf">
+								</div>
+								<div class="form-group">
+									<?php $faktur_attach = ''; ?>
+									@foreach($data->media as $item)
+										@if($item->name == 'Faktur Pajak' && $item->attachment != '')
+											<?php $faktur_attach = $item->attachment; ?>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/faktur')}}"> Download Faktur Pajak "<?php echo $faktur_attach; ?>"</a>
+										@endif
+									@endforeach
+									<input type="hidden" id="faktur_name" value="<?php echo $faktur_attach; ?>">
+								</div>
+							</div>
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
@@ -1133,8 +1134,8 @@
 									<label>
 										Tanggal SPK Dikeluarkan *
 									</label>
-									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-										<input type="text" name="spk_date" class="form-control" value="{{ $data->spk_date }}" required/>
+									<p class="input-group input-append" data-date-format="yyyy-mm-dd">
+										<input type="text" name="spk_date" class="form-control" value="{{ $data->spk_date }}" readonly required/>
 										<span class="input-group-btn">
 											<button type="button" class="btn btn-default">
 												<i class="glyphicon glyphicon-calendar"></i>
@@ -1143,6 +1144,23 @@
 									</p>
 								</div>
 							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Nomor SPK *
+									</label>
+										<input type="text" name="spk_code" id="spk_code" class="form-control" placeholder="Nomor SPK" value="{{ $data->spk_code }}" required 
+										<?php if($data->spk_code != null){echo "readonly";}?>
+										>
+									@if($data->examination_lab_id != null && $data->spk_code == null)
+										<button type="button" class="btn btn-wide btn-green btn-squared pull-right" onclick="generateSPKCode('<?php echo $data->examinationLab->lab_code ?>','<?php echo $data->examinationType->name ?>','<?php echo date('Y') ?>')">
+											Generate
+										</button>
+									@endif
+								</div>
+							</div>
+						</div>
+						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
@@ -1163,23 +1181,6 @@
 											<option value="-1" selected>Not Completed</option>
 										@endif
 									</select>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>
-										Nomor SPK *
-									</label>
-										<input type="text" name="spk_code" id="spk_code" class="form-control" placeholder="Nomor SPK" value="{{ $data->spk_code }}" required 
-										<?php if($data->spk_code != null){echo "readonly";}?>
-										>
-									@if($data->examination_lab_id != null && $data->spk_code == null)
-										<button type="button" class="btn btn-wide btn-green btn-squared pull-right" onclick="generateSPKCode('<?php echo $data->examinationLab->lab_code ?>','<?php echo $data->examinationType->name ?>','<?php echo date('Y') ?>')">
-											Generate
-										</button>
-									@endif
 								</div>
 							</div>
 							@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1')
@@ -1233,7 +1234,7 @@
 							Step Pelaksanaan Uji
 						</legend>
 						<div class="row">
-						@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
+						@if(1 != 1)
 							<?php
 								$start_date = new DateTime(date('Y-m-d'));
 								$end_date = new DateTime($exam_schedule->data[0]->targetDt);
@@ -1441,24 +1442,24 @@
 										Bukti Penerimaan & Pengeluaran Perangkat Uji File *
 									</label>
 									<input type="file" name="barang_file2" id="barang_file2" class="form-control" accept="application/pdf"/>
-									<button class="btn btn-wide btn-green btn-squared pull-right">
-										Submit
-									</button>
 								</div>
 								<div class="form-group">
+									<?php $barang_attach2 = ''; ?>
 									@foreach($data->media as $item)
 										@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji2' && $item->attachment != '')
+											<?php $barang_attach2 = $item->attachment; ?>
 											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji2')}}"> Download Bukti Pengeluaran Perangkat Uji</a>
 										@endif
 									@endforeach
+									<input type="hidden" id="barang_name2" value="<?php echo $barang_attach2; ?>">
 								</div>
-								</div>
+							</div>
 							<div class="col-md-12">
 								<div class="form-group">
 									<label for="form-field-select-2">
 										Lokasi Barang Sekarang
 									</label>
-									<select name="update_barang" class="cs-select cs-skin-elastic">
+									<select id="update_barang" name="update_barang" class="cs-select cs-skin-elastic">
 										@if(count($data->equipment)==0)
 											<option value="2" selected>URel (Store)</option>
 										@elseif($data->equipment[0]->location==1)
@@ -1474,52 +1475,59 @@
 									<a onclick="updateBarang('{{ $data->id }}')"> Update Lokasi Barang</a>
 								</div>	
 							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<button class="btn btn-wide btn-green btn-squared pull-right">
+										Submit
+									</button>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+				{!! Form::close() !!}
+
+				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-tanda-terima')) !!}
+					{!! csrf_field() !!}
+					<input type="hidden" name="status" class="form-control" value=""/>
+					<input type="hidden" name="keterangan" class="form-control" value=""/>
+    				<fieldset>
+						<legend>
+							Tanda Terima Hasil Pengujian
+						</legend>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<a onclick="makeTandaTerima('<?php echo $data->id ?>')"> Buatkan File Tanda Terima</a>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										File Tanda Terima *
+									</label>
+									<input type="file" name="tanda_terima_file" id="tanda_terima_file" class="form-control" accept="application/pdf"/>
+								</div>
+								<div class="form-group">
+									<?php $tanda_terima_attach = ''; ?>
+									@foreach($data->media as $item)
+										@if($item->name == 'Tanda Terima Hasil Pengujian' && $item->attachment != '')
+											<?php $tanda_terima_attach = $item->attachment; ?>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tanda Terima Hasil Pengujian')}}"> Download Tanda Terima Hasil Pengujian"<?php echo $tanda_terima_attach; ?>"</a>
+										@endif
+									@endforeach
+									<input type="hidden" id="tanda_terima_name" value="<?php echo $tanda_terima_attach; ?>">
+								</div>
+							</div>
+							<div class="col-md-12">
+								<button type="submit" class="btn btn-wide btn-green btn-squared pull-right">
+									Submit
+								</button>
+							</div>
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
 				@endif
-				@if($data->examination_type_id != 1)
-						{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-tanda-terima')) !!}
-							{!! csrf_field() !!}
-							<input type="hidden" name="status" class="form-control" value=""/>
-							<input type="hidden" name="keterangan" class="form-control" value=""/>
-		    				<fieldset>
-								<legend>
-									Tanda Terima Hasil Pengujian
-								</legend>
-								<div class="row">
-									<div class="col-md-12">
-										<div class="form-group">
-											<a onclick="makeTandaTerima('<?php echo $data->id ?>')"> Buatkan File Tanda Terima</a>
-										</div>
-									</div>
-									<div class="col-md-12">
-										<div class="form-group">
-											<label>
-												File Tanda Terima *
-											</label>
-											<input type="file" name="tanda_terima_file" id="tanda_terima_file" class="form-control" accept="application/pdf"/>
-										</div>
-										<div class="form-group">
-											<?php $tanda_terima_attach = ''; ?>
-											@foreach($data->media as $item)
-												@if($item->name == 'Tanda Terima Hasil Pengujian' && $item->attachment != '')
-													<?php $tanda_terima_attach = $item->attachment; ?>
-													<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tanda Terima Hasil Pengujian')}}"> Download Tanda Terima Hasil Pengujian"<?php echo $tanda_terima_attach; ?>"</a>
-												@endif
-											@endforeach
-											<input type="hidden" id="tanda_terima_name" value="<?php echo $tanda_terima_attach; ?>">
-										</div>
-									</div>
-									<div class="col-md-12">
-										<button type="submit" class="btn btn-wide btn-green btn-squared pull-right">
-											Submit
-										</button>
-									</div>
-								</div>
-							</fieldset>
-						{!! Form::close() !!}
-					@endif
+
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-lap-uji')) !!}
 					{!! csrf_field() !!}
 					<input type="hidden" name="status" class="form-control" value="Laporan Uji"/>
@@ -1532,6 +1540,7 @@
 								<div class="form-group">
 									@foreach($data->media as $item)
 										@if($item->name == 'Laporan Uji')
+											<input type="hidden" id="hide_attachment_form-lap-uji" value="{{ $item->attachment }}">
 											@if($item->attachment != '')
 											<div class="col-md-4">
 												<div class="form-group">
@@ -1561,7 +1570,7 @@
 								</div>
 							</div>
 							<div class="col-md-12">
-								@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
+								@if(1 != 1)
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
@@ -1599,7 +1608,7 @@
 									</p>
 								</div>
 							</div>
-	                        <div class="col-md-12">
+	                        <div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
 										Status *
@@ -1663,7 +1672,7 @@
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
-				@if($data->examination_type_id !='2' && $data->examination_type_id !='3' && $data->examination_type_id !='4')
+				@if($data->examination_type_id =='1')
 					{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'id' => 'form-sidang')) !!}
 					{!! csrf_field() !!}
 						<input type="hidden" name="status" class="form-control" value="Sidang QA"/>
@@ -1823,35 +1832,37 @@
 								Edit Lokasi Barang
 							</legend>
 							<div class="row">
-								<div class="form-group">
-									@foreach($data->media as $item)
-										@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan Perangkat Uji</a>
-										@endif
-									@endforeach
-								</div>
-								<div class="form-group">
-									<label>
-										Bukti Penerimaan & Pengeluaran Perangkat Uji File *
-									</label>
-									<input type="file" name="barang_file2" id="barang_file2" class="form-control" accept="application/pdf"/>
-									<button class="btn btn-wide btn-green btn-squared pull-right">
-										Submit
-									</button>
-								</div>
-								<div class="form-group">
-									@foreach($data->media as $item)
-										@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji2' && $item->attachment != '')
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji2')}}"> Download Bukti Pengeluaran Perangkat Uji</a>
-										@endif
-									@endforeach
+								<div class="col-md-12">
+									<div class="form-group">
+										@foreach($data->media as $item)
+											@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan Perangkat Uji</a>
+											@endif
+										@endforeach
+									</div>
+									<div class="form-group">
+										<label>
+											Bukti Penerimaan & Pengeluaran Perangkat Uji File *
+										</label>
+										<input type="file" name="barang_file2" id="barang_file2" class="form-control" accept="application/pdf"/>
+									</div>
+									<div class="form-group">
+										<?php $barang_attach2 = ''; ?>
+										@foreach($data->media as $item)
+											@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji2' && $item->attachment != '')
+												<?php $barang_attach2 = $item->attachment; ?>
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji2')}}"> Download Bukti Pengeluaran Perangkat Uji</a>
+											@endif
+										@endforeach
+										<input type="hidden" id="barang_name2" value="<?php echo $barang_attach2; ?>">
+									</div>
 								</div>
 								<div class="col-md-12">
 									<div class="form-group">
 										<label for="form-field-select-2">
 											Lokasi Barang Sekarang
 										</label>
-										<select name="update_barang" class="cs-select cs-skin-elastic">
+										<select id="update_barang" name="update_barang" class="cs-select cs-skin-elastic">
 											@if(count($data->equipment)==0)
 												<option value="2" selected>URel (Store)</option>
 											@elseif($data->equipment[0]->location==1)
@@ -1866,6 +1877,13 @@
 									<div class="form-group">
 										<a onclick="updateBarang('{{ $data->id }}')"> Update Lokasi Barang</a>
 									</div>	
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<button class="btn btn-wide btn-green btn-squared pull-right">
+											Submit
+										</button>
+									</div>
 								</div>
 							</div>
 						</fieldset>
@@ -1962,7 +1980,7 @@
 												Tanggal Mulai Berlaku *
 											</label>
 											<p id="validFrom" class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
-												<input type="text" name="valid_from" id="valid_from" class="form-control" value="{{ $data->device->valid_from }}"/>
+												<input type="text" name="valid_from" id="valid_from" class="form-control" value="{{ $data->device->valid_from }}" required />
 												<span class="input-group-btn">
 													<button type="button" class="btn btn-default">
 														<i class="glyphicon glyphicon-calendar"></i>
@@ -1977,7 +1995,7 @@
 												Tanggal Akhir Berlaku *
 											</label>
 											<p id="validThru" class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
-												<input type="text" name="valid_thru" id="valid_thru" class="form-control" value="{{ $data->device->valid_thru }}"/>
+												<input type="text" name="valid_thru" id="valid_thru" class="form-control" value="{{ $data->device->valid_thru }}" required />
 												<span class="input-group-btn">
 													<button type="button" class="btn btn-default">
 														<i class="glyphicon glyphicon-calendar"></i>
@@ -2290,36 +2308,68 @@
 		$inputs.each(function() {
 			values[this.name] = $(this).val();
 		});
-		if(values['registration_status'] == '-1' && keterangan == ''){
-			$('#myModalketerangan_registrasi').modal('show');
-			return false;
+		if(values['registration_status'] == '-1'){
+			if(keterangan == ''){
+				$('#myModalketerangan_registrasi').modal('show');
+				$('#myModalketerangan_registrasi').on('shown.bs.modal', function () {
+				    $('#keterangan_registrasi').focus();
+				});
+				return false;
+			}else{
+				$('#myModalketerangan_registrasi').modal('hide');
+			}
 		}else{
-			$('#myModalketerangan_registrasi').modal('hide');
+			if(!document.getElementById('hide_attachment_form-registrasi').value){
+				alert("Form Uji belum ditanda tangan / di-upload oleh kastamer!");
+				return false;
+			}
+			if(!document.getElementById('examination_lab_id').value){
+				alert("Pilih Laboratorium Pengujian!");
+				$('#examination_lab_id').focus();
+				return false;
+			}
 		}
 	});
 	
 	$('#form-function-test').submit(function () {
 		var keterangan = document.getElementById('keterangan_function').value;
 		var barang_file = document.getElementById('barang_file');
+		var barang_name = document.getElementById('barang_name');
 		var function_file = document.getElementById('function_file');
-		var function_name = document.getElementById('function_name').value;
+		var function_name = document.getElementById('function_name');
 		var $inputs = $('#form-function-test :input');
 		var values = {};
 		$inputs.each(function() {
 			values[this.name] = $(this).val();
 		});
-		if(barang_file.value ==''){
-			if(values['function_status'] == '-1'){
-				if(keterangan == ''){
-					$('#myModalketerangan_function').modal('show');
-					return false;
-				}else{
-					$('#myModalketerangan_function').modal('hide');
-				}			
+		if(values['function_status'] == '-1'){
+			if(keterangan == ''){
+				$('#myModalketerangan_function').modal('show');
+				$('#myModalketerangan_function').on('shown.bs.modal', function () {
+				    $('#keterangan_function').focus();
+				});
+				return false;
 			}else{
-				if(function_file.value == '' && function_name == ''){
-					alert("File Laporan Hasil Uji Fungsi harus dipilih");$('#function_file').focus();return false;				
-				}
+				$('#myModalketerangan_function').modal('hide');
+			}			
+		}else{
+			if(document.getElementById('hide_approval_form-function-test').value == 0){
+				alert("Belum Ada Tanggal Uji Fungsi FIX!");
+				return false;
+			}
+			if(document.getElementById('hide_count_equipment_form-function-test').value == 0){
+				alert("Uji Fungsi Belum dilakukan, Masukkan Barang terlebih dahulu!");
+				return false;
+			}
+			if(document.getElementById('hide_test_TE_form-function-test').value == 0){
+				alert("Belum Ada Hasil Uji Fungsi!");
+				return false;
+			}
+			if(function_file.value == '' && function_name.value == ''){
+				alert("File Laporan Hasil Uji Fungsi harus dipilih");$('#function_file').focus();return false;
+			}
+			if(barang_file.value == '' && barang_name.value == ''){
+				alert("File Bukti Penerimaan & Pengeluaran Perangkat Uji harus dipilih");$('#barang_file').focus();return false;
 			}
 		}
 	});
@@ -2336,6 +2386,9 @@
 		if(values['contract_status'] == '-1'){
 			if(keterangan == ''){
 				$('#myModalketerangan_contract').modal('show');
+				$('#myModalketerangan_contract').on('shown.bs.modal', function () {
+				    $('#keterangan_contract').focus();
+				});
 				return false;
 			}else{
 				$('#myModalketerangan_contract').modal('hide');
@@ -2351,25 +2404,27 @@
 		var keterangan = document.getElementById('keterangan_spb').value;
 		var spb_file = document.getElementById('spb_file');
 		var spb_name = document.getElementById('spb_name').value;
+		var spb_number = document.getElementById('spb_number').value;
 		var $inputs = $('#form-spb :input');
 		var values = {};
 		$inputs.each(function() {
 			values[this.name] = $(this).val();
 		});
-		/* if(values['spb_status'] == '-1' && keterangan == ''){
-			$('#myModalketerangan_spb').modal('show');
-			return false;
-		}else{
-			$('#myModalketerangan_spb').modal('hide');
-		} */
 		if(values['spb_status'] == '-1'){
 			if(keterangan == ''){
 				$('#myModalketerangan_spb').modal('show');
+				$('#myModalketerangan_spb').on('shown.bs.modal', function () {
+				    $('#keterangan_spb').focus();
+				});
 				return false;
 			}else{
 				$('#myModalketerangan_spb').modal('hide');
 			}			
 		}else{
+			if(!spb_number){
+				alert("Belum Ada Nomor SPB, Buatkan File SPB terlebih dahulu!");
+				return false;
+			}
 			if(spb_file.value == '' && spb_name == ''){
 				alert("File SPB harus dipilih");$('#spb_file').focus();return false;				
 			}
@@ -2388,21 +2443,22 @@
 		if(values['payment_status'] == '-1'){
 			if(keterangan == ''){
 				$('#myModalketerangan_pembayaran').modal('show');
+				$('#myModalketerangan_pembayaran').on('shown.bs.modal', function () {
+				    $('#keterangan_pembayaran').focus();
+				});
 				return false;
 			}else{
 				$('#myModalketerangan_pembayaran').modal('hide');
 			}			
 		}else{
+			if(document.getElementById('hide_status_form-pembayaran').value == 0){
+				alert("Kastamer belum melakukan pembayaran / bukti bayar belum di-upload oleh kastamer!");
+				return false;
+			}
 			if(kuitansi_file.value == '' && kuitansi_name == ''){
 				alert("File Kuitansi harus dipilih");$('#kuitansi_file').focus();return false;				
 			}
 		}
-		/* if(values['payment_status'] == '-1' && keterangan == ''){
-			$('#myModalketerangan_pembayaran').modal('show');
-			return false;
-		}else{
-			$('#myModalketerangan_pembayaran').modal('hide');
-		} */
 	});
 	
 	$('#form-spk').submit(function () {
@@ -2414,6 +2470,9 @@
 		});
 		if(values['spk_status'] == '-1' && keterangan == ''){
 			$('#myModalketerangan_spk').modal('show');
+			$('#myModalketerangan_spk').on('shown.bs.modal', function () {
+			    $('#keterangan_spk').focus();
+			});
 			return false;
 		}else{
 			$('#myModalketerangan_spk').modal('hide');
@@ -2429,12 +2488,32 @@
 		});
 		if(values['examination_status'] == '-1' && keterangan == ''){
 			$('#myModalketerangan_form_uji').modal('show');
+			$('#myModalketerangan_form_uji').on('shown.bs.modal', function () {
+			    $('#keterangan_form_uji').focus();
+			});
 			return false;
 		}else{
 			$('#myModalketerangan_form_uji').modal('hide');
 		}
 	});
 
+	$('#form-barang').submit(function () {
+		var barang_file2 = document.getElementById('barang_file2');
+		var barang_name2 = document.getElementById('barang_name2').value;
+		var $inputs = $('#form-barang :input');
+		var values = {};
+		$inputs.each(function() {
+			values[this.name] = $(this).val();
+		});
+		if(barang_file2.value == '' && barang_name2 == ''){
+			alert("File Tanda Terima harus dipilih");$('#barang_file2').focus();return false;				
+		}
+		if(document.getElementById('update_barang').value != 1){
+			alert("Barang belum diambil kembali oleh kastamer, Update Lokasi Barang terlebih dahulu!");
+			return false;
+		}
+	});
+	
 	$('#form-tanda-terima').submit(function () {
 		var tanda_terima_file = document.getElementById('tanda_terima_file');
 		var tanda_terima_name = document.getElementById('tanda_terima_name').value;
@@ -2447,13 +2526,9 @@
 			alert("File Tanda Terima harus dipilih");$('#tanda_terima_file').focus();return false;				
 		}
 	});
-</script>
-@if($data->examination_type_id =='2' || $data->examination_type_id =='3' || $data->examination_type_id =='4')
-<script type="text/javascript">
+
 	$('#form-lap-uji').submit(function () {
 		var keterangan = document.getElementById('keterangan_lap_uji').value;
-		var lap_uji_file = document.getElementById('lap_uji_file');
-		var lap_uji_name = document.getElementById('lap_uji_name').value;
 		var $inputs = $('#form-lap-uji :input');
 		var values = {};
 		$inputs.each(function() {
@@ -2462,36 +2537,22 @@
 		if(values['resume_status'] == '-1'){
 			if(keterangan == ''){
 				$('#myModalketerangan_lap_uji').modal('show');
+				$('#myModalketerangan_lap_uji').on('shown.bs.modal', function () {
+				    $('#keterangan_lap_uji').focus();
+				});
 				return false;
 			}else{
 				$('#myModalketerangan_lap_uji').modal('hide');
 			}			
 		}else{
-			if(lap_uji_file.value == '' && lap_uji_name == ''){
-				alert("File Laporan Uji harus dipilih");$('.lap_uji_file').focus();return false;				
+			if(!document.getElementById('hide_attachment_form-lap-uji').value){
+				alert("Laporan Hasil Pengujian belum ada / di-upload oleh Test Engineer!");
+				return false;
 			}
 		}
 	});
 </script>
-@else
-<script type="text/javascript">
-	$('#form-lap-uji').submit(function () {
-		var keterangan = document.getElementById('keterangan_lap_uji').value;
-		var $inputs = $('#form-lap-uji :input');
-		var values = {};
-		$inputs.each(function() {
-			values[this.name] = $(this).val();
-		});
-		if(values['resume_status'] == '-1' && keterangan == ''){
-			$('#myModalketerangan_lap_uji').modal('show');
-			return false;
-		}else{
-			$('#myModalketerangan_lap_uji').modal('hide');
-		}
-	});
-</script>
-@endif
-@if($data->examination_type_id !='2' && $data->examination_type_id !='3' && $data->examination_type_id !='4')
+@if($data->examination_type_id == '1')
 <script type="text/javascript">	
 	$('#form-sidang').submit(function () {
 		var keterangan = document.getElementById('keterangan_sidang_qa').value;
@@ -2500,11 +2561,21 @@
 		$inputs.each(function() {
 			values[this.name] = $(this).val();
 		});
-		if(values['qa_status'] == '-1' && keterangan == ''){
-			$('#myModalketerangan_sidang_qa').modal('show');
-			return false;
+		if(values['qa_status'] == '-1'){
+			if(keterangan == ''){
+				$('#myModalketerangan_sidang_qa').modal('show');
+				$('#myModalketerangan_sidang_qa').on('shown.bs.modal', function () {
+				    $('#keterangan_sidang_qa').focus();
+				});
+				return false;
+			}else{
+				$('#myModalketerangan_sidang_qa').modal('hide');
+			}
 		}else{
-			$('#myModalketerangan_sidang_qa').modal('hide');
+			if (document.getElementById("passed").checked == false && document.getElementById("notPassed").checked == false) {
+		     	alert("Belum Ada Hasil Sidang QA!");
+				return false;
+		    }
 		}
 	});
 	
@@ -2520,6 +2591,9 @@
 		if(values['certificate_status'] == '-1'){
 			if(keterangan == ''){
 				$('#myModalketerangan_sertifikat').modal('show');
+				$('#myModalketerangan_sertifikat').on('shown.bs.modal', function () {
+				    $('#keterangan_sertifikat').focus();
+				});
 				return false;
 			}else{
 				$('#myModalketerangan_sertifikat').modal('hide');
@@ -2529,12 +2603,6 @@
 				alert("File Sertifikat harus dipilih");$('#certificate_file').focus();return false;				
 			}
 		}
-		/*if(values['certificate_status'] == '-1' && keterangan == ''){
-			$('#myModalketerangan_sertifikat').modal('show');
-			return false;
-		}else{
-			$('#myModalketerangan_sertifikat').modal('hide');
-		}*/
 	});
 </script>
 @endif
