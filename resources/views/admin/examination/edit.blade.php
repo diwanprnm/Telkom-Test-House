@@ -1018,7 +1018,7 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Kuitansi File *
+										Kuitansi File
 									</label>
 									<input type="file" name="kuitansi_file" id="kuitansi_file" class="form-control" accept="application/pdf, image/*">
 								</div>
@@ -1234,7 +1234,7 @@
 							Step Pelaksanaan Uji
 						</legend>
 						<div class="row">
-						@if(1 != 1)
+						@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
 							<?php
 								$start_date = new DateTime(date('Y-m-d'));
 								$end_date = new DateTime($exam_schedule->data[0]->targetDt);
@@ -1570,7 +1570,7 @@
 								</div>
 							</div>
 							<div class="col-md-12">
-								@if(1 != 1)
+								@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
@@ -2432,9 +2432,9 @@
 	});
 	
 	$('#form-pembayaran').submit(function () {
-		var keterangan = document.getElementById('keterangan_pembayaran').value;
+		/*var keterangan = document.getElementById('keterangan_pembayaran').value;
 		var kuitansi_file = document.getElementById('kuitansi_file');
-		var kuitansi_name = document.getElementById('kuitansi_name').value;
+		var kuitansi_name = document.getElementById('kuitansi_name').value;*/
 		var $inputs = $('#form-pembayaran :input');
 		var values = {};
 		$inputs.each(function() {
@@ -2455,9 +2455,9 @@
 				alert("Kastamer belum melakukan pembayaran / bukti bayar belum di-upload oleh kastamer!");
 				return false;
 			}
-			if(kuitansi_file.value == '' && kuitansi_name == ''){
+			/*if(kuitansi_file.value == '' && kuitansi_name == ''){
 				alert("File Kuitansi harus dipilih");$('#kuitansi_file').focus();return false;				
-			}
+			}*/
 		}
 	});
 	

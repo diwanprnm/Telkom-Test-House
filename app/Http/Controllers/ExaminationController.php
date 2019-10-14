@@ -1020,10 +1020,11 @@ class ExaminationController extends Controller
 					// $income->price = $request->input('cust_price_payment');
 					$income->updated_by = $currentUser->id;
 					$income->save();
-				$path_file = public_path().'/media/examination/'.$id;
+				/*$path_file = public_path().'/media/examination/'.$id;
 				$attach = ExaminationAttach::where('name', 'Kuitansi')->where('examination_id', ''.$id.'')->first();
 					$attach_name = $attach->attachment;
-				$this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.pembayaran", "ACC Pembayaran",$path_file."/".$attach_name);
+				$this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.pembayaran", "ACC Pembayaran",$path_file."/".$attach_name);*/
+				$this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.pembayaran", "ACC Pembayaran");
 				
 				$client = new Client([
 					'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
