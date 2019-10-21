@@ -140,7 +140,7 @@
 									<input type="text" name="fax" class="form-control" placeholder="Fax" value="{{ $data->fax }}">
 								</div>
 							</div>
-	                        <div class="col-md-6">
+	                        <div class="col-md-7">
 								<div class="form-group">
 									<label for="form-field-select-2">
 										Status *
@@ -156,12 +156,12 @@
 									</select>
 								</div>
 							</div>
-							<div class="col-md-12">
+							<div class="col-md-6">
 								<div class="form-group">
-									<label class="col-md-3">
-										Menu Akses *
+									<label">
+										Akses Menu
 									</label>
-									<div class="col-md-7"> 
+									<div class="form-group"> 
 										<?php
 
 										function in_multiarray($elem, $array,$field)
@@ -186,12 +186,12 @@
 								        foreach ($tree as $key => $value) {
 								            if(isset($value[0]['children'])) {
 		 							$is_active = (in_multiarray($value[0]['id'], $menu_user,'id'))?'checked':'';
-								                $html .= '<li><label> <input type="checkbox" name="menus[]" '.$is_active.' value="'.$value[0]['id'].'" /> '.$value[0]['name'].'</label>';
+								                $html .= '<li><label> <input type="checkbox" class="chk" id="'.$value[0]['url'].'" name="menus[]" '.$is_active.' value="'.$value[0]['id'].'" /> '.$value[0]['name'].'</label>';
 								                $html .= '<ul>';
 								               
 								                foreach ($value[0]['children'] as $child) { 
 									$is_active = (in_multiarray($child['id'], $menu_user,'id'))?'checked':'';
-								                   	$html .= '<li><label> <input type="checkbox" name="menus[]" '.$is_active.'  value="'.$child['id'].'" /> '.$child['name'].'</label></li>'; 
+								                   	$html .= '<li><label> <input type="checkbox" class="chk" id="'.$child['url'].'" name="menus[]" '.$is_active.'  value="'.$child['id'].'" /> '.$child['name'].'</label></li>'; 
 								                }
 								                $html .= '</ul>';
 								            }else{
@@ -199,6 +199,8 @@
 								              $html .= '<li>
 								              				<label> 
 								              				<input type="checkbox" 
+								              						class="chk"
+								              						id="'.$value[0]['url'].'"
 								              						name="menus[]" '.$is_active.'  
 								              						value="'.$value[0]['id'].'" /> 
 								              				'.$value[0]['name'].'</label>
@@ -210,18 +212,66 @@
 								        echo $html;
 									 ?>
 									</div>
-									
+								</div>
+							</div>
+							<div class="col-md-6 tree_examination">
+								<div class="form-group">
+									<label">
+										Akses Pengujian
+									</label>
+									<div class="form-group"> 
+										<input type="hidden" id="hide_admin_role" name="hide_admin_role">
+										<ul id="tree_examination">
+											<li>
+												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['registration_status'] || $admin_role[0]['function_status'] || $admin_role[0]['contract_status']? 'checked':'';}?>>Registrasi</label>
+												<ul>
+													<li><label> <input type="checkbox" name="examinations[]" value="registration_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['registration_status'] ?'checked':'';}?>>Registrasi</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="function_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['function_status'] ?'checked':'';}?>>Uji Fungsi</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="contract_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['contract_status'] ?'checked':'';}?>>Tinjauan Kontrak</label></li>
+												</ul>
+											</li>
+											<li>
+												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['spb_status'] || $admin_role[0]['payment_status']? 'checked':'';}?>>Pembayaran</label>
+												<ul>
+													<li><label> <input type="checkbox" name="examinations[]" value="spb_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['spb_status'] ?'checked':'';}?>>SPB</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="payment_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['payment_status'] ?'checked':'';}?>>Pembayaran</label></li>
+												</ul>
+											</li>
+											<li>
+												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['spk_status'] || $admin_role[0]['examination_status']? 'checked':'';}?>>Pengujian</label>
+												<ul>
+													<li><label> <input type="checkbox" name="examinations[]" value="spk_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['spk_status'] ?'checked':'';}?>>Pembuatan SPK</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="examination_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['examination_status'] ?'checked':'';}?>>Pelaksanaan Uji</label></li>
+												</ul>
+											</li>
+											<li>
+												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['resume_status'] || $admin_role[0]['qa_status'] || $admin_role[0]['certificate_status']? 'checked':'';}?>>Sertifikat</label>
+												<ul>
+													<li><label> <input type="checkbox" name="examinations[]" value="resume_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['resume_status'] ?'checked':'';}?>>Laporan Uji</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="qa_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['qa_status'] ?'checked':'';}?>>Sidang QA</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="certificate_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['certificate_status'] ?'checked':'';}?>>Penerbitan Sertifikat</label></li>
+												</ul>
+											</li>
+											<li>
+												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['equipment_status'] || $admin_role[0]['receipt_status']? 'checked':'';}?>>Lainnya</label>
+												<ul>
+													<li><label> <input type="checkbox" name="examinations[]" value="equipment_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['equipment_status'] ?'checked':'';}?>>Edit Lokasi Barang</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="receipt_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['receipt_status'] ?'checked':'';}?>>Tanda Terima Hasil Pengujian</label></li>
+												</ul>
+											</li>
+										</ul>
+									</div>
 								</div>
 							</div>
 	                        <div class="col-md-12">
 	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
 	                                Submit
 	                            </button>
-	                                <a style=" color:white !important;" href="{{URL::to('/admin/userin')}}">
-	                            		<button type="button" class="btn btn-wide btn-red btn-squared btn-marginleft pull-left">
-	                                		Cancel
-	                            		</button>
-	                                </a>
+                                <a style=" color:white !important;" href="{{URL::to('/admin/userin')}}">
+                            		<button type="button" class="btn btn-wide btn-red btn-squared btn-marginleft pull-left">
+                                		Cancel
+                            		</button>
+                                </a>
 	                        </div>
 						</div>
 					</fieldset>
@@ -247,8 +297,33 @@
 <script src={{ asset("assets/js/jquery-checktree.js") }}></script>
 <script type="text/javascript">
 	jQuery(document).ready(function() {
+		$('#hide_admin_role').val(0);
+		$('.tree_examination').hide();
+		$("input[type=checkbox]").each(function(){
+			checkBox = this.labels[0].textContent;
+			if(checkBox.trim() == "Pengujian"){
+				if(this.checked) {
+					$('#hide_admin_role').val(1);
+					$('.tree_examination').show();
+			    }
+			}
+		});
+
 		FormElements.init();
 		$('#tree').checktree();
+		$('#tree_examination').checktree();
+		$(".chk").change(function() {
+			checkBox = this.labels[0].textContent;
+			if(checkBox.trim() == "Pengujian"){
+				if(this.checked) {
+					$('#hide_admin_role').val(1);
+					$('.tree_examination').show();
+			    }else{
+			    	$('#hide_admin_role').val(0);
+			    	$('.tree_examination').hide();
+			    }
+			}
+		});
 	});
 	
 	$('#company_id').chosen();

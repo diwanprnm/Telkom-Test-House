@@ -127,7 +127,7 @@
 									<input type="text" name="fax" class="form-control" placeholder="Fax">
 								</div>
 							</div>
-	                        <div class="col-md-6">
+	                        <div class="col-md-7">
 								<div class="form-group">
 									<label for="form-field-select-2">
 										Status *
@@ -140,12 +140,12 @@
 									</select>
 								</div>
 							</div>
-							<div class="col-md-12">
+							<div class="col-md-6">
 								<div class="form-group">
-									<label class="col-md-3">
-										Menu Akses *
+									<label>
+										Akses Menu
 									</label>
-									<div class="col-md-7"> 
+									<div class="form-group"> 
 										<?php
 										$html = '<ul id="tree">';
 								        foreach ($tree as $key => $value) {
@@ -167,6 +167,55 @@
 									 ?>
 									</div>
 									
+								</div>
+							</div>
+							<div class="col-md-6 tree_examination">
+								<div class="form-group">
+									<label">
+										Akses Pengujian
+									</label>
+									<div class="form-group"> 
+										<input type="hidden" id="hide_admin_role" name="hide_admin_role">
+										<ul id="tree_examination">
+											<li>
+												<label> <input type="checkbox">Registrasi</label>
+												<ul>
+													<li><label> <input type="checkbox" name="examinations[]" value="registration_status">Registrasi</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="function_status">Uji Fungsi</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="contract_status">Tinjauan Kontrak</label></li>
+												</ul>
+											</li>
+											<li>
+												<label> <input type="checkbox">Pembayaran</label>
+												<ul>
+													<li><label> <input type="checkbox" name="examinations[]" value="spb_status">SPB</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="payment_status">Pembayaran</label></li>
+												</ul>
+											</li>
+											<li>
+												<label> <input type="checkbox">Pengujian</label>
+												<ul>
+													<li><label> <input type="checkbox" name="examinations[]" value="spk_status">Pembuatan SPK</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="examination_status">Pelaksanaan Uji</label></li>
+												</ul>
+											</li>
+											<li>
+												<label> <input type="checkbox">Sertifikat</label>
+												<ul>
+													<li><label> <input type="checkbox" name="examinations[]" value="resume_status">Laporan Uji</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="qa_status">Sidang QA</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="certificate_status">Penerbitan Sertifikat</label></li>
+												</ul>
+											</li>
+											<li>
+												<label> <input type="checkbox">Lainnya</label>
+												<ul>
+													<li><label> <input type="checkbox" name="examinations[]" value="equipment_status">Edit Lokasi Barang</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="receipt_status">Tanda Terima Hasil Pengujian</label></li>
+												</ul>
+											</li>
+										</ul>
+									</div>
 								</div>
 							</div>
 	                        <div class="col-md-12">
@@ -200,16 +249,39 @@
 <script src={{ asset("vendor/bootstrap-timepicker/bootstrap-timepicker.min.js") }}></script>
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
 <script src={{ asset("assets/js/form-elements.js") }}></script>
-<script src="{{ asset("assets/js/jquery-checktree.js") }}"></script>
- 
+<script src={{ asset("assets/js/jquery-checktree.js") }}></script>
 <script type="text/javascript">
 	$('#company_id').chosen();
 	// $('#company_id').val(0);
 	$('#company_id').trigger("chosen:updated");
 	jQuery(document).ready(function() {
+		$('#hide_admin_role').val(0);
+		$('.tree_examination').hide();
+		$("input[type=checkbox]").each(function(){
+			checkBox = this.labels[0].textContent;
+			if(checkBox.trim() == "Pengujian"){
+				if(this.checked) {
+					$('#hide_admin_role').val(1);
+					$('.tree_examination').show();
+			    }
+			}
+		});
+
 		FormElements.init();
 		$('#tree').checktree();
- 		console.log("asd");
+		$('#tree_examination').checktree();
+		$(".chk").change(function() {
+			checkBox = this.labels[0].textContent;
+			if(checkBox.trim() == "Pengujian"){
+				if(this.checked) {
+					$('#hide_admin_role').val(1);
+					$('.tree_examination').show();
+			    }else{
+			    	$('#hide_admin_role').val(0);
+			    	$('.tree_examination').hide();
+			    }
+			}
+		});
 	});
 </script>
 @endsection

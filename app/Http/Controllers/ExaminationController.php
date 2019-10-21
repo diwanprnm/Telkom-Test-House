@@ -39,6 +39,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 use App\Events\Notification;
 use App\NotificationTable;
+use App\AdminRole;
 
 class ExaminationController extends Controller
 {
@@ -417,48 +418,55 @@ class ExaminationController extends Controller
      */
     public function edit($id)
     {
-        $exam = Examination::where('id', $id)
-                            ->with('company')
-                            ->with('examinationType')
-                            ->with('examinationLab')
-                            ->with('device')
-                            ->with('media')
-                            ->with('equipment')
-                            ->first();
+    	$currentUser = Auth::user();
+    	$admins = AdminRole::where('user_id', $currentUser->id)->get();
+    	if(count($admins)>0){
+	        $exam = Examination::where('id', $id)
+	                            ->with('company')
+	                            ->with('examinationType')
+	                            ->with('examinationLab')
+	                            ->with('device')
+	                            ->with('media')
+	                            ->with('equipment')
+	                            ->first();
 
-        $labs = ExaminationLab::all();
-		// $gen_spk_code = $this->generateSPKCOde($exam->examinationLab->lab_code,$exam->examinationType->name,date('Y'));
-		
-		$client = new Client([
-			'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
-			// Base URI is used with relative requests
-			// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
-			'base_uri' => config("app.url_api_bsp"),
-			// You can set any number of default request options.
-			'timeout'  => 60.0,
-		]);
-		
-		$query_lab = "SELECT action_date FROM equipment_histories WHERE location = 3 AND examination_id = '".$id."' ORDER BY created_at DESC LIMIT 1";
-		$data_lab = DB::select($query_lab);
-		
-		$query_gudang = "SELECT action_date FROM equipment_histories WHERE location = 2 AND examination_id = '".$id."' ORDER BY created_at DESC LIMIT 2";
-		$data_gudang = DB::select($query_gudang);
-		
-		// $res_exam_schedule = $client->post('notification/notifToTE?lab='.$exam->examinationLab->lab_code)->getBody();
-		$res_exam_schedule = $client->get('spk/searchData?spkNumber='.$exam->spk_code)->getBody();
-		$exam_schedule = json_decode($res_exam_schedule);
-		
-		$res_exam_approve_date = $client->get('spk/searchHistoryData?spkNumber='.$exam->spk_code)->getBody();
-		$exam_approve_date = json_decode($res_exam_approve_date);
+	        $labs = ExaminationLab::all();
+			// $gen_spk_code = $this->generateSPKCOde($exam->examinationLab->lab_code,$exam->examinationType->name,date('Y'));
+			
+			$client = new Client([
+				'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+				// Base URI is used with relative requests
+				// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+				'base_uri' => config("app.url_api_bsp"),
+				// You can set any number of default request options.
+				'timeout'  => 60.0,
+			]);
+			
+			$query_lab = "SELECT action_date FROM equipment_histories WHERE location = 3 AND examination_id = '".$id."' ORDER BY created_at DESC LIMIT 1";
+			$data_lab = DB::select($query_lab);
+			
+			$query_gudang = "SELECT action_date FROM equipment_histories WHERE location = 2 AND examination_id = '".$id."' ORDER BY created_at DESC LIMIT 2";
+			$data_gudang = DB::select($query_gudang);
+			
+			// $res_exam_schedule = $client->post('notification/notifToTE?lab='.$exam->examinationLab->lab_code)->getBody();
+			$res_exam_schedule = $client->get('spk/searchData?spkNumber='.$exam->spk_code)->getBody();
+			$exam_schedule = json_decode($res_exam_schedule);
+			
+			$res_exam_approve_date = $client->get('spk/searchHistoryData?spkNumber='.$exam->spk_code)->getBody();
+			$exam_approve_date = json_decode($res_exam_approve_date);
 
-        return view('admin.examination.edit')
-            ->with('data', $exam)
-            // ->with('gen_spk_code', $gen_spk_code)
-            ->with('labs', $labs)
-            ->with('data_lab', $data_lab)
-            ->with('data_gudang', $data_gudang)
-			->with('exam_approve_date', $exam_approve_date)
-			->with('exam_schedule', $exam_schedule);
+	        return view('admin.examination.edit')
+	            ->with('data', $exam)
+	            // ->with('gen_spk_code', $gen_spk_code)
+	            ->with('labs', $labs)
+	            ->with('data_lab', $data_lab)
+	            ->with('data_gudang', $data_gudang)
+				->with('exam_approve_date', $exam_approve_date)
+				->with('exam_schedule', $exam_schedule)
+				->with('admin_roles', $admins);
+    	}else{
+    		return view('errors.401a');
+    	}
     }
 
     /**

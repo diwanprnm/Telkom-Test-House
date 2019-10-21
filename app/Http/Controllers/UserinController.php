@@ -12,6 +12,7 @@ use App\User;
 use App\Logs;
 use App\Menu;
 use App\UsersMenus;
+use App\AdminRole;
 
 use Auth;
 use Session;
@@ -159,6 +160,8 @@ class UserinController extends Controller
     {
         $currentUser = Auth::user();
         $menus = $request->input('menus');
+        $roles = $request->input('examinations');
+        $hide_admin_role = $request->input('hide_admin_role');
         
         $user = new User;
         $user->id = Uuid::uuid4();
@@ -211,6 +214,23 @@ class UserinController extends Controller
                     $usersmenus->created_by = $currentUser->id;
                     try{
                         $usersmenus->save();
+                    }catch(\Exception $e){
+                        Session::flash('error', 'Save failed');
+                        return redirect('/admin/userin/create')->withInput();
+                    }
+                }
+
+                if($hide_admin_role && $roles){
+                    $usersroles = new AdminRole;
+                    $usersroles->user_id =  $user->id; 
+                    $usersroles->user_name =  $user->name; 
+                    $usersroles->user_email =  $user->email; 
+                    foreach ($roles as $key => $value) {
+                        $usersroles->$value = 1; 
+                    }
+                    $usersroles->created_by = $currentUser->id;
+                    try{
+                        $usersroles->save();
                     }catch(\Exception $e){
                         Session::flash('error', 'Save failed');
                         return redirect('/admin/userin/create')->withInput();
@@ -352,10 +372,13 @@ class UserinController extends Controller
             $tree[] = $this->createTree($new, array($value));
         } 
 
+        $admin_role = AdminRole::where("user_id",$id)->get();
+
         return view('admin.userin.edit')
             ->with('role', $roles)
             ->with('tree', $tree)
             ->with('menu_user', $menu_user)
+            ->with('admin_role', $admin_role)
             ->with('company', $companies)
             ->with('data', $user);
     }
@@ -371,6 +394,8 @@ class UserinController extends Controller
     {
         $currentUser = Auth::user();
         $menus = $request->input('menus');
+        $roles = $request->input('examinations');
+        $hide_admin_role = $request->input('hide_admin_role');
 
         $user = User::find($id);
         $oldData = $user;
@@ -428,6 +453,7 @@ class UserinController extends Controller
         try{
             $user->save();
             $removeDataUserMenus = UsersMenus::where("user_id",$user->id)->delete();
+            $removeDataUserRoles = AdminRole::where("user_id",$user->id)->delete();
           
 
             $logs = new Logs;
@@ -447,7 +473,23 @@ class UserinController extends Controller
                     $usersmenus->save();
                 }catch(\Exception $e){
                     Session::flash('error', 'Save failed');
-                    return redirect('/admin/userin/create')->withInput();
+                    return redirect('/admin/userin/'.$user->id.'/edit')->withInput();
+                }
+            }
+            if($hide_admin_role && $roles){
+                $usersroles = new AdminRole;
+                $usersroles->user_id =  $user->id; 
+                $usersroles->user_name =  $user->name; 
+                $usersroles->user_email =  $user->email; 
+                foreach ($roles as $key => $value) {
+                    $usersroles->$value = 1; 
+                }
+                $usersroles->created_by = $currentUser->id;
+                try{
+                    $usersroles->save();
+                }catch(\Exception $e){
+                    Session::flash('error', 'Save failed');
+                    return redirect('/admin/userin/'.$user->id.'/edit')->withInput();
                 }
             }
             
@@ -455,7 +497,7 @@ class UserinController extends Controller
             return redirect('/admin/userin');
         } catch(Exception $e){
             Session::flash('error', 'Save failed');
-            return redirect('/admin/userin/'.$user->id.'edit');
+            return redirect('/admin/userin/'.$user->id.'/edit');
         }
     }
 

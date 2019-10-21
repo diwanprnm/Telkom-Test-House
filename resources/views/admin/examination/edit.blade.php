@@ -386,6 +386,7 @@
 							</div>
 					</div>
 				</div>
+				@if($admin_roles[0]->registration_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'id' => 'form-registrasi')) !!}
 					{!! csrf_field() !!}
 					<input type="hidden" name="status" class="form-control" value="Registrasi"/>
@@ -525,7 +526,9 @@
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
+				@endif
 				
+				@if($admin_roles[0]->function_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-function-test')) !!}
 					{!! csrf_field() !!}
 					<input type="hidden" name="status" class="form-control" value="Uji Fungsi"/>
@@ -766,7 +769,9 @@
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
+				@endif
 
+				@if($admin_roles[0]->contract_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-contract')) !!}
 					{!! csrf_field() !!}
 					<input type="hidden" name="status" class="form-control" value="Tinjauan Kontrak"/>
@@ -862,7 +867,9 @@
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
+				@endif
 
+				@if($admin_roles[0]->spb_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-spb')) !!}
 					{!! csrf_field() !!}
 					<input type="hidden" name="status" class="form-control" value="SPB"/>
@@ -968,7 +975,9 @@
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
+				@endif
 
+				@if($admin_roles[0]->payment_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-pembayaran')) !!}
 					{!! csrf_field() !!}
 					<input type="hidden" name="status" class="form-control" value="Pembayaran"/>
@@ -1120,7 +1129,9 @@
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
+				@endif
 
+				@if($admin_roles[0]->spk_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'id' => 'form-spk')) !!}
 					{!! csrf_field() !!}
 					<input type="hidden" name="status" class="form-control" value="Pembuatan SPK"/>
@@ -1225,7 +1236,9 @@
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
+				@endif
 
+				@if($admin_roles[0]->examination_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'id' => 'form-uji')) !!}
 					{!! csrf_field() !!}
 					<input type="hidden" name="status" class="form-control" value="Pelaksanaan Uji"/>
@@ -1418,8 +1431,10 @@
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
+				@endif
 				
 				@if($data->examination_type_id !='1')
+				@if($admin_roles[0]->equipment_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-barang')) !!}
 					{!! csrf_field() !!}
 					<input type="hidden" name="status" class="form-control" value=""/>
@@ -1485,7 +1500,9 @@
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
+				@endif
 
+				@if($admin_roles[0]->receipt_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-tanda-terima')) !!}
 					{!! csrf_field() !!}
 					<input type="hidden" name="status" class="form-control" value=""/>
@@ -1527,7 +1544,9 @@
 					</fieldset>
 				{!! Form::close() !!}
 				@endif
+				@endif
 
+				@if($admin_roles[0]->resume_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-lap-uji')) !!}
 					{!! csrf_field() !!}
 					<input type="hidden" name="status" class="form-control" value="Laporan Uji"/>
@@ -1569,8 +1588,7 @@
 									@endforeach
 								</div>
 							</div>
-							<div class="col-md-12">
-								@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
+							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
@@ -1591,8 +1609,7 @@
 										</label>
 									</div>
 								</div>
-								@endif
-							</div>
+							@endif
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
@@ -1672,7 +1689,10 @@
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
+				@endif
+
 				@if($data->examination_type_id =='1')
+					@if($admin_roles[0]->qa_status)
 					{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'id' => 'form-sidang')) !!}
 					{!! csrf_field() !!}
 						<input type="hidden" name="status" class="form-control" value="Sidang QA"/>
@@ -1822,7 +1842,9 @@
 							</div>
 						</fieldset>
 					{!! Form::close() !!}
+					@endif
 					
+					@if($admin_roles[0]->equipment_status)
 					{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-barang')) !!}
 						{!! csrf_field() !!}
 						<input type="hidden" name="status" class="form-control" value=""/>
@@ -1888,7 +1910,10 @@
 							</div>
 						</fieldset>
 					{!! Form::close() !!}
+					@endif
+
 					@if($data->examination_type_id == 1)
+						@if($admin_roles[0]->receipt_status)
 						{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-tanda-terima')) !!}
 							{!! csrf_field() !!}
 							<input type="hidden" name="status" class="form-control" value=""/>
@@ -1929,7 +1954,10 @@
 								</div>
 							</fieldset>
 						{!! Form::close() !!}
+						@endif
 					@endif
+
+					@if($admin_roles[0]->certificate_status)
 					{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-sertifikat')) !!}
 						{!! csrf_field() !!}
 						<input type="hidden" name="status" class="form-control" value="Penerbitan Sertifikat"/>
@@ -2070,6 +2098,7 @@
 							</div>
 						</fieldset>
 					{!! Form::close() !!}
+					@endif
 				@endif
 			</div>
 		</div>
