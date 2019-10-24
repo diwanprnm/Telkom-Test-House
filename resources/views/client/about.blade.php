@@ -3,6 +3,12 @@
     ============================================= -->
     <title>{{ trans('translate.about') }} {{ trans('translate.about_us') }} - Telkom DDS</title>
 @section('content')
+<style type="text/css">
+	.fluid-width-video-wrapper iframe {
+	    width: 50%;
+	    height: 50%;
+	}
+</style>
  		<!-- Page Title
 		============================================= -->
 		<section id="page-title">
@@ -48,7 +54,7 @@
 							?>
 						@endif
 					</div>
-
+					
 				</div>
 
 

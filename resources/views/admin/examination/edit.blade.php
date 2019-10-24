@@ -386,6 +386,7 @@
 							</div>
 					</div>
 				</div>
+				@if(isset($admin_roles[0]))
 				@if($admin_roles[0]->registration_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'id' => 'form-registrasi')) !!}
 					{!! csrf_field() !!}
@@ -526,8 +527,162 @@
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
+				@else
+    				<fieldset>
+						<legend>
+							Step Registrasi
+						</legend>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										Tanda Tangan Form Uji
+									</label>
+									<input type="hidden" value="{{ $data->attachment }}">
+									@if($data->attachment != null)
+										<label>
+											: Sudah di tanda tangan
+										</label>
+										<div class="form-group">
+											<a href="{{URL::to('/admin/examination/download/'.$data->id)}}"> Download Form Uji</a>
+										</div>
+									@else
+										<label>
+											: Belum di tanda tangan
+										</label>
+									@endif
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Laboratorium Pengujian *
+									</label>
+									<select class="cs-select cs-skin-elastic">
+										@if($data->examination_lab_id != null)
+											@foreach($labs as $item)
+												@if($item->id == $data->examination_lab_id)
+													<option value="{{$item->id}}" selected>{{$item->name}}</option>
+												@endif
+											@endforeach
+										@else
+											<option value="" disabled selected>Select...</option>
+										@endif
+									</select>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Lokasi Pengujian *
+									</label>
+									<select class="cs-select cs-skin-elastic" required>
+										@if($data->is_loc_test == 1)
+											<option value="1" selected>Uji Lokasi</option>
+										@else
+											<option value="0" selected>Uji Lab Telkom</option>
+										@endif
+									</select>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Status *
+									</label>
+									<select class="cs-select cs-skin-elastic">
+										@if($data->registration_status == 0)
+											<option value="0" selected>Choose Status</option>
+										@elseif($data->registration_status == 1)
+											<option value="1" selected>Completed</option>
+										@else
+											<option value="-1" selected>Not Completed</option>
+										@endif
+									</select>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+				@endif
+				@else
+    				<fieldset>
+						<legend>
+							Step Registrasi
+						</legend>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										Tanda Tangan Form Uji
+									</label>
+									<input type="hidden" value="{{ $data->attachment }}">
+									@if($data->attachment != null)
+										<label>
+											: Sudah di tanda tangan
+										</label>
+										<div class="form-group">
+											<a href="{{URL::to('/admin/examination/download/'.$data->id)}}"> Download Form Uji</a>
+										</div>
+									@else
+										<label>
+											: Belum di tanda tangan
+										</label>
+									@endif
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Laboratorium Pengujian *
+									</label>
+									<select class="cs-select cs-skin-elastic">
+										@if($data->examination_lab_id != null)
+											@foreach($labs as $item)
+												@if($item->id == $data->examination_lab_id)
+													<option value="{{$item->id}}" selected>{{$item->name}}</option>
+												@endif
+											@endforeach
+										@else
+											<option value="" disabled selected>Select...</option>
+										@endif
+									</select>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Lokasi Pengujian *
+									</label>
+									<select class="cs-select cs-skin-elastic" required>
+										@if($data->is_loc_test == 1)
+											<option value="1" selected>Uji Lokasi</option>
+										@else
+											<option value="0" selected>Uji Lab Telkom</option>
+										@endif
+									</select>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Status *
+									</label>
+									<select class="cs-select cs-skin-elastic">
+										@if($data->registration_status == 0)
+											<option value="0" selected>Choose Status</option>
+										@elseif($data->registration_status == 1)
+											<option value="1" selected>Completed</option>
+										@else
+											<option value="-1" selected>Not Completed</option>
+										@endif
+									</select>
+								</div>
+							</div>
+						</div>
+					</fieldset>
 				@endif
 				
+				@if(isset($admin_roles[0]))
 				@if($admin_roles[0]->function_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-function-test')) !!}
 					{!! csrf_field() !!}
@@ -769,8 +924,348 @@
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
+				@else
+					<fieldset>
+						<legend>
+							Step Uji Fungsi
+						</legend>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th colspan="4">Riwayat Pengajuan Tanggal Uji Fungsi</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>Pengajuan Tanggal Customer</td>
+												<td>Jadwal dari Test Engineer</td>
+												<td>Pengajuan Ulang dari Customer</td>
+												<td>Jadwal dari Test Engineer</td>
+											</tr>
+											<tr>
+												<td>
+													<strong><?php echo $data->cust_test_date; ?></strong>
+												</td>
+												<td>
+													<strong><?php echo $data->deal_test_date; ?></strong>
+												</td>
+												<td>
+													<strong><?php echo $data->urel_test_date; ?></strong>
+												</td>
+												<td>
+													<strong><?php echo $data->function_date; ?></strong>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+
+									@if($data->function_test_reason != '' && $data->function_test_date_approval != 1)
+										<label for="alasan">Alasan Jadwal Ulang:</label>
+										<textarea class="form-control" rows="2" readonly>{{ $data->function_test_reason }}</textarea>
+									@endif
+								</div>
+
+								@if($data->function_test_date_approval == 1)
+									<div class="col-md-6 center">
+										<div class="form-group">
+											<h4 style="display:inline">
+												Jadwal FIX Uji Fungsi : 
+												@if($data->function_date != null)
+													<?php echo $data->function_date; ?>
+												@else
+													<?php echo $data->deal_test_date; ?>
+												@endif
+											</h4>
+										</div>
+									</div>
+									<div class="col-md-6 center">
+										<div class="form-group">
+											<h4 style="display:inline">
+												Disetujui oleh : {{ $data->function_test_PIC }}
+											</h4>
+										</div>
+									</div>
+								@endif
+							</div>							
+
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Lokasi Barang Sebelum Uji Fungsi
+									</label>
+									<select class="cs-select cs-skin-elastic">
+										@if(count($data->equipment)==0)
+											<option value="1" selected>Customer (Applicant)</option>
+										@else
+											<option value="2" selected>URel (Store)</option>
+										@endif
+									</select>
+								</div>
+							</div>
+								@if($data->function_date != null)
+									<?php $in_equip_date = $data->function_date; ?>
+								@elseif($data->function_date == null && $data->urel_test_date != null)
+									<?php $in_equip_date = $data->urel_test_date; ?>
+								@elseif($data->urel_test_date == null && $data->deal_test_date != null)
+									<?php $in_equip_date = $data->deal_test_date; ?>
+								@else
+									<?php $in_equip_date = $data->cust_test_date; ?>
+								@endif
+
+							<div class="col-md-12">
+								@if($data->function_test_TE != 0 && $data->function_test_date_approval == 1)
+								<div class="col-md-12 center">
+									<div class="form-group">
+										<h4 style="display:inline">
+											Hasil Uji Fungsi
+										</h4>
+										<h4 style="display:inline">
+											: @if($data->function_test_TE == 1)
+												Memenuhi
+											@elseif($data->function_test_TE == 2)
+												Tidak Memenuhi
+											@elseif($data->function_test_TE == 3)
+												dll
+											@else
+												Tidak Ada
+											@endif
+										</h4>
+									</div>
+								</div>
+								<div class="form-group">
+									<label>
+										Hasil Uji Fungsi File *
+									</label>
+								</div>
+								<div class="form-group">
+									<?php $function_attach = ''; ?>
+									@foreach($data->media as $item)
+										@if($item->name == 'Laporan Hasil Uji Fungsi' && $item->attachment != '')
+											<?php $function_attach = $item->attachment; ?>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil Uji Fungsi "<?php echo $function_attach; ?>"</a>
+										@endif
+									@endforeach
+								</div>
+								<div class="form-group">
+									<label for="catatan">Catatan :</label>
+									<textarea class="form-control" rows="5" readonly disabled>{{ $data->catatan }}</textarea>
+								</div>
+								@endif
+							</div>
+							@if($data->function_test_TE == 1 && $data->function_test_date_approval == 1)
+								<div class="col-md-12">
+									<div class="form-group">
+										<label>
+											Bukti Penerimaan & Pengeluaran Perangkat Uji File *
+										</label>
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<?php $barang_attach = ''; ?>
+										@foreach($data->media as $item)
+											@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
+												<?php $barang_attach = $item->attachment; ?>
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan & Pengeluaran Perangkat Uji "<?php echo $barang_attach; ?>"</a>
+											@endif
+										@endforeach
+									</div>
+								</div>
+							@endif
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Status *
+									</label>
+									<select class="cs-select cs-skin-elastic">
+										@if($data->function_status == 0)
+											<option value="0" selected>Choose Status</option>
+										@elseif($data->function_status == 1)
+											<option value="1" selected>Completed</option>
+										@else
+											<option value="-1" selected>Not Completed</option>
+										@endif
+									</select>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+				@endif
+				@else
+					<fieldset>
+						<legend>
+							Step Uji Fungsi
+						</legend>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th colspan="4">Riwayat Pengajuan Tanggal Uji Fungsi</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>Pengajuan Tanggal Customer</td>
+												<td>Jadwal dari Test Engineer</td>
+												<td>Pengajuan Ulang dari Customer</td>
+												<td>Jadwal dari Test Engineer</td>
+											</tr>
+											<tr>
+												<td>
+													<strong><?php echo $data->cust_test_date; ?></strong>
+												</td>
+												<td>
+													<strong><?php echo $data->deal_test_date; ?></strong>
+												</td>
+												<td>
+													<strong><?php echo $data->urel_test_date; ?></strong>
+												</td>
+												<td>
+													<strong><?php echo $data->function_date; ?></strong>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+
+									@if($data->function_test_reason != '' && $data->function_test_date_approval != 1)
+										<label for="alasan">Alasan Jadwal Ulang:</label>
+										<textarea class="form-control" rows="2" readonly>{{ $data->function_test_reason }}</textarea>
+									@endif
+								</div>
+
+								@if($data->function_test_date_approval == 1)
+									<div class="col-md-6 center">
+										<div class="form-group">
+											<h4 style="display:inline">
+												Jadwal FIX Uji Fungsi : 
+												@if($data->function_date != null)
+													<?php echo $data->function_date; ?>
+												@else
+													<?php echo $data->deal_test_date; ?>
+												@endif
+											</h4>
+										</div>
+									</div>
+									<div class="col-md-6 center">
+										<div class="form-group">
+											<h4 style="display:inline">
+												Disetujui oleh : {{ $data->function_test_PIC }}
+											</h4>
+										</div>
+									</div>
+								@endif
+							</div>							
+
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Lokasi Barang Sebelum Uji Fungsi
+									</label>
+									<select class="cs-select cs-skin-elastic">
+										@if(count($data->equipment)==0)
+											<option value="1" selected>Customer (Applicant)</option>
+										@else
+											<option value="2" selected>URel (Store)</option>
+										@endif
+									</select>
+								</div>
+							</div>
+								@if($data->function_date != null)
+									<?php $in_equip_date = $data->function_date; ?>
+								@elseif($data->function_date == null && $data->urel_test_date != null)
+									<?php $in_equip_date = $data->urel_test_date; ?>
+								@elseif($data->urel_test_date == null && $data->deal_test_date != null)
+									<?php $in_equip_date = $data->deal_test_date; ?>
+								@else
+									<?php $in_equip_date = $data->cust_test_date; ?>
+								@endif
+
+							<div class="col-md-12">
+								@if($data->function_test_TE != 0 && $data->function_test_date_approval == 1)
+								<div class="col-md-12 center">
+									<div class="form-group">
+										<h4 style="display:inline">
+											Hasil Uji Fungsi
+										</h4>
+										<h4 style="display:inline">
+											: @if($data->function_test_TE == 1)
+												Memenuhi
+											@elseif($data->function_test_TE == 2)
+												Tidak Memenuhi
+											@elseif($data->function_test_TE == 3)
+												dll
+											@else
+												Tidak Ada
+											@endif
+										</h4>
+									</div>
+								</div>
+								<div class="form-group">
+									<label>
+										Hasil Uji Fungsi File *
+									</label>
+								</div>
+								<div class="form-group">
+									<?php $function_attach = ''; ?>
+									@foreach($data->media as $item)
+										@if($item->name == 'Laporan Hasil Uji Fungsi' && $item->attachment != '')
+											<?php $function_attach = $item->attachment; ?>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil Uji Fungsi "<?php echo $function_attach; ?>"</a>
+										@endif
+									@endforeach
+								</div>
+								<div class="form-group">
+									<label for="catatan">Catatan :</label>
+									<textarea class="form-control" rows="5" readonly disabled>{{ $data->catatan }}</textarea>
+								</div>
+								@endif
+							</div>
+							@if($data->function_test_TE == 1 && $data->function_test_date_approval == 1)
+								<div class="col-md-12">
+									<div class="form-group">
+										<label>
+											Bukti Penerimaan & Pengeluaran Perangkat Uji File *
+										</label>
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<?php $barang_attach = ''; ?>
+										@foreach($data->media as $item)
+											@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
+												<?php $barang_attach = $item->attachment; ?>
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan & Pengeluaran Perangkat Uji "<?php echo $barang_attach; ?>"</a>
+											@endif
+										@endforeach
+									</div>
+								</div>
+							@endif
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Status *
+									</label>
+									<select class="cs-select cs-skin-elastic">
+										@if($data->function_status == 0)
+											<option value="0" selected>Choose Status</option>
+										@elseif($data->function_status == 1)
+											<option value="1" selected>Completed</option>
+										@else
+											<option value="-1" selected>Not Completed</option>
+										@endif
+									</select>
+								</div>
+							</div>
+						</div>
+					</fieldset>
 				@endif
 
+				@if(isset($admin_roles[0]))
 				@if($admin_roles[0]->contract_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-contract')) !!}
 					{!! csrf_field() !!}
@@ -867,8 +1362,90 @@
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
+				@else
+					<fieldset>
+						<legend>
+							Step Tinjauan Kontrak
+						</legend>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										Tinjauan Kontrak File *
+									</label>
+								</div>
+								<div class="form-group">
+									<?php $contract_attach = ''; ?>
+									@foreach($data->media as $item)
+										@if($item->name == 'Tinjauan Kontrak' && $item->attachment != '')
+											<?php $contract_attach = $item->attachment; ?>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tinjauan Kontrak')}}"> Download Tinjauan Kontrak "<?php echo $contract_attach; ?>"</a>
+										@endif
+									@endforeach
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Status *
+									</label>
+									<select class="cs-select cs-skin-elastic">
+										@if($data->contract_status == 0)
+											<option value="0" selected>Choose Status</option>
+										@elseif($data->contract_status == 1)
+											<option value="1" selected>Completed</option>
+										@else
+											<option value="-1" selected>Not Completed</option>
+										@endif
+									</select>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+				@endif
+				@else
+					<fieldset>
+						<legend>
+							Step Tinjauan Kontrak
+						</legend>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										Tinjauan Kontrak File *
+									</label>
+								</div>
+								<div class="form-group">
+									<?php $contract_attach = ''; ?>
+									@foreach($data->media as $item)
+										@if($item->name == 'Tinjauan Kontrak' && $item->attachment != '')
+											<?php $contract_attach = $item->attachment; ?>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tinjauan Kontrak')}}"> Download Tinjauan Kontrak "<?php echo $contract_attach; ?>"</a>
+										@endif
+									@endforeach
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Status *
+									</label>
+									<select class="cs-select cs-skin-elastic">
+										@if($data->contract_status == 0)
+											<option value="0" selected>Choose Status</option>
+										@elseif($data->contract_status == 1)
+											<option value="1" selected>Completed</option>
+										@else
+											<option value="-1" selected>Not Completed</option>
+										@endif
+									</select>
+								</div>
+							</div>
+						</div>
+					</fieldset>
 				@endif
 
+				@if(isset($admin_roles[0]))
 				@if($admin_roles[0]->spb_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-spb')) !!}
 					{!! csrf_field() !!}
@@ -975,8 +1552,110 @@
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
+				@else
+					<fieldset>
+						<legend>
+							Step SPB
+						</legend>
+					@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1')
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										SPB File *
+									</label>
+								</div>
+								<div class="form-group">
+									<?php $spb_attach = ''; ?>
+									@foreach($data->media as $item)
+										@if($item->name == 'SPB' && $item->attachment != '')
+											<?php $spb_attach = $item->attachment; ?>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/SPB')}}"> Download SPB "<?php echo $spb_attach; ?>"</a>
+										@endif
+									@endforeach
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Total Biaya *
+									</label>
+									<input type="text" class="form-control" placeholder="Total Biaya" value="{{ $data->price }}" readonly required>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Status *
+									</label>
+									<select class="cs-select cs-skin-elastic">
+										@if($data->spb_status == 0)
+											<option value="0" selected>Choose Status</option>
+										@elseif($data->spb_status == 1)
+											<option value="1" selected>Completed</option>
+										@else
+											<option value="-1" selected>Not Completed</option>
+										@endif
+									</select>
+								</div>
+							</div>
+						</div>
+					@endif
+					</fieldset>
+				@endif
+				@else
+					<fieldset>
+						<legend>
+							Step SPB
+						</legend>
+					@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1')
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										SPB File *
+									</label>
+								</div>
+								<div class="form-group">
+									<?php $spb_attach = ''; ?>
+									@foreach($data->media as $item)
+										@if($item->name == 'SPB' && $item->attachment != '')
+											<?php $spb_attach = $item->attachment; ?>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/SPB')}}"> Download SPB "<?php echo $spb_attach; ?>"</a>
+										@endif
+									@endforeach
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Total Biaya *
+									</label>
+									<input type="text" class="form-control" placeholder="Total Biaya" value="{{ $data->price }}" readonly required>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Status *
+									</label>
+									<select class="cs-select cs-skin-elastic">
+										@if($data->spb_status == 0)
+											<option value="0" selected>Choose Status</option>
+										@elseif($data->spb_status == 1)
+											<option value="1" selected>Completed</option>
+										@else
+											<option value="-1" selected>Not Completed</option>
+										@endif
+									</select>
+								</div>
+							</div>
+						</div>
+					@endif
+					</fieldset>
 				@endif
 
+				@if(isset($admin_roles[0]))
 				@if($admin_roles[0]->payment_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-pembayaran')) !!}
 					{!! csrf_field() !!}
@@ -1129,8 +1808,186 @@
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
+				@else
+					<fieldset>
+						<legend>
+							Step Pembayaran
+						</legend>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										Status Pembayaran
+									</label>
+										<?php $status = 0 ?>
+									@foreach($data->media as $item)
+										@if($item->name == 'File Pembayaran' && $item->attachment !='')
+											<?php $status = 1; break; ?>
+										@endif
+									@endforeach
+
+									@if($status)
+										<label>
+											: Sudah di bayar, pada {{ $item->updated_at }}
+										</label>
+										<div class="form-group">
+											<label>
+												Banyak Uang *
+											</label>
+											<input type="text" class="form-control" placeholder="Banyak Uang" value="{{ $data->cust_price_payment }}" readonly required>
+										</div>
+										<div class="form-group">
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/File Pembayaran')}}"> Download Bukti Pembayaran</a>
+										</div>
+									@else
+										<label>
+											: Belum di bayar
+										</label>
+									@endif
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Kuitansi File
+									</label>
+								</div>
+								<div class="form-group">
+									<?php $kuitansi_attach = ''; ?>
+									@foreach($data->media as $item)
+										@if($item->name == 'Kuitansi' && $item->attachment != '')
+											<?php $kuitansi_attach = $item->attachment; ?>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/kuitansi')}}"> Download Kuitansi "<?php echo $kuitansi_attach; ?>"</a>
+										@endif
+									@endforeach
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Faktur Pajak File
+									</label>
+								</div>
+								<div class="form-group">
+									<?php $faktur_attach = ''; ?>
+									@foreach($data->media as $item)
+										@if($item->name == 'Faktur Pajak' && $item->attachment != '')
+											<?php $faktur_attach = $item->attachment; ?>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/faktur')}}"> Download Faktur Pajak "<?php echo $faktur_attach; ?>"</a>
+										@endif
+									@endforeach
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Status *
+									</label>
+									<select class="cs-select cs-skin-elastic">
+										@if($data->payment_status == 0)
+											<option value="0" selected>Choose Status</option>
+										@elseif($data->payment_status == 1)
+											<option value="1" selected>Completed</option>
+										@else
+											<option value="-1" selected>Not Completed</option>
+										@endif
+									</select>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+				@endif
+				@else
+					<fieldset>
+						<legend>
+							Step Pembayaran
+						</legend>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										Status Pembayaran
+									</label>
+										<?php $status = 0 ?>
+									@foreach($data->media as $item)
+										@if($item->name == 'File Pembayaran' && $item->attachment !='')
+											<?php $status = 1; break; ?>
+										@endif
+									@endforeach
+
+									@if($status)
+										<label>
+											: Sudah di bayar, pada {{ $item->updated_at }}
+										</label>
+										<div class="form-group">
+											<label>
+												Banyak Uang *
+											</label>
+											<input type="text" class="form-control" placeholder="Banyak Uang" value="{{ $data->cust_price_payment }}" readonly required>
+										</div>
+										<div class="form-group">
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/File Pembayaran')}}"> Download Bukti Pembayaran</a>
+										</div>
+									@else
+										<label>
+											: Belum di bayar
+										</label>
+									@endif
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Kuitansi File
+									</label>
+								</div>
+								<div class="form-group">
+									<?php $kuitansi_attach = ''; ?>
+									@foreach($data->media as $item)
+										@if($item->name == 'Kuitansi' && $item->attachment != '')
+											<?php $kuitansi_attach = $item->attachment; ?>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/kuitansi')}}"> Download Kuitansi "<?php echo $kuitansi_attach; ?>"</a>
+										@endif
+									@endforeach
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Faktur Pajak File
+									</label>
+								</div>
+								<div class="form-group">
+									<?php $faktur_attach = ''; ?>
+									@foreach($data->media as $item)
+										@if($item->name == 'Faktur Pajak' && $item->attachment != '')
+											<?php $faktur_attach = $item->attachment; ?>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/faktur')}}"> Download Faktur Pajak "<?php echo $faktur_attach; ?>"</a>
+										@endif
+									@endforeach
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Status *
+									</label>
+									<select class="cs-select cs-skin-elastic">
+										@if($data->payment_status == 0)
+											<option value="0" selected>Choose Status</option>
+										@elseif($data->payment_status == 1)
+											<option value="1" selected>Completed</option>
+										@else
+											<option value="-1" selected>Not Completed</option>
+										@endif
+									</select>
+								</div>
+							</div>
+						</div>
+					</fieldset>
 				@endif
 
+				@if(isset($admin_roles[0]))
 				@if($admin_roles[0]->spk_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'id' => 'form-spk')) !!}
 					{!! csrf_field() !!}
@@ -1236,8 +2093,108 @@
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
+				@else
+					<fieldset>
+						<legend>
+							Step Pembuatan SPK
+						</legend>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Tanggal SPK Dikeluarkan *
+									</label>
+									<p class="input-group input-append" data-date-format="yyyy-mm-dd">
+										<input type="text" class="form-control" value="{{ $data->spk_date }}" readonly required/>
+										<span class="input-group-btn">
+											<button type="button" class="btn btn-default">
+												<i class="glyphicon glyphicon-calendar"></i>
+											</button>
+										</span>
+									</p>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Nomor SPK *
+									</label>
+										<input type="text" class="form-control" placeholder="Nomor SPK" value="{{ $data->spk_code }}" required readonly>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Status *
+									</label>
+									<select class="cs-select cs-skin-elastic">
+										@if($data->spk_status == 0)
+											<option value="0" selected>Choose Status</option>
+										@elseif($data->spk_status == 1)
+											<option value="1" selected>Completed</option>
+										@else
+											<option value="-1" selected>Not Completed</option>
+										@endif
+									</select>
+								</div>
+							</div>
+	                    </div>
+					</fieldset>
+				@endif
+				@else
+					<fieldset>
+						<legend>
+							Step Pembuatan SPK
+						</legend>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Tanggal SPK Dikeluarkan *
+									</label>
+									<p class="input-group input-append" data-date-format="yyyy-mm-dd">
+										<input type="text" class="form-control" value="{{ $data->spk_date }}" readonly required/>
+										<span class="input-group-btn">
+											<button type="button" class="btn btn-default">
+												<i class="glyphicon glyphicon-calendar"></i>
+											</button>
+										</span>
+									</p>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Nomor SPK *
+									</label>
+										<input type="text" class="form-control" placeholder="Nomor SPK" value="{{ $data->spk_code }}" required readonly>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Status *
+									</label>
+									<select class="cs-select cs-skin-elastic">
+										@if($data->spk_status == 0)
+											<option value="0" selected>Choose Status</option>
+										@elseif($data->spk_status == 1)
+											<option value="1" selected>Completed</option>
+										@else
+											<option value="-1" selected>Not Completed</option>
+										@endif
+									</select>
+								</div>
+							</div>
+	                    </div>
+					</fieldset>
 				@endif
 
+				@if(isset($admin_roles[0]))
 				@if($admin_roles[0]->examination_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'id' => 'form-uji')) !!}
 					{!! csrf_field() !!}
@@ -1431,9 +2388,299 @@
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
+				@else
+					<fieldset>
+						<legend>
+							Step Pelaksanaan Uji
+						</legend>
+						<div class="row">
+						@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
+							<?php
+								$start_date = new DateTime(date('Y-m-d'));
+								$end_date = new DateTime($exam_schedule->data[0]->targetDt);
+								if($start_date>$end_date){
+									$sisa_spk = 0;
+								}else{
+									$interval = $start_date->diff($end_date);
+									$sisa_spk = $interval->days;
+								}
+							?>
+							<div class="col-md-12">
+								<div class="form-group">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th colspan="4">Riwayat Pelaksanaan Uji</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>Tanggal Approve Manager Lab</td>
+												<td>Target Selesai Uji</td>
+												<td>Sisa Waktu Pengujian</td>
+											</tr>
+											<tr>
+												<td>
+													<strong>{{ $exam_schedule->data[0]->startTestDt }}</strong>
+												</td>
+												<td>
+													<strong>{{ $exam_schedule->data[0]->targetDt }}</strong>
+												</td>
+												<td>
+													<strong>{{ $sisa_spk }} hari</strong>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>	
+							@if(count($data_lab)>0)
+								<div class="col-md-12">
+									<div class="form-group">
+										<label for="form-field-select-2">
+											Barang pindah dari Gudang ke Lab tanggal : {{ $data_lab[0]->action_date }}
+										</label>
+									</div>
+								</div>
+							@endif
+							<div class="col-md-12">
+								<div class="form-group">
+									<table class="table table-bordered">
+										<tbody>
+											<tr>
+												<td>Mulai Uji oleh Test Engineer</td>
+												<td>Selesai Uji oleh Test Engineer</td>
+											</tr>
+											<tr>
+												<td>
+													<strong>{{ $exam_schedule->data[0]->actualStartTestDt }}</strong>
+												</td>
+												<td>
+													<strong>{{ $exam_schedule->data[0]->actualFinishTestDt }}</strong>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							@if(count($data_gudang)>1)
+								<div class="col-md-12">
+									<div class="form-group">
+										<label for="form-field-select-2"> 
+											Barang pindah dari Lab ke Gudang tanggal : 
+											@if($data_gudang[0]->action_date != NULL AND $data_gudang[0]->action_date != '0000-00-00')
+												tanggal : {{ $data_gudang[0]->action_date }}
+											@endif
+										</label>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Tanggal Barang Dikembalikan *
+										</label>
+										<p class="input-group input-append" data-date-format="yyyy-mm-dd">
+											@if($data_gudang[0]->action_date != NULL AND $data_gudang[0]->action_date != '0000-00-00')
+												<input type="text" class="form-control" value="{{ $data_gudang[0]->action_date }}" readonly required/>
+											@else
+												<input type="text" class="form-control" value="" readonly required/>
+											@endif
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-default">
+													<i class="glyphicon glyphicon-calendar"></i>
+												</button>
+											</span>
+										</p>
+									</div>
+								</div>
+							@endif
+						@endif						
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Lokasi Barang Sekarang
+									</label>
+									<label>
+										: 
+										@if(count($data->equipment)==0)
+											Lab (Laboratory)
+										@elseif($data->equipment[0]->location==1)
+											Customer (Applicant)
+										@elseif($data->equipment[0]->location==2)
+											URel (Store)
+										@elseif($data->equipment[0]->location==3)
+											Lab (Laboratory)
+										@endif
+									</label>
+								</div>
+							</div>
+	                        <div class="col-md-6">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Status *
+									</label>
+									<select class="cs-select cs-skin-elastic">
+										@if($data->examination_status == 0)
+											<option value="0" selected>Choose Status</option>
+										@elseif($data->examination_status == 1)
+											<option value="1" selected>Completed</option>
+										@else
+											<option value="-1" selected>Not Completed</option>
+										@endif
+									</select>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+				@endif
+				@else
+					<fieldset>
+						<legend>
+							Step Pelaksanaan Uji
+						</legend>
+						<div class="row">
+						@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
+							<?php
+								$start_date = new DateTime(date('Y-m-d'));
+								$end_date = new DateTime($exam_schedule->data[0]->targetDt);
+								if($start_date>$end_date){
+									$sisa_spk = 0;
+								}else{
+									$interval = $start_date->diff($end_date);
+									$sisa_spk = $interval->days;
+								}
+							?>
+							<div class="col-md-12">
+								<div class="form-group">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th colspan="4">Riwayat Pelaksanaan Uji</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>Tanggal Approve Manager Lab</td>
+												<td>Target Selesai Uji</td>
+												<td>Sisa Waktu Pengujian</td>
+											</tr>
+											<tr>
+												<td>
+													<strong>{{ $exam_schedule->data[0]->startTestDt }}</strong>
+												</td>
+												<td>
+													<strong>{{ $exam_schedule->data[0]->targetDt }}</strong>
+												</td>
+												<td>
+													<strong>{{ $sisa_spk }} hari</strong>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>	
+							@if(count($data_lab)>0)
+								<div class="col-md-12">
+									<div class="form-group">
+										<label for="form-field-select-2">
+											Barang pindah dari Gudang ke Lab tanggal : {{ $data_lab[0]->action_date }}
+										</label>
+									</div>
+								</div>
+							@endif
+							<div class="col-md-12">
+								<div class="form-group">
+									<table class="table table-bordered">
+										<tbody>
+											<tr>
+												<td>Mulai Uji oleh Test Engineer</td>
+												<td>Selesai Uji oleh Test Engineer</td>
+											</tr>
+											<tr>
+												<td>
+													<strong>{{ $exam_schedule->data[0]->actualStartTestDt }}</strong>
+												</td>
+												<td>
+													<strong>{{ $exam_schedule->data[0]->actualFinishTestDt }}</strong>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							@if(count($data_gudang)>1)
+								<div class="col-md-12">
+									<div class="form-group">
+										<label for="form-field-select-2"> 
+											Barang pindah dari Lab ke Gudang tanggal : 
+											@if($data_gudang[0]->action_date != NULL AND $data_gudang[0]->action_date != '0000-00-00')
+												tanggal : {{ $data_gudang[0]->action_date }}
+											@endif
+										</label>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Tanggal Barang Dikembalikan *
+										</label>
+										<p class="input-group input-append" data-date-format="yyyy-mm-dd">
+											@if($data_gudang[0]->action_date != NULL AND $data_gudang[0]->action_date != '0000-00-00')
+												<input type="text" class="form-control" value="{{ $data_gudang[0]->action_date }}" readonly required/>
+											@else
+												<input type="text" class="form-control" value="" readonly required/>
+											@endif
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-default">
+													<i class="glyphicon glyphicon-calendar"></i>
+												</button>
+											</span>
+										</p>
+									</div>
+								</div>
+							@endif
+						@endif						
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Lokasi Barang Sekarang
+									</label>
+									<label>
+										: 
+										@if(count($data->equipment)==0)
+											Lab (Laboratory)
+										@elseif($data->equipment[0]->location==1)
+											Customer (Applicant)
+										@elseif($data->equipment[0]->location==2)
+											URel (Store)
+										@elseif($data->equipment[0]->location==3)
+											Lab (Laboratory)
+										@endif
+									</label>
+								</div>
+							</div>
+	                        <div class="col-md-6">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Status *
+									</label>
+									<select class="cs-select cs-skin-elastic">
+										@if($data->examination_status == 0)
+											<option value="0" selected>Choose Status</option>
+										@elseif($data->examination_status == 1)
+											<option value="1" selected>Completed</option>
+										@else
+											<option value="-1" selected>Not Completed</option>
+										@endif
+									</select>
+								</div>
+							</div>
+						</div>
+					</fieldset>
 				@endif
 				
 				@if($data->examination_type_id !='1')
+				@if(isset($admin_roles[0]))
 				@if($admin_roles[0]->equipment_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-barang')) !!}
 					{!! csrf_field() !!}
@@ -1500,8 +2747,108 @@
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
+				@else
+					<fieldset>
+						<legend>
+							Edit Lokasi Barang
+						</legend>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									@foreach($data->media as $item)
+										@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan Perangkat Uji</a>
+										@endif
+									@endforeach
+								</div>
+								<div class="form-group">
+									<label>
+										Bukti Penerimaan & Pengeluaran Perangkat Uji File *
+									</label>
+								</div>
+								<div class="form-group">
+									<?php $barang_attach2 = ''; ?>
+									@foreach($data->media as $item)
+										@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji2' && $item->attachment != '')
+											<?php $barang_attach2 = $item->attachment; ?>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji2')}}"> Download Bukti Pengeluaran Perangkat Uji</a>
+										@endif
+									@endforeach
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Lokasi Barang Sekarang
+									</label>
+									<select class="cs-select cs-skin-elastic">
+										@if(count($data->equipment)==0)
+											<option value="2" selected>URel (Store)</option>
+										@elseif($data->equipment[0]->location==1)
+											<option value="1" selected>Customer (Applicant)</option>
+										@elseif($data->equipment[0]->location==2)
+											<option value="2" selected>URel (Store)</option>
+										@elseif($data->equipment[0]->location==3)
+											<option value="3" selected>Lab (Laboratory)</option>
+										@endif
+									</select>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+				@endif
+				@else
+					<fieldset>
+						<legend>
+							Edit Lokasi Barang
+						</legend>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									@foreach($data->media as $item)
+										@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan Perangkat Uji</a>
+										@endif
+									@endforeach
+								</div>
+								<div class="form-group">
+									<label>
+										Bukti Penerimaan & Pengeluaran Perangkat Uji File *
+									</label>
+								</div>
+								<div class="form-group">
+									<?php $barang_attach2 = ''; ?>
+									@foreach($data->media as $item)
+										@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji2' && $item->attachment != '')
+											<?php $barang_attach2 = $item->attachment; ?>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji2')}}"> Download Bukti Pengeluaran Perangkat Uji</a>
+										@endif
+									@endforeach
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Lokasi Barang Sekarang
+									</label>
+									<select class="cs-select cs-skin-elastic">
+										@if(count($data->equipment)==0)
+											<option value="2" selected>URel (Store)</option>
+										@elseif($data->equipment[0]->location==1)
+											<option value="1" selected>Customer (Applicant)</option>
+										@elseif($data->equipment[0]->location==2)
+											<option value="2" selected>URel (Store)</option>
+										@elseif($data->equipment[0]->location==3)
+											<option value="3" selected>Lab (Laboratory)</option>
+										@endif
+									</select>
+								</div>
+							</div>
+						</div>
+					</fieldset>
 				@endif
 
+				@if(isset($admin_roles[0]))
 				@if($admin_roles[0]->receipt_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-tanda-terima')) !!}
 					{!! csrf_field() !!}
@@ -1543,9 +2890,59 @@
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
+				@else
+					<fieldset>
+						<legend>
+							Tanda Terima Hasil Pengujian
+						</legend>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										File Tanda Terima *
+									</label>
+								</div>
+								<div class="form-group">
+									<?php $tanda_terima_attach = ''; ?>
+									@foreach($data->media as $item)
+										@if($item->name == 'Tanda Terima Hasil Pengujian' && $item->attachment != '')
+											<?php $tanda_terima_attach = $item->attachment; ?>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tanda Terima Hasil Pengujian')}}"> Download Tanda Terima Hasil Pengujian"<?php echo $tanda_terima_attach; ?>"</a>
+										@endif
+									@endforeach
+								</div>
+							</div>
+						</div>
+					</fieldset>
+				@endif
+				@else
+					<fieldset>
+						<legend>
+							Tanda Terima Hasil Pengujian
+						</legend>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										File Tanda Terima *
+									</label>
+								</div>
+								<div class="form-group">
+									<?php $tanda_terima_attach = ''; ?>
+									@foreach($data->media as $item)
+										@if($item->name == 'Tanda Terima Hasil Pengujian' && $item->attachment != '')
+											<?php $tanda_terima_attach = $item->attachment; ?>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tanda Terima Hasil Pengujian')}}"> Download Tanda Terima Hasil Pengujian"<?php echo $tanda_terima_attach; ?>"</a>
+										@endif
+									@endforeach
+								</div>
+							</div>
+						</div>
+					</fieldset>
 				@endif
 				@endif
 
+				@if(isset($admin_roles[0]))
 				@if($admin_roles[0]->resume_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-lap-uji')) !!}
 					{!! csrf_field() !!}
@@ -1689,9 +3086,197 @@
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
+				@else
+					<fieldset>
+						<legend>
+							Step Laporan Uji
+						</legend>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									@foreach($data->media as $item)
+										@if($item->name == 'Laporan Uji')
+											@if($item->attachment != '')
+											<div class="col-md-4">
+												<div class="form-group">
+													<a href="{{$item->attachment}}&isCover=true&isIsi=false"> Download Sampul/Judul Laporan </a>
+												</div>
+											</div>
+											<div class="col-md-4">
+												<div class="form-group">
+													<a href="{{$item->attachment}}&isCover=false&isIsi=true"> Download Isi Laporan </a>
+												</div>
+											</div>
+											<div class="col-md-4">
+												<div class="form-group">
+													<a href="{{$item->attachment}}"> Download Keseluruhan Laporan </a>
+												</div>
+											</div>
+											@else
+											<label>
+												Laporan Hasil Pengujian
+											</label>
+											<label>
+												: Belum Tersedia
+											</label>
+											@endif
+										@endif
+									@endforeach
+								</div>
+							</div>
+							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Mulai Pembuatan Laporan
+										</label>
+										<label>
+											: {{ $exam_schedule->data[0]->startReportDt }}
+										</label>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Selesai Pembuatan Laporan
+										</label>
+										<label>
+											: {{ $exam_schedule->data[0]->finishReportDt }}
+										</label>
+									</div>
+								</div>
+							@endif
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Tanggal Laporan Diterbitkan*
+									</label>
+									<p class="input-group input-append" data-date-format="yyyy-mm-dd">
+										<input type="text" class="form-control" value="{{ $data->resume_date }}" readonly required/>
+										<span class="input-group-btn">
+											<button type="button" class="btn btn-default">
+												<i class="glyphicon glyphicon-calendar"></i>
+											</button>
+										</span>
+									</p>
+								</div>
+							</div>
+	                        <div class="col-md-6">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Status *
+									</label>
+									<select class="cs-select cs-skin-elastic">
+										@if($data->resume_status == 0)
+											<option value="0" selected>Choose Status</option>
+										@elseif($data->resume_status == 1)
+											<option value="1" selected>Completed</option>
+										@else
+											<option value="-1" selected>Not Completed</option>
+										@endif
+									</select>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+				@endif
+				@else
+					<fieldset>
+						<legend>
+							Step Laporan Uji
+						</legend>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									@foreach($data->media as $item)
+										@if($item->name == 'Laporan Uji')
+											@if($item->attachment != '')
+											<div class="col-md-4">
+												<div class="form-group">
+													<a href="{{$item->attachment}}&isCover=true&isIsi=false"> Download Sampul/Judul Laporan </a>
+												</div>
+											</div>
+											<div class="col-md-4">
+												<div class="form-group">
+													<a href="{{$item->attachment}}&isCover=false&isIsi=true"> Download Isi Laporan </a>
+												</div>
+											</div>
+											<div class="col-md-4">
+												<div class="form-group">
+													<a href="{{$item->attachment}}"> Download Keseluruhan Laporan </a>
+												</div>
+											</div>
+											@else
+											<label>
+												Laporan Hasil Pengujian
+											</label>
+											<label>
+												: Belum Tersedia
+											</label>
+											@endif
+										@endif
+									@endforeach
+								</div>
+							</div>
+							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Mulai Pembuatan Laporan
+										</label>
+										<label>
+											: {{ $exam_schedule->data[0]->startReportDt }}
+										</label>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Selesai Pembuatan Laporan
+										</label>
+										<label>
+											: {{ $exam_schedule->data[0]->finishReportDt }}
+										</label>
+									</div>
+								</div>
+							@endif
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Tanggal Laporan Diterbitkan*
+									</label>
+									<p class="input-group input-append" data-date-format="yyyy-mm-dd">
+										<input type="text" class="form-control" value="{{ $data->resume_date }}" readonly required/>
+										<span class="input-group-btn">
+											<button type="button" class="btn btn-default">
+												<i class="glyphicon glyphicon-calendar"></i>
+											</button>
+										</span>
+									</p>
+								</div>
+							</div>
+	                        <div class="col-md-6">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Status *
+									</label>
+									<select class="cs-select cs-skin-elastic">
+										@if($data->resume_status == 0)
+											<option value="0" selected>Choose Status</option>
+										@elseif($data->resume_status == 1)
+											<option value="1" selected>Completed</option>
+										@else
+											<option value="-1" selected>Not Completed</option>
+										@endif
+									</select>
+								</div>
+							</div>
+						</div>
+					</fieldset>
 				@endif
 
 				@if($data->examination_type_id =='1')
+					@if(isset($admin_roles[0]))
 					@if($admin_roles[0]->qa_status)
 					{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'id' => 'form-sidang')) !!}
 					{!! csrf_field() !!}
@@ -1842,8 +3427,146 @@
 							</div>
 						</fieldset>
 					{!! Form::close() !!}
+					@else
+						<fieldset>
+							<legend>
+								Step Sidang QA
+							</legend>
+							<div class="row">
+								<div class="col-md-12">
+									<div class="form-group">
+										<label>
+											Status Pengujian *
+										</label>
+										<div class="radio-list">
+											@if($data->qa_passed == 1)
+											<div class="radio">
+												<div class="radio clip-radio radio-primary">
+														<input type="radio" value="1" checked>
+														<label for="passed">
+															Lulus
+														</label>
+												</div>
+											</div>
+											@elseif($data->qa_passed == -1)
+											<div class="radio">
+												<div class="radio clip-radio radio-primary">
+													<input type="radio" value="-1" checked>
+													<label for="notPassed">
+														Tidak Lulus
+													</label>
+												</div>
+											</div>
+											@endif
+										</div>
+									</div>
+								</div>
+								
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Tanggal Verifikasi *
+										</label>
+										<p class="input-group input-append" data-date-format="yyyy-mm-dd">
+											<input type="text" class="form-control" value="{{ $data->qa_date }}" readonly required/>
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-default">
+													<i class="glyphicon glyphicon-calendar"></i>
+												</button>
+											</span>
+										</p>
+									</div>
+								</div>
+		                        <div class="col-md-6">
+									<div class="form-group">
+										<label for="form-field-select-2">
+											Status *
+										</label>
+										<select class="cs-select cs-skin-elastic">
+											@if($data->qa_status == 0)
+												<option value="0" selected>Choose Status</option>
+											@elseif($data->qa_status == 1)
+												<option value="1" selected>Completed</option>
+											@else
+												<option value="-1" selected>Not Completed</option>
+											@endif
+										</select>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+					@endif
+					@else
+						<fieldset>
+							<legend>
+								Step Sidang QA
+							</legend>
+							<div class="row">
+								<div class="col-md-12">
+									<div class="form-group">
+										<label>
+											Status Pengujian *
+										</label>
+										<div class="radio-list">
+											@if($data->qa_passed == 1)
+											<div class="radio">
+												<div class="radio clip-radio radio-primary">
+														<input type="radio" value="1" checked>
+														<label for="passed">
+															Lulus
+														</label>
+												</div>
+											</div>
+											@elseif($data->qa_passed == -1)
+											<div class="radio">
+												<div class="radio clip-radio radio-primary">
+													<input type="radio" value="-1" checked>
+													<label for="notPassed">
+														Tidak Lulus
+													</label>
+												</div>
+											</div>
+											@endif
+										</div>
+									</div>
+								</div>
+								
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Tanggal Verifikasi *
+										</label>
+										<p class="input-group input-append" data-date-format="yyyy-mm-dd">
+											<input type="text" class="form-control" value="{{ $data->qa_date }}" readonly required/>
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-default">
+													<i class="glyphicon glyphicon-calendar"></i>
+												</button>
+											</span>
+										</p>
+									</div>
+								</div>
+		                        <div class="col-md-6">
+									<div class="form-group">
+										<label for="form-field-select-2">
+											Status *
+										</label>
+										<select class="cs-select cs-skin-elastic">
+											@if($data->qa_status == 0)
+												<option value="0" selected>Choose Status</option>
+											@elseif($data->qa_status == 1)
+												<option value="1" selected>Completed</option>
+											@else
+												<option value="-1" selected>Not Completed</option>
+											@endif
+										</select>
+									</div>
+								</div>
+							</div>
+						</fieldset>
 					@endif
 					
+					@if(isset($admin_roles[0]))
 					@if($admin_roles[0]->equipment_status)
 					{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-barang')) !!}
 						{!! csrf_field() !!}
@@ -1910,9 +3633,109 @@
 							</div>
 						</fieldset>
 					{!! Form::close() !!}
+					@else
+						<fieldset>
+							<legend>
+								Edit Lokasi Barang
+							</legend>
+							<div class="row">
+								<div class="col-md-12">
+									<div class="form-group">
+										@foreach($data->media as $item)
+											@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan Perangkat Uji</a>
+											@endif
+										@endforeach
+									</div>
+									<div class="form-group">
+										<label>
+											Bukti Penerimaan & Pengeluaran Perangkat Uji File *
+										</label>
+									</div>
+									<div class="form-group">
+										<?php $barang_attach2 = ''; ?>
+										@foreach($data->media as $item)
+											@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji2' && $item->attachment != '')
+												<?php $barang_attach2 = $item->attachment; ?>
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji2')}}"> Download Bukti Pengeluaran Perangkat Uji</a>
+											@endif
+										@endforeach
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<label for="form-field-select-2">
+											Lokasi Barang Sekarang
+										</label>
+										<select class="cs-select cs-skin-elastic">
+											@if(count($data->equipment)==0)
+												<option value="2" selected>URel (Store)</option>
+											@elseif($data->equipment[0]->location==1)
+												<option value="1" selected>Customer (Applicant)</option>
+											@elseif($data->equipment[0]->location==2)
+												<option value="2" selected>URel (Store)</option>
+											@elseif($data->equipment[0]->location==3)
+												<option value="3" selected>Lab (Laboratory)</option>
+											@endif
+										</select>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+					@endif
+					@else
+						<fieldset>
+							<legend>
+								Edit Lokasi Barang
+							</legend>
+							<div class="row">
+								<div class="col-md-12">
+									<div class="form-group">
+										@foreach($data->media as $item)
+											@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan Perangkat Uji</a>
+											@endif
+										@endforeach
+									</div>
+									<div class="form-group">
+										<label>
+											Bukti Penerimaan & Pengeluaran Perangkat Uji File *
+										</label>
+									</div>
+									<div class="form-group">
+										<?php $barang_attach2 = ''; ?>
+										@foreach($data->media as $item)
+											@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji2' && $item->attachment != '')
+												<?php $barang_attach2 = $item->attachment; ?>
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji2')}}"> Download Bukti Pengeluaran Perangkat Uji</a>
+											@endif
+										@endforeach
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<label for="form-field-select-2">
+											Lokasi Barang Sekarang
+										</label>
+										<select class="cs-select cs-skin-elastic">
+											@if(count($data->equipment)==0)
+												<option value="2" selected>URel (Store)</option>
+											@elseif($data->equipment[0]->location==1)
+												<option value="1" selected>Customer (Applicant)</option>
+											@elseif($data->equipment[0]->location==2)
+												<option value="2" selected>URel (Store)</option>
+											@elseif($data->equipment[0]->location==3)
+												<option value="3" selected>Lab (Laboratory)</option>
+											@endif
+										</select>
+									</div>
+								</div>
+							</div>
+						</fieldset>
 					@endif
 
 					@if($data->examination_type_id == 1)
+						@if(isset($admin_roles[0]))
 						@if($admin_roles[0]->receipt_status)
 						{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-tanda-terima')) !!}
 							{!! csrf_field() !!}
@@ -1954,9 +3777,59 @@
 								</div>
 							</fieldset>
 						{!! Form::close() !!}
+						@else
+							<fieldset>
+								<legend>
+									Tanda Terima Hasil Pengujian
+								</legend>
+								<div class="row">
+									<div class="col-md-12">
+										<div class="form-group">
+											<label>
+												File Tanda Terima *
+											</label>
+										</div>
+										<div class="form-group">
+											<?php $tanda_terima_attach = ''; ?>
+											@foreach($data->media as $item)
+												@if($item->name == 'Tanda Terima Hasil Pengujian' && $item->attachment != '')
+													<?php $tanda_terima_attach = $item->attachment; ?>
+													<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tanda Terima Hasil Pengujian')}}"> Download Tanda Terima Hasil Pengujian"<?php echo $tanda_terima_attach; ?>"</a>
+												@endif
+											@endforeach
+										</div>
+									</div>
+								</div>
+							</fieldset>
+						@endif
+						@else
+							<fieldset>
+								<legend>
+									Tanda Terima Hasil Pengujian
+								</legend>
+								<div class="row">
+									<div class="col-md-12">
+										<div class="form-group">
+											<label>
+												File Tanda Terima *
+											</label>
+										</div>
+										<div class="form-group">
+											<?php $tanda_terima_attach = ''; ?>
+											@foreach($data->media as $item)
+												@if($item->name == 'Tanda Terima Hasil Pengujian' && $item->attachment != '')
+													<?php $tanda_terima_attach = $item->attachment; ?>
+													<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tanda Terima Hasil Pengujian')}}"> Download Tanda Terima Hasil Pengujian"<?php echo $tanda_terima_attach; ?>"</a>
+												@endif
+											@endforeach
+										</div>
+									</div>
+								</div>
+							</fieldset>
 						@endif
 					@endif
 
+					@if(isset($admin_roles[0]))
 					@if($admin_roles[0]->certificate_status)
 					{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-sertifikat')) !!}
 						{!! csrf_field() !!}
@@ -2098,6 +3971,171 @@
 							</div>
 						</fieldset>
 					{!! Form::close() !!}
+					@else
+						<fieldset>
+							<legend>
+								Step Penerbitan Sertifikat
+							</legend>
+							<div class="row">
+								@if($data->qa_passed == 1)
+								<div>
+									<div class="col-md-12">
+										<div class="form-group">
+											<label>
+												Sertifikat File *
+											</label>
+										</div>
+										<div class="form-group">
+										<?php $certificate_name = ''; ?>
+										@if($data->certificate_status)
+											@if($data->device->certificate)
+												<?php $certificate_name = $data->device->cert_number; ?>
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->device_id.'/certificate')}}"> Download Certificate {{ $data->device->cert_number }}</a>
+											@endif
+										@endif
+										</div>
+									</div>
+									<div class="col-md-7">
+										<div class="form-group">
+											<label>
+												Nomor Sertifikat *
+											</label>
+												<input type="text" class="form-control" placeholder="Nomor Sertifikat" value="{{ $data->device->cert_number }}" readonly required>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>
+												Tanggal Mulai Berlaku *
+											</label>
+											<p class="input-group input-append" data-date-format="yyyy-mm-dd" />
+												<input type="text" class="form-control" value="{{ $data->device->valid_from }}" readonly required/>
+												<span class="input-group-btn">
+													<button type="button" class="btn btn-default">
+														<i class="glyphicon glyphicon-calendar"></i>
+													</button>
+												</span>
+											</p>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>
+												Tanggal Akhir Berlaku *
+											</label>
+											<p class="input-group input-append" data-date-format="yyyy-mm-dd" />
+												<input type="text" class="form-control" value="{{ $data->device->valid_thru }}" readonly required/>
+												<span class="input-group-btn">
+													<button type="button" class="btn btn-default">
+														<i class="glyphicon glyphicon-calendar"></i>
+													</button>
+												</span>
+											</p>
+										</div>
+									</div>
+								</div>
+								@endif
+		                        <div class="col-md-6">
+									<div class="form-group">
+										<label for="form-field-select-2">
+											Status *
+										</label>
+										<select name="certificate_status" class="cs-select cs-skin-elastic">
+											@if($data->certificate_status == 0)
+												<option value="0" selected>Choose Status</option>
+											@elseif($data->certificate_status == 1)
+												<option value="1" selected>Completed</option>
+											@else
+												<option value="-1" selected>Not Completed</option>
+											@endif
+										</select>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+					@endif
+					@else
+						<fieldset>
+							<legend>
+								Step Penerbitan Sertifikat
+							</legend>
+							<div class="row">
+								@if($data->qa_passed == 1)
+								<div>
+									<div class="col-md-12">
+										<div class="form-group">
+											<label>
+												Sertifikat File *
+											</label>
+										</div>
+										<div class="form-group">
+										<?php $certificate_name = ''; ?>
+										@if($data->certificate_status)
+											@if($data->device->certificate)
+												<?php $certificate_name = $data->device->cert_number; ?>
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->device_id.'/certificate')}}"> Download Certificate {{ $data->device->cert_number }}</a>
+											@endif
+										@endif
+										</div>
+									</div>
+									<div class="col-md-7">
+										<div class="form-group">
+											<label>
+												Nomor Sertifikat *
+											</label>
+												<input type="text" class="form-control" placeholder="Nomor Sertifikat" value="{{ $data->device->cert_number }}" readonly required>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>
+												Tanggal Mulai Berlaku *
+											</label>
+											<p class="input-group input-append" data-date-format="yyyy-mm-dd" />
+												<input type="text" class="form-control" value="{{ $data->device->valid_from }}" readonly required/>
+												<span class="input-group-btn">
+													<button type="button" class="btn btn-default">
+														<i class="glyphicon glyphicon-calendar"></i>
+													</button>
+												</span>
+											</p>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>
+												Tanggal Akhir Berlaku *
+											</label>
+											<p class="input-group input-append" data-date-format="yyyy-mm-dd" />
+												<input type="text" class="form-control" value="{{ $data->device->valid_thru }}" readonly required/>
+												<span class="input-group-btn">
+													<button type="button" class="btn btn-default">
+														<i class="glyphicon glyphicon-calendar"></i>
+													</button>
+												</span>
+											</p>
+										</div>
+									</div>
+								</div>
+								@endif
+		                        <div class="col-md-6">
+									<div class="form-group">
+										<label for="form-field-select-2">
+											Status *
+										</label>
+										<select name="certificate_status" class="cs-select cs-skin-elastic">
+											@if($data->certificate_status == 0)
+												<option value="0" selected>Choose Status</option>
+											@elseif($data->certificate_status == 1)
+												<option value="1" selected>Completed</option>
+											@else
+												<option value="-1" selected>Not Completed</option>
+											@endif
+										</select>
+									</div>
+								</div>
+							</div>
+						</fieldset>
 					@endif
 				@endif
 			</div>

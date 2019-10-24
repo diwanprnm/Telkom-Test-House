@@ -3,6 +3,12 @@
     ============================================= -->
     <title>{{ trans('translate.process') }} - Telkom DDS</title>
 @section('content')
+<style type="text/css">
+	.fluid-width-video-wrapper iframe {
+	    width: 100%;
+	    height: 100%;
+	}
+</style>
 	<!-- Page Title
 ============================================= -->
 <section id="page-title">
@@ -45,7 +51,11 @@
 					<div class="col-md-8">
 						<h4>Quality Assurance (QA)</h4>
 						<p>{{ trans('translate.subtitle_qa_process') }}</p>
+						<a href="#videoStory1" class="btn btn-default btn-sm videoLink">{{ trans('translate.video_guide') }} <i class="fa fa-play-circle" aria-hidden="true">&nbsp;</i></a>
 						<a href="{{url('detailprocess/qa')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
+					</div>
+					<div id="videoStory1" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
+						<iframe width="853" height="480" src="https://www.youtube.com/embed/cew5AE7Kwwk" frameborder="0" allowfullscreen></iframe>
 					</div>
 				</div>
 
@@ -56,7 +66,11 @@
 					<div class="col-md-8">
 						<h4>Type Approval (TA)</h4>
 						<p>{{ trans('translate.subtitle_ta_process') }}</p>
+						<a href="#videoStory2" class="btn btn-default btn-sm videoLink">{{ trans('translate.video_guide') }} <i class="fa fa-play-circle" aria-hidden="true">&nbsp;</i></a>
 						<a href="{{url('detailprocess/ta')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
+					</div>
+					<div id="videoStory2" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
+						<iframe width="853" height="480" src="https://www.youtube.com/embed/cew5AE7Kwwk" frameborder="0" allowfullscreen></iframe>
 					</div>
 				</div>
 
@@ -67,7 +81,11 @@
 					<div class="col-md-8">
 						<h4>Voluntary Test (VT)</h4>
 						<p>{{ trans('translate.subtitle_vt_process') }}</p>
+						<a href="#videoStory3" class="btn btn-default btn-sm videoLink">{{ trans('translate.video_guide') }} <i class="fa fa-play-circle" aria-hidden="true">&nbsp;</i></a>
 						<a href="{{url('detailprocess/vt')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
+					</div>
+					<div id="videoStory3" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
+						<iframe width="853" height="480" src="https://www.youtube.com/embed/cew5AE7Kwwk" frameborder="0" allowfullscreen></iframe>
 					</div>
 				</div>
 
@@ -78,7 +96,11 @@
 					<div class="col-md-8">
 						<h4>Calibration (CAL)</h4>
 						<p>{{ trans('translate.subtitle_cal_process') }}</p>
+						<a href="#videoStory4" class="btn btn-default btn-sm videoLink">{{ trans('translate.video_guide') }} <i class="fa fa-play-circle" aria-hidden="true">&nbsp;</i></a>
 						<a href="{{url('detailprocess/cal')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
+					</div>
+					<div id="videoStory4" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
+						<iframe width="853" height="480" src="https://www.youtube.com/embed/cew5AE7Kwwk" frameborder="0" allowfullscreen></iframe>
 					</div>
 				</div>
 
@@ -96,4 +118,12 @@
 </section><!-- #content end -->
 
 @endsection
- 
+
+@section('content_js')
+<script type="text/javascript">
+	$('.videoLink').magnificPopup({
+		type:'inline',
+		midClick: true // Allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source in href.
+  	});
+</script>
+@endsection

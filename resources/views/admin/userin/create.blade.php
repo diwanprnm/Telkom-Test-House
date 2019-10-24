@@ -150,15 +150,15 @@
 										$html = '<ul id="tree">';
 								        foreach ($tree as $key => $value) {
 								            if(isset($value[0]['children'])) {
-								                $html .= '<li><label> <input type="checkbox" name="menus[]" checked value="'.$value[0]['id'].'" /> '.$value[0]['name'].'</label>';
+								                $html .= '<li><label> <input type="checkbox" class="chk" name="menus[]" checked value="'.$value[0]['id'].'" /> '.$value[0]['name'].'</label>';
 								                $html .= '<ul>';
 								               
 								                foreach ($value[0]['children'] as $child) { 
-								                   $html .= '<li><label> <input type="checkbox" name="menus[]" checked value="'.$child['id'].'" /> '.$child['name'].'</label></li>'; 
+								                   $html .= '<li><label> <input type="checkbox" class="chk" name="menus[]" checked value="'.$child['id'].'" /> '.$child['name'].'</label></li>'; 
 								                }
 								                $html .= '</ul>';
 								            }else{
-								              $html .= '<li><label> <input type="checkbox" name="menus[]" checked value="'.$value[0]['id'].'" /> '.$value[0]['name'].'</label></li>';
+								              $html .= '<li><label> <input type="checkbox" class="chk" name="menus[]" checked value="'.$value[0]['id'].'" /> '.$value[0]['name'].'</label></li>';
 								            }
 								        }
 								        $html .= '</ul></li>';

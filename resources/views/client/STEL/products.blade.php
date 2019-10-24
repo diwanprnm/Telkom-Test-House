@@ -3,7 +3,7 @@
     ============================================= -->
     <title>{{ trans('translate.see_product') }} - Telkom DDS</title>
 @section('content') 
-
+</style>
 	<section id="page-title"> 
 		<div class="container clearfix">
 			<h1>{{ trans('translate.see_product') }}</h1>
@@ -26,7 +26,10 @@
 
 			<div class="row">
 				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 left-content"></div>
-				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 right-content"></div>
+				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 right-content"><a href="#videoStory" class="button more pull-right" id="videoLink">{{ trans('translate.video_stel') }} <i class="fa fa-play-circle" aria-hidden="true">&nbsp;</i></a></div>
+			</div>
+			<div id="videoStory" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
+				<iframe width="853" height="480" src="https://www.youtube.com/embed/cew5AE7Kwwk" frameborder="0" allowfullscreen></iframe>
 			</div>
 
 		</div> 
@@ -197,3 +200,11 @@
 	</section><!-- #content end -->
 @endsection
  
+@section('content_js')
+<script type="text/javascript">
+	$('#videoLink').magnificPopup({
+		type:'inline',
+		midClick: true // Allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source in href.
+  	});
+</script>
+@endsection

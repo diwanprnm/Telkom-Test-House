@@ -393,4 +393,7 @@ return [
 	'an_attach_has_been_sent' => 'Thank you, your payment will be processed further.',
 
 	'charge_client_valid_from'	=> 'Valid from',
+
+	'video_stel' => 'Buy STEL(s) Guide Video',
+	'video_guide' => 'Guide Video',
 ];

@@ -396,4 +396,7 @@ return [
 	'an_email_has_been_sent' => 'Terima kasih, berkas pembayaran anda akan kami proses lebih lanjut.',
 
 	'charge_client_valid_from'	=> 'Berlaku mulai dari',
+
+	'video_stel' => 'Video Panduan Pembelian STEL',
+	'video_guide' => 'Video Panduan',
 ];
