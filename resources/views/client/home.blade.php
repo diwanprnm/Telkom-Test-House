@@ -244,6 +244,7 @@
 @endsection
 
 @section('content_js')
+<script src="https://apis.google.com/js/platform.js?onload=onLoadCallback" async defer></script>
 <script type="text/javascript">
 	const API_KEY = 'AIzaSyATpem3sOT-CfhfLsdeNpA3000nALWnE10';
 	const API_ID = '724749132562-h3kncergsa5988h38nveevo7bra8ohmu.apps.googleusercontent.com';
@@ -256,12 +257,18 @@
 	const playlist = document.getElementsByClassName("playlist")[0];
 
 	// From Google API Docs
-	function initAPIClient() {
+	window.onLoadCallback = function(){
+	  	gapi.load("client:auth2", function() {
+	    gapi.auth2.init({client_id: API_ID});
+	    loadClient().then(getPlaylistItems);
+	  });  
+	}
+	/*function initAPIClient() {
 	  gapi.load("client:auth2", function() {
 	    gapi.auth2.init({client_id: API_ID});
 	    loadClient().then(getPlaylistItems);
 	  });  
-	};
+	};*/
 
 	// From Google API Docs
 	function loadClient() {
@@ -324,7 +331,7 @@
 	};
 
 	// Before doing any action with the API ->
-	initAPIClient();
+	// initAPIClient();
 
 	function goUp(){
 	  if (videoVisible > 0){
