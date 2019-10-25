@@ -399,4 +399,6 @@ return [
 
 	'video_stel' => 'Video Panduan Pembelian STEL',
 	'video_guide' => 'Video Panduan',
+
+	'video_tutorial' => 'Video Tutorial',
 ];

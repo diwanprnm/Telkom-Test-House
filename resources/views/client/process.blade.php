@@ -55,7 +55,7 @@
 						<a href="{{url('detailprocess/qa')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
 					</div>
 					<div id="videoStory1" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
-						<iframe width="853" height="480" src="https://www.youtube.com/embed/cew5AE7Kwwk" frameborder="0" allowfullscreen></iframe>
+						<iframe width="853" height="480" src="https://www.youtube.com/embed/4sL5-d9yxl8" frameborder="0" allowfullscreen></iframe>
 					</div>
 				</div>
 
@@ -70,7 +70,7 @@
 						<a href="{{url('detailprocess/ta')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
 					</div>
 					<div id="videoStory2" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
-						<iframe width="853" height="480" src="https://www.youtube.com/embed/cew5AE7Kwwk" frameborder="0" allowfullscreen></iframe>
+						<iframe width="853" height="480" src="https://www.youtube.com/embed/Ju-uU2kJ3m8" frameborder="0" allowfullscreen></iframe>
 					</div>
 				</div>
 
@@ -85,7 +85,7 @@
 						<a href="{{url('detailprocess/vt')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
 					</div>
 					<div id="videoStory3" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
-						<iframe width="853" height="480" src="https://www.youtube.com/embed/cew5AE7Kwwk" frameborder="0" allowfullscreen></iframe>
+						<iframe width="853" height="480" src="https://www.youtube.com/embed/uGxUzfekYIE" frameborder="0" allowfullscreen></iframe>
 					</div>
 				</div>
 
@@ -96,11 +96,7 @@
 					<div class="col-md-8">
 						<h4>Calibration (CAL)</h4>
 						<p>{{ trans('translate.subtitle_cal_process') }}</p>
-						<a href="#videoStory4" class="btn btn-default btn-sm videoLink">{{ trans('translate.video_guide') }} <i class="fa fa-play-circle" aria-hidden="true">&nbsp;</i></a>
 						<a href="{{url('detailprocess/cal')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
-					</div>
-					<div id="videoStory4" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
-						<iframe width="853" height="480" src="https://www.youtube.com/embed/cew5AE7Kwwk" frameborder="0" allowfullscreen></iframe>
 					</div>
 				</div>
 

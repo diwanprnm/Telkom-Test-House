@@ -396,4 +396,6 @@ return [
 
 	'video_stel' => 'Buy STEL(s) Guide Video',
 	'video_guide' => 'Guide Video',
+
+	'video_tutorial' => 'Tutorial Video',
 ];
