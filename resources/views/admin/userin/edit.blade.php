@@ -231,7 +231,7 @@
 												</ul>
 											</li>
 											<li>
-												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['spb_status'] || $admin_role[0]['payment_status']? 'checked':'';}?>>Pembayaran</label>
+												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['spb_status'] || $admin_role[0]['payment_status']? 'checked':'';}?>>Keuangan</label>
 												<ul>
 													<li><label> <input type="checkbox" name="examinations[]" value="spb_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['spb_status'] ?'checked':'';}?>>SPB</label></li>
 													<li><label> <input type="checkbox" name="examinations[]" value="payment_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['payment_status'] ?'checked':'';}?>>Pembayaran</label></li>
@@ -245,7 +245,7 @@
 												</ul>
 											</li>
 											<li>
-												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['resume_status'] || $admin_role[0]['qa_status'] || $admin_role[0]['certificate_status']? 'checked':'';}?>>Sertifikat</label>
+												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['resume_status'] || $admin_role[0]['qa_status'] || $admin_role[0]['certificate_status']? 'checked':'';}?>>Laporan & Sertifikat</label>
 												<ul>
 													<li><label> <input type="checkbox" name="examinations[]" value="resume_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['resume_status'] ?'checked':'';}?>>Laporan Uji</label></li>
 													<li><label> <input type="checkbox" name="examinations[]" value="qa_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['qa_status'] ?'checked':'';}?>>Sidang QA</label></li>

@@ -90,7 +90,7 @@
 											</tr> 
 											<tr class="content" style="display: none;">
 												<td colspan="8">
-													<table class="table table-striped table-bordered" cellspacing="0" width="100%">
+													<table class="table table-striped" cellspacing="0" width="100%">
 														<thead>
 															<tr>
 																<th>No</th>

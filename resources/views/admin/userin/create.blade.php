@@ -186,7 +186,7 @@
 												</ul>
 											</li>
 											<li>
-												<label> <input type="checkbox">Pembayaran</label>
+												<label> <input type="checkbox">Keuangan</label>
 												<ul>
 													<li><label> <input type="checkbox" name="examinations[]" value="spb_status">SPB</label></li>
 													<li><label> <input type="checkbox" name="examinations[]" value="payment_status">Pembayaran</label></li>
@@ -200,7 +200,7 @@
 												</ul>
 											</li>
 											<li>
-												<label> <input type="checkbox">Sertifikat</label>
+												<label> <input type="checkbox">Laporan & Sertifikat</label>
 												<ul>
 													<li><label> <input type="checkbox" name="examinations[]" value="resume_status">Laporan Uji</label></li>
 													<li><label> <input type="checkbox" name="examinations[]" value="qa_status">Sidang QA</label></li>

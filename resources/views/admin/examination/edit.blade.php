@@ -399,19 +399,16 @@
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>
-										Tanda Tangan Form Uji
+										Form Uji
 									</label>
 									<input type="hidden" id="hide_attachment_form-registrasi" value="{{ $data->attachment }}">
 									@if($data->attachment != null)
 										<label>
-											: Sudah di tanda tangan
+											: <a href="{{URL::to('/admin/examination/download/'.$data->id)}}"> Download</a>
 										</label>
-										<div class="form-group">
-											<a href="{{URL::to('/admin/examination/download/'.$data->id)}}"> Download Form Uji</a>
-										</div>
 									@else
 										<label>
-											: Belum di tanda tangan
+											: (Kosong)
 										</label>
 									@endif
 								</div>
@@ -536,19 +533,16 @@
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>
-										Tanda Tangan Form Uji
+										Form Uji
 									</label>
 									<input type="hidden" value="{{ $data->attachment }}">
 									@if($data->attachment != null)
 										<label>
-											: Sudah di tanda tangan
+											: <a href="{{URL::to('/admin/examination/download/'.$data->id)}}"> Download</a>
 										</label>
-										<div class="form-group">
-											<a href="{{URL::to('/admin/examination/download/'.$data->id)}}"> Download Form Uji</a>
-										</div>
 									@else
 										<label>
-											: Belum di tanda tangan
+											: (Kosong)
 										</label>
 									@endif
 								</div>
@@ -613,19 +607,16 @@
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>
-										Tanda Tangan Form Uji
+										Form Uji
 									</label>
 									<input type="hidden" value="{{ $data->attachment }}">
 									@if($data->attachment != null)
 										<label>
-											: Sudah di tanda tangan
+											: <a href="{{URL::to('/admin/examination/download/'.$data->id)}}"> Download</a>
 										</label>
-										<div class="form-group">
-											<a href="{{URL::to('/admin/examination/download/'.$data->id)}}"> Download Form Uji</a>
-										</div>
 									@else
 										<label>
-											: Belum di tanda tangan
+											: (Kosong)
 										</label>
 									@endif
 								</div>
@@ -1461,7 +1452,7 @@
 									<a onclick="makeSPB('<?php echo $data->id ?>','<?php echo $data->spb_number ?>','<?php echo $data->spb_date ?>')"> Buatkan File SPB</a>
 								</div>
 							</div>
-							<div class="col-md-6">
+							<div class="col-md-12">
 								<div class="form-group">
 									<label>
 										SPB File *
@@ -1482,12 +1473,19 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
+										Nomor SPB *
+									</label>
+									<input type="text" name="spb_number" id="spb_number" class="form-control" placeholder="Nomor SPB" value="{{ $data->spb_number }}" readonly required>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
 										Total Biaya *
 									</label>
 									<input type="text" name="exam_price" id="exam_price" class="form-control" placeholder="Total Biaya" value="{{ $data->price }}" readonly required>
 								</div>
 							</div>
-							<input type="hidden" name="spb_number" id="spb_number" value="{{ $data->spb_number }}">
 							<input type="hidden" name="spb_date" id="spb_date" value="{{ $data->spb_date }}">
 							<div class="col-md-6">
 								<div class="form-group">
@@ -1559,7 +1557,7 @@
 						</legend>
 					@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1')
 						<div class="row">
-							<div class="col-md-6">
+							<div class="col-md-12">
 								<div class="form-group">
 									<label>
 										SPB File *
@@ -1573,6 +1571,14 @@
 											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/SPB')}}"> Download SPB "<?php echo $spb_attach; ?>"</a>
 										@endif
 									@endforeach
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Nomor SPB *
+									</label>
+									<input type="text" name="spb_number" id="spb_number" class="form-control" placeholder="Nomor SPB" value="{{ $data->spb_number }}" readonly required>
 								</div>
 							</div>
 							<div class="col-md-6">
@@ -1610,7 +1616,7 @@
 						</legend>
 					@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1')
 						<div class="row">
-							<div class="col-md-6">
+							<div class="col-md-12">
 								<div class="form-group">
 									<label>
 										SPB File *
@@ -1624,6 +1630,14 @@
 											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/SPB')}}"> Download SPB "<?php echo $spb_attach; ?>"</a>
 										@endif
 									@endforeach
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Nomor SPB *
+									</label>
+									<input type="text" name="spb_number" id="spb_number" class="form-control" placeholder="Nomor SPB" value="{{ $data->spb_number }}" readonly required>
 								</div>
 							</div>
 							<div class="col-md-6">
@@ -1668,7 +1682,7 @@
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>
-										Status Pembayaran
+										Bukti Pembayaran
 									</label>
 										<?php $status = 0 ?>
 									@foreach($data->media as $item)
@@ -1680,7 +1694,7 @@
 
 									@if($status)
 										<label>
-											: Sudah di bayar, pada {{ $item->updated_at }}
+											: <a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/File Pembayaran')}}"> Download</a>
 										</label>
 										<div class="form-group">
 											<label>
@@ -1688,12 +1702,9 @@
 											</label>
 											<input type="text" name="cust_price_payment" id="cust_price_payment" class="form-control" placeholder="Banyak Uang" value="{{ $data->cust_price_payment }}" required>
 										</div>
-										<div class="form-group">
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/File Pembayaran')}}"> Download Bukti Pembayaran</a>
-										</div>
 									@else
 										<label>
-											: Belum di bayar
+											: (Kosong)
 										</label>
 									@endif
 								</div>
@@ -1817,7 +1828,7 @@
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>
-										Status Pembayaran
+										Bukti Pembayaran
 									</label>
 										<?php $status = 0 ?>
 									@foreach($data->media as $item)
@@ -1828,7 +1839,7 @@
 
 									@if($status)
 										<label>
-											: Sudah di bayar, pada {{ $item->updated_at }}
+											: <a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/File Pembayaran')}}"> Download</a>
 										</label>
 										<div class="form-group">
 											<label>
@@ -1836,12 +1847,9 @@
 											</label>
 											<input type="text" class="form-control" placeholder="Banyak Uang" value="{{ $data->cust_price_payment }}" readonly required>
 										</div>
-										<div class="form-group">
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/File Pembayaran')}}"> Download Bukti Pembayaran</a>
-										</div>
 									@else
 										<label>
-											: Belum di bayar
+											: (Kosong)
 										</label>
 									@endif
 								</div>
@@ -1906,7 +1914,7 @@
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>
-										Status Pembayaran
+										Bukti Pembayaran
 									</label>
 										<?php $status = 0 ?>
 									@foreach($data->media as $item)
@@ -1917,7 +1925,7 @@
 
 									@if($status)
 										<label>
-											: Sudah di bayar, pada {{ $item->updated_at }}
+											: <a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/File Pembayaran')}}"> Download</a>
 										</label>
 										<div class="form-group">
 											<label>
@@ -1925,12 +1933,9 @@
 											</label>
 											<input type="text" class="form-control" placeholder="Banyak Uang" value="{{ $data->cust_price_payment }}" readonly required>
 										</div>
-										<div class="form-group">
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/File Pembayaran')}}"> Download Bukti Pembayaran</a>
-										</div>
 									@else
 										<label>
-											: Belum di bayar
+											: (Kosong)
 										</label>
 									@endif
 								</div>
@@ -4433,10 +4438,10 @@
 				return false;
 			}
 			if(function_file.value == '' && function_name.value == ''){
-				alert("File Laporan Hasil Uji Fungsi harus dipilih");$('#function_file').focus();return false;
+				alert("File Laporan Hasil Uji Fungsi belum diunggah");$('#function_file').focus();return false;
 			}
 			if(barang_file.value == '' && barang_name.value == ''){
-				alert("File Bukti Penerimaan & Pengeluaran Perangkat Uji harus dipilih");$('#barang_file').focus();return false;
+				alert("File Bukti Penerimaan & Pengeluaran Perangkat Uji belum diunggah");$('#barang_file').focus();return false;
 			}
 		}
 	});
@@ -4462,7 +4467,7 @@
 			}			
 		}else{
 			if(contract_file.value == '' && contract_name == ''){
-				alert("File Tinjauan Kontrak harus dipilih");$('#contract_file').focus();return false;				
+				alert("File Tinjauan Kontrak belum diunggah");$('#contract_file').focus();return false;				
 			}
 		}
 	});
@@ -4489,11 +4494,11 @@
 			}			
 		}else{
 			if(!spb_number){
-				alert("Belum Ada Nomor SPB, Buatkan File SPB terlebih dahulu!");
+				alert("Silakan mengisi Nomor SPB terlebih dahulu (Buatkan File SPB)!");
 				return false;
 			}
 			if(spb_file.value == '' && spb_name == ''){
-				alert("File SPB harus dipilih");$('#spb_file').focus();return false;				
+				alert("File SPB belum diunggah");$('#spb_file').focus();return false;				
 			}
 		}
 	});
@@ -4523,7 +4528,7 @@
 				return false;
 			}
 			/*if(kuitansi_file.value == '' && kuitansi_name == ''){
-				alert("File Kuitansi harus dipilih");$('#kuitansi_file').focus();return false;				
+				alert("File Kuitansi belum diunggah");$('#kuitansi_file').focus();return false;				
 			}*/
 		}
 	});
@@ -4573,7 +4578,7 @@
 			values[this.name] = $(this).val();
 		});
 		if(barang_file2.value == '' && barang_name2 == ''){
-			alert("File Tanda Terima harus dipilih");$('#barang_file2').focus();return false;				
+			alert("File Tanda Terima belum diunggah");$('#barang_file2').focus();return false;				
 		}
 		if(document.getElementById('update_barang').value != 1){
 			alert("Barang belum diambil kembali oleh kastamer, Update Lokasi Barang terlebih dahulu!");
@@ -4590,7 +4595,7 @@
 			values[this.name] = $(this).val();
 		});
 		if(tanda_terima_file.value == '' && tanda_terima_name == ''){
-			alert("File Tanda Terima harus dipilih");$('#tanda_terima_file').focus();return false;				
+			alert("File Tanda Terima belum diunggah");$('#tanda_terima_file').focus();return false;				
 		}
 	});
 
@@ -4667,7 +4672,7 @@
 			}			
 		}else{
 			if(certificate_file.value == '' && certificate_name == ''){
-				alert("File Sertifikat harus dipilih");$('#certificate_file').focus();return false;				
+				alert("File Sertifikat belum diunggah");$('#certificate_file').focus();return false;				
 			}
 		}
 	});
