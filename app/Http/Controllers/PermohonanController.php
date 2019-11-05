@@ -112,6 +112,22 @@ class PermohonanController extends Controller
 			$message_question = "Data Not Found";
 		}
 		
+        $query_playlist = "SELECT playlist_url FROM youtube WHERE id = 1";
+		$data_playlist = DB::select($query_playlist);
+
+		// $playlist_id = "cew5AE7Kwwk";
+		// $playlist_url = "https://www.youtube.com/embed/cew5AE7Kwwk";
+		$playlist_id = "";
+		$playlist_url = "";
+		if (count($data_playlist) > 0){
+			$playlist_url = $data_playlist[0]->playlist_url;
+			$url_components = parse_url($playlist_url); 
+			if(isset($url_components['query'])){
+				parse_str($url_components['query'], $params);	
+				$playlist_id = $params['list'];
+			}	
+		}
+		
         // $query_footers = "SELECT * FROM footers WHERE is_active = 1";
 		// $data_footers = DB::select($query_footers);
             
@@ -127,6 +143,8 @@ class PermohonanController extends Controller
 			->with('data_stels', $data_stels)
 			->with('data_question', $data_question)
 			->with('partners', $partners)
+			->with('playlist_id', $playlist_id)
+			->with('playlist_url', $playlist_url)
 			->with('count_partners', sizeof($partners))
 			->with('page', $page);
 			// ->with('data_footers', $data_footers);

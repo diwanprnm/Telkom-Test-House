@@ -113,9 +113,24 @@ class HomeController extends Controller
     	$currentUser = Auth::user();
 		
 		if($currentUser){
+			$query_url = "SELECT * FROM youtube WHERE id = 1";
+            $data_url = DB::select($query_url);
+
+            $qa_video_url = "https://www.youtube.com/embed/cew5AE7Kwwk";
+            $ta_video_url = "https://www.youtube.com/embed/cew5AE7Kwwk";
+            $vt_video_url = "https://www.youtube.com/embed/cew5AE7Kwwk";
+            if (count($data_url) > 0){
+                $qa_video_url = $data_url[0]->qa_url ? $data_url[0]->qa_url : $qa_video_url;
+                $ta_video_url = $data_url[0]->ta_url ? $data_url[0]->ta_url : $ta_video_url;
+                $vt_video_url = $data_url[0]->vt_url ? $data_url[0]->vt_url : $vt_video_url;
+            }
+
 	    	$data = array();
 	    	$page = "process";
 			return view('client.process')
+				->with('qa_video_url', $qa_video_url)
+				->with('ta_video_url', $ta_video_url)
+				->with('vt_video_url', $vt_video_url)
 				->with('data', $data)
 				->with('page', $page);   
 		}else{

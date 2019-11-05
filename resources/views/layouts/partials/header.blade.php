@@ -99,6 +99,10 @@
                     </li>
                   </ul>
               </li> 
+
+              <li class="{{ (!empty($page) && $page == '#tutorial') ?'current':''}}">
+                <a id="click-section-playlist" href="{{url('/')}}#tutorial">{{ trans('translate.video_tutorial') }}</a>
+              </li>  
                  
             </ul>
 

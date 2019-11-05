@@ -55,7 +55,7 @@
 						<a href="{{url('detailprocess/qa')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
 					</div>
 					<div id="videoStory1" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
-						<iframe width="853" height="480" src="https://www.youtube.com/embed/4sL5-d9yxl8" frameborder="0" allowfullscreen></iframe>
+						<iframe width="853" height="480" src="{{ $qa_video_url }}" frameborder="0" allowfullscreen></iframe>
 					</div>
 				</div>
 
@@ -70,7 +70,7 @@
 						<a href="{{url('detailprocess/ta')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
 					</div>
 					<div id="videoStory2" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
-						<iframe width="853" height="480" src="https://www.youtube.com/embed/Ju-uU2kJ3m8" frameborder="0" allowfullscreen></iframe>
+						<iframe width="853" height="480" src="{{ $ta_video_url }}" frameborder="0" allowfullscreen></iframe>
 					</div>
 				</div>
 
@@ -85,7 +85,7 @@
 						<a href="{{url('detailprocess/vt')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
 					</div>
 					<div id="videoStory3" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
-						<iframe width="853" height="480" src="https://www.youtube.com/embed/uGxUzfekYIE" frameborder="0" allowfullscreen></iframe>
+						<iframe width="853" height="480" src="{{ $vt_video_url }}" frameborder="0" allowfullscreen></iframe>
 					</div>
 				</div>
 

@@ -4545,6 +4545,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::resource('/generalSetting', 'GeneralSettingController');
 	Route::resource('/spb', 'SPBController');
 	Route::resource('/nogudang', 'NoGudangController');
+	Route::resource('/videoTutorial', 'VideoTutorialController');
 
 });
 	Route::get('/adm_dashboard_autocomplete/{query}', 'DashboardController@autocomplete')->name('adm_dashboard_autocomplete');

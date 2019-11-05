@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -32,6 +33,14 @@ class ProductsController extends Controller
         $currentUser = Auth::user();
         $search = trim($request->input('search'));
         if($currentUser){
+            $query_url = "SELECT * FROM youtube WHERE id = 1";
+            $data_url = DB::select($query_url);
+
+            $video_url = "https://www.youtube.com/embed/cew5AE7Kwwk";
+            if (count($data_url) > 0){
+                $video_url = $data_url[0]->buy_stel_url ? $data_url[0]->buy_stel_url : $video_url;
+            }
+
             $paginate = 10;
             $stels = \DB::table('stels')
                 ->selectRaw('stels.*,(SELECT count(*) FROM stels_sales 
@@ -61,6 +70,7 @@ class ProductsController extends Controller
             return view('client.STEL.products') 
                 ->with('page', $page)
                 ->with('search', $search)
+                ->with('video_url', $video_url)
                 ->with('stels', $stels);
         }else{
            return  redirect('login');

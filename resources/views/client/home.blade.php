@@ -10,12 +10,12 @@
 
 	.playlist {
 	  display: flex;
-	  box-sizing: border-box;
-	  flex-direction: column;
-	  margin: 0 20px;
-	  height: 270px;
-	  width: 150px;
-	  overflow-y: hidden;
+	  /*box-sizing: border-box;*/
+	  /*flex-direction: column;*/
+	  /*margin: 0 20px;*/
+	  /*height: 270px;*/
+	  width: 20%;
+	  /*overflow-y: hidden;*/
 	}
 
 	.playlist-item {
@@ -94,32 +94,24 @@
 
 
 
-				<div class="clear"></div>
+				<div id="tutorial" class="clear"></div>
 
 				<div class="divider"><i class="icon-circle"></i></div>
-				<div id="section-partner" class="heading-block title-center page-section">
+				<div id="section-playlist" class="heading-block title-center page-section">
 					<h2>{{ trans('translate.video_tutorial') }}</h2>
 				</div>
 				<div id="root">
 				  <iframe 
 				          width="438" 
 				          height="250"         
-				          src="https://www.youtube.com/embed?listType=playlist&list=PLl3Z5rVQaSyXdmOjIJ2pKhBAIAEOno63C&index=0" 
+				          src="{{ $playlist_url }}&listType=playlist&index=0" 
 				          frameborder="0" 
 				          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
 				          allowfullscreen="1"
 				          id="iframe_yt"
 				          ></iframe>
-				  <div>
-				    <div class="center_arrow">
-				      <img src="http://aux.iconspalace.com/uploads/drop-down-vector-icon-256.png" width="25px" style="transform: scaleY(-1);" onClick="goUp();"/>
-				    </div>
-				    <div class="playlist"></div>
-				    <div class="center_arrow">
-				      <img src="http://aux.iconspalace.com/uploads/drop-down-vector-icon-256.png" width="25px" onClick="goDown();"/>
-				      </div>
-				  </div>
 				</div>
+				<!-- <div class="playlist"></div> -->
 				
 				<div class="clear"></div>
 
@@ -244,110 +236,34 @@
 @endsection
 
 @section('content_js')
-<script src="https://apis.google.com/js/platform.js?onload=onLoadCallback" async defer></script>
-<script type="text/javascript">
-	const API_KEY = 'AIzaSyATpem3sOT-CfhfLsdeNpA3000nALWnE10';
-	const API_ID = '724749132562-h3kncergsa5988h38nveevo7bra8ohmu.apps.googleusercontent.com';
-	const PLAYLIST_ID = 'PLl3Z5rVQaSyXdmOjIJ2pKhBAIAEOno63C';
+<script>
+$(document).ready(function(){
+  // Add smooth scrolling to all links
+  $("#click-section-playlist").on('click', function(event) {
 
-	var videoVisible = 0;
-	var maxVideoVisible = 50;
+    // Make sure this.hash has a value before overriding default behavior
+    if (this.hash !== "") {
+      // Prevent default anchor click behavior
+      event.preventDefault();
 
-	const playlistItems = [];
-	const playlist = document.getElementsByClassName("playlist")[0];
+      // Store hash
+      var hash = this.hash;
 
-	// From Google API Docs
-	window.onLoadCallback = function(){
-	  	gapi.load("client:auth2", function() {
-	    gapi.auth2.init({client_id: API_ID});
-	    loadClient().then(getPlaylistItems);
-	  });  
-	}
-	/*function initAPIClient() {
-	  gapi.load("client:auth2", function() {
-	    gapi.auth2.init({client_id: API_ID});
-	    loadClient().then(getPlaylistItems);
-	  });  
-	};*/
+      // Using jQuery's animate() method to add smooth page scroll
+      // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
+      $('html, body').animate({
+        scrollTop: $(hash).offset().top
+      }, 800, function(){
+   
+        // Add hash (#) to URL when done scrolling (default click behavior)
+        window.location.hash = hash;
+      });
+    } // End if
+  });
 
-	// From Google API Docs
-	function loadClient() {
-	  gapi.client.setApiKey(API_KEY);
-	  return gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
-	    .then(
-	    function() { 
-	      console.log("GAPI client loaded for API"); },
-	    function(err) { 
-	      console.error("Error loading GAPI client for API", err); 
-	    });
-	}
-
-	function getPlaylistItems(pageToken) {
-	    return gapi.client.youtube.playlistItems.list({
-	      "part": "snippet,contentDetails",
-	      "maxResults": 50, // This is the maximum available value, according to the google docs
-	      "playlistId": PLAYLIST_ID,
-	      pageToken
-	    })
-	      .then(function(response) {
-	      const { items, nextPageToken } = response.result;
-	      
-	      // The items[] is an array of a playlist items.
-	      // nextPageToken - if empty - there are no items left to fetch
-	      
-	      playlistItems.push(...items);
-	      
-	      // It's up to you, how to handle the item from playlist. 
-	      // Add `onclick` events to navigate to another video, or use another thumbnail image quality 
-	      var index = 0;
-	      items.forEach(function(item) {
-	          const thumbnailItem = createPlaylistItem(item, index);
-	          playlist.appendChild(thumbnailItem);
-	          index++;
-	        });
-	      
-	      maxVideoVisible = index - 3;
-	      
-
-	      // Recursively get another portion of items, if there any left
-	      if (nextPageToken) {
-	        getPlaylistItems(nextPageToken);        
-	      }
-	    },
-	  function(err) { console.error("Execute error", err); });
-	}
-
-	function createPlaylistItem(i, index) {
-	  var changeIndex = index;
-	  const item = document.createElement('div');
-	  item.classList.add('playlist-item');
-	  item.style.background = `url(https://i.ytimg.com/vi/${i.snippet.resourceId.videoId}/mqdefault.jpg) no-repeat center`;
-	  item.style.backgroundSize = 'contain';
-	  item.id = index.toString();
-	  item.addEventListener("click", function(){ 
-	    document.getElementById('iframe_yt').src = "https://www.youtube.com/embed?listType=playlist&list=PLl3Z5rVQaSyXdmOjIJ2pKhBAIAEOno63C&autoplay=1&index=" + changeIndex.toString();
-	  });
-	  return item;
-	};
-
-	// Before doing any action with the API ->
-	// initAPIClient();
-
-	function goUp(){
-	  if (videoVisible > 0){
-	    videoVisible--;
-	    document.getElementById(videoVisible.toString()).style.height = "90px";
-	  }
-	}
-	function goDown(){
-	    if (videoVisible < maxVideoVisible){
-	      document.getElementById(videoVisible.toString()).style.height = "0px";
-	     videoVisible++;    
-	  }  
-	}
-
+});
 </script>
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 <script>
 	$(".chosen-select").chosen(); 
 </script>
