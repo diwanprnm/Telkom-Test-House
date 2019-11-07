@@ -97,13 +97,11 @@
 				<div id="tutorial" class="clear"></div>
 
 				<div class="divider"><i class="icon-circle"></i></div>
-				<div id="section-playlist" class="heading-block title-center page-section">
+				<div id="section-playlist" class="title-center page-section">
 					<h2>{{ trans('translate.video_tutorial') }}</h2>
 				</div>
 				<div id="root">
-				  <iframe 
-				          width="438" 
-				          height="250"         
+				  <iframe          
 				          src="{{ $playlist_url }}&listType=playlist&index=0" 
 				          frameborder="0" 
 				          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 

@@ -82,7 +82,7 @@
                   <a href="{{url('Devclient')}}">{{ trans('translate.devic_test_passed') }}</a>
               </li>
 
-              <li class=" {{ (!empty($page) && ($page == 'payment_status' || $page == 'products' || $page == 'checkout')) ?'current':''}}">
+              <li class=" {{ (!empty($page) && ($page == 'purchase_history' || $page == 'products' || $page == 'checkout')) ?'current':''}}">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">Stel <i class="icon-angle-down"></i></a>
                    <ul class="dropdown-menu" role="menu">
                     <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ trans('translate.menu_ref') }}</a>
@@ -95,7 +95,7 @@
                       <a href="{{url('/products')}}">{{ trans('translate.see_product') }}</a>
                     </li>
                       <li>
-                      <a href="{{url('/payment_status')}}">{{ trans('translate.payment_status') }}</a>
+                      <a href="{{url('/purchase_history')}}">{{ trans('translate.payment_status') }}</a>
                     </li>
                   </ul>
               </li> 

@@ -54,7 +54,7 @@
 						</div>
 						<div class="row">
 							<div class="col-md-6">
-								<a class="button button-3d btn-sky nomargin" href="{{url('/payment_status')}}">{{ trans('translate.back') }}</a>
+								<a class="button button-3d btn-sky nomargin" href="{{url('/purchase_history')}}">{{ trans('translate.back') }}</a>
 							</div>
 							<div class=" pull-right col-md-6">
 								<button type="submit" class="button button-3d btn-sky nomargin pull-right" style="margin-bottom:10px;">
