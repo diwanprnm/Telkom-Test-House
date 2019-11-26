@@ -65,7 +65,7 @@
 									<textarea type="text" name="description" class="form-control" placeholder="Deskripsi Lab" required>{{ $data->description }}</textarea>
 								</div>
 							</div>
-	                        <div class="col-md-4">
+	                        <div class="col-md-12">
 								<div class="form-group">
 									<label for="form-field-select-2">
 										Status *
@@ -79,6 +79,38 @@
 											<option value="0" selected>Not Active</option>
 										@endif
 									</select>
+								</div>
+							</div>
+							<div id="is_not_active_date">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Tutup Sampai *
+										</label>
+										<p id="closeUntil" class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
+											<input type="text" name="close_until" id="close_until" class="form-control" value="{{ $data->close_until }}" required/>
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-default">
+													<i class="glyphicon glyphicon-calendar"></i>
+												</button>
+											</span>
+										</p>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Dibuka Kembali *
+										</label>
+										<p id="openAt" class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
+											<input type="text" name="open_at" id="open_at" class="form-control" value="{{ $data->open_at }}" required/>
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-default">
+													<i class="glyphicon glyphicon-calendar"></i>
+												</button>
+											</span>
+										</p>
+									</div>
 								</div>
 							</div>
 	                        <div class="col-md-12">
@@ -111,4 +143,25 @@
 <script src={{ asset("vendor/bootstrap-datepicker/bootstrap-datepicker.min.js") }}></script>
 <script src={{ asset("vendor/bootstrap-timepicker/bootstrap-timepicker.min.js") }}></script>
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
+<script src={{ asset("assets/js/form-elements.js") }}></script>
+<script type="text/javascript">
+	if("{{ $data->is_active }}" == 1){
+		$("#is_not_active_date").hide();
+	}else{
+		$("#is_not_active_date").show();
+	}
+	jQuery(document).ready(function() {
+		FormElements.init();
+
+		SelectFx.prototype.options = {
+			onChange: function (val) { 
+				if(val == 1){
+	        		$("#is_not_active_date").hide();
+				}else{
+					$("#is_not_active_date").show();
+				}
+			}
+		};
+	});
+</script>
 @endsection

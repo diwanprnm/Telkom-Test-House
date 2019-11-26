@@ -33,15 +33,61 @@
 	#iframe_yt{
 	  margin-top: 29px;
 	}
+
+
+	/* Modal Content (Image) */
+	.modal-content {
+	  margin: auto;
+	  display: block;
+	  width: 80%;
+	  max-width: 700px;
+	  margin-top: 10%;
+	}
+
+	/* Caption of Modal Image (Image Text) - Same Width as the Image */
+	#caption {
+	  margin: auto;
+	  display: block;
+	  width: 80%;
+	  max-width: 700px;
+	  text-align: center;
+	  color: #ccc;
+	  padding: 10px 0;
+	  height: 150px;
+	}
+
+
+	/* The Close Button */
+
+	.close {
+	  /*position: absolute;*/
+	  color: red;
+	  font-size: 20px;
+	  opacity: 0.6;
+	}
+
+	.close:hover,
+	.close:focus {
+	  color: #bbb;
+	  text-decoration: none;
+	  cursor: pointer;
+	}
+
+	/* 100% Image Width on Smaller Screens */
+	@media only screen and (max-width: 700px){
+		.modal-content {
+			width: 100%;
+		}
+	}
 </style>
 	<link rel="stylesheet" href="{{url('vendor/chosen/chosen.css')}}">
- 	<section id="slider" class="slider-parallax swiper_wrapper clearfix" style="height: 600px;">
+ 	<section id="slider" class="slider-parallax swiper_wrapper clearfix" style="height: 600px;" data-loop="true">
 
 		<div class="swiper-container swiper-parent">
 			<div class="swiper-wrapper">
 			
 				@foreach($data_slideshow as $item)
-				<div class="swiper-slide dark" style="background-image: url('media/slideshow/<?php echo $item->image?>');">
+				<div class="swiper-slide dark" data-timeout="{{ $item->timeout*1000 }}" style="background-image: url('media/slideshow/<?php echo $item->image?>');">
 					<div class="container clearfix"> 
 					</div>
 				</div>
@@ -231,11 +277,52 @@
 		</div>
 
 	</section><!-- #content end -->
+	@if($data_pop_up_information)
+		<div id="modal_notice" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
+	        <img src="media/certification/<?php echo $data_pop_up_information[0]->image?>" class="modal-content">
+	        <div id="caption"><span class="close" data-dismiss="modal">{{ trans('translate.close') }} <i class="fa fa-times-circle-o" aria-hidden="true"></i></span></div>
+		</div>
+	@endif
 @endsection
 
 @section('content_js')
 <script>
+	// Set individual slide timeout for dynamic autoplay
+	var setSwiperSlideTimeout = function ( swiper ) {
+	    var timeout = $( swiper.slides[ swiper.activeIndex ] ).data( "timeout" );
+
+	    if (timeout === undefined || timeout === "" || timeout === 0) {
+	        timeout = 60000;
+	    }
+
+	    var slideNumberCurrent = $("#slide-number-current");
+	    if( slideNumberCurrent.length > 0 ){
+			slideNumberCurrent.html( Number( $('.swiper_wrapper').find('.swiper-slide.swiper-slide-active').attr('data-swiper-slide-index') ) + 1 );
+		}
+
+	    swiper.params.autoplay = timeout;
+	    swiper.update();
+	    swiper.startAutoplay();
+	};
+
+	var mySwiper = new Swiper('.swiper-container', {
+	    nextButton: '#slider-arrow-right',
+	    prevButton: '#slider-arrow-left',
+	    slidesPerView: 1,
+	    paginationClickable: true,
+	    autoplay: 0, // CHANGED THIS FROM 5000 to 0
+	    loop: true,
+	    onInit: function ( currentSwiper ) {
+	        currentSwiper.stopAutoplay();
+	        setSwiperSlideTimeout( currentSwiper );
+	    },
+	    onSlideChangeEnd: function ( currentSwiper ) {
+	        currentSwiper.stopAutoplay();
+	        setSwiperSlideTimeout( currentSwiper );
+	    }
+	});
 $(document).ready(function(){
+	if("{{ count($data_pop_up_information) }}">0){$("#modal_notice").modal('show');}
   // Add smooth scrolling to all links
   $("#click-section-playlist").on('click', function(event) {
 

@@ -4462,6 +4462,8 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::resource('/userin', 'UserinController');
 	Route::resource('/usereks', 'UsereksController');
 	Route::resource('/slideshow', 'SlideshowController');
+	Route::resource('/certification', 'CertificationController');
+	Route::resource('/popupinformation', 'PopUpInformationController');
 	Route::resource('/footer', 'FooterController');
 	Route::resource('/labs', 'ExaminationLabController');
 	Route::resource('/myexam', 'MyExaminationController');
@@ -4545,7 +4547,9 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::resource('/generalSetting', 'GeneralSettingController');
 	Route::resource('/spb', 'SPBController');
 	Route::resource('/nogudang', 'NoGudangController');
+	Route::resource('/feedbackncomplaint', 'FeedbackComplaintController');
 	Route::resource('/videoTutorial', 'VideoTutorialController');
+	Route::post('/orderSlideshow', 'SlideshowController@orderSlideshow');
 
 });
 	Route::get('/adm_dashboard_autocomplete/{query}', 'DashboardController@autocomplete')->name('adm_dashboard_autocomplete');

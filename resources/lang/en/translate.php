@@ -28,6 +28,7 @@ return [
 	'service_company_plg_id'	=> 'PLG_ID',
 	'service_company_nib'		=> 'NIB',
 	'service_company_phone'		=> 'Phone',
+	'service_company_cs'		=> 'Customer Service TTH',
 	'service_company_fax'		=> 'Facsimile',
 	'service_company_email'		=> 'Email',
 	'service_company_agent'		=> 'Agent/Distributor',
@@ -398,4 +399,14 @@ return [
 	'video_guide' => 'Guide Video',
 
 	'video_tutorial' => 'Tutorial Video',
+
+	'close' => 'CLOSE',
+
+	'unautorizhed_layanan_message' => 'You do not have permission to access this page because all Laboratorium has been closed',
+
+	'attention' => 'ATTENTION',
+	'message_close_lab' => 'Registration of Equipment Testing in TELKOM DDS Quality Assurance Laboratorium has been closed. Thank You',
+	'message_close_lab_separate' => 'Registration of Equipment Testing in some Laboratorium has been closed : ',
+	'close_until' => 'close until',
+	'available_stel' => 'This is a list of test references that can still register for testing : ',
 ];

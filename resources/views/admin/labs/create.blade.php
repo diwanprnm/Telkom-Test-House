@@ -73,7 +73,7 @@
 									<select name="is_active" class="cs-select cs-skin-elastic" required>
 										<option value="" disabled selected>Select...</option>
 										<option value="1">Active</option>
-										<option value="0">Not Active</option>
+										<!-- <option value="0">Not Active</option> -->
 										
 									</select>
 								</div>

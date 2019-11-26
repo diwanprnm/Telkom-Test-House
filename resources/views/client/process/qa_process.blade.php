@@ -188,7 +188,11 @@
 									<select  class="chosen-select" id="f1-cmb-ref-perangkat" name="f1-cmb-ref-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}" class="required"> 
 											<option value="" selected>{{ trans('translate.examination_choose_stel') }}</option>
 										@foreach($data_stels as $item)
-											<option value="{{ $item->stel }}">{{ $item->stel }} || {{ $item->device_name }}</option>
+											@if(in_array($item->lab,$data_layanan_not_active))
+												<option value="{{ $item->stel }}" disabled>{{ $item->stel }} || {{ $item->device_name }}</option>
+											@else
+												<option value="{{ $item->stel }}">{{ $item->stel }} || {{ $item->device_name }}</option>
+											@endif
 										@endforeach
 									</select>
 									@foreach($data_stels as $item)
@@ -475,7 +479,7 @@
 				            <fieldset>
 				            	<div class="form-group">
 										<label>{{ trans('translate.service_upload_now') }}<span class="text-danger">*</span></label>
-										<input class="data-upload-detail-pengujian" id="fileInput-detail-pengujian" name="fuploaddetailpengujian" type="file" accept="application/pdf,image/*">
+										<input class="data-upload-detail-pengujian form-control" id="fileInput-detail-pengujian" name="fuploaddetailpengujian" type="file" accept="application/pdf,image/*">
 										<div id="attachment-file"></div>
 										<button type="button" class="button button3d btn-green upload-form">{{ trans('translate.service_upload_now') }}</button>
 										<div id="attachment-file">

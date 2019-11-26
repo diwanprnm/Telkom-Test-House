@@ -35,6 +35,8 @@ use App\Events\Notification;
 use App\NotificationTable;
 use App\AdminRole;
 
+use Carbon\Carbon;
+
 class PengujianController extends Controller
 {
     /**
@@ -1619,7 +1621,17 @@ class PengujianController extends Controller
     }
 	
 	public function checkKuisioner(Request $request) {
-		$quest = Questioner::where("examination_id", "=", $request->input('id'))->select('complaint')->get();
+		$currentUser = Auth::user();
+		$expDate = Carbon::now()->subMonths(3);
+		$company_id = $currentUser->company_id;
+		// $quest = Questioner::where("examination_id", "=", $request->input('id'))
+		$query = Questioner::with('user')
+				->whereDate('questioner_date', '>=', $expDate);
+			$query->whereHas('user', function ($query) use ($company_id) {
+                $query->where('company_id', $company_id);
+            });
+		// ->where("created_by", "=", $currentUser->id)
+		$quest = $query->select('complaint')->get();
 		$is_exists = count($quest);
 		if($is_exists > 0){
 			echo $quest[0]->complaint;

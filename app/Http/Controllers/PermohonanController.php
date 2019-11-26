@@ -77,7 +77,10 @@ class PermohonanController extends Controller
 			$message = 'Data not found';
 		}
 		
-        $query_slideshow = "SELECT * FROM slideshows WHERE is_active = 1 ORDER BY created_at";
+        $query_pop_up_information = "SELECT * FROM certifications WHERE type = 0 AND is_active = 1";
+		$data_pop_up_information = DB::select($query_pop_up_information);
+        
+        $query_slideshow = "SELECT * FROM slideshows WHERE is_active = 1 ORDER BY position";
 		$data_slideshow = DB::select($query_slideshow);
             
 		if (count($data_slideshow) == 0){
@@ -137,6 +140,7 @@ class PermohonanController extends Controller
 		return view('client.home')
 			->with('user_id', $user_id)
 			->with('data', $data)
+			->with('data_pop_up_information', $data_pop_up_information)
 			->with('data_slideshow', $data_slideshow)
 			->with('data_about', $data_about)
 			->with('data_procedure', $data_procedure)

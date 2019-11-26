@@ -31,6 +31,7 @@ return [
 	'service_company_plg_id'	=> 'PLG_ID',
 	'service_company_nib'		=> 'NIB',
 	'service_company_phone'		=> 'Telepon',
+	'service_company_cs'		=> 'Customer Service TTH',
 	'service_company_fax'		=> 'Faksimil',
 	'service_company_email'		=> 'Email',
 	'service_company_confirm'	=> '*Apabila ada perubahan data perusahaan, silakan email ke Admin urelddstelkom@gmail.com',
@@ -401,4 +402,14 @@ return [
 	'video_guide' => 'Video Panduan',
 
 	'video_tutorial' => 'Video Tutorial',
+
+	'close' => 'TUTUP',
+
+	'unautorizhed_layanan_message' => 'Anda tidak berhak mengakses halaman ini dikarenakan semua Laboratorium sudah ditutup',
+
+	'attention' => 'PEMBERITAHUAN',
+	'message_close_lab' => 'Pendaftaran Pengujian Perangkat di Lab Quality Assurance TELKOM DDS Sudah Ditutup. Terima Kasih',
+	'message_close_lab_separate' => 'Pendaftaran Pengujian Perangkat di beberapa Lab TELKOM DDS Sudah Ditutup : ',
+	'close_until' => 'ditutup sampai',
+	'available_stel' => 'Berikut adalah daftar referensi uji yang masih dapat melakukan registrasi pengujian : ',
 ];

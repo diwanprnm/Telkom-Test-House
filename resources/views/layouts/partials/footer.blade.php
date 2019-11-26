@@ -36,7 +36,7 @@
                                             Jl. Gegerkalong Hilir, Sukarasa, Sukasari<br>
                                             Kota Bandung, Jawa Barat 40152<br>
                                         </address>
-                                        <abbr title="Phone Number"><strong>{{ trans('translate.service_company_phone') }}:</strong></abbr> (022) 4571145<br>
+                                        <abbr title="Customer Service"><strong>{{ trans('translate.service_company_cs') }}:</strong></abbr><br> (+62) 812-2483-7500<br>
                                         <abbr title="Email Address"><strong>{{ trans('translate.service_company_email') }}:</strong></abbr> urelddstelkom@gmail.com<br><br>
                                         <address>
                                             <strong>{{ trans('translate.bank_account') }}:</strong><br>

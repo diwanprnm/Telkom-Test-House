@@ -190,10 +190,18 @@
 				            		<input type="hidden" name="old_ref" id="old_ref" value="{{ $userData->referensi_perangkat }}" >
 									<select  class="chosen-select" id="f1-cmb-ref-perangkat" name="f1-cmb-ref-perangkat" placeholder="{{ trans('translate.service_device_test_reference') }}">
 										@foreach($data_stels as $item)
-											@if($item->stel == $userData->referensi_perangkat)
-												<option value="{{ $item->stel }}" selected>{{ $item->stel }} || {{ $item->device_name }}</option>
+											@if(in_array($item->lab,$data_layanan_not_active))
+												@if($item->stel == $userData->referensi_perangkat)
+													<option value="{{ $item->stel }}" disabled selected>{{ $item->stel }} || {{ $item->device_name }}</option>
+												@else
+													<option value="{{ $item->stel }}" disabled>{{ $item->stel }} || {{ $item->device_name }}</option>
+												@endif
 											@else
-												<option value="{{ $item->stel }}">{{ $item->stel }} || {{ $item->device_name }}</option>
+												@if($item->stel == $userData->referensi_perangkat)
+													<option value="{{ $item->stel }}" selected>{{ $item->stel }} || {{ $item->device_name }}</option>
+												@else
+													<option value="{{ $item->stel }}">{{ $item->stel }} || {{ $item->device_name }}</option>
+												@endif
 											@endif
 										@endforeach
 									</select>
@@ -504,7 +512,7 @@
 				            <fieldset>
 				            	<div class="form-group">
 										<label>{{ trans('translate.service_upload_now') }}<span class="text-danger">*</span></label>
-										<input class="data-upload-detail-pengujian" id="fileInput-detail-pengujian" name="fuploaddetailpengujian_edit" type="file" accept="application/pdf,image/*">
+										<input class="data-upload-detail-pengujian form-control" id="fileInput-detail-pengujian" name="fuploaddetailpengujian_edit" type="file" accept="application/pdf,image/*">
 										<input type="hidden" name="hide_attachment_file_edit" id="hide_attachment_file" value="{{ $userData->attachment }}"/>
 										<a id="attachments-file" class="btn btn-link" >{{ $userData->attachment }}</a>
 										<div id="attachment-file"></div>

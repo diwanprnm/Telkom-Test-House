@@ -8,6 +8,7 @@ use App\Http\Requests;
 
 use App\ExaminationLab;
 use App\Logs;
+use App\ManageProcess;
 
 use Auth;
 use Session;
@@ -105,6 +106,17 @@ class ExaminationLabController extends Controller
         try{
             $labs->save();
 
+            for ($i=1; $i <= 4; $i++) { 
+                $mp = new ManageProcess;
+                $mp->exam_type_id = $i;
+                $mp->lab_id = $labs->id;
+                $mp->is_active = 1;
+
+                $mp->created_by = $currentUser->id;
+                $mp->updated_by = $currentUser->id;
+                $mp->save();
+            }
+
             $logs = new Logs;
             $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
             $logs->action = "Create Examination Lab";
@@ -175,6 +187,12 @@ class ExaminationLabController extends Controller
         if ($request->has('is_active')){
             $labs->is_active = $request->input('is_active');
         }
+        if ($request->has('close_until')){
+            $labs->close_until = $request->input('close_until');
+        }
+        if ($request->has('open_at')){
+            $labs->open_at = $request->input('open_at');
+        }
 
         $labs->updated_by = $currentUser->id;
 
@@ -211,6 +229,7 @@ class ExaminationLabController extends Controller
 
         if ($labs){
             try{
+                ManageProcess::where('lab_id', '=' ,''.$id.'')->delete();
                 $labs->delete();
                 
                 $logs = new Logs;

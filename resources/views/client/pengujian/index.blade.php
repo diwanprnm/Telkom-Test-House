@@ -1574,8 +1574,9 @@
               beforeShowDay: function(date){
                var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
                var noWeekend = $.datepicker.noWeekends(date);
-                   if (noWeekend[0]) {
-                    return  [$.inArray(string, holidays) == -1];
+              	var month = date.getMonth()+1; // +1 because JS months start at 0
+		           if (noWeekend[0]) {
+                    return  [$.inArray(string, holidays) == -1],[!(month == 12), ""];
                    }
                    else
                     return noWeekend;

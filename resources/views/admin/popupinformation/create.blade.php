@@ -7,14 +7,14 @@
 		<section id="page-title">
 			<div class="row">
 				<div class="col-sm-8">
-					<h1 class="mainTitle">Tambah Slideshow Baru</h1>
+					<h1 class="mainTitle">Tambah Pop Up Information Baru</h1>
 				</div>
 				<ol class="breadcrumb">
 					<li>
 						<span>Beranda</span>
 					</li>
 					<li>
-						<span>Slideshow</span>
+						<span>Pop Up Information</span>
 					</li>
 					<li class="active">
 						<span>Tambah</span>
@@ -26,11 +26,11 @@
 		<!-- start: RESPONSIVE TABLE -->
 		<div class="container-fluid container-fullw bg-white">
 			<div class="col-md-12">
-				{!! Form::open(array('url' => 'admin/slideshow', 'method' => 'POST', 'enctype' => 'multipart/form-data')) !!}
+				{!! Form::open(array('url' => 'admin/popupinformation', 'method' => 'POST', 'enctype' => 'multipart/form-data')) !!}
 					{!! csrf_field() !!}
     				<fieldset>
 						<legend>
-							Tambah Slideshow Baru
+							Tambah Pop Up Information Baru
 						</legend>
 						<div class="row">
 							<div class="col-md-12">
@@ -44,38 +44,11 @@
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>
-										Headline *
-									</label>
-									<input type="text" name="headline" class="form-control" placeholder="Headline" required>
-								</div>
-							</div>
-							<div class="col-md-12">
-								<div class="form-group">
-									<label>
 										Gambar *
 									</label>
 									<input type="file" name="image" class="form-control" accept="image/*" required>
 								</div>
 							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>
-										Timeout (dalam detik)
-									</label>
-									<input type="number" name="timeout" min="0" class="form-control" placeholder="... s">
-								</div>
-							</div>
-							<!-- <div class="col-md-6">
-								<div class="form-group">
-									<label>
-										Warna Tulisan *
-									</label>
-									<div id="cp2" class="input-group colorpicker-component">
-										<input name="color" type="text" class="form-control" />
-										<span class="input-group-addon"><i></i></span>
-									</div>
-								</div>
-							</div> -->
 	                        <div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
@@ -93,7 +66,7 @@
 	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
 	                                Submit
 	                            </button>
-	                                	<a style=" color:white !important;" href="{{URL::to('/admin/slideshow')}}">
+	                                	<a style=" color:white !important;" href="{{URL::to('/admin/popupinformation')}}">
 	                            			<button type="button" class="btn btn-wide btn-red btn-squared btn-marginleft pull-left">
 	                                			Cancel
 	                            			</button>
@@ -124,10 +97,6 @@
 <script type="text/javascript">
 	jQuery(document).ready(function() {
 		FormElements.init();
-
-		$(function() {
-	        $('#cp2').colorpicker();
-	    });
 	});
 </script>
 @endsection

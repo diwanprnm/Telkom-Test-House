@@ -51,18 +51,18 @@
 					============================================= -->
 					<div id="portfolio" class="portfolio grid-container portfolio-3 clearfix">
 					
-					@foreach($data_slideshow as $item)
+					@foreach($data_certification as $item)
 					<article class="portfolio-item pf-media pf-icons">
 						<div class="portfolio-image">
 							<a href="#">
-								<img src="{{ asset('media/slideshow/'.$item->image) }}" alt="Open Imagination">
+								<img src="{{ asset('media/certification/'.$item->image) }}" alt="Open Imagination">
 							</a>
 							<div class="portfolio-overlay">
-								<a href="{{ asset('media/slideshow/'.$item->image) }}" class="center-icon" data-lightbox="image"><i class="icon-line-search"></i></a>
+								<a href="{{ asset('media/certification/'.$item->image) }}" class="center-icon" data-lightbox="image"><i class="icon-line-search"></i></a>
 							</div>
 						</div>
 						<div class="portfolio-desc">
-							<h3 style="color:{{ $item->color }}">{{ $item->title }}</h3>
+							<h3>{{ $item->title }}</h3>
 						</div>
 					</article>
 					@endforeach

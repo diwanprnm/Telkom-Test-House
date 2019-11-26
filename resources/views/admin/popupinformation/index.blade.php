@@ -1,23 +1,20 @@
 @extends('layouts.app')
 
 @section('content')
-<style type="text/css">
-	td { cursor: grab; }
-</style>
 <div class="main-content" >
 	<div class="wrap-content container" id="container">
 		<!-- start: PAGE TITLE -->
 		<section id="page-title">
 			<div class="row">
 				<div class="col-sm-8">
-					<h1 class="mainTitle">Slideshow</h1>
+					<h1 class="mainTitle">Pop Up Information</h1>
 				</div>
 				<ol class="breadcrumb">
 					<li>
 						<span>Beranda</span>
 					</li>
 					<li class="active">
-						<span>Slideshow</span>
+						<span>Pop Up Information</span>
 					</li>
 				</ol>
 			</div>
@@ -27,9 +24,9 @@
 		<div class="container-fluid container-fullw bg-white">
 	        <div class="row">
 		        <div class="col-md-6">
-		                <a style=" color:white !important;" href="{{URL::to('/admin/slideshow/create')}}">
+		                <a style=" color:white !important;" href="{{URL::to('/admin/popupinformation/create')}}">
 		            		<button type="button" class="btn btn-wide btn-green btn-squared" >
-		                		Tambah Slideshow
+		                		Tambah Pop Up Information
 		            		</button>         
 		                </a>
 		        </div>
@@ -59,24 +56,20 @@
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
 							<thead>
 								<tr>
-                                    <th class="center">Aksi</th>
+									<th class="center">No</th>
 									<th class="center">Judul</th>
-									<th class="center">Headline</th>
 									<th class="center">Gambar</th>
-									<th class="center">Timeout</th>
                                     <th class="center">Status</th>
-									<th class="center"></th>
+                                    <th class="center">Aksi</th>
 								</tr>
 							</thead>
-							<tbody class="row_position">
+							<tbody>
 								<?php $no=1; ?>
 								@foreach($data as $item)
-									<tr id="{{ $item->id }}">
-										<!-- <td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td> -->
+									<tr>
+										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
 										<td class="center">{{ $item->title }}</td>
-										<td class="center">{{ $item->headline }}</td>
-										<td class="center"><img src="{{asset('media/slideshow/'.$item->image)}}" width="240"/></td>
-										<td class="center">{{ $item->timeout }}s</td>
+										<td class="center"><img src="{{asset('media/popupinformation/'.$item->image)}}" width="240"/></td>
 										@if($item->is_active)
 	                                    	<td class="center"><span class="label label-sm label-success">Active</span></td>
 	                                    @else
@@ -84,14 +77,13 @@
 	                                    @endif
 	                                    <td class="center">
 											<div>
-												<a href="{{URL::to('admin/slideshow/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
-												{!! Form::open(array('url' => 'admin/slideshow/'.$item->id, 'method' => 'DELETE')) !!}
+												<a href="{{URL::to('admin/popupinformation/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
+												{!! Form::open(array('url' => 'admin/popupinformation/'.$item->id, 'method' => 'DELETE')) !!}
 													{!! csrf_field() !!}
 													<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')"><i class="fa fa-times fa fa-white"></i></button>
 												{!! Form::close() !!}
 											</div>
 										</td>
-										<td class="center"><i class="fa fa-reorder"></td>
 									</tr>
 								<?php $no++ ?>
 								@endforeach
@@ -115,39 +107,13 @@
 
 @section('content_js')
 <script type="text/javascript">
-	$( ".row_position" ).sortable({
-        delay: 150,
-        stop: function() {
-            var selectedData = new Array();
-            $('.row_position>tr').each(function() {
-                selectedData.push($(this).attr("id"));
-            });
-            updateOrder(selectedData);
-        }
-    });
-
-    function updateOrder(data){
-    	$.ajax({
-			type: 'POST',
-			url: 'orderSlideshow',
-			data: {'_token':"{{ csrf_token() }}", 'position':data},
-			beforeSend: function(){
-				document.getElementById("overlay").style.display="inherit";
-			},
-			success: function (data) {
-				console.log(data);
-				document.getElementById("overlay").style.display="none";	
-			},
-		});
-    }
-
 	$( function() {
 		$( "#search_value" ).autocomplete({
 			minLength: 3,
 			source: function (request, response) {
 				$.ajax({
 					type: 'GET',
-					url: 'adm_slideshow_autocomplete/'+request.term,
+					url: 'adm_popupinformation_autocomplete/'+request.term,
 					dataType: "json",
 					cache: false,
 					success: function (data) {
@@ -187,7 +153,7 @@
 				var params = {
 					search:document.getElementById("search_value").value			
 				};
-				document.location.href = baseUrl+'/admin/slideshow?'+jQuery.param(params);
+				document.location.href = baseUrl+'/admin/popupinformation?'+jQuery.param(params);
 	        }
 	    });
 	});

@@ -9,20 +9,21 @@
 
 	<div class="content-wrap"> 
 		<div class="container clearfix">  
-			<div class="tabs tabs-bordered clearfix" id="tab-2">
+			<div class="clearfix" id="tab-2">
 
-							<ul class="tab-nav clearfix">
-								<li><a href="#tabs-profile">{{ trans('translate.profile') }}</a></li>
-								<li><a href="#tabs-company">{{ trans('translate.company') }}</a></li>
+							<ul class="nav nav-tabs clearfix">
+								<li class="{{ $tabs == 'profile' ? 'active' : '' }}"><a href="#tabs-profile" data-toggle="tab"><strong>{{ trans('translate.profile') }}</strong></a></li>
+								<li class="{{ $tabs == 'company' ? 'active' : '' }}"><a href="#tabs-company" data-toggle="tab"><strong>{{ trans('translate.company') }}</strong></a></li>
 							</ul>
 
-							<div class="tab-container">
+							<div class="tab-content">
 
-								<div class="tab-content clearfix" id="tabs-profile">
+								<div id="tabs-profile" class="clearfix tab-pane fade {{ $tabs == 'profile' ? 'in active' : '' }}">
 									<form id="form" class="smart-wizard" role="form" method="POST" action="{{ url('/client/profile') }}" enctype="multipart/form-data">
 										{{ csrf_field() }}
 										<input type="hidden" name="hide_id_user" id="hide_id_user" value="<?php echo $data['id'] ?>">
 
+										<br>
 										<div class="col_full">
 											<label for="register-form-name">{{ trans('translate.profile_name') }} :</label>
 											<input type="text" id="username" class="form-control input-submit" name="username" placeholder="John Doe" value="<?php echo $data['name'] ?>">
@@ -106,7 +107,7 @@
 
 									</form> 
 								</div>
-								<div class="tab-content clearfix" id="tabs-company">
+								<div id="tabs-company" class="clearfix tab-pane fade {{ $tabs == 'company' ? 'in active' : '' }}">
 									<form id="form" class="smart-wizard" role="form" method="POST" action="{{ url('/client/company') }}" enctype="multipart/form-data">
 							{{ csrf_field() }}
 							<input type="hidden" name="hide_id_company" id="hide_id_company" value="<?php echo $myComp['id'] ?>"/>
@@ -120,7 +121,8 @@
 								<div class="alert alert-info">
 									{{ Session::get('message_company') }}
 								</div>
-							@endif			
+							@endif
+							<br>			
 							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.company_name') }} : </label>
 								<input type="text" id="name" class="form-control input-submit" name="name" placeholder="PT. Maju Mundur" value="<?php echo $myComp['name'] ?>">
@@ -248,7 +250,7 @@
 @endsection
 
 @section('content_js')
-<script>
+<script type="text/javascript">
  	function downloadFileCompany(file){
 		var path = "{{ URL::asset('media/company') }}";
 		var company_id = $('#hide_id_company').val();

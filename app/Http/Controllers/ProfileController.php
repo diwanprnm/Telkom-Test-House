@@ -48,15 +48,16 @@ class ProfileController extends Controller
      */
     public function index(Request $request)
     {
+    	$tabs = $request->input('tabs') == 'company' ? 'company' : 'profile';
 		$query = "SELECT * FROM companies WHERE id != 1 AND is_active = 1";
 		$data_company = DB::select($query);		
-		
-        $currentUser = Auth::user();
+		$currentUser = Auth::user();
 		if ($currentUser){
 			$myComp = Company::where('id', $currentUser['attributes']['company_id'])->first();
             return view('client.profile.index')
                 ->with('data', $currentUser['attributes'])
                 ->with('data_company', $data_company)
+                ->with('tabs', $tabs)
                 ->with('myComp', $myComp);
         }
     }

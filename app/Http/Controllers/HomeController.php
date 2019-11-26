@@ -17,6 +17,8 @@ use App\Events\Notification;
 use App\NotificationTable;
 use App\Footer;
 use App\AdminRole;
+use App\ExaminationLab;
+use App\Company;
 
 class HomeController extends Controller
 {
@@ -63,17 +65,17 @@ class HomeController extends Controller
 			$query = "SELECT * FROM articles WHERE type = 'Sertifikasi'";
 			$data = DB::select($query);
 			
-			$query_slideshow = "SELECT * FROM slideshows WHERE is_active = 1 ORDER BY created_at";
-			$data_slideshow = DB::select($query_slideshow);
+			$query_certification = "SELECT * FROM certifications WHERE is_active = 1 AND type = 1 ORDER BY created_at";
+			$data_certification = DB::select($query_certification);
 				
-			if (count($data_slideshow) == 0){
+			if (count($data_certification) == 0){
 				$message_slideshow = 'Data not found';
 			}
 			
     	$page = "sertifikasi";
 		return view('client.sertifikasi')
 			->with('data', $data)
-			->with('data_slideshow', $data_slideshow)
+			->with('data_certification', $data_certification)
 			->with('page', $page);
     }
     
@@ -124,6 +126,26 @@ class HomeController extends Controller
                 $ta_video_url = $data_url[0]->ta_url ? $data_url[0]->ta_url : $ta_video_url;
                 $vt_video_url = $data_url[0]->vt_url ? $data_url[0]->vt_url : $vt_video_url;
             }
+		// untuk QA
+            $query_stels_qa = "SELECT DISTINCT s.code as stel ,s.name as device_name, s.type as lab, ssd.attachment as file, ssd.id as id_folder
+				FROM stels s,stels_sales ss,stels_sales_detail ssd, companies c , users u
+				WHERE s.id = ssd.stels_id AND s.is_active = 1 AND ss.id = ssd.stels_sales_id AND ss.user_id = u.id AND u.company_id = c.id
+				AND ss.payment_status = 1 AND c.id = '".$currentUser->company->id."'";
+				$data_stels_qa = DB::select($query_stels_qa);
+		// untuk selain QA
+			$query_stels = "SELECT code as stel, name as device_name , type as lab FROM stels WHERE is_active = 1 ORDER BY name";
+				$data_stels = DB::select($query_stels);
+
+            $query_layanan = ExaminationLab::where('is_active', 0);
+            $data_layanan = $query_layanan->orderBy('lab_code')->get();
+
+            $data_layanan_not_active = array();
+			foreach ($data_layanan as $data) {
+				array_push($data_layanan_not_active, $data->id);
+			}
+
+            $query_layanan_active = ExaminationLab::where('is_active', 1);
+            $data_layanan_active = $query_layanan_active->get();
 
 	    	$data = array();
 	    	$page = "process";
@@ -131,6 +153,11 @@ class HomeController extends Controller
 				->with('qa_video_url', $qa_video_url)
 				->with('ta_video_url', $ta_video_url)
 				->with('vt_video_url', $vt_video_url)
+				->with('data_layanan', $data_layanan)
+				->with('data_layanan_active', $data_layanan_active)
+				->with('data_layanan_not_active', $data_layanan_not_active)
+				->with('data_stels_qa', $data_stels_qa)
+				->with('data_stels', $data_stels)
 				->with('data', $data)
 				->with('page', $page);   
 		}else{
@@ -143,16 +170,23 @@ class HomeController extends Controller
     	$currentUser = Auth::user();
 		
 		if($currentUser){
+			$query_layanan_active = ExaminationLab::where('is_active', 1);
+            $data_layanan_active = $query_layanan_active->get();
+            if(count($data_layanan_active) == 0){
+				return view("errors.401_available_lab");
+			}
 			if($category == 'qa'){
-				$query_stels = "SELECT DISTINCT s.code as stel ,s.name as device_name, ssd.attachment as file, ssd.id as id_folder
+				$query_stels = "SELECT DISTINCT s.code as stel ,s.name as device_name, s.type as lab, ssd.attachment as file, ssd.id as id_folder
 				FROM stels s,stels_sales ss,stels_sales_detail ssd, companies c , users u
 				WHERE s.id = ssd.stels_id AND s.is_active = 1 AND ss.id = ssd.stels_sales_id AND ss.user_id = u.id AND u.company_id = c.id
 				AND ss.payment_status = 1 AND c.id = '".$currentUser->company->id."'";
 				$data_stels = DB::select($query_stels);				
 			}else{
-				$query_stels = "SELECT code as stel, name as device_name FROM stels WHERE is_active = 1 ORDER BY name";
+				$query_stels = "SELECT code as stel, name as device_name , type as lab FROM stels WHERE is_active = 1 ORDER BY name";
 				$data_stels = DB::select($query_stels);
 			}
+			$query_layanan = ExaminationLab::where('is_active', 0);
+            $data_layanan = $query_layanan->get();
 
 			$query = "SELECT
 					u.id AS user_id, u.`name` AS namaPemohon, u.address AS alamatPemohon, u.phone_number AS telpPemohon, u.fax AS faxPemohon, u.email AS emailPemohon, u.email2 AS emailPemohon2, u.email3 AS emailPemohon3, u.company_id AS company_id,
@@ -169,6 +203,11 @@ class HomeController extends Controller
 			$userData = DB::select($query);
 
 			// print_r($userData);
+			$data_layanan_not_active = array();
+			foreach ($data_layanan as $data) {
+				array_push($data_layanan_not_active, $data->id);
+			}
+			
 			$data =  array();
 	    	$page = "process";
 			return view('client.process.'.$category.'_process')
@@ -176,6 +215,7 @@ class HomeController extends Controller
 				->with('userData', $userData[0])
 				->with('jns_pengujian', $category)
 				->with('data_stels', $data_stels)
+				->with('data_layanan_not_active', $data_layanan_not_active)
 				->with('page', $page);   
 		}else{ 
 			return redirect("/login");

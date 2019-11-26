@@ -174,7 +174,11 @@
 											<label for="f1-referensi-perangkat">{{ trans('translate.service_device_test_reference') }} *</label>
 											<select multiple class="chosen-select" id="f1-referensi-perangkat" name="f1-referensi-perangkat[]" placeholder="{{ trans('translate.service_device_test_reference') }}"> 
 												@foreach($data_stels as $item)
-													<option value="{{ $item->stel }}">{{ $item->stel }} || {{ $item->device_name }}</option>
+													@if(in_array($item->lab,$data_layanan_not_active))
+														<option value="{{ $item->stel }}" disabled>{{ $item->stel }} || {{ $item->device_name }}</option>
+													@else
+														<option value="{{ $item->stel }}">{{ $item->stel }} || {{ $item->device_name }}</option>
+													@endif
 												@endforeach
 											</select>
 										</div>
@@ -308,7 +312,7 @@
 										</div> 
 					            </fieldset>
 
-					            <h2>Forth Step</h2>
+					            <h2>Fifth Step</h2>
 					            <fieldset>
 
 					            		<input type="hidden" name="hide_cekSNjnsPengujian" id="hide_cekSNjnsPengujian">
@@ -455,11 +459,11 @@
 											</tr>
 										</table> 
 					            </fieldset>
-					             <h2>Forth Step</h2>
+					             <h2>Sixth Step</h2>
 					            <fieldset>
 					            	<div class="form-group">
 											<label>{{ trans('translate.service_upload_now') }}<span class="text-danger">*</span></label>
-											<input class="data-upload-detail-pengujian" id="fileInput-detail-pengujian" name="fuploaddetailpengujian_edit" type="file" accept="application/pdf,image/*">
+											<input class="data-upload-detail-pengujian form-control" id="fileInput-detail-pengujian" name="fuploaddetailpengujian_edit" type="file" accept="application/pdf,image/*">
 											<input type="hidden" name="hide_attachment_file_edit" id="hide_attachment_file" value="{{ $userData->attachment }}"/>
 											<a id="attachments-file" class="btn btn-link">{{ $userData->attachment }}</a>
 											<div id="attachment-file"></div>
@@ -476,7 +480,7 @@
 											</div>
 										</div>
 					            </fieldset>
-								<h2>Forth Step</h2>
+								<h2>Seventh Step</h2>
 					        	<fieldset class="lastFieldset"> 
 									<h4 class="judulselesai">{{ trans('translate.service_thanks') }}</h4> 
 									<a class="button button3d btn-green" href="<?php echo url('/pengujian');?>">Finish</a>

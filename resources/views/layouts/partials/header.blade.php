@@ -140,6 +140,7 @@
                 <li class="loginMenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo substr($currentUser['attributes']['name'],0,7)."...";?>  <i class="icon-angle-down"></i></a>
                   <ul class="dropdown-menu" role="menu">
                     <li><a href="{{url('/client/profile')}}">{{ trans('translate.profile') }}</a></li>
+                    <li><a href="{{url('/client/profile?tabs=company')}}">{{ trans('translate.company') }}</a></li>
                     <li><a href="{{url('/client/logout')}}">{{ trans('translate.logout') }}</a></li>
                   </ul> 
                 </li>

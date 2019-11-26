@@ -40,7 +40,7 @@ class SlideshowController extends Controller
 
         if ($currentUser){
             $message = null;
-            $paginate = 10;
+            $paginate = 100;
             $search = trim($request->input('search'));
             
             if ($search != null){
@@ -58,7 +58,7 @@ class SlideshowController extends Controller
                     $logs->save();
             }else{
                 $slideshows = Slideshow::whereNotNull('created_at')
-                    ->orderBy('created_at')
+                    ->orderBy('position')
                     ->paginate($paginate);
             }
             
@@ -108,6 +108,7 @@ class SlideshowController extends Controller
         $slideshow->title = $request->input('title');
         $slideshow->headline = $request->input('headline');
         $slideshow->color = $request->input('color');
+        $slideshow->timeout = $request->input('timeout');
 
         if ($request->hasFile('image')) {
 				$image_info = getimagesize($request->file('image'));
@@ -223,7 +224,10 @@ class SlideshowController extends Controller
         if ($request->has('color')){
             $slideshow->color = $request->input('color');
         }
-        if ($request->hasFile('image')) {
+        if ($request->has('timeout')){
+            $slideshow->timeout = $request->input('timeout');
+        }
+        if ($request->file('image')) {
             /*$ext_file = $request->file('image')->getClientOriginalExtension();
             $name_file = uniqid().'_slide_'.$slideshow->id.'.'.$ext_file;*/
             $name_file = 'slide_'.$request->file('image')->getClientOriginalName();
@@ -296,5 +300,17 @@ class SlideshowController extends Controller
 	public function autocomplete($query) {
         $respons_result = Slideshow::autocomplet($query);
         return response($respons_result);
+    }
+
+    public function orderSlideshow(Request $request){
+        $position = $request->input('position');
+        $i=1;
+        foreach($position as $k => $v){
+            $slideshow = Slideshow::find($v);
+            $slideshow->position = $i;
+            $slideshow->save();
+            $i++;
+        }
+        return 1;
     }
 }
