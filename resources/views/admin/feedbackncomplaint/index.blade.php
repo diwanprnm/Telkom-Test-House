@@ -320,7 +320,7 @@
 				document.location.href = baseUrl+'/admin/feedbackncomplaint?'+jQuery.param(params);
 	        }
 	    });
-
+/*
 	    document.getElementById("filter").onclick = function() {
             var baseUrl = "{{URL::to('/')}}";
             var params = {};
@@ -334,7 +334,7 @@
 			var company = document.getElementById("company");
 			var companyValue = company.options[company.selectedIndex].value;
 			var lab = document.getElementById("lab");
-			var labValue = lab.options[lab.selectedIndex].value;
+			var labValue = lab.options[lab.selectedIndex].value;*/
 /*sorting*/
 			/*var sort_by = document.getElementById("sort_by");
 			var sort_byValue = sort_by.options[sort_by.selectedIndex].value;
@@ -342,7 +342,7 @@
 			var sort_typeValue = sort_type.options[sort_type.selectedIndex].value;*/
 /*end sorting*/
 
-			params['search'] = search_value;
+			/*params['search'] = search_value;
 			
 			if (beforeValue != ''){
 				params['before_date'] = beforeValue;
@@ -358,7 +358,7 @@
 			}
 			if (labValue != ''){
 				params['lab'] = labValue;
-			}
+			}*/
 /*sorting*/			
 			/*if (sort_byValue != ''){
 				params['sort_by'] = sort_byValue;
@@ -367,10 +367,10 @@
 				params['sort_type'] = sort_typeValue;
 			}*/
 /*end sorting*/			
-			document.location.href = baseUrl+'/admin/feedbackncomplaint?'+jQuery.param(params);
-	    };
+/*			document.location.href = baseUrl+'/admin/feedbackncomplaint?'+jQuery.param(params);
+	    };*/
 
-	    document.getElementById("excel").onclick = function() {
+/*	    document.getElementById("excel").onclick = function() {
             var baseUrl = "{{URL::to('/')}}";
             var params = {};
 			var search_value = document.getElementById("search_value").value;
@@ -383,7 +383,7 @@
 			var company = document.getElementById("company");
 			var companyValue = company.options[company.selectedIndex].value;
 			var lab = document.getElementById("lab");
-			var labValue = lab.options[lab.selectedIndex].value;
+			var labValue = lab.options[lab.selectedIndex].value;*/
 			
 /*sorting*/
 			/*var sort_by = document.getElementById("sort_by");
@@ -392,7 +392,7 @@
 			var sort_typeValue = sort_type.options[sort_type.selectedIndex].value;*/
 /*end sorting*/
 
-			params['search'] = search_value;
+/*			params['search'] = search_value;
 			
 			if (beforeValue != ''){
 				params['before_date'] = beforeValue;
@@ -408,7 +408,7 @@
 			}
 			if (labValue != ''){
 				params['lab'] = labValue;
-			}
+			}*/
 /*sorting*/			
 			/*if (sort_byValue != ''){
 				params['sort_by'] = sort_byValue;
@@ -417,8 +417,8 @@
 				params['sort_type'] = sort_typeValue;
 			}*/
 /*end sorting*/			
-			document.location.href = baseUrl+'/feedbackncomplaint/excel?'+jQuery.param(params);
-	    };
+/*			document.location.href = baseUrl+'/feedbackncomplaint/excel?'+jQuery.param(params);
+	    };*/
 	});
 </script>
 @endsection
