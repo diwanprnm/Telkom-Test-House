@@ -1641,9 +1641,9 @@ class PengujianController extends Controller
     }
 	
 	public function insertKuisioner(Request $request){
+		// print_r($request->all());exit;
 		$currentUser = Auth::user();
 		$tanggal = strtotime($request->input('tanggal'));
-		
 		$quest = new Questioner;
 		$quest->id = Uuid::uuid4();
 		$quest->examination_id = $request->input('exam_id');
@@ -1693,12 +1693,8 @@ class PengujianController extends Controller
 				$questioner_dyn->order_question = ($i+1);
 				$questioner_dyn->is_essay = $request->input('is_essay')[$i];
 				$questioner_dyn->questioner_date = date('Y-m-d', $tanggal);
-				$questioner_dyn->eks_answer = $request->input('eks')[$i];
-				if(isset($request->input('pref')[$i])){
-					$questioner_dyn->perf_answer = $request->input('pref')[$i];
-				}else{
-					$questioner_dyn->perf_answer = 0;
-				}
+				$questioner_dyn->eks_answer = $request->input('eks'.$i);
+				$questioner_dyn->perf_answer = $request->input('is_essay')[$i] == 1 ? 0 : $request->input('pref'.$i);
 				
 				$questioner_dyn->created_by = $currentUser->id;
 				$questioner_dyn->created_at = date('Y-m-d H:i:s');

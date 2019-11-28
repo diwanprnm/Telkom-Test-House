@@ -132,7 +132,7 @@
 			url: 'orderSlideshow',
 			data: {'_token':"{{ csrf_token() }}", 'position':data},
 			beforeSend: function(){
-				document.getElementById("overlay").style.display="inherit";
+				// document.getElementById("overlay").style.display="inherit";
 			},
 			success: function (data) {
 				console.log(data);

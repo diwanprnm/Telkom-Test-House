@@ -230,13 +230,13 @@ class HomeController extends Controller
 		
 		if($currentUser){
 			if($category == 'qa'){
-				$query_stels = "SELECT DISTINCT s.code as stel ,s.name as device_name, ssd.attachment as file, ssd.id as id_folder
+				$query_stels = "SELECT DISTINCT s.code as stel ,s.name as device_name s.type as lab, ssd.attachment as file, ssd.id as id_folder
 				FROM stels s,stels_sales ss,stels_sales_detail ssd, companies c , users u
 				WHERE s.id = ssd.stels_id AND s.is_active = 1 AND ss.id = ssd.stels_sales_id AND ss.user_id = u.id AND u.company_id = c.id
 				AND ss.payment_status = 1 AND c.id = '".$currentUser->company->id."'";
 				$data_stels = DB::select($query_stels);				
 			}else{
-				$query_stels = "SELECT code as stel, name as device_name FROM stels WHERE is_active = 1 ORDER BY name";
+				$query_stels = "SELECT code as stel, name as device_name, type as lab FROM stels WHERE is_active = 1 ORDER BY name";
 				$data_stels = DB::select($query_stels);
 			}
 			

@@ -18,6 +18,30 @@
 		<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">  
 	--> 
 @section('content')
+<style type="text/css">
+	.radio-toolbar input[type="radio"] {
+	  opacity: 0;
+	  position: fixed;
+	  width: 0;
+	}
+	.radio-toolbar label {
+	    display: inline-block;
+	    background-color: #ddd;
+	    padding: 6%;
+	    font-family: sans-serif, Arial;
+	    border-radius: 100%;
+	}
+	.radio-toolbar input[type="radio"]:checked + label {
+	    background-color:#bfb;
+	    border-color: #4c4;
+	}
+	.radio-toolbar input[type="radio"]:focus + label {
+	    border: 2px dashed #444;
+	}
+	.radio-toolbar label:hover {
+	  background-color: #dfd;
+	}
+</style>
  		<!-- Page Title
 		============================================= -->
 		<section id="page-title">
@@ -1309,8 +1333,8 @@
                       <tr>
                         <th>NO</th>
                         <th>PERTANYAAN</th>
-                        <th>TINGKAT KEPENTINGAN</th>
-                        <th>TINGKAT KEPUASAN</th>
+                        <th style="width: 25%;">TINGKAT KEPENTINGAN</th>
+                        <th style="width: 25%;">TINGKAT KEPUASAN</th>
                       </tr>
                       <tbody>
             <?php $no = 0; ?>
@@ -1322,16 +1346,32 @@
                 @if($item->is_essay)
                 <td colspan = 2>{{ $item->question }}</td>
                 <td colspan = 2>
-                  <textarea name="eks[]" class="form-control" placeholder="..."></textarea>
+                  <textarea name="eks{{$no-1}}" class="form-control" placeholder="..."></textarea>
                 </td>
                 @else
                 <td>{{ $no }}</td>
                 <td>{{ $item->question }}</td>
                 <td>
-                  <input type="number" name="eks[]" min="1" max="10" value="10" placeholder="1-10" class="form-control">
+                	<div class="radio-toolbar">
+                		<?php
+                			for ($i=0; $i<10 ; $i++) { 
+                		?>
+                				<input type="radio" id="eks{{$no.$i}}" name="eks{{$no-1}}" value="{{$i+1}}" <?php echo $i == 7 ? "checked" : "";?>><label for="eks{{$no.$i}}">{{$i+1}}</label>
+                		<?php
+                			}
+                		?>
+                	</div>
                 </td>
                 <td>
-                  <input type="number" name="pref[]" min="1" max="10" value="10" placeholder="1-10" class="form-control">
+                	<div class="radio-toolbar">
+                		<?php
+                			for ($i=0; $i<10 ; $i++) { 
+                		?>
+                				<input type="radio" id="pref{{$no.$i}}" name="pref{{$no-1}}" value="{{$i+1}}" <?php echo $i == 7 ? "checked" : "";?>><label for="pref{{$no.$i}}">{{$i+1}}</label>
+                		<?php
+                			}
+                		?>
+                	</div>
                 </td>
                 @endif
               </tr>
