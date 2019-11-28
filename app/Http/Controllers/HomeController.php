@@ -239,6 +239,8 @@ class HomeController extends Controller
 				$query_stels = "SELECT code as stel, name as device_name, type as lab FROM stels WHERE is_active = 1 ORDER BY name";
 				$data_stels = DB::select($query_stels);
 			}
+			$query_layanan = ExaminationLab::where('is_active', 0);
+            $data_layanan = $query_layanan->get();
 			
 			$query = "SELECT
 				e.id,
@@ -280,6 +282,12 @@ class HomeController extends Controller
 			AND e.id = '".$id."'
 			";
 			$userData = DB::select($query);
+			
+			$data_layanan_not_active = array();
+			foreach ($data_layanan as $data) {
+				array_push($data_layanan_not_active, $data->id);
+			}
+
 			$admins = AdminRole::where('registration_status',1)->get()->toArray();
 			foreach ($admins as $admin) { 
 				$data= array( 
@@ -318,6 +326,7 @@ class HomeController extends Controller
 				->with('userData', $userData[0])
 				->with('jns_pengujian', $category)
 				->with('data_stels', $data_stels)
+				->with('data_layanan_not_active', $data_layanan_not_active)
 				->with('page', $page);   
 		}else{ 
 			return redirect("/login");
