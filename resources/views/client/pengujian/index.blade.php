@@ -27,9 +27,8 @@
 	.radio-toolbar label {
 	    display: inline-block;
 	    background-color: #ddd;
-	    padding: 6%;
+	    padding: 2%;
 	    font-family: sans-serif, Arial;
-	    border-radius: 100%;
 	}
 	.radio-toolbar input[type="radio"]:checked + label {
 	    background-color:#bfb;
@@ -1356,7 +1355,7 @@
                 		<?php
                 			for ($i=0; $i<10 ; $i++) { 
                 		?>
-                				<input type="radio" id="eks{{$no.$i}}" name="eks{{$no-1}}" value="{{$i+1}}" <?php echo $i == 7 ? "checked" : "";?>><label for="eks{{$no.$i}}">{{$i+1}}</label>
+                				<input type="radio" id="eks{{$no.$i}}" name="eks{{$no-1}}" value="{{$i+1}}" <?php echo $i == 0 ? "checked" : "";?>><label for="eks{{$no.$i}}">{{$i+1}}</label>
                 		<?php
                 			}
                 		?>
@@ -1367,7 +1366,7 @@
                 		<?php
                 			for ($i=0; $i<10 ; $i++) { 
                 		?>
-                				<input type="radio" id="pref{{$no.$i}}" name="pref{{$no-1}}" value="{{$i+1}}" <?php echo $i == 7 ? "checked" : "";?>><label for="pref{{$no.$i}}">{{$i+1}}</label>
+                				<input type="radio" id="pref{{$no.$i}}" name="pref{{$no-1}}" value="{{$i+1}}" <?php echo $i == 0 ? "checked" : "";?>><label for="pref{{$no.$i}}">{{$i+1}}</label>
                 		<?php
                 			}
                 		?>
