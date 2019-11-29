@@ -79,52 +79,6 @@
 			width: 100%;
 		}
 	}
-
-	/* padding-bottom and top for image */
-.mfp-no-margins img.mfp-img {
-	padding: 0;
-}
-/* position of shadow behind the image */
-.mfp-no-margins .mfp-figure:after {
-	top: 0;
-	bottom: 0;
-}
-/* padding for main container */
-.mfp-no-margins .mfp-container {
-	padding: 0;
-}
-
-
-/* 
-
-for zoom animation 
-uncomment this part if you haven't added this code anywhere else
-
-*/
-/*
-
-.mfp-with-zoom .mfp-container,
-.mfp-with-zoom.mfp-bg {
-	opacity: 0;
-	-webkit-backface-visibility: hidden;
-	-webkit-transition: all 0.3s ease-out; 
-	-moz-transition: all 0.3s ease-out; 
-	-o-transition: all 0.3s ease-out; 
-	transition: all 0.3s ease-out;
-}
-
-.mfp-with-zoom.mfp-ready .mfp-container {
-		opacity: 1;
-}
-.mfp-with-zoom.mfp-ready.mfp-bg {
-		opacity: 0.8;
-}
-
-.mfp-with-zoom.mfp-removing .mfp-container, 
-.mfp-with-zoom.mfp-removing.mfp-bg {
-	opacity: 0;
-}
-*/
 </style>
 	<link rel="stylesheet" href="{{url('vendor/chosen/chosen.css')}}">
  	<section id="slider" class="slider-parallax swiper_wrapper clearfix" style="height: 600px;" data-loop="true">
@@ -323,9 +277,6 @@ uncomment this part if you haven't added this code anywhere else
 		</div>
 
 	</section><!-- #content end -->
-<a class="image-popup-no-margins" href="images/services/1.jpg">
-	<img src="images/services/1.jpg" style="width: 100%; height: 100%;">
-</a>
 	@if($data_pop_up_information)
 		<div id="modal_notice" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
 	        <img src="media/certification/<?php echo $data_pop_up_information[0]->image?>" class="modal-content">
@@ -336,30 +287,6 @@ uncomment this part if you haven't added this code anywhere else
 
 @section('content_js')
 <script>
-	(function($){
-	    $(window).load(function() {
-	       $('.image-popup-no-margins').trigger('click');    	
-	    });
-	})(jQuery);
-	$(document).ready(function() {
-
-		$('.image-popup-no-margins').magnificPopup({
-			type: 'image',
-			enableEscapeKey: false,
-			closeOnBgClick: false,
-			closeOnContentClick: false,
-			fixedContentPos: true,
-			mainClass: 'mfp-img-mobile',
-			image: {
-				verticalFit: true
-			},
-			zoom: {
-				enabled: true,
-				duration: 300 // don't foget to change the duration also in CSS
-			}
-		});
-
-	});
 	// Set individual slide timeout for dynamic autoplay
 	var setSwiperSlideTimeout = function ( swiper ) {
 	    var timeout = $( swiper.slides[ swiper.activeIndex ] ).data( "timeout" );
