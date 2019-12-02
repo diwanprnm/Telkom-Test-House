@@ -329,7 +329,7 @@ uncomment this part if you haven't added this code anywhere else
 		</a>
 	@endif
 		<!-- <div id="modal_notice" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
-	        <img src="media/certification/<?php echo $data_pop_up_information[0]->image?>" class="modal-content">
+	        <img src="media/certification/<?php // echo $data_pop_up_information[0]->image?>" class="modal-content">
 	        <div id="caption"><span class="close" data-dismiss="modal">{{ trans('translate.close') }} <i class="fa fa-times-circle-o" aria-hidden="true"></i></span></div>
 		</div> -->
 @endsection
