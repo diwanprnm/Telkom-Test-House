@@ -324,8 +324,8 @@ uncomment this part if you haven't added this code anywhere else
 
 	</section><!-- #content end -->
 	@if($data_pop_up_information)
-		<a class="image-popup-no-margins" href="media/certification/<?php echo $data_pop_up_information[0]->image?>">
-			<img src="media/certification/<?php echo $data_pop_up_information[0]->image?>" style="width: 100%; height: auto;">
+		<a class="image-popup-no-margins" href="media/popupinformation/<?php echo $data_pop_up_information[0]->image?>">
+			<img src="media/popupinformation/<?php echo $data_pop_up_information[0]->image?>" style="width: 100%; height: auto;">
 		</a>
 	@endif
 		<!-- <div id="modal_notice" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
