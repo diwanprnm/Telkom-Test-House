@@ -42,8 +42,8 @@
 								echo strip_tags($data[0]->description_english);
 							}*/
 							?>
-						@endif -->
-					</div>
+						@endif
+					</div> -->
 
 					<div class="col_full">
 
