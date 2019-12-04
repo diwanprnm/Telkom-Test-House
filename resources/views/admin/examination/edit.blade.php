@@ -4616,12 +4616,12 @@
 			}else{
 				$('#myModalketerangan_lap_uji').modal('hide');
 			}			
-		}else{
+		}/*else{
 			if(!document.getElementById('hide_attachment_form-lap-uji').value){
 				alert("Laporan Hasil Pengujian belum ada / di-upload oleh Test Engineer!");
 				return false;
 			}
-		}
+		}*/
 	});
 </script>
 @if($data->examination_type_id == '1')
