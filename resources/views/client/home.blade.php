@@ -324,7 +324,7 @@ uncomment this part if you haven't added this code anywhere else
 
 	</section><!-- #content end -->
 	@if($data_pop_up_information)
-		<a class="image-popup-no-margins" href="media/popupinformation/<?php echo $data_pop_up_information[0]->image?>">
+		<a class="image-popup-no-margins" href="media/popupinformation/<?php echo $data_pop_up_information[0]->image?>" style = "display: none;">
 			<img src="media/popupinformation/<?php echo $data_pop_up_information[0]->image?>" style="width: 100%; height: auto;">
 		</a>
 	@endif

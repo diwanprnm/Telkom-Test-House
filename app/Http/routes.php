@@ -4572,6 +4572,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::get('/charge/excel', 'ExaminationChargeController@excel');
 	Route::get('/calibration/excel', 'CalibrationChargeController@excel');
 	Route::get('/spk/excel', 'SPKController@excel');
+	Route::get('/feedbackncomplaint/excel', 'FeedbackComplaintController@excel');
 
 Route::post('/submitPermohonan', 'PermohonanController@submit');
 Route::post('/uploadPermohonan', 'PermohonanController@upload');

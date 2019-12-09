@@ -53,10 +53,14 @@
 						<h4>Quality Assurance (QA)</h4>
 						<p>{{ trans('translate.subtitle_qa_process') }}</p>
 							<a href="#videoStory1" class="btn btn-default btn-sm videoLink">{{ trans('translate.video_guide') }} <i class="fa fa-play-circle" aria-hidden="true">&nbsp;</i></a>
-						@if(count($data_layanan))
-							<a class="button button-3d nomargin btn-sky" data-toggle="modal" data-target="#modal_status_layanan_qa">{{ trans('translate.process') }}</a>
+						@if($qs_certificate_date == 1)
+							<a class="button button-3d nomargin btn-sky" data-toggle="modal" data-target="#modal_qs_certificate_date">{{ trans('translate.process') }}</a>
 						@else
-							<a href="{{url('detailprocess/qa')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
+							@if(count($data_layanan))
+								<a class="button button-3d nomargin btn-sky" data-toggle="modal" data-target="#modal_status_layanan_qa">{{ trans('translate.process') }}</a>
+							@else
+								<a href="{{url('detailprocess/qa')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
+							@endif
 						@endif
 					</div>
 					<div id="videoStory1" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
@@ -118,10 +122,14 @@
 						<h4>Type Approval (TA)</h4>
 						<p>{{ trans('translate.subtitle_ta_process') }}</p>
 						<a href="#videoStory2" class="btn btn-default btn-sm videoLink">{{ trans('translate.video_guide') }} <i class="fa fa-play-circle" aria-hidden="true">&nbsp;</i></a>
-						@if(count($data_layanan))
-							<a class="button button-3d nomargin btn-sky" data-toggle="modal" data-target="#modal_status_layanan_ta">{{ trans('translate.process') }}</a>
+						@if($qs_certificate_date == 1)
+							<a class="button button-3d nomargin btn-sky" data-toggle="modal" data-target="#modal_qs_certificate_date">{{ trans('translate.process') }}</a>
 						@else
-							<a href="{{url('detailprocess/ta')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
+							@if(count($data_layanan))
+								<a class="button button-3d nomargin btn-sky" data-toggle="modal" data-target="#modal_status_layanan_ta">{{ trans('translate.process') }}</a>
+							@else
+								<a href="{{url('detailprocess/ta')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
+							@endif
 						@endif
 					</div>
 					<div id="videoStory2" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
@@ -183,10 +191,14 @@
 						<h4>Voluntary Test (VT)</h4>
 						<p>{{ trans('translate.subtitle_vt_process') }}</p>
 						<a href="#videoStory3" class="btn btn-default btn-sm videoLink">{{ trans('translate.video_guide') }} <i class="fa fa-play-circle" aria-hidden="true">&nbsp;</i></a>
-						@if(count($data_layanan))
-							<a class="button button-3d nomargin btn-sky" data-toggle="modal" data-target="#modal_status_layanan_vt">{{ trans('translate.process') }}</a>
+						@if($qs_certificate_date == 1)
+							<a class="button button-3d nomargin btn-sky" data-toggle="modal" data-target="#modal_qs_certificate_date">{{ trans('translate.process') }}</a>
 						@else
-							<a href="{{url('detailprocess/vt')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
+							@if(count($data_layanan))
+								<a class="button button-3d nomargin btn-sky" data-toggle="modal" data-target="#modal_status_layanan_vt">{{ trans('translate.process') }}</a>
+							@else
+								<a href="{{url('detailprocess/vt')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
+							@endif
 						@endif
 					</div>
 					<div id="videoStory3" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
@@ -247,10 +259,14 @@
 					<div class="col-md-8">
 						<h4>Calibration (CAL)</h4>
 						<p>{{ trans('translate.subtitle_cal_process') }}</p>
-						@if(count($data_layanan))
-							<a class="button button-3d nomargin btn-sky" data-toggle="modal" data-target="#modal_status_layanan_cal">{{ trans('translate.process') }}</a>
+						@if($qs_certificate_date == 1)
+							<a class="button button-3d nomargin btn-sky" data-toggle="modal" data-target="#modal_qs_certificate_date">{{ trans('translate.process') }}</a>
 						@else
-							<a href="{{url('detailprocess/cal')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
+							@if(count($data_layanan))
+								<a class="button button-3d nomargin btn-sky" data-toggle="modal" data-target="#modal_status_layanan_cal">{{ trans('translate.process') }}</a>
+							@else
+								<a href="{{url('detailprocess/cal')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
+							@endif
 						@endif
 					</div>
 					<div id="modal_status_layanan_cal" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
@@ -300,6 +316,29 @@
 				      </div>
 				    </div>
 				</div>
+
+				<div id="modal_qs_certificate_date" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
+			      <div class="modal-dialog modal-lg">
+
+			        <!-- Modal content-->
+			        <div class="modal-content">
+			          <div class="modal-header">
+			            <button type="button" class="close" data-dismiss="modal">&times;</button>
+			            <h2 class="modal-title">{{ trans('translate.attention') }}</h2>
+			          </div>
+			          <div class="modal-body pre-scrollable" style="padding-bottom: 20%;">
+			               <div class="row">
+			               		<h2>{{ trans('translate.qs_certifcate_date_expired_message1') }}
+			               		{{ trans('translate.qs_certifcate_date_expired_message2') }}</h2>
+			                </div>
+			          </div>
+			          <div class="modal-footer">
+			          	<button type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
+			          </div>
+			        </div>
+
+			      </div>
+			    </div>
 
 			</div>
 			

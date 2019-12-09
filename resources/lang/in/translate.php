@@ -412,4 +412,7 @@ return [
 	'message_close_lab_separate' => 'Pendaftaran Pengujian Perangkat di beberapa Lab TELKOM DDS Sudah Ditutup : ',
 	'close_until' => 'ditutup sampai',
 	'available_stel' => 'Berikut adalah daftar referensi uji yang masih dapat melakukan registrasi pengujian : ',
+
+	'qs_certifcate_date_expired_message1' => 'Tanggal Sertifikat Sistem Mutu sudah Kadaluarsa (expired)',
+	'qs_certifcate_date_expired_message2' => 'Silakan hubungi petugas kami untuk memperbaharui Tanggal Sertifikat Sistem Mutu Anda.',
 ];

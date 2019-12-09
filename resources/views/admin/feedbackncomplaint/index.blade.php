@@ -29,10 +29,10 @@
 		<div class="container-fluid container-fullw bg-white">
 	        <div class="row">
 	        	<div class="col-md-6">
-	    			<!-- <a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><i class="ti-filter"></i> Filter</a>
+	    			<!-- <a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><i class="ti-filter"></i> Filter</a> -->
 	    			<button id="excel" type="submit" class="btn btn-info pull-left">
                         Export to Excel
-                    </button> -->
+                    </button>
 				</div>
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table">
@@ -370,11 +370,11 @@
 /*			document.location.href = baseUrl+'/admin/feedbackncomplaint?'+jQuery.param(params);
 	    };*/
 
-/*	    document.getElementById("excel").onclick = function() {
+	    document.getElementById("excel").onclick = function() {
             var baseUrl = "{{URL::to('/')}}";
             var params = {};
 			var search_value = document.getElementById("search_value").value;
-			var before = document.getElementById("before_date");
+			/*var before = document.getElementById("before_date");
             var after = document.getElementById("after_date");
 			var beforeValue = before.value;
 			var afterValue = after.value;
@@ -392,9 +392,9 @@
 			var sort_typeValue = sort_type.options[sort_type.selectedIndex].value;*/
 /*end sorting*/
 
-/*			params['search'] = search_value;
+			params['search'] = search_value;
 			
-			if (beforeValue != ''){
+			/*if (beforeValue != ''){
 				params['before_date'] = beforeValue;
 			}
 			if (afterValue != ''){
@@ -417,8 +417,8 @@
 				params['sort_type'] = sort_typeValue;
 			}*/
 /*end sorting*/			
-/*			document.location.href = baseUrl+'/feedbackncomplaint/excel?'+jQuery.param(params);
-	    };*/
+			document.location.href = baseUrl+'/feedbackncomplaint/excel?'+jQuery.param(params);
+	    };
 	});
 </script>
 @endsection

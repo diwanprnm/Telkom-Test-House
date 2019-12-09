@@ -409,4 +409,7 @@ return [
 	'message_close_lab_separate' => 'Registration of Equipment Testing in some Laboratorium has been closed : ',
 	'close_until' => 'close until',
 	'available_stel' => 'This is a list of test references that can still register for testing : ',
+
+	'qs_certifcate_date_expired_message1' => 'Quality System Certificate Period Has Passed (expired)',
+	'qs_certifcate_date_expired_message2' => 'Please contact our staff to renew your Quality System Certificate Date.',
 ];

@@ -115,6 +115,10 @@ class HomeController extends Controller
     	$currentUser = Auth::user();
 		
 		if($currentUser){
+			$date = strtotime($currentUser->company->qs_certificate_date);
+			$now = strtotime('now');
+			$qs_certificate_date = $date < $now ? 1 : 0;
+
 			$query_url = "SELECT * FROM youtube WHERE id = 1";
             $data_url = DB::select($query_url);
 
@@ -150,6 +154,7 @@ class HomeController extends Controller
 	    	$data = array();
 	    	$page = "process";
 			return view('client.process')
+				->with('qs_certificate_date', $qs_certificate_date)
 				->with('qa_video_url', $qa_video_url)
 				->with('ta_video_url', $ta_video_url)
 				->with('vt_video_url', $vt_video_url)
@@ -170,6 +175,12 @@ class HomeController extends Controller
     	$currentUser = Auth::user();
 		
 		if($currentUser){
+			$date = strtotime($currentUser->company->qs_certificate_date);
+			$now = strtotime('now');
+			if($date < $now){
+				return view("errors.401_qs_certificate_date");
+			}
+
 			$query_layanan_active = ExaminationLab::where('is_active', 1);
             $data_layanan_active = $query_layanan_active->get();
             if(count($data_layanan_active) == 0){
