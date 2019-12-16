@@ -192,7 +192,7 @@
 										@foreach($data_stels as $item)
 											@if(in_array($item->lab,$data_layanan_not_active))
 												@if($item->stel == $userData->referensi_perangkat)
-													<option value="{{ $item->stel }}" disabled selected>{{ $item->stel }} || {{ $item->device_name }}</option>
+													<option value="{{ $item->stel }}" selected>{{ $item->stel }} || {{ $item->device_name }}</option>
 												@else
 													<option value="{{ $item->stel }}" disabled>{{ $item->stel }} || {{ $item->device_name }}</option>
 												@endif
