@@ -24,6 +24,9 @@ use File;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Client;
+
 use App\NotificationTable;
 
 class ProductsController extends Controller
@@ -258,6 +261,64 @@ class ProductsController extends Controller
             $invoice_number = "STEL ".str_pad($number, $fill, '0', STR_PAD_LEFT)."/".$bulan.'/'.date('Y');
         }
 
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json', 
+                            'Authorization' => 'apiKey 4ZU03BLNm1ebXSlQa4ou3y:6MHfjHpbOVv3FKTFAf8jIv'
+                        ],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+        ]);
+
+        $data = [
+                "from" => [
+                    "name" => "user-name",
+                    "address" => "User Address.",
+                    "phone" => "user Phone",
+                    "email" => "user-mail",
+                    "npwp" => "npwp-perusahaan"
+                ],
+                "to" => [
+                    "name" => "Telkom Test House",
+                    "address" => "Jl. Gegerkalong Hilir, Sukarasa, Sukasari, Kota Bandung, Jawa Barat 40152.",
+                    "phone" => "(+62) 812-2483-7500",
+                    "email" => "urelddstelkom@gmail.com",
+                    "npwp" => "cari-tahu"
+                ],
+                "product_id" => "5def1d54d2622f00108f3996",
+                "details" => [
+                    [
+                        "item" => "S-TSEL E-015-2012 Ver 1.1",
+                        "description" => "Spesifikasi Telekomunikasi Litihum Iron Phosphate (LiFePO4)-Ion Battery",
+                        "quantity" => 1,
+                        "price" => 1500000,
+                        "total" => 1500000
+                    ],
+                    [
+                        "item" => "S-TSEL F-005-2011 Ver.1.1",
+                        "description" => "Kabel Koaksial RF (Kabel Feeder)",
+                        "quantity" => 1,
+                        "price" => 1500000,
+                        "total" => 1500000
+                    ]
+                ],
+                "created" => [
+                    "by" => "user-name",
+                    "reference_id" => "user-id"
+                ]
+            ];
+
+        $params['json'] = $data;
+        /*$res_purchase = $client->post("v1/orders", $params)->getBody();
+        $purchase = json_decode($res_purchase);*/
+
+        /*get
+            $purchase->status; //if true lanjut, else panggil lagi API ny
+            $purchase->data->_id;
+            $purchase->data->total_price;
+            $purchase->data->tax;
+            $purchase->data->unique_code;
+        */
+
         if($request->input('agree')){
             $logs = new Logs;
             $currentUser = Auth::user();
@@ -272,7 +333,8 @@ class ProductsController extends Controller
             $page = "checkout";
             return view('client.STEL.checkout') 
                 ->with('page', $page)
-                 ->with('invoice_number', $invoice_number);
+                // ->with('PO_ID', $purchase->data->_id)
+                ->with('invoice_number', $invoice_number);
         }else{
             return redirect('products');
         } 
@@ -353,8 +415,36 @@ class ProductsController extends Controller
                         $logs->page = "Client STEL";
                         $logs->save();
 
-
                         Cart::destroy();
+
+
+                        $client = new Client([
+                            'headers' => ['Content-Type' => 'application/json', 
+                                            'Authorization' => 'apiKey 4ZU03BLNm1ebXSlQa4ou3y:6MHfjHpbOVv3FKTFAf8jIv'
+                                        ],
+                            'base_uri' => config("app.url_api_tpn"),
+                            'timeout'  => 60.0,
+                        ]);
+
+                        $data = [
+                            "po_id" => $request->input("PO_ID"),
+                            "due_date" => "2019-12-23 10:00:00", //kalo SPB 14 hari
+                            "include_tax_invoice" => true,
+                            "created" => [
+                                "by" => "user-name",
+                                "reference_id" => "user-id"
+                            ]
+                        ];
+
+                    $params['json'] = $data;
+                    /*$res_billing = $client->post("v1/billings", $params)->getBody();
+                    $billing = json_decode($res_billing);*/
+
+                    /*get
+                        $billing->status; //if true lanjut, else panggil lagi API ny
+                        $billing->data->_id; //BILLING_ID
+                    */
+
                     } catch(\Illuminate\Database\QueryException $e){ 
                         Session::flash('error', 'Failed To Checkout');
                         return redirect('products');

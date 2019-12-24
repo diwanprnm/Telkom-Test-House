@@ -25,6 +25,8 @@ use File;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Client;
 
 use App\Events\Notification;
 use App\NotificationTable;
@@ -229,6 +231,7 @@ class SalesController extends Controller
         $STELSales = STELSales::find($id);
         $oldStel = $STELSales;  
 		$notifUploadSTEL = 0;
+        $data = array();
         if ($request->has('payment_status')){
 			for($i=0;$i<count($request->input('stels_sales_detail_id'));$i++){
 				if ($request->file('stel_file')[$i]) {
@@ -242,13 +245,43 @@ class SalesController extends Controller
 						$STELSalesDetail->attachment = $name_file;
 						$STELSalesDetail->save();
 						$notifUploadSTEL = 1;
+
+                        $data [] = 
+                            [
+                                'name' => "file",
+                                'contents' => fopen($path_file.'/'.$name_file, 'r'),
+                                'filename' => $request->file('stel_file')[$i]->getClientOriginalName()
+                            ]
+                        ;
 					}else{
 						Session::flash('error', 'Save STEL to directory failed');
 						return redirect('/admin/sales/'.$STELSales->id.'/edit');
 					}
 				}
 			}
-			
+            if($data != null){
+                $data [] = array(
+                    'name'=>"delivered",
+                    'contents'=>json_encode(['by'=>'user-name', "reference_id" => 'user-id']),
+                );
+
+                // dd($data);
+                $client = new Client([
+                    'headers' => ['Authorization' => 'apiKey 4ZU03BLNm1ebXSlQa4ou3y:6MHfjHpbOVv3FKTFAf8jIv'],
+                    'base_uri' => config("app.url_api_tpn"),
+                    'timeout'  => 60.0,
+                ]);
+
+                $params['multipart'] = $data;
+                /*$res_upload = $client->post("v1/billings/5e0076b8f970af0017666c4a/deliver", $params)->getBody();
+                $upload = json_decode($res_upload);*/
+
+                /*get
+                    $upload->status; //if true lanjut, else panggil lagi API ny
+                    $upload->data->_id;
+                */
+            }
+
 			if ($request->hasFile('kuitansi_file')) {
 				$name_file = 'kuitansi_stel_'.$request->file('kuitansi_file')->getClientOriginalName();
 				$path_file = public_path().'/media/stel/'.$STELSales->id;
