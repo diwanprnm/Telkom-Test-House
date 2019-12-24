@@ -261,7 +261,7 @@ class ProductsController extends Controller
             $invoice_number = "STEL ".str_pad($number, $fill, '0', STR_PAD_LEFT)."/".$bulan.'/'.date('Y');
         }
 
-        $client = new Client([
+        /*$client = new Client([
             'headers' => ['Content-Type' => 'application/json', 
                             'Authorization' => 'apiKey 4ZU03BLNm1ebXSlQa4ou3y:6MHfjHpbOVv3FKTFAf8jIv'
                         ],
@@ -308,7 +308,7 @@ class ProductsController extends Controller
             ];
 
         $params['json'] = $data;
-        /*$res_purchase = $client->post("v1/orders", $params)->getBody();
+        $res_purchase = $client->post("v1/orders", $params)->getBody();
         $purchase = json_decode($res_purchase);*/
 
         /*get
@@ -418,7 +418,7 @@ class ProductsController extends Controller
                         Cart::destroy();
 
 
-                        $client = new Client([
+                        /*$client = new Client([
                             'headers' => ['Content-Type' => 'application/json', 
                                             'Authorization' => 'apiKey 4ZU03BLNm1ebXSlQa4ou3y:6MHfjHpbOVv3FKTFAf8jIv'
                                         ],
@@ -437,7 +437,7 @@ class ProductsController extends Controller
                         ];
 
                     $params['json'] = $data;
-                    /*$res_billing = $client->post("v1/billings", $params)->getBody();
+                    $res_billing = $client->post("v1/billings", $params)->getBody();
                     $billing = json_decode($res_billing);*/
 
                     /*get

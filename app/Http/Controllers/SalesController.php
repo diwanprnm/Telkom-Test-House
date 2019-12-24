@@ -246,13 +246,13 @@ class SalesController extends Controller
 						$STELSalesDetail->save();
 						$notifUploadSTEL = 1;
 
-                        $data [] = 
+                        /*$data [] = 
                             [
                                 'name' => "file",
                                 'contents' => fopen($path_file.'/'.$name_file, 'r'),
                                 'filename' => $request->file('stel_file')[$i]->getClientOriginalName()
                             ]
-                        ;
+                        ;*/
 					}else{
 						Session::flash('error', 'Save STEL to directory failed');
 						return redirect('/admin/sales/'.$STELSales->id.'/edit');
@@ -260,7 +260,7 @@ class SalesController extends Controller
 				}
 			}
             if($data != null){
-                $data [] = array(
+                /*$data [] = array(
                     'name'=>"delivered",
                     'contents'=>json_encode(['by'=>'user-name', "reference_id" => 'user-id']),
                 );
@@ -273,7 +273,7 @@ class SalesController extends Controller
                 ]);
 
                 $params['multipart'] = $data;
-                /*$res_upload = $client->post("v1/billings/5e0076b8f970af0017666c4a/deliver", $params)->getBody();
+                $res_upload = $client->post("v1/billings/5e0076b8f970af0017666c4a/deliver", $params)->getBody();
                 $upload = json_decode($res_upload);*/
 
                 /*get
