@@ -319,6 +319,7 @@ return [
 	'stel_delete_item'		=> 'Are you sure want to delete ?',
 	'stel_price_total'		=> 'Price of Total',
 	'stel_taxes_total'		=> 'Taxes Total',
+	'stel_unique_code'		=> 'Unique Code',
 	'stel_rupiah'			=> 'IDR',
 	'stel_term_condition'	=> 'Term and Condition',
 	'stel_agree_statement'	=> 'Im agree with the term and condition',
@@ -412,4 +413,7 @@ return [
 
 	'qs_certifcate_date_expired_message1' => 'Quality System Certificate Period Has Passed (expired)',
 	'qs_certifcate_date_expired_message2' => 'Please contact our staff to renew your Quality System Certificate Date.',
+
+	'tax_invoice' => 'Tax Invoice',
+	'receipt' => 'Receipt',
 ];

@@ -322,6 +322,7 @@ return [
 	'stel_delete_item'		=> 'Anda yakin menghapus data ini ?',
 	'stel_price_total'		=> 'Total Harga',
 	'stel_taxes_total'		=> 'Total Pajak',
+	'stel_unique_code'		=> 'Kode Unik',
 	'stel_rupiah'			=> 'Rp',
 	'stel_term_condition'	=> 'Persyaratan Dan Ketentuan',
 	'stel_agree_statement'	=> 'Saya Setuju Dengan syarat dan ketentuan diatas',
@@ -415,4 +416,7 @@ return [
 
 	'qs_certifcate_date_expired_message1' => 'Tanggal Sertifikat Sistem Mutu sudah Kadaluarsa (expired)',
 	'qs_certifcate_date_expired_message2' => 'Silakan hubungi petugas kami untuk memperbaharui Tanggal Sertifikat Sistem Mutu Anda.',
+
+	'tax_invoice' => 'Faktur Pajak',
+	'receipt' => 'Kuitansi',
 ];

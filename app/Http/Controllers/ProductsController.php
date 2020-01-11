@@ -239,11 +239,12 @@ class ProductsController extends Controller
     }
 
     public function store(Request $request){
-        Cart::add(['id' => $request->id, 'name' => $request->name,'code' => $request->code, 'qty' => 1, 'price' => $request->price]);
+        Cart::add(['id' => $request->id, 'name' => $request->name.'myTokenProduct'.$request->code, 'qty' => 1, 'price' => $request->price]);
         return redirect('products');
     }
 
     public function checkout(Request $request){ 
+        $currentUser = Auth::user();
         $countStelsSales =  STELSales::where(array())->count();
         $invoice_id = 0; 
         $fill = 3;
@@ -261,67 +262,51 @@ class ProductsController extends Controller
             $invoice_number = "STEL ".str_pad($number, $fill, '0', STR_PAD_LEFT)."/".$bulan.'/'.date('Y');
         }
 
-        /*$client = new Client([
-            'headers' => ['Content-Type' => 'application/json', 
-                            'Authorization' => 'apiKey 4ZU03BLNm1ebXSlQa4ou3y:6MHfjHpbOVv3FKTFAf8jIv'
-                        ],
-            'base_uri' => config("app.url_api_tpn"),
-            'timeout'  => 60.0,
-        ]);
+        /*SEMENTARA*/
+        /*$details = array();
+        foreach (Cart::content() as $row) {
+            $res = explode('myTokenProduct', $row->name);
+            $stel_name = $res[0] ? $res[0] : '-';
+            $stel_code = $res[1] ? $res[1] : '-';
+            $details [] = 
+                [
+                    "item" => $stel_code,
+                    "description" => $stel_name,
+                    "quantity" => $row->qty,
+                    "price" => $row->price,
+                    "total" => $row->price*$row->qty
+                ]
+            ;
+        }
 
         $data = [
-                "from" => [
-                    "name" => "user-name",
-                    "address" => "User Address.",
-                    "phone" => "user Phone",
-                    "email" => "user-mail",
-                    "npwp" => "npwp-perusahaan"
-                ],
-                "to" => [
-                    "name" => "Telkom Test House",
-                    "address" => "Jl. Gegerkalong Hilir, Sukarasa, Sukasari, Kota Bandung, Jawa Barat 40152.",
-                    "phone" => "(+62) 812-2483-7500",
-                    "email" => "urelddstelkom@gmail.com",
-                    "npwp" => "cari-tahu"
-                ],
-                "product_id" => "5def1d54d2622f00108f3996",
-                "details" => [
-                    [
-                        "item" => "S-TSEL E-015-2012 Ver 1.1",
-                        "description" => "Spesifikasi Telekomunikasi Litihum Iron Phosphate (LiFePO4)-Ion Battery",
-                        "quantity" => 1,
-                        "price" => 1500000,
-                        "total" => 1500000
-                    ],
-                    [
-                        "item" => "S-TSEL F-005-2011 Ver.1.1",
-                        "description" => "Kabel Koaksial RF (Kabel Feeder)",
-                        "quantity" => 1,
-                        "price" => 1500000,
-                        "total" => 1500000
-                    ]
-                ],
-                "created" => [
-                    "by" => "user-name",
-                    "reference_id" => "user-id"
-                ]
-            ];
+            "from" => [
+                "name" => $currentUser->name,
+                "address" => $currentUser->address,
+                "phone" => $currentUser->phone_number,
+                "email" => $currentUser->email,
+                "npwp" => $currentUser->company->npwp_number
+            ],
+            "to" => [
+                "name" => "Telkom Test House",
+                "address" => "Jl. Gegerkalong Hilir, Sukarasa, Sukasari, Kota Bandung, Jawa Barat 40152.",
+                "phone" => "(+62) 812-2483-7500",
+                "email" => "urelddstelkom@gmail.com",
+                "npwp" => "-" //cari tahu
+            ],
+            "product_id" => "5def1d54d2622f00108f3996", //product_id TTH
+            "details" => $details,
+            "created" => [
+                "by" => $currentUser->name,
+                "reference_id" => $currentUser->id
+            ]
+        ];
 
-        $params['json'] = $data;
-        $res_purchase = $client->post("v1/orders", $params)->getBody();
-        $purchase = json_decode($res_purchase);*/
-
-        /*get
-            $purchase->status; //if true lanjut, else panggil lagi API ny
-            $purchase->data->_id;
-            $purchase->data->total_price;
-            $purchase->data->tax;
-            $purchase->data->unique_code;
-        */
+        $purchase = $this->api_purchase($data);*/
+        $purchase = null;
 
         if($request->input('agree')){
             $logs = new Logs;
-            $currentUser = Auth::user();
             $logs->user_id = $currentUser->id;
             $logs->id = Uuid::uuid4();
             $logs->action = "Checkout Stel";   
@@ -333,11 +318,49 @@ class ProductsController extends Controller
             $page = "checkout";
             return view('client.STEL.checkout') 
                 ->with('page', $page)
-                // ->with('PO_ID', $purchase->data->_id)
+                ->with('PO_ID', $purchase && $purchase->status == true ? $purchase->data->_id : null)
+                ->with('total_price', $purchase && $purchase->status ? $purchase->data->total_price : Cart::subtotal())
+                ->with('tax', $purchase && $purchase->status == true ? $purchase->data->tax : Cart::tax())
+                ->with('unique_code', $purchase && $purchase->status == true ? $purchase->data->unique_code : '0')
+                ->with('final_price', $purchase && $purchase->status == true ? $purchase->data->final_price : Cart::total())
                 ->with('invoice_number', $invoice_number);
         }else{
             return redirect('products');
         } 
+    }
+
+    public function api_purchase($data){
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json', 
+                            'Authorization' => 'apiKey 4ZU03BLNm1ebXSlQa4ou3y:6MHfjHpbOVv3FKTFAf8jIv'
+                        ],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+        try {
+            
+            $params['json'] = $data;
+            $res_purchase = $client->post("v1/orders", $params)->getBody();
+            $purchase = json_decode($res_purchase);
+
+            /*while ($purchase->status != true) {
+                $this->api_purchase($data);
+            }*/
+
+            /*get
+                $purchase->status; //if true lanjut, else panggil lagi API nya
+                $purchase->data->_id;
+                $purchase->data->total_price;
+                $purchase->data->tax;
+                $purchase->data->unique_code;
+                $purchase->data->final_price;
+            */
+
+            return $purchase;
+        } catch(Exception $e){
+            return null;
+        }
     }
 
     public function doCheckout(Request $request){  
@@ -368,6 +391,25 @@ class ProductsController extends Controller
            $STELSales->created_by =$currentUser->id;
            $STELSales->created_at = date("Y-m-d H:i:s");
             // $STELSales->payment_code =  $result->payment_code;
+
+           /*SEMENTARA*/
+           /*if($request->input("PO_ID")){
+               $data = [
+                    "po_id" => $request->input("PO_ID"),
+                    // "due_date" => "2019-12-23 10:00:00", //kalo SPB 14 hari
+                    "include_tax_invoice" => true,
+                    "created" => [
+                        "by" => $currentUser->name,
+                        "reference_id" => $currentUser->id
+                    ]
+                ];
+
+                $billing = $this->api_billing($data);
+
+                $STELSales->PO_ID = $request->input("PO_ID");
+                $STELSales->BILLING_ID = $billing && $billing->status == true ? $billing->data->_id : null;
+           }*/
+
             try{
                 $save = $STELSales->save();
 
@@ -417,39 +459,11 @@ class ProductsController extends Controller
 
                         Cart::destroy();
 
-
-                        /*$client = new Client([
-                            'headers' => ['Content-Type' => 'application/json', 
-                                            'Authorization' => 'apiKey 4ZU03BLNm1ebXSlQa4ou3y:6MHfjHpbOVv3FKTFAf8jIv'
-                                        ],
-                            'base_uri' => config("app.url_api_tpn"),
-                            'timeout'  => 60.0,
-                        ]);
-
-                        $data = [
-                            "po_id" => $request->input("PO_ID"),
-                            "due_date" => "2019-12-23 10:00:00", //kalo SPB 14 hari
-                            "include_tax_invoice" => true,
-                            "created" => [
-                                "by" => "user-name",
-                                "reference_id" => "user-id"
-                            ]
-                        ];
-
-                    $params['json'] = $data;
-                    $res_billing = $client->post("v1/billings", $params)->getBody();
-                    $billing = json_decode($res_billing);*/
-
-                    /*get
-                        $billing->status; //if true lanjut, else panggil lagi API ny
-                        $billing->data->_id; //BILLING_ID
-                    */
-
                     } catch(\Illuminate\Database\QueryException $e){ 
                         Session::flash('error', 'Failed To Checkout');
                         return redirect('products');
                     } 
-                return redirect('payment_status');
+                return redirect('purchase_history');
             } catch(\Illuminate\Database\QueryException $e){
                 
                 Session::flash('error', 'Failed To Checkout');
@@ -459,6 +473,35 @@ class ProductsController extends Controller
            return redirect('/');
         } 
         
+    }
+
+    public function api_billing($data){
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json', 
+                            'Authorization' => 'apiKey 4ZU03BLNm1ebXSlQa4ou3y:6MHfjHpbOVv3FKTFAf8jIv'
+                        ],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+        try {
+            $params['json'] = $data;
+            $res_billing = $client->post("v1/billings", $params)->getBody();
+            $billing = json_decode($res_billing);
+
+            /*while ($billing->status != true) {
+                $this->api_billing($data);
+            }*/
+
+            /*get
+                $billing->status; //if true lanjut, else panggil lagi API ny
+                $billing->data->_id; //BILLING_ID
+            */
+
+            return $billing;
+        } catch(Exception $e){
+            return null;
+        }
     }
 
     public function destroy($id)

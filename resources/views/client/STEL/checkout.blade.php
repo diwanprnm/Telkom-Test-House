@@ -28,7 +28,7 @@
 					<div class="row">    
 						<p> No. Invoice	: {{$invoice_number}} </p> 
 						<input type="hidden" name="invoice_number" value="{{$invoice_number}}"><br>
-						
+						<input type="hidden" name="PO_ID" value="{{$PO_ID}}"><br>
 						<div class="row"> 
 							<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
 								<thead>
@@ -45,8 +45,13 @@
 									  @foreach(Cart::content() as $row)
 									<tr>
 										<td>1</td>
-										<td>{{$row->name}}</td>
-										<td>{{$row->code}}</td>
+										<?php 
+											$res = explode('myTokenProduct', $row->name);
+											$stel_name = $res[0] ? $res[0] : '-';
+											$stel_code = $res[1] ? $res[1] : '-';
+										?>
+										<td>{{$stel_name}}</td>
+										<td>{{$stel_code}}</td>
 										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($row->price)}}</td> 
 										<td align="center">{{$row->qty}}</td> 
 										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($row->price*$row->qty)}}</td> 
@@ -56,15 +61,19 @@
 								<tfoot>
 									<tr class="list-total-harga">
 										<td colspan="5" align="right">Total</td> 
-										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format(Cart::subtotal())}}</td> 
+										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($total_price)}}</td> 
 									</tr> 
 									<tr class="list-total-harga">
 										<td colspan="5" align="right">{{ trans('translate.stel_taxes_total') }}</td> 
-										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format(Cart::tax())}}</td> 
+										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($tax)}}</td> 
 									</tr> 
 									<tr class="list-total-harga">
-										<td colspan="5" align="right">{{ trans('translate.stel_price_total') }}</td> 
-										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format(Cart::total())}}</td> 
+										<td colspan="5" align="right">{{ trans('translate.stel_unique_code') }}</td> 
+										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($unique_code)}}</td> 
+									</tr> 
+									<tr class="list-total-harga">
+										<td colspan="5" align="right">{{ trans('translate.stel_price_total') }}</td>
+										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($final_price)}}</td> 
 									</tr> 
 								</tfoot>
 							</table> 

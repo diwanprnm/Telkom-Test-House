@@ -151,15 +151,30 @@
 								                        		<td colspan="5" align="right"> </td>
 								                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php 
 								                        			echo 	number_format($total, 0, '.', ',');?></td>
+								                        		<td align="center"> === </td>
 								                        	</tr>
 								                       		<tr>
 								                        		<td colspan="5" align="right"> {{ trans('translate.tax') }}</td>
 								                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php $tax =  $total * (config("cart.tax")/100);
 								                        			echo	number_format($tax, 0, '.', ',');?></td>
+								                        		<td align="center">
+								                        			@if($item->faktur_file != '')
+																		<a target="_blank" href="{{ URL::to('/client/downloadfakturstel/'.$item->id) }}">
+													                    	{{ trans('translate.download') }} {{ trans('translate.tax_invoice') }}
+													                    </a>
+																	@endif
+																</td>
 								                        	</tr>
 								                        	<tr>
 								                        		<td colspan="5" align="right"> Total</td>
 								                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($total+$tax, 0, '.', ',');?></td>
+								                        		<td align="center">
+								                        			@if($item->id_kuitansi != '')
+																		<a target="_blank" href="{{ URL::to('/client/downloadkuitansistel/'.$item->id_kuitansi) }}">
+													                    	{{ trans('translate.download') }} {{ trans('translate.receipt') }}
+													                    </a>
+																	@endif
+																</td>
 								                        	</tr> 
 														</tfoot>
 													</table>

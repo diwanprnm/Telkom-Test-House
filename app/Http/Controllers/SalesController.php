@@ -208,7 +208,7 @@ class SalesController extends Controller
 
     public function edit($id)
     {
-        $select = array("stels_sales.id","stels_sales_attachment.attachment","stels_sales_attachment.stel_sales_id");  
+        $select = array("stels_sales.id","stels_sales.id_kuitansi","stels_sales.faktur_file","stels_sales_attachment.attachment","stels_sales_attachment.stel_sales_id");  
         $stel = STELSalesAttach::select($select)->rightJoin("stels_sales","stels_sales.id","=","stels_sales_attachment.stel_sales_id")
                 ->where("stels_sales.id",$id)->first();
 				
@@ -246,6 +246,7 @@ class SalesController extends Controller
 						$STELSalesDetail->save();
 						$notifUploadSTEL = 1;
 
+                        /*SEMENTARA*/
                         /*$data [] = 
                             [
                                 'name' => "file",
@@ -259,28 +260,30 @@ class SalesController extends Controller
 					}
 				}
 			}
-            if($data != null){
-                /*$data [] = array(
+            /*SEMENTARA*/
+            /*if($STELSales->BILLING_ID != null && $data != null){
+                $data [] = array(
                     'name'=>"delivered",
-                    'contents'=>json_encode(['by'=>'user-name', "reference_id" => 'user-id']),
+                    'contents'=>json_encode(['by'=>$currentUser->name, "reference_id" => $currentUser->id]),
                 );
 
-                // dd($data);
-                $client = new Client([
-                    'headers' => ['Authorization' => 'apiKey 4ZU03BLNm1ebXSlQa4ou3y:6MHfjHpbOVv3FKTFAf8jIv'],
-                    'base_uri' => config("app.url_api_tpn"),
-                    'timeout'  => 60.0,
-                ]);
+                $upload = $this->api_upload($data,$STELSales->BILLING_ID);
 
-                $params['multipart'] = $data;
-                $res_upload = $client->post("v1/billings/5e0076b8f970af0017666c4a/deliver", $params)->getBody();
-                $upload = json_decode($res_upload);*/
+                if($upload){
+                    $data_invoices = [
+                        "billing_id" => $STELSales->BILLING_ID,
+                        "created" => [
+                            "by" => $currentUser->name,
+                            "reference_id" => $currentUser->id
+                        ]
+                    ];
 
-                /*get
-                    $upload->status; //if true lanjut, else panggil lagi API ny
-                    $upload->data->_id;
-                */
-            }
+                    $invoice = $upload && $upload->status == true ? $this->api_invoice($data_invoices) : null;
+
+                    $STELSales->INVOICE_ID = $invoice && $invoice->status == true ? $invoice->data->_id : null;
+                }
+
+            }*/
 
 			if ($request->hasFile('kuitansi_file')) {
 				$name_file = 'kuitansi_stel_'.$request->file('kuitansi_file')->getClientOriginalName();
@@ -416,6 +419,52 @@ class SalesController extends Controller
         }else{
             return redirect('/admin/sales');
         } 
+    }
+
+    public function api_upload($data, $BILLING_ID){
+        $client = new Client([
+            'headers' => ['Authorization' => 'apiKey 4ZU03BLNm1ebXSlQa4ou3y:6MHfjHpbOVv3FKTFAf8jIv'],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+        try {
+            $params['multipart'] = $data;
+            $res_upload = $client->post("v1/billings/".$BILLING_ID."/deliver", $params)->getBody(); //BILLING_ID
+            $upload = json_decode($res_upload);
+
+            /*get
+                $upload->status; //if true lanjut, else panggil lagi API nya, dan jalankan API invoices
+                $upload->data->_id;
+            */
+
+            return $upload;
+        } catch(Exception $e){
+            return null;
+        }
+    }
+
+    public function api_invoice($data_invoices){
+        $client = new Client([
+            'headers' => ['Authorization' => 'apiKey 4ZU03BLNm1ebXSlQa4ou3y:6MHfjHpbOVv3FKTFAf8jIv'],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+        try {
+            $param_invoices['json'] = $data_invoices;
+            $res_invoices = $client->post("v1/invoices", $param_invoices)->getBody();
+            $invoice = json_decode($res_invoices);
+
+            /*get
+                $invoice->status; //if true lanjut, else panggil lagi API ny
+                $invoice->data->_id; //INVOICE_ID
+            */
+
+            return $invoice;
+        } catch(Exception $e){
+            return null;
+        }
     }
 
     public function upload($id)

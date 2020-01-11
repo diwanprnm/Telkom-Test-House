@@ -55,6 +55,13 @@
 									</label>
 									<input type="file" name="kuitansi_file" id="kuitansi_file" class="form-control" accept="application/pdf, image/*">
 								</div>
+								<div class="form-group">
+									@if($data->id_kuitansi != '')
+										<a href="{{ URL::to('/admin/downloadkuitansistel/'.$data->id_kuitansi) }}" target="_blank">
+					                    	{{ $data->id_kuitansi }}
+					                    </a>
+									@endif
+								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
@@ -62,6 +69,13 @@
 										Faktur Pajak File *
 									</label>
 									<input type="file" name="faktur_file" id="faktur_file" class="form-control" accept="application/pdf">
+								</div>
+								<div class="form-group">
+									@if($data->faktur_file != '')
+										<a href="{{ URL::to('/admin/downloadfakturstel/'.$data->id) }}" target="_blank">
+					                    	{{ $data->faktur_file }}
+					                    </a>
+									@endif
 								</div>
 							</div>
 	                        <div class="col-md-12">
