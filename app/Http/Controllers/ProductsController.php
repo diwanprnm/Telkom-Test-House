@@ -288,11 +288,11 @@ class ProductsController extends Controller
                 "npwp" => "-" //cari tahu
             ],
             "to" => [
-                "name" => $currentUser->name,
-                "address" => $currentUser->address,
-                "phone" => $currentUser->phone_number,
-                "email" => $currentUser->email,
-                "npwp" => $currentUser->company->npwp_number
+                "name" => $currentUser->name ? $currentUser->name : "-",
+                "address" => $currentUser->address ? $currentUser->address : "-",
+                "phone" => $currentUser->phone_number ? $currentUser->phone_number : "-",
+                "email" => $currentUser->email ? $currentUser->email : "-",
+                "npwp" => $currentUser->company->npwp_number ? $currentUser->company->npwp_number : "-"
             ],
             "product_id" => config("app.product_id_tth"), //product_id TTH
             "details" => $details,
