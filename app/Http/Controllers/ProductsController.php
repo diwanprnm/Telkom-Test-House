@@ -303,7 +303,6 @@ class ProductsController extends Controller
         ];
 
         $purchase = $this->api_purchase($data);
-        // $purchase = null;
 
         if($request->input('agree')){
             $logs = new Logs;

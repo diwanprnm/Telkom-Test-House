@@ -116,7 +116,8 @@ class StelAPIController extends AppBaseController
 				$pdf = new FPDF();
 
 				// dd($pdf);
-				return $pdf->load($html)->show();
+				// return $pdf->load($html)->show();
+				return $this->sendResponse($param, "faktur delivered");
     			break;
     		
     		default:
