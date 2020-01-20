@@ -356,10 +356,9 @@ class ProductsController extends Controller
                 $purchase->data->unique_code;
                 $purchase->data->final_price;
             */
-                dd($purchase);
+
             return $purchase;
         } catch(Exception $e){
-            dd($e);
             return null;
         }
     }
