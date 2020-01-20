@@ -247,13 +247,13 @@ class SalesController extends Controller
 						$notifUploadSTEL = 1;
 
                         /*SEMENTARA*/
-                        /*$data [] = 
+                        $data [] = 
                             [
                                 'name' => "file",
                                 'contents' => fopen($path_file.'/'.$name_file, 'r'),
                                 'filename' => $request->file('stel_file')[$i]->getClientOriginalName()
                             ]
-                        ;*/
+                        ;
 					}else{
 						Session::flash('error', 'Save STEL to directory failed');
 						return redirect('/admin/sales/'.$STELSales->id.'/edit');
@@ -261,7 +261,7 @@ class SalesController extends Controller
 				}
 			}
             /*SEMENTARA*/
-            /*if($STELSales->BILLING_ID != null && $data != null){
+            if($STELSales->BILLING_ID != null && $data != null){
                 $data [] = array(
                     'name'=>"delivered",
                     'contents'=>json_encode(['by'=>$currentUser->name, "reference_id" => $currentUser->id]),
@@ -269,7 +269,7 @@ class SalesController extends Controller
 
                 $upload = $this->api_upload($data,$STELSales->BILLING_ID);
 
-                if($upload){
+                /*if($upload){
                     $data_invoices = [
                         "billing_id" => $STELSales->BILLING_ID,
                         "created" => [
@@ -281,9 +281,9 @@ class SalesController extends Controller
                     $invoice = $upload && $upload->status == true ? $this->api_invoice($data_invoices) : null;
 
                     $STELSales->INVOICE_ID = $invoice && $invoice->status == true ? $invoice->data->_id : null;
-                }
+                }*/
 
-            }*/
+            }
 
 			if ($request->hasFile('kuitansi_file')) {
 				$name_file = 'kuitansi_stel_'.$request->file('kuitansi_file')->getClientOriginalName();

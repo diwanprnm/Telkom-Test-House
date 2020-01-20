@@ -263,7 +263,7 @@ class ProductsController extends Controller
         }
 
         /*SEMENTARA*/
-        /*$details = array();
+        $details = array();
         foreach (Cart::content() as $row) {
             $res = explode('myTokenProduct', $row->name);
             $stel_name = $res[0] ? $res[0] : '-';
@@ -281,18 +281,18 @@ class ProductsController extends Controller
 
         $data = [
             "from" => [
-                "name" => $currentUser->name,
-                "address" => $currentUser->address,
-                "phone" => $currentUser->phone_number,
-                "email" => $currentUser->email,
-                "npwp" => $currentUser->company->npwp_number
-            ],
-            "to" => [
                 "name" => "Telkom Test House",
                 "address" => "Jl. Gegerkalong Hilir, Sukarasa, Sukasari, Kota Bandung, Jawa Barat 40152.",
                 "phone" => "(+62) 812-2483-7500",
                 "email" => "urelddstelkom@gmail.com",
                 "npwp" => "-" //cari tahu
+            ],
+            "to" => [
+                "name" => $currentUser->name,
+                "address" => $currentUser->address,
+                "phone" => $currentUser->phone_number,
+                "email" => $currentUser->email,
+                "npwp" => $currentUser->company->npwp_number
             ],
             "product_id" => "5def1d54d2622f00108f3996", //product_id TTH
             "details" => $details,
@@ -302,8 +302,8 @@ class ProductsController extends Controller
             ]
         ];
 
-        $purchase = $this->api_purchase($data);*/
-        $purchase = null;
+        $purchase = $this->api_purchase($data);
+        // $purchase = null;
 
         if($request->input('agree')){
             $logs = new Logs;
@@ -393,7 +393,7 @@ class ProductsController extends Controller
             // $STELSales->payment_code =  $result->payment_code;
 
            /*SEMENTARA*/
-           /*if($request->input("PO_ID")){
+           if($request->input("PO_ID")){
                $data = [
                     "po_id" => $request->input("PO_ID"),
                     // "due_date" => "2019-12-23 10:00:00", //kalo SPB 14 hari
@@ -408,7 +408,7 @@ class ProductsController extends Controller
 
                 $STELSales->PO_ID = $request->input("PO_ID");
                 $STELSales->BILLING_ID = $billing && $billing->status == true ? $billing->data->_id : null;
-           }*/
+           }
 
             try{
                 $save = $STELSales->save();

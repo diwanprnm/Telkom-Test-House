@@ -7,13 +7,18 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Response;
 use App\STEL;
+
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Client;
+
+use FPDF;
  
 class StelAPIController extends AppBaseController
 {
     
     public function getStelData(Request $param)
-    {
-		$param = (object) $param->all();
+    {    	
+    	$param = (object) $param->all();
 		
 		$whereID = array();
 		 
@@ -76,6 +81,71 @@ class StelAPIController extends AppBaseController
 			return $this->sendError('STELS Data Not Found');
 		}
 		return $this->sendResponse($result, 'STELS Data Found');
+    }
+
+    public function webHookTPN(Request $param){
+    	switch ($param->event) {
+    		case 'billing_paid':
+    			if(empty($param->data['billing']['_id'])){
+					return $this->sendError('BILLING_ID Not Found');
+				}
+
+		    	/*JIKA PERLU TAMBAH NOTIFIKASI KE ADMIN, BAHWA PEMBAYARAN SUDAH SELESAI*/
+		    	$data_invoices = [
+		            "billing_id" => $param->data['billing']['_id'],
+		            "created" => [
+		                "by" => "admin",
+		                "reference_id" => 1
+		            ]
+		        ];
+
+		        // $invoices = $this->api_invoice($data_invoices);
+		        $invoices = null;
+		        if($invoices && $invoices->status == true){
+		        	return $this->sendResponse($invoices, "create_invoice SENT");
+		        }else{
+		        	return $this->sendError("create_invoice FAILED");	
+		        }
+    			break;
+
+    		case 'faktur_created':
+    			$url = $param->data['url_faktur'];
+				$html = file_get_contents($url);
+				// dd($html);
+
+				$pdf = new FPDF();
+
+				// dd($pdf);
+				return $pdf->load($html)->show();
+    			break;
+    		
+    		default:
+    			# code...
+    			break;
+    	}
+    }
+	
+    public function api_invoice($data_invoices){
+        $client = new Client([
+            'headers' => ['Authorization' => 'apiKey 4ZU03BLNm1ebXSlQa4ou3y:6MHfjHpbOVv3FKTFAf8jIv'],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+        try {
+            $param_invoices['json'] = $data_invoices;
+            $res_invoices = $client->post("v1/invoices", $param_invoices)->getBody();
+            $invoice = json_decode($res_invoices);
+
+            /*get
+                $invoice->status; //if true lanjut, else panggil lagi API ny
+                $invoice->data->_id; //INVOICE_ID
+            */
+
+            return $invoice;
+        } catch(Exception $e){
+            return null;
+        }
     }
 	 
 }
