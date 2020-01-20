@@ -60,10 +60,6 @@ pipeline {
                         unstash 'ws'
                         script {
                             echo "Do Unit Test Here"
-                            def node = tool name: 'PHP-8.9', type: 'jenkins.plugins.PHP.tools.PHPInstallation'
-                            env.PATH = "${node}/bin:${env.PATH}"
-                            // sh "npm install"
-                            // sh "npm run test"
                             echo "defining sonar-scanner"
                             def scannerHome = tool 'SonarScanner' ;
                             withSonarQubeEnv('SonarQube') {
