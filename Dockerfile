@@ -14,7 +14,8 @@ RUN docker-php-ext-install \
         mcrypt \
         mbstring \
         tokenizer \
-        zip
+        zip \
+        exif
 
 # Run install mysql PDO and enable mode rewrite
 RUN docker-php-ext-install pdo_mysql
