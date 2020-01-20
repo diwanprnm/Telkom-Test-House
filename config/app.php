@@ -16,7 +16,8 @@ return [
     'env' => env('APP_ENV', 'production'),
     // 'url_api_bsp' => env('url_api_bsp', 'http://ptbsp.ddns.net:13280/RevitalisasiOTR/api/'),
     'url_api_bsp' => env('url_api_bsp', 'http://revitalisasiotr-otr.apps.playcourt.id/api/'),
-    'url_api_tpn' => env('url_api_tpn', 'http://telkompartner-tpncms-dev.vsan-apps.playcourt.id/api/'),
+    // 'url_api_tpn' => env('url_api_tpn', 'http://telkompartner-tpncms-dev.vsan-apps.playcourt.id/api/'),
+    'url_api_tpn' => env('url_api_tpn', 'https://partner.telkom.co.id/api/'),
     'IS_ENABLED_NOTIFICATION' => env('IS_ENABLED_NOTIFICATION', true),
 
     /*
