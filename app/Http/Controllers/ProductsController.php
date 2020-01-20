@@ -294,7 +294,7 @@ class ProductsController extends Controller
                 "email" => $currentUser->email,
                 "npwp" => $currentUser->company->npwp_number
             ],
-            "product_id" => "5def1d54d2622f00108f3996", //product_id TTH
+            "product_id" => config("app.product_id_tth"), //product_id TTH
             "details" => $details,
             "created" => [
                 "by" => $currentUser->name,
@@ -332,7 +332,7 @@ class ProductsController extends Controller
     public function api_purchase($data){
         $client = new Client([
             'headers' => ['Content-Type' => 'application/json', 
-                            'Authorization' => 'apiKey 4ZU03BLNm1ebXSlQa4ou3y:6MHfjHpbOVv3FKTFAf8jIv'
+                            'Authorization' => config("app.gateway_tpn")
                         ],
             'base_uri' => config("app.url_api_tpn"),
             'timeout'  => 60.0,
@@ -478,7 +478,7 @@ class ProductsController extends Controller
     public function api_billing($data){
         $client = new Client([
             'headers' => ['Content-Type' => 'application/json', 
-                            'Authorization' => 'apiKey 4ZU03BLNm1ebXSlQa4ou3y:6MHfjHpbOVv3FKTFAf8jIv'
+                            'Authorization' => config("app.gateway_tpn")
                         ],
             'base_uri' => config("app.url_api_tpn"),
             'timeout'  => 60.0,

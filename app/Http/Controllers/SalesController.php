@@ -423,7 +423,7 @@ class SalesController extends Controller
 
     public function api_upload($data, $BILLING_ID){
         $client = new Client([
-            'headers' => ['Authorization' => 'apiKey 4ZU03BLNm1ebXSlQa4ou3y:6MHfjHpbOVv3FKTFAf8jIv'],
+            'headers' => ['Authorization' => config("app.gateway_tpn")],
             'base_uri' => config("app.url_api_tpn"),
             'timeout'  => 60.0,
             'http_errors' => false
@@ -446,7 +446,7 @@ class SalesController extends Controller
 
     public function api_invoice($data_invoices){
         $client = new Client([
-            'headers' => ['Authorization' => 'apiKey 4ZU03BLNm1ebXSlQa4ou3y:6MHfjHpbOVv3FKTFAf8jIv'],
+            'headers' => ['Authorization' => config("app.gateway_tpn")],
             'base_uri' => config("app.url_api_tpn"),
             'timeout'  => 60.0,
             'http_errors' => false
