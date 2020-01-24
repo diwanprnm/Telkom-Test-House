@@ -31,3 +31,7 @@ RUN mkdir -p \
     && composer install 
 
 USER user
+
+ADD init.sh .
+
+CMD ["/var/www/data/html/init.sh"]
