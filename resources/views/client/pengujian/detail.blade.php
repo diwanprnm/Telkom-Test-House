@@ -296,6 +296,7 @@
 															
 														@elseif($item_attach->name == 'Laporan Uji')
 															@if(
+																1 == 0 &&
 																$item->registration_status == 1 &&
 																$item->function_status == 1 &&
 																$item->contract_status == 1 &&

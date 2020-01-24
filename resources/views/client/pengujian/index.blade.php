@@ -333,6 +333,7 @@
 								<?php } ?>
 								
 								<?php if(
+									1 == 0 &&
 				  $item->registration_status == 1 &&
                   $item->function_status == 1 &&
                   $item->contract_status == 1 &&

@@ -84,9 +84,9 @@
 							<div class="col-md-4">
 								<input type="radio" name="payment_method" value="atm" checked> {{ trans('translate.stel_payment_method_atm') }}
 							</div>
-							<div class="col-md-4">
+							<!-- <div class="col-md-4">
 								<input type="radio" name="payment_method" value="cc"> {{ trans('translate.stel_payment_method_credit') }}
-							</div>
+							</div> -->
 						</div>
 					</div>	 
 					<div class="row metoda">
