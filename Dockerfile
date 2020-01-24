@@ -28,7 +28,8 @@ RUN mkdir -p \
         storage/logs/laravel.log \
     && sed -i -e 's|/var/www/data/html|/var/www/data/html/public|g' \
         /usr/local/docker/etc/apache2/httpd.conf \
-    && composer install 
+    && composer install \
+    && chmod -R 775 /var/www/data/html
 
 USER user
 
