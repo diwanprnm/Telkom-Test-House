@@ -954,7 +954,6 @@ class PermohonanController extends Controller
 			WHERE id = (SELECT company_id FROM users WHERE id = '".$user_id."')
 		";
 		print_r($query_update_companie);
-		print_r($query_update_companie->toSql());
 		$data_update_companie = DB::update($query_update_companie);
 		
 		$request->session()->put('key', $data);
