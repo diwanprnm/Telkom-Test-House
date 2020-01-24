@@ -8,7 +8,7 @@ pipeline {
         string(name: 'STAGING_NAMESPACE',          description: 'Staging Namespace',                    defaultValue: '')
         string(name: 'DEVELOPMENT_NAMESPACE',      description: 'Development Namespace',                defaultValue: 'telkomtesthouse-dev')
 
-        string(name: 'DOCKER_IMAGE_NAME',          description: 'Docker Image Name',                    defaultValue: 'telkomtesthouse')
+        string(name: 'DOCKER_IMAGE_NAME',          description: 'Docker Image Name',                    defaultValue: 'telkomtesthouse-dev')
 
         string(name: 'CHAT_ID',                    description: 'chat id of telegram group',            defaultValue: '-383243277')
     }
