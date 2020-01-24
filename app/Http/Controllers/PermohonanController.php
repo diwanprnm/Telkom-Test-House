@@ -953,8 +953,9 @@ class PermohonanController extends Controller
 				updated_at = '".date('Y-m-d H:i:s')."'
 			WHERE id = (SELECT company_id FROM users WHERE id = '".$user_id."')
 		";
+		print_r($query_update_companie);
+		print_r($query_update_companie->toSql());
 		$data_update_companie = DB::update($query_update_companie);
-		print_r($data_update_companie->toSql());
 		
 		$request->session()->put('key', $data);
 		
