@@ -84,7 +84,7 @@ class StelAPIController extends AppBaseController
 		return $this->sendResponse($result, 'STELS Data Found');
     }
 
-    public function webHookTPN(Request $param){
+    public function webhookTPN(Request $param){
     	switch ($param->event) {
     		case 'billing_paid':
     			if(empty($param->data['billing']['_id'])){

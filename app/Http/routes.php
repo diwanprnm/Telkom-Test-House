@@ -4635,7 +4635,7 @@ Route::group(['prefix' => '/v1', 'middlewareGroups' => 'api'], function () {
 	Route::get('/companies', 'v1\CompanyAPIController@getCompanies');
 	Route::get('/customer', 'v1\CustomerAPIController@getCustomer');
 	Route::get('/stel', 'v1\StelAPIController@getStelData');
-	Route::post('/webHookTPN', 'v1\StelAPIController@webHookTPN');
+	Route::post('/webhookTPN', 'v1\StelAPIController@webhookTPN');
 	Route::get('/device', 'v1\DeviceAPIController@getDeviceData');
 	Route::get('/examination', 'v1\ExaminationAPIController@getExaminationData');
 	Route::get('/examination/applicants', 'v1\ExaminationAPIController@getExaminationByApplicants');
