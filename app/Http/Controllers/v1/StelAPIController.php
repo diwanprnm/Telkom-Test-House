@@ -90,7 +90,7 @@ class StelAPIController extends AppBaseController
     			if(empty($param->data['billing']['_id'])){
 					return $this->sendError('BILLING_ID Not Found');
 				}
-	        	$BILLING_ID = $param->data['billing']['_id']);
+	        	$BILLING_ID = $param->data['billing']['_id'];
 
 		    	/*JIKA PERLU TAMBAH NOTIFIKASI KE ADMIN, BAHWA PEMBAYARAN SUDAH SELESAI*/
 		    	$data_invoices = [
