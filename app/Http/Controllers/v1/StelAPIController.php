@@ -91,7 +91,7 @@ class StelAPIController extends AppBaseController
 					return $this->sendError('BILLING_ID Not Found');
 				}
 	        	$BILLING_ID = $param->data['billing']['_id'];
-
+	        	print_r('BILLING_ID'.$BILLING_ID);
 		    	/*JIKA PERLU TAMBAH NOTIFIKASI KE ADMIN, BAHWA PEMBAYARAN SUDAH SELESAI*/
 		    	$data_invoices = [
 		            "billing_id" => $BILLING_ID,
@@ -100,7 +100,9 @@ class StelAPIController extends AppBaseController
 		                "reference_id" => 1
 		            ]
 		        ];
+		        print_r('data_invoices'.$data_invoices);
 		        $invoices = $this->api_invoice($data_invoices);
+		        print_r('invoices'.$invoices);
 		        // $invoices = null;
 		        if($invoices && $invoices->status == true){
         			try {
