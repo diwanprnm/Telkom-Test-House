@@ -299,7 +299,12 @@ class ProductsController extends Controller
             "created" => [
                 "by" => $currentUser->name,
                 "reference_id" => $currentUser->id
-            ]
+            ],
+            "config" => [
+                "kode_wapu" => "01",
+                "afiliasi" => "non-telkom"
+            ],
+            "include_tax_invoice" => true
         ];
 
         $purchase = $this->api_purchase($data);

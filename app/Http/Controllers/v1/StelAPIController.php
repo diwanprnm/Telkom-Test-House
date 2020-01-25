@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Response;
 use App\STEL;
+use App\STELSales;
 
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
@@ -89,19 +90,26 @@ class StelAPIController extends AppBaseController
     			if(empty($param->data['billing']['_id'])){
 					return $this->sendError('BILLING_ID Not Found');
 				}
+	        	$BILLING_ID = $param->data['billing']['_id']);
 
 		    	/*JIKA PERLU TAMBAH NOTIFIKASI KE ADMIN, BAHWA PEMBAYARAN SUDAH SELESAI*/
 		    	$data_invoices = [
-		            "billing_id" => $param->data['billing']['_id'],
+		            "billing_id" => $BILLING_ID,
 		            "created" => [
-		                "by" => "admin",
+		                "by" => "SUPERADMIN UREL",
 		                "reference_id" => 1
 		            ]
 		        ];
-
-		        // $invoices = $this->api_invoice($data_invoices);
-		        $invoices = null;
+		        $invoices = $this->api_invoice($data_invoices);
+		        // $invoices = null;
 		        if($invoices && $invoices->status == true){
+        			try {
+		        		$STELSales = STELSales::where("BILLING_ID", $BILLING_ID)->first();
+		        		$STELSales->INVOICE_ID = $invoice->data->_id;
+		        		$STELSales->save();
+		        	} catch(Exception $e){
+			            return null;
+			        }
 		        	return $this->sendResponse($invoices, "create_invoice SENT");
 		        }else{
 		        	return $this->sendError("create_invoice FAILED");	
@@ -116,7 +124,7 @@ class StelAPIController extends AppBaseController
 				$pdf = new FPDF();
 
 				// dd($pdf);
-				// return $pdf->load($html)->show();
+				return $pdf->load($html)->show();
 				return $this->sendResponse($param, "faktur delivered");
     			break;
     		
