@@ -106,6 +106,7 @@ class StelAPIController extends AppBaseController
 		        if($invoices && $invoices->status == true){
         			try {
 		        		$STELSales = STELSales::where("BILLING_ID", $BILLING_ID)->first();
+		        		$STELSales->payment_status = 1; //disini kah?
 		        		$STELSales->INVOICE_ID = $invoices->data->_id;
 		        		$STELSales->save();
 		        	} catch(Exception $e){
