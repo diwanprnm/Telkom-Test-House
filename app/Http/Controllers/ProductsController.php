@@ -405,7 +405,7 @@ class ProductsController extends Controller
                         "kode_wapu" => "01",
                         "afiliasi" => "non-telkom"
                     ],
-            "include_tax_invoice" => true
+                    "include_tax_invoice" => true
                 ];
 
                 $billing = $this->api_billing($data);

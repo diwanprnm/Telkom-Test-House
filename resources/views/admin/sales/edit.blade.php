@@ -23,6 +23,19 @@
 			</div>
 		</section>
 		<!-- end: PAGE TITLE -->
+
+		@if (Session::get('error'))
+			<div class="alert alert-error alert-danger">
+				{{ Session::get('error') }}
+			</div>
+		@endif
+		
+		@if (Session::get('message'))
+			<div class="alert alert-info">
+				{{ Session::get('message') }}
+			</div>
+		@endif
+
 		<!-- start: RESPONSIVE TABLE -->
 		<div class="container-fluid container-fullw bg-white">
 			<div class="col-md-12">
@@ -43,9 +56,18 @@
 									@endif
 								</div>
 							</div>
-							<div class="col-md-12">
+							<div class="col-md-6">
 								<div class="form-group">
 									<a onclick="makeKuitansi('<?php echo $data->id ?>')"> Buatkan File Kuitansi</a>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									@if($data->faktur_file != '')
+										-
+									@else
+										<a onclick="checkTaxInvoice('<?php echo $data->id ?>')"> Cek Faktur Pajak</a>
+									@endif
 								</div>
 							</div>
 							<div class="col-md-6">
@@ -163,6 +185,37 @@
 			},
 			error:function(){
 				alert("Gagal mengambil data");
+			}
+		});
+		
+		/* $("#1").load("../loadDataKet",{pgw_id6:res[3]}, function() {
+			document.getElementById("overlay").style.display="none";
+		}); */
+	}
+
+	function checkTaxInvoice(a){
+		var APP_URL = {!! json_encode(url('/admin/sales/checkTaxInvoice')) !!};		
+		$.ajax({
+			type: "POST",
+			url : "generateTaxInvoice",
+			data: {'_token':"{{ csrf_token() }}", 'id':a},
+			beforeSend: function(){
+				document.getElementById("overlay").style.display="inherit";
+			},
+			success: function(response){
+				console.log(response);
+				if(response){
+					alert(response);
+					if(response == "Faktur Pajak Berhasil Disimpan."){location.reload();}
+				}else{
+					alert("Gagal mengambil data (s)");
+				}
+				document.getElementById("overlay").style.display="none";
+			},
+			error:function(response){
+				console.log(response);
+				alert("Gagal mengambil data (e)");
+				document.getElementById("overlay").style.display="none";
 			}
 		});
 		

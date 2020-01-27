@@ -4527,6 +4527,8 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::resource('/sales', 'SalesController');
 	Route::get('/sales/{id}/upload', 'SalesController@upload');
 	Route::get('/sales/{id}/{reason}/deleteProduct', 'SalesController@deleteProduct');
+	Route::get('/sales/checkTaxInvoice', 'SalesController@checkTaxInvoice');
+	Route::post('/sales/{id}/generateTaxInvoice', 'SalesController@generateTaxInvoice');
 	Route::resource('/question', 'QuestionController');
 	Route::resource('/questionerquestion', 'QuestionerQuestionController');
 	Route::resource('/questionpriv', 'QuestionprivController');
@@ -4635,7 +4637,6 @@ Route::group(['prefix' => '/v1', 'middlewareGroups' => 'api'], function () {
 	Route::get('/companies', 'v1\CompanyAPIController@getCompanies');
 	Route::get('/customer', 'v1\CustomerAPIController@getCustomer');
 	Route::get('/stel', 'v1\StelAPIController@getStelData');
-	Route::post('/webhookTPN', 'v1\StelAPIController@webhookTPN');
 	Route::get('/device', 'v1\DeviceAPIController@getDeviceData');
 	Route::get('/examination', 'v1\ExaminationAPIController@getExaminationData');
 	Route::get('/examination/applicants', 'v1\ExaminationAPIController@getExaminationByApplicants');

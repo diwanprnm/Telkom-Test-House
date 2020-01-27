@@ -27,6 +27,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
+use GuzzleHttp\Stream\Stream;
 
 use App\Events\Notification;
 use App\NotificationTable;
@@ -233,6 +234,28 @@ class SalesController extends Controller
 		$notifUploadSTEL = 0;
         $data = array();
         if ($request->has('payment_status')){
+
+            /*TPN api_invoice*/
+            if($STELSales->payment_status !=1){
+                $data_invoices = [
+                    "billing_id" => $STELSales->BILLING_ID,
+                    "created" => [
+                        "by" => "SUPERADMIN UREL",
+                        "reference_id" => "1"
+                        /*"by" => $currentUser->name,
+                        "reference_id" => $currentUser->id*/
+                    ]
+                ];
+
+                $invoice = $this->api_invoice($data_invoices);
+                $STELSales->INVOICE_ID = $invoice && $invoice->status == true ? $invoice->data->_id : null;
+                if($invoice && $invoice->status == false){
+                    Session::flash('error', $invoice->message);
+                    return redirect('/admin/sales/'.$STELSales->id.'/edit');
+                }
+            }
+
+
 			for($i=0;$i<count($request->input('stels_sales_detail_id'));$i++){
 				if ($request->file('stel_file')[$i]) {
 					$name_file = 'stel_file_'.$request->file('stel_file')[$i]->getClientOriginalName();
@@ -246,7 +269,7 @@ class SalesController extends Controller
 						$STELSalesDetail->save();
 						$notifUploadSTEL = 1;
 
-                        /*SEMENTARA*/
+                        /*TPN api_upload*/
                         $data [] = 
                             [
                                 'name' => "file",
@@ -260,7 +283,7 @@ class SalesController extends Controller
 					}
 				}
 			}
-            /*SEMENTARA*/
+            /*TPN api_upload*/
             if($STELSales->BILLING_ID != null && $data != null){
                 $data [] = array(
                     'name'=>"delivered",
@@ -268,21 +291,6 @@ class SalesController extends Controller
                 );
 
                 $upload = $this->api_upload($data,$STELSales->BILLING_ID);
-
-                /*if($upload){
-                    $data_invoices = [
-                        "billing_id" => $STELSales->BILLING_ID,
-                        "created" => [
-                            "by" => $currentUser->name,
-                            "reference_id" => $currentUser->id
-                        ]
-                    ];
-
-                    $invoice = $upload && $upload->status == true ? $this->api_invoice($data_invoices) : null;
-
-                    $STELSales->INVOICE_ID = $invoice && $invoice->status == true ? $invoice->data->_id : null;
-                }*/
-
             }
 
 			if ($request->hasFile('kuitansi_file')) {
@@ -453,7 +461,7 @@ class SalesController extends Controller
         ]);
         try {
             $param_invoices['json'] = $data_invoices;
-            $res_invoices = $client->post("v1/invoices", $param_invoices)->getBody();
+            $res_invoices = $client->post("v1/invoices", $param_invoices)->getBody()->getContents();
             $invoice = json_decode($res_invoices);
 
             /*get
@@ -591,5 +599,73 @@ class SalesController extends Controller
         }
     }
 
+    public function generateTaxInvoice(Request $request) {
+        $client = new Client([
+            'headers' => ['Authorization' => config("app.gateway_tpn")],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+
+        $STELSales = STELSales::where("id", $request->input('id'))->first();
+
+        if($STELSales){
+            try {
+                // $INVOICE_ID = "5e2d64971220bd00151b778f";
+                $INVOICE_ID = $STELSales->INVOICE_ID;
+                $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
+                $invoice = json_decode($res_invoice->getBody());
+                
+                if($invoice && $invoice->status == true){
+                    $status_invoice = $invoice->data->status_invoice;
+                    if($status_invoice == "approved"){
+                        $status_faktur = $invoice->data->status_faktur;
+                        if($status_faktur == "received"){
+                            /*SAVE FAKTUR PAJAK*/
+                            $name_file = 'faktur_stel_'.$INVOICE_ID.'.pdf';
+
+                            $path_file = public_path().'/media/stel/'.$request->input('id');
+                            if (!file_exists($path_file)) {
+                                mkdir($path_file, 0775);
+                            }
+
+                            $response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/taxinvoice/pdf');
+                            $stream = (String)$response->getBody();
+
+                            if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
+                                $STELSales->faktur_file = $name_file;
+                                $STELSales->save();
+                                return "Faktur Pajak Berhasil Disimpan.";
+                            }else{
+                                return "Gagal Menyimpan Faktur Pajak!";
+                            }
+                        }else{
+                            return $invoice->data->status_faktur;
+                        }
+                    }else{
+                        switch ($status_invoice) {
+                            case 'invoiced':
+                                return "Faktur Pajak belum Tersedia, karena Invoice Baru Dibuat.";
+                                break;
+                            
+                            case 'returned':
+                                return $invoice->data->$status_invoice->message;
+                                break;
+                            
+                            default:
+                                return "Faktur Pajak belum Tersedia. Invoice sudah dikirim ke DJP.";
+                                break;
+                        }
+                    }
+                }else{
+                    return "Data Invoice Tidak Ditemukan!";        
+                }
+            } catch(Exception $e){
+                return null;
+            }
+        }else{
+            return "Data Pembelian Tidak Ditemukan!";
+        }
+    }
 
 }
