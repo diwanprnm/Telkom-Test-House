@@ -593,13 +593,10 @@ class SalesController extends Controller
             $file = public_path().'/media/stel/'.$stel->id."/".$stel->faktur_file;
             $headers = array(
               'Content-Type: application/octet-stream',
-              'Content-Disposition' => 'attachment; filename="'.$stel->faktur_file.'"',
+              'Content-Disposition' => 'inline; filename="'.$stel->faktur_file.'"',
             );
 
             return Response::file($file, $headers);
-            /*$response = Response::make($file, 200);
-            $response->header('Content-Type', 'application/pdf');
-            return $response;*/
         }
     }
 
