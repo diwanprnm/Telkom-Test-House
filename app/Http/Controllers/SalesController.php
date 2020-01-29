@@ -27,7 +27,6 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
-use GuzzleHttp\Stream\Stream;
 
 use App\Events\Notification;
 use App\NotificationTable;
