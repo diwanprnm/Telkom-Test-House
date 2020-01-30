@@ -29,10 +29,8 @@ RUN mkdir -p \
     && sed -i -e 's|/var/www/data/html|/var/www/data/html/public|g' \
         /usr/local/docker/etc/apache2/httpd.conf \
     && composer install \
-    && chmod -R 775 /var/www/data/html
+    && mv misc/docker/.env.prod ./.env \
+    && chmod -R 775 /var/www/data/html \
+    && php artisan key:generate
 
 USER user
-
-ADD init.sh .
-
-CMD ["/var/www/data/html/init.sh"]
