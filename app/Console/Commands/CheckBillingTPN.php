@@ -57,6 +57,7 @@ class CheckBillingTPN extends Command
 
                 $invoice = $this->api_invoice($data_invoices);
                 $STELSales->INVOICE_ID = $invoice && $invoice->status == true ? $invoice->data->_id : null;
+                $STELSales->payment_status = $invoice && $invoice->status == true ? 1 : 0;
 
                 $updated_count = $invoice && $invoice->status == true ? $updated_count += 1 : $updated_count;
                 $updated_count = $STELSales->save() ? $updated_count : $updated_count -= 1;
