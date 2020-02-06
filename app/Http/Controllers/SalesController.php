@@ -235,7 +235,7 @@ class SalesController extends Controller
         if ($request->has('payment_status')){
 
             /*TPN api_invoice*/
-            if($STELSales->payment_status !=1){
+            if($STELSales->payment_status !=1 && $STELSales->BILLING_ID){
                 $data_invoices = [
                     "billing_id" => $STELSales->BILLING_ID,
                     "created" => [
