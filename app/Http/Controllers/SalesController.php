@@ -235,14 +235,12 @@ class SalesController extends Controller
         if ($request->has('payment_status')){
 
             /*TPN api_invoice*/
-            if($STELSales->payment_status !=1 && $STELSales->BILLING_ID){
+            /*if($STELSales->payment_status !=1 && $STELSales->BILLING_ID){
                 $data_invoices = [
                     "billing_id" => $STELSales->BILLING_ID,
                     "created" => [
                         "by" => "SUPERADMIN UREL",
                         "reference_id" => "1"
-                        /*"by" => $currentUser->name,
-                        "reference_id" => $currentUser->id*/
                     ]
                 ];
 
@@ -252,7 +250,7 @@ class SalesController extends Controller
                     Session::flash('error', $invoice->message);
                     return redirect('/admin/sales/'.$STELSales->id.'/edit');
                 }
-            }
+            }*/
 
 
 			for($i=0;$i<count($request->input('stels_sales_detail_id'));$i++){
