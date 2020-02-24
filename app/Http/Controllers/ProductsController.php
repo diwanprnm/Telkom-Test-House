@@ -336,7 +336,7 @@ class ProductsController extends Controller
             'base_uri' => config("app.url_api_tpn"),
             'timeout'  => 60.0,
             'http_errors' => false,
-            // 'verify' => false
+            'verify' => false
         ]);
         try {
             
