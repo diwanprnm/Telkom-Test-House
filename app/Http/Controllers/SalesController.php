@@ -235,7 +235,8 @@ class SalesController extends Controller
         if ($request->has('payment_status')){
 
             /*TPN api_invoice*/
-            /*if($STELSales->payment_status !=1 && $STELSales->BILLING_ID){
+            // if($request->input('payment_status') == 1 && $STELSales->payment_status !=1 && $STELSales->BILLING_ID && $STELSales->INVOICE_ID == null){
+            if($request->input('payment_status') == 1 && $STELSales->payment_status !=1 && $STELSales->BILLING_ID){
                 $data_invoices = [
                     "billing_id" => $STELSales->BILLING_ID,
                     "created" => [
@@ -246,11 +247,11 @@ class SalesController extends Controller
 
                 $invoice = $this->api_invoice($data_invoices);
                 $STELSales->INVOICE_ID = $invoice && $invoice->status == true ? $invoice->data->_id : null;
-                if($invoice && $invoice->status == false){
+                /*if($invoice && $invoice->status == false){
                     Session::flash('error', $invoice->message);
                     return redirect('/admin/sales/'.$STELSales->id.'/edit');
-                }
-            }*/
+                }*/
+            }
 
 
 			for($i=0;$i<count($request->input('stels_sales_detail_id'));$i++){
