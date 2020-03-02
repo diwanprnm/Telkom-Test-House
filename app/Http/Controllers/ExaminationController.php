@@ -1595,7 +1595,7 @@ class ExaminationController extends Controller
         try{
             $exam->save();
 			if($spk_created == 1){
-				$res_exam_schedule = $client->get('spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR);				
+				$res_exam_schedule = $client->get('spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR);
 			}
              
 				$exam_hist = new ExaminationHistory;
@@ -2834,6 +2834,9 @@ $notification->id = Uuid::uuid4();
 		$device = Device::find($device_id);
 		if ($exam_attach && $exam && $device){
 			try{
+				$res_delete_spk = $client->get('spk/delete?examId='.$exam->id.'&spkNumber='.$exam->spk_code)->getBody();
+				$delete_spk = json_decode($res_delete_spk);
+
 				$logs_a_exam = $exam;
 				$logs_a_device = $device;
 				Income::where('reference_id', '=' ,''.$id.'')->delete();
@@ -2858,9 +2861,6 @@ $notification->id = Uuid::uuid4();
 					// You can set any number of default request options.
 					'timeout'  => 60.0,
 				]);
-				
-				$res_delete_spk = $client->get('spk/delete?examId='.$exam->id.'&spkNumber='.$exam->spk_code)->getBody();
-				$delete_spk = json_decode($res_delete_spk);
 
 				$logs = new Logs_administrator;
 				$logs->id = Uuid::uuid4();

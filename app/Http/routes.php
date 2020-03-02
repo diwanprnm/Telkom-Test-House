@@ -4550,6 +4550,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::resource('/spb', 'SPBController');
 	Route::resource('/nogudang', 'NoGudangController');
 	Route::resource('/feedbackncomplaint', 'FeedbackComplaintController');
+	Route::resource('/fakturpajak', 'FakturPajakController');
 	Route::resource('/videoTutorial', 'VideoTutorialController');
 	Route::post('/orderSlideshow', 'SlideshowController@orderSlideshow');
 
