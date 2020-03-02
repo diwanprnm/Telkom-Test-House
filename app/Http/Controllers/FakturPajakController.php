@@ -47,7 +47,7 @@ class FakturPajakController extends Controller
             $page = $request->has('page') ? $request->get('page') : '1';
             $sort_by = $request->has('sort_by') ? $request->get('sort_by') : 'updated_at';
             $sort_type = $request->has('sort_type') ? $request->get('sort_type') : 'desc';
-            $paginate = 2;
+            $paginate = 10;
             $type = '';
             $filterCompany = '';
             $companies = Company::where('id','!=', 1)->get();
