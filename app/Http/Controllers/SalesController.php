@@ -13,6 +13,7 @@ use App\Logs_administrator;
 use App\STELSales;
 use App\STELSalesAttach;
 use App\STELSalesDetail;
+use App\User;
 
 use Auth;
 use Session; 
@@ -40,19 +41,40 @@ class SalesController extends Controller
     public function index(Request $request)
     { 
         $currentUser = Auth::user();
-        $before = null;
-        $after = null;
-        $payment_status = '';
         if ($currentUser){
             $message = null;
             $paginate = 10;
-            $search = trim($request->input('search'));
-            $select = array(
-                "logs.action","logs.page","logs.created_at as search_date","users.name"
-            );
-            $select = array("stels_sales.id","stels_sales.created_at","stels_sales.invoice","stels_sales.payment_status","stels_sales.payment_method","stels_sales.total","stels_sales.cust_price_payment","companies.name as company_name","stels.name as stel_name","stels.code as stel_code"); 
 
-            $dataSales = STELSales::select($select)->whereNotNull('stels_sales.created_at')
+            $search = trim($request->input('search'));
+            $before = null;
+            $after = null;
+            $payment_status = '';
+
+            $select = array("stels_sales.id","stels_sales.created_at","stels_sales.invoice","stels_sales.payment_status","stels_sales.payment_method","stels_sales.total","stels_sales.cust_price_payment","companies.name as company_name",
+                DB::raw('stels_sales.id as _id,
+                        (
+                            SELECT GROUP_CONCAT(stels.name SEPARATOR ", ")
+                            FROM
+                                stels,
+                                stels_sales_detail
+                            WHERE
+                                stels_sales_detail.stels_sales_id = _id
+                            AND
+                                stels_sales_detail.stels_id = stels.id
+                        ) as stel_name
+                        ,(
+                            SELECT GROUP_CONCAT(stels.code SEPARATOR ", ")
+                            FROM
+                                stels,
+                                stels_sales_detail
+                            WHERE
+                                stels_sales_detail.stels_sales_id = _id
+                            AND
+                                stels_sales_detail.stels_id = stels.id
+                        ) as stel_code')
+            ); 
+
+            $dataSales = STELSales::select($select)->distinct()->whereNotNull('stels_sales.created_at')
                         ->join("users","users.id","=","stels_sales.user_id")
                         ->join("companies","users.company_id","=","companies.id")
                         ->join("stels_sales_detail","stels_sales_detail.stels_sales_id","=","stels_sales.id")
@@ -61,7 +83,9 @@ class SalesController extends Controller
             if ($search != null){
             
                 $dataSales = $dataSales->where('invoice','like','%'.$search.'%')
-                            ->orWhere('companies.name', 'like', '%'.$search.'%');
+                            ->orWhere('companies.name', 'like', '%'.$search.'%')
+                            ->orWhere('stels.name', 'like', '%'.$search.'%')
+                            ->orWhere('stels.code', 'like', '%'.$search.'%');
 
                 $logs = new Logs;
                 $logs->id = Uuid::uuid4();
@@ -92,12 +116,9 @@ class SalesController extends Controller
                 $after = $request->get('after_date');
             }
 
-            $data_excel = $dataSales->orderBy('stels_sales.created_at', 'desc')->get();
             $data = $dataSales->orderBy('stels_sales.created_at', 'desc')
                                 ->paginate($paginate);
            
-            $request->session()->put('excel_sales', $data_excel);
-            
             if (count($dataSales) == 0){
                 $message = 'Data not found';
             }
@@ -109,6 +130,80 @@ class SalesController extends Controller
                 ->with('payment_status', $payment_status)
                 ->with('before_date', $before)
                 ->with('after_date', $after);
+        }
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        if(Auth::user()->id == 1 or Auth::user()->email == 'admin@mail.com'){
+            $stels = STEL::where("is_active", 1)->orderBy('name')->get();
+            $users = User::where("role_id", 2)->where("is_active", 1)->orderBy('name')->get();
+            return view('admin.sales.create')
+                ->with('stels', $stels)
+                ->with('users', $users);
+        }else{
+            return view('errors.401');
+        }
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $currentUser = Auth::user();
+        
+        foreach ($request->input('stels') as $key => $value) {
+            $stels = explode('-myToken-', $value);
+            $stel_id[] = $stels[0];
+            $stel_price[] = $stels[1];
+        }
+
+        $tax = $request->has('is_tax') ? 0.1*array_sum($stel_price) : 0;
+
+        $sales = new STELSales;
+        $sales->user_id = $request->input('user_id');
+        $sales->payment_method = 1;
+        $sales->payment_status = 1;
+        $sales->total = array_sum($stel_price) + $tax;
+        $sales->cust_price_payment = array_sum($stel_price) + $tax;
+
+        $sales->created_by = $request->input('user_id');
+        $sales->updated_by = $currentUser->id;
+
+        try{
+            if($sales->save()){
+                foreach($stel_id as $key => $row){ 
+                    $STELSalesDetail = new STELSalesDetail;
+                    $STELSalesDetail->stels_sales_id = $sales->id;
+                    $STELSalesDetail->stels_id = $stel_id[$key];
+                    $STELSalesDetail->qty = 1;
+                    $STELSalesDetail->save();
+                }
+            }
+
+            $logs = new Logs_administrator;
+            $logs->id = Uuid::uuid4();
+            $logs->user_id = $currentUser->id;
+            $logs->action = "Tambah Data Pembelian STEL";
+            $logs->page = "Rekap Pembelian STEL";
+            $logs->reason = "";
+            $logs->data = $sales.$STELSalesDetail;
+            $logs->save();
+
+            Session::flash('message', 'Sales successfully created');
+            return redirect('/admin/sales');
+        } catch(Exception $e){
+            Session::flash('error', 'Save failed');
+            return redirect('/admin/sales/create');
         }
     } 
 
@@ -161,17 +256,77 @@ class SalesController extends Controller
         // the user's e-mail address, the amount paid, and the payment
         // timestamp.
         
-        $data = $request->session()->get('excel_sales');
-        $examsArray = []; 
+        $search = trim($request->input('search'));
+        $before = null;
+        $after = null;
+        $payment_status = '';
+
+        $select = array("stels_sales.id","stels_sales.created_at","stels_sales.invoice","stels_sales.payment_status","stels_sales.payment_method","stels_sales.total","stels_sales.cust_price_payment","companies.name as company_name",
+            DB::raw('stels_sales.id as _id,
+                    (
+                        SELECT GROUP_CONCAT(stels.name SEPARATOR ", ")
+                        FROM
+                            stels,
+                            stels_sales_detail
+                        WHERE
+                            stels_sales_detail.stels_sales_id = _id
+                        AND
+                            stels_sales_detail.stels_id = stels.id
+                    ) as stel_name
+                    ,(
+                        SELECT GROUP_CONCAT(stels.code SEPARATOR ", ")
+                        FROM
+                            stels,
+                            stels_sales_detail
+                        WHERE
+                            stels_sales_detail.stels_sales_id = _id
+                        AND
+                            stels_sales_detail.stels_id = stels.id
+                    ) as stel_code')
+        ); 
+
+        $dataSales = STELSales::select($select)->distinct()->whereNotNull('stels_sales.created_at')
+                    ->join("users","users.id","=","stels_sales.user_id")
+                    ->join("companies","users.company_id","=","companies.id")
+                    ->join("stels_sales_detail","stels_sales_detail.stels_sales_id","=","stels_sales.id")
+                    ->join("stels","stels.id","=","stels_sales_detail.stels_id");
+        
+        if ($search != null){
+            $dataSales = $dataSales->where('invoice','like','%'.$search.'%')
+                        ->orWhere('companies.name', 'like', '%'.$search.'%')
+                        ->orWhere('stels.name', 'like', '%'.$search.'%')
+                        ->orWhere('stels.code', 'like', '%'.$search.'%');
+        }
+
+         if ($request->has('payment_status')){
+            $payment_status = $request->get('payment_status');
+            if($request->input('payment_status') != 'all'){
+                $dataSales->where('payment_status', $request->get('payment_status'));
+            }
+        }
+
+        if ($request->has('before_date')){  
+            $dataSales->where(DB::raw('DATE(stels_sales.created_at)'), '<=', $request->get('before_date'));
+            $before = $request->get('before_date');
+        }
+
+        if ($request->has('after_date')){ 
+            $dataSales->where(DB::raw('DATE(stels_sales.created_at)'), '>=', $request->get('after_date'));
+            $after = $request->get('after_date');
+        }
+
+        $data = $dataSales->orderBy('stels_sales.created_at', 'desc')->get();
 
         // Define the Excel spreadsheet headers
         $examsArray[] = [
             'No',
+            'Company Name',
             'Sales Date',
             'Invoice',
-            'Type',
+            'Total',
             'Status',
-            'Payment Method'
+            'Payment Method',
+            'Document Code'
         ]; 
         
         // Convert each member of the returned collection into an array,
@@ -179,13 +334,33 @@ class SalesController extends Controller
             $no = 0;
         foreach ($data as $row) {
             $no ++;
+            $payment_status = "Paid (success)";
+            switch ($row->payment_status) {
+                case -1:
+                    $payment_status = "Paid (decline)";
+                    break; 
+                case 0:
+                    $payment_status = "Unpaid";
+                    break; 
+                case 1:
+                    $payment_status = "Paid (success)";
+                    break; 
+                case 2:
+                    $payment_status = "Paid (waiting confirmation)";
+                    break; 
+                default:
+                    # code...
+                    break;
+            }
             $examsArray[] = [
                 $no,
+                $row->company_name,
                 $row->created_at,
                 $row->invoice,
-                'Stels',
-                ($row->payment_status == 1)?'Pending':'Timeout',
-                ($row->payment_method == 1)?'ATM':'Kartu Kredit'
+                number_format($row->cust_price_payment, 0, '.', ','),
+                $payment_status,
+                ($row->payment_method == 1)?'ATM':'Kartu Kredit',
+                $row->stel_code
             ];
         }
         $currentUser = Auth::user();
@@ -516,6 +691,7 @@ class SalesController extends Controller
                 $price = $stel_sales_detail->stel->price;
                 $total = $price+($price*$tax*$qty);
                 $stel_sales->total -= $total;
+                $stel_sales->cust_price_payment -= $total;
                 $stel_sales->update();
             }
 
