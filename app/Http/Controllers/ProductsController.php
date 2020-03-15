@@ -285,13 +285,13 @@ class ProductsController extends Controller
                 "address" => "Jl. Gegerkalong Hilir, Sukarasa, Sukasari, Kota Bandung, Jawa Barat 40152.",
                 "phone" => "(+62) 812-2483-7500",
                 "email" => "urelddstelkom@gmail.com",
-                "npwp" => "-" //cari tahu
+                "npwp" => "01.000.013.1-093.000"
             ],
             "to" => [
-                "name" => $currentUser->name ? $currentUser->name : "-",
-                "address" => $currentUser->address ? $currentUser->address : "-",
-                "phone" => $currentUser->phone_number ? $currentUser->phone_number : "-",
-                "email" => $currentUser->email ? $currentUser->email : "-",
+                "name" => $currentUser->company->name ? $currentUser->company->name : "-",
+                "address" => $currentUser->company->address ? $currentUser->company->address : "-",
+                "phone" => $currentUser->company->phone_number ? $currentUser->company->phone_number : "-",
+                "email" => $currentUser->company->email ? $currentUser->company->email : "-",
                 "npwp" => $currentUser->company->npwp_number ? $currentUser->company->npwp_number : "-"
             ],
             "product_id" => config("app.product_id_tth"), //product_id TTH
