@@ -7,11 +7,17 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Response;
 use App\STEL;
-
 use App\STELSales;
+use App\Logs;
+
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
+
+use App\Events\Notification;
+use App\NotificationTable;
  
 class StelAPIController extends AppBaseController
 {    
@@ -89,6 +95,7 @@ class StelAPIController extends AppBaseController
             $updated_count = 0;
             foreach ($stel as $data) {
                 $STELSales = STELSales::find($data->id);
+                $oldStel = $STELSales;
 
                 $data_invoices = [
                     "billing_id" => $data->BILLING_ID,
@@ -98,13 +105,53 @@ class StelAPIController extends AppBaseController
                     ]
                 ];
 
-                $invoice = $this->api_invoice($data_invoices);
-                $STELSales->INVOICE_ID = $invoice && $invoice->status == true ? $invoice->data->_id : null;
-                $STELSales->payment_status = $invoice && $invoice->status == true ? 1 : 0;
+                $billing = $this->api_billing($data->BILLING_ID);
+                if($billing && $billing->status == true && $billing->data->status_paid == 'paid'){
+                    $STELSales->payment_status = 1;
 
-                $updated_count = $invoice && $invoice->status == true ? $updated_count += 1 : $updated_count;
-                $updated_count = $STELSales->save() ? $updated_count : $updated_count -= 1;
+                    $invoice = $this->api_invoice($data_invoices);
+                    $STELSales->INVOICE_ID = $invoice && $invoice->status == true ? $invoice->data->_id : null;
+
+                    $updated_count = $invoice && $invoice->status == true ? $updated_count += 1 : $updated_count;
+
+                    if($STELSales->save()){
+                        $data = array( 
+                            "from"=>"admin-digimon",
+                            "to"=>$STELSales->created_by,
+                            "message"=>"Pembayaran Stel Telah diterima",
+                            "url"=>"payment_detail/".$STELSales->id,
+                            "is_read"=>0,
+                            "created_at"=>date("Y-m-d H:i:s"),
+                            "updated_at"=>date("Y-m-d H:i:s")
+                        );
+
+                        $notification = new NotificationTable();
+                        $notification->id = Uuid::uuid4();
+                        $notification->from = $data['from'];
+                        $notification->to = $data['to'];
+                        $notification->message = $data['message'];
+                        $notification->url = $data['url'];
+                        $notification->is_read = $data['is_read'];
+                        $notification->created_at = $data['created_at'];
+                        $notification->updated_at = $data['updated_at'];
+                        $notification->save();
+                        $data['id'] = $notification->id; 
+                        event(new Notification($data));
+
+                        $logs = new Logs;
+                        $logs->user_id = 1;
+                        $logs->id = Uuid::uuid4();
+                        $logs->action = "Update Status Pembayaran STEL";
+                        $logs->data = $oldStel;
+                        $logs->created_by = 1;
+                        $logs->page = "SALES";
+                        $logs->save();
+                    }else{
+                        $updated_count -= 1;
+                    }
+                }
             }
+
             return 'checkBillingTPN Command Run successfully! '.$updated_count.'/'.count($stel).' updated.';
         }else{
             return 'checkBillingTPN Command Run successfully! Nothing to update.';
@@ -124,6 +171,23 @@ class StelAPIController extends AppBaseController
             $invoice = json_decode($res_invoices);
 
             return $invoice;
+        } catch(Exception $e){
+            return null;
+        }
+    }
+
+    public function api_billing($id_billing){
+        $client = new Client([
+            'headers' => ['Authorization' => config("app.gateway_tpn")],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+        try {
+            $res_billing = $client->get("v1/billings/".$id_billing."")->getBody()->getContents();
+            $billing = json_decode($res_billing);
+
+            return $billing;
         } catch(Exception $e){
             return null;
         }
