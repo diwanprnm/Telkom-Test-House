@@ -2834,6 +2834,15 @@ $notification->id = Uuid::uuid4();
 		$device = Device::find($device_id);
 		if ($exam_attach && $exam && $device){
 			try{
+				$client = new Client([
+					'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+					// Base URI is used with relative requests
+					// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+					'base_uri' => config("app.url_api_bsp"),
+					// You can set any number of default request options.
+					'timeout'  => 60.0,
+				]);
+				
 				$res_delete_spk = $client->get('spk/delete?examId='.$exam->id.'&spkNumber='.$exam->spk_code)->getBody();
 				$delete_spk = json_decode($res_delete_spk);
 
@@ -2852,15 +2861,6 @@ $notification->id = Uuid::uuid4();
 				if (File::exists(public_path().'\media\\examination\\'.$id)){
 					File::deleteDirectory(public_path().'\media\\examination\\'.$id);
 				}
-
-				$client = new Client([
-					'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
-					// Base URI is used with relative requests
-					// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
-					'base_uri' => config("app.url_api_bsp"),
-					// You can set any number of default request options.
-					'timeout'  => 60.0,
-				]);
 
 				$logs = new Logs_administrator;
 				$logs->id = Uuid::uuid4();
