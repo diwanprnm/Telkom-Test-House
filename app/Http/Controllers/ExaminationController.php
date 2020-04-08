@@ -1597,7 +1597,7 @@ class ExaminationController extends Controller
             $exam->save();
 			if($spk_created == 1){
 				$res_exam_schedule = $client->get('spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR);
-				/*$exam_schedule = $res_exam_schedule ? json_decode($res_exam_schedule->getBody()) : null;
+				$exam_schedule = $res_exam_schedule ? json_decode($res_exam_schedule->getBody()) : null;
 				if(!$exam_schedule){
 					$api_logs = new Api_logs;
 					$api_logs->send_to = "OTR";
@@ -1623,7 +1623,7 @@ class ExaminationController extends Controller
 					$api_logs->updated_by = $currentUser->id;
 
 					$api_logs->save();
-				}*/
+				}
 			}
              
 				$exam_hist = new ExaminationHistory;
