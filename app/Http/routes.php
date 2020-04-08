@@ -4659,6 +4659,7 @@ Route::group(['prefix' => '/v1', 'middlewareGroups' => 'api'], function () {
 	Route::post('/sendSertifikat', 'v1\ExaminationAPIController@sendSertifikat');
 	Route::post('/sendSPK', 'v1\ExaminationAPIController@sendSPK');
 	Route::post('/sendSPKHistory', 'v1\ExaminationAPIController@sendSPKHistory');
+	Route::get('/checkSPKCreatedOTR', 'v1\ExaminationAPIController@checkSPKCreatedOTR');
 });
 
 Route::get('/do_backup', 'BackupController@backup'); 

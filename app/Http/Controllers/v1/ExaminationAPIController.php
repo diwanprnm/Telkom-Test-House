@@ -16,9 +16,12 @@ use App\ExaminationAttach;
 use App\AdminRole;
 use App\TbMSPK;
 use App\TbHSPK;
+use App\Api_logs;
 
 use App\User;
 use Mail;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Client;
 
 // UUID
 use Ramsey\Uuid\Uuid;
@@ -1708,5 +1711,37 @@ $notification->id = Uuid::uuid4();
     	}else{
     		return $this->sendError('ID or SPK_NUMBER or ACTION or REMARK or CREATED_BY or CREATED_DT or UPDATED_BY or UPDATED_DT Is Required');
     	}
+    }
+
+    public function checkSPKCreatedOTR()
+    {
+        $spk = Api_logs::where('route', 'LIKE', '%spk/addNotif%')
+        		->where('status', 0)
+     			->get();
+        if(count($spk)>0){
+            $client = new Client([
+				'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+				// Base URI is used with relative requests
+				// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+				'base_uri' => config("app.url_api_bsp"),
+				// You can set any number of default request options.
+				'timeout'  => 60.0,
+			]);
+            $updated_count = 0;
+            foreach ($spk as $data) {
+				$this_spk = Api_logs::where("id", $data->id)->first();
+	        	try {
+	        		$res_exam_schedule = $client->get($data->route);
+					$exam_schedule = $res_exam_schedule ? json_decode($res_exam_schedule->getBody()) : null;
+					$this_spk->status = $exam_schedule && $exam_schedule->status == true ? 1 : 0;
+					$updated_count = $this_spk->status == 1 && $this_spk->save() ? $updated_count += 1 : $updated_count;
+                } catch(Exception $e){
+                    return null;
+                }
+            }
+            return 'checkSPKCreatedOTR Command Run successfully! '.$updated_count.'/'.count($spk).' updated.';
+        }else{
+            return 'checkSPKCreatedOTR Command Run successfully! Nothing to update.';
+        }
     }
 }

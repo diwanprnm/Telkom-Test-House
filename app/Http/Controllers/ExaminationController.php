@@ -15,6 +15,7 @@ use App\ExaminationAttach;
 use App\ExaminationLab;
 use App\ExaminationHistory;
 use App\User;
+use App\Api_logs;
 use App\Logs;
 use App\Logs_administrator;
 use App\Income;
@@ -1596,6 +1597,33 @@ class ExaminationController extends Controller
             $exam->save();
 			if($spk_created == 1){
 				$res_exam_schedule = $client->get('spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR);
+				$exam_schedule = $res_exam_schedule ? json_decode($res_exam_schedule->getBody()) : null;
+				if(!$exam_schedule){
+					$api_logs = new Api_logs;
+					$api_logs->send_to = "OTR";
+					$api_logs->route = 'spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR;
+					$api_logs->status = 0;
+					$api_logs->data = "-";
+					$api_logs->reference_id = $exam->id;
+					$api_logs->reference_table = "examinations";
+					$api_logs->created_by = $currentUser->id;
+					$api_logs->updated_by = $currentUser->id;
+
+					$api_logs->save();
+				}else 
+				if($exam_schedule && $exam_schedule->status == false){
+					$api_logs = new Api_logs;
+					$api_logs->send_to = "OTR";
+					$api_logs->route = 'spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR;
+					$api_logs->status = $exam_schedule->status;
+					$api_logs->data = json_encode($exam_schedule);
+					$api_logs->reference_id = $exam->id;
+					$api_logs->reference_table = "examinations";
+					$api_logs->created_by = $currentUser->id;
+					$api_logs->updated_by = $currentUser->id;
+
+					$api_logs->save();
+				}
 			}
              
 				$exam_hist = new ExaminationHistory;
@@ -2833,7 +2861,8 @@ $notification->id = Uuid::uuid4();
 			$device_id = $exam['device_id'];
 		$device = Device::find($device_id);
 		if ($exam_attach && $exam && $device){
-			try{
+			/* DELETE SPK FROM OTR */
+			if($exam->spk_code){
 				$client = new Client([
 					'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
 					// Base URI is used with relative requests
@@ -2845,7 +2874,13 @@ $notification->id = Uuid::uuid4();
 				
 				$res_delete_spk = $client->get('spk/delete?examId='.$exam->id.'&spkNumber='.$exam->spk_code)->getBody();
 				$delete_spk = json_decode($res_delete_spk);
-
+				if($delete_spk->status == false){
+					Session::flash('error', $delete_spk->message.' (message from OTR)');
+					return redirect('/admin/examination');
+				}
+			}
+			/* END DELETE SPK FROM OTR */
+			try{
 				$logs_a_exam = $exam;
 				$logs_a_device = $device;
 				Income::where('reference_id', '=' ,''.$id.'')->delete();
