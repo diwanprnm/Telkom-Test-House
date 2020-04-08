@@ -15,7 +15,7 @@ return [
 
     'env' => env('APP_ENV', 'production'),
     // 'url_api_bsp' => env('url_api_bsp', 'http://otr.ptbsp.com/OTR_Privy/api/'),
-    'url_api_bsp' => env('url_api_bsp', 'http://revitalisasiotr-otr.apps.playcourt.id/api/'),
+    'url_api_bsp' => env('url_api_bsp', 'http://revitalisasiotr-otr.apps.playcourt.id/apiXXX/'),
 /*    'url_api_tpn' => env('url_api_tpn', 'http://telkompartner-tpncms-dev.vsan-apps.playcourt.id/api/'),
     'gateway_tpn' => env('gateway_tpn', 'apiKey 4ZU03BLNm1ebXSlQa4ou3y:6MHfjHpbOVv3FKTFAf8jIv'),
     'product_id_tth' => env('product_id_tth', '5def1d54d2622f00108f3996'),*/
