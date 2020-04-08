@@ -1596,7 +1596,7 @@ class ExaminationController extends Controller
         try{
             $exam->save();
 			if($spk_created == 1){
-				$res_exam_schedule = $client->get('spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR);
+				$res_exam_schedule = $client->get('spk/addNotifXXX?id='.$exam->id.'&spkNumber='.$spk_number_forOTR);
 				$exam_schedule = $res_exam_schedule ? json_decode($res_exam_schedule->getBody()) : null;
 				if(!$exam_schedule){
 					$api_logs = new Api_logs;
