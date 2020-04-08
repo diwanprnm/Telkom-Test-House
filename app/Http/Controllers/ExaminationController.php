@@ -1596,27 +1596,28 @@ class ExaminationController extends Controller
         try{
             $exam->save();
 			if($spk_created == 1){
-				$res_exam_schedule = $client->get('spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR);
-				$exam_schedule = $res_exam_schedule ? json_decode($res_exam_schedule->getBody()) : null;
-				if(!$exam_schedule){
+				try {
+					$res_exam_schedule = $client->get('spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR);
+					$exam_schedule = $res_exam_schedule ? json_decode($res_exam_schedule->getBody()) : null;
+					if($exam_schedule && $exam_schedule->status == false){
+						$api_logs = new Api_logs;
+						$api_logs->send_to = "OTR";
+						$api_logs->route = 'spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR;
+						$api_logs->status = $exam_schedule->status;
+						$api_logs->data = json_encode($exam_schedule);
+						$api_logs->reference_id = $exam->id;
+						$api_logs->reference_table = "examinations";
+						$api_logs->created_by = $currentUser->id;
+						$api_logs->updated_by = $currentUser->id;
+
+						$api_logs->save();
+					}
+				} catch(Exception $e){
 					$api_logs = new Api_logs;
 					$api_logs->send_to = "OTR";
 					$api_logs->route = 'spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR;
 					$api_logs->status = 0;
 					$api_logs->data = "-";
-					$api_logs->reference_id = $exam->id;
-					$api_logs->reference_table = "examinations";
-					$api_logs->created_by = $currentUser->id;
-					$api_logs->updated_by = $currentUser->id;
-
-					$api_logs->save();
-				}else 
-				if($exam_schedule && $exam_schedule->status == false){
-					$api_logs = new Api_logs;
-					$api_logs->send_to = "OTR";
-					$api_logs->route = 'spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR;
-					$api_logs->status = $exam_schedule->status;
-					$api_logs->data = json_encode($exam_schedule);
 					$api_logs->reference_id = $exam->id;
 					$api_logs->reference_table = "examinations";
 					$api_logs->created_by = $currentUser->id;
