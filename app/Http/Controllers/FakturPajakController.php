@@ -45,18 +45,18 @@ class FakturPajakController extends Controller
             $search = trim($request->input('search'));
             $message = null;
             $page = $request->has('page') ? $request->get('page') : '1';
-            $sort_by = $request->has('sort_by') ? $request->get('sort_by') : 'updated_at';
+            $sort_by = $request->has('sort_by') ? $request->get('sort_by') : 'payment_date';
             $sort_type = $request->has('sort_type') ? $request->get('sort_type') : 'desc';
             $paginate = 10;
             $type = '';
             $filterCompany = '';
             $companies = Company::where('id','!=', 1)->get();
 
-            $spb = Examination::select(DB::raw('examinations.id as _id, "SPB" as type, users.name as user_name, companies.name as company_name, CONCAT(devices.name, ", tipe ", devices.model, ", kapasitas ", devices.capacity) as description, examination_attachments.attachment as faktur_file, examination_attachments.updated_at'))
+            $spb = Examination::select(DB::raw('examinations.id as _id, "SPB" as type, users.name as user_name, companies.name as company_name, CONCAT(devices.name, ", tipe ", devices.model, ", kapasitas ", devices.capacity) as description, examination_attachments.attachment as faktur_file, DATE(examination_attachments.tgl) as payment_date'))
                 ->join('users', 'examinations.created_by', '=', 'users.id')
                 ->join('companies', 'examinations.company_id', '=', 'companies.id')
                 ->join('devices', 'examinations.device_id', '=', 'devices.id')
-                ->join('examination_attachments', 'examinations.id', '=', 'examination_attachments.examination_id')
+                ->leftJoin('examination_attachments', 'examinations.id', '=', 'examination_attachments.examination_id')
                 ->whereNotNull('examinations.created_at')
                 ->where('examination_attachments.name', 'Faktur Pajak')
                 ->where('examination_attachments.attachment', '!=', '')
@@ -73,10 +73,11 @@ class FakturPajakController extends Controller
                                     AND
                                         stels_sales_detail.stels_id = stels.id
                                 ) as description,
-                                stels_sales.faktur_file, stels_sales.updated_at'))
+                                stels_sales.faktur_file, DATE(stels_sales_attachment.updated_at) as payment_date'))
                 ->join('users', 'stels_sales.created_by', '=', 'users.id')
                 ->join('companies', 'users.company_id', '=', 'companies.id')
                 ->join('stels_sales_detail', 'stels_sales.id', '=', 'stels_sales_detail.stels_sales_id')
+                ->leftJoin('stels_sales_attachment', 'stels_sales.id', '=', 'stels_sales_attachment.stel_sales_id')
                 ->join('stels', 'stels_sales_detail.stels_id', '=', 'stels.id')
                 ->where('stels_sales.faktur_file', '!=', '')
             ;

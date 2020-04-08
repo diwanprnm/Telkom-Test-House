@@ -185,7 +185,7 @@
 									<th class="center">Nama</th>
                                     <th class="center">Perusahaan</th>
                                     <th class="center">Deskripsi</th>
-									<th class="center">Updated At</th>
+									<th class="center">Payment Date</th>
 									<th class="center">Download</th>
 								</tr>
 							</thead>
@@ -199,7 +199,7 @@
 											<td class="center">{{ $item->user_name }}</td>
 											<td class="center">{{ $item->company_name }}</td>
 											<td class="center">{{ $item->description }}</td>
-											<td class="center">{{ $item->updated_at }}</td>
+											<td class="center">{{ $item->payment_date }}</td>
 											<td class="center">
 												@if($item->type == 'SPB')
 													<a href="{{URL::to('/admin/examination/media/download/'.$item->_id.'/faktur')}}">{{ $item->faktur_file }}</a>
