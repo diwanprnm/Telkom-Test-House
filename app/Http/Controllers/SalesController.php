@@ -784,6 +784,28 @@ class SalesController extends Controller
         $STELSales = STELSales::where("id", $request->input('id'))->first();
 
         if($STELSales){
+            /* GENERATE NAMA FILE FAKTUR */
+                $stel = STELSales::select(DB::raw('companies.name as company_name, 
+                                (
+                                    SELECT GROUP_CONCAT(stels.code SEPARATOR ", ")
+                                    FROM
+                                        stels,
+                                        stels_sales_detail
+                                    WHERE
+                                        stels_sales_detail.stels_sales_id = stels_sales.id
+                                    AND
+                                        stels_sales_detail.stels_id = stels.id
+                                ) as description, DATE(stels_sales_attachment.updated_at) as payment_date'))
+                ->join('users', 'stels_sales.created_by', '=', 'users.id')
+                ->join('companies', 'users.company_id', '=', 'companies.id')
+                ->join('stels_sales_detail', 'stels_sales.id', '=', 'stels_sales_detail.stels_sales_id')
+                ->leftJoin('stels_sales_attachment', 'stels_sales.id', '=', 'stels_sales_attachment.stel_sales_id')
+                ->join('stels', 'stels_sales_detail.stels_id', '=', 'stels.id')
+                ->where('stels_sales.id', $request->input('id'))
+                ->get();
+
+                $filename = $stel ? $stel[0]->payment_date.'_'.$stel[0]->company_name.'_'.$stel[0]->description : $STELSales->INVOICE_ID;
+            /* END GENERATE NAMA FILE FAKTUR */
             try {
                 // $INVOICE_ID = "5e2d64971220bd00151b778f";
                 $INVOICE_ID = $STELSales->INVOICE_ID;
@@ -796,7 +818,7 @@ class SalesController extends Controller
                         $status_faktur = $invoice->data->status_faktur;
                         if($status_faktur == "received"){
                             /*SAVE FAKTUR PAJAK*/
-                            $name_file = 'faktur_stel_'.$INVOICE_ID.'.pdf';
+                            $name_file = 'faktur_stel_'.$filename.'.pdf';
 
                             $path_file = public_path().'/media/stel/'.$request->input('id');
                             if (!file_exists($path_file)) {

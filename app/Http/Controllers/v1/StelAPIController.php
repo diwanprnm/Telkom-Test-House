@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\v1;
  
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -212,6 +213,28 @@ class StelAPIController extends AppBaseController
                 $STELSales = STELSales::where("id", $data->id)->first();
 
                 if($STELSales){
+                    /* GENERATE NAMA FILE FAKTUR */
+                        $stel = STELSales::select(DB::raw('companies.name as company_name, 
+                                        (
+                                            SELECT GROUP_CONCAT(stels.code SEPARATOR ", ")
+                                            FROM
+                                                stels,
+                                                stels_sales_detail
+                                            WHERE
+                                                stels_sales_detail.stels_sales_id = stels_sales.id
+                                            AND
+                                                stels_sales_detail.stels_id = stels.id
+                                        ) as description, DATE(stels_sales_attachment.updated_at) as payment_date'))
+                        ->join('users', 'stels_sales.created_by', '=', 'users.id')
+                        ->join('companies', 'users.company_id', '=', 'companies.id')
+                        ->join('stels_sales_detail', 'stels_sales.id', '=', 'stels_sales_detail.stels_sales_id')
+                        ->leftJoin('stels_sales_attachment', 'stels_sales.id', '=', 'stels_sales_attachment.stel_sales_id')
+                        ->join('stels', 'stels_sales_detail.stels_id', '=', 'stels.id')
+                        ->where('stels_sales.id', $data->id)
+                        ->get();
+
+                        $filename = $stel ? $stel[0]->payment_date.'_'.$stel[0]->company_name.'_'.$stel[0]->description : $STELSales->INVOICE_ID;
+                    /* END GENERATE NAMA FILE FAKTUR */
                     try {
                         $INVOICE_ID = $STELSales->INVOICE_ID;
                         $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
@@ -222,7 +245,7 @@ class StelAPIController extends AppBaseController
                             $status_faktur = $invoice->data->status_faktur;
                             if($status_invoice == "approved" && $status_faktur == "received"){
                                 /*SAVE FAKTUR PAJAK*/
-                                $name_file = 'faktur_stel_'.$INVOICE_ID.'.pdf';
+                                $name_file = 'faktur_stel_'.$filename.'.pdf';
 
                                 $path_file = public_path().'/media/stel/'.$data->id;
                                 if (!file_exists($path_file)) {
