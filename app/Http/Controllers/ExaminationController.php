@@ -440,6 +440,7 @@ class ExaminationController extends Controller
 			// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
 			'base_uri' => config("app.url_api_bsp"),
 			// You can set any number of default request options.
+			// 'http_errors' => false,
 			'timeout'  => 60.0,
 		]);
 		
@@ -1037,6 +1038,7 @@ class ExaminationController extends Controller
 					// Base URI is used with relative requests
 					// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
 					'base_uri' => config("app.url_api_bsp"),
+					'http_errors' => false,
 					// You can set any number of default request options.
 					'timeout'  => 60.0,
 				]);
@@ -1596,23 +1598,21 @@ class ExaminationController extends Controller
         try{
             $exam->save();
 			if($spk_created == 1){
-				try {
-					$res_exam_schedule = $client->get('spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR);
-					$exam_schedule = $res_exam_schedule ? json_decode($res_exam_schedule->getBody()) : null;
-					if($exam_schedule && $exam_schedule->status == false){
-						$api_logs = new Api_logs;
-						$api_logs->send_to = "OTR";
-						$api_logs->route = 'spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR;
-						$api_logs->status = $exam_schedule->status;
-						$api_logs->data = json_encode($exam_schedule);
-						$api_logs->reference_id = $exam->id;
-						$api_logs->reference_table = "examinations";
-						$api_logs->created_by = $currentUser->id;
-						$api_logs->updated_by = $currentUser->id;
+				$res_exam_schedule = $client->get('spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR);
+				$exam_schedule = $res_exam_schedule->getStatusCode() == '200' ? json_decode($res_exam_schedule->getBody()) : null;
+				if($exam_schedule && $exam_schedule->status == false){
+					$api_logs = new Api_logs;
+					$api_logs->send_to = "OTR";
+					$api_logs->route = 'spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR;
+					$api_logs->status = $exam_schedule->status;
+					$api_logs->data = json_encode($exam_schedule);
+					$api_logs->reference_id = $exam->id;
+					$api_logs->reference_table = "examinations";
+					$api_logs->created_by = $currentUser->id;
+					$api_logs->updated_by = $currentUser->id;
 
-						$api_logs->save();
-					}
-				} catch(Exception $e){
+					$api_logs->save();
+				}elseif ($exam_schedule == null) {
 					$api_logs = new Api_logs;
 					$api_logs->send_to = "OTR";
 					$api_logs->route = 'spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR;
