@@ -57,9 +57,14 @@
 								</div>
 							</div>
 							<div class="col-md-6">
-								<div class="form-group">
+								@if($data->id_kuitansi != '')
+									-
+								@else
+									<a onclick="checkKuitansi('<?php echo $data->id ?>')"> Cek Kuitansi</a>
+								@endif
+								<!-- <div class="form-group">
 									<a onclick="makeKuitansi('<?php echo $data->id ?>')"> Buatkan File Kuitansi</a>
-								</div>
+								</div> -->
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
@@ -193,8 +198,37 @@
 		}); */
 	}
 
+	function checkKuitansi(a){
+		$.ajax({
+			type: "POST",
+			url : "generateKuitansi",
+			data: {'_token':"{{ csrf_token() }}", 'id':a},
+			beforeSend: function(){
+				document.getElementById("overlay").style.display="inherit";
+			},
+			success: function(response){
+				console.log(response);
+				if(response){
+					alert(response);
+					if(response == "Kuitansi Berhasil Disimpan."){location.reload();}
+				}else{
+					alert("Gagal mengambil data (s)");
+				}
+				document.getElementById("overlay").style.display="none";
+			},
+			error:function(response){
+				console.log(response);
+				alert("Gagal mengambil data (e)");
+				document.getElementById("overlay").style.display="none";
+			}
+		});
+		
+		/* $("#1").load("../loadDataKet",{pgw_id6:res[3]}, function() {
+			document.getElementById("overlay").style.display="none";
+		}); */
+	}
+
 	function checkTaxInvoice(a){
-		var APP_URL = {!! json_encode(url('/admin/sales/checkTaxInvoice')) !!};		
 		$.ajax({
 			type: "POST",
 			url : "generateTaxInvoice",

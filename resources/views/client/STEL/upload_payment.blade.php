@@ -48,7 +48,7 @@
 									</tr>
 									 <tr>
 										<th colspan="3">{{ trans('translate.examination_price_payment') }} : 
-										<input type="text" id="jml-pembayaran" class="jml-pembayaran" name="jml-pembayaran" placeholder="0" value="{{ $data->total }}" readonly="" required></th>
+										<input type="text" id="jml-pembayaran" class="jml-pembayaran" name="jml-pembayaran" placeholder="0" value="{{ $data->total }}" required></th>
 									</tr>
 							</table>
 						</div>

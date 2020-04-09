@@ -774,6 +774,74 @@ class SalesController extends Controller
         }
     }
 
+    public function generateKuitansi(Request $request) {
+        $client = new Client([
+            'headers' => ['Authorization' => config("app.gateway_tpn")],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'verify' => false,
+            'http_errors' => false
+        ]);
+
+        $STELSales = STELSales::where("id", $request->input('id'))->first();
+        if($STELSales){
+            try {
+                $INVOICE_ID = "5e85a3565816ba001523dcac";
+                // $INVOICE_ID = $STELSales->INVOICE_ID;
+                $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
+                $invoice = json_decode($res_invoice->getBody());
+                
+                if($invoice && $invoice->status == true){
+                    $status_invoice = $invoice->data->status_invoice;
+                    if($status_invoice == "approved"){
+                        $status_faktur = $invoice->data->status_faktur;
+                        if($status_faktur == "received"){
+                            /*SAVE KUITANSI*/
+                            $name_file = 'kuitansi_stel_'.$INVOICE_ID.'.pdf';
+
+                            $path_file = public_path().'/media/stel/'.$request->input('id');
+                            if (!file_exists($path_file)) {
+                                mkdir($path_file, 0775);
+                            }
+                            $response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/exportpdf');
+                            $stream = (String)$response->getBody();
+
+                            if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
+                                $STELSales->id_kuitansi = $name_file;
+                                $STELSales->save();
+                                return "Kuitansi Berhasil Disimpan.";
+                            }else{
+                                return "Gagal Menyimpan Kuitansi!";
+                            }
+                        }else{
+                            return $invoice->data->status_faktur;
+                        }
+                    }else{
+                        switch ($status_invoice) {
+                            case 'invoiced':
+                                return "Invoice Baru Dibuat.";
+                                break;
+                            
+                            case 'returned':
+                                return $invoice->data->$status_invoice->message;
+                                break;
+                            
+                            default:
+                                return "Invoice sudah dikirim ke DJP.";
+                                break;
+                        }
+                    }
+                }else{
+                    return "Data Invoice Tidak Ditemukan!";        
+                }
+            } catch(Exception $e){
+                return null;
+            }
+        }else{
+            return "Data Pembelian Tidak Ditemukan!";
+        }
+    }
+
     public function generateTaxInvoice(Request $request) {
         $client = new Client([
             'headers' => ['Authorization' => config("app.gateway_tpn")],

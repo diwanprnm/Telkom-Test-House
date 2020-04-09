@@ -4527,7 +4527,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::resource('/sales', 'SalesController');
 	Route::get('/sales/{id}/upload', 'SalesController@upload');
 	Route::get('/sales/{id}/{reason}/deleteProduct', 'SalesController@deleteProduct');
-	Route::get('/sales/checkTaxInvoice', 'SalesController@checkTaxInvoice');
+	Route::post('/sales/{id}/generateKuitansi', 'SalesController@generateKuitansi');
 	Route::post('/sales/{id}/generateTaxInvoice', 'SalesController@generateTaxInvoice');
 	Route::resource('/question', 'QuestionController');
 	Route::resource('/questionerquestion', 'QuestionerQuestionController');
