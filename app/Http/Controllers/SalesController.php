@@ -213,15 +213,16 @@ class SalesController extends Controller
 
         if($currentUser){
             $select = array("stels.name","stels.price","stels.code","stels_sales_detail.qty","stels_sales_detail.id","stels_sales_detail.attachment"); 
-            $STELSales = STELSalesDetail::select($select)->where("stels_sales_id",$id)
+            $STELSales_detail = STELSalesDetail::select($select)->where("stels_sales_id",$id)
                         ->join("stels","stels.id","=","stels_sales_detail.stels_id")
                         ->get();
-			$STELSales_idKuitansi = STELSales::find($id);
+			$STELSales = STELSales::find($id);
 			return view('admin.sales.detail')
-            ->with('data', $STELSales) 
+            ->with('data', $STELSales_detail) 
             ->with('id_sales', $id) 
-            ->with('id_kuitansi', $STELSales_idKuitansi->id_kuitansi) 
-            ->with('faktur_file', $STELSales_idKuitansi->faktur_file) 
+            ->with('id_kuitansi', $STELSales->id_kuitansi) 
+            ->with('faktur_file', $STELSales->faktur_file) 
+            ->with('price_total', $STELSales->total)
 			;     
         }else{
             redirect("login");

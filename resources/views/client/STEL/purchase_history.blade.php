@@ -89,7 +89,7 @@
 												<td><a href="javascript:void(0)" class="collapsible">{{ trans('translate.examination_detail') }}</a></td> 
 											</tr> 
 											<tr class="content" style="display: none;">
-												<td colspan="8">
+												<td colspan="8" align="center">
 													<table class="table table-striped" cellspacing="0" width="100%">
 														<thead>
 															<tr>
@@ -147,15 +147,24 @@
 															<?php }?>
 														</tbody>
 														<tfoot> 
+															<?php
+																$unique_code = ($data[$i]->total/1.1) - $total;
+															?>
 								                        	<tr>
-								                        		<td colspan="5" align="right"> </td>
+								                        		<td colspan="5" align="right"> {{ trans('translate.stel_unique_code') }}</td>
 								                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php 
-								                        			echo 	number_format($total, 0, '.', ',');?></td>
+								                        			echo 	number_format($unique_code, 0, '.', ',');?></td>
+								                        		<td align="center"> === </td>
+								                        	</tr>
+								                        	<tr>
+								                        		<td colspan="5" align="right"> Total</td>
+								                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php 
+								                        			echo 	number_format($total + $unique_code, 0, '.', ',');?></td>
 								                        		<td align="center"> === </td>
 								                        	</tr>
 								                       		<tr>
 								                        		<td colspan="5" align="right"> {{ trans('translate.tax') }}</td>
-								                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php $tax =  $total * (config("cart.tax")/100);
+								                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php $tax =  ($total + $unique_code) * (config("cart.tax")/100);
 								                        			echo	number_format($tax, 0, '.', ',');?></td>
 								                        		<td align="center">
 								                        			@if($item->faktur_file != '')
@@ -166,8 +175,8 @@
 																</td>
 								                        	</tr>
 								                        	<tr>
-								                        		<td colspan="5" align="right"> Total</td>
-								                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($total+$tax, 0, '.', ',');?></td>
+								                        		<td colspan="5" align="right"> {{ trans('translate.stel_price_total') }}</td>
+								                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($data[$i]->total, 0, '.', ',');?></td>
 								                        		<td align="center">
 								                        			@if($item->id_kuitansi != '')
 																		<a target="_blank" href="{{ URL::to('/client/downloadkuitansistel/'.$item->id_kuitansi) }}">

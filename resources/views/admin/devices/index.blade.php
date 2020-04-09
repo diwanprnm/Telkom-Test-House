@@ -119,7 +119,6 @@
 									<th class="center">Nama Perusahaan</th>
 									<th class="center">Nama Perangkat</th>
 									<th class="center">Merk/Pabrik</th>
-									<th class="center">Negara Pembuat</th>
 									<th class="center">Tipe</th>
 									<th class="center">Kapasitas/Kecepatan</th>
 									<th class="center">Referensi Uji</th>
@@ -138,7 +137,6 @@
 										<td class="center">{{ $item->namaPerusahaan }}</td>
 										<td class="center">{{ $item->namaPerangkat }}</td>
 										<td class="center">{{ $item->merk }}</td>
-										<td class="center">{{ $item->manufactured_by }}</td>
 										<td class="center">{{ $item->tipe }}</td>
 										<td class="center">{{ $item->kapasitas }}</td>
 										<td class="center">{{ $item->standarisasi }}</td>

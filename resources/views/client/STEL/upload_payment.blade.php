@@ -48,7 +48,7 @@
 									</tr>
 									 <tr>
 										<th colspan="3">{{ trans('translate.examination_price_payment') }} : 
-										<input type="text" id="jml-pembayaran" class="jml-pembayaran" name="jml-pembayaran" placeholder="0"  required></th>
+										<input type="text" id="jml-pembayaran" class="jml-pembayaran" name="jml-pembayaran" placeholder="0" value="{{ $data->total }}" readonly="" required></th>
 									</tr>
 							</table>
 						</div>
@@ -77,10 +77,10 @@
 @endsection
 @section('content_js')
 <script type="text/javascript">	
-			 
 	 
 	/* Dengan Rupiah */
-	 var jml_pembayaran = document.getElementById('jml-pembayaran');
+	var jml_pembayaran = document.getElementById('jml-pembayaran');
+	jml_pembayaran.value = formatRupiah(jml_pembayaran.value, 'Rp. ');		 
 	jml_pembayaran.addEventListener('keyup', function(e)
 	{
 		jml_pembayaran.value = formatRupiah(this.value, 'Rp. ');

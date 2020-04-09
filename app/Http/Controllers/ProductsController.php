@@ -153,7 +153,7 @@ class ProductsController extends Controller
     public function upload_payment($id)
     { 
         $currentUser = Auth::user();
-        $data = STELSalesAttach::where("stel_sales_id",$id)->first();
+        $data = STELSales::find($id);
         $page = "upload_payment";
         return view('client.STEL.upload_payment') 
         ->with('page', $page) 
@@ -387,7 +387,7 @@ class ProductsController extends Controller
            $STELSales->payment_status = 0;
            $STELSales->invoice = $request->input("invoice_number");
            $STELSales->user_id = $currentUser->id;
-           $STELSales->total = Cart::total();
+           $STELSales->total = $request->input("final_price");
            $STELSales->created_by =$currentUser->id;
            $STELSales->created_at = date("Y-m-d H:i:s");
             // $STELSales->payment_code =  $result->payment_code;
