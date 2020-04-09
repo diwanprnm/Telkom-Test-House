@@ -577,15 +577,30 @@ class ProductsController extends Controller
 	
     public function viewWatermark($id)
     {
-        $stel = STELSalesDetail::where("id",$id)->first();
+        $currentUser = Auth::user();
+        if($currentUser){
+            $query = STELSales::whereHas('user', function ($query) use ($currentUser) {
+                $query->where('company_id', $currentUser->company_id);
+            })
+            ->whereHas('sales_detail', function ($query) use ($id) {
+                $query->where('id', $id);
+            })
+            ->with('user')
+            ->with('sales_detail');
+            $stel = $query->get();
+            if (count($stel)>0){
+                $file = public_path().'/media/stelAttach/'.$id."/".$stel[0]->sales_detail[0]->attachment;
+                $headers = array(
+                  'Content-Type: application/octet-stream',
+                );
 
-        if ($stel){
-            $file = public_path().'/media/stelAttach/'.$stel->id."/".$stel->attachment;
-            $headers = array(
-              'Content-Type: application/octet-stream',
-            );
-
-            return Response::file($file, $headers);
+                return Response::file($file, $headers);
+            }else{
+               return redirect()->back();
+            }
+        }
+        else{
+           return redirect()->back();
         }
     }
 
