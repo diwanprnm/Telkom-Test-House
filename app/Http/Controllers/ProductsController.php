@@ -364,7 +364,6 @@ class ProductsController extends Controller
     }
 
     public function doCheckout(Request $request){  
-        
         $currentUser = Auth::user();
         $STELSales = new STELSales;
         if($currentUser){ 
@@ -393,8 +392,13 @@ class ProductsController extends Controller
             // $STELSales->payment_code =  $result->payment_code;
 
            /*SEMENTARA*/
-           if($request->input("PO_ID")){
-               $data = [
+            $stel_code = '';
+            foreach (Cart::content() as $row) {
+                $res = explode('myTokenProduct', $row->name);
+                $stel_code = $stel_code ? $stel_code.', '.$res[1] : $res[1];
+            }
+            if($request->input("PO_ID")){
+                $data = [
                     "po_id" => $request->input("PO_ID"),
                     // "due_date" => "2019-12-23 10:00:00", //kalo SPB 14 hari
                     "include_tax_invoice" => true,
@@ -405,7 +409,7 @@ class ProductsController extends Controller
                     "config" => [
                         "kode_wapu" => "01",
                         "afiliasi" => "non-telkom",
-                        "tax_invoice_text" => "String"
+                        "tax_invoice_text" => $stel_code.'.'
                     ],
                     "include_tax_invoice" => true
                 ];
@@ -414,7 +418,7 @@ class ProductsController extends Controller
 
                 $STELSales->PO_ID = $request->input("PO_ID");
                 $STELSales->BILLING_ID = $billing && $billing->status == true ? $billing->data->_id : null;
-           }
+            }
 
             try{
                 $save = $STELSales->save();
