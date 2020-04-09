@@ -281,8 +281,8 @@ class ProductsController extends Controller
 
         $data = [
             "from" => [
-                "name" => "Telkom Test House",
-                "address" => "Jl. Gegerkalong Hilir, Sukarasa, Sukasari, Kota Bandung, Jawa Barat 40152.",
+                "name" => "PT TELEKOMUNIKASI INDONESIA, TBK.",
+                "address" => "Telkom Indonesia Graha Merah Putih, Jalan Japati No.1 Bandung, Jawa Barat, 40133",
                 "phone" => "(+62) 812-2483-7500",
                 "email" => "urelddstelkom@gmail.com",
                 "npwp" => "01.000.013.1-093.000"
