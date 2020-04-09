@@ -404,7 +404,8 @@ class ProductsController extends Controller
                     ],
                     "config" => [
                         "kode_wapu" => "01",
-                        "afiliasi" => "non-telkom"
+                        "afiliasi" => "non-telkom",
+                        "tax_invoice_text" => "String"
                     ],
                     "include_tax_invoice" => true
                 ];

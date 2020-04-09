@@ -779,15 +779,13 @@ class SalesController extends Controller
             'headers' => ['Authorization' => config("app.gateway_tpn")],
             'base_uri' => config("app.url_api_tpn"),
             'timeout'  => 60.0,
-            'verify' => false,
             'http_errors' => false
         ]);
 
         $STELSales = STELSales::where("id", $request->input('id'))->first();
         if($STELSales){
             try {
-                $INVOICE_ID = "5e85a3565816ba001523dcac";
-                // $INVOICE_ID = $STELSales->INVOICE_ID;
+                $INVOICE_ID = $STELSales->INVOICE_ID;
                 $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
                 $invoice = json_decode($res_invoice->getBody());
                 
@@ -876,7 +874,6 @@ class SalesController extends Controller
                 $filename = $stel ? $stel[0]->payment_date.'_'.$stel[0]->company_name.'_'.$stel[0]->description : $STELSales->INVOICE_ID;
             /* END GENERATE NAMA FILE FAKTUR */
             try {
-                // $INVOICE_ID = "5e2d64971220bd00151b778f";
                 $INVOICE_ID = $STELSales->INVOICE_ID;
                 $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
                 $invoice = json_decode($res_invoice->getBody());
