@@ -326,8 +326,7 @@ class StelAPIController extends AppBaseController
 
     public function checkReturnedTPN()
     {
-        return 'checkReturnedTPN Command Run successfully! Nothing to update.';
-        /*$stel = STELSales::where('faktur_file', '')->whereNotNull('INVOICE_ID')->get();
+        $stel = STELSales::where('faktur_file', '')->whereNotNull('INVOICE_ID')->get();
         if(count($stel)>0){
             $client = new Client([
                 'headers' => ['Authorization' => config("app.gateway_tpn")],
@@ -348,21 +347,14 @@ class StelAPIController extends AppBaseController
                         
                         if($invoice && $invoice->status == true){
                             $status_invoice = $invoice->data->status_invoice;
-                            $status_faktur = $invoice->data->status_faktur;
-                            if($status_invoice == "approved" && $status_faktur == "received"){
-                                $name_file = 'faktur_stel_'.$filename.'.pdf';
-
-                                $path_file = public_path().'/media/stel/'.$data->id;
-                                if (!file_exists($path_file)) {
-                                    mkdir($path_file, 0775);
-                                }
-
-                                $response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/taxinvoice/pdf');
-                                $stream = (String)$response->getBody();
-
-                                if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
-                                    $STELSales->faktur_file = $name_file;
-                                    $updated_count = $STELSales->save() ? $updated_count += 1 : $updated_count;
+                            if($status_invoice == "returned"){
+                                $res_billing = $client->request('GET', 'v1/invoices?filterobjid-billing._id='.$STELSales->BILLING_ID);
+                                $billing = json_decode($res_billing->getBody());
+                                foreach ($billing->data as $data_billing) {
+                                    if($data_billing->status_faktur == "received"){
+                                        $STELSales->INVOICE_ID = $data_billing->_id;
+                                        $updated_count = $STELSales->save() ? $updated_count += 1 : $updated_count;
+                                    }
                                 }
                             }
                         }
@@ -371,9 +363,9 @@ class StelAPIController extends AppBaseController
                     }
                 }
             }
-            return 'checkTaxInvoiceTPN Command Run successfully! '.$updated_count.'/'.count($stel).' updated.';
+            return 'checkReturnedTPN Command Run successfully! '.$updated_count.'/'.count($stel).' updated.';
         }else{
-            return 'checkTaxInvoiceTPN Command Run successfully! Nothing to update.';
-        }*/
+            return 'checkReturnedTPN Command Run successfully! Nothing to update.';
+        }
     }
 }
