@@ -33,6 +33,7 @@ class ProductsController extends Controller
 {
     public function index(Request $request)
     {   
+        $request->session()->forget('PO_ID_from_TPN');
         $request->session()->forget('unique_code_from_TPN');
         $currentUser = Auth::user();
         $search = trim($request->input('search'));
@@ -334,6 +335,8 @@ class ProductsController extends Controller
             $tax = $purchase && $purchase->status ? $purchase->data->tax : Cart::tax();
             $final_price = $purchase && $purchase->status == true ? $purchase->data->final_price : Cart::total();
 */
+            $PO_ID = $request->session()->get('PO_ID_from_TPN') ? $request->session()->get('PO_ID_from_TPN') : ($purchase && $purchase->status ? $purchase->data->_id : null);
+            $request->session()->put('PO_ID_from_TPN', $unique_code);
             $total_price = Cart::subtotal();
             $unique_code = $request->session()->get('unique_code_from_TPN') ? $request->session()->get('unique_code_from_TPN') : ($purchase && $purchase->status ? $purchase->data->unique_code : '0');
             $request->session()->put('unique_code_from_TPN', $unique_code);
@@ -343,7 +346,7 @@ class ProductsController extends Controller
             $page = "checkout";
             return view('client.STEL.checkout') 
                 ->with('page', $page)
-                ->with('PO_ID', $purchase && $purchase->status == true ? $purchase->data->_id : null)
+                ->with('PO_ID', $PO_ID)
                 ->with('total_price', $total_price)
                 ->with('tax', $tax)
                 ->with('unique_code', $unique_code)
@@ -377,6 +380,7 @@ class ProductsController extends Controller
     }
 
     public function doCheckout(Request $request){  
+        $request->session()->forget('PO_ID_from_TPN');
         $request->session()->forget('unique_code_from_TPN');
         $currentUser = Auth::user();
         $STELSales = new STELSales;

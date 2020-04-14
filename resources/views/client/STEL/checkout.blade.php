@@ -28,7 +28,6 @@
 					<div class="row">    
 						<p> No. Invoice	: {{$invoice_number}} </p> 
 						<input type="hidden" name="invoice_number" value="{{$invoice_number}}"><br>
-						<input type="hidden" name="PO_ID" value="{{$PO_ID}}"><br>
 						<input type="hidden" name="final_price" value="{{$final_price}}"><br>
 						<div class="row"> 
 							<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
