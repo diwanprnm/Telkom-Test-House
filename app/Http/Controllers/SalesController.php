@@ -349,6 +349,9 @@ class SalesController extends Controller
                 case 2:
                     $payment_status = "Paid (waiting confirmation)";
                     break; 
+                case 3:
+                    $payment_status = "Paid (delivered)";
+                    break; 
                 default:
                     # code...
                     break;
@@ -427,10 +430,12 @@ class SalesController extends Controller
                     return redirect('/admin/sales/'.$STELSales->id.'/edit');
                 }*/
             // }
-
-
-			for($i=0;$i<count($request->input('stels_sales_detail_id'));$i++){
-				if ($request->file('stel_file')[$i]) {
+            $attachment_count = 0;
+            $success_count = 0;
+            for($i=0;$i<count($request->input('stels_sales_detail_id'));$i++){
+                $attachment = $request->input('stels_sales_attachment')[$i];
+                if(!$attachment){$attachment_count++;}
+                if ($request->file('stel_file')[$i]) {
 					$name_file = 'stel_file_'.$request->file('stel_file')[$i]->getClientOriginalName();
 					$path_file = public_path().'/media/stelAttach/'.$request->input('stels_sales_detail_id')[$i];
 					if (!file_exists($path_file)) {
@@ -441,6 +446,7 @@ class SalesController extends Controller
 						$STELSalesDetail->attachment = $name_file;
 						$STELSalesDetail->save();
 						$notifUploadSTEL = 1;
+                        $success_count++;
 
                         /*TPN api_upload*/
                         $data [] = 
@@ -456,6 +462,7 @@ class SalesController extends Controller
 					}
 				}
 			}
+            
             /*TPN api_upload*/
             if($STELSales->BILLING_ID != null && $data != null){
                 $data [] = array(
@@ -493,7 +500,7 @@ class SalesController extends Controller
 				}
 			}
             $STELSales->updated_by = $currentUser->id; 
-            $STELSales->payment_status = $request->input('payment_status');
+            $STELSales->payment_status = $success_count == $attachment_count && $attachment_count > 0 ? 3 : $request->input('payment_status');
 
             try{
                 $STELSales->save();

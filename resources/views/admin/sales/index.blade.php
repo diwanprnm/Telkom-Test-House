@@ -110,6 +110,12 @@
 												@else
 													<option value="2">Paid (waiting confirmation)</option>
 												@endif
+												
+												@if($payment_status == '3')
+													<option value="3" selected>Paid (delivered)</option>
+												@else
+													<option value="3">Paid (delivered)</option>
+												@endif
 										</select>
 									</div>
 								</div>
@@ -187,6 +193,9 @@
 														case 2:
 															echo "Paid (waiting confirmation)";
 															break; 
+														case 3:
+															echo "Paid (delivered)";
+															break; 
 														default:
 															# code...
 															break;
@@ -203,7 +212,7 @@
 											</td>
 											<td class="center">
 												<div>
-													@if($item->payment_status == 1)
+													@if($item->payment_status == 1 or $item->payment_status == 3)
 														<a href="{{URL::to('admin/sales/'.$item->id.'/upload')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Upload"><i class="fa fa-upload"></i></a>
 													@endif
 												</div>
