@@ -380,8 +380,7 @@ class ProductsController extends Controller
     }
 
     public function doCheckout(Request $request){  
-        $request->session()->forget('PO_ID_from_TPN');
-        $request->session()->forget('unique_code_from_TPN');
+        $PO_ID = $request->session()->get('PO_ID_from_TPN');
         $currentUser = Auth::user();
         $STELSales = new STELSales;
         if($currentUser){ 
@@ -408,9 +407,9 @@ class ProductsController extends Controller
            $STELSales->created_by =$currentUser->id;
            $STELSales->created_at = date("Y-m-d H:i:s");
 
-           if($request->input("PO_ID")){
+           if($PO_ID){
                 $data = [
-                    "draft_id" => $request->input("PO_ID"),
+                    "draft_id" => $PO_ID,
                     "created" => [
                         "by" => $currentUser->name,
                         "reference_id" => $currentUser->id
@@ -419,7 +418,7 @@ class ProductsController extends Controller
 
                 $billing = $this->api_billing($data);
 
-                $STELSales->PO_ID = $request->input("PO_ID");
+                $STELSales->PO_ID = $PO_ID;
                 $STELSales->BILLING_ID = $billing && $billing->status == true ? $billing->data->_id : null;
             }
 
@@ -471,6 +470,9 @@ class ProductsController extends Controller
                         $logs->save();
 
                         Cart::destroy();
+
+                        $request->session()->forget('PO_ID_from_TPN');
+                        $request->session()->forget('unique_code_from_TPN');
 
                     } catch(\Illuminate\Database\QueryException $e){ 
                         Session::flash('error', 'Failed To Checkout');
