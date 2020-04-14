@@ -336,7 +336,7 @@ class ProductsController extends Controller
             $final_price = $purchase && $purchase->status == true ? $purchase->data->final_price : Cart::total();
 */
             $PO_ID = $request->session()->get('PO_ID_from_TPN') ? $request->session()->get('PO_ID_from_TPN') : ($purchase && $purchase->status ? $purchase->data->_id : null);
-            $request->session()->put('PO_ID_from_TPN', $unique_code);
+            $request->session()->put('PO_ID_from_TPN', $PO_ID);
             $total_price = Cart::subtotal();
             $unique_code = $request->session()->get('unique_code_from_TPN') ? $request->session()->get('unique_code_from_TPN') : ($purchase && $purchase->status ? $purchase->data->unique_code : '0');
             $request->session()->put('unique_code_from_TPN', $unique_code);
