@@ -111,6 +111,7 @@ class StelAPIController extends AppBaseController
 
                 $billing = $this->api_billing($data->BILLING_ID);
                 if($billing && $billing->status == true && $billing->data->status_paid == 'paid'){
+                    $STELSales->cust_price_payment = $billing->data->draft->final_price;
                     $STELSales->payment_status = 1;
 
                     $invoice = $this->api_invoice($data_invoices);
