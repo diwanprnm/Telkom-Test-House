@@ -50,7 +50,7 @@ class SalesController extends Controller
             $after = null;
             $payment_status = '';
 
-            $select = array("stels_sales.id","stels_sales.created_at","stels_sales.invoice","stels_sales.payment_status","stels_sales.payment_method","stels_sales.total","stels_sales.cust_price_payment","companies.name as company_name",
+            $select = array("stels_sales.id","stels_sales.created_at","stels_sales.invoice","stels_sales.payment_status","stels_sales.payment_method","stels_sales.total","stels_sales.cust_price_payment","companies.name as company_name","stels_sales_detail.attachment",
                 DB::raw('stels_sales.id as _id,
                         (
                             SELECT GROUP_CONCAT(stels.name SEPARATOR ", ")

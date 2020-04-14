@@ -264,6 +264,7 @@ class ProductsController extends Controller
         }
 
         $details = array();
+        $stel_code_string = '';
         foreach (Cart::content() as $row) {
             $res = explode('myTokenProduct', $row->name);
             $stel_name = $res[0] ? $res[0] : '-';
@@ -277,6 +278,7 @@ class ProductsController extends Controller
                     "total" => $row->price*$row->qty
                 ]
             ;
+            $stel_code_string = $stel_code_string ? $stel_code_string.', '.$res[1] : $res[1];
         }
 
         $data = [
@@ -299,6 +301,18 @@ class ProductsController extends Controller
             "created" => [
                 "by" => $currentUser->name,
                 "reference_id" => $currentUser->id
+            ],
+            "config" => [
+                "kode_wapu" => "01",
+                "afiliasi" => "non-telkom",
+                "tax_invoice_text" => $stel_code_string.'.'
+            ],
+            "include_tax_invoice" => true,
+            "bank" => [
+                "owner" => "Divisi RisTI TELKOM",
+                "account_number" => "131-0096022712",
+                "bank_name" => "BANK MANDIRI",
+                "branch_office" => "KCP KAMPUS TELKOM BANDUNG"         
             ]
         ];
 
@@ -353,21 +367,8 @@ class ProductsController extends Controller
         try {
             
             $params['json'] = $data;
-            $res_purchase = $client->post("v1/orders", $params)->getBody();
+            $res_purchase = $client->post("v1/draftbillings", $params)->getBody();
             $purchase = json_decode($res_purchase);
-
-            /*while ($purchase->status != true) {
-                $this->api_purchase($data);
-            }*/
-
-            /*get
-                $purchase->status; //if true lanjut, else panggil lagi API nya
-                $purchase->data->_id;
-                $purchase->data->total_price;
-                $purchase->data->tax;
-                $purchase->data->unique_code;
-                $purchase->data->final_price;
-            */
 
             return $purchase;
         } catch(Exception $e){
@@ -402,29 +403,14 @@ class ProductsController extends Controller
            $STELSales->total = $request->input("final_price");
            $STELSales->created_by =$currentUser->id;
            $STELSales->created_at = date("Y-m-d H:i:s");
-            // $STELSales->payment_code =  $result->payment_code;
 
-           /*SEMENTARA*/
-            $stel_code = '';
-            foreach (Cart::content() as $row) {
-                $res = explode('myTokenProduct', $row->name);
-                $stel_code = $stel_code ? $stel_code.', '.$res[1] : $res[1];
-            }
-            if($request->input("PO_ID")){
+           if($request->input("PO_ID")){
                 $data = [
-                    "po_id" => $request->input("PO_ID"),
-                    // "due_date" => "2019-12-23 10:00:00", //kalo SPB 14 hari
-                    "include_tax_invoice" => true,
+                    "draft_id" => $request->input("PO_ID"),
                     "created" => [
                         "by" => $currentUser->name,
                         "reference_id" => $currentUser->id
-                    ],
-                    "config" => [
-                        "kode_wapu" => "01",
-                        "afiliasi" => "non-telkom",
-                        "tax_invoice_text" => $stel_code.'.'
-                    ],
-                    "include_tax_invoice" => true
+                    ]
                 ];
 
                 $billing = $this->api_billing($data);
@@ -511,15 +497,6 @@ class ProductsController extends Controller
             $params['json'] = $data;
             $res_billing = $client->post("v1/billings", $params)->getBody();
             $billing = json_decode($res_billing);
-
-            /*while ($billing->status != true) {
-                $this->api_billing($data);
-            }*/
-
-            /*get
-                $billing->status; //if true lanjut, else panggil lagi API ny
-                $billing->data->_id; //BILLING_ID
-            */
 
             return $billing;
         } catch(Exception $e){
