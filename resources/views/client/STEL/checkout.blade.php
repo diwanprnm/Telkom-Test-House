@@ -42,9 +42,11 @@
 									</tr>
 								</thead>
 								<tbody>
+									@php $no = 0;@endphp
 									  @foreach(Cart::content() as $row)
+									  	@php $no++;@endphp
 									<tr>
-										<td>1</td>
+										<td>{{$no}}</td>
 										<?php 
 											$res = explode('myTokenProduct', $row->name);
 											$stel_name = $res[0] ? $res[0] : '-';
