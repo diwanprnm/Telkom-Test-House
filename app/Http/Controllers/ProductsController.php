@@ -337,7 +337,7 @@ class ProductsController extends Controller
             $total_price = Cart::subtotal();
             $unique_code = $request->session()->get('unique_code_from_TPN') ? $request->session()->get('unique_code_from_TPN') : ($purchase && $purchase->status ? $purchase->data->unique_code : '0');
             $request->session()->put('unique_code_from_TPN', $unique_code);
-            $tax = 0.1*($total_price + $unique_code);
+            $tax = floor(0.1*($total_price + $unique_code));
             $final_price = $total_price + $unique_code + $tax;
 
             $page = "checkout";
