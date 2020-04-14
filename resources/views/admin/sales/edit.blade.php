@@ -105,7 +105,7 @@
 									@endif
 								</div>
 							</div>
-	                        <div class="col-md-12">
+	                        <!-- <div class="col-md-12">
 								<div class="form-group">
 									<label for="form-field-select-2">
 										Status *
@@ -136,6 +136,13 @@
 	                            <a style=" color:white !important;" href="{{URL::to('/admin/sales')}}">
 									<button type="button" class="btn btn-wide btn-red btn-squared btn-marginleft pull-left">
 									Cancel
+									</button>
+								</a>
+	                        </div> -->
+	                        <div class="col-md-12">
+	                            <a style=" color:white !important;" href="{{URL::to('/admin/sales')}}">
+									<button type="button" class="btn btn-wide btn-red btn-squared pull-left">
+									Kembali
 									</button>
 								</a>
 	                        </div>

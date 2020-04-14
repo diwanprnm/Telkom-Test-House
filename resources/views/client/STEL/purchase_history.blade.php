@@ -157,7 +157,7 @@
 								                        		<td align="center"> === </td>
 								                        	</tr>
 								                        	<tr>
-								                        		<td colspan="5" align="right"> Total</td>
+								                        		<td colspan="5" align="right">Sub Total</td>
 								                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php 
 								                        			echo 	number_format($total + $unique_code, 0, '.', ',');?></td>
 								                        		<td align="center"> === </td>
@@ -174,8 +174,8 @@
 																	@endif
 																</td>
 								                        	</tr>
-								                        	<tr>
-								                        		<td colspan="5" align="right"> {{ trans('translate.stel_price_total') }}</td>
+								                        	<tr style="font-weight: bold;">
+								                        		<td colspan="5" align="right"> Total</td>
 								                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($data[$i]->total, 0, '.', ',');?></td>
 								                        		<td align="center">
 								                        			@if($item->id_kuitansi != '')

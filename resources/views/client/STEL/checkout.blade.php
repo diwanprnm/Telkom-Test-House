@@ -65,15 +65,15 @@
 										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($unique_code)}}</td> 
 									</tr> 
 									<tr class="list-total-harga">
-										<td colspan="5" align="right">Total</td> 
+										<td colspan="5" align="right">Sub Total</td> 
 										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($total_price + $unique_code)}}</td> 
 									</tr> 
 									<tr class="list-total-harga">
 										<td colspan="5" align="right">{{ trans('translate.tax') }}</td> 
 										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($tax)}}</td> 
 									</tr> 
-									<tr class="list-total-harga">
-										<td colspan="5" align="right">{{ trans('translate.stel_price_total') }}</td>
+									<tr class="list-total-harga" style="font-weight: bold">
+										<td colspan="5" align="right">Total</td>
 										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($final_price)}}</td> 
 									</tr> 
 								</tfoot>

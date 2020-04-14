@@ -129,7 +129,7 @@
                             			echo	number_format($unique_code, 0, '.', ',');?></td>
                             	</tr>
                             	<tr>
-                            		<td colspan="5" align="right"> Total</td>
+                            		<td colspan="5" align="right"> Sub Total</td>
                             		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php 
                             			echo	number_format($total + $unique_code, 0, '.', ',');?></td>
                             	</tr>
@@ -138,8 +138,8 @@
                             		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php $tax =  ($total + $unique_code) * (config("cart.tax")/100);
                             			echo	number_format($tax, 0, '.', ',');?></td>
                             	</tr>
-                            	<tr>
-                            		<td colspan="5" align="right"> Price of Total</td>
+                            	<tr style="font-weight: bold;">
+                            		<td colspan="5" align="right">Total</td>
                             		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($price_total, 0, '.', ',');?></td>
                             	</tr>
                             </tfoot>
