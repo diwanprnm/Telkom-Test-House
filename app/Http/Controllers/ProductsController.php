@@ -33,6 +33,7 @@ class ProductsController extends Controller
 {
     public function index(Request $request)
     {   
+        $request->session()->forget('unique_code_from_TPN');
         $currentUser = Auth::user();
         $search = trim($request->input('search'));
         if($currentUser){
@@ -262,7 +263,6 @@ class ProductsController extends Controller
             $invoice_number = "STEL ".str_pad($number, $fill, '0', STR_PAD_LEFT)."/".$bulan.'/'.date('Y');
         }
 
-        /*SEMENTARA*/
         $details = array();
         foreach (Cart::content() as $row) {
             $res = explode('myTokenProduct', $row->name);
@@ -313,15 +313,27 @@ class ProductsController extends Controller
             $logs->created_by = $currentUser->id;
             $logs->page = "Client STEL";
             $logs->save();
+            /* DATA DARI TPN  */
+/*
+            $total_price = $purchase && $purchase->status ? $purchase->data->total_price : Cart::subtotal();
+            $unique_code = $purchase && $purchase->status ? $purchase->data->unique_code : '0';
+            $tax = $purchase && $purchase->status ? $purchase->data->tax : Cart::tax();
+            $final_price = $purchase && $purchase->status == true ? $purchase->data->final_price : Cart::total();
+*/
+            $total_price = Cart::subtotal();
+            $unique_code = $request->session()->get('unique_code_from_TPN') ? $request->session()->get('unique_code_from_TPN') : ($purchase && $purchase->status ? $purchase->data->unique_code : '0');
+            $request->session()->put('unique_code_from_TPN', $unique_code);
+            $tax = 0.1*($total_price + $unique_code);
+            $final_price = $total_price + $unique_code + $tax;
 
             $page = "checkout";
             return view('client.STEL.checkout') 
                 ->with('page', $page)
                 ->with('PO_ID', $purchase && $purchase->status == true ? $purchase->data->_id : null)
-                ->with('total_price', $purchase && $purchase->status ? $purchase->data->total_price : Cart::subtotal())
-                ->with('tax', $purchase && $purchase->status == true ? $purchase->data->tax : Cart::tax())
-                ->with('unique_code', $purchase && $purchase->status == true ? $purchase->data->unique_code : '0')
-                ->with('final_price', $purchase && $purchase->status == true ? $purchase->data->final_price : Cart::total())
+                ->with('total_price', $total_price)
+                ->with('tax', $tax)
+                ->with('unique_code', $unique_code)
+                ->with('final_price', $final_price)
                 ->with('invoice_number', $invoice_number);
         }else{
             return redirect('products');
@@ -364,6 +376,7 @@ class ProductsController extends Controller
     }
 
     public function doCheckout(Request $request){  
+        $request->session()->forget('unique_code_from_TPN');
         $currentUser = Auth::user();
         $STELSales = new STELSales;
         if($currentUser){ 

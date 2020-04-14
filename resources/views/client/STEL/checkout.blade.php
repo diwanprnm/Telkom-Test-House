@@ -24,7 +24,7 @@
 		<section id="content"> 
 			<div class="content-wrap"> 
 				<div class="container"> 
-					<form id="form-send-feedback" class="nobottommargin" role="form" method="POST" action="{{ url('doCheckout') }}">
+					<form id="form-send-feedback" class="nobottommargin" role="form" method="POST" action="{{ url('doCheckout') }}" onsubmit="javascript:document.getElementById('submit-btn').style.display = 'none';document.getElementById('submit-msg').style.display = 'block';">
 					<div class="row">    
 						<p> No. Invoice	: {{$invoice_number}} </p> 
 						<input type="hidden" name="invoice_number" value="{{$invoice_number}}"><br>
@@ -153,10 +153,9 @@
 							</div>   
 						
 					</div> 		
-					<div class="col_full"><button class="button full button-3d btn-sky">OK</button></div>
+					<div class="col_full"><button id="submit-btn" class="button full button-3d btn-sky">OK</button> <p hidden id="submit-msg">Please Wait ...</p></div>
 					</form>
 				</div>  
 			</div> 
 		</section><!-- #content end -->
 @endsection
- 

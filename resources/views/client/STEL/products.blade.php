@@ -182,14 +182,17 @@
 									<li>{{ trans('translate.stel_term_condition_num6') }}</li>
 								</ul>
 							</div>
-							   <form class="form-horizontal" role="form" method="POST" action="{{ url('checkout') }}">
+							   <form class="form-horizontal" role="form" method="POST" action="{{ url('checkout') }}" onsubmit="javascript:document.getElementById('submit-btn').style.display = 'none';document.getElementById('submit-msg').style.display = 'block';">
                         {{ csrf_field() }}
 							<div style="padding: 20px;">
 								<input type="checkbox" name="agree" required value="1"> {{ trans('translate.stel_agree_statement') }}
 							</div>
-							<div class="section nomargin" style="padding: 10px;">
+							<div id="submit-btn" class="section nomargin" style="padding: 10px;">
 								<button class="button button-3d btn-blue" type="submit">{{ trans('translate.stel_agree') }}</button> 
 								<a class="button button-3d btn-grey" onClick="$.magnificPopup.close();return false;">{{ trans('translate.stel_not_agree') }}</a>
+							</div>
+							<div id="submit-msg" class="section nomargin" style="padding: 10px;" hidden="">
+								<p>Please Wait ...</p>
 							</div>
 							</form>
 						</div>
