@@ -82,7 +82,7 @@ class ProductsController extends Controller
     }
 
     public function purchase_history(Request $request)
-    { 
+    {
         $currentUser = Auth::user();
         if($currentUser){
             $paginate = 10;
@@ -317,6 +317,7 @@ class ProductsController extends Controller
         ];
 
         $purchase = $this->api_purchase($data);
+        dd($purchase);
 
         if($request->input('agree')){
             $logs = new Logs;
