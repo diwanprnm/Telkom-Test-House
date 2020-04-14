@@ -317,7 +317,6 @@ class ProductsController extends Controller
         ];
 
         $purchase = $this->api_purchase($data);
-        dd($purchase);
 
         if($request->input('agree')){
             $logs = new Logs;
