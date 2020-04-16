@@ -79,6 +79,8 @@
 															break; 
 														case 2:
 															echo '<td class="center"><span class="label label-sm label-warning" style="line-height: 2;">Paid (waiting confirmation)</span></td>';
+														case 3:
+															echo '<td class="center"><span class="label label-sm label-info" style="line-height: 2;">Paid (delivered)</span></td>';
 															break; 
 														default:
 															# code...
@@ -115,11 +117,11 @@
 																			<td>{{$item_detail->qty}}</td> 
 																			<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($item_detail->stel->price * $item_detail->qty), 0, '.', ','); ?></td>
 																			<?php  
-																				if($item_detail->attachment !="" && $payment_status == 1){
+																				if($item_detail->attachment !="" && ($payment_status == 1 or $payment_status == 3)){
 																			?>
 																					<td colspan="6" align="center"><a target="_blank" href="{{ URL::to('/client/downloadstelwatermark/'.$item_detail->id) }}">{{ trans('translate.download') }} File</a></td>
 																			<?php }
-																			else if($item_detail->attachment !="" && $payment_status == 1){
+																			else if($item_detail->attachment !="" && ($payment_status == 1 or $payment_status == 3)){
 																			?>
 																				<td colspan="6" align="center"><a target="_blank" href="{!! url("cetakstel?invoice_id={$invoice}&attach={$item_detail->stel->attachment}&company_name={$company_name}") !!}">{{ trans('translate.download') }} File</a></td>
 																			<?php
