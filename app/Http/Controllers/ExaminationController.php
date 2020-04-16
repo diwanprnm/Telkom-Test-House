@@ -1226,6 +1226,28 @@ class ExaminationController extends Controller
 					// return redirect('/admin/examination/'.$exam->id.'/edit');
 				// }
 			// }
+			if ($request->hasFile('rev_lap_uji_file')) {
+				$name_file = 'rev_lap_uji_'.$request->file('rev_lap_uji_file')->getClientOriginalName();
+				$path_file = public_path().'/media/examination/'.$exam->id;
+				if (!file_exists($path_file)) {
+					mkdir($path_file, 0775);
+				}
+				if($request->file('rev_lap_uji_file')->move($path_file,$name_file)){
+					
+					$attach = new ExaminationAttach;
+					$attach->id = Uuid::uuid4();
+					$attach->examination_id = $exam->id; 
+					$attach->name = 'Revisi Laporan Uji';
+					$attach->attachment = $name_file;
+					$attach->created_by = $currentUser->id;
+					$attach->updated_by = $currentUser->id;
+
+					$attach->save();
+				}else{
+					Session::flash('error', 'Save Revisi Laporan Uji to directory failed');
+					return redirect('/admin/examination/'.$exam->id.'/edit');
+				}
+			}
             $status = $request->input('resume_status');
             $exam->resume_status = $status;
 			
@@ -1349,7 +1371,7 @@ class ExaminationController extends Controller
 				return redirect('/admin/examination/'.$exam->id.'/edit');
 			}
 		}
-        if ($request->has('qa_status')){
+		if ($request->has('qa_status')){
             $status = $request->input('qa_status');
             $passed = $request->input('passed');
             $exam->qa_status = $status;
@@ -1716,6 +1738,20 @@ class ExaminationController extends Controller
 
                 return Response::download($file, $exam->attachment, $headers);
             }
+        }
+    }
+
+    public function downloadRefUjiFile($id)
+    {
+        $data = ExaminationAttach::find($id);
+
+        if ($data){
+            $file = public_path().'/media/examination/'.$data->examination_id.'/'.$data->attachment;
+            $headers = array(
+              'Content-Type: application/octet-stream',
+            );
+
+            return Response::download($file, $data->attachment, $headers);
         }
     }
 
@@ -3539,4 +3575,26 @@ $notification->id = Uuid::uuid4();
 		$bulan = $array_bulan[$bln];
 		return $bulan;
 	}
+
+	public function deleteRevLapUji($id)
+    {
+        $currentUser = Auth::user();
+        $examination_attachment = ExaminationAttach::find($id);
+        if($examination_attachment){
+            
+            // unlink stels_sales_detail.attachment
+            if (File::exists(public_path().'\media\examination\\'.$examination_attachment->examination_id.'\\'.$examination_attachment->attachment)){
+                File::delete(public_path().'\media\examination\\'.$examination_attachment->examination_id.'\\'.$examination_attachment->attachment);
+            }
+
+            // delete stels_sales_detail
+            $examination_attachment->delete();
+
+            Session::flash('message', 'Successfully Delete Revision File');
+        }else{
+            Session::flash('error', 'Undefined Data');
+        }
+            return redirect('/admin/examination/'.$examination_attachment->examination_id.'/edit');
+
+    }
 }

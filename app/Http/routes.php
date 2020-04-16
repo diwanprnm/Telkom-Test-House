@@ -4424,6 +4424,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::get('/logout', 'UserController@logout');
 	Route::get('/', 'DashboardController@index');
 	Route::get('/examination/download/{id}', 'ExaminationController@downloadForm');
+	Route::get('/examination/media/download/{id}', 'ExaminationController@downloadRefUjiFile');
 	Route::get('/examination/media/download/{id}/{name}', 'ExaminationController@downloadMedia');
 	Route::get('/examination/print/{id}', 'ExaminationController@printForm');
 	Route::get('/examination/media/print/{id}/{name}', 'ExaminationController@printMedia');
@@ -4444,6 +4445,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::post('/sales/{id}/generateKuitansiParamSTEL', 'ExaminationController@generateKuitansiParamSTEL');
 	Route::get('/examination/generateEquip', 'ExaminationController@generateEquip');
 	Route::get('/examination/generateSPB', 'ExaminationController@generateSPB');
+	Route::get('/examination/{id}/deleteRevLapUji', 'ExaminationController@deleteRevLapUji');
 	Route::post('/examination/generateSPB', 'ExaminationController@generateSPBData');
 	Route::put('/user/profile/{id}', 'UserController@updateProfile');
 	Route::resource('/article', 'ArticleController');
