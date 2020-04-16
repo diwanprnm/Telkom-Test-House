@@ -333,7 +333,7 @@
 								<?php } ?>
 								
 								<?php if(
-									1 == 0 &&
+									($item->examination_type_id == 2 or $item->examination_type_id == 3) &&
 				  $item->registration_status == 1 &&
                   $item->function_status == 1 &&
                   $item->contract_status == 1 &&

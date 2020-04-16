@@ -768,6 +768,7 @@ class PengujianController extends Controller
 					et.id AS id_jns_pengujian,
 					et.name AS jns_pengujian,
 					et.description AS desc_pengujian,
+					e.examination_type_id,
 					e.spk_code,
 					e.function_test_PIC,
 					e.resume_date,
@@ -820,6 +821,7 @@ class PengujianController extends Controller
 					et.id AS id_jns_pengujian,
 					et.name AS jns_pengujian,
 					et.description AS desc_pengujian,
+					e.examination_type_id,
 					e.spk_code,
 					e.function_test_PIC,
 					e.resume_date,
@@ -858,9 +860,10 @@ class PengujianController extends Controller
             }
 			
             $query_attach = "
-				SELECT examination_id AS id_attach,`name`,attachment,'examination' AS jns FROM examination_attachments WHERE examination_id = '".$id."' AND attachment != ''
+				SELECT examination_id AS id_attach,`name`,attachment,'examination' AS jns, created_at FROM examination_attachments WHERE examination_id = '".$id."' AND attachment != ''
 					UNION
-				SELECT id AS id_attach,'Sertifikat',certificate,'device' AS jns FROM devices WHERE id = (SELECT device_id FROM examinations WHERE id = '".$id."'  AND certificate_status = 1)
+				SELECT id AS id_attach,'Sertifikat',certificate,'device' AS jns, created_at FROM devices WHERE id = (SELECT device_id FROM examinations WHERE id = '".$id."'  AND certificate_status = 1)
+				ORDER BY created_at
 			";
 			$data_attach = DB::select($query_attach);
 			
@@ -949,7 +952,7 @@ class PengujianController extends Controller
     {
     	$currentUser = Auth::user();
 		$query_attach = "
-			SELECT name,attachment FROM examination_attachments WHERE examination_id = '".$id."' AND name = 'Laporan Uji' AND attachment != ''
+			SELECT name, attachment FROM examination_attachments WHERE examination_id = '".$id."' AND (name = 'Laporan Uji' OR name = 'Revisi Laporan Uji') AND attachment != '' ORDER BY created_at
 		";
 		$data_attach = DB::select($query_attach);
 		if (count($data_attach) == 0){
@@ -959,8 +962,19 @@ class PengujianController extends Controller
 			return back();
 		}
 		else{
-			$attach = $data_attach[0]->name; //name
-			$file = $data_attach[0]->attachment; //link here
+			$rev_uji = 0;
+			foreach ($data_attach as $item) {
+				if($item->name == 'Laporan Uji' && $rev_uji == 0){
+					$file = $item->attachment;
+				}
+				if($item->name == 'Revisi Laporan Uji'){
+					$rev_uji = 1;
+					$file = public_path().'/media/examination/'.$id.'/'.$item->attachment;
+					$attach = $item->attachment;
+				}
+			}
+			// $attach = 'Laporan Uji'; //name
+			// $file = $data_attach[0]->attachment; //link here
 			$headers = array(
 			  'Content-Type: application/octet-stream',
 			);
@@ -975,8 +989,11 @@ class PengujianController extends Controller
 			$exam_hist->created_at = date('Y-m-d H:i:s');
 			$exam_hist->save();
 
-			// return Response::download($file, $attach, $headers);
-			return  redirect($file);
+			if($rev_uji == 1){
+				return Response::download($file, $attach, $headers);
+			}else{
+				return redirect($file);
+			}
 		}
     }
 	
