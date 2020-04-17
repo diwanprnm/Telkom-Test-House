@@ -2957,9 +2957,12 @@
 							Step Laporan Uji
 						</legend>
 						<div class="row">
+							@php $rev_uji = 0; @endphp
 							@foreach($data->media as $item)
 								@if($item->name == 'Laporan Uji')
-									<?php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;?>
+									@if($rev_uji == 0)
+										<?php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;?>
+									@endif
 									<input type="hidden" id="hide_attachment_form-lap-uji" value="{{ $item->attachment }}">
 									@if($item->attachment != '')
 									<div class="col-md-12">
@@ -2998,6 +3001,9 @@
 									</div>
 									@endif
 								@endif
+								@if($item->name == 'Revisi Laporan Uji' && $rev_uji == 0)
+									<?php $rev_uji = 1; $lap_uji_url = URL::to('/admin/examination/media/download/'.$item->id); $lap_uji_attach = $item->attachment;?>
+								@endif
 							@endforeach
 							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
 								<div class="col-md-6">
@@ -3021,63 +3027,6 @@
 									</div>
 								</div>
 							@endif
-							@if($data->examination_type_id =='2' || $data->examination_type_id =='3')
-							<div class="col-md-12">
-								<div class="form-group">
-									<label>
-										Revisi Laporan Uji*
-									</label>
-									<input type="file" name="rev_lap_uji_file" id="rev_lap_uji_file" class="form-control" accept="application/pdf, image/*">
-								</div>
-								<div class="form-group">
-									<table class="table table-bordered">
-										<thead>
-											<tr>
-												<th colspan="5">Riwayat Revisi Laporan Uji</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr style="text-align: center;">
-												<td>No</td>
-												<td>Attachment</td>
-												<td>Created By</td>
-												<td>Created At</td>
-												<td>Action</td>
-											</tr>
-											<?php $no=0;?>
-											@foreach($data->media as $item)
-												@if($item->name == 'Revisi Laporan Uji')
-													<?php $no++;?>
-													<tr>
-														<td style="text-align: center;">
-															<strong>{{ $no }}</strong>
-														</td>
-														<td>
-															<strong><a href="{{URL::to('/admin/examination/media/download/'.$item->id)}}"> {{ $item->attachment }}</a></strong>
-														</td>
-														<td>
-															<strong>{{ $item->user->name }}</strong>
-														</td>
-														<td>
-															<strong>{{ $item->created_at }}</strong>
-														</td>
-														<td style="text-align: center;">
-															<strong> <a class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Destroy" onclick="delete_rev_lap_uji_file('{{ $item->id }}')"><i class="fa fa-trash"></i></a> </strong>
-														</td>
-													</tr>
-												@endif
-											@endforeach
-											@if($no == 0)
-												<tr><td colspan="5" style="text-align: center;"> Data Not Found </td></tr>
-											@else
-												<?php $lap_uji_url = "URL::to('/admin/examination/media/download/'.$item->id)"; ?>
-												<?php $lap_uji_attach = $item->attachment; ?>
-											@endif
-										</tbody>
-									</table>
-								</div>
-							</div>
-							@endif
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>
@@ -3085,13 +3034,72 @@
 									</label>
 									<label>
 										: @if($lap_uji_attach)
-											<a href="{{ $lap_uji_url }}"> {{ $lap_uji_attach }}</a>
+											<a href="{{ $lap_uji_url }}"> {{ $lap_uji_attach }}</a> <a class="btn btn-primary" data-toggle="collapse" href="#collapse1" ><b>Revisi</b></a>
 										@else
 											Belum Tersedia
 										@endif
 									</label>
 								</div>
 							</div>
+							@if($data->examination_type_id =='2' || $data->examination_type_id =='3')
+							<div class="col-md-12" class="panel panel-info">
+								<div id="collapse1" class="panel-collapse collapse">
+									<div class="form-group">
+										<label>
+											Revisi Laporan Uji*
+										</label>
+										<input type="file" name="rev_lap_uji_file" id="rev_lap_uji_file" class="form-control" accept="application/pdf, image/*">
+									</div>
+									<div class="form-group">
+										<table class="table table-bordered">
+											<thead>
+												<tr>
+													<th colspan="5">Riwayat Revisi Laporan Uji</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr style="text-align: center;">
+													<td>No</td>
+													<td>Attachment</td>
+													<td>Created By</td>
+													<td>Created At</td>
+													<td>Action</td>
+												</tr>
+												<?php $no=0;?>
+												@foreach($data->media as $item)
+													@if($item->name == 'Revisi Laporan Uji')
+														<?php $no++;?>
+														<tr>
+															<td style="text-align: center;">
+																<strong>{{ $no }}</strong>
+															</td>
+															<td>
+																<strong><a href="{{URL::to('/admin/examination/media/download/'.$item->id)}}"> {{ $item->attachment }}</a></strong>
+															</td>
+															<td>
+																<strong>{{ $item->user->name }}</strong>
+															</td>
+															<td>
+																<strong>{{ $item->created_at }}</strong>
+															</td>
+															<td style="text-align: center;">
+																<strong> <a class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Destroy" onclick="delete_rev_lap_uji_file('{{ $item->id }}')"><i class="fa fa-trash"></i></a> </strong>
+															</td>
+														</tr>
+													@endif
+												@endforeach
+												@if($no == 0)
+													<tr><td colspan="5" style="text-align: center;"> Data Not Found </td></tr>
+												@else
+													<?php $lap_uji_url = "URL::to('/admin/examination/media/download/'.$item->id)"; ?>
+													<?php $lap_uji_attach = $item->attachment; ?>
+												@endif
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							@endif
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>

@@ -863,7 +863,7 @@ class PengujianController extends Controller
 				SELECT examination_id AS id_attach,`name`,attachment,'examination' AS jns, created_at FROM examination_attachments WHERE examination_id = '".$id."' AND attachment != ''
 					UNION
 				SELECT id AS id_attach,'Sertifikat',certificate,'device' AS jns, created_at FROM devices WHERE id = (SELECT device_id FROM examinations WHERE id = '".$id."'  AND certificate_status = 1)
-				ORDER BY created_at
+				ORDER BY created_at DESC
 			";
 			$data_attach = DB::select($query_attach);
 			
@@ -952,7 +952,7 @@ class PengujianController extends Controller
     {
     	$currentUser = Auth::user();
 		$query_attach = "
-			SELECT name, attachment FROM examination_attachments WHERE examination_id = '".$id."' AND (name = 'Laporan Uji' OR name = 'Revisi Laporan Uji') AND attachment != '' ORDER BY created_at
+			SELECT name, attachment FROM examination_attachments WHERE examination_id = '".$id."' AND (name = 'Laporan Uji' OR name = 'Revisi Laporan Uji') AND attachment != '' ORDER BY created_at DESC
 		";
 		$data_attach = DB::select($query_attach);
 		if (count($data_attach) == 0){
@@ -967,7 +967,7 @@ class PengujianController extends Controller
 				if($item->name == 'Laporan Uji' && $rev_uji == 0){
 					$file = $item->attachment;
 				}
-				if($item->name == 'Revisi Laporan Uji'){
+				if($item->name == 'Revisi Laporan Uji' && $rev_uji == 0){
 					$rev_uji = 1;
 					$file = public_path().'/media/examination/'.$id.'/'.$item->attachment;
 					$attach = $item->attachment;

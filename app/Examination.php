@@ -58,7 +58,7 @@ class Examination extends Model
 
     public function media()
     {
-        return $this->hasMany('App\ExaminationAttach')->orderBy('created_at');
+        return $this->hasMany('App\ExaminationAttach')->orderBy('created_at', 'DESC');
     }
 	
 	static function autocomplet($query){

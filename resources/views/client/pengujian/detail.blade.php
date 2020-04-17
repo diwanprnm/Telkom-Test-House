@@ -302,7 +302,7 @@
 													@if($item_attach->name == 'Laporan Uji' && $rev_uji == 0)
 														@php $lap_uji_file = $item_attach->attachment; @endphp
 													@endif
-													@if($item_attach->name == 'Revisi Laporan Uji')
+													@if($item_attach->name == 'Revisi Laporan Uji' && $rev_uji == 0)
 														@php $rev_uji = 1; @endphp
 														@php $lap_uji_file = URL::to('/pengujian/download/'.$item_attach->id_attach.'/'.$item_attach->attachment.'/'.$item_attach->jns); @endphp
 													@endif
@@ -312,7 +312,7 @@
 												<tr>
 													<td>
 														@if(
-															($item->examination_type_id == 2 or $item->examination_type_id == 3) &&
+															$item->examination_type_id == 2 &&
 															$item->registration_status == 1 &&
 															$item->function_status == 1 &&
 															$item->contract_status == 1 &&
