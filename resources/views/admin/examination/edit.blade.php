@@ -2957,7 +2957,7 @@
 							Step Laporan Uji
 						</legend>
 						<div class="row">
-							@php $rev_uji = 0; @endphp
+							@php $rev_uji = 0; $lap_uji_url = null; $lap_uji_attach = null @endphp
 							@foreach($data->media as $item)
 								@if($item->name == 'Laporan Uji')
 									@if($rev_uji == 0)
@@ -3034,10 +3034,11 @@
 									</label>
 									<label>
 										: @if($lap_uji_attach)
-											<a href="{{ $lap_uji_url }}"> {{ $lap_uji_attach }}</a> <a class="btn btn-primary" data-toggle="collapse" href="#collapse1" ><b>Revisi</b></a>
+											<a href="{{ $lap_uji_url }}"> {{ $lap_uji_attach }}</a>
 										@else
 											Belum Tersedia
 										@endif
+										<a class="btn btn-primary" data-toggle="collapse" href="#collapse1" ><b>Revisi</b></a>
 									</label>
 								</div>
 							</div>
@@ -3090,9 +3091,6 @@
 												@endforeach
 												@if($no == 0)
 													<tr><td colspan="5" style="text-align: center;"> Data Not Found </td></tr>
-												@else
-													<?php $lap_uji_url = "URL::to('/admin/examination/media/download/'.$item->id)"; ?>
-													<?php $lap_uji_attach = $item->attachment; ?>
 												@endif
 											</tbody>
 										</table>

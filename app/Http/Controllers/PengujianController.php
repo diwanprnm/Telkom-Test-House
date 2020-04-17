@@ -955,9 +955,10 @@ class PengujianController extends Controller
 			SELECT name, attachment FROM examination_attachments WHERE examination_id = '".$id."' AND (name = 'Laporan Uji' OR name = 'Revisi Laporan Uji') AND attachment != '' ORDER BY created_at DESC
 		";
 		$data_attach = DB::select($query_attach);
+		$file = NULL;
+		$attach = NULL;
 		if (count($data_attach) == 0){
 			$message = 'Data not found';
-			$attach = NULL;
 			Session::flash('error_download_resume', 'Download Failed');
 			return back();
 		}
