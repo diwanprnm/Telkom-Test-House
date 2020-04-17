@@ -3038,7 +3038,7 @@
 										@else
 											Belum Tersedia
 										@endif
-										<a class="btn btn-primary" data-toggle="collapse" href="#collapse1" ><b>Revisi</b></a>
+										<a class="btn btn-primary" data-toggle="collapse" href="#collapse1"><b>Revisi</b></a>
 									</label>
 								</div>
 							</div>
