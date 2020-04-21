@@ -1487,6 +1487,7 @@
 								</div>
 							</div>
 							<input type="hidden" name="spb_date" id="spb_date" value="{{ $data->spb_date }}">
+							<input type="hidden" name="PO_ID" id="PO_ID" value="{{ $data->PO_ID }}">
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
@@ -1771,8 +1772,9 @@
 										@endif
 									</select>
 								</div>
-								<input type="hidden" name="spb_number" id="spb_number" value="{{ $data->spb_number }}">
+								<input type="hidden" name="PO_ID" id="PO_ID" value="{{ $data->PO_ID }}">
 								<input type="hidden" name="exam_price" id="exam_price" value="{{ $data->price }}">
+								<input type="hidden" name="spb_number" id="spb_number" value="{{ $data->spb_number }}">
 								<input type="hidden" name="spb_date" id="spb_date" value="{{ $data->spb_date }}">
 							</div>
 							@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1')

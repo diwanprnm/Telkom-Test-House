@@ -931,9 +931,9 @@ class ExaminationController extends Controller
 	              $notification->updated_at = $data['updated_at'];
 	              $notification->save();
 	               	$data['id'] = $notification->id;
-	               event(new Notification($data));
+	               // event(new Notification($data));
 
-				$this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.spb", "Upload SPB",$path_file."/".$attach_name);
+				// $this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.spb", "Upload SPB",$path_file."/".$attach_name);
 			}else if($status == -1){
 				$exam->price = $request->input('exam_price');
 				// $exam->keterangan = $request->input('keterangan');
@@ -1553,6 +1553,31 @@ class ExaminationController extends Controller
 		if ($request->has('spb_date')){
             $exam->spb_date = $request->input('spb_date');
         }
+		if ($request->has('PO_ID')){
+			if($exam->BILLING_ID){
+				$data_cancel_billing = [
+	            	"canceled" => [
+						"message" => "-",
+						"by" => $currentUser->name,
+                    	"reference_id" => $currentUser->id
+					]
+	            ];
+				$cancel_billing = $this->api_cancel_billing($exam->BILLING_ID, $data_cancel_billing);
+				dd($cancel_billing);
+			}
+			$data_billing = [
+                "draft_id" => $request->input('PO_ID'),
+                "created" => [
+                    "by" => $currentUser->name,
+                    "reference_id" => $currentUser->id
+                ]
+            ];
+
+            $billing = $this->api_billing($data_billing);
+
+            $exam->PO_ID = $request->input('PO_ID');
+            $exam->BILLING_ID = $billing && $billing->status == true ? $billing->data->_id : null;
+        }
 
         // if ($request->hasFile('resume_file')) {
             // $ext_file = $request->file('resume_file')->getClientOriginalExtension();
@@ -1681,6 +1706,46 @@ class ExaminationController extends Controller
         } catch(Exception $e){
             Session::flash('error', 'Save failed');
             return redirect('/admin/examination/'.$exam->id.'/edit');
+        }
+    }
+
+    public function api_cancel_billing($BILLING_ID,$data){
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json', 
+                            'Authorization' => config("app.gateway_tpn_2")
+                        ],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+        try {
+            $params['json'] = $data;
+            $res_cancel_billing = $client->put("v1/billings/".$BILLING_ID."/cancel")->getBody();
+            $cancel_billing = json_decode($res_cancel_billing);
+
+            return $cancel_billing;
+        } catch(Exception $e){
+            return null;
+        }
+    }
+
+    public function api_billing($data){
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json', 
+                            'Authorization' => config("app.gateway_tpn_2")
+                        ],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+        try {
+            $params['json'] = $data;
+            $res_billing = $client->post("v1/billings", $params)->getBody();
+            $billing = json_decode($res_billing);
+
+            return $billing;
+        } catch(Exception $e){
+            return null;
         }
     }
 
@@ -3253,37 +3318,122 @@ $notification->id = Uuid::uuid4();
 			}
 		}
 		
-		if($this->cekSPBNumber($request->input('spb_number')) == 0){
+		if($this->cekSPBNumber($request->input('spb_number')) > 0){
+			echo 2; //SPB Number Exists
+		}else{
 			$exam_id = $request->input('exam_id');
 			$spb_number = $request->input('spb_number');
 			$spb_date = $request->input('spb_date');
 			$arr_nama_perangkat = $request->input('arr_nama_perangkat');
 			$arr_biaya = $request->input('arr_biaya');
-			$arr_nama_perangkat2 = $request->input('arr_nama_perangkat2');
-			$arr_biaya2 = $request->input('arr_biaya2');
 			$exam = Examination::where('id', $exam_id)
 						->with('user')
 						->with('company')
+						->with('device')
 						->with('examinationType')
 						->first()
 			;
+/* Kirim Draft ke TPN */
+			$biaya = 0;
+			for($i=0;$i<count($arr_biaya);$i++){
+				$biaya = $biaya + $arr_biaya[$i];
+			}
+			$ppn = 0.1*$biaya;
+			$total_biaya = $biaya + $ppn;
+			$details [] = 
+	            [
+	                "item" => $spb_number,
+	                "description" => 'Pengujian Perangkat '.$exam->device->name,
+	                "quantity" => 1,
+	                "price" => $biaya,
+	                "total" => $biaya
+	            ]
+	        ;
+
+			$data_draft = [
+	            "from" => [
+	                "name" => "PT TELEKOMUNIKASI INDONESIA, TBK.",
+	                "address" => "Telkom Indonesia Graha Merah Putih, Jalan Japati No.1 Bandung, Jawa Barat, 40133",
+	                "phone" => "(+62) 812-2483-7500",
+	                "email" => "urelddstelkom@gmail.com",
+	                "npwp" => "01.000.013.1-093.000"
+	            ],
+	            "to" => [
+	                "name" => $exam->company->name ? $exam->company->name : "-",
+	                "address" => $exam->company->address ? $exam->company->address : "-",
+	                "phone" => $exam->company->phone_number ? $exam->company->phone_number : "-",
+	                "email" => $exam->company->email ? $exam->company->email : "-",
+	                "npwp" => $exam->company->npwp_number ? $exam->company->npwp_number : "-"
+	            ],
+	            "product_id" => config("app.product_id_tth_2"), //product_id TTH untuk Pengujian
+	            "details" => $details,
+	            "created" => [
+	                "by" => $exam->user->name,
+	                "reference_id" => $exam->user->id
+	            ],
+	            "config" => [
+	                "kode_wapu" => "01",
+	                "afiliasi" => "non-telkom",
+	                "tax_invoice_text" => $details[0]['description']
+	            ],
+	            "include_tax_invoice" => true,
+	            "bank" => [
+	                "owner" => "Divisi RisTI TELKOM",
+	                "account_number" => "131-0096022712",
+	                "bank_name" => "BANK MANDIRI",
+	                "branch_office" => "KCP KAMPUS TELKOM BANDUNG"         
+	            ]
+	        ];
+	        $purchase = $this->api_purchase($data_draft);
+
+	        /*$PO_ID = $request->session()->get('PO_ID_from_TPN') ? $request->session()->get('PO_ID_from_TPN') : ($purchase && $purchase->status ? $purchase->data->_id : null);
+            $request->session()->put('PO_ID_from_TPN', $PO_ID);*/
+	        $total_price = $biaya;
+            $PO_ID = $purchase && $purchase->status ? $purchase->data->_id : null;
+            $unique_code = $purchase && $purchase->status ? $purchase->data->unique_code : '0';
+            // $request->session()->put('unique_code_from_TPN', $unique_code);
+            $tax = floor(0.1*($total_price + $unique_code));
+            $final_price = $total_price + $unique_code + $tax;
+            array_push($arr_nama_perangkat, 'Unique Code');
+            array_push($arr_biaya, $unique_code);
+/* END Kirim Draft ke TPN */
 			$data = []; 
 			$data[] = [
 				'spb_number' => $spb_number,
 				'spb_date' => $spb_date,
 				'arr_nama_perangkat' => $arr_nama_perangkat,
 				'arr_biaya' => $arr_biaya,
-				'arr_nama_perangkat2' => $arr_nama_perangkat2,
-				'arr_biaya2' => $arr_biaya2,
+				'unique_code' => $unique_code,
 				'exam' => $exam,
 				'manager_urel' => $manager_urels,
 				'is_poh' => $is_poh
 			];
+
 			$request->session()->put('key_exam_for_spb', $data);
-			echo 1;			
-		}else{
-			echo 2; //SPB Number Exists
+			echo $PO_ID.'myToken'.$final_price;
 		}
+    }
+
+    public function api_purchase($data){
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json', 
+                            'Authorization' => config("app.gateway_tpn_2")
+                        ],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false,
+            'verify' => false
+        ]);
+        try {
+            
+            $params['json'] = $data;
+            $res_purchase = $client->post("v1/draftbillings", $params)->getBody();
+            $purchase = json_decode($res_purchase);
+
+            return $purchase;
+        } catch(Exception $e){
+            return null;
+        }
     }
 	
 	function cekSPBNumber($spb_number)

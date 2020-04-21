@@ -18,8 +18,8 @@ return [
     'url_api_bsp' => env('url_api_bsp', 'http://revitalisasiotr-otr.apps.playcourt.id/api/'),
     
     /* ENV DEV TPN */
-/*
     'url_api_tpn' => env('url_api_tpn', 'http://telkompartner-tpncms-dev.vsan-apps.playcourt.id/api/'),    
+/*
     'gateway_tpn' => env('gateway_tpn', 'apiKey 4ZU03BLNm1ebXSlQa4ou3y:6MHfjHpbOVv3FKTFAf8jIv'),
     'product_id_tth' => env('product_id_tth', '5e5377a0c5f8d40010fc4594'),
 */
@@ -29,7 +29,7 @@ return [
 
     /* ENV PROD TPN */
 
-    'url_api_tpn' => env('url_api_tpn', 'https://partner.telkom.co.id/api/'),
+    // 'url_api_tpn' => env('url_api_tpn', 'https://partner.telkom.co.id/api/'),
     'gateway_tpn' => env('gateway_tpn', 'apiKey 1w4kG2nmIYPiHfjxIEeSsh:3fhd4B65RoTRp2HCUhJbsJ'),
     'product_id_tth' => env('product_id_tth', '5e5377a0c5f8d40010fc4594'),
 

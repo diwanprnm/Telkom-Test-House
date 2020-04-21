@@ -3468,12 +3468,8 @@ Route::get('cetakSPB', function(Illuminate\Http\Request $request){
 		for($i=0;$i<count($data[0]['arr_nama_perangkat']);$i++){
 			$biaya = $biaya + $data[0]['arr_biaya'][$i];
 		}
-		$biaya2 = 0;
-		for($i=0;$i<count($data[0]['arr_nama_perangkat2']);$i++){
-			$biaya2 = $biaya2 + $data[0]['arr_biaya2'][$i];
-		}
-		$ppn = 0.1*$biaya;
-		$total_biaya = $biaya + $biaya2 + $ppn;
+		$ppn = floor(0.1*$biaya);
+		$total_biaya = $biaya + $ppn;
 		$terbilang = $pdf->terbilang($total_biaya, 3);
 		$spb_date = date('j', strtotime($data[0]['spb_date']))." ".strftime('%B %Y', strtotime($data[0]['spb_date']));
 	// $pdf->judul_kop('FORM TINJAUAN KONTRAK','Contract Review Form');
@@ -3526,10 +3522,7 @@ Route::get('cetakSPB', function(Illuminate\Http\Request $request){
 	for($i=0;$i<count($data[0]['arr_nama_perangkat']);$i++){
 		$pdf->RowRect(array('',($i+1).'.',$data[0]['arr_nama_perangkat'][$i],number_format($data[0]['arr_biaya'][$i],0,",",".").",-"));	
 	}
-	$pdf->RowRect(array('','','PPN 10 %',number_format($ppn,0,",",".").",-"));	
-	for($i=0;$i<count($data[0]['arr_nama_perangkat2']);$i++){
-		$pdf->RowRect(array('',($i+1).'.',$data[0]['arr_nama_perangkat2'][$i],number_format($data[0]['arr_biaya2'][$i],0,",",".").",-"));	
-	}
+	$pdf->RowRect(array('','','PPN 10 %',number_format($ppn,0,",",".").",-"));
 	$pdf->SetFont('helvetica','B',9);
 	$pdf->RowRect(array('','','Total Biaya Pengujian',number_format($total_biaya,0,",",".").",-"));	
 	$pdf->SetWidths(array(17,160));

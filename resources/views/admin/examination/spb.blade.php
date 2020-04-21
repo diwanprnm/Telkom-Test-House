@@ -122,39 +122,22 @@
 						</div>
 					</td>
 				</tr>
-			</tbody>
-			<tbody class="tes_append"></tbody>
-		</table>
-		<table width=100%>
-			<thead>
-				<label for="nama_perangkat">Tambahkan Biaya diluar PPN *bila perlu</label>
-			</thead>
-			<tbody border="1">
-				<tr>
-					<td align="center">
-						<label for="nama_perangkat">Nama *</label>
-					</td>
-					<td align="center">
-						<label for="biaya">Biaya (tanpa PPN) *</label>
-					</td>
-					<td style="width:40px;"><a  style="width:40px;" value='Add More' class='del btn btn-success btn-flat' onclick='addAppend2()'><i id='icon_add' class='fa fa-plus'/></a></td>
-				</tr>
 				@if($data->is_loc_test == 1)
 					<tr>
 						<td>
 							<div class="form-group">
-								<input type="text" class="form-control" name="nama_perangkat2[]" value="Uji Lokasi" required>
+								<input type="text" class="form-control" name="nama_perangkat[]" value="Uji Lokasi" required>
 							</div>
 						</td>
 						<td>
 							<div class="form-group">
-								<input type="number" class="form-control biaya" name="biaya2[]" id="biaya2" value="0" required>
+								<input type="number" class="form-control biaya" name="biaya[]" id="biaya1" value="0" required>
 							</div>
 						</td>
 					</tr>
 				@endif
 			</tbody>
-			<tbody class="tes_append2"></tbody>
+			<tbody class="tes_append"></tbody>
 		</table>
 		<div class="row">
 			<div class="col-md-6">
@@ -283,7 +266,6 @@
 		{
 			$("#hapus_"+a+"").remove();
 			arr_biaya = [];
-			arr_biaya2 = [];
 			total_biaya = 0;
 			ppn = 0;
 
@@ -295,65 +277,12 @@
 			ppn = 0.1*total_biaya;
 			total_biaya += ppn;
 
-			var biaya2 = document.getElementsByName("biaya2[]");
-			for (i = 0; i < biaya2.length; i++) {
-				arr_biaya2[i] = biaya2[i].value
-				total_biaya += Number(arr_biaya2[i]);
-			}
-
-            $('#total_biaya').val(total_biaya);
+			$('#total_biaya').val(total_biaya);
 		}
 		
-			var hitung2 = 0;
-			function addAppend2(){
-				hitung2 += 1;
-				var bahan_append = '<tr id="hapus2_'+hitung2+'">';
-						bahan_append += '<td>'
-						bahan_append += '<div class="form-group">'
-							bahan_append += '<input type="text" class="form-control" name="nama_perangkat2[]" required>'
-						bahan_append += '</div>'
-						bahan_append += '</td>'
-						bahan_append += '<td>'
-						bahan_append += '<div class="form-group">'
-							bahan_append += '<input type="number" class="form-control biaya" name="biaya2[]" required>'
-						bahan_append += '</div>'
-						bahan_append += '</td>'
-						bahan_append += '<td style="width:40px;"><a  style="width:40px;" value="Delete" class="del btn btn-danger btn-flat" onclick="destroy2('+hitung2+')"><i id="icon_add" class="fa-cross fa fa-remove"/></a></td>'
-				bahan_append += '</tr>'
-
-				$('.tes_append2').append(bahan_append);
-				changeTotal();
-			}
-			function destroy2(a)
-			{
-				$("#hapus2_"+a+"").remove();
-				arr_biaya = [];
-				arr_biaya2 = [];
-				total_biaya = 0;
-				ppn = 0;
-
-        		var biaya = document.getElementsByName("biaya[]");
-	            for (i = 0; i < biaya.length; i++) {
-					arr_biaya[i] = biaya[i].value
-					total_biaya += Number(arr_biaya[i]);
-				}
-				ppn = 0.1*total_biaya;
-				total_biaya += ppn;
-
-				var biaya2 = document.getElementsByName("biaya2[]");
-				for (i = 0; i < biaya2.length; i++) {
-					arr_biaya2[i] = biaya2[i].value
-					total_biaya += Number(arr_biaya2[i]);
-				}
-
-	            $('#total_biaya').val(total_biaya);
-			}
-			
 		$('.generate-button').click(function () {
 			arr_nama_perangkat = [];
 			arr_biaya = [];
-			arr_nama_perangkat2 = [];
-			arr_biaya2 = [];
 			total_biaya = 0;
 			ppn = 0;
 			var exam_id = document.getElementsByName("exam_id")[0].value;
@@ -371,34 +300,25 @@
 				}
 				ppn = 0.1*total_biaya;
 				total_biaya += ppn;
-			var nama_perangkat2 = document.getElementsByName("nama_perangkat2[]");
-				var i;
-				for (i = 0; i < nama_perangkat2.length; i++) {
-					arr_nama_perangkat2[i] = nama_perangkat2[i].value;
-				}
-			var biaya2 = document.getElementsByName("biaya2[]");
-				for (i = 0; i < biaya2.length; i++) {
-					arr_biaya2[i] = biaya2[i].value
-					total_biaya += Number(arr_biaya2[i]);
-				}
 			
 			var APP_URL = {!! json_encode(url('/cetakSPB')) !!};
 			
 			$.ajax({
 				type: "POST",
 				url : "generateSPB",
-				data: {'_token':"{{ csrf_token() }}", 'exam_id':exam_id, 'spb_number':spb_number, 'spb_date':spb_date, 'arr_nama_perangkat':arr_nama_perangkat, 'arr_biaya':arr_biaya, 'arr_nama_perangkat2':arr_nama_perangkat2, 'arr_biaya2':arr_biaya2},
+				data: {'_token':"{{ csrf_token() }}", 'exam_id':exam_id, 'spb_number':spb_number, 'spb_date':spb_date, 'arr_nama_perangkat':arr_nama_perangkat, 'arr_biaya':arr_biaya},
 				beforeSend: function(){
 					
 				},
 				success: function(response){
-					if(response == 1){
-						window.open(APP_URL);
-						pops(total_biaya,spb_number,spb_date);
-						window.close();
-					}
-					else if(response == 2){
+					console.log(response);
+					if(response == 2){
 						alert("Nomor SPB sudah ada!");
+					}else if(response.includes("myToken")){
+						var res = response.split("myToken");
+						window.open(APP_URL);
+						pops(res[0],res[1],spb_number,spb_date);
+						window.close();
 					}else{
 						alert("Gagal mengambil data");
 					}
@@ -417,7 +337,6 @@
         function changeTotal(){
         	$('.biaya').on('keyup',function(){
         		arr_biaya = [];
-				arr_biaya2 = [];
 				total_biaya = 0;
 				ppn = 0;
 
@@ -426,20 +345,17 @@
 					arr_biaya[i] = biaya[i].value
 					total_biaya += Number(arr_biaya[i]);
 				}
-				ppn = 0.1*total_biaya;
-				total_biaya += ppn;
-
-				var biaya2 = document.getElementsByName("biaya2[]");
-				for (i = 0; i < biaya2.length; i++) {
-					arr_biaya2[i] = biaya2[i].value
-					total_biaya += Number(arr_biaya2[i]);
-				}
+				/*ppn = 0.1*total_biaya;
+				total_biaya += ppn;*/
 
 	            $('#total_biaya').val(total_biaya);
 	        });
         }
 		
-		function pops(jumlah,spb_number,spb_date){
+		function pops(PO_ID,jumlah,spb_number,spb_date){
+			textcontent=opener.document.getElementById("PO_ID").value;
+			opener.document.getElementById("PO_ID").value = PO_ID;
+			
 			textcontent=opener.document.getElementById("exam_price").value;
 			opener.document.getElementById("exam_price").value = jumlah;
 			
