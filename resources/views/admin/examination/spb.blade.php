@@ -41,9 +41,40 @@
     <link href={{ asset("assets/css/jquery-ui-1_12_1.css") }} rel="stylesheet" type="text/css">
 	<script src={{ asset("assets/js/jquery-1.12.4.js") }}></script>
 	<script src={{ asset("assets/js/jquery-ui-1_12_1.js") }}></script>
+	<style type="text/css">
+        #overlay {
+          z-index: 1000;
+          display:none;
+          position: fixed;
+          top: 0px;
+          left: 0px;
+          width: 100%;
+          height: 100%;
+          background: rgba(4, 10, 30, 0.8);
+        }
+        #tengah{
+            width: 250px;
+            height: 30px;
+            position: absolute;
+            top:0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+    </style>
 </head>
 
 <body>
+	<div id="overlay">
+        <div id="tengah">
+            <center>
+                <br>
+                <span style="color:#ffffff">Please wait ....</span>
+                <img src='{{ asset("images/loading.gif") }}'/>
+            </center>
+        </div>
+    </div>
 
 	<input type="hidden" name="exam_id" id="exam_id" class="form-control" value="{{ $exam_id }}"/>
 	<fieldset>
@@ -308,23 +339,27 @@
 				url : "generateSPB",
 				data: {'_token':"{{ csrf_token() }}", 'exam_id':exam_id, 'spb_number':spb_number, 'spb_date':spb_date, 'arr_nama_perangkat':arr_nama_perangkat, 'arr_biaya':arr_biaya},
 				beforeSend: function(){
-					
+					document.getElementById("overlay").style.display="inherit";
 				},
 				success: function(response){
 					console.log(response);
 					if(response == 2){
 						alert("Nomor SPB sudah ada!");
+						document.getElementById("overlay").style.display="none";
 					}else if(response.includes("myToken")){
 						var res = response.split("myToken");
 						window.open(APP_URL);
 						pops(res[0],res[1],spb_number,spb_date);
 						window.close();
+						// document.getElementById("overlay").style.display="none";
 					}else{
 						alert("Gagal mengambil data");
+						document.getElementById("overlay").style.display="none";
 					}
 				},
 				error:function(){
 					alert("Gagal mengambil data");
+					document.getElementById("overlay").style.display="none";
 				}
 			});
 		});

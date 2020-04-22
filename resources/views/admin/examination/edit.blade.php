@@ -1710,9 +1710,32 @@
 									@endif
 								</div>
 							</div>
-							<div class="col-md-12">
-								<div class="form-group">
+							<?php $find_kuitansi = 0; $find_faktur = 0; $kuitansi_attach = ''; $faktur_attach = '';?>
+							@foreach($data->media as $item)
+								@if($item->name == 'Kuitansi' && $item->attachment != '' && $find_kuitansi == 0)
+									<?php $find_kuitansi = 1; $kuitansi_attach = $item->attachment;?>
+								@endif
+								@if($item->name == 'Faktur Pajak' && $item->attachment != '' && $find_faktur == 0)
+									<?php $find_faktur = 1; $faktur_attach = $item->attachment;?>
+								@endif
+							@endforeach
+							<div class="col-md-6">
+								@if($find_kuitansi == 1)
+									-
+								@else
+									<a onclick="checkKuitansi('<?php echo $data->id ?>')"> Cek Kuitansi</a>
+								@endif
+								<!-- <div class="form-group">
 									<a onclick="makeKuitansi('<?php echo $data->id ?>')"> Buatkan File Kuitansi</a>
+								</div> -->
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									@if($find_faktur == 1)
+										-
+									@else
+										<a onclick="checkTaxInvoice('<?php echo $data->id ?>')"> Cek Faktur Pajak</a>
+									@endif
 								</div>
 							</div>
 							<div class="col-md-6">
@@ -1723,13 +1746,9 @@
 									<input type="file" name="kuitansi_file" id="kuitansi_file" class="form-control" accept="application/pdf, image/*">
 								</div>
 								<div class="form-group">
-									<?php $kuitansi_attach = ''; ?>
-									@foreach($data->media as $item)
-										@if($item->name == 'Kuitansi' && $item->attachment != '')
-											<?php $kuitansi_attach = $item->attachment; ?>
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/kuitansi')}}"> Download Kuitansi "<?php echo $kuitansi_attach; ?>"</a>
-										@endif
-									@endforeach
+									@if($kuitansi_attach != '')
+										<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/kuitansi')}}"> Download Kuitansi "<?php echo $kuitansi_attach; ?>"</a>
+									@endif
 									<input type="hidden" id="kuitansi_name" value="<?php echo $kuitansi_attach; ?>">
 								</div>
 							</div>
@@ -1741,13 +1760,9 @@
 									<input type="file" name="faktur_file" id="faktur_file" class="form-control" accept="application/pdf">
 								</div>
 								<div class="form-group">
-									<?php $faktur_attach = ''; ?>
-									@foreach($data->media as $item)
-										@if($item->name == 'Faktur Pajak' && $item->attachment != '')
-											<?php $faktur_attach = $item->attachment; ?>
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/faktur')}}"> Download Faktur Pajak "<?php echo $faktur_attach; ?>"</a>
-										@endif
-									@endforeach
+									@if($faktur_attach != '')>
+										<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/faktur')}}"> Download Faktur Pajak "<?php echo $faktur_attach; ?>"</a>
+									@endif
 									<input type="hidden" id="faktur_name" value="<?php echo $faktur_attach; ?>">
 								</div>
 							</div>
@@ -1756,7 +1771,7 @@
 									<label for="form-field-select-2">
 										Status *
 									</label>
-									<select name="payment_status" class="cs-select cs-skin-elastic">
+									<select id="payment_status" name="payment_status" class="cs-select cs-skin-elastic">
 										@if($data->payment_status == 0)
 											<option value="0" selected>Choose Status</option>
 											<option value="1">Completed</option>
@@ -4514,6 +4529,66 @@
 		}); */
 	}
 	
+	function checkKuitansi(a){
+		$.ajax({
+			type: "POST",
+			url : "generateKuitansiSPB",
+			data: {'_token':"{{ csrf_token() }}", 'id':a},
+			beforeSend: function(){
+				document.getElementById("overlay").style.display="inherit";
+			},
+			success: function(response){
+				console.log(response);
+				if(response){
+					alert(response);
+					if(response == "Kuitansi Berhasil Disimpan."){location.reload();}
+				}else{
+					alert("Gagal mengambil data (s)");
+				}
+				document.getElementById("overlay").style.display="none";
+			},
+			error:function(response){
+				console.log(response);
+				alert("Gagal mengambil data (e)");
+				document.getElementById("overlay").style.display="none";
+			}
+		});
+		
+		/* $("#1").load("../loadDataKet",{pgw_id6:res[3]}, function() {
+			document.getElementById("overlay").style.display="none";
+		}); */
+	}
+
+	function checkTaxInvoice(a){
+		$.ajax({
+			type: "POST",
+			url : "generateTaxInvoiceSPB",
+			data: {'_token':"{{ csrf_token() }}", 'id':a},
+			beforeSend: function(){
+				document.getElementById("overlay").style.display="inherit";
+			},
+			success: function(response){
+				console.log(response);
+				if(response){
+					alert(response);
+					if(response == "Faktur Pajak Berhasil Disimpan."){location.reload();}
+				}else{
+					alert("Gagal mengambil data (s)");
+				}
+				document.getElementById("overlay").style.display="none";
+			},
+			error:function(response){
+				console.log(response);
+				alert("Gagal mengambil data (e)");
+				document.getElementById("overlay").style.display="none";
+			}
+		});
+		
+		/* $("#1").load("../loadDataKet",{pgw_id6:res[3]}, function() {
+			document.getElementById("overlay").style.display="none";
+		}); */
+	}
+
 	function masukkanBarang(a,b){
 		var APP_URL = {!! json_encode(url('/admin/equipment/create')) !!};		
 		$.ajax({
@@ -4725,6 +4800,7 @@
 		var spb_file = document.getElementById('spb_file');
 		var spb_name = document.getElementById('spb_name').value;
 		var spb_number = document.getElementById('spb_number').value;
+		var payment_status = document.getElementById('payment_status').value;
 		var $inputs = $('#form-spb :input');
 		var values = {};
 		$inputs.each(function() {
@@ -4741,6 +4817,10 @@
 				$('#myModalketerangan_spb').modal('hide');
 			}			
 		}else{
+			if(payment_status == 1){
+				alert("SPB sudah dibayar oleh Kastamer!");
+				return false;
+			}
 			if(!spb_number){
 				alert("Silakan mengisi Nomor SPB terlebih dahulu (Buatkan File SPB)!");
 				return false;
@@ -4771,10 +4851,10 @@
 				$('#myModalketerangan_pembayaran').modal('hide');
 			}			
 		}else{
-			if(document.getElementById('hide_status_form-pembayaran').value == 0){
+			/*if(document.getElementById('hide_status_form-pembayaran').value == 0){
 				alert("Kastamer belum melakukan pembayaran / bukti bayar belum di-upload oleh kastamer!");
 				return false;
-			}
+			}*/
 			/*if(kuitansi_file.value == '' && kuitansi_name == ''){
 				alert("File Kuitansi belum diunggah");$('#kuitansi_file').focus();return false;				
 			}*/

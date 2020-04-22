@@ -4438,6 +4438,8 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::post('/sales/{id}/generateKuitansiParamSTEL', 'ExaminationController@generateKuitansiParamSTEL');
 	Route::get('/examination/generateEquip', 'ExaminationController@generateEquip');
 	Route::get('/examination/generateSPB', 'ExaminationController@generateSPB');
+	Route::post('/examination/{id}/generateKuitansiSPB', 'ExaminationController@generateKuitansi');
+	Route::post('/examination/{id}/generateTaxInvoiceSPB', 'ExaminationController@generateTaxInvoice');
 	Route::get('/examination/{id}/deleteRevLapUji', 'ExaminationController@deleteRevLapUji');
 	Route::post('/examination/generateSPB', 'ExaminationController@generateSPBData');
 	Route::put('/user/profile/{id}', 'UserController@updateProfile');

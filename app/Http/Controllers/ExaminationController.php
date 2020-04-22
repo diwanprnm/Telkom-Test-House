@@ -1554,6 +1554,10 @@ class ExaminationController extends Controller
             $exam->spb_date = $request->input('spb_date');
         }
 		if ($request->has('PO_ID')){
+			if($exam->payment_status == 1){
+				Session::flash('error', 'SPB Already Paid');
+                return redirect('/admin/examination/'.$exam->id.'/edit');
+			}
 			if($exam->BILLING_ID){
 				$data_cancel_billing = [
 	            	"canceled" => [
@@ -1563,7 +1567,6 @@ class ExaminationController extends Controller
 					]
 	            ];
 				$cancel_billing = $this->api_cancel_billing($exam->BILLING_ID, $data_cancel_billing);
-				dd($cancel_billing);
 			}
 			$data_billing = [
                 "draft_id" => $request->input('PO_ID'),
@@ -1720,7 +1723,7 @@ class ExaminationController extends Controller
         ]);
         try {
             $params['json'] = $data;
-            $res_cancel_billing = $client->put("v1/billings/".$BILLING_ID."/cancel")->getBody();
+            $res_cancel_billing = $client->put("v1/billings/".$BILLING_ID."/cancel", $params)->getBody();
             $cancel_billing = json_decode($res_cancel_billing);
 
             return $cancel_billing;
@@ -1744,6 +1747,207 @@ class ExaminationController extends Controller
             $billing = json_decode($res_billing);
 
             return $billing;
+        } catch(Exception $e){
+            return null;
+        }
+    }
+
+    public function generateKuitansi(Request $request) {
+    	$client = new Client([
+            'headers' => ['Authorization' => config("app.gateway_tpn_2")],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+
+        $id = $request->input('id');
+        
+        $exam = Examination::where("id", $id)->first();
+        if($exam){
+            try {
+                $INVOICE_ID = $exam->INVOICE_ID;
+                $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
+                $invoice = json_decode($res_invoice->getBody());
+                
+                if($invoice && $invoice->status == true){
+                    $status_invoice = $invoice->data->status_invoice;
+                    if($status_invoice == "approved"){
+                        $status_faktur = $invoice->data->status_faktur;
+                        if($status_faktur == "received"){
+                            /*SAVE KUITANSI*/
+                            $name_file = 'kuitansi_spb_'.$INVOICE_ID.'.pdf';
+							$path_file = public_path().'/media/examination/'.$id;
+							if (!file_exists($path_file)) {
+								mkdir($path_file, 0775);
+							}
+							$response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/exportpdf');
+                            $stream = (String)$response->getBody();
+
+                            if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
+                                $attach = ExaminationAttach::where('name', 'Kuitansi')->where('examination_id', ''.$id.'')->first();
+                                $currentUser = Auth::user();
+
+								if ($attach){
+									$attach->attachment = $name_file;
+									$attach->updated_by = $currentUser->id;
+
+									$attach->save();
+								} else{
+									$attach = new ExaminationAttach;
+									$attach->id = Uuid::uuid4();
+									$attach->examination_id = $id; 
+									$attach->name = 'Kuitansi';
+									$attach->attachment = $name_file;
+									$attach->created_by = $currentUser->id;
+									$attach->updated_by = $currentUser->id;
+
+									$attach->save();
+								}
+                                return "Kuitansi Berhasil Disimpan.";
+                            }else{
+                                return "Gagal Menyimpan Kuitansi!";
+                            }
+                        }else{
+                            return $invoice->data->status_faktur;
+                        }
+                    }else{
+                        switch ($status_invoice) {
+                            case 'invoiced':
+                                return "Invoice Baru Dibuat.";
+                                break;
+                            
+                            case 'returned':
+                                return $invoice->data->$status_invoice->message;
+                                break;
+                            
+                            default:
+                                return "Invoice sudah dikirim ke DJP.";
+                                break;
+                        }
+                    }
+                }else{
+                    return "Data Invoice Tidak Ditemukan!";        
+                }
+            } catch(Exception $e){
+                return null;
+            }
+        }else{
+            return "Data Pembelian Tidak Ditemukan!";
+        }
+    }
+
+    public function generateTaxInvoice(Request $request) {
+        $client = new Client([
+            'headers' => ['Authorization' => config("app.gateway_tpn_2")],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+
+        $id = $request->input('id');
+
+        $exam = Examination::select(DB::raw('companies.name as company_name, examination_attachments.tgl as payment_date, examinations.*, devices.*'))
+        ->join('companies', 'examinations.company_id', '=', 'companies.id')
+        ->join('devices', 'examinations.device_id', '=', 'devices.id')
+        ->leftJoin('examination_attachments', function($leftJoin){
+            $leftJoin->on('examinations.id', '=', 'examination_attachments.examination_id');
+            $leftJoin->on(DB::raw('examination_attachments.name'), DB::raw('='),DB::raw("'Faktur Pajak'"));
+        })
+        ->where('examinations.id', $id)
+        ->first();
+        if($exam){
+            /* GENERATE NAMA FILE FAKTUR */
+                $filename = $exam ? $exam->payment_date.'_'.$exam->company_name.'_Pengujian Perangkat'.$exam->name : $exam->INVOICE_ID;
+            /* END GENERATE NAMA FILE FAKTUR */
+            try {
+                $INVOICE_ID = $exam->INVOICE_ID;
+                $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
+                $invoice = json_decode($res_invoice->getBody());
+                if($invoice && $invoice->status == true){
+    			    $status_invoice = $invoice->data->status_invoice;
+                    if($status_invoice == "approved"){
+                        $status_faktur = $invoice->data->status_faktur;
+                        if($status_faktur == "received"){
+                            /*SAVE FAKTUR PAJAK*/
+                            $name_file = 'faktur_spb_'.$filename.'.pdf';
+                            $path_file = public_path().'/media/examination/'.$id;
+                            if (!file_exists($path_file)) {
+                                mkdir($path_file, 0775);
+                            }
+                            $response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/taxinvoice/pdf');
+                            $stream = (String)$response->getBody();
+
+                            if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
+                                $attach = ExaminationAttach::where('name', 'Faktur Pajak')->where('examination_id', ''.$id.'')->first();
+                                $currentUser = Auth::user();
+
+								if ($attach){
+									$attach->attachment = $name_file;
+									$attach->updated_by = $currentUser->id;
+
+									$attach->save();
+								} else{
+									$attach = new ExaminationAttach;
+									$attach->id = Uuid::uuid4();
+									$attach->examination_id = $id; 
+									$attach->name = 'Faktur Pajak';
+									$attach->attachment = $name_file;
+									$attach->created_by = $currentUser->id;
+									$attach->updated_by = $currentUser->id;
+
+									$attach->save();
+								}
+                                return "Faktur Pajak Berhasil Disimpan.";
+                            }else{
+                                return "Gagal Menyimpan Faktur Pajak!";
+                            }
+                        }else{
+                            return $invoice->data->status_faktur;
+                        }
+                    }else{
+                        switch ($status_invoice) {
+                            case 'invoiced':
+                                return "Faktur Pajak belum Tersedia, karena Invoice Baru Dibuat.";
+                                break;
+                            
+                            case 'returned':
+                                return $invoice->data->$status_invoice->message;
+                                break;
+                            
+                            default:
+                                return "Faktur Pajak belum Tersedia. Invoice sudah dikirim ke DJP.";
+                                break;
+                        }
+                    }
+                }else{
+                    return "Data Invoice Tidak Ditemukan!";        
+                }
+            } catch(Exception $e){
+                return null;
+            }
+        }else{
+            return "Data Pembelian Tidak Ditemukan!";
+        }
+    }
+
+    public function api_upload($data, $BILLING_ID){
+        $client = new Client([
+            'headers' => ['Authorization' => config("app.gateway_tpn_2")],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+        try {
+            $params['multipart'] = $data;
+            $res_upload = $client->post("v1/billings/".$BILLING_ID."/deliver", $params)->getBody(); //BILLING_ID
+            $upload = json_decode($res_upload);
+
+            /*get
+                $upload->status; //if true lanjut, else panggil lagi API nya, dan jalankan API invoices
+                $upload->data->_id;
+            */
+
+            return $upload;
         } catch(Exception $e){
             return null;
         }
