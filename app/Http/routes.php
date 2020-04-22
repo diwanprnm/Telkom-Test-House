@@ -4659,6 +4659,10 @@ Route::group(['prefix' => '/v1', 'middlewareGroups' => 'api'], function () {
 	Route::post('/sendSPK', 'v1\ExaminationAPIController@sendSPK');
 	Route::post('/sendSPKHistory', 'v1\ExaminationAPIController@sendSPKHistory');
 	Route::get('/checkSPKCreatedOTR', 'v1\ExaminationAPIController@checkSPKCreatedOTR');
+	Route::get('/checkBillingSPBTPN', 'v1\ExaminationAPIController@checkBillingTPN');
+	Route::get('/checkTaxInvoiceSPBTPN', 'v1\ExaminationAPIController@checkTaxInvoiceTPN');
+	Route::get('/checkKuitansiSPBTPN', 'v1\ExaminationAPIController@checkKuitansiTPN');
+	Route::get('/checkReturnedSPBTPN', 'v1\ExaminationAPIController@checkReturnedTPN');
 });
 
 Route::get('/do_backup', 'BackupController@backup'); 

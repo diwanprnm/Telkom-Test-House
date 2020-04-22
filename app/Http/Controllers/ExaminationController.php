@@ -931,9 +931,9 @@ class ExaminationController extends Controller
 	              $notification->updated_at = $data['updated_at'];
 	              $notification->save();
 	               	$data['id'] = $notification->id;
-	               // event(new Notification($data));
+	               event(new Notification($data));
 
-				// $this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.spb", "Upload SPB",$path_file."/".$attach_name);
+				$this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.spb", "Upload SPB",$path_file."/".$attach_name);
 			}else if($status == -1){
 				$exam->price = $request->input('exam_price');
 				// $exam->keterangan = $request->input('keterangan');
@@ -1226,6 +1226,26 @@ class ExaminationController extends Controller
 					// return redirect('/admin/examination/'.$exam->id.'/edit');
 				// }
 			// }
+			if(!$request->hasFile('rev_lap_uji_file') && $request->has('hide_attachment_form-lap-uji') && $exam->resume_status == 0){
+				/*TPN api_upload*/
+                $data_upload [] = 
+                    [
+                        'name' => "file",
+                        'contents' => fopen($request->input('hide_attachment_form-lap-uji'), 'r'),
+                        'filename' => $request->input('hide_attachment_form-lap-uji')
+                    ]
+                ;
+
+                /*TPN api_upload*/
+	            if($exam->BILLING_ID != null && $data_upload != null){
+	                $data_upload [] = array(
+	                    'name'=>"delivered",
+	                    'contents'=>json_encode(['by'=>$currentUser->name, "reference_id" => $currentUser->id]),
+	                );
+
+	                $upload = $this->api_upload($data_upload,$exam->BILLING_ID);
+	            }
+			}
 			if ($request->hasFile('rev_lap_uji_file')) {
 				$name_file = 'rev_lap_uji_'.$request->file('rev_lap_uji_file')->getClientOriginalName();
 				$path_file = public_path().'/media/examination/'.$exam->id;
@@ -1233,6 +1253,25 @@ class ExaminationController extends Controller
 					mkdir($path_file, 0775);
 				}
 				if($request->file('rev_lap_uji_file')->move($path_file,$name_file)){
+
+					/*TPN api_upload*/
+                    $data_upload [] = 
+                        [
+                            'name' => "file",
+                            'contents' => fopen($path_file.'/'.$name_file, 'r'),
+                            'filename' => $request->file('rev_lap_uji_file')->getClientOriginalName()
+                        ]
+                    ;
+
+                    /*TPN api_upload*/
+		            if($exam->BILLING_ID != null && $data_upload != null){
+		                $data_upload [] = array(
+		                    'name'=>"delivered",
+		                    'contents'=>json_encode(['by'=>$currentUser->name, "reference_id" => $currentUser->id]),
+		                );
+
+		                $upload = $this->api_upload($data_upload,$exam->BILLING_ID);
+		            }
 					
 					$attach = new ExaminationAttach;
 					$attach->id = Uuid::uuid4();

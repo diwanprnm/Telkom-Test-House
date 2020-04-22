@@ -1787,10 +1787,6 @@
 										@endif
 									</select>
 								</div>
-								<input type="hidden" name="PO_ID" id="PO_ID" value="{{ $data->PO_ID }}">
-								<input type="hidden" name="exam_price" id="exam_price" value="{{ $data->price }}">
-								<input type="hidden" name="spb_number" id="spb_number" value="{{ $data->spb_number }}">
-								<input type="hidden" name="spb_date" id="spb_date" value="{{ $data->spb_date }}">
 							</div>
 							@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1')
 							<div class="col-md-12">
@@ -2980,7 +2976,6 @@
 									@if($rev_uji == 0)
 										<?php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;?>
 									@endif
-									<input type="hidden" id="hide_attachment_form-lap-uji" value="{{ $item->attachment }}">
 									@if($item->attachment != '')
 									<div class="col-md-12">
 										<div class="form-group">
@@ -3057,11 +3052,12 @@
 										@endif
 										<a class="btn btn-primary" data-toggle="collapse" href="#collapse1"><b>Revisi</b></a>
 									</label>
+									<input type="hidden" name="hide_attachment_form-lap-uji" id="hide_attachment_form-lap-uji" value="{{ $lap_uji_attach }}">
 								</div>
 							</div>
 							@if($data->examination_type_id =='2' || $data->examination_type_id =='3')
 							<div class="col-md-12" class="panel panel-info">
-								<div id="collapse1" class="panel-collapse collapse">
+								<div id="collapse1" class="collapse">
 									<div class="form-group">
 										<label>
 											Revisi Laporan Uji*
@@ -3203,7 +3199,6 @@
 							@foreach($data->media as $item)
 								@if($item->name == 'Laporan Uji')
 									<?php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;?>
-									<input type="hidden" id="hide_attachment_form-lap-uji" value="{{ $item->attachment }}">
 									@if($item->attachment != '')
 									<div class="col-md-12">
 										<div class="form-group">
@@ -3373,7 +3368,6 @@
 							@foreach($data->media as $item)
 								@if($item->name == 'Laporan Uji')
 									<?php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;?>
-									<input type="hidden" id="hide_attachment_form-lap-uji" value="{{ $item->attachment }}">
 									@if($item->attachment != '')
 									<div class="col-md-12">
 										<div class="form-group">
@@ -4928,6 +4922,7 @@
 	});
 
 	$('#form-lap-uji').submit(function () {
+		var rev_lap_uji_file = document.getElementById('rev_lap_uji_file');
 		var keterangan = document.getElementById('keterangan_lap_uji').value;
 		var $inputs = $('#form-lap-uji :input');
 		var values = {};
@@ -4944,12 +4939,12 @@
 			}else{
 				$('#myModalketerangan_lap_uji').modal('hide');
 			}			
-		}/*else{
-			if(!document.getElementById('hide_attachment_form-lap-uji').value){
+		}else{
+			if(!document.getElementById('hide_attachment_form-lap-uji').value && rev_lap_uji_file.value == ''){
 				alert("Laporan Hasil Pengujian belum ada / di-upload oleh Test Engineer!");
 				return false;
 			}
-		}*/
+		}
 	});
 </script>
 @if($data->examination_type_id == '1')
