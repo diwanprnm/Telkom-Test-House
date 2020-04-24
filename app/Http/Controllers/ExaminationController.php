@@ -904,7 +904,7 @@ class ExaminationController extends Controller
 			$status = $request->input('spb_status');
             $exam->spb_status = $status;
 			if($status == 1){
-				$exam->price = str_replace("Rp",'',str_replace(".",'',$request->input('exam_price')));
+				$exam->price = str_replace(".",'',$request->input('exam_price'));
 				$path_file = public_path().'/media/examination/'.$id;
 				$attach = ExaminationAttach::where('name', 'SPB')->where('examination_id', ''.$id.'')->first();
 					$attach_name = $attach->attachment;
@@ -935,7 +935,7 @@ class ExaminationController extends Controller
 
 				$this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.spb", "Upload SPB",$path_file."/".$attach_name);
 			}else if($status == -1){
-				$exam->price = str_replace("Rp",'',str_replace(".",'',$request->input('exam_price')));
+				$exam->price = str_replace(".",'',$request->input('exam_price'));
 				// $exam->keterangan = $request->input('keterangan');
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","SPB",$request->input('keterangan'));
 			}
@@ -943,7 +943,7 @@ class ExaminationController extends Controller
 		$spk_created = 0;
         if ($request->has('payment_status')){
 			if ($request->has('cust_price_payment')){
-				$exam->cust_price_payment = str_replace("Rp",'',str_replace(".",'',$request->input('cust_price_payment')));
+				$exam->cust_price_payment = str_replace(".",'',$request->input('cust_price_payment'));
 			}
 			if ($request->hasFile('kuitansi_file')) {
 				$name_file = 'kuitansi_'.$request->file('kuitansi_file')->getClientOriginalName();
@@ -1023,7 +1023,7 @@ class ExaminationController extends Controller
 					$income = Income::where('reference_id', $exam->id)->first();
 				}
 					// ($item->payment_method == 1)?'ATM':'Kartu Kredit'
-					$income->price = ($request->input('cust_price_payment') != NULL) ? str_replace("Rp",'',str_replace(".",'',$request->input('cust_price_payment'))) : 0;
+					$income->price = ($request->input('cust_price_payment') != NULL) ? str_replace(".",'',$request->input('cust_price_payment')) : 0;
 					// $income->price = $request->input('cust_price_payment');
 					$income->updated_by = $currentUser->id;
 					$income->save();
