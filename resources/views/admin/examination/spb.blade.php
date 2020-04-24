@@ -118,7 +118,7 @@
 						<label>
 							Pilih STEL sebagai referensi biaya *
 						</label>
-						<select class="form-control" id="cmb-ref-perangkat" name="cmb-ref-perangkat">
+						<select class="form-control" id="cmb-ref-perangkat" name="cmb-ref-perangkat" onchange="changeTotal();">
 								<option value="">- Pilih STEL -</option>
 							@foreach($data_stels as $item)
 								<option value="{{ $item->price }}">{{ $item->stel }} || {{ $item->price }}</option>
@@ -157,12 +157,12 @@
 					<tr>
 						<td>
 							<div class="form-group">
-								<input type="text" class="form-control" name="nama_perangkat[]" value="Uji Lokasi" required>
+								<input type="text" class="form-control" name="nama_perangkat[]" value="Biaya Akomodasi & Transportasi" required>
 							</div>
 						</td>
 						<td>
 							<div class="form-group">
-								<input type="number" class="form-control biaya" name="biaya[]" id="biaya1" value="0" required>
+								<input type="number" class="form-control biaya" name="biaya[]" id="biaya1" required>
 							</div>
 						</td>
 					</tr>
@@ -174,7 +174,7 @@
 			<div class="col-md-6">
 				<div class="form-group">
 					<label>
-						Total Biaya *
+						Total Biaya (Rp.) *
 					</label>
 						<input type="text" name="total_biaya" id="total_biaya" class="form-control" value="{{ $price + ($price*0.1) }}" readonly="" />
 				</div>
@@ -291,24 +291,14 @@
 			bahan_append += '</tr>'
 
 			$('.tes_append').append(bahan_append);
-			changeTotal();
+			$('.biaya').on('input',function(){
+            	changeTotal();
+	        });
 		}
 		function destroy(a)
 		{
 			$("#hapus_"+a+"").remove();
-			arr_biaya = [];
-			total_biaya = 0;
-			ppn = 0;
-
-    		var biaya = document.getElementsByName("biaya[]");
-            for (i = 0; i < biaya.length; i++) {
-				arr_biaya[i] = biaya[i].value
-				total_biaya += Number(arr_biaya[i]);
-			}
-			ppn = 0.1*total_biaya;
-			total_biaya += ppn;
-
-			$('#total_biaya').val(total_biaya);
+			changeTotal();
 		}
 		
 		$('.generate-button').click(function () {
@@ -326,7 +316,7 @@
 				}
 			var biaya = document.getElementsByName("biaya[]");
 				for (i = 0; i < biaya.length; i++) {
-					arr_biaya[i] = biaya[i].value
+					arr_biaya[i] = biaya[i].value ? biaya[i].value : 0;
 					total_biaya += Number(arr_biaya[i]);
 				}
 				ppn = 0.1*total_biaya;
@@ -366,33 +356,53 @@
 		
         jQuery(document).ready(function() {
             Main.init();
-            changeTotal();
+            $('.biaya').on('input',function(){
+            	changeTotal();
+	        });
         });
 
         function changeTotal(){
-        	$('.biaya').on('keyup',function(){
-        		arr_biaya = [];
-				total_biaya = 0;
-				ppn = 0;
+        	arr_biaya = [];
+			total_biaya = 0;
+			ppn = 0;
 
-        		var biaya = document.getElementsByName("biaya[]");
-	            for (i = 0; i < biaya.length; i++) {
-					arr_biaya[i] = biaya[i].value
-					total_biaya += Number(arr_biaya[i]);
-				}
-				/*ppn = 0.1*total_biaya;
-				total_biaya += ppn;*/
+    		var biaya = document.getElementsByName("biaya[]");
+            for (i = 0; i < biaya.length; i++) {
+				arr_biaya[i] = biaya[i].value ? biaya[i].value : 0;
+				total_biaya += Number(arr_biaya[i]);
+			}
+			/*ppn = 0.1*total_biaya;
+			total_biaya += ppn;*/
 
-	            $('#total_biaya').val(total_biaya);
-	        });
+            $('#total_biaya').val(total_biaya);
+            var total_biaya = document.getElementById('total_biaya');
+			$('#total_biaya').val(formatPrice(total_biaya.value));
         }
 		
+		/* Fungsi */
+		function formatPrice(angka, prefix)
+		{
+			var number_string = angka.replace(/[^,\d]/g, '').toString(),
+				split	= number_string.split(','),
+				sisa 	= split[0].length % 3,
+				rupiah 	= split[0].substr(0, sisa),
+				ribuan 	= split[0].substr(sisa).match(/\d{3}/gi);
+				
+			if (ribuan) {
+				separator = sisa ? '.' : '';
+				rupiah += separator + ribuan.join('.');
+			}
+			
+			rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+			return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+		}
+
 		function pops(PO_ID,jumlah,spb_number,spb_date){
 			textcontent=opener.document.getElementById("PO_ID").value;
 			opener.document.getElementById("PO_ID").value = PO_ID;
 			
 			textcontent=opener.document.getElementById("exam_price").value;
-			opener.document.getElementById("exam_price").value = jumlah;
+			opener.document.getElementById("exam_price").value = jumlah.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
 			
 			textcontent=opener.document.getElementById("spb_number").value;
 			opener.document.getElementById("spb_number").value = spb_number;

@@ -904,7 +904,7 @@ class ExaminationController extends Controller
 			$status = $request->input('spb_status');
             $exam->spb_status = $status;
 			if($status == 1){
-				$exam->price = $request->input('exam_price');
+				$exam->price = str_replace("Rp",'',str_replace(".",'',$request->input('exam_price')));
 				$path_file = public_path().'/media/examination/'.$id;
 				$attach = ExaminationAttach::where('name', 'SPB')->where('examination_id', ''.$id.'')->first();
 					$attach_name = $attach->attachment;
@@ -935,7 +935,7 @@ class ExaminationController extends Controller
 
 				$this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.spb", "Upload SPB",$path_file."/".$attach_name);
 			}else if($status == -1){
-				$exam->price = $request->input('exam_price');
+				$exam->price = str_replace("Rp",'',str_replace(".",'',$request->input('exam_price')));
 				// $exam->keterangan = $request->input('keterangan');
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","SPB",$request->input('keterangan'));
 			}
@@ -943,7 +943,7 @@ class ExaminationController extends Controller
 		$spk_created = 0;
         if ($request->has('payment_status')){
 			if ($request->has('cust_price_payment')){
-				$exam->cust_price_payment = $request->input('cust_price_payment');
+				$exam->cust_price_payment = str_replace("Rp",'',str_replace(".",'',$request->input('cust_price_payment')));
 			}
 			if ($request->hasFile('kuitansi_file')) {
 				$name_file = 'kuitansi_'.$request->file('kuitansi_file')->getClientOriginalName();
@@ -1023,7 +1023,7 @@ class ExaminationController extends Controller
 					$income = Income::where('reference_id', $exam->id)->first();
 				}
 					// ($item->payment_method == 1)?'ATM':'Kartu Kredit'
-					$income->price = ($request->input('cust_price_payment') != NULL) ? $request->input('cust_price_payment') : 0;
+					$income->price = ($request->input('cust_price_payment') != NULL) ? str_replace("Rp",'',str_replace(".",'',$request->input('cust_price_payment'))) : 0;
 					// $income->price = $request->input('cust_price_payment');
 					$income->updated_by = $currentUser->id;
 					$income->save();
@@ -1228,16 +1228,7 @@ class ExaminationController extends Controller
 			// }
 			if(!$request->hasFile('rev_lap_uji_file') && $request->has('hide_attachment_form-lap-uji') && $exam->resume_status == 0){
 				/*TPN api_upload*/
-                $data_upload [] = 
-                    [
-                        'name' => "file",
-                        'contents' => fopen($request->input('hide_attachment_form-lap-uji'), 'r'),
-                        'filename' => $request->input('hide_attachment_form-lap-uji')
-                    ]
-                ;
-
-                /*TPN api_upload*/
-	            if($exam->BILLING_ID != null && $data_upload != null){
+	            if($exam->BILLING_ID != null){
 	                $data_upload [] = array(
 	                    'name'=>"delivered",
 	                    'contents'=>json_encode(['by'=>$currentUser->name, "reference_id" => $currentUser->id]),
@@ -1253,18 +1244,8 @@ class ExaminationController extends Controller
 					mkdir($path_file, 0775);
 				}
 				if($request->file('rev_lap_uji_file')->move($path_file,$name_file)){
-
-					/*TPN api_upload*/
-                    $data_upload [] = 
-                        [
-                            'name' => "file",
-                            'contents' => fopen($path_file.'/'.$name_file, 'r'),
-                            'filename' => $request->file('rev_lap_uji_file')->getClientOriginalName()
-                        ]
-                    ;
-
                     /*TPN api_upload*/
-		            if($exam->BILLING_ID != null && $data_upload != null){
+		            if($exam->BILLING_ID != null){
 		                $data_upload [] = array(
 		                    'name'=>"delivered",
 		                    'contents'=>json_encode(['by'=>$currentUser->name, "reference_id" => $currentUser->id]),
@@ -1885,18 +1866,34 @@ class ExaminationController extends Controller
 
         $id = $request->input('id');
 
-        $exam = Examination::select(DB::raw('companies.name as company_name, examination_attachments.tgl as payment_date, examinations.*, devices.*'))
-        ->join('companies', 'examinations.company_id', '=', 'companies.id')
+        $exam = Examination::select(DB::raw('companies.name as company_name, examination_attachments.tgl as payment_date, examinations.*, devices.name, devices.mark, devices.capacity, devices.model'))
+    	->where('examinations.id', $id)
+    	->whereNotExists(function ($query) {
+           	$query->select(DB::raw(1))
+                 ->from('examination_attachments')
+                 ->whereRaw('examination_attachments.examination_id = examinations.id')
+                 ->whereRaw('examination_attachments.name = "Faktur Pajak"')
+            ;
+       	})->orWhereExists(function ($query) {
+           	$query->select(DB::raw(1))
+                 ->from('examination_attachments')
+                 ->whereRaw('examination_attachments.examination_id = examinations.id')
+                 ->whereRaw('examination_attachments.name = "Faktur Pajak"')
+                 ->whereRaw('examination_attachments.attachment = ""')
+            ;
+       	})
+       	->join('companies', 'examinations.company_id', '=', 'companies.id')
         ->join('devices', 'examinations.device_id', '=', 'devices.id')
         ->leftJoin('examination_attachments', function($leftJoin){
             $leftJoin->on('examinations.id', '=', 'examination_attachments.examination_id');
-            $leftJoin->on(DB::raw('examination_attachments.name'), DB::raw('='),DB::raw("'Faktur Pajak'"));
+            $leftJoin->on(DB::raw('examination_attachments.name'), DB::raw('='),DB::raw("'File Pembayaran'"));
         })
-        ->where('examinations.id', $id)
         ->first();
+
         if($exam){
+        	$payment_date = $exam->payment_date != '0000-00-00' ? $exam->payment_date : null;
             /* GENERATE NAMA FILE FAKTUR */
-                $filename = $exam ? $exam->payment_date.'_'.$exam->company_name.'_Pengujian Perangkat'.$exam->name : $exam->INVOICE_ID;
+                $filename = $exam ? $payment_date.'_'.$exam->company_name.'_'.$exam->name.'_'.$exam->name.'_'.$exam->name.'_'.$exam->name : $exam->INVOICE_ID;
             /* END GENERATE NAMA FILE FAKTUR */
             try {
                 $INVOICE_ID = $exam->INVOICE_ID;
@@ -3585,8 +3582,8 @@ $notification->id = Uuid::uuid4();
 			$total_biaya = $biaya + $ppn;
 			$details [] = 
 	            [
-	                "item" => $spb_number,
-	                "description" => 'Pengujian Perangkat '.$exam->device->name,
+	                "item" => 'Biaya Uji '.$exam->examinationType->name.' ('.$exam->examinationType->description.')',
+	                "description" => $exam->device->name.', '.$exam->device->mark.', '.$exam->device->capacity.', '.$exam->device->model,
 	                "quantity" => 1,
 	                "price" => $biaya,
 	                "total" => $biaya

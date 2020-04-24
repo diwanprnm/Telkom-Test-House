@@ -1773,7 +1773,7 @@ $notification->id = Uuid::uuid4();
                     $updated_count = $invoice && $invoice->status == true ? $updated_count += 1 : $updated_count;
 
                     if($Examination->save()){
-                    	/*$timestamp = strtotime($billing->data->billing_date);
+                    	/*$timestamp = strtotime($billing->data->paid->at);
                     	$tgl = date('Y-m-d', $timestamp);
                     	$attach = ExaminationAttach::where('name', 'File Pembayaran')->where('examination_id', ''.$Examination->id.'')->first();
                     	if ($attach){
@@ -1863,14 +1863,23 @@ $notification->id = Uuid::uuid4();
 
     public function checkKuitansiTPN()
     {
-    	$exam = Examination::select(DB::raw('examinations.*'))
-    	->leftJoin('examination_attachments', function($leftJoin){
-            $leftJoin->on('examinations.id', '=', 'examination_attachments.examination_id');
-            $leftJoin->on(DB::raw('examination_attachments.name'), DB::raw('='),DB::raw("'Kuitansi'"));
-            $leftJoin->on(DB::raw('examination_attachments.attachment'), DB::raw('='),DB::raw("''"));
-        })
-        ->whereNotNull('examinations.INVOICE_ID')
+    	$exam = Examination::whereNotNull('examinations.INVOICE_ID')
+    	->whereNotExists(function ($query) {
+           	$query->select(DB::raw(1))
+                 ->from('examination_attachments')
+                 ->whereRaw('examination_attachments.examination_id = examinations.id')
+                 ->whereRaw('examination_attachments.name = "Kuitansi"')
+            ;
+       	})->orWhereExists(function ($query) {
+           	$query->select(DB::raw(1))
+                 ->from('examination_attachments')
+                 ->whereRaw('examination_attachments.examination_id = examinations.id')
+                 ->whereRaw('examination_attachments.name = "Kuitansi"')
+                 ->whereRaw('examination_attachments.attachment = ""')
+            ;
+       	})
         ->get();
+
         if(count($exam)>0){
             $client = new Client([
                 'headers' => ['Authorization' => config("app.gateway_tpn_2")],
@@ -1929,16 +1938,30 @@ $notification->id = Uuid::uuid4();
 
     public function checkTaxInvoiceTPN()
     {
-        $exam = Examination::select(DB::raw('companies.name as company_name, examination_attachments.tgl as payment_date, examinations.*, devices.name'))
-        ->join('companies', 'examinations.company_id', '=', 'companies.id')
+    	$exam = Examination::select(DB::raw('companies.name as company_name, examination_attachments.tgl as payment_date, examinations.*, devices.name'))
+    	->whereNotNull('examinations.INVOICE_ID')
+    	->whereNotExists(function ($query) {
+           	$query->select(DB::raw(1))
+                 ->from('examination_attachments')
+                 ->whereRaw('examination_attachments.examination_id = examinations.id')
+                 ->whereRaw('examination_attachments.name = "Faktur Pajak"')
+            ;
+       	})->orWhereExists(function ($query) {
+           	$query->select(DB::raw(1))
+                 ->from('examination_attachments')
+                 ->whereRaw('examination_attachments.examination_id = examinations.id')
+                 ->whereRaw('examination_attachments.name = "Faktur Pajak"')
+                 ->whereRaw('examination_attachments.attachment = ""')
+            ;
+       	})
+       	->join('companies', 'examinations.company_id', '=', 'companies.id')
         ->join('devices', 'examinations.device_id', '=', 'devices.id')
-    	->leftJoin('examination_attachments', function($leftJoin){
+        ->leftJoin('examination_attachments', function($leftJoin){
             $leftJoin->on('examinations.id', '=', 'examination_attachments.examination_id');
-            $leftJoin->on(DB::raw('examination_attachments.name'), DB::raw('='),DB::raw("'Faktur Pajak'"));
-            $leftJoin->on(DB::raw('examination_attachments.attachment'), DB::raw('='),DB::raw("''"));
+            $leftJoin->on(DB::raw('examination_attachments.name'), DB::raw('='),DB::raw("'File Pembayaran'"));
         })
-        ->whereNotNull('examinations.INVOICE_ID')
         ->get();
+
         if(count($exam)>0){
             $client = new Client([
                 'headers' => ['Authorization' => config("app.gateway_tpn_2")],
@@ -1949,8 +1972,9 @@ $notification->id = Uuid::uuid4();
 
             $updated_count = 0;
             foreach ($exam as $data) {
+            	$payment_date = $data->payment_date != '0000-00-00' ? $data->payment_date : null;
                 /* GENERATE NAMA FILE FAKTUR */
-                    $filename = $data ? $data->payment_date.'_'.$data->company_name.'_Pengujian Perangkat'.$data->name : $data->INVOICE_ID;
+                    $filename = $data ? $payment_date.'_'.$data->company_name.'_Pengujian Perangkat'.$data->name : $data->INVOICE_ID;
                 /* END GENERATE NAMA FILE FAKTUR */
     		    try {
                     $INVOICE_ID = $data->INVOICE_ID;
@@ -2002,15 +2026,24 @@ $notification->id = Uuid::uuid4();
 
     public function checkReturnedTPN()
     {
-        $exam = Examination::select(DB::raw('examinations.*'))
-    	->leftJoin('examination_attachments', function($leftJoin){
-            $leftJoin->on('examinations.id', '=', 'examination_attachments.examination_id');
-            $leftJoin->on(DB::raw('examination_attachments.name'), DB::raw('='),DB::raw("'Faktur Pajak'"));
-            $leftJoin->on(DB::raw('examination_attachments.attachment'), DB::raw('='),DB::raw("''"));
-        })
-        ->whereNotNull('examinations.INVOICE_ID')
+    	$exam = Examination::select(DB::raw('examinations.*'))
+    	->whereNotNull('examinations.INVOICE_ID')
+    	->whereNotExists(function ($query) {
+           	$query->select(DB::raw(1))
+                 ->from('examination_attachments')
+                 ->whereRaw('examination_attachments.examination_id = examinations.id')
+                 ->whereRaw('examination_attachments.name = "Faktur Pajak"')
+            ;
+       	})->orWhereExists(function ($query) {
+           	$query->select(DB::raw(1))
+                 ->from('examination_attachments')
+                 ->whereRaw('examination_attachments.examination_id = examinations.id')
+                 ->whereRaw('examination_attachments.name = "Faktur Pajak"')
+                 ->whereRaw('examination_attachments.attachment = ""')
+            ;
+       	})
         ->get();
-        
+
         if(count($exam)>0){
             $client = new Client([
                 'headers' => ['Authorization' => config("app.gateway_tpn_2")],

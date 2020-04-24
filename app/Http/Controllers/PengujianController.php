@@ -1083,7 +1083,7 @@ class PengujianController extends Controller
                 ->with('message', $message)
                 ->with('spb_number', $examination->spb_number)
                 ->with('spb_date', $examination->spb_date)
-                ->with('cust_price_payment', $examination->cust_price_payment)
+                ->with('price', $examination->price)
                 ->with('data', $data)
                 ->with('examinationsData', $examinationsData);
                 // ->with('search', $search);

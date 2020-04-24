@@ -1481,9 +1481,9 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Total Biaya *
+										Total Biaya (Rp.) *
 									</label>
-									<input type="text" name="exam_price" id="exam_price" class="form-control" placeholder="Total Biaya" value="{{ $data->price }}" readonly required>
+									<input type="text" name="exam_price" id="exam_price" class="formatPrice form-control" placeholder="Total Biaya" value="{{ $data->price }}" readonly required>
 								</div>
 							</div>
 							<input type="hidden" name="spb_date" id="spb_date" value="{{ $data->spb_date }}">
@@ -1699,9 +1699,9 @@
 										</label>
 										<div class="form-group">
 											<label>
-												Banyak Uang *
+												Banyak Uang (Rp.) *
 											</label>
-											<input type="text" name="cust_price_payment" id="cust_price_payment" class="form-control" placeholder="Banyak Uang" value="{{ $data->cust_price_payment }}" required>
+											<input type="text" name="cust_price_payment" id="cust_price_payment" class="formatPrice form-control" placeholder="Banyak Uang" value="{{ $data->cust_price_payment }}" required>
 										</div>
 									@else
 										<label>
@@ -1760,7 +1760,7 @@
 									<input type="file" name="faktur_file" id="faktur_file" class="form-control" accept="application/pdf">
 								</div>
 								<div class="form-group">
-									@if($faktur_attach != '')>
+									@if($faktur_attach != '')
 										<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/faktur')}}"> Download Faktur Pajak "<?php echo $faktur_attach; ?>"</a>
 									@endif
 									<input type="hidden" id="faktur_name" value="<?php echo $faktur_attach; ?>">
@@ -1856,9 +1856,9 @@
 										</label>
 										<div class="form-group">
 											<label>
-												Banyak Uang *
+												Banyak Uang (Rp.) *
 											</label>
-											<input type="text" class="form-control" placeholder="Banyak Uang" value="{{ $data->cust_price_payment }}" readonly required>
+											<input type="text" class="formatPrice form-control" placeholder="Banyak Uang" value="{{ $data->cust_price_payment }}" readonly required>
 										</div>
 									@else
 										<label>
@@ -1942,9 +1942,9 @@
 										</label>
 										<div class="form-group">
 											<label>
-												Banyak Uang *
+												Banyak Uang (Rp.) *
 											</label>
-											<input type="text" class="form-control" placeholder="Banyak Uang" value="{{ $data->cust_price_payment }}" readonly required>
+											<input type="text" class="formatPrice form-control" placeholder="Banyak Uang" value="{{ $data->cust_price_payment }}" readonly required>
 										</div>
 									@else
 										<label>
@@ -3050,12 +3050,12 @@
 										@else
 											Belum Tersedia
 										@endif
-										<a class="btn btn-primary" data-toggle="collapse" href="#collapse1"><b>Revisi</b></a>
+										<a class="btn btn-primary rev-button" data-toggle="collapse" href="#collapse1"><b>Revisi</b></a>
 									</label>
 									<input type="hidden" name="hide_attachment_form-lap-uji" id="hide_attachment_form-lap-uji" value="{{ $lap_uji_attach }}">
 								</div>
 							</div>
-							@if($data->examination_type_id =='2' || $data->examination_type_id =='3')
+							
 							<div class="col-md-12" class="panel panel-info">
 								<div id="collapse1" class="collapse">
 									<div class="form-group">
@@ -3110,7 +3110,7 @@
 									</div>
 								</div>
 							</div>
-							@endif
+							
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
@@ -3259,7 +3259,7 @@
 									</div>
 								</div>
 							@endif
-							@if($data->examination_type_id =='2' || $data->examination_type_id =='3')
+							
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>
@@ -3310,7 +3310,7 @@
 									</table>
 								</div>
 							</div>
-							@endif
+							
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>
@@ -4438,8 +4438,45 @@
 				}
 			}
 		});
+
+		$('.formatPrice').keyup(function () {
+			this.value = formatPrice(this.value);
+		});
+
+		$('.rev-button').click(function () {
+			if(this.text == 'Revisi'){
+				this.text = 'Tutup';
+			}else{
+				this.text = 'Revisi';
+			}
+		});
+
 	});
-	
+
+	var exam_price = document.getElementById('exam_price');
+	$('#exam_price').val(formatPrice(exam_price.value));
+		
+	var cust_price_payment = document.getElementById('cust_price_payment');
+	$('#cust_price_payment').val(formatPrice(cust_price_payment.value));
+
+	/* Fungsi */
+	function formatPrice(angka, prefix)
+	{
+		var number_string = angka.replace(/[^,\d]/g, '').toString(),
+			split	= number_string.split(','),
+			sisa 	= split[0].length % 3,
+			rupiah 	= split[0].substr(0, sisa),
+			ribuan 	= split[0].substr(sisa).match(/\d{3}/gi);
+			
+		if (ribuan) {
+			separator = sisa ? '.' : '';
+			rupiah += separator + ribuan.join('.');
+		}
+		
+		rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+		return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+	}
+		
 	function generateSPKCode(a,b,c){
 		$.ajax({
 			type: "POST",
