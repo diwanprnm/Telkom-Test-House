@@ -1893,7 +1893,7 @@ class ExaminationController extends Controller
         if($exam){
         	$payment_date = $exam->payment_date != '0000-00-00' ? $exam->payment_date : null;
             /* GENERATE NAMA FILE FAKTUR */
-                $filename = $exam ? $payment_date.'_'.$exam->company_name.'_'.$exam->name.'_'.$exam->name.'_'.$exam->name.'_'.$exam->name : $exam->INVOICE_ID;
+                $filename = $exam ? $payment_date.'_'.$exam->company_name.'_'.$exam->name.'_'.$exam->mark.'_'.$exam->capacity.'_'.$exam->model : $exam->INVOICE_ID;
             /* END GENERATE NAMA FILE FAKTUR */
             try {
                 $INVOICE_ID = $exam->INVOICE_ID;
