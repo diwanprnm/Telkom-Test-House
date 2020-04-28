@@ -31,7 +31,6 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
 			\App\Http\Middleware\App::class,
 			\PragmaRX\Tracker\Vendor\Laravel\Middlewares\Tracker::class,
-            // \App\Http\Middleware\HttpsProtocol::class,
         ],
 		
         'api' => [
