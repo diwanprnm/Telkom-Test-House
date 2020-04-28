@@ -190,7 +190,7 @@
    <?php if(config('app.IS_ENABLED_NOTIFICATION')){?>
     <script src="{{url('vendor/socket/socket.io.js')}}"></script>
     <script>
-        var socket = io('http://testhouse-notification-telkomtesthouse.apps.playcourt.id:31959');
+        var socket = io('https://testhouse-notification-telkomtesthouse.apps.playcourt.id:31959');
         // var socket = io('http://37.72.172.144:3000');
         socket.on("notification-channel:App\\Events\\Notification", function(message){ 
             var userId = $("#user_id").val();
