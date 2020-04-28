@@ -15,9 +15,6 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
-
-        // appending custom middleware 
-        'MyApp\Http\Middleware\HttpsProtocol'
     ];
 
     /**
@@ -34,6 +31,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
 			\App\Http\Middleware\App::class,
 			\PragmaRX\Tracker\Vendor\Laravel\Middlewares\Tracker::class,
+            \App\Http\HttpsProtocol\App::class,
         ],
 		
         'api' => [
