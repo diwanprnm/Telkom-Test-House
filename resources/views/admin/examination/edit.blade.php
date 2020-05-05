@@ -1719,15 +1719,15 @@
 									<?php $find_faktur = 1; $faktur_attach = $item->attachment;?>
 								@endif
 							@endforeach
-							<div class="col-md-6">
+							<!-- <div class="col-md-6">
 								@if($find_kuitansi == 1)
 									-
 								@else
 									<a onclick="checkKuitansi('<?php echo $data->id ?>')"> Cek Kuitansi</a>
 								@endif
-								<!-- <div class="form-group">
+								<div class="form-group">
 									<a onclick="makeKuitansi('<?php echo $data->id ?>')"> Buatkan File Kuitansi</a>
-								</div> -->
+								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
@@ -1737,7 +1737,7 @@
 										<a onclick="checkTaxInvoice('<?php echo $data->id ?>')"> Cek Faktur Pajak</a>
 									@endif
 								</div>
-							</div>
+							</div> -->
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>

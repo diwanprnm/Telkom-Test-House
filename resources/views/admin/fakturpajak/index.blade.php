@@ -12,14 +12,14 @@
 		<section id="page-title">
 			<div class="row">
 				<div class="col-sm-8">
-					<h1 class="mainTitle">Rekap Faktur Pajak</h1>
+					<h1 class="mainTitle">Rekap Kuitansi dan Faktur Pajak</h1>
 				</div>
 				<ol class="breadcrumb">
 					<li>
 						<span>Pengujian</span>
 					</li>
 					<li class="active">
-						<span>Rekap Faktur Pajak</span>
+						<span>Rekap Kuitansi dan Faktur Pajak</span>
 					</li>
 				</ol>
 			</div>
@@ -199,14 +199,34 @@
 											<td class="center">{{ $item->user_name }}</td>
 											<td class="center">{{ $item->company_name }}</td>
 											<td class="center">{{ $item->description }}</td>
-											<td class="center">{{ $item->payment_date }}</td>
+											<td class="center">{{ $item->payment_date ? $item->payment_date : '0000-00-00' }}</td>
 											<td class="center">
-												@if($item->type == 'SPB')
-													<a href="{{URL::to('/admin/examination/media/download/'.$item->_id.'/faktur')}}">{{ $item->faktur_file }}</a>
+												@if($item->type == 'SPB')	
+													@if($item->id_kuitansi)
+														<a href="{{URL::to('/admin/examination/media/download/'.$item->_id.'/kuitansi')}}">Kuitansi</a>
+													@else
+														Kuitansi
+													@endif
+													 || 
+													@if($item->faktur_file)
+														<a href="{{URL::to('/admin/examination/media/download/'.$item->_id.'/faktur')}}">Faktur Pajak</a>
+													@else
+														Faktur Pajak
+													@endif
 												@elseif($item->type == 'STEL')
-													<a href="{{URL::to('/admin/downloadfakturstel/'.$item->_id) }}" target="_blank">{{ $item->faktur_file }}</a>
+													@if($item->id_kuitansi)
+														<a href="{{URL::to('/admin/downloadkuitansistel/'.$item->id_kuitansi) }}" target="_blank">Kuitansi</a>
+													@else
+														Kuitansi
+													@endif
+													 || 
+													@if($item->faktur_file)
+														<a href="{{URL::to('/admin/downloadfakturstel/'.$item->_id) }}" target="_blank">Faktur Pajak</a>
+													@else
+														Faktur Pajak
+													@endif
 												@else
-													-
+													Kuitansi || Faktur Pajak
 												@endif
 											</td>
 										</tr>

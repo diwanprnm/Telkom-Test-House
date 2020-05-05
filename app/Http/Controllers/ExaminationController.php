@@ -432,7 +432,7 @@ class ExaminationController extends Controller
                             ->first();
 
         $labs = ExaminationLab::all();
-		// $gen_spk_code = $this->generateSPKCOde($exam->examinationLab->lab_code,$exam->examinationType->name,date('Y'));
+		// $gen_spk_code = $this->generateSPKCode($exam->examinationLab->lab_code,$exam->examinationType->name,date('Y'));
 		
 		$client = new Client([
 			'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
@@ -1049,7 +1049,7 @@ class ExaminationController extends Controller
 				->first();
 
                 if ($exam->spk_code == null){
-                    $spk_number_forOTR = $this->generateSPKCOde($exam_forOTR->examinationLab->lab_code,$exam_forOTR->examinationType->name,date('Y'));
+                    $spk_number_forOTR = $this->generateSPKCode($exam_forOTR->examinationLab->lab_code,$exam_forOTR->examinationType->name,date('Y'));
                     $exam->spk_code = $spk_number_forOTR;
                     $exam->spk_date = date('Y-m-d');
                     $spk_created = 1;
@@ -3343,7 +3343,7 @@ $notification->id = Uuid::uuid4();
     }
 	
 	public function generateSPKCodeManual(Request $request) {
-		$gen_spk_code = $this->generateSPKCOde($request->input('lab_code'),$request->input('exam_type'),$request->input('year'));
+		$gen_spk_code = $this->generateSPKCode($request->input('lab_code'),$request->input('exam_type'),$request->input('year'));
 		return $gen_spk_code;
     }
 	
@@ -3387,23 +3387,23 @@ $notification->id = Uuid::uuid4();
 		$thisYear = date('Y');
 		$query = "
 			SELECT SUBSTRING_INDEX(spb_number,'/',1) + 1 AS last_numb
-			FROM examinations WHERE SUBSTRING_INDEX(spb_number,'/',-1) = ".$thisYear."
+			FROM examinations WHERE SUBSTRING_INDEX(spb_number,'/',-1) = ".$thisYear." AND spb_number LIKE '%TTH-02%'
 			ORDER BY last_numb DESC LIMIT 1
 		";
 		$data = DB::select($query);
 		if (count($data) == 0){
-			return '001/KU000/DDS-73/'.$thisYear.'';
+			return '001/TTH-02/'.$thisYear.'';
 		}
 		else{
 			$last_numb = $data[0]->last_numb;
 			if($last_numb < 10){
-				return '00'.$last_numb.'/KU000/DDS-73/'.$thisYear.'';
+				return '00'.$last_numb.'/TTH-02/'.$thisYear.'';
 			}
 			else if($last_numb < 100){
-				return '0'.$last_numb.'/KU000/DDS-73/'.$thisYear.'';
+				return '0'.$last_numb.'/TTH-02/'.$thisYear.'';
 			}
 			else{
-				return ''.$last_numb.'/KU000/DDS-73/'.$thisYear.'';
+				return ''.$last_numb.'/TTH-02/'.$thisYear.'';
 			}
 		}
     }

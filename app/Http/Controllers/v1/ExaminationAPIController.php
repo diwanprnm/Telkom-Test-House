@@ -1751,7 +1751,7 @@ $notification->id = Uuid::uuid4();
         if(count($exam)>0){
             $updated_count = 0;
             foreach ($exam as $data) {
-                $Examination = Examination::with('company')->find($data->id);
+                $Examination = Examination::with('company')->with('examinationType')->with('examinationLab')->find($data->id);
                 $oldStel = $Examination;
 
                 $data_invoices = [
@@ -1772,6 +1772,14 @@ $notification->id = Uuid::uuid4();
 
                     $updated_count = $invoice && $invoice->status == true ? $updated_count += 1 : $updated_count;
 
+                    $spk_created = 0;
+                    if ($Examination->spk_code == null){
+	                    $spk_number_forOTR = $this->generateSPKCode($Examination->examinationLab->lab_code,$Examination->examinationType->name,date('Y'));
+	                    $Examination->spk_code = $spk_number_forOTR;
+	                    $Examination->spk_date = date('Y-m-d');
+                    	$spk_created = 1;
+	                }
+
                     if($Examination->save()){
                     	/*$timestamp = strtotime($billing->data->paid->at);
                     	$tgl = date('Y-m-d', $timestamp);
@@ -1790,6 +1798,43 @@ $notification->id = Uuid::uuid4();
 
 							$attach->save();
 						}*/
+						if($spk_created == 1){
+							$client = new Client([
+								'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+								'base_uri' => config("app.url_api_bsp"),
+								'http_errors' => false,
+								'timeout'  => 60.0,
+							]);
+
+							$res_exam_schedule = $client->get('spk/addNotif?id='.$Examination->id.'&spkNumber='.$spk_number_forOTR);
+							$exam_schedule = $res_exam_schedule->getStatusCode() == '200' ? json_decode($res_exam_schedule->getBody()) : null;
+							if($exam_schedule && $exam_schedule->status == false){
+								$api_logs = new Api_logs;
+								$api_logs->send_to = "OTR";
+								$api_logs->route = 'spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR;
+								$api_logs->status = $exam_schedule->status;
+								$api_logs->data = json_encode($exam_schedule);
+								$api_logs->reference_id = $exam->id;
+								$api_logs->reference_table = "examinations";
+								$api_logs->created_by = $currentUser->id;
+								$api_logs->updated_by = $currentUser->id;
+
+								$api_logs->save();
+							}elseif ($exam_schedule == null) {
+								$api_logs = new Api_logs;
+								$api_logs->send_to = "OTR";
+								$api_logs->route = 'spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR;
+								$api_logs->status = 0;
+								$api_logs->data = "-";
+								$api_logs->reference_id = $exam->id;
+								$api_logs->reference_table = "examinations";
+								$api_logs->created_by = $currentUser->id;
+								$api_logs->updated_by = $currentUser->id;
+
+								$api_logs->save();
+							}
+						}
+
                     	$admins = AdminRole::where('payment_status',1)->get()->toArray();
 						foreach ($admins as $admin) {  
 							$notif_data= array( 
@@ -1824,6 +1869,42 @@ $notification->id = Uuid::uuid4();
         }else{
             return 'checkBillingSPBTPN Command Run successfully! Nothing to update.';
         }
+    }
+
+    public function generateSPKCode($a,$b,$c) {
+		// $query = "
+			// SELECT 
+			// SUBSTRING_INDEX(SUBSTRING_INDEX(spk_code,'/',2),'/',-1) + 1 AS last_numb
+			// FROM examinations WHERE 
+			// SUBSTRING_INDEX(spk_code,'/',1) = '".$a."' AND
+			// SUBSTRING_INDEX(SUBSTRING_INDEX(spk_code,'/',-2),'/',1) = '".$b."' AND
+			// SUBSTRING_INDEX(spk_code,'/',-1) = '".$c."'
+			// ORDER BY last_numb DESC LIMIT 1
+		// ";
+		$query = "
+			SELECT 
+			SUBSTRING_INDEX(SUBSTRING_INDEX(spk_code,'/',2),'/',-1) + 1 AS last_numb
+			FROM examinations WHERE 
+			SUBSTRING_INDEX(spk_code,'/',1) = '".$a."' AND
+			SUBSTRING_INDEX(spk_code,'/',-1) = '".$c."'
+			ORDER BY last_numb DESC LIMIT 1
+		";
+		$data = DB::select($query);
+		if (count($data) == 0){
+			return ''.$a.'/001/'.$b.'/'.$c.'';
+		}
+		else{
+			$last_numb = $data[0]->last_numb;
+			if($last_numb < 10){
+				return ''.$a.'/00'.$last_numb.'/'.$b.'/'.$c.'';
+			}
+			else if($last_numb < 100){
+				return ''.$a.'/0'.$last_numb.'/'.$b.'/'.$c.'';
+			}
+			else{
+				return ''.$a.'/'.$last_numb.'/'.$b.'/'.$c.'';
+			}
+		}
     }
 
     public function api_invoice($data_invoices){

@@ -52,14 +52,49 @@ class FakturPajakController extends Controller
             $filterCompany = '';
             $companies = Company::where('id','!=', 1)->get();
 
-            $spb = Examination::select(DB::raw('examinations.id as _id, "SPB" as type, users.name as user_name, companies.name as company_name, CONCAT(devices.name, ", tipe ", devices.model, ", kapasitas ", devices.capacity) as description, examination_attachments.attachment as faktur_file, DATE(examination_attachments.tgl) as payment_date'))
+            $spb = Examination::select(DB::raw('examinations.id as _id, "SPB" as type, users.name as user_name, companies.name as company_name, CONCAT(devices.name, ", tipe ", devices.model, ", kapasitas ", devices.capacity) as description, 
+                (
+                    SELECT attachment
+                    FROM
+                        examination_attachments
+                    WHERE
+                        examination_id = _id
+                    AND
+                        name = "Kuitansi"
+                ) as id_kuitansi,
+                (
+                    SELECT attachment
+                    FROM
+                        examination_attachments
+                    WHERE
+                        examination_id = _id
+                    AND
+                        name = "Faktur Pajak"
+                ) as faktur_file, 
+                (
+                    SELECT DATE(examination_attachments.tgl)
+                    FROM
+                        examination_attachments
+                    WHERE
+                        examination_id = _id
+                    AND
+                        name = "Pembayaran"
+                ) as payment_date'))
                 ->join('users', 'examinations.created_by', '=', 'users.id')
                 ->join('companies', 'examinations.company_id', '=', 'companies.id')
                 ->join('devices', 'examinations.device_id', '=', 'devices.id')
-                ->leftJoin('examination_attachments', 'examinations.id', '=', 'examination_attachments.examination_id')
+                ->join('examination_attachments', 'examinations.id', '=', 'examination_attachments.examination_id')
                 ->whereNotNull('examinations.created_at')
-                ->where('examination_attachments.name', 'Faktur Pajak')
-                ->where('examination_attachments.attachment', '!=', '')
+                ->where(function($q1){
+                    return $q1->where(function($q){
+                        return $q->where('examination_attachments.name', 'Kuitansi')
+                            ->where('examination_attachments.attachment', '!=', '');
+                        })->orWhere(function($q){
+                        return $q->where('examination_attachments.name', 'Faktur Pajak')
+                            ->where('examination_attachments.attachment', '!=', '');
+                        });
+                    })
+                ->distinct('_id')
             ;
 
             $stel = STELSales::select(DB::raw('stels_sales.id as _id, "STEL" as type, users.name as user_name, companies.name as company_name, 
@@ -73,13 +108,16 @@ class FakturPajakController extends Controller
                                     AND
                                         stels_sales_detail.stels_id = stels.id
                                 ) as description,
-                                stels_sales.faktur_file, DATE(stels_sales_attachment.updated_at) as payment_date'))
+                                stels_sales.id_kuitansi, stels_sales.faktur_file, DATE(stels_sales_attachment.updated_at) as payment_date'))
                 ->join('users', 'stels_sales.created_by', '=', 'users.id')
                 ->join('companies', 'users.company_id', '=', 'companies.id')
                 ->join('stels_sales_detail', 'stels_sales.id', '=', 'stels_sales_detail.stels_sales_id')
                 ->leftJoin('stels_sales_attachment', 'stels_sales.id', '=', 'stels_sales_attachment.stel_sales_id')
                 ->join('stels', 'stels_sales_detail.stels_id', '=', 'stels.id')
-                ->where('stels_sales.faktur_file', '!=', '')
+                ->where(function($q){
+                    return $q->where('stels_sales.id_kuitansi', '!=', '')
+                        ->orWhere('stels_sales.faktur_file', '!=', '');
+                    })
             ;
 
             if ($search != null){
@@ -97,7 +135,7 @@ class FakturPajakController extends Controller
                 $dataSearch = array('search' => $search);
                 $logs->data = json_encode($dataSearch);
                 $logs->created_by = $currentUser->id;
-                $logs->page = "Rekap Faktur Pajak";
+                $logs->page = "Rekap Kuitansi dan Faktur Pajak";
                 $logs->save();
             }
 
