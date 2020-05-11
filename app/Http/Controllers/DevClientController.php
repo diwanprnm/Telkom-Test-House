@@ -54,6 +54,7 @@ class DevClientController extends Controller
 						'companies.name AS namaPerusahaan',
 						'devices.name AS namaPerangkat',
 						'devices.mark AS merk',
+						'devices.manufactured_by',
 						'devices.model AS tipe',
 						'devices.capacity AS kapasitas',
 						'devices.test_reference AS standarisasi',
