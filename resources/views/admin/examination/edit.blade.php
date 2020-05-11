@@ -4459,7 +4459,9 @@
 	}
 		
 	var cust_price_payment = document.getElementById('cust_price_payment');
-	$('#cust_price_payment').val(formatPrice(cust_price_payment.value));
+	if($("#cust_price_payment").length != 0) {
+		$('#cust_price_payment').val(formatPrice(cust_price_payment.value));
+	}
 
 	/* Fungsi */
 	function formatPrice(angka, prefix)
