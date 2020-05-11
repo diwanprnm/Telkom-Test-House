@@ -4454,7 +4454,7 @@
 	});
 
 	var exam_price = document.getElementById('exam_price');
-	if($("#exam_price").length == 0) {
+	if($("#exam_price").length != 0) {
 		$('#exam_price').val(formatPrice(exam_price.value));
 	}
 		
