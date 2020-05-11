@@ -61,6 +61,7 @@
 												<th class="center">{{ trans('translate.devic_test_passed_name') }}</th>
 												<th class="center">{{ trans('translate.devic_test_passed_device') }}</th>
 												<th class="center">{{ trans('translate.devic_test_passed_mark') }}</th>
+												<th class="center">{{ trans('translate.service_device_manufactured_by') }}</th>
 												<th class="center">{{ trans('translate.devic_test_passed_type') }}</th>
 												<th class="center">{{ trans('translate.devic_test_passed_capacity') }}</th>
 												<th class="center">{{ trans('translate.devic_test_passed_standar') }}</th>
@@ -77,6 +78,7 @@
 												<td class="center">{{ $item->namaPerusahaan }}</td>
 												<td class="center">{{ $item->namaPerangkat }}</td>
 												<td class="center">{{ $item->merk }}</td>
+												<td class="center">{{ $item->manufactured_by }}</td>
 												<td class="center">{{ $item->tipe }}</td>
 												<td class="center">{{ $item->kapasitas }}</td>
 												<td class="center">{{ $item->standarisasi }}</td>
