@@ -135,7 +135,7 @@
 						<label for="nama_perangkat">Nama Perangkat *</label>
 					</td>
 					<td align="center">
-						<label for="biaya">Biaya (dengan PPN) *</label>
+						<label for="biaya">Biaya *</label>
 					</td>
 					<td style="width:40px;"><a  style="width:40px;" value='Add More' class='del btn btn-success btn-flat' onclick='addAppend()'><i id='icon_add' class='fa fa-plus'/></a></td>
 				</tr>
@@ -170,6 +170,7 @@
 			</tbody>
 			<tbody class="tes_append"></tbody>
 		</table>
+		<p style="margin-top: -2%;font-size: 80%;">Note : Biaya belum termasuk ppn 10%</p>
 		<div class="row">
 			<div class="col-md-6">
 				<div class="form-group">
