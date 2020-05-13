@@ -28,7 +28,7 @@ RUN docker-php-ext-install pdo_mysql
 #    mv composer.phar /usr/local/bin/composer
 
 # ADD directory website
-# ADD . /var/www/html/telkom-dds
+# ADD . /var/www/html/telkomtesthouse
 
 
 WORKDIR /var/www/html
@@ -83,13 +83,13 @@ RUN chmod +x /usr/local/bin/laravel-apache2-foreground
 # RUN apt-get update && apt-get -y install zip unzip
 
 # Change directory into project root & install vendor
-# RUN cd /var/www/html/telkom-dds && \
+# RUN cd /var/www/html/telkomtesthouse && \
 #	composer install
 
 # Change file permission 775
 # RUN cd /var/www/html && \
-#	chmod -R 775 telkom-dds && \
-#	chown -R www-data:www-data telkom-dds
+#	chmod -R 775 telkomtesthouse && \
+#	chown -R www-data:www-data telkomtesthouse
 
 # open port 443
 # EXPOSE 80
