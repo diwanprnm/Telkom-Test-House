@@ -575,17 +575,18 @@ class ProductsController extends Controller
     {
         $currentUser = Auth::user();
         if($currentUser){
-            $query = STELSales::whereHas('user', function ($query) use ($currentUser) {
-                $query->where('company_id', $currentUser->company_id);
+            $query = STELSales::
+            join('users', function ($join) use ($currentUser) {
+                $join->on('stels_sales.created_by', '=', 'users.id')
+                 ->where('users.company_id', '=', $currentUser->company_id);
             })
-            ->whereHas('sales_detail', function ($query) use ($id) {
-                $query->where('id', $id);
-            })
-            ->with('user')
-            ->with('sales_detail');
+            ->join('stels_sales_detail', function ($join) use ($id) {
+                $join->on('stels_sales.id', '=', 'stels_sales_detail.stels_sales_id')
+                 ->where('stels_sales_detail.id', '=', $id);
+            });
             $stel = $query->get();
             if (count($stel)>0){
-                $file = public_path().'/media/stelAttach/'.$id."/".$stel[0]->sales_detail[0]->attachment;
+                $file = public_path().'/media/stelAttach/'.$id."/".$stel[0]->attachment;
                 $headers = array(
                   'Content-Type: application/octet-stream',
                 );
