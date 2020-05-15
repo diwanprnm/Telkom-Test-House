@@ -16,6 +16,7 @@ use App\ExaminationAttach;
 use App\AdminRole;
 use App\TbMSPK;
 use App\TbHSPK;
+use App\Income;
 use App\Api_logs;
 
 use App\User;
@@ -1747,26 +1748,26 @@ $notification->id = Uuid::uuid4();
 
     public function checkBillingTPN()
     {
-        $exam = Examination::where('payment_status', 0)->whereNotNull('BILLING_ID')->get();
+        $exam = Examination::where('payment_status', 1)->whereNotNull('BILLING_ID')->get();
         if(count($exam)>0){
             $updated_count = 0;
             foreach ($exam as $data) {
-                $Examination = Examination::with('company')->with('examinationType')->with('examinationLab')->find($data->id);
+                $Examination = Examination::with('device')->with('company')->with('examinationType')->with('examinationLab')->find($data->id);
                 $oldStel = $Examination;
 
-                $data_invoices = [
+                /*$data_invoices = [
                     "billing_id" => $data->BILLING_ID,
                     "created" => [
                         "by" => "SUPERADMIN UREL",
                         "reference_id" => "1"
                     ]
                 ];
-
+*/
                 $billing = $this->api_billing($data->BILLING_ID);
                 if($billing && $billing->status == true && $billing->data->status_paid == 'paid'){
                     $Examination->cust_price_payment = $billing->data->draft->final_price;
                     $Examination->payment_status = 1;
-
+/*
                     $invoice = $this->api_invoice($data_invoices);
                     $Examination->INVOICE_ID = $invoice && $invoice->status == true ? $invoice->data->_id : null;
 
@@ -1779,7 +1780,7 @@ $notification->id = Uuid::uuid4();
 	                    $Examination->spk_date = date('Y-m-d');
                     	$spk_created = 1;
 	                }
-
+*/
                     if($Examination->save()){
                     	/*$timestamp = strtotime($billing->data->paid->at);
                     	$tgl = date('Y-m-d', $timestamp);
@@ -1798,7 +1799,26 @@ $notification->id = Uuid::uuid4();
 
 							$attach->save();
 						}*/
-						if($spk_created == 1){
+						if($this->cekRefID($Examination->id) == 0){
+							$income = new Income;
+							$income->id = Uuid::uuid4();
+							$income->company_id = $Examination->company_id;
+							$income->inc_type = 1; 
+							$income->reference_id = $Examination->id; 
+							$income->reference_number = $Examination->spb_number;
+							$income->tgl = $Examination->spb_date;
+							$income->created_by = 1;
+
+						}else{
+							$income = Income::where('reference_id', $Examination->id)->first();
+						}
+						
+						$income->price = $Examination->cust_price_payment;
+						$income->updated_by = 1;
+						$income->save();
+						$this->sendEmailNotification($Examination->created_by,$Examination->device->name,$Examination->examinationType->name,$Examination->examinationType->description, "emails.pembayaran", "ACC Pembayaran");
+
+						/*if($spk_created == 1){
 							$client = new Client([
 								'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
 								'base_uri' => config("app.url_api_bsp"),
@@ -1858,7 +1878,7 @@ $notification->id = Uuid::uuid4();
 					      	$notification->save();
 					      	$notif_data['id'] = $notification->id; 
 					        event(new Notification($notif_data));
-				    	}
+				    	}*/
                     }else{
                         $updated_count -= 1;
                     }
@@ -1871,6 +1891,34 @@ $notification->id = Uuid::uuid4();
         }
     }
 
+    function cekRefID($exam_id)
+    {
+		$income = Income::where('reference_id','=',''.$exam_id.'')->get();
+		return count($income);
+    }
+
+    /**
+     * Send an e-mail notification to the user.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
+    public function sendEmailNotification($user, $dev_name, $exam_type, $exam_type_desc, $message, $subject)
+    {
+        $data = User::findOrFail($user);
+		
+        Mail::send($message, array(
+			'user_name' => $data->name,
+			'dev_name' => $dev_name,
+			'exam_type' => $exam_type,
+			'exam_type_desc' => $exam_type_desc
+			), function ($m) use ($data,$subject) {
+            $m->to($data->email)->subject($subject);
+        });
+
+        return true;
+    }
+	
     public function generateSPKCode($a,$b,$c) {
 		// $query = "
 			// SELECT 
