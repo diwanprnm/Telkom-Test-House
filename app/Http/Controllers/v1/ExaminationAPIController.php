@@ -1748,26 +1748,26 @@ $notification->id = Uuid::uuid4();
 
     public function checkBillingTPN()
     {
-        $exam = Examination::where('payment_status', 1)->whereNotNull('BILLING_ID')->get();
+        $exam = Examination::where('payment_status', 0)->whereNotNull('BILLING_ID')->get();
         if(count($exam)>0){
             $updated_count = 0;
             foreach ($exam as $data) {
                 $Examination = Examination::with('device')->with('company')->with('examinationType')->with('examinationLab')->find($data->id);
                 $oldStel = $Examination;
 
-                /*$data_invoices = [
+                $data_invoices = [
                     "billing_id" => $data->BILLING_ID,
                     "created" => [
                         "by" => "SUPERADMIN UREL",
                         "reference_id" => "1"
                     ]
                 ];
-*/
+
                 $billing = $this->api_billing($data->BILLING_ID);
                 if($billing && $billing->status == true && $billing->data->status_paid == 'paid'){
                     $Examination->cust_price_payment = $billing->data->draft->final_price;
                     $Examination->payment_status = 1;
-/*
+
                     $invoice = $this->api_invoice($data_invoices);
                     $Examination->INVOICE_ID = $invoice && $invoice->status == true ? $invoice->data->_id : null;
 
@@ -1780,7 +1780,7 @@ $notification->id = Uuid::uuid4();
 	                    $Examination->spk_date = date('Y-m-d');
                     	$spk_created = 1;
 	                }
-*/
+
                     if($Examination->save()){
                     	/*$timestamp = strtotime($billing->data->paid->at);
                     	$tgl = date('Y-m-d', $timestamp);
@@ -1818,7 +1818,7 @@ $notification->id = Uuid::uuid4();
 						$income->save();
 						$this->sendEmailNotification($Examination->created_by,$Examination->device->name,$Examination->examinationType->name,$Examination->examinationType->description, "emails.pembayaran", "ACC Pembayaran");
 
-						/*if($spk_created == 1){
+						if($spk_created == 1){
 							$client = new Client([
 								'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
 								'base_uri' => config("app.url_api_bsp"),
@@ -1878,7 +1878,7 @@ $notification->id = Uuid::uuid4();
 					      	$notification->save();
 					      	$notif_data['id'] = $notification->id; 
 					        event(new Notification($notif_data));
-				    	}*/
+				    	}
                     }else{
                         $updated_count -= 1;
                     }
