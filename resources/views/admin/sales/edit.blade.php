@@ -56,15 +56,15 @@
 									@endif
 								</div>
 							</div>
-							<!-- <div class="col-md-6">
+							<div class="col-md-6">
 								@if($data->id_kuitansi != '')
 									-
 								@else
 									<a onclick="checkKuitansi('<?php echo $data->id ?>')"> Cek Kuitansi</a>
 								@endif
-								<div class="form-group">
+								<!-- <div class="form-group">
 									<a onclick="makeKuitansi('<?php echo $data->id ?>')"> Buatkan File Kuitansi</a>
-								</div>
+								</div> -->
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
@@ -74,7 +74,7 @@
 										<a onclick="checkTaxInvoice('<?php echo $data->id ?>')"> Cek Faktur Pajak</a>
 									@endif
 								</div>
-							</div> -->
+							</div>
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
