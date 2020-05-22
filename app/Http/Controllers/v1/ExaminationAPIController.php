@@ -1748,7 +1748,7 @@ $notification->id = Uuid::uuid4();
 
     public function checkBillingTPN()
     {
-        $exam = Examination::where('payment_status', 0)->whereNotNull('BILLING_ID')->get();
+        $exam = Examination::where('payment_status', '!=', 1)->whereNotNull('BILLING_ID')->whereNull('INVOICE_ID')->get();
         if(count($exam)>0){
             $updated_count = 0;
             foreach ($exam as $data) {
