@@ -91,10 +91,7 @@ class StelAPIController extends AppBaseController
 
     public function checkBillingTPN()
     {
-        $stel = STELSales::where(function($q){
-                                $q->where('payment_status', 0)
-                                    ->orWhere('payment_status', 2);
-                            })->whereNotNull('BILLING_ID')->get();
+        $stel = STELSales::where('payment_status', '!=', 1)->whereNotNull('BILLING_ID')->whereNull('INVOICE_ID')->get();
         if(count($stel)>0){
             $updated_count = 0;
             foreach ($stel as $data) {
@@ -112,7 +109,7 @@ class StelAPIController extends AppBaseController
                 $billing = $this->api_billing($data->BILLING_ID);
                 if($billing && $billing->status == true && $billing->data->status_paid == 'paid'){
                     $STELSales->cust_price_payment = $billing->data->draft->final_price;
-                    $STELSales->payment_status = 1;
+                    $STELSales->payment_status = $STELSales->payment_status == 3 ? 3 : 1;
 
                     $invoice = $this->api_invoice($data_invoices);
                     $STELSales->INVOICE_ID = $invoice && $invoice->status == true ? $invoice->data->_id : null;
