@@ -91,7 +91,10 @@ class StelAPIController extends AppBaseController
 
     public function checkBillingTPN()
     {
-        $stel = STELSales::where('payment_status', '!=', 1)->whereNotNull('BILLING_ID')->whereNull('INVOICE_ID')->get();
+        $stel = STELSales::where(function($q){
+                                $q->where('payment_status', 0)
+                                    ->orWhere('payment_status', 2);
+                            })->whereNotNull('BILLING_ID')->get();
         if(count($stel)>0){
             $updated_count = 0;
             foreach ($stel as $data) {
