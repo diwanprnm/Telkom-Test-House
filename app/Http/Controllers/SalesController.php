@@ -661,16 +661,22 @@ class SalesController extends Controller
         $stel = STELSalesAttach::select($select)->rightJoin("stels_sales","stels_sales.id","=","stels_sales_attachment.stel_sales_id")
                 ->where("stels_sales.id",$id)->first();
                 
-        $select = array("stels.name","stels.price","stels.code","stels_sales_detail.qty","stels_sales_detail.id","stels_sales_detail.attachment","stels.attachment as stelAttach","stels_sales.invoice","companies.name as company_name","stels_sales.payment_status"); 
+        $select = array("stels.name","stels.price","stels.code","stels_sales_detail.qty","stels_sales_detail.id","stels_sales_detail.attachment","stels.attachment as stelAttach","stels_sales.invoice","companies.name as company_name","stels_sales.payment_status","stels_sales.BILLING_ID","stels_sales.INVOICE_ID"); 
         $STELSales = STELSalesDetail::select($select)->where("stels_sales_id",$id)
                     ->join("stels_sales","stels_sales.id","=","stels_sales_detail.stels_sales_id")
                     ->join("stels","stels.id","=","stels_sales_detail.stels_id")
                     ->join("users","users.id","=","stels_sales.user_id")
                     ->join("companies","companies.id","=","users.company_id")
                     ->get();
-        return view('admin.sales.upload')
-            ->with('data', $stel)
-            ->with('dataStel', $STELSales);
+        
+        if($STELSales[0]->BILLING_ID && !$STELSales[0]->INVOICE_ID){
+            Session::flash('error', "Can't upload attachment. Undefined INVOICE_ID!");
+            return redirect('/admin/sales/');
+        }else{
+            return view('admin.sales.upload')
+                ->with('data', $stel)
+                ->with('dataStel', $STELSales);
+        }
     }
 
 	public function deleteProduct($id,$reason = null)
@@ -796,7 +802,7 @@ class SalesController extends Controller
                 $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
                 $invoice = json_decode($res_invoice->getBody());
                 
-                if($invoice && $invoice->status == true){
+                if($INVOICE_ID && $invoice && $invoice->status == true){
                     $status_invoice = $invoice->data->status_invoice;
                     if($status_invoice == "approved"){
                         $status_faktur = $invoice->data->status_faktur;
@@ -885,7 +891,7 @@ class SalesController extends Controller
                 $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
                 $invoice = json_decode($res_invoice->getBody());
                 
-                if($invoice && $invoice->status == true){
+                if($INVOICE_ID && $invoice && $invoice->status == true){
                     $status_invoice = $invoice->data->status_invoice;
                     if($status_invoice == "approved"){
                         $status_faktur = $invoice->data->status_faktur;

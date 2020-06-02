@@ -419,4 +419,7 @@ return [
 
 	'tax_invoice' => 'Faktur Pajak',
 	'receipt' => 'Kuitansi',
+
+	'payment_alert_1' => 'Untuk kemudahan verifikasi pembayaran, kepada pelanggan mohon untuk membayar tagihan sesuai nominal yang tertera hingga 3 digit terakhir.',
+	'payment_alert_2' => 'Jika ada lebih dari satu transaksi, harap tidak menggabungkan pembayarannya menjadi satu.',
 ];

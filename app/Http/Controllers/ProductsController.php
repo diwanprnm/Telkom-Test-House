@@ -200,7 +200,7 @@ class ProductsController extends Controller
                 $STELSalesAttach->save();
                 $id = $request->input('stelsales_id');
                 $STELSales = STELSales::find($id);
-                $STELSales->payment_status = 2;
+                $STELSales->payment_status = $STELSales->payment_status == 0 ? 2 : $STELSales->payment_status;
                 $STELSales->cust_price_payment = $jml_pembayaran;
                 $STELSales->save();
 

@@ -23,7 +23,7 @@
 		============================================= -->
 		<section id="content"> 
 			<div class="content-wrap"> 
-				<div class="container"> 
+				<div class="container clearfix"> 
 					<form id="form-send-feedback" class="nobottommargin" role="form" method="POST" action="{{ url('doCheckout') }}" onsubmit="javascript:document.getElementById('submit-btn').style.display = 'none';document.getElementById('submit-msg').style.display = 'block';">
 					<div class="row">    
 						<p> No. Invoice	: {{$invoice_number}} </p> 
@@ -79,6 +79,9 @@
 									</tr> 
 								</tfoot>
 							</table> 
+						</div> 
+						<div class="alert alert-warning" style="font-weight: bold;">
+							{{ trans('translate.payment_alert_1') }}<br>{{ trans('translate.payment_alert_2') }}
 						</div> 
 						{{ trans('translate.stel_payment_method') }}
 						<br>

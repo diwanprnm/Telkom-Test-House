@@ -326,6 +326,9 @@
 								<?php if($item->spb_status == 1 and $item->payment_status != 1){ ?>
 									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/pembayaran')}}">{{ trans('translate.examination_payment') }}</a>
 									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/downloadSPB')}}">{{ trans('translate.download') }} SPB</a>
+									<div class="alert alert-warning" style="font-weight: bold;">
+										{{ trans('translate.payment_alert_1') }}<br>{{ trans('translate.payment_alert_2') }}
+									</div> 
 								<?php } ?>
 								
 								<?php if($item->registration_status != 1){ ?>

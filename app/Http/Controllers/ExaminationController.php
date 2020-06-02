@@ -1789,7 +1789,7 @@ class ExaminationController extends Controller
                 $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
                 $invoice = json_decode($res_invoice->getBody());
                 
-                if($invoice && $invoice->status == true){
+                if($INVOICE_ID && $invoice && $invoice->status == true){
                     $status_invoice = $invoice->data->status_invoice;
                     if($status_invoice == "approved"){
                         $status_faktur = $invoice->data->status_faktur;
@@ -1899,7 +1899,7 @@ class ExaminationController extends Controller
                 $INVOICE_ID = $exam->INVOICE_ID;
                 $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
                 $invoice = json_decode($res_invoice->getBody());
-                if($invoice && $invoice->status == true){
+                if($INVOICE_ID && $invoice && $invoice->status == true){
     			    $status_invoice = $invoice->data->status_invoice;
                     if($status_invoice == "approved"){
                         $status_faktur = $invoice->data->status_faktur;
