@@ -54,7 +54,7 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="table-responsive font-table">
-									<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1">
+									<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1" style="font-size: smaller;">
 										<thead>
 											<tr>
 												<th class="center">{{ trans('translate.devic_test_passed_no') }}</th>
