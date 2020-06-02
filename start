@@ -1,0 +1,29 @@
+#!/bin/sh
+
+LARAVEL_SEED_SLEEP=${LARAVEL_SEED_SLEEP:-1}
+
+echo "Create storage directory"
+mkdir -p /var/www/data/html/bootstrap/cache/ \
+         /var/www/data/html/storage/app \
+         /var/www/data/html/storage/logs \
+         /var/www/data/html/storage/tmp \
+         /var/www/data/html/storage/framework/sessions \
+         /var/www/data/html/storage/framework/views \
+         /var/www/data/html/storage/framework/cache \
+&& chmod -R 775 /var/www/data/html/storage/ \
+&& chmod -R 777 /var/www/data/html/storage/tmp/ \
+&& chmod -R 777 /var/www/data/html/storage/fonts/ \
+&& chmod -R 775 /var/www/data/html/bootstrap/cache/ \
+&& chown -R user:user /var/www/data/html
+
+echo "Run composer optimize"
+composer dump-autoload --optimize
+
+echo "Run db migration"
+sleep ${LARAVEL_SEED_SLEEP}
+php artisan migrate --force
+
+echo "Run default entrypoint"
+exec /usr/bin/supervisord -n -c /var/www/data/etc/supervisor/supervisord.conf -d /var/www/data/etc/supervisor
+
+exit 0
