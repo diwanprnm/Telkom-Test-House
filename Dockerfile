@@ -1,4 +1,4 @@
-FROM telkomindonesia/alpine:php-7.1-apache-novol
+FROM telkomindonesia/alpine:php-7.1-nginx-novol
 
 WORKDIR /var/www/data/html
 
