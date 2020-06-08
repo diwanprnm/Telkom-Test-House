@@ -1,16 +1,42 @@
 #!/bin/sh
 
+#echo "Replace default nginx configuration"
+#cp /var/www/data/html/setup/nginx/default.conf /var/www/data/etc/nginx/conf.d/default.conf
+
+#echo "Replace default php.ini configuration"
+#cp /var/www/data/html/setup/php7/php.ini /var/www/data/etc/php7/php.ini
+
+#echo "Replace default supervisord configuration"
+#cp /var/www/data/html/setup/supervisor/supervisord.conf /var/www/data/etc/supervisor/supervisord.conf
+
+#echo "Add supervisor email queue configuration"
+#cp /var/www/data/html/setup/supervisor/03-queue-email.conf /var/www/data/etc/supervisor/conf.d/03-queue-email.conf
+
 LARAVEL_SEED_SLEEP=${LARAVEL_SEED_SLEEP:-1}
 
 echo "Create storage directory"
 mkdir -p /var/www/data/html/bootstrap/cache/ \
          /var/www/data/html/storage/app \
+         /var/www/data/html/storage/fonts \
          /var/www/data/html/storage/logs \
          /var/www/data/html/storage/tmp \
          /var/www/data/html/storage/framework/sessions \
          /var/www/data/html/storage/framework/views \
          /var/www/data/html/storage/framework/cache \
+         /var/www/data/html/public/media/certification \
+         /var/www/data/html/public/media/company \
+         /var/www/data/html/public/media/device \
+         /var/www/data/html/public/media/examination \
+         /var/www/data/html/public/media/footer \
+         /var/www/data/html/public/media/popupinformation \
+         /var/www/data/html/public/media/slideshow \
+         /var/www/data/html/public/media/stel \
+         /var/www/data/html/public/media/stelAttach \
+         /var/www/data/html/public/media/tempCompany \
+         /var/www/data/html/public/media/user \
+         /var/www/data/html/public/media/usman \
 && chmod -R 775 /var/www/data/html/storage/ \
+&& chmod -R 775 /var/www/data/html/public/media/ \
 && chmod -R 777 /var/www/data/html/storage/tmp/ \
 && chmod -R 777 /var/www/data/html/storage/fonts/ \
 && chmod -R 775 /var/www/data/html/bootstrap/cache/ \
@@ -22,6 +48,7 @@ composer dump-autoload --optimize
 echo "Run db migration"
 sleep ${LARAVEL_SEED_SLEEP}
 php artisan migrate --force
+php artisan db:seed
 
 echo "Run default entrypoint"
 exec /usr/bin/supervisord -n -c /var/www/data/etc/supervisor/supervisord.conf -d /var/www/data/etc/supervisor

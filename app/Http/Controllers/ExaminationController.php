@@ -83,39 +83,21 @@ class ExaminationController extends Controller
                                 ->with('examinationLab')
                                 ->with('media')
                                 ->with('device');
-			$query->where(function($qry){
-				$qry->where(function($q){
-					return $q->where('registration_status', '!=', '1')
-						->orWhere('function_status', '!=', '1')
-						->orWhere('contract_status', '!=', '1')
-						->orWhere('spb_status', '!=', '1')
-						->orWhere('payment_status', '!=', '1')
-						->orWhere('spk_status', '!=', '1')
-						->orWhere('examination_status', '!=', '1')
-						->orWhere('resume_status', '!=', '1')
-						->orWhere('qa_status', '!=', '1')
-						->orWhere('certificate_status', '!=', '1')
-						->orWhere('location', '!=', '1')
-						// ->orWhere(function($qa){
-							// return $qa->where('qa_passed', '=', '-1')->where('location', '!=', '1');
-						// })
-						;
-					})
-					->where('examination_type_id', '=', '1')
-				->orWhere(function($q){
-					return $q->where('registration_status', '!=', '1')
-						->orWhere('function_status', '!=', '1')
-						->orWhere('contract_status', '!=', '1')
-						->orWhere('spb_status', '!=', '1')
-						->orWhere('payment_status', '!=', '1')
-						->orWhere('spk_status', '!=', '1')
-						->orWhere('examination_status', '!=', '1')
-						->orWhere('resume_status', '!=', '1')
-						->orWhere('location', '!=', '1')
-						;
-					})->where('examination_type_id', '!=', '1')
+			$query->where(function($q){
+				return $q->where('registration_status', '!=', '1')
+					->orWhere('function_status', '!=', '1')
+					->orWhere('contract_status', '!=', '1')
+					->orWhere('spb_status', '!=', '1')
+					->orWhere('payment_status', '!=', '1')
+					->orWhere('spk_status', '!=', '1')
+					->orWhere('examination_status', '!=', '1')
+					->orWhere('resume_status', '!=', '1')
+					->orWhere('qa_status', '!=', '1')
+					->orWhere('certificate_status', '!=', '1')
+					->orWhere('location', '!=', '1')
 					;
-			});
+				})
+				;
 			if ($search != null){
                 $query->where(function($qry) use($search){
                     $qry->whereHas('device', function ($q) use ($search){
@@ -2150,39 +2132,21 @@ class ExaminationController extends Controller
                             ->with('examinationLab')
                             ->with('media')
                             ->with('device');
-		$query->where(function($qry){
-			$qry->where(function($q){
-				return $q->where('registration_status', '!=', '1')
-					->orWhere('function_status', '!=', '1')
-					->orWhere('contract_status', '!=', '1')
-					->orWhere('spb_status', '!=', '1')
-					->orWhere('payment_status', '!=', '1')
-					->orWhere('spk_status', '!=', '1')
-					->orWhere('examination_status', '!=', '1')
-					->orWhere('resume_status', '!=', '1')
-					->orWhere('qa_status', '!=', '1')
-					->orWhere('certificate_status', '!=', '1')
-					->orWhere('location', '!=', '1')
-					// ->orWhere(function($qa){
-						// return $qa->where('qa_passed', '=', '-1')->where('location', '!=', '1');
-					// })
-					;
-				})
-				->where('examination_type_id', '=', '1')
-			->orWhere(function($q){
-				return $q->where('registration_status', '!=', '1')
-					->orWhere('function_status', '!=', '1')
-					->orWhere('contract_status', '!=', '1')
-					->orWhere('spb_status', '!=', '1')
-					->orWhere('payment_status', '!=', '1')
-					->orWhere('spk_status', '!=', '1')
-					->orWhere('examination_status', '!=', '1')
-					->orWhere('resume_status', '!=', '1')
-					->orWhere('location', '!=', '1')
-					;
-				})->where('examination_type_id', '!=', '1')
+		$query->where(function($q){
+			return $q->where('registration_status', '!=', '1')
+				->orWhere('function_status', '!=', '1')
+				->orWhere('contract_status', '!=', '1')
+				->orWhere('spb_status', '!=', '1')
+				->orWhere('payment_status', '!=', '1')
+				->orWhere('spk_status', '!=', '1')
+				->orWhere('examination_status', '!=', '1')
+				->orWhere('resume_status', '!=', '1')
+				->orWhere('qa_status', '!=', '1')
+				->orWhere('certificate_status', '!=', '1')
+				->orWhere('location', '!=', '1')
 				;
-		});
+			})
+			;
 		if ($search != null){
             $query->where(function($qry) use($search){
                 $qry->whereHas('device', function ($q) use ($search){
