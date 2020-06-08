@@ -1,16 +1,16 @@
 #!/bin/sh
 
-#echo "Replace default nginx configuration"
-#cp /var/www/data/html/setup/nginx/default.conf /var/www/data/etc/nginx/conf.d/default.conf
+echo "Replace default nginx configuration"
+cp /var/www/data/html/setup/nginx/default.conf /var/www/data/etc/nginx/conf.d/default.conf
 
-#echo "Replace default php.ini configuration"
-#cp /var/www/data/html/setup/php7/php.ini /var/www/data/etc/php7/php.ini
+echo "Replace default php.ini configuration"
+cp /var/www/data/html/setup/php7/php.ini /var/www/data/etc/php7/php.ini
 
-#echo "Replace default supervisord configuration"
-#cp /var/www/data/html/setup/supervisor/supervisord.conf /var/www/data/etc/supervisor/supervisord.conf
+echo "Replace default supervisord configuration"
+cp /var/www/data/html/setup/supervisor/supervisord.conf /var/www/data/etc/supervisor/supervisord.conf
 
-#echo "Add supervisor email queue configuration"
-#cp /var/www/data/html/setup/supervisor/03-queue-email.conf /var/www/data/etc/supervisor/conf.d/03-queue-email.conf
+echo "Add supervisor email queue configuration"
+cp /var/www/data/html/setup/supervisor/03-queue-email.conf /var/www/data/etc/supervisor/conf.d/03-queue-email.conf
 
 LARAVEL_SEED_SLEEP=${LARAVEL_SEED_SLEEP:-1}
 

@@ -29,6 +29,23 @@ services:
     expose:
       - "8080"
 
+  notification:
+    build : ./notification
+    networks:
+      - tthnet
+    environment:
+      - LARAVEL_SEED_SLEEP=10
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+    volumes:
+      - ./notification:/usr/src/app
+    ports:
+      - 4002:8080
+    depends_on:
+      - redis
+    expose:
+      - "8080"
+    
   mysql_tth:
     image: 'telkomindonesia/alpine:mysql-10.2'
     user: user
