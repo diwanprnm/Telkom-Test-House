@@ -1,5 +1,6 @@
 <?php
-
+@ob_start();
+session_start();
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
