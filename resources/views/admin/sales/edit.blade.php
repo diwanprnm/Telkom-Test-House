@@ -23,6 +23,19 @@
 			</div>
 		</section>
 		<!-- end: PAGE TITLE -->
+
+		@if (Session::get('error'))
+			<div class="alert alert-error alert-danger">
+				{{ Session::get('error') }}
+			</div>
+		@endif
+		
+		@if (Session::get('message'))
+			<div class="alert alert-info">
+				{{ Session::get('message') }}
+			</div>
+		@endif
+
 		<!-- start: RESPONSIVE TABLE -->
 		<div class="container-fluid container-fullw bg-white">
 			<div class="col-md-12">
@@ -43,9 +56,23 @@
 									@endif
 								</div>
 							</div>
-							<div class="col-md-12">
-								<div class="form-group">
+							<div class="col-md-6">
+								@if($data->id_kuitansi != '')
+									-
+								@else
+									<a onclick="checkKuitansi('<?php echo $data->id ?>')"> Cek Kuitansi</a>
+								@endif
+								<!-- <div class="form-group">
 									<a onclick="makeKuitansi('<?php echo $data->id ?>')"> Buatkan File Kuitansi</a>
+								</div> -->
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									@if($data->faktur_file != '')
+										-
+									@else
+										<a onclick="checkTaxInvoice('<?php echo $data->id ?>')"> Cek Faktur Pajak</a>
+									@endif
 								</div>
 							</div>
 							<div class="col-md-6">
@@ -78,7 +105,7 @@
 									@endif
 								</div>
 							</div>
-	                        <div class="col-md-12">
+	                        <!-- <div class="col-md-12">
 								<div class="form-group">
 									<label for="form-field-select-2">
 										Status *
@@ -109,6 +136,13 @@
 	                            <a style=" color:white !important;" href="{{URL::to('/admin/sales')}}">
 									<button type="button" class="btn btn-wide btn-red btn-squared btn-marginleft pull-left">
 									Cancel
+									</button>
+								</a>
+	                        </div> -->
+	                        <div class="col-md-12">
+	                            <a style=" color:white !important;" href="{{URL::to('/admin/sales')}}">
+									<button type="button" class="btn btn-wide btn-red btn-squared pull-left">
+									Kembali
 									</button>
 								</a>
 	                        </div>
@@ -163,6 +197,66 @@
 			},
 			error:function(){
 				alert("Gagal mengambil data");
+			}
+		});
+		
+		/* $("#1").load("../loadDataKet",{pgw_id6:res[3]}, function() {
+			document.getElementById("overlay").style.display="none";
+		}); */
+	}
+
+	function checkKuitansi(a){
+		$.ajax({
+			type: "POST",
+			url : "generateKuitansi",
+			data: {'_token':"{{ csrf_token() }}", 'id':a},
+			beforeSend: function(){
+				document.getElementById("overlay").style.display="inherit";
+			},
+			success: function(response){
+				console.log(response);
+				if(response){
+					alert(response);
+					if(response == "Kuitansi Berhasil Disimpan."){location.reload();}
+				}else{
+					alert("Gagal mengambil data (s)");
+				}
+				document.getElementById("overlay").style.display="none";
+			},
+			error:function(response){
+				console.log(response);
+				alert("Gagal mengambil data (e)");
+				document.getElementById("overlay").style.display="none";
+			}
+		});
+		
+		/* $("#1").load("../loadDataKet",{pgw_id6:res[3]}, function() {
+			document.getElementById("overlay").style.display="none";
+		}); */
+	}
+
+	function checkTaxInvoice(a){
+		$.ajax({
+			type: "POST",
+			url : "generateTaxInvoice",
+			data: {'_token':"{{ csrf_token() }}", 'id':a},
+			beforeSend: function(){
+				document.getElementById("overlay").style.display="inherit";
+			},
+			success: function(response){
+				console.log(response);
+				if(response){
+					alert(response);
+					if(response == "Faktur Pajak Berhasil Disimpan."){location.reload();}
+				}else{
+					alert("Gagal mengambil data (s)");
+				}
+				document.getElementById("overlay").style.display="none";
+			},
+			error:function(response){
+				console.log(response);
+				alert("Gagal mengambil data (e)");
+				document.getElementById("overlay").style.display="none";
 			}
 		});
 		

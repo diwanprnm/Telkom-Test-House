@@ -649,13 +649,14 @@
 
 							$(".actions").hide(); 
 						},
-						error:function(){
+						error:function(data){
 							$( "#formBTNprevious" ).show();
 							$( "#formBTNfinish" ).show();
 							$( "#formBTNnext" ).show();
 							$("body").removeClass("loading");
 							error = true;
 							alert("Gagal mengambil data"); 
+							console.log(data);
 							formWizard.steps("previous"); 
 						}
 					}); 

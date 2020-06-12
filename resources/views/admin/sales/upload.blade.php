@@ -23,6 +23,19 @@
 			</div>
 		</section>
 		<!-- end: PAGE TITLE -->
+
+		@if (Session::get('error'))
+			<div class="alert alert-error alert-danger">
+				{{ Session::get('error') }}
+			</div>
+		@endif
+		
+		@if (Session::get('message'))
+			<div class="alert alert-info">
+				{{ Session::get('message') }}
+			</div>
+		@endif
+
 		<!-- start: RESPONSIVE TABLE -->
 		<div class="container-fluid container-fullw bg-white">
 			<div class="col-md-12">
@@ -58,6 +71,7 @@
 														@endif
 														<input type="file" name="stel_file[]" class="form-control" accept="application/pdf" style="width: auto;">
 														<input type="hidden" name="stels_sales_detail_id[]" value="{{ $item->id }}">
+														<input type="hidden" name="stels_sales_attachment[]" value="{{ $item->attachment }}">
 													</td>
 												</tr>
 											@endforeach

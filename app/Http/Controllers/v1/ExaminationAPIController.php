@@ -16,9 +16,13 @@ use App\ExaminationAttach;
 use App\AdminRole;
 use App\TbMSPK;
 use App\TbHSPK;
+use App\Income;
+use App\Api_logs;
 
 use App\User;
 use Mail;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Client;
 
 // UUID
 use Ramsey\Uuid\Uuid;
@@ -1708,5 +1712,506 @@ $notification->id = Uuid::uuid4();
     	}else{
     		return $this->sendError('ID or SPK_NUMBER or ACTION or REMARK or CREATED_BY or CREATED_DT or UPDATED_BY or UPDATED_DT Is Required');
     	}
+    }
+
+    public function checkSPKCreatedOTR()
+    {
+        $spk = Api_logs::where('route', 'LIKE', '%spk/addNotif%')
+        		->where('status', 0)
+     			->get();
+        if(count($spk)>0){
+            $client = new Client([
+				'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+				// Base URI is used with relative requests
+				// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+				'base_uri' => config("app.url_api_bsp"),
+				// You can set any number of default request options.
+				'timeout'  => 60.0,
+			]);
+            $updated_count = 0;
+            foreach ($spk as $data) {
+				$this_spk = Api_logs::where("id", $data->id)->first();
+	        	try {
+	        		$res_exam_schedule = $client->get($data->route);
+					$exam_schedule = $res_exam_schedule ? json_decode($res_exam_schedule->getBody()) : null;
+					$this_spk->status = $exam_schedule && $exam_schedule->status == true ? 1 : 0;
+					$updated_count = $this_spk->status == 1 && $this_spk->save() ? $updated_count += 1 : $updated_count;
+                } catch(Exception $e){
+                    return null;
+                }
+            }
+            return 'checkSPKCreatedOTR Command Run successfully! '.$updated_count.'/'.count($spk).' updated.';
+        }else{
+            return 'checkSPKCreatedOTR Command Run successfully! Nothing to update.';
+        }
+    }
+
+    public function checkBillingTPN()
+    {
+        $exam = Examination::where('payment_status', 0)->whereNotNull('BILLING_ID')->get();
+        if(count($exam)>0){
+            $updated_count = 0;
+            foreach ($exam as $data) {
+                $Examination = Examination::with('device')->with('company')->with('examinationType')->with('examinationLab')->find($data->id);
+                $oldStel = $Examination;
+
+                $data_invoices = [
+                    "billing_id" => $data->BILLING_ID,
+                    "created" => [
+                        "by" => "SUPERADMIN UREL",
+                        "reference_id" => "1"
+                    ]
+                ];
+
+                $billing = $this->api_billing($data->BILLING_ID);
+                if($billing && $billing->status == true && $billing->data->status_paid == 'paid'){
+                    $Examination->cust_price_payment = $billing->data->draft->final_price;
+                    $Examination->payment_status = 1;
+
+                    $invoice = $this->api_invoice($data_invoices);
+                    $Examination->INVOICE_ID = $invoice && $invoice->status == true ? $invoice->data->_id : null;
+
+                    $updated_count = $invoice && $invoice->status == true ? $updated_count += 1 : $updated_count;
+
+                    $spk_created = 0;
+                    if ($Examination->spk_code == null){
+	                    $spk_number_forOTR = $this->generateSPKCode($Examination->examinationLab->lab_code,$Examination->examinationType->name,date('Y'));
+	                    $Examination->spk_code = $spk_number_forOTR;
+	                    $Examination->spk_date = date('Y-m-d');
+                    	$spk_created = 1;
+	                }
+
+                    if($Examination->save()){
+                    	/*$timestamp = strtotime($billing->data->paid->at);
+                    	$tgl = date('Y-m-d', $timestamp);
+                    	$attach = ExaminationAttach::where('name', 'File Pembayaran')->where('examination_id', ''.$Examination->id.'')->first();
+                    	if ($attach){
+							$attach->tgl = $tgl;
+							$attach->save();
+						} else{
+							$attach = new ExaminationAttach;
+							$attach->id = Uuid::uuid4();
+							$attach->examination_id = $Examination->id; 
+							$attach->name = 'File Pembayaran';
+							$attach->created_by = $Examination->created_by;
+							$attach->updated_by = $Examination->created_by;
+							$attach->tgl = $tgl;
+
+							$attach->save();
+						}*/
+						if($this->cekRefID($Examination->id) == 0){
+							$income = new Income;
+							$income->id = Uuid::uuid4();
+							$income->company_id = $Examination->company_id;
+							$income->inc_type = 1; 
+							$income->reference_id = $Examination->id; 
+							$income->reference_number = $Examination->spb_number;
+							$income->tgl = $Examination->spb_date;
+							$income->created_by = 1;
+
+						}else{
+							$income = Income::where('reference_id', $Examination->id)->first();
+						}
+						
+						$income->price = $Examination->cust_price_payment;
+						$income->updated_by = 1;
+						$income->save();
+						$this->sendEmailNotification($Examination->created_by,$Examination->device->name,$Examination->examinationType->name,$Examination->examinationType->description, "emails.pembayaran", "ACC Pembayaran");
+
+						if($spk_created == 1){
+							$client = new Client([
+								'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+								'base_uri' => config("app.url_api_bsp"),
+								'http_errors' => false,
+								'timeout'  => 60.0,
+							]);
+
+							$res_exam_schedule = $client->get('spk/addNotif?id='.$Examination->id.'&spkNumber='.$spk_number_forOTR);
+							$exam_schedule = $res_exam_schedule->getStatusCode() == '200' ? json_decode($res_exam_schedule->getBody()) : null;
+							if($exam_schedule && $exam_schedule->status == false){
+								$api_logs = new Api_logs;
+								$api_logs->send_to = "OTR";
+								$api_logs->route = 'spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR;
+								$api_logs->status = $exam_schedule->status;
+								$api_logs->data = json_encode($exam_schedule);
+								$api_logs->reference_id = $exam->id;
+								$api_logs->reference_table = "examinations";
+								$api_logs->created_by = $currentUser->id;
+								$api_logs->updated_by = $currentUser->id;
+
+								$api_logs->save();
+							}elseif ($exam_schedule == null) {
+								$api_logs = new Api_logs;
+								$api_logs->send_to = "OTR";
+								$api_logs->route = 'spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR;
+								$api_logs->status = 0;
+								$api_logs->data = "-";
+								$api_logs->reference_id = $exam->id;
+								$api_logs->reference_table = "examinations";
+								$api_logs->created_by = $currentUser->id;
+								$api_logs->updated_by = $currentUser->id;
+
+								$api_logs->save();
+							}
+						}
+
+                    	$admins = AdminRole::where('payment_status',1)->get()->toArray();
+						foreach ($admins as $admin) {  
+							$notif_data= array( 
+				                "from"=>'admin-digimon',
+				                "to"=>$admin['user_id'],
+				                "message"=>$Examination->company->name." membayar SPB nomor".$Examination->spb_number,
+				                "url"=>"examination/".$Examination->id.'/edit',
+				                "is_read"=>0,
+				                "created_at"=>date("Y-m-d H:i:s"),
+				                "updated_at"=>date("Y-m-d H:i:s")
+			                );
+						  	$notification = new NotificationTable();
+							$notification->id = Uuid::uuid4();
+					      	$notification->from = $notif_data['from'];
+					      	$notification->to = $notif_data['to'];
+					      	$notification->message = $notif_data['message'];
+					      	$notification->url = $notif_data['url'];
+					      	$notification->is_read = $notif_data['is_read'];
+					      	$notification->created_at = $notif_data['created_at'];
+					      	$notification->updated_at = $notif_data['updated_at'];
+					      	$notification->save();
+					      	$notif_data['id'] = $notification->id; 
+					        event(new Notification($notif_data));
+				    	}
+                    }else{
+                        $updated_count -= 1;
+                    }
+                }
+            }
+
+            return 'checkBillingSPBTPN Command Run successfully! '.$updated_count.'/'.count($exam).' updated.';
+        }else{
+            return 'checkBillingSPBTPN Command Run successfully! Nothing to update.';
+        }
+    }
+
+    function cekRefID($exam_id)
+    {
+		$income = Income::where('reference_id','=',''.$exam_id.'')->get();
+		return count($income);
+    }
+
+    /**
+     * Send an e-mail notification to the user.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
+    public function sendEmailNotification($user, $dev_name, $exam_type, $exam_type_desc, $message, $subject)
+    {
+        $data = User::findOrFail($user);
+		
+        Mail::send($message, array(
+			'user_name' => $data->name,
+			'dev_name' => $dev_name,
+			'exam_type' => $exam_type,
+			'exam_type_desc' => $exam_type_desc
+			), function ($m) use ($data,$subject) {
+            $m->to($data->email)->subject($subject);
+        });
+
+        return true;
+    }
+	
+    public function generateSPKCode($a,$b,$c) {
+		// $query = "
+			// SELECT 
+			// SUBSTRING_INDEX(SUBSTRING_INDEX(spk_code,'/',2),'/',-1) + 1 AS last_numb
+			// FROM examinations WHERE 
+			// SUBSTRING_INDEX(spk_code,'/',1) = '".$a."' AND
+			// SUBSTRING_INDEX(SUBSTRING_INDEX(spk_code,'/',-2),'/',1) = '".$b."' AND
+			// SUBSTRING_INDEX(spk_code,'/',-1) = '".$c."'
+			// ORDER BY last_numb DESC LIMIT 1
+		// ";
+		$query = "
+			SELECT 
+			SUBSTRING_INDEX(SUBSTRING_INDEX(spk_code,'/',2),'/',-1) + 1 AS last_numb
+			FROM examinations WHERE 
+			SUBSTRING_INDEX(spk_code,'/',1) = '".$a."' AND
+			SUBSTRING_INDEX(spk_code,'/',-1) = '".$c."'
+			ORDER BY last_numb DESC LIMIT 1
+		";
+		$data = DB::select($query);
+		if (count($data) == 0){
+			return ''.$a.'/001/'.$b.'/'.$c.'';
+		}
+		else{
+			$last_numb = $data[0]->last_numb;
+			if($last_numb < 10){
+				return ''.$a.'/00'.$last_numb.'/'.$b.'/'.$c.'';
+			}
+			else if($last_numb < 100){
+				return ''.$a.'/0'.$last_numb.'/'.$b.'/'.$c.'';
+			}
+			else{
+				return ''.$a.'/'.$last_numb.'/'.$b.'/'.$c.'';
+			}
+		}
+    }
+
+    public function api_invoice($data_invoices){
+        $client = new Client([
+            'headers' => ['Authorization' => config("app.gateway_tpn_2")],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+        try {
+            $param_invoices['json'] = $data_invoices;
+            $res_invoices = $client->post("v1/invoices", $param_invoices)->getBody()->getContents();
+            $invoice = json_decode($res_invoices);
+
+            return $invoice;
+        } catch(Exception $e){
+            return null;
+        }
+    }
+
+    public function api_billing($id_billing){
+        $client = new Client([
+            'headers' => ['Authorization' => config("app.gateway_tpn_2")],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+        try {
+            $res_billing = $client->get("v1/billings/".$id_billing."")->getBody()->getContents();
+            $billing = json_decode($res_billing);
+
+            return $billing;
+        } catch(Exception $e){
+            return null;
+        }
+    }
+
+    public function checkKuitansiTPN()
+    {
+    	$exam = Examination::whereNotNull('examinations.INVOICE_ID')
+    	->whereNotExists(function ($query) {
+           	$query->select(DB::raw(1))
+                 ->from('examination_attachments')
+                 ->whereRaw('examination_attachments.examination_id = examinations.id')
+                 ->whereRaw('examination_attachments.name = "Kuitansi"')
+            ;
+       	})->orWhereExists(function ($query) {
+           	$query->select(DB::raw(1))
+                 ->from('examination_attachments')
+                 ->whereRaw('examination_attachments.examination_id = examinations.id')
+                 ->whereRaw('examination_attachments.name = "Kuitansi"')
+                 ->whereRaw('examination_attachments.attachment = ""')
+            ;
+       	})
+        ->get();
+
+        if(count($exam)>0){
+            $client = new Client([
+                'headers' => ['Authorization' => config("app.gateway_tpn_2")],
+                'base_uri' => config("app.url_api_tpn"),
+                'timeout'  => 60.0,
+                'http_errors' => false
+            ]);
+
+            $updated_count = 0;
+            foreach ($exam as $data) {
+                try {
+                    $INVOICE_ID = $data->INVOICE_ID;
+                    $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
+                    $invoice = json_decode($res_invoice->getBody());
+                    
+                    if($invoice && $invoice->status == true){
+                        $status_invoice = $invoice->data->status_invoice;
+                        $status_faktur = $invoice->data->status_faktur;
+                        if($status_invoice == "approved" && $status_faktur == "received"){
+                            /*SAVE KUITANSI*/
+                            $name_file = 'kuitansi_spb_'.$INVOICE_ID.'.pdf';
+                            $path_file = public_path().'/media/examination/'.$data->id;
+                            if (!file_exists($path_file)) {
+                                mkdir($path_file, 0775);
+                            }
+                            $response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/exportpdf');
+                            $stream = (String)$response->getBody();
+
+                            if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
+                                $attach = ExaminationAttach::where('name', 'Kuitansi')->where('examination_id', ''.$data->id.'')->first();
+                                if ($attach){
+									$attach->attachment = $name_file;
+									$attach->updated_by = 1;
+								} else{
+									$attach = new ExaminationAttach;
+									$attach->id = Uuid::uuid4();
+									$attach->examination_id = $data->id; 
+									$attach->name = 'Kuitansi';
+									$attach->attachment = $name_file;
+									$attach->created_by = 1;
+									$attach->updated_by = 1;
+								}
+                                $updated_count = $attach->save() ? $updated_count += 1 : $updated_count;
+                            }
+                        }
+                    }
+                } catch(Exception $e){
+                    return null;
+                }
+            }
+            return 'checkKuitansiSPBTPN Command Run successfully! '.$updated_count.'/'.count($exam).' updated.';
+        }else{
+            return 'checkKuitansiSPBTPN Command Run successfully! Nothing to update.';
+        }
+    }
+
+    public function checkTaxInvoiceTPN()
+    {
+    	$exam = Examination::select(DB::raw('companies.name as company_name, examination_attachments.tgl as payment_date, examinations.*, devices.name'))
+    	->whereNotNull('examinations.INVOICE_ID')
+    	->whereNotExists(function ($query) {
+           	$query->select(DB::raw(1))
+                 ->from('examination_attachments')
+                 ->whereRaw('examination_attachments.examination_id = examinations.id')
+                 ->whereRaw('examination_attachments.name = "Faktur Pajak"')
+            ;
+       	})->orWhereExists(function ($query) {
+           	$query->select(DB::raw(1))
+                 ->from('examination_attachments')
+                 ->whereRaw('examination_attachments.examination_id = examinations.id')
+                 ->whereRaw('examination_attachments.name = "Faktur Pajak"')
+                 ->whereRaw('examination_attachments.attachment = ""')
+            ;
+       	})
+       	->join('companies', 'examinations.company_id', '=', 'companies.id')
+        ->join('devices', 'examinations.device_id', '=', 'devices.id')
+        ->leftJoin('examination_attachments', function($leftJoin){
+            $leftJoin->on('examinations.id', '=', 'examination_attachments.examination_id');
+            $leftJoin->on(DB::raw('examination_attachments.name'), DB::raw('='),DB::raw("'File Pembayaran'"));
+        })
+        ->get();
+
+        if(count($exam)>0){
+            $client = new Client([
+                'headers' => ['Authorization' => config("app.gateway_tpn_2")],
+                'base_uri' => config("app.url_api_tpn"),
+                'timeout'  => 60.0,
+                'http_errors' => false
+            ]);
+
+            $updated_count = 0;
+            foreach ($exam as $data) {
+            	$payment_date = $data->payment_date != '0000-00-00' ? $data->payment_date : null;
+                /* GENERATE NAMA FILE FAKTUR */
+                    $filename = $data ? $payment_date.'_'.$data->company_name.'_Pengujian Perangkat'.$data->name : $data->INVOICE_ID;
+                /* END GENERATE NAMA FILE FAKTUR */
+    		    try {
+                    $INVOICE_ID = $data->INVOICE_ID;
+                    $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
+                    $invoice = json_decode($res_invoice->getBody());
+                    
+                    if($invoice && $invoice->status == true){
+                        $status_invoice = $invoice->data->status_invoice;
+                        $status_faktur = $invoice->data->status_faktur;
+                        if($status_invoice == "approved" && $status_faktur == "received"){
+                            /*SAVE FAKTUR PAJAK*/
+                            $name_file = 'faktur_spb_'.$filename.'.pdf';
+
+                            $path_file = public_path().'/media/examination/'.$data->id;
+                            if (!file_exists($path_file)) {
+                                mkdir($path_file, 0775);
+                            }
+
+                            $response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/taxinvoice/pdf');
+                            $stream = (String)$response->getBody();
+
+                            if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
+                                $attach = ExaminationAttach::where('name', 'Faktur Pajak')->where('examination_id', ''.$data->id.'')->first();
+                                if ($attach){
+									$attach->attachment = $name_file;
+									$attach->updated_by = 1;
+								} else{
+									$attach = new ExaminationAttach;
+									$attach->id = Uuid::uuid4();
+									$attach->examination_id = $data->id; 
+									$attach->name = 'Faktur Pajak';
+									$attach->attachment = $name_file;
+									$attach->created_by = 1;
+									$attach->updated_by = 1;
+								}
+                                $updated_count = $attach->save() ? $updated_count += 1 : $updated_count;
+                            }
+                        }
+                    }
+                } catch(Exception $e){
+                    return null;
+                }
+            }
+            return 'checkTaxInvoiceSPBTPN Command Run successfully! '.$updated_count.'/'.count($exam).' updated.';
+        }else{
+            return 'checkTaxInvoiceSPBTPN Command Run successfully! Nothing to update.';
+        }
+    }
+
+    public function checkReturnedTPN()
+    {
+    	$exam = Examination::select(DB::raw('examinations.*'))
+    	->whereNotNull('examinations.INVOICE_ID')
+    	->whereNotExists(function ($query) {
+           	$query->select(DB::raw(1))
+                 ->from('examination_attachments')
+                 ->whereRaw('examination_attachments.examination_id = examinations.id')
+                 ->whereRaw('examination_attachments.name = "Faktur Pajak"')
+            ;
+       	})->orWhereExists(function ($query) {
+           	$query->select(DB::raw(1))
+                 ->from('examination_attachments')
+                 ->whereRaw('examination_attachments.examination_id = examinations.id')
+                 ->whereRaw('examination_attachments.name = "Faktur Pajak"')
+                 ->whereRaw('examination_attachments.attachment = ""')
+            ;
+       	})
+        ->get();
+
+        if(count($exam)>0){
+            $client = new Client([
+                'headers' => ['Authorization' => config("app.gateway_tpn_2")],
+                'base_uri' => config("app.url_api_tpn"),
+                'timeout'  => 60.0,
+                'http_errors' => false
+            ]);
+
+            $updated_count = 0;
+            foreach ($exam as $data) {
+                $Examination = Examination::where("id", $data->id)->first();
+
+                if($Examination){
+                    try {
+                        $INVOICE_ID = $Examination->INVOICE_ID;
+                        $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
+                        $invoice = json_decode($res_invoice->getBody());
+                        
+                        if($invoice && $invoice->status == true){
+                            $status_invoice = $invoice->data->status_invoice;
+                            if($status_invoice == "returned"){
+                                $res_billing = $client->request('GET', 'v1/invoices?filterobjid-billing._id='.$Examination->BILLING_ID);
+                                $billing = json_decode($res_billing->getBody());
+                                foreach ($billing->data as $data_billing) {
+                                    if($data_billing->status_faktur == "received"){
+                                        $Examination->INVOICE_ID = $data_billing->_id;
+                                        $updated_count = $Examination->save() ? $updated_count += 1 : $updated_count;
+                                    }
+                                }
+                            }
+                        }
+                    } catch(Exception $e){
+                        return null;
+                    }
+                }
+            }
+            return 'checkReturnedSPBTPN Command Run successfully! '.$updated_count.'/'.count($exam).' updated.';
+        }else{
+            return 'checkReturnedSPBTPN Command Run successfully! Nothing to update.';
+        }
     }
 }

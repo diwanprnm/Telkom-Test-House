@@ -288,33 +288,46 @@
 												</td> 
 											</tr>
 											@endif
+											@php $rev_uji = 0; $lap_uji_file = null; @endphp
 											@foreach($data_attach as $item_attach)
-											<tr>
-												<td> 
-													@if($item_attach->attachment != '')
-														@if($item_attach->name == 'Sertifikat')
-															
-														@elseif($item_attach->name == 'Laporan Uji')
-															@if(
-																$item->registration_status == 1 &&
-																$item->function_status == 1 &&
-																$item->contract_status == 1 &&
-																$item->spb_status == 1 &&
-																$item->payment_status == 1 &&
-																$item->spk_status == 1 &&
-																$item->examination_status == 1 &&
-																$item->resume_status == 1 &&
-																date('Y-m-d') >= $item->resume_date
-															)
-																<a class="btn btn-link" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->nama_perangkat }}','{{ $item_attach->attachment }}','{{ $item_attach->jns }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">{{ $item_attach->name }} </a>
-															@endif
-														@else	
+												@if($item_attach->attachment != '' && $item_attach->name != 'Laporan Uji' && $item_attach->name != 'Revisi Laporan Uji')
+												<tr>
+													<td> 
+														@if($item_attach->name != 'Sertifikat')
 															<a class="btn btn-link" href="{{URL::to('/pengujian/download/'.$item_attach->id_attach.'/'.$item_attach->attachment.'/'.$item_attach->jns)}}">{{ $item_attach->name }} </a>
 														@endif
+													</td>
+												</tr>
+												@else
+													@if($item_attach->name == 'Laporan Uji' && $rev_uji == 0)
+														@php $lap_uji_file = $item_attach->attachment; @endphp
 													@endif
-												</td>
-											</tr>
+													@if($item_attach->name == 'Revisi Laporan Uji' && $rev_uji == 0)
+														@php $rev_uji = 1; @endphp
+														@php $lap_uji_file = URL::to('/pengujian/download/'.$item_attach->id_attach.'/'.$item_attach->attachment.'/'.$item_attach->jns); @endphp
+													@endif
+												@endif
 											@endforeach
+											@if($lap_uji_file)
+												<tr>
+													<td>
+														@if(
+															$item->examination_type_id == 2 &&
+															$item->registration_status == 1 &&
+															$item->function_status == 1 &&
+															$item->contract_status == 1 &&
+															$item->spb_status == 1 &&
+															$item->payment_status == 1 &&
+															$item->spk_status == 1 &&
+															$item->examination_status == 1 &&
+															$item->resume_status == 1 &&
+															date('Y-m-d') >= $item->resume_date
+														)
+															<a class="btn btn-link" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->nama_perangkat }}','{{ $lap_uji_file }}','{{ $item_attach->jns }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">Laporan Uji </a>
+														@endif
+													</td>
+												</tr>
+											@endif
 										</tbody>
 									</table>
 								</div>

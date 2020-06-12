@@ -3468,12 +3468,8 @@ Route::get('cetakSPB', function(Illuminate\Http\Request $request){
 		for($i=0;$i<count($data[0]['arr_nama_perangkat']);$i++){
 			$biaya = $biaya + $data[0]['arr_biaya'][$i];
 		}
-		$biaya2 = 0;
-		for($i=0;$i<count($data[0]['arr_nama_perangkat2']);$i++){
-			$biaya2 = $biaya2 + $data[0]['arr_biaya2'][$i];
-		}
-		$ppn = 0.1*$biaya;
-		$total_biaya = $biaya + $biaya2 + $ppn;
+		$ppn = floor(0.1*$biaya);
+		$total_biaya = $biaya + $ppn;
 		$terbilang = $pdf->terbilang($total_biaya, 3);
 		$spb_date = date('j', strtotime($data[0]['spb_date']))." ".strftime('%B %Y', strtotime($data[0]['spb_date']));
 	// $pdf->judul_kop('FORM TINJAUAN KONTRAK','Contract Review Form');
@@ -3526,10 +3522,7 @@ Route::get('cetakSPB', function(Illuminate\Http\Request $request){
 	for($i=0;$i<count($data[0]['arr_nama_perangkat']);$i++){
 		$pdf->RowRect(array('',($i+1).'.',$data[0]['arr_nama_perangkat'][$i],number_format($data[0]['arr_biaya'][$i],0,",",".").",-"));	
 	}
-	$pdf->RowRect(array('','','PPN 10 %',number_format($ppn,0,",",".").",-"));	
-	for($i=0;$i<count($data[0]['arr_nama_perangkat2']);$i++){
-		$pdf->RowRect(array('',($i+1).'.',$data[0]['arr_nama_perangkat2'][$i],number_format($data[0]['arr_biaya2'][$i],0,",",".").",-"));	
-	}
+	$pdf->RowRect(array('','','PPN 10 %',number_format($ppn,0,",",".").",-"));
 	$pdf->SetFont('helvetica','B',9);
 	$pdf->RowRect(array('','','Total Biaya Pengujian',number_format($total_biaya,0,",",".").",-"));	
 	$pdf->SetWidths(array(17,160));
@@ -4424,6 +4417,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::get('/logout', 'UserController@logout');
 	Route::get('/', 'DashboardController@index');
 	Route::get('/examination/download/{id}', 'ExaminationController@downloadForm');
+	Route::get('/examination/media/download/{id}', 'ExaminationController@downloadRefUjiFile');
 	Route::get('/examination/media/download/{id}/{name}', 'ExaminationController@downloadMedia');
 	Route::get('/examination/print/{id}', 'ExaminationController@printForm');
 	Route::get('/examination/media/print/{id}/{name}', 'ExaminationController@printMedia');
@@ -4444,6 +4438,9 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::post('/sales/{id}/generateKuitansiParamSTEL', 'ExaminationController@generateKuitansiParamSTEL');
 	Route::get('/examination/generateEquip', 'ExaminationController@generateEquip');
 	Route::get('/examination/generateSPB', 'ExaminationController@generateSPB');
+	Route::post('/examination/{id}/generateKuitansiSPB', 'ExaminationController@generateKuitansi');
+	Route::post('/examination/{id}/generateTaxInvoiceSPB', 'ExaminationController@generateTaxInvoice');
+	Route::get('/examination/{id}/deleteRevLapUji', 'ExaminationController@deleteRevLapUji');
 	Route::post('/examination/generateSPB', 'ExaminationController@generateSPBData');
 	Route::put('/user/profile/{id}', 'UserController@updateProfile');
 	Route::resource('/article', 'ArticleController');
@@ -4527,6 +4524,8 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::resource('/sales', 'SalesController');
 	Route::get('/sales/{id}/upload', 'SalesController@upload');
 	Route::get('/sales/{id}/{reason}/deleteProduct', 'SalesController@deleteProduct');
+	Route::post('/sales/{id}/generateKuitansi', 'SalesController@generateKuitansi');
+	Route::post('/sales/{id}/generateTaxInvoice', 'SalesController@generateTaxInvoice');
 	Route::resource('/question', 'QuestionController');
 	Route::resource('/questionerquestion', 'QuestionerQuestionController');
 	Route::resource('/questionpriv', 'QuestionprivController');
@@ -4548,6 +4547,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::resource('/spb', 'SPBController');
 	Route::resource('/nogudang', 'NoGudangController');
 	Route::resource('/feedbackncomplaint', 'FeedbackComplaintController');
+	Route::resource('/fakturpajak', 'FakturPajakController');
 	Route::resource('/videoTutorial', 'VideoTutorialController');
 	Route::post('/orderSlideshow', 'SlideshowController@orderSlideshow');
 
@@ -4635,6 +4635,10 @@ Route::group(['prefix' => '/v1', 'middlewareGroups' => 'api'], function () {
 	Route::get('/companies', 'v1\CompanyAPIController@getCompanies');
 	Route::get('/customer', 'v1\CustomerAPIController@getCustomer');
 	Route::get('/stel', 'v1\StelAPIController@getStelData');
+	Route::get('/checkBillingTPN', 'v1\StelAPIController@checkBillingTPN');
+	Route::get('/checkTaxInvoiceTPN', 'v1\StelAPIController@checkTaxInvoiceTPN');
+	Route::get('/checkKuitansiTPN', 'v1\StelAPIController@checkKuitansiTPN');
+	Route::get('/checkReturnedTPN', 'v1\StelAPIController@checkReturnedTPN');
 	Route::get('/device', 'v1\DeviceAPIController@getDeviceData');
 	Route::get('/examination', 'v1\ExaminationAPIController@getExaminationData');
 	Route::get('/examination/applicants', 'v1\ExaminationAPIController@getExaminationByApplicants');
@@ -4654,6 +4658,11 @@ Route::group(['prefix' => '/v1', 'middlewareGroups' => 'api'], function () {
 	Route::post('/sendSertifikat', 'v1\ExaminationAPIController@sendSertifikat');
 	Route::post('/sendSPK', 'v1\ExaminationAPIController@sendSPK');
 	Route::post('/sendSPKHistory', 'v1\ExaminationAPIController@sendSPKHistory');
+	Route::get('/checkSPKCreatedOTR', 'v1\ExaminationAPIController@checkSPKCreatedOTR');
+	Route::get('/checkBillingSPBTPN', 'v1\ExaminationAPIController@checkBillingTPN');
+	Route::get('/checkTaxInvoiceSPBTPN', 'v1\ExaminationAPIController@checkTaxInvoiceTPN');
+	Route::get('/checkKuitansiSPBTPN', 'v1\ExaminationAPIController@checkKuitansiTPN');
+	Route::get('/checkReturnedSPBTPN', 'v1\ExaminationAPIController@checkReturnedTPN');
 });
 
 Route::get('/do_backup', 'BackupController@backup'); 

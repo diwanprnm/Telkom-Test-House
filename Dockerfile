@@ -1,36 +1,18 @@
-FROM telkomindonesia/alpine:php-7.1-apache-novol
+FROM telkomindonesia/alpine:php-7.1-nginx-novol
 
 WORKDIR /var/www/data/html
 
-USER root
+COPY composer.* ./
+
+RUN composer install --no-scripts --no-autoloader
 
 COPY . .
 
-RUN mkdir -p \
-      bootstrap/cache \
-      storage/app \
-      storage/logs \
-      storage/tmp \
-      storage/framework/cache \
-      storage/framework/sessions \
-      storage/framework/views \
-    && chmod 775 -R \
-        bootstrap/cache \
-        storage/app \
-        storage/logs \
-        storage/tmp \
-        storage/framework/cache \
-        storage/framework/sessions \
-        storage/framework/views \
-    && touch \
-        storage/logs/laravel.log \
-    && chmod 664 \
-        storage/logs/laravel.log \
-    && sed -i -e 's|/var/www/data/html|/var/www/data/html/public|g' \
-        /usr/local/docker/etc/apache2/httpd.conf \
-    && composer install \
-    && mv misc/docker/.env.prod ./.env \
-    && chmod -R 775 /var/www/data/html \
-    && php artisan key:generate
+USER root
+
+RUN chmod -R 775 /var/www/data/html \
+    && chmod 755 /var/www/data/html/start
 
 USER user
+
+CMD ["./start"]

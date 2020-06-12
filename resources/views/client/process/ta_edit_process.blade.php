@@ -633,12 +633,13 @@
 
 							$(".actions").hide(); 
 						},
-						error:function(){
+						error:function(data){
 							$( "#formBTNprevious" ).show();
 							$( "#formBTNfinish" ).show();
 							$( "#formBTNnext" ).show();
 							$("body").removeClass("loading");
 							error = true;
+							console.log(data);
 							alert("Gagal mengambil data"); 
 							formWizard.steps("previous"); 
 						}

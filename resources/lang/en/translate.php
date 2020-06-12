@@ -416,4 +416,7 @@ return [
 
 	'tax_invoice' => 'Tax Invoice',
 	'receipt' => 'Receipt',
+
+	'payment_alert_1' => 'For ease of payment verification, customer is required to pay according to the nominal listed up to the last 3 digits.',
+	'payment_alert_2' => 'If there is more than one transaction, please do not combine the payments into one.',
 ];

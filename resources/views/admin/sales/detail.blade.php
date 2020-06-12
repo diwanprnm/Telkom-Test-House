@@ -120,19 +120,27 @@
 								@endforeach
                             </tbody>
                             <tfoot>
+                            	<?php
+									$unique_code = ($price_total/1.1) - $total;
+								?>
                             	<tr>
-                            		<td colspan="5" align="right"> Total</td>
+                            		<td colspan="5" align="right"> {{ trans('translate.stel_unique_code') }}</td>
                             		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php 
-                            			echo	number_format($total, 0, '.', ',');?></td>
+                            			echo	number_format($unique_code, 0, '.', ',');?></td>
+                            	</tr>
+                            	<tr>
+                            		<td colspan="5" align="right"> Sub Total</td>
+                            		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php 
+                            			echo	number_format($total + $unique_code, 0, '.', ',');?></td>
                             	</tr>
                            		<tr>
                             		<td colspan="5" align="right"> Tax</td>
-                            		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php $tax =  $total * (config("cart.tax")/100);
+                            		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php $tax =  ($total + $unique_code) * (config("cart.tax")/100);
                             			echo	number_format($tax, 0, '.', ',');?></td>
                             	</tr>
-                            	<tr>
-                            		<td colspan="5" align="right"> Total</td>
-                            		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($total+$tax, 0, '.', ',');?></td>
+                            	<tr style="font-weight: bold;">
+                            		<td colspan="5" align="right">Total</td>
+                            		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($price_total, 0, '.', ',');?></td>
                             	</tr>
                             </tfoot>
 						</table>

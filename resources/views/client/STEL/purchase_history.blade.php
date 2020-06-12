@@ -79,6 +79,8 @@
 															break; 
 														case 2:
 															echo '<td class="center"><span class="label label-sm label-warning" style="line-height: 2;">Paid (waiting confirmation)</span></td>';
+														case 3:
+															echo '<td class="center"><span class="label label-sm label-info" style="line-height: 2;">Paid (delivered)</span></td>';
 															break; 
 														default:
 															# code...
@@ -89,7 +91,7 @@
 												<td><a href="javascript:void(0)" class="collapsible">{{ trans('translate.examination_detail') }}</a></td> 
 											</tr> 
 											<tr class="content" style="display: none;">
-												<td colspan="8">
+												<td colspan="8" align="center">
 													<table class="table table-striped" cellspacing="0" width="100%">
 														<thead>
 															<tr>
@@ -115,11 +117,11 @@
 																			<td>{{$item_detail->qty}}</td> 
 																			<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($item_detail->stel->price * $item_detail->qty), 0, '.', ','); ?></td>
 																			<?php  
-																				if($item_detail->attachment !="" && $payment_status == 1){
+																				if($item_detail->attachment !="" && ($payment_status == 1 or $payment_status == 3)){
 																			?>
 																					<td colspan="6" align="center"><a target="_blank" href="{{ URL::to('/client/downloadstelwatermark/'.$item_detail->id) }}">{{ trans('translate.download') }} File</a></td>
 																			<?php }
-																			else if($item_detail->attachment !="" && $payment_status == 1){
+																			else if($item_detail->attachment !="" && ($payment_status == 1 or $payment_status == 3)){
 																			?>
 																				<td colspan="6" align="center"><a target="_blank" href="{!! url("cetakstel?invoice_id={$invoice}&attach={$item_detail->stel->attachment}&company_name={$company_name}") !!}">{{ trans('translate.download') }} File</a></td>
 																			<?php
@@ -147,15 +149,24 @@
 															<?php }?>
 														</tbody>
 														<tfoot> 
+															<?php
+																$unique_code = ($data[$i]->total/1.1) - $total;
+															?>
 								                        	<tr>
-								                        		<td colspan="5" align="right"> </td>
+								                        		<td colspan="5" align="right"> {{ trans('translate.stel_unique_code') }}</td>
 								                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php 
-								                        			echo 	number_format($total, 0, '.', ',');?></td>
+								                        			echo 	number_format($unique_code, 0, '.', ',');?></td>
+								                        		<td align="center"> === </td>
+								                        	</tr>
+								                        	<tr>
+								                        		<td colspan="5" align="right">Sub Total</td>
+								                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php 
+								                        			echo 	number_format($total + $unique_code, 0, '.', ',');?></td>
 								                        		<td align="center"> === </td>
 								                        	</tr>
 								                       		<tr>
 								                        		<td colspan="5" align="right"> {{ trans('translate.tax') }}</td>
-								                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php $tax =  $total * (config("cart.tax")/100);
+								                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php $tax =  ($total + $unique_code) * (config("cart.tax")/100);
 								                        			echo	number_format($tax, 0, '.', ',');?></td>
 								                        		<td align="center">
 								                        			@if($item->faktur_file != '')
@@ -165,9 +176,9 @@
 																	@endif
 																</td>
 								                        	</tr>
-								                        	<tr>
+								                        	<tr style="font-weight: bold;">
 								                        		<td colspan="5" align="right"> Total</td>
-								                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($total+$tax, 0, '.', ',');?></td>
+								                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($data[$i]->total, 0, '.', ',');?></td>
 								                        		<td align="center">
 								                        			@if($item->id_kuitansi != '')
 																		<a target="_blank" href="{{ URL::to('/client/downloadkuitansistel/'.$item->id_kuitansi) }}">

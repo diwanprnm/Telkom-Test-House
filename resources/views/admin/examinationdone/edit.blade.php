@@ -944,11 +944,20 @@
 							Step Laporan Uji
 						</legend>
 						<div class="row">
-							<div class="col-md-12">
-								<div class="form-group">
-									@foreach($data->media as $item)
-										@if($item->name == 'Laporan Uji')
-											@if($item->attachment != '')
+							@foreach($data->media as $item)
+								@if($item->name == 'Laporan Uji')
+									<?php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;?>
+									<input type="hidden" id="hide_attachment_form-lap-uji" value="{{ $item->attachment }}">
+									@if($item->attachment != '')
+									<div class="col-md-12">
+										<div class="form-group">
+											<label>
+												Laporan Hasil Pengujian dari OTR :
+											</label>
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="form-group">
 											<div class="col-md-4">
 												<div class="form-group">
 													<a href="{{$item->attachment}}&isCover=true&isIsi=false"> Download Sampul/Judul Laporan </a>
@@ -964,41 +973,107 @@
 													<a href="{{$item->attachment}}"> Download Keseluruhan Laporan </a>
 												</div>
 											</div>
-											@else
+										</div>
+									</div>
+									@else
+									<div class="col-md-12">
+										<div class="form-group">
 											<label>
-												Laporan Hasil Pengujian
+												Laporan Hasil Pengujian dari OTR : Belum Tersedia
 											</label>
-											<label>
-												: Belum Tersedia
-											</label>
-											@endif
-										@endif
-									@endforeach
+										</div>
+									</div>
+									@endif
+								@endif
+							@endforeach
+							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Mulai Pembuatan Laporan
+									</label>
+									<label>
+										: {{ $exam_schedule->data[0]->startReportDt }}
+									</label>
 								</div>
 							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Selesai Pembuatan Laporan
+									</label>
+									<label>
+										: {{ $exam_schedule->data[0]->finishReportDt }}
+									</label>
+								</div>
+							</div>
+							@endif
+							@if($data->examination_type_id =='2' || $data->examination_type_id =='3')
 							<div class="col-md-12">
-								@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>
-											Mulai Pembuatan Laporan
-										</label>
-										<label>
-											: {{ $exam_schedule->data[0]->startReportDt }}
-										</label>
-									</div>
+								<div class="form-group">
+									<label>
+										Revisi Laporan Uji*
+									</label>
+									<input type="file" name="rev_lap_uji_file" id="rev_lap_uji_file" class="form-control" accept="application/pdf, image/*">
 								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>
-											Selesai Pembuatan Laporan
-										</label>
-										<label>
-											: {{ $exam_schedule->data[0]->finishReportDt }}
-										</label>
-									</div>
+								<div class="form-group">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th colspan="5">Riwayat Revisi Laporan Uji</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr style="text-align: center;">
+												<td>No</td>
+												<td>Attachment</td>
+												<td>Created By</td>
+												<td>Created At</td>
+											</tr>
+											<?php $no=0;?>
+											@foreach($data->media as $item)
+												@if($item->name == 'Revisi Laporan Uji')
+													<?php $no++;?>
+													<tr>
+														<td style="text-align: center;">
+															<strong>{{ $no }}</strong>
+														</td>
+														<td>
+															<strong><a href="{{URL::to('/admin/examination/media/download/'.$item->id)}}"> {{ $item->attachment }}</a></strong>
+														</td>
+														<td>
+															<strong>{{ $item->user->name }}</strong>
+														</td>
+														<td>
+															<strong>{{ $item->created_at }}</strong>
+														</td>
+													</tr>
+												@endif
+											@endforeach
+											@if($no == 0)
+												<tr><td colspan="5" style="text-align: center;"> Data Not Found </td></tr>
+											@else
+												<?php $lap_uji_url = "URL::to('/admin/examination/media/download/'.$item->id)"; ?>
+												<?php $lap_uji_attach = $item->attachment; ?>
+											@endif
+										</tbody>
+									</table>
 								</div>
-								@endif
+							</div>
+							@endif
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										Laporan yang Diterbitkan
+									</label>
+									<label>
+										: @if($lap_uji_attach)
+											<a href="{{ $lap_uji_url }}"> {{ $lap_uji_attach }}</a>
+										@else
+											Belum Tersedia
+										@endif
+									</label>
+								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
