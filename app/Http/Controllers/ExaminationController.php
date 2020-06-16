@@ -997,8 +997,8 @@ class ExaminationController extends Controller
 					$income->company_id = $exam->company_id;
 					$income->inc_type = 1; 
 					$income->reference_id = $exam->id; 
-					$income->reference_number = $request->input('spb_number');
-					$income->tgl = $request->input('spb_date');
+					$income->reference_number = $exam->spb_number;
+					$income->tgl = $exam->spb_date;
 					$income->created_by = $currentUser->id;
 
 				}else{
