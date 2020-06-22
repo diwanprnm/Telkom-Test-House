@@ -33,7 +33,7 @@
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table">
 	                    <input id="search_value" type="text" placeholder="Search" id="form-field-17" class="form-control " value="{{ $search }}">
-	                    <i class="ti-search"></i>
+	                    <em class="ti-search"></em>
 	                </span>
 	            </div>
 	        </div>
