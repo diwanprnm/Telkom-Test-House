@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 
 use Auth;
@@ -310,9 +309,6 @@ class ExaminationChargeController extends Controller
 
         $search = trim($request->input($this::SEARCH));
         
-        $category = '';
-        $status = -1;
-
         if ($search != null){
             $examinationCharge = ExaminationCharge::whereNotNull($this::CREATED_AT)
                 ->where($this::DEVICE_NAME,'like','%'.$search.'%')
@@ -321,18 +317,12 @@ class ExaminationChargeController extends Controller
         }else{
             $query = ExaminationCharge::whereNotNull($this::CREATED_AT);
 
-            if ($request->has($this::CATEGORY)){
-                $category = $request->get($this::CATEGORY);
-                if($request->input($this::CATEGORY) != 'all'){
-                    $query->where($this::CATEGORY, $request->get($this::CATEGORY));
-                }
+            if ($request->has($this::CATEGORY) && $request->input($this::CATEGORY) != 'all' ){
+                $query->where($this::CATEGORY, $request->get($this::CATEGORY));
             }
 
-            if ($request->has($this::IS_ACTIVE)){
-                $status = $request->get($this::IS_ACTIVE);
-                if ($request->get($this::IS_ACTIVE) > -1){
-                    $query->where($this::IS_ACTIVE, $request->get($this::IS_ACTIVE));
-                }
+            if ($request->has($this::IS_ACTIVE) && $request->get($this::IS_ACTIVE) > -1 ){
+                $query->where($this::IS_ACTIVE, $request->get($this::IS_ACTIVE));
             }
 
             $examinationCharge = $query->orderBy($this::DEVICE_NAME);
