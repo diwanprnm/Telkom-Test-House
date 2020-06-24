@@ -14,6 +14,25 @@ use App\Logs;
 
 use Excel;
 
+/**Duplicated var
+ * */
+$search_var='search';
+$created_var='created_at';
+$device_var='device_name';
+$calibration_var="CALIBRATION CHARGE";
+$is_active_var='is_active';
+$message_var='message';
+$price_var='price';
+$adm_var='/admin/calibration';
+$err_var='error';
+
+
+
+
+
+
+
+
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
@@ -37,17 +56,17 @@ class CalibrationChargeController extends Controller
     public function index(Request $request)
     {
         $currentUser = Auth::user();
-
+       
         if ($currentUser){
             $message = null;
             $paginate = 10;
-            $search = trim($request->input('search'));
+            $search = trim($request->input($search_var));
             $status = -1;
             
             if ($search != null){
-                $charge = CalibrationCharge::whereNotNull('created_at')
-                    ->where('device_name','like','%'.$search.'%')
-                    ->orderBy('device_name')
+                $charge = CalibrationCharge::whereNotNull( $created_var)
+                    ->where($device_var,'like','%'.$search.'%')
+                    ->orderBy($device_var)
                     ->paginate($paginate);
 
                     $logs = new Logs;
@@ -56,19 +75,19 @@ class CalibrationChargeController extends Controller
                     $datasearch = array("search"=>$search);
                     $logs->data = json_encode($datasearch);
                     $logs->created_by = $currentUser->id;
-                    $logs->page = "CALIBRATION CHARGE";
+                    $logs->page = $calibration_var;
                     $logs->save();
             }else{
-                $query = CalibrationCharge::whereNotNull('created_at');
+                $query = CalibrationCharge::whereNotNull( $created_var);
 
-                if ($request->has('is_active')){
-                    $status = $request->get('is_active');
-                    if ($request->get('is_active') > -1){
-                        $query->where('is_active', $request->get('is_active'));
+                if ($request->has($is_active_var)){
+                    $status = $request->get($is_active_var);
+                    if ($request->get($is_active_var) > -1){
+                        $query->where($is_active_var, $request->get($is_active_var));
                     }
                 }
 
-                $charge = $query->orderBy('device_name')
+                $charge = $query->orderBy($device_var)
                                ->paginate($paginate);
             }
             
@@ -77,9 +96,9 @@ class CalibrationChargeController extends Controller
             }
             
             return view('admin.calibration.index')
-                ->with('message', $message)
+                ->with($message_var, $message)
                 ->with('data', $charge)
-                ->with('search', $search)
+                ->with($search_var, $search)
                 ->with('status', $status);
         }
     }
@@ -106,9 +125,9 @@ class CalibrationChargeController extends Controller
 
         $charge = new CalibrationCharge;
         $charge->id = Uuid::uuid4();
-        $charge->device_name = $request->input('device_name');
-        $charge->price = str_replace(",","",$request->input('price'));
-        $charge->is_active = $request->input('is_active');
+        $charge->device_name = $request->input($device_var);
+        $charge->price = str_replace(",","",$request->input($price_var));
+        $charge->is_active = $request->input($is_active_var);
         $charge->created_by = $currentUser->id;
         $charge->updated_by = $currentUser->id;
 
@@ -120,13 +139,13 @@ class CalibrationChargeController extends Controller
             $logs->action = "Create Calibration Charge";
             $logs->data = $charge;
             $logs->created_by = $currentUser->id;
-            $logs->page = "CALIBRATION CHARGE";
+            $logs->page = $calibration_var;
             $logs->save();
 
-            Session::flash('message', 'Charge successfully created');
-            return redirect('/admin/calibration');
+            Session::flash($message_var, 'Charge successfully created');
+            return redirect();
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
+            Session::flash($err_var, 'Save failed');
             return redirect('/admin/calibration/create');
         }
     }
@@ -169,14 +188,14 @@ class CalibrationChargeController extends Controller
 
         $charge = CalibrationCharge::find($id);
         $oldData = $charge;
-        if ($request->has('device_name')){
-            $charge->device_name = $request->input('device_name');
+        if ($request->has($device_var)){
+            $charge->device_name = $request->input($device_var);
         }
-        if ($request->has('price')){
-            $charge->price = str_replace(",","",$request->input('price'));
+        if ($request->has($price_var)){
+            $charge->price = str_replace(",","",$request->input($price_var));
         }
-        if ($request->has('is_active')){
-            $charge->is_active = $request->input('is_active');
+        if ($request->has($is_active_var)){
+            $charge->is_active = $request->input($is_active_var);
         }
 
         $charge->updated_by = $currentUser->id;
@@ -189,13 +208,13 @@ class CalibrationChargeController extends Controller
             $logs->action = "Update Calibration Charge";
             $logs->data = $oldData;
             $logs->created_by = $currentUser->id;
-            $logs->page = "CALIBRATION CHARGE";
+            $logs->page = $calibration_var;
             $logs->save();
 
-            Session::flash('message', 'Charge successfully updated');
-            return redirect('/admin/calibration');
+            Session::flash($message_var, 'Charge successfully updated');
+            return redirect($adm_var);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
+            Session::flash($err_var, 'Save failed');
             return redirect('/admin/calibration/'.$charge->id.'/edit');
         }
     }
@@ -220,14 +239,14 @@ class CalibrationChargeController extends Controller
                 $logs->action = "Delete Calibration Charge";
                 $logs->data = $oldData;
                 $logs->created_by = $currentUser->id;
-                $logs->page = "CALIBRATION CHARGE";
+                $logs->page = $calibration_var;
                 $logs->save();
 
-                Session::flash('message', 'Charge successfully deleted');
-                return redirect('/admin/calibration');
+                Session::flash($message_var, 'Charge successfully deleted');
+                return redirect($adm_var);
             }catch (Exception $e){
-                Session::flash('error', 'Delete failed');
-                return redirect('/admin/calibration');
+                Session::flash( $err_var, 'Delete failed');
+                return redirect($adm_var);
             }
         }
     }
@@ -245,13 +264,13 @@ class CalibrationChargeController extends Controller
         // the user's e-mail address, the amount paid, and the payment
         // timestamp.
 
-        $search = trim($request->input('search'));
-        $status = -1;
+        $search = trim($request->input($search_var));
+       // $status = -1;
 
         if ($search != null){
-            $charge = CalibrationCharge::whereNotNull('created_at')
-                ->where('device_name','like','%'.$search.'%')
-                ->orderBy('device_name');
+            $charge = CalibrationCharge::whereNotNull( $created_var)
+                ->where($device_var,'like','%'.$search.'%')
+                ->orderBy($device_var);
 
                 $logs = new Logs;
                 $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
@@ -259,19 +278,19 @@ class CalibrationChargeController extends Controller
                 $datasearch = array("search"=>$search);
                 $logs->data = json_encode($datasearch);
                 $logs->created_by = $currentUser->id;
-                $logs->page = "CALIBRATION CHARGE";
+                $logs->page = $calibration_var;
                 $logs->save();
         }else{
-            $query = CalibrationCharge::whereNotNull('created_at');
+            $query = CalibrationCharge::whereNotNull( $created_var');
 
-            if ($request->has('is_active')){
-                $status = $request->get('is_active');
-                if ($request->get('is_active') > -1){
-                    $query->where('is_active', $request->get('is_active'));
+            if ($request->has($is_active_var)){
+                $status = $request->get($is_active_var);
+                if ($request->get($is_active_var) > -1){
+                    $query->where($is_active_var, $request->get($is_active_var));
                 }
             }
 
-            $charge = $query->orderBy('device_name');
+            $charge = $query->orderBy($device_var);
         }
 
         $data = $charge->get();
@@ -307,9 +326,7 @@ class CalibrationChargeController extends Controller
         Excel::create('Data Tarif Kalibrasi', function($excel) use ($examsArray) {
 
             // Set the spreadsheet title, creator, and description
-            // $excel->setTitle('Payments');
-            // $excel->setCreator('Laravel')->setCompany('WJ Gilmore, LLC');
-            // $excel->setDescription('payments file');
+           
 
             // Build the spreadsheet, passing in the payments array
             $excel->sheet('sheet1', function($sheet) use ($examsArray) {
