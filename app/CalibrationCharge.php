@@ -19,6 +19,6 @@ class CalibrationCharge extends Model
 		->orderBy('device_name')
 		->take(5)
 		->distinct()
-		->get();;
+		//->get();;
 	}
 }
