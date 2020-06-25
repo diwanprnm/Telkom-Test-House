@@ -279,7 +279,7 @@
 											<td class="center">{{ $item->device->name }}</td>
 											<td class="center">{{ $item->device->mark }}</td>
 											<td class="center">{{ $item->device->capacity }}</td>
-											<td class="center">{{ $item->price }}</td>
+											<td class="center"><?php echo number_format($item->price, 0, '.', ','); ?></td>
 											<td class="center">
 												@if($item->payment_status == '1')
 													SUDAH

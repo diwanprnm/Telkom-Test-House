@@ -21,7 +21,7 @@
     <title>TELKOM DIGITAL SERVICE</title>
 
     <!-- Fonts -->
-    <link href="http://fonts.googleapis.com/css?family=Lato:300,400,400italic,600,700|Raleway:300,400,500,600,700|Crete+Round:400italic" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400italic,600,700|Raleway:300,400,500,600,700|Crete+Round:400italic" rel="stylesheet" type="text/css" />
 
     <!-- Styles -->
     <link href={{ asset("vendor/bootstrap/css/bootstrap.min.css") }} rel="stylesheet" type="text/css">
@@ -41,9 +41,40 @@
     <link href={{ asset("assets/css/jquery-ui-1_12_1.css") }} rel="stylesheet" type="text/css">
 	<script src={{ asset("assets/js/jquery-1.12.4.js") }}></script>
 	<script src={{ asset("assets/js/jquery-ui-1_12_1.js") }}></script>
+	<style type="text/css">
+        #overlay {
+          z-index: 1000;
+          display:none;
+          position: fixed;
+          top: 0px;
+          left: 0px;
+          width: 100%;
+          height: 100%;
+          background: rgba(4, 10, 30, 0.8);
+        }
+        #tengah{
+            width: 250px;
+            height: 30px;
+            position: absolute;
+            top:0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+    </style>
 </head>
 
 <body>
+	<div id="overlay">
+        <div id="tengah">
+            <center>
+                <br>
+                <span style="color:#ffffff">Please wait ....</span>
+                <img src='{{ asset("images/loading.gif") }}'/>
+            </center>
+        </div>
+    </div>
 
 	<input type="hidden" name="exam_id" id="exam_id" class="form-control" value="{{ $exam_id }}"/>
 	<fieldset>
@@ -87,7 +118,7 @@
 						<label>
 							Pilih STEL sebagai referensi biaya *
 						</label>
-						<select class="form-control" id="cmb-ref-perangkat" name="cmb-ref-perangkat">
+						<select class="form-control" id="cmb-ref-perangkat" name="cmb-ref-perangkat" onchange="changeTotal();">
 								<option value="">- Pilih STEL -</option>
 							@foreach($data_stels as $item)
 								<option value="{{ $item->price }}">{{ $item->stel }} || {{ $item->price }}</option>
@@ -104,7 +135,7 @@
 						<label for="nama_perangkat">Nama Perangkat *</label>
 					</td>
 					<td align="center">
-						<label for="biaya">Biaya (dengan PPN) *</label>
+						<label for="biaya">Biaya *</label>
 					</td>
 					<td style="width:40px;"><a  style="width:40px;" value='Add More' class='del btn btn-success btn-flat' onclick='addAppend()'><i id='icon_add' class='fa fa-plus'/></a></td>
 				</tr>
@@ -122,45 +153,29 @@
 						</div>
 					</td>
 				</tr>
-			</tbody>
-			<tbody class="tes_append"></tbody>
-		</table>
-		<table width=100%>
-			<thead>
-				<label for="nama_perangkat">Tambahkan Biaya diluar PPN *bila perlu</label>
-			</thead>
-			<tbody border="1">
-				<tr>
-					<td align="center">
-						<label for="nama_perangkat">Nama *</label>
-					</td>
-					<td align="center">
-						<label for="biaya">Biaya (tanpa PPN) *</label>
-					</td>
-					<td style="width:40px;"><a  style="width:40px;" value='Add More' class='del btn btn-success btn-flat' onclick='addAppend2()'><i id='icon_add' class='fa fa-plus'/></a></td>
-				</tr>
 				@if($data->is_loc_test == 1)
 					<tr>
 						<td>
 							<div class="form-group">
-								<input type="text" class="form-control" name="nama_perangkat2[]" value="Uji Lokasi" required>
+								<input type="text" class="form-control" name="nama_perangkat[]" value="Biaya Akomodasi & Transportasi" required>
 							</div>
 						</td>
 						<td>
 							<div class="form-group">
-								<input type="number" class="form-control biaya" name="biaya2[]" id="biaya2" value="0" required>
+								<input type="number" class="form-control biaya" name="biaya[]" id="biaya1" required>
 							</div>
 						</td>
 					</tr>
 				@endif
 			</tbody>
-			<tbody class="tes_append2"></tbody>
+			<tbody class="tes_append"></tbody>
 		</table>
+		<p style="margin-top: -2%;font-size: 80%;">Note : Biaya belum termasuk ppn 10%</p>
 		<div class="row">
 			<div class="col-md-6">
 				<div class="form-group">
 					<label>
-						Total Biaya *
+						Total Biaya (Rp.) *
 					</label>
 						<input type="text" name="total_biaya" id="total_biaya" class="form-control" value="{{ $price + ($price*0.1) }}" readonly="" />
 				</div>
@@ -277,83 +292,19 @@
 			bahan_append += '</tr>'
 
 			$('.tes_append').append(bahan_append);
-			changeTotal();
+			$('.biaya').on('input',function(){
+            	changeTotal();
+	        });
 		}
 		function destroy(a)
 		{
 			$("#hapus_"+a+"").remove();
-			arr_biaya = [];
-			arr_biaya2 = [];
-			total_biaya = 0;
-			ppn = 0;
-
-    		var biaya = document.getElementsByName("biaya[]");
-            for (i = 0; i < biaya.length; i++) {
-				arr_biaya[i] = biaya[i].value
-				total_biaya += Number(arr_biaya[i]);
-			}
-			ppn = 0.1*total_biaya;
-			total_biaya += ppn;
-
-			var biaya2 = document.getElementsByName("biaya2[]");
-			for (i = 0; i < biaya2.length; i++) {
-				arr_biaya2[i] = biaya2[i].value
-				total_biaya += Number(arr_biaya2[i]);
-			}
-
-            $('#total_biaya').val(total_biaya);
+			changeTotal();
 		}
 		
-			var hitung2 = 0;
-			function addAppend2(){
-				hitung2 += 1;
-				var bahan_append = '<tr id="hapus2_'+hitung2+'">';
-						bahan_append += '<td>'
-						bahan_append += '<div class="form-group">'
-							bahan_append += '<input type="text" class="form-control" name="nama_perangkat2[]" required>'
-						bahan_append += '</div>'
-						bahan_append += '</td>'
-						bahan_append += '<td>'
-						bahan_append += '<div class="form-group">'
-							bahan_append += '<input type="number" class="form-control biaya" name="biaya2[]" required>'
-						bahan_append += '</div>'
-						bahan_append += '</td>'
-						bahan_append += '<td style="width:40px;"><a  style="width:40px;" value="Delete" class="del btn btn-danger btn-flat" onclick="destroy2('+hitung2+')"><i id="icon_add" class="fa-cross fa fa-remove"/></a></td>'
-				bahan_append += '</tr>'
-
-				$('.tes_append2').append(bahan_append);
-				changeTotal();
-			}
-			function destroy2(a)
-			{
-				$("#hapus2_"+a+"").remove();
-				arr_biaya = [];
-				arr_biaya2 = [];
-				total_biaya = 0;
-				ppn = 0;
-
-        		var biaya = document.getElementsByName("biaya[]");
-	            for (i = 0; i < biaya.length; i++) {
-					arr_biaya[i] = biaya[i].value
-					total_biaya += Number(arr_biaya[i]);
-				}
-				ppn = 0.1*total_biaya;
-				total_biaya += ppn;
-
-				var biaya2 = document.getElementsByName("biaya2[]");
-				for (i = 0; i < biaya2.length; i++) {
-					arr_biaya2[i] = biaya2[i].value
-					total_biaya += Number(arr_biaya2[i]);
-				}
-
-	            $('#total_biaya').val(total_biaya);
-			}
-			
 		$('.generate-button').click(function () {
 			arr_nama_perangkat = [];
 			arr_biaya = [];
-			arr_nama_perangkat2 = [];
-			arr_biaya2 = [];
 			total_biaya = 0;
 			ppn = 0;
 			var exam_id = document.getElementsByName("exam_id")[0].value;
@@ -366,82 +317,93 @@
 				}
 			var biaya = document.getElementsByName("biaya[]");
 				for (i = 0; i < biaya.length; i++) {
-					arr_biaya[i] = biaya[i].value
+					arr_biaya[i] = biaya[i].value ? biaya[i].value : 0;
 					total_biaya += Number(arr_biaya[i]);
 				}
 				ppn = 0.1*total_biaya;
 				total_biaya += ppn;
-			var nama_perangkat2 = document.getElementsByName("nama_perangkat2[]");
-				var i;
-				for (i = 0; i < nama_perangkat2.length; i++) {
-					arr_nama_perangkat2[i] = nama_perangkat2[i].value;
-				}
-			var biaya2 = document.getElementsByName("biaya2[]");
-				for (i = 0; i < biaya2.length; i++) {
-					arr_biaya2[i] = biaya2[i].value
-					total_biaya += Number(arr_biaya2[i]);
-				}
 			
 			var APP_URL = {!! json_encode(url('/cetakSPB')) !!};
 			
 			$.ajax({
 				type: "POST",
 				url : "generateSPB",
-				data: {'_token':"{{ csrf_token() }}", 'exam_id':exam_id, 'spb_number':spb_number, 'spb_date':spb_date, 'arr_nama_perangkat':arr_nama_perangkat, 'arr_biaya':arr_biaya, 'arr_nama_perangkat2':arr_nama_perangkat2, 'arr_biaya2':arr_biaya2},
+				data: {'_token':"{{ csrf_token() }}", 'exam_id':exam_id, 'spb_number':spb_number, 'spb_date':spb_date, 'arr_nama_perangkat':arr_nama_perangkat, 'arr_biaya':arr_biaya},
 				beforeSend: function(){
-					
+					document.getElementById("overlay").style.display="inherit";
 				},
 				success: function(response){
-					if(response == 1){
-						window.open(APP_URL);
-						pops(total_biaya,spb_number,spb_date);
-						window.close();
-					}
-					else if(response == 2){
+					console.log(response);
+					if(response == 2){
 						alert("Nomor SPB sudah ada!");
+						document.getElementById("overlay").style.display="none";
+					}else if(response.includes("myToken")){
+						var res = response.split("myToken");
+						window.open(APP_URL);
+						pops(res[0],res[1],spb_number,spb_date);
+						window.close();
+						// document.getElementById("overlay").style.display="none";
 					}else{
 						alert("Gagal mengambil data");
+						document.getElementById("overlay").style.display="none";
 					}
 				},
 				error:function(){
 					alert("Gagal mengambil data");
+					document.getElementById("overlay").style.display="none";
 				}
 			});
 		});
 		
         jQuery(document).ready(function() {
             Main.init();
-            changeTotal();
+            $('.biaya').on('input',function(){
+            	changeTotal();
+	        });
         });
 
         function changeTotal(){
-        	$('.biaya').on('keyup',function(){
-        		arr_biaya = [];
-				arr_biaya2 = [];
-				total_biaya = 0;
-				ppn = 0;
+        	arr_biaya = [];
+			total_biaya = 0;
+			ppn = 0;
 
-        		var biaya = document.getElementsByName("biaya[]");
-	            for (i = 0; i < biaya.length; i++) {
-					arr_biaya[i] = biaya[i].value
-					total_biaya += Number(arr_biaya[i]);
-				}
-				ppn = 0.1*total_biaya;
-				total_biaya += ppn;
+    		var biaya = document.getElementsByName("biaya[]");
+            for (i = 0; i < biaya.length; i++) {
+				arr_biaya[i] = biaya[i].value ? biaya[i].value : 0;
+				total_biaya += Number(arr_biaya[i]);
+			}
+			/*ppn = 0.1*total_biaya;
+			total_biaya += ppn;*/
 
-				var biaya2 = document.getElementsByName("biaya2[]");
-				for (i = 0; i < biaya2.length; i++) {
-					arr_biaya2[i] = biaya2[i].value
-					total_biaya += Number(arr_biaya2[i]);
-				}
-
-	            $('#total_biaya').val(total_biaya);
-	        });
+            $('#total_biaya').val(total_biaya);
+            var total_biaya = document.getElementById('total_biaya');
+			$('#total_biaya').val(formatPrice(total_biaya.value));
         }
 		
-		function pops(jumlah,spb_number,spb_date){
+		/* Fungsi */
+		function formatPrice(angka, prefix)
+		{
+			var number_string = angka.replace(/[^,\d]/g, '').toString(),
+				split	= number_string.split(','),
+				sisa 	= split[0].length % 3,
+				rupiah 	= split[0].substr(0, sisa),
+				ribuan 	= split[0].substr(sisa).match(/\d{3}/gi);
+				
+			if (ribuan) {
+				separator = sisa ? '.' : '';
+				rupiah += separator + ribuan.join('.');
+			}
+			
+			rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+			return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+		}
+
+		function pops(PO_ID,jumlah,spb_number,spb_date){
+			textcontent=opener.document.getElementById("PO_ID").value;
+			opener.document.getElementById("PO_ID").value = PO_ID;
+			
 			textcontent=opener.document.getElementById("exam_price").value;
-			opener.document.getElementById("exam_price").value = jumlah;
+			opener.document.getElementById("exam_price").value = jumlah.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
 			
 			textcontent=opener.document.getElementById("spb_number").value;
 			opener.document.getElementById("spb_number").value = spb_number;

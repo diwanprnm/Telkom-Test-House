@@ -25,7 +25,9 @@
 	        <div class="row">
 		        <div class="col-md-6">
 		        <a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><i class="ti-filter"></i> Filter</a>
-					<!-- <a class="btn btn-info pull-left" href="{{URL::to('sales/excel')}}"> Export to Excel</a> -->
+					<button id="excel" type="submit" class="btn btn-info pull-left">
+                        Export to Excel
+                    </button>
 		        </div>
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table">
@@ -108,6 +110,12 @@
 												@else
 													<option value="2">Paid (waiting confirmation)</option>
 												@endif
+												
+												@if($payment_status == '3')
+													<option value="3" selected>Paid (delivered)</option>
+												@else
+													<option value="3">Paid (delivered)</option>
+												@endif
 										</select>
 									</div>
 								</div>
@@ -134,7 +142,15 @@
 					{{ Session::get('message') }}
 				</div>
 			@endif
-
+			<div class="row">
+				<div class="col-md-6 pull-right" style="margin-bottom:10px;margin-top:20px">
+					<a style=" color:white !important;" href="{{URL::to('/admin/sales/create')}}">
+		            <button type="button" class="btn btn-wide btn-green btn-squared pull-right" >
+						Tambah
+		            </button>         
+					</a>
+		        </div>
+		    </div>
 			<div class="row">
 				<div class="col-md-12">
 					<div class="table-responsive">
@@ -153,88 +169,69 @@
 								</tr>
 							</thead>
 							<tbody> 
-								@php $no = 1; $stels_sales_id = array(); @endphp
-								@foreach($data as $keys => $item)
-									@php 
-										$stels_sales_id[$no] = $item->id;
-										$no++;
-									@endphp
-								@endforeach
-								@php 
-									$stels_sales_id[$no] = "";
-									$count = 0;
-									$no = 0;
-									$data_stel_name = "";
-									$data_stel_code = "";
-								@endphp
-								@foreach($data as $keys => $item)
-									@php 
-										$no++; 
-										if($data_stel_name == ""){
-											$data_stel_name = $item->stel_name;
-											$data_stel_code = $item->stel_code;
-										}else{
-											$data_stel_name = $data_stel_name.", ".$item->stel_name;
-											$data_stel_code = $data_stel_code.", ".$item->stel_code;
-										}
+								@php $no = 1; @endphp
+								@if(count($data)>0)
+									@foreach($data as $keys => $item)
+										<tr>
+											<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
+											<td class="center">{{ $item->company_name }}</td>
+											<td class="center">{{ $item->created_at }}</td>
+											<td class="center">{{ $item->invoice }}</td>
+											<td class="center"><?php echo number_format($item->cust_price_payment, 0, '.', ','); ?></td>
+											<td class="center">
+												<?php
+													switch ($item->payment_status) {
+														case -1:
+															echo "Paid (decline)";
+															break; 
+														case 0:
+															echo "Unpaid";
+															break; 
+														case 1:
+															echo "Paid (success)";
+															break; 
+														case 2:
+															echo "Paid (waiting confirmation)";
+															break; 
+														case 3:
+															echo "Paid (delivered)";
+															break; 
+														default:
+															# code...
+															break;
+													}
+													?>
 
-										if($item->id != $stels_sales_id[$no+1]){
-											$count++;
-									@endphp
+											</td>
+											<td class="center">{{ ($item->payment_method == 1)?'ATM':'Kartu Kredit'}}</td> 
+											<td class="center">{{ $item->stel_code }}</td>
+											<td class="center">
+												<div>
+													<a href="{{URL::to('admin/sales/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
+												</div>
+											</td>
+											<td class="center">
+												<div>
+													@if($item->payment_status == 1 or $item->payment_status == 3)
+														<a href="{{URL::to('admin/sales/'.$item->id.'/upload')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Upload"><i class="fa fa-upload"></i></a>
+													@endif
+												</div>
+											</td>
+											<td class="center">
+												<div>
+													<a href="{{URL::to('admin/sales/'.$item->id)}}" class="btn btn-wide btn-primary btn-margin" tooltip-placement="top" tooltip="Detail">Detail </a>
+												</div>
+											</td>
+										</tr> 
+									<?php $no++ ?>
+									@endforeach
+								@else
 									<tr>
-										<td class="center">{{++$keys}}</td> 
-										<td class="center">{{ $item->company_name }}</td>
-										<td class="center">{{ $item->created_at }}</td>
-										<td class="center">{{ $item->invoice }}</td>
-										<td class="center"><?php echo number_format($item->cust_price_payment, 0, '.', ','); ?></td>
-										<td class="center">
-											<?php
-												switch ($item->payment_status) {
-													case -1:
-														echo "Paid (decline)";
-														break; 
-													case 0:
-														echo "Unpaid";
-														break; 
-													case 1:
-														echo "Paid (success)";
-														break; 
-													case 2:
-														echo "Paid (waiting confirmation)";
-														break; 
-													default:
-														# code...
-														break;
-												}
-												?>
-
+										<td colspan=9 class="center">
+											Data Not Found
 										</td>
-										<td class="center">{{ ($item->payment_method == 1)?'ATM':'Kartu Kredit'}}</td> 
-										<td class="center">{{ $data_stel_code }}</td>
-										<td class="center">
-											<div>
-												<a href="{{URL::to('admin/sales/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
-											</div>
-										</td>
-										<td class="center">
-											<div>
-												@if($item->payment_status == 1)
-													<a href="{{URL::to('admin/sales/'.$item->id.'/upload')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Upload"><i class="fa fa-upload"></i></a>
-												@endif
-											</div>
-										</td>
-										<td class="center">
-											<div>
-												<a href="{{URL::to('admin/sales/'.$item->id)}}" class="btn btn-wide btn-primary btn-margin" tooltip-placement="top" tooltip="Detail">Detail </a>
-											</div>
-										</td>
-										@php 
-											$data_stel_name = "";
-											$data_stel_code = ""; 
-										}
-										@endphp
-									</tr> 
-								@endforeach
+									</tr>
+								@endif
                             </tbody>
 						</table>
 					</div>
@@ -303,6 +300,29 @@
 			}
 			params['search'] = search_value;
 			document.location.href = baseUrl+'/admin/sales?'+jQuery.param(params);
+	    };
+
+	document.getElementById("excel").onclick = function() {
+            var baseUrl = "{{URL::to('/')}}";
+            var params = {}; 
+			var search_value = document.getElementById("search_value").value;
+            var before = document.getElementById("before_date");
+            var after = document.getElementById("after_date");
+            var payment_status = document.getElementById("payment_status").value;
+			var beforeValue = before.value;
+			var afterValue = after.value;
+			
+			if (beforeValue != ''){
+				params['before_date'] = beforeValue;
+			}
+			if (afterValue != ''){
+				params['after_date'] = afterValue;
+			}
+			if (payment_status != ''){
+				params['payment_status'] = payment_status;
+			}
+			params['search'] = search_value;
+			document.location.href = baseUrl+'/sales/excel?'+jQuery.param(params);
 	    };
 </script>>
 @endsection

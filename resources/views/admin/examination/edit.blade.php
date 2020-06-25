@@ -1481,12 +1481,13 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Total Biaya *
+										Total Biaya (Rp.) *
 									</label>
-									<input type="text" name="exam_price" id="exam_price" class="form-control" placeholder="Total Biaya" value="{{ $data->price }}" readonly required>
+									<input type="text" name="exam_price" id="exam_price" class="formatPrice form-control" placeholder="Total Biaya" value="{{ $data->price }}" readonly required>
 								</div>
 							</div>
 							<input type="hidden" name="spb_date" id="spb_date" value="{{ $data->spb_date }}">
+							<input type="hidden" name="PO_ID" id="PO_ID" value="{{ $data->PO_ID }}">
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
@@ -1698,9 +1699,9 @@
 										</label>
 										<div class="form-group">
 											<label>
-												Banyak Uang *
+												Banyak Uang (Rp.) *
 											</label>
-											<input type="text" name="cust_price_payment" id="cust_price_payment" class="form-control" placeholder="Banyak Uang" value="{{ $data->cust_price_payment }}" required>
+											<input type="text" name="cust_price_payment" id="cust_price_payment" class="formatPrice form-control" placeholder="Banyak Uang" value="{{ $data->cust_price_payment }}" required>
 										</div>
 									@else
 										<label>
@@ -1709,9 +1710,32 @@
 									@endif
 								</div>
 							</div>
-							<div class="col-md-12">
-								<div class="form-group">
+							<?php $find_kuitansi = 0; $find_faktur = 0; $kuitansi_attach = ''; $faktur_attach = '';?>
+							@foreach($data->media as $item)
+								@if($item->name == 'Kuitansi' && $item->attachment != '' && $find_kuitansi == 0)
+									<?php $find_kuitansi = 1; $kuitansi_attach = $item->attachment;?>
+								@endif
+								@if($item->name == 'Faktur Pajak' && $item->attachment != '' && $find_faktur == 0)
+									<?php $find_faktur = 1; $faktur_attach = $item->attachment;?>
+								@endif
+							@endforeach
+							<div class="col-md-6">
+								@if($find_kuitansi == 1)
+									-
+								@else
+									<a onclick="checkKuitansi('<?php echo $data->id ?>')"> Cek Kuitansi</a>
+								@endif
+								<!-- <div class="form-group">
 									<a onclick="makeKuitansi('<?php echo $data->id ?>')"> Buatkan File Kuitansi</a>
+								</div> -->
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									@if($find_faktur == 1)
+										-
+									@else
+										<a onclick="checkTaxInvoice('<?php echo $data->id ?>')"> Cek Faktur Pajak</a>
+									@endif
 								</div>
 							</div>
 							<div class="col-md-6">
@@ -1722,13 +1746,9 @@
 									<input type="file" name="kuitansi_file" id="kuitansi_file" class="form-control" accept="application/pdf, image/*">
 								</div>
 								<div class="form-group">
-									<?php $kuitansi_attach = ''; ?>
-									@foreach($data->media as $item)
-										@if($item->name == 'Kuitansi' && $item->attachment != '')
-											<?php $kuitansi_attach = $item->attachment; ?>
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/kuitansi')}}"> Download Kuitansi "<?php echo $kuitansi_attach; ?>"</a>
-										@endif
-									@endforeach
+									@if($kuitansi_attach != '')
+										<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/kuitansi')}}"> Download Kuitansi "<?php echo $kuitansi_attach; ?>"</a>
+									@endif
 									<input type="hidden" id="kuitansi_name" value="<?php echo $kuitansi_attach; ?>">
 								</div>
 							</div>
@@ -1740,13 +1760,9 @@
 									<input type="file" name="faktur_file" id="faktur_file" class="form-control" accept="application/pdf">
 								</div>
 								<div class="form-group">
-									<?php $faktur_attach = ''; ?>
-									@foreach($data->media as $item)
-										@if($item->name == 'Faktur Pajak' && $item->attachment != '')
-											<?php $faktur_attach = $item->attachment; ?>
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/faktur')}}"> Download Faktur Pajak "<?php echo $faktur_attach; ?>"</a>
-										@endif
-									@endforeach
+									@if($faktur_attach != '')
+										<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/faktur')}}"> Download Faktur Pajak "<?php echo $faktur_attach; ?>"</a>
+									@endif
 									<input type="hidden" id="faktur_name" value="<?php echo $faktur_attach; ?>">
 								</div>
 							</div>
@@ -1755,7 +1771,7 @@
 									<label for="form-field-select-2">
 										Status *
 									</label>
-									<select name="payment_status" class="cs-select cs-skin-elastic">
+									<select id="payment_status" name="payment_status" class="cs-select cs-skin-elastic">
 										@if($data->payment_status == 0)
 											<option value="0" selected>Choose Status</option>
 											<option value="1">Completed</option>
@@ -1771,9 +1787,6 @@
 										@endif
 									</select>
 								</div>
-								<input type="hidden" name="spb_number" id="spb_number" value="{{ $data->spb_number }}">
-								<input type="hidden" name="exam_price" id="exam_price" value="{{ $data->price }}">
-								<input type="hidden" name="spb_date" id="spb_date" value="{{ $data->spb_date }}">
 							</div>
 							@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1')
 							<div class="col-md-12">
@@ -1843,9 +1856,9 @@
 										</label>
 										<div class="form-group">
 											<label>
-												Banyak Uang *
+												Banyak Uang (Rp.) *
 											</label>
-											<input type="text" class="form-control" placeholder="Banyak Uang" value="{{ $data->cust_price_payment }}" readonly required>
+											<input type="text" class="formatPrice form-control" placeholder="Banyak Uang" value="{{ $data->cust_price_payment }}" readonly required>
 										</div>
 									@else
 										<label>
@@ -1929,9 +1942,9 @@
 										</label>
 										<div class="form-group">
 											<label>
-												Banyak Uang *
+												Banyak Uang (Rp.) *
 											</label>
-											<input type="text" class="form-control" placeholder="Banyak Uang" value="{{ $data->cust_price_payment }}" readonly required>
+											<input type="text" class="formatPrice form-control" placeholder="Banyak Uang" value="{{ $data->cust_price_payment }}" readonly required>
 										</div>
 									@else
 										<label>
@@ -2957,12 +2970,22 @@
 							Step Laporan Uji
 						</legend>
 						<div class="row">
-							<div class="col-md-12">
-								<div class="form-group">
-									@foreach($data->media as $item)
-										@if($item->name == 'Laporan Uji')
-											<input type="hidden" id="hide_attachment_form-lap-uji" value="{{ $item->attachment }}">
-											@if($item->attachment != '')
+							@php $rev_uji = 0; $lap_uji_url = null; $lap_uji_attach = null @endphp
+							@foreach($data->media as $item)
+								@if($item->name == 'Laporan Uji')
+									@if($rev_uji == 0)
+										<?php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;?>
+									@endif
+									@if($item->attachment != '')
+									<div class="col-md-12">
+										<div class="form-group">
+											<label>
+												Laporan Hasil Pengujian dari OTR :
+											</label>
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="form-group">
 											<div class="col-md-4">
 												<div class="form-group">
 													<a href="{{$item->attachment}}&isCover=true&isIsi=false"> Download Sampul/Judul Laporan </a>
@@ -2978,18 +3001,22 @@
 													<a href="{{$item->attachment}}"> Download Keseluruhan Laporan </a>
 												</div>
 											</div>
-											@else
+										</div>
+									</div>
+									@else
+									<div class="col-md-12">
+										<div class="form-group">
 											<label>
-												Laporan Hasil Pengujian
+												Laporan Hasil Pengujian dari OTR : Belum Tersedia
 											</label>
-											<label>
-												: Belum Tersedia
-											</label>
-											@endif
-										@endif
-									@endforeach
-								</div>
-							</div>
+										</div>
+									</div>
+									@endif
+								@endif
+								@if($item->name == 'Revisi Laporan Uji' && $rev_uji == 0)
+									<?php $rev_uji = 1; $lap_uji_url = URL::to('/admin/examination/media/download/'.$item->id); $lap_uji_attach = $item->attachment;?>
+								@endif
+							@endforeach
 							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
 								<div class="col-md-6">
 									<div class="form-group">
@@ -3012,6 +3039,78 @@
 									</div>
 								</div>
 							@endif
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										Laporan yang Diterbitkan
+									</label>
+									<label>
+										: @if($lap_uji_attach)
+											<a href="{{ $lap_uji_url }}"> {{ $lap_uji_attach }}</a>
+										@else
+											Belum Tersedia
+										@endif
+										<a class="btn btn-primary rev-button" data-toggle="collapse" href="#collapse1"><b>Revisi</b></a>
+									</label>
+									<input type="hidden" name="hide_attachment_form-lap-uji" id="hide_attachment_form-lap-uji" value="{{ $lap_uji_attach }}">
+								</div>
+							</div>
+							
+							<div class="col-md-12" class="panel panel-info">
+								<div id="collapse1" class="collapse">
+									<div class="form-group">
+										<label>
+											Revisi Laporan Uji*
+										</label>
+										<input type="file" name="rev_lap_uji_file" id="rev_lap_uji_file" class="form-control" accept="application/pdf, image/*">
+									</div>
+									<div class="form-group">
+										<table class="table table-bordered">
+											<thead>
+												<tr>
+													<th colspan="5">Riwayat Revisi Laporan Uji</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr style="text-align: center;">
+													<td>No</td>
+													<td>Attachment</td>
+													<td>Created By</td>
+													<td>Created At</td>
+													<td>Action</td>
+												</tr>
+												<?php $no=0;?>
+												@foreach($data->media as $item)
+													@if($item->name == 'Revisi Laporan Uji')
+														<?php $no++;?>
+														<tr>
+															<td style="text-align: center;">
+																<strong>{{ $no }}</strong>
+															</td>
+															<td>
+																<strong><a href="{{URL::to('/admin/examination/media/download/'.$item->id)}}"> {{ $item->attachment }}</a></strong>
+															</td>
+															<td>
+																<strong>{{ $item->user->name }}</strong>
+															</td>
+															<td>
+																<strong>{{ $item->created_at }}</strong>
+															</td>
+															<td style="text-align: center;">
+																<strong> <a class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Destroy" onclick="delete_rev_lap_uji_file('{{ $item->id }}')"><i class="fa fa-trash"></i></a> </strong>
+															</td>
+														</tr>
+													@endif
+												@endforeach
+												@if($no == 0)
+													<tr><td colspan="5" style="text-align: center;"> Data Not Found </td></tr>
+												@endif
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
@@ -3097,11 +3196,19 @@
 							Step Laporan Uji
 						</legend>
 						<div class="row">
-							<div class="col-md-12">
-								<div class="form-group">
-									@foreach($data->media as $item)
-										@if($item->name == 'Laporan Uji')
-											@if($item->attachment != '')
+							@foreach($data->media as $item)
+								@if($item->name == 'Laporan Uji')
+									<?php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;?>
+									@if($item->attachment != '')
+									<div class="col-md-12">
+										<div class="form-group">
+											<label>
+												Laporan Hasil Pengujian dari OTR :
+											</label>
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="form-group">
 											<div class="col-md-4">
 												<div class="form-group">
 													<a href="{{$item->attachment}}&isCover=true&isIsi=false"> Download Sampul/Judul Laporan </a>
@@ -3117,18 +3224,19 @@
 													<a href="{{$item->attachment}}"> Download Keseluruhan Laporan </a>
 												</div>
 											</div>
-											@else
+										</div>
+									</div>
+									@else
+									<div class="col-md-12">
+										<div class="form-group">
 											<label>
-												Laporan Hasil Pengujian
+												Laporan Hasil Pengujian dari OTR : Belum Tersedia
 											</label>
-											<label>
-												: Belum Tersedia
-											</label>
-											@endif
-										@endif
-									@endforeach
-								</div>
-							</div>
+										</div>
+									</div>
+									@endif
+								@endif
+							@endforeach
 							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
 								<div class="col-md-6">
 									<div class="form-group">
@@ -3151,6 +3259,72 @@
 									</div>
 								</div>
 							@endif
+							
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										Revisi Laporan Uji*
+									</label>
+								</div>
+								<div class="form-group">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th colspan="5">Riwayat Revisi Laporan Uji</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr style="text-align: center;">
+												<td>No</td>
+												<td>Attachment</td>
+												<td>Created By</td>
+												<td>Created At</td>
+											</tr>
+											<?php $no=0;?>
+											@foreach($data->media as $item)
+												@if($item->name == 'Revisi Laporan Uji')
+													<?php $no++;?>
+													<tr>
+														<td style="text-align: center;">
+															<strong>{{ $no }}</strong>
+														</td>
+														<td>
+															<strong><a href="{{URL::to('/admin/examination/media/download/'.$item->id)}}"> {{ $item->attachment }}</a></strong>
+														</td>
+														<td>
+															<strong>{{ $item->user->name }}</strong>
+														</td>
+														<td>
+															<strong>{{ $item->created_at }}</strong>
+														</td>
+													</tr>
+												@endif
+											@endforeach
+											@if($no == 0)
+												<tr><td colspan="5" style="text-align: center;"> Data Not Found </td></tr>
+											@else
+												<?php $lap_uji_url = "URL::to('/admin/examination/media/download/'.$item->id)"; ?>
+												<?php $lap_uji_attach = $item->attachment; ?>
+											@endif
+										</tbody>
+									</table>
+								</div>
+							</div>
+							
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										Laporan yang Diterbitkan
+									</label>
+									<label>
+										: @if($lap_uji_attach)
+											<a href="{{ $lap_uji_url }}"> {{ $lap_uji_attach }}</a>
+										@else
+											Belum Tersedia
+										@endif
+									</label>
+								</div>
+							</div>
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
@@ -3191,11 +3365,19 @@
 							Step Laporan Uji
 						</legend>
 						<div class="row">
-							<div class="col-md-12">
-								<div class="form-group">
-									@foreach($data->media as $item)
-										@if($item->name == 'Laporan Uji')
-											@if($item->attachment != '')
+							@foreach($data->media as $item)
+								@if($item->name == 'Laporan Uji')
+									<?php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;?>
+									@if($item->attachment != '')
+									<div class="col-md-12">
+										<div class="form-group">
+											<label>
+												Laporan Hasil Pengujian dari OTR :
+											</label>
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="form-group">
 											<div class="col-md-4">
 												<div class="form-group">
 													<a href="{{$item->attachment}}&isCover=true&isIsi=false"> Download Sampul/Judul Laporan </a>
@@ -3211,18 +3393,19 @@
 													<a href="{{$item->attachment}}"> Download Keseluruhan Laporan </a>
 												</div>
 											</div>
-											@else
+										</div>
+									</div>
+									@else
+									<div class="col-md-12">
+										<div class="form-group">
 											<label>
-												Laporan Hasil Pengujian
+												Laporan Hasil Pengujian dari OTR : Belum Tersedia
 											</label>
-											<label>
-												: Belum Tersedia
-											</label>
-											@endif
-										@endif
-									@endforeach
-								</div>
-							</div>
+										</div>
+									</div>
+									@endif
+								@endif
+							@endforeach
 							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
 								<div class="col-md-6">
 									<div class="form-group">
@@ -3245,6 +3428,72 @@
 									</div>
 								</div>
 							@endif
+							@if($data->examination_type_id =='2' || $data->examination_type_id =='3')
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										Revisi Laporan Uji*
+									</label>
+								</div>
+								<div class="form-group">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th colspan="5">Riwayat Revisi Laporan Uji</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr style="text-align: center;">
+												<td>No</td>
+												<td>Attachment</td>
+												<td>Created By</td>
+												<td>Created At</td>
+											</tr>
+											<?php $no=0;?>
+											@foreach($data->media as $item)
+												@if($item->name == 'Revisi Laporan Uji')
+													<?php $no++;?>
+													<tr>
+														<td style="text-align: center;">
+															<strong>{{ $no }}</strong>
+														</td>
+														<td>
+															<strong><a href="{{URL::to('/admin/examination/media/download/'.$item->id)}}"> {{ $item->attachment }}</a></strong>
+														</td>
+														<td>
+															<strong>{{ $item->user->name }}</strong>
+														</td>
+														<td>
+															<strong>{{ $item->created_at }}</strong>
+														</td>
+													</tr>
+												@endif
+											@endforeach
+											@if($no == 0)
+												<tr><td colspan="5" style="text-align: center;"> Data Not Found </td></tr>
+											@else
+												<?php $lap_uji_url = "URL::to('/admin/examination/media/download/'.$item->id)"; ?>
+												<?php $lap_uji_attach = $item->attachment; ?>
+											@endif
+										</tbody>
+									</table>
+								</div>
+							</div>
+							@endif
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										Laporan yang Diterbitkan
+									</label>
+									<label>
+										: @if($lap_uji_attach)
+											<a href="{{ $lap_uji_url }}"> {{ $lap_uji_attach }}</a>
+										@else
+											Belum Tersedia
+										@endif
+									</label>
+								</div>
+							</div>
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
@@ -4189,8 +4438,49 @@
 				}
 			}
 		});
+
+		$('.formatPrice').keyup(function () {
+			this.value = formatPrice(this.value);
+		});
+
+		$('.rev-button').click(function () {
+			if(this.text == 'Revisi'){
+				this.text = 'Tutup';
+			}else{
+				this.text = 'Revisi';
+			}
+		});
+
 	});
-	
+
+	var exam_price = document.getElementById('exam_price');
+	if($("#exam_price").length != 0) {
+		$('#exam_price').val(formatPrice(exam_price.value));
+	}
+		
+	var cust_price_payment = document.getElementById('cust_price_payment');
+	if($("#cust_price_payment").length != 0) {
+		$('#cust_price_payment').val(formatPrice(cust_price_payment.value));
+	}
+
+	/* Fungsi */
+	function formatPrice(angka, prefix)
+	{
+		var number_string = angka.replace(/[^,\d]/g, '').toString(),
+			split	= number_string.split(','),
+			sisa 	= split[0].length % 3,
+			rupiah 	= split[0].substr(0, sisa),
+			ribuan 	= split[0].substr(sisa).match(/\d{3}/gi);
+			
+		if (ribuan) {
+			separator = sisa ? '.' : '';
+			rupiah += separator + ribuan.join('.');
+		}
+		
+		rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+		return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+	}
+		
 	function generateSPKCode(a,b,c){
 		$.ajax({
 			type: "POST",
@@ -4274,6 +4564,66 @@
 		}); */
 	}
 	
+	function checkKuitansi(a){
+		$.ajax({
+			type: "POST",
+			url : "generateKuitansiSPB",
+			data: {'_token':"{{ csrf_token() }}", 'id':a},
+			beforeSend: function(){
+				document.getElementById("overlay").style.display="inherit";
+			},
+			success: function(response){
+				console.log(response);
+				if(response){
+					alert(response);
+					if(response == "Kuitansi Berhasil Disimpan."){location.reload();}
+				}else{
+					alert("Gagal mengambil data (s)");
+				}
+				document.getElementById("overlay").style.display="none";
+			},
+			error:function(response){
+				console.log(response);
+				alert("Gagal mengambil data (e)");
+				document.getElementById("overlay").style.display="none";
+			}
+		});
+		
+		/* $("#1").load("../loadDataKet",{pgw_id6:res[3]}, function() {
+			document.getElementById("overlay").style.display="none";
+		}); */
+	}
+
+	function checkTaxInvoice(a){
+		$.ajax({
+			type: "POST",
+			url : "generateTaxInvoiceSPB",
+			data: {'_token':"{{ csrf_token() }}", 'id':a},
+			beforeSend: function(){
+				document.getElementById("overlay").style.display="inherit";
+			},
+			success: function(response){
+				console.log(response);
+				if(response){
+					alert(response);
+					if(response == "Faktur Pajak Berhasil Disimpan."){location.reload();}
+				}else{
+					alert("Gagal mengambil data (s)");
+				}
+				document.getElementById("overlay").style.display="none";
+			},
+			error:function(response){
+				console.log(response);
+				alert("Gagal mengambil data (e)");
+				document.getElementById("overlay").style.display="none";
+			}
+		});
+		
+		/* $("#1").load("../loadDataKet",{pgw_id6:res[3]}, function() {
+			document.getElementById("overlay").style.display="none";
+		}); */
+	}
+
 	function masukkanBarang(a,b){
 		var APP_URL = {!! json_encode(url('/admin/equipment/create')) !!};		
 		$.ajax({
@@ -4341,6 +4691,14 @@
 				alert("Gagal mengambil data");
 			}
 		});
+	}
+
+	function delete_rev_lap_uji_file(a){
+		var baseUrl = "{{URL::to('/')}}";
+		if (confirm('Are you sure want to delete this data?')) {
+		    document.getElementById("overlay").style.display="inherit";	
+		 	document.location.href = baseUrl+'/admin/examination/'+a+'/deleteRevLapUji';
+		}
 	}
 	
 	$('.btn-tgl-kontrak').click(function () {
@@ -4477,6 +4835,7 @@
 		var spb_file = document.getElementById('spb_file');
 		var spb_name = document.getElementById('spb_name').value;
 		var spb_number = document.getElementById('spb_number').value;
+		var payment_status = document.getElementById('payment_status').value;
 		var $inputs = $('#form-spb :input');
 		var values = {};
 		$inputs.each(function() {
@@ -4493,6 +4852,10 @@
 				$('#myModalketerangan_spb').modal('hide');
 			}			
 		}else{
+			if(payment_status == 1){
+				alert("SPB sudah dibayar oleh Kastamer!");
+				return false;
+			}
 			if(!spb_number){
 				alert("Silakan mengisi Nomor SPB terlebih dahulu (Buatkan File SPB)!");
 				return false;
@@ -4523,10 +4886,10 @@
 				$('#myModalketerangan_pembayaran').modal('hide');
 			}			
 		}else{
-			if(document.getElementById('hide_status_form-pembayaran').value == 0){
+			/*if(document.getElementById('hide_status_form-pembayaran').value == 0){
 				alert("Kastamer belum melakukan pembayaran / bukti bayar belum di-upload oleh kastamer!");
 				return false;
-			}
+			}*/
 			/*if(kuitansi_file.value == '' && kuitansi_name == ''){
 				alert("File Kuitansi belum diunggah");$('#kuitansi_file').focus();return false;				
 			}*/
@@ -4600,6 +4963,7 @@
 	});
 
 	$('#form-lap-uji').submit(function () {
+		var rev_lap_uji_file = document.getElementById('rev_lap_uji_file');
 		var keterangan = document.getElementById('keterangan_lap_uji').value;
 		var $inputs = $('#form-lap-uji :input');
 		var values = {};
@@ -4616,12 +4980,12 @@
 			}else{
 				$('#myModalketerangan_lap_uji').modal('hide');
 			}			
-		}/*else{
-			if(!document.getElementById('hide_attachment_form-lap-uji').value){
+		}else{
+			if(!document.getElementById('hide_attachment_form-lap-uji').value && rev_lap_uji_file.value == ''){
 				alert("Laporan Hasil Pengujian belum ada / di-upload oleh Test Engineer!");
 				return false;
 			}
-		}*/
+		}
 	});
 </script>
 @if($data->examination_type_id == '1')

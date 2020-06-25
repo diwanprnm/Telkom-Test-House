@@ -15,6 +15,7 @@ use App\ExaminationAttach;
 use App\ExaminationLab;
 use App\ExaminationHistory;
 use App\User;
+use App\Api_logs;
 use App\Logs;
 use App\Logs_administrator;
 use App\Income;
@@ -82,39 +83,21 @@ class ExaminationController extends Controller
                                 ->with('examinationLab')
                                 ->with('media')
                                 ->with('device');
-			$query->where(function($qry){
-				$qry->where(function($q){
-					return $q->where('registration_status', '!=', '1')
-						->orWhere('function_status', '!=', '1')
-						->orWhere('contract_status', '!=', '1')
-						->orWhere('spb_status', '!=', '1')
-						->orWhere('payment_status', '!=', '1')
-						->orWhere('spk_status', '!=', '1')
-						->orWhere('examination_status', '!=', '1')
-						->orWhere('resume_status', '!=', '1')
-						->orWhere('qa_status', '!=', '1')
-						->orWhere('certificate_status', '!=', '1')
-						->orWhere('location', '!=', '1')
-						// ->orWhere(function($qa){
-							// return $qa->where('qa_passed', '=', '-1')->where('location', '!=', '1');
-						// })
-						;
-					})
-					->where('examination_type_id', '=', '1')
-				->orWhere(function($q){
-					return $q->where('registration_status', '!=', '1')
-						->orWhere('function_status', '!=', '1')
-						->orWhere('contract_status', '!=', '1')
-						->orWhere('spb_status', '!=', '1')
-						->orWhere('payment_status', '!=', '1')
-						->orWhere('spk_status', '!=', '1')
-						->orWhere('examination_status', '!=', '1')
-						->orWhere('resume_status', '!=', '1')
-						->orWhere('location', '!=', '1')
-						;
-					})->where('examination_type_id', '!=', '1')
+			$query->where(function($q){
+				return $q->where('registration_status', '!=', '1')
+					->orWhere('function_status', '!=', '1')
+					->orWhere('contract_status', '!=', '1')
+					->orWhere('spb_status', '!=', '1')
+					->orWhere('payment_status', '!=', '1')
+					->orWhere('spk_status', '!=', '1')
+					->orWhere('examination_status', '!=', '1')
+					->orWhere('resume_status', '!=', '1')
+					->orWhere('qa_status', '!=', '1')
+					->orWhere('certificate_status', '!=', '1')
+					->orWhere('location', '!=', '1')
 					;
-			});
+				})
+				;
 			if ($search != null){
                 $query->where(function($qry) use($search){
                     $qry->whereHas('device', function ($q) use ($search){
@@ -431,7 +414,7 @@ class ExaminationController extends Controller
                             ->first();
 
         $labs = ExaminationLab::all();
-		// $gen_spk_code = $this->generateSPKCOde($exam->examinationLab->lab_code,$exam->examinationType->name,date('Y'));
+		// $gen_spk_code = $this->generateSPKCode($exam->examinationLab->lab_code,$exam->examinationType->name,date('Y'));
 		
 		$client = new Client([
 			'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
@@ -439,6 +422,7 @@ class ExaminationController extends Controller
 			// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
 			'base_uri' => config("app.url_api_bsp"),
 			// You can set any number of default request options.
+			// 'http_errors' => false,
 			'timeout'  => 60.0,
 		]);
 		
@@ -902,7 +886,7 @@ class ExaminationController extends Controller
 			$status = $request->input('spb_status');
             $exam->spb_status = $status;
 			if($status == 1){
-				$exam->price = $request->input('exam_price');
+				$exam->price = str_replace(".",'',$request->input('exam_price'));
 				$path_file = public_path().'/media/examination/'.$id;
 				$attach = ExaminationAttach::where('name', 'SPB')->where('examination_id', ''.$id.'')->first();
 					$attach_name = $attach->attachment;
@@ -933,7 +917,7 @@ class ExaminationController extends Controller
 
 				$this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.spb", "Upload SPB",$path_file."/".$attach_name);
 			}else if($status == -1){
-				$exam->price = $request->input('exam_price');
+				$exam->price = str_replace(".",'',$request->input('exam_price'));
 				// $exam->keterangan = $request->input('keterangan');
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","SPB",$request->input('keterangan'));
 			}
@@ -941,7 +925,7 @@ class ExaminationController extends Controller
 		$spk_created = 0;
         if ($request->has('payment_status')){
 			if ($request->has('cust_price_payment')){
-				$exam->cust_price_payment = $request->input('cust_price_payment');
+				$exam->cust_price_payment = str_replace(".",'',$request->input('cust_price_payment'));
 			}
 			if ($request->hasFile('kuitansi_file')) {
 				$name_file = 'kuitansi_'.$request->file('kuitansi_file')->getClientOriginalName();
@@ -1013,15 +997,15 @@ class ExaminationController extends Controller
 					$income->company_id = $exam->company_id;
 					$income->inc_type = 1; 
 					$income->reference_id = $exam->id; 
-					$income->reference_number = $request->input('spb_number');
-					$income->tgl = $request->input('spb_date');
+					$income->reference_number = $exam->spb_number;
+					$income->tgl = $exam->spb_date;
 					$income->created_by = $currentUser->id;
 
 				}else{
 					$income = Income::where('reference_id', $exam->id)->first();
 				}
 					// ($item->payment_method == 1)?'ATM':'Kartu Kredit'
-					$income->price = ($request->input('cust_price_payment') != NULL) ? $request->input('cust_price_payment') : 0;
+					$income->price = ($request->input('cust_price_payment') != NULL) ? str_replace(".",'',$request->input('cust_price_payment')) : 0;
 					// $income->price = $request->input('cust_price_payment');
 					$income->updated_by = $currentUser->id;
 					$income->save();
@@ -1036,6 +1020,7 @@ class ExaminationController extends Controller
 					// Base URI is used with relative requests
 					// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
 					'base_uri' => config("app.url_api_bsp"),
+					'http_errors' => false,
 					// You can set any number of default request options.
 					'timeout'  => 60.0,
 				]);
@@ -1046,7 +1031,7 @@ class ExaminationController extends Controller
 				->first();
 
                 if ($exam->spk_code == null){
-                    $spk_number_forOTR = $this->generateSPKCOde($exam_forOTR->examinationLab->lab_code,$exam_forOTR->examinationType->name,date('Y'));
+                    $spk_number_forOTR = $this->generateSPKCode($exam_forOTR->examinationLab->lab_code,$exam_forOTR->examinationType->name,date('Y'));
                     $exam->spk_code = $spk_number_forOTR;
                     $exam->spk_date = date('Y-m-d');
                     $spk_created = 1;
@@ -1223,6 +1208,48 @@ class ExaminationController extends Controller
 					// return redirect('/admin/examination/'.$exam->id.'/edit');
 				// }
 			// }
+			if(!$request->hasFile('rev_lap_uji_file') && $request->has('hide_attachment_form-lap-uji') && $exam->resume_status == 0){
+				/*TPN api_upload*/
+	            if($exam->BILLING_ID != null){
+	                $data_upload [] = array(
+	                    'name'=>"delivered",
+	                    'contents'=>json_encode(['by'=>$currentUser->name, "reference_id" => $currentUser->id]),
+	                );
+
+	                $upload = $this->api_upload($data_upload,$exam->BILLING_ID);
+	            }
+			}
+			if ($request->hasFile('rev_lap_uji_file')) {
+				$name_file = 'rev_lap_uji_'.$request->file('rev_lap_uji_file')->getClientOriginalName();
+				$path_file = public_path().'/media/examination/'.$exam->id;
+				if (!file_exists($path_file)) {
+					mkdir($path_file, 0775);
+				}
+				if($request->file('rev_lap_uji_file')->move($path_file,$name_file)){
+                    /*TPN api_upload*/
+		            if($exam->BILLING_ID != null){
+		                $data_upload [] = array(
+		                    'name'=>"delivered",
+		                    'contents'=>json_encode(['by'=>$currentUser->name, "reference_id" => $currentUser->id]),
+		                );
+
+		                $upload = $this->api_upload($data_upload,$exam->BILLING_ID);
+		            }
+					
+					$attach = new ExaminationAttach;
+					$attach->id = Uuid::uuid4();
+					$attach->examination_id = $exam->id; 
+					$attach->name = 'Revisi Laporan Uji';
+					$attach->attachment = $name_file;
+					$attach->created_by = $currentUser->id;
+					$attach->updated_by = $currentUser->id;
+
+					$attach->save();
+				}else{
+					Session::flash('error', 'Save Revisi Laporan Uji to directory failed');
+					return redirect('/admin/examination/'.$exam->id.'/edit');
+				}
+			}
             $status = $request->input('resume_status');
             $exam->resume_status = $status;
 			
@@ -1346,7 +1373,7 @@ class ExaminationController extends Controller
 				return redirect('/admin/examination/'.$exam->id.'/edit');
 			}
 		}
-        if ($request->has('qa_status')){
+		if ($request->has('qa_status')){
             $status = $request->input('qa_status');
             $passed = $request->input('passed');
             $exam->qa_status = $status;
@@ -1528,6 +1555,34 @@ class ExaminationController extends Controller
 		if ($request->has('spb_date')){
             $exam->spb_date = $request->input('spb_date');
         }
+		if ($request->has('PO_ID')){
+			if($exam->payment_status == 1){
+				Session::flash('error', 'SPB Already Paid');
+                return redirect('/admin/examination/'.$exam->id.'/edit');
+			}
+			if($exam->BILLING_ID){
+				$data_cancel_billing = [
+	            	"canceled" => [
+						"message" => "-",
+						"by" => $currentUser->name,
+                    	"reference_id" => $currentUser->id
+					]
+	            ];
+				$cancel_billing = $this->api_cancel_billing($exam->BILLING_ID, $data_cancel_billing);
+			}
+			$data_billing = [
+                "draft_id" => $request->input('PO_ID'),
+                "created" => [
+                    "by" => $currentUser->name,
+                    "reference_id" => $currentUser->id
+                ]
+            ];
+
+            $billing = $this->api_billing($data_billing);
+
+            $exam->PO_ID = $request->input('PO_ID');
+            $exam->BILLING_ID = $billing && $billing->status == true ? $billing->data->_id : null;
+        }
 
         // if ($request->hasFile('resume_file')) {
             // $ext_file = $request->file('resume_file')->getClientOriginalExtension();
@@ -1595,7 +1650,33 @@ class ExaminationController extends Controller
         try{
             $exam->save();
 			if($spk_created == 1){
-				$res_exam_schedule = $client->get('spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR);				
+				$res_exam_schedule = $client->get('spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR);
+				$exam_schedule = $res_exam_schedule->getStatusCode() == '200' ? json_decode($res_exam_schedule->getBody()) : null;
+				if($exam_schedule && $exam_schedule->status == false){
+					$api_logs = new Api_logs;
+					$api_logs->send_to = "OTR";
+					$api_logs->route = 'spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR;
+					$api_logs->status = $exam_schedule->status;
+					$api_logs->data = json_encode($exam_schedule);
+					$api_logs->reference_id = $exam->id;
+					$api_logs->reference_table = "examinations";
+					$api_logs->created_by = $currentUser->id;
+					$api_logs->updated_by = $currentUser->id;
+
+					$api_logs->save();
+				}elseif ($exam_schedule == null) {
+					$api_logs = new Api_logs;
+					$api_logs->send_to = "OTR";
+					$api_logs->route = 'spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR;
+					$api_logs->status = 0;
+					$api_logs->data = "-";
+					$api_logs->reference_id = $exam->id;
+					$api_logs->reference_table = "examinations";
+					$api_logs->created_by = $currentUser->id;
+					$api_logs->updated_by = $currentUser->id;
+
+					$api_logs->save();
+				}
 			}
              
 				$exam_hist = new ExaminationHistory;
@@ -1630,6 +1711,263 @@ class ExaminationController extends Controller
         } catch(Exception $e){
             Session::flash('error', 'Save failed');
             return redirect('/admin/examination/'.$exam->id.'/edit');
+        }
+    }
+
+    public function api_cancel_billing($BILLING_ID,$data){
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json', 
+                            'Authorization' => config("app.gateway_tpn_2")
+                        ],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+        try {
+            $params['json'] = $data;
+            $res_cancel_billing = $client->put("v1/billings/".$BILLING_ID."/cancel", $params)->getBody();
+            $cancel_billing = json_decode($res_cancel_billing);
+
+            return $cancel_billing;
+        } catch(Exception $e){
+            return null;
+        }
+    }
+
+    public function api_billing($data){
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json', 
+                            'Authorization' => config("app.gateway_tpn_2")
+                        ],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+        try {
+            $params['json'] = $data;
+            $res_billing = $client->post("v1/billings", $params)->getBody();
+            $billing = json_decode($res_billing);
+
+            return $billing;
+        } catch(Exception $e){
+            return null;
+        }
+    }
+
+    public function generateKuitansi(Request $request) {
+    	$client = new Client([
+            'headers' => ['Authorization' => config("app.gateway_tpn_2")],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+
+        $id = $request->input('id');
+        
+        $exam = Examination::where("id", $id)->first();
+        if($exam){
+            try {
+                $INVOICE_ID = $exam->INVOICE_ID;
+                $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
+                $invoice = json_decode($res_invoice->getBody());
+                
+                if($INVOICE_ID && $invoice && $invoice->status == true){
+                    $status_invoice = $invoice->data->status_invoice;
+                    if($status_invoice == "approved"){
+                        $status_faktur = $invoice->data->status_faktur;
+                        if($status_faktur == "received"){
+                            /*SAVE KUITANSI*/
+                            $name_file = 'kuitansi_spb_'.$INVOICE_ID.'.pdf';
+							$path_file = public_path().'/media/examination/'.$id;
+							if (!file_exists($path_file)) {
+								mkdir($path_file, 0775);
+							}
+							$response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/exportpdf');
+                            $stream = (String)$response->getBody();
+
+                            if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
+                                $attach = ExaminationAttach::where('name', 'Kuitansi')->where('examination_id', ''.$id.'')->first();
+                                $currentUser = Auth::user();
+
+								if ($attach){
+									$attach->attachment = $name_file;
+									$attach->updated_by = $currentUser->id;
+
+									$attach->save();
+								} else{
+									$attach = new ExaminationAttach;
+									$attach->id = Uuid::uuid4();
+									$attach->examination_id = $id; 
+									$attach->name = 'Kuitansi';
+									$attach->attachment = $name_file;
+									$attach->created_by = $currentUser->id;
+									$attach->updated_by = $currentUser->id;
+
+									$attach->save();
+								}
+                                return "Kuitansi Berhasil Disimpan.";
+                            }else{
+                                return "Gagal Menyimpan Kuitansi!";
+                            }
+                        }else{
+                            return $invoice->data->status_faktur;
+                        }
+                    }else{
+                        switch ($status_invoice) {
+                            case 'invoiced':
+                                return "Invoice Baru Dibuat.";
+                                break;
+                            
+                            case 'returned':
+                                return $invoice->data->$status_invoice->message;
+                                break;
+                            
+                            default:
+                                return "Invoice sudah dikirim ke DJP.";
+                                break;
+                        }
+                    }
+                }else{
+                    return "Data Invoice Tidak Ditemukan!";        
+                }
+            } catch(Exception $e){
+                return null;
+            }
+        }else{
+            return "Data Pembelian Tidak Ditemukan!";
+        }
+    }
+
+    public function generateTaxInvoice(Request $request) {
+        $client = new Client([
+            'headers' => ['Authorization' => config("app.gateway_tpn_2")],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+
+        $id = $request->input('id');
+
+        $exam = Examination::select(DB::raw('companies.name as company_name, examination_attachments.tgl as payment_date, examinations.*, devices.name, devices.mark, devices.capacity, devices.model'))
+    	->where('examinations.id', $id)
+    	->whereNotExists(function ($query) {
+           	$query->select(DB::raw(1))
+                 ->from('examination_attachments')
+                 ->whereRaw('examination_attachments.examination_id = examinations.id')
+                 ->whereRaw('examination_attachments.name = "Faktur Pajak"')
+            ;
+       	})->orWhereExists(function ($query) {
+           	$query->select(DB::raw(1))
+                 ->from('examination_attachments')
+                 ->whereRaw('examination_attachments.examination_id = examinations.id')
+                 ->whereRaw('examination_attachments.name = "Faktur Pajak"')
+                 ->whereRaw('examination_attachments.attachment = ""')
+            ;
+       	})
+       	->join('companies', 'examinations.company_id', '=', 'companies.id')
+        ->join('devices', 'examinations.device_id', '=', 'devices.id')
+        ->leftJoin('examination_attachments', function($leftJoin){
+            $leftJoin->on('examinations.id', '=', 'examination_attachments.examination_id');
+            $leftJoin->on(DB::raw('examination_attachments.name'), DB::raw('='),DB::raw("'File Pembayaran'"));
+        })
+        ->first();
+
+        if($exam){
+        	$payment_date = $exam->payment_date != '0000-00-00' ? $exam->payment_date : null;
+            /* GENERATE NAMA FILE FAKTUR */
+                $filename = $exam ? $payment_date.'_'.$exam->company_name.'_'.$exam->name.'_'.$exam->mark.'_'.$exam->capacity.'_'.$exam->model : $exam->INVOICE_ID;
+            /* END GENERATE NAMA FILE FAKTUR */
+            try {
+                $INVOICE_ID = $exam->INVOICE_ID;
+                $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
+                $invoice = json_decode($res_invoice->getBody());
+                if($INVOICE_ID && $invoice && $invoice->status == true){
+    			    $status_invoice = $invoice->data->status_invoice;
+                    if($status_invoice == "approved"){
+                        $status_faktur = $invoice->data->status_faktur;
+                        if($status_faktur == "received"){
+                            /*SAVE FAKTUR PAJAK*/
+                            $name_file = 'faktur_spb_'.$filename.'.pdf';
+                            $path_file = public_path().'/media/examination/'.$id;
+                            if (!file_exists($path_file)) {
+                                mkdir($path_file, 0775);
+                            }
+                            $response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/taxinvoice/pdf');
+                            $stream = (String)$response->getBody();
+
+                            if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
+                                $attach = ExaminationAttach::where('name', 'Faktur Pajak')->where('examination_id', ''.$id.'')->first();
+                                $currentUser = Auth::user();
+
+								if ($attach){
+									$attach->attachment = $name_file;
+									$attach->updated_by = $currentUser->id;
+
+									$attach->save();
+								} else{
+									$attach = new ExaminationAttach;
+									$attach->id = Uuid::uuid4();
+									$attach->examination_id = $id; 
+									$attach->name = 'Faktur Pajak';
+									$attach->attachment = $name_file;
+									$attach->created_by = $currentUser->id;
+									$attach->updated_by = $currentUser->id;
+
+									$attach->save();
+								}
+                                return "Faktur Pajak Berhasil Disimpan.";
+                            }else{
+                                return "Gagal Menyimpan Faktur Pajak!";
+                            }
+                        }else{
+                            return $invoice->data->status_faktur;
+                        }
+                    }else{
+                        switch ($status_invoice) {
+                            case 'invoiced':
+                                return "Faktur Pajak belum Tersedia, karena Invoice Baru Dibuat.";
+                                break;
+                            
+                            case 'returned':
+                                return $invoice->data->$status_invoice->message;
+                                break;
+                            
+                            default:
+                                return "Faktur Pajak belum Tersedia. Invoice sudah dikirim ke DJP.";
+                                break;
+                        }
+                    }
+                }else{
+                    return "Data Invoice Tidak Ditemukan!";        
+                }
+            } catch(Exception $e){
+                return null;
+            }
+        }else{
+            return "Data Pembelian Tidak Ditemukan!";
+        }
+    }
+
+    public function api_upload($data, $BILLING_ID){
+        $client = new Client([
+            'headers' => ['Authorization' => config("app.gateway_tpn_2")],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+        try {
+            $params['multipart'] = $data;
+            $res_upload = $client->post("v1/billings/".$BILLING_ID."/deliver", $params)->getBody(); //BILLING_ID
+            $upload = json_decode($res_upload);
+
+            /*get
+                $upload->status; //if true lanjut, else panggil lagi API nya, dan jalankan API invoices
+                $upload->data->_id;
+            */
+
+            return $upload;
+        } catch(Exception $e){
+            return null;
         }
     }
 
@@ -1687,6 +2025,20 @@ class ExaminationController extends Controller
 
                 return Response::download($file, $exam->attachment, $headers);
             }
+        }
+    }
+
+    public function downloadRefUjiFile($id)
+    {
+        $data = ExaminationAttach::find($id);
+
+        if ($data){
+            $file = public_path().'/media/examination/'.$data->examination_id.'/'.$data->attachment;
+            $headers = array(
+              'Content-Type: application/octet-stream',
+            );
+
+            return Response::download($file, $data->attachment, $headers);
         }
     }
 
@@ -1780,39 +2132,21 @@ class ExaminationController extends Controller
                             ->with('examinationLab')
                             ->with('media')
                             ->with('device');
-		$query->where(function($qry){
-			$qry->where(function($q){
-				return $q->where('registration_status', '!=', '1')
-					->orWhere('function_status', '!=', '1')
-					->orWhere('contract_status', '!=', '1')
-					->orWhere('spb_status', '!=', '1')
-					->orWhere('payment_status', '!=', '1')
-					->orWhere('spk_status', '!=', '1')
-					->orWhere('examination_status', '!=', '1')
-					->orWhere('resume_status', '!=', '1')
-					->orWhere('qa_status', '!=', '1')
-					->orWhere('certificate_status', '!=', '1')
-					->orWhere('location', '!=', '1')
-					// ->orWhere(function($qa){
-						// return $qa->where('qa_passed', '=', '-1')->where('location', '!=', '1');
-					// })
-					;
-				})
-				->where('examination_type_id', '=', '1')
-			->orWhere(function($q){
-				return $q->where('registration_status', '!=', '1')
-					->orWhere('function_status', '!=', '1')
-					->orWhere('contract_status', '!=', '1')
-					->orWhere('spb_status', '!=', '1')
-					->orWhere('payment_status', '!=', '1')
-					->orWhere('spk_status', '!=', '1')
-					->orWhere('examination_status', '!=', '1')
-					->orWhere('resume_status', '!=', '1')
-					->orWhere('location', '!=', '1')
-					;
-				})->where('examination_type_id', '!=', '1')
+		$query->where(function($q){
+			return $q->where('registration_status', '!=', '1')
+				->orWhere('function_status', '!=', '1')
+				->orWhere('contract_status', '!=', '1')
+				->orWhere('spb_status', '!=', '1')
+				->orWhere('payment_status', '!=', '1')
+				->orWhere('spk_status', '!=', '1')
+				->orWhere('examination_status', '!=', '1')
+				->orWhere('resume_status', '!=', '1')
+				->orWhere('qa_status', '!=', '1')
+				->orWhere('certificate_status', '!=', '1')
+				->orWhere('location', '!=', '1')
 				;
-		});
+			})
+			;
 		if ($search != null){
             $query->where(function($qry) use($search){
                 $qry->whereHas('device', function ($q) use ($search){
@@ -2833,6 +3167,25 @@ $notification->id = Uuid::uuid4();
 			$device_id = $exam['device_id'];
 		$device = Device::find($device_id);
 		if ($exam_attach && $exam && $device){
+			/* DELETE SPK FROM OTR */
+			if($exam->spk_code){
+				$client = new Client([
+					'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+					// Base URI is used with relative requests
+					// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+					'base_uri' => config("app.url_api_bsp"),
+					// You can set any number of default request options.
+					'timeout'  => 60.0,
+				]);
+				
+				$res_delete_spk = $client->get('spk/delete?examId='.$exam->id.'&spkNumber='.$exam->spk_code)->getBody();
+				$delete_spk = json_decode($res_delete_spk);
+				if($delete_spk->status == false){
+					Session::flash('error', $delete_spk->message.' (message from OTR)');
+					return redirect('/admin/examination');
+				}
+			}
+			/* END DELETE SPK FROM OTR */
 			try{
 				$logs_a_exam = $exam;
 				$logs_a_device = $device;
@@ -2849,18 +3202,6 @@ $notification->id = Uuid::uuid4();
 				if (File::exists(public_path().'\media\\examination\\'.$id)){
 					File::deleteDirectory(public_path().'\media\\examination\\'.$id);
 				}
-
-				$client = new Client([
-					'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
-					// Base URI is used with relative requests
-					// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
-					'base_uri' => config("app.url_api_bsp"),
-					// You can set any number of default request options.
-					'timeout'  => 60.0,
-				]);
-				
-				$res_delete_spk = $client->get('spk/delete?examId='.$exam->id.'&spkNumber='.$exam->spk_code)->getBody();
-				$delete_spk = json_decode($res_delete_spk);
 
 				$logs = new Logs_administrator;
 				$logs->id = Uuid::uuid4();
@@ -2966,7 +3307,7 @@ $notification->id = Uuid::uuid4();
     }
 	
 	public function generateSPKCodeManual(Request $request) {
-		$gen_spk_code = $this->generateSPKCOde($request->input('lab_code'),$request->input('exam_type'),$request->input('year'));
+		$gen_spk_code = $this->generateSPKCode($request->input('lab_code'),$request->input('exam_type'),$request->input('year'));
 		return $gen_spk_code;
     }
 	
@@ -3010,23 +3351,23 @@ $notification->id = Uuid::uuid4();
 		$thisYear = date('Y');
 		$query = "
 			SELECT SUBSTRING_INDEX(spb_number,'/',1) + 1 AS last_numb
-			FROM examinations WHERE SUBSTRING_INDEX(spb_number,'/',-1) = ".$thisYear."
+			FROM examinations WHERE SUBSTRING_INDEX(spb_number,'/',-1) = ".$thisYear." AND spb_number LIKE '%TTH-02%'
 			ORDER BY last_numb DESC LIMIT 1
 		";
 		$data = DB::select($query);
 		if (count($data) == 0){
-			return '001/KU000/DDS-73/'.$thisYear.'';
+			return '001/TTH-02/'.$thisYear.'';
 		}
 		else{
 			$last_numb = $data[0]->last_numb;
 			if($last_numb < 10){
-				return '00'.$last_numb.'/KU000/DDS-73/'.$thisYear.'';
+				return '00'.$last_numb.'/TTH-02/'.$thisYear.'';
 			}
 			else if($last_numb < 100){
-				return '0'.$last_numb.'/KU000/DDS-73/'.$thisYear.'';
+				return '0'.$last_numb.'/TTH-02/'.$thisYear.'';
 			}
 			else{
-				return ''.$last_numb.'/KU000/DDS-73/'.$thisYear.'';
+				return ''.$last_numb.'/TTH-02/'.$thisYear.'';
 			}
 		}
     }
@@ -3181,37 +3522,122 @@ $notification->id = Uuid::uuid4();
 			}
 		}
 		
-		if($this->cekSPBNumber($request->input('spb_number')) == 0){
+		if($this->cekSPBNumber($request->input('spb_number')) > 0){
+			echo 2; //SPB Number Exists
+		}else{
 			$exam_id = $request->input('exam_id');
 			$spb_number = $request->input('spb_number');
 			$spb_date = $request->input('spb_date');
 			$arr_nama_perangkat = $request->input('arr_nama_perangkat');
 			$arr_biaya = $request->input('arr_biaya');
-			$arr_nama_perangkat2 = $request->input('arr_nama_perangkat2');
-			$arr_biaya2 = $request->input('arr_biaya2');
 			$exam = Examination::where('id', $exam_id)
 						->with('user')
 						->with('company')
+						->with('device')
 						->with('examinationType')
 						->first()
 			;
+/* Kirim Draft ke TPN */
+			$biaya = 0;
+			for($i=0;$i<count($arr_biaya);$i++){
+				$biaya = $biaya + $arr_biaya[$i];
+			}
+			$ppn = 0.1*$biaya;
+			$total_biaya = $biaya + $ppn;
+			$details [] = 
+	            [
+	                "item" => 'Biaya Uji '.$exam->examinationType->name.' ('.$exam->examinationType->description.')',
+	                "description" => $exam->device->name.', '.$exam->device->mark.', '.$exam->device->capacity.', '.$exam->device->model,
+	                "quantity" => 1,
+	                "price" => $biaya,
+	                "total" => $biaya
+	            ]
+	        ;
+
+			$data_draft = [
+	            "from" => [
+	                "name" => "PT TELEKOMUNIKASI INDONESIA, TBK.",
+	                "address" => "Telkom Indonesia Graha Merah Putih, Jalan Japati No.1 Bandung, Jawa Barat, 40133",
+	                "phone" => "(+62) 812-2483-7500",
+	                "email" => "urelddstelkom@gmail.com",
+	                "npwp" => "01.000.013.1-093.000"
+	            ],
+	            "to" => [
+	                "name" => $exam->company->name ? $exam->company->name : "-",
+	                "address" => $exam->company->address ? $exam->company->address : "-",
+	                "phone" => $exam->company->phone_number ? $exam->company->phone_number : "-",
+	                "email" => $exam->company->email ? $exam->company->email : "-",
+	                "npwp" => $exam->company->npwp_number ? $exam->company->npwp_number : "-"
+	            ],
+	            "product_id" => config("app.product_id_tth_2"), //product_id TTH untuk Pengujian
+	            "details" => $details,
+	            "created" => [
+	                "by" => $exam->user->name,
+	                "reference_id" => $exam->user->id
+	            ],
+	            "config" => [
+	                "kode_wapu" => "01",
+	                "afiliasi" => "non-telkom",
+	                "tax_invoice_text" => $details[0]['description']
+	            ],
+	            "include_tax_invoice" => true,
+	            "bank" => [
+	                "owner" => "Divisi RisTI TELKOM",
+	                "account_number" => "131-0096022712",
+	                "bank_name" => "BANK MANDIRI",
+	                "branch_office" => "KCP KAMPUS TELKOM BANDUNG"         
+	            ]
+	        ];
+	        $purchase = $this->api_purchase($data_draft);
+
+	        /*$PO_ID = $request->session()->get('PO_ID_from_TPN') ? $request->session()->get('PO_ID_from_TPN') : ($purchase && $purchase->status ? $purchase->data->_id : null);
+            $request->session()->put('PO_ID_from_TPN', $PO_ID);*/
+	        $total_price = $biaya;
+            $PO_ID = $purchase && $purchase->status ? $purchase->data->_id : null;
+            $unique_code = $purchase && $purchase->status ? $purchase->data->unique_code : '0';
+            // $request->session()->put('unique_code_from_TPN', $unique_code);
+            $tax = floor(0.1*($total_price + $unique_code));
+            $final_price = $total_price + $unique_code + $tax;
+            array_push($arr_nama_perangkat, 'Unique Code');
+            array_push($arr_biaya, $unique_code);
+/* END Kirim Draft ke TPN */
 			$data = []; 
 			$data[] = [
 				'spb_number' => $spb_number,
 				'spb_date' => $spb_date,
 				'arr_nama_perangkat' => $arr_nama_perangkat,
 				'arr_biaya' => $arr_biaya,
-				'arr_nama_perangkat2' => $arr_nama_perangkat2,
-				'arr_biaya2' => $arr_biaya2,
+				'unique_code' => $unique_code,
 				'exam' => $exam,
 				'manager_urel' => $manager_urels,
 				'is_poh' => $is_poh
 			];
+
 			$request->session()->put('key_exam_for_spb', $data);
-			echo 1;			
-		}else{
-			echo 2; //SPB Number Exists
+			echo $PO_ID.'myToken'.$final_price;
 		}
+    }
+
+    public function api_purchase($data){
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json', 
+                            'Authorization' => config("app.gateway_tpn_2")
+                        ],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false,
+            'verify' => false
+        ]);
+        try {
+            
+            $params['json'] = $data;
+            $res_purchase = $client->post("v1/draftbillings", $params)->getBody();
+            $purchase = json_decode($res_purchase);
+
+            return $purchase;
+        } catch(Exception $e){
+            return null;
+        }
     }
 	
 	function cekSPBNumber($spb_number)
@@ -3503,4 +3929,26 @@ $notification->id = Uuid::uuid4();
 		$bulan = $array_bulan[$bln];
 		return $bulan;
 	}
+
+	public function deleteRevLapUji($id)
+    {
+        $currentUser = Auth::user();
+        $examination_attachment = ExaminationAttach::find($id);
+        if($examination_attachment){
+            
+            // unlink stels_sales_detail.attachment
+            if (File::exists(public_path().'\media\examination\\'.$examination_attachment->examination_id.'\\'.$examination_attachment->attachment)){
+                File::delete(public_path().'\media\examination\\'.$examination_attachment->examination_id.'\\'.$examination_attachment->attachment);
+            }
+
+            // delete stels_sales_detail
+            $examination_attachment->delete();
+
+            Session::flash('message', 'Successfully Delete Revision File');
+        }else{
+            Session::flash('error', 'Undefined Data');
+        }
+            return redirect('/admin/examination/'.$examination_attachment->examination_id.'/edit');
+
+    }
 }

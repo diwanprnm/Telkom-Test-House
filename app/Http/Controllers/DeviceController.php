@@ -65,6 +65,7 @@ class DeviceController extends Controller
 						'devices.test_reference AS standarisasi',
 						'devices.valid_from',
 						'devices.valid_thru',
+						'devices.manufactured_by',
 						'devices.serial_number',
 						'devices.cert_number',
 						'companies.name',
@@ -262,10 +263,10 @@ class DeviceController extends Controller
 			'Tgl. Sertifikat Perusahaan',*/
 			'Nama Perangkat',
 			'Merk/Pabrik',
+			'Negara Pembuat',
 			'Tipe',
 			'Kapasitas/Kecepatan',
-			/*'Pembuat Perangkat',
-			'Nomor Seri Perangkat',*/
+			// 'Nomor Seri Perangkat',
 			'Referensi Uji',
 			'No Sertifikat',
 			'Berlaku Dari',
@@ -309,10 +310,10 @@ class DeviceController extends Controller
 				$qs_certificate_date,*/
 				$row->namaPerangkat,
 				$row->merk,
+				$row->manufactured_by,
 				$row->tipe,
 				$row->kapasitas,
-				/*$row->manufactured_by,
-				$row->serial_number,*/
+				// $row->serial_number,
 				$row->standarisasi,
 				$row->cert_number,
 				$row->valid_from,

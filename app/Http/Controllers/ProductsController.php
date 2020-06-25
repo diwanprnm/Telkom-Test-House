@@ -33,6 +33,8 @@ class ProductsController extends Controller
 {
     public function index(Request $request)
     {   
+        $request->session()->forget('PO_ID_from_TPN');
+        $request->session()->forget('unique_code_from_TPN');
         $currentUser = Auth::user();
         $search = trim($request->input('search'));
         if($currentUser){
@@ -81,7 +83,7 @@ class ProductsController extends Controller
     }
 
     public function purchase_history(Request $request)
-    { 
+    {
         $currentUser = Auth::user();
         if($currentUser){
             $paginate = 10;
@@ -153,7 +155,7 @@ class ProductsController extends Controller
     public function upload_payment($id)
     { 
         $currentUser = Auth::user();
-        $data = STELSalesAttach::where("stel_sales_id",$id)->first();
+        $data = STELSales::find($id);
         $page = "upload_payment";
         return view('client.STEL.upload_payment') 
         ->with('page', $page) 
@@ -198,7 +200,7 @@ class ProductsController extends Controller
                 $STELSalesAttach->save();
                 $id = $request->input('stelsales_id');
                 $STELSales = STELSales::find($id);
-                $STELSales->payment_status = 2;
+                $STELSales->payment_status = $STELSales->payment_status == 0 ? 2 : $STELSales->payment_status;
                 $STELSales->cust_price_payment = $jml_pembayaran;
                 $STELSales->save();
 
@@ -262,8 +264,8 @@ class ProductsController extends Controller
             $invoice_number = "STEL ".str_pad($number, $fill, '0', STR_PAD_LEFT)."/".$bulan.'/'.date('Y');
         }
 
-        /*SEMENTARA*/
-        /*$details = array();
+        $details = array();
+        $stel_code_string = '';
         foreach (Cart::content() as $row) {
             $res = explode('myTokenProduct', $row->name);
             $stel_name = $res[0] ? $res[0] : '-';
@@ -277,33 +279,45 @@ class ProductsController extends Controller
                     "total" => $row->price*$row->qty
                 ]
             ;
+            $stel_code_string = $stel_code_string ? $stel_code_string.', '.$res[1] : $res[1];
         }
 
         $data = [
             "from" => [
-                "name" => $currentUser->name,
-                "address" => $currentUser->address,
-                "phone" => $currentUser->phone_number,
-                "email" => $currentUser->email,
-                "npwp" => $currentUser->company->npwp_number
-            ],
-            "to" => [
-                "name" => "Telkom Test House",
-                "address" => "Jl. Gegerkalong Hilir, Sukarasa, Sukasari, Kota Bandung, Jawa Barat 40152.",
+                "name" => "PT TELEKOMUNIKASI INDONESIA, TBK.",
+                "address" => "Telkom Indonesia Graha Merah Putih, Jalan Japati No.1 Bandung, Jawa Barat, 40133",
                 "phone" => "(+62) 812-2483-7500",
                 "email" => "urelddstelkom@gmail.com",
-                "npwp" => "-" //cari tahu
+                "npwp" => "01.000.013.1-093.000"
             ],
-            "product_id" => "5def1d54d2622f00108f3996", //product_id TTH
+            "to" => [
+                "name" => $currentUser->company->name ? $currentUser->company->name : "-",
+                "address" => $currentUser->company->address ? $currentUser->company->address : "-",
+                "phone" => $currentUser->company->phone_number ? $currentUser->company->phone_number : "-",
+                "email" => $currentUser->company->email ? $currentUser->company->email : "-",
+                "npwp" => $currentUser->company->npwp_number ? $currentUser->company->npwp_number : "-"
+            ],
+            "product_id" => config("app.product_id_tth"), //product_id TTH
             "details" => $details,
             "created" => [
                 "by" => $currentUser->name,
                 "reference_id" => $currentUser->id
+            ],
+            "config" => [
+                "kode_wapu" => "01",
+                "afiliasi" => "non-telkom",
+                "tax_invoice_text" => $stel_code_string.'.'
+            ],
+            "include_tax_invoice" => true,
+            "bank" => [
+                "owner" => "Divisi RisTI TELKOM",
+                "account_number" => "131-0096022712",
+                "bank_name" => "BANK MANDIRI",
+                "branch_office" => "KCP KAMPUS TELKOM BANDUNG"         
             ]
         ];
 
-        $purchase = $this->api_purchase($data);*/
-        $purchase = null;
+        $purchase = $this->api_purchase($data);
 
         if($request->input('agree')){
             $logs = new Logs;
@@ -314,15 +328,29 @@ class ProductsController extends Controller
             $logs->created_by = $currentUser->id;
             $logs->page = "Client STEL";
             $logs->save();
+            /* DATA DARI TPN  */
+/*
+            $total_price = $purchase && $purchase->status ? $purchase->data->total_price : Cart::subtotal();
+            $unique_code = $purchase && $purchase->status ? $purchase->data->unique_code : '0';
+            $tax = $purchase && $purchase->status ? $purchase->data->tax : Cart::tax();
+            $final_price = $purchase && $purchase->status == true ? $purchase->data->final_price : Cart::total();
+*/
+            $PO_ID = $request->session()->get('PO_ID_from_TPN') ? $request->session()->get('PO_ID_from_TPN') : ($purchase && $purchase->status ? $purchase->data->_id : null);
+            $request->session()->put('PO_ID_from_TPN', $PO_ID);
+            $total_price = Cart::subtotal();
+            $unique_code = $request->session()->get('unique_code_from_TPN') ? $request->session()->get('unique_code_from_TPN') : ($purchase && $purchase->status ? $purchase->data->unique_code : '0');
+            $request->session()->put('unique_code_from_TPN', $unique_code);
+            $tax = floor(0.1*($total_price + $unique_code));
+            $final_price = $total_price + $unique_code + $tax;
 
             $page = "checkout";
             return view('client.STEL.checkout') 
                 ->with('page', $page)
-                ->with('PO_ID', $purchase && $purchase->status == true ? $purchase->data->_id : null)
-                ->with('total_price', $purchase && $purchase->status ? $purchase->data->total_price : Cart::subtotal())
-                ->with('tax', $purchase && $purchase->status == true ? $purchase->data->tax : Cart::tax())
-                ->with('unique_code', $purchase && $purchase->status == true ? $purchase->data->unique_code : '0')
-                ->with('final_price', $purchase && $purchase->status == true ? $purchase->data->final_price : Cart::total())
+                ->with('PO_ID', $PO_ID)
+                ->with('total_price', $total_price)
+                ->with('tax', $tax)
+                ->with('unique_code', $unique_code)
+                ->with('final_price', $final_price)
                 ->with('invoice_number', $invoice_number);
         }else{
             return redirect('products');
@@ -332,30 +360,18 @@ class ProductsController extends Controller
     public function api_purchase($data){
         $client = new Client([
             'headers' => ['Content-Type' => 'application/json', 
-                            'Authorization' => 'apiKey 4ZU03BLNm1ebXSlQa4ou3y:6MHfjHpbOVv3FKTFAf8jIv'
+                            'Authorization' => config("app.gateway_tpn")
                         ],
             'base_uri' => config("app.url_api_tpn"),
             'timeout'  => 60.0,
-            'http_errors' => false
+            'http_errors' => false,
+            'verify' => false
         ]);
         try {
             
             $params['json'] = $data;
-            $res_purchase = $client->post("v1/orders", $params)->getBody();
+            $res_purchase = $client->post("v1/draftbillings", $params)->getBody();
             $purchase = json_decode($res_purchase);
-
-            /*while ($purchase->status != true) {
-                $this->api_purchase($data);
-            }*/
-
-            /*get
-                $purchase->status; //if true lanjut, else panggil lagi API nya
-                $purchase->data->_id;
-                $purchase->data->total_price;
-                $purchase->data->tax;
-                $purchase->data->unique_code;
-                $purchase->data->final_price;
-            */
 
             return $purchase;
         } catch(Exception $e){
@@ -364,7 +380,7 @@ class ProductsController extends Controller
     }
 
     public function doCheckout(Request $request){  
-        
+        $PO_ID = $request->session()->get('PO_ID_from_TPN');
         $currentUser = Auth::user();
         $STELSales = new STELSales;
         if($currentUser){ 
@@ -387,17 +403,13 @@ class ProductsController extends Controller
            $STELSales->payment_status = 0;
            $STELSales->invoice = $request->input("invoice_number");
            $STELSales->user_id = $currentUser->id;
-           $STELSales->total = Cart::total();
+           $STELSales->total = $request->input("final_price");
            $STELSales->created_by =$currentUser->id;
            $STELSales->created_at = date("Y-m-d H:i:s");
-            // $STELSales->payment_code =  $result->payment_code;
 
-           /*SEMENTARA*/
-           /*if($request->input("PO_ID")){
-               $data = [
-                    "po_id" => $request->input("PO_ID"),
-                    // "due_date" => "2019-12-23 10:00:00", //kalo SPB 14 hari
-                    "include_tax_invoice" => true,
+           if($PO_ID){
+                $data = [
+                    "draft_id" => $PO_ID,
                     "created" => [
                         "by" => $currentUser->name,
                         "reference_id" => $currentUser->id
@@ -406,9 +418,9 @@ class ProductsController extends Controller
 
                 $billing = $this->api_billing($data);
 
-                $STELSales->PO_ID = $request->input("PO_ID");
+                $STELSales->PO_ID = $PO_ID;
                 $STELSales->BILLING_ID = $billing && $billing->status == true ? $billing->data->_id : null;
-           }*/
+            }
 
             try{
                 $save = $STELSales->save();
@@ -459,6 +471,9 @@ class ProductsController extends Controller
 
                         Cart::destroy();
 
+                        $request->session()->forget('PO_ID_from_TPN');
+                        $request->session()->forget('unique_code_from_TPN');
+
                     } catch(\Illuminate\Database\QueryException $e){ 
                         Session::flash('error', 'Failed To Checkout');
                         return redirect('products');
@@ -478,7 +493,7 @@ class ProductsController extends Controller
     public function api_billing($data){
         $client = new Client([
             'headers' => ['Content-Type' => 'application/json', 
-                            'Authorization' => 'apiKey 4ZU03BLNm1ebXSlQa4ou3y:6MHfjHpbOVv3FKTFAf8jIv'
+                            'Authorization' => config("app.gateway_tpn")
                         ],
             'base_uri' => config("app.url_api_tpn"),
             'timeout'  => 60.0,
@@ -488,15 +503,6 @@ class ProductsController extends Controller
             $params['json'] = $data;
             $res_billing = $client->post("v1/billings", $params)->getBody();
             $billing = json_decode($res_billing);
-
-            /*while ($billing->status != true) {
-                $this->api_billing($data);
-            }*/
-
-            /*get
-                $billing->status; //if true lanjut, else panggil lagi API ny
-                $billing->data->_id; //BILLING_ID
-            */
 
             return $billing;
         } catch(Exception $e){
@@ -567,15 +573,31 @@ class ProductsController extends Controller
 	
     public function viewWatermark($id)
     {
-        $stel = STELSalesDetail::where("id",$id)->first();
+        $currentUser = Auth::user();
+        if($currentUser){
+            $query = STELSales::
+            join('users', function ($join) use ($currentUser) {
+                $join->on('stels_sales.created_by', '=', 'users.id')
+                 ->where('users.company_id', '=', $currentUser->company_id);
+            })
+            ->join('stels_sales_detail', function ($join) use ($id) {
+                $join->on('stels_sales.id', '=', 'stels_sales_detail.stels_sales_id')
+                 ->where('stels_sales_detail.id', '=', $id);
+            });
+            $stel = $query->get();
+            if (count($stel)>0){
+                $file = public_path().'/media/stelAttach/'.$id."/".$stel[0]->attachment;
+                $headers = array(
+                  'Content-Type: application/octet-stream',
+                );
 
-        if ($stel){
-            $file = public_path().'/media/stelAttach/'.$stel->id."/".$stel->attachment;
-            $headers = array(
-              'Content-Type: application/octet-stream',
-            );
-
-            return Response::file($file, $headers);
+                return Response::file($file, $headers);
+            }else{
+               return redirect()->back();
+            }
+        }
+        else{
+           return redirect()->back();
         }
     }
 

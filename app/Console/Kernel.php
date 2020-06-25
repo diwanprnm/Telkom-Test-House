@@ -14,6 +14,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         // Commands\Inspire::class,
+        /*Commands\CheckBillingTPN::class,
+        Commands\checkTaxInvoiceTPN::class,*/
     ];
 
     /**
@@ -26,5 +28,9 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        /*$schedule->command('checkBillingTPN')
+                 ->everyMinute();
+        $schedule->command('checkTaxInvoiceTPN')
+                 ->everyMinute();*/
     }
 }

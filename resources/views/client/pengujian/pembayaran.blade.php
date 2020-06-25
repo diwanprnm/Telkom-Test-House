@@ -88,7 +88,7 @@
 														</tr>
 														<tr>
 															<td>{{ trans('translate.examination_price_payment') }} : 
-															<input type="text" id="jml-pembayaran" class="jml-pembayaran form-control" name="jml-pembayaran" placeholder="<?php echo $cust_price_payment ?>" value="<?php echo $cust_price_payment ?>" required></td>
+															<input type="text" id="jml-pembayaran" class="jml-pembayaran form-control" name="jml-pembayaran" placeholder="<?php echo $price ?>" value="<?php echo $price ?>" required></td>
 														</tr>
 												</table>
 											</div>
@@ -124,7 +124,6 @@
 @endsection
  
 @section('content_js')
-
  		<script type="text/javascript">	
  	// 		$('.date').datepicker({  
 		// 	"format": "dd-mm-yyyy",
@@ -133,7 +132,8 @@
 		// });
 
 		/* Dengan Rupiah */
-		 var jml_pembayaran = document.getElementById('jml-pembayaran');
+		var jml_pembayaran = document.getElementById('jml-pembayaran');
+		jml_pembayaran.value = formatRupiah(jml_pembayaran.value, 'Rp. ');
 		jml_pembayaran.addEventListener('keyup', function(e)
 		{
 			jml_pembayaran.value = formatRupiah(this.value, 'Rp. ');
@@ -155,7 +155,7 @@
 			
 			rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
 			return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
-		}		
+		}
 
 		var spb_date = $("#spd_date").val();
 

@@ -237,7 +237,7 @@
 													<span class="stepDesc"><small> Laporan Uji </small></span>
 												</a>
 											</li>
-											@if($item->examination_type_id !='2' && $item->examination_type_id !='3')
+											@if($item->examination_type_id !='2' && $item->examination_type_id !='3' && $item->examination_type_id !='4')
 												<li>
 													@if($item->resume_status == '1' && $item->qa_status != '1')
 														<a href="#step-2" class="done wait">

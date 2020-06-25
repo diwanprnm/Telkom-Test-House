@@ -23,12 +23,12 @@
 		============================================= -->
 		<section id="content"> 
 			<div class="content-wrap"> 
-				<div class="container"> 
-					<form id="form-send-feedback" class="nobottommargin" role="form" method="POST" action="{{ url('doCheckout') }}">
+				<div class="container clearfix"> 
+					<form id="form-send-feedback" class="nobottommargin" role="form" method="POST" action="{{ url('doCheckout') }}" onsubmit="javascript:document.getElementById('submit-btn').style.display = 'none';document.getElementById('submit-msg').style.display = 'block';">
 					<div class="row">    
 						<p> No. Invoice	: {{$invoice_number}} </p> 
 						<input type="hidden" name="invoice_number" value="{{$invoice_number}}"><br>
-						<input type="hidden" name="PO_ID" value="{{$PO_ID}}"><br>
+						<input type="hidden" name="final_price" value="{{$final_price}}"><br>
 						<div class="row"> 
 							<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
 								<thead>
@@ -42,9 +42,11 @@
 									</tr>
 								</thead>
 								<tbody>
+									@php $no = 0;@endphp
 									  @foreach(Cart::content() as $row)
+									  	@php $no++;@endphp
 									<tr>
-										<td>1</td>
+										<td>{{$no}}</td>
 										<?php 
 											$res = explode('myTokenProduct', $row->name);
 											$stel_name = $res[0] ? $res[0] : '-';
@@ -60,23 +62,26 @@
 								</tbody>
 								<tfoot>
 									<tr class="list-total-harga">
-										<td colspan="5" align="right">Total</td> 
-										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($total_price)}}</td> 
-									</tr> 
-									<tr class="list-total-harga">
-										<td colspan="5" align="right">{{ trans('translate.stel_taxes_total') }}</td> 
-										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($tax)}}</td> 
-									</tr> 
-									<tr class="list-total-harga">
 										<td colspan="5" align="right">{{ trans('translate.stel_unique_code') }}</td> 
 										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($unique_code)}}</td> 
 									</tr> 
 									<tr class="list-total-harga">
-										<td colspan="5" align="right">{{ trans('translate.stel_price_total') }}</td>
+										<td colspan="5" align="right">Sub Total</td> 
+										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($total_price + $unique_code)}}</td> 
+									</tr> 
+									<tr class="list-total-harga">
+										<td colspan="5" align="right">{{ trans('translate.tax') }}</td> 
+										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($tax)}}</td> 
+									</tr> 
+									<tr class="list-total-harga" style="font-weight: bold">
+										<td colspan="5" align="right">Total</td>
 										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($final_price)}}</td> 
 									</tr> 
 								</tfoot>
 							</table> 
+						</div> 
+						<div class="alert alert-warning" style="font-weight: bold;">
+							{{ trans('translate.payment_alert_1') }}<br>{{ trans('translate.payment_alert_2') }}
 						</div> 
 						{{ trans('translate.stel_payment_method') }}
 						<br>
@@ -84,9 +89,9 @@
 							<div class="col-md-4">
 								<input type="radio" name="payment_method" value="atm" checked> {{ trans('translate.stel_payment_method_atm') }}
 							</div>
-							<div class="col-md-4">
+							<!-- <div class="col-md-4">
 								<input type="radio" name="payment_method" value="cc"> {{ trans('translate.stel_payment_method_credit') }}
-							</div>
+							</div> -->
 						</div>
 					</div>	 
 					<div class="row metoda">
@@ -152,10 +157,9 @@
 							</div>   
 						
 					</div> 		
-					<div class="col_full"><button class="button full button-3d btn-sky">OK</button></div>
+					<div class="col_full"><button id="submit-btn" class="button full button-3d btn-sky">OK</button> <p hidden id="submit-msg">Please Wait ...</p></div>
 					</form>
 				</div>  
 			</div> 
 		</section><!-- #content end -->
 @endsection
- 
