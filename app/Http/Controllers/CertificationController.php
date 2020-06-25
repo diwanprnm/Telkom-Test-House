@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
-
 use App\Certification;
 use App\Logs;
 
@@ -20,6 +18,18 @@ use Storage;
 
 class CertificationController extends Controller
 {
+
+    private const SEARCH = 'search';
+    private const ERROR = 'error';
+    private const CREATED_AT = 'created_at';
+    private const TITLE = 'title';
+    private const MESSAGE = 'message';
+    private const IMAGE = 'image';
+    private const IS_ACTIVE = 'is_active';
+    private const CERTIFICATION = 'CERTIFICATION';
+    private const ADMIN_CERTIFICATION = '/admin/certification';
+    private const ADMIN_CERTIFICATION_CREATE = '/admin/certification/create';
+
     /**
      * Create a new controller instance.
      *
@@ -42,13 +52,13 @@ class CertificationController extends Controller
         if ($currentUser){
             $message = null;
             $paginate = 10;
-            $search = trim($request->input('search'));
+            $search = trim($request->input($this::SEARCH));
             
             if ($search != null){
-                $certifications = Certification::whereNotNull('created_at')
-                    ->where('title','like','%'.$search.'%')
+                $certifications = Certification::whereNotNull($this::CREATED_AT)
+                    ->where($this::TITLE,'like','%'.$search.'%')
                     ->where('type',1)
-                    ->orderBy('created_at')
+                    ->orderBy($this::CREATED_AT)
                     ->paginate($paginate);
 
                     $logs = new Logs;
@@ -56,12 +66,12 @@ class CertificationController extends Controller
                     $logs->action = "Search Certification";
                     $logs->data = json_encode(array("search"=>$search));
                     $logs->created_by = $currentUser->id;
-                    $logs->page = "CERTIFICATION";
+                    $logs->page = $this::CERTIFICATION;
                     $logs->save();
             }else{
-                $certifications = Certification::whereNotNull('created_at')
+                $certifications = Certification::whereNotNull($this::CREATED_AT)
                     ->where('type',1)
-                    ->orderBy('created_at')
+                    ->orderBy($this::CREATED_AT)
                     ->paginate($paginate);
             }
             
@@ -70,9 +80,9 @@ class CertificationController extends Controller
             }
             
             return view('admin.certification.index')
-                ->with('message', $message)
+                ->with($this::MESSAGE, $message)
                 ->with('data', $certifications)
-                ->with('search', $search);
+                ->with($this::SEARCH, $search);
         }
     }
 
@@ -94,41 +104,28 @@ class CertificationController extends Controller
      */
     public function store(Request $request)
     {
-		// echo"<pre>";print_r($request->file('image')->getRealPath());exit;
-		// echo"<pre>";print_r(pathinfo($request->file('image')->getClientOriginalName()));exit;
-		// $size = getimagesize($filename);
-		// list($width, $height) = $request->file('image')->getClientSize();
-		// $image_info = getimagesize($request->file('image'));
-		// $image_width = $image_info[0];
-		// $image_height = $image_info[1];
-		// echo $image_width;
-		// echo $image_height;exit;
-		// echo"<pre>";print_r($request->file('image')->getClientSize());exit;
+
         $currentUser = Auth::user();
 
         $certification = new Certification;
         $certification->id = Uuid::uuid4();
-        $certification->title = $request->input('title');
-        if ($request->hasFile('image')) {
+        $certification->title = $request->input($this::TITLE);
 
-            // $image_info = getimagesize($request->file('image'));
-            // $image_width = $image_info[0];
-            // $image_height = $image_info[1];
-            // $image = $request->file('image');
-            $name_file = 'cert_'.$request->file('image')->getClientOriginalName(); 
-            $image_ori = Image::make($request->file('image')); 
-             
+        if ($request->hasFile($this::IMAGE)) {
+
+            $name_file = 'cert_'.$request->file($this::IMAGE)->getClientOriginalName(); 
+            $image_ori = Image::make($request->file($this::IMAGE)); 
             $saveMinio = Storage::disk('minio')->put("certification/$name_file",(string) $image_ori->encode());
  
             if($saveMinio){
                 $certification->image = $name_file;
             }else{
-                Session::flash('error', 'Save Image to directory failed');
-                return redirect('/admin/certification/create');
+                Session::flash($this::ERROR, 'Save Image to directory failed');
+                return redirect($this::ADMIN_CERTIFICATION_CREATE);
             }
         }
         
-        $certification->is_active = $request->input('is_active');
+        $certification->is_active = $request->input($this::IS_ACTIVE);
         $certification->type = 1;
         $certification->created_by = $currentUser->id;
 		$certification->created_at = ''.date('Y-m-d H:i:s').'';
@@ -141,14 +138,14 @@ class CertificationController extends Controller
             $logs->action = "Create Certification";
             $logs->data = $certification;
             $logs->created_by = $currentUser->id;
-            $logs->page = "CERTIFICATION";
+            $logs->page = $this::CERTIFICATION;
             $logs->save();
 
-            Session::flash('message', 'Certification successfully created');
-            return redirect('/admin/certification');
+            Session::flash($this::MESSAGE, 'Certification successfully created');
+            return redirect($this::ADMIN_CERTIFICATION);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
-            return redirect('/admin/certification/create');
+            Session::flash($this::ERROR, 'Save failed');
+            return redirect($this::ADMIN_CERTIFICATION_CREATE);
         }
     }
 
@@ -190,23 +187,23 @@ class CertificationController extends Controller
 
         $certification = Certification::find($id);
         $oldData = $certification;
-        if ($request->has('title')){
-            $certification->title = $request->input('title');
+        if ($request->has($this::TITLE)){
+            $certification->title = $request->input($this::TITLE);
         }
-        if ($request->has('is_active')){
-            $certification->is_active = $request->input('is_active');
+        if ($request->has($this::IS_ACTIVE)){
+            $certification->is_active = $request->input($this::IS_ACTIVE);
         }
-        if ($request->file('image')) {
-            $name_file = 'cert_'.$request->file('image')->getClientOriginalName();
+        if ($request->file($this::IMAGE)) {
+            $name_file = 'cert_'.$request->file($this::IMAGE)->getClientOriginalName();
             $path_file = public_path().'/media/certification';
             if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
-            if($request->file('image')->move($path_file,$name_file)){
+            if($request->file($this::IMAGE)->move($path_file,$name_file)){
                 $certification->image = $name_file;
             }else{
-                Session::flash('error', 'Save Image to directory failed');
-                return redirect('/admin/certification/create');
+                Session::flash($this::ERROR, 'Save Image to directory failed');
+                return redirect($this::ADMIN_CERTIFICATION_CREATE);
             }
         }
 
@@ -221,13 +218,13 @@ class CertificationController extends Controller
             $logs->action = "Update Certification";
             $logs->data = $oldData;
             $logs->created_by = $currentUser->id;
-            $logs->page = "CERTIFICATION";
+            $logs->page = $this::CERTIFICATION;
             $logs->save();
 
-            Session::flash('message', 'Certification successfully updated');
-            return redirect('/admin/certification');
+            Session::flash($this::MESSAGE, 'Certification successfully updated');
+            return redirect($this::ADMIN_CERTIFICATION);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
+            Session::flash($this::ERROR, 'Save failed');
             return redirect('/admin/certification/'.$certification->id.'edit');
         }
     }
@@ -252,14 +249,14 @@ class CertificationController extends Controller
                 $logs->action = "Delete Certification";
                 $logs->data = $oldData;
                 $logs->created_by = $currentUser->id;
-                $logs->page = "CERTIFICATION";
+                $logs->page = $this::CERTIFICATION;
                 $logs->save();
 
-                Session::flash('message', 'Certification successfully deleted');
-                return redirect('/admin/certification');
+                Session::flash($this::MESSAGE, 'Certification successfully deleted');
+                return redirect($this::ADMIN_CERTIFICATION);
             }catch (Exception $e){
-                Session::flash('error', 'Delete failed');
-                return redirect('/admin/certification');
+                Session::flash($this::ERROR, 'Delete failed');
+                return redirect($this::ADMIN_CERTIFICATION);
             }
         }
     }
