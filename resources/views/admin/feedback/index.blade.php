@@ -24,12 +24,12 @@
 		<div class="container-fluid container-fullw bg-white">
 	        <div class="row">
 		        <div class="col-md-6">
-	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1"><i class="ti-filter"></i> Filter</a>
+	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1"><em class="ti-filter"></em> Filter</a>
 				</div>
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table">
 	                    <input id="search_value" type="text" placeholder="Search" id="form-field-17" class="form-control " value="{{ $search }}">
-	                    <i class="ti-search"></i>
+	                    <em class="ti-search"></em>
 	                </span>
 	            </div>
 	            <div class="col-md-12 panel panel-info">
@@ -48,7 +48,7 @@
 											<input type="text" placeholder="Dari Tanggal" value="{{ $after_date }}" name="after_date" id="after_date" class="form-control"/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
+													<em class="glyphicon glyphicon-calendar"></em>
 												</button>
 											</span>
 										</p>
@@ -63,7 +63,7 @@
 											<input type="text" placeholder="Sampai Tanggal" value="{{ $before_date }}" name="before_date" id="before_date" class="form-control"/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
+													<em class="glyphicon glyphicon-calendar"></em>
 												</button>
 											</span>
 										</p>
@@ -99,45 +99,7 @@
 										</select>
 									</div>
 								</div>
-				<!-- sorting -->
-								<!-- <div class="col-md-6">
-									<div class="form-group">
-										<label>
-											Sort by :
-										</label>
-										<select id="sort_by" name="sort_by" class="cs-select cs-skin-elastic" required>
-											@if($sort_by == '')
-												<option value="" disabled selected>Select...</option>
-											@endif
-											@if($sort_by == 'tanggal')
-		                                        <option value="tanggal" selected>Tanggal</option>
-											@else
-		                                        <option value="tanggal">Tanggal</option>
-		                                    @endif
-											@if($sort_by == 'status')
-		                                        <option value="status" selected>Status</option>
-											@else
-		                                        <option value="status">Status</option>
-		                                    @endif
-										</select>
-										<select id="sort_type" name="sort_type" class="cs-select cs-skin-elastic" required>
-											@if($sort_type == '')
-												<option value="" disabled selected>Select...</option>
-											@endif
-											@if($sort_type == 'asc')
-		                                        <option value="asc" selected>ASC</option>
-											@else
-		                                        <option value="asc">ASC</option>
-		                                    @endif
-											@if($sort_type == 'desc')
-		                                        <option value="desc" selected>DESC</option>
-											@else
-		                                        <option value="desc">DESC</option>
-		                                    @endif
-										</select>
-									</div>
-								</div> -->
-				<!-- end sorting -->
+
 								<div class="col-md-12">
 		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 		                                Filter
@@ -194,10 +156,10 @@
 										<td class="center">{{ $item->created_at }}</td>
 	                                    <td class="center">
 											<div>
-												<a href="{{URL::to('admin/feedback/'.$item->id.'/reply')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-mail-reply"></i></a>
+												<a href="{{URL::to('admin/feedback/'.$item->id.'/reply')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-mail-reply"></em></a>
 												{!! Form::open(array('url' => 'admin/feedback/'.$item->id.'/destroy')) !!}
 													{!! csrf_field() !!}
-													<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')"><i class="fa fa-times fa fa-white"></i></button>
+													<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')"><em class="fa fa-times fa fa-white"></em></button>
 												{!! Form::close() !!}
 											</div>
 										</td>
@@ -258,12 +220,6 @@
 					},
 				});
 			},
-
-
-			// focus: function( event, ui ) {
-				// $( "#search_value" ).val( ui.item.label );
-				// return false;
-			// },
 
 			select: function( event, ui ) {
 				$( "#search_value" ).val( ui.item.label );

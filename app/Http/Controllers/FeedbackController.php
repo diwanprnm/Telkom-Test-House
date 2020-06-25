@@ -21,6 +21,15 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 class FeedbackController extends Controller
 {
+    private const SEARCH = 'search';
+    private const FEEDBACK = 'FEEDBACK';
+    private const BEFORE_DATE = 'before_date';
+    private const STATUS = 'status';
+    private const AFTER_DATE = 'after_date';
+    private const MESSAGE = 'message';
+    private const ADMIN_FEEDBACK = '/admin/feedback';
+
+    //$this::ADMIN_CERTIFICATION
     /**
      * Create a new controller instance.
      *
@@ -40,67 +49,71 @@ class FeedbackController extends Controller
     {
         $currentUser = Auth::user();
 
-        if ($currentUser){
-            $message = null;
-            $paginate = 10;
-            $search = trim($request->input('search'));
-            $status = '';
-            $before = null;
-            $after = null;
-
-            $sort_by = 'updated_at';
-            $sort_type = 'desc';
-
-            if ($search != null){
-                $query = Feedback::whereNotNull('created_at')
-                    ->where('subject','like','%'.$search.'%');
-
-                    $logs = new Logs;
-                    $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                    $logs->action = "Search Feedback";  
-                    $dataSearch = array("search"=>$search);
-                    $logs->data = json_encode($dataSearch);
-                    $logs->created_by = $currentUser->id;
-                    $logs->page = "FEEDBACK";
-                    $logs->save();
-            }else{
-                $query = Feedback::whereNotNull('created_at');
-
-                if ($request->has('status')){
-                    $status = $request->get('status');
-					if($request->input('status') != 'all'){
-						$query->where('status', $request->get('status'));
-					}
-                }
-
-            }
-            if ($request->has('before_date')){
-                $query->where(DB::raw('DATE(created_at)'), '<=', $request->get('before_date'));
-                $before = $request->get('before_date');
-            }
-
-            if ($request->has('after_date')){
-                $query->where(DB::raw('DATE(created_at)'), '>=', $request->get('after_date'));
-                $after = $request->get('after_date');
-            }
-
-            $feedbacks = $query->orderBy($sort_by, $sort_type)
-                            ->paginate($paginate);
-            
-            if (count($feedbacks) == 0){
-                $message = 'Data not found';
-            }
-            
-            return view('admin.feedback.index')
-                ->with('message', $message)
-                ->with('data', $feedbacks)
-                ->with('search', $search)
-                ->with('status', $status)
-                ->with('before_date', $before)
-                ->with('after_date', $after)
-                ->with('sort_by', $sort_by)
-                ->with('sort_type', $sort_type);
+        if (!$currentUser){
+            return false;
         }
+
+        
+        $message = null;
+        $paginate = 10;
+        $search = trim($request->input($this::SEARCH));
+        $status = '';
+        $before = null;
+        $after = null;
+
+        $sort_by = 'updated_at';
+        $sort_type = 'desc';
+
+        if ($search != null){
+            $query = Feedback::whereNotNull('created_at')
+                ->where('subject','like','%'.$search.'%');
+
+                $logs = new Logs;
+                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
+                $logs->action = "Search Feedback";  
+                $dataSearch = array($this::SEARCH=>$search);
+                $logs->data = json_encode($dataSearch);
+                $logs->created_by = $currentUser->id;
+                $logs->page = $this::FEEDBACK;
+                $logs->save();
+        }else{
+            $query = Feedback::whereNotNull('created_at');
+
+            if ($request->has($this::STATUS)){
+                $status = $request->get($this::STATUS);
+                if($request->input($this::STATUS) != 'all'){
+                    $query->where($this::STATUS, $request->get($this::STATUS));
+                }
+            }
+
+        }
+        if ($request->has($this::BEFORE_DATE)){
+            $query->where(DB::raw('DATE(created_at)'), '<=', $request->get($this::BEFORE_DATE));
+            $before = $request->get($this::BEFORE_DATE);
+        }
+
+        if ($request->has($this::AFTER_DATE)){
+            $query->where(DB::raw('DATE(created_at)'), '>=', $request->get($this::AFTER_DATE));
+            $after = $request->get($this::AFTER_DATE);
+        }
+
+        $feedbacks = $query->orderBy($sort_by, $sort_type)
+                        ->paginate($paginate);
+        
+        if (count($feedbacks) == 0){
+            $message = 'Data not found';
+        }
+        
+        return view('admin.feedback.index')
+            ->with($this::MESSAGE, $message)
+            ->with('data', $feedbacks)
+            ->with($this::SEARCH, $search)
+            ->with($this::STATUS, $status)
+            ->with($this::BEFORE_DATE, $before)
+            ->with($this::AFTER_DATE, $after)
+            ->with('sort_by', $sort_by)
+            ->with('sort_type', $sort_type);
+        
     }
 
     /**
@@ -129,14 +142,14 @@ class FeedbackController extends Controller
                 $logs->action = "Delete Feedback";
                 $logs->data = $oldData;
                 $logs->created_by = $currentUser->id;
-                $logs->page = "FEEDBACK";
+                $logs->page = $this::FEEDBACK;
                 $logs->save();
 
-                Session::flash('message', 'Feedback successfully deleted');
-                return redirect('/admin/feedback');
+                Session::flash($this::MESSAGE, 'Feedback successfully deleted');
+                return redirect($this::ADMIN_FEEDBACK);
             }catch (Exception $e){
                 Session::flash('error', 'Delete failed');
-                return redirect('/admin/feedback');
+                return redirect($this::ADMIN_FEEDBACK);
             }
         }
     }
@@ -150,10 +163,6 @@ class FeedbackController extends Controller
     public function sendEmailReplyFeedback(Request $request)
     {
         $data = Feedback::findOrFail($request->get('id'));
-
-        // Mail::send('emails.feedback', array('data' => $request->get('description')), function ($m) use ($data) {
-            // $m->to($data->email)->subject($data->subject);
-        // });
 		
         $currentUser = Auth::user();		
 		$data->updated_by = $currentUser->id;
@@ -166,11 +175,11 @@ class FeedbackController extends Controller
         $dataUpdate = array('data' => $request->get('description'));
         $logs->data = json_encode($dataUpdate);
         $logs->created_by = $currentUser->id;
-        $logs->page = "FEEDBACK";
+        $logs->page = $this::FEEDBACK;
         $logs->save();
 
-        Session::flash('message', 'Reply sudah terkirim');
-        return redirect('/admin/feedback');
+        Session::flash($this::MESSAGE, 'Reply sudah terkirim');
+        return redirect($this::ADMIN_FEEDBACK);
     }
 	
 	public function autocomplete($query) {
