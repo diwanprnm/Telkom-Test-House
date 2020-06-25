@@ -19,6 +19,15 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 class ArticleController extends Controller
 {
+    private const SEARCH = 'search';
+    private const ERROR = 'error';
+    private const MESSAGE = 'message';
+    private const TITLE = 'title';
+    private const DESCRIPTION = 'description';
+    private const DESCRIPTION_ENGLISH = 'description_english';
+    private const IS_ACTIVE = 'is_active';
+    private const ADMIN_ARTICLE = '/admin/article';
+        
     /**
      * Create a new controller instance.
      *
@@ -41,12 +50,12 @@ class ArticleController extends Controller
         if ($currentUser){
             $message = null;
             $paginate = 10;
-            $search = trim($request->input('search'));
+            $search = trim($request->input($this::SEARCH));
             
             if ($search != null){
                 $articles = Article::whereNotNull('created_at')
-                    ->where('title','like','%'.$search.'%')
-                    ->orderBy('title')
+                    ->where($this::TITLE,'like','%'.$search.'%')
+                    ->orderBy($this::TITLE)
                     ->paginate($paginate);
 
                 $logs = new Logs;
@@ -62,7 +71,7 @@ class ArticleController extends Controller
 
             }else{
                 $articles = Article::whereNotNull('created_at')
-                    ->orderBy('title')
+                    ->orderBy($this::TITLE)
                     ->paginate($paginate);
             }
             
@@ -71,9 +80,9 @@ class ArticleController extends Controller
             }
             
             return view('admin.article.index')
-                ->with('message', $message)
+                ->with($this::MESSAGE, $message)
                 ->with('data', $articles)
-                ->with('search', $search);
+                ->with($this::SEARCH, $search);
         }
     }
 
@@ -99,20 +108,20 @@ class ArticleController extends Controller
 
         $article = new Article;
         $article->id = Uuid::uuid4();
-        $article->title = $request->input('title');
+        $article->title = $request->input($this::TITLE);
         $article->type = $request->input('type');
-        $article->description = $request->input('description');
-        $article->description_english = $request->input('description_english');
-        $article->is_active = $request->input('is_active');
+        $article->description = $request->input($this::DESCRIPTION);
+        $article->description_english = $request->input($this::DESCRIPTION_ENGLISH);
+        $article->is_active = $request->input($this::IS_ACTIVE);
         $article->created_by = $currentUser->id;
         $article->updated_by = $currentUser->id;
 
         try{
             $article->save();
-            Session::flash('message', 'Article successfully created');
-            return redirect('/admin/article');
+            Session::flash($this::MESSAGE, 'Article successfully created');
+            return redirect($this::ADMIN_ARTICLE);
         } catch(\Exception $e){
-            Session::flash('error', 'Save failed');
+            Session::flash($this::ERROR, 'Save failed');
             return redirect('/admin/article/create');
         }
     }
@@ -155,30 +164,30 @@ class ArticleController extends Controller
 
         $article = Article::find($id);
 
-        if ($request->has('title')){
-            $article->title = $request->input('title');
+        if ($request->has($this::TITLE)){
+            $article->title = $request->input($this::TITLE);
         }
-        if ($request->has('description')){
-            $article->description = $request->input('description');
+        if ($request->has($this::DESCRIPTION)){
+            $article->description = $request->input($this::DESCRIPTION);
         }
-        if ($request->has('description_english')){
-            $article->description_english = $request->input('description_english');
+        if ($request->has($this::DESCRIPTION_ENGLISH)){
+            $article->description_english = $request->input($this::DESCRIPTION_ENGLISH);
         }
         if ($request->has('type')){
             $article->type = $request->input('type');
         }
-        if ($request->has('is_active')){
-            $article->is_active = $request->input('is_active');
+        if ($request->has($this::IS_ACTIVE)){
+            $article->is_active = $request->input($this::IS_ACTIVE);
         }
 
         $article->updated_by = $currentUser->id;
 
         try{
             $article->save();
-            Session::flash('message', 'Article successfully updated');
-            return redirect('/admin/article');
+            Session::flash($this::MESSAGE, 'Article successfully updated');
+            return redirect($this::ADMIN_ARTICLE);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
+            Session::flash($this::ERROR, 'Save failed');
             return redirect('/admin/article/'.$article->id.'/edit');
         }
     }
@@ -197,11 +206,11 @@ class ArticleController extends Controller
             try{
                 $article->delete();
                 
-                Session::flash('message', 'Article successfully deleted');
-                return redirect('/admin/article');
+                Session::flash($this::MESSAGE, 'Article successfully deleted');
+                return redirect($this::ADMIN_ARTICLE);
             }catch (Exception $e){
-                Session::flash('error', 'Delete failed');
-                return redirect('/admin/article');
+                Session::flash($this::ERROR, 'Delete failed');
+                return redirect($this::ADMIN_ARTICLE);
             }
         }
     }
