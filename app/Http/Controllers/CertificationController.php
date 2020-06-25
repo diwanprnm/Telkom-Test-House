@@ -16,6 +16,7 @@ use Image;
 // UUID
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
+use Storage;
 
 class CertificationController extends Controller
 {
@@ -109,16 +110,17 @@ class CertificationController extends Controller
         $certification->id = Uuid::uuid4();
         $certification->title = $request->input('title');
         if ($request->hasFile('image')) {
-                $image_info = getimagesize($request->file('image'));
-                $image_width = $image_info[0];
-                $image_height = $image_info[1];
-                $image = $request->file('image');
-            $name_file = 'cert_'.$request->file('image')->getClientOriginalName();
-            $path_file = public_path().'/media/certification';
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file('image')->move($path_file,$name_file)){
+
+            // $image_info = getimagesize($request->file('image'));
+            // $image_width = $image_info[0];
+            // $image_height = $image_info[1];
+            // $image = $request->file('image');
+            $name_file = 'cert_'.$request->file('image')->getClientOriginalName(); 
+            $image_ori = Image::make($request->file('image')); 
+             
+            $saveMinio = Storage::disk('minio')->put("certification/$name_file",(string) $image_ori->encode());
+ 
+            if($saveMinio){
                 $certification->image = $name_file;
             }else{
                 Session::flash('error', 'Save Image to directory failed');

@@ -7,7 +7,7 @@
     "require": {
         "php": ">=5.5.9",
         "laravel/framework": "5.2.*",
-        "laravelcollective/html": "5.2.*",
+        "laravelcollective/html": "^5.2.0",
         "intervention/image": "2.*",
         "ramsey/uuid": "^3.3",
         "unisharp/laravel-ckeditor": "*",
@@ -26,7 +26,9 @@
         "ixudra/curl": "^6.10",
         "anlutro/curl": "^1.4",
         "setasign/fpdi": "^1.6",
-        "setasign/fpdf": "^1.8"
+        "setasign/fpdf": "^1.8",
+        "coraxster/flysystem-aws-s3-v3-minio": "^1.0",
+        "league/flysystem-aws-s3-v3": "^1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

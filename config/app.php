@@ -179,13 +179,15 @@ return [
 		
 		// Anouar\Fpdf\FpdfServiceProvider::class,
         Unisharp\Ckeditor\ServiceProvider::class,
-        Unisharp\Laravelfilemanager\LaravelFilemanagerServiceProvider::class,
+        // Unisharp\Laravelfilemanager\LaravelFilemanagerServiceProvider::class,
 		Maatwebsite\Excel\ExcelServiceProvider::class,
 		Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
 		PragmaRX\Tracker\Vendor\Laravel\ServiceProvider::class,
 		'Witty\LaravelDbBackup\DBBackupServiceProvider',
         Gloudemans\Shoppingcart\ShoppingcartServiceProvider::class,
           Ixudra\Curl\CurlServiceProvider::class,
+          
+        App\Providers\MinIOStorageServiceProvider::class
     ],
 
     /*

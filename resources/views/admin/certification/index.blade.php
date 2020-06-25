@@ -69,7 +69,8 @@
 									<tr>
 										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
 										<td class="center">{{ $item->title }}</td>
-										<td class="center"><img src="{{asset('media/certification/'.$item->image)}}" width="240"/></td>
+										<td class="center">
+											<img src="{{ \Storage::disk('minio')->url('certification/'.$item->image)}}" width="240"/></td>
 										@if($item->is_active)
 	                                    	<td class="center"><span class="label label-sm label-success">Active</span></td>
 	                                    @else
@@ -77,7 +78,7 @@
 	                                    @endif
 	                                    <td class="center">
 											<div>
-												<a href="{{URL::to('admin/certification/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
+												<a href="{{ URL::to('admin/certification/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
 												{!! Form::open(array('url' => 'admin/certification/'.$item->id, 'method' => 'DELETE')) !!}
 													{!! csrf_field() !!}
 													<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')"><i class="fa fa-times fa fa-white"></i></button>
