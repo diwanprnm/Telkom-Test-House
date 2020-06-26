@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\DB;
 
 class Income extends Model
 {
-    protected $table = "incomes";
+    protected const INCOMES = 'incomes';
+    protected $table = self::INCOMES;
     
     public $incrementing = false;
 	
@@ -22,7 +23,7 @@ class Income extends Model
     }
 	
 	static function autocomplet($query){
-		$queries = DB::table('incomes')
+		$queries = DB::table(self::INCOMES)
 				->join('companies', 'incomes.company_id', '=', 'companies.id')
                 ->select('companies.name as autosuggest')
 				->where('companies.name', 'like','%'.$query.'%');
@@ -32,7 +33,7 @@ class Income extends Model
 				->distinct()
                 ->get();
 		
-		$data2 = DB::table('incomes')
+		$data2 = DB::table(self::INCOMES)
 				->select('reference_number as autosuggest')
 				->where('reference_number', 'like','%'.$query.'%')
                 ->orderBy('reference_number')
@@ -40,7 +41,6 @@ class Income extends Model
 				->distinct()
                 ->get();
 		
-		$auto_complete_result = array_merge($data1,$data2);
-        return $auto_complete_result;
+        return array_merge($data1,$data2);
 	}
 }

@@ -34,406 +34,52 @@ use App\NotificationTable;
 
 class IncomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
+    private const SEARCH = 'search';
+    private const COMPANY = 'company';
+    private const BEFORE_DATE = 'before_date';
+    private const AFTER_DATE = 'after_date';
+    private const MESSAGE = 'message';
+    private const STATUS = 'status';
+    private const NUMBER = 'number';
+    private const KUITANSI_DATE = 'kuitansi_date';
+    private const SORT_BY = 'sort_by';
+    private const SORT_TYPE = 'sort_type';
+    private const MANAGER_UREL = 'manager_urel';
+    private const REGISTRATION_STATUS = 'examinations.registration_status';
+    private const FUNCTION_STATUS = 'examinations.function_status';
+    private const CONTRACT_STATUS = 'examinations.contract_status';
+    private const SPB_STATUS = 'examinations.spb_status';
+    private const PAYMENT_STATUS = 'examinations.payment_status';
+    private const SPK_STATUS = 'examinations.spk_status';
+    private const EXAMINATION_STATUS = 'examinations.examination_status';
+    private const RESUME_STATUS = 'examinations.resume_status';
+    private const QA_STATUS = 'examinations.qa_status';
+    private const CERTIFICATION_STATUS = 'examinations.certificate_status';
+
+
     public function __construct()
     {
         $this->middleware('auth.admin');
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
         $currentUser = Auth::user();
 
-        if ($currentUser){
-            $message = null;
-            $paginate = 10;
-            $search = trim($request->input('search'));
-            $type = '';
-            $lab = '';
-            $status = '';
-			$before = null;
-            $after = null;
-
-            $examType = ExaminationType::all();
-            $examLab = ExaminationLab::all();
-
-            $query = Income::selectRaw("incomes.*, examinations.examination_type_id, examinations.examination_lab_id,
-			            	examinations.registration_status,
-			            	examinations.function_status,
-							examinations.contract_status,
-							examinations.spb_status,
-							examinations.payment_status,
-							examinations.spk_status,
-							examinations.examination_status,
-							examinations.resume_status,
-							examinations.qa_status,
-							examinations.certificate_status
-            				")
-            				->join("examinations","examinations.id","=","incomes.reference_id")
-        					->whereNotNull('incomes.created_at')
-							->where('incomes.inc_type', 1)
-                            ->with('company')
-                            ->with('examination');
-			
-			if ($search != null){
-                $query->where(function($qry) use($search){
-                    $qry->whereHas('company', function ($q) use ($search){
-						return $q->where('name', 'like', '%'.strtolower($search).'%');
-					});
-                });
-
-                $logs = new Logs;
-                $logs->id = Uuid::uuid4();
-                $logs->user_id = $currentUser->id;
-                $logs->action = "search";  
-                $dataSearch = array('search' => $search);
-                $logs->data = json_encode($dataSearch);
-                $logs->created_by = $currentUser->id;
-                $logs->page = "INCOME";
-                $logs->save();
-            }
-
-            if ($request->has('type')){
-                $type = $request->get('type');
-                if($request->input('type') != 'all'){
-					$query->where('examination_type_id', $request->get('type'));
-				}
-            }
-
-            if ($request->has('status')){
-                switch ($request->get('status')) {
-                    case 1:
-						$query->where('examinations.registration_status', '!=', 1);
-                        $status = 1;
-                        break;
-                    case 2:
-						$query->where('examinations.registration_status', '=', 1);
-						$query->where('examinations.function_status', '!=', 1);
-                        $status = 2;
-                        break;
-                    case 3:
-						$query->where('examinations.registration_status', '=', 1);
-						$query->where('examinations.function_status', '=', 1);
-						$query->where('examinations.contract_status', '!=', 1);
-                        $status = 3;
-                        break;
-                    case 4:
-						$query->where('examinations.registration_status', '=', 1);
-						$query->where('examinations.function_status', '=', 1);
-						$query->where('examinations.contract_status', '=', 1);
-						$query->where('examinations.spb_status', '!=', 1);
-                        $status = 4;
-                        break;
-                    case 5:
-						$query->where('examinations.registration_status', '=', 1);
-						$query->where('examinations.function_status', '=', 1);
-						$query->where('examinations.contract_status', '=', 1);
-						$query->where('examinations.spb_status', '=', 1);
-						$query->where('examinations.payment_status', '!=', 1);
-                        $status = 5;
-                        break;
-                    case 6:
-						$query->where('examinations.registration_status', '=', 1);
-						$query->where('examinations.function_status', '=', 1);
-						$query->where('examinations.contract_status', '=', 1);
-						$query->where('examinations.spb_status', '=', 1);
-						$query->where('examinations.payment_status', '=', 1);
-						$query->where('examinations.spk_status', '!=', 1);
-                        $status = 6;
-                        break;
-                    case 7:
-						$query->where('examinations.registration_status', '=', 1);
-						$query->where('examinations.function_status', '=', 1);
-						$query->where('examinations.contract_status', '=', 1);
-						$query->where('examinations.spb_status', '=', 1);
-						$query->where('examinations.payment_status', '=', 1);
-						$query->where('examinations.spk_status', '=', 1);
-						$query->where('examinations.examination_status', '!=', 1);
-                        $status = 7;
-                        break;
-                    case 8:
-						$query->where('examinations.registration_status', '=', 1);
-						$query->where('examinations.function_status', '=', 1);
-						$query->where('examinations.contract_status', '=', 1);
-						$query->where('examinations.spb_status', '=', 1);
-						$query->where('examinations.payment_status', '=', 1);
-						$query->where('examinations.spk_status', '=', 1);
-						$query->where('examinations.examination_status', '=', 1);
-						$query->where('examinations.resume_status', '!=', 1);
-                        $status = 8;
-                        break;
-                    case 9:
-						$query->where('examinations.registration_status', '=', 1);
-						$query->where('examinations.function_status', '=', 1);
-						$query->where('examinations.contract_status', '=', 1);
-						$query->where('examinations.spb_status', '=', 1);
-						$query->where('examinations.payment_status', '=', 1);
-						$query->where('examinations.spk_status', '=', 1);
-						$query->where('examinations.examination_status', '=', 1);
-						$query->where('examinations.resume_status', '=', 1);
-						$query->where('examinations.qa_status', '!=', 1);
-                        $status = 9;
-                        break;
-                    case 10:
-						$query->where('examinations.registration_status', '=', 1);
-						$query->where('examinations.function_status', '=', 1);
-						$query->where('examinations.contract_status', '=', 1);
-						$query->where('examinations.spb_status', '=', 1);
-						$query->where('examinations.payment_status', '=', 1);
-						$query->where('examinations.spk_status', '=', 1);
-						$query->where('examinations.examination_status', '=', 1);
-						$query->where('examinations.resume_status', '=', 1);
-						$query->where('examinations.qa_status', '=', 1);
-						$query->where('examinations.certificate_status', '!=', 1);
-                        $status = 10;
-                        break;
-                    
-                    default:
-						$status = 'all';
-                        break;
-                }
-            }
-
-            if ($request->has('lab')){
-                $lab = $request->get('lab');
-                if($request->input('lab') != 'all'){
-					$query->where('examination_lab_id', $request->get('lab'));
-				}
-            }
-
-			if ($request->has('before_date')){
-				$query->where('tgl', '<=', $request->get('before_date'));
-				$before = $request->get('before_date');
-			}
-
-			if ($request->has('after_date')){
-				$query->where('tgl', '>=', $request->get('after_date'));
-				$after = $request->get('after_date');
-			}
-
-			$data = $query->orderBy('tgl', 'desc')
-                        ->paginate($paginate);
-			
-            if (count($query) == 0){
-                $message = 'Data not found';
-            }
-			
-            return view('admin.income.index')
-                ->with('message', $message)
-                ->with('data', $data)
-                ->with('search', $search)
-                ->with('type', $examType)
-                ->with('status', $status)
-                ->with('filterType', $type)
-                ->with('lab', $examLab)
-                ->with('filterLab', $lab)
-				->with('before_date', $before)
-                ->with('after_date', $after);
+        if (!$currentUser){
+            return false;
         }
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create(Request $request)
-    {
-		$number = $request->session()->get('key_kode_for_kuitansi');
-		$from = $request->session()->get('key_from_for_kuitansi');
-		$price = $request->session()->get('key_price_for_kuitansi');
-		$for = $request->session()->get('key_for_for_kuitansi');
-		return view('admin.income.create_kuitansi')
-			->with('number', $number)
-			->with('from', $from)
-			->with('price', $price)
-			->with('for', $for)
-		;
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-		if($this->cekKuitansi($request->input('number')) == 0){
-			$currentUser = Auth::user();
-
-			$kuitansi = new Kuitansi;
-			$kuitansi->id = Uuid::uuid4();
-			$kuitansi->number = $request->input('number');
-			$kuitansi->from = $request->input('from');
-			$kuitansi->price = $request->input('price');
-			$kuitansi->for = $request->input('for');
-			$kuitansi->kuitansi_date = $request->input('kuitansi_date');
-			$kuitansi->created_by = $currentUser->id;
-			$kuitansi->updated_by = $currentUser->id;
-
-			try{
-				$kuitansi->save();
-				Session::flash('message', 'Kuitansi successfully created');
-				Session::flash('id', $kuitansi->id);
-				return redirect('/admin/kuitansi');
-			} catch(\Exception $e){
-				Session::flash('error', 'Save failed');
-				return redirect('/admin/kuitansi/create')->withInput($request->all());
-			}
-		}else{
-			Session::flash('error', 'Existing Number');
-			return redirect('/admin/kuitansi/create')->withInput($request->all());
-		}
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function show($id)
-    // {
-        
-    // }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function edit($id)
-    // {
-        
-    // }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function update(Request $request, $id)
-    // {
-        
-    // }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function destroy($id)
-    // {
-        
-    // }
-	
-	public function kuitansi(Request $request){
-		$currentUser = Auth::user();
-
-        if ($currentUser){
-            $id = null;
-            $message = null;
-            $paginate = 10;
-            $search = trim($request->input('search'));
-
-            $before = null;
-            $after = null;
-            $type = '';
-
-            $sort_by = 'kuitansi_date';
-            $sort_type = 'desc';
-
-            $query = Kuitansi::whereNotNull('created_at');
-			
-			if ($search != null){
-                $query->where("number", "like", '%'.strtolower($search).'%')
-					->orWhere("from", "like", '%'.strtolower($search).'%')
-					->orWhere("for", "like", '%'.strtolower($search).'%')
-				;
-
-                $logs = new Logs;
-                $logs->id = Uuid::uuid4();
-                $logs->user_id = $currentUser->id;
-                $logs->action = "search";  
-                $dataSearch = array('search' => $search);
-                $logs->data = json_encode($dataSearch);
-                $logs->created_by = $currentUser->id;
-                $logs->page = "KUITANSI";
-                $logs->save();
-            }
-
-            if ($request->has('before_date')){
-                $query->where('kuitansi_date', '<=', $request->get('before_date'));
-                $before = $request->get('before_date');
-            }
-
-            if ($request->has('after_date')){
-                $query->where('kuitansi_date', '>=', $request->get('after_date'));
-                $after = $request->get('after_date');
-            }
-
-            if ($request->has('type')){
-                $type = $request->get('type');
-                if($request->input('type') != 'all'){
-                	$request->input('type') == 'spb' ? $query->where("for", "like", '%pengujian%') : $query->where("for", "not like", '%pengujian%');
-                }
-            }
-
-            if ($request->has('sort_by')){
-                $sort_by = $request->get('sort_by');
-            }
-            if ($request->has('sort_type')){
-                $sort_type = $request->get('sort_type');
-            }
-
-            $data = $query->orderBy($sort_by, $sort_type)
-                        ->paginate($paginate);
-			
-            if (count($query) == 0){
-                $message = 'Data not found';
-            }
-			
-            return view('admin.income.kuitansi')
-                ->with('message', $message)
-                ->with('id', $id)
-                ->with('search', $search)
-                ->with('before_date', $before)
-                ->with('after_date', $after)
-                ->with('filterType', $type)
-                ->with('sort_by', $sort_by)
-                ->with('sort_type', $sort_type)
-                ->with('data', $data);
-        }
-	}
-
-	public function excel(Request $request) 
-	{
-		// Execute the query used to retrieve the data. In this example
-		// we're joining hypothetical users and payments tables, retrieving
-		// the payments table's primary key, the user's first and last name, 
-		// the user's e-mail address, the amount paid, and the payment
-		// timestamp.
-
-        $search = trim($request->input('search'));
+        $message = null;
+        $paginate = 10;
+        $search = trim($request->input(self::SEARCH));
         $type = '';
         $lab = '';
         $status = '';
         $before = null;
         $after = null;
+
+        $examType = ExaminationType::all();
+        $examLab = ExaminationLab::all();
 
         $query = Income::selectRaw("incomes.*, examinations.examination_type_id, examinations.examination_lab_id,
                         examinations.registration_status,
@@ -450,12 +96,12 @@ class IncomeController extends Controller
                         ->join("examinations","examinations.id","=","incomes.reference_id")
                         ->whereNotNull('incomes.created_at')
                         ->where('incomes.inc_type', 1)
-                        ->with('company')
+                        ->with(self::COMPANY)
                         ->with('examination');
         
         if ($search != null){
             $query->where(function($qry) use($search){
-                $qry->whereHas('company', function ($q) use ($search){
+                $qry->whereHas(self::COMPANY, function ($q) use ($search){
                     return $q->where('name', 'like', '%'.strtolower($search).'%');
                 });
             });
@@ -463,8 +109,8 @@ class IncomeController extends Controller
             $logs = new Logs;
             $logs->id = Uuid::uuid4();
             $logs->user_id = $currentUser->id;
-            $logs->action = "search";  
-            $dataSearch = array('search' => $search);
+            $logs->action = self::SEARCH;  
+            $dataSearch = array(self::SEARCH => $search);
             $logs->data = json_encode($dataSearch);
             $logs->created_by = $currentUser->id;
             $logs->page = "INCOME";
@@ -478,99 +124,9 @@ class IncomeController extends Controller
             }
         }
 
-        if ($request->has('status')){
-            switch ($request->get('status')) {
-                case 1:
-                    $query->where('examinations.registration_status', '!=', 1);
-                    $status = 1;
-                    break;
-                case 2:
-                    $query->where('examinations.registration_status', '=', 1);
-                    $query->where('examinations.function_status', '!=', 1);
-                    $status = 2;
-                    break;
-                case 3:
-                    $query->where('examinations.registration_status', '=', 1);
-                    $query->where('examinations.function_status', '=', 1);
-                    $query->where('examinations.contract_status', '!=', 1);
-                    $status = 3;
-                    break;
-                case 4:
-                    $query->where('examinations.registration_status', '=', 1);
-                    $query->where('examinations.function_status', '=', 1);
-                    $query->where('examinations.contract_status', '=', 1);
-                    $query->where('examinations.spb_status', '!=', 1);
-                    $status = 4;
-                    break;
-                case 5:
-                    $query->where('examinations.registration_status', '=', 1);
-                    $query->where('examinations.function_status', '=', 1);
-                    $query->where('examinations.contract_status', '=', 1);
-                    $query->where('examinations.spb_status', '=', 1);
-                    $query->where('examinations.payment_status', '!=', 1);
-                    $status = 5;
-                    break;
-                case 6:
-                    $query->where('examinations.registration_status', '=', 1);
-                    $query->where('examinations.function_status', '=', 1);
-                    $query->where('examinations.contract_status', '=', 1);
-                    $query->where('examinations.spb_status', '=', 1);
-                    $query->where('examinations.payment_status', '=', 1);
-                    $query->where('examinations.spk_status', '!=', 1);
-                    $status = 6;
-                    break;
-                case 7:
-                    $query->where('examinations.registration_status', '=', 1);
-                    $query->where('examinations.function_status', '=', 1);
-                    $query->where('examinations.contract_status', '=', 1);
-                    $query->where('examinations.spb_status', '=', 1);
-                    $query->where('examinations.payment_status', '=', 1);
-                    $query->where('examinations.spk_status', '=', 1);
-                    $query->where('examinations.examination_status', '!=', 1);
-                    $status = 7;
-                    break;
-                case 8:
-                    $query->where('examinations.registration_status', '=', 1);
-                    $query->where('examinations.function_status', '=', 1);
-                    $query->where('examinations.contract_status', '=', 1);
-                    $query->where('examinations.spb_status', '=', 1);
-                    $query->where('examinations.payment_status', '=', 1);
-                    $query->where('examinations.spk_status', '=', 1);
-                    $query->where('examinations.examination_status', '=', 1);
-                    $query->where('examinations.resume_status', '!=', 1);
-                    $status = 8;
-                    break;
-                case 9:
-                    $query->where('examinations.registration_status', '=', 1);
-                    $query->where('examinations.function_status', '=', 1);
-                    $query->where('examinations.contract_status', '=', 1);
-                    $query->where('examinations.spb_status', '=', 1);
-                    $query->where('examinations.payment_status', '=', 1);
-                    $query->where('examinations.spk_status', '=', 1);
-                    $query->where('examinations.examination_status', '=', 1);
-                    $query->where('examinations.resume_status', '=', 1);
-                    $query->where('examinations.qa_status', '!=', 1);
-                    $status = 9;
-                    break;
-                case 10:
-                    $query->where('examinations.registration_status', '=', 1);
-                    $query->where('examinations.function_status', '=', 1);
-                    $query->where('examinations.contract_status', '=', 1);
-                    $query->where('examinations.spb_status', '=', 1);
-                    $query->where('examinations.payment_status', '=', 1);
-                    $query->where('examinations.spk_status', '=', 1);
-                    $query->where('examinations.examination_status', '=', 1);
-                    $query->where('examinations.resume_status', '=', 1);
-                    $query->where('examinations.qa_status', '=', 1);
-                    $query->where('examinations.certificate_status', '!=', 1);
-                    $status = 10;
-                    break;
-                
-                default:
-                    $status = 'all';
-                    break;
-            }
-        }
+        $filterStatus = $this->filterStatus($query, $request);
+        $query = $filterStatus->query;
+        $status = $filterStatus->status;
 
         if ($request->has('lab')){
             $lab = $request->get('lab');
@@ -579,14 +135,239 @@ class IncomeController extends Controller
             }
         }
 
-        if ($request->has('before_date')){
-            $query->where('tgl', '<=', $request->get('before_date'));
-            $before = $request->get('before_date');
+        if ($request->has(self::BEFORE_DATE)){
+            $query->where('tgl', '<=', $request->get(self::BEFORE_DATE));
+            $before = $request->get(self::BEFORE_DATE);
         }
 
-        if ($request->has('after_date')){
-            $query->where('tgl', '>=', $request->get('after_date'));
-            $after = $request->get('after_date');
+        if ($request->has(self::AFTER_DATE)){
+            $query->where('tgl', '>=', $request->get(self::AFTER_DATE));
+            $after = $request->get(self::AFTER_DATE);
+        }
+
+        $data = $query->orderBy('tgl', 'desc')
+                    ->paginate($paginate);
+        
+        if (count($query) == 0){
+            $message = 'Data not found';
+        }
+        
+        return view('admin.income.index')
+            ->with(self::MESSAGE, $message)
+            ->with('data', $data)
+            ->with(self::SEARCH, $search)
+            ->with('type', $examType)
+            ->with(self::STATUS, $status)
+            ->with('filterType', $type)
+            ->with('lab', $examLab)
+            ->with('filterLab', $lab)
+            ->with(self::BEFORE_DATE, $before)
+            ->with(self::AFTER_DATE, $after);
+        
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create(Request $request)
+    {
+		$number = $request->session()->get('key_kode_for_kuitansi');
+		$from = $request->session()->get('key_from_for_kuitansi');
+		$price = $request->session()->get('key_price_for_kuitansi');
+		$for = $request->session()->get('key_for_for_kuitansi');
+		return view('admin.income.create_kuitansi')
+			->with(self::NUMBER, $number)
+			->with('from', $from)
+			->with('price', $price)
+			->with('for', $for)
+		;
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+		if($this->cekKuitansi($request->input(self::NUMBER)) == 0){
+			$currentUser = Auth::user();
+
+			$kuitansi = new Kuitansi;
+			$kuitansi->id = Uuid::uuid4();
+			$kuitansi->number = $request->input(self::NUMBER);
+			$kuitansi->from = $request->input('from');
+			$kuitansi->price = $request->input('price');
+			$kuitansi->for = $request->input('for');
+			$kuitansi->kuitansi_date = $request->input(self::KUITANSI_DATE);
+			$kuitansi->created_by = $currentUser->id;
+			$kuitansi->updated_by = $currentUser->id;
+
+			try{
+				$kuitansi->save();
+				Session::flash(self::MESSAGE, 'Kuitansi successfully created');
+				Session::flash('id', $kuitansi->id);
+				return redirect('/admin/kuitansi');
+			} catch(\Exception $e){
+				Session::flash('error', 'Save failed');
+				return redirect('/admin/kuitansi/create')->withInput($request->all());
+			}
+		}else{
+			Session::flash('error', 'Existing Number');
+			return redirect('/admin/kuitansi/create')->withInput($request->all());
+		}
+    }
+	
+	public function kuitansi(Request $request){
+		$currentUser = Auth::user();
+        
+        if (!$currentUser){
+            return false;
+        }
+
+        $id = null;
+        $message = null;
+        $paginate = 10;
+        $search = trim($request->input(self::SEARCH));
+
+        $before = null;
+        $after = null;
+        $type = '';
+
+        $sort_by = self::KUITANSI_DATE;
+        $sort_type = 'desc';
+
+        $query = Kuitansi::whereNotNull('created_at');
+        
+        if ($search != null){
+            $query->where("number", "like", '%'.strtolower($search).'%')
+                ->orWhere("from", "like", '%'.strtolower($search).'%')
+                ->orWhere("for", "like", '%'.strtolower($search).'%')
+            ;
+
+            $logs = new Logs;
+            $logs->id = Uuid::uuid4();
+            $logs->user_id = $currentUser->id;
+            $logs->action = self::SEARCH;  
+            $dataSearch = array(self::SEARCH => $search);
+            $logs->data = json_encode($dataSearch);
+            $logs->created_by = $currentUser->id;
+            $logs->page = "KUITANSI";
+            $logs->save();
+        }
+
+        if ($request->has(self::BEFORE_DATE)){
+            $query->where(self::KUITANSI_DATE, '<=', $request->get(self::BEFORE_DATE));
+            $before = $request->get(self::BEFORE_DATE);
+        }
+
+        if ($request->has(self::AFTER_DATE)){
+            $query->where(self::KUITANSI_DATE, '>=', $request->get(self::AFTER_DATE));
+            $after = $request->get(self::AFTER_DATE);
+        }
+
+        if ($request->has('type')){
+            $type = $request->get('type');
+            if($request->input('type') != 'all'){
+                $request->input('type') == 'spb' ? $query->where("for", "like", '%pengujian%') : $query->where("for", "not like", '%pengujian%');
+            }
+        }
+
+        if ($request->has(self::SORT_BY)){
+            $sort_by = $request->get(self::SORT_BY);
+        }
+        if ($request->has(self::SORT_TYPE)){
+            $sort_type = $request->get(self::SORT_TYPE);
+        }
+
+        $data = $query->orderBy($sort_by, $sort_type)
+                    ->paginate($paginate);
+        
+        if (count($query) == 0){
+            $message = 'Data not found';
+        }
+        
+        return view('admin.income.kuitansi')
+            ->with(self::MESSAGE, $message)
+            ->with('id', $id)
+            ->with(self::SEARCH, $search)
+            ->with(self::BEFORE_DATE, $before)
+            ->with(self::AFTER_DATE, $after)
+            ->with('filterType', $type)
+            ->with(self::SORT_BY, $sort_by)
+            ->with(self::SORT_TYPE, $sort_type)
+            ->with('data', $data);
+        
+	}
+
+	public function excel(Request $request) 
+	{
+		// Execute the query used to retrieve the data. In this example
+		// we're joining hypothetical users and payments tables, retrieving
+		// the payments table's primary key, the user's first and last name, 
+		// the user's e-mail address, the amount paid, and the payment
+        // timestamp.
+        
+        $currentUser = Auth::user();
+
+        $search = trim($request->input(self::SEARCH));
+
+        $query = Income::selectRaw("incomes.*, examinations.examination_type_id, examinations.examination_lab_id,
+                        examinations.registration_status,
+                        examinations.function_status,
+                        examinations.contract_status,
+                        examinations.spb_status,
+                        examinations.payment_status,
+                        examinations.spk_status,
+                        examinations.examination_status,
+                        examinations.resume_status,
+                        examinations.qa_status,
+                        examinations.certificate_status
+                        ")
+                        ->join("examinations","examinations.id","=","incomes.reference_id")
+                        ->whereNotNull('incomes.created_at')
+                        ->where('incomes.inc_type', 1)
+                        ->with(self::COMPANY)
+                        ->with('examination');
+        
+        if ($search != null){
+            $query->where(function($qry) use($search){
+                $qry->whereHas(self::COMPANY, function ($q) use ($search){
+                    return $q->where('name', 'like', '%'.strtolower($search).'%');
+                });
+            });
+
+            $logs = new Logs;
+            $logs->id = Uuid::uuid4();
+            $logs->user_id = $currentUser->id;
+            $logs->action = self::SEARCH;  
+            $dataSearch = array(self::SEARCH => $search);
+            $logs->data = json_encode($dataSearch);
+            $logs->created_by = $currentUser->id;
+            $logs->page = "INCOME";
+            $logs->save();
+        }
+
+        if ($request->has('type') && $request->input('type') != 'all'){
+            $query->where('examination_type_id', $request->get('type'));
+        }
+
+        $filterStatus = $this->filterStatus($query, $request);
+        $query = $filterStatus->query;
+
+        if ($request->has('lab') && $request->input('lab') != 'all'){
+            $query->where('examination_lab_id', $request->get('lab'));
+        }
+
+        if ($request->has(self::BEFORE_DATE)){
+            $query->where('tgl', '<=', $request->get(self::BEFORE_DATE));
+        }
+
+        if ($request->has(self::AFTER_DATE)){
+            $query->where('tgl', '>=', $request->get(self::AFTER_DATE));
         }
 
         $data = $query->orderBy('tgl', 'desc')
@@ -629,11 +410,6 @@ class IncomeController extends Controller
 		// Generate and return the spreadsheet
 		Excel::create('Data Pendapatan', function($excel) use ($examsArray) {
 
-			// Set the spreadsheet title, creator, and description
-			// $excel->setTitle('Payments');
-			// $excel->setCreator('Laravel')->setCompany('WJ Gilmore, LLC');
-			// $excel->setDescription('payments file');
-
 			// Build the spreadsheet, passing in the payments array
 			$excel->sheet('sheet1', function($sheet) use ($examsArray) {
 				$sheet->fromArray($examsArray, null, 'A1', false, false);
@@ -658,88 +434,169 @@ class IncomeController extends Controller
 			return '001/DDS-73/'.$thisYear.'';
 		}
 		else{
-			$last_numb = $data[0]->last_numb;
-			if($last_numb < 10){
-				return '00'.$last_numb.'/DDS-73/'.$thisYear.'';
-			}
-			else if($last_numb < 100){
-				return '0'.$last_numb.'/DDS-73/'.$thisYear.'';
-			}
-			else{
-				return ''.$last_numb.'/DDS-73/'.$thisYear.'';
-			}
+            $last_numb = str_pad($data[0]->last_numb,3,"0");
+            return $last_numb.'/DDS-73/'.$thisYear.'';
 		}
     }
 	
 	public function cetakKuitansi($id, Request $request) {
-		/*$client = new Client([
-			'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
-			// Base URI is used with relative requests
-			// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
-			'base_uri' => config("app.url_api_bsp"),
-			// You can set any number of default request options.
-			'timeout'  => 60.0,
-		]);
-		*/
-		/*$res_manager_urel = $client->get('user/getManagerLabInfo?groupId=MU')->getBody();
-		$manager_urel = json_decode($res_manager_urel);
-
-		if(count($manager_urel->data) == 1){
-			if( strpos( $manager_urel->data[0]->name, "/" ) !== false ) {$manager_urels = urlencode(urlencode($manager_urel->data[0]->name));}
-				else{$manager_urels = $manager_urel->data[0]->name?: '-';}
-		}else{
-			$manager_urels = '...............................';
-		}*/
-		$is_poh = 0;
+ 
+        $manager_urels = '-';
+        
+        $is_poh = 0;
 		$general_setting_poh = GeneralSetting::where('code', 'poh_manager_urel')->first();
 		if($general_setting_poh){
 			if($general_setting_poh->is_active){
-				$is_poh = 1;
-				if( strpos( $general_setting_poh->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting_poh->value));}
-					else{$manager_urels = $general_setting_poh->value?: '-';}
+                $is_poh = 1;
+                $manager_urels = $this->filterUrlEncode ($general_setting_poh->value);
 			}else{
-				$general_setting = GeneralSetting::where('code', 'manager_urel')->first();
+				$general_setting = GeneralSetting::where('code', self::MANAGER_UREL)->first();
 				if($general_setting){
-					if( strpos( $general_setting->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting->value));}
-						else{$manager_urels = $general_setting->value?: '-';}
-				}else{
-					$manager_urels = '...............................';
-				}	
+                    $manager_urels = $this->filterUrlEncode ($general_setting->value);
+				}
 			}
 		}else{
-			$general_setting = GeneralSetting::where('code', 'manager_urel')->first();
+			$general_setting = GeneralSetting::where('code', self::MANAGER_UREL)->first();
 			if($general_setting){
-				if( strpos( $general_setting->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting->value));}
-					else{$manager_urels = $general_setting->value?: '-';}
-			}else{
-				$manager_urels = '...............................';
+                $manager_urels = $this->filterUrlEncode ($general_setting->value);
 			}
 		}
 		
 		$data = Kuitansi::find($id);
-		    
-		if (count($data) == 0){
-			$message = 'Data not found';
-		}
-		if( strpos( $data->number, "/" ) !== false ) {$number = urlencode(urlencode($data->number));}else{$number = $data->number?: '-';}
-		if( strpos( $data->from, "/" ) !== false ) {$from = urlencode(urlencode($data->from));}else{$from = $data->from?: '-';}
-		if( strpos( $data->price, "/" ) !== false ) {$price = urlencode(urlencode($data->price));}else{$price = $data->price?: '0';}
-		if( strpos( $data->for, "/" ) !== false ) {$for = urlencode(urlencode($data->for));}else{$for = $data->for?: '-';}
-		if( strpos( $data->kuitansi_date, "/" ) !== false ) {$kuitansi_date = urlencode(urlencode($data->kuitansi_date));}else{$kuitansi_date = $data->kuitansi_date?: '-';}
-		return \Redirect::route('cetakHasilKuitansi', [
-			'nomor' => $number,
-			'dari' => $from,
-			'jumlah' => $price,
-			'untuk' => $for,
-			'manager_urel' => $manager_urels,
-			'tanggal' => $kuitansi_date,
-			'is_poh' => $is_poh
+
+	    return \Redirect::route('cetakHasilKuitansi', [
+			'nomor' => $this->filterUrlEncode($data->number),
+			'dari' => $this->filterUrlEncode($data->from),
+			'jumlah' => $this->filterUrlEncode($data->price, true),
+			'untuk' => $this->filterUrlEncode($data->for),
+			'tanggal' => $this->filterUrlEncode($data->kuitansi_date),
+            'is_poh' => $is_poh,
+            self::MANAGER_UREL => $manager_urels,
 		]);
     }
 	
 	function cekKuitansi($number)
     {
-		$inc = Kuitansi::where('number','=',''.$number.'')->get();
+		$inc = Kuitansi::where(self::NUMBER,'=',''.$number.'')->get();
 		return count($inc);
+    }
+
+    private function filterStatus($query, Request $request)
+    {
+        $filterStatus = new stdClass();
+
+        if ($request->has(self::STATUS)){
+            switch ($request->get(self::STATUS)) {
+                case 1:
+                    $query->where(self::REGISTRATION_STATUS, '!=', 1);
+                    $status = 1;
+                    break;
+                case 2:
+                    $query->where(self::REGISTRATION_STATUS, '=', 1);
+                    $query->where(self::FUNCTION_STATUS, '!=', 1);
+                    $status = 2;
+                    break;
+                case 3:
+                    $query->where(self::REGISTRATION_STATUS, '=', 1);
+                    $query->where(self::FUNCTION_STATUS, '=', 1);
+                    $query->where(self::CONTRACT_STATUS, '!=', 1);
+                    $status = 3;
+                    break;
+                case 4:
+                    $query->where(self::REGISTRATION_STATUS, '=', 1);
+                    $query->where(self::FUNCTION_STATUS, '=', 1);
+                    $query->where(self::CONTRACT_STATUS, '=', 1);
+                    $query->where(self::SPB_STATUS, '!=', 1);
+                    $status = 4;
+                    break;
+                case 5:
+                    $query->where(self::REGISTRATION_STATUS, '=', 1);
+                    $query->where(self::FUNCTION_STATUS, '=', 1);
+                    $query->where(self::CONTRACT_STATUS, '=', 1);
+                    $query->where(self::SPB_STATUS, '=', 1);
+                    $query->where(self::PAYMENT_STATUS, '!=', 1);
+                    $status = 5;
+                    break;
+                case 6:
+                    $query->where(self::REGISTRATION_STATUS, '=', 1);
+                    $query->where(self::FUNCTION_STATUS, '=', 1);
+                    $query->where(self::CONTRACT_STATUS, '=', 1);
+                    $query->where(self::SPB_STATUS, '=', 1);
+                    $query->where(self::PAYMENT_STATUS, '=', 1);
+                    $query->where(self::SPK_STATUS, '!=', 1);
+                    $status = 6;
+                    break;
+                case 7:
+                    $query->where(self::REGISTRATION_STATUS, '=', 1);
+                    $query->where(self::FUNCTION_STATUS, '=', 1);
+                    $query->where(self::CONTRACT_STATUS, '=', 1);
+                    $query->where(self::SPB_STATUS, '=', 1);
+                    $query->where(self::PAYMENT_STATUS, '=', 1);
+                    $query->where(self::SPK_STATUS, '=', 1);
+                    $query->where(self::EXAMINATION_STATUS, '!=', 1);
+                    $status = 7;
+                    break;
+                case 8:
+                    $query->where(self::REGISTRATION_STATUS, '=', 1);
+                    $query->where(self::FUNCTION_STATUS, '=', 1);
+                    $query->where(self::CONTRACT_STATUS, '=', 1);
+                    $query->where(self::SPB_STATUS, '=', 1);
+                    $query->where(self::PAYMENT_STATUS, '=', 1);
+                    $query->where(self::SPK_STATUS, '=', 1);
+                    $query->where(self::EXAMINATION_STATUS, '=', 1);
+                    $query->where(self::RESUME_STATUS, '!=', 1);
+                    $status = 8;
+                    break;
+                case 9:
+                    $query->where(self::REGISTRATION_STATUS, '=', 1);
+                    $query->where(self::FUNCTION_STATUS, '=', 1);
+                    $query->where(self::CONTRACT_STATUS, '=', 1);
+                    $query->where(self::SPB_STATUS, '=', 1);
+                    $query->where(self::PAYMENT_STATUS, '=', 1);
+                    $query->where(self::SPK_STATUS, '=', 1);
+                    $query->where(self::EXAMINATION_STATUS, '=', 1);
+                    $query->where(self::RESUME_STATUS, '=', 1);
+                    $query->where(self::QA_STATUS, '!=', 1);
+                    $status = 9;
+                    break;
+                case 10:
+                    $query->where(self::REGISTRATION_STATUS, '=', 1);
+                    $query->where(self::FUNCTION_STATUS, '=', 1);
+                    $query->where(self::CONTRACT_STATUS, '=', 1);
+                    $query->where(self::SPB_STATUS, '=', 1);
+                    $query->where(self::PAYMENT_STATUS, '=', 1);
+                    $query->where(self::SPK_STATUS, '=', 1);
+                    $query->where(self::EXAMINATION_STATUS, '=', 1);
+                    $query->where(self::RESUME_STATUS, '=', 1);
+                    $query->where(self::QA_STATUS, '=', 1);
+                    $query->where(self::CERTIFICATION_STATUS, '!=', 1);
+                    $status = 10;
+                    break;
+                
+                default:
+                    $status = 'all';
+                    break;
+            }
+        }
+
+        $filterStatus->query = $query;
+        $filterStatus->status = $status;
+        return $filterStatus;
+    }
+
+    private function filterUrlEncode ($string, $number=false)
+    {
+        if(!$string && $number){
+            return '0';
+        }
+        if(!$string && !$number){
+            return '-';
+        }
+
+        if( strpos( $string, "/" ) ){
+            $string = urlencode(urlencode($string));
+        }
+
+        return $string;
     }
 }

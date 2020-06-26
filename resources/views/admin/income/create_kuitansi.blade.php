@@ -10,7 +10,6 @@
 		}
 	</script>
     <!-- META -->
-    <!--[if IE]><meta http-equiv='X-UA-Compatible' content="IE=edge,IE=9,IE=8,chrome=1" /><![endif]-->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
@@ -84,9 +83,6 @@
 												Nomor *
 											</label>
 											<input type="text" id="number" name="number" class="form-control" value="{{ $number }}" placeholder="Nomor" required>
-											<!-- <button type="button" class="btn btn-wide btn-green btn-squared pull-right" onclick="generateKuitansi()">
-												Generate
-											</button> -->
 										</div>
 									</div> 
 			                        <div class="col-md-12">
@@ -122,7 +118,7 @@
 												<input type="text" name="kuitansi_date" class="form-control" value="{{ date('Y-m-d') }}" required readonly>
 												<span class="input-group-btn">
 													<button type="button" class="btn btn-default">
-														<i class="glyphicon glyphicon-calendar"></i>
+														<em class="glyphicon glyphicon-calendar"></em>
 													</button>
 												</span>
 											</p>
@@ -150,7 +146,6 @@
 	</div>
 
 	<!-- start: MAIN JAVASCRIPTS -->
-    <!-- <script src={{ asset("vendor/jquery/jquery.min.js") }}></script> -->
     <script src={{ asset("vendor/bootstrap/js/bootstrap.min.js") }}></script>
     <script src={{ asset("vendor/modernizr/modernizr.js") }}></script>
     <script src={{ asset("vendor/jquery-cookie/jquery.cookie.js") }}></script>
