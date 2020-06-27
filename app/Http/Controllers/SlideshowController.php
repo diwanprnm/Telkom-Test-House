@@ -19,6 +19,19 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 class SlideshowController extends Controller
 {
+    private const SEARCH = 'search';
+    private const CREATED_AT = 'created_at';
+    private const TITLE = 'title';
+    private const SLIDESHOW = 'SLIDESHOW';
+    private const MESSAGE = 'message';
+    private const HEADLINE = 'headline';
+    private const COLOR = 'color';
+    private const TIMEOUT = 'timeout';
+    private const IMAGE = 'image';
+    private const ERROR = 'error';
+    private const ADMIN_SLIDESHOW_CREATE = '/admin/slideshow/create';
+    private const IS_ACTIVE = 'is_active';
+    private const ADMIN_SLIDE_SHOW = '/admin/slideshow';
     /**
      * Create a new controller instance.
      *
@@ -41,12 +54,12 @@ class SlideshowController extends Controller
         if ($currentUser){
             $message = null;
             $paginate = 100;
-            $search = trim($request->input('search'));
+            $search = trim($request->input(self::SEARCH));
             
             if ($search != null){
-                $slideshows = Slideshow::whereNotNull('created_at')
-                    ->where('title','like','%'.$search.'%')
-                    ->orderBy('created_at')
+                $slideshows = Slideshow::whereNotNull(self::CREATED_AT)
+                    ->where(self::TITLE,'like','%'.$search.'%')
+                    ->orderBy(self::CREATED_AT)
                     ->paginate($paginate);
 
                     $logs = new Logs;
@@ -54,10 +67,10 @@ class SlideshowController extends Controller
                     $logs->action = "Search Slideshow";
                     $logs->data = json_encode(array("search"=>$search));
                     $logs->created_by = $currentUser->id;
-                    $logs->page = "SLIDESHOW";
+                    $logs->page = self::SLIDESHOW;
                     $logs->save();
             }else{
-                $slideshows = Slideshow::whereNotNull('created_at')
+                $slideshows = Slideshow::whereNotNull(self::CREATED_AT)
                     ->orderBy('position')
                     ->paginate($paginate);
             }
@@ -67,9 +80,9 @@ class SlideshowController extends Controller
             }
             
             return view('admin.slideshow.index')
-                ->with('message', $message)
+                ->with(self::MESSAGE, $message)
                 ->with('data', $slideshows)
-                ->with('search', $search);
+                ->with(self::SEARCH, $search);
         }
     }
 
@@ -91,69 +104,37 @@ class SlideshowController extends Controller
      */
     public function store(Request $request)
     {
-		// echo"<pre>";print_r($request->file('image')->getRealPath());exit;
-		// echo"<pre>";print_r(pathinfo($request->file('image')->getClientOriginalName()));exit;
-		// $size = getimagesize($filename);
-		// list($width, $height) = $request->file('image')->getClientSize();
-		// $image_info = getimagesize($request->file('image'));
-		// $image_width = $image_info[0];
-		// $image_height = $image_info[1];
-		// echo $image_width;
-		// echo $image_height;exit;
-		// echo"<pre>";print_r($request->file('image')->getClientSize());exit;
         $currentUser = Auth::user();
 
         $slideshow = new Slideshow;
         $slideshow->id = Uuid::uuid4();
-        $slideshow->title = $request->input('title');
-        $slideshow->headline = $request->input('headline');
-        $slideshow->color = $request->input('color');
-        $slideshow->timeout = $request->input('timeout');
+        $slideshow->title = $request->input(self::TITLE);
+        $slideshow->headline = $request->input(self::HEADLINE);
+        $slideshow->color = $request->input(self::COLOR);
+        $slideshow->timeout = $request->input(self::TIMEOUT);
 
-        if ($request->hasFile('image')) {
-				$image_info = getimagesize($request->file('image'));
-				$image_width = $image_info[0];
-				$image_height = $image_info[1];
-				$image = $request->file('image');
-            /*$ext_file = $request->file('image')->getClientOriginalExtension();
-            $name_file = uniqid().'_slide_'.$slideshow->id.'.'.$ext_file;*/
-            $name_file = 'slide_'.$request->file('image')->getClientOriginalName();
+        if ($request->hasFile(self::IMAGE))
+        {
+            //belum ada koding untuk simpan image ke storage!
+
+            $name_file = 'slide_'.$request->file(self::IMAGE)->getClientOriginalName();
             $path_file = public_path().'/media/slideshow';
+        
             if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
-			/* if($image_height > 768){
-				$percent = ($image_width/768);
-				$newwidth = $image_width * $percent;
-				$newheight = $image_height * $percent;
-				$thumb = imagecreatetruecolor($newwidth, $newheight);
-				$source = imagecreatefromjpeg($request->file('image'));
-				imagecopyresized($thumb, $source, 0, 0, 0, 0, $newwidth, $newheight, $image_width, $image_height);
-				// $img = Image::make($image->getRealPath())->resize(1024, 768)->insert($path_file.'/'.$name_file);
-				file_put_contents(''.$path_file.'/'.$name_file.'', imagejpeg($thumb));
-				$slideshow->image = $name_file;
-				// echo imagejpeg($thumb);exit;
-				// if(imagejpeg($thumb)->move($path_file,$name_file)){					
-					// $slideshow->image = $name_file;
-				// }else{
-					// Session::flash('error', 'Save Image to directory failed');
-					// return redirect('/admin/slideshow/create');
-				// }
-			}
-            else  */
-				if($request->file('image')->move($path_file,$name_file)){
-                $slideshow->image = $name_file;
+			
+            if($request->file(self::IMAGE)->move($path_file,$name_file)){
+                    $slideshow->image = $name_file;
             }else{
-                Session::flash('error', 'Save Image to directory failed');
-                return redirect('/admin/slideshow/create');
+                Session::flash(self::ERROR, 'Save Image to directory failed');
+                return redirect(self::ADMIN_SLIDESHOW_CREATE);
             }
         }
         
-        $slideshow->is_active = $request->input('is_active');
+        $slideshow->is_active = $request->input(self::IS_ACTIVE);
         $slideshow->created_by = $currentUser->id;
-        // $slideshow->updated_by = $currentUser->id;
 		$slideshow->created_at = ''.date('Y-m-d H:i:s').'';
-        // $slideshow->updated_at = ''.date('Y-m-d H:i:s').'';
 
         try{
             $slideshow->save();
@@ -163,14 +144,14 @@ class SlideshowController extends Controller
             $logs->action = "Create Slideshow";
             $logs->data = $slideshow;
             $logs->created_by = $currentUser->id;
-            $logs->page = "SLIDESHOW";
+            $logs->page = self::SLIDESHOW;
             $logs->save();
 
-            Session::flash('message', 'Slideshow successfully created');
-            return redirect('/admin/slideshow');
+            Session::flash(self::MESSAGE, 'Slideshow successfully created');
+            return redirect(self::ADMIN_SLIDE_SHOW);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
-            return redirect('/admin/slideshow/create');
+            Session::flash(self::ERROR, 'Save failed');
+            return redirect(self::ADMIN_SLIDESHOW_CREATE);
         }
     }
 
@@ -212,34 +193,32 @@ class SlideshowController extends Controller
 
         $slideshow = Slideshow::find($id);
         $oldData = $slideshow;
-        if ($request->has('title')){
-            $slideshow->title = $request->input('title');
+        if ($request->has(self::TITLE)){
+            $slideshow->title = $request->input(self::TITLE);
         }
-        if ($request->has('headline')){
-            $slideshow->headline = $request->input('headline');
+        if ($request->has(self::HEADLINE)){
+            $slideshow->headline = $request->input(self::HEADLINE);
         }
-        if ($request->has('is_active')){
-            $slideshow->is_active = $request->input('is_active');
+        if ($request->has(self::IS_ACTIVE)){
+            $slideshow->is_active = $request->input(self::IS_ACTIVE);
         }
-        if ($request->has('color')){
-            $slideshow->color = $request->input('color');
+        if ($request->has(self::COLOR)){
+            $slideshow->color = $request->input(self::COLOR);
         }
-        if ($request->has('timeout')){
-            $slideshow->timeout = $request->input('timeout');
+        if ($request->has(self::TIMEOUT)){
+            $slideshow->timeout = $request->input(self::TIMEOUT);
         }
-        if ($request->file('image')) {
-            /*$ext_file = $request->file('image')->getClientOriginalExtension();
-            $name_file = uniqid().'_slide_'.$slideshow->id.'.'.$ext_file;*/
-            $name_file = 'slide_'.$request->file('image')->getClientOriginalName();
+        if ($request->file(self::IMAGE)) {
+            $name_file = 'slide_'.$request->file(self::IMAGE)->getClientOriginalName();
             $path_file = public_path().'/media/slideshow';
             if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
-            if($request->file('image')->move($path_file,$name_file)){
+            if($request->file(self::IMAGE)->move($path_file,$name_file)){
                 $slideshow->image = $name_file;
             }else{
-                Session::flash('error', 'Save Image to directory failed');
-                return redirect('/admin/slideshow/create');
+                Session::flash(self::ERROR, 'Save Image to directory failed');
+                return redirect(self::ADMIN_SLIDESHOW_CREATE);
             }
         }
 
@@ -254,13 +233,13 @@ class SlideshowController extends Controller
             $logs->action = "Update Slideshow";
             $logs->data = $oldData;
             $logs->created_by = $currentUser->id;
-            $logs->page = "SLIDESHOW";
+            $logs->page = self::SLIDESHOW;
             $logs->save();
 
-            Session::flash('message', 'Slideshow successfully updated');
-            return redirect('/admin/slideshow');
+            Session::flash(self::MESSAGE, 'Slideshow successfully updated');
+            return redirect(self::ADMIN_SLIDE_SHOW);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
+            Session::flash(self::ERROR, 'Save failed');
             return redirect('/admin/slideshow/'.$slideshow->id.'edit');
         }
     }
@@ -285,14 +264,14 @@ class SlideshowController extends Controller
                 $logs->action = "Delete Slideshow";
                 $logs->data = $oldData;
                 $logs->created_by = $currentUser->id;
-                $logs->page = "SLIDESHOW";
+                $logs->page = self::SLIDESHOW;
                 $logs->save();
 
-                Session::flash('message', 'Slideshow successfully deleted');
-                return redirect('/admin/slideshow');
+                Session::flash(self::MESSAGE, 'Slideshow successfully deleted');
+                return redirect(self::ADMIN_SLIDE_SHOW);
             }catch (Exception $e){
-                Session::flash('error', 'Delete failed');
-                return redirect('/admin/slideshow');
+                Session::flash(self::ERROR, 'Delete failed');
+                return redirect(self::ADMIN_SLIDE_SHOW);
             }
         }
     }
@@ -305,7 +284,7 @@ class SlideshowController extends Controller
     public function orderSlideshow(Request $request){
         $position = $request->input('position');
         $i=1;
-        foreach($position as $k => $v){
+        foreach($position as $v){
             $slideshow = Slideshow::find($v);
             $slideshow->position = $i;
             $slideshow->save();

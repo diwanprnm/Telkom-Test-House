@@ -75,7 +75,7 @@
 										<!-- <td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td> -->
 										<td class="center">{{ $item->title }}</td>
 										<td class="center">{{ $item->headline }}</td>
-										<td class="center"><img src="{{asset('media/slideshow/'.$item->image)}}" width="240"/></td>
+										<td class="center"><img src="{{asset('media/slideshow/'.$item->image)}}" width="240" alt="telkom-test-house-media-slideshow"/></td>
 										<td class="center">{{ $item->timeout }}s</td>
 										@if($item->is_active)
 	                                    	<td class="center"><span class="label label-sm label-success">Active</span></td>

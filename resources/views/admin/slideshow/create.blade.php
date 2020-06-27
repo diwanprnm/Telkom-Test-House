@@ -65,17 +65,6 @@
 									<input type="number" name="timeout" min="0" class="form-control" placeholder="... s">
 								</div>
 							</div>
-							<!-- <div class="col-md-6">
-								<div class="form-group">
-									<label>
-										Warna Tulisan *
-									</label>
-									<div id="cp2" class="input-group colorpicker-component">
-										<input name="color" type="text" class="form-control" />
-										<span class="input-group-addon"><i></i></span>
-									</div>
-								</div>
-							</div> -->
 	                        <div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">

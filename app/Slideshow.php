@@ -11,14 +11,12 @@ class Slideshow extends Model
     public $incrementing = false;
 	
 	static function autocomplet($query){
-		$auto_complete_result = DB::table('slideshows')
+		return DB::table('slideshows')
 				->select('title as autosuggest')
 				->where('title', 'like','%'.$query.'%')
                 ->orderBy('title')
                 ->take(5)
 				->distinct()
                 ->get();
-		
-		return $auto_complete_result;
 	}
 }
