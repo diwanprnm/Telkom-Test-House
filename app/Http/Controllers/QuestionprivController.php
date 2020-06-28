@@ -14,6 +14,12 @@ use Session;
 
 class QuestionprivController extends Controller
 {
+    private const QUESTION = 'question';
+    private const USER_ID = 'user_id';
+    private const MESSAGE = 'message';
+    private const CHECK_PRIVILEGE = 'check-privilege';
+    private const ADMIN_QUESTIONPRIV = '/admin/questionpriv';
+    private const ERROR = 'error';
     /**
      * Create a new controller instance.
      *
@@ -40,7 +46,7 @@ class QuestionprivController extends Controller
 			
 			$questionpriv = Questionpriv::whereNotNull('created_at')
 				->with('user')
-				->with('question');
+				->with(self::QUESTION);
 
             if ($search != null){
 				$questionpriv->where(function($qry) use($search){
@@ -48,12 +54,12 @@ class QuestionprivController extends Controller
 							return $q->where('name', 'like', '%'.strtolower($search).'%')
 									->orWhere('email', 'like', '%'.strtolower($search).'%');
 						})
-					->orWhereHas('question', function ($q) use ($search){
+					->orWhereHas(self::QUESTION, function ($q) use ($search){
 							return $q->where('name', 'like', '%'.strtolower($search).'%');
 						});
                 });
             }
-			$data = $questionpriv->orderBy('user_id')
+			$data = $questionpriv->orderBy(self::USER_ID)
                     ->paginate($paginate);
             
             if (count($data) == 0){
@@ -61,7 +67,7 @@ class QuestionprivController extends Controller
             }
             
             return view('admin.questionpriv.index')
-                ->with('message', $message)
+                ->with(self::MESSAGE, $message)
                 ->with('data', $data)
 				->with('search', $search);
         }
@@ -78,7 +84,7 @@ class QuestionprivController extends Controller
         $question = Question::where('is_active','=','1')->get();
 
         return view('admin.questionpriv.create')
-            ->with('question', $question)
+            ->with(self::QUESTION, $question)
             ->with('user', $user);
     }
 
@@ -90,33 +96,25 @@ class QuestionprivController extends Controller
      */
     public function store(Request $request)
     {
-		$questionpriv = Questionpriv::where('user_id','=',$request->input('user_id'))->get();
+		$questionpriv = Questionpriv::where(self::USER_ID,'=',$request->input(self::USER_ID))->get();
 
-		if(count($questionpriv) == 0 AND count($request->input('check-privilege')) > 0)
+		if(count($questionpriv) == 0 && count($request->input(self::CHECK_PRIVILEGE)) > 0)
 		{
 			$currentUser = Auth::user();
-			for($i=0;$i<count($request->input('check-privilege'));$i++){
+			for($i=0;$i<count($request->input(self::CHECK_PRIVILEGE));$i++){
 				$questionpriv = new Questionpriv;
-				$questionpriv->user_id = $request->input('user_id');
-				$questionpriv->question_id = $request->input('check-privilege')[$i];
+				$questionpriv->user_id = $request->input(self::USER_ID);
+				$questionpriv->question_id = $request->input(self::CHECK_PRIVILEGE)[$i];
 				
 				$questionpriv->created_by = $currentUser->id;
 				$questionpriv->updated_by = $currentUser->id;
 
-				try{
-					$questionpriv->save();
-					// Session::flash('message', 'User successfully created');
-					// return redirect('/admin/questionpriv');
-				} catch(\Exception $e){
-					// Session::flash('error', 'Save failed');
-					// return redirect('/admin/questionpriv/create')
-								// ->withInput();
-				}
+                $questionpriv->save();
 			}
-			Session::flash('message', 'User successfully created');
-					return redirect('/admin/questionpriv');
+			Session::flash(self::MESSAGE, 'User successfully created');
+					return redirect(self::ADMIN_QUESTIONPRIV);
 		}else{
-			Session::flash('error', 'User Existing or No Privilege selected');
+			Session::flash(self::ERROR, 'User Existing or No Privilege selected');
 				return redirect('/admin/questionpriv/create')
 							->withInput();
 		}
@@ -141,14 +139,14 @@ class QuestionprivController extends Controller
      */
     public function edit($id)
     {
-        $questionpriv = Questionpriv::where('user_id','=',$id)
+        $questionpriv = Questionpriv::where(self::USER_ID,'=',$id)
 					->with('user')
-					->with('question')
+					->with(self::QUESTION)
 					->get();
         $question = Question::where('is_active','=','1')->get();
 
         return view('admin.questionpriv.edit')
-			->with('question', $question)
+			->with(self::QUESTION, $question)
             ->with('data', $questionpriv);
     }
 
@@ -161,32 +159,26 @@ class QuestionprivController extends Controller
      */
     public function update(Request $request, $id)
     {
-		if(count($request->input('check-privilege')) > 0)
+		if(count($request->input(self::CHECK_PRIVILEGE)) > 0)
 		{
 			$currentUser = Auth::user();
-			$questionpriv = Questionpriv::where('user_id','=',$id)->delete();
-			for($i=0;$i<count($request->input('check-privilege'));$i++){
+            $questionpriv = Questionpriv::where(self::USER_ID,'=',$id);
+            $questionpriv->delete();
+			for($i=0;$i<count($request->input(self::CHECK_PRIVILEGE));$i++){
 				$questionpriv = new Questionpriv;
 				$questionpriv->user_id = $id;
-				$questionpriv->question_id = $request->input('check-privilege')[$i];
+				$questionpriv->question_id = $request->input(self::CHECK_PRIVILEGE)[$i];
 				
 				$questionpriv->created_by = $currentUser->id;
 				$questionpriv->updated_by = $currentUser->id;
 
-				try{
-					$questionpriv->save();
-					// Session::flash('message', 'User successfully created');
-					// return redirect('/admin/questionpriv');
-				} catch(\Exception $e){
-					// Session::flash('error', 'Save failed');
-					// return redirect('/admin/questionpriv/create')
-								// ->withInput();
-				}
+                $questionpriv->save();
+
 			}
-			Session::flash('message', 'User successfully updated');
-					return redirect('/admin/questionpriv');
+			Session::flash(self::MESSAGE, 'User successfully updated');
+					return redirect(self::ADMIN_QUESTIONPRIV);
 		}else{
-			Session::flash('error', 'No Privilege selected');
+			Session::flash(self::ERROR, 'No Privilege selected');
 				return redirect('/admin/questionpriv/'.$id.'/edit')
 							->withInput();
 		}
@@ -200,17 +192,17 @@ class QuestionprivController extends Controller
      */
     public function destroy($id)
     {
-		$questionpriv = Questionpriv::where('user_id','=',$id);
+		$questionpriv = Questionpriv::where(self::USER_ID,'=',$id);
 
         if ($questionpriv){
             try{
                 $questionpriv->delete();
                 
-                Session::flash('message', 'Privilege successfully deleted');
-                return redirect('/admin/questionpriv');
+                Session::flash(self::MESSAGE, 'Privilege successfully deleted');
+                return redirect(self::ADMIN_QUESTIONPRIV);
             }catch (Exception $e){
-                Session::flash('error', 'Delete failed');
-                return redirect('/admin/questionpriv');
+                Session::flash(self::ERROR, 'Delete failed');
+                return redirect(self::ADMIN_QUESTIONPRIV);
             }
         }
     }
