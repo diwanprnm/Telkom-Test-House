@@ -221,49 +221,11 @@ class NewExaminationChargeController extends Controller
 
         $charge = new NewExaminationChargeDetail;
         $charge->id = Uuid::uuid4();
-        $charge->new_exam_charges_id = $id;
-        if ($request->has(self::EXAMINATION_CHARGES_ID)){
-            $charge->examination_charges_id = $request->input(self::EXAMINATION_CHARGES_ID);
-            $charge->old_device_name = $request->input('old_device_name');
-            $charge->old_stel = $request->input('old_stel');
-            $charge->old_category = $request->input('old_category');
-            $charge->old_duration = str_replace(",","",$request->input('old_duration'));
-            $charge->price = str_replace(",","",$request->input(self::PRICE));
-            $charge->ta_price = str_replace(",","",$request->input(self::TA_PRICE));
-            $charge->vt_price = str_replace(",","",$request->input(self::VT_PRICE));
-        }else{
-            $charge->examination_charges_id = Uuid::uuid4();
-        }
-        $charge->device_name = $request->input(self::DEVICE_NAME);
-        $charge->stel = $request->input('stel');
-        $charge->category = $request->input(self::CATEGORY);
-        $charge->duration = str_replace(",","",$request->input(self::DURATION));
-        $charge->new_price = str_replace(",","",$request->input(self::NEW_PRICE));
-        $charge->new_ta_price = str_replace(",","",$request->input(self::NEW_TA_PRICE));
-        $charge->new_vt_price = str_replace(",","",$request->input(self::NEW_VT_PRICE));
-
         $charge->created_by = $currentUser->id;
-        $charge->updated_by = $currentUser->id;
         $charge->created_at = date(self::DATE_FORMAT);
-        $charge->updated_at = date(self::DATE_FORMAT);
-
-        try{
-            $charge->save();
-
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Create New Charge Detail";
-            $logs->data = $charge;
-            $logs->created_by = $currentUser->id;
-            $logs->page = self::NEW_EXAMINATION_CHARGE;
-            $logs->save();
-
-            Session::flash(self::MESSAGE, 'New Charge successfully created');
-            return redirect(self::ADMIN_NEWCHARGE.$id);
-        } catch(Exception $e){
-            Session::flash(self::ERROR, self::SAFE_FAILED);
-            return redirect(self::ADMIN_NEWCHARGE.$id.'/createDetail');
-        }
+        $redirect_if_error = self::ADMIN_NEWCHARGE.$id.'/createDetail';
+        
+        $this->customSaveDetail($charge,$id,$request,$currentUser,$redirect_if_error);
     }
 
     /**
@@ -428,47 +390,9 @@ class NewExaminationChargeController extends Controller
         $currentUser = Auth::user();
 
         $charge = NewExaminationChargeDetail::find($exam_id);
-        $charge->new_exam_charges_id = $id;
-        if ($request->has(self::EXAMINATION_CHARGES_ID)){
-            $charge->examination_charges_id = $request->input(self::EXAMINATION_CHARGES_ID);
-            $charge->old_device_name = $request->input('old_device_name');
-            $charge->old_stel = $request->input('old_stel');
-            $charge->old_category = $request->input('old_category');
-            $charge->old_duration = str_replace(",","",$request->input('old_duration'));
-            $charge->price = str_replace(",","",$request->input(self::PRICE));
-            $charge->ta_price = str_replace(",","",$request->input(self::TA_PRICE));
-            $charge->vt_price = str_replace(",","",$request->input(self::VT_PRICE));
-        }else{
-            $charge->examination_charges_id = Uuid::uuid4();
-        }
-        $charge->device_name = $request->input(self::DEVICE_NAME);
-        $charge->stel = $request->input('stel');
-        $charge->category = $request->input(self::CATEGORY);
-        $charge->duration = str_replace(",","",$request->input(self::DURATION));
-        $charge->new_price = str_replace(",","",$request->input(self::NEW_PRICE));
-        $charge->new_ta_price = str_replace(",","",$request->input(self::NEW_TA_PRICE));
-        $charge->new_vt_price = str_replace(",","",$request->input(self::NEW_VT_PRICE));
-
-        $charge->updated_by = $currentUser->id;
-        $charge->updated_at = date(self::DATE_FORMAT);
-
-        try{
-            $charge->save();
-
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Edit New Charge Detail";
-            $logs->data = $charge;
-            $logs->created_by = $currentUser->id;
-            $logs->page = self::NEW_EXAMINATION_CHARGE;
-            $logs->save();
-
-            Session::flash(self::MESSAGE, 'New Charge successfully updated');
-            return redirect(self::ADMIN_NEWCHARGE.$id);
-        } catch(Exception $e){
-            Session::flash(self::ERROR, self::SAFE_FAILED);
-            return redirect(self::ADMIN_NEWCHARGE.$id.'/editDetail/'.$exam_id);
-        }
+        $redirect_if_error = self::ADMIN_NEWCHARGE.$id.'/editDetail/'.$exam_id;
+        
+        $this->customSaveDetail($charge,$id,$request,$currentUser,$redirect_if_error);
     }
 
     /**
@@ -565,14 +489,14 @@ class NewExaminationChargeController extends Controller
                 ->where('id', $data[$i][self::EXAMINATION_CHARGES_ID])
                 ->update([
                     self::DEVICE_NAME   => $data[$i][self::DEVICE_NAME],
-                    'stel'          => $data[$i]['stel'],
+                    'stel'              => $data[$i]['stel'],
                     self::CATEGORY      => $data[$i][self::CATEGORY],
                     self::DURATION      => $data[$i][self::DURATION],
                     self::PRICE         => $data[$i][self::NEW_PRICE],
                     self::VT_PRICE      => $data[$i][self::NEW_VT_PRICE],
                     self::TA_PRICE      => $data[$i][self::NEW_TA_PRICE],
-                    'is_active'     => '1',
-                    'updated_by'    => $currentUser->id
+                    'is_active'         => '1',
+                    'updated_by'        => $currentUser->id
                 ]);
             if(!$update){
                 $charge = new ExaminationCharge;
@@ -602,6 +526,51 @@ class NewExaminationChargeController extends Controller
                     continue;
                 }
             }
+        }
+    }
+
+    private function customSaveDetail($charge,$id,Request $request,$currentUser,$redirect)
+    {
+        $charge->new_exam_charges_id = $id;
+        if ($request->has(self::EXAMINATION_CHARGES_ID)){
+            $charge->examination_charges_id = $request->input(self::EXAMINATION_CHARGES_ID);
+            $charge->old_device_name = $request->input('old_device_name');
+            $charge->old_stel = $request->input('old_stel');
+            $charge->old_category = $request->input('old_category');
+            $charge->old_duration = str_replace(",","",$request->input('old_duration'));
+            $charge->price = str_replace(",","",$request->input(self::PRICE));
+            $charge->ta_price = str_replace(",","",$request->input(self::TA_PRICE));
+            $charge->vt_price = str_replace(",","",$request->input(self::VT_PRICE));
+        }else{
+            $charge->examination_charges_id = Uuid::uuid4();
+        }
+        $charge->device_name = $request->input(self::DEVICE_NAME);
+        $charge->stel = $request->input('stel');
+        $charge->category = $request->input(self::CATEGORY);
+        $charge->duration = str_replace(",","",$request->input(self::DURATION));
+        $charge->new_price = str_replace(",","",$request->input(self::NEW_PRICE));
+        $charge->new_ta_price = str_replace(",","",$request->input(self::NEW_TA_PRICE));
+        $charge->new_vt_price = str_replace(",","",$request->input(self::NEW_VT_PRICE));
+        $charge->updated_by = $currentUser->id;
+        $charge->updated_at = date(self::DATE_FORMAT);
+
+        try{
+            $charge->save();
+
+            $logs = new Logs;
+            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
+            $logs->action = "Edit New Charge Detail";
+            $logs->data = $charge;
+            $logs->created_by = $currentUser->id;
+            $logs->page = self::NEW_EXAMINATION_CHARGE;
+            $logs->save();
+
+            Session::flash(self::MESSAGE, 'New Charge successfully updated');
+            return redirect(self::ADMIN_NEWCHARGE.$id);
+        } catch(Exception $e){
+            Session::flash(self::ERROR, self::SAFE_FAILED);
+            return redirect($redirect);
+            // kembali pada return redirect(self::ADMIN_NEWCHARGE.$id.'/editDetail/'.$exam_id)
         }
     }
 }
