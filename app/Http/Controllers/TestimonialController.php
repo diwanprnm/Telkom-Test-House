@@ -17,6 +17,9 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 class TestimonialController extends Controller
 {
+    private const CREATED_AT = 'created_at';
+    private const MESSAGE = 'message';
+
     /**
      * Create a new controller instance.
      *
@@ -42,15 +45,15 @@ class TestimonialController extends Controller
             $search = trim($request->input('search'));
             
             if ($search != null){
-                $testimonials = Testimonial::whereNotNull('created_at')
+                $testimonials = Testimonial::whereNotNull(self::CREATED_AT)
 					->with('examination.user')
 					->with('examination.company')
-                    ->where('message','like','%'.$search.'%')
+                    ->where(self::MESSAGE,'like','%'.$search.'%')
                     ->orderBy('updated_at')
                     ->paginate($paginate);
             }else{
-                $testimonials = Testimonial::whereNotNull('created_at')
-                    ->orderBy('created_at', 'DESC')
+                $testimonials = Testimonial::whereNotNull(self::CREATED_AT)
+                    ->orderBy(self::CREATED_AT, 'DESC')
                     ->paginate($paginate);
             }
             
@@ -59,7 +62,7 @@ class TestimonialController extends Controller
             }
             
             return view('admin.testimonial.index')
-                ->with('message', $message)
+                ->with(self::MESSAGE, $message)
                 ->with('data', $testimonials)
                 ->with('search', $search);
         }
@@ -71,8 +74,8 @@ class TestimonialController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-        // return view('admin.testimonial.create');
+    { 
+
     }
 
     /**
@@ -83,25 +86,7 @@ class TestimonialController extends Controller
      */
     public function store(Request $request)
     {
-        // $currentUser = Auth::user();
-
-        // $testimonial = new Testimonial;
-        // $testimonial->id = Uuid::uuid4();
-        // $testimonial->description = $request->input('description');
-
         
-        // $testimonial->is_active = $request->input('is_active');
-        // $testimonial->created_by = $currentUser->id;
-        // $testimonial->updated_by = $currentUser->id;
-
-        // try{
-            // $testimonial->save();
-            // Session::flash('message', 'Information successfully created');
-            // return redirect('/admin/testimonial');
-        // } catch(Exception $e){
-            // Session::flash('error', 'Save failed');
-            // return redirect('/admin/testimonial/create');
-        // }
     }
 
     /**
@@ -141,33 +126,16 @@ class TestimonialController extends Controller
         $currentUser = Auth::user();
 
         $testimonial = Testimonial::find($id);
-
-        // if ($request->has('description')){
-            // $testimonial->description = $request->input('description');
-        // }
+ 
         if ($request->has('is_active')){
             $testimonial->is_active = $request->input('is_active');
         }
-        // if ($request->hasFile('image')) {
-            // $ext_file = $request->file('image')->getClientOriginalExtension();
-            // $name_file = uniqid().'_testimonial_'.$testimonial->id.'.'.$ext_file;
-            // $path_file = public_path().'/media/testimonial';
-            // if (!file_exists($path_file)) {
-                // mkdir($path_file, 0775);
-            // }
-            // if($request->file('image')->move($path_file,$name_file)){
-                // $testimonial->image = $name_file;
-            // }else{
-                // Session::flash('error', 'Save Image to directory failed');
-                // return redirect('/admin/testimonial/create');
-            // }
-        // }
 
         $testimonial->updated_by = $currentUser->id;
 
         try{
             $testimonial->save();
-            Session::flash('message', 'Information successfully updated');
+            Session::flash(self::MESSAGE, 'Information successfully updated');
             return redirect('/admin/testimonial');
         } catch(Exception $e){
             Session::flash('error', 'Save failed');
@@ -183,18 +151,6 @@ class TestimonialController extends Controller
      */
     public function destroy($id)
     {
-        // $testimonial = Testimonial::find($id);
 
-        // if ($testimonial){
-            // try{
-                // $testimonial->delete();
-                
-                // Session::flash('message', 'Information successfully deleted');
-                // return redirect('/admin/testimonial');
-            // }catch (Exception $e){
-                // Session::flash('error', 'Delete failed');
-                // return redirect('/admin/testimonial');
-            // }
-        // }
     }
 }

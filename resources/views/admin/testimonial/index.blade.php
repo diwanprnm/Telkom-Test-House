@@ -24,21 +24,8 @@
 		<div class="container-fluid container-fullw bg-white">
 	        <div class="row">
 		        <div class="col-md-6">
-				<!--
-		            <a style=" color:white !important;" href="{{URL::to('/admin/testimonial/create')}}">
-						<button type="button" class="btn btn-wide btn-green btn-squared" >
-							Tambah Testimonial
-						</button>         
-					</a>
-				-->
 		        </div>
 				<div class="col-md-6 pull-right">
-					<!--
-	                <span class="input-icon input-icon-right search-table">
-	                    <input id="search_value" type="text" placeholder="Search" id="form-field-17" class="form-control " value="{{ $search }}">
-	                    <i class="ti-search"></i>
-	                </span>
-					-->
 	            </div>
 	        </div>
 
@@ -58,14 +45,15 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-testimonial">
+							<caption>Testimonial table</caption>
 							<thead>
 								<tr>
-									<th class="center">No</th>
-									<th class="center">Nama</th>
-									<th class="center">Perusahaan</th>
-									<th class="center">Testimoni</th>
-									<th class="center">Status</th>
-									<th class="center">Aksi</th>
+									<th class="center" scope="col">No</th>
+									<th class="center" scope="col">Nama</th>
+									<th class="center" scope="col">Perusahaan</th>
+									<th class="center" scope="col">Testimoni</th>
+									<th class="center" scope="col">Status</th>
+									<th class="center" scope="col">Aksi</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -109,18 +97,5 @@
 
 @section('content_js')
 <script type="text/javascript">
-	/*
-	jQuery(document).ready(function() {       
-		$('#search_value').keydown(function(event) {
-	        if (event.keyCode == 13) {
-	            var baseUrl = "{{URL::to('/')}}";
-				var params = {
-					search:document.getElementById("search_value").value			
-				};
-				document.location.href = baseUrl+'/admin/testimonial?'+jQuery.param(params);
-	        }
-	    });
-	});
-	*/
 </script>
 @endsection
