@@ -24,13 +24,13 @@
 		<div class="container-fluid container-fullw bg-white">
 	        <div class="row">
 		        <div class="col-md-6"> 
-				 	<a class="btn btn-wide btn-primary pull-left" href="{{url('do_backup')}}"><i class="fa fa-database"></i> Backup NOW</a>
+				 	<a class="btn btn-wide btn-primary pull-left" href="{{url('do_backup')}}"><em class="fa fa-database"></em> Backup NOW</a>
 				 
 				</div>
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table">
 	                    <input id="search_value" type="text" placeholder="Search" id="form-field-17" class="form-control " value="{{ $search }}">
-	                    <i class="ti-search"></i>
+	                    <em class="ti-search"></em>
 	                </span>
 	            </div>
 	        </div>
@@ -51,13 +51,14 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+							<caption>Backup list table</caption> 
 							<thead>
 								<tr>
-									<th class="center">No</th> 
-									<th class="center">Username</th> 
-									<th class="center">File</th>
-									<th class="center">Waktu Backup</th>
-									<th class="center">Action</th> 
+									<th class="center" scope="col">No</th> 
+									<th class="center" scope="col">Username</th> 
+									<th class="center" scope="col">File</th>
+									<th class="center" scope="col">Waktu Backup</th>
+									<th class="center" scope="col">Action</th> 
 								</tr>
 							</thead>
 							<tbody>
@@ -69,17 +70,10 @@
 										<td class="center"><a href="{{storage_path().'/app/public/backup-data/'.$item->file}}">{{ $item->file }}</a></td>
 										<td class="center">{{ $item->created_at }}</td> 
 										<td class="center">
-											<!-- <div> 
-												{!! Form::open(array('url' => 'admin/restore/', 'method' => 'POST')) !!}
-													{!! csrf_field() !!}
-													<input type="hidden" name="id" value="{{$item->id}}">
-													<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to Restore ?')"><i class="fa fa-database"></i>Restore</button>
-												{!! Form::close() !!}
-											</div> -->
-											<div> 
-											 
-													<a class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')" href="{{url('admin/delete/'.$item->id)}}"><i class="fa fa-times fa fa-white"></i></a>
-											 
+											<div>
+												<a class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')" href="{{url('admin/delete/'.$item->id)}}">
+													<em class="fa fa-times fa fa-white"></em>
+												</a>
 											</div>
 										</td>
 									</tr>

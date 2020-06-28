@@ -24,8 +24,13 @@ use File;
 
 class BackupController extends Controller
 {
+    private const SEARCH = 'search';
+    private const BACKUP_CREATED_AT = 'backup_history.created_at';
+    private const MESSAGE = 'message';
+    private const ADMIN_BACKUP = '/admin/backup';
+    private const ERROR = 'error';
     
-     public function __construct()
+    public function __construct()
     {
         $this->middleware('auth.admin');
     }
@@ -41,16 +46,16 @@ class BackupController extends Controller
         if ($currentUser){
             $message = null;
             $paginate = 10;
-            $search = trim($request->input('search'));
+            $search = trim($request->input(self::SEARCH));
             $select = array(
-                "backup_history.id","backup_history.file","backup_history.created_at","users.name"
+                'backup_history.id','backup_history.file',self::BACKUP_CREATED_AT,'users.name'
             );
             if ($search != null){
             
-                $dataBackups = BackupHistory::select($select)->whereNotNull('backup_history.created_at')
+                $dataBackups = BackupHistory::select($select)->whereNotNull(self::BACKUP_CREATED_AT)
                 ->join("users","users.id","=","backup_history.user_id")
                     ->where('action','like','%'.$search.'%')
-                    ->orderBy('backup_history.created_at', 'desc')
+                    ->orderBy(self::BACKUP_CREATED_AT, 'desc')
                     ->paginate($paginate);
 
                 $backups = new BackupHistory;
@@ -63,9 +68,9 @@ class BackupController extends Controller
                 $backups->save();
 
             }else{
-                $dataBackups = BackupHistory::select($select)->whereNotNull('backup_history.created_at')
+                $dataBackups = BackupHistory::select($select)->whereNotNull(self::BACKUP_CREATED_AT)
                     ->join("users","users.id","=","backup_history.user_id")
-                    ->orderBy('backup_history.created_at', 'desc')
+                    ->orderBy(self::BACKUP_CREATED_AT, 'desc')
                     ->paginate($paginate);
             }
             
@@ -74,9 +79,9 @@ class BackupController extends Controller
             }
             
             return view('admin.backup.index')
-                ->with('message', $message)
+                ->with(self::MESSAGE, $message)
                 ->with('data', $dataBackups)
-                ->with('search', $search);
+                ->with(self::SEARCH, $search);
         }
     } 
 
@@ -93,34 +98,33 @@ class BackupController extends Controller
              try {
                 Artisan::call('db:backup'); 
                 $backup->save(); 
-                Session::flash('message', 'Backup successfully created');
-                return redirect('/admin/backup');
+                Session::flash(self::MESSAGE, 'Backup successfully created');
+                return redirect(self::ADMIN_BACKUP);
             } catch(Exception $e) {
-                Session::flash('error', 'Backup failed');
-                return redirect('/admin/backup');
+                Session::flash(self::ERROR, 'Backup failed');
+                return redirect(self::ADMIN_BACKUP);
             }
         }else{
-            Session::flash('error', 'Access Denied');
-            return redirect('/admin/backup');
+            Session::flash(self::ERROR, 'Access Denied');
+            return redirect(self::ADMIN_BACKUP);
         }
     }
 
     public function restore(Request $request)
     {
-        $currentUser = Auth::user();
         $backups = BackupHistory::find($request->input('id')); 
         if($backups){
             try {
                 Artisan::call('db:restore '.$backups->file);  
-                Session::flash('message', 'Restore successfully created');
-                return redirect('/admin/backup');
+                Session::flash(self::MESSAGE, 'Restore successfully created');
+                return redirect(self::ADMIN_BACKUP);
             } catch(Exception $e) {
-                Session::flash('error', 'Restore failed');
-                return redirect('/admin/backup');
+                Session::flash(self::ERROR, 'Restore failed');
+                return redirect(self::ADMIN_BACKUP);
             }
         }else{
-            Session::flash('error', 'Data Not Found');
-            return redirect('/admin/backup');
+            Session::flash(self::ERROR, 'Data Not Found');
+            return redirect(self::ADMIN_BACKUP);
         }
       
     } 
@@ -135,11 +139,11 @@ class BackupController extends Controller
                 if (File::exists(storage_path().'\app\\public\\backup-data\\'.$exam->file)){
                     File::deleteDirectory(storage_path().'\app\\public\\backup-data\\'.$exam->file);
                 }
-                Session::flash('message', 'Backup successfully deleted');
-                return redirect('/admin/backup');
+                Session::flash(self::MESSAGE, 'Backup successfully deleted');
+                return redirect(self::ADMIN_BACKUP);
             }catch (Exception $e){
-                Session::flash('error', 'Delete failed');
-                return redirect('/admin/backup');
+                Session::flash(self::ERROR, 'Delete failed');
+                return redirect(self::ADMIN_BACKUP);
             }
         }
     }
