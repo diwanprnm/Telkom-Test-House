@@ -50,7 +50,7 @@
 										<input type="text" name="valid_from" class="form-control" value="{{ $charge->valid_from }}" required="">
 										<span class="input-group-btn">
 											<button type="button" class="btn btn-default">
-												<i class="glyphicon glyphicon-calendar"></i>
+												<em class="glyphicon glyphicon-calendar"></em>
 											</button>
 										</span>
 									</p>
@@ -111,12 +111,12 @@
 		<div class="container-fluid container-fullw bg-white">
 	        <div class="row">
 	        	<div class="col-md-6">
-	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><i class="ti-filter"></i> Filter</a>
+	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><em class="ti-filter"></em> Filter</a>
 	    		</div>
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table">
 	                    <input id="search_value" type="text" placeholder="Search" id="form-field-17" class="form-control " value="{{ $search }}">
-	                    <i class="ti-search"></i>
+	                    <em class="ti-search"></em>
 	                </span>
 	            </div>
 	            <div class="col-md-12 panel panel-info">
@@ -213,17 +213,18 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+							<caption>Examination charge table list</caption>
 							<thead>
 								<tr>
-									<th class="center">No</th>
-									<th class="center">Nama Perangkat</th>
-									<th class="center">Referensi Uji</th>
-									<th class="center">Kategori</th>
-									<th class="center">Durasi (Hari)</th>
-									<th class="center">Biaya QA (Rp.)</th>
-									<th class="center">Biaya VT (Rp.)</th>
-									<th class="center">Biaya TA (Rp.)</th>
-                                    <th class="center">Aksi</th>
+									<th class="center" scope="col">No</th>
+									<th class="center" scope="col">Nama Perangkat</th>
+									<th class="center" scope="col">Referensi Uji</th>
+									<th class="center" scope="col">Kategori</th>
+									<th class="center" scope="col">Durasi (Hari)</th>
+									<th class="center" scope="col">Biaya QA (Rp.)</th>
+									<th class="center" scope="col">Biaya VT (Rp.)</th>
+									<th class="center" scope="col">Biaya TA (Rp.)</th>
+                                    <th class="center" scope="col">Aksi</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -240,11 +241,11 @@
 										<td class="center"><?php echo number_format($item->new_ta_price, 0, '.', ','); ?></td>
 	                                    <td class="center">
 											<div>
-												<a href="{{URL::to('admin/newcharge/'.$charge->id.'/editDetail/'.$item->id)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
+												<a href="{{URL::to('admin/newcharge/'.$charge->id.'/editDetail/'.$item->id)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
 												@if($charge->is_implement == 0)
 												{!! Form::open(array('url' => 'admin/newcharge/'.$charge->id.'/deleteDetail/'.$item->id, 'method' => 'POST')) !!}
 													{!! csrf_field() !!}
-													<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')"><i class="fa fa-times fa fa-white"></i></button>
+													<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')"><em class="fa fa-times fa fa-white"></em></button>
 												{!! Form::close() !!}
 												@endif
 											</div>

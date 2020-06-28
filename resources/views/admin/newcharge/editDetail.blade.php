@@ -52,8 +52,8 @@
 
 							<div class="col-md-12"><label></label></div>
 
-							<div class="col-md-6"><label><b>SEBELUM</b></label></div>
-							<div class="col-md-6"><label><b>SESUDAH</b></label></div>
+							<div class="col-md-6"><label><strong>SEBELUM</strong></label></div>
+							<div class="col-md-6"><label><strong>SESUDAH</strong></label></div>
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
