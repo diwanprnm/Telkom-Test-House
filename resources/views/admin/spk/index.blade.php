@@ -29,8 +29,7 @@
 		<div class="container-fluid container-fullw bg-white">
 	        <div class="row">
 	        	<div class="col-md-6">
-	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><i class="ti-filter"></i> Filter</a>
-	    			<!--<a class="btn btn-info pull-left" id="excel" href="{{URL::to('examination/excel')}}"> Export to Excel</a> -->
+	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><em class="ti-filter"></em> Filter</a>
 	    			<button id="excel" type="submit" class="btn btn-info pull-left">
                         Export to Excel
                     </button>
@@ -38,7 +37,7 @@
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table">
 	                    <input id="search_value" type="text" placeholder="Search" id="form-field-17" class="form-control " value="{{ $search }}">
-	                    <i class="ti-search"></i>
+	                    <em class="ti-search"></em>
 	                </span>
 	            </div>
 	            <div class="col-md-12 panel panel-info">
@@ -57,7 +56,7 @@
 											<input type="text" placeholder="Dari Tanggal" value="{{ $after_date }}" name="after_date" id="after_date" class="form-control"/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
+													<em class="glyphicon glyphicon-calendar"></em>
 												</button>
 											</span>
 										</p>
@@ -72,7 +71,7 @@
 											<input type="text" placeholder="Sampai Tanggal" value="{{ $before_date }}" name="before_date" id="before_date" class="form-control"/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
+													<em class="glyphicon glyphicon-calendar"></em>
 												</button>
 											</span>
 										</p>
@@ -253,21 +252,25 @@
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
 							<thead>
+								<caption>(SPJ) Surat Perintah Jalan Table</caption>
 								<tr>
-									<th class="center">No</th>
-									<th class="center">Nomor SPK</th>
-									<th class="center">Laboratorium</th>
-									<th class="center">Tipe Pengujian</th>
-                                    <th class="center">Perusahaan</th>
-                                    <th class="center">Perangkat</th>
-                                    <th class="center">Status</th>
-                                    <th class="center">Aksi</th>
+									<th class="center" scope="col">No</th>
+									<th class="center" scope="col">Nomor SPK</th>
+									<th class="center" scope="col">Laboratorium</th>
+									<th class="center" scope="col">Tipe Pengujian</th>
+                                    <th class="center" scope="col">Perusahaan</th>
+                                    <th class="center" scope="col">Perangkat</th>
+                                    <th class="center" scope="col">Status</th>
+                                    <th class="center" scope="col">Aksi</th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php $no=1; ?>
 								@if(count($data)>0)
 									@foreach($data as $item)
+										@if(no==1)
+											<?php continue; ?>
+										@endif
 										<tr>
 											<td class="center">{{$no}}</td>
 											<td class="center">{{ $item->SPK_NUMBER }}</td>
@@ -275,87 +278,10 @@
 											<td class="center">{{ $item->TESTING_TYPE }} ({{ $item->TESTING_TYPE_DESC }})</td>
 											<td class="center">{{ $item->COMPANY_NAME }}</td>
 											<td class="center">{{ $item->DEVICE_NAME }}</td>
-											<?php
-												switch ($item->FLOW_STATUS) {
-									                case 1:
-									                    $status = 'Draft SPK';
-									                    break;
-									                case 2:
-									                    $status = 'SPK dikirim ke Manajer UREL';
-									                    break;
-									                case 3:
-									                    $status = 'SPK disetujui Manajer UREL';
-									                    break;
-									                case 4:
-									                    $status = 'SPK disetujui SMPIA';
-									                    break;
-									                case 5:
-									                    $status = 'SPK disetujui Manager Lab';
-									                    break;
-									                case 6:
-									                    $status = 'Proses Uji';
-									                    break;
-									                case 7:
-									                    $status = 'SPK ditolak Manajer UREL';
-									                    break;
-									                case 8:
-									                    $status = 'SPK ditolak SMPIA';
-									                    break;
-									                case 9:
-									                    $status = 'SPK ditolak Manager Lab';
-									                    break;
-									                case 10:
-									                    $status = 'TE meminta revisi target uji';
-									                    break;
-									                case 11:
-									                    $status = 'Laporan dikirim ke Manajer Lab';
-									                    break;
-									                case 12:
-									                    $status = 'Laporan disetujui Manajer Lab';
-									                    break;
-									                case 13:
-									                    $status = 'Laporan disetujui SMPIA';
-									                    break;
-									                case 14:
-									                    $status = 'Laporan disetujui Manajer UREL';
-									                    break;
-									                case 15:
-									                    $status = 'Laporan dikembalikan Manajer Lab';
-									                    break;
-									                case 16:
-									                    $status = 'Laporan dikembalikan SMPIA';
-									                    break;
-									                case 17:
-									                    $status = 'Laporan dikembalikan Manajer UREL';
-									                    break;
-									                case 18:
-									                    $status = 'Laporan ditolak EGM';
-									                    break;
-									                case 19:
-									                    $status = 'Selesai SPK';
-									                    break;
-									                case 20:
-									                    $status = 'Selesai Uji';
-									                    break;
-									                case 21:
-									                    $status = 'Selesai Sidang';
-									                    break;
-									                case 22:
-									                    $status = 'Sidang Ditunda';
-									                    break;
-									                case 23:
-									                    $status = 'Draft Laporan';
-									                    break;
-									                
-									                default:
-									                    $status = '';
-									                    break;
-									            }
-											?>
-											<td class="center">{{ $status }}</td>
+											<td class="center">{{ $examsArray[no][5] }}</td>
 											<td class="center">
 												<div>
-													<a href="{{URL::to('admin/spk/'.$item->ID.'')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
+													<a href="{{URL::to('admin/spk/'.$item->ID.'')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
 												</div>
 											</td>
 										</tr>

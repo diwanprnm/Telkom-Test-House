@@ -17,16 +17,13 @@ class QueryFilter
     protected const SORT_BY = 'sort_by';
     protected const SORT_TYPE = 'sort_type';
 
-
-    public function __construct()
-    {
- 
-    }
-
-    public function search(Request $request, $query)
+    public function search(Request $request, $query, $number)
     {
         $isNull = true;
         $request->has(self::SEARCH) ? $search = trim($request->input(self::SEARCH)) : $search = '';
+        if (!$number) {
+            return false;
+        }
 
         if ($search != null){
             $query->where(function($qry) use($search){
@@ -36,7 +33,7 @@ class QueryFilter
                 ->orWhereHas(self::COMPANY, function ($q) use ($search){
                         return $q->where('name', 'like', '%'.strtolower($search).'%');
                     })
-                ->orWhere(self::SPB_NUMBER, 'like', '%'.strtolower($search).'%');
+                ->orWhere($number, 'like', '%'.strtolower($search).'%');
             });
             $isNull = false;
         }
@@ -48,12 +45,15 @@ class QueryFilter
         );
     }
 
-    public function beforeDate(Request $request, $query)
+    public function beforeDate(Request $request, $query, $date_variable)
     {
-        $before = 'bisabisabsai';
+        $before = '';
+        if (!$date_variable) {
+            return false;
+        }
 
         if ($request->has(self::BEFORE_DATE)){
-            $query->where('spb_date', '<=', $request->get(self::BEFORE_DATE));
+            $query->where($date_variable, '<=', $request->get(self::BEFORE_DATE));
             $before = $request->get(self::BEFORE_DATE);
         }
 
@@ -63,12 +63,15 @@ class QueryFilter
         );
     }
 
-    public function afterDate(Request $request, $query)
+    public function afterDate(Request $request, $query, $date_variable)
     {
         $after = null;
+        if (!$date_variable) {
+            return false;
+        }
 
         if ($request->has(self::AFTER_DATE)){
-            $query->where('spb_date', '>=', $request->get(self::AFTER_DATE));
+            $query->where($date_variable, '>=', $request->get(self::AFTER_DATE));
             $after = $request->get(self::AFTER_DATE);
         }
 
@@ -81,6 +84,7 @@ class QueryFilter
     public function spb(Request $request, $query)
     {
         $filterSpb = '';
+
         if ($request->has('spb')){
             $filterSpb = $request->get('spb');
             if($request->input('spb') != 'all'){
@@ -94,14 +98,34 @@ class QueryFilter
         );
     }
 
-    public function type(Request $request, $query)
+    public function spk(Request $request, $query)
+    {
+        $filterSpk = '';
+
+        if ($request->has('spk')){
+            $filterSpk = $request->get('spk');
+            if($request->input('spk') != 'all'){
+                $query->where('SPK_NUMBER', $request->get('spk'));
+            }
+        }
+
+        return array(
+            self::QUERY => $query,
+            'filterSpk' => $filterSpk,
+        );
+    }
+
+    public function type(Request $request, $query, $kind_of_type)
     {
         $type = '';
+        if (!$kind_of_type) {
+            return false;
+        }
 
         if ($request->has('type')){
             $type = $request->get('type');
             if($request->input('type') != 'all'){
-                $query->where('examination_type_id', $request->get('type'));
+                $query->where($kind_of_type, $request->get('type'));
             }
         }
 
@@ -111,15 +135,18 @@ class QueryFilter
         );
     }
 
-    public function company(Request $request, $query)
+    public function company(Request $request, $query, $company_variable)
     {
         $filterCompany = '';
+        if (!$company_variable) {
+            return false;
+        }
 
         if ($request->has(self::COMPANY)){
             $filterCompany = $request->get(self::COMPANY);
             if($request->input(self::COMPANY) != 'all'){
                 $query->whereHas(self::COMPANY, function ($q) use ($request){
-                    return $q->where('name', 'like', '%'.$request->get(self::COMPANY).'%');
+                    return $q->where($company_variable, 'like', '%'.$request->get(self::COMPANY).'%');
                 });
             }
         }
@@ -147,9 +174,29 @@ class QueryFilter
         );
     }
 
-    public function getSortedAndOrderedData($request, $query)
+    public function lab(Request $request, $query, $lab_variable)
     {
-        $sort_by = self::SPB_NUMBER;
+        $lab='';
+        if (!$lab_variable) {
+            return false;
+        }
+
+        if ($request->has('lab')){
+            $lab = $request->get('lab');
+            if($request->input('lab') != 'all'){
+                $query->where($lab_variable, $request->get('lab'));
+            }
+        }
+
+        return array(
+            self::QUERY => $query,
+            'lab' => $lab
+        );
+
+    }
+
+    public function getSortedAndOrderedData($request, $query, $sort_by)
+    {
         $sort_type = 'desc';
         $paginate = 10;
 

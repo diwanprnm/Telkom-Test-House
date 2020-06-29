@@ -27,6 +27,8 @@ class SPBController extends Controller
     private const COMPANY = 'company';
     private const QUERY = 'query';
     private const SEARCH = 'search';
+    private const SPB_NUMBER = 'spb_number';
+    private const SPB_DATE = 'spb_date';
     /**
      * Create a new controller instance.
      *
@@ -59,7 +61,7 @@ class SPBController extends Controller
                             ->with('examinationLab')
                             ->with('media')
                             ->with('device');
-        $query->whereNotNull('spb_number');
+        $query->whereNotNull(self::SPB_NUMBER);
         $query->where('registration_status', 1);
         $query->where('function_status', 1);
         $query->where('contract_status', 1);
@@ -68,27 +70,27 @@ class SPBController extends Controller
 
         $queryFilter = new QueryFilter;
 
-        $searchFiltered = $queryFilter->search($request, $query);
+        $searchFiltered = $queryFilter->search($request, $query, self::SPB_NUMBER);
         $query = $searchFiltered[self::QUERY];
-        $search = $searchFiltered[self::search];
+        $search = $searchFiltered[self::SEARCH];
 
         if ($searchFiltered['isNull'])
         {
             $logs = new Logs;
             $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
             $logs->action = "search";  
-            $dataSearch = array(self::search => $search);
+            $dataSearch = array(self::SEARCH => $search);
             $logs->data = json_encode($dataSearch);
             $logs->created_by = $currentUser->id;
             $logs->page = "Rekap Nomor SPB";
             $logs->save();
         }
 
-        $beforeDateFiltered = $queryFilter->beforeDate($request, $query);
+        $beforeDateFiltered = $queryFilter->beforeDate($request, $query, self::SPB_DATE);
         $query = $beforeDateFiltered[self::QUERY];
         $before = $beforeDateFiltered['before'];
 
-        $afterDateFiltered = $queryFilter->afterDate($request, $query);
+        $afterDateFiltered = $queryFilter->afterDate($request, $query, self::SPB_DATE);
         $query = $afterDateFiltered[self::QUERY];
         $after = $afterDateFiltered['after'];
 
@@ -96,11 +98,11 @@ class SPBController extends Controller
         $query = $spbFiltered[self::QUERY];
         $filterSpb = $spbFiltered['filterSpb'];
 
-        $typeFiltered = $queryFilter->type($request, $query);
+        $typeFiltered = $queryFilter->type($request, $query, 'examination_type_id');
         $query = $typeFiltered[self::QUERY];
         $type = $typeFiltered['type'];
 
-        $companyFiltered = $queryFilter->company($request, $query);
+        $companyFiltered = $queryFilter->company($request, $query, 'name');
         $query = $companyFiltered[self::QUERY];
         $filterCompany = $companyFiltered['filterCompany'];
 
@@ -108,7 +110,7 @@ class SPBController extends Controller
         $query = $paymentStatusFiltered[self::QUERY];
         $filterPayment_status = $paymentStatusFiltered['filterPayment_status'];
 
-        $sortedAndOrderedData = $queryFilter->getSortedAndOrderedData($request, $query);
+        $sortedAndOrderedData = $queryFilter->getSortedAndOrderedData($request, $query, self::SPB_NUMBER);
         $data = $sortedAndOrderedData['data'];
         $sort_by = $sortedAndOrderedData['sort_by'];
         $sort_type = $sortedAndOrderedData['sort_type'];
@@ -119,7 +121,7 @@ class SPBController extends Controller
         return view('admin.spb.index')
             ->with('message', $message)
             ->with('data', $data)
-            ->with(self::search, $search)
+            ->with(self::SEARCH, $search)
             ->with('before_date', $before)
             ->with('after_date', $after)
             ->with('spb', $spb)
@@ -151,7 +153,7 @@ class SPBController extends Controller
                             ->with('examinationLab')
                             ->with('media')
                             ->with('device');
-        $query->whereNotNull('spb_number');
+        $query->whereNotNull(self::SPB_NUMBER);
         $query->where('registration_status', 1);
         $query->where('function_status', 1);
         $query->where('contract_status', 1);
@@ -161,19 +163,19 @@ class SPBController extends Controller
         $searchFiltered = $queryFilter->search($request, $query);
         $query = $searchFiltered[self::QUERY];
 
-        $beforeDateFiltered = $queryFilter->beforeDate($request, $query);
+        $beforeDateFiltered = $queryFilter->beforeDate($request, $query, self::SPB_DATE);
         $query = $beforeDateFiltered[self::QUERY];
 
-        $afterDateFiltered = $queryFilter->afterDate($request, $query);
+        $afterDateFiltered = $queryFilter->afterDate($request, $query, self::SPB_DATE);
         $query = $afterDateFiltered[self::QUERY];
 
         $spbFiltered = $queryFilter->spb($request, $query);
         $query = $spbFiltered[self::QUERY];
 
-        $typeFiltered = $queryFilter->type($request, $query);
+        $typeFiltered = $queryFilter->type($request, $query, 'examination_type_id');
         $query = $typeFiltered[self::QUERY];
 
-        $companyFiltered = $queryFilter->company($request, $query);
+        $companyFiltered = $queryFilter->company($request, $query, 'name');
         $query = $companyFiltered[self::QUERY];
 
         $paymentStatusFiltered = $queryFilter->paymentStatus($request, $query);
