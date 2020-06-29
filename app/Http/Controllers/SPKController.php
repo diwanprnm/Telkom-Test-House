@@ -67,21 +67,9 @@ class SPKController extends Controller
 
         $queryFilter = new QueryFilter;
 
-        $searchFiltered = $queryFilter->search($request, $query, 'SPK_NUMBER');
-        $query = $searchFiltered[self::QUERY];
-        $search = $searchFiltered[self::SEARCH];
-
-        if ($searchFiltered['isNull'])
-        {
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = self::SEARCH;  
-            $dataSearch = array(self::SEARCH => $search);
-            $logs->data = json_encode($dataSearch);
-            $logs->created_by = $currentUser->id;
-            $logs->page = self::RIWAYAT_SPK;
-            $logs->save();
-        }
+        $searchAndLog = $this->searchAndLog($queryFilter, $query, $currentUser, $request);
+        $query = $searchAndLog[self::QUERY];
+        $search = $searchAndLog[self::SEARCH];
 
         $beforeDateFiltered = $queryFilter->beforeDate($request, $query, DB::raw(self::EXAMINATION_SPK_DATE));
         $query = $beforeDateFiltered[self::QUERY];
@@ -162,21 +150,8 @@ class SPKController extends Controller
         
         $queryFilter = new QueryFilter;
 
-        $searchFiltered = $queryFilter->search($request, $query, 'SPK_NUMBER');
-        $query = $searchFiltered[self::QUERY];
-        $search = $searchFiltered[self::SEARCH];
-
-        if ($searchFiltered['isNull'])
-        {
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = self::SEARCH;  
-            $dataSearch = array(self::SEARCH => $search);
-            $logs->data = json_encode($dataSearch);
-            $logs->created_by = $currentUser->id;
-            $logs->page = self::RIWAYAT_SPK;
-            $logs->save();
-        }
+        $searchAndLog = $this->searchAndLog($queryFilter, $query, $currentUser, $request);
+        $query = $searchAndLog[self::QUERY];
 
         $beforeDateFiltered = $queryFilter->beforeDate($request, $query, DB::raw(self::EXAMINATION_SPK_DATE));
         $query = $beforeDateFiltered[self::QUERY];
@@ -215,5 +190,31 @@ class SPKController extends Controller
                 $sheet->fromArray($examsArray, null, 'A1', false, false);
             });
         })->export('xlsx');
+    }
+
+    private function searchAndLog($queryFilter, $query, $currentUser, Request $request)
+    {
+        $searchFiltered = $queryFilter->search($request, $query, 'SPK_NUMBER');
+        $query = $searchFiltered[self::QUERY];
+        $search = $searchFiltered[self::SEARCH];
+
+        if ($searchFiltered['isNull'])
+        {
+            $logs = new Logs;
+            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
+            $logs->action = self::SEARCH;  
+            $dataSearch = array(self::SEARCH => $search);
+            $logs->data = json_encode($dataSearch);
+            $logs->created_by = $currentUser->id;
+            $logs->page = self::RIWAYAT_SPK;
+            $logs->save();
+        }
+
+        return array(
+            'queryFilter' => $queryFilter,
+            'query' => $query,
+            'currentUser' => $currentUser,
+            'search' => $search,
+        );
     }
 }
