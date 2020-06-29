@@ -130,15 +130,16 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+							<caption>(Kuitansi) Invoice of Income Table</caption>
 							<thead>
 								<tr>
-									<th class="center"></th>
-									<th class="center">Nomor</th>
-									<th class="center">Sudah diterima dari</th>
-									<th class="center">Banyak Uang</th>
-									<th class="center">Untuk Pembayaran</th>
-									<th class="center">Tanggal</th>
-									<th class="center"></th>
+									<th class="center" scope="col"></th>
+									<th class="center" scope="col">Nomor</th>
+									<th class="center" scope="col">Sudah diterima dari</th>
+									<th class="center" scope="col">Banyak Uang</th>
+									<th class="center" scope="col">Untuk Pembayaran</th>
+									<th class="center" scope="col">Tanggal</th>
+									<th class="center" scope="col"></th>
 								</tr>
 							</thead>
 							<tbody>

@@ -206,15 +206,16 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+							<caption>Income Table</caption>
 							<thead>
 								<tr>
-									<th class="center">No</th>
-									<th class="center">Sumber Pendapatan</th>
-									<th class="center">Nama Pemohon Pengujian</th>
-									<th class="center">Tanggal</th>
-									<th class="center">No. Referensi</th>
-									<th class="center">Nilai</th>
-									<th class="center">Nomor SPK</th>
+									<th class="center" scope="col">No</th>
+									<th class="center" scope="col">Sumber Pendapatan</th>
+									<th class="center" scope="col">Nama Pemohon Pengujian</th>
+									<th class="center" scope="col">Tanggal</th>
+									<th class="center" scope="col">No. Referensi</th>
+									<th class="center" scope="col">Nilai</th>
+									<th class="center" scope="col">Nomor SPK</th>
 								</tr>
 							</thead>
 							<tbody>

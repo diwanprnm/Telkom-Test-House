@@ -71,7 +71,7 @@
 	                                    @endif
 	                                    <td class="center">
 											<div>
-												<a href="{{URL::to('admin/testimonial/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
+												<a href="{{URL::to('admin/testimonial/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
 											</div>
 										</td>
 									</tr>

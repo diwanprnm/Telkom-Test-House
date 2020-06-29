@@ -251,8 +251,8 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+							<caption>(SPJ) Surat Perintah Jalan Table</caption>
 							<thead>
-								<caption>(SPJ) Surat Perintah Jalan Table</caption>
 								<tr>
 									<th class="center" scope="col">No</th>
 									<th class="center" scope="col">Nomor SPK</th>
