@@ -15,6 +15,10 @@ use App\STELSalesAttach;
 use App\STELSalesDetail;
 use App\User;
 
+use App\Services\Querys\QueryFilter;
+use App\Services\Admin\SalesService;
+use App\Services\Logs\LogService;
+
 use Auth;
 use Session; 
 use Validator;
@@ -41,96 +45,31 @@ class SalesController extends Controller
     public function index(Request $request)
     { 
         $currentUser = Auth::user();
-        if ($currentUser){
-            $message = null;
-            $paginate = 10;
+        if (!$currentUser){return redirect("login");}
 
-            $search = trim($request->input('search'));
-            $before = null;
-            $after = null;
-            $payment_status = '';
+        $message = null;
+        $paginate = 10;
 
-            $select = array("stels_sales.id","stels_sales.created_at","stels_sales.invoice","stels_sales.payment_status","stels_sales.payment_method","stels_sales.total","stels_sales.cust_price_payment","companies.name as company_name",
-                DB::raw('stels_sales.id as _id,
-                        (
-                            SELECT GROUP_CONCAT(stels.name SEPARATOR ", ")
-                            FROM
-                                stels,
-                                stels_sales_detail
-                            WHERE
-                                stels_sales_detail.stels_sales_id = _id
-                            AND
-                                stels_sales_detail.stels_id = stels.id
-                        ) as stel_name
-                        ,(
-                            SELECT GROUP_CONCAT(stels.code SEPARATOR ", ")
-                            FROM
-                                stels,
-                                stels_sales_detail
-                            WHERE
-                                stels_sales_detail.stels_sales_id = _id
-                            AND
-                                stels_sales_detail.stels_id = stels.id
-                        ) as stel_code')
-            ); 
+        // initial service sales 
+        $salesService = new SalesService();
 
-            $dataSales = STELSales::select($select)->distinct()->whereNotNull('stels_sales.created_at')
-                        ->join("users","users.id","=","stels_sales.user_id")
-                        ->join("companies","users.company_id","=","companies.id")
-                        ->join("stels_sales_detail","stels_sales_detail.stels_sales_id","=","stels_sales.id")
-                        ->join("stels","stels.id","=","stels_sales_detail.stels_id");
-            
-            if ($search != null){
-            
-                $dataSales = $dataSales->where('invoice','like','%'.$search.'%')
-                            ->orWhere('companies.name', 'like', '%'.$search.'%')
-                            ->orWhere('stels.name', 'like', '%'.$search.'%')
-                            ->orWhere('stels.code', 'like', '%'.$search.'%');
-
-                $logs = new Logs;
-                $logs->id = Uuid::uuid4();
-                $logs->user_id = $currentUser->id;
-                $logs->action = "Search Sales"; 
-                $dataSearch = array("search"=>$search);
-                $logs->data = json_encode($dataSearch);
-                $logs->created_by = $currentUser->id;
-                $logs->page = "Sales";
-                $logs->save();
-
-            }
-
-             if ($request->has('payment_status')){
-                $payment_status = $request->get('payment_status');
-                if($request->input('payment_status') != 'all'){
-                    $dataSales->where('payment_status', $request->get('payment_status'));
-                }
-            }
-
-            if ($request->has('before_date')){  
-                $dataSales->where(DB::raw('DATE(stels_sales.created_at)'), '<=', $request->get('before_date'));
-                $before = $request->get('before_date');
-            }
-
-            if ($request->has('after_date')){ 
-                $dataSales->where(DB::raw('DATE(stels_sales.created_at)'), '>=', $request->get('after_date'));
-                $after = $request->get('after_date');
-            }
-
-            $data = $dataSales->orderBy('stels_sales.created_at', 'desc')
-                                ->paginate($paginate);
-           
-            if (count($dataSales) == 0){
-                $message = 'Data not found';
-            }
-            
-            return view('admin.sales.index')
-                ->with('message', $message)
-                ->with('data', $data)
-                ->with('search', $search)
-                ->with('payment_status', $payment_status)
-                ->with('before_date', $before)
-                ->with('after_date', $after);
+        // gate Sales Data
+        $data = $salesService->getData($request);
+        
+        // give message if data not found
+        if (count($data['data']->paginate($paginate)) == 0){
+            $message = 'Data not found';
         }
+       
+        //return view to saves index with data
+        return view('admin.sales.index')
+            ->with('message', $message)
+            ->with('data', $data['data']->paginate($paginate))
+            ->with('search', $data['search'])
+            ->with('payment_status', $data['paymentStatus'])
+            ->with('before_date', $data['before'])
+            ->with('after_date', $data['after']);
+        
     }
 
     /**
@@ -251,72 +190,18 @@ class SalesController extends Controller
 
     public function excel(Request $request) 
     {
-        // Execute the query used to retrieve the data. In this example
-        // we're joining hypothetical users and payments tables, retrieving
-        // the payments table's primary key, the user's first and last name, 
-        // the user's e-mail address, the amount paid, and the payment
-        // timestamp.
+
+        $currentUser = Auth::user();
+        if (!$currentUser){return redirect("login");}
+
+        $message = 'Data ok';
         
-        $search = trim($request->input('search'));
-        $before = null;
-        $after = null;
-        $payment_status = '';
+        // initial service sales 
+        $salesService = new SalesService();
 
-        $select = array("stels_sales.id","stels_sales.created_at","stels_sales.invoice","stels_sales.payment_status","stels_sales.payment_method","stels_sales.total","stels_sales.cust_price_payment","companies.name as company_name",
-            DB::raw('stels_sales.id as _id,
-                    (
-                        SELECT GROUP_CONCAT(stels.name SEPARATOR ", ")
-                        FROM
-                            stels,
-                            stels_sales_detail
-                        WHERE
-                            stels_sales_detail.stels_sales_id = _id
-                        AND
-                            stels_sales_detail.stels_id = stels.id
-                    ) as stel_name
-                    ,(
-                        SELECT GROUP_CONCAT(stels.code SEPARATOR ", ")
-                        FROM
-                            stels,
-                            stels_sales_detail
-                        WHERE
-                            stels_sales_detail.stels_sales_id = _id
-                        AND
-                            stels_sales_detail.stels_id = stels.id
-                    ) as stel_code')
-        ); 
+        // gate Sales Data
+        $data = $salesService->getData($request)['data']->get();
 
-        $dataSales = STELSales::select($select)->distinct()->whereNotNull('stels_sales.created_at')
-                    ->join("users","users.id","=","stels_sales.user_id")
-                    ->join("companies","users.company_id","=","companies.id")
-                    ->join("stels_sales_detail","stels_sales_detail.stels_sales_id","=","stels_sales.id")
-                    ->join("stels","stels.id","=","stels_sales_detail.stels_id");
-        
-        if ($search != null){
-            $dataSales = $dataSales->where('invoice','like','%'.$search.'%')
-                        ->orWhere('companies.name', 'like', '%'.$search.'%')
-                        ->orWhere('stels.name', 'like', '%'.$search.'%')
-                        ->orWhere('stels.code', 'like', '%'.$search.'%');
-        }
-
-         if ($request->has('payment_status')){
-            $payment_status = $request->get('payment_status');
-            if($request->input('payment_status') != 'all'){
-                $dataSales->where('payment_status', $request->get('payment_status'));
-            }
-        }
-
-        if ($request->has('before_date')){  
-            $dataSales->where(DB::raw('DATE(stels_sales.created_at)'), '<=', $request->get('before_date'));
-            $before = $request->get('before_date');
-        }
-
-        if ($request->has('after_date')){ 
-            $dataSales->where(DB::raw('DATE(stels_sales.created_at)'), '>=', $request->get('after_date'));
-            $after = $request->get('after_date');
-        }
-
-        $data = $dataSales->orderBy('stels_sales.created_at', 'desc')->get();
 
         // Define the Excel spreadsheet headers
         $examsArray[] = [
@@ -328,34 +213,31 @@ class SalesController extends Controller
             'Status',
             'Payment Method',
             'Document Code'
-        ]; 
+        ];
+
+         // Define payment status
+        $paymentStatusList = array(
+            '-1'=> 'Paid (decline)',
+            '0' => 'Unpaid',
+            '1' => 'Paid (success)',
+            '2' => 'Paid (waiting confirmation)',
+            '3' => 'Paid (delivered)'
+        );
+       
+        
         
         // Convert each member of the returned collection into an array,
         // and append it to the payments array.
             $no = 0;
         foreach ($data as $row) {
             $no ++;
-            $payment_status = "Paid (success)";
-            switch ($row->payment_status) {
-                case -1:
-                    $payment_status = "Paid (decline)";
-                    break; 
-                case 0:
-                    $payment_status = "Unpaid";
-                    break; 
-                case 1:
-                    $payment_status = "Paid (success)";
-                    break; 
-                case 2:
-                    $payment_status = "Paid (waiting confirmation)";
-                    break; 
-                case 3:
-                    $payment_status = "Paid (delivered)";
-                    break; 
-                default:
-                    # code...
-                    break;
+            
+            if ($paymentStatusList[$row->payment_status]){
+                $payment_status = $paymentStatusList[$row->payment_status];
+            }else{
+                $payment_status = "Paid (success)";
             }
+
             $examsArray[] = [
                 $no,
                 $row->company_name,
@@ -367,15 +249,10 @@ class SalesController extends Controller
                 $row->stel_code
             ];
         }
-        $currentUser = Auth::user();
-        $logs = new Logs;
-        $logs->id = Uuid::uuid4();
-        $logs->user_id = $currentUser->id;
-        $logs->action = "download_excel";   
-        $logs->data = "";
-        $logs->created_by = $currentUser->id;
-        $logs->page = "SALES";
-        $logs->save();
+
+        // Create log
+        $logService = new LogService;
+        $logService->createLog('download_excel', 'SALES','');
 
         // Generate and return the spreadsheet
         Excel::create('Data Sales', function($excel) use ($examsArray) { 
@@ -412,24 +289,6 @@ class SalesController extends Controller
 		$notifUploadSTEL = 0;
         $data = array();
         if ($request->has('payment_status')){
-
-            /*TPN api_invoice*/
-            /*if($request->input('payment_status') == 1 && $STELSales->payment_status !=1 && $STELSales->BILLING_ID){
-                $data_invoices = [
-                    "billing_id" => $STELSales->BILLING_ID,
-                    "created" => [
-                        "by" => "SUPERADMIN UREL",
-                        "reference_id" => "1"
-                    ]
-                ];
-
-                $invoice = $this->api_invoice($data_invoices);
-                $STELSales->INVOICE_ID = $invoice && $invoice->status == true ? $invoice->data->_id : null;*/
-                /*if($invoice && $invoice->status == false){
-                    Session::flash('error', $invoice->message);
-                    return redirect('/admin/sales/'.$STELSales->id.'/edit');
-                }*/
-            // }
             $attachment_count = 0;
             $success_count = 0;
             for($i=0;$i<count($request->input('stels_sales_detail_id'));$i++){
@@ -529,14 +388,11 @@ class SalesController extends Controller
 						$data['id'] = $notification->id; 
 						event(new Notification($data));
 						
-						$logs = new Logs;
-						$logs->user_id = $currentUser->id;
-						$logs->id = Uuid::uuid4();
-						$logs->action = "Upload Dokumen Pembelian STEL";
-						$logs->data = $oldStel;
-						$logs->created_by = $currentUser->id;
-						$logs->page = "SALES";
-						$logs->save();
+                        
+                        // Create log
+                        $logService = new LogService;
+                        $logService->createLog('Upload Dokumen Pembelian STEL', 'SALES',$oldStel);
+
 						
 						Session::flash('message', 'STELS successfully uploaded');
 				}else{
@@ -588,14 +444,10 @@ class SalesController extends Controller
 						event(new Notification($data));
 					}
 
-					$logs = new Logs;
-					$logs->user_id = $currentUser->id;
-					$logs->id = Uuid::uuid4();
-					$logs->action = "Update Status Pembayaran STEL";
-					$logs->data = $oldStel;
-					$logs->created_by = $currentUser->id;
-					$logs->page = "SALES";
-					$logs->save();
+                    //create log
+                    $logService->createLog('Update Status Pembayaran STEL', 'SALES',$oldStel);
+
+                    //flash message
 					Session::flash('message', 'SALES successfully updated');
 				}
 
@@ -620,11 +472,6 @@ class SalesController extends Controller
             $params['multipart'] = $data;
             $res_upload = $client->post("v1/billings/".$BILLING_ID."/deliver", $params)->getBody(); //BILLING_ID
             $upload = json_decode($res_upload);
-
-            /*get
-                $upload->status; //if true lanjut, else panggil lagi API nya, dan jalankan API invoices
-                $upload->data->_id;
-            */
 
             return $upload;
         } catch(Exception $e){
