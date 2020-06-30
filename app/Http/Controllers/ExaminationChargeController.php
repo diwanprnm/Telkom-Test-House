@@ -13,6 +13,8 @@ use Input;
 use App\Logs;
 use App\ExaminationCharge;
 
+use App\Services\Logs\LogService;
+
 use Excel;
 
 use Ramsey\Uuid\Uuid;
@@ -358,14 +360,10 @@ class ExaminationChargeController extends Controller
                 $row->is_active == '1' ? 'Active' : 'Not Active'
             ];
         }
-        $currentUser = Auth::user();
-        $logs = new Logs;
-        $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-        $logs->action = "download_excel";   
-        $logs->data = "";
-        $logs->created_by = $currentUser->id;
-        $logs->page = "Tarif Pengujian";
-        $logs->save();
+
+        // Create log
+        $logService = new LogService;
+        $logService->createLog('download_excel', 'Tarif Pengujian','');
 
         // Generate and return the spreadsheet
         Excel::create('Data Tarif Pengujian', function($excel) use ($examsArray) {

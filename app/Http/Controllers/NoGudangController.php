@@ -18,6 +18,8 @@ use App\ExaminationLab;
 use App\Company;
 use App\Logs;
 
+use App\Services\Logs\LogService;
+
 use Excel;
 
 use Ramsey\Uuid\Uuid;
@@ -74,15 +76,12 @@ class NoGudangController extends Controller
         // tambah filter search ke query kalau ada
         $fileredSearch = $this->filterSearch($search, $query);
         $query = $fileredSearch->$query;
+
         // Masukan dalam log kalau user mencoba mencari sesuatu
         if (!$fileredSearch->isNull){
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "search";
-            $logs->data = json_encode(array(self::SEARCH => $search));
-            $logs->created_by = $currentUser->id;
-            $logs->page = "Rekap Nomor Gudang";
-            $logs->save();
+            // Create log
+            $logService = new LogService;
+            $logService->createLog('search', 'Rekap Nomor Gudang', json_encode(array(self::SEARCH => $search)));
         }
         
         /// tambah filter before_date ke query kalau ada
