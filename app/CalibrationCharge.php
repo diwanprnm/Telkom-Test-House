@@ -18,7 +18,6 @@ class CalibrationCharge extends Model
 		->where('device_name', 'like','%'.$query.'%')
 		->orderBy('device_name')
 		->take(5)
-		->distinct()
-		//->get();;
+		->distinct();
 	}
 }
