@@ -49,6 +49,7 @@ echo "Run db migration"
 sleep ${LARAVEL_SEED_SLEEP}
 php artisan migrate --force
 php artisan db:seed
+php artisan key:generate
 
 echo "Run default entrypoint"
 exec /usr/bin/supervisord -n -c /var/www/data/etc/supervisor/supervisord.conf -d /var/www/data/etc/supervisor
