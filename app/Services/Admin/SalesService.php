@@ -15,6 +15,7 @@ use App\Services\Querys\QueryFilter;
 class SalesService
 {
     protected const SEARCH = 'search';
+    protected const QUERY = 'query';
     
     public function getData(Request $request)
     {
@@ -27,27 +28,27 @@ class SalesService
         
         //filter search if has input create log.
         $searchFiltered = $this->search($request, $dataSales);
-        if ($searchFiltered['search']!=''){
-            LogService::createLog("Search Sales","Sales",array("search"=>$search));
+        if ($searchFiltered[self::SEARCH]!=''){
+            LogService::createLog("Search Sales","Sales",array("search"=>$searchFiltered[self::SEARCH]));
         }
         $dataSales = $searchFiltered['dataSales'];
         
         //data filtered by paymet_status
         $paymentFiltered = $queryFilter->paymentStatusAll($request, $dataSales);
-        $dataSales = $paymentFiltered['query'];
+        $dataSales = $paymentFiltered[self::QUERY];
 
         //filter beforeDate
         $beforeFiltered = $queryFilter->beforeDate($request, $dataSales, DB::raw('DATE(stels_sales.created_at)'));
-        $dataSales = $beforeFiltered['query'];
+        $dataSales = $beforeFiltered[self::QUERY];
 
         //filter afterDate
         $afterFiltered = $queryFilter->afterDate($request, $dataSales, DB::raw('DATE(stels_sales.created_at)'));
-        $dataSales = $afterFiltered['query'];
+        $dataSales = $afterFiltered[self::QUERY];
 
         //get the data and sort them
         return array(
             'data' => $queryFilter->getSortedAndOrderedData($request, $dataSales, 'created_at')['data'],
-            'search' => $searchFiltered['search'],
+            $this::SEARCH => $searchFiltered[$this::SEARCH],
             'paymentStatus' => $paymentFiltered['filterPayment_status'],
             'before' => $beforeFiltered['before'],
             'after' => $afterFiltered['after'],
@@ -100,9 +101,8 @@ class SalesService
 
         return array(
             'dataSales' => $dataSales,
-            'search' => $search,
+            $this::SEARCH => $search,
         );
-        
     }
 
 

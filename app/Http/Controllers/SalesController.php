@@ -18,6 +18,7 @@ use App\User;
 use App\Services\Querys\QueryFilter;
 use App\Services\Admin\SalesService;
 use App\Services\Logs\LogService;
+use App\Services\NotificationService;
 
 use Auth;
 use Session; 
@@ -38,7 +39,34 @@ use App\NotificationTable;
 
 class SalesController extends Controller
 { 
-     public function __construct()
+    private const SEARCH = 'search';
+    private const MESSAGE = 'message';
+    private const LOGIN = 'login';
+    private const PAYMENT_STATUS = 'payment_status';
+    private const STELS = 'stels';
+    private const USERS = 'users';
+    private const ADMIN_SALES = '/admin/sales';
+    private const FAKTUR_FILE = 'faktur_file';
+    private const ERROR = 'error';
+    private const SALES = 'SALES';
+    private const STEL_FILE = 'stel_file';
+    private const EDIT = '/edit';
+    private const KUITANSI_FILE = 'kuitansi_file';
+    private const MEDIA_STEL = '/media/stel/';
+    private const ADMIN = 'admin';
+    private const PAYMENT_DETAIL = 'payment_detail/';
+    private const IS_READ = 'is_read';
+    private const HEADERS = 'headers';
+    private const AUTHORIZATION = 'Authorization';
+    private const APP_GATEWAY_TPN = 'app.gateway_tpn';
+    private const BASE_URI = 'base_uri';
+    private const APP_URL_API_TPN = 'app.url_api_tpn';
+    private const CONTENT_TYPE = 'Content-Type: application/octet-stream';
+    private const V1_INVOICE = 'v1/invoices/';
+    private const TIMEOUT = 'timeout';
+    private const HTTP_ERROR = 'http_errors';
+
+    public function __construct()
     {
         $this->middleware('auth.admin');
     }
@@ -47,10 +75,9 @@ class SalesController extends Controller
         $currentUser = Auth::user();
         if (!$currentUser){return redirect("login");}
 
+        //initial var
         $message = null;
         $paginate = 10;
-
-        // initial service sales 
         $salesService = new SalesService();
 
         // gate Sales Data
@@ -65,21 +92,17 @@ class SalesController extends Controller
         return view('admin.sales.index')
             ->with('message', $message)
             ->with('data', $data['data']->paginate($paginate))
-            ->with('search', $data['search'])
+            ->with(self::SEARCH, $data[self::SEARCH])
             ->with('payment_status', $data['paymentStatus'])
             ->with('before_date', $data['before'])
             ->with('after_date', $data['after']);
         
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
-        if(Auth::user()->id == 1 or Auth::user()->email == 'admin@mail.com'){
+        if(Auth::user()->id == 1 || Auth::user()->email == 'admin@mail.com'){
             $stels = STEL::where("is_active", 1)->orderBy('name')->get();
             $users = User::where("role_id", 2)->where("is_active", 1)->orderBy('name')->get();
             return view('admin.sales.create')
@@ -90,12 +113,7 @@ class SalesController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
         $currentUser = Auth::user();
@@ -114,7 +132,6 @@ class SalesController extends Controller
         $sales->payment_status = 1;
         $sales->total = array_sum($stel_price) + $tax;
         $sales->cust_price_payment = array_sum($stel_price) + $tax;
-
         $sales->created_by = $request->input('user_id');
         $sales->updated_by = $currentUser->id;
 
@@ -166,7 +183,6 @@ class SalesController extends Controller
         }else{
             redirect("login");
         }
-        
     }  
 
     public function sales_detail($id)
@@ -193,15 +209,12 @@ class SalesController extends Controller
 
         $currentUser = Auth::user();
         if (!$currentUser){return redirect("login");}
-
-        $message = 'Data ok';
         
         // initial service sales 
         $salesService = new SalesService();
 
         // gate Sales Data
         $data = $salesService->getData($request)['data']->get();
-
 
         // Define the Excel spreadsheet headers
         $examsArray[] = [
@@ -223,12 +236,9 @@ class SalesController extends Controller
             '2' => 'Paid (waiting confirmation)',
             '3' => 'Paid (delivered)'
         );
-       
         
-        
-        // Convert each member of the returned collection into an array,
-        // and append it to the payments array.
-            $no = 0;
+        // Convert each ot the returned collection into an array, and append it to the payments array
+        $no = 0;
         foreach ($data as $row) {
             $no ++;
             
@@ -282,183 +292,144 @@ class SalesController extends Controller
 
     public function update(Request $request, $id)
     {
-		$currentUser = Auth::user();
+        if (!$request->has('payment_status')){return redirect('/admin/sales');}
 
+		$currentUser = Auth::user();
         $STELSales = STELSales::find($id);
+        $notificationService = new NotificationService();
+
         $oldStel = $STELSales;  
 		$notifUploadSTEL = 0;
         $data = array();
-        if ($request->has('payment_status')){
-            $attachment_count = 0;
-            $success_count = 0;
-            for($i=0;$i<count($request->input('stels_sales_detail_id'));$i++){
-                $attachment = $request->input('stels_sales_attachment')[$i];
-                if(!$attachment){$attachment_count++;}
-                if ($request->file('stel_file')[$i]) {
-					$name_file = 'stel_file_'.$request->file('stel_file')[$i]->getClientOriginalName();
-					$path_file = public_path().'/media/stelAttach/'.$request->input('stels_sales_detail_id')[$i];
-					if (!file_exists($path_file)) {
-						mkdir($path_file, 0775);
-					}
-					if($request->file('stel_file')[$i]->move($path_file,$name_file)){
-						$STELSalesDetail = STELSalesDetail::find($request->input('stels_sales_detail_id')[$i]);
-						$STELSalesDetail->attachment = $name_file;
-						$STELSalesDetail->save();
-						$notifUploadSTEL = 1;
-                        $success_count++;
 
-                        /*TPN api_upload*/
-                        $data [] = 
-                            [
-                                'name' => "file",
-                                'contents' => fopen($path_file.'/'.$name_file, 'r'),
-                                'filename' => $request->file('stel_file')[$i]->getClientOriginalName()
-                            ]
-                        ;
-					}else{
-						Session::flash('error', 'Save STEL to directory failed');
-						return redirect('/admin/sales/'.$STELSales->id.'/edit');
-					}
-				}
-			}
+        $attachment_count = 0;
+        $success_count = 0;
+        for($i=0;$i<count($request->input('stels_sales_detail_id'));$i++){
+            $attachment = $request->input('stels_sales_attachment')[$i];
+            if(!$attachment){$attachment_count++;}
+            if ($request->file('stel_file')[$i]) {
+                $name_file = 'stel_file_'.$request->file('stel_file')[$i]->getClientOriginalName();
+                $path_file = public_path().'/media/stelAttach/'.$request->input('stels_sales_detail_id')[$i];
+                if (!file_exists($path_file)) {
+                    mkdir($path_file, 0775);
+                }
+                if($request->file('stel_file')[$i]->move($path_file,$name_file)){
+                    $STELSalesDetail = STELSalesDetail::find($request->input('stels_sales_detail_id')[$i]);
+                    $STELSalesDetail->attachment = $name_file;
+                    $STELSalesDetail->save();
+                    $notifUploadSTEL = 1;
+                    $success_count++;
+
+                    /*TPN api_upload*/
+                    $data [] = [
+                            'name' => "file",
+                            'contents' => fopen($path_file.'/'.$name_file, 'r'),
+                            'filename' => $request->file('stel_file')[$i]->getClientOriginalName()
+                        ];
+                }else{
+                    Session::flash('error', 'Save STEL to directory failed');
+                    return redirect('/admin/sales'.'/'.$STELSales->id.'/edit');
+                }
+            }
+        }
+        
+        /*TPN api_upload*/
+        if($STELSales->BILLING_ID != null && $data != null){
+            $data [] = array(
+                'name'=>"delivered",
+                'contents'=>json_encode(['by'=>$currentUser->name, "reference_id" => $currentUser->id]),
+            );
+
+            //$upload = $this->api_upload($data,$STELSales->BILLING_ID)
+        }
+
+        if ($request->hasFile('kuitansi_file')) {
+            $name_file = 'kuitansi_stel_'.$request->file('kuitansi_file')->getClientOriginalName();
+            $path_file = public_path().'/media/stel/'.$STELSales->id;
+            if (!file_exists($path_file)) {
+                mkdir($path_file, 0775);
+            }
+            if($request->file('kuitansi_file')->move($path_file,$name_file)){
+                $STELSales->id_kuitansi = $name_file;					
+            }else{
+                Session::flash('error', 'Save Receipt to directory failed');
+                return redirect('/admin/sales'.'/'.$STELSales->id.'/edit');
+            }
+        }
+        if ($request->hasFile('faktur_file')) {
+            $name_file = 'faktur_stel_'.$request->file('faktur_file')->getClientOriginalName();
+            $path_file = public_path().'/media/stel/'.$STELSales->id;
+            if (!file_exists($path_file)) {
+                mkdir($path_file, 0775);
+            }
+            if($request->file('faktur_file')->move($path_file,$name_file)){
+                $STELSales->faktur_file = $name_file;					
+            }else{
+                Session::flash('error', 'Save Invoice to directory failed');
+                return redirect('/admin/sales'.'/'.$STELSales->id.'/edit');
+            }
+        }
+        $STELSales->updated_by = $currentUser->id; 
+        $STELSales->payment_status = $success_count == $attachment_count && $attachment_count > 0 ? 3 : $request->input('payment_status');
+
+        try{
+            $STELSales->save();
             
-            /*TPN api_upload*/
-            if($STELSales->BILLING_ID != null && $data != null){
-                $data [] = array(
-                    'name'=>"delivered",
-                    'contents'=>json_encode(['by'=>$currentUser->name, "reference_id" => $currentUser->id]),
-                );
+            if($notifUploadSTEL == 1){
+                    
+                $data['id'] = $notificationService->make(array(
+                    "from"=>"admin",
+                    "to"=>$STELSales->created_by,
+                    "message"=>"STEL telah diupload",
+                    "url"=>"payment_detail/".$STELSales->id,
+                    "is_read"=>0,
+                ));
+                event(new Notification($data));
+                
+                // Create log
+                $logService = new LogService;
+                $logService->createLog('Upload Dokumen Pembelian STEL', 'SALES',$oldStel);
 
-                $upload = $this->api_upload($data,$STELSales->BILLING_ID);
+                    
+                    Session::flash('message', 'STELS successfully uploaded');
+            }else{
+                if ($STELSales->payment_status == 1) {
+
+                    // Make PAYMENT ACCEPTED notification & event
+                    $data['id'] = $notificationService->make(array(
+                        "from"=>"admin",
+                        "to"=>$STELSales->created_by,
+                        "message"=>"Pembayaran Stel Telah diterima",
+                        "url"=>"payment_detail/".$STELSales->id,
+                        "is_read"=>0,
+                    ));
+                    event(new Notification($data));
+                } else if($STELSales->payment_status == -1) {
+
+                    // Make PAYMENT REJECTED notification & event
+                    $data['id'] = $notificationService->make(array(
+                        "from"=>"admin",
+                        "to"=>$STELSales->created_by,
+                        "message"=>"Pembayaran Stel Telah ditolak",
+                        "url"=>"payment_detail/".$STELSales->id,
+                        "is_read"=>0,
+                    ));
+                    event(new Notification($data));
+                }
+
+                //create log
+                $logService->createLog('Update Status Pembayaran STEL', 'SALES',$oldStel);
+
+                //flash message
+                Session::flash('message', 'SALES successfully updated');
             }
 
-			if ($request->hasFile('kuitansi_file')) {
-				$name_file = 'kuitansi_stel_'.$request->file('kuitansi_file')->getClientOriginalName();
-				$path_file = public_path().'/media/stel/'.$STELSales->id;
-				if (!file_exists($path_file)) {
-					mkdir($path_file, 0775);
-				}
-				if($request->file('kuitansi_file')->move($path_file,$name_file)){
-					$STELSales->id_kuitansi = $name_file;					
-				}else{
-					Session::flash('error', 'Save Receipt to directory failed');
-					return redirect('/admin/sales/'.$STELSales->id.'/edit');
-				}
-			}
-			if ($request->hasFile('faktur_file')) {
-				$name_file = 'faktur_stel_'.$request->file('faktur_file')->getClientOriginalName();
-				$path_file = public_path().'/media/stel/'.$STELSales->id;
-				if (!file_exists($path_file)) {
-					mkdir($path_file, 0775);
-				}
-				if($request->file('faktur_file')->move($path_file,$name_file)){
-					$STELSales->faktur_file = $name_file;					
-				}else{
-					Session::flash('error', 'Save Invoice to directory failed');
-					return redirect('/admin/sales/'.$STELSales->id.'/edit');
-				}
-			}
-            $STELSales->updated_by = $currentUser->id; 
-            $STELSales->payment_status = $success_count == $attachment_count && $attachment_count > 0 ? 3 : $request->input('payment_status');
-
-            try{
-                $STELSales->save();
-				
-				if($notifUploadSTEL == 1){
-					$data= array( 
-						"from"=>"admin",
-						"to"=>$STELSales->created_by,
-						"message"=>"STEL telah diupload",
-						"url"=>"payment_detail/".$STELSales->id,
-						"is_read"=>0,
-						"created_at"=>date("Y-m-d H:i:s"),
-						"updated_at"=>date("Y-m-d H:i:s")
-						);
-
-						$notification = new NotificationTable();
-						$notification->id = Uuid::uuid4();
-						$notification->from = $data['from'];
-						$notification->to = $data['to'];
-						$notification->message = $data['message'];
-						$notification->url = $data['url'];
-						$notification->is_read = $data['is_read'];
-						$notification->created_at = $data['created_at'];
-						$notification->updated_at = $data['updated_at'];
-						$notification->save();
-						$data['id'] = $notification->id; 
-						event(new Notification($data));
-						
-                        
-                        // Create log
-                        $logService = new LogService;
-                        $logService->createLog('Upload Dokumen Pembelian STEL', 'SALES',$oldStel);
-
-						
-						Session::flash('message', 'STELS successfully uploaded');
-				}else{
-					if ($STELSales->payment_status == 1) {
-						$data= array( 
-						"from"=>"admin",
-						"to"=>$STELSales->created_by,
-						"message"=>"Pembayaran Stel Telah diterima",
-						"url"=>"payment_detail/".$STELSales->id,
-						"is_read"=>0,
-						"created_at"=>date("Y-m-d H:i:s"),
-						"updated_at"=>date("Y-m-d H:i:s")
-						);
-
-						$notification = new NotificationTable();
-						$notification->id = Uuid::uuid4();
-						$notification->from = $data['from'];
-						$notification->to = $data['to'];
-						$notification->message = $data['message'];
-						$notification->url = $data['url'];
-						$notification->is_read = $data['is_read'];
-						$notification->created_at = $data['created_at'];
-						$notification->updated_at = $data['updated_at'];
-						$notification->save();
-						$data['id'] = $notification->id; 
-						event(new Notification($data));
-					} else if($STELSales->payment_status == -1) {
-						$data= array( 
-						"from"=>"admin",
-						"to"=>$STELSales->created_by,
-						"message"=>"Pembayaran Stel Telah ditolak",
-						"url"=>"payment_detail/".$STELSales->id,
-						"is_read"=>0,
-						"created_at"=>date("Y-m-d H:i:s"),
-						"updated_at"=>date("Y-m-d H:i:s")
-						);
-
-						$notification = new NotificationTable();
-						$notification->id = Uuid::uuid4();
-						$notification->from = $data['from'];
-						$notification->to = $data['to'];
-						$notification->message = $data['message'];
-						$notification->url = $data['url'];
-						$notification->is_read = $data['is_read'];
-						$notification->created_at = $data['created_at'];
-						$notification->updated_at = $data['updated_at'];
-						$notification->save();
-						$data['id'] = $notification->id; 
-						event(new Notification($data));
-					}
-
-                    //create log
-                    $logService->createLog('Update Status Pembayaran STEL', 'SALES',$oldStel);
-
-                    //flash message
-					Session::flash('message', 'SALES successfully updated');
-				}
-
-                return redirect('/admin/sales');
-            } catch(Exception $e){
-                Session::flash('error', 'Save failed');
-                return redirect('/admin/sales/'.$STELSales->id.'/edit');
-            }
-        }else{
             return redirect('/admin/sales');
-        } 
+        } catch(Exception $e){
+            Session::flash('error', 'Save failed');
+            return redirect('/admin/sales'.'/'.$STELSales->id.'/edit');
+        }
+ 
     }
 
     public function api_upload($data, $BILLING_ID){
@@ -471,9 +442,8 @@ class SalesController extends Controller
         try {
             $params['multipart'] = $data;
             $res_upload = $client->post("v1/billings/".$BILLING_ID."/deliver", $params)->getBody(); //BILLING_ID
-            $upload = json_decode($res_upload);
+            return json_decode($res_upload);
 
-            return $upload;
         } catch(Exception $e){
             return null;
         }
@@ -489,14 +459,12 @@ class SalesController extends Controller
         try {
             $param_invoices['json'] = $data_invoices;
             $res_invoices = $client->post("v1/invoices", $param_invoices)->getBody()->getContents();
-            $invoice = json_decode($res_invoices);
+            return json_decode($res_invoices);
 
             /*get
                 $invoice->status; //if true lanjut, else panggil lagi API ny
                 $invoice->data->_id; //INVOICE_ID
             */
-
-            return $invoice;
         } catch(Exception $e){
             return null;
         }
@@ -518,7 +486,7 @@ class SalesController extends Controller
         
         if($STELSales[0]->BILLING_ID && !$STELSales[0]->INVOICE_ID){
             Session::flash('error', "Can't upload attachment. Undefined INVOICE_ID!");
-            return redirect('/admin/sales/');
+            return redirect('/admin/sales,'.'/');
         }else{
             return view('admin.sales.upload')
                 ->with('data', $stel)
@@ -643,61 +611,60 @@ class SalesController extends Controller
         ]);
 
         $STELSales = STELSales::where("id", $request->input('id'))->first();
-        if($STELSales){
-            try {
-                $INVOICE_ID = $STELSales->INVOICE_ID;
-                $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
-                $invoice = json_decode($res_invoice->getBody());
-                
-                if($INVOICE_ID && $invoice && $invoice->status == true){
-                    $status_invoice = $invoice->data->status_invoice;
-                    if($status_invoice == "approved"){
-                        $status_faktur = $invoice->data->status_faktur;
-                        if($status_faktur == "received"){
-                            /*SAVE KUITANSI*/
-                            $name_file = 'kuitansi_stel_'.$INVOICE_ID.'.pdf';
+        if(!$STELSales){return "Data Pembelian Tidak Ditemukan!";}
 
-                            $path_file = public_path().'/media/stel/'.$request->input('id');
-                            if (!file_exists($path_file)) {
-                                mkdir($path_file, 0775);
-                            }
-                            $response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/exportpdf');
-                            $stream = (String)$response->getBody();
+        try {
+            $INVOICE_ID = $STELSales->INVOICE_ID;
+            $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
+            $invoice = json_decode($res_invoice->getBody());
+            
+            if($INVOICE_ID && $invoice && $invoice->status){
+                $status_invoice = $invoice->data->status_invoice;
+                if($status_invoice == "approved"){
+                    $status_faktur = $invoice->data->status_faktur;
+                    if($status_faktur == "received"){
+                        /*SAVE KUITANSI*/
+                        $name_file = 'kuitansi_stel_'.$INVOICE_ID.'.pdf';
 
-                            if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
-                                $STELSales->id_kuitansi = $name_file;
-                                $STELSales->save();
-                                return "Kuitansi Berhasil Disimpan.";
-                            }else{
-                                return "Gagal Menyimpan Kuitansi!";
-                            }
+                        $path_file = public_path().'/media/stel/'.$request->input('id');
+                        if (!file_exists($path_file)) {
+                            mkdir($path_file, 0775);
+                        }
+                        $response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/exportpdf');
+                        $stream = (String)$response->getBody();
+
+                        if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
+                            $STELSales->id_kuitansi = $name_file;
+                            $STELSales->save();
+                            return "Kuitansi Berhasil Disimpan.";
                         }else{
-                            return $invoice->data->status_faktur;
+                            return "Gagal Menyimpan Kuitansi!";
                         }
                     }else{
-                        switch ($status_invoice) {
-                            case 'invoiced':
-                                return "Invoice Baru Dibuat.";
-                                break;
-                            
-                            case 'returned':
-                                return $invoice->data->$status_invoice->message;
-                                break;
-                            
-                            default:
-                                return "Invoice sudah dikirim ke DJP.";
-                                break;
-                        }
+                        return $invoice->data->status_faktur;
                     }
                 }else{
-                    return "Data Invoice Tidak Ditemukan!";        
+                    switch ($status_invoice) {
+                        case 'invoiced':
+                            return "Invoice Baru Dibuat.";
+                            break;
+                        
+                        case 'returned':
+                            return $invoice->data->$status_invoice->message;
+                            break;
+                        
+                        default:
+                            return "Invoice sudah dikirim ke DJP.";
+                            break;
+                    }
                 }
-            } catch(Exception $e){
-                return null;
+            }else{
+                return "Data Invoice Tidak Ditemukan!";        
             }
-        }else{
-            return "Data Pembelian Tidak Ditemukan!";
+        } catch(Exception $e){
+            return null;
         }
+
     }
 
     public function generateTaxInvoice(Request $request) {
@@ -710,84 +677,95 @@ class SalesController extends Controller
 
         $STELSales = STELSales::where("id", $request->input('id'))->first();
 
-        if($STELSales){
-            /* GENERATE NAMA FILE FAKTUR */
-                $stel = STELSales::select(DB::raw('companies.name as company_name, 
-                                (
-                                    SELECT GROUP_CONCAT(stels.code SEPARATOR ", ")
-                                    FROM
-                                        stels,
-                                        stels_sales_detail
-                                    WHERE
-                                        stels_sales_detail.stels_sales_id = stels_sales.id
-                                    AND
-                                        stels_sales_detail.stels_id = stels.id
-                                ) as description, DATE(stels_sales_attachment.updated_at) as payment_date'))
-                ->join('users', 'stels_sales.created_by', '=', 'users.id')
-                ->join('companies', 'users.company_id', '=', 'companies.id')
-                ->join('stels_sales_detail', 'stels_sales.id', '=', 'stels_sales_detail.stels_sales_id')
-                ->leftJoin('stels_sales_attachment', 'stels_sales.id', '=', 'stels_sales_attachment.stel_sales_id')
-                ->join('stels', 'stels_sales_detail.stels_id', '=', 'stels.id')
-                ->where('stels_sales.id', $request->input('id'))
-                ->get();
+        if(!$STELSales){return "Data Pembelian Tidak Ditemukan!";}
+        
+        /* GENERATE NAMA FILE FAKTUR */
+        $stel = STELSales::select(DB::raw('companies.name as company_name, 
+            (
+                SELECT GROUP_CONCAT(stels.code SEPARATOR ", ")
+                FROM
+                    stels,
+                    stels_sales_detail
+                WHERE
+                    stels_sales_detail.stels_sales_id = stels_sales.id
+                AND
+                    stels_sales_detail.stels_id = stels.id
+            ) as description, DATE(stels_sales_attachment.updated_at) as payment_date'))
+            ->join('users', 'stels_sales.created_by', '=', 'users.id')
+            ->join('companies', 'users.company_id', '=', 'companies.id')
+            ->join('stels_sales_detail', 'stels_sales.id', '=', 'stels_sales_detail.stels_sales_id')
+            ->leftJoin('stels_sales_attachment', 'stels_sales.id', '=', 'stels_sales_attachment.stel_sales_id')
+            ->join('stels', 'stels_sales_detail.stels_id', '=', 'stels.id')
+            ->where('stels_sales.id', $request->input('id'))
+            ->get();
 
-                $filename = $stel ? $stel[0]->payment_date.'_'.$stel[0]->company_name.'_'.$stel[0]->description : $STELSales->INVOICE_ID;
-            /* END GENERATE NAMA FILE FAKTUR */
-            try {
-                $INVOICE_ID = $STELSales->INVOICE_ID;
-                $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
-                $invoice = json_decode($res_invoice->getBody());
+        $filename = $stel ? $stel[0]->payment_date.'_'.$stel[0]->company_name.'_'.$stel[0]->description : $STELSales->INVOICE_ID;
+
+        
+        try {
+            $INVOICE_ID = $STELSales->INVOICE_ID;
+            $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
+            $invoice = json_decode($res_invoice->getBody());
+            
+            if($INVOICE_ID && $invoice && $invoice->status){
+                $status_invoice = $invoice->data->status_invoice;
+                //here 
+                $this->saveFakturPajak($status_invoice, $invoice, $filename, $request, $client, $INVOICE_ID, $STELSales );
                 
-                if($INVOICE_ID && $invoice && $invoice->status == true){
-                    $status_invoice = $invoice->data->status_invoice;
-                    if($status_invoice == "approved"){
-                        $status_faktur = $invoice->data->status_faktur;
-                        if($status_faktur == "received"){
-                            /*SAVE FAKTUR PAJAK*/
-                            $name_file = 'faktur_stel_'.$filename.'.pdf';
+            }else{
+                $result = "Data Invoice Tidak Ditemukan!";        
+            }
+        } catch(Exception $e){
+            $result = null;
+        }
 
-                            $path_file = public_path().'/media/stel/'.$request->input('id');
-                            if (!file_exists($path_file)) {
-                                mkdir($path_file, 0775);
-                            }
+        return $result;
 
-                            $response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/taxinvoice/pdf');
-                            $stream = (String)$response->getBody();
+    }
 
-                            if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
-                                $STELSales->faktur_file = $name_file;
-                                $STELSales->save();
-                                return "Faktur Pajak Berhasil Disimpan.";
-                            }else{
-                                return "Gagal Menyimpan Faktur Pajak!";
-                            }
-                        }else{
-                            return $invoice->data->status_faktur;
-                        }
-                    }else{
-                        switch ($status_invoice) {
-                            case 'invoiced':
-                                return "Faktur Pajak belum Tersedia, karena Invoice Baru Dibuat.";
-                                break;
-                            
-                            case 'returned':
-                                return $invoice->data->$status_invoice->message;
-                                break;
-                            
-                            default:
-                                return "Faktur Pajak belum Tersedia. Invoice sudah dikirim ke DJP.";
-                                break;
-                        }
-                    }
-                }else{
-                    return "Data Invoice Tidak Ditemukan!";        
+    private function saveFakturPajak($status_invoice, $invoice, $filename, $request, $client, $INVOICE_ID, $STELSales )
+    {
+        if($status_invoice == "approved"){
+            $status_faktur = $invoice->data->status_faktur;
+            if($status_faktur == "received"){
+                /*SAVE FAKTUR PAJAK*/
+                $name_file = 'faktur_stel_'.$filename.'.pdf';
+
+                $path_file = public_path().'/media/stel/'.$request->input('id');
+                if (!file_exists($path_file)) {
+                    mkdir($path_file, 0775);
                 }
-            } catch(Exception $e){
-                return null;
+
+                $response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/taxinvoice/pdf');
+                $stream = (String)$response->getBody();
+
+                if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
+                    $STELSales->faktur_file = $name_file;
+                    $STELSales->save();
+                    $result = "Faktur Pajak Berhasil Disimpan.";
+                }else{
+                    $result = "Gagal Menyimpan Faktur Pajak!";
+                }
+            }else{
+                $result = $invoice->data->status_faktur;
             }
         }else{
-            return "Data Pembelian Tidak Ditemukan!";
+            switch ($status_invoice) {
+                case 'invoiced':
+                    $result = "Faktur Pajak belum Tersedia, karena Invoice Baru Dibuat.";
+                    break;
+                
+                case 'returned':
+                    $result = $invoice->data->$status_invoice->message;
+                    break;
+                
+                default:
+                $result = "Faktur Pajak belum Tersedia. Invoice sudah dikirim ke DJP.";
+                    break;
+            }
         }
+
+        return $result;
     }
 
 }
