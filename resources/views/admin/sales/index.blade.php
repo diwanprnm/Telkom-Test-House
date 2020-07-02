@@ -24,7 +24,7 @@
 		<div class="container-fluid container-fullw bg-white">
 	        <div class="row">
 		        <div class="col-md-6">
-		        <a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><i class="ti-filter"></i> Filter</a>
+		        <a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><em class="ti-filter"></em> Filter</a>
 					<button id="excel" type="submit" class="btn btn-info pull-left">
                         Export to Excel
                     </button>
@@ -32,7 +32,7 @@
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table">
 	                    <input id="search_value" type="text" placeholder="Search" id="form-field-17" class="form-control " value="{{ $search }}">
-	                    <i class="ti-search"></i>
+	                    <em class="ti-search"></em>
 	                </span>
 	            </div>
 	            <div class="col-md-12 panel panel-info">
@@ -51,7 +51,7 @@
 											<input type="text" placeholder="Dari Tanggal" value="{{ $after_date }}" name="after_date" id="after_date" class="form-control"/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
+													<em class="glyphicon glyphicon-calendar"></em>
 												</button>
 											</span>
 										</p>
@@ -66,7 +66,7 @@
 											<input type="text" placeholder="Sampai Tanggal" value="{{ $before_date }}" name="before_date" id="before_date" class="form-control"/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
+													<em class="glyphicon glyphicon-calendar"></em>
 												</button>
 											</span>
 										</p>
@@ -155,17 +155,18 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+							<caption>Sales Table</caption>
 							<thead>
 								<tr>
-									<th class="center">No</th> 
-									<th class="center">Company Name</th> 
-									<th class="center">Sales Date</th> 
-									<th class="center">Invoice</th>  
-									<th class="center">Total</th>
-									<th class="center">Status</th>
-									<th class="center">Payment Method</th> 
-									<th class="center">Document Code</th> 
-									<th class="center" colspan="2">Action</th>  
+									<th class="center" scope="col">No</th> 
+									<th class="center" scope="col">Company Name</th> 
+									<th class="center" scope="col">Sales Date</th> 
+									<th class="center" scope="col">Invoice</th>  
+									<th class="center" scope="col">Total</th>
+									<th class="center" scope="col">Status</th>
+									<th class="center" scope="col">Payment Method</th> 
+									<th class="center" scope="col">Document Code</th> 
+									<th class="center" colspan="2"  scope="colgroup">Action</th>  
 								</tr>
 							</thead>
 							<tbody> 
@@ -207,13 +208,13 @@
 											<td class="center">{{ $item->stel_code }}</td>
 											<td class="center">
 												<div>
-													<a href="{{URL::to('admin/sales/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
+													<a href="{{URL::to('admin/sales/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
 												</div>
 											</td>
 											<td class="center">
 												<div>
 													@if($item->payment_status == 1 or $item->payment_status == 3)
-														<a href="{{URL::to('admin/sales/'.$item->id.'/upload')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Upload"><i class="fa fa-upload"></i></a>
+														<a href="{{URL::to('admin/sales/'.$item->id.'/upload')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Upload"><em class="fa fa-upload"></em></a>
 													@endif
 												</div>
 											</td>

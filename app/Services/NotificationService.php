@@ -7,7 +7,7 @@ use App\NotificationTable;
 
 class NotificationSerice
 {
-    public function makeNotification($data)
+    public function make($data)
     {
         $notification = new NotificationTable();
         $notification->id = Uuid::uuid4();
@@ -19,6 +19,7 @@ class NotificationSerice
         $notification->created_at = date("Y-m-d H:i:s");
         $notification->updated_at = date("Y-m-d H:i:s");
         $notification->save();
-        $data['id'] = $notification->id; 
+        
+        return $notification->id; 
     }
 }
