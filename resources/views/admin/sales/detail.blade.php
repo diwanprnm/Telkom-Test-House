@@ -21,7 +21,7 @@
 				<table class="table-full-width">
 					<caption>Keterangan</caption>
 					<tr>
-						<th>
+						<th scope="col">
 							<div class="form-group">
 								<label for="keterangan">Keterangan:</label>
 								<textarea class="form-control" rows="5" name="keterangan" id="keterangan"></textarea>
@@ -34,7 +34,7 @@
 				<table class="table-full-width">
 					<caption>Submit</caption>
 					<tr>
-						<th>
+						<th scope="col">
 							<button type="button" id="btn-modal-delete_detail" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
 						</th>
 					</tr>
