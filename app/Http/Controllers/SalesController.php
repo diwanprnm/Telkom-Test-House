@@ -193,9 +193,9 @@ class SalesController extends Controller
 			return view('admin.sales.detail')
             ->with('data', $STELSales_detail) 
             ->with('id_sales', $id) 
-            ->with('id_kuitansi', 's')//$STELSales->id_kuitansi) 
-            ->with('faktur_file', 's')//$STELSales->faktur_file) 
-            ->with('price_total', '1500')//$STELSales->total)
+            ->with('id_kuitansi', $STELSales->id_kuitansi) 
+            ->with('faktur_file', $STELSales->faktur_file) 
+            ->with('price_total', $STELSales->total)
 			;     
         }else{
             redirect(self::LOGIN);
