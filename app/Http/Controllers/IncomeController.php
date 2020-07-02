@@ -47,16 +47,6 @@ class IncomeController extends Controller
     private const SORT_BY = 'sort_by';
     private const SORT_TYPE = 'sort_type';
     private const MANAGER_UREL = 'manager_urel';
-    private const REGISTRATION_STATUS = 'examinations.registration_status';
-    private const FUNCTION_STATUS = 'examinations.function_status';
-    private const CONTRACT_STATUS = 'examinations.contract_status';
-    private const SPB_STATUS = 'examinations.spb_status';
-    private const PAYMENT_STATUS = 'examinations.payment_status';
-    private const SPK_STATUS = 'examinations.spk_status';
-    private const EXAMINATION_STATUS = 'examinations.examination_status';
-    private const RESUME_STATUS = 'examinations.resume_status';
-    private const QA_STATUS = 'examinations.qa_status';
-    private const CERTIFICATION_STATUS = 'examinations.certificate_status';
 
 
     public function __construct()
@@ -417,98 +407,32 @@ class IncomeController extends Controller
     {
         $filterStatus = new \stdClass();
         $status = '';
-        if ($request->has(self::STATUS)){
-            switch ($request->get(self::STATUS)) {
-                case 1:
-                    $query->where(self::REGISTRATION_STATUS, '!=', 1);
-                    $status = 1;
-                    break;
-                case 2:
-                    $query->where(self::REGISTRATION_STATUS, '=', 1);
-                    $query->where(self::FUNCTION_STATUS, '!=', 1);
-                    $status = 2;
-                    break;
-                case 3:
-                    $query->where(self::REGISTRATION_STATUS, '=', 1);
-                    $query->where(self::FUNCTION_STATUS, '=', 1);
-                    $query->where(self::CONTRACT_STATUS, '!=', 1);
-                    $status = 3;
-                    break;
-                case 4:
-                    $query->where(self::REGISTRATION_STATUS, '=', 1);
-                    $query->where(self::FUNCTION_STATUS, '=', 1);
-                    $query->where(self::CONTRACT_STATUS, '=', 1);
-                    $query->where(self::SPB_STATUS, '!=', 1);
-                    $status = 4;
-                    break;
-                case 5:
-                    $query->where(self::REGISTRATION_STATUS, '=', 1);
-                    $query->where(self::FUNCTION_STATUS, '=', 1);
-                    $query->where(self::CONTRACT_STATUS, '=', 1);
-                    $query->where(self::SPB_STATUS, '=', 1);
-                    $query->where(self::PAYMENT_STATUS, '!=', 1);
-                    $status = 5;
-                    break;
-                case 6:
-                    $query->where(self::REGISTRATION_STATUS, '=', 1);
-                    $query->where(self::FUNCTION_STATUS, '=', 1);
-                    $query->where(self::CONTRACT_STATUS, '=', 1);
-                    $query->where(self::SPB_STATUS, '=', 1);
-                    $query->where(self::PAYMENT_STATUS, '=', 1);
-                    $query->where(self::SPK_STATUS, '!=', 1);
-                    $status = 6;
-                    break;
-                case 7:
-                    $query->where(self::REGISTRATION_STATUS, '=', 1);
-                    $query->where(self::FUNCTION_STATUS, '=', 1);
-                    $query->where(self::CONTRACT_STATUS, '=', 1);
-                    $query->where(self::SPB_STATUS, '=', 1);
-                    $query->where(self::PAYMENT_STATUS, '=', 1);
-                    $query->where(self::SPK_STATUS, '=', 1);
-                    $query->where(self::EXAMINATION_STATUS, '!=', 1);
-                    $status = 7;
-                    break;
-                case 8:
-                    $query->where(self::REGISTRATION_STATUS, '=', 1);
-                    $query->where(self::FUNCTION_STATUS, '=', 1);
-                    $query->where(self::CONTRACT_STATUS, '=', 1);
-                    $query->where(self::SPB_STATUS, '=', 1);
-                    $query->where(self::PAYMENT_STATUS, '=', 1);
-                    $query->where(self::SPK_STATUS, '=', 1);
-                    $query->where(self::EXAMINATION_STATUS, '=', 1);
-                    $query->where(self::RESUME_STATUS, '!=', 1);
-                    $status = 8;
-                    break;
-                case 9:
-                    $query->where(self::REGISTRATION_STATUS, '=', 1);
-                    $query->where(self::FUNCTION_STATUS, '=', 1);
-                    $query->where(self::CONTRACT_STATUS, '=', 1);
-                    $query->where(self::SPB_STATUS, '=', 1);
-                    $query->where(self::PAYMENT_STATUS, '=', 1);
-                    $query->where(self::SPK_STATUS, '=', 1);
-                    $query->where(self::EXAMINATION_STATUS, '=', 1);
-                    $query->where(self::RESUME_STATUS, '=', 1);
-                    $query->where(self::QA_STATUS, '!=', 1);
-                    $status = 9;
-                    break;
-                case 10:
-                    $query->where(self::REGISTRATION_STATUS, '=', 1);
-                    $query->where(self::FUNCTION_STATUS, '=', 1);
-                    $query->where(self::CONTRACT_STATUS, '=', 1);
-                    $query->where(self::SPB_STATUS, '=', 1);
-                    $query->where(self::PAYMENT_STATUS, '=', 1);
-                    $query->where(self::SPK_STATUS, '=', 1);
-                    $query->where(self::EXAMINATION_STATUS, '=', 1);
-                    $query->where(self::RESUME_STATUS, '=', 1);
-                    $query->where(self::QA_STATUS, '=', 1);
-                    $query->where(self::CERTIFICATION_STATUS, '!=', 1);
-                    $status = 10;
-                    break;
-                
-                default:
-                    $status = 'all';
-                    break;
-            }
+
+        $bussinessStep = array(
+            'examinations.registration_status',
+            'examinations.function_status',
+            'examinations.contract_status',
+            'examinations.spb_status',
+            'examinations.payment_status',
+            'examinations.spk_status',
+            'examinations.examination_status',
+            'examinations.resume_status',
+            'examinations.qa_status',
+            'examinations.certificate_status',
+        );
+        
+        if ( $request->has(self::STATUS) && isset($bussinessStep[$request->get(self::STATUS)]) ) {
+            $req = $request->get(self::STATUS);
+            for ($step = 1; $step <= $req; $step++) {
+                if ( $step != $req ){
+                    $query->where($bussinessStep[$step-1], '=', 1);
+                }else{
+                    $query->where($bussinessStep[$step-1], '!=', 1);
+                    $status = $step;
+                }
+              }
+        } else{
+            $status = 'all';
         }
 
         $filterStatus->query = $query;
