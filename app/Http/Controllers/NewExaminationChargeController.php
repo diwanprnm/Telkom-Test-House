@@ -124,7 +124,7 @@ class NewExaminationChargeController extends Controller
                 $message = 'Data not found';
             }
 
-            $newCharge = NewExaminationCharge::where(self::IS_IMPLEMENT,0)->orderBy(self::MESSAGE,"desc")->get();
+            $newCharge = NewExaminationCharge::where(self::IS_IMPLEMENT,0)->orderBy(self::VALID_FROM,"desc")->get();
             
             return view('admin.newcharge.index')
                 ->with('new_charge', $newCharge)
@@ -144,7 +144,7 @@ class NewExaminationChargeController extends Controller
      */
     public function create()
     {
-        $newCharge = NewExaminationCharge::where(self::IS_IMPLEMENT,0)->orderBy(self::MESSAGE,"desc")->get();
+        $newCharge = NewExaminationCharge::where(self::IS_IMPLEMENT,0)->orderBy(self::VALID_FROM,"desc")->get();
         if(empty($newCharge[0])){
             return view('admin.newcharge.create');
         }else{

@@ -16,6 +16,7 @@ use App\Examination;
 use App\GeneralSetting;
 use App\ExaminationType;
 use App\ExaminationLab;
+use App\Services\Logs\LogService;
 
 use Auth;
 use Session;
@@ -35,6 +36,7 @@ use App\NotificationTable;
 class IncomeController extends Controller
 {
     private const SEARCH = 'search';
+    private const QUERY = 'query';
     private const COMPANY = 'company';
     private const BEFORE_DATE = 'before_date';
     private const AFTER_DATE = 'after_date';
@@ -81,41 +83,10 @@ class IncomeController extends Controller
         $examType = ExaminationType::all();
         $examLab = ExaminationLab::all();
 
-        $query = Income::selectRaw("incomes.*, examinations.examination_type_id, examinations.examination_lab_id,
-                        examinations.registration_status,
-                        examinations.function_status,
-                        examinations.contract_status,
-                        examinations.spb_status,
-                        examinations.payment_status,
-                        examinations.spk_status,
-                        examinations.examination_status,
-                        examinations.resume_status,
-                        examinations.qa_status,
-                        examinations.certificate_status
-                        ")
-                        ->join("examinations","examinations.id","=","incomes.reference_id")
-                        ->whereNotNull('incomes.created_at')
-                        ->where('incomes.inc_type', 1)
-                        ->with(self::COMPANY)
-                        ->with('examination');
-        
-        if ($search != null){
-            $query->where(function($qry) use($search){
-                $qry->whereHas(self::COMPANY, function ($q) use ($search){
-                    return $q->where('name', 'like', '%'.strtolower($search).'%');
-                });
-            });
+        $initialQuery = $this->initialQuery($search, $currentUser);
+        $search = $initialQuery[self::SEARCH];
+        $query = $initialQuery[self::QUERY];
 
-            $logs = new Logs;
-            $logs->id = Uuid::uuid4();
-            $logs->user_id = $currentUser->id;
-            $logs->action = self::SEARCH;  
-            $dataSearch = array(self::SEARCH => $search);
-            $logs->data = json_encode($dataSearch);
-            $logs->created_by = $currentUser->id;
-            $logs->page = "INCOME";
-            $logs->save();
-        }
 
         if ($request->has('type')){
             $type = $request->get('type');
@@ -222,7 +193,8 @@ class IncomeController extends Controller
     }
 	
 	public function kuitansi(Request $request){
-		$currentUser = Auth::user();
+        $currentUser = Auth::user();
+        $logService = new LogService();
         
         if (!$currentUser){
             return false;
@@ -248,15 +220,7 @@ class IncomeController extends Controller
                 ->orWhere("for", "like", '%'.strtolower($search).'%')
             ;
 
-            $logs = new Logs;
-            $logs->id = Uuid::uuid4();
-            $logs->user_id = $currentUser->id;
-            $logs->action = self::SEARCH;  
-            $dataSearch = array(self::SEARCH => $search);
-            $logs->data = json_encode($dataSearch);
-            $logs->created_by = $currentUser->id;
-            $logs->page = "KUITANSI";
-            $logs->save();
+            $logService->createLog(self::SEARCH, 'KUITANSI', json_encode(array(self::SEARCH => $search)) );
         }
 
         if ($request->has(self::BEFORE_DATE)){
@@ -315,43 +279,11 @@ class IncomeController extends Controller
 
         $search = trim($request->input(self::SEARCH));
 
-        $query = Income::selectRaw("incomes.*, examinations.examination_type_id, examinations.examination_lab_id,
-                        examinations.registration_status,
-                        examinations.function_status,
-                        examinations.contract_status,
-                        examinations.spb_status,
-                        examinations.payment_status,
-                        examinations.spk_status,
-                        examinations.examination_status,
-                        examinations.resume_status,
-                        examinations.qa_status,
-                        examinations.certificate_status
-                        ")
-                        ->join("examinations","examinations.id","=","incomes.reference_id")
-                        ->whereNotNull('incomes.created_at')
-                        ->where('incomes.inc_type', 1)
-                        ->with(self::COMPANY)
-                        ->with('examination');
-        
-        if ($search != null){
-            $query->where(function($qry) use($search){
-                $qry->whereHas(self::COMPANY, function ($q) use ($search){
-                    return $q->where('name', 'like', '%'.strtolower($search).'%');
-                });
-            });
-
-            $logs = new Logs;
-            $logs->id = Uuid::uuid4();
-            $logs->user_id = $currentUser->id;
-            $logs->action = self::SEARCH;  
-            $dataSearch = array(self::SEARCH => $search);
-            $logs->data = json_encode($dataSearch);
-            $logs->created_by = $currentUser->id;
-            $logs->page = "INCOME";
-            $logs->save();
-        }
+        $initialQuery = $this->initialQuery($search, $currentUser);
+        $query = $initialQuery[self::QUERY];
 
         if ($request->has('type') && $request->input('type') != 'all'){
+
             $query->where('examination_type_id', $request->get('type'));
         }
 
@@ -483,8 +415,8 @@ class IncomeController extends Controller
 
     private function filterStatus($query, Request $request)
     {
-        $filterStatus = new stdClass();
-
+        $filterStatus = new \stdClass();
+        $status = '';
         if ($request->has(self::STATUS)){
             switch ($request->get(self::STATUS)) {
                 case 1:
@@ -598,5 +530,44 @@ class IncomeController extends Controller
         }
 
         return $string;
+    }
+
+    private function initialQuery($search, $currentUser)
+    {
+        $logService = new LogService();
+
+        $query = Income::selectRaw("incomes.*, examinations.examination_type_id, examinations.examination_lab_id,
+            examinations.registration_status,
+            examinations.function_status,
+            examinations.contract_status,
+            examinations.spb_status,
+            examinations.payment_status,
+            examinations.spk_status,
+            examinations.examination_status,
+            examinations.resume_status,
+            examinations.qa_status,
+            examinations.certificate_status"
+            )
+            ->join("examinations","examinations.id","=","incomes.reference_id")
+            ->whereNotNull('incomes.created_at')
+            ->where('incomes.inc_type', 1)
+            ->with(self::COMPANY)
+            ->with('examination');
+
+        if ($search != null){
+            $query->where(function($qry) use($search){
+                $qry->whereHas(self::COMPANY, function ($q) use ($search){
+                    return $q->where('name', 'like', '%'.strtolower($search).'%');
+                });
+            });
+
+
+            $logService->createLog(self::SEARCH, 'INCOME', json_encode(array(self::SEARCH => $search)) );
+        }
+        return array(
+            self::SEARCH=> $search,
+            'currentUser' => $currentUser,
+            self::QUERY => $query,
+        );
     }
 }
