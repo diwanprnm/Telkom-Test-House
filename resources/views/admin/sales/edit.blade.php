@@ -62,9 +62,6 @@
 								@else
 									<a onclick="checkKuitansi('<?php echo $data->id ?>')"> Cek Kuitansi</a>
 								@endif
-								<!-- <div class="form-group">
-									<a onclick="makeKuitansi('<?php echo $data->id ?>')"> Buatkan File Kuitansi</a>
-								</div> -->
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
@@ -105,40 +102,6 @@
 									@endif
 								</div>
 							</div>
-	                        <!-- <div class="col-md-12">
-								<div class="form-group">
-									<label for="form-field-select-2">
-										Status *
-									</label>
-									<select name="payment_status" class="cs-select cs-skin-elastic" required> 
-										@if($dataStel[0]->payment_status == 1)
-											<option value="0">Choose Status</option>
-											<option value="1" selected>Success</option>
-											<option value="-1">Decline</option>
-										@elseif($dataStel[0]->payment_status == -1)
-											<option value="0">Choose Status</option>
-											<option value="1">Success</option>
-											<option value="-1" selected>Decline</option>
-										@else
-											<option value="{{ $dataStel[0]->payment_status }}" selected>Choose Status</option>
-											<option value="1">Success</option>
-											<option value="-1">Decline</option>
-										@endif
-									</select>
-								</div>
-							</div>
-	                       
-							
-	                        <div class="col-md-12">
-	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
-	                                Submit
-	                            </button>
-	                            <a style=" color:white !important;" href="{{URL::to('/admin/sales')}}">
-									<button type="button" class="btn btn-wide btn-red btn-squared btn-marginleft pull-left">
-									Cancel
-									</button>
-								</a>
-	                        </div> -->
 	                        <div class="col-md-12">
 	                            <a style=" color:white !important;" href="{{URL::to('/admin/sales')}}">
 									<button type="button" class="btn btn-wide btn-red btn-squared pull-left">

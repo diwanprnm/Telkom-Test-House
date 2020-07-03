@@ -18,6 +18,8 @@ use App\ExaminationLab;
 use App\Company;
 use App\Logs;
 
+use App\Services\Logs\LogService;
+
 use Excel;
 
 use Ramsey\Uuid\Uuid;
@@ -26,6 +28,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 class NoGudangController extends Controller
 {
     private const SEARCH = 'search';
+    private const QUERY = 'query';
     private const BEFORE_DATE = 'before_date';
     private const AFTER_DATE = 'after_date';
     private const NOGUDANG = 'nogudang';
@@ -73,16 +76,13 @@ class NoGudangController extends Controller
         
         // tambah filter search ke query kalau ada
         $fileredSearch = $this->filterSearch($search, $query);
-        $query = $fileredSearch->$query;
+        $query = $fileredSearch[self::QUERY];
+
         // Masukan dalam log kalau user mencoba mencari sesuatu
-        if (!$fileredSearch->isNull){
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "search";
-            $logs->data = json_encode(array(self::SEARCH => $search));
-            $logs->created_by = $currentUser->id;
-            $logs->page = "Rekap Nomor Gudang";
-            $logs->save();
+        if (!$fileredSearch['isNull']){
+            // Create log
+            $logService = new LogService;
+            $logService->createLog('search', 'Rekap Nomor Gudang', json_encode(array(self::SEARCH => $search)));
         }
         
         /// tambah filter before_date ke query kalau ada
@@ -106,7 +106,7 @@ class NoGudangController extends Controller
         $type = $filterType->type;
 
         /// Tambah filter company ke query kalau ada
-        $filteredCompany = $this->filterType($request, $query);
+        $filteredCompany = $this->filterCompany($request, $query);
         $query = $filteredCompany->query;
         $filterCompany = $filteredCompany->filterCompany;
 
@@ -116,7 +116,7 @@ class NoGudangController extends Controller
         $lab = $filteredLab->lab;
         
         /// Geting data with filter sort_by, sort_type & Order By
-        $data = $this->getDataSortAndOrdered($request, $query, $paginate);
+        $data = $this->getDataSortAndOrdered($request, $query)->paginate($paginate);
         
         if (count($data) == 0){
             $message = 'Data not found';
@@ -155,7 +155,7 @@ class NoGudangController extends Controller
 
         // tambah filter search ke query kalau ada
         $fileredSearch = $this->filterSearch($search, $query);
-        $query = $fileredSearch->$query;
+        $query = $fileredSearch[self::QUERY];
 
         /// tambah filter before_date ke query kalau ada
         $filteredBeforeDate = $this->filterBeforeDate($request, $query);
@@ -174,7 +174,7 @@ class NoGudangController extends Controller
         $query = $filterType->query;
 
         /// Tambah filter company ke query kalau ada
-        $filteredCompany = $this->filterType($request, $query);
+        $filteredCompany = $this->filterCompany($request, $query);
         $query = $filteredCompany->query;
 
         /// Tambah filter lab ke query kalau ada
@@ -182,7 +182,7 @@ class NoGudangController extends Controller
         $query = $filteredLab->query;
         
         /// Geting data with filter sort_by, sort_type & Order By
-        $data = $this->getDataSortAndOrdered($request, $query, $paginate);
+        $data = $this->getDataSortAndOrdered($request, $query)->get();
 
         $examsArray = []; 
 
@@ -228,14 +228,9 @@ class NoGudangController extends Controller
                 $tgl_keluar_barang
             ];
         }
-        $currentUser = Auth::user();
-        $logs = new Logs;
-        $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-        $logs->action = "download_excel";   
-        $logs->data = "";
-        $logs->created_by = $currentUser->id;
-        $logs->page = "Rekap Nomor Gudang";
-        $logs->save();
+
+        $logService = new LogService;
+        $logService->createLog('download_excel', 'Rekap Nomor Gudang', '' );
 
         // Generate and return the spreadsheet
         Excel::create('Data Gudang', function($excel) use ($examsArray) {
@@ -302,22 +297,22 @@ class NoGudangController extends Controller
 
     private function filterSearch($search, $query){
         $isNull = true;
-        $result = new stdClass();
         
         if ($search != null){
             $isNull = false;
             $query->where(DB::raw('companies.name'), 'like', '%'.strtolower($search).'%')
-            ->orWhere(DB::raw('devices.name'), 'like', '%'.strtolower($search).'%')
-            ->orWhere(DB::raw('no'), 'like', '%'.strtolower($search).'%');
+                ->orWhere(DB::raw('devices.name'), 'like', '%'.strtolower($search).'%')
+                ->orWhere(DB::raw('no'), 'like', '%'.strtolower($search).'%');
         }
         
-        $result->isNull = $isNull;
-        $result->query = $query;
-        return $result;
+        return array(
+            self::QUERY => $query,
+            'isNull' => $isNull
+        );
     }
 
     private function filterBeforeDate($request, $query){
-        $result = new stdClass();
+        $result = new \stdClass();
         $before = null;
 
         if ($request->has(self::BEFORE_DATE)){
@@ -337,12 +332,12 @@ class NoGudangController extends Controller
         }
 
         $result->query = $query;
-        $result->$before = $before;
+        $result->before = $before;
         return $result;
     }
 
     private function filterAfterDate($request, $query){
-        $result = new stdClass();
+        $result = new \stdClass();
         $after = null;
 
         if ($request->has(self::AFTER_DATE)){
@@ -362,12 +357,12 @@ class NoGudangController extends Controller
         }
 
         $result->query = $query;
-        $result->$after = $after;
+        $result->after = $after;
         return $result;
     }
 
     private function filterNoGudang($request, $query){
-        $result = new stdClass();
+        $result = new \stdClass();
         $noGudang = '';
 
         if ($request->has(self::NOGUDANG)){
@@ -378,12 +373,12 @@ class NoGudangController extends Controller
         }
 
         $result->query = $query;
-        $result->$noGudang = $noGudang;
+        $result->noGudang = $noGudang;
         return $result;
     }
 
     private function filterType($request, $query){
-        $result = new stdClass();
+        $result = new \stdClass();
         $type = '';
 
         if ($request->has('type')){
@@ -394,12 +389,12 @@ class NoGudangController extends Controller
         }
 
         $result->query = $query;
-        $result->$type = $type;
+        $result->type = $type;
         return $result;
     }
 
     private function filterCompany($request, $query){
-        $result = new stdClass();
+        $result = new \stdClass();
         $filterCompany = '';
 
         if ($request->has(self::COMPANY)){
@@ -410,12 +405,12 @@ class NoGudangController extends Controller
         }
 
         $result->query = $query;
-        $result->$filterCompany = $filterCompany;
+        $result->filterCompany = $filterCompany;
         return $result;
     }
 
     private function filterLab($request, $query){
-        $result = new stdClass();
+        $result = new \stdClass();
         $lab = '';
 
         if ($request->has('lab')){
@@ -426,11 +421,11 @@ class NoGudangController extends Controller
         }
 
         $result->query = $query;
-        $result->$lab = $lab;
+        $result->lab = $lab;
         return $result;
     }
 
-    private function getDataSortAndOrdered($request, $query, $paginate){
+    private function getDataSortAndOrdered($request, $query){
         $sort_by = 'no';
         $sort_type = 'desc';
 
@@ -441,8 +436,7 @@ class NoGudangController extends Controller
             $sort_type = $request->get(self::SORT_TYPE);
         }
 
-        return $query->orderBy($sort_by, $sort_type)
-                    ->paginate($paginate);
+        return $query->orderBy($sort_by, $sort_type);
     }
 
 }

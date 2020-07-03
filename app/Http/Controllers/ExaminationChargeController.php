@@ -13,6 +13,8 @@ use Input;
 use App\Logs;
 use App\ExaminationCharge;
 
+use App\Services\Logs\LogService;
+
 use Excel;
 
 use Ramsey\Uuid\Uuid;
@@ -52,6 +54,7 @@ class ExaminationChargeController extends Controller
     public function index(Request $request)
     {
         $currentUser = Auth::user();
+        $logService = new LogService();
 
         if (!$currentUser){
             return false;
@@ -70,14 +73,7 @@ class ExaminationChargeController extends Controller
                 ->orderByRaw('category, device_name')
                 ->paginate($paginate);
 
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Search Charge";
-                $datasearch = array("search"=>$search);
-                $logs->data = json_encode($datasearch);
-                $logs->created_by = $currentUser->id;
-                $logs->page = $this::EXAMINATION_CHARGE;
-                $logs->save();
+                $logService->createLog('Search Charge', $this::EXAMINATION_CHARGE, json_encode(array("search"=>$search)) );
         }else{
             $query = ExaminationCharge::whereNotNull($this::CREATED_AT);
 
@@ -131,6 +127,7 @@ class ExaminationChargeController extends Controller
     public function store(Request $request)
     {
         $currentUser = Auth::user();
+        $logService = new LogService();
 			
 			$name_exists = $this->cekNamaPerangkat($request->input($this::DEVICE_NAME));
 		if($name_exists == 1){
@@ -155,13 +152,7 @@ class ExaminationChargeController extends Controller
         try{
             $charge->save();
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Create Charge";
-            $logs->data = $charge;
-            $logs->created_by = $currentUser->id;
-            $logs->page = $this::EXAMINATION_CHARGE;
-            $logs->save();
+            $logService->createLog('Create Charge', $this::EXAMINATION_CHARGE, $charge );
 
             Session::flash($this::MESSAGE, 'Charge successfully created');
             return redirect($this::ADMIN_CHARGE);
@@ -206,6 +197,7 @@ class ExaminationChargeController extends Controller
     public function update(Request $request, $id)
     {
         $currentUser = Auth::user();
+        $logService = new LogService();
 
         $charge = ExaminationCharge::find($id);
         $oldData = $charge;
@@ -240,13 +232,7 @@ class ExaminationChargeController extends Controller
         try{
             $charge->save();
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Update Charge";
-            $logs->data = $oldData;
-            $logs->created_by = $currentUser->id;
-            $logs->page = $this::EXAMINATION_CHARGE;
-            $logs->save();
+            $logService->createLog('Update Charge', $this::EXAMINATION_CHARGE, $oldData );
 
             Session::flash($this::MESSAGE, 'Charge successfully updated');
             return redirect($this::ADMIN_CHARGE);
@@ -265,20 +251,15 @@ class ExaminationChargeController extends Controller
     public function destroy($id)
     {
         $charge = ExaminationCharge::find($id);
-        $currentUser = Auth::user();
+        $logService = new LogService();
+
         $oldData = $charge;
         if ($charge){
             try{
                 $charge->delete();
                 
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Delete Charge";
-                $logs->data = $oldData;
-                $logs->created_by = $currentUser->id;
-                $logs->page = $this::EXAMINATION_CHARGE;
-                $logs->save();
-                
+                $logService->createLog('Delete Charge', $this::EXAMINATION_CHARGE, $oldData );
+
                 Session::flash($this::MESSAGE, 'Charge successfully deleted');
                 return redirect($this::ADMIN_CHARGE);
             }catch (Exception $e){
@@ -358,14 +339,10 @@ class ExaminationChargeController extends Controller
                 $row->is_active == '1' ? 'Active' : 'Not Active'
             ];
         }
-        $currentUser = Auth::user();
-        $logs = new Logs;
-        $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-        $logs->action = "download_excel";   
-        $logs->data = "";
-        $logs->created_by = $currentUser->id;
-        $logs->page = "Tarif Pengujian";
-        $logs->save();
+
+        // Create log
+        $logService = new LogService;
+        $logService->createLog('download_excel', 'Tarif Pengujian','');
 
         // Generate and return the spreadsheet
         Excel::create('Data Tarif Pengujian', function($excel) use ($examsArray) {

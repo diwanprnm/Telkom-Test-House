@@ -14,27 +14,29 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title"><i class="fa fa-eyes-open"></i> Detail Pembelian STEL Akan Dihapus, Mohon Berikan Keterangan!</h4>
+				<h4 class="modal-title"><em class="fa fa-eyes-open"></em> Detail Pembelian STEL Akan Dihapus, Mohon Berikan Keterangan!</h4>
 			</div>
 			
 			<div class="modal-body">
-				<table width=100%>
+				<table class="table-full-width">
+					<caption>Keterangan</caption>
 					<tr>
-						<td>
+						<th scope="col">
 							<div class="form-group">
 								<label for="keterangan">Keterangan:</label>
 								<textarea class="form-control" rows="5" name="keterangan" id="keterangan"></textarea>
 							</div>
-						</td>
+						</th>
 					</tr>
 				</table>
 			</div><!-- /.modal-content -->
 			<div class="modal-footer">
-				<table width=100%>
+				<table class="table-full-width">
+					<caption>Submit</caption>
 					<tr>
-						<td>
-							<button type="button" id="btn-modal-delete_detail" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
-						</td>
+						<th scope="col">
+							<button type="button" id="btn-modal-delete_detail" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
+						</th>
 					</tr>
 				</table>
 			</div>
@@ -83,18 +85,19 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+							<caption>Sales document table</caption>
 							<thead>
 								<tr>
-									<th class="center">No</th> 
-									<th class="center">Document Name</th> 
-									<th class="center">Document Code</th>  
-									<th class="center">Price</th> 
-									<th class="center">QTY</th> 
-									<th class="center">Total</th>
-									<th class="center">Attachment</th>
-									@if($is_super == '1' || $is_admin_mail == 'admin@mail.com')
-										<th class="center">Action</th>
-									@endif
+									<th class="center" scope="col">No</th> 
+									<th class="center" scope="col">Document Name</th> 
+									<th class="center" scope="col">Document Code</th>  
+									<th class="center" scope="col">Price</th> 
+									<th class="center" scope="col">QTY</th> 
+									<th class="center" scope="col">Total</th>
+									<th class="center" scope="col">Attachment</th>
+								@if($is_super == '1' || $is_admin_mail == 'admin@mail.com')
+									<th class="center" scope="col">Action</th>
+								@endif
 								</tr>
 							</thead>
 							<tbody> 
@@ -106,12 +109,12 @@
 										<td class="center">{{ $item->code }}</td>
 										<td class="center">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($item->price, 0, '.', ','); ?></td>
 										<td class="center"><?php echo $item->qty; ?></td>
-										<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($item->price * $item->qty, 0, '.', ','); ?></td> 
+										<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($item->price * $item->qty, 0, '.', ','); ?></td> 
 										<td class="center"><a href="{{ URL::to('/admin/downloadstelwatermark/'.$item->id) }}" target="_blank">{{ $item->attachment }}</a></td>
 										@if($is_super == '1' || $is_admin_mail == 'admin@mail.com')
 										<td class="center">
 											<div>
-												<a class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Destroy" data-toggle="modal" data-target="#myModal_delete_detail" onclick="document.getElementById('hide_stel_sales_detail_id').value = '{{ $item->id }}'"><i class="fa fa-trash"></i></a>
+												<a class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Destroy" data-toggle="modal" data-target="#myModal_delete_detail" onclick="document.getElementById('hide_stel_sales_detail_id').value = '{{ $item->id }}'"><em class="fa fa-trash"></em></a>
 											</div>
 										</td>
 										@endif
@@ -124,23 +127,23 @@
 									$unique_code = ($price_total/1.1) - $total;
 								?>
                             	<tr>
-                            		<td colspan="5" align="right"> {{ trans('translate.stel_unique_code') }}</td>
-                            		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php 
+                            		<td colspan="5" class="text-align-right"> {{ trans('translate.stel_unique_code') }}</td>
+                            		<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. <?php 
                             			echo	number_format($unique_code, 0, '.', ',');?></td>
                             	</tr>
                             	<tr>
-                            		<td colspan="5" align="right"> Sub Total</td>
-                            		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php 
+                            		<td colspan="5" class="text-align-right"> Sub Total</td>
+                            		<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. <?php 
                             			echo	number_format($total + $unique_code, 0, '.', ',');?></td>
                             	</tr>
                            		<tr>
-                            		<td colspan="5" align="right"> Tax</td>
-                            		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php $tax =  ($total + $unique_code) * (config("cart.tax")/100);
+                            		<td colspan="5" class="text-align-right"> Tax</td>
+                            		<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. <?php $tax =  ($total + $unique_code) * (config("cart.tax")/100);
                             			echo	number_format($tax, 0, '.', ',');?></td>
                             	</tr>
                             	<tr style="font-weight: bold;">
-                            		<td colspan="5" align="right">Total</td>
-                            		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($price_total, 0, '.', ',');?></td>
+                            		<td colspan="5" class="text-align-right">Total</td>
+                            		<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($price_total, 0, '.', ',');?></td>
                             	</tr>
                             </tfoot>
 						</table>
@@ -169,6 +172,11 @@
 @endsection
 
 @section('content_js')
+<style>
+	.text-align-right{
+		text-align: right;
+	}
+</style>
 <script src={{ asset("vendor/maskedinput/jquery.maskedinput.min.js") }}></script>
 <script src={{ asset("vendor/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js") }}></script>
 <script src={{ asset("vendor/autosize/autosize.min.js") }}></script>

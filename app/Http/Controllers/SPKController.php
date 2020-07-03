@@ -52,6 +52,7 @@ class SPKController extends Controller
         if (!$currentUser){ return false;}
 
         $message = null;
+        $paginate = 10;
 
         $examType = ExaminationType::all();
         $companies = Company::where('id','!=', 1)->get();
@@ -96,7 +97,7 @@ class SPKController extends Controller
         $lab = $labFiltered['lab'];
         
         $sortedAndOrderedData = $queryFilter->getSortedAndOrderedData($request, $query, 'spk_date');
-        $data = $sortedAndOrderedData['data'];
+        $data = $sortedAndOrderedData['data']->paginate($paginate);
         $sort_by = $sortedAndOrderedData['sort_by'];
         $sort_type = $sortedAndOrderedData['sort_type'];
 
@@ -169,7 +170,7 @@ class SPKController extends Controller
         $query = $companyFiltered[self::QUERY];
 
         $sortedAndOrderedData = $queryFilter->getSortedAndOrderedData($request, $query, 'spk_date');
-        $data = $sortedAndOrderedData['data'];
+        $data = $sortedAndOrderedData['data']->get();
 
         $SPKServices = new SPKService();
         $examsArray = $SPKServices->collectionToArrayAndApendPayment($data);

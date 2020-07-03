@@ -174,6 +174,23 @@ class QueryFilter
         );
     }
 
+    public function paymentStatusAll(Request $request,$query)
+    {
+        $filterPayment_status = '';
+
+        if ($request->has('payment_status')){
+            $filterPayment_status = $request->get('payment_status');
+            if($request->input('payment_status') != 'all'){
+                $query->where('payment_status', $request->get('payment_status'));
+            }
+        }
+
+        return array(
+            self::QUERY => $query,
+            'filterPayment_status' => $filterPayment_status
+        );
+    }
+
     public function lab(Request $request, $query, $lab_variable)
     {
         $lab='';
@@ -195,10 +212,9 @@ class QueryFilter
 
     }
 
-    public function getSortedAndOrderedData($request, $query, $sort_by)
+    public function getSortedAndOrderedData($request, $query, $sort_by = false)
     {
         $sort_type = 'desc';
-        $paginate = 10;
 
         if ($request->has(self::SORT_BY)){
             $sort_by = $request->get(self::SORT_BY);
@@ -207,8 +223,7 @@ class QueryFilter
             $sort_type = $request->get(self::SORT_TYPE);
         }
 
-        $data = $query->orderBy($sort_by, $sort_type)
-                    ->paginate($paginate);
+        $data = $query->orderBy($sort_by, $sort_type);
 
         return array(
             'data' => $data,
