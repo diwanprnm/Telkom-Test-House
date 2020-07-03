@@ -102,13 +102,14 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+						<caption>Calibrationchargetable</caption>
 							<thead>
 								<tr>
-									<th class="center">No</th>
-									<th class="center">Nama Alat Uji</th>
-									<th class="center">Biaya (Rp.)</th>
-									<th class="center">Status</th>
-                                    <th class="center">Aksi</th>
+									<th class="center" id="no">No</th>
+									<th class="center" id="nama">Nama Alat Uji</th>
+									<th class="center" id="biaya">Biaya (Rp.)</th>
+									<th class="center" id="status">Status</th>
+                                    <th class="center" id="aksi">Aksi</th>
 								</tr>
 							</thead>
 							<tbody>
