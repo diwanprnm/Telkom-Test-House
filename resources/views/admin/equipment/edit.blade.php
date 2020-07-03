@@ -75,10 +75,10 @@
 									<div id="wizard" class="swMain">
 									<div id="step-1">
 										<div class="form-group">
-											<table class="table table-condensed">
+											<table class="table table-condensed"><caption></caption>
 												<thead>
 													<tr>
-														<th colspan="3">Detail Informasi</th>
+														<th colspan="3" scope="col">Detail Informasi</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -99,14 +99,14 @@
 										</div>
 											<div class="table-responsive">
 												<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
-													<thead>
+												<caption></caption><thead>
 														<tr>
-															<th class="center">Jumlah</th>
-															<th class="center">Unit</th>
-															<th class="center">Deskripsi</th>
-															<th class="center">Lokasi</th>
-															<th class="center">PIC</th>
-															<th class="center">Keterangan</th>
+															<th class="center" scope="col">Jumlah</th>
+															<th class="center" scope="col">Unit</th>
+															<th class="center" scope="col">Deskripsi</th>
+															<th class="center" scope="col">Lokasi</th>
+															<th class="center" scope="col">PIC</th>
+															<th class="center" scope="col">Keterangan</th>
 														</tr>
 													</thead>
 													<tbody>
@@ -154,7 +154,7 @@
 											<input type="text" name="equip_date" class="form-control" value="<?php echo date('Y-m-d');?>">
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
+													<em class="glyphicon glyphicon-calendar"></em>
 												</button>
 											</span>
 										</p>
@@ -211,7 +211,7 @@
 	</div>
 	
 	<!-- start: MAIN JAVASCRIPTS -->
-    <!-- <script src={{ asset("vendor/jquery/jquery.min.js") }}></script> -->
+   
     <script src={{ asset("vendor/bootstrap/js/bootstrap.min.js") }}></script>
     <script src={{ asset("vendor/modernizr/modernizr.js") }}></script>
     <script src={{ asset("vendor/jquery-cookie/jquery.cookie.js") }}></script>

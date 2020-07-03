@@ -28,7 +28,7 @@
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table">
 	                    <input id="search_value" type="text" placeholder="Search" id="form-field-17" class="form-control " value="{{ $search }}">
-	                    <i class="ti-search"></i>
+	                    <em class="ti-search"></em>
 	                </span>
 	            </div>
 	        </div>
@@ -54,13 +54,7 @@
 			@endif
 			
 			<div class="row">
-				<!-- <div class="col-md-6 pull-right" style="margin-bottom:10px">
-		            <a style=" color:white !important;" href="{{URL::to('/admin/equipment/create')}}">
-						<button type="button" class="btn btn-wide btn-green btn-squared pull-right" >
-							Add Equipment
-						</button>
-					</a>
-		        </div> -->
+			
 				<div class="col-md-12">
 					<div class="table-responsive">
 						@foreach($data as $item)
@@ -69,10 +63,10 @@
 	  								<div id="wizard" class="swMain">
 										<div id="step-1">
 											<div class="form-group">
-												<table class="table table-condensed">
+												<table class="table table-condensed"><caption></caption>
 													<thead>
 														<tr>
-															<th colspan="3">Detail Informasi</th>
+															<th colspan="3" scope="col">Detail Informasi</th>
 														</tr>
 													</thead>
 													<tbody>
@@ -111,14 +105,15 @@
 											</div>
 												<div class="table-responsive">
 													<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+														<caption></caption>
 														<thead>
 															<tr>
-																<th class="center">Jumlah</th>
-																<th class="center">Unit</th>
-																<th class="center">Deskripsi</th>
-																<th class="center">Lokasi</th>
-																<th class="center">PIC</th>
-																<th class="center">Keterangan</th>
+																<th class="center" scope="col">Jumlah</th>
+																<th class="center" scope="col">Unit</th>
+																<th class="center" scope="col">Deskripsi</th>
+																<th class="center" scope="col">Lokasi</th>
+																<th class="center" scope="col">PIC</th>
+																<th class="center" scope="col">Keterangan</th>
 															</tr>
 														</thead>
 														<tbody>
@@ -137,11 +132,7 @@
 																		@endif
 																		<td class="center">{{ $equip->pic }}</td>
 																		<td class="center">{{ $equip->remarks }}</td>
-																		<!-- <td class="center">
-																			<div>
-																				<a href="{{URL::to('admin/equipment/'.$equip->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
-																			</div>
-																		</td> -->
+																		
 																	</tr>
 																@endif
 															@endforeach

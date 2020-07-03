@@ -29,7 +29,7 @@
 		<div class="container-fluid container-fullw bg-white">
 	        <div class="row">
 	        	<div class="col-md-6">
-	    			<!-- <a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><i class="ti-filter"></i> Filter</a> -->
+	    			
 	    			<button id="excel" type="submit" class="btn btn-info pull-left">
                         Export to Excel
                     </button>
@@ -37,7 +37,7 @@
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table">
 	                    <input id="search_value" type="text" placeholder="Search" id="form-field-17" class="form-control " value="{{ $search }}">
-	                    <i class="ti-search"></i>
+	                    <em class="ti-search"></em>
 	                </span>
 	            </div>
 	            <div class="col-md-12 panel panel-info">
@@ -102,60 +102,10 @@
 								</div>
 								
 								<!-- sorting  -->
-								<!-- <div class="col-md-6">
-									<div class="form-group">
-										<label>
-											Sort by :
-										</label>
-										<select id="sort_by" name="sort_by" class="cs-select cs-skin-elastic" required>
-											@if($sort_by == '')
-												<option value="" disabled selected>Select...</option>
-											@endif
-											@if($sort_by == 'tgl_masuk_barang')
-                                                <option value="tgl_masuk_barang" selected>Tanggal Masuk Barang</option>
-											@else
-                                                <option value="tgl_masuk_barang">Tanggal Masuk Barang</option>
-                                            @endif
-											@if($sort_by == 'no')
-                                                <option value="no" selected>Faktur Pajak</option>
-											@else
-                                                <option value="no">Faktur Pajak</option>
-                                            @endif
-                                            @if($sort_by == 'examination_type_id')
-                                                <option value="examination_type_id" selected>Tipe Pengujian</option>
-											@else
-                                                <option value="examination_type_id">Tipe Pengujian</option>
-                                            @endif
-											@if($sort_by == 'company_name')
-                                                <option value="company_name" selected>Nama Perusahaan</option>
-											@else
-                                                <option value="company_name">Nama Perusahaan</option>
-                                            @endif
-										</select>
-										<select id="sort_type" name="sort_type" class="cs-select cs-skin-elastic" required>
-											@if($sort_type == '')
-												<option value="" disabled selected>Select...</option>
-											@endif
-											@if($sort_type == 'asc')
-                                                <option value="asc" selected>ASC</option>
-											@else
-                                                <option value="asc">ASC</option>
-                                            @endif
-											@if($sort_type == 'desc')
-                                                <option value="desc" selected>DESC</option>
-											@else
-                                                <option value="desc">DESC</option>
-                                            @endif
-										</select>
-									</div>
-								</div> -->
+							
 								<!-- end sorting  -->
 
-								<!-- <div class="col-md-12">
-		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
-		                                Filter
-		                            </button>
-		                        </div> -->
+								
 		                    </div>
 						</fieldset>
 			    	</div>
@@ -178,15 +128,16 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+							<caption></caption>
 							<thead>
 								<tr>
-									<th class="center">No</th>
-									<th class="center">Tipe</th>
-									<th class="center">Nama</th>
-                                    <th class="center">Perusahaan</th>
-                                    <th class="center">Deskripsi</th>
-									<th class="center">Payment Date</th>
-									<th class="center">Download</th>
+									<th class="center" scope="col">No</th>
+									<th class="center" scope="col">Tipe</th>
+									<th class="center" scope="col">Nama</th>
+                                    <th class="center" scope="col">Perusahaan</th>
+                                    <th class="center" scope="col">Deskripsi</th>
+									<th class="center" scope="col">Payment Date</th>
+									<th class="center" scope="col">Download</th>
 								</tr>
 							</thead>
 							<tbody>

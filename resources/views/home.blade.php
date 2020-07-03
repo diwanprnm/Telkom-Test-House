@@ -17,12 +17,12 @@
     <div class="container-fluid container-fullw bg-white">
         <div class="row">
             <div class="col-md-6">
-                <a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1"><i class="ti-filter"></i> Filter</a>
+                <a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1"><em class="ti-filter"></em> Filter</a>
             </div>
             <div class="col-md-6">
                 <span class="input-icon input-icon-right search-table">
                     <input id="search_value" type="text" placeholder="Search" id="form-field-17" class="form-control " value="{{ $search }}">
-                    <i class="ti-search"></i>
+                    <em class="ti-search"></em>
                 </span>
             </div>
             <div class="col-md-12 panel panel-info">
@@ -104,17 +104,17 @@
                 </div>
             <div class="col-md-12">
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover table-full-width dataTable no-footer">
+                    <table class="table table-striped table-hover table-full-width dataTable no-footer"><caption>Home</caption>
                         <thead>
                             <tr>
-                                <th class="center">No</th>
-                                <th class="center">Perusahaan</th>
-                                <th class="center">Pemohon</th>
-                                <th class="center">Perangkat</th>
-                                <th class="center">Tipe Pengujian</th>
-                                <th class="center">Tanggal Pengajuan</th>
-                                <th class="center">Status</th>
-                                <th class="center">Aksi</th>
+                                <th class="center" id="no">No</th>
+                                <th class="center" id="perusahaan">Perusahaan</th>
+                                <th class="center" id="pemohon">Pemohon</th>
+                                <th class="center" id="perangkat">Perangkat</th>
+                                <th class="center" id="tipe pengujian">Tipe Pengujian</th>
+                                <th class="center" id="tanggal pengajuan">Tanggal Pengajuan</th>
+                                <th class="center" id="status">Status</th>
+                                <th class="center" id="aksi">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>

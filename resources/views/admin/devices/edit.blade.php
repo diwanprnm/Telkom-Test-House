@@ -90,7 +90,7 @@
 										<input type="text" name="valid_from" id="valid_from" class="form-control" value="{{ $data->valid_from }}"/>
 										<span class="input-group-btn">
 											<button type="button" class="btn btn-default">
-												<i class="glyphicon glyphicon-calendar"></i>
+												<em class="glyphicon glyphicon-calendar"></em>
 											</button>
 										</span>
 									</p>
@@ -105,7 +105,7 @@
 										<input type="text" name="valid_thru" id="valid_thru" class="form-control" value="{{ $data->valid_thru }}"/>
 										<span class="input-group-btn">
 											<button type="button" class="btn btn-default">
-												<i class="glyphicon glyphicon-calendar"></i>
+												<em class="glyphicon glyphicon-calendar"></em>
 											</button>
 										</span>
 									</p>

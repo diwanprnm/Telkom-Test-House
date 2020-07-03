@@ -82,7 +82,7 @@
 										<input type="text" name="equip_date" class="form-control" value="{{ $in_equip_date }}">
 										<span class="input-group-btn">
 											<button type="button" class="btn btn-default">
-												<i class="glyphicon glyphicon-calendar"></i>
+												<em class="glyphicon glyphicon-calendar"></em>
 											</button>
 										</span>
 									</p>
@@ -188,7 +188,7 @@
 	</div>
 
 	<!-- start: MAIN JAVASCRIPTS -->
-    <!-- <script src={{ asset("vendor/jquery/jquery.min.js") }}></script> -->
+    
     <script src={{ asset("vendor/bootstrap/js/bootstrap.min.js") }}></script>
     <script src={{ asset("vendor/modernizr/modernizr.js") }}></script>
     <script src={{ asset("vendor/jquery-cookie/jquery.cookie.js") }}></script>

@@ -23,19 +23,7 @@
 		<!-- end: PAGE TITLE -->
 		<!-- start: RESPONSIVE TABLE -->
 		<div class="container-fluid container-fullw bg-white">
-			<!--
-	        <div class="row">
-		        <div class="col-md-6">
-	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1"><i class="ti-filter"></i> Filter</a>
-				</div>
-				<div class="col-md-6">
-	                <span class="input-icon input-icon-right search-table">
-	                    <input id="search_value" type="text" placeholder="Search" id="form-field-17" class="form-control " value="{{ $search }}">
-	                    <i class="ti-search"></i>
-	                </span>
-	            </div>
-	        </div>
-			-->
+			
 
 	        @if (Session::get('error'))
 				<div class="alert alert-error alert-danger">
@@ -54,13 +42,14 @@
 					<div class="table-responsive">
 						<div class="center"> <strong>Summary </strong></div>
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+						<caption>Admin</caption>
 							<thead>
 								<tr>
-									<th class="center">Time Period</th>
-									<th class="center">Page Views</th>
-									<th class="center">New Visitors</th>
-									<th class="center">Return Visitors</th>
-									<th class="center">Total Visitors</th>
+									<th class="center" id="time period">Time Period</th>
+									<th class="center" id="page views">Page Views</th>
+									<th class="center" id="new visitor">New Visitors</th>
+									<th class="center" id="return visitor">Return Visitors</th>
+									<th class="center" id="total visitor">Total Visitors</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -109,10 +98,11 @@
                             </tbody>
 						</table>
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+						<caption>Footer</caption>
 							<thead>
 								<tr>
-									<th class="center" style="width:20%"></th>
-									<th class="center" colspan="4">Site History</th>
+									<th class="center" style="width:20%" id="kosong"></th>
+									<th class="center" colspan="4" id="site history">Site History</th>
 								</tr>
 							</thead>
 							<tbody>
