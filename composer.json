@@ -27,8 +27,7 @@
         "anlutro/curl": "^1.4",
         "setasign/fpdi": "^1.6",
         "setasign/fpdf": "^1.8",
-        "coraxster/flysystem-aws-s3-v3-minio": "^1.0",
-        "league/flysystem-aws-s3-v3": "^1.0"
+        "coraxster/flysystem-aws-s3-v3-minio": "^1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
