@@ -18,6 +18,16 @@ use App\Logs;
 use Auth;
 use Response;
 
+$search_v='search';
+$reg_v='registration_status';
+$spbstat_v='spb_status';
+$paymstat_v='payment_status';
+$comp_v='company';
+$medi_v='media';
+$device_v='device';
+$stat_v='status';
+$funcstat_v='function_status';
+$contrstat_v='contract_status';
 // UUID
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -33,17 +43,21 @@ class DashboardController extends Controller
     {
         $this->middleware('auth.admin');
     }
-
+    
     /**
      * Show the application dashboard.
      *
      * @return \Illuminate\Http\Response
      */
+
+
+
+
     public function index(Request $request)
     {
 		$message = null;
         $paginate = 10;
-        $search = trim($request->input('search'));
+        $search = trim($request->input($search_v));
         $type = '';
 		$status = '';
 
@@ -51,28 +65,28 @@ class DashboardController extends Controller
 
         $query = Examination::whereNotNull('created_at')
                             ->where(function($q){
-                                $q->where('registration_status', 0)
-                                    ->orWhere('registration_status', 1)
-									->orWhere('registration_status', -1)
-                                    ->orWhere('spb_status', 0)
-									->orWhere('spb_status', -1)
-                                    ->orWhere('spb_status', 1)
-									->orWhere('payment_status', -1);
+                                $q->where($reg_v, 0)
+                                    ->orWhere($reg_v, 1)
+									->orWhere($reg_v, -1)
+                                    ->orWhere($spbstat_v, 0)
+									->orWhere($spbstat_v, -1)
+                                    ->orWhere($spbstat_v, 1)
+									->orWhere( $paymstat_v, -1);
                             })
-                            ->where('payment_status', 0)
+                            ->where( $paymstat_v, 0)
                             ->with('user')
-                            ->with('company')
+                            ->with($comp_v)
                             ->with('examinationType')
                             ->with('examinationLab')
-                            ->with('media')
-                            ->with('device');
+                            ->with($medi_v)
+                            ->with($device_v);
 
         if ($search != null){
             $query->where(function($qry) use($search){
-                $qry->whereHas('device', function ($q) use ($search){
+                $qry->whereHas($device_v, function ($q) use ($search){
                         return $q->where('name', 'like', '%'.strtolower($search).'%');
                     })
-                ->orWhereHas('company', function ($q) use ($search){
+                ->orWhereHas($comp_v, function ($q) use ($search){
                         return $q->where('name', 'like', '%'.strtolower($search).'%');
                     })
                 ->orWhereHas('examinationLab', function ($q) use ($search){
@@ -85,7 +99,7 @@ class DashboardController extends Controller
             $logs = new Logs;
             $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
             $logs->action = "Search Dashboard";  
-            $dataSearch = array('search' => $search);
+            $dataSearch = array($search_v => $search);
             $logs->data = json_encode($dataSearch);
             $logs->created_by = $currentUser->id;
             $logs->page = "DASHBOARD";
@@ -99,49 +113,49 @@ class DashboardController extends Controller
 			}
         }
 
-        if ($request->has('company')){
-            $query->whereHas('company', function ($q) use ($request){
-                return $q->where('name', 'like', '%'.strtolower($request->get('company')).'%');
+        if ($request->has($comp_v)){
+            $query->whereHas($comp_v, function ($q) use ($request){
+                return $q->where('name', 'like', '%'.strtolower($request->get($comp_v)).'%');
             });
         }
 
-        if ($request->has('device')){
-            $query->whereHas('device', function ($q) use ($request){
-                return $q->where('name', 'like', '%'.strtolower($request->get('device')).'%');
+        if ($request->has($device_v)){
+            $query->whereHas($device_v, function ($q) use ($request){
+                return $q->where('name', 'like', '%'.strtolower($request->get($device_v)).'%');
             });
         }
-		if ($request->has('status')){
-			switch ($request->get('status')) {
+		if ($request->has($stat_v)){
+			switch ($request->get($stat_v)) {
 				case 1:
-					$query->where('registration_status', '!=', '1');
+					$query->where($reg_v, '!=', '1');
 					$status = 1;
 					break;
 				case 2:
-                    $query->where('registration_status', 1);
-                    $query->where('function_status', 1);
-                    $query->where('contract_status', 1);
-                    $query->where('spb_status', '!=', 1);
+                    $query->where($reg_v, 1);
+                    $query->where($funcstat_v, 1);
+                    $query->where($contrstat_v, 1);
+                    $query->where($spbstat_v, '!=', 1);
                     $status = 2;
                     break;
                 case 3:
-					$query->where('registration_status', 1);
-                    $query->where('function_status', 1);
-                    $query->where('contract_status', 1);
-                    $query->where('spb_status', 1);
-                    $query->where('payment_status', '!=', 1);
-                    $query->whereHas('media', function ($q) use ($request){
+					$query->where($reg_v, 1);
+                    $query->where($funcstat_v, 1);
+                    $query->where($contrstat_v, 1);
+                    $query->where($spbstat_v, 1);
+                    $query->where( $paymstat_v, '!=', 1);
+                    $query->whereHas($medi_v, function ($q) use ($request){
                         return $q->where('name', '=', 'File Pembayaran')
                                 ->where('attachment', '=' ,'');
                     });
                     $status = 3;
                     break;
                 case 4:
-                    $query->where('registration_status', 1);
-                    $query->where('function_status', 1);
-                    $query->where('contract_status', 1);
-					$query->where('spb_status', 1);
-					$query->where('payment_status', '!=', 1);
-                    $query->whereHas('media', function ($q) use ($request){
+                    $query->where($reg_v, 1);
+                    $query->where($funcstat_v, 1);
+                    $query->where($contrstat_v, 1);
+					$query->where($spbstat_v, 1);
+					$query->where( $paymstat_v, '!=', 1);
+                    $query->whereHas($medi_v, function ($q) use ($request){
                         return $q->where('name', '=', 'File Pembayaran')
                                 ->where('attachment', '!=' ,'');
                     });
@@ -164,9 +178,9 @@ class DashboardController extends Controller
             ->with('message', $message)
             ->with('data', $data)
             ->with('type', $examType)
-            ->with('search', $search)
+            ->with($search_v, $search)
             ->with('filterType', $type)
-			->with('status', $status);
+			->with($stat_v, $status);
     }
 	
 	public function downloadUsman()
