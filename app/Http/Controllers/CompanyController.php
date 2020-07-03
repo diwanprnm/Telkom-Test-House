@@ -165,12 +165,12 @@ class CompanyController extends Controller
             $is_uploaded = false;
             if (in_array($ext, $allowedFile))
             { 
-                $is_uploaded = Storage::disk('minio')->putFileAs("company/",$file,$file_name);
+                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/$file_name",$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
-                $is_uploaded = Storage::disk('minio')->put("company/$file_name",(string)$image->encode()); 
+                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/$file_name",(string)$image->encode()); 
             }else{
                 Session::flash('error', 'Format Not Available');
                 return redirect('/admin/company/create');
@@ -191,13 +191,13 @@ class CompanyController extends Controller
             
             $is_uploaded = false;
             if (in_array($ext, $allowedFile))
-            { 
-                $is_uploaded = Storage::disk('minio')->putFileAs("company/",$file,$file_name);
+            {  
+                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/$file_name",$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
-                $is_uploaded = Storage::disk('minio')->put("company/$file_name",(string)$image->encode()); 
+                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/".$file_name,(string)$image->encode()); 
             }else{
                 Session::flash('error', 'Format Not Available');
                 return redirect('/admin/company/create');
@@ -217,13 +217,13 @@ class CompanyController extends Controller
             
             $is_uploaded = false;
             if (in_array($ext, $allowedFile))
-            { 
-                $is_uploaded = Storage::disk('minio')->putFileAs("company/",$file,$file_name);
+            {  
+                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/$file_name",$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
-                $is_uploaded = Storage::disk('minio')->put("company/$file_name",(string)$image->encode()); 
+                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/".$file_name,(string)$image->encode()); 
             }else{
                 Session::flash('error', 'Format Not Available');
                 return redirect('/admin/company/create');
@@ -343,12 +343,12 @@ class CompanyController extends Controller
             $is_uploaded = false;
             if (in_array($ext, $allowedFile))
             { 
-                $is_uploaded = Storage::disk('minio')->putFileAs("company/",$file,$file_name);
+                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/$file_name",$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
-                $is_uploaded = Storage::disk('minio')->put("company/$file_name",(string)$image->encode()); 
+                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/$file_name",(string)$image->encode()); 
             }else{
                 Session::flash('error', 'Format Not Available');
                 return redirect('/admin/company/create');
@@ -370,12 +370,12 @@ class CompanyController extends Controller
             $is_uploaded = false;
             if (in_array($ext, $allowedFile))
             { 
-                $is_uploaded = Storage::disk('minio')->putFileAs("company/",$file,$file_name);
+                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/".$file_name,$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
-                $is_uploaded = Storage::disk('minio')->put("company/$file_name",(string)$image->encode()); 
+                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/".$file_name,(string)$image->encode()); 
             }else{
                 Session::flash('error', 'Format Not Available');
                 return redirect('/admin/company/create');
@@ -396,12 +396,12 @@ class CompanyController extends Controller
             $is_uploaded = false;
             if (in_array($ext, $allowedFile))
             { 
-                $is_uploaded = Storage::disk('minio')->putFileAs("company/",$file,$file_name);
+                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/".$file_name,$file,$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
-                $is_uploaded = Storage::disk('minio')->put("company/$file_name",(string)$image->encode()); 
+                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/".$file_name,(string)$image->encode()); 
             }else{
                 Session::flash('error', 'Format Not Available');
                 return redirect('/admin/company/create');
