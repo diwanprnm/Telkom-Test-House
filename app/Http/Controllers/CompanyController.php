@@ -370,7 +370,7 @@ class CompanyController extends Controller
             $is_uploaded = false;
             if (in_array($ext, $allowedFile))
             { 
-                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/".$file_name,$file);
+                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/".$file_name,$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
@@ -396,7 +396,7 @@ class CompanyController extends Controller
             $is_uploaded = false;
             if (in_array($ext, $allowedFile))
             { 
-                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/".,$file,$file_name);
+                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/".,$file,$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
