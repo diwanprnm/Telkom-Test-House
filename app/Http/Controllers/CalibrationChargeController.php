@@ -39,15 +39,7 @@ class CalibrationChargeController extends Controller
     private const PRICE = 'price';
     private const ADM = '/admin/calibration';
     private const ERR = 'error';
- //   SEARCH='search';
-//CREATE='created_at';
-//DEVICE='device_name';
-//CALIBRATION="CALIBRATION CHARGE";
-//IS_ACTIVE='is_active';
-//MESSAGE='message';
-//PRICE='price';
-//ADM='/admin/calibration';
-//ERR='error';
+
     /**
      * Create a new controller instance.
      *

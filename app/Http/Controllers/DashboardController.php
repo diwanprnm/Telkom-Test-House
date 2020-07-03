@@ -35,16 +35,7 @@ class DashboardController extends Controller
     private const STAT = 'status';
     private const FUNCSTAT = 'function_status';
     private const CONTRSTAT = 'contract_status';
-  //  $search_v='search';
-//$reg_v='registration_status';
-//SPB='spb_status';
-//PAYSTAT='payment_status';
-//COMP='company';
-//MEDIA='media';
-//$device_v='device';
-//STAT='status';
-//FUNCSTAT='function_status';
-//CONTRSTAT='contract_status';
+
     /**
      * Create a new controller instance.
      *
