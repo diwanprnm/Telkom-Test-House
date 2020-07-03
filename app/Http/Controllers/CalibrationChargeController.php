@@ -31,6 +31,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 class CalibrationChargeController extends Controller
 {
     private const SEARCH = 'search';
+    private const SEARCH = 'search';
     private const CREATE = 'created_at';
     private const DEVICE = 'device_name';
     private const CALIBRATION = 'CALIBRATION CHARGE';
@@ -62,7 +63,7 @@ class CalibrationChargeController extends Controller
         if ($currentUser){
             $message = null;
             $paginate = 10;
-            $search = trim($request->input($this::SEARCH));
+            $search = trim($request->input($this::SEARCH_));
             $status = -1;
             
             if ($search != null){
@@ -266,8 +267,8 @@ class CalibrationChargeController extends Controller
         // the user's e-mail address, the amount paid, and the payment
         // timestamp.
 
-        $search = trim($request->input($this::SEARCH));
-       // $status = -1;
+        $search = trim($request->input($this::SEARCH_));
+       
 
         if ($search != null){
             $charge = CalibrationCharge::whereNotNull($this::CREATE)
