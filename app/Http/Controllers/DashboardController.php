@@ -18,22 +18,33 @@ use App\Logs;
 use Auth;
 use Response;
 
-$search_v='search';
-$reg_v='registration_status';
-$spbstat_v='spb_status';
-$paymstat_v='payment_status';
-$comp_v='company';
-$medi_v='media';
-$device_v='device';
-$stat_v='status';
-$funcstat_v='function_status';
-$contrstat_v='contract_status';
+
 // UUID
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 class DashboardController extends Controller
 {
+    private const SEARCH = 'search';
+    private const REG = 'registration_status';
+    private const SPB = 'spb_status';
+    private const PAYSTAT = 'payment_status';
+    private const COMP = 'company';
+    private const MEDIA = 'media';
+    private const DEVICE = 'device';
+    private const STAT = 'status';
+    private const FUNCSTAT = 'function_status';
+    private const CONTRSTAT = 'contract_status';
+  //  $search_v='search';
+//$reg_v='registration_status';
+//SPB='spb_status';
+//PAYSTAT='payment_status';
+//COMP='company';
+//MEDIA='media';
+//$device_v='device';
+//STAT='status';
+//FUNCSTAT='function_status';
+//CONTRSTAT='contract_status';
     /**
      * Create a new controller instance.
      *
@@ -57,7 +68,7 @@ class DashboardController extends Controller
     {
 		$message = null;
         $paginate = 10;
-        $search = trim($request->input($search_v));
+        $search = trim($request->input($this::SEARCH));
         $type = '';
 		$status = '';
 
@@ -65,28 +76,28 @@ class DashboardController extends Controller
 
         $query = Examination::whereNotNull('created_at')
                             ->where(function($q){
-                                $q->where($reg_v, 0)
-                                    ->orWhere($reg_v, 1)
-									->orWhere($reg_v, -1)
-                                    ->orWhere($spbstat_v, 0)
-									->orWhere($spbstat_v, -1)
-                                    ->orWhere($spbstat_v, 1)
-									->orWhere( $paymstat_v, -1);
+                                $q->where($this::REG, 0)
+                                    ->orWhere($this::REG, 1)
+									->orWhere($this::REG, -1)
+                                    ->orWhere($this::SPB, 0)
+									->orWhere($this::SPB, -1)
+                                    ->orWhere($this::SPB, 1)
+									->orWhere($this::PAYSTAT, -1);
                             })
-                            ->where( $paymstat_v, 0)
+                            ->where($this::PAYSTAT, 0)
                             ->with('user')
-                            ->with($comp_v)
+                            ->with($this::COMP)
                             ->with('examinationType')
                             ->with('examinationLab')
-                            ->with($medi_v)
-                            ->with($device_v);
+                            ->with($this::MEDIA)
+                            ->with($this::DEVICE);
 
         if ($search != null){
             $query->where(function($qry) use($search){
-                $qry->whereHas($device_v, function ($q) use ($search){
+                $qry->whereHas($this::DEVICE, function ($q) use ($search){
                         return $q->where('name', 'like', '%'.strtolower($search).'%');
                     })
-                ->orWhereHas($comp_v, function ($q) use ($search){
+                ->orWhereHas(COMP, function ($q) use ($search){
                         return $q->where('name', 'like', '%'.strtolower($search).'%');
                     })
                 ->orWhereHas('examinationLab', function ($q) use ($search){
@@ -99,7 +110,7 @@ class DashboardController extends Controller
             $logs = new Logs;
             $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
             $logs->action = "Search Dashboard";  
-            $dataSearch = array($search_v => $search);
+            $dataSearch = array($this::SEARCH => $search);
             $logs->data = json_encode($dataSearch);
             $logs->created_by = $currentUser->id;
             $logs->page = "DASHBOARD";
@@ -113,49 +124,49 @@ class DashboardController extends Controller
 			}
         }
 
-        if ($request->has($comp_v)){
-            $query->whereHas($comp_v, function ($q) use ($request){
-                return $q->where('name', 'like', '%'.strtolower($request->get($comp_v)).'%');
+        if ($request->has($this::COMP)){
+            $query->whereHas(COMP, function ($q) use ($request){
+                return $q->where('name', 'like', '%'.strtolower($request->get(COMP)).'%');
             });
         }
 
-        if ($request->has($device_v)){
-            $query->whereHas($device_v, function ($q) use ($request){
-                return $q->where('name', 'like', '%'.strtolower($request->get($device_v)).'%');
+        if ($request->has($this::DEVICE)){
+            $query->whereHas($this::DEVICE, function ($q) use ($request){
+                return $q->where('name', 'like', '%'.strtolower($request->get(DEVICE)).'%');
             });
         }
-		if ($request->has($stat_v)){
-			switch ($request->get($stat_v)) {
+		if ($request->has($this::STAT)){
+			switch ($request->get($this::STAT)) {
 				case 1:
-					$query->where($reg_v, '!=', '1');
+					$query->where($this::REG, '!=', '1');
 					$status = 1;
 					break;
 				case 2:
-                    $query->where($reg_v, 1);
-                    $query->where($funcstat_v, 1);
-                    $query->where($contrstat_v, 1);
-                    $query->where($spbstat_v, '!=', 1);
+                    $query->where($this::REG, 1);
+                    $query->where($this::FUNCSTAT, 1);
+                    $query->where($this::CONTRSTAT, 1);
+                    $query->where($this::SPB, '!=', 1);
                     $status = 2;
                     break;
                 case 3:
-					$query->where($reg_v, 1);
-                    $query->where($funcstat_v, 1);
-                    $query->where($contrstat_v, 1);
-                    $query->where($spbstat_v, 1);
-                    $query->where( $paymstat_v, '!=', 1);
-                    $query->whereHas($medi_v, function ($q) use ($request){
+					$query->where($this::REG, 1);
+                    $query->where($this::FUNCSTAT, 1);
+                    $query->where($this::CONTRSTAT, 1);
+                    $query->where($this::SPB, 1);
+                    $query->where($this::PAYSTAT, '!=', 1);
+                    $query->whereHas($this::MEDIA, function ($q) use ($request){
                         return $q->where('name', '=', 'File Pembayaran')
                                 ->where('attachment', '=' ,'');
                     });
                     $status = 3;
                     break;
                 case 4:
-                    $query->where($reg_v, 1);
-                    $query->where($funcstat_v, 1);
-                    $query->where($contrstat_v, 1);
-					$query->where($spbstat_v, 1);
-					$query->where( $paymstat_v, '!=', 1);
-                    $query->whereHas($medi_v, function ($q) use ($request){
+                    $query->where($this::REG, 1);
+                    $query->where($this::FUNCSTAT, 1);
+                    $query->where($this::CONTRSTAT, 1);
+					$query->where($this::SPB, 1);
+					$query->where($this::PAYSTAT, '!=', 1);
+                    $query->whereHas($this::MEDIA, function ($q) use ($request){
                         return $q->where('name', '=', 'File Pembayaran')
                                 ->where('attachment', '!=' ,'');
                     });
@@ -178,9 +189,9 @@ class DashboardController extends Controller
             ->with('message', $message)
             ->with('data', $data)
             ->with('type', $examType)
-            ->with($search_v, $search)
+            ->with($this::SEARCH, $search)
             ->with('filterType', $type)
-			->with($stat_v, $status);
+			->with($this::STAT, $status);
     }
 	
 	public function downloadUsman()

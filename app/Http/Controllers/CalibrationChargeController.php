@@ -16,15 +16,7 @@ use Excel;
 
 /**Duplicated var
  * */
-$search_var='search';
-$created_var='created_at';
-$device_var='device_name';
-$calibration_var="CALIBRATION CHARGE";
-$is_active_var='is_active';
-$message_var='message';
-$price_var='price';
-$adm_var='/admin/calibration';
-$err_var='error';
+
 
 
 
@@ -38,6 +30,24 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 class CalibrationChargeController extends Controller
 {
+    private const SEARCH = 'search';
+    private const CREATE = 'created_at';
+    private const DEVICE = 'device_name';
+    private const CALIBRATION = 'CALIBRATION CHARGE';
+    private const IS_ACTIVE = 'is_active';
+    private const MESSAGE = 'message';
+    private const PRICE = 'price';
+    private const ADM = '/admin/calibration';
+    private const ERR = 'error';
+ //   SEARCH='search';
+//CREATE='created_at';
+//DEVICE='device_name';
+//CALIBRATION="CALIBRATION CHARGE";
+//IS_ACTIVE='is_active';
+//MESSAGE='message';
+//PRICE='price';
+//ADM='/admin/calibration';
+//ERR='error';
     /**
      * Create a new controller instance.
      *
@@ -60,13 +70,13 @@ class CalibrationChargeController extends Controller
         if ($currentUser){
             $message = null;
             $paginate = 10;
-            $search = trim($request->input($search_var));
+            $search = trim($request->input($this::SEARCH));
             $status = -1;
             
             if ($search != null){
-                $charge = CalibrationCharge::whereNotNull( $created_var)
-                    ->where($device_var,'like','%'.$search.'%')
-                    ->orderBy($device_var)
+                $charge = CalibrationCharge::whereNotNull($this::CREATE)
+                    ->where($this::DEVICE,'like','%'.$search.'%')
+                    ->orderBy($this::DEVICE)
                     ->paginate($paginate);
 
                     $logs = new Logs;
@@ -75,19 +85,19 @@ class CalibrationChargeController extends Controller
                     $datasearch = array("search"=>$search);
                     $logs->data = json_encode($datasearch);
                     $logs->created_by = $currentUser->id;
-                    $logs->page = $calibration_var;
+                    $logs->page = $this::CALIBRATION;
                     $logs->save();
             }else{
-                $query = CalibrationCharge::whereNotNull( $created_var);
+                $query = CalibrationCharge::whereNotNull($this::CREATE);
 
-                if ($request->has($is_active_var)){
-                    $status = $request->get($is_active_var);
-                    if ($request->get($is_active_var) > -1){
-                        $query->where($is_active_var, $request->get($is_active_var));
+                if ($request->has($this::IS_ACTIVE)){
+                    $status = $request->get($this::IS_ACTIVE);
+                    if ($request->get($this::IS_ACTIVE) > -1){
+                        $query->where($this::IS_ACTIVE, $request->get($this::IS_ACTIVE));
                     }
                 }
 
-                $charge = $query->orderBy($device_var)
+                $charge = $query->orderBy($this::DEVICE)
                                ->paginate($paginate);
             }
             
@@ -96,9 +106,9 @@ class CalibrationChargeController extends Controller
             }
             
             return view('admin.calibration.index')
-                ->with($message_var, $message)
+                ->with($this::MESSAGE, $message)
                 ->with('data', $charge)
-                ->with($search_var, $search)
+                ->with($this::SEARCH, $search)
                 ->with('status', $status);
         }
     }
@@ -125,9 +135,9 @@ class CalibrationChargeController extends Controller
 
         $charge = new CalibrationCharge;
         $charge->id = Uuid::uuid4();
-        $charge->device_name = $request->input($device_var);
-        $charge->price = str_replace(",","",$request->input($price_var));
-        $charge->is_active = $request->input($is_active_var);
+        $charge->device_name = $request->input($this::DEVICE);
+        $charge->price = str_replace(",","",$request->input($this::PRICE));
+        $charge->is_active = $request->input($this::IS_ACTIVE);
         $charge->created_by = $currentUser->id;
         $charge->updated_by = $currentUser->id;
 
@@ -139,13 +149,13 @@ class CalibrationChargeController extends Controller
             $logs->action = "Create Calibration Charge";
             $logs->data = $charge;
             $logs->created_by = $currentUser->id;
-            $logs->page = $calibration_var;
+            $logs->page = $this::CALIBRATION;
             $logs->save();
 
-            Session::flash($message_var, 'Charge successfully created');
+            Session::flash($this::MESSAGE, 'Charge successfully created');
             return redirect();
         } catch(Exception $e){
-            Session::flash($err_var, 'Save failed');
+            Session::flash($this::ERR, 'Save failed');
             return redirect('/admin/calibration/create');
         }
     }
@@ -188,14 +198,14 @@ class CalibrationChargeController extends Controller
 
         $charge = CalibrationCharge::find($id);
         $oldData = $charge;
-        if ($request->has($device_var)){
-            $charge->device_name = $request->input($device_var);
+        if ($request->has($this::DEVICE)){
+            $charge->device_name = $request->input($this::DEVICE);
         }
-        if ($request->has($price_var)){
-            $charge->price = str_replace(",","",$request->input($price_var));
+        if ($request->has($this::PRICE)){
+            $charge->price = str_replace(",","",$request->input($this::PRICE));
         }
-        if ($request->has($is_active_var)){
-            $charge->is_active = $request->input($is_active_var);
+        if ($request->has($this::IS_ACTIVE)){
+            $charge->is_active = $request->input($this::IS_ACTIVE);
         }
 
         $charge->updated_by = $currentUser->id;
@@ -208,13 +218,13 @@ class CalibrationChargeController extends Controller
             $logs->action = "Update Calibration Charge";
             $logs->data = $oldData;
             $logs->created_by = $currentUser->id;
-            $logs->page = $calibration_var;
+            $logs->page = $this::CALIBRATION;
             $logs->save();
 
-            Session::flash($message_var, 'Charge successfully updated');
-            return redirect($adm_var);
+            Session::flash($this::MESSAGE, 'Charge successfully updated');
+            return redirect($this::ADM);
         } catch(Exception $e){
-            Session::flash($err_var, 'Save failed');
+            Session::flash($this::ERR, 'Save failed');
             return redirect('/admin/calibration/'.$charge->id.'/edit');
         }
     }
@@ -239,14 +249,14 @@ class CalibrationChargeController extends Controller
                 $logs->action = "Delete Calibration Charge";
                 $logs->data = $oldData;
                 $logs->created_by = $currentUser->id;
-                $logs->page = $calibration_var;
+                $logs->page = $this::CALIBRATION;
                 $logs->save();
 
-                Session::flash($message_var, 'Charge successfully deleted');
-                return redirect($adm_var);
+                Session::flash($this::MESSAGE, 'Charge successfully deleted');
+                return redirect($this::ADM);
             }catch (Exception $e){
-                Session::flash( $err_var, 'Delete failed');
-                return redirect($adm_var);
+                Session::flash($this::ERR, 'Delete failed');
+                return redirect($this::ADM);
             }
         }
     }
@@ -264,13 +274,13 @@ class CalibrationChargeController extends Controller
         // the user's e-mail address, the amount paid, and the payment
         // timestamp.
 
-        $search = trim($request->input($search_var));
+        $search = trim($request->input($this::SEARCH));
        // $status = -1;
 
         if ($search != null){
-            $charge = CalibrationCharge::whereNotNull( $created_var)
-                ->where($device_var,'like','%'.$search.'%')
-                ->orderBy($device_var);
+            $charge = CalibrationCharge::whereNotNull($this::CREATE)
+                ->where($this::DEVICE,'like','%'.$search.'%')
+                ->orderBy($this::DEVICE);
 
                 $logs = new Logs;
                 $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
@@ -278,19 +288,19 @@ class CalibrationChargeController extends Controller
                 $datasearch = array("search"=>$search);
                 $logs->data = json_encode($datasearch);
                 $logs->created_by = $currentUser->id;
-                $logs->page = $calibration_var;
+                $logs->page = $this::CALIBRATION;
                 $logs->save();
         }else{
-            $query = CalibrationCharge::whereNotNull( $created_var');
+            $query = CalibrationCharge::whereNotNull($this::CREATE);
 
-            if ($request->has($is_active_var)){
-                $status = $request->get($is_active_var);
-                if ($request->get($is_active_var) > -1){
-                    $query->where($is_active_var, $request->get($is_active_var));
+            if ($request->has($this::IS_ACTIVE)){
+                $status = $request->get($this::IS_ACTIVE);
+                if ($request->get($this::IS_ACTIVE) > -1){
+                    $query->where($this::IS_ACTIVE, $request->get($this::IS_ACTIVE));
                 }
             }
 
-            $charge = $query->orderBy($device_var);
+            $charge = $query->orderBy($this::DEVICE);
         }
 
         $data = $charge->get();
