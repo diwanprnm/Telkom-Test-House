@@ -31,7 +31,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 class CalibrationChargeController extends Controller
 {
     private const SEARCH = 'search';
-    private const SEARCH = 'search';
+    private const SEARCH_ = 'search';
     private const CREATE = 'created_at';
     private const DEVICE = 'device_name';
     private const CALIBRATION = 'CALIBRATION CHARGE';
