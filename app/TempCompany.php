@@ -21,15 +21,13 @@ class TempCompany extends Model
     }
 	
 	static function autocomplet($query){
-		$auto_complete_result = DB::table('temp_company')
+		return DB::table('temp_company')
 				->join('companies', 'temp_company.company_id', '=', 'companies.id')
                 ->select('companies.name as autosuggest')
 				->where('companies.name', 'like','%'.$query.'%')
 				->orderBy('companies.name')
                 ->take(5)
 				->distinct()
-                ->get();
-				
-		return $auto_complete_result;
+                ->get(); 
 	}
 }
