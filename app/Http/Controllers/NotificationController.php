@@ -30,8 +30,8 @@ class NotificationController extends Controller
      * @return void
      */
     public function __construct()
-    {
-        // $this->middleware('auth.admin');
+    { 
+
     }
 
      /**
@@ -49,9 +49,7 @@ public function index(Request $request)
 			$countNotificationH = NotificationTable::where("is_read",0)->where("to",$currentUser->id)->orderBy("created_at","desc")->get()->count();
 			
 			$dataNotification = NotificationTable::where("to",$currentUser->id)->orderBy("is_read")->orderBy("created_at","desc")->get();
-			$countNotification = NotificationTable::where("to",$currentUser->id)->orderBy("is_read")->orderBy("created_at","desc")->get()->count();
-			// View()->share('notification_data_user', $dataNotification->toArray());
-			// View()->share('notification_count', $countNotification);
+			$countNotification = NotificationTable::where("to",$currentUser->id)->orderBy("is_read")->orderBy("created_at","desc")->get()->count(); 
 			return view('client.notification')
 				->with('notification_data_user', $dataNotificationH)
 				->with('notification_count', $countNotificationH)
@@ -88,7 +86,7 @@ public function index(Request $request)
         }
         $tree = array();
         
-        foreach ($parentMenu as $key => $value) {
+        foreach ($parentMenu as $value) {
             $tree[] = $this->createTree($new, array($value));
         } 
 		
@@ -112,9 +110,7 @@ public function index(Request $request)
                             ->get()->count();
 							
 			$dataNotification = NotificationTable::where("to","admin")->orWhere("to",$currentUser->id)->orderBy("is_read")->orderBy("created_at","desc")->get();
-			$countNotification = NotificationTable::where("to","admin")->orWhere("to",$currentUser->id)->orderBy("is_read")->orderBy("created_at","desc")->get()->count();
-			// View()->share('notification_data_user', $dataNotification->toArray());
-			// View()->share('notification_count', $countNotification);
+			$countNotification = NotificationTable::where("to","admin")->orWhere("to",$currentUser->id)->orderBy("is_read")->orderBy("created_at","desc")->get()->count(); 
 			return view('admin.notification')
 				->with('tree_menus', $tree)
 				
@@ -146,7 +142,7 @@ public function index(Request $request)
 	
 	public function createTree(&$list, $parent){
 
-        foreach ($parent as $k=>$l){
+        foreach ($parent as $l){
             if(isset($list[$l['id']])){
                 $l['children'] = $this->createTree($list, $list[$l['id']]);
             }
