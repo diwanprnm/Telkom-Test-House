@@ -66,7 +66,12 @@ class PermohonanController extends Controller
 	public function createPermohonan()
 	{
 		$currentUser = Auth::user();
-		$user_id = ''.$currentUser['attributes']['id'].'';
+		if(isset($currentUser)){
+
+			$user_id = ''.$currentUser['attributes']['id'].'';
+		}else{
+			$user_id = 0;
+		}
 		$query = "SELECT * FROM examination_types";
 		$page = "";
 		$data = DB::select($query);
