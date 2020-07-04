@@ -80,11 +80,10 @@ class STELController extends Controller
 				}
             }
 
-            if ($request->has('year')){
-                if($request->input('year') != 'all'){
-                    $year = $request->get('year');
-                    $query->where('year', $request->get('year'));
-                }
+            if ($request->has('year') && $request->input('year') != 'all'){ 
+                $year = $request->get('year');
+                $query->where('year', $request->get('year'));
+            
             }
 
             if ($request->has('is_active')){
@@ -132,8 +131,7 @@ class STELController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-		// $request->flash();
+    { 
 		$currentUser = Auth::user();
 			
 			$name_exists = $this->cekNamaSTEL($request->input('name'));
@@ -155,9 +153,7 @@ class STELController extends Controller
 		$stel->created_by = $currentUser->id;
 		$stel->updated_by = $currentUser->id;
 
-		if ($request->hasFile('attachment')) {
-			/*$ext_file = $request->file('attachment')->getClientOriginalExtension();
-			$name_file = uniqid().'_stel_'.$stel->code.'.'.$ext_file;*/
+		if ($request->hasFile('attachment')) { 
             $name_file = 'stel_'.$request->file('attachment')->getClientOriginalName();
 			$path_file = public_path().'/media/stel';
 			if (!file_exists($path_file)) {
@@ -261,9 +257,7 @@ class STELController extends Controller
         if ($request->has('total')){
             $stel->total = str_replace(",","",$request->input('total'));
         }
-        if ($request->hasFile('attachment')) {
-            /*$ext_file = $request->file('attachment')->getClientOriginalExtension();
-            $name_file = uniqid().'_stel_'.$stel->code.'.'.$ext_file;*/
+        if ($request->hasFile('attachment')) { 
             $name_file = 'stel_'.$request->file('attachment')->getClientOriginalName();
             $path_file = public_path().'/media/stel';
             if (!file_exists($path_file)) {
@@ -368,7 +362,7 @@ class STELController extends Controller
         $search = trim($request->input('search'));
         
         $category = '';
-        $status = -1;
+        $status = $request->get('is_active');
 
         if ($search != null){
             $stels = STEL::whereNotNull('created_at')
@@ -388,10 +382,9 @@ class STELController extends Controller
                 }
             }
 
-            if ($request->has('is_active')){
-                $status = $request->get('is_active');
-                if ($request->get('is_active') > -1){
-                    $query->where('is_active', $request->get('is_active'));
+            if ($request->has('is_active')){ 
+                if ($status > -1){
+                    $query->where('is_active', $status);
                 }
             }
             
@@ -441,11 +434,7 @@ class STELController extends Controller
 
         // Generate and return the spreadsheet
         Excel::create('Data STEL/STD', function($excel) use ($examsArray) {
-
-            // Set the spreadsheet title, creator, and description
-            // $excel->setTitle('Payments');
-            // $excel->setCreator('Laravel')->setCompany('WJ Gilmore, LLC');
-            // $excel->setDescription('payments file');
+ 
 
             // Build the spreadsheet, passing in the payments array
             $excel->sheet('sheet1', function($sheet) use ($examsArray) {
