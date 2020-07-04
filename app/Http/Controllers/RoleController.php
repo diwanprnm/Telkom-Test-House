@@ -43,9 +43,7 @@ class RoleController extends Controller
         if ($currentUser){
             $message = null;
             $paginate = 10;
-            $search = trim($request->input('search'));
-            $category = '';
-            $status = -1;
+            $search = trim($request->input('search'));  
             
             if ($search != null){
                 $stels = Role::whereNotNull('created_at')
@@ -96,11 +94,10 @@ class RoleController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-		// $request->flash();
+    { 
 		$currentUser = Auth::user(); 
 		$role = new Role;
-	   $role->id = Uuid::uuid4();
+	    $role->id = Uuid::uuid4();
 		$role->name = $request->input('name');
 	  
 		$role->created_by = $currentUser->id;
@@ -240,12 +237,11 @@ class RoleController extends Controller
 	
     function cekNamaSTEL($name)
     {
-		$stels = STEL::where('name','=',''.$name.'')->get();
-		return count($stels);
+		 
+		return  count(STEL::where('name','=',''.$name.'')->get());
     }
 	
 	public function autocomplete($query) {
-        $respons_result = STEL::adm_stel_autocomplet($query);
-        return response($respons_result);
+        return response(STEL::adm_stel_autocomplet($query)); 
     }
 }
