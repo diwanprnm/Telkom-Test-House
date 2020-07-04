@@ -17,7 +17,7 @@ use App\AdminRole;
 use App\TbMSPK;
 use App\TbHSPK;
 use App\Income;
-use App\Api_logs;
+use App\ApiLogs;
 
 use App\User;
 use Mail;
@@ -1716,7 +1716,7 @@ $notification->id = Uuid::uuid4();
 
     public function checkSPKCreatedOTR()
     {
-        $spk = Api_logs::where('route', 'LIKE', '%spk/addNotif%')
+        $spk = ApiLogs::where('route', 'LIKE', '%spk/addNotif%')
         		->where('status', 0)
      			->get();
         if(count($spk)>0){
@@ -1730,7 +1730,7 @@ $notification->id = Uuid::uuid4();
 			]);
             $updated_count = 0;
             foreach ($spk as $data) {
-				$this_spk = Api_logs::where("id", $data->id)->first();
+				$this_spk = ApiLogs::where("id", $data->id)->first();
 	        	try {
 	        		$res_exam_schedule = $client->get($data->route);
 					$exam_schedule = $res_exam_schedule ? json_decode($res_exam_schedule->getBody()) : null;
@@ -1829,7 +1829,7 @@ $notification->id = Uuid::uuid4();
 							$res_exam_schedule = $client->get('spk/addNotif?id='.$Examination->id.'&spkNumber='.$spk_number_forOTR);
 							$exam_schedule = $res_exam_schedule->getStatusCode() == '200' ? json_decode($res_exam_schedule->getBody()) : null;
 							if($exam_schedule && $exam_schedule->status == false){
-								$api_logs = new Api_logs;
+								$api_logs = new ApiLogs;
 								$api_logs->send_to = "OTR";
 								$api_logs->route = 'spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR;
 								$api_logs->status = $exam_schedule->status;
@@ -1841,7 +1841,7 @@ $notification->id = Uuid::uuid4();
 
 								$api_logs->save();
 							}elseif ($exam_schedule == null) {
-								$api_logs = new Api_logs;
+								$api_logs = new ApiLogs;
 								$api_logs->send_to = "OTR";
 								$api_logs->route = 'spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR;
 								$api_logs->status = 0;
