@@ -74,8 +74,9 @@ class UserinController extends Controller
                     $logs->page = "USER INTERNAL";
                     try{
                         $logs->save();    
-                    }catch(Illuminate\Database\QueryException $e){
-                     
+                    }catch(Illuminate\Database\QueryException $e){ 
+                        Session::flash('error', 'Failed Create Log');
+                        return redirect('/admin/userin');
                     }
                     
             }else{
@@ -129,7 +130,7 @@ class UserinController extends Controller
         }
         $tree = array();
         
-        foreach ($parentMenu as $key => $value) {
+        foreach ($parentMenu as $value) {
             $tree[] = $this->createTree($new, array($value));
         } 
       
@@ -141,7 +142,7 @@ class UserinController extends Controller
 
     public function createTree(&$list, $parent){
 
-        foreach ($parent as $k=>$l){
+        foreach ($parent as $l){
             if(isset($list[$l['id']])){
                 $l['children'] = $this->createTree($list, $list[$l['id']]);
             }
@@ -175,9 +176,7 @@ class UserinController extends Controller
         $user->phone_number = $request->input('phone_number');
         $user->fax = $request->input('fax');
 
-        if ($request->hasFile('picture')) {
-            /*$ext_file = $request->file('picture')->getClientOriginalExtension();
-            $name_file = uniqid().'_user_'.$user->id.'.'.$ext_file;*/
+        if ($request->hasFile('picture')) { 
             $name_file = 'profile_'.$request->file('picture')->getClientOriginalName();
             $path_file = public_path().'/media/user/'.$user->id;
             if (!file_exists($path_file)) {
@@ -304,9 +303,7 @@ class UserinController extends Controller
             $user->is_active = $request->input('is_active');
         }
 
-        if ($request->hasFile('picture')) {
-            /*$ext_file = $request->file('picture')->getClientOriginalExtension();
-            $name_file = uniqid().'_user_'.$user->id.'.'.$ext_file;*/
+        if ($request->hasFile('picture')) { 
             $name_file = 'profile_'.$request->file('picture')->getClientOriginalName();
             $path_file = public_path().'/media/user/'.$user->id;
             if (!file_exists($path_file)) {
@@ -368,7 +365,7 @@ class UserinController extends Controller
         }
         $tree = array();
         
-        foreach ($parentMenu as $key => $value) {
+        foreach ($parentMenu as $value) {
             $tree[] = $this->createTree($new, array($value));
         } 
 
@@ -432,9 +429,7 @@ class UserinController extends Controller
             $user->fax = $request->input('fax');
         }
 
-        if ($request->hasFile('picture')) {
-            /*$ext_file = $request->file('picture')->getClientOriginalExtension();
-            $name_file = uniqid().'_user_'.$user->id.'.'.$ext_file;*/
+        if ($request->hasFile('picture')) { 
             $name_file = 'profile_'.$request->file('picture')->getClientOriginalName();
             $path_file = public_path().'/media/user/'.$user->id;
             if (!file_exists($path_file)) {
@@ -464,7 +459,7 @@ class UserinController extends Controller
             $logs->page = "USER INTERNAL";
             $logs->save();
 
-            foreach ($menus as $key => $value) {
+            foreach ($menus as  $value) {
                 $usersmenus = new UsersMenus;
                 $usersmenus->user_id =  $user->id; 
                 $usersmenus->menu_id = $value; 
@@ -481,7 +476,7 @@ class UserinController extends Controller
                 $usersroles->user_id =  $user->id; 
                 $usersroles->user_name =  $user->name; 
                 $usersroles->user_email =  $user->email; 
-                foreach ($roles as $key => $value) {
+                foreach ($roles as  $value) {
                     $usersroles->$value = 1; 
                 }
                 $usersroles->created_by = $currentUser->id;
