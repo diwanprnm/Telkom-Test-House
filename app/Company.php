@@ -11,14 +11,12 @@ class Company extends Model
     public $incrementing = false;
 	
 	static function autocomplet($query){
-		$auto_complete_result = DB::table('companies')
+		return DB::table('companies')
 				->select('name as autosuggest')
 				->where('name', 'like','%'.$query.'%')
                 ->orderBy('name')
                 ->take(5)
 				->distinct()
-                ->get();
-		
-		return $auto_complete_result;
+                ->get(); 
 	}
 }
