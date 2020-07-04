@@ -59,11 +59,7 @@ class TempCompanyController extends Controller
 				$query->where(function($qry) use($search){
                     $qry->whereHas('company', function ($q) use ($search){
 							return $q->where('name', 'like', '%'.strtolower($search).'%');
-						})
-						// ->orWhereHas('user', function ($q) use ($search){
-							// return $q->where('name', 'like', '%'.strtolower($search).'%');
-						// })
-						;
+						});
                 });
             }
             if ($request->has('is_commited')){
@@ -148,9 +144,7 @@ class TempCompanyController extends Controller
      */
     public function edit($id)
     {
-        $company = TempCompany::find($id)->with('user')
-                        ->with('company');
-		$company = TempCompany::where('id', $id)
+        $company = TempCompany::where('id', $id)
                             ->with('company')
                             ->with('user')
                             ->first();
@@ -332,12 +326,13 @@ if(copy($npwp_file_temp,$npwp_file_now)){
 
                     return Response::file($file, $headers);
                     break;
+                 default:
+                    return false;
             }
         }
     }
 	
 	public function autocomplete($query) {
-        $respons_result = TempCompany::autocomplet($query);
-        return response($respons_result);
+        $return response(TempCompany::autocomplet($query)); 
     }
 }
