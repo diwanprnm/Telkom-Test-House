@@ -82,27 +82,29 @@
 								<div class="modal-content">
 									<div class="modal-header">
 										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-										<h4 class="modal-title"><i class="fa fa-eyes-open"></i>Setting Manager URel atau POH Akan Diganti, Mohon Berikan Keterangan!</h4>
+										<h4 class="modal-title"><em class="fa fa-eyes-open"></em>Setting Manager URel atau POH Akan Diganti, Mohon Berikan Keterangan!</h4>
 									</div>
 									
 									<div class="modal-body">
 										<table width=100%>
+										<caption></caption>
 											<tr>
-												<td>
+												<th scope="col">
 													<div class="form-group">
 														<label for="keterangan">Keterangan:</label>
 														<textarea class="form-control" rows="5" name="keterangan" id="keterangan"></textarea>
 													</div>
-												</td>
+												</th>
 											</tr>
 										</table>
 									</div><!-- /.modal-content -->
 									<div class="modal-footer">
 										<table width=100%>
+										<caption></caption>
 											<tr>
-												<td>
-													<button type="submit" id="btn-modal-update" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
-												</td>
+												<th scope="col">
+													<button type="submit" id="btn-modal-update" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
+												</th>
 											</tr>
 										</table>
 									</div>

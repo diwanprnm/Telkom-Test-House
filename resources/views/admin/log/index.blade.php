@@ -29,8 +29,8 @@
 		<div class="container-fluid container-fullw bg-white">
 	        <div class="row">
 		        <div class="col-md-6">
-		        	<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><i class="ti-filter"></i> Filter</a>
-					<!-- <a class="btn btn-info pull-left" href="{{URL::to('log/excel')}}"> Export to Excel</a> -->
+		        	<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><em class="ti-filter"></em> Filter</a>
+					
 					<button id="excel" type="submit" class="btn btn-info pull-left">
                         Export to Excel
                     </button>
@@ -38,7 +38,7 @@
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table">
 	                    <input id="search_value" type="text" placeholder="Search" id="form-field-17" class="form-control " value="{{ $search }}">
-	                    <i class="ti-search"></i>
+	                    <em class="ti-search"></em>
 	                </span>
 	            </div>
 	            <div class="col-md-12 panel panel-info">
@@ -57,7 +57,7 @@
 											<input type="text" placeholder="Dari Tanggal" value="{{ $after_date }}" name="after_date" id="after_date" class="form-control"/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
+													<em class="glyphicon glyphicon-calendar"></em>
 												</button>
 											</span>
 										</p>
@@ -72,7 +72,7 @@
 											<input type="text" placeholder="Sampai Tanggal" value="{{ $before_date }}" name="before_date" id="before_date" class="form-control"/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
+													<em class="glyphicon glyphicon-calendar"></em>
 												</button>
 											</span>
 										</p>
@@ -131,48 +131,7 @@
 							</div>
 							<div class="row">
 								<!-- Sorting -->
-								<!-- <div class="col-md-6">
-									<div class="form-group">
-										<label>
-											Sort by :
-										</label>
-										<select id="sort_by" name="sort_by" class="cs-select cs-skin-elastic" required>
-											@if($sort_by == '')
-												<option value="" disabled selected>Select...</option>
-											@endif
-											@if($sort_by == 'logs.created_at')
-                                                <option value="logs.created_at" selected>Periode</option>
-											@else
-                                                <option value="logs.created_at">Periode</option>
-                                            @endif
-											@if($sort_by == 'users.name')
-                                                <option value="users.name" selected>Username</option>
-											@else
-                                                <option value="users.name">Username</option>
-                                            @endif
-											@if($sort_by == 'logs.action')
-                                                <option value="logs.action" selected>Action</option>
-											@else
-                                                <option value="logs.action">Action</option>
-                                            @endif
-										</select>
-										<select id="sort_type" name="sort_type" class="cs-select cs-skin-elastic" required>
-											@if($sort_type == '')
-												<option value="" disabled selected>Select...</option>
-											@endif
-											@if($sort_type == 'asc')
-                                                <option value="asc" selected>ASC</option>
-											@else
-                                                <option value="asc">ASC</option>
-                                            @endif
-											@if($sort_type == 'desc')
-                                                <option value="desc" selected>DESC</option>
-											@else
-                                                <option value="desc">DESC</option>
-                                            @endif
-										</select>
-									</div>
-								</div> -->
+								
 								<!-- End Sorting -->
 								<div class="col-md-12">
 		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
@@ -201,13 +160,14 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+							<caption></caption>
 							<thead>
 								<tr>
-									<th class="center">No</th> 
-									<th class="center">Username</th> 
-									<th class="center">Action</th>
-									<th class="center">Page</th>
-									<th class="center">Date</th> 
+									<th class="center" scope="col">No</th> 
+									<th class="center" scope="col">Username</th> 
+									<th class="center" scope="col">Action</th>
+									<th class="center" scope="col">Page</th>
+									<th class="center" scope="col">Date</th> 
 								</tr>
 							</thead>
 							<tbody>

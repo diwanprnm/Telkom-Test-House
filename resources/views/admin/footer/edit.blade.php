@@ -38,7 +38,7 @@
 									<label>
 										Gambar *
 									</label>
-									<img src="{{asset('media/footer/'.$data->image)}}" width="240px">
+									<img src="{{asset('media/footer/'.$data->image)}}" width="240px"  alt="">
 									<input type="file" name="image" accept="image/*" class="form-control">
 								</div>
 							</div>

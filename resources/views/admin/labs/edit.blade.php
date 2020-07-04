@@ -91,7 +91,7 @@
 											<input type="text" name="close_until" id="close_until" class="form-control" value="{{ $data->close_until }}" required/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
+													<em class="glyphicon glyphicon-calendar"></em>
 												</button>
 											</span>
 										</p>
@@ -106,7 +106,7 @@
 											<input type="text" name="open_at" id="open_at" class="form-control" value="{{ $data->open_at }}" required/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
+													<em class="glyphicon glyphicon-calendar"></em>
 												</button>
 											</span>
 										</p>
