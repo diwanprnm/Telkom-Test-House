@@ -74,7 +74,8 @@ class UsereksController extends Controller
                     try{
                         $logs->save();    
                     }catch(Illuminate\Database\QueryException $e){
-                     
+                        Session::flash('error', 'Failed Create Log');
+                        return redirect('/admin/usereks');
                     }
                     
             }else{
@@ -143,8 +144,7 @@ class UsereksController extends Controller
      */
     public function store(Request $request)
     {
-        $currentUser = Auth::user();
-        $menus = $request->input('menus');
+        $currentUser = Auth::user(); 
         
         $user = new User;
         $user->id = Uuid::uuid4();
@@ -158,9 +158,7 @@ class UsereksController extends Controller
         $user->phone_number = $request->input('phone_number');
         $user->fax = $request->input('fax');
 
-        if ($request->hasFile('picture')) {
-            /*$ext_file = $request->file('picture')->getClientOriginalExtension();
-            $name_file = uniqid().'_user_'.$user->id.'.'.$ext_file;*/
+        if ($request->hasFile('picture')) { 
             $name_file = 'profile_'.$request->file('picture')->getClientOriginalName();
             $path_file = public_path().'/media/user/'.$user->id;
             if (!file_exists($path_file)) {
@@ -256,9 +254,7 @@ class UsereksController extends Controller
             $user->is_active = $request->input('is_active');
         }
 
-        if ($request->hasFile('picture')) {
-            /*$ext_file = $request->file('picture')->getClientOriginalExtension();
-            $name_file = uniqid().'_user_'.$user->id.'.'.$ext_file;*/
+        if ($request->hasFile('picture')) { 
             $name_file = 'profile_'.$request->file('picture')->getClientOriginalName();
             $path_file = public_path().'/media/user/'.$user->id;
             if (!file_exists($path_file)) {
@@ -304,8 +300,7 @@ class UsereksController extends Controller
     {
         $user = User::find($id);
 		$roles = Role::where('id', '=', 2)->get();
-        $companies = Company::where('id', '!=', '1')->orderBy('name')->get();
-        $currentUser = Auth::user();
+        $companies = Company::where('id', '!=', '1')->orderBy('name')->get(); 
 
         return view('admin.usereks.edit')
             ->with('role', $roles)
@@ -322,8 +317,7 @@ class UsereksController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $currentUser = Auth::user();
-        $menus = $request->input('menus');
+        $currentUser = Auth::user(); 
 
         $user = User::find($id);
         $oldData = $user;
@@ -360,9 +354,7 @@ class UsereksController extends Controller
             $user->fax = $request->input('fax');
         }
 
-        if ($request->hasFile('picture')) {
-            /*$ext_file = $request->file('picture')->getClientOriginalExtension();
-            $name_file = uniqid().'_user_'.$user->id.'.'.$ext_file;*/
+        if ($request->hasFile('picture')) { 
             $name_file = 'profile_'.$request->file('picture')->getClientOriginalName();
             $path_file = public_path().'/media/user/'.$user->id;
             if (!file_exists($path_file)) {
