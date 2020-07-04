@@ -333,6 +333,6 @@ if(copy($npwp_file_temp,$npwp_file_now)){
     }
 	
 	public function autocomplete($query) {
-        $return response(TempCompany::autocomplet($query)); 
+        return response(TempCompany::autocomplet($query)); 
     }
 }
