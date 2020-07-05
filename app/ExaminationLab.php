@@ -11,7 +11,7 @@ class ExaminationLab extends Model
     public $incrementing = false;
 
 	static function autocomplet($query){
-		$auto_complete_result = DB::table('examination_labs')
+		return  DB::table('examination_labs')
 				->select('name as autosuggest')
 				->where('name', 'like','%'.$query.'%')
                 ->orderBy('name')
@@ -19,6 +19,6 @@ class ExaminationLab extends Model
 				->distinct()
                 ->get();
 		
-		return $auto_complete_result;
+		
 	}
 }

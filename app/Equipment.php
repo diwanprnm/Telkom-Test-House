@@ -21,15 +21,5 @@ class Equipment extends Model
         return $this->belongsTo('App\User', 'created_by');
     }
 	
-	// static function autocomplet($query){
-		// $auto_complete_result = DB::table('users')
-				// ->select('name as autosuggest')
-				// ->where('name', 'like','%'.$query.'%')
-                // ->orderBy('name')
-                // ->take(5)
-				// ->distinct()
-                // ->get();
-		
-		// return $auto_complete_result;
-	// }
+	
 }

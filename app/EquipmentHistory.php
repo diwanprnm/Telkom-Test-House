@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class EquipmentHistory extends Model
 {
     protected $table = "equipment_histories";
-    // public $incrementing = false;
+    
 	public $timestamps = false;
 		
     public function equipment()

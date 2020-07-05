@@ -11,7 +11,7 @@ class Footer extends Model
     public $incrementing = false;
 	
 	static function autocomplet($query){
-		$auto_complete_result = DB::table('footers')
+		return  DB::table('footers')
 				->select('description as autosuggest')
 				->where('description', 'like','%'.$query.'%')
                 ->orderBy('description')
@@ -19,6 +19,5 @@ class Footer extends Model
 				->distinct()
                 ->get();
 		
-		return $auto_complete_result;
 	}
 }

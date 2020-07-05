@@ -10,9 +10,7 @@ class QuestionerQuestion extends Model
     protected $table = "questioner_questions";
 	public $incrementing = false;
 	
-    // public function questionerdynamic()
-    // {
-        // return $this->hasMany('App\QuestionerDynamic');
-    // }
+   
+   
 
 }
