@@ -70,7 +70,7 @@
 										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
 										<td class="center">{{ $item->title }}</td>
 										<td class="center">
-											<img src="{{ \Storage::disk('minio')->url('certification/'.$item->image)}}" width="240" alt="Certificate"/></td>
+											<img src="{{ \Storage::disk('minio')->url('certification/'.$item->image) }}" width="240" alt="Certificate"/></td>
 										@if($item->is_active)
 	                                    	<td class="center"><span class="label label-sm label-success">Active</span></td>
 	                                    @else

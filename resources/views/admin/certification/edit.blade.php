@@ -46,7 +46,7 @@
 									<label>
 										Gambar *
 									</label>
-									<img src="{{asset('media/certification/'.$data->image)}}" width="240px" alt="Media Certification">
+									<img src="{{ Storage::disk('minio')->url('certification/'.$data->image) }}" width="240px" alt="Media Certification">
 									<input type="file" name="image" accept="image/*" class="form-control">
 								</div>
 							</div>
