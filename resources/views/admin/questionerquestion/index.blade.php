@@ -26,7 +26,7 @@
 				<div class="col-md-12">
 	                <span class="input-icon input-icon-right search-table">
 	                    <input id="search_value" type="text" placeholder="Search" id="form-field-17" class="form-control " value="{{ $search }}">
-	                    <i class="ti-search"></i>
+	                    <em class="ti-search"></em>
 	                </span>
 	            </div> 
 	        </div>
@@ -54,13 +54,14 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
-							<thead>
+							<caption></caption>
+								<thead>
 								<tr>
-									<th class="center">No</th> 
-									<th class="center">Nama</th> 
-									<th class="center">Status</th> 
-                                    <th class="center">Aksi</th>
-								</tr>
+									<th class="center" scope="col">No</th> 
+									<th class="center" scope="col">Nama</th> 
+									<th class="center" scope="col">Status</th> 
+                                    <th class="center" scope="col">Aksi</th>
+								</tr>	
 							</thead>
 							<tbody>
 								<?php $no=1; ?>
@@ -79,10 +80,10 @@
 	                                    @endif
 	                                    <td class="center">
 											<div>
-												<a href="{{URL::to('admin/questionerquestion/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
+												<a href="{{URL::to('admin/questionerquestion/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
 												{!! Form::open(array('url' => 'admin/questionerquestion/'.$item->id, 'method' => 'DELETE')) !!}
 													{!! csrf_field() !!}
-													<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')"><i class="fa fa-times fa fa-white"></i></button>
+													<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')"><em class="fa fa-times fa fa-white"></em></button>
 												{!! Form::close() !!}
 											</div>
 										</td>

@@ -25,8 +25,8 @@
 	            	<div class="panel panel-white no-radius text-center">
 	            		<div class="panel-body">
 	            			<span class="fa-stack fa-2x">
-	            				<i class="fa fa-square fa-stack-2x text-primary"></i>	
-	            				<i class="fa fa-building-o fa-stack-1x fa-inverse"></i>
+	            				<em class="fa fa-square fa-stack-2x text-primary"></em>	
+	            				<em class="fa fa-building-o fa-stack-1x fa-inverse"></em>
 	            			</span>
 	            			<h2 class="StepTitle">
 	            				<?php echo number_format($data['jml_perusahaan'], 0, ',', '.'); ?> Perusahaan
@@ -40,8 +40,8 @@
 	            	<div class="panel panel-white no-radius text-center">
 	            		<div class="panel-body">
 	            			<span class="fa-stack fa-2x">
-	            				<i class="fa fa-square fa-stack-2x text-primary"></i>	
-	            				<i class="fa fa-user fa-stack-1x fa-inverse"></i>
+	            				<em class="fa fa-square fa-stack-2x text-primary"></em>	
+	            				<em class="fa fa-user fa-stack-1x fa-inverse"></em>
 	            			</span>
 	            			<h2 class="StepTitle">
 	            				<?php echo number_format($data['jml_pemohon'], 0, ',', '.'); ?> Pemohon
@@ -55,8 +55,8 @@
 	            	<div class="panel panel-white no-radius text-center">
 	            		<div class="panel-body">
 	            			<span class="fa-stack fa-2x">
-	            				<i class="fa fa-square fa-stack-2x text-primary"></i>	
-	            				<i class="fa fa-check-circle-o fa-stack-1x fa-inverse"></i>
+	            				<em class="fa fa-square fa-stack-2x text-primary"></em>	
+	            				<em class="fa fa-check-circle-o fa-stack-1x fa-inverse"></em>
 	            			</span>
 	            			<h2 class="StepTitle">
 	            				<?php echo number_format($data['jml_perangkatlulus'], 0, ',', '.'); ?> Perangkat
@@ -70,8 +70,8 @@
 	            	<div class="panel panel-white no-radius text-center">
 	            		<div class="panel-body">
 	            			<span class="fa-stack fa-2x">
-	            				<i class="fa fa-square fa-stack-2x text-primary"></i>	
-	            				<i class="fa fa-times-circle-o fa-stack-1x fa-inverse"></i>
+	            				<em class="fa fa-square fa-stack-2x text-primary"></em>	
+	            				<em class="fa fa-times-circle-o fa-stack-1x fa-inverse"></em>
 	            			</span>
 	            			<h2 class="StepTitle">
 	            				<?php echo number_format($data['count_dev_notComp'], 0, ',', '.'); ?> Perangkat
@@ -186,7 +186,7 @@
 					<div class="table-responsive">
 						<span>Cari Berdasarkan Tahun :
 						<input type="number" id="txt-keyword" value="<?php echo date('Y')?>" style="padding:3px 4px 4px 4px;border:1px solid #ccc" placeholder="Input Tahun ...">
-						<button class="btn btn-default btn-flat" id="sendEmail" data-toggle="modal" onclick="doSearch()">Search <i class="fa fa-search"></i></button>
+						<button class="btn btn-default btn-flat" id="sendEmail" data-toggle="modal" onclick="doSearch()">Search <em class="fa fa-search"></em></button>
 						<div id="chart" style="z-index:-10;"></div>
 					</div>
 				</div>
@@ -194,7 +194,7 @@
 					<div class="table-responsive">
 						<span>Cari Berdasarkan Tahun :
 						<input type="number" id="txt-keyword-2" value="<?php echo date('Y')?>" style="padding:3px 4px 4px 4px;border:1px solid #ccc" placeholder="Input Tahun ...">
-						<button class="btn btn-default btn-flat" id="sendEmail" data-toggle="modal" onclick="doSearch2()">Search <i class="fa fa-search"></i></button>
+						<button class="btn btn-default btn-flat" id="sendEmail" data-toggle="modal" onclick="doSearch2()">Search <em class="fa fa-search"></em></button>
 						<div id="chart2" style="z-index:-10;"></div>
 					</div>
 				</div>
