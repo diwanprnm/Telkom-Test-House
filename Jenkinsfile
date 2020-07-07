@@ -60,6 +60,19 @@ pipeline {
                         unstash 'ws'
                         script {
                             echo "Do Unit Test Here"
+                            echo "Prepare Unit Test"
+                            sh "/var/lib/jenkins/bin/composer install --no-scripts --no-autoloader"
+                            sh "mkdir ./bootstrap/cache"
+                            sh "/var/lib/jenkins/bin/composer update"
+                            echo "Run Unit Test"
+                            sh "mkdir -p ./storage/framework/sessions"
+                            sh "mkdir -p ./storage/framework/views"
+                            sh "mkdir -p ./storage/framework/cache"
+                            sh "php artisan config:clear"
+                            sh "php artisan cache:clear"
+                            sh "php artisan view:clear"
+                            sh "./vendor/bin/phpunit --log-junit reports/phpunit.xml --coverage-clover reports/phpunit.coverage.xml"
+                            
                             echo "defining sonar-scanner"
                             def scannerHome = tool 'SonarScanner' ;
                             withSonarQubeEnv('SonarQube') {
