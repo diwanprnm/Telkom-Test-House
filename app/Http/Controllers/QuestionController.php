@@ -24,6 +24,14 @@ class QuestionController extends Controller
      *
      * @return void
      */
+
+    private const SEARCH = 'search';
+    private const QUESTION = "Question";
+    private const MESSA = 'message';
+    private const ADMIN = '/admin/question';
+    private const ERR = 'error';
+
+
     public function __construct()
     {
         $this->middleware('auth.admin');
@@ -41,7 +49,7 @@ class QuestionController extends Controller
         if ($currentUser){
             $message = null;
             $paginate = 10;
-            $search = trim($request->input('search'));
+            $search = trim($request->input($this::SEARCH));
             
             if ($search != null){
                 $data = Question::whereNotNull('created_at')
@@ -55,7 +63,7 @@ class QuestionController extends Controller
                     $datasearch = array("search"=>$search);
                     $logs->data = json_encode($datasearch);
                     $logs->created_by = $currentUser->id;
-                    $logs->page = "Question";
+                    $logs->page = this::QUESTION;
                     $logs->save();
             }else{
                 $query = Question::whereNotNull('created_at'); 
@@ -69,9 +77,9 @@ class QuestionController extends Controller
             }
             
             return view('admin.question.index')
-                ->with('message', $message)
+                ->with(this::MESSA, $message)
                 ->with('data', $data)
-                ->with('search', $search) ;
+                ->with($this::SEARCH, $search) ;
         }
     }
 
@@ -93,7 +101,7 @@ class QuestionController extends Controller
      */
     public function store(Request $request)
     {
-		// $request->flash();
+		
 		$currentUser = Auth::user(); 
 		$question = new Question;
 		$question->id = Uuid::uuid4();
@@ -112,13 +120,13 @@ class QuestionController extends Controller
             $logs->action = "Create Question Category";
             $logs->data = $question;
             $logs->created_by = $currentUser->id;
-            $logs->page = "Question";
+            $logs->page = this::QUESTION;
             $logs->save();
 			
-            Session::flash('message', 'question successfully created');
-			return redirect('/admin/question');
+            Session::flash(this::MESSA, 'question successfully created');
+			return redirect(this::ADMIN);
 		} catch(Exception $e){
-			Session::flash('error', 'Save failed');
+			Session::flash(this::ERR, 'Save failed');
 			return redirect('/admin/question/create');
 		}
     }
@@ -178,13 +186,13 @@ class QuestionController extends Controller
             $logs->action = "Update Question Category";
             $logs->data = $olddata;
             $logs->created_by = $currentUser->id;
-            $logs->page = "Question";
+            $logs->page = this::QUESTION;
             $logs->save();
 
-            Session::flash('message', 'Question successfully updated');
-            return redirect('/admin/question');
+            Session::flash(this::MESSA, 'Question successfully updated');
+            return redirect(this::ADMIN);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
+            Session::flash(this::ERR, 'Save failed');
             return redirect('/admin/question/'.$data->id.'/edit');
         }
     }
@@ -209,18 +217,18 @@ class QuestionController extends Controller
                 $logs->action = "Delete Question Category";
                 $logs->data = $olddata;
                 $logs->created_by = $currentUser->id;
-                $logs->page = "Question";
+                $logs->page = this::QUESTION;
                 $logs->save();
 
-                Session::flash('message', 'Question successfully deleted');
-                return redirect('/admin/question');
+                Session::flash(this::MESSA, 'Question successfully deleted');
+                return redirect(this::ADMIN);
             }catch (Exception $e){
-                Session::flash('error', 'Delete failed');
-                return redirect('/admin/question');
+                Session::flash(this::ERR, 'Delete failed');
+                return redirect(this::ADMIN);
             }
         }else{
-             Session::flash('error', 'Question Not Found');
-                return redirect('/admin/question');
+             Session::flash(this::ERR, 'Question Not Found');
+                return redirect(this::ADMIN);
         }
     }
 }
