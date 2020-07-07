@@ -26,6 +26,11 @@ class VideoTutorialController extends Controller
      *
      * @return void
      */
+
+    private const MESSAGE = 'message';
+    private const TUTOR = '/admin/videoTutorial';
+    private const ERR = 'error';
+
     public function __construct()
     {
         $this->middleware('auth.admin');
@@ -47,7 +52,7 @@ class VideoTutorialController extends Controller
             }
             
             return view('admin.videotutorial.index')
-                ->with('message', $message)
+                ->with($this::MESSAGE, $message)
                 ->with('data', $videotutorial);
         }
     }
@@ -70,7 +75,7 @@ class VideoTutorialController extends Controller
      */
     public function store(Request $request)
     {
-        // $request->flash();
+        
         $currentUser = Auth::user(); 
         $videotutorial = new VideoTutorial;
         $videotutorial->id = Uuid::uuid4();
@@ -92,10 +97,10 @@ class VideoTutorialController extends Controller
             $logs->page = "VideoTutorial";
             $logs->save();
             
-            Session::flash('message', 'FAQ successfully created');
-            return redirect('/admin/videoTutorial');
+            Session::flash($this::MESSAGE, 'FAQ successfully created');
+            return redirect($this::TUTOR);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
+            Session::flash($this::ERR, 'Save failed');
             return redirect('/admin/videoTutorial/create');
         }
     }
@@ -159,11 +164,11 @@ class VideoTutorialController extends Controller
             $logs->page = "Video Tutorial";
             $logs->save();
 
-            Session::flash('message', 'Video Tutorial successfully updated');
-            return redirect('/admin/videoTutorial');
+            Session::flash($this::MESSAGE, 'Video Tutorial successfully updated');
+            return redirect($this::TUTOR);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
-            return redirect('/admin/videoTutorial');
+            Session::flash($this::ERR, 'Save failed');
+            return redirect($this::TUTOR);
         }
     }
 
@@ -190,14 +195,14 @@ class VideoTutorialController extends Controller
                 $logs->page = "VideoTutorial";
                 $logs->save();
 
-                Session::flash('message', 'FAQ successfully deleted');
-                return redirect('/admin/videoTutorial');
+                Session::flash($this::MESSAGE, 'FAQ successfully deleted');
+                return redirect($this::TUTOR);
             }catch (Exception $e){
-                Session::flash('error', 'Delete failed');
-                return redirect('/admin/videoTutorial');
+                Session::flash($this::ERR, 'Delete failed');
+                return redirect($this::TUTOR);
             }
         }else{
-             Session::flash('error', 'Role Not Found');
+             Session::flash($this::ERR, 'Role Not Found');
                 return redirect('/admin/VideoTutorialutorial');
         }
     }    

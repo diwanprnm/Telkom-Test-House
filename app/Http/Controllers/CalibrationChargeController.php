@@ -286,7 +286,7 @@ class CalibrationChargeController extends Controller
             $query = CalibrationCharge::whereNotNull($this::CREATE);
 
             if ($request->has($this::IS_ACTIVE)){
-                $status = $request->get($this::IS_ACTIVE);
+                 $request->get($this::IS_ACTIVE);
                 if ($request->get($this::IS_ACTIVE) > -1){
                     $query->where($this::IS_ACTIVE, $request->get($this::IS_ACTIVE));
                 }
