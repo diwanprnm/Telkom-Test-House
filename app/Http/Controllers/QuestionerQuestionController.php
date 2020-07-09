@@ -26,6 +26,15 @@ class QuestionerQuestionController extends Controller
      *
      * @return void
      */
+
+    private const SEARCH = 'search';
+    private const QUESTION = 'question';
+    private const MESSA = 'message';
+    private const ORDER = 'order_question';
+    private const ERR = 'error';
+    private const ADMIN='/admin/questionerquestion';
+    //test question
+
     public function __construct()
     {
         $this->middleware('auth.admin');
@@ -43,12 +52,12 @@ class QuestionerQuestionController extends Controller
         if ($currentUser){
             $message = null;
             $paginate = 100;
-            $search = trim($request->input('search'));
+            $search = trim($request->input($this::SEARCH));
             
             if ($search != null){
                 $data = QuestionerQuestion::whereNotNull('created_at')
-                    ->where('question','like','%'.$search.'%')
-                    ->orderBy('order_question')
+                    ->where($this::QUESTION,'like','%'.$search.'%')
+                    ->orderBy($this::ORDER)
                     ->paginate($paginate);
 
                     $logs = new Logs;
@@ -62,7 +71,7 @@ class QuestionerQuestionController extends Controller
             }else{
                 $query = QuestionerQuestion::whereNotNull('created_at'); 
                 
-                $data = $query->orderBy('order_question')
+                $data = $query->orderBy($this::ORDER)
                             ->paginate($paginate);
             }
             
@@ -71,9 +80,9 @@ class QuestionerQuestionController extends Controller
             }
             
             return view('admin.questionerquestion.index')
-                ->with('message', $message)
+                ->with($this::MESSA, $message)
                 ->with('data', $data)
-                ->with('search', $search) ;
+                ->with($this::SEARCH, $search) ;
         }
     }
 
@@ -112,8 +121,8 @@ class QuestionerQuestionController extends Controller
 		$currentUser = Auth::user(); 
 		$question = new QuestionerQuestion;
 		$question->id = Uuid::uuid4();
-		$question->question = $request->input('question');
-		$question->order_question = $request->input('order_question');
+		$question->question = $request->input($this::QUESTION);
+		$question->order_question = $request->input($this::ORDER);
 		if($request->input('is_essay')){
 			$question->is_essay = 1;
 		}else{
@@ -136,10 +145,10 @@ class QuestionerQuestionController extends Controller
             $logs->page = "Question";
             $logs->save();
 			
-            Session::flash('message', 'question successfully created');
-			return redirect('/admin/questionerquestion');
+            Session::flash($this::MESSA, 'question successfully created');
+			return redirect($this::ADMIN);
 		} catch(Exception $e){
-			Session::flash('error', 'Save failed');
+			Session::flash($this::ERR, 'Save failed');
 			return redirect('/admin/questionerquestion/create');
 		}
     }
@@ -183,11 +192,11 @@ class QuestionerQuestionController extends Controller
         $data = QuestionerQuestion::find($id);
         $olddata = $data; 
 		
-        if ($request->has('question')){
-            $data->question = $request->input('question');
+        if ($request->has($this::QUESTION)){
+            $data->question = $request->input($this::QUESTION);
         } 
-        if ($request->has('order_question')){
-            $data->order_question = $request->input('order_question');
+        if ($request->has($this::ORDER)){
+            $data->order_question = $request->input($this::ORDER);
         } 
 		if($request->input('is_essay')){
 			$data->is_essay = 1;
@@ -210,10 +219,10 @@ class QuestionerQuestionController extends Controller
             $logs->page = "Question of Questioner";
             $logs->save();
 
-            Session::flash('message', 'Question successfully updated');
-            return redirect('/admin/questionerquestion');
+            Session::flash($this::MESSA, 'Question successfully updated');
+            return redirect($this::ADMIN);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
+            Session::flash($this::ERR, 'Save failed');
             return redirect('/admin/questionerquestion/'.$data->id.'/edit');
         }
     }
@@ -242,15 +251,15 @@ class QuestionerQuestionController extends Controller
                 $logs->page = "Question";
                 $logs->save();
 
-                Session::flash('message', 'Question successfully deleted');
-                return redirect('/admin/questionerquestion');
+                Session::flash($this::MESSA, 'Question successfully deleted');
+                return redirect($this::ADMIN);
             }catch (Exception $e){
-                Session::flash('error', 'Delete failed');
-                return redirect('/admin/questionerquestion');
+                Session::flash($this::ERR, 'Delete failed');
+                return redirect($this::ADMIN);
             }
         }else{
-             Session::flash('error', 'Question Not Found');
-                return redirect('/admin/questionerquestion');
+             Session::flash($this::ERR, 'Question Not Found');
+                return redirect($this::ADMIN);
         }
     }
 }
