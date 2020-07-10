@@ -97,6 +97,8 @@ class CertificationControllerTest extends TestCase
         //Response status redirect to certification.index
         $this->assertResponseStatus(302) 
             ->see('Redirecting to <a href="http://localhost/admin/certification">http://localhost/admin/certification</a>');
+        //delete remaining Certificate(s) when test is done
+        Certification::truncate();
     }
 
 }
