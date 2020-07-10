@@ -80,7 +80,7 @@
 								</div>
 							</div>
 	                        <div class="col-md-12">
-	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
+	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left" name="submit" value="submit">
 	                                Submit
 	                            </button>
 								<a style=" color:white !important;" href="{{URL::to('/admin/article')}}">
