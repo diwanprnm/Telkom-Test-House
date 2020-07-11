@@ -4507,8 +4507,9 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::resource('/log', 'LogController');
 	Route::resource('/log_administrator', 'Log_administratorController');
 	Route::get('/backup', 'BackupController@index');
-	Route::get('/delete/{id}', 'BackupController@destroy');
-	Route::post('/restore', 'BackupController@restore');
+	Route::get('/backup/{id}/delete', 'BackupController@destroy');
+	Route::get('/backup/{id}/media', 'BackupController@viewmedia');
+	Route::get('/backup/{id}/restore', 'BackupController@restore');
 	
 	Route::resource('/examinationdone', 'ExaminationDoneController');
 	

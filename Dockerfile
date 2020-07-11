@@ -13,6 +13,9 @@ USER root
 RUN chmod -R 775 /var/www/data/html \
     && chmod 755 /var/www/data/html/start
 
+RUN apk update \
+    && apk add mysql-client
+
 USER user
 
 CMD ["./start"]

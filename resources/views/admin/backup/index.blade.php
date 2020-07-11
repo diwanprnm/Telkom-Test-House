@@ -62,30 +62,38 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php $no=1; ?>
-								@foreach($data as $item)
-									<tr>
-										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
-										<td class="center">{{ $item->name }}</td> 
-										<td class="center"><a href="{{storage_path().'/app/public/backup-data/'.$item->file}}">{{ $item->file }}</a></td>
-										<td class="center">{{ $item->created_at }}</td> 
-										<td class="center">
-											<div>
-												<a class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')" href="{{url('admin/delete/'.$item->id)}}">
-													<em class="fa fa-times fa fa-white"></em>
-												</a>
-											</div>
-										</td>
-									</tr>
-								<?php $no++ ?>
-								@endforeach
+								<tr>
+								@if (count($data))
+									@php
+										$no=1;
+									@endphp
+									@foreach($data as $item)
+									<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
+									<td class="center">{{ $item->name }}</td> 
+									<td class="center"><a href="{{url('admin/backup/'.$item->id.'/media')}}">{{ $item->file }}</a></td>
+									<td class="center">{{ $item->created_at }}</td> 
+									<td class="center">
+										<div>
+											<a class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')" href="{{url('admin/backup/'.$item->id.'/delete')}}">
+												<em class="fa fa-times fa fa-white"></em>
+											</a>
+										</div>
+									</td>
+										@php
+											$no++
+										@endphp
+									@endforeach
+								@else
+									<td class="center" colspan="5">{{$message}}</td>
+								@endif
+								</tr>
                             </tbody>
 						</table>
 					</div>
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								<?php echo $data->appends(array('search' => $search))->links(); ?>
+								{{$data->appends(array('search' => $search))->links()}}
 							</div>
 						</div>
 					</div>
