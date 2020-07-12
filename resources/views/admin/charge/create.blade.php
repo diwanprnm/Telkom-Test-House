@@ -60,57 +60,15 @@
 										Kategori *
 									</label>
 									<select name="category" class="cs-select cs-skin-elastic" required>
-										@if( old('category') == 'Lab CPE' )
-											<option value="Lab CPE" selected>Lab CPE</option>
-											<option value="Lab Device">Lab Device</option>
-											<option value="Lab Energi">Lab Energi</option>
-											<option value="Lab Kabel">Lab Kabel</option>
-											<option value="Lab Transmisi">Lab Transmisi</option>
-											<option value="Lab EMC">Lab EMC</option>
-										@elseif( old('category') == 'Lab Device' )
-											<option value="Lab CPE">Lab CPE</option>
-											<option value="Lab Device" selected>Lab Device</option>
-											<option value="Lab Energi">Lab Energi</option>
-											<option value="Lab Kabel">Lab Kabel</option>
-											<option value="Lab Transmisi">Lab Transmisi</option>
-											<option value="Lab EMC">Lab EMC</option>
-										@elseif( old('category') == 'Lab Energi' )
-											<option value="Lab CPE">Lab CPE</option>
-											<option value="Lab Device">Lab Device</option>
-											<option value="Lab Energi" selected>Lab Energi</option>
-											<option value="Lab Kabel">Lab Kabel</option>
-											<option value="Lab Transmisi">Lab Transmisi</option>
-											<option value="Lab EMC">Lab EMC</option>
-										@elseif( old('category') == 'Lab Kabel' )
-											<option value="Lab CPE">Lab CPE</option>
-											<option value="Lab Energi">Lab Energi</option>
-											<option value="Lab Device">Lab Device</option>
-											<option value="Lab Kabel" selected>Lab Kabel</option>
-											<option value="Lab Transmisi">Lab Transmisi</option>
-											<option value="Lab EMC">Lab EMC</option>
-										@elseif( old('category') == 'Lab Transmisi' )
-											<option value="Lab CPE">Lab CPE</option>
-											<option value="Lab Energi">Lab Energi</option>
-											<option value="Lab Device">Lab Device</option>
-											<option value="Lab Kabel">Lab Kabel</option>
-											<option value="Lab Transmisi" selected>Lab Transmisi</option>
-											<option value="Lab EMC">Lab EMC</option>
-										@elseif( old('category') == 'Lab EMC' )
-											<option value="Lab CPE">Lab CPE</option>
-											<option value="Lab Energi">Lab Energi</option>
-											<option value="Lab Device">Lab Device</option>
-											<option value="Lab Kabel">Lab Kabel</option>
-											<option value="Lab Transmisi">Lab Transmisi</option>
-											<option value="Lab EMC" selected>Lab EMC</option>
-										@else
-											<option value="" disabled selected>Select...</option>
-											<option value="Lab CPE">Lab CPE</option>
-											<option value="Lab Energi">Lab Energi</option>
-											<option value="Lab Device">Lab Device</option>
-											<option value="Lab Kabel">Lab Kabel</option>
-											<option value="Lab Transmisi">Lab Transmisi</option>
-											<option value="Lab EMC">Lab EMC</option>
-										@endif
+									@if (!old('category'))
+										<option value="" disabled selected>Select...</option>
+									@endif
+										<option value="Lab CPE" @if(old('category') == 'Lab CPE') {{'selected'}} @endif >Lab CPE</option>
+										<option value="Lab Device" @if(old('category') == 'Lab Device') {{'selected'}} @endif >Lab Device</option>
+										<option value="Lab Energi" @if(old('category') == 'Lab Energi') {{'selected'}} @endif>Lab Energi</option>
+										<option value="Lab Kabel" @if(old('category') == 'Lab Kabel') {{'selected'}} @endif>Lab Kabel</option>
+										<option value="Lab Transmisi" @if(old('category') == 'Lab Transmisi') {{'selected'}} @endif>Lab Transmisi</option>
+										<option value="Lab EMC" @if(old('category') == 'Lab EMC') {{'selected'}} @endif>Lab EMC</option>
 									</select>
 								</div>
 							</div>
@@ -152,22 +110,16 @@
 										Status *
 									</label>
 									<select name="is_active" class="cs-select cs-skin-elastic" required>
-										@if( old('is_active') == '1' )
-											<option value="1" selected>Active</option>
-											<option value="0">Not Active</option>
-										@elseif( old('is_active') == '0' )
-											<option value="1">Active</option>
-											<option value="0" selected>Not Active</option>
-										@else
-											<option value="" disabled selected>Select...</option>
-											<option value="1">Active</option>
-											<option value="0">Not Active</option>
-										@endif
+									@if (!old('is_active'))
+										<option value="" disabled selected>Select...</option>
+									@endif
+										<option value="1" @if(old('is_active') == '1') {{'selected'}} @endif >Active</option>
+										<option value="0" @if(old('is_active') == '0') {{'selected'}} @endif >Not Active</option>
 									</select>
 								</div>
 							</div>
 	                        <div class="col-md-12">
-	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
+	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left" name="submit" value="submit">
 	                                Submit
 	                            </button>
 								<a style=" color:white !important;" href="{{URL::to('/admin/charge')}}">

@@ -22,44 +22,32 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 class ExaminationChargeController extends Controller
 {
-    private const SEARCH = 'search';
-    private const ERROR = 'error';
-    private const MESSAGE = 'message';
+    private const ADMIN_CHARGE = 'admin/charge';
+    private const CATEGORY = 'category';
     private const CREATED_AT = 'created_at';
     private const DEVICE_NAME = 'device_name';
-    private const EXAMINATION_CHARGE = 'EXAMINATION CHARGE';
     private const DURATION = 'duration';
+    private const ERROR = 'error';
+    private const EXAMINATION_CHARGE = 'EXAMINATION CHARGE';
+    private const IS_ACTIVE = 'is_active';
+    private const MESSAGE = 'message';
     private const PRICE = 'price';
+    private const SEARCH = 'search';
     private const TA_PRICE = 'ta_price';
     private const VT_PRICE = 'vt_price';
-    private const ADMIN_CHARGE = 'admin_charge';
-    private const CATEGORY = 'category';
-    private const IS_ACTIVE = 'is_active';
     
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
+
     public function __construct()
     {
         $this->middleware('auth.admin');
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index(Request $request)
     {
-        $currentUser = Auth::user();
         $logService = new LogService();
 
-        if (!$currentUser){
-            return false;
-        }
-
+        $notFound = null;
         $message = null;
         $paginate = 10;
         $search = trim($request->input($this::SEARCH));
@@ -96,10 +84,11 @@ class ExaminationChargeController extends Controller
         }
         
         if (count($examinationCharge) == 0){
-            $message = 'Data not found';
+            $notFound = 'Data not found';
         }
         
         return view('admin.charge.index')
+            ->with('notFound', $notFound)
             ->with($this::MESSAGE, $message)
             ->with('data', $examinationCharge)
             ->with($this::SEARCH, $search)
@@ -108,32 +97,23 @@ class ExaminationChargeController extends Controller
         
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         return view('admin.charge.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
         $currentUser = Auth::user();
         $logService = new LogService();
 			
-			$name_exists = $this->cekNamaPerangkat($request->input($this::DEVICE_NAME));
+		$name_exists = $this->cekNamaPerangkat($request->input($this::DEVICE_NAME));
 		if($name_exists == 1){
 			return redirect()->back()
-			->with('error_name', 1)
-			->withInput($request->all());
+                ->with('error_name', 1)
+                ->withInput($request->all());
 		}
 
         $charge = new ExaminationCharge;
@@ -157,28 +137,17 @@ class ExaminationChargeController extends Controller
             Session::flash($this::MESSAGE, 'Charge successfully created');
             return redirect($this::ADMIN_CHARGE);
         } catch(Exception $e){
-            Session::flash($this::ERROR, 'Save failed');
-            return redirect('/admin/charge/create');
+            return redirect('/admin/charge/create')->with($this::ERROR, 'Save failed');
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
-        //
+
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {
         $charge = ExaminationCharge::find($id);
@@ -187,13 +156,7 @@ class ExaminationChargeController extends Controller
             ->with('data', $charge);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id)
     {
         $currentUser = Auth::user();
@@ -237,17 +200,11 @@ class ExaminationChargeController extends Controller
             Session::flash($this::MESSAGE, 'Charge successfully updated');
             return redirect($this::ADMIN_CHARGE);
         } catch(Exception $e){
-            Session::flash($this::ERROR, 'Save failed');
-            return redirect('/admin/charge/'.$charge->id.'/edit');
+            return redirect('/admin/charge/'.$charge->id.'/edit')->with($this::ERROR, 'Save failed');
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function destroy($id)
     {
         $charge = ExaminationCharge::find($id);
@@ -268,17 +225,20 @@ class ExaminationChargeController extends Controller
             }
         }
     }
-	
+    
+    
 	function cekNamaPerangkat($name)
     {
 		$charge = ExaminationCharge::where($this::DEVICE_NAME,'=',''.$name.'')->get();
 		return count($charge);
     }
-	
+    
+    
 	public function autocomplete($query) {
         $respons_result = ExaminationCharge::autocomplet($query);
         return response($respons_result);
     }
+
 
     public function excel(Request $request) 
     {
@@ -346,10 +306,9 @@ class ExaminationChargeController extends Controller
 
         // Generate and return the spreadsheet
         Excel::create('Data Tarif Pengujian', function($excel) use ($examsArray) {
-
-            $excel->sheet('sheet1', function($sheet) use ($examsArray) {
-                $sheet->fromArray($examsArray, null, 'A1', false, false);
-            });
-        })->export('xlsx'); 
+                $excel->sheet('sheet1', function($sheet) use ($examsArray) {
+                    $sheet->fromArray($examsArray, null, 'A1', false, false);
+                });
+            })->download('xlsx');
     }
 }
