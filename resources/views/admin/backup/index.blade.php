@@ -62,12 +62,13 @@
 								</tr>
 							</thead>
 							<tbody>
+								
+							@if (count($data))
+								@php
+									$no=1;
+								@endphp
+								@foreach($data as $item)
 								<tr>
-								@if (count($data))
-									@php
-										$no=1;
-									@endphp
-									@foreach($data as $item)
 									<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
 									<td class="center">{{ $item->name }}</td> 
 									<td class="center"><a href="{{url('admin/backup/'.$item->id.'/media')}}">{{ $item->file }}</a></td>
@@ -82,11 +83,14 @@
 										@php
 											$no++
 										@endphp
-									@endforeach
-								@else
-									<td class="center" colspan="5">{{$message}}</td>
-								@endif
 								</tr>
+								@endforeach
+								@else
+								<tr>
+									<td class="center" colspan="5">{{$message}}</td>
+								</tr>
+								@endif
+								
                             </tbody>
 						</table>
 					</div>
