@@ -9,7 +9,9 @@ use App\Http\Requests;
 
 use App\Feedback;
 use App\User;
-use App\Logs;
+use App\Services\Logs\LogService;
+use App\Services\Querys\QueryFilter;
+use App\Services\MyHelper;
 
 use Auth;
 use Session;
@@ -47,73 +49,39 @@ class FeedbackController extends Controller
      */
     public function index(Request $request)
     {
-        $currentUser = Auth::user();
-
-        if (!$currentUser){
-            return false;
-        }
-
-        
+        $logService = New LogService();
+        $query = Feedback::whereNotNull('created_at');
+        $search = MyHelper::filterDefault($request->input($this::SEARCH));
         $message = null;
-        $paginate = 10;
-        $search = trim($request->input($this::SEARCH));
-        $status = '';
-        $before = null;
-        $after = null;
 
-        $sort_by = 'updated_at';
-        $sort_type = 'desc';
-
-        if ($search != null){
-            $query = Feedback::whereNotNull('created_at')
-                ->where('subject','like','%'.$search.'%');
-
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Search Feedback";  
-                $dataSearch = array($this::SEARCH=>$search);
-                $logs->data = json_encode($dataSearch);
-                $logs->created_by = $currentUser->id;
-                $logs->page = $this::FEEDBACK;
-                $logs->save();
-        }else{
-            $query = Feedback::whereNotNull('created_at');
-
-            if ($request->has($this::STATUS)){
-                $status = $request->get($this::STATUS);
-                if($request->input($this::STATUS) != 'all'){
-                    $query->where($this::STATUS, $request->get($this::STATUS));
-                }
-            }
-
-        }
-        if ($request->has($this::BEFORE_DATE)){
-            $query->where(DB::raw('DATE(created_at)'), '<=', $request->get($this::BEFORE_DATE));
-            $before = $request->get($this::BEFORE_DATE);
+        $queryFilter = New QueryFilter($request,$query);
+        if ($search){
+            $queryFilter = New QueryFilter($request, $query->where('subject','like','%'.$search.'%'));
+            $logService->createLog('Search Feedback',$this::FEEDBACK, json_encode(array($this::SEARCH=>$search)) );
+        }else if ($request->has($this::STATUS && $request->input($this::STATUS) != 'all')){
+            $queryFilter = New QueryFilter($request, $query->where($this::STATUS, $request->get($this::STATUS)));
         }
 
-        if ($request->has($this::AFTER_DATE)){
-            $query->where(DB::raw('DATE(created_at)'), '>=', $request->get($this::AFTER_DATE));
-            $after = $request->get($this::AFTER_DATE);
-        }
-
-        $feedbacks = $query->orderBy($sort_by, $sort_type)
-                        ->paginate($paginate);
+        $feedbacks = $queryFilter
+                        ->beforeDate(DB::raw('DATE(created_at)'))
+                        ->afterDate(DB::raw('DATE(created_at)'))
+                        ->getSortedAndOrderedData('updated_at', 'desc')
+                        ->query
+                        ->paginate(10);
         
         if (count($feedbacks) == 0){
             $message = 'Data not found';
         }
         
         return view('admin.feedback.index')
-            ->with($this::MESSAGE, $message)
             ->with('data', $feedbacks)
+            ->with($this::MESSAGE, $message)
             ->with($this::SEARCH, $search)
-            ->with($this::STATUS, $status)
-            ->with($this::BEFORE_DATE, $before)
-            ->with($this::AFTER_DATE, $after)
-            ->with('sort_by', $sort_by)
-            ->with('sort_type', $sort_type);
-        
+            ->with($this::STATUS, MyHelper::filterDefault($request->input($this::STATUS)))
+            ->with($this::BEFORE_DATE, MyHelper::filterDefault($request->input('before')))
+            ->with($this::AFTER_DATE, MyHelper::filterDefault($request->input('after')))
+            ->with('sort_by', MyHelper::filterDefault($request->input('sort_by')))
+            ->with('sort_type', MyHelper::filterDefault($request->input('sort_type')));
     }
 
     /**
@@ -130,26 +98,17 @@ class FeedbackController extends Controller
 	
 	public function destroy($id)
     {
+        $logService = new LogService();
         $feedback = Feedback::find($id);
-        $oldData = $feedback;
-        $currentUser = Auth::user();
+        $oldData = clone $feedback;
         if ($feedback){
             try{
                 $feedback->delete();
-
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Delete Feedback";
-                $logs->data = $oldData;
-                $logs->created_by = $currentUser->id;
-                $logs->page = $this::FEEDBACK;
-                $logs->save();
-
+                $logService->createLog('Delete Feedback',$this::FEEDBACK, $oldData );
                 Session::flash($this::MESSAGE, 'Feedback successfully deleted');
                 return redirect($this::ADMIN_FEEDBACK);
             }catch (Exception $e){
-                Session::flash('error', 'Delete failed');
-                return redirect($this::ADMIN_FEEDBACK);
+                return redirect($this::ADMIN_FEEDBACK)->with('error', 'Delete failed');
             }
         }
     }
@@ -163,20 +122,13 @@ class FeedbackController extends Controller
     public function sendEmailReplyFeedback(Request $request)
     {
         $data = Feedback::findOrFail($request->get('id'));
-		
-        $currentUser = Auth::user();		
+        $logService = new LogService();
+        $currentUser = Auth::user();	
 		$data->updated_by = $currentUser->id;
         $data->status = true;
         $data->save();
 
-        $logs = new Logs;
-        $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-        $logs->action = "Reply Feedback";  
-        $dataUpdate = array('data' => $request->get('description'));
-        $logs->data = json_encode($dataUpdate);
-        $logs->created_by = $currentUser->id;
-        $logs->page = $this::FEEDBACK;
-        $logs->save();
+        $logService->createLog('Reply Feedback',$this::FEEDBACK, json_encode(array('data' => $request->get('description'))) );
 
         Session::flash($this::MESSAGE, 'Reply sudah terkirim');
         return redirect($this::ADMIN_FEEDBACK);
