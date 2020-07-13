@@ -55,3 +55,19 @@ $factory->define(App\Company::class, function (Faker\Generator $faker) {
         'updated_at' => mt_rand(0,1),
     ];
 });
+
+$factory->define(App\Feedback::class, function (Faker\Generator $faker) {
+    return [
+        'id' => $faker->numberBetween(1000,9000),
+        'email' => $faker->safeEmail,
+        'subject' => $faker->sentence(2, true),
+        'message' => $faker->sentence(6, true),
+        'created_by' => mt_rand(0,1),
+        'created_at' => mt_rand(0,1),
+        'updated_by' => mt_rand(0,1),
+        'updated_at' => mt_rand(0,1),
+        'status' => 0,
+        'category' => $faker->word,
+
+    ];
+});
