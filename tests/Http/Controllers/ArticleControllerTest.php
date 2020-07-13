@@ -10,7 +10,7 @@ use App\Article;
 class ArticleControllerTest extends TestCase
 {
 
-    public function testIndexAsNonAdmin()
+   public function testIndexAsNonAdmin()
     {
         $user = factory(User::class)->make();
         $this->actingAs($user)->call('GET','admin/article');
@@ -72,7 +72,7 @@ class ArticleControllerTest extends TestCase
         //check view and see flash message "certificates is successfully created"
         $this->assertResponseStatus(200)
             ->see('Article successfully created');
-    }
+    } 
 
     public function testEdit()
     {
