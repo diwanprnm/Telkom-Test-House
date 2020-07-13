@@ -260,8 +260,6 @@ return [
 		'Excel'     => Maatwebsite\Excel\Facades\Excel::class,
 		'Tracker' => PragmaRX\Tracker\Vendor\Laravel\Facade::class,
         'Cart' => Gloudemans\Shoppingcart\Facades\Cart::class,
-        // 'MyHelper' untuk kebutuhan checking variable string & number
-        'Helper' => App\Helpers\MyHelper::class,
     ],
 
     'merchant_id' => env('merchant_id', 'SMART424'),
