@@ -31,6 +31,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 class CalibrationChargeController extends Controller
 {
     private const SEARCH = 'search';
+    private const SEARCH2 = "search";
     private const CREATE = 'created_at';
     private const DEVICE = 'device_name';
     private const CALIBRATION = 'CALIBRATION CHARGE';
@@ -74,7 +75,7 @@ class CalibrationChargeController extends Controller
                     $logs = new Logs;
                     $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
                     $logs->action = "Search Calibration Charge";
-                    $datasearch = array("search"=>$search);
+                    $datasearch = array($this::SEARCH2=>$search);
                     $logs->data = json_encode($datasearch);
                     $logs->created_by = $currentUser->id;
                     $logs->page = $this::CALIBRATION;
@@ -277,7 +278,7 @@ class CalibrationChargeController extends Controller
                 $logs = new Logs;
                 $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
                 $logs->action = "Search Calibration Charge";
-                $datasearch = array("search"=>$search);
+                $datasearch = array($this::SEARCH2=>$search);
                 $logs->data = json_encode($datasearch);
                 $logs->created_by = $currentUser->id;
                 $logs->page = $this::CALIBRATION;
