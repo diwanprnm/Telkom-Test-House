@@ -174,7 +174,7 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
-							<caption>Feedback and Complain Score Table</caption>
+							<caption>Feedback and Complaint Table</caption>
 							<thead>
 								<tr>
 									<th class="center" scope="col">No</th>
@@ -187,7 +187,9 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php $no=1; ?>
+								@php
+									$no=1;
+								@endphp
 								@if(count($data)>0)
 									@foreach($data as $item)
 										<tr>
@@ -199,7 +201,9 @@
 											<td class="center">{{ $item->examination->device->capacity }}</td>
 											<td class="center"><a href="{{URL::to('/cetakKepuasanKonsumen/'.$item->examination->id)}}" target="_blank"> Download Feedback</a> || <a href="{{URL::to('/cetakComplaint/'.$item->examination->id)}}" target="_blank"> Download Complaint</a></td>
 										</tr>
-									<?php $no++ ?>
+									@php
+										$no++
+									@endphp
 									@endforeach
 								@else
 									<tr>
@@ -214,7 +218,7 @@
 					<div class="row">
 	                    <div class="col-md-12 col-sm-12">
 	                        <div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-	                            <?php echo $data->appends(array('search' => $search,'before_date' => $before_date,'after_date' => $after_date,'type' => $filterType,'company' => $filterCompany,'lab' => $filterLab,'sort_by' => $sort_by,'sort_type' => $sort_type))->links(); ?>
+	                             {{$data->appends(array('search' => $search,'before_date' => $before_date,'after_date' => $after_date,'type' => $filterType,'company' => $filterCompany,'lab' => $filterLab,'sort_by' => $sort_by,'sort_type' => $sort_type))->links()}}
 	                        </div>
 	                    </div>
 	                </div>

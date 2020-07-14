@@ -15,7 +15,13 @@ use App\ExaminationLab;
 use App\Company;
 use App\Questioner;
 use App\Logs;
+use App\Services\Logs\LogService;
+use App\Services\Querys\QueryFilter;
+use App\Services\MyHelper;
 
+
+use Storage;
+use File;
 use Excel;
 
 use Ramsey\Uuid\Uuid;
@@ -23,12 +29,12 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 class FeedbackComplaintController extends Controller
 {
-    private const SEARCH = 'search';
+    private const EXAMINATION_COMPANY = 'examination.company';
     private const EXAMINATION_DEVICE = 'examination.device';
     private const RECAP_FEEDBACK_COMPLAINT = "Rekap Feedback dan Complaint";
+    private const SEARCH = 'search';
     private const SORT_BY = 'sort_by';
     private const SORT_TYPE = 'sort_type';
-    private const EXAMINATION_COMPANY = 'examination.company';
     /**
      * Create a new controller instance.
      *
@@ -46,74 +52,59 @@ class FeedbackComplaintController extends Controller
      */
     public function index(Request $request)
     {
-        $currentUser = Auth::user();
+        $message = null;
+        $paginate = 10;
+        $search = trim($request->input(self::SEARCH));
+        $before = null;
+        $after = null;
+        $type = '';
+        $filterCompany = '';
+        $lab = '';
+        $sort_by = 'questioner_date';
+        $sort_type = 'desc';
 
-        if ($currentUser){
-            $message = null;
-            $paginate = 10;
-            $search = trim($request->input(self::SEARCH));
+        $logService = new LogService();
+        $examType = ExaminationType::all();
+        $companies = Company::where('id','!=', 1)->get();
+        $examLab = ExaminationLab::all();
 
-            $before = null;
-            $after = null;
-            $type = '';
-            $filterCompany = '';
-            $lab = '';
-
-            $sort_by = 'questioner_date';
-            $sort_type = 'desc';
-
-            $examType = ExaminationType::all();
-            $companies = Company::where('id','!=', 1)->get();
-            $examLab = ExaminationLab::all();
-
-            $query = Questioner::with(self::EXAMINATION_DEVICE)->with(self::EXAMINATION_COMPANY)->with('user');
-            
-            if ($search != null){
-                    $query->whereHas(self::EXAMINATION_COMPANY, function ($query) use ($search) {
-                        $query->where('name', 'like', '%'.strtolower($search).'%');
-                    })->orWhereHas(self::EXAMINATION_DEVICE, function ($query) use ($search) {
-                        $query->orWhere('name', 'like', '%'.strtolower($search).'%');
-                    });
-
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "search";  
-                $dataSearch = array(self::SEARCH => $search);
-                $logs->data = json_encode($dataSearch);
-                $logs->created_by = $currentUser->id;
-                $logs->page = self::RECAP_FEEDBACK_COMPLAINT;
-                $logs->save();
-            }
-
-            if ($request->has(self::SORT_BY)){
-                $sort_by = $request->get(self::SORT_BY);
-            }
-            if ($request->has(self::SORT_TYPE)){
-                $sort_type = $request->get(self::SORT_TYPE);
-            }
-
-            $data = $query->orderBy($sort_by, $sort_type)
-                        ->paginate($paginate);
-            
-            if (count($data) == 0){
-                $message = 'Data not found';
-            }
-            
-            return view('admin.feedbackncomplaint.index')
-                ->with('message', $message)
-                ->with('data', $data)
-                ->with(self::SEARCH, $search)
-                ->with('before_date', $before)
-                ->with('after_date', $after)
-                ->with('type', $examType)
-                ->with('filterType', $type)
-                ->with('company', $companies)
-                ->with('filterCompany', $filterCompany)
-                ->with('lab', $examLab)
-                ->with('filterLab', $lab)
-                ->with(self::SORT_BY, $sort_by)
-                ->with(self::SORT_TYPE, $sort_type);
+        $query = Questioner::with(self::EXAMINATION_DEVICE)->with(self::EXAMINATION_COMPANY)->with('user');
+        $queryFilter = new QueryFilter($request, $query);
+        if ($search != null){
+            $query->whereHas(self::EXAMINATION_COMPANY, function ($query) use ($search) {
+                $query->where('name', 'like', '%'.strtolower($search).'%');
+            })->orWhereHas(self::EXAMINATION_DEVICE, function ($query) use ($search) {
+                $query->orWhere('name', 'like', '%'.strtolower($search).'%');
+            });
+            $queryFilter = new QueryFilter($request, $query);
+            $logService->createLog('search', self::RECAP_FEEDBACK_COMPLAINT, json_encode(array(self::SEARCH => $search)) );
         }
+
+        $data = $queryFilter
+            ->getSortedAndOrderedData($sort_by, $sort_type)
+            ->query
+            ->paginate($paginate);
+
+        
+        if (count($data) == 0){
+            $message = 'Data not found';
+        }
+        
+        return view('admin.feedbackncomplaint.index')
+            ->with('message', $message)
+            ->with('data', $data)
+            ->with(self::SEARCH, $search)
+            ->with('before_date', $before)
+            ->with('after_date', $after)
+            ->with('type', $examType)
+            ->with('filterType', $type)
+            ->with('company', $companies)
+            ->with('filterCompany', $filterCompany)
+            ->with('lab', $examLab)
+            ->with('filterLab', $lab)
+            ->with(self::SORT_BY, $sort_by)
+            ->with(self::SORT_TYPE, $sort_type);
+        
     }
 
     public function excel(Request $request) 
@@ -123,29 +114,35 @@ class FeedbackComplaintController extends Controller
         // the payments table's primary key, the user's first and last name, 
         // the user's e-mail address, the amount paid, and the payment
         // timestamp.
-
+        $logService = new LogService();
         $search = trim($request->input(self::SEARCH));
-        $sort_by = 'questioner_date';
-        $sort_type = 'desc';
 
-        $query = Questioner::with(self::EXAMINATION_DEVICE)->with(self::EXAMINATION_COMPANY)->with('examination.questionerdynamic')->with('examination.examinationType')->with('user');
-        
+        $query = Questioner::with(self::EXAMINATION_DEVICE)
+                            ->with(self::EXAMINATION_COMPANY)
+                            ->with('examination.questionerdynamic')
+                            ->with('examination.examinationType')
+                            ->with('user');
+        $queryFilter = new QueryFilter($request, $query);
+
         if ($search != null){
             $query->whereHas(self::EXAMINATION_COMPANY, function ($query) use ($search) {
                 $query->where('name', 'like', '%'.strtolower($search).'%');
             })->orWhereHas(self::EXAMINATION_DEVICE, function ($query) use ($search) {
                 $query->orWhere('name', 'like', '%'.strtolower($search).'%');
             });
+            $queryFilter = new QueryFilter($request, $query);
         }
 
-        if ($request->has(self::SORT_BY)){
-            $sort_by = $request->get(self::SORT_BY);
-        }
-        if ($request->has(self::SORT_TYPE)){
-            $sort_type = $request->get(self::SORT_TYPE);
+        $data = $queryFilter
+            ->getSortedAndOrderedData('questioner_date', 'desc')
+            ->query
+            ->get();
+
+        if(!count( $data)){
+            Session::flash('error', 'Cannot download file - Data not found');
+            return redirect('admin/feedbackncomplaint');
         }
 
-        $data = $query->orderBy($sort_by, $sort_type)->get();
 
         $examsArray = []; 
         // Define the Excel spreadsheet headers
@@ -188,13 +185,13 @@ class FeedbackComplaintController extends Controller
         // and append it to the payments array.
         $no = 3;
         foreach ($data as $row) {
-            $questioner_date = $this->filterDefault($row->questioner_date);
-            $user_name = $this->filterDefault($row->user->name);
-            $company_name = $this->filterDefault($row->examination->company->name);
-            $phone_number = $this->filterDefault($row->user->phone_number);
-            $examType_name = $this->filterDefault($row->examination->examinationType->name);
-            $examType_desc = $this->filterDefault($row->examination->examinationType->description);
-            $device_name = $this->filterDefault($row->examination->device->name);
+            $questioner_date = MyHelper::filterDefault($row->questioner_date);
+            $user_name = MyHelper::filterDefault($row->user->name);
+            $company_name = MyHelper::filterDefault($row->examination->company->name);
+            $phone_number = MyHelper::filterDefault($row->user->phone_number);
+            $examType_name = MyHelper::filterDefault($row->examination->examinationType->name);
+            $examType_desc = MyHelper::filterDefault($row->examination->examinationType->description);
+            $device_name = MyHelper::filterDefault($row->examination->device->name);
                         
             $examsArray[] = [
                 $no-2,
@@ -211,18 +208,10 @@ class FeedbackComplaintController extends Controller
             $no++;
         }
 
-        $currentUser = Auth::user();
-        $logs = new Logs;
-        $logs->id = Uuid::uuid4();
-        $logs->user_id = $currentUser->id;
-        $logs->action = "download_excel";   
-        $logs->data = "";
-        $logs->created_by = $currentUser->id;
-        $logs->page = self::RECAP_FEEDBACK_COMPLAINT;
-        $logs->save();
+        $logService->createLog('download_excel', self::RECAP_FEEDBACK_COMPLAINT, '' );
 
         // Generate and return the spreadsheet
-        Excel::create('Data Feedback', function($excel) use ($examsArray) {
+        Excel::create('DataFeedback', function($excel) use ($examsArray) {
 
             // Build the spreadsheet, passing in the payments array
             $excel->sheet('sheet1', function($sheet) use ($examsArray) {
@@ -237,12 +226,16 @@ class FeedbackComplaintController extends Controller
                 $sheet->mergeCells('AG1:BE1');
                 $sheet->fromArray($examsArray, null, 'A1', false, false);
             });
-        })->export('xlsx'); 
-    }
+        })->store('xlsx');
 
-    private function filterDefault($string, $is_number = false)
-    {
-        $is_number? $defaultValue = '' : '0';
-        return isset($string)? $string : $defaultValue ;
+        $file = Storage::disk('tmp')->get('DataFeedback.xlsx');
+
+        $headers = [
+            'Content-Type' => 'Application/Spreadsheet',
+            'Content-Description' => 'File Transfer',
+            'Content-Disposition' => "attachment; filename=DataFeedback.xlsx",
+            'filename'=> 'DataFeedback.xlsx'
+        ];
+        return response($file, 200, $headers);
     }
 }
