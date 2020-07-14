@@ -50,9 +50,9 @@ $factory->define(App\Company::class, function (Faker\Generator $faker) {
         'qs_certificate_date' => str_random(10), 
         'is_active' => mt_rand(0,1),
         'created_by' => mt_rand(0,1),
-        'created_at' => mt_rand(0,1),
+        'created_at' => Carbon\Carbon::now(),
         'updated_by' => mt_rand(0,1),
-        'updated_at' => mt_rand(0,1)
+        'updated_at' => Carbon\Carbon::now(),
     ];
 });
 
@@ -63,9 +63,9 @@ $factory->define(App\Feedback::class, function (Faker\Generator $faker) {
         'subject' => $faker->sentence(2, true),
         'message' => $faker->sentence(6, true),
         'created_by' => mt_rand(0,1),
-        'created_at' => mt_rand(0,1),
+        'created_at' => Carbon\Carbon::now(),
         'updated_by' => mt_rand(0,1),
-        'updated_at' => mt_rand(0,1),
+        'updated_at' => Carbon\Carbon::now(),
         'status' => 0,
         'category' => $faker->word
     ];
@@ -93,19 +93,6 @@ $factory->define(App\Device::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\ExaminationType::class, function (Faker\Generator $faker) {
-    return [
-        'id' => $faker->numberBetween(1000,9000),
-        'name' => $faker->word,
-        'description' => $faker->sentence(6, true),
-        'created_by' => '1',
-        'updated_by' => '1',
-        'created_at' => Carbon\Carbon::now(),
-        'updated_at' => Carbon\Carbon::now(),
-        'picture' => $faker->word
-    ];
-});
-
 $factory->define(App\ExaminationLab::class, function (Faker\Generator $faker) {
     return [
         'id' => $faker->numberBetween(1000,9000),
@@ -126,9 +113,7 @@ $factory->define(App\ExaminationLab::class, function (Faker\Generator $faker) {
 $factory->define(App\Examination::class, function (Faker\Generator $faker) {
     return [
         'id' => $faker->numberBetween(1000,9000),
-         'examination_type_id' => function () {
-            return factory(App\ExaminationType::class)->create()->id;
-        },
+         'examination_type_id' => $faker->numberBetween(1,4),
         'company_id' => function () {
             return factory(App\Company::class)->create()->id;
         },
