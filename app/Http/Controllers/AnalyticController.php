@@ -10,6 +10,7 @@ use App\TrackerSessions;
 
 class AnalyticController extends Controller
 {
+	private const YMD = 'Y-m-d';
 	public function __construct()
     {
         $this->middleware('auth.admin');
@@ -21,13 +22,13 @@ class AnalyticController extends Controller
 		$search = null;
         $currentUser = Auth::user();
 		$now = date('Y-m-d H:i:s');
-		$datenow = date('Y-m-d');
-		$dateyesterday = date('Y-m-d',strtotime("-1 days"));
-		$datelastweek = date('Y-m-d',strtotime("-7 days"));
+		$datenow = date($this::YMD);
+		$dateyesterday = date($this::YMD,strtotime("-1 days"));
+		$datelastweek = date($this::YMD,strtotime("-7 days"));
 		$thisDay = date('d');
 		$thisMonth = date('m');
 		$thisYear = date('Y');
-			$datestring=date('Y-m-d').' first day of last month';
+			$datestring=date($this::YMD).' first day of last month';
 			$dt=date_create($datestring);
 		$lastMonth = $dt->format('m');
 		$lastYear = $dt->format('Y');
@@ -46,7 +47,7 @@ class AnalyticController extends Controller
 			$sess = DB::select("
 				SELECT DISTINCT(client_ip) FROM tracker_sessions WHERE DATE(created_at) = '".$datenow."'
 			");
-				// $sess_now_old = $this->temp_sess_today($sess,$datenow);
+				
 				$sess_now_old = $this->temp_sess_today($datenow);
 				$sess_now = count($sess) - $sess_now_old;
             /*YESTERDAY*/
@@ -155,7 +156,7 @@ class AnalyticController extends Controller
 				'log_max_date' => $log_max_date,
 				'log_max_count' => $log_max_count
 			];
-			// echo"<pre>";print_r($data);exit;
+			
 			
             if (count($data) == 0){
                 $message = 'Data not found';
@@ -169,7 +170,7 @@ class AnalyticController extends Controller
     }
 	
 	public function temp_sess_today($b){
-		// $return_today = 0;
+		
 		$temp_sess = DB::select("
 			SELECT COUNT(DISTINCT
 					(s1.client_ip)) AS jml
@@ -186,12 +187,7 @@ class AnalyticController extends Controller
 				WHERE
 					DATE(s1.created_at) = '".$b."'
 		");
-		// foreach ($a as $row) {
-			// $temp_sess = DB::select("SELECT COUNT(*) as jml FROM tracker_sessions WHERE client_ip = '".$row->client_ip."' AND DATE(created_at) < '".$b."'");
-			// if($temp_sess[0]->jml > 0){
-				// $return_today = $return_today + 1;
-			// }
-		// }
+		
 		return $temp_sess[0]->jml;
 	}
 }

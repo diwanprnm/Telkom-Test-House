@@ -15,6 +15,27 @@ use App\ExaminationLab;
 
 class TopDashboardController extends Controller
 {
+	private const YMD = 'Y-m-d';
+
+	private const STELS = "stels_sales.id";
+	private const UPDATE = 'stels_sales_attachment.updated_at';
+	private const KAB = 'stel_kab';
+	private const ENE = 'stel_ene';
+	private const TRA = 'stel_tra';
+	private const CPE = 'stel_cpe';
+	private const KAL = 'stel_kal';
+	private const EXAM = 'examination';
+	private const EXAMID = 'examination_type_id';
+	private const CREATED = 'created_at';
+	private const PRICE = 'price' ;
+	private const DEVICE = 'device';
+	private const QA = 'device_qa';
+	private const VT = 'device_vt';
+	private const TA = 'device_ta';
+	private const CAL = 'device_cal';
+	private const KEYW = 'keyword';
+
+
 	public function __construct()
     {
         $this->middleware('auth.admin');
@@ -25,13 +46,13 @@ class TopDashboardController extends Controller
 		$message = null;
 		$search = null;
         $currentUser = Auth::user();
-		$datenow = date('Y-m-d');
-		$dateyesterday = date('Y-m-d',strtotime("-1 days"));
-		$datelastweek = date('Y-m-d',strtotime("-7 days"));
+		$datenow = date($this::YMD);
+		$dateyesterday = date($this::YMD,strtotime("-1 days"));
+		$datelastweek = date($this::YMD,strtotime("-7 days"));
 		$thisDay = date('d');
 		$thisMonth = date('m');
 		$thisYear = date('Y');
-			$datestring=date('Y-m-d').' first day of last month';
+			$datestring=date($this::YMD).' first day of last month';
 			$dt=date_create($datestring);
 		$lastMonth = $dt->format('m');
 		$lastYear = $dt->format('Y');
@@ -74,15 +95,15 @@ class TopDashboardController extends Controller
 			$pengujian = Examination::all();
 			foreach ($pengujian as $row) {
 				if($row->registration_status < 1){$count_reg = $count_reg + 1;}
-				else if($row->registration_status == 1 and $row->function_status < 1){$count_func = $count_func + 1;}
-				else if($row->function_status == 1 and $row->contract_status < 1){$count_cont = $count_cont + 1;}
-				else if($row->contract_status == 1 and $row->spb_status < 1){$count_spb = $count_spb + 1;}
-				else if($row->spb_status == 1 and $row->payment_status < 1){$count_pay = $count_pay + 1;}
-				else if($row->payment_status == 1 and $row->spk_status < 1){$count_spk = $count_spk + 1;}
-				else if($row->spk_status == 1 and $row->examination_status < 1){$count_exam = $count_exam + 1;}
-				else if($row->examination_status == 1 and $row->resume_status < 1){$count_resu = $count_resu + 1;}
-				else if($row->resume_status == 1 and $row->qa_status < 1){$count_qa = $count_qa + 1;}
-				else if($row->qa_status == 1 and $row->certificate_status < 1){$count_cert = $count_cert + 1;}
+				else if($row->registration_status == 1 && $row->function_status < 1){$count_func = $count_func + 1;}
+				else if($row->function_status == 1 && $row->contract_status < 1){$count_cont = $count_cont + 1;}
+				else if($row->contract_status == 1 && $row->spb_status < 1){$count_spb = $count_spb + 1;}
+				else if($row->spb_status == 1 && $row->payment_status < 1){$count_pay = $count_pay + 1;}
+				else if($row->payment_status == 1 && $row->spk_status < 1){$count_spk = $count_spk + 1;}
+				else if($row->spk_status == 1 && $row->examination_status < 1){$count_exam = $count_exam + 1;}
+				else if($row->examination_status == 1 && $row->resume_status < 1){$count_resu = $count_resu + 1;}
+				else if($row->resume_status == 1 && $row->qa_status < 1){$count_qa = $count_qa + 1;}
+				else if($row->qa_status == 1 && $row->certificate_status < 1){$count_cert = $count_cert + 1;}
 			}
 
 			$deviceNotComp = Examination::where('qa_passed', -1)->count();
@@ -104,7 +125,7 @@ class TopDashboardController extends Controller
 				'count_exam_all' => count($pengujian),
 				'count_dev_notComp' => $deviceNotComp
 			];
-			// echo"<pre>";print_r($data);exit;
+			
 			
             if (count($data) == 0){
                 $message = 'Data not found';
@@ -126,12 +147,12 @@ class TopDashboardController extends Controller
 				$sum_stel_kal = 0;
 				$select = array('stels_sales.cust_price_payment', 'stels.type');
 		        $query = STELSales::selectRaw(implode(",", $select))
-		        		->join("stels_sales_attachment","stels_sales_attachment.stel_sales_id","=","stels_sales.id")
-                       	->join("stels_sales_detail","stels_sales_detail.stels_sales_id","=","stels_sales.id")
+		        		->join("stels_sales_attachment","stels_sales_attachment.stel_sales_id","=",$this::STELS)
+                       	->join("stels_sales_detail","stels_sales_detail.stels_sales_id","=",$this::STELS)
                        	->join("stels","stels.id","=","stels_sales_detail.stels_id")
                         ->whereNotNull('stels_sales_attachment.attachment')
-                        ->whereYear('stels_sales_attachment.updated_at', '=', $thisYear)
-                        ->whereMonth('stels_sales_attachment.updated_at', '=', $i+1);
+                        ->whereYear($this::UPDATE, '=', $thisYear)
+                        ->whereMonth($this::UPDATE, '=', $i+1);
                 $stels_sales = $query->get();
 
 		        foreach($stels_sales as $item){
@@ -163,43 +184,43 @@ class TopDashboardController extends Controller
 		        	$sum_stel += $item->cust_price_payment;
 		        }
 				$chart['stel'][$i]=(float)$sum_stel;
-				$chart['stel_kab'][$i]=(float)$sum_stel_kab;
-				$chart['stel_ene'][$i]=(float)$sum_stel_ene;
-				$chart['stel_tra'][$i]=(float)$sum_stel_tra;
-				$chart['stel_cpe'][$i]=(float)$sum_stel_cpe;
-				$chart['stel_kal'][$i]=(float)$sum_stel_kal;
+				$chart[$this::KAB][$i]=(float)$sum_stel_kab;
+				$chart[$this::ENE][$i]=(float)$sum_stel_ene;
+				$chart[$this::TRA][$i]=(float)$sum_stel_tra;
+				$chart[$this::CPE][$i]=(float)$sum_stel_cpe;
+				$chart[$this::KAL][$i]=(float)$sum_stel_kal;
 
-				$jml_device_qa = Income::whereHas('examination', function ($q){
-						return $q->where('examination_type_id', 1);
+				$jml_device_qa = Income::whereHas($this::EXAM, function ($q){
+						return $q->where($this::EXAMID, 1);
 					})
-		        ->whereYear('created_at', '=', $thisYear)
-		        ->whereMonth('created_at', '=', $i+1)
-		        ->select('price')
-		        ->sum('price');
+		        ->whereYear($this::CREATED, '=', $thisYear)
+		        ->whereMonth($this::CREATED, '=', $i+1)
+		        ->select($this::PRICE)
+		        ->sum($this::PRICE);
 
-		        $jml_device_vt = Income::whereHas('examination', function ($q){
-						return $q->where('examination_type_id', 3);
+		        $jml_device_vt = Income::whereHas($this::EXAM, function ($q){
+						return $q->where($this::EXAMID, 3);
 					})
-		        ->whereYear('created_at', '=', $thisYear)
-		        ->whereMonth('created_at', '=', $i+1)
-		        ->select('price')
-		        ->sum('price');
+		        ->whereYear($this::CREATED, '=', $thisYear)
+		        ->whereMonth($this::CREATED, '=', $i+1)
+		        ->select($this::PRICE)
+		        ->sum($this::PRICE);
 
-		        $jml_device_ta = Income::whereHas('examination', function ($q){
-						return $q->where('examination_type_id', 2);
+		        $jml_device_ta = Income::whereHas($this::EXAM, function ($q){
+						return $q->where($this::EXAMID, 2);
 					})
-		        ->whereYear('created_at', '=', $thisYear)
-		        ->whereMonth('created_at', '=', $i+1)
-		        ->select('price')
-		        ->sum('price');
+		        ->whereYear($this::CREATED, '=', $thisYear)
+		        ->whereMonth($this::CREATED, '=', $i+1)
+		        ->select($this::PRICE)
+		        ->sum($this::PRICE);
 
-		        $jml_device_cal = Income::whereHas('examination', function ($q){
-						return $q->where('examination_type_id', 4);
+		        $jml_device_cal = Income::whereHas($this::EXAM, function ($q){
+						return $q->where($this::EXAMID, 4);
 					})
-		        ->whereYear('created_at', '=', $thisYear)
-		        ->whereMonth('created_at', '=', $i+1)
-		        ->select('price')
-		        ->sum('price');
+		        ->whereYear($this::CREATED, '=', $thisYear)
+		        ->whereMonth($this::CREATED, '=', $i+1)
+		        ->select($this::PRICE)
+		        ->sum($this::PRICE);
 
 				$jml_device = DB::select("
 					SELECT sum(price) AS jml
@@ -208,11 +229,11 @@ class TopDashboardController extends Controller
 					;
 				");
 
-				$chart['device'][$i]=(float)$jml_device[0]->jml;
-				$chart['device_qa'][$i] = (float)$jml_device_qa;
-				$chart['device_vt'][$i] = (float)$jml_device_vt;
-				$chart['device_ta'][$i] = (float)$jml_device_ta;
-				$chart['device_cal'][$i] = (float)$jml_device_cal;
+				$chart[$this::DEVICE][$i]=(float)$jml_device[0]->jml;
+				$chart[$this::QA][$i] = (float)$jml_device_qa;
+				$chart[$this::VT][$i] = (float)$jml_device_vt;
+				$chart[$this::TA][$i] = (float)$jml_device_ta;
+				$chart[$this::CAL][$i] = (float)$jml_device_cal;
 			}
 
             return view('admin.topdashboard.index')
@@ -221,21 +242,21 @@ class TopDashboardController extends Controller
                 ->with('tahun', $thisYear)
                 ->with('data', $data)
                 ->with('stel', $chart['stel'])
-                ->with('stel_kab', $chart['stel_kab'])
-                ->with('stel_ene', $chart['stel_ene'])
-                ->with('stel_tra', $chart['stel_tra'])
-                ->with('stel_cpe', $chart['stel_cpe'])
-                ->with('stel_kal', $chart['stel_kal'])
-                ->with('device', $chart['device'])
-                ->with('device_qa', $chart['device_qa'])
-                ->with('device_vt', $chart['device_vt'])
-                ->with('device_ta', $chart['device_ta'])
-                ->with('device_cal', $chart['device_cal']);
+                ->with($this::KAB, $chart[$this::KAB])
+                ->with($this::ENE, $chart[$this::ENE])
+                ->with($this::TRA, $chart[$this::TRA])
+                ->with($this::CPE, $chart[$this::CPE])
+                ->with($this::KAL, $chart[$this::KAL])
+                ->with($this::DEVICE, $chart[$this::DEVICE])
+                ->with($this::QA, $chart[$this::QA])
+                ->with($this::VT, $chart[$this::VT])
+                ->with($this::TA, $chart[$this::TA])
+                ->with($this::CAL, $chart[$this::CAL]);
         }
     }
 	
 	public function temp_sess_today($b){
-		// $return_today = 0;
+		
 		$temp_sess = DB::select("
 			SELECT COUNT(DISTINCT
 					(s1.client_ip)) AS jml
@@ -252,12 +273,7 @@ class TopDashboardController extends Controller
 				WHERE
 					DATE(s1.created_at) = '".$b."'
 		");
-		// foreach ($a as $row) {
-			// $temp_sess = DB::select("SELECT COUNT(*) as jml FROM tracker_sessions WHERE client_ip = '".$row->client_ip."' AND DATE(created_at) < '".$b."'");
-			// if($temp_sess[0]->jml > 0){
-				// $return_today = $return_today + 1;
-			// }
-		// }
+		
 		return $temp_sess[0]->jml;
 	}
 	
@@ -278,12 +294,12 @@ class TopDashboardController extends Controller
 				$sum_stel_kal = 0;
 				$select = array('stels_sales.cust_price_payment', 'stels.type');
 		        $query = STELSales::selectRaw(implode(",", $select))
-		        		->join("stels_sales_attachment","stels_sales_attachment.stel_sales_id","=","stels_sales.id")
-                       	->join("stels_sales_detail","stels_sales_detail.stels_sales_id","=","stels_sales.id")
+		        		->join("stels_sales_attachment","stels_sales_attachment.stel_sales_id","=",$this::STELS)
+                       	->join("stels_sales_detail","stels_sales_detail.stels_sales_id","=",$this::STELS)
                        	->join("stels","stels.id","=","stels_sales_detail.stels_id")
                         ->whereNotNull('stels_sales_attachment.attachment')
-                        ->whereYear('stels_sales_attachment.updated_at', '=', $request->input('keyword'))
-                        ->whereMonth('stels_sales_attachment.updated_at', '=', $i+1);
+                        ->whereYear($this::UPDATE, '=', $request->input($this::KEYW))
+                        ->whereMonth($this::UPDATE, '=', $i+1);
                 $stels_sales = $query->get();
 
 		        foreach($stels_sales as $item){
@@ -315,70 +331,70 @@ class TopDashboardController extends Controller
 		        	$sum_stel += $item->cust_price_payment;
 		        }
 				$chart['stel'][$i]=(float)$sum_stel;
-				$chart['stel_kab'][$i]=(float)$sum_stel_kab;
-				$chart['stel_ene'][$i]=(float)$sum_stel_ene;
-				$chart['stel_tra'][$i]=(float)$sum_stel_tra;
-				$chart['stel_cpe'][$i]=(float)$sum_stel_cpe;
-				$chart['stel_kal'][$i]=(float)$sum_stel_kal;
+				$chart[$this::KAB][$i]=(float)$sum_stel_kab;
+				$chart[$this::ENE][$i]=(float)$sum_stel_ene;
+				$chart[$this::TRA][$i]=(float)$sum_stel_tra;
+				$chart[$this::CPE][$i]=(float)$sum_stel_cpe;
+				$chart[$this::KAL][$i]=(float)$sum_stel_kal;
 			}
 			echo json_encode($chart['stel'])."||";
-			echo json_encode($chart['stel_kab'])."||";
-			echo json_encode($chart['stel_tra'])."||";
-			echo json_encode($chart['stel_cpe'])."||";
-			echo json_encode($chart['stel_ene'])."||";
-			echo json_encode($chart['stel_kal'])."||";
+			echo json_encode($chart[$this::KAB])."||";
+			echo json_encode($chart[$this::TRA])."||";
+			echo json_encode($chart[$this::CPE])."||";
+			echo json_encode($chart[$this::ENE])."||";
+			echo json_encode($chart[$this::KAL])."||";
 		}else{
 			for($i=0;$i<12;$i++){
-				$jml_device_qa = Income::whereHas('examination', function ($q){
-						return $q->where('examination_type_id', 1);
+				$jml_device_qa = Income::whereHas($this::EXAM, function ($q){
+						return $q->where($this::EXAMID, 1);
 					})
-		        ->whereYear('created_at', '=', $request->input('keyword'))
-		        ->whereMonth('created_at', '=', $i+1)
-		        ->select('price')
-		        ->sum('price');
+		        ->whereYear($this::CREATED, '=', $request->input($this::KEYW))
+		        ->whereMonth($this::CREATED, '=', $i+1)
+		        ->select($this::PRICE)
+		        ->sum($this::PRICE);
 
-		        $jml_device_vt = Income::whereHas('examination', function ($q){
-						return $q->where('examination_type_id', 3);
+		        $jml_device_vt = Income::whereHas($this::EXAM, function ($q){
+						return $q->where($this::EXAMID, 3);
 					})
-		        ->whereYear('created_at', '=', $request->input('keyword'))
-		        ->whereMonth('created_at', '=', $i+1)
-		        ->select('price')
-		        ->sum('price');
+		        ->whereYear($this::CREATED, '=', $request->input($this::KEYW))
+		        ->whereMonth($this::CREATED, '=', $i+1)
+		        ->select($this::PRICE)
+		        ->sum($this::PRICE);
 
-		        $jml_device_ta = Income::whereHas('examination', function ($q){
-						return $q->where('examination_type_id', 2);
+		        $jml_device_ta = Income::whereHas($this::EXAM, function ($q){
+						return $q->where($this::EXAMID, 2);
 					})
-		        ->whereYear('created_at', '=', $request->input('keyword'))
-		        ->whereMonth('created_at', '=', $i+1)
-		        ->select('price')
-		        ->sum('price');
+		        ->whereYear($this::CREATED, '=', $request->input($this::KEYW))
+		        ->whereMonth($this::CREATED, '=', $i+1)
+		        ->select($this::PRICE)
+		        ->sum($this::PRICE);
 
-		        $jml_device_cal = Income::whereHas('examination', function ($q){
-						return $q->where('examination_type_id', 4);
+		        $jml_device_cal = Income::whereHas($this::EXAM, function ($q){
+						return $q->where($this::EXAMID, 4);
 					})
-		        ->whereYear('created_at', '=', $request->input('keyword'))
-		        ->whereMonth('created_at', '=', $i+1)
-		        ->select('price')
-		        ->sum('price');
+		        ->whereYear($this::CREATED, '=', $request->input($this::KEYW))
+		        ->whereMonth($this::CREATED, '=', $i+1)
+		        ->select($this::PRICE)
+		        ->sum($this::PRICE);
 
 				$jml_device = DB::select("
 					SELECT sum(price) AS jml
-					from incomes where YEAR(tgl) = ".$request->input('keyword')."
+					from incomes where YEAR(tgl) = ".$request->input($this::KEYW)."
 					AND MONTH(tgl) = ".($i+1)."
 					;
 				");
 
-				$chart['device'][$i]=(float)$jml_device[0]->jml;
-				$chart['device_qa'][$i] = (float)$jml_device_qa;
-				$chart['device_vt'][$i] = (float)$jml_device_vt;
-				$chart['device_ta'][$i] = (float)$jml_device_ta;
-				$chart['device_cal'][$i] = (float)$jml_device_cal;
+				$chart[$this::DEVICE][$i]=(float)$jml_device[0]->jml;
+				$chart[$this::QA][$i] = (float)$jml_device_qa;
+				$chart[$this::VT][$i] = (float)$jml_device_vt;
+				$chart[$this::TA][$i] = (float)$jml_device_ta;
+				$chart[$this::CAL][$i] = (float)$jml_device_cal;
 			}
-			echo json_encode($chart['device'])."||";
-			echo json_encode($chart['device_qa'])."||";
-			echo json_encode($chart['device_vt'])."||";
-			echo json_encode($chart['device_ta'])."||";
-			echo json_encode($chart['device_cal'])."||";
+			echo json_encode($chart[$this::DEVICE])."||";
+			echo json_encode($chart[$this::QA])."||";
+			echo json_encode($chart[$this::VT])."||";
+			echo json_encode($chart[$this::TA])."||";
+			echo json_encode($chart[$this::CAL])."||";
 		}
 	}
 }

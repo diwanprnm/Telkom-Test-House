@@ -27,6 +27,12 @@ class GeneralSettingController extends Controller
      *
      * @return void
      */
+
+    private const MESSAGE = 'message';
+    private const GEN = '/admin/generalsetting';
+    private const ERR = 'error';
+    private const MAN = "poh_manager_urel";
+
     public function __construct()
     {
         $this->middleware('auth.admin');
@@ -49,11 +55,11 @@ class GeneralSettingController extends Controller
                 }
                 
                 return view('admin.generalsetting.index')
-                    ->with('message', $message)
+                    ->with($this::MESSAGE, $message)
                     ->with('data', $generalsetting);
             }else{
                 return view('admin.generalsetting.index')
-                    ->with('message', 'Access Denied')
+                    ->with($this::MESSAGE, 'Access Denied')
                     ->with('data', null);
             }
         }
@@ -77,7 +83,7 @@ class GeneralSettingController extends Controller
      */
     public function store(Request $request)
     {
-        // $request->flash();
+        
         $currentUser = Auth::user(); 
         $generalsetting = new GeneralSetting;
         $generalsetting->id = Uuid::uuid4();
@@ -99,10 +105,10 @@ class GeneralSettingController extends Controller
             $logs->page = "GeneralSetting";
             $logs->save();
             
-            Session::flash('message', 'FAQ successfully created');
-            return redirect('/admin/generalsetting');
+            Session::flash($this::MESSAGE, 'FAQ successfully created');
+            return redirect($this::GEN);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
+            Session::flash($this::ERR, 'Save failed');
             return redirect('/admin/generalsetting/create');
         }
     }
@@ -144,7 +150,7 @@ class GeneralSettingController extends Controller
         $currentUser = Auth::user();
 
         if ($request->has('is_poh')){
-            $generalsetting = GeneralSetting::where("code", "poh_manager_urel")->first();
+            $generalsetting = GeneralSetting::where("code", $this::MAN)->first();
             $oldGeneralSetting = $generalsetting; 
             $generalsetting->value = $request->input('poh_manager_urel');
             $generalsetting->is_active = 1;
@@ -153,7 +159,7 @@ class GeneralSettingController extends Controller
             $oldGeneralSetting = $generalsetting; 
             $generalsetting->value = $request->input('manager_urel');
 
-            $generalsettingPOH = GeneralSetting::where("code", "poh_manager_urel")->first();
+            $generalsettingPOH = GeneralSetting::where("code", $this::MAN)->first();
             $generalsettingPOH->is_active = 0;
             $generalsettingPOH->updated_by = $currentUser->id; 
             $generalsettingPOH->save();
@@ -182,10 +188,10 @@ class GeneralSettingController extends Controller
             $logs_a->data = $oldGeneralSetting;
             $logs_a->save();
 
-            Session::flash('message', 'General Setting successfully updated');
+            Session::flash($this::MESSAGE, 'General Setting successfully updated');
             return redirect('/admin/generalSetting');
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
+            Session::flash($this::ERR, 'Save failed');
             return redirect('/admin/generalSetting');
         }
     }
@@ -213,15 +219,15 @@ class GeneralSettingController extends Controller
                 $logs->page = "GeneralSetting";
                 $logs->save();
 
-                Session::flash('message', 'FAQ successfully deleted');
-                return redirect('/admin/generalsetting');
+                Session::flash($this::MESSAGE, 'FAQ successfully deleted');
+                return redirect($this::GEN);
             }catch (Exception $e){
-                Session::flash('error', 'Delete failed');
-                return redirect('/admin/generalsetting');
+                Session::flash($this::ERR, 'Delete failed');
+                return redirect($this::GEN);
             }
         }else{
-             Session::flash('error', 'Role Not Found');
-                return redirect('/admin/generalsetting');
+             Session::flash($this::ERR, 'Role Not Found');
+                return redirect($this::GEN);
         }
     }    
 }
