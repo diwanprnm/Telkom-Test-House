@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 
 use App\STELSales;
@@ -17,12 +16,15 @@ use App\GeneralSetting;
 use App\ExaminationType;
 use App\ExaminationLab;
 use App\Services\Logs\LogService;
+use App\Services\Querys\QueryFilter;
 
 use Auth;
-use Session;
+use Excel;
 use File;
 use Response;
-use Excel;
+use Session;
+use Storage;
+
 
 // UUID
 use Ramsey\Uuid\Uuid;
@@ -35,19 +37,18 @@ use App\NotificationTable;
 
 class IncomeController extends Controller
 {
-    private const SEARCH = 'search';
-    private const QUERY = 'query';
-    private const COMPANY = 'company';
-    private const BEFORE_DATE = 'before_date';
     private const AFTER_DATE = 'after_date';
-    private const MESSAGE = 'message';
-    private const STATUS = 'status';
-    private const NUMBER = 'number';
+    private const BEFORE_DATE = 'before_date';
+    private const COMPANY = 'company';
     private const KUITANSI_DATE = 'kuitansi_date';
+    private const MANAGER_UREL = 'manager_urel';
+    private const MESSAGE = 'message';
+    private const NUMBER = 'number';
+    private const QUERY = 'query';
+    private const SEARCH = 'search';
     private const SORT_BY = 'sort_by';
     private const SORT_TYPE = 'sort_type';
-    private const MANAGER_UREL = 'manager_urel';
-
+    private const STATUS = 'status';
 
     public function __construct()
     {
@@ -56,75 +57,51 @@ class IncomeController extends Controller
 
     public function index(Request $request)
     {
-        $currentUser = Auth::user();
-
-        if (!$currentUser){
-            return false;
-        }
-        $message = null;
+        //initial var
         $paginate = 10;
         $search = trim($request->input(self::SEARCH));
-        $type = '';
-        $lab = '';
-        $status = '';
-        $before = null;
-        $after = null;
+        $dataNotFound='';
 
+        //getting relation db
         $examType = ExaminationType::all();
         $examLab = ExaminationLab::all();
 
-        $initialQuery = $this->initialQuery($search, $currentUser);
-        $search = $initialQuery[self::SEARCH];
-        $query = $initialQuery[self::QUERY];
+        //Filter query based on request
+        $initialQuery = $this->initialQuery($search);
+        $queryFilter = new QueryFilter($request, $initialQuery[self::QUERY]);
+        $queryFilter->examination_type('type');
+        $filterStatus = $this->filterStatus($queryFilter->query, $request);
+        $queryFilter
+            ->updateQuery($filterStatus[self::QUERY])
+            ->examination_lab('lab')
+            ->beforeDate('tgl')
+            ->afterDate('tgl')
+            ->getSortedAndOrderedData('tgl', 'desc')              
+        ;
 
-
-        if ($request->has('type')){
-            $type = $request->get('type');
-            if($request->input('type') != 'all'){
-                $query->where('examination_type_id', $request->get('type'));
-            }
-        }
-
-        $filterStatus = $this->filterStatus($query, $request);
-        $query = $filterStatus->query;
-        $status = $filterStatus->status;
-
-        if ($request->has('lab')){
-            $lab = $request->get('lab');
-            if($request->input('lab') != 'all'){
-                $query->where('examination_lab_id', $request->get('lab'));
-            }
-        }
-
-        if ($request->has(self::BEFORE_DATE)){
-            $query->where('tgl', '<=', $request->get(self::BEFORE_DATE));
-            $before = $request->get(self::BEFORE_DATE);
-        }
-
-        if ($request->has(self::AFTER_DATE)){
-            $query->where('tgl', '>=', $request->get(self::AFTER_DATE));
-            $after = $request->get(self::AFTER_DATE);
-        }
-
-        $data = $query->orderBy('tgl', 'desc')
-                    ->paginate($paginate);
+        //get data
+        $data = $queryFilter
+            ->getQuery()
+            ->paginate($paginate)
+        ;
         
-        if (count($query) == 0){
-            $message = 'Data not found';
+        //set $dataNotFound if Data not found
+        if (count($data) == 0){
+            $dataNotFound = 'Data not found';
         }
         
         return view('admin.income.index')
-            ->with(self::MESSAGE, $message)
-            ->with('data', $data)
-            ->with(self::SEARCH, $search)
-            ->with('type', $examType)
-            ->with(self::STATUS, $status)
-            ->with('filterType', $type)
-            ->with('lab', $examLab)
-            ->with('filterLab', $lab)
-            ->with(self::BEFORE_DATE, $before)
-            ->with(self::AFTER_DATE, $after);
-        
+            ->with('data',              $data)
+            ->with('type',              $examType)
+            ->with('lab',               $examLab)
+            ->with('dataNotFound',      $dataNotFound)
+            ->with(self::STATUS,        $filterStatus[self::STATUS])
+            ->with(self::SEARCH,        $initialQuery[self::SEARCH])
+            ->with('filterType',        $queryFilter->examination_type)
+            ->with('filterLab',         $queryFilter->examination_lab)
+            ->with(self::BEFORE_DATE,   $queryFilter->before)
+            ->with(self::AFTER_DATE,    $queryFilter->after)
+        ;
     }
 
     /**
@@ -173,56 +150,47 @@ class IncomeController extends Controller
 				Session::flash('id', $kuitansi->id);
 				return redirect('/admin/kuitansi');
 			} catch(\Exception $e){
-				Session::flash('error', 'Save failed');
-				return redirect('/admin/kuitansi/create')->withInput($request->all());
+				return redirect('/admin/kuitansi/create')->withInput($request->all())->with('error', 'Save failed');
 			}
 		}else{
-			Session::flash('error', 'Existing Number');
+			Session::flash('error', '"Nomor Kuitansi" is already exist');
 			return redirect('/admin/kuitansi/create')->withInput($request->all());
 		}
     }
 	
 	public function kuitansi(Request $request){
-        $currentUser = Auth::user();
         $logService = new LogService();
-        
-        if (!$currentUser){
-            return false;
-        }
 
         $id = null;
         $message = null;
         $paginate = 10;
         $search = trim($request->input(self::SEARCH));
-
         $before = null;
         $after = null;
         $type = '';
-
         $sort_by = self::KUITANSI_DATE;
         $sort_type = 'desc';
+        $dataNotFound = '';
 
-        $query = Kuitansi::whereNotNull('created_at');
+        $queryFilter = new QueryFilter($request, Kuitansi::whereNotNull('created_at'));
         
         if ($search != null){
-            $query->where("number", "like", '%'.strtolower($search).'%')
+            $query = $queryFilter
+                ->getQuery()
+                ->where("number", "like", '%'.strtolower($search).'%')
                 ->orWhere("from", "like", '%'.strtolower($search).'%')
                 ->orWhere("for", "like", '%'.strtolower($search).'%')
             ;
-
+            $queryFilter = $queryFilter->updateQuery($query);
             $logService->createLog(self::SEARCH, 'KUITANSI', json_encode(array(self::SEARCH => $search)) );
         }
 
-        if ($request->has(self::BEFORE_DATE)){
-            $query->where(self::KUITANSI_DATE, '<=', $request->get(self::BEFORE_DATE));
-            $before = $request->get(self::BEFORE_DATE);
-        }
+        $queryFilter
+            ->beforeDate(self::KUITANSI_DATE)
+            ->afterDate(self::KUITANSI_DATE)
+        ;
 
-        if ($request->has(self::AFTER_DATE)){
-            $query->where(self::KUITANSI_DATE, '>=', $request->get(self::AFTER_DATE));
-            $after = $request->get(self::AFTER_DATE);
-        }
-
+        $query = $queryFilter->getQuery();
         if ($request->has('type')){
             $type = $request->get('type');
             if($request->input('type') != 'all'){
@@ -230,18 +198,18 @@ class IncomeController extends Controller
             }
         }
 
-        if ($request->has(self::SORT_BY)){
-            $sort_by = $request->get(self::SORT_BY);
-        }
-        if ($request->has(self::SORT_TYPE)){
-            $sort_type = $request->get(self::SORT_TYPE);
-        }
+        $queryFilter
+            ->updateQuery($query)
+            ->getSortedAndOrderedData($sort_by, $sort_type)
+        ;
 
-        $data = $query->orderBy($sort_by, $sort_type)
-                    ->paginate($paginate);
+        $data = $queryFilter
+            ->getQuery()
+            ->paginate($paginate)
+        ;
         
-        if (count($query) == 0){
-            $message = 'Data not found';
+        if (count($data) == 0){
+            $dataNotFound = 'Data not found';
         }
         
         return view('admin.income.kuitansi')
@@ -253,7 +221,8 @@ class IncomeController extends Controller
             ->with('filterType', $type)
             ->with(self::SORT_BY, $sort_by)
             ->with(self::SORT_TYPE, $sort_type)
-            ->with('data', $data);
+            ->with('data', $data)
+            ->with('dataNotFound', $dataNotFound);
         
 	}
 
@@ -264,39 +233,30 @@ class IncomeController extends Controller
 		// the payments table's primary key, the user's first and last name, 
 		// the user's e-mail address, the amount paid, and the payment
         // timestamp.
-        
-        $currentUser = Auth::user();
 
+        //initial var
         $search = trim($request->input(self::SEARCH));
 
-        $initialQuery = $this->initialQuery($search, $currentUser);
-        $query = $initialQuery[self::QUERY];
+        //Filter query based on request
+        $initialQuery = $this->initialQuery($search);
+        $queryFilter = new QueryFilter($request, $initialQuery[self::QUERY]);
+        $queryFilter->examination_type('type');
+        $filterStatus = $this->filterStatus($queryFilter->getQuery(), $request);
+        $queryFilter
+            ->updateQuery($filterStatus[self::QUERY])
+            ->examination_lab('lab')
+            ->beforeDate('tgl')
+            ->afterDate('tgl')
+            ->getSortedAndOrderedData('tgl', 'desc') 
+        ;
 
-        if ($request->has('type') && $request->input('type') != 'all'){
+        //Get data
+        $data = $queryFilter
+            ->getQuery()
+            ->get()
+        ;
 
-            $query->where('examination_type_id', $request->get('type'));
-        }
-
-        $filterStatus = $this->filterStatus($query, $request);
-        $query = $filterStatus->query;
-
-        if ($request->has('lab') && $request->input('lab') != 'all'){
-            $query->where('examination_lab_id', $request->get('lab'));
-        }
-
-        if ($request->has(self::BEFORE_DATE)){
-            $query->where('tgl', '<=', $request->get(self::BEFORE_DATE));
-        }
-
-        if ($request->has(self::AFTER_DATE)){
-            $query->where('tgl', '>=', $request->get(self::AFTER_DATE));
-        }
-
-        $data = $query->orderBy('tgl', 'desc')
-                    ->get();
-		
-		$examsArray = []; 
-
+		$examsArray = [];
 		// Define the Excel spreadsheet headers
 		$examsArray[] = [
 			'No',
@@ -329,14 +289,25 @@ class IncomeController extends Controller
 			];
 			$no++;
 		}
-		// Generate and return the spreadsheet
-		Excel::create('Data Pendapatan', function($excel) use ($examsArray) {
+        //Generate and return the spreadsheet
+        $excelFileName = 'DataPendapatan';
+		Excel::create($excelFileName, function($excel) use ($examsArray) {
 
 			// Build the spreadsheet, passing in the payments array
 			$excel->sheet('sheet1', function($sheet) use ($examsArray) {
 				$sheet->fromArray($examsArray, null, 'A1', false, false);
 			});
-		})->export('xlsx');
+        })->store('xlsx');
+        
+        $file = Storage::disk('tmp')->get($excelFileName.'.xlsx');
+
+        $headers = [
+            'Content-Type' => 'Application/Spreadsheet',
+            'Content-Description' => 'File Transfer',
+            'Content-Disposition' => "attachment; filename=$excelFileName.xlsx",
+            'filename'=> "$excelFileName.xlsx"
+        ];
+        return response($file, 200, $headers);
 	}
 	
 	public function autocomplete($query) {
@@ -384,7 +355,9 @@ class IncomeController extends Controller
 			}
 		}
 		
-		$data = Kuitansi::find($id);
+        $data = Kuitansi::find($id)->get()[0];
+        
+        //dd($data);
 
 	    return \Redirect::route('cetakHasilKuitansi', [
 			'nomor' => $this->filterUrlEncode($data->number),
@@ -397,7 +370,7 @@ class IncomeController extends Controller
 		]);
     }
 	
-	function cekKuitansi($number)
+	private function cekKuitansi($number)
     {
 		$inc = Kuitansi::where(self::NUMBER,'=',''.$number.'')->get();
 		return count($inc);
@@ -405,10 +378,10 @@ class IncomeController extends Controller
 
     private function filterStatus($query, Request $request)
     {
-        $filterStatus = new \stdClass();
         $status = '';
 
         $bussinessStep = array(
+            '',
             'examinations.registration_status',
             'examinations.function_status',
             'examinations.contract_status',
@@ -423,40 +396,39 @@ class IncomeController extends Controller
         
         if ( $request->has(self::STATUS) && isset($bussinessStep[$request->get(self::STATUS)]) ) {
             $req = $request->get(self::STATUS);
+            $status = $req;
             for ($step = 1; $step <= $req; $step++) {
-                if ( $step != $req ){
-                    $query->where($bussinessStep[$step-1], '=', 1);
+                if ( $step < $req ){
+                    $query->where($bussinessStep[$step], '=', 1);
                 }else{
-                    $query->where($bussinessStep[$step-1], '!=', 1);
-                    $status = $step;
+                    $query->where($bussinessStep[$step], '!=', 1);
+                    break;
                 }
-              }
-        } else{
+            }
+        }else {
             $status = 'all';
         }
-
-        $filterStatus->query = $query;
-        $filterStatus->status = $status;
-        return $filterStatus;
+        return array(
+            self::QUERY => $query,
+            self::STATUS => $status
+        );
     }
 
     private function filterUrlEncode ($string, $number=false)
     {
         if(!$string && $number){
-            return '0';
+            $string = '0';
         }
         if(!$string && !$number){
-            return '-';
+            $string = '-';
         }
-
-        if( strpos( $string, "/" ) ){
+        if( $string && strpos( $string, "/" ) ){
             $string = urlencode(urlencode($string));
         }
-
         return $string;
     }
 
-    private function initialQuery($search, $currentUser)
+    private function initialQuery($search)
     {
         $logService = new LogService();
 
@@ -475,8 +447,9 @@ class IncomeController extends Controller
             ->join("examinations","examinations.id","=","incomes.reference_id")
             ->whereNotNull('incomes.created_at')
             ->where('incomes.inc_type', 1)
+            ->with('examination')
             ->with(self::COMPANY)
-            ->with('examination');
+        ;
 
         if ($search != null){
             $query->where(function($qry) use($search){
@@ -485,12 +458,10 @@ class IncomeController extends Controller
                 });
             });
 
-
-            $logService->createLog(self::SEARCH, 'INCOME', json_encode(array(self::SEARCH => $search)) );
+            $logService->createLog( self::SEARCH, 'INCOME', json_encode(array(self::SEARCH=>$search)) );
         }
         return array(
             self::SEARCH=> $search,
-            'currentUser' => $currentUser,
             self::QUERY => $query,
         );
     }

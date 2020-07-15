@@ -219,30 +219,42 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php $no=1; ?>
-								@foreach($data as $item)
-									<tr>
-										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
-										@if($item->inc_type == 1)
-											<td class="center">Pengujian Perangkat {{ $item->examination->device->name }}</td>
-										@else
-											<td class="center">Pembelian STEL</td>
-										@endif
-										<td class="center">{{ $item->examination->user->name }} ({{ $item->company->name }})</td>
-										<td class="center">{{ $item->tgl }}</td>
-										<td class="center">{{ $item->reference_number }}</td>
-										<td class="center"><?php echo number_format($item->price, 0, '.', ','); ?></td>
-										<td class="center">{{ $item->examination->spk_code }}</td>
-									</tr>
-								<?php $no++ ?>
-								@endforeach
+
+						@if (count($data))
+							@php
+								$no=1;
+							@endphp
+							@foreach($data as $item)
+								<tr>
+									<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
+									@if($item->inc_type == 1)
+										<td class="center">Pengujian Perangkat {{ $item->examination->device->name }}</td>
+									@else
+										<td class="center">Pembelian STEL</td>
+									@endif
+									<td class="center">{{ $item->examination->user->name }} ({{ $item->company->name }})</td>
+									<td class="center">{{ $item->tgl }}</td>
+									<td class="center">{{ $item->reference_number }}</td>
+									<td class="center">{{ number_format($item->price, 0, '.', ',') }}</td>
+									<td class="center">{{ $item->examination->spk_code }}</td>
+								</tr>
+							@php
+								$no++
+							@endphp
+							@endforeach
+						@else
+							<tr>
+								<td class="center" colspan="7">{{ $dataNotFound }}</td>
+							</tr>
+						@endif
+
                             </tbody>
 						</table>
 					</div>
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								<?php echo $data->appends(array('search' => $search,'type' => $filterType,'status' => $status,'lab' => $filterLab,'before_date' => $before_date,'after_date' => $after_date))->links(); ?>
+								{{$data->appends(array('search' => $search,'type' => $filterType,'status' => $status,'lab' => $filterLab,'before_date' => $before_date,'after_date' => $after_date))->links()}}
 							</div>
 						</div>
 					</div>

@@ -143,32 +143,43 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php $no=1; ?>
-								@foreach($data as $item)
-									<tr>
-										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
-										<td class="center">{{ $item->number }}</td>
-										<td class="center">{{ $item->from }}</td>
-										<td class="center"><?php echo number_format($item->price, 0, '.', ','); ?></td>
-										<td class="center">{{ $item->for }}</td>
-										<td class="center">
-											{{ date('j', strtotime($item->kuitansi_date))." ".strftime('%B %Y', strtotime($item->kuitansi_date)) }}
-										</td>
-										<td class="center">
-											<div>
-												<a href="{{URL::to('cetakKuitansi/'.$item->id.'')}}" target="_blank" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
-											</div>
-										</td>
-									</tr>
-								<?php $no++ ?>
-								@endforeach
+						@if (count($data))
+							@php
+								$no=1;
+							@endphp
+							@foreach($data as $item)
+								<tr>
+									<td class="center">{{ $no+(($data->currentPage()-1)*$data->perPage()) }}</td>
+									<td class="center">{{ $item->number }}</td>
+									<td class="center">{{ $item->from }}</td>
+									<td class="center">{{ number_format($item->price, 0, '.', ',') }}</td>
+									<td class="center">{{ $item->for }}</td>
+									<td class="center">
+										{{ date('j', strtotime($item->kuitansi_date))." ".strftime('%B %Y', strtotime($item->kuitansi_date)) }}
+									</td>
+									<td class="center">
+										<div>
+											<a href="{{URL::to('cetakKuitansi/'.$item->id.'')}}" target="_blank" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
+										</div>
+									</td>
+								</tr>
+							@php
+								$no++
+							@endphp
+							@endforeach
+						@else
+							<tr>
+								<td class="center" colspan="7">{{ $dataNotFound }}</td>
+							</tr>
+						@endif
+							
                             </tbody>
 						</table>
 					</div>
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								<?php echo $data->appends(array('search' => $search,'before_date' => $before_date,'after_date' => $after_date,'type' => $filterType,'sort_by' => $sort_by,'sort_type' => $sort_type))->links(); ?>
+								{{$data->appends(array('search' => $search,'before_date' => $before_date,'after_date' => $after_date,'type' => $filterType,'sort_by' => $sort_by,'sort_type' => $sort_type))->links()}}
 							</div>
 						</div>
 					</div>
