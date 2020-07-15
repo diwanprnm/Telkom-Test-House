@@ -32,7 +32,7 @@ $factory->define(App\CalibrationCharge::class, function (Faker\Generator $faker)
 
 $factory->define(App\Company::class, function (Faker\Generator $faker) {
     return [
-    	'id' => bcrypt(str_random(10)),
+    	'id' => $faker->numberBetween(1000,9000),
         'name' => $faker->word,
         'address' => str_random(10),
         'city' => str_random(10),
@@ -125,13 +125,15 @@ $factory->define(App\Examination::class, function (Faker\Generator $faker) {
         },
         'spk_code' => $faker->word,
         'registration_status' => '1',
+        'function_status' => '1',
+        'contract_status' => '1',
         'spb_status' => '1',
         'payment_status' => '1',
-        'spk_status' => '1',
-        'examination_status'  => '1',
-        'resume_status' => '1',
-        'qa_status'  => '1',
-        'certificate_status'  => '1',
+        'spk_status' => '0',
+        'examination_status'  => '0',
+        'resume_status' => '0',
+        'qa_status'  => '0',
+        'certificate_status'  => '0',
         'created_by' => '1',
         'updated_by' => '1',
         'created_at' => Carbon\Carbon::now(),
@@ -148,10 +150,8 @@ $factory->define(App\Examination::class, function (Faker\Generator $faker) {
         'urel_test_date' => Carbon\Carbon::now(),
         'cust_test_date' => Carbon\Carbon::now(),
         'deal_test_date' => Carbon\Carbon::now(),
-        'function_status' => '1',
         'catatan' => $faker->sentence(3, true),
         'function_date' => Carbon\Carbon::now(),
-        'contract_status' => '1',
         'contract_date' => Carbon\Carbon::now(),
         'testing_start' => Carbon\Carbon::now(),
         'testing_end' => Carbon\Carbon::now(),
@@ -236,5 +236,25 @@ $factory->define(App\Questioner::class, function (Faker\Generator $faker) {
         'updated_at'=> Carbon\Carbon::now(),
         'complaint_date' => Carbon\Carbon::now(),
         'complaint' => $faker->sentence(2, true)
+    ];
+});
+
+$factory->define(App\Income::class, function (Faker\Generator $faker) {
+    return [
+        'id' => $faker->numberBetween(1000,9000),
+        'company_id' => function () {
+            return factory(App\Company::class)->create()->id;
+        },
+        'inc_type' => '1',
+        'reference_id' => function () {
+            return factory(App\Examination::class)->create()->id;
+        },
+        'reference_number' => $faker->numberBetween(1000,9000),
+        'price'  => $faker->numberBetween(1000,9000).'000',
+        'tgl'=> Carbon\Carbon::now(),
+        'created_by' => '1',
+        'updated_by' => '1',
+        'created_at'=> Carbon\Carbon::now(),
+        'updated_at'=> Carbon\Carbon::now()
     ];
 });
