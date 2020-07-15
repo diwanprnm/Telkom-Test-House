@@ -25,6 +25,8 @@ class QueryFilter
     public $data;
     public $sort_by;
     public $sort_type;
+    public $examination_type;
+    public $examination_lab;
 
     public function __construct(Request $request, $query)
     {
@@ -191,7 +193,7 @@ class QueryFilter
 
     }
 
-
+    //CHAINABLE FUNCTION, FROM NOW ON.
     public function beforeDate($date_variable)
     {
         if ($date_variable && $this->request->has(self::BEFORE_DATE)) {
@@ -229,6 +231,41 @@ class QueryFilter
         }
         
         return $this;
+    }
+
+    public function examination_type($requestName = 'type')
+    {
+        if ($this->request->has($requestName)){
+            $this->examination_type = $this->request->get($requestName);
+            if($this->request->input($requestName) != 'all'){
+                $this->query->where('examination_type_id', $this->request->get($requestName));
+            }
+        }
+
+        return $this;
+    }
+
+    public function examination_lab($requestName = 'lab')
+    {
+        if ($this->request->has($requestName)){
+            $this->examination_lab = $this->request->get($requestName);
+            if($this->request->input($requestName) != 'all'){
+                $this->query->where('examination_lab_id', $this->request->get($requestName));
+            }
+        }
+
+        return $this;
+    }
+
+    public function updateQuery($query)
+    {
+        $this->query = $query;
+        return $this;
+    }
+
+    public function getQuery()
+    {
+        return $this->query;
     }
 
 }
