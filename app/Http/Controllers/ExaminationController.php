@@ -749,6 +749,7 @@ class ExaminationController extends Controller
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Uji Fungsi",$request->input('keterangan'));
 			}
         }
+        $spk_created = 0;
         if ($request->has('contract_status')){
 			if ($request->hasFile('contract_file')) {
 				/*$ext_file = $request->file('contract_file')->getClientOriginalExtension();
@@ -789,6 +790,14 @@ class ExaminationController extends Controller
 				$attach = ExaminationAttach::where('name', 'Tinjauan Kontrak')->where('examination_id', ''.$id.'')->first();
 					$attach_name = $attach->attachment;
 				// $this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.contract", "Upload Tinjauan Pustaka",$path_file."/".$attach_name);
+
+				if ($exam->spk_code == null && $exam->company_id == '74629ce1-2e32-4cdf-adae-4d3d42ca9bb1'){
+                    $spk_number_forOTR = $this->generateSPKCode($exam_forOTR->examinationLab->lab_code,$exam_forOTR->examinationType->name,date('Y'));
+                    $exam->spk_code = $spk_number_forOTR;
+                    $exam->spk_date = date('Y-m-d');
+                    $spk_created = 1;
+                }
+
 				if($exam->contract_status){
 					/* push notif*/
 		            
@@ -922,7 +931,7 @@ class ExaminationController extends Controller
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","SPB",$request->input('keterangan'));
 			}
         }
-		$spk_created = 0;
+		
         if ($request->has('payment_status')){
 			if ($request->has('cust_price_payment')){
 				$exam->cust_price_payment = str_replace(".",'',$request->input('cust_price_payment'));
