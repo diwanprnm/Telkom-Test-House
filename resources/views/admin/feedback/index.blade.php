@@ -127,20 +127,30 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+							<caption class="hidden"> Question and Answer Table - Telkom Test House</caption>
 							<thead>
 								<tr>
-									<th class="center">No</th>
-									<th class="center">Category</th>
-									<th class="center">Email</th>
-									<th class="center">Subject</th>
-									<th class="center">Pesan</th>
-									<th class="center">Status</th>
-									<th class="center">Tanggal</th>
-                                    <th class="center">Aksi</th>
+									<th class="center" scope="col">No</th>
+									<th class="center" scope="col">Category</th>
+									<th class="center" scope="col">Email</th>
+									<th class="center" scope="col">Subject</th>
+									<th class="center" scope="col">Pesan</th>
+									<th class="center" scope="col">Status</th>
+									<th class="center" scope="col">Tanggal</th>
+                                    <th class="center" scope="col">Aksi</th>
 								</tr>
 							</thead>
 							<tbody>
-								<?php $no=1; ?>
+							@if ($message)
+								<tr>
+									<td class="center" colspan="8"> {{$message}} </td>
+								</tr>
+							@else
+								
+							@endif
+								@php
+									$no=1;
+								@endphp
 								@foreach($data as $item)
 									<tr>
 										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
@@ -164,7 +174,9 @@
 											</div>
 										</td>
 									</tr>
-								<?php $no++ ?>
+								@php
+									$no++
+								@endphp
 								@endforeach
                             </tbody>
 						</table>

@@ -158,56 +158,68 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+							<caption>Examination Charge Table - Telkom Test House</caption>
 							<thead>
 								<tr>
-									<th class="center">No</th>
-									<th class="center">Nama Perangkat</th>
-									<th class="center">Referensi Uji</th>
-									<th class="center">Kategori</th>
-									<th class="center">Durasi (Hari)</th>
-									<th class="center">Biaya QA (Rp.)</th>
-									<th class="center">Biaya VT (Rp.)</th>
-									<th class="center">Biaya TA (Rp.)</th>
-									<th class="center">Status</th>
-                                    <th class="center">Aksi</th>
+									<th class="center" scope="col">No</th>
+									<th class="center" scope="col">Nama Perangkat</th>
+									<th class="center" scope="col">Referensi Uji</th>
+									<th class="center" scope="col">Kategori</th>
+									<th class="center" scope="col">Durasi (Hari)</th>
+									<th class="center" scope="col">Biaya QA (Rp.)</th>
+									<th class="center" scope="col">Biaya VT (Rp.)</th>
+									<th class="center" scope="col">Biaya TA (Rp.)</th>
+									<th class="center" scope="col">Status</th>
+                                    <th class="center" scope="col">Aksi</th>
 								</tr>
 							</thead>
 							<tbody>
-								<?php $no=1; ?>
-								@foreach($data as $item)
-									<tr>
-										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
-										<td class="center">{{ $item->device_name }}</td>
-										<td class="center">{{ $item->stel }}</td>
-										<td class="center">{{ $item->category }}</td>
-										<td class="center"><?php echo number_format($item->duration, 0, '.', ','); ?></td>
-										<td class="center"><?php echo number_format($item->price, 0, '.', ','); ?></td>
-										<td class="center"><?php echo number_format($item->vt_price, 0, '.', ','); ?></td>
-										<td class="center"><?php echo number_format($item->ta_price, 0, '.', ','); ?></td>
-	                                    @if($item->is_active)
-	                                    	<td class="center"><span class="label label-sm label-success">Active</span></td>
-	                                    @else
-	                                    	<td class="center"><span class="label label-sm label-warning">Not Active</span></td>
-	                                    @endif
-	                                    <td class="center">
-											<div>
-												<a href="{{URL::to('admin/charge/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
-												{!! Form::open(array('url' => 'admin/charge/'.$item->id, 'method' => 'DELETE')) !!}
-													{!! csrf_field() !!}
-													<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')"><em class="fa fa-times fa fa-white"></em></button>
-												{!! Form::close() !!}
-											</div>
-										</td>
-									</tr>
-								<?php $no++ ?>
-								@endforeach
+						@if ($notFound)
+								<tr>
+									<td class="center" colspan="10">{{$notFound}}</td>
+								</tr>
+						@else
+							@php
+								$no=1;
+							@endphp
+							@foreach($data as $item)
+								<tr>
+									<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
+									<td class="center">{{ $item->device_name }}</td>
+									<td class="center">{{ $item->stel }}</td>
+									<td class="center">{{ $item->category }}</td>
+									<td class="center">{{number_format($item->duration, 0, '.', ',')}}</td>
+									<td class="center">{{number_format($item->price, 0, '.', ',')}}</td>
+									<td class="center">{{number_format($item->vt_price, 0, '.', ',')}}</td>
+									<td class="center">{{number_format($item->ta_price, 0, '.', ',')}}</td>
+								@if($item->is_active)
+									<td class="center"><span class="label label-sm label-success">Active</span></td>
+								@else
+									<td class="center"><span class="label label-sm label-warning">Not Active</span></td>
+								@endif
+									<td class="center">
+										<div>
+											<a href="{{URL::to('admin/charge/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
+											{!! Form::open(array('url' => 'admin/charge/'.$item->id, 'method' => 'DELETE')) !!}
+												{!! csrf_field() !!}
+												<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')"><em class="fa fa-times fa fa-white"></em></button>
+											{!! Form::close() !!}
+										</div>
+									</td>
+								</tr>
+							@php
+								$no++
+							@endphp
+							@endforeach
+						@endif
+							
                             </tbody>
 						</table>
 					</div>
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								<?php echo $data->appends(array('search' => $search,'category' => $category,'is_active' => $status))->links(); ?>
+								{{$data->appends(array('search' => $search,'category' => $category,'is_active' => $status))->links()}}
 							</div>
 						</div>
 					</div>

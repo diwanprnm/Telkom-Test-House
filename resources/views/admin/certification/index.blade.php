@@ -54,17 +54,20 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+							<caption>Certificate Table - Telkom Test House</caption>
 							<thead>
 								<tr>
-									<th class="center">No</th>
-									<th class="center">Judul</th>
-									<th class="center">Gambar</th>
-                                    <th class="center">Status</th>
-                                    <th class="center">Aksi</th>
+									<th class="center" scope="col">No</th>
+									<th class="center" scope="col">Judul</th>
+									<th class="center" scope="col">Gambar</th>
+                                    <th class="center" scope="col">Status</th>
+                                    <th class="center" scope="col">Aksi</th>
 								</tr>
 							</thead>
 							<tbody>
-								<?php $no=1; ?>
+								@php
+									$no=1;	
+								@endphp
 								@foreach($data as $item)
 									<tr>
 										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
@@ -86,7 +89,9 @@
 											</div>
 										</td>
 									</tr>
-								<?php $no++ ?>
+								@php
+									$no++;	
+								@endphp
 								@endforeach
                             </tbody>
 						</table>
@@ -94,7 +99,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								<?php echo $data->appends(array('search' => $search))->links(); ?>
+								{{$data->appends(array('search' => $search))->links()}}
 							</div>
 						</div>
 					</div>

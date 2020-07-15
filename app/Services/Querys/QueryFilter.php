@@ -17,6 +17,21 @@ class QueryFilter
     protected const SORT_BY = 'sort_by';
     protected const SORT_TYPE = 'sort_type';
 
+    //chain 
+    public $request;
+    public $query;
+    public $before;
+    public $after;
+    public $data;
+    public $sort_by;
+    public $sort_type;
+
+    public function __construct(Request $request, $query)
+    {
+        $this->request = $request;
+        $this->query = $query;
+    }
+
     public function search(Request $request, $query, $number)
     {
         $isNull = true;
@@ -42,42 +57,6 @@ class QueryFilter
             self::QUERY => $query,
             self::SEARCH => $search,
             'isNull' => $isNull
-        );
-    }
-
-    public function beforeDate(Request $request, $query, $date_variable)
-    {
-        $before = '';
-        if (!$date_variable) {
-            return false;
-        }
-
-        if ($request->has(self::BEFORE_DATE)){
-            $query->where($date_variable, '<=', $request->get(self::BEFORE_DATE));
-            $before = $request->get(self::BEFORE_DATE);
-        }
-
-        return array(
-            self::QUERY => $query,
-            'before' => $before
-        );
-    }
-
-    public function afterDate(Request $request, $query, $date_variable)
-    {
-        $after = null;
-        if (!$date_variable) {
-            return false;
-        }
-
-        if ($request->has(self::AFTER_DATE)){
-            $query->where($date_variable, '>=', $request->get(self::AFTER_DATE));
-            $after = $request->get(self::AFTER_DATE);
-        }
-
-        return array(
-            self::QUERY => $query,
-            'after' => $after
         );
     }
 
@@ -178,10 +157,10 @@ class QueryFilter
     {
         $filterPayment_status = '';
 
-        if ($request->has('payment_status')){
-            $filterPayment_status = $request->get('payment_status');
-            if($request->input('payment_status') != 'all'){
-                $query->where('payment_status', $request->get('payment_status'));
+        if ($request->has(self::PAYMENT_STATUS)){
+            $filterPayment_status = $request->get(self::PAYMENT_STATUS);
+            if($request->input(self::PAYMENT_STATUS) != 'all'){
+                $query->where(self::PAYMENT_STATUS, $request->get(self::PAYMENT_STATUS));
             }
         }
 
@@ -212,27 +191,44 @@ class QueryFilter
 
     }
 
-    public function getSortedAndOrderedData($request, $query, $sort_by = false)
+
+    public function beforeDate($date_variable)
     {
-        $sort_type = 'desc';
-
-        if ($request->has(self::SORT_BY)){
-            $sort_by = $request->get(self::SORT_BY);
-        }
-        if ($request->has(self::SORT_TYPE)){
-            $sort_type = $request->get(self::SORT_TYPE);
+        if ($date_variable && $this->request->has(self::BEFORE_DATE)) {
+            $this->query->where($date_variable, '<=', $this->request->get(self::BEFORE_DATE));
+            $this->before = $this->request->get(self::BEFORE_DATE);
         }
 
-        $data = $query->orderBy($sort_by, $sort_type);
-
-        return array(
-            'data' => $data,
-            self::SORT_BY => $sort_by,
-            self::SORT_TYPE=> $sort_type
-        );
+        return $this;
     }
 
+    public function afterDate($date_variable)
+    {
+        if ($date_variable && $this->request->has(self::AFTER_DATE)) {
+            $this->query->where($date_variable, '>=', $this->request->get(self::AFTER_DATE));
+            $this->after = $this->request->get(self::AFTER_DATE);
+        }
 
+        return $this;
+    }
 
+    public function getSortedAndOrderedData($sort_by = false, $sort_type = 'desc')
+    {
+        $this->sort_by = $sort_by;
+        $this->sort_type = $sort_type;
+
+        if ($this->request->has(self::SORT_BY)){
+            $this->sort_by = $this->request->input(self::SORT_BY);
+        }
+        if ($this->request->has(self::SORT_TYPE)){
+            $this->sort_type = $this->request->input(self::SORT_TYPE);
+        }
+
+        if ($this->sort_by){
+            $this->query = $this->query->orderBy($this->sort_by, $this->sort_type);
+        }
+        
+        return $this;
+    }
 
 }

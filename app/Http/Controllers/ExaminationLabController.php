@@ -24,6 +24,15 @@ class ExaminationLabController extends Controller
      *
      * @return void
      */
+    private const MESSAGE = 'message';
+    private const SEARCH = 'search';
+    private const EXAM = "EXAMINATION LABS";
+    private const LAB = 'lab_code';
+    private const INIT = 'lab_init';
+    private const DESC = 'description';
+    private const ACTIVE = 'is_active';
+    private const LABS = '/admin/labs';
+    private const ERR = 'error';
     public function __construct()
     {
         $this->middleware('auth.admin');
@@ -41,7 +50,7 @@ class ExaminationLabController extends Controller
         if ($currentUser){
             $message = null;
             $paginate = 10;
-            $search = trim($request->input('search'));
+            $search = trim($request->input($this::SEARCH));
             
             if ($search != null){
                 $labs = ExaminationLab::whereNotNull('created_at')
@@ -54,7 +63,7 @@ class ExaminationLabController extends Controller
                     $logs->action = "Search Examination Lab";
                     $logs->data = json_encode(array("search"=>$search));
                     $logs->created_by = $currentUser->id;
-                    $logs->page = "EXAMINATION LABS";
+                    $logs->page = $this::EXAM;
                     $logs->save();
             }else{
                 $labs = ExaminationLab::whereNotNull('created_at')
@@ -67,9 +76,9 @@ class ExaminationLabController extends Controller
             }
             
             return view('admin.labs.index')
-                ->with('message', $message)
+                ->with($this::MESSAGE, $message)
                 ->with('data', $labs)
-                ->with('search', $search);
+                ->with($this::SEARCH, $search);
         }
     }
 
@@ -96,10 +105,10 @@ class ExaminationLabController extends Controller
         $labs = new ExaminationLab;
         $labs->id = Uuid::uuid4();
         $labs->name = $request->input('name');
-        $labs->lab_code = $request->input('lab_code');
-        $labs->lab_init = $request->input('lab_init');
-        $labs->description = $request->input('description');
-        $labs->is_active = $request->input('is_active');
+        $labs->lab_code = $request->input($this::LAB);
+        $labs->lab_init = $request->input($this::INIT);
+        $labs->description = $request->input($this::DESC);
+        $labs->is_active = $request->input($this::ACTIVE);
         $labs->created_by = $currentUser->id;
         $labs->updated_by = $currentUser->id;
 
@@ -122,13 +131,13 @@ class ExaminationLabController extends Controller
             $logs->action = "Create Examination Lab";
             $logs->data = $labs;
             $logs->created_by = $currentUser->id;
-            $logs->page = "EXAMINATION LABS";
+            $logs->page = $this::EXAM;
             $logs->save();
 
-            Session::flash('message', 'Labs successfully created');
-            return redirect('/admin/labs');
+            Session::flash($this::MESSAGE, 'Labs successfully created');
+            return redirect($this::LABS);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
+            Session::flash($this::ERR, 'Save failed');
             return redirect('/admin/labs/create');
         }
     }
@@ -175,17 +184,17 @@ class ExaminationLabController extends Controller
         if ($request->has('name')){
             $labs->name = $request->input('name');
         }
-        if ($request->has('lab_code')){
-            $labs->lab_code = $request->input('lab_code');
+        if ($request->has($this::LAB)){
+            $labs->lab_code = $request->input($this::LAB);
         }
-        if ($request->has('lab_init')){
-            $labs->lab_init = $request->input('lab_init');
+        if ($request->has($this::INIT)){
+            $labs->lab_init = $request->input($this::INIT);
         }
-        if ($request->has('description')){
-            $labs->description = $request->input('description');
+        if ($request->has($this::DESC)){
+            $labs->description = $request->input($this::DESC);
         }
-        if ($request->has('is_active')){
-            $labs->is_active = $request->input('is_active');
+        if ($request->has($this::ACTIVE)){
+            $labs->is_active = $request->input($this::ACTIVE);
         }
         if ($request->has('close_until')){
             $labs->close_until = $request->input('close_until');
@@ -204,13 +213,13 @@ class ExaminationLabController extends Controller
             $logs->action = "Update Examination Lab";
             $logs->data = $oldData;
             $logs->created_by = $currentUser->id;
-            $logs->page = "EXAMINATION LABS";
+            $logs->page = $this::EXAM;
             $logs->save();
 
-            Session::flash('message', 'Labs successfully updated');
-            return redirect('/admin/labs');
+            Session::flash($this::MESSAGE, 'Labs successfully updated');
+            return redirect($this::LABS);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
+            Session::flash($this::ERR, 'Save failed');
             return redirect('/admin/labs/'.$labs->id.'edit');
         }
     }
@@ -237,14 +246,14 @@ class ExaminationLabController extends Controller
                 $logs->action = "Delete Examination Lab";
                 $logs->data = $oldData;
                 $logs->created_by = $currentUser->id;
-                $logs->page = "EXAMINATION LABS";
+                $logs->page = $this::EXAM;
                 $logs->save();
 
-                Session::flash('message', 'Labs successfully deleted');
-                return redirect('/admin/labs');
+                Session::flash($this::MESSAGE, 'Labs successfully deleted');
+                return redirect($this::LABS);
             }catch (Exception $e){
-                Session::flash('error', 'Delete failed');
-                return redirect('/admin/labs');
+                Session::flash($this::ERR, 'Delete failed');
+                return redirect($this::LABS);
             }
         }
     }

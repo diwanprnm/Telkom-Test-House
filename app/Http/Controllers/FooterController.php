@@ -23,6 +23,16 @@ class FooterController extends Controller
      *
      * @return void
      */
+    private const SEARCH = 'search';
+    private const DESC = 'description';
+    private const FOOTER = "FOOTER";
+    private const MESS = 'message';
+    private const IMAGE = 'image';
+    private const ERR = 'error';
+    private const CREATE = '/admin/footer/create';
+    private const ACT = 'is_active';
+    private const ADM = '/admin/footer';
+
     public function __construct()
     {
         $this->middleware('auth.admin');
@@ -40,11 +50,11 @@ class FooterController extends Controller
         if ($currentUser){
             $message = null;
             $paginate = 10;
-            $search = trim($request->input('search'));
+            $search = trim($request->input($this::SEARCH));
             
             if ($search != null){
                 $footers = Footer::whereNotNull('created_at')
-                    ->where('description','like','%'.$search.'%')
+                    ->where($this::DESC,'like','%'.$search.'%')
                     ->orderBy('updated_at')
                     ->paginate($paginate);
 
@@ -54,7 +64,7 @@ class FooterController extends Controller
                     $datasearch = array("search"=>$search);
                     $logs->data = json_encode($datasearch);
                     $logs->created_by = $currentUser->id;
-                    $logs->page = "FOOTER";
+                    $logs->page = $this::FOOTER;
                     $logs->save();
             }else{
                 $footers = Footer::whereNotNull('created_at')
@@ -67,9 +77,9 @@ class FooterController extends Controller
             }
             
             return view('admin.footer.index')
-                ->with('message', $message)
+                ->with($this::MESS, $message)
                 ->with('data', $footers)
-                ->with('search', $search);
+                ->with($this::SEARCH, $search);
         }
     }
 
@@ -78,6 +88,7 @@ class FooterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    
     public function create()
     {
         return view('admin.footer.create');
@@ -95,25 +106,24 @@ class FooterController extends Controller
 
         $footer = new Footer;
         $footer->id = Uuid::uuid4();
-        $footer->description = $request->input('description');
+        $footer->description = $request->input($this::DESC);
 
-        if ($request->hasFile('image')) {
-            /*$ext_file = $request->file('image')->getClientOriginalExtension();
-            $name_file = uniqid().'_footer_'.$footer->id.'.'.$ext_file;*/
-            $name_file = 'footer_'.$request->file('image')->getClientOriginalName();
+        if ($request->hasFile($this::IMAGE)) {
+           
+            $name_file = 'footer_'.$request->file($this::IMAGE)->getClientOriginalName();
             $path_file = public_path().'/media/footer';
             if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
-            if($request->file('image')->move($path_file,$name_file)){
+            if($request->file($this::IMAGE)->move($path_file,$name_file)){
                 $footer->image = $name_file;
             }else{
-                Session::flash('error', 'Save Image to directory failed');
-                return redirect('/admin/footer/create');
+                Session::flash($this::ERR, 'Save Image to directory failed');
+                return redirect($this::CREATE);
             }
         }
         
-        $footer->is_active = $request->input('is_active');
+        $footer->is_active = $request->input($this::ACT);
         $footer->created_by = $currentUser->id;
         $footer->updated_by = $currentUser->id;
 
@@ -125,14 +135,14 @@ class FooterController extends Controller
             $logs->action = "Create Footer";  
             $logs->data = $footer;
             $logs->created_by = $currentUser->id;
-            $logs->page = "FOOTER";
+            $logs->page = $this::FOOTER;
             $logs->save();
 
-            Session::flash('message', 'Information successfully created');
-            return redirect('/admin/footer');
+            Session::flash($this::MESS, 'Information successfully created');
+            return redirect($this::ADM);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
-            return redirect('/admin/footer/create');
+            Session::flash($this::ERR, 'Save failed');
+            return redirect($this::CREATE);
         }
     }
 
@@ -175,25 +185,24 @@ class FooterController extends Controller
         $footer = Footer::find($id);
         $oldData = $footer;
 
-        if ($request->has('description')){
-            $footer->description = $request->input('description');
+        if ($request->has($this::DESC)){
+            $footer->description = $request->input($this::DESC);
         }
-        if ($request->has('is_active')){
-            $footer->is_active = $request->input('is_active');
+        if ($request->has($this::ACT)){
+            $footer->is_active = $request->input($this::ACT);
         }
-        if ($request->hasFile('image')) {
-            /*$ext_file = $request->file('image')->getClientOriginalExtension();
-            $name_file = uniqid().'_footer_'.$footer->id.'.'.$ext_file;*/
-            $name_file = 'footer_'.$request->file('image')->getClientOriginalName();
+        if ($request->hasFile($this::IMAGE)) {
+            
+            $name_file = 'footer_'.$request->file($this::IMAGE)->getClientOriginalName();
             $path_file = public_path().'/media/footer';
             if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
-            if($request->file('image')->move($path_file,$name_file)){
+            if($request->file($this::IMAGE)->move($path_file,$name_file)){
                 $footer->image = $name_file;
             }else{
-                Session::flash('error', 'Save Image to directory failed');
-                return redirect('/admin/footer/create');
+                Session::flash($this::ERR, 'Save Image to directory failed');
+                return redirect($this::CREATE);
             }
         }
 
@@ -207,13 +216,13 @@ class FooterController extends Controller
             $logs->action = "Update Footer";  
             $logs->data = $oldData;
             $logs->created_by = $currentUser->id;
-            $logs->page = "FOOTER";
+            $logs->page = $this::FOOTER;
             $logs->save();
 
-            Session::flash('message', 'Information successfully updated');
-            return redirect('/admin/footer');
+            Session::flash($this::MESS, 'Information successfully updated');
+            return redirect($this::ADM);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
+            Session::flash($this::ERR, 'Save failed');
             return redirect('/admin/footer/'.$footer->id.'edit');
         }
     }
@@ -238,14 +247,14 @@ class FooterController extends Controller
                 $logs->action = "Delete Footer";  
                 $logs->data = $oldData;
                 $logs->created_by = $currentUser->id;
-                $logs->page = "FOOTER";
+                $logs->page = $this::FOOTER;
                 $logs->save();
                 
-                Session::flash('message', 'Information successfully deleted');
-                return redirect('/admin/footer');
+                Session::flash($this::MESS, 'Information successfully deleted');
+                return redirect($this::ADM);
             }catch (Exception $e){
-                Session::flash('error', 'Delete failed');
-                return redirect('/admin/footer');
+                Session::flash($this::ERR, 'Delete failed');
+                return redirect($this::ADM);
             }
         }
     }

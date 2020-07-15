@@ -12,6 +12,8 @@ use Session;
 use Image;
 
 // UUID
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use Storage;
 
 class CertificationController extends Controller
@@ -113,8 +115,7 @@ class CertificationController extends Controller
             if($saveMinio){
                 $certification->image = $name_file;
             }else{
-                Session::flash(self::ERROR, 'Save Image to directory failed');
-                return redirect(self::ADMIN_CERTIFICATION_CREATE);
+                return redirect(self::ADMIN_CERTIFICATION_CREATE)->with(self::ERROR, 'Save Image to directory failed');
             }
         }
         
@@ -130,8 +131,7 @@ class CertificationController extends Controller
             Session::flash(self::MESSAGE, 'Certification successfully created');
             return redirect(self::ADMIN_CERTIFICATION);
         } catch(Exception $e){
-            Session::flash(self::ERROR, 'Save failed');
-            return redirect(self::ADMIN_CERTIFICATION_CREATE);
+            return redirect(self::ADMIN_CERTIFICATION_CREATE)->with(self::ERROR, 'Save failed');
         }
     }
 
@@ -172,7 +172,7 @@ class CertificationController extends Controller
         $certification = Certification::find($id);
         $logService = new LogService();
 
-        $oldData = $certification;
+        $oldData = clone $certification;
         if ($request->has(self::TITLE)){
             $certification->title = $request->input(self::TITLE);
         }
@@ -188,8 +188,7 @@ class CertificationController extends Controller
             if($saveMinio){
                 $certification->image = $name_file;
             }else{
-                Session::flash(self::ERROR, 'Save Image to directory failed');
-                return redirect(self::ADMIN_CERTIFICATION_CREATE);
+                return redirect(self::ADMIN_CERTIFICATION_CREATE)->with(self::ERROR, 'Save Image to directory failed');
             }
         }
 
@@ -203,8 +202,7 @@ class CertificationController extends Controller
             Session::flash(self::MESSAGE, 'Certification successfully updated');
             return redirect(self::ADMIN_CERTIFICATION);
         } catch(Exception $e){
-            Session::flash(self::ERROR, 'Save failed');
-            return redirect('/admin/certification/'.$certification->id.'edit');
+            return redirect('/admin/certification/'.$certification->id.'edit')->with(self::ERROR, 'Save failed');
         }
     }
 
@@ -218,7 +216,7 @@ class CertificationController extends Controller
     {
         $certification = Certification::find($id);
         $logService = new LogService();
-        $oldData = $certification;
+        $oldData = clone $certification;
 
         if ($certification){
             try{
@@ -228,14 +226,9 @@ class CertificationController extends Controller
                 Session::flash(self::MESSAGE, 'Certification successfully deleted');
                 return redirect(self::ADMIN_CERTIFICATION);
             }catch (Exception $e){
-                Session::flash(self::ERROR, 'Delete failed');
-                return redirect(self::ADMIN_CERTIFICATION);
+                return redirect(self::ADMIN_CERTIFICATION)->with(self::ERROR, 'Delete failed');
             }
         }
     }
-	
-	public function autocomplete($query) {
-        $respons_result = Certification::autocomplet($query);
-        return response($respons_result);
-    }
+    
 }

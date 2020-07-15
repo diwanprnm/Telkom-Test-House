@@ -248,9 +248,7 @@ class Log_administratorController extends Controller
 		Excel::create('Data Aktivitas Administrator', function($excel) use ($examsArray) {
 
 			// Set the spreadsheet title, creator, and description
-			// $excel->setTitle('Payments');
-			// $excel->setCreator('Laravel')->setCompany('WJ Gilmore, LLC');
-			// $excel->setDescription('payments file');
+			
 
 			// Build the spreadsheet, passing in the payments array
 			$excel->sheet('sheet1', function($sheet) use ($examsArray) {

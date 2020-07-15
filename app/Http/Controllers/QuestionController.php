@@ -30,7 +30,7 @@ class QuestionController extends Controller
     private const MESSA = 'message';
     private const ADMIN = '/admin/question';
     private const ERR = 'error';
-
+    //test question
 
     public function __construct()
     {

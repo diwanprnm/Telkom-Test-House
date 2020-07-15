@@ -26,7 +26,7 @@
 		<!-- start: RESPONSIVE TABLE -->
 		<div class="container-fluid container-fullw bg-white">
 			<div class="col-md-12">
-				{!! Form::open(array('url' => 'admin/article/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data')) !!}
+				{!! Form::open(array('url' => 'admin/article/'.$data->id, 'method' => 'PATCH', 'enctype' => 'multipart/form-data')) !!}
 				{!! csrf_field() !!}
     				<fieldset>
 						<legend>
@@ -82,7 +82,7 @@
 								</div>
 							</div>
 	                        <div class="col-md-12">
-	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
+	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left" name="submit" value="submit">
 	                                Submit
 	                            </button>
 								<a style=" color:white !important;" href="{{URL::to('/admin/article')}}">

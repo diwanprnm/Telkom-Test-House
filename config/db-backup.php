@@ -3,11 +3,11 @@
 
 return [
 
-	'path' => storage_path() . '/app/public/backup-data/',
+	'path' => storage_path() . '/tmp/',
 
 	'mysql' => [
-		'dump_command_path' => 'C:\\xampp\\mysql\\bin\\',
-		'restore_command_path' => 'C:\\xampp\\mysql\\bin\\',
+		'dump_command_path' => '/usr/bin/',
+		'restore_command_path' => '/usr/bin/',
 	],
 
 	's3' => [

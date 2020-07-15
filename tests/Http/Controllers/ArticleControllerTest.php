@@ -3,14 +3,22 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use app\videoTutorial;
-class VideoTutorialControllerTest extends TestCase
+
+use App\User;
+use App\Article;
+
+class ArticleControllerTest extends TestCase
 {
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
+
+   public function testIndexAsNonAdmin()
+    {
+        $user = factory(User::class)->make();
+        $this->actingAs($user)->call('GET','admin/article');
+        //status sukses, tapi ada bacaaan you dont have permission
+        $this->assertResponseStatus(200)
+            ->see("Unautorizhed. You do not have permission to access this page.");
+    }
+
     public function testIndex()
     {
         $user = User::where('id', '=', '1')->first();
@@ -107,4 +115,7 @@ class VideoTutorialControllerTest extends TestCase
         //delete remaining article when test is done
         Article::truncate();
     }
+
+
+    
 }

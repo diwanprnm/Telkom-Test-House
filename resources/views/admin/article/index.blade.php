@@ -49,42 +49,54 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+							<caption>Article Table - Telkom Test House </caption>
 							<thead>
 								<tr>
-									<th class="center">No</th>
-									<th class="center">Judul</th>
-									<th class="center">Type</th>
-									<th class="center">Status</th>
-                                    <th class="center">Aksi</th>
+									<th class="center" scope="col">No</th>
+									<th class="center" scope="col">Judul</th>
+									<th class="center" scope="col">Type</th>
+									<th class="center" scope="col">Status</th>
+                                    <th class="center" scope="col">Aksi</th>
 								</tr>
 							</thead>
 							<tbody>
-								<?php $no=1; ?>
-								@foreach($data as $item)
-									<tr>
-										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
-										<td class="center">{{ $item->title }}</td>
-										<td class="center">{{ $item->type }}</td>
-										@if($item->is_active)
-	                                    	<td class="center"><span class="label label-sm label-success">Active</span></td>
-	                                    @else
-	                                    	<td class="center"><span class="label label-sm label-warning">Not Active</span></td>
-	                                    @endif
-	                                    <td class="center">
-											<div>
-												<a href="{{URL::to('admin/article/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
-											</div>
-										</td>
-									</tr>
-								<?php $no++ ?>
-								@endforeach
+								@if (count($data))
+									@php
+										$no=1;
+									@endphp
+									@foreach($data as $item)
+										<tr>
+											<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
+											<td class="center">{{ $item->title }}</td>
+											<td class="center">{{ $item->type }}</td>
+											@if($item->is_active)
+												<td class="center"><span class="label label-sm label-success">Active</span></td>
+											@else
+												<td class="center"><span class="label label-sm label-warning">Not Active</span></td>
+											@endif
+											<td class="center">
+												<div>
+													<a href="{{URL::to('admin/article/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
+												</div>
+											</td>
+										</tr>
+									@php
+										$no++
+									@endphp
+									@endforeach
+								@else
+									<td class="center" colspan="5">{{$message}}</td>
+								@endif 
+									
+								
+
                             </tbody>
 						</table>
 					</div>
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								<?php echo $data->appends(array('search' => $search))->links(); ?>
+								{{$data->appends(array('search' => $search))->links()}}
 							</div>
 						</div>
 					</div>
