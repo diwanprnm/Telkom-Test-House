@@ -90,7 +90,7 @@
 							</div>
 	                        <div class="col-md-12">
 	                            @if($charge->is_implement == '0')
-		                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
+		                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left" name="submit" value="submit">
 		                                Submit
 		                            </button>
 		                        @endif
@@ -228,38 +228,49 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php $no=1;?>
-								@foreach($data as $item)
-									<tr>
-										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
-										<td class="center">{{ $item->device_name }}</td>
-										<td class="center">{{ $item->stel }}</td>
-										<td class="center">{{ $item->category }}</td>
-										<td class="center"><?php echo number_format($item->duration, 0, '.', ','); ?></td>
-										<td class="center"><?php echo number_format($item->new_price, 0, '.', ','); ?></td>
-										<td class="center"><?php echo number_format($item->new_vt_price, 0, '.', ','); ?></td>
-										<td class="center"><?php echo number_format($item->new_ta_price, 0, '.', ','); ?></td>
-	                                    <td class="center">
-											<div>
-												<a href="{{URL::to('admin/newcharge/'.$charge->id.'/editDetail/'.$item->id)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
-												@if($charge->is_implement == 0)
-												{!! Form::open(array('url' => 'admin/newcharge/'.$charge->id.'/deleteDetail/'.$item->id, 'method' => 'POST')) !!}
-													{!! csrf_field() !!}
-													<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')"><em class="fa fa-times fa fa-white"></em></button>
-												{!! Form::close() !!}
-												@endif
-											</div>
-										</td>
-									</tr>
-								<?php $no++ ?>
-								@endforeach
+						@if (count($data))
+								@php
+									$no=1;
+								@endphp
+							@foreach($data as $item)
+								<tr>
+									<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
+									<td class="center">{{ $item->device_name }}</td>
+									<td class="center">{{ $item->stel }}</td>
+									<td class="center">{{ $item->category }}</td>
+									<td class="center">{{ number_format($item->duration, 0, '.', ',') }}</td>
+									<td class="center">{{ number_format($item->new_price, 0, '.', ',') }}</td>
+									<td class="center">{{ number_format($item->new_vt_price, 0, '.', ',') }}</td>
+									<td class="center">{{ number_format($item->new_ta_price, 0, '.', ',') }}</td>
+									<td class="center">
+										<div>
+											<a href="{{URL::to('admin/newcharge/'.$charge->id.'/editDetail/'.$item->id)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
+											@if($charge->is_implement == 0)
+											{!! Form::open(array('url' => 'admin/newcharge/'.$charge->id.'/deleteDetail/'.$item->id, 'method' => 'POST')) !!}
+												{!! csrf_field() !!}
+												<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')"><em class="fa fa-times fa fa-white"></em></button>
+											{!! Form::close() !!}
+											@endif
+										</div>
+									</td>
+								</tr>
+								@php
+									$no++
+								@endphp
+							@endforeach
+						@else
+								<tr>
+									<td class="center" colspan="9">{{ $dataNotFound }}</td>
+								</tr>
+						@endif
+								
                             </tbody>
 						</table>
 					</div>
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								<?php echo $data->appends(array('search' => $search,'category' => $category))->links(); ?>
+								{{$data->appends(array('search' => $search,'category' => $category))->links()}}
 							</div>
 						</div>
 					</div>

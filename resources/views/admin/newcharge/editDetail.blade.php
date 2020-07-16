@@ -45,7 +45,7 @@
 								<select name="examination_charges_id" class="examination_charges_id form-control">
 							        <option value="">Choose Data</option>
 							        @foreach($examinationCharge as $item)
-										<option value="{{$item->id}}" data-name="{{$item->device_name}}" data-stel="{{$item->stel}}" data-category="{{$item->category}}" data-duration="{{$item->duration}}" data-price="{{$item->price}}" data-vt_price="{{$item->vt_price}}" data-ta_price="{{$item->ta_price}}" <?php if($data->examination_charges_id == $item->id){echo "selected";}?>>{{$item->device_name}} || {{$item->stel}}</option>
+										<option value="{{$item->id}}" data-name="{{$item->device_name}}" data-stel="{{$item->stel}}" data-category="{{$item->category}}" data-duration="{{$item->duration}}" data-price="{{$item->price}}" data-vt_price="{{$item->vt_price}}" data-ta_price="{{$item->ta_price}}" @if ($data->examination_charges_id == $item->id) {{'selected'}}	@endif>{{$item->device_name}} || {{$item->stel}}</option>
 									@endforeach
 							    </select>
 							</div>
@@ -272,7 +272,7 @@
 							</div>
 	                        <div class="col-md-12">
 	                        	@if($is_implement == 0)
-	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
+	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left" name="submit" value="submit">
 	                                Submit
 	                            </button>
 	                            @endif

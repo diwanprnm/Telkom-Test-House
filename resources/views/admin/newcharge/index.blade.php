@@ -108,7 +108,7 @@
 									</div>
 								</div>
 								<div class="col-md-12">
-		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
+		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right" name="submit" value="submit">
 		                                Filter
 		                            </button>
 		                        </div>
@@ -153,41 +153,51 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php $no=1; ?>
-								@foreach($data as $item)
-									<tr>
-										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
-										<td class="center">{{ $item->name }}</td>
-										<td class="center">{{ $item->description }}</td>
-										<td class="center">{{ $item->valid_from }}</td>
-	                                    @if($item->is_implement == '1')
-	                                    	<td class="center"><span class="label label-sm label-success">Done</span></td>
-	                                   	@elseif($item->is_implement == '0')
-	                                    	<td class="center"><span class="label label-sm label-warning">Not Process</span></td>
-	                                    @elseif($item->is_implement == '-1')
-	                                    	<td class="center"><span class="label label-sm label-danger">Cancel</span></td>
-	                                    @endif
-	                                    <td class="center">
-											<div>
-												<a href="{{URL::to('admin/newcharge/'.$item->id.'')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
-												@if($item->is_implement == '0')
-													{!! Form::open(array('url' => 'admin/newcharge/'.$item->id, 'method' => 'DELETE')) !!}
-														{!! csrf_field() !!}
-														<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')"><em class="fa fa-times fa fa-white"></em></button>
-													{!! Form::close() !!}
-												@endif
-											</div>
-										</td>
-									</tr>
-								<?php $no++ ?>
-								@endforeach
+						@if (count($data))
+							@php
+								$no=1;
+							@endphp
+							@foreach($data as $item)
+								<tr>
+									<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
+									<td class="center">{{ $item->name }}</td>
+									<td class="center">{{ $item->description }}</td>
+									<td class="center">{{ $item->valid_from }}</td>
+								@if($item->is_implement == '1')
+									<td class="center"><span class="label label-sm label-success">Done</span></td>
+								@elseif($item->is_implement == '0')
+									<td class="center"><span class="label label-sm label-warning">Not Process</span></td>
+								@elseif($item->is_implement == '-1')
+									<td class="center"><span class="label label-sm label-danger">Cancel</span></td>
+								@endif
+									<td class="center">
+										<div>
+											<a href="{{URL::to('admin/newcharge/'.$item->id.'')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
+										@if($item->is_implement == '0')
+											{!! Form::open(array('url' => 'admin/newcharge/'.$item->id, 'method' => 'DELETE')) !!}
+												{!! csrf_field() !!}
+												<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')"><em class="fa fa-times fa fa-white"></em></button>
+											{!! Form::close() !!}
+										@endif
+										</div>
+									</td>
+								</tr>
+							@php
+								$no++
+							@endphp
+							@endforeach
+						@else
+							<tr>
+								<td class="center" colspan="6">{{ $dataNotFound }}</td>
+							</tr>
+						@endif
                             </tbody>
 						</table>
 					</div>
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								<?php echo $data->appends(array('search' => $search,'is_implement' => $status,'before_date' => $before_date,'after_date' => $after_date))->links(); ?>
+								{{$data->appends(array('search' => $search,'is_implement' => $status,'before_date' => $before_date,'after_date' => $after_date))->links()}}
 							</div>
 						</div>
 					</div>

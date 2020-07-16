@@ -4,61 +4,66 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
 use App\Http\Requests;
 
 use Auth;
 use Response;
 use Session;
 use Input;
+use Excel;
 
 use App\Logs;
 use App\ExaminationCharge;
 use App\NewExaminationCharge;
 use App\NewExaminationChargeDetail;
 
-use Excel;
+use App\Services\Logs\LogService;
+use App\Services\Querys\QueryFilter;
+
+
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 class NewExaminationChargeController extends Controller
 {
-    private const SEARCH = 'search';
-    private const NEW_EXAMINATION_CHARGE = "NEW EXAMINATION CHARGE";
-    private const IS_IMPLEMENT = 'is_implement';
-    private const BEFORE_DATE = 'before_date';
+    private const ADMIN_NEWCHARGE = '/admin/newcharge/';
     private const AFTER_DATE = 'after_date';
-    private const VALID_FROM = 'valid_from';
-    private const MESSAGE = 'message';
-    private const ERROR = 'error';
+    private const ALL_EXAMINATION_CHARGES = 'examination_charges.*';
+    private const BEFORE_DATE = 'before_date';
+    private const CATEGORY = 'category';
+    private const CATEGORY_AND_DEVICE_NAME = 'category, device_name';
+    private const CREATED_AT_IN_EXAMINATION_CHARGES = 'examination_charges.created_at';
+    private const DATE_FORMAT = "Y-m-d H:i:s";
     private const DESCRIPTION = 'description';
-    private const SAFE_FAILED = 'Save failed';
+    private const DEVICE_NAME = 'device_name';
+    private const DURATION = 'duration';
+    private const ERROR = 'error';
     private const EXAMINATION_CHARGE = 'examinationCharge';
     private const EXAMINATION_CHARGES = 'examination_charges';
-    private const ID_IN_EXAMINATION_CHARGES = 'examination_charges.id';
-    private const ALL_EXAMINATION_CHARGES = 'examination_charges.*';
     private const EXAMINATION_CHARGES_ID = 'examination_charges_id';
-    private const CREATED_AT_IN_EXAMINATION_CHARGES = 'examination_charges.created_at';
-    private const IS_ACTIVE_IN_EXAMINATION_CHARGES = 'examination_charges.is_active';
-    private const NEW_EXAMINATION_CHARGES_DETAIL = 'new_examination_charges_detail';
     private const EXAMINATION_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES_DETAIL = 'new_examination_charges_detail.examination_charges_id';
-    private const NEW_EXAM_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES = 'new_examination_charges_detail.new_exam_charges_id';
-    private const NEW_EXAMINATION_CHARGES = 'new_examination_charges';
+    private const ID_IN_EXAMINATION_CHARGES = 'examination_charges.id';
     private const ID_IN_NEW_EXAMINATION_CHARGES = 'new_examination_charges.id';
-    private const CATEGORY_AND_DEVICE_NAME = 'category, device_name';
-    private const PRICE = 'price';
-    private const TA_PRICE = 'ta_price';
-    private const VT_PRICE = 'vt_price';
-    private const DEVICE_NAME = 'device_name';
-    private const CATEGORY = 'category';
-    private const DURATION = 'duration';
+    private const IS_ACTIVE_IN_EXAMINATION_CHARGES = 'examination_charges.is_active';
+    private const IS_IMPLEMENT = 'is_implement';
+    private const MESSAGE = 'message';
+    private const NEW_CHARGE_SUCCEED_UPDATED = 'New Charge successfully updated';
+    private const NEW_EXAM_CHARGES_ID = 'new_exam_charges_id';
+    private const NEW_EXAM_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES = 'new_examination_charges_detail.new_exam_charges_id';
+    private const NEW_EXAMINATION_CHARGE = "NEW EXAMINATION CHARGE";
+    private const NEW_EXAMINATION_CHARGES = 'new_examination_charges';
+    private const NEW_EXAMINATION_CHARGES_DETAIL = 'new_examination_charges_detail';
     private const NEW_PRICE = 'new_price';
     private const NEW_TA_PRICE = 'new_ta_price';
     private const NEW_VT_PRICE = 'new_vt_price';
-    private const DATE_FORMAT = "Y-m-d H:i:s";
-    private const NEW_EXAM_CHARGES_ID = 'new_exam_charges_id';
-    private const ADMIN_NEWCHARGE = '/admin/newcharge/';
+    private const PRICE = 'price';
+    private const SEARCH = 'search';
+    private const SAVE_FAILED = 'Save failed';
+    private const SUCCEED = 'succeed';
+    private const TA_PRICE = 'ta_price';
+    private const VALID_FROM = 'valid_from';
+    private const VT_PRICE = 'vt_price';
 
     /**
      * Create a new controller instance.
@@ -77,64 +82,62 @@ class NewExaminationChargeController extends Controller
      */
     public function index(Request $request)
     {
-        $currentUser = Auth::user();
+        //initial var
+        $logService = new LogService();
+        $paginate = 10;
+        $search = trim($request->input(self::SEARCH));
+        $status = '';
+        $dataNotFound = '';
 
-        if ($currentUser){
-            $message = null;
-            $paginate = 10;
-            $search = trim($request->input(self::SEARCH));
-            $before = null;
-            $after = null;
-            $status = '';
-            
-            $query = NewExaminationCharge::whereNotNull('created_at');
-            if ($search != null){
-                    $query = $query->where('name','like','%'.$search.'%');
-
-                    $logs = new Logs;
-                    $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                    $logs->action = "Search Name";
-                    $datasearch = array(self::SEARCH=>$search);
-                    $logs->data = json_encode($datasearch);
-                    $logs->created_by = $currentUser->id;
-                    $logs->page = self::NEW_EXAMINATION_CHARGE;
-                    $logs->save();
-            }
-            
-            if ($request->has(self::IS_IMPLEMENT)){
-                $status = $request->get(self::IS_IMPLEMENT);
-                if($request->input(self::IS_IMPLEMENT) != 'all'){
-                    $query->where(self::IS_IMPLEMENT, $request->get(self::IS_IMPLEMENT));
-                }
-            }
-
-            if ($request->has(self::BEFORE_DATE)){
-                $query->where(DB::raw('DATE(valid_from)'), '<=', $request->get(self::BEFORE_DATE));
-                $before = $request->get(self::BEFORE_DATE);
-            }
-
-            if ($request->has(self::AFTER_DATE)){
-                $query->where(DB::raw('DATE(valid_from)'), '>=', $request->get(self::AFTER_DATE));
-                $after = $request->get(self::AFTER_DATE);
-            }
-
-            $newExaminationCharge = $query->orderBy(self::VALID_FROM, 'desc')->paginate($paginate);
-            
-            if (count($newExaminationCharge) == 0){
-                $message = 'Data not found';
-            }
-
-            $newCharge = NewExaminationCharge::where(self::IS_IMPLEMENT,0)->orderBy(self::VALID_FROM,"desc")->get();
-            
-            return view('admin.newcharge.index')
-                ->with('new_charge', $newCharge)
-                ->with(self::MESSAGE, $message)
-                ->with('data', $newExaminationCharge)
-                ->with(self::SEARCH, $search)
-                ->with(self::BEFORE_DATE, $before)
-                ->with(self::AFTER_DATE, $after)
-                ->with('status', $status);
+        // get query
+        $newCharge = NewExaminationCharge::where(self::IS_IMPLEMENT,0)->orderBy(self::VALID_FROM,"desc")->get();
+        $queryFilter = new QueryFilter($request, NewExaminationCharge::whereNotNull('created_at'));
+        
+        //filter query
+        if ($search != null){
+                $query = $queryFilter
+                    ->getQuery()
+                    ->where('name','like','%'.$search.'%')
+                ;
+                $queryFilter->updateQuery($query);
+                $logService->createLog(' Search Name', self::NEW_EXAMINATION_CHARGE, json_encode(array(self::SEARCH=>$search)) );
         }
+        if ($request->has(self::IS_IMPLEMENT)){
+            $status = $request->get(self::IS_IMPLEMENT);
+            if($request->input(self::IS_IMPLEMENT) != 'all'){
+                $query = $queryFilter
+                    ->getQuery()
+                    ->where(self::IS_IMPLEMENT, $request->get(self::IS_IMPLEMENT))
+                ;
+                $queryFilter->updateQuery($query);
+            }
+        }
+        $queryFilter
+            ->beforeDate(DB::raw('DATE(valid_from)'))
+            ->afterDate(DB::raw('DATE(valid_from)'))
+            ->getSortedAndOrderedData(self::VALID_FROM, 'desc')
+        ;
+
+        //get data from query
+        $newExaminationCharge = $queryFilter
+            ->getQuery()
+            ->paginate($paginate);
+        
+        //leave message if not found
+        if (count($newExaminationCharge) == 0){
+            $dataNotFound = 'Data not found';
+        }
+
+        //return view
+        return view('admin.newcharge.index')
+            ->with('new_charge', $newCharge)
+            ->with('dataNotFound', $dataNotFound)
+            ->with('data', $newExaminationCharge)
+            ->with(self::SEARCH, $search)
+            ->with(self::BEFORE_DATE, $queryFilter->before)
+            ->with(self::AFTER_DATE, $queryFilter->after)
+            ->with('status', $status);
+        
     }
 
     /**
@@ -161,6 +164,7 @@ class NewExaminationChargeController extends Controller
     public function store(Request $request)
     {
         $currentUser = Auth::user();
+        $logService = new LogService();
 			
         $charge = new NewExaminationCharge;
         $charge->id = Uuid::uuid4();
@@ -172,20 +176,11 @@ class NewExaminationChargeController extends Controller
 
         try{
             $charge->save();
-
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Create New Charge";
-            $logs->data = $charge;
-            $logs->created_by = $currentUser->id;
-            $logs->page = self::NEW_EXAMINATION_CHARGE;
-            $logs->save();
-
+            $logService->createLog('Create New Charge', self::NEW_EXAMINATION_CHARGE, $charge);
             Session::flash(self::MESSAGE, 'New Charge successfully created');
             return redirect(self::ADMIN_NEWCHARGE.$charge->id);
         } catch(Exception $e){
-            Session::flash(self::ERROR, self::SAFE_FAILED);
-            return redirect('/admin/newcharge/create');
+            return redirect('/admin/newcharge/create')->with(self::ERROR, self::SAVE_FAILED);
         }
     }
 
@@ -194,24 +189,27 @@ class NewExaminationChargeController extends Controller
         $newCharge = NewExaminationCharge::find($id);
         if($newCharge->is_implement == 0){
             $query = DB::table(self::EXAMINATION_CHARGES)
-                    ->leftJoin(self::NEW_EXAMINATION_CHARGES_DETAIL, function($q) use ($id)
-                    {
-                        $q->on(self::ID_IN_EXAMINATION_CHARGES, '=', self::EXAMINATION_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES_DETAIL)
-                            ->where(self::NEW_EXAM_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES, '=', "$id");
-                    })
-                    ->leftJoin(self::NEW_EXAMINATION_CHARGES, self::NEW_EXAM_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES, '=', self::ID_IN_NEW_EXAMINATION_CHARGES)
-                    ->select(self::ALL_EXAMINATION_CHARGES)
-                    ->whereNull(self::EXAMINATION_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES_DETAIL)
-                    ->whereNotNull(self::CREATED_AT_IN_EXAMINATION_CHARGES)->where(self::IS_ACTIVE_IN_EXAMINATION_CHARGES, 1);
+                        ->leftJoin(self::NEW_EXAMINATION_CHARGES_DETAIL, function($q) use ($id)
+                            {
+                                $q->on(self::ID_IN_EXAMINATION_CHARGES, '=', self::EXAMINATION_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES_DETAIL)
+                                    ->where(self::NEW_EXAM_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES, '=', "$id")
+                                ;
+                            })
+                        ->leftJoin(self::NEW_EXAMINATION_CHARGES, self::NEW_EXAM_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES, '=', self::ID_IN_NEW_EXAMINATION_CHARGES)
+                        ->select(self::ALL_EXAMINATION_CHARGES)
+                        ->whereNull(self::EXAMINATION_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES_DETAIL)
+                        ->whereNotNull(self::CREATED_AT_IN_EXAMINATION_CHARGES)->where(self::IS_ACTIVE_IN_EXAMINATION_CHARGES, 1)
+                    ;
 
             $examinationCharge = $query->orderByRaw(self::CATEGORY_AND_DEVICE_NAME)->get();
 
             return view('admin.newcharge.createDetail')
                 ->with('id', $id)
                 ->with(self::EXAMINATION_CHARGE, $examinationCharge)
-                ;
+            ;
         }else{
-            return redirect('admin/newcharge/'.$id)->with(self::ERROR, 'The data has been processed!');
+            Session::flash(self::ERROR, 'The data has been processed!');
+            return redirect('admin/newcharge/'.$id);
         }
     }
 
@@ -223,9 +221,14 @@ class NewExaminationChargeController extends Controller
         $charge->id = Uuid::uuid4();
         $charge->created_by = $currentUser->id;
         $charge->created_at = date(self::DATE_FORMAT);
-        $redirect_if_error = self::ADMIN_NEWCHARGE.$id.'/createDetail';
         
-        $this->customSaveDetail($charge,$id,$request,$currentUser,$redirect_if_error);
+        $customSave = $this->customSaveDetail($charge,$id,$request,$currentUser);
+
+        if($customSave == self::SUCCEED){
+            Session::flash(self::MESSAGE, self::NEW_CHARGE_SUCCEED_UPDATED);
+            return redirect(self::ADMIN_NEWCHARGE.$id);
+        }
+        return redirect(self::ADMIN_NEWCHARGE.$id.'/createDetail')->with(self::ERROR, self::SAVE_FAILED);
     }
 
     /**
@@ -236,54 +239,44 @@ class NewExaminationChargeController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $currentUser = Auth::user();
-
-        if ($currentUser){
-            $charge = NewExaminationCharge::find($id);
-
-            $message = null;
-            $paginate = 10;
-            $search = trim($request->input(self::SEARCH));
-            $category = '';
-            
-            $query = NewExaminationChargeDetail::whereNotNull('created_at')->where(self::NEW_EXAM_CHARGES_ID, $id);
-            
-            if ($search != null){
-                $query->where(function($qry) use($search){
-                    $qry->where(self::DEVICE_NAME, 'like', '%'.strtolower($search).'%')
-                    ->orWhere('stel', 'like', '%'.strtolower($search).'%');
-                });
-
-                    $logs = new Logs;
-                    $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                    $logs->action = "Search Charge";
-                    $datasearch = array(self::SEARCH=>$search);
-                    $logs->data = json_encode($datasearch);
-                    $logs->created_by = $currentUser->id;
-                    $logs->page = self::NEW_EXAMINATION_CHARGE;
-                    $logs->save();
-            }
-            
-            if ($request->has(self::CATEGORY)){
-                $category = $request->get(self::CATEGORY);
-                if($request->input(self::CATEGORY) != 'all'){
-                    $query->where(self::CATEGORY,'like', '%'.$request->get(self::CATEGORY).'%');
-                }
-            }
-
-            $examinationCharge = $query->orderByRaw(self::CATEGORY_AND_DEVICE_NAME)->paginate($paginate);
-
-            if (count($examinationCharge) == 0){
-                $message = 'Data not found';
-            }
-            
-            return view('admin.newcharge.show')
-                ->with('charge', $charge)
-                ->with(self::MESSAGE, $message)
-                ->with('data', $examinationCharge)
-                ->with(self::SEARCH, $search)
-                ->with(self::CATEGORY, $category);
+        //intial var
+        $paginate = 10;
+        $search = trim($request->input(self::SEARCH));
+        $category = '';
+        $dataNotFound = '';
+        
+        //get initial data
+        $logService = new LogService();
+        $charge = NewExaminationCharge::find($id);
+        $query = NewExaminationChargeDetail::whereNotNull('created_at')->where(self::NEW_EXAM_CHARGES_ID, $id);
+        
+        if ($search != null){
+            $query->where(function($qry) use($search){
+                $qry->where(self::DEVICE_NAME, 'like', '%'.strtolower($search).'%')
+                ->orWhere('stel', 'like', '%'.strtolower($search).'%');
+            });
+                $logService->createLog('Search Charge', self::NEW_EXAMINATION_CHARGE, json_encode(array(self::SEARCH=>$search)));
         }
+        
+        if ($request->has(self::CATEGORY)){
+            $category = $request->get(self::CATEGORY);
+            if($request->input(self::CATEGORY) != 'all'){
+                $query->where(self::CATEGORY,'like', '%'.$request->get(self::CATEGORY).'%');
+            }
+        }
+
+        $examinationCharge = $query->orderByRaw(self::CATEGORY_AND_DEVICE_NAME)->paginate($paginate);
+
+        if (count($examinationCharge) == 0){
+            $dataNotFound = 'Data not found';
+        }
+        
+        return view('admin.newcharge.show')
+            ->with('charge', $charge)
+            ->with('dataNotFound', $dataNotFound)
+            ->with('data', $examinationCharge)
+            ->with(self::SEARCH, $search)
+            ->with(self::CATEGORY, $category);
     }
 
     /**
@@ -306,7 +299,7 @@ class NewExaminationChargeController extends Controller
         return view('admin.newcharge.edit')
             ->with('data', $charge)
             ->with(self::EXAMINATION_CHARGE, $examinationCharge)
-            ;
+        ;
     }
 
     /**
@@ -319,9 +312,9 @@ class NewExaminationChargeController extends Controller
     public function update(Request $request, $id)
     {
         $currentUser = Auth::user();
-
         $charge = NewExaminationCharge::find($id);
-        $oldData = $charge;
+        $logService = new LogService();
+        $oldData = clone $charge;
 
         if ($request->has('name')){
             $charge->name = $request->input('name');
@@ -341,20 +334,12 @@ class NewExaminationChargeController extends Controller
         try{
             $charge->save();
             if($charge->is_implement == '1'){$this->implementNew($id);}
-            Session::flash(self::MESSAGE, 'New Charge successfully updated');
-
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Update New Charge";
-            $logs->data = $oldData;
-            $logs->created_by = $currentUser->id;
-            $logs->page = self::NEW_EXAMINATION_CHARGE;
-            $logs->save();
-
+            
+            $logService->createLog('Update New Charge', self::NEW_EXAMINATION_CHARGE, $oldData);
+            Session::flash(self::MESSAGE, self::NEW_CHARGE_SUCCEED_UPDATED);
             return redirect(self::ADMIN_NEWCHARGE);
         } catch(Exception $e){
-            Session::flash(self::ERROR, self::SAFE_FAILED);
-            return redirect(self::ADMIN_NEWCHARGE.$charge->id.'/edit');
+            return redirect(self::ADMIN_NEWCHARGE.$charge->id.'/edit')->with(self::ERROR, self::SAVE_FAILED);
         }
     }
 
@@ -364,16 +349,17 @@ class NewExaminationChargeController extends Controller
         $newChargeDetail = NewExaminationChargeDetail::find($exam_id);
         
         $query = DB::table(self::EXAMINATION_CHARGES)
-                ->leftJoin(self::NEW_EXAMINATION_CHARGES_DETAIL, function($q) use ($id)
-                    {
-                        $q->on(self::ID_IN_EXAMINATION_CHARGES, '=', self::EXAMINATION_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES_DETAIL)
-                            ->where(self::NEW_EXAM_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES, '=', "$id");
-                    })
-                ->leftJoin(self::NEW_EXAMINATION_CHARGES, self::NEW_EXAM_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES, '=', self::ID_IN_NEW_EXAMINATION_CHARGES)
-                ->select(self::ALL_EXAMINATION_CHARGES)
-                ->whereNull(self::EXAMINATION_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES_DETAIL)
-                ->orWhere('new_examination_charges_detail.id', $exam_id)
-                ->whereNotNull(self::CREATED_AT_IN_EXAMINATION_CHARGES)->where(self::IS_ACTIVE_IN_EXAMINATION_CHARGES, 1);
+            ->leftJoin(self::NEW_EXAMINATION_CHARGES_DETAIL, function($q) use ($id)
+                {
+                    $q->on(self::ID_IN_EXAMINATION_CHARGES, '=', self::EXAMINATION_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES_DETAIL)
+                        ->where(self::NEW_EXAM_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES, '=', "$id");
+                })
+            ->leftJoin(self::NEW_EXAMINATION_CHARGES, self::NEW_EXAM_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES, '=', self::ID_IN_NEW_EXAMINATION_CHARGES)
+            ->select(self::ALL_EXAMINATION_CHARGES)
+            ->whereNull(self::EXAMINATION_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES_DETAIL)
+            ->orWhere('new_examination_charges_detail.id', $exam_id)
+            ->whereNotNull(self::CREATED_AT_IN_EXAMINATION_CHARGES)->where(self::IS_ACTIVE_IN_EXAMINATION_CHARGES, 1)
+        ;
         $examinationCharge = $query->orderByRaw(self::CATEGORY_AND_DEVICE_NAME)->get();
 
         return view('admin.newcharge.editDetail')
@@ -382,18 +368,24 @@ class NewExaminationChargeController extends Controller
             ->with('data', $newChargeDetail)
             ->with(self::EXAMINATION_CHARGE, $examinationCharge)
             ->with(self::IS_IMPLEMENT, $newCharge->is_implement)
-            ;
+        ;
     }
 
     public function updateDetail(Request $request, $id, $exam_id)
     {
         $currentUser = Auth::user();
-
         $charge = NewExaminationChargeDetail::find($exam_id);
-        $redirect_if_error = self::ADMIN_NEWCHARGE.$id.'/editDetail/'.$exam_id;
         
-        $this->customSaveDetail($charge,$id,$request,$currentUser,$redirect_if_error);
+        $customSave = $this->customSaveDetail($charge,$id,$request,$currentUser);
+
+        if($customSave == self::SUCCEED){
+            Session::flash(self::MESSAGE, self::NEW_CHARGE_SUCCEED_UPDATED);
+            return redirect(self::ADMIN_NEWCHARGE.$id);
+        }
+        Session::flash(self::ERROR, self::SAVE_FAILED);
+        return redirect(self::ADMIN_NEWCHARGE.$id.'/editDetail/'.$exam_id);
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -405,26 +397,16 @@ class NewExaminationChargeController extends Controller
     {
         NewExaminationChargeDetail::where(self::NEW_EXAM_CHARGES_ID, $id)->delete();
         $charge = NewExaminationCharge::find($id);
-        $currentUser = Auth::user();
-        $oldData = $charge;
+        $logService = new LogService();
+        $oldData = clone $charge;
         if ($charge){
             try{
                 $charge->delete();
-
-                
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Delete Charge";
-                $logs->data = $oldData;
-                $logs->created_by = $currentUser->id;
-                $logs->page = self::NEW_EXAMINATION_CHARGE;
-                $logs->save();
-                
+                $logService->createLog('Delete Charge', self::NEW_EXAMINATION_CHARGE, $oldData);
                 Session::flash(self::MESSAGE, 'New Charge successfully deleted');
                 return redirect(self::ADMIN_NEWCHARGE);
             }catch (Exception $e){
-                Session::flash(self::ERROR, 'Delete failed');
-                return redirect(self::ADMIN_NEWCHARGE);
+                return redirect(self::ADMIN_NEWCHARGE)->with(self::ERROR, 'Delete failed');
             }
         }
     }
@@ -432,53 +414,45 @@ class NewExaminationChargeController extends Controller
     public function deleteDetail($id, $exam_id)
     {
         $charge = NewExaminationChargeDetail::find($exam_id);
-        $currentUser = Auth::user();
-        $oldData = $charge;
+        $logService = new LogService();
+        $oldData = clone $charge;
         if ($charge){
             try{
                 $charge->delete();
-
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Delete Charge Detail";
-                $logs->data = $oldData;
-                $logs->created_by = $currentUser->id;
-                $logs->page = self::NEW_EXAMINATION_CHARGE;
-                $logs->save();
-                
+                $logService->createLog('Delete Charge Detail', self::NEW_EXAMINATION_CHARGE, $oldData);                
                 Session::flash(self::MESSAGE, 'New Charge detail successfully deleted');
                 return redirect(self::ADMIN_NEWCHARGE.$id);
             }catch (Exception $e){
-                Session::flash(self::ERROR, 'Delete failed');
-                return redirect(self::ADMIN_NEWCHARGE.$id);
+                return redirect(self::ADMIN_NEWCHARGE.$id)->with(self::ERROR, 'Delete failed');
             }
         }
     }
 
     public function implementNew($id){
         $currentUser = Auth::user();
+        $logService = new LogService();
 
         /* query id examination_charges yang tidak ada di new_examination_charges_detail, lalu dinonaktifkan (is_active == 0) */
-
         $query = DB::table(self::EXAMINATION_CHARGES)
-                ->leftJoin(self::NEW_EXAMINATION_CHARGES_DETAIL, function($q) use ($id)
-                    {
-                        $q->on(self::ID_IN_EXAMINATION_CHARGES, '=', self::EXAMINATION_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES_DETAIL)
-                            ->where(self::NEW_EXAM_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES, '=', "$id");
-                    })
-                ->leftJoin(self::NEW_EXAMINATION_CHARGES, self::NEW_EXAM_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES, '=', self::ID_IN_NEW_EXAMINATION_CHARGES)
-                ->select(self::ID_IN_EXAMINATION_CHARGES)
-                ->whereNull(self::EXAMINATION_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES_DETAIL)
-                ->whereNotNull(self::CREATED_AT_IN_EXAMINATION_CHARGES)->where(self::IS_ACTIVE_IN_EXAMINATION_CHARGES, 1);
+            ->leftJoin(self::NEW_EXAMINATION_CHARGES_DETAIL, function($q) use ($id){
+                $q->on(self::ID_IN_EXAMINATION_CHARGES, '=', self::EXAMINATION_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES_DETAIL)
+                    ->where(self::NEW_EXAM_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES, '=', "$id");
+            })
+            ->leftJoin(self::NEW_EXAMINATION_CHARGES, self::NEW_EXAM_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES, '=', self::ID_IN_NEW_EXAMINATION_CHARGES)
+            ->select(self::ID_IN_EXAMINATION_CHARGES)
+            ->whereNull(self::EXAMINATION_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES_DETAIL)
+            ->whereNotNull(self::CREATED_AT_IN_EXAMINATION_CHARGES)->where(self::IS_ACTIVE_IN_EXAMINATION_CHARGES, 1)
+        ;
+        
         $examinationCharge = $query->get();
-
         for ($i=0; $i <count($examinationCharge) ; $i++) {
             $update = DB::table(self::EXAMINATION_CHARGES)
                 ->where('id', $examinationCharge[$i]->id)
                 ->update([
                     'is_active'     => '0',
                     'updated_by'    => $currentUser->id
-                ]);
+                ])
+            ;
         }
 
         /* implement dengan cek examination_charges.id = new_examination_charges_detail.examination_charges_id */       
@@ -514,14 +488,7 @@ class NewExaminationChargeController extends Controller
 
                 try{
                     $charge->save();
-
-                    $logs = new Logs;
-                    $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                    $logs->action = "Create Charge";
-                    $logs->data = $charge;
-                    $logs->created_by = $currentUser->id;
-                    $logs->page = "EXAMINATION CHARGE";
-                    $logs->save();
+                    $logService->createLog('Create Charge', 'EXAMINATION CHARGE', $charge);
                 } catch(Exception $e){
                     continue;
                 }
@@ -529,8 +496,9 @@ class NewExaminationChargeController extends Controller
         }
     }
 
-    private function customSaveDetail($charge,$id,Request $request,$currentUser,$redirect)
+    private function customSaveDetail($charge,$id,Request $request,$currentUser)
     {
+        $logService = new LogService();
         $charge->new_exam_charges_id = $id;
         if ($request->has(self::EXAMINATION_CHARGES_ID)){
             $charge->examination_charges_id = $request->input(self::EXAMINATION_CHARGES_ID);
@@ -556,21 +524,12 @@ class NewExaminationChargeController extends Controller
 
         try{
             $charge->save();
-
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Edit New Charge Detail";
-            $logs->data = $charge;
-            $logs->created_by = $currentUser->id;
-            $logs->page = self::NEW_EXAMINATION_CHARGE;
-            $logs->save();
-
-            Session::flash(self::MESSAGE, 'New Charge successfully updated');
-            return redirect(self::ADMIN_NEWCHARGE.$id);
+            $logService->createLog('Edit New Charge Detail', self::NEW_EXAMINATION_CHARGE, $charge);
+            $status = self::SUCCEED;
         } catch(Exception $e){
-            Session::flash(self::ERROR, self::SAFE_FAILED);
-            return redirect($redirect);
-            // kembali pada return redirect(self::ADMIN_NEWCHARGE.$id.'/editDetail/'.$exam_id)
+            $status = 'error';
         }
+
+        return $status;
     }
 }
