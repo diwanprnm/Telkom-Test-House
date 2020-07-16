@@ -13,7 +13,7 @@
 
 $factory->define(App\User::class, function (Faker\Generator $faker) {
     return [
-        'id' => str_random(2),
+        'id' => $faker->uuid,
         'role_id' =>1,
         'email' => $faker->safeEmail,
         'password' => bcrypt(str_random(10)),
@@ -32,7 +32,7 @@ $factory->define(App\CalibrationCharge::class, function (Faker\Generator $faker)
 
 $factory->define(App\Company::class, function (Faker\Generator $faker) {
     return [
-    	'id' => $faker->numberBetween(1000,9000),
+    	'id' => $faker->uuid,
         'name' => $faker->word,
         'address' => str_random(10),
         'city' => str_random(10),
@@ -58,7 +58,7 @@ $factory->define(App\Company::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Feedback::class, function (Faker\Generator $faker) {
     return [
-        'id' => $faker->numberBetween(1000,9000),
+        'id' => $faker->uuid,
         'email' => $faker->safeEmail,
         'subject' => $faker->sentence(2, true),
         'message' => $faker->sentence(6, true),
@@ -73,7 +73,7 @@ $factory->define(App\Feedback::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Device::class, function (Faker\Generator $faker) {
     return [
-        'id' => $faker->numberBetween(1000,9000),
+        'id' => $faker->uuid,
         'name' => $faker->word,
         'mark' => $faker->word,
         'capacity' => $faker->word,
@@ -95,7 +95,7 @@ $factory->define(App\Device::class, function (Faker\Generator $faker) {
 
 $factory->define(App\ExaminationLab::class, function (Faker\Generator $faker) {
     return [
-        'id' => $faker->numberBetween(1000,9000),
+        'id' => $faker->uuid,
         'name' => $faker->word,
         'description' => $faker->sentence(6, true),
         'is_active' => '1',
@@ -112,7 +112,7 @@ $factory->define(App\ExaminationLab::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Examination::class, function (Faker\Generator $faker) {
     return [
-        'id' => $faker->numberBetween(1000,9000),
+        'id' => $faker->uuid,
          'examination_type_id' => $faker->numberBetween(1,4),
         'company_id' => function () {
             return factory(App\Company::class)->create()->id;
@@ -176,7 +176,7 @@ $factory->define(App\Examination::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Questioner::class, function (Faker\Generator $faker) {
     return [
-        'id' => $faker->numberBetween(1000,9000),
+        'id' => $faker->uuid,
         'examination_id' => function () {
             return factory(App\Examination::class)->create()->id;
         },
@@ -241,7 +241,7 @@ $factory->define(App\Questioner::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Income::class, function (Faker\Generator $faker) {
     return [
-        'id' => $faker->numberBetween(1000,9000),
+        'id' => $faker->uuid,
         'company_id' => function () {
             return factory(App\Company::class)->create()->id;
         },
@@ -256,5 +256,66 @@ $factory->define(App\Income::class, function (Faker\Generator $faker) {
         'updated_by' => '1',
         'created_at'=> Carbon\Carbon::now(),
         'updated_at'=> Carbon\Carbon::now()
+    ];
+});
+
+$factory->define(App\ExaminationCharge::class, function (Faker\Generator $faker) {
+    return [
+        'id' => $faker->uuid,
+        'device_name' => $faker->word,
+        'stel' => $faker->word,
+        'category' => 'Lab CPE',
+        'duration' => $faker->numberBetween(5,60),
+        'price' => $faker->numberBetween(100,900).'0000',
+        'is_active' => 1,
+        'created_by' => 1,
+        'updated_by' => 1,
+        'created_at'=> Carbon\Carbon::now(),
+        'updated_at'=> Carbon\Carbon::now(),
+        'vt_price' => $faker->numberBetween(100,900).'0000',
+        'ta_price' => $faker->numberBetween(100,900).'0000'
+    ];
+});
+
+$factory->define(App\NewExaminationCharge::class, function (Faker\Generator $faker) {
+    return [
+        'id' => $faker->uuid,
+        'name' => $faker->word,
+        'description'=> $faker->sentence(6, true),
+        'valid_from' => Carbon\Carbon::now(),
+        'is_implement' => 0,
+        'created_by' => 1,
+        'updated_by' => 1,
+        'created_at' => Carbon\Carbon::now(),
+        'updated_at' => Carbon\Carbon::now(),
+    ];
+}); //NewExaminationChargeDetail
+
+$factory->define(App\NewExaminationChargeDetail::class, function (Faker\Generator $faker) {
+    $examination_charges = factory(App\ExaminationCharge::class)->create();
+    return [
+        'id' => $faker->uuid,
+        'new_exam_charges_id' => function () {
+            return factory(App\NewExaminationCharge::class)->create()->id;
+        },
+        'examination_charges_id' => $examination_charges->id,
+        'price' => $examination_charges->price,
+        'vt_price' => $examination_charges->vt_price,
+        'ta_price'=> $examination_charges->ta_price,
+        'new_price' => $faker->numberBetween(100,900).'0000',
+        'new_vt_price' => $faker->numberBetween(100,900).'0000',
+        'new_ta_price' => $faker->numberBetween(100,900).'0000',
+        'created_by' => 1,
+        'updated_by' => 1,
+        'created_at' => Carbon\Carbon::now(),
+        'updated_at' => Carbon\Carbon::now(),
+        'device_name' => $faker->word,
+        'stel' => $faker->word,
+        'category' => 'Lab CPE',
+        'duration' => $faker->numberBetween(5,60),
+        'old_device_name' => $examination_charges->device_name,
+        'old_stel' => $examination_charges->stel,
+        'old_category' => $examination_charges->category,
+        'old_duration' => $examination_charges->duration,
     ];
 });
