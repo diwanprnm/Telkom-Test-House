@@ -27,6 +27,19 @@ class DevicencController extends Controller
      *
      * @return void
      */
+	private const SEARCH = 'search';
+	private const EXAM = 'examinations';
+	private const DEVICE = 'devices';
+	private const EDI = 'examinations.device_id';
+	private const DEV_ID = 'devices.id';
+	private const COMPANIES = 'companies';
+	private const COMP_ID = 'companies.id';
+	private const DEVICE_NAME = 'devices.name';
+	private const DEVICE_MARK = 'devices.mark';
+	private const DEVICE_MOD = 'devices.model';
+	private const QA_DATE = 'qa_date';
+	private const ADMIN = '/admin/devicenc/';
+	
     public function __construct()
     {
         $this->middleware('auth.admin');
@@ -45,7 +58,7 @@ class DevicencController extends Controller
             $message = null;
             $messageAfter = null;
             $paginate = 1000;
-            $search = trim($request->input('search'));
+            $search = trim($request->input($this::SEARCH));
             $search2 = trim($request->input('search2'));
 			$before = null;
             $after = null;
@@ -53,9 +66,9 @@ class DevicencController extends Controller
             $tab = $request->input('tab');
             $expDate = Carbon::now()->subMonths(6);
             
-            $dev = DB::table('examinations')
-			->join('devices', 'examinations.device_id', '=', 'devices.id')
-			->join('companies', 'examinations.company_id', '=', 'companies.id')
+            $dev = DB::table($this::EXAM)
+			->join($this::DEVICE, $this::EDI, '=', $this::DEV_ID)
+			->join($this::COMPANIES, 'examinations.company_id', '=', $this::COMP_ID)
 			->select(
 					'examinations.price AS totalBiaya',
 					'examinations.spk_code',
@@ -94,9 +107,10 @@ class DevicencController extends Controller
 			->where('devices.status', 1)
 			;
 
-			$afterDev = DB::table('examinations')
-			->join('devices', 'examinations.device_id', '=', 'devices.id')
-			->join('companies', 'examinations.company_id', '=', 'companies.id')
+			$afterDev = 
+			DB::table($this::EXAM)
+			->join($this::DEVICE, $this::EDI, '=', $this::DEV_ID)
+			->join($this::COMPANIES, 'examinations.company_id', '=', $this::COMP_ID)
 			->select(
 					'examinations.price AS totalBiaya',
 					'examinations.spk_code',
@@ -149,10 +163,10 @@ class DevicencController extends Controller
 
             if ($search != null){
         		$dev->where(function($q) use($search){
-					$q->where('devices.name','like','%'.$search.'%')
+					$q->where($this::DEVICE_NAME,'like','%'.$search.'%')
 						->orWhere('companies.name','like','%'.$search.'%')
 						->orWhere('devices.mark','like','%'.$search.'%')
-						->orWhere('devices.model','like','%'.$search.'%');
+						->orWhere($this::DEVICE_MOD,'like','%'.$search.'%');
 				});
 				
 
@@ -169,10 +183,10 @@ class DevicencController extends Controller
 
             if ($search2 != null){
         		$afterDev->where(function($q) use($search2){
-					$q->where('devices.name','like','%'.$search2.'%')
+					$q->where($this::DEVICE_NAME,'like','%'.$search2.'%')
 						->orWhere('companies.name','like','%'.$search2.'%')
 						->orWhere('devices.mark','like','%'.$search2.'%')
-						->orWhere('devices.model','like','%'.$search2.'%');
+						->orWhere($this::DEVICE_MOD,'like','%'.$search2.'%');
 				});
 				
 
@@ -187,13 +201,13 @@ class DevicencController extends Controller
 				
             }
 
-			$data = $dev->orderBy('qa_date', 'desc')->paginate($paginate);
+			$data = $dev->orderBy($this::QA_DATE, 'desc')->paginate($paginate);
             
             if (count($data) == 0){
                 $message = 'Data not found';
             }
 			
-			$dataAfter = $afterDev->orderBy('qa_date', 'desc')->paginate($paginate);
+			$dataAfter = $afterDev->orderBy($this::QA_DATE, 'desc')->paginate($paginate);
 			$dataAfter->setPageName('other_page');
             
             if (count($dataAfter) == 0){
@@ -206,7 +220,7 @@ class DevicencController extends Controller
                 ->with('messageAfter', $messageAfter)
                 ->with('data', $data)
                 ->with('dataAfter', $dataAfter)
-                ->with('search', $search)
+                ->with($this::SEARCH, $search)
                 ->with('search2', $search2)
                 ->with('before_date', $before)
                 ->with('after_date', $after);
@@ -221,16 +235,15 @@ class DevicencController extends Controller
         // the user's e-mail address, the amount paid, and the payment
         // timestamp.
 
-        $search = trim($request->input('search'));
-		$before = null;
-        $after = null;
+        $search = trim($request->input($this::SEARCH));
+		
         
         $tab = $request->input('tab');
         $expDate = Carbon::now()->subMonths(6);
             
-        $dev = DB::table('examinations')
-		->join('devices', 'examinations.device_id', '=', 'devices.id')
-		->join('companies', 'examinations.company_id', '=', 'companies.id')
+        $dev = DB::table($this::EXAM)
+		->join($this::DEVICE, $this::EDI, '=', $this::DEV_ID)
+		->join($this::COMPANIES, 'examinations.company_id', '=', $this::COMP_ID)
 		->select(
 				'examinations.price AS totalBiaya',
 				'examinations.spk_code',
@@ -269,9 +282,9 @@ class DevicencController extends Controller
 		->where('devices.status', 1)
 		;
 
-		$afterDev = DB::table('examinations')
-		->join('devices', 'examinations.device_id', '=', 'devices.id')
-		->join('companies', 'examinations.company_id', '=', 'companies.id')
+		$afterDev = DB::table($this::EXAM)
+		->join($this::DEVICE, $this::EDI, '=', $this::DEV_ID)
+		->join($this::COMPANIES, 'examinations.company_id', '=', $this::COMP_ID)
 		->select(
 				'examinations.price AS totalBiaya',
 				'examinations.spk_code',
@@ -310,7 +323,7 @@ class DevicencController extends Controller
 					$q->whereDate('examinations.qa_date','<',$expDate)
 						->orWhere('devices.status', '-1');
 				});
-		;
+		
 
 		if ($request->has('before_date')){
 			$dev->where('devices.valid_thru', '<=', $request->get('before_date'));
@@ -325,29 +338,28 @@ class DevicencController extends Controller
         if ($search != null){
         	if($tab == 'tab-2'){
         		$afterDev->where(function($q) use($search){
-					$q->where('devices.name','like','%'.$search.'%')
+					$q->where($this::DEVICE_NAME,'like','%'.$search.'%')
 						->orWhere('companies.name','like','%'.$search.'%')
 						->orWhere('devices.mark','like','%'.$search.'%')
-						->orWhere('devices.model','like','%'.$search.'%');
+						->orWhere($this::DEVICE_MOD,'like','%'.$search.'%');
 				});
 
-				$data = $afterDev->orderBy('qa_date', 'desc')->get();
+				$data = $afterDev->orderBy($this::QA_DATE, 'desc')->get();
         	}else{
 				$dev->where(function($q) use($search){
-					$q->where('devices.name','like','%'.$search.'%')
+					$q->where($this::DEVICE_NAME,'like','%'.$search.'%')
 						->orWhere('companies.name','like','%'.$search.'%')
 						->orWhere('devices.mark','like','%'.$search.'%')
-						->orWhere('devices.model','like','%'.$search.'%');
+						->orWhere($this::DEVICE_MOD,'like','%'.$search.'%');
 				});
 
-				$data = $dev->orderBy('qa_date', 'desc')->get();
+				$data = $dev->orderBy($this::QA_DATE, 'desc')->get();
         	}			
         }else{
-        	if($tab == 'tab-2'){$data = $afterDev->orderBy('qa_date', 'desc')->get();}else{$data = $dev->orderBy('qa_date', 'desc')->get();}
+        	if($tab == 'tab-2'){$data = $afterDev->orderBy($this::QA_DATE, 'desc')->get();}else{$data = $dev->orderBy($this::QA_DATE, 'desc')->get();}
         }
 
         $examsArray = []; 
-
         // Define the Excel spreadsheet headers
         $examsArray[] = [
 			'No',
@@ -373,22 +385,11 @@ class DevicencController extends Controller
 			'Total Biaya'*/
 			'Tanggal Sidang'
 		]; 
-        
         // Convert each member of the returned collection into an array,
         // and append it to the payments array.
         $no = 1;
 		foreach ($data as $row) {
-			/*if($row->siup_date==''){
-				$siup_date = '';
-			}else{
-				$siup_date = date("d-m-Y", strtotime($row->siup_date));
-			}
-			if($row->qs_certificate_date==''){
-				$qs_certificate_date = '';
-			}else{
-				$qs_certificate_date = date("d-m-Y", strtotime($row->qs_certificate_date));
-			}*/
-
+		
 			$examsArray[] = [
 				$no,
 				// $row->jns_perusahaan,
@@ -415,7 +416,6 @@ class DevicencController extends Controller
 			];
 			$no++;
 		}
-
 		$logs = new Logs;
 		$currentUser = Auth::user();
         $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
@@ -424,15 +424,10 @@ class DevicencController extends Controller
         $logs->created_by = $currentUser->id;
         $logs->page = "Perangkat Tidak Lulus Uji";
         $logs->save();
-
         // Generate and return the spreadsheet
         Excel::create('Data Perangkat Tidak Lulus Uji', function($excel) use ($examsArray) {
 
             // Set the spreadsheet title, creator, and description
-            // $excel->setTitle('Payments');
-            // $excel->setCreator('Laravel')->setCompany('WJ Gilmore, LLC');
-            // $excel->setDescription('payments file');
-
             // Build the spreadsheet, passing in the payments array
             $excel->sheet('sheet1', function($sheet) use ($examsArray) {
                 $sheet->fromArray($examsArray, null, 'A1', false, false);
@@ -464,14 +459,14 @@ class DevicencController extends Controller
 	            $logs->save();
 
 	            Session::flash('message', 'Successfully Move Data');
-	            return redirect('/admin/devicenc/');
+	            return redirect($this::ADMIN);
         	} catch(Exception $e){
 	            Session::flash('error', 'Move failed');
-	            return redirect('/admin/devicenc/');
+	            return redirect($this::ADMIN);
 		    }
         }else{
             Session::flash('error', 'Undefined Data');
-            return redirect('/admin/devicenc/');
+            return redirect($this::ADMIN);
         }
 
     }
