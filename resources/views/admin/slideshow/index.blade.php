@@ -60,48 +60,61 @@
 							<caption>Slideshow List Table</caption>
 							<thead>
 								<tr>
-                                    <th class="center" scope="col">Aksi</th>
 									<th class="center" scope="col">Judul</th>
 									<th class="center" scope="col">Headline</th>
 									<th class="center" scope="col">Gambar</th>
 									<th class="center" scope="col">Timeout</th>
-                                    <th class="center" scope="col">Status</th>
+									<th class="center" scope="col">Status</th>
+									<th class="center" scope="col">Aksi</th>
 									<th class="center" scope="col"></th>
 								</tr>
 							</thead>
 							<tbody class="row_position">
-								<?php $no=1; ?>
-								@foreach($data as $item)
-									<tr id="{{ $item->id }}">
-										<td class="center">{{ $item->title }}</td>
-										<td class="center">{{ $item->headline }}</td>
-										<td class="center"><img src="{{asset('media/slideshow/'.$item->image)}}" width="240" alt="telkom-test-house-media-slideshow"/></td>
-										<td class="center">{{ $item->timeout }}s</td>
-										@if($item->is_active)
-	                                    	<td class="center"><span class="label label-sm label-success">Active</span></td>
-	                                    @else
-	                                    	<td class="center"><span class="label label-sm label-warning">Not Active</span></td>
-	                                    @endif
-	                                    <td class="center">
-											<div>
-												<a href="{{URL::to('admin/slideshow/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
-												{!! Form::open(array('url' => 'admin/slideshow/'.$item->id, 'method' => 'DELETE')) !!}
-													{!! csrf_field() !!}
-													<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')"><em class="fa fa-times fa fa-white"></em></button>
-												{!! Form::close() !!}
-											</div>
-										</td>
-										<td class="center"><em class="fa fa-reorder"></em></td>
-									</tr>
-								<?php $no++ ?>
-								@endforeach
+						@if (count($data))
+							@php
+								$no=1;
+							@endphp
+							@foreach($data as $item)
+								<tr id="{{ $item->id }}">
+									<td class="center">{{ $item->title }}</td>
+									<td class="center">{{ $item->headline }}</td>
+									<td class="center">
+										<img src="{{ \Storage::disk('minio')->url('slideshow/'.$item->image) }}" width="240" alt="telkom-test-house-media-slideshow"/></td>
+									</td>
+									<td class="center">{{ $item->timeout }}s</td>
+									@if($item->is_active)
+										<td class="center"><span class="label label-sm label-success">Active</span></td>
+									@else
+										<td class="center"><span class="label label-sm label-warning">Not Active</span></td>
+									@endif
+									<td class="center">
+										<div>
+											<a href="{{URL::to('admin/slideshow/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
+											{!! Form::open(array('url' => 'admin/slideshow/'.$item->id, 'method' => 'DELETE')) !!}
+												{!! csrf_field() !!}
+												<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')"><em class="fa fa-times fa fa-white"></em></button>
+											{!! Form::close() !!}
+										</div>
+									</td>
+									<td class="center"><em class="fa fa-reorder"></em></td>
+								</tr>
+								@php
+									$no++
+								@endphp
+							@endforeach
+						@else
+								<tr>
+									<td class="center" colspan="7">{{ $noDataFound }}</td>
+								</tr>
+						@endif	
+								
                             </tbody>
 						</table>
 					</div>
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								<?php echo $data->appends(array('search' => $search))->links(); ?>
+								{{$data->appends(array('search' => $search))->links()}}
 							</div>
 						</div>
 					</div>

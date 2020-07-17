@@ -54,7 +54,7 @@
 									<label>
 										Gambar *
 									</label>
-									<img src="{{asset('media/slideshow/'.$data->image)}}" width="240px" alt="telkom-test-house-media-slideshow">
+									<img src="{{ \Storage::disk('minio')->url('slideshow/'.$data->image) }}" width="240" alt="telkom-test-house-media-slideshow"/></td>
 									<input type="file" name="image" accept="image/*" class="form-control">
 								</div>
 							</div>
@@ -83,7 +83,7 @@
 								</div>
 							</div>
 	                        <div class="col-md-12">
-	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
+	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left" name="submit" value="submit">
 	                                Submit
 	                            </button>
 	                                <a style=" color:white !important;" href="{{URL::to('/admin/slideshow')}}">

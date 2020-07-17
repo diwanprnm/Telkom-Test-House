@@ -3,15 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 
 use App\Slideshow;
 use App\Logs;
+use App\Services\Logs\LogService;
 
 use Auth;
 use Session;
 use Image;
+use Storage;
 
 // UUID
 use Ramsey\Uuid\Uuid;
@@ -49,41 +50,32 @@ class SlideshowController extends Controller
      */
     public function index(Request $request)
     {
-        $currentUser = Auth::user();
-
-        if ($currentUser){
-            $message = null;
-            $paginate = 100;
-            $search = trim($request->input(self::SEARCH));
-            
-            if ($search != null){
-                $slideshows = Slideshow::whereNotNull(self::CREATED_AT)
-                    ->where(self::TITLE,'like','%'.$search.'%')
-                    ->orderBy(self::CREATED_AT)
-                    ->paginate($paginate);
-
-                    $logs = new Logs;
-                    $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                    $logs->action = "Search Slideshow";
-                    $logs->data = json_encode(array("search"=>$search));
-                    $logs->created_by = $currentUser->id;
-                    $logs->page = self::SLIDESHOW;
-                    $logs->save();
-            }else{
-                $slideshows = Slideshow::whereNotNull(self::CREATED_AT)
-                    ->orderBy('position')
-                    ->paginate($paginate);
-            }
-            
-            if (count($slideshows) == 0){
-                $message = 'Data not found';
-            }
-            
-            return view('admin.slideshow.index')
-                ->with(self::MESSAGE, $message)
-                ->with('data', $slideshows)
-                ->with(self::SEARCH, $search);
+        $logService = new LogService();
+        $noDataFound = '';
+        $paginate = 100;
+        $search = trim($request->input(self::SEARCH));
+        
+        if ($search != null){
+            $slideshows = Slideshow::whereNotNull(self::CREATED_AT)
+                ->where(self::TITLE,'like','%'.$search.'%')
+                ->orderBy(self::CREATED_AT)
+                ->paginate($paginate);
+                $logService->createLog('Search Slideshow', self::SLIDESHOW, json_encode(array("search"=>$search)));
+        }else{
+            $slideshows = Slideshow::whereNotNull(self::CREATED_AT)
+                ->orderBy('position')
+                ->paginate($paginate);
         }
+        
+        if (count($slideshows) == 0){
+            $noDataFound = 'Data not found';
+        }
+        
+        return view('admin.slideshow.index')
+            ->with('noDataFound', $noDataFound)
+            ->with('data', $slideshows)
+            ->with(self::SEARCH, $search);
+        
     }
 
     /**
@@ -105,7 +97,7 @@ class SlideshowController extends Controller
     public function store(Request $request)
     {
         $currentUser = Auth::user();
-
+        $logService = new LogService();
         $slideshow = new Slideshow;
         $slideshow->id = Uuid::uuid4();
         $slideshow->title = $request->input(self::TITLE);
@@ -115,20 +107,14 @@ class SlideshowController extends Controller
 
         if ($request->hasFile(self::IMAGE))
         {
-            //belum ada koding untuk simpan image ke storage!
-
-            $name_file = 'slide_'.$request->file(self::IMAGE)->getClientOriginalName();
-            $path_file = public_path().'/media/slideshow';
-        
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-			
-            if($request->file(self::IMAGE)->move($path_file,$name_file)){
-                    $slideshow->image = $name_file;
-            }else{
-                Session::flash(self::ERROR, 'Save Image to directory failed');
-                return redirect(self::ADMIN_SLIDESHOW_CREATE);
+            $name_file = 'slide_'.$request->file(self::IMAGE)->getClientOriginalName(); 
+            $image_ori = Image::make($request->file(self::IMAGE));
+            $saveMinio = Storage::disk('minio')->put("slideshow/$name_file",(string) $image_ori->encode());
+ 
+            if($saveMinio){
+                $slideshow->image = $name_file;
+            }else {
+                return redirect(self::ADMIN_SLIDESHOW_CREATE)->with(self::ERROR, 'Save Image to directory failed');
             }
         }
         
@@ -138,20 +124,12 @@ class SlideshowController extends Controller
 
         try{
             $slideshow->save();
-
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Create Slideshow";
-            $logs->data = $slideshow;
-            $logs->created_by = $currentUser->id;
-            $logs->page = self::SLIDESHOW;
-            $logs->save();
+            $logService->createLog('Create Slideshow', self::SLIDESHOW, $slideshow);
 
             Session::flash(self::MESSAGE, 'Slideshow successfully created');
             return redirect(self::ADMIN_SLIDE_SHOW);
         } catch(Exception $e){
-            Session::flash(self::ERROR, 'Save failed');
-            return redirect(self::ADMIN_SLIDESHOW_CREATE);
+            return redirect(self::ADMIN_SLIDESHOW_CREATE)->with(self::ERROR, 'Save failed');
         }
     }
 
@@ -190,9 +168,9 @@ class SlideshowController extends Controller
     public function update(Request $request, $id)
     {
         $currentUser = Auth::user();
-
+        $logService = new LogService();
         $slideshow = Slideshow::find($id);
-        $oldData = $slideshow;
+        $oldData = clone $slideshow;
         if ($request->has(self::TITLE)){
             $slideshow->title = $request->input(self::TITLE);
         }
@@ -209,16 +187,14 @@ class SlideshowController extends Controller
             $slideshow->timeout = $request->input(self::TIMEOUT);
         }
         if ($request->file(self::IMAGE)) {
-            $name_file = 'slide_'.$request->file(self::IMAGE)->getClientOriginalName();
-            $path_file = public_path().'/media/slideshow';
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file(self::IMAGE)->move($path_file,$name_file)){
-                $slideshow->image = $name_file;
-            }else{
-                Session::flash(self::ERROR, 'Save Image to directory failed');
-                return redirect(self::ADMIN_SLIDESHOW_CREATE);
+            $name_file = 'slide_'.$request->file(self::IMAGE)->getClientOriginalName(); 
+            $image_ori = Image::make($request->file(self::IMAGE));
+            $saveMinio = Storage::disk('minio')->put("slideshow/$name_file",(string) $image_ori->encode());
+ 
+            if($saveMinio){
+                $slideshow->image =  $name_file;
+            }else {
+                return redirect(self::ADMIN_SLIDESHOW_CREATE)->with(self::ERROR, 'Save Image to directory failed');
             }
         }
 
@@ -227,20 +203,11 @@ class SlideshowController extends Controller
 
         try{
             $slideshow->save();
-
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Update Slideshow";
-            $logs->data = $oldData;
-            $logs->created_by = $currentUser->id;
-            $logs->page = self::SLIDESHOW;
-            $logs->save();
-
+            $logService->createLog('Update Slideshow', self::SLIDESHOW, $oldData);
             Session::flash(self::MESSAGE, 'Slideshow successfully updated');
             return redirect(self::ADMIN_SLIDE_SHOW);
         } catch(Exception $e){
-            Session::flash(self::ERROR, 'Save failed');
-            return redirect('/admin/slideshow/'.$slideshow->id.'edit');
+            return redirect('/admin/slideshow/'.$slideshow->id.'edit')->with(self::ERROR, 'Save failed');
         }
     }
 
@@ -252,26 +219,18 @@ class SlideshowController extends Controller
      */
     public function destroy($id)
     {
+        $logService = new LogService();
         $slideshow = Slideshow::find($id);
         $oldData = $slideshow;
-        $currentUser = Auth::user();
         if ($slideshow){
             try{
                 $slideshow->delete();
-
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Delete Slideshow";
-                $logs->data = $oldData;
-                $logs->created_by = $currentUser->id;
-                $logs->page = self::SLIDESHOW;
-                $logs->save();
+                $logService->createLog('Delete Slideshow', self::SLIDESHOW, $oldData);
 
                 Session::flash(self::MESSAGE, 'Slideshow successfully deleted');
                 return redirect(self::ADMIN_SLIDE_SHOW);
             }catch (Exception $e){
-                Session::flash(self::ERROR, 'Delete failed');
-                return redirect(self::ADMIN_SLIDE_SHOW);
+                return redirect(self::ADMIN_SLIDE_SHOW)->with(self::ERROR, 'Delete failed');
             }
         }
     }
