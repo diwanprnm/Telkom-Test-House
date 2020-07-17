@@ -9,6 +9,8 @@ use App\Http\Requests;
 
 use Auth;
 use Session;
+use Excel;
+use Storage;
 
 use App\Equipment;
 use App\EquipmentHistory;
@@ -18,9 +20,9 @@ use App\ExaminationLab;
 use App\Company;
 use App\Logs;
 
+use App\Services\Querys\QueryFilter;
+use App\Services\MyHelper;
 use App\Services\Logs\LogService;
-
-use Excel;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -53,20 +55,14 @@ class NoGudangController extends Controller
      */
     public function index(Request $request)
     {
-        $currentUser = Auth::user();
-
-        if (!$currentUser){return false;}
-
-        $message = null;
         $paginate = 10;
         $search = trim($request->input(self::SEARCH));
-
         $sort_by = 'no';
         $sort_type = 'desc';
 
         $examType = ExaminationType::all();
-        $companies = Company::where('id','!=', 1)->get();
         $examLab = ExaminationLab::all();
+        $companies = Company::where('id','!=', 1)->get();
 
         // Buat query awal
         $query = $this->intialQuery();
@@ -77,7 +73,6 @@ class NoGudangController extends Controller
         // tambah filter search ke query kalau ada
         $fileredSearch = $this->filterSearch($search, $query);
         $query = $fileredSearch[self::QUERY];
-
         // Masukan dalam log kalau user mencoba mencari sesuatu
         if (!$fileredSearch['isNull']){
             // Create log
@@ -85,59 +80,39 @@ class NoGudangController extends Controller
             $logService->createLog('search', 'Rekap Nomor Gudang', json_encode(array(self::SEARCH => $search)));
         }
         
-        /// tambah filter before_date ke query kalau ada
-        $filteredBeforeDate = $this->filterBeforeDate($request, $query);
-        $query = $filteredBeforeDate->query;
-        $before = $filteredBeforeDate->before;
+        //Filter Query
+        $queryFilter = new QueryFilter($request, $query);
+        $queryFilter
+            ->afterDate($this->getDate())
+            ->beforeDate($this->getDate())
+            ->noGudang()
+            ->examination_type()
+            ->examination_lab()
+            ->companyName()
+        ;
 
-        /// tambah filter after_date ke query kalau ada
-        $filteredAfterDate = $this->filterAfterDate($request, $query);
-        $query = $filteredAfterDate->query;
-        $after = $filteredAfterDate->after;
-
-        /// tambah filter no_gudang ke query kalau ada
-        $filteredNoGudang = $this->filterNoGudang($request, $query);
-        $query = $filteredNoGudang->query;
-        $filterNoGudang = $filteredNoGudang->noGudang;
-
-        /// Tambah filter type  ke query kalau ada
-        $filterType = $this->filterType($request, $query);
-        $query = $filterType->query;
-        $type = $filterType->type;
-
-        /// Tambah filter company ke query kalau ada
-        $filteredCompany = $this->filterCompany($request, $query);
-        $query = $filteredCompany->query;
-        $filterCompany = $filteredCompany->filterCompany;
-
-        /// Tambah filter lab ke query kalau ada
-        $filteredLab = $this->filterLab($request, $query);
-        $query = $filteredLab->query;
-        $lab = $filteredLab->lab;
-        
-        /// Geting data with filter sort_by, sort_type & Order By
-        $data = $this->getDataSortAndOrdered($request, $query)->paginate($paginate);
-        
-        if (count($data) == 0){
-            $message = 'Data not found';
-        }
+        //Get data from query
+        $data = $queryFilter
+            ->getSortedAndOrderedData($sort_by, $sort_type)
+            ->getQuery()
+            ->paginate($paginate)
+        ;
         
         return view('admin.nogudang.index')
-            ->with('message', $message)
             ->with('data', $data)
             ->with(self::SEARCH, $search)
-            ->with(self::BEFORE_DATE, $before)
-            ->with(self::AFTER_DATE, $after)
-            ->with(self::NOGUDANG, $nogudang)
-            ->with('filterNoGudang', $filterNoGudang)
+            ->with(self::BEFORE_DATE, $queryFilter->before)
+            ->with(self::AFTER_DATE, $queryFilter->after)
+            ->with('filterNoGudang', $queryFilter->noGudang)
+            ->with('filterCompany', $queryFilter->companyName)
+            ->with('filterLab', $queryFilter->examination_lab)
+            ->with('filterType', $queryFilter->examination_type)
+            ->with(self::SORT_BY, $queryFilter->sort_by)
+            ->with(self::SORT_TYPE, $queryFilter->sort_type)
             ->with('type', $examType)
-            ->with('filterType', $type)
-            ->with(self::COMPANY, $companies)
-            ->with('filterCompany', $filterCompany)
             ->with('lab', $examLab)
-            ->with('filterLab', $lab)
-            ->with(self::SORT_BY, $sort_by)
-            ->with(self::SORT_TYPE, $sort_type);
+            ->with(self::NOGUDANG, $nogudang)
+            ->with(self::COMPANY, $companies);
     }
 
     public function excel(Request $request) 
@@ -147,7 +122,6 @@ class NoGudangController extends Controller
         // the payments table's primary key, the user's first and last name, 
         // the user's e-mail address, the amount paid, and the payment
         // timestamp.
-
         $search = trim($request->input(self::SEARCH));
 
         // Buat query awal
@@ -157,32 +131,23 @@ class NoGudangController extends Controller
         $fileredSearch = $this->filterSearch($search, $query);
         $query = $fileredSearch[self::QUERY];
 
-        /// tambah filter before_date ke query kalau ada
-        $filteredBeforeDate = $this->filterBeforeDate($request, $query);
-        $query = $filteredBeforeDate->query;
+        //Filter Query
+        $queryFilter = new QueryFilter($request, $query);
+        $queryFilter
+            ->afterDate($this->getDate())
+            ->beforeDate($this->getDate())
+            ->noGudang()
+            ->examination_type()
+            ->examination_lab()
+            ->companyName()
+        ;
 
-        /// tambah filter after_date ke query kalau ada
-        $filteredAfterDate = $this->filterAfterDate($request, $query);
-        $query = $filteredAfterDate->query;
-
-        /// tambah filter no_gudang ke query kalau ada
-        $filteredNoGudang = $this->filterNoGudang($request, $query);
-        $query = $filteredNoGudang->query;
-
-        /// Tambah filter type  ke query kalau ada
-        $filterType = $this->filterType($request, $query);
-        $query = $filterType->query;
-
-        /// Tambah filter company ke query kalau ada
-        $filteredCompany = $this->filterCompany($request, $query);
-        $query = $filteredCompany->query;
-
-        /// Tambah filter lab ke query kalau ada
-        $filteredLab = $this->filterLab($request, $query);
-        $query = $filteredLab->query;
-        
-        /// Geting data with filter sort_by, sort_type & Order By
-        $data = $this->getDataSortAndOrdered($request, $query)->get();
+        //Get data from query
+        $data = $queryFilter
+            ->getSortedAndOrderedData('no', 'desc')
+            ->getQuery()
+            ->get()
+        ;
 
         $examsArray = []; 
 
@@ -197,20 +162,20 @@ class NoGudangController extends Controller
             'Kapasitas/Kecepatan Perangkat',
             'Tanggal Masuk',
             'Tanggal Keluar'
-        ]; 
+        ];
         
         // Convert each member of the returned collection into an array,
         // and append it to the payments array.
         foreach ($data as $row) {
             $no = $row->no;
-            $examType_name = $this->filterDefault($row->examType_name);
-            $examType_desc = $this->filterDefault($row->examType_desc);
-            $company_name = $this->filterDefault($row->company_name);
+            $examType_name = MyHelper::filterDefault($row->examType_name);
+            $examType_desc = MyHelper::filterDefault($row->examType_desc);
+            $company_name = MyHelper::filterDefault($row->company_name);
             /*Device*/
-            $device_name = $this->filterDefault($row->device_name);
-            $device_mark = $this->filterDefault($row->device_mark);
-            $device_capacity = $this->filterDefault($row->device_capacity);
-            $device_model = $this->filterDefault($row->device_model);
+            $device_name = MyHelper::filterDefault($row->device_name);
+            $device_mark = MyHelper::filterDefault($row->device_mark);
+            $device_capacity = MyHelper::filterDefault($row->device_capacity);
+            $device_model = MyHelper::filterDefault($row->device_model);
             /*EndDevice*/
 
             $tgl_masuk_barang = date("d-m-Y", strtotime($row->tgl_masuk_barang));
@@ -239,13 +204,17 @@ class NoGudangController extends Controller
             $excel->sheet('sheet1', function($sheet) use ($examsArray) {
                 $sheet->fromArray($examsArray, null, 'A1', false, false);
             });
-        })->export('xlsx'); 
-    }
+        })->store('xlsx');
 
-    private function filterDefault($string, $is_number = false)
-    {
-        $is_number? $defaultValue = '' : '0';
-        return isset($string)? $string : $defaultValue ;
+        $file = Storage::disk('tmp')->get('Data Gudang.xlsx');
+
+        $headers = [
+            'Content-Type' => 'Application/Spreadsheet',
+            'Content-Description' => 'File Transfer',
+            'Content-Disposition' => "attachment; filename=Data Gudang.xlsx",
+            'filename'=> 'Data Gudang.xlsx'
+        ];
+        return response($file, 200, $headers);
     }
 
     private function intialQuery(){
@@ -311,132 +280,20 @@ class NoGudangController extends Controller
         );
     }
 
-    private function filterBeforeDate($request, $query){
-        $result = new \stdClass();
-        $before = null;
-
-        if ($request->has(self::BEFORE_DATE)){
-            $query->where(DB::raw('(
-                SELECT
-                    action_date AS tgl_masuk_gudang
-                FROM
-                    equipment_histories
-                WHERE
-                    examination_id = examinations.id
-                AND location = 2
-                ORDER BY
-                    created_at ASC
-                LIMIT 1
-            )'), '<=', $request->get(self::BEFORE_DATE));
-            $before = $request->get(self::BEFORE_DATE);
-        }
-
-        $result->query = $query;
-        $result->before = $before;
-        return $result;
-    }
-
-    private function filterAfterDate($request, $query){
-        $result = new \stdClass();
-        $after = null;
-
-        if ($request->has(self::AFTER_DATE)){
-            $query->where(DB::raw('(
-                SELECT
-                    action_date AS tgl_masuk_gudang
-                FROM
-                    equipment_histories
-                WHERE
-                    examination_id = examinations.id
-                AND location = 2
-                ORDER BY
-                    created_at ASC
-                LIMIT 1
-            )'), '>=', $request->get(self::AFTER_DATE));
-            $after = $request->get(self::AFTER_DATE);
-        }
-
-        $result->query = $query;
-        $result->after = $after;
-        return $result;
-    }
-
-    private function filterNoGudang($request, $query){
-        $result = new \stdClass();
-        $noGudang = '';
-
-        if ($request->has(self::NOGUDANG)){
-            $noGudang = $request->get(self::NOGUDANG);
-            if($request->input(self::NOGUDANG) != 'all'){
-                $query->where('no', $request->get(self::NOGUDANG));
-            }
-        }
-
-        $result->query = $query;
-        $result->noGudang = $noGudang;
-        return $result;
-    }
-
-    private function filterType($request, $query){
-        $result = new \stdClass();
-        $type = '';
-
-        if ($request->has('type')){
-            $type = $request->get('type');
-            if($request->input('type') != 'all'){
-                $query->where('examination_type_id', $request->get('type'));
-            }
-        }
-
-        $result->query = $query;
-        $result->type = $type;
-        return $result;
-    }
-
-    private function filterCompany($request, $query){
-        $result = new \stdClass();
-        $filterCompany = '';
-
-        if ($request->has(self::COMPANY)){
-            $filterCompany = $request->get(self::COMPANY);
-            if($request->input(self::COMPANY) != 'all'){
-                $query->where('companies.name', $request->get(self::COMPANY));
-            }
-        }
-
-        $result->query = $query;
-        $result->filterCompany = $filterCompany;
-        return $result;
-    }
-
-    private function filterLab($request, $query){
-        $result = new \stdClass();
-        $lab = '';
-
-        if ($request->has('lab')){
-            $lab = $request->get('lab');
-            if($request->input('lab') != 'all'){
-                $query->where('examination_lab_id', $request->get('lab'));
-            }
-        }
-
-        $result->query = $query;
-        $result->lab = $lab;
-        return $result;
-    }
-
-    private function getDataSortAndOrdered($request, $query){
-        $sort_by = 'no';
-        $sort_type = 'desc';
-
-        if ($request->has(self::SORT_BY)){
-            $sort_by = $request->get(self::SORT_BY);
-        }
-        if ($request->has(self::SORT_TYPE)){
-            $sort_type = $request->get(self::SORT_TYPE);
-        }
-
-        return $query->orderBy($sort_by, $sort_type);
+    private function getDate()
+    {
+        return DB::raw('(
+            SELECT
+                action_date AS tgl_masuk_gudang
+            FROM
+                equipment_histories
+            WHERE
+                examination_id = examinations.id
+            AND location = 2
+            ORDER BY
+                created_at ASC
+            LIMIT 1
+        )');
     }
 
 }

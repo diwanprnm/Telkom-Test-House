@@ -218,35 +218,39 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php $no=1; ?>
-								@if(count($data)>0)
-									@foreach($data as $item)
-										<tr>
-											<td class="center">{{$no}}</td>
-											<td class="center">{{ $item->no }}</td>
-											<td class="center">{{ $item->company_name }}</td>
-											<td class="center">{{ $item->device_name }}</td>
-											<td class="center">{{ $item->device_mark }}</td>
-											<td class="center">{{ $item->device_capacity }}</td>
-											<td class="center">{{ $item->tgl_masuk_barang }}</td>
-											<td class="center">{{ $item->tgl_keluar_barang }}</td>
-										</tr>
-									<?php $no++ ?>
-									@endforeach
-								@else
-									<tr>
-										<td colspan=8 class="center">
-											Data Not Found
-										</td>
-									</tr>
-								@endif
+						@php
+							$no=1;
+						@endphp
+						@if(count($data)>0)
+							@foreach($data as $item)
+								<tr>
+									<td class="center">{{$no}}</td>
+									<td class="center">{{ $item->no }}</td>
+									<td class="center">{{ $item->company_name }}</td>
+									<td class="center">{{ $item->device_name }}</td>
+									<td class="center">{{ $item->device_mark }}</td>
+									<td class="center">{{ $item->device_capacity }}</td>
+									<td class="center">{{ $item->tgl_masuk_barang }}</td>
+									<td class="center">{{ $item->tgl_keluar_barang }}</td>
+								</tr>
+								@php
+									$no++
+								@endphp
+							@endforeach
+						@else
+								<tr>
+									<td colspan=8 class="center">
+										Data Not Found
+									</td>
+								</tr>
+						@endif
                             </tbody>
 						</table>
 					</div>
 					<div class="row">
 	                    <div class="col-md-12 col-sm-12">
 	                        <div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-	                            <?php echo $data->appends(array('search' => $search,'before_date' => $before_date,'after_date' => $after_date,'type' => $filterType,'nogudang' => $filterNoGudang,'company' => $filterCompany,'lab' => $filterLab,'sort_by' => $sort_by,'sort_type' => $sort_type))->links(); ?>
+	                            {{$data->appends(array('search' => $search,'before_date' => $before_date,'after_date' => $after_date,'type' => $filterType,'nogudang' => $filterNoGudang,'company' => $filterCompany,'lab' => $filterLab,'sort_by' => $sort_by,'sort_type' => $sort_type))->links()}}
 	                        </div>
 	                    </div>
 	                </div>
