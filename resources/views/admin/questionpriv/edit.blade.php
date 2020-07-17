@@ -53,14 +53,11 @@
 	                        <div class="col-md-4">
 								<div class="form-group">
 									<input type="checkbox" class="check-privilege{{$question_item->id}}" name="check-privilege[]" value="{{$question_item->id}}" 
-									<?php 
-									$ketemu = 0;
-									foreach($data as $item){
-										if($question_item->id == $item->question_id){$ketemu = 1;}
-									}
-										if($ketemu == 1){echo "checked";}
-									$ketemu = 0;
-									?>
+										@foreach ($data as $item)
+											@if ($question_item->id == $item->question_id)
+												checked
+											@endif
+										@endforeach
 									>
 									<label>
 										{{$question_item->name}}

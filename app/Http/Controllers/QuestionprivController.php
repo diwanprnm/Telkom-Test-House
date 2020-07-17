@@ -37,40 +37,36 @@ class QuestionprivController extends Controller
      */
     public function index(Request $request)
     {
-        $currentUser = Auth::user();
+        $dataNotFound = '';
+        $paginate = 10;
+        $search = trim($request->input('search'));
+        
+        $questionpriv = Questionpriv::whereNotNull('created_at')
+            ->with('user')
+            ->with(self::QUESTION);
 
-        if ($currentUser){
-            $message = null;
-            $paginate = 10;
-            $search = trim($request->input('search'));
-			
-			$questionpriv = Questionpriv::whereNotNull('created_at')
-				->with('user')
-				->with(self::QUESTION);
-
-            if ($search != null){
-				$questionpriv->where(function($qry) use($search){
-                    $qry->whereHas('user', function ($q) use ($search){
-							return $q->where('name', 'like', '%'.strtolower($search).'%')
-									->orWhere('email', 'like', '%'.strtolower($search).'%');
-						})
-					->orWhereHas(self::QUESTION, function ($q) use ($search){
-							return $q->where('name', 'like', '%'.strtolower($search).'%');
-						});
-                });
-            }
-			$data = $questionpriv->orderBy(self::USER_ID)
-                    ->paginate($paginate);
-            
-            if (count($data) == 0){
-                $message = 'Data not found';
-            }
-            
-            return view('admin.questionpriv.index')
-                ->with(self::MESSAGE, $message)
-                ->with('data', $data)
-				->with('search', $search);
+        if ($search != null){
+            $questionpriv->where(function($qry) use($search){
+                $qry->whereHas('user', function ($q) use ($search){
+                        return $q->where('name', 'like', '%'.strtolower($search).'%')
+                                ->orWhere('email', 'like', '%'.strtolower($search).'%');
+                    })
+                ->orWhereHas(self::QUESTION, function ($q) use ($search){
+                        return $q->where('name', 'like', '%'.strtolower($search).'%');
+                    });
+            });
         }
+        $data = $questionpriv->orderBy(self::USER_ID)
+                ->paginate($paginate);
+        
+        if (count($data) == 0){
+            $dataNotFound = 'Data not found';
+        }
+        
+        return view('admin.questionpriv.index')
+            ->with('dataNotFound', $dataNotFound)
+            ->with('data', $data)
+            ->with('search', $search);
     }
 
     /**
@@ -96,10 +92,13 @@ class QuestionprivController extends Controller
      */
     public function store(Request $request)
     {
+        //dd($request->input(self::CHECK_PRIVILEGE));
+        
 		$questionpriv = Questionpriv::where(self::USER_ID,'=',$request->input(self::USER_ID))->get();
 
-		if(count($questionpriv) == 0 && count($request->input(self::CHECK_PRIVILEGE)) > 0)
+		if(count($questionpriv) == 0 && count($request->input(self::CHECK_PRIVILEGE)))
 		{
+            //dd('hello');
 			$currentUser = Auth::user();
 			for($i=0;$i<count($request->input(self::CHECK_PRIVILEGE));$i++){
 				$questionpriv = new Questionpriv;
@@ -114,6 +113,7 @@ class QuestionprivController extends Controller
 			Session::flash(self::MESSAGE, 'User successfully created');
 					return redirect(self::ADMIN_QUESTIONPRIV);
 		}else{
+            //dd(count($request->input(self::CHECK_PRIVILEGE)) );
 			Session::flash(self::ERROR, 'User Existing or No Privilege selected');
 				return redirect('/admin/questionpriv/create')
 							->withInput();

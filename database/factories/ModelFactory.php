@@ -18,6 +18,24 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'email' => $faker->safeEmail,
         'password' => bcrypt(str_random(10)),
         'remember_token' => str_random(10),
+        'company_id' => function () {
+            return factory(App\Company::class)->create()->id;
+        },
+        'name' => $faker->name,
+        'is_active' => 1,
+        'created_by' => 1,
+        'updated_by' => 1,
+        'created_at' => '',
+        'updated_at' => '',
+        'picture' => '',
+        'address' => $faker->address,
+        'phone_number' => $faker->e164PhoneNumber,
+        'fax' => $faker->e164PhoneNumber,
+        'email2' => '',
+        'email3' => '',
+        'is_deleted' => 0,
+        'deleted_by' => '',
+        'deleted_at' => '',
     ];
 });
 
@@ -343,7 +361,7 @@ $factory->define(App\Equipment::class, function (Faker\Generator $faker) {
         'created_at' => Carbon\Carbon::now(),
         'updated_at' => Carbon\Carbon::now(),
         'description' => $faker->sentence(6, true),
-        'no' => $faker->word,
+        'no' => $faker->word
     ];
 });
 
@@ -359,6 +377,33 @@ $factory->define(App\EquipmentHistory::class, function (Faker\Generator $faker, 
         'examination_id' => function () {
             return factory(App\Equipment::class)->create()->examination_id;
         },
-        'action_date' => Carbon\Carbon::now(),
+        'action_date' => Carbon\Carbon::now()
+    ];
+});
+
+
+$factory->define(App\Question::class, function (Faker\Generator $faker) {
+    return [
+        'id' => $faker->uuid,
+        'name' => $faker->word,
+        'is_active' => 1,
+        'created_by' => 1,
+        'updated_by' => 1,
+        'created_at' => Carbon\Carbon::now(),
+        'updated_at' => Carbon\Carbon::now()
+    ];
+});
+
+
+$factory->define(App\Questionpriv::class, function (Faker\Generator $faker, $params) {
+    return [
+        'user_id' => function () {
+            return factory(App\User::class)->create(['role_id'=> 1])->id;
+        },
+        'question_id' => '',
+        'created_by' => 1,
+        'updated_by' => 1,
+        'created_at' => Carbon\Carbon::now(),
+        'updated_at' => Carbon\Carbon::now()
     ];
 });

@@ -59,17 +59,18 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php $no=0; 
-								$temp_user_id="unlogicalUUIDBL"; 
-								$temp_user_name=""; 
-								$temp_user_email=""; 
-								$temp_qn=""; 
-								?>
+								@php
+									$no = 0;
+									$temp_user_id="unlogicalUUIDBL"; 
+									$temp_user_name=""; 
+									$temp_user_email=""; 
+									$temp_qn=""; 
+								@endphp
 								@foreach($data as $item)
 									@if($item->user_id != $temp_user_id)
 										@if($temp_user_id != "unlogicalUUIDBL")
 										<tr>
-											<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
+											<td class="center">{{ $no+(($data->currentPage()-1)*$data->perPage()) }}</td>
 											<td class="center">{{ $temp_user_name }}</td>
 											<td class="center">{{ $temp_user_email }}</td>
 											<td class="center">{{ $temp_qn }}.</td>
@@ -84,17 +85,20 @@
 											</td>
 										</tr>
 										@endif
-										<?php 
-										$temp_user_id=$item->user_id;
-										$temp_user_name=$item->user->name;
-										$temp_user_email=$item->user->email;
-										$temp_qn=$item->question->name; 
-										$no++;
-										?>
+										@php
+											$temp_user_id=$item->user_id;
+											$temp_user_name=$item->user->name;
+											$temp_user_email=$item->user->email;
+											$temp_qn=$item->question->name; 
+											$no++;
+										@endphp
 									@else
-										<?php $temp_qn=$temp_qn.", ".$item->question->name; ?>
+										@php
+											$temp_qn=$temp_qn.", ".$item->question->name;
+										@endphp
 									@endif
 								@endforeach
+							@if (count($data))
 								<tr>
 									<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
 									<td class="center">{{ $temp_user_name }}</td>
@@ -110,13 +114,19 @@
 										</div>
 									</td>
 								</tr>
+							@else
+								<tr>
+									<td class="center" colspan="5">{{$dataNotFound}}</td>
+								</tr>
+							@endif
+								
                             </tbody>
 						</table>
 					</div>
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								<?php echo $data->appends(array('search' => $search))->links(); ?>
+								{{ $data->appends(array('search' => $search))->links() }}
 							</div>
 						</div>
 					</div>
