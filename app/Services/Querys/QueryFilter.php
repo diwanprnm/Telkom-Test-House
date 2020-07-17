@@ -27,6 +27,8 @@ class QueryFilter
     public $sort_type;
     public $examination_type;
     public $examination_lab;
+    public $noGudang;
+    public $companyName;
 
     public function __construct(Request $request, $query)
     {
@@ -241,7 +243,6 @@ class QueryFilter
                 $this->query->where('examination_type_id', $this->request->get($requestName));
             }
         }
-
         return $this;
     }
 
@@ -253,7 +254,27 @@ class QueryFilter
                 $this->query->where('examination_lab_id', $this->request->get($requestName));
             }
         }
+        return $this;
+    }
+    public function noGudang($requestName = 'nogudang', $searchName='no'){
 
+        if ($this->request->has($requestName)){
+            $this->noGudang = $this->request->get($requestName);
+            if($this->request->input($requestName) != 'all'){
+                $this->query->where($searchName, $this->request->get($requestName));
+            }
+        }
+        return $this;
+    }
+
+    public function companyName($requestName = 'company', $searchName='companies.name'){
+
+        if ($this->request->has($requestName)){
+            $this->companyName = $this->request->get($requestName);
+            if($this->request->input($requestName) != 'all'){
+                $this->query->where($searchName, $this->request->get($requestName));
+            }
+        }
         return $this;
     }
 
