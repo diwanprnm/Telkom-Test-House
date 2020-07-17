@@ -17,9 +17,11 @@ class NewExaminationChargeControllerTest extends TestCase
     public function testIndexAsAdmin()
     {
         //truncate data
-        DB::table('new_examination_charges_detail')->delete();
-        DB::table('new_examination_charges')->delete();
-        DB::table('examination_charges')->delete();
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('new_examination_charges_detail')->truncate();
+        DB::table('new_examination_charges')->truncate();
+        DB::table('examination_charges')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         //Make request as Admin
         $admin = User::where('id', '=', '1')->first();
@@ -145,9 +147,11 @@ class NewExaminationChargeControllerTest extends TestCase
         $this->assertRedirectedTo('admin/newcharge', ['error' => 'You have not processing data!']);
 
         //truncate data
-        DB::table('new_examination_charges_detail')->delete();
-        DB::table('new_examination_charges')->delete();
-        DB::table('examination_charges')->delete();
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('new_examination_charges_detail')->truncate();
+        DB::table('new_examination_charges')->truncate();
+        DB::table('examination_charges')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
 
@@ -164,9 +168,11 @@ class NewExaminationChargeControllerTest extends TestCase
         //Status ok dan ada "TAMBAH TARIF PENGUJIAN BARU" admin/newcharge/
         $this->assertRedirectedTo("admin/newcharge/$newExaminationCharge->id", ['error' => 'The data has been processed!']);
 
-        DB::table('new_examination_charges_detail')->delete();
-        DB::table('new_examination_charges')->delete();
-        DB::table('examination_charges')->delete();
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('new_examination_charges_detail')->truncate();
+        DB::table('new_examination_charges')->truncate();
+        DB::table('examination_charges')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
     public function testShow()
@@ -186,9 +192,11 @@ class NewExaminationChargeControllerTest extends TestCase
         ;
 
         // Remove Residual Data
-        DB::table('new_examination_charges_detail')->delete();
-        DB::table('new_examination_charges')->delete();
-        DB::table('examination_charges')->delete();
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('new_examination_charges_detail')->truncate();
+        DB::table('new_examination_charges')->truncate();
+        DB::table('examination_charges')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
     public function testEdit()
@@ -224,7 +232,9 @@ class NewExaminationChargeControllerTest extends TestCase
         $this->assertRedirectedTo("admin/newcharge", ['message' => 'New Charge successfully updated']);
 
         //delete residual
-        DB::table('new_examination_charges')->delete();
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('new_examination_charges')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
 
@@ -243,9 +253,11 @@ class NewExaminationChargeControllerTest extends TestCase
         ;
 
         //truncate data
-        DB::table('new_examination_charges_detail')->delete();
-        DB::table('new_examination_charges')->delete();
-        DB::table('examination_charges')->delete();
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('new_examination_charges_detail')->truncate();
+        DB::table('new_examination_charges')->truncate();
+        DB::table('examination_charges')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
     public function testUpdateDetail()
@@ -301,8 +313,10 @@ class NewExaminationChargeControllerTest extends TestCase
         $this->assertRedirectedTo("admin/newcharge", ['message' => 'New Charge successfully deleted']);
 
         //truncate data
-        DB::table('new_examination_charges_detail')->delete();
-        DB::table('new_examination_charges')->delete();
-        DB::table('examination_charges')->delete();
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('new_examination_charges_detail')->truncate();
+        DB::table('new_examination_charges')->truncate();
+        DB::table('examination_charges')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

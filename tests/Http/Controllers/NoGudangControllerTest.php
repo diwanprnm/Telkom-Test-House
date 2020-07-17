@@ -12,9 +12,11 @@ class NoGudangControllerTest extends TestCase
     public function testIndexWithotDataFound()
     {
         // truncate data
-        DB::table('equipment_histories')->delete();
-        DB::table('equipments')->delete();
-        DB::table('examinations')->delete();
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('equipment_histories')->truncate();
+        DB::table('equipments')->truncate();
+        DB::table('examinations')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         //Make request as Admin
         $admin = User::where('id', '=', '1')->first();
@@ -67,6 +69,13 @@ class NoGudangControllerTest extends TestCase
         $this->assertTrue($response->headers->get('content-type') == 'Application/Spreadsheet');
         $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
         $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename=Data Gudang.xlsx');
+
+        //truncate table
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('equipment_histories')->truncate();
+        DB::table('equipments')->truncate();
+        DB::table('examinations')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
     
