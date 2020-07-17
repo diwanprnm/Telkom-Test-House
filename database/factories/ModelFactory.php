@@ -239,16 +239,17 @@ $factory->define(App\Questioner::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Income::class, function (Faker\Generator $faker) {
+$factory->define(App\Income::class, function (Faker\Generator $faker, $params) {
+    if(isset($params['examination'])){
+        $examination = $params['examination'];
+    }else{
+        $examination = factory(App\Examination::class)->create();
+    }
     return [
         'id' => $faker->uuid,
-        'company_id' => function () {
-            return factory(App\Company::class)->create()->id;
-        },
+        'company_id' => $examination->company_id,
         'inc_type' => '1',
-        'reference_id' => function () {
-            return factory(App\Examination::class)->create()->id;
-        },
+        'reference_id' => $examination->id,
         'reference_number' => $faker->numberBetween(1000,9000),
         'price'  => $faker->numberBetween(1000,9000).'000',
         'tgl'=> Carbon\Carbon::now(),
@@ -281,7 +282,7 @@ $factory->define(App\NewExaminationCharge::class, function (Faker\Generator $fak
     return [
         'id' => $faker->uuid,
         'name' => $faker->word,
-        'description'=> $faker->sentence(6, true),
+        'description' => $faker->sentence(6, true),
         'valid_from' => Carbon\Carbon::now(),
         'is_implement' => 0,
         'created_by' => 1,
@@ -291,12 +292,17 @@ $factory->define(App\NewExaminationCharge::class, function (Faker\Generator $fak
     ];
 }); //NewExaminationChargeDetail
 
-$factory->define(App\NewExaminationChargeDetail::class, function (Faker\Generator $faker) {
-    $examination_charges = factory(App\ExaminationCharge::class)->create();
+$factory->define(App\NewExaminationChargeDetail::class, function (Faker\Generator $faker, $params) {
+    if(isset($params['examination_charges'])){
+        $examination_charges = $params['examination_charges'];
+    }else{
+        $examination_charges = factory(App\ExaminationCharge::class)->create();
+    }
     return [
         'id' => $faker->uuid,
         'new_exam_charges_id' => function () {
-            return factory(App\NewExaminationCharge::class)->create()->id;
+            $examination_charges = factory(App\NewExaminationCharge::class)->create();
+            return $examination_charges->id;
         },
         'examination_charges_id' => $examination_charges->id,
         'price' => $examination_charges->price,
@@ -317,5 +323,42 @@ $factory->define(App\NewExaminationChargeDetail::class, function (Faker\Generato
         'old_stel' => $examination_charges->stel,
         'old_category' => $examination_charges->category,
         'old_duration' => $examination_charges->duration,
+    ];
+});
+
+$factory->define(App\Equipment::class, function (Faker\Generator $faker) {
+    return [
+        'id' => $faker->uuid,
+        'examination_id' => function () {
+            return factory(App\Examination::class)->create()->id;
+        },
+        'name' => $faker->word,
+        'qty' => $faker->numberBetween(1,100),
+        'unit' => $faker->word,
+        'location' => 2,
+        'pic' => $faker->word,
+        'remarks' => $faker->word,
+        'created_by' => 1,
+        'updated_by' => 1,
+        'created_at' => Carbon\Carbon::now(),
+        'updated_at' => Carbon\Carbon::now(),
+        'description' => $faker->sentence(6, true),
+        'no' => $faker->word,
+    ];
+});
+
+
+$factory->define(App\EquipmentHistory::class, function (Faker\Generator $faker, $params) {
+    return [
+        'id' => $faker->uuid,
+        'location' => 2,
+        'created_by' => 1,
+        'updated_by' => 1,
+        'created_at' => Carbon\Carbon::now(),
+        'updated_at' => Carbon\Carbon::now(),
+        'examination_id' => function () {
+            return factory(App\Equipment::class)->create()->examination_id;
+        },
+        'action_date' => Carbon\Carbon::now(),
     ];
 });
