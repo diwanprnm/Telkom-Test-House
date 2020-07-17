@@ -299,5 +299,10 @@ class NewExaminationChargeControllerTest extends TestCase
 
         //Status sukses dan judul "TARIF PENGUJIAN BARU"
         $this->assertRedirectedTo("admin/newcharge", ['message' => 'New Charge successfully deleted']);
+
+        //truncate data
+        DB::table('new_examination_charges_detail')->delete();
+        DB::table('new_examination_charges')->delete();
+        DB::table('examination_charges')->delete();
     }
 }

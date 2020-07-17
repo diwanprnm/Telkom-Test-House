@@ -60,7 +60,7 @@ class IncomeControllerTest extends TestCase
         App\Examination::latest()->first()->delete();
         App\ExaminationLab::latest()->first()->delete();
         App\Device::latest()->first()->delete();
-        App\Company::latest()->take(2)->delete();
+        App\Company::latest()->first()->delete();
     }
 
 
