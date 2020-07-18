@@ -25,174 +25,17 @@ class QueryFilter
     public $data;
     public $sort_by;
     public $sort_type;
+    public $spbNumber;
     public $examination_type;
     public $examination_lab;
     public $noGudang;
     public $companyName;
+    public $paymentStatus;
 
     public function __construct(Request $request, $query)
     {
         $this->request = $request;
         $this->query = $query;
-    }
-
-    public function search(Request $request, $query, $number)
-    {
-        $isNull = true;
-        $request->has(self::SEARCH) ? $search = trim($request->input(self::SEARCH)) : $search = '';
-        if (!$number) {
-            return false;
-        }
-
-        if ($search != null){
-            $query->where(function($qry) use($search){
-                $qry->whereHas('device', function ($q) use ($search){
-                        return $q->where('name', 'like', '%'.strtolower($search).'%');
-                    })
-                ->orWhereHas(self::COMPANY, function ($q) use ($search){
-                        return $q->where('name', 'like', '%'.strtolower($search).'%');
-                    })
-                ->orWhere($number, 'like', '%'.strtolower($search).'%');
-            });
-            $isNull = false;
-        }
-
-        return array(
-            self::QUERY => $query,
-            self::SEARCH => $search,
-            'isNull' => $isNull
-        );
-    }
-
-    public function spb(Request $request, $query)
-    {
-        $filterSpb = '';
-
-        if ($request->has('spb')){
-            $filterSpb = $request->get('spb');
-            if($request->input('spb') != 'all'){
-                $query->where(self::SPB_NUMBER, $request->get('spb'));
-            }
-        }
-
-        return array(
-            self::QUERY => $query,
-            'filterSpb' => $filterSpb
-        );
-    }
-
-    public function spk(Request $request, $query)
-    {
-        $filterSpk = '';
-
-        if ($request->has('spk')){
-            $filterSpk = $request->get('spk');
-            if($request->input('spk') != 'all'){
-                $query->where('SPK_NUMBER', $request->get('spk'));
-            }
-        }
-
-        return array(
-            self::QUERY => $query,
-            'filterSpk' => $filterSpk,
-        );
-    }
-
-    public function type(Request $request, $query, $kind_of_type)
-    {
-        $type = '';
-        if (!$kind_of_type) {
-            return false;
-        }
-
-        if ($request->has('type')){
-            $type = $request->get('type');
-            if($request->input('type') != 'all'){
-                $query->where($kind_of_type, $request->get('type'));
-            }
-        }
-
-        return array(
-            self::QUERY => $query,
-            'type' => $type
-        );
-    }
-
-    public function company(Request $request, $query, $company_variable)
-    {
-        $filterCompany = '';
-        if (!$company_variable) {
-            return false;
-        }
-
-        if ($request->has(self::COMPANY)){
-            $filterCompany = $request->get(self::COMPANY);
-            if($request->input(self::COMPANY) != 'all'){
-                $query->whereHas(self::COMPANY, function ($q) use ($request){
-                    return $q->where($company_variable, 'like', '%'.$request->get(self::COMPANY).'%');
-                });
-            }
-        }
-
-        return array(
-            self::QUERY => $query,
-            'filterCompany' => $filterCompany
-        );
-    }
-
-    public function paymentStatus(Request $request, $query)
-    {
-        $filterPayment_status = '';
-
-        if ($request->has(self::PAYMENT_STATUS)){
-            $filterPayment_status = $request->get(self::PAYMENT_STATUS);
-            if($request->input(self::PAYMENT_STATUS) != 'all'){
-                $request->input(self::PAYMENT_STATUS) == '1' ? $query->where(self::PAYMENT_STATUS, '=', 1) : $query->where(self::PAYMENT_STATUS, '!=', 1);
-            }
-        }
-
-        return array(
-            self::QUERY => $query,
-            'filterPayment_status' => $filterPayment_status
-        );
-    }
-
-    public function paymentStatusAll(Request $request,$query)
-    {
-        $filterPayment_status = '';
-
-        if ($request->has(self::PAYMENT_STATUS)){
-            $filterPayment_status = $request->get(self::PAYMENT_STATUS);
-            if($request->input(self::PAYMENT_STATUS) != 'all'){
-                $query->where(self::PAYMENT_STATUS, $request->get(self::PAYMENT_STATUS));
-            }
-        }
-
-        return array(
-            self::QUERY => $query,
-            'filterPayment_status' => $filterPayment_status
-        );
-    }
-
-    public function lab(Request $request, $query, $lab_variable)
-    {
-        $lab='';
-        if (!$lab_variable) {
-            return false;
-        }
-
-        if ($request->has('lab')){
-            $lab = $request->get('lab');
-            if($request->input('lab') != 'all'){
-                $query->where($lab_variable, $request->get('lab'));
-            }
-        }
-
-        return array(
-            self::QUERY => $query,
-            'lab' => $lab
-        );
-
     }
 
     //CHAINABLE FUNCTION, FROM NOW ON.
@@ -273,6 +116,28 @@ class QueryFilter
             $this->companyName = $this->request->get($requestName);
             if($this->request->input($requestName) != 'all'){
                 $this->query->where($searchName, $this->request->get($requestName));
+            }
+        }
+        return $this;
+    }
+
+    public function paymentStatus($requestName = 'payment_status', $searchName='payment_status')
+    {
+        if ($this->request->has($requestName)){
+            $this->paymentStatus = $this->request->get($requestName);
+            if($this->request->input($requestName) != 'all'){
+                $this->request->input($requestName) == '1' ? $this->query->where($searchName, '=', 1) : $this->query->where($searchName, '!=', 1);
+            }
+        }
+        return $this;
+    }
+
+    public function spbNumber($requestName = 'spb', $searchName='spb_number')
+    {
+        if ($this->request->has($requestName )){
+            $this->spbNumber = $this->request->get($requestName );
+            if($this->request->input($requestName ) != 'all'){
+                $this->query->where($searchName, $this->request->get($requestName ));
             }
         }
         return $this;
