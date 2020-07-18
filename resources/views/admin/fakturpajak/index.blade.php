@@ -128,7 +128,7 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
-							<caption></caption>
+							<caption>Faktur Pajak Table</caption>
 							<thead>
 								<tr>
 									<th class="center" scope="col">No</th>
@@ -141,11 +141,13 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php $no=1; ?>
+								@php
+									$no=1;
+								@endphp
 								@if(count($data)>0)
 									@foreach($data as $item)
 										<tr>
-											<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
+											<td class="center">{{ $no+(($data->currentPage()-1)*$data->perPage())}}</td>
 											<td class="center">{{ $item->type }}</td>
 											<td class="center">{{ $item->user_name }}</td>
 											<td class="center">{{ $item->company_name }}</td>
@@ -181,13 +183,13 @@
 												@endif
 											</td>
 										</tr>
-									<?php $no++ ?>
+									@php
+										$no++
+									@endphp
 									@endforeach
 								@else
 									<tr>
-										<td colspan=8 class="center">
-											Data Not Found
-										</td>
+										<td colspan=8 class="center">{{$noDataFound}}</td>
 									</tr>
 								@endif
                             </tbody>
@@ -196,7 +198,7 @@
 					<div class="row">
 	                    <div class="col-md-12 col-sm-12">
 	                        <div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-	                            <?php echo $data->appends(array('search' => $search,'type' => $filterType,'company' => $filterCompany,'sort_by' => $sort_by,'sort_type' => $sort_type))->links(); ?>
+	                            {{$data->appends(array('search' => $search,'type' => $filterType,'company' => $filterCompany,'sort_by' => $sort_by,'sort_type' => $sort_type))->links()}}
 	                        </div>
 	                    </div>
 	                </div>

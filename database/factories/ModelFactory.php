@@ -131,7 +131,7 @@ $factory->define(App\ExaminationLab::class, function (Faker\Generator $faker) {
 $factory->define(App\Examination::class, function (Faker\Generator $faker) {
     return [
         'id' => $faker->uuid,
-         'examination_type_id' => $faker->numberBetween(1,4),
+        'examination_type_id' => $faker->numberBetween(1,4),
         'company_id' => function () {
             return factory(App\Company::class)->create()->id;
         },
@@ -189,6 +189,23 @@ $factory->define(App\Examination::class, function (Faker\Generator $faker) {
         'PO_ID' => $faker->word,
         'BILLING_ID' => $faker->word,
         'INVOICE_ID' => $faker->word,
+    ];
+});
+
+$factory->define(App\ExaminationAttach::class, function (Faker\Generator $faker) {
+    return [
+        'id' => $faker->uuid,
+        'examination_id' => function () {
+            return factory(App\Examination::class)->create()->id;
+        },
+        'name' => $faker->word,
+        'attachment' => $faker->word,
+        'created_by' => '1',
+        'updated_by' => '1',
+        'created_at'=> Carbon\Carbon::now(),
+        'updated_at'=> Carbon\Carbon::now(),
+        'no' => $faker->word,
+        'tgl'=> Carbon\Carbon::now(),
     ];
 });
 
@@ -408,7 +425,7 @@ $factory->define(App\Questionpriv::class, function (Faker\Generator $faker, $par
     ];
 });
 
-$factory->define(App\Testimonial::class, function (Faker\Generator $faker, $params) {
+$factory->define(App\Testimonial::class, function (Faker\Generator $faker) {
     return [
         'id' => $faker->uuid,
         'examination_id' => function () {
@@ -420,5 +437,98 @@ $factory->define(App\Testimonial::class, function (Faker\Generator $faker, $para
         'updated_by' => 1,
         'created_at' => Carbon\Carbon::now(),
         'updated_at' => Carbon\Carbon::now()
+    ];
+});
+
+
+$factory->define(App\STEL::class, function (Faker\Generator $faker) {
+    return [
+        'id' => $faker->uuid,
+        'code' => 'test_code_'.$faker->word,
+        'name' => 'test_name_'.$faker->word,
+        'type' => 'test_type_'.$faker->word,
+        'version' => 1,
+        'year' => 2020,
+        'price' =>  $faker->numberBetween(1000,9000).'000',
+        'total' =>  $faker->numberBetween(1000,9000).'000',
+        'is_active' => 1,
+        'created_by' => 1,
+        'updated_by' => 1,
+        'created_at' => Carbon\Carbon::now(),
+        'updated_at' => Carbon\Carbon::now(),
+        'attachment' => 'test_attachment_'.$faker->word,
+        'stel_type' => 1,
+    ];
+});
+
+
+$factory->define(App\STELSales::class, function (Faker\Generator $faker) {
+    return [
+        'id' => $faker->uuid,
+        'user_id' => function () {
+            return factory(App\User::class)->create(['role_id'=>'2'])->id;
+        },
+        'invoice' => $faker->word,
+        'name' => $faker->word,
+        'exp' => $faker->word,
+        'cvc' => $faker->numberBetween(100,900),
+        'cvv' => $faker->numberBetween(100,900),
+        'type' => $faker->word,
+        'no_card' => $faker->numberBetween(100000,900000).$faker->numberBetween(100000,900000),
+        'no_telp' => '0811'.$faker->numberBetween(1000000,9000000),
+        'email' => $faker->safeEmail,
+        'country' => 'Indonesia',
+        'province' => 'Jawa',
+        'city' => 'Bandung',
+        'postal_code' => '14045',
+        'birthdate' => '1993-01-01',
+        'payment_method' => 1,
+        'payment_status' => 1,
+        'total' => $faker->numberBetween(1000,9000).'000',
+        'created_by' => 1,
+        'updated_by' => 1,
+        'created_at' => Carbon\Carbon::now(),
+        'updated_at' => Carbon\Carbon::now(),
+        'payment_code' => $faker->numberBetween(100,900),
+        'cust_price_payment' =>  $faker->numberBetween(1000,9000).'000',
+        'id_kuitansi' =>'id_kuitansi_'.$faker->word,
+        'faktur_file' => 'test_faktur_file_'.$faker->word,
+        'PO_ID' => 'test_po_id_'.$faker->word,
+        'BILLING_ID' => 'test_billing_id_'.$faker->word,
+        'INVOICE_ID' => 'test_invoice_id_'.$faker->word,
+    ];
+});
+
+
+$factory->define(App\STELSalesAttach::class, function (Faker\Generator $faker) {
+    return [
+        'id' => $faker->uuid,
+        'stel_sales_id' => function () {
+            return factory(App\STELSales::class)->create()->id;
+        },
+        'attachment' => 'test_attachment_'.$faker->word,
+        'created_by' => 1,
+        'updated_by' => 1,
+        'created_at' => Carbon\Carbon::now(),
+        'updated_at' => Carbon\Carbon::now()
+    ];
+});
+
+
+$factory->define(App\STELSalesDetail::class, function (Faker\Generator $faker) {
+    return [
+        'id' => $faker->uuid,
+        'stels_sales_id' => function () {
+            return factory(App\STELSales::class)->create()->id;
+        },
+        'stels_id' => function () {
+            return factory(App\STEL::class)->create()->id;
+        },
+        'created_by' => 1,
+        'updated_by' => 1,
+        'created_at' => Carbon\Carbon::now(),
+        'updated_at' => Carbon\Carbon::now(),
+        'qty' => $faker->numberBetween(100,900),
+        'attachment' => 'test_attachment_'.$faker->word,
     ];
 });
