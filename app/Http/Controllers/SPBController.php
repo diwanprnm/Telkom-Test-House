@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 
 use Auth;
 use Session;
+use Excel;
+use Storage;
 
 use App\Examination;
 use App\ExaminationType;
@@ -16,8 +17,8 @@ use App\Company;
 use App\Logs;
 
 use App\Services\Querys\QueryFilter;
-
-use Excel;
+use App\Services\MyHelper;
+use App\Services\Logs\LogService;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -25,7 +26,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 class SPBController extends Controller
 {
     private const COMPANY = 'company';
-    private const QUERY = 'query';
+    private const DEVICE = 'device';
     private const SEARCH = 'search';
     private const SPB_NUMBER = 'spb_number';
     private const SPB_DATE = 'spb_date';
@@ -46,94 +47,69 @@ class SPBController extends Controller
      */
     public function index(Request $request)
     {
-        $currentUser = Auth::user();
-        if (!$currentUser){return false;}
+        $logService = new LogService();
+        $noDataFound = '';
+        $paginate = 10;
+        $search = trim($request->input(self::SEARCH));
+        $sort_by = self::SPB_NUMBER;
+        $sort_type = 'desc';
 
-        $examType = ExaminationType::all();
-        $companies = Company::where('id','!=', 1)->get();
+        $query      = $this->getInitialQuery();
+        $examType   = ExaminationType::all();
+        $companies  = Company::where('id','!=', 1)->get();
+        $spb        = $query->get();
+        $queryFilter= new QueryFilter($request, $query);
 
-        $query = Examination::select(DB::raw('examinations.*, companies.name as company_name'))
-        ->join('companies', 'examinations.company_id', '=', 'companies.id')
-                            ->whereNotNull('examinations.created_at')
-                            ->with('user')
-                            ->with(self::COMPANY)
-                            ->with('examinationType')
-                            ->with('examinationLab')
-                            ->with('media')
-                            ->with('device');
-        $query->whereNotNull(self::SPB_NUMBER);
-        $query->where('registration_status', 1);
-        $query->where('function_status', 1);
-        $query->where('contract_status', 1);
-
-        $spb = $query->get();
-
-        $queryFilter = new QueryFilter;
-
-        $searchFiltered = $queryFilter->search($request, $query, self::SPB_NUMBER);
-        $query = $searchFiltered[self::QUERY];
-        $search = $searchFiltered[self::SEARCH];
-
-        if ($searchFiltered['isNull'])
-        {
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "search";  
-            $dataSearch = array(self::SEARCH => $search);
-            $logs->data = json_encode($dataSearch);
-            $logs->created_by = $currentUser->id;
-            $logs->page = "Rekap Nomor SPB";
-            $logs->save();
+        if ($search != null){
+            $query->where(function($qry) use($search){
+                $qry->whereHas(self::DEVICE, function ($q) use ($search){
+                            return $q->where('name', 'like', '%'.strtolower($search).'%');
+                        })
+                    ->orWhereHas(self::COMPANY, function ($q) use ($search){
+                            return $q->where('name', 'like', '%'.strtolower($search).'%');
+                        })
+                    ->orWhere(self::SPB_NUMBER, 'like', '%'.strtolower($search).'%')
+                ;
+            });
+            $queryFilter= new QueryFilter($request, $query);
+            $logService->createLog(self::SEARCH, 'Rekap Nomor SPB', json_encode(array(self::SEARCH => $search)));
         }
 
-        $beforeDateFiltered = $queryFilter->beforeDate($request, $query, self::SPB_DATE);
-        $query = $beforeDateFiltered[self::QUERY];
-        $before = $beforeDateFiltered['before'];
+        $queryFilter
+            ->beforeDate(self::SPB_DATE)
+            ->afterDate(self::SPB_DATE)
+            ->spbNumber()
+            ->examination_type()
+            ->companyName()
+            ->paymentStatus()
+            ->getSortedAndOrderedData($sort_by, $sort_type)
+        ;
 
-        $afterDateFiltered = $queryFilter->afterDate($request, $query, self::SPB_DATE);
-        $query = $afterDateFiltered[self::QUERY];
-        $after = $afterDateFiltered['after'];
-
-        $spbFiltered = $queryFilter->spb($request, $query);
-        $query = $spbFiltered[self::QUERY];
-        $filterSpb = $spbFiltered['filterSpb'];
-
-        $typeFiltered = $queryFilter->type($request, $query, 'examination_type_id');
-        $query = $typeFiltered[self::QUERY];
-        $type = $typeFiltered['type'];
-
-        $companyFiltered = $queryFilter->company($request, $query, 'name');
-        $query = $companyFiltered[self::QUERY];
-        $filterCompany = $companyFiltered['filterCompany'];
-
-        $paymentStatusFiltered = $queryFilter->paymentStatus($request, $query);
-        $query = $paymentStatusFiltered[self::QUERY];
-        $filterPayment_status = $paymentStatusFiltered['filterPayment_status'];
-
-        $sortedAndOrderedData = $queryFilter->getSortedAndOrderedData($request, $query, self::SPB_NUMBER);
-        $data = $sortedAndOrderedData['data'];
-        $sort_by = $sortedAndOrderedData['sort_by'];
-        $sort_type = $sortedAndOrderedData['sort_type'];
+        $data = $queryFilter
+            ->getQuery()
+            ->paginate($paginate)
+        ;
         
-       (count($data) == 0) ? $message = 'Data not found': $message = '';
-
+        if (count($data) == 0){
+            $noDataFound = 'Data not found';
+        }
         
         return view('admin.spb.index')
-            ->with('message', $message)
             ->with('data', $data)
+            ->with('noDataFound', $noDataFound)
             ->with(self::SEARCH, $search)
-            ->with('before_date', $before)
-            ->with('after_date', $after)
-            ->with('spb', $spb)
-            ->with('filterSpb', $filterSpb)
-            ->with('type', $examType)
-            ->with('filterType', $type)
             ->with(self::COMPANY, $companies)
-            ->with('filterCompany', $filterCompany)
-            ->with('filterPayment_status', $filterPayment_status)
-            ->with('sort_by', $sort_by)
-            ->with('sort_type', $sort_type);
-    
+            ->with('spb', $spb)
+            ->with('type', $examType)
+            ->with('filterSpb', $queryFilter->spbNumber)
+            ->with('before_date', $queryFilter->before)
+            ->with('after_date', $queryFilter->after)
+            ->with('filterType', $queryFilter->examination_type)
+            ->with('filterCompany', $queryFilter->companyName)
+            ->with('filterPayment_status', $queryFilter->paymentStatus)
+            ->with('sort_by', $queryFilter->sort_by)
+            ->with('sort_type', $queryFilter->sort_type);
+
     }
 
     public function excel(Request $request) 
@@ -143,45 +119,40 @@ class SPBController extends Controller
         // the payments table's primary key, the user's first and last name, 
         // the user's e-mail address, the amount paid, and the payment
         // timestamp.
+        $logService = new LogService();
+        $search = trim($request->input(self::SEARCH));
+        $sort_by = self::SPB_NUMBER;
+        $sort_type = 'desc';
 
-        $query = Examination::select(DB::raw('examinations.*, companies.name as company_name'))
-        ->join('companies', 'examinations.company_id', '=', 'companies.id')
-                            ->whereNotNull('examinations.created_at')
-                            ->with('user')
-                            ->with(self::COMPANY)
-                            ->with('examinationType')
-                            ->with('examinationLab')
-                            ->with('media')
-                            ->with('device');
-        $query->whereNotNull(self::SPB_NUMBER);
-        $query->where('registration_status', 1);
-        $query->where('function_status', 1);
-        $query->where('contract_status', 1);
+        $query = $this->getInitialQuery();
+        $queryFilter= new QueryFilter($request, $query);
 
-        $queryFilter = new QueryFilter;
+        if ($search != null){
+            $query->where(function($qry) use($search){
+                $qry->whereHas(self::DEVICE, function ($q) use ($search){
+                        return $q->where('name', 'like', '%'.strtolower($search).'%');
+                    })
+                ->orWhereHas(self::COMPANY, function ($q) use ($search){
+                        return $q->where('name', 'like', '%'.strtolower($search).'%');
+                    })
+                ->orWhere(self::SPB_NUMBER, 'like', '%'.strtolower($search).'%');
+            });
+            $queryFilter= new QueryFilter($request, $query);
+        }
+        $queryFilter
+            ->beforeDate(self::SPB_DATE)
+            ->afterDate(self::SPB_DATE)
+            ->spbNumber()
+            ->examination_type()
+            ->companyName()
+            ->paymentStatus()
+            ->getSortedAndOrderedData($sort_by, $sort_type)
+        ;
 
-        $searchFiltered = $queryFilter->search($request, $query);
-        $query = $searchFiltered[self::QUERY];
-
-        $beforeDateFiltered = $queryFilter->beforeDate($request, $query, self::SPB_DATE);
-        $query = $beforeDateFiltered[self::QUERY];
-
-        $afterDateFiltered = $queryFilter->afterDate($request, $query, self::SPB_DATE);
-        $query = $afterDateFiltered[self::QUERY];
-
-        $spbFiltered = $queryFilter->spb($request, $query);
-        $query = $spbFiltered[self::QUERY];
-
-        $typeFiltered = $queryFilter->type($request, $query, 'examination_type_id');
-        $query = $typeFiltered[self::QUERY];
-
-        $companyFiltered = $queryFilter->company($request, $query, 'name');
-        $query = $companyFiltered[self::QUERY];
-
-        $paymentStatusFiltered = $queryFilter->paymentStatus($request, $query);
-        $query = $paymentStatusFiltered[self::QUERY];
-
-        $data = $queryFilter->getDataSortedAndOrdered($request, $query);
+        $data = $queryFilter
+            ->getQuery()
+            ->get()
+        ;
 
         $examsArray = []; 
 
@@ -202,17 +173,15 @@ class SPBController extends Controller
         // Convert each member of the returned collection into an array,
         // and append it to the payments array.
         foreach ($data as $row) {
-            $spb_number = $row->spb_number;
+            $examType_name = MyHelper::filterDefault($row->examinationType->name);
+            $examType_desc = MyHelper::filterDefault($row->examinationType->description);
             $spb_date = date("d-m-Y", strtotime($row->spb_date));
-            $examType_name = Helper::filterDefault($row->examinationType->name);
-            $examType_desc = Helper::filterDefault($row->examinationType->description);
-            $company_name = Helper::filterDefault($row->company->name);
-            /*Device*/
-            $device_name = Helper::filterDefault($row->device->name);
-            $device_mark = Helper::filterDefault($row->device->mark);
-            $device_capacity = Helper::filterDefault($row->device->capacity);
-            $device_model = Helper::filterDefault($row->device->model);
-            /*EndDevice*/
+            $spb_number = $row->spb_number;
+            $company_name = MyHelper::filterDefault($row->company->name);
+            $device_name = MyHelper::filterDefault($row->device->name);
+            $device_mark = MyHelper::filterDefault($row->device->mark);
+            $device_capacity = MyHelper::filterDefault($row->device->capacity);
+            $device_model = MyHelper::filterDefault($row->device->model);
 
             $price = $row->price;
             $status_bayar = $row->payment_status == '1' ? 'SUDAH' : 'BELUM';
@@ -230,22 +199,44 @@ class SPBController extends Controller
                 $status_bayar
             ];
         }
-        $currentUser = Auth::user();
-        $logs = new Logs;
-        $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-        $logs->action = "download_excel";   
-        $logs->data = "";
-        $logs->created_by = $currentUser->id;
-        $logs->page = "Rekap Nomor SPB";
-        $logs->save();
-
+        $logService->createLog('download_excel', 'Rekap Nomor SPB', "" );
+        
+        $excelFileName = 'Data SPB';
         // Generate and return the spreadsheet
-        Excel::create('Data SPB', function($excel) use ($examsArray) {
-
-            // Build the spreadsheet, passing in the payments array
+        Excel::create($excelFileName, function($excel) use ($examsArray) {
             $excel->sheet('sheet1', function($sheet) use ($examsArray) {
                 $sheet->fromArray($examsArray, null, 'A1', false, false);
             });
-        })->export('xlsx'); 
+        })->store('xlsx');
+
+        $file = Storage::disk('tmp')->get($excelFileName.'.xlsx');
+
+        $headers = [
+            'Content-Type' => 'Application/Spreadsheet',
+            'Content-Description' => 'File Transfer',
+            'Content-Disposition' => "attachment; filename=$excelFileName.xlsx",
+            'filename'=> "$excelFileName.xlsx"
+        ];
+        return response($file, 200, $headers);
+    }
+
+    private function getInitialQuery()
+    {
+
+        $query = Examination::select(DB::raw('examinations.*, companies.name as company_name'))
+        ->join('companies', 'examinations.company_id', '=', 'companies.id')
+                            ->whereNotNull('examinations.created_at')
+                            ->with('user')
+                            ->with(self::COMPANY)
+                            ->with('examinationType')
+                            ->with('examinationLab')
+                            ->with('media')
+                            ->with(self::DEVICE);
+        $query->whereNotNull(self::SPB_NUMBER);
+        $query->where('registration_status', 1);
+        $query->where('function_status', 1);
+        $query->where('contract_status', 1);
+
+        return $query;
     }
 }

@@ -269,7 +269,9 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php $no=1; ?>
+								@php
+									$no=1;
+								@endphp
 								@if(count($data)>0)
 									@foreach($data as $item)
 										<tr>
@@ -279,7 +281,7 @@
 											<td class="center">{{ $item->device->name }}</td>
 											<td class="center">{{ $item->device->mark }}</td>
 											<td class="center">{{ $item->device->capacity }}</td>
-											<td class="center"><?php echo number_format($item->price, 0, '.', ','); ?></td>
+											<td class="center">{{ number_format($item->price, 0, '.', ',') }}</td>
 											<td class="center">
 												@if($item->payment_status == '1')
 													SUDAH
@@ -295,12 +297,14 @@
 												@endforeach
 											</td>
 										</tr>
-									<?php $no++ ?>
+									@php
+										$no++
+									@endphp
 									@endforeach
 								@else
 									<tr>
 										<td colspan=9 class="center">
-											Data Not Found
+											{{$noDataFound}}
 										</td>
 									</tr>
 								@endif
@@ -310,7 +314,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								<?php echo $data->appends(array('search' => $search,'before_date' => $before_date,'after_date' => $after_date,'type' => $filterType,'spb' => $filterSpb,'company' => $filterCompany,'payment_status' => $filterPayment_status,'sort_by' => $sort_by,'sort_type' => $sort_type))->links(); ?>
+								{{$data->appends(array('search' => $search,'before_date' => $before_date,'after_date' => $after_date,'type' => $filterType,'spb' => $filterSpb,'company' => $filterCompany,'payment_status' => $filterPayment_status,'sort_by' => $sort_by,'sort_type' => $sort_type))->links()}}
 							</div>
 						</div>
 					</div>
