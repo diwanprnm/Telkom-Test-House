@@ -356,8 +356,6 @@ class IncomeController extends Controller
 		}
 		
         $data = Kuitansi::find($id)->get()[0];
-        
-        //dd($data);
 
 	    return \Redirect::route('cetakHasilKuitansi', [
 			'nomor' => $this->filterUrlEncode($data->number),
