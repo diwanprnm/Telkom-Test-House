@@ -407,3 +407,18 @@ $factory->define(App\Questionpriv::class, function (Faker\Generator $faker, $par
         'updated_at' => Carbon\Carbon::now()
     ];
 });
+
+$factory->define(App\Testimonial::class, function (Faker\Generator $faker, $params) {
+    return [
+        'id' => $faker->uuid,
+        'examination_id' => function () {
+            return factory(App\Examination::class)->create()->id;
+        },
+        'message' => $faker->sentence(6, true),
+        'is_active' => 0,
+        'created_by' => 1,
+        'updated_by' => 1,
+        'created_at' => Carbon\Carbon::now(),
+        'updated_at' => Carbon\Carbon::now()
+    ];
+});

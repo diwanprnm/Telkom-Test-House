@@ -37,35 +37,31 @@ class TestimonialController extends Controller
      */
     public function index(Request $request)
     {
-        $currentUser = Auth::user();
-
-        if ($currentUser){
-            $message = null;
-            $paginate = 10;
-            $search = trim($request->input('search'));
-            
-            if ($search != null){
-                $testimonials = Testimonial::whereNotNull(self::CREATED_AT)
-					->with('examination.user')
-					->with('examination.company')
-                    ->where(self::MESSAGE,'like','%'.$search.'%')
-                    ->orderBy('updated_at')
-                    ->paginate($paginate);
-            }else{
-                $testimonials = Testimonial::whereNotNull(self::CREATED_AT)
-                    ->orderBy(self::CREATED_AT, 'DESC')
-                    ->paginate($paginate);
-            }
-            
-            if (count($testimonials) == 0){
-                $message = 'Data not found';
-            }
-            
-            return view('admin.testimonial.index')
-                ->with(self::MESSAGE, $message)
-                ->with('data', $testimonials)
-                ->with('search', $search);
+        $noDataFound = '';
+        $paginate = 10;
+        $search = trim($request->input('search'));
+        
+        if ($search != null){
+            $testimonials = Testimonial::whereNotNull(self::CREATED_AT)
+                ->with('examination.user')
+                ->with('examination.company')
+                ->where(self::MESSAGE,'like','%'.$search.'%')
+                ->orderBy('updated_at')
+                ->paginate($paginate);
+        }else{
+            $testimonials = Testimonial::whereNotNull(self::CREATED_AT)
+                ->orderBy(self::CREATED_AT, 'DESC')
+                ->paginate($paginate);
         }
+        
+        if (count($testimonials) == 0){
+            $noDataFound = 'Data not found';
+        }
+        
+        return view('admin.testimonial.index')
+            ->with('noDataFound', $noDataFound)
+            ->with('data', $testimonials)
+            ->with('search', $search);
     }
 
     /**
@@ -138,8 +134,7 @@ class TestimonialController extends Controller
             Session::flash(self::MESSAGE, 'Information successfully updated');
             return redirect('/admin/testimonial');
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
-            return redirect('/admin/testimonial/'.$testimonial->id.'edit');
+            return redirect('/admin/testimonial/'.$testimonial->id.'edit')->with('error', 'Save failed');
         }
     }
 
