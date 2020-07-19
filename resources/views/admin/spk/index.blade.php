@@ -251,7 +251,7 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
-							<caption>(SPJ) Surat Perintah Jalan Table</caption>
+							<caption>(SPK) Surat Perintah Kerja Table</caption>
 							<thead>
 								<tr>
 									<th class="center" scope="col">No</th>
@@ -265,32 +265,44 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php $no=1; ?>
+								@php
+									$no=1;
+								@endphp
 								@if(count($data)>0)
 									@foreach($data as $item)
-										@if(no==1)
-											<?php continue; ?>
-										@endif
+										{{-- @if($no==1)
+											@php
+												continue;
+											@endphp
+										@endif --}}
 										<tr>
-											<td class="center">{{$no}}</td>
+											<td class="center">{{ $no }}</td>
 											<td class="center">{{ $item->SPK_NUMBER }}</td>
 											<td class="center">{{ $item->lab_name }}</td>
 											<td class="center">{{ $item->TESTING_TYPE }} ({{ $item->TESTING_TYPE_DESC }})</td>
 											<td class="center">{{ $item->COMPANY_NAME }}</td>
 											<td class="center">{{ $item->DEVICE_NAME }}</td>
-											<td class="center">{{ $examsArray[no][5] }}</td>
+											<td class="center">
+												@if (isset($listFlowStatus[$item->FLOW_STATUS]))
+													{{ $listFlowStatus[$item->FLOW_STATUS] }}
+												@else
+													Unkown Status
+												@endif
+											</td>
 											<td class="center">
 												<div>
 													<a href="{{URL::to('admin/spk/'.$item->ID.'')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
 												</div>
 											</td>
 										</tr>
-									<?php $no++ ?>
+									@php
+										$no++
+									@endphp
 									@endforeach
 								@else
 									<tr>
 										<td colspan=8 class="center">
-											Data Not Found
+											{{$noDataFound}}
 										</td>
 									</tr>
 								@endif
@@ -300,7 +312,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								<?php echo $data->appends(array('search' => $search,'before_date' => $before_date,'after_date' => $after_date,'type' => $filterType,'spk' => $filterSpk,'company' => $filterCompany,'lab' => $filterLab,'sort_by' => $sort_by,'sort_type' => $sort_type))->links(); ?>
+								{{ $data->appends(array('search' => $search,'before_date' => $before_date,'after_date' => $after_date,'type' => $filterType,'spk' => $filterSpk,'company' => $filterCompany,'lab' => $filterLab,'sort_by' => $sort_by,'sort_type' => $sort_type))->links() }}
 							</div>
 						</div>
 					</div>

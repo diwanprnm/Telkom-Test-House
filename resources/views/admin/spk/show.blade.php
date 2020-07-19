@@ -29,27 +29,32 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+							<caption>(SPK) Surat Perintah Kerja Table</caption>
 							<thead>
 								<tr>
-									<th class="center">Proses ke-</th>
-									<th class="center">Aksi</th>
-									<th class="center">Keterangan</th>
-									<th class="center">Oleh</th>
-                                    <th class="center">Waktu</th>
+									<th class="center" scope="col">Proses ke-</th>
+									<th class="center" scope="col">Aksi</th>
+									<th class="center" scope="col">Keterangan</th>
+									<th class="center" scope="col">Oleh</th>
+                                    <th class="center" scope="col">Waktu</th>
 								</tr>
 							</thead>
 							<tbody>
-								<?php $no=1; ?>
-								@if(count($data)>0)
+								@php
+									$no=1;
+								@endphp
+								@if(count($data))
 									@foreach($data as $item)
 										<tr>
-											<td class="center">{{$no}}</td>
+											<td class="center">{{ $no }}</td>
 											<td class="center">{{ $item->ACTION }}</td>
 											<td class="center">{{ $item->REMARK }}</td>
 											<td class="center">{{ $item->CREATED_BY }}</td>
 											<td class="center">{{ $item->CREATED_DT }}</td>
 										</tr>
-									<?php $no++ ?>
+									@php
+										$no++
+									@endphp
 									@endforeach
 								@else
 									<tr>
