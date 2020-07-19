@@ -270,11 +270,6 @@
 								@endphp
 								@if(count($data)>0)
 									@foreach($data as $item)
-										{{-- @if($no==1)
-											@php
-												continue;
-											@endphp
-										@endif --}}
 										<tr>
 											<td class="center">{{ $no }}</td>
 											<td class="center">{{ $item->SPK_NUMBER }}</td>
