@@ -121,8 +121,8 @@ $factory->define(App\ExaminationLab::class, function (Faker\Generator $faker) {
         'updated_by' => '1',
         'created_at' => Carbon\Carbon::now(),
         'updated_at' => Carbon\Carbon::now(),
-        'lab_code' => $faker->bothify(5),
-        'lab_init' => $faker->bothify(10),
+        'lab_code' => $faker->numberBetween(1000,9000),
+        'lab_init' => $faker->numberBetween(1000,9000).$faker->numberBetween(1000,9000),
         'close_until' => Carbon\Carbon::now(),
         'open_at' => Carbon\Carbon::now()
     ];
@@ -530,5 +530,37 @@ $factory->define(App\STELSalesDetail::class, function (Faker\Generator $faker) {
         'updated_at' => Carbon\Carbon::now(),
         'qty' => $faker->numberBetween(100,900),
         'attachment' => 'test_attachment_'.$faker->word,
+    ];
+});
+
+$factory->define(App\TbMSPK::class, function (Faker\Generator $faker) {
+    return [
+        'ID'  => function () {
+            return factory(App\Examination::class)->create()->id;
+        },
+        'SPK_NUMBER' => $faker->numberBetween(100,900).$faker->word,
+        'LAB_CODE'  => $faker->word,
+        'TESTING_TYPE' => $faker->randomElement(['QA' ,'TA', 'VT', 'CAL']),
+        'DEVICE_NAME' => $faker->word,
+        'COMPANY_NAME' => $faker->word,
+        'FLOW_STATUS' =>  $faker->numberBetween(1,23),
+        'CREATED_BY' => 1,
+        'CREATED_DT' => Carbon\Carbon::now(),
+        'UPDATED_BY' => 1,
+        'UPDATED_DT' => Carbon\Carbon::now(),
+    ];
+});
+$factory->define(App\TbHSPK::class, function (Faker\Generator $faker) {
+    return [
+        'ID'  => function () {
+            return factory(App\Examination::class)->create()->id;
+        },
+        'SPK_NUMBER' => $faker->numberBetween(100,900).$faker->word,
+        'ACTION'  => $faker->word,
+        'REMARK' => $faker->word,
+        'CREATED_BY' => 1,
+        'CREATED_DT' => Carbon\Carbon::now(),
+        'UPDATED_BY' => 1,
+        'UPDATED_DT' => Carbon\Carbon::now(),
     ];
 });

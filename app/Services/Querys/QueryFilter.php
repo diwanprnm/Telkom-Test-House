@@ -13,24 +13,26 @@ class QueryFilter
     protected const SEARCH = 'search';
     protected const COMPANY = 'company';
     protected const SPB_NUMBER = 'spb_number';
-    protected const PAYMENT_STATUS = 'payment_status';
     protected const SORT_BY = 'sort_by';
     protected const SORT_TYPE = 'sort_type';
 
     //chain 
     public $request;
     public $query;
-    public $before;
-    public $after;
-    public $data;
-    public $sort_by;
-    public $sort_type;
-    public $spbNumber;
-    public $examination_type;
-    public $examination_lab;
-    public $noGudang;
-    public $companyName;
-    public $paymentStatus;
+    public $before = '';
+    public $after = '';
+    public $data = '';
+    public $sort_by = '';
+    public $sort_type = '';
+    public $spbNumber = '';
+    public $spkNumber = '';
+    public $testingType = '';
+    public $examination_type = '';
+    public $examination_lab = '';
+    public $labCode = '';
+    public $noGudang = '';
+    public $companyName = '';
+    public $paymentStatus = '';
 
     public function __construct(Request $request, $query)
     {
@@ -78,6 +80,18 @@ class QueryFilter
         return $this;
     }
 
+    public function testingType($requestName = 'type', $searchName='TESTING_TYPE')
+    {
+        if ($this->request->has($requestName)){
+            $this->testingType = $this->request->get($requestName);
+            if($this->request->input($requestName) != 'all'){
+                $this->query->where($searchName, 'like', '%'.$this->request->get($requestName).'%');
+            }
+        }
+
+        return $this;
+    }
+
     public function examination_type($requestName = 'type')
     {
         if ($this->request->has($requestName)){
@@ -99,6 +113,18 @@ class QueryFilter
         }
         return $this;
     }
+
+    public function labCode($requestName = 'lab', $searchName='tb_m_spk.LAB_CODE')
+    {
+        if ($this->request->has($requestName)){
+            $this->labCode = $this->request->get($requestName);
+            if($this->request->input($requestName) != 'all'){
+                $this->query->where($searchName, $this->request->get($requestName));
+            }
+        }
+        return $this;
+    }
+
     public function noGudang($requestName = 'nogudang', $searchName='no'){
 
         if ($this->request->has($requestName)){
@@ -136,6 +162,17 @@ class QueryFilter
     {
         if ($this->request->has($requestName )){
             $this->spbNumber = $this->request->get($requestName );
+            if($this->request->input($requestName ) != 'all'){
+                $this->query->where($searchName, $this->request->get($requestName ));
+            }
+        }
+        return $this;
+    }
+
+    public function spkNumber($requestName = 'spk', $searchName='SPK_NUMBER')
+    {
+        if ($this->request->has($requestName )){
+            $this->spkNumber = $this->request->get($requestName );
             if($this->request->input($requestName ) != 'all'){
                 $this->query->where($searchName, $this->request->get($requestName ));
             }
