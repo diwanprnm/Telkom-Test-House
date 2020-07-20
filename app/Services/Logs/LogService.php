@@ -26,5 +26,19 @@ class LogService
         $logs->save();
     }
 
+    public function createAdminLog($action = '', $page = '',$data = '', $reason = '' )
+    {
+        $currentUser = Auth::user();
+        
+        $logs = new Logs_administrator;
+        $logs->id = Uuid::uuid4();
+        $logs->user_id = $currentUser->id;
+        $logs->action = $action;
+        $logs->page = $page;
+        $logs->reason = $reason;
+        $logs->data = $data;
+        $logs->save();
+    }
+
 
 }

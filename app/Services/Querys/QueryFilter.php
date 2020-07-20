@@ -7,14 +7,15 @@ use App\Http\Requests;
 
 class QueryFilter
 {
-    protected const BEFORE_DATE = 'before_date';
     protected const AFTER_DATE = 'after_date';
-    protected const QUERY = 'query';
-    protected const SEARCH = 'search';
+    protected const BEFORE_DATE = 'before_date';
     protected const COMPANY = 'company';
-    protected const SPB_NUMBER = 'spb_number';
+    protected const QUERY = 'query';
+    protected const PAYMENT_STATUS = 'payment_status';
+    protected const SEARCH = 'search';
     protected const SORT_BY = 'sort_by';
     protected const SORT_TYPE = 'sort_type';
+    protected const SPB_NUMBER = 'spb_number';
 
     //chain 
     public $request;
@@ -33,6 +34,7 @@ class QueryFilter
     public $noGudang = '';
     public $companyName = '';
     public $paymentStatus = '';
+    public $paymentAllStatus = '';
 
     public function __construct(Request $request, $query)
     {
@@ -147,12 +149,23 @@ class QueryFilter
         return $this;
     }
 
-    public function paymentStatus($requestName = 'payment_status', $searchName='payment_status')
+    public function paymentStatus($requestName = self::PAYMENT_STATUS, $searchName=self::PAYMENT_STATUS)
     {
         if ($this->request->has($requestName)){
             $this->paymentStatus = $this->request->get($requestName);
             if($this->request->input($requestName) != 'all'){
                 $this->request->input($requestName) == '1' ? $this->query->where($searchName, '=', 1) : $this->query->where($searchName, '!=', 1);
+            }
+        }
+        return $this;
+    }
+
+    public function paymentAllStatus($requestName = self::PAYMENT_STATUS, $searchName=self::PAYMENT_STATUS)
+    {
+        if ($this->request->has($requestName)){
+            $this->paymentAllStatus = $this->request->get($requestName);
+            if($this->request->input($requestName) != 'all'){
+                $this->query->where($searchName, $this->request->get($requestName));
             }
         }
         return $this;
