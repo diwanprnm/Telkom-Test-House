@@ -796,6 +796,8 @@ class ExaminationController extends Controller
                     $exam->spk_code = $spk_number_forOTR;
                     $exam->spk_date = date('Y-m-d');
                     $spk_created = 1;
+                    $exam->spb_status = $status;
+                    $exam->payment_status = $status;
                 }
 
 				if($exam->contract_status){
