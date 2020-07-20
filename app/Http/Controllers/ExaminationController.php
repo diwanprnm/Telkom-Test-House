@@ -806,7 +806,7 @@ class ExaminationController extends Controller
 				->with('examinationLab')
 				->first();
 
-				if ($exam->spk_code == null && $exam->company_id == '74629ce1-2e32-4cdf-adae-4d3d42ca9bb1'){
+				if ($exam->spk_code == null && $exam->company_id == '0fbf131c-32e3-4c9a-b6e0-a0f217cb2830'){
                     $spk_number_forOTR = $this->generateSPKCode($exam_forOTR->examinationLab->lab_code,$exam_forOTR->examinationType->name,date('Y'));
                     $exam->spk_code = $spk_number_forOTR;
                     $exam->spk_date = date('Y-m-d');
