@@ -791,11 +791,28 @@ class ExaminationController extends Controller
 					$attach_name = $attach->attachment;
 				// $this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.contract", "Upload Tinjauan Pustaka",$path_file."/".$attach_name);
 
-				if ($exam->spk_code == null && $exam->company_id == '74629ce1-2e32-4cdf-adae-4d3d42ca9bb1'){
+				$client = new Client([
+					'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+					// Base URI is used with relative requests
+					// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+					'base_uri' => config("app.url_api_bsp"),
+					'http_errors' => false,
+					// You can set any number of default request options.
+					'timeout'  => 60.0,
+				]);
+
+				$exam_forOTR = Examination::where('id', $exam->id)
+				->with('examinationType')
+				->with('examinationLab')
+				->first();
+
+				if ($exam->spk_code == null && $exam->company_id == '0fbf131c-32e3-4c9a-b6e0-a0f217cb2830'){
                     $spk_number_forOTR = $this->generateSPKCode($exam_forOTR->examinationLab->lab_code,$exam_forOTR->examinationType->name,date('Y'));
                     $exam->spk_code = $spk_number_forOTR;
                     $exam->spk_date = date('Y-m-d');
                     $spk_created = 1;
+                    $exam->spb_status = $status;
+                    $exam->payment_status = $status;
                 }
 
 				if($exam->contract_status){
