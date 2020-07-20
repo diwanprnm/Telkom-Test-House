@@ -790,6 +790,10 @@ class ExaminationController extends Controller
 				$attach = ExaminationAttach::where('name', 'Tinjauan Kontrak')->where('examination_id', ''.$id.'')->first();
 					$attach_name = $attach->attachment;
 				// $this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.contract", "Upload Tinjauan Pustaka",$path_file."/".$attach_name);
+				$exam_forOTR = Examination::where('id', $exam->id)
+				->with('examinationType')
+				->with('examinationLab')
+				->first();
 
 				if ($exam->spk_code == null && $exam->company_id == '74629ce1-2e32-4cdf-adae-4d3d42ca9bb1'){
                     $spk_number_forOTR = $this->generateSPKCode($exam_forOTR->examinationLab->lab_code,$exam_forOTR->examinationType->name,date('Y'));
