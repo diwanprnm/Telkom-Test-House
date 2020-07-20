@@ -790,6 +790,17 @@ class ExaminationController extends Controller
 				$attach = ExaminationAttach::where('name', 'Tinjauan Kontrak')->where('examination_id', ''.$id.'')->first();
 					$attach_name = $attach->attachment;
 				// $this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.contract", "Upload Tinjauan Pustaka",$path_file."/".$attach_name);
+
+				$client = new Client([
+					'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+					// Base URI is used with relative requests
+					// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+					'base_uri' => config("app.url_api_bsp"),
+					'http_errors' => false,
+					// You can set any number of default request options.
+					'timeout'  => 60.0,
+				]);
+
 				$exam_forOTR = Examination::where('id', $exam->id)
 				->with('examinationType')
 				->with('examinationLab')
