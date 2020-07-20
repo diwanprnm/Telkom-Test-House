@@ -39,6 +39,7 @@ class DevicencController extends Controller
 	private const DEVICE_MOD = 'devices.model';
 	private const QA_DATE = 'qa_date';
 	private const ADMIN = '/admin/devicenc/';
+	private const TOTBIY = 'examinations.price AS totalBiaya';
 	
     public function __construct()
     {

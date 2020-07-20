@@ -11,6 +11,7 @@ use App\Logs;
 
 use Auth;
 use Session;
+use Image;
 
 // UUID
 use Ramsey\Uuid\Uuid;
@@ -107,8 +108,33 @@ class FooterController extends Controller
         $footer = new Footer;
         $footer->id = Uuid::uuid4();
         $footer->description = $request->input($this::DESC);
-
-        if ($request->hasFile($this::IMAGE)) {
+        
+        $allowedImage = ['jpeg','jpg','png'];
+       
+        if ($request->hasFile($this::IMAGE)) { 
+            $file = $request->file($this::IMAGE);
+            $ext = $file->getClientOriginalExtension(); 
+            $file_name = 'footer_'.$request->file($this::IMAGE)->getClientOriginalName();
+            
+            $is_uploaded = false;
+           
+              if (in_array($ext, $allowedImage))
+            { 
+                $image = Image::make($file);   
+                $is_uploaded = Storage::disk('minio')->put("footer/".$footer->id."/$file_name",(string)$image->encode()); 
+             }else{
+                Session::flash('error', 'Format Not Available');
+                return redirect('/admin/footer/create');
+            } 
+             
+            if($is_uploaded){
+                $company->npwp_file = $file_name;
+            }else{
+                Session::flash($this::ERR, 'Save Image to directory failed');
+                return redirect($this::CREATE);
+            }
+        }        
+      /*  if ($request->hasFile($this::IMAGE)) {
            
             $name_file = 'footer_'.$request->file($this::IMAGE)->getClientOriginalName();
             $path_file = public_path().'/media/footer';
@@ -121,7 +147,7 @@ class FooterController extends Controller
                 Session::flash($this::ERR, 'Save Image to directory failed');
                 return redirect($this::CREATE);
             }
-        }
+        } */
         
         $footer->is_active = $request->input($this::ACT);
         $footer->created_by = $currentUser->id;

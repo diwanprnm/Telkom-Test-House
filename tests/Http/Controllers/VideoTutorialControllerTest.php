@@ -37,12 +37,13 @@ class VideoTutorialControllerTest extends TestCase
         $user = User::where('id', '=', '1')->first();
         $this->actingAs($user)
             ->visit('admin/article/create')
-            ->see('<h1 class="mainTitle">TAMBAH ARTIKEL BARU</h1>')
-            ->type('Testing Article store', 'title')
-            ->type('Good type', 'type')
-            ->select('0', 'is_active')
-            ->type('Teks ini mendeskripsikan isi artikel', 'description')
-            ->type('This text descripted the article', 'description_english')
+            ->see('<h1 class="mainTitle">Manage URL Information</h1>')
+            ->type('Testing url', 'profile_url')
+            ->type('Testing url', 'buy_stel_url')
+            ->type('Testing url', 'qa_url')
+            ->type('Testing url', 'ta_url')
+            ->type('Testing url', 'vt_url')
+            ->type('Testing url', 'playlist_url')
             ->press('submit');
         //check view and see flash message "certificates is successfully created"
         $this->assertResponseStatus(200)

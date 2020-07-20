@@ -17,6 +17,7 @@ use App\Logs;
 use Auth;
 use Session;
 use Hash;
+use Image;
 
 // UUID
 use Ramsey\Uuid\Uuid;
