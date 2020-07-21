@@ -5,7 +5,7 @@ namespace App\Services\Logs;
 use Auth;
 use App\Logs;
 use App\User;
-
+use App\Logs_administrator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
