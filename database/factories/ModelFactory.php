@@ -506,7 +506,7 @@ $factory->define(App\STELSalesAttach::class, function (Faker\Generator $faker) {
         'stel_sales_id' => function () {
             return factory(App\STELSales::class)->create()->id;
         },
-        'attachment' => 'test_attachment_'.$faker->word,
+        'attachment' => 'testing.jpg',
         'created_by' => 1,
         'updated_by' => 1,
         'created_at' => Carbon\Carbon::now(),
@@ -528,7 +528,7 @@ $factory->define(App\STELSalesDetail::class, function (Faker\Generator $faker) {
         'updated_by' => 1,
         'created_at' => Carbon\Carbon::now(),
         'updated_at' => Carbon\Carbon::now(),
-        'qty' => $faker->numberBetween(100,900),
+        'qty' => 1,
         'attachment' => 'test_attachment_'.$faker->word,
     ];
 });
