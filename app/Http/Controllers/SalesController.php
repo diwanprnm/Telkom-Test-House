@@ -24,7 +24,7 @@ use Session;
 use Validator;
 use Excel;
 use Response;
-
+use Storage;
 use File;
 
 use Ramsey\Uuid\Uuid;
@@ -71,7 +71,7 @@ class SalesController extends Controller
     private const STELS_NAME = 'stels.name';
     private const STELS_PRICE = 'stels.price';
     private const STELS_SALES = 'stels_sales';
-    private const STELS_SALES_ATTACHMENT_DOT_STALE_SALES_ID = 'stels_sales_attachment.stel_sales_id';
+    private const STELS_SALES_ATTACHMENT_DOT_STEL_SALES_ID = 'stels_sales_attachment.stel_sales_id';
     private const STELS_SALES_DOT_ID = 'stels_sales.id';
     private const STELS_SALES_DETAIL_ATTACHMENT = 'stels_sales_detail.attachment';
     private const STELS_SALES_DETAIL_DOT_ID = 'stels_sales_detail.id';
@@ -163,31 +163,25 @@ class SalesController extends Controller
             Session::flash(self::MESSAGE, 'Sales successfully created');
             return redirect(self::ADMIN_SALES);
         } catch(Exception $e){
-            Session::flash(self::ERROR, 'Save failed');
-            return redirect('/admin/sales/create');
+            return redirect('/admin/sales/create')->with(self::ERROR, 'Save failed');
         }
     } 
 
     public function show($id)
-    { 
-        $currentUser = Auth::user();
-
-        if($currentUser){
-            $select = array(self::STELS_NAME,self::STELS_PRICE,self::STELS_CODE,self::STELS_SALES_DETAIL_QTY,self::STELS_SALES_DETAIL_DOT_ID,self::STELS_SALES_DETAIL_ATTACHMENT); 
-            $STELSales_detail = STELSalesDetail::select($select)->where(self::STELS_SALES_ID,$id)
-                        ->join(self::STELS,self::STELS_ID,"=",self::STELS_SALES_DETAIL_DOT_STELS_ID)
-                        ->get();
-			$STELSales = STELSales::find($id);
-			return view('admin.sales.detail')
+    {
+        $select = array(self::STELS_NAME,self::STELS_PRICE,self::STELS_CODE,self::STELS_SALES_DETAIL_QTY,self::STELS_SALES_DETAIL_DOT_ID,self::STELS_SALES_DETAIL_ATTACHMENT); 
+        $STELSales_detail = STELSalesDetail::select($select)->where(self::STELS_SALES_ID,$id)
+                    ->join(self::STELS,self::STELS_ID,"=",self::STELS_SALES_DETAIL_DOT_STELS_ID)
+                    ->get();
+        $STELSales = STELSales::find($id);
+        if(!$STELSales){return redirect(self::ADMIN_SALES)->with(self::ERROR, 'Undefined Data'); }
+        return view('admin.sales.detail')
             ->with('data', $STELSales_detail) 
             ->with('id_sales', $id) 
             ->with('id_kuitansi', $STELSales->id_kuitansi) 
             ->with('faktur_file', $STELSales->faktur_file) 
             ->with('price_total', $STELSales->total)
-			;     
-        }else{
-            redirect(self::LOGIN);
-        }
+        ;
     }  
 
     public function sales_detail($id)
@@ -270,17 +264,28 @@ class SalesController extends Controller
         $logService->createLog('download_excel', self::SALES,'');
 
         // Generate and return the spreadsheet
-        Excel::create('Data Sales', function($excel) use ($examsArray) { 
+        $excelFileName = 'Data Sales';
+        Excel::create($excelFileName, function($excel) use ($examsArray) { 
             $excel->sheet('sheet1', function($sheet) use ($examsArray) {
                 $sheet->fromArray($examsArray, null, 'A1', false, false);
             });
-        })->export('xlsx'); 
+        })->store('xlsx');
+
+        $file = Storage::disk('tmp')->get($excelFileName.'.xlsx');
+
+        $headers = [
+            'Content-Type' => 'Application/Spreadsheet',
+            'Content-Description' => 'File Transfer',
+            'Content-Disposition' => "attachment; filename=$excelFileName.xlsx",
+            'filename'=> "$excelFileName.xlsx"
+        ];
+        return response($file, 200, $headers);
     }
 
     public function edit($id)
     {
-        $select = array(self::STELS_SALES_DOT_ID,"stels_sales.id_kuitansi","stels_sales.faktur_file","stels_sales_attachment.attachment",self::STELS_SALES_ATTACHMENT_DOT_STALE_SALES_ID);  
-        $stel = STELSalesAttach::select($select)->rightJoin(self::STELS_SALES,self::STELS_SALES_DOT_ID,"=",self::STELS_SALES_ATTACHMENT_DOT_STALE_SALES_ID)
+        $select = array(self::STELS_SALES_DOT_ID,"stels_sales.id_kuitansi","stels_sales.faktur_file","stels_sales_attachment.attachment",self::STELS_SALES_ATTACHMENT_DOT_STEL_SALES_ID);  
+        $stel = STELSalesAttach::select($select)->rightJoin(self::STELS_SALES,self::STELS_SALES_DOT_ID,"=",self::STELS_SALES_ATTACHMENT_DOT_STEL_SALES_ID)
                 ->where(self::STELS_SALES_DOT_ID,$id)->first();
 				
 		$select = array(self::STELS_NAME,self::STELS_PRICE,self::STELS_CODE,self::STELS_SALES_DETAIL_QTY,self::STELS_SALES_DETAIL_DOT_ID,self::STELS_SALES_DETAIL_ATTACHMENT,"stels.attachment as stelAttach",self::STELS_SALES_INVOICE, self::AS_COMPANY_NAME,self::STELS_SALES_DOT_PAYMENT_STATUS); 
@@ -430,8 +435,8 @@ class SalesController extends Controller
 
     public function upload($id)
     {
-        $select = array(self::STELS_SALES_DOT_ID,"stels_sales_attachment.attachment",self::STELS_SALES_ATTACHMENT_DOT_STALE_SALES_ID);  
-        $stel = STELSalesAttach::select($select)->rightJoin(self::STELS_SALES,self::STELS_SALES_DOT_ID,"=",self::STELS_SALES_ATTACHMENT_DOT_STALE_SALES_ID)
+        $select = array(self::STELS_SALES_DOT_ID,"stels_sales_attachment.attachment",self::STELS_SALES_ATTACHMENT_DOT_STEL_SALES_ID);  
+        $stel = STELSalesAttach::select($select)->rightJoin(self::STELS_SALES,self::STELS_SALES_DOT_ID,"=",self::STELS_SALES_ATTACHMENT_DOT_STEL_SALES_ID)
                 ->where(self::STELS_SALES_DOT_ID,$id)->first();
                 
         $select = array(self::STELS_NAME,self::STELS_PRICE,self::STELS_CODE,self::STELS_SALES_DETAIL_QTY,self::STELS_SALES_DETAIL_DOT_ID,self::STELS_SALES_DETAIL_ATTACHMENT,"stels.attachment as stelAttach",self::STELS_SALES_INVOICE,self::AS_COMPANY_NAME,self::STELS_SALES_DOT_PAYMENT_STATUS,"stels_sales.BILLING_ID",self::STELS_SALES_INVOICE); 
@@ -472,7 +477,6 @@ class SalesController extends Controller
             // update total stels_sales by stels_sales_detail.stels_sales_id
             if($stel_sales){
                 $logs_a_stel_sales = $stel_sales;
-                
                 $qty = $stel_sales_detail->qty;
                 $tax = 0.1;
                 $price = $stel_sales_detail->stel->price;
@@ -489,7 +493,7 @@ class SalesController extends Controller
             return redirect('/admin/sales/'.$stel_sales->id);
         }else{
             Session::flash(self::ERROR, 'Undefined Data');
-            return redirect('/admin/sales/'.$stel_sales->id);
+            return redirect('/admin/sales/');
         }
 
     }
@@ -499,11 +503,16 @@ class SalesController extends Controller
         $stel = STELSalesAttach::where("stel_sales_id",$id)->first();
 
         if ($stel){
-            $file = public_path().self::MEDIA_STEL.$stel->stel_sales_id."/".$stel->attachment;
-            $headers = array(
-              self::CONTENT_TYPE,
-            );
-            return Response::file($file, $headers);
+            $fileMinio = Storage::disk('minio')->get("stel/$stel->stel_sales_id/$stel->attachment");
+
+            $headers = [
+                'Content-Type' => 'image/jpeg', 
+                'Content-Description' => 'File Transfer',
+                'Content-Disposition' => "attachment; filename={$stel->attachment}",
+                'filename'=> $stel->attachment
+            ];
+            
+            return response($fileMinio, 200, $headers);
         }
     }
 
@@ -657,6 +666,7 @@ class SalesService
     
     public function getData(Request $request)
     {
+        $logService = new LogService();
         //query awal untuk sales controller
         $dataSales = $this->initialQuery(); 
         //inisial service sales dan queryFilter
@@ -665,7 +675,7 @@ class SalesService
         $searchFiltered = $this->search($request, $dataSales);
         if ($searchFiltered[self::SEARCH]!=''){
             $queryFilter = new QueryFilter($request, $searchFiltered['dataSales']);
-            LogService::createLog("Search Sales","Sales",array(self::SEARCH=>$searchFiltered[self::SEARCH]));
+            $logService->createLog('Search Sales','Sales',json_encode(array(self::SEARCH=>$searchFiltered[self::SEARCH])));
         }
         //filterquery
         $queryFilter
