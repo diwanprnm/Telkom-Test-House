@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Events\Notification;
 use App\NotificationTable;
 
-class NotificationSerice
+class NotificationService
 {
     public function make($data)
     {
@@ -20,6 +20,6 @@ class NotificationSerice
         $notification->updated_at = date("Y-m-d H:i:s");
         $notification->save();
         
-        return $notification->id; 
+        return $notification->id;
     }
 }
