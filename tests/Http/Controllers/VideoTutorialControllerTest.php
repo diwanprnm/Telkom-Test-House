@@ -17,39 +17,45 @@ class VideoTutorialControllerTest extends TestCase
         $user = User::where('id', '=', '1')->first();
         $this->actingAs($user)->call('GET','admin/videoTutorial');
         //Status sukses dan judul Certification
-        $this->assertResponseStatus(200)
-            ->see('<h1 class="mainTitle">Manage URL Information</h1>');
-    }
-
-  
-
-    
-
-    public function testCreate()
-    {
-        $user = User::where('id', '=', '1')->first();
-        $this->actingAs($user)->call('GET','admin/videoTutorial/create');
         $this->assertResponseStatus(200);
-            
     }
 
-    public function testStore()
+
+
+  /*  public function testStore()
     {
         $user = User::where('id', '=', '1')->first();
         $this->actingAs($user)
-            ->visit('admin/article/create')
-            ->see('<h1 class="mainTitle">Manage URL Information</h1>')
+            ->visit('admin/videoTutorial')
             ->type('Testing url', 'profile_url')
             ->type('Testing url', 'buy_stel_url')
             ->type('Testing url', 'qa_url')
             ->type('Testing url', 'ta_url')
             ->type('Testing url', 'vt_url')
             ->type('Testing url', 'playlist_url')
-            ->press('submit');
+            ->press('Submit');
         //check view and see flash message "certificates is successfully created"
-        $this->assertResponseStatus(200)
-            ->see('Article successfully created');
-    } 
+        $this->assertResponseStatus(200);
+    } */
 
+    public function test_stores_company()
+	{ 
+//$user = factory(App\User::class)->create(); 
+        $user = User::where('id', '=', '1')->first();
+        
+		$response =  $this->actingAs($user)->call('RESOURCE', 'admin/VideoTutorial/create', 
+		[ 
+	        'profile_url' => str_random(10),
+	        'buy_stel_url' => str_random(10),
+	        'qa_url' => str_random(10) ,
+	        'ta_url' =>  str_random(10),
+	        'vt_url' => str_random(10) ,
+	        'playlist_url' =>str_random(10) 
+	        
+	    ]);   
+		
+        $this->assertEquals(302, $response->status());
+	     
+	}
   
 }

@@ -63,34 +63,34 @@ class CalibrationChargeController extends Controller
         if ($currentUser){
             $message = null;
             $paginate = 10;
-            $search = trim($request->input($this::SEARCH));
+            $search = trim($request->input(self::SEARCH));
             $status = -1;
             
             if ($search != null){
-                $charge = CalibrationCharge::whereNotNull($this::CREATE)
-                    ->where($this::DEVICE,'like','%'.$search.'%')
-                    ->orderBy($this::DEVICE)
+                $charge = CalibrationCharge::whereNotNull(self::CREATE)
+                    ->where(self::DEVICE,'like','%'.$search.'%')
+                    ->orderBy(self::DEVICE)
                     ->paginate($paginate);
 
                     $logs = new Logs;
                     $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
                     $logs->action = "Search Calibration Charge";
-                    $datasearch = array($this::SEARCH2=>$search);
+                    $datasearch = array(self::SEARCH2=>$search);
                     $logs->data = json_encode($datasearch);
                     $logs->created_by = $currentUser->id;
-                    $logs->page = $this::CALIBRATION;
+                    $logs->page = self::CALIBRATION;
                     $logs->save();
             }else{
-                $query = CalibrationCharge::whereNotNull($this::CREATE);
+                $query = CalibrationCharge::whereNotNull(self::CREATE);
 
-                if ($request->has($this::IS_ACTIVE)){
-                    $status = $request->get($this::IS_ACTIVE);
-                    if ($request->get($this::IS_ACTIVE) > -1){
-                        $query->where($this::IS_ACTIVE, $request->get($this::IS_ACTIVE));
+                if ($request->has(self::IS_ACTIVE)){
+                    $status = $request->get(self::IS_ACTIVE);
+                    if ($request->get(self::IS_ACTIVE) > -1){
+                        $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
                     }
                 }
 
-                $charge = $query->orderBy($this::DEVICE)
+                $charge = $query->orderBy(self::DEVICE)
                                ->paginate($paginate);
             }
             
@@ -99,9 +99,9 @@ class CalibrationChargeController extends Controller
             }
             
             return view('admin.calibration.index')
-                ->with($this::MESSAGE, $message)
+                ->with(self::MESSAGE, $message)
                 ->with('data', $charge)
-                ->with($this::SEARCH, $search)
+                ->with(self::SEARCH, $search)
                 ->with('status', $status);
         }
     }
@@ -128,9 +128,9 @@ class CalibrationChargeController extends Controller
 
         $charge = new CalibrationCharge;
         $charge->id = Uuid::uuid4();
-        $charge->device_name = $request->input($this::DEVICE);
-        $charge->price = str_replace(",","",$request->input($this::PRICE));
-        $charge->is_active = $request->input($this::IS_ACTIVE);
+        $charge->device_name = $request->input('device_name');
+        $charge->price = str_replace(",","",$request->input('price'));
+        $charge->is_active = $request->input('is_active');
         $charge->created_by = $currentUser->id;
         $charge->updated_by = $currentUser->id;
 
@@ -142,13 +142,13 @@ class CalibrationChargeController extends Controller
             $logs->action = "Create Calibration Charge";
             $logs->data = $charge;
             $logs->created_by = $currentUser->id;
-            $logs->page = $this::CALIBRATION;
+            $logs->page = self::CALIBRATION;
             $logs->save();
 
-            Session::flash($this::MESSAGE, 'Charge successfully created');
+            Session::flash(self::MESSAGE, 'Charge successfully created');
             return redirect();
         } catch(Exception $e){
-            Session::flash($this::ERR, 'Save failed');
+            Session::flash(self::ERR, 'Save failed');
             return redirect('/admin/calibration/create');
         }
     }
@@ -191,14 +191,14 @@ class CalibrationChargeController extends Controller
 
         $charge = CalibrationCharge::find($id);
         $oldData = $charge;
-        if ($request->has($this::DEVICE)){
-            $charge->device_name = $request->input($this::DEVICE);
+        if ($request->has(self::DEVICE)){
+            $charge->device_name = $request->input(self::DEVICE);
         }
-        if ($request->has($this::PRICE)){
-            $charge->price = str_replace(",","",$request->input($this::PRICE));
+        if ($request->has(self::PRICE)){
+            $charge->price = str_replace(",","",$request->input(self::PRICE));
         }
-        if ($request->has($this::IS_ACTIVE)){
-            $charge->is_active = $request->input($this::IS_ACTIVE);
+        if ($request->has(self::IS_ACTIVE)){
+            $charge->is_active = $request->input(self::IS_ACTIVE);
         }
 
         $charge->updated_by = $currentUser->id;
@@ -211,13 +211,13 @@ class CalibrationChargeController extends Controller
             $logs->action = "Update Calibration Charge";
             $logs->data = $oldData;
             $logs->created_by = $currentUser->id;
-            $logs->page = $this::CALIBRATION;
+            $logs->page = self::CALIBRATION;
             $logs->save();
 
-            Session::flash($this::MESSAGE, 'Charge successfully updated');
-            return redirect($this::ADM);
+            Session::flash(self::MESSAGE, 'Charge successfully updated');
+            return redirect(self::ADM);
         } catch(Exception $e){
-            Session::flash($this::ERR, 'Save failed');
+            Session::flash(self::ERR, 'Save failed');
             return redirect('/admin/calibration/'.$charge->id.'/edit');
         }
     }
@@ -242,14 +242,14 @@ class CalibrationChargeController extends Controller
                 $logs->action = "Delete Calibration Charge";
                 $logs->data = $oldData;
                 $logs->created_by = $currentUser->id;
-                $logs->page = $this::CALIBRATION;
+                $logs->page = self::CALIBRATION;
                 $logs->save();
 
-                Session::flash($this::MESSAGE, 'Charge successfully deleted');
-                return redirect($this::ADM);
+                Session::flash(self::MESSAGE, 'Charge successfully deleted');
+                return redirect(self::ADM);
             }catch (Exception $e){
-                Session::flash($this::ERR, 'Delete failed');
-                return redirect($this::ADM);
+                Session::flash(self::ERR, 'Delete failed');
+                return redirect(self::ADM);
             }
         }
     }
@@ -267,33 +267,33 @@ class CalibrationChargeController extends Controller
         // the user's e-mail address, the amount paid, and the payment
         // timestamp.
 
-        $search = trim($request->input($this::SEARCH));
+        $search = trim($request->input(self::SEARCH));
        
 
         if ($search != null){
-            $charge = CalibrationCharge::whereNotNull($this::CREATE)
-                ->where($this::DEVICE,'like','%'.$search.'%')
-                ->orderBy($this::DEVICE);
+            $charge = CalibrationCharge::whereNotNull(self::CREATE)
+                ->where(self::DEVICE,'like','%'.$search.'%')
+                ->orderBy(self::DEVICE);
 
                 $logs = new Logs;
                 $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
                 $logs->action = "Search Calibration Charge";
-                $datasearch = array($this::SEARCH2=>$search);
+                $datasearch = array(self::SEARCH2=>$search);
                 $logs->data = json_encode($datasearch);
                 $logs->created_by = $currentUser->id;
-                $logs->page = $this::CALIBRATION;
+                $logs->page = self::CALIBRATION;
                 $logs->save();
         }else{
-            $query = CalibrationCharge::whereNotNull($this::CREATE);
+            $query = CalibrationCharge::whereNotNull(self::CREATE);
 
-            if ($request->has($this::IS_ACTIVE)){
-                 $request->get($this::IS_ACTIVE);
-                if ($request->get($this::IS_ACTIVE) > -1){
-                    $query->where($this::IS_ACTIVE, $request->get($this::IS_ACTIVE));
+            if ($request->has(self::IS_ACTIVE)){
+                 $request->get(self::IS_ACTIVE);
+                if ($request->get(self::IS_ACTIVE) > -1){
+                    $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
                 }
             }
 
-            $charge = $query->orderBy($this::DEVICE);
+            $charge = $query->orderBy(self::DEVICE);
         }
 
         $data = $charge->get();
