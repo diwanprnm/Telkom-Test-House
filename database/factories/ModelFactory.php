@@ -491,8 +491,8 @@ $factory->define(App\STELSales::class, function (Faker\Generator $faker) {
         'updated_at' => Carbon\Carbon::now(),
         'payment_code' => $faker->numberBetween(100,900),
         'cust_price_payment' =>  $faker->numberBetween(1000,9000).'000',
-        'id_kuitansi' =>'id_kuitansi_'.$faker->word,
-        'faktur_file' => 'test_faktur_file_'.$faker->word,
+        'id_kuitansi' =>'test_kuitansi.jpg',
+        'faktur_file' => 'test_faktur.jpg',
         'PO_ID' => 'test_po_id_'.$faker->word,
         'BILLING_ID' => 'test_billing_id_'.$faker->word,
         'INVOICE_ID' => 'test_invoice_id_'.$faker->word,
@@ -529,7 +529,7 @@ $factory->define(App\STELSalesDetail::class, function (Faker\Generator $faker) {
         'created_at' => Carbon\Carbon::now(),
         'updated_at' => Carbon\Carbon::now(),
         'qty' => 1,
-        'attachment' => 'test_attachment_'.$faker->word,
+        'attachment' => 'testing_watermark.jpg',
     ];
 });
 
