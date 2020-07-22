@@ -81,6 +81,9 @@
 								</div>
 								<div class="form-group">
 									@if($data->id_kuitansi != '')
+										@php
+											$data->id_kuitansi = preg_replace('/\\.[^.\\s]{3,4}$/', '', $data->id_kuitansi);
+										@endphp
 										<a href="{{ URL::to('/admin/downloadkuitansistel/'.$data->id_kuitansi) }}" target="_blank">
 					                    	{{ $data->id_kuitansi }}
 					                    </a>
