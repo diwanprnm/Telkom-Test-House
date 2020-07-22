@@ -77,7 +77,7 @@ class QuestionController extends Controller
             }
             
             return view('admin.question.index')
-                ->with(this::MESSA, $message)
+                ->with($this::MESSA, $message)
                 ->with('data', $data)
                 ->with($this::SEARCH, $search) ;
         }
@@ -120,13 +120,13 @@ class QuestionController extends Controller
             $logs->action = "Create Question Category";
             $logs->data = $question;
             $logs->created_by = $currentUser->id;
-            $logs->page = this::QUESTION;
+            $logs->page = $this::QUESTION;
             $logs->save();
 			
-            Session::flash(this::MESSA, 'question successfully created');
-			return redirect(this::ADMIN);
+            Session::flash($this::MESSA, 'question successfully created');
+			return redirect($this::ADMIN);
 		} catch(Exception $e){
-			Session::flash(this::ERR, 'Save failed');
+			Session::flash($this::ERR, 'Save failed');
 			return redirect('/admin/question/create');
 		}
     }
@@ -186,13 +186,13 @@ class QuestionController extends Controller
             $logs->action = "Update Question Category";
             $logs->data = $olddata;
             $logs->created_by = $currentUser->id;
-            $logs->page = this::QUESTION;
+            $logs->page = $this::QUESTION;
             $logs->save();
 
-            Session::flash(this::MESSA, 'Question successfully updated');
-            return redirect(this::ADMIN);
+            Session::flash($this::MESSA, 'Question successfully updated');
+            return redirect($this::ADMIN);
         } catch(Exception $e){
-            Session::flash(this::ERR, 'Save failed');
+            Session::flash($this::ERR, 'Save failed');
             return redirect('/admin/question/'.$data->id.'/edit');
         }
     }
@@ -217,18 +217,18 @@ class QuestionController extends Controller
                 $logs->action = "Delete Question Category";
                 $logs->data = $olddata;
                 $logs->created_by = $currentUser->id;
-                $logs->page = this::QUESTION;
+                $logs->page = $this::QUESTION;
                 $logs->save();
 
-                Session::flash(this::MESSA, 'Question successfully deleted');
-                return redirect(this::ADMIN);
+                Session::flash($this::MESSA, 'Question successfully deleted');
+                return redirect($this::ADMIN);
             }catch (Exception $e){
-                Session::flash(this::ERR, 'Delete failed');
-                return redirect(this::ADMIN);
+                Session::flash($this::ERR, 'Delete failed');
+                return redirect($this::ADMIN);
             }
         }else{
-             Session::flash(this::ERR, 'Question Not Found');
-                return redirect(this::ADMIN);
+             Session::flash($this::ERR, 'Question Not Found');
+                return redirect($this::ADMIN);
         }
     }
 }
