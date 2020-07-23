@@ -321,7 +321,7 @@ class SalesController extends Controller
         $success_count = $savedSTELFiles['success_count'];
         $data = $savedSTELFiles['data'];
         
-        /*TPN api_upload*/
+        /*TPN api_  */
         if($STELSales->BILLING_ID != null && $data != null){
             $data [] = array(
                 'name'=>"delivered",
@@ -449,7 +449,7 @@ class SalesController extends Controller
         
         if($STELSales[0]->BILLING_ID && !$STELSales[0]->INVOICE_ID){
             Session::flash(self::ERROR, "Can't upload attachment. Undefined INVOICE_ID!");
-            return redirect('/admin/sales,'.'/');
+            return redirect('/admin/sales'.'/');
         }else{
             return view('admin.sales.upload')
                 ->with('data', $stel)
@@ -498,7 +498,7 @@ class SalesController extends Controller
 
     }
 
-    public function viewMedia($id)
+    public function viewMedia($id) //bukti pembayaran
     {
         $stel = STELSalesAttach::where("stel_sales_id",$id)->first();
 
@@ -516,41 +516,75 @@ class SalesController extends Controller
         }
     }
 
-    public function viewWatermark($id)
+    public function viewWatermark($id) //Stel Detail Attachment
     {
         $stel = STELSalesDetail::where("id",$id)->first();
+
         if ($stel){
-            $file = public_path().'/media/stelAttach/'.$stel->id."/".$stel->attachment;
-            $headers = array(
-              self::CONTENT_TYPE,
-            );
-            return Response::file($file, $headers);
+            $fileMinio = Storage::disk('minio')->get("stelAttach/$stel->id/$stel->attachment");
+
+            $headers = [
+                'Content-Type' => 'image/jpeg', 
+                'Content-Description' => 'File Transfer',
+                'Content-Disposition' => "attachment; filename={$stel->attachment}",
+                'filename'=> $stel->attachment
+            ];
+            
+            return response($fileMinio, 200, $headers);
         }
     }
 
-    public function downloadkuitansistel($id)
+    public function downloadkuitansistel($id) //download kuitansi
     {
-        $stel = STELSales::where("id_kuitansi",$id)->first();
+        $stel = STELSales::where("id_kuitansi", 'like', $id . '%' )->first();
+
         if ($stel){
-            $file = public_path().self::MEDIA_STEL.$stel->id."/".$stel->id_kuitansi;
-            $headers = array(
-              self::CONTENT_TYPE,
-            );
-            return Response::file($file, $headers);
+            $fileMinio = Storage::disk('minio')->get("stel/$stel->id/$stel->id_kuitansi");
+
+            $headers = [
+                'Content-Type' => 'image/jpeg', 
+                'Content-Description' => 'File Transfer',
+                'Content-Disposition' => "attachment; filename={$stel->id_kuitansi}",
+                'filename'=> $stel->id_kuitansi
+            ];
+            
+            return response($fileMinio, 200, $headers);
         }
+
+        // if ($stel){
+        //     $file = public_path().self::MEDIA_STEL.$stel->id."/".$stel->id_kuitansi;
+        //     $headers = array(
+        //       self::CONTENT_TYPE,
+        //     );
+        //     return Response::file($file, $headers);
+        // }
     }
 
-    public function downloadfakturstel($id)
+    public function downloadfakturstel($id) //download faktur
     {
         $stel = STELSales::where("id",$id)->first();
+
         if ($stel){
-            $file = public_path().self::MEDIA_STEL.$stel->id."/".$stel->faktur_file;
-            $headers = array(
-              self::CONTENT_TYPE,
-              'Content-Disposition' => 'inline; filename="'.$stel->faktur_file.'"',
-            );
-            return Response::file($file, $headers);
+            $fileMinio = Storage::disk('minio')->get("stel/$stel->id/$stel->faktur_file");
+
+            $headers = [
+                'Content-Type' => 'image/jpeg', 
+                'Content-Description' => 'File Transfer',
+                'Content-Disposition' => "attachment; filename={$stel->faktur_file}",
+                'filename'=> $stel->faktur_file
+            ];
+            
+            return response($fileMinio, 200, $headers);
         }
+
+        // if ($stel){
+        //     $file = public_path().self::MEDIA_STEL.$stel->id."/".$stel->faktur_file;
+        //     $headers = array(
+        //       self::CONTENT_TYPE,
+        //       'Content-Disposition' => 'inline; filename="'.$stel->faktur_file.'"',
+        //     );
+        //     return Response::file($file, $headers);
+        // }
     }
 
     public function generateKuitansi(Request $request) {
@@ -569,6 +603,8 @@ class SalesController extends Controller
             $INVOICE_ID = $STELSales->INVOICE_ID;
             $res_invoice = $client->request('GET', self::V1_INVOICE.$INVOICE_ID);
             $invoice = json_decode($res_invoice->getBody());
+
+            dd($invoice);
             
             if($INVOICE_ID && $invoice && $invoice->status){
                 // Save Kuitansi
@@ -872,19 +908,22 @@ class SalesService
 
     public function saveSTELFiles($request, $STELSales, $data)
     {
+        $notifUploadSTEL = null;
         $attachment_count = 0;
         $success_count = 0;
         for($i=0;$i<count($request->input(self::STELS_SALES_DETAIL_ID));$i++){
+            $STELSalesDetail = STELSalesDetail::find($request->input(self::STELS_SALES_DETAIL_ID)[$i]);
             $attachment = $request->input('stels_sales_attachment')[$i];
             if(!$attachment){$attachment_count++;}
             if ($request->file(self::STEL_FILE)[$i]) {
+
+                $file = $request->file(self::STEL_FILE)[$i];
                 $name_file = 'stel_file_'.$request->file(self::STEL_FILE)[$i]->getClientOriginalName();
-                $path_file = public_path().'/media/stelAttach/'.$request->input(self::STELS_SALES_DETAIL_ID)[$i];
-                if (!file_exists($path_file)) {
-                    mkdir($path_file, 0775);
-                }
-                if($request->file(self::STEL_FILE)[$i]->move($path_file,$name_file)){
-                    $STELSalesDetail = STELSalesDetail::find($request->input(self::STELS_SALES_DETAIL_ID)[$i]);
+
+                $is_uploaded = Storage::disk('minio')->put("stelAttach/".$STELSalesDetail->id."/$name_file",$file->__toString());
+                $path_file = Storage::disk('minio')->url("stelAttach/".$STELSalesDetail->id."/$name_file");
+
+                if($is_uploaded){
                     $STELSalesDetail->attachment = $name_file;
                     $STELSalesDetail->save();
                     $notifUploadSTEL = 1;
@@ -893,7 +932,7 @@ class SalesService
                     /*TPN api_upload*/
                     $data [] = [
                             'name' => "file",
-                            'contents' => fopen($path_file.'/'.$name_file, 'r'),
+                            'contents' => fopen($path_file, 'r'),
                             'filename' => $request->file(self::STEL_FILE)[$i]->getClientOriginalName()
                         ];
                 }else{
@@ -904,7 +943,6 @@ class SalesService
         }
 
         return array(
-            'STELSalesDetail' => $STELSalesDetail,
             'attachment_count' => $attachment_count,
             'success_count' => $success_count,
             'notifUploadSTEL' => $notifUploadSTEL,
