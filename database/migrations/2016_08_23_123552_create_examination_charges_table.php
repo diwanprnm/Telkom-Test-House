@@ -19,6 +19,8 @@ class CreateExaminationChargesTable extends Migration
             $table->string('category');
             $table->string('duration');
             $table->integer('price');
+            $table->integer('vt_price')->default(0);
+            $table->integer('ta_price')->default(0);
             $table->boolean('is_active');
             $table->uuid('created_by');
             $table->uuid('updated_by');

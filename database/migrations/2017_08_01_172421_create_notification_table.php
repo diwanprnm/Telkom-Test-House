@@ -33,6 +33,6 @@ class CreateNotificationTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('notification');
     }
 }

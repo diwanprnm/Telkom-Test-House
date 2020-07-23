@@ -15,7 +15,9 @@ class CreateStelsSalesDetailTable extends Migration
          Schema::create('stels_sales_detail', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('stels_sales_id');  
-            $table->integer('stels_id');  
+            $table->integer('stels_id');
+            $table->integer('qty')->default(1);
+            $table->string('attachment')->nullable();
             $table->uuid('created_by'); 
             $table->uuid('updated_by'); 
              $table->timestamps();

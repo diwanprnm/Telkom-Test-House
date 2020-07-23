@@ -65,7 +65,8 @@ class CreateKuisionerTable extends Migration
             $table->integer('quest24_perf');
             $table->integer('quest25_eks');
             $table->integer('quest25_perf');
-            
+            $table->date('complaint_date')->nullable();
+			$table->text('complaint')->nullable();
             $table->uuid('created_by');
             $table->uuid('updated_by');
             $table->timestamps();

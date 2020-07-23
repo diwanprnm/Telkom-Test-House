@@ -14,25 +14,28 @@ class CreateCompaniesTable extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name');
-            $table->string('address');
-            $table->string('city');
-            $table->string('email');
-            $table->string('postal_code');
-            $table->string('phone_number');
-            $table->string('fax');
-            $table->string('npwp_number');
-            $table->string('npwp_file');
-            $table->string('siup_number');
-            $table->string('siup_file');
-            $table->date('siup_date');
-            $table->string('qs_certificate_number');
-            $table->string('qs_certificate_file');
-            $table->date('qs_certificate_date');
-            $table->boolean('is_active');
+            $table->string('name')->default();
+            $table->string('address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('email')->default();
+            $table->string('postal_code')->nullable();
+            $table->string('phone_number')->nullable();
+            $table->string('fax')->nullable();
+            $table->string('npwp_number')->nullable();
+            $table->string('npwp_file')->nullable();
+            $table->string('siup_number')->nullable();
+            $table->string('siup_file')->nullable();
+            $table->date('siup_date')->nullable();
+            $table->string('qs_certificate_number')->nullable();
+            $table->string('qs_certificate_file')->nullable();
+            $table->date('qs_certificate_date')->nullable();
+            $table->boolean('is_active')->default(0);
+            $table->text('keterangan')->nullable();
+            $table->string('plg_id')->default();
+            $table->string('nib')->default();
             $table->rememberToken();
-            $table->uuid('created_by');
-            $table->uuid('updated_by');
+            $table->uuid('created_by')->default();
+            $table->uuid('updated_by')->default();
             $table->timestamps();
         });
     }

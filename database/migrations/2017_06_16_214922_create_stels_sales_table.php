@@ -34,6 +34,13 @@ class CreateStelsSalesTable extends Migration
             $table->integer('payment_method');
             $table->integer('payment_status');
             $table->string('total');
+            $table->double('cust_price_payment', 15, 0)->default(0);
+            $table->text('payment_code')->nullable();
+            $table->string('id_kuitansi')->nullable();
+            $table->string('faktur_file')->nullable();
+            $table->string('PO_ID')->nullable();
+            $table->string('BILLING_ID')->nullable();
+            $table->string('INVOICE_ID')->nullable();
             $table->uuid('created_by'); 
             $table->uuid('updated_by');
             $table->timestamps();

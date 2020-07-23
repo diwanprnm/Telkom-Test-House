@@ -29,6 +29,6 @@ class CreateStelsSalesAttachmentTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('stels_sales_attachment');
     }
 }

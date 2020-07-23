@@ -25,6 +25,7 @@ class CreateDevicesTable extends Migration
             $table->boolean('status');
             $table->date('valid_from')->nullable();
             $table->date('valid_thru')->nullable();
+            $table->string('cert_number')->nullable();
             $table->boolean('is_active');
             $table->uuid('created_by');
             $table->uuid('updated_by');
