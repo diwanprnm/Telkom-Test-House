@@ -7,18 +7,21 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\User;
 use App\Article;
 
+use PHPUnit\Framework\TestCase;
+
 class ArticleControllerTest extends TestCase
 {
     // use DatabaseMigrations;
     
-    // public function setUp()
-    // {
-    //     parent::setUp();
-    //     $this->artisan('db:seed');
-    // }
+    public function setUp()
+    {
+        parent::setUp();
+        // $this->artisan('db:seed');
+    }
     
     public function testIndex(){
-        $admin = User::where('id', '=', '1')->first();
+        $admin = User::where('role_id', '=', '1')->first();
+        dd($admin);
         $this->actingAs($admin)->call('GET','admin/article');
         $this->assertResponseStatus(200);
     }
