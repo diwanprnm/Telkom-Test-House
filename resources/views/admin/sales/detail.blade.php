@@ -154,6 +154,9 @@
                     	<button type="button" class="btn btn-wide btn-red btn-squared pull-left" style="margin-right: 1%;">Kembali</button>
                     </a>
 					@if($id_kuitansi != '')
+						@php
+							$id_kuitansi = preg_replace('/\\.[^.\\s]{3,4}$/', '', $id_kuitansi);
+						@endphp
 					<a href="{{ URL::to('/admin/downloadkuitansistel/'.$id_kuitansi) }}" target="_blank">
                     	<button type="button" class="btn btn-wide btn-red btn-squared pull-right" style="margin-right: 1%;">Lihat Kuitansi</button>
                     </a>

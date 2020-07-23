@@ -74,6 +74,11 @@ return [
             'driver' => 'local',
             'root' => storage_path('tmp'),
         ],
+        
+        'local_public' => [
+            'driver' => 'local',
+            'root'   => public_path(),
+        ],
 
     ],
 
