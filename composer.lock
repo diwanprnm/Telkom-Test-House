@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7dd2699a3ffd434732f50abc13578ffd",
+    "content-hash": "4a59a3c21648c5193e0ba96b187239c7",
     "packages": [
         {
             "name": "anlutro/curl",
@@ -48,16 +48,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.147.3",
+            "version": "3.147.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "a563bb8bd83ec232db6b0b230832e3a6bde8a838"
+                "reference": "5a393f4be30df12e2517bba104002dbb21da5122"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/a563bb8bd83ec232db6b0b230832e3a6bde8a838",
-                "reference": "a563bb8bd83ec232db6b0b230832e3a6bde8a838",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/5a393f4be30df12e2517bba104002dbb21da5122",
+                "reference": "5a393f4be30df12e2517bba104002dbb21da5122",
                 "shasum": ""
             },
             "require": {
@@ -129,7 +129,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2020-07-22T18:18:26+00:00"
+            "time": "2020-07-23T18:17:54+00:00"
         },
         {
             "name": "classpreloader/classpreloader",
