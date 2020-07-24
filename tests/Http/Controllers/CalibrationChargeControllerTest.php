@@ -19,17 +19,24 @@ class CalibrationChargeControllerTest extends TestCase
 	 * @test
 	 */
 	
-	public function testIndex()
+	public function testIndexAsNonAdmin()
     {
 		
-		
-		$response = $this->call('GET', 'admin/calibration');	
+        $user = factory(User::class)->make();
+        $this->actingAs($user)->call('GET','admin/calibration');
         $this->assertResponseStatus(200);
-    } 
+    }
+
+
+	public function test_search_company()
+	{ 
+	   $response = $this->call('GET', 'admin/calibration?search=asda&is_active=&after_date=&before_date=');  
+       $this->assertEquals(200, $response->status());
+	}
 	public function test_stores()
 	{ 
 		$user = factory(App\User::class)->create(); 
-		$response =  $this->actingAs($user)->call('POST', 'admin/calibration', 
+		$response =  $this->actingAs($user)->call('GET', 'admin/calibration', 
 		[ 
 			'device_name' => str_random(10),
 	        'price' => mt_rand(0,10000),
