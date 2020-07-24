@@ -14,10 +14,11 @@ class CreateExaminationTypesTable extends Migration
     {
         Schema::create('examination_types', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name');
-            $table->string('description');
-            $table->uuid('created_by');
-            $table->uuid('updated_by');
+            $table->string('name')->default();
+            $table->string('description')->nullable();
+            $table->string('picture')->nullable();
+            $table->uuid('created_by')->nullable();
+            $table->uuid('updated_by')->nullable();
             $table->timestamps();
         });
     }

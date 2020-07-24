@@ -18,6 +18,7 @@ class CreateKuitansiTable extends Migration
             $table->string('from');  
             $table->double('price', 15, 0);
             $table->string('for');
+            $table->date('kuitansi_date')->nullable();
 			$table->uuid('created_by');
             $table->uuid('updated_by');
             $table->timestamps();

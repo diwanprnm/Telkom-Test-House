@@ -17,6 +17,8 @@ class CreateExaminationAttachmentsTable extends Migration
             $table->uuid('examination_id');
             $table->string('name');
             $table->string('attachment');
+            $table->string('no')->nullable();
+            $table->date('tgl')->nullable();
             $table->uuid('created_by');
             $table->uuid('updated_by');
             $table->timestamps();

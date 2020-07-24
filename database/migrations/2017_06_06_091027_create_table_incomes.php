@@ -35,6 +35,6 @@ class CreateTableIncomes extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('incomes');
     }
 }

@@ -17,6 +17,7 @@ class CreateArticlesTable extends Migration
             $table->string('title');
             $table->string('type');
             $table->text('description');
+            $table->text('description_english')->nullable();
             $table->boolean('is_active');
             $table->uuid('created_by');
             $table->uuid('updated_by');

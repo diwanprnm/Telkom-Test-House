@@ -13,7 +13,7 @@ class CompanyTableSeeder extends Seeder
     {
         DB::table('companies')->insert([
             'id' => '1',
-            'name' => 'TELKOM DDS',
+            'name' => 'TELKOM DDB',
             'is_active' => true,
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),

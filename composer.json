@@ -14,7 +14,6 @@
         "unisharp/laravel-filemanager": "*",
         "maatwebsite/excel": "^2.1",
         "rap2hpoutre/laravel-log-viewer": "^0.8.0",
-        "pragmarx/tracker": "^3.1",
         "geoip/geoip": "~1.14",
         "infyomlabs/core-templates": "5.3.x-dev",
         "infyomlabs/laravel-generator": "5.3.x-dev",
@@ -32,7 +31,7 @@
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~4.0",
+        "phpunit/phpunit": "^7",
         "symfony/css-selector": "2.8.*|3.0.*",
         "symfony/dom-crawler": "2.8.*|3.0.*"
     },

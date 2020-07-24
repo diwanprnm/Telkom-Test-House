@@ -21,6 +21,8 @@ class CreateStelsTable extends Migration
             $table->string('year');
             $table->integer('price');
             $table->integer('total');
+            $table->integer('stel_type')->default(1);
+            $table->string('attachment')->nullable();
             $table->boolean('is_active');
             $table->uuid('created_by');
             $table->uuid('updated_by');

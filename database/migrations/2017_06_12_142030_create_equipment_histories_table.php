@@ -14,13 +14,14 @@ class CreateEquipmentHistoriesTable extends Migration
     {
         Schema::create('equipment_histories', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('equipment_id');
+            $table->uuid('examination_id')->nullable();
             $table->boolean('location');
+            $table->date('action_date')->nullable();
             $table->uuid('created_by');
             $table->uuid('updated_by');
             $table->timestamps();
 			
-			$table->foreign('equipment_id')->references('id')->on('equipments');
+			$table->foreign('examination_id')->references('id')->on('examinations');
         });
     }
 
@@ -31,6 +32,6 @@ class CreateEquipmentHistoriesTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('equipment_histories');
     }
 }

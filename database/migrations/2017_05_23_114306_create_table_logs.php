@@ -16,7 +16,7 @@ class CreateTableLogs extends Migration
             $table->uuid('id')->primary();  
             $table->uuid('user_id');
             $table->string('action')->nullable();  
-            $table->string('data')->nullable();  
+            $table->text('data')->nullable();  
             $table->uuid('created_by');
             $table->uuid('updated_by');
             $table->timestamps(); 

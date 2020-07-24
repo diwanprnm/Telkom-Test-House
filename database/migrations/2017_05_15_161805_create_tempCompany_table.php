@@ -30,6 +30,8 @@ class CreateTempCompanyTable extends Migration
             $table->string('qs_certificate_number');
             $table->string('qs_certificate_file');
             $table->date('qs_certificate_date')->nullable();
+            $table->string('plg_id')->nullable();
+            $table->string('nib')->nullable();
             $table->boolean('is_commited');
             $table->uuid('created_by');
             $table->uuid('updated_by');

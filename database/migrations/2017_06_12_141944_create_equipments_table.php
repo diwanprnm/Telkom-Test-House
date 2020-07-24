@@ -21,6 +21,8 @@ class CreateEquipmentsTable extends Migration
             $table->boolean('location');
             $table->string('pic');
             $table->string('remarks');
+            $table->text('description')->nullable();
+            $table->string('no')->nullable();
             $table->uuid('created_by');
             $table->uuid('updated_by');
             $table->timestamps();
@@ -36,6 +38,6 @@ class CreateEquipmentsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('equipments');
     }
 }

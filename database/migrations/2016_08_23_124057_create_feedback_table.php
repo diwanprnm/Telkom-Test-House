@@ -17,6 +17,8 @@ class CreateFeedbackTable extends Migration
             $table->string('email');
             $table->string('subject');
             $table->text('message');
+            $table->boolean('status')->default(1);
+            $table->string('category')->nullable();
             $table->uuid('created_by');
             $table->uuid('updated_by');
             $table->timestamps();

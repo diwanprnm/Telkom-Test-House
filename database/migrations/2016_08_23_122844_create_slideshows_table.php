@@ -16,6 +16,10 @@ class CreateSlideshowsTable extends Migration
             $table->uuid('id')->primary();
             $table->string('title');
             $table->string('image');
+            $table->string('headline')->nullable();
+            $table->string('color')->nullable();
+            $table->integer('timeout')->default(0);
+            $table->integer('position')->nullable();
             $table->boolean('is_active');
             $table->uuid('created_by');
             $table->uuid('updated_by');

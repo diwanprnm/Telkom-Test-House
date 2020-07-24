@@ -201,7 +201,7 @@ return [
         // Unisharp\Laravelfilemanager\LaravelFilemanagerServiceProvider::class,
 		Maatwebsite\Excel\ExcelServiceProvider::class,
 		Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
-		PragmaRX\Tracker\Vendor\Laravel\ServiceProvider::class,
+		// PragmaRX\Tracker\Vendor\Laravel\ServiceProvider::class,
 		'Witty\LaravelDbBackup\DBBackupServiceProvider',
         Gloudemans\Shoppingcart\ShoppingcartServiceProvider::class,
           Ixudra\Curl\CurlServiceProvider::class,
@@ -258,7 +258,7 @@ return [
         'Image' => Intervention\Image\Facades\Image::class,
 		// 'FPDF' => setasign\Fpdf\Facades\Fpdf::class,
 		'Excel'     => Maatwebsite\Excel\Facades\Excel::class,
-		'Tracker' => PragmaRX\Tracker\Vendor\Laravel\Facade::class,
+		// 'Tracker' => PragmaRX\Tracker\Vendor\Laravel\Facade::class,
         'Cart' => Gloudemans\Shoppingcart\Facades\Cart::class,
     ],
 

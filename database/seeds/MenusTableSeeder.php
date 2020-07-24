@@ -26,7 +26,7 @@ class MenusTableSeeder extends Seeder
             ['id' => '8', 'parent_id' => 2, 'name' => 'Equipment', 'url' => 'equipment', 'icon' => null],
             ['id' => '9', 'parent_id' => 0, 'name' => 'Dashboard', 'url' => 'topdashboard', 'icon' => 'ti-target'],
             ['id' => '10', 'parent_id' => 0, 'name' => 'Customer Relation', 'url' => '#', 'icon' => 'ti-comments-smiley'],
-            ['id' => '11', 'parent_id' => 9, 'name' => 'Feedback', 'url' => 'feedback', 'icon' => 'ti-comments'],
+            ['id' => '11', 'parent_id' => 9, 'name' => 'Questions and Answers (QnA)', 'url' => 'feedback', 'icon' => 'ti-comments'],
             ['id' => '12', 'parent_id' => 9, 'name' => 'Testimonial', 'url' => 'testimonial', 'icon' => 'ti-comment-alt'],
             ['id' => '13', 'parent_id' => 0, 'name' => 'Data Master', 'url' => '#', 'icon' => 'ti-server'],
             ['id' => '14', 'parent_id' => 12, 'name' => 'Artikel', 'url' => 'article', 'icon' => null],

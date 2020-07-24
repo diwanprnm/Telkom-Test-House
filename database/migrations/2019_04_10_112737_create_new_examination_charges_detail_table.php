@@ -16,6 +16,14 @@ class CreateNewExaminationChargesDetailTable extends Migration
             $table->uuid('id')->primary();
             $table->uuid('new_exam_charges_id');
             $table->uuid('examination_charges_id');
+            $table->string('old_device_name')->nullable();
+            $table->string('old_stel')->nullable();
+            $table->string('old_category')->nullable();
+            $table->string('old_duration')->nullable();
+            $table->string('device_name')->nullable();
+            $table->string('stel')->nullable();
+            $table->string('category')->nullable();
+            $table->string('duration')->nullable();
             $table->integer('price')->default(0);
             $table->integer('vt_price')->default(0);
             $table->integer('ta_price')->default(0);
