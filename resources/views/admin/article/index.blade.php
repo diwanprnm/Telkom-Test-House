@@ -28,7 +28,7 @@
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table">
 	                    <input id="search_value" type="text" placeholder="Search" id="form-field-17" class="form-control " value="{{ $search }}">
-	                    <i class="ti-search"></i>
+	                    <em class="ti-search"></em>
 	                </span>
 	            </div>
 	        </div>
@@ -49,7 +49,7 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
-							<caption>Article Table - Telkom Test House </caption>
+							<caption>Article Table</caption>
 							<thead>
 								<tr>
 									<th class="center" scope="col">No</th>
@@ -76,7 +76,7 @@
 											@endif
 											<td class="center">
 												<div>
-													<a href="{{URL::to('admin/article/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
+													<a href="{{URL::to('admin/article/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
 												</div>
 											</td>
 										</tr>

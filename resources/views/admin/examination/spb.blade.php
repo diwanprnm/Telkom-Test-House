@@ -96,14 +96,14 @@
 						Tanggal SPB *
 					</label>
 					<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-					<?php
+					@php
 						if($spb_date == '' or $spb_date == '0000-00-00' or $spb_date == NULL){
 							$timestamp = date('Y-m-d');
 						}else{
 							$timestamp = date('Y-m-d', strtotime($spb_date));
 						}
-					?>
-						<input type="text" name="spb_date" id="spb_date" class="form-control" value="<?php echo $timestamp;?>" required readonly/>
+					@endphp
+						<input type="text" name="spb_date" id="spb_date" class="form-control" value="{{ $timestamp }}" required readonly/>
 						<span class="input-group-btn">
 							<button type="button" class="btn btn-default">
 								<i class="glyphicon glyphicon-calendar"></i>
@@ -129,6 +129,7 @@
 			@endif
 		</div>
 		<table width=100%>
+			<caption></caption>
 			<tbody>
 				<tr>
 					<td align="center">

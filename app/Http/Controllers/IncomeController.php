@@ -289,25 +289,8 @@ class IncomeController extends Controller
 			];
 			$no++;
 		}
-        //Generate and return the spreadsheet
-        $excelFileName = 'DataPendapatan';
-		Excel::create($excelFileName, function($excel) use ($examsArray) {
-
-			// Build the spreadsheet, passing in the payments array
-			$excel->sheet('sheet1', function($sheet) use ($examsArray) {
-				$sheet->fromArray($examsArray, null, 'A1', false, false);
-			});
-        })->store('xlsx');
-        
-        $file = Storage::disk('tmp')->get($excelFileName.'.xlsx');
-
-        $headers = [
-            'Content-Type' => 'Application/Spreadsheet',
-            'Content-Description' => 'File Transfer',
-            'Content-Disposition' => "attachment; filename=$excelFileName.xlsx",
-            'filename'=> "$excelFileName.xlsx"
-        ];
-        return response($file, 200, $headers);
+        $excel = \App\Services\ExcelService::download($examsArray, 'Data Pendapatan');
+        return response($excel['file'], 200, $excel['headers']);
 	}
 	
 	public function autocomplete($query) {

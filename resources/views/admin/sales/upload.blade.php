@@ -49,13 +49,14 @@
 							<div class="col-md-12">
 								<div class="table-responsive">
 									<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+										<caption>Uploaded File Table</caption>
 										<thead>
 											<tr>
-												<th class="center">No</th> 
-												<th class="center">Document Name</th> 
-												<th class="center">Document Code</th> 
-												<th class="center">Attachment</th> 
-												<th class="center">Upload File</th> 
+												<th class="center" scope="col">No</th> 
+												<th class="center" scope="col">Document Name</th> 
+												<th class="center" scope="col">Document Code</th> 
+												<th class="center" scope="col">Attachment</th> 
+												<th class="center" scope="col">Upload File</th> 
 											</tr>
 										</thead>
 										<tbody>

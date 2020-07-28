@@ -2,11 +2,11 @@
 
 @section('content')
 
-<?php
+@php
 	$currentUser = Auth::user();
 	$is_admin_mail = $currentUser['email'];
 	$is_super = $currentUser['id'];
-?>
+@endphp
 
 <input type="hide" id="hide_stel_sales_detail_id" name="hide_stel_sales_detail_id">
 <div class="modal fade" id="myModal_delete_detail" tabindex="-1" role="dialog" aria-hidden="true">
@@ -100,16 +100,18 @@
 								@endif
 								</tr>
 							</thead>
-							<tbody> 
-							<?php $total = 0;?>
+							<tbody>
+							@php
+								$total = 0;
+							@endphp
 								@foreach($data as $keys => $item)
 									<tr>
-										<td class="center">{{++$keys}}</td> 
+										<td class="center">{{ ++$keys }}</td> 
 										<td class="center">{{ $item->name }}</td>
 										<td class="center">{{ $item->code }}</td>
-										<td class="center">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($item->price, 0, '.', ','); ?></td>
-										<td class="center"><?php echo $item->qty; ?></td>
-										<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($item->price * $item->qty, 0, '.', ','); ?></td> 
+										<td class="center">{{ trans('translate.stel_rupiah') }}. {{ number_format($item->price, 0, '.', ',')}} </td>
+										<td class="center">{{ $item->qty }}</td>
+										<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. {{ number_format($item->price * $item->qty, 0, '.', ',') }}</td> 
 										<td class="center"><a href="{{ URL::to('/admin/downloadstelwatermark/'.$item->id) }}" target="_blank">{{ $item->attachment }}</a></td>
 										@if($is_super == '1' || $is_admin_mail == 'admin@mail.com')
 										<td class="center">
@@ -118,32 +120,42 @@
 											</div>
 										</td>
 										@endif
-									</tr> 
-									<?php $total +=($item->price * $item->qty); ?>
+									</tr>
+									@php
+										$total +=($item->price * $item->qty);
+									@endphp
 								@endforeach
                             </tbody>
                             <tfoot>
-                            	<?php
+								@php
 									$unique_code = ($price_total/1.1) - $total;
-								?>
+								@endphp
                             	<tr>
                             		<td colspan="5" class="text-align-right"> {{ trans('translate.stel_unique_code') }}</td>
-                            		<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. <?php 
-                            			echo	number_format($unique_code, 0, '.', ',');?></td>
+                            		<td class="text-align-right">
+										{{ trans('translate.stel_rupiah') }}. {{ number_format($unique_code, 0, '.', ',') }}
+									</td>
                             	</tr>
                             	<tr>
                             		<td colspan="5" class="text-align-right"> Sub Total</td>
-                            		<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. <?php 
-                            			echo	number_format($total + $unique_code, 0, '.', ',');?></td>
+                            		<td class="text-align-right">
+										{{ trans('translate.stel_rupiah') }}. {{ number_format($total + $unique_code, 0, '.', ',') }}
+									</td>
                             	</tr>
                            		<tr>
                             		<td colspan="5" class="text-align-right"> Tax</td>
-                            		<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. <?php $tax =  ($total + $unique_code) * (config("cart.tax")/100);
-                            			echo	number_format($tax, 0, '.', ',');?></td>
+									<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. 
+										@php
+											$tax =  ($total + $unique_code) * (config("cart.tax")/100);
+										@endphp
+										{{ number_format($tax, 0, '.', ',') }}
+									</td>
                             	</tr>
                             	<tr style="font-weight: bold;">
                             		<td colspan="5" class="text-align-right">Total</td>
-                            		<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($price_total, 0, '.', ',');?></td>
+                            		<td class="text-align-right">
+										{{ trans('translate.stel_rupiah') }}. {{ number_format($price_total, 0, '.', ',') }}
+									</td>
                             	</tr>
                             </tfoot>
 						</table>
