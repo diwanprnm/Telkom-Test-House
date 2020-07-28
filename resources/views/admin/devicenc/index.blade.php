@@ -44,27 +44,27 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title"><i class="fa fa-eyes-open"></i>Perangkat Akan Dipindahkan Menjadi Layak Uji Ulang, Mohon Berikan Keterangan!</h4>
+				<h4 class="modal-title"><em class="fa fa-eyes-open"></em>Perangkat Akan Dipindahkan Menjadi Layak Uji Ulang, Mohon Berikan Keterangan!</h4>
 			</div>
 			
 			<div class="modal-body">
-				<table width=100%>
+				<table ><caption> </caption>
 					<tr>
-						<td>
+						<th>
 							<div class="form-group">
 								<label for="keterangan">Keterangan:</label>
 								<textarea class="form-control" rows="5" name="keterangan" id="keterangan"></textarea>
 							</div>
-						</td>
+						</th>
 					</tr>
 				</table>
 			</div><!-- /.modal-content -->
 			<div class="modal-footer">
-				<table width=100%>
+				<table><caption> </caption>
 					<tr>
-						<td>
-							<button type="button" id="btn-modal-move_data" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
-						</td>
+						<th>
+							<button type="button" id="btn-modal-move_data" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
+						</th>
 					</tr>
 				</table>
 			</div>
@@ -102,34 +102,33 @@
 
 			<div id="tab-1" class="row tab-content">
 			    <div class="col-md-6">
-	    			<!-- <a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><i class="ti-filter"></i> Filter</a> -->
-					<button id="excel" type="submit" class="btn btn-info pull-left">
+	    				<button id="excel" type="submit" class="btn btn-info pull-left">
                         Export to Excel
                     </button>
 				</div>
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table">
 	                    <input id="search_value" type="text" placeholder="Search" id="form-field-17" class="form-control " value="{{ $search }}">
-	                    <i class="ti-search"></i>
+	                    <em class="ti-search"></em>
 	                </span>
 	            </div>
 		    
 				<div class="col-md-12">
 					<div class="table-responsive">
-						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer"><caption> </caption>
 							<thead>
 								<tr>
-									<th class="center">No</th>
-									<th class="center">Nama Perusahaan</th>
-									<th class="center">Nama Perangkat</th>
-									<th class="center">Merk/Pabrik</th>
-									<th class="center">Tipe</th>
-									<th class="center">Kapasitas/Kecepatan</th>
-									<th class="center">Referensi Uji</th>
-									<th class="center">Buatan</th>
-									<th class="center">Tanggal Sidang</th>
+									<th class="center" scope="col">No</th>
+									<th class="center" scope="col">Nama Perusahaan</th>
+									<th class="center" scope="col">Nama Perangkat</th>
+									<th class="center" scope="col">Merk/Pabrik</th>
+									<th class="center" scope="col">Tipe</th>
+									<th class="center" scope="col">Kapasitas/Kecepatan</th>
+									<th class="center" scope="col">Referensi Uji</th>
+									<th class="center" scope="col">Buatan</th>
+									<th class="center" scope="col">Tanggal Sidang</th>
 									@if($is_super == '1' || $is_admin_mail == 'admin@mail.com')
-										<th class="center">Action</th>
+										<th class="center" scope="col">Action</th>
 									@endif
 								</tr>
 							</thead>
@@ -148,7 +147,7 @@
 									@if($is_super == '1' || $is_admin_mail == 'admin@mail.com')
 										<td class="center">
 											<div>
-												<a class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Destroy" data-toggle="modal" data-target="#myModal_move_data" onclick="document.getElementById('hide_device_id').value = '{{ $item->device_id }}'"><i class="fa fa-repeat"></i></a>
+												<a class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Destroy" data-toggle="modal" data-target="#myModal_move_data" onclick="document.getElementById('hide_device_id').value = '{{ $item->device_id }}'"><em class="fa fa-repeat"></em></a>
 											</div>
 										</td>
 										@endif
@@ -169,32 +168,31 @@
 
 			<div id="tab-2" class="row tab-content">
 			    <div class="col-md-6">
-	    			<!-- <a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><i class="ti-filter"></i> Filter</a> -->
-					<button id="excel2" type="submit" class="btn btn-info pull-left">
+	    			<button id="excel2" type="submit" class="btn btn-info pull-left">
                         Export to Excel
                     </button>
 				</div>
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table">
 	                    <input id="search_value2" type="text" placeholder="Search" id="form-field-17" class="form-control " value="{{ $search2 }}">
-	                    <i class="ti-search"></i>
+	                    <em class="ti-search"></em>
 	                </span>
 	            </div>
 		    
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
-							<thead>
+							<caption></caption><thead>
 								<tr>
-									<th class="center">No</th>
-									<th class="center">Nama Perusahaan</th>
-									<th class="center">Nama Perangkat</th>
-									<th class="center">Merk/Pabrik</th>
-									<th class="center">Tipe</th>
-									<th class="center">Kapasitas/Kecepatan</th>
-									<th class="center">Referensi Uji</th>
-									<th class="center">Buatan</th>
-									<th class="center">Tanggal Sidang</th>
+									<th class="center" scope="col">No</th>
+									<th class="center" scope="col">Nama Perusahaan</th>
+									<th class="center" scope="col">Nama Perangkat</th>
+									<th class="center" scope="col">Merk/Pabrik</th>
+									<th class="center" scope="col">Tipe</th>
+									<th class="center" scope="col">Kapasitas/Kecepatan</th>
+									<th class="center" scope="col">Referensi Uji</th>
+									<th class="center" scope="col">Buatan</th>
+									<th class="center" scope="col">Tanggal Sidang</th>
 								</tr>
 							</thead>
 							<?php $no=1; ?>
