@@ -150,7 +150,7 @@ class DevicencController extends Controller
 					$q->whereDate('examinations.qa_date','<',$expDate)
 						->orWhere('devices.status', '-1');
 				});
-			;
+			
 
 			if ($request->has('before_date')){
 				$dev->where('devices.valid_thru', '<=', $request->get('before_date'));
@@ -235,13 +235,9 @@ class DevicencController extends Controller
         // the payments table's primary key, the user's first and last name, 
         // the user's e-mail address, the amount paid, and the payment
         // timestamp.
-
         $search = trim($request->input($this::SEARCH));
-		
-        
         $tab = $request->input('tab');
-        $expDate = Carbon::now()->subMonths(6);
-            
+        $expDate = Carbon::now()->subMonths(6);   
         $dev = DB::table($this::EXAM)
 		->join($this::DEVICE, $this::EDI, '=', $this::DEV_ID)
 		->join($this::COMPANIES, 'examinations.company_id', '=', $this::COMP_ID)
@@ -282,7 +278,6 @@ class DevicencController extends Controller
 		->whereDate('examinations.qa_date','>=',$expDate)
 		->where('devices.status', 1)
 		;
-
 		$afterDev = DB::table($this::EXAM)
 		->join($this::DEVICE, $this::EDI, '=', $this::DEV_ID)
 		->join($this::COMPANIES, 'examinations.company_id', '=', $this::COMP_ID)
@@ -324,16 +319,14 @@ class DevicencController extends Controller
 					$q->whereDate('examinations.qa_date','<',$expDate)
 						->orWhere('devices.status', '-1');
 				});
-		
-
 		if ($request->has('before_date')){
 			$dev->where('devices.valid_thru', '<=', $request->get('before_date'));
-			$before = $request->get('before_date');
+			//$before = $request->get('before_date');
 		}
 
 		if ($request->has('after_date')){
 			$dev->where('devices.valid_thru', '>=', $request->get('after_date'));
-			$after = $request->get('after_date');
+			//$after = $request->get('after_date');
 		}
 
         if ($search != null){

@@ -33,7 +33,7 @@ class AnalyticController extends Controller
 		$lastMonth = $dt->format('m');
 		$lastYear = $dt->format('Y');
 		
-		$d=cal_days_in_month(CAL_GREGORIAN,$thisMonth,$thisYear);
+	//	$d=cal_days_in_month(CAL_GREGORIAN,$thisMonth,$thisYear);
 
         if ($currentUser){
 			/*TODAY*/

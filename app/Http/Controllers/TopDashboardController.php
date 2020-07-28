@@ -46,17 +46,7 @@ class TopDashboardController extends Controller
 		$message = null;
 		$search = null;
         $currentUser = Auth::user();
-		$datenow = date($this::YMD);
-		$dateyesterday = date($this::YMD,strtotime("-1 days"));
-		$datelastweek = date($this::YMD,strtotime("-7 days"));
-		$thisDay = date('d');
-		$thisMonth = date('m');
-		$thisYear = date('Y');
-			$datestring=date($this::YMD).' first day of last month';
-			$dt=date_create($datestring);
-		$lastMonth = $dt->format('m');
-		$lastYear = $dt->format('Y');
-		
+	
 		$d=cal_days_in_month(CAL_GREGORIAN,$thisMonth,$thisYear);
 
         if ($currentUser){
