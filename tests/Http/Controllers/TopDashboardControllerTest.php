@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class TopDashboardControllerTest extends TestCase
 {
-    use WithoutMiddleware;
+   // use WithoutMiddleware;
     /**
      * A basic test example.
      *
