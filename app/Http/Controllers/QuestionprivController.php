@@ -92,13 +92,10 @@ class QuestionprivController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request->input(self::CHECK_PRIVILEGE));
-        
 		$questionpriv = Questionpriv::where(self::USER_ID,'=',$request->input(self::USER_ID))->get();
 
 		if(count($questionpriv) == 0 && count($request->input(self::CHECK_PRIVILEGE)))
 		{
-            //dd('hello');
 			$currentUser = Auth::user();
 			for($i=0;$i<count($request->input(self::CHECK_PRIVILEGE));$i++){
 				$questionpriv = new Questionpriv;
@@ -113,7 +110,6 @@ class QuestionprivController extends Controller
 			Session::flash(self::MESSAGE, 'User successfully created');
 					return redirect(self::ADMIN_QUESTIONPRIV);
 		}else{
-            //dd(count($request->input(self::CHECK_PRIVILEGE)) );
 			Session::flash(self::ERROR, 'User Existing or No Privilege selected');
 				return redirect('/admin/questionpriv/create')
 							->withInput();
