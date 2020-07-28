@@ -28,6 +28,14 @@ class DeviceController extends Controller
     {
         $this->middleware('auth.admin');
     }
+	private const SEARCH = 'search';
+	private const YMD = 'Y-m-d';
+	private const DEVICEVAL= 'devices.valid_thru';
+	private const COMPANIES_NAME = 'companies.name';
+	private const BEFORE = 'before_date';
+	private const AFTER = 'after_date';
+	private const CATEGORY = 'category';
+	private const MANUFACTURE = 'manufactured_by';
 
     /**
      * Display a listing of the resource.
@@ -41,9 +49,9 @@ class DeviceController extends Controller
         if ($currentUser){
             $message = null;
             $paginate = 10;
-            $search = trim($request->input('search'));
-			$datenow = date('Y-m-d');
-			$dateMin1Year = date('Y-m-d', strtotime('-1 year'));
+            $search = trim($request->input($this::SEARCH));
+			$datenow = date($this::YMD);
+			$dateMin1Year = date($this::YMD, strtotime('-1 year'));
 			$before = null;
             $after = null;
             $category = null;
@@ -64,11 +72,11 @@ class DeviceController extends Controller
 						'devices.capacity AS kapasitas',
 						'devices.test_reference AS standarisasi',
 						'devices.valid_from',
-						'devices.valid_thru',
+						$this::DEVICEVAL,
 						'devices.manufactured_by',
 						'devices.serial_number',
 						'devices.cert_number',
-						'companies.name',
+						$this::DEVICEVAL,
 						'companies.address',
 						'companies.city',
 						'companies.postal_code',
@@ -85,49 +93,46 @@ class DeviceController extends Controller
 				->where('examinations.qa_status','=','1')
 				->where('examinations.qa_passed','=','1')
 				->where('examinations.certificate_status','=','1')
-				/*->where(function($q) use($datenow,$dateMin1Year){
-					$q->where('devices.valid_thru', '>=', $datenow)
-						->orWhere('devices.valid_thru', '>=', $dateMin1Year);
-				})*/
+				
 				->where(function($q) use($search){
 					$q->where('devices.name','like','%'.$search.'%')
-						->orWhere('companies.name','like','%'.$search.'%')
+						->orWhere($this::DEVICEVAL,'like','%'.$search.'%')
 						->orWhere('devices.mark','like','%'.$search.'%')
 						->orWhere('devices.model','like','%'.$search.'%');
 				});
 				
-				if ($request->has('before_date')){
-					$dev->where('devices.valid_thru', '>=', $request->get('before_date'));
-					$before = $request->get('before_date');
+				if ($request->has($this::BEFORE)){
+					$dev->where($this::DEVICEVAL, '>=', $request->get($this::BEFORE));
+					$before = $request->get($this::BEFORE);
 				}
 
-				if ($request->has('after_date')){
-					$dev->where('devices.valid_thru', '<=', $request->get('after_date'));
-					$after = $request->get('after_date');
+				if ($request->has($this::AFTER)){
+					$dev->where($this::DEVICEVAL, '<=', $request->get($this::AFTER));
+					$after = $request->get($this::AFTER);
 				}
 
-				if ($request->has('category')){
-					switch ($request->get('category')) {
+				if ($request->has($this::CATEGORY)){
+					switch ($request->get($this::CATEGORY)) {
 						case 'aktif':
-							$dev->where('devices.valid_thru', '>=', $datenow);
+							$dev->where($this::DEVICEVAL, '>=', $datenow);
 							break;
 						
 						case 'aktif1':
-							$dev->where('devices.valid_thru', '>=', $dateMin1Year);
-							$dev->where('devices.valid_thru', '<', $datenow);
+							$dev->where($this::DEVICEVAL, '>=', $dateMin1Year);
+							$dev->where($this::DEVICEVAL, '<', $datenow);
 							break;
 						
 						default:
 							$dev->where(function($q) use($datenow,$dateMin1Year){
-								$q->where('devices.valid_thru', '>=', $datenow)
-									->orWhere('devices.valid_thru', '>=', $dateMin1Year);
+								$q->where($this::DEVICEVAL, '>=', $datenow)
+									->orWhere($this::DEVICEVAL, '>=', $dateMin1Year);
 							});
 							break;
 					}
-					$category = $request->get('category');
+					$category = $request->get($this::CATEGORY);
 				}
 				else{
-					$dev->where('devices.valid_thru', '>=', $datenow);
+					$dev->where($this::DEVICEVAL, '>=', $datenow);
 				}
 
 				$logs = new Logs;
@@ -139,8 +144,8 @@ class DeviceController extends Controller
                 $logs->page = "DEVICE";
                 $logs->save();
 				
-				$data_excel = $dev->orderBy('devices.valid_thru', 'desc')->get();
-				$data = $dev->orderBy('devices.valid_thru', 'desc')->paginate($paginate);
+				$data_excel = $dev->orderBy($this::DEVICEVAL, 'desc')->get();
+				$data = $dev->orderBy($this::DEVICEVAL, 'desc')->paginate($paginate);
             }else{
 				$dev = DB::table('examinations')
 				->join('devices', 'examinations.device_id', '=', 'devices.id')
@@ -157,11 +162,11 @@ class DeviceController extends Controller
 						'devices.capacity AS kapasitas',
 						'devices.test_reference AS standarisasi',
 						'devices.valid_from',
-						'devices.valid_thru',
+						$this::DEVICEVAL,
 						'devices.manufactured_by',
 						'devices.serial_number',
 						'devices.cert_number',
-						'companies.name',
+						$this::DEVICEVAL,
 						'companies.address',
 						'companies.city',
 						'companies.postal_code',
@@ -178,46 +183,40 @@ class DeviceController extends Controller
 				->where('examinations.qa_status','=','1')
 				->where('examinations.qa_passed','=','1')
 				->where('examinations.certificate_status','=','1');
-				/*->where(function($q) use($datenow,$dateMin1Year){
-					$q->where('devices.valid_thru', '>=', $datenow)
-						->orWhere('devices.valid_thru', '>=', $dateMin1Year);
-				});*/
 
-				if ($request->has('before_date')){
-					$dev->where('devices.valid_thru', '>=', $request->get('before_date'));
-					$before = $request->get('before_date');
+				if ($request->has($this::BEFORE)){
+					$dev->where($this::DEVICEVAL, '>=', $request->get($this::BEFORE));
+					$before = $request->get($this::BEFORE);
 				}
-
-				if ($request->has('after_date')){
-					$dev->where('devices.valid_thru', '<=', $request->get('after_date'));
-					$after = $request->get('after_date');
+				if ($request->has($this::AFTER)){
+					$dev->where($this::DEVICEVAL, '<=', $request->get($this::AFTER));
+					$after = $request->get($this::AFTER);
 				}
-
-				if ($request->has('category')){
-					switch ($request->get('category')) {
+				if ($request->has($this::CATEGORY)){
+					switch ($request->get($this::CATEGORY)) {
 						case 'aktif':
-							$dev->where('devices.valid_thru', '>=', $datenow);
+							$dev->where($this::DEVICEVAL, '>=', $datenow);
 							break;
 						
 						case 'aktif1':
-							$dev->where('devices.valid_thru', '>=', $dateMin1Year);
-							$dev->where('devices.valid_thru', '<', $datenow);
+							$dev->where($this::DEVICEVAL, '>=', $dateMin1Year);
+							$dev->where($this::DEVICEVAL, '<', $datenow);
 							break;
 						
 						default:
 							$dev->where(function($q) use($datenow,$dateMin1Year){
-								$q->where('devices.valid_thru', '>=', $datenow)
-									->orWhere('devices.valid_thru', '>=', $dateMin1Year);
+								$q->where($this::DEVICEVAL, '>=', $datenow)
+									->orWhere($this::DEVICEVAL, '>=', $dateMin1Year);
 							});
 							break;
 					}
-					$category = $request->get('category');
+					$category = $request->get($this::CATEGORY);
 				}else{
-					$dev->where('devices.valid_thru', '>=', $datenow);
+					$dev->where($this::DEVICEVAL, '>=', $datenow);
 				}
 
-				$data_excel = $dev->orderBy('devices.valid_thru', 'desc')->get();
-				$data = $dev->orderBy('devices.valid_thru', 'desc')->paginate($paginate);
+				$data_excel = $dev->orderBy($this::DEVICEVAL, 'desc')->get();
+				$data = $dev->orderBy($this::DEVICEVAL, 'desc')->paginate($paginate);
             }
             
             if (count($data) == 0){
@@ -229,10 +228,10 @@ class DeviceController extends Controller
             return view('admin.devices.index')
                 ->with('message', $message)
                 ->with('data', $data)
-                ->with('search', $search)
-                ->with('before_date', $before)
-                ->with('category', $category)
-                ->with('after_date', $after);
+                ->with($this::SEARCH, $search)
+                ->with($this::BEFORE, $before)
+                ->with($this::CATEGORY, $category)
+                ->with($this::AFTER, $after);
         }
     }
 	
@@ -280,17 +279,8 @@ class DeviceController extends Controller
 		// and append it to the payments array.
 			$no = 1;
 		foreach ($data as $row) {
-			/*if($row->siup_date==''){
-				$siup_date = '';
-			}else{
-				$siup_date = date("d-m-Y", strtotime($row->siup_date));
-			}
-			if($row->qs_certificate_date==''){
-				$qs_certificate_date = '';
-			}else{
-				$qs_certificate_date = date("d-m-Y", strtotime($row->qs_certificate_date));
-			}*/
-			if($row->valid_thru >= date('Y-m-d')){
+		
+			if($row->valid_thru >= date($this::YMD)){
 				$category = 'Aktif';
 			}else{
 				$category = 'Aktif + 1';
@@ -338,9 +328,6 @@ class DeviceController extends Controller
 		Excel::create('Data Perangkat Lulus Uji', function($excel) use ($examsArray) {
 
 			// Set the spreadsheet title, creator, and description
-			// $excel->setTitle('Payments');
-			// $excel->setCreator('Laravel')->setCompany('WJ Gilmore, LLC');
-			// $excel->setDescription('payments file');
 
 			// Build the spreadsheet, passing in the payments array
 			$excel->sheet('sheet1', function($sheet) use ($examsArray) {
@@ -374,11 +361,11 @@ class DeviceController extends Controller
         if ($request->has('capacity')){
             $device->capacity = $request->input('capacity');
         }
-        if ($request->has('manufactured_by')){
-            $device->manufactured_by = $request->input('manufactured_by');
+        if ($request->has($this::MANUFACTURE)){
+            $device->manufactured_by = $request->input($this::MANUFACTURE);
         }
-        if ($request->has('manufactured_by')){
-            $device->manufactured_by = $request->input('manufactured_by');
+        if ($request->has($this::MANUFACTURE)){
+            $device->manufactured_by = $request->input($this::MANUFACTURE);
         }
         if ($request->has('serial_number')){
             $device->serial_number = $request->input('serial_number');
