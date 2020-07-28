@@ -56,7 +56,6 @@ class SPKController extends Controller
         $search = trim($request->input(self::SEARCH));
         $sort_by = self::TBMSPK_SPK_NUMBER;
         $sort_type = 'desc';
-        $logService = new LogService();
         $examType = ExaminationType::all();
         $companies = Company::where('id','!=', 1)->get();
         $examLab = ExaminationLab::all();
@@ -67,26 +66,8 @@ class SPKController extends Controller
                     ->join("examination_types","examination_types.name","=","tb_m_spk.TESTING_TYPE")
                     ->groupBy(self::EXAMINATION_ID);
         $spk = $query->get();
-        $queryFilter =  new QueryFilter($request, $query);
-        if ($search != null){
-            $query->where(function($qry) use($search){
-                $qry->where('DEVICE_NAME', 'like', '%'.strtolower($search).'%')
-                ->orwhere(self::COMPANY_NAME, 'like', '%'.strtolower($search).'%')
-                ->orWhere(self::SPK_NUMBER, 'like', '%'.strtolower($search).'%');
-            });
-            $queryFilter =  new QueryFilter($request, $query);
-            $logService->createLog(self::SEARCH, self::RIWAYAT_SPK, json_encode(array(self::SEARCH => $search)));
-        }
 
-        $queryFilter
-            ->beforeDate(DB::raw(self::EXAMINATION_SPK_DATE))
-            ->afterDate(DB::raw(self::EXAMINATION_SPK_DATE))
-            ->spkNumber('spk',self::TBMSPK_SPK_NUMBER)
-            ->testingType()
-            ->companyName(self::COMPANY,'tb_m_spk.COMPANY_NAME')
-            ->labCode('lab',self::TBMSPK_LAB_CODE)
-            ->getSortedAndOrderedData($sort_by, $sort_type)
-        ;
+        $queryFilter = $this->getData($request, $query);
 
         $data = $queryFilter
             ->getQuery()
@@ -132,34 +113,12 @@ class SPKController extends Controller
         // the user's e-mail address, the amount paid, and the payment
         // timestamp.
         $logService = new LogService();
-        $search = trim($request->input(self::SEARCH));
-        $sort_by = self::TBMSPK_SPK_NUMBER;
-        $sort_type = 'desc';
         $query = TbMSPK::select(DB::raw('tb_m_spk.*, examinations.spk_date as spk_date'))
                     ->join("examinations",self::EXAMINATION_ID,"=","tb_m_spk.ID")
                     //->with('examination')
         ;
-        $queryFilter =  new QueryFilter($request, $query);
-        if ($search != null){
-            $query->where(function($qry) use($search){
-                $qry->where('DEVICE_NAME', 'like', '%'.strtolower($search).'%')
-                ->orwhere(self::COMPANY_NAME, 'like', '%'.strtolower($search).'%')
-                ->orWhere(self::SPK_NUMBER, 'like', '%'.strtolower($search).'%');
-            });
-            $queryFilter =  new QueryFilter($request, $query);
-            $logService->createLog(self::SEARCH, self::RIWAYAT_SPK, json_encode(array(self::SEARCH => $search)));
-        }
 
-        $queryFilter
-            ->beforeDate(DB::raw(self::EXAMINATION_SPK_DATE))
-            ->afterDate(DB::raw(self::EXAMINATION_SPK_DATE))
-            ->spkNumber('spk',self::TBMSPK_SPK_NUMBER)
-            ->testingType()
-            ->companyName(self::COMPANY,'tb_m_spk.COMPANY_NAME')
-            //->labCode('lab',self::TBMSPK_LAB_CODE)
-            ->getSortedAndOrderedData($sort_by, $sort_type)
-        ;
-
+        $queryFilter = $this->getData($request, $query);
         $data = $queryFilter
             ->getQuery()
             ->get()
@@ -247,5 +206,36 @@ class SPKController extends Controller
             22 => 'Sidang Ditunda',
             23 => 'Draft Laporan'
         );
+    }
+
+    private function getData($request, $query)
+    {
+        $logService = new LogService();
+        $search = trim($request->input(self::SEARCH));
+        $sort_by = self::TBMSPK_SPK_NUMBER;
+        $sort_type = 'desc';
+
+        $queryFilter =  new QueryFilter($request, $query);
+        if ($search != null){
+            $query->where(function($qry) use($search){
+                $qry->where('DEVICE_NAME', 'like', '%'.strtolower($search).'%')
+                ->orwhere(self::COMPANY_NAME, 'like', '%'.strtolower($search).'%')
+                ->orWhere(self::SPK_NUMBER, 'like', '%'.strtolower($search).'%');
+            });
+            $queryFilter =  new QueryFilter($request, $query);
+            $logService->createLog(self::SEARCH, self::RIWAYAT_SPK, json_encode(array(self::SEARCH => $search)));
+        }
+
+        $queryFilter
+            ->beforeDate(DB::raw(self::EXAMINATION_SPK_DATE))
+            ->afterDate(DB::raw(self::EXAMINATION_SPK_DATE))
+            ->spkNumber('spk',self::TBMSPK_SPK_NUMBER)
+            ->testingType()
+            ->companyName(self::COMPANY,'tb_m_spk.COMPANY_NAME')
+            ->labCode('lab',self::TBMSPK_LAB_CODE)
+            ->getSortedAndOrderedData($sort_by, $sort_type)
+        ;
+
+        return $queryFilter;
     }
 }
