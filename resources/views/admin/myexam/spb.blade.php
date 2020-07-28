@@ -70,13 +70,13 @@
 					</label>
 					<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
 						@if($spb_number == '')
-							<input type="text" name="spb_date" id="spb_date" class="form-control" value="<?php echo date('Y-m-d')?>" required readonly/>
+							<input type="text" name="spb_date" id="spb_date" class="form-control" value="{{ date('Y-m-d') }}" required readonly/>
 						@else
-							<input type="text" name="spb_date" id="spb_date" class="form-control" value="<?php echo $spb_date?>" required readonly/>
+							<input type="text" name="spb_date" id="spb_date" class="form-control" value="{{ $spb_date }}" required readonly/>
 						@endif
 						<span class="input-group-btn">
 							<button type="button" class="btn btn-default">
-								<i class="glyphicon glyphicon-calendar"></i>
+								<em class="glyphicon glyphicon-calendar"></em>
 							</button>
 						</span>
 					</p>
@@ -99,6 +99,7 @@
 			@endif
 		</div>
 		<table width=100%>
+			<caption></caption>
 			<tbody>
 				<tr>
 					<td align="center">
@@ -107,7 +108,7 @@
 					<td align="center">
 						<label for="biaya">Biaya (Rp.) *</label>
 					</td>
-					<td style="width:40px;"><a  style="width:40px;" value='Add More' class='del btn btn-success btn-flat' onclick='addAppend()'><i id='icon_add' class='fa fa-plus'/></a></td>
+					<td style="width:40px;"><a  style="width:40px;" value='Add More' class='del btn btn-success btn-flat' onclick='addAppend()'><em id='icon_add' class='fa fa-plus'></em></a></td>
 				</tr>
 				<tr>
 					<td>
