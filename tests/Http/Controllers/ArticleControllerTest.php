@@ -7,8 +7,6 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\User;
 use App\Article;
 
-use PHPUnit\Framework\TestCase;
-
 class ArticleControllerTest extends TestCase
 {
     public function setUp()

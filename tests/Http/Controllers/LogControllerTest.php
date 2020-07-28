@@ -12,7 +12,7 @@ class LogControllerTest extends TestCase
      * @return void
      */
 
-    public function delete_soon(){
+    public function testDeleteSoon(){
         $this->assertTrue(true);
     }
 

@@ -9,7 +9,7 @@ use App\User;
 class SalesControllerTest extends TestCase
 {
 
-    public function delete_soon(){
+    public function testDeleteSoon(){
         $this->assertTrue(true);
     }
 

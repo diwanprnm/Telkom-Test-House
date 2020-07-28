@@ -6,14 +6,18 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class AnalyticControllerTest extends TestCase
 {
-    use WithoutMiddleware;
     /**
      * A basic test example.
      *
      * @return void
      */
 
-    public function delete_soon(){
+    public function setUp()
+    {
+        parent::setUp();
+    }
+
+    public function testDeleteSoon(){
         $this->assertTrue(true);
     }
 

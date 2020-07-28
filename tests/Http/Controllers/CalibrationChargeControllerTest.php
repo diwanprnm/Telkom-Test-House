@@ -19,7 +19,7 @@ class CalibrationChargeControllerTest extends TestCase
 	 * @test
 	 */
 	
-	public function delete_soon(){
+	public function testDeleteSoon(){
         $this->assertTrue(true);
     }
 

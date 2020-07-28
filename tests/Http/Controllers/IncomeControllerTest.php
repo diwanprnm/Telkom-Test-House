@@ -9,7 +9,7 @@ use App\User;
 class IncomeControllerTest extends TestCase
 {
 
-    public function delete_soon(){
+    public function testDeleteSoon(){
         $this->assertTrue(true);
     }
 

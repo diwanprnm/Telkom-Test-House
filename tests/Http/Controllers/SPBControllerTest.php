@@ -9,7 +9,7 @@ use App\User;
 class SPBControllerTest extends TestCase
 {
 
-    public function delete_soon(){
+    public function testDeleteSoon(){
         $this->assertTrue(true);
     }
 
