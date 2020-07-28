@@ -41,8 +41,7 @@ class AnalyticController extends Controller
 				SELECT * FROM tracker_log l, tracker_route_paths rp 
 				WHERE l.route_path_id = rp.id 
 				AND rp.path NOT LIKE '%admin%' AND rp.path NOT LIKE '%mylogsbl%'
-				AND DATE(l.created_at) = '".$datenow."'
-			");
+				AND DATE(l.created_at) = '".$datenow."'	");
 				$log_now = count($log);
 			$sess = DB::select("
 				SELECT DISTINCT(client_ip) FROM tracker_sessions WHERE DATE(created_at) = '".$datenow."'
