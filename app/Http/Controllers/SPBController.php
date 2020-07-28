@@ -200,24 +200,8 @@ class SPBController extends Controller
             ];
         }
         $logService->createLog('download_excel', 'Rekap Nomor SPB', "" );
-        
-        $excelFileName = 'Data SPB';
-        // Generate and return the spreadsheet
-        Excel::create($excelFileName, function($excel) use ($examsArray) {
-            $excel->sheet('sheet1', function($sheet) use ($examsArray) {
-                $sheet->fromArray($examsArray, null, 'A1', false, false);
-            });
-        })->store('xlsx');
-
-        $file = Storage::disk('tmp')->get($excelFileName.'.xlsx');
-
-        $headers = [
-            'Content-Type' => 'Application/Spreadsheet',
-            'Content-Description' => 'File Transfer',
-            'Content-Disposition' => "attachment; filename=$excelFileName.xlsx",
-            'filename'=> "$excelFileName.xlsx"
-        ];
-        return response($file, 200, $headers);
+        $excel = \App\Services\ExcelService::download($examsArray, 'Data SPB');
+        return response($excel['file'], 200, $excel['headers']);
     }
 
     private function getInitialQuery()

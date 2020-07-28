@@ -156,26 +156,9 @@ class SPKController extends Controller
             ];
         }
 
-        //create log
         $logService->createLog('download_excel', self::RIWAYAT_SPK, '');
-
-        $fileName = 'Data SPK';
-        // Generate and return the spreadsheet
-        Excel::create($fileName , function($excel) use ($examsArray) {
-            $excel->sheet('sheet1', function($sheet) use ($examsArray) {
-                $sheet->fromArray($examsArray, null, 'A1', false, false);
-            });
-        })->store('xlsx');
-
-        $file = Storage::disk('tmp')->get($fileName.'.xlsx');
-
-        $headers = [
-            'Content-Type' => 'Application/Spreadsheet',
-            'Content-Description' => 'File Transfer',
-            'Content-Disposition' => "attachment; filename=$fileName.xlsx",
-            'filename'=> $fileName.'.xlsx'
-        ];
-        return response($file, 200, $headers);
+        $excel = \App\Services\ExcelService::download($examsArray, 'Data SPK');
+        return response($excel['file'], 200, $excel['headers']);
     }
 
     private function getListFlowStatus()
