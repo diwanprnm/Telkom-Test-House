@@ -25,6 +25,17 @@ class PopUpInformationController extends Controller
      *
      * @return void
      */
+    private const SEARCH = 'search';
+    private const CREATED = 'created_at';
+    private const TITLE = 'title';
+    private const CERTIFICATION = "CERTIFICATION";
+    private const MESSAGE = 'message';
+    private const IMAGE = 'image';
+    private const ERROR = 'error';
+    private const CREATE = '/admin/popupinformation/create';
+    private const IS_ACTIVE = 'is_active';
+    private const ADMIN = '/admin/popupinformation';
+
     public function __construct()
     {
         $this->middleware('auth.admin');
@@ -42,13 +53,13 @@ class PopUpInformationController extends Controller
         if ($currentUser){
             $message = null;
             $paginate = 10;
-            $search = trim($request->input('search'));
+            $search = trim($request->input($this::SEARCH));
             
             if ($search != null){
-                $popupinformations = Certification::whereNotNull('created_at')
-                    ->where('title','like','%'.$search.'%')
+                $popupinformations = Certification::whereNotNull($this::CREATED)
+                    ->where($this::TITLE,'like','%'.$search.'%')
                     ->where('type',0)
-                    ->orderBy('created_at')
+                    ->orderBy($this::CREATED)
                     ->paginate($paginate);
 
                     $logs = new Logs;
@@ -56,12 +67,12 @@ class PopUpInformationController extends Controller
                     $logs->action = "Search Pop Up Information";
                     $logs->data = json_encode(array("search"=>$search));
                     $logs->created_by = $currentUser->id;
-                    $logs->page = "CERTIFICATION";
+                    $logs->page = $this::CERTIFICATION;
                     $logs->save();
             }else{
-                $popupinformations = Certification::whereNotNull('created_at')
+                $popupinformations = Certification::whereNotNull($this::CREATED)
                     ->where('type',0)
-                    ->orderBy('created_at', 'desc')
+                    ->orderBy($this::CREATED, 'desc')
                     ->paginate($paginate);
             }
             
@@ -70,9 +81,9 @@ class PopUpInformationController extends Controller
             }
             
             return view('admin.popupinformation.index')
-                ->with('message', $message)
+                ->with($this::MESSAGE, $message)
                 ->with('data', $popupinformations)
-                ->with('search', $search);
+                ->with($this::SEARCH, $search);
         }
     }
 
@@ -94,41 +105,32 @@ class PopUpInformationController extends Controller
      */
     public function store(Request $request)
     {
-		// echo"<pre>";print_r($request->file('image')->getRealPath());exit;
-		// echo"<pre>";print_r(pathinfo($request->file('image')->getClientOriginalName()));exit;
-		// $size = getimagesize($filename);
-		// list($width, $height) = $request->file('image')->getClientSize();
-		// $image_info = getimagesize($request->file('image'));
-		// $image_width = $image_info[0];
-		// $image_height = $image_info[1];
-		// echo $image_width;
-		// echo $image_height;exit;
-		// echo"<pre>";print_r($request->file('image')->getClientSize());exit;
+		
         $currentUser = Auth::user();
 
         $popupinformation = new Certification;
         $popupinformation->id = Uuid::uuid4();
-        $popupinformation->title = $request->input('title');
-        if ($request->hasFile('image')) {
-                $image_info = getimagesize($request->file('image'));
-                $image_width = $image_info[0];
-                $image_height = $image_info[1];
-                $image = $request->file('image');
-            $name_file = 'cert_'.$request->file('image')->getClientOriginalName();
+        $popupinformation->title = $request->input($this::TITLE);
+        if ($request->hasFile($this::IMAGE)) {
+                $image_info = getimagesize($request->file($this::IMAGE));
+               // $image_width = $image_info[0];
+               // $image_height = $image_info[1];
+               // $image = $request->file($this::IMAGE);
+            $name_file = 'cert_'.$request->file($this::IMAGE)->getClientOriginalName();
             $path_file = public_path().'/media/popupinformation';
             if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
-            if($request->file('image')->move($path_file,$name_file)){
+            if($request->file($this::IMAGE)->move($path_file,$name_file)){
                 $popupinformation->image = $name_file;
             }else{
-                Session::flash('error', 'Save Image to directory failed');
-                return redirect('/admin/popupinformation/create');
+                Session::flash($this::ERROR, 'Save Image to directory failed');
+                return redirect($this::CREATE);
             }
         }
         
-        $popupinformation->is_active = $request->input('is_active');
-            $request->input('is_active')==1 ? DB::table('certifications')->where('type', 0)->update(['is_active' => 0]) : "";
+        $popupinformation->is_active = $request->input($this::IS_ACTIVE);
+            $request->input($this::IS_ACTIVE)==1 ? DB::table('certifications')->where('type', 0)->update([$this::IS_ACTIVE => 0]) : "";
         $popupinformation->type = 0;
         $popupinformation->created_by = $currentUser->id;
 		$popupinformation->created_at = ''.date('Y-m-d H:i:s').'';
@@ -141,14 +143,14 @@ class PopUpInformationController extends Controller
             $logs->action = "Create Pop Up Information";
             $logs->data = $popupinformation;
             $logs->created_by = $currentUser->id;
-            $logs->page = "CERTIFICATION";
+            $logs->page = $this::CERTIFICATION;
             $logs->save();
 
-            Session::flash('message', 'Pop Up Information successfully created');
-            return redirect('/admin/popupinformation');
+            Session::flash($this::MESSAGE, 'Pop Up Information successfully created');
+            return redirect($this::ADMIN);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
-            return redirect('/admin/popupinformation/create');
+            Session::flash($this::ERROR, 'Save failed');
+            return redirect($this::CREATE);
         }
     }
 
@@ -190,24 +192,24 @@ class PopUpInformationController extends Controller
 
         $popupinformation = Certification::find($id);
         $oldData = $popupinformation;
-        if ($request->has('title')){
-            $popupinformation->title = $request->input('title');
+        if ($request->has($this::TITLE)){
+            $popupinformation->title = $request->input($this::TITLE);
         }
-        if ($request->has('is_active')){
-            $popupinformation->is_active = $request->input('is_active');
-            $request->input('is_active')==1 ? DB::table('certifications')->where('type', 0)->update(['is_active' => 0]) : "";
+        if ($request->has($this::IS_ACTIVE)){
+            $popupinformation->is_active = $request->input($this::IS_ACTIVE);
+            $request->input($this::IS_ACTIVE)==1 ? DB::table('certifications')->where('type', 0)->update([$this::IS_ACTIVE => 0]) : "";
         }
-        if ($request->file('image')) {
-            $name_file = 'cert_'.$request->file('image')->getClientOriginalName();
+        if ($request->file($this::IMAGE)) {
+            $name_file = 'cert_'.$request->file($this::IMAGE)->getClientOriginalName();
             $path_file = public_path().'/media/popupinformation';
             if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
-            if($request->file('image')->move($path_file,$name_file)){
+            if($request->file($this::IMAGE)->move($path_file,$name_file)){
                 $popupinformation->image = $name_file;
             }else{
-                Session::flash('error', 'Save Image to directory failed');
-                return redirect('/admin/popupinformation/create');
+                Session::flash($this::ERROR, 'Save Image to directory failed');
+                return redirect($this::CREATE);
             }
         }
 
@@ -222,13 +224,13 @@ class PopUpInformationController extends Controller
             $logs->action = "Update Pop Up Information";
             $logs->data = $oldData;
             $logs->created_by = $currentUser->id;
-            $logs->page = "CERTIFICATION";
+            $logs->page = $this::CERTIFICATION;
             $logs->save();
 
-            Session::flash('message', 'Pop Up Information successfully updated');
-            return redirect('/admin/popupinformation');
+            Session::flash($this::MESSAGE, 'Pop Up Information successfully updated');
+            return redirect($this::ADMIN);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
+            Session::flash($this::ERROR, 'Save failed');
             return redirect('/admin/popupinformation/'.$popupinformation->id.'edit');
         }
     }
@@ -253,14 +255,14 @@ class PopUpInformationController extends Controller
                 $logs->action = "Delete Pop Up Information";
                 $logs->data = $oldData;
                 $logs->created_by = $currentUser->id;
-                $logs->page = "CERTIFICATION";
+                $logs->page = $this::CERTIFICATION;
                 $logs->save();
 
-                Session::flash('message', 'Pop Up Information successfully deleted');
-                return redirect('/admin/popupinformation');
+                Session::flash($this::MESSAGE, 'Pop Up Information successfully deleted');
+                return redirect($this::ADMIN);
             }catch (Exception $e){
-                Session::flash('error', 'Delete failed');
-                return redirect('/admin/popupinformation');
+                Session::flash($this::ERROR, 'Delete failed');
+                return redirect($this::ADMIN);
             }
         }
     }
