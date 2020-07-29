@@ -102,9 +102,9 @@
 			<caption></caption>
 			<tbody>
 				<tr>
-					<td align="center">
+					<th align="center" scope="col">
 						<label for="nama_perangkat">Nama Perangkat *</label>
-					</td>
+					</th>
 					<td align="center">
 						<label for="biaya">Biaya (Rp.) *</label>
 					</td>

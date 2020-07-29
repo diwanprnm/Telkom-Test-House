@@ -24,7 +24,7 @@
 		<div class="container-fluid container-fullw bg-white">
 	        <div class="row">
 				<div class="col-md-6">
-	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><i class="ti-filter"></i> Filter</a>
+	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><em class="ti-filter"></em> Filter</a>
 				<!--
 					<a class="btn btn-info pull-left" href="{{URL::to('history/excel')}}"> Export to Excel</a>
 				-->
@@ -80,7 +80,7 @@
 											<input type="text" placeholder="Dari Tanggal" value="{{ $after_date }}" name="after_date" id="after_date" class="form-control"/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
+													<em class="glyphicon glyphicon-calendar"></em>
 												</button>
 											</span>
 										</p>
@@ -88,7 +88,7 @@
 											<input type="text" placeholder="Sampai Tanggal" value="{{ $before_date }}" name="before_date" id="before_date" class="form-control"/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
+													<em class="glyphicon glyphicon-calendar"></em>
 												</button>
 											</span>
 										</p>
@@ -108,17 +108,17 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="table-responsive">
-						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer"><caption></caption>
 							<thead>
 								<tr>
-									<th class="center">No</th>
-									<th class="center">Nama Perangkat</th>
-									<th class="center">Pemohon</th>
-									<th class="center">Tahap</th>
-									<th class="center">Status</th>
-									<th class="center">Keterangan</th>
-									<th class="center">Tanggal</th>
-									<th class="center">Admin</th>
+									<th class="center" scope="col">No</th>
+									<th class="center" scope="col">Nama Perangkat</th>
+									<th class="center" scope="col">Pemohon</th>
+									<th class="center" scope="col">Tahap</th>
+									<th class="center" scope="col">Status</th>
+									<th class="center" scope="col">Keterangan</th>
+									<th class="center" scope="col">Tanggal</th>
+									<th class="center" scope="col">Admin</th>
 								</tr>
 							</thead>
 							<tbody>
