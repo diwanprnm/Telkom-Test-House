@@ -14,27 +14,27 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title"><i class="fa fa-eyes-open"></i> Data Pengujian Akan Dihapus, Mohon Berikan Keterangan!</h4>
+				<h4 class="modal-title"><em class="fa fa-eyes-open"></em> Data Pengujian Akan Dihapus, Mohon Berikan Keterangan!</h4>
 			</div>
 			
 			<div class="modal-body">
-				<table width=100%>
+				<table width=100%><caption></caption>
 					<tr>
-						<td>
+						<th scope="col">
 							<div class="form-group">
 								<label for="keterangan">Keterangan:</label>
 								<textarea class="form-control" rows="5" name="keterangan" id="keterangan"></textarea>
 							</div>
-						</td>
+						</th>
 					</tr>
 				</table>
 			</div><!-- /.modal-content -->
 			<div class="modal-footer">
-				<table width=100%>
+				<table width=100%><caption></caption>
 					<tr>
-						<td>
-							<button type="button" id="btn-modal-delete" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
-						</td>
+						<th scope="col">
+							<button type="button" id="btn-modal-delete" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
+						</th>
 					</tr>
 				</table>
 			</div>
@@ -65,7 +65,7 @@
 		<div class="container-fluid container-fullw bg-white">
 			<div class="row">
 				<div class="col-md-6">
-	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><i class="ti-filter"></i> Filter</a>
+	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><em class="ti-filter"></em> Filter</a>
 	    			<!--<a class="btn btn-info pull-left" id="excel" href="{{URL::to('examination/excel')}}"> Export to Excel</a> -->
 	    			<button id="excel" type="submit" class="btn btn-info pull-left">
                         Export to Excel
@@ -74,7 +74,7 @@
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table">
 	                    <input id="search_value" type="text" placeholder="Search" id="form-field-17" class="form-control " value="{{ $search }}">
-	                    <i class="ti-search"></i>
+	                    <em class="ti-search"></em>
 	                </span>
 	            </div>
 	            <div class="col-md-12 panel panel-info">
@@ -186,7 +186,7 @@
 											<input type="text" placeholder="Dari Tanggal" value="{{ $after_date }}" name="after_date" id="after_date" class="form-control"/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
+													<em class="glyphicon glyphicon-calendar"></em>
 												</button>
 											</span>
 										</p>
@@ -201,7 +201,7 @@
 											<input type="text" placeholder="Sampai Tanggal" value="{{ $before_date }}" name="before_date" id="before_date" class="form-control"/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
+													<em class="glyphicon glyphicon-calendar"></em>
 												</button>
 											</span>
 										</p>
@@ -401,10 +401,10 @@
 										
 										<div id="step-1">
 											<div class="form-group">
-												<table class="table table-condensed">
+												<table class="table table-condensed"><caption></caption>
 													<thead>
 														<tr>
-															<th colspan="3">Detail Informasi</th>
+															<th colspan="3" scope="col">Detail Informasi</th>
 														</tr>
 													</thead>
 													<tbody>
@@ -481,18 +481,18 @@
 											</div>
 											<div class=" pull-left">
 					                        	@if($item->attachment != '')
-					                        		<a class="btn btn-wide btn-primary pull-left" style="margin-left:10px" href="{{URL::to('/admin/examination/download/'.$item->id)}}"><i class="ti-download"></i> Form Uji</a>
+					                        		<a class="btn btn-wide btn-primary pull-left" style="margin-left:10px" href="{{URL::to('/admin/examination/download/'.$item->id)}}"><em class="ti-download"></em> Form Uji</a>
 												@endif
 												
 												@foreach($item->media as $item_SPB)
 													@if($item_SPB->name == 'SPB')
-														<a class="btn btn-wide btn-primary pull-left" style="margin-left:10px" href="{{URL::to('/admin/examination/media/download/'.$item->id.'/SPB')}}"><i class="ti-download"></i> SPB</a>
+														<a class="btn btn-wide btn-primary pull-left" style="margin-left:10px" href="{{URL::to('/admin/examination/media/download/'.$item->id.'/SPB')}}"><em class="ti-download"></em> SPB</a>
 													@endif
 												@endforeach
 												
 					                        	@if($item->examination_type_id !='2' && $item->examination_type_id !='3' && $item->examination_type_id !='4')
 					                        		@if($item->device->certificate != '')
-						                        		<a class="btn btn-wide btn-primary pull-left" style="margin-left:10px" href="{{URL::to('/admin/examination/media/download/'.$item->device_id.'/certificate')}}"><i class="ti-download"></i> Sertifikat</a>
+						                        		<a class="btn btn-wide btn-primary pull-left" style="margin-left:10px" href="{{URL::to('/admin/examination/media/download/'.$item->device_id.'/certificate')}}"><em class="ti-download"></em> Sertifikat</a>
 						                        	@endif
 					                        	@endif
 					                        </div>

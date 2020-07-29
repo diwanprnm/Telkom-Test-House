@@ -50,7 +50,7 @@
 			<div class="modal-body">
 				<table ><caption> </caption>
 					<tr>
-						<th>
+						<th scope="col">
 							<div class="form-group">
 								<label for="keterangan">Keterangan:</label>
 								<textarea class="form-control" rows="5" name="keterangan" id="keterangan"></textarea>
@@ -62,7 +62,7 @@
 			<div class="modal-footer">
 				<table><caption> </caption>
 					<tr>
-						<th>
+						<th scope="col">
 							<button type="button" id="btn-modal-move_data" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
 						</th>
 					</tr>
