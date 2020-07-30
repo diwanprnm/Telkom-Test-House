@@ -15,7 +15,6 @@ use App\ExaminationLab;
 
 class TopDashboardController extends Controller
 {
-	private const YMD = 'Y-m-d';
 
 	private const STELS = "stels_sales.id";
 	private const UPDATE = 'stels_sales_attachment.updated_at';
@@ -43,23 +42,17 @@ class TopDashboardController extends Controller
 	
 	public function index(Request $request)
     {
-		$message = null;
-		$search = null;
-        $currentUser = Auth::user();	
-		$thisYear = date('Y');
+		$message = null; $search = null; $currentUser = Auth::user();	$thisYear = date('Y');
       if ($currentUser){
 			$pemohon = DB::select("
 				select count(distinct created_by) as jml
 				from examinations;
-			");
-				$jmlpemohon = $pemohon[0]->jml;
-            
+			");$jmlpemohon = $pemohon[0]->jml;
 			$perusahaan = DB::select("
 				select count(distinct company_id) as jml
 				from examinations;
 			");
 				$jmlperusahaan = $perusahaan[0]->jml;
-            
 			$perangkat_lulus = DB::select("
 				select count(*) as jml
 				from examinations
@@ -68,17 +61,8 @@ class TopDashboardController extends Controller
 				AND resume_status = 1 AND qa_status = 1 AND certificate_status = 1;
 			");
 			$jmlperangkatlulus = $perangkat_lulus[0]->jml;
-			$count_reg = 0;
-			$count_func = 0;
-			$count_cont = 0;
-			$count_spb = 0;
-			$count_pay = 0;
-			$count_spk = 0;
-			$count_exam = 0;
-			$count_resu = 0;
-			$count_qa = 0;
-			$count_cert = 0;
-			$pengujian = Examination::all();
+			$count_reg = 0; $count_func = 0; $count_cont = 0; $count_spb = 0;	$count_pay = 0;	$count_spk = 0;
+			$count_exam = 0; $count_resu = 0; $count_qa = 0;$count_cert = 0; $pengujian = Examination::all();
 			foreach ($pengujian as $row) {
 				if($row->registration_status < 1){$count_reg = $count_reg + 1;}
 				else if($row->registration_status == 1 && $row->function_status < 1){$count_func = $count_func + 1;}
@@ -91,9 +75,7 @@ class TopDashboardController extends Controller
 				else if($row->resume_status == 1 && $row->qa_status < 1){$count_qa = $count_qa + 1;}
 				else if($row->qa_status == 1 && $row->certificate_status < 1){$count_cert = $count_cert + 1;}
 			}
-
 			$deviceNotComp = Examination::where('qa_passed', -1)->count();
-            
 			$data = [
 				'jml_pemohon' => $jmlpemohon,
 				'jml_perusahaan' => $jmlperusahaan,
@@ -120,12 +102,7 @@ class TopDashboardController extends Controller
 			$id_cpe = ExaminationLab::where('name', 'like', '%cpe%')->select('id')->first();
 			$id_kal = ExaminationLab::where('name', 'like', '%kalibrasi%')->select('id')->first();
 			for($i=0;$i<12;$i++){
-				$sum_stel = 0;
-				$sum_stel_kab = 0;
-				$sum_stel_ene = 0;
-				$sum_stel_tra = 0;
-				$sum_stel_cpe = 0;
-				$sum_stel_kal = 0;
+				$sum_stel = 0; $sum_stel_kab = 0; $sum_stel_ene = 0; $sum_stel_tra = 0; $sum_stel_cpe = 0; $sum_stel_kal = 0;
 				$select = array('stels_sales.cust_price_payment', 'stels.type');
 		        $query = STELSales::selectRaw(implode(",", $select))
 		        		->join("stels_sales_attachment","stels_sales_attachment.stel_sales_id","=",$this::STELS)
@@ -158,12 +135,8 @@ class TopDashboardController extends Controller
 		        	}
 		        	$sum_stel += $item->cust_price_payment;
 		        }
-				$chart['stel'][$i]=(float)$sum_stel;
-				$chart[$this::KAB][$i]=(float)$sum_stel_kab;
-				$chart[$this::ENE][$i]=(float)$sum_stel_ene;
-				$chart[$this::TRA][$i]=(float)$sum_stel_tra;
-				$chart[$this::CPE][$i]=(float)$sum_stel_cpe;
-				$chart[$this::KAL][$i]=(float)$sum_stel_kal;
+				$chart['stel'][$i]=(float)$sum_stel; $chart[$this::KAB][$i]=(float)$sum_stel_kab; $chart[$this::ENE][$i]=(float)$sum_stel_ene;
+				$chart[$this::TRA][$i]=(float)$sum_stel_tra; $chart[$this::CPE][$i]=(float)$sum_stel_cpe; $chart[$this::KAL][$i]=(float)$sum_stel_kal;
 				$jml_device_qa = Income::whereHas($this::EXAM, function ($q){
 						return $q->where($this::EXAMID, 1);
 					})
@@ -198,10 +171,8 @@ class TopDashboardController extends Controller
 					AND MONTH(tgl) = ".($i+1)."
 					;
 				");
-				$chart[$this::DEVICE][$i]=(float)$jml_device[0]->jml;
-				$chart[$this::QA][$i] = (float)$jml_device_qa;
-				$chart[$this::VT][$i] = (float)$jml_device_vt;
-				$chart[$this::TA][$i] = (float)$jml_device_ta;
+				$chart[$this::DEVICE][$i]=(float)$jml_device[0]->jml;  $chart[$this::QA][$i] = (float)$jml_device_qa;
+				$chart[$this::VT][$i] = (float)$jml_device_vt;  $chart[$this::TA][$i] = (float)$jml_device_ta;
 				$chart[$this::CAL][$i] = (float)$jml_device_cal;
 			}
             return view('admin.topdashboard.index')

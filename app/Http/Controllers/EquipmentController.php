@@ -279,7 +279,8 @@ class EquipmentController extends Controller
 					$this::EXAMID,
 					$this::DEVICENAME,
 					$this::DEVICEMODEL
-					)
+                    )
+                    
             ->where($this::EXAMID, $id)
 			->orderBy($this::DEVICENAME)
 			->first();

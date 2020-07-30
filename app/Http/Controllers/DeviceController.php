@@ -31,7 +31,6 @@ class DeviceController extends Controller
 	private const SEARCH = 'search';
 	private const YMD = 'Y-m-d';
 	private const DEVICEVAL= 'devices.valid_thru';
-	private const COMPANIES_NAME = 'companies.name';
 	private const BEFORE = 'before_date';
 	private const AFTER = 'after_date';
 	private const CATEGORY = 'category';
