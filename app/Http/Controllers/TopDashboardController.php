@@ -45,21 +45,9 @@ class TopDashboardController extends Controller
     {
 		$message = null;
 		$search = null;
-        $currentUser = Auth::user();
-		$datenow = date($this::YMD);
-		$dateyesterday = date($this::YMD,strtotime("-1 days"));
-		$datelastweek = date($this::YMD,strtotime("-7 days"));
-		$thisDay = date('d');
-		$thisMonth = date('m');
+        $currentUser = Auth::user();	
 		$thisYear = date('Y');
-			$datestring=date($this::YMD).' first day of last month';
-			$dt=date_create($datestring);
-		$lastMonth = $dt->format('m');
-		$lastYear = $dt->format('Y');
-		$d=cal_days_in_month(CAL_GREGORIAN,$thisMonth,$thisYear);
-
-        if ($currentUser){
-				
+      if ($currentUser){
 			$pemohon = DB::select("
 				select count(distinct created_by) as jml
 				from examinations;
@@ -80,7 +68,6 @@ class TopDashboardController extends Controller
 				AND resume_status = 1 AND qa_status = 1 AND certificate_status = 1;
 			");
 			$jmlperangkatlulus = $perangkat_lulus[0]->jml;
-            
 			$count_reg = 0;
 			$count_func = 0;
 			$count_cont = 0;
@@ -124,20 +111,15 @@ class TopDashboardController extends Controller
 				'count_exam_all' => count($pengujian),
 				'count_dev_notComp' => $deviceNotComp
 			];
-			
-			
             if (count($data) == 0){
                 $message = 'Data not found';
             }
-			
 			$id_kab = ExaminationLab::where('name', 'like', '%kabel%')->select('id')->first();
 			$id_ene = ExaminationLab::where('name', 'like', '%energi%')->select('id')->first();
 			$id_tra = ExaminationLab::where('name', 'like', '%transmisi%')->select('id')->first();
 			$id_cpe = ExaminationLab::where('name', 'like', '%cpe%')->select('id')->first();
 			$id_kal = ExaminationLab::where('name', 'like', '%kalibrasi%')->select('id')->first();
-
 			for($i=0;$i<12;$i++){
-
 				$sum_stel = 0;
 				$sum_stel_kab = 0;
 				$sum_stel_ene = 0;
@@ -153,29 +135,23 @@ class TopDashboardController extends Controller
                         ->whereYear($this::UPDATE, '=', $thisYear)
                         ->whereMonth($this::UPDATE, '=', $i+1);
                 $stels_sales = $query->get();
-
 		        foreach($stels_sales as $item){
 		        	switch ($item->type) {
 		        		case $id_kab->id:
 		        			$sum_stel_kab += $item->cust_price_payment;
 		        			break;
-
 		        		case $id_ene->id:
 		        			$sum_stel_ene += $item->cust_price_payment;
 		        			break;
-
 		        		case $id_tra->id:
 		        			$sum_stel_tra += $item->cust_price_payment;
 		        			break;
-
 		        		case $id_cpe->id:
 		        			$sum_stel_cpe += $item->cust_price_payment;
 		        			break;
-
 		        		case $id_kal->id:
 		        			$sum_stel_kal += $item->cust_price_payment;
 		        			break;
-		        		
 		        		default:
 		        			# code...
 		        			break;
@@ -188,7 +164,6 @@ class TopDashboardController extends Controller
 				$chart[$this::TRA][$i]=(float)$sum_stel_tra;
 				$chart[$this::CPE][$i]=(float)$sum_stel_cpe;
 				$chart[$this::KAL][$i]=(float)$sum_stel_kal;
-
 				$jml_device_qa = Income::whereHas($this::EXAM, function ($q){
 						return $q->where($this::EXAMID, 1);
 					})
@@ -196,7 +171,6 @@ class TopDashboardController extends Controller
 		        ->whereMonth($this::CREATED, '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
-
 		        $jml_device_vt = Income::whereHas($this::EXAM, function ($q){
 						return $q->where($this::EXAMID, 3);
 					})
@@ -204,7 +178,6 @@ class TopDashboardController extends Controller
 		        ->whereMonth($this::CREATED, '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
-
 		        $jml_device_ta = Income::whereHas($this::EXAM, function ($q){
 						return $q->where($this::EXAMID, 2);
 					})
@@ -212,7 +185,6 @@ class TopDashboardController extends Controller
 		        ->whereMonth($this::CREATED, '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
-
 		        $jml_device_cal = Income::whereHas($this::EXAM, function ($q){
 						return $q->where($this::EXAMID, 4);
 					})
@@ -220,21 +192,18 @@ class TopDashboardController extends Controller
 		        ->whereMonth($this::CREATED, '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
-
 				$jml_device = DB::select("
 					SELECT sum(price) AS jml
 					from incomes where YEAR(tgl) = ".$thisYear."
 					AND MONTH(tgl) = ".($i+1)."
 					;
 				");
-
 				$chart[$this::DEVICE][$i]=(float)$jml_device[0]->jml;
 				$chart[$this::QA][$i] = (float)$jml_device_qa;
 				$chart[$this::VT][$i] = (float)$jml_device_vt;
 				$chart[$this::TA][$i] = (float)$jml_device_ta;
 				$chart[$this::CAL][$i] = (float)$jml_device_cal;
 			}
-
             return view('admin.topdashboard.index')
                 ->with('search', $search)
                 ->with('message', $message)

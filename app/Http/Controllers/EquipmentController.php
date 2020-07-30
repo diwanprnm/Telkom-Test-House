@@ -206,8 +206,8 @@ class EquipmentController extends Controller
               "message"=>"Perangkat yang akan diuji, sudah masuk Gudang Urel",
               "url"=>"pengujian/".$equipment->examination_id."/detail",
               "is_read"=>0,
-              "created_at"=>date("Y-m-d H:i:s"),
-              "updated_at"=>date("Y-m-d H:i:s")
+              "created_at"=>date($this::YMDH),
+              "updated_at"=>date(self::YMDH)
               );
               
               $notification = new NotificationTable();
@@ -227,7 +227,7 @@ class EquipmentController extends Controller
             Session::flash($this::MESSAGE, 'Equipment successfully created');
             return redirect($this::ADMINEQUIP);
         } catch(\Exception $e){
-           // return $e;
+           
 			Session::flash($this::ERROR, 'Save Failed');
             return redirect('/admin/equipment/create')
                         ->withInput();
