@@ -112,10 +112,7 @@ class PopUpInformationController extends Controller
         $popupinformation->id = Uuid::uuid4();
         $popupinformation->title = $request->input($this::TITLE);
         if ($request->hasFile($this::IMAGE)) {
-                $image_info = getimagesize($request->file($this::IMAGE));
-               // $image_width = $image_info[0];
-               // $image_height = $image_info[1];
-               // $image = $request->file($this::IMAGE);
+               
             $name_file = 'cert_'.$request->file($this::IMAGE)->getClientOriginalName();
             $path_file = public_path().'/media/popupinformation';
             if (!file_exists($path_file)) {
