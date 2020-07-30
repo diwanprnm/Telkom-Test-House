@@ -25,11 +25,11 @@
 	        <div class="row">
 				<div class="col-md-12">
 					<div class="table-responsive">
-						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer"><caption></caption>
 							<thead>
 								<tr>
-									<th class="center">No</th>
-									<th class="center">Notification</th>
+									<th class="center" scope="col">No</th>
+									<th class="center" scope="col">Notification</th>
 								</tr>
 							</thead>
 							<tbody>
