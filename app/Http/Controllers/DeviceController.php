@@ -60,67 +60,41 @@ class DeviceController extends Controller
 				->join('devices', 'examinations.device_id', '=', 'devices.id')
 				->join('companies', 'examinations.company_id', '=', 'companies.id')
 				->select(
-						'examinations.price AS totalBiaya',
-						'examinations.spk_code',
-						'examinations.jns_perusahaan',
-						'companies.name AS namaPerusahaan',
-						'devices.id AS deviceId',
-						'devices.name AS namaPerangkat',
-						'devices.mark AS merk',
-						'devices.model AS tipe',
-						'devices.capacity AS kapasitas',
-						'devices.test_reference AS standarisasi',
-						'devices.valid_from',
-						$this::DEVICEVAL,
-						'devices.manufactured_by',
-						'devices.serial_number',
-						'devices.cert_number',
-						$this::DEVICEVAL,
-						'companies.address',
-						'companies.city',
-						'companies.postal_code',
-						'companies.email',
-						'companies.phone_number',
-						'companies.fax',
-						'companies.npwp_number',
-						'companies.siup_number',
-						'companies.siup_date',
-						'companies.qs_certificate_number',
+						'examinations.price AS totalBiaya','examinations.spk_code','examinations.jns_perusahaan','companies.name AS namaPerusahaan',
+						'devices.id AS deviceId','devices.name AS namaPerangkat','devices.mark AS merk','devices.model AS tipe',
+						'devices.capacity AS kapasitas','devices.test_reference AS standarisasi','devices.valid_from',$this::DEVICEVAL,
+						'devices.manufactured_by','devices.serial_number','devices.cert_number',$this::DEVICEVAL,'companies.address',
+						'companies.city','companies.postal_code','companies.email','companies.phone_number','companies.fax',
+						'companies.npwp_number','companies.siup_number','companies.siup_date','companies.qs_certificate_number',
 						'companies.qs_certificate_date'
 						)
 				->where('examinations.resume_status','=','1')
 				->where('examinations.qa_status','=','1')
 				->where('examinations.qa_passed','=','1')
 				->where('examinations.certificate_status','=','1')
-				
 				->where(function($q) use($search){
 					$q->where('devices.name','like','%'.$search.'%')
 						->orWhere($this::DEVICEVAL,'like','%'.$search.'%')
 						->orWhere('devices.mark','like','%'.$search.'%')
 						->orWhere('devices.model','like','%'.$search.'%');
 				});
-				
 				if ($request->has($this::BEFORE)){
 					$dev->where($this::DEVICEVAL, '>=', $request->get($this::BEFORE));
 					$before = $request->get($this::BEFORE);
 				}
-
 				if ($request->has($this::AFTER)){
 					$dev->where($this::DEVICEVAL, '<=', $request->get($this::AFTER));
 					$after = $request->get($this::AFTER);
 				}
-
 				if ($request->has($this::CATEGORY)){
 					switch ($request->get($this::CATEGORY)) {
 						case 'aktif':
 							$dev->where($this::DEVICEVAL, '>=', $datenow);
-							break;
-						
+							break;		
 						case 'aktif1':
 							$dev->where($this::DEVICEVAL, '>=', $dateMin1Year);
 							$dev->where($this::DEVICEVAL, '<', $datenow);
 							break;
-						
 						default:
 							$dev->where(function($q) use($datenow,$dateMin1Year){
 								$q->where($this::DEVICEVAL, '>=', $datenow)
@@ -133,7 +107,6 @@ class DeviceController extends Controller
 				else{
 					$dev->where($this::DEVICEVAL, '>=', $datenow);
 				}
-
 				$logs = new Logs;
                 $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
                 $logs->action = "Search Device";  
@@ -142,7 +115,6 @@ class DeviceController extends Controller
                 $logs->created_by = $currentUser->id;
                 $logs->page = "DEVICE";
                 $logs->save();
-				
 				$data_excel = $dev->orderBy($this::DEVICEVAL, 'desc')->get();
 				$data = $dev->orderBy($this::DEVICEVAL, 'desc')->paginate($paginate);
             }else{
@@ -150,16 +122,9 @@ class DeviceController extends Controller
 				->join('devices', 'examinations.device_id', '=', 'devices.id')
 				->join('companies', 'examinations.company_id', '=', 'companies.id')
 				->select(
-						'examinations.price AS totalBiaya',
-						'examinations.spk_code',
-						'examinations.jns_perusahaan',
-						'companies.name AS namaPerusahaan',
-						'devices.id AS deviceId',
-						'devices.name AS namaPerangkat',
-						'devices.mark AS merk',
-						'devices.model AS tipe',
-						'devices.capacity AS kapasitas',
-						'devices.test_reference AS standarisasi',
+						'examinations.price AS totalBiaya','examinations.spk_code','examinations.jns_perusahaan','companies.name AS namaPerusahaan',
+						'devices.id AS deviceId','devices.name AS namaPerangkat','devices.mark AS merk','devices.model AS tipe',
+						'devices.capacity AS kapasitas','devices.test_reference AS standarisasi',
 						'devices.valid_from',
 						$this::DEVICEVAL,
 						'devices.manufactured_by',
@@ -182,7 +147,6 @@ class DeviceController extends Controller
 				->where('examinations.qa_status','=','1')
 				->where('examinations.qa_passed','=','1')
 				->where('examinations.certificate_status','=','1');
-
 				if ($request->has($this::BEFORE)){
 					$dev->where($this::DEVICEVAL, '>=', $request->get($this::BEFORE));
 					$before = $request->get($this::BEFORE);
@@ -195,13 +159,11 @@ class DeviceController extends Controller
 					switch ($request->get($this::CATEGORY)) {
 						case 'aktif':
 							$dev->where($this::DEVICEVAL, '>=', $datenow);
-							break;
-						
+							break;			
 						case 'aktif1':
 							$dev->where($this::DEVICEVAL, '>=', $dateMin1Year);
 							$dev->where($this::DEVICEVAL, '<', $datenow);
 							break;
-						
 						default:
 							$dev->where(function($q) use($datenow,$dateMin1Year){
 								$q->where($this::DEVICEVAL, '>=', $datenow)
@@ -213,17 +175,13 @@ class DeviceController extends Controller
 				}else{
 					$dev->where($this::DEVICEVAL, '>=', $datenow);
 				}
-
 				$data_excel = $dev->orderBy($this::DEVICEVAL, 'desc')->get();
 				$data = $dev->orderBy($this::DEVICEVAL, 'desc')->paginate($paginate);
             }
-            
             if (count($data) == 0){
                 $message = 'Data not found';
             }
-			
             $request->session()->put('excel_pengujian_sukses', $data_excel);
-			
             return view('admin.devices.index')
                 ->with('message', $message)
                 ->with('data', $data)
