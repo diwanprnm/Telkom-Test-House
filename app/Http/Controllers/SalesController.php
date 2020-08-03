@@ -748,7 +748,7 @@ class SalesService
 
     public function search(Request $request, $dataSales)
     {
-        $request->has(self::SEARCH) ? $search = trim($request->input(self::SEARCH)) : $search = '';
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         if($search!=''){
             $dataSales = $dataSales->where('invoice','like','%'.$search.'%')
             ->orWhere('companies.name', 'like', '%'.$search.'%')

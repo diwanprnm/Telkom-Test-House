@@ -54,7 +54,7 @@ class FeedbackComplaintController extends Controller
     {
         $message = null;
         $paginate = 10;
-        $search = trim($request->input(self::SEARCH));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         $before = null;
         $after = null;
         $type = '';
@@ -70,7 +70,7 @@ class FeedbackComplaintController extends Controller
 
         $query = Questioner::with(self::EXAMINATION_DEVICE)->with(self::EXAMINATION_COMPANY)->with('user');
         $queryFilter = new QueryFilter($request, $query);
-        if ($search != null){
+        if ($search){
             $query->whereHas(self::EXAMINATION_COMPANY, function ($query) use ($search) {
                 $query->where('name', 'like', '%'.strtolower($search).'%');
             })->orWhereHas(self::EXAMINATION_DEVICE, function ($query) use ($search) {

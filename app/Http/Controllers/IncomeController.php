@@ -59,7 +59,7 @@ class IncomeController extends Controller
     {
         //initial var
         $paginate = 10;
-        $search = trim($request->input(self::SEARCH));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         $dataNotFound='';
 
         //getting relation db
@@ -235,7 +235,7 @@ class IncomeController extends Controller
         // timestamp.
 
         //initial var
-        $search = trim($request->input(self::SEARCH));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
 
         //Filter query based on request
         $initialQuery = $this->initialQuery($search);
@@ -306,7 +306,7 @@ class IncomeController extends Controller
 			ORDER BY last_numb DESC LIMIT 1
 		";
 		$data = DB::select($query);
-		if (count($data) == 0){
+		if (!count($data)){
 			return '001/DDS-73/'.$thisYear.'';
 		}
 		else{
@@ -432,7 +432,7 @@ class IncomeController extends Controller
             ->with(self::COMPANY)
         ;
 
-        if ($search != null){
+        if ($search){
             $query->where(function($qry) use($search){
                 $qry->whereHas(self::COMPANY, function ($q) use ($search){
                     return $q->where('name', 'like', '%'.strtolower($search).'%');

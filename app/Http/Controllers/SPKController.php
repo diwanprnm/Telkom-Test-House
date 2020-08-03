@@ -53,7 +53,7 @@ class SPKController extends Controller
     {
         $noDataFound = '';
         $paginate = 10;
-        $search = trim($request->input(self::SEARCH));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         $sort_by = self::TBMSPK_SPK_NUMBER;
         $sort_type = 'desc';
         $examType = ExaminationType::all();
@@ -194,12 +194,12 @@ class SPKController extends Controller
     private function getData($request, $query)
     {
         $logService = new LogService();
-        $search = trim($request->input(self::SEARCH));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         $sort_by = self::TBMSPK_SPK_NUMBER;
         $sort_type = 'desc';
 
         $queryFilter =  new QueryFilter($request, $query);
-        if ($search != null){
+        if ($search){
             $query->where(function($qry) use($search){
                 $qry->where('DEVICE_NAME', 'like', '%'.strtolower($search).'%')
                 ->orwhere(self::COMPANY_NAME, 'like', '%'.strtolower($search).'%')

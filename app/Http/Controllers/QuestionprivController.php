@@ -39,7 +39,7 @@ class QuestionprivController extends Controller
     {
         $dataNotFound = '';
         $paginate = 10;
-        $search = trim(strip_tags($request->input('search','')));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         
         $questionpriv = Questionpriv::whereNotNull('created_at')
             ->with('user')

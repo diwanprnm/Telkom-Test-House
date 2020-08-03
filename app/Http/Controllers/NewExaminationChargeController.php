@@ -85,7 +85,7 @@ class NewExaminationChargeController extends Controller
         //initial var
         $logService = new LogService();
         $paginate = 10;
-        $search = trim($request->input(self::SEARCH));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         $status = '';
         $dataNotFound = '';
 
@@ -94,7 +94,7 @@ class NewExaminationChargeController extends Controller
         $queryFilter = new QueryFilter($request, NewExaminationCharge::whereNotNull('created_at'));
         
         //filter query
-        if ($search != null){
+        if ($search){
                 $query = $queryFilter
                     ->getQuery()
                     ->where('name','like','%'.$search.'%')

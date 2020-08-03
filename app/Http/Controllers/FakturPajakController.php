@@ -46,7 +46,7 @@ class FakturPajakController extends Controller
     {
         $logService = new LogService();
 
-        $search = trim($request->input(self::SEARCH));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         $noDataFound = '';
         $page = $request->has('page') ? $request->get('page') : '1';
         $sort_by = $request->has(self::SORT_BY) ? $request->get(self::SORT_BY) : 'payment_date';
@@ -124,7 +124,7 @@ class FakturPajakController extends Controller
                 })
         ;
 
-        if ($search != null){
+        if ($search){
             $spb->having('company_name', 'like', '%'.strtolower($search).'%')
                 ->orHaving('description', 'like', '%'.strtolower($search).'%')
                 ->orHaving('faktur_file', 'like', '%'.strtolower($search).'%')

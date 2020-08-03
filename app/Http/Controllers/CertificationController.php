@@ -53,7 +53,7 @@ class CertificationController extends Controller
 
         $message = null;
         $paginate = 10;
-        $search = trim(strip_tags($request->input('search','')));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         
         if ($search){
             $certifications = Certification::whereNotNull(self::CREATED_AT)
@@ -62,7 +62,7 @@ class CertificationController extends Controller
                 ->orderBy(self::CREATED_AT)
                 ->paginate($paginate);
                 //Create search log
-                $logService->createLog('Search Certification', self::CERTIFICATION, json_encode(array("search"=>$search)) );
+                $logService->createLog('Search Certification', self::CERTIFICATION, json_encode(array(self::SEARCH=>$search)) );
         }else{
             $certifications = Certification::whereNotNull(self::CREATED_AT)
                 ->where('type',1)

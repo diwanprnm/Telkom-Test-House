@@ -50,7 +50,7 @@ class SPBController extends Controller
         $logService = new LogService();
         $noDataFound = '';
         $paginate = 10;
-        $search = trim($request->input(self::SEARCH));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         $sort_by = self::SPB_NUMBER;
         $sort_type = 'desc';
 
@@ -60,7 +60,7 @@ class SPBController extends Controller
         $spb        = $query->get();
         $queryFilter= new QueryFilter($request, $query);
 
-        if ($search != null){
+        if ($search){
             $query->where(function($qry) use($search){
                 $qry->whereHas(self::DEVICE, function ($q) use ($search){
                             return $q->where('name', 'like', '%'.strtolower($search).'%');
