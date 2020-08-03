@@ -53,7 +53,7 @@ class SlideshowController extends Controller
         $logService = new LogService();
         $noDataFound = '';
         $paginate = 100;
-        $search = trim($request->input(self::SEARCH));
+        $search = trim(strip_tags($request->input('search','')));
         
         if ($search != null){
             $slideshows = Slideshow::whereNotNull(self::CREATED_AT)
@@ -96,6 +96,14 @@ class SlideshowController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            self::TITLE => 'required',
+            self::HEADLINE => 'required',
+            self::IMAGE => 'required|mimes:jpg,jpeg,png',
+            self::TIMEOUT => 'numeric',
+            self::IS_ACTIVE => 'required|boolean'
+        ]);
+
         $currentUser = Auth::user();
         $logService = new LogService();
         $slideshow = new Slideshow;
@@ -103,7 +111,7 @@ class SlideshowController extends Controller
         $slideshow->title = $request->input(self::TITLE);
         $slideshow->headline = $request->input(self::HEADLINE);
         $slideshow->color = $request->input(self::COLOR);
-        $slideshow->timeout = $request->input(self::TIMEOUT);
+        $slideshow->timeout = $request->input(self::TIMEOUT,'1');
 
         if ($request->hasFile(self::IMAGE))
         {
@@ -167,6 +175,12 @@ class SlideshowController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->validate($request, [
+            self::IMAGE => 'mimes:jpg,jpeg,png',
+            self::TIMEOUT => 'numeric',
+            self::IS_ACTIVE => 'boolean'
+        ]);
+
         $currentUser = Auth::user();
         $logService = new LogService();
         $slideshow = Slideshow::find($id);
