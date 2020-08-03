@@ -39,13 +39,13 @@ class QuestionprivController extends Controller
     {
         $dataNotFound = '';
         $paginate = 10;
-        $search = trim($request->input('search'));
+        $search = trim(strip_tags($request->input('search','')));
         
         $questionpriv = Questionpriv::whereNotNull('created_at')
             ->with('user')
             ->with(self::QUESTION);
 
-        if ($search != null){
+        if ($search){
             $questionpriv->where(function($qry) use($search){
                 $qry->whereHas('user', function ($q) use ($search){
                         return $q->where('name', 'like', '%'.strtolower($search).'%')
@@ -92,9 +92,14 @@ class QuestionprivController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            self::CHECK_PRIVILEGE => 'required',
+            self::USER_ID => 'required',
+        ]);
+
 		$questionpriv = Questionpriv::where(self::USER_ID,'=',$request->input(self::USER_ID))->get();
 
-		if(count($questionpriv) == 0 && count($request->input(self::CHECK_PRIVILEGE)))
+		if(count($questionpriv) != 0 && count($request->input(self::CHECK_PRIVILEGE)))
 		{
 			$currentUser = Auth::user();
 			for($i=0;$i<count($request->input(self::CHECK_PRIVILEGE));$i++){
@@ -155,6 +160,10 @@ class QuestionprivController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->validate($request, [
+            self::CHECK_PRIVILEGE => 'required',
+        ]);
+
 		if(count($request->input(self::CHECK_PRIVILEGE)) > 0)
 		{
 			$currentUser = Auth::user();
