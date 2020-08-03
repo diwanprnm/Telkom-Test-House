@@ -48,11 +48,13 @@ class DevicencController extends Controller
 	private const DEVICE_STAT='devices.status';
 	private const BEFORE = 'before_date';
 	private const AFTER = 'after_date';
-	
+	private const EXAM_DATE = 'examinations.qa_date';
+	private const DEVICE = 'devices.valid_thru';
+	private const COMP_NAME = 'companies.name';
 	public const DATA = ['examinations.price AS totalBiaya',
 	'examinations.spk_code',
 	'examinations.jns_perusahaan',
-	'examinations.qa_date',
+	self::EXAM_DATE,
 	'companies.name AS namaPerusahaan',
 	'devices.id as device_id',
 	'devices.name AS namaPerangkat',
@@ -61,10 +63,10 @@ class DevicencController extends Controller
 	'devices.capacity AS kapasitas',
 	'devices.test_reference AS standarisasi',
 	'devices.valid_from',
-	'devices.valid_thru',
+	self::DEVICE,
 	'devices.serial_number',
 	'devices.manufactured_by',
-	'companies.name',
+	self::COMP_NAME,
 	'companies.address',
 	'companies.city',
 	'companies.postal_code',
@@ -114,7 +116,7 @@ class DevicencController extends Controller
 			->where(self::EXAM_STATUS,'=','1')
 			->where(self::EXAM_PAS,'=','-1')
 			->where(self::EXAM_CERTI,'=','1')
-			->whereDate('examinations.qa_date','>=',$expDate)
+			->whereDate(self::EXAM_DATE,'>=',$expDate)
 			->where(self::DEVICE_STAT, 1)
 			;
 
@@ -131,25 +133,25 @@ class DevicencController extends Controller
 			->where(self::EXAM_PAS,'=','-1')
 			->where(self::EXAM_CERTI,'=','1')
 			->where(function($q) use($expDate){
-					$q->whereDate('examinations.qa_date','<',$expDate)
+					$q->whereDate(self::EXAM_DATE,'<',$expDate)
 						->orWhere(self::DEVICE_STAT, '-1');
 				});
 			
 
 			if ($request->has(self::BEFORE)){
-				$dev->where('devices.valid_thru', '<=', $request->get(self::BEFORE));
+				$dev->where(self::DEVICE, '<=', $request->get(self::BEFORE));
 				$before = $request->get(self::BEFORE);
 			}
 
 			if ($request->has(self::AFTER)){
-				$dev->where('devices.valid_thru', '>=', $request->get(self::AFTER));
+				$dev->where(self::DEVICE, '>=', $request->get(self::AFTER));
 				$after = $request->get(self::AFTER);
 			}
 
             if ($search != null){
         		$dev->where(function($q) use($search){
 					$q->where($this::DEVICE_NAME,'like','%'.$search.'%')
-						->orWhere('companies.name','like','%'.$search.'%')
+						->orWhere(self::COMP_NAME,'like','%'.$search.'%')
 						->orWhere(self::DEVICE_MARK,'like','%'.$search.'%')
 						->orWhere($this::DEVICE_MOD,'like','%'.$search.'%');
 				});
@@ -169,7 +171,7 @@ class DevicencController extends Controller
             if ($search2 != null){
         		$afterDev->where(function($q) use($search2){
 					$q->where($this::DEVICE_NAME,'like','%'.$search2.'%')
-						->orWhere('companies.name','like','%'.$search2.'%')
+						->orWhere(self::COMP_NAME,'like','%'.$search2.'%')
 						->orWhere(self::DEVICE_MARK,'like','%'.$search2.'%')
 						->orWhere($this::DEVICE_MOD,'like','%'.$search2.'%');
 				});
@@ -233,7 +235,7 @@ class DevicencController extends Controller
 		->where(self::EXAM_STATUS,'=','1')
 		->where(self::EXAM_PAS,'=','-1')
 		->where(self::EXAM_CERTI,'=','1')
-		->whereDate('examinations.qa_date','>=',$expDate)
+		->whereDate(self::EXAM_DATE,'>=',$expDate)
 		->where(self::DEVICE_STAT, 1)
 		;
 		$afterDev = DB::table($this::EXAM)
@@ -248,15 +250,15 @@ class DevicencController extends Controller
 		->where(self::EXAM_PAS,'=','-1')
 		->where(self::EXAM_CERTI,'=','1')
 		->where(function($q) use($expDate){
-					$q->whereDate('examinations.qa_date','<',$expDate)
+					$q->whereDate(self::EXAM_DATE,'<',$expDate)
 						->orWhere(self::DEVICE_STAT, '-1');
 				});
 		if ($request->has(self::BEFORE)){
-			$dev->where('devices.valid_thru', '<=', $request->get(self::BEFORE));
+			$dev->where(self::DEVICE, '<=', $request->get(self::BEFORE));
 		}
 
 		if ($request->has(self::AFTER)){
-			$dev->where('devices.valid_thru', '>=', $request->get(self::AFTER));
+			$dev->where(self::DEVICE, '>=', $request->get(self::AFTER));
 			
 		}
 
@@ -264,7 +266,7 @@ class DevicencController extends Controller
         	if($tab == 'tab-2'){
         		$afterDev->where(function($q) use($search){
 					$q->where($this::DEVICE_NAME,'like','%'.$search.'%')
-						->orWhere('companies.name','like','%'.$search.'%')
+						->orWhere(self::COMP_NAME,'like','%'.$search.'%')
 						->orWhere(self::DEVICE_MARK,'like','%'.$search.'%')
 						->orWhere($this::DEVICE_MOD,'like','%'.$search.'%');
 				});
@@ -273,7 +275,7 @@ class DevicencController extends Controller
         	}else{
 				$dev->where(function($q) use($search){
 					$q->where($this::DEVICE_NAME,'like','%'.$search.'%')
-						->orWhere('companies.name','like','%'.$search.'%')
+						->orWhere(self::COMP_NAME,'like','%'.$search.'%')
 						->orWhere(self::DEVICE_MARK,'like','%'.$search.'%')
 						->orWhere($this::DEVICE_MOD,'like','%'.$search.'%');
 				});
