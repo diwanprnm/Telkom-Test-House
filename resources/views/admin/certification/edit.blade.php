@@ -23,6 +23,15 @@
 			</div>
 		</section>
 		<!-- end: PAGE TITLE -->
+		@if (count($errors) > 0)
+			<div class="alert alert-danger">
+				<ul>
+					@foreach ($errors->all() as $error)
+						<li>{{ $error }}</li>
+					@endforeach
+				</ul>
+			</div>
+		@endif
 		<!-- start: RESPONSIVE TABLE -->
 		<div class="container-fluid container-fullw bg-white">
 			<div class="col-md-12">
@@ -47,7 +56,7 @@
 										Gambar *
 									</label>
 									<img src="{{ Storage::disk('minio')->url('certification/'.$data->image) }}" width="240px" alt="Media Certification">
-									<input type="file" name="image" accept="image/*" class="form-control">
+									<input type="file" name="image" accept="image/jpg, image/jpeg, image/png" class="form-control">
 								</div>
 							</div>
 	                        <div class="col-md-6">
@@ -55,7 +64,7 @@
 									<label for="form-field-select-2">
 										Status *
 									</label>
-									<select name="is_active" class="cs-select cs-skin-elastic">
+									<select name="is_active" class="cs-select cs-skin-elastic" required>
 										@if($data->is_active)
 											<option value="1" selected>Active</option>
 											<option value="0">Not Active</option>
