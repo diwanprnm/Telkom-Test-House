@@ -193,23 +193,23 @@ class Log_administratorController extends Controller
 
         if ($request->has($this::BEFORE)){
             $datalogs->where(DB::raw($this::DATE), '<=', $request->get($this::BEFORE));
-            $before = $request->get($this::BEFORE);
+           
         }
 
         if ($request->has($this::AFTER)){
             $datalogs->where(DB::raw($this::DATE), '>=', $request->get($this::AFTER));
-            $after = $request->get($this::AFTER);
+           
         }
 
         if ($request->has($this::USERNAME)){
-            $filterUsername = $request->get($this::USERNAME);
+           
             if($request->input($this::USERNAME) != 'all'){
                 $datalogs->where('users.name', $request->get($this::USERNAME));
             }
         }
 
         if ($request->has($this::ACTION)){
-            $filterAction = $request->get($this::ACTION);
+            
             if($request->input($this::ACTION) != 'all'){
                 $datalogs->where($this::ACTION, $request->get($this::ACTION));
             }

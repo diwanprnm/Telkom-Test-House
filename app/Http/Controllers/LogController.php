@@ -185,9 +185,7 @@ class LogController extends Controller
         );
         $datalogs = Logs::select($select)->whereNotNull($this::LOG_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_USER);
 
-        if ($search != null){
-            $data->where($this::ACTION,'like','%'.$search.'%');
-        }
+      
 
         if ($request->has($this::BEFORE)){
             $datalogs->where(DB::raw($this::DATE), '<=', $request->get($this::BEFORE));
