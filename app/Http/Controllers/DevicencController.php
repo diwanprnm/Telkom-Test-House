@@ -28,6 +28,7 @@ class DevicencController extends Controller
      * @return void
      */
 	private const SEARCH = 'search';
+	private const SEARCH2 = "search";
 	private const EXAM = 'examinations';
 	private const DEVICE = 'devices';
 	private const EDI = 'examinations.device_id';
@@ -49,6 +50,8 @@ class DevicencController extends Controller
 	private const BEFORE = 'before_date';
 	private const AFTER = 'after_date';
 	private const EXAM_DATE = 'examinations.qa_date';
+	private const DEVICE_VAL = 'devices.valid_thru';
+	private const COMPANIES_NAME = 'companies.name';
 	
 	public const DATA = ['examinations.price AS totalBiaya',
 	'examinations.spk_code',
@@ -62,10 +65,10 @@ class DevicencController extends Controller
 	'devices.capacity AS kapasitas',
 	'devices.test_reference AS standarisasi',
 	'devices.valid_from',
-	'devices.valid_thru',
+	self::DEVICE_VAL,
 	'devices.serial_number',
 	'devices.manufactured_by',
-	'companies.name',
+	self::COMPANIES_NAME,
 	'companies.address',
 	'companies.city',
 	'companies.postal_code',
@@ -138,19 +141,19 @@ class DevicencController extends Controller
 			
 
 			if ($request->has(self::BEFORE)){
-				$dev->where('devices.valid_thru', '<=', $request->get(self::BEFORE));
+				$dev->where(self::DEVICE_VAL, '<=', $request->get(self::BEFORE));
 				$before = $request->get(self::BEFORE);
 			}
 
 			if ($request->has(self::AFTER)){
-				$dev->where('devices.valid_thru', '>=', $request->get(self::AFTER));
+				$dev->where(self::DEVICE_VAL, '>=', $request->get(self::AFTER));
 				$after = $request->get(self::AFTER);
 			}
 
             if ($search != null){
         		$dev->where(function($q) use($search){
 					$q->where($this::DEVICE_NAME,'like','%'.$search.'%')
-						->orWhere('companies.name','like','%'.$search.'%')
+						->orWhere(self::COMPANIES_NAME,'like','%'.$search.'%')
 						->orWhere(self::DEVICE_MARK,'like','%'.$search.'%')
 						->orWhere($this::DEVICE_MOD,'like','%'.$search.'%');
 				});
@@ -159,7 +162,7 @@ class DevicencController extends Controller
 				$logs = new Logs;
                 $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
                 $logs->action = "Search Device";  
-                $dataSearch = array("search"=>$search); 
+                $dataSearch = array(self::SEARCH2=>$search); 
                 $logs->data = json_encode($dataSearch);
                 $logs->created_by = $currentUser->id;
                 $logs->page = "DEVICE";
@@ -170,7 +173,7 @@ class DevicencController extends Controller
             if ($search2 != null){
         		$afterDev->where(function($q) use($search2){
 					$q->where($this::DEVICE_NAME,'like','%'.$search2.'%')
-						->orWhere('companies.name','like','%'.$search2.'%')
+						->orWhere(self::COMPANIES_NAME,'like','%'.$search2.'%')
 						->orWhere(self::DEVICE_MARK,'like','%'.$search2.'%')
 						->orWhere($this::DEVICE_MOD,'like','%'.$search2.'%');
 				});
@@ -179,7 +182,7 @@ class DevicencController extends Controller
 				$logs = new Logs;
                 $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
                 $logs->action = "Search Device";  
-                $dataSearch = array("search"=>$search); 
+                $dataSearch = array(self::SEARCH2=>$search); 
                 $logs->data = json_encode($dataSearch);
                 $logs->created_by = $currentUser->id;
                 $logs->page = "DEVICE";
@@ -253,11 +256,11 @@ class DevicencController extends Controller
 						->orWhere(self::DEVICE_STAT, '-1');
 				});
 		if ($request->has(self::BEFORE)){
-			$dev->where('devices.valid_thru', '<=', $request->get(self::BEFORE));
+			$dev->where(self::DEVICE_VAL, '<=', $request->get(self::BEFORE));
 		}
 
 		if ($request->has(self::AFTER)){
-			$dev->where('devices.valid_thru', '>=', $request->get(self::AFTER));
+			$dev->where(self::DEVICE_VAL, '>=', $request->get(self::AFTER));
 			
 		}
 
@@ -265,7 +268,7 @@ class DevicencController extends Controller
         	if($tab == 'tab-2'){
         		$afterDev->where(function($q) use($search){
 					$q->where($this::DEVICE_NAME,'like','%'.$search.'%')
-						->orWhere('companies.name','like','%'.$search.'%')
+						->orWhere(self::COMPANIES_NAME,'like','%'.$search.'%')
 						->orWhere(self::DEVICE_MARK,'like','%'.$search.'%')
 						->orWhere($this::DEVICE_MOD,'like','%'.$search.'%');
 				});
@@ -274,7 +277,7 @@ class DevicencController extends Controller
         	}else{
 				$dev->where(function($q) use($search){
 					$q->where($this::DEVICE_NAME,'like','%'.$search.'%')
-						->orWhere('companies.name','like','%'.$search.'%')
+						->orWhere(self::COMPANIES_NAME,'like','%'.$search.'%')
 						->orWhere(self::DEVICE_MARK,'like','%'.$search.'%')
 						->orWhere($this::DEVICE_MOD,'like','%'.$search.'%');
 				});
