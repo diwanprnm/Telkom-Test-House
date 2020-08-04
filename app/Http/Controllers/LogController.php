@@ -35,9 +35,10 @@ class LogController extends Controller
     private const BEFORE = 'before_date';
     private const DATE = 'DATE(logs.created_at)';
     private const AFTER = 'after_date';
-    private const USERNAME = 'username';
+    private const USERNAME = 'users.name';
     private const SORT_BY = 'sort_by';
     private const SORT_TYPE = 'sort_type';
+    private const USN = 'username' ;
 	/**
      * Create a new controller instance.
      *
@@ -80,7 +81,7 @@ class LogController extends Controller
             );
             $datalogs2 = Logs::select($select2)->whereNotNull($this::LOG_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_USER);
 
-            $username = $datalogs2->distinct()->orderBy('users.name')->get();
+            $username = $datalogs2->distinct()->orderBy(self::USERNAME)->get();
 
             $select3 = array(
                 $this::LOG_ACTION
@@ -113,10 +114,10 @@ class LogController extends Controller
                 $after = $request->get($this::AFTER);
             }
 
-            if ($request->has($this::AFTER)){
-                $filterUsername = $request->get($this::AFTER);
-                if($request->input($this::AFTER) != 'all'){
-                    $datalogs->where('users.name', $request->get($this::AFTER));
+            if ($request->has($this::USN)){
+                $filterUsername = $request->get($this::USN);
+                if($request->input($this::USN) != 'all'){
+                    $datalogs->where(self::USERNAME, $request->get($this::USN));
                 }
             }
 
@@ -147,7 +148,7 @@ class LogController extends Controller
                 ->with($this::SEARCH, $search)
                 ->with($this::BEFORE, $before)
                 ->with($this::AFTER, $after)
-                ->with($this::AFTER, $username)
+                ->with($this::USN, $username)
                 ->with('filterUsername', $filterUsername)
                 ->with($this::ACTION, $action)
                 ->with('filterAction', $filterAction)
@@ -198,10 +199,10 @@ class LogController extends Controller
             $after = $request->get($this::AFTER);
         }
 
-        if ($request->has($this::AFTER)){
-            $filterUsername = $request->get($this::AFTER);
-            if($request->input($this::AFTER) != 'all'){
-                $datalogs->where('users.name', $request->get($this::AFTER));
+        if ($request->has($this::USN)){
+            $filterUsername = $request->get($this::USN);
+            if($request->input($this::USN) != 'all'){
+                $datalogs->where(self::USERNAME, $request->get($this::USN));
             }
         }
 
