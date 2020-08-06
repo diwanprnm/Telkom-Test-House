@@ -30,7 +30,7 @@
 					<input type="hidden" name="hide_id_user" id="hide_id_user">
 					<input type="hidden" name="hide_company_id" id="hide_company_id">
 					<div class="row" style="padding-right: 10px;margin-top: 20px;">
-					<a data-dismiss="modal" style="cursor:pointer;"><img src="{{asset('template-assets/img/close (2).png')}}" style=" margin-top:-27px; float:right;" width="20"></a>
+					<a data-dismiss="modal" style="cursor:pointer;"><img src="{{asset('template-assets/img/close (2).png')}}" style=" margin-top:-27px; float:right;" width="20" alt="close"></a>
 					</div>
 					
 					<h5 class="status-hide">{{ trans('translate.service_title') }}</h5>
@@ -40,37 +40,38 @@
 						</div>
 						<div class="f1-step active"></div>
 						<div class="f1-step">
-							<div class="f1-step-icon"><i class="fa fa-user"></i></div>
+							<div class="f1-step-icon"><em class="fa fa-user"></em></div>
 							<p>{{ trans('translate.service_application') }}</p>
 						</div>
 						<div class="f1-step">
-							<div class="f1-step-icon"><i class="fa fa-user"></i></div>
+							<div class="f1-step-icon"><em class="fa fa-user"></em></div>
 							<p>{{ trans('translate.service_company') }}</p>
 						</div>
 						<div class="f1-step">
-							<div class="f1-step-icon"><i class="fa fa-user"></i></div>
+							<div class="f1-step-icon"><em class="fa fa-user"></em></div>
 							<p>{{ trans('translate.service_device') }}</p>
 						</div>
 						<div class="f1-step">
-							<div class="f1-step-icon"><i class="fa fa-user"></i></div>
+							<div class="f1-step-icon"><em class="fa fa-user"></em></div>
 							<p>{{ trans('translate.service_upload') }}</p>
 						</div>
 						<div class="f1-step">
-							<div class="f1-step-icon"><i class="fa fa-user"></i></div>
+							<div class="f1-step-icon"><em class="fa fa-user"></em></div>
 							<p>{{ trans('translate.service_preview') }}</p>
 						</div>
 						<div class="f1-step">
-							<div class="f1-step-icon"><i class="fa fa-user"></i></div>
+							<div class="f1-step-icon"><em class="fa fa-user"></em></div>
 							<p>{{ trans('translate.service_upload_form') }}</p>
 						</div>
 						  <div class="f1-step">
-							<div class="f1-step-icon"><i class="fa fa-user"></i></div>
+							<div class="f1-step-icon"><em class="fa fa-user"></em></div>
 							<p>{{ trans('translate.service_finished') }}</p>
 						</div>
 					</div>
 					<fieldset>
+						<legend></legend>
 						<div style="text-align: center">
-							<img src="{{asset('assets/images/x-banner-1.png')}}">
+							<img src="{{asset('assets/images/x-banner-1.png')}}" alt="gambar x-banner 1">
 						</div>
 						<div class="f1-buttons" style="margin-top:10px">
 							<button type="button" class="btn btn-next btn-procedure">{{ trans('translate.service_next') }}</button>
@@ -78,6 +79,7 @@
 					</fieldset>
 					<!-- Data Pemohon-->
 					<fieldset>
+						<legend></legend>
 						<h4>{{ trans('translate.service_application') }}</h4>
 						<input type="hidden" name="hide_jns_pengujian" id="hide_jns_pengujian" value=""/>
 						<div class="form-group">
@@ -112,6 +114,7 @@
 					</fieldset>
 					<!-- Data Perusahaan-->
 					<fieldset>
+						<legend></legend>
 						<h4>{{ trans('translate.service_company') }}</h4>
 						<div class="form-group">
 							<label for="f1-jns-perusahaan">{{ trans('translate.service_company_type') }} : </label>
@@ -149,6 +152,7 @@
 					</fieldset>
 					<!-- Data Perangkat-->
 					<fieldset>
+						<legend></legend>
 						<h4>{{ trans('translate.service_device') }}</h4>
 						<div class="form-group">
 							<label for="f1-nama-perangkat">{{ trans('translate.service_device_equipment') }}</label>
@@ -195,6 +199,7 @@
 					</fieldset>
 					<!-- upload berkas-->
 					<fieldset>
+						<legend></legend>
 						<h4>{{ trans('translate.service_upload') }}</h4>
 						<div class="form-group">
 							<label>{{ trans('translate.service_upload_siupp') }}<span class="text-danger">*</span></label>
@@ -334,10 +339,12 @@
 					</fieldset>
 					<!-- Preview-->
 					<fieldset>
+						<legend></legend>
 						<input type="hidden" name="hide_cekSNjnsPengujian" id="hide_cekSNjnsPengujian">
 						<h4>{{ trans('translate.service_preview') }}</h4>
 						<h3>{{ trans('translate.service_application') }}</h3>
 						<table class="table table-striped">
+							<caption></caption>
 							<tr>
 								<td>{{ trans('translate.service_application_name') }}</td>
 								<td> : </td>
@@ -366,6 +373,7 @@
 						<h3>{{ trans('translate.service_company') }}</h3>
 						<div id="f2-preview-6"></div>
 						<table class="table table-striped">
+							<caption></caption>
 							<tr>
 								<td>{{ trans('translate.service_company_name') }}</td>
 								<td> : </td>
@@ -395,6 +403,7 @@
 						<br>
 						<h3>{{ trans('translate.service_device') }}</h3>
 						<table class="table table-striped">
+							<caption></caption>
 							<tr>
 								<td>{{ trans('translate.service_device_equipment') }}</td>
 								<td> : </td>
@@ -430,6 +439,7 @@
 						</table>
 						<h3>{{ trans('translate.service_upload') }}</h3>
 						<table class="table table-striped">
+							<caption></caption>
 							<tr>
 								<td>{{ trans('translate.service_upload_siupp') }}</td>
 								<td> : </td>
@@ -488,6 +498,7 @@
 					</fieldset>
 					<!-- upload detail pengujian-->
 					<fieldset>
+						<legend></legend>
 						<h4>{{ trans('translate.service_upload_form') }}</h4>
 						<div class="form-group">
 							<label>{{ trans('translate.service_upload_now') }}<span class="text-danger">*</span></label>
@@ -508,6 +519,7 @@
 					</fieldset>
 					<!-- submit-->
 					<fieldset>
+						<legend></legend>
 						<h4 class="judulselesai">{{ trans('translate.service_thanks') }}</h4>
 						<div class="f1-buttons">
 							<button type="button" class="btn btn-submit">OK</button>
