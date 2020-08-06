@@ -97,14 +97,14 @@
 										<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1">
 											<thead>
 												<tr>
-													<th class="center">{{ trans('translate.charge_no') }}</th>
-													<th class="center">{{ trans('translate.charge_name') }}</th>
-													<th class="center">{{ trans('translate.charge_stel') }}</th>
-													<th class="center">{{ trans('translate.charge_category') }}</th>
-													<th class="center">{{ trans('translate.charge_duration') }}</th>
-													<th class="center">{{ trans('translate.charge_cost') }}</th>
-													<th class="center">{{ trans('translate.charge_vt_cost') }}</th>
-													<th class="center">{{ trans('translate.charge_ta_cost') }}</th>
+													<th class="center" scope="col">{{ trans('translate.charge_no') }}</th>
+													<th class="center" scope="col">{{ trans('translate.charge_name') }}</th>
+													<th class="center" scope="col">{{ trans('translate.charge_stel') }}</th>
+													<th class="center" scope="col">{{ trans('translate.charge_category') }}</th>
+													<th class="center" scope="col">{{ trans('translate.charge_duration') }}</th>
+													<th class="center" scope="col">{{ trans('translate.charge_cost') }}</th>
+													<th class="center" scope="col">{{ trans('translate.charge_vt_cost') }}</th>
+													<th class="center" scope="col">{{ trans('translate.charge_ta_cost') }}</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -126,7 +126,7 @@
 												<div class="table-responsive font-table">
 													<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1">
 														<thead>
-															<tr align="center">
+															<tr class="center">
 																<th colspan="3" style="text-align: center;">{{ trans('translate.data_not_found') }}</th>
 															</tr>
 														</thead>

@@ -32,7 +32,7 @@
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1">
 							<thead>
 								<tr class="center">
-									<th colspan="3" style="text-align: center;">{{ trans('translate.data_not_found') }}</th>
+									<th colspan="3" style="text-align: center;" scope="col">{{ trans('translate.data_not_found') }}</th>
 								</tr>
 							</thead>
 						</table>

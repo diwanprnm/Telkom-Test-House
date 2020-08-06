@@ -20,7 +20,7 @@
 													<table class="table table-condensed">
 														<thead>
 															<tr>
-																<th colspan="3">{{ trans('translate.search_result') }}</th>
+																<th colspan="3" scope="colgroup">{{ trans('translate.search_result') }}</th>
 															</tr>
 														</thead>
 														<tbody>
@@ -50,8 +50,8 @@
 															<div class="table-responsive font-table">
 																<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1">
 																	<thead>
-																		<tr align="center">
-																			<th colspan="3" style="text-align: center;">{{ trans('translate.data_not_found') }}</th>
+																		<tr class="center">
+																			<th colspan="3" style="text-align: center;" scope="colgroup">{{ trans('translate.data_not_found') }}</th>
 																		</tr>
 																	</thead>
 																</table>

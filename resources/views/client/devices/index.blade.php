@@ -57,17 +57,17 @@
 									<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1" style="font-size: smaller;">
 										<thead>
 											<tr>
-												<th class="center">{{ trans('translate.devic_test_passed_no') }}</th>
-												<th class="center">{{ trans('translate.devic_test_passed_name') }}</th>
-												<th class="center">{{ trans('translate.devic_test_passed_device') }}</th>
-												<th class="center">{{ trans('translate.devic_test_passed_mark') }}</th>
-												<th class="center">{{ trans('translate.service_device_manufactured_by') }}</th>
-												<th class="center">{{ trans('translate.devic_test_passed_type') }}</th>
-												<th class="center">{{ trans('translate.devic_test_passed_capacity') }}</th>
-												<th class="center">{{ trans('translate.devic_test_passed_standar') }}</th>
-												<th class="center">{{ trans('translate.devic_test_passed_cert_numb') }}</th>
-												<th class="center">{{ trans('translate.devic_test_passed_valid_form') }}</th>
-												<th class="center">{{ trans('translate.devic_test_passed_valid_thru') }}</th>
+												<th class="center" scope="col">{{ trans('translate.devic_test_passed_no') }}</th>
+												<th class="center" scope="col">{{ trans('translate.devic_test_passed_name') }}</th>
+												<th class="center" scope="col">{{ trans('translate.devic_test_passed_device') }}</th>
+												<th class="center" scope="col">{{ trans('translate.devic_test_passed_mark') }}</th>
+												<th class="center" scope="col">{{ trans('translate.service_device_manufactured_by') }}</th>
+												<th class="center" scope="col">{{ trans('translate.devic_test_passed_type') }}</th>
+												<th class="center" scope="col">{{ trans('translate.devic_test_passed_capacity') }}</th>
+												<th class="center" scope="col">{{ trans('translate.devic_test_passed_standar') }}</th>
+												<th class="center" scope="col">{{ trans('translate.devic_test_passed_cert_numb') }}</th>
+												<th class="center" scope="col">{{ trans('translate.devic_test_passed_valid_form') }}</th>
+												<th class="center" scope="col">{{ trans('translate.devic_test_passed_valid_thru') }}</th>
 											</tr>
 										</thead>
 										<tbody>

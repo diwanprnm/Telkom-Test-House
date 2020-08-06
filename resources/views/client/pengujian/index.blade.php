@@ -241,7 +241,7 @@
 							<div class="data-status">
 								<table class="table table-striped">
 									<tr>
-										<th colspan="3">{{ trans('translate.examination_status') }}</th>
+										<th colspan="3" scope="colgroup">{{ trans('translate.examination_status') }}</th>
 									</tr>
 									@if($item->registration_status != '0' && $item->function_status != '1')
 									<tr>
@@ -372,8 +372,8 @@
 						<div class="table-responsive font-table">
 							<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1">
 								<thead>
-									<tr align="center">
-										<th colspan="3" style="text-align: center;">{{ trans('translate.data_not_found') }}</th>
+									<tr class="center">
+										<th colspan="3" style="text-align: center;" scope="colgroup">{{ trans('translate.data_not_found') }}</th>
 									</tr>
 								</thead>
 							</table>
@@ -902,9 +902,9 @@
 			<div class="modal-footer">
 				<table width=100%>
 					<tr>
-						<td>
+						<th>
 							<button type="submit" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
-						</td>
+						</th>
 					</tr>
 				</table>
 			</div>
@@ -1029,9 +1029,9 @@
 			<div class="modal-footer">
 				<table width=100%>
 					<tr>
-						<td>
+						<th>
 							<button type="submit" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
-						</td>
+						</th>
 					</tr>
 				</table>
 			</div>
@@ -1101,12 +1101,12 @@
                     </p>
                 </div>
                 <div class="row">
-                    <table id="table_kuisioner" style="width:100%; padding: 2px;" border="1">
+                    <table id="table_kuisioner" style="width:100%; padding: 2px; border: 1px">
                       <tr>
-                        <th>No</th>
-                        <th>Kriteria</th> 
-                        <th>Nilai Ekspetasi</th>
-                        <th>NIlai Performasi</th>
+                        <th scope="col">No</th>
+                        <th scope="col">Kriteria</th> 
+                        <th scope="col">Nilai Ekspetasi</th>
+                        <th scope="col">NIlai Performasi</th>
                       </tr>
                       <tr>
                         <td>1</td>
@@ -1147,12 +1147,12 @@
                 <div class="row">
                     <p>Pada tahap ini, silahkan mengisi nilai dengan sekala 1-7 untuk nilai ekspetasi awal dan nilai performansi. Kastemer diharapkan mengisi kolom nilai dan setiap kriteria, serta nilai performansi/kenyataan dari setiap kriteria</p>
                     <p>Nilai 7 adalah penilaian Sangat Baik atau Sangat Setuju dan nilai 1 adalah penilaian Sangat Tidak Baik atau Sangat Tidak Setuju. Kastemer diharapkan dapat memberikan nilai dengan angka bulat.</p>
-                    <table id="table_kuisioner" style="width:100%; padding: 2px;" border="1">
+                    <table id="table_kuisioner" style="width:100%; padding: 2px; border: 1px" >
                       <tr>
-                        <th>No</th>
-                        <th>Kriteria</th> 
-                        <th>Nilai Ekspetasi</th>
-                        <th>NIlai Performasi</th>
+                        <th scope="col">No</th>
+                        <th scope="col">Kriteria</th> 
+                        <th scope="col">Nilai Ekspetasi</th>
+                        <th scope="col">Nilai Performasi</th>
                       </tr>
                       <tr>
                         <td>7</td>
@@ -1332,12 +1332,12 @@
                     </p>
                 </div>
                 <div class="row">
-                    <table id="table_kuisioner" style="width:100%; padding: 2px;" border="1">
+                    <table id="table_kuisioner" style="width:100%; padding: 2px; border: 1px;">
                       <tr>
-                        <th>NO</th>
-                        <th>PERTANYAAN</th>
-                        <th style="width: 25%;">TINGKAT KEPENTINGAN</th>
-                        <th style="width: 25%;">TINGKAT KEPUASAN</th>
+                        <th scope="col">NO</th>
+                        <th scope="col">PERTANYAAN</th>
+                        <th style="width: 25%;" scope="col">TINGKAT KEPENTINGAN</th>
+                        <th style="width: 25%;" scope="col">TINGKAT KEPUASAN</th>
                       </tr>
                       <tbody>
             <?php $no = 0; ?>
@@ -1404,19 +1404,19 @@
           </div>
           <div class="modal-body pre-scrollable">
                 <form id="form-complain">
-                    <table id="table_kuisioner" style="width:100%; padding: 2px;" border="1">
+                    <table id="table_kuisioner" style="width:100%; padding: 2px; border:1px">
                         <tr>
-                            <th colspan="2">No</th>
+                            <th colspan="2" scope="colgroup">No</th>
                             <td colspan="2"><input type="text" name="no" class="form-control" readonly></td>
                         </tr>
                         <tr>
-                            <th>Sheet</th>
+                            <th scope="col">Sheet</th>
                             <td><input type="text" name="no" class="form-control" readonly></td>
                             <th>of</th>
                             <td><input type="text" name="no" class="form-control" readonly></td>
                         </tr>
                         <tr>
-                            <th colspan="2">
+                            <th colspan="2" scope="colgroup">
                                 <label>Customer Name and Address</label>
                                 <textarea class="form-control" placeholder="-" readonly>{{ $currentUser->name }} / {{ $currentUser->address }}</textarea>
                             </th>
@@ -1429,7 +1429,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <th colspan="2">
+                            <th colspan="2" scope="colgroup">
                                 <label>Customer Contact</label>
                                 <input type="text" name="no" class="form-control" placeholder="-" value="{{ $currentUser->phone }}" readonly>
                             </th>
@@ -1447,25 +1447,25 @@
                             </td>
                         </tr>
                         <tr>
-                            <th colspan="4">
+                            <th colspan="4" scope="colgroup">
                                 <label>Customer Complaint</label>
                                 <textarea name="complaint" class="form-control" placeholder="Your Complaint"></textarea>
                             </th>
                         </tr>
                         <tr>
-                            <th colspan="4">
+                            <th colspan="4" scope="colgroup">
                                 <label>Name of Recipient</label>
                                 <input type="text" name="no" class="form-control" placeholder="-" readonly>
                             </th>
                         </tr>
                         <tr>
-                            <th colspan="4">
+                            <th colspan="4" scope="colgroup">
                                 <label>Corrective Action Taken</label>
                                 <textarea class="form-control" placeholder="-" readonly></textarea>
                             </th>
                         </tr>
                         <tr>
-                            <th colspan="2">
+                            <th colspan="2" scope="colgroup">
                                 <label>Completed Date</label>
                                 <input type="text" name="no" class="form-control" placeholder="DD/MM/YYYY" readonly>
                             </th>
@@ -1475,13 +1475,13 @@
                             </td>
                         </tr>
                         <tr>
-                            <th colspan="4">
+                            <th colspan="4" scope="colgroup">
                                 <label>Name of Actiones</label>
                                 <input type="text" name="no" class="form-control" placeholder="-" readonly>
                             </th>
                         </tr>
                         <tr>
-                            <th colspan="2">
+                            <th colspan="2" scope="colgroup">
                                 <label>USer Relation Manager Signature</label>
                                 <input type="text" name="no" class="form-control" placeholder="-" readonly>
                             </th>

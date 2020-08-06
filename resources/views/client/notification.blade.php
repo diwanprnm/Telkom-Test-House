@@ -32,8 +32,8 @@
 									<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1">
 										<thead>
 											<tr>
-												<th class="center">No</th>
-												<th class="center">{{ trans('translate.notification') }}</th>
+												<th class="center" scope="col">No</th>
+												<th class="center" scope="col">{{ trans('translate.notification') }}</th>
 										</thead>
 										<tbody>
 											<?php $no=1; if($notification_data_count>0){ ?>
@@ -54,8 +54,8 @@
 											<div class="table-responsive font-table">
 												<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1">
 													<thead>
-														<tr align="center">
-															<th colspan="3" style="text-align: center;">{{ trans('translate.data_not_found') }}</th>
+														<tr class="center">
+															<th colspan="3" style="text-align: center;"  scope="col">{{ trans('translate.data_not_found') }}</th>
 														</tr>
 													</thead>
 												</table>
