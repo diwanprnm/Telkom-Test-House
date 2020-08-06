@@ -14,12 +14,13 @@ use Session;
 
 class QuestionprivController extends Controller
 {
-    private const QUESTION = 'question';
-    private const USER_ID = 'user_id';
-    private const MESSAGE = 'message';
-    private const CHECK_PRIVILEGE = 'check-privilege';
     private const ADMIN_QUESTIONPRIV = '/admin/questionpriv';
+    private const CHECK_PRIVILEGE = 'check-privilege';
     private const ERROR = 'error';
+    private const MESSAGE = 'message';
+    private const QUESTION = 'question';
+    private const REQUIRED = 'required';
+    private const USER_ID = 'user_id';
     /**
      * Create a new controller instance.
      *
@@ -93,8 +94,8 @@ class QuestionprivController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            self::CHECK_PRIVILEGE => 'required',
-            self::USER_ID => 'required',
+            self::CHECK_PRIVILEGE => self::REQUIRED,
+            self::USER_ID => self::REQUIRED,
         ]);
 
 		$questionpriv = Questionpriv::where(self::USER_ID,'=',$request->input(self::USER_ID))->get();
@@ -161,7 +162,7 @@ class QuestionprivController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            self::CHECK_PRIVILEGE => 'required',
+            self::CHECK_PRIVILEGE => self::REQUIRED,
         ]);
 
 		if(count($request->input(self::CHECK_PRIVILEGE)) > 0)
