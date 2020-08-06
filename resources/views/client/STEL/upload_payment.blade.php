@@ -37,17 +37,17 @@
 							<table class="table table-condensed">
 								<thead>
 									<tr>
-										<th colspan="3">{{ trans('translate.examination_upload_payment') }}</th>
+										<th colspan="3" scope="col">{{ trans('translate.examination_upload_payment') }}</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr>
-										<th colspan="3">
+										<th colspan="3" scope="col">
 										<input class="data-upload-pembayaran" id="data-upload-pembayaran" name="filePembayaran" type="file" accept="application/pdf,image/*" required> 
 									 	</th>
 									</tr>
 									 <tr>
-										<th colspan="3">{{ trans('translate.examination_price_payment') }} : 
+										<th colspan="3" scope="col">{{ trans('translate.examination_price_payment') }} : 
 										<input type="text" id="jml-pembayaran" class="jml-pembayaran" name="jml-pembayaran" placeholder="0" value="{{ $data->total }}" required></th>
 									</tr>
 							</table>

@@ -32,13 +32,13 @@
 								<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
 									<thead>
 										<tr>
-											<th>No</th>
-											<th>{{ trans('translate.stel_payment_status_order_date') }}</th>
-											<th>{{ trans('translate.stel_code') }}</th> 
-											<th>Total</th> 
-											<th>PIC</th>   
-											<th>Status</th>
-											<th colspan="2" class="center">Action</th>
+											<th scope="col">No</th>
+											<th scope="col">{{ trans('translate.stel_payment_status_order_date') }}</th>
+											<th scope="col">{{ trans('translate.stel_code') }}</th> 
+											<th scope="col">Total</th> 
+											<th scope="col">PIC</th>   
+											<th scope="col">Status</th>
+											<th colspan="2" class="center" scope="col">Action</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -91,17 +91,17 @@
 												<td><a href="javascript:void(0)" class="collapsible">{{ trans('translate.examination_detail') }}</a></td> 
 											</tr> 
 											<tr class="content" style="display: none;">
-												<td colspan="8" align="center">
+												<td colspan="8" class="center">
 													<table class="table table-striped" cellspacing="0" width="100%">
 														<thead>
 															<tr>
-																<th>No</th>
-																<th>{{ trans('translate.stel_name') }}</th>
-																<th>{{ trans('translate.stel_code') }}</th>
-																<th>{{ trans('translate.stel_price') }}</th>
-																<th>{{ trans('translate.stel_qty') }}</th>  
-																<th>Total</th>  
-																<th>Action</th>
+																<th scope="col">No</th>
+																<th scope="col">{{ trans('translate.stel_name') }}</th>
+																<th scope="col">{{ trans('translate.stel_code') }}</th>
+																<th scope="col">{{ trans('translate.stel_price') }}</th>
+																<th scope="col">{{ trans('translate.stel_qty') }}</th>  
+																<th scope="col">Total</th>  
+																<th scope="col">Action</th>
 															</tr>
 														</thead>
 														<tbody>
@@ -115,20 +115,20 @@
 																			<td>{{$item_detail->stel->code}}</td>
 																			<td>{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($item_detail->stel->price), 0, '.', ','); ?></td> 
 																			<td>{{$item_detail->qty}}</td> 
-																			<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($item_detail->stel->price * $item_detail->qty), 0, '.', ','); ?></td>
+																			<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($item_detail->stel->price * $item_detail->qty), 0, '.', ','); ?></td>
 																			<?php  
 																				if($item_detail->attachment !="" && ($payment_status == 1 or $payment_status == 3)){
 																			?>
-																					<td colspan="6" align="center"><a target="_blank" href="{{ URL::to('/client/downloadstelwatermark/'.$item_detail->id) }}">{{ trans('translate.download') }} File</a></td>
+																					<td colspan="6" class="center"><a target="_blank" href="{{ URL::to('/client/downloadstelwatermark/'.$item_detail->id) }}">{{ trans('translate.download') }} File</a></td>
 																			<?php }
 																			else if($item_detail->attachment !="" && ($payment_status == 1 or $payment_status == 3)){
 																			?>
-																				<td colspan="6" align="center"><a target="_blank" href="{!! url("cetakstel?invoice_id={$invoice}&attach={$item_detail->stel->attachment}&company_name={$company_name}") !!}">{{ trans('translate.download') }} File</a></td>
+																				<td colspan="6" class="center"><a target="_blank" href="{!! url("cetakstel?invoice_id={$invoice}&attach={$item_detail->stel->attachment}&company_name={$company_name}") !!}">{{ trans('translate.download') }} File</a></td>
 																			<?php
 																			}
 																				else{
 																			?>	
-																					<td colspan="6" align="center">{{ trans('translate.document_not_found') }}</td>
+																					<td colspan="6" class="center">{{ trans('translate.document_not_found') }}</td>
 																			<?php 
 																				}
 																			?>  
@@ -137,13 +137,13 @@
 																	<?php }else{?> 
 																		<tr>
 																			<td>{{++$keys}}</td>
-																			<td colspan="6" align="center">{{ trans('translate.document_not_found') }}</td>
+																			<td colspan="6" class="center">{{ trans('translate.document_not_found') }}</td>
 																		</tr> 
 																	<?php }?>
 																@endforeach
 
 															<?php }else{?> 
-																<tr align="center">
+																<tr class="center">
 																	<td colspan="7" style="text-align: center;">{{ trans('translate.data_not_found') }}</td>
 																</tr> 
 															<?php }?>
@@ -153,22 +153,22 @@
 																$unique_code = ($data[$i]->total/1.1) - $total;
 															?>
 								                        	<tr>
-								                        		<td colspan="5" align="right"> {{ trans('translate.stel_unique_code') }}</td>
-								                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php 
+								                        		<td colspan="5" class="text-align-right"> {{ trans('translate.stel_unique_code') }}</td>
+								                        		<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. <?php 
 								                        			echo 	number_format($unique_code, 0, '.', ',');?></td>
-								                        		<td align="center"> === </td>
+								                        		<td class="center"> === </td>
 								                        	</tr>
 								                        	<tr>
-								                        		<td colspan="5" align="right">Sub Total</td>
-								                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php 
+								                        		<td colspan="5" class="text-align-right">Sub Total</td>
+								                        		<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. <?php 
 								                        			echo 	number_format($total + $unique_code, 0, '.', ',');?></td>
-								                        		<td align="center"> === </td>
+								                        		<td class="center"> === </td>
 								                        	</tr>
 								                       		<tr>
-								                        		<td colspan="5" align="right"> {{ trans('translate.tax') }}</td>
-								                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php $tax =  ($total + $unique_code) * (config("cart.tax")/100);
+								                        		<td colspan="5" class="text-align-right"> {{ trans('translate.tax') }}</td>
+								                        		<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. <?php $tax =  ($total + $unique_code) * (config("cart.tax")/100);
 								                        			echo	number_format($tax, 0, '.', ',');?></td>
-								                        		<td align="center">
+								                        		<td class="center">
 								                        			@if($item->faktur_file != '')
 																		<a target="_blank" href="{{ URL::to('/client/downloadfakturstel/'.$item->id) }}">
 													                    	{{ trans('translate.download') }} {{ trans('translate.tax_invoice') }}
@@ -177,9 +177,9 @@
 																</td>
 								                        	</tr>
 								                        	<tr style="font-weight: bold;">
-								                        		<td colspan="5" align="right"> Total</td>
-								                        		<td align="right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($data[$i]->total, 0, '.', ',');?></td>
-								                        		<td align="center">
+								                        		<td colspan="5" class="text-align-right"> Total</td>
+								                        		<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($data[$i]->total, 0, '.', ',');?></td>
+								                        		<td class="center">
 								                        			@if($item->id_kuitansi != '')
 																		<a target="_blank" href="{{ URL::to('/client/downloadkuitansistel/'.$item->id_kuitansi) }}">
 													                    	{{ trans('translate.download') }} {{ trans('translate.receipt') }}
@@ -198,8 +198,8 @@
 											<div class="col-md-12">
 												<div class="table-responsive">
 													<table class="table table-striped">
-														<tr align="center">
-															<th style="text-align: center;">{{ trans('translate.data_not_found') }}</th>
+														<tr class="center">
+															<th style="text-align: center;" scope="col">{{ trans('translate.data_not_found') }}</th>
 														</tr> 
 													</table>
 												</div>

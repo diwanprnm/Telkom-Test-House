@@ -76,12 +76,12 @@
 									<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1">
 										<thead>
 											<tr>
-												<th class="center">{{ trans('translate.stel_no') }}</th>
-												<th class="center">{{ trans('translate.stel_name') }}</th>
-												<th class="center">{{ trans('translate.stel_code') }}</th>
-												<th class="center">{{ trans('translate.stel_price') }}</th>
-												<th class="center">{{ trans('translate.stel_version') }}</th>
-												<th class="center">{{ trans('translate.stel_category') }}</th>
+												<th class="center" scope="col">{{ trans('translate.stel_no') }}</th>
+												<th class="center" scope="col">{{ trans('translate.stel_name') }}</th>
+												<th class="center" scope="col">{{ trans('translate.stel_code') }}</th>
+												<th class="center" scope="col">{{ trans('translate.stel_price') }}</th>
+												<th class="center" scope="col">{{ trans('translate.stel_version') }}</th>
+												<th class="center" scope="col">{{ trans('translate.stel_category') }}</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -101,7 +101,7 @@
 											<div class="table-responsive font-table">
 												<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1">
 													<thead>
-														<tr align="center">
+														<tr class="center">
 															<th colspan="3" style="text-align: center;">{{ trans('translate.data_not_found') }}</th>
 														</tr>
 													</thead>
