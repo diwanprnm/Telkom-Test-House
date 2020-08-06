@@ -28,6 +28,24 @@ class Log_administratorController extends Controller
      *
      * @return void
      */
+    private const SEARCH = 'search';
+    private const LOG_ADMIN_CREATED = 'logs_administrator.created_at';
+    private const LOG_ADMIN_ACTION = "logs_administrator.action";
+    private const LOG_ADMIN_PAGE = "logs_administrator.page";
+    private const LOG_ADMIN_SEARCH = "logs_administrator.created_at as search_date";
+    private const USER_NAME = "users.name";
+    private const LOG_ADMIN_USER = "logs_administrator.user_id";
+    private const USER_ID = "users.id";
+    private const USER = "users";
+    private const ACTION = 'action';
+    private const BEFORE = 'before_date';
+    private const DATE = 'DATE(logs_administrator.created_at)';
+    private const AFTER = 'after_date';
+    private const USERNAME = 'username';
+    private const SORT_BY = 'sort_by';
+    private const SORT_TYPE = 'sort_type';
+    
+
     public function __construct()
     {
         $this->middleware('auth.admin');
@@ -45,36 +63,36 @@ class Log_administratorController extends Controller
         if ($currentUser){
             $message = null;
             $paginate = 10;
-            $search = trim($request->input('search'));
+            $search = trim($request->input($this::SEARCH));
 
             $before = null;
             $after = null;
             $filterUsername = '';
             $filterAction = '';
 
-            $sort_by = 'logs_administrator.created_at';
+            $sort_by = $this::LOG_ADMIN_CREATED;
             $sort_type = 'desc';
 
             $select = array(
-            	"logs_administrator.action","logs_administrator.page","logs_administrator.reason","logs_administrator.created_at as search_date","users.name"
+            	$this::LOG_ADMIN_ACTION,$this::LOG_ADMIN_PAGE,"logs_administrator.reason",$this::LOG_ADMIN_SEARCH,$this::USER_NAME
             );
-            $datalogs = Logs_administrator::select($select)->whereNotNull('logs_administrator.created_at')->join("users","users.id","=","logs_administrator.user_id");
+            $datalogs = Logs_administrator::select($select)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
 
             $select2 = array(
-                "users.name"
+                $this::USER_NAME
             );
-            $datalogs2 = Logs_administrator::select($select2)->whereNotNull('logs_administrator.created_at')->join("users","users.id","=","logs_administrator.user_id");
+            $datalogs2 = Logs_administrator::select($select2)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
 
             $username = $datalogs2->distinct()->orderBy('users.name')->get();
 
             $select3 = array(
-                "logs_administrator.action"
+                $this::LOG_ADMIN_ACTION
             );
-            $datalogs3 = Logs_administrator::select($select3)->whereNotNull('logs_administrator.created_at')->join("users","users.id","=","logs_administrator.user_id");
+            $datalogs3 = Logs_administrator::select($select3)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
             $action = $datalogs3->distinct()->orderBy('logs_administrator.action')->get();
 
             if ($search != null){
-                $datalogs->where('action','like','%'.$search.'%');
+                $datalogs->where($this::ACTION,'like','%'.$search.'%');
 
                 $logs = new Logs;
                 $logs->id = Uuid::uuid4();
@@ -88,35 +106,35 @@ class Log_administratorController extends Controller
 
             }
 
-            if ($request->has('before_date')){
-                $datalogs->where(DB::raw('DATE(logs_administrator.created_at)'), '<=', $request->get('before_date'));
-                $before = $request->get('before_date');
+            if ($request->has($this::BEFORE)){
+                $datalogs->where(DB::raw($this::DATE), '<=', $request->get($this::BEFORE));
+                $before = $request->get($this::BEFORE);
             }
 
-            if ($request->has('after_date')){
-                $datalogs->where(DB::raw('DATE(logs_administrator.created_at)'), '>=', $request->get('after_date'));
-                $after = $request->get('after_date');
+            if ($request->has($this::AFTER)){
+                $datalogs->where(DB::raw($this::DATE), '>=', $request->get($this::AFTER));
+                $after = $request->get($this::AFTER);
             }
 
-            if ($request->has('username')){
-                $filterUsername = $request->get('username');
-                if($request->input('username') != 'all'){
-                    $datalogs->where('users.name', $request->get('username'));
+            if ($request->has($this::USERNAME)){
+                $filterUsername = $request->get($this::USERNAME);
+                if($request->input($this::USERNAME) != 'all'){
+                    $datalogs->where('users.name', $request->get($this::USERNAME));
                 }
             }
 
-            if ($request->has('action')){
-                $filterAction = $request->get('action');
-                if($request->input('action') != 'all'){
-                    $datalogs->where('action', $request->get('action'));
+            if ($request->has($this::ACTION)){
+                $filterAction = $request->get($this::ACTION);
+                if($request->input($this::ACTION) != 'all'){
+                    $datalogs->where($this::ACTION, $request->get($this::ACTION));
                 }
             }
 
-            if ($request->has('sort_by')){
-                $sort_by = $request->get('sort_by');
+            if ($request->has($this::SORT_BY)){
+                $sort_by = $request->get($this::SORT_BY);
             }
-            if ($request->has('sort_type')){
-                $sort_type = $request->get('sort_type');
+            if ($request->has($this::SORT_TYPE)){
+                $sort_type = $request->get($this::SORT_TYPE);
             }
                 
                 $data = $datalogs->orderBy($sort_by, $sort_type)
@@ -129,21 +147,21 @@ class Log_administratorController extends Controller
             return view('admin.log_administrator.index')
                 ->with('message', $message)
                 ->with('data', $data)
-                ->with('search', $search)
-                ->with('before_date', $before)
-                ->with('after_date', $after)
-                ->with('username', $username)
+                ->with($this::SEARCH, $search)
+                ->with($this::BEFORE, $before)
+                ->with($this::AFTER, $after)
+                ->with($this::USERNAME, $username)
                 ->with('filterUsername', $filterUsername)
-                ->with('action', $action)
+                ->with($this::ACTION, $action)
                 ->with('filterAction', $filterAction)
-                ->with('sort_by', $sort_by)
-                ->with('sort_type', $sort_type);
+                ->with($this::SORT_BY, $sort_by)
+                ->with($this::SORT_TYPE, $sort_type);
         }
     }
 
     public function autocomplete($query) {
     	$select = array(
-            	"logs_administrator.action","logs_administrator.page","logs_administrator.created_at as search_date","users.name"
+            	$this::LOG_ADMIN_ACTION,$this::LOG_ADMIN_PAGE,$this::LOG_ADMIN_SEARCH,$this::USER_NAME
             );
         $respons_result = Logs_administrator::select($select)->autocomplet($query);
         return response($respons_result);
@@ -157,54 +175,51 @@ class Log_administratorController extends Controller
 		// the user's e-mail address, the amount paid, and the payment
 		// timestamp.
 		
-        $search = trim($request->input('search'));
+        $search = trim($request->input($this::SEARCH));
         
-        $before = null;
-        $after = null;
-        $filterUsername = '';
-        $filterAction = '';
+    
 
-        $sort_by = 'logs_administrator.created_at';
+        $sort_by = $this::LOG_ADMIN_CREATED;
         $sort_type = 'desc';
 
         $select = array(
-            "logs_administrator.action","logs_administrator.page","logs_administrator.created_at as search_date","users.name"
+            $this::LOG_ADMIN_ACTION,$this::LOG_ADMIN_PAGE,$this::LOG_ADMIN_SEARCH,$this::USER_NAME
         );
-        $datalogs = Logs_administrator::select($select)->whereNotNull('logs_administrator.created_at')->join("users","users.id","=","logs_administrator.user_id");
+        $datalogs = Logs_administrator::select($select)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
 
         if ($search != null){
-            $datalogs->where('action','like','%'.$search.'%');
+            $datalogs->where($this::ACTION,'like','%'.$search.'%');
         }
 
-        if ($request->has('before_date')){
-            $datalogs->where(DB::raw('DATE(logs_administrator.created_at)'), '<=', $request->get('before_date'));
-            $before = $request->get('before_date');
+        if ($request->has($this::BEFORE)){
+            $datalogs->where(DB::raw($this::DATE), '<=', $request->get($this::BEFORE));
+           
         }
 
-        if ($request->has('after_date')){
-            $datalogs->where(DB::raw('DATE(logs_administrator.created_at)'), '>=', $request->get('after_date'));
-            $after = $request->get('after_date');
+        if ($request->has($this::AFTER)){
+            $datalogs->where(DB::raw($this::DATE), '>=', $request->get($this::AFTER));
+           
         }
 
-        if ($request->has('username')){
-            $filterUsername = $request->get('username');
-            if($request->input('username') != 'all'){
-                $datalogs->where('users.name', $request->get('username'));
+        if ($request->has($this::USERNAME)){
+           
+            if($request->input($this::USERNAME) != 'all'){
+                $datalogs->where('users.name', $request->get($this::USERNAME));
             }
         }
 
-        if ($request->has('action')){
-            $filterAction = $request->get('action');
-            if($request->input('action') != 'all'){
-                $datalogs->where('action', $request->get('action'));
+        if ($request->has($this::ACTION)){
+            
+            if($request->input($this::ACTION) != 'all'){
+                $datalogs->where($this::ACTION, $request->get($this::ACTION));
             }
         }
 
-        if ($request->has('sort_by')){
-            $sort_by = $request->get('sort_by');
+        if ($request->has($this::SORT_BY)){
+            $sort_by = $request->get($this::SORT_BY);
         }
-        if ($request->has('sort_type')){
-            $sort_type = $request->get('sort_type');
+        if ($request->has($this::SORT_TYPE)){
+            $sort_type = $request->get($this::SORT_TYPE);
         }
 
 		$data = $datalogs->orderBy($sort_by, $sort_type)->get();

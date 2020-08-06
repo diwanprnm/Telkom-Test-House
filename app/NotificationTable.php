@@ -10,7 +10,7 @@ class NotificationTable extends Model
     public $incrementing = false;
     public $timestamps = false;
         
-    static function NotificationTable()
+    public function notificationTable()
     {
         return $this->belongsTo('App\NotificationTable');
     }

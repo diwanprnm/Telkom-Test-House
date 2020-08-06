@@ -190,15 +190,15 @@
 								
 								<div id="step-1">
 									<div class="form-group">
-										<table class="table table-condensed">
+										<table class="table table-condensed"><caption></caption>
 											<thead>
 											@if($data->keterangan == -1)
 												<tr>
-													<th colspan="3" align="center"><font color="red">Perangkat ini sudah pernah diuji, dengan status "Tidak Lulus Uji"</font></th>
+													<th colspan="3" align="center" scope="col"><font color="red">Perangkat ini sudah pernah diuji, dengan status "Tidak Lulus Uji"</font></th>
 												</tr>
 											@endif
 												<tr>
-													<th colspan="3">Detail Informasi</th>
+													<th colspan="3" scope="col">Detail Informasi</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -370,10 +370,10 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="form-group">
-									<table class="table table-bordered">
+									<table class="table table-bordered"><caption></caption>
 										<thead>
 											<tr>
-												<th colspan="4">Riwayat Pengajuan Tanggal Uji Fungsi</th>
+												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal Uji Fungsi</th>
 											</tr>
 										</thead>
 										<tbody>

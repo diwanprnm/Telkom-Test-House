@@ -23,6 +23,15 @@
 			</div>
 		</section>
 		<!-- end: PAGE TITLE -->
+		@if (count($errors) > 0)
+			<div class="alert alert-danger">
+				<ul>
+					@foreach ($errors->all() as $error)
+						<li>{{ $error }}</li>
+					@endforeach
+				</ul>
+			</div>
+		@endif
 		<!-- start: RESPONSIVE TABLE -->
 		<div class="container-fluid container-fullw bg-white">
 			<div class="col-md-12">
@@ -55,7 +64,7 @@
 										Gambar *
 									</label>
 									<img src="{{ \Storage::disk('minio')->url('slideshow/'.$data->image) }}" width="240" alt="telkom-test-house-media-slideshow"/></td>
-									<input type="file" name="image" accept="image/*" class="form-control">
+									<input type="file" name="image" accept="image/jpg, image/jpeg, image/png" class="form-control">
 								</div>
 							</div>
 							<div class="col-md-6">
@@ -63,7 +72,7 @@
 									<label>
 										Timeout (dalam detik)
 									</label>
-									<input type="number" name="timeout" min="0" class="form-control" value="{{ $data->timeout }}" placeholder="... s">
+									<input type="number" name="timeout" min="0" class="form-control" value="{{ $data->timeout }}" placeholder="... s" required>
 								</div>
 							</div>
 	                        <div class="col-md-6">

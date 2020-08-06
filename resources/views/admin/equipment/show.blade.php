@@ -38,10 +38,10 @@
 								<div id="wizard" class="swMain">
 								<div id="step-1">
 									<div class="form-group">
-										<table class="table table-condensed">
+										<table class="table table-condensed"><caption></caption>
 											<thead>
 												<tr>
-													<th colspan="3">Detail Informasi</th>
+													<th colspan="3" scope="col">Detail Informasi</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -61,15 +61,15 @@
 										</table>
 									</div>
 										<div class="table-responsive">
-											<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+											<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer"><caption></caption>
 												<thead>
 													<tr>
-														<th class="center">Jumlah</th>
-														<th class="center">Unit</th>
-														<th class="center">Deskripsi</th>
-														<th class="center">Lokasi</th>
-														<th class="center">PIC</th>
-														<th class="center">Keterangan</th>
+														<th class="center" scope="col">Jumlah</th>
+														<th class="center" scope="col">Unit</th>
+														<th class="center" scope="col">Deskripsi</th>
+														<th class="center" scope="col">Lokasi</th>
+														<th class="center" scope="col">PIC</th>
+														<th class="center" scope="col">Keterangan</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -97,11 +97,11 @@
 										<br>
 										<h4>History Perpindahan Barang</h4>
 										<div class="table-responsive">
-											<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+											<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer"><caption></caption>
 												<thead>
 													<tr>
-														<th class="center">Lokasi</th>
-														<th class="center">Tanggal</th>
+														<th class="center" scope="col">Lokasi</th>
+														<th class="center" scope="col">Tanggal</th>
 													</tr>
 												</thead>
 												<tbody>

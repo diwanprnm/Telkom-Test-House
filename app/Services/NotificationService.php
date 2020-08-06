@@ -5,6 +5,9 @@ namespace App\Services;
 use App\Events\Notification;
 use App\NotificationTable;
 
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
+
 class NotificationService
 {
     public function make($data)

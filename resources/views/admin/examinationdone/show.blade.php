@@ -387,13 +387,13 @@
 					<div class="row">
 						<div class="col-md-12">
 							<div class="form-group">
-								<table class="table table-condensed">
+								<table class="table table-condensed"><caption></caption>
 									<thead>
 										<tr>
-											<td class="center">Tahap</td>
-											<td class="center">Status</td>
-											<td class="center">Keterangan</td>
-											<td class="center">Tanggal</td>
+											<th class="center" scope="col">Tahap</th>
+											<th class="center" scope="col">Status</th>
+											<th class="center" scope="col">Keterangan</th>
+											<th class="center" scope="col">Tanggal</th>
 										</tr>
 									</thead>
 									<tbody>

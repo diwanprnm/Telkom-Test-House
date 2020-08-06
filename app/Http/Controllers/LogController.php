@@ -22,6 +22,23 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 class LogController extends Controller
 {
+    private const SEARCH = 'search';
+    private const LOG_CREATED = 'logs.created_at';
+    private const LOG_ACTION = "logs.action";
+    private const LOG_PAGE = "logs.page";
+    private const LOG_SEARCH = "logs.created_at as search_date";
+    private const USER_NAME = "users.name";
+    private const LOG_USER = "logs.user_id";
+    private const USER_ID = "users.id";
+    private const USER = "users";
+    private const ACTION = 'action';
+    private const BEFORE = 'before_date';
+    private const DATE = 'DATE(logs.created_at)';
+    private const AFTER = 'after_date';
+    private const USERNAME = 'users.name';
+    private const SORT_BY = 'sort_by';
+    private const SORT_TYPE = 'sort_type';
+    private const USN = 'username' ;
 	/**
      * Create a new controller instance.
      *
@@ -44,36 +61,36 @@ class LogController extends Controller
         if ($currentUser){
             $message = null;
             $paginate = 10;
-            $search = trim($request->input('search'));
+            $search = trim($request->input($this::SEARCH));
 
             $before = null;
             $after = null;
             $filterUsername = '';
             $filterAction = '';
 
-            $sort_by = 'logs.created_at';
+            $sort_by = $this::LOG_CREATED;
             $sort_type = 'desc';
 
             $select = array(
-            	"logs.action","logs.page","logs.created_at as search_date","users.name"
+            	$this::LOG_ACTION,$this::LOG_PAGE,$this::LOG_SEARCH,$this::USER_NAME
             );
-            $datalogs = Logs::select($select)->whereNotNull('logs.created_at')->join("users","users.id","=","logs.user_id");
+            $datalogs = Logs::select($select)->whereNotNull($this::LOG_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_USER);
 
             $select2 = array(
-                "users.name"
+                $this::USER_NAME
             );
-            $datalogs2 = Logs::select($select2)->whereNotNull('logs.created_at')->join("users","users.id","=","logs.user_id");
+            $datalogs2 = Logs::select($select2)->whereNotNull($this::LOG_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_USER);
 
-            $username = $datalogs2->distinct()->orderBy('users.name')->get();
+            $username = $datalogs2->distinct()->orderBy(self::USERNAME)->get();
 
             $select3 = array(
-                "logs.action"
+                $this::LOG_ACTION
             );
-            $datalogs3 = Logs::select($select3)->whereNotNull('logs.created_at')->join("users","users.id","=","logs.user_id");
+            $datalogs3 = Logs::select($select3)->whereNotNull($this::LOG_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_USER);
             $action = $datalogs3->distinct()->orderBy('logs.action')->get();
 
             if ($search != null){
-                $datalogs->where('action','like','%'.$search.'%');
+                $datalogs->where($this::ACTION,'like','%'.$search.'%');
 
                 $logs = new Logs;
                 $logs->id = Uuid::uuid4();
@@ -87,35 +104,35 @@ class LogController extends Controller
 
             }
 
-            if ($request->has('before_date')){
-                $datalogs->where(DB::raw('DATE(logs.created_at)'), '<=', $request->get('before_date'));
-                $before = $request->get('before_date');
+            if ($request->has($this::BEFORE)){
+                $datalogs->where(DB::raw($this::DATE), '<=', $request->get($this::BEFORE));
+                $before = $request->get($this::BEFORE);
             }
 
-            if ($request->has('after_date')){
-                $datalogs->where(DB::raw('DATE(logs.created_at)'), '>=', $request->get('after_date'));
-                $after = $request->get('after_date');
+            if ($request->has($this::AFTER)){
+                $datalogs->where(DB::raw($this::DATE), '>=', $request->get($this::AFTER));
+                $after = $request->get($this::AFTER);
             }
 
-            if ($request->has('username')){
-                $filterUsername = $request->get('username');
-                if($request->input('username') != 'all'){
-                    $datalogs->where('users.name', $request->get('username'));
+            if ($request->has($this::USN)){
+                $filterUsername = $request->get($this::USN);
+                if($request->input($this::USN) != 'all'){
+                    $datalogs->where(self::USERNAME, $request->get($this::USN));
                 }
             }
 
-            if ($request->has('action')){
-                $filterAction = $request->get('action');
-                if($request->input('action') != 'all'){
-                    $datalogs->where('action', $request->get('action'));
+            if ($request->has($this::ACTION)){
+                $filterAction = $request->get($this::ACTION);
+                if($request->input($this::ACTION) != 'all'){
+                    $datalogs->where($this::ACTION, $request->get($this::ACTION));
                 }
             }
 
-            if ($request->has('sort_by')){
-                $sort_by = $request->get('sort_by');
+            if ($request->has($this::SORT_BY)){
+                $sort_by = $request->get($this::SORT_BY);
             }
-            if ($request->has('sort_type')){
-                $sort_type = $request->get('sort_type');
+            if ($request->has($this::SORT_TYPE)){
+                $sort_type = $request->get($this::SORT_TYPE);
             }
                 
                 $data = $datalogs->orderBy($sort_by, $sort_type)
@@ -128,21 +145,21 @@ class LogController extends Controller
             return view('admin.log.index')
                 ->with('message', $message)
                 ->with('data', $data)
-                ->with('search', $search)
-                ->with('before_date', $before)
-                ->with('after_date', $after)
-                ->with('username', $username)
+                ->with($this::SEARCH, $search)
+                ->with($this::BEFORE, $before)
+                ->with($this::AFTER, $after)
+                ->with($this::USN, $username)
                 ->with('filterUsername', $filterUsername)
-                ->with('action', $action)
+                ->with($this::ACTION, $action)
                 ->with('filterAction', $filterAction)
-                ->with('sort_by', $sort_by)
-                ->with('sort_type', $sort_type);
+                ->with($this::SORT_BY, $sort_by)
+                ->with($this::SORT_TYPE, $sort_type);
         }
     }
 
     public function autocomplete($query) {
     	$select = array(
-            	"logs.action","logs.page","logs.created_at as search_date","users.name"
+            	$this::LOG_ACTION,$this::LOG_PAGE,$this::LOG_SEARCH,$this::USER_NAME
             );
         $respons_result = Logs::select($select)->autocomplet($query);
         return response($respons_result);
@@ -156,54 +173,49 @@ class LogController extends Controller
 		// the user's e-mail address, the amount paid, and the payment
 		// timestamp.
 		
-        $search = trim($request->input('search'));
+        $search = trim($request->input($this::SEARCH));
         
-        $before = null;
-        $after = null;
-        $filterUsername = '';
-        $filterAction = '';
+       
 
-        $sort_by = 'logs.created_at';
+        $sort_by = $this::LOG_CREATED;
         $sort_type = 'desc';
 
         $select = array(
-            "logs.action","logs.page","logs.created_at as search_date","users.name"
+            $this::LOG_ACTION,$this::LOG_PAGE,$this::LOG_SEARCH,$this::USER_NAME
         );
-        $datalogs = Logs::select($select)->whereNotNull('logs.created_at')->join("users","users.id","=","logs.user_id");
+        $datalogs = Logs::select($select)->whereNotNull($this::LOG_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_USER);
 
-        if ($search != null){
-            $data->where('action','like','%'.$search.'%');
+      
+
+        if ($request->has($this::BEFORE)){
+            $datalogs->where(DB::raw($this::DATE), '<=', $request->get($this::BEFORE));
+            $before = $request->get($this::BEFORE);
         }
 
-        if ($request->has('before_date')){
-            $datalogs->where(DB::raw('DATE(logs.created_at)'), '<=', $request->get('before_date'));
-            $before = $request->get('before_date');
+        if ($request->has($this::AFTER)){
+            $datalogs->where(DB::raw($this::DATE), '>=', $request->get($this::AFTER));
+            $after = $request->get($this::AFTER);
         }
 
-        if ($request->has('after_date')){
-            $datalogs->where(DB::raw('DATE(logs.created_at)'), '>=', $request->get('after_date'));
-            $after = $request->get('after_date');
-        }
-
-        if ($request->has('username')){
-            $filterUsername = $request->get('username');
-            if($request->input('username') != 'all'){
-                $datalogs->where('users.name', $request->get('username'));
+        if ($request->has($this::USN)){
+            $filterUsername = $request->get($this::USN);
+            if($request->input($this::USN) != 'all'){
+                $datalogs->where(self::USERNAME, $request->get($this::USN));
             }
         }
 
-        if ($request->has('action')){
-            $filterAction = $request->get('action');
-            if($request->input('action') != 'all'){
-                $datalogs->where('action', $request->get('action'));
+        if ($request->has($this::ACTION)){
+            $filterAction = $request->get($this::ACTION);
+            if($request->input($this::ACTION) != 'all'){
+                $datalogs->where($this::ACTION, $request->get($this::ACTION));
             }
         }
 
-        if ($request->has('sort_by')){
-            $sort_by = $request->get('sort_by');
+        if ($request->has($this::SORT_BY)){
+            $sort_by = $request->get($this::SORT_BY);
         }
-        if ($request->has('sort_type')){
-            $sort_type = $request->get('sort_type');
+        if ($request->has($this::SORT_TYPE)){
+            $sort_type = $request->get($this::SORT_TYPE);
         }
 
 		$data = $datalogs->orderBy($sort_by, $sort_type)->get();
@@ -245,10 +257,7 @@ class LogController extends Controller
 		Excel::create('Data Aktivitas User', function($excel) use ($examsArray) {
 
 			// Set the spreadsheet title, creator, and description
-			// $excel->setTitle('Payments');
-			// $excel->setCreator('Laravel')->setCompany('WJ Gilmore, LLC');
-			// $excel->setDescription('payments file');
-
+		
 			// Build the spreadsheet, passing in the payments array
 			$excel->sheet('sheet1', function($sheet) use ($examsArray) {
 				$sheet->fromArray($examsArray, null, 'A1', false, false);

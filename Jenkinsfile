@@ -74,6 +74,8 @@ pipeline {
                             sh "./vendor/bin/phpunit --log-junit reports/phpunit.xml --coverage-clover reports/phpunit.coverage.xml"
                             
                             echo "defining sonar-scanner"
+                            def node = tool name: 'NodeJS-12', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+                            env.PATH = "${node}/bin:${env.PATH}"
                             def scannerHome = tool 'SonarScanner' ;
                             withSonarQubeEnv('SonarQube') {
                                 sh "${scannerHome}/bin/sonar-scanner"

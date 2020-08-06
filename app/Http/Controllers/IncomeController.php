@@ -59,7 +59,7 @@ class IncomeController extends Controller
     {
         //initial var
         $paginate = 10;
-        $search = trim($request->input(self::SEARCH));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         $dataNotFound='';
 
         //getting relation db
@@ -235,7 +235,7 @@ class IncomeController extends Controller
         // timestamp.
 
         //initial var
-        $search = trim($request->input(self::SEARCH));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
 
         //Filter query based on request
         $initialQuery = $this->initialQuery($search);
@@ -289,25 +289,8 @@ class IncomeController extends Controller
 			];
 			$no++;
 		}
-        //Generate and return the spreadsheet
-        $excelFileName = 'DataPendapatan';
-		Excel::create($excelFileName, function($excel) use ($examsArray) {
-
-			// Build the spreadsheet, passing in the payments array
-			$excel->sheet('sheet1', function($sheet) use ($examsArray) {
-				$sheet->fromArray($examsArray, null, 'A1', false, false);
-			});
-        })->store('xlsx');
-        
-        $file = Storage::disk('tmp')->get($excelFileName.'.xlsx');
-
-        $headers = [
-            'Content-Type' => 'Application/Spreadsheet',
-            'Content-Description' => 'File Transfer',
-            'Content-Disposition' => "attachment; filename=$excelFileName.xlsx",
-            'filename'=> "$excelFileName.xlsx"
-        ];
-        return response($file, 200, $headers);
+        $excel = \App\Services\ExcelService::download($examsArray, 'Data Pendapatan');
+        return response($excel['file'], 200, $excel['headers']);
 	}
 	
 	public function autocomplete($query) {
@@ -323,7 +306,7 @@ class IncomeController extends Controller
 			ORDER BY last_numb DESC LIMIT 1
 		";
 		$data = DB::select($query);
-		if (count($data) == 0){
+		if (!count($data)){
 			return '001/DDS-73/'.$thisYear.'';
 		}
 		else{
@@ -449,7 +432,7 @@ class IncomeController extends Controller
             ->with(self::COMPANY)
         ;
 
-        if ($search != null){
+        if ($search){
             $query->where(function($qry) use($search){
                 $qry->whereHas(self::COMPANY, function ($q) use ($search){
                     return $q->where('name', 'like', '%'.strtolower($search).'%');

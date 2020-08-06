@@ -20,19 +20,19 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 class SlideshowController extends Controller
 {
-    private const SEARCH = 'search';
-    private const CREATED_AT = 'created_at';
-    private const TITLE = 'title';
-    private const SLIDESHOW = 'SLIDESHOW';
-    private const MESSAGE = 'message';
-    private const HEADLINE = 'headline';
-    private const COLOR = 'color';
-    private const TIMEOUT = 'timeout';
-    private const IMAGE = 'image';
-    private const ERROR = 'error';
-    private const ADMIN_SLIDESHOW_CREATE = '/admin/slideshow/create';
-    private const IS_ACTIVE = 'is_active';
     private const ADMIN_SLIDE_SHOW = '/admin/slideshow';
+    private const ADMIN_SLIDESHOW_CREATE = '/admin/slideshow/create';
+    private const COLOR = 'color';
+    private const CREATED_AT = 'created_at';
+    private const ERROR = 'error';
+    private const HEADLINE = 'headline';
+    private const IMAGE = 'image';
+    private const IS_ACTIVE = 'is_active';
+    private const MESSAGE = 'message';
+    private const SEARCH = 'search';
+    private const SLIDESHOW = 'SLIDESHOW';
+    private const TIMEOUT = 'timeout';
+    private const TITLE = 'title';
     /**
      * Create a new controller instance.
      *
@@ -53,14 +53,14 @@ class SlideshowController extends Controller
         $logService = new LogService();
         $noDataFound = '';
         $paginate = 100;
-        $search = trim($request->input(self::SEARCH));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         
-        if ($search != null){
+        if ($search){
             $slideshows = Slideshow::whereNotNull(self::CREATED_AT)
                 ->where(self::TITLE,'like','%'.$search.'%')
                 ->orderBy(self::CREATED_AT)
                 ->paginate($paginate);
-                $logService->createLog('Search Slideshow', self::SLIDESHOW, json_encode(array("search"=>$search)));
+                $logService->createLog('Search Slideshow', self::SLIDESHOW, json_encode(array(self::SEARCH=>$search)));
         }else{
             $slideshows = Slideshow::whereNotNull(self::CREATED_AT)
                 ->orderBy('position')
@@ -96,6 +96,14 @@ class SlideshowController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            self::TITLE => 'required',
+            self::HEADLINE => 'required',
+            self::IMAGE => 'required|mimes:jpg,jpeg,png',
+            self::TIMEOUT => 'numeric',
+            self::IS_ACTIVE => 'required|boolean'
+        ]);
+
         $currentUser = Auth::user();
         $logService = new LogService();
         $slideshow = new Slideshow;
@@ -103,7 +111,7 @@ class SlideshowController extends Controller
         $slideshow->title = $request->input(self::TITLE);
         $slideshow->headline = $request->input(self::HEADLINE);
         $slideshow->color = $request->input(self::COLOR);
-        $slideshow->timeout = $request->input(self::TIMEOUT);
+        $slideshow->timeout = $request->input(self::TIMEOUT,'1');
 
         if ($request->hasFile(self::IMAGE))
         {
@@ -167,6 +175,12 @@ class SlideshowController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->validate($request, [
+            self::IMAGE => 'mimes:jpg,jpeg,png',
+            self::TIMEOUT => 'numeric',
+            self::IS_ACTIVE => 'boolean'
+        ]);
+
         $currentUser = Auth::user();
         $logService = new LogService();
         $slideshow = Slideshow::find($id);

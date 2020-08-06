@@ -51,7 +51,7 @@ class FeedbackController extends Controller
     {
         $logService = New LogService();
         $query = Feedback::whereNotNull('created_at');
-        $search = MyHelper::filterDefault($request->input($this::SEARCH));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         $message = null;
 
         $queryFilter = New QueryFilter($request,$query);

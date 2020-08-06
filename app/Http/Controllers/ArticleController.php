@@ -42,11 +42,11 @@ class ArticleController extends Controller
         $logService = new LogService();
         $message = null;
         $paginate = 10;
-        $search = trim($request->input(self::SEARCH));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         
-        if ($search != null){
+        if ($search){
             $articles = $articles->where(self::TITLE,'like','%'.$search.'%');
-            $logService->createLog('Search Article', 'ARTICLE',json_encode(array("search"=>$search)) );
+            $logService->createLog('Search Article', 'ARTICLE',json_encode(array(self::SEARCH=>$search)) );
         }
 
         $articles = $articles->orderBy(self::TITLE)
@@ -90,10 +90,15 @@ class ArticleController extends Controller
         }
     }
 
-
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function show($id)
     {
-        
+
     }
 
 

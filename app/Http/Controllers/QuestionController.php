@@ -63,7 +63,7 @@ class QuestionController extends Controller
                     $datasearch = array("search"=>$search);
                     $logs->data = json_encode($datasearch);
                     $logs->created_by = $currentUser->id;
-                    $logs->page = this::QUESTION;
+                    $logs->page = $this::QUESTION;
                     $logs->save();
             }else{
                 $query = Question::whereNotNull('created_at'); 

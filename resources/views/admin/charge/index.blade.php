@@ -158,7 +158,7 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
-							<caption>Examination Charge Table - Telkom Test House</caption>
+							<caption>Examination Charge Table</caption>
 							<thead>
 								<tr>
 									<th class="center" scope="col">No</th>

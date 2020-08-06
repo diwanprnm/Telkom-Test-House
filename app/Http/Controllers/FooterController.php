@@ -134,20 +134,7 @@ class FooterController extends Controller
                 return redirect($this::CREATE);
             }
         }        
-      /*  if ($request->hasFile($this::IMAGE)) {
-           
-            $name_file = 'footer_'.$request->file($this::IMAGE)->getClientOriginalName();
-            $path_file = public_path().'/media/footer';
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file($this::IMAGE)->move($path_file,$name_file)){
-                $footer->image = $name_file;
-            }else{
-                Session::flash($this::ERR, 'Save Image to directory failed');
-                return redirect($this::CREATE);
-            }
-        } */
+     
         
         $footer->is_active = $request->input($this::ACT);
         $footer->created_by = $currentUser->id;

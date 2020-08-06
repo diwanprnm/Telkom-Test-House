@@ -56,7 +56,7 @@ class NoGudangController extends Controller
     public function index(Request $request)
     {
         $paginate = 10;
-        $search = trim($request->input(self::SEARCH));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         $sort_by = 'no';
         $sort_type = 'desc';
 
@@ -122,7 +122,7 @@ class NoGudangController extends Controller
         // the payments table's primary key, the user's first and last name, 
         // the user's e-mail address, the amount paid, and the payment
         // timestamp.
-        $search = trim($request->input(self::SEARCH));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
 
         // Buat query awal
         $query = $this->intialQuery();
@@ -267,7 +267,7 @@ class NoGudangController extends Controller
     private function filterSearch($search, $query){
         $isNull = true;
         
-        if ($search != null){
+        if ($search){
             $isNull = false;
             $query->where(DB::raw('companies.name'), 'like', '%'.strtolower($search).'%')
                 ->orWhere(DB::raw('devices.name'), 'like', '%'.strtolower($search).'%')

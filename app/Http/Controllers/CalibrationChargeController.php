@@ -325,6 +325,8 @@ class CalibrationChargeController extends Controller
         $logs->page = "Tarif Kalibrasi";
         $logs->save();
 
+
+        
         // Generate and return the spreadsheet
         Excel::create('Data Tarif Kalibrasi', function($excel) use ($examsArray) {
 

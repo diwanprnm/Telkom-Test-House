@@ -14,27 +14,27 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title"><i class="fa fa-eyes-open"></i> Uji Fungsi Akan Direset, Mohon Berikan Keterangan!</h4>
+				<h4 class="modal-title"><em class="fa fa-eyes-open"></em> Uji Fungsi Akan Direset, Mohon Berikan Keterangan!</h4>
 			</div>
 			
 			<div class="modal-body">
-				<table width=100%>
+				<table width=100%><caption></caption>
 					<tr>
-						<td>
+						<th scope="col">
 							<div class="form-group">
 								<label for="keterangan">Keterangan:</label>
 								<textarea class="form-control" rows="5" name="keterangan" id="keterangan"></textarea>
 							</div>
-						</td>
+						</th>
 					</tr>
 				</table>
 			</div><!-- /.modal-content -->
 			<div class="modal-footer">
-				<table width=100%>
+				<table width=100%><caption></caption>
 					<tr>
-						<td>
-							<button type="button" id="btn-modal-reset_uf" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
-						</td>
+						<th scope="col">
+							<button type="button" id="btn-modal-reset_uf" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
+						</th>
 					</tr>
 				</table>
 			</div>
@@ -50,13 +50,13 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title"><i class="fa fa-eyes-open"></i> Silakan Isi Data-data Berikut !</h4>
+				<h4 class="modal-title"><em class="fa fa-eyes-open"></em> Silakan Isi Data-data Berikut !</h4>
 			</div>
 			
 			<div class="modal-body">
-				<table width=100%>
+				<table width=100%><caption></caption>
 					<tr>
-						<td>
+						<th scope="col">
 							<div class="form-group">
 								<label>
 									Tanggal Surat *
@@ -69,21 +69,21 @@
 									@endif
 									<span class="input-group-btn">
 										<button type="button" class="btn btn-default">
-											<i class="glyphicon glyphicon-calendar"></i>
+											<em class="glyphicon glyphicon-calendar"></em>
 										</button>
 									</span>
 								</p>
 							</div>
-						</td>
+						</th>
 					</tr>
 				</table>
 			</div><!-- /.modal-content -->
 			<div class="modal-footer">
-				<table width=100%>
-					<tr>
-						<td>
-							<button type="button" class="btn btn-danger btn-tgl-kontrak" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
-						</td>
+				<table width=100%><caption></caption>
+					<th>
+						<th scope="col">
+							<button type="button" class="btn btn-danger btn-tgl-kontrak" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
+						</th>
 					</tr>
 				</table>
 			</div>
@@ -297,16 +297,16 @@
 								
 								<div id="step-1">
 									<div class="form-group">
-										<table class="table table-condensed">
+										<table class="table table-condensed"><caption></caption>
 											<thead>
 											@if(strpos($data->keterangan, 'qa_date') !== false)
 												<?php $data_ket = explode("qa_date",$data->keterangan); ?>
 												<tr>
-													<th colspan="3" align="center"><font color="red">Perangkat ini sudah pernah diuji, dengan status "Tidak Lulus Uji" berdasarkan keputusan Sidang QA tanggal {{ $data_ket[1] }}</font></th>
+													<th colspan="3" align="center" scope="col"><font color="red">Perangkat ini sudah pernah diuji, dengan status "Tidak Lulus Uji" berdasarkan keputusan Sidang QA tanggal {{ $data_ket[1] }}</font></th>
 												</tr>
 											@endif
 												<tr>
-													<th colspan="3">Detail Informasi</th>
+													<th colspan="3" scope="col">Detail Informasi</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -495,27 +495,27 @@
 								<div class="modal-content">
 									<div class="modal-header">
 										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-										<h4 class="modal-title"><i class="fa fa-eyes-open"></i> Step Registrasi Not Completed, Mohon Berikan Keterangan!</h4>
+										<h4 class="modal-title"><em class="fa fa-eyes-open"></em> Step Registrasi Not Completed, Mohon Berikan Keterangan!</h4>
 									</div>
 									
 									<div class="modal-body">
-										<table width=100%>
+										<table width=100%><caption></caption>
 											<tr>
-												<td>
+												<th scope="col">
 													<div class="form-group">
 														<label for="keterangan">Keterangan:</label>
 														<textarea class="form-control" rows="5" name="keterangan" id="keterangan_registrasi"></textarea>
 													</div>
-												</td>
+												</th>
 											</tr>
 										</table>
 									</div><!-- /.modal-content -->
 									<div class="modal-footer">
-										<table width=100%>
+										<table width=100%><caption></caption>
 											<tr>
-												<td>
-													<button type="submit" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
-												</td>
+												<th scope="col">
+													<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
+												</th>
 											</tr>
 										</table>
 									</div>
@@ -688,10 +688,10 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="form-group">
-									<table class="table table-bordered">
+									<table class="table table-bordered"><caption></caption>
 										<thead>
 											<tr>
-												<th colspan="4">Riwayat Pengajuan Tanggal Uji Fungsi</th>
+												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal Uji Fungsi</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -886,27 +886,27 @@
 								<div class="modal-content">
 									<div class="modal-header">
 										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-										<h4 class="modal-title"><i class="fa fa-eyes-open"></i> Step Uji Fungsi Not Completed, Mohon Berikan Keterangan!</h4>
+										<h4 class="modal-title"><em class="fa fa-eyes-open"></em> Step Uji Fungsi Not Completed, Mohon Berikan Keterangan!</h4>
 									</div>
 									
 									<div class="modal-body">
-										<table width=100%>
+										<table width=100%><caption></caption>
 											<tr>
-												<td>
+												<th scope="col">
 													<div class="form-group">
 														<label for="keterangan">Keterangan:</label>
 														<textarea class="form-control" rows="5" name="keterangan" id="keterangan_function"></textarea>
 													</div>
-												</td>
+												</th>
 											</tr>
 										</table>
 									</div><!-- /.modal-content -->
 									<div class="modal-footer">
-										<table width=100%>
+										<table width=100%><caption></caption>
 											<tr>
-												<td>
+												<th scope="col">
 													<button type="submit" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
-												</td>
+												</th>
 											</tr>
 										</table>
 									</div>
@@ -923,10 +923,10 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="form-group">
-									<table class="table table-bordered">
+									<table class="table table-bordered"><caption></caption>
 										<thead>
 											<tr>
-												<th colspan="4">Riwayat Pengajuan Tanggal Uji Fungsi</th>
+												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal Uji Fungsi</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -1093,10 +1093,10 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="form-group">
-									<table class="table table-bordered">
+									<table class="table table-bordered"><caption></caption>
 										<thead>
 											<tr>
-												<th colspan="4">Riwayat Pengajuan Tanggal Uji Fungsi</th>
+												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal Uji Fungsi</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -1324,27 +1324,27 @@
 								<div class="modal-content">
 									<div class="modal-header">
 										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-										<h4 class="modal-title"><i class="fa fa-eyes-open"></i> Step Tinjauan Kontrak Not Completed, Mohon Berikan Keterangan!</h4>
+										<h4 class="modal-title"><em class="fa fa-eyes-open"></em> Step Tinjauan Kontrak Not Completed, Mohon Berikan Keterangan!</h4>
 									</div>
 									
 									<div class="modal-body">
-										<table width=100%>
+										<table width=100%><caption></caption>
 											<tr>
-												<td>
+												<th scope="col">
 													<div class="form-group">
 														<label for="keterangan">Keterangan:</label>
 														<textarea class="form-control" rows="5" name="keterangan" id="keterangan_contract"></textarea>
 													</div>
-												</td>
+												</th>
 											</tr>
 										</table>
 									</div><!-- /.modal-content -->
 									<div class="modal-footer">
-										<table width=100%>
+										<table width=100%><caption></caption>
 											<tr>
-												<td>
-													<button type="submit" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
-												</td>
+												<th scope="col">
+													<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
+												</th>
 											</tr>
 										</table>
 									</div>
@@ -1522,27 +1522,27 @@
 								<div class="modal-content">
 									<div class="modal-header">
 										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-										<h4 class="modal-title"><i class="fa fa-eyes-open"></i> Step SPB Not Completed, Mohon Berikan Keterangan!</h4>
+										<h4 class="modal-title"><em class="fa fa-eyes-open"></em> Step SPB Not Completed, Mohon Berikan Keterangan!</h4>
 									</div>
 									
 									<div class="modal-body">
-										<table width=100%>
+										<table width=100%><caption></caption>
 											<tr>
-												<td>
+												<th scope="col">
 													<div class="form-group">
 														<label for="keterangan">Keterangan:</label>
 														<textarea class="form-control" rows="5" name="keterangan" id="keterangan_spb"></textarea>
 													</div>
-												</td>
+												</th>
 											</tr>
 										</table>
 									</div><!-- /.modal-content -->
 									<div class="modal-footer">
-										<table width=100%>
+										<table width=100%><caption></caption>
 											<tr>
-												<td>
-													<button type="submit" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
-												</td>
+												<th scope="col">
+													<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
+												</th>
 											</tr>
 										</table>
 									</div>
@@ -1803,27 +1803,27 @@
 								<div class="modal-content">
 									<div class="modal-header">
 										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-										<h4 class="modal-title"><i class="fa fa-eyes-open"></i> Step Pembayaran Not Completed, Mohon Berikan Keterangan!</h4>
+										<h4 class="modal-title"><em class="fa fa-eyes-open"></em> Step Pembayaran Not Completed, Mohon Berikan Keterangan!</h4>
 									</div>
 									
 									<div class="modal-body">
-										<table width=100%>
+										<table width=100%><caption></caption>
 											<tr>
-												<td>
+												<th scope="col">
 													<div class="form-group">
 														<label for="keterangan">Keterangan:</label>
 														<textarea class="form-control" rows="5" name="keterangan" id="keterangan_pembayaran"></textarea>
 													</div>
-												</td>
+												</th>
 											</tr>
 										</table>
 									</div><!-- /.modal-content -->
 									<div class="modal-footer">
-										<table width=100%>
+										<table width=100%><caption></caption>
 											<tr>
-												<td>
-													<button type="submit" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
-												</td>
+												<th scope="col">
+													<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
+												</th>
 											</tr>
 										</table>
 									</div>
@@ -2024,7 +2024,7 @@
 										<input type="text" name="spk_date" class="form-control" value="{{ $data->spk_date }}" readonly required/>
 										<span class="input-group-btn">
 											<button type="button" class="btn btn-default">
-												<i class="glyphicon glyphicon-calendar"></i>
+												<em class="glyphicon glyphicon-calendar"></em>
 											</button>
 										</span>
 									</p>
@@ -2082,27 +2082,27 @@
 								<div class="modal-content">
 									<div class="modal-header">
 										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-										<h4 class="modal-title"><i class="fa fa-eyes-open"></i> Step Pembuatan SPK Not Completed, Mohon Berikan Keterangan!</h4>
+										<h4 class="modal-title"><em class="fa fa-eyes-open"></em> Step Pembuatan SPK Not Completed, Mohon Berikan Keterangan!</h4>
 									</div>
 									
 									<div class="modal-body">
-										<table width=100%>
+										<table width=100%><caption></caption>
 											<tr>
-												<td>
+												<th scope="col">
 													<div class="form-group">
 														<label for="keterangan">Keterangan:</label>
 														<textarea class="form-control" rows="5" name="keterangan" id="keterangan_spk"></textarea>
 													</div>
-												</td>
+												</th>
 											</tr>
 										</table>
 									</div><!-- /.modal-content -->
 									<div class="modal-footer">
-										<table width=100%>
+										<table width=100%><caption></caption>
 											<tr>
-												<td>
-													<button type="submit" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
-												</td>
+												<th scope="col">
+													<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
+												</th>
 											</tr>
 										</table>
 									</div>
@@ -2126,7 +2126,7 @@
 										<input type="text" class="form-control" value="{{ $data->spk_date }}" readonly required/>
 										<span class="input-group-btn">
 											<button type="button" class="btn btn-default">
-												<i class="glyphicon glyphicon-calendar"></i>
+												<em class="glyphicon glyphicon-calendar"></em>
 											</button>
 										</span>
 									</p>
@@ -2176,7 +2176,7 @@
 										<input type="text" class="form-control" value="{{ $data->spk_date }}" readonly required/>
 										<span class="input-group-btn">
 											<button type="button" class="btn btn-default">
-												<i class="glyphicon glyphicon-calendar"></i>
+												<em class="glyphicon glyphicon-calendar"></em>
 											</button>
 										</span>
 									</p>
@@ -2235,10 +2235,10 @@
 							?>
 							<div class="col-md-12">
 								<div class="form-group">
-									<table class="table table-bordered">
+									<table class="table table-bordered"><caption></caption>
 										<thead>
 											<tr>
-												<th colspan="4">Riwayat Pelaksanaan Uji</th>
+												<th colspan="4" scope="col">Riwayat Pelaksanaan Uji</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -2273,11 +2273,11 @@
 							@endif
 							<div class="col-md-12">
 								<div class="form-group">
-									<table class="table table-bordered">
+									<table class="table table-bordered"><caption></caption>
 										<tbody>
 											<tr>
-												<td>Mulai Uji oleh Test Engineer</td>
-												<td>Selesai Uji oleh Test Engineer</td>
+												<th scope="col">Mulai Uji oleh Test Engineer</th>
+												<th scope="col">Selesai Uji oleh Test Engineer</th>
 											</tr>
 											<tr>
 												<td>
@@ -2315,7 +2315,7 @@
 											@endif
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
+													<em class="glyphicon glyphicon-calendar"></em>
 												</button>
 											</span>
 										</p>
@@ -2377,27 +2377,27 @@
 								<div class="modal-content">
 									<div class="modal-header">
 										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-										<h4 class="modal-title"><i class="fa fa-eyes-open"></i> Step Pelaksanaan Uji Not Completed, Mohon Berikan Keterangan!</h4>
+										<h4 class="modal-title"><em class="fa fa-eyes-open"></em> Step Pelaksanaan Uji Not Completed, Mohon Berikan Keterangan!</h4>
 									</div>
 									
 									<div class="modal-body">
-										<table width=100%>
+										<table width=100%><caption></caption>
 											<tr>
-												<td>
+												<thscope="col">
 													<div class="form-group">
 														<label for="keterangan">Keterangan:</label>
 														<textarea class="form-control" rows="5" name="keterangan" id="keterangan_form_uji"></textarea>
 													</div>
-												</td>
+												</th>
 											</tr>
 										</table>
 									</div><!-- /.modal-content -->
 									<div class="modal-footer">
-										<table width=100%>
+										<table width=100%><caption>
 											<tr>
-												<td>
-													<button type="submit" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
-												</td>
+												<th scope="col">
+													<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
+												</th>
 											</tr>
 										</table>
 									</div>
@@ -2425,10 +2425,10 @@
 							?>
 							<div class="col-md-12">
 								<div class="form-group">
-									<table class="table table-bordered">
+									<table class="table table-bordered"><caption></caption>
 										<thead>
 											<tr>
-												<th colspan="4">Riwayat Pelaksanaan Uji</th>
+												<th colspan="4" scope="col">Riwayat Pelaksanaan Uji</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -2463,11 +2463,11 @@
 							@endif
 							<div class="col-md-12">
 								<div class="form-group">
-									<table class="table table-bordered">
+									<table class="table table-bordered"><caption></caption>
 										<tbody>
 											<tr>
-												<td>Mulai Uji oleh Test Engineer</td>
-												<td>Selesai Uji oleh Test Engineer</td>
+												<th scope="col">Mulai Uji oleh Test Engineer</th>
+												<th scope="col">Selesai Uji oleh Test Engineer</th>
 											</tr>
 											<tr>
 												<td>
@@ -2505,7 +2505,7 @@
 											@endif
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
+													<em class="glyphicon glyphicon-calendar"></em>
 												</button>
 											</span>
 										</p>
@@ -2570,10 +2570,10 @@
 							?>
 							<div class="col-md-12">
 								<div class="form-group">
-									<table class="table table-bordered">
+									<table class="table table-bordered"><caption></caption>
 										<thead>
 											<tr>
-												<th colspan="4">Riwayat Pelaksanaan Uji</th>
+												<th colspan="4" scope="col">Riwayat Pelaksanaan Uji</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -2608,11 +2608,11 @@
 							@endif
 							<div class="col-md-12">
 								<div class="form-group">
-									<table class="table table-bordered">
+									<table class="table table-bordered"><caption></caption>
 										<tbody>
 											<tr>
-												<td>Mulai Uji oleh Test Engineer</td>
-												<td>Selesai Uji oleh Test Engineer</td>
+												<th scope="col">Mulai Uji oleh Test Engineer</th>
+												<th scope="col">Selesai Uji oleh Test Engineer</th>
 											</tr>
 											<tr>
 												<td>
@@ -2650,7 +2650,7 @@
 											@endif
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
+													<em class="glyphicon glyphicon-calendar"></em>
 												</button>
 											</span>
 										</p>
@@ -3050,7 +3050,7 @@
 										@else
 											Belum Tersedia
 										@endif
-										<a class="btn btn-primary rev-button" data-toggle="collapse" href="#collapse1"><b>Revisi</b></a>
+										<a class="btn btn-primary rev-button" data-toggle="collapse" href="#collapse1"><strong>Revisi</strong></a>
 									</label>
 									<input type="hidden" name="hide_attachment_form-lap-uji" id="hide_attachment_form-lap-uji" value="{{ $lap_uji_attach }}">
 								</div>
@@ -3065,10 +3065,10 @@
 										<input type="file" name="rev_lap_uji_file" id="rev_lap_uji_file" class="form-control" accept="application/pdf, image/*">
 									</div>
 									<div class="form-group">
-										<table class="table table-bordered">
+										<table class="table table-bordered"><caption></caption>
 											<thead>
 												<tr>
-													<th colspan="5">Riwayat Revisi Laporan Uji</th>
+													<th colspan="5" scope="col">Riwayat Revisi Laporan Uji</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -3097,7 +3097,7 @@
 																<strong>{{ $item->created_at }}</strong>
 															</td>
 															<td style="text-align: center;">
-																<strong> <a class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Destroy" onclick="delete_rev_lap_uji_file('{{ $item->id }}')"><i class="fa fa-trash"></i></a> </strong>
+																<strong> <a class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Destroy" onclick="delete_rev_lap_uji_file('{{ $item->id }}')"><em class="fa fa-trash"></em></a> </strong>
 															</td>
 														</tr>
 													@endif
@@ -3120,7 +3120,7 @@
 										<input type="text" name="resume_date" class="form-control" value="{{ $data->resume_date }}" required/>
 										<span class="input-group-btn">
 											<button type="button" class="btn btn-default">
-												<i class="glyphicon glyphicon-calendar"></i>
+												<em class="glyphicon glyphicon-calendar"></em>
 											</button>
 										</span>
 									</p>
@@ -3161,27 +3161,27 @@
 								<div class="modal-content">
 									<div class="modal-header">
 										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-										<h4 class="modal-title"><i class="fa fa-eyes-open"></i> Step Laporan Uji Not Completed, Mohon Berikan Keterangan!</h4>
+										<h4 class="modal-title"><em class="fa fa-eyes-open"></em> Step Laporan Uji Not Completed, Mohon Berikan Keterangan!</h4>
 									</div>
 									
 									<div class="modal-body">
-										<table width=100%>
+										<table width=100%><caption></caption>
 											<tr>
-												<td>
+												<th scope="col">
 													<div class="form-group">
 														<label for="keterangan">Keterangan:</label>
 														<textarea class="form-control" rows="5" name="keterangan" id="keterangan_lap_uji"></textarea>
 													</div>
-												</td>
+												</th>
 											</tr>
 										</table>
 									</div><!-- /.modal-content -->
 									<div class="modal-footer">
-										<table width=100%>
+										<table width=100%><caption></caption>
 											<tr>
-												<td>
+												<th scope="col">
 													<button type="submit" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
-												</td>
+												</th>
 											</tr>
 										</table>
 									</div>
@@ -3267,11 +3267,11 @@
 									</label>
 								</div>
 								<div class="form-group">
-									<table class="table table-bordered">
+									<table class="table table-bordered"><caption></caption>
 										<thead>
 											<tr>
-												<th colspan="5">Riwayat Revisi Laporan Uji</th>
-											</tr>
+												<th colspan="5" scope="col">Riwayat Revisi Laporan Uji</th>
+											</tr> 
 										</thead>
 										<tbody>
 											<tr style="text-align: center;">
@@ -3334,7 +3334,7 @@
 										<input type="text" class="form-control" value="{{ $data->resume_date }}" readonly required/>
 										<span class="input-group-btn">
 											<button type="button" class="btn btn-default">
-												<i class="glyphicon glyphicon-calendar"></i>
+												<em class="glyphicon glyphicon-calendar"></em>
 											</button>
 										</span>
 									</p>
@@ -3436,10 +3436,10 @@
 									</label>
 								</div>
 								<div class="form-group">
-									<table class="table table-bordered">
+									<table class="table table-bordered"><caption></caption>
 										<thead>
 											<tr>
-												<th colspan="5">Riwayat Revisi Laporan Uji</th>
+												<th colspan="5" scope="col">Riwayat Revisi Laporan Uji</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -3503,7 +3503,7 @@
 										<input type="text" class="form-control" value="{{ $data->resume_date }}" readonly required/>
 										<span class="input-group-btn">
 											<button type="button" class="btn btn-default">
-												<i class="glyphicon glyphicon-calendar"></i>
+												<em class="glyphicon glyphicon-calendar"></em>
 											</button>
 										</span>
 									</p>
@@ -3611,7 +3611,7 @@
 											<input type="text" name="qa_date" class="form-control" value="{{ $data->qa_date }}" required/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
+													<em class="glyphicon glyphicon-calendar"></em>
 												</button>
 											</span>
 										</p>
@@ -3652,27 +3652,27 @@
 									<div class="modal-content">
 										<div class="modal-header">
 											<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-											<h4 class="modal-title"><i class="fa fa-eyes-open"></i> Step Sidang QA Not Completed, Mohon Berikan Keterangan!</h4>
+											<h4 class="modal-title"><em class="fa fa-eyes-open"></em> Step Sidang QA Not Completed, Mohon Berikan Keterangan!</h4>
 										</div>
 										
 										<div class="modal-body">
-											<table width=100%>
+											<table width=100%><caption></caption>
 												<tr>
-													<td>
+													<th scope="col">
 														<div class="form-group">
 															<label for="keterangan">Keterangan:</label>
 															<textarea class="form-control" rows="5" name="keterangan" id="keterangan_sidang_qa"></textarea>
 														</div>
-													</td>
+													</th>
 												</tr>
 											</table>
 										</div><!-- /.modal-content -->
 										<div class="modal-footer">
-											<table width=100%>
+											<table width=100%><caption></caption>
 												<tr>
-													<td>
-														<button type="submit" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
-													</td>
+													<th scope="col">
+														<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
+													</th>
 												</tr>
 											</table>
 										</div>
@@ -3725,7 +3725,7 @@
 											<input type="text" class="form-control" value="{{ $data->qa_date }}" readonly required/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
+													<em class="glyphicon glyphicon-calendar"></em>
 												</button>
 											</span>
 										</p>
@@ -3794,7 +3794,7 @@
 											<input type="text" class="form-control" value="{{ $data->qa_date }}" readonly required/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
+													<em class="glyphicon glyphicon-calendar"></em>
 												</button>
 											</span>
 										</p>
@@ -4138,7 +4138,7 @@
 												<input type="text" name="valid_from" id="valid_from" class="form-control" value="{{ $data->device->valid_from }}" required />
 												<span class="input-group-btn">
 													<button type="button" class="btn btn-default">
-														<i class="glyphicon glyphicon-calendar"></i>
+														<em class="glyphicon glyphicon-calendar"></em>
 													</button>
 												</span>
 											</p>
@@ -4153,7 +4153,7 @@
 												<input type="text" name="valid_thru" id="valid_thru" class="form-control" value="{{ $data->device->valid_thru }}" required />
 												<span class="input-group-btn">
 													<button type="button" class="btn btn-default">
-														<i class="glyphicon glyphicon-calendar"></i>
+														<em class="glyphicon glyphicon-calendar"></em>
 													</button>
 												</span>
 											</p>
@@ -4196,27 +4196,27 @@
 									<div class="modal-content">
 										<div class="modal-header">
 											<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-											<h4 class="modal-title"><i class="fa fa-eyes-open"></i> Step Penerbitan Sertifikat Not Completed, Mohon Berikan Keterangan!</h4>
+											<h4 class="modal-title"><em class="fa fa-eyes-open"></em> Step Penerbitan Sertifikat Not Completed, Mohon Berikan Keterangan!</h4>
 										</div>
 										
 										<div class="modal-body">
-											<table width=100%>
+											<table width=100%><caption></caption>
 												<tr>
-													<td>
+													<th scope="col">
 														<div class="form-group">
 															<label for="keterangan">Keterangan:</label>
 															<textarea class="form-control" rows="5" name="keterangan" id="keterangan_sertifikat"></textarea>
 														</div>
-													</td>
+													</th>
 												</tr>
 											</table>
 										</div><!-- /.modal-content -->
 										<div class="modal-footer">
-											<table width=100%>
+											<table width=100%><caption></caption>
 												<tr>
-													<td>
-														<button type="submit" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
-													</td>
+													<th scope="col">
+														<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
+													</th>
 												</tr>
 											</table>
 										</div>
@@ -4266,7 +4266,7 @@
 												<input type="text" class="form-control" value="{{ $data->device->valid_from }}" readonly required/>
 												<span class="input-group-btn">
 													<button type="button" class="btn btn-default">
-														<i class="glyphicon glyphicon-calendar"></i>
+														<em class="glyphicon glyphicon-calendar"></em>
 													</button>
 												</span>
 											</p>
@@ -4281,7 +4281,7 @@
 												<input type="text" class="form-control" value="{{ $data->device->valid_thru }}" readonly required/>
 												<span class="input-group-btn">
 													<button type="button" class="btn btn-default">
-														<i class="glyphicon glyphicon-calendar"></i>
+														<em class="glyphicon glyphicon-calendar"></em>
 													</button>
 												</span>
 											</p>
@@ -4349,7 +4349,7 @@
 												<input type="text" class="form-control" value="{{ $data->device->valid_from }}" readonly required/>
 												<span class="input-group-btn">
 													<button type="button" class="btn btn-default">
-														<i class="glyphicon glyphicon-calendar"></i>
+														<em class="glyphicon glyphicon-calendar"></em>
 													</button>
 												</span>
 											</p>
@@ -4364,7 +4364,7 @@
 												<input type="text" class="form-control" value="{{ $data->device->valid_thru }}" readonly required/>
 												<span class="input-group-btn">
 													<button type="button" class="btn btn-default">
-														<i class="glyphicon glyphicon-calendar"></i>
+														<em class="glyphicon glyphicon-calendar"></em>
 													</button>
 												</span>
 											</p>

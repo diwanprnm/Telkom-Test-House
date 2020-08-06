@@ -42,7 +42,7 @@ class BackupController extends Controller
         $logService = new LogService();
         $message = null;
         $paginate = 10;
-        $search = trim($request->input(self::SEARCH));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         
         $select = array(
             'backup_history.id',
@@ -53,9 +53,9 @@ class BackupController extends Controller
         $dataBackups = BackupHistory::select($select)->whereNotNull(self::BACKUP_CREATED_AT)
             ->join("users","users.id","=","backup_history.user_id");
 
-        if ($search != null){
+        if ($search){
             $dataBackups = $dataBackups->where('file','like','%'.$search.'%');
-            $logService->createLog('Search Backup File', 'BACKUP & RESTORE', json_encode(array("search"=>$search)) );
+            $logService->createLog('Search Backup File', 'BACKUP & RESTORE', json_encode(array(self::SEARCH=>$search)) );
         }
 
         $dataBackups = $dataBackups->orderBy(self::BACKUP_CREATED_AT, 'desc')

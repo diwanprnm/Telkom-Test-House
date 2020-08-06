@@ -50,7 +50,7 @@ class SPBController extends Controller
         $logService = new LogService();
         $noDataFound = '';
         $paginate = 10;
-        $search = trim($request->input(self::SEARCH));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         $sort_by = self::SPB_NUMBER;
         $sort_type = 'desc';
 
@@ -60,7 +60,7 @@ class SPBController extends Controller
         $spb        = $query->get();
         $queryFilter= new QueryFilter($request, $query);
 
-        if ($search != null){
+        if ($search){
             $query->where(function($qry) use($search){
                 $qry->whereHas(self::DEVICE, function ($q) use ($search){
                             return $q->where('name', 'like', '%'.strtolower($search).'%');
@@ -200,24 +200,8 @@ class SPBController extends Controller
             ];
         }
         $logService->createLog('download_excel', 'Rekap Nomor SPB', "" );
-        
-        $excelFileName = 'Data SPB';
-        // Generate and return the spreadsheet
-        Excel::create($excelFileName, function($excel) use ($examsArray) {
-            $excel->sheet('sheet1', function($sheet) use ($examsArray) {
-                $sheet->fromArray($examsArray, null, 'A1', false, false);
-            });
-        })->store('xlsx');
-
-        $file = Storage::disk('tmp')->get($excelFileName.'.xlsx');
-
-        $headers = [
-            'Content-Type' => 'Application/Spreadsheet',
-            'Content-Description' => 'File Transfer',
-            'Content-Disposition' => "attachment; filename=$excelFileName.xlsx",
-            'filename'=> "$excelFileName.xlsx"
-        ];
-        return response($file, 200, $headers);
+        $excel = \App\Services\ExcelService::download($examsArray, 'Data SPB');
+        return response($excel['file'], 200, $excel['headers']);
     }
 
     private function getInitialQuery()

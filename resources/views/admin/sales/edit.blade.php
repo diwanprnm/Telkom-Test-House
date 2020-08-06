@@ -60,7 +60,7 @@
 								@if($data->id_kuitansi != '')
 									-
 								@else
-									<a onclick="checkKuitansi('<?php echo $data->id ?>')"> Cek Kuitansi</a>
+									<a onclick="checkKuitansi('{{ $data->id }}')"> Cek Kuitansi</a>
 								@endif
 							</div>
 							<div class="col-md-6">
@@ -68,7 +68,7 @@
 									@if($data->faktur_file != '')
 										-
 									@else
-										<a onclick="checkTaxInvoice('<?php echo $data->id ?>')"> Cek Faktur Pajak</a>
+										<a onclick="checkTaxInvoice('{{ $data->id }}')"> Cek Faktur Pajak</a>
 									@endif
 								</div>
 							</div>

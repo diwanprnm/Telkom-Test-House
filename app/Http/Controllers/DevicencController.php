@@ -28,6 +28,7 @@ class DevicencController extends Controller
      * @return void
      */
 	private const SEARCH = 'search';
+	private const SEARCH2 = "search";
 	private const EXAM = 'examinations';
 	private const DEVICE = 'devices';
 	private const EDI = 'examinations.device_id';
@@ -39,7 +40,46 @@ class DevicencController extends Controller
 	private const DEVICE_MOD = 'devices.model';
 	private const QA_DATE = 'qa_date';
 	private const ADMIN = '/admin/devicenc/';
-	private const TOTBIY = 'examinations.price AS totalBiaya';
+	private const EXAM_COMP = 'examinations.company_id';
+	private const EXAM_TYPE = 'examinations.examination_type_id';
+	private const EXAM_STAT = 'examinations.resume_status';
+	private const EXAM_STATUS = 'examinations.qa_status';
+	private const EXAM_PAS = 'examinations.qa_passed';
+	private const EXAM_CERTI = 'examinations.certificate_status';
+	private const DEVICE_STAT='devices.status';
+	private const BEFORE = 'before_date';
+	private const AFTER = 'after_date';
+	private const EXAM_DATE = 'examinations.qa_date';
+	private const DEVICE_VAL = 'devices.valid_thru';
+	private const COMPANIES_NAME = 'companies.name';
+	
+	public const DATA = ['examinations.price AS totalBiaya',
+	'examinations.spk_code',
+	'examinations.jns_perusahaan',
+	self::EXAM_DATE,
+	'companies.name AS namaPerusahaan',
+	'devices.id as device_id',
+	'devices.name AS namaPerangkat',
+	'devices.mark AS merk',
+	'devices.model AS tipe',
+	'devices.capacity AS kapasitas',
+	'devices.test_reference AS standarisasi',
+	'devices.valid_from',
+	self::DEVICE_VAL,
+	'devices.serial_number',
+	'devices.manufactured_by',
+	self::COMPANIES_NAME,
+	'companies.address',
+	'companies.city',
+	'companies.postal_code',
+	'companies.email',
+	'companies.phone_number',
+	'companies.fax',
+	'companies.npwp_number',
+	'companies.siup_number',
+	'companies.siup_date',
+	'companies.qs_certificate_number',
+	'companies.qs_certificate_date'];
 	
     public function __construct()
     {
@@ -69,104 +109,52 @@ class DevicencController extends Controller
             
             $dev = DB::table($this::EXAM)
 			->join($this::DEVICE, $this::EDI, '=', $this::DEV_ID)
-			->join($this::COMPANIES, 'examinations.company_id', '=', $this::COMP_ID)
-			->select(
-					'examinations.price AS totalBiaya',
-					'examinations.spk_code',
-					'examinations.jns_perusahaan',
-					'examinations.qa_date',
-					'companies.name AS namaPerusahaan',
-					'devices.id as device_id',
-					'devices.name AS namaPerangkat',
-					'devices.mark AS merk',
-					'devices.model AS tipe',
-					'devices.capacity AS kapasitas',
-					'devices.test_reference AS standarisasi',
-					'devices.valid_from',
-					'devices.valid_thru',
-					'devices.serial_number',
-					'devices.manufactured_by',
-					'companies.name',
-					'companies.address',
-					'companies.city',
-					'companies.postal_code',
-					'companies.email',
-					'companies.phone_number',
-					'companies.fax',
-					'companies.npwp_number',
-					'companies.siup_number',
-					'companies.siup_date',
-					'companies.qs_certificate_number',
-					'companies.qs_certificate_date'
+			->join($this::COMPANIES, self::EXAM_COMP, '=', $this::COMP_ID)
+			->select(self::DATA
+					
 					)
-			->where('examinations.examination_type_id','=','1')
-			->where('examinations.resume_status','=','1')
-			->where('examinations.qa_status','=','1')
-			->where('examinations.qa_passed','=','-1')
-			->where('examinations.certificate_status','=','1')
-			->whereDate('examinations.qa_date','>=',$expDate)
-			->where('devices.status', 1)
+			->where(self::EXAM_TYPE,'=','1')
+			->where(self::EXAM_STAT,'=','1')
+			->where(self::EXAM_STATUS,'=','1')
+			->where(self::EXAM_PAS,'=','-1')
+			->where(self::EXAM_CERTI,'=','1')
+			->whereDate(self::EXAM_DATE,'>=',$expDate)
+			->where(self::DEVICE_STAT, 1)
 			;
 
 			$afterDev = 
 			DB::table($this::EXAM)
 			->join($this::DEVICE, $this::EDI, '=', $this::DEV_ID)
-			->join($this::COMPANIES, 'examinations.company_id', '=', $this::COMP_ID)
-			->select(
-					'examinations.price AS totalBiaya',
-					'examinations.spk_code',
-					'examinations.jns_perusahaan',
-					'examinations.qa_date',
-					'companies.name AS namaPerusahaan',
-					'devices.id as device_id',
-					'devices.name AS namaPerangkat',
-					'devices.mark AS merk',
-					'devices.model AS tipe',
-					'devices.capacity AS kapasitas',
-					'devices.test_reference AS standarisasi',
-					'devices.valid_from',
-					'devices.valid_thru',
-					'devices.serial_number',
-					'devices.manufactured_by',
-					'companies.name',
-					'companies.address',
-					'companies.city',
-					'companies.postal_code',
-					'companies.email',
-					'companies.phone_number',
-					'companies.fax',
-					'companies.npwp_number',
-					'companies.siup_number',
-					'companies.siup_date',
-					'companies.qs_certificate_number',
-					'companies.qs_certificate_date'
+			->join($this::COMPANIES, self::EXAM_COMP, '=', $this::COMP_ID)
+			->select(self::DATA
+					
 					)
-			->where('examinations.examination_type_id','=','1')
-			->where('examinations.resume_status','=','1')
-			->where('examinations.qa_status','=','1')
-			->where('examinations.qa_passed','=','-1')
-			->where('examinations.certificate_status','=','1')
+			->where(self::EXAM_TYPE,'=','1')
+			->where(self::EXAM_STAT,'=','1')
+			->where(self::EXAM_STATUS,'=','1')
+			->where(self::EXAM_PAS,'=','-1')
+			->where(self::EXAM_CERTI,'=','1')
 			->where(function($q) use($expDate){
-					$q->whereDate('examinations.qa_date','<',$expDate)
-						->orWhere('devices.status', '-1');
+					$q->whereDate(self::EXAM_DATE,'<',$expDate)
+						->orWhere(self::DEVICE_STAT, '-1');
 				});
-			;
+			
 
-			if ($request->has('before_date')){
-				$dev->where('devices.valid_thru', '<=', $request->get('before_date'));
-				$before = $request->get('before_date');
+			if ($request->has(self::BEFORE)){
+				$dev->where(self::DEVICE_VAL, '<=', $request->get(self::BEFORE));
+				$before = $request->get(self::BEFORE);
 			}
 
-			if ($request->has('after_date')){
-				$dev->where('devices.valid_thru', '>=', $request->get('after_date'));
-				$after = $request->get('after_date');
+			if ($request->has(self::AFTER)){
+				$dev->where(self::DEVICE_VAL, '>=', $request->get(self::AFTER));
+				$after = $request->get(self::AFTER);
 			}
 
             if ($search != null){
         		$dev->where(function($q) use($search){
 					$q->where($this::DEVICE_NAME,'like','%'.$search.'%')
-						->orWhere('companies.name','like','%'.$search.'%')
-						->orWhere('devices.mark','like','%'.$search.'%')
+						->orWhere(self::COMPANIES_NAME,'like','%'.$search.'%')
+						->orWhere(self::DEVICE_MARK,'like','%'.$search.'%')
 						->orWhere($this::DEVICE_MOD,'like','%'.$search.'%');
 				});
 				
@@ -174,7 +162,7 @@ class DevicencController extends Controller
 				$logs = new Logs;
                 $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
                 $logs->action = "Search Device";  
-                $dataSearch = array("search"=>$search); 
+                $dataSearch = array(self::SEARCH2=>$search); 
                 $logs->data = json_encode($dataSearch);
                 $logs->created_by = $currentUser->id;
                 $logs->page = "DEVICE";
@@ -185,8 +173,8 @@ class DevicencController extends Controller
             if ($search2 != null){
         		$afterDev->where(function($q) use($search2){
 					$q->where($this::DEVICE_NAME,'like','%'.$search2.'%')
-						->orWhere('companies.name','like','%'.$search2.'%')
-						->orWhere('devices.mark','like','%'.$search2.'%')
+						->orWhere(self::COMPANIES_NAME,'like','%'.$search2.'%')
+						->orWhere(self::DEVICE_MARK,'like','%'.$search2.'%')
 						->orWhere($this::DEVICE_MOD,'like','%'.$search2.'%');
 				});
 				
@@ -194,7 +182,7 @@ class DevicencController extends Controller
 				$logs = new Logs;
                 $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
                 $logs->action = "Search Device";  
-                $dataSearch = array("search"=>$search); 
+                $dataSearch = array(self::SEARCH2=>$search); 
                 $logs->data = json_encode($dataSearch);
                 $logs->created_by = $currentUser->id;
                 $logs->page = "DEVICE";
@@ -223,8 +211,8 @@ class DevicencController extends Controller
                 ->with('dataAfter', $dataAfter)
                 ->with($this::SEARCH, $search)
                 ->with('search2', $search2)
-                ->with('before_date', $before)
-                ->with('after_date', $after);
+                ->with(self::BEFORE, $before)
+                ->with(self::AFTER, $after);
         }
     }
 
@@ -235,113 +223,53 @@ class DevicencController extends Controller
         // the payments table's primary key, the user's first and last name, 
         // the user's e-mail address, the amount paid, and the payment
         // timestamp.
-
         $search = trim($request->input($this::SEARCH));
-		
-        
         $tab = $request->input('tab');
-        $expDate = Carbon::now()->subMonths(6);
-            
+        $expDate = Carbon::now()->subMonths(6);   
         $dev = DB::table($this::EXAM)
 		->join($this::DEVICE, $this::EDI, '=', $this::DEV_ID)
-		->join($this::COMPANIES, 'examinations.company_id', '=', $this::COMP_ID)
-		->select(
-				'examinations.price AS totalBiaya',
-				'examinations.spk_code',
-				'examinations.jns_perusahaan',
-				'examinations.qa_date',
-				'companies.name AS namaPerusahaan',
-				'devices.id as device_id',
-				'devices.name AS namaPerangkat',
-				'devices.mark AS merk',
-				'devices.model AS tipe',
-				'devices.capacity AS kapasitas',
-				'devices.test_reference AS standarisasi',
-				'devices.valid_from',
-				'devices.valid_thru',
-				'devices.serial_number',
-				'devices.manufactured_by',
-				'companies.name',
-				'companies.address',
-				'companies.city',
-				'companies.postal_code',
-				'companies.email',
-				'companies.phone_number',
-				'companies.fax',
-				'companies.npwp_number',
-				'companies.siup_number',
-				'companies.siup_date',
-				'companies.qs_certificate_number',
-				'companies.qs_certificate_date'
+		->join($this::COMPANIES, self::EXAM_COMP, '=', $this::COMP_ID)
+		->select(self::DATA
+				
 				)
-		->where('examinations.examination_type_id','=','1')
-		->where('examinations.resume_status','=','1')
-		->where('examinations.qa_status','=','1')
-		->where('examinations.qa_passed','=','-1')
-		->where('examinations.certificate_status','=','1')
-		->whereDate('examinations.qa_date','>=',$expDate)
-		->where('devices.status', 1)
+		->where(self::EXAM_TYPE,'=','1')
+		->where(self::EXAM_STAT,'=','1')
+		->where(self::EXAM_STATUS,'=','1')
+		->where(self::EXAM_PAS,'=','-1')
+		->where(self::EXAM_CERTI,'=','1')
+		->whereDate(self::EXAM_DATE,'>=',$expDate)
+		->where(self::DEVICE_STAT, 1)
 		;
-
 		$afterDev = DB::table($this::EXAM)
 		->join($this::DEVICE, $this::EDI, '=', $this::DEV_ID)
-		->join($this::COMPANIES, 'examinations.company_id', '=', $this::COMP_ID)
-		->select(
-				'examinations.price AS totalBiaya',
-				'examinations.spk_code',
-				'examinations.jns_perusahaan',
-				'examinations.qa_date',
-				'companies.name AS namaPerusahaan',
-				'devices.id as device_id',
-				'devices.name AS namaPerangkat',
-				'devices.mark AS merk',
-				'devices.model AS tipe',
-				'devices.capacity AS kapasitas',
-				'devices.test_reference AS standarisasi',
-				'devices.valid_from',
-				'devices.valid_thru',
-				'devices.serial_number',
-				'devices.manufactured_by',
-				'companies.name',
-				'companies.address',
-				'companies.city',
-				'companies.postal_code',
-				'companies.email',
-				'companies.phone_number',
-				'companies.fax',
-				'companies.npwp_number',
-				'companies.siup_number',
-				'companies.siup_date',
-				'companies.qs_certificate_number',
-				'companies.qs_certificate_date'
+		->join($this::COMPANIES, self::EXAM_COMP, '=', $this::COMP_ID)
+		->select(self::DATA
+				
 				)
-		->where('examinations.examination_type_id','=','1')
-		->where('examinations.resume_status','=','1')
-		->where('examinations.qa_status','=','1')
-		->where('examinations.qa_passed','=','-1')
-		->where('examinations.certificate_status','=','1')
+		->where(self::EXAM_TYPE,'=','1')
+		->where(self::EXAM_STAT,'=','1')
+		->where(self::EXAM_STATUS,'=','1')
+		->where(self::EXAM_PAS,'=','-1')
+		->where(self::EXAM_CERTI,'=','1')
 		->where(function($q) use($expDate){
-					$q->whereDate('examinations.qa_date','<',$expDate)
-						->orWhere('devices.status', '-1');
+					$q->whereDate(self::EXAM_DATE,'<',$expDate)
+						->orWhere(self::DEVICE_STAT, '-1');
 				});
-		
-
-		if ($request->has('before_date')){
-			$dev->where('devices.valid_thru', '<=', $request->get('before_date'));
-			$before = $request->get('before_date');
+		if ($request->has(self::BEFORE)){
+			$dev->where(self::DEVICE_VAL, '<=', $request->get(self::BEFORE));
 		}
 
-		if ($request->has('after_date')){
-			$dev->where('devices.valid_thru', '>=', $request->get('after_date'));
-			$after = $request->get('after_date');
+		if ($request->has(self::AFTER)){
+			$dev->where(self::DEVICE_VAL, '>=', $request->get(self::AFTER));
+			
 		}
 
         if ($search != null){
         	if($tab == 'tab-2'){
         		$afterDev->where(function($q) use($search){
 					$q->where($this::DEVICE_NAME,'like','%'.$search.'%')
-						->orWhere('companies.name','like','%'.$search.'%')
-						->orWhere('devices.mark','like','%'.$search.'%')
+						->orWhere(self::COMPANIES_NAME,'like','%'.$search.'%')
+						->orWhere(self::DEVICE_MARK,'like','%'.$search.'%')
 						->orWhere($this::DEVICE_MOD,'like','%'.$search.'%');
 				});
 
@@ -349,8 +277,8 @@ class DevicencController extends Controller
         	}else{
 				$dev->where(function($q) use($search){
 					$q->where($this::DEVICE_NAME,'like','%'.$search.'%')
-						->orWhere('companies.name','like','%'.$search.'%')
-						->orWhere('devices.mark','like','%'.$search.'%')
+						->orWhere(self::COMPANIES_NAME,'like','%'.$search.'%')
+						->orWhere(self::DEVICE_MARK,'like','%'.$search.'%')
 						->orWhere($this::DEVICE_MOD,'like','%'.$search.'%');
 				});
 
@@ -426,14 +354,16 @@ class DevicencController extends Controller
         $logs->page = "Perangkat Tidak Lulus Uji";
         $logs->save();
         // Generate and return the spreadsheet
-        Excel::create('Data Perangkat Tidak Lulus Uji', function($excel) use ($examsArray) {
+		 Excel::create('Data Perangkat Tidak Lulus Uji', function($excel) use ($examsArray)
+		 {
 
             // Set the spreadsheet title, creator, and description
             // Build the spreadsheet, passing in the payments array
             $excel->sheet('sheet1', function($sheet) use ($examsArray) {
                 $sheet->fromArray($examsArray, null, 'A1', false, false);
             });
-        })->export('xlsx'); 
+		 })->export('xlsx'); 
+		
     }
 
     public function moveData($id,$reason = null)

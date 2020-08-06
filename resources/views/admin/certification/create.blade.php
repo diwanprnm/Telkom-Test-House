@@ -23,6 +23,15 @@
 			</div>
 		</section>
 		<!-- end: PAGE TITLE -->
+		@if (count($errors) > 0)
+			<div class="alert alert-danger">
+				<ul>
+					@foreach ($errors->all() as $error)
+						<li>{{ $error }}</li>
+					@endforeach
+				</ul>
+			</div>
+		@endif
 		<!-- start: RESPONSIVE TABLE -->
 		<div class="container-fluid container-fullw bg-white">
 			<div class="col-md-12">
@@ -46,7 +55,7 @@
 									<label>
 										Gambar *
 									</label>
-									<input type="file" name="image" class="form-control" accept="image/*" required>
+									<input type="file" name="image" class="form-control" accept="image/jpg, image/jpeg, image/png" required>
 								</div>
 							</div>
 	                        <div class="col-md-6">

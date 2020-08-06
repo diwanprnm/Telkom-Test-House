@@ -32,17 +32,17 @@
 			<!-- end excel -->
 				<div class="col-md-12">
 					<div class="table-responsive">
-						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer"><caption></caption>
 							<thead>
 								<tr>
-									<th class="center">No</th>
-									<th class="center">Tanggal FIX</th>
-									<th class="center">Nama Perusahaan</th>
-									<th class="center">Nama Perangkat</th>
-									<th class="center">Merk</th>
-									<th class="center">Tipe</th>
-									<th class="center">Kapasitas/Kecepatan</th>
-									<th class="center">Hasil Uji Fungsi</th>
+									<th class="center" scope="col">No</th>
+									<th class="center" scope="col">Tanggal FIX</th>
+									<th class="center" scope="col">Nama Perusahaan</th>
+									<th class="center" scope="col">Nama Perangkat</th>
+									<th class="center" scope="col">Merk</th>
+									<th class="center" scope="col">Tipe</th>
+									<th class="center" scope="col">Kapasitas/Kecepatan</th>
+									<th class="center" scope="col">Hasil Uji Fungsi</th>
 								</tr>
 							</thead>
 							<tbody>

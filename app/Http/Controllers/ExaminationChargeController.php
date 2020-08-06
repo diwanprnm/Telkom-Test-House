@@ -50,18 +50,18 @@ class ExaminationChargeController extends Controller
         $notFound = null;
         $message = null;
         $paginate = 10;
-        $search = trim($request->input($this::SEARCH));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         $category = '';
         $status = -1;
         
-        if ($search != null){
+        if ($search){
             $examinationCharge = ExaminationCharge::whereNotNull($this::CREATED_AT)
                 ->where($this::DEVICE_NAME,'like','%'.$search.'%')
                 ->orWhere('stel','like','%'.$search.'%')
                 ->orderByRaw('category, device_name')
                 ->paginate($paginate);
 
-                $logService->createLog('Search Charge', $this::EXAMINATION_CHARGE, json_encode(array("search"=>$search)) );
+                $logService->createLog('Search Charge', $this::EXAMINATION_CHARGE, json_encode(array(self::SEARCH=>$search)) );
         }else{
             $query = ExaminationCharge::whereNotNull($this::CREATED_AT);
 
@@ -141,7 +141,12 @@ class ExaminationChargeController extends Controller
         }
     }
 
-
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function show($id)
     {
 

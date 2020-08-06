@@ -71,7 +71,7 @@
             <center>
                 <br>
                 <span style="color:#ffffff">Please wait ....</span>
-                <img src='{{ asset("images/loading.gif") }}'/>
+                <img src='{{ asset("images/loading.gif") }}' alt=""/>
             </center>
         </div>
     </div>
@@ -96,17 +96,17 @@
 						Tanggal SPB *
 					</label>
 					<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-					<?php
+					@php
 						if($spb_date == '' or $spb_date == '0000-00-00' or $spb_date == NULL){
 							$timestamp = date('Y-m-d');
 						}else{
 							$timestamp = date('Y-m-d', strtotime($spb_date));
 						}
-					?>
-						<input type="text" name="spb_date" id="spb_date" class="form-control" value="<?php echo $timestamp;?>" required readonly/>
+					@endphp
+						<input type="text" name="spb_date" id="spb_date" class="form-control" value="{{ $timestamp }}" required readonly/>
 						<span class="input-group-btn">
 							<button type="button" class="btn btn-default">
-								<i class="glyphicon glyphicon-calendar"></i>
+								<em class="glyphicon glyphicon-calendar"></empty>
 							</button>
 						</span>
 					</p>
@@ -129,15 +129,16 @@
 			@endif
 		</div>
 		<table width=100%>
+			<caption></caption>
 			<tbody>
 				<tr>
-					<td align="center">
+					<th align="center" scope="col">
 						<label for="nama_perangkat">Nama Perangkat *</label>
-					</td>
+					</th>
 					<td align="center">
 						<label for="biaya">Biaya *</label>
 					</td>
-					<td style="width:40px;"><a  style="width:40px;" value='Add More' class='del btn btn-success btn-flat' onclick='addAppend()'><i id='icon_add' class='fa fa-plus'/></a></td>
+					<td style="width:40px;"><a  style="width:40px;" value='Add More' class='del btn btn-success btn-flat' onclick='addAppend()'><em id='icon_add' class='fa fa-plus'></em></a></td>
 				</tr>
 				<tr>
 					<td>

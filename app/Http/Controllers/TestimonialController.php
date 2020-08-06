@@ -39,9 +39,9 @@ class TestimonialController extends Controller
     {
         $noDataFound = '';
         $paginate = 10;
-        $search = trim($request->input('search'));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         
-        if ($search != null){
+        if ($search){
             $testimonials = Testimonial::whereNotNull(self::CREATED_AT)
                 ->with('examination.user')
                 ->with('examination.company')

@@ -174,13 +174,13 @@
 								@if(count($data)>0)
 									@foreach($data as $keys => $item)
 										<tr>
-											<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
+											<td class="center">{{ $no+(($data->currentPage()-1)*$data->perPage()) }}</td>
 											<td class="center">{{ $item->company_name }}</td>
 											<td class="center">{{ $item->created_at }}</td>
 											<td class="center">{{ $item->invoice }}</td>
-											<td class="center"><?php echo number_format($item->cust_price_payment, 0, '.', ','); ?></td>
+											<td class="center">{{ number_format($item->cust_price_payment, 0, '.', ',') }}</td>
 											<td class="center">
-												<?php
+												@php
 													switch ($item->payment_status) {
 														case -1:
 															echo "Paid (decline)";
@@ -201,8 +201,7 @@
 															# code...
 															break;
 													}
-													?>
-
+												@endphp
 											</td>
 											<td class="center">{{ ($item->payment_method == 1)?'ATM':'Kartu Kredit'}}</td> 
 											<td class="center">{{ $item->stel_code }}</td>
@@ -223,8 +222,10 @@
 													<a href="{{URL::to('admin/sales/'.$item->id)}}" class="btn btn-wide btn-primary btn-margin" tooltip-placement="top" tooltip="Detail">Detail </a>
 												</div>
 											</td>
-										</tr> 
-									<?php $no++ ?>
+										</tr>
+									@php
+										$no++
+									@endphp
 									@endforeach
 								@else
 									<tr>
@@ -239,7 +240,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								<?php echo $data->appends(array('payment_status' => $payment_status,'search' => $search,'before_date' => $before_date,'after_date' => $after_date))->links(); ?>
+								{{ $data->appends(array('payment_status' => $payment_status,'search' => $search,'before_date' => $before_date,'after_date' => $after_date))->links() }}
 							</div>
 						</div>
 					</div>

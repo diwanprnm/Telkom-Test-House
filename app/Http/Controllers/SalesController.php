@@ -45,13 +45,15 @@ class SalesController extends Controller
     private const APP_URL_API_TPN = 'app.url_api_tpn';
     private const AUTHORIZATION = 'Authorization';
     private const BASE_URI = 'base_uri';
-    private const CONTENT_TYPE = 'Content-Type: application/octet-stream';
+    //private const CONTENT_TYPE = 'Content-Type: application/octet-stream'
+    private const CONTENT_DESCRIPTION = 'File Transfer';
+    private const CONTENT_TYPE_IMAGE = 'image/jpeg';
     private const ERROR = 'error';
     private const HEADERS = 'headers';
     private const HTTP_ERROR = 'http_errors';
     private const IS_READ = 'is_read';
     private const LOGIN = 'login';
-    private const MEDIA_STEL = '/media/stel/';
+    //private const MEDIA_STEL = '/media/stel/'
     private const MESSAGE = 'message';
     private const PAYMENT_DETAIL = 'payment_detail/';
     private const PAYMENT_STATUS = 'payment_status';
@@ -91,7 +93,7 @@ class SalesController extends Controller
     }
 
     public function index(Request $request)
-    { 
+    {
         //initial var
         $message = null;
         $paginate = 10;
@@ -274,10 +276,10 @@ class SalesController extends Controller
         $file = Storage::disk('tmp')->get($excelFileName.'.xlsx');
 
         $headers = [
-            'Content-Type' => 'Application/Spreadsheet',
-            'Content-Description' => 'File Transfer',
-            'Content-Disposition' => "attachment; filename=$excelFileName.xlsx",
-            'filename'=> "$excelFileName.xlsx"
+            'Content-Type' => 'application/vnd.ms-excel',
+            'Content-Description' => self::CONTENT_DESCRIPTION,
+            'Content-Disposition' => "attachment; filename=\"$excelFileName.xlsx\"",
+            'filename'=> "\"$excelFileName.xlsx\""
         ];
         return response($file, 200, $headers);
     }
@@ -449,7 +451,7 @@ class SalesController extends Controller
         
         if($STELSales[0]->BILLING_ID && !$STELSales[0]->INVOICE_ID){
             Session::flash(self::ERROR, "Can't upload attachment. Undefined INVOICE_ID!");
-            return redirect('/admin/sales'.'/');
+            return redirect(self::ADMIN_SALES.'/');
         }else{
             return view('admin.sales.upload')
                 ->with('data', $stel)
@@ -506,7 +508,7 @@ class SalesController extends Controller
             $fileMinio = Storage::disk('minio')->get("stel/$stel->stel_sales_id/$stel->attachment");
 
             $headers = [
-                'Content-Type' => 'image/jpeg', 
+                'Content-Type' => self::CONTENT_TYPE_IMAGE,
                 'Content-Description' => 'File Transfer',
                 'Content-Disposition' => "attachment; filename={$stel->attachment}",
                 'filename'=> $stel->attachment
@@ -524,10 +526,10 @@ class SalesController extends Controller
             $fileMinio = Storage::disk('minio')->get("stelAttach/$stel->id/$stel->attachment");
 
             $headers = [
-                'Content-Type' => 'image/jpeg', 
-                'Content-Description' => 'File Transfer',
-                'Content-Disposition' => "attachment; filename={$stel->attachment}",
-                'filename'=> $stel->attachment
+                'Content-Type' => 'application/pdf', 
+                'Content-Description' => self::CONTENT_DESCRIPTION,
+                'Content-Disposition' => "attachment; filename=\"{$stel->attachment}\"",
+                'filename'=> "\"$stel->attachment\""
             ];
             
             return response($fileMinio, 200, $headers);
@@ -542,22 +544,14 @@ class SalesController extends Controller
             $fileMinio = Storage::disk('minio')->get("stel/$stel->id/$stel->id_kuitansi");
 
             $headers = [
-                'Content-Type' => 'image/jpeg', 
-                'Content-Description' => 'File Transfer',
+                'Content-Type' => self::CONTENT_TYPE_IMAGE, 
+                'Content-Description' => self::CONTENT_DESCRIPTION,
                 'Content-Disposition' => "attachment; filename={$stel->id_kuitansi}",
                 'filename'=> $stel->id_kuitansi
             ];
             
             return response($fileMinio, 200, $headers);
         }
-
-        // if ($stel){
-        //     $file = public_path().self::MEDIA_STEL.$stel->id."/".$stel->id_kuitansi;
-        //     $headers = array(
-        //       self::CONTENT_TYPE,
-        //     );
-        //     return Response::file($file, $headers);
-        // }
     }
 
     public function downloadfakturstel($id) //download faktur
@@ -568,23 +562,14 @@ class SalesController extends Controller
             $fileMinio = Storage::disk('minio')->get("stel/$stel->id/$stel->faktur_file");
 
             $headers = [
-                'Content-Type' => 'image/jpeg', 
-                'Content-Description' => 'File Transfer',
+                'Content-Type' => self::CONTENT_TYPE_IMAGE, 
+                'Content-Description' => self::CONTENT_DESCRIPTION,
                 'Content-Disposition' => "attachment; filename={$stel->faktur_file}",
                 'filename'=> $stel->faktur_file
             ];
             
             return response($fileMinio, 200, $headers);
         }
-
-        // if ($stel){
-        //     $file = public_path().self::MEDIA_STEL.$stel->id."/".$stel->faktur_file;
-        //     $headers = array(
-        //       self::CONTENT_TYPE,
-        //       'Content-Disposition' => 'inline; filename="'.$stel->faktur_file.'"',
-        //     );
-        //     return Response::file($file, $headers);
-        // }
     }
 
     public function generateKuitansi(Request $request) {
@@ -603,8 +588,6 @@ class SalesController extends Controller
             $INVOICE_ID = $STELSales->INVOICE_ID;
             $res_invoice = $client->request('GET', self::V1_INVOICE.$INVOICE_ID);
             $invoice = json_decode($res_invoice->getBody());
-
-            dd($invoice);
             
             if($INVOICE_ID && $invoice && $invoice->status){
                 // Save Kuitansi
@@ -765,7 +748,7 @@ class SalesService
 
     public function search(Request $request, $dataSales)
     {
-        $request->has(self::SEARCH) ? $search = trim($request->input(self::SEARCH)) : $search = '';
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         if($search!=''){
             $dataSales = $dataSales->where('invoice','like','%'.$search.'%')
             ->orWhere('companies.name', 'like', '%'.$search.'%')
@@ -785,8 +768,7 @@ class SalesService
             if($status_faktur == "received"){
                 /*SAVE FAKTUR PAJAK*/
                 $name_file = 'faktur_stel_'.$filename.'.pdf';
-
-                $path_file = public_path().self::MEDIA_STEL.$request->input('id');
+                $path_file = storage_path('tmp/');
                 if (!file_exists($path_file)) {
                     mkdir($path_file, 0775);
                 }
@@ -794,7 +776,11 @@ class SalesService
                 $response = $client->request('GET', self::V1_INVOICE.$INVOICE_ID.'/taxinvoice/pdf');
                 $stream = (String)$response->getBody();
 
-                if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
+                if(file_put_contents($path_file.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment; ".$stream)){
+                    $fileFaktur = Storage::disk('tmp')->get($name_file);
+                    Storage::disk(self::MINIO)->put("stel/$request->input('id')/$name_file", $fileFaktur );
+                    File::delete(storage_path("tmp/$name_file"));
+
                     $STELSales->faktur_file = $name_file;
                     $STELSales->save();
                     $result = "Faktur Pajak Berhasil Disimpan.";
@@ -831,15 +817,18 @@ class SalesService
             if($status_faktur == "received"){
                 /*SAVE KUITANSI*/
                 $name_file = 'kuitansi_stel_'.$INVOICE_ID.'.pdf';
-
-                $path_file = public_path().self::MEDIA_STEL.$request->input('id');
+                $path_file = storage_path('tmp/');
                 if (!file_exists($path_file)) {
                     mkdir($path_file, 0775);
                 }
                 $response = $client->request('GET', self::V1_INVOICE.$INVOICE_ID.'/exportpdf');
                 $stream = (String)$response->getBody();
 
-                if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
+                if(file_put_contents($path_file.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment; ".$stream)){
+                    $fileKuitansi = Storage::disk('tmp')->get($name_file);
+                    Storage::disk(self::MINIO)->put("stel/$request->input('id')/$name_file", $fileKuitansi );
+                    File::delete(storage_path("tmp/$name_file"));
+
                     $STELSales->id_kuitansi = $name_file;
                     $STELSales->save();
                     $result = "Kuitansi Berhasil Disimpan.";
@@ -920,7 +909,7 @@ class SalesService
                 $file = $request->file(self::STEL_FILE)[$i];
                 $name_file = 'stel_file_'.$request->file(self::STEL_FILE)[$i]->getClientOriginalName();
 
-                $is_uploaded = Storage::disk('minio')->put("stelAttach/".$STELSalesDetail->id."/$name_file",$file->__toString());
+                $is_uploaded = Storage::disk('minio')->put("stelAttach/".$STELSalesDetail->id."/$name_file", file_get_contents($file));
                 $path_file = Storage::disk('minio')->url("stelAttach/".$STELSalesDetail->id."/$name_file");
 
                 if($is_uploaded){

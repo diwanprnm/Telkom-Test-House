@@ -22,18 +22,18 @@ class AnalyticController extends Controller
 		$search = null;
         $currentUser = Auth::user();
 		$now = date('Y-m-d H:i:s');
-		$datenow = date($this::YMD);
-		$dateyesterday = date($this::YMD,strtotime("-1 days"));
-		$datelastweek = date($this::YMD,strtotime("-7 days"));
+		$datenow = date('Y-m-d');
+		$dateyesterday = date('Y-m-d',strtotime("-1 days"));
+		$datelastweek = date('Y-m-d',strtotime("-7 days"));
 		$thisDay = date('d');
 		$thisMonth = date('m');
 		$thisYear = date('Y');
-			$datestring=date($this::YMD).' first day of last month';
+			$datestring=date('Y-m-d').' first day of last month';
 			$dt=date_create($datestring);
 		$lastMonth = $dt->format('m');
 		$lastYear = $dt->format('Y');
 		
-		$d=cal_days_in_month(CAL_GREGORIAN,$thisMonth,$thisYear);
+	
 
         if ($currentUser){
 			/*TODAY*/
@@ -41,8 +41,7 @@ class AnalyticController extends Controller
 				SELECT * FROM tracker_log l, tracker_route_paths rp 
 				WHERE l.route_path_id = rp.id 
 				AND rp.path NOT LIKE '%admin%' AND rp.path NOT LIKE '%mylogsbl%'
-				AND DATE(l.created_at) = '".$datenow."'
-			");
+				AND DATE(l.created_at) = '".$datenow."'	");
 				$log_now = count($log);
 			$sess = DB::select("
 				SELECT DISTINCT(client_ip) FROM tracker_sessions WHERE DATE(created_at) = '".$datenow."'

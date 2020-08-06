@@ -53,16 +53,16 @@ class CertificationController extends Controller
 
         $message = null;
         $paginate = 10;
-        $search = trim($request->input(self::SEARCH));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         
-        if ($search != null){
+        if ($search){
             $certifications = Certification::whereNotNull(self::CREATED_AT)
                 ->where(self::TITLE,'like','%'.$search.'%')
                 ->where('type',1)
                 ->orderBy(self::CREATED_AT)
                 ->paginate($paginate);
                 //Create search log
-                $logService->createLog('Search Certification', self::CERTIFICATION, json_encode(array("search"=>$search)) );
+                $logService->createLog('Search Certification', self::CERTIFICATION, json_encode(array(self::SEARCH=>$search)) );
         }else{
             $certifications = Certification::whereNotNull(self::CREATED_AT)
                 ->where('type',1)
@@ -99,6 +99,12 @@ class CertificationController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            self::TITLE => 'required',
+            self::IS_ACTIVE => 'required',
+            self::IMAGE => 'required|mimes:jpg,jpeg,png'
+        ]);
+
         $logService = new LogService();
         $currentUser = Auth::user();
 
@@ -168,6 +174,10 @@ class CertificationController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->validate($request, [
+            self::IMAGE => 'mimes:jpg,jpeg,png'
+        ]);
+
         $currentUser = Auth::user();
         $certification = Certification::find($id);
         $logService = new LogService();
