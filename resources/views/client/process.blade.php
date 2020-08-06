@@ -47,12 +47,12 @@
 			<div class="row">
 				<div class="col-md-12 container-list">
 					<div class="col-md-4">
-						<img src="{{asset('template-assets/img/portfolio/LabCPE.jpg')}}">
+						<img src="{{asset('template-assets/img/portfolio/LabCPE.jpg')}}" alt="gambar portofolio lab CPE">
 					</div>
 					<div class="col-md-8">
 						<h4>Quality Assurance (QA)</h4>
 						<p>{{ trans('translate.subtitle_qa_process') }}</p>
-							<a href="#videoStory1" class="btn btn-default btn-sm videoLink">{{ trans('translate.video_guide') }} <i class="fa fa-play-circle" aria-hidden="true">&nbsp;</i></a>
+							<a href="#videoStory1" class="btn btn-default btn-sm videoLink">{{ trans('translate.video_guide') }} <em class="fa fa-play-circle" aria-hidden="true">&nbsp;</em></a>
 						@if($qs_certificate_date == 1)
 							<a class="button button-3d nomargin btn-sky" data-toggle="modal" data-target="#modal_qs_certificate_date">{{ trans('translate.process') }}</a>
 						@else
@@ -64,7 +64,7 @@
 						@endif
 					</div>
 					<div id="videoStory1" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
-						<iframe width="853" height="480" src="{{ $qa_video_url }}" frameborder="0" allowfullscreen></iframe>
+						<iframe title="video story 1" width="853" height="480" src="{{ $qa_video_url }}" frameborder="0" allowfullscreen></iframe>
 					</div> 
 					<div id="modal_status_layanan_qa" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
 				      <div class="modal-dialog modal-lg">
@@ -81,9 +81,9 @@
 				                    	<h2>{{ trans('translate.message_close_lab') }}</h2>
 				                    @else
 				                    	<p>
-				                    		<b style="font-size: 130%;">{{ trans('translate.message_close_lab_separate') }}</b><br>
+				                    		<strong style="font-size: 130%;">{{ trans('translate.message_close_lab_separate') }}</strong><br>
 				                    		@foreach($data_layanan as $data)
-				                    			<i class="fa fa-angle-right"></i> {{ $data->name }} {{ trans('translate.close_until') }} {{ date('d M Y', strtotime($data->close_until)) }}.<br>
+				                    			<em class="fa fa-angle-right"></em> {{ $data->name }} {{ trans('translate.close_until') }} {{ date('d M Y', strtotime($data->close_until)) }}.<br>
 				                    		@endforeach
 				                    	</p>
 				                    	<h4>{{ trans('translate.available_stel') }}</h4>
@@ -116,12 +116,12 @@
 
 				<div class="col-md-12 container-list">
 					<div class="col-md-4">
-						<img src="{{asset('template-assets/img/portfolio/LabEnergi.jpg')}}">
+						<img src="{{asset('template-assets/img/portfolio/LabEnergi.jpg')}}" alt="gambar portofolio lab energi">
 					</div>
 					<div class="col-md-8">
 						<h4>Type Approval (TA)</h4>
 						<p>{{ trans('translate.subtitle_ta_process') }}</p>
-						<a href="#videoStory2" class="btn btn-default btn-sm videoLink">{{ trans('translate.video_guide') }} <i class="fa fa-play-circle" aria-hidden="true">&nbsp;</i></a>
+						<a href="#videoStory2" class="btn btn-default btn-sm videoLink">{{ trans('translate.video_guide') }} <em class="fa fa-play-circle" aria-hidden="true">&nbsp;</em></a>
 						@if($qs_certificate_date == 1)
 							<a class="button button-3d nomargin btn-sky" data-toggle="modal" data-target="#modal_qs_certificate_date">{{ trans('translate.process') }}</a>
 						@else
@@ -133,7 +133,7 @@
 						@endif
 					</div>
 					<div id="videoStory2" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
-						<iframe width="853" height="480" src="{{ $ta_video_url }}" frameborder="0" allowfullscreen></iframe>
+						<iframe title="video story 2" width="853" height="480" src="{{ $ta_video_url }}" frameborder="0" allowfullscreen></iframe>
 					</div>
 					<div id="modal_status_layanan_ta" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
 				      <div class="modal-dialog modal-lg">
@@ -150,9 +150,9 @@
 				                    	<h2>{{ trans('translate.message_close_lab') }}</h2>
 				                    @else
 				                    	<p>
-				                    		<b style="font-size: 130%;">{{ trans('translate.message_close_lab_separate') }}</b><br>
+				                    		<Strong style="font-size: 130%;">{{ trans('translate.message_close_lab_separate') }}</strong><br>
 				                    		@foreach($data_layanan as $data)
-				                    			<i class="fa fa-angle-right"></i> {{ $data->name }} {{ trans('translate.close_until') }} {{ date('d M Y', strtotime($data->close_until)) }}.<br>
+				                    			<em class="fa fa-angle-right"></em> {{ $data->name }} {{ trans('translate.close_until') }} {{ date('d M Y', strtotime($data->close_until)) }}.<br>
 				                    		@endforeach
 				                    	</p>
 				                    	<h4>{{ trans('translate.available_stel') }}</h4>
@@ -185,12 +185,12 @@
 
 				<div class="col-md-12 container-list">
 					<div class="col-md-4">
-						<img src="{{asset('template-assets/img/portfolio/LabKabel.jpg')}}">
+						<img src="{{asset('template-assets/img/portfolio/LabKabel.jpg')}}" alt="protofolio lab kabel">
 					</div>
 					<div class="col-md-8">
 						<h4>Voluntary Test (VT)</h4>
 						<p>{{ trans('translate.subtitle_vt_process') }}</p>
-						<a href="#videoStory3" class="btn btn-default btn-sm videoLink">{{ trans('translate.video_guide') }} <i class="fa fa-play-circle" aria-hidden="true">&nbsp;</i></a>
+						<a href="#videoStory3" class="btn btn-default btn-sm videoLink">{{ trans('translate.video_guide') }} <em class="fa fa-play-circle" aria-hidden="true">&nbsp;</em></a>
 						@if($qs_certificate_date == 1)
 							<a class="button button-3d nomargin btn-sky" data-toggle="modal" data-target="#modal_qs_certificate_date">{{ trans('translate.process') }}</a>
 						@else
@@ -202,7 +202,7 @@
 						@endif
 					</div>
 					<div id="videoStory3" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
-						<iframe width="853" height="480" src="{{ $vt_video_url }}" frameborder="0" allowfullscreen></iframe>
+						<iframe width="853" height="480" src="{{ $vt_video_url }}" frameborder="0" allowfullscreen title="video story"></iframe>
 					</div>
 					<div id="modal_status_layanan_vt" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
 				      <div class="modal-dialog modal-lg">
@@ -219,9 +219,9 @@
 				                    	<h2>{{ trans('translate.message_close_lab') }}</h2>
 				                    @else
 				                    	<p>
-				                    		<b style="font-size: 130%;">{{ trans('translate.message_close_lab_separate') }}</b><br>
+				                    		<strong style="font-size: 130%;">{{ trans('translate.message_close_lab_separate') }}</strong><br>
 				                    		@foreach($data_layanan as $data)
-				                    			<i class="fa fa-angle-right"></i> {{ $data->name }} {{ trans('translate.close_until') }} {{ date('d M Y', strtotime($data->close_until)) }}.<br>
+				                    			<em class="fa fa-angle-right"></em> {{ $data->name }} {{ trans('translate.close_until') }} {{ date('d M Y', strtotime($data->close_until)) }}.<br>
 				                    		@endforeach
 				                    	</p>
 				                    	<h4>{{ trans('translate.available_stel') }}</h4>
@@ -254,7 +254,7 @@
 
 				<div class="col-md-12 container-list">
 					<div class="col-md-4">
-						<img src="{{asset('template-assets/img/portfolio/LabTransmisi.jpg')}}">
+						<img src="{{asset('template-assets/img/portfolio/LabTransmisi.jpg')}}" alt="portofolio lab transmisi">
 					</div>
 					<div class="col-md-8">
 						<h4>Calibration (CAL)</h4>
@@ -284,9 +284,9 @@
 				                    	<h2 align="justify">{{ trans('translate.message_close_lab') }}</h2>
 				                    @else
 				                    	<p>
-				                    		<b style="font-size: 130%;">{{ trans('translate.message_close_lab_separate') }}</b><br>
+				                    		<strong style="font-size: 130%;">{{ trans('translate.message_close_lab_separate') }}</strong><br>
 				                    		@foreach($data_layanan as $data)
-				                    			<i class="fa fa-angle-right"></i> {{ $data->name }} {{ trans('translate.close_until') }} {{ date('d M Y', strtotime($data->close_until)) }}.<br>
+				                    			<em class="fa fa-angle-right"></em> {{ $data->name }} {{ trans('translate.close_until') }} {{ date('d M Y', strtotime($data->close_until)) }}.<br>
 				                    		@endforeach
 				                    	</p>
 				                    	<h4>{{ trans('translate.available_stel') }}</h4>

@@ -50,6 +50,7 @@
 										<div id="wizard" class="swMain">
 											<div class="form-group">
 												<table class="table table-condensed">
+													<caption></caption>
 													<thead>
 														<tr>
 															<th colspan="3">{{ trans('translate.examination_upload_payment') }}</th>

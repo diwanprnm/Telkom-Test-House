@@ -2,8 +2,8 @@
 	<div class="col-md-12">
 		<div class="table-responsive font-table">
 			<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1">
+				<caption></caption>
 				<thead>
-					<caption></caption>
 					<tr>
 						<th class="center" scope="col" >{{ trans('translate.stel_no') }}</th>
 						<th class="center" scope="col" >{{ trans('translate.stel_name') }}</th>
