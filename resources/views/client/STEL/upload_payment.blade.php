@@ -35,6 +35,7 @@
 			@endif
 						<div class="form-group">
 							<table class="table table-condensed">
+								<caption></caption>
 								<thead>
 									<tr>
 										<th colspan="3" scope="col">{{ trans('translate.examination_upload_payment') }}</th>

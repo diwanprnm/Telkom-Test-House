@@ -1018,6 +1018,7 @@
 								</div>
 								<div class="form-group">
 									<table class="table table-bordered">
+										<caption></caption>
 										<thead>
 											<tr>
 												<th colspan="5" scope="colgroup">Riwayat Revisi Laporan Uji</th>

@@ -140,8 +140,8 @@ uncomment this part if you haven't added this code anywhere else
 				@endforeach
 			
 			</div>
-			<div id="slider-arrow-left"><i class="icon-angle-left"></i></div>
-			<div id="slider-arrow-right"><i class="icon-angle-right"></i></div>
+			<div id="slider-arrow-left"><em class="icon-angle-left"></em></div>
+			<div id="slider-arrow-right"><em class="icon-angle-right"></em></div>
 			<div id="slide-number"><div id="slide-number-current"></div><span>/</span><div id="slide-number-total"></div></div>
 		</div>
 
@@ -188,12 +188,13 @@ uncomment this part if you haven't added this code anywhere else
 
 				<div id="tutorial" class="clear"></div>
 
-				<div class="divider"><i class="icon-circle"></i></div>
+				<div class="divider"><em class="icon-circle"></em></div>
 				<div id="section-playlist" class="title-center page-section">
 					<h2>{{ trans('translate.video_tutorial') }}</h2>
 				</div>
 				<div id="root">
-				  <iframe          
+				  <iframe
+						  title="video tutorial"
 				          src="{{ $playlist_url }}&listType=playlist&index=0" 
 				          frameborder="0" 
 				          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
@@ -205,7 +206,7 @@ uncomment this part if you haven't added this code anywhere else
 				
 				<div class="clear"></div>
 
-				<div class="divider"><i class="icon-circle"></i></div>
+				<div class="divider"><em class="icon-circle"></em></div>
 				<div id="section-partner" class="heading-block title-center page-section">
 					<h2>{{ trans('translate.our_partner') }}</h2>
 				</div>
@@ -325,7 +326,7 @@ uncomment this part if you haven't added this code anywhere else
 	</section><!-- #content end -->
 	@if($data_pop_up_information)
 		<a class="image-popup-no-margins" href="media/popupinformation/<?php echo $data_pop_up_information[0]->image?>" style = "display: none;">
-			<img src="media/popupinformation/<?php echo $data_pop_up_information[0]->image?>" style="width: 100%; height: auto;">
+			<img src="media/popupinformation/<?php echo $data_pop_up_information[0]->image?>" style="width: 100%; height: auto;" alt="pop-up information">
 		</a>
 	@endif
 		<!-- <div id="modal_notice" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">

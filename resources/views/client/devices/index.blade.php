@@ -33,7 +33,7 @@
 							<div class="col-md-6 col-xs-12 form-group">
 								<span class="input-icon input-icon-right search-table"> 
 									<input id="search_device" type="text" placeholder="{{ trans('translate.search_dev') }}" id="form-field-17" class="form-control " value="{{ $search }}">
-									<i class="ti-search"></i>
+									<em class="ti-search"></em>
 								</span>
 							</div>
 						</div>
@@ -55,6 +55,7 @@
 							<div class="col-md-12">
 								<div class="table-responsive font-table">
 									<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1" style="font-size: smaller;">
+										<caption></caption>
 										<thead>
 											<tr>
 												<th class="center" scope="col">{{ trans('translate.devic_test_passed_no') }}</th>
@@ -91,8 +92,9 @@
 											<?php }else{?>
 											<div class="table-responsive font-table">
 												<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1">
+													<caption></caption>
 													<thead>
-														<tr align="center">
+														<tr class="center">
 															<th colspan="3" style="text-align: center;">{{ trans('translate.data_not_found') }}</th>
 														</tr>
 													</thead>

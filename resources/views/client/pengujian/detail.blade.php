@@ -57,11 +57,12 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title"><i class="fa fa-eyes-open"></i> {{ trans('translate.download_certificate_message') }} </h4>
+					<h4 class="modal-title"><em class="fa fa-eyes-open"></em> {{ trans('translate.download_certificate_message') }} </h4>
 				</div>
 				
 				<div class="modal-body">
 					<table width=100%>
+						<caption></caption>
 						<tr>
 							<th scope="col">
 								<div class="form-group">
@@ -74,9 +75,10 @@
 				</div><!-- /.modal-content -->
 				<div class="modal-footer">
 					<table width=100%>
+						<caption></caption>
 						<tr>
 							<th scope="col">
-								<button type="button" id="submit-testimonial" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
+								<button type="button" id="submit-testimonial" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
 							</th>
 						</tr>
 					</table>
@@ -102,6 +104,7 @@
 											<div id="wizard" class="swMain">
 												<div class="form-group">
 													<table class="table table-condensed">
+														<caption></caption>
 														<thead>
 															<tr>
 																<th colspan="2" scope="colgroup">{{ trans('translate.examination_date') }}</th>
@@ -139,6 +142,7 @@
 											<div id="wizard" class="swMain">
 												<div class="form-group">
 													<table class="table table-condensed">
+														<caption></caption>
 														<tbody>
 															<tr>
 																<td class="left">{{ trans('translate.examination_spk_code') }} : {{ $data[0]->spk_code }}</td>
@@ -165,6 +169,7 @@
 							@foreach($data as $item)
 								<div class="form-group">
 									<table class="table table-condensed">
+										<caption></caption>
 										<thead>
 											<tr>
 												<th colspan="3">{{ trans('translate.service_application') }}</th>
@@ -351,6 +356,7 @@
 						<div id="wizard" class="swMain">
 							<div class="form-group">
 								<table class="table table-condensed">
+									<caption></caption>
 									<thead>
 										<tr>
 											<th colspan="4" scope="colgroup">{{ trans('translate.examination_history') }}</th>
@@ -444,7 +450,8 @@
                     </p>
                 </div>
                 <div class="row">
-                    <table id="table_kuisioner" style="width:100%; padding: 2px;" border="1">
+					<table id="table_kuisioner" style="width:100%; padding: 2px; border: 1px">
+					  <caption></caption>
                       <tr>
                         <th scope="col">No</th>
                         <th scope="col">Kriteria</th> 
@@ -490,7 +497,8 @@
                 <div class="row">
                     <p>Pada tahap ini, silahkan mengisi nilai dengan sekala 1-7 untuk nilai ekspetasi awal dan nilai performansi. Kastemer diharapkan mengisi kolom nilai dan setiap kriteria, serta nilai performansi/kenyataan dari setiap kriteria</p>
                     <p>Nilai 7 adalah penilaian Sangat Baik atau Sangat Setuju dan nilai 1 adalah penilaian Sangat Tidak Baik atau Sangat Tidak Setuju. Kastemer diharapkan dapat memberikan nilai dengan angka bulat.</p>
-                    <table id="table_kuisioner" style="width:100%; padding: 2px;" border="1">
+					<table id="table_kuisioner" style="width:100%; padding: 2px; border: 1px" border="1">
+					  <caption></caption>
                       <tr>
                         <th scope="col">No</th>
                         <th scope="col">Kriteria</th> 
@@ -675,7 +683,8 @@
                     </p>
                 </div>
                 <div class="row">
-                    <table id="table_kuisioner" style="width:100%; padding: 2px; border:1px">
+					<table id="table_kuisioner" style="width:100%; padding: 2px; border:1px">
+					  <caption></caption>
                       <tr>
                         <th scope="col">NO</th>
                         <th scope="col">PERTANYAAN</th>
@@ -747,7 +756,8 @@
           </div>
           <div class="modal-body pre-scrollable">
                 <form id="form-complain">
-                    <table id="table_kuisioner" style="width:100%; padding: 2px; border=1px">
+					<table id="table_kuisioner" style="width:100%; padding: 2px; border=1px">
+						<caption></caption>
                         <tr>
                             <th colspan="2" scope="colgroup">No</th>
                             <td colspan="2"><input type="text" name="no" class="form-control" readonly></td>

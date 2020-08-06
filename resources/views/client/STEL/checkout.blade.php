@@ -31,6 +31,7 @@
 						<input type="hidden" name="final_price" value="{{$final_price}}"><br>
 						<div class="row"> 
 							<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
+								<caption></caption>
 								<thead>
 									<tr>
 										<th scope="col">No</th>
@@ -97,7 +98,7 @@
 					<div class="row metoda">
 						<div class="col-md-12 bank-list-header">This is list of bank if you take this method</div>
 						<div class="col-md-3" style="font-weight: bold;font-size: 175%;">
-							<img src="http://localhost/telkomdds/public/images/bank/mandiri.png">
+							<img src="http://localhost/telkomdds/public/images/bank/mandiri.png" alt="logo bank mandiri">
 							BANK MANDIRI
 						</div>
 						<div class="col-md-9" style="font-weight: bold;font-size: 240%;margin-top: -3%;">

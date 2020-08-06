@@ -43,7 +43,7 @@
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-4">
                                     <button type="submit" class="button button-3d btn-sky">
-                                        <i class="fa fa-btn fa-envelope"></i> {{ trans('translate.reset_password_send') }}
+                                        <em class="fa fa-btn fa-envelope"></em> {{ trans('translate.reset_password_send') }}
                                     </button>
                                 </div>
                             </div>
@@ -51,11 +51,11 @@
 						</div>
                        <div class="done_sent">
                            <div class="done">
-                               <i class="fa fa-check-circle" aria-hidden="true"></i>
+                               <em class="fa fa-check-circle" aria-hidden="true"></em>
                            </div>
                            <div class="content">
                                <h3>{{ trans('translate.pass_reset_email_sent') }}</h3>
-                               <p>{{ trans('translate.an_email_has_been_sent') }} <b>{{ session()->get('status') }}.</b></p>
+                               <p>{{ trans('translate.an_email_has_been_sent') }} <strong>{{ session()->get('status') }}.</strong></p>
                                <p>{{ trans('translate.follow_the_direction') }}</p>
                            </div>
                            <div class="footer">

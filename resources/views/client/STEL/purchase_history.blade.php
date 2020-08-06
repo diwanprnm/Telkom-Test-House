@@ -30,6 +30,7 @@
 						<div class="col-md-12">
 							<div class="table-responsive">
 								<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
+									<caption></caption>
 									<thead>
 										<tr>
 											<th scope="col">No</th>
@@ -93,6 +94,7 @@
 											<tr class="content" style="display: none;">
 												<td colspan="8" class="center">
 													<table class="table table-striped" cellspacing="0" width="100%">
+														<caption></caption>
 														<thead>
 															<tr>
 																<th scope="col">No</th>
@@ -198,6 +200,7 @@
 											<div class="col-md-12">
 												<div class="table-responsive">
 													<table class="table table-striped">
+														<caption></caption>
 														<tr class="center">
 															<th style="text-align: center;" scope="col">{{ trans('translate.data_not_found') }}</th>
 														</tr> 

@@ -34,7 +34,7 @@
 				<div class="container clearfix">
 
 					<div class="col_full">
-						<img src="images/slider.jpg">
+						<img src="images/slider.jpg" alt="image slider">
 					</div>
 
 					<div class="col_full">
