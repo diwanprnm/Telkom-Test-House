@@ -47,6 +47,7 @@ composer dump-autoload --optimize
 
 echo "Run db migration"
 sleep ${LARAVEL_SEED_SLEEP}
+touch /var/www/data/html/.env
 php artisan migrate --force
 php artisan db:seed
 php artisan key:generate
