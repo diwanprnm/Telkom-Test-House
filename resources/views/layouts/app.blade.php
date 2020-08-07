@@ -81,7 +81,7 @@
             <center>
                 <br>
                 <span style="color:#ffffff">Please wait ....</span>
-                <img src='{{ asset("images/loading.gif") }}'/>
+                <img src='{{ asset("images/loading.gif") }}' alt="loading image"/>
             </center>
         </div>
     </div>
@@ -111,10 +111,10 @@
                             $html .= '<li '.$is_active.'>  <a >
                                 <div class="item-content">
                                     <div class="item-media">
-                                        <i class="'.$value[0]['icon'].' "></i>
+                                        <em class="'.$value[0]['icon'].' "></em>
                                     </div>
                                     <div class="item-inner">
-                                        <span class="title"> '.$value[0]['name'].' </span><i class="icon-arrow"></i>
+                                        <span class="title"> '.$value[0]['name'].' </span><em class="icon-arrow"></em>
                                     </div>
                                 </div>
                             </a>';
@@ -132,7 +132,7 @@
                           $html .= '<li '.$is_active.'> <a href="'.url("admin/".$value[0]['url']).'">
                                     <div class="item-content">
                                         <div class="item-media">
-                                            <i class="'.$value[0]['icon'].' "></i>
+                                            <em class="'.$value[0]['icon'].' "></em>
                                         </div>
                                         <div class="item-inner">
                                             <span class="title"> '.$value[0]['name'].' </span>
@@ -155,17 +155,17 @@
                 <!-- start: NAVBAR HEADER -->
                 <div class="navbar-header">
                     <a href="#" class="sidebar-mobile-toggler pull-left hidden-md hidden-lg" class="btn btn-navbar sidebar-toggle" data-toggle-class="app-slide-off" data-toggle-target="#app" data-toggle-click-outside="#sidebar">
-                        <i class="ti-align-justify"></i>
+                        <em class="ti-align-justify"></em>
                     </a>
                     <a class="navbar-brand" href="{{URL::to('/admin')}}">
-                        <img src='{{ asset("images/logo_telkom.png") }}' width="100"/>
+                        <img src='{{ asset("images/logo_telkom.png") }}' width="100" alt="logo telkom"/>
                     </a>
                     <a href="#" class="sidebar-toggler pull-right visible-md visible-lg" data-toggle-class="app-sidebar-closed" data-toggle-target="#app">
-                        <i class="ti-align-justify"></i>
+                        <em class="ti-align-justify"></em>
                     </a>
                     <a class="pull-right menu-toggler visible-xs-block" id="menu-toggler" data-toggle="collapse" href=".navbar-collapse">
                         <span class="sr-only">Toggle navigation</span>
-                        <i class="ti-view-grid"></i>
+                        <em class="ti-view-grid"></em>
                     </a>
                 </div>
                 <!-- end: NAVBAR HEADER -->
@@ -176,7 +176,7 @@
                        <li class="dropdown notification">
                           <a href class="dropdown-toggle" data-toggle="dropdown">
                                 <span class="dot-badge partition-red notification-count"><?php echo $notification_count;?></span> 
-                                <i class="ti-comment"></i> 
+                                <em class="ti-comment"></em> 
                                 <span translate="topbar.messages.MAIN" class="ng-scope ">Notification</span>
                             </a>
                             <ul class="dropdown-menu dropdown-light dropdown-messages dropdown-large"> 
@@ -203,7 +203,7 @@
                         </li>
                         <li class="dropdown current-user">
                             <a href class="dropdown-toggle" data-toggle="dropdown">
-                                <img src='{{ asset("media/user/".Auth::user()->id."/".Auth::user()->picture) }}' alt="{{ Auth::user()->name }}" width="32" height="32"> <span class="username">{{ Auth::user()->name }} <i class="ti-angle-down"></i></i></span>
+                                <img src="{{ asset("media/user/".Auth::user()->id."/".Auth::user()->picture) }}" alt="{{ Auth::user()->name }}" width="32" height="32"> <span class="username">{{ Auth::user()->name }} <em class="ti-angle-down"></em></span>
                             </a>
                             <ul class="dropdown-menu dropdown-dark">
 								<li>
@@ -238,7 +238,7 @@
                     &copy; <span class="current-year"></span><span class="text-bold text-uppercase"> PT. TELEKOMUNIKASI INDONESIA</span>. <span>All rights reserved</span>
                 </div>
                 <div class="pull-right">
-                    <span class="go-top"><i class="ti-angle-up"></i></span>
+                    <span class="go-top"><em class="ti-angle-up"></em></span>
                 </div>
             </div>
         </footer>

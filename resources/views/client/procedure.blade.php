@@ -70,7 +70,7 @@
 																</div>
 																
 																<div class="col_half col_last right">
-																	<img src="images/procedure/tp_1.png">
+																	<img src="images/procedure/tp_1.png" alt="gambar prosedur registrasi pengujian">
 																</div>
 															</div>
 									                    </div>
@@ -97,7 +97,7 @@
 																</div>
 																
 																<div class="col_half col_last right">
-																	<img src="images/procedure/tp_2.png">
+																	<img src="images/procedure/tp_2.png" alt="gambar procedur Uji Fungsi">
 																</div>
 															</div>
 									                    </div>
@@ -127,7 +127,7 @@
 																</div>
 																
 																<div class="col_half col_last right">
-																	<img src="images/procedure/tp_3.png">
+																	<img src="images/procedure/tp_3.png" alt="gambar procedur perhitungan, pembayaran, pembuatan spk">
 																</div>
 															</div>
 									                    </div>
@@ -156,7 +156,7 @@
 																</div>
 																
 																<div class="col_half col_last right">
-																	<img src="images/procedure/tp_4.png">
+																	<img src="images/procedure/tp_4.png" alt="gambar prosedur pelaksanaan uji">
 																</div>
 															</div>
 									                    </div>
@@ -176,7 +176,7 @@
 																</div>
 																
 																<div class="col_half col_last right">
-																	<img src="images/procedure/tp_5.png">
+																	<img src="images/procedure/tp_5.png" alt="gambar prosedur pernerbitan sertifikat">
 																</div>
 															</div>
 									                    </div>
@@ -219,7 +219,7 @@
 											<p>Prosedur lanjutan ini dilakukannya pembayaran oleh Customer via transfer, dengan melampirkan tanda bukti transfer yang dikirim melalui email.</p>
 										</div>
 										<div class="col_half col_last right">
-											<img src="images/procedure/pdstel_1.png">
+											<img src="images/procedure/pdstel_1.png" alt="gambar prosedur pengajuan, feedback, dan pembayaran">
 										</div>
 									</div>
 
@@ -235,7 +235,7 @@
 											<p>Setelah semua tahap sesuai, dan menerima dokumen yang telah disiapkan Customer memeberikan konfirmasi bahwa dokumen telah diterima.</p>
 										</div>
 										<div class="col_half col_last right">
-											<img src="images/procedure/pdstel_2.png">
+											<img src="images/procedure/pdstel_2.png" alt="gambar prosedur penyiapan, pengiriman dan konfirmasi penerimaan dokumen">
 										</div>
 									</div>
 								</div>

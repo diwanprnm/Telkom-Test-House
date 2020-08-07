@@ -45,16 +45,13 @@ class SalesController extends Controller
     private const APP_URL_API_TPN = 'app.url_api_tpn';
     private const AUTHORIZATION = 'Authorization';
     private const BASE_URI = 'base_uri';
-    //private const CONTENT_TYPE = 'Content-Type: application/octet-stream'
-    private const CONTENT_DESCRIPTION = 'File Transfer';
-    private const CONTENT_TYPE_IMAGE = 'image/jpeg';
     private const ERROR = 'error';
     private const HEADERS = 'headers';
     private const HTTP_ERROR = 'http_errors';
     private const IS_READ = 'is_read';
     private const LOGIN = 'login';
-    //private const MEDIA_STEL = '/media/stel/'
     private const MESSAGE = 'message';
+    private const MINIO = 'minio';
     private const PAYMENT_DETAIL = 'payment_detail/';
     private const PAYMENT_STATUS = 'payment_status';
     private const SALES = 'SALES';
@@ -275,13 +272,7 @@ class SalesController extends Controller
 
         $file = Storage::disk('tmp')->get($excelFileName.'.xlsx');
 
-        $headers = [
-            'Content-Type' => 'application/vnd.ms-excel',
-            'Content-Description' => self::CONTENT_DESCRIPTION,
-            'Content-Disposition' => "attachment; filename=\"$excelFileName.xlsx\"",
-            'filename'=> "\"$excelFileName.xlsx\""
-        ];
-        return response($file, 200, $headers);
+        return response($file, 200, \App\Services\MyHelper::getHeaderExcel($excelFileName.'.xlsx'));
     }
 
     public function edit($id)
@@ -505,16 +496,9 @@ class SalesController extends Controller
         $stel = STELSalesAttach::where("stel_sales_id",$id)->first();
 
         if ($stel){
-            $fileMinio = Storage::disk('minio')->get("stel/$stel->stel_sales_id/$stel->attachment");
-
-            $headers = [
-                'Content-Type' => self::CONTENT_TYPE_IMAGE,
-                'Content-Description' => 'File Transfer',
-                'Content-Disposition' => "attachment; filename={$stel->attachment}",
-                'filename'=> $stel->attachment
-            ];
+            $fileMinio = Storage::disk(self::MINIO)->get("stel/$stel->stel_sales_id/$stel->attachment");
             
-            return response($fileMinio, 200, $headers);
+            return response($fileMinio, 200, \App\Services\MyHelper::getHeaderImage($stel->attachment));
         }
     }
 
@@ -523,16 +507,9 @@ class SalesController extends Controller
         $stel = STELSalesDetail::where("id",$id)->first();
 
         if ($stel){
-            $fileMinio = Storage::disk('minio')->get("stelAttach/$stel->id/$stel->attachment");
-
-            $headers = [
-                'Content-Type' => 'application/pdf', 
-                'Content-Description' => self::CONTENT_DESCRIPTION,
-                'Content-Disposition' => "attachment; filename=\"{$stel->attachment}\"",
-                'filename'=> "\"$stel->attachment\""
-            ];
+            $fileMinio = Storage::disk(self::MINIO)->get("stelAttach/$stel->id/$stel->attachment");
             
-            return response($fileMinio, 200, $headers);
+            return response($fileMinio, 200, \App\Services\MyHelper::getHeaderImage($stel->attachment));
         }
     }
 
@@ -541,16 +518,9 @@ class SalesController extends Controller
         $stel = STELSales::where("id_kuitansi", 'like', $id . '%' )->first();
 
         if ($stel){
-            $fileMinio = Storage::disk('minio')->get("stel/$stel->id/$stel->id_kuitansi");
-
-            $headers = [
-                'Content-Type' => self::CONTENT_TYPE_IMAGE, 
-                'Content-Description' => self::CONTENT_DESCRIPTION,
-                'Content-Disposition' => "attachment; filename={$stel->id_kuitansi}",
-                'filename'=> $stel->id_kuitansi
-            ];
+            $fileMinio = Storage::disk(self::MINIO)->get("stel/$stel->id/$stel->id_kuitansi");
             
-            return response($fileMinio, 200, $headers);
+            return response($fileMinio, 200, \App\Services\MyHelper::getHeaderImage($stel->id_kuitansi));
         }
     }
 
@@ -559,16 +529,9 @@ class SalesController extends Controller
         $stel = STELSales::where("id",$id)->first();
 
         if ($stel){
-            $fileMinio = Storage::disk('minio')->get("stel/$stel->id/$stel->faktur_file");
-
-            $headers = [
-                'Content-Type' => self::CONTENT_TYPE_IMAGE, 
-                'Content-Description' => self::CONTENT_DESCRIPTION,
-                'Content-Disposition' => "attachment; filename={$stel->faktur_file}",
-                'filename'=> $stel->faktur_file
-            ];
+            $fileMinio = Storage::disk(self::MINIO)->get("stel/$stel->id/$stel->faktur_file");
             
-            return response($fileMinio, 200, $headers);
+            return response($fileMinio, 200, \App\Services\MyHelper::getHeaderImage($stel->faktur_file));
         }
     }
 
@@ -669,6 +632,7 @@ class SalesService
     protected const FAKTUR_FILE = 'faktur_file';
     protected const KUITANSI_FILE = 'kuitansi_file';
     protected const MEDIA_STEL = '/media/stel/';
+    protected const MINIO = 'minio';
     protected const QUERY = 'query';
     protected const SEARCH = 'search';
     protected const STEL_FILE = 'stel_file';
@@ -909,8 +873,8 @@ class SalesService
                 $file = $request->file(self::STEL_FILE)[$i];
                 $name_file = 'stel_file_'.$request->file(self::STEL_FILE)[$i]->getClientOriginalName();
 
-                $is_uploaded = Storage::disk('minio')->put("stelAttach/".$STELSalesDetail->id."/$name_file", file_get_contents($file));
-                $path_file = Storage::disk('minio')->url("stelAttach/".$STELSalesDetail->id."/$name_file");
+                $is_uploaded = Storage::disk(self::MINIO)->put("stelAttach/".$STELSalesDetail->id."/$name_file", file_get_contents($file));
+                $path_file = Storage::disk(self::MINIO)->url("stelAttach/".$STELSalesDetail->id."/$name_file");
 
                 if($is_uploaded){
                     $STELSalesDetail->attachment = $name_file;

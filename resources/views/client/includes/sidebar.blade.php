@@ -2,7 +2,7 @@
 	<div class="page-sidebar navbar-collapse collapse">
 		<ul class="page-sidebar-menu" data-auto-scroll="true" data-slide-speed="200">
 			<li class="sidebar" style=" height:150px;">
-            <img src="{{asset('asset/back.png')}}" width="235" height="150">
+            <img src="{{asset('asset/back.png')}}" width="235" height="150" alt="back">
 				<center>
                 <div style="padding-top:40px; margin-top:-150px;" >
 				@if( Auth::User()->image!=null)
@@ -22,7 +22,7 @@
 			@if( Auth::User()->hasPermission('home_view') )
 			<li @if($segment_1=='home') ? class="start active open" : "" @endif>
 				<a href="{{URL::to('/home')}}">
-				<i class="fa fa-dashboard"></i>
+				<em class="fa fa-dashboard"></em>
 				<span class="title">Home</span>
 				</a>
 			</li>
@@ -31,7 +31,7 @@
 			@if( Auth::User()->hasPermission('user_view') )
 			<li @if($segment_1=='users') ? class="start active open" : "" @endif>
 				<a href="{{URL::to('/users')}}">
-				<i class="fa fa-user"></i>
+				<em class="fa fa-user"></em>
 				<span class="title">
 				Users</span>
 				</a>
@@ -41,7 +41,7 @@
 			@if( Auth::User()->hasPermission('userprivileges_view') )
 			<li @if($segment_1=='privileges') ? class="start active open" : "" @endif>
 				<a href="{{URL::to('/privileges')}}">
-				<i class="fa fa-key"></i>
+				<em class="fa fa-key"></em>
 				<span class="title">User Privileges</span>
 				</a>
 			</li>			
@@ -49,7 +49,7 @@
 			
 			<li>
 				<a href="{{URL::to('logout')}}">
-				<i class="fa fa-lock"></i>
+				<em class="fa fa-lock"></em>
 				<span class="title">Logout</span>
 				</a>
 			</li>

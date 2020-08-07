@@ -22,9 +22,9 @@
 				<li><a href="#" class="url-pengujian">{{ trans('translate.examination') }}</a></li>
 			</ul>
 			<ul class="cd-main-nav-kanan pull-right marginavlogin">
-				<li><a href="{{URL::to('/client/downloadUsman')}}" class="page-scroll"><img src="{{asset('template-assets/img/baru/PDF.png')}}" width="13" style="margin-top:-4.7px;"></a></li>
-				<li><a href="{!! url('language') !!}/en" class="page-scroll"><img src="{{asset('template-assets/img/baru/united-kingdom.png')}}" width="13" style="margin-top:-4.7px;"></a></li>
-				<li><a href="{!! url('language') !!}/in" class="page-scroll"><img src="{{asset('template-assets/img/baru/indonesia.png')}}" width="13" style="margin-top:-4.7px;"></a></li>
+				<li><a href="{{URL::to('/client/downloadUsman')}}" class="page-scroll"><img src="{{asset('template-assets/img/baru/PDF.png')}}" width="13" style="margin-top:-4.7px;" alt="logo pdf"></a></li>
+				<li><a href="{!! url('language') !!}/en" class="page-scroll"><img src="{{asset('template-assets/img/baru/united-kingdom.png')}}" width="13" style="margin-top:-4.7px;" alt="bendera inggris"></a></li>
+				<li><a href="{!! url('language') !!}/in" class="page-scroll"><img src="{{asset('template-assets/img/baru/indonesia.png')}}" width="13" style="margin-top:-4.7px;" alt="bendera indonesia"></a></li>
 				<?php
 					$currentUser = Auth::user();
 					if($currentUser){
@@ -74,7 +74,7 @@ $(function() {
 			<div id="contact">
 				<div class="panel panel-default red-telkom">
 					<div class="panel-heading red-telkom">{{ trans('translate.login') }}</div>
-					 <a data-dismiss="modal" style="cursor:pointer;"><img src="{{asset('template-assets/img/close (2).png')}}" style=" margin-top:-38px; margin-right:14px; float:right;" width="18"></a>
+					 <a data-dismiss="modal" style="cursor:pointer;"><img src="{{asset('template-assets/img/close (2).png')}}" style=" margin-top:-38px; margin-right:14px; float:right;" width="18" alt="close"></a>
 				</div>
 				<form class="form-horizontal" role="form" method="POST" action="{{ url('/client/login') }}">
 					<input id="type_url" type="hidden" name="type_url" class="type_url">
@@ -111,7 +111,7 @@ $(function() {
 					<div class="form-group f1-buttons" style="margin-bottom:25px; height:25px;">
 						<div class="col-md-6 col-md-offset-4">
 							<button type="submit" class="btn btn-primary">
-								<i class="fa fa-btn fa-sign-in"></i> {{ trans('translate.login') }}
+								<em class="fa fa-btn fa-sign-in"></em> {{ trans('translate.login') }}
 							</button>		
 						</div>
 					</div>

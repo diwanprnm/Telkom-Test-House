@@ -85,7 +85,8 @@
 				        <div id="wizard">
 				        	
 					            <h2>First Step</h2>
-					            <fieldset > 		
+					            <fieldset>
+									<legend></legend>	
 					            	<input type="hidden" name="hide_jns_pengujian" id="hide_jns_pengujian" value="2"/>
 					            	<input type="hidden" name="hide_id_user" id="hide_id_user" value="{{$userData->user_id}}">
 									<input type="hidden" name="hide_company_id" id="hide_company_id" value="{{$userData->company_id}}">
@@ -123,6 +124,7 @@
 
 					            <h2>Second Step</h2>
 					            <fieldset>
+									<legend></legend>
 					               <div class="form-group">
 											<label for="f1-jns-perusahaan">{{ trans('translate.service_company_type') }} : </label>
 											<!-- <input type="radio" name="jns_perusahaan"  id="rad-jns_perusahaan1" value="Agen" checked>
@@ -169,7 +171,8 @@
 					            </fieldset>
 
 					            <h2>Third Step</h2>
-					            <fieldset> 
+					            <fieldset>
+										<legend></legend>	
 										<div class="form-group"> 
 											<input type="radio" name="lokasi_pengujian" value="0" placeholder="{{ trans('translate.service_lab_testing') }}" checked>
 											<input type="radio" name="lokasi_pengujian" value="1" placeholder="{{ trans('translate.service_loc_testing') }}">
@@ -215,6 +218,7 @@
 
 					            <h2>Forth Step</h2>
 					            <fieldset>
+									<legend></legend>	
 					                <div class="form-group">
 											<label>{{ trans('translate.service_upload_siupp') }}<span class="text-danger">* 
 												@if($userData->fileSIUPP)
@@ -306,10 +310,12 @@
 
 					            <h2>Fifth Step</h2>
 					            <fieldset>
+										<legend></legend>
 					            		<input type="hidden" name="hide_cekSNjnsPengujian" id="hide_cekSNjnsPengujian">
 										<h4>{{ trans('translate.service_preview') }}</h4>
 										<h3>{{ trans('translate.service_application') }}</h3>
 										<table class="table table-striped" id="preview-field">
+											<caption></caption>
 											<tr>
 												<td>{{ trans('translate.service_application_name') }}</td>
 												<td> : </td>
@@ -338,6 +344,7 @@
 										<h3 id="company_type"></h3>
 										<div id="f2-preview-6"></div>
 										<table class="table table-striped" id="preview-field">
+											<caption></caption>
 											<tr>
 												<td>{{ trans('translate.service_company_name') }}</td>
 												<td> : </td>
@@ -377,6 +384,7 @@
 										<h3 class="telkom_test">{{ trans('translate.service_device') }} ({{ trans('translate.service_lab_testing') }})</h3>
 										<h3 class="location_test">{{ trans('translate.service_device') }} ({{ trans('translate.service_loc_testing') }})</h3>
 										<table class="table table-striped" id="preview-field">
+											<caption></caption>
 											<tr>
 												<td>{{ trans('translate.service_device_equipment') }}</td>
 												<td> : </td>
@@ -412,6 +420,7 @@
 										</table>
 										<h3>{{ trans('translate.service_upload') }}</h3>
 										<table class="table table-striped" id="preview-field">
+											<caption></caption>
 											<tr>
 												<td>{{ trans('translate.service_upload_siupp') }}</td>
 												<td> : </td>
@@ -468,6 +477,7 @@
 					            </fieldset>
 					             <h2>Sixth Step</h2>
 					            <fieldset>
+									<legend></legend>
 					            	<div class="form-group">
 											<label>{{ trans('translate.service_upload_now') }}<span class="text-danger">*</span></label>
 											<input class="data-upload-detail-pengujian form-control" id="fileInput-detail-pengujian" name="fuploaddetailpengujian" type="file" accept="application/pdf,image/*">
@@ -486,7 +496,8 @@
 										</div>
 					            </fieldset>
 								<h2>Seventh Step</h2>
-					        	<fieldset class="lastFieldset"> 
+					        	<fieldset class="lastFieldset">
+									<legend></legend>
 									<h4 class="judulselesai">{{ trans('translate.service_thanks') }}</h4> 
 									<a class="button button3d btn-green" href="<?php echo url('/pengujian');?>">Finish</a>
 								</fieldset>

@@ -80,7 +80,7 @@
 			</div><!-- /.modal-content -->
 			<div class="modal-footer">
 				<table width=100%><caption></caption>
-					<th>
+					<tr>
 						<th scope="col">
 							<button type="button" class="btn btn-danger btn-tgl-kontrak" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
 						</th>
@@ -302,7 +302,7 @@
 											@if(strpos($data->keterangan, 'qa_date') !== false)
 												<?php $data_ket = explode("qa_date",$data->keterangan); ?>
 												<tr>
-													<th colspan="3" align="center" scope="col"><font color="red">Perangkat ini sudah pernah diuji, dengan status "Tidak Lulus Uji" berdasarkan keputusan Sidang QA tanggal {{ $data_ket[1] }}</font></th>
+													<th colspan="3" class="center" scope="col"><p style="color:red">Perangkat ini sudah pernah diuji, dengan status "Tidak Lulus Uji" berdasarkan keputusan Sidang QA tanggal {{ $data_ket[1] }}</p></th>
 												</tr>
 											@endif
 												<tr>
@@ -905,7 +905,7 @@
 										<table width=100%><caption></caption>
 											<tr>
 												<th scope="col">
-													<button type="submit" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
+													<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
 												</th>
 											</tr>
 										</table>
@@ -2383,7 +2383,7 @@
 									<div class="modal-body">
 										<table width=100%><caption></caption>
 											<tr>
-												<thscope="col">
+												<th scope="col">
 													<div class="form-group">
 														<label for="keterangan">Keterangan:</label>
 														<textarea class="form-control" rows="5" name="keterangan" id="keterangan_form_uji"></textarea>
@@ -3180,7 +3180,7 @@
 										<table width=100%><caption></caption>
 											<tr>
 												<th scope="col">
-													<button type="submit" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
+													<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
 												</th>
 											</tr>
 										</table>

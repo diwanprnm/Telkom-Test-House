@@ -29,7 +29,7 @@
 				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 right-content"><a href="#videoStory" class="btn btn-default btn-lg more pull-right" id="videoLink">{{ trans('translate.video_guide') }} <i class="fa fa-play-circle" aria-hidden="true">&nbsp;</i></a></div>
 			</div>
 			<div id="videoStory" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
-				<iframe width="853" height="480" src="{{ $video_url }}" frameborder="0" allowfullscreen></iframe>
+				<iframe title="video story" width="853" height="480" src="{{ $video_url }}" frameborder="0" allowfullscreen></iframe>
 			</div>
 
 		</div> 
@@ -43,7 +43,7 @@
 						<div class="col-md-4 offset-0"> 
 							<span class="input-icon input-icon-right search-table"> 
 								<input id="search_stel_product" name="search" type="text" placeholder="{{ trans('translate.search_STEL') }}" id="form-field-17" class="form-control " value="{{ $search }}">
-								<i class="ti-search"></i>
+								<em class="ti-search"></em>
 							</span> 
 						</div>			
 						<div class="col-md-4">
@@ -51,9 +51,9 @@
 						<div class="col-md-4 offset-0 right">
 							 <div class="btn-group">
 					            <a href="#" id="list" class="btn btn-default btn-sm">
-					            <i class="fa fa-th"></i> List</a> 
+					            <em class="fa fa-th"></em> List</a> 
 					            <a href="#" id="grid" class="btn btn-default btn-sm">
-					            	<i class="fa fa-th-large"></i>
+					            	<em class="fa fa-th-large"></em>
 					            Grid</a>
 					        </div>
 						</div>
@@ -128,7 +128,7 @@
 			<!-- FILTERS -->
 			<div class="col-md-3 filters offset-0">
 				<div class="header-cart padding20">
-					<div class="header-cart-icon"><i class="icon-cart"></i></div>
+					<div class="header-cart-icon"><em class="icon-cart"></em></div>
 					<div class="header-cart-text"><h4> {{ trans('translate.stel_total_in_cart') }}<br><span>{{Cart::count()}} Pcs</span></h4></div>
 				</div>
 				<div style="overflow-y: auto; max-height:750px;">
@@ -137,7 +137,7 @@
 					<div class="list-cart padding20">
 						{!! Form::open(array('url' => 'products/'.$row->rowId, 'method' => 'DELETE')) !!}
 														{!! csrf_field() !!}
-						<button class="btn btn-transparent btn-xs pull-right" tooltip-placement="top" tooltip="Remove" onclick="return confirm('{{ trans('translate.stel_delete_item') }}')"><i class="fa fa-times fa fa-white"></i></button>
+						<button class="btn btn-transparent btn-xs pull-right" tooltip-placement="top" tooltip="Remove" onclick="return confirm('{{ trans('translate.stel_delete_item') }}')"><em class="fa fa-times fa fa-white"></em></button>
 						{!! Form::close() !!}
 						<?php 
 							$res = explode('myTokenProduct', $row->name);

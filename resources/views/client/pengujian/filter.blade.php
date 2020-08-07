@@ -83,9 +83,10 @@
 
 						<div class="form-group">
 							<table class="table table-condensed">
+								<caption></caption>
 								<thead>
 									<tr>
-										<th colspan="3">{{ trans('translate.examination_status') }}</th>
+										<th colspan="3" scope="colgroup">{{ trans('translate.examination_status') }}</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -124,9 +125,10 @@
 					<?php }else{?>
 						<div class="form-group">
 							<table class="table table-condensed">
+								<caption></caption>
 								<thead>
-									<tr align="center">
-										<th colspan="3" style="text-align: center;">{{ trans('translate.data_not_found') }}</th>
+									<tr class="center">
+										<th colspan="3" style="text-align: center;" scope="colgroup">{{ trans('translate.data_not_found') }}</th>
 									</tr>
 								</thead>
 							</table>

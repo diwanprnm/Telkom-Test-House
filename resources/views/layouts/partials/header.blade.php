@@ -7,8 +7,8 @@
       <!-- Logo
       ============================================= -->
       <div id="logo"> 
-        <a href="{{url('/')}}" class="standard-logo"><img src="{{url('images/logo_telkom.png')}}"></a>
-        <a href="{{url('/')}}" class="retina-logo"><img src="{{url('images/logo_telkom.png')}}"></a> 
+        <a href="{{url('/')}}" class="standard-logo"><img src="{{url('images/logo_telkom.png')}}" alt="logo telkom"></a>
+        <a href="{{url('/')}}" class="retina-logo"><img src="{{url('images/logo_telkom.png')}}" alt="logo telkom hires"></a> 
       </div><!-- #logo end -->
 
       <ul class="header-extras">
@@ -29,14 +29,14 @@
 
         <div class="container clearfix">
 
-          <div id="primary-menu-trigger"><i class="icon-reorder"></i></div>
+          <div id="primary-menu-trigger"><em class="icon-reorder"></em></div>
 
             <ul class="menuUtama">
               <li class="{{ (empty($page)) ?'current':''}}">
                 <a href="{{url('/')}}">{{ trans('translate.home') }}</a>
               </li>  
               <li class="{{ (!empty($page) && ($page == 'about' || $page == 'sertifikasi' || $page == 'contact'))?'current':''}}">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" >{{ trans('translate.menu_company') }}  <i class="icon-angle-down"></i></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" >{{ trans('translate.menu_company') }}  <em class="icon-angle-down"></em></a>
                 <ul class="dropdown-menu" role="menu">
                    <li><a href="{{url('about')}}">{{ trans('translate.about') }} {{ trans('translate.about_us') }}</a></li>
                   <li><a href="{{url('sertifikasi')}}">{{ trans('translate.certification') }}</a></li>
@@ -44,7 +44,7 @@
                 </ul>
               </li>
               <li class="{{ (!empty($page) && ($page == 'STELclient' || $page == 'STSELclient' || $page == 'Chargeclient' || $page == 'procedure' || $page == 'pengujian' || $page == 'process'))?'current':''}}">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ trans('translate.menu_testing') }} <i class="icon-angle-down"></i></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ trans('translate.menu_testing') }} <em class="icon-angle-down"></em></a>
                 <ul class="dropdown-menu" role="menu">
                   <li><a href="{{url('procedure')}}">{{ trans('translate.procedure') }}</a></li>
                   <li><a href="{{url('process')}}">{{ trans('translate.process') }}</a></li>
@@ -83,7 +83,7 @@
               </li>
 
               <li class=" {{ (!empty($page) && ($page == 'purchase_history' || $page == 'products' || $page == 'checkout')) ?'current':''}}">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Stel <i class="icon-angle-down"></i></a>
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Stel <em class="icon-angle-down"></em></a>
                    <ul class="dropdown-menu" role="menu">
                     <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ trans('translate.menu_ref') }}</a>
                         <ul class="dropdown-menu" role="menu">
@@ -108,13 +108,13 @@
 
             <ul class="menu-right">
               @if( Config::get('app.locale') == 'in')
-                <li> <a href="#" class="dropdown-toggle" data-toggle="dropdown">INA <i class="icon-angle-down"></i></a>
+                <li> <a href="#" class="dropdown-toggle" data-toggle="dropdown">INA <em class="icon-angle-down"></em></a>
                 <ul class="dropdown-menu" role="menu">
                   <li><a class="linkLang" href="{!! url('language') !!}/en">ENG</a></li>
                 </ul>
                 </li>
               @else
-                <li> <a href="#" class="dropdown-toggle" data-toggle="dropdown">ENG  <i class="icon-angle-down"></i></a>
+                <li> <a href="#" class="dropdown-toggle" data-toggle="dropdown">ENG  <em class="icon-angle-down"></em></a>
                 <ul class="dropdown-menu" role="menu">
                   <li><a class="linkLang" href="{!! url('language') !!}/in">INA</a></li>
                 </ul></li>
@@ -137,7 +137,7 @@
               $currentUser = Auth::user();
               if($currentUser){
               ?> 
-                <li class="loginMenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo substr($currentUser['attributes']['name'],0,7)."...";?>  <i class="icon-angle-down"></i></a>
+                <li class="loginMenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo substr($currentUser['attributes']['name'],0,7)."...";?>  <em class="icon-angle-down"></em></a>
                   <ul class="dropdown-menu" role="menu">
                     <li><a href="{{url('/client/profile')}}">{{ trans('translate.profile') }}</a></li>
                     <li><a href="{{url('/client/profile?tabs=company')}}">{{ trans('translate.company') }}</a></li>
@@ -157,7 +157,7 @@
               if($currentUser){
               ?> 
 	              <div id="top-cart" style="float:left">
-		                <a href="#" id="top-cart-trigger"><i class="icon-shopping-cart"></i><span>{{Cart::count()}}</span></a>
+		                <a href="#" id="top-cart-trigger"><em class="icon-shopping-cart"></em><span>{{Cart::count()}}</span></a>
 		                 @if(Cart::count() >= 1)
 		                <div class="top-cart-content">
 		                    <div class="top-cart-title">
@@ -183,7 +183,7 @@
 		                </div>
 		                @endif
 	              </div>
-	              <li>  <a href="#" id="top-notification-trigger"><i class="icon-bell"></i><span id="notification-count"><?php echo $notification_count;?></span></a></li>
+	              <li>  <a href="#" id="top-notification-trigger"><em class="icon-bell"></em><span id="notification-count"><?php echo $notification_count;?></span></a></li>
 	             	<div id="top-notification" style="float:left"> 
 	                	<div class="top-notification-content">
                       <?php 
@@ -239,13 +239,13 @@
 
       <div class="container clearfix">
 
-        <div id="primary-menu-trigger"><i class="icon-reorder"></i></div>
+        <div id="primary-menu-trigger"><em class="icon-reorder"></em></div>
 
         <!-- Logo
         ============================================= -->
         <div id="logo">
-            <a href="{{url('/')}}" class="standard-logo"><img src="{{url('images/logo_telkom.png')}}"></a>
-            <a href="{{url('/')}}" class="retina-logo"><img src="{{url('images/logo_telkom.png')}}"></a> 
+            <a href="{{url('/')}}" class="standard-logo"><img src="{{url('images/logo_telkom.png')}}" alt="logo telkom"></a>
+            <a href="{{url('/')}}" class="retina-logo"><img src="{{url('images/logo_telkom.png')}}" alt="logo telkom hires"></a> 
         </div><!-- #logo end -->
 
         <!-- Primary Navigation
@@ -257,7 +257,7 @@
                 <a href="{{url('/')}}">{{ trans('translate.home') }}</a>
               </li> 
               <li class="{{ (!empty($page) && ($page == 'about' || $page == 'sertifikasi' || $page == 'contact'))?'current':''}}">
-                <a href="#" >{{ trans('translate.menu_company') }}  <i class="icon-angle-down"></i></a>
+                <a href="#" >{{ trans('translate.menu_company') }}  <em class="icon-angle-down"></em></a>
                 <ul>
                    <li><a href="{{url('about')}}">{{ trans('translate.about') }} {{ trans('translate.about_us') }}</a></li>
                   <li><a href="{{url('sertifikasi')}}">{{ trans('translate.certification') }}</a></li>
@@ -265,7 +265,7 @@
                 </ul>
               </li>
               <li class="{{ (!empty($page) && ($page == 'STELclient' || $page == 'STSELclient' || $page == 'Chargeclient' || $page == 'procedure' || $page == 'pengujian'))?'current':''}}">
-                <a href="#">{{ trans('translate.menu_testing') }} <i class="icon-angle-down"></i></a>
+                <a href="#">{{ trans('translate.menu_testing') }} <em class="icon-angle-down"></em></a>
                 <ul>
                   <li><a href="{{url('procedure')}}">{{ trans('translate.procedure') }}</a></li>
                   <?php
@@ -295,7 +295,7 @@
               </li>
 
               <li class=" {{ (!empty($page) && ($page == 'payment_status' || $page == 'products' || $page == 'checkout')) ?'current':''}}">
-                  <a href="#">Stel <i class="icon-angle-down"></i></a>
+                  <a href="#">Stel <em class="icon-angle-down"></em></a>
                    <ul>
                     <li>
                       <a href="{{url('/products')}}">{{ trans('translate.see_product') }}</a>
@@ -309,7 +309,7 @@
               $currentUser = Auth::user();
               if($currentUser){
               ?> 
-                <li><a href="#"><?php echo $currentUser['attributes']['name'];?>  <i class="icon-angle-down"></i></a>
+                <li><a href="#"><?php echo $currentUser['attributes']['name'];?>  <em class="icon-angle-down"></em></a>
                   <ul>
                     <li><a href="{{url('/client/profile')}}">{{ trans('translate.profile') }}</a></li>
                     <li><a href="{{url('/client/logout')}}">{{ trans('translate.logout') }}</a></li>
@@ -323,20 +323,20 @@
               }
               ?> 
                  @if( Config::get('app.locale') == 'in')
-                <li> <a href="#" >INA <i class="icon-angle-down"></i></a>
+                <li> <a href="#" >INA <em class="icon-angle-down"></em></a>
                 <ul >
                   <li><a href="{!! url('language') !!}/en">ENG</a></li>
                 </ul>
                 </li>
               @else
-                <li> <a href="#">ENG  <i class="icon-angle-down"></i></a>
+                <li> <a href="#">ENG  <em class="icon-angle-down"></em></a>
                 <ul >
                   <li><a href="{!! url('language') !!}/in">INA</a></li>
                 </ul></li>
               @endif  
              
               <div id="top-cart" style="float:left">
-                <a href="#" id="top-cart-trigger"><i class="icon-shopping-cart"></i><span>{{Cart::count()}}</span></a>
+                <a href="#" id="top-cart-trigger"><em class="icon-shopping-cart"></em><span>{{Cart::count()}}</span></a>
                  @if(Cart::count() >= 1)
                 <div class="top-cart-content">
                     <div class="top-cart-title">
@@ -362,7 +362,7 @@
                 </div>
                 @endif
               </div>
-              <li><a href="#" id="top-cart-trigger"><i class="icon-bell"></i></a></li>
+              <li><a href="#" id="top-cart-trigger"><em class="icon-bell"></em></a></li>
             
             </ul>
 

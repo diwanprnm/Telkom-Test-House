@@ -54,7 +54,7 @@
 								<img src="{{ asset('media/certification/'.$item->image) }}" alt="Open Imagination">
 							</a>
 							<div class="portfolio-overlay">
-								<a href="{{ asset('media/certification/'.$item->image) }}" class="center-icon" data-lightbox="image"><i class="icon-line-search"></i></a>
+								<a href="{{ asset('media/certification/'.$item->image) }}" class="center-icon" data-lightbox="image"><em class="icon-line-search"></em></a>
 							</div>
 						</div>
 						<div class="portfolio-desc">

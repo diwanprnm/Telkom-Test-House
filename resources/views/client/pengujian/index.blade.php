@@ -240,8 +240,9 @@
 							</div>
 							<div class="data-status">
 								<table class="table table-striped">
+									<caption></caption>
 									<tr>
-										<th colspan="3">{{ trans('translate.examination_status') }}</th>
+										<th colspan="3" scope="colgroup">{{ trans('translate.examination_status') }}</th>
 									</tr>
 									@if($item->registration_status != '0' && $item->function_status != '1')
 									<tr>
@@ -371,9 +372,10 @@
 						<?php }else{?>
 						<div class="table-responsive font-table">
 							<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1">
+								<caption></caption>
 								<thead>
-									<tr align="center">
-										<th colspan="3" style="text-align: center;">{{ trans('translate.data_not_found') }}</th>
+									<tr class="center">
+										<th colspan="3" style="text-align: center;" scope="colgroup">{{ trans('translate.data_not_found') }}</th>
 									</tr>
 								</thead>
 							</table>
@@ -408,7 +410,7 @@
 					<input type="hidden" name="hide_id_user" id="hide_id_user">
 					<input type="hidden" name="hide_company_id" id="hide_company_id">
 					<div class="row" style="padding-right: 10px;margin-top: 20px;">
-					<a data-dismiss="modal" style="cursor:pointer;"><img src="{{asset('template-assets/img/close (2).png')}}" style=" margin-top:-27px; float:right;" width="20"></a>
+					<a data-dismiss="modal" style="cursor:pointer;"><img src="{{asset('template-assets/img/close (2).png')}}" style=" margin-top:-27px; float:right;" width="20" alt="close"></a>
 					</div>
 					<h5>{{ trans('translate.service_title') }}</h5>
 					<div class="f1-steps">
@@ -416,31 +418,31 @@
 							<div class="f1-progress-line" data-now-value="52.22" data-number-of-steps="8" style="width: 52.22%;"></div>
 						</div>
 						<div class="f1-step">
-							<div class="f1-step-icon"><i class="fa fa-user"></i></div>
+							<div class="f1-step-icon"><em class="fa fa-user"></em></div>
 							<p>{{ trans('translate.service_application') }}</p>
 						</div>
 						<div class="f1-step active">
-							<div class="f1-step-icon"><i class="fa fa-user"></i></div>
+							<div class="f1-step-icon"><em class="fa fa-user"></em></div>
 							<p>{{ trans('translate.service_company') }}</p>
 						</div>
 						<div class="f1-step">
-							<div class="f1-step-icon"><i class="fa fa-user"></i></div>
+							<div class="f1-step-icon"><em class="fa fa-user"></em></div>
 							<p>{{ trans('translate.service_device') }}</p>
 						</div>
 						<div class="f1-step">
-							<div class="f1-step-icon"><i class="fa fa-user"></i></div>
+							<div class="f1-step-icon"><em class="fa fa-user"></em></div>
 							<p>{{ trans('translate.service_upload') }}</p>
 						</div>
 						<div class="f1-step">
-							<div class="f1-step-icon"><i class="fa fa-user"></i></div>
+							<div class="f1-step-icon"><em class="fa fa-user"></em></div>
 							<p>{{ trans('translate.service_preview') }}</p>
 						</div>
 						  <div class="f1-step">
-							<div class="f1-step-icon"><i class="fa fa-user"></i></div>
+							<div class="f1-step-icon"><em class="fa fa-user"></em></div>
 							<p>{{ trans('translate.service_upload_form') }}</p>
 						</div>
 						  <div class="f1-step">
-							<div class="f1-step-icon"><i class="fa fa-user"></i></div>
+							<div class="f1-step-icon"><em class="fa fa-user"></em></div>
 							<p>{{ trans('translate.service_finished') }}</p>
 						</div>
 					</div>
@@ -458,6 +460,7 @@
 					
 					<!-- Data Perusahaan-->
 					<fieldset>
+						<legend></legend>
 						<h4>{{ trans('translate.service_company') }}</h4>
 						<div class="form-group">
 							<label for="f1-jns-perusahaan">{{ trans('translate.service_company_type') }} : </label>
@@ -491,6 +494,7 @@
 					</fieldset>	
 					<!-- Data Perangkat-->
 					<fieldset>
+						<legend></legend>
 						<input type="hidden" name="hide_jns_pengujian_edit" id="hide_jns_pengujian" class="hide_jns_pengujian_edit"/>
 						<input type="hidden" name="hide_serial_number_edit" id="hide_serial_number_edit"/>
 						<input type="hidden" name="hide_name_edit" id="hide_name_edit"/>
@@ -541,6 +545,7 @@
 					</fieldset>
 					<!-- upload berkas-->
 					<fieldset>
+						<legend></legend>
 						<h4>{{ trans('translate.service_upload') }}</h4>
 						<div class="form-group">
 							<label>{{ trans('translate.service_upload_siupp') }}<span class="text-danger">*</span></label>
@@ -683,10 +688,12 @@
 					</fieldset>
 					<!-- Preview-->
 					<fieldset>
+						<legend></legend>
 						<input type="hidden" name="hide_cekSNjnsPengujian_edit" id="hide_cekSNjnsPengujian_edit">
 						<h4>{{ trans('translate.service_preview') }}</h4>
 						<h3>{{ trans('translate.service_application') }}</h3>
 						<table class="table table-striped">
+							<caption></caption>
 							<tr>
 								<td>{{ trans('translate.service_application_name') }}</td>
 								<td> : </td>
@@ -715,6 +722,7 @@
 						<h3>{{ trans('translate.service_company') }}</h3>
 						<div id="f2-preview-6"></div>
 						<table class="table table-striped">
+							<caption></caption>
 							<tr>
 								<td>{{ trans('translate.service_company_name') }}</td>
 								<td> : </td>
@@ -744,6 +752,7 @@
 						<br>
 						<h3>{{ trans('translate.service_device') }}</h3>
 						<table class="table table-striped">
+							<caption></caption>
 							<tr>
 								<td>{{ trans('translate.service_device_equipment') }}</td>
 								<td> : </td>
@@ -779,6 +788,7 @@
 						</table>
 						<h3>{{ trans('translate.service_upload') }}</h3>
 						<table class="table table-striped">
+							<caption></caption>
 							<tr>
 								<td>{{ trans('translate.service_upload_siupp') }}</td>
 								<td> : </td>
@@ -837,6 +847,7 @@
 					</fieldset>
 					<!-- upload detail pengujian-->
 					<fieldset>
+						<legend></legend>
 						<h4>{{ trans('translate.service_upload_form') }}</h4>
 						<div class="form-group">
 							<label>{{ trans('translate.service_upload_now') }}<span class="text-danger">*</span></label>
@@ -855,6 +866,7 @@
 					</fieldset>
 					<!-- submit-->
 					<fieldset>
+						<legend></legend>
 						<h4 class="judulselesai">{{ trans('translate.service_thanks') }}</h4>
 						<div class="f1-buttons">
 							<button type="button" class="btn btn-submit">OK</button>
@@ -875,11 +887,12 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title"><i class="fa fa-eyes-open"></i> {{ trans('translate.reschedule_message') }}</h4>
+				<h4 class="modal-title"><em class="fa fa-eyes-open"></em> {{ trans('translate.reschedule_message') }}</h4>
 			</div>
 			
 			<div class="modal-body">
 				<table width=100%>
+					<caption></caption>
 					<tr>
 						<td>
 							<div class="form-group">
@@ -890,7 +903,7 @@
 										<input type="text" id="cust_test_date" class="form-control datepicker" name="cust_test_date" placeholder="Tanggal ..." readonly>
 										<span class="input-group-btn">
 											<!-- <button type="button" class="btn btn-default"> -->
-												<i class="glyphicon glyphicon-calendar"></i>
+												<em class="glyphicon glyphicon-calendar"></em>
 											<!-- </button> -->
 										</span>
 									<!-- </p> -->
@@ -901,10 +914,11 @@
 			</div><!-- /.modal-content -->
 			<div class="modal-footer">
 				<table width=100%>
+					<caption></caption>
 					<tr>
-						<td>
-							<button type="submit" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
-						</td>
+						<th scope="col">
+							<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
+						</th>
 					</tr>
 				</table>
 			</div>
@@ -922,11 +936,12 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title"><i class="fa fa-eyes-open"></i> {{ trans('translate.reschedule_message') }}</h4>
+				<h4 class="modal-title"><em class="fa fa-eyes-open"></em> {{ trans('translate.reschedule_message') }}</h4>
 			</div>
 			
 			<div class="modal-body">
 				<table width=100%>
+					<caption></caption>
 					<tr>
 						<td>
 							<div class="row">
@@ -955,7 +970,7 @@
 											<input type="text" id="urel_test_date2" class="form-control datepicker" name="urel_test_date" placeholder="Tanggal ..." readonly>
 											<span class="input-group-btn">
 												<!-- <button type="button" class="btn btn-default"> -->
-													<i class="glyphicon glyphicon-calendar"></i>
+													<em class="glyphicon glyphicon-calendar"></em>
 												<!-- </button> -->
 											</span>
 										<!-- </p> -->
@@ -976,9 +991,10 @@
 			</div><!-- /.modal-content -->
 			<div class="modal-footer">
 				<table width=100%>
+					<caption></caption>
 					<tr>
 						<td>
-							<button type="submit" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
+							<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
 						</td>
 					</tr>
 				</table>
@@ -997,11 +1013,12 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title"><i class="fa fa-eyes-open"></i> {{ trans('translate.reschedule_message_agree') }}</h4>
+				<h4 class="modal-title"><em class="fa fa-eyes-open"></em> {{ trans('translate.reschedule_message_agree') }}</h4>
 			</div>
 			
 			<div class="modal-body">
 				<table width=100%>
+					<caption></caption>
 					<tr>
 						<td>
 							<div class="row">
@@ -1028,10 +1045,11 @@
 			</div><!-- /.modal-content -->
 			<div class="modal-footer">
 				<table width=100%>
+					<caption></caption>
 					<tr>
-						<td>
-							<button type="submit" class="btn btn-danger" style="width:100%"><i class="fa fa-check-square-o"></i> Submit</button>
-						</td>
+						<th scope="col">
+							<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
+						</th>
 					</tr>
 				</table>
 			</div>
@@ -1101,12 +1119,13 @@
                     </p>
                 </div>
                 <div class="row">
-                    <table id="table_kuisioner" style="width:100%; padding: 2px;" border="1">
+					<table id="table_kuisioner" style="width:100%; padding: 2px; border: 1px">
+					  <caption></caption>
                       <tr>
-                        <th>No</th>
-                        <th>Kriteria</th> 
-                        <th>Nilai Ekspetasi</th>
-                        <th>NIlai Performasi</th>
+                        <th scope="col">No</th>
+                        <th scope="col">Kriteria</th> 
+                        <th scope="col">Nilai Ekspetasi</th>
+                        <th scope="col">NIlai Performasi</th>
                       </tr>
                       <tr>
                         <td>1</td>
@@ -1147,12 +1166,13 @@
                 <div class="row">
                     <p>Pada tahap ini, silahkan mengisi nilai dengan sekala 1-7 untuk nilai ekspetasi awal dan nilai performansi. Kastemer diharapkan mengisi kolom nilai dan setiap kriteria, serta nilai performansi/kenyataan dari setiap kriteria</p>
                     <p>Nilai 7 adalah penilaian Sangat Baik atau Sangat Setuju dan nilai 1 adalah penilaian Sangat Tidak Baik atau Sangat Tidak Setuju. Kastemer diharapkan dapat memberikan nilai dengan angka bulat.</p>
-                    <table id="table_kuisioner" style="width:100%; padding: 2px;" border="1">
-                      <tr>
-                        <th>No</th>
-                        <th>Kriteria</th> 
-                        <th>Nilai Ekspetasi</th>
-                        <th>NIlai Performasi</th>
+                    <table id="table_kuisioner" style="width:100%; padding: 2px; border: 1px" >
+					  <caption></caption>
+					  <tr>
+                        <th scope="col">No</th>
+                        <th scope="col">Kriteria</th> 
+                        <th scope="col">Nilai Ekspetasi</th>
+                        <th scope="col">Nilai Performasi</th>
                       </tr>
                       <tr>
                         <td>7</td>
@@ -1332,12 +1352,13 @@
                     </p>
                 </div>
                 <div class="row">
-                    <table id="table_kuisioner" style="width:100%; padding: 2px;" border="1">
+					<table id="table_kuisioner" style="width:100%; padding: 2px; border: 1px;">
+					  <caption></caption>
                       <tr>
-                        <th>NO</th>
-                        <th>PERTANYAAN</th>
-                        <th style="width: 25%;">TINGKAT KEPENTINGAN</th>
-                        <th style="width: 25%;">TINGKAT KEPUASAN</th>
+                        <th scope="col">NO</th>
+                        <th scope="col">PERTANYAAN</th>
+                        <th style="width: 25%;" scope="col">TINGKAT KEPENTINGAN</th>
+                        <th style="width: 25%;" scope="col">TINGKAT KEPUASAN</th>
                       </tr>
                       <tbody>
             <?php $no = 0; ?>
@@ -1404,19 +1425,20 @@
           </div>
           <div class="modal-body pre-scrollable">
                 <form id="form-complain">
-                    <table id="table_kuisioner" style="width:100%; padding: 2px;" border="1">
+					<table id="table_kuisioner" style="width:100%; padding: 2px; border:1px">
+						<caption></caption>
                         <tr>
-                            <th colspan="2">No</th>
+                            <th colspan="2" scope="colgroup">No</th>
                             <td colspan="2"><input type="text" name="no" class="form-control" readonly></td>
                         </tr>
                         <tr>
-                            <th>Sheet</th>
+                            <th scope="col">Sheet</th>
                             <td><input type="text" name="no" class="form-control" readonly></td>
-                            <th>of</th>
+                            <th scope="col">of</th>
                             <td><input type="text" name="no" class="form-control" readonly></td>
                         </tr>
                         <tr>
-                            <th colspan="2">
+                            <th colspan="2" scope="colgroup">
                                 <label>Customer Name and Address</label>
                                 <textarea class="form-control" placeholder="-" readonly>{{ $currentUser->name }} / {{ $currentUser->address }}</textarea>
                             </th>
@@ -1429,7 +1451,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <th colspan="2">
+                            <th colspan="2" scope="colgroup">
                                 <label>Customer Contact</label>
                                 <input type="text" name="no" class="form-control" placeholder="-" value="{{ $currentUser->phone }}" readonly>
                             </th>
@@ -1447,25 +1469,25 @@
                             </td>
                         </tr>
                         <tr>
-                            <th colspan="4">
+                            <th colspan="4" scope="colgroup">
                                 <label>Customer Complaint</label>
                                 <textarea name="complaint" class="form-control" placeholder="Your Complaint"></textarea>
                             </th>
                         </tr>
                         <tr>
-                            <th colspan="4">
+                            <th colspan="4" scope="colgroup">
                                 <label>Name of Recipient</label>
                                 <input type="text" name="no" class="form-control" placeholder="-" readonly>
                             </th>
                         </tr>
                         <tr>
-                            <th colspan="4">
+                            <th colspan="4" scope="colgroup">
                                 <label>Corrective Action Taken</label>
                                 <textarea class="form-control" placeholder="-" readonly></textarea>
                             </th>
                         </tr>
                         <tr>
-                            <th colspan="2">
+                            <th colspan="2" scope="colgroup">
                                 <label>Completed Date</label>
                                 <input type="text" name="no" class="form-control" placeholder="DD/MM/YYYY" readonly>
                             </th>
@@ -1475,13 +1497,13 @@
                             </td>
                         </tr>
                         <tr>
-                            <th colspan="4">
+                            <th colspan="4" scope="colgroup">
                                 <label>Name of Actiones</label>
                                 <input type="text" name="no" class="form-control" placeholder="-" readonly>
                             </th>
                         </tr>
                         <tr>
-                            <th colspan="2">
+                            <th colspan="2" scope="colgroup">
                                 <label>USer Relation Manager Signature</label>
                                 <input type="text" name="no" class="form-control" placeholder="-" readonly>
                             </th>

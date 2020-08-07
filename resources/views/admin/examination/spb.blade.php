@@ -132,10 +132,10 @@
 			<caption></caption>
 			<tbody>
 				<tr>
-					<th align="center" scope="col">
+					<th class="center" scope="col">
 						<label for="nama_perangkat">Nama Perangkat *</label>
 					</th>
-					<td align="center">
+					<td class="center">
 						<label for="biaya">Biaya *</label>
 					</td>
 					<td style="width:40px;"><a  style="width:40px;" value='Add More' class='del btn btn-success btn-flat' onclick='addAppend()'><em id='icon_add' class='fa fa-plus'></em></a></td>

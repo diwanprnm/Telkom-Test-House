@@ -50,17 +50,18 @@
 										<div id="wizard" class="swMain">
 											<div class="form-group">
 												<table class="table table-condensed">
+													<caption></caption>
 													<thead>
 														<tr>
-															<th colspan="3">{{ trans('translate.examination_upload_payment') }}</th>
+															<th colspan="3" scope="colgroup">{{ trans('translate.examination_upload_payment') }}</th>
 														</tr>
 													</thead>
 													<tbody>
 														<tr>
-															<th colspan="3"></th>
+															<th colspan="3" scope="colgroup"></th>
 														</tr>
 														<tr>
-															<th colspan="3">{{ trans('translate.examination_file_payment') }}</th>
+															<th colspan="3" scope="colgroup">{{ trans('translate.examination_file_payment') }}</th>
 														</tr>
 														<tr>
 															<td>
