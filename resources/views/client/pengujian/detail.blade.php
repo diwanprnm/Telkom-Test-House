@@ -172,7 +172,7 @@
 										<caption></caption>
 										<thead>
 											<tr>
-												<th colspan="3">{{ trans('translate.service_application') }}</th>
+												<th colspan="3" scope="colgroup">{{ trans('translate.service_application') }}</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -763,9 +763,9 @@
                             <td colspan="2"><input type="text" name="no" class="form-control" readonly></td>
                         </tr>
                         <tr>
-                            <th>Sheet</th>
+                            <th scope="col">Sheet</th>
                             <td><input type="text" name="no" class="form-control" readonly></td>
-                            <th>of</th>
+                            <th scope="col">of</th>
                             <td><input type="text" name="no" class="form-control" readonly></td>
                         </tr>
                         <tr>
@@ -782,7 +782,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <th colspan="2">
+                            <th colspan="2" scope="colgroup">
                                 <label>Customer Contact</label>
                                 <input type="text" name="no" class="form-control" placeholder="-" value="{{ $currentUser->phone }}" readonly>
                             </th>

@@ -916,7 +916,7 @@
 				<table width=100%>
 					<caption></caption>
 					<tr>
-						<th>
+						<th scope="col">
 							<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
 						</th>
 					</tr>
@@ -1047,7 +1047,7 @@
 				<table width=100%>
 					<caption></caption>
 					<tr>
-						<th>
+						<th scope="col">
 							<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
 						</th>
 					</tr>
@@ -1434,7 +1434,7 @@
                         <tr>
                             <th scope="col">Sheet</th>
                             <td><input type="text" name="no" class="form-control" readonly></td>
-                            <th>of</th>
+                            <th scope="col">of</th>
                             <td><input type="text" name="no" class="form-control" readonly></td>
                         </tr>
                         <tr>

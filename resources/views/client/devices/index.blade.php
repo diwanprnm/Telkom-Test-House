@@ -95,7 +95,7 @@
 													<caption></caption>
 													<thead>
 														<tr class="center">
-															<th colspan="3" style="text-align: center;">{{ trans('translate.data_not_found') }}</th>
+															<th colspan="3" style="text-align: center;" scope="colgroup">{{ trans('translate.data_not_found') }}</th>
 														</tr>
 													</thead>
 												</table>

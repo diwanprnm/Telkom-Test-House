@@ -18,6 +18,7 @@
 											<div id="wizard" class="swMain">
 												<div class="form-group">
 													<table class="table table-condensed">
+														<caption></caption>
 														<thead>
 															<tr>
 																<th colspan="3" scope="colgroup">{{ trans('translate.search_result') }}</th>
@@ -49,6 +50,7 @@
 																<?php }else{?>
 															<div class="table-responsive font-table">
 																<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1">
+																	<caption></caption>
 																	<thead>
 																		<tr class="center">
 																			<th colspan="3" style="text-align: center;" scope="colgroup">{{ trans('translate.data_not_found') }}</th>
