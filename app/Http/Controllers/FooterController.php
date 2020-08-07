@@ -15,6 +15,7 @@ use Image;
 use File;
 use Response;
 use Excel;
+use Storage;
 // UUID
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
