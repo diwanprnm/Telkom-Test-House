@@ -143,6 +143,11 @@
 												<div class="form-group">
 													<table class="table table-condensed">
 														<caption></caption>
+														<thead class="hidden">
+															<tr>
+																<th>-</th>
+															</tr>
+														</thead>
 														<tbody>
 															<tr>
 																<td class="left">{{ trans('translate.examination_spk_code') }} : {{ $data[0]->spk_code }}</td>
