@@ -16,7 +16,7 @@
                 width: 100%;
                 display: table;
                 font-weight: 100;
-                font-family: 'Lato, Sans-serif';
+                font-family: Lato, sans-serif;
             }
 
             .container {
