@@ -372,8 +372,7 @@ class ResetPasswordController extends Controller
      */
     protected function getResetSuccessResponse($response)
     {
-		return redirect('/')->with('status', trans($response));
-        return redirect($this->redirectPath())->with('status', trans($response));
+		return redirect('/')->with('status', trans($response)); 
     }
 
     /**

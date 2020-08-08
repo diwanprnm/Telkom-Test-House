@@ -3,7 +3,7 @@
 		<ul class="page-sidebar-menu" data-auto-scroll="true" data-slide-speed="200">
 			<li class="sidebar" style=" height:150px;">
             <img src="{{asset('asset/back.png')}}" width="235" height="150" alt="back">
-				<center>
+			 	
                 <div style="padding-top:40px; margin-top:-150px;" >
 				@if( Auth::User()->image!=null)
 					<img alt="" class="circle avatar" style="width:50px;" src="{{ asset(Auth::User()->image) }}"/><br>
@@ -11,8 +11,7 @@
 					<img alt="" class="circle avatar" style="width:50px;" src="{{ asset('asset/pp.png') }}"/><br>
 				@endif
 				<span style="color:rgba(107,107,107,1.00); font-weight:bold;">{{ Auth::user()->name }}</span>
-				</div>
-                </center>
+				</div> 
 			</li>
 			<?php 
 				$segment_1 = Request::segment(1);

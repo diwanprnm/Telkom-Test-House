@@ -118,23 +118,19 @@
 																			<td>{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($item_detail->stel->price), 0, '.', ','); ?></td> 
 																			<td>{{$item_detail->qty}}</td> 
 																			<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($item_detail->stel->price * $item_detail->qty), 0, '.', ','); ?></td>
-																			<?php  
-																				if($item_detail->attachment !="" && ($payment_status == 1 or $payment_status == 3)){
-																			?>
-																					<td colspan="6" class="center"><a target="_blank" href="{{ URL::to('/client/downloadstelwatermark/'.$item_detail->id) }}">{{ trans('translate.download') }} File</a></td>
-																			<?php }
-																			else if($item_detail->attachment !="" && ($payment_status == 1 or $payment_status == 3)){
-																			?>
-																				<td colspan="6" class="center"><a target="_blank" href="{!! url("cetakstel?invoice_id={$invoice}&attach={$item_detail->stel->attachment}&company_name={$company_name}") !!}">{{ trans('translate.download') }} File</a></td>
-																			<?php
-																			}
-																				else{
-																			?>	
-																					<td colspan="6" class="center">{{ trans('translate.document_not_found') }}</td>
-																			<?php 
-																				}
-																			?>  
-																		</tr> 
+	<?php  
+		 if($item_detail->attachment !="" && ($payment_status == 1 or $payment_status == 3)){
+	?>
+		<td colspan="6" class="center"><a target="_blank" href="{!! url("cetakstel?invoice_id={$invoice}&attach={$item_detail->stel->attachment}&company_name={$company_name}") !!}">{{ trans('translate.download') }} File</a></td>
+	<?php
+	}
+		else{
+	?>	
+			<td colspan="6" class="center">{{ trans('translate.document_not_found') }}</td>
+	<?php 
+		}
+	?>  
+</tr> 
 																	<?php $total +=($item_detail->stel->price * $item_detail->qty);?>
 																	<?php }else{?> 
 																		<tr>
