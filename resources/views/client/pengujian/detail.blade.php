@@ -145,7 +145,7 @@
 														<caption></caption>
 														<thead class="hidden">
 															<tr>
-																<th>-</th>
+																<th scope="col">-</th>
 															</tr>
 														</thead>
 														<tbody>

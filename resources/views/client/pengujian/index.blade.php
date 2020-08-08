@@ -694,6 +694,11 @@
 						<h3>{{ trans('translate.service_application') }}</h3>
 						<table class="table table-striped">
 							<caption></caption>
+							<thead class="hidden">
+								<tr>
+									<th scope="col">-</th>
+								</tr>
+							</thead>
 							<tr>
 								<td>{{ trans('translate.service_application_name') }}</td>
 								<td> : </td>
@@ -723,6 +728,11 @@
 						<div id="f2-preview-6"></div>
 						<table class="table table-striped">
 							<caption></caption>
+							<thead class="hidden">
+								<tr>
+									<th scope="col">-</th>
+								</tr>
+							</thead>
 							<tr>
 								<td>{{ trans('translate.service_company_name') }}</td>
 								<td> : </td>
@@ -753,6 +763,11 @@
 						<h3>{{ trans('translate.service_device') }}</h3>
 						<table class="table table-striped">
 							<caption></caption>
+							<thead class="hidden">
+								<tr>
+									<th scope="col">-</th>
+								</tr>
+							</thead>
 							<tr>
 								<td>{{ trans('translate.service_device_equipment') }}</td>
 								<td> : </td>
@@ -789,6 +804,11 @@
 						<h3>{{ trans('translate.service_upload') }}</h3>
 						<table class="table table-striped">
 							<caption></caption>
+							<thead class="hidden">
+								<tr>
+									<th scope="col">-</th>
+								</tr>
+							</thead>
 							<tr>
 								<td>{{ trans('translate.service_upload_siupp') }}</td>
 								<td> : </td>
@@ -893,6 +913,11 @@
 			<div class="modal-body">
 				<table width=100%>
 					<caption></caption>
+					<thead class="hidden">
+						<tr>
+							<th scope="col">-</th>
+						</tr>
+					</thead>
 					<tr>
 						<td>
 							<div class="form-group">
@@ -942,6 +967,11 @@
 			<div class="modal-body">
 				<table width=100%>
 					<caption></caption>
+					<thead class="hidden">
+						<tr>
+							<th scope="col">-</th>
+						</tr>
+					</thead>
 					<tr>
 						<td>
 							<div class="row">
@@ -992,6 +1022,11 @@
 			<div class="modal-footer">
 				<table width=100%>
 					<caption></caption>
+					<thead class="hidden">
+						<tr>
+							<th scope="col">-</th>
+						</tr>
+					</thead>
 					<tr>
 						<td>
 							<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
@@ -1019,6 +1054,11 @@
 			<div class="modal-body">
 				<table width=100%>
 					<caption></caption>
+					<thead class="hidden">
+						<tr>
+							<th scope="col">-</th>
+						</tr>
+					</thead>
 					<tr>
 						<td>
 							<div class="row">
