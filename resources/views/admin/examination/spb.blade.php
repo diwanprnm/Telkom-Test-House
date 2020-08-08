@@ -67,12 +67,10 @@
 
 <body>
 	<div id="overlay">
-        <div id="tengah">
-            <center>
-                <br>
-                <span style="color:#ffffff">Please wait ....</span>
-                <img src='{{ asset("images/loading.gif") }}' alt=""/>
-            </center>
+        <div id="tengah"> 
+            <br>
+            <span style="color:#ffffff">Please wait ....</span>
+            <img src='{{ asset("images/loading.gif") }}' alt=""/> 
         </div>
     </div>
 
