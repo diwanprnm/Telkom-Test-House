@@ -345,6 +345,11 @@
 						<h3>{{ trans('translate.service_application') }}</h3>
 						<table class="table table-striped">
 							<caption></caption>
+							<thead class="hidden">
+								<tr>
+									<th scope="col">-</th>
+								</tr>
+							</thead>
 							<tr>
 								<td>{{ trans('translate.service_application_name') }}</td>
 								<td> : </td>
@@ -374,6 +379,11 @@
 						<div id="f2-preview-6"></div>
 						<table class="table table-striped">
 							<caption></caption>
+							<thead class="hidden">
+								<tr>
+									<th scope="col">-</th>
+								</tr>
+							</thead>
 							<tr>
 								<td>{{ trans('translate.service_company_name') }}</td>
 								<td> : </td>
@@ -404,6 +414,11 @@
 						<h3>{{ trans('translate.service_device') }}</h3>
 						<table class="table table-striped">
 							<caption></caption>
+							<thead class="hidden">
+								<tr>
+									<th scope="col">-</th>
+								</tr>
+							</thead>
 							<tr>
 								<td>{{ trans('translate.service_device_equipment') }}</td>
 								<td> : </td>
@@ -440,6 +455,11 @@
 						<h3>{{ trans('translate.service_upload') }}</h3>
 						<table class="table table-striped">
 							<caption></caption>
+							<thead class="hidden">
+								<tr>
+									<th scope="col">-</th>
+								</tr>
+							</thead>
 							<tr>
 								<td>{{ trans('translate.service_upload_siupp') }}</td>
 								<td> : </td>
