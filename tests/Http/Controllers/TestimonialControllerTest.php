@@ -44,9 +44,7 @@ class TestimonialControllerTest extends TestCase
     // public function testIndexWithSearch()
     // {
     //     //Presist Data
-    //     $testimonial = factory(App\Testimonial::class)->create([
-    //         'message' => 'ini adalah testimonial_testing'
-    //     ]);
+    //     $testimonial = factory(App\Testimonial::class)->create(['message' => 'ini adalah testimonial_testing']);
 
     //     //make request with search
     //     $user = User::where('id', '=', '1')->first();

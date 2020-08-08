@@ -48,6 +48,7 @@ class NewExaminationChargeController extends Controller
     private const IS_ACTIVE_IN_EXAMINATION_CHARGES = 'examination_charges.is_active';
     private const IS_IMPLEMENT = 'is_implement';
     private const MESSAGE = 'message';
+    private const NAME = 'name';
     private const NEW_CHARGE_SUCCEED_UPDATED = 'New Charge successfully updated';
     private const NEW_EXAM_CHARGES_ID = 'new_exam_charges_id';
     private const NEW_EXAM_CHARGES_ID_IN_NEW_EXAMINATION_CHARGES = 'new_examination_charges_detail.new_exam_charges_id';
@@ -60,6 +61,7 @@ class NewExaminationChargeController extends Controller
     private const PRICE = 'price';
     private const SEARCH = 'search';
     private const SAVE_FAILED = 'Save failed';
+    private const STEL = 'stel';
     private const SUCCEED = 'succeed';
     private const TA_PRICE = 'ta_price';
     private const VALID_FROM = 'valid_from';
@@ -163,12 +165,18 @@ class NewExaminationChargeController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            self::NAME => 'required',
+            self::DESCRIPTION => 'required',
+            self::VALID_FROM => 'required|date',
+        ]);
+
         $currentUser = Auth::user();
         $logService = new LogService();
 			
         $charge = new NewExaminationCharge;
         $charge->id = Uuid::uuid4();
-        $charge->name = $request->input('name');
+        $charge->name = $request->input(self::NAME);
         $charge->description = $request->input(self::DESCRIPTION);
         $charge->valid_from = $request->input(self::VALID_FROM);
         $charge->created_by = $currentUser->id;
@@ -241,7 +249,7 @@ class NewExaminationChargeController extends Controller
     {
         //intial var
         $paginate = 10;
-        $search = trim($request->input(self::SEARCH));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         $category = '';
         $dataNotFound = '';
         
@@ -498,9 +506,32 @@ class NewExaminationChargeController extends Controller
 
     private function customSaveDetail($charge,$id,Request $request,$currentUser)
     {
+
+        $this->validate($request, [
+            self::DEVICE_NAME => 'required',
+            self::STEL => 'required',
+            self::CATEGORY => 'required',
+            self::DURATION => 'required',
+            self::NEW_PRICE => 'required',
+            self::NEW_TA_PRICE => 'required',
+            self::NEW_VT_PRICE => 'required',
+        ]);
+
+
         $logService = new LogService();
         $charge->new_exam_charges_id = $id;
         if ($request->has(self::EXAMINATION_CHARGES_ID)){
+
+            $this->validate($request, [
+                'old_device_name' => 'required',
+                'old_stel' => 'required',
+                'old_category' => 'required',
+                'old_duration' => 'required',
+                self::PRICE => 'required',
+                self::TA_PRICE => 'required',
+                self::VT_PRICE => 'required',
+            ]);
+
             $charge->examination_charges_id = $request->input(self::EXAMINATION_CHARGES_ID);
             $charge->old_device_name = $request->input('old_device_name');
             $charge->old_stel = $request->input('old_stel');
@@ -513,7 +544,7 @@ class NewExaminationChargeController extends Controller
             $charge->examination_charges_id = Uuid::uuid4();
         }
         $charge->device_name = $request->input(self::DEVICE_NAME);
-        $charge->stel = $request->input('stel');
+        $charge->stel = $request->input(self::STEL);
         $charge->category = $request->input(self::CATEGORY);
         $charge->duration = str_replace(",","",$request->input(self::DURATION));
         $charge->new_price = str_replace(",","",$request->input(self::NEW_PRICE));

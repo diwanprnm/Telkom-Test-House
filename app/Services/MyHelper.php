@@ -32,7 +32,7 @@ class MyHelper
     public static function getHeaderImage($fileName = null)
     {
         $header = self::getHeader($fileName);
-        $header[self::CONTENT_TYPE] = 'image/jpeg';
+        $header[self::CONTENT_TYPE] = 'image/*';
         return $header;
     }
 }

@@ -28,6 +28,7 @@ class ArticleController extends Controller
     private const MESSAGE = 'message';
     private const SEARCH = 'search';
     private const TITLE = 'title';
+    private const TYPE = 'type';
         
 
     public function __construct()
@@ -69,15 +70,22 @@ class ArticleController extends Controller
 
     public function store(Request $request)
     {
+        $this->validate($request, [
+            self::TITLE => 'required',
+            self::TYPE => 'required',
+            self::DESCRIPTION => 'required',
+            self::DESCRIPTION_ENGLISH => 'required',
+            self::IS_ACTIVE => 'required|boolean',
+        ]);
         $currentUser = Auth::user();
 
         $article = new Article;
         $article->id = Uuid::uuid4();
         $article->title = $request->input(self::TITLE);
-        $article->type = $request->input('type');
+        $article->type = $request->input(self::TYPE);
         $article->description = $request->input(self::DESCRIPTION);
         $article->description_english = $request->input(self::DESCRIPTION_ENGLISH);
-        $article->is_active = $request->input(self::IS_ACTIVE);
+        $article->is_active = $request->input(self::IS_ACTIVE,0);
         $article->created_by = $currentUser->id;
         $article->updated_by = $currentUser->id;
 
@@ -113,6 +121,10 @@ class ArticleController extends Controller
     
     public function update(Request $request, $id)
     {
+        $this->validate($request, [
+            self::IS_ACTIVE => 'boolean',
+        ]);
+
         $currentUser = Auth::user();
 
         $article = Article::find($id);
@@ -126,8 +138,8 @@ class ArticleController extends Controller
         if ($request->has(self::DESCRIPTION_ENGLISH)){
             $article->description_english = $request->input(self::DESCRIPTION_ENGLISH);
         }
-        if ($request->has('type')){
-            $article->type = $request->input('type');
+        if ($request->has(self::TYPE)){
+            $article->type = $request->input(self::TYPE);
         }
         if ($request->has(self::IS_ACTIVE)){
             $article->is_active = $request->input(self::IS_ACTIVE);

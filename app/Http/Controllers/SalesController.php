@@ -59,6 +59,7 @@ class SalesController extends Controller
     private const STELS = 'stels';
     private const TIMEOUT = 'timeout';
     private const USERS = 'users';
+    private const USER_ID_R = 'users_id';
     private const V1_INVOICE = 'v1/invoices/';
 
     //Databse related const
@@ -128,6 +129,11 @@ class SalesController extends Controller
 
     public function store(Request $request)
     {
+        $this->validate($request, [
+            self::STELS => 'required',
+            self::USER_ID_R => 'required',
+        ]);
+
         $currentUser = Auth::user();
         $logService = new LogService();
         foreach ($request->input(self::STELS) as $key => $value) {
@@ -139,12 +145,12 @@ class SalesController extends Controller
         $tax = $request->has('is_tax') ? 0.1*array_sum($stel_price) : 0;
 
         $sales = new STELSales;
-        $sales->user_id = $request->input('user_id');
+        $sales->user_id = $request->input(self::USER_ID_R);
         $sales->payment_method = 1;
         $sales->payment_status = 1;
         $sales->total = array_sum($stel_price) + $tax;
         $sales->cust_price_payment = array_sum($stel_price) + $tax;
-        $sales->created_by = $request->input('user_id');
+        $sales->created_by = $request->input(self::USER_ID_R);
         $sales->updated_by = $currentUser->id;
 
         try{
@@ -262,17 +268,8 @@ class SalesController extends Controller
         $logService = new LogService;
         $logService->createLog('download_excel', self::SALES,'');
 
-        // Generate and return the spreadsheet
-        $excelFileName = 'Data Sales';
-        Excel::create($excelFileName, function($excel) use ($examsArray) { 
-            $excel->sheet('sheet1', function($sheet) use ($examsArray) {
-                $sheet->fromArray($examsArray, null, 'A1', false, false);
-            });
-        })->store('xlsx');
-
-        $file = Storage::disk('tmp')->get($excelFileName.'.xlsx');
-
-        return response($file, 200, \App\Services\MyHelper::getHeaderExcel($excelFileName.'.xlsx'));
+        $excel = \App\Services\ExcelService::download($examsArray, 'Data Sales');
+        return response($excel['file'], 200, $excel['headers']);
     }
 
     public function edit($id)
@@ -295,7 +292,9 @@ class SalesController extends Controller
 
     public function update(Request $request, $id)
     {
-        if (!$request->has(self::PAYMENT_STATUS)){return redirect(self::ADMIN_SALES);}
+        $this->validate($request, [
+            self::PAYMENT_STATUS => 'required',
+        ]);
 
 		$currentUser = Auth::user();
         $STELSales = STELSales::find($id);
@@ -536,6 +535,10 @@ class SalesController extends Controller
     }
 
     public function generateKuitansi(Request $request) {
+        $this->validate($request, [
+            'id' => 'required',
+        ]);
+    
         $salesService = new SalesService();
         $client = new Client([
             self::HEADERS => [self::AUTHORIZATION => config(self::APP_GATEWAY_TPN)],
@@ -566,6 +569,10 @@ class SalesController extends Controller
     }
 
     public function generateTaxInvoice(Request $request) {
+        $this->validate($request, [
+            'id' => 'required',
+        ]);
+
         $salesService = new SalesService;
         $client = new Client([
             self::HEADERS => [self::AUTHORIZATION => config(self::APP_GATEWAY_TPN)],
@@ -727,6 +734,10 @@ class SalesService
 
     public function saveFakturPajak($status_invoice, $invoice, $filename, $request, $client, $INVOICE_ID, $STELSales )
     {
+        $this->validate($request, [
+            'id' => 'required',
+        ]);
+
         if($status_invoice == "approved"){
             $status_faktur = $invoice->data->status_faktur;
             if($status_faktur == "received"){
@@ -775,6 +786,10 @@ class SalesService
 
     public function saveKuitansi($invoice, $INVOICE_ID, $request, $client, $STELSales)
     {
+        $this->validate($request, [
+            'id' => 'required',
+        ]);
+
         $status_invoice = $invoice->data->status_invoice;
         if($status_invoice == "approved"){
             $status_faktur = $invoice->data->status_faktur;
@@ -861,6 +876,12 @@ class SalesService
 
     public function saveSTELFiles($request, $STELSales, $data)
     {
+        $this->validate($request, [
+            self::STELS_SALES_DETAIL_ID => 'required',
+            'stels_sales_attachment' => 'required',
+            self::STEL_FILE => 'required',
+        ]);
+
         $notifUploadSTEL = null;
         $attachment_count = 0;
         $success_count = 0;

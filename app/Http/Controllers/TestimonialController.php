@@ -19,6 +19,7 @@ class TestimonialController extends Controller
 {
     private const CREATED_AT = 'created_at';
     private const MESSAGE = 'message';
+    private const SEARCH = 'search';
 
     /**
      * Create a new controller instance.
@@ -119,8 +120,11 @@ class TestimonialController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $currentUser = Auth::user();
+        $this->validate($request, [
+            'is_active' => 'boolean',
+        ]);
 
+        $currentUser = Auth::user();
         $testimonial = Testimonial::find($id);
  
         if ($request->has('is_active')){
