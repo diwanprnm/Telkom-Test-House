@@ -54,6 +54,7 @@ class SalesController extends Controller
     private const MINIO = 'minio';
     private const PAYMENT_DETAIL = 'payment_detail/';
     private const PAYMENT_STATUS = 'payment_status';
+    private const REQUIRED = 'required';
     private const SALES = 'SALES';
     private const SEARCH = 'search';
     private const STELS = 'stels';
@@ -130,8 +131,8 @@ class SalesController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            self::STELS => 'required',
-            self::USER_ID_R => 'required',
+            self::STELS => self::REQUIRED,
+            self::USER_ID_R => self::REQUIRED,
         ]);
 
         $currentUser = Auth::user();
@@ -293,7 +294,7 @@ class SalesController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            self::PAYMENT_STATUS => 'required',
+            self::PAYMENT_STATUS => self::REQUIRED,
         ]);
 
 		$currentUser = Auth::user();
@@ -536,7 +537,7 @@ class SalesController extends Controller
 
     public function generateKuitansi(Request $request) {
         $this->validate($request, [
-            'id' => 'required',
+            'id' => self::REQUIRED,
         ]);
     
         $salesService = new SalesService();
@@ -570,7 +571,7 @@ class SalesController extends Controller
 
     public function generateTaxInvoice(Request $request) {
         $this->validate($request, [
-            'id' => 'required',
+            'id' => self::REQUIRED,
         ]);
 
         $salesService = new SalesService;
@@ -735,7 +736,7 @@ class SalesService
     public function saveFakturPajak($status_invoice, $invoice, $filename, $request, $client, $INVOICE_ID, $STELSales )
     {
         $this->validate($request, [
-            'id' => 'required',
+            'id' => self::REQUIRED,
         ]);
 
         if($status_invoice == "approved"){
@@ -787,7 +788,7 @@ class SalesService
     public function saveKuitansi($invoice, $INVOICE_ID, $request, $client, $STELSales)
     {
         $this->validate($request, [
-            'id' => 'required',
+            'id' => self::REQUIRED,
         ]);
 
         $status_invoice = $invoice->data->status_invoice;
@@ -877,9 +878,9 @@ class SalesService
     public function saveSTELFiles($request, $STELSales, $data)
     {
         $this->validate($request, [
-            self::STELS_SALES_DETAIL_ID => 'required',
-            'stels_sales_attachment' => 'required',
-            self::STEL_FILE => 'required',
+            self::STELS_SALES_DETAIL_ID => self::REQUIRED,
+            'stels_sales_attachment' => self::REQUIRED,
+            self::STEL_FILE => self::REQUIRED,
         ]);
 
         $notifUploadSTEL = null;

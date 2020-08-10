@@ -20,6 +20,7 @@ class QuestionprivController extends Controller
     private const MESSAGE = 'message';
     private const QUESTION = 'question';
     private const REQUIRED = 'required';
+    private const SEARCH = 'search';
     private const USER_ID = 'user_id';
     /**
      * Create a new controller instance.
