@@ -1678,7 +1678,7 @@
 										<?php $status = 0 ?>
 									@foreach($data->media as $item)
 										@if($item->name == 'File Pembayaran' && $item->attachment !='')
-											<?php $status = 1; exit; ?>
+											<?php $status = 1; break; ?>
 										@endif
 									@endforeach
 									<input type="hidden" id="hide_status_form-pembayaran" value="{{ $status }}">
@@ -1833,7 +1833,7 @@
 										<?php $status = 0 ?>
 									@foreach($data->media as $item)
 										@if($item->name == 'File Pembayaran' && $item->attachment !='')
-											<?php $status = 1; exit; ?>
+											<?php $status = 1; break; ?>
 										@endif
 									@endforeach
 
@@ -1919,7 +1919,7 @@
 										<?php $status = 0 ?>
 									@foreach($data->media as $item)
 										@if($item->name == 'File Pembayaran' && $item->attachment !='')
-											<?php $status = 1; exit; ?>
+											<?php $status = 1; break; ?>
 										@endif
 									@endforeach
 
@@ -2398,7 +2398,7 @@
 									</div>
 									
 									<div class="modal-body">
-										<table width=100%><caption></caption>
+										<table style="width: 100%;"><caption></caption>
 											<tr>
 												<th scope="col">
 													<div class="form-group">
@@ -2410,7 +2410,7 @@
 										</table>
 									</div><!-- /.modal-content -->
 									<div class="modal-footer">
-										<table width=100%><caption>
+										<table style="width: 100%;"><caption>
 											<tr>
 												<th scope="col">
 													<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>

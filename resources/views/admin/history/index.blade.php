@@ -25,18 +25,9 @@
 	        <div class="row">
 				<div class="col-md-6">
 	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><em class="ti-filter"></em> Filter</a>
-				<!--
-					<a class="btn btn-info pull-left" href="{{URL::to('history/excel')}}"> Export to Excel</a>
-				-->
 				</div>
 				<div class="col-md-6">
-				<!--
-	                <span class="input-icon input-icon-right search-table">
-	                    <input id="search_value" type="text" placeholder="Search" id="form-field-17" class="form-control " value="">
-	                    <i class="ti-search"></i>
-	                </span>
-				-->
-	            </div>
+				</div>
 	            <div class="col-md-12 panel panel-info">
 			    	<div id="collapse1" class="panel-collapse collapse">
 			     		<fieldset>

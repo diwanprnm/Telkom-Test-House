@@ -163,20 +163,22 @@
 									</label>
 									<div class="form-group"> 
 										<?php
-
+										$CHECKED_STRING = 'checked';
 										function in_multiarray($elem, $array,$field)
 										{
 										    $top = sizeof($array) - 1;
 										    $bottom = 0;
 										    while($bottom <= $top)
 										    {
-										        if($array[$bottom][$field] == $elem)
-										            return true;
-										        else 
-										            if(is_array($array[$bottom][$field]))
-										                if(in_multiarray($elem, ($array[$bottom][$field])))
-										                    return true;
-
+										        if($array[$bottom][$field] == $elem){
+													return true;
+												}
+										        else if(is_array($array[$bottom][$field]))
+												{
+													if(in_multiarray($elem, ($array[$bottom][$field]))){
+														return true;
+													}
+												}
 										        $bottom++;
 										    }        
 										    return false;
@@ -185,17 +187,17 @@
 										$html = '<ul id="tree">';
 								        foreach ($tree as $key => $value) {
 								            if(isset($value[0]['children'])) {
-		 							$is_active = (in_multiarray($value[0]['id'], $menu_user,'id'))?'checked':'';
+		 							$is_active = (in_multiarray($value[0]['id'], $menu_user,'id'))?$CHECKED_STRING:'';
 								                $html .= '<li><label> <input type="checkbox" class="chk" id="'.$value[0]['url'].'" name="menus[]" '.$is_active.' value="'.$value[0]['id'].'" /> '.$value[0]['name'].'</label>';
 								                $html .= '<ul>';
 								               
 								                foreach ($value[0]['children'] as $child) { 
-									$is_active = (in_multiarray($child['id'], $menu_user,'id'))?'checked':'';
+									$is_active = (in_multiarray($child['id'], $menu_user,'id'))?$CHECKED_STRING:'';
 								                   	$html .= '<li><label> <input type="checkbox" class="chk" id="'.$child['url'].'" name="menus[]" '.$is_active.'  value="'.$child['id'].'" /> '.$child['name'].'</label></li>'; 
 								                }
 								                $html .= '</ul>';
 								            }else{
-								 			$is_active = (in_multiarray($value[0]['id'], $menu_user,'id'))?'checked':'';
+								 			$is_active = (in_multiarray($value[0]['id'], $menu_user,'id'))?$CHECKED_STRING:'';
 								              $html .= '<li>
 								              				<label> 
 								              				<input type="checkbox" 
@@ -223,40 +225,40 @@
 										<input type="hidden" id="hide_admin_role" name="hide_admin_role">
 										<ul id="tree_examination">
 											<li>
-												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['registration_status'] || $admin_role[0]['function_status'] || $admin_role[0]['contract_status']? 'checked':'';}?>>Registrasi</label>
+												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['registration_status'] || $admin_role[0]['function_status'] || $admin_role[0]['contract_status']? $CHECKED_STRING:'';}?>>Registrasi</label>
 												<ul>
-													<li><label> <input type="checkbox" name="examinations[]" value="registration_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['registration_status'] ?'checked':'';}?>>Registrasi</label></li>
-													<li><label> <input type="checkbox" name="examinations[]" value="function_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['function_status'] ?'checked':'';}?>>Uji Fungsi</label></li>
-													<li><label> <input type="checkbox" name="examinations[]" value="contract_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['contract_status'] ?'checked':'';}?>>Tinjauan Kontrak</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="registration_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['registration_status'] ?$CHECKED_STRING:'';}?>>Registrasi</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="function_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['function_status'] ?$CHECKED_STRING:'';}?>>Uji Fungsi</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="contract_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['contract_status'] ?$CHECKED_STRING:'';}?>>Tinjauan Kontrak</label></li>
 												</ul>
 											</li>
 											<li>
-												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['spb_status'] || $admin_role[0]['payment_status']? 'checked':'';}?>>Keuangan</label>
+												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['spb_status'] || $admin_role[0]['payment_status']? $CHECKED_STRING:'';}?>>Keuangan</label>
 												<ul>
-													<li><label> <input type="checkbox" name="examinations[]" value="spb_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['spb_status'] ?'checked':'';}?>>SPB</label></li>
-													<li><label> <input type="checkbox" name="examinations[]" value="payment_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['payment_status'] ?'checked':'';}?>>Pembayaran</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="spb_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['spb_status'] ?$CHECKED_STRING:'';}?>>SPB</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="payment_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['payment_status'] ?$CHECKED_STRING:'';}?>>Pembayaran</label></li>
 												</ul>
 											</li>
 											<li>
-												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['spk_status'] || $admin_role[0]['examination_status']? 'checked':'';}?>>Pengujian</label>
+												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['spk_status'] || $admin_role[0]['examination_status']? $CHECKED_STRING:'';}?>>Pengujian</label>
 												<ul>
-													<li><label> <input type="checkbox" name="examinations[]" value="spk_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['spk_status'] ?'checked':'';}?>>Pembuatan SPK</label></li>
-													<li><label> <input type="checkbox" name="examinations[]" value="examination_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['examination_status'] ?'checked':'';}?>>Pelaksanaan Uji</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="spk_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['spk_status'] ?$CHECKED_STRING:'';}?>>Pembuatan SPK</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="examination_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['examination_status'] ?$CHECKED_STRING:'';}?>>Pelaksanaan Uji</label></li>
 												</ul>
 											</li>
 											<li>
-												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['resume_status'] || $admin_role[0]['qa_status'] || $admin_role[0]['certificate_status']? 'checked':'';}?>>Laporan & Sertifikat</label>
+												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['resume_status'] || $admin_role[0]['qa_status'] || $admin_role[0]['certificate_status']? $CHECKED_STRING:'';}?>>Laporan & Sertifikat</label>
 												<ul>
-													<li><label> <input type="checkbox" name="examinations[]" value="resume_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['resume_status'] ?'checked':'';}?>>Laporan Uji</label></li>
-													<li><label> <input type="checkbox" name="examinations[]" value="qa_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['qa_status'] ?'checked':'';}?>>Sidang QA</label></li>
-													<li><label> <input type="checkbox" name="examinations[]" value="certificate_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['certificate_status'] ?'checked':'';}?>>Penerbitan Sertifikat</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="resume_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['resume_status'] ?$CHECKED_STRING:'';}?>>Laporan Uji</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="qa_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['qa_status'] ?$CHECKED_STRING:'';}?>>Sidang QA</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="certificate_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['certificate_status'] ?$CHECKED_STRING:'';}?>>Penerbitan Sertifikat</label></li>
 												</ul>
 											</li>
 											<li>
-												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['equipment_status'] || $admin_role[0]['receipt_status']? 'checked':'';}?>>Lainnya</label>
+												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['equipment_status'] || $admin_role[0]['receipt_status']? $CHECKED_STRING:'';}?>>Lainnya</label>
 												<ul>
-													<li><label> <input type="checkbox" name="examinations[]" value="equipment_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['equipment_status'] ?'checked':'';}?>>Edit Lokasi Barang</label></li>
-													<li><label> <input type="checkbox" name="examinations[]" value="receipt_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['receipt_status'] ?'checked':'';}?>>Tanda Terima Hasil Pengujian</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="equipment_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['equipment_status'] ?$CHECKED_STRING:'';}?>>Edit Lokasi Barang</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="receipt_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['receipt_status'] ?$CHECKED_STRING:'';}?>>Tanda Terima Hasil Pengujian</label></li>
 												</ul>
 											</li>
 										</ul>

@@ -98,14 +98,14 @@
 				</div>
 			@endif
 		</div>
-		<table width=100%>
+		<table style="width: 100%;">
 			<caption></caption>
 			<tbody>
 				<tr>
-					<th align="center" scope="col">
+					<th class="center" scope="col">
 						<label for="nama_perangkat">Nama Perangkat *</label>
 					</th>
-					<td align="center">
+					<td class="center">
 						<label for="biaya">Biaya (Rp.) *</label>
 					</td>
 					<td style="width:40px;"><a  style="width:40px;" value='Add More' class='del btn btn-success btn-flat' onclick='addAppend()'><em id='icon_add' class='fa fa-plus'></em></a></td>
@@ -113,13 +113,11 @@
 				<tr>
 					<td>
 						<div class="form-group">
-							<!-- <textarea class="form-control" rows="1" name="nama_perangkat" required>1 Unit {{ $data->device->name }}, merk {{ $data->device->mark }}, type {{ $data->device->model }}, kapasitas {{ $data->device->capacity }}</textarea> -->
 							<input type="text" class="form-control" name="nama_perangkat[]" value="1 Unit {{ $data->device->name }}, merk {{ $data->device->mark }}, type {{ $data->device->model }}, kapasitas {{ $data->device->capacity }}" required>
 						</div>
 					</td>
 					<td>
 						<div class="form-group">
-							<!-- <textarea class="form-control" rows="1" name="biaya" required>{{ $price }},-</textarea> -->
 							<input type="number" class="form-control" name="biaya[]" id="biaya1" value="{{ $price }}" required>
 						</div>
 					</td>
@@ -137,7 +135,6 @@
 	</fieldset>
 	
 	<!-- start: MAIN JAVASCRIPTS -->
-    <!-- <script src={{ asset("vendor/jquery/jquery.min.js") }}></script> -->
     <script src={{ asset("vendor/bootstrap/js/bootstrap.min.js") }}></script>
     <script src={{ asset("vendor/modernizr/modernizr.js") }}></script>
     <script src={{ asset("vendor/jquery-cookie/jquery.cookie.js") }}></script>

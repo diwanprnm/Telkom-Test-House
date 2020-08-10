@@ -93,7 +93,7 @@ table {
 									</div>
 									
 									<div class="modal-body">
-										<table width=100%>
+										<table style="width: 100%;">
 										<caption></caption>
 											<tr>
 												<th scope="col">
@@ -106,7 +106,7 @@ table {
 										</table>
 									</div><!-- /.modal-content -->
 									<div class="modal-footer">
-										<table width=100%>
+										<table style="width: 100%;">
 										<caption></caption>
 											<tr>
 												<th scope="col">

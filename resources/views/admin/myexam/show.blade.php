@@ -1,4 +1,4 @@
-<?php echo"<pre>";print_r($data);exit;?>@extends('layouts.app')
+@extends('layouts.app')
 
 @section('content')
 
@@ -379,11 +379,6 @@
 					<a href="{{URL::to('/admin/myexam')}}">
                     	<button type="button" class="btn btn-wide btn-red btn-squared pull-left" style="margin-right: 1%;">Kembali</button>
                     </a>
-					<!-- 
-					<a href="{{URL::to('admin/examination/revisi/'.$data->id)}}">
-                    	<button type="button" class="btn btn-wide btn-red btn-squared pull-left">Edit</button>
-                    </a>
-					-->
                 </div>
 			</div>
 		</div>
