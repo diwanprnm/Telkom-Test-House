@@ -30,6 +30,34 @@ class CompanyController extends Controller
      *
      * @return void
      */
+
+
+    private const IS_ACTIVE = 'is_active';
+    private const COMPANY = 'COMPANY';
+    private const CREATED_AT = 'created_at';
+    private const BEFORE_DATE = 'before_date';
+    private const AFTER_DATE = 'after_date';
+    private const SORT_BY = 'sort_by';
+    private const SORT_TYPE = 'sort_type';
+    private const MESSAGE = 'message';
+    private const ADDRESS = 'address';
+    private const PLG_ID = 'plg_id';
+    private const EMAIL = 'email';
+    private const POSTAL_CODE = 'postal_code';
+    private const PHONE_NUMBER = 'phone_number';
+    private const NPWP_NUMBER = 'npwp_number';
+    private const SIUP_NUMBER = 'siup_number';
+    private const ERROR = 'error';
+    private const FORMAT_NOT_AVAILABLE = 'Format Not Available';
+    private const ADMIN_CREATE = '/admin/company/create';
+    private const ADMIN_COMPANY = '/admin/company';
+    private const SIUP_FILE = 'siup_file';
+    private const QS_CERTIFICATE_FILE = 'qs_certificate_file';
+    private const QS_CERTIFICATE_DATE = 'qs_certificate_date';
+    private const QS_CERTIFICATE_NUMBER = 'qs_certificate_number';
+    private const NPWP_FILE = 'npwp_file';
+    private const MINIO = 'minio';
+
     public function __construct()
     {
         $this->middleware('auth.admin');
@@ -56,7 +84,7 @@ class CompanyController extends Controller
             $sort_type = 'asc';
             
             if ($search != null){
-                $query = Company::whereNotNull('created_at')
+                $query = Company::whereNotNull(self::CREATED_AT)
 					->where('id', '<>', '1')
                     ->where('name','like','%'.$search.'%');
 				
@@ -65,41 +93,40 @@ class CompanyController extends Controller
                     $logs->action = "Search Company";
                     $logs->data = json_encode(array("search"=>$search));
                     $logs->created_by = $currentUser->id;
-                    $logs->page = "COMPANY";
+                    $logs->page = self::COMPANY;
                     $logs->save();
             }else{
-                $query = Company::whereNotNull('created_at')->where('id', '<>', '1');
+                $query = Company::whereNotNull(self::CREATED_AT)->where('id', '<>', '1');
 
-                if ($request->has('is_active')){
-                    $status = $request->get('is_active');
-					if($request->input('is_active') != '0'){
-						$query->where('is_active', $request->get('is_active'));
+                if ($request->has(self::IS_ACTIVE)){
+                    $status = $request->get(self::IS_ACTIVE);
+					if($request->input(self::IS_ACTIVE) != '0'){
+						$query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
 					}
                 }
             }
 
-            if ($request->has('before_date')){
-                $query->where(DB::raw('DATE(created_at)'), '<=', $request->get('before_date'));
-                $before = $request->get('before_date');
+            if ($request->has(self::BEFORE_DATE)){
+                $query->where(DB::raw('DATE(created_at)'), '<=', $request->get(self::BEFORE_DATE));
+                $before = $request->get(self::BEFORE_DATE);
             }
 
-            if ($request->has('after_date')){
-                $query->where(DB::raw('DATE(created_at)'), '>=', $request->get('after_date'));
-                $after = $request->get('after_date');
+            if ($request->has(self::AFTER_DATE)){
+                $query->where(DB::raw('DATE(created_at)'), '>=', $request->get(self::AFTER_DATE));
+                $after = $request->get(self::AFTER_DATE);
             }
 
-            if ($request->has('sort_by')){
-            $sort_by = $request->get('sort_by');
+            if ($request->has(self::SORT_BY)){
+            $sort_by = $request->get(self::SORT_BY);
             }
-            if ($request->has('sort_type')){
-                $sort_type = $request->get('sort_type');
+            if ($request->has(self::SORT_TYPE)){
+                $sort_type = $request->get(self::SORT_TYPE);
             }
             
             $companies = $query->orderBy($sort_by, $sort_type)
                         ->paginate($paginate);
-            
-			// $data_excel = $query->orderBy('updated_at', 'desc')->get();
-			$data_excel = Company::whereNotNull('created_at')->where('id', '<>', '1')->orderBy('updated_at', 'desc')->get();
+             
+			$data_excel = Company::whereNotNull(self::CREATED_AT)->where('id', '<>', '1')->orderBy('updated_at', 'desc')->get();
 			$request->session()->put('excel_pengujian', $data_excel);
 			
             if (count($companies) == 0){
@@ -107,14 +134,14 @@ class CompanyController extends Controller
             }
             
             return view('admin.company.index')
-                ->with('message', $message)
+                ->with(self::MESSAGE, $message)
                 ->with('data', $companies)
                 ->with('search', $search)
                 ->with('status', $status)
-                ->with('before_date', $before)
-                ->with('after_date', $after)
-                ->with('sort_by', $sort_by)
-                ->with('sort_type', $sort_type);
+                ->with(self::BEFORE_DATE, $before)
+                ->with(self::AFTER_DATE, $after)
+                ->with(self::SORT_BY, $sort_by)
+                ->with(self::SORT_TYPE, $sort_type);
         }
     }
 
@@ -141,104 +168,104 @@ class CompanyController extends Controller
         $company = new Company;
         $company->id = Uuid::uuid4();
         $company->name = $request->input('name');
-        $company->address = $request->input('address');
-        $company->plg_id = $request->input('plg_id');
+        $company->address = $request->input(self::address);
+        $company->plg_id = $request->input(self::PLG_ID);
         $company->nib = $request->input('nib');
         $company->city = $request->input('city');
-        $company->email = $request->input('email');
-        $company->postal_code = $request->input('postal_code');
-        $company->phone_number = $request->input('phone_number');
+        $company->email = $request->input(self::EMAIL);
+        $company->postal_code = $request->input(self::POSTAL_CODE);
+        $company->phone_number = $request->input(self::PHONE_NUMBER);
         $company->fax = $request->input('fax');
-        $company->npwp_number = $request->input('npwp_number');
-        $company->siup_number = $request->input('siup_number');
+        $company->npwp_number = $request->input(self::NPWP_NUMBER);
+        $company->siup_number = $request->input(self::SIUP_NUMBER);
         $company->siup_date = $request->input('siup_date');
-        $company->qs_certificate_number = $request->input('qs_certificate_number');
+        $company->qs_certificate_number = $request->input(self::QS_CERTIFICATE_NUMBER);
         $company->keterangan = $request->input('keterangan');
  
         $allowedImage = ['jpeg','jpg','png'];
         $allowedFile = ['pdf'];
-        if ($request->hasFile('npwp_file')) { 
-            $file = $request->file('npwp_file');
+        if ($request->hasFile(self::NPWP_FILE)) { 
+            $file = $request->file(self::NPWP_FILE);
             $ext = $file->getClientOriginalExtension(); 
-            $file_name = 'npwp_'.$request->file('npwp_file')->getClientOriginalName();
+            $file_name = 'npwp_'.$request->file(self::NPWP_FILE)->getClientOriginalName();
             
             $is_uploaded = false;
             if (in_array($ext, $allowedFile))
             { 
-                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/$file_name",$file->__toString());
+                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/$file_name",$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
-                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/$file_name",(string)$image->encode()); 
+                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/$file_name",(string)$image->encode()); 
             }else{
-                Session::flash('error', 'Format Not Available');
-                return redirect('/admin/company/create');
+                Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
+                return redirect(self::ADMIN_CREATE);
             } 
              
             if($is_uploaded){
                 $company->npwp_file = $file_name;
             }else{
-                Session::flash('error', 'Save NPWP to directory failed');
-                return redirect('/admin/company/create');
+                Session::flash(self::ERROR, 'Save NPWP to directory failed');
+                return redirect(self::ADMIN_CREATE);
             }
         }        
-        if ($request->hasFile('siup_file')) {  
+        if ($request->hasFile(self::SIUP_FILE)) {  
 
-            $file = $request->file('siup_file');
+            $file = $request->file(self::SIUP_FILE);
             $ext = $file->getClientOriginalExtension(); 
-            $file_name = 'siupp_'.$request->file('siup_file')->getClientOriginalName();
+            $file_name = 'siupp_'.$request->file(self::SIUP_FILE)->getClientOriginalName();
             
             $is_uploaded = false;
             if (in_array($ext, $allowedFile))
             {  
-                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/$file_name",$file->__toString());
+                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/$file_name",$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
-                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/".$file_name,(string)$image->encode()); 
+                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/".$file_name,(string)$image->encode()); 
             }else{
-                Session::flash('error', 'Format Not Available');
-                return redirect('/admin/company/create');
+                Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
+                return redirect(self::ADMIN_CREATE);
             } 
              
             if($is_uploaded){
                 $company->siup_file = $file_name;
             }else{
-                Session::flash('error', 'Save SIUP to directory failed');
-                return redirect('/admin/company/create');
+                Session::flash(self::ERROR, 'Save SIUP to directory failed');
+                return redirect(self::ADMIN_CREATE);
             }
         }
-        if ($request->hasFile('qs_certificate_file')) {  
-            $file = $request->file('qs_certificate_file');
+        if ($request->hasFile(self::QS_CERTIFICATE_FILE)) {  
+            $file = $request->file(self::QS_CERTIFICATE_FILE);
             $ext = $file->getClientOriginalExtension(); 
-            $file_name = 'serti_uji_mutu_'.$request->file('qs_certificate_file')->getClientOriginalName();
+            $file_name = 'serti_uji_mutu_'.$request->file(self::QS_CERTIFICATE_FILE)->getClientOriginalName();
             
             $is_uploaded = false;
             if (in_array($ext, $allowedFile))
             {  
-                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/$file_name",$file->__toString());
+                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/$file_name",$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
-                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/".$file_name,(string)$image->encode()); 
+                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/".$file_name,(string)$image->encode()); 
             }else{
-                Session::flash('error', 'Format Not Available');
-                return redirect('/admin/company/create');
+                Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
+                return redirect(self::ADMIN_CREATE);
             } 
              
             if($is_uploaded){
                 $company->qs_certificate_file = $file_name;
             }else{
-                Session::flash('error', 'Save QS certificate to directory failed');
-                return redirect('/admin/company/create');
+                Session::flash(self::ERROR, 'Save QS certificate to directory failed');
+                return redirect(self::ADMIN_CREATE);
             }
         }
         
-        $company->qs_certificate_date = $request->input('qs_certificate_date');
-        $company->is_active = $request->input('is_active');
+        $company->qs_certificate_date = $request->input(self::QS_CERTIFICATE_DATE);
+        $company->is_active = $request->input(self::IS_ACTIVE);
         $company->created_by = $currentUser->id;
         $company->updated_by = $currentUser->id;
 
@@ -250,14 +277,14 @@ class CompanyController extends Controller
             $logs->action = "Create Company";
             $logs->data = $company;
             $logs->created_by = $currentUser->id;
-            $logs->page = "COMPANY";
+            $logs->page = self::COMPANY;
             $logs->save();
 
-            Session::flash('message', 'Company successfully created');
-            return redirect('/admin/company');
+            Session::flash(self::MESSAGE, 'Company successfully created');
+            return redirect(self::ADMIN_COMPANY);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
-            return redirect('/admin/company/create');
+            Session::flash(self::ERROR, 'Save failed');
+            return redirect(self::ADMIN_CREATE);
         }
     }
 
@@ -306,11 +333,11 @@ class CompanyController extends Controller
         if ($request->has('name')){
             $company->name = $request->input('name');
         }
-        if ($request->has('address')){
-            $company->address = $request->input('address');
+        if ($request->has(self::address)){
+            $company->address = $request->input(self::address);
         }
-        if ($request->has('plg_id')){
-            $company->plg_id = $request->input('plg_id');
+        if ($request->has(self::PLG_ID)){
+            $company->plg_id = $request->input(self::PLG_ID);
         }
         if ($request->has('nib')){
             $company->nib = $request->input('nib');
@@ -318,119 +345,119 @@ class CompanyController extends Controller
         if ($request->has('city')){
             $company->city = $request->input('city');
         }
-        if ($request->has('email')){
-            $company->email = $request->input('email');
+        if ($request->has(self::EMAIL)){
+            $company->email = $request->input(self::EMAIL);
         }
-        if ($request->has('postal_code')){
-            $company->postal_code = $request->input('postal_code');
+        if ($request->has(self::POSTAL_CODE)){
+            $company->postal_code = $request->input(self::POSTAL_CODE);
         }
-        if ($request->has('phone_number')){
-            $company->phone_number = $request->input('phone_number');
+        if ($request->has(self::PHONE_NUMBER)){
+            $company->phone_number = $request->input(self::PHONE_NUMBER);
         }
         if ($request->has('fax')){
             $company->fax = $request->input('fax');
         }
-        if ($request->has('npwp_number')){
-            $company->npwp_number = $request->input('npwp_number');
+        if ($request->has(self::NPWP_NUMBER)){
+            $company->npwp_number = $request->input(self::NPWP_NUMBER);
         }
         $allowedImage = ['jpeg','jpg','png'];
         $allowedFile = ['pdf'];
-        if ($request->hasFile('npwp_file')) { 
-            $file = $request->file('npwp_file');
+        if ($request->hasFile(self::NPWP_FILE)) { 
+            $file = $request->file(self::NPWP_FILE);
             $ext = $file->getClientOriginalExtension(); 
-            $file_name = 'npwp_'.$request->file('npwp_file')->getClientOriginalName();
+            $file_name = 'npwp_'.$request->file(self::NPWP_FILE)->getClientOriginalName();
             
             $is_uploaded = false;
             if (in_array($ext, $allowedFile))
             { 
-                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/$file_name",$file->__toString());
+                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/$file_name",$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
-                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/$file_name",(string)$image->encode()); 
+                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/$file_name",(string)$image->encode()); 
             }else{
-                Session::flash('error', 'Format Not Available');
-                return redirect('/admin/company/create');
+                Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
+                return redirect(self::ADMIN_CREATE);
             } 
              
             if($is_uploaded){
                 $company->npwp_file = $file_name;
             }else{
-                Session::flash('error', 'Save NPWP to directory failed');
-                return redirect('/admin/company/create');
+                Session::flash(self::ERROR, 'Save NPWP to directory failed');
+                return redirect(self::ADMIN_CREATE);
             }
         }        
-        if ($request->hasFile('siup_file')) {  
+        if ($request->hasFile(self::SIUP_FILE)) {  
 
-            $file = $request->file('siup_file');
+            $file = $request->file(self::SIUP_FILE);
             $ext = $file->getClientOriginalExtension(); 
-            $file_name = 'siupp_'.$request->file('siup_file')->getClientOriginalName();
+            $file_name = 'siupp_'.$request->file(self::SIUP_FILE)->getClientOriginalName();
             
             $is_uploaded = false;
             if (in_array($ext, $allowedFile))
             { 
-                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/".$file_name,$file->__toString());
+                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/".$file_name,$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
-                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/".$file_name,(string)$image->encode()); 
+                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/".$file_name,(string)$image->encode()); 
             }else{
-                Session::flash('error', 'Format Not Available');
-                return redirect('/admin/company/create');
+                Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
+                return redirect(self::ADMIN_CREATE);
             } 
              
             if($is_uploaded){
                 $company->siup_file = $file_name;
             }else{
-                Session::flash('error', 'Save SIUP to directory failed');
-                return redirect('/admin/company/create');
+                Session::flash(self::ERROR, 'Save SIUP to directory failed');
+                return redirect(self::ADMIN_CREATE);
             }
         }
-        if ($request->hasFile('qs_certificate_file')) {  
-            $file = $request->file('qs_certificate_file');
+        if ($request->hasFile(self::QS_CERTIFICATE_FILE)) {  
+            $file = $request->file(self::QS_CERTIFICATE_FILE);
             $ext = $file->getClientOriginalExtension(); 
-            $file_name = 'serti_uji_mutu_'.$request->file('qs_certificate_file')->getClientOriginalName();
+            $file_name = 'serti_uji_mutu_'.$request->file(self::QS_CERTIFICATE_FILE)->getClientOriginalName();
             
             $is_uploaded = false;
             if (in_array($ext, $allowedFile))
             { 
-                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/".$file_name,$file,$file->__toString());
+                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/".$file_name,$file,$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
-                $is_uploaded = Storage::disk('minio')->put("company/".$company->id."/".$file_name,(string)$image->encode()); 
+                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/".$file_name,(string)$image->encode()); 
             }else{
-                Session::flash('error', 'Format Not Available');
-                return redirect('/admin/company/create');
+                Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
+                return redirect(self::ADMIN_CREATE);
             } 
              
             if($is_uploaded){
                 $company->qs_certificate_file = $file_name;
             }else{
-                Session::flash('error', 'Save QS certificate to directory failed');
-                return redirect('/admin/company/create');
+                Session::flash(self::ERROR, 'Save QS certificate to directory failed');
+                return redirect(self::ADMIN_CREATE);
             }
         }
-        if ($request->has('siup_number')){
-            $company->siup_number = $request->input('siup_number');
+        if ($request->has(self::SIUP_NUMBER)){
+            $company->siup_number = $request->input(self::SIUP_NUMBER);
         }
         if ($request->has('siup_date')){
             $company->siup_date = $request->input('siup_date');
         }
-        if ($request->has('qs_certificate_number')){
-            $company->qs_certificate_number = $request->input('qs_certificate_number');
+        if ($request->has(self::QS_CERTIFICATE_NUMBER)){
+            $company->qs_certificate_number = $request->input(self::QS_CERTIFICATE_NUMBER);
         }
-        if ($request->has('qs_certificate_date')){
-            $company->qs_certificate_date = $request->input('qs_certificate_date');
+        if ($request->has(self::QS_CERTIFICATE_DATE)){
+            $company->qs_certificate_date = $request->input(self::QS_CERTIFICATE_DATE);
         }
-        if ($request->has('qs_certificate_date')){
+        if ($request->has(self::QS_CERTIFICATE_DATE)){
             $company->keterangan = $request->input('keterangan');
         }
-        if ($request->has('is_active')){
-            $company->is_active = $request->input('is_active');
+        if ($request->has(self::IS_ACTIVE)){
+            $company->is_active = $request->input(self::IS_ACTIVE);
         }
 
         $company->updated_by = $currentUser->id;
@@ -443,14 +470,14 @@ class CompanyController extends Controller
             $logs->action = "Update Company";
             $logs->data = $oldData;
             $logs->created_by = $currentUser->id;
-            $logs->page = "COMPANY";
+            $logs->page = self::COMPANY;
             $logs->save();
 
-            Session::flash('message', 'Company successfully updated');
-            return redirect('/admin/company');
+            Session::flash(self::MESSAGE, 'Company successfully updated');
+            return redirect(self::ADMIN_COMPANY);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
-            return redirect('/admin/company/'.$company->id.'/edit');
+            Session::flash(self::ERROR, 'Save failed');
+            return redirect(self::ADMIN_COMPANY.$company->id.'/edit');
         }
     }
 
@@ -474,14 +501,14 @@ class CompanyController extends Controller
                 $logs->action = "Delete Company";
                 $logs->data = $oldData;
                 $logs->created_by = $currentUser->id;
-                $logs->page = "COMPANY";
+                $logs->page = self::COMPANY;
                 $logs->save();
 
-                Session::flash('message', 'Company successfully deleted');
-                return redirect('/admin/company');
+                Session::flash(self::MESSAGE, 'Company successfully deleted');
+                return redirect(self::ADMIN_COMPANY);
             }catch (Exception $e){
-                Session::flash('error', 'Delete failed');
-                return redirect('/admin/company');
+                Session::flash(self::ERROR, 'Delete failed');
+                return redirect(self::ADMIN_COMPANY);
             }
         }
     }
@@ -493,7 +520,7 @@ class CompanyController extends Controller
         if ($company){
             switch ($name) {
                 case 'npwp': 
-                    $file = Storage::disk('minio')->url('company/'.$company->npwp_file);
+                    $file = Storage::disk(self::MINIO)->url('company/'.$company->npwp_file);
                      
                     $filename = $company->npwp_file;
                     $tempImage = tempnam(sys_get_temp_dir(), $filename);
@@ -503,7 +530,7 @@ class CompanyController extends Controller
                     break;
 
                 case 'siup':  
-                    $file = Storage::disk('minio')->url('company/'.$company->siup_file);
+                    $file = Storage::disk(self::MINIO)->url('company/'.$company->siup_file);
                      
                     $filename = $company->npwp_file;
                     $tempImage = tempnam(sys_get_temp_dir(), $filename);
@@ -514,7 +541,7 @@ class CompanyController extends Controller
 
                 case 'qs': 
 
-                    $file = Storage::disk('minio')->url('company/'.$company->qs_certificate_file);
+                    $file = Storage::disk(self::MINIO)->url('company/'.$company->qs_certificate_file);
                      
                     $filename = $company->qs_certificate_file;
                     $tempImage = tempnam(sys_get_temp_dir(), $filename);
@@ -522,6 +549,8 @@ class CompanyController extends Controller
 
                     return response()->download($tempImage, $filename);
                     break;
+                default:
+                    return false; 
             }
         }
     }
@@ -583,12 +612,7 @@ class CompanyController extends Controller
 		}
 		// Generate and return the spreadsheet
 		Excel::create('Data Perusahaan', function($excel) use ($examsArray) {
-
-			// Set the spreadsheet title, creator, and description
-			// $excel->setTitle('Payments');
-			// $excel->setCreator('Laravel')->setCompany('WJ Gilmore, LLC');
-			// $excel->setDescription('payments file');
-
+ 
 			// Build the spreadsheet, passing in the payments array
 			$excel->sheet('sheet1', function($sheet) use ($examsArray) {
 				$sheet->fromArray($examsArray, null, 'A1', false, false);
@@ -602,34 +626,30 @@ class CompanyController extends Controller
 		
 		if($request->hasFile('import_file')){
 			$path = $request->file('import_file')->getRealPath();
-			$data = Excel::load($path, function($reader) {})->get();
+			$data = Excel::load($path, function() {})->get();
 			$datenow = date('Y-m-d H:i:s');
 			if(!empty($data) && $data->count()){
-				foreach ($data->toArray() as $key => $value) {
-					// if(!empty($value)){
-						// foreach ($value as $v) {        
-							$insert[] = [
-								'id' => Uuid::uuid4(),
-								'name' => $value['nama'],
-								'address' => $value['alamat'],
-								'city' => $value['kota'],
-								'email' => $value['email'],
-								'postal_code' => $value['kode_pos'],
-								'phone_number' => $value['no_telp'],
-								'fax' => $value['no_fax'],
-								'npwp_number' => $value['no_npwp'],
-								'siup_number' => $value['no_siupp'],
-								'siup_date' => $value['tgl_siupp'],
-								'qs_certificate_number' => $value['no_sertifikat'],
-								'qs_certificate_date' => $value['tgl_sertifikat'],
-								'is_active' => 0,
-								'created_by' => $currentUser->id,
-								'updated_by' => $currentUser->id,
-								'created_at' => $datenow,
-								'updated_at' => $datenow
-							];
-						// }
-					// }
+				foreach ($data->toArray() as $value) {        
+					$insert[] = [
+						'id' => Uuid::uuid4(),
+						'name' => $value['nama'],
+						self::address => $value['alamat'],
+						'city' => $value['kota'],
+						self::EMAIL => $value[self::EMAIL],
+						self::POSTAL_CODE => $value['kode_pos'],
+						self::PHONE_NUMBER => $value['no_telp'],
+						'fax' => $value['no_fax'],
+						self::NPWP_NUMBER => $value['no_npwp'],
+						self::SIUP_NUMBER => $value['no_siupp'],
+						'siup_date' => $value['tgl_siupp'],
+						self::QS_CERTIFICATE_NUMBER => $value['no_sertifikat'],
+						self::QS_CERTIFICATE_DATE => $value['tgl_sertifikat'],
+						self::IS_ACTIVE => 0,
+						'created_by' => $currentUser->id,
+						'updated_by' => $currentUser->id,
+						self::CREATED_AT => $datenow,
+						'updated_at' => $datenow
+					]; 
 				}
 				if(!empty($insert)){
 					Company::insert($insert);
@@ -638,22 +658,13 @@ class CompanyController extends Controller
                     $logs->action = "Import Company";
                     $logs->data = "";
                     $logs->created_by = $currentUser->id;
-                    $logs->page = "COMPANY";
+                    $logs->page = self::COMPANY;
                     $logs->save();
-						return back()->with('message','Insert Record successfully.');
-						// Session::flash('message', 'Company successfully created');
-						// try{
-							// $company->save();
-							// Session::flash('message', 'Company successfully created');
-							// return redirect('/admin/company');
-						// } catch(Exception $e){
-							// Session::flash('error', 'Save failed');
-							// return redirect('/admin/company/create');
-						// }
+						return back()->with(self::MESSAGE,'Insert Record successfully.'); 
 				}
 			}
 		}
-		return back()->with('error','Please Check your file, Something is wrong there.');
+		return back()->with(self::ERROR,'Please Check your file, Something is wrong there.');
 	}
 	
 	public function autocomplete($query) {
