@@ -277,14 +277,10 @@ class CalibrationChargeController extends Controller
                 ->where(self::DEVICE,'like','%'.$search.'%')
                 ->orderBy(self::DEVICE);
 
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Search Calibration Charge";
-                $datasearch = array(self::SEARCH2=>$search);
-                $logs->data = json_encode($datasearch);
-                $logs->created_by = $currentUser->id;
-                $logs->page = self::CALIBRATION;
-                $logs->save();
+                $logService = new LogService();
+                $logService->createLog('Search Calibration Charge',self::CALIBRATION, json_encode(array(self::SEARCH2=>$search)) );
+
+              
         }else{
             $query = CalibrationCharge::whereNotNull(self::CREATE);
 
