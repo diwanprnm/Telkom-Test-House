@@ -195,14 +195,12 @@ uncomment this part if you haven't added this code anywhere else
 				<div id="root">
 				  <iframe
 						  title="video tutorial"
-				          src="{{ $playlist_url }}&listType=playlist&index=0" 
-				          frameborder="0" 
+				          src="{{ $playlist_url }}&listType=playlist&index=0"
 				          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
 				          allowfullscreen="1"
 				          id="iframe_yt"
 				          ></iframe>
 				</div>
-				<!-- <div class="playlist"></div> -->
 				
 				<div class="clear"></div>
 
@@ -226,95 +224,6 @@ uncomment this part if you haven't added this code anywhere else
 
 				<div class="clear"></div>
 
-				<!-- <div class="divider divider-short divider-center"><i class="icon-circle"></i></div>
-
-				<div id="section-contact" class="heading-block title-center page-section">
-					<h2>{{ trans('translate.contact') }}</h2>
-					<span>{{ trans('translate.contact_description') }}</span>
-				</div> -->
-
-				<!-- Contact Form
-				============================================= -->
-				<!-- <div class="col_full">
-
-					<div class="fancy-title">
-						<h3>{{ trans('translate.contact_us') }}</h3>
-					</div>
-
-					<div class="contact-widget">
-
-						<div class="contact-form-result">
-							@if (Session::get('error_feedback'))
-								<div class="alert alert-error alert-danger">
-									{{ Session::get('error_feedback') }}
-								</div>
-							@endif
-							
-							@if (Session::get('message_feedback'))
-								<div class="alert alert-info">
-									{{ Session::get('message_feedback') }}
-								</div>
-							@endif 
-						</div>
-
-						 
-						 <form id="form-send-feedback" class="nobottommargin"  role="form" method="POST" action="{{ url('/client/feedback') }}">
-						 	{{ csrf_field() }}
-							<input type="hidden" name="_token" value="{{ csrf_token() }}">
-							<div class="form-process"></div>
-
-							<div class="col-md-8 col-md-offset-2">
-								<label for="template-contactform-name">{{ trans('translate.contact_question') }} <small>*</small></label>
-								<select class="required chosen-select" id="question" name="question"> 
-										<option value="0">-</option>
-									@foreach($data_question as $item)
-										<option value="{{ $item->id }}">{{ $item->name }}</option>
-									@endforeach
-								</select>
-							</div>  
-
-							<div class="clear"></div>
-
-							<div class="col-md-8 col-md-offset-2">
-								<label for="template-contactform-name">{{ trans('translate.contact_email') }} <small>*</small></label>
-								<input type="text" name="email" id="Email" placeholder="john@mail.com" class="sm-form-control required" />
-							</div>  
-
-							<div class="clear"></div>
-
-							<div class="col-md-8 col-md-offset-2">
-								<label for="template-contactform-subject">{{ trans('translate.contact_subject') }} <small>*</small></label>
-								<input type="text" name="subject" id="Subject" placeholder="{{ trans('translate.contact_subject_example') }}" class="required sm-form-control" />
-							</div> 
-
-							<div class="clear"></div>
-
-							<div class="col-md-8 col-md-offset-2">
-								<label for="template-contactform-message">{{ trans('translate.contact_message') }} <small>*</small></label>
-								<textarea class="required sm-form-control" name="message" rows="3" placeholder="{{ trans('translate.contact_message') }}" rows="6" cols="30"></textarea>
-							</div>
-
-							<div class="clear"></div>
-
-							<div class="col-md-8 col-md-offset-2">
-								<div class="g-recaptcha" data-sitekey="6Le87jIUAAAAADQF_jaDT4vnN0yiKM8kFoLJdICO" data-callback="recaptchaCallback"></div>
-								<input type="hidden" class="hiddenRecaptcha required sm-form-control" name="hiddenRecaptcha" id="hiddenRecaptcha">
-							</div>
-
-							<div class="clear"></div>
-
-							<div class="col-md-8 col-md-offset-2" style="margin-top:15px">
-								<button type="submit" class="button button-3d nomargin full btn-sky" type="submit" name="template-contactform-submit" value="submit">{{ trans('translate.contact_send') }}</button>
-							</div>
-
-						</form>
-
-					</div>
-
-
-				</div> -->
-				<!-- Contact Form End -->
-
 				</div>
 
 
@@ -329,10 +238,6 @@ uncomment this part if you haven't added this code anywhere else
 			<img src="media/popupinformation/<?php echo $data_pop_up_information[0]->image?>" style="width: 100%; height: auto;" alt="pop-up information">
 		</a>
 	@endif
-		<!-- <div id="modal_notice" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
-	        <img src="media/certification/<?php // echo $data_pop_up_information[0]->image?>" class="modal-content">
-	        <div id="caption"><span class="close" data-dismiss="modal">{{ trans('translate.close') }} <i class="fa fa-times-circle-o" aria-hidden="true"></i></span></div>
-		</div> -->
 @endsection
 
 @section('content_js')

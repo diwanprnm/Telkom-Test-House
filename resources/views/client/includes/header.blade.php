@@ -1,10 +1,10 @@
 <header class="cd-main-header animate-search navbar-fixed-top">
 	<div class="cd-logo"><a href="#0"><img src="{{asset('template-assets/img/baru/logo.png')}}" width="130" alt="Logo"></a></div>
-		<nav class="cd-main-nav-wrapper">
+		<nav aria-label="Main Nav" class="cd-main-nav-wrapper">
 			<a href="#search" class="cd-search-trigger cd-text-replace"></a>			
 			 <!-- .cd-main-nav -->
 		</nav> <!-- .cd-main-nav-wrapper -->
-		<nav class="cd-main-nav-wrapper asa" style="background-color:rgba(251,70,73,1.00);">
+		<nav aria-label="Main Nav" class="cd-main-nav-wrapper asa" style="background-color:rgba(251,70,73,1.00);">
 			<ul class="cd-main-nav">
 				<li><a href="{{url('/')}}#owl-hero" class="page-scroll">{{ trans('translate.home') }}</a></li>
 				<li><a href="{{url('/')}}#about" class="page-scroll">{{ trans('translate.about') }}</a></li>
@@ -29,7 +29,6 @@
 					$currentUser = Auth::user();
 					if($currentUser){
 				?>
-					<!-- <li><a href="{{url('/client/logout')}}" class="page-scroll"><strong>LOGOUT</strong></a></li> -->
 					<li class="dropdown"><button class="page-scroll dropdown-toggle btn-header" type="button" id="menu1" data-toggle="dropdown"><?php echo $currentUser['attributes']['name'];?><span class="caret"></span></button>
 						<ul class="dropdown-menu b-red" role="menu" aria-labelledby="menu1">
 							<li role="presentation"><a role="menuitem" tabindex="-1" href="{{url('/client/profile')}}">{{ trans('translate.profile') }}</a></li>

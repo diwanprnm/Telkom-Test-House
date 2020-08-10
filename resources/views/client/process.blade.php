@@ -64,7 +64,7 @@
 						@endif
 					</div>
 					<div id="videoStory1" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
-						<iframe title="video story 1" width="853" height="480" src="{{ $qa_video_url }}" frameborder="0" allowfullscreen></iframe>
+						<iframe title="video story 1" width="853" height="480" src="{{ $qa_video_url }}" allowfullscreen></iframe>
 					</div> 
 					<div id="modal_status_layanan_qa" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
 				      <div class="modal-dialog modal-lg">
@@ -133,7 +133,7 @@
 						@endif
 					</div>
 					<div id="videoStory2" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
-						<iframe title="video story 2" width="853" height="480" src="{{ $ta_video_url }}" frameborder="0" allowfullscreen></iframe>
+						<iframe title="video story 2" width="853" height="480" src="{{ $ta_video_url }}" allowfullscreen></iframe>
 					</div>
 					<div id="modal_status_layanan_ta" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
 				      <div class="modal-dialog modal-lg">
@@ -202,7 +202,7 @@
 						@endif
 					</div>
 					<div id="videoStory3" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
-						<iframe width="853" height="480" src="{{ $vt_video_url }}" frameborder="0" allowfullscreen title="video story"></iframe>
+						<iframe width="853" height="480" src="{{ $vt_video_url }}" allowfullscreen title="video story"></iframe>
 					</div>
 					<div id="modal_status_layanan_vt" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
 				      <div class="modal-dialog modal-lg">
@@ -281,7 +281,7 @@
 				          <div class="modal-body pre-scrollable" style="padding-bottom: 20%;">
 				               <div class="row">
 				               		@if(count($data_layanan_active) == 0)
-				                    	<h2 align="justify">{{ trans('translate.message_close_lab') }}</h2>
+				                    	<h2 style="text-align: justify;">{{ trans('translate.message_close_lab') }}</h2>
 				                    @else
 				                    	<p>
 				                    		<strong style="font-size: 130%;">{{ trans('translate.message_close_lab_separate') }}</strong><br>

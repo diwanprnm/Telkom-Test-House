@@ -1,5 +1,6 @@
 <?php
 	$currentUser = Auth::user();
+	$date_dmY = date('d-m-Y');
 ?>
 @extends('layouts.client')
 <!-- Document Title
@@ -61,7 +62,7 @@
 				</div>
 				
 				<div class="modal-body">
-					<table width=100%>
+					<table style="width: 100%;">
 						<caption></caption>
 						<tr>
 							<th scope="col">
@@ -74,7 +75,7 @@
 					</table>
 				</div><!-- /.modal-content -->
 				<div class="modal-footer">
-					<table width=100%>
+					<table style="width: 100%;">
 						<caption></caption>
 						<tr>
 							<th scope="col">
@@ -165,9 +166,7 @@
 						</div>
 						@endif
 						 <!-- start: WIZARD FORM -->
-						<?php $no=1; //print_r($data);exit;
-						//foreach($data as $item){
-						?>
+						<?php $no=1;?>
 						<form action="#" role="form" class="smart-wizard" id="form">
 							{!! csrf_field() !!}
 							<div id="wizard" class="swMain">
@@ -353,7 +352,6 @@
 							</div>
 							<?php 
 							$no++;
-							//}
 							?>
 							@endforeach
 						</form>
@@ -401,7 +399,6 @@
         <!-- Modal content-->
         <div class="modal-content">
           <div class="modal-header">
-            <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
             <h4 class="modal-title">Survey Kepuasan Kastamer Eksternal</h4>
           </div>
           <div class="modal-body pre-scrollable">
@@ -410,14 +407,7 @@
                     <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
                         <div class="form-group">
                             <label>Tanggal</label>
-							<!--<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">-->
-								<input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo date('d-m-Y');?>" readonly required>
-								<!--<span class="input-group-btn">
-									<button type="button" class="btn btn-default">
-										<i class="glyphicon glyphicon-calendar"></i>
-									</button>
-								</span>-->
-							<!--</p>-->
+								<input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo $date_dmY;?>" readonly required>
                         </div>
                         <div class="form-group">
                             <label>Nama</label>
@@ -629,7 +619,6 @@
             </form>
           </div>
           <div class="modal-footer">
-            <!-- <button type="submit" class="button button3d btn-sky" data-dismiss="modal">Simpan</button> -->
 			<button type="button" id="submit-kuisioner1" class="button button3d btn-sky">Simpan</button>
           </div>
         </div>
@@ -675,7 +664,7 @@
                         </div>
                         <div class="form-group">
                             <label>Tanggal</label>
-                            <input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo date('d-m-Y');?>" readonly required>
+                            <input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo $date_dmY;?>" readonly required>
                         </div>
                     </div>
                 </div>
@@ -742,7 +731,6 @@
             </form>
           </div>
           <div class="modal-footer">
-            <!-- <button type="submit" class="button button3d btn-sky" data-dismiss="modal">Simpan</button> -->
 			<button type="button" id="submit-kuisioner" class="button button3d btn-sky">Simpan</button>
           </div>
         </div>
@@ -794,14 +782,7 @@
                             <td colspan="2">
 								<input type="hidden" id="my_exam_id" name="my_exam_id">
 								<label>Date</label>
-								<!--<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">-->
-									<input type="text" id="tanggal_complaint" name="tanggal_complaint" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo date('d-m-Y');?>" readonly required>
-									<!--<span class="input-group-btn">
-										<button type="button" class="btn btn-default">
-											<i class="glyphicon glyphicon-calendar"></i>
-										</button>
-									</span>-->
-								<!--</p>-->
+									<input type="text" id="tanggal_complaint" name="tanggal_complaint" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo $date_dmY;?>" readonly required>
                             </td>
                         </tr>
                         <tr>
@@ -827,10 +808,10 @@
                                 <label>Completed Date</label>
                                 <input type="text" name="no" class="form-control" placeholder="DD/MM/YYYY" readonly>
                             </th>
-                            <td colspan="2" scope="colgroup">
+                            <th colspan="2" scope="colgroup">
                                 <label>CPAR No</label>
                                 <input type="text" name="no" class="form-control" placeholder="-" readonly>
-                            </td>
+                            </th>
                         </tr>
                         <tr>
                             <th colspan="4" scope="colgroup">

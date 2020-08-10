@@ -190,10 +190,10 @@
 
 									<div class="col_full">
 										<div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
-											<a type="button" name="previous" class="carousel-control button button-3d nomargin btn-sky" id="prevTP" href="#text-carousel" data-slide="prev" hidden="">Prev</a>
+											<a type="button" class="carousel-control button button-3d nomargin btn-sky" id="prevTP" href="#text-carousel" data-slide="prev" hidden="">Prev</a>
 										</div>
 										<div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 right">
-											<a type="button" name="next" class="carousel-control button button-3d nomargin btn-sky" id="nextTP" href="#text-carousel" data-slide="next" hidden>Next</a>
+											<a type="button" class="carousel-control button button-3d nomargin btn-sky" id="nextTP" href="#text-carousel" data-slide="next" hidden>Next</a>
 										</div>
 									</div>
 

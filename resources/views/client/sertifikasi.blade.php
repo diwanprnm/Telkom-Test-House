@@ -62,35 +62,6 @@
 						</div>
 					</article>
 					@endforeach
-<!--
-						<article class="portfolio-item pf-illustrations">
-							<div class="portfolio-image">
-								<a href="#">
-									<img src="images/certificate/cf lab - kalibrasi.jpg" alt="Locked Steel Gate">
-								</a>
-								<div class="portfolio-overlay">
-									<a href="images/certificate/cf lab - kalibrasi.jpg" class="center-icon" data-lightbox="image"><i class="icon-line-search"></i></a>
-								</div>
-							</div>
-							<div class="portfolio-desc">
-								<h3>SERTIFIKASI AKREDITASI LABORATORIUM KALIBRASI</h3>
-							</div>
-						</article>
-
-						<article class="portfolio-item pf-graphics pf-uielements">
-							<div class="portfolio-image">
-								<a href="#">
-									<img src="images/certificate/cf - lab qa.png" alt="Mac Sunglasses">
-								</a>
-								<div class="portfolio-overlay">
-									<a href="images/certificate/cf - lab qa.png" class="center-icon" data-lightbox="image"><i class="icon-line-search"></i></a>
-								</div>
-							</div>
-							<div class="portfolio-desc">
-								<h3>SERTIFIKASI AKREDITASI LABORATORIUM QA</h3>
-							</div>
-						</article>
--->
 					</div><!-- #portfolio end -->
 					</div>
 

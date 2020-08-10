@@ -30,7 +30,7 @@
 			</div>
 		@endif
 
-		@php $CHECKED_STRING = 'checked'; endphp@
+		@php $CHECKED_STRING = 'checked'; @endphp
 		
 		<!-- start: RESPONSIVE TABLE -->
 		<div class="container-fluid container-fullw bg-white">
