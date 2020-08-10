@@ -7,13 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class Examination extends Model
 {
-    
-    private const APP_COMPANY = 'App\Company';
-    private const APP_EXAMINATION_TYPE = 'App\ExaminationType';
-    private const APP_EXAMINATION_LAB= 'App\ExaminationLab';
-    private const APP_DEVICE = 'App\Device';
-    private const APP_USER = 'App\User';
-    private const APP_EQUIPMENT = 'App\Equipment';
+      
     private const EXAM_REGISTRATION_STATUS = 'examinations.registration_status';
     private const EXAM_DEVICES_ID = 'examinations.device_id';
     private const EXAM_COMPANY_ID = 'examinations.company_id';
