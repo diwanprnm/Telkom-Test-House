@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class ExaminationHistory extends Model
 {
     protected $table = "examination_histories";
-    // public $incrementing = false;
 	public $timestamps = false;
 		
     public function examination()

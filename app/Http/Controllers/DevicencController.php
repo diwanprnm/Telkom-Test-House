@@ -11,7 +11,7 @@ use App\Examination;
 use App\Device;
 use App\Company;
 use App\Logs;
-use App\Logs_administrator;
+use App\LogsAdministrator;
 
 use Auth;
 use Session;
@@ -380,7 +380,7 @@ class DevicencController extends Controller
         		$devicenc->save();
         		$logs_devicenc = $devicenc;
             
-	            $logs = new Logs_administrator;
+	            $logs = new LogsAdministrator;
 	            $logs->id = Uuid::uuid4();
 	            $logs->user_id = $currentUser->id;
 	            $logs->action = "Memindahkan Data Perangkat Menjadi Layak Uji Ulang";

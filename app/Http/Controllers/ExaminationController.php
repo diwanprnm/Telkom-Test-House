@@ -17,7 +17,7 @@ use App\ExaminationHistory;
 use App\User;
 use App\Api_logs;
 use App\Logs;
-use App\Logs_administrator;
+use App\LogsAdministrator;
 use App\Income;
 use App\Questioner;
 use App\Equipment;
@@ -3229,7 +3229,7 @@ $notification->id = Uuid::uuid4();
 					File::deleteDirectory(public_path().'\media\\examination\\'.$id);
 				}
 
-				$logs = new Logs_administrator;
+				$logs = new LogsAdministrator;
 				$logs->id = Uuid::uuid4();
 				$logs->user_id = $currentUser->id;
 				$logs->action = "Hapus Data Pengujian";
@@ -3302,7 +3302,7 @@ $notification->id = Uuid::uuid4();
 					$logs->page = "EXAMINATION";
 					$logs->save();
 
-					$logs_a = new Logs_administrator;
+					$logs_a = new LogsAdministrator;
 					$logs_a->id = Uuid::uuid4();
 					$logs_a->user_id = $currentUser->id;
 					$logs_a->action = "Reset Uji Fungsi";
