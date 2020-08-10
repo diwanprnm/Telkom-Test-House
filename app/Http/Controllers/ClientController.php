@@ -42,7 +42,7 @@ class ClientController extends Controller
 	private const TYPE_URL = 'type_url';
 	private const ERROR_CODE = 'error_code';
 	private const EMAIL = 'email';
-	private const PWD = 'password';
+	private const KATA_KUNCI = 'password';
 	private const SCHOOL_ID = 'school_id';
 	private const SUCCESS = 'Success';
 	private const MESSAGE = 'message';
@@ -94,7 +94,7 @@ class ClientController extends Controller
 	{
 		$email_deleted = $this->cekDeleted($request->input(self::EMAIL));
 		if($email_deleted == 0){
-			$credentials = $request->only(self::EMAIL, self::PWD);
+			$credentials = $request->only(self::EMAIL, self::KATA_KUNCI);
 			if (Auth::attempt($credentials)) {
 				$logs = new Logs;
 				$currentUser = Auth::user();
@@ -171,7 +171,7 @@ class ClientController extends Controller
 	        $user->id = Uuid::uuid4();
 	        $user->email = $request->input(self::EMAIL);
 	        $user->fullname = $request->input('fullname');
-	        $user->password = bcrypt($request->input(self::PWD));
+	        $user->password = bcrypt($request->input(self::KATA_KUNCI));
 			
 			try {
 				$user->save();
@@ -261,7 +261,7 @@ class ClientController extends Controller
 		
 		$user = User::where(self::EMAIL,$email)->first();
 		if($user){
-			$user->password = bcrypt($request->input(self::PWD));
+			$user->password = bcrypt($request->input(self::KATA_KUNCI));
 			try {
 				$user->save();
 				return Response([self::MESSAGE => self::SUCCESS, 'data' => $user], 200);
