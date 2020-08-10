@@ -6,14 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class Examination extends Model
-{
-      
-    private const EXAM_REGISTRATION_STATUS = 'examinations.registration_status';
+{      
+	private const EXAM_REGISTRATION_STATUS = 'examinations.registration_status';
+	private const EXAM_CERTIFICATE_STATUS = 'examinations.certificate_status';
+	private const EXAM_SPB_STATUS = 'examinations.spb_status';
+	private const EXAM_PAYMENT_STATUS = 'examinations.payment_status';
     private const EXAM_DEVICES_ID = 'examinations.device_id';
-    private const EXAM_COMPANY_ID = 'examinations.company_id';
-    private const COMPANY_AUTOSUGGEST = 'companies.name as autosuggest';
+	private const EXAM_COMPANY_ID = 'examinations.company_id';
+	private const EXAM_TYPE_ID = 'examinations.examination_type_id';
     private const DEVICES_ID = 'devices.id';
-    private const COMPANIES_ID = 'companies.id';
+	private const DEVICES_VALID_THRU = 'devices.valid_thru';
+	private const DEVICE_NAME = 'devices.name';
+	private const DEVICE_NAME_AUTOSUGGEST = 'devices.name as autosuggest';
+	private const COMPANIES_ID = 'companies.id';
+	private const COMPANIES_NAME = 'companies.name';
+	private const COMPANY_AUTOSUGGEST = 'companies.name as autosuggest';
     private const PAYMENT_STATUS = 'payment_status';
     private const TABLE_EXAM = 'examinations';
     private const TABLE_DEVICE = 'devices';
@@ -79,21 +86,21 @@ class Examination extends Model
 				->join(self::TABLE_DEVICE, self::EXAM_DEVICES_ID, '=', self::DEVICES_ID)
 				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
                 ->select(self::COMPANY_AUTOSUGGEST)
-				->where('examinations.certificate_status','=','1')
-				->where('devices.valid_thru', '>=', $datenow)
-                ->where('companies.name', 'like','%'.$query.'%')
-				->orderBy('companies.name')
+				->where(self::EXAM_CERTIFICATE_STATUS,'=','1')
+				->where(self::DEVICES_VALID_THRU, '>=', $datenow)
+                ->where(self::COMPANIES_NAME, 'like','%'.$query.'%')
+				->orderBy(self::COMPANIES_NAME)
                 ->take(2)
 				->distinct()
                 ->get();
 		$data2 = DB::table(self::TABLE_EXAM)
 				->join(self::TABLE_DEVICE, self::DEVICES_ID, '=', self::DEVICES_ID)
 				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
-                ->select('devices.name as autosuggest')
-				->where('examinations.certificate_status','=','1')
-				->where('devices.valid_thru', '>=', $datenow)
-                ->where('devices.name', 'like','%'.$query.'%')
-				->orderBy('devices.name')
+                ->select(self::DEVICE_NAME_AUTOSUGGEST)
+				->where(self::EXAM_CERTIFICATE_STATUS,'=','1')
+				->where(self::DEVICES_VALID_THRU, '>=', $datenow)
+                ->where(self::DEVICE_NAME, 'like','%'.$query.'%')
+				->orderBy(self::DEVICE_NAME)
                 ->take(2)
 				->distinct()
                 ->get();
@@ -101,8 +108,8 @@ class Examination extends Model
 				->join(self::TABLE_DEVICE, self::DEVICES_ID, '=', self::DEVICES_ID)
 				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
                 ->select('devices.mark as autosuggest')
-				->where('examinations.certificate_status','=','1')
-				->where('devices.valid_thru', '>=', $datenow)
+				->where(self::EXAM_CERTIFICATE_STATUS,'=','1')
+				->where(self::DEVICES_VALID_THRU, '>=', $datenow)
                 ->where('devices.mark', 'like','%'.$query.'%')
 				->orderBy('devices.mark')
                 ->take(2)
@@ -112,8 +119,8 @@ class Examination extends Model
 				->join(self::TABLE_DEVICE, self::DEVICES_ID, '=', self::DEVICES_ID)
 				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
                 ->select('devices.model as autosuggest')
-				->where('examinations.certificate_status','=','1')
-				->where('devices.valid_thru', '>=', $datenow)
+				->where(self::EXAM_CERTIFICATE_STATUS,'=','1')
+				->where(self::DEVICES_VALID_THRU, '>=', $datenow)
                 ->where('devices.model', 'like','%'.$query.'%')
 				->orderBy('devices.model')
                 ->take(2)
@@ -129,11 +136,11 @@ class Examination extends Model
         return DB::table(self::TABLE_EXAM)
 				->join(self::TABLE_DEVICE, self::DEVICES_ID, '=', self::DEVICES_ID)
 				->join('users', 'examinations.created_by', '=', 'users.id')
-				->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
-                ->select('devices.name as autosuggest')
+				->join('examination_types', self::EXAM_TYPE_ID, '=', 'examination_types.id')
+                ->select(self::DEVICE_NAME_AUTOSUGGEST)
                 ->where(self::EXAM_COMPANY_ID,'=',''.$company_id.'')
-                ->where('devices.name', 'like','%'.$query.'%')
-				->orderBy('devices.name')
+                ->where(self::DEVICE_NAME, 'like','%'.$query.'%')
+				->orderBy(self::DEVICE_NAME)
                 ->take(2)
 				->distinct()
                 ->get(); 
@@ -142,19 +149,19 @@ class Examination extends Model
 	static function adm_dashboard_autocomplet($query){
 		return DB::table(self::TABLE_EXAM)
 				->join(self::TABLE_DEVICE, self::DEVICES_ID, '=', self::DEVICES_ID)
-                ->select('devices.name as autosuggest')
+                ->select(self::DEVICE_NAME_AUTOSUGGEST)
 				->where(function($q){
-					$q->where('examinations.registration_status', 0)
-						->orWhere('examinations.registration_status', 1)
-						->orWhere('examinations.registration_status', -1)
-						->orWhere('examinations.spb_status', 0)
-						->orWhere('examinations.spb_status', -1)
-						->orWhere('examinations.spb_status', 1)
-						->orWhere('examinations.payment_status', -1);
+					$q->where(self::EXAM_REGISTRATION_STATUS, 0)
+						->orWhere(self::EXAM_REGISTRATION_STATUS, 1)
+						->orWhere(self::EXAM_REGISTRATION_STATUS, -1)
+						->orWhere(self::EXAM_SPB_STATUS, 0)
+						->orWhere(self::EXAM_SPB_STATUS, -1)
+						->orWhere(self::EXAM_SPB_STATUS, 1)
+						->orWhere(self::EXAM_PAYMENT_STATUS, -1);
 				})
 				->where(self::PAYMENT_STATUS, 0)
-                ->where('devices.name', 'like','%'.$query.'%')
-				->orderBy('devices.name')
+                ->where(self::DEVICE_NAME, 'like','%'.$query.'%')
+				->orderBy(self::DEVICE_NAME)
                 ->take(5)
 				->distinct()
                 ->get(); 
@@ -164,9 +171,9 @@ class Examination extends Model
 		$data1 = DB::table(self::TABLE_EXAM)
 				->join(self::TABLE_DEVICE, self::DEVICES_ID, '=', self::DEVICES_ID)
 				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
-                ->select('devices.name as autosuggest')
-				->where('devices.name', 'like','%'.$query.'%')
-				->orderBy('devices.name')
+                ->select(self::DEVICE_NAME_AUTOSUGGEST)
+				->where(self::DEVICE_NAME, 'like','%'.$query.'%')
+				->orderBy(self::DEVICE_NAME)
                 ->take(3)
 				->distinct()
                 ->get();
@@ -175,8 +182,8 @@ class Examination extends Model
 				->join(self::TABLE_DEVICE, self::DEVICES_ID, '=', self::DEVICES_ID)
 				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
                 ->select(self::COMPANY_AUTOSUGGEST)
-				->where('companies.name', 'like','%'.$query.'%')
-				->orderBy('companies.name')
+				->where(self::COMPANIES_NAME, 'like','%'.$query.'%')
+				->orderBy(self::COMPANIES_NAME)
                 ->take(3)
 				->distinct()
                 ->get();
@@ -188,8 +195,8 @@ class Examination extends Model
 		$queries = DB::table(self::TABLE_EXAM)
 				->join(self::TABLE_DEVICE, self::DEVICES_ID, '=', self::DEVICES_ID)
 				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
-                ->select('devices.name as autosuggest')
-				->where('devices.name', 'like','%'.$query.'%');
+                ->select(self::DEVICE_NAME_AUTOSUGGEST)
+				->where(self::DEVICE_NAME, 'like','%'.$query.'%');
 					$queries->where(function($qry){
 						$qry->where(function($q){
 							return $q->where('examination_type_id', '=', '1')
@@ -218,7 +225,7 @@ class Examination extends Model
 								;
 							});
 					});
-				$data1 = $queries->orderBy('devices.name')
+				$data1 = $queries->orderBy(self::DEVICE_NAME)
                 ->take(3)
 				->distinct()
                 ->get();
@@ -227,37 +234,36 @@ class Examination extends Model
 				->join(self::TABLE_DEVICE, self::DEVICES_ID, '=', self::DEVICES_ID)
 				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
                 ->select(self::COMPANY_AUTOSUGGEST)
-				->where('companies.name', 'like','%'.$query.'%');
+				->where(self::COMPANIES_NAME, 'like','%'.$query.'%');
 					$queries->where(function($qry){
 						$qry->where(function($q){
-							$where_exam= $q->where('examinations.examination_type_id', '=', '1')
-								->where('examinations.registration_status', '=', '1')
+							return $q->where(self::EXAM_TYPE_ID, '=', '1')
+								->where(self::EXAM_REGISTRATION_STATUS, '=', '1')
 								->where('examinations.function_status', '=', '1')
 								->where('examinations.contract_status', '=', '1')
-								->where('examinations.spb_status', '=', '1')
-								->where('examinations.payment_status', '=', '1')
+								->where(self::EXAM_SPB_STATUS, '=', '1')
+								->where(self::EXAM_PAYMENT_STATUS, '=', '1')
 								->where('examinations.spk_status', '=', '1')
 								->where('examinations.examination_status', '=', '1')
 								->where('examinations.resume_status', '=', '1')
 								->where('examinations.qa_status', '=', '1')
-								->where('examinations.certificate_status', '=', '1')
+								->where(self::EXAM_CERTIFICATE_STATUS, '=', '1')
 								;
-							return $where_exam;
 							})
 						->orWhere(function($q){
-							return $q->where('examinations.examination_type_id', '!=', '1')
-								->where('examinations.registration_status', '=', '1')
+							return $q->where(self::EXAM_TYPE_ID, '!=', '1')
+								->where(self::EXAM_REGISTRATION_STATUS, '=', '1')
 								->where('examinations.function_status', '=', '1')
 								->where('examinations.contract_status', '=', '1')
-								->where('examinations.spb_status', '=', '1')
-								->where('examinations.payment_status', '=', '1')
+								->where(self::EXAM_SPB_STATUS, '=', '1')
+								->where(self::EXAM_PAYMENT_STATUS, '=', '1')
 								->where('examinations.spk_status', '=', '1')
 								->where('examinations.examination_status', '=', '1')
 								->where('examinations.resume_status', '=', '1')
 								;
 							});
 					});
-				$data2 = $queries->orderBy('companies.name')
+				$data2 = $queries->orderBy(self::COMPANIES_NAME)
                 ->take(3)
 				->distinct()
                 ->get();
