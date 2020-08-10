@@ -6,8 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class STEL extends Model
-{
-    protected $table = "stels";
+{   
+    private const TABLE_STELS = 'stels'; 
+    private const CODE_AUTOSUGGEST = 'code as autosuggest';
+    private const NAME_AUTOSUGGEST = 'name as autosuggest';
+    protected $table = self::TABLE_STELS;
 
     public function examinationLab()
     {
@@ -19,15 +22,15 @@ class STEL extends Model
             ['stel_type', '=', '1'],
             ['code', 'like', '%'.$query.'%'] 
         ];
-        $data1 = DB::table('stels')
-                ->select('code as autosuggest')
+        $data1 = DB::table(self::TABLE_STELS)
+                ->select(self::CODE_AUTOSUGGEST)
 				->where($where) 
 				->orderBy('code')
                 ->take(3)
                 ->distinct()
                 ->get();
-		$data2 = DB::table('stels')
-                ->select('name as autosuggest')
+		$data2 = DB::table(self::TABLE_STELS)
+                ->select(self::NAME_AUTOSUGGEST)
 				->where($where) 
 				->orderBy('name')
                 ->take(3)
@@ -41,15 +44,15 @@ class STEL extends Model
             ['stel_type', '=', '2'],
             ['code', 'like', '%'.$query.'%'] 
         ];
-        $data1 = DB::table('stels')
-                ->select('code as autosuggest')
+        $data1 = DB::table(self::TABLE_STELS)
+                ->select(self::CODE_AUTOSUGGEST)
 				->where($where) 
 				->orderBy('code')
                 ->take(3)
 				->distinct()
                 ->get();
-		$data2 = DB::table('stels')
-                ->select('name as autosuggest')
+		$data2 = DB::table(self::TABLE_STELS)
+                ->select(self::NAME_AUTOSUGGEST)
 				->where($where) 
 				->orderBy('name')
                 ->take(3)
@@ -59,8 +62,8 @@ class STEL extends Model
     }
 	
 	static function adm_stel_autocomplet($query){
-        return DB::table('stels')
-                ->select('name as autosuggest')
+        return DB::table(self::TABLE_STELS)
+                ->select(self::NAME_AUTOSUGGEST)
 				->where('name', 'like','%'.$query.'%')
 				->orderBy('name')
                 ->take(5)

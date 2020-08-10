@@ -29,6 +29,7 @@ class ArticleController extends Controller
     private const SEARCH = 'search';
     private const TITLE = 'title';
     private const TYPE = 'type';
+    private const REQUIRED = 'required';
         
 
     public function __construct()
@@ -71,10 +72,10 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            self::TITLE => 'required',
-            self::TYPE => 'required',
-            self::DESCRIPTION => 'required',
-            self::DESCRIPTION_ENGLISH => 'required',
+            self::TITLE => self::REQUIRED,
+            self::TYPE => self::REQUIRED,
+            self::DESCRIPTION => self::REQUIRED,
+            self::DESCRIPTION_ENGLISH => self::REQUIRED,
             self::IS_ACTIVE => 'required|boolean',
         ]);
         $currentUser = Auth::user();

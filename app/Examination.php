@@ -230,7 +230,7 @@ class Examination extends Model
 				->where('companies.name', 'like','%'.$query.'%');
 					$queries->where(function($qry){
 						$qry->where(function($q){
-							return $q->where('examinations.examination_type_id', '=', '1')
+							$where_exam= $q->where('examinations.examination_type_id', '=', '1')
 								->where('examinations.registration_status', '=', '1')
 								->where('examinations.function_status', '=', '1')
 								->where('examinations.contract_status', '=', '1')
@@ -242,6 +242,7 @@ class Examination extends Model
 								->where('examinations.qa_status', '=', '1')
 								->where('examinations.certificate_status', '=', '1')
 								;
+							return $where_exam;
 							})
 						->orWhere(function($q){
 							return $q->where('examinations.examination_type_id', '!=', '1')
