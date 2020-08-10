@@ -173,7 +173,7 @@ class LogController extends Controller
 		// the user's e-mail address, the amount paid, and the payment
 		// timestamp.
 		
-        $search = trim($request->input($this::SEARCH));
+      
         
        
 
@@ -189,26 +189,25 @@ class LogController extends Controller
 
         if ($request->has($this::BEFORE)){
             $datalogs->where(DB::raw($this::DATE), '<=', $request->get($this::BEFORE));
-            $before = $request->get($this::BEFORE);
+           
         }
 
         if ($request->has($this::AFTER)){
             $datalogs->where(DB::raw($this::DATE), '>=', $request->get($this::AFTER));
-            $after = $request->get($this::AFTER);
+           
         }
 
-        if ($request->has($this::USN)){
-            $filterUsername = $request->get($this::USN);
-            if($request->input($this::USN) != 'all'){
+        if ($request->has($this::USN) && $request->input($this::USN) != 'all'){
+            
+            
                 $datalogs->where(self::USERNAME, $request->get($this::USN));
-            }
+            
         }
 
-        if ($request->has($this::ACTION)){
-            $filterAction = $request->get($this::ACTION);
-            if($request->input($this::ACTION) != 'all'){
+        if ($request->has($this::ACTION) && $request->input($this::ACTION) != 'all' ){
+           
                 $datalogs->where($this::ACTION, $request->get($this::ACTION));
-            }
+            
         }
 
         if ($request->has($this::SORT_BY)){
