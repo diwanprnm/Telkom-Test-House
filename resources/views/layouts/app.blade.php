@@ -95,18 +95,20 @@
                         <span>Navigation</span>
                     </div>
                    <?php
+                    $children_string = 'children';
+                    $class_active_string = 'class="active"';
                     $segment_1 = Request::segment(1);
                     $segment_2 = Request::segment(2);
                     $html = '<ul id="main-navigation-menu">';
                     foreach ($tree_menus as $key => $value) {
-                        if(isset($value[0]['children'])) {  
+                        if(isset($value[0][$children_string])) {  
                             $found = false;
-                            foreach ($value[0]['children'] as $child) { 
+                            foreach ($value[0][$children_string] as $child) { 
                                 if($segment_2==$child['url']){
                                     $found = true;
                                 }
                             } 
-                        $is_active = ($found) ? 'class="active"' : '' ;
+                        $is_active = ($found) ? $class_active_string : '' ;
                             $html .= '<li '.$is_active.'>  <a >
                                 <div class="item-content">
                                     <div class="item-media">
@@ -119,15 +121,15 @@
                             </a>';
                             $html .= '<ul class="sub-menu">';
                            
-                            foreach ($value[0]['children'] as $child) { 
-                                $is_active = ($segment_2==$child['url']) ? 'class="active"' : '' ;
+                            foreach ($value[0][$children_string] as $child) { 
+                                $is_active = ($segment_2==$child['url']) ? $class_active_string : '' ;
                                 $html .= '<li '.$is_active.'>  <a href="'.url("admin/".$child['url']).'">
                                                     <span class="title"> '.$child['name'].' </span> 
                                         </a></li>'; 
                             }
                             $html .= '</ul></li>';
                         }else{
-                          $is_active = ($segment_2==$value[0]['url']) ? 'class="active"' : '' ;
+                          $is_active = ($segment_2==$value[0]['url']) ? $class_active_string : '' ;
                           $html .= '<li '.$is_active.'> <a href="'.url("admin/".$value[0]['url']).'">
                                     <div class="item-content">
                                         <div class="item-media">
@@ -246,7 +248,6 @@
     <?php  $currentUser = Auth::user(); ?>
     <input type="hidden" id="user_id" value="<?php echo (empty($currentUser))?0:$currentUser['attributes']['id'];?>">
     <!-- start: MAIN JAVASCRIPTS -->
-    <!-- <script src={{ asset("vendor/jquery/jquery.min.js") }}></script> -->
     <script src={{ asset("vendor/bootstrap/js/bootstrap.min.js") }}></script>
     <script src={{ asset("vendor/modernizr/modernizr.js") }}></script>
     <script src={{ asset("vendor/jquery-cookie/jquery.cookie.js") }}></script>

@@ -1,3 +1,8 @@
+<?php
+  $currentUser = Auth::user();
+  $currentUserAttr = $currentUser['attributes'];
+?>
+
 <!-- Header
   ============================================= -->
   <header id="header" class="sticky-style-2 visible-lg visible-md hidden-sm hidden-xs">
@@ -25,7 +30,7 @@
 
       <!-- Primary Navigation
       ============================================= -->
-      <nav id="primary-menu" class="style-2">
+      <nav id="primary-menu" aria-label="Primary menu" class="style-2">
 
         <div class="container clearfix">
 
@@ -49,7 +54,6 @@
                   <li><a href="{{url('procedure')}}">{{ trans('translate.procedure') }}</a></li>
                   <li><a href="{{url('process')}}">{{ trans('translate.process') }}</a></li>
                   <?php
-                  $currentUser = Auth::user();
                   if($currentUser){
                   ?> 
                   <li><a href="{{ url('pengujian')}}">{{ trans('translate.examination') }}</a></li>
@@ -121,7 +125,6 @@
               @endif 
 
               <?php
-              $currentUser = Auth::user();
               if($currentUser){
               ?> 
                 <li></li>
@@ -134,10 +137,9 @@
               ?> 
 
               <?php
-              $currentUser = Auth::user();
               if($currentUser){
               ?> 
-                <li class="loginMenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo substr($currentUser['attributes']['name'],0,7)."...";?>  <em class="icon-angle-down"></em></a>
+                <li class="loginMenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo substr($currentUserAttr['name'],0,7)."...";?>  <em class="icon-angle-down"></em></a>
                   <ul class="dropdown-menu" role="menu">
                     <li><a href="{{url('/client/profile')}}">{{ trans('translate.profile') }}</a></li>
                     <li><a href="{{url('/client/profile?tabs=company')}}">{{ trans('translate.company') }}</a></li>
@@ -153,7 +155,6 @@
               ?> 
 
               <?php
-              $currentUser = Auth::user();
               if($currentUser){
               ?> 
 	              <div id="top-cart" style="float:left">
@@ -250,7 +251,7 @@
 
         <!-- Primary Navigation
         ============================================= -->
-        <nav id="primary-menu">
+        <nav id="primary-menu" aria-label="Primary menu">
 
             <ul>
               <li class="{{ (empty($page)) ?'current':''}}">
@@ -269,7 +270,6 @@
                 <ul>
                   <li><a href="{{url('procedure')}}">{{ trans('translate.procedure') }}</a></li>
                   <?php
-                  $currentUser = Auth::user();
                   if($currentUser){
                   ?> 
                   <li><a href="{{ url('pengujian')}}">{{ trans('translate.examination') }}</a></li>
@@ -306,10 +306,9 @@
                   </ul>
               </li> 
                <?php
-              $currentUser = Auth::user();
               if($currentUser){
               ?> 
-                <li><a href="#"><?php echo $currentUser['attributes']['name'];?>  <em class="icon-angle-down"></em></a>
+                <li><a href="#"><?php echo $currentUserAttr['name'];?>  <em class="icon-angle-down"></em></a>
                   <ul>
                     <li><a href="{{url('/client/profile')}}">{{ trans('translate.profile') }}</a></li>
                     <li><a href="{{url('/client/logout')}}">{{ trans('translate.logout') }}</a></li>
@@ -371,8 +370,5 @@
       </div>
 
     </div>
-     <?php
-        $currentUser = Auth::user(); 
-    ?>
-    <input type="hidden" id="user_id" value="<?php echo (empty($currentUser))?0:$currentUser['attributes']['id'];?>">
+    <input type="hidden" id="user_id" value="<?php echo (empty($currentUser))?0:$currentUserAttr['id'];?>">
   </header><!-- #header mobile end -->
