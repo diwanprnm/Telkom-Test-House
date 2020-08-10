@@ -21,6 +21,11 @@ use Input;
 use Ramsey\Uuid\Uuid;
 class RoleController extends Controller
 {
+
+    private const SEARCH = 'search';
+    private const MESSAGE = 'message';
+    private const ADMIN_ROLE = '/admin/role';
+    private const ERROR = 'error';
     /**
      * Create a new controller instance.
      *
@@ -43,7 +48,7 @@ class RoleController extends Controller
         if ($currentUser){
             $message = null;
             $paginate = 10;
-            $search = trim($request->input('search'));  
+            $search = trim($request->input(self::SEARCH));  
             
             if ($search != null){
                 $stels = Role::whereNotNull('created_at')
@@ -54,7 +59,7 @@ class RoleController extends Controller
                     $logs = new Logs;
                     $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
                     $logs->action = "Search Role";
-                    $datasearch = array("search"=>$search);
+                    $datasearch = array(self::SEARCH=>$search);
                     $logs->data = json_encode($datasearch);
                     $logs->created_by = $currentUser->id;
                     $logs->page = "Role";
@@ -71,9 +76,9 @@ class RoleController extends Controller
             }
             
             return view('admin.role.index')
-                ->with('message', $message)
+                ->with(self::MESSAGE, $message)
                 ->with('data', $stels)
-                ->with('search', $search) ;
+                ->with(self::SEARCH, $search) ;
         }
     }
 
@@ -115,8 +120,8 @@ class RoleController extends Controller
             $logs->page = "Role";
             $logs->save();
 			
-            Session::flash('message', 'role successfully created');
-			return redirect('/admin/role');
+            Session::flash(self::MESSAGE, 'role successfully created');
+			return redirect(self::ADMIN_ROLE);
 		} catch(Exception $e){
 			Session::flash('error', 'Save failed');
 			return redirect('/admin/role/create');
@@ -178,8 +183,8 @@ class RoleController extends Controller
             $logs->page = "Role";
             $logs->save();
 
-            Session::flash('message', 'Role successfully updated');
-            return redirect('/admin/role');
+            Session::flash(self::MESSAGE, 'Role successfully updated');
+            return redirect(self::ADMIN_ROLE);
         } catch(Exception $e){
             Session::flash('error', 'Save failed');
             return redirect('/admin/role/'.$stel->id.'/edit');
@@ -194,12 +199,12 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        $stel = Role::find($id);
-        $oldStel = $stel;
+        $role = Role::find($id);
+        $oldStel = $role;
         $currentUser = Auth::user();
-        if ($stel){
+        if ($role){
             try{
-                $stel->delete();
+                $role->delete();
                 
                 $logs = new Logs;
                 $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
@@ -209,15 +214,15 @@ class RoleController extends Controller
                 $logs->page = "Role";
                 $logs->save();
 
-                Session::flash('message', 'Role successfully deleted');
-                return redirect('/admin/role');
+                Session::flash(self::MESSAGE, 'Role successfully deleted');
+                return redirect(self::ADMIN_ROLE);
             }catch (Exception $e){
                 Session::flash('error', 'Delete failed');
-                return redirect('/admin/role');
+                return redirect(self::ADMIN_ROLE);
             }
         }else{
              Session::flash('error', 'Role Not Found');
-                return redirect('/admin/role');
+                return redirect(self::ADMIN_ROLE);
         }
     }
 

@@ -24,6 +24,12 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 class NotificationController extends Controller
 {
+
+
+    private const CREATED_AT = 'created_at';
+    private const IS_READ = 'is_read';
+    private const MENUS_ID = 'menus.id';
+    private const ADMIN = 'admin';
 	/**
      * Create a new controller instance.
      *
@@ -45,11 +51,11 @@ public function index(Request $request)
         $currentUser = Auth::user();
 
         if ($currentUser){
-			$dataNotificationH = NotificationTable::where("is_read",0)->where("to",$currentUser->id)->orderBy("created_at","desc")->limit(10)->get();
-			$countNotificationH = NotificationTable::where("is_read",0)->where("to",$currentUser->id)->orderBy("created_at","desc")->get()->count();
+			$dataNotificationH = NotificationTable::where(self::IS_READ,0)->where("to",$currentUser->id)->orderBy(self::CREATED_AT,"desc")->limit(10)->get();
+			$countNotificationH = NotificationTable::where(self::IS_READ,0)->where("to",$currentUser->id)->orderBy(self::CREATED_AT,"desc")->get()->count();
 			
-			$dataNotification = NotificationTable::where("to",$currentUser->id)->orderBy("is_read")->orderBy("created_at","desc")->get();
-			$countNotification = NotificationTable::where("to",$currentUser->id)->orderBy("is_read")->orderBy("created_at","desc")->get()->count(); 
+			$dataNotification = NotificationTable::where("to",$currentUser->id)->orderBy(self::IS_READ)->orderBy(self::CREATED_AT,"desc")->get();
+			$countNotification = NotificationTable::where("to",$currentUser->id)->orderBy(self::IS_READ)->orderBy(self::CREATED_AT,"desc")->get()->count(); 
 			return view('client.notification')
 				->with('notification_data_user', $dataNotificationH)
 				->with('notification_count', $countNotificationH)
@@ -64,12 +70,12 @@ public function index(Request $request)
     {
         $currentUser = Auth::user();
 		if($currentUser){
-            $select = array('menus.id','menus.name','menus.url','menus.parent_id','menus.icon');
-            $menu = Menu::selectRaw(implode(",", $select))->join("users_menus","menus.id","=","users_menus.menu_id")
+            $select = array(self::MENUS_ID,'menus.name','menus.url','menus.parent_id','menus.icon');
+            $menu = Menu::selectRaw(implode(",", $select))->join("users_menus",self::MENUS_ID,"=","users_menus.menu_id")
                     ->where("user_id",$currentUser['id'])
                     ->get()->toArray();
 
-            $parentMenu = Menu::selectRaw(implode(",", $select))->join("users_menus","menus.id","=","users_menus.menu_id")
+            $parentMenu = Menu::selectRaw(implode(",", $select))->join("users_menus",self::MENUS_ID,"=","users_menus.menu_id")
                     ->where("parent_id",0)
                     ->where("user_id",$currentUser['id'])
                     ->get()->toArray();
@@ -93,7 +99,7 @@ public function index(Request $request)
         if ($currentUser){
 			$dataNotificationH = NotificationTable::where("is_read",0)
                             ->where(function($q) use ($currentUser){
-                            return $q->where('to', "admin")
+                            return $q->where('to', self::ADMIN)
                                 ->orWhere('to', $currentUser->id)
                                 ;
                             })
@@ -102,15 +108,15 @@ public function index(Request $request)
 
             $countNotificationH = NotificationTable::where("is_read",0)
                             ->where(function($q) use ($currentUser){
-                            return $q->where('to', "admin")
+                            return $q->where('to', self::ADMIN)
                                 ->orWhere('to', $currentUser->id)
                                 ;
                             })
                             ->orderBy("created_at","desc")
                             ->get()->count();
 							
-			$dataNotification = NotificationTable::where("to","admin")->orWhere("to",$currentUser->id)->orderBy("is_read")->orderBy("created_at","desc")->get();
-			$countNotification = NotificationTable::where("to","admin")->orWhere("to",$currentUser->id)->orderBy("is_read")->orderBy("created_at","desc")->get()->count(); 
+			$dataNotification = NotificationTable::where("to",self::ADMIN)->orWhere("to",$currentUser->id)->orderBy("is_read")->orderBy("created_at","desc")->get();
+			$countNotification = NotificationTable::where("to",self::ADMIN)->orWhere("to",$currentUser->id)->orderBy("is_read")->orderBy("created_at","desc")->get()->count(); 
 			return view('admin.notification')
 				->with('tree_menus', $tree)
 				
