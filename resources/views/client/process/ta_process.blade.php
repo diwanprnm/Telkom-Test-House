@@ -127,10 +127,6 @@
 									<legend></legend>
 					               <div class="form-group">
 											<label for="f1-jns-perusahaan">{{ trans('translate.service_company_type') }} : </label>
-											<!-- <input type="radio" name="jns_perusahaan"  id="rad-jns_perusahaan1" value="Agen" checked>
-											<input type="radio" name="jns_perusahaan"   id="rad-jns_perusahaan2" value="Pabrikan">
-											<input type="radio" name="jns_perusahaan"  id="rad-jns_perusahaan3" value="Perorangan"> -->
- 
 											<input type="radio" name="jns_perusahaan" value="Agen" placeholder="{{ trans('translate.service_company_agent') }}" checked>
 											<input type="radio" name="jns_perusahaan" value="Pabrikan" placeholder="{{ trans('translate.service_company_branch') }}">
 											<input type="radio" name="jns_perusahaan" value="Perorangan" placeholder="{{ trans('translate.service_company_individual') }}">

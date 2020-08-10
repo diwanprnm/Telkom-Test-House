@@ -5,7 +5,7 @@
 <!-- Document Title
     ============================================= -->
     <title>{{ trans('translate.examination') }} - Telkom DDS</title>
-
+@php $date_STRING = date('d-m-Y'); @endphp
 @section('content')
 <style type="text/css">
 	.radio-toolbar input[type="radio"] {
@@ -584,7 +584,7 @@
                     <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
                         <div class="form-group">
                             <label>Tanggal</label>
-                			<input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo date('d-m-Y');?>" readonly required>
+                			<input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo $date_STRING;?>" readonly required>
                         </div>
                         <div class="form-group">
                             <label>Nama</label>
@@ -841,7 +841,7 @@
                         </div>
                         <div class="form-group">
                             <label>Tanggal</label>
-                            <input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo date('d-m-Y');?>" readonly required>
+                            <input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo $date_STRING;?>" readonly required>
                         </div>
                     </div>
                 </div>
@@ -959,7 +959,7 @@
                             <td colspan="2">
                 <input type="hidden" id="my_exam_id" name="my_exam_id">
                 <label>Date</label>
-                  <input type="text" id="tanggal_complaint" name="tanggal_complaint" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo date('d-m-Y');?>" readonly required>
+                  <input type="text" id="tanggal_complaint" name="tanggal_complaint" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo $date_STRING;?>" readonly required>
                             </td>
                         </tr>
                         <tr>
