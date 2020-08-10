@@ -18,7 +18,7 @@
 			</div>
 			
 			<div class="modal-body">
-				<table width=100%><caption></caption>
+				<table style="width: 100%;"><caption></caption>
 					<tr>
 						<th scope="col">
 							<div class="form-group">
@@ -30,7 +30,7 @@
 				</table>
 			</div><!-- /.modal-content -->
 			<div class="modal-footer">
-				<table width=100%><caption></caption>
+				<table style="width: 100%;"><caption></caption>
 					<tr>
 						<th scope="col">
 							<button type="button" id="btn-modal-reset_uf" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
@@ -54,7 +54,7 @@
 			</div>
 			
 			<div class="modal-body">
-				<table width=100%><caption></caption>
+				<table style="width: 100%;"><caption></caption>
 					<tr>
 						<th scope="col">
 							<div class="form-group">
@@ -79,7 +79,7 @@
 				</table>
 			</div><!-- /.modal-content -->
 			<div class="modal-footer">
-				<table width=100%><caption></caption>
+				<table style="width: 100%;"><caption></caption>
 					<tr>
 						<th scope="col">
 							<button type="button" class="btn btn-danger btn-tgl-kontrak" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
@@ -452,16 +452,6 @@
 									</select>
 								</div>
 							</div>
-							<!-- <div class="col-md-12">
-								<div class="form-group">
-									<label>
-										Kelengkapan Registrasi
-									</label>
-									<label>
-										: {{ $data->company->keterangan }}
-									</label>
-								</div>
-							</div> -->
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
@@ -499,7 +489,7 @@
 									</div>
 									
 									<div class="modal-body">
-										<table width=100%><caption></caption>
+										<table style="width: 100%;"><caption></caption>
 											<tr>
 												<th scope="col">
 													<div class="form-group">
@@ -511,7 +501,7 @@
 										</table>
 									</div><!-- /.modal-content -->
 									<div class="modal-footer">
-										<table width=100%><caption></caption>
+										<table style="width: 100%;"><caption></caption>
 											<tr>
 												<th scope="col">
 													<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
@@ -890,7 +880,7 @@
 									</div>
 									
 									<div class="modal-body">
-										<table width=100%><caption></caption>
+										<table style="width: 100%;"><caption></caption>
 											<tr>
 												<th scope="col">
 													<div class="form-group">
@@ -902,7 +892,7 @@
 										</table>
 									</div><!-- /.modal-content -->
 									<div class="modal-footer">
-										<table width=100%><caption></caption>
+										<table style="width: 100%;"><caption></caption>
 											<tr>
 												<th scope="col">
 													<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
@@ -1328,7 +1318,7 @@
 									</div>
 									
 									<div class="modal-body">
-										<table width=100%><caption></caption>
+										<table style="width: 100%;"><caption></caption>
 											<tr>
 												<th scope="col">
 													<div class="form-group">
@@ -1340,7 +1330,7 @@
 										</table>
 									</div><!-- /.modal-content -->
 									<div class="modal-footer">
-										<table width=100%><caption></caption>
+										<table style="width: 100%;"><caption></caption>
 											<tr>
 												<th scope="col">
 													<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
@@ -1526,7 +1516,7 @@
 									</div>
 									
 									<div class="modal-body">
-										<table width=100%><caption></caption>
+										<table style="width: 100%;"><caption></caption>
 											<tr>
 												<th scope="col">
 													<div class="form-group">
@@ -1538,7 +1528,7 @@
 										</table>
 									</div><!-- /.modal-content -->
 									<div class="modal-footer">
-										<table width=100%><caption></caption>
+										<table style="width: 100%;"><caption></caption>
 											<tr>
 												<th scope="col">
 													<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
@@ -1688,7 +1678,7 @@
 										<?php $status = 0 ?>
 									@foreach($data->media as $item)
 										@if($item->name == 'File Pembayaran' && $item->attachment !='')
-											<?php $status = 1; break; ?>
+											<?php $status = 1; exit; ?>
 										@endif
 									@endforeach
 									<input type="hidden" id="hide_status_form-pembayaran" value="{{ $status }}">
@@ -1725,9 +1715,6 @@
 								@else
 									<a onclick="checkKuitansi('<?php echo $data->id ?>')"> Cek Kuitansi</a>
 								@endif
-								<!-- <div class="form-group">
-									<a onclick="makeKuitansi('<?php echo $data->id ?>')"> Buatkan File Kuitansi</a>
-								</div> -->
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
@@ -1807,7 +1794,7 @@
 									</div>
 									
 									<div class="modal-body">
-										<table width=100%><caption></caption>
+										<table style="width: 100%;"><caption></caption>
 											<tr>
 												<th scope="col">
 													<div class="form-group">
@@ -1819,7 +1806,7 @@
 										</table>
 									</div><!-- /.modal-content -->
 									<div class="modal-footer">
-										<table width=100%><caption></caption>
+										<table style="width: 100%;"><caption></caption>
 											<tr>
 												<th scope="col">
 													<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
@@ -1846,7 +1833,7 @@
 										<?php $status = 0 ?>
 									@foreach($data->media as $item)
 										@if($item->name == 'File Pembayaran' && $item->attachment !='')
-											<?php $status = 1; break; ?>
+											<?php $status = 1; exit; ?>
 										@endif
 									@endforeach
 
@@ -1932,7 +1919,7 @@
 										<?php $status = 0 ?>
 									@foreach($data->media as $item)
 										@if($item->name == 'File Pembayaran' && $item->attachment !='')
-											<?php $status = 1; break; ?>
+											<?php $status = 1; exit; ?>
 										@endif
 									@endforeach
 
@@ -2086,7 +2073,7 @@
 									</div>
 									
 									<div class="modal-body">
-										<table width=100%><caption></caption>
+										<table style="width: 100%;"><caption></caption>
 											<tr>
 												<th scope="col">
 													<div class="form-group">
@@ -2098,7 +2085,7 @@
 										</table>
 									</div><!-- /.modal-content -->
 									<div class="modal-footer">
-										<table width=100%><caption></caption>
+										<table style="width: 100%;"><caption></caption>
 											<tr>
 												<th scope="col">
 													<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
@@ -2212,12 +2199,12 @@
 					</fieldset>
 				@endif
 
-				@if(isset($admin_roles[0]))
-				@if($admin_roles[0]->examination_status)
+				@if(isset($admin_roles[0]) && $admin_roles[0]->examination_status == 1)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'id' => 'form-uji')) !!}
 					{!! csrf_field() !!}
 					<input type="hidden" name="status" class="form-control" value="Pelaksanaan Uji"/>
-    				<fieldset>
+				@endif
+					<fieldset>
 						<legend>
 							Step Pelaksanaan Uji
 						</legend>
@@ -2307,6 +2294,7 @@
 										<label>
 											Tanggal Barang Dikembalikan *
 										</label>
+										@if(isset($admin_roles[0]) && $admin_roles[0]->examination_status == 1)
 										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
 											@if($data_gudang[0]->action_date != NULL AND $data_gudang[0]->action_date != '0000-00-00')
 												<input type="text" name="lab_to_gudang_date" class="form-control" value="{{ $data_gudang[0]->action_date }}" required/>
@@ -2319,6 +2307,20 @@
 												</button>
 											</span>
 										</p>
+										@else
+										<p class="input-group input-append" data-date-format="yyyy-mm-dd">
+											@if($data_gudang[0]->action_date != NULL AND $data_gudang[0]->action_date != '0000-00-00')
+												<input type="text" class="form-control" value="{{ $data_gudang[0]->action_date }}" readonly required/>
+											@else
+												<input type="text" class="form-control" value="" readonly required/>
+											@endif
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-default">
+													<em class="glyphicon glyphicon-calendar"></em>
+												</button>
+											</span>
+										</p>
+										@endif
 									</div>
 								</div>
 							@endif
@@ -2342,11 +2344,12 @@
 									</label>
 								</div>
 							</div>
-	                        <div class="col-md-6">
+					        <div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
 										Status *
 									</label>
+									@if(isset($admin_roles[0]) && $admin_roles[0]->examination_status == 1)
 									<select name="examination_status" class="cs-select cs-skin-elastic">
 										@if($data->examination_status == 0)
 											<option value="0" selected>Choose Status</option>
@@ -2362,16 +2365,30 @@
 											<option value="-1" selected>Not Completed</option>
 										@endif
 									</select>
+									@else
+									<select class="cs-select cs-skin-elastic">
+										@if($data->examination_status == 0)
+											<option value="0" selected>Choose Status</option>
+										@elseif($data->examination_status == 1)
+											<option value="1" selected>Completed</option>
+										@else
+											<option value="-1" selected>Not Completed</option>
+										@endif
+									</select>
+									@endif
 								</div>
 							</div>
-							@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1')
-	                        <div class="col-md-12">
-	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-right">
-	                                Update
-	                            </button>
-	                        </div>
-	                        @endif
+							@if(isset($admin_roles[0]) && $admin_roles[0]->examination_status == 1)
+								@if($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1')
+						        <div class="col-md-12">
+						            <button type="submit" class="btn btn-wide btn-green btn-squared pull-right">
+						                Update
+						            </button>
+						        </div>
+						        @endif
+						    @endif
 						</div>
+						@if(isset($admin_roles[0]) && $admin_roles[0]->examination_status == 1)
 						<div class="modal fade" id="myModalketerangan_form_uji" tabindex="-1" role="dialog" aria-hidden="true">
 							<div class="modal-dialog">
 								<div class="modal-content">
@@ -2404,297 +2421,10 @@
 								</div><!-- /.modal-dialog -->
 							</div><!-- /.modal -->
 						</div>
+						@endif
 					</fieldset>
+				@if(isset($admin_roles[0]) && $admin_roles[0]->examination_status == 1)
 				{!! Form::close() !!}
-				@else
-					<fieldset>
-						<legend>
-							Step Pelaksanaan Uji
-						</legend>
-						<div class="row">
-						@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
-							<?php
-								$start_date = new DateTime(date('Y-m-d'));
-								$end_date = new DateTime($exam_schedule->data[0]->targetDt);
-								if($start_date>$end_date){
-									$sisa_spk = 0;
-								}else{
-									$interval = $start_date->diff($end_date);
-									$sisa_spk = $interval->days;
-								}
-							?>
-							<div class="col-md-12">
-								<div class="form-group">
-									<table class="table table-bordered"><caption></caption>
-										<thead>
-											<tr>
-												<th colspan="4" scope="col">Riwayat Pelaksanaan Uji</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>Tanggal Approve Manager Lab</td>
-												<td>Target Selesai Uji</td>
-												<td>Sisa Waktu Pengujian</td>
-											</tr>
-											<tr>
-												<td>
-													<strong>{{ $exam_schedule->data[0]->startTestDt }}</strong>
-												</td>
-												<td>
-													<strong>{{ $exam_schedule->data[0]->targetDt }}</strong>
-												</td>
-												<td>
-													<strong>{{ $sisa_spk }} hari</strong>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>	
-							@if(count($data_lab)>0)
-								<div class="col-md-12">
-									<div class="form-group">
-										<label for="form-field-select-2">
-											Barang pindah dari Gudang ke Lab tanggal : {{ $data_lab[0]->action_date }}
-										</label>
-									</div>
-								</div>
-							@endif
-							<div class="col-md-12">
-								<div class="form-group">
-									<table class="table table-bordered"><caption></caption>
-										<tbody>
-											<tr>
-												<th scope="col">Mulai Uji oleh Test Engineer</th>
-												<th scope="col">Selesai Uji oleh Test Engineer</th>
-											</tr>
-											<tr>
-												<td>
-													<strong>{{ $exam_schedule->data[0]->actualStartTestDt }}</strong>
-												</td>
-												<td>
-													<strong>{{ $exam_schedule->data[0]->actualFinishTestDt }}</strong>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-							@if(count($data_gudang)>1)
-								<div class="col-md-12">
-									<div class="form-group">
-										<label for="form-field-select-2"> 
-											Barang pindah dari Lab ke Gudang tanggal : 
-											@if($data_gudang[0]->action_date != NULL AND $data_gudang[0]->action_date != '0000-00-00')
-												tanggal : {{ $data_gudang[0]->action_date }}
-											@endif
-										</label>
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>
-											Tanggal Barang Dikembalikan *
-										</label>
-										<p class="input-group input-append" data-date-format="yyyy-mm-dd">
-											@if($data_gudang[0]->action_date != NULL AND $data_gudang[0]->action_date != '0000-00-00')
-												<input type="text" class="form-control" value="{{ $data_gudang[0]->action_date }}" readonly required/>
-											@else
-												<input type="text" class="form-control" value="" readonly required/>
-											@endif
-											<span class="input-group-btn">
-												<button type="button" class="btn btn-default">
-													<em class="glyphicon glyphicon-calendar"></em>
-												</button>
-											</span>
-										</p>
-									</div>
-								</div>
-							@endif
-						@endif						
-							<div class="col-md-12">
-								<div class="form-group">
-									<label for="form-field-select-2">
-										Lokasi Barang Sekarang
-									</label>
-									<label>
-										: 
-										@if(count($data->equipment)==0)
-											Lab (Laboratory)
-										@elseif($data->equipment[0]->location==1)
-											Customer (Applicant)
-										@elseif($data->equipment[0]->location==2)
-											URel (Store)
-										@elseif($data->equipment[0]->location==3)
-											Lab (Laboratory)
-										@endif
-									</label>
-								</div>
-							</div>
-	                        <div class="col-md-6">
-								<div class="form-group">
-									<label for="form-field-select-2">
-										Status *
-									</label>
-									<select class="cs-select cs-skin-elastic">
-										@if($data->examination_status == 0)
-											<option value="0" selected>Choose Status</option>
-										@elseif($data->examination_status == 1)
-											<option value="1" selected>Completed</option>
-										@else
-											<option value="-1" selected>Not Completed</option>
-										@endif
-									</select>
-								</div>
-							</div>
-						</div>
-					</fieldset>
-				@endif
-				@else
-					<fieldset>
-						<legend>
-							Step Pelaksanaan Uji
-						</legend>
-						<div class="row">
-						@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
-							<?php
-								$start_date = new DateTime(date('Y-m-d'));
-								$end_date = new DateTime($exam_schedule->data[0]->targetDt);
-								if($start_date>$end_date){
-									$sisa_spk = 0;
-								}else{
-									$interval = $start_date->diff($end_date);
-									$sisa_spk = $interval->days;
-								}
-							?>
-							<div class="col-md-12">
-								<div class="form-group">
-									<table class="table table-bordered"><caption></caption>
-										<thead>
-											<tr>
-												<th colspan="4" scope="col">Riwayat Pelaksanaan Uji</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>Tanggal Approve Manager Lab</td>
-												<td>Target Selesai Uji</td>
-												<td>Sisa Waktu Pengujian</td>
-											</tr>
-											<tr>
-												<td>
-													<strong>{{ $exam_schedule->data[0]->startTestDt }}</strong>
-												</td>
-												<td>
-													<strong>{{ $exam_schedule->data[0]->targetDt }}</strong>
-												</td>
-												<td>
-													<strong>{{ $sisa_spk }} hari</strong>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>	
-							@if(count($data_lab)>0)
-								<div class="col-md-12">
-									<div class="form-group">
-										<label for="form-field-select-2">
-											Barang pindah dari Gudang ke Lab tanggal : {{ $data_lab[0]->action_date }}
-										</label>
-									</div>
-								</div>
-							@endif
-							<div class="col-md-12">
-								<div class="form-group">
-									<table class="table table-bordered"><caption></caption>
-										<tbody>
-											<tr>
-												<th scope="col">Mulai Uji oleh Test Engineer</th>
-												<th scope="col">Selesai Uji oleh Test Engineer</th>
-											</tr>
-											<tr>
-												<td>
-													<strong>{{ $exam_schedule->data[0]->actualStartTestDt }}</strong>
-												</td>
-												<td>
-													<strong>{{ $exam_schedule->data[0]->actualFinishTestDt }}</strong>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-							@if(count($data_gudang)>1)
-								<div class="col-md-12">
-									<div class="form-group">
-										<label for="form-field-select-2"> 
-											Barang pindah dari Lab ke Gudang tanggal : 
-											@if($data_gudang[0]->action_date != NULL AND $data_gudang[0]->action_date != '0000-00-00')
-												tanggal : {{ $data_gudang[0]->action_date }}
-											@endif
-										</label>
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>
-											Tanggal Barang Dikembalikan *
-										</label>
-										<p class="input-group input-append" data-date-format="yyyy-mm-dd">
-											@if($data_gudang[0]->action_date != NULL AND $data_gudang[0]->action_date != '0000-00-00')
-												<input type="text" class="form-control" value="{{ $data_gudang[0]->action_date }}" readonly required/>
-											@else
-												<input type="text" class="form-control" value="" readonly required/>
-											@endif
-											<span class="input-group-btn">
-												<button type="button" class="btn btn-default">
-													<em class="glyphicon glyphicon-calendar"></em>
-												</button>
-											</span>
-										</p>
-									</div>
-								</div>
-							@endif
-						@endif						
-							<div class="col-md-12">
-								<div class="form-group">
-									<label for="form-field-select-2">
-										Lokasi Barang Sekarang
-									</label>
-									<label>
-										: 
-										@if(count($data->equipment)==0)
-											Lab (Laboratory)
-										@elseif($data->equipment[0]->location==1)
-											Customer (Applicant)
-										@elseif($data->equipment[0]->location==2)
-											URel (Store)
-										@elseif($data->equipment[0]->location==3)
-											Lab (Laboratory)
-										@endif
-									</label>
-								</div>
-							</div>
-	                        <div class="col-md-6">
-								<div class="form-group">
-									<label for="form-field-select-2">
-										Status *
-									</label>
-									<select class="cs-select cs-skin-elastic">
-										@if($data->examination_status == 0)
-											<option value="0" selected>Choose Status</option>
-										@elseif($data->examination_status == 1)
-											<option value="1" selected>Completed</option>
-										@else
-											<option value="-1" selected>Not Completed</option>
-										@endif
-									</select>
-								</div>
-							</div>
-						</div>
-					</fieldset>
 				@endif
 				
 				@if($data->examination_type_id !='1')
@@ -3165,7 +2895,7 @@
 									</div>
 									
 									<div class="modal-body">
-										<table width=100%><caption></caption>
+										<table style="width: 100%;"><caption></caption>
 											<tr>
 												<th scope="col">
 													<div class="form-group">
@@ -3177,7 +2907,7 @@
 										</table>
 									</div><!-- /.modal-content -->
 									<div class="modal-footer">
-										<table width=100%><caption></caption>
+										<table style="width: 100%;"><caption></caption>
 											<tr>
 												<th scope="col">
 													<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
@@ -3656,7 +3386,7 @@
 										</div>
 										
 										<div class="modal-body">
-											<table width=100%><caption></caption>
+											<table style="width: 100%;"><caption></caption>
 												<tr>
 													<th scope="col">
 														<div class="form-group">
@@ -3668,7 +3398,7 @@
 											</table>
 										</div><!-- /.modal-content -->
 										<div class="modal-footer">
-											<table width=100%><caption></caption>
+											<table style="width: 100%;"><caption></caption>
 												<tr>
 													<th scope="col">
 														<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
@@ -4121,14 +3851,6 @@
 												<input type="text" name="cert_number" id="cert_number" class="form-control" placeholder="Nomor Sertifikat" value="{{ $data->device->cert_number }}" required>
 										</div>
 									</div>
-									<!-- <div class="col-md-6">
-										<div class="form-group">
-											<label>
-												Tanggal Penerbitan Sertifikat *
-											</label>
-											<input type="text" name="certificate_date" class="form-control" value="{{ $data->certificate_date }}" readonly>
-										</div>
-									</div> -->
 									<div class="col-md-6">
 										<div class="form-group">
 											<label>
@@ -4200,7 +3922,7 @@
 										</div>
 										
 										<div class="modal-body">
-											<table width=100%><caption></caption>
+											<table style="width: 100%;"><caption></caption>
 												<tr>
 													<th scope="col">
 														<div class="form-group">
@@ -4212,7 +3934,7 @@
 											</table>
 										</div><!-- /.modal-content -->
 										<div class="modal-footer">
-											<table width=100%><caption></caption>
+											<table style="width: 100%;"><caption></caption>
 												<tr>
 													<th scope="col">
 														<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
