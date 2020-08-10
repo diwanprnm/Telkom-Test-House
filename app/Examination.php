@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\DB;
 
 class Examination extends Model
 {
-    protected $table = "examinations";
-    private const APP_COMPANy = 'App\Company';
+    
+    private const APP_COMPANY = 'App\Company';
     private const APP_EXAMINATION_TYPE = 'App\ExaminationType';
     private const APP_EXAMINATION_LAB= 'App\ExaminationLab';
     private const APP_DEVICE = 'App\Device';
@@ -22,8 +22,10 @@ class Examination extends Model
     private const COMPANIES_ID = 'companies.id';
     private const PAYMENT_STATUS = 'payment_status';
     private const TABLE_EXAM = 'examinations';
-    private const TABLE_DEVICE = 'examinations';
+    private const TABLE_DEVICE = 'devices';
     private const TABLE_COMPANIES = 'companies';
+
+    protected $table = self::TABLE_EXAM;
     public $incrementing = false;
 
     public function company()
