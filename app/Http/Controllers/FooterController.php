@@ -12,7 +12,10 @@ use App\Logs;
 use Auth;
 use Session;
 use Image;
-
+use File;
+use Response;
+use Excel;
+use Storage;
 // UUID
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -128,7 +131,7 @@ class FooterController extends Controller
             } 
              
             if($is_uploaded){
-                $company->npwp_file = $file_name;
+                $footer->npwp_file = $file_name;
             }else{
                 Session::flash($this::ERR, 'Save Image to directory failed');
                 return redirect($this::CREATE);

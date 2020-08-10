@@ -74,7 +74,7 @@
 							<div class="col-md-6 col-xs-12">
 								<span class="input-icon input-icon-right search-table"> 
 									<input id="search_charge" type="text" placeholder="{{ trans('translate.search_charge') }}" id="form-field-17" class="form-control " value="{{ $search }}">
-									<i class="ti-search"></i>
+									<em class="ti-search"></em>
 								</span>
 							</div>
 						</div>
@@ -95,16 +95,17 @@
 								<div class="col-md-12">
 									<div class="table-responsive font-table">
 										<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1">
+											<caption></caption>
 											<thead>
 												<tr>
-													<th class="center">{{ trans('translate.charge_no') }}</th>
-													<th class="center">{{ trans('translate.charge_name') }}</th>
-													<th class="center">{{ trans('translate.charge_stel') }}</th>
-													<th class="center">{{ trans('translate.charge_category') }}</th>
-													<th class="center">{{ trans('translate.charge_duration') }}</th>
-													<th class="center">{{ trans('translate.charge_cost') }}</th>
-													<th class="center">{{ trans('translate.charge_vt_cost') }}</th>
-													<th class="center">{{ trans('translate.charge_ta_cost') }}</th>
+													<th class="center" scope="col">{{ trans('translate.charge_no') }}</th>
+													<th class="center" scope="col">{{ trans('translate.charge_name') }}</th>
+													<th class="center" scope="col">{{ trans('translate.charge_stel') }}</th>
+													<th class="center" scope="col">{{ trans('translate.charge_category') }}</th>
+													<th class="center" scope="col">{{ trans('translate.charge_duration') }}</th>
+													<th class="center" scope="col">{{ trans('translate.charge_cost') }}</th>
+													<th class="center" scope="col">{{ trans('translate.charge_vt_cost') }}</th>
+													<th class="center" scope="col">{{ trans('translate.charge_ta_cost') }}</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -125,9 +126,10 @@
 												<?php }else{?>
 												<div class="table-responsive font-table">
 													<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1">
+														<caption></caption>
 														<thead>
-															<tr align="center">
-																<th colspan="3" style="text-align: center;">{{ trans('translate.data_not_found') }}</th>
+															<tr class="center">
+																<th colspan="3" style="text-align: center;" scope="colgroup">{{ trans('translate.data_not_found') }}</th>
 															</tr>
 														</thead>
 													</table>

@@ -31,7 +31,7 @@
 
 						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa, velit, eum, delectus aliquid dolore numquam dolorem assumenda nisi nemo eveniet et illo tempore voluptatem cum in repudiandae pariatur. Architecto, exercitationem perspiciatis nam quod tenetur alias necessitatibus quibusdam eum accusamus a.</p>
 
-						<div class="divider"><i class="icon-circle"></i></div>
+						<div class="divider"><em class="icon-circle"></em></div>
 
 						<div class="col_half nobottommargin">
 

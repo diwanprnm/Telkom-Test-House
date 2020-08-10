@@ -1,6 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
+<style type=”text/css”>
+table {
+    margin: 8px;
+}
+
+
+</style>
 <div class="main-content" >
 	<div class="wrap-content container" id="container">
 		<!-- start: PAGE TITLE -->

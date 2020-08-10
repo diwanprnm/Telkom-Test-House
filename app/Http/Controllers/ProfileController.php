@@ -98,8 +98,7 @@ class ProfileController extends Controller
 			if($data_type_file[0] != 'image')	{
 				return redirect()->back()
 				->with('error_img_type', 1)
-				->withInput($request->all());
-				exit;
+				->withInput($request->all()); 
 			}else{
 				/*$ext_file = $request->file('userPicture')->getClientOriginalName();
 				$name_file = uniqid().'_user_'.$request->input('hide_id_user').'.'.$ext_file;*/

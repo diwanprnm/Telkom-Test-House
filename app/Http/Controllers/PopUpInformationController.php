@@ -13,6 +13,9 @@ use App\Logs;
 use Auth;
 use Session;
 use Image;
+use File;
+use Response;
+use Storage;
 
 // UUID
 use Ramsey\Uuid\Uuid;
@@ -111,19 +114,24 @@ class PopUpInformationController extends Controller
         $popupinformation = new Certification;
         $popupinformation->id = Uuid::uuid4();
         $popupinformation->title = $request->input($this::TITLE);
-        if ($request->hasFile($this::IMAGE)) {
-               
-            $name_file = 'cert_'.$request->file($this::IMAGE)->getClientOriginalName();
-            $path_file = public_path().'/media/popupinformation';
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file($this::IMAGE)->move($path_file,$name_file)){
-                $popupinformation->image = $name_file;
-            }else{
-                Session::flash($this::ERROR, 'Save Image to directory failed');
-                return redirect($this::CREATE);
-            }
+   
+        $allowedImage = ['jpeg','jpg','png'];
+       
+        if ($request->hasFile($this::IMAGE)) { 
+            $file = $request->file($this::IMAGE);
+            $ext = $file->getClientOriginalExtension(); 
+            $file_name = 'popupinformation_'.$request->file($this::IMAGE)->getClientOriginalName();
+            
+            $is_uploaded = false;
+           
+              if (in_array($ext, $allowedImage))
+            { 
+                $image = Image::make($file);   
+                $is_uploaded = Storage::disk('minio')->put("popupinformation/".$popupinformation->id."/$file_name",(string)$image->encode()); 
+             }else{
+                Session::flash('error', 'Format Not Available');
+                return redirect('/admin/popupinformation/create');
+            } 
         }
         
         $popupinformation->is_active = $request->input($this::IS_ACTIVE);
@@ -150,6 +158,7 @@ class PopUpInformationController extends Controller
             return redirect($this::CREATE);
         }
     }
+
 
     /**
      * Display the specified resource.

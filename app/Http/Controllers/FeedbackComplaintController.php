@@ -84,7 +84,6 @@ class FeedbackComplaintController extends Controller
             ->getSortedAndOrderedData($sort_by, $sort_type)
             ->query
             ->paginate($paginate);
-
         
         if (count($data) == 0){
             $message = 'Data not found';
@@ -210,8 +209,9 @@ class FeedbackComplaintController extends Controller
 
         $logService->createLog('download_excel', self::RECAP_FEEDBACK_COMPLAINT, '' );
 
+        $excelFileName = 'Data Feedback';
         // Generate and return the spreadsheet
-        Excel::create('DataFeedback', function($excel) use ($examsArray) {
+        Excel::create($excelFileName, function($excel) use ($examsArray) {
 
             // Build the spreadsheet, passing in the payments array
             $excel->sheet('sheet1', function($sheet) use ($examsArray) {
@@ -228,14 +228,8 @@ class FeedbackComplaintController extends Controller
             });
         })->store('xlsx');
 
-        $file = Storage::disk('tmp')->get('DataFeedback.xlsx');
+        $file = Storage::disk('tmp')->get("$excelFileName.xlsx");
 
-        $headers = [
-            'Content-Type' => 'Application/Spreadsheet',
-            'Content-Description' => 'File Transfer',
-            'Content-Disposition' => "attachment; filename=DataFeedback.xlsx",
-            'filename'=> 'DataFeedback.xlsx'
-        ];
-        return response($file, 200, $headers);
+        return response($file, 200, \App\Services\MyHelper::getHeaderExcel("$excelFileName.xlsx"));
     }
 }

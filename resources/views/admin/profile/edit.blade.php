@@ -98,7 +98,7 @@
 									<label>
 										Gambar
 									</label>
-									<img src="{{asset('media/user/'.$data->id.'/'.$data->picture)}}" width="240px">
+									<img src="{{asset('media/user/'.$data->id.'/'.$data->picture)}}" width="240px" alt="gambar profile">
 									<input type="file" name="picture" class="form-control">
 								</div>
 							</div>

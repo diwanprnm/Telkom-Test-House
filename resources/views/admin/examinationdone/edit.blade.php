@@ -194,7 +194,7 @@
 											<thead>
 											@if($data->keterangan == -1)
 												<tr>
-													<th colspan="3" align="center" scope="col"><font color="red">Perangkat ini sudah pernah diuji, dengan status "Tidak Lulus Uji"</font></th>
+													<th colspan="3" class="center" scope="col"><p style="color:red">Perangkat ini sudah pernah diuji, dengan status "Tidak Lulus Uji"</p></th>
 												</tr>
 											@endif
 												<tr>
@@ -1018,9 +1018,10 @@
 								</div>
 								<div class="form-group">
 									<table class="table table-bordered">
+										<caption></caption>
 										<thead>
 											<tr>
-												<th colspan="5">Riwayat Revisi Laporan Uji</th>
+												<th colspan="5" scope="colgroup">Riwayat Revisi Laporan Uji</th>
 											</tr>
 										</thead>
 										<tbody>

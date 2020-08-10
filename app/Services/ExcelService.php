@@ -20,12 +20,7 @@ class ExcelService
 
         $file = Storage::disk('tmp')->get($fileName.'.xlsx');
 
-        $headers = [
-            'Content-Type' => 'Application/Spreadsheet',
-            'Content-Description' => 'File Transfer',
-            'Content-Disposition' => "attachment; filename=$fileName.xlsx",
-            'filename'=> $fileName.'.xlsx'
-        ];
+        $headers = \App\Services\MyHelper::getHeaderExcel("$fileName.xlsx");
 
         return array(
             'file' => $file,

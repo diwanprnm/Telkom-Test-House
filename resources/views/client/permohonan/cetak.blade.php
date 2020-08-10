@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
     <head>
         <title>Laravel</title>
 
@@ -16,7 +16,7 @@
                 width: 100%;
                 display: table;
                 font-weight: 100;
-                font-family: 'Lato';
+                font-family: Lato, sans-serif;
             }
 
             .container {

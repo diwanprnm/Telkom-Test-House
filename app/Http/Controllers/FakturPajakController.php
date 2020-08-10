@@ -48,9 +48,9 @@ class FakturPajakController extends Controller
 
         $search = trim(strip_tags($request->input(self::SEARCH,'')));
         $noDataFound = '';
-        $page = $request->has('page') ? $request->get('page') : '1';
-        $sort_by = $request->has(self::SORT_BY) ? $request->get(self::SORT_BY) : 'payment_date';
-        $sort_type = $request->has(self::SORT_TYPE) ? $request->get(self::SORT_TYPE) : 'desc';
+        $page = $request->get('page','1');
+        $sort_by = $request->get(self::SORT_BY,'payment_date');
+        $sort_type = $request->get(self::SORT_TYPE,'desc');
         $paginate = 10;
         $type = '';
         $filterCompany = '';

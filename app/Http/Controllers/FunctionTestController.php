@@ -104,7 +104,7 @@ class FunctionTestController extends Controller
         // Convert each member of the returned collection into an array,
         // and append it to the payments array.
         $tanggal_fix = '-';
-        foreach ($data as $row) {
+        foreach ($data as $item) {
             if($item->function_test_date_approval == 1){
                 if($item->function_date != null){
                     $tanggal_fix = $item->function_date;
@@ -127,11 +127,11 @@ class FunctionTestController extends Controller
             }
             $examsArray[] = [
                 $$tanggal_fix,
-                $row->company->name,
-                $row->device->name,
-                $row->device->mark,
-                $row->device->model,
-                $row->device->capacity,
+                $item->company->name,
+                $item->device->name,
+                $item->device->mark,
+                $item->device->model,
+                $item->device->capacity,
                 $hasil
             ];
         }

@@ -35,16 +35,17 @@
 							<div class="table-responsive">
 
 								<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
+									<caption></caption>
 									<thead>
 										<tr>
-											<th>No</th>
-											<th>{{ trans('translate.stel_payment_status_order_date') }}</th>
-											<th>Invoice</th>
-											<th>{{ trans('translate.stel_payment_code') }}</th> 
-											<th>Total</th> 
-											<th>Status</th>
-											<th>{{ trans('translate.stel_payment_status_complete_time') }}</th>   
-											<th colspan="2" class="center">Action</th>
+											<th scope="col">No</th>
+											<th scope="col">{{ trans('translate.stel_payment_status_order_date') }}</th>
+											<th scope="col">Invoice</th>
+											<th scope="col">{{ trans('translate.stel_payment_code') }}</th> 
+											<th scope="col">Total</th> 
+											<th scope="col">Status</th>
+											<th scope="col">{{ trans('translate.stel_payment_status_complete_time') }}</th>   
+											<th colspan="2" class="center"  scope="col">Action</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -86,7 +87,7 @@
 											@endforeach
 
 										<?php }else{?> 
-											<tr align="center">
+											<tr class="center">
 												<td colspan="7" style="text-align: center;">{{ trans('translate.data_not_found') }}</td>
 											</tr> 
 										<?php }?>

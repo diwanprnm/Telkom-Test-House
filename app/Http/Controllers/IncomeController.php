@@ -40,10 +40,13 @@ class IncomeController extends Controller
     private const AFTER_DATE = 'after_date';
     private const BEFORE_DATE = 'before_date';
     private const COMPANY = 'company';
+    private const FOR = 'for';
+    private const FROM = 'from';
     private const KUITANSI_DATE = 'kuitansi_date';
     private const MANAGER_UREL = 'manager_urel';
     private const MESSAGE = 'message';
     private const NUMBER = 'number';
+    private const PRICE = 'price';
     private const QUERY = 'query';
     private const SEARCH = 'search';
     private const SORT_BY = 'sort_by';
@@ -131,15 +134,23 @@ class IncomeController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            self::NUMBER => 'required',
+            self::FROM => 'required',
+            self::PRICE => 'required',
+            self::FOR => 'required',
+            self::KUITANSI_DATE => 'required|date'
+        ]);
+
 		if($this->cekKuitansi($request->input(self::NUMBER)) == 0){
 			$currentUser = Auth::user();
 
 			$kuitansi = new Kuitansi;
 			$kuitansi->id = Uuid::uuid4();
 			$kuitansi->number = $request->input(self::NUMBER);
-			$kuitansi->from = $request->input('from');
-			$kuitansi->price = $request->input('price');
-			$kuitansi->for = $request->input('for');
+			$kuitansi->from = $request->input(self::FROM);
+			$kuitansi->price = $request->input(self::PRICE);
+			$kuitansi->for = $request->input(self::FOR);
 			$kuitansi->kuitansi_date = $request->input(self::KUITANSI_DATE);
 			$kuitansi->created_by = $currentUser->id;
 			$kuitansi->updated_by = $currentUser->id;
@@ -164,7 +175,7 @@ class IncomeController extends Controller
         $id = null;
         $message = null;
         $paginate = 10;
-        $search = trim($request->input(self::SEARCH));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         $before = null;
         $after = null;
         $type = '';
@@ -223,7 +234,6 @@ class IncomeController extends Controller
             ->with(self::SORT_TYPE, $sort_type)
             ->with('data', $data)
             ->with('dataNotFound', $dataNotFound);
-        
 	}
 
 	public function excel(Request $request) 

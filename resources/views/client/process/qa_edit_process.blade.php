@@ -33,7 +33,7 @@
       </div>
       <div class="modal-body pre-scrollable">
            <div class="row">
-                <h2 style="text-align: justify;font-weight: normal;">Mohon maaf perangkat yang saudara/i daftarkan <b>sudah pernah diuji dan tidak lulus</b> sesuai keputusan Sidang QA tanggal <text id="text-1"></text>. Saudara/i <b>dapat mendaftarkan kembali</b> perangkat tersebut 6 bulan setelah keputusan sidang QA, yaitu <b>tanggal <text id="text-2"></text></b>.</h2>
+                <h2 style="text-align: justify;font-weight: normal;">Mohon maaf perangkat yang saudara/i daftarkan <strong>sudah pernah diuji dan tidak lulus</strong> sesuai keputusan Sidang QA tanggal <text id="text-1"></text>. Saudara/i <strong>dapat mendaftarkan kembali</strong> perangkat tersebut 6 bulan setelah keputusan sidang QA, yaitu <strong>tanggal <text id="text-2"></text></strong>.</h2>
         		<button type="button" class="button button3d btn-sky pull-right" data-dismiss="modal">OK</button>
             </div>
       </div>
@@ -106,7 +106,8 @@
 						<input type="hidden" name="token" value="{{ csrf_token() }}">
 				        <div id="wizard"> 
 				            <h2>First Step</h2>
-				            <fieldset > 	 
+				            <fieldset>
+								<legend></legend>
 				            	<input type="hidden" name="hide_jns_pengujian" id="hide_jns_pengujian" value="1"/>
 				        		<input type="hidden" name="hide_exam_id" id="hide_exam_id" value="{{$userData->id}}"/>
 								<input type="hidden" name="hide_device_id" id="hide_device_id" value="{{$userData->device_id}}"/> 
@@ -146,7 +147,8 @@
 
 				            <h2>Second Step</h2>
 				            <fieldset>
-				               <div class="form-group"> 
+								<legend></legend>
+				                <div class="form-group"> 
 				               		<label for="f1-jns-perusahaan">{{ trans('translate.service_company_type') }} : </label>
 									<input type="radio" name="jns_perusahaan" value="Agen" placeholder="{{ trans('translate.service_company_agent') }}">
 									<input type="radio" name="jns_perusahaan" value="Pabrikan" placeholder="{{ trans('translate.service_company_branch') }}">
@@ -181,6 +183,7 @@
 
 				            <h2>Third Step</h2>
 				            <fieldset>
+								<legend></legend>
 								<div class="form-group"> 
 									<input type="radio" name="lokasi_pengujian" value="0" placeholder="{{ trans('translate.service_lab_testing') }}">
 									<input type="radio" name="lokasi_pengujian" value="1" placeholder="{{ trans('translate.service_loc_testing') }}">
@@ -243,6 +246,7 @@
 
 				            <h2>Forth Step</h2>
 				            <fieldset>
+								<legend></legend>
 				                <div class="form-group">
 										<label>{{ trans('translate.service_upload_siupp') }}<span class="text-danger">* 
 											@if($userData->fileSIUPP)
@@ -357,11 +361,18 @@
 				            </fieldset>
 
 				            <h2>Fifth Step</h2>
-				            <fieldset> 
+				            <fieldset>
+									<legend></legend>
 				            		<input type="hidden" name="hide_cekSNjnsPengujian" id="hide_cekSNjnsPengujian">
 									<h4>{{ trans('translate.service_preview') }}</h4>
 									<h3>{{ trans('translate.service_application') }}</h3>
 									<table class="table table-striped" id="preview-field">
+										<caption></caption>
+										<thead class="hidden">
+											<tr>
+												<th scope="col">-</th>
+											</tr>
+										</thead>
 										<tr>
 											<td>{{ trans('translate.service_application_name') }}</td>
 											<td> : </td>
@@ -390,6 +401,12 @@
 									<h3 id="company_type"></h3>
 									<div id="f2-preview-6"></div>
 									<table class="table table-striped" id="preview-field">
+										<caption></caption>
+										<thead class="hidden">
+											<tr>
+												<th scope="col">-</th>
+											</tr>
+										</thead>
 										<tr>
 											<td>{{ trans('translate.service_company_name') }}</td>
 											<td> : </td>
@@ -420,6 +437,12 @@
 									<h3 class="telkom_test">{{ trans('translate.service_device') }} ({{ trans('translate.service_lab_testing') }})</h3>
 									<h3 class="location_test">{{ trans('translate.service_device') }} ({{ trans('translate.service_loc_testing') }})</h3>
 									<table class="table table-striped" id="preview-field">
+										<caption></caption>
+										<thead class="hidden">
+											<tr>
+												<th scope="col">-</th>
+											</tr>
+										</thead>
 										<tr>
 											<td>{{ trans('translate.service_device_equipment') }}</td>
 											<td> : </td>
@@ -455,6 +478,12 @@
 									</table>
 									<h3>{{ trans('translate.service_upload') }}</h3>
 									<table class="table table-striped" id="preview-field">
+										<caption></caption>
+										<thead class="hidden">
+											<tr>
+												<th scope="col">-</th>
+											</tr>
+										</thead>
 										<tr>
 											<td>{{ trans('translate.service_upload_siupp') }}</td>
 											<td> : </td>
@@ -510,6 +539,7 @@
 				            
 				            <h2>Sixth Step</h2>
 				            <fieldset>
+								<legend></legend>
 				            	<div class="form-group">
 										<label>{{ trans('translate.service_upload_now') }}<span class="text-danger">*</span></label>
 										<input class="data-upload-detail-pengujian form-control" id="fileInput-detail-pengujian" name="fuploaddetailpengujian_edit" type="file" accept="application/pdf,image/*">
@@ -531,7 +561,8 @@
 				            </fieldset>
 
 							<h2>Seventh Step</h2>
-				        	<fieldset class="lastFieldset"> 
+				        	<fieldset class="lastFieldset">
+								<legend></legend>
 								<h4 class="judulselesai">{{ trans('translate.service_thanks') }}</h4> 
 								<a class="button button3d btn-green" href="<?php echo url('/pengujian');?>">Finish</a>
 							</fieldset>

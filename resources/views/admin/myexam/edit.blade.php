@@ -1109,7 +1109,7 @@
 											<input type="text" name="resume_date" class="form-control" value="{{ $data->resume_date }}" required/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
-													<i class="glyphicon glyphicon-calendar"></i>
+													<em class="glyphicon glyphicon-calendar"></em>
 												</button>
 											</span>
 										</p>

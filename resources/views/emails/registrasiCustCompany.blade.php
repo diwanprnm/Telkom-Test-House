@@ -41,15 +41,15 @@
 </div>
 <div class="content" style="width:75%;background-color:rgba(255,255,255,1.00);border: 3px #ff3e41 solid;border-radius:15px;position:relative;margin-left:auto;margin-right:auto;padding-left:25px;padding-right:25px;padding-top:5px;padding-bottom:5px;">
 	<div style="text-align:right;">
-		<img style="width:15%;" src="http://37.72.172.144/telkom-dds-web/public/assets/images/Telkom-Indonesia-Corporate-Logo1.jpg">
+		<img style="width:15%;" src="http://37.72.172.144/telkom-dds-web/public/assets/images/Telkom-Indonesia-Corporate-Logo1.jpg" alt="logo telkom">
 	</div>
-	<h3 style="font-family:Arial; font-size:1.2em; color:rgba(110,110,110,1.00);"></h3>
-	<p style="font-style:italic; font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-		<b>== PEMBERITAHUAN ==</b>
+	<h3 style="font-family:Arial, serif; font-size:1.2em; color:rgba(110,110,110,1.00);"></h3>
+	<p style="font-style:italic; font-family:Helvetica, sans-serif; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
+		<strong>== PEMBERITAHUAN ==</strong>
 		<br><br>
 	</p>
-	<p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-		Kastamer atas nama {!! $user_name !!} dan email {!! $user_email !!}, mengajukan permohonan aktivasi akun baru beserta data perusahaan baru <b>(belum terdaftar pada aplikasi)</b>.
+	<p style="font-family:Helvetica, sans-serif; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
+		Kastamer atas nama {!! $user_name !!} dan email {!! $user_email !!}, mengajukan permohonan aktivasi akun baru beserta data perusahaan baru <strong>(belum terdaftar pada aplikasi)</strong>.
 		<br>
 		Perusahaan bernama {!! $comp_name !!}, beralamat di {!! $comp_address !!}. Dengan nomor telepon {!! $comp_phone !!} dan email {!! $comp_email !!} 
 		<br><br>
@@ -62,7 +62,7 @@
 		---
 		<br><br>
 	</p>
-	<p style="font-style:italic; font-family:Helvetica; font-size:0.88em; color:rgba(146,146,146,1.00); margin-top:-7px;">
+	<p style="font-style:italic; font-family:Helvetica, sans-serif; font-size:0.88em; color:rgba(146,146,146,1.00); margin-top:-7px;">
 		Email ini dihasilkan secara otomatis oleh sistem dan mohon untuk tidak membalas email ini. Informasi lebih lanjut hubungi Urel Care di 022 - 4571145 dari ponsel, atau manfaatkan fasilitas webmail di urelddstelkom@gmail.com untuk menghubungi staff User Relation kami.
 	</p>
 </div>

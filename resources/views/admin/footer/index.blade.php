@@ -69,7 +69,7 @@
 								@foreach($data as $item)
 									<tr>
 										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
-										<td class="center"><img src="{{asset('media/footer/'.$item->image)}}" width="240"  alt=""/></td>
+										<td class="center"><img src="{{ \Storage::disk('minio')->url('footer/'.$item->image) }}" width="240"  alt=""/></td>
 										<td class="center">{{ $item->description }}</td>
 										@if($item->is_active)
 	                                    	<td class="center"><span class="label label-sm label-success">Active</span></td>

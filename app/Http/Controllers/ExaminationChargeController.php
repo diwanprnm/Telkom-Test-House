@@ -33,6 +33,7 @@ class ExaminationChargeController extends Controller
     private const MESSAGE = 'message';
     private const PRICE = 'price';
     private const SEARCH = 'search';
+    private const STEL = 'stel';
     private const TA_PRICE = 'ta_price';
     private const VT_PRICE = 'vt_price';
     
@@ -106,6 +107,17 @@ class ExaminationChargeController extends Controller
 
     public function store(Request $request)
     {
+        $this->validate($request, [
+            $this::DEVICE_NAME => 'required',
+            $this::STEL => 'required',
+            $this::CATEGORY => 'required',
+            $this::DURATION => 'required',
+            $this::PRICE => 'required',
+            $this::TA_PRICE => 'required',
+            $this::VT_PRICE => 'required',
+            $this::IS_ACTIVE => 'required|boolean',
+        ]);
+
         $currentUser = Auth::user();
         $logService = new LogService();
 			
@@ -119,7 +131,7 @@ class ExaminationChargeController extends Controller
         $charge = new ExaminationCharge;
         $charge->id = Uuid::uuid4();
         $charge->device_name = $request->input($this::DEVICE_NAME);
-        $charge->stel = $request->input('stel');
+        $charge->stel = $request->input($this::STEL);
         $charge->category = $request->input($this::CATEGORY);
         $charge->duration = str_replace(",","",$request->input($this::DURATION));
         $charge->price = str_replace(",","",$request->input($this::PRICE));
@@ -164,6 +176,10 @@ class ExaminationChargeController extends Controller
 
     public function update(Request $request, $id)
     {
+        $this->validate($request, [
+            $this::IS_ACTIVE => 'boolean',
+        ]);
+
         $currentUser = Auth::user();
         $logService = new LogService();
 
@@ -173,8 +189,8 @@ class ExaminationChargeController extends Controller
         if ($request->has($this::DEVICE_NAME)){
             $charge->device_name = $request->input($this::DEVICE_NAME);
         }
-        if ($request->has('stel')){
-            $charge->stel = $request->input('stel');
+        if ($request->has($this::STEL)){
+            $charge->stel = $request->input($this::STEL);
         }
         if ($request->has($this::CATEGORY)){
             $charge->category = $request->input($this::CATEGORY);

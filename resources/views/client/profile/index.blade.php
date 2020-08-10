@@ -92,9 +92,9 @@
 											<div class="col_full">
 												<label for="register-form-repassword">{{ trans('translate.profile_picture') }} : </label>
 												<?php if($data['picture'] == ''){?>
-													<img src="{{asset('assets/images/default-profile.png')}}" width="240px">
+													<img src="{{asset('assets/images/default-profile.png')}}" width="240px" alt="gambar default profil picture">
 												<?php }else{?>
-													<img src="{{asset('media/user/'.$data['id'].'/'.$data['picture'])}}" width="240px">
+													<img src="{{asset('media/user/'.$data['id'].'/'.$data['picture'])}}" width="240px" alt="gambar profile picture">
 												<?php }?>
 												<input class="data-upload-user-picture" id="data-upload-user-picture" name="userPicture" type="file" accept="image/*">
 												<input type="hidden" name="hide_pic_file" id="hide_pic_file" value="<?php echo $data['picture'] ?>"/>

@@ -53,12 +53,11 @@ class SPBController extends Controller
         $search = trim(strip_tags($request->input(self::SEARCH,'')));
         $sort_by = self::SPB_NUMBER;
         $sort_type = 'desc';
-
-        $query      = $this->getInitialQuery();
-        $examType   = ExaminationType::all();
-        $companies  = Company::where('id','!=', 1)->get();
-        $spb        = $query->get();
-        $queryFilter= new QueryFilter($request, $query);
+        $query = $this->getInitialQuery();
+        $examType = ExaminationType::all();
+        $companies = Company::where('id','!=', 1)->get();
+        $spb = $query->get();
+        $queryFilter = new QueryFilter($request, $query);
 
         if ($search){
             $query->where(function($qry) use($search){
@@ -120,7 +119,7 @@ class SPBController extends Controller
         // the user's e-mail address, the amount paid, and the payment
         // timestamp.
         $logService = new LogService();
-        $search = trim($request->input(self::SEARCH));
+        $search = trim(strip_tags($request->input(self::SEARCH,'')));
         $sort_by = self::SPB_NUMBER;
         $sort_type = 'desc';
 

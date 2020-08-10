@@ -31,14 +31,15 @@
 						<input type="hidden" name="final_price" value="{{$final_price}}"><br>
 						<div class="row"> 
 							<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
+								<caption></caption>
 								<thead>
 									<tr>
-										<th>No</th>
-										<th>{{ trans('translate.stel_name') }}</th>
- 										<th>{{ trans('translate.stel_code') }}</th>
-										<th>{{ trans('translate.stel_price') }}</th> 
-										<th>{{ trans('translate.stel_qty') }}</th>
-										<th>Total</th> 
+										<th scope="col">No</th>
+										<th scope="col">{{ trans('translate.stel_name') }}</th>
+ 										<th scope="col">{{ trans('translate.stel_code') }}</th>
+										<th scope="col">{{ trans('translate.stel_price') }}</th> 
+										<th scope="col">{{ trans('translate.stel_qty') }}</th>
+										<th scope="col">Total</th> 
 									</tr>
 								</thead>
 								<tbody>
@@ -54,28 +55,28 @@
 										?>
 										<td>{{$stel_name}}</td>
 										<td>{{$stel_code}}</td>
-										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($row->price)}}</td> 
-										<td align="center">{{$row->qty}}</td> 
-										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($row->price*$row->qty)}}</td> 
+										<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. {{number_format($row->price)}}</td> 
+										<td class="center">{{$row->qty}}</td> 
+										<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. {{number_format($row->price*$row->qty)}}</td> 
 									</tr> 
 									@endforeach
 								</tbody>
 								<tfoot>
 									<tr class="list-total-harga">
-										<td colspan="5" align="right">{{ trans('translate.stel_unique_code') }}</td> 
-										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($unique_code)}}</td> 
+										<td colspan="5" class="text-align-right">{{ trans('translate.stel_unique_code') }}</td> 
+										<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. {{number_format($unique_code)}}</td> 
 									</tr> 
 									<tr class="list-total-harga">
-										<td colspan="5" align="right">Sub Total</td> 
-										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($total_price + $unique_code)}}</td> 
+										<td colspan="5" class="text-align-right">Sub Total</td> 
+										<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. {{number_format($total_price + $unique_code)}}</td> 
 									</tr> 
 									<tr class="list-total-harga">
-										<td colspan="5" align="right">{{ trans('translate.tax') }}</td> 
-										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($tax)}}</td> 
+										<td colspan="5" class="text-align-right">{{ trans('translate.tax') }}</td> 
+										<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. {{number_format($tax)}}</td> 
 									</tr> 
 									<tr class="list-total-harga" style="font-weight: bold">
-										<td colspan="5" align="right">Total</td>
-										<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($final_price)}}</td> 
+										<td colspan="5" class="text-align-right">Total</td>
+										<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. {{number_format($final_price)}}</td> 
 									</tr> 
 								</tfoot>
 							</table> 
@@ -97,7 +98,7 @@
 					<div class="row metoda">
 						<div class="col-md-12 bank-list-header">This is list of bank if you take this method</div>
 						<div class="col-md-3" style="font-weight: bold;font-size: 175%;">
-							<img src="http://localhost/telkomdds/public/images/bank/mandiri.png">
+							<img src="http://localhost/telkomdds/public/images/bank/mandiri.png" alt="logo bank mandiri">
 							BANK MANDIRI
 						</div>
 						<div class="col-md-9" style="font-weight: bold;font-size: 240%;margin-top: -3%;">

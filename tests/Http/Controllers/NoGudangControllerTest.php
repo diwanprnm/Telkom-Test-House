@@ -37,9 +37,7 @@ class NoGudangControllerTest extends TestCase
     // {
     //     // create and get data
     //     $equipment = factory(App\Equipment::class)->create();
-    //     factory(App\EquipmentHistory::class)->create([
-    //         'examination_id' => $equipment->examination_id,
-    //     ]);
+    //     factory(App\EquipmentHistory::class)->create(['examination_id' => $equipment->examination_id,]);
     //     $examination = App\Examination::find($equipment->examination_id);
     //     $company = App\Company::find($examination->company_id);
 

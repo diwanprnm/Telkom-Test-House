@@ -272,7 +272,7 @@
 										
 										<div id="step-1">
 											<div class="form-group">
-												<table class="table table-condensed"><caption</caption>
+												<table class="table table-condensed"><caption></caption>
 													<thead>
 														<tr>
 															<th colspan="3" scope="col">Detail Informasi</th>
