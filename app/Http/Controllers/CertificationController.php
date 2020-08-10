@@ -26,6 +26,7 @@ class CertificationController extends Controller
     private const IMAGE = 'image';
     private const IS_ACTIVE = 'is_active';
     private const MESSAGE = 'message';
+    private const REQUIRED = 'required';
     private const SEARCH = 'search';
     private const TITLE = 'title';
 
@@ -100,8 +101,8 @@ class CertificationController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            self::TITLE => 'required',
-            self::IS_ACTIVE => 'required',
+            self::TITLE => self::REQUIRED,
+            self::IS_ACTIVE => self::REQUIRED,
             self::IMAGE => 'required|mimes:jpg,jpeg,png'
         ]);
 

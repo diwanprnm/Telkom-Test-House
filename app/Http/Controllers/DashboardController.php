@@ -145,7 +145,7 @@ class DashboardController extends Controller
                     $query->where($this::CONTRSTAT, 1);
                     $query->where($this::SPB, 1);
                     $query->where($this::PAYSTAT, '!=', 1);
-                    $query->whereHas($this::MEDIA, function ($q) use ($request){
+                    $query->whereHas($this::MEDIA, function ($q) {
                         return $q->where('name', '=', 'File Pembayaran')
                                 ->where('attachment', '=' ,'');
                     });
@@ -157,7 +157,7 @@ class DashboardController extends Controller
                     $query->where($this::CONTRSTAT, 1);
 					$query->where($this::SPB, 1);
 					$query->where($this::PAYSTAT, '!=', 1);
-                    $query->whereHas($this::MEDIA, function ($q) use ($request){
+                    $query->whereHas($this::MEDIA, function ($q) {
                         return $q->where('name', '=', 'File Pembayaran')
                                 ->where('attachment', '!=' ,'');
                     });

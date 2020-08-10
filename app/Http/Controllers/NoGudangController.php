@@ -29,12 +29,12 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 class NoGudangController extends Controller
 {
-    private const SEARCH = 'search';
-    private const QUERY = 'query';
-    private const BEFORE_DATE = 'before_date';
     private const AFTER_DATE = 'after_date';
-    private const NOGUDANG = 'nogudang';
+    private const BEFORE_DATE = 'before_date';
     private const COMPANY = 'company';
+    private const NOGUDANG = 'nogudang';
+    private const QUERY = 'query';
+    private const SEARCH = 'search';
     private const SORT_BY = 'sort_by';
     private const SORT_TYPE = 'sort_type';
 

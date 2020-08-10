@@ -32,6 +32,7 @@ class ExaminationChargeController extends Controller
     private const IS_ACTIVE = 'is_active';
     private const MESSAGE = 'message';
     private const PRICE = 'price';
+    private const REQUIRED = 'required';
     private const SEARCH = 'search';
     private const STEL = 'stel';
     private const TA_PRICE = 'ta_price';
@@ -108,13 +109,13 @@ class ExaminationChargeController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            $this::DEVICE_NAME => 'required',
-            $this::STEL => 'required',
-            $this::CATEGORY => 'required',
-            $this::DURATION => 'required',
-            $this::PRICE => 'required',
-            $this::TA_PRICE => 'required',
-            $this::VT_PRICE => 'required',
+            $this::DEVICE_NAME => self::REQUIRED,
+            $this::STEL => self::REQUIRED,
+            $this::CATEGORY => self::REQUIRED,
+            $this::DURATION => self::REQUIRED,
+            $this::PRICE => self::REQUIRED,
+            $this::TA_PRICE => self::REQUIRED,
+            $this::VT_PRICE => self::REQUIRED,
             $this::IS_ACTIVE => 'required|boolean',
         ]);
 

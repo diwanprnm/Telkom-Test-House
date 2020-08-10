@@ -48,6 +48,7 @@ class IncomeController extends Controller
     private const NUMBER = 'number';
     private const PRICE = 'price';
     private const QUERY = 'query';
+    private const REQUIRED = 'required';
     private const SEARCH = 'search';
     private const SORT_BY = 'sort_by';
     private const SORT_TYPE = 'sort_type';
@@ -135,10 +136,10 @@ class IncomeController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            self::NUMBER => 'required',
-            self::FROM => 'required',
-            self::PRICE => 'required',
-            self::FOR => 'required',
+            self::NUMBER => self::REQUIRED,
+            self::FROM => self::REQUIRED,
+            self::PRICE => self::REQUIRED,
+            self::FOR => self::REQUIRED,
             self::KUITANSI_DATE => 'required|date'
         ]);
 

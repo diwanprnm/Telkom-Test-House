@@ -14,14 +14,17 @@ use Auth;
 
 class Controller extends BaseController
 {
-    use AuthorizesRequests, AuthorizesResources, DispatchesJobs, ValidatesRequests;
+	use AuthorizesRequests, AuthorizesResources, DispatchesJobs, ValidatesRequests;
+	
+	protected $message_footers = '';
+
 	public function __construct()
 	{
         $query_footers = "SELECT * FROM footers WHERE is_active = 1";
 		$data_footers = DB::select($query_footers);
 
         if (count($data_footers) == 0){
-			$message_footers = "Data Not Found";
+			$this->message_footers = "Data Not Found";
 		}
 			$currentUser = Auth::user(); 
 			if ($currentUser){				
