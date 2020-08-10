@@ -29,6 +29,7 @@ class SlideshowController extends Controller
     private const IMAGE = 'image';
     private const IS_ACTIVE = 'is_active';
     private const MESSAGE = 'message';
+    private const REQUIRED = 'required';
     private const SEARCH = 'search';
     private const SLIDESHOW = 'SLIDESHOW';
     private const TIMEOUT = 'timeout';
@@ -97,8 +98,8 @@ class SlideshowController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            self::TITLE => 'required',
-            self::HEADLINE => 'required',
+            self::TITLE => self::REQUIRED,
+            self::HEADLINE => self::REQUIRED,
             self::IMAGE => 'required|mimes:jpg,jpeg,png',
             self::TIMEOUT => 'numeric',
             self::IS_ACTIVE => 'required|boolean'
