@@ -15,6 +15,7 @@ use Auth;
 use Session;
 use Validator;
 use Excel;
+use App\Services\Logs\LogServices;
 
 // UUID
 use Ramsey\Uuid\Uuid;
@@ -92,15 +93,9 @@ class LogController extends Controller
             if ($search != null){
                 $datalogs->where($this::ACTION,'like','%'.$search.'%');
 
-                $logs = new Logs;
-                $logs->id = Uuid::uuid4();
-                $logs->user_id = $currentUser->id;
-                $logs->action = "Search Log"; 
-                $dataSearch = array("search"=>$search);
-                $logs->data = json_encode($dataSearch);
-                $logs->created_by = $currentUser->id;
-                $logs->page = "LOG";
-                $logs->save();
+                $logService = new LogService();
+                $logService->createLog('Search Log',"LOG", json_encode(array("search"=>$search)) );
+               
 
             }
 
