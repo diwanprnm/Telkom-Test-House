@@ -11,6 +11,7 @@ use Session;
 
 use App\CalibrationCharge;
 use App\Logs;
+use App\Services\Logs\LogServices;
 
 use Excel;
 
@@ -317,13 +318,19 @@ class CalibrationChargeController extends Controller
             ];
         }
         $currentUser = Auth::user();
-        $logs = new Logs;
+
+        $logService = new LogService();
+        $logService->createLog('download_excel',"Tarif Kalibrasi", "");
+
+
+
+       /* $logs = new Logs;
         $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
         $logs->action = "download_excel";   
         $logs->data = "";
         $logs->created_by = $currentUser->id;
         $logs->page = "Tarif Kalibrasi";
-        $logs->save();
+        $logs->save();*/
 
 
         
