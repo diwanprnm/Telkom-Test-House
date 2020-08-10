@@ -44,6 +44,120 @@ use App\AdminRole;
 
 class ExaminationController extends Controller
 {
+
+	private const SEARCH = 'search';
+	private const CREATED_AT = 'created_at';
+	private const COMPANY = 'company';
+	private const EXAMINATION_TYPE = 'examinationType';
+	private const EXAMINATION_LAB = 'examinationLab';
+	private const MEDIA = 'media';
+	private const DEVICS = 'device';
+	private const REGISTRATION_STATUS = 'registration_status';
+	private const FUNCTION_STATUS = 'function_status';
+	private const CONTRACT_STATUS = 'contract_status';
+	private const SPB_STATUS = 'spb_status';
+	private const PAYMENT_STATUS = 'payment_status';
+	private const SPK_STATUS = 'spk_status';
+	private const EXAMINATION_STATUS = 'examination_status';
+	private const RESUME_STATUS = 'resume_status';
+	private const QA_STATUS = 'qa_status';
+	private const CERTIFICATE_STATUS = 'certificate_status';
+	private const LOCATION = 'location';
+	private const EXAMINATION = 'EXAMINATION';
+	private const STATUS = 'status';
+	private const BEFORE_DATE = 'before_date';
+	private const SPK_DATE = 'spk_date';
+	private const AFTER_DATE = 'after_date';
+	private const UPDATED_AT = 'updated_at';
+	private const MESSAGE = 'message';
+	private const EXAMINATION_ID = 'examination_id';
+	private const HEADERS = 'headers';
+	private const CONTENT_TYPE = 'Content-type';
+	private const APPLICATION_HEADER = 'application/x-www-form-urlencoded';
+	private const BASE_URI = 'base_uri';
+	private const APP_URI_API_BSP = 'app.url_api_bsp';
+	private const TIMEOUT = 'timeout';
+	private const ADMIN = 'admin';
+	private const PENGUJIAN_LOC = 'pengujian/';
+	private const DETAIL_LOC = '/detail';
+	private const IS_READ = 'is_read';
+	private const DATE_FORMAT_1 = 'Y-m-d H:i:s';
+	private const KONFORMASI_PEMBATALAN = 'Konfirmasi Pembatalan Pengujian';
+	private const EMAILS_FAIL = 'emails.fail';
+	private const KETERANGAN = 'keterangan';
+	private const REGISTRASI = 'Registrasi';
+	private const BARANG_FILE = 'barang_file';
+	private const MEDIA_EXAMINATION_LOC = '/media/examination/';
+	private const EDIT_LOC = '/edit';
+	private const ADMIN_EXAMINATION_LOC = '/admin/examination/';
+	private const ERROR = 'error';
+	private const FUNCTION_FILE = 'function_file';
+	private const DATE_FORMAT_2 = 'Y-m-d';
+	private const UJI_FUNGSI = 'Uji Fungsi';
+	private const CONTRACT_FILE = 'contract_file';
+	private const TINJAUAN_KONTRAK = 'Tinjauan Kontrak';
+	private const HTTP_ERRORS = 'http_errors';
+	private const SPB_FILE = 'spb_file';
+	private const CUST_PRICE_PAYMENT = 'cust_price_payment';
+	private const KUITANSI_FILE = 'kuitansi_file';
+	private const KUITANSI = 'Kuitansi';
+	private const FAKTUR_FILE = 'faktur_file';
+	private const FAKTUR_PAJAK = 'Faktur Pajak';
+	private const REFERENCE_ID = 'reference_id';
+	private const PEMBAYARAN = 'Pembayaran';
+	private const PEMBUATAN_SPK = 'Pembuatan SPK';
+	private const PELAKSANAAN_UJI = 'Pelaksanaan Uji';
+	private const REV_LAP_UJI = 'rev_lap_uji_file';
+	private const LAPORAN_UJI = 'Laporan Uji';
+	private const BARANG_FILE2 = 'barang_file2';
+	private const TANDA_TERIMA = 'tanda_terima_file';
+	private const QA_DATE = 'qa_date';
+	private const SIDANG_QA = 'Sidang QA';
+	private const CATATAN = 'catatan';
+	private const CONTRACT_DATE = 'contract_date';
+	private const SPB_NUMBER = 'spb_number';
+	private const SPB_DATE = 'spb_date';
+	private const PO_ID = 'PO_ID';
+	private const CERTIFICATE_DATE = 'certificate_file';
+	private const MEDIA_DEVICE_LOC = '/media/device/';
+	private const SPK_NUMBER_URI = '&spkNumber=';
+	private const SPK_ADD_NOTIF_ID_URI = 'spk/addNotif?id=';
+	private const EXAMINATIONS = 'examinations';
+	private const ADMIN_EXAMINATION = '/admin/examination';
+	private const JSON_HEADER = 'application/json';
+	private const AUTHORIZATION = 'Authorization';
+	private const APP_GATEWAY_TPN_2 = 'app.gateway_tpn_2';
+	private const APP_URI_API_TPN = 'app.url_api_tpn';
+	private const V1_INVOICE = 'v1/invoices/';
+	private const EXAMINATIONS_ID = 'examinations.id';
+	private const EXAMINATION_ATTACHMENTS = 'examination_attachments';
+	private const HEADER_CONTENT_TYPE = 'Content-Type: application/octet-stream';
+	private const USER_NAME = 'user_name';
+	private const DEV_NAME = 'dev_name';
+	private const EXAM_TYPE = 'exam_type';
+	private const EXAM_TYPE_DESC = 'exam_type_desc';
+	private const COMPLETED = 'Completed';
+	private const NOT_COMPLETED = 'Not Completed';
+	private const ON_PROGRESS = 'On Progress';
+	private const DATE_FORMAT_3 = 'd-m-Y';
+	private const NAMA_PERANGKAT = 'nama_perangkat';
+	private const MEREK_PERANGKAT = 'merk_perangkat';
+	private const KAPASITAS_PERANGKAT = 'kapasitas_perangkat';
+	private const PEMBUAT_PERANGKAT = 'pembuat_perangkat';
+	private const MODEL_PERANGKAT = 'model_perangkat';
+	private const CMB_REF_PERANGKAT = 'cmb-ref-perangkat';
+	private const REF_PERANGAKAT = 'ref_perangkat';
+	private const SN_PERANGKAT = 'sn_perangkat';
+	private const ID_EXAM = 'id_exam';
+	private const J_F_Y = 'j F Y';
+	private const EQUIPMENT = 'Equipment';
+	private const DOTS = '...............................';
+	private const MANAGER_UREL = 'manager_urel';
+	private const TTH_02 = '/TTH-02/';
+	private const EXAM_ID = 'exam_id';
+	private const DDS_73 = '/DDS-73/';
+
+
 	/**
      * Create a new controller instance.
      *
@@ -67,7 +181,7 @@ class ExaminationController extends Controller
         if ($currentUser){
             $message = null;
             $paginate = 5;
-            $search = trim($request->input('search'));
+            $search = trim($request->input(self::SEARCH));
             $comp_stat = '';
             $type = '';
             $status = '';
@@ -76,37 +190,37 @@ class ExaminationController extends Controller
 
             $examType = ExaminationType::all();
 
-            $query = Examination::whereNotNull('created_at')
+            $query = Examination::whereNotNull(self::CREATED_AT)
                                 ->with('user')
-                                ->with('company')
-                                ->with('examinationType')
-                                ->with('examinationLab')
-                                ->with('media')
-                                ->with('device');
+                                ->with(self::COMPANY)
+                                ->with(self::EXAMINATION_TYPE)
+                                ->with(self::EXAMINATION_LAB)
+                                ->with(self::MEDIA)
+                                ->with(self::DEVICS);
 			$query->where(function($q){
-				return $q->where('registration_status', '!=', '1')
-					->orWhere('function_status', '!=', '1')
-					->orWhere('contract_status', '!=', '1')
-					->orWhere('spb_status', '!=', '1')
-					->orWhere('payment_status', '!=', '1')
-					->orWhere('spk_status', '!=', '1')
-					->orWhere('examination_status', '!=', '1')
-					->orWhere('resume_status', '!=', '1')
-					->orWhere('qa_status', '!=', '1')
-					->orWhere('certificate_status', '!=', '1')
-					->orWhere('location', '!=', '1')
+				return $q->where(self::REGISTRATION_STATUS, '!=', '1')
+					->orWhere(self::FUNCTION_STATUS, '!=', '1')
+					->orWhere(self::CONTRACT_STATUS, '!=', '1')
+					->orWhere(self::SPB_STATUS, '!=', '1')
+					->orWhere(self::PAYMENT_STATUS, '!=', '1')
+					->orWhere(self::SPK_STATUS, '!=', '1')
+					->orWhere(self::EXAMINATION_STATUS, '!=', '1')
+					->orWhere(self::RESUME_STATUS, '!=', '1')
+					->orWhere(self::QA_STATUS, '!=', '1')
+					->orWhere(self::CERTIFICATE_STATUS, '!=', '1')
+					->orWhere(self::LOCATION, '!=', '1')
 					;
 				})
 				;
 			if ($search != null){
                 $query->where(function($qry) use($search){
-                    $qry->whereHas('device', function ($q) use ($search){
+                    $qry->whereHas(self::DEVICS, function ($q) use ($search){
 							return $q->where('name', 'like', '%'.strtolower($search).'%');
 						})
-					->orWhereHas('company', function ($q) use ($search){
+					->orWhereHas(self::COMPANY, function ($q) use ($search){
 							return $q->where('name', 'like', '%'.strtolower($search).'%');
 						})
-					->orWhereHas('examinationLab', function ($q) use ($search){
+					->orWhereHas(self::EXAMINATION_LAB, function ($q) use ($search){
 							return $q->where('name', 'like', '%'.strtolower($search).'%');
 						})
 					->orWhere('function_test_NO', 'like', '%'.strtolower($search).'%')
@@ -116,31 +230,12 @@ class ExaminationController extends Controller
                 $logs = new Logs;
                 $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
                 $logs->action = "search";  
-                $dataSearch = array('search' => $search);
+                $dataSearch = array(self::SEARCH => $search);
                 $logs->data = json_encode($dataSearch);
                 $logs->created_by = $currentUser->id;
-                $logs->page = "EXAMINATION";
+                $logs->page = self::EXAMINATION;
                 $logs->save();
             }
-
-            // if ($request->has('comp_stat')){
-                // $comp_stat = $request->get('comp_stat');
-                // if($request->input('comp_stat') != 'all'){
-					// $query->where(function($q) use($request){
-					// return $q->where('registration_status', '=', $request->get('comp_stat'))
-						// ->orWhere('function_status', '=', $request->get('comp_stat'))
-						// ->orWhere('contract_status', '=', $request->get('comp_stat'))
-						// ->orWhere('spb_status', '=', $request->get('comp_stat'))
-						// ->orWhere('payment_status', '=', $request->get('comp_stat'))
-						// ->orWhere('spk_status', '=', $request->get('comp_stat'))
-						// ->orWhere('examination_status', '=', $request->get('comp_stat'))
-						// ->orWhere('resume_status', '=', $request->get('comp_stat'))
-						// ->orWhere('qa_status', '=', $request->get('comp_stat'))
-						// ->orWhere('certificate_status', '=', $request->get('comp_stat'))
-						// ;
-					// });
-				// }
-            // }
 
             if ($request->has('type')){
                 $type = $request->get('type');
@@ -149,183 +244,103 @@ class ExaminationController extends Controller
 				}
             }
 
-            if ($request->has('company')){
-                $query->whereHas('company', function ($q) use ($request){
-                    return $q->where('name', 'like', '%'.strtolower($request->get('company')).'%');
+            if ($request->has(self::COMPANY)){
+                $query->whereHas(self::COMPANY, function ($q) use ($request){
+                    return $q->where('name', 'like', '%'.strtolower($request->get(self::COMPANY)).'%');
                 });
             }
 
-            if ($request->has('device')){
-                $query->whereHas('device', function ($q) use ($request){
-                    return $q->where('name', 'like', '%'.strtolower($request->get('device')).'%');
+            if ($request->has(self::DEVICS)){
+                $query->whereHas(self::DEVICS, function ($q) use ($request){
+                    return $q->where('name', 'like', '%'.strtolower($request->get(self::DEVICS)).'%');
                 });
             }
 
-            if ($request->has('status')){
-                switch ($request->get('status')) {
+            if ($request->has(self::STATUS)){
+                switch ($request->get(self::STATUS)) {
                     case 1:
-						/*if ($request->has('comp_stat')){
-							$comp_stat = $request->get('comp_stat');
-							if($request->input('comp_stat') != 'all'){
-								$query->where('registration_status', '=', $request->get('comp_stat'));
-							}else{
-								$query->where('registration_status', '!=', 1);
-							}
-						}*/
-						$query->where('registration_status', '!=', 1);
+						$query->where(self::REGISTRATION_STATUS, '!=', 1);
                         $status = 1;
                         break;
                     case 2:
-                        /*if ($request->has('comp_stat')){
-							$comp_stat = $request->get('comp_stat');
-							if($request->input('comp_stat') != 'all'){
-								$query->where('function_status', '=', $request->get('comp_stat'));
-							}else{
-								$query->where('function_status', '!=', 1);
-							}
-						}*/
-						$query->where('registration_status', '=', 1);
-						$query->where('function_status', '!=', 1);
+						$query->where(self::REGISTRATION_STATUS, '=', 1);
+						$query->where(self::FUNCTION_STATUS, '!=', 1);
                         $status = 2;
                         break;
                     case 3:
-                        /*if ($request->has('comp_stat')){
-							$comp_stat = $request->get('comp_stat');
-							if($request->input('comp_stat') != 'all'){
-								$query->where('contract_status', '=', $request->get('comp_stat'));
-							}else{
-								$query->where('contract_status', '!=', 1);
-							}
-						}*/
-						$query->where('registration_status', '=', 1);
-						$query->where('function_status', '=', 1);
-						$query->where('contract_status', '!=', 1);
+						$query->where(self::REGISTRATION_STATUS, '=', 1);
+						$query->where(self::FUNCTION_STATUS, '=', 1);
+						$query->where(self::CONTRACT_STATUS, '!=', 1);
                         $status = 3;
                         break;
                     case 4:
-                        /*if ($request->has('comp_stat')){
-							$comp_stat = $request->get('comp_stat');
-							if($request->input('comp_stat') != 'all'){
-								$query->where('spb_status', '=', $request->get('comp_stat'));
-							}else{
-								$query->where('spb_status', '!=', 1);
-							}
-						}*/
-						$query->where('registration_status', '=', 1);
-						$query->where('function_status', '=', 1);
-						$query->where('contract_status', '=', 1);
-						$query->where('spb_status', '!=', 1);
+						$query->where(self::REGISTRATION_STATUS, '=', 1);
+						$query->where(self::FUNCTION_STATUS, '=', 1);
+						$query->where(self::CONTRACT_STATUS, '=', 1);
+						$query->where(self::SPB_STATUS, '!=', 1);
                         $status = 4;
                         break;
                     case 5:
-                        /*if ($request->has('comp_stat')){
-							$comp_stat = $request->get('comp_stat');
-							if($request->input('comp_stat') != 'all'){
-								$query->where('payment_status', '=', $request->get('comp_stat'));
-							}else{
-								$query->where('payment_status', '!=', 1);
-							}
-						}*/
-						$query->where('registration_status', '=', 1);
-						$query->where('function_status', '=', 1);
-						$query->where('contract_status', '=', 1);
-						$query->where('spb_status', '=', 1);
-						$query->where('payment_status', '!=', 1);
+						$query->where(self::REGISTRATION_STATUS, '=', 1);
+						$query->where(self::FUNCTION_STATUS, '=', 1);
+						$query->where(self::CONTRACT_STATUS, '=', 1);
+						$query->where(self::SPB_STATUS, '=', 1);
+						$query->where(self::PAYMENT_STATUS, '!=', 1);
                         $status = 5;
                         break;
                     case 6:
-                        /*if ($request->has('comp_stat')){
-							$comp_stat = $request->get('comp_stat');
-							if($request->input('comp_stat') != 'all'){
-								$query->where('spk_status', '=', $request->get('comp_stat'));
-							}else{
-								$query->where('spk_status', '!=', 1);
-							}
-						}*/
-						$query->where('registration_status', '=', 1);
-						$query->where('function_status', '=', 1);
-						$query->where('contract_status', '=', 1);
-						$query->where('spb_status', '=', 1);
-						$query->where('payment_status', '=', 1);
-						$query->where('spk_status', '!=', 1);
+						$query->where(self::REGISTRATION_STATUS, '=', 1);
+						$query->where(self::FUNCTION_STATUS, '=', 1);
+						$query->where(self::CONTRACT_STATUS, '=', 1);
+						$query->where(self::SPB_STATUS, '=', 1);
+						$query->where(self::PAYMENT_STATUS, '=', 1);
+						$query->where(self::SPK_STATUS, '!=', 1);
                         $status = 6;
                         break;
                     case 7:
-                        /*if ($request->has('comp_stat')){
-							$comp_stat = $request->get('comp_stat');
-							if($request->input('comp_stat') != 'all'){
-								$query->where('examination_status', '=', $request->get('comp_stat'));
-							}else{
-								$query->where('examination_status', '!=', 0);
-							}
-						}*/
-						$query->where('registration_status', '=', 1);
-						$query->where('function_status', '=', 1);
-						$query->where('contract_status', '=', 1);
-						$query->where('spb_status', '=', 1);
-						$query->where('payment_status', '=', 1);
-						$query->where('spk_status', '=', 1);
-						$query->where('examination_status', '!=', 1);
+						$query->where(self::REGISTRATION_STATUS, '=', 1);
+						$query->where(self::FUNCTION_STATUS, '=', 1);
+						$query->where(self::CONTRACT_STATUS, '=', 1);
+						$query->where(self::SPB_STATUS, '=', 1);
+						$query->where(self::PAYMENT_STATUS, '=', 1);
+						$query->where(self::SPK_STATUS, '=', 1);
+						$query->where(self::EXAMINATION_STATUS, '!=', 1);
                         $status = 7;
                         break;
                     case 8:
-                        /*if ($request->has('comp_stat')){
-							$comp_stat = $request->get('comp_stat');
-							if($request->input('comp_stat') != 'all'){
-								$query->where('resume_status', '=', $request->get('comp_stat'));
-							}else{
-								$query->where('resume_status', '!=', 0);
-							}
-						}*/
-						$query->where('registration_status', '=', 1);
-						$query->where('function_status', '=', 1);
-						$query->where('contract_status', '=', 1);
-						$query->where('spb_status', '=', 1);
-						$query->where('payment_status', '=', 1);
-						$query->where('spk_status', '=', 1);
-						$query->where('examination_status', '=', 1);
-						$query->where('resume_status', '!=', 1);
+						$query->where(self::REGISTRATION_STATUS, '=', 1);
+						$query->where(self::FUNCTION_STATUS, '=', 1);
+						$query->where(self::CONTRACT_STATUS, '=', 1);
+						$query->where(self::SPB_STATUS, '=', 1);
+						$query->where(self::PAYMENT_STATUS, '=', 1);
+						$query->where(self::SPK_STATUS, '=', 1);
+						$query->where(self::EXAMINATION_STATUS, '=', 1);
+						$query->where(self::RESUME_STATUS, '!=', 1);
                         $status = 8;
                         break;
                     case 9:
-                        /*if ($request->has('comp_stat')){
-							$comp_stat = $request->get('comp_stat');
-							if($request->input('comp_stat') != 'all'){
-								$query->where('qa_status', '=', $request->get('comp_stat'));
-							}else{
-								$query->where('qa_status', '!=', 0);
-							}
-						}*/
-						$query->where('registration_status', '=', 1);
-						$query->where('function_status', '=', 1);
-						$query->where('contract_status', '=', 1);
-						$query->where('spb_status', '=', 1);
-						$query->where('payment_status', '=', 1);
-						$query->where('spk_status', '=', 1);
-						$query->where('examination_status', '=', 1);
-						$query->where('resume_status', '=', 1);
-						$query->where('qa_status', '!=', 1);
+						$query->where(self::REGISTRATION_STATUS, '=', 1);
+						$query->where(self::FUNCTION_STATUS, '=', 1);
+						$query->where(self::CONTRACT_STATUS, '=', 1);
+						$query->where(self::SPB_STATUS, '=', 1);
+						$query->where(self::PAYMENT_STATUS, '=', 1);
+						$query->where(self::SPK_STATUS, '=', 1);
+						$query->where(self::EXAMINATION_STATUS, '=', 1);
+						$query->where(self::RESUME_STATUS, '=', 1);
+						$query->where(self::QA_STATUS, '!=', 1);
                         $status = 9;
                         break;
                     case 10:
-                        /*if ($request->has('comp_stat')){
-							$comp_stat = $request->get('comp_stat');
-							if($request->input('comp_stat') != 'all'){
-								$query->where('certificate_status', '=', $request->get('comp_stat'));
-							}else{
-								$query->where('certificate_status', '!=', 0);
-							}
-						}*/
-						$query->where('registration_status', '=', 1);
-						$query->where('function_status', '=', 1);
-						$query->where('contract_status', '=', 1);
-						$query->where('spb_status', '=', 1);
-						$query->where('payment_status', '=', 1);
-						$query->where('spk_status', '=', 1);
-						$query->where('examination_status', '=', 1);
-						$query->where('resume_status', '=', 1);
-						$query->where('qa_status', '=', 1);
-						$query->where('certificate_status', '!=', 1);
+						$query->where(self::REGISTRATION_STATUS, '=', 1);
+						$query->where(self::FUNCTION_STATUS, '=', 1);
+						$query->where(self::CONTRACT_STATUS, '=', 1);
+						$query->where(self::SPB_STATUS, '=', 1);
+						$query->where(self::PAYMENT_STATUS, '=', 1);
+						$query->where(self::SPK_STATUS, '=', 1);
+						$query->where(self::EXAMINATION_STATUS, '=', 1);
+						$query->where(self::RESUME_STATUS, '=', 1);
+						$query->where(self::QA_STATUS, '=', 1);
+						$query->where(self::CERTIFICATE_STATUS, '!=', 1);
                         $status = 10;
                         break;
                     
@@ -335,17 +350,17 @@ class ExaminationController extends Controller
                 }
             }
 			
-			if ($request->has('before_date')){
-				$query->where('spk_date', '<=', $request->get('before_date'));
-				$before = $request->get('before_date');
+			if ($request->has(self::BEFORE_DATE)){
+				$query->where(self::SPK_DATE, '<=', $request->get(self::BEFORE_DATE));
+				$before = $request->get(self::BEFORE_DATE);
 			}
 
-			if ($request->has('after_date')){
-				$query->where('spk_date', '>=', $request->get('after_date'));
-				$after = $request->get('after_date');
+			if ($request->has(self::AFTER_DATE)){
+				$query->where(self::SPK_DATE, '>=', $request->get(self::AFTER_DATE));
+				$after = $request->get(self::AFTER_DATE);
 			}
 
-			$data = $query->orderBy('updated_at', 'desc')
+			$data = $query->orderBy(self::UPDATED_AT, 'desc')
                         ->paginate($paginate);
 			
             if (count($query) == 0){
@@ -353,15 +368,15 @@ class ExaminationController extends Controller
             }
 			
             return view('admin.examination.index')
-                ->with('message', $message)
+                ->with(self::MESSAGE, $message)
                 ->with('data', $data)
                 ->with('comp_stat', $comp_stat)
                 ->with('type', $examType)
-                ->with('search', $search)
+                ->with(self::SEARCH, $search)
                 ->with('filterType', $type)
-                ->with('status', $status)
-				->with('before_date', $before)
-                ->with('after_date', $after);
+                ->with(self::STATUS, $status)
+				->with(self::BEFORE_DATE, $before)
+                ->with(self::AFTER_DATE, $after);
         }
     }
 
@@ -375,17 +390,17 @@ class ExaminationController extends Controller
     {
         $exam = Examination::where('id', $id)
                             ->with('user')
-                            ->with('company')
-                            ->with('examinationType')
-                            ->with('examinationLab')
-                            ->with('device')
-                            ->with('media')
+                            ->with(self::COMPANY)
+                            ->with(self::EXAMINATION_TYPE)
+                            ->with(self::EXAMINATION_LAB)
+                            ->with(self::DEVICS)
+                            ->with(self::MEDIA)
                             ->first();
 							
-		$exam_history = ExaminationHistory::whereNotNull('created_at')
+		$exam_history = ExaminationHistory::whereNotNull(self::CREATED_AT)
 					->with('user')
-                    ->where('examination_id', $id)
-                    ->orderBy('created_at', 'DESC')
+                    ->where(self::EXAMINATION_ID, $id)
+                    ->orderBy(self::CREATED_AT, 'DESC')
                     ->get();
 
         return view('admin.examination.show')
@@ -405,25 +420,24 @@ class ExaminationController extends Controller
     	$admins = AdminRole::where('user_id', $currentUser->id)->get();
     	
         $exam = Examination::where('id', $id)
-                            ->with('company')
-                            ->with('examinationType')
-                            ->with('examinationLab')
-                            ->with('device')
-                            ->with('media')
-                            ->with('equipment')
+                            ->with(self::COMPANY)
+                            ->with(self::EXAMINATION_TYPE)
+                            ->with(self::EXAMINATION_LAB)
+                            ->with(self::DEVICS)
+                            ->with(self::MEDIA)
+                            ->with(self::EQUIPMENT)
                             ->first();
 
         $labs = ExaminationLab::all();
-		// $gen_spk_code = $this->generateSPKCode($exam->examinationLab->lab_code,$exam->examinationType->name,date('Y'));
 		
 		$client = new Client([
-			'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+			self::HEADERS => [self::CONTENT_TYPE => self::APPLICATION_HEADER],
 			// Base URI is used with relative requests
-			// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
-			'base_uri' => config("app.url_api_bsp"),
+			// self::BASE_URI => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+			self::BASE_URI => config(self::APP_URI_API_BSP),
 			// You can set any number of default request options.
-			// 'http_errors' => false,
-			'timeout'  => 60.0,
+			// self::HTTP_ERRORS => false,
+			self::TIMEOUT  => 60.0,
 		]);
 		
 		$query_lab = "SELECT action_date FROM equipment_histories WHERE location = 3 AND examination_id = '".$id."' ORDER BY created_at DESC LIMIT 1";
@@ -432,7 +446,6 @@ class ExaminationController extends Controller
 		$query_gudang = "SELECT action_date FROM equipment_histories WHERE location = 2 AND examination_id = '".$id."' ORDER BY created_at DESC LIMIT 2";
 		$data_gudang = DB::select($query_gudang);
 		
-		// $res_exam_schedule = $client->post('notification/notifToTE?lab='.$exam->examinationLab->lab_code)->getBody();
 		$res_exam_schedule = $client->get('spk/searchData?spkNumber='.$exam->spk_code)->getBody();
 		$exam_schedule = json_decode($res_exam_schedule);
 		
@@ -468,37 +481,30 @@ class ExaminationController extends Controller
         if ($request->has('examination_lab_id')){
             $exam->examination_lab_id = $request->input('examination_lab_id');
         }
-        /*if ($request->has('spk_code')){
-            $exam->spk_code = $request->input('spk_code');
-			if($this->checkSPKCode($request->input('spk_code')) > 0){
-				Session::flash('error', 'SPK Number must be unique, please Re-Generate');
-                return redirect('/admin/examination/'.$exam->id.'/edit');
-			}
-        }*/
-        if ($request->has('registration_status')){
-			$status = $request->input('registration_status');
+        if ($request->has(self::REGISTRATION_STATUS)){
+			$status = $request->input(self::REGISTRATION_STATUS);
             $exam->registration_status = $status;
 			$exam->is_loc_test = $request->input('is_loc_test');
 			if($status == 1){
 				/* push notif*/ 
 				$data= array( 
-	                "from"=>"admin",
+	                "from"=>self::ADMIN,
 	                "to"=>$exam->created_by,
 	                "message"=>"Registrasi Completed",
-	                "url"=>"pengujian/".$exam->id."/detail",
+	                "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
 	                "is_read"=>0,
-	                "created_at"=>date("Y-m-d H:i:s"),
-	                "updated_at"=>date("Y-m-d H:i:s")
+	                "created_at"=>date(self::DATE_FORMAT_1),
+	                "updated_at"=>date(self::DATE_FORMAT_1)
                 );
 				$notification = new NotificationTable();
                 $notification->id = Uuid::uuid4();
 			    $notification->from = $data['from'];
 		        $notification->to = $data['to'];
-		        $notification->message = $data['message'];
+		        $notification->message = $data[self::MESSAGE];
 		        $notification->url = $data['url'];
-		        $notification->is_read = $data['is_read'];
-		        $notification->created_at = $data['created_at'];
-		        $notification->updated_at = $data['updated_at'];
+		        $notification->is_read = $data[self::IS_READ];
+		        $notification->created_at = $data[self::CREATED_AT];
+		        $notification->updated_at = $data[self::UPDATED_AT];
 		        $notification->save();  
 
 			     	$data['id'] = $notification->id;
@@ -507,43 +513,41 @@ class ExaminationController extends Controller
 				
 				$this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.registrasi", "Acc Registrasi");
 			}else if($status == -1){
-				// $exam->keterangan = $request->input('keterangan');
 				/* push notif*/
-				
 			     $data= array( 
-                "from"=>"admin",
+                "from"=>self::ADMIN,
                 "to"=>$exam->created_by,
                 "message"=>"Registrasi Not Completed",
-                "url"=>"pengujian/".$exam->id."/detail",
+                "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
                 "is_read"=>0,
-                "created_at"=>date("Y-m-d H:i:s"),
-                "updated_at"=>date("Y-m-d H:i:s")
+                "created_at"=>date(self::DATE_FORMAT_1),
+                "updated_at"=>date(self::DATE_FORMAT_1)
                 );
 				  $notification = new NotificationTable();
                   $notification->id = Uuid::uuid4();
 			      $notification->from = $data['from'];
 			      $notification->to = $data['to'];
-			      $notification->message = $data['message'];
+			      $notification->message = $data[self::MESSAGE];
 			      $notification->url = $data['url'];
-			      $notification->is_read = $data['is_read'];
-			      $notification->created_at = $data['created_at'];
-			      $notification->updated_at = $data['updated_at'];
+			      $notification->is_read = $data[self::IS_READ];
+			      $notification->created_at = $data[self::CREATED_AT];
+			      $notification->updated_at = $data[self::UPDATED_AT];
 			      $notification->save(); 
 
 			      $data['id'] = $notification->id;
 			      event(new Notification($data));
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Registrasi",$request->input('keterangan'));
+				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::REGISTRASI,$request->input(self::KETERANGAN));
 			}
         }
-		if ($request->has('function_status')){
-			if ($request->hasFile('barang_file')) {
-				$name_file = 'form_penerimaan_barang_'.$request->file('barang_file')->getClientOriginalName();
-				$path_file = public_path().'/media/examination/'.$exam->id;
+		if ($request->has(self::FUNCTION_STATUS)){
+			if ($request->hasFile(self::BARANG_FILE)) {
+				$name_file = 'form_penerimaan_barang_'.$request->file(self::BARANG_FILE)->getClientOriginalName();
+				$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
 				if (!file_exists($path_file)) {
 					mkdir($path_file, 0775);
 				}
-				if($request->file('barang_file')->move($path_file,$name_file)){
-					$attach = ExaminationAttach::where('name', 'Bukti Penerimaan & Pengeluaran Perangkat Uji1')->where('examination_id', ''.$exam->id.'')->first();
+				if($request->file(self::BARANG_FILE)->move($path_file,$name_file)){
+					$attach = ExaminationAttach::where('name', 'Bukti Penerimaan & Pengeluaran Perangkat Uji1')->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
 					if ($attach){
 						$attach->attachment = $name_file;
 						$attach->updated_by = $currentUser->id;
@@ -561,22 +565,20 @@ class ExaminationController extends Controller
 						$attach->save();
 					}
 					
-					 return redirect('/admin/examination/'.$exam->id.'/edit');
+					 return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
 				}else{
-					Session::flash('error', 'Save Bukti Penerimaan & Pengeluaran Perangkat Uji to directory failed');
-					return redirect('/admin/examination/'.$exam->id.'/edit');
+					Session::flash(self::ERROR, 'Save Bukti Penerimaan & Pengeluaran Perangkat Uji to directory failed');
+					return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
 				}
 			}
-			if ($request->hasFile('function_file')) {
-				/*$ext_file = $request->file('function_file')->getClientOriginalExtension();
-				$name_file = uniqid().'_function_'.$exam->id.'.'.$ext_file;*/
-				$name_file = 'function_'.$request->file('function_file')->getClientOriginalName();
-				$path_file = public_path().'/media/examination/'.$exam->id;
+			if ($request->hasFile(self::FUNCTION_FILE)) {
+				$name_file = 'function_'.$request->file(self::FUNCTION_FILE)->getClientOriginalName();
+				$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
 				if (!file_exists($path_file)) {
 					mkdir($path_file, 0775);
 				}
-				if($request->file('function_file')->move($path_file,$name_file)){
-					$attach = ExaminationAttach::where('name', 'Laporan Hasil Uji Fungsi')->where('examination_id', ''.$exam->id.'')->first();
+				if($request->file(self::FUNCTION_FILE)->move($path_file,$name_file)){
+					$attach = ExaminationAttach::where('name', 'Laporan Hasil Uji Fungsi')->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
 					if ($attach){
 						$attach->attachment = $name_file;
 						$attach->updated_by = $currentUser->id;
@@ -595,25 +597,24 @@ class ExaminationController extends Controller
 					}
 
 				}else{
-					Session::flash('error', 'Save Function Test Report to directory failed');
-					return redirect('/admin/examination/'.$exam->id.'/edit');
+					Session::flash(self::ERROR, 'Save Function Test Report to directory failed');
+					return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
 				}
 			}
-			$status = $request->input('function_status');
+			$status = $request->input(self::FUNCTION_STATUS);
 			if($exam->function_date != null){
 				$exam->contract_date = $exam->function_date;
 			}
 			else if($exam->deal_test_date != null){
 				$exam->contract_date = $exam->deal_test_date;
 			}else{
-				$exam->contract_date = date('Y-m-d');				
+				$exam->contract_date = date(self::DATE_FORMAT_2);				
 			}
 			$exam->function_status = $status;
 
-            // ketika update status di uji fungsi -> baru di delete history nya ketika hasil tidak memenuhi
             if($exam->function_test_TE == 2){
-                Equipment::where('examination_id', '=' ,''.$exam->id.'')->delete();
-                EquipmentHistory::where('examination_id', '=' ,''.$exam->id.'')->delete();
+                Equipment::where(self::EXAMINATION_ID, '=' ,''.$exam->id.'')->delete();
+                EquipmentHistory::where(self::EXAMINATION_ID, '=' ,''.$exam->id.'')->delete();
                 
                 $exam->cust_test_date = NULL;
                 $exam->deal_test_date = NULL;
@@ -629,138 +630,134 @@ class ExaminationController extends Controller
 	            
                 if ($exam->function_test_TE == 1){
                     $data= array( 
-                        "from"=>"admin",
+                        "from"=>self::ADMIN,
                         "to"=>$exam->created_by,
                         "message"=>"Hasil Uji Fungsi Memenuhi",
-                        "url"=>"pengujian/".$exam->id."/detail",
+                        "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
                         "is_read"=>0,
-                        "created_at"=>date("Y-m-d H:i:s"),
-                        "updated_at"=>date("Y-m-d H:i:s")
+                        "created_at"=>date(self::DATE_FORMAT_1),
+                        "updated_at"=>date(self::DATE_FORMAT_1)
                     );
                 }
                 else if ($exam->function_test_TE == 2){
                     $data= array( 
-                        "from"=>"admin",
+                        "from"=>self::ADMIN,
                         "to"=>$exam->created_by,
                         "message"=>"Hasil Uji Fungsi Tidak Memenuhi",
-                        "url"=>"pengujian/".$exam->id."/detail",
+                        "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
                         "is_read"=>0,
-                        "created_at"=>date("Y-m-d H:i:s"),
-                        "updated_at"=>date("Y-m-d H:i:s")
+                        "created_at"=>date(self::DATE_FORMAT_1),
+                        "updated_at"=>date(self::DATE_FORMAT_1)
                     );   
                 }
                 else if ($exam->function_test_TE == 3){
                     $data= array( 
-                        "from"=>"admin",
+                        "from"=>self::ADMIN,
                         "to"=>$exam->created_by,
                         "message"=>"Hasil Uji Fungsi lain-lain",
-                        "url"=>"pengujian/".$exam->id."/detail",
+                        "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
                         "is_read"=>0,
-                        "created_at"=>date("Y-m-d H:i:s"),
-                        "updated_at"=>date("Y-m-d H:i:s")
+                        "created_at"=>date(self::DATE_FORMAT_1),
+                        "updated_at"=>date(self::DATE_FORMAT_1)
                     );
                 }else{
 					$data= array( 
-						"from"=>"admin",
+						"from"=>self::ADMIN,
 						"to"=>$exam->created_by,
 						"message"=>"Tahap Uji Fungsi Completed",
-						"url"=>"pengujian/".$exam->id."/detail",
+						"url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
 						"is_read"=>0,
-						"created_at"=>date("Y-m-d H:i:s"),
-						"updated_at"=>date("Y-m-d H:i:s")
+						"created_at"=>date(self::DATE_FORMAT_1),
+						"updated_at"=>date(self::DATE_FORMAT_1)
 					);
 				}
 	              $notification = new NotificationTable();
                   $notification->id = Uuid::uuid4();
 	              $notification->from = $data['from'];
 	              $notification->to = $data['to'];
-	              $notification->message = $data['message'];
+	              $notification->message = $data[self::MESSAGE];
 	              $notification->url = $data['url'];
-	              $notification->is_read = $data['is_read'];
-	              $notification->created_at = $data['created_at'];
-	              $notification->updated_at = $data['updated_at'];
+	              $notification->is_read = $data[self::IS_READ];
+	              $notification->created_at = $data[self::CREATED_AT];
+	              $notification->updated_at = $data[self::UPDATED_AT];
 	              $notification->save();
 	              $data['id'] = $notification->id;
 	              	
 	               event(new Notification($data));
 
-				// $this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.function", "Acc Uji Fungsi");
 			}else if($status == -1){
 				/* push notif*/
 		            
 					if ($exam->function_test_TE == 1){
                         $data= array( 
-                            "from"=>"admin",
+                            "from"=>self::ADMIN,
                             "to"=>$exam->created_by,
                             "message"=>"Hasil Uji Fungsi Memenuhi",
-                            "url"=>"pengujian/".$exam->id."/detail",
+                            "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
                             "is_read"=>0,
-                            "created_at"=>date("Y-m-d H:i:s"),
-                            "updated_at"=>date("Y-m-d H:i:s")
+                            "created_at"=>date(self::DATE_FORMAT_1),
+                            "updated_at"=>date(self::DATE_FORMAT_1)
                         );
                     }
                     else if ($exam->function_test_TE == 2){
                         $data= array( 
-                            "from"=>"admin",
+                            "from"=>self::ADMIN,
                             "to"=>$exam->created_by,
                             "message"=>"Hasil Uji Fungsi Tidak Memenuhi",
-                            "url"=>"pengujian/".$exam->id."/detail",
+                            "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
                             "is_read"=>0,
-                            "created_at"=>date("Y-m-d H:i:s"),
-                            "updated_at"=>date("Y-m-d H:i:s")
+                            "created_at"=>date(self::DATE_FORMAT_1),
+                            "updated_at"=>date(self::DATE_FORMAT_1)
                         );   
                     }
                     else if ($exam->function_test_TE == 3){
                         $data= array( 
-                            "from"=>"admin",
+                            "from"=>self::ADMIN,
                             "to"=>$exam->created_by,
                             "message"=>"Hasil Uji Fungsi lain-lain",
-                            "url"=>"pengujian/".$exam->id."/detail",
+                            "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
                             "is_read"=>0,
-                            "created_at"=>date("Y-m-d H:i:s"),
-                            "updated_at"=>date("Y-m-d H:i:s")
+                            "created_at"=>date(self::DATE_FORMAT_1),
+                            "updated_at"=>date(self::DATE_FORMAT_1)
                         );
                     }else{
 						$data= array( 
-                            "from"=>"admin",
+                            "from"=>self::ADMIN,
                             "to"=>$exam->created_by,
                             "message"=>"Tahap Uji Fungsi Not Completed",
-                            "url"=>"pengujian/".$exam->id."/detail",
+                            "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
                             "is_read"=>0,
-                            "created_at"=>date("Y-m-d H:i:s"),
-                            "updated_at"=>date("Y-m-d H:i:s")
+                            "created_at"=>date(self::DATE_FORMAT_1),
+                            "updated_at"=>date(self::DATE_FORMAT_1)
 						);
 					}
 		              $notification = new NotificationTable();
                       $notification->id = Uuid::uuid4();
 		              $notification->from = $data['from'];
 		              $notification->to = $data['to'];
-		              $notification->message = $data['message'];
+		              $notification->message = $data[self::MESSAGE];
 		              $notification->url = $data['url'];
-		              $notification->is_read = $data['is_read'];
-		              $notification->created_at = $data['created_at'];
-		              $notification->updated_at = $data['updated_at'];
+		              $notification->is_read = $data[self::IS_READ];
+		              $notification->created_at = $data[self::CREATED_AT];
+		              $notification->updated_at = $data[self::UPDATED_AT];
 		              $notification->save();
 
 		              $data['id'] = $notification->id;
 
 		                event(new Notification($data));
-				// $exam->keterangan = $request->input('keterangan');
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Uji Fungsi",$request->input('keterangan'));
+				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Uji Fungsi",$request->input(self::KETERANGAN));
 			}
         }
         $spk_created = 0;
-        if ($request->has('contract_status')){
-			if ($request->hasFile('contract_file')) {
-				/*$ext_file = $request->file('contract_file')->getClientOriginalExtension();
-				$name_file = uniqid().'_contract_'.$exam->id.'.'.$ext_file;*/
-				$name_file = 'contract_'.$request->file('contract_file')->getClientOriginalName();
-				$path_file = public_path().'/media/examination/'.$exam->id;
+        if ($request->has(self::CONTRACT_STATUS)){
+			if ($request->hasFile(self::CONTRACT_FILE)) {
+				$name_file = 'contract_'.$request->file(self::CONTRACT_FILE)->getClientOriginalName();
+				$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
 				if (!file_exists($path_file)) {
 					mkdir($path_file, 0775);
 				}
-				if($request->file('contract_file')->move($path_file,$name_file)){
-					$attach = ExaminationAttach::where('name', 'Tinjauan Kontrak')->where('examination_id', ''.$exam->id.'')->first();
+				if($request->file(self::CONTRACT_FILE)->move($path_file,$name_file)){
+					$attach = ExaminationAttach::where('name', self::TINJAUAN_KONTRAK)->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
 
 					if ($attach){
 						$attach->attachment = $name_file;
@@ -771,7 +768,7 @@ class ExaminationController extends Controller
 						$attach = new ExaminationAttach;
 						$attach->id = Uuid::uuid4();
 						$attach->examination_id = $exam->id; 
-						$attach->name = 'Tinjauan Kontrak';
+						$attach->name = self::TINJAUAN_KONTRAK;
 						$attach->attachment = $name_file;
 						$attach->created_by = $currentUser->id;
 						$attach->updated_by = $currentUser->id;
@@ -779,37 +776,36 @@ class ExaminationController extends Controller
 						$attach->save();
 					}
 				}else{
-					Session::flash('error', 'Save contract review to directory failed');
-					return redirect('/admin/examination/'.$exam->id.'/edit');
+					Session::flash(self::ERROR, 'Save contract review to directory failed');
+					return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
 				}
 			}
-			$status = $request->input('contract_status');
+			$status = $request->input(self::CONTRACT_STATUS);
             $exam->contract_status = $status;
 			if($status == 1){
-				$path_file = public_path().'/media/examination/'.$id;
-				$attach = ExaminationAttach::where('name', 'Tinjauan Kontrak')->where('examination_id', ''.$id.'')->first();
+				$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$id;
+				$attach = ExaminationAttach::where('name', self::TINJAUAN_KONTRAK)->where(self::EXAMINATION_ID, ''.$id.'')->first();
 					$attach_name = $attach->attachment;
-				// $this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.contract", "Upload Tinjauan Pustaka",$path_file."/".$attach_name);
-
+				
 				$client = new Client([
-					'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+					self::HEADERS => [self::CONTENT_TYPE => self::APPLICATION_HEADER],
 					// Base URI is used with relative requests
-					// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
-					'base_uri' => config("app.url_api_bsp"),
-					'http_errors' => false,
+					// self::BASE_URI => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+					self::BASE_URI => config(self::APP_URI_API_BSP),
+					self::HTTP_ERRORS => false,
 					// You can set any number of default request options.
-					'timeout'  => 60.0,
+					self::TIMEOUT  => 60.0,
 				]);
 
 				$exam_forOTR = Examination::where('id', $exam->id)
-				->with('examinationType')
-				->with('examinationLab')
+				->with(self::EXAMINATION_TYPE)
+				->with(self::EXAMINATION_LAB)
 				->first();
 
 				if ($exam->spk_code == null && $exam->company_id == '0fbf131c-32e3-4c9a-b6e0-a0f217cb2830'){
                     $spk_number_forOTR = $this->generateSPKCode($exam_forOTR->examinationLab->lab_code,$exam_forOTR->examinationType->name,date('Y'));
                     $exam->spk_code = $spk_number_forOTR;
-                    $exam->spk_date = date('Y-m-d');
+                    $exam->spk_date = date(self::DATE_FORMAT_2);
                     $spk_created = 1;
                     $exam->spb_status = $status;
                     $exam->payment_status = $status;
@@ -820,23 +816,23 @@ class ExaminationController extends Controller
 		            
 
 		              $data= array( 
-		                    "from"=>"admin",
+		                    "from"=>self::ADMIN,
 		                    "to"=>$exam->created_by,
 		                    "message"=>"Tinjauan Kontrak Completed",
-		                    "url"=>"pengujian/".$id."/detail",
+		                    "url"=>self::PENGUJIAN_LOC.$id.self::DETAIL_LOC,
 		                    "is_read"=>0,
-		                    "created_at"=>date("Y-m-d H:i:s"),
-		                    "updated_at"=>date("Y-m-d H:i:s")
+		                    "created_at"=>date(self::DATE_FORMAT_1),
+		                    "updated_at"=>date(self::DATE_FORMAT_1)
 		                    );
 		              $notification = new NotificationTable();
                       $notification->id = Uuid::uuid4();
 		              $notification->from = $data['from'];
 		              $notification->to = $data['to'];
-		              $notification->message = $data['message'];
+		              $notification->message = $data[self::MESSAGE];
 		              $notification->url = $data['url'];
-		              $notification->is_read = $data['is_read'];
-		              $notification->created_at = $data['created_at'];
-		              $notification->updated_at = $data['updated_at'];
+		              $notification->is_read = $data[self::IS_READ];
+		              $notification->created_at = $data[self::CREATED_AT];
+		              $notification->updated_at = $data[self::UPDATED_AT];
 		              $notification->save();
 
 		              $data['id'] = $notification->id;
@@ -844,24 +840,24 @@ class ExaminationController extends Controller
 				}else{
 					/* push notif*/
 		            $data= array( 
-		                    "from"=>"admin",
+		                    "from"=>self::ADMIN,
 		                    "to"=>$exam->created_by,
 		                    "message"=>"Tinjauan Kontrak Not Completed",
-		                    "url"=>"pengujian/".$id."/detail",
+		                    "url"=>self::PENGUJIAN_LOC.$id.self::DETAIL_LOC,
 		                    "is_read"=>0,
-		                    "created_at"=>date("Y-m-d H:i:s"),
-		                    "updated_at"=>date("Y-m-d H:i:s")
+		                    "created_at"=>date(self::DATE_FORMAT_1),
+		                    "updated_at"=>date(self::DATE_FORMAT_1)
 		                    );
 
 		              $notification = new NotificationTable();
                       $notification->id = Uuid::uuid4();
 		              $notification->from = $data['from'];
 		              $notification->to = $data['to'];
-		              $notification->message = $data['message'];
+		              $notification->message = $data[self::MESSAGE];
 		              $notification->url = $data['url'];
-		              $notification->is_read = $data['is_read'];
-		              $notification->created_at = $data['created_at'];
-		              $notification->updated_at = $data['updated_at'];
+		              $notification->is_read = $data[self::IS_READ];
+		              $notification->created_at = $data[self::CREATED_AT];
+		              $notification->updated_at = $data[self::UPDATED_AT];
 		              $notification->save();
 
 		              $data['id'] = $notification->id;
@@ -870,23 +866,20 @@ class ExaminationController extends Controller
 				}
 				
 			}else if($status == -1){
-				// $exam->keterangan = $request->input('keterangan');
 				
 				
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Tinjauan Pustaka",$request->input('keterangan'));
+				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Tinjauan Pustaka",$request->input(self::KETERANGAN));
 			}
         }
-		if ($request->has('spb_status')){
-			if ($request->hasFile('spb_file')) {
-				/*$ext_file = $request->file('spb_file')->getClientOriginalExtension();
-				$name_file = uniqid().'_spb_'.$exam->id.'.'.$ext_file;*/
-				$name_file = 'spb_'.$request->file('spb_file')->getClientOriginalName();
-				$path_file = public_path().'/media/examination/'.$exam->id;
+		if ($request->has(self::SPB_STATUS)){
+			if ($request->hasFile(self::SPB_FILE)) {
+				$name_file = 'spb_'.$request->file(self::SPB_FILE)->getClientOriginalName();
+				$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
 				if (!file_exists($path_file)) {
 					mkdir($path_file, 0775);
 				}
-				if($request->file('spb_file')->move($path_file,$name_file)){
-					$attach = ExaminationAttach::where('name', 'SPB')->where('examination_id', ''.$exam->id.'')->first();
+				if($request->file(self::SPB_FILE)->move($path_file,$name_file)){
+					$attach = ExaminationAttach::where('name', 'SPB')->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
 
 					if ($attach){
 						$attach->attachment = $name_file;
@@ -905,38 +898,38 @@ class ExaminationController extends Controller
 						$attach->save();
 					}					
 				}else{
-					Session::flash('error', 'Save spb to directory failed');
-					return redirect('/admin/examination/'.$exam->id.'/edit');
+					Session::flash(self::ERROR, 'Save spb to directory failed');
+					return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
 				}
 			}
-			$status = $request->input('spb_status');
+			$status = $request->input(self::SPB_STATUS);
             $exam->spb_status = $status;
 			if($status == 1){
 				$exam->price = str_replace(".",'',$request->input('exam_price'));
-				$path_file = public_path().'/media/examination/'.$id;
-				$attach = ExaminationAttach::where('name', 'SPB')->where('examination_id', ''.$id.'')->first();
+				$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$id;
+				$attach = ExaminationAttach::where('name', 'SPB')->where(self::EXAMINATION_ID, ''.$id.'')->first();
 					$attach_name = $attach->attachment;
 
 				/* push notif*/
 	           	$data= array( 
-	                    "from"=>"admin",
+	                    "from"=>self::ADMIN,
 	                    "to"=>$exam->created_by,
 	                    "message"=>"URel mengirimkan SPB untuk dibayar",
-	                    "url"=>"pengujian/".$exam->id."/pembayaran",
+	                    "url"=>self::PENGUJIAN_LOC.$exam->id."/pembayaran",
 	                    "is_read"=>0,
-	                    "created_at"=>date("Y-m-d H:i:s"),
-	                    "updated_at"=>date("Y-m-d H:i:s")
+	                    "created_at"=>date(self::DATE_FORMAT_1),
+	                    "updated_at"=>date(self::DATE_FORMAT_1)
 	                    );
 
 	              $notification = new NotificationTable();
                   $notification->id = Uuid::uuid4();
 	              $notification->from = $data['from'];
 	              $notification->to = $data['to'];
-	              $notification->message = $data['message'];
+	              $notification->message = $data[self::MESSAGE];
 	              $notification->url = $data['url'];
-	              $notification->is_read = $data['is_read'];
-	              $notification->created_at = $data['created_at'];
-	              $notification->updated_at = $data['updated_at'];
+	              $notification->is_read = $data[self::IS_READ];
+	              $notification->created_at = $data[self::CREATED_AT];
+	              $notification->updated_at = $data[self::UPDATED_AT];
 	              $notification->save();
 	               	$data['id'] = $notification->id;
 	               event(new Notification($data));
@@ -944,23 +937,22 @@ class ExaminationController extends Controller
 				$this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.spb", "Upload SPB",$path_file."/".$attach_name);
 			}else if($status == -1){
 				$exam->price = str_replace(".",'',$request->input('exam_price'));
-				// $exam->keterangan = $request->input('keterangan');
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","SPB",$request->input('keterangan'));
+				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"SPB",$request->input(self::KETERANGAN));
 			}
         }
 		
-        if ($request->has('payment_status')){
-			if ($request->has('cust_price_payment')){
-				$exam->cust_price_payment = str_replace(".",'',$request->input('cust_price_payment'));
+        if ($request->has(self::PAYMENT_STATUS)){
+			if ($request->has(self::CUST_PRICE_PAYMENT)){
+				$exam->cust_price_payment = str_replace(".",'',$request->input(self::CUST_PRICE_PAYMENT));
 			}
-			if ($request->hasFile('kuitansi_file')) {
-				$name_file = 'kuitansi_'.$request->file('kuitansi_file')->getClientOriginalName();
-				$path_file = public_path().'/media/examination/'.$exam->id;
+			if ($request->hasFile(self::KUITANSI_FILE)) {
+				$name_file = 'kuitansi_'.$request->file(self::KUITANSI_FILE)->getClientOriginalName();
+				$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
 				if (!file_exists($path_file)) {
 					mkdir($path_file, 0775);
 				}
-				if($request->file('kuitansi_file')->move($path_file,$name_file)){
-					$attach = ExaminationAttach::where('name', 'Kuitansi')->where('examination_id', ''.$exam->id.'')->first();
+				if($request->file(self::KUITANSI_FILE)->move($path_file,$name_file)){
+					$attach = ExaminationAttach::where('name', self::KUITANSI)->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
 
 					if ($attach){
 						$attach->attachment = $name_file;
@@ -971,7 +963,7 @@ class ExaminationController extends Controller
 						$attach = new ExaminationAttach;
 						$attach->id = Uuid::uuid4();
 						$attach->examination_id = $exam->id; 
-						$attach->name = 'Kuitansi';
+						$attach->name = self::KUITANSI;
 						$attach->attachment = $name_file;
 						$attach->created_by = $currentUser->id;
 						$attach->updated_by = $currentUser->id;
@@ -979,18 +971,18 @@ class ExaminationController extends Controller
 						$attach->save();
 					}					
 				}else{
-					Session::flash('error', 'Save kuitansi to directory failed');
-					return redirect('/admin/examination/'.$exam->id.'/edit');
+					Session::flash(self::ERROR, 'Save kuitansi to directory failed');
+					return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
 				}
 			}
-			if ($request->hasFile('faktur_file')) {
-				$name_file = 'faktur_'.$request->file('faktur_file')->getClientOriginalName();
-				$path_file = public_path().'/media/examination/'.$exam->id;
+			if ($request->hasFile(self::FAKTUR_FILE)) {
+				$name_file = 'faktur_'.$request->file(self::FAKTUR_FILE)->getClientOriginalName();
+				$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
 				if (!file_exists($path_file)) {
 					mkdir($path_file, 0775);
 				}
-				if($request->file('faktur_file')->move($path_file,$name_file)){
-					$attach = ExaminationAttach::where('name', 'Faktur Pajak')->where('examination_id', ''.$exam->id.'')->first();
+				if($request->file(self::FAKTUR_FILE)->move($path_file,$name_file)){
+					$attach = ExaminationAttach::where('name', self::FAKTUR_PAJAK)->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
 
 					if ($attach){
 						$attach->attachment = $name_file;
@@ -1001,7 +993,7 @@ class ExaminationController extends Controller
 						$attach = new ExaminationAttach;
 						$attach->id = Uuid::uuid4();
 						$attach->examination_id = $exam->id; 
-						$attach->name = 'Faktur Pajak';
+						$attach->name = self::FAKTUR_PAJAK;
 						$attach->attachment = $name_file;
 						$attach->created_by = $currentUser->id;
 						$attach->updated_by = $currentUser->id;
@@ -1009,13 +1001,12 @@ class ExaminationController extends Controller
 						$attach->save();
 					}					
 				}else{
-					Session::flash('error', 'Save Faktur Pajak to directory failed');
-					return redirect('/admin/examination/'.$exam->id.'/edit');
+					Session::flash(self::ERROR, 'Save Faktur Pajak to directory failed');
+					return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
 				}
 			}
-            $status = $request->input('payment_status');
+            $status = $request->input(self::PAYMENT_STATUS);
             $exam->payment_status = $status;
-			// $exam->spk_status = $status;
 			if($status == 1){
 				if($this->cekRefID($exam->id) == 0){
 					$income = new Income;
@@ -1028,86 +1019,80 @@ class ExaminationController extends Controller
 					$income->created_by = $currentUser->id;
 
 				}else{
-					$income = Income::where('reference_id', $exam->id)->first();
+					$income = Income::where(self::REFERENCE_ID, $exam->id)->first();
 				}
 					// ($item->payment_method == 1)?'ATM':'Kartu Kredit'
-					$income->price = ($request->input('cust_price_payment') != NULL) ? str_replace(".",'',$request->input('cust_price_payment')) : 0;
-					// $income->price = $request->input('cust_price_payment');
+					$income->price = ($request->input(self::CUST_PRICE_PAYMENT) != NULL) ? str_replace(".",'',$request->input(self::CUST_PRICE_PAYMENT)) : 0;
 					$income->updated_by = $currentUser->id;
 					$income->save();
-				/*$path_file = public_path().'/media/examination/'.$id;
-				$attach = ExaminationAttach::where('name', 'Kuitansi')->where('examination_id', ''.$id.'')->first();
-					$attach_name = $attach->attachment;
-				$this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.pembayaran", "ACC Pembayaran",$path_file."/".$attach_name);*/
+
 				$this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.pembayaran", "ACC Pembayaran");
 				
 				$client = new Client([
-					'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+					self::HEADERS => [self::CONTENT_TYPE => self::APPLICATION_HEADER],
 					// Base URI is used with relative requests
-					// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
-					'base_uri' => config("app.url_api_bsp"),
-					'http_errors' => false,
+					// self::BASE_URI => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+					self::BASE_URI => config(self::APP_URI_API_BSP),
+					self::HTTP_ERRORS => false,
 					// You can set any number of default request options.
-					'timeout'  => 60.0,
+					self::TIMEOUT  => 60.0,
 				]);
 				
 				$exam_forOTR = Examination::where('id', $exam->id)
-				->with('examinationType')
-				->with('examinationLab')
+				->with(self::EXAMINATION_TYPE)
+				->with(self::EXAMINATION_LAB)
 				->first();
 
                 if ($exam->spk_code == null){
                     $spk_number_forOTR = $this->generateSPKCode($exam_forOTR->examinationLab->lab_code,$exam_forOTR->examinationType->name,date('Y'));
                     $exam->spk_code = $spk_number_forOTR;
-                    $exam->spk_date = date('Y-m-d');
+                    $exam->spk_date = date(self::DATE_FORMAT_2);
                     $spk_created = 1;
                 }
 
-				// $res_exam_schedule = $client->post('notification/notifToTE?lab=?'.$exam->examinationLab->lab_code)->getBody();
-				// $res_exam_schedule = $client->get('spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR);
 				if($exam->payment_status){
 					
 						$data= array( 
-		                "from"=>"admin",
+		                "from"=>self::ADMIN,
 		                "to"=>$exam->created_by,
 		                "message"=>"Pembayaran Completed",
-		                "url"=>"pengujian/".$exam->id."/detail",
+		                "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
 		                "is_read"=>0,
-		                "created_at"=>date("Y-m-d H:i:s"),
-		                "updated_at"=>date("Y-m-d H:i:s")
+		                "created_at"=>date(self::DATE_FORMAT_1),
+		                "updated_at"=>date(self::DATE_FORMAT_1)
 		                );
 				  	$notification = new NotificationTable();
                     $notification->id = Uuid::uuid4();
 			      	$notification->from = $data['from'];
 			      	$notification->to = $data['to'];
-			      	$notification->message = $data['message'];
+			      	$notification->message = $data[self::MESSAGE];
 			      	$notification->url = $data['url'];
-			      	$notification->is_read = $data['is_read'];
-			      	$notification->created_at = $data['created_at'];
-			      	$notification->updated_at = $data['updated_at'];
+			      	$notification->is_read = $data[self::IS_READ];
+			      	$notification->created_at = $data[self::CREATED_AT];
+			      	$notification->updated_at = $data[self::UPDATED_AT];
 			      	$notification->save();
 			      	$data['id'] = $notification->id;
 			      
 			        event(new Notification($data));
 				}else{
 						$data= array( 
-		                "from"=>"admin",
+		                "from"=>self::ADMIN,
 		                "to"=>$exam->created_by,
 		                "message"=>"Pembayaran Not Completed",
-		                "url"=>"pengujian/".$exam->id."/detail",
+		                "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
 		                "is_read"=>0,
-		                "created_at"=>date("Y-m-d H:i:s"),
-		                "updated_at"=>date("Y-m-d H:i:s")
+		                "created_at"=>date(self::DATE_FORMAT_1),
+		                "updated_at"=>date(self::DATE_FORMAT_1)
 	                );
 				  	$notification = new NotificationTable();
                     $notification->id = Uuid::uuid4();
 			      	$notification->from = $data['from'];
 			      	$notification->to = $data['to'];
-			      	$notification->message = $data['message'];
+			      	$notification->message = $data[self::MESSAGE];
 			      	$notification->url = $data['url'];
-			      	$notification->is_read = $data['is_read'];
-			      	$notification->created_at = $data['created_at'];
-			      	$notification->updated_at = $data['updated_at'];
+			      	$notification->is_read = $data[self::IS_READ];
+			      	$notification->created_at = $data[self::CREATED_AT];
+			      	$notification->updated_at = $data[self::UPDATED_AT];
 			      	$notification->save();
 
 			      	$data['id'] = $notification->id;
@@ -1116,51 +1101,47 @@ class ExaminationController extends Controller
 			        event(new Notification($data));
 				}
 				
-				// $exam_schedule = json_decode($res_exam_schedule);
 			}else if($status == -1){
-				Income::where('reference_id', '=' ,''.$exam->id.'')->delete();
-				// $exam->keterangan = $request->input('keterangan');
+				Income::where(self::REFERENCE_ID, '=' ,''.$exam->id.'')->delete();
 				
 				
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Pembayaran",$request->input('keterangan'));
+				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::PEMBAYARAN,$request->input(self::KETERANGAN));
 			}
         }
-        if ($request->has('spk_status')){
-            $status = $request->input('spk_status');
+        if ($request->has(self::SPK_STATUS)){
+            $status = $request->input(self::SPK_STATUS);
             $exam->spk_status = $status;
 			if($status == -1){
-				// $exam->keterangan = $request->input('keterangan');
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Pembuatan SPK",$request->input('keterangan'));
+				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::PEMBUATAN_SPK,$request->input(self::KETERANGAN));
 			}
         }
-        if ($request->has('examination_status')){
-            $status = $request->input('examination_status');
+        if ($request->has(self::EXAMINATION_STATUS)){
+            $status = $request->input(self::EXAMINATION_STATUS);
             $exam->examination_status = $status;
 			if($status == -1){
 			
-				// $exam->keterangan = $request->input('keterangan');
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Pelaksanaan Uji",$request->input('keterangan'));
+				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::PELAKSANAAN_UJI,$request->input(self::KETERANGAN));
 			}else{
 				if($status ){
 					
 					$data= array( 
-		                "from"=>"admin",
+		                "from"=>self::ADMIN,
 		                "to"=>$exam->created_by,
 		                "message"=>"Pelaksanaan Uji Completed",
-		                "url"=>"pengujian/".$exam->id."/detail",
+		                "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
 		                "is_read"=>0,
-		                "created_at"=>date("Y-m-d H:i:s"),
-		                "updated_at"=>date("Y-m-d H:i:s")
+		                "created_at"=>date(self::DATE_FORMAT_1),
+		                "updated_at"=>date(self::DATE_FORMAT_1)
 	                );
 				  	$notification = new NotificationTable();
                     $notification->id = Uuid::uuid4();
 			      	$notification->from = $data['from'];
 			      	$notification->to = $data['to'];
-			      	$notification->message = $data['message'];
+			      	$notification->message = $data[self::MESSAGE];
 			      	$notification->url = $data['url'];
-			      	$notification->is_read = $data['is_read'];
-			      	$notification->created_at = $data['created_at'];
-			      	$notification->updated_at = $data['updated_at'];  
+			      	$notification->is_read = $data[self::IS_READ];
+			      	$notification->created_at = $data[self::CREATED_AT];
+			      	$notification->updated_at = $data[self::UPDATED_AT];  
 			      	$notification->save();
 
 			      	$data['id'] = $notification->id;
@@ -1168,23 +1149,23 @@ class ExaminationController extends Controller
 			      	event(new Notification($data));
 				}else{ 
 					$data= array( 
-		                "from"=>"admin",
+		                "from"=>self::ADMIN,
 		                "to"=>$exam->created_by,
 		                "message"=>"Pelaksanaan Uji Not Completed",
-		                "url"=>"pengujian/".$exam->id."/detail",
+		                "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
 		                "is_read"=>0,
-		                "created_at"=>date("Y-m-d H:i:s"),
-		                "updated_at"=>date("Y-m-d H:i:s")
+		                "created_at"=>date(self::DATE_FORMAT_1),
+		                "updated_at"=>date(self::DATE_FORMAT_1)
 	                );
 				  	$notification = new NotificationTable();
                     $notification->id = Uuid::uuid4();
 			      	$notification->from = $data['from'];
 			      	$notification->to = $data['to'];
-			      	$notification->message = $data['message'];
+			      	$notification->message = $data[self::MESSAGE];
 			      	$notification->url = $data['url'];
-			      	$notification->is_read = $data['is_read'];
-			      	$notification->created_at = $data['created_at'];
-			      	$notification->updated_at = $data['updated_at'];
+			      	$notification->is_read = $data[self::IS_READ];
+			      	$notification->created_at = $data[self::CREATED_AT];
+			      	$notification->updated_at = $data[self::UPDATED_AT];
 			      	$notification->save();
 			      	$data['id'] = $notification->id;
 			      	event(new Notification($data));
@@ -1196,62 +1177,27 @@ class ExaminationController extends Controller
 					SET 
 						action_date = '".$request->input('lab_to_gudang_date')."',
 						updated_by = '".$currentUser->id."',
-						updated_at = '".date('Y-m-d H:i:s')."'
-					WHERE location = 2 AND examination_id = '".$id."'
-				";
-				$data_update = DB::update($query_update);
+						updated_at = '".date(self::DATE_FORMAT_1)."'
+					WHERE location = 2 AND examination_id = '".$id."'";
+				DB::update($query_update);
 			}
         }
-        if ($request->has('resume_status')){
-			// if ($request->hasFile('lap_uji_file')) {
-				// $ext_file = $request->file('lap_uji_file')->getClientOriginalExtension();
-				// $name_file = uniqid().'_resume_'.$exam->id.'.'.$ext_file;
-				// $path_file = public_path().'/media/examination/'.$exam->id;
-				// if (!file_exists($path_file)) {
-					// mkdir($path_file, 0775);
-				// }
-				// if($request->file('lap_uji_file')->move($path_file,$name_file)){
-					// $attach = ExaminationAttach::where('name', 'Laporan Uji')->where('examination_id', ''.$exam->id.'')->first();
-
-					// if ($attach){
-						// $attach->attachment = $name_file;
-						// $attach->updated_by = $currentUser->id;
-
-						// $attach->save();
-					// } else{
-						// $attach = new ExaminationAttach;
-						// $attach->id = Uuid::uuid4();
-						// $attach->examination_id = $exam->id; 
-						// $attach->name = 'Laporan Uji';
-						// $attach->attachment = $name_file;
-						// $attach->created_by = $currentUser->id;
-						// $attach->updated_by = $currentUser->id;
-
-						// $attach->save();
-					// }
-				// }else{
-					// Session::flash('error', 'Save resume to directory failed');
-					// return redirect('/admin/examination/'.$exam->id.'/edit');
-				// }
-			// }
-			if(!$request->hasFile('rev_lap_uji_file') && $request->has('hide_attachment_form-lap-uji') && $exam->resume_status == 0){
-				/*TPN api_upload*/
-	            if($exam->BILLING_ID != null){
+        if ($request->has(self::RESUME_STATUS)){
+			if(!$request->hasFile(self::REV_LAP_UJI) && $request->has('hide_attachment_form-lap-uji') && $exam->resume_status == 0 && $exam->BILLING_ID != null){
 	                $data_upload [] = array(
 	                    'name'=>"delivered",
 	                    'contents'=>json_encode(['by'=>$currentUser->name, "reference_id" => $currentUser->id]),
 	                );
 
-	                $upload = $this->api_upload($data_upload,$exam->BILLING_ID);
-	            }
+	                $this->api_upload($data_upload,$exam->BILLING_ID);
 			}
-			if ($request->hasFile('rev_lap_uji_file')) {
-				$name_file = 'rev_lap_uji_'.$request->file('rev_lap_uji_file')->getClientOriginalName();
-				$path_file = public_path().'/media/examination/'.$exam->id;
+			if ($request->hasFile(self::REV_LAP_UJI)) {
+				$name_file = 'rev_lap_uji_'.$request->file(self::REV_LAP_UJI)->getClientOriginalName();
+				$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
 				if (!file_exists($path_file)) {
 					mkdir($path_file, 0775);
 				}
-				if($request->file('rev_lap_uji_file')->move($path_file,$name_file)){
+				if($request->file(self::REV_LAP_UJI)->move($path_file,$name_file)){
                     /*TPN api_upload*/
 		            if($exam->BILLING_ID != null){
 		                $data_upload [] = array(
@@ -1259,7 +1205,7 @@ class ExaminationController extends Controller
 		                    'contents'=>json_encode(['by'=>$currentUser->name, "reference_id" => $currentUser->id]),
 		                );
 
-		                $upload = $this->api_upload($data_upload,$exam->BILLING_ID);
+		                $this->api_upload($data_upload,$exam->BILLING_ID);
 		            }
 					
 					$attach = new ExaminationAttach;
@@ -1272,39 +1218,38 @@ class ExaminationController extends Controller
 
 					$attach->save();
 				}else{
-					Session::flash('error', 'Save Revisi Laporan Uji to directory failed');
-					return redirect('/admin/examination/'.$exam->id.'/edit');
+					Session::flash(self::ERROR, 'Save Revisi Laporan Uji to directory failed');
+					return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
 				}
 			}
-            $status = $request->input('resume_status');
+            $status = $request->input(self::RESUME_STATUS);
             $exam->resume_status = $status;
 			
 			if($status == -1){
-				// $exam->keterangan = $request->input('keterangan');
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Laporan Uji",$request->input('keterangan'));
+				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Laporan Uji",$request->input(self::KETERANGAN));
 			
 			}else{
 				if($status ){
 					
 					$data= array( 
-		                "from"=>"admin",
+		                "from"=>self::ADMIN,
 		                "to"=>$exam->created_by,
 		                "message"=>"Laporan Uji Completed",
-		                "url"=>"pengujian/".$exam->id."/detail",
+		                "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
 		                "is_read"=>0,
-		                "created_at"=>date("Y-m-d H:i:s"),
-	                	"updated_at"=>date("Y-m-d H:i:s")
+		                "created_at"=>date(self::DATE_FORMAT_1),
+	                	"updated_at"=>date(self::DATE_FORMAT_1)
 	                );
 
 				  	$notification = new NotificationTable();
                     $notification->id = Uuid::uuid4();
 			      	$notification->from = $data['from'];
 			      	$notification->to = $data['to'];
-			      	$notification->message = $data['message'];
+			      	$notification->message = $data[self::MESSAGE];
 			      	$notification->url = $data['url'];
-			      	$notification->is_read = $data['is_read'];
-			      	$notification->created_at = $data['created_at'];
-			      	$notification->updated_at = $data['updated_at'];
+			      	$notification->is_read = $data[self::IS_READ];
+			      	$notification->created_at = $data[self::CREATED_AT];
+			      	$notification->updated_at = $data[self::UPDATED_AT];
 			      	$notification->save();
 
 			      	$data['id'] = $notification->id;
@@ -1312,23 +1257,23 @@ class ExaminationController extends Controller
 			      	event(new Notification($data));
 				}else{ 
 					$data= array( 
-		                "from"=>"admin",
+		                "from"=>self::ADMIN,
 		                "to"=>$exam->created_by,
 		                "message"=>"Laporan Uji Not Completed",
-		                "url"=>"pengujian/".$exam->id."/detail",
+		                "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
 		                "is_read"=>0,
-		                "created_at"=>date("Y-m-d H:i:s"),
-		                "updated_at"=>date("Y-m-d H:i:s")
+		                "created_at"=>date(self::DATE_FORMAT_1),
+		                "updated_at"=>date(self::DATE_FORMAT_1)
 	                );
 				  	$notification = new NotificationTable();
                     $notification->id = Uuid::uuid4();
 			      	$notification->from = $data['from'];
 			      	$notification->to = $data['to'];
-			      	$notification->message = $data['message'];
+			      	$notification->message = $data[self::MESSAGE];
 			      	$notification->url = $data['url'];
-			      	$notification->is_read = $data['is_read'];
-			      	$notification->created_at = $data['created_at'];
-			      	$notification->updated_at = $data['updated_at'];
+			      	$notification->is_read = $data[self::IS_READ];
+			      	$notification->created_at = $data[self::CREATED_AT];
+			      	$notification->updated_at = $data[self::UPDATED_AT];
 			      	$notification->save();
 
 			      	
@@ -1338,14 +1283,14 @@ class ExaminationController extends Controller
 				
 			}
         }
-		if ($request->hasFile('barang_file2')) {
-			$name_file = 'form_penerimaan_barang2_'.$request->file('barang_file2')->getClientOriginalName();
-			$path_file = public_path().'/media/examination/'.$exam->id;
+		if ($request->hasFile(self::BARANG_FILE2)) {
+			$name_file = 'form_penerimaan_barang2_'.$request->file(self::BARANG_FILE2)->getClientOriginalName();
+			$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
 			if (!file_exists($path_file)) {
 				mkdir($path_file, 0775);
 			}
-			if($request->file('barang_file2')->move($path_file,$name_file)){
-				$attach = ExaminationAttach::where('name', 'Bukti Penerimaan & Pengeluaran Perangkat Uji2')->where('examination_id', ''.$exam->id.'')->first();
+			if($request->file(self::BARANG_FILE2)->move($path_file,$name_file)){
+				$attach = ExaminationAttach::where('name', 'Bukti Penerimaan & Pengeluaran Perangkat Uji2')->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
 				if ($attach){
 					$attach->attachment = $name_file;
 					$attach->updated_by = $currentUser->id;
@@ -1362,20 +1307,20 @@ class ExaminationController extends Controller
 
 					$attach->save();
 				}
-				return redirect('/admin/examination/'.$exam->id.'/edit');
+				return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
 			}else{
-				Session::flash('error', 'Save Bukti Penerimaan & Pengeluaran Perangkat Uji to directory failed');
-				return redirect('/admin/examination/'.$exam->id.'/edit');
+				Session::flash(self::ERROR, 'Save Bukti Penerimaan & Pengeluaran Perangkat Uji to directory failed');
+				return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
 			}
 		}
-		if ($request->hasFile('tanda_terima_file')) {
-			$name_file = 'form_tanda_terima_hasil_pengujian_'.$request->file('tanda_terima_file')->getClientOriginalName();
-			$path_file = public_path().'/media/examination/'.$exam->id;
+		if ($request->hasFile(self::TANDA_TERIMA)) {
+			$name_file = 'form_tanda_terima_hasil_pengujian_'.$request->file(self::TANDA_TERIMA)->getClientOriginalName();
+			$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
 			if (!file_exists($path_file)) {
 				mkdir($path_file, 0775);
 			}
-			if($request->file('tanda_terima_file')->move($path_file,$name_file)){
-				$attach = ExaminationAttach::where('name', 'Tanda Terima Hasil Pengujian')->where('examination_id', ''.$exam->id.'')->first();
+			if($request->file(self::TANDA_TERIMA)->move($path_file,$name_file)){
+				$attach = ExaminationAttach::where('name', 'Tanda Terima Hasil Pengujian')->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
 				if ($attach){
 					$attach->attachment = $name_file;
 					$attach->updated_by = $currentUser->id;
@@ -1392,21 +1337,21 @@ class ExaminationController extends Controller
 
 					$attach->save();
 				}
-				Session::flash('message', 'Success Save Tanda Terima Hasil Pengujian to directory');
-				return redirect('/admin/examination/'.$exam->id.'/edit');
+				Session::flash(self::MESSAGE, 'Success Save Tanda Terima Hasil Pengujian to directory');
+				return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
 			}else{
-				Session::flash('error', 'Save Tanda Terima Hasil Pengujian to directory failed');
-				return redirect('/admin/examination/'.$exam->id.'/edit');
+				Session::flash(self::ERROR, 'Save Tanda Terima Hasil Pengujian to directory failed');
+				return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
 			}
 		}
-		if ($request->has('qa_status')){
-            $status = $request->input('qa_status');
+		if ($request->has(self::QA_STATUS)){
+            $status = $request->input(self::QA_STATUS);
             $passed = $request->input('passed');
             $exam->qa_status = $status;
             $exam->qa_passed = $passed;
             if($exam->qa_passed == 1){  
 
-            	if(strpos($exam->keterangan, 'qa_date') !== false){
+            	if(strpos($exam->keterangan, self::QA_DATE) !== false){
             		$data_ket = explode("qa_date", $exam->keterangan);
             		$devnc_exam = Examination::find($data_ket[2]);
 
@@ -1416,92 +1361,89 @@ class ExaminationController extends Controller
 			        	try{
 			        		$devnc_exam->save();
 			        	} catch(Exception $e){
-
+							// DO NOTHING
 					    }
 			        }
             	}
 
             	$data= array( 
-	                "from"=>"admin",
+	                "from"=>self::ADMIN,
 	                "to"=>$exam->created_by,
 	                "message"=>"Perangkat Lulus Sidang QA",
-	                "url"=>"pengujian/".$exam->id."/detail",
+	                "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
 	                "is_read"=>0,
-	                "created_at"=>date("Y-m-d H:i:s"),
-	                "updated_at"=>date("Y-m-d H:i:s")
+	                "created_at"=>date(self::DATE_FORMAT_1),
+	                "updated_at"=>date(self::DATE_FORMAT_1)
 	            );
 
 			  	$notification = new NotificationTable();
                 $notification->id = Uuid::uuid4();
 		      	$notification->from = $data['from'];
 		      	$notification->to = $data['to'];
-		      	$notification->message = $data['message'];
+		      	$notification->message = $data[self::MESSAGE];
 		      	$notification->url = $data['url'];
-		      	$notification->is_read = $data['is_read'];
-		      	$notification->created_at = $data['created_at'];
-		      	$notification->updated_at = $data['updated_at'];
+		      	$notification->is_read = $data[self::IS_READ];
+		      	$notification->created_at = $data[self::CREATED_AT];
+		      	$notification->updated_at = $data[self::UPDATED_AT];
 		      	$notification->save(); 
 		      	$data['id'] = $notification->id;
 	            event(new Notification($data));
 
-                // $this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.sidang_QA", "Hasil Sidang QA");
             }else{ 
 
             	$exam->certificate_status = 1;
 
 		      	$data= array( 
-	                "from"=>"admin",
+	                "from"=>self::ADMIN,
 	                "to"=>$exam->created_by,
 	                "message"=>"Perangkat tidak lulus Sidang QA",
-	                "url"=>"pengujian/".$exam->id."/detail",
+	                "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
 	                "is_read"=>0,
-	                "created_at"=>date("Y-m-d H:i:s"),
-	                "updated_at"=>date("Y-m-d H:i:s")
+	                "created_at"=>date(self::DATE_FORMAT_1),
+	                "updated_at"=>date(self::DATE_FORMAT_1)
                 );
 			  	$notification = new NotificationTable();
                 $notification->id = Uuid::uuid4();
 		      	$notification->from = $data['from'];
 		      	$notification->to = $data['to'];
-		      	$notification->message = $data['message'];
+		      	$notification->message = $data[self::MESSAGE];
 		      	$notification->url = $data['url'];
-		      	$notification->is_read = $data['is_read'];
-		      	$notification->created_at = $data['created_at'];
-		      	$notification->updated_at = $data['updated_at'];
+		      	$notification->is_read = $data[self::IS_READ];
+		      	$notification->created_at = $data[self::CREATED_AT];
+		      	$notification->updated_at = $data[self::UPDATED_AT];
 		      	$notification->save();
 
 		      	$data['id'] = $notification->id;
                 event(new Notification($data));
 
-                // $this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.sidang_QA", "Hasil Sidang QA");
             }
            
 			if($status == -1){
-				// $exam->keterangan = $request->input('keterangan');
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Sidang QA",$request->input('keterangan'));
+				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::SIDANG_QA,$request->input(self::KETERANGAN));
 			}
         }
-        if ($request->has('certificate_status')){
-            $status = $request->input('certificate_status');
+        if ($request->has(self::CERTIFICATE_STATUS)){
+            $status = $request->input(self::CERTIFICATE_STATUS);
             $exam->certificate_status = $status;
             if($exam->certificate_status){ 
             	$data= array(  
-                "from"=>"admin",
+                "from"=>self::ADMIN,
                 "to"=>$exam->created_by,
                 "message"=>"Sertifikat Completed",
-                "url"=>"pengujian/".$exam->id."/detail",
+                "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
                 "is_read"=>0,
-                "created_at"=>date("Y-m-d H:i:s"),
-                "updated_at"=>date("Y-m-d H:i:s")
+                "created_at"=>date(self::DATE_FORMAT_1),
+                "updated_at"=>date(self::DATE_FORMAT_1)
                 );
 			  	$notification = new NotificationTable();
                 $notification->id = Uuid::uuid4();
 		      	$notification->from = $data['from'];
 		      	$notification->to = $data['to'];
-		      	$notification->message = $data['message'];
+		      	$notification->message = $data[self::MESSAGE];
 		      	$notification->url = $data['url'];
-		      	$notification->is_read = $data['is_read'];
-		      	$notification->created_at = $data['created_at'];
-		      	$notification->updated_at = $data['updated_at'];
+		      	$notification->is_read = $data[self::IS_READ];
+		      	$notification->created_at = $data[self::CREATED_AT];
+		      	$notification->updated_at = $data[self::UPDATED_AT];
 		      	$notification->save();  
 		     	$data['id'] = $notification->id;
 
@@ -1509,23 +1451,23 @@ class ExaminationController extends Controller
             }else{  
 
             	$data= array( 
-                "from"=>"admin",
+                "from"=>self::ADMIN,
                 "to"=>$exam->created_by,
                 "message"=>"Sertifikat Not Completed",
-                "url"=>"pengujian/".$exam->id."/detail",
+                "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
                 "is_read"=>0,
-                "created_at"=>date("Y-m-d H:i:s"),
-                "updated_at"=>date("Y-m-d H:i:s")
+                "created_at"=>date(self::DATE_FORMAT_1),
+                "updated_at"=>date(self::DATE_FORMAT_1)
                 );
 			  	$notification = new NotificationTable();
                 $notification->id = Uuid::uuid4();
 		      	$notification->from = $data['from'];
 		      	$notification->to = $data['to'];
-		      	$notification->message = $data['message'];
+		      	$notification->message = $data[self::MESSAGE];
 		      	$notification->url = $data['url'];
-		      	$notification->is_read = $data['is_read'];
-		      	$notification->created_at = $data['created_at'];
-		      	$notification->updated_at = $data['updated_at'];
+		      	$notification->is_read = $data[self::IS_READ];
+		      	$notification->created_at = $data[self::CREATED_AT];
+		      	$notification->updated_at = $data[self::UPDATED_AT];
 		      	$notification->save();
 
 		      	$data['id'] = $notification->id;
@@ -1535,33 +1477,23 @@ class ExaminationController extends Controller
 			if($status == 1){
 				$this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.sertifikat", "Penerbitan Sertfikat");
 			}else if($status == -1){
-				// $exam->keterangan = $request->input('keterangan');
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Pembuatan Sertifikat",$request->input('keterangan'));
+				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Pembuatan Sertifikat",$request->input(self::KETERANGAN));
 			}
         }
-        // if ($request->has('examination_date')){
-            // $exam->examination_date = $request->input('examination_date');
-        // }
         if ($request->has('resume_date')){
             $exam->resume_date = $request->input('resume_date');
         }
-        if ($request->has('qa_date')){
-            $exam->qa_date = $request->input('qa_date');
+        if ($request->has(self::QA_DATE)){
+            $exam->qa_date = $request->input(self::QA_DATE);
         }
         if ($request->has('certificate_date')){
             $exam->certificate_date = $request->input('certificate_date');
         }
-		// if ($request->has('spk_date')){
-            // $exam->spk_date = $request->input('spk_date');
-        // }
-		// if ($request->has('function_date')){
-            // $exam->function_date = $request->input('function_date');
-        // }
-		if ($request->has('catatan')){
-            $exam->catatan = $request->input('catatan');
+		if ($request->has(self::CATATAN)){
+            $exam->catatan = $request->input(self::CATATAN);
         }
-		if ($request->has('contract_date')){
-            $exam->contract_date = $request->input('contract_date');
+		if ($request->has(self::CONTRACT_DATE)){
+            $exam->contract_date = $request->input(self::CONTRACT_DATE);
         }
 		if ($request->has('testing_start')){
             $exam->testing_start = $request->input('testing_start');
@@ -1569,22 +1501,16 @@ class ExaminationController extends Controller
 		if ($request->has('testing_end')){
             $exam->testing_end = $request->input('testing_end');
         }
-		// if ($request->has('urel_test_date')){
-            // $exam->urel_test_date = $request->input('urel_test_date');
-        // }
-		// if ($request->has('deal_test_date')){
-            // $exam->deal_test_date = $request->input('deal_test_date');
-        // }
-		if ($request->has('spb_number')){
-            $exam->spb_number = $request->input('spb_number');
+		if ($request->has(self::SPB_NUMBER)){
+            $exam->spb_number = $request->input(self::SPB_NUMBER);
         }
-		if ($request->has('spb_date')){
-            $exam->spb_date = $request->input('spb_date');
+		if ($request->has(self::SPB_DATE)){
+            $exam->spb_date = $request->input(self::SPB_DATE);
         }
-		if ($request->has('PO_ID')){
+		if ($request->has(self::PO_ID)){
 			if($exam->payment_status == 1){
-				Session::flash('error', 'SPB Already Paid');
-                return redirect('/admin/examination/'.$exam->id.'/edit');
+				Session::flash(self::ERROR, 'SPB Already Paid');
+                return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
 			}
 			if($exam->BILLING_ID){
 				$data_cancel_billing = [
@@ -1594,10 +1520,10 @@ class ExaminationController extends Controller
                     	"reference_id" => $currentUser->id
 					]
 	            ];
-				$cancel_billing = $this->api_cancel_billing($exam->BILLING_ID, $data_cancel_billing);
+				$this->api_cancel_billing($exam->BILLING_ID, $data_cancel_billing);
 			}
 			$data_billing = [
-                "draft_id" => $request->input('PO_ID'),
+                "draft_id" => $request->input(self::PO_ID),
                 "created" => [
                     "by" => $currentUser->name,
                     "reference_id" => $currentUser->id
@@ -1606,56 +1532,21 @@ class ExaminationController extends Controller
 
             $billing = $this->api_billing($data_billing);
 
-            $exam->PO_ID = $request->input('PO_ID');
-            $exam->BILLING_ID = $billing && $billing->status == true ? $billing->data->_id : null;
+            $exam->PO_ID = $request->input(self::PO_ID);
+            $exam->BILLING_ID = $billing && $billing->status ? $billing->data->_id : null;
         }
 
-        // if ($request->hasFile('resume_file')) {
-            // $ext_file = $request->file('resume_file')->getClientOriginalExtension();
-            // $name_file = uniqid().'_resume_'.$exam->id.'.'.$ext_file;
-            // $path_file = public_path().'/media/examination/'.$exam->id;
-            // if (!file_exists($path_file)) {
-                // mkdir($path_file, 0775);
-            // }
-            // if($request->file('resume_file')->move($path_file,$name_file)){
-                // $attach = ExaminationAttach::where('name', 'Laporan Uji')->first();
-
-                // if ($attach){
-                    // $attach->attachment = $name_file;
-                    // $attach->updated_by = $currentUser->id;
-
-                    // $attach->save();
-                // } else{
-                    // $attach = new ExaminationAttach;
-                    // $attach->id = Uuid::uuid4();
-                    // $attach->examination_id = $exam->id; 
-                    // $attach->name = 'Laporan Uji';
-                    // $attach->attachment = $name_file;
-                    // $attach->created_by = $currentUser->id;
-                    // $attach->updated_by = $currentUser->id;
-
-                    // $attach->save();
-                // }
-            // }else{
-                // Session::flash('error', 'Save spb to directory failed');
-                // return redirect('/admin/examination/'.$exam->id.'/edit');
-            // }
-        // }
-
-        if ($request->hasFile('certificate_file')) {
-			$name_file = 'sertifikat_'.$request->file('certificate_file')->getClientOriginalName();
-			$path_file = public_path().'/media/device/'.$exam->device_id;
-            // $ext_file = $request->file('certificate_file')->getClientOriginalExtension();
-            // $name_file = uniqid().'_certificate_'.$exam->device_id.'.'.$ext_file;
-            // $path_file = public_path().'/media/device/'.$exam->device_id;
+        if ($request->hasFile(self::CERTIFICATE_DATE)) {
+			$name_file = 'sertifikat_'.$request->file(self::CERTIFICATE_DATE)->getClientOriginalName();
+			$path_file = public_path().self::MEDIA_DEVICE_LOC.$exam->device_id;
             if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
-            if($request->file('certificate_file')->move($path_file,$name_file)){
+            if($request->file(self::CERTIFICATE_DATE)->move($path_file,$name_file)){
                 $device = Device::findOrFail($exam->device_id);
                 if ($device){
                     $device->certificate = $name_file;
-                    $device->status = $request->input('certificate_status');
+                    $device->status = $request->input(self::CERTIFICATE_STATUS);
                     $device->valid_from = $request->input('valid_from');
                     $device->valid_thru = $request->input('valid_thru');
                     $device->cert_number = $request->input('cert_number');
@@ -1663,8 +1554,8 @@ class ExaminationController extends Controller
                     $device->save();
                 }
             }else{
-                Session::flash('error', 'Save spb to directory failed');
-                return redirect('/admin/examination/'.$exam->id.'/edit');
+                Session::flash(self::ERROR, 'Save spb to directory failed');
+                return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
             }
         }
 		
@@ -1676,16 +1567,16 @@ class ExaminationController extends Controller
         try{
             $exam->save();
 			if($spk_created == 1){
-				$res_exam_schedule = $client->get('spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR);
+				$res_exam_schedule = $client->get(self::SPK_ADD_NOTIF_ID_URI.$exam->id.self::SPK_NUMBER_URI.$spk_number_forOTR);
 				$exam_schedule = $res_exam_schedule->getStatusCode() == '200' ? json_decode($res_exam_schedule->getBody()) : null;
-				if($exam_schedule && $exam_schedule->status == false){
+				if($exam_schedule && !$exam_schedule->status){
 					$api_logs = new Api_logs;
 					$api_logs->send_to = "OTR";
-					$api_logs->route = 'spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR;
+					$api_logs->route = self::SPK_ADD_NOTIF_ID_URI.$exam->id.self::SPK_NUMBER_URI.$spk_number_forOTR;
 					$api_logs->status = $exam_schedule->status;
 					$api_logs->data = json_encode($exam_schedule);
 					$api_logs->reference_id = $exam->id;
-					$api_logs->reference_table = "examinations";
+					$api_logs->reference_table = self::EXAMINATIONS;
 					$api_logs->created_by = $currentUser->id;
 					$api_logs->updated_by = $currentUser->id;
 
@@ -1693,11 +1584,11 @@ class ExaminationController extends Controller
 				}elseif ($exam_schedule == null) {
 					$api_logs = new Api_logs;
 					$api_logs->send_to = "OTR";
-					$api_logs->route = 'spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR;
+					$api_logs->route = self::SPK_ADD_NOTIF_ID_URI.$exam->id.self::SPK_NUMBER_URI.$spk_number_forOTR;
 					$api_logs->status = 0;
 					$api_logs->data = "-";
 					$api_logs->reference_id = $exam->id;
-					$api_logs->reference_table = "examinations";
+					$api_logs->reference_table = self::EXAMINATIONS;
 					$api_logs->created_by = $currentUser->id;
 					$api_logs->updated_by = $currentUser->id;
 
@@ -1707,54 +1598,52 @@ class ExaminationController extends Controller
              
 				$exam_hist = new ExaminationHistory;
 				$exam_hist->examination_id = $exam->id;
-				$exam_hist->date_action = date('Y-m-d H:i:s');
-				$exam_hist->tahap = $request->input('status');
-					if ($request->has('registration_status')){$exam_hist->status = $request->input('registration_status');}
-					if ($request->has('function_status')){$exam_hist->status = $request->input('function_status');}
-					if ($request->has('contract_status')){$exam_hist->status = $request->input('contract_status');}
-					if ($request->has('spb_status')){$exam_hist->status = $request->input('spb_status');}
-					if ($request->has('payment_status')){$exam_hist->status = $request->input('payment_status');}
-					if ($request->has('spk_status')){$exam_hist->status = $request->input('spk_status');}
-					if ($request->has('examination_status')){$exam_hist->status = $request->input('examination_status');}
-					if ($request->has('resume_status')){$exam_hist->status = $request->input('resume_status');}
-					if ($request->has('qa_status')){$exam_hist->status = $request->input('qa_status');}
-					if ($request->has('certificate_status')){$exam_hist->status = $request->input('certificate_status');}
-				$exam_hist->keterangan = $request->input('keterangan');
+				$exam_hist->date_action = date(self::DATE_FORMAT_1);
+				$exam_hist->tahap = $request->input(self::STATUS);
+					if ($request->has(self::REGISTRATION_STATUS)){$exam_hist->status = $request->input(self::REGISTRATION_STATUS);}
+					if ($request->has(self::FUNCTION_STATUS)){$exam_hist->status = $request->input(self::FUNCTION_STATUS);}
+					if ($request->has(self::CONTRACT_STATUS)){$exam_hist->status = $request->input(self::CONTRACT_STATUS);}
+					if ($request->has(self::SPB_STATUS)){$exam_hist->status = $request->input(self::SPB_STATUS);}
+					if ($request->has(self::PAYMENT_STATUS)){$exam_hist->status = $request->input(self::PAYMENT_STATUS);}
+					if ($request->has(self::SPK_STATUS)){$exam_hist->status = $request->input(self::SPK_STATUS);}
+					if ($request->has(self::EXAMINATION_STATUS)){$exam_hist->status = $request->input(self::EXAMINATION_STATUS);}
+					if ($request->has(self::RESUME_STATUS)){$exam_hist->status = $request->input(self::RESUME_STATUS);}
+					if ($request->has(self::QA_STATUS)){$exam_hist->status = $request->input(self::QA_STATUS);}
+					if ($request->has(self::CERTIFICATE_STATUS)){$exam_hist->status = $request->input(self::CERTIFICATE_STATUS);}
+				$exam_hist->keterangan = $request->input(self::KETERANGAN);
 				$exam_hist->created_by = $currentUser->id;
-				$exam_hist->created_at = date('Y-m-d H:i:s');
+				$exam_hist->created_at = date(self::DATE_FORMAT_1);
 				$exam_hist->save();
 
                 $logs = new Logs;
                 $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Update ".$request->input('status');   
+                $logs->action = "Update ".$request->input(self::STATUS);   
                 $logs->data = $exam;
                 $logs->created_by = $currentUser->id;
-                $logs->page = "EXAMINATION";
+                $logs->page = self::EXAMINATION;
                 $logs->save();
 
-            Session::flash('message', 'Examination successfully updated');
-            return redirect('/admin/examination');
+            Session::flash(self::MESSAGE, 'Examination successfully updated');
+            return redirect(self::ADMIN_EXAMINATION);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
-            return redirect('/admin/examination/'.$exam->id.'/edit');
+            Session::flash(self::ERROR, 'Save failed');
+            return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
         }
     }
 
     public function api_cancel_billing($BILLING_ID,$data){
         $client = new Client([
-            'headers' => ['Content-Type' => 'application/json', 
-                            'Authorization' => config("app.gateway_tpn_2")
+            self::HEADERS => [self::CONTENT_TYPE => self::JSON_HEADER, 
+                            self::AUTHORIZATION => config(self::APP_GATEWAY_TPN_2)
                         ],
-            'base_uri' => config("app.url_api_tpn"),
-            'timeout'  => 60.0,
-            'http_errors' => false
+            self::BASE_URI => config(self::APP_URI_API_TPN),
+            self::TIMEOUT  => 60.0,
+            self::HTTP_ERRORS => false
         ]);
         try {
             $params['json'] = $data;
             $res_cancel_billing = $client->put("v1/billings/".$BILLING_ID."/cancel", $params)->getBody();
-            $cancel_billing = json_decode($res_cancel_billing);
-
-            return $cancel_billing;
+            return json_decode($res_cancel_billing);
         } catch(Exception $e){
             return null;
         }
@@ -1762,19 +1651,17 @@ class ExaminationController extends Controller
 
     public function api_billing($data){
         $client = new Client([
-            'headers' => ['Content-Type' => 'application/json', 
-                            'Authorization' => config("app.gateway_tpn_2")
+            self::HEADERS => [self::CONTENT_TYPE => self::JSON_HEADER, 
+                            self::AUTHORIZATION => config(self::APP_GATEWAY_TPN_2)
                         ],
-            'base_uri' => config("app.url_api_tpn"),
-            'timeout'  => 60.0,
-            'http_errors' => false
+            self::BASE_URI => config(self::APP_URI_API_TPN),
+            self::TIMEOUT  => 60.0,
+            self::HTTP_ERRORS => false
         ]);
         try {
             $params['json'] = $data;
             $res_billing = $client->post("v1/billings", $params)->getBody();
-            $billing = json_decode($res_billing);
-
-            return $billing;
+            return json_decode($res_billing);
         } catch(Exception $e){
             return null;
         }
@@ -1782,10 +1669,10 @@ class ExaminationController extends Controller
 
     public function generateKuitansi(Request $request) {
     	$client = new Client([
-            'headers' => ['Authorization' => config("app.gateway_tpn_2")],
-            'base_uri' => config("app.url_api_tpn"),
-            'timeout'  => 60.0,
-            'http_errors' => false
+            self::HEADERS => [self::AUTHORIZATION => config(self::APP_GATEWAY_TPN_2)],
+            self::BASE_URI => config(self::APP_URI_API_TPN),
+            self::TIMEOUT  => 60.0,
+            self::HTTP_ERRORS => false
         ]);
 
         $id = $request->input('id');
@@ -1794,25 +1681,25 @@ class ExaminationController extends Controller
         if($exam){
             try {
                 $INVOICE_ID = $exam->INVOICE_ID;
-                $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
+                $res_invoice = $client->request('GET', self::V1_INVOICE.$INVOICE_ID);
                 $invoice = json_decode($res_invoice->getBody());
                 
-                if($INVOICE_ID && $invoice && $invoice->status == true){
+                if($INVOICE_ID && $invoice && $invoice->status){
                     $status_invoice = $invoice->data->status_invoice;
                     if($status_invoice == "approved"){
                         $status_faktur = $invoice->data->status_faktur;
                         if($status_faktur == "received"){
                             /*SAVE KUITANSI*/
                             $name_file = 'kuitansi_spb_'.$INVOICE_ID.'.pdf';
-							$path_file = public_path().'/media/examination/'.$id;
+							$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$id;
 							if (!file_exists($path_file)) {
 								mkdir($path_file, 0775);
 							}
-							$response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/exportpdf');
+							$response = $client->request('GET', self::V1_INVOICE.$INVOICE_ID.'/exportpdf');
                             $stream = (String)$response->getBody();
 
                             if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
-                                $attach = ExaminationAttach::where('name', 'Kuitansi')->where('examination_id', ''.$id.'')->first();
+                                $attach = ExaminationAttach::where('name', self::KUITANSI)->where(self::EXAMINATION_ID, ''.$id.'')->first();
                                 $currentUser = Auth::user();
 
 								if ($attach){
@@ -1824,7 +1711,7 @@ class ExaminationController extends Controller
 									$attach = new ExaminationAttach;
 									$attach->id = Uuid::uuid4();
 									$attach->examination_id = $id; 
-									$attach->name = 'Kuitansi';
+									$attach->name = self::KUITANSI;
 									$attach->attachment = $name_file;
 									$attach->created_by = $currentUser->id;
 									$attach->updated_by = $currentUser->id;
@@ -1866,25 +1753,25 @@ class ExaminationController extends Controller
 
     public function generateTaxInvoice(Request $request) {
         $client = new Client([
-            'headers' => ['Authorization' => config("app.gateway_tpn_2")],
-            'base_uri' => config("app.url_api_tpn"),
-            'timeout'  => 60.0,
-            'http_errors' => false
+            self::HEADERS => [self::AUTHORIZATION => config(self::APP_GATEWAY_TPN_2)],
+            self::BASE_URI => config(self::APP_URI_API_TPN),
+            self::TIMEOUT  => 60.0,
+            self::HTTP_ERRORS => false
         ]);
 
         $id = $request->input('id');
 
         $exam = Examination::select(DB::raw('companies.name as company_name, examination_attachments.tgl as payment_date, examinations.*, devices.name, devices.mark, devices.capacity, devices.model'))
-    	->where('examinations.id', $id)
+    	->where(self::EXAMINATIONS_ID, $id)
     	->whereNotExists(function ($query) {
            	$query->select(DB::raw(1))
-                 ->from('examination_attachments')
+                 ->from(self::EXAMINATION_ATTACHMENTS)
                  ->whereRaw('examination_attachments.examination_id = examinations.id')
                  ->whereRaw('examination_attachments.name = "Faktur Pajak"')
             ;
        	})->orWhereExists(function ($query) {
            	$query->select(DB::raw(1))
-                 ->from('examination_attachments')
+                 ->from(self::EXAMINATION_ATTACHMENTS)
                  ->whereRaw('examination_attachments.examination_id = examinations.id')
                  ->whereRaw('examination_attachments.name = "Faktur Pajak"')
                  ->whereRaw('examination_attachments.attachment = ""')
@@ -1892,8 +1779,8 @@ class ExaminationController extends Controller
        	})
        	->join('companies', 'examinations.company_id', '=', 'companies.id')
         ->join('devices', 'examinations.device_id', '=', 'devices.id')
-        ->leftJoin('examination_attachments', function($leftJoin){
-            $leftJoin->on('examinations.id', '=', 'examination_attachments.examination_id');
+        ->leftJoin(self::EXAMINATION_ATTACHMENTS, function($leftJoin){
+            $leftJoin->on(self::EXAMINATIONS_ID, '=', 'examination_attachments.examination_id');
             $leftJoin->on(DB::raw('examination_attachments.name'), DB::raw('='),DB::raw("'File Pembayaran'"));
         })
         ->first();
@@ -1905,24 +1792,24 @@ class ExaminationController extends Controller
             /* END GENERATE NAMA FILE FAKTUR */
             try {
                 $INVOICE_ID = $exam->INVOICE_ID;
-                $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
+                $res_invoice = $client->request('GET', self::V1_INVOICE.$INVOICE_ID);
                 $invoice = json_decode($res_invoice->getBody());
-                if($INVOICE_ID && $invoice && $invoice->status == true){
+                if($INVOICE_ID && $invoice && $invoice->status){
     			    $status_invoice = $invoice->data->status_invoice;
                     if($status_invoice == "approved"){
                         $status_faktur = $invoice->data->status_faktur;
                         if($status_faktur == "received"){
                             /*SAVE FAKTUR PAJAK*/
                             $name_file = 'faktur_spb_'.$filename.'.pdf';
-                            $path_file = public_path().'/media/examination/'.$id;
+                            $path_file = public_path().self::MEDIA_EXAMINATION_LOC.$id;
                             if (!file_exists($path_file)) {
                                 mkdir($path_file, 0775);
                             }
-                            $response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/taxinvoice/pdf');
+                            $response = $client->request('GET', self::V1_INVOICE.$INVOICE_ID.'/taxinvoice/pdf');
                             $stream = (String)$response->getBody();
 
                             if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
-                                $attach = ExaminationAttach::where('name', 'Faktur Pajak')->where('examination_id', ''.$id.'')->first();
+                                $attach = ExaminationAttach::where('name', self::FAKTUR_PAJAK)->where(self::EXAMINATION_ID, ''.$id.'')->first();
                                 $currentUser = Auth::user();
 
 								if ($attach){
@@ -1934,7 +1821,7 @@ class ExaminationController extends Controller
 									$attach = new ExaminationAttach;
 									$attach->id = Uuid::uuid4();
 									$attach->examination_id = $id; 
-									$attach->name = 'Faktur Pajak';
+									$attach->name = self::FAKTUR_PAJAK;
 									$attach->attachment = $name_file;
 									$attach->created_by = $currentUser->id;
 									$attach->updated_by = $currentUser->id;
@@ -1976,22 +1863,16 @@ class ExaminationController extends Controller
 
     public function api_upload($data, $BILLING_ID){
         $client = new Client([
-            'headers' => ['Authorization' => config("app.gateway_tpn_2")],
-            'base_uri' => config("app.url_api_tpn"),
-            'timeout'  => 60.0,
-            'http_errors' => false
+            self::HEADERS => [self::AUTHORIZATION => config(self::APP_GATEWAY_TPN_2)],
+            self::BASE_URI => config(self::APP_URI_API_TPN),
+            self::TIMEOUT  => 60.0,
+            self::HTTP_ERRORS => false
         ]);
         try {
             $params['multipart'] = $data;
             $res_upload = $client->post("v1/billings/".$BILLING_ID."/deliver", $params)->getBody(); //BILLING_ID
-            $upload = json_decode($res_upload);
+            return json_decode($res_upload);
 
-            /*get
-                $upload->status; //if true lanjut, else panggil lagi API nya, dan jalankan API invoices
-                $upload->data->_id;
-            */
-
-            return $upload;
         } catch(Exception $e){
             return null;
         }
@@ -2002,9 +1883,9 @@ class ExaminationController extends Controller
         $exam = Examination::find($id);
 
         if ($exam){
-            $file = public_path().'/media/examination/'.$exam->id.'/'.$exam->attachment;
+            $file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id.'/'.$exam->attachment;
             $headers = array(
-              'Content-Type: application/octet-stream',
+              self::HEADER_CONTENT_TYPE,
             );
 
             return Response::download($file, $exam->attachment, $headers);
@@ -2016,9 +1897,9 @@ class ExaminationController extends Controller
         $exam = Examination::find($id);
 
         if ($exam){
-            $file = public_path().'/media/examination/'.$exam->id.'/'.$exam->attachment;
+            $file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id.'/'.$exam->attachment;
             $headers = array(
-              'Content-Type: application/octet-stream',
+              self::HEADER_CONTENT_TYPE,
             );
 
             return Response::file($file);
@@ -2031,22 +1912,22 @@ class ExaminationController extends Controller
             $device = Device::findOrFail($id);
 
             if ($device){
-                $file = public_path().'/media/device/'.$device->id.'/'.$device->certificate;
+                $file = public_path().self::MEDIA_DEVICE_LOC.$device->id.'/'.$device->certificate;
                 $headers = array(
-                  'Content-Type: application/octet-stream',
+                  self::HEADER_CONTENT_TYPE,
                 );
 
                 return Response::download($file, $device->attachment, $headers);
             }
         } else{
-            $exam = ExaminationAttach::where('examination_id', $id)
+            $exam = ExaminationAttach::where(self::EXAMINATION_ID, $id)
                                 ->where('name','like','%'.$name.'%')
                                 ->first();
 
             if ($exam){
-                $file = public_path().'/media/examination/'.$exam->examination_id.'/'.$exam->attachment;
+                $file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->examination_id.'/'.$exam->attachment;
                 $headers = array(
-                  'Content-Type: application/octet-stream',
+                  self::HEADER_CONTENT_TYPE,
                 );
 
                 return Response::download($file, $exam->attachment, $headers);
@@ -2059,9 +1940,9 @@ class ExaminationController extends Controller
         $data = ExaminationAttach::find($id);
 
         if ($data){
-            $file = public_path().'/media/examination/'.$data->examination_id.'/'.$data->attachment;
+            $file = public_path().self::MEDIA_EXAMINATION_LOC.$data->examination_id.'/'.$data->attachment;
             $headers = array(
-              'Content-Type: application/octet-stream',
+              self::HEADER_CONTENT_TYPE,
             );
 
             return Response::download($file, $data->attachment, $headers);
@@ -2074,7 +1955,7 @@ class ExaminationController extends Controller
             $device = Device::findOrFail($id);
 
             if ($device){
-                $file = public_path().'/media/device/'.$device->id.'/'.$device->certificate;
+                $file = public_path().self::MEDIA_DEVICE_LOC.$device->id.'/'.$device->certificate;
                 $headers = array(
                   'Content-Type: application/pdf',
                 );
@@ -2082,12 +1963,12 @@ class ExaminationController extends Controller
                 return Response::file($file);
             }
         } else{
-            $exam = ExaminationAttach::where('examination_id', $id)
+            $exam = ExaminationAttach::where(self::EXAMINATION_ID, $id)
                                 ->where('name','like','%'.$name.'%')
                                 ->first();
 
             if ($exam){
-                $file = public_path().'/media/examination/'.$exam->examination_id.'/'.$exam->attachment;
+                $file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->examination_id.'/'.$exam->attachment;
                 $headers = array(
                   'Content-Type: application/pdf',
                 );
@@ -2108,10 +1989,10 @@ class ExaminationController extends Controller
         $data = User::findOrFail($user);
 		
         Mail::send($message, array(
-			'user_name' => $data->name,
-			'dev_name' => $dev_name,
-			'exam_type' => $exam_type,
-			'exam_type_desc' => $exam_type_desc
+			self::USER_NAME => $data->name,
+			self::DEV_NAME => $dev_name,
+			self::EXAM_TYPE => $exam_type,
+			self::EXAM_TYPE_DESC => $exam_type_desc
 			), function ($m) use ($data,$subject) {
             $m->to($data->email)->subject($subject);
         });
@@ -2124,10 +2005,10 @@ class ExaminationController extends Controller
         $data = User::findOrFail($user);
 		
         Mail::send($message, array(
-			'user_name' => $data->name,
-			'dev_name' => $dev_name,
-			'exam_type' => $exam_type,
-			'exam_type_desc' => $exam_type_desc
+			self::USER_NAME => $data->name,
+			self::DEV_NAME => $dev_name,
+			self::EXAM_TYPE => $exam_type,
+			self::EXAM_TYPE_DESC => $exam_type_desc
 			), function ($m) use ($data,$subject,$attach) {
             $m->to($data->email)->subject($subject);
 			$m->attach($attach);
@@ -2144,253 +2025,146 @@ class ExaminationController extends Controller
 		// the user's e-mail address, the amount paid, and the payment
 		// timestamp.
 
-        $search = trim($request->input('search'));
-        $comp_stat = '';
-        $type = '';
-        $status = '';
-		$before = null;
-        $after = null;
+        $search = trim($request->input(self::SEARCH));
 
-        $query = Examination::whereNotNull('created_at')
+        $query = Examination::whereNotNull(self::CREATED_AT)
                             ->with('user')
-                            ->with('company')
-                            ->with('examinationType')
-                            ->with('examinationLab')
-                            ->with('media')
-                            ->with('device');
+                            ->with(self::COMPANY)
+                            ->with(self::EXAMINATION_TYPE)
+                            ->with(self::EXAMINATION_LAB)
+                            ->with(self::MEDIA)
+                            ->with(self::DEVICS);
 		$query->where(function($q){
-			return $q->where('registration_status', '!=', '1')
-				->orWhere('function_status', '!=', '1')
-				->orWhere('contract_status', '!=', '1')
-				->orWhere('spb_status', '!=', '1')
-				->orWhere('payment_status', '!=', '1')
-				->orWhere('spk_status', '!=', '1')
-				->orWhere('examination_status', '!=', '1')
-				->orWhere('resume_status', '!=', '1')
-				->orWhere('qa_status', '!=', '1')
-				->orWhere('certificate_status', '!=', '1')
-				->orWhere('location', '!=', '1')
+			return $q->where(self::REGISTRATION_STATUS, '!=', '1')
+				->orWhere(self::FUNCTION_STATUS, '!=', '1')
+				->orWhere(self::CONTRACT_STATUS, '!=', '1')
+				->orWhere(self::SPB_STATUS, '!=', '1')
+				->orWhere(self::PAYMENT_STATUS, '!=', '1')
+				->orWhere(self::SPK_STATUS, '!=', '1')
+				->orWhere(self::EXAMINATION_STATUS, '!=', '1')
+				->orWhere(self::RESUME_STATUS, '!=', '1')
+				->orWhere(self::QA_STATUS, '!=', '1')
+				->orWhere(self::CERTIFICATE_STATUS, '!=', '1')
+				->orWhere(self::LOCATION, '!=', '1')
 				;
 			})
 			;
 		if ($search != null){
             $query->where(function($qry) use($search){
-                $qry->whereHas('device', function ($q) use ($search){
+                $qry->whereHas(self::DEVICS, function ($q) use ($search){
 						return $q->where('name', 'like', '%'.strtolower($search).'%');
 					})
-				->orWhereHas('company', function ($q) use ($search){
+				->orWhereHas(self::COMPANY, function ($q) use ($search){
 						return $q->where('name', 'like', '%'.strtolower($search).'%');
 					})
-				->orWhereHas('examinationLab', function ($q) use ($search){
+				->orWhereHas(self::EXAMINATION_LAB, function ($q) use ($search){
 							return $q->where('name', 'like', '%'.strtolower($search).'%');
 						})
 				->orWhere('function_test_NO', 'like', '%'.strtolower($search).'%');
             });
         }
 
-        // if ($request->has('comp_stat')){
-            // $comp_stat = $request->get('comp_stat');
-            // if($request->input('comp_stat') != 'all'){
-				// $query->where(function($q) use($request){
-				// return $q->where('registration_status', '=', $request->get('comp_stat'))
-					// ->orWhere('function_status', '=', $request->get('comp_stat'))
-					// ->orWhere('contract_status', '=', $request->get('comp_stat'))
-					// ->orWhere('spb_status', '=', $request->get('comp_stat'))
-					// ->orWhere('payment_status', '=', $request->get('comp_stat'))
-					// ->orWhere('spk_status', '=', $request->get('comp_stat'))
-					// ->orWhere('examination_status', '=', $request->get('comp_stat'))
-					// ->orWhere('resume_status', '=', $request->get('comp_stat'))
-					// ->orWhere('qa_status', '=', $request->get('comp_stat'))
-					// ->orWhere('certificate_status', '=', $request->get('comp_stat'))
-					// ;
-				// });
-			// }
-        // }
-
-        if ($request->has('type')){
-            $type = $request->get('type');
-            if($request->input('type') != 'all'){
-				$query->where('examination_type_id', $request->get('type'));
-			}
+        if ($request->has('type') && $request->input('type') != 'all'){
+			$query->where('examination_type_id', $request->get('type'));
         }
 
-        if ($request->has('company')){
-            $query->whereHas('company', function ($q) use ($request){
-                return $q->where('name', 'like', '%'.strtolower($request->get('company')).'%');
+        if ($request->has(self::COMPANY)){
+            $query->whereHas(self::COMPANY, function ($q) use ($request){
+                return $q->where('name', 'like', '%'.strtolower($request->get(self::COMPANY)).'%');
             });
         }
 
-        if ($request->has('device')){
-            $query->whereHas('device', function ($q) use ($request){
-                return $q->where('name', 'like', '%'.strtolower($request->get('device')).'%');
+        if ($request->has(self::DEVICS)){
+            $query->whereHas(self::DEVICS, function ($q) use ($request){
+                return $q->where('name', 'like', '%'.strtolower($request->get(self::DEVICS)).'%');
             });
         }
 
-        if ($request->has('status')){
-            switch ($request->get('status')) {
+        if ($request->has(self::STATUS)){
+            switch ($request->get(self::STATUS)) {
                 case 1:
-					/*if ($request->has('comp_stat')){
-						$comp_stat = $request->get('comp_stat');
-						if($request->input('comp_stat') != 'all'){
-							$query->where('registration_status', '=', $request->get('comp_stat'));
-						}else{
-							$query->where('registration_status', '!=', 0);
-						}
-					}*/
-					$query->where('registration_status', '!=', 1);
+					$query->where(self::REGISTRATION_STATUS, '!=', 1);
                     $status = 1;
                     break;
                 case 2:
-                    /*if ($request->has('comp_stat')){
-						$comp_stat = $request->get('comp_stat');
-						if($request->input('comp_stat') != 'all'){
-							$query->where('function_status', '=', $request->get('comp_stat'));
-						}else{
-							$query->where('function_status', '!=', 0);
-						}
-					}*/
-					$query->where('registration_status', '=', 1);
-					$query->where('function_status', '!=', 1);
+					$query->where(self::REGISTRATION_STATUS, '=', 1);
+					$query->where(self::FUNCTION_STATUS, '!=', 1);
                     $status = 2;
                     break;
                 case 3:
-                    /*if ($request->has('comp_stat')){
-						$comp_stat = $request->get('comp_stat');
-						if($request->input('comp_stat') != 'all'){
-							$query->where('contract_status', '=', $request->get('comp_stat'));
-						}else{
-							$query->where('contract_status', '!=', 0);
-						}
-					}*/
-					$query->where('registration_status', '=', 1);
-					$query->where('function_status', '=', 1);
-					$query->where('contract_status', '!=', 1);
+					$query->where(self::REGISTRATION_STATUS, '=', 1);
+					$query->where(self::FUNCTION_STATUS, '=', 1);
+					$query->where(self::CONTRACT_STATUS, '!=', 1);
                     $status = 3;
                     break;
                 case 4:
-                    /*if ($request->has('comp_stat')){
-						$comp_stat = $request->get('comp_stat');
-						if($request->input('comp_stat') != 'all'){
-							$query->where('spb_status', '=', $request->get('comp_stat'));
-						}else{
-							$query->where('spb_status', '!=', 0);
-						}
-					}*/
-					$query->where('registration_status', '=', 1);
-					$query->where('function_status', '=', 1);
-					$query->where('contract_status', '=', 1);
-					$query->where('spb_status', '!=', 1);
+					$query->where(self::REGISTRATION_STATUS, '=', 1);
+					$query->where(self::FUNCTION_STATUS, '=', 1);
+					$query->where(self::CONTRACT_STATUS, '=', 1);
+					$query->where(self::SPB_STATUS, '!=', 1);
                     $status = 4;
                     break;
                 case 5:
-                    /*if ($request->has('comp_stat')){
-						$comp_stat = $request->get('comp_stat');
-						if($request->input('comp_stat') != 'all'){
-							$query->where('payment_status', '=', $request->get('comp_stat'));
-						}else{
-							$query->where('payment_status', '!=', 0);
-						}
-					}*/
-					$query->where('registration_status', '=', 1);
-					$query->where('function_status', '=', 1);
-					$query->where('contract_status', '=', 1);
-					$query->where('spb_status', '=', 1);
-					$query->where('payment_status', '!=', 1);
+					$query->where(self::REGISTRATION_STATUS, '=', 1);
+					$query->where(self::FUNCTION_STATUS, '=', 1);
+					$query->where(self::CONTRACT_STATUS, '=', 1);
+					$query->where(self::SPB_STATUS, '=', 1);
+					$query->where(self::PAYMENT_STATUS, '!=', 1);
                     $status = 5;
                     break;
                 case 6:
-                    /*if ($request->has('comp_stat')){
-						$comp_stat = $request->get('comp_stat');
-						if($request->input('comp_stat') != 'all'){
-							$query->where('spk_status', '=', $request->get('comp_stat'));
-						}else{
-							$query->where('spk_status', '!=', 0);
-						}
-					}*/
-					$query->where('registration_status', '=', 1);
-					$query->where('function_status', '=', 1);
-					$query->where('contract_status', '=', 1);
-					$query->where('spb_status', '=', 1);
-					$query->where('payment_status', '=', 1);
-					$query->where('spk_status', '!=', 1);
+					$query->where(self::REGISTRATION_STATUS, '=', 1);
+					$query->where(self::FUNCTION_STATUS, '=', 1);
+					$query->where(self::CONTRACT_STATUS, '=', 1);
+					$query->where(self::SPB_STATUS, '=', 1);
+					$query->where(self::PAYMENT_STATUS, '=', 1);
+					$query->where(self::SPK_STATUS, '!=', 1);
                     $status = 6;
                     break;
                 case 7:
-                    /*if ($request->has('comp_stat')){
-						$comp_stat = $request->get('comp_stat');
-						if($request->input('comp_stat') != 'all'){
-							$query->where('examination_status', '=', $request->get('comp_stat'));
-						}else{
-							$query->where('examination_status', '!=', 0);
-						}
-					}*/
-					$query->where('registration_status', '=', 1);
-					$query->where('function_status', '=', 1);
-					$query->where('contract_status', '=', 1);
-					$query->where('spb_status', '=', 1);
-					$query->where('payment_status', '=', 1);
-					$query->where('spk_status', '=', 1);
-					$query->where('examination_status', '!=', 1);
+					$query->where(self::REGISTRATION_STATUS, '=', 1);
+					$query->where(self::FUNCTION_STATUS, '=', 1);
+					$query->where(self::CONTRACT_STATUS, '=', 1);
+					$query->where(self::SPB_STATUS, '=', 1);
+					$query->where(self::PAYMENT_STATUS, '=', 1);
+					$query->where(self::SPK_STATUS, '=', 1);
+					$query->where(self::EXAMINATION_STATUS, '!=', 1);
                     $status = 7;
                     break;
                 case 8:
-                    /*if ($request->has('comp_stat')){
-						$comp_stat = $request->get('comp_stat');
-						if($request->input('comp_stat') != 'all'){
-							$query->where('resume_status', '=', $request->get('comp_stat'));
-						}else{
-							$query->where('resume_status', '!=', 0);
-						}
-					}*/
-					$query->where('registration_status', '=', 1);
-					$query->where('function_status', '=', 1);
-					$query->where('contract_status', '=', 1);
-					$query->where('spb_status', '=', 1);
-					$query->where('payment_status', '=', 1);
-					$query->where('spk_status', '=', 1);
-					$query->where('examination_status', '=', 1);
-					$query->where('resume_status', '!=', 1);
+					$query->where(self::REGISTRATION_STATUS, '=', 1);
+					$query->where(self::FUNCTION_STATUS, '=', 1);
+					$query->where(self::CONTRACT_STATUS, '=', 1);
+					$query->where(self::SPB_STATUS, '=', 1);
+					$query->where(self::PAYMENT_STATUS, '=', 1);
+					$query->where(self::SPK_STATUS, '=', 1);
+					$query->where(self::EXAMINATION_STATUS, '=', 1);
+					$query->where(self::RESUME_STATUS, '!=', 1);
                     $status = 8;
                     break;
                 case 9:
-                    /*if ($request->has('comp_stat')){
-						$comp_stat = $request->get('comp_stat');
-						if($request->input('comp_stat') != 'all'){
-							$query->where('qa_status', '=', $request->get('comp_stat'));
-						}else{
-							$query->where('qa_status', '!=', 0);
-						}
-					}*/
-					$query->where('registration_status', '=', 1);
-					$query->where('function_status', '=', 1);
-					$query->where('contract_status', '=', 1);
-					$query->where('spb_status', '=', 1);
-					$query->where('payment_status', '=', 1);
-					$query->where('spk_status', '=', 1);
-					$query->where('examination_status', '=', 1);
-					$query->where('resume_status', '=', 1);
-					$query->where('qa_status', '!=', 1);
+					$query->where(self::REGISTRATION_STATUS, '=', 1);
+					$query->where(self::FUNCTION_STATUS, '=', 1);
+					$query->where(self::CONTRACT_STATUS, '=', 1);
+					$query->where(self::SPB_STATUS, '=', 1);
+					$query->where(self::PAYMENT_STATUS, '=', 1);
+					$query->where(self::SPK_STATUS, '=', 1);
+					$query->where(self::EXAMINATION_STATUS, '=', 1);
+					$query->where(self::RESUME_STATUS, '=', 1);
+					$query->where(self::QA_STATUS, '!=', 1);
                     $status = 9;
                     break;
                 case 10:
-                    /*if ($request->has('comp_stat')){
-						$comp_stat = $request->get('comp_stat');
-						if($request->input('comp_stat') != 'all'){
-							$query->where('certificate_status', '=', $request->get('comp_stat'));
-						}else{
-							$query->where('certificate_status', '!=', 0);
-						}
-					}*/
-					$query->where('registration_status', '=', 1);
-					$query->where('function_status', '=', 1);
-					$query->where('contract_status', '=', 1);
-					$query->where('spb_status', '=', 1);
-					$query->where('payment_status', '=', 1);
-					$query->where('spk_status', '=', 1);
-					$query->where('examination_status', '=', 1);
-					$query->where('resume_status', '=', 1);
-					$query->where('qa_status', '=', 1);
-					$query->where('certificate_status', '!=', 1);
+					$query->where(self::REGISTRATION_STATUS, '=', 1);
+					$query->where(self::FUNCTION_STATUS, '=', 1);
+					$query->where(self::CONTRACT_STATUS, '=', 1);
+					$query->where(self::SPB_STATUS, '=', 1);
+					$query->where(self::PAYMENT_STATUS, '=', 1);
+					$query->where(self::SPK_STATUS, '=', 1);
+					$query->where(self::EXAMINATION_STATUS, '=', 1);
+					$query->where(self::RESUME_STATUS, '=', 1);
+					$query->where(self::QA_STATUS, '=', 1);
+					$query->where(self::CERTIFICATE_STATUS, '!=', 1);
                     $status = 10;
                     break;
                 
@@ -2400,17 +2174,15 @@ class ExaminationController extends Controller
             }
         }
 		
-		if ($request->has('before_date')){
-			$query->where('spk_date', '<=', $request->get('before_date'));
-			$before = $request->get('before_date');
+		if ($request->has(self::BEFORE_DATE)){
+			$query->where(self::SPK_DATE, '<=', $request->get(self::BEFORE_DATE));
 		}
 
-		if ($request->has('after_date')){
-			$query->where('spk_date', '>=', $request->get('after_date'));
-			$after = $request->get('after_date');
+		if ($request->has(self::AFTER_DATE)){
+			$query->where(self::SPK_DATE, '>=', $request->get(self::AFTER_DATE));
 		}
 
-		$data = $query->orderBy('updated_at', 'desc')->get();
+		$data = $query->orderBy(self::UPDATED_AT, 'desc')->get();
 
 		$examsArray = []; 
 
@@ -2444,15 +2216,15 @@ class ExaminationController extends Controller
 			'Tanggal Berlaku Perangkat',
 			'Nomor SPK',
 			'Tanggal SPK',
-			'Registrasi',
-			'Uji Fungsi',
-			'Tinjauan Kontrak',
+			self::REGISTRASI,
+			self::UJI_FUNGSI,
+			self::TINJAUAN_KONTRAK,
 			'SPB',
-			'Pembayaran',
-			'Pembuatan SPK',
-			'Pelaksanaan Uji',
-			'Laporan Uji',
-			'Sidang QA',
+			self::PEMBAYARAN,
+			self::PEMBUATAN_SPK,
+			self::PELAKSANAAN_UJI,
+			self::LAPORAN_UJI,
+			self::SIDANG_QA,
 			'Penerbitan Sertifikat',
 			'Total Biaya'
 		]; 
@@ -2461,123 +2233,133 @@ class ExaminationController extends Controller
 		// and append it to the payments array.
 		foreach ($data as $row) {
 			if( $row->registration_status == 1) {
-				$status_reg = 'Completed';
-			}else
+				$status_reg = self::COMPLETED;
+			}else{
 				if( $row->registration_status == -1) {
-					$status_reg = 'Not Completed';
+					$status_reg = self::NOT_COMPLETED;
 				}else{
-					$status_reg = 'On Progress';
+					$status_reg = self::ON_PROGRESS;
 				}
+			}
 				
 			if( $row->function_status == 1) {
-				$status_func = 'Completed';
-			}else
+				$status_func = self::COMPLETED;
+			}else{
 				if( $row->function_status == -1) {
-					$status_func = 'Not Completed';
+					$status_func = self::NOT_COMPLETED;
 				}else{
-					$status_func = 'On Progress';
+					$status_func = self::ON_PROGRESS;
 				}
+			}
 				
 			if( $row->contract_status == 1) {
-				$status_cont = 'Completed';
-			}else
+				$status_cont = self::COMPLETED;
+			}else{
 				if( $row->contract_status == -1) {
-					$status_cont = 'Not Completed';
+					$status_cont = self::NOT_COMPLETED;
 				}else{
-					$status_cont = 'On Progress';
+					$status_cont = self::ON_PROGRESS;
 				}
+			}
 				
 			if( $row->spb_status == 1) {
-				$status_spb = 'Completed';
-			}else
+				$status_spb = self::COMPLETED;
+			}else{
 				if( $row->spb_status == -1) {
-					$status_spb = 'Not Completed';
+					$status_spb = self::NOT_COMPLETED;
 				}else{
-					$status_spb = 'On Progress';
+					$status_spb = self::ON_PROGRESS;
 				}
+			}
 			
 			if( $row->payment_status == 1) {
-				$status_pay = 'Completed';
-			}else
+				$status_pay = self::COMPLETED;
+			}else{
 				if( $row->payment_status == -1) {
-					$status_pay = 'Not Completed';
+					$status_pay = self::NOT_COMPLETED;
 				}else{
-					$status_pay = 'On Progress';
+					$status_pay = self::ON_PROGRESS;
 				}
+			}
 				
 			if( $row->spk_status == 1) {
-				$status_spk = 'Completed';
-			}else
+				$status_spk = self::COMPLETED;
+			}else{
 				if( $row->spk_status == -1) {
-					$status_spk = 'Not Completed';
+					$status_spk = self::NOT_COMPLETED;
 				}else{
-					$status_spk = 'On Progress';
+					$status_spk = self::ON_PROGRESS;
 				}
+			}
 				
 			if( $row->examination_status == 1) {
-				$status_exam = 'Completed';
-			}else
+				$status_exam = self::COMPLETED;
+			}else{
 				if( $row->examination_status == -1) {
-					$status_exam = 'Not Completed';
+					$status_exam = self::NOT_COMPLETED;
 				}else{
-					$status_exam = 'On Progress';
+					$status_exam = self::ON_PROGRESS;
 				}
+			}
 				
 			if( $row->resume_status == 1) {
-				$status_resu = 'Completed';
-			}else
+				$status_resu = self::COMPLETED;
+			}else{
 				if( $row->resume_status == -1) {
-					$status_resu = 'Not Completed';
+					$status_resu = self::NOT_COMPLETED;
 				}else{
-					$status_resu = 'On Progress';
+					$status_resu = self::ON_PROGRESS;
 				}
+			}
 				
 			if( $row->qa_status == 1) {
-				$status_qa = 'Completed';
-			}else
+				$status_qa = self::COMPLETED;
+			}else{
 				if( $row->qa_status == -1) {
-					$status_qa = 'Not Completed';
+					$status_qa = self::NOT_COMPLETED;
 				}else{
-					$status_qa = 'On Progress';
+					$status_qa = self::ON_PROGRESS;
 				}
-				
+			}
+
 			if( $row->certificate_status == 1) {
-				$status_cert = 'Completed';
-			}else
+				$status_cert = self::COMPLETED;
+			}else{
 				if( $row->certificate_status == -1) {
-					$status_cert = 'Not Completed';
+					$status_cert = self::NOT_COMPLETED;
 				}else{
-					$status_cert = 'On Progress';
+					$status_cert = self::ON_PROGRESS;
 				}
+			}
 
 			/*Tahap Pengujian*/
 
 			if($row->registration_status != 1){
-				$tahap = 'Registrasi';
+				$tahap = self::REGISTRASI;
 			}
 			if($row->registration_status == 1 && $row->function_status != 1){
-				$tahap = 'Uji Fungsi';
+				$tahap = self::UJI_FUNGSI;
 			}
 			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status != 1){
-				$tahap = 'Tinjauan Kontrak';
+				$tahap = self::TINJAUAN_KONTRAK;
 			}
 			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status == 1 && $row->spb_status != 1){
 				$tahap = 'SPB';
 			}
 			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status == 1 && $row->spb_status == 1 && $row->payment_status != 1){
-				$tahap = 'Pembayaran';
+				$tahap = self::PEMBAYARAN;
 			}
 			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status == 1 && $row->spb_status == 1 && $row->payment_status == 1 && $row->spk_status != 1){
-				$tahap = 'Pembuatan SPK';
+				$tahap = self::PEMBUATAN_SPK;
 			}
 			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status == 1 && $row->spb_status == 1 && $row->payment_status == 1 && $row->spk_status == 1 && $row->examination_status != 1){
-				$tahap = 'Pelaksanaan Uji';
+				$tahap = self::PELAKSANAAN_UJI;
 			}
 			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status == 1 && $row->spb_status == 1 && $row->payment_status == 1 && $row->spk_status == 1 && $row->examination_status == 1 && $row->resume_status != 1){
-				$tahap = 'Laporan Uji';
+				$tahap = self::LAPORAN_UJI;
 			}
 			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status == 1 && $row->spb_status == 1 && $row->payment_status == 1 && $row->spk_status == 1 && $row->examination_status == 1 && $row->resume_status == 1 && $row->qa_status != 1){
-				$tahap = 'Sidang QA';
+				$tahap = self::SIDANG_QA;
 			}
 			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status == 1 && $row->spb_status == 1 && $row->payment_status == 1 && $row->spk_status == 1 && $row->examination_status == 1 && $row->resume_status == 1 && $row->qa_status == 1 && $row->certificate_status != 1){
 				$tahap = 'Penerbitan Sertifikat';
@@ -2630,12 +2412,12 @@ class ExaminationController extends Controller
 			if(!isset($row->company->siup_date)){
 				$siup_date = '';
 			}else{
-				$siup_date = date("d-m-Y", strtotime($row->company->siup_date));
+				$siup_date = date(self::DATE_FORMAT_3, strtotime($row->company->siup_date));
 			}
 			if(!isset($row->company->qs_certificate_date)){
 				$qs_certificate_date = '';
 			}else{
-				$qs_certificate_date = date("d-m-Y", strtotime($row->company->qs_certificate_date));
+				$qs_certificate_date = date(self::DATE_FORMAT_3, strtotime($row->company->qs_certificate_date));
 			}
 			if(!isset($row->company->name)){
 				$company_name = '';
@@ -2693,12 +2475,12 @@ class ExaminationController extends Controller
 			if(!isset($row->device->valid_from)){
 				$valid_from = '';
 			}else{
-				$valid_from = date("d-m-Y", strtotime($row->device->valid_from));
+				$valid_from = date(self::DATE_FORMAT_3, strtotime($row->device->valid_from));
 			}
 			if(!isset($row->device->valid_thru)){
 				$valid_thru = '';
 			}else{
-				$valid_thru = date("d-m-Y", strtotime($row->device->valid_thru));
+				$valid_thru = date(self::DATE_FORMAT_3, strtotime($row->device->valid_thru));
 			}
 			if(!isset($row->device->name)){
 				$device_name = '';
@@ -2740,7 +2522,7 @@ class ExaminationController extends Controller
 			if($row->spk_date==''){
 				$spk_date = '';
 			}else{
-				$spk_date = date("d-m-Y", strtotime($row->spk_date));
+				$spk_date = date(self::DATE_FORMAT_3, strtotime($row->spk_date));
 			}
 			$examsArray[] = [
 				"".$examType_name." (".$examType_desc.")",
@@ -2790,33 +2572,27 @@ class ExaminationController extends Controller
         $logs->action = "download_excel";   
         $logs->data = "";
         $logs->created_by = $currentUser->id;
-        $logs->page = "EXAMINATION";
+        $logs->page = self::EXAMINATION;
         $logs->save();
 
 		// Generate and return the spreadsheet
 		Excel::create('Data Pengujian', function($excel) use ($examsArray) {
-
-			// Set the spreadsheet title, creator, and description
-			// $excel->setTitle('Payments');
-			// $excel->setCreator('Laravel')->setCompany('WJ Gilmore, LLC');
-			// $excel->setDescription('payments file');
-
 			// Build the spreadsheet, passing in the payments array
 			$excel->sheet('sheet1', function($sheet) use ($examsArray) {
 				$sheet->fromArray($examsArray, null, 'A1', false, false);
 			});
-		})->export('xlsx'); 
+		})->export('xlsx');
 	}
 	
 	public function revisi($id)
     {
         $exam = Examination::where('id', $id)
                             ->with('user')
-                            ->with('company')
-                            ->with('examinationType')
-                            ->with('examinationLab')
-                            ->with('device')
-                            ->with('media')
+                            ->with(self::COMPANY)
+                            ->with(self::EXAMINATION_TYPE)
+                            ->with(self::EXAMINATION_LAB)
+                            ->with(self::DEVICS)
+                            ->with(self::MEDIA)
                             ->first();
 		$query_stels = "SELECT * FROM stels WHERE is_active = 1";
 		$data_stels = DB::select($query_stels);
@@ -2832,42 +2608,42 @@ class ExaminationController extends Controller
 
 			$device = Device::findOrFail($request->input('id_perangkat'));
 
-        if ($request->has('nama_perangkat')){
-            $device->name = $request->input('nama_perangkat');
+        if ($request->has(self::NAMA_PERANGKAT)){
+            $device->name = $request->input(self::NAMA_PERANGKAT);
         }
 			
-        if ($request->has('merk_perangkat')){
-            $device->mark = $request->input('merk_perangkat');
+        if ($request->has(self::MEREK_PERANGKAT)){
+            $device->mark = $request->input(self::MEREK_PERANGKAT);
         }
 			
-        if ($request->has('kapasitas_perangkat')){
-            $device->capacity = $request->input('kapasitas_perangkat');
+        if ($request->has(self::KAPASITAS_PERANGKAT)){
+            $device->capacity = $request->input(self::KAPASITAS_PERANGKAT);
         }
 			
-        if ($request->has('pembuat_perangkat')){
-            $device->manufactured_by = $request->input('pembuat_perangkat');
+        if ($request->has(self::PEMBUAT_PERANGKAT)){
+            $device->manufactured_by = $request->input(self::PEMBUAT_PERANGKAT);
         }
 			
-        if ($request->has('model_perangkat')){
-            $device->model = $request->input('model_perangkat');
+        if ($request->has(self::MODEL_PERANGKAT)){
+            $device->model = $request->input(self::MODEL_PERANGKAT);
         }
 			
-        if ($request->has('cmb-ref-perangkat')){
-            $device->test_reference = $request->input('cmb-ref-perangkat');
-			$ref_perangkat = $request->input('cmb-ref-perangkat');
+        if ($request->has(self::CMB_REF_PERANGKAT)){
+            $device->test_reference = $request->input(self::CMB_REF_PERANGKAT);
+			$ref_perangkat = $request->input(self::CMB_REF_PERANGKAT);
         }
 			
-        if ($request->has('ref_perangkat')){
-            $device->test_reference = $request->input('ref_perangkat');
-			$ref_perangkat = $request->input('ref_perangkat');
+        if ($request->has(self::REF_PERANGAKAT)){
+            $device->test_reference = $request->input(self::REF_PERANGAKAT);
+			$ref_perangkat = $request->input(self::REF_PERANGAKAT);
         }
 			
-        if ($request->has('sn_perangkat')){
-            $device->serial_number = $request->input('sn_perangkat');
+        if ($request->has(self::SN_PERANGKAT)){
+            $device->serial_number = $request->input(self::SN_PERANGKAT);
         }
 			
 		$device->updated_by = '".$currentUser->id."';
-		$device->updated_at = date("Y-m-d H:i:s");
+		$device->updated_at = date(self::DATE_FORMAT_1);
         
         try{
             $device->save();
@@ -2886,92 +2662,80 @@ class ExaminationController extends Controller
             	"from"=>$currentUser->id,
             	"to"=>$device->created_by,
             	"message"=>"Urel mengedit data pengujian",
-            	"url"=>"pengujian/".$request->input('id_exam')."/detail",
+            	"url"=>self::PENGUJIAN_LOC.$request->input(self::ID_EXAM).self::DETAIL_LOC,
             	"is_read"=>0,
-            	"created_at"=>date("Y-m-d H:i:s"),
-            	"updated_at"=>date("Y-m-d H:i:s")
+            	"created_at"=>date(self::DATE_FORMAT_1),
+            	"updated_at"=>date(self::DATE_FORMAT_1)
             );
 
 		  	$notification = new NotificationTable();
 $notification->id = Uuid::uuid4();
 	      	$notification->from = $data['from'];
 	      	$notification->to = $data['to'];
-	      	$notification->message = $data['message'];
+	      	$notification->message = $data[self::MESSAGE];
 	      	$notification->url = $data['url'];
-	      	$notification->is_read = $data['is_read'];
-	      	$notification->created_at = $data['created_at'];
-	      	$notification->updated_at = $data['updated_at'];
+	      	$notification->is_read = $data[self::IS_READ];
+	      	$notification->created_at = $data[self::CREATED_AT];
+	      	$notification->updated_at = $data[self::UPDATED_AT];
 	      	$notification->save();
 
 	      	$data['id'] = $notification->id;
 	      	event(new Notification($data));
 
 
-            Session::flash('message', 'Examination successfully updated');
+            Session::flash(self::MESSAGE, 'Examination successfully updated');
 			$this->sendEmailRevisi(
 				$request->input('exam_created'),
-				$request->input('exam_type'),
+				$request->input(self::EXAM_TYPE),
 				$request->input('exam_desc'),
 				$request->input('hidden_nama_perangkat'),
-				$request->input('nama_perangkat'),
+				$request->input(self::NAMA_PERANGKAT),
 				$request->input('hidden_merk_perangkat'),
-				$request->input('merk_perangkat'),
+				$request->input(self::MEREK_PERANGKAT),
 				$request->input('hidden_kapasitas_perangkat'),
-				$request->input('kapasitas_perangkat'),
+				$request->input(self::KAPASITAS_PERANGKAT),
 				$request->input('hidden_pembuat_perangkat'),
-				$request->input('pembuat_perangkat'),
+				$request->input(self::PEMBUAT_PERANGKAT),
 				$request->input('hidden_model_perangkat'),
-				$request->input('model_perangkat'),
+				$request->input(self::MODEL_PERANGKAT),
 				$request->input('hidden_ref_perangkat'),
 				$ref_perangkat,
 				$request->input('hidden_sn_perangkat'),
-				$request->input('sn_perangkat'),
+				$request->input(self::SN_PERANGKAT),
 				"emails.revisi", 
 				"Revisi Data Permohonan Uji"
 			);
-            return redirect('/admin/examination/'.$request->input('id_exam').'');
+            return redirect(self::ADMIN_EXAMINATION_LOC.$request->input(self::ID_EXAM).'');
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
-            return redirect('/admin/examination/revisi/'.$request->input('id_exam').'');
+            Session::flash(self::ERROR, 'Save failed');
+            return redirect('/admin/examination/revisi/'.$request->input(self::ID_EXAM).'');
         }
     }
 	
 	public function tanggalkontrak(Request $request)
     {
 		$client = new Client([
-			'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+			self::HEADERS => [self::CONTENT_TYPE => self::APPLICATION_HEADER],
 			// Base URI is used with relative requests
-			// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
-			'base_uri' => config("app.url_api_bsp"),
+			// self::BASE_URI => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+			self::BASE_URI => config(self::APP_URI_API_BSP),
 			// You can set any number of default request options.
-			'timeout'  => 60.0,
+			self::TIMEOUT  => 60.0,
 		]);
 		
 		$currentUser = Auth::user();
 		
 		$exam_id = $request->input('hide_id_exam');
-		// $testing_start = $request->input('testing_start');
-        // if($request->input('testing_start') == '' or $request->input('testing_start') == '0000-00-00' or $request->input('testing_start') == NULL){
-            // $testing_start_ina = '_ _ - _ _ - _ _ _ _';
-        // }else{
-            // $testing_start_ina = date('d-m-Y', strtotime($request->input('testing_start')));
-        // }
-		// $testing_end = $request->input('testing_end');
-        // if($request->input('testing_end') == '' or $request->input('testing_end') == '0000-00-00' or $request->input('testing_start') == NULL){
-            // $testing_end_ina = '_ _ - _ _ - _ _ _ _';
-        // }else{
-            // $testing_end_ina = date('d-m-Y', strtotime($request->input('testing_end')));
-        // }
-		$contract_date = $request->input('contract_date');
+		$contract_date = $request->input(self::CONTRACT_DATE);
 			$contract_date_ina_temp = strtotime($contract_date);
-			$contract_date_ina = date('j F Y', $contract_date_ina_temp);
+			$contract_date_ina = date(self::J_F_Y, $contract_date_ina_temp);
 		
 		$exam = Examination::where('id', $exam_id)
 				->with('user')
-				->with('company')
-				->with('device')
-				->with('examinationLab')
-				->with('Equipment')
+				->with(self::COMPANY)
+				->with(self::DEVICS)
+				->with(self::EXAMINATION_LAB)
+				->with(self::EQUIPMENT)
 				->first();
 			
 			try{
@@ -2979,10 +2743,10 @@ $notification->id = Uuid::uuid4();
 					SET 
 						contract_date = '".$contract_date."',
 						updated_by = '".$currentUser['attributes']['id']."',
-						updated_at = '".date('Y-m-d H:i:s')."'
+						updated_at = '".date(self::DATE_FORMAT_1)."'
 					WHERE id = '".$exam_id."'
 				";
-				$data_update = DB::update($query_update);
+				DB::update($query_update);
 				
 				$res_manager_lab = $client->get('user/getManagerLabInfo?labCode='.$exam->examinationLab->lab_code)->getBody();
 				$manager_lab = json_decode($res_manager_lab);
@@ -2994,14 +2758,14 @@ $notification->id = Uuid::uuid4();
 					if( strpos( $manager_lab->data[0]->name, "/" ) !== false ) {$manager_labs = urlencode(urlencode($manager_lab->data[0]->name));}
 						else{$manager_labs = $manager_lab->data[0]->name?: '-';}
 				}else{
-					$manager_labs = '...............................';
+					$manager_labs = self::DOTS;
 				}
 				
 				if(count($manager_urel->data) == 1){
 					if( strpos( $manager_urel->data[0]->name, "/" ) !== false ) {$manager_urels = urlencode(urlencode($manager_urel->data[0]->name));}
 						else{$manager_urels = $manager_urel->data[0]->name?: '-';}
 				}else{
-					$manager_urels = '...............................';
+					$manager_urels = self::DOTS;
 				}
 
 				$is_poh = 0;
@@ -3012,21 +2776,21 @@ $notification->id = Uuid::uuid4();
 						if( strpos( $general_setting_poh->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting_poh->value));}
 							else{$manager_urels = $general_setting_poh->value?: '-';}
 					}else{
-						$general_setting = GeneralSetting::where('code', 'manager_urel')->first();
+						$general_setting = GeneralSetting::where('code', self::MANAGER_UREL)->first();
 						if($general_setting){
 							if( strpos( $general_setting->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting->value));}
 								else{$manager_urels = $general_setting->value?: '-';}
 						}else{
-							$manager_urels = '...............................';
+							$manager_urels = self::DOTS;
 						}	
 					}
 				}else{
-					$general_setting = GeneralSetting::where('code', 'manager_urel')->first();
+					$general_setting = GeneralSetting::where('code', self::MANAGER_UREL)->first();
 					if($general_setting){
 						if( strpos( $general_setting->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting->value));}
 							else{$manager_urels = $general_setting->value?: '-';}
 					}else{
-						$manager_urels = '...............................';
+						$manager_urels = self::DOTS;
 					}
 				}
 				
@@ -3034,7 +2798,7 @@ $notification->id = Uuid::uuid4();
 					if( strpos( $exam->equipment[0]->pic, "/" ) !== false ) {$pic = urlencode(urlencode($exam->equipment[0]->pic));}
 						else{$pic = $exam->equipment[0]->pic?: '-';}
 				}else{
-					$pic = '...............................';
+					$pic = self::DOTS;
 				}
 				
 				$data = Array([
@@ -3046,29 +2810,25 @@ $notification->id = Uuid::uuid4();
 					'alamat_perusahaan' => $exam->company->address,
 					'plg_id' => $exam->company->plg_id,
 					'nib' => $exam->company->nib,
-					'nama_perangkat' => $exam->device->name,
+					self::NAMA_PERANGKAT => $exam->device->name,
 					'merek_perangkat' => $exam->device->mark,
-					'model_perangkat' => $exam->device->model,
-					'kapasitas_perangkat' => $exam->device->capacity,
+					self::MODEL_PERANGKAT => $exam->device->model,
+					self::KAPASITAS_PERANGKAT => $exam->device->capacity,
 					'referensi_perangkat' => $exam->device->test_reference,
-					'pembuat_perangkat' => $exam->device->manufactured_by,
+					self::PEMBUAT_PERANGKAT => $exam->device->manufactured_by,
 					'is_loc_test' => $exam->is_loc_test,
-					'contract_date' => $contract_date_ina,
+					self::CONTRACT_DATE => $contract_date_ina,
 					'manager_lab' => $manager_labs,
-					'manager_urel' => $manager_urels,
+					self::MANAGER_UREL => $manager_urels,
 					'pic' => $pic,
 					'is_poh' => $is_poh
 				]);
 				
 				$request->session()->put('key_contract', $data);
-				
-				Session::flash('message', 'Contract successfully created');
-				// $this->sendProgressEmail("Pengujian atas nama ".$user_name." dengan alamat email ".$user_email.", telah melakukan proses Upload Bukti Pembayaran");
-				// return back();
+				Session::flash(self::MESSAGE, 'Contract successfully created');
 				echo 1;
 			} catch(Exception $e){
-				Session::flash('error', 'Contract failed');
-				// return back();
+				Session::flash(self::ERROR, 'Contract failed');
 				echo 0;
 			}
     }
@@ -3078,12 +2838,12 @@ $notification->id = Uuid::uuid4();
 		$exam_id = $request->input('hide_id_exam');
 		$exam = Examination::where('id', $exam_id)
 				->with('user')
-				->with('device')
-				->with('media')
+				->with(self::DEVICS)
+				->with(self::MEDIA)
 				->first();
 			$no_laporan = '-';
 			foreach ($exam->media as $item) {
-				if($item->name == 'Laporan Uji' && $item->no != ''){
+				if($item->name == self::LAPORAN_UJI && $item->no != ''){
 					$no_laporan = $item->no;
 				}
 			}
@@ -3092,25 +2852,22 @@ $notification->id = Uuid::uuid4();
 				$data = Array([
 					'nama_pemohon' => $exam->user->name,
 					'alamat_pemohon' => $exam->user->address,
-					'nama_perangkat' => $exam->device->name,
+					self::NAMA_PERANGKAT => $exam->device->name,
 					'merek_perangkat' => $exam->device->mark,
-					'model_perangkat' => $exam->device->model,
-					'kapasitas_perangkat' => $exam->device->capacity,
+					self::MODEL_PERANGKAT => $exam->device->model,
+					self::KAPASITAS_PERANGKAT => $exam->device->capacity,
 					'referensi_perangkat' => $exam->device->test_reference,
-					'pembuat_perangkat' => $exam->device->manufactured_by,
+					self::PEMBUAT_PERANGKAT => $exam->device->manufactured_by,
 					'cert_number' => $exam->device->cert_number,
 					'no_laporan' => $no_laporan
 				]);
 				
 				$request->session()->put('key_tanda_terima', $data);
 				
-				Session::flash('message', 'Tanda Terima successfully created');
-				// $this->sendProgressEmail("Pengujian atas nama ".$user_name." dengan alamat email ".$user_email.", telah melakukan proses Upload Bukti Pembayaran");
-				// return back();
+				Session::flash(self::MESSAGE, 'Tanda Terima successfully created');
 				echo 1;
 			} catch(Exception $e){
-				Session::flash('error', 'Tanda Terima failed');
-				// return back();
+				Session::flash(self::ERROR, 'Tanda Terima failed');
 				echo 0;
 			}
     }
@@ -3140,9 +2897,9 @@ $notification->id = Uuid::uuid4();
         $data = User::findOrFail($user);
 		
         Mail::send($message, array(
-			'user_name' => $data->name,
-			'exam_type' => $exam_type,
-			'exam_type_desc' => $exam_type_desc,
+			self::USER_NAME => $data->name,
+			self::EXAM_TYPE => $exam_type,
+			self::EXAM_TYPE_DESC => $exam_type_desc,
 			'perangkat1' => $perangkat1,
 			'perangkat2' => $perangkat2,
 			'merk_perangkat1' => $merk_perangkat1,
@@ -3169,12 +2926,12 @@ $notification->id = Uuid::uuid4();
         $data = User::findOrFail($user);
 		
         Mail::send($message, array(
-			'user_name' => $data->name,
-			'dev_name' => $dev_name,
-			'exam_type' => $exam_type,
-			'exam_type_desc' => $exam_type_desc,
+			self::USER_NAME => $data->name,
+			self::DEV_NAME => $dev_name,
+			self::EXAM_TYPE => $exam_type,
+			self::EXAM_TYPE_DESC => $exam_type_desc,
 			'tahap' => $tahap,
-			'keterangan' => $keterangan
+			self::KETERANGAN => $keterangan
 			), function ($m) use ($data,$subject) {
             $m->to($data->email)->subject($subject);
         });
@@ -3188,7 +2945,7 @@ $notification->id = Uuid::uuid4();
 		$logs_a_exam = NULL;
 		$logs_a_device = NULL;
 		
-		$exam_attach = ExaminationAttach::where('examination_id', '=' ,''.$id.'')->get();
+		$exam_attach = ExaminationAttach::where(self::EXAMINATION_ID, '=' ,''.$id.'')->get();
 		$exam = Examination::find($id);
 			$device_id = $exam['device_id'];
 		$device = Device::find($device_id);
@@ -3196,32 +2953,32 @@ $notification->id = Uuid::uuid4();
 			/* DELETE SPK FROM OTR */
 			if($exam->spk_code){
 				$client = new Client([
-					'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+					self::HEADERS => [self::CONTENT_TYPE => self::APPLICATION_HEADER],
 					// Base URI is used with relative requests
-					// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
-					'base_uri' => config("app.url_api_bsp"),
+					// self::BASE_URI => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+					self::BASE_URI => config(self::APP_URI_API_BSP),
 					// You can set any number of default request options.
-					'timeout'  => 60.0,
+					self::TIMEOUT  => 60.0,
 				]);
 				
-				$res_delete_spk = $client->get('spk/delete?examId='.$exam->id.'&spkNumber='.$exam->spk_code)->getBody();
+				$res_delete_spk = $client->get('spk/delete?examId='.$exam->id.self::SPK_NUMBER_URI.$exam->spk_code)->getBody();
 				$delete_spk = json_decode($res_delete_spk);
-				if($delete_spk->status == false){
-					Session::flash('error', $delete_spk->message.' (message from OTR)');
-					return redirect('/admin/examination');
+				if(!$delete_spk->status){
+					Session::flash(self::ERROR, $delete_spk->message.' (message from OTR)');
+					return redirect(self::ADMIN_EXAMINATION);
 				}
 			}
 			/* END DELETE SPK FROM OTR */
 			try{
 				$logs_a_exam = $exam;
 				$logs_a_device = $device;
-				Income::where('reference_id', '=' ,''.$id.'')->delete();
-				Questioner::where('examination_id', '=' ,''.$id.'')->delete();
-				Equipment::where('examination_id', '=' ,''.$id.'')->delete();
-				EquipmentHistory::where('examination_id', '=' ,''.$id.'')->delete();
-				ExaminationHistory::where('examination_id', '=' ,''.$id.'')->delete();
-				ExaminationAttach::where('examination_id', '=' ,''.$id.'')->delete();
-				QuestionerDynamic::where('examination_id', '=' ,''.$id.'')->delete();
+				Income::where(self::REFERENCE_ID, '=' ,''.$id.'')->delete();
+				Questioner::where(self::EXAMINATION_ID, '=' ,''.$id.'')->delete();
+				Equipment::where(self::EXAMINATION_ID, '=' ,''.$id.'')->delete();
+				EquipmentHistory::where(self::EXAMINATION_ID, '=' ,''.$id.'')->delete();
+				ExaminationHistory::where(self::EXAMINATION_ID, '=' ,''.$id.'')->delete();
+				ExaminationAttach::where(self::EXAMINATION_ID, '=' ,''.$id.'')->delete();
+				QuestionerDynamic::where(self::EXAMINATION_ID, '=' ,''.$id.'')->delete();
 				$exam->delete();
 				$device->delete();
 				
@@ -3238,11 +2995,11 @@ $notification->id = Uuid::uuid4();
 				$logs->data = $logs_a_exam.$logs_a_device;
 				$logs->save();
 
-				Session::flash('message', 'Examination successfully deleted');
-				return redirect('/admin/examination');
+				Session::flash(self::MESSAGE, 'Examination successfully deleted');
+				return redirect(self::ADMIN_EXAMINATION);
 			}catch (Exception $e){
-				Session::flash('error', 'Delete failed');
-				return redirect('/admin/examination');
+				Session::flash(self::ERROR, 'Delete failed');
+				return redirect(self::ADMIN_EXAMINATION);
 			}
 		}
 	}
@@ -3257,8 +3014,8 @@ $notification->id = Uuid::uuid4();
 			if ($exam){
 				try{
 					$logs_a_exam = $exam;
-					Equipment::where('examination_id', '=' ,''.$exam->id.'')->delete();
-					EquipmentHistory::where('examination_id', '=' ,''.$exam->id.'')->delete();
+					Equipment::where(self::EXAMINATION_ID, '=' ,''.$exam->id.'')->delete();
+					EquipmentHistory::where(self::EXAMINATION_ID, '=' ,''.$exam->id.'')->delete();
 					
 					$exam->cust_test_date = NULL;
 					$exam->deal_test_date = NULL;
@@ -3269,37 +3026,27 @@ $notification->id = Uuid::uuid4();
 					$exam->function_test_date_approval = 0;
 					$exam->function_test_status_detail = NULL;
 					$exam->updated_by = $currentUser->id;
-					$exam->updated_at = date('Y-m-d H:i:s');
+					$exam->updated_at = date(self::DATE_FORMAT_1);
 					$exam->location = 0;
 					
 					$exam->save();
 					
 					$exam_hist = new ExaminationHistory;
 					$exam_hist->examination_id = $exam->id;
-					$exam_hist->date_action = date('Y-m-d H:i:s');
-					$exam_hist->tahap = 'Uji Fungsi';
-					$exam_hist->status = 'Not Completed';
+					$exam_hist->date_action = date(self::DATE_FORMAT_1);
+					$exam_hist->tahap = self::UJI_FUNGSI;
+					$exam_hist->status = self::NOT_COMPLETED;
 					$exam_hist->keterangan = 'Data Uji Fungsi direset oleh Super Admin URel';
 					$exam_hist->created_by = $currentUser->id;
-					$exam_hist->created_at = date('Y-m-d H:i:s');
+					$exam_hist->created_at = date(self::DATE_FORMAT_1);
 					$exam_hist->save();
-					
-					// $data= array( 
-						// "from"=>"admin",
-						// "to"=>$exam->created_by,
-						// "message"=>"Hasil Uji Fungsi lain-lain",
-						// "url"=>"pengujian/".$exam->id."/detail",
-						// "is_read"=>0,
-						// "created_at"=>date("Y-m-d H:i:s"),
-						// "updated_at"=>date("Y-m-d H:i:s")
-					// );
 
 					$logs = new Logs;
 					$logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
 					$logs->action = "Reset Uji Fungsi";
 					$logs->data = $exam;
 					$logs->created_by = $currentUser->id;
-					$logs->page = "EXAMINATION";
+					$logs->page = self::EXAMINATION;
 					$logs->save();
 
 					$logs_a = new LogsAdministrator;
@@ -3311,11 +3058,11 @@ $notification->id = Uuid::uuid4();
 					$logs_a->data = $logs_a_exam;
 					$logs_a->save();
 					
-					Session::flash('message', 'Function Test successfully reset');
-					return redirect('/admin/examination/'.$exam->id.'/edit');
+					Session::flash(self::MESSAGE, 'Function Test successfully reset');
+					return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
 				}catch (Exception $e){
-					Session::flash('error', 'Reset failed');
-					return redirect('/admin/examination/'.$exam->id.'/edit');
+					Session::flash(self::ERROR, 'Reset failed');
+					return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
 				}
 			}
 		}
@@ -3333,20 +3080,11 @@ $notification->id = Uuid::uuid4();
     }
 	
 	public function generateSPKCodeManual(Request $request) {
-		$gen_spk_code = $this->generateSPKCode($request->input('lab_code'),$request->input('exam_type'),$request->input('year'));
-		return $gen_spk_code;
+		return $this->generateSPKCode($request->input('lab_code'),$request->input(self::EXAM_TYPE),$request->input('year'));
     }
 	
 	public function generateSPKCode($a,$b,$c) {
-		// $query = "
-			// SELECT 
-			// SUBSTRING_INDEX(SUBSTRING_INDEX(spk_code,'/',2),'/',-1) + 1 AS last_numb
-			// FROM examinations WHERE 
-			// SUBSTRING_INDEX(spk_code,'/',1) = '".$a."' AND
-			// SUBSTRING_INDEX(SUBSTRING_INDEX(spk_code,'/',-2),'/',1) = '".$b."' AND
-			// SUBSTRING_INDEX(spk_code,'/',-1) = '".$c."'
-			// ORDER BY last_numb DESC LIMIT 1
-		// ";
+
 		$query = "
 			SELECT 
 			SUBSTRING_INDEX(SUBSTRING_INDEX(spk_code,'/',2),'/',-1) + 1 AS last_numb
@@ -3356,7 +3094,7 @@ $notification->id = Uuid::uuid4();
 			ORDER BY last_numb DESC LIMIT 1
 		";
 		$data = DB::select($query);
-		if (count($data) == 0){
+		if (!count($data)){
 			return ''.$a.'/001/'.$b.'/'.$c.'';
 		}
 		else{
@@ -3381,42 +3119,42 @@ $notification->id = Uuid::uuid4();
 			ORDER BY last_numb DESC LIMIT 1
 		";
 		$data = DB::select($query);
-		if (count($data) == 0){
+		if (!count($data)){
 			return '001/TTH-02/'.$thisYear.'';
 		}
 		else{
 			$last_numb = $data[0]->last_numb;
 			if($last_numb < 10){
-				return '00'.$last_numb.'/TTH-02/'.$thisYear.'';
+				return '00'.$last_numb.self::TTH_02.$thisYear.'';
 			}
 			else if($last_numb < 100){
-				return '0'.$last_numb.'/TTH-02/'.$thisYear.'';
+				return '0'.$last_numb.self::TTH_02.$thisYear.'';
 			}
 			else{
-				return ''.$last_numb.'/TTH-02/'.$thisYear.'';
+				return ''.$last_numb.self::TTH_02.$thisYear.'';
 			}
 		}
     }
 	
 	public function generateSPBParam(Request $request) {
-		$request->session()->put('key_exam_id_for_generate_spb', $request->input('exam_id'));
-		$request->session()->put('key_spb_number_for_generate_spb', $request->input('spb_number'));
-		$request->session()->put('key_spb_date_for_generate_spb', $request->input('spb_date'));
+		$request->session()->put('key_exam_id_for_generate_spb', $request->input(self::EXAM_ID));
+		$request->session()->put('key_spb_number_for_generate_spb', $request->input(self::SPB_NUMBER));
+		$request->session()->put('key_spb_date_for_generate_spb', $request->input(self::SPB_DATE));
 		echo 1;
     }
 	
 	public function generateEquipParam(Request $request) {
-		$request->session()->put('key_exam_id_for_generate_equip_masuk', $request->input('exam_id'));
+		$request->session()->put('key_exam_id_for_generate_equip_masuk', $request->input(self::EXAM_ID));
 		$request->session()->put('key_in_equip_date_for_generate_equip_masuk', $request->input('in_equip_date'));
 		echo 1;
     }
 	
 	public function generateKuitansiParam(Request $request) {
 		$kode = $this->generateKuitansiManual();
-		$exam_id = $request->input('exam_id');
+		$exam_id = $request->input(self::EXAM_ID);
 		$exam = Examination::where('id', $exam_id)
-					->with('device')
-					->with('company')
+					->with(self::DEVICS)
+					->with(self::COMPANY)
 					->first();
 		$request->session()->put('key_jenis_for_kuitansi', 1);
 		$request->session()->put('key_id_for_kuitansi', $exam_id);
@@ -3429,7 +3167,7 @@ $notification->id = Uuid::uuid4();
 	
 	public function generateKuitansiParamSTEL(Request $request) {
 		$kode = $this->generateKuitansiManual();
-		$exam_id = $request->input('exam_id');
+		$exam_id = $request->input(self::EXAM_ID);
 		$query_stels = "SELECT DISTINCT
 				s. code AS stel,
 				ss. cust_price_payment,
@@ -3465,12 +3203,12 @@ $notification->id = Uuid::uuid4();
 	public function generateSPB(Request $request) {
 		$exam_id = $request->session()->get('key_exam_id_for_generate_spb');
 		$spb_number = $request->session()->get('key_spb_number_for_generate_spb');
-		if($spb_number == "" or $spb_number == null){
+		if($spb_number == "" || $spb_number == null){
 			$spb_number = $this->generateSPBNumber();
 		}
 		$spb_date = $request->session()->get('key_spb_date_for_generate_spb');
 		$exam = Examination::where('id', $exam_id)
-					->with('device')
+					->with(self::DEVICS)
 					->first()
 		;
 		if($exam->examination_type_id == 2){
@@ -3482,7 +3220,7 @@ $notification->id = Uuid::uuid4();
 			$query_price = "SELECT price FROM examination_charges WHERE stel LIKE '%".$exam->device->test_reference."%'";
 		}
 		$price = DB::select($query_price);
-		if(count($price) == 0){
+		if(!count($price)){
 			$price = 0;
 		}else{
 			$price = $price[0]->price;
@@ -3490,13 +3228,11 @@ $notification->id = Uuid::uuid4();
 		
 		$query_stels = "SELECT * FROM examination_charges ORDER BY device_name";
 		$data_stels = DB::select($query_stels);
-			
-		// setlocale(LC_MONETARY, 'it_IT');
-		// $price = number_format($price[0]->price, 0, ',', '.');
+
 		return view('admin.examination.spb')
-					->with('exam_id', $exam_id)
-					->with('spb_number', $spb_number)
-					->with('spb_date', $spb_date)
+					->with(self::EXAM_ID, $exam_id)
+					->with(self::SPB_NUMBER, $spb_number)
+					->with(self::SPB_DATE, $spb_date)
 					->with('data', $exam)
 					->with('price', $price)
 					->with('data_stels', $data_stels)
@@ -3504,24 +3240,6 @@ $notification->id = Uuid::uuid4();
     }
 	
 	public function generateSPBData(Request $request) {
-		/*$client = new Client([
-			'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
-			// Base URI is used with relative requests
-			// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
-			'base_uri' => config("app.url_api_bsp"),
-			// You can set any number of default request options.
-			'timeout'  => 60.0,
-		]);
-		*/
-		/*$res_manager_urel = $client->get('user/getManagerLabInfo?groupId=MU')->getBody();
-		$manager_urel = json_decode($res_manager_urel);
-
-		if(count($manager_urel->data) == 1){
-			if( strpos( $manager_urel->data[0]->name, "/" ) !== false ) {$manager_urels = urlencode(urlencode($manager_urel->data[0]->name));}
-				else{$manager_urels = $manager_urel->data[0]->name?: '-';}
-		}else{
-			$manager_urels = '...............................';
-		}*/
 		$is_poh = 0;
 		$general_setting_poh = GeneralSetting::where('code', 'poh_manager_urel')->first();
 		if($general_setting_poh){
@@ -3530,37 +3248,37 @@ $notification->id = Uuid::uuid4();
 				if( strpos( $general_setting_poh->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting_poh->value));}
 					else{$manager_urels = $general_setting_poh->value?: '-';}
 			}else{
-				$general_setting = GeneralSetting::where('code', 'manager_urel')->first();
+				$general_setting = GeneralSetting::where('code', self::MANAGER_UREL)->first();
 				if($general_setting){
 					if( strpos( $general_setting->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting->value));}
 						else{$manager_urels = $general_setting->value?: '-';}
 				}else{
-					$manager_urels = '...............................';
+					$manager_urels = self::DOTS;
 				}	
 			}
 		}else{
-			$general_setting = GeneralSetting::where('code', 'manager_urel')->first();
+			$general_setting = GeneralSetting::where('code', self::MANAGER_UREL)->first();
 			if($general_setting){
 				if( strpos( $general_setting->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting->value));}
 					else{$manager_urels = $general_setting->value?: '-';}
 			}else{
-				$manager_urels = '...............................';
+				$manager_urels = self::DOTS;
 			}
 		}
 		
-		if($this->cekSPBNumber($request->input('spb_number')) > 0){
+		if($this->cekSPBNumber($request->input(self::SPB_NUMBER)) > 0){
 			echo 2; //SPB Number Exists
 		}else{
-			$exam_id = $request->input('exam_id');
-			$spb_number = $request->input('spb_number');
-			$spb_date = $request->input('spb_date');
+			$exam_id = $request->input(self::EXAM_ID);
+			$spb_number = $request->input(self::SPB_NUMBER);
+			$spb_date = $request->input(self::SPB_DATE);
 			$arr_nama_perangkat = $request->input('arr_nama_perangkat');
 			$arr_biaya = $request->input('arr_biaya');
 			$exam = Examination::where('id', $exam_id)
 						->with('user')
-						->with('company')
-						->with('device')
-						->with('examinationType')
+						->with(self::COMPANY)
+						->with(self::DEVICS)
+						->with(self::EXAMINATION_TYPE)
 						->first()
 			;
 /* Kirim Draft ke TPN */
@@ -3615,13 +3333,9 @@ $notification->id = Uuid::uuid4();
 	            ]
 	        ];
 	        $purchase = $this->api_purchase($data_draft);
-
-	        /*$PO_ID = $request->session()->get('PO_ID_from_TPN') ? $request->session()->get('PO_ID_from_TPN') : ($purchase && $purchase->status ? $purchase->data->_id : null);
-            $request->session()->put('PO_ID_from_TPN', $PO_ID);*/
 	        $total_price = $biaya;
             $PO_ID = $purchase && $purchase->status ? $purchase->data->_id : null;
             $unique_code = $purchase && $purchase->status ? $purchase->data->unique_code : '0';
-            // $request->session()->put('unique_code_from_TPN', $unique_code);
             $tax = floor(0.1*($total_price + $unique_code));
             $final_price = $total_price + $unique_code + $tax;
             array_push($arr_nama_perangkat, 'Unique Code');
@@ -3629,13 +3343,13 @@ $notification->id = Uuid::uuid4();
 /* END Kirim Draft ke TPN */
 			$data = []; 
 			$data[] = [
-				'spb_number' => $spb_number,
-				'spb_date' => $spb_date,
+				self::SPB_NUMBER => $spb_number,
+				self::SPB_DATE => $spb_date,
 				'arr_nama_perangkat' => $arr_nama_perangkat,
 				'arr_biaya' => $arr_biaya,
 				'unique_code' => $unique_code,
 				'exam' => $exam,
-				'manager_urel' => $manager_urels,
+				self::MANAGER_UREL => $manager_urels,
 				'is_poh' => $is_poh
 			];
 
@@ -3646,21 +3360,19 @@ $notification->id = Uuid::uuid4();
 
     public function api_purchase($data){
         $client = new Client([
-            'headers' => ['Content-Type' => 'application/json', 
-                            'Authorization' => config("app.gateway_tpn_2")
+            self::HEADERS => [self::CONTENT_TYPE => self::JSON_HEADER, 
+                            self::AUTHORIZATION => config(self::APP_GATEWAY_TPN_2)
                         ],
-            'base_uri' => config("app.url_api_tpn"),
-            'timeout'  => 60.0,
-            'http_errors' => false,
+            self::BASE_URI => config(self::APP_URI_API_TPN),
+            self::TIMEOUT  => 60.0,
+            self::HTTP_ERRORS => false,
             'verify' => false
         ]);
         try {
             
             $params['json'] = $data;
             $res_purchase = $client->post("v1/draftbillings", $params)->getBody();
-            $purchase = json_decode($res_purchase);
-
-            return $purchase;
+            return json_decode($res_purchase);
         } catch(Exception $e){
             return null;
         }
@@ -3668,34 +3380,33 @@ $notification->id = Uuid::uuid4();
 	
 	function cekSPBNumber($spb_number)
     {
-		$exam = Examination::where('spb_number','=',''.$spb_number.'')->get();
+		$exam = Examination::where(self::SPB_NUMBER,'=',''.$spb_number.'')->get();
 		return count($exam);
     }
 	
 	function cekRefID($exam_id)
     {
-		$income = Income::where('reference_id','=',''.$exam_id.'')->get();
+		$income = Income::where(self::REFERENCE_ID,'=',''.$exam_id.'')->get();
 		return count($income);
     }
 	
 	function cetakUjiFungsi($id)
     {
 		$client = new Client([
-			'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+			self::HEADERS => [self::CONTENT_TYPE => self::APPLICATION_HEADER],
 			// Base URI is used with relative requests
-			// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
-			'base_uri' => config("app.url_api_bsp"),
+			// self::BASE_URI => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+			self::BASE_URI => config(self::APP_URI_API_BSP),
 			// You can set any number of default request options.
-			'timeout'  => 60.0,
+			self::TIMEOUT  => 60.0,
 		]);
-		// $res_function_test = $client->get('functionTest/getResultData?id='.$id)->getBody();
 		$res_function_test = $client->get('functionTest/getFunctionTestInfo?id='.$id)->getBody();
 		$function_test = json_decode($res_function_test);
 		
 		$data = Examination::where('id','=',$id)
-		->with('Company')
-		->with('Device')
-		->with('Equipment')
+		->with(self::COMPANY)
+		->with(self::DEVICS)
+		->with(self::EQUIPMENT)
 		->get();
 		if( strpos( $data[0]->function_test_NO, "/" ) !== false ) {$no_reg = urlencode(urlencode($data[0]->function_test_NO));}
 			else{$no_reg = $data[0]->function_test_NO?: '-';}
@@ -3738,11 +3449,11 @@ $notification->id = Uuid::uuid4();
 		}
 		if($data[0]->function_test_date_approval == 1){
 			if($data[0]->function_date != null){
-				if( strpos( $data[0]->function_date, "/" ) !== false ) {$tgl_uji_fungsi = urlencode(urlencode(date("j F Y", strtotime($data[0]->function_date))));}
-					else{$tgl_uji_fungsi = date("j F Y", strtotime($data[0]->function_date))?: '-';}
+				if( strpos( $data[0]->function_date, "/" ) !== false ) {$tgl_uji_fungsi = urlencode(urlencode(date(self::J_F_Y, strtotime($data[0]->function_date))));}
+					else{$tgl_uji_fungsi = date(self::J_F_Y, strtotime($data[0]->function_date))?: '-';}
 			}else{
-				if( strpos( $data[0]->deal_test_date, "/" ) !== false ) {$tgl_uji_fungsi = urlencode(urlencode(date("j F Y", strtotime($data[0]->deal_test_date))));}
-					else{$tgl_uji_fungsi = date("j F Y", strtotime($data[0]->deal_test_date))?: '-';}
+				if( strpos( $data[0]->deal_test_date, "/" ) !== false ) {$tgl_uji_fungsi = urlencode(urlencode(date(self::J_F_Y, strtotime($data[0]->deal_test_date))));}
+					else{$tgl_uji_fungsi = date(self::J_F_Y, strtotime($data[0]->deal_test_date))?: '-';}
 			}
 		}else{
 			$tgl_uji_fungsi = '-';
@@ -3758,8 +3469,8 @@ $notification->id = Uuid::uuid4();
 			'device_manufactured_by' => $device_manufactured_by,
 			'device_model' => $device_model,
 			'device_serial_number' => $device_serial_number,
-			'status' => $function_test_TE,
-			'catatan' => $catatan,
+			self::STATUS => $function_test_TE,
+			self::CATATAN => $catatan,
 			'tgl_uji_fungsi' => $tgl_uji_fungsi,
 			'nik_te' => $nik_te,
 			'name_te' => $name_te,
@@ -3769,24 +3480,13 @@ $notification->id = Uuid::uuid4();
 	
 	function cetakFormBarang($id, Request $request)
     {
-		/* $client = new Client([
-			// Base URI is used with relative requests
-			'base_uri' => 'http://ptbsp.ddns.net:13280/RevitalisasiOTR/api/',
-			// 'base_uri' => config("app.url_api_bsp"),
-			// You can set any number of default request options.
-			'timeout'  => 60.0,
-		]);
-		// $res_function_test = $client->get('functionTest/getResultData?id='.$id)->getBody();
-		$res_function_test = $client->get('functionTest/getResultData?id=3babffdd-6af1-4be7-a7bb-07da626c1351')->getBody();
-		$function_test = json_decode($res_function_test);
-		*/
 		$data = Examination::where('id','=',$id)
-		->with('ExaminationType')
-		->with('ExaminationLab')
-		->with('Company')
+		->with(self::EXAMINATION_TYPE)
+		->with(self::EXAMINATION_LAB)
+		->with(self::COMPANY)
 		->with('User')
-		->with('Device')
-		->with('Equipment')
+		->with(self::DEVICS)
+		->with(self::EQUIPMENT)
 		->get();
 		if(isset($data[0]->equipment[0]->no)){
 			if ($data[0]->equipment[0]->no) {
@@ -3797,12 +3497,12 @@ $notification->id = Uuid::uuid4();
 					SET no = '".$kode_barang."'
 					WHERE examination_id = '".$id."'
 				";
-				$data_update = DB::update($query_update);
+				DB::update($query_update);
 			}
 		}else{
 			$kode_barang = '';
-			Session::flash('error', 'Undefined Equipment(s), please put equipment(s) first');
-            return redirect('/admin/examination/'.$id.'/edit');
+			Session::flash(self::ERROR, 'Undefined Equipment(s), please put equipment(s) first');
+            return redirect(self::ADMIN_EXAMINATION_LOC.$id.self::EDIT_LOC);
 		}
 		$kode_barang = urlencode(urlencode($kode_barang));
 		if( strpos( $data[0]->company->name, "/" ) !== false ) {$company_name = urlencode(urlencode($data[0]->company->name));}
@@ -3831,8 +3531,8 @@ $notification->id = Uuid::uuid4();
 			else{$exam_type = $data[0]->ExaminationType->name?: '-';}
 		if( strpos( $data[0]->ExaminationType->description, "/" ) !== false ) {$exam_type_desc = urlencode(urlencode($data[0]->ExaminationType->description));}
 			else{$exam_type_desc = $data[0]->ExaminationType->description?: '-';}
-		if( strpos( $data[0]->contract_date, "/" ) !== false ) {$timestamp = strtotime($data[0]->contract_date);$contract_date = urlencode(urlencode(date('d-m-Y', $timestamp)));}
-			else{$timestamp = strtotime($data[0]->contract_date);$contract_date = date('d-m-Y', $timestamp)?: '-';}
+		if( strpos( $data[0]->contract_date, "/" ) !== false ) {$timestamp = strtotime($data[0]->contract_date);$contract_date = urlencode(urlencode(date(self::DATE_FORMAT_3, $timestamp)));}
+			else{$timestamp = strtotime($data[0]->contract_date);$contract_date = date(self::DATE_FORMAT_3, $timestamp)?: '-';}
 		
 		$request->session()->put('key_exam_for_equipment', $data[0]->equipment);
 		return \Redirect::route('cetakBuktiPenerimaanPerangkat', [
@@ -3848,31 +3548,31 @@ $notification->id = Uuid::uuid4();
 			'device_manufactured_by' => $device_manufactured_by,
 			'device_model' => $device_model,
 			'device_serial_number' => $device_serial_number,
-			'exam_type' => $exam_type,
-			'exam_type_desc' => $exam_type_desc,
-			'contract_date' => $contract_date
+			self::EXAM_TYPE => $exam_type,
+			self::EXAM_TYPE_DESC => $exam_type_desc,
+			self::CONTRACT_DATE => $contract_date
 		]);
     }
 	
 	public function generateEquip(Request $request)
     {
 		$exam_id = $request->session()->get('key_exam_id_for_generate_equip_masuk');
-		$equipment = Equipment::where('examination_id', $exam_id)->get();
-        $location = Equipment::where('examination_id', $exam_id)->first();
-        $examination = DB::table('examinations')
+		$equipment = Equipment::where(self::EXAMINATION_ID, $exam_id)->get();
+        $location = Equipment::where(self::EXAMINATION_ID, $exam_id)->first();
+        $examination = DB::table(self::EXAMINATIONS)
 			->join('devices', 'examinations.device_id', '=', 'devices.id')
 			->select(
-					'examinations.id',
+					self::EXAMINATIONS_ID,
 					'devices.name',
 					'devices.model'
 					)
-            ->where('examinations.id', $exam_id)
+            ->where(self::EXAMINATIONS_ID, $exam_id)
 			->orderBy('devices.name')
 			->first();
 
         return view('admin.equipment.edit')
             ->with('item', $examination)
-            ->with('location', $location)
+            ->with(self::LOCATION, $location)
             ->with('data', $equipment);
     }
 	
@@ -3884,43 +3584,24 @@ $notification->id = Uuid::uuid4();
 			ORDER BY last_numb DESC LIMIT 1
 		";
 		$data = DB::select($query);
-		if (count($data) == 0){
+		if (!count($data)){
 			return '001/DDS-73/'.$thisYear.'';
 		}
 		else{
 			$last_numb = $data[0]->last_numb;
 			if($last_numb < 10){
-				return '00'.$last_numb.'/DDS-73/'.$thisYear.'';
+				return '00'.$last_numb.self::DDS_73.$thisYear.'';
 			}
 			else if($last_numb < 100){
-				return '0'.$last_numb.'/DDS-73/'.$thisYear.'';
+				return '0'.$last_numb.self::DDS_73.$thisYear.'';
 			}
 			else{
-				return ''.$last_numb.'/DDS-73/'.$thisYear.'';
+				return ''.$last_numb.self::DDS_73.$thisYear.'';
 			}
 		}
     }
 	
 	public function generateKodeBarang($a,$b,$c) {
-		/*$query = "
-			SELECT
-				SUBSTRING_INDEX(no, '/', 1) + 1 AS last_numb
-			FROM
-				equipments
-			WHERE
-			SUBSTRING_INDEX(
-				SUBSTRING_INDEX(no, '/', 2),
-				'/' ,- 1
-			) = '".$a."' AND
-			SUBSTRING_INDEX(
-				SUBSTRING_INDEX(no, '/', 3),
-				'/' ,- 1
-			) = '".$b."' AND
-			SUBSTRING_INDEX(no, '/', -1) = ".$c."
-			ORDER BY
-				last_numb DESC
-			LIMIT 1
-		";*/
 		$query = "
 			SELECT
 				SUBSTRING_INDEX(no, '/', 1) + 1 AS last_numb
@@ -3933,7 +3614,7 @@ $notification->id = Uuid::uuid4();
 			LIMIT 1
 		";
 		$data = DB::select($query);
-		if (count($data) == 0){
+		if (!count($data)){
 			return '001/'.$a.'/'.$b.'/'.$c.'';
 		}
 		else{
@@ -3952,13 +3633,11 @@ $notification->id = Uuid::uuid4();
 	
 	function romawi($bln){
 		$array_bulan = array(1=>"I","II","III", "IV", "V","VI","VII","VIII","IX","X", "XI","XII");
-		$bulan = $array_bulan[$bln];
-		return $bulan;
+		return $array_bulan[$bln];
 	}
 
 	public function deleteRevLapUji($id)
     {
-        $currentUser = Auth::user();
         $examination_attachment = ExaminationAttach::find($id);
         if($examination_attachment){
             
@@ -3970,11 +3649,11 @@ $notification->id = Uuid::uuid4();
             // delete stels_sales_detail
             $examination_attachment->delete();
 
-            Session::flash('message', 'Successfully Delete Revision File');
+            Session::flash(self::MESSAGE, 'Successfully Delete Revision File');
         }else{
-            Session::flash('error', 'Undefined Data');
+            Session::flash(self::ERROR, 'Undefined Data');
         }
-            return redirect('/admin/examination/'.$examination_attachment->examination_id.'/edit');
+            return redirect(self::ADMIN_EXAMINATION_LOC.$examination_attachment->examination_id.self::EDIT_LOC);
 
     }
 }
