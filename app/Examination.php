@@ -120,13 +120,13 @@ class Examination extends Model
 				->distinct()
                 ->get();
 		
-		$auto_complete_result = array_merge($data1,$data2,$data3,$data4);
-        return $auto_complete_result;
+		return array_merge($data1,$data2,$data3,$data4);
+         
     }
 	
 	static function autocomplet_pengujian($query,$company_id){ 
 		
-        $auto_complete_result = DB::table(self::TABLE_EXAM)
+        return DB::table(self::TABLE_EXAM)
 				->join(self::TABLE_DEVICE, self::DEVICES_ID, '=', self::DEVICES_ID)
 				->join('users', 'examinations.created_by', '=', 'users.id')
 				->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
@@ -136,13 +136,11 @@ class Examination extends Model
 				->orderBy('devices.name')
                 ->take(2)
 				->distinct()
-                ->get();
-		
-		return $auto_complete_result;
+                ->get(); 
 	}
 	
 	static function adm_dashboard_autocomplet($query){
-		$auto_complete_result = DB::table(self::TABLE_EXAM)
+		return DB::table(self::TABLE_EXAM)
 				->join(self::TABLE_DEVICE, self::DEVICES_ID, '=', self::DEVICES_ID)
                 ->select('devices.name as autosuggest')
 				->where(function($q){
@@ -159,9 +157,7 @@ class Examination extends Model
 				->orderBy('devices.name')
                 ->take(5)
 				->distinct()
-                ->get();
-		
-		return $auto_complete_result;
+                ->get(); 
 	}
 	
 	static function adm_exam_autocomplet($query){
