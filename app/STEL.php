@@ -17,9 +17,9 @@ class STEL extends Model
         return $this->belongsTo('App\ExaminationLab', 'type');
     }
 	
-	static function autocomplet_stel($query){
+	static function autocomplet_stel($query,$stel_type){
         $where =   [
-            ['stel_type', '=', '1'],
+            ['stel_type', '=', $stel_type],
             ['code', 'like', '%'.$query.'%'] 
         ];
         $data1 = DB::table(self::TABLE_STELS)
@@ -37,29 +37,7 @@ class STEL extends Model
 				->distinct()
                 ->get(); 
         return array_merge($data1,$data2);
-    }
-	
-	static function autocomplet_stsel($query){
-        $where =   [
-            ['stel_type', '=', '2'],
-            ['code', 'like', '%'.$query.'%'] 
-        ];
-        $data1 = DB::table(self::TABLE_STELS)
-                ->select(self::CODE_AUTOSUGGEST)
-				->where($where) 
-				->orderBy('code')
-                ->take(3)
-				->distinct()
-                ->get();
-		$data2 = DB::table(self::TABLE_STELS)
-                ->select(self::NAME_AUTOSUGGEST)
-				->where($where) 
-				->orderBy('name')
-                ->take(3)
-				->distinct()
-                ->get(); 
-        return array_merge($data1,$data2);
-    }
+    } 
 	
 	static function adm_stel_autocomplet($query){
         return DB::table(self::TABLE_STELS)

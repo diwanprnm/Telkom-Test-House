@@ -117,7 +117,7 @@ class STSELClientController extends Controller
     }
 	
 	public function autocomplete($query) {
-        $respons_result = STEL::autocomplet_stsel($query);
+        $respons_result = STEL::autocomplet_stel($query,2);
         return response($respons_result);
     }
 }
