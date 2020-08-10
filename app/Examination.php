@@ -8,7 +8,22 @@ use Illuminate\Support\Facades\DB;
 class Examination extends Model
 {
     protected $table = "examinations";
-
+    private const APP_COMPANy = 'App\Company';
+    private const APP_EXAMINATION_TYPE = 'App\ExaminationType';
+    private const APP_EXAMINATION_LAB= 'App\ExaminationLab';
+    private const APP_DEVICE = 'App\Device';
+    private const APP_USER = 'App\User';
+    private const APP_EQUIPMENT = 'App\Equipment';
+    private const EXAM_REGISTRATION_STATUS = 'examinations.registration_status';
+    private const EXAM_DEVICES_ID = 'examinations.device_id';
+    private const EXAM_COMPANY_ID = 'examinations.company_id';
+    private const COMPANY_AUTOSUGGEST = 'companies.name as autosuggest';
+    private const DEVICES_ID = 'devices.id';
+    private const COMPANIES_ID = 'companies.id';
+    private const PAYMENT_STATUS = 'payment_status';
+    private const TABLE_EXAM = 'examinations';
+    private const TABLE_DEVICE = 'examinations';
+    private const TABLE_COMPANIES = 'companies';
     public $incrementing = false;
 
     public function company()
@@ -64,10 +79,10 @@ class Examination extends Model
 	static function autocomplet($query){
 		$datenow = date('Y-m-d');
 		
-        $data1 = DB::table('examinations')
-				->join('devices', 'examinations.device_id', '=', 'devices.id')
-				->join('companies', 'examinations.company_id', '=', 'companies.id')
-                ->select('companies.name as autosuggest')
+        $data1 = DB::table(self::TABLE_EXAM)
+				->join(self::TABLE_DEVICE, self::EXAM_DEVICES_ID, '=', self::DEVICES_ID)
+				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
+                ->select(self::COMPANY_AUTOSUGGEST)
 				->where('examinations.certificate_status','=','1')
 				->where('devices.valid_thru', '>=', $datenow)
                 ->where('companies.name', 'like','%'.$query.'%')
@@ -75,9 +90,9 @@ class Examination extends Model
                 ->take(2)
 				->distinct()
                 ->get();
-		$data2 = DB::table('examinations')
-				->join('devices', 'examinations.device_id', '=', 'devices.id')
-				->join('companies', 'examinations.company_id', '=', 'companies.id')
+		$data2 = DB::table(self::TABLE_EXAM)
+				->join(self::TABLE_DEVICE, self::DEVICES_ID, '=', self::DEVICES_ID)
+				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
                 ->select('devices.name as autosuggest')
 				->where('examinations.certificate_status','=','1')
 				->where('devices.valid_thru', '>=', $datenow)
@@ -86,9 +101,9 @@ class Examination extends Model
                 ->take(2)
 				->distinct()
                 ->get();
-		$data3 = DB::table('examinations')
-				->join('devices', 'examinations.device_id', '=', 'devices.id')
-				->join('companies', 'examinations.company_id', '=', 'companies.id')
+		$data3 = DB::table(self::TABLE_EXAM)
+				->join(self::TABLE_DEVICE, self::DEVICES_ID, '=', self::DEVICES_ID)
+				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
                 ->select('devices.mark as autosuggest')
 				->where('examinations.certificate_status','=','1')
 				->where('devices.valid_thru', '>=', $datenow)
@@ -97,9 +112,9 @@ class Examination extends Model
                 ->take(2)
 				->distinct()
                 ->get();
-		$data4 = DB::table('examinations')
-				->join('devices', 'examinations.device_id', '=', 'devices.id')
-				->join('companies', 'examinations.company_id', '=', 'companies.id')
+		$data4 = DB::table(self::TABLE_EXAM)
+				->join(self::TABLE_DEVICE, self::DEVICES_ID, '=', self::DEVICES_ID)
+				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
                 ->select('devices.model as autosuggest')
 				->where('examinations.certificate_status','=','1')
 				->where('devices.valid_thru', '>=', $datenow)
@@ -113,15 +128,14 @@ class Examination extends Model
         return $auto_complete_result;
     }
 	
-	static function autocomplet_pengujian($query,$company_id){
-		$datenow = date('Y-m-d');
+	static function autocomplet_pengujian($query,$company_id){ 
 		
-        $auto_complete_result = DB::table('examinations')
-				->join('devices', 'examinations.device_id', '=', 'devices.id')
+        $auto_complete_result = DB::table(self::TABLE_EXAM)
+				->join(self::TABLE_DEVICE, self::DEVICES_ID, '=', self::DEVICES_ID)
 				->join('users', 'examinations.created_by', '=', 'users.id')
 				->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
                 ->select('devices.name as autosuggest')
-                ->where('examinations.company_id','=',''.$company_id.'')
+                ->where(self::EXAM_COMPANY_ID,'=',''.$company_id.'')
                 ->where('devices.name', 'like','%'.$query.'%')
 				->orderBy('devices.name')
                 ->take(2)
@@ -132,8 +146,8 @@ class Examination extends Model
 	}
 	
 	static function adm_dashboard_autocomplet($query){
-		$auto_complete_result = DB::table('examinations')
-				->join('devices', 'examinations.device_id', '=', 'devices.id')
+		$auto_complete_result = DB::table(self::TABLE_EXAM)
+				->join(self::TABLE_DEVICE, self::DEVICES_ID, '=', self::DEVICES_ID)
                 ->select('devices.name as autosuggest')
 				->where(function($q){
 					$q->where('examinations.registration_status', 0)
@@ -144,7 +158,7 @@ class Examination extends Model
 						->orWhere('examinations.spb_status', 1)
 						->orWhere('examinations.payment_status', -1);
 				})
-				->where('payment_status', 0)
+				->where(self::PAYMENT_STATUS, 0)
                 ->where('devices.name', 'like','%'.$query.'%')
 				->orderBy('devices.name')
                 ->take(5)
@@ -155,9 +169,9 @@ class Examination extends Model
 	}
 	
 	static function adm_exam_autocomplet($query){
-		$data1 = DB::table('examinations')
-				->join('devices', 'examinations.device_id', '=', 'devices.id')
-				->join('companies', 'examinations.company_id', '=', 'companies.id')
+		$data1 = DB::table(self::TABLE_EXAM)
+				->join(self::TABLE_DEVICE, self::DEVICES_ID, '=', self::DEVICES_ID)
+				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
                 ->select('devices.name as autosuggest')
 				->where('devices.name', 'like','%'.$query.'%')
 				->orderBy('devices.name')
@@ -165,24 +179,23 @@ class Examination extends Model
 				->distinct()
                 ->get();
 		
-		$data2 = DB::table('examinations')
-				->join('devices', 'examinations.device_id', '=', 'devices.id')
-				->join('companies', 'examinations.company_id', '=', 'companies.id')
-                ->select('companies.name as autosuggest')
+		$data2 = DB::table(self::TABLE_EXAM)
+				->join(self::TABLE_DEVICE, self::DEVICES_ID, '=', self::DEVICES_ID)
+				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
+                ->select(self::COMPANY_AUTOSUGGEST)
 				->where('companies.name', 'like','%'.$query.'%')
 				->orderBy('companies.name')
                 ->take(3)
 				->distinct()
                 ->get();
-		
-		$auto_complete_result = array_merge($data1,$data2);
-        return $auto_complete_result;
+		 
+        return array_merge($data1,$data2);
 	}
 	
 	static function adm_exam_done_autocomplet($query){
-		$queries = DB::table('examinations')
-				->join('devices', 'examinations.device_id', '=', 'devices.id')
-				->join('companies', 'examinations.company_id', '=', 'companies.id')
+		$queries = DB::table(self::TABLE_EXAM)
+				->join(self::TABLE_DEVICE, self::DEVICES_ID, '=', self::DEVICES_ID)
+				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
                 ->select('devices.name as autosuggest')
 				->where('devices.name', 'like','%'.$query.'%');
 					$queries->where(function($qry){
@@ -192,7 +205,7 @@ class Examination extends Model
 								->where('function_status', '=', '1')
 								->where('contract_status', '=', '1')
 								->where('spb_status', '=', '1')
-								->where('payment_status', '=', '1')
+								->where(self::PAYMENT_STATUS, '=', '1')
 								->where('spk_status', '=', '1')
 								->where('examination_status', '=', '1')
 								->where('resume_status', '=', '1')
@@ -206,7 +219,7 @@ class Examination extends Model
 								->where('function_status', '=', '1')
 								->where('contract_status', '=', '1')
 								->where('spb_status', '=', '1')
-								->where('payment_status', '=', '1')
+								->where(self::PAYMENT_STATUS, '=', '1')
 								->where('spk_status', '=', '1')
 								->where('examination_status', '=', '1')
 								->where('resume_status', '=', '1')
@@ -218,10 +231,10 @@ class Examination extends Model
 				->distinct()
                 ->get();
 		
-		$queries = DB::table('examinations')
-				->join('devices', 'examinations.device_id', '=', 'devices.id')
-				->join('companies', 'examinations.company_id', '=', 'companies.id')
-                ->select('companies.name as autosuggest')
+		$queries = DB::table(self::TABLE_EXAM)
+				->join(self::TABLE_DEVICE, self::DEVICES_ID, '=', self::DEVICES_ID)
+				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
+                ->select(self::COMPANY_AUTOSUGGEST)
 				->where('companies.name', 'like','%'.$query.'%');
 					$queries->where(function($qry){
 						$qry->where(function($q){
@@ -256,7 +269,7 @@ class Examination extends Model
 				->distinct()
                 ->get();
 				
-		$auto_complete_result = array_merge($data1,$data2);
-        return $auto_complete_result;
+		 return array_merge($data1,$data2);
+       
 	}
 }
