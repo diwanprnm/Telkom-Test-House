@@ -267,8 +267,6 @@ class CalibrationChargeController extends Controller
         // the payments table's primary key, the user's first and last name, 
         // the user's e-mail address, the amount paid, and the payment
         // timestamp.
-        $currentUser = Auth::user();
-
         $search = trim($request->input(self::SEARCH));
        
 
