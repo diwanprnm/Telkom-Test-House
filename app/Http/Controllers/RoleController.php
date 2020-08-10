@@ -123,7 +123,7 @@ class RoleController extends Controller
             Session::flash(self::MESSAGE, 'role successfully created');
 			return redirect(self::ADMIN_ROLE);
 		} catch(Exception $e){
-			Session::flash('error', 'Save failed');
+			Session::flash(self::ERROR, 'Save failed');
 			return redirect('/admin/role/create');
 		}
     }
@@ -186,7 +186,7 @@ class RoleController extends Controller
             Session::flash(self::MESSAGE, 'Role successfully updated');
             return redirect(self::ADMIN_ROLE);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
+            Session::flash(self::ERROR, 'Save failed');
             return redirect('/admin/role/'.$stel->id.'/edit');
         }
     }
@@ -217,11 +217,11 @@ class RoleController extends Controller
                 Session::flash(self::MESSAGE, 'Role successfully deleted');
                 return redirect(self::ADMIN_ROLE);
             }catch (Exception $e){
-                Session::flash('error', 'Delete failed');
+                Session::flash(self::ERROR, 'Delete failed');
                 return redirect(self::ADMIN_ROLE);
             }
         }else{
-             Session::flash('error', 'Role Not Found');
+             Session::flash(self::ERROR, 'Role Not Found');
                 return redirect(self::ADMIN_ROLE);
         }
     }

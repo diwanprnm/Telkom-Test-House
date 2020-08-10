@@ -22,6 +22,24 @@ use Input;
 use Ramsey\Uuid\Uuid;
 class STELController extends Controller
 {
+
+
+
+    private const EXAMINATION_LAB = 'examinationLab';
+    private const SEARCH = 'search';
+    private const CREATED_AT = 'created_at';
+    private const CATEGORY = 'category';
+    private const IS_ACTIVE = 'is_active';
+    private const EXAM_LAB = 'examLab';
+    private const MESSAGE = 'message';
+    private const STEL_TYPE = 'stel_type';
+    private const VERSION = 'version';
+    private const PRICE = 'price';
+    private const TOTAL = 'total';
+    private const ATTACHMENT = 'attachment';
+    private const ERROR = 'error';
+    private const ADMIN_CREATE = '/admin/stel/create';
+    private const ADMIN_STEL = '/admin/stel';
     /**
      * Create a new controller instance.
      *
@@ -44,16 +62,16 @@ class STELController extends Controller
         if ($currentUser){
             $message = null;
             $paginate = 10;
-            $search = trim($request->input('search'));
+            $search = trim($request->input(self::SEARCH));
             $category = '';
             $year = '';
             $status = -1;
 
             $examLab = ExaminationLab::all();
             
-            $query = STEL::whereNotNull('created_at')->with('examinationLab');
+            $query = STEL::whereNotNull(self::CREATED_AT)->with(self::EXAMINATION_LAB);
 
-            $tahun = STEL::whereNotNull('created_at')->with('examinationLab')->select('year')->orderBy('year','desc')->distinct()->get();
+            $tahun = STEL::whereNotNull(self::CREATED_AT)->with(self::EXAMINATION_LAB)->select('year')->orderBy('year','desc')->distinct()->get();
 
             if ($search != null){
                 $query->where(function($qry) use($search){
@@ -64,17 +82,17 @@ class STELController extends Controller
                 $logs = new Logs;
                 $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
                 $logs->action = "Search STEL";
-                $datasearch = array("search"=>$search);
+                $datasearch = array(self::SEARCH=>$search);
                 $logs->data = json_encode($datasearch);
                 $logs->created_by = $currentUser->id;
                 $logs->page = "STEL";
                 $logs->save();
             }
             
-            if ($request->has('category')){
-                $category = $request->get('category');
-				if($request->input('category') != 'all'){
-					$query->whereHas('examinationLab', function ($q) use ($category){
+            if ($request->has(self::CATEGORY)){
+                $category = $request->get(self::CATEGORY);
+				if($request->input(self::CATEGORY) != 'all'){
+					$query->whereHas(self::EXAMINATION_LAB, function ($q) use ($category){
                         return $q->where('id', $category);
                     });
 				}
@@ -86,10 +104,10 @@ class STELController extends Controller
             
             }
 
-            if ($request->has('is_active')){
-                $status = $request->get('is_active');
-                if ($request->get('is_active') > -1){
-					$query->where('is_active', $request->get('is_active'));
+            if ($request->has(self::IS_ACTIVE)){
+                $status = $request->get(self::IS_ACTIVE);
+                if ($request->get(self::IS_ACTIVE) > -1){
+					$query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
                 }
             }
                 
@@ -100,11 +118,11 @@ class STELController extends Controller
             }
             
             return view('admin.STEL.index')
-                ->with('examLab', $examLab)
-                ->with('message', $message)
+                ->with(self::EXAM_LAB, $examLab)
+                ->with(self::MESSAGE, $message)
                 ->with('data', $stels)
-                ->with('search', $search)
-                ->with('category', $category)
+                ->with(self::SEARCH, $search)
+                ->with(self::CATEGORY, $category)
                 ->with('tahun', $tahun)
                 ->with('year', $year)
                 ->with('status', $status);
@@ -120,7 +138,7 @@ class STELController extends Controller
     {
         $examLab = ExaminationLab::all();
         return view('admin.STEL.create')
-            ->with('examLab',$examLab)
+            ->with(self::EXAM_LAB,$examLab)
         ;
     }
 
@@ -142,28 +160,28 @@ class STELController extends Controller
 		}
 		$stel = new STEL;
 		$stel->code = $request->input('code');
-		$stel->stel_type = $request->input('stel_type');
+		$stel->stel_type = $request->input(self::STEL_TYPE);
 		$stel->name = $request->input('name');
 		$stel->type = $request->input('type');
-		$stel->version = $request->input('version');
+		$stel->version = $request->input(self::VERSION);
 		$stel->year = $request->input('year');
-		$stel->price = str_replace(",","",$request->input('price'));
-		$stel->total = str_replace(",","",$request->input('total'));
-		$stel->is_active = $request->input('is_active');
+		$stel->price = str_replace(",","",$request->input(self::PRICE));
+		$stel->total = str_replace(",","",$request->input(self::TOTAL));
+		$stel->is_active = $request->input(self::IS_ACTIVE);
 		$stel->created_by = $currentUser->id;
 		$stel->updated_by = $currentUser->id;
 
-		if ($request->hasFile('attachment')) { 
-            $name_file = 'stel_'.$request->file('attachment')->getClientOriginalName();
+		if ($request->hasFile(self::ATTACHMENT)) { 
+            $name_file = 'stel_'.$request->file(self::ATTACHMENT)->getClientOriginalName();
 			$path_file = public_path().'/media/stel';
 			if (!file_exists($path_file)) {
 				mkdir($path_file, 0775);
 			}
-			if($request->file('attachment')->move($path_file,$name_file)){
+			if($request->file(self::ATTACHMENT)->move($path_file,$name_file)){
 				$stel->attachment = $name_file;
 			}else{
-				Session::flash('error', 'Save STEL to directory failed');
-				return redirect('/admin/stel/create');
+				Session::flash(self::ERROR, 'Save STEL to directory failed');
+				return redirect(self::ADMIN_CREATE);
 			}
 		}
  
@@ -180,11 +198,11 @@ class STELController extends Controller
             $logs->page = "STEL";
             $logs->save();
 			
-            Session::flash('message', 'STEL successfully created');
-			return redirect('/admin/stel');
+            Session::flash(self::MESSAGE, 'STEL successfully created');
+			return redirect(self::ADMIN_STEL);
 		} catch(Exception $e){
-			Session::flash('error', 'Save failed');
-			return redirect('/admin/stel/create');
+			Session::flash(self::ERROR, 'Save failed');
+			return redirect(self::ADMIN_CREATE);
 		}
     }
 
@@ -211,7 +229,7 @@ class STELController extends Controller
         $stel = STEL::find($id);
 
         return view('admin.STEL.edit')
-            ->with('examLab', $examLab)
+            ->with(self::EXAM_LAB, $examLab)
             ->with('data', $stel)
         ;
     }
@@ -233,8 +251,8 @@ class STELController extends Controller
         if ($request->has('code')){
             $stel->code = $request->input('code');
         }
-        if ($request->has('stel_type')){
-            $stel->stel_type = $request->input('stel_type');
+        if ($request->has(self::STEL_TYPE)){
+            $stel->stel_type = $request->input(self::STEL_TYPE);
         }
         if ($request->has('name')){
             $stel->name = $request->input('name');
@@ -242,32 +260,32 @@ class STELController extends Controller
         if ($request->has('type')){
             $stel->type = $request->input('type');
         }
-        if ($request->has('version')){
-            $stel->version = $request->input('version');
+        if ($request->has(self::VERSION)){
+            $stel->version = $request->input(self::VERSION);
         }
         if ($request->has('year')){
             $stel->year = $request->input('year');
         }
-        if ($request->has('price')){
-            $stel->price = str_replace(",","",$request->input('price'));
+        if ($request->has(self::PRICE)){
+            $stel->price = str_replace(",","",$request->input(self::PRICE));
         }
-        if ($request->has('is_active')){
-            $stel->is_active = $request->input('is_active');
+        if ($request->has(self::IS_ACTIVE)){
+            $stel->is_active = $request->input(self::IS_ACTIVE);
         }
-        if ($request->has('total')){
-            $stel->total = str_replace(",","",$request->input('total'));
+        if ($request->has(self::TOTAL)){
+            $stel->total = str_replace(",","",$request->input(self::TOTAL));
         }
-        if ($request->hasFile('attachment')) { 
-            $name_file = 'stel_'.$request->file('attachment')->getClientOriginalName();
+        if ($request->hasFile(self::ATTACHMENT)) { 
+            $name_file = 'stel_'.$request->file(self::ATTACHMENT)->getClientOriginalName();
             $path_file = public_path().'/media/stel';
             if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
-            if($request->file('attachment')->move($path_file,$name_file)){
+            if($request->file(self::ATTACHMENT)->move($path_file,$name_file)){
                 $stel->attachment = $name_file;
             }else{
-                Session::flash('error', 'Save STEL to directory failed');
-                return redirect('/admin/stel/create');
+                Session::flash(self::ERROR, 'Save STEL to directory failed');
+                return redirect(self::ADMIN_CREATE);
             }
         }
 
@@ -286,10 +304,10 @@ class STELController extends Controller
             $logs->page = "STEL";
             $logs->save();
 
-            Session::flash('message', 'STEL successfully updated');
-            return redirect('/admin/stel');
+            Session::flash(self::MESSAGE, 'STEL successfully updated');
+            return redirect(self::ADMIN_STEL);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
+            Session::flash(self::ERROR, 'Save failed');
             return redirect('/admin/stel/'.$stel->id.'/edit');
         }
     }
@@ -317,11 +335,11 @@ class STELController extends Controller
                 $logs->page = "STEL";
                 $logs->save();
 
-                Session::flash('message', 'STEL successfully deleted');
-                return redirect('/admin/stel');
+                Session::flash(self::MESSAGE, 'STEL successfully deleted');
+                return redirect(self::ADMIN_STEL);
             }catch (Exception $e){
-                Session::flash('error', 'Delete failed');
-                return redirect('/admin/stel');
+                Session::flash(self::ERROR, 'Delete failed');
+                return redirect(self::ADMIN_STEL);
             }
         }
     }
@@ -359,33 +377,31 @@ class STELController extends Controller
         // the user's e-mail address, the amount paid, and the payment
         // timestamp.
 
-        $search = trim($request->input('search'));
+        $search = trim($request->input(self::SEARCH));
         
         $category = '';
-        $status = $request->get('is_active');
+        $status = $request->get(self::IS_ACTIVE);
 
         if ($search != null){
-            $stels = STEL::whereNotNull('created_at')
-                ->with('examinationLab')
+            $stels = STEL::whereNotNull(self::CREATED_AT)
+                ->with(self::EXAMINATION_LAB)
                 ->where('name','like','%'.$search.'%')
                 ->orWhere('code','like','%'.$search.'%')
                 ->orderBy('code');
         }else{
-            $query = STEL::whereNotNull('created_at')->with('examinationLab');
+            $query = STEL::whereNotNull(self::CREATED_AT)->with(self::EXAMINATION_LAB);
 
-            if ($request->has('category')){
-                $category = $request->get('category');
-                if($request->input('category') != 'all'){
-                    $query->whereHas('examinationLab', function ($q) use ($category){
+            if ($request->has(self::CATEGORY)){
+                $category = $request->get(self::CATEGORY);
+                if($request->input(self::CATEGORY) != 'all'){
+                    $query->whereHas(self::EXAMINATION_LAB, function ($q) use ($category){
                         return $q->where('id', $category);
                     });
                 }
             }
 
-            if ($request->has('is_active')){ 
-                if ($status > -1){
-                    $query->where('is_active', $status);
-                }
+            if ($request->has(self::IS_ACTIVE) && $status > -1){  
+                $query->where(self::IS_ACTIVE, $status); 
             }
             
             $stels = $query->orderBy('name');

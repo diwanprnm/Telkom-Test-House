@@ -97,26 +97,26 @@ public function index(Request $request)
         } 
 		
         if ($currentUser){
-			$dataNotificationH = NotificationTable::where("is_read",0)
+			$dataNotificationH = NotificationTable::where(self::IS_READ,0)
                             ->where(function($q) use ($currentUser){
                             return $q->where('to', self::ADMIN)
                                 ->orWhere('to', $currentUser->id)
                                 ;
                             })
-                            ->orderBy("created_at","desc")
+                            ->orderBy(self::CREATED_AT,"desc")
                             ->limit(10)->get()->toArray();
 
-            $countNotificationH = NotificationTable::where("is_read",0)
+            $countNotificationH = NotificationTable::where(self::IS_READ,0)
                             ->where(function($q) use ($currentUser){
                             return $q->where('to', self::ADMIN)
                                 ->orWhere('to', $currentUser->id)
                                 ;
                             })
-                            ->orderBy("created_at","desc")
+                            ->orderBy(self::CREATED_AT,"desc")
                             ->get()->count();
 							
-			$dataNotification = NotificationTable::where("to",self::ADMIN)->orWhere("to",$currentUser->id)->orderBy("is_read")->orderBy("created_at","desc")->get();
-			$countNotification = NotificationTable::where("to",self::ADMIN)->orWhere("to",$currentUser->id)->orderBy("is_read")->orderBy("created_at","desc")->get()->count(); 
+			$dataNotification = NotificationTable::where("to",self::ADMIN)->orWhere("to",$currentUser->id)->orderBy(self::IS_READ)->orderBy(self::CREATED_AT,"desc")->get();
+			$countNotification = NotificationTable::where("to",self::ADMIN)->orWhere("to",$currentUser->id)->orderBy(self::IS_READ)->orderBy(self::CREATED_AT,"desc")->get()->count(); 
 			return view('admin.notification')
 				->with('tree_menus', $tree)
 				
