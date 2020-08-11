@@ -171,7 +171,7 @@ class CompanyController extends Controller
         $company = new Company;
         $company->id = Uuid::uuid4();
         $company->name = $request->input('name');
-        $company->address = $request->input(self::address);
+        $company->address = $request->input(self::ADDRESS);
         $company->plg_id = $request->input(self::PLG_ID);
         $company->nib = $request->input('nib');
         $company->city = $request->input('city');
