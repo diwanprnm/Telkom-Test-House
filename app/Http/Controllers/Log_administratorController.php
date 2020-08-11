@@ -201,18 +201,18 @@ class Log_administratorController extends Controller
            
         }
 
-        if ($request->has($this::USERNAME)){
+        if ($request->has($this::USERNAME) && ($request->input($this::USERNAME) != 'all'){
            
-            if($request->input($this::USERNAME) != 'all'){
+            
                 $datalogs->where(self::USER_NAME, $request->get($this::USERNAME));
-            }
+            
         }
 
-        if ($request->has($this::ACTION)){
+        if ($request->has($this::ACTION) && $request->input($this::ACTION) != 'all' ){
             
-            if($request->input($this::ACTION) != 'all'){
+            
                 $datalogs->where($this::ACTION, $request->get($this::ACTION));
-            }
+            
         }
 
         if ($request->has($this::SORT_BY)){

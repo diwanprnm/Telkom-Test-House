@@ -214,7 +214,7 @@ class LogController extends Controller
 
 		$data = $datalogs->orderBy($sort_by, $sort_type)->get();
         $examsArray = []; 
-
+        $no = 0;
 		// Define the Excel spreadsheet headers
 		$examsArray[] = [
 			'No',
@@ -226,7 +226,7 @@ class LogController extends Controller
 		
 		// Convert each member of the returned collection into an array,
 		// and append it to the payments array.
-			$no = 0;
+			
 		foreach ($data as $row) {
 			$no ++;
 			$examsArray[] = [
