@@ -22,17 +22,14 @@ use App\Company;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    // public function __construct()
-    // {
-        // $this->middleware('auth.admin');
-    // }
-
-    /**
+	private const IS_ACTIVE = 'is_active';
+	private const YOUTUBE_LINK = 'https://www.youtube.com/embed/cew5AE7Kwwk';
+	private const PROCESS = 'process';
+	private const DATA_LAYANAN_NOT_ACTIVE = 'data_layanan_not_active';
+	private const DATA_SALES = 'data_stels';
+	private const TO_LOGIN = '/login';
+	
+	/**
      * Show the application dashboard.
      *
      * @return \Illuminate\Http\Response
@@ -40,7 +37,7 @@ class HomeController extends Controller
     public function index()
     { 
 		$data = array();
-		$partners = Footer::where('is_active', true)->get();
+		$partners = Footer::where(self::IS_ACTIVE, true)->get();
     	$page = "home";
 		return view('client.home')
 			->with('data', $data)
@@ -74,7 +71,8 @@ class HomeController extends Controller
 		return view('client.sertifikasi')
 			->with('data', $data)
 			->with('data_certification', $data_certification)
-			->with('page', $page);
+			->with('page', $page)
+			->with('message', $message_slideshow);
     }
     
     public function faq()
@@ -120,25 +118,22 @@ class HomeController extends Controller
 			$query_url = "SELECT * FROM youtube WHERE id = 1";
             $data_url = DB::select($query_url);
 
-            $qa_video_url = "https://www.youtube.com/embed/cew5AE7Kwwk";
-            $ta_video_url = "https://www.youtube.com/embed/cew5AE7Kwwk";
-            $vt_video_url = "https://www.youtube.com/embed/cew5AE7Kwwk";
-            if (count($data_url) > 0){
+            $qa_video_url = self::YOUTUBE_LINK;
+            $ta_video_url = self::YOUTUBE_LINK;
+            $vt_video_url = self::YOUTUBE_LINK;
+            if (count($data_url)){
                 $qa_video_url = $data_url[0]->qa_url ? $data_url[0]->qa_url : $qa_video_url;
                 $ta_video_url = $data_url[0]->ta_url ? $data_url[0]->ta_url : $ta_video_url;
                 $vt_video_url = $data_url[0]->vt_url ? $data_url[0]->vt_url : $vt_video_url;
             }
 		// untuk QA
-            $query_stels_qa = "SELECT DISTINCT s.code as stel ,s.name as device_name, s.type as lab, ssd.attachment as file, ssd.id as id_folder
-				FROM stels s,stels_sales ss,stels_sales_detail ssd, companies c , users u
-				WHERE s.id = ssd.stels_id AND s.is_active = 1 AND ss.id = ssd.stels_sales_id AND ss.user_id = u.id AND u.company_id = c.id
-				AND (ss.payment_status = 1 or ss.payment_status = 3) AND c.id = '".$currentUser->company->id."'";
+				$query_stels_qa = $this->getInitialQuery($currentUser);
 				$data_stels_qa = DB::select($query_stels_qa);
 		// untuk selain QA
 			$query_stels = "SELECT code as stel, name as device_name , type as lab FROM stels WHERE is_active = 1 ORDER BY name";
 				$data_stels = DB::select($query_stels);
 
-            $query_layanan = ExaminationLab::where('is_active', 0);
+            $query_layanan = ExaminationLab::where(self::IS_ACTIVE, 0);
             $data_layanan = $query_layanan->orderBy('lab_code')->get();
 
             $data_layanan_not_active = array();
@@ -146,11 +141,11 @@ class HomeController extends Controller
 				array_push($data_layanan_not_active, $data->id);
 			}
 
-            $query_layanan_active = ExaminationLab::where('is_active', 1);
+            $query_layanan_active = ExaminationLab::where(self::IS_ACTIVE, 1);
             $data_layanan_active = $query_layanan_active->get();
 
 	    	$data = array();
-	    	$page = "process";
+	    	$page = self::PROCESS;
 			return view('client.process')
 				->with('qs_certificate_date', $qs_certificate_date)
 				->with('qa_video_url', $qa_video_url)
@@ -158,13 +153,13 @@ class HomeController extends Controller
 				->with('vt_video_url', $vt_video_url)
 				->with('data_layanan', $data_layanan)
 				->with('data_layanan_active', $data_layanan_active)
-				->with('data_layanan_not_active', $data_layanan_not_active)
+				->with(self::DATA_LAYANAN_NOT_ACTIVE, $data_layanan_not_active)
 				->with('data_stels_qa', $data_stels_qa)
-				->with('data_stels', $data_stels)
+				->with(self::DATA_SALES, $data_stels)
 				->with('data', $data)
 				->with('page', $page);   
 		}else{
-			return redirect("/login");
+			return redirect(self::TO_LOGIN);
 		}
     }
 
@@ -179,22 +174,19 @@ class HomeController extends Controller
 				return view("errors.401_qs_certificate_date");
 			}
 
-			$query_layanan_active = ExaminationLab::where('is_active', 1);
+			$query_layanan_active = ExaminationLab::where(self::IS_ACTIVE, 1);
             $data_layanan_active = $query_layanan_active->get();
             if(count($data_layanan_active) == 0){
 				return view("errors.401_available_lab");
 			}
 			if($category == 'qa'){
-				$query_stels = "SELECT DISTINCT s.code as stel ,s.name as device_name, s.type as lab, ssd.attachment as file, ssd.id as id_folder
-				FROM stels s,stels_sales ss,stels_sales_detail ssd, companies c , users u
-				WHERE s.id = ssd.stels_id AND s.is_active = 1 AND ss.id = ssd.stels_sales_id AND ss.user_id = u.id AND u.company_id = c.id
-				AND (ss.payment_status = 1 or ss.payment_status = 3) AND c.id = '".$currentUser->company->id."'";
+				$query_stels = $this->getInitialQuery($currentUser);
 				$data_stels = DB::select($query_stels);				
 			}else{
 				$query_stels = "SELECT code as stel, name as device_name , type as lab FROM stels WHERE is_active = 1 ORDER BY name";
 				$data_stels = DB::select($query_stels);
 			}
-			$query_layanan = ExaminationLab::where('is_active', 0);
+			$query_layanan = ExaminationLab::where(self::IS_ACTIVE, 0);
             $data_layanan = $query_layanan->get();
 
 			$query = "SELECT
@@ -211,23 +203,22 @@ class HomeController extends Controller
 				";
 			$userData = DB::select($query);
 
-			// print_r($userData);
 			$data_layanan_not_active = array();
 			foreach ($data_layanan as $data) {
 				array_push($data_layanan_not_active, $data->id);
 			}
 			
 			$data =  array();
-	    	$page = "process";
+	    	$page = self::PROCESS;
 			return view('client.process.'.$category.'_process')
 				->with('data', $data)
 				->with('userData', $userData[0])
 				->with('jns_pengujian', $category)
-				->with('data_stels', $data_stels)
-				->with('data_layanan_not_active', $data_layanan_not_active)
+				->with(self::DATA_SALES, $data_stels)
+				->with(self::DATA_LAYANAN_NOT_ACTIVE, $data_layanan_not_active)
 				->with('page', $page);   
 		}else{ 
-			return redirect("/login");
+			return redirect(self::TO_LOGIN);
 		}
 		
     }
@@ -239,16 +230,13 @@ class HomeController extends Controller
 		
 		if($currentUser){
 			if($category == 'qa'){
-				$query_stels = "SELECT DISTINCT s.code as stel ,s.name as device_name, s.type as lab, ssd.attachment as file, ssd.id as id_folder
-				FROM stels s,stels_sales ss,stels_sales_detail ssd, companies c , users u
-				WHERE s.id = ssd.stels_id AND s.is_active = 1 AND ss.id = ssd.stels_sales_id AND ss.user_id = u.id AND u.company_id = c.id
-				AND (ss.payment_status = 1 or ss.payment_status = 3) AND c.id = '".$currentUser->company->id."'";
+				$query_stels = $this->getInitialQuery($currentUser);
 				$data_stels = DB::select($query_stels);				
 			}else{
 				$query_stels = "SELECT code as stel, name as device_name, type as lab FROM stels WHERE is_active = 1 ORDER BY name";
 				$data_stels = DB::select($query_stels);
 			}
-			$query_layanan = ExaminationLab::where('is_active', 0);
+			$query_layanan = ExaminationLab::where(self::IS_ACTIVE, 0);
             $data_layanan = $query_layanan->get();
 			
 			$query = "SELECT
@@ -323,22 +311,21 @@ class HomeController extends Controller
 		     
 		      event(new Notification($data));
 		  	}
-			// print_r($userData);
 			$data =  array();
 
-			if(count($userData) <= 0){	
+			if(!count($userData)){	
 				return redirect("/process");
 			}
-	    	$page = "process";
+	    	$page = self::PROCESS;
 			return view('client.process.'.$category.'_edit_process')
 				->with('data', $data)
 				->with('userData', $userData[0])
 				->with('jns_pengujian', $category)
-				->with('data_stels', $data_stels)
-				->with('data_layanan_not_active', $data_layanan_not_active)
+				->with(self::DATA_SALES, $data_stels)
+				->with(self::DATA_LAYANAN_NOT_ACTIVE, $data_layanan_not_active)
 				->with('page', $page);   
 		}else{ 
-			return redirect("/login");
+			return redirect(self::TO_LOGIN);
 		}
 		
     }
@@ -407,5 +394,13 @@ class HomeController extends Controller
 		);
 
 		return Response::download($file, 'User Manual Situs Jasa Layanan Pelanggan Lab Pengujian [Customer].pdf', $headers);
+	}
+
+	private function getInitialQuery($currentUser)
+	{
+		return "SELECT DISTINCT s.code as stel ,s.name as device_name, s.type as lab, ssd.attachment as file, ssd.id as id_folder
+				FROM stels s,stels_sales ss,stels_sales_detail ssd, companies c , users u
+				WHERE s.id = ssd.stels_id AND s.is_active = 1 AND ss.id = ssd.stels_sales_id AND ss.user_id = u.id AND u.company_id = c.id
+				AND (ss.payment_status = 1 or ss.payment_status = 3) AND c.id = '".$currentUser->company->id."'";
 	}
 }

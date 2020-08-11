@@ -19,15 +19,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 class ExaminationNewChargeClientController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    // public function __construct()
-    // {
-        // $this->middleware('auth');
-    // }
+    private const CATEGORY = 'category';
 
     /**
      * Display a listing of the resource.
@@ -36,13 +28,10 @@ class ExaminationNewChargeClientController extends Controller
      */
     public function index(Request $request)
     {
-        // $currentUser = Auth::user();
-
-        // if ($currentUser){
             $message = null;
             $paginate = 10;
             $search = trim($request->input('search'));
-			$category = trim($request->input('category'));
+			$category = trim($request->input(self::CATEGORY));
 
             $examLab = ExaminationLab::all();
 
@@ -54,24 +43,12 @@ class ExaminationNewChargeClientController extends Controller
 
             if ($search != null){
                 $query = $query->where('new_examination_charges_detail.device_name','like','%'.$search.'%');
-
-                    //$logs = new Logs;
-                    //$currentUser = Auth::user();
-                    //$logs->user_id = $currentUser->id;
-                    //$logs->id = Uuid::uuid4();
-                    //$logs->action = "Search Charge";
-                    //$datasearch = array("search"=>$search);
-                    //$logs->data = json_encode($datasearch);
-                    //$logs->created_by = $currentUser->id;
-                    //$logs->page = "CHARGE";
-                    //$logs->save();
-
             }
 			
-            if ($request->has('category')){
-                $category = $request->get('category');
-                if($request->input('category') != 'all'){
-                    $query->where('category', $request->get('category'));
+            if ($request->has(self::CATEGORY)){
+                $category = $request->get(self::CATEGORY);
+                if($request->input(self::CATEGORY) != 'all'){
+                    $query->where(self::CATEGORY, $request->get(self::CATEGORY));
                 }
             }
 
@@ -88,18 +65,17 @@ class ExaminationNewChargeClientController extends Controller
                 ->with('data', $examinationCharge)
                 ->with('search', $search)
                 ->with('page', $page)
-				->with('category', $category);
-        // }
+				->with(self::CATEGORY, $category);
     }
 	
 	
 	public function filter(Request $request)
     {
 		$paginate = 2;
-		$category = trim($request->input('category'));
+		$category = trim($request->input(self::CATEGORY));
 		if ($category != null){
 			$data = ExaminationCharge::whereNotNull('created_at')
-				->where('category','=',''.$category.'')
+				->where(self::CATEGORY,'=',''.$category.'')
 				->orderBy('device_name')
 				->paginate($paginate);
 		}else{
@@ -107,7 +83,6 @@ class ExaminationNewChargeClientController extends Controller
 				->orderBy('device_name')
 				->paginate($paginate);
 		}
-		// print_r($data);exit;
 		return response()
             ->view('client.new_charge.filter', $data, 200)
             ->header('Content-Type', 'text/html');

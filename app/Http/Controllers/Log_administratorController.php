@@ -83,7 +83,7 @@ class Log_administratorController extends Controller
             );
             $datalogs2 = LogsAdministrator::select($select2)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
 
-            $username = $datalogs2->distinct()->orderBy('users.name')->get();
+            $username = $datalogs2->distinct()->orderBy(self::USER_NAME)->get();
 
             $select3 = array(
                 $this::LOG_ADMIN_ACTION
@@ -119,7 +119,7 @@ class Log_administratorController extends Controller
             if ($request->has($this::USERNAME)){
                 $filterUsername = $request->get($this::USERNAME);
                 if($request->input($this::USERNAME) != 'all'){
-                    $datalogs->where('users.name', $request->get($this::USERNAME));
+                    $datalogs->where(self::USER_NAME, $request->get($this::USERNAME));
                 }
             }
 
@@ -204,7 +204,7 @@ class Log_administratorController extends Controller
         if ($request->has($this::USERNAME)){
            
             if($request->input($this::USERNAME) != 'all'){
-                $datalogs->where('users.name', $request->get($this::USERNAME));
+                $datalogs->where(self::USER_NAME, $request->get($this::USERNAME));
             }
         }
 

@@ -24,6 +24,8 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 class HistoryController extends Controller
 {
  
+	private const BEFORE_DATE = 'before_date';
+	private const AFTER_DATE = 'after_date';
     /**
      * Create a new controller instance.
      *
@@ -64,14 +66,14 @@ class HistoryController extends Controller
 				}
             }
 			
-			if ($request->has('before_date')){
-				$query->where('date_action', '<=', $request->get('before_date'));
-				$before = $request->get('before_date');
+			if ($request->has(self::BEFORE_DATE)){
+				$query->where('date_action', '<=', $request->get(self::BEFORE_DATE));
+				$before = $request->get(self::BEFORE_DATE);
 			}
 
-			if ($request->has('after_date')){
-				$query->where('date_action', '>=', $request->get('after_date'));
-				$after = $request->get('after_date');
+			if ($request->has(self::AFTER_DATE)){
+				$query->where('date_action', '>=', $request->get(self::AFTER_DATE));
+				$after = $request->get(self::AFTER_DATE);
 			}
  
             $data = $query->orderBy('created_at', 'desc')
@@ -85,8 +87,8 @@ class HistoryController extends Controller
                 ->with('message', $message)
                 ->with('data', $data)
                 ->with('type', $type) 
-				->with('before_date', $before)
-                ->with('after_date', $after)
+				->with(self::BEFORE_DATE, $before)
+                ->with(self::AFTER_DATE, $after)
 			;
         }
     }  

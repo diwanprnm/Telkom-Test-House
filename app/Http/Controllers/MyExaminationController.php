@@ -29,6 +29,59 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 class MyExaminationController extends Controller
 {
+
+	private const SEARCH = 'search';
+	private const ADMIN_MYEXAM_INDEX = 'admin.myexam.index';
+	private const MESSAGE = 'message';
+	private const FILTER_TYPE = 'filterType';
+	private const STATUS = 'status';
+	private const BEFORE_DATE = 'before_date';
+	private const AFTER_DATE = 'after_date';
+	private const CREATED_AT = 'created_at';
+	private const COMPANY = 'company';
+	private const EXAMINATIN_TYPE = 'examinationType';
+	private const MEDIA = 'media';
+	private const DEVICE = 'device';
+	private const REGISTRATION_STATUS = 'registration_status';
+	private const FUNCTION_STATUS = 'function_status';
+	private const CONTRACT_STATUS = 'contract_status';
+	private const SPB_STATUS = 'spb_status';
+	private const PAYMENT_STATUS = 'payment_status';
+	private const SPK_STATUS = 'spk_status';
+	private const EXAMINATION_STATUS = 'examination_status';
+	private const RESUME_STATUS = 'resume_status';
+	private const QA_STATUS = 'qa_status';
+	private const CERTIFICATE_STATUS = 'certificate_status';
+	private const SPK_DATE = 'spk_date';
+	private const SPK_CODE = 'spk_code';
+	private const ERROR = 'error';
+	private const EDIT_LOC = '/edit';
+	private const MY_EXAM_LOC = '/admin/myexam/';
+	private const KETERANGAN = 'keterangan';
+	private const EMAIL_FAILS = 'emails.fail';
+	private const KONFORMASI_PEMBATALAN_PENGUJIAN = 'Konfirmasi Pembatalan Pengujian';
+	private const CONTRACT_FILE = 'contract_file';
+	private const MEDIA_EXAMINATION_LOC = '/media/examination/';
+	private const TINJAUAN_KONTRAK = 'Tinjauan Kontrak';
+	private const EXAMINATION_ID = 'examination_id';
+	private const SPB_FILE = 'spb_file';
+	private const EXAM_PRICE = 'exam_price';
+	private const SPB_NUMBER = 'spb_number';
+	private const SPB_DATE = 'spb_date';
+	private const REFERENCE_ID = 'reference_id';
+	private const LAP_UJI_FILE = 'lap_uji_file';
+	private const LAP_UJI = 'Laporan Uji';
+	private const CONTRACT_DATE = 'contract_date';
+	private const TESTING_START = 'testing_start';
+	private const TESTING_END = 'testing_end';
+	private const CERTIFICATE_FILE = 'certificate_file';
+	private const DATE_FORMAT = 'Y-m-d H:i:s';
+	private const USER_NAME = 'user_name';
+	private const DEV_NAME = 'dev_name';
+	private const EXAM_TYPE = 'exam_type';
+	private const EXAM_TYPE_DESC = 'exam_type_desc';
+	private const DATE_FORMAT2 = 'd-m-Y';
+	private const EXAM_ID = 'exam_id';
     /**
      * Create a new controller instance.
      *
@@ -51,7 +104,7 @@ class MyExaminationController extends Controller
 		$adminRole = AdminRole::find($currentUser->id);
 		$message = null;
 		$paginate = 5;
-		$search = trim($request->input('search'));
+		$search = trim($request->input(self::SEARCH));
 		$type = '';
 		$status = '';
 		$before = null;
@@ -62,40 +115,39 @@ class MyExaminationController extends Controller
 		
 		if(!$adminRole){
 			$message = "Data Not Found";
-			return view('admin.myexam.index')
-					->with('message', $message)
+			return view(self::ADMIN_MYEXAM_INDEX)
+					->with(self::MESSAGE, $message)
 					->with('data', $data)
 					->with('type', $examType)
-					->with('search', $search)
-					->with('filterType', $type)
-					->with('status', $status)
-					->with('before_date', $before)
-					->with('after_date', $after);
-					;
+					->with(self::SEARCH, $search)
+					->with(self::FILTER_TYPE, $type)
+					->with(self::STATUS, $status)
+					->with(self::BEFORE_DATE, $before)
+					->with(self::AFTER_DATE, $after);
 		}else{
 			if ($currentUser){
-				$query = Examination::whereNotNull('created_at')
+				$query = Examination::whereNotNull(self::CREATED_AT)
 									->with('user')
-									->with('company')
-									->with('examinationType')
-									->with('media')
-									->with('device');
+									->with(self::COMPANY)
+									->with(self::EXAMINATIN_TYPE)
+									->with(self::MEDIA)
+									->with(self::DEVICE);
 
 				if ($adminRole->registration_status){
 					$query->where(function($q){
 						$q
-							->where('registration_status', 0)
-							->orWhere('registration_status', -1);
+							->where(self::REGISTRATION_STATUS, 0)
+							->orWhere(self::REGISTRATION_STATUS, -1);
 					});
 				}
 
 				if ($adminRole->function_status){
 					$query->orWhere(function($q){
-							$q->where('registration_status', 1)
+							$q->where(self::REGISTRATION_STATUS, 1)
 							  ->where(function($r){
 									$r
-										->where('function_status', 0)
-										->orWhere('function_status', -1);
+										->where(self::FUNCTION_STATUS, 0)
+										->orWhere(self::FUNCTION_STATUS, -1);
 								})
 							;
 						})
@@ -105,11 +157,11 @@ class MyExaminationController extends Controller
 
 				if ($adminRole->contract_status){
 					$query->orWhere(function($q){
-							$q->where('function_status', 1)
+							$q->where(self::FUNCTION_STATUS, 1)
 							  ->where(function($r){
 									$r
-										->where('contract_status', 0)
-										->orWhere('contract_status', -1);
+										->where(self::CONTRACT_STATUS, 0)
+										->orWhere(self::CONTRACT_STATUS, -1);
 								})
 							;
 						})
@@ -118,11 +170,11 @@ class MyExaminationController extends Controller
 				
 				if ($adminRole->spb_status){
 					$query->orWhere(function($q){
-							$q->where('contract_status', 1)
+							$q->where(self::CONTRACT_STATUS, 1)
 							  ->where(function($r){
 									$r
-										->where('spb_status', 0)
-										->orWhere('spb_status', -1);
+										->where(self::SPB_STATUS, 0)
+										->orWhere(self::SPB_STATUS, -1);
 								})
 							;
 						})
@@ -131,11 +183,11 @@ class MyExaminationController extends Controller
 				
 				if ($adminRole->payment_status){
 					$query->orWhere(function($q){
-							$q->where('spb_status', 1)
+							$q->where(self::SPB_STATUS, 1)
 							  ->where(function($r){
 									$r
-										->where('payment_status', 0)
-										->orWhere('payment_status', -1);
+										->where(self::PAYMENT_STATUS, 0)
+										->orWhere(self::PAYMENT_STATUS, -1);
 								})
 							;
 						})
@@ -144,11 +196,11 @@ class MyExaminationController extends Controller
 
 				if ($adminRole->spk_status){
 					$query->orWhere(function($q){
-							$q->where('payment_status', 1)
+							$q->where(self::PAYMENT_STATUS, 1)
 							  ->where(function($r){
 									$r
-										->where('spk_status', 0)
-										->orWhere('spk_status', -1);
+										->where(self::SPK_STATUS, 0)
+										->orWhere(self::SPK_STATUS, -1);
 								})
 							;
 						})
@@ -157,11 +209,11 @@ class MyExaminationController extends Controller
 
 				if ($adminRole->examination_status){
 					$query->orWhere(function($q){
-							$q->where('spk_status', 1)
+							$q->where(self::SPK_STATUS, 1)
 							  ->where(function($r){
 									$r
-										->where('examination_status', 0)
-										->orWhere('examination_status', -1);
+										->where(self::EXAMINATION_STATUS, 0)
+										->orWhere(self::EXAMINATION_STATUS, -1);
 								})
 							;
 						})
@@ -170,11 +222,11 @@ class MyExaminationController extends Controller
 
 				if ($adminRole->resume_status){
 					$query->orWhere(function($q){
-							$q->where('examination_status', 1)
+							$q->where(self::EXAMINATION_STATUS, 1)
 							  ->where(function($r){
 									$r
-										->where('resume_status', 0)
-										->orWhere('resume_status', -1);
+										->where(self::RESUME_STATUS, 0)
+										->orWhere(self::RESUME_STATUS, -1);
 								})
 							;
 						})
@@ -183,11 +235,11 @@ class MyExaminationController extends Controller
 
 				if ($adminRole->qa_status){
 					$query->orWhere(function($q){
-							$q->where('resume_status', 1)
+							$q->where(self::RESUME_STATUS, 1)
 							  ->where(function($r){
 									$r
-										->where('qa_status', 0)
-										->orWhere('qa_status', -1);
+										->where(self::QA_STATUS, 0)
+										->orWhere(self::QA_STATUS, -1);
 								})
 							;
 						})
@@ -196,11 +248,11 @@ class MyExaminationController extends Controller
 
 				if ($adminRole->certificate_status){
 					$query->orWhere(function($q){
-							$q->where('qa_status', 1)
+							$q->where(self::QA_STATUS, 1)
 							  ->where(function($r){
 									$r
-										->where('certificate_status', 0)
-										->orWhere('certificate_status', -1);
+										->where(self::CERTIFICATE_STATUS, 0)
+										->orWhere(self::CERTIFICATE_STATUS, -1);
 								})
 							;
 						})
@@ -209,10 +261,10 @@ class MyExaminationController extends Controller
 				
 				if ($search != null){
 					$query->where(function($qry) use($search){
-						$qry->whereHas('device', function ($q) use ($search){
+						$qry->whereHas(self::DEVICE, function ($q) use ($search){
 								return $q->where('name', 'like', '%'.strtolower($search).'%');
 							})
-						->orWhereHas('company', function ($q) use ($search){
+						->orWhereHas(self::COMPANY, function ($q) use ($search){
 								return $q->where('name', 'like', '%'.strtolower($search).'%');
 							});
 					});
@@ -220,8 +272,8 @@ class MyExaminationController extends Controller
 					$logs = new Logs;
 					$logs->id = Uuid::uuid4();
 					$logs->user_id = $currentUser->id;
-					$logs->action = "search";  
-					$dataSearch = array('search' => $search);
+					$logs->action = self::SEARCH;  
+					$dataSearch = array(self::SEARCH => $search);
 					$logs->data = json_encode($dataSearch);
 					$logs->created_by = $currentUser->id;
 					$logs->page = "EXAMINATION";
@@ -235,58 +287,58 @@ class MyExaminationController extends Controller
 					}
 				}
 
-				if ($request->has('company')){
-					$query->whereHas('company', function ($q) use ($request){
-						return $q->where('name', 'like', '%'.strtolower($request->get('company')).'%');
+				if ($request->has(self::COMPANY)){
+					$query->whereHas(self::COMPANY, function ($q) use ($request){
+						return $q->where('name', 'like', '%'.strtolower($request->get(self::COMPANY)).'%');
 					});
 				}
 
-				if ($request->has('device')){
-					$query->whereHas('device', function ($q) use ($request){
-						return $q->where('name', 'like', '%'.strtolower($request->get('device')).'%');
+				if ($request->has(self::DEVICE)){
+					$query->whereHas(self::DEVICE, function ($q) use ($request){
+						return $q->where('name', 'like', '%'.strtolower($request->get(self::DEVICE)).'%');
 					});
 				}
 
-				if ($request->has('status')){
-					switch ($request->get('status')) {
+				if ($request->has(self::STATUS)){
+					switch ($request->get(self::STATUS)) {
 						case 1:
-							$query->where('registration_status', 1);
+							$query->where(self::REGISTRATION_STATUS, 1);
 							$status = 1;
 							break;
 						case 2:
-							$query->where('function_status', 1);
+							$query->where(self::FUNCTION_STATUS, 1);
 							$status = 2;
 							break;
 						case 3:
-							$query->where('contract_status', 1);
+							$query->where(self::CONTRACT_STATUS, 1);
 							$status = 3;
 							break;
 						case 4:
-							$query->where('spb_status', 1);
+							$query->where(self::SPB_STATUS, 1);
 							$status = 4;
 							break;
 						case 5:
-							$query->where('payment_status', 1);
+							$query->where(self::PAYMENT_STATUS, 1);
 							$status = 5;
 							break;
 						case 6:
-							$query->where('spk_status', 1);
+							$query->where(self::SPK_STATUS, 1);
 							$status = 6;
 							break;
 						case 7:
-							$query->where('examination_status', 1);
+							$query->where(self::EXAMINATION_STATUS, 1);
 							$status = 7;
 							break;
 						case 8:
-							$query->where('resume_status', 1);
+							$query->where(self::RESUME_STATUS, 1);
 							$status = 8;
 							break;
 						case 9:
-							$query->where('qa_status', 1);
+							$query->where(self::QA_STATUS, 1);
 							$status = 9;
 							break;
 						case 10:
-							$query->where('certificate_status', 1);
+							$query->where(self::CERTIFICATE_STATUS, 1);
 							$status = 10;
 							break;
 						
@@ -296,14 +348,14 @@ class MyExaminationController extends Controller
 					}
 				}
 				
-				if ($request->has('before_date')){
-					$query->where('spk_date', '<=', $request->get('before_date'));
-					$before = $request->get('before_date');
+				if ($request->has(self::BEFORE_DATE)){
+					$query->where(self::SPK_DATE, '<=', $request->get(self::BEFORE_DATE));
+					$before = $request->get(self::BEFORE_DATE);
 				}
 
-				if ($request->has('after_date')){
-					$query->where('spk_date', '>=', $request->get('after_date'));
-					$after = $request->get('after_date');
+				if ($request->has(self::AFTER_DATE)){
+					$query->where(self::SPK_DATE, '>=', $request->get(self::AFTER_DATE));
+					$after = $request->get(self::AFTER_DATE);
 				}
 
 				$data_excel = $query->orderBy('updated_at', 'desc')->get();
@@ -316,15 +368,15 @@ class MyExaminationController extends Controller
 					$message = "Data Not Found";
 				}
 				
-				return view('admin.myexam.index')
-					->with('message', $message)
+				return view(self::ADMIN_MYEXAM_INDEX)
+					->with(self::MESSAGE, $message)
 					->with('data', $data)
 					->with('type', $examType)
-					->with('search', $search)
-					->with('filterType', $type)
-					->with('status', $status)
-					->with('before_date', $before)
-					->with('after_date', $after);
+					->with(self::SEARCH, $search)
+					->with(self::FILTER_TYPE, $type)
+					->with(self::STATUS, $status)
+					->with(self::BEFORE_DATE, $before)
+					->with(self::AFTER_DATE, $after);
 			}
 		}
     }
@@ -336,47 +388,35 @@ class MyExaminationController extends Controller
 		
 		$message = null;
         $paginate = 10;
-        $search = trim($request->input('search'));
+        $search = trim($request->input(self::SEARCH));
         $type = '';
 		$status = '';
 
 		$examType = ExaminationType::all();
 		
-        $query = Examination::whereNotNull('created_at')
-                            // ->where(function($q){
-                                // $q->where('registration_status', 0)
-                                    // ->orWhere('registration_status', 1)
-									// ->orWhere('registration_status', -1)
-                                    // ->orWhere('spb_status', 0)
-									// ->orWhere('spb_status', -1)
-                                    // ->orWhere('spb_status', 1)
-									// ->orWhere('payment_status', -1);
-                            // })
+        $query = Examination::whereNotNull(self::CREATED_AT)
                             ->with('user')
-                            ->with('company')
-                            ->with('examinationType')
-                            ->with('media')
-                            ->with('device')
+                            ->with(self::COMPANY)
+                            ->with(self::EXAMINATIN_TYPE)
+                            ->with(self::MEDIA)
+                            ->with(self::DEVICE)
 							;
-		// $query->where(function($q){
-		// 	$q->where('registration_status', '<' , 2);
-		// });
 							
 		if ($adminRole->registration_status){
 			$query->where(function($q){
 				$q
-					->where('registration_status', 0)
-					->orWhere('registration_status', -1);
+					->where(self::REGISTRATION_STATUS, 0)
+					->orWhere(self::REGISTRATION_STATUS, -1);
 			});
 		}
 
 		if ($adminRole->function_status){
 			$query->orWhere(function($q){
-					$q->where('registration_status', 1)
+					$q->where(self::REGISTRATION_STATUS, 1)
 					  ->where(function($r){
 							$r
-								->where('function_status', 0)
-								->orWhere('function_status', -1);
+								->where(self::FUNCTION_STATUS, 0)
+								->orWhere(self::FUNCTION_STATUS, -1);
 						})
 					;
 				})
@@ -386,11 +426,11 @@ class MyExaminationController extends Controller
 
 		if ($adminRole->contract_status){
 			$query->orWhere(function($q){
-					$q->where('function_status', 1)
+					$q->where(self::FUNCTION_STATUS, 1)
 					  ->where(function($r){
 							$r
-								->where('contract_status', 0)
-								->orWhere('contract_status', -1);
+								->where(self::CONTRACT_STATUS, 0)
+								->orWhere(self::CONTRACT_STATUS, -1);
 						})
 					;
 				})
@@ -399,11 +439,11 @@ class MyExaminationController extends Controller
 		
 		if ($adminRole->spb_status){
 			$query->orWhere(function($q){
-					$q->where('contract_status', 1)
+					$q->where(self::CONTRACT_STATUS, 1)
 					  ->where(function($r){
 							$r
-								->where('spb_status', 0)
-								->orWhere('spb_status', -1);
+								->where(self::SPB_STATUS, 0)
+								->orWhere(self::SPB_STATUS, -1);
 						})
 					;
 				})
@@ -412,11 +452,11 @@ class MyExaminationController extends Controller
 		
 		if ($adminRole->payment_status){
 			$query->where(function($q){
-					$q->where('spb_status', 1)
+					$q->where(self::SPB_STATUS, 1)
 					  ->where(function($r){
 							$r
-								->where('payment_status', 0)
-								->orWhere('payment_status', -1);
+								->where(self::PAYMENT_STATUS, 0)
+								->orWhere(self::PAYMENT_STATUS, -1);
 						})
 					;
 				})
@@ -425,11 +465,11 @@ class MyExaminationController extends Controller
 
 		if ($adminRole->spk_status){
 			$query->where(function($q){
-					$q->where('payment_status', 1)
+					$q->where(self::PAYMENT_STATUS, 1)
 					  ->where(function($r){
 							$r
-								->where('spk_status', 0)
-								->orWhere('spk_status', -1);
+								->where(self::SPK_STATUS, 0)
+								->orWhere(self::SPK_STATUS, -1);
 						})
 					;
 				})
@@ -438,11 +478,11 @@ class MyExaminationController extends Controller
 
 		if ($adminRole->examination_status){
 			$query->where(function($q){
-					$q->where('spk_status', 1)
+					$q->where(self::SPK_STATUS, 1)
 					  ->where(function($r){
 							$r
-								->where('examination_status', 0)
-								->orWhere('examination_status', -1);
+								->where(self::EXAMINATION_STATUS, 0)
+								->orWhere(self::EXAMINATION_STATUS, -1);
 						})
 					;
 				})
@@ -451,11 +491,11 @@ class MyExaminationController extends Controller
 
 		if ($adminRole->resume_status){
 			$query->where(function($q){
-					$q->where('examination_status', 1)
+					$q->where(self::EXAMINATION_STATUS, 1)
 					  ->where(function($r){
 							$r
-								->where('resume_status', 0)
-								->orWhere('resume_status', -1);
+								->where(self::RESUME_STATUS, 0)
+								->orWhere(self::RESUME_STATUS, -1);
 						})
 					;
 				})
@@ -464,11 +504,11 @@ class MyExaminationController extends Controller
 
 		if ($adminRole->qa_status){
 			$query->where(function($q){
-					$q->where('resume_status', 1)
+					$q->where(self::RESUME_STATUS, 1)
 					  ->where(function($r){
 							$r
-								->where('qa_status', 0)
-								->orWhere('qa_status', -1);
+								->where(self::QA_STATUS, 0)
+								->orWhere(self::QA_STATUS, -1);
 						})
 					;
 				})
@@ -477,11 +517,11 @@ class MyExaminationController extends Controller
 
 		if ($adminRole->certificate_status){
 			$query->where(function($q){
-					$q->where('qa_status', 1)
+					$q->where(self::QA_STATUS, 1)
 					  ->where(function($r){
 							$r
-								->where('certificate_status', 0)
-								->orWhere('certificate_status', -1);
+								->where(self::CERTIFICATE_STATUS, 0)
+								->orWhere(self::CERTIFICATE_STATUS, -1);
 						})
 					;
 				})
@@ -489,7 +529,7 @@ class MyExaminationController extends Controller
 		} 
 
 		if ($search != null){
-            $query->whereHas('device', function ($q) use ($search){
+            $query->whereHas(self::DEVICE, function ($q) use ($search){
                 return $q->where('name', 'like', '%'.strtolower($search).'%');
             });
         }
@@ -501,68 +541,43 @@ class MyExaminationController extends Controller
 			}
         }
 
-        if ($request->has('company')){
-            $query->whereHas('company', function ($q) use ($request){
-                return $q->where('name', 'like', '%'.strtolower($request->get('company')).'%');
+        if ($request->has(self::COMPANY)){
+            $query->whereHas(self::COMPANY, function ($q) use ($request){
+                return $q->where('name', 'like', '%'.strtolower($request->get(self::COMPANY)).'%');
             });
         }
 
-        if ($request->has('device')){
-            $query->whereHas('device', function ($q) use ($request){
-                return $q->where('name', 'like', '%'.strtolower($request->get('device')).'%');
+        if ($request->has(self::DEVICE)){
+            $query->whereHas(self::DEVICE, function ($q) use ($request){
+                return $q->where('name', 'like', '%'.strtolower($request->get(self::DEVICE)).'%');
             });
         }
-		// if ($request->has('status')){
-			// switch ($request->get('status')) {
-				// case 1:
-					// $query->where('registration_status', '!=', 1);
-					// $status = 1;
-					// break;
-				// case 2:
-					// $query->where('registration_status', 1);
-					// $query->where('spb_status', '!=', 1);
-					// $status = 2;
-					// break;
-				// case 3:
-					// $query->where('spb_status', 1);
-					// $query->where('payment_status', '!=', 1);
-					// $status = 3;
-					// break;
-				// case 4:
-					// $query->where('payment_status', 1);
-					// $status = 4;
-					// break;
-				// default:
-					// $status = 'all';
-					// break;
-			// }
-		// }
 
-        $data = $query->orderBy('created_at')
+        $data = $query->orderBy(self::CREATED_AT)
                     ->paginate($paginate);
 
         if (count($data) == 0){
             $message = 'Data not found';
         }
 		
-        return view('admin.myexam.index')
-            ->with('message', $message)
+        return view(self::ADMIN_MYEXAM_INDEX)
+            ->with(self::MESSAGE, $message)
             ->with('data', $data)
             ->with('type', $examType)
-            ->with('search', $search)
-            ->with('filterType', $type)
-			->with('status', $status);
+            ->with(self::SEARCH, $search)
+            ->with(self::FILTER_TYPE, $type)
+			->with(self::STATUS, $status);
     }
 	
 	public function show($id)
     {
         $exam = Examination::where('id', $id)
                             ->with('user')
-                            ->with('company')
-                            ->with('examinationType')
+                            ->with(self::COMPANY)
+                            ->with(self::EXAMINATIN_TYPE)
                             ->with('examinationLab')
-                            ->with('device')
-                            ->with('media')
+                            ->with(self::DEVICE)
+                            ->with(self::MEDIA)
                             ->first();
 
         return view('admin.myexam.show')
@@ -578,11 +593,11 @@ class MyExaminationController extends Controller
     public function edit($id)
     {
         $exam = Examination::where('id', $id)
-                            ->with('company')
-                            ->with('examinationType')
+                            ->with(self::COMPANY)
+                            ->with(self::EXAMINATIN_TYPE)
                             ->with('examinationLab')
-                            ->with('device')
-                            ->with('media')
+                            ->with(self::DEVICE)
+                            ->with(self::MEDIA)
                             ->first();
 
         $labs = ExaminationLab::all();
@@ -592,19 +607,19 @@ class MyExaminationController extends Controller
 		$adminRole = AdminRole::find($currentUser->id);
 		
 		if ($adminRole->registration_status){
-			$exam->where('registration_status', 0)
-				->orWhere('registration_status', -1);
+			$exam->where(self::REGISTRATION_STATUS, 0)
+				->orWhere(self::REGISTRATION_STATUS, -1);
 		}
 
 		if ($adminRole->function_status){
 			$exam
 				->orWhere(function($q){
 					$q
-						->where('registration_status', 1)
+						->where(self::REGISTRATION_STATUS, 1)
 						->where(function($r){
 							$r
-								->where('function_status', 0)
-								->orWhere('function_status', -1);
+								->where(self::FUNCTION_STATUS, 0)
+								->orWhere(self::FUNCTION_STATUS, -1);
 						})
 					;
 				})
@@ -615,88 +630,16 @@ class MyExaminationController extends Controller
 			$exam
 				->orWhere(function($q){
 					$q
-						->where('function_status', 1)
+						->where(self::FUNCTION_STATUS, 1)
 						->where(function($r){
 							$r
-								->where('contract_status', 0)
-								->orWhere('contract_status', -1);
+								->where(self::CONTRACT_STATUS, 0)
+								->orWhere(self::CONTRACT_STATUS, -1);
 						})
 					;
 				})
 			;
 		}
-
-/* 
-		if ($adminRole->spb_status){
-			$exam
-				->orWhere(function($q){
-					$q
-						->where('contract_status', 1)
-						->where(function($r){
-							$r
-								->where('spb_status', 0)
-								->orWhere('spb_status', -1);
-						})
-					;
-				})
-			;
-		}
-
-		if ($adminRole->payment_status){
-			$exam
-				->orWhere(function($q){
-					$q
-						->where('spb_status', 1)
-						->where(function($r){
-							$r
-								->where('payment_status', 0)
-								->orWhere('payment_status', -1);
-						})
-					;
-				})
-			;
-		}
-
-		if ($adminRole->spk_status){
-			$exam->where('payment_status', 1)
-				->where(function($q){
-					$q->where('spk_status', 0)
-						->orWhere('spk_status', -1);
-				});
-		}
-
-		if ($adminRole->examination_status){
-			$exam->where('spk_status', 1)
-				->where(function($q){
-					$q->where('examination_status', 0)
-						->orWhere('examination_status', -1);
-				});
-		}
-
-		if ($adminRole->resume_status){
-			$exam->where('examination_status', 1)
-				->where(function($q){
-					$q->where('resume_status', 0)
-						->orWhere('resume_status', -1);
-				});
-		}
-
-		if ($adminRole->qa_status){
-			$exam->where('resume_status', 1)
-				->where(function($q){
-					$q->where('qa_status', 0)
-						->orWhere('qa_status', -1);
-				});
-		}
-
-		if ($adminRole->certificate_status){
-			$exam->where('qa_status', 1)
-				->where(function($q){
-					$q->where('certificate_status', 0)
-						->orWhere('certificate_status', -1);
-				});
-		}
- */	
 
         return view('admin.myexam.edit')
             ->with('data', $exam)
@@ -723,43 +666,42 @@ class MyExaminationController extends Controller
         if ($request->has('examination_lab_id')){
             $exam->examination_lab_id = $request->input('examination_lab_id');
         }
-        if ($request->has('spk_code')){
-            $exam->spk_code = $request->input('spk_code');
-			if($this->checkSPKCode($request->input('spk_code')) > 0){
-				Session::flash('error', 'SPK Number must be unique, please Re-Generate');
-                return redirect('/admin/myexam/'.$exam->id.'/edit');
+        if ($request->has(self::SPK_CODE)){
+            $exam->spk_code = $request->input(self::SPK_CODE);
+			if($this->checkSPKCode($request->input(self::SPK_CODE)) > 0){
+				Session::flash(self::ERROR, 'SPK Number must be unique, please Re-Generate');
+                return redirect(self::MY_EXAM_LOC.$exam->id.self::EDIT_LOC);
 			}
         }
-        if ($request->has('registration_status')){
-			$status = $request->input('registration_status');
+        if ($request->has(self::REGISTRATION_STATUS)){
+			$status = $request->input(self::REGISTRATION_STATUS);
 			$exam->registration_status = $status;
 			if($status == 1){
 				$this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.registrasi", "Acc Registrasi");
 			}else if($status == -1){
-				$exam->keterangan = $request->input('keterangan');
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Registrasi",$request->input('keterangan'));
+				$exam->keterangan = $request->input(self::KETERANGAN);
+				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAIL_FAILS, self::KONFORMASI_PEMBATALAN_PENGUJIAN,"Registrasi",$request->input(self::KETERANGAN));
 			}
         }
-		if ($request->has('function_status')){
-			$status = $request->input('function_status');
+		if ($request->has(self::FUNCTION_STATUS)){
+			$status = $request->input(self::FUNCTION_STATUS);
 			$exam->function_status = $status;
 			if($status == 1){
-				// $this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.function", "Acc Uji Fungsi");
+				// $this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.function", "Acc Uji Fungsi")
 			}else if($status == -1){
-				$exam->keterangan = $request->input('keterangan');
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Uji Fungsi",$request->input('keterangan'));
+				$exam->keterangan = $request->input(self::KETERANGAN);
+				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAIL_FAILS, self::KONFORMASI_PEMBATALAN_PENGUJIAN,"Uji Fungsi",$request->input(self::KETERANGAN));
 			}
         }
-        if ($request->has('contract_status')){
-			if ($request->hasFile('contract_file')) {
-				$ext_file = $request->file('contract_file')->getClientOriginalExtension();
+        if ($request->has(self::CONTRACT_STATUS)){
+			if ($request->hasFile(self::CONTRACT_FILE)) {
+				$ext_file = $request->file(self::CONTRACT_FILE)->getClientOriginalExtension();
 				$name_file = uniqid().'_contract_'.$exam->id.'.'.$ext_file;
-				$path_file = public_path().'/media/examination/'.$exam->id;
+				$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
 				if (!file_exists($path_file)) {
 					mkdir($path_file, 0775);
 				}
-				if($request->file('contract_file')->move($path_file,$name_file)){
-					$attach = ExaminationAttach::where('name', 'Tinjauan Kontrak')->where('examination_id', ''.$exam->id.'')->first();
+				if($request->file(self::CONTRACT_FILE)->move($path_file,$name_file)){
 
 					if ($attach){
 						$attach->attachment = $name_file;
@@ -770,7 +712,7 @@ class MyExaminationController extends Controller
 						$attach = new ExaminationAttach;
 						$attach->id = Uuid::uuid4();
 						$attach->examination_id = $exam->id; 
-						$attach->name = 'Tinjauan Kontrak';
+						$attach->name = self::TINJAUAN_KONTRAK;
 						$attach->attachment = $name_file;
 						$attach->created_by = $currentUser->id;
 						$attach->updated_by = $currentUser->id;
@@ -778,32 +720,31 @@ class MyExaminationController extends Controller
 						$attach->save();
 					}
 				}else{
-					Session::flash('error', 'Save contract review to directory failed');
-					return redirect('/admin/myexam/'.$exam->id.'/edit');
+					Session::flash(self::ERROR, 'Save contract review to directory failed');
+					return redirect(self::MY_EXAM_LOC.$exam->id.self::EDIT_LOC);
 				}
 			}
-			$status = $request->input('contract_status');
+			$status = $request->input(self::CONTRACT_STATUS);
             $exam->contract_status = $status;
 			if($status == 1){
-				$path_file = public_path().'/media/examination/'.$id;
-				$attach = ExaminationAttach::where('name', 'Tinjauan Kontrak')->where('examination_id', ''.$id.'')->first();
+				$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$id;
+				$attach = ExaminationAttach::where('name', self::TINJAUAN_KONTRAK)->where(self::EXAMINATION_ID, ''.$id.'')->first();
 					$attach_name = $attach->attachment;
-				// $this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.contract", "Upload Tinjauan Pustaka",$path_file."/".$attach_name);
 			}else if($status == -1){
-				$exam->keterangan = $request->input('keterangan');
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Tinjauan Pustaka",$request->input('keterangan'));
+				$exam->keterangan = $request->input(self::KETERANGAN);
+				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAIL_FAILS, self::KONFORMASI_PEMBATALAN_PENGUJIAN,"Tinjauan Pustaka",$request->input(self::KETERANGAN));
 			}
         }
-		if ($request->has('spb_status')){
-			if ($request->hasFile('spb_file')) {
-				$ext_file = $request->file('spb_file')->getClientOriginalExtension();
+		if ($request->has(self::SPB_STATUS)){
+			if ($request->hasFile(self::SPB_FILE)) {
+				$ext_file = $request->file(self::SPB_FILE)->getClientOriginalExtension();
 				$name_file = uniqid().'_spb_'.$exam->id.'.'.$ext_file;
-				$path_file = public_path().'/media/examination/'.$exam->id;
+				$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
 				if (!file_exists($path_file)) {
 					mkdir($path_file, 0775);
 				}
-				if($request->file('spb_file')->move($path_file,$name_file)){
-					$attach = ExaminationAttach::where('name', 'SPB')->where('examination_id', ''.$exam->id.'')->first();
+				if($request->file(self::SPB_FILE)->move($path_file,$name_file)){
+					$attach = ExaminationAttach::where('name', 'SPB')->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
 
 					if ($attach){
 						$attach->attachment = $name_file;
@@ -822,26 +763,26 @@ class MyExaminationController extends Controller
 						$attach->save();
 					}					
 				}else{
-					Session::flash('error', 'Save spb to directory failed');
-					return redirect('/admin/myexam/'.$exam->id.'/edit');
+					Session::flash(self::ERROR, 'Save spb to directory failed');
+					return redirect(self::MY_EXAM_LOC.$exam->id.self::EDIT_LOC);
 				}
 			}
-			$status = $request->input('spb_status');
+			$status = $request->input(self::SPB_STATUS);
             $exam->spb_status = $status;
 			if($status == 1){
-				$exam->price = $request->input('exam_price');
-				$path_file = public_path().'/media/examination/'.$id;
-				$attach = ExaminationAttach::where('name', 'SPB')->where('examination_id', ''.$id.'')->first();
+				$exam->price = $request->input(self::EXAM_PRICE);
+				$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$id;
+				$attach = ExaminationAttach::where('name', 'SPB')->where(self::EXAMINATION_ID, ''.$id.'')->first();
 					$attach_name = $attach->attachment;
 				$this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.spb", "Upload SPB",$path_file."/".$attach_name);
 			}else if($status == -1){
-				$exam->price = $request->input('exam_price');
-				$exam->keterangan = $request->input('keterangan');
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","SPB",$request->input('keterangan'));
+				$exam->price = $request->input(self::EXAM_PRICE);
+				$exam->keterangan = $request->input(self::KETERANGAN);
+				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAIL_FAILS, self::KONFORMASI_PEMBATALAN_PENGUJIAN,"SPB",$request->input(self::KETERANGAN));
 			}
         }
-        if ($request->has('payment_status')){
-            $status = $request->input('payment_status');
+        if ($request->has(self::PAYMENT_STATUS)){
+            $status = $request->input(self::PAYMENT_STATUS);
             $exam->payment_status = $status;
 			if($status == 1){
 				if($this->cekRefID($exam->id) == 0){
@@ -850,51 +791,51 @@ class MyExaminationController extends Controller
 					$income->company_id = $exam->company_id;
 					$income->inc_type = 1; 
 					$income->reference_id = $exam->id; 
-					$income->reference_number = $request->input('spb_number');
-					$income->tgl = $request->input('spb_date');
+					$income->reference_number = $request->input(self::SPB_NUMBER);
+					$income->tgl = $request->input(self::SPB_DATE);
 					$income->created_by = $currentUser->id;
 
 				}else{
-					$income = Income::where('reference_id', $exam->id)->first();
+					$income = Income::where(self::REFERENCE_ID, $exam->id)->first();
 				}
-					$income->price = $request->input('exam_price');
+					$income->price = $request->input(self::EXAM_PRICE);
 					$income->updated_by = $currentUser->id;
 					$income->save();
 				$this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.pembayaran", "ACC Pembayaran");
 			}else if($status == -1){
-				Income::where('reference_id', '=' ,''.$exam->id.'')->delete();
-				$exam->keterangan = $request->input('keterangan');
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Pembayaran",$request->input('keterangan'));
+				Income::where(self::REFERENCE_ID, '=' ,''.$exam->id.'')->delete();
+				$exam->keterangan = $request->input(self::KETERANGAN);
+				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAIL_FAILS, self::KONFORMASI_PEMBATALAN_PENGUJIAN,"Pembayaran",$request->input(self::KETERANGAN));
 			}
         }
-        if ($request->has('spk_status')){
-            $status = $request->input('spk_status');
+        if ($request->has(self::SPK_STATUS)){
+            $status = $request->input(self::SPK_STATUS);
             $exam->spk_status = $status;
 			if($status == -1){
-				$exam->keterangan = $request->input('keterangan');
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Pembuatan SPK",$request->input('keterangan'));
+				$exam->keterangan = $request->input(self::KETERANGAN);
+				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAIL_FAILS, self::KONFORMASI_PEMBATALAN_PENGUJIAN,"Pembuatan SPK",$request->input(self::KETERANGAN));
 			}
         }
-        if ($request->has('examination_status')){
-            $status = $request->input('examination_status');
+        if ($request->has(self::EXAMINATION_STATUS)){
+            $status = $request->input(self::EXAMINATION_STATUS);
             $exam->examination_status = $status;
 			if($status == 1){
 				$this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.uji", "Pelaksanaan Uji");
 			}else if($status == -1){
-				$exam->keterangan = $request->input('keterangan');
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Pelaksanaan Uji",$request->input('keterangan'));
+				$exam->keterangan = $request->input(self::KETERANGAN);
+				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAIL_FAILS, self::KONFORMASI_PEMBATALAN_PENGUJIAN,"Pelaksanaan Uji",$request->input(self::KETERANGAN));
 			}
         }
-        if ($request->has('resume_status')){
-			if ($request->hasFile('lap_uji_file')) {
-				$ext_file = $request->file('lap_uji_file')->getClientOriginalExtension();
+        if ($request->has(self::RESUME_STATUS)){
+			if ($request->hasFile(self::LAP_UJI_FILE)) {
+				$ext_file = $request->file(self::LAP_UJI_FILE)->getClientOriginalExtension();
 				$name_file = uniqid().'_resume_'.$exam->id.'.'.$ext_file;
-				$path_file = public_path().'/media/examination/'.$exam->id;
+				$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
 				if (!file_exists($path_file)) {
 					mkdir($path_file, 0775);
 				}
-				if($request->file('lap_uji_file')->move($path_file,$name_file)){
-					$attach = ExaminationAttach::where('name', 'Laporan Uji')->where('examination_id', ''.$exam->id.'')->first();
+				if($request->file(self::LAP_UJI_FILE)->move($path_file,$name_file)){
+					$attach = ExaminationAttach::where('name', self::LAP_UJI)->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
 
 					if ($attach){
 						$attach->attachment = $name_file;
@@ -905,7 +846,7 @@ class MyExaminationController extends Controller
 						$attach = new ExaminationAttach;
 						$attach->id = Uuid::uuid4();
 						$attach->examination_id = $exam->id; 
-						$attach->name = 'Laporan Uji';
+						$attach->name = self::LAP_UJI;
 						$attach->attachment = $name_file;
 						$attach->created_by = $currentUser->id;
 						$attach->updated_by = $currentUser->id;
@@ -913,35 +854,35 @@ class MyExaminationController extends Controller
 						$attach->save();
 					}
 				}else{
-					Session::flash('error', 'Save resume to directory failed');
-					return redirect('/admin/myexam/'.$exam->id.'/edit');
+					Session::flash(self::ERROR, 'Save resume to directory failed');
+					return redirect(self::MY_EXAM_LOC.$exam->id.self::EDIT_LOC);
 				}
 			}
-            $status = $request->input('resume_status');
+            $status = $request->input(self::RESUME_STATUS);
             $exam->resume_status = $status;
 			if($status == -1){
-				$exam->keterangan = $request->input('keterangan');
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Laporan Uji",$request->input('keterangan'));
+				$exam->keterangan = $request->input(self::KETERANGAN);
+				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAIL_FAILS, self::KONFORMASI_PEMBATALAN_PENGUJIAN,self::LAP_UJI,$request->input(self::KETERANGAN));
 			}
         }
-        if ($request->has('qa_status')){
-            $status = $request->input('qa_status');
+        if ($request->has(self::QA_STATUS)){
+            $status = $request->input(self::QA_STATUS);
             $passed = $request->input('passed');
             $exam->qa_status = $status;
             $exam->qa_passed = $passed;
 			if($status == -1){
-				$exam->keterangan = $request->input('keterangan');
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Sidang QA",$request->input('keterangan'));
+				$exam->keterangan = $request->input(self::KETERANGAN);
+				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAIL_FAILS, self::KONFORMASI_PEMBATALAN_PENGUJIAN,"Sidang QA",$request->input(self::KETERANGAN));
 			}
         }
-        if ($request->has('certificate_status')){
-            $status = $request->input('certificate_status');
+        if ($request->has(self::CERTIFICATE_STATUS)){
+            $status = $request->input(self::CERTIFICATE_STATUS);
             $exam->certificate_status = $status;
 			if($status == 1){
 				$this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.sertifikat", "Penerbitan Sertfikat");
 			}else if($status == -1){
-				$exam->keterangan = $request->input('keterangan');
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.fail", "Konfirmasi Pembatalan Pengujian","Pembuatan Sertifikat",$request->input('keterangan'));
+				$exam->keterangan = $request->input(self::KETERANGAN);
+				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAIL_FAILS, self::KONFORMASI_PEMBATALAN_PENGUJIAN,"Pembuatan Sertifikat",$request->input(self::KETERANGAN));
 			}
         }
         if ($request->has('examination_date')){
@@ -956,8 +897,8 @@ class MyExaminationController extends Controller
         if ($request->has('certificate_date')){
             $exam->certificate_date = $request->input('certificate_date');
         }
-		if ($request->has('spk_date')){
-            $exam->spk_date = $request->input('spk_date');
+		if ($request->has(self::SPK_DATE)){
+            $exam->spk_date = $request->input(self::SPK_DATE);
         }
 		if ($request->has('function_date')){
             $exam->function_date = $request->input('function_date');
@@ -965,14 +906,14 @@ class MyExaminationController extends Controller
 		if ($request->has('catatan')){
             $exam->catatan = $request->input('catatan');
         }
-		if ($request->has('contract_date')){
-            $exam->contract_date = $request->input('contract_date');
+		if ($request->has(self::CONTRACT_DATE)){
+            $exam->contract_date = $request->input(self::CONTRACT_DATE);
         }
-		if ($request->has('testing_start')){
-            $exam->testing_start = $request->input('testing_start');
+		if ($request->has(self::TESTING_START)){
+            $exam->testing_start = $request->input(self::TESTING_START);
         }
-		if ($request->has('testing_end')){
-            $exam->testing_end = $request->input('testing_end');
+		if ($request->has(self::TESTING_END)){
+            $exam->testing_end = $request->input(self::TESTING_END);
         }
 		if ($request->has('urel_test_date')){
             $exam->urel_test_date = $request->input('urel_test_date');
@@ -980,65 +921,33 @@ class MyExaminationController extends Controller
 		if ($request->has('deal_test_date')){
             $exam->deal_test_date = $request->input('deal_test_date');
         }
-		if ($request->has('spb_number')){
-            $exam->spb_number = $request->input('spb_number');
+		if ($request->has(self::SPB_NUMBER)){
+            $exam->spb_number = $request->input(self::SPB_NUMBER);
         }
-		if ($request->has('spb_date')){
-            $exam->spb_date = $request->input('spb_date');
+		if ($request->has(self::SPB_DATE)){
+            $exam->spb_date = $request->input(self::SPB_DATE);
         }
 
-        // if ($request->hasFile('resume_file')) {
-            // $ext_file = $request->file('resume_file')->getClientOriginalExtension();
-            // $name_file = uniqid().'_resume_'.$exam->id.'.'.$ext_file;
-            // $path_file = public_path().'/media/examination/'.$exam->id;
-            // if (!file_exists($path_file)) {
-                // mkdir($path_file, 0775);
-            // }
-            // if($request->file('resume_file')->move($path_file,$name_file)){
-                // $attach = ExaminationAttach::where('name', 'Laporan Uji')->first();
-
-                // if ($attach){
-                    // $attach->attachment = $name_file;
-                    // $attach->updated_by = $currentUser->id;
-
-                    // $attach->save();
-                // } else{
-                    // $attach = new ExaminationAttach;
-                    // $attach->id = Uuid::uuid4();
-                    // $attach->examination_id = $exam->id; 
-                    // $attach->name = 'Laporan Uji';
-                    // $attach->attachment = $name_file;
-                    // $attach->created_by = $currentUser->id;
-                    // $attach->updated_by = $currentUser->id;
-
-                    // $attach->save();
-                // }
-            // }else{
-                // Session::flash('error', 'Save spb to directory failed');
-                // return redirect('/admin/myexam/'.$exam->id.'/edit');
-            // }
-        // }
-
-        if ($request->hasFile('certificate_file')) {
-            $ext_file = $request->file('certificate_file')->getClientOriginalExtension();
+        if ($request->hasFile(self::CERTIFICATE_FILE)) {
+            $ext_file = $request->file(self::CERTIFICATE_FILE)->getClientOriginalExtension();
             $name_file = uniqid().'_certificate_'.$exam->device_id.'.'.$ext_file;
             $path_file = public_path().'/media/device/'.$exam->device_id;
             if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
-            if($request->file('certificate_file')->move($path_file,$name_file)){
+            if($request->file(self::CERTIFICATE_FILE)->move($path_file,$name_file)){
                 $device = Device::findOrFail($exam->device_id);
                 if ($device){
                     $device->certificate = $name_file;
-                    $device->status = $request->input('certificate_status');
+                    $device->status = $request->input(self::CERTIFICATE_STATUS);
                     $device->valid_from = $request->input('valid_from');
                     $device->valid_thru = $request->input('valid_thru');
 
                     $device->save();
                 }
             }else{
-                Session::flash('error', 'Save spb to directory failed');
-                return redirect('/admin/myexam/'.$exam->id.'/edit');
+                Session::flash(self::ERROR, 'Save spb to directory failed');
+                return redirect(self::MY_EXAM_LOC.$exam->id.self::EDIT_LOC);
             }
         }
 		
@@ -1052,37 +961,37 @@ class MyExaminationController extends Controller
              
 				$exam_hist = new ExaminationHistory;
 				$exam_hist->examination_id = $exam->id;
-				$exam_hist->date_action = date('Y-m-d H:i:s');
-				$exam_hist->tahap = $request->input('status');
-					if ($request->has('registration_status')){$exam_hist->status = $request->input('registration_status');}
-					if ($request->has('function_status')){$exam_hist->status = $request->input('function_status');}
-					if ($request->has('contract_status')){$exam_hist->status = $request->input('contract_status');}
-					if ($request->has('spb_status')){$exam_hist->status = $request->input('spb_status');}
-					if ($request->has('payment_status')){$exam_hist->status = $request->input('payment_status');}
-					if ($request->has('spk_status')){$exam_hist->status = $request->input('spk_status');}
-					if ($request->has('examination_status')){$exam_hist->status = $request->input('examination_status');}
-					if ($request->has('resume_status')){$exam_hist->status = $request->input('resume_status');}
-					if ($request->has('qa_status')){$exam_hist->status = $request->input('qa_status');}
-					if ($request->has('certificate_status')){$exam_hist->status = $request->input('certificate_status');}
-				$exam_hist->keterangan = $request->input('keterangan');
+				$exam_hist->date_action = date(self::DATE_FORMAT);
+				$exam_hist->tahap = $request->input(self::STATUS);
+					if ($request->has(self::REGISTRATION_STATUS)){$exam_hist->status = $request->input(self::REGISTRATION_STATUS);}
+					if ($request->has(self::FUNCTION_STATUS)){$exam_hist->status = $request->input(self::FUNCTION_STATUS);}
+					if ($request->has(self::CONTRACT_STATUS)){$exam_hist->status = $request->input(self::CONTRACT_STATUS);}
+					if ($request->has(self::SPB_STATUS)){$exam_hist->status = $request->input(self::SPB_STATUS);}
+					if ($request->has(self::PAYMENT_STATUS)){$exam_hist->status = $request->input(self::PAYMENT_STATUS);}
+					if ($request->has(self::SPK_STATUS)){$exam_hist->status = $request->input(self::SPK_STATUS);}
+					if ($request->has(self::EXAMINATION_STATUS)){$exam_hist->status = $request->input(self::EXAMINATION_STATUS);}
+					if ($request->has(self::RESUME_STATUS)){$exam_hist->status = $request->input(self::RESUME_STATUS);}
+					if ($request->has(self::QA_STATUS)){$exam_hist->status = $request->input(self::QA_STATUS);}
+					if ($request->has(self::CERTIFICATE_STATUS)){$exam_hist->status = $request->input(self::CERTIFICATE_STATUS);}
+				$exam_hist->keterangan = $request->input(self::KETERANGAN);
 				$exam_hist->created_by = $currentUser->id;
-				$exam_hist->created_at = date('Y-m-d H:i:s');
+				$exam_hist->created_at = date(self::DATE_FORMAT);
 				$exam_hist->save();
 
                 $logs = new Logs;
                 $logs->id = Uuid::uuid4();
                 $logs->user_id = $currentUser->id;
-                $logs->action = "Update ".$request->input('status');   
+                $logs->action = "Update ".$request->input(self::STATUS);   
                 $logs->data = $exam;
                 $logs->created_by = $currentUser->id;
                 $logs->page = "MY EXAMINATION";
                 $logs->save();
 
-            Session::flash('message', 'Examination successfully updated');
+            Session::flash(self::MESSAGE, 'Examination successfully updated');
             return redirect('/admin/myexam');
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
-            return redirect('/admin/myexam/'.$exam->id.'/edit');
+            Session::flash(self::ERROR, 'Save failed');
+            return redirect(self::MY_EXAM_LOC.$exam->id.self::EDIT_LOC);
         }
     }
 	
@@ -1097,10 +1006,10 @@ class MyExaminationController extends Controller
         $data = User::findOrFail($user);
 		
         Mail::send($message, array(
-			'user_name' => $data->name,
-			'dev_name' => $dev_name,
-			'exam_type' => $exam_type,
-			'exam_type_desc' => $exam_type_desc
+			self::USER_NAME => $data->name,
+			self::DEV_NAME => $dev_name,
+			self::EXAM_TYPE => $exam_type,
+			self::EXAM_TYPE_DESC => $exam_type_desc
 			), function ($m) use ($data,$subject) {
             $m->to($data->email)->subject($subject);
         });
@@ -1113,10 +1022,10 @@ class MyExaminationController extends Controller
         $data = User::findOrFail($user);
 		
         Mail::send($message, array(
-			'user_name' => $data->name,
-			'dev_name' => $dev_name,
-			'exam_type' => $exam_type,
-			'exam_type_desc' => $exam_type_desc
+			self::USER_NAME => $data->name,
+			self::DEV_NAME => $dev_name,
+			self::EXAM_TYPE => $exam_type,
+			self::EXAM_TYPE_DESC => $exam_type_desc
 			), function ($m) use ($data,$subject,$attach) {
             $m->to($data->email)->subject($subject);
 			$m->attach($attach);
@@ -1130,12 +1039,12 @@ class MyExaminationController extends Controller
         $data = User::findOrFail($user);
 		
         Mail::send($message, array(
-			'user_name' => $data->name,
-			'dev_name' => $dev_name,
-			'exam_type' => $exam_type,
-			'exam_type_desc' => $exam_type_desc,
+			self::USER_NAME => $data->name,
+			self::DEV_NAME => $dev_name,
+			self::EXAM_TYPE => $exam_type,
+			self::EXAM_TYPE_DESC => $exam_type_desc,
 			'tahap' => $tahap,
-			'keterangan' => $keterangan
+			self::KETERANGAN => $keterangan
 			), function ($m) use ($data,$subject) {
             $m->to($data->email)->subject($subject);
         });
@@ -1153,19 +1062,19 @@ class MyExaminationController extends Controller
 		$currentUser = Auth::user();
 		
 		$exam_id = $request->input('hide_id_exam');
-		$testing_start = $request->input('testing_start');
+		$testing_start = $request->input(self::TESTING_START);
 			$testing_start_ina_temp = strtotime($testing_start);
-			$testing_start_ina = date('d-m-Y', $testing_start_ina_temp);
-		$testing_end = $request->input('testing_end');
+			$testing_start_ina = date(self::DATE_FORMAT2, $testing_start_ina_temp);
+		$testing_end = $request->input(self::TESTING_END);
 			$testing_end_ina_temp = strtotime($testing_end);
-			$testing_end_ina = date('d-m-Y', $testing_end_ina_temp);
-		$contract_date = $request->input('contract_date');
+			$testing_end_ina = date(self::DATE_FORMAT2, $testing_end_ina_temp);
+		$contract_date = $request->input(self::CONTRACT_DATE);
 			$contract_date_ina_temp = strtotime($contract_date);
-			$contract_date_ina = date('d-m-Y', $contract_date_ina_temp);
+			$contract_date_ina = date(self::DATE_FORMAT2, $contract_date_ina_temp);
 		
 		$exam = Examination::where('id', $exam_id)
 				->with('user')
-				->with('device')
+				->with(self::DEVICE)
 				->first();
 			
 			try{
@@ -1175,10 +1084,10 @@ class MyExaminationController extends Controller
 						testing_start = '".$testing_start."',
 						testing_end = '".$testing_end."',
 						updated_by = '".$currentUser['attributes']['id']."',
-						updated_at = '".date('Y-m-d H:i:s')."'
+						updated_at = '".date(self::DATE_FORMAT)."'
 					WHERE id = '".$exam_id."'
 				";
-				$data_update = DB::update($query_update);
+				DB::update($query_update);
 				
 				$data = Array([
 					'nama_pemohon' => $exam->user->name,
@@ -1189,20 +1098,17 @@ class MyExaminationController extends Controller
 					'kapasitas_perangkat' => $exam->device->capacity,
 					'referensi_perangkat' => $exam->device->test_reference,
 					'pembuat_perangkat' => $exam->device->manufactured_by,
-					'testing_start' => $testing_start_ina,
-					'testing_end' => $testing_end_ina,
-					'contract_date' => $contract_date_ina
+					self::TESTING_START => $testing_start_ina,
+					self::TESTING_END => $testing_end_ina,
+					self::CONTRACT_DATE => $contract_date_ina
 				]);
 				
 				$request->session()->put('key_contract', $data);
 				
-				Session::flash('message', 'Contract successfully created');
-				// $this->sendProgressEmail("Pengujian atas nama ".$user_name." dengan alamat email ".$user_email.", telah melakukan proses Upload Bukti Pembayaran");
-				// return back();
+				Session::flash(self::MESSAGE, 'Contract successfully created');
 				echo 1;
 			} catch(Exception $e){
-				Session::flash('error', 'Contract failed');
-				// return back();
+				Session::flash(self::ERROR, 'Contract failed');
 				echo 0;
 			}
     }
@@ -1214,8 +1120,7 @@ class MyExaminationController extends Controller
     }
 	
 	public function generateSPKCodeManual(Request $request) {
-		$gen_spk_code = $this->generateSPKCOde($request->input('lab_code'),$request->input('exam_type'),$request->input('year'));
-		return $gen_spk_code;
+		return $this->generateSPKCOde($request->input('lab_code'),$request->input(self::EXAM_TYPE),$request->input('year'));
     }
 	
 	public function generateSPKCode($a,$b,$c) {
@@ -1229,7 +1134,7 @@ class MyExaminationController extends Controller
 			ORDER BY last_numb DESC LIMIT 1
 		";
 		$data = DB::select($query);
-		if (count($data) == 0){
+		if (!count($data)){
 			return ''.$a.'/001/'.$b.'/'.$c.'';
 		}
 		else{
@@ -1247,9 +1152,9 @@ class MyExaminationController extends Controller
     }
 	
 	public function generateSPBParam(Request $request) {
-		$request->session()->put('key_my_exam_id_for_generate_spb', $request->input('exam_id'));
-		$request->session()->put('key_my_spb_number_for_generate_spb', $request->input('spb_number'));
-		$request->session()->put('key_my_spb_date_for_generate_spb', $request->input('spb_date'));
+		$request->session()->put('key_my_exam_id_for_generate_spb', $request->input(self::EXAM_ID));
+		$request->session()->put('key_my_spb_number_for_generate_spb', $request->input(self::SPB_NUMBER));
+		$request->session()->put('key_my_spb_date_for_generate_spb', $request->input(self::SPB_DATE));
 		echo 1;
     }
 	
@@ -1258,12 +1163,12 @@ class MyExaminationController extends Controller
 		$spb_number = $request->session()->pull('key_my_spb_number_for_generate_spb');
 		$spb_date = $request->session()->pull('key_my_spb_date_for_generate_spb');
 		$exam = Examination::where('id', $exam_id)
-					->with('device')
+					->with(self::DEVICE)
 					->first()
 		;
 		$query_price = "SELECT price FROM stels WHERE code = '".$exam->device->test_reference."'";
 		$price = DB::select($query_price);
-		if(count($price) == 0){
+		if(!count($price)){
 			$price = 0;
 		}else{
 			$price = $price[0]->price;
@@ -1272,12 +1177,10 @@ class MyExaminationController extends Controller
 		$query_stels = "SELECT * FROM stels WHERE is_active = 1";
 		$data_stels = DB::select($query_stels);
 			
-		// setlocale(LC_MONETARY, 'it_IT');
-		// $price = number_format($price[0]->price, 0, ',', '.');
 		return view('admin.myexam.spb')
-					->with('exam_id', $exam_id)
-					->with('spb_number', $spb_number)
-					->with('spb_date', $spb_date)
+					->with(self::EXAM_ID, $exam_id)
+					->with(self::SPB_NUMBER, $spb_number)
+					->with(self::SPB_DATE, $spb_date)
 					->with('data', $exam)
 					->with('price', $price)
 					->with('data_stels', $data_stels)
@@ -1285,22 +1188,22 @@ class MyExaminationController extends Controller
     }
 	
 	public function generateSPBData(Request $request) {
-		if($this->cekSPBNumber($request->input('spb_number')) == 0){
-			$exam_id = $request->input('exam_id');
-			$spb_number = $request->input('spb_number');
-			$spb_date = $request->input('spb_date');
+		if($this->cekSPBNumber($request->input(self::SPB_NUMBER)) == 0){
+			$exam_id = $request->input(self::EXAM_ID);
+			$spb_number = $request->input(self::SPB_NUMBER);
+			$spb_date = $request->input(self::SPB_DATE);
 			$arr_nama_perangkat = $request->input('arr_nama_perangkat');
 			$arr_biaya = $request->input('arr_biaya');
 			$exam = Examination::where('id', $exam_id)
 						->with('user')
-						->with('company')
-						->with('examinationType')
+						->with(self::COMPANY)
+						->with(self::EXAMINATIN_TYPE)
 						->first()
 			;
 			$data = []; 
 			$data[] = [
-				'spb_number' => $spb_number,
-				'spb_date' => $spb_date,
+				self::SPB_NUMBER => $spb_number,
+				self::SPB_DATE => $spb_date,
 				'arr_nama_perangkat' => $arr_nama_perangkat,
 				'arr_biaya' => $arr_biaya,
 				'exam' => $exam
@@ -1314,13 +1217,13 @@ class MyExaminationController extends Controller
 	
 	function cekSPBNumber($spb_number)
     {
-		$exam = Examination::where('spb_number','=',''.$spb_number.'')->get();
+		$exam = Examination::where(self::SPB_NUMBER,'=',''.$spb_number.'')->get();
 		return count($exam);
     }
 	
 	function cekRefID($exam_id)
     {
-		$income = Income::where('reference_id','=',''.$exam_id.'')->get();
+		$income = Income::where(self::REFERENCE_ID,'=',''.$exam_id.'')->get();
 		return count($income);
     }
 }

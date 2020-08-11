@@ -65,7 +65,8 @@ class FunctionTestController extends Controller
             }
 			
             return view('admin.functiontest.index')
-                ->with('data', $data);
+                ->with('data', $data)
+                ->with('message', $message);
         }
     }
 
