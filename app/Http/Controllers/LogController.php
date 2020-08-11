@@ -237,19 +237,11 @@ class LogController extends Controller
 				$row->search_date
 			];
 		}
-        $currentUser = Auth::user();
+        
         $logService = new LogService();
         $logService->createLog('download_excel',"LOG","" );
 
-      /*  $logs = new Logs;
-        $logs->id = Uuid::uuid4();
-        $logs->user_id = $currentUser->id;
-        $logs->action = "download_excel";   
-        $logs->data = "";
-        $logs->created_by = $currentUser->id;
-        $logs->page = "LOG";
-        $logs->save();*/
-
+    
 		// Generate and return the spreadsheet
 		Excel::create('Data Aktivitas User', function($excel) use ($examsArray) {
 
