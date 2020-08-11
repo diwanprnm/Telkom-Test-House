@@ -172,12 +172,12 @@
 										    {
 										        if($array[$bottom][$field] == $elem){
 													return true;
-												}
-										        else if(is_array($array[$bottom][$field]))
-												{
-													if(in_multiarray($elem, ($array[$bottom][$field]))){
+												}else if( 
+										        	is_array($array[$bottom][$field]) && 
+										        	in_multiarray($elem, ($array[$bottom][$field])))
+												{ 
 														return true;
-													}
+													 
 												}
 										        $bottom++;
 										    }        

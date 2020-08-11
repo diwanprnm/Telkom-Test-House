@@ -148,17 +148,19 @@
 									<div class="form-group"> 
 										<?php
 										$html = '<ul id="tree">';
+										$label_open = '<li><label> <input type="checkbox" class="chk" name="menus[]" checked value=';
+										$label_close = '" />';
 								        foreach ($tree as $key => $value) {
 								            if(isset($value[0]['children'])) {
-								                $html .= '<li><label> <input type="checkbox" class="chk" name="menus[]" checked value="'.$value[0]['id'].'" /> '.$value[0]['name'].'</label>';
+								                $html .= $label_open.'"'.$value[0]['id'].$label_close.$value[0]['name'].'</label>';
 								                $html .= '<ul>';
 								               
 								                foreach ($value[0]['children'] as $child) { 
-								                   $html .= '<li><label> <input type="checkbox" class="chk" name="menus[]" checked value="'.$child['id'].'" /> '.$child['name'].'</label></li>'; 
+								                   $html .= $label_open.'"'.$child['id'].$label_close.$child['name'].'</label></li>'; 
 								                }
 								                $html .= '</ul>';
 								            }else{
-								              $html .= '<li><label> <input type="checkbox" class="chk" name="menus[]" checked value="'.$value[0]['id'].'" /> '.$value[0]['name'].'</label></li>';
+								              $html .= $label_open.'"'.$value[0]['id'].$label_close.$value[0]['name'].'</label></li>';
 								            }
 								        }
 								        $html .= '</ul></li>';

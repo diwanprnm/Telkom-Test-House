@@ -23,6 +23,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 class HistoryController extends Controller
 {
+ 
     /**
      * Create a new controller instance.
      *
@@ -88,82 +89,9 @@ class HistoryController extends Controller
                 ->with('after_date', $after)
 			;
         }
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function create()
-    // {
-		
-    // }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    // public function store(Request $request)
-    // {
-        
-    // }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function show($id)
-    // {
-        
-    // }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function edit($id)
-    // {
-        
-    // }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function update(Request $request, $id)
-    // {
-        
-    // }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function destroy($id)
-    // {
-        
-    // }
-
+    }  
 	public function excel(Request $request) 
-	{
-		// Execute the query used to retrieve the data. In this example
-		// we're joining hypothetical users and payments tables, retrieving
-		// the payments table's primary key, the user's first and last name, 
-		// the user's e-mail address, the amount paid, and the payment
-		// timestamp.
-		
+	{ 
 		$data = $request->session()->get('excel_history');
 		$examsArray = []; 
 
@@ -198,14 +126,7 @@ class HistoryController extends Controller
 			$no++;
 		}
 		// Generate and return the spreadsheet
-		Excel::create('Data Pendapatan', function($excel) use ($examsArray) {
-
-			// Set the spreadsheet title, creator, and description
-			// $excel->setTitle('Payments');
-			// $excel->setCreator('Laravel')->setCompany('WJ Gilmore, LLC');
-			// $excel->setDescription('payments file');
-
-			// Build the spreadsheet, passing in the payments array
+		Excel::create('Data Pendapatan', function($excel) use ($examsArray) { 
 			$excel->sheet('sheet1', function($sheet) use ($examsArray) {
 				$sheet->fromArray($examsArray, null, 'A1', false, false);
 			});

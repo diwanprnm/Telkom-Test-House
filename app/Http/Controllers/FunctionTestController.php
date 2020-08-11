@@ -46,8 +46,7 @@ class FunctionTestController extends Controller
     {
         $currentUser = Auth::user();
 
-        if ($currentUser){
-            $message = null;
+        if ($currentUser){ 
             $paginate = 10;
 
             $query = Examination::whereNotNull('created_at')
@@ -126,7 +125,7 @@ class FunctionTestController extends Controller
                 $hasil = 'Tidak Ada';
             }
             $examsArray[] = [
-                $$tanggal_fix,
+                $tanggal_fix,
                 $item->company->name,
                 $item->device->name,
                 $item->device->mark,
@@ -137,7 +136,8 @@ class FunctionTestController extends Controller
         }
         $currentUser = Auth::user();
         $logs = new Logs;
-        $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
+        $logs->user_id = $currentUser->id;
+        $logs->id = Uuid::uuid4();
         $logs->action = "download_excel";   
         $logs->data = "";
         $logs->created_by = $currentUser->id;
@@ -145,13 +145,7 @@ class FunctionTestController extends Controller
         $logs->save();
 
         // Generate and return the spreadsheet
-        Excel::create('Data Uji Fungsi', function($excel) use ($examsArray) {
-
-            // Set the spreadsheet title, creator, and description
-            // $excel->setTitle('Payments');
-            // $excel->setCreator('Laravel')->setCompany('WJ Gilmore, LLC');
-            // $excel->setDescription('payments file');
-
+        Excel::create('Data Uji Fungsi', function($excel) use ($examsArray) { 
             // Build the spreadsheet, passing in the payments array
             $excel->sheet('sheet1', function($sheet) use ($examsArray) {
                 $sheet->fromArray($examsArray, null, 'A1', false, false);
