@@ -22,13 +22,13 @@ class AnalyticController extends Controller
 		$search = null;
         $currentUser = Auth::user();
 		$now = date('Y-m-d H:i:s');
-		$datenow = date('Y-m-d');
-		$dateyesterday = date('Y-m-d',strtotime("-1 days"));
-		$datelastweek = date('Y-m-d',strtotime("-7 days"));
+		$datenow = date(self::YMD);
+		$dateyesterday = date(self::YMD,strtotime("-1 days"));
+		$datelastweek = date(self::YMD,strtotime("-7 days"));
 		$thisDay = date('d');
 		$thisMonth = date('m');
 		$thisYear = date('Y');
-			$datestring=date('Y-m-d').' first day of last month';
+			$datestring=date(self::YMD).' first day of last month';
 			$dt=date_create($datestring);
 		$lastMonth = $dt->format('m');
 		$lastYear = $dt->format('Y');

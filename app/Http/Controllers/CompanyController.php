@@ -57,6 +57,9 @@ class CompanyController extends Controller
     private const QS_CERTIFICATE_NUMBER = 'qs_certificate_number';
     private const NPWP_FILE = 'npwp_file';
     private const MINIO = 'minio';
+    private const SEARCH = 'search';
+    private const SIUP_DATE = 'siup_date';
+    private const COMPANY_PATH = 'company/';
 
     public function __construct()
     {
@@ -75,7 +78,7 @@ class CompanyController extends Controller
         if ($currentUser){
             $message = null;
             $paginate = 10;
-            $search = trim($request->input('search'));
+            $search = trim($request->input(self::SEARCH));
             $status = '';
             $before = null;
             $after = null;
@@ -91,7 +94,7 @@ class CompanyController extends Controller
                     $logs = new Logs;
                     $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
                     $logs->action = "Search Company";
-                    $logs->data = json_encode(array("search"=>$search));
+                    $logs->data = json_encode(array(self::SEARCH=>$search));
                     $logs->created_by = $currentUser->id;
                     $logs->page = self::COMPANY;
                     $logs->save();
@@ -136,7 +139,7 @@ class CompanyController extends Controller
             return view('admin.company.index')
                 ->with(self::MESSAGE, $message)
                 ->with('data', $companies)
-                ->with('search', $search)
+                ->with(self::SEARCH, $search)
                 ->with('status', $status)
                 ->with(self::BEFORE_DATE, $before)
                 ->with(self::AFTER_DATE, $after)
@@ -178,7 +181,7 @@ class CompanyController extends Controller
         $company->fax = $request->input('fax');
         $company->npwp_number = $request->input(self::NPWP_NUMBER);
         $company->siup_number = $request->input(self::SIUP_NUMBER);
-        $company->siup_date = $request->input('siup_date');
+        $company->siup_date = $request->input(self::SIUP_DATE);
         $company->qs_certificate_number = $request->input(self::QS_CERTIFICATE_NUMBER);
         $company->keterangan = $request->input('keterangan');
  
@@ -192,12 +195,12 @@ class CompanyController extends Controller
             $is_uploaded = false;
             if (in_array($ext, $allowedFile))
             { 
-                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/$file_name",$file->__toString());
+                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/$file_name",$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
-                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/$file_name",(string)$image->encode()); 
+                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/$file_name",(string)$image->encode()); 
             }else{
                 Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
                 return redirect(self::ADMIN_CREATE);
@@ -219,12 +222,12 @@ class CompanyController extends Controller
             $is_uploaded = false;
             if (in_array($ext, $allowedFile))
             {  
-                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/$file_name",$file->__toString());
+                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/$file_name",$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
-                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/".$file_name,(string)$image->encode()); 
+                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/".$file_name,(string)$image->encode()); 
             }else{
                 Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
                 return redirect(self::ADMIN_CREATE);
@@ -245,12 +248,12 @@ class CompanyController extends Controller
             $is_uploaded = false;
             if (in_array($ext, $allowedFile))
             {  
-                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/$file_name",$file->__toString());
+                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/$file_name",$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
-                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/".$file_name,(string)$image->encode()); 
+                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/".$file_name,(string)$image->encode()); 
             }else{
                 Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
                 return redirect(self::ADMIN_CREATE);
@@ -370,12 +373,12 @@ class CompanyController extends Controller
             $is_uploaded = false;
             if (in_array($ext, $allowedFile))
             { 
-                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/$file_name",$file->__toString());
+                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/$file_name",$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
-                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/$file_name",(string)$image->encode()); 
+                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/$file_name",(string)$image->encode()); 
             }else{
                 Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
                 return redirect(self::ADMIN_CREATE);
@@ -397,12 +400,12 @@ class CompanyController extends Controller
             $is_uploaded = false;
             if (in_array($ext, $allowedFile))
             { 
-                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/".$file_name,$file->__toString());
+                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/".$file_name,$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
-                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/".$file_name,(string)$image->encode()); 
+                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/".$file_name,(string)$image->encode()); 
             }else{
                 Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
                 return redirect(self::ADMIN_CREATE);
@@ -423,12 +426,12 @@ class CompanyController extends Controller
             $is_uploaded = false;
             if (in_array($ext, $allowedFile))
             { 
-                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/".$file_name,$file,$file->__toString());
+                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/".$file_name,$file,$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
-                $is_uploaded = Storage::disk(self::MINIO)->put("company/".$company->id."/".$file_name,(string)$image->encode()); 
+                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/".$file_name,(string)$image->encode()); 
             }else{
                 Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
                 return redirect(self::ADMIN_CREATE);
@@ -444,8 +447,8 @@ class CompanyController extends Controller
         if ($request->has(self::SIUP_NUMBER)){
             $company->siup_number = $request->input(self::SIUP_NUMBER);
         }
-        if ($request->has('siup_date')){
-            $company->siup_date = $request->input('siup_date');
+        if ($request->has(self::SIUP_DATE)){
+            $company->siup_date = $request->input(self::SIUP_DATE);
         }
         if ($request->has(self::QS_CERTIFICATE_NUMBER)){
             $company->qs_certificate_number = $request->input(self::QS_CERTIFICATE_NUMBER);
@@ -626,7 +629,7 @@ class CompanyController extends Controller
 		
 		if($request->hasFile('import_file')){
 			$path = $request->file('import_file')->getRealPath();
-			$data = Excel::load($path, function() {})->get();
+			$data = Excel::load($path)->get();
 			$datenow = date('Y-m-d H:i:s');
 			if(!empty($data) && $data->count()){
 				foreach ($data->toArray() as $value) {        
@@ -641,7 +644,7 @@ class CompanyController extends Controller
 						'fax' => $value['no_fax'],
 						self::NPWP_NUMBER => $value['no_npwp'],
 						self::SIUP_NUMBER => $value['no_siupp'],
-						'siup_date' => $value['tgl_siupp'],
+						self::SIUP_DATE => $value['tgl_siupp'],
 						self::QS_CERTIFICATE_NUMBER => $value['no_sertifikat'],
 						self::QS_CERTIFICATE_DATE => $value['tgl_sertifikat'],
 						self::IS_ACTIVE => 0,

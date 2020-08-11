@@ -106,34 +106,29 @@ class DevicencController extends Controller
 
             $tab = $request->input('tab');
             $expDate = Carbon::now()->subMonths(6);
-            
+            $where = array(
+            	self::EXAM_TYPE=>1,
+            	self::EXAM_STAT=>1,
+            	self::EXAM_STATUS=>1,
+            	self::EXAM_PAS=>1,
+            	self::EXAM_CERTI=>1,
+            	self::EXAM_DATE=>$expDate,
+            	self::DEVICE_STAT=>1
+            );
             $dev = DB::table($this::EXAM)
 			->join($this::DEVICE, $this::EDI, '=', $this::DEV_ID)
 			->join($this::COMPANIES, self::EXAM_COMP, '=', $this::COMP_ID)
-			->select(self::DATA
-					
-					)
-			->where(self::EXAM_TYPE,'=','1')
-			->where(self::EXAM_STAT,'=','1')
-			->where(self::EXAM_STATUS,'=','1')
-			->where(self::EXAM_PAS,'=','-1')
-			->where(self::EXAM_CERTI,'=','1')
+			->select(self::DATA)
+			->where($where) 
 			->whereDate(self::EXAM_DATE,'>=',$expDate)
-			->where(self::DEVICE_STAT, 1)
-			;
+			->where(self::DEVICE_STAT, 1);
 
 			$afterDev = 
 			DB::table($this::EXAM)
 			->join($this::DEVICE, $this::EDI, '=', $this::DEV_ID)
 			->join($this::COMPANIES, self::EXAM_COMP, '=', $this::COMP_ID)
-			->select(self::DATA
-					
-					)
-			->where(self::EXAM_TYPE,'=','1')
-			->where(self::EXAM_STAT,'=','1')
-			->where(self::EXAM_STATUS,'=','1')
-			->where(self::EXAM_PAS,'=','-1')
-			->where(self::EXAM_CERTI,'=','1')
+			->select(self::DATA)  
+			->where($where) 
 			->where(function($q) use($expDate){
 					$q->whereDate(self::EXAM_DATE,'<',$expDate)
 						->orWhere(self::DEVICE_STAT, '-1');

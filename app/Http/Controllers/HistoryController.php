@@ -44,10 +44,8 @@ class HistoryController extends Controller
 
         if ($currentUser){
             $message = null;
-            $paginate = 5;
-            $search = trim($request->input('search'));
-            $type = '';
-            $status = '';
+            $paginate = 5; 
+            $type = ''; 
 			$before = null;
             $after = null;
 
@@ -57,26 +55,7 @@ class HistoryController extends Controller
                                 ->with('examination.user')
                                 ->with('examination.company')
                                 ->with('examination.device')
-					;
-			
-			// if ($search != null){
-                // $query->where(function($qry) use($search){
-                    // $qry->whereHas('company', function ($q) use ($search){
-						// return $q->where('name', 'like', '%'.strtolower($search).'%');
-					// });
-                // });
-
-                // $logs = new Logs;
-                // $logs->id = Uuid::uuid4();
-                // $logs->user_id = $currentUser->id;
-                // $logs->action = "search";  
-                // $dataSearch = array('search' => $search);
-                // $logs->data = json_encode($dataSearch);
-                // $logs->created_by = $currentUser->id;
-                // $logs->page = "History";
-                // $logs->save();
-            // }
-
+					; 
             if ($request->has('type')){
                 $type = $request->get('type');
                 if($request->input('type') != 'all'){
@@ -93,12 +72,9 @@ class HistoryController extends Controller
 				$query->where('date_action', '>=', $request->get('after_date'));
 				$after = $request->get('after_date');
 			}
-
-			// $data_excel = $query->orderBy('created_at', 'desc')->get();
+ 
             $data = $query->orderBy('created_at', 'desc')
-                        ->paginate($paginate);
-						
-			// $request->session()->put('excel_history', $data_excel);
+                        ->paginate($paginate); 
 
             if (count($query) == 0){
                 $message = 'Data not found';
@@ -107,8 +83,7 @@ class HistoryController extends Controller
             return view('admin.history.index')
                 ->with('message', $message)
                 ->with('data', $data)
-                ->with('type', $type)
-                // ->with('search', $search)
+                ->with('type', $type) 
 				->with('before_date', $before)
                 ->with('after_date', $after)
 			;
