@@ -280,6 +280,7 @@ class CompanyController extends Controller
             $logs->action = "Create Company";
             $logs->data = $company;
             $logs->created_by = $currentUser->id;
+            $logs->updated_by = $currentUser->id;
             $logs->page = self::COMPANY;
             $logs->save();
 
@@ -336,8 +337,8 @@ class CompanyController extends Controller
         if ($request->has('name')){
             $company->name = $request->input('name');
         }
-        if ($request->has(self::address)){
-            $company->address = $request->input(self::address);
+        if ($request->has(self::ADDRESS)){
+            $company->address = $request->input(self::ADDRESS);
         }
         if ($request->has(self::PLG_ID)){
             $company->plg_id = $request->input(self::PLG_ID);
@@ -473,6 +474,7 @@ class CompanyController extends Controller
             $logs->action = "Update Company";
             $logs->data = $oldData;
             $logs->created_by = $currentUser->id;
+            $logs->updated_by = $currentUser->id;
             $logs->page = self::COMPANY;
             $logs->save();
 
@@ -504,6 +506,7 @@ class CompanyController extends Controller
                 $logs->action = "Delete Company";
                 $logs->data = $oldData;
                 $logs->created_by = $currentUser->id;
+                $logs->updated_by = $currentUser->id;
                 $logs->page = self::COMPANY;
                 $logs->save();
 
