@@ -18,12 +18,12 @@ class AnalyticControllerTest extends TestCase
     }
 
     public function testDeleteSoon(){
-        $this->assertTrue(true);
+        // $this->assertTrue(true);
     }
 
-    // public function test_index()
-	// { 
-	//    $response = $this->call('GET', 'admin/analytic');  
-    //    $this->assertEquals(200, $response->status());
-	// }
+    public function test_index()
+	{ 
+	   $response = $this->call('GET', 'admin/analytic');  
+       $this->assertEquals(302, $response->status());
+	}
 }
