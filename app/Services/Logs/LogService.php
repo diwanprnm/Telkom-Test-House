@@ -22,6 +22,7 @@ class LogService
         $logs->action = $action;
         $logs->data = $data;
         $logs->created_by = $currentUser->id;
+        $logs->updated_by = $currentUser->id;
         $logs->page = $page;
         $logs->save();
     }
