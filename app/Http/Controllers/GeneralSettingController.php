@@ -9,7 +9,7 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Http\Requests;
 
 use App\Logs;
-use App\Logs_administrator;
+use App\LogsAdministrator;
 use App\GeneralSetting;
 
 use Auth;
@@ -179,7 +179,7 @@ class GeneralSettingController extends Controller
             $logs->page = "General Setting";
             $logs->save();
 
-            $logs_a = new Logs_administrator;
+            $logs_a = new LogsAdministrator;
             $logs_a->id = Uuid::uuid4();
             $logs_a->user_id = $currentUser->id;
             $logs_a->action = "Update Manager URel atau POH";

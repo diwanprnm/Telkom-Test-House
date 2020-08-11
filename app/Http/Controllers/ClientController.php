@@ -36,7 +36,18 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 class ClientController extends Controller
 {	
 	protected $loginPath = '/client/login';
-	
+	private const TO_PORTOFOLO = '/#portfolio';
+	private const USER_NOT_MATCH = 'Email or Password Not Match';
+	private const USER_BANNED = 'User not found or User Banned by admin';
+	private const TYPE_URL = 'type_url';
+	private const ERROR_CODE = 'error_code';
+	private const EMAIL = 'email';
+	private const KATA_KUNCI = 'password';
+	private const SCHOOL_ID = 'school_id';
+	private const SUCCESS = 'Success';
+	private const MESSAGE = 'message';
+
+
 	public function cekLogin(Request $request)
     {
         $currentUser = Auth::user();
@@ -48,9 +59,8 @@ class ClientController extends Controller
     }
 		
 	public function login() {
-		Session()->forget('type_url');
-		// return view('pages.login');
-		return back()->with('error_code', 5);
+		Session()->forget(self::TYPE_URL);
+		return back()->with(self::ERROR_CODE, 5);
 	}
 	
 	public function logout(Request $request) {
@@ -82,11 +92,9 @@ class ClientController extends Controller
 	*/
 	public function authenticate(Request $request)
 	{
-		// print_r($request->all());exit;
-		// grab credentials from the request
-		$email_deleted = $this->cekDeleted($request->input('email'));
+		$email_deleted = $this->cekDeleted($request->input(self::EMAIL));
 		if($email_deleted == 0){
-			$credentials = $request->only('email', 'password');
+			$credentials = $request->only(self::EMAIL, self::KATA_KUNCI);
 			if (Auth::attempt($credentials)) {
 				$logs = new Logs;
 				$currentUser = Auth::user();
@@ -97,51 +105,51 @@ class ClientController extends Controller
 		        $logs->created_by = $currentUser->id;
 		        $logs->page = "LOGIN";
 		        $logs->save();
-				if($request->input('type_url') == 1){
-					return redirect('/#portfolio');
-				}else if($request->input('type_url') == 2){
+				if($request->input(self::TYPE_URL) == 1){
+					return redirect(self::TO_PORTOFOLO);
+				}else if($request->input(self::TYPE_URL) == 2){
 					return redirect('/');
 				}else{
 					return back();
 				}
 			}else{
-				if($request->input('type_url') == 1){
-					return redirect('/#portfolio')
-					->with('type_url', 1)
-					->with('error_code', 5)
+				if($request->input(self::TYPE_URL) == 1){
+					return redirect(self::TO_PORTOFOLO)
+					->with(self::TYPE_URL, 1)
+					->with(self::ERROR_CODE, 5)
 					->withInput($request->all())
-					->withErrors('Email or Password Not Match');
-				}else if($request->input('type_url') == 2){
-					return redirect('/')->with('error_code', 5)
-					->with('type_url', 2)
-					->with('error_code', 5)
+					->withErrors(self::USER_NOT_MATCH);
+				}else if($request->input(self::TYPE_URL) == 2){
+					return redirect('/')->with(self::ERROR_CODE, 5)
+					->with(self::TYPE_URL, 2)
+					->with(self::ERROR_CODE, 5)
 					->withInput($request->all())
-					->withErrors('Email or Password Not Match');
+					->withErrors(self::USER_NOT_MATCH);
 				}else{
-					return back()->with('error_code', 5)
-					->with('error_code', 5)
+					return back()->with(self::ERROR_CODE, 5)
+					->with(self::ERROR_CODE, 5)
 					->withInput($request->all())
-					->withErrors('Email or Password Not Match');;
+					->withErrors(self::USER_NOT_MATCH);
 				}
 			}
 		}else{
-			if($request->input('type_url') == 1){
-				return redirect('/#portfolio')
-				->with('type_url', 1)
-				->with('error_code', 5)
+			if($request->input(self::TYPE_URL) == 1){
+				return redirect(self::TO_PORTOFOLO)
+				->with(self::TYPE_URL, 1)
+				->with(self::ERROR_CODE, 5)
 				->withInput($request->all())
-				->withErrors('User not found or User Banned by admin');
-			}else if($request->input('type_url') == 2){
-				return redirect('/')->with('error_code', 5)
-				->with('type_url', 2)
-				->with('error_code', 5)
+				->withErrors(self::USER_BANNED);
+			}else if($request->input(self::TYPE_URL) == 2){
+				return redirect('/')->with(self::ERROR_CODE, 5)
+				->with(self::TYPE_URL, 2)
+				->with(self::ERROR_CODE, 5)
 				->withInput($request->all())
-				->withErrors('User not found or User Banned by admin');
+				->withErrors(self::USER_BANNED);
 			}else{
-				return back()->with('error_code', 5)
-				->with('error_code', 5)
+				return back()->with(self::ERROR_CODE, 5)
+				->with(self::ERROR_CODE, 5)
 				->withInput($request->all())
-				->withErrors('User not found or User Banned by admin');;
+				->withErrors(self::USER_BANNED);
 			}
 		}
 	}
@@ -158,17 +166,17 @@ class ClientController extends Controller
 	public function register(Request $request) {
 		$admin = Auth::user();
 
-		if (!$admin->is("Member_".$request->get('school_id'))){
+		if (!$admin->is("Member_".$request->get(self::SCHOOL_ID))){
 			$user = new User;
 	        $user->id = Uuid::uuid4();
-	        $user->email = $request->input('email');
+	        $user->email = $request->input(self::EMAIL);
 	        $user->fullname = $request->input('fullname');
-	        $user->password = bcrypt($request->input('password'));
+	        $user->password = bcrypt($request->input(self::KATA_KUNCI));
 			
 			try {
 				$user->save();
 
-				$user_role = Role::where('name', '=', 'Member_'.$request->get('school_id'))->first();
+				$user_role = Role::where('name', '=', 'Member_'.$request->get(self::SCHOOL_ID))->first();
 				$user->attachRole($user_role);
 
 				$alumni = new Alumnus;
@@ -182,24 +190,24 @@ class ClientController extends Controller
 					$userSchool = new UserSchool;
 					$userSchool->id = Uuid::uuid4();
 					$userSchool->user_id = $user->id;
-					$userSchool->school_id = $request->get('school_id');
+					$userSchool->school_id = $request->get(self::SCHOOL_ID);
 					$userSchool->generation_id = $request->get('generation_id');
 					$userSchool->class_id = $request->get('class_id');
 					$userSchool->save();
 
 					$result = array();
-					$result['message'] = 'Success';
+					$result[self::MESSAGE] = self::SUCCESS;
 					$result['data'] = $user;
 					
 					return response()->json($result,200);
 				} catch (\Illuminate\Database\QueryException $ex) {
-					return Response(['message' => 'failed save alumni data profile', 'data' => new \stdClass()], 500);
+					return Response([self::MESSAGE => 'failed save alumni data profile', 'data' => new \stdClass()], 500);
 				}
 			} catch (\Illuminate\Database\QueryException $ex) {
-				return Response(['message' => 'Email already exist', 'data' => new \stdClass()], 500);
+				return Response([self::MESSAGE => 'Email already exist', 'data' => new \stdClass()], 500);
 			}	
 		} else{
-			return Response(['message' => 'You don\'t have permission to registering new user' , 'data' => new \stdClass()], 400);	
+			return Response([self::MESSAGE => 'You don\'t have permission to registering new user' , 'data' => new \stdClass()], 400);	
 		}
     }
 	
@@ -215,24 +223,24 @@ class ClientController extends Controller
 	*/
 	public function forgot(Request $request)
 	{
-		$user = User::where('email',$request->input('email'))->first();
+		$user = User::where(self::EMAIL,$request->input(self::EMAIL))->first();
 		if($user){
 			date_default_timezone_set("Asia/Jakarta");
 			$date = date ("Y-m-d H:i:s", time());
 			$timestamp = strtotime($date);
 			
-			$token = $request->input('email').'-'.$timestamp;
+			$token = $request->input(self::EMAIL).'-'.$timestamp;
 			$token_encrypt = $this->encryptIt($token);
 		
 			Mail::send('mail_forget', array('firstname'=>$user->fullname,'token'=>$token_encrypt), function($message) use ($user) {
 				$message->to($user->email, $user->fullname)->subject('Forgot Password Koloni');
 			});
 			
-			$result['message'] = 'Success';
+			$result[self::MESSAGE] = self::SUCCESS;
 			$result['data'] = $user;
 			return response()->json($result,200);
 		}else{
-			return response()->json(['message' => 'User not found'], 404);
+			return response()->json([self::MESSAGE => 'User not found'], 404);
 		}
 	}
 	
@@ -248,20 +256,20 @@ class ClientController extends Controller
 		$timestamp = strtotime($date);
 		
 		if($timestamp-$expire_time>3600){
-			return Response(['message' => 'Token expire', 'data' => new \stdClass()], 200);
+			return Response([self::MESSAGE => 'Token expire', 'data' => new \stdClass()], 200);
 		}
 		
-		$user = User::where('email',$email)->first();
+		$user = User::where(self::EMAIL,$email)->first();
 		if($user){
-			$user->password = bcrypt($request->input('password'));
+			$user->password = bcrypt($request->input(self::KATA_KUNCI));
 			try {
 				$user->save();
-				return Response(['message' => 'Success', 'data' => $user], 200);
+				return Response([self::MESSAGE => self::SUCCESS, 'data' => $user], 200);
 			} catch (\Illuminate\Database\QueryException $ex) {
-				return Response(['message' => 'Save failed', 'data' => new \stdClass()], 500);
+				return Response([self::MESSAGE => 'Save failed', 'data' => new \stdClass()], 500);
 			}
 		}else{
-			return Response(['message' => 'Email not found', 'data' => new \stdClass()], 404);
+			return Response([self::MESSAGE => 'Email not found', 'data' => new \stdClass()], 404);
 		}
 	}
 	
@@ -286,15 +294,15 @@ class ClientController extends Controller
 				$currentUser->password = $new_password;
 				try {
 					$currentUser->save();
-					return Response(['message' => 'Success', 'data' => $currentUser], 200);
+					return Response([self::MESSAGE => self::SUCCESS, 'data' => $currentUser], 200);
 				} catch (\Illuminate\Database\QueryException $ex) {
-					return Response(['message' => 'Save failed', 'data' => new \stdClass()], 500);
+					return Response([self::MESSAGE => 'Save failed', 'data' => new \stdClass()], 500);
 				}
 			}else{
-				return Response(['message' => 'Wrong password', 'data' => new \stdClass()], 200);
+				return Response([self::MESSAGE => 'Wrong password', 'data' => new \stdClass()], 200);
 			}
 		}else{
-			return Response(['message' => 'User not found', 'data' => new \stdClass()], 404);
+			return Response([self::MESSAGE => 'User not found', 'data' => new \stdClass()], 404);
 		}
 	}
 	
@@ -313,8 +321,6 @@ class ClientController extends Controller
 			$q->where('companies.is_active', '=' , 0);
 		});
 		$user = $query->get();
-		// $user = $query->toSql();
-		// dd($user);exit;
 		
 		return count($user);
     }

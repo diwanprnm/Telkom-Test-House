@@ -34,7 +34,7 @@
 						<div class="col-md-12">
 							<div class="table-responsive">
 
-								<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
+								<table id="datatable1" class="table table-striped table-bordered" style="width: 100%;">
 									<caption></caption>
 									<thead>
 										<tr>

@@ -51,7 +51,6 @@
 							
 							<div class="col-md-6 col-xs-12">
 								<span class="input-icon input-icon-right search-table">
-									<!-- <input type="text" placeholder="Search" id="form-field-17" class="form-control col-xs-12  "> -->
 									<input id="search_stsel" type="text" placeholder="{{ trans('translate.search_STEL') }}" id="form-field-17" class="form-control " value="{{ $search }}">
 									<em class="ti-search"></em>
 								</span>

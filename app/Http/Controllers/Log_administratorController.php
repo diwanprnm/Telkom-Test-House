@@ -10,7 +10,7 @@ use App\Http\Requests;
 
 use App\Article;
 use App\Logs;
-use App\Logs_administrator;
+use App\LogsAdministrator;
 
 use Auth;
 use Session;
@@ -76,19 +76,19 @@ class Log_administratorController extends Controller
             $select = array(
             	$this::LOG_ADMIN_ACTION,$this::LOG_ADMIN_PAGE,"logs_administrator.reason",$this::LOG_ADMIN_SEARCH,$this::USER_NAME
             );
-            $datalogs = Logs_administrator::select($select)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
+            $datalogs = LogsAdministrator::select($select)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
 
             $select2 = array(
                 $this::USER_NAME
             );
-            $datalogs2 = Logs_administrator::select($select2)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
+            $datalogs2 = LogsAdministrator::select($select2)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
 
             $username = $datalogs2->distinct()->orderBy('users.name')->get();
 
             $select3 = array(
                 $this::LOG_ADMIN_ACTION
             );
-            $datalogs3 = Logs_administrator::select($select3)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
+            $datalogs3 = LogsAdministrator::select($select3)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
             $action = $datalogs3->distinct()->orderBy('logs_administrator.action')->get();
 
             if ($search != null){
@@ -163,7 +163,7 @@ class Log_administratorController extends Controller
     	$select = array(
             	$this::LOG_ADMIN_ACTION,$this::LOG_ADMIN_PAGE,$this::LOG_ADMIN_SEARCH,$this::USER_NAME
             );
-        $respons_result = Logs_administrator::select($select)->autocomplet($query);
+        $respons_result = LogsAdministrator::select($select)->autocomplet($query);
         return response($respons_result);
     }
     
@@ -185,7 +185,7 @@ class Log_administratorController extends Controller
         $select = array(
             $this::LOG_ADMIN_ACTION,$this::LOG_ADMIN_PAGE,$this::LOG_ADMIN_SEARCH,$this::USER_NAME
         );
-        $datalogs = Logs_administrator::select($select)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
+        $datalogs = LogsAdministrator::select($select)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
 
         if ($search != null){
             $datalogs->where($this::ACTION,'like','%'.$search.'%');

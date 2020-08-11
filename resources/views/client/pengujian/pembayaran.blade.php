@@ -76,11 +76,9 @@
 														</tr>
 														<tr>
 															<?php 
-																if($data->tgl == '' or $data->tgl == '0000-00-00' or $data->tgl == NULL){
-																	// $timestamp = date('d-m-Y');
+																if($data->tgl == '' || $data->tgl == '0000-00-00' || $data->tgl == NULL){
 																	$timestamp = $spb_date;
 																}else{
-																	// $timestamp = date('d-m-Y', strtotime($data->tgl));
 																	$timestamp = $data->tgl;
 																}
 															?>

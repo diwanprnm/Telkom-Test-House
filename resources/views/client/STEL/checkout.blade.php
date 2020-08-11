@@ -30,7 +30,7 @@
 						<input type="hidden" name="invoice_number" value="{{$invoice_number}}"><br>
 						<input type="hidden" name="final_price" value="{{$final_price}}"><br>
 						<div class="row"> 
-							<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
+							<table id="datatable1" class="table table-striped table-bordered" style="width: 100%;">
 								<caption></caption>
 								<thead>
 									<tr>
@@ -90,9 +90,6 @@
 							<div class="col-md-4">
 								<input type="radio" name="payment_method" value="atm" checked> {{ trans('translate.stel_payment_method_atm') }}
 							</div>
-							<!-- <div class="col-md-4">
-								<input type="radio" name="payment_method" value="cc"> {{ trans('translate.stel_payment_method_credit') }}
-							</div> -->
 						</div>
 					</div>	 
 					<div class="row metoda">

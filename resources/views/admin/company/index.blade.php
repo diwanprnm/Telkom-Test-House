@@ -103,38 +103,7 @@
 									</div>
 								</div>
 <!-- sorting -->
-								<!-- <div class="col-md-6">
-									<div class="form-group">
-										<label>
-											Sort by :
-										</label>
-										<select id="sort_by" name="sort_by" class="cs-select cs-skin-elastic" required>
-											@if($sort_by == '')
-												<option value="" disabled selected>Select...</option>
-											@endif
-											@if($sort_by == 'created_at')
-                                                <option value="created_at" selected>Tanggal Daftar</option>
-											@else
-                                                <option value="created_at">Tanggal Daftar</option>
-                                            @endif
-										</select>
-										<select id="sort_type" name="sort_type" class="cs-select cs-skin-elastic" required>
-											@if($sort_type == '')
-												<option value="" disabled selected>Select...</option>
-											@endif
-											@if($sort_type == 'asc')
-                                                <option value="asc" selected>ASC</option>
-											@else
-                                                <option value="asc">ASC</option>
-                                            @endif
-											@if($sort_type == 'desc')
-                                                <option value="desc" selected>DESC</option>
-											@else
-                                                <option value="desc">DESC</option>
-                                            @endif
-										</select>
-									</div>
-								</div> -->
+								
 <!-- end sorting -->
 								<div class="col-md-12">
 		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">

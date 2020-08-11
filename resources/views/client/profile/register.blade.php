@@ -111,7 +111,6 @@
 							</div>
 
 							<div class="new-company-form" style="display: none;">
-								<!-- <h3>{{ trans('translate.company') }}</h3> -->
 								<div class="col_full">
 									<label for="register-form-repassword">{{ trans('translate.company_name') }} : *</label>
 									<input disabled="disabled" type="text" id="comp_name" class="form-control input-submit new-company-field" name="comp_name" placeholder="PT. Maju Mundur" value="{{ old('comp_name') }}" required>

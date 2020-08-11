@@ -29,7 +29,7 @@
 				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 right-content"><a href="#videoStory" class="btn btn-default btn-lg more pull-right" id="videoLink">{{ trans('translate.video_guide') }} <i class="fa fa-play-circle" aria-hidden="true">&nbsp;</i></a></div>
 			</div>
 			<div id="videoStory" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
-				<iframe title="video story" width="853" height="480" src="{{ $video_url }}" frameborder="0" allowfullscreen></iframe>
+				<iframe title="video story" width="853" height="480" src="{{ $video_url }}" allowfullscreen></iframe>
 			</div>
 
 		</div> 
@@ -89,7 +89,7 @@
 										<?php  
 										$is_exist = false;
 										 foreach (Cart::content() as $item) {
-										 	if($item->id == $stel->id) $is_exist = true;
+										 	if($item->id == $stel->id){$is_exist = true;}
 										 } 
 										?>
 
@@ -170,9 +170,6 @@
 						<div class="block divcenter" style="background-color: #FFF; max-width: 500px;">
 							<div  style="padding: 50px;">
 								<h3>{{ trans('translate.stel_term_condition') }}</h3>
-								<!--
-								<p class="nobottommargin">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum delectus, tenetur obcaecati porro! Expedita nostrum tempora quia provident perspiciatis inventore, autem eaque, quod explicabo, ipsum, facilis aliquid! Sapiente, possimus quo!</p> 
-								-->
 								<ul>
 									<li>{{ trans('translate.stel_term_condition_num1') }}</li>
 									<li>{{ trans('translate.stel_term_condition_num2') }}</li>

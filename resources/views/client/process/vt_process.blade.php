@@ -127,10 +127,6 @@
 									<legend></legend>
 					                <div class="form-group">
 											<label for="f1-jns-perusahaan">{{ trans('translate.service_company_type') }} : </label>
-											<!-- <input type="radio" name="jns_perusahaan"  id="rad-jns_perusahaan1" value="Agen" checked>
-											<input type="radio" name="jns_perusahaan"   id="rad-jns_perusahaan2" value="Pabrikan">
-											<input type="radio" name="jns_perusahaan"  id="rad-jns_perusahaan3" value="Perorangan"> -->
- 
 											<input type="radio" name="jns_perusahaan" value="Agen" placeholder="{{ trans('translate.service_company_agent') }}" checked>
 											<input type="radio" name="jns_perusahaan" value="Pabrikan" placeholder="{{ trans('translate.service_company_branch') }}">
 											<input type="radio" name="jns_perusahaan" value="Perorangan" placeholder="{{ trans('translate.service_company_individual') }}">
@@ -232,46 +228,7 @@
 										<div class="form-group">
 											<label>{{ trans('translate.service_upload_siupp_date') }}</label>
 											<input type="text" name="f1-tgl-siupp" placeholder="{{ trans('translate.service_upload_siupp_date') }}" class="data-upload-berkas datepicker f1-tgl-siupp  input-submit" id="f1-tgl-siupp" value="{{$userData->tglSIUPP}}">
-											<!-- <input type="hidden" name="f1-tgl-siupp" placeholder="{{ trans('translate.service_upload_siupp_date') }}" class="data-upload-berkas f1-tgl-siupp form-control input-submit" id="f1-tgl-siupp" readonly>
-											<div class="col-xs-1 selectContainer">
-												 <select name="daySIUPP" id="daySIUPP" class="form-control" placeholder="Day" style="width:auto;" onchange="setDays(monthSIUPP,this,yearSIUPP,1)">
-													@for($i = 1;$i <= 31; $i++)
-														<?php
-															if($i < 10){
-																$i = '0'.$i;
-															}
-														?>
-														<option value="{{$i}}">{{$i}}</option>
-													@endfor
-												</select>
-											</div>
-											<div class="col-xs-2 selectContainer">
-											 	 <select name="monthSIUPP" id="monthSIUPP" class="form-control" " placeholder="Month" style="width:auto;" onchange="setDays(this,daySIUPP,yearSIUPP,1)">
-													<option value="01">January</option>
-													<option value="02">February</option>
-													<option value="03">March</option>
-													<option value="04">April</option>
-													<option value="05">May</option>
-													<option value="06">June</option>
-													<option value="07">July</option>
-													<option value="08">August</option>
-													<option value="09">September</option>
-													<option value="10">October</option>
-													<option value="11">November</option>
-													<option value="12">December</option>
-												</select>
-											</div>
-											<div class="col-xs-2 selectContainer">
-											 	<select name="yearSIUPP" id="yearSIUPP" class="form-control" style="width:auto;" " placeholder="Year" onchange="setDays(monthSIUPP,daySIUPP,this,1)">
-													@for($i = date('Y')+100;$i >= 1900; $i--)
-														@if($i == date('Y'))
-															<option value="{{$i}}" selected>{{$i}}</option>
-														@else
-															<option value="{{$i}}">{{$i}}</option>
-														@endif
-													@endfor
-												</select>
-											</div> -->
+
 										</div>
 										<div class="form-group col-xs-12" style="margin-top:35px">
 											<label>{{ trans('translate.service_upload_certificate') }}<span class="text-danger">*</span></label>
@@ -294,46 +251,6 @@
 										<div class="form-group">
 											<label>{{ trans('translate.service_upload_certificate_date') }}</label>
 											<input type="text" name="f1-batas-waktu" placeholder="{{ trans('translate.service_upload_certificate_date') }}" class="datepicker data-upload-berkas f1-batas-waktu  input-submit" id="f1-batas-waktu" value="{{$userData->tglSertifikat}}">
-											<!-- <input type="hidden" name="f1-batas-waktu" placeholder="{{ trans('translate.service_upload_certificate_date') }}" class="data-upload-berkas f1-batas-waktu form-control input-submit" id="f1-batas-waktu" readonly>
-											<div class="col-xs-1 selectContainer">
-												 <select name="daySerti" id="daySerti" class="form-control" style="width:auto;"  " placeholder="Day" onchange="setDays(monthSerti,this,yearSerti,0)">
-													@for($i = 1;$i <= 31; $i++)
-														<?php
-															if($i < 10){
-																$i = '0'.$i;
-															}
-														?>
-														<option value="{{$i}}">{{$i}}</option>
-													@endfor
-												</select>
-											</div>
-											<div class="col-xs-2 selectContainer">
-											 	<select name="monthSerti" id="monthSerti" class="form-control" style="width:auto;"  " placeholder="Month" onchange="setDays(this,daySerti,yearSerti,0)">
-													<option value="01">January</option>
-													<option value="02">February</option>
-													<option value="03">March</option>
-													<option value="04">April</option>
-													<option value="05">May</option>
-													<option value="06">June</option>
-													<option value="07">July</option>
-													<option value="08">August</option>
-													<option value="09">September</option>
-													<option value="10">October</option>
-													<option value="11">November</option>
-													<option value="12">December</option>
-												</select>
-											</div>
-											<div class="col-xs-2 selectContainer">
-												 <select name="yearSerti" id="yearSerti" class="form-control" style="width:auto;" " placeholder="Year" onchange="setDays(monthSerti,daySerti,this,0)">
-													@for($i = date('Y')+100;$i >= 1900; $i--)
-														@if($i == date('Y'))
-															<option value="{{$i}}" selected>{{$i}}</option>
-														@else
-															<option value="{{$i}}">{{$i}}</option>
-														@endif
-													@endfor
-												</select>
-											</div> -->
 										</div>
 										<div class="form-group col-xs-12" style="margin-top:35px">
 											<label>{{ trans('translate.service_upload_npwp') }}<span class="text-danger">* 

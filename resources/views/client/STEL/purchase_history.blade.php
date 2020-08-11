@@ -29,7 +29,7 @@
 					<div class="row">   
 						<div class="col-md-12">
 							<div class="table-responsive">
-								<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
+								<table id="datatable1" class="table table-striped table-bordered" style="width: 100%;">
 									<caption></caption>
 									<thead>
 										<tr>
@@ -93,7 +93,7 @@
 											</tr> 
 											<tr class="content" style="display: none;">
 												<td colspan="8" class="center">
-													<table class="table table-striped" cellspacing="0" width="100%">
+													<table class="table table-striped" style="width: 100%;">
 														<caption></caption>
 														<thead>
 															<tr>
@@ -119,7 +119,7 @@
 																			<td>{{$item_detail->qty}}</td> 
 																			<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($item_detail->stel->price * $item_detail->qty), 0, '.', ','); ?></td>
 	<?php  
-		 if($item_detail->attachment !="" && ($payment_status == 1 or $payment_status == 3)){
+		 if($item_detail->attachment !="" && ($payment_status == 1 || $payment_status == 3)){
 	?>
 		<td colspan="6" class="center"><a target="_blank" href="{!! url("cetakstel?invoice_id={$invoice}&attach={$item_detail->stel->attachment}&company_name={$company_name}") !!}">{{ trans('translate.download') }} File</a></td>
 	<?php

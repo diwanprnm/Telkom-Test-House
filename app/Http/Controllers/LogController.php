@@ -15,6 +15,7 @@ use Auth;
 use Session;
 use Validator;
 use Excel;
+use App\Services\Logs\LogServices;
 
 // UUID
 use Ramsey\Uuid\Uuid;
@@ -92,15 +93,9 @@ class LogController extends Controller
             if ($search != null){
                 $datalogs->where($this::ACTION,'like','%'.$search.'%');
 
-                $logs = new Logs;
-                $logs->id = Uuid::uuid4();
-                $logs->user_id = $currentUser->id;
-                $logs->action = "Search Log"; 
-                $dataSearch = array("search"=>$search);
-                $logs->data = json_encode($dataSearch);
-                $logs->created_by = $currentUser->id;
-                $logs->page = "LOG";
-                $logs->save();
+                $logService = new LogService();
+                $logService->createLog('Search Log',"LOG", json_encode(array("search"=>$search)) );
+               
 
             }
 
@@ -173,7 +168,7 @@ class LogController extends Controller
 		// the user's e-mail address, the amount paid, and the payment
 		// timestamp.
 		
-        $search = trim($request->input($this::SEARCH));
+      
         
        
 
@@ -189,26 +184,25 @@ class LogController extends Controller
 
         if ($request->has($this::BEFORE)){
             $datalogs->where(DB::raw($this::DATE), '<=', $request->get($this::BEFORE));
-            $before = $request->get($this::BEFORE);
+           
         }
 
         if ($request->has($this::AFTER)){
             $datalogs->where(DB::raw($this::DATE), '>=', $request->get($this::AFTER));
-            $after = $request->get($this::AFTER);
+           
         }
 
-        if ($request->has($this::USN)){
-            $filterUsername = $request->get($this::USN);
-            if($request->input($this::USN) != 'all'){
+        if ($request->has($this::USN) && $request->input($this::USN) != 'all'){
+            
+            
                 $datalogs->where(self::USERNAME, $request->get($this::USN));
-            }
+            
         }
 
-        if ($request->has($this::ACTION)){
-            $filterAction = $request->get($this::ACTION);
-            if($request->input($this::ACTION) != 'all'){
+        if ($request->has($this::ACTION) && $request->input($this::ACTION) != 'all' ){
+           
                 $datalogs->where($this::ACTION, $request->get($this::ACTION));
-            }
+            
         }
 
         if ($request->has($this::SORT_BY)){

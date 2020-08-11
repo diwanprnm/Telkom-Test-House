@@ -13,7 +13,7 @@
 			</div>
 			
 			<div class="modal-body">
-				<table width=100%><caption></caption>
+				<table style="width: 100%;"><caption></caption>
 					<tr>
 						<th scope="col">
 							<div class="col-md-6">
@@ -66,7 +66,7 @@
 				</table>
 			</div><!-- /.modal-content -->
 			<div class="modal-footer">
-				<table width=100%><caption></caption>
+				<table style="width: 100%;"><caption></caption>
 					<tr>
 						<th scope="col">
 							<button type="button" class="btn btn-danger btn-tgl-kontrak" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
@@ -451,7 +451,7 @@
 										</div>
 										
 										<div class="modal-body">
-											<table width=100%><caption></caption>
+											<table style="width: 100%;"><caption></caption>
 												<tr>
 													<th scope="col">
 														<div class="form-group">
@@ -463,7 +463,7 @@
 											</table>
 										</div><!-- /.modal-content -->
 										<div class="modal-footer">
-											<table width=100%><caption></caption>
+											<table style="width: 100%;"><caption></caption>
 												<tr>
 													<th scope="col">
 														<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
@@ -545,7 +545,7 @@
 										</div>
 										
 										<div class="modal-body">
-											<table width=100%><caption></caption>
+											<table style="width: 100%;"><caption></caption>
 												<tr>
 													<th scope="col">
 														<div class="form-group">
@@ -557,7 +557,7 @@
 											</table>
 										</div><!-- /.modal-content -->
 										<div class="modal-footer">
-											<table width=100%><caption></caption>
+											<table style="width: 100%;"><caption></caption>
 												<tr>
 													<th scope="col">
 														<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
@@ -641,7 +641,7 @@
 										</div>
 										
 										<div class="modal-body">
-											<table width=100%><caption></caption>
+											<table style="width: 100%;"><caption></caption>
 												<tr>
 													<th scope="col">
 														<div class="form-group">
@@ -653,7 +653,7 @@
 											</table>
 										</div><!-- /.modal-content -->
 										<div class="modal-footer">
-											<table width=100%><caption></caption>
+											<table style="width: 100%;"><caption></caption>
 												<tr>
 													<th scope="col">
 														<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
@@ -747,7 +747,7 @@
 										</div>
 										
 										<div class="modal-body">
-											<table width=100%><caption></caption>
+											<table style="width: 100%;"><caption></caption>
 												<tr>
 													<th scope="col">
 														<div class="form-group">
@@ -759,7 +759,7 @@
 											</table>
 										</div><!-- /.modal-content -->
 										<div class="modal-footer">
-											<table width=100%><caption></caption>
+											<table style="width: 100%;"><caption></caption>
 												<tr>
 													<th scope="col">
 														<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
@@ -851,7 +851,7 @@
 										</div>
 										
 										<div class="modal-body">
-											<table width=100%><caption></caption>
+											<table style="width: 100%;"><caption></caption>
 												<tr>
 													<th scope="col">
 														<div class="form-group">
@@ -863,7 +863,7 @@
 											</table>
 										</div><!-- /.modal-content -->
 										<div class="modal-footer">
-											<table width=100%><caption></caption>
+											<table style="width: 100%;"><caption></caption>
 												<tr>
 													<th scope="col">
 														<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
@@ -956,7 +956,7 @@
 										</div>
 										
 										<div class="modal-body">
-											<table width=100%><caption></caption>
+											<table style="width: 100%;"><caption></caption>
 												<tr>
 													<th scope="col">
 														<div class="form-group">
@@ -968,7 +968,7 @@
 											</table>
 										</div><!-- /.modal-content -->
 										<div class="modal-footer">
-											<table width=100%><caption>,/caption>
+											<table style="width: 100%;"><caption>,/caption>
 												<tr>
 													<th scope="col">
 														<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
@@ -1044,7 +1044,7 @@
 										</div>
 										
 										<div class="modal-body">
-											<table width=100%><caption></caption>
+											<table style="width: 100%;"><caption></caption>
 												<tr>
 													<th scope="col">
 														<div class="form-group">
@@ -1056,7 +1056,7 @@
 											</table>
 										</div><!-- /.modal-content -->
 										<div class="modal-footer">
-											<table width=100%><caption></caption>
+											<table style="width: 100%;"><caption></caption>
 												<tr>
 													<th scope="col">
 														<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
@@ -1152,7 +1152,7 @@
 										</div>
 										
 										<div class="modal-body">
-											<table width=100%><caption></caption>
+											<table style="width: 100%;"><caption></caption>
 												<tr>
 													<th scope="col">
 														<div class="form-group">
@@ -1164,7 +1164,7 @@
 											</table>
 										</div><!-- /.modal-content -->
 										<div class="modal-footer">
-											<table width=100%><caption></caption>
+											<table style="width: 100%;"><caption></caption>
 												<tr>
 													<th scope="col">
 														<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
@@ -1286,7 +1286,7 @@
 											</div>
 											
 											<div class="modal-body">
-												<table width=100%><caption></caption>
+												<table style="width: 100%;"><caption></caption>
 													<tr>
 														<th scope="col">
 															<div class="form-group">
@@ -1298,7 +1298,7 @@
 												</table>
 											</div><!-- /.modal-content -->
 											<div class="modal-footer">
-												<table width=100%><caption></caption>
+												<table style="width: 100%;"><caption></caption>
 													<tr>
 														<th scope="col">
 															<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
@@ -1423,7 +1423,7 @@
 											</div>
 											
 											<div class="modal-body">
-												<table width=100%><caption></caption>
+												<table style="width: 100%;"><caption></caption>
 													<tr>
 														<th scope="col">
 															<div class="form-group">
@@ -1435,7 +1435,7 @@
 												</table>
 											</div><!-- /.modal-content -->
 											<div class="modal-footer">
-												<table width=100%><caption></caption>
+												<table style="width: 100%;"><caption></caption>
 													<tr>
 														<th scope="col">
 															<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>

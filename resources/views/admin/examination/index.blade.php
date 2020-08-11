@@ -18,7 +18,7 @@
 			</div>
 			
 			<div class="modal-body">
-				<table width=100%><caption></caption>
+				<table style="width: 100%;"><caption></caption>
 					<tr>
 						<th scope="col">
 							<div class="form-group">
@@ -30,7 +30,7 @@
 				</table>
 			</div><!-- /.modal-content -->
 			<div class="modal-footer">
-				<table width=100%><caption></caption>
+				<table style="width: 100%;"><caption></caption>
 					<tr>
 						<th scope="col">
 							<button type="button" id="btn-modal-delete" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
@@ -66,7 +66,6 @@
 			<div class="row">
 				<div class="col-md-6">
 	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><em class="ti-filter"></em> Filter</a>
-	    			<!--<a class="btn btn-info pull-left" id="excel" href="{{URL::to('examination/excel')}}"> Export to Excel</a> -->
 	    			<button id="excel" type="submit" class="btn btn-info pull-left">
                         Export to Excel
                     </button>

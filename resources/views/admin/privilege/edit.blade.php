@@ -29,6 +29,8 @@
 				{{ Session::get('error') }}
 			</div>
 		@endif
+
+		@php $CHECKED_STRING = 'checked'; @endphp
 		
 		<!-- start: RESPONSIVE TABLE -->
 		<div class="container-fluid container-fullw bg-white">
@@ -50,7 +52,7 @@
 							</div>
 	                        <div class="col-md-4">
 								<div class="form-group">
-									<input type="checkbox" class="check-privilege1" name="check-privilege[]" value="1" <?php if($data->registration_status == 1){echo "checked";}?>>
+									<input type="checkbox" class="check-privilege1" name="check-privilege[]" value="1" <?php if($data->registration_status == 1){echo $CHECKED_STRING;}?>>
 									<label>
 										Registrasi
 									</label>
@@ -59,7 +61,7 @@
 	                        
 	                        <div class="col-md-4">
 								<div class="form-group">
-									<input type="checkbox" class="check-privilege2" name="check-privilege[]" value="2" <?php if($data->function_status == 1){echo "checked";}?>>
+									<input type="checkbox" class="check-privilege2" name="check-privilege[]" value="2" <?php if($data->function_status == 1){echo $CHECKED_STRING;}?>>
 									<label>
 										Uji Fungsi
 									</label>
@@ -68,7 +70,7 @@
 	                        
 							<div class="col-md-4">
 								<div class="form-group">
-									<input type="checkbox" class="check-privilege3" name="check-privilege[]" value="3" <?php if($data->contract_status == 1){echo "checked";}?>>
+									<input type="checkbox" class="check-privilege3" name="check-privilege[]" value="3" <?php if($data->contract_status == 1){echo $CHECKED_STRING;}?>>
 									<label>
 										Tinjauan Kontrak
 									</label>
@@ -77,7 +79,7 @@
 	                        
 	                        <div class="col-md-4">
 								<div class="form-group">
-									<input type="checkbox" class="check-privilege4" name="check-privilege[]" value="4" <?php if($data->spb_status == 1){echo "checked";}?>>
+									<input type="checkbox" class="check-privilege4" name="check-privilege[]" value="4" <?php if($data->spb_status == 1){echo $CHECKED_STRING;}?>>
 									<label>
 										SPB
 									</label>
@@ -86,7 +88,7 @@
 	                        
 	                        <div class="col-md-4">
 								<div class="form-group">
-									<input type="checkbox" class="check-privilege5" name="check-privilege[]" value="5" <?php if($data->payment_status == 1){echo "checked";}?>>
+									<input type="checkbox" class="check-privilege5" name="check-privilege[]" value="5" <?php if($data->payment_status == 1){echo $CHECKED_STRING;}?>>
 									<label>
 										Pembayaran
 									</label>
@@ -95,7 +97,7 @@
 	                        
 	                        <div class="col-md-4">
 								<div class="form-group">
-									<input type="checkbox" class="check-privilege6" name="check-privilege[]" value="6" <?php if($data->spk_status == 1){echo "checked";}?>>
+									<input type="checkbox" class="check-privilege6" name="check-privilege[]" value="6" <?php if($data->spk_status == 1){echo $CHECKED_STRING;}?>>
 									<label>
 										Pembuatan SPK
 									</label>
@@ -104,7 +106,7 @@
 	                        
 	                        <div class="col-md-4">
 								<div class="form-group">
-									<input type="checkbox" class="check-privilege7" name="check-privilege[]" value="7" <?php if($data->examination_status == 1){echo "checked";}?>>
+									<input type="checkbox" class="check-privilege7" name="check-privilege[]" value="7" <?php if($data->examination_status == 1){echo $CHECKED_STRING;}?>>
 									<label>
 										Pelaksanaan Uji
 									</label>
@@ -113,7 +115,7 @@
 	                        
 	                        <div class="col-md-4">
 								<div class="form-group">
-									<input type="checkbox" class="check-privilege8" name="check-privilege[]" value="8" <?php if($data->resume_status == 1){echo "checked";}?>>
+									<input type="checkbox" class="check-privilege8" name="check-privilege[]" value="8" <?php if($data->resume_status == 1){echo $CHECKED_STRING;}?>>
 									<label>
 										Laporan Uji
 									</label>
@@ -122,7 +124,7 @@
 	                        
 	                        <div class="col-md-4">
 								<div class="form-group">
-									<input type="checkbox" class="check-privilege9" name="check-privilege[]" value="9" <?php if($data->qa_status == 1){echo "checked";}?>>
+									<input type="checkbox" class="check-privilege9" name="check-privilege[]" value="9" <?php if($data->qa_status == 1){echo $CHECKED_STRING;}?>>
 									<label>
 										Sidang QA
 									</label>
@@ -131,7 +133,7 @@
 	                        
 	                        <div class="col-md-4">
 								<div class="form-group">
-									<input type="checkbox" class="check-privilege10" name="check-privilege[]" value="10" <?php if($data->certificate_status == 1){echo "checked";}?>>
+									<input type="checkbox" class="check-privilege10" name="check-privilege[]" value="10" <?php if($data->certificate_status == 1){echo $CHECKED_STRING;}?>>
 									<label>
 										Penerbitan Sertifikat
 									</label>

@@ -59,6 +59,7 @@ class NewExaminationChargeController extends Controller
     private const NEW_TA_PRICE = 'new_ta_price';
     private const NEW_VT_PRICE = 'new_vt_price';
     private const PRICE = 'price';
+    private const REQUIRED = 'required';
     private const SEARCH = 'search';
     private const SAVE_FAILED = 'Save failed';
     private const STEL = 'stel';
@@ -166,8 +167,8 @@ class NewExaminationChargeController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            self::NAME => 'required',
-            self::DESCRIPTION => 'required',
+            self::NAME => self::REQUIRED,
+            self::DESCRIPTION => self::REQUIRED,
             self::VALID_FROM => 'required|date',
         ]);
 
@@ -508,13 +509,13 @@ class NewExaminationChargeController extends Controller
     {
 
         $this->validate($request, [
-            self::DEVICE_NAME => 'required',
-            self::STEL => 'required',
-            self::CATEGORY => 'required',
-            self::DURATION => 'required',
-            self::NEW_PRICE => 'required',
-            self::NEW_TA_PRICE => 'required',
-            self::NEW_VT_PRICE => 'required',
+            self::DEVICE_NAME => self::REQUIRED,
+            self::STEL => self::REQUIRED,
+            self::CATEGORY => self::REQUIRED,
+            self::DURATION => self::REQUIRED,
+            self::NEW_PRICE => self::REQUIRED,
+            self::NEW_TA_PRICE => self::REQUIRED,
+            self::NEW_VT_PRICE => self::REQUIRED,
         ]);
 
 
@@ -523,13 +524,13 @@ class NewExaminationChargeController extends Controller
         if ($request->has(self::EXAMINATION_CHARGES_ID)){
 
             $this->validate($request, [
-                'old_device_name' => 'required',
-                'old_stel' => 'required',
-                'old_category' => 'required',
-                'old_duration' => 'required',
-                self::PRICE => 'required',
-                self::TA_PRICE => 'required',
-                self::VT_PRICE => 'required',
+                'old_device_name' => self::REQUIRED,
+                'old_stel' => self::REQUIRED,
+                'old_category' => self::REQUIRED,
+                'old_duration' => self::REQUIRED,
+                self::PRICE => self::REQUIRED,
+                self::TA_PRICE => self::REQUIRED,
+                self::VT_PRICE => self::REQUIRED,
             ]);
 
             $charge->examination_charges_id = $request->input(self::EXAMINATION_CHARGES_ID);

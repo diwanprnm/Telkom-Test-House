@@ -11,6 +11,7 @@ use Session;
 
 use App\CalibrationCharge;
 use App\Logs;
+use App\Services\Logs\LogServices;
 
 use Excel;
 
@@ -266,7 +267,6 @@ class CalibrationChargeController extends Controller
         // the payments table's primary key, the user's first and last name, 
         // the user's e-mail address, the amount paid, and the payment
         // timestamp.
-
         $search = trim($request->input(self::SEARCH));
        
 
@@ -275,14 +275,10 @@ class CalibrationChargeController extends Controller
                 ->where(self::DEVICE,'like','%'.$search.'%')
                 ->orderBy(self::DEVICE);
 
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Search Calibration Charge";
-                $datasearch = array(self::SEARCH2=>$search);
-                $logs->data = json_encode($datasearch);
-                $logs->created_by = $currentUser->id;
-                $logs->page = self::CALIBRATION;
-                $logs->save();
+                $logService = new LogService();
+                $logService->createLog('Search Calibration Charge',self::CALIBRATION, json_encode(array(self::SEARCH2=>$search)) );
+
+              
         }else{
             $query = CalibrationCharge::whereNotNull(self::CREATE);
 
@@ -316,14 +312,13 @@ class CalibrationChargeController extends Controller
                 $row->is_active == '1' ? 'Active' : 'Not Active'
             ];
         }
-        $currentUser = Auth::user();
-        $logs = new Logs;
-        $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-        $logs->action = "download_excel";   
-        $logs->data = "";
-        $logs->created_by = $currentUser->id;
-        $logs->page = "Tarif Kalibrasi";
-        $logs->save();
+        
+
+        $logService = new LogService();
+        $logService->createLog('download_excel',"Tarif Kalibrasi", "");
+
+
+
 
 
         

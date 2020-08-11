@@ -5,18 +5,7 @@
 <!-- Document Title
     ============================================= -->
     <title>{{ trans('translate.examination') }} - Telkom DDS</title>
-    <!-- Bootstrap Css -->
-	<!-- <link href="{{ asset('template-assets/bootstrap-assets/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css"/> -->
-
-    <!-- Style -->
-	<!--
-		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
-		<link href="{{ asset('template-assets/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet" type="text/css"/>
-		<link href="{{ asset('template-assets/css/form-elements.css')}}" rel="stylesheet" type="text/css"/>
-		<link href="{{ asset('template-assets/css/popup.css')}}" rel="stylesheet" type="text/css"/>
-
-		<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">  
-	--> 
+@php $date_STRING = date('d-m-Y'); @endphp
 @section('content')
 <style type="text/css">
 	.radio-toolbar input[type="radio"] {
@@ -89,14 +78,6 @@
 							<option value="10">{{ trans('translate.examination_certificate') }}</option>
 						</select>
 					</div>
-					<!--  
-					<div class="col-md-6 col-xs-12">
-						<span class="input-icon input-icon-right search-table"> 
-							<input id="search_value" type="text" placeholder="{{ trans('translate.search_exam') }}" id="form-field-17" class="form-control " value="{{ $search }}">
-							<i class="ti-search"></i>
-						</span>
-					</div>
-					-->
 				</div>
 			
 				@if (Session::get('error'))
@@ -324,7 +305,7 @@
 									@endif
 								@endif
 								
-								<?php if($item->spb_status == 1 and $item->payment_status != 1){ ?>
+								<?php if($item->spb_status == 1 && $item->payment_status != 1){ ?>
 									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/pembayaran')}}">{{ trans('translate.examination_payment') }}</a>
 									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/downloadSPB')}}">{{ trans('translate.download') }} SPB</a>
 									<div class="alert alert-warning" style="font-weight: bold;">
@@ -396,509 +377,7 @@
 			</div> 
 		</section><!-- #content end -->
 		
-
-<div class="modal fade bs-example-modal-lg" id="myModaledit" aria-labelledby="myModalLabel" style="display: none;" data-backdrop="static" tabindex="-1" role="dialog">
-	<div class="modal-dialog modal-lg">
-		<!-- Modal content-->
-		<div class="row">
-			<div id="contact">
-				<form role="form" action="#" method="post" class="f1" id="form-permohonan-edit" enctype="multipart/form-data">
-					{!! csrf_field() !!}
-					<input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-					<input type="hidden" name="hide_exam_id_edit" id="hide_exam_id_edit"/>
-					<input type="hidden" name="hide_device_id_edit" id="hide_device_id_edit"/>
-					<input type="hidden" name="hide_id_user" id="hide_id_user">
-					<input type="hidden" name="hide_company_id" id="hide_company_id">
-					<div class="row" style="padding-right: 10px;margin-top: 20px;">
-					<a data-dismiss="modal" style="cursor:pointer;"><img src="{{asset('template-assets/img/close (2).png')}}" style=" margin-top:-27px; float:right;" width="20" alt="close"></a>
-					</div>
-					<h5>{{ trans('translate.service_title') }}</h5>
-					<div class="f1-steps">
-						<div class="f1-progress">
-							<div class="f1-progress-line" data-now-value="52.22" data-number-of-steps="8" style="width: 52.22%;"></div>
-						</div>
-						<div class="f1-step">
-							<div class="f1-step-icon"><em class="fa fa-user"></em></div>
-							<p>{{ trans('translate.service_application') }}</p>
-						</div>
-						<div class="f1-step active">
-							<div class="f1-step-icon"><em class="fa fa-user"></em></div>
-							<p>{{ trans('translate.service_company') }}</p>
-						</div>
-						<div class="f1-step">
-							<div class="f1-step-icon"><em class="fa fa-user"></em></div>
-							<p>{{ trans('translate.service_device') }}</p>
-						</div>
-						<div class="f1-step">
-							<div class="f1-step-icon"><em class="fa fa-user"></em></div>
-							<p>{{ trans('translate.service_upload') }}</p>
-						</div>
-						<div class="f1-step">
-							<div class="f1-step-icon"><em class="fa fa-user"></em></div>
-							<p>{{ trans('translate.service_preview') }}</p>
-						</div>
-						  <div class="f1-step">
-							<div class="f1-step-icon"><em class="fa fa-user"></em></div>
-							<p>{{ trans('translate.service_upload_form') }}</p>
-						</div>
-						  <div class="f1-step">
-							<div class="f1-step-icon"><em class="fa fa-user"></em></div>
-							<p>{{ trans('translate.service_finished') }}</p>
-						</div>
-					</div>
-						
-						<input type="hidden" name="f1-nama-pemohon-edit" placeholder="Nama pemohon" class="data-pemohon f1-nama-pemohon form-control input-submit" id="f1-nama-pemohon" readonly>
-						<input type="hidden" name="f1-alamat-pemohon-edit" placeholder="Alamat..." class="data-pemohon f1-alamat-pemohon form-control input-submit" id="f1-alamat-pemohon" readonly>
-						<input type="hidden" name="f1-telepon-pemohon-edit" placeholder="Telepon..." class="data-pemohon f1-telepon-pemohon form-control input-submit" id="f1-telepon-pemohon" readonly>
-						<input type="hidden" name="f1-faksimile-pemohon-edit" placeholder="Faksimile..." class="data-pemohon f1-faksimile-pemohon form-control input-submit" id="f1-faksimile-pemohon" readonly>
-						<input type="hidden" name="f1-email-pemohon-edit" placeholder="E-mail..." class="data-pemohon f1-email-pemohon form-control input-submit" id="f1-email-pemohon" readonly>
-						<!--
-							<input type="radio" name="jns-perusahaan" class="jns-perusahaan" id="edit-rad-pabrikan" value="Pabrikan">Pabrikan
-							<input type="radio" name="jns-perusahaan" class="jns-perusahaan" id="edit-rad-agen" value="Agen/Perwakilan">Agen/Perwakilan
-							<input type="radio" name="jns-perusahaan" class="jns-perusahaan" id="edit-rad-pengguna" value="Pengguna/Perorangan">Pengguna/Perorangan
-						-->
-					
-					<!-- Data Perusahaan-->
-					<fieldset>
-						<legend></legend>
-						<h4>{{ trans('translate.service_company') }}</h4>
-						<div class="form-group">
-							<label for="f1-jns-perusahaan">{{ trans('translate.service_company_type') }} : </label>
-							<input type="radio" name="jns_perusahaan" class="rad-jns_perusahaan-edit" id="rad-jns_perusahaan1-edit" value="Agen">{{ trans('translate.service_company_agent') }}
-							<input type="radio" name="jns_perusahaan" class="rad-jns_perusahaan-edit" id="rad-jns_perusahaan2-edit" value="Pabrikan">{{ trans('translate.service_company_branch') }}
-							<input type="radio" name="jns_perusahaan" class="rad-jns_perusahaan-edit" id="rad-jns_perusahaan3-edit" value="Perorangan">{{ trans('translate.service_company_individual') }}
-						</div>
-						<div class="form-group">
-							<label for="f1-nama-perusahaan">{{ trans('translate.service_company_name') }}</label>
-							<input type="text" name="f1-nama-perusahaan-edit" placeholder="{{ trans('translate.service_company_name') }}" class="data-perusahaan f1-nama-perusahaan form-control input-submit" id="f1-nama-perusahaan" readonly>
-						</div>
-						<div class="form-group">
-							<label for="f1-alamat-perusahaan">{{ trans('translate.service_company_address') }}</label>
-							<input type="text" name="f1-alamat-perusahaan-edit" placeholder="{{ trans('translate.service_company_address') }}" class="data-perusahaan f1-alamat-perusahaan form-control input-submit" id="f1-alamat-perusahaan" readonly>
-						</div>
-						<div class="form-group">
-							<label for="f1-telepon-perusahaan">{{ trans('translate.service_company_phone') }}</label>
-							 <input type="text" name="f1-telepon-perusahaan-edit" placeholder="{{ trans('translate.service_company_phone') }}" class="data-perusahaan f1-telepon-perusahaan form-control input-submit" id="f1-telepon-perusahaan" readonly>
-						</div>
-						<div class="form-group">
-							<label for="f1-faksimile-perusahaan">{{ trans('translate.service_company_fax') }}</label>
-							 <input type="text" name="f1-faksimile-perusahaan-edit" placeholder="{{ trans('translate.service_company_fax') }}" class="data-perusahaan f1-faksimile-perusahaan form-control input-submit" id="f1-faksimile-perusahaan" readonly>
-						</div>
-						<div class="form-group">
-							<label for="f1-email-perusahaan">{{ trans('translate.service_company_email') }}</label>
-							 <input type="text" name="f1-email-perusahaan-edit" placeholder="{{ trans('translate.service_company_email') }}" class="data-perusahaan f1-email-perusahaan form-control input-submit" id="f1-email-perusahaan" readonly>
-						</div>
-						<div class="f1-buttons">
-							<button type="button" class="btn btn-next">{{ trans('translate.service_next') }}</button>
-						</div>
-					</fieldset>	
-					<!-- Data Perangkat-->
-					<fieldset>
-						<legend></legend>
-						<input type="hidden" name="hide_jns_pengujian_edit" id="hide_jns_pengujian" class="hide_jns_pengujian_edit"/>
-						<input type="hidden" name="hide_serial_number_edit" id="hide_serial_number_edit"/>
-						<input type="hidden" name="hide_name_edit" id="hide_name_edit"/>
-						<input type="hidden" name="hide_model_edit" id="hide_model_edit"/>
-						<h4>{{ trans('translate.service_device') }}</h4>
-						<div class="form-group">
-							<label for="f1-nama-perangkat">{{ trans('translate.service_device_equipment') }}</label>
-							<input type="text" name="f1-nama-perangkat-edit" placeholder="{{ trans('translate.service_device_equipment') }}" class="data-perangkat f1-nama-perangkat form-control input-submit" id="f1-nama-perangkat">
-						</div>
-						<div class="form-group">
-							<label for="f1-merek-perangkat">{{ trans('translate.service_device_mark') }}</label>
-							<input type="text" name="f1-merek-perangkat-edit" placeholder="{{ trans('translate.service_device_mark') }}" class="data-perangkat f1-merek-perangkat form-control input-submit" id="f1-merek-perangkat">
-						</div>
-						<div class="form-group">
-							<label for="f1-kapasitas-perangkat">{{ trans('translate.service_device_capacity') }}</label>
-							<input type="text" name="f1-kapasitas-perangkat-edit" placeholder="{{ trans('translate.service_device_capacity') }}" class="data-perangkat f1-kapasitas-perangkat form-control input-submit" id="f1-kapasitas-perangkat">
-						</div>
-						<div class="form-group">
-							<label for="f1-pembuat-perangkat">{{ trans('translate.service_device_manufactured_by') }}</label>
-							<input type="text" name="f1-pembuat-perangkat-edit" placeholder="{{ trans('translate.service_device_manufactured_by') }}" class="data-perangkat f1-pembuat-perangkat form-control input-submit" id="f1-pembuat-perangkat">
-						</div>
-						<div class="form-group">
-							<label for="f1-serialNumber-perangkat">{{ trans('translate.service_device_serial_number') }}</label>
-							<input type="text" name="f1-serialNumber-perangkat-edit" placeholder="{{ trans('translate.service_device_serial_number') }}" class="data-perangkat f1-serialNumber-perangkat form-control input-submit" id="f1-serialNumber-perangkat">
-						</div>
-						<div class="form-group">
-							<label for="f1-model-perangkat">{{ trans('translate.service_device_model') }}</label>
-							<input type="text" name="f1-model-perangkat-edit" placeholder="{{ trans('translate.service_device_model') }}" class="data-perangkat f1-model-perangkat form-control input-submit" id="f1-model-perangkat">
-						</div>
-						<input type="hidden" class="data-perangkat f1-jns-referensi-perangkat" id="f1-jns-referensi-perangkat" name="f1-jns-referensi-perangkat">
-						<div class="form-group cmb-ref-perangkat">
-							<label for="f1-referensi-perangkat">{{ trans('translate.service_device_test_reference') }}</label>
-							<select class="form-control" id="f1-cmb-ref-perangkat" name="f1-cmb-ref-perangkat">
-									<option value="">{{ trans('translate.service_device_test_reference') }}</option>
-								@foreach($data_stels as $item)
-									<option value="{{ $item->code }}">{{ $item->code }} || {{ $item->name }}</option>
-								@endforeach
-							</select>
-						</div>
-						<div class="form-group txt-ref-perangkat">
-							<label for="f1-referensi-perangkat">{{ trans('translate.service_device_test_reference') }}</label>
-							<input type="text" name="f1-referensi-perangkat-edit" placeholder="{{ trans('translate.service_device_test_reference') }}" class="data-perangkat f1-referensi-perangkat form-control input-submit" id="f1-referensi-perangkat">
-						</div>
-						<div class="f1-buttons">
-							<button type="button" class="btn btn-previous">{{ trans('translate.service_previous') }}</button>
-							<button type="button" class="btn btn-next cek-SN-jnsPengujian">{{ trans('translate.service_next') }}</button>
-						</div>
-					</fieldset>
-					<!-- upload berkas-->
-					<fieldset>
-						<legend></legend>
-						<h4>{{ trans('translate.service_upload') }}</h4>
-						<div class="form-group">
-							<label>{{ trans('translate.service_upload_siupp') }}<span class="text-danger">*</span></label>
-							<input class="data-upload-berkas f1-file-siupp" id="fileInput-SIUPP" name="fuploadsiupp_edit" type="file" accept="application/pdf">
-							<input type="hidden" name="hide_siupp_file_edit" id="hide_siupp_file" value=""/>
-							<a id="siupp-file" class="btn btn-link siupp-file-edit" style="color:black !important;" ></a>
-						</div>
-						<div class="form-group" style="margin-bottom:0.01%">
-							<label class="sr-only" for="f1-no-siupp">{{ trans('translate.service_upload_siupp_no') }}</label>
-							<input type="text" name="f1-no-siupp-edit" placeholder="{{ trans('translate.service_upload_siupp_no') }}" class="data-upload-berkas f1-no-siupp form-control input-submit" id="f1-no-siupp">
-						</div>
-						<div class="form-group">
-							<label class="sr-only" for="f1-tgl-siupp">{{ trans('translate.service_upload_siupp_date') }}</label>
-							<input type="hidden" name="f1-tgl-siupp-edit" placeholder="{{ trans('translate.service_upload_siupp_date') }}" class="date data-upload-berkas f1-tgl-siupp form-control input-submit" id="f1-tgl-siupp" readonly>
-							<div class="col-xs-1 selectContainer">
-								D: <select name="daySIUPP" id="daySIUPP" class="form-control" style="width:auto;" onchange="setDays(monthSIUPP,this,yearSIUPP,1)">
-									@for($i = 1;$i <= 31; $i++)
-										<?php
-											if($i < 10){
-												$i = '0'.$i;
-											}
-										?>
-										<option value="{{$i}}">{{$i}}</option>
-									@endfor
-								</select>
-							</div>
-							<div class="col-xs-2 selectContainer">
-								M: <select name="monthSIUPP" id="monthSIUPP" class="form-control" style="width:auto;" onchange="setDays(this,daySIUPP,yearSIUPP,1)">
-									<option value="01">January</option>
-									<option value="02">February</option>
-									<option value="03">March</option>
-									<option value="04">April</option>
-									<option value="05">May</option>
-									<option value="06">June</option>
-									<option value="07">July</option>
-									<option value="08">August</option>
-									<option value="09">September</option>
-									<option value="10">October</option>
-									<option value="11">November</option>
-									<option value="12">December</option>
-								</select>
-							</div>
-							<div class="col-xs-2 selectContainer">
-								Y: <select name="yearSIUPP" id="yearSIUPP" class="form-control" style="width:auto;" onchange="setDays(monthSIUPP,daySIUPP,this,1)">
-									@for($i = date('Y')+100;$i >= 1900; $i--)
-										@if($i == date('Y'))
-											<option value="{{$i}}" selected>{{$i}}</option>
-										@else
-											<option value="{{$i}}">{{$i}}</option>
-										@endif
-									@endfor
-								</select>
-							</div>
-						</div>
-						<div class="form-group col-xs-12" style="margin-top:35px">
-							<label>{{ trans('translate.service_upload_certificate') }}<span class="text-danger">*</span></label>
-							<input type="text" name="f1-sertifikat-sistem-mutu-edit" placeholder="{{ trans('translate.service_upload_certificate') }}" class="data-upload-berkas f1-sertifikat-sistem-mutu form-control input-submit" id="f1-sertifikat-sistem-mutu">
-						</div>
-						<div class="form-group col-xs-12" style="margin-bottom:0.01%">
-							<label>{{ trans('translate.service_upload_certificate_file') }}<span class="text-danger">*</span></label>
-							<input class="data-upload-berkas f1-file-lampiran" id="fileInput-lampiran" name="fuploadlampiran_edit" type="file" accept="application/pdf">
-							<input type="hidden" name="hide_sertifikat_file_edit" id="hide_sertifikat_file" value=""/>
-							<a id="sertifikat-file" class="btn btn-link sertifikat-file-edit" style="color:black !important;" ></a>
-						</div>
-						<div class="form-group">
-							<label class="sr-only" for="f1-batas-waktu">{{ trans('translate.service_upload_certificate_date') }}</label>
-							<input type="hidden" name="f1-batas-waktu-edit" placeholder="{{ trans('translate.service_upload_certificate_date') }}" class="date data-upload-berkas f1-batas-waktu form-control input-submit" id="f1-batas-waktu" readonly>
-							<div class="col-xs-1 selectContainer">
-								D: <select name="daySerti" id="daySerti" class="form-control" style="width:auto;" onchange="setDays(monthSerti,this,yearSerti,0)">
-									@for($i = 1;$i <= 31; $i++)
-										<?php
-											if($i < 10){
-												$i = '0'.$i;
-											}
-										?>
-										<option value="{{$i}}">{{$i}}</option>
-									@endfor
-								</select>
-							</div>
-							<div class="col-xs-2 selectContainer">
-								M: <select name="monthSerti" id="monthSerti" class="form-control" style="width:auto;" onchange="setDays(this,daySerti,yearSerti,0)">
-									<option value="01">January</option>
-									<option value="02">February</option>
-									<option value="03">March</option>
-									<option value="04">April</option>
-									<option value="05">May</option>
-									<option value="06">June</option>
-									<option value="07">July</option>
-									<option value="08">August</option>
-									<option value="09">September</option>
-									<option value="10">October</option>
-									<option value="11">November</option>
-									<option value="12">December</option>
-								</select>
-							</div>
-							<div class="col-xs-2 selectContainer">
-								Y: <select name="yearSerti" id="yearSerti" class="form-control" style="width:auto;" onchange="setDays(monthSerti,daySerti,this,0)">
-									@for($i = date('Y')+100;$i >= 1900; $i--)
-										@if($i == date('Y'))
-											<option value="{{$i}}" selected>{{$i}}</option>
-										@else
-											<option value="{{$i}}">{{$i}}</option>
-										@endif
-									@endfor
-								</select>
-							</div>
-						</div>
-						<div class="form-group col-xs-12" style="margin-top:35px">
-							<label>{{ trans('translate.service_upload_npwp') }}<span class="text-danger">*</span></label>
-							<input class="data-upload-berkas f1-file-NPWP" id="fileInput-NPWP" name="fuploadnpwp_edit" type="file" accept="application/pdf">
-							<input type="hidden" name="hide_npwp_file_edit" id="hide_npwp_file" value=""/>
-							<a id="npwp-file" class="btn btn-link npwp-file-edit" style="color:black !important;" ></a>
-						</div>
-						<div class="form-group col-xs-12">
-							<label>{{ trans('translate.service_upload_reference_test') }}<span class="text-danger">*</span></label>
-							<input class="data-upload-berkas f1-file-ref-uji" id="fileInput-ref-uji" name="fuploadrefuji_edit" type="file" accept="application/pdf">
-							<input type="hidden" name="hide_ref_uji_file_edit" id="hide_ref_uji_file" value=""/>
-							<a id="ref-uji-file" class="btn btn-link ref-uji-file-edit" style="color:black !important;" ></a>
-						</div>
-						<div class="dv-srt-dukungan-prinsipal">
-							<div class="form-group col-xs-12">
-								<label>{{ trans('translate.service_upload_support_principals') }}<span class="text-danger">*</span></label>
-								<input class="data-upload-berkas f1-file-prinsipal" id="fileInput-prinsipal" name="fuploadprinsipal_edit" type="file" accept="application/pdf">
-								<input type="hidden" name="hide_prinsipal_file_edit" id="hide_prinsipal_file" value=""/>
-								<a id="prinsipal-file" class="btn btn-link prinsipal-file-edit" style="color:black !important;" ></a>
-							</div>
-						</div>
-						<div class="dv-srt-sp3">
-							<div class="form-group col-xs-12">
-								<label>{{ trans('translate.service_upload_sp3') }}<span class="text-danger">*</span></label>
-								<input class="data-upload-berkas f1-file-sp3" id="fileInput-sp3" name="fuploadsp3_edit" type="file" accept="application/pdf">
-								<input type="hidden" name="hide_sp3_file_edit" id="hide_sp3_file" value=""/>
-								<a id="sp3-file" class="btn btn-link sp3-file-edit" style="color:black !important;" ></a>
-							</div>
-						</div>
-						<div class="f1-buttons col-xs-12">
-							<button type="button" class="btn btn-previous">{{ trans('translate.service_previous') }}</button>
-							<button type="button" class="btn btn-next">{{ trans('translate.service_next') }}</button>
-						</div>
-					</fieldset>
-					<!-- Preview-->
-					<fieldset>
-						<legend></legend>
-						<input type="hidden" name="hide_cekSNjnsPengujian_edit" id="hide_cekSNjnsPengujian_edit">
-						<h4>{{ trans('translate.service_preview') }}</h4>
-						<h3>{{ trans('translate.service_application') }}</h3>
-						<table class="table table-striped">
-							<caption></caption>
-							<thead class="hidden">
-								<tr>
-									<th scope="col">-</th>
-								</tr>
-							</thead>
-							<tr>
-								<td>{{ trans('translate.service_application_name') }}</td>
-								<td> : </td>
-								<td> <div id="f1-preview-1" class="f1-preview-1-edit"></div></td>
-							</tr>
-							<tr>
-								<td>{{ trans('translate.service_application_address') }}</td>
-								<td> : </td>
-								<td> <div id="f1-preview-2" class="f1-preview-2-edit"></div></td>
-							</tr>
-							<tr>
-								<td>{{ trans('translate.service_application_phone') }}</td>
-								<td> : </td>
-								<td> <div id="f1-preview-3" class="f1-preview-3-edit"></div></td>
-								<td colspan=2></td>
-								<td>{{ trans('translate.service_application_fax') }}</td>
-								<td> : </td>
-								<td> <div id="f1-preview-4" class="f1-preview-4-edit"></div></td>
-							</tr>
-							<tr>
-								<td>{{ trans('translate.service_application_email') }}</td>
-								<td> : </td>
-								<td> <div id="f1-preview-5" class="f1-preview-5-edit"></div></td>
-							</tr>
-						</table>
-						<h3>{{ trans('translate.service_company') }}</h3>
-						<div id="f2-preview-6"></div>
-						<table class="table table-striped">
-							<caption></caption>
-							<thead class="hidden">
-								<tr>
-									<th scope="col">-</th>
-								</tr>
-							</thead>
-							<tr>
-								<td>{{ trans('translate.service_company_name') }}</td>
-								<td> : </td>
-								<td> <div id="f2-preview-1" class="f2-preview-1-edit"></div></td>
-							</tr>
-							<tr>
-								<td>{{ trans('translate.service_company_address') }}</td>
-								<td> : </td>
-								<td> <div id="f2-preview-2" class="f2-preview-2-edit"></div></td>
-							</tr>
-							<tr>
-								<td>{{ trans('translate.service_company_phone') }}</td>
-								<td> : </td>
-								<td> <div id="f2-preview-3" class="f2-preview-3-edit"></div></td>
-								<td colspan=2></td>
-								<td>{{ trans('translate.service_company_fax') }}</td>
-								<td> : </td>
-								<td> <div id="f2-preview-4" class="f2-preview-4-edit"></div></td>
-							</tr>
-							<tr>
-								<td>{{ trans('translate.service_company_email') }}</td>
-								<td> : </td>
-								<td> <div id="f2-preview-5" class="f2-preview-5-edit"></div></td>
-							</tr>
-						</table>
-						<h3 id="f5-jns-pengujian" class="f5-jns-pengujian-edit">{{ trans('translate.service_preview_exam_type') }} : </h3>
-						<br>
-						<h3>{{ trans('translate.service_device') }}</h3>
-						<table class="table table-striped">
-							<caption></caption>
-							<thead class="hidden">
-								<tr>
-									<th scope="col">-</th>
-								</tr>
-							</thead>
-							<tr>
-								<td>{{ trans('translate.service_device_equipment') }}</td>
-								<td> : </td>
-								<td> <div id="f3-preview-1" class="f3-preview-1"></div></td>
-							</tr>
-							<tr>
-								<td>{{ trans('translate.service_device_mark') }}</td>
-								<td> : </td>
-								<td> <div id="f3-preview-2"></div></td>
-								<td colspan=2></td>
-								<td>{{ trans('translate.service_device_model') }}</td>
-								<td> : </td>
-								<td> <div id="f3-preview-3"></div></td>
-							</tr>
-							<tr>
-								<td>{{ trans('translate.service_device_capacity') }}</td>
-								<td> : </td>
-								<td> <div id="f3-preview-4"></div></td>
-								<td colspan=2></td>
-								<td>{{ trans('translate.service_device_test_reference') }}</td>
-								<td> : </td>
-								<td> <div id="f3-preview-5"></div></td>
-							</tr>
-							<tr>
-								<td>{{ trans('translate.service_device_serial_number') }}</td>
-								<td> : </td>
-								<td> <div id="f3-preview-7"></div></td>
-								<td colspan=2></td>
-								<td>{{ trans('translate.service_device_manufactured_by') }}</td>
-								<td> : </td>
-								<td> <div id="f3-preview-6"></div></td>
-							</tr>
-						</table>
-						<h3>{{ trans('translate.service_upload') }}</h3>
-						<table class="table table-striped">
-							<caption></caption>
-							<thead class="hidden">
-								<tr>
-									<th scope="col">-</th>
-								</tr>
-							</thead>
-							<tr>
-								<td>{{ trans('translate.service_upload_siupp') }}</td>
-								<td> : </td>
-								<td> <div id="f4-preview-1" class="f4-preview-1-edit"></div></td>
-							</tr>
-							<tr>
-								<td>{{ trans('translate.service_upload_siupp_no') }}</td>
-								<td> : </td>
-								<td> <div id="f4-preview-2"></div></td>
-							</tr>
-							<tr>
-								<td>{{ trans('translate.service_upload_siupp_date') }}</td>
-								<td> : </td>
-								<td> <div id="f4-preview-3"></div></td>
-							</tr>
-							<tr>
-								<td>{{ trans('translate.service_upload_certificate') }}</td>
-								<td> : </td>
-								<td> <div id="f4-preview-5"></div></td>
-							</tr>
-							<tr>
-								<td>{{ trans('translate.service_upload_certificate_file') }}</td>
-								<td> : </td>
-								<td> <div id="f4-preview-6" class="f4-preview-6-edit"></div></td>
-							</tr>
-							<tr>
-								<td>{{ trans('translate.service_upload_certificate_date') }}</td>
-								<td> : </td>
-								<td> <div id="f4-preview-7"></div></td>
-							</tr>
-							<tr>
-								<td>{{ trans('translate.service_upload_npwp') }}</td>
-								<td> : </td>
-								<td> <div id="f4-preview-11" class="f4-preview-11-edit"></div></td>
-							</tr>
-							<tr>
-								<td>{{ trans('translate.service_upload_reference_test') }}</td>
-								<td> : </td>
-								<td> <div id="f4-preview-file-ref-uji" class="f4-preview-file-ref-uji"></div></td>
-							</tr>
-							<tr class="dv-srt-dukungan-prinsipal">
-								<td>{{ trans('translate.service_upload_support_principals') }}</td>
-								<td> : </td>
-								<td> <div id="f4-preview-8" class="f4-preview-8-edit"></div></td>
-							</tr>
-							<tr class="dv-srt-sp3">
-								<td>{{ trans('translate.service_upload_sp3') }}</td>
-								<td> : </td>
-								<td> <div id="f4-preview-file-sp3" class="f4-preview-file-sp3-edit"></div></td>
-							</tr>
-						</table>
-						<div class="f1-buttons">
-							<button type="button" class="btn btn-previous">{{ trans('translate.service_previous') }}</button>
-							<button type="button" class="btn btn-next update-permohonan">{{ trans('translate.service_save') }}</button>
-						</div>
-					</fieldset>
-					<!-- upload detail pengujian-->
-					<fieldset>
-						<legend></legend>
-						<h4>{{ trans('translate.service_upload_form') }}</h4>
-						<div class="form-group">
-							<label>{{ trans('translate.service_upload_now') }}<span class="text-danger">*</span></label>
-							<input class="data-upload-detail-pengujian" id="fileInput-detail-pengujian" name="fuploaddetailpengujian_edit" type="file" accept="application/pdf">
-							<input type="hidden" name="hide_attachment_file_edit" id="hide_attachment_file" value=""/>
-							<a id="attachment-file" class="btn btn-link attachment-file-edit" style="color:black !important;" ></a>
-							<button type="button" class="btn btn-next upload-form">{{ trans('translate.service_upload_now') }}</button>
-							<div id="attachment-file">
-								{{ trans('translate.service_upload_if_form') }}
-								<a class="btn btn-link" style="margin-left:-10px; height:37px; color:black !important; font-size: 100%;" href="{{ url('/cetakPermohonan') }}" target="_blank">{{ trans('translate.service_upload_click') }}</a>
-							</div>
-						</div>
-						<div class="f1-buttons">
-							<button type="button" class="btn btn-next">{{ trans('translate.service_upload_later') }}</button>
-						</div>
-					</fieldset>
-					<!-- submit-->
-					<fieldset>
-						<legend></legend>
-						<h4 class="judulselesai">{{ trans('translate.service_thanks') }}</h4>
-						<div class="f1-buttons">
-							<button type="button" class="btn btn-submit">OK</button>
-						</div>
-					</fieldset>
-				</form>
-			</div>
-		</div>	  
-	</div>
-</div>
-
-<form id="form" role="form" method="POST" action="{{ url('/pengujian/tanggaluji') }}">
+<form id="form" role="form" method="POST" action="{{ url('/pengujian/tanggaluji') }}" aria-label="Form Tanggal Uji">
 {!! csrf_field() !!}
 <input type="hidden" name="hide_id_exam" id="hide_id_exam"/>
 <input type="hidden" name="hide_date_type" id="hide_date_type"/>
@@ -911,7 +390,7 @@
 			</div>
 			
 			<div class="modal-body">
-				<table width=100%>
+				<table style="width: 100%;">
 					<caption></caption>
 					<thead class="hidden">
 						<tr>
@@ -921,24 +400,20 @@
 					<tr>
 						<td>
 							<div class="form-group">
-									<label>
-										{{ trans('translate.reschedule_date') }} *
-									</label>
-									<!-- <p class="input-group input-append"> -->
-										<input type="text" id="cust_test_date" class="form-control datepicker" name="cust_test_date" placeholder="Tanggal ..." readonly>
-										<span class="input-group-btn">
-											<!-- <button type="button" class="btn btn-default"> -->
-												<em class="glyphicon glyphicon-calendar"></em>
-											<!-- </button> -->
-										</span>
-									<!-- </p> -->
-								</div>
+								<label>
+									{{ trans('translate.reschedule_date') }} *
+								</label>
+									<input type="text" id="cust_test_date" class="form-control datepicker" name="cust_test_date" placeholder="Tanggal ..." readonly>
+									<span class="input-group-btn">
+											<em class="glyphicon glyphicon-calendar"></em>
+									</span>
+							</div>
 						</td>
 					</tr>
 				</table>
 			</div><!-- /.modal-content -->
 			<div class="modal-footer">
-				<table width=100%>
+				<table style="width: 100%;">
 					<caption></caption>
 					<tr>
 						<th scope="col">
@@ -952,7 +427,7 @@
 </div>
 </form>
 
-<form id="form" role="form" method="POST" action="{{ url('/pengujian/tanggaluji') }}">
+<form id="form" role="form" method="POST" action="{{ url('/pengujian/tanggaluji') }}" aria-label="Form Tanggal Uji 2">
 {!! csrf_field() !!}
 <input type="hidden" name="hide_id_exam2" id="hide_id_exam2"/>
 <input type="hidden" name="hide_date_type" id="hide_date_type2"/>
@@ -965,7 +440,7 @@
 			</div>
 			
 			<div class="modal-body">
-				<table width=100%>
+				<table style="width: 100%;">
 					<caption></caption>
 					<thead class="hidden">
 						<tr>
@@ -996,14 +471,10 @@
 										<label>
 											{{ trans('translate.reschedule_date') }} *
 										</label>
-										<!-- <p class="input-group input-append"> -->
 											<input type="text" id="urel_test_date2" class="form-control datepicker" name="urel_test_date" placeholder="Tanggal ..." readonly>
 											<span class="input-group-btn">
-												<!-- <button type="button" class="btn btn-default"> -->
 													<em class="glyphicon glyphicon-calendar"></em>
-												<!-- </button> -->
 											</span>
-										<!-- </p> -->
 									</div>
 								</div>
 								<div class="col-md-12">
@@ -1020,7 +491,7 @@
 				</table>
 			</div><!-- /.modal-content -->
 			<div class="modal-footer">
-				<table width=100%>
+				<table style="width: 100%;">
 					<caption></caption>
 					<thead class="hidden">
 						<tr>
@@ -1039,7 +510,7 @@
 </div>
 </form>
 
-<form id="form" role="form" method="POST" action="{{ url('/pengujian/tanggaluji') }}">
+<form id="form" role="form" method="POST" action="{{ url('/pengujian/tanggaluji') }}" aria-label="Form Tanggal Uji 3">
 {!! csrf_field() !!}
 <input type="hidden" name="hide_id_exam3" id="hide_id_exam3"/>
 <input type="hidden" name="hide_date_type" id="hide_date_type3"/>
@@ -1052,7 +523,7 @@
 			</div>
 			
 			<div class="modal-body">
-				<table width=100%>
+				<table style="width: 100%;">
 					<caption></caption>
 					<thead class="hidden">
 						<tr>
@@ -1084,7 +555,7 @@
 				</table>
 			</div><!-- /.modal-content -->
 			<div class="modal-footer">
-				<table width=100%>
+				<table style="width: 100%;">
 					<caption></caption>
 					<tr>
 						<th scope="col">
@@ -1105,7 +576,6 @@
         <!-- Modal content-->
         <div class="modal-content">
           <div class="modal-header">
-            <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
             <h4 class="modal-title">Survey Kepuasan Kastamer Eksternal</h4>
           </div>
           <div class="modal-body pre-scrollable">
@@ -1114,14 +584,7 @@
                     <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
                         <div class="form-group">
                             <label>Tanggal</label>
-              <!--<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">-->
-                <input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo date('d-m-Y');?>" readonly required>
-                <!--<span class="input-group-btn">
-                  <button type="button" class="btn btn-default">
-                    <i class="glyphicon glyphicon-calendar"></i>
-                  </button>
-                </span>-->
-              <!--</p>-->
+                			<input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo $date_STRING;?>" readonly required>
                         </div>
                         <div class="form-group">
                             <label>Nama</label>
@@ -1333,7 +796,6 @@
             </form>
           </div>
           <div class="modal-footer">
-            <!-- <button type="submit" class="button button3d btn-sky" data-dismiss="modal">Simpan</button> -->
       <button type="button" id="submit-kuisioner1" class="button button3d btn-sky">Simpan</button>
           </div>
         </div>
@@ -1379,7 +841,7 @@
                         </div>
                         <div class="form-group">
                             <label>Tanggal</label>
-                            <input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo date('d-m-Y');?>" readonly required>
+                            <input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo $date_STRING;?>" readonly required>
                         </div>
                     </div>
                 </div>
@@ -1446,7 +908,6 @@
             </form>
           </div>
           <div class="modal-footer">
-            <!-- <button type="submit" class="button button3d btn-sky" data-dismiss="modal">Simpan</button> -->
       <button type="button" id="submit-kuisioner" class="button button3d btn-sky">Simpan</button>
           </div>
         </div>
@@ -1498,14 +959,7 @@
                             <td colspan="2">
                 <input type="hidden" id="my_exam_id" name="my_exam_id">
                 <label>Date</label>
-                <!--<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">-->
-                  <input type="text" id="tanggal_complaint" name="tanggal_complaint" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo date('d-m-Y');?>" readonly required>
-                  <!--<span class="input-group-btn">
-                    <button type="button" class="btn btn-default">
-                      <i class="glyphicon glyphicon-calendar"></i>
-                    </button>
-                  </span>-->
-                <!--</p>-->
+                  <input type="text" id="tanggal_complaint" name="tanggal_complaint" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo $date_STRING;?>" readonly required>
                             </td>
                         </tr>
                         <tr>
@@ -1744,210 +1198,6 @@
 		});
 	});
 	
-	function edit(a,b){
-		if(b==1){
-			alert("Pengujian sudah teregistrasi!");return false;
-		}else{
-			$.ajax({
-				type: "POST",
-				url : "editPengujian",
-				data: {'_token':"{{ csrf_token() }}", 'id':a},
-				type:'post',
-				beforeSend: function(){
-					$('#myModaledit').modal('hide');
-				},
-				success: function(data){
-					console.log(data);
-					
-					var nama_pemohon = document.getElementsByName("f1-nama-pemohon-edit");
-					var alamat_pemohon = document.getElementsByName("f1-alamat-pemohon-edit");
-					var telepon_pemohon = document.getElementsByName("f1-telepon-pemohon-edit");
-					var faksimile_pemohon = document.getElementsByName("f1-faksimile-pemohon-edit");
-					var email_pemohon = document.getElementsByName("f1-email-pemohon-edit");
-					
-					var nama_perusahaan = document.getElementsByName("f1-nama-perusahaan-edit");
-					var alamat_perusahaan = document.getElementsByName("f1-alamat-perusahaan-edit");
-					var telepon_perusahaan = document.getElementsByName("f1-telepon-perusahaan-edit");
-					var faksimile_perusahaan = document.getElementsByName("f1-faksimile-perusahaan-edit");
-					var email_perusahaan = document.getElementsByName("f1-email-perusahaan-edit");
-					
-					var nama_perangkat = document.getElementsByName("f1-nama-perangkat-edit");
-					var merek_perangkat = document.getElementsByName("f1-merek-perangkat-edit");
-					var kapasitas_perangkat = document.getElementsByName("f1-kapasitas-perangkat-edit");
-					var pembuat_perangkat = document.getElementsByName("f1-pembuat-perangkat-edit");
-					var serialNumber_perangkat = document.getElementsByName("f1-serialNumber-perangkat-edit");
-					var model_perangkat = document.getElementsByName("f1-model-perangkat-edit");
-					var referensi_perangkat = document.getElementsByName("f1-referensi-perangkat-edit");
-					
-					var hide_siupp_file = document.getElementsByName("hide_siupp_file_edit");
-					var no_siupp = document.getElementsByName("f1-no-siupp-edit");
-					var tgl_siupp = document.getElementsByName("f1-tgl-siupp-edit");
-					var hide_sertifikat_file = document.getElementsByName("hide_sertifikat_file_edit");
-					var no_sertifikat = document.getElementsByName("f1-sertifikat-sistem-mutu-edit");
-					var batas_waktu = document.getElementsByName("f1-batas-waktu-edit");
-					var hide_npwp_file = document.getElementsByName("hide_npwp_file_edit");
-					var hide_ref_uji_file = document.getElementsByName("hide_ref_uji_file_edit");
-					var no_ref_uji = document.getElementsByName("f1-no-surat-ref-uji-edit");
-					var tgl_ref_uji = document.getElementsByName("f1-tgl-surat-ref-uji-edit");
-					var hide_prinsipal_file = document.getElementsByName("hide_prinsipal_file_edit");
-					var no_prinsipal = document.getElementsByName("f1-no-surat-prinsipal-edit");
-					var tgl_prinsipal = document.getElementsByName("f1-tgl-surat-prinsipal-edit");
-					var hide_sp3_file = document.getElementsByName("hide_sp3_file_edit");
-					var no_sp3 = document.getElementsByName("f1-no-surat-sp3-edit");
-					var tgl_sp3 = document.getElementsByName("f1-tgl-surat-sp3-edit");
-					
-					var hide_attachment_file = document.getElementsByName("hide_attachment_file_edit");
-					
-					str = data.split("|token|");
-					$('#hide_id_user').val(str[14]);
-					for (var i=0;i<nama_pemohon.length;i++) {nama_pemohon[i].value = str[15];}
-					for (var i=0;i<alamat_pemohon.length;i++) {alamat_pemohon[i].value = str[37];}
-					for (var i=0;i<telepon_pemohon.length;i++) {telepon_pemohon[i].value = str[38];}
-					for (var i=0;i<faksimile_pemohon.length;i++) {faksimile_pemohon[i].value = str[39];}
-					for (var i=0;i<email_pemohon.length;i++) {email_pemohon[i].value = str[16];}
-					
-					for (var i=0;i<nama_perusahaan.length;i++) {nama_perusahaan[i].value = str[17];}
-					for (var i=0;i<alamat_perusahaan.length;i++) {alamat_perusahaan[i].value = str[18];}
-					for (var i=0;i<telepon_perusahaan.length;i++) {telepon_perusahaan[i].value = str[19];}
-					for (var i=0;i<faksimile_perusahaan.length;i++) {faksimile_perusahaan[i].value = str[20];}
-					for (var i=0;i<email_perusahaan.length;i++) {email_perusahaan[i].value = str[21];}
-					
-					for (var i=0;i<nama_perangkat.length;i++) {nama_perangkat[i].value = str[0];}
-					$('#hide_name_edit').val(str[0]);
-					for (var i=0;i<merek_perangkat.length;i++) {merek_perangkat[i].value = str[1];}
-					for (var i=0;i<kapasitas_perangkat.length;i++) {kapasitas_perangkat[i].value = str[2];}
-					for (var i=0;i<pembuat_perangkat.length;i++) {pembuat_perangkat[i].value = str[3];}
-					for (var i=0;i<serialNumber_perangkat.length;i++) {serialNumber_perangkat[i].value = str[4];}
-					$('#hide_serial_number_edit').val(str[4]);
-					for (var i=0;i<model_perangkat.length;i++) {model_perangkat[i].value = str[5];}
-					$('#hide_model_edit').val(str[5]);
-					
-					for (var i=0;i<hide_siupp_file.length;i++) {hide_siupp_file[i].value = str[11];}
-					$('.siupp-file-edit').html(str[11]);
-					$('.f4-preview-1-edit').html(str[11]);
-					for (var i=0;i<no_siupp.length;i++) {no_siupp[i].value = str[10];}
-					for (var i=0;i<tgl_siupp.length;i++) {tgl_siupp[i].value = str[12];}
-						date_format_siupp = str[12].split("-");
-						$('#daySIUPP').val(date_format_siupp[0]);
-						$('#monthSIUPP').val(date_format_siupp[1]);
-						$('#yearSIUPP').val(date_format_siupp[2]);
-					for (var i=0;i<hide_sertifikat_file.length;i++) {hide_sertifikat_file[i].value = str[8];}
-					$('.sertifikat-file-edit').html(str[8]);
-					$('.f4-preview-6-edit').html(str[8]);
-					for (var i=0;i<no_sertifikat.length;i++) {no_sertifikat[i].value = str[7];}
-					for (var i=0;i<batas_waktu.length;i++) {batas_waktu[i].value = str[9];}
-						date_format_serti = str[9].split("-");
-						$('#daySerti').val(date_format_serti[0]);
-						$('#monthSerti').val(date_format_serti[1]);
-						$('#yearSerti').val(date_format_serti[2]);
-					for (var i=0;i<hide_npwp_file.length;i++) {hide_npwp_file[i].value = str[13];}
-					$('.npwp-file-edit').html(str[13]);
-					$('.f4-preview-11-edit').html(str[13]);
-					
-					for (var i=0;i<hide_attachment_file.length;i++) {hide_attachment_file[i].value = str[25];}
-					$('.attachment-file-edit').html(str[25]);
-					
-					for (var i=0;i<hide_ref_uji_file.length;i++) {hide_ref_uji_file[i].value = str[26];}
-					$('.ref-uji-file-edit').html(str[26]);
-					$('.f4-preview-file-ref-uji').html(str[26]);
-					for (var i=0;i<no_ref_uji.length;i++) {no_ref_uji[i].value = str[27];}
-					for (var i=0;i<tgl_ref_uji.length;i++) {tgl_ref_uji[i].value = str[28];}
-					
-					for (var i=0;i<hide_prinsipal_file.length;i++) {hide_prinsipal_file[i].value = str[29];}
-					$('.prinsipal-file-edit').html(str[29]);
-					$('.f4-preview-8-edit').html(str[29]);
-					for (var i=0;i<no_prinsipal.length;i++) {no_prinsipal[i].value = str[30];}
-					for (var i=0;i<tgl_prinsipal.length;i++) {tgl_prinsipal[i].value = str[31];}
-					
-					for (var i=0;i<hide_sp3_file.length;i++) {hide_sp3_file[i].value = str[32];}
-					$('.sp3-file-edit').html(str[32]);
-					$('.f4-preview-file-sp3-edit').html(str[32]);
-					for (var i=0;i<no_sp3.length;i++) {no_sp3[i].value = str[33];}
-					for (var i=0;i<tgl_sp3.length;i++) {tgl_sp3[i].value = str[34];}
-					
-					$('#f1-preview-1').html(str[15]);
-					$('#f1-preview-2').html(str[37]);
-					$('#f1-preview-3').html(str[38]);
-					$('#f1-preview-4').html(str[39]);
-					$('#f1-preview-5').html(str[16]);
-					$('#f2-preview-1').html(str[17]);
-					$('#f2-preview-2').html(str[18]);
-					$('#f2-preview-3').html(str[19]);
-					$('#f2-preview-4').html(str[20]);
-					$('#f2-preview-5').html(str[21]);
-					$('#hide_device_id_edit').val(str[22]);
-					$('.hide_jns_pengujian_edit').val(str[23]);
-						if(str[23]==1){
-							$(".dv-srt-dukungan-prinsipal").show();
-							$(".cmb-ref-perangkat").show();
-							$("#f1-cmb-ref-perangkat").val(''+str[6]+'');
-							$(".txt-ref-perangkat").hide();
-							$("#f1-jns-referensi-perangkat").val(1);
-							$(".dv-srt-sp3").hide();
-							// $('.f5-jns-pengujian-edit').html('Jenis Pengujian : QA');
-							var divs = document.getElementsByClassName('f5-jns-pengujian-edit');
-							for (var i = 0; i < divs.length; i++) {
-								divs[i].innerHTML += " QA";
-							}
-						}else if(str[23]==2){
-							$(".dv-srt-dukungan-prinsipal").hide();
-							$(".cmb-ref-perangkat").hide();
-							$(".txt-ref-perangkat").show();
-							for (var i=0;i<referensi_perangkat.length;i++) {referensi_perangkat[i].value = str[6];}
-							$("#f1-jns-referensi-perangkat").val(0);
-							$(".dv-srt-sp3").show();
-							// $('.f5-jns-pengujian-edit').html('Jenis Pengujian : TA');
-							var divs = document.getElementsByClassName('f5-jns-pengujian-edit');
-							for (var i = 0; i < divs.length; i++) {
-								divs[i].innerHTML += " TA";
-							}
-						}else if(str[23]==3){
-							$(".dv-srt-dukungan-prinsipal").hide();
-							$(".cmb-ref-perangkat").hide();
-							$(".txt-ref-perangkat").show();
-							for (var i=0;i<referensi_perangkat.length;i++) {referensi_perangkat[i].value = str[6];}
-							$("#f1-jns-referensi-perangkat").val(0);
-							$(".dv-srt-sp3").hide();
-							// $('.f5-jns-pengujian-edit').html('Jenis Pengujian : VT');
-							var divs = document.getElementsByClassName('f5-jns-pengujian-edit');
-							for (var i = 0; i < divs.length; i++) {
-								divs[i].innerHTML += " VT";
-							}
-						}else{
-							$(".dv-srt-dukungan-prinsipal").hide();
-							$(".cmb-ref-perangkat").hide();
-							$(".txt-ref-perangkat").show();
-							for (var i=0;i<referensi_perangkat.length;i++) {referensi_perangkat[i].value = str[6];}
-							$("#f1-jns-referensi-perangkat").val(0);
-							$(".dv-srt-sp3").hide();
-							// $('.f5-jns-pengujian-edit').html('Jenis Pengujian : CAL');
-							var divs = document.getElementsByClassName('f5-jns-pengujian-edit');
-							for (var i = 0; i < divs.length; i++) {
-								divs[i].innerHTML += " CAL";
-							}
-						}
-					$('input[name="jns_perusahaan"][value="' + str[24] + '"]').prop('checked', true);
-					if(str[23] == 1){					
-						if(str[24] == 'Pabrikan'){
-							$(".dv-srt-dukungan-prinsipal").hide();
-						}
-						else{
-							$(".dv-srt-dukungan-prinsipal").show();
-						}
-					}
-					$('#hide_exam_id_edit').val(str[35]);
-					$('#hide_company_id').val(str[36]);
-					
-					$('#myModaledit').modal('show');
-				},
-				error:function(){
-					alert("Gagal mengambil data");
-					$('#myModaledit').modal('hide');
-				}
-			});
-		}
-	}
-	
 	$('.cek-SN-jnsPengujian').click(function(){
 		var jnsPelanggan = $('.hide_jns_pengujian_edit').val();
 		var true_serialNumber_perangkat = $('#hide_serial_number_edit').val();
@@ -2120,20 +1370,7 @@
 </script>
 <script type="text/javascript" src="{{ asset('assets/js/search/pengujian.js')}}"></script>
 <script src="{{ asset('assets/js/chosen.jquery.min.js') }}"></script>
-<!-- <script src={{ asset("assets/js/chosen.jquery.min.js") }}></script> -->
 <script type="text/javascript">
-	$('#myModaledit').on('shown.bs.modal', function () 
-	{
-		$('#f1-cmb-ref-perangkat').chosen();
-		// $('#f1-cmb-ref-perangkat').trigger("chosen:updated");
-		$('#f1_cmb_ref_perangkat_chosen').css({
-			"width": "100%"
-		});
-		$('#f1_cmb_ref_perangkat_chosen .chosen-single span').css({
-			"color": "black"
-		});
-	}); 
-	
 	function isTestimonial(a,b,c,d,e){
 		var link = document.getElementById('link');
 			// link.value = '/pengujian/download/'+a+'/'+b+'/'+c;
