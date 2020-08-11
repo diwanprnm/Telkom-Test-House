@@ -170,11 +170,11 @@
 										    $bottom = 0;
 										    while($bottom <= $top)
 										    {
-										        if($array[$bottom][$field] == $elem){
-													return true;
-												}else if( 
+										        if($array[$bottom][$field] == $elem || (
 										        	is_array($array[$bottom][$field]) && 
-										        	in_multiarray($elem, ($array[$bottom][$field])))
+										        	in_multiarray($elem, ($array[$bottom][$field]))
+										        	)
+										    	)
 												{ 
 														return true;
 													 
