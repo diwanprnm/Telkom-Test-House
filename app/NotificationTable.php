@@ -8,11 +8,6 @@ class NotificationTable extends Model
 {
     protected $table = "notification";
     public $incrementing = false;
-    public $timestamps = false;
-        
-    public function notificationTable()
-    {
-        return $this->belongsTo('App\NotificationTable');
-    }
-
+    public $timestamps = false; 
+    
 }
