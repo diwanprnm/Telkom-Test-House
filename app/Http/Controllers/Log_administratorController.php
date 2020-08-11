@@ -201,7 +201,7 @@ class Log_administratorController extends Controller
            
         }
 
-        if ($request->has($this::USERNAME) && ($request->input($this::USERNAME) != 'all'){
+        if ($request->has($this::USERNAME) && ($request->input($this::USERNAME) != 'all')){
            
             
                 $datalogs->where(self::USER_NAME, $request->get($this::USERNAME));
