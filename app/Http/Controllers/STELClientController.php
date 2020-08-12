@@ -16,16 +16,13 @@ use Session;
 
 class STELClientController extends Controller
 {
+    private const STELCLIENT_STRING = 'STELclient';
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    // public function __construct()
-    // {
-        // $this->middleware('auth');
-    // }
-
+   
     /**
      * Display a listing of the resource.
      *
@@ -33,69 +30,49 @@ class STELClientController extends Controller
      */
     public function index(Request $request)
     {
-        // $currentUser = Auth::user();
+        $message = null;
+        $paginate = 10;
+        $search = trim($request->input('search'));
+        $type = '';
+        $stel_type = $request->path() == self::STELCLIENT_STRING ? 1 : 2;
+        
+        $examLab = ExaminationLab::all();
 
-        // if ($currentUser){
-            $message = null;
-            $paginate = 10;
-            $search = trim($request->input('search'));
-            $type = '';
-            
-            $examLab = ExaminationLab::all();
+        $query = STEL::with('examinationLab')
+            ->whereNotNull('created_at')
+            ->where('stel_type','=',$stel_type)
+            ->where('is_active','=','1')
+            ;
 
-            if ($search != null){
-                $query = STEL::whereNotNull('created_at')
-                    ->where('stel_type','=','1')
-					->where('is_active','=','1')
-                    ->where(function($q) use ($search){
-                        return $q->where('code','like','%'.$search.'%')
-                        ->orWhere('name','like','%'.$search.'%')
-                        ;
-                    })
-                    ->with('examinationLab')
-                    ;
-                    //$logs = new Logs;
-                    //$currentUser = Auth::user();
-                    //$logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                    //$logs->action = "Search STEL";
-                    //$datasearch = array("search"=>$search,"type"=>$type);
-                    //$logs->data = json_encode($datasearch);
-                    //$logs->created_by = $currentUser->id;
-                    //$logs->page = "STEL";
-                    //$logs->save();
-            }else{
-                $query = STEL::whereNotNull('created_at')
-					->where('stel_type','=','1')
-					->where('is_active','=','1')
-                    ->with('examinationLab')
-                    ;
-            }
+        if ($search != null){
+            $query->where(function($q) use ($search){
+                return $q->where('code','like','%'.$search.'%')
+                ->orWhere('name','like','%'.$search.'%')
+                ;
+            });
+        }
 
-            if ($request->has('type')){
-                $type = $request->get('type');
-                if($request->input('type') != 'all'){
-                    $query->whereHas('examinationLab', function ($q) use ($type){
-                        return $q->where('id', $type);
-                    });
-                }
+        if ($request->has('type')){
+            $type = $request->get('type');
+            if($request->input('type') != 'all'){
+                $query->whereHas('examinationLab', function ($q) use ($type){
+                    return $q->where('id', $type);
+                });
             }
-            
-				// $stels = $query->orderBy('updated_at', 'desc')
-				$stels = $query->orderBy('name')
-                         ->paginate($paginate);
-			
-            if (count($stels) == 0){
-                $message = 'Data not found';
-            }
-            $page = "STELclient";
-            return view('client.STEL.index')
-                ->with('examLab', $examLab)
-                ->with('message', $message)
-                ->with('data', $stels)
-                ->with('page', $page)
-                ->with('search', $search)
-                ->with('type', $type);
-        // }
+        }
+        
+        $stels = $query->orderBy('name')->paginate($paginate);
+        
+        if (count($stels) == 0){
+            $message = 'Data not found';
+        }
+        return view($request->path() == self::STELCLIENT_STRING ? 'client.STEL.index' : 'client.STSEL.index')
+            ->with('examLab', $examLab)
+            ->with('message', $message)
+            ->with('data', $stels)
+            ->with('page', $request->path() == self::STELCLIENT_STRING ? 'STEL' : 'STSEL')
+            ->with('search', $search)
+            ->with('type', $type);
     }
 	
 	public function filter(Request $request)
@@ -111,14 +88,15 @@ class STELClientController extends Controller
 			$stels = STEL::whereNotNull('created_at')
 				->orderBy('code')
 				->paginate($paginate);
-		}
+        }
+        
 		return response()
-			->view('client.STEL.filter', $stels, 200)
+			->view($request->path() == self::STELCLIENT_STRING ? 'client.STEL.filter' : 'client.STSEL.filter', $stels, 200)
 			->header('Content-Type', 'text/html');
     }
 	
 	public function autocomplete($query) {
-        $respons_result = STEL::autocomplet_stel($query,1);
+        $respons_result = STEL::autocomplet_stel($query, $request->path() == self::STELCLIENT_STRING ? 1 : 2);
         return response($respons_result);
-    }  
+    }
 }

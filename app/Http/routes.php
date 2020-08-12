@@ -4589,10 +4589,8 @@ Route::get('/pengujian', 'PengujianController@index');
 Route::get('/pengujian/{id}/detail', 'PengujianController@detail');
 Route::post('/testimonial', 'PengujianController@testimonial');
 Route::post('/cekAmbilBarang', 'PengujianController@cekAmbilBarang');
-Route::resource('/STELclient', 'STELClientController');
 Route::get('/STELclient', 'STELClientController@index');
-Route::resource('/STSELclient', 'STSELClientController');
-Route::get('/STSELclient', 'STSELClientController@index');
+Route::get('/STSELclient', 'STELClientController@index');
 Route::resource('/Chargeclient', 'ExaminationChargeClientController');
 Route::get('/Chargeclient', 'ExaminationChargeClientController@index');
 Route::resource('/NewChargeclient', 'ExaminationNewChargeClientController');
@@ -4625,7 +4623,7 @@ Route::get('mylogsbl', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index'
 
  
 Route::get('/stel_autocomplete/{query}', 'STELClientController@autocomplete')->name('stel_autocomplete');
-Route::get('/stsel_autocomplete/{query}', 'STSELClientController@autocomplete')->name('stsel_autocomplete');
+Route::get('/stsel_autocomplete/{query}', 'STELClientController@autocomplete')->name('stsel_autocomplete');
 Route::get('/charge_client_autocomplete/{query}', 'ExaminationChargeClientController@autocomplete')->name('charge_client_autocomplete');
 Route::get('/new_charge_client_autocomplete/{query}', 'ExaminationNewChargeClientController@autocomplete')->name('new_charge_client_autocomplete');
 Route::get('/dev_client_autocomplete/{query}', 'DevClientController@autocomplete')->name('dev_client_autocomplete');
