@@ -181,6 +181,7 @@ class ExaminationController extends Controller
     {
 		$currentUser = Auth::user();
 		$logService = new LogService();
+		$examinationService = new ExaminationService();
 
         if ($currentUser){
             $message = null;
@@ -189,7 +190,7 @@ class ExaminationController extends Controller
 			
             $examType = ExaminationType::all();
 
-			$tempData = $this->requestQuery($request, $search, $type = '', $status = '', $before = null, $after = null);
+			$tempData = $examinationService->requestQuery($request, $search, $type = '', $status = '', $before = null, $after = null);
 
             $query = $tempData[0];
             $search = $tempData[1];
@@ -198,7 +199,7 @@ class ExaminationController extends Controller
 			$before = $tempData[4];
 			$after = $tempData[5];
 			
-			$search != null ? $logService->createLog('search', $this::EXAMINATION, json_encode(array('search' => $search)) ) : '';
+			$search != null ? $logService->createLog(self::SEARCH, $this::EXAMINATION, json_encode(array(self::SEARCH => $search)) ) : '';
 
 			$data = $query->orderBy(self::UPDATED_AT, 'desc')
                         ->paginate($paginate);
@@ -218,171 +219,6 @@ class ExaminationController extends Controller
                 ->with(self::AFTER_DATE, $after);
         }
     }
-
-	function requestQuery($request, $search, $type, $status, $before, $after){
-		$query = Examination::whereNotNull(self::CREATED_AT)
-							->with('user')
-							->with(self::COMPANY)
-							->with(self::EXAMINATION_TYPE)
-							->with(self::EXAMINATION_LAB)
-							->with(self::MEDIA)
-							->with(self::DEVICE);
-		$query->where(function($q){
-			return $q->where(self::REGISTRATION_STATUS, '!=', '1')
-				->orWhere(self::FUNCTION_STATUS, '!=', '1')
-				->orWhere(self::CONTRACT_STATUS, '!=', '1')
-				->orWhere(self::SPB_STATUS, '!=', '1')
-				->orWhere(self::PAYMENT_STATUS, '!=', '1')
-				->orWhere(self::SPK_STATUS, '!=', '1')
-				->orWhere(self::EXAMINATION_STATUS, '!=', '1')
-				->orWhere(self::RESUME_STATUS, '!=', '1')
-				->orWhere(self::QA_STATUS, '!=', '1')
-				->orWhere(self::CERTIFICATE_STATUS, '!=', '1')
-				->orWhere(self::LOCATION, '!=', '1')
-				;
-			})
-			;
-		if ($search != null){
-			$query->where(function($qry) use($search){
-				$qry->whereHas(self::DEVICE, function ($q) use ($search){
-						return $q->where('name', 'like', '%'.strtolower($search).'%');
-					})
-				->orWhereHas(self::COMPANY, function ($q) use ($search){
-						return $q->where('name', 'like', '%'.strtolower($search).'%');
-					})
-				->orWhereHas(self::EXAMINATION_LAB, function ($q) use ($search){
-						return $q->where('name', 'like', '%'.strtolower($search).'%');
-					})
-				->orWhere('function_test_NO', 'like', '%'.strtolower($search).'%')
-				->orWhere('spk_code', 'like', '%'.strtolower($search).'%');
-			});
-		}
-
-		if ($request->has('type')){
-			$type = $request->get('type');
-			if($request->input('type') != 'all'){
-				$query->where('examination_type_id', $request->get('type'));
-			}
-		}
-
-		if ($request->has(self::COMPANY)){
-			$query->whereHas(self::COMPANY, function ($q) use ($request){
-				return $q->where('name', 'like', '%'.strtolower($request->get(self::COMPANY)).'%');
-			});
-		}
-
-		if ($request->has(self::DEVICE)){
-			$query->whereHas(self::DEVICE, function ($q) use ($request){
-				return $q->where('name', 'like', '%'.strtolower($request->get(self::DEVICE)).'%');
-			});
-		}
-
-		if ($request->has(self::STATUS)){
-			switch ($request->get(self::STATUS)) {
-				case 1:
-					$query->where(self::REGISTRATION_STATUS, '!=', 1);
-					$status = 1;
-					break;
-				case 2:
-					$query->where(self::REGISTRATION_STATUS, '=', 1);
-					$query->where(self::FUNCTION_STATUS, '!=', 1);
-					$status = 2;
-					break;
-				case 3:
-					$query->where(self::REGISTRATION_STATUS, '=', 1);
-					$query->where(self::FUNCTION_STATUS, '=', 1);
-					$query->where(self::CONTRACT_STATUS, '!=', 1);
-					$status = 3;
-					break;
-				case 4:
-					$query->where(self::REGISTRATION_STATUS, '=', 1);
-					$query->where(self::FUNCTION_STATUS, '=', 1);
-					$query->where(self::CONTRACT_STATUS, '=', 1);
-					$query->where(self::SPB_STATUS, '!=', 1);
-					$status = 4;
-					break;
-				case 5:
-					$query->where(self::REGISTRATION_STATUS, '=', 1);
-					$query->where(self::FUNCTION_STATUS, '=', 1);
-					$query->where(self::CONTRACT_STATUS, '=', 1);
-					$query->where(self::SPB_STATUS, '=', 1);
-					$query->where(self::PAYMENT_STATUS, '!=', 1);
-					$status = 5;
-					break;
-				case 6:
-					$query->where(self::REGISTRATION_STATUS, '=', 1);
-					$query->where(self::FUNCTION_STATUS, '=', 1);
-					$query->where(self::CONTRACT_STATUS, '=', 1);
-					$query->where(self::SPB_STATUS, '=', 1);
-					$query->where(self::PAYMENT_STATUS, '=', 1);
-					$query->where(self::SPK_STATUS, '!=', 1);
-					$status = 6;
-					break;
-				case 7:
-					$query->where(self::REGISTRATION_STATUS, '=', 1);
-					$query->where(self::FUNCTION_STATUS, '=', 1);
-					$query->where(self::CONTRACT_STATUS, '=', 1);
-					$query->where(self::SPB_STATUS, '=', 1);
-					$query->where(self::PAYMENT_STATUS, '=', 1);
-					$query->where(self::SPK_STATUS, '=', 1);
-					$query->where(self::EXAMINATION_STATUS, '!=', 1);
-					$status = 7;
-					break;
-				case 8:
-					$query->where(self::REGISTRATION_STATUS, '=', 1);
-					$query->where(self::FUNCTION_STATUS, '=', 1);
-					$query->where(self::CONTRACT_STATUS, '=', 1);
-					$query->where(self::SPB_STATUS, '=', 1);
-					$query->where(self::PAYMENT_STATUS, '=', 1);
-					$query->where(self::SPK_STATUS, '=', 1);
-					$query->where(self::EXAMINATION_STATUS, '=', 1);
-					$query->where(self::RESUME_STATUS, '!=', 1);
-					$status = 8;
-					break;
-				case 9:
-					$query->where(self::REGISTRATION_STATUS, '=', 1);
-					$query->where(self::FUNCTION_STATUS, '=', 1);
-					$query->where(self::CONTRACT_STATUS, '=', 1);
-					$query->where(self::SPB_STATUS, '=', 1);
-					$query->where(self::PAYMENT_STATUS, '=', 1);
-					$query->where(self::SPK_STATUS, '=', 1);
-					$query->where(self::EXAMINATION_STATUS, '=', 1);
-					$query->where(self::RESUME_STATUS, '=', 1);
-					$query->where(self::QA_STATUS, '!=', 1);
-					$status = 9;
-					break;
-				case 10:
-					$query->where(self::REGISTRATION_STATUS, '=', 1);
-					$query->where(self::FUNCTION_STATUS, '=', 1);
-					$query->where(self::CONTRACT_STATUS, '=', 1);
-					$query->where(self::SPB_STATUS, '=', 1);
-					$query->where(self::PAYMENT_STATUS, '=', 1);
-					$query->where(self::SPK_STATUS, '=', 1);
-					$query->where(self::EXAMINATION_STATUS, '=', 1);
-					$query->where(self::RESUME_STATUS, '=', 1);
-					$query->where(self::QA_STATUS, '=', 1);
-					$query->where(self::CERTIFICATE_STATUS, '!=', 1);
-					$status = 10;
-					break;
-				
-				default:
-					$status = 'all';
-					break;
-			}
-		}
-		
-		if ($request->has(self::BEFORE_DATE)){
-			$query->where(self::SPK_DATE, '<=', $request->get(self::BEFORE_DATE));
-			$before = $request->get(self::BEFORE_DATE);
-		}
-
-		if ($request->has(self::AFTER_DATE)){
-			$query->where(self::SPK_DATE, '>=', $request->get(self::AFTER_DATE));
-			$after = $request->get(self::AFTER_DATE);
-		}
-
-		return array($query, $search, $type, $status, $before, $after);
-	}
 
     /**
      * Display the specified resource.
@@ -1846,9 +1682,12 @@ class ExaminationController extends Controller
 		// the user's e-mail address, the amount paid, and the payment
 		// timestamp.
 
+		$logService = new LogService();
+		$examinationService = new ExaminationService();
+
         $search = trim($request->input(self::SEARCH));
 
-        $tempData = $this->requestQuery($request, $search, $type = '', $status = '', $before = null, $after = null);
+        $tempData = $examinationService->requestQuery($request, $search, $type = '', $status = '', $before = null, $after = null);
 
 		$query = $tempData[0];
 		$search = $tempData[1];
@@ -2241,14 +2080,8 @@ class ExaminationController extends Controller
 				$row->price
 			];
 		}
-        $currentUser = Auth::user();
-        $logs = new Logs;
-        $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-        $logs->action = "download_excel";   
-        $logs->data = "";
-        $logs->created_by = $currentUser->id;
-        $logs->page = self::EXAMINATION;
-        $logs->save();
+		
+		$logService->createLog("download_excel", $this::EXAMINATION, "");
 
 		// Generate and return the spreadsheet
 		Excel::create('Data Pengujian', function($excel) use ($examsArray) {
@@ -2280,8 +2113,9 @@ class ExaminationController extends Controller
 	public function updaterevisi(Request $request)
     {
 		$currentUser = Auth::user();
-
-			$device = Device::findOrFail($request->input('id_perangkat'));
+		$notificationService = new NotificationService();
+		
+		$device = Device::findOrFail($request->input('id_perangkat'));
 
         if ($request->has(self::NAMA_PERANGKAT)){
             $device->name = $request->input(self::NAMA_PERANGKAT);
