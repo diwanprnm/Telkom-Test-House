@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
-// use Illuminate\Database\Query\Builder;
 use Illuminate\Pagination\Paginator;
 use App\Http\Requests;
 use Illuminate\Http\Request;
@@ -39,15 +38,64 @@ use Carbon\Carbon;
 
 class PengujianController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    // public function __construct()
-    // {
-        // $this->middleware('auth');
-    // }
+
+	private const ATTRIBUTES = 'attributes';
+	private const COMPANY_ID = 'company_id';
+	private const SEARCH = 'search';
+	private const STATUS = 'status';
+	private const PAYMENT_STATUS = 'payment_status';
+	private const EXAMINATIONS = 'examinations';
+	private const DEVICES = 'devices';
+	private const DEVICES_DOT_ID = 'devices.id';
+	private const EXAMINATIONS_DEVICES_ID = 'examinations.device_id';
+	private const EXAMINATIONS_CREATED_BY = 'examinations.created_by';
+	private const USERS_ID = 'users.id';
+	private const USERS = 'users';
+	private const COMPANIES = 'companies';
+	private const COMPANIES_ID = 'companies.id';
+	private const USER_COMPANY_ID = 'users.company_id';
+	private const EXAMINATION_TYPES = 'examination_types';
+	private const EXAMINATIONS_TYPE_ID = 'examinations.examination_type_id';
+	private const EXAMINATION_TYPES_ID = 'examination_types.id';
+	private const EXAMINATIONS_COMPANY_ID = 'examinations.company_id';
+	private const DEVICES_NAME = 'devices.name';
+	private const EXAMINATIONS_DOT = 'examinations.';
+	private const EXAMINATIONS_UPDATED_AT = 'examinations.updated_at';
+	private const DATA_NOT_FOUND = 'Data not found';
+	private const IS_ACTIVE = 'is_active';
+	private const MESSAGE = 'message';
+	private const PENGUJIAN = 'pengujian';
+	private const USER_ID = 'user_id';
+	private const CONTENT_TYPE = 'Content-Type';
+	private const TOKEN = '|token|';
+	private const CREATED_AT = 'created_at';
+	private const EXAMINATION_ID = 'examination_id';
+	private const EXAMINATION_LAB = 'examinationLab';
+	private const HEADERS = 'headers';
+	private const APLLICATION_HEADER_FORM = 'application/x-www-form-urlencoded';
+	private const APP_URL_API_BSP = 'app.url_api_bsp';
+	private const BASE_URI = 'base_uri';
+	private const TIMEOUT = 'timeout';
+	private const APLLICATION_HEADER_OCTET = 'Content-Type: application/octet-stream';
+	private const DOWNLOAD_FAILED = 'Download Failed';
+	private const MEDIA_EXAMINATION_LOC = '/media/examination/';
+	private const DATE_FORMAT1 = 'Y-m-d H:i:s';
+	private const HIDE_ID_EXAM = 'hide_id_exam';
+	private const FILE_PEMBAYARAN = 'filePembayaran';
+	private const HIDE_FILE_PEMBAYARAN = 'hide_file_pembayaran';
+	private const ERROR = 'error';
+	private const DATE_FORMAT2 = 'Y-m-d';
+	private const EXAMINATION_LOC = 'examination/';
+	private const EDIT_LOC = '/edit';
+	private const IS_READ = 'is_read';
+	private const UPDATED_AT = 'updated_at';
+	private const HIDE_DATE_TYPE = 'hide_date_type';
+	private const UPDATE_FAILED = 'Update failed';
+	private const HIDE_ID_EXAM2 = 'hide_id_exam2';
+	private const ADMIN = 'admin';
+	private const HIDE_ID_EXAM3 = 'hide_id_exam3';
+	private const EXAM_ID = 'exam_id';
+	private const MY_EXAM_ID = 'my_exam_id';
 
     /**
      * Show the application dashboard.
@@ -58,437 +106,176 @@ class PengujianController extends Controller
     public function index(Request $request)
     {
 		$currentUser = Auth::user();
-		$user_id = ''.$currentUser['attributes']['id'].'';
-		$company_id = ''.$currentUser['attributes']['company_id'].'';
+		$user_id = ''.$currentUser[self::ATTRIBUTES]['id'].'';
+		$company_id = ''.$currentUser[self::ATTRIBUTES][self::COMPANY_ID].'';
         if ($currentUser){
             $message = null;
             $paginate = 10;
-            $search = trim($request->input('search'));
+            $search = trim($request->input(self::SEARCH));
             $jns = trim($request->input('jns'));
-            $status = trim($request->input('status'));
+            $status = trim($request->input(self::STATUS));
 			
 			$arr_status = [
 				'registration_status',
 				'function_status',
 				'contract_status',
 				'spb_status',
-				'payment_status',
+				self::PAYMENT_STATUS,
 				'spk_status',
 				'examination_status',
 				'resume_status',
 				'qa_status',
 				'certificate_status'
 			];
+
+			$neededColumn = 'examinations.id,
+				examinations.examination_type_id,
+				examinations.device_id,
+				devices.name AS nama_perangkat,
+				devices.mark AS merk_perangkat,
+				devices.serial_number AS serialNumber,
+				devices.model AS model_perangkat,
+				devices.certificate AS sistem_mutuPerangkat,
+				devices.capacity AS kapasitas_perangkat,
+				devices.cert_number,
+				examinations.registration_status,
+				examinations.function_status,
+				examinations.contract_status,
+				examinations.spb_status,
+				examinations.payment_status,
+				examinations.spk_status,
+				examinations.examination_status,
+				examinations.resume_status,
+				examinations.qa_status,
+				examinations.qa_passed,
+				examinations.certificate_status,
+				examinations.urel_test_date,
+				examinations.cust_test_date,
+				examinations.deal_test_date,
+				examination_types.name AS jns_pengujian,
+				examination_types.description AS desc_pengujian,
+				users.name AS userName,
+				examinations.function_test_reason,
+				companies.name AS companiesName,
+				examinations.function_date,
+				examinations.function_test_PIC,
+				examinations.function_test_NO,
+				examinations.function_test_date_approval,
+				examinations.resume_date,
+				examinations.created_at,
+				(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name';
 			
             if ($search != null){
 				if($jns > 0){
 					if($status > 0){
-						$data = DB::table('examinations')
-						->join('devices', 'examinations.device_id', '=', 'devices.id')
-						->join('users', 'examinations.created_by', '=', 'users.id')
-						->join('companies', 'users.company_id', '=', 'companies.id')
-						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
-						->select(DB::raw(
-								'examinations.id,
-								examinations.examination_type_id,
-								examinations.device_id,
-								devices.name AS nama_perangkat,
-								devices.mark AS merk_perangkat,
-								devices.serial_number AS serialNumber,
-								devices.model AS model_perangkat,
-								devices.certificate AS sistem_mutuPerangkat,
-								devices.capacity AS kapasitas_perangkat,
-								devices.cert_number,
-								examinations.registration_status,
-								examinations.function_status,
-								examinations.contract_status,
-								examinations.spb_status,
-								examinations.payment_status,
-								examinations.spk_status,
-								examinations.examination_status,
-								examinations.resume_status,
-								examinations.qa_status,
-								examinations.qa_passed,
-								examinations.certificate_status,
-								examinations.urel_test_date,
-								examinations.cust_test_date,
-								examinations.deal_test_date,
-								examination_types.name AS jns_pengujian,
-								examination_types.description AS desc_pengujian,
-								users.name AS userName,
-								examinations.function_test_reason,
-								companies.name AS companiesName,
-								examinations.function_date,
-								examinations.function_test_PIC,
-								examinations.function_test_NO,
-								examinations.function_test_date_approval,
-								examinations.resume_date,
-								examinations.created_at,
-								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
-								))
-						->where('examinations.company_id','=',''.$company_id.'')
-						// ->where('examinations.created_by','=',''.$user_id.'')
-						->where('devices.name','like','%'.$search.'%')
-						->where('examinations.'.$arr_status[$status-1].'','=','1')
-						->where('examinations.'.$arr_status[$status].'','<','1')
-						->where('examinations.examination_type_id','=',''.$request->input('jns').'')
-						->orderBy('examinations.updated_at', 'desc')
+						$data = DB::table(self::EXAMINATIONS)
+						->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
+						->join(self::USERS, self::EXAMINATIONS_CREATED_BY, '=', self::USERS_ID)
+						->join(self::COMPANIES, self::USER_COMPANY_ID, '=', self::COMPANIES_ID)
+						->join(self::EXAMINATION_TYPES, self::EXAMINATIONS_TYPE_ID, '=', self::EXAMINATION_TYPES_ID)
+						->select(DB::raw( $neededColumn ))
+						->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
+						// ->where(self::EXAMINATIONS_CREATED_BY,'=',''.$user_id.'')
+						->where(self::DEVICES_NAME,'like','%'.$search.'%')
+						->where(self::EXAMINATIONS_DOT.$arr_status[$status-1].'','=','1')
+						->where(self::EXAMINATIONS_DOT.$arr_status[$status].'','<','1')
+						->where(self::EXAMINATIONS_TYPE_ID,'=',''.$request->input('jns').'')
+						->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
 						->paginate($paginate);
 					}else{
-						$data = DB::table('examinations')
-						->join('devices', 'examinations.device_id', '=', 'devices.id')
-						->join('users', 'examinations.created_by', '=', 'users.id')
-						->join('companies', 'users.company_id', '=', 'companies.id')
-						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
-						->select(DB::raw(
-								'examinations.id,
-								examinations.examination_type_id,
-								examinations.device_id,
-								devices.name AS nama_perangkat,
-								devices.mark AS merk_perangkat,
-								devices.serial_number AS serialNumber,
-								devices.model AS model_perangkat,
-								devices.certificate AS sistem_mutuPerangkat,
-								devices.capacity AS kapasitas_perangkat,
-								devices.cert_number,
-								examinations.registration_status,
-								examinations.function_status,
-								examinations.contract_status,
-								examinations.spb_status,
-								examinations.payment_status,
-								examinations.spk_status,
-								examinations.examination_status,
-								examinations.resume_status,
-								examinations.qa_status,
-								examinations.qa_passed,
-								examinations.certificate_status,
-								examinations.urel_test_date,
-								examinations.cust_test_date,
-								examinations.deal_test_date,
-								examination_types.name AS jns_pengujian,
-								examination_types.description AS desc_pengujian,
-								users.name AS userName,
-								examinations.function_test_reason,
-								companies.name AS companiesName,
-								examinations.function_date,
-								examinations.function_test_PIC,
-								examinations.function_test_NO,
-								examinations.function_test_date_approval,
-								examinations.resume_date,
-								examinations.created_at,
-								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
-								))
-						->where('examinations.company_id','=',''.$company_id.'')
-						// ->where('examinations.created_by','=',''.$user_id.'')
-						->where('devices.name','like','%'.$search.'%')
-						->where('examinations.examination_type_id','=',''.$request->input('jns').'')
-						->orderBy('examinations.updated_at', 'desc')
+						$data = DB::table(self::EXAMINATIONS)
+						->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
+						->join(self::USERS, self::EXAMINATIONS_CREATED_BY, '=', self::USERS_ID)
+						->join(self::COMPANIES, self::USER_COMPANY_ID, '=', self::COMPANIES_ID)
+						->join(self::EXAMINATION_TYPES, self::EXAMINATIONS_TYPE_ID, '=', self::EXAMINATION_TYPES_ID)
+						->select(DB::raw( $neededColumn ))
+						->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
+						// ->where(self::EXAMINATIONS_CREATED_BY,'=',''.$user_id.'')
+						->where(self::DEVICES_NAME,'like','%'.$search.'%')
+						->where(self::EXAMINATIONS_TYPE_ID,'=',''.$request->input('jns').'')
+						->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
 						->paginate($paginate);
 					}
 				}else{
 					if($status > 0){
-						$data = DB::table('examinations')
-						->join('devices', 'examinations.device_id', '=', 'devices.id')
-						->join('users', 'examinations.created_by', '=', 'users.id')
-						->join('companies', 'users.company_id', '=', 'companies.id')
-						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
-						->select(DB::raw(
-								'examinations.id,
-								examinations.examination_type_id,
-								examinations.device_id,
-								devices.name AS nama_perangkat,
-								devices.mark AS merk_perangkat,
-								devices.serial_number AS serialNumber,
-								devices.model AS model_perangkat,
-								devices.certificate AS sistem_mutuPerangkat,
-								devices.capacity AS kapasitas_perangkat,
-								devices.cert_number,
-								examinations.registration_status,
-								examinations.function_status,
-								examinations.contract_status,
-								examinations.spb_status,
-								examinations.payment_status,
-								examinations.spk_status,
-								examinations.examination_status,
-								examinations.resume_status,
-								examinations.qa_status,
-								examinations.qa_passed,
-								examinations.certificate_status,
-								examinations.urel_test_date,
-								examinations.cust_test_date,
-								examinations.deal_test_date,
-								examination_types.name AS jns_pengujian,
-								examination_types.description AS desc_pengujian,
-								users.name AS userName,
-								examinations.function_test_reason,
-								companies.name AS companiesName,
-								examinations.function_date,
-								examinations.function_test_PIC,
-								examinations.function_test_NO,
-								examinations.function_test_date_approval,
-								examinations.resume_date,
-								examinations.created_at,
-								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
-								))
-						->where('examinations.company_id','=',''.$company_id.'')
-						// ->where('examinations.created_by','=',''.$user_id.'')
-						->where('devices.name','like','%'.$search.'%')
-						->where('examinations.'.$arr_status[$status-1].'','=','1')
-						->where('examinations.'.$arr_status[$status].'','<','1')
-						->orderBy('examinations.updated_at', 'desc')
+						$data = DB::table(self::EXAMINATIONS)
+						->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
+						->join(self::USERS, self::EXAMINATIONS_CREATED_BY, '=', self::USERS_ID)
+						->join(self::COMPANIES, self::USER_COMPANY_ID, '=', self::COMPANIES_ID)
+						->join(self::EXAMINATION_TYPES, self::EXAMINATIONS_TYPE_ID, '=', self::EXAMINATION_TYPES_ID)
+						->select(DB::raw( $neededColumn ))
+						->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
+						// ->where(self::EXAMINATIONS_CREATED_BY,'=',''.$user_id.'')
+						->where(self::DEVICES_NAME,'like','%'.$search.'%')
+						->where(self::EXAMINATIONS_DOT.$arr_status[$status-1].'','=','1')
+						->where(self::EXAMINATIONS_DOT.$arr_status[$status].'','<','1')
+						->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
 						->paginate($paginate);
 					}else{
-						$data = DB::table('examinations')
-						->join('devices', 'examinations.device_id', '=', 'devices.id')
-						->join('users', 'examinations.created_by', '=', 'users.id')
-						->join('companies', 'users.company_id', '=', 'companies.id')
-						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
-						->select(DB::raw(
-								'examinations.id,
-								examinations.examination_type_id,
-								examinations.device_id,
-								devices.name AS nama_perangkat,
-								devices.mark AS merk_perangkat,
-								devices.serial_number AS serialNumber,
-								devices.model AS model_perangkat,
-								devices.certificate AS sistem_mutuPerangkat,
-								devices.capacity AS kapasitas_perangkat,
-								devices.cert_number,
-								examinations.registration_status,
-								examinations.function_status,
-								examinations.contract_status,
-								examinations.spb_status,
-								examinations.payment_status,
-								examinations.spk_status,
-								examinations.examination_status,
-								examinations.resume_status,
-								examinations.qa_status,
-								examinations.qa_passed,
-								examinations.certificate_status,
-								examinations.urel_test_date,
-								examinations.cust_test_date,
-								examinations.deal_test_date,
-								examination_types.name AS jns_pengujian,
-								examination_types.description AS desc_pengujian,
-								users.name AS userName,
-								examinations.function_test_reason,
-								companies.name AS companiesName,
-								examinations.function_date,
-								examinations.function_test_PIC,
-								examinations.function_test_NO,
-								examinations.function_test_date_approval,
-								examinations.resume_date,
-								examinations.created_at,
-								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
-								))
-						->where('examinations.company_id','=',''.$company_id.'')
-						// ->where('examinations.created_by','=',''.$user_id.'')
-						->where('devices.name','like','%'.$search.'%')
-						->orderBy('examinations.updated_at', 'desc')
+						$data = DB::table(self::EXAMINATIONS)
+						->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
+						->join(self::USERS, self::EXAMINATIONS_CREATED_BY, '=', self::USERS_ID)
+						->join(self::COMPANIES, self::USER_COMPANY_ID, '=', self::COMPANIES_ID)
+						->join(self::EXAMINATION_TYPES, self::EXAMINATIONS_TYPE_ID, '=', self::EXAMINATION_TYPES_ID)
+						->select(DB::raw( $neededColumn ))
+						->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
+						// ->where(self::EXAMINATIONS_CREATED_BY,'=',''.$user_id.'')
+						->where(self::DEVICES_NAME,'like','%'.$search.'%')
+						->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
 						->paginate($paginate);
 					}
 				}
             }else{
                 if($jns > 0){
 					if($status > 0){
-						$data = DB::table('examinations')
-						->join('devices', 'examinations.device_id', '=', 'devices.id')
-						->join('users', 'examinations.created_by', '=', 'users.id')
-						->join('companies', 'users.company_id', '=', 'companies.id')
-						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
-						->select(DB::raw(
-								'examinations.id,
-								examinations.examination_type_id,
-								examinations.device_id,
-								devices.name AS nama_perangkat,
-								devices.mark AS merk_perangkat,
-								devices.serial_number AS serialNumber,
-								devices.model AS model_perangkat,
-								devices.certificate AS sistem_mutuPerangkat,
-								devices.capacity AS kapasitas_perangkat,
-								devices.cert_number,
-								examinations.registration_status,
-								examinations.function_status,
-								examinations.contract_status,
-								examinations.spb_status,
-								examinations.payment_status,
-								examinations.spk_status,
-								examinations.examination_status,
-								examinations.resume_status,
-								examinations.qa_status,
-								examinations.qa_passed,
-								examinations.certificate_status,
-								examinations.urel_test_date,
-								examinations.cust_test_date,
-								examinations.deal_test_date,
-								examination_types.name AS jns_pengujian,
-								examination_types.description AS desc_pengujian,
-								users.name AS userName,
-								examinations.function_test_reason,
-								companies.name AS companiesName,
-								examinations.function_date,
-								examinations.function_test_PIC,
-								examinations.function_test_NO,
-								examinations.function_test_date_approval,
-								examinations.resume_date,
-								examinations.created_at,
-								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
-								))
-						->where('examinations.company_id','=',''.$company_id.'')
-						// ->where('examinations.created_by','=',''.$user_id.'')
-						->where('examinations.'.$arr_status[$status-1].'','=','1')
-						->where('examinations.'.$arr_status[$status].'','<','1')
-						->where('examinations.examination_type_id','=',''.$request->input('jns').'')
-						->orderBy('examinations.updated_at', 'desc')
+						$data = DB::table(self::EXAMINATIONS)
+						->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
+						->join(self::USERS, self::EXAMINATIONS_CREATED_BY, '=', self::USERS_ID)
+						->join(self::COMPANIES, self::USER_COMPANY_ID, '=', self::COMPANIES_ID)
+						->join(self::EXAMINATION_TYPES, self::EXAMINATIONS_TYPE_ID, '=', self::EXAMINATION_TYPES_ID)
+						->select(DB::raw( $neededColumn ))
+						->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
+						// ->where(self::EXAMINATIONS_CREATED_BY,'=',''.$user_id.'')
+						->where(self::EXAMINATIONS_DOT.$arr_status[$status-1].'','=','1')
+						->where(self::EXAMINATIONS_DOT.$arr_status[$status].'','<','1')
+						->where(self::EXAMINATIONS_TYPE_ID,'=',''.$request->input('jns').'')
+						->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
 						->paginate($paginate);
 					}else{
-						$data = DB::table('examinations')
-						->join('devices', 'examinations.device_id', '=', 'devices.id')
-						->join('users', 'examinations.created_by', '=', 'users.id')
-						->join('companies', 'users.company_id', '=', 'companies.id')
-						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
-						->select(DB::raw(
-								'examinations.id,
-								examinations.examination_type_id,
-								examinations.device_id,
-								devices.name AS nama_perangkat,
-								devices.mark AS merk_perangkat,
-								devices.serial_number AS serialNumber,
-								devices.model AS model_perangkat,
-								devices.certificate AS sistem_mutuPerangkat,
-								devices.capacity AS kapasitas_perangkat,
-								devices.cert_number,
-								examinations.registration_status,
-								examinations.function_status,
-								examinations.contract_status,
-								examinations.spb_status,
-								examinations.payment_status,
-								examinations.spk_status,
-								examinations.examination_status,
-								examinations.resume_status,
-								examinations.qa_status,
-								examinations.qa_passed,
-								examinations.certificate_status,
-								examinations.urel_test_date,
-								examinations.cust_test_date,
-								examinations.deal_test_date,
-								examination_types.name AS jns_pengujian,
-								examination_types.description AS desc_pengujian,
-								users.name AS userName,
-								examinations.function_test_reason,
-								companies.name AS companiesName,
-								examinations.function_date,
-								examinations.function_test_PIC,
-								examinations.function_test_NO,
-								examinations.function_test_date_approval,
-								examinations.resume_date,
-								examinations.created_at,
-								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
-								))
-						->where('examinations.company_id','=',''.$company_id.'')
-						// ->where('examinations.created_by','=',''.$user_id.'')
-						->where('examinations.examination_type_id','=',''.$request->input('jns').'')
-						->orderBy('examinations.updated_at', 'desc')
+						$data = DB::table(self::EXAMINATIONS)
+						->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
+						->join(self::USERS, self::EXAMINATIONS_CREATED_BY, '=', self::USERS_ID)
+						->join(self::COMPANIES, self::USER_COMPANY_ID, '=', self::COMPANIES_ID)
+						->join(self::EXAMINATION_TYPES, self::EXAMINATIONS_TYPE_ID, '=', self::EXAMINATION_TYPES_ID)
+						->select(DB::raw( $neededColumn ))
+						->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
+						// ->where(self::EXAMINATIONS_CREATED_BY,'=',''.$user_id.'')
+						->where(self::EXAMINATIONS_TYPE_ID,'=',''.$request->input('jns').'')
+						->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
 						->paginate($paginate);
 					}
 				}else{
 					if($status > 0){
-						$data = DB::table('examinations')
-						->join('devices', 'examinations.device_id', '=', 'devices.id')
-						->join('users', 'examinations.created_by', '=', 'users.id')
-						->join('companies', 'users.company_id', '=', 'companies.id')
-						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
-						->select(DB::raw(
-								'examinations.id,
-								examinations.examination_type_id,
-								examinations.device_id,
-								devices.name AS nama_perangkat,
-								devices.mark AS merk_perangkat,
-								devices.serial_number AS serialNumber,
-								devices.model AS model_perangkat,
-								devices.certificate AS sistem_mutuPerangkat,
-								devices.capacity AS kapasitas_perangkat,
-								devices.cert_number,
-								examinations.registration_status,
-								examinations.function_status,
-								examinations.contract_status,
-								examinations.spb_status,
-								examinations.payment_status,
-								examinations.spk_status,
-								examinations.examination_status,
-								examinations.resume_status,
-								examinations.qa_status,
-								examinations.qa_passed,
-								examinations.certificate_status,
-								examinations.urel_test_date,
-								examinations.cust_test_date,
-								examinations.deal_test_date,
-								examination_types.name AS jns_pengujian,
-								examination_types.description AS desc_pengujian,
-								users.name AS userName,
-								examinations.function_test_reason,
-								companies.name AS companiesName,
-								examinations.function_date,
-								examinations.function_test_PIC,
-								examinations.function_test_NO,
-								examinations.function_test_date_approval,
-								examinations.resume_date,
-								examinations.created_at,
-								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
-								))
-						->where('examinations.company_id','=',''.$company_id.'')
-						// ->where('examinations.created_by','=',''.$user_id.'')
-						->where('examinations.'.$arr_status[$status-1].'','=','1')
-						->where('examinations.'.$arr_status[$status].'','<','1')
-						->orderBy('examinations.updated_at', 'desc')
+						$data = DB::table(self::EXAMINATIONS)
+						->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
+						->join(self::USERS, self::EXAMINATIONS_CREATED_BY, '=', self::USERS_ID)
+						->join(self::COMPANIES, self::USER_COMPANY_ID, '=', self::COMPANIES_ID)
+						->join(self::EXAMINATION_TYPES, self::EXAMINATIONS_TYPE_ID, '=', self::EXAMINATION_TYPES_ID)
+						->select(DB::raw( $neededColumn ))
+						->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
+						->where(self::EXAMINATIONS_DOT.$arr_status[$status-1].'','=','1')
+						->where(self::EXAMINATIONS_DOT.$arr_status[$status].'','<','1')
+						->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
 						->paginate($paginate);
 					}else{
-						$data = DB::table('examinations')
-						->join('devices', 'examinations.device_id', '=', 'devices.id')
-						->join('users', 'examinations.created_by', '=', 'users.id')
-						->join('companies', 'users.company_id', '=', 'companies.id')
-						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
-						->select(DB::raw(
-								'examinations.id,
-								examinations.examination_type_id,
-								examinations.device_id,
-								devices.name AS nama_perangkat,
-								devices.mark AS merk_perangkat,
-								devices.serial_number AS serialNumber,
-								devices.model AS model_perangkat,
-								devices.certificate AS sistem_mutuPerangkat,
-								devices.capacity AS kapasitas_perangkat,
-								devices.cert_number,
-								examinations.registration_status,
-								examinations.function_status,
-								examinations.contract_status,
-								examinations.spb_status,
-								examinations.payment_status,
-								examinations.spk_status,
-								examinations.examination_status,
-								examinations.resume_status,
-								examinations.qa_status,
-								examinations.qa_passed,
-								examinations.certificate_status,
-								examinations.urel_test_date,
-								examinations.cust_test_date,
-								examinations.deal_test_date,
-								examination_types.name AS jns_pengujian,
-								examination_types.description AS desc_pengujian,
-								users.name AS userName,
-								examinations.function_test_reason,
-								companies.name AS companiesName,
-								examinations.function_date,
-								examinations.function_test_PIC,
-								examinations.function_test_NO,
-								examinations.function_test_date_approval,
-								examinations.resume_date,
-								examinations.created_at,
-								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
-								))
-						->where('examinations.company_id','=',''.$company_id.'')
-						// ->where('examinations.created_by','=',''.$user_id.'')
-						->orderBy('examinations.updated_at', 'desc')
+						$data = DB::table(self::EXAMINATIONS)
+						->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
+						->join(self::USERS, self::EXAMINATIONS_CREATED_BY, '=', self::USERS_ID)
+						->join(self::COMPANIES, self::USER_COMPANY_ID, '=', self::COMPANIES_ID)
+						->join(self::EXAMINATION_TYPES, self::EXAMINATIONS_TYPE_ID, '=', self::EXAMINATION_TYPES_ID)
+						->select(DB::raw( $neededColumn ))
+						->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
+						->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
 						->paginate($paginate);
 					}
 				}
@@ -497,7 +284,7 @@ class PengujianController extends Controller
 				$data_exam_type = DB::select($query_exam_type);
 			
             if (count($data) == 0){
-                $message = 'Data not found';
+                $message = self::DATA_NOT_FOUND;
             }
 			
 			$query_stels = "SELECT * FROM stels WHERE is_active = 1";
@@ -507,18 +294,20 @@ class PengujianController extends Controller
 				$message_stels = "Data Not Found";
 			}
 			
-			$data_kuisioner = QuestionerQuestion::where("is_active",1)->orderBy('order_question')->get();
+			$data_kuisioner = QuestionerQuestion::where(self::IS_ACTIVE,1)->orderBy('order_question')->get();
             	
             return view('client.pengujian.index')
-                ->with('message', $message)
+                ->with(self::MESSAGE, $message)
                 ->with('data_exam_type', $data_exam_type)
                 ->with('data', $data)
-                ->with('search', $search)
+                ->with(self::SEARCH, $search)
                 ->with('jns', $jns)
-                ->with('page', "pengujian")
-                ->with('status', $status)
+                ->with('page', self::PENGUJIAN)
+                ->with(self::STATUS, $status)
                 ->with('data_stels', $data_stels)
-                ->with('data_kuisioner', $data_kuisioner);
+				->with('data_kuisioner', $data_kuisioner)
+				->with('message_stels', $message_stels)
+				->with(self::USER_ID, $user_id);
         }else{
 			return  redirect('login');
 		}
@@ -527,130 +316,82 @@ class PengujianController extends Controller
     public function filter(Request $request)
     {
 		$currentUser = Auth::user();
-		$user_id = ''.$currentUser['attributes']['id'].'';
-		$company_id = ''.$currentUser['attributes']['company_id'].'';
-			$pengujian = $request->input('pengujian');
-			$status = $request->input('status');
+		$user_id = ''.$currentUser[self::ATTRIBUTES]['id'].'';
+		$company_id = ''.$currentUser[self::ATTRIBUTES][self::COMPANY_ID].'';
+		$pengujian = $request->input(self::PENGUJIAN);
+		$status = $request->input(self::STATUS);
 		$arr_status = [
 			'registration_status',
 			'spb_status',
-			'payment_status',
+			self::PAYMENT_STATUS,
 			'spk_status',
 			'examination_status',
 			'resume_status',
 			'qa_status',
 			'certificate_status'
 		];
-		$message = null;
+		$neededColumn = array(
+			'examinations.id',
+			self::EXAMINATIONS_TYPE_ID,
+			'devices.name AS nama_perangkat',
+			'devices.mark AS merk_perangkat',
+			'devices.serial_number AS serialNumber',
+			'devices.model AS model_perangkat',
+			'devices.certificate AS sistem_mutuPerangkat',
+			'examinations.registration_status',
+			'examinations.spb_status',
+			'examinations.payment_status',
+			'examinations.spk_status',
+			'examinations.examination_status',
+			'examinations.resume_status',
+			'examinations.qa_status',
+			'examinations.certificate_status'
+		);
 		$paginate = 2;
-		if($pengujian > 0){
+		if( $pengujian > 0){
 			if($status > 0){
-				$data = DB::table('examinations')
-				->join('devices', 'examinations.device_id', '=', 'devices.id')
-				->select(
-						'examinations.id',
-						'examinations.examination_type_id',
-						'devices.name AS nama_perangkat',
-						'devices.mark AS merk_perangkat',
-						'devices.serial_number AS serialNumber',
-						'devices.model AS model_perangkat',
-						'devices.certificate AS sistem_mutuPerangkat',
-						'examinations.registration_status',
-						'examinations.spb_status',
-						'examinations.payment_status',
-						'examinations.spk_status',
-						'examinations.examination_status',
-						'examinations.resume_status',
-						'examinations.qa_status',
-						'examinations.certificate_status'
-						)
-				->where('examinations.company_id','=',''.$company_id.'')
-				->where('examinations.'.$arr_status[$status-1].'','=','1')
-				->where('examinations.'.$arr_status[$status].'','<','1')
-				->where('examinations.examination_type_id','=',''.$request->input('pengujian').'')
+				$data = DB::table(self::EXAMINATIONS)
+				->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
+				->select( $neededColumn )
+				->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
+				->where(self::EXAMINATIONS_DOT.$arr_status[$status-1].'','=','1')
+				->where(self::EXAMINATIONS_DOT.$arr_status[$status].'','<','1')
+				->where(self::EXAMINATIONS_TYPE_ID,'=',''.$request->input(self::PENGUJIAN).'')
 				->paginate($paginate);
 			}else{
-				$data = DB::table('examinations')
-				->join('devices', 'examinations.device_id', '=', 'devices.id')
-				->select(
-						'examinations.id',
-						'examinations.examination_type_id',
-						'devices.name AS nama_perangkat',
-						'devices.mark AS merk_perangkat',
-						'devices.serial_number AS serialNumber',
-						'devices.model AS model_perangkat',
-						'devices.certificate AS sistem_mutuPerangkat',
-						'examinations.registration_status',
-						'examinations.spb_status',
-						'examinations.payment_status',
-						'examinations.spk_status',
-						'examinations.examination_status',
-						'examinations.resume_status',
-						'examinations.qa_status',
-						'examinations.certificate_status'
-						)
-				->where('examinations.company_id','=',''.$company_id.'')
-				->where('examinations.examination_type_id','=',''.$request->input('pengujian').'')
+				$data = DB::table(self::EXAMINATIONS)
+				->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
+				->select( $neededColumn )
+				->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
+				->where(self::EXAMINATIONS_TYPE_ID,'=',''.$request->input(self::PENGUJIAN).'')
 				->paginate($paginate);
 			}
 		}else{
 			if($status > 0){
-				$data = DB::table('examinations')
-				->join('devices', 'examinations.device_id', '=', 'devices.id')
-				->select(
-						'examinations.id',
-						'examinations.examination_type_id',
-						'devices.name AS nama_perangkat',
-						'devices.mark AS merk_perangkat',
-						'devices.serial_number AS serialNumber',
-						'devices.model AS model_perangkat',
-						'devices.certificate AS sistem_mutuPerangkat',
-						'examinations.registration_status',
-						'examinations.spb_status',
-						'examinations.payment_status',
-						'examinations.spk_status',
-						'examinations.examination_status',
-						'examinations.resume_status',
-						'examinations.qa_status',
-						'examinations.certificate_status'
-						)
-				->where('examinations.company_id','=',''.$company_id.'')
-				->where('examinations.'.$arr_status[$status-1].'','=','1')
-				->where('examinations.'.$arr_status[$status].'','<','1')
+				$data = DB::table(self::EXAMINATIONS)
+				->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
+				->select( $neededColumn )
+				->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
+				->where(self::EXAMINATIONS_DOT.$arr_status[$status-1].'','=','1')
+				->where(self::EXAMINATIONS_DOT.$arr_status[$status].'','<','1')
 				->paginate($paginate);
 			}else{
-				$data = DB::table('examinations')
-				->join('devices', 'examinations.device_id', '=', 'devices.id')
-				->select(
-						'examinations.id',
-						'examinations.examination_type_id',
-						'devices.name AS nama_perangkat',
-						'devices.mark AS merk_perangkat',
-						'devices.serial_number AS serialNumber',
-						'devices.model AS model_perangkat',
-						'devices.certificate AS sistem_mutuPerangkat',
-						'examinations.registration_status',
-						'examinations.spb_status',
-						'examinations.payment_status',
-						'examinations.spk_status',
-						'examinations.examination_status',
-						'examinations.resume_status',
-						'examinations.qa_status',
-						'examinations.certificate_status'
-						)
-				->where('examinations.company_id','=',''.$company_id.'')
+				$data = DB::table(self::EXAMINATIONS)
+				->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
+				->select( $neededColumn )
+				->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
 				->paginate($paginate);
 			}
 		}
 		
 		return response()
-            ->view('client.pengujian.filter', $data, 200)
-            ->header('Content-Type', 'text/html');
+			->view('client.pengujian.filter', $data, 200)
+			->with(self::USER_ID, $user_id)
+            ->header(self::CONTENT_TYPE, 'text/html');
     }
 	
 	public function edit(Request $request)
     {
-		// print_r($request->all());exit;
 		$query = "SELECT
 			e.id,
 			e.device_id,
@@ -690,49 +431,49 @@ class PengujianController extends Controller
 		AND e.id = '".$request->input('id')."'
 		";
 		$data = DB::select($query);
-		if(count($data) > 0){			
-			echo $data[0]->nama_perangkat."|token|"; #0
-			echo $data[0]->merk_perangkat."|token|"; #1
-			echo $data[0]->kapasitas_perangkat."|token|"; #2
-			echo $data[0]->pembuat_perangkat."|token|"; #3
-			echo $data[0]->serialNumber."|token|"; #4
-			echo $data[0]->model_perangkat."|token|"; #5
-			echo $data[0]->referensi_perangkat."|token|"; #6
-			echo $data[0]->noSertifikat."|token|"; #7
-			echo $data[0]->fileSertifikat."|token|"; #8
-			echo date("d-m-Y", strtotime($data[0]->tglSertifikat))."|token|"; #9
-			echo $data[0]->noSIUPP."|token|"; #10
-			echo $data[0]->fileSIUPP."|token|"; #11
-			echo date("d-m-Y", strtotime($data[0]->tglSIUPP))."|token|"; #12
-			echo $data[0]->fileNPWP."|token|"; #13
-			echo $data[0]->user_id."|token|"; #14
-			echo $data[0]->namaPemohon."|token|"; #15
-			echo $data[0]->emailPemohon."|token|"; #16
-			echo $data[0]->namaPerusahaan."|token|"; #17
-			echo $data[0]->alamatPerusahaan."|token|"; #18
-			echo $data[0]->telpPerusahaan."|token|"; #19
-			echo $data[0]->faxPerusahaan."|token|"; #20
-			echo $data[0]->emailPerusahaan."|token|"; #21
-			echo $data[0]->device_id."|token|"; #22
-			echo $data[0]->examination_type_id."|token|"; #23
-			echo $data[0]->jnsPerusahaan."|token|"; #24
-			echo $data[0]->attachment."|token|"; #25
-			echo $data[0]->fileref_uji."|token|"; #26
-			echo $data[0]->noref_uji."|token|"; #27
-			echo $data[0]->tglref_uji."|token|"; #28
-			echo $data[0]->filesrt_prinsipal."|token|"; #29
-			echo $data[0]->nosrt_prinsipal."|token|"; #30
-			echo $data[0]->tglsrt_prinsipal."|token|"; #31
-			echo $data[0]->filesrt_sp3."|token|"; #32
-			echo $data[0]->nosrt_sp3."|token|"; #33
-			echo $data[0]->tglsrt_sp3."|token|"; #34
-			echo $data[0]->id."|token|"; #35
-			echo $data[0]->company_id."|token|"; #36
-			echo $data[0]->alamatPemohon."|token|"; #37
-			echo $data[0]->telpPemohon."|token|"; #38
-			echo $data[0]->faxPemohon."|token|"; #39
-			echo $data[0]->plg_idPerusahaan."|token|"; #40
-			echo $data[0]->nibPerusahaan."|token|"; #41
+		if(count($data)){			
+			echo $data[0]->nama_perangkat.self::TOKEN; #0
+			echo $data[0]->merk_perangkat.self::TOKEN; #1
+			echo $data[0]->kapasitas_perangkat.self::TOKEN; #2
+			echo $data[0]->pembuat_perangkat.self::TOKEN; #3
+			echo $data[0]->serialNumber.self::TOKEN; #4
+			echo $data[0]->model_perangkat.self::TOKEN; #5
+			echo $data[0]->referensi_perangkat.self::TOKEN; #6
+			echo $data[0]->noSertifikat.self::TOKEN; #7
+			echo $data[0]->fileSertifikat.self::TOKEN; #8
+			echo date("d-m-Y", strtotime($data[0]->tglSertifikat)).self::TOKEN; #9
+			echo $data[0]->noSIUPP.self::TOKEN; #10
+			echo $data[0]->fileSIUPP.self::TOKEN; #11
+			echo date("d-m-Y", strtotime($data[0]->tglSIUPP)).self::TOKEN; #12
+			echo $data[0]->fileNPWP.self::TOKEN; #13
+			echo $data[0]->user_id.self::TOKEN; #14
+			echo $data[0]->namaPemohon.self::TOKEN; #15
+			echo $data[0]->emailPemohon.self::TOKEN; #16
+			echo $data[0]->namaPerusahaan.self::TOKEN; #17
+			echo $data[0]->alamatPerusahaan.self::TOKEN; #18
+			echo $data[0]->telpPerusahaan.self::TOKEN; #19
+			echo $data[0]->faxPerusahaan.self::TOKEN; #20
+			echo $data[0]->emailPerusahaan.self::TOKEN; #21
+			echo $data[0]->device_id.self::TOKEN; #22
+			echo $data[0]->examination_type_id.self::TOKEN; #23
+			echo $data[0]->jnsPerusahaan.self::TOKEN; #24
+			echo $data[0]->attachment.self::TOKEN; #25
+			echo $data[0]->fileref_uji.self::TOKEN; #26
+			echo $data[0]->noref_uji.self::TOKEN; #27
+			echo $data[0]->tglref_uji.self::TOKEN; #28
+			echo $data[0]->filesrt_prinsipal.self::TOKEN; #29
+			echo $data[0]->nosrt_prinsipal.self::TOKEN; #30
+			echo $data[0]->tglsrt_prinsipal.self::TOKEN; #31
+			echo $data[0]->filesrt_sp3.self::TOKEN; #32
+			echo $data[0]->nosrt_sp3.self::TOKEN; #33
+			echo $data[0]->tglsrt_sp3.self::TOKEN; #34
+			echo $data[0]->id.self::TOKEN; #35
+			echo $data[0]->company_id.self::TOKEN; #36
+			echo $data[0]->alamatPemohon.self::TOKEN; #37
+			echo $data[0]->telpPemohon.self::TOKEN; #38
+			echo $data[0]->faxPemohon.self::TOKEN; #39
+			echo $data[0]->plg_idPerusahaan.self::TOKEN; #40
+			echo $data[0]->nibPerusahaan.self::TOKEN; #41
 		}else{
 			echo 0; //Tidak Ada Data
 		}
@@ -741,11 +482,11 @@ class PengujianController extends Controller
 	public function detail($id, Request $request)
     {
         $currentUser = Auth::user();
-		$user_id = ''.$currentUser['attributes']['id'].'';
+		$user_id = ''.$currentUser[self::ATTRIBUTES]['id'].'';
+		$message = '';
         if ($currentUser){
-            $message = null;
             $paginate = 2;
-            $search = trim($request->input('search'));
+            $search = trim($request->input(self::SEARCH));
             
             if ($search != null){
 				$query = "SELECT e.id,
@@ -796,8 +537,7 @@ class PengujianController extends Controller
 				AND	e.device_id = d.id
 				AND	e.examination_type_id = et.id
 				AND e.id = '".$id."'
-				-- AND u.id = '".$user_id."'
-				";
+				-- AND u.id = '".$user_id."'";
 				$data = DB::select($query)->paginate($paginate);
             }else{
                 $query = "SELECT
@@ -850,13 +590,12 @@ class PengujianController extends Controller
 				AND	e.device_id = d.id
 				AND	e.examination_type_id = et.id
 				AND e.id = '".$id."'
-				-- AND u.id = '".$user_id."'
-				";
+				-- AND u.id = '".$user_id."'";
 				$data = DB::select($query);
             }
             
             if (count($data) == 0){
-                $message = 'Data not found';
+                $message = self::DATA_NOT_FOUND;
             }
 			
             $query_attach = "
@@ -867,40 +606,40 @@ class PengujianController extends Controller
 			";
 			$data_attach = DB::select($query_attach);
 			
-			$exam_history = ExaminationHistory::whereNotNull('created_at')
+			$exam_history = ExaminationHistory::whereNotNull(self::CREATED_AT)
 					->with('user')
-                    ->where('examination_id', $id)
-                    ->orderBy('created_at', 'DESC')
+                    ->where(self::EXAMINATION_ID, $id)
+                    ->orderBy(self::CREATED_AT, 'DESC')
                     ->get();
 					
 			$examfromOTR = Examination::where('id', $id)
                             ->with('examinationType')
-                            ->with('examinationLab')
+                            ->with(self::EXAMINATION_LAB)
                             ->first();
 					
 			$client = new Client([
-				'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+				self::HEADERS => [self::CONTENT_TYPE => self::APLLICATION_HEADER_FORM],
 				// Base URI is used with relative requests
 				// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
-				'base_uri' => config("app.url_api_bsp"),
+				self::BASE_URI => config(self::APP_URL_API_BSP),
 				// You can set any number of default request options.
-				'timeout'  => 60.0,
+				self::TIMEOUT  => 60.0,
 			]);
 			
 			$res_exam_schedule = $client->get('spk/searchData?spkNumber='.$examfromOTR->spk_code)->getBody();
 			$exam_schedule = json_decode($res_exam_schedule);
 			
-			$data_kuisioner = QuestionerQuestion::where("is_active",1)->orderBy('order_question')->get();
+			$data_kuisioner = QuestionerQuestion::where(self::IS_ACTIVE,1)->orderBy('order_question')->get();
 			
             return view('client.pengujian.detail')
-                // ->with('message', $message)
+                // ->with(self::MESSAGE, $message)
                 ->with('data', $data)
                 ->with('exam_history', $exam_history)
                 ->with('exam_schedule', $exam_schedule)
-                ->with('page', "pengujian")
+                ->with('page', self::PENGUJIAN)
                 ->with('data_attach', $data_attach)
-                ->with('data_kuisioner', $data_kuisioner);
-                // ->with('search', $search);
+                ->with('data_kuisioner', $data_kuisioner)
+                ->with(self::MESSAGE, $message);
         }
     }
 	
@@ -908,7 +647,7 @@ class PengujianController extends Controller
     {
 		$file = public_path().'/media/'.$jns.'/'.$id.'/'.$attach;
 		$headers = array(
-		  'Content-Type: application/octet-stream',
+		  self::APLLICATION_HEADER_OCTET,
 		);
 
 		return Response::download($file, $attach, $headers);
@@ -916,32 +655,33 @@ class PengujianController extends Controller
 	
 	public function downloadSPB($id)
     {
-    	$currentUser = Auth::user();
+		$currentUser = Auth::user();
+		$message = '';
 		$query_attach = "
 			SELECT attachment FROM examination_attachments WHERE examination_id = '".$id."' AND name = 'spb' AND attachment != ''
 		";
 		$data_attach = DB::select($query_attach);
-		if (count($data_attach) == 0){
-			$message = 'Data not found';
+		if (!count($data_attach)){
+			$message = self::DATA_NOT_FOUND;
 			$attach = NULL;
-			Session::flash('error_download_spb', 'Download Failed');
-			return back();
+			Session::flash('error_download_spb', self::DOWNLOAD_FAILED);
+			return back()->with(self::MESSAGE, $message);
 		}
 		else{
 			$attach = $data_attach[0]->attachment;
-			$file = public_path().'/media/examination/'.$id.'/'.$attach;
+			$file = public_path().self::MEDIA_EXAMINATION_LOC.$id.'/'.$attach;
 			$headers = array(
-			  'Content-Type: application/octet-stream',
+			  self::APLLICATION_HEADER_OCTET,
 			);
 			
 			$exam_hist = new ExaminationHistory;
 			$exam_hist->examination_id = $id;
-			$exam_hist->date_action = date('Y-m-d H:i:s');
+			$exam_hist->date_action = date(self::DATE_FORMAT1);
 			$exam_hist->tahap = 'Download SPB';
 			$exam_hist->status = 1;
 			$exam_hist->keterangan = '';
 			$exam_hist->created_by = $currentUser->id;
-			$exam_hist->created_at = date('Y-m-d H:i:s');
+			$exam_hist->created_at = date(self::DATE_FORMAT1);
 			$exam_hist->save();
 
 			return Response::download($file, $attach, $headers);
@@ -958,9 +698,9 @@ class PengujianController extends Controller
 		$file = NULL;
 		$attach = NULL;
 		if (count($data_attach) == 0){
-			$message = 'Data not found';
-			Session::flash('error_download_resume', 'Download Failed');
-			return back();
+			$message = self::DATA_NOT_FOUND;
+			Session::flash('error_download_resume', self::DOWNLOAD_FAILED);
+			return back()->with(self::MESSAGE, $message);
 		}
 		else{
 			$rev_uji = 0;
@@ -970,24 +710,24 @@ class PengujianController extends Controller
 				}
 				if($item->name == 'Revisi Laporan Uji' && $rev_uji == 0){
 					$rev_uji = 1;
-					$file = public_path().'/media/examination/'.$id.'/'.$item->attachment;
+					$file = public_path().self::MEDIA_EXAMINATION_LOC.$id.'/'.$item->attachment;
 					$attach = $item->attachment;
 				}
 			}
 			// $attach = 'Laporan Uji'; //name
 			// $file = $data_attach[0]->attachment; //link here
 			$headers = array(
-			  'Content-Type: application/octet-stream',
+			  self::APLLICATION_HEADER_OCTET,
 			);
 			
 			$exam_hist = new ExaminationHistory;
 			$exam_hist->examination_id = $id;
-			$exam_hist->date_action = date('Y-m-d H:i:s');
+			$exam_hist->date_action = date(self::DATE_FORMAT1);
 			$exam_hist->tahap = 'Download Laporan Uji';
 			$exam_hist->status = 1;
 			$exam_hist->keterangan = '';
 			$exam_hist->created_by = $currentUser->id;
-			$exam_hist->created_at = date('Y-m-d H:i:s');
+			$exam_hist->created_at = date(self::DATE_FORMAT1);
 			$exam_hist->save();
 
 			if($rev_uji == 1){
@@ -1002,46 +742,33 @@ class PengujianController extends Controller
     {
     	$currentUser = Auth::user();
 		$examination = Examination::where('id', $id)->with('device')->get();
-		// $query_attach = "
-			// SELECT attachment FROM examination_attachments WHERE examination_id = '".$id."' AND name LIKE '%Sertifikat%' AND attachment != ''
-		// ";
-		// $data_attach = DB::select($query_attach);
 		$data_attach = $examination[0]->device;
 		if (count($data_attach) == 0){
-			$message = 'Data not found';
+			$message = self::DATA_NOT_FOUND;
 			$attach = NULL;
-			Session::flash('error_download_certificate', 'Download Failed');
-			return back();
+			Session::flash('error_download_certificate', self::DOWNLOAD_FAILED);
+			return back()->with(self::MESSAGE, $message);
 		}
 		else{
-			// $attach = $data_attach[0]->name; //name
-			// $file = $data_attach[0]->attachment; //link here
-			// $headers = array(
-			  // 'Content-Type: application/octet-stream',
-			// );
 			
-			$examhist = ExaminationHistory::where("examination_id", "=", $id)->where("tahap", "=", "Download Sertifikat");
-			$count_download = count($examhist->get());
-			// if($count_download > 0){
-				// return($examhist->get());
-			// }else{				
-				$exam_hist = new ExaminationHistory;
-				$exam_hist->examination_id = $id;
-				$exam_hist->date_action = date('Y-m-d H:i:s');
-				$exam_hist->tahap = 'Download Sertifikat';
-				$exam_hist->status = 1;
-				$exam_hist->keterangan = 'Download ke-'.($count_download+1);
-				$exam_hist->created_by = $currentUser->id;
-				$exam_hist->created_at = date('Y-m-d H:i:s');
-				$exam_hist->save();
+			$examhist = ExaminationHistory::where(self::EXAMINATION_ID, "=", $id)->where("tahap", "=", "Download Sertifikat");
+			$count_download = count($examhist->get());		
+			$exam_hist = new ExaminationHistory;
+			$exam_hist->examination_id = $id;
+			$exam_hist->date_action = date(self::DATE_FORMAT1);
+			$exam_hist->tahap = 'Download Sertifikat';
+			$exam_hist->status = 1;
+			$exam_hist->keterangan = 'Download ke-'.($count_download+1);
+			$exam_hist->created_by = $currentUser->id;
+			$exam_hist->created_at = date(self::DATE_FORMAT1);
+			$exam_hist->save();
 			
-			// return Response::download($file, $attach, $headers);
 			$jns = 'device';
 			$id = $data_attach->id;
 			$attach = $data_attach->certificate;
 			$file = public_path().'/media/'.$jns.'/'.$id.'/'.$attach;
 			$headers = array(
-			  'Content-Type: application/octet-stream',
+			  self::APLLICATION_HEADER_OCTET,
 			);
 
 			return Response::download($file, $attach, $headers);
@@ -1052,65 +779,63 @@ class PengujianController extends Controller
     {
 		$examination = Examination::find($id);
 		$currentUser = Auth::user();
-		$user_id = ''.$currentUser['attributes']['id'].'';
-		$company_id = ''.$currentUser['attributes']['company_id'].'';
+		$user_id = ''.$currentUser[self::ATTRIBUTES]['id'].'';
+		$company_id = ''.$currentUser[self::ATTRIBUTES][self::COMPANY_ID].'';
         if ($currentUser){
             $message = null;
             $paginate = 2;
-            $search = trim($request->input('search'));
+            $search = trim($request->input(self::SEARCH,''));
             
 			$data = DB::table('examination_attachments')
 				->select('examination_attachments.*')
-				->join('examinations', 'examination_attachments.examination_id', '=', 'examinations.id')
-				->where('examination_id', '=', ''.$id.'')
-				// ->where('created_by', '=', ''.$user_id.'')
-				->where('examinations.company_id', '=', ''.$company_id.'')
+				->join(self::EXAMINATIONS, 'examination_attachments.examination_id', '=', 'examinations.id')
+				->where(self::EXAMINATION_ID, '=', ''.$id.'')
+				->where(self::EXAMINATIONS_COMPANY_ID, '=', ''.$company_id.'')
 				->where('name', '=', 'File Pembayaran')
 				->first();
 
 
-		 	$examinationsData = DB::table('examinations')
+		 	$examinationsData = DB::table(self::EXAMINATIONS)
 				->where('id', '=', ''.$id.'') 
 				->first();
 			
-            // print_r($data);exit;
-            if (count($data) == 0){
-                $message = 'Data not found';
+            if (!count($data)){
+                $message = self::DATA_NOT_FOUND;
 				$data = NULL;
             }
 			
             return view('client.pengujian.pembayaran')
-                ->with('message', $message)
+                ->with(self::MESSAGE, $message)
                 ->with('spb_number', $examination->spb_number)
                 ->with('spb_date', $examination->spb_date)
                 ->with('price', $examination->price)
                 ->with('data', $data)
-                ->with('examinationsData', $examinationsData);
-                // ->with('search', $search);
+                ->with('examinationsData', $examinationsData)
+                ->with(self::USER_ID, $user_id)
+                ->with('paginate', $paginate)
+                ->with(self::SEARCH, $search);
         }
     }
 	
 	public function uploadPembayaran(Request $request)
     {
 		$currentUser = Auth::user();
-		$user_name = ''.$currentUser['attributes']['name'].'';
-		$user_email = ''.$currentUser['attributes']['email'].'';
-		$path_file = public_path().'/media/examination/'.$request->input('hide_id_exam').'';
-		if ($request->hasFile('filePembayaran')) {
-			// $ext_file = $request->file('filePembayaran')->getClientOriginalName();
-			// $name_file = uniqid().'_user_'.$request->input('hide_id_exam').'.'.$ext_file;
-			$name_file = 'spb_payment_'.$request->file('filePembayaran')->getClientOriginalName();
-			if($request->file('filePembayaran')->move($path_file,$name_file)){
+		$user_name = ''.$currentUser[self::ATTRIBUTES]['name'].'';
+		$user_email = ''.$currentUser[self::ATTRIBUTES]['email'].'';
+		$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM).'';
+		if ($request->hasFile(self::FILE_PEMBAYARAN)) {
+			$name_file = 'spb_payment_'.$request->file(self::FILE_PEMBAYARAN)->getClientOriginalName();
+			if($request->file(self::FILE_PEMBAYARAN)->move($path_file,$name_file)){
                 $fPembayaran = $name_file;
-				if (File::exists(public_path().'\media\examination\\'.$request->input('hide_id_exam').'\\'.$request->input('hide_file_pembayaran'))){
-					File::delete(public_path().'\media\examination\\'.$request->input('hide_id_exam').'\\'.$request->input('hide_file_pembayaran'));
+				if (File::exists(public_path().'\media\examination\\'.$request->input(self::HIDE_ID_EXAM).'\\'.$request->input(self::HIDE_FILE_PEMBAYARAN))){
+					File::delete(public_path().'\media\examination\\'.$request->input(self::HIDE_ID_EXAM).'\\'.$request->input(self::HIDE_FILE_PEMBAYARAN));
 				}
             }else{
-                Session::flash('error', 'Upload Payment Attachment to directory failed');
-                return redirect('/pengujian/'.$request->input('hide_id_exam').'/pembayaran');
+                Session::flash(self::ERROR, 'Upload Payment Attachment to directory failed');
+                return redirect('/pengujian/'.$request->input(self::HIDE_ID_EXAM).'/pembayaran');
             }
 		}else{
-			$fPembayaran = $request->input('hide_file_pembayaran');
+			$fPembayaran = $request->input(self::HIDE_FILE_PEMBAYARAN);
 		}
 			$timestamp = strtotime($request->input('tgl-pembayaran'));
 			$jumlah = str_replace(".",'',$request->input('jml-pembayaran'));
@@ -1121,141 +846,124 @@ class PengujianController extends Controller
 					SET 
 						attachment = '".$fPembayaran."',
 						no = '".$request->input('no-pembayaran')."',
-						tgl = '".date('Y-m-d', $timestamp)."',
-						updated_by = '".$currentUser['attributes']['id']."',
-						updated_at = '".date('Y-m-d H:i:s')."'
+						tgl = '".date(self::DATE_FORMAT2, $timestamp)."',
+						updated_by = '".$currentUser[self::ATTRIBUTES]['id']."',
+						updated_at = '".date(self::DATE_FORMAT1)."'
 					WHERE id = '".$request->input('hide_id_attach')."'
 				";
-				$data_update_attach = DB::update($query_update_attach);
+				DB::update($query_update_attach);
 				
-				$examination = Examination::find($request->input('hide_id_exam'));
+				$examination = Examination::find($request->input(self::HIDE_ID_EXAM));
 				$examination->cust_price_payment = $jumlah;
 				$examination->save();
 				
 				$exam_hist = new ExaminationHistory;
-				$exam_hist->examination_id = $request->input('hide_id_exam');
-				$exam_hist->date_action = date('Y-m-d H:i:s');
+				$exam_hist->examination_id = $request->input(self::HIDE_ID_EXAM);
+				$exam_hist->date_action = date(self::DATE_FORMAT1);
 				$exam_hist->tahap = 'Upload Bukti Pembayaran';
 				$exam_hist->status = 1;
 				$exam_hist->keterangan = '';
 				$exam_hist->created_by = $currentUser->id;
-				$exam_hist->created_at = date('Y-m-d H:i:s');
+				$exam_hist->created_at = date(self::DATE_FORMAT1);
 				$exam_hist->save();
 
-				$admins = AdminRole::where('payment_status',1)->get()->toArray();
+				$admins = AdminRole::where(self::PAYMENT_STATUS,1)->get()->toArray();
 				foreach ($admins as $admin) {  
 					$data= array( 
 		                "from"=>$currentUser->id,
-		                "to"=>$admin['user_id'],
-		                "message"=>$currentUser->company->name." membayar SPB nomor".$examination->spb_number,
-		                "url"=>"examination/".$request->input('hide_id_exam').'/edit',
-		                "is_read"=>0,
-		                "created_at"=>date("Y-m-d H:i:s"),
-		                "updated_at"=>date("Y-m-d H:i:s")
+		                "to"=>$admin[self::USER_ID],
+		                self::MESSAGE=>$currentUser->company->name." membayar SPB nomor".$examination->spb_number,
+		                "url"=>self::EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM).self::EDIT_LOC,
+		                self::IS_READ=>0,
+		                self::CREATED_AT=>date(self::DATE_FORMAT1),
+		                self::UPDATED_AT=>date(self::DATE_FORMAT1)
 	                );
 				  	$notification = new NotificationTable();
 					$notification->id = Uuid::uuid4();
 			      	$notification->from = $data['from'];
 			      	$notification->to = $data['to'];
-			      	$notification->message = $data['message'];
+			      	$notification->message = $data[self::MESSAGE];
 			      	$notification->url = $data['url'];
-			      	$notification->is_read = $data['is_read'];
-			      	$notification->created_at = $data['created_at'];
-			      	$notification->updated_at = $data['updated_at'];
+			      	$notification->is_read = $data[self::IS_READ];
+			      	$notification->created_at = $data[self::CREATED_AT];
+			      	$notification->updated_at = $data[self::UPDATED_AT];
 			      	$notification->save();
 			      	$data['id'] = $notification->id; 
 			        event(new Notification($data));
 		    	}
-				Session::flash('message', 'Upload successfully');
-				// $this->sendProgressEmail("Pengujian atas nama ".$user_name." dengan alamat email ".$user_email.", telah melakukan proses Upload Bukti Pembayaran");
-				// return back();
+				Session::flash(self::MESSAGE, 'Upload successfully');
 			} catch(Exception $e){
-				Session::flash('error', 'Upload failed');
-				// return back();
+				Session::flash(self::ERROR, 'Upload failed');
 			}
-			
-		// $query_update_attach = "UPDATE examination_attachments
-			// SET 
-				// attachment = '".$fPembayaran."',
-				// no = '".$request->input('no-pembayaran')."',
-				// tgl = '".date('Y-m-d', $timestamp)."',
-				// updated_by = '".$currentUser['attributes']['id']."',
-				// updated_at = '".date('Y-m-d H:i:s')."'
-			// WHERE id = '".$request->input('hide_id_attach')."'
-		// ";
-		// $data_update_attach = DB::update($query_update_attach);
 		
-		return back();
+		return back()
+			->with('user_name', $user_name)
+			->with('user_email', $user_email);
     }
 	
 	public function updateTanggalUji(Request $request)
     {
 		$currentUser = Auth::user();
-		if($request->input('hide_date_type') == 1){
-		$exam = Examination::where('id', $request->input('hide_id_exam'))
-		->with('examinationLab')
+		if($request->input(self::HIDE_DATE_TYPE) == 1){
+		$exam = Examination::where('id', $request->input(self::HIDE_ID_EXAM))
+		->with(self::EXAMINATION_LAB)
 		->first()
 		;
 		$cust_test_date = strtotime($request->input('cust_test_date'));
 			try{
 				$query_update = "UPDATE examinations
 					SET 
-						cust_test_date = '".date('Y-m-d', $cust_test_date)."',
-						updated_by = '".$currentUser['attributes']['id']."',
-						updated_at = '".date('Y-m-d H:i:s')."',
+						cust_test_date = '".date(self::DATE_FORMAT2, $cust_test_date)."',
+						updated_by = '".$currentUser[self::ATTRIBUTES]['id']."',
+						updated_at = '".date(self::DATE_FORMAT1)."',
 						function_test_status_detail = 'Pengajuan uji fungsi baru'
-					WHERE id = '".$request->input('hide_id_exam')."'
+					WHERE id = '".$request->input(self::HIDE_ID_EXAM)."'
 				";
-				$data_update = DB::update($query_update);
+				DB::update($query_update);
 				
 				$exam_hist = new ExaminationHistory;
-				$exam_hist->examination_id = $request->input('hide_id_exam');
-				$exam_hist->date_action = date('Y-m-d H:i:s');
+				$exam_hist->examination_id = $request->input(self::HIDE_ID_EXAM);
+				$exam_hist->date_action = date(self::DATE_FORMAT1);
 				$exam_hist->tahap = 'Update Tanggal Uji';
 				$exam_hist->status = 1;
-				$exam_hist->keterangan = date('Y-m-d', $cust_test_date).' dari Kastamer';
+				$exam_hist->keterangan = date(self::DATE_FORMAT2, $cust_test_date).' dari Kastamer';
 				$exam_hist->created_by = $currentUser->id;
-				$exam_hist->created_at = date('Y-m-d H:i:s');
+				$exam_hist->created_at = date(self::DATE_FORMAT1);
 				$exam_hist->save();
 				
-				Session::flash('message', 'Update successfully');
+				Session::flash(self::MESSAGE, 'Update successfully');
 				$client = new Client([
-					'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+					self::HEADERS => [self::CONTENT_TYPE => self::APLLICATION_HEADER_FORM],
 					// Base URI is used with relative requests
 					// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
-					'base_uri' => config("app.url_api_bsp"),
+					self::BASE_URI => config(self::APP_URL_API_BSP),
 					// You can set any number of default request options.
-					'timeout'  => 60.0,
+					self::TIMEOUT  => 60.0,
 				]);
 				
-				// $res_exam_schedule = $client->post('notification/notifToTE?lab='.$exam->examinationLab->lab_code)->getBody();
 				$res_exam_schedule = $client->post('notification/notifToTE?lab='.$exam->examinationLab->lab_code.'&id='.$exam->id);
-				// $exam_schedule = json_decode($res_exam_schedule);
-				
-				// $this->sendProgressEmail("Pengujian atas nama ".$user_name." dengan alamat email ".$user_email.", telah melakukan proses Upload Bukti Pembayaran");
-				// return back();
 				/* push notif*/
 				$admins = AdminRole::where('function_status',1)->get()->toArray();
 				foreach ($admins as $admin) { 
 					$data= array(
 						"from"=>$currentUser->id,
-						"to"=>$admin['user_id'],
-						"message"=>$currentUser->company->name." Update Tanggal Uji Fungsi",
-						"url"=>"examination/".$request->input('hide_id_exam')."/edit",
-						"is_read"=>0,
-						"created_at"=>date("Y-m-d H:i:s"),
-						"updated_at"=>date("Y-m-d H:i:s")
+						"to"=>$admin[self::USER_ID],
+						self::MESSAGE=>$currentUser->company->name." Update Tanggal Uji Fungsi",
+						"url"=>self::EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM).self::EDIT_LOC,
+						self::IS_READ=>0,
+						self::CREATED_AT=>date(self::DATE_FORMAT1),
+						self::UPDATED_AT=>date(self::DATE_FORMAT1)
 					);
 					
 					$notification = new NotificationTable();
 					$notification->id = Uuid::uuid4();
 					$notification->from = $data['from'];
 					$notification->to = $data['to'];
-					$notification->message = $data['message'];
+					$notification->message = $data[self::MESSAGE];
 					$notification->url = $data['url'];
-					$notification->is_read = $data['is_read'];
-					$notification->created_at = $data['created_at'];
-					$notification->updated_at = $data['updated_at'];
+					$notification->is_read = $data[self::IS_READ];
+					$notification->created_at = $data[self::CREATED_AT];
+					$notification->updated_at = $data[self::UPDATED_AT];
 					$notification->save();
 					$data['id'] = $notification->id;
 					event(new Notification($data));
@@ -1263,12 +971,11 @@ class PengujianController extends Controller
 					return back();
 
 			} catch(Exception $e){
-				Session::flash('error', 'Update failed');
-				// return back();
+				Session::flash(self::ERROR, self::UPDATE_FAILED);
 			}
-		}else if($request->input('hide_date_type') == 2){
-			$exam = Examination::where('id', $request->input('hide_id_exam2'))
-			->with('examinationLab')
+		}else if($request->input(self::HIDE_DATE_TYPE) == 2){
+			$exam = Examination::where('id', $request->input(self::HIDE_ID_EXAM2))
+			->with(self::EXAMINATION_LAB)
 			->first()
 			;
 			$urel_test_date = strtotime($request->input('urel_test_date'));
@@ -1278,32 +985,32 @@ class PengujianController extends Controller
 					SET 
 						function_test_date_approval = '1',
 						function_test_reason = '',
-						updated_by = '".$currentUser['attributes']['id']."',
-						updated_at = '".date('Y-m-d H:i:s')."',
+						updated_by = '".$currentUser[self::ATTRIBUTES]['id']."',
+						updated_at = '".date(self::DATE_FORMAT1)."',
 						function_test_status_detail = 'Tanggal uji fungsi fix'
-					WHERE id = '".$request->input('hide_id_exam2')."'
+					WHERE id = '".$request->input(self::HIDE_ID_EXAM2)."'
 				";
-				$data_update = DB::update($query_update);
+				DB::update($query_update);
 				
 				$deal_test_date = strtotime($request->input('deal_test_date2'));
 				
 				$exam_hist = new ExaminationHistory;
-				$exam_hist->examination_id = $request->input('hide_id_exam2');
-				$exam_hist->date_action = date('Y-m-d H:i:s');
+				$exam_hist->examination_id = $request->input(self::HIDE_ID_EXAM2);
+				$exam_hist->date_action = date(self::DATE_FORMAT1);
 				$exam_hist->tahap = 'Menyetujui Tanggal Uji';
 				$exam_hist->status = 1;
-				$exam_hist->keterangan = date('Y-m-d', $deal_test_date).' dari Kastamer (DISETUJUI)';
+				$exam_hist->keterangan = date(self::DATE_FORMAT2, $deal_test_date).' dari Kastamer (DISETUJUI)';
 				$exam_hist->created_by = $currentUser->id;
-				$exam_hist->created_at = date('Y-m-d H:i:s');
+				$exam_hist->created_at = date(self::DATE_FORMAT1);
 				$exam_hist->save();
 
 				$client = new Client([
-					'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+					self::HEADERS => [self::CONTENT_TYPE => self::APLLICATION_HEADER_FORM],
 					// Base URI is used with relative requests
 					// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
-					'base_uri' => config("app.url_api_bsp"),
+					self::BASE_URI => config(self::APP_URL_API_BSP),
 					// You can set any number of default request options.
-					'timeout'  => 60.0,
+					self::TIMEOUT  => 60.0,
 				]);
 				
 				$res_exam_schedule = $client->get('notification/notifApproveToTE?id='.$exam->id.'&lab='.$exam->examinationLab->lab_code);
@@ -1311,104 +1018,98 @@ class PengujianController extends Controller
 				/* push notif*/
 					$data= array(
 					"from"=>$currentUser->id,
-					"to"=>"admin",
-					"message"=>$currentUser->company->name." Menyetujui Tanggal Uji Fungsi",
-					"url"=>"examination/".$request->input('hide_id_exam2')."/edit",
-					"is_read"=>0,
-					"created_at"=>date("Y-m-d H:i:s"),
-					"updated_at"=>date("Y-m-d H:i:s")
+					"to"=>self::ADMIN,
+					self::MESSAGE=>$currentUser->company->name." Menyetujui Tanggal Uji Fungsi",
+					"url"=>self::EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM2).self::EDIT_LOC,
+					self::IS_READ=>0,
+					self::CREATED_AT=>date(self::DATE_FORMAT1),
+					self::UPDATED_AT=>date(self::DATE_FORMAT1)
 					);
 					
 					 $notification = new NotificationTable();
 					$notification->id = Uuid::uuid4();
 					  $notification->from = $data['from'];
 					  $notification->to = $data['to'];
-					  $notification->message = $data['message'];
+					  $notification->message = $data[self::MESSAGE];
 					  $notification->url = $data['url'];
-					  $notification->is_read = $data['is_read'];
-					  $notification->created_at = $data['created_at'];
-					  $notification->updated_at = $data['updated_at'];
+					  $notification->is_read = $data[self::IS_READ];
+					  $notification->created_at = $data[self::CREATED_AT];
+					  $notification->updated_at = $data[self::UPDATED_AT];
 					  $notification->save();
 					  $data['id'] = $notification->id;
 					  event(new Notification($data));
 					return back();
 				
 				} catch(Exception $e){
-					Session::flash('error', 'Update failed');
+					Session::flash(self::ERROR, self::UPDATE_FAILED);
 				}
 			}else{
 				try{
 					$query_update = "UPDATE examinations
 						SET 
-							urel_test_date = '".date('Y-m-d', $urel_test_date)."',
+							urel_test_date = '".date(self::DATE_FORMAT2, $urel_test_date)."',
 							function_test_reason = '".$request->input('alasan')."',
-							updated_by = '".$currentUser['attributes']['id']."',
-							updated_at = '".date('Y-m-d H:i:s')."',
+							updated_by = '".$currentUser[self::ATTRIBUTES]['id']."',
+							updated_at = '".date(self::DATE_FORMAT1)."',
 							function_test_status_detail = 'Pengajuan ulang uji fungsi'
-						WHERE id = '".$request->input('hide_id_exam2')."'
+						WHERE id = '".$request->input(self::HIDE_ID_EXAM2)."'
 					";
-					$data_update = DB::update($query_update);
+					DB::update($query_update);
 					
 					$exam_hist = new ExaminationHistory;
-					$exam_hist->examination_id = $request->input('hide_id_exam2');
-					$exam_hist->date_action = date('Y-m-d H:i:s');
+					$exam_hist->examination_id = $request->input(self::HIDE_ID_EXAM2);
+					$exam_hist->date_action = date(self::DATE_FORMAT1);
 					$exam_hist->tahap = 'Update Tanggal Uji';
 					$exam_hist->status = 1;
-					$exam_hist->keterangan = date('Y-m-d', $urel_test_date).' dari Kastamer ('.$request->input('alasan').')';
+					$exam_hist->keterangan = date(self::DATE_FORMAT2, $urel_test_date).' dari Kastamer ('.$request->input('alasan').')';
 					$exam_hist->created_by = $currentUser->id;
-					$exam_hist->created_at = date('Y-m-d H:i:s');
+					$exam_hist->created_at = date(self::DATE_FORMAT1);
 					$exam_hist->save();
 					
-					Session::flash('message', 'Update successfully');
+					Session::flash(self::MESSAGE, 'Update successfully');
 					$client = new Client([
-						'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+						self::HEADERS => [self::CONTENT_TYPE => self::APLLICATION_HEADER_FORM],
 						// Base URI is used with relative requests
 						// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
-						'base_uri' => config("app.url_api_bsp"),
+						self::BASE_URI => config(self::APP_URL_API_BSP),
 						// You can set any number of default request options.
-						'timeout'  => 60.0,
+						self::TIMEOUT  => 60.0,
 					]);
 					
-					// $res_exam_schedule = $client->post('notification/notifRescheduleToTE?lab='.$exam->examinationLab->lab_code)->getBody();
 					$res_exam_schedule = $client->post('notification/notifRescheduleToTE?id='.$exam->id);
-					// $exam_schedule = json_decode($res_exam_schedule);
-					
-					// $this->sendProgressEmail("Pengujian atas nama ".$user_name." dengan alamat email ".$user_email.", telah melakukan proses Upload Bukti Pembayaran");
-					// return back();
 					
 					/* push notif*/
 						$data= array(
 						"from"=>$currentUser->id,
-						"to"=>"admin",
-						"message"=>$currentUser->company->name." Update Tanggal Uji Fungsi",
-						"url"=>"examination/".$request->input('hide_id_exam2')."/edit",
-						"is_read"=>0,
-						"created_at"=>date("Y-m-d H:i:s"),
-						"updated_at"=>date("Y-m-d H:i:s")
+						"to"=>self::ADMIN,
+						self::MESSAGE=>$currentUser->company->name." Update Tanggal Uji Fungsi",
+						"url"=>self::EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM2).self::EDIT_LOC,
+						self::IS_READ=>0,
+						self::CREATED_AT=>date(self::DATE_FORMAT1),
+						self::UPDATED_AT=>date(self::DATE_FORMAT1)
 						);
 						
 						$notification = new NotificationTable();
 						$notification->id = Uuid::uuid4();
 						  $notification->from = $data['from'];
 						  $notification->to = $data['to'];
-						  $notification->message = $data['message'];
+						  $notification->message = $data[self::MESSAGE];
 						  $notification->url = $data['url'];
-						  $notification->is_read = $data['is_read'];
-						  $notification->created_at = $data['created_at'];
-						  $notification->updated_at = $data['updated_at'];
+						  $notification->is_read = $data[self::IS_READ];
+						  $notification->created_at = $data[self::CREATED_AT];
+						  $notification->updated_at = $data[self::UPDATED_AT];
 						  $notification->save();
 						  $data['id'] = $notification->id;
 						  event(new Notification($data));
 						return back();
 						
 				} catch(Exception $e){
-					Session::flash('error', 'Update failed');
-					// return back();
+					Session::flash(self::ERROR, self::UPDATE_FAILED);
 				}
 			}
-		}else if($request->input('hide_date_type') == 3){
-			$exam = Examination::where('id', $request->input('hide_id_exam3'))
-			->with('examinationLab')
+		}else if($request->input(self::HIDE_DATE_TYPE) == 3){
+			$exam = Examination::where('id', $request->input(self::HIDE_ID_EXAM3))
+			->with(self::EXAMINATION_LAB)
 			->first()
 			;
 			try{
@@ -1416,32 +1117,32 @@ class PengujianController extends Controller
 					SET 
 						function_test_date_approval = '1',
 						function_test_reason = '',
-						updated_by = '".$currentUser['attributes']['id']."',
-						updated_at = '".date('Y-m-d H:i:s')."',
+						updated_by = '".$currentUser[self::ATTRIBUTES]['id']."',
+						updated_at = '".date(self::DATE_FORMAT1)."',
 						function_test_status_detail = 'Tanggal uji fungsi fix'
-					WHERE id = '".$request->input('hide_id_exam3')."'
+					WHERE id = '".$request->input(self::HIDE_ID_EXAM3)."'
 				";
-				$data_update = DB::update($query_update);
+				DB::update($query_update);
 				
 				$deal_test_date = strtotime($request->input('deal_test_date3'));
 				
 				$exam_hist = new ExaminationHistory;
-				$exam_hist->examination_id = $request->input('hide_id_exam3');
-				$exam_hist->date_action = date('Y-m-d H:i:s');
+				$exam_hist->examination_id = $request->input(self::HIDE_ID_EXAM3);
+				$exam_hist->date_action = date(self::DATE_FORMAT1);
 				$exam_hist->tahap = 'Menyetujui Tanggal Uji';
 				$exam_hist->status = 1;
-				$exam_hist->keterangan = date('Y-m-d', $deal_test_date).' dari Kastamer (DISETUJUI)';
+				$exam_hist->keterangan = date(self::DATE_FORMAT2, $deal_test_date).' dari Kastamer (DISETUJUI)';
 				$exam_hist->created_by = $currentUser->id;
-				$exam_hist->created_at = date('Y-m-d H:i:s');
+				$exam_hist->created_at = date(self::DATE_FORMAT1);
 				$exam_hist->save();
 
 				$client = new Client([
-					'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+					self::HEADERS => [self::CONTENT_TYPE => self::APLLICATION_HEADER_FORM],
 					// Base URI is used with relative requests
 					// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
-					'base_uri' => config("app.url_api_bsp"),
+					self::BASE_URI => config(self::APP_URL_API_BSP),
 					// You can set any number of default request options.
-					'timeout'  => 60.0,
+					self::TIMEOUT  => 60.0,
 				]);
 				
 				$res_exam_schedule = $client->get('notification/notifApproveToTE?id='.$exam->id.'&lab='.$exam->examinationLab->lab_code);
@@ -1449,47 +1150,46 @@ class PengujianController extends Controller
 				/* push notif*/
 					$data= array(
 					"from"=>$currentUser->id,
-					"to"=>"admin",
-					"message"=>$currentUser->company->name." Menyetujui Tanggal Uji Fungsi",
-					"url"=>"examination/".$request->input('hide_id_exam3')."/edit",
-					"is_read"=>0,
-					"created_at"=>date("Y-m-d H:i:s"),
-					"updated_at"=>date("Y-m-d H:i:s")
+					"to"=>self::ADMIN,
+					self::MESSAGE=>$currentUser->company->name." Menyetujui Tanggal Uji Fungsi",
+					"url"=>self::EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM3).self::EDIT_LOC,
+					self::IS_READ=>0,
+					self::CREATED_AT=>date(self::DATE_FORMAT1),
+					self::UPDATED_AT=>date(self::DATE_FORMAT1)
 					);
 					
 					 $notification = new NotificationTable();
 					$notification->id = Uuid::uuid4();
 					  $notification->from = $data['from'];
 					  $notification->to = $data['to'];
-					  $notification->message = $data['message'];
+					  $notification->message = $data[self::MESSAGE];
 					  $notification->url = $data['url'];
-					  $notification->is_read = $data['is_read'];
-					  $notification->created_at = $data['created_at'];
-					  $notification->updated_at = $data['updated_at'];
+					  $notification->is_read = $data[self::IS_READ];
+					  $notification->created_at = $data[self::CREATED_AT];
+					  $notification->updated_at = $data[self::UPDATED_AT];
 					  $notification->save();
 					  $data['id'] = $notification->id;
 					  event(new Notification($data));
 					return back();
 				
 			} catch(Exception $e){
-				Session::flash('error', 'Update failed');
+				Session::flash(self::ERROR, self::UPDATE_FAILED);
 			}
 		}
     }
 	
 	public function sendProgressEmail($message)
     {
-		$data = DB::table('users')
+		$data = DB::table(self::USERS)
 				->where('role_id', 1)
-				->where('is_active', 1)
+				->where(self::IS_ACTIVE, 1)
 				->get();
 		
 		Mail::send('client.pengujian.email', array('data' => $message), function ($m) use ($data) {
             $m->to($data[0]->email)->subject("Upload Bukti Pembayaran");
         });
 
-        return true;		
-		// return redirect()->back()->with('status', '');
+        return true;
     }
 	
 	public function details($id, Request $request)
@@ -1530,14 +1230,6 @@ class PengujianController extends Controller
 		";
 		$data = DB::select($query);
             
-		if (count($data) == 0){
-			$message = 'Data not found';
-		}
-		// redirect()->route('cetak',array('param1' => 'as','param2' => 'asd'));
-		// return redirect()->route('cetak', array('nick' => $data));
-		// return redirect()->back()->with('data', ['some kind of data']);
-		// return Redirect::route('cetak', array('nick' => $data));
-		// return \Redirect::route('cetak')->with('message', 'State saved correctly!!!');
 		return \Redirect::route('cetak', [
 			'namaPemohon' => urlencode(urlencode($data[0]->namaPemohon)) ?: '-',
 			'alamatPemohon' => urlencode(urlencode($data[0]->alamatPemohon)) ?: '-',
@@ -1571,12 +1263,12 @@ class PengujianController extends Controller
 	public function testimonial(Request $request)
     {
 		$currentUser = Auth::user();
-		$datenow = date('Y-m-d H:i:s');
+		$datenow = date(self::DATE_FORMAT1);
 		
 		$testimonial = new Testimonial;
         $testimonial->id = Uuid::uuid4();
-        $testimonial->examination_id = $request->input('exam_id');
-        $testimonial->message = $request->input('message');
+        $testimonial->examination_id = $request->input(self::EXAM_ID);
+        $testimonial->message = $request->input(self::MESSAGE);
         $testimonial->is_active = 0;
 		$testimonial->created_by = $currentUser->id;
         $testimonial->updated_by = $currentUser->id;
@@ -1586,13 +1278,13 @@ class PengujianController extends Controller
 		
 		if($testimonial->save()){
 			$exam_hist = new ExaminationHistory;
-			$exam_hist->examination_id = $request->input('exam_id');
-			$exam_hist->date_action = date('Y-m-d H:i:s');
+			$exam_hist->examination_id = $request->input(self::EXAM_ID);
+			$exam_hist->date_action = date(self::DATE_FORMAT1);
 			$exam_hist->tahap = 'Download Sertifikat dan Mengisi Testimoni';
 			$exam_hist->status = 1;
 			$exam_hist->keterangan = '';
 			$exam_hist->created_by = $currentUser->id;
-			$exam_hist->created_at = date('Y-m-d H:i:s');
+			$exam_hist->created_at = date(self::DATE_FORMAT1);
 			$exam_hist->save();
 			
 			echo 1;			
@@ -1604,36 +1296,19 @@ class PengujianController extends Controller
 	public function cekAmbilBarang(Request $request)
     {
 		$currentUser = Auth::user();
-		$equip = Equipment::where("examination_id", "=", $request->input('my_exam_id'))->where("location", "=", "1");
+		$equip = Equipment::where(self::EXAMINATION_ID, "=", $request->input(self::MY_EXAM_ID))->where("location", "=", "1");
 		$is_location = count($equip->get());
-		// return(count($equip->get()));
 		//if count 1, masukan ke history download
-		if($is_location > 0){
-			/* $examhist = ExaminationHistory::where("examination_id", "=", $request->input('my_exam_id'))->where("tahap", "=", "Download Sertifikat");
-			$count_download = count($examhist->get()); */
-			// if($count_download > 0){
-				// return($examhist->get());
-			// }else{				
-				/* $exam_hist = new ExaminationHistory;
-				$exam_hist->examination_id = $request->input('my_exam_id');
-				$exam_hist->date_action = date('Y-m-d H:i:s');
-				$exam_hist->tahap = 'Download Sertifikat';
-				$exam_hist->status = 1;
-				$exam_hist->keterangan = 'Download ke-'.($count_download+1);
-				$exam_hist->created_by = $currentUser->id;
-				$exam_hist->created_at = date('Y-m-d H:i:s');
-				$exam_hist->save(); */
-				
-				return 1;
-			// }
-		}else{
-			return 0;
+		if($is_location > 0){				
+			return 1;
 		}
+		return 0;
+		
 	}
 	
 	public function autocomplete($query) {
 		$currentUser = Auth::user();
-		$company_id = ''.$currentUser['attributes']['company_id'].'';
+		$company_id = ''.$currentUser[self::ATTRIBUTES][self::COMPANY_ID].'';
         $respons_result = Examination::autocomplet_pengujian($query,$company_id);
         return response($respons_result);
     }
@@ -1643,12 +1318,12 @@ class PengujianController extends Controller
 		$expDate = Carbon::now()->subMonths(3);
 		$company_id = $currentUser->company_id;
 		$exam_id = $request->input('id');
-		// $quest = Questioner::where("examination_id", "=", $request->input('id'))
+		// $quest = Questioner::where(self::EXAMINATION_ID, "=", $request->input('id'))
 		$query = Questioner::with('user')
 				->whereDate('questioner_date', '>=', $expDate)
-	            ->orWhere('examination_id', $exam_id);
+	            ->orWhere(self::EXAMINATION_ID, $exam_id);
 		$query->whereHas('user', function ($query) use ($company_id) {
-            $query->where('company_id', $company_id);
+            $query->where(self::COMPANY_ID, $company_id);
         });
 		// ->where("created_by", "=", $currentUser->id)
 		$quest = $query->select('complaint')->get();
@@ -1661,46 +1336,15 @@ class PengujianController extends Controller
     }
 	
 	public function insertKuisioner(Request $request){
-		// print_r($request->all());exit;
 		$currentUser = Auth::user();
 		$tanggal = strtotime($request->input('tanggal'));
 		$quest = new Questioner;
 		$quest->id = Uuid::uuid4();
-		$quest->examination_id = $request->input('exam_id');
-		$quest->questioner_date = date('Y-m-d', $tanggal);
-		/* $quest->quest1_eks = $request->input('quest1_eks');$quest->quest1_perf = $request->input('quest1_perf');
-		$quest->quest2_eks = $request->input('quest2_eks');$quest->quest2_perf = $request->input('quest2_perf');
-		$quest->quest3_eks = $request->input('quest3_eks');$quest->quest3_perf = $request->input('quest3_perf');
-		$quest->quest4_eks = $request->input('quest4_eks');$quest->quest4_perf = $request->input('quest4_perf');
-		$quest->quest5_eks = $request->input('quest5_eks');$quest->quest5_perf = $request->input('quest5_perf');
-		$quest->quest6 = $request->input('quest6');
-		$quest->quest7_eks = $request->input('quest7_eks');$quest->quest7_perf = $request->input('quest7_perf');
-		$quest->quest8_eks = $request->input('quest8_eks');$quest->quest8_perf = $request->input('quest8_perf');
-		$quest->quest9_eks = $request->input('quest9_eks');$quest->quest9_perf = $request->input('quest9_perf');
-		$quest->quest10_eks = $request->input('quest10_eks');$quest->quest10_perf = $request->input('quest10_perf');
-		$quest->quest11_eks = $request->input('quest11_eks');$quest->quest11_perf = $request->input('quest11_perf');
-		$quest->quest12_eks = $request->input('quest12_eks');$quest->quest12_perf = $request->input('quest12_perf');
-		$quest->quest13_eks = $request->input('quest13_eks');$quest->quest13_perf = $request->input('quest13_perf');
-		$quest->quest14_eks = $request->input('quest14_eks');$quest->quest14_perf = $request->input('quest14_perf');
-		$quest->quest15_eks = $request->input('quest15_eks');$quest->quest15_perf = $request->input('quest15_perf');
-		$quest->quest16_eks = $request->input('quest16_eks');$quest->quest16_perf = $request->input('quest16_perf');
-		$quest->quest17_eks = $request->input('quest17_eks');$quest->quest17_perf = $request->input('quest17_perf');
-		$quest->quest18_eks = $request->input('quest18_eks');$quest->quest18_perf = $request->input('quest18_perf');
-		$quest->quest19_eks = $request->input('quest19_eks');$quest->quest19_perf = $request->input('quest19_perf');
-		$quest->quest20_eks = $request->input('quest20_eks');$quest->quest20_perf = $request->input('quest20_perf'); */
-		// $quest->quest21_eks = $request->input('quest21_eks');$quest->quest21_perf = $request->input('quest21_perf');
-		// $quest->quest22_eks = $request->input('quest22_eks');$quest->quest22_perf = $request->input('quest22_perf');
-		// $quest->quest23_eks = $request->input('quest23_eks');$quest->quest23_perf = $request->input('quest23_perf');
-		// $quest->quest24_eks = $request->input('quest24_eks');$quest->quest24_perf = $request->input('quest24_perf');
-		// $quest->quest25_eks = $request->input('quest25_eks');$quest->quest25_perf = $request->input('quest25_perf');
-		/* $quest->quest21_eks = 0;$quest->quest21_perf = 0;
-		$quest->quest22_eks = 0;$quest->quest22_perf = 0;
-		$quest->quest23_eks = 0;$quest->quest23_perf = 0;
-		$quest->quest24_eks = 0;$quest->quest24_perf = 0;
-		$quest->quest25_eks = 0;$quest->quest25_perf = 0; */
+		$quest->examination_id = $request->input(self::EXAM_ID);
+		$quest->questioner_date = date(self::DATE_FORMAT2, $tanggal);
 		
 		$quest->created_by = $currentUser->id;
-		$quest->created_at = date('Y-m-d H:i:s');
+		$quest->created_at = date(self::DATE_FORMAT1);
 		
 		try{
 			$quest->save();
@@ -1709,42 +1353,42 @@ class PengujianController extends Controller
 			for($i=0;$i<count($request->input('question_id'));$i++){
 				$questioner_dyn = new QuestionerDynamic;
 				$questioner_dyn->question_id = $request->input('question_id')[$i];
-				$questioner_dyn->examination_id = $request->input('exam_id');
+				$questioner_dyn->examination_id = $request->input(self::EXAM_ID);
 				$questioner_dyn->order_question = ($i+1);
 				$questioner_dyn->is_essay = $request->input('is_essay')[$i];
-				$questioner_dyn->questioner_date = date('Y-m-d', $tanggal);
+				$questioner_dyn->questioner_date = date(self::DATE_FORMAT2, $tanggal);
 				$questioner_dyn->eks_answer = $request->input('eks'.$i);
 				$questioner_dyn->perf_answer = $request->input('is_essay')[$i] == 1 ? 0 : $request->input('pref'.$i);
 				
 				$questioner_dyn->created_by = $currentUser->id;
-				$questioner_dyn->created_at = date('Y-m-d H:i:s');
+				$questioner_dyn->created_at = date(self::DATE_FORMAT1);
 
 				try{
 					$questioner_dyn->save();
 				} catch(\Exception $e){
-					
+					// do nothing
 				}
 			}
 			/* ====== */
 
 			$data= array( 
 	        "from"=>$currentUser->id,
-	        "to"=>"admin",
-	        "message"=>$currentUser->company->name." Mengisi Kuisioner",
-	        "url"=>"examinationdone/".$request->input('exam_id').'/edit',
-	        "is_read"=>0,
-	        "created_at"=>date("Y-m-d H:i:s"),
-	        "updated_at"=>date("Y-m-d H:i:s")
+	        "to"=>self::ADMIN,
+	        self::MESSAGE=>$currentUser->company->name." Mengisi Kuisioner",
+	        "url"=>"examinationdone/".$request->input(self::EXAM_ID).self::EDIT_LOC,
+	        self::IS_READ=>0,
+	        self::CREATED_AT=>date(self::DATE_FORMAT1),
+	        self::UPDATED_AT=>date(self::DATE_FORMAT1)
 	        );
 		  	$notification = new NotificationTable();
 			$notification->id = Uuid::uuid4();
 	      	$notification->from = $data['from'];
 	      	$notification->to = $data['to'];
-	      	$notification->message = $data['message'];
+	      	$notification->message = $data[self::MESSAGE];
 	      	$notification->url = $data['url'];
-	      	$notification->is_read = $data['is_read'];
-	      	$notification->created_at = $data['created_at'];
-	      	$notification->updated_at = $data['updated_at'];
+	      	$notification->is_read = $data[self::IS_READ];
+	      	$notification->created_at = $data[self::CREATED_AT];
+	      	$notification->updated_at = $data[self::UPDATED_AT];
 	      	$notification->save();
 	      	$data['id'] = $notification->id; 
 	        event(new Notification($data));
@@ -1759,12 +1403,12 @@ class PengujianController extends Controller
 		$currentUser = Auth::user();
 		$tanggal = strtotime($request->input('tanggal_complaint'));
 		
-		$quest = Questioner::where('examination_id','=',$request->input('my_exam_id'))->first();
+		$quest = Questioner::where(self::EXAMINATION_ID,'=',$request->input(self::MY_EXAM_ID))->first();
 		
-		$quest->complaint_date = date('Y-m-d', $tanggal);
+		$quest->complaint_date = date(self::DATE_FORMAT2, $tanggal);
 		$quest->complaint = $request->input('complaint');
 		$quest->updated_by = $currentUser->id;
-		$quest->updated_at = date('Y-m-d H:i:s');
+		$quest->updated_at = date(self::DATE_FORMAT1);
 		
 		try{
 			$quest->save();
@@ -1772,22 +1416,22 @@ class PengujianController extends Controller
 
 			$data= array( 
 	        "from"=>$currentUser->id,
-	        "to"=>"admin",
-	        "message"=>$currentUser->company->name." Mengajukan Complaint",
-	        "url"=>"examinationdone/".$request->input('my_exam_id').'/edit',
-	        "is_read"=>0,
-	        "created_at"=>date("Y-m-d H:i:s"),
-	        "updated_at"=>date("Y-m-d H:i:s")
+	        "to"=>self::ADMIN,
+	        self::MESSAGE=>$currentUser->company->name." Mengajukan Complaint",
+	        "url"=>"examinationdone/".$request->input(self::MY_EXAM_ID).self::EDIT_LOC,
+	        self::IS_READ=>0,
+	        self::CREATED_AT=>date(self::DATE_FORMAT1),
+	        self::UPDATED_AT=>date(self::DATE_FORMAT1)
 	        );
 		  	$notification = new NotificationTable();
 			$notification->id = Uuid::uuid4();
 	      	$notification->from = $data['from'];
 	      	$notification->to = $data['to'];
-	      	$notification->message = $data['message'];
+	      	$notification->message = $data[self::MESSAGE];
 	      	$notification->url = $data['url'];
-	      	$notification->is_read = $data['is_read'];
-	      	$notification->created_at = $data['created_at'];
-	      	$notification->updated_at = $data['updated_at'];
+	      	$notification->is_read = $data[self::IS_READ];
+	      	$notification->created_at = $data[self::CREATED_AT];
+	      	$notification->updated_at = $data[self::UPDATED_AT];
 	      	$notification->save();
 	      	$data['id'] = $notification->id; 
 	        event(new Notification($data));
