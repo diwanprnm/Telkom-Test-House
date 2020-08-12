@@ -96,7 +96,7 @@ class STELClientController extends Controller
     }
 	
 	public function autocomplete($query) {
-        $respons_result = STEL::autocomplet_stel($query, $request->path() == self::STELCLIENT_STRING ? 1 : 2);
+        $respons_result = STEL::autocomplet_stel($query);
         return response($respons_result);
     }
 }

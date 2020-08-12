@@ -51,7 +51,7 @@ class ExaminationController extends Controller
 	private const EXAMINATION_TYPE = 'examinationType';
 	private const EXAMINATION_LAB = 'examinationLab';
 	private const MEDIA = 'media';
-	private const DEVICS = 'device';
+	private const DEVICE = 'device';
 	private const REGISTRATION_STATUS = 'registration_status';
 	private const FUNCTION_STATUS = 'function_status';
 	private const CONTRACT_STATUS = 'contract_status';
@@ -176,189 +176,26 @@ class ExaminationController extends Controller
 	 
     public function index(Request $request)
     {
-        $currentUser = Auth::user();
+		$currentUser = Auth::user();
+		$logService = new LogService();
 
         if ($currentUser){
             $message = null;
             $paginate = 5;
-            $search = trim($request->input(self::SEARCH));
-            $comp_stat = '';
-            $type = '';
-            $status = '';
-			$before = null;
-            $after = null;
-
+			$search = trim($request->input(self::SEARCH));
+			
             $examType = ExaminationType::all();
 
-            $query = Examination::whereNotNull(self::CREATED_AT)
-                                ->with('user')
-                                ->with(self::COMPANY)
-                                ->with(self::EXAMINATION_TYPE)
-                                ->with(self::EXAMINATION_LAB)
-                                ->with(self::MEDIA)
-                                ->with(self::DEVICS);
-			$query->where(function($q){
-				return $q->where(self::REGISTRATION_STATUS, '!=', '1')
-					->orWhere(self::FUNCTION_STATUS, '!=', '1')
-					->orWhere(self::CONTRACT_STATUS, '!=', '1')
-					->orWhere(self::SPB_STATUS, '!=', '1')
-					->orWhere(self::PAYMENT_STATUS, '!=', '1')
-					->orWhere(self::SPK_STATUS, '!=', '1')
-					->orWhere(self::EXAMINATION_STATUS, '!=', '1')
-					->orWhere(self::RESUME_STATUS, '!=', '1')
-					->orWhere(self::QA_STATUS, '!=', '1')
-					->orWhere(self::CERTIFICATE_STATUS, '!=', '1')
-					->orWhere(self::LOCATION, '!=', '1')
-					;
-				})
-				;
-			if ($search != null){
-                $query->where(function($qry) use($search){
-                    $qry->whereHas(self::DEVICS, function ($q) use ($search){
-							return $q->where('name', 'like', '%'.strtolower($search).'%');
-						})
-					->orWhereHas(self::COMPANY, function ($q) use ($search){
-							return $q->where('name', 'like', '%'.strtolower($search).'%');
-						})
-					->orWhereHas(self::EXAMINATION_LAB, function ($q) use ($search){
-							return $q->where('name', 'like', '%'.strtolower($search).'%');
-						})
-					->orWhere('function_test_NO', 'like', '%'.strtolower($search).'%')
-					->orWhere('spk_code', 'like', '%'.strtolower($search).'%');
-                });
+			$tempData = $this->requestQuery($request, $search, $type = '', $status = '', $before = null, $after = null);
 
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "search";  
-                $dataSearch = array(self::SEARCH => $search);
-                $logs->data = json_encode($dataSearch);
-                $logs->created_by = $currentUser->id;
-                $logs->page = self::EXAMINATION;
-                $logs->save();
-            }
-
-            if ($request->has('type')){
-                $type = $request->get('type');
-                if($request->input('type') != 'all'){
-					$query->where('examination_type_id', $request->get('type'));
-				}
-            }
-
-            if ($request->has(self::COMPANY)){
-                $query->whereHas(self::COMPANY, function ($q) use ($request){
-                    return $q->where('name', 'like', '%'.strtolower($request->get(self::COMPANY)).'%');
-                });
-            }
-
-            if ($request->has(self::DEVICS)){
-                $query->whereHas(self::DEVICS, function ($q) use ($request){
-                    return $q->where('name', 'like', '%'.strtolower($request->get(self::DEVICS)).'%');
-                });
-            }
-
-            if ($request->has(self::STATUS)){
-                switch ($request->get(self::STATUS)) {
-                    case 1:
-						$query->where(self::REGISTRATION_STATUS, '!=', 1);
-                        $status = 1;
-                        break;
-                    case 2:
-						$query->where(self::REGISTRATION_STATUS, '=', 1);
-						$query->where(self::FUNCTION_STATUS, '!=', 1);
-                        $status = 2;
-                        break;
-                    case 3:
-						$query->where(self::REGISTRATION_STATUS, '=', 1);
-						$query->where(self::FUNCTION_STATUS, '=', 1);
-						$query->where(self::CONTRACT_STATUS, '!=', 1);
-                        $status = 3;
-                        break;
-                    case 4:
-						$query->where(self::REGISTRATION_STATUS, '=', 1);
-						$query->where(self::FUNCTION_STATUS, '=', 1);
-						$query->where(self::CONTRACT_STATUS, '=', 1);
-						$query->where(self::SPB_STATUS, '!=', 1);
-                        $status = 4;
-                        break;
-                    case 5:
-						$query->where(self::REGISTRATION_STATUS, '=', 1);
-						$query->where(self::FUNCTION_STATUS, '=', 1);
-						$query->where(self::CONTRACT_STATUS, '=', 1);
-						$query->where(self::SPB_STATUS, '=', 1);
-						$query->where(self::PAYMENT_STATUS, '!=', 1);
-                        $status = 5;
-                        break;
-                    case 6:
-						$query->where(self::REGISTRATION_STATUS, '=', 1);
-						$query->where(self::FUNCTION_STATUS, '=', 1);
-						$query->where(self::CONTRACT_STATUS, '=', 1);
-						$query->where(self::SPB_STATUS, '=', 1);
-						$query->where(self::PAYMENT_STATUS, '=', 1);
-						$query->where(self::SPK_STATUS, '!=', 1);
-                        $status = 6;
-                        break;
-                    case 7:
-						$query->where(self::REGISTRATION_STATUS, '=', 1);
-						$query->where(self::FUNCTION_STATUS, '=', 1);
-						$query->where(self::CONTRACT_STATUS, '=', 1);
-						$query->where(self::SPB_STATUS, '=', 1);
-						$query->where(self::PAYMENT_STATUS, '=', 1);
-						$query->where(self::SPK_STATUS, '=', 1);
-						$query->where(self::EXAMINATION_STATUS, '!=', 1);
-                        $status = 7;
-                        break;
-                    case 8:
-						$query->where(self::REGISTRATION_STATUS, '=', 1);
-						$query->where(self::FUNCTION_STATUS, '=', 1);
-						$query->where(self::CONTRACT_STATUS, '=', 1);
-						$query->where(self::SPB_STATUS, '=', 1);
-						$query->where(self::PAYMENT_STATUS, '=', 1);
-						$query->where(self::SPK_STATUS, '=', 1);
-						$query->where(self::EXAMINATION_STATUS, '=', 1);
-						$query->where(self::RESUME_STATUS, '!=', 1);
-                        $status = 8;
-                        break;
-                    case 9:
-						$query->where(self::REGISTRATION_STATUS, '=', 1);
-						$query->where(self::FUNCTION_STATUS, '=', 1);
-						$query->where(self::CONTRACT_STATUS, '=', 1);
-						$query->where(self::SPB_STATUS, '=', 1);
-						$query->where(self::PAYMENT_STATUS, '=', 1);
-						$query->where(self::SPK_STATUS, '=', 1);
-						$query->where(self::EXAMINATION_STATUS, '=', 1);
-						$query->where(self::RESUME_STATUS, '=', 1);
-						$query->where(self::QA_STATUS, '!=', 1);
-                        $status = 9;
-                        break;
-                    case 10:
-						$query->where(self::REGISTRATION_STATUS, '=', 1);
-						$query->where(self::FUNCTION_STATUS, '=', 1);
-						$query->where(self::CONTRACT_STATUS, '=', 1);
-						$query->where(self::SPB_STATUS, '=', 1);
-						$query->where(self::PAYMENT_STATUS, '=', 1);
-						$query->where(self::SPK_STATUS, '=', 1);
-						$query->where(self::EXAMINATION_STATUS, '=', 1);
-						$query->where(self::RESUME_STATUS, '=', 1);
-						$query->where(self::QA_STATUS, '=', 1);
-						$query->where(self::CERTIFICATE_STATUS, '!=', 1);
-                        $status = 10;
-                        break;
-                    
-                    default:
-						$status = 'all';
-                        break;
-                }
-            }
+            $query = $tempData[0];
+            $search = $tempData[1];
+            $type = $tempData[2];
+            $status = $tempData[3];
+			$before = $tempData[4];
+			$after = $tempData[5];
 			
-			if ($request->has(self::BEFORE_DATE)){
-				$query->where(self::SPK_DATE, '<=', $request->get(self::BEFORE_DATE));
-				$before = $request->get(self::BEFORE_DATE);
-			}
-
-			if ($request->has(self::AFTER_DATE)){
-				$query->where(self::SPK_DATE, '>=', $request->get(self::AFTER_DATE));
-				$after = $request->get(self::AFTER_DATE);
-			}
+			$search != null ? $logService->createLog('search', $this::EXAMINATION, json_encode(array('search' => $search)) ) : '';
 
 			$data = $query->orderBy(self::UPDATED_AT, 'desc')
                         ->paginate($paginate);
@@ -370,7 +207,6 @@ class ExaminationController extends Controller
             return view('admin.examination.index')
                 ->with(self::MESSAGE, $message)
                 ->with('data', $data)
-                ->with('comp_stat', $comp_stat)
                 ->with('type', $examType)
                 ->with(self::SEARCH, $search)
                 ->with('filterType', $type)
@@ -379,6 +215,171 @@ class ExaminationController extends Controller
                 ->with(self::AFTER_DATE, $after);
         }
     }
+
+	function requestQuery($request, $search, $type, $status, $before, $after){
+		$query = Examination::whereNotNull(self::CREATED_AT)
+							->with('user')
+							->with(self::COMPANY)
+							->with(self::EXAMINATION_TYPE)
+							->with(self::EXAMINATION_LAB)
+							->with(self::MEDIA)
+							->with(self::DEVICE);
+		$query->where(function($q){
+			return $q->where(self::REGISTRATION_STATUS, '!=', '1')
+				->orWhere(self::FUNCTION_STATUS, '!=', '1')
+				->orWhere(self::CONTRACT_STATUS, '!=', '1')
+				->orWhere(self::SPB_STATUS, '!=', '1')
+				->orWhere(self::PAYMENT_STATUS, '!=', '1')
+				->orWhere(self::SPK_STATUS, '!=', '1')
+				->orWhere(self::EXAMINATION_STATUS, '!=', '1')
+				->orWhere(self::RESUME_STATUS, '!=', '1')
+				->orWhere(self::QA_STATUS, '!=', '1')
+				->orWhere(self::CERTIFICATE_STATUS, '!=', '1')
+				->orWhere(self::LOCATION, '!=', '1')
+				;
+			})
+			;
+		if ($search != null){
+			$query->where(function($qry) use($search){
+				$qry->whereHas(self::DEVICE, function ($q) use ($search){
+						return $q->where('name', 'like', '%'.strtolower($search).'%');
+					})
+				->orWhereHas(self::COMPANY, function ($q) use ($search){
+						return $q->where('name', 'like', '%'.strtolower($search).'%');
+					})
+				->orWhereHas(self::EXAMINATION_LAB, function ($q) use ($search){
+						return $q->where('name', 'like', '%'.strtolower($search).'%');
+					})
+				->orWhere('function_test_NO', 'like', '%'.strtolower($search).'%')
+				->orWhere('spk_code', 'like', '%'.strtolower($search).'%');
+			});
+		}
+
+		if ($request->has('type')){
+			$type = $request->get('type');
+			if($request->input('type') != 'all'){
+				$query->where('examination_type_id', $request->get('type'));
+			}
+		}
+
+		if ($request->has(self::COMPANY)){
+			$query->whereHas(self::COMPANY, function ($q) use ($request){
+				return $q->where('name', 'like', '%'.strtolower($request->get(self::COMPANY)).'%');
+			});
+		}
+
+		if ($request->has(self::DEVICE)){
+			$query->whereHas(self::DEVICE, function ($q) use ($request){
+				return $q->where('name', 'like', '%'.strtolower($request->get(self::DEVICE)).'%');
+			});
+		}
+
+		if ($request->has(self::STATUS)){
+			switch ($request->get(self::STATUS)) {
+				case 1:
+					$query->where(self::REGISTRATION_STATUS, '!=', 1);
+					$status = 1;
+					break;
+				case 2:
+					$query->where(self::REGISTRATION_STATUS, '=', 1);
+					$query->where(self::FUNCTION_STATUS, '!=', 1);
+					$status = 2;
+					break;
+				case 3:
+					$query->where(self::REGISTRATION_STATUS, '=', 1);
+					$query->where(self::FUNCTION_STATUS, '=', 1);
+					$query->where(self::CONTRACT_STATUS, '!=', 1);
+					$status = 3;
+					break;
+				case 4:
+					$query->where(self::REGISTRATION_STATUS, '=', 1);
+					$query->where(self::FUNCTION_STATUS, '=', 1);
+					$query->where(self::CONTRACT_STATUS, '=', 1);
+					$query->where(self::SPB_STATUS, '!=', 1);
+					$status = 4;
+					break;
+				case 5:
+					$query->where(self::REGISTRATION_STATUS, '=', 1);
+					$query->where(self::FUNCTION_STATUS, '=', 1);
+					$query->where(self::CONTRACT_STATUS, '=', 1);
+					$query->where(self::SPB_STATUS, '=', 1);
+					$query->where(self::PAYMENT_STATUS, '!=', 1);
+					$status = 5;
+					break;
+				case 6:
+					$query->where(self::REGISTRATION_STATUS, '=', 1);
+					$query->where(self::FUNCTION_STATUS, '=', 1);
+					$query->where(self::CONTRACT_STATUS, '=', 1);
+					$query->where(self::SPB_STATUS, '=', 1);
+					$query->where(self::PAYMENT_STATUS, '=', 1);
+					$query->where(self::SPK_STATUS, '!=', 1);
+					$status = 6;
+					break;
+				case 7:
+					$query->where(self::REGISTRATION_STATUS, '=', 1);
+					$query->where(self::FUNCTION_STATUS, '=', 1);
+					$query->where(self::CONTRACT_STATUS, '=', 1);
+					$query->where(self::SPB_STATUS, '=', 1);
+					$query->where(self::PAYMENT_STATUS, '=', 1);
+					$query->where(self::SPK_STATUS, '=', 1);
+					$query->where(self::EXAMINATION_STATUS, '!=', 1);
+					$status = 7;
+					break;
+				case 8:
+					$query->where(self::REGISTRATION_STATUS, '=', 1);
+					$query->where(self::FUNCTION_STATUS, '=', 1);
+					$query->where(self::CONTRACT_STATUS, '=', 1);
+					$query->where(self::SPB_STATUS, '=', 1);
+					$query->where(self::PAYMENT_STATUS, '=', 1);
+					$query->where(self::SPK_STATUS, '=', 1);
+					$query->where(self::EXAMINATION_STATUS, '=', 1);
+					$query->where(self::RESUME_STATUS, '!=', 1);
+					$status = 8;
+					break;
+				case 9:
+					$query->where(self::REGISTRATION_STATUS, '=', 1);
+					$query->where(self::FUNCTION_STATUS, '=', 1);
+					$query->where(self::CONTRACT_STATUS, '=', 1);
+					$query->where(self::SPB_STATUS, '=', 1);
+					$query->where(self::PAYMENT_STATUS, '=', 1);
+					$query->where(self::SPK_STATUS, '=', 1);
+					$query->where(self::EXAMINATION_STATUS, '=', 1);
+					$query->where(self::RESUME_STATUS, '=', 1);
+					$query->where(self::QA_STATUS, '!=', 1);
+					$status = 9;
+					break;
+				case 10:
+					$query->where(self::REGISTRATION_STATUS, '=', 1);
+					$query->where(self::FUNCTION_STATUS, '=', 1);
+					$query->where(self::CONTRACT_STATUS, '=', 1);
+					$query->where(self::SPB_STATUS, '=', 1);
+					$query->where(self::PAYMENT_STATUS, '=', 1);
+					$query->where(self::SPK_STATUS, '=', 1);
+					$query->where(self::EXAMINATION_STATUS, '=', 1);
+					$query->where(self::RESUME_STATUS, '=', 1);
+					$query->where(self::QA_STATUS, '=', 1);
+					$query->where(self::CERTIFICATE_STATUS, '!=', 1);
+					$status = 10;
+					break;
+				
+				default:
+					$status = 'all';
+					break;
+			}
+		}
+		
+		if ($request->has(self::BEFORE_DATE)){
+			$query->where(self::SPK_DATE, '<=', $request->get(self::BEFORE_DATE));
+			$before = $request->get(self::BEFORE_DATE);
+		}
+
+		if ($request->has(self::AFTER_DATE)){
+			$query->where(self::SPK_DATE, '>=', $request->get(self::AFTER_DATE));
+			$after = $request->get(self::AFTER_DATE);
+		}
+
+		return array($query, $search, $type, $status, $before, $after);
+	}
 
     /**
      * Display the specified resource.
@@ -393,7 +394,7 @@ class ExaminationController extends Controller
                             ->with(self::COMPANY)
                             ->with(self::EXAMINATION_TYPE)
                             ->with(self::EXAMINATION_LAB)
-                            ->with(self::DEVICS)
+                            ->with(self::DEVICE)
                             ->with(self::MEDIA)
                             ->first();
 							
@@ -423,7 +424,7 @@ class ExaminationController extends Controller
                             ->with(self::COMPANY)
                             ->with(self::EXAMINATION_TYPE)
                             ->with(self::EXAMINATION_LAB)
-                            ->with(self::DEVICS)
+                            ->with(self::DEVICE)
                             ->with(self::MEDIA)
                             ->with(self::EQUIPMENT)
                             ->first();
@@ -2027,160 +2028,14 @@ class ExaminationController extends Controller
 
         $search = trim($request->input(self::SEARCH));
 
-        $query = Examination::whereNotNull(self::CREATED_AT)
-                            ->with('user')
-                            ->with(self::COMPANY)
-                            ->with(self::EXAMINATION_TYPE)
-                            ->with(self::EXAMINATION_LAB)
-                            ->with(self::MEDIA)
-                            ->with(self::DEVICS);
-		$query->where(function($q){
-			return $q->where(self::REGISTRATION_STATUS, '!=', '1')
-				->orWhere(self::FUNCTION_STATUS, '!=', '1')
-				->orWhere(self::CONTRACT_STATUS, '!=', '1')
-				->orWhere(self::SPB_STATUS, '!=', '1')
-				->orWhere(self::PAYMENT_STATUS, '!=', '1')
-				->orWhere(self::SPK_STATUS, '!=', '1')
-				->orWhere(self::EXAMINATION_STATUS, '!=', '1')
-				->orWhere(self::RESUME_STATUS, '!=', '1')
-				->orWhere(self::QA_STATUS, '!=', '1')
-				->orWhere(self::CERTIFICATE_STATUS, '!=', '1')
-				->orWhere(self::LOCATION, '!=', '1')
-				;
-			})
-			;
-		if ($search != null){
-            $query->where(function($qry) use($search){
-                $qry->whereHas(self::DEVICS, function ($q) use ($search){
-						return $q->where('name', 'like', '%'.strtolower($search).'%');
-					})
-				->orWhereHas(self::COMPANY, function ($q) use ($search){
-						return $q->where('name', 'like', '%'.strtolower($search).'%');
-					})
-				->orWhereHas(self::EXAMINATION_LAB, function ($q) use ($search){
-							return $q->where('name', 'like', '%'.strtolower($search).'%');
-						})
-				->orWhere('function_test_NO', 'like', '%'.strtolower($search).'%');
-            });
-        }
+        $tempData = $this->requestQuery($request, $search, $type = '', $status = '', $before = null, $after = null);
 
-        if ($request->has('type') && $request->input('type') != 'all'){
-			$query->where('examination_type_id', $request->get('type'));
-        }
-
-        if ($request->has(self::COMPANY)){
-            $query->whereHas(self::COMPANY, function ($q) use ($request){
-                return $q->where('name', 'like', '%'.strtolower($request->get(self::COMPANY)).'%');
-            });
-        }
-
-        if ($request->has(self::DEVICS)){
-            $query->whereHas(self::DEVICS, function ($q) use ($request){
-                return $q->where('name', 'like', '%'.strtolower($request->get(self::DEVICS)).'%');
-            });
-        }
-
-        if ($request->has(self::STATUS)){
-            switch ($request->get(self::STATUS)) {
-                case 1:
-					$query->where(self::REGISTRATION_STATUS, '!=', 1);
-                    $status = 1;
-                    break;
-                case 2:
-					$query->where(self::REGISTRATION_STATUS, '=', 1);
-					$query->where(self::FUNCTION_STATUS, '!=', 1);
-                    $status = 2;
-                    break;
-                case 3:
-					$query->where(self::REGISTRATION_STATUS, '=', 1);
-					$query->where(self::FUNCTION_STATUS, '=', 1);
-					$query->where(self::CONTRACT_STATUS, '!=', 1);
-                    $status = 3;
-                    break;
-                case 4:
-					$query->where(self::REGISTRATION_STATUS, '=', 1);
-					$query->where(self::FUNCTION_STATUS, '=', 1);
-					$query->where(self::CONTRACT_STATUS, '=', 1);
-					$query->where(self::SPB_STATUS, '!=', 1);
-                    $status = 4;
-                    break;
-                case 5:
-					$query->where(self::REGISTRATION_STATUS, '=', 1);
-					$query->where(self::FUNCTION_STATUS, '=', 1);
-					$query->where(self::CONTRACT_STATUS, '=', 1);
-					$query->where(self::SPB_STATUS, '=', 1);
-					$query->where(self::PAYMENT_STATUS, '!=', 1);
-                    $status = 5;
-                    break;
-                case 6:
-					$query->where(self::REGISTRATION_STATUS, '=', 1);
-					$query->where(self::FUNCTION_STATUS, '=', 1);
-					$query->where(self::CONTRACT_STATUS, '=', 1);
-					$query->where(self::SPB_STATUS, '=', 1);
-					$query->where(self::PAYMENT_STATUS, '=', 1);
-					$query->where(self::SPK_STATUS, '!=', 1);
-                    $status = 6;
-                    break;
-                case 7:
-					$query->where(self::REGISTRATION_STATUS, '=', 1);
-					$query->where(self::FUNCTION_STATUS, '=', 1);
-					$query->where(self::CONTRACT_STATUS, '=', 1);
-					$query->where(self::SPB_STATUS, '=', 1);
-					$query->where(self::PAYMENT_STATUS, '=', 1);
-					$query->where(self::SPK_STATUS, '=', 1);
-					$query->where(self::EXAMINATION_STATUS, '!=', 1);
-                    $status = 7;
-                    break;
-                case 8:
-					$query->where(self::REGISTRATION_STATUS, '=', 1);
-					$query->where(self::FUNCTION_STATUS, '=', 1);
-					$query->where(self::CONTRACT_STATUS, '=', 1);
-					$query->where(self::SPB_STATUS, '=', 1);
-					$query->where(self::PAYMENT_STATUS, '=', 1);
-					$query->where(self::SPK_STATUS, '=', 1);
-					$query->where(self::EXAMINATION_STATUS, '=', 1);
-					$query->where(self::RESUME_STATUS, '!=', 1);
-                    $status = 8;
-                    break;
-                case 9:
-					$query->where(self::REGISTRATION_STATUS, '=', 1);
-					$query->where(self::FUNCTION_STATUS, '=', 1);
-					$query->where(self::CONTRACT_STATUS, '=', 1);
-					$query->where(self::SPB_STATUS, '=', 1);
-					$query->where(self::PAYMENT_STATUS, '=', 1);
-					$query->where(self::SPK_STATUS, '=', 1);
-					$query->where(self::EXAMINATION_STATUS, '=', 1);
-					$query->where(self::RESUME_STATUS, '=', 1);
-					$query->where(self::QA_STATUS, '!=', 1);
-                    $status = 9;
-                    break;
-                case 10:
-					$query->where(self::REGISTRATION_STATUS, '=', 1);
-					$query->where(self::FUNCTION_STATUS, '=', 1);
-					$query->where(self::CONTRACT_STATUS, '=', 1);
-					$query->where(self::SPB_STATUS, '=', 1);
-					$query->where(self::PAYMENT_STATUS, '=', 1);
-					$query->where(self::SPK_STATUS, '=', 1);
-					$query->where(self::EXAMINATION_STATUS, '=', 1);
-					$query->where(self::RESUME_STATUS, '=', 1);
-					$query->where(self::QA_STATUS, '=', 1);
-					$query->where(self::CERTIFICATE_STATUS, '!=', 1);
-                    $status = 10;
-                    break;
-                
-                default:
-					$status = 'all';
-                    break;
-            }
-        }
-		
-		if ($request->has(self::BEFORE_DATE)){
-			$query->where(self::SPK_DATE, '<=', $request->get(self::BEFORE_DATE));
-		}
-
-		if ($request->has(self::AFTER_DATE)){
-			$query->where(self::SPK_DATE, '>=', $request->get(self::AFTER_DATE));
-		}
+		$query = $tempData[0];
+		$search = $tempData[1];
+		$type = $tempData[2];
+		$status = $tempData[3];
+		$before = $tempData[4];
+		$after = $tempData[5];
 
 		$data = $query->orderBy(self::UPDATED_AT, 'desc')->get();
 
@@ -2591,7 +2446,7 @@ class ExaminationController extends Controller
                             ->with(self::COMPANY)
                             ->with(self::EXAMINATION_TYPE)
                             ->with(self::EXAMINATION_LAB)
-                            ->with(self::DEVICS)
+                            ->with(self::DEVICE)
                             ->with(self::MEDIA)
                             ->first();
 		$query_stels = "SELECT * FROM stels WHERE is_active = 1";
@@ -2733,7 +2588,7 @@ $notification->id = Uuid::uuid4();
 		$exam = Examination::where('id', $exam_id)
 				->with('user')
 				->with(self::COMPANY)
-				->with(self::DEVICS)
+				->with(self::DEVICE)
 				->with(self::EXAMINATION_LAB)
 				->with(self::EQUIPMENT)
 				->first();
@@ -2838,7 +2693,7 @@ $notification->id = Uuid::uuid4();
 		$exam_id = $request->input('hide_id_exam');
 		$exam = Examination::where('id', $exam_id)
 				->with('user')
-				->with(self::DEVICS)
+				->with(self::DEVICE)
 				->with(self::MEDIA)
 				->first();
 			$no_laporan = '-';
@@ -3153,7 +3008,7 @@ $notification->id = Uuid::uuid4();
 		$kode = $this->generateKuitansiManual();
 		$exam_id = $request->input(self::EXAM_ID);
 		$exam = Examination::where('id', $exam_id)
-					->with(self::DEVICS)
+					->with(self::DEVICE)
 					->with(self::COMPANY)
 					->first();
 		$request->session()->put('key_jenis_for_kuitansi', 1);
@@ -3208,7 +3063,7 @@ $notification->id = Uuid::uuid4();
 		}
 		$spb_date = $request->session()->get('key_spb_date_for_generate_spb');
 		$exam = Examination::where('id', $exam_id)
-					->with(self::DEVICS)
+					->with(self::DEVICE)
 					->first()
 		;
 		if($exam->examination_type_id == 2){
@@ -3277,7 +3132,7 @@ $notification->id = Uuid::uuid4();
 			$exam = Examination::where('id', $exam_id)
 						->with('user')
 						->with(self::COMPANY)
-						->with(self::DEVICS)
+						->with(self::DEVICE)
 						->with(self::EXAMINATION_TYPE)
 						->first()
 			;
@@ -3405,7 +3260,7 @@ $notification->id = Uuid::uuid4();
 		
 		$data = Examination::where('id','=',$id)
 		->with(self::COMPANY)
-		->with(self::DEVICS)
+		->with(self::DEVICE)
 		->with(self::EQUIPMENT)
 		->get();
 		if( strpos( $data[0]->function_test_NO, "/" ) !== false ) {$no_reg = urlencode(urlencode($data[0]->function_test_NO));}
@@ -3485,7 +3340,7 @@ $notification->id = Uuid::uuid4();
 		->with(self::EXAMINATION_LAB)
 		->with(self::COMPANY)
 		->with('User')
-		->with(self::DEVICS)
+		->with(self::DEVICE)
 		->with(self::EQUIPMENT)
 		->get();
 		if(isset($data[0]->equipment[0]->no)){
@@ -3631,11 +3486,6 @@ $notification->id = Uuid::uuid4();
 		}
     }
 	
-	function romawi($bln){
-		$array_bulan = array(1=>"I","II","III", "IV", "V","VI","VII","VIII","IX","X", "XI","XII");
-		return $array_bulan[$bln];
-	}
-
 	public function deleteRevLapUji($id)
     {
         $examination_attachment = ExaminationAttach::find($id);

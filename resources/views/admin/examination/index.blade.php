@@ -618,11 +618,9 @@
             var params = {};
 			var search_value = document.getElementById("search_value").value;
             var status = document.getElementById("status");
-            // var comp_stat = document.getElementById("comp_stat");
             var type = document.getElementById("type");
 			var statusValue = status.options[status.selectedIndex].value;
 			var typeValue = type.options[type.selectedIndex].value;
-			// var comp_statValue = comp_stat.options[comp_stat.selectedIndex].value;
 			var before = document.getElementById("before_date");
             var after = document.getElementById("after_date");
 			var beforeValue = before.value;
@@ -641,9 +639,6 @@
 			if (typeValue != ''){
 				params['type'] = typeValue;
 			}
-			/*if (comp_statValue != ''){
-				params['comp_stat'] = comp_statValue;
-			}*/
 				params['search'] = search_value;
 			document.location.href = baseUrl+'/admin/examination?'+jQuery.param(params);
 	    };
@@ -653,11 +648,9 @@
             var params = {};
 			var search_value = document.getElementById("search_value").value;
             var status = document.getElementById("status");
-            // var comp_stat = document.getElementById("comp_stat");
             var type = document.getElementById("type");
 			var statusValue = status.options[status.selectedIndex].value;
 			var typeValue = type.options[type.selectedIndex].value;
-			// var comp_statValue = comp_stat.options[comp_stat.selectedIndex].value;
 			var before = document.getElementById("before_date");
             var after = document.getElementById("after_date");
 			var beforeValue = before.value;
@@ -676,9 +669,6 @@
 			if (typeValue != ''){
 				params['type'] = typeValue;
 			}
-			/*if (comp_statValue != ''){
-				params['comp_stat'] = comp_statValue;
-			}*/
 				params['search'] = search_value;
 			document.location.href = baseUrl+'/examination/excel?'+jQuery.param(params);
 	    };
