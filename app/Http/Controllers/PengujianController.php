@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
-// use Illuminate\Database\Query\Builder;
 use Illuminate\Pagination\Paginator;
 use App\Http\Requests;
 use Illuminate\Http\Request;
@@ -39,15 +38,74 @@ use Carbon\Carbon;
 
 class PengujianController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    // public function __construct()
-    // {
-        // $this->middleware('auth');
-    // }
+
+	// private const X = 'attributes';
+	// private const X = 'company_id';
+	// private const X = 'search';
+	// private const X = 'status';
+	// private const X = 'payment_status';
+	// private const X = 'examinations';
+	// private const X = 'devices';
+	// private const X = 'examinations.device_id';
+	// private const X = 'devices.id';
+	// private const X = 'users';
+	// private const X = 'users.id';
+	// private const X = 'examinations.created_by';
+	// private const X = 'companies.id';
+	// private const X = 'users.company_id';
+	// private const X = 'companies';
+	// private const X = 'examination_types.id';
+	// private const X = 'examination_types';
+	// private const X = 'examinations.examination_type_id';
+	// private const X = 'examinations.company_id';
+	// private const X = 'devices.name';
+	// private const X = 'examinations';
+	// private const X = 'examinations.updated_at';
+	// private const X = 'is_active';
+	// private const X = 'message';
+	// private const X = 'pengujian';
+	// private const X = 'Content-Type';
+	// private const X = '|token|';
+	// private const X = 'created_at';
+	// private const X = 'examination_id';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
+	// private const X = 'x';
 
     /**
      * Show the application dashboard.
@@ -79,6 +137,43 @@ class PengujianController extends Controller
 				'qa_status',
 				'certificate_status'
 			];
+
+			$neededColumn = 'examinations.id,
+				examinations.examination_type_id,
+				examinations.device_id,
+				devices.name AS nama_perangkat,
+				devices.mark AS merk_perangkat,
+				devices.serial_number AS serialNumber,
+				devices.model AS model_perangkat,
+				devices.certificate AS sistem_mutuPerangkat,
+				devices.capacity AS kapasitas_perangkat,
+				devices.cert_number,
+				examinations.registration_status,
+				examinations.function_status,
+				examinations.contract_status,
+				examinations.spb_status,
+				examinations.payment_status,
+				examinations.spk_status,
+				examinations.examination_status,
+				examinations.resume_status,
+				examinations.qa_status,
+				examinations.qa_passed,
+				examinations.certificate_status,
+				examinations.urel_test_date,
+				examinations.cust_test_date,
+				examinations.deal_test_date,
+				examination_types.name AS jns_pengujian,
+				examination_types.description AS desc_pengujian,
+				users.name AS userName,
+				examinations.function_test_reason,
+				companies.name AS companiesName,
+				examinations.function_date,
+				examinations.function_test_PIC,
+				examinations.function_test_NO,
+				examinations.function_test_date_approval,
+				examinations.resume_date,
+				examinations.created_at,
+				(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name';
 			
             if ($search != null){
 				if($jns > 0){
@@ -88,44 +183,7 @@ class PengujianController extends Controller
 						->join('users', 'examinations.created_by', '=', 'users.id')
 						->join('companies', 'users.company_id', '=', 'companies.id')
 						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
-						->select(DB::raw(
-								'examinations.id,
-								examinations.examination_type_id,
-								examinations.device_id,
-								devices.name AS nama_perangkat,
-								devices.mark AS merk_perangkat,
-								devices.serial_number AS serialNumber,
-								devices.model AS model_perangkat,
-								devices.certificate AS sistem_mutuPerangkat,
-								devices.capacity AS kapasitas_perangkat,
-								devices.cert_number,
-								examinations.registration_status,
-								examinations.function_status,
-								examinations.contract_status,
-								examinations.spb_status,
-								examinations.payment_status,
-								examinations.spk_status,
-								examinations.examination_status,
-								examinations.resume_status,
-								examinations.qa_status,
-								examinations.qa_passed,
-								examinations.certificate_status,
-								examinations.urel_test_date,
-								examinations.cust_test_date,
-								examinations.deal_test_date,
-								examination_types.name AS jns_pengujian,
-								examination_types.description AS desc_pengujian,
-								users.name AS userName,
-								examinations.function_test_reason,
-								companies.name AS companiesName,
-								examinations.function_date,
-								examinations.function_test_PIC,
-								examinations.function_test_NO,
-								examinations.function_test_date_approval,
-								examinations.resume_date,
-								examinations.created_at,
-								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
-								))
+						->select(DB::raw( $neededColumn ))
 						->where('examinations.company_id','=',''.$company_id.'')
 						// ->where('examinations.created_by','=',''.$user_id.'')
 						->where('devices.name','like','%'.$search.'%')
@@ -140,44 +198,7 @@ class PengujianController extends Controller
 						->join('users', 'examinations.created_by', '=', 'users.id')
 						->join('companies', 'users.company_id', '=', 'companies.id')
 						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
-						->select(DB::raw(
-								'examinations.id,
-								examinations.examination_type_id,
-								examinations.device_id,
-								devices.name AS nama_perangkat,
-								devices.mark AS merk_perangkat,
-								devices.serial_number AS serialNumber,
-								devices.model AS model_perangkat,
-								devices.certificate AS sistem_mutuPerangkat,
-								devices.capacity AS kapasitas_perangkat,
-								devices.cert_number,
-								examinations.registration_status,
-								examinations.function_status,
-								examinations.contract_status,
-								examinations.spb_status,
-								examinations.payment_status,
-								examinations.spk_status,
-								examinations.examination_status,
-								examinations.resume_status,
-								examinations.qa_status,
-								examinations.qa_passed,
-								examinations.certificate_status,
-								examinations.urel_test_date,
-								examinations.cust_test_date,
-								examinations.deal_test_date,
-								examination_types.name AS jns_pengujian,
-								examination_types.description AS desc_pengujian,
-								users.name AS userName,
-								examinations.function_test_reason,
-								companies.name AS companiesName,
-								examinations.function_date,
-								examinations.function_test_PIC,
-								examinations.function_test_NO,
-								examinations.function_test_date_approval,
-								examinations.resume_date,
-								examinations.created_at,
-								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
-								))
+						->select(DB::raw( $neededColumn ))
 						->where('examinations.company_id','=',''.$company_id.'')
 						// ->where('examinations.created_by','=',''.$user_id.'')
 						->where('devices.name','like','%'.$search.'%')
@@ -192,44 +213,7 @@ class PengujianController extends Controller
 						->join('users', 'examinations.created_by', '=', 'users.id')
 						->join('companies', 'users.company_id', '=', 'companies.id')
 						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
-						->select(DB::raw(
-								'examinations.id,
-								examinations.examination_type_id,
-								examinations.device_id,
-								devices.name AS nama_perangkat,
-								devices.mark AS merk_perangkat,
-								devices.serial_number AS serialNumber,
-								devices.model AS model_perangkat,
-								devices.certificate AS sistem_mutuPerangkat,
-								devices.capacity AS kapasitas_perangkat,
-								devices.cert_number,
-								examinations.registration_status,
-								examinations.function_status,
-								examinations.contract_status,
-								examinations.spb_status,
-								examinations.payment_status,
-								examinations.spk_status,
-								examinations.examination_status,
-								examinations.resume_status,
-								examinations.qa_status,
-								examinations.qa_passed,
-								examinations.certificate_status,
-								examinations.urel_test_date,
-								examinations.cust_test_date,
-								examinations.deal_test_date,
-								examination_types.name AS jns_pengujian,
-								examination_types.description AS desc_pengujian,
-								users.name AS userName,
-								examinations.function_test_reason,
-								companies.name AS companiesName,
-								examinations.function_date,
-								examinations.function_test_PIC,
-								examinations.function_test_NO,
-								examinations.function_test_date_approval,
-								examinations.resume_date,
-								examinations.created_at,
-								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
-								))
+						->select(DB::raw( $neededColumn ))
 						->where('examinations.company_id','=',''.$company_id.'')
 						// ->where('examinations.created_by','=',''.$user_id.'')
 						->where('devices.name','like','%'.$search.'%')
@@ -243,44 +227,7 @@ class PengujianController extends Controller
 						->join('users', 'examinations.created_by', '=', 'users.id')
 						->join('companies', 'users.company_id', '=', 'companies.id')
 						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
-						->select(DB::raw(
-								'examinations.id,
-								examinations.examination_type_id,
-								examinations.device_id,
-								devices.name AS nama_perangkat,
-								devices.mark AS merk_perangkat,
-								devices.serial_number AS serialNumber,
-								devices.model AS model_perangkat,
-								devices.certificate AS sistem_mutuPerangkat,
-								devices.capacity AS kapasitas_perangkat,
-								devices.cert_number,
-								examinations.registration_status,
-								examinations.function_status,
-								examinations.contract_status,
-								examinations.spb_status,
-								examinations.payment_status,
-								examinations.spk_status,
-								examinations.examination_status,
-								examinations.resume_status,
-								examinations.qa_status,
-								examinations.qa_passed,
-								examinations.certificate_status,
-								examinations.urel_test_date,
-								examinations.cust_test_date,
-								examinations.deal_test_date,
-								examination_types.name AS jns_pengujian,
-								examination_types.description AS desc_pengujian,
-								users.name AS userName,
-								examinations.function_test_reason,
-								companies.name AS companiesName,
-								examinations.function_date,
-								examinations.function_test_PIC,
-								examinations.function_test_NO,
-								examinations.function_test_date_approval,
-								examinations.resume_date,
-								examinations.created_at,
-								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
-								))
+						->select(DB::raw( $neededColumn ))
 						->where('examinations.company_id','=',''.$company_id.'')
 						// ->where('examinations.created_by','=',''.$user_id.'')
 						->where('devices.name','like','%'.$search.'%')
@@ -296,44 +243,7 @@ class PengujianController extends Controller
 						->join('users', 'examinations.created_by', '=', 'users.id')
 						->join('companies', 'users.company_id', '=', 'companies.id')
 						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
-						->select(DB::raw(
-								'examinations.id,
-								examinations.examination_type_id,
-								examinations.device_id,
-								devices.name AS nama_perangkat,
-								devices.mark AS merk_perangkat,
-								devices.serial_number AS serialNumber,
-								devices.model AS model_perangkat,
-								devices.certificate AS sistem_mutuPerangkat,
-								devices.capacity AS kapasitas_perangkat,
-								devices.cert_number,
-								examinations.registration_status,
-								examinations.function_status,
-								examinations.contract_status,
-								examinations.spb_status,
-								examinations.payment_status,
-								examinations.spk_status,
-								examinations.examination_status,
-								examinations.resume_status,
-								examinations.qa_status,
-								examinations.qa_passed,
-								examinations.certificate_status,
-								examinations.urel_test_date,
-								examinations.cust_test_date,
-								examinations.deal_test_date,
-								examination_types.name AS jns_pengujian,
-								examination_types.description AS desc_pengujian,
-								users.name AS userName,
-								examinations.function_test_reason,
-								companies.name AS companiesName,
-								examinations.function_date,
-								examinations.function_test_PIC,
-								examinations.function_test_NO,
-								examinations.function_test_date_approval,
-								examinations.resume_date,
-								examinations.created_at,
-								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
-								))
+						->select(DB::raw( $neededColumn ))
 						->where('examinations.company_id','=',''.$company_id.'')
 						// ->where('examinations.created_by','=',''.$user_id.'')
 						->where('examinations.'.$arr_status[$status-1].'','=','1')
@@ -347,44 +257,7 @@ class PengujianController extends Controller
 						->join('users', 'examinations.created_by', '=', 'users.id')
 						->join('companies', 'users.company_id', '=', 'companies.id')
 						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
-						->select(DB::raw(
-								'examinations.id,
-								examinations.examination_type_id,
-								examinations.device_id,
-								devices.name AS nama_perangkat,
-								devices.mark AS merk_perangkat,
-								devices.serial_number AS serialNumber,
-								devices.model AS model_perangkat,
-								devices.certificate AS sistem_mutuPerangkat,
-								devices.capacity AS kapasitas_perangkat,
-								devices.cert_number,
-								examinations.registration_status,
-								examinations.function_status,
-								examinations.contract_status,
-								examinations.spb_status,
-								examinations.payment_status,
-								examinations.spk_status,
-								examinations.examination_status,
-								examinations.resume_status,
-								examinations.qa_status,
-								examinations.qa_passed,
-								examinations.certificate_status,
-								examinations.urel_test_date,
-								examinations.cust_test_date,
-								examinations.deal_test_date,
-								examination_types.name AS jns_pengujian,
-								examination_types.description AS desc_pengujian,
-								users.name AS userName,
-								examinations.function_test_reason,
-								companies.name AS companiesName,
-								examinations.function_date,
-								examinations.function_test_PIC,
-								examinations.function_test_NO,
-								examinations.function_test_date_approval,
-								examinations.resume_date,
-								examinations.created_at,
-								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
-								))
+						->select(DB::raw( $neededColumn ))
 						->where('examinations.company_id','=',''.$company_id.'')
 						// ->where('examinations.created_by','=',''.$user_id.'')
 						->where('examinations.examination_type_id','=',''.$request->input('jns').'')
@@ -398,46 +271,8 @@ class PengujianController extends Controller
 						->join('users', 'examinations.created_by', '=', 'users.id')
 						->join('companies', 'users.company_id', '=', 'companies.id')
 						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
-						->select(DB::raw(
-								'examinations.id,
-								examinations.examination_type_id,
-								examinations.device_id,
-								devices.name AS nama_perangkat,
-								devices.mark AS merk_perangkat,
-								devices.serial_number AS serialNumber,
-								devices.model AS model_perangkat,
-								devices.certificate AS sistem_mutuPerangkat,
-								devices.capacity AS kapasitas_perangkat,
-								devices.cert_number,
-								examinations.registration_status,
-								examinations.function_status,
-								examinations.contract_status,
-								examinations.spb_status,
-								examinations.payment_status,
-								examinations.spk_status,
-								examinations.examination_status,
-								examinations.resume_status,
-								examinations.qa_status,
-								examinations.qa_passed,
-								examinations.certificate_status,
-								examinations.urel_test_date,
-								examinations.cust_test_date,
-								examinations.deal_test_date,
-								examination_types.name AS jns_pengujian,
-								examination_types.description AS desc_pengujian,
-								users.name AS userName,
-								examinations.function_test_reason,
-								companies.name AS companiesName,
-								examinations.function_date,
-								examinations.function_test_PIC,
-								examinations.function_test_NO,
-								examinations.function_test_date_approval,
-								examinations.resume_date,
-								examinations.created_at,
-								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
-								))
+						->select(DB::raw( $neededColumn ))
 						->where('examinations.company_id','=',''.$company_id.'')
-						// ->where('examinations.created_by','=',''.$user_id.'')
 						->where('examinations.'.$arr_status[$status-1].'','=','1')
 						->where('examinations.'.$arr_status[$status].'','<','1')
 						->orderBy('examinations.updated_at', 'desc')
@@ -448,46 +283,8 @@ class PengujianController extends Controller
 						->join('users', 'examinations.created_by', '=', 'users.id')
 						->join('companies', 'users.company_id', '=', 'companies.id')
 						->join('examination_types', 'examinations.examination_type_id', '=', 'examination_types.id')
-						->select(DB::raw(
-								'examinations.id,
-								examinations.examination_type_id,
-								examinations.device_id,
-								devices.name AS nama_perangkat,
-								devices.mark AS merk_perangkat,
-								devices.serial_number AS serialNumber,
-								devices.model AS model_perangkat,
-								devices.certificate AS sistem_mutuPerangkat,
-								devices.capacity AS kapasitas_perangkat,
-								devices.cert_number,
-								examinations.registration_status,
-								examinations.function_status,
-								examinations.contract_status,
-								examinations.spb_status,
-								examinations.payment_status,
-								examinations.spk_status,
-								examinations.examination_status,
-								examinations.resume_status,
-								examinations.qa_status,
-								examinations.qa_passed,
-								examinations.certificate_status,
-								examinations.urel_test_date,
-								examinations.cust_test_date,
-								examinations.deal_test_date,
-								examination_types.name AS jns_pengujian,
-								examination_types.description AS desc_pengujian,
-								users.name AS userName,
-								examinations.function_test_reason,
-								companies.name AS companiesName,
-								examinations.function_date,
-								examinations.function_test_PIC,
-								examinations.function_test_NO,
-								examinations.function_test_date_approval,
-								examinations.resume_date,
-								examinations.created_at,
-								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
-								))
+						->select(DB::raw( $neededColumn ))
 						->where('examinations.company_id','=',''.$company_id.'')
-						// ->where('examinations.created_by','=',''.$user_id.'')
 						->orderBy('examinations.updated_at', 'desc')
 						->paginate($paginate);
 					}
@@ -518,7 +315,9 @@ class PengujianController extends Controller
                 ->with('page', "pengujian")
                 ->with('status', $status)
                 ->with('data_stels', $data_stels)
-                ->with('data_kuisioner', $data_kuisioner);
+				->with('data_kuisioner', $data_kuisioner)
+				->with('message_stels', $message_stels)
+				->with('user_id', $user_id);
         }else{
 			return  redirect('login');
 		}
@@ -529,8 +328,8 @@ class PengujianController extends Controller
 		$currentUser = Auth::user();
 		$user_id = ''.$currentUser['attributes']['id'].'';
 		$company_id = ''.$currentUser['attributes']['company_id'].'';
-			$pengujian = $request->input('pengujian');
-			$status = $request->input('status');
+		$pengujian = $request->input('pengujian');
+		$status = $request->input('status');
 		$arr_status = [
 			'registration_status',
 			'spb_status',
@@ -541,29 +340,29 @@ class PengujianController extends Controller
 			'qa_status',
 			'certificate_status'
 		];
-		$message = null;
+		$neededColumn = array(
+			'examinations.id',
+			'examinations.examination_type_id',
+			'devices.name AS nama_perangkat',
+			'devices.mark AS merk_perangkat',
+			'devices.serial_number AS serialNumber',
+			'devices.model AS model_perangkat',
+			'devices.certificate AS sistem_mutuPerangkat',
+			'examinations.registration_status',
+			'examinations.spb_status',
+			'examinations.payment_status',
+			'examinations.spk_status',
+			'examinations.examination_status',
+			'examinations.resume_status',
+			'examinations.qa_status',
+			'examinations.certificate_status'
+		);
 		$paginate = 2;
-		if($pengujian > 0){
+		if( $pengujian > 0){
 			if($status > 0){
 				$data = DB::table('examinations')
 				->join('devices', 'examinations.device_id', '=', 'devices.id')
-				->select(
-						'examinations.id',
-						'examinations.examination_type_id',
-						'devices.name AS nama_perangkat',
-						'devices.mark AS merk_perangkat',
-						'devices.serial_number AS serialNumber',
-						'devices.model AS model_perangkat',
-						'devices.certificate AS sistem_mutuPerangkat',
-						'examinations.registration_status',
-						'examinations.spb_status',
-						'examinations.payment_status',
-						'examinations.spk_status',
-						'examinations.examination_status',
-						'examinations.resume_status',
-						'examinations.qa_status',
-						'examinations.certificate_status'
-						)
+				->select( $neededColumn )
 				->where('examinations.company_id','=',''.$company_id.'')
 				->where('examinations.'.$arr_status[$status-1].'','=','1')
 				->where('examinations.'.$arr_status[$status].'','<','1')
@@ -572,23 +371,7 @@ class PengujianController extends Controller
 			}else{
 				$data = DB::table('examinations')
 				->join('devices', 'examinations.device_id', '=', 'devices.id')
-				->select(
-						'examinations.id',
-						'examinations.examination_type_id',
-						'devices.name AS nama_perangkat',
-						'devices.mark AS merk_perangkat',
-						'devices.serial_number AS serialNumber',
-						'devices.model AS model_perangkat',
-						'devices.certificate AS sistem_mutuPerangkat',
-						'examinations.registration_status',
-						'examinations.spb_status',
-						'examinations.payment_status',
-						'examinations.spk_status',
-						'examinations.examination_status',
-						'examinations.resume_status',
-						'examinations.qa_status',
-						'examinations.certificate_status'
-						)
+				->select( $neededColumn )
 				->where('examinations.company_id','=',''.$company_id.'')
 				->where('examinations.examination_type_id','=',''.$request->input('pengujian').'')
 				->paginate($paginate);
@@ -597,23 +380,7 @@ class PengujianController extends Controller
 			if($status > 0){
 				$data = DB::table('examinations')
 				->join('devices', 'examinations.device_id', '=', 'devices.id')
-				->select(
-						'examinations.id',
-						'examinations.examination_type_id',
-						'devices.name AS nama_perangkat',
-						'devices.mark AS merk_perangkat',
-						'devices.serial_number AS serialNumber',
-						'devices.model AS model_perangkat',
-						'devices.certificate AS sistem_mutuPerangkat',
-						'examinations.registration_status',
-						'examinations.spb_status',
-						'examinations.payment_status',
-						'examinations.spk_status',
-						'examinations.examination_status',
-						'examinations.resume_status',
-						'examinations.qa_status',
-						'examinations.certificate_status'
-						)
+				->select( $neededColumn )
 				->where('examinations.company_id','=',''.$company_id.'')
 				->where('examinations.'.$arr_status[$status-1].'','=','1')
 				->where('examinations.'.$arr_status[$status].'','<','1')
@@ -621,36 +388,20 @@ class PengujianController extends Controller
 			}else{
 				$data = DB::table('examinations')
 				->join('devices', 'examinations.device_id', '=', 'devices.id')
-				->select(
-						'examinations.id',
-						'examinations.examination_type_id',
-						'devices.name AS nama_perangkat',
-						'devices.mark AS merk_perangkat',
-						'devices.serial_number AS serialNumber',
-						'devices.model AS model_perangkat',
-						'devices.certificate AS sistem_mutuPerangkat',
-						'examinations.registration_status',
-						'examinations.spb_status',
-						'examinations.payment_status',
-						'examinations.spk_status',
-						'examinations.examination_status',
-						'examinations.resume_status',
-						'examinations.qa_status',
-						'examinations.certificate_status'
-						)
+				->select( $neededColumn )
 				->where('examinations.company_id','=',''.$company_id.'')
 				->paginate($paginate);
 			}
 		}
 		
 		return response()
-            ->view('client.pengujian.filter', $data, 200)
+			->view('client.pengujian.filter', $data, 200)
+			->with('user_id', $user_id)
             ->header('Content-Type', 'text/html');
     }
 	
 	public function edit(Request $request)
     {
-		// print_r($request->all());exit;
 		$query = "SELECT
 			e.id,
 			e.device_id,
@@ -690,7 +441,7 @@ class PengujianController extends Controller
 		AND e.id = '".$request->input('id')."'
 		";
 		$data = DB::select($query);
-		if(count($data) > 0){			
+		if(count($data)){			
 			echo $data[0]->nama_perangkat."|token|"; #0
 			echo $data[0]->merk_perangkat."|token|"; #1
 			echo $data[0]->kapasitas_perangkat."|token|"; #2
@@ -742,8 +493,8 @@ class PengujianController extends Controller
     {
         $currentUser = Auth::user();
 		$user_id = ''.$currentUser['attributes']['id'].'';
+		$message = '';
         if ($currentUser){
-            $message = null;
             $paginate = 2;
             $search = trim($request->input('search'));
             
@@ -796,8 +547,7 @@ class PengujianController extends Controller
 				AND	e.device_id = d.id
 				AND	e.examination_type_id = et.id
 				AND e.id = '".$id."'
-				-- AND u.id = '".$user_id."'
-				";
+				-- AND u.id = '".$user_id."'";
 				$data = DB::select($query)->paginate($paginate);
             }else{
                 $query = "SELECT
@@ -850,8 +600,7 @@ class PengujianController extends Controller
 				AND	e.device_id = d.id
 				AND	e.examination_type_id = et.id
 				AND e.id = '".$id."'
-				-- AND u.id = '".$user_id."'
-				";
+				-- AND u.id = '".$user_id."'";
 				$data = DB::select($query);
             }
             
@@ -899,8 +648,8 @@ class PengujianController extends Controller
                 ->with('exam_schedule', $exam_schedule)
                 ->with('page', "pengujian")
                 ->with('data_attach', $data_attach)
-                ->with('data_kuisioner', $data_kuisioner);
-                // ->with('search', $search);
+                ->with('data_kuisioner', $data_kuisioner)
+                ->with('message', $message);
         }
     }
 	
@@ -916,16 +665,17 @@ class PengujianController extends Controller
 	
 	public function downloadSPB($id)
     {
-    	$currentUser = Auth::user();
+		$currentUser = Auth::user();
+		$message = '';
 		$query_attach = "
 			SELECT attachment FROM examination_attachments WHERE examination_id = '".$id."' AND name = 'spb' AND attachment != ''
 		";
 		$data_attach = DB::select($query_attach);
-		if (count($data_attach) == 0){
+		if (!count($data_attach)){
 			$message = 'Data not found';
 			$attach = NULL;
 			Session::flash('error_download_spb', 'Download Failed');
-			return back();
+			return back()->with('message', $message);
 		}
 		else{
 			$attach = $data_attach[0]->attachment;
@@ -960,7 +710,7 @@ class PengujianController extends Controller
 		if (count($data_attach) == 0){
 			$message = 'Data not found';
 			Session::flash('error_download_resume', 'Download Failed');
-			return back();
+			return back()->with('message', $message);
 		}
 		else{
 			$rev_uji = 0;
@@ -1002,40 +752,27 @@ class PengujianController extends Controller
     {
     	$currentUser = Auth::user();
 		$examination = Examination::where('id', $id)->with('device')->get();
-		// $query_attach = "
-			// SELECT attachment FROM examination_attachments WHERE examination_id = '".$id."' AND name LIKE '%Sertifikat%' AND attachment != ''
-		// ";
-		// $data_attach = DB::select($query_attach);
 		$data_attach = $examination[0]->device;
 		if (count($data_attach) == 0){
 			$message = 'Data not found';
 			$attach = NULL;
 			Session::flash('error_download_certificate', 'Download Failed');
-			return back();
+			return back()->with('message', $message);
 		}
 		else{
-			// $attach = $data_attach[0]->name; //name
-			// $file = $data_attach[0]->attachment; //link here
-			// $headers = array(
-			  // 'Content-Type: application/octet-stream',
-			// );
 			
 			$examhist = ExaminationHistory::where("examination_id", "=", $id)->where("tahap", "=", "Download Sertifikat");
-			$count_download = count($examhist->get());
-			// if($count_download > 0){
-				// return($examhist->get());
-			// }else{				
-				$exam_hist = new ExaminationHistory;
-				$exam_hist->examination_id = $id;
-				$exam_hist->date_action = date('Y-m-d H:i:s');
-				$exam_hist->tahap = 'Download Sertifikat';
-				$exam_hist->status = 1;
-				$exam_hist->keterangan = 'Download ke-'.($count_download+1);
-				$exam_hist->created_by = $currentUser->id;
-				$exam_hist->created_at = date('Y-m-d H:i:s');
-				$exam_hist->save();
+			$count_download = count($examhist->get());		
+			$exam_hist = new ExaminationHistory;
+			$exam_hist->examination_id = $id;
+			$exam_hist->date_action = date('Y-m-d H:i:s');
+			$exam_hist->tahap = 'Download Sertifikat';
+			$exam_hist->status = 1;
+			$exam_hist->keterangan = 'Download ke-'.($count_download+1);
+			$exam_hist->created_by = $currentUser->id;
+			$exam_hist->created_at = date('Y-m-d H:i:s');
+			$exam_hist->save();
 			
-			// return Response::download($file, $attach, $headers);
 			$jns = 'device';
 			$id = $data_attach->id;
 			$attach = $data_attach->certificate;
@@ -1057,13 +794,12 @@ class PengujianController extends Controller
         if ($currentUser){
             $message = null;
             $paginate = 2;
-            $search = trim($request->input('search'));
+            $search = trim($request->input('search',''));
             
 			$data = DB::table('examination_attachments')
 				->select('examination_attachments.*')
 				->join('examinations', 'examination_attachments.examination_id', '=', 'examinations.id')
 				->where('examination_id', '=', ''.$id.'')
-				// ->where('created_by', '=', ''.$user_id.'')
 				->where('examinations.company_id', '=', ''.$company_id.'')
 				->where('name', '=', 'File Pembayaran')
 				->first();
@@ -1073,8 +809,7 @@ class PengujianController extends Controller
 				->where('id', '=', ''.$id.'') 
 				->first();
 			
-            // print_r($data);exit;
-            if (count($data) == 0){
+            if (!count($data)){
                 $message = 'Data not found';
 				$data = NULL;
             }
@@ -1085,8 +820,10 @@ class PengujianController extends Controller
                 ->with('spb_date', $examination->spb_date)
                 ->with('price', $examination->price)
                 ->with('data', $data)
-                ->with('examinationsData', $examinationsData);
-                // ->with('search', $search);
+                ->with('examinationsData', $examinationsData)
+                ->with('user_id', $user_id)
+                ->with('paginate', $paginate)
+                ->with('search', $search);
         }
     }
 	
@@ -1097,8 +834,6 @@ class PengujianController extends Controller
 		$user_email = ''.$currentUser['attributes']['email'].'';
 		$path_file = public_path().'/media/examination/'.$request->input('hide_id_exam').'';
 		if ($request->hasFile('filePembayaran')) {
-			// $ext_file = $request->file('filePembayaran')->getClientOriginalName();
-			// $name_file = uniqid().'_user_'.$request->input('hide_id_exam').'.'.$ext_file;
 			$name_file = 'spb_payment_'.$request->file('filePembayaran')->getClientOriginalName();
 			if($request->file('filePembayaran')->move($path_file,$name_file)){
                 $fPembayaran = $name_file;
@@ -1126,7 +861,7 @@ class PengujianController extends Controller
 						updated_at = '".date('Y-m-d H:i:s')."'
 					WHERE id = '".$request->input('hide_id_attach')."'
 				";
-				$data_update_attach = DB::update($query_update_attach);
+				DB::update($query_update_attach);
 				
 				$examination = Examination::find($request->input('hide_id_exam'));
 				$examination->cust_price_payment = $jumlah;
@@ -1167,25 +902,13 @@ class PengujianController extends Controller
 			        event(new Notification($data));
 		    	}
 				Session::flash('message', 'Upload successfully');
-				// $this->sendProgressEmail("Pengujian atas nama ".$user_name." dengan alamat email ".$user_email.", telah melakukan proses Upload Bukti Pembayaran");
-				// return back();
 			} catch(Exception $e){
 				Session::flash('error', 'Upload failed');
-				// return back();
 			}
-			
-		// $query_update_attach = "UPDATE examination_attachments
-			// SET 
-				// attachment = '".$fPembayaran."',
-				// no = '".$request->input('no-pembayaran')."',
-				// tgl = '".date('Y-m-d', $timestamp)."',
-				// updated_by = '".$currentUser['attributes']['id']."',
-				// updated_at = '".date('Y-m-d H:i:s')."'
-			// WHERE id = '".$request->input('hide_id_attach')."'
-		// ";
-		// $data_update_attach = DB::update($query_update_attach);
 		
-		return back();
+		return back()
+			->with('user_name', $user_name)
+			->with('user_email', $user_email);
     }
 	
 	public function updateTanggalUji(Request $request)
@@ -1206,7 +929,7 @@ class PengujianController extends Controller
 						function_test_status_detail = 'Pengajuan uji fungsi baru'
 					WHERE id = '".$request->input('hide_id_exam')."'
 				";
-				$data_update = DB::update($query_update);
+				DB::update($query_update);
 				
 				$exam_hist = new ExaminationHistory;
 				$exam_hist->examination_id = $request->input('hide_id_exam');
@@ -1228,12 +951,7 @@ class PengujianController extends Controller
 					'timeout'  => 60.0,
 				]);
 				
-				// $res_exam_schedule = $client->post('notification/notifToTE?lab='.$exam->examinationLab->lab_code)->getBody();
 				$res_exam_schedule = $client->post('notification/notifToTE?lab='.$exam->examinationLab->lab_code.'&id='.$exam->id);
-				// $exam_schedule = json_decode($res_exam_schedule);
-				
-				// $this->sendProgressEmail("Pengujian atas nama ".$user_name." dengan alamat email ".$user_email.", telah melakukan proses Upload Bukti Pembayaran");
-				// return back();
 				/* push notif*/
 				$admins = AdminRole::where('function_status',1)->get()->toArray();
 				foreach ($admins as $admin) { 
@@ -1264,7 +982,6 @@ class PengujianController extends Controller
 
 			} catch(Exception $e){
 				Session::flash('error', 'Update failed');
-				// return back();
 			}
 		}else if($request->input('hide_date_type') == 2){
 			$exam = Examination::where('id', $request->input('hide_id_exam2'))
@@ -1283,7 +1000,7 @@ class PengujianController extends Controller
 						function_test_status_detail = 'Tanggal uji fungsi fix'
 					WHERE id = '".$request->input('hide_id_exam2')."'
 				";
-				$data_update = DB::update($query_update);
+				DB::update($query_update);
 				
 				$deal_test_date = strtotime($request->input('deal_test_date2'));
 				
@@ -1347,7 +1064,7 @@ class PengujianController extends Controller
 							function_test_status_detail = 'Pengajuan ulang uji fungsi'
 						WHERE id = '".$request->input('hide_id_exam2')."'
 					";
-					$data_update = DB::update($query_update);
+					DB::update($query_update);
 					
 					$exam_hist = new ExaminationHistory;
 					$exam_hist->examination_id = $request->input('hide_id_exam2');
@@ -1369,12 +1086,7 @@ class PengujianController extends Controller
 						'timeout'  => 60.0,
 					]);
 					
-					// $res_exam_schedule = $client->post('notification/notifRescheduleToTE?lab='.$exam->examinationLab->lab_code)->getBody();
 					$res_exam_schedule = $client->post('notification/notifRescheduleToTE?id='.$exam->id);
-					// $exam_schedule = json_decode($res_exam_schedule);
-					
-					// $this->sendProgressEmail("Pengujian atas nama ".$user_name." dengan alamat email ".$user_email.", telah melakukan proses Upload Bukti Pembayaran");
-					// return back();
 					
 					/* push notif*/
 						$data= array(
@@ -1403,7 +1115,6 @@ class PengujianController extends Controller
 						
 				} catch(Exception $e){
 					Session::flash('error', 'Update failed');
-					// return back();
 				}
 			}
 		}else if($request->input('hide_date_type') == 3){
@@ -1421,7 +1132,7 @@ class PengujianController extends Controller
 						function_test_status_detail = 'Tanggal uji fungsi fix'
 					WHERE id = '".$request->input('hide_id_exam3')."'
 				";
-				$data_update = DB::update($query_update);
+				DB::update($query_update);
 				
 				$deal_test_date = strtotime($request->input('deal_test_date3'));
 				
@@ -1488,8 +1199,7 @@ class PengujianController extends Controller
             $m->to($data[0]->email)->subject("Upload Bukti Pembayaran");
         });
 
-        return true;		
-		// return redirect()->back()->with('status', '');
+        return true;
     }
 	
 	public function details($id, Request $request)
@@ -1530,14 +1240,6 @@ class PengujianController extends Controller
 		";
 		$data = DB::select($query);
             
-		if (count($data) == 0){
-			$message = 'Data not found';
-		}
-		// redirect()->route('cetak',array('param1' => 'as','param2' => 'asd'));
-		// return redirect()->route('cetak', array('nick' => $data));
-		// return redirect()->back()->with('data', ['some kind of data']);
-		// return Redirect::route('cetak', array('nick' => $data));
-		// return \Redirect::route('cetak')->with('message', 'State saved correctly!!!');
 		return \Redirect::route('cetak', [
 			'namaPemohon' => urlencode(urlencode($data[0]->namaPemohon)) ?: '-',
 			'alamatPemohon' => urlencode(urlencode($data[0]->alamatPemohon)) ?: '-',
@@ -1606,29 +1308,12 @@ class PengujianController extends Controller
 		$currentUser = Auth::user();
 		$equip = Equipment::where("examination_id", "=", $request->input('my_exam_id'))->where("location", "=", "1");
 		$is_location = count($equip->get());
-		// return(count($equip->get()));
 		//if count 1, masukan ke history download
-		if($is_location > 0){
-			/* $examhist = ExaminationHistory::where("examination_id", "=", $request->input('my_exam_id'))->where("tahap", "=", "Download Sertifikat");
-			$count_download = count($examhist->get()); */
-			// if($count_download > 0){
-				// return($examhist->get());
-			// }else{				
-				/* $exam_hist = new ExaminationHistory;
-				$exam_hist->examination_id = $request->input('my_exam_id');
-				$exam_hist->date_action = date('Y-m-d H:i:s');
-				$exam_hist->tahap = 'Download Sertifikat';
-				$exam_hist->status = 1;
-				$exam_hist->keterangan = 'Download ke-'.($count_download+1);
-				$exam_hist->created_by = $currentUser->id;
-				$exam_hist->created_at = date('Y-m-d H:i:s');
-				$exam_hist->save(); */
-				
-				return 1;
-			// }
-		}else{
-			return 0;
+		if($is_location > 0){				
+			return 1;
 		}
+		return 0;
+		
 	}
 	
 	public function autocomplete($query) {
@@ -1661,43 +1346,12 @@ class PengujianController extends Controller
     }
 	
 	public function insertKuisioner(Request $request){
-		// print_r($request->all());exit;
 		$currentUser = Auth::user();
 		$tanggal = strtotime($request->input('tanggal'));
 		$quest = new Questioner;
 		$quest->id = Uuid::uuid4();
 		$quest->examination_id = $request->input('exam_id');
 		$quest->questioner_date = date('Y-m-d', $tanggal);
-		/* $quest->quest1_eks = $request->input('quest1_eks');$quest->quest1_perf = $request->input('quest1_perf');
-		$quest->quest2_eks = $request->input('quest2_eks');$quest->quest2_perf = $request->input('quest2_perf');
-		$quest->quest3_eks = $request->input('quest3_eks');$quest->quest3_perf = $request->input('quest3_perf');
-		$quest->quest4_eks = $request->input('quest4_eks');$quest->quest4_perf = $request->input('quest4_perf');
-		$quest->quest5_eks = $request->input('quest5_eks');$quest->quest5_perf = $request->input('quest5_perf');
-		$quest->quest6 = $request->input('quest6');
-		$quest->quest7_eks = $request->input('quest7_eks');$quest->quest7_perf = $request->input('quest7_perf');
-		$quest->quest8_eks = $request->input('quest8_eks');$quest->quest8_perf = $request->input('quest8_perf');
-		$quest->quest9_eks = $request->input('quest9_eks');$quest->quest9_perf = $request->input('quest9_perf');
-		$quest->quest10_eks = $request->input('quest10_eks');$quest->quest10_perf = $request->input('quest10_perf');
-		$quest->quest11_eks = $request->input('quest11_eks');$quest->quest11_perf = $request->input('quest11_perf');
-		$quest->quest12_eks = $request->input('quest12_eks');$quest->quest12_perf = $request->input('quest12_perf');
-		$quest->quest13_eks = $request->input('quest13_eks');$quest->quest13_perf = $request->input('quest13_perf');
-		$quest->quest14_eks = $request->input('quest14_eks');$quest->quest14_perf = $request->input('quest14_perf');
-		$quest->quest15_eks = $request->input('quest15_eks');$quest->quest15_perf = $request->input('quest15_perf');
-		$quest->quest16_eks = $request->input('quest16_eks');$quest->quest16_perf = $request->input('quest16_perf');
-		$quest->quest17_eks = $request->input('quest17_eks');$quest->quest17_perf = $request->input('quest17_perf');
-		$quest->quest18_eks = $request->input('quest18_eks');$quest->quest18_perf = $request->input('quest18_perf');
-		$quest->quest19_eks = $request->input('quest19_eks');$quest->quest19_perf = $request->input('quest19_perf');
-		$quest->quest20_eks = $request->input('quest20_eks');$quest->quest20_perf = $request->input('quest20_perf'); */
-		// $quest->quest21_eks = $request->input('quest21_eks');$quest->quest21_perf = $request->input('quest21_perf');
-		// $quest->quest22_eks = $request->input('quest22_eks');$quest->quest22_perf = $request->input('quest22_perf');
-		// $quest->quest23_eks = $request->input('quest23_eks');$quest->quest23_perf = $request->input('quest23_perf');
-		// $quest->quest24_eks = $request->input('quest24_eks');$quest->quest24_perf = $request->input('quest24_perf');
-		// $quest->quest25_eks = $request->input('quest25_eks');$quest->quest25_perf = $request->input('quest25_perf');
-		/* $quest->quest21_eks = 0;$quest->quest21_perf = 0;
-		$quest->quest22_eks = 0;$quest->quest22_perf = 0;
-		$quest->quest23_eks = 0;$quest->quest23_perf = 0;
-		$quest->quest24_eks = 0;$quest->quest24_perf = 0;
-		$quest->quest25_eks = 0;$quest->quest25_perf = 0; */
 		
 		$quest->created_by = $currentUser->id;
 		$quest->created_at = date('Y-m-d H:i:s');
@@ -1722,7 +1376,7 @@ class PengujianController extends Controller
 				try{
 					$questioner_dyn->save();
 				} catch(\Exception $e){
-					
+					// do nothing
 				}
 			}
 			/* ====== */
