@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 class ExaminationService
 {
 
+    private const CREATED_AT = 'created_at';
     private const COMPANY = 'company';
 	private const EXAMINATION_TYPE = 'examinationType';
 	private const EXAMINATION_LAB = 'examinationLab';
