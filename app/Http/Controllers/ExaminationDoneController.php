@@ -31,6 +31,8 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 
+use App\Services\ExaminationService;
+
 class ExaminationDoneController extends Controller
 {
 	private const SEARCH = 'search';
@@ -225,6 +227,7 @@ class ExaminationDoneController extends Controller
      */
     public function edit($id)
     {
+		$examinationService = new ExaminationService();
         $exam = Examination::where('id', $id)
                             ->with(self::COMPANY)
                             ->with(self::EXAMINATION_TYPE)
@@ -246,25 +249,15 @@ class ExaminationDoneController extends Controller
 			'timeout'  => 60.0,
 		]);
 		
-		$query_lab = "SELECT action_date FROM equipment_histories WHERE location = 3 AND examination_id = '".$id."' ORDER BY created_at DESC LIMIT 1";
-		$data_lab = DB::select($query_lab);
-		
-		$query_gudang = "SELECT action_date FROM equipment_histories WHERE location = 2 AND examination_id = '".$id."' ORDER BY created_at DESC LIMIT 2";
-		$data_gudang = DB::select($query_gudang);
-		
-		$res_exam_schedule = $client->get('spk/searchData?spkNumber='.$exam->spk_code)->getBody();
-		$exam_schedule = json_decode($res_exam_schedule);
-		
-		$res_exam_approve_date = $client->get('spk/searchHistoryData?spkNumber='.$exam->spk_code)->getBody();
-		$exam_approve_date = json_decode($res_exam_approve_date);
-		
+		$tempData = $examinationService->getDetailDataFromOTR($client, $id, $exam->spk_code);
+
         return view('admin.examinationdone.edit')
             ->with('data', $exam)
             ->with('labs', $labs)
-			->with('data_lab', $data_lab)
-            ->with('data_gudang', $data_gudang)
-			->with('exam_approve_date', $exam_approve_date)
-			->with('exam_schedule', $exam_schedule);
+			->with('data_lab', $tempData[0])
+            ->with('data_gudang', $tempData[1])
+			->with('exam_approve_date', $tempData[2])
+			->with('exam_schedule', $tempData[3]);
     }
 	
 	public function excel(Request $request) 

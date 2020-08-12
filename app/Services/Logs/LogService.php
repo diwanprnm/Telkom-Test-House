@@ -5,7 +5,7 @@ namespace App\Services\Logs;
 use Auth;
 use App\Logs;
 use App\User;
-use App\Logs_administrator;
+use App\LogsAdministrator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
@@ -31,7 +31,7 @@ class LogService
     {
         $currentUser = Auth::user();
         
-        $logs = new Logs_administrator;
+        $logs = new LogsAdministrator;
         $logs->id = Uuid::uuid4();
         $logs->user_id = $currentUser->id;
         $logs->action = $action;

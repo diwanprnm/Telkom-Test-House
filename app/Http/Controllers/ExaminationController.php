@@ -39,8 +39,11 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 use App\Events\Notification;
-use App\NotificationTable;
 use App\AdminRole;
+
+use App\Services\Logs\LogService;
+use App\Services\ExaminationService;
+use App\Services\NotificationService;
 
 class ExaminationController extends Controller
 {
@@ -418,7 +421,8 @@ class ExaminationController extends Controller
     public function edit($id)
     {
     	$currentUser = Auth::user();
-    	$admins = AdminRole::where('user_id', $currentUser->id)->get();
+		$admins = AdminRole::where('user_id', $currentUser->id)->get();
+		$examinationService = new ExaminationService();
     	
         $exam = Examination::where('id', $id)
                             ->with(self::COMPANY)
@@ -440,27 +444,16 @@ class ExaminationController extends Controller
 			// self::HTTP_ERRORS => false,
 			self::TIMEOUT  => 60.0,
 		]);
-		
-		$query_lab = "SELECT action_date FROM equipment_histories WHERE location = 3 AND examination_id = '".$id."' ORDER BY created_at DESC LIMIT 1";
-		$data_lab = DB::select($query_lab);
-		
-		$query_gudang = "SELECT action_date FROM equipment_histories WHERE location = 2 AND examination_id = '".$id."' ORDER BY created_at DESC LIMIT 2";
-		$data_gudang = DB::select($query_gudang);
-		
-		$res_exam_schedule = $client->get('spk/searchData?spkNumber='.$exam->spk_code)->getBody();
-		$exam_schedule = json_decode($res_exam_schedule);
-		
-		$res_exam_approve_date = $client->get('spk/searchHistoryData?spkNumber='.$exam->spk_code)->getBody();
-		$exam_approve_date = json_decode($res_exam_approve_date);
+
+		$tempData = $examinationService->getDetailDataFromOTR($client, $id, $exam->spk_code);
 
         return view('admin.examination.edit')
             ->with('data', $exam)
-            // ->with('gen_spk_code', $gen_spk_code)
             ->with('labs', $labs)
-            ->with('data_lab', $data_lab)
-            ->with('data_gudang', $data_gudang)
-			->with('exam_approve_date', $exam_approve_date)
-			->with('exam_schedule', $exam_schedule)
+            ->with('data_lab', $tempData[0])
+            ->with('data_gudang', $tempData[1])
+			->with('exam_approve_date', $tempData[2])
+			->with('exam_schedule', $tempData[3])
 			->with('admin_roles', $admins);
     }
 
@@ -474,6 +467,7 @@ class ExaminationController extends Controller
     public function update(Request $request, $id)
     {
 		$currentUser = Auth::user();
+		$notificationService = new NotificationService();
 
         $exam = Examination::find($id);
 			$device = Device::findOrFail($exam->device_id);
@@ -496,47 +490,28 @@ class ExaminationController extends Controller
 	                self::IS_READ=>0,
 	                self::CREATED_AT=>date(self::DATE_FORMAT_1),
 	                self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-                );
-				$notification = new NotificationTable();
-                $notification->id = Uuid::uuid4();
-			    $notification->from = $data['from'];
-		        $notification->to = $data['to'];
-		        $notification->message = $data[self::MESSAGE];
-		        $notification->url = $data['url'];
-		        $notification->is_read = $data[self::IS_READ];
-		        $notification->created_at = $data[self::CREATED_AT];
-		        $notification->updated_at = $data[self::UPDATED_AT];
-		        $notification->save();  
-
-			     	$data['id'] = $notification->id;
-
+				);
+				$notification_id = $notificationService->make($data);
+			    $data['id'] = $notification_id;
 			    event(new Notification($data));
 				
 				$this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.registrasi", "Acc Registrasi");
 			}else if($status == -1){
 				/* push notif*/
 			     $data= array( 
-                "from"=>self::ADMIN,
-                "to"=>$exam->created_by,
-                self::MESSAGE=>"Registrasi Not Completed",
-                "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-                self::IS_READ=>0,
-                self::CREATED_AT=>date(self::DATE_FORMAT_1),
-                self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-                );
-				  $notification = new NotificationTable();
-                  $notification->id = Uuid::uuid4();
-			      $notification->from = $data['from'];
-			      $notification->to = $data['to'];
-			      $notification->message = $data[self::MESSAGE];
-			      $notification->url = $data['url'];
-			      $notification->is_read = $data[self::IS_READ];
-			      $notification->created_at = $data[self::CREATED_AT];
-			      $notification->updated_at = $data[self::UPDATED_AT];
-			      $notification->save(); 
-
-			      $data['id'] = $notification->id;
-			      event(new Notification($data));
+					"from"=>self::ADMIN,
+					"to"=>$exam->created_by,
+					self::MESSAGE=>"Registrasi Not Completed",
+					"url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
+					self::IS_READ=>0,
+					self::CREATED_AT=>date(self::DATE_FORMAT_1),
+					self::UPDATED_AT=>date(self::DATE_FORMAT_1)
+				);
+				
+				$notification_id = $notificationService->make($data);
+			    $data['id'] = $notification_id;
+				event(new Notification($data));
+				
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::REGISTRASI,$request->input(self::KETERANGAN));
 			}
         }
@@ -672,19 +647,10 @@ class ExaminationController extends Controller
 						self::UPDATED_AT=>date(self::DATE_FORMAT_1)
 					);
 				}
-	              $notification = new NotificationTable();
-                  $notification->id = Uuid::uuid4();
-	              $notification->from = $data['from'];
-	              $notification->to = $data['to'];
-	              $notification->message = $data[self::MESSAGE];
-	              $notification->url = $data['url'];
-	              $notification->is_read = $data[self::IS_READ];
-	              $notification->created_at = $data[self::CREATED_AT];
-	              $notification->updated_at = $data[self::UPDATED_AT];
-	              $notification->save();
-	              $data['id'] = $notification->id;
-	              	
-	               event(new Notification($data));
+
+				$notification_id = $notificationService->make($data);
+			    $data['id'] = $notification_id;
+			    event(new Notification($data));
 
 			}else if($status == -1){
 				/* push notif*/
@@ -732,20 +698,11 @@ class ExaminationController extends Controller
                             self::UPDATED_AT=>date(self::DATE_FORMAT_1)
 						);
 					}
-		              $notification = new NotificationTable();
-                      $notification->id = Uuid::uuid4();
-		              $notification->from = $data['from'];
-		              $notification->to = $data['to'];
-		              $notification->message = $data[self::MESSAGE];
-		              $notification->url = $data['url'];
-		              $notification->is_read = $data[self::IS_READ];
-		              $notification->created_at = $data[self::CREATED_AT];
-		              $notification->updated_at = $data[self::UPDATED_AT];
-		              $notification->save();
 
-		              $data['id'] = $notification->id;
+		            $notification_id = $notificationService->make($data);
+					$data['id'] = $notification_id;
+					event(new Notification($data));
 
-		                event(new Notification($data));
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Uji Fungsi",$request->input(self::KETERANGAN));
 			}
         }
@@ -814,61 +771,37 @@ class ExaminationController extends Controller
 
 				if($exam->contract_status){
 					/* push notif*/
-		            
-
-		              $data= array( 
-		                    "from"=>self::ADMIN,
-		                    "to"=>$exam->created_by,
-		                    self::MESSAGE=>"Tinjauan Kontrak Completed",
-		                    "url"=>self::PENGUJIAN_LOC.$id.self::DETAIL_LOC,
-		                    self::IS_READ=>0,
-		                    self::CREATED_AT=>date(self::DATE_FORMAT_1),
-		                    self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-		                    );
-		              $notification = new NotificationTable();
-                      $notification->id = Uuid::uuid4();
-		              $notification->from = $data['from'];
-		              $notification->to = $data['to'];
-		              $notification->message = $data[self::MESSAGE];
-		              $notification->url = $data['url'];
-		              $notification->is_read = $data[self::IS_READ];
-		              $notification->created_at = $data[self::CREATED_AT];
-		              $notification->updated_at = $data[self::UPDATED_AT];
-		              $notification->save();
-
-		              $data['id'] = $notification->id;
-		              event(new Notification($data));
+		            $data= array( 
+						"from"=>self::ADMIN,
+						"to"=>$exam->created_by,
+						self::MESSAGE=>"Tinjauan Kontrak Completed",
+						"url"=>self::PENGUJIAN_LOC.$id.self::DETAIL_LOC,
+						self::IS_READ=>0,
+						self::CREATED_AT=>date(self::DATE_FORMAT_1),
+						self::UPDATED_AT=>date(self::DATE_FORMAT_1)
+					);
+					
+					$notification_id = $notificationService->make($data);
+					$data['id'] = $notification_id;
+					event(new Notification($data));
 				}else{
 					/* push notif*/
 		            $data= array( 
-		                    "from"=>self::ADMIN,
-		                    "to"=>$exam->created_by,
-		                    self::MESSAGE=>"Tinjauan Kontrak Not Completed",
-		                    "url"=>self::PENGUJIAN_LOC.$id.self::DETAIL_LOC,
-		                    self::IS_READ=>0,
-		                    self::CREATED_AT=>date(self::DATE_FORMAT_1),
-		                    self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-		                    );
+						"from"=>self::ADMIN,
+						"to"=>$exam->created_by,
+						self::MESSAGE=>"Tinjauan Kontrak Not Completed",
+						"url"=>self::PENGUJIAN_LOC.$id.self::DETAIL_LOC,
+						self::IS_READ=>0,
+						self::CREATED_AT=>date(self::DATE_FORMAT_1),
+						self::UPDATED_AT=>date(self::DATE_FORMAT_1)
+					);
 
-		              $notification = new NotificationTable();
-                      $notification->id = Uuid::uuid4();
-		              $notification->from = $data['from'];
-		              $notification->to = $data['to'];
-		              $notification->message = $data[self::MESSAGE];
-		              $notification->url = $data['url'];
-		              $notification->is_read = $data[self::IS_READ];
-		              $notification->created_at = $data[self::CREATED_AT];
-		              $notification->updated_at = $data[self::UPDATED_AT];
-		              $notification->save();
-
-		              $data['id'] = $notification->id;
-
-		              event(new Notification($data));
+					$notification_id = $notificationService->make($data);
+					$data['id'] = $notification_id;
+					event(new Notification($data));
 				}
 				
 			}else if($status == -1){
-				
-				
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Tinjauan Pustaka",$request->input(self::KETERANGAN));
 			}
         }
@@ -913,27 +846,18 @@ class ExaminationController extends Controller
 
 				/* push notif*/
 	           	$data= array( 
-	                    "from"=>self::ADMIN,
-	                    "to"=>$exam->created_by,
-	                    self::MESSAGE=>"URel mengirimkan SPB untuk dibayar",
-	                    "url"=>self::PENGUJIAN_LOC.$exam->id."/pembayaran",
-	                    self::IS_READ=>0,
-	                    self::CREATED_AT=>date(self::DATE_FORMAT_1),
-	                    self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-	                    );
+					"from"=>self::ADMIN,
+					"to"=>$exam->created_by,
+					self::MESSAGE=>"URel mengirimkan SPB untuk dibayar",
+					"url"=>self::PENGUJIAN_LOC.$exam->id."/pembayaran",
+					self::IS_READ=>0,
+					self::CREATED_AT=>date(self::DATE_FORMAT_1),
+					self::UPDATED_AT=>date(self::DATE_FORMAT_1)
+				);
 
-	              $notification = new NotificationTable();
-                  $notification->id = Uuid::uuid4();
-	              $notification->from = $data['from'];
-	              $notification->to = $data['to'];
-	              $notification->message = $data[self::MESSAGE];
-	              $notification->url = $data['url'];
-	              $notification->is_read = $data[self::IS_READ];
-	              $notification->created_at = $data[self::CREATED_AT];
-	              $notification->updated_at = $data[self::UPDATED_AT];
-	              $notification->save();
-	               	$data['id'] = $notification->id;
-	               event(new Notification($data));
+	            $notification_id = $notificationService->make($data);
+			    $data['id'] = $notification_id;
+			    event(new Notification($data));
 
 				$this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.spb", "Upload SPB",$path_file."/".$attach_name);
 			}else if($status == -1){
@@ -1053,28 +977,19 @@ class ExaminationController extends Controller
 
 				if($exam->payment_status){
 					
-						$data= array( 
-		                "from"=>self::ADMIN,
-		                "to"=>$exam->created_by,
-		                self::MESSAGE=>"Pembayaran Completed",
-		                "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-		                self::IS_READ=>0,
-		                self::CREATED_AT=>date(self::DATE_FORMAT_1),
-		                self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-		                );
-				  	$notification = new NotificationTable();
-                    $notification->id = Uuid::uuid4();
-			      	$notification->from = $data['from'];
-			      	$notification->to = $data['to'];
-			      	$notification->message = $data[self::MESSAGE];
-			      	$notification->url = $data['url'];
-			      	$notification->is_read = $data[self::IS_READ];
-			      	$notification->created_at = $data[self::CREATED_AT];
-			      	$notification->updated_at = $data[self::UPDATED_AT];
-			      	$notification->save();
-			      	$data['id'] = $notification->id;
-			      
-			        event(new Notification($data));
+					$data= array( 
+						"from"=>self::ADMIN,
+						"to"=>$exam->created_by,
+						self::MESSAGE=>"Pembayaran Completed",
+						"url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
+						self::IS_READ=>0,
+						self::CREATED_AT=>date(self::DATE_FORMAT_1),
+						self::UPDATED_AT=>date(self::DATE_FORMAT_1)
+					);
+
+					$notification_id = $notificationService->make($data);
+					$data['id'] = $notification_id;
+					event(new Notification($data));
 				}else{
 						$data= array( 
 		                "from"=>self::ADMIN,
@@ -1085,27 +1000,13 @@ class ExaminationController extends Controller
 		                self::CREATED_AT=>date(self::DATE_FORMAT_1),
 		                self::UPDATED_AT=>date(self::DATE_FORMAT_1)
 	                );
-				  	$notification = new NotificationTable();
-                    $notification->id = Uuid::uuid4();
-			      	$notification->from = $data['from'];
-			      	$notification->to = $data['to'];
-			      	$notification->message = $data[self::MESSAGE];
-			      	$notification->url = $data['url'];
-			      	$notification->is_read = $data[self::IS_READ];
-			      	$notification->created_at = $data[self::CREATED_AT];
-			      	$notification->updated_at = $data[self::UPDATED_AT];
-			      	$notification->save();
-
-			      	$data['id'] = $notification->id;
-
-
-			        event(new Notification($data));
+					$notification_id = $notificationService->make($data);
+					$data['id'] = $notification_id;
+					event(new Notification($data));
 				}
 				
 			}else if($status == -1){
 				Income::where(self::REFERENCE_ID, '=' ,''.$exam->id.'')->delete();
-				
-				
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::PEMBAYARAN,$request->input(self::KETERANGAN));
 			}
         }
@@ -1134,20 +1035,9 @@ class ExaminationController extends Controller
 		                self::CREATED_AT=>date(self::DATE_FORMAT_1),
 		                self::UPDATED_AT=>date(self::DATE_FORMAT_1)
 	                );
-				  	$notification = new NotificationTable();
-                    $notification->id = Uuid::uuid4();
-			      	$notification->from = $data['from'];
-			      	$notification->to = $data['to'];
-			      	$notification->message = $data[self::MESSAGE];
-			      	$notification->url = $data['url'];
-			      	$notification->is_read = $data[self::IS_READ];
-			      	$notification->created_at = $data[self::CREATED_AT];
-			      	$notification->updated_at = $data[self::UPDATED_AT];  
-			      	$notification->save();
-
-			      	$data['id'] = $notification->id;
-
-			      	event(new Notification($data));
+					$notification_id = $notificationService->make($data);
+					$data['id'] = $notification_id;
+					event(new Notification($data));
 				}else{ 
 					$data= array( 
 		                "from"=>self::ADMIN,
@@ -1158,18 +1048,9 @@ class ExaminationController extends Controller
 		                self::CREATED_AT=>date(self::DATE_FORMAT_1),
 		                self::UPDATED_AT=>date(self::DATE_FORMAT_1)
 	                );
-				  	$notification = new NotificationTable();
-                    $notification->id = Uuid::uuid4();
-			      	$notification->from = $data['from'];
-			      	$notification->to = $data['to'];
-			      	$notification->message = $data[self::MESSAGE];
-			      	$notification->url = $data['url'];
-			      	$notification->is_read = $data[self::IS_READ];
-			      	$notification->created_at = $data[self::CREATED_AT];
-			      	$notification->updated_at = $data[self::UPDATED_AT];
-			      	$notification->save();
-			      	$data['id'] = $notification->id;
-			      	event(new Notification($data));
+					$notification_id = $notificationService->make($data);
+					$data['id'] = $notification_id;
+					event(new Notification($data));
 				}
 				
 			}
@@ -1242,20 +1123,9 @@ class ExaminationController extends Controller
 	                	self::UPDATED_AT=>date(self::DATE_FORMAT_1)
 	                );
 
-				  	$notification = new NotificationTable();
-                    $notification->id = Uuid::uuid4();
-			      	$notification->from = $data['from'];
-			      	$notification->to = $data['to'];
-			      	$notification->message = $data[self::MESSAGE];
-			      	$notification->url = $data['url'];
-			      	$notification->is_read = $data[self::IS_READ];
-			      	$notification->created_at = $data[self::CREATED_AT];
-			      	$notification->updated_at = $data[self::UPDATED_AT];
-			      	$notification->save();
-
-			      	$data['id'] = $notification->id;
-
-			      	event(new Notification($data));
+					$notification_id = $notificationService->make($data);
+					$data['id'] = $notification_id;
+					event(new Notification($data));
 				}else{ 
 					$data= array( 
 		                "from"=>self::ADMIN,
@@ -1266,20 +1136,9 @@ class ExaminationController extends Controller
 		                self::CREATED_AT=>date(self::DATE_FORMAT_1),
 		                self::UPDATED_AT=>date(self::DATE_FORMAT_1)
 	                );
-				  	$notification = new NotificationTable();
-                    $notification->id = Uuid::uuid4();
-			      	$notification->from = $data['from'];
-			      	$notification->to = $data['to'];
-			      	$notification->message = $data[self::MESSAGE];
-			      	$notification->url = $data['url'];
-			      	$notification->is_read = $data[self::IS_READ];
-			      	$notification->created_at = $data[self::CREATED_AT];
-			      	$notification->updated_at = $data[self::UPDATED_AT];
-			      	$notification->save();
-
-			      	
-			      	$data['id'] = $notification->id;
-			      	event(new Notification($data));
+					$notification_id = $notificationService->make($data);
+					$data['id'] = $notification_id;
+					event(new Notification($data));
 				}
 				
 			}
@@ -1377,18 +1236,9 @@ class ExaminationController extends Controller
 	                self::UPDATED_AT=>date(self::DATE_FORMAT_1)
 	            );
 
-			  	$notification = new NotificationTable();
-                $notification->id = Uuid::uuid4();
-		      	$notification->from = $data['from'];
-		      	$notification->to = $data['to'];
-		      	$notification->message = $data[self::MESSAGE];
-		      	$notification->url = $data['url'];
-		      	$notification->is_read = $data[self::IS_READ];
-		      	$notification->created_at = $data[self::CREATED_AT];
-		      	$notification->updated_at = $data[self::UPDATED_AT];
-		      	$notification->save(); 
-		      	$data['id'] = $notification->id;
-	            event(new Notification($data));
+				$notification_id = $notificationService->make($data);
+			    $data['id'] = $notification_id;
+			    event(new Notification($data));
 
             }else{ 
 
@@ -1402,20 +1252,11 @@ class ExaminationController extends Controller
 	                self::IS_READ=>0,
 	                self::CREATED_AT=>date(self::DATE_FORMAT_1),
 	                self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-                );
-			  	$notification = new NotificationTable();
-                $notification->id = Uuid::uuid4();
-		      	$notification->from = $data['from'];
-		      	$notification->to = $data['to'];
-		      	$notification->message = $data[self::MESSAGE];
-		      	$notification->url = $data['url'];
-		      	$notification->is_read = $data[self::IS_READ];
-		      	$notification->created_at = $data[self::CREATED_AT];
-		      	$notification->updated_at = $data[self::UPDATED_AT];
-		      	$notification->save();
-
-		      	$data['id'] = $notification->id;
-                event(new Notification($data));
+				);
+				
+				$notification_id = $notificationService->make($data);
+			    $data['id'] = $notification_id;
+			    event(new Notification($data));
 
             }
            
@@ -1428,52 +1269,31 @@ class ExaminationController extends Controller
             $exam->certificate_status = $status;
             if($exam->certificate_status){ 
             	$data= array(  
-                "from"=>self::ADMIN,
-                "to"=>$exam->created_by,
-                self::MESSAGE=>"Sertifikat Completed",
-                "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-                self::IS_READ=>0,
-                self::CREATED_AT=>date(self::DATE_FORMAT_1),
-                self::UPDATED_AT=>date(self::DATE_FORMAT_1)
+					"from"=>self::ADMIN,
+					"to"=>$exam->created_by,
+					self::MESSAGE=>"Sertifikat Completed",
+					"url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
+					self::IS_READ=>0,
+					self::CREATED_AT=>date(self::DATE_FORMAT_1),
+					self::UPDATED_AT=>date(self::DATE_FORMAT_1)
                 );
-			  	$notification = new NotificationTable();
-                $notification->id = Uuid::uuid4();
-		      	$notification->from = $data['from'];
-		      	$notification->to = $data['to'];
-		      	$notification->message = $data[self::MESSAGE];
-		      	$notification->url = $data['url'];
-		      	$notification->is_read = $data[self::IS_READ];
-		      	$notification->created_at = $data[self::CREATED_AT];
-		      	$notification->updated_at = $data[self::UPDATED_AT];
-		      	$notification->save();  
-		     	$data['id'] = $notification->id;
-
-                event(new Notification($data));
+				$notification_id = $notificationService->make($data);
+			    $data['id'] = $notification_id;
+			    event(new Notification($data));
             }else{  
 
             	$data= array( 
-                "from"=>self::ADMIN,
-                "to"=>$exam->created_by,
-                self::MESSAGE=>"Sertifikat Not Completed",
-                "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-                self::IS_READ=>0,
-                self::CREATED_AT=>date(self::DATE_FORMAT_1),
-                self::UPDATED_AT=>date(self::DATE_FORMAT_1)
+					"from"=>self::ADMIN,
+					"to"=>$exam->created_by,
+					self::MESSAGE=>"Sertifikat Not Completed",
+					"url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
+					self::IS_READ=>0,
+					self::CREATED_AT=>date(self::DATE_FORMAT_1),
+					self::UPDATED_AT=>date(self::DATE_FORMAT_1)
                 );
-			  	$notification = new NotificationTable();
-                $notification->id = Uuid::uuid4();
-		      	$notification->from = $data['from'];
-		      	$notification->to = $data['to'];
-		      	$notification->message = $data[self::MESSAGE];
-		      	$notification->url = $data['url'];
-		      	$notification->is_read = $data[self::IS_READ];
-		      	$notification->created_at = $data[self::CREATED_AT];
-		      	$notification->updated_at = $data[self::UPDATED_AT];
-		      	$notification->save();
-
-		      	$data['id'] = $notification->id;
-
-                event(new Notification($data));
+				$notification_id = $notificationService->make($data);
+			    $data['id'] = $notification_id;
+			    event(new Notification($data));
             }
 			if($status == 1){
 				$this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.sertifikat", "Penerbitan Sertfikat");
@@ -2523,20 +2343,9 @@ class ExaminationController extends Controller
             	self::UPDATED_AT=>date(self::DATE_FORMAT_1)
             );
 
-		  	$notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
-	      	$notification->from = $data['from'];
-	      	$notification->to = $data['to'];
-	      	$notification->message = $data[self::MESSAGE];
-	      	$notification->url = $data['url'];
-	      	$notification->is_read = $data[self::IS_READ];
-	      	$notification->created_at = $data[self::CREATED_AT];
-	      	$notification->updated_at = $data[self::UPDATED_AT];
-	      	$notification->save();
-
-	      	$data['id'] = $notification->id;
-	      	event(new Notification($data));
-
+			$notification_id = $notificationService->make($data);
+			$data['id'] = $notification_id;
+			event(new Notification($data));
 
             Session::flash(self::MESSAGE, 'Examination successfully updated');
 			$this->sendEmailRevisi(
