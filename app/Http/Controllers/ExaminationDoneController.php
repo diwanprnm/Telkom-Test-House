@@ -42,6 +42,7 @@ class ExaminationDoneController extends Controller
 	private const BEFORE_DATE = 'before_date';
 	private const AFTER_DATE = 'after_date';
 	private const DATE_FORMAT = 'd-m-Y';
+	private const EXAM_LAB = 'examinationLab';
 	/**
      * Create a new controller instance.
      *
@@ -76,7 +77,7 @@ class ExaminationDoneController extends Controller
                                 ->with('user')
                                 ->with(self::COMPANY)
                                 ->with(self::EXAMINATION_TYPE)
-                                ->with('examinationLab')
+                                ->with(self::EXAM_LAB)
                                 ->with(self::MEDIA)
                                 ->with(self::DEVICE)
 								;
@@ -200,7 +201,7 @@ class ExaminationDoneController extends Controller
                             ->with('user')
                             ->with(self::COMPANY)
                             ->with(self::EXAMINATION_TYPE)
-                            ->with('examinationLab')
+                            ->with(self::EXAM_LAB)
                             ->with(self::DEVICE)
                             ->with(self::MEDIA)
                             ->first();
@@ -227,7 +228,7 @@ class ExaminationDoneController extends Controller
         $exam = Examination::where('id', $id)
                             ->with(self::COMPANY)
                             ->with(self::EXAMINATION_TYPE)
-                            ->with('examinationLab')
+                            ->with(self::EXAM_LAB)
                             ->with(self::DEVICE)
                             ->with(self::MEDIA)
 							->with('examinationHistory')
