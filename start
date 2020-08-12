@@ -47,15 +47,10 @@ composer dump-autoload --optimize
 
 echo "Run db migration"
 sleep ${LARAVEL_SEED_SLEEP}
-touch /var/www/data/html/.env
+cp /var/www/data/html/.env.example .env
 php artisan migrate --force
 php artisan db:seed
 php artisan key:generate
-
-echo "Run sqlite env"
-touch /var/www/data/html/database/dds_db.sqlite
-php artisan migrate --database=sqlite
-php artisan db:seed --database=sqlite
 
 echo "Run default entrypoint"
 exec /usr/bin/supervisord -n -c /var/www/data/etc/supervisor/supervisord.conf -d /var/www/data/etc/supervisor
