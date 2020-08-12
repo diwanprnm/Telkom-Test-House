@@ -214,7 +214,7 @@ class LogController extends Controller
 
 		$data = $datalogs->orderBy($sort_by, $sort_type)->get();
         $examsArray = []; 
-
+        $no = 0;
 		// Define the Excel spreadsheet headers
 		$examsArray[] = [
 			'No',
@@ -226,7 +226,7 @@ class LogController extends Controller
 		
 		// Convert each member of the returned collection into an array,
 		// and append it to the payments array.
-			$no = 0;
+			
 		foreach ($data as $row) {
 			$no ++;
 			$examsArray[] = [
@@ -237,16 +237,11 @@ class LogController extends Controller
 				$row->search_date
 			];
 		}
-        $currentUser = Auth::user();
-        $logs = new Logs;
-        $logs->id = Uuid::uuid4();
-        $logs->user_id = $currentUser->id;
-        $logs->action = "download_excel";   
-        $logs->data = "";
-        $logs->created_by = $currentUser->id;
-        $logs->page = "LOG";
-        $logs->save();
+        
+        $logService = new LogService();
+        $logService->createLog('download_excel',"LOG","" );
 
+    
 		// Generate and return the spreadsheet
 		Excel::create('Data Aktivitas User', function($excel) use ($examsArray) {
 

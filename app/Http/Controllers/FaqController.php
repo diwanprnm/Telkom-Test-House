@@ -21,6 +21,12 @@ use Ramsey\Uuid\Uuid;
 
 class FaqController extends Controller
 {
+    private const SEARCH = 'search';
+    private const QUESTION = 'question';
+    private const MESSAGE = 'message';
+    private const ANSWER = 'answer';
+    private const ADMIN_FAQ_LOC = '/admin/faq';
+    private const ERROR = 'error';
     /**
      * Create a new controller instance.
      *
@@ -43,20 +49,18 @@ class FaqController extends Controller
         if ($currentUser){
             $message = null;
             $paginate = 10;
-            $search = trim($request->input('search'));
-            $category = '';
-            $status = -1;
+            $search = trim($request->input(self::SEARCH));
             
             if ($search != null){
                 $faq = Faq::whereNotNull('created_at')
-                    ->where('question','like','%'.$search.'%')
-                    ->orderBy('question')
+                    ->where(self::QUESTION,'like','%'.$search.'%')
+                    ->orderBy(self::QUESTION)
                     ->paginate($paginate);
 
                     $logs = new Logs;
                     $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
                     $logs->action = "Search Faq";
-                    $datasearch = array("search"=>$search);
+                    $datasearch = array(self::SEARCH=>$search);
                     $logs->data = json_encode($datasearch);
                     $logs->created_by = $currentUser->id;
                     $logs->page = "Faq";
@@ -64,7 +68,7 @@ class FaqController extends Controller
             }else{
                 $query = Faq::whereNotNull('created_at'); 
                 
-                $faq = $query->orderBy('question')
+                $faq = $query->orderBy(self::QUESTION)
                             ->paginate($paginate);
             }
             
@@ -73,9 +77,9 @@ class FaqController extends Controller
             }
             
             return view('admin.faq.index')
-                ->with('message', $message)
+                ->with(self::MESSAGE, $message)
                 ->with('data', $faq)
-                ->with('search', $search);
+                ->with(self::SEARCH, $search);
         }
     }
 
@@ -97,12 +101,11 @@ class FaqController extends Controller
      */
     public function store(Request $request)
     {
-        // $request->flash();
         $currentUser = Auth::user(); 
         $faq = new Faq;
         $faq->id = Uuid::uuid4();
-        $faq->question = $request->input('question');
-        $faq->answer = $request->input('answer');
+        $faq->question = $request->input(self::QUESTION);
+        $faq->answer = $request->input(self::ANSWER);
       
         $faq->created_by = $currentUser->id;
         $faq->updated_by = $currentUser->id; 
@@ -119,10 +122,10 @@ class FaqController extends Controller
             $logs->page = "Faq";
             $logs->save();
             
-            Session::flash('message', 'FAQ successfully created');
-            return redirect('/admin/faq');
+            Session::flash(self::MESSAGE, 'FAQ successfully created');
+            return redirect(self::ADMIN_FAQ_LOC);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
+            Session::flash(self::ERROR, 'Save failed');
             return redirect('/admin/faq/create');
         }
     }
@@ -166,12 +169,12 @@ class FaqController extends Controller
         $faq = Faq::find($id);
         $oldFaq = $faq; 
 
-        if ($request->has('question')){
-            $faq->question = $request->input('question');
+        if ($request->has(self::QUESTION)){
+            $faq->question = $request->input(self::QUESTION);
         }
 
-        if ($request->has('answer')){
-            $faq->answer = $request->input('answer');
+        if ($request->has(self::ANSWER)){
+            $faq->answer = $request->input(self::ANSWER);
         }
 
         $faq->updated_by = $currentUser->id; 
@@ -188,10 +191,10 @@ class FaqController extends Controller
             $logs->page = "Faq";
             $logs->save();
 
-            Session::flash('message', 'FAQ successfully updated');
-            return redirect('/admin/faq');
+            Session::flash(self::MESSAGE, 'FAQ successfully updated');
+            return redirect(self::ADMIN_FAQ_LOC);
         } catch(Exception $e){
-            Session::flash('error', 'Save failed');
+            Session::flash(self::ERROR, 'Save failed');
             return redirect('/admin/faq/'.$faq->id.'/edit');
         }
     }
@@ -219,15 +222,15 @@ class FaqController extends Controller
                 $logs->page = "Faq";
                 $logs->save();
 
-                Session::flash('message', 'FAQ successfully deleted');
-                return redirect('/admin/faq');
+                Session::flash(self::MESSAGE, 'FAQ successfully deleted');
+                return redirect(self::ADMIN_FAQ_LOC);
             }catch (Exception $e){
-                Session::flash('error', 'Delete failed');
-                return redirect('/admin/faq');
+                Session::flash(self::ERROR, 'Delete failed');
+                return redirect(self::ADMIN_FAQ_LOC);
             }
         }else{
-             Session::flash('error', 'Role Not Found');
-                return redirect('/admin/faq');
+             Session::flash(self::ERROR, 'Role Not Found');
+                return redirect(self::ADMIN_FAQ_LOC);
         }
     }    
 }
