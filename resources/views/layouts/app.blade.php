@@ -176,15 +176,15 @@
                       
                        <li class="dropdown notification">
                           <a href class="dropdown-toggle" data-toggle="dropdown">
-                                <span class="dot-badge partition-red notification-count"><?php echo $notification_count;?></span> 
+                                <span class="dot-badge partition-red notification-count">@php echo $notification_count;@endphp</span> 
                                 <em class="ti-comment"></em> 
                                 <span translate="topbar.messages.MAIN" class="ng-scope ">Notification</span>
                             </a>
                             <ul class="dropdown-menu dropdown-light dropdown-messages dropdown-large"> 
-                             <?php
-                      foreach ($notification_data as $notif) { ?> 
+                             @php
+                      foreach ($notification_data as $notif) { @endphp
                                 <li>
-                                    <a data-url="<?php echo $notif['url']?>" data-id="<?php echo $notif['id']?>" class="notifData"><?php 
+                                    <a data-url="@php echo $notif['url']@endphp" data-id="@php echo $notif['id']@endphp" class="notifData">@php 
                                     $string =  $notif['message'];
                                         if (strlen($string) > 35) {
 
@@ -194,9 +194,9 @@
                                                 // make sure it ends in a word so assassinate doesn't become ass...
                                                 $string = substr($stringCut, 0, strrpos($stringCut, ' ')).'...'; 
                                             }
-                                    echo $string;?></a>
+                                    echo $string;@endphp</a>
                                 </li>
-                                 <?php }?>
+                                 @php }@endphp
 								 <li>
 									<a href="{{ url('/admin/all_notifications')}}">See All Notifications</a> 
 								 </li>
@@ -307,7 +307,7 @@
                         console.log(data);
                         $(".notification-count").html(data); 
                         
-						window.open("<?php echo URL::to('/'); ?>/admin/"+notifURL, '_blank', 'toolbar=yes, location=yes, status=yes, menubar=yes, scrollbars=yes');
+						window.open("@php echo URL::to('/'); @endphp/admin/"+notifURL, '_blank', 'toolbar=yes, location=yes, status=yes, menubar=yes, scrollbars=yes');
                     }
                 }); 
             });
