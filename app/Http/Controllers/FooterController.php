@@ -131,7 +131,7 @@ class FooterController extends Controller
             } 
              
             if($is_uploaded){
-                $footer->npwp_file = $file_name;
+                $footer->image = $file_name;
             }else{
                 Session::flash($this::ERR, 'Save Image to directory failed');
                 return redirect($this::CREATE);
