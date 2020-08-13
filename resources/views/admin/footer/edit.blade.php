@@ -38,7 +38,7 @@
 									<label>
 										Gambar *
 									</label>
-									<img src="{{ \Storage::disk('minio')->url('footer/'.$item->image) }}" width="240px"  alt="">
+									<img src="{{ \Storage::disk('minio')->url('footer/'.$data->image) }}" width="240px"  alt="">
 									<input type="file" name="image" accept="image/*" class="form-control">
 								</div>
 							</div>

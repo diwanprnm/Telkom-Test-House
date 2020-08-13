@@ -941,7 +941,7 @@ class PengujianController extends Controller
 					self::TIMEOUT  => 60.0,
 				]);
 				
-				$res_exam_schedule = $client->post('notification/notifToTE?lab='.$exam->examinationLab->lab_code.'&id='.$exam->id);
+				$client->post('notification/notifToTE?lab='.$exam->examinationLab->lab_code.'&id='.$exam->id);
 				/* push notif*/
 				$admins = AdminRole::where('function_status',1)->get()->toArray();
 				foreach ($admins as $admin) { 
@@ -1013,7 +1013,7 @@ class PengujianController extends Controller
 					self::TIMEOUT  => 60.0,
 				]);
 				
-				$res_exam_schedule = $client->get('notification/notifApproveToTE?id='.$exam->id.'&lab='.$exam->examinationLab->lab_code);
+				 $client->get('notification/notifApproveToTE?id='.$exam->id.'&lab='.$exam->examinationLab->lab_code);
 
 				/* push notif*/
 					$data= array(
@@ -1076,7 +1076,7 @@ class PengujianController extends Controller
 						self::TIMEOUT  => 60.0,
 					]);
 					
-					$res_exam_schedule = $client->post('notification/notifRescheduleToTE?id='.$exam->id);
+					$client->post('notification/notifRescheduleToTE?id='.$exam->id);
 					
 					/* push notif*/
 						$data= array(
@@ -1145,7 +1145,7 @@ class PengujianController extends Controller
 					self::TIMEOUT  => 60.0,
 				]);
 				
-				$res_exam_schedule = $client->get('notification/notifApproveToTE?id='.$exam->id.'&lab='.$exam->examinationLab->lab_code);
+				$client->get('notification/notifApproveToTE?id='.$exam->id.'&lab='.$exam->examinationLab->lab_code);
 
 				/* push notif*/
 					$data= array(
@@ -1294,8 +1294,7 @@ class PengujianController extends Controller
 	}
 	
 	public function cekAmbilBarang(Request $request)
-    {
-		$currentUser = Auth::user();
+    { 
 		$equip = Equipment::where(self::EXAMINATION_ID, "=", $request->input(self::MY_EXAM_ID))->where("location", "=", "1");
 		$is_location = count($equip->get());
 		//if count 1, masukan ke history download

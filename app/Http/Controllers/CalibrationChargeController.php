@@ -147,7 +147,7 @@ class CalibrationChargeController extends Controller
             $logs->save();
 
             Session::flash(self::MESSAGE, 'Charge successfully created');
-            return redirect();
+            return redirect(self::ADM);
         } catch(Exception $e){
             Session::flash(self::ERR, 'Save failed');
             return redirect('/admin/calibration/create');
