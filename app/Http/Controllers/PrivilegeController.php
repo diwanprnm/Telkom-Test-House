@@ -102,7 +102,7 @@ class PrivilegeController extends Controller
      */
     public function store(Request $request)
     {
-		if(count($request->input('check-privilege')) > 0)
+		if(count($request->input(self::CHECK_PRIVILEGE)) > 0)
 		{
 			$currentUser = Auth::user();
 			$user = User::find($request->input('user_id'));
@@ -169,7 +169,7 @@ class PrivilegeController extends Controller
      */
     public function update(Request $request, $id)
     {
-		if(count($request->input('check-privilege')) > 0)
+		if(count($request->input(self::CHECK_PRIVILEGE)) > 0)
 		{
 			$currentUser = Auth::user();
 
