@@ -94,7 +94,7 @@
                     <div class="navbar-title">
                         <span>Navigation</span>
                     </div>
-                   <?php
+                   @php
                     $children_string = 'children';
                     $class_active_string = 'class="active"';
                     $segment_1 = Request::segment(1);
@@ -145,7 +145,7 @@
                     $html .= '</ul>';
 
                     echo $html;
-                 ?> 
+                 @endphp
                 </nav>
             </div>
         </div>
@@ -245,8 +245,8 @@
         </footer>
         <!-- end: FOOTER -->
     </div>
-    <?php  $currentUser = Auth::user(); ?>
-    <input type="hidden" id="user_id" value="<?php echo (empty($currentUser))?0:$currentUser['attributes']['id'];?>">
+    @php  $currentUser = Auth::user(); @endphp
+    <input type="hidden" id="user_id" value="@php echo (empty($currentUser))?0:$currentUser['attributes']['id'];@endphp">
     <!-- start: MAIN JAVASCRIPTS -->
     <script src={{ asset("vendor/bootstrap/js/bootstrap.min.js") }}></script>
     <script src={{ asset("vendor/modernizr/modernizr.js") }}></script>
@@ -263,7 +263,7 @@
             Main.init();
         });
     </script>
-    <?php if(config('app.IS_ENABLED_NOTIFICATION')){?>
+    @php if(config('app.IS_ENABLED_NOTIFICATION')){@endphp
      <script src="{{url('vendor/socket/socket.io.js')}}"></script>
       <script>
         var socket = io('https://notification.telkomtesthouse.co.id:3000');
@@ -299,14 +299,14 @@
                 var notifURL = $(this).attr("data-url");
                 $.ajax({ 
                     type: "POST",
-                    url : "<?php echo URL::to('/'); ?>/updateNotif", 
+                    url : "@php echo URL::to('/'); @endphp/updateNotif", 
                     data:{
                         "notif_id":notifID
                     }, 
                     success: function(data){ 
                         console.log(data);
                         $(".notification-count").html(data); 
-                        // window.location.href = "<?php echo URL::to('/'); ?>/admin/"+notifURL; 
+                        
 						window.open("<?php echo URL::to('/'); ?>/admin/"+notifURL, '_blank', 'toolbar=yes, location=yes, status=yes, menubar=yes, scrollbars=yes');
                     }
                 }); 
@@ -314,7 +314,7 @@
         }
         
     </script>
-    <?php }?>
+    @php } @endphp
     <!-- end: MAIN JAVASCRIPTS -->
 </body>
 </html>

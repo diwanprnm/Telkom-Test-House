@@ -187,7 +187,7 @@
     </script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-   <?php if(config('app.IS_ENABLED_NOTIFICATION')){?>
+   @php if(config('app.IS_ENABLED_NOTIFICATION')){@endphp
     <script src="{{url('vendor/socket/socket.io.js')}}"></script>
     <script>
         var socket = io('https://notification.telkomtesthouse.co.id:3000');
@@ -220,22 +220,22 @@
                 var notifURL = $(this).attr("data-url");
                 $.ajax({ 
                     type: "POST",
-                    url : "<?php echo URL::to('/'); ?>/updateNotif", 
+                    url : "@php echo URL::to('/'); @endphp/updateNotif", 
                     data:{
                         "notif_id":notifID
                     }, 
                     success: function(data){ 
                         console.log(data);
                         $(".notification-count").html(data); 
-                        // window.location.href = "<?php echo URL::to('/'); ?>/admin/"+notifURL; 
-                        window.open("<?php echo URL::to('/'); ?>/"+notifURL, '_blank', 'toolbar=yes, location=yes, status=yes, menubar=yes, scrollbars=yes');
+                       
+                        window.open("@php echo URL::to('/'); @endphp/"+notifURL, '_blank', 'toolbar=yes, location=yes, status=yes, menubar=yes, scrollbars=yes');
                     }
                 }); 
             });
         }
     </script>
 
-    <?php }?>
+    @php }@endphp
      @yield('content_js')
      <script src="https://rawgit.com/kswedberg/jquery-smooth-scroll/master/jquery.smooth-scroll.js"></script>
       <script type="text/javascript">
