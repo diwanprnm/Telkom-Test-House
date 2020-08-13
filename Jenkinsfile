@@ -79,7 +79,7 @@ pipeline {
                             sh "touch ${WORKSPACE}/database/dds_db.sqlite"
                             sh "php artisan migrate --database=sqlite"
                             sh "php artisan db:seed --database=sqlite"
-                            sh "cp env.example .env"
+                            sh "cp .env.example .env"
                             sh "php artisan key:generate"
                             
                             sh "./vendor/bin/phpunit --log-junit reports/phpunit.xml --coverage-clover reports/phpunit.coverage.xml"
