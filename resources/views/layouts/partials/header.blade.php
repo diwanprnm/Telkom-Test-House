@@ -70,7 +70,7 @@
                     <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ trans('translate.charge') }}</a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="{{url('Chargeclient')}}">{{ trans('translate.charge') }}</a></li>
-                            <li><a href="{{url('NewChargeclient')}}">{{ trans('translate.new_charge') }} <?php echo date("j M Y", strtotime($new_charge[0]->valid_from));?></a></li>
+                            <li><a href="{{url('NewChargeclient')}}">{{ trans('translate.new_charge') }} @php echo date("j M Y", strtotime($new_charge[0]->valid_from));@endphp</a></li>
                         </ul>
                     </li>
                   <?php
@@ -139,7 +139,7 @@
               <?php
               if($currentUser){
               ?> 
-                <li class="loginMenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo substr($currentUserAttr['name'],0,7)."...";?>  <em class="icon-angle-down"></em></a>
+                <li class="loginMenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">@php echo substr($currentUserAttr['name'],0,7)."...";@endphp  <em class="icon-angle-down"></em></a>
                   <ul class="dropdown-menu" role="menu">
                     <li><a href="{{url('/client/profile')}}">{{ trans('translate.profile') }}</a></li>
                     <li><a href="{{url('/client/profile?tabs=company')}}">{{ trans('translate.company') }}</a></li>
@@ -192,7 +192,7 @@
                       <div class="top-notification-items">
                         <div class="top-notification-item clearfix">
                           <div class="top-notification-item-desc">
-                            <a data-url="<?php echo $notif['url']?>" data-id="<?php echo $notif['id']?>" class="notifData">{{$notif['message']}}</a> 
+                            <a data-url="@php echo $notif['url']@endphp" data-id="<?php echo $notif['id']?>" class="notifData">{{$notif['message']}}</a> 
                           </div>
                         </div>
                       </div>
@@ -370,5 +370,5 @@
       </div>
 
     </div>
-    <input type="hidden" id="user_id" value="<?php echo (empty($currentUser))?0:$currentUserAttr['id'];?>">
+    <input type="hidden" id="user_id" value="@php echo (empty($currentUser))?0:$currentUserAttr['id'];@endphp">
   </header><!-- #header mobile end -->

@@ -33,11 +33,11 @@
 	}
 </style>
 
-<?php
+@php
 	$currentUser = Auth::user();
 	$is_admin_mail = $currentUser['email'];
 	$is_super = $currentUser['id'];
-?>
+	@endphp
 <input type="hide" id="hide_device_id" name="hide_device_id">
 <div class="modal fade" id="myModal_move_data" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog">
@@ -132,7 +132,7 @@
 									@endif
 								</tr>
 							</thead>
-							<?php $no=1; ?>
+							@php $no=1; @endphp
 							@foreach($data as $item)
 								<tr>
 									<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
@@ -152,14 +152,14 @@
 										</td>
 										@endif
 								</tr>
-							<?php $no++ ?>
+							@php $no++ @endphp
 							@endforeach
 						</table>
 					</div>
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								<?php echo $data->appends(array('search' => $search, 'tab' => 'tab-1'))->links(); ?>
+								@php echo $data->appends(array('search' => $search, 'tab' => 'tab-1'))->links(); @endphp
 							</div>
 						</div>
 					</div>
@@ -195,7 +195,7 @@
 									<th class="center" scope="col">Tanggal Sidang</th>
 								</tr>
 							</thead>
-							<?php $no=1; ?>
+							@php $no=1; @endphp
 							@foreach($dataAfter as $item)
 								<tr>
 									<td class="center">{{$no+(($dataAfter->currentPage()-1)*$dataAfter->perPage())}}</td>
@@ -208,14 +208,14 @@
 									<td class="center">{{ $item->manufactured_by }}</td>
 									<td class="center">{{ $item->qa_date }}</td>
 								</tr>
-							<?php $no++ ?>
+							@php $no++ @endphp
 							@endforeach
 						</table>
 					</div>
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								<?php echo $dataAfter->appends(array('search2' => $search2, 'tab' => 'tab-2'))->links(); ?>
+								@php echo $dataAfter->appends(array('search2' => $search2, 'tab' => 'tab-2'))->links(); @endphp
 							</div>
 						</div>
 					</div>
