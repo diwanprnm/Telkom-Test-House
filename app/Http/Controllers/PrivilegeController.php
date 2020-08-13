@@ -155,7 +155,7 @@ class PrivilegeController extends Controller
 			try{
 				$adminrole->save();
 				Session::flash(self::MESSAGE, 'User successfully created');
-				return redirect('/admin/privilege');
+				return redirect(self::ADMIN_PRIVILEGE);
 			} catch(\Exception $e){
 				Session::flash(self::ERROR, 'Save failed');
 				return redirect('/admin/privilege/create')
@@ -218,14 +218,14 @@ class PrivilegeController extends Controller
 			try{
 				$adminrole->save();
 				Session::flash(self::MESSAGE, 'Privilege successfully updated');
-				return redirect('/admin/privilege');
+				return redirect(self::ADMIN_PRIVILEGE);
 			} catch(Exception $e){
 				Session::flash(self::ERROR, 'Save failed');
-				return redirect('/admin/privilege/'.$adminrole->user_id.'edit');
+				return redirect(self::ADMIN_PRIVILEGE.$adminrole->user_id.'edit');
 			}
 		}else{
 			Session::flash(self::ERROR, 'No Privilege selected');
-				return redirect('/admin/privilege/'.$adminrole->user_id.'edit')
+				return redirect(self::ADMIN_PRIVILEGE.$adminrole->user_id.'edit')
 							->withInput();
 		}
     }
@@ -245,10 +245,10 @@ class PrivilegeController extends Controller
                 $adminrole->delete();
                 
                 Session::flash(self::MESSAGE, 'Privilege successfully deleted');
-                return redirect('/admin/privilege');
+                return redirect(self::ADMIN_PRIVILEGE);
             }catch (Exception $e){
                 Session::flash(self::ERROR, 'Delete failed');
-                return redirect('/admin/privilege');
+                return redirect(self::ADMIN_PRIVILEGE);
             }
         }
     }
