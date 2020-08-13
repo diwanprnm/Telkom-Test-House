@@ -15,7 +15,7 @@ class PrivilegeController extends Controller
 {
 
 
-    private const USER_NAME = 'username';
+    private const USER_NAME = 'user_name';
     private const MESSAGE = 'message';
     private const ERROR = 'error';
     private const CHECK_PRIVILEGE = 'check-privilege';
@@ -81,51 +81,16 @@ class PrivilegeController extends Controller
     }
 
     private function setAdminRole($adminrole,$request){ 
-        $adminrole->registration_status = 0;
-        $adminrole->function_status = 0;
-        $adminrole->contract_status = 0;
-        $adminrole->spb_status = 0;
-        $adminrole->payment_status = 0;
-        $adminrole->spk_status = 0;
-        $adminrole->examination_status = 0;
-        $adminrole->resume_status = 0;
-        $adminrole->qa_status = 0;
-        $adminrole->certificate_status = 0;
-        switch ($request->input(self::CHECK_PRIVILEGE)) {
-            case in_array("1", $request->input(self::CHECK_PRIVILEGE)):
-                $adminrole->registration_status = 1;
-                break;
-            case in_array("2", $request->input(self::CHECK_PRIVILEGE)):
-                $adminrole->function_status = 1;
-                break;
-            case in_array("3", $request->input(self::CHECK_PRIVILEGE)):
-                $adminrole->contract_status = 1;
-                break;
-            case in_array("4", $request->input(self::CHECK_PRIVILEGE)):
-                $adminrole->spb_status = 1;
-                break;
-            case in_array("5", $request->input(self::CHECK_PRIVILEGE)):
-                $adminrole->payment_status = 1;
-                break;
-            case in_array("6", $request->input(self::CHECK_PRIVILEGE)):
-                $adminrole->spk_status = 1;
-                break;
-            case in_array("7", $request->input(self::CHECK_PRIVILEGE)):
-                $adminrole->examination_status = 1;
-                break;
-            case in_array("8", $request->input(self::CHECK_PRIVILEGE)):
-                $adminrole->resume_status = 1;
-                break;
-            case in_array("9", $request->input(self::CHECK_PRIVILEGE)):
-                $adminrole->qa_status = 1;
-                break;
-            case in_array("10", $request->input(self::CHECK_PRIVILEGE)):
-                $adminrole->certificate_status = 1;
-                break; 
-            default: 
-                break;
-        } 
-
+        $adminrole->registration_status = (in_array("1", $request->input(self::CHECK_PRIVILEGE)))?1:0;
+        $adminrole->function_status = (in_array("2", $request->input(self::CHECK_PRIVILEGE)))?1:0;
+        $adminrole->contract_status = (in_array("3", $request->input(self::CHECK_PRIVILEGE)))?1:0;
+        $adminrole->spb_status = (in_array("4", $request->input(self::CHECK_PRIVILEGE)))?1:0;
+        $adminrole->payment_status = (in_array("5", $request->input(self::CHECK_PRIVILEGE)))?1:0;
+        $adminrole->spk_status = (in_array("6", $request->input(self::CHECK_PRIVILEGE)))?1:0;
+        $adminrole->examination_status = (in_array("7", $request->input(self::CHECK_PRIVILEGE)))?1:0;
+        $adminrole->resume_status = (in_array("8", $request->input(self::CHECK_PRIVILEGE)))?1:0;
+        $adminrole->qa_status = (in_array("9", $request->input(self::CHECK_PRIVILEGE)))?1:0;
+        $adminrole->certificate_status = (in_array("10", $request->input(self::CHECK_PRIVILEGE)))?1:0;  
         return $adminrole;
     }
 
@@ -145,9 +110,8 @@ class PrivilegeController extends Controller
 			$adminrole = new Adminrole;
 			$adminrole->user_id = $user->id;
 			$adminrole->user_name = $user->name;
-			$adminrole->user_email = $user->email;
-			
-            $this->setAdminRole($adminrole,$request);
+			$adminrole->user_email = $user->email; 
+            $adminrole = $this->setAdminRole($adminrole,$request);
 			
 			$adminrole->created_by = $currentUser->id;
 			$adminrole->updated_by = $currentUser->id;
@@ -211,7 +175,7 @@ class PrivilegeController extends Controller
 
 			$adminrole = Adminrole::find($id);
 
-			$this->setAdminRole($adminrole,$request);
+			$adminrole = $this->setAdminRole($adminrole,$request);
 			
 			$adminrole->updated_by = $currentUser->id;
 
