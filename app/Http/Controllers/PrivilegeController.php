@@ -46,13 +46,13 @@ class PrivilegeController extends Controller
 
             if ($search != null){
                 $adminrole = Adminrole::whereNotNull('created_at')
-                    ->where('user_name','like','%'.$search.'%')
+                    ->where(self::USER_NAME,'like','%'.$search.'%')
 					->orWhere('user_email','like','%'.$search.'%')
-                    ->orderBy('user_name')
+                    ->orderBy(self::USER_NAME)
                     ->paginate($paginate);
             }else{
                 $adminrole = Adminrole::whereNotNull('created_at')
-					->orderBy('user_name')
+					->orderBy(self::USER_NAME)
                     ->paginate($paginate);
             }
             
@@ -61,7 +61,7 @@ class PrivilegeController extends Controller
             }
             
             return view('admin.privilege.index')
-                ->with('message', $message)
+                ->with(self::MESSAGE, $message)
                 ->with('data', $adminrole)
 				->with('search', $search);
         }
@@ -93,34 +93,34 @@ class PrivilegeController extends Controller
         $adminrole->certificate_status = 0;
         switch ($request->input(self::CHECK_PRIVILEGE)) {
             case in_array("1", $request->input(self::CHECK_PRIVILEGE)):
-                $adminrole->registration_status = 1.
+                $adminrole->registration_status = 1;
                 break;
             case in_array("2", $request->input(self::CHECK_PRIVILEGE)):
-                $adminrole->function_status = 1.
+                $adminrole->function_status = 1;
                 break;
             case in_array("3", $request->input(self::CHECK_PRIVILEGE)):
-                $adminrole->contract_status = 1.
+                $adminrole->contract_status = 1;
                 break;
             case in_array("4", $request->input(self::CHECK_PRIVILEGE)):
-                $adminrole->spb_status = 1.
+                $adminrole->spb_status = 1;
                 break;
             case in_array("5", $request->input(self::CHECK_PRIVILEGE)):
-                $adminrole->payment_status = 1.
+                $adminrole->payment_status = 1;
                 break;
-            case in_array("6", $request->input('check-privilege')):
-                $adminrole->spk_status = 1.
+            case in_array("6", $request->input(self::CHECK_PRIVILEGE)):
+                $adminrole->spk_status = 1;
                 break;
-            case in_array("7", $request->input('check-privilege')):
-                $adminrole->examination_status = 1.
+            case in_array("7", $request->input(self::CHECK_PRIVILEGE)):
+                $adminrole->examination_status = 1;
                 break;
-            case in_array("8", $request->input('check-privilege')):
-                $adminrole->resume_status = 1.
+            case in_array("8", $request->input(self::CHECK_PRIVILEGE)):
+                $adminrole->resume_status = 1;
                 break;
-            case in_array("9", $request->input('check-privilege')):
-                $adminrole->qa_status = 1.
+            case in_array("9", $request->input(self::CHECK_PRIVILEGE)):
+                $adminrole->qa_status = 1;
                 break;
-            case in_array("10", $request->input('check-privilege')):
-                $adminrole->certificate_status = 1.
+            case in_array("10", $request->input(self::CHECK_PRIVILEGE)):
+                $adminrole->certificate_status = 1;
                 break; 
             default: 
                 break;
@@ -154,15 +154,15 @@ class PrivilegeController extends Controller
 
 			try{
 				$adminrole->save();
-				Session::flash('message', 'User successfully created');
+				Session::flash(self::MESSAGE, 'User successfully created');
 				return redirect('/admin/privilege');
 			} catch(\Exception $e){
-				Session::flash('error', 'Save failed');
+				Session::flash(self::ERROR, 'Save failed');
 				return redirect('/admin/privilege/create')
 							->withInput();
 			}
 		}else{
-			Session::flash('error', 'No Privilege selected');
+			Session::flash(self::ERROR, 'No Privilege selected');
 				return redirect('/admin/privilege/create')
 							->withInput();
 		}
@@ -217,14 +217,14 @@ class PrivilegeController extends Controller
 
 			try{
 				$adminrole->save();
-				Session::flash('message', 'Privilege successfully updated');
+				Session::flash(self::MESSAGE, 'Privilege successfully updated');
 				return redirect('/admin/privilege');
 			} catch(Exception $e){
-				Session::flash('error', 'Save failed');
+				Session::flash(self::ERROR, 'Save failed');
 				return redirect('/admin/privilege/'.$adminrole->user_id.'edit');
 			}
 		}else{
-			Session::flash('error', 'No Privilege selected');
+			Session::flash(self::ERROR, 'No Privilege selected');
 				return redirect('/admin/privilege/'.$adminrole->user_id.'edit')
 							->withInput();
 		}
@@ -244,10 +244,10 @@ class PrivilegeController extends Controller
             try{
                 $adminrole->delete();
                 
-                Session::flash('message', 'Privilege successfully deleted');
+                Session::flash(self::MESSAGE, 'Privilege successfully deleted');
                 return redirect('/admin/privilege');
             }catch (Exception $e){
-                Session::flash('error', 'Delete failed');
+                Session::flash(self::ERROR, 'Delete failed');
                 return redirect('/admin/privilege');
             }
         }
