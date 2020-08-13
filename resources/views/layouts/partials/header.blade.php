@@ -1,7 +1,7 @@
-<?php
+@php
   $currentUser = Auth::user();
   $currentUserAttr = $currentUser['attributes'];
-?>
+@endphp
 
 <!-- Header
   ============================================= -->
