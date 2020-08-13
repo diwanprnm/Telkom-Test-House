@@ -57,7 +57,7 @@ pipeline {
                 stage('Unit Test') {
                     agent { label "PHP" }
                     environment { 
-                       SQLLITE_PATH = $/${WORKSPACE}/database/dds_db.sqlite$
+                       SQLLITE_PATH = $/${WORKSPACE}/database/dds_db.sqlite/$
                     }
                     steps {
                         unstash 'ws'
@@ -76,7 +76,7 @@ pipeline {
                             sh "php artisan view:clear"
 
                             echo "Run sqlite env"
-                            sh "touch {WORKSPACE}/database/dds_db.sqlite"
+                            sh "touch ${WORKSPACE}/database/dds_db.sqlite"
                             sh "php artisan migrate --database=sqlite"
                             sh "php artisan db:seed --database=sqlite"
                             sh "php artisan key:generate"
