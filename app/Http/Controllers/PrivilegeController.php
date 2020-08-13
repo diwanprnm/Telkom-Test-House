@@ -73,6 +73,55 @@ class PrivilegeController extends Controller
             ->with('user', $user);
     }
 
+    private function setAdminRole($adminrole,$request){ 
+        $adminrole->registration_status = 0;
+        $adminrole->function_status = 0;
+        $adminrole->contract_status = 0;
+        $adminrole->spb_status = 0;
+        $adminrole->payment_status = 0;
+        $adminrole->spk_status = 0;
+        $adminrole->examination_status = 0;
+        $adminrole->resume_status = 0;
+        $adminrole->qa_status = 0;
+        $adminrole->certificate_status = 0;
+        switch ($request->input('check-privilege')) {
+            case in_array("1", $request->input('check-privilege')):
+                $adminrole->registration_status = 1.
+                break;
+            case in_array("2", $request->input('check-privilege')):
+                $adminrole->function_status = 1.
+                break;
+            case in_array("3", $request->input('check-privilege')):
+                $adminrole->contract_status = 1.
+                break;
+            case in_array("4", $request->input('check-privilege')):
+                $adminrole->spb_status = 1.
+                break;
+            case in_array("5", $request->input('check-privilege')):
+                $adminrole->payment_status = 1.
+                break;
+            case in_array("6", $request->input('check-privilege')):
+                $adminrole->spk_status = 1.
+                break;
+            case in_array("7", $request->input('check-privilege')):
+                $adminrole->examination_status = 1.
+                break;
+            case in_array("8", $request->input('check-privilege')):
+                $adminrole->resume_status = 1.
+                break;
+            case in_array("9", $request->input('check-privilege')):
+                $adminrole->qa_status = 1.
+                break;
+            case in_array("10", $request->input('check-privilege')):
+                $adminrole->certificate_status = 1.
+                break; 
+            default: 
+                break;
+        } 
+
+        return $adminrole
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -90,16 +139,8 @@ class PrivilegeController extends Controller
 			$adminrole->user_id = $user->id;
 			$adminrole->user_name = $user->name;
 			$adminrole->user_email = $user->email;
-			if (in_array("1", $request->input('check-privilege'))){$adminrole->registration_status = 1;}else{$adminrole->registration_status = 0;}
-			if (in_array("2", $request->input('check-privilege'))){$adminrole->function_status = 1;}else{$adminrole->function_status = 0;}
-			if (in_array("3", $request->input('check-privilege'))){$adminrole->contract_status = 1;}else{$adminrole->contract_status = 0;}
-			if (in_array("4", $request->input('check-privilege'))){$adminrole->spb_status = 1;}else{$adminrole->spb_status = 0;}
-			if (in_array("5", $request->input('check-privilege'))){$adminrole->payment_status = 1;}else{$adminrole->payment_status = 0;}
-			if (in_array("6", $request->input('check-privilege'))){$adminrole->spk_status = 1;}else{$adminrole->spk_status = 0;}
-			if (in_array("7", $request->input('check-privilege'))){$adminrole->examination_status = 1;}else{$adminrole->examination_status = 0;}
-			if (in_array("8", $request->input('check-privilege'))){$adminrole->resume_status = 1;}else{$adminrole->resume_status = 0;}
-			if (in_array("9", $request->input('check-privilege'))){$adminrole->qa_status = 1;}else{$adminrole->qa_status = 0;}
-			if (in_array("10", $request->input('check-privilege'))){$adminrole->certificate_status = 1;}else{$adminrole->certificate_status = 0;}
+			
+            $this->setAdminRole($adminrole,$request);
 			
 			$adminrole->created_by = $currentUser->id;
 			$adminrole->updated_by = $currentUser->id;
@@ -163,16 +204,7 @@ class PrivilegeController extends Controller
 
 			$adminrole = Adminrole::find($id);
 
-			if (in_array("1", $request->input('check-privilege'))){$adminrole->registration_status = 1;}else{$adminrole->registration_status = 0;}
-			if (in_array("2", $request->input('check-privilege'))){$adminrole->function_status = 1;}else{$adminrole->function_status = 0;}
-			if (in_array("3", $request->input('check-privilege'))){$adminrole->contract_status = 1;}else{$adminrole->contract_status = 0;}
-			if (in_array("4", $request->input('check-privilege'))){$adminrole->spb_status = 1;}else{$adminrole->spb_status = 0;}
-			if (in_array("5", $request->input('check-privilege'))){$adminrole->payment_status = 1;}else{$adminrole->payment_status = 0;}
-			if (in_array("6", $request->input('check-privilege'))){$adminrole->spk_status = 1;}else{$adminrole->spk_status = 0;}
-			if (in_array("7", $request->input('check-privilege'))){$adminrole->examination_status = 1;}else{$adminrole->examination_status = 0;}
-			if (in_array("8", $request->input('check-privilege'))){$adminrole->resume_status = 1;}else{$adminrole->resume_status = 0;}
-			if (in_array("9", $request->input('check-privilege'))){$adminrole->qa_status = 1;}else{$adminrole->qa_status = 0;}
-			if (in_array("10", $request->input('check-privilege'))){$adminrole->certificate_status = 1;}else{$adminrole->certificate_status = 0;}
+			$this->setAdminRole($adminrole,$request);
 			
 			$adminrole->updated_by = $currentUser->id;
 
