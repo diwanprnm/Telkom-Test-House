@@ -95,20 +95,18 @@ class QuestionprivController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            self::CHECK_PRIVILEGE => self::REQUIRED,
             self::USER_ID => self::REQUIRED,
         ]);
 
 		$questionpriv = Questionpriv::where(self::USER_ID,'=',$request->input(self::USER_ID))->get();
 
-		if(count($questionpriv) != 0 && count($request->input(self::CHECK_PRIVILEGE)))
+		if(!count($questionpriv) && count($request->input(self::CHECK_PRIVILEGE)) )
 		{
 			$currentUser = Auth::user();
 			for($i=0;$i<count($request->input(self::CHECK_PRIVILEGE));$i++){
 				$questionpriv = new Questionpriv;
 				$questionpriv->user_id = $request->input(self::USER_ID);
 				$questionpriv->question_id = $request->input(self::CHECK_PRIVILEGE)[$i];
-				
 				$questionpriv->created_by = $currentUser->id;
 				$questionpriv->updated_by = $currentUser->id;
 
@@ -162,10 +160,6 @@ class QuestionprivController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            self::CHECK_PRIVILEGE => self::REQUIRED,
-        ]);
-
 		if(count($request->input(self::CHECK_PRIVILEGE)) > 0)
 		{
 			$currentUser = Auth::user();
