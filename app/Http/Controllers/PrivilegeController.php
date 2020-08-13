@@ -13,6 +13,13 @@ use Session;
 
 class PrivilegeController extends Controller
 {
+
+
+    private const USER_NAME = 'username';
+    private const MESSAGE = 'message';
+    private const ERROR = 'error';
+    private const CHECK_PRIVILEGE = 'check-privilege';
+    private const ADMIN_PRIVILEGE = '/admin/privilege';
     /**
      * Create a new controller instance.
      *
@@ -84,20 +91,20 @@ class PrivilegeController extends Controller
         $adminrole->resume_status = 0;
         $adminrole->qa_status = 0;
         $adminrole->certificate_status = 0;
-        switch ($request->input('check-privilege')) {
-            case in_array("1", $request->input('check-privilege')):
+        switch ($request->input(self::CHECK_PRIVILEGE)) {
+            case in_array("1", $request->input(self::CHECK_PRIVILEGE)):
                 $adminrole->registration_status = 1.
                 break;
-            case in_array("2", $request->input('check-privilege')):
+            case in_array("2", $request->input(self::CHECK_PRIVILEGE)):
                 $adminrole->function_status = 1.
                 break;
-            case in_array("3", $request->input('check-privilege')):
+            case in_array("3", $request->input(self::CHECK_PRIVILEGE)):
                 $adminrole->contract_status = 1.
                 break;
-            case in_array("4", $request->input('check-privilege')):
+            case in_array("4", $request->input(self::CHECK_PRIVILEGE)):
                 $adminrole->spb_status = 1.
                 break;
-            case in_array("5", $request->input('check-privilege')):
+            case in_array("5", $request->input(self::CHECK_PRIVILEGE)):
                 $adminrole->payment_status = 1.
                 break;
             case in_array("6", $request->input('check-privilege')):
