@@ -56,6 +56,9 @@ pipeline {
             parallel {
                 stage('Unit Test') {
                     agent { label "PHP" }
+                    environment { 
+                       SQLLITE_PATH = $/${WORKSPACE}/database/dds_db.sqlite$
+                    }
                     steps {
                         unstash 'ws'
                         script {
@@ -71,6 +74,13 @@ pipeline {
                             sh "php artisan config:clear"
                             sh "php artisan cache:clear"
                             sh "php artisan view:clear"
+
+                            echo "Run sqlite env"
+                            sh "touch {WORKSPACE}/database/dds_db.sqlite"
+                            sh "php artisan migrate --database=sqlite"
+                            sh "php artisan db:seed --database=sqlite"
+                            php artisan key:generate
+                            
                             sh "./vendor/bin/phpunit --log-junit reports/phpunit.xml --coverage-clover reports/phpunit.coverage.xml"
                             
                             echo "defining sonar-scanner"
