@@ -56,6 +56,9 @@ pipeline {
             parallel {
                 stage('Unit Test') {
                     agent { label "PHP" }
+                    environment { 
+                       SQLLITE_PATH = $/${WORKSPACE}/database/dds_db.sqlite/$
+                    }
                     steps {
                         unstash 'ws'
                         script {
@@ -63,19 +66,28 @@ pipeline {
                             echo "Prepare Unit Test"
                             sh "/var/lib/jenkins/bin/composer install --no-scripts --no-autoloader"
                             sh "mkdir ./bootstrap/cache"
-                            sh "/var/lib/jenkins/bin/composer update"
+                            //sh "/var/lib/jenkins/bin/composer update"
                             echo "Run Unit Test"
                             sh "mkdir -p ./storage/framework/sessions"
                             sh "mkdir -p ./storage/framework/views"
                             sh "mkdir -p ./storage/framework/cache"
+                            
+                            sh "/var/lib/jenkins/bin/composer dump-autoload --optimize"
                             sh "php artisan config:clear"
                             sh "php artisan cache:clear"
                             sh "php artisan view:clear"
+
+                            echo "Run sqlite env"
+                            sh "cp .env.example .env"
+                            sh "touch ${WORKSPACE}/database/dds_db.sqlite"
+                            sh "php artisan migrate --database=sqlite"
+                            sh "php artisan db:seed --database=sqlite"
+                            sh "php artisan key:generate"
                             sh "./vendor/bin/phpunit --log-junit reports/phpunit.xml --coverage-clover reports/phpunit.coverage.xml"
                             
                             echo "defining sonar-scanner"
-                            def node = tool name: 'NodeJS-12', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
-                            env.PATH = "${node}/bin:${env.PATH}"
+                            //def node = tool name: 'NodeJS-12', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+                            //env.PATH = "${node}/bin:${env.PATH}"
                             def scannerHome = tool 'SonarScanner' ;
                             withSonarQubeEnv('SonarQube') {
                                 sh "${scannerHome}/bin/sonar-scanner"
