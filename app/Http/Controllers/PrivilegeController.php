@@ -126,7 +126,7 @@ class PrivilegeController extends Controller
                 break;
         } 
 
-        return $adminrole
+        return $adminrole;
     }
 
     /**
