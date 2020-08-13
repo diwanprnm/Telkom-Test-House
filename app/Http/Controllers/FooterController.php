@@ -113,7 +113,7 @@ class FooterController extends Controller
         $footer->description = $request->input($this::DESC);
         
         $allowedImage = ['jpeg','jpg','png'];
-       
+        $status  = false;
         if ($request->hasFile($this::IMAGE)) { 
             $file = $request->file($this::IMAGE);
             $ext = $file->getClientOriginalExtension(); 
@@ -121,20 +121,18 @@ class FooterController extends Controller
             
             $is_uploaded = false;
            
-              if (in_array($ext, $allowedImage))
+            if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
                 $is_uploaded = Storage::disk('minio')->put("footer/".$footer->id."/$file_name",(string)$image->encode()); 
              }else{
-                Session::flash('error', 'Format Not Available');
-                return redirect('/admin/footer/create');
+                Session::flash('error', 'Format Not Available'); 
             } 
              
             if($is_uploaded){
                 $footer->image = $file_name;
             }else{
-                Session::flash($this::ERR, 'Save Image to directory failed');
-                return redirect($this::CREATE);
+                Session::flash($this::ERR, 'Save Image to directory failed'); 
             }
         }        
      
@@ -155,9 +153,14 @@ class FooterController extends Controller
             $logs->save();
 
             Session::flash($this::MESS, 'Information successfully created');
-            return redirect($this::ADM);
+            $status = true;
         } catch(Exception $e){
-            Session::flash($this::ERR, 'Save failed');
+            Session::flash($this::ERR, 'Save failed'); 
+        }
+
+        if($status){
+             return redirect($this::ADM);
+        }else{
             return redirect($this::CREATE);
         }
     }
