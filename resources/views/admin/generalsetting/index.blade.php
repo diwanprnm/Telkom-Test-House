@@ -132,9 +132,9 @@ table {
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
 @if($data)
 <script type="text/javascript">
-	<?php
+	@php
 		if($data[1]->is_active){
-	?>		
+			@endphp		
 			$('#is_poh').prop('checked', true);
 			$("#poh_manager_urel-div").show();
 			$("#manager_urel-div").hide();

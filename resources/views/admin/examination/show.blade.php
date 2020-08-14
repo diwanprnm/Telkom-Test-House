@@ -2,11 +2,11 @@
 
 @section('content')
 
-<?php
+@php
 	$currentUser = Auth::user();
 	$is_admin_mail = $currentUser['email'];
 	$is_super = $currentUser['id'];
-?>
+	@endphp
 
 <input type="hide" id="hide_exam_id" name="hide_exam_id">
 <div class="modal fade" id="myModal_delete" tabindex="-1" role="dialog" aria-hidden="true">

@@ -2,10 +2,10 @@
 
 @section('content')
 
-<?php
+@php
 	$currentUser = Auth::user();
 	$is_super = $currentUser['id'];
-?>
+	@endphp
 
 <div class="main-content" >
 	<div class="wrap-content container" id="container">

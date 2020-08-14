@@ -175,7 +175,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php $no=1; ?>
+								@php $no=1; @endphp
 								@foreach($data as $item)
 									<tr>
 										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
@@ -185,8 +185,8 @@
 										<td class="center">{{ $item->examinationLab->name }}</td>
 										<td class="center">{{ $item->version }}</td>
 										<td class="center">{{ $item->year }}</td>
-	                                    <td class="center"><?php echo number_format($item->price, 0, '.', ','); ?></td>
-	                                    <td class="center"><?php echo number_format($item->total, 0, '.', ','); ?></td>
+	                                    <td class="center">@php echo number_format($item->price, 0, '.', ','); @endphp</td>
+	                                    <td class="center">@php echo number_format($item->total, 0, '.', ','); @endphp</td>
 	                                    @if($item->is_active)
 	                                    	<td class="center"><span class="label label-sm label-success">Active</span></td>
 	                                    @else
@@ -202,7 +202,7 @@
 											</div>
 										</td>
 									</tr>
-								<?php $no++ ?>
+								@php $no++ @endphp
 								@endforeach
                             </tbody>
 						</table>
@@ -210,7 +210,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								<?php echo $data->appends(array('search' => $search,'category' => $category,'year' => $year,'is_active' => $status))->links(); ?>
+								@php echo $data->appends(array('search' => $search,'category' => $category,'year' => $year,'is_active' => $status))->links(); @endphp
 							</div>
 						</div>
 					</div>

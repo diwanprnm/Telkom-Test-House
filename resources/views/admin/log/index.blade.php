@@ -171,7 +171,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php $no=1; ?>
+								@php $no=1; @endphp
 								@foreach($data as $item)
 									<tr>
 										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
@@ -180,7 +180,7 @@
 										<td class="center">{{ $item->page }}</td> 
 										<td class="center">{{ $item->search_date }}</td> 
 									</tr>
-								<?php $no++ ?>
+								@php $no++ @endphp
 								@endforeach
                             </tbody>
 						</table>
@@ -188,7 +188,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								<?php echo $data->appends(array('search' => $search,'before_date' => $before_date,'after_date' => $after_date,'username' => $filterUsername,'action' => $filterAction,'sort_by' => $sort_by,'sort_type' => $sort_type))->links(); ?>
+								@php echo $data->appends(array('search' => $search,'before_date' => $before_date,'after_date' => $after_date,'username' => $filterUsername,'action' => $filterAction,'sort_by' => $sort_by,'sort_type' => $sort_type))->links(); @endphp
 							</div>
 						</div>
 					</div>

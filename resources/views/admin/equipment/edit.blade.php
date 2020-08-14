@@ -151,7 +151,7 @@
 											Tanggal
 										</label>
 										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-											<input type="text" name="equip_date" class="form-control" value="<?php echo date('Y-m-d');?>">
+											<input type="text" name="equip_date" class="form-control" value="@php echo date('Y-m-d');@endphp">
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
 													<em class="glyphicon glyphicon-calendar"></em>
