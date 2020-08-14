@@ -390,7 +390,7 @@
 											Pengajuan Tanggal Uji dari URel
 										</label>
 										<label>
-											: <?php echo $data->urel_test_date; ?>
+											: @php echo $data->urel_test_date; @endphp
 										</label>
 									</div>
 								</div>
@@ -400,7 +400,7 @@
 											Pengajuan Tanggal Uji dari Customer
 										</label>
 										<label>
-											: <?php echo $data->cust_test_date; ?>
+											: @php echo $data->cust_test_date; @endphp
 										</label>
 									</div>
 								</div>
@@ -410,7 +410,7 @@
 											Penetapan akhir Tanggal Uji
 										</label>
 										<label>
-											: <?php echo $data->deal_test_date; ?>
+											: @php echo $data->deal_test_date; @endphp
 										</label>
 									</div>
 								</div>
@@ -583,7 +583,7 @@
 							<div class="row">
 								<div class="col-md-12">
 									<div class="form-group">
-										<a onclick="makeContract('<?php echo $data->id ?>','<?php echo $data->contract_date ?>','<?php echo $data->testing_start ?>','<?php echo $data->testing_end ?>')"> Buatkan File Kontrak</a>
+										<a onclick="makeContract('@php echo $data->id @endphp','@php echo $data->contract_date @endphp','@php echo $data->testing_start @endphp','@php echo $data->testing_end @endphp')"> Buatkan File Kontrak</a>
 									</div>
 								</div>
 								<div class="col-md-12">
@@ -594,14 +594,14 @@
 										<input type="file" name="contract_file" id="contract_file" class="form-control" accept="application/pdf"/>
 									</div>
 									<div class="form-group">
-										<?php $contract_attach = ''; ?>
+										@php $contract_attach = ''; @endphp
 										@foreach($data->media as $item)
 											@if($item->name == 'Tinjauan Kontrak' && $item->attachment != '')
-												<?php $contract_attach = $item->attachment; ?>
-												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tinjauan Kontrak')}}"> Download Tinjauan Kontrak "<?php echo $contract_attach; ?>"</a>
+												@php $contract_attach = $item->attachment; @endphp
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tinjauan Kontrak')}}"> Download Tinjauan Kontrak "@php echo $contract_attach; @endphp"</a>
 											@endif
 										@endforeach
-										<input type="hidden" id="contract_name" value="<?php echo $contract_attach; ?>">
+										<input type="hidden" id="contract_name" value="@php echo $contract_attach; @endphp">
 									</div>
 								</div>
 								<div class="col-md-6">
@@ -679,7 +679,7 @@
 							<div class="row">
 								<div class="col-md-12">
 									<div class="form-group">
-										<a onclick="makeSPB('<?php echo $data->id ?>','<?php echo $data->spb_number ?>','<?php echo $data->spb_date ?>')"> Buatkan File SPB</a>
+										<a onclick="makeSPB('@php echo $data->id @endphp','@php echo $data->spb_number @endphp','@php echo $data->spb_date @endphp')"> Buatkan File SPB</a>
 									</div>
 								</div>
 								<div class="col-md-6">
@@ -690,14 +690,14 @@
 										<input type="file" name="spb_file" id="spb_file" class="form-control" accept="application/pdf, image/*">
 									</div>
 									<div class="form-group">
-										<?php $spb_attach = ''; ?>
+										@php $spb_attach = ''; @endphp
 										@foreach($data->media as $item)
 											@if($item->name == 'SPB' && $item->attachment != '')
-												<?php $spb_attach = $item->attachment; ?>
-												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/SPB')}}"> Download SPB "<?php echo $spb_attach; ?>"</a>
+												@php $spb_attach = $item->attachment; @endphp
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/SPB')}}"> Download SPB "@php echo $spb_attach; @endphp"</a>
 											@endif
 										@endforeach
-										<input type="hidden" id="spb_name" value="<?php echo $spb_attach; ?>">
+										<input type="hidden" id="spb_name" value="@php echo $spb_attach; @endphp">
 									</div>
 								</div>
 								<div class="col-md-6">
@@ -790,9 +790,9 @@
 										</label>
 										@foreach($data->media as $item)
 											@if($item->name == 'File Pembayaran' && $item->attachment !='')
-												<?php $status = 1; break; ?>
+												@php $status = 1; break; @endphp
 											@else
-												<?php $status = 0 ?>
+												@php $status = 0 @endphp
 											@endif
 										@endforeach
 
@@ -936,7 +936,7 @@
 										@else
 											<input type="text" name="spk_code" id="spk_code" class="form-control" placeholder="Nomor SPK" value="{{ $data->spk_code }}" required>
 										@endif
-										<button type="button" class="btn btn-wide btn-green btn-squared pull-right" onclick="generateSPKCode('<?php echo $data->examinationLab->lab_code ?>','<?php echo $data->examinationType->name ?>','<?php echo date('Y') ?>')">
+										<button type="button" class="btn btn-wide btn-green btn-squared pull-right" onclick="generateSPKCode('@php echo $data->examinationLab->lab_code @endphp','@php echo $data->examinationType->name @endphp','@php echo date('Y') @endphp')">
 											Generate
 										</button>
 									</div>
@@ -1089,14 +1089,14 @@
 										<input type="file" name="lap_uji_file" id="lap_uji_file" class="form-control" accept="application/pdf, image/*">
 									</div>
 									<div class="form-group">
-										<?php $lap_uji_attach = ''; ?>
+										@php $lap_uji_attach = ''; @endphp
 										@foreach($data->media as $item)
 											@if($item->name == 'Laporan Uji' && $item->attachment != '')
-												<?php $lap_uji_attach = $item->attachment; ?>
-												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Uji')}}"> Download Laporan Uji "<?php echo $lap_uji_attach; ?>"</a>
+												@php $lap_uji_attach = $item->attachment; @endphp
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Uji')}}"> Download Laporan Uji "@php echo $lap_uji_attach; @endphp"</a>
 											@endif
 										@endforeach
-										<input type="hidden" id="lap_uji_name" value="<?php echo $lap_uji_attach; ?>">
+										<input type="hidden" id="lap_uji_name" value="@php echo $lap_uji_attach; @endphp">
 									</div>
 								</div>
 								@endif
