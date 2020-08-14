@@ -184,7 +184,7 @@
 		                </div>
 		                @endif
 	              </div>
-	              <li>  <a href="#" id="top-notification-trigger"><em class="icon-bell"></em><span id="notification-count"><?php echo $notification_count;?></span></a></li>
+	              <li>  <a href="#" id="top-notification-trigger"><em class="icon-bell"></em><span id="notification-count">@php echo $notification_count;@endphp</span></a></li>
 	             	<div id="top-notification" style="float:left"> 
 	                	<div class="top-notification-content">
                       @php 
@@ -192,7 +192,7 @@
                       <div class="top-notification-items">
                         <div class="top-notification-item clearfix">
                           <div class="top-notification-item-desc">
-                            <a data-url="@php echo $notif['url']@endphp" data-id="<?php echo $notif['id']?>" class="notifData">{{$notif['message']}}</a> 
+                            <a data-url="@php echo $notif['url']@endphp" data-id="@php echo $notif['id']@endphp" class="notifData">{{$notif['message']}}</a> 
                           </div>
                         </div>
                       </div>

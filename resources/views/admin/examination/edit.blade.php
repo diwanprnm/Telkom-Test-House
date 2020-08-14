@@ -2,11 +2,11 @@
 
 @section('content')
 
-<?php
+@php
 	$currentUser = Auth::user();
 	$is_admin_mail = $currentUser['email'];
 	$is_super = $currentUser['id'];
-?>
+@endphp
 
 <input type="hide" id="hide_exam_id" name="hide_exam_id">
 <div class="modal fade" id="myModal_reset_uf" tabindex="-1" role="dialog" aria-hidden="true">
@@ -300,7 +300,7 @@
 										<table class="table table-condensed"><caption></caption>
 											<thead>
 											@if(strpos($data->keterangan, 'qa_date') !== false)
-												<?php $data_ket = explode("qa_date",$data->keterangan); ?>
+												@php $data_ket = explode("qa_date",$data->keterangan); @endphp
 												<tr>
 													<th colspan="3" class="center" scope="col"><p style="color:red">Perangkat ini sudah pernah diuji, dengan status "Tidak Lulus Uji" berdasarkan keputusan Sidang QA tanggal {{ $data_ket[1] }}</p></th>
 												</tr>
@@ -693,16 +693,16 @@
 											</tr>
 											<tr>
 												<td>
-													<strong><?php echo $data->cust_test_date; ?></strong>
+													<strong>@php echo $data->cust_test_date; @endphp</strong>
 												</td>
 												<td>
-													<strong><?php echo $data->deal_test_date; ?></strong>
+													<strong>@php echo $data->deal_test_date; @endphp</strong>
 												</td>
 												<td>
-													<strong><?php echo $data->urel_test_date; ?></strong>
+													<strong>@php echo $data->urel_test_date; @endphp</strong>
 												</td>
 												<td>
-													<strong><?php echo $data->function_date; ?></strong>
+													<strong>@php echo $data->function_date; @endphp</strong>
 												</td>
 											</tr>
 										</tbody>
@@ -720,9 +720,9 @@
 											<h4 style="display:inline">
 												Jadwal FIX Uji Fungsi : 
 												@if($data->function_date != null)
-													<?php echo $data->function_date; ?>
+													@php echo $data->function_date; @endphp
 												@else
-													<?php echo $data->deal_test_date; ?>
+													@php echo $data->deal_test_date; @endphp
 												@endif
 											</h4>
 										</div>
@@ -752,13 +752,13 @@
 								</div>
 							</div>
 								@if($data->function_date != null)
-									<?php $in_equip_date = $data->function_date; ?>
+									@php $in_equip_date = $data->function_date; @endphp
 								@elseif($data->function_date == null && $data->urel_test_date != null)
-									<?php $in_equip_date = $data->urel_test_date; ?>
+									@php $in_equip_date = $data->urel_test_date; @endphp
 								@elseif($data->urel_test_date == null && $data->deal_test_date != null)
-									<?php $in_equip_date = $data->deal_test_date; ?>
+									@php $in_equip_date = $data->deal_test_date; @endphp
 								@else
-									<?php $in_equip_date = $data->cust_test_date; ?>
+									@php $in_equip_date = $data->cust_test_date; @endphp
 								@endif
 							<input type="hidden" id="hide_count_equipment_form-function-test" value="{{ count($data->equipment) }}">
 								@if(count($data->equipment)==0 && $data->function_test_date_approval == 1)
@@ -799,14 +799,14 @@
 									<input type="file" name="function_file" id="function_file" class="form-control" accept="application/pdf"/>
 								</div>
 								<div class="form-group">
-									<?php $function_attach = ''; ?>
+									@php $function_attach = ''; @endphp
 									@foreach($data->media as $item)
 										@if($item->name == 'Laporan Hasil Uji Fungsi' && $item->attachment != '')
-											<?php $function_attach = $item->attachment; ?>
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil Uji Fungsi "<?php echo $function_attach; ?>"</a>
+											@php $function_attach = $item->attachment; @endphp
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil Uji Fungsi "@php echo $function_attach; @endphp"</a>
 										@endif
 									@endforeach
-									<input type="hidden" id="function_name" value="<?php echo $function_attach; ?>">
+									<input type="hidden" id="function_name" value="@php echo $function_attach; @endphp">
 								</div>
 								<div class="form-group">
 									<label for="catatan">Catatan :</label>
@@ -830,14 +830,14 @@
 								</div>
 								<div class="col-md-12">
 									<div class="form-group">
-										<?php $barang_attach = ''; ?>
+										@php $barang_attach = ''; @endphp
 										@foreach($data->media as $item)
 											@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
-												<?php $barang_attach = $item->attachment; ?>
-												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan & Pengeluaran Perangkat Uji "<?php echo $barang_attach; ?>"</a>
+												@php $barang_attach = $item->attachment; @endphp
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan & Pengeluaran Perangkat Uji "@php echo $barang_attach; @endphp"</a>
 											@endif
 										@endforeach
-										<input type="hidden" id="barang_name" value="<?php echo $barang_attach; ?>">
+										<input type="hidden" id="barang_name" value="@php echo $barang_attach; @endphp">
 									</div>
 								</div>
 							@endif
@@ -928,16 +928,16 @@
 											</tr>
 											<tr>
 												<td>
-													<strong><?php echo $data->cust_test_date; ?></strong>
+													<strong>@php echo $data->cust_test_date; @endphp</strong>
 												</td>
 												<td>
-													<strong><?php echo $data->deal_test_date; ?></strong>
+													<strong>@php echo $data->deal_test_date; @endphp</strong>
 												</td>
 												<td>
-													<strong><?php echo $data->urel_test_date; ?></strong>
+													<strong>@php echo $data->urel_test_date; @endphp</strong>
 												</td>
 												<td>
-													<strong><?php echo $data->function_date; ?></strong>
+													<strong>@php echo $data->function_date; @endphp</strong>
 												</td>
 											</tr>
 										</tbody>
@@ -955,9 +955,9 @@
 											<h4 style="display:inline">
 												Jadwal FIX Uji Fungsi : 
 												@if($data->function_date != null)
-													<?php echo $data->function_date; ?>
+													@php echo $data->function_date; @endphp
 												@else
-													<?php echo $data->deal_test_date; ?>
+													@php echo $data->deal_test_date; @endphp
 												@endif
 											</h4>
 										</div>
@@ -987,13 +987,13 @@
 								</div>
 							</div>
 								@if($data->function_date != null)
-									<?php $in_equip_date = $data->function_date; ?>
+									@php $in_equip_date = $data->function_date; @endphp
 								@elseif($data->function_date == null && $data->urel_test_date != null)
-									<?php $in_equip_date = $data->urel_test_date; ?>
+									@php $in_equip_date = $data->urel_test_date; @endphp
 								@elseif($data->urel_test_date == null && $data->deal_test_date != null)
-									<?php $in_equip_date = $data->deal_test_date; ?>
+									@php $in_equip_date = $data->deal_test_date; @endphp
 								@else
-									<?php $in_equip_date = $data->cust_test_date; ?>
+									@php $in_equip_date = $data->cust_test_date; @endphp
 								@endif
 
 							<div class="col-md-12">
@@ -1022,11 +1022,11 @@
 									</label>
 								</div>
 								<div class="form-group">
-									<?php $function_attach = ''; ?>
+									@php $function_attach = ''; @endphp
 									@foreach($data->media as $item)
 										@if($item->name == 'Laporan Hasil Uji Fungsi' && $item->attachment != '')
-											<?php $function_attach = $item->attachment; ?>
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil Uji Fungsi "<?php echo $function_attach; ?>"</a>
+											@php $function_attach = $item->attachment; @endphp
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil Uji Fungsi "@php echo $function_attach; @endphp"</a>
 										@endif
 									@endforeach
 								</div>
@@ -1046,11 +1046,11 @@
 								</div>
 								<div class="col-md-12">
 									<div class="form-group">
-										<?php $barang_attach = ''; ?>
+										@php $barang_attach = ''; @endphp
 										@foreach($data->media as $item)
 											@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
-												<?php $barang_attach = $item->attachment; ?>
-												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan & Pengeluaran Perangkat Uji "<?php echo $barang_attach; ?>"</a>
+												@php $barang_attach = $item->attachment; @endphp
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan & Pengeluaran Perangkat Uji "@php echo $barang_attach; @endphp"</a>
 											@endif
 										@endforeach
 									</div>
@@ -1098,16 +1098,16 @@
 											</tr>
 											<tr>
 												<td>
-													<strong><?php echo $data->cust_test_date; ?></strong>
+													<strong>@php echo $data->cust_test_date; @endphp</strong>
 												</td>
 												<td>
-													<strong><?php echo $data->deal_test_date; ?></strong>
+													<strong>@php echo $data->deal_test_date; @endphp</strong>
 												</td>
 												<td>
-													<strong><?php echo $data->urel_test_date; ?></strong>
+													<strong>@php echo $data->urel_test_date; @endphp</strong>
 												</td>
 												<td>
-													<strong><?php echo $data->function_date; ?></strong>
+													<strong>@php echo $data->function_date; @endphp</strong>
 												</td>
 											</tr>
 										</tbody>
@@ -1125,9 +1125,9 @@
 											<h4 style="display:inline">
 												Jadwal FIX Uji Fungsi : 
 												@if($data->function_date != null)
-													<?php echo $data->function_date; ?>
+													@php echo $data->function_date; @endphp
 												@else
-													<?php echo $data->deal_test_date; ?>
+													@php echo $data->deal_test_date; @endphp
 												@endif
 											</h4>
 										</div>
@@ -1157,13 +1157,13 @@
 								</div>
 							</div>
 								@if($data->function_date != null)
-									<?php $in_equip_date = $data->function_date; ?>
+									@php $in_equip_date = $data->function_date; @endphp
 								@elseif($data->function_date == null && $data->urel_test_date != null)
-									<?php $in_equip_date = $data->urel_test_date; ?>
+									@php $in_equip_date = $data->urel_test_date; @endphp
 								@elseif($data->urel_test_date == null && $data->deal_test_date != null)
-									<?php $in_equip_date = $data->deal_test_date; ?>
+									@php $in_equip_date = $data->deal_test_date; @endphp
 								@else
-									<?php $in_equip_date = $data->cust_test_date; ?>
+									@php $in_equip_date = $data->cust_test_date; @endphp
 								@endif
 
 							<div class="col-md-12">
@@ -1192,11 +1192,11 @@
 									</label>
 								</div>
 								<div class="form-group">
-									<?php $function_attach = ''; ?>
+									@php $function_attach = ''; @endphp
 									@foreach($data->media as $item)
 										@if($item->name == 'Laporan Hasil Uji Fungsi' && $item->attachment != '')
-											<?php $function_attach = $item->attachment; ?>
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil Uji Fungsi "<?php echo $function_attach; ?>"</a>
+											@php $function_attach = $item->attachment; @endphp
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil Uji Fungsi "@php echo $function_attach; @endphp"</a>
 										@endif
 									@endforeach
 								</div>
@@ -1216,11 +1216,11 @@
 								</div>
 								<div class="col-md-12">
 									<div class="form-group">
-										<?php $barang_attach = ''; ?>
+										@php $barang_attach = ''; @endphp
 										@foreach($data->media as $item)
 											@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
-												<?php $barang_attach = $item->attachment; ?>
-												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan & Pengeluaran Perangkat Uji "<?php echo $barang_attach; ?>"</a>
+												@php $barang_attach = $item->attachment; @endphp
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan & Pengeluaran Perangkat Uji "@php echo $barang_attach; @endphp"</a>
 											@endif
 										@endforeach
 									</div>
@@ -1258,7 +1258,7 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="form-group">
-									<a onclick="makeContract('<?php echo $data->id ?>','<?php echo $data->contract_date ?>')"> Buatkan File Kontrak</a>
+									<a onclick="makeContract('@php echo $data->id @endphp','@php echo $data->contract_date @endphp')"> Buatkan File Kontrak</a>
 								</div>
 							</div>
 							<div class="col-md-12">
@@ -1269,14 +1269,14 @@
 									<input type="file" name="contract_file" id="contract_file" class="form-control" accept="application/pdf"/>
 								</div>
 								<div class="form-group">
-									<?php $contract_attach = ''; ?>
+									@php $contract_attach = ''; @endphp
 									@foreach($data->media as $item)
 										@if($item->name == 'Tinjauan Kontrak' && $item->attachment != '')
-											<?php $contract_attach = $item->attachment; ?>
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tinjauan Kontrak')}}"> Download Tinjauan Kontrak "<?php echo $contract_attach; ?>"</a>
+											@php $contract_attach = $item->attachment; @endphp
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tinjauan Kontrak')}}"> Download Tinjauan Kontrak "@php echo $contract_attach; @endphp"</a>
 										@endif
 									@endforeach
-									<input type="hidden" id="contract_name" value="<?php echo $contract_attach; ?>">
+									<input type="hidden" id="contract_name" value="@php echo $contract_attach; @endphp">
 								</div>
 							</div>
 							<div class="col-md-6">
@@ -1356,11 +1356,11 @@
 									</label>
 								</div>
 								<div class="form-group">
-									<?php $contract_attach = ''; ?>
+									@php $contract_attach = ''; @endphp
 									@foreach($data->media as $item)
 										@if($item->name == 'Tinjauan Kontrak' && $item->attachment != '')
-											<?php $contract_attach = $item->attachment; ?>
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tinjauan Kontrak')}}"> Download Tinjauan Kontrak "<?php echo $contract_attach; ?>"</a>
+											@php $contract_attach = $item->attachment; @endphp
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tinjauan Kontrak')}}"> Download Tinjauan Kontrak "@php echo $contract_attach; @endphp"</a>
 										@endif
 									@endforeach
 								</div>
@@ -1397,11 +1397,11 @@
 									</label>
 								</div>
 								<div class="form-group">
-									<?php $contract_attach = ''; ?>
+									@php $contract_attach = ''; @endphp
 									@foreach($data->media as $item)
 										@if($item->name == 'Tinjauan Kontrak' && $item->attachment != '')
-											<?php $contract_attach = $item->attachment; ?>
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tinjauan Kontrak')}}"> Download Tinjauan Kontrak "<?php echo $contract_attach; ?>"</a>
+											@php $contract_attach = $item->attachment; @endphp
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tinjauan Kontrak')}}"> Download Tinjauan Kontrak "@php echo $contract_attach; @endphp"</a>
 										@endif
 									@endforeach
 								</div>
@@ -1439,7 +1439,7 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="form-group">
-									<a onclick="makeSPB('<?php echo $data->id ?>','<?php echo $data->spb_number ?>','<?php echo $data->spb_date ?>')"> Buatkan File SPB</a>
+									<a onclick="makeSPB('@php echo $data->id @endphp','@php echo $data->spb_number @endphp','@php echo $data->spb_date @endphp')"> Buatkan File SPB</a>
 								</div>
 							</div>
 							<div class="col-md-12">
@@ -1450,14 +1450,14 @@
 									<input type="file" name="spb_file" id="spb_file" class="form-control" accept="application/pdf, image/*">
 								</div>
 								<div class="form-group">
-									<?php $spb_attach = ''; ?>
+									@php $spb_attach = ''; @endphp
 									@foreach($data->media as $item)
 										@if($item->name == 'SPB' && $item->attachment != '')
-											<?php $spb_attach = $item->attachment; ?>
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/SPB')}}"> Download SPB "<?php echo $spb_attach; ?>"</a>
+											@php $spb_attach = $item->attachment; @endphp
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/SPB')}}"> Download SPB "@php echo $spb_attach; @endphp"</a>
 										@endif
 									@endforeach
-									<input type="hidden" id="spb_name" value="<?php echo $spb_attach; ?>">
+									<input type="hidden" id="spb_name" value="@php echo $spb_attach; @endphp">
 								</div>
 							</div>
 							<div class="col-md-6">
@@ -1555,11 +1555,11 @@
 									</label>
 								</div>
 								<div class="form-group">
-									<?php $spb_attach = ''; ?>
+									@php $spb_attach = ''; @endphp
 									@foreach($data->media as $item)
 										@if($item->name == 'SPB' && $item->attachment != '')
-											<?php $spb_attach = $item->attachment; ?>
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/SPB')}}"> Download SPB "<?php echo $spb_attach; ?>"</a>
+											@php $spb_attach = $item->attachment; @endphp
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/SPB')}}"> Download SPB "@php echo $spb_attach; @endphp"</a>
 										@endif
 									@endforeach
 								</div>
@@ -1614,11 +1614,11 @@
 									</label>
 								</div>
 								<div class="form-group">
-									<?php $spb_attach = ''; ?>
+									@php $spb_attach = ''; @endphp
 									@foreach($data->media as $item)
 										@if($item->name == 'SPB' && $item->attachment != '')
-											<?php $spb_attach = $item->attachment; ?>
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/SPB')}}"> Download SPB "<?php echo $spb_attach; ?>"</a>
+											@php $spb_attach = $item->attachment; @endphp
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/SPB')}}"> Download SPB "@php echo $spb_attach; @endphp"</a>
 										@endif
 									@endforeach
 								</div>
@@ -1675,10 +1675,10 @@
 									<label>
 										Bukti Pembayaran
 									</label>
-										<?php $status = 0 ?>
+										@php $status = 0 @endphp
 									@foreach($data->media as $item)
 										@if($item->name == 'File Pembayaran' && $item->attachment !='')
-											<?php $status = 1; break; ?>
+											@php $status = 1;  @endphp
 										@endif
 									@endforeach
 									<input type="hidden" id="hide_status_form-pembayaran" value="{{ $status }}">
@@ -1700,20 +1700,20 @@
 									@endif
 								</div>
 							</div>
-							<?php $find_kuitansi = 0; $find_faktur = 0; $kuitansi_attach = ''; $faktur_attach = '';?>
+							@php $find_kuitansi = 0; $find_faktur = 0; $kuitansi_attach = ''; $faktur_attach = '';@endphp
 							@foreach($data->media as $item)
 								@if($item->name == 'Kuitansi' && $item->attachment != '' && $find_kuitansi == 0)
-									<?php $find_kuitansi = 1; $kuitansi_attach = $item->attachment;?>
+									@php $find_kuitansi = 1; $kuitansi_attach = $item->attachment;@endphp
 								@endif
 								@if($item->name == 'Faktur Pajak' && $item->attachment != '' && $find_faktur == 0)
-									<?php $find_faktur = 1; $faktur_attach = $item->attachment;?>
+									@php $find_faktur = 1; $faktur_attach = $item->attachment;@endphp
 								@endif
 							@endforeach
 							<div class="col-md-6">
 								@if($find_kuitansi == 1)
 									-
 								@else
-									<a onclick="checkKuitansi('<?php echo $data->id ?>')"> Cek Kuitansi</a>
+									<a onclick="checkKuitansi('@php echo $data->id @endphp')"> Cek Kuitansi</a>
 								@endif
 							</div>
 							<div class="col-md-6">
@@ -1721,7 +1721,7 @@
 									@if($find_faktur == 1)
 										-
 									@else
-										<a onclick="checkTaxInvoice('<?php echo $data->id ?>')"> Cek Faktur Pajak</a>
+										<a onclick="checkTaxInvoice('@php echo $data->id @endphp')"> Cek Faktur Pajak</a>
 									@endif
 								</div>
 							</div>
@@ -1734,9 +1734,9 @@
 								</div>
 								<div class="form-group">
 									@if($kuitansi_attach != '')
-										<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/kuitansi')}}"> Download Kuitansi "<?php echo $kuitansi_attach; ?>"</a>
+										<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/kuitansi')}}"> Download Kuitansi "@php echo $kuitansi_attach; @endphp"</a>
 									@endif
-									<input type="hidden" id="kuitansi_name" value="<?php echo $kuitansi_attach; ?>">
+									<input type="hidden" id="kuitansi_name" value="@php echo $kuitansi_attach; @endphp">
 								</div>
 							</div>
 							<div class="col-md-6">
@@ -1748,9 +1748,9 @@
 								</div>
 								<div class="form-group">
 									@if($faktur_attach != '')
-										<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/faktur')}}"> Download Faktur Pajak "<?php echo $faktur_attach; ?>"</a>
+										<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/faktur')}}"> Download Faktur Pajak "@php echo $faktur_attach; @endphp"</a>
 									@endif
-									<input type="hidden" id="faktur_name" value="<?php echo $faktur_attach; ?>">
+									<input type="hidden" id="faktur_name" value="@php echo $faktur_attach; @endphp">
 								</div>
 							</div>
 							<div class="col-md-6">
@@ -1830,10 +1830,10 @@
 									<label>
 										Bukti Pembayaran
 									</label>
-										<?php $status = 0 ?>
+										@php $status = 0 @endphp
 									@foreach($data->media as $item)
 										@if($item->name == 'File Pembayaran' && $item->attachment !='')
-											<?php $status = 1; break; ?>
+											@php $status = 1;  @endphp
 										@endif
 									@endforeach
 
@@ -1861,11 +1861,11 @@
 									</label>
 								</div>
 								<div class="form-group">
-									<?php $kuitansi_attach = ''; ?>
+									@php $kuitansi_attach = ''; @endphp
 									@foreach($data->media as $item)
 										@if($item->name == 'Kuitansi' && $item->attachment != '')
-											<?php $kuitansi_attach = $item->attachment; ?>
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/kuitansi')}}"> Download Kuitansi "<?php echo $kuitansi_attach; ?>"</a>
+											@php $kuitansi_attach = $item->attachment; @endphp
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/kuitansi')}}"> Download Kuitansi "@php echo $kuitansi_attach; @endphp"</a>
 										@endif
 									@endforeach
 								</div>
@@ -1877,11 +1877,11 @@
 									</label>
 								</div>
 								<div class="form-group">
-									<?php $faktur_attach = ''; ?>
+									@php $faktur_attach = ''; @endphp
 									@foreach($data->media as $item)
 										@if($item->name == 'Faktur Pajak' && $item->attachment != '')
-											<?php $faktur_attach = $item->attachment; ?>
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/faktur')}}"> Download Faktur Pajak "<?php echo $faktur_attach; ?>"</a>
+											@php $faktur_attach = $item->attachment; @endphp
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/faktur')}}"> Download Faktur Pajak "@php echo $faktur_attach; @endphp"</a>
 										@endif
 									@endforeach
 								</div>
@@ -1916,10 +1916,10 @@
 									<label>
 										Bukti Pembayaran
 									</label>
-										<?php $status = 0 ?>
+										@php $status = 0 @endphp
 									@foreach($data->media as $item)
 										@if($item->name == 'File Pembayaran' && $item->attachment !='')
-											<?php $status = 1; break; ?>
+											@php $status = 1;  @endphp
 										@endif
 									@endforeach
 
@@ -1947,11 +1947,11 @@
 									</label>
 								</div>
 								<div class="form-group">
-									<?php $kuitansi_attach = ''; ?>
+									@php $kuitansi_attach = ''; @endphp
 									@foreach($data->media as $item)
 										@if($item->name == 'Kuitansi' && $item->attachment != '')
-											<?php $kuitansi_attach = $item->attachment; ?>
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/kuitansi')}}"> Download Kuitansi "<?php echo $kuitansi_attach; ?>"</a>
+											@php $kuitansi_attach = $item->attachment; @endphp
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/kuitansi')}}"> Download Kuitansi "@php echo $kuitansi_attach; @endphp"</a>
 										@endif
 									@endforeach
 								</div>
@@ -1963,11 +1963,11 @@
 									</label>
 								</div>
 								<div class="form-group">
-									<?php $faktur_attach = ''; ?>
+									@php $faktur_attach = ''; @endphp
 									@foreach($data->media as $item)
 										@if($item->name == 'Faktur Pajak' && $item->attachment != '')
-											<?php $faktur_attach = $item->attachment; ?>
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/faktur')}}"> Download Faktur Pajak "<?php echo $faktur_attach; ?>"</a>
+											@php $faktur_attach = $item->attachment; @endphp
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/faktur')}}"> Download Faktur Pajak "@php echo $faktur_attach; @endphp"</a>
 										@endif
 									@endforeach
 								</div>
@@ -2023,10 +2023,10 @@
 										Nomor SPK *
 									</label>
 										<input type="text" name="spk_code" id="spk_code" class="form-control" placeholder="Nomor SPK" value="{{ $data->spk_code }}" required 
-										<?php if($data->spk_code != null){echo "readonly";}?>
+										@php if($data->spk_code != null){echo "readonly";}@endphp
 										>
 									@if($data->examination_lab_id != null && $data->spk_code == null)
-										<button type="button" class="btn btn-wide btn-green btn-squared pull-right" onclick="generateSPKCode('<?php echo $data->examinationLab->lab_code ?>','<?php echo $data->examinationType->name ?>','<?php echo date('Y') ?>')">
+										<button type="button" class="btn btn-wide btn-green btn-squared pull-right" onclick="generateSPKCode('@php echo $data->examinationLab->lab_code @endphp','@php echo $data->examinationType->name @endphp','@php echo date('Y') @endphp')">
 											Generate
 										</button>
 									@endif
@@ -2210,7 +2210,7 @@
 						</legend>
 						<div class="row">
 						@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
-							<?php
+							@php
 								$start_date = new DateTime(date('Y-m-d'));
 								$end_date = new DateTime($exam_schedule->data[0]->targetDt);
 								if($start_date>$end_date){
@@ -2219,7 +2219,7 @@
 									$interval = $start_date->diff($end_date);
 									$sisa_spk = $interval->days;
 								}
-							?>
+							@endphp
 							<div class="col-md-12">
 								<div class="form-group">
 									<table class="table table-bordered"><caption></caption>
@@ -2454,14 +2454,14 @@
 									<input type="file" name="barang_file2" id="barang_file2" class="form-control" accept="application/pdf"/>
 								</div>
 								<div class="form-group">
-									<?php $barang_attach2 = ''; ?>
+									@php $barang_attach2 = ''; @endphp
 									@foreach($data->media as $item)
 										@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji2' && $item->attachment != '')
-											<?php $barang_attach2 = $item->attachment; ?>
+											@php $barang_attach2 = $item->attachment; @endphp
 											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji2')}}"> Download Bukti Pengeluaran Perangkat Uji</a>
 										@endif
 									@endforeach
-									<input type="hidden" id="barang_name2" value="<?php echo $barang_attach2; ?>">
+									<input type="hidden" id="barang_name2" value="@php echo $barang_attach2; @endphp">
 								</div>
 							</div>
 							<div class="col-md-12">
@@ -2515,10 +2515,10 @@
 									</label>
 								</div>
 								<div class="form-group">
-									<?php $barang_attach2 = ''; ?>
+									@php $barang_attach2 = ''; @endphp
 									@foreach($data->media as $item)
 										@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji2' && $item->attachment != '')
-											<?php $barang_attach2 = $item->attachment; ?>
+											@php $barang_attach2 = $item->attachment; @endphp
 											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji2')}}"> Download Bukti Pengeluaran Perangkat Uji</a>
 										@endif
 									@endforeach
@@ -2565,10 +2565,10 @@
 									</label>
 								</div>
 								<div class="form-group">
-									<?php $barang_attach2 = ''; ?>
+									@php $barang_attach2 = ''; @endphp
 									@foreach($data->media as $item)
 										@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji2' && $item->attachment != '')
-											<?php $barang_attach2 = $item->attachment; ?>
+											@php $barang_attach2 = $item->attachment; @endphp
 											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji2')}}"> Download Bukti Pengeluaran Perangkat Uji</a>
 										@endif
 									@endforeach
@@ -2609,7 +2609,7 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="form-group">
-									<a onclick="makeTandaTerima('<?php echo $data->id ?>')"> Buatkan File Tanda Terima</a>
+									<a onclick="makeTandaTerima('@php echo $data->id @endphp')"> Buatkan File Tanda Terima</a>
 								</div>
 							</div>
 							<div class="col-md-12">
@@ -2620,14 +2620,14 @@
 									<input type="file" name="tanda_terima_file" id="tanda_terima_file" class="form-control" accept="application/pdf"/>
 								</div>
 								<div class="form-group">
-									<?php $tanda_terima_attach = ''; ?>
+									@php $tanda_terima_attach = ''; @endphp
 									@foreach($data->media as $item)
 										@if($item->name == 'Tanda Terima Hasil Pengujian' && $item->attachment != '')
-											<?php $tanda_terima_attach = $item->attachment; ?>
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tanda Terima Hasil Pengujian')}}"> Download Tanda Terima Hasil Pengujian"<?php echo $tanda_terima_attach; ?>"</a>
+											@php $tanda_terima_attach = $item->attachment; @endphp
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tanda Terima Hasil Pengujian')}}"> Download Tanda Terima Hasil Pengujian"@php echo $tanda_terima_attach; @endphp"</a>
 										@endif
 									@endforeach
-									<input type="hidden" id="tanda_terima_name" value="<?php echo $tanda_terima_attach; ?>">
+									<input type="hidden" id="tanda_terima_name" value="@php echo $tanda_terima_attach; @endphp">
 								</div>
 							</div>
 							<div class="col-md-12">
@@ -2651,11 +2651,11 @@
 									</label>
 								</div>
 								<div class="form-group">
-									<?php $tanda_terima_attach = ''; ?>
+									@php $tanda_terima_attach = ''; @endphp
 									@foreach($data->media as $item)
 										@if($item->name == 'Tanda Terima Hasil Pengujian' && $item->attachment != '')
-											<?php $tanda_terima_attach = $item->attachment; ?>
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tanda Terima Hasil Pengujian')}}"> Download Tanda Terima Hasil Pengujian"<?php echo $tanda_terima_attach; ?>"</a>
+											@php $tanda_terima_attach = $item->attachment; @endphp
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tanda Terima Hasil Pengujian')}}"> Download Tanda Terima Hasil Pengujian"@php echo $tanda_terima_attach; @endphp"</a>
 										@endif
 									@endforeach
 								</div>
@@ -2676,11 +2676,11 @@
 									</label>
 								</div>
 								<div class="form-group">
-									<?php $tanda_terima_attach = ''; ?>
+									@php $tanda_terima_attach = ''; @endphp
 									@foreach($data->media as $item)
 										@if($item->name == 'Tanda Terima Hasil Pengujian' && $item->attachment != '')
-											<?php $tanda_terima_attach = $item->attachment; ?>
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tanda Terima Hasil Pengujian')}}"> Download Tanda Terima Hasil Pengujian"<?php echo $tanda_terima_attach; ?>"</a>
+											@php $tanda_terima_attach = $item->attachment; @endphp
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tanda Terima Hasil Pengujian')}}"> Download Tanda Terima Hasil Pengujian"@php echo $tanda_terima_attach; @endphp"</a>
 										@endif
 									@endforeach
 								</div>
@@ -2704,7 +2704,7 @@
 							@foreach($data->media as $item)
 								@if($item->name == 'Laporan Uji')
 									@if($rev_uji == 0)
-										<?php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;?>
+										@php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;@endphp
 									@endif
 									@if($item->attachment != '')
 									<div class="col-md-12">
@@ -2744,7 +2744,7 @@
 									@endif
 								@endif
 								@if($item->name == 'Revisi Laporan Uji' && $rev_uji == 0)
-									<?php $rev_uji = 1; $lap_uji_url = URL::to('/admin/examination/media/download/'.$item->id); $lap_uji_attach = $item->attachment;?>
+									@php $rev_uji = 1; $lap_uji_url = URL::to('/admin/examination/media/download/'.$item->id); $lap_uji_attach = $item->attachment;@endphp
 								@endif
 							@endforeach
 							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
@@ -2809,10 +2809,10 @@
 													<td>Created At</td>
 													<td>Action</td>
 												</tr>
-												<?php $no=0;?>
+												@php $no=0;@endphp
 												@foreach($data->media as $item)
 													@if($item->name == 'Revisi Laporan Uji')
-														<?php $no++;?>
+														@php $no++;@endphp
 														<tr>
 															<td style="text-align: center;">
 																<strong>{{ $no }}</strong>
@@ -2928,7 +2928,7 @@
 						<div class="row">
 							@foreach($data->media as $item)
 								@if($item->name == 'Laporan Uji')
-									<?php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;?>
+									@php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;@endphp
 									@if($item->attachment != '')
 									<div class="col-md-12">
 										<div class="form-group">
@@ -3010,10 +3010,10 @@
 												<td>Created By</td>
 												<td>Created At</td>
 											</tr>
-											<?php $no=0;?>
+											@php $no=0;@endphp
 											@foreach($data->media as $item)
 												@if($item->name == 'Revisi Laporan Uji')
-													<?php $no++;?>
+													@php $no++;@endphp
 													<tr>
 														<td style="text-align: center;">
 															<strong>{{ $no }}</strong>
@@ -3033,8 +3033,8 @@
 											@if($no == 0)
 												<tr><td colspan="5" style="text-align: center;"> Data Not Found </td></tr>
 											@else
-												<?php $lap_uji_url = "URL::to('/admin/examination/media/download/'.$item->id)"; ?>
-												<?php $lap_uji_attach = $item->attachment; ?>
+												@php $lap_uji_url = "URL::to('/admin/examination/media/download/'.$item->id)"; @endphp
+												@php $lap_uji_attach = $item->attachment; @endphp
 											@endif
 										</tbody>
 									</table>
@@ -3097,7 +3097,7 @@
 						<div class="row">
 							@foreach($data->media as $item)
 								@if($item->name == 'Laporan Uji')
-									<?php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;?>
+									@php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;@endphp
 									@if($item->attachment != '')
 									<div class="col-md-12">
 										<div class="form-group">
@@ -3179,10 +3179,10 @@
 												<td>Created By</td>
 												<td>Created At</td>
 											</tr>
-											<?php $no=0;?>
+											@php $no=0;@endphp
 											@foreach($data->media as $item)
 												@if($item->name == 'Revisi Laporan Uji')
-													<?php $no++;?>
+													@php $no++;@endphp
 													<tr>
 														<td style="text-align: center;">
 															<strong>{{ $no }}</strong>
@@ -3202,8 +3202,8 @@
 											@if($no == 0)
 												<tr><td colspan="5" style="text-align: center;"> Data Not Found </td></tr>
 											@else
-												<?php $lap_uji_url = "URL::to('/admin/examination/media/download/'.$item->id)"; ?>
-												<?php $lap_uji_attach = $item->attachment; ?>
+												@php $lap_uji_url = "URL::to('/admin/examination/media/download/'.$item->id)"; @endphp
+												@php $lap_uji_attach = $item->attachment; @endphp
 											@endif
 										</tbody>
 									</table>
@@ -3576,14 +3576,14 @@
 										<input type="file" name="barang_file2" id="barang_file2" class="form-control" accept="application/pdf"/>
 									</div>
 									<div class="form-group">
-										<?php $barang_attach2 = ''; ?>
+										@php $barang_attach2 = ''; @endphp
 										@foreach($data->media as $item)
 											@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji2' && $item->attachment != '')
-												<?php $barang_attach2 = $item->attachment; ?>
+												@php $barang_attach2 = $item->attachment; @endphp
 												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji2')}}"> Download Bukti Pengeluaran Perangkat Uji</a>
 											@endif
 										@endforeach
-										<input type="hidden" id="barang_name2" value="<?php echo $barang_attach2; ?>">
+										<input type="hidden" id="barang_name2" value="@php echo $barang_attach2; @endphp">
 									</div>
 								</div>
 								<div class="col-md-12">
@@ -3637,10 +3637,10 @@
 										</label>
 									</div>
 									<div class="form-group">
-										<?php $barang_attach2 = ''; ?>
+										@php $barang_attach2 = ''; @endphp
 										@foreach($data->media as $item)
 											@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji2' && $item->attachment != '')
-												<?php $barang_attach2 = $item->attachment; ?>
+												@php $barang_attach2 = $item->attachment; @endphp
 												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji2')}}"> Download Bukti Pengeluaran Perangkat Uji</a>
 											@endif
 										@endforeach
@@ -3687,10 +3687,10 @@
 										</label>
 									</div>
 									<div class="form-group">
-										<?php $barang_attach2 = ''; ?>
+										@php $barang_attach2 = ''; @endphp
 										@foreach($data->media as $item)
 											@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji2' && $item->attachment != '')
-												<?php $barang_attach2 = $item->attachment; ?>
+												@php $barang_attach2 = $item->attachment; @endphp
 												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji2')}}"> Download Bukti Pengeluaran Perangkat Uji</a>
 											@endif
 										@endforeach
@@ -3732,7 +3732,7 @@
 								<div class="row">
 									<div class="col-md-12">
 										<div class="form-group">
-											<a onclick="makeTandaTerima('<?php echo $data->id ?>')"> Buatkan File Tanda Terima</a>
+											<a onclick="makeTandaTerima('@php echo $data->id @endphp')"> Buatkan File Tanda Terima</a>
 										</div>
 									</div>
 									<div class="col-md-12">
@@ -3743,14 +3743,14 @@
 											<input type="file" name="tanda_terima_file" id="tanda_terima_file" class="form-control" accept="application/pdf"/>
 										</div>
 										<div class="form-group">
-											<?php $tanda_terima_attach = ''; ?>
+											@php $tanda_terima_attach = ''; @endphp
 											@foreach($data->media as $item)
 												@if($item->name == 'Tanda Terima Hasil Pengujian' && $item->attachment != '')
-													<?php $tanda_terima_attach = $item->attachment; ?>
-													<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tanda Terima Hasil Pengujian')}}"> Download Tanda Terima Hasil Pengujian"<?php echo $tanda_terima_attach; ?>"</a>
+													@php $tanda_terima_attach = $item->attachment; @endphp
+													<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tanda Terima Hasil Pengujian')}}"> Download Tanda Terima Hasil Pengujian"@php echo $tanda_terima_attach; @endphp"</a>
 												@endif
 											@endforeach
-											<input type="hidden" id="tanda_terima_name" value="<?php echo $tanda_terima_attach; ?>">
+											<input type="hidden" id="tanda_terima_name" value="@php echo $tanda_terima_attach; @endphp">
 										</div>
 									</div>
 									<div class="col-md-12">
@@ -3774,11 +3774,11 @@
 											</label>
 										</div>
 										<div class="form-group">
-											<?php $tanda_terima_attach = ''; ?>
+											@php $tanda_terima_attach = ''; @endphp
 											@foreach($data->media as $item)
 												@if($item->name == 'Tanda Terima Hasil Pengujian' && $item->attachment != '')
-													<?php $tanda_terima_attach = $item->attachment; ?>
-													<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tanda Terima Hasil Pengujian')}}"> Download Tanda Terima Hasil Pengujian"<?php echo $tanda_terima_attach; ?>"</a>
+													@php $tanda_terima_attach = $item->attachment; @endphp
+													<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tanda Terima Hasil Pengujian')}}"> Download Tanda Terima Hasil Pengujian"@php echo $tanda_terima_attach; @endphp"</a>
 												@endif
 											@endforeach
 										</div>
@@ -3799,11 +3799,11 @@
 											</label>
 										</div>
 										<div class="form-group">
-											<?php $tanda_terima_attach = ''; ?>
+											@php $tanda_terima_attach = ''; @endphp
 											@foreach($data->media as $item)
 												@if($item->name == 'Tanda Terima Hasil Pengujian' && $item->attachment != '')
-													<?php $tanda_terima_attach = $item->attachment; ?>
-													<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tanda Terima Hasil Pengujian')}}"> Download Tanda Terima Hasil Pengujian"<?php echo $tanda_terima_attach; ?>"</a>
+													@php $tanda_terima_attach = $item->attachment; @endphp
+													<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tanda Terima Hasil Pengujian')}}"> Download Tanda Terima Hasil Pengujian"@php echo $tanda_terima_attach; @endphp"</a>
 												@endif
 											@endforeach
 										</div>
@@ -3833,14 +3833,14 @@
 											<input type="file" name="certificate_file" id="certificate_file" class="form-control" accept="application/pdf, image/*">
 										</div>
 										<div class="form-group">
-										<?php $certificate_name = ''; ?>
+										@php $certificate_name = ''; @endphp
 										@if($data->certificate_status)
 											@if($data->device->certificate)
-												<?php $certificate_name = $data->device->cert_number; ?>
+												@php $certificate_name = $data->device->cert_number; @endphp
 												<a href="{{URL::to('/admin/examination/media/download/'.$data->device_id.'/certificate')}}"> Download Certificate {{ $data->device->cert_number }}</a>
 											@endif
 										@endif
-										<input type="hidden" id="certificate_name" value="<?php echo $certificate_name; ?>">
+										<input type="hidden" id="certificate_name" value="@php echo $certificate_name; @endphp">
 										</div>
 									</div>
 									<div class="col-md-7">
@@ -3962,10 +3962,10 @@
 											</label>
 										</div>
 										<div class="form-group">
-										<?php $certificate_name = ''; ?>
+										@php $certificate_name = ''; @endphp
 										@if($data->certificate_status)
 											@if($data->device->certificate)
-												<?php $certificate_name = $data->device->cert_number; ?>
+												@php $certificate_name = $data->device->cert_number; @endphp
 												<a href="{{URL::to('/admin/examination/media/download/'.$data->device_id.'/certificate')}}"> Download Certificate {{ $data->device->cert_number }}</a>
 											@endif
 										@endif
@@ -4045,10 +4045,10 @@
 											</label>
 										</div>
 										<div class="form-group">
-										<?php $certificate_name = ''; ?>
+										@php $certificate_name = ''; @endphp
 										@if($data->certificate_status)
 											@if($data->device->certificate)
-												<?php $certificate_name = $data->device->cert_number; ?>
+												@php $certificate_name = $data->device->cert_number; @endphp
 												<a href="{{URL::to('/admin/examination/media/download/'.$data->device_id.'/certificate')}}"> Download Certificate {{ $data->device->cert_number }}</a>
 											@endif
 										@endif

@@ -29,7 +29,7 @@
 	            				<em class="fa fa-building-o fa-stack-1x fa-inverse"></em>
 	            			</span>
 	            			<h2 class="StepTitle">
-	            				<?php echo number_format($data['jml_perusahaan'], 0, ',', '.'); ?> Perusahaan
+	            				@php echo number_format($data['jml_perusahaan'], 0, ',', '.'); @endphp Perusahaan
 	            			</h2>
 	            			<p class="text-small">Jumlah mitra perusahaan yang terdaftar</p>
 	            		</div>
@@ -44,7 +44,7 @@
 	            				<em class="fa fa-user fa-stack-1x fa-inverse"></em>
 	            			</span>
 	            			<h2 class="StepTitle">
-	            				<?php echo number_format($data['jml_pemohon'], 0, ',', '.'); ?> Pemohon
+	            				@php echo number_format($data['jml_pemohon'], 0, ',', '.'); @endphp Pemohon
 	            			</h2>
 	            			<p class="text-small">Jumlah pemohon pengujian yang terdaftar</p>
 	            		</div>
@@ -59,7 +59,7 @@
 	            				<em class="fa fa-check-circle-o fa-stack-1x fa-inverse"></em>
 	            			</span>
 	            			<h2 class="StepTitle">
-	            				<?php echo number_format($data['jml_perangkatlulus'], 0, ',', '.'); ?> Perangkat
+	            				@php echo number_format($data['jml_perangkatlulus'], 0, ',', '.'); @endphp Perangkat
 	            			</h2>
 	            			<p class="text-small">Jumlah perangkat lulus uji yang terdaftar</p>
 	            		</div>
@@ -74,7 +74,7 @@
 	            				<em class="fa fa-times-circle-o fa-stack-1x fa-inverse"></em>
 	            			</span>
 	            			<h2 class="StepTitle">
-	            				<?php echo number_format($data['count_dev_notComp'], 0, ',', '.'); ?> Perangkat
+	            				@php echo number_format($data['count_dev_notComp'], 0, ',', '.'); @endphp Perangkat
 	            			</h2>
 	            			<p class="text-small">Jumlah perangkat tidak lulus uji yang terdaftar</p>
 	            		</div>
@@ -185,7 +185,7 @@
 				<div class="col-md-6">
 					<div class="table-responsive">
 						<span>Cari Berdasarkan Tahun :
-						<input type="number" id="txt-keyword" value="<?php echo date('Y')?>" style="padding:3px 4px 4px 4px;border:1px solid #ccc" placeholder="Input Tahun ...">
+						<input type="number" id="txt-keyword" value="@php echo date('Y')@endphp" style="padding:3px 4px 4px 4px;border:1px solid #ccc" placeholder="Input Tahun ...">
 						<button class="btn btn-default btn-flat" id="sendEmail" data-toggle="modal" onclick="doSearch()">Search <em class="fa fa-search"></em></button>
 						<div id="chart" style="z-index:-10;"></div>
 					</div>
@@ -193,7 +193,7 @@
 				<div class="col-md-6">
 					<div class="table-responsive">
 						<span>Cari Berdasarkan Tahun :
-						<input type="number" id="txt-keyword-2" value="<?php echo date('Y')?>" style="padding:3px 4px 4px 4px;border:1px solid #ccc" placeholder="Input Tahun ...">
+						<input type="number" id="txt-keyword-2" value="@php echo date('Y')@endphp" style="padding:3px 4px 4px 4px;border:1px solid #ccc" placeholder="Input Tahun ...">
 						<button class="btn btn-default btn-flat" id="sendEmail" data-toggle="modal" onclick="doSearch2()">Search <em class="fa fa-search"></em></button>
 						<div id="chart2" style="z-index:-10;"></div>
 					</div>
@@ -403,7 +403,7 @@ if(event.keyCode == 13){
    type: 'line',
   },
   title: {
-   text: 'Pembelian STEL <?php echo $tahun ?>',
+   text: 'Pembelian STEL @php echo $tahun @endphp',
    x: -20
   },
   subtitle: {
@@ -422,22 +422,22 @@ if(event.keyCode == 13){
   },
   series: [{
    name: 'Semua',
-   data: <?php echo json_encode($stel) ?>
+   data: @php echo json_encode($stel) @endphp
   },{
    name: 'Lab Kabel',
-   data: <?php echo json_encode($stel_kab) ?>
+   data: @php echo json_encode($stel_kab) @endphp
   },{
    name: 'Lab Transmisi',
-   data: <?php echo json_encode($stel_tra) ?>
+   data: @php echo json_encode($stel_tra) @endphp
   },{
    name: 'Lab CPE',
-   data: <?php echo json_encode($stel_cpe) ?>
+   data: @php echo json_encode($stel_cpe) @endphp
   },{
    name: 'Lab Energi',
-   data: <?php echo json_encode($stel_ene) ?>
+   data: @php echo json_encode($stel_ene) @endphp
   },{
    name: 'Lab Kalibrasi',
-   data: <?php echo json_encode($stel_kal) ?>
+   data: @php echo json_encode($stel_kal) @endphp
   }]
  });
  
@@ -447,7 +447,7 @@ if(event.keyCode == 13){
    type: 'line',
   },
   title: {
-   text: 'Pengujian Perangkat <?php echo $tahun ?>',
+   text: 'Pengujian Perangkat @php echo $tahun @endphp',
    x: -20
   },
   subtitle: {
@@ -465,19 +465,19 @@ if(event.keyCode == 13){
   },
   series: [{
    name: 'Semua',
-   data: <?php echo json_encode($device) ?>
+   data: @php echo json_encode($device) @endphp
   },{
    name: 'QA',
-   data: <?php echo json_encode($device_qa) ?>
+   data: @php echo json_encode($device_qa) @endphp
   },{
    name: 'TA',
-   data: <?php echo json_encode($device_ta) ?>
+   data: @php echo json_encode($device_ta) @endphp
   },{
    name: 'VT',
-   data: <?php echo json_encode($device_vt) ?>
+   data: @php echo json_encode($device_vt) @endphp
   },{
    name: 'CAL',
-   data: <?php echo json_encode($device_cal) ?>
+   data: @php echo json_encode($device_cal) @endphp
   }]
  });
  
