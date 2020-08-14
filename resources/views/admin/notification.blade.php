@@ -33,11 +33,11 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php $no=1; ?>
+								@php $no=1; @endphp
 								@foreach($notification_data_admin as $item)
 									<tr>
 										<td class="center">{{$no}}</td>
-										<td class="left"><a data-id="<?php echo $item['id'];?>" data-url="{{$item['url']}}" class="notifData">
+										<td class="left"><a data-id="@php echo $item['id'];@endphp" data-url="{{$item['url']}}" class="notifData">
 											@if($item['is_read'])
 												{{$item['message']}} ({{$item['created_at']}})
 											@else
@@ -45,7 +45,7 @@
 											@endif
 										</a></td>
 									</tr>
-								<?php $no++ ?>
+								@php $no++ @endphp
 								@endforeach
                             </tbody>
 						</table>
