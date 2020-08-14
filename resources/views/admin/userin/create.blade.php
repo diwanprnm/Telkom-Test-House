@@ -146,7 +146,7 @@
 										Akses Menu
 									</label>
 									<div class="form-group"> 
-										<?php
+										@php
 										$html = '<ul id="tree">';
 										$label_open = '<li><label> <input type="checkbox" class="chk" name="menus[]" checked value=';
 										$label_close = '" />';
@@ -166,7 +166,7 @@
 								        $html .= '</ul></li>';
 
 								        echo $html;
-									 ?>
+										@endphp
 									</div>
 									
 								</div>

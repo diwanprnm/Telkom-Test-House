@@ -162,7 +162,7 @@
 										Akses Menu
 									</label>
 									<div class="form-group"> 
-										<?php
+										@php
 										$CHECKED_STRING = 'checked';
 										function in_multiarray($elem, $array,$field)
 										{
@@ -212,7 +212,7 @@
 								        $html .= '</ul></li>';
 
 								        echo $html;
-									 ?>
+									 @endphp
 									</div>
 								</div>
 							</div>
@@ -225,40 +225,40 @@
 										<input type="hidden" id="hide_admin_role" name="hide_admin_role">
 										<ul id="tree_examination">
 											<li>
-												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['registration_status'] || $admin_role[0]['function_status'] || $admin_role[0]['contract_status']? $CHECKED_STRING:'';}?>>Registrasi</label>
+												<label> <input type="checkbox" @php if(isset($admin_role[0])){echo $admin_role[0]['registration_status'] || $admin_role[0]['function_status'] || $admin_role[0]['contract_status']? $CHECKED_STRING:'';}@endphp>Registrasi</label>
 												<ul>
-													<li><label> <input type="checkbox" name="examinations[]" value="registration_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['registration_status'] ?$CHECKED_STRING:'';}?>>Registrasi</label></li>
-													<li><label> <input type="checkbox" name="examinations[]" value="function_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['function_status'] ?$CHECKED_STRING:'';}?>>Uji Fungsi</label></li>
-													<li><label> <input type="checkbox" name="examinations[]" value="contract_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['contract_status'] ?$CHECKED_STRING:'';}?>>Tinjauan Kontrak</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="registration_status" @php if(isset($admin_role[0])){echo $admin_role[0]['registration_status'] ?$CHECKED_STRING:'';}@endphp>Registrasi</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="function_status" @php if(isset($admin_role[0])){echo $admin_role[0]['function_status'] ?$CHECKED_STRING:'';}@endphp>Uji Fungsi</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="contract_status" @php if(isset($admin_role[0])){echo $admin_role[0]['contract_status'] ?$CHECKED_STRING:'';}@endphp>Tinjauan Kontrak</label></li>
 												</ul>
 											</li>
 											<li>
-												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['spb_status'] || $admin_role[0]['payment_status']? $CHECKED_STRING:'';}?>>Keuangan</label>
+												<label> <input type="checkbox" @php if(isset($admin_role[0])){echo $admin_role[0]['spb_status'] || $admin_role[0]['payment_status']? $CHECKED_STRING:'';}@endphp>Keuangan</label>
 												<ul>
-													<li><label> <input type="checkbox" name="examinations[]" value="spb_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['spb_status'] ?$CHECKED_STRING:'';}?>>SPB</label></li>
-													<li><label> <input type="checkbox" name="examinations[]" value="payment_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['payment_status'] ?$CHECKED_STRING:'';}?>>Pembayaran</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="spb_status" @php if(isset($admin_role[0])){echo $admin_role[0]['spb_status'] ?$CHECKED_STRING:'';}@endphp>SPB</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="payment_status" @php if(isset($admin_role[0])){echo $admin_role[0]['payment_status'] ?$CHECKED_STRING:'';}@endphp>Pembayaran</label></li>
 												</ul>
 											</li>
 											<li>
-												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['spk_status'] || $admin_role[0]['examination_status']? $CHECKED_STRING:'';}?>>Pengujian</label>
+												<label> <input type="checkbox" @php if(isset($admin_role[0])){echo $admin_role[0]['spk_status'] || $admin_role[0]['examination_status']? $CHECKED_STRING:'';}@endphp>Pengujian</label>
 												<ul>
-													<li><label> <input type="checkbox" name="examinations[]" value="spk_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['spk_status'] ?$CHECKED_STRING:'';}?>>Pembuatan SPK</label></li>
-													<li><label> <input type="checkbox" name="examinations[]" value="examination_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['examination_status'] ?$CHECKED_STRING:'';}?>>Pelaksanaan Uji</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="spk_status" @php if(isset($admin_role[0])){echo $admin_role[0]['spk_status'] ?$CHECKED_STRING:'';}@endphp>Pembuatan SPK</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="examination_status" @php if(isset($admin_role[0])){echo $admin_role[0]['examination_status'] ?$CHECKED_STRING:'';}@endphp>Pelaksanaan Uji</label></li>
 												</ul>
 											</li>
 											<li>
-												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['resume_status'] || $admin_role[0]['qa_status'] || $admin_role[0]['certificate_status']? $CHECKED_STRING:'';}?>>Laporan & Sertifikat</label>
+												<label> <input type="checkbox" @php if(isset($admin_role[0])){echo $admin_role[0]['resume_status'] || $admin_role[0]['qa_status'] || $admin_role[0]['certificate_status']? $CHECKED_STRING:'';}@endphp>Laporan & Sertifikat</label>
 												<ul>
-													<li><label> <input type="checkbox" name="examinations[]" value="resume_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['resume_status'] ?$CHECKED_STRING:'';}?>>Laporan Uji</label></li>
-													<li><label> <input type="checkbox" name="examinations[]" value="qa_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['qa_status'] ?$CHECKED_STRING:'';}?>>Sidang QA</label></li>
-													<li><label> <input type="checkbox" name="examinations[]" value="certificate_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['certificate_status'] ?$CHECKED_STRING:'';}?>>Penerbitan Sertifikat</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="resume_status" @php if(isset($admin_role[0])){echo $admin_role[0]['resume_status'] ?$CHECKED_STRING:'';}@endphp>Laporan Uji</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="qa_status" @php if(isset($admin_role[0])){echo $admin_role[0]['qa_status'] ?$CHECKED_STRING:'';}@endphp>Sidang QA</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="certificate_status" @php if(isset($admin_role[0])){echo $admin_role[0]['certificate_status'] ?$CHECKED_STRING:'';}@endphp>Penerbitan Sertifikat</label></li>
 												</ul>
 											</li>
 											<li>
-												<label> <input type="checkbox" <?php if(isset($admin_role[0])){echo $admin_role[0]['equipment_status'] || $admin_role[0]['receipt_status']? $CHECKED_STRING:'';}?>>Lainnya</label>
+												<label> <input type="checkbox" @php if(isset($admin_role[0])){echo $admin_role[0]['equipment_status'] || $admin_role[0]['receipt_status']? $CHECKED_STRING:'';}@endphp>Lainnya</label>
 												<ul>
-													<li><label> <input type="checkbox" name="examinations[]" value="equipment_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['equipment_status'] ?$CHECKED_STRING:'';}?>>Edit Lokasi Barang</label></li>
-													<li><label> <input type="checkbox" name="examinations[]" value="receipt_status" <?php if(isset($admin_role[0])){echo $admin_role[0]['receipt_status'] ?$CHECKED_STRING:'';}?>>Tanda Terima Hasil Pengujian</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="equipment_status" @php if(isset($admin_role[0])){echo $admin_role[0]['equipment_status'] ?$CHECKED_STRING:'';}@endphp>Edit Lokasi Barang</label></li>
+													<li><label> <input type="checkbox" name="examinations[]" value="receipt_status" @php if(isset($admin_role[0])){echo $admin_role[0]['receipt_status'] ?$CHECKED_STRING:'';}@endphp>Tanda Terima Hasil Pengujian</label></li>
 												</ul>
 											</li>
 										</ul>
