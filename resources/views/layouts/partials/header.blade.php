@@ -53,33 +53,33 @@
                 <ul class="dropdown-menu" role="menu">
                   <li><a href="{{url('procedure')}}">{{ trans('translate.procedure') }}</a></li>
                   <li><a href="{{url('process')}}">{{ trans('translate.process') }}</a></li>
-                  <?php
+                  @php
                   if($currentUser){
-                  ?> 
+                  @endphp 
                   <li><a href="{{ url('pengujian')}}">{{ trans('translate.examination') }}</a></li>
-                  <?php   
+                  @php   
                   }else{
-                  ?>
+                    @endphp
                   <li><a href="{{ url('login')}}">{{ trans('translate.examination') }}</a></li>
-                  <?php
+                  @php
                   }
-                  ?>
-                  <?php
+                  @endphp
+                  @php
                   if(!empty($new_charge[0])){
-                  ?>
+                    @endphp
                     <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ trans('translate.charge') }}</a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="{{url('Chargeclient')}}">{{ trans('translate.charge') }}</a></li>
                             <li><a href="{{url('NewChargeclient')}}">{{ trans('translate.new_charge') }} @php echo date("j M Y", strtotime($new_charge[0]->valid_from));@endphp</a></li>
                         </ul>
                     </li>
-                  <?php
+                  @php
                   }else{
-                  ?>
+                    @endphp
                     <li><a href="{{url('Chargeclient')}}">{{ trans('translate.charge') }}</a></li>
-                  <?php
+                  @php
                   }
-                  ?>
+                  @endphp
                 </ul>
               </li> 
               <li class=" {{ (!empty($page) && $page == 'Devclient') ?'current':''}}">
@@ -124,21 +124,21 @@
                 </ul></li>
               @endif 
 
-              <?php
+              @php
               if($currentUser){
-              ?> 
+                @endphp 
                 <li></li>
-              <?php   
+              @php   
               }else{
-              ?>
+                @endphp
                 <li><a href="{{ url('/register') }}">{{ trans('translate.sign_up') }}</a></li>
-              <?php
+              @php
               }
-              ?> 
+              @endphp 
 
-              <?php
+              @php
               if($currentUser){
-              ?> 
+                @endphp 
                 <li class="loginMenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">@php echo substr($currentUserAttr['name'],0,7)."...";@endphp  <em class="icon-angle-down"></em></a>
                   <ul class="dropdown-menu" role="menu">
                     <li><a href="{{url('/client/profile')}}">{{ trans('translate.profile') }}</a></li>
@@ -146,17 +146,17 @@
                     <li><a href="{{url('/client/logout')}}">{{ trans('translate.logout') }}</a></li>
                   </ul> 
                 </li>
-              <?php   
+              @php   
               }else{
-              ?>
+                @endphp
                 <li class="loginMenu"><a href="{{ url('login')}}">{{ trans('translate.login') }}</a></li>
-              <?php
+              @php
               }
-              ?> 
+              @endphp
 
-              <?php
+              @php
               if($currentUser){
-              ?> 
+                @endphp 
 	              <div id="top-cart" style="float:left">
 		                <a href="#" id="top-cart-trigger"><em class="icon-shopping-cart"></em><span>{{Cart::count()}}</span></a>
 		                 @if(Cart::count() >= 1)
@@ -187,8 +187,8 @@
 	              <li>  <a href="#" id="top-notification-trigger"><em class="icon-bell"></em><span id="notification-count"><?php echo $notification_count;?></span></a></li>
 	             	<div id="top-notification" style="float:left"> 
 	                	<div class="top-notification-content">
-                      <?php 
-                      foreach ($notification_data_user as $notif) { ?> 
+                      @php 
+                      foreach ($notification_data_user as $notif) { @endphp
                       <div class="top-notification-items">
                         <div class="top-notification-item clearfix">
                           <div class="top-notification-item-desc">
@@ -197,7 +197,7 @@
                         </div>
                       </div>
 
-                    <?php }?>
+                    @php }@endphp
 						<div class="top-notification-items">
 							<div class="top-notification-item clearfix">
 							  <div class="top-notification-item-desc">
@@ -207,15 +207,15 @@
 						  </div>
 	                	</div> 
 	              	</div> 
-              <?php   
+              @php   
               }else{
-              ?>
+                @endphp
               	<div id="top-cart" style="float:left">
 	            </div>
                 <li></li>
-              <?php
+              @php
               }
-              ?> 
+              @endphp
 
 
               
@@ -269,17 +269,17 @@
                 <a href="#">{{ trans('translate.menu_testing') }} <em class="icon-angle-down"></em></a>
                 <ul>
                   <li><a href="{{url('procedure')}}">{{ trans('translate.procedure') }}</a></li>
-                  <?php
+                  @php
                   if($currentUser){
-                  ?> 
+                    @endphp 
                   <li><a href="{{ url('pengujian')}}">{{ trans('translate.examination') }}</a></li>
-                  <?php   
+                  @php   
                   }else{
-                  ?>
+                    @endphp
                   <li><a href="{{ url('login')}}">{{ trans('translate.examination') }}</a></li>
-                  <?php
+                  @php
                   }
-                  ?> 
+                  @endphp
                   <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ trans('translate.menu_ref') }}</a>
                       <ul>
                           <li><a href="{{url('STELclient')}}">{{ trans('translate.stel') }}</a></li>
@@ -305,22 +305,22 @@
                     </li>
                   </ul>
               </li> 
-               <?php
+               @php
               if($currentUser){
-              ?> 
-                <li><a href="#"><?php echo $currentUserAttr['name'];?>  <em class="icon-angle-down"></em></a>
+                @endphp 
+                <li><a href="#">@php echo $currentUserAttr['name'];@endphp  <em class="icon-angle-down"></em></a>
                   <ul>
                     <li><a href="{{url('/client/profile')}}">{{ trans('translate.profile') }}</a></li>
                     <li><a href="{{url('/client/logout')}}">{{ trans('translate.logout') }}</a></li>
                   </ul> 
                 </li>
-              <?php   
+              @php   
               }else{
-              ?>
+                @endphp
                 <li><a href="{{ url('login')}}">{{ trans('translate.login') }}</a></li>
-              <?php
+              @php
               }
-              ?> 
+              @endphp 
                  @if( Config::get('app.locale') == 'in')
                 <li> <a href="#" >INA <em class="icon-angle-down"></em></a>
                 <ul >
