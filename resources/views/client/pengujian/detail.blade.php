@@ -1,7 +1,7 @@
-<?php
+@php
 	$currentUser = Auth::user();
 	$date_dmY = date('d-m-Y');
-?>
+@endphp
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
@@ -51,7 +51,7 @@
 
 
 
-	<input type="hidden" name="exam_id" id="exam_id" value="<?php echo $data[0]->id ?>">
+	<input type="hidden" name="exam_id" id="exam_id" value="@php echo $data[0]->id @endphp">
 	<input type="hidden" name="link" id="link">
 	<div class="modal fade" id="myModal_testimonial" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog">
@@ -166,7 +166,7 @@
 						</div>
 						@endif
 						 <!-- start: WIZARD FORM -->
-						<?php $no=1;?>
+						@php $no=1;@endphp
 						<form action="#" role="form" class="smart-wizard" id="form">
 							{!! csrf_field() !!}
 							<div id="wizard" class="swMain">
@@ -350,9 +350,9 @@
 									</div>
 								</div>										
 							</div>
-							<?php 
+							@php 
 							$no++;
-							?>
+							@endphp
 							@endforeach
 						</form>
 						<!-- end: WIZARD FORM -->
@@ -407,7 +407,7 @@
                     <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
                         <div class="form-group">
                             <label>Tanggal</label>
-								<input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo $date_dmY;?>" readonly required>
+								<input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" value="@php echo $date_dmY;@endphp" readonly required>
                         </div>
                         <div class="form-group">
                             <label>Nama</label>
@@ -664,7 +664,7 @@
                         </div>
                         <div class="form-group">
                             <label>Tanggal</label>
-                            <input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo $date_dmY;?>" readonly required>
+                            <input type="text" id="tanggal" name="tanggal" placeholder="DD/MM/YYYY" class="form-control" value="@php echo $date_dmY;@endphp" readonly required>
                         </div>
                     </div>
                 </div>
@@ -686,11 +686,11 @@
                         <th style="width: 25%;" scope="col">TINGKAT KEPUASAN</th>
                       </tr>
                       <tbody>
-            <?php $no = 0; ?>
+            @php $no = 0; @endphp
             @foreach($data_kuisioner as $item)
               <input type="hidden" name="question_id[]" value="{{ $item->id }}">
               <input type="hidden" name="is_essay[]" value="{{ $item->is_essay }}">
-              <?php $no++; ?>
+              @php $no++; @endphp
               <tr>
                 @if($item->is_essay)
                 <td colspan = 2>{{ $item->question }}</td>
@@ -702,24 +702,24 @@
                 <td>{{ $item->question }}</td>
                 <td>
                 	<div class="radio-toolbar">
-                		<?php
+                		@php
                 			for ($i=0; $i<10 ; $i++) { 
-                		?>
-                				<input type="radio" id="eks{{$no.$i}}" name="eks{{$no-1}}" value="{{$i+1}}" <?php echo $i == 7 ? "checked" : "";?>><label for="eks{{$no.$i}}">{{$i+1}}</label>
-                		<?php
+                		@endphp
+                				<input type="radio" id="eks{{$no.$i}}" name="eks{{$no-1}}" value="{{$i+1}}" @php echo $i == 7 ? "checked" : "";@endphp><label for="eks{{$no.$i}}">{{$i+1}}</label>
+                		@php
                 			}
-                		?>
+                		@endphp
                 	</div>
                 </td>
                 <td>
                 	<div class="radio-toolbar">
-                		<?php
+                		@php
                 			for ($i=0; $i<10 ; $i++) { 
-                		?>
-                				<input type="radio" id="pref{{$no.$i}}" name="pref{{$no-1}}" value="{{$i+1}}" <?php echo $i == 7 ? "checked" : "";?>><label for="pref{{$no.$i}}">{{$i+1}}</label>
-                		<?php
+                		@endphp
+                				<input type="radio" id="pref{{$no.$i}}" name="pref{{$no-1}}" value="{{$i+1}}" @php echo $i == 7 ? "checked" : "";@endphp><label for="pref{{$no.$i}}">{{$i+1}}</label>
+                		@php
                 			}
-                		?>
+                		@endphp
                 	</div>
                 </td>
                 @endif
@@ -782,7 +782,7 @@
                             <td colspan="2">
 								<input type="hidden" id="my_exam_id" name="my_exam_id">
 								<label>Date</label>
-									<input type="text" id="tanggal_complaint" name="tanggal_complaint" placeholder="DD/MM/YYYY" class="form-control" value="<?php echo $date_dmY;?>" readonly required>
+									<input type="text" id="tanggal_complaint" name="tanggal_complaint" placeholder="DD/MM/YYYY" class="form-control" value="@php echo $date_dmY;@endphp" readonly required>
                             </td>
                         </tr>
                         <tr>

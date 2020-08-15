@@ -43,9 +43,9 @@
 									<!-- start: WIZARD FORM -->
 									<form id="form" class="smart-wizard" role="form" method="POST" action="{{ url('/pengujian/pembayaran') }}" enctype="multipart/form-data">
 										{!! csrf_field() !!}
-										<input type="hidden" name="hide_id_user" id="hide_id_user" value="<?php echo $data->created_by ?>"/>
-										<input type="hidden" name="hide_id_exam" id="hide_id_exam" value="<?php echo $data->examination_id ?>"/>
-										<input type="hidden" name="hide_id_attach" id="hide_id_attach" value="<?php echo $data->id ?>"/>
+										<input type="hidden" name="hide_id_user" id="hide_id_user" value="@php echo $data->created_by @endphp"/>
+										<input type="hidden" name="hide_id_exam" id="hide_id_exam" value="@php echo $data->examination_id @endphp"/>
+										<input type="hidden" name="hide_id_attach" id="hide_id_attach" value="@php echo $data->id @endphp"/>
 										{{ csrf_field() }}
 										<div id="wizard" class="swMain">
 											<div class="form-group">
@@ -66,28 +66,28 @@
 														<tr>
 															<td>
 																<input class="data-upload-pembayaran" id="data-upload-pembayaran" name="filePembayaran" type="file" accept="application/pdf,image/*" required>
-																<input type="hidden" name="hide_file_pembayaran" id="hide_file_pembayaran" value="<?php echo $data->attachment ?>"/>
-																<div id="file-pembayaran"><?php echo $data->attachment ?></div>
+																<input type="hidden" name="hide_file_pembayaran" id="hide_file_pembayaran" value="@php echo $data->attachment @endphp"/>
+																<div id="file-pembayaran">@php echo $data->attachment @endphp</div>
 															</td>
 														</tr>
 														<tr>
 															<td>{{ trans('translate.examination_number_payment') }} : 
-															<input type="text" id="no-pembayaran" class="no-pembayaran form-control" name="no-pembayaran" placeholder="<?php echo $spb_number ?>" value="<?php echo $spb_number ?>" readonly></td>
+															<input type="text" id="no-pembayaran" class="no-pembayaran form-control" name="no-pembayaran" placeholder="@php echo $spb_number @endphp" value="@php echo $spb_number @endphp" readonly></td>
 														</tr>
 														<tr>
-															<?php 
+															@php 
 																if($data->tgl == '' || $data->tgl == '0000-00-00' || $data->tgl == NULL){
 																	$timestamp = $spb_date;
 																}else{
 																	$timestamp = $data->tgl;
 																}
-															?>
+															@endphp
 															<td>{{ trans('translate.examination_date_payment') }} : 
-															<input type="text" id="tgl-pembayaran" class="date tgl-pembayaran form-control" name="tgl-pembayaran" placeholder="Tanggal ..." value="<?php echo $timestamp; ?>" readonly required></td>
+															<input type="text" id="tgl-pembayaran" class="date tgl-pembayaran form-control" name="tgl-pembayaran" placeholder="Tanggal ..." value="@php echo $timestamp; @endphp" readonly required></td>
 														</tr>
 														<tr>
 															<td>{{ trans('translate.examination_price_payment') }} : 
-															<input type="text" id="jml-pembayaran" class="jml-pembayaran form-control" name="jml-pembayaran" placeholder="<?php echo $price ?>" value="<?php echo $price ?>" required></td>
+															<input type="text" id="jml-pembayaran" class="jml-pembayaran form-control" name="jml-pembayaran" placeholder="@php echo $price @endphp" value="@php echo $price @endphp" required></td>
 														</tr>
 												</table>
 											</div>
@@ -112,7 +112,7 @@
 				</div>
 
 
-				<input type="hidden" name="spb_date" id="spd_date" value="<?php echo $examinationsData->spb_date;?>">
+				<input type="hidden" name="spb_date" id="spd_date" value="@php echo $examinationsData->spb_date;@endphp">
 				</div>
 
 			</div>
