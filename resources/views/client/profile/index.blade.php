@@ -31,55 +31,55 @@
 								<div id="tabs-profile" class="clearfix tab-pane fade {{ $tabs == 'profile' ? 'in active' : '' }}">
 									<form id="form" class="smart-wizard" role="form" method="POST" action="{{ url('/client/profile') }}" enctype="multipart/form-data" aria-label = "Form Profile">
 										{{ csrf_field() }}
-										<input type="hidden" name="hide_id_user" id="hide_id_user" value="@php echo $data['id'] ">
+										<input type="hidden" name="hide_id_user" id="hide_id_user" value="@php echo $data['id'] @endphp">
 
 										<br>
 										<div class="col_full">
 											<label for="register-form-name">{{ trans('translate.profile_name') }} :</label>
-											<input type="text" id="username" class="form-control input-submit" name="username" placeholder="John Doe" value="@php echo $data['name'] ">
-											<input type="hidden" name="hide_username" id="hide_username" value="@php echo $data['name'] ">
+											<input type="text" id="username" class="form-control input-submit" name="username" placeholder="John Doe" value="@php echo $data['name'] @endphp">
+											<input type="hidden" name="hide_username" id="hide_username" value="@php echo $data['name'] @endphp">
 										</div>
 
 											<div class="col_full">
 												<label for="register-form-email">{{ trans('translate.profile_address') }} :</label>
-												<input type="text" id="address" class="form-control input-submit" name="address" placeholder="Jln. Bandung" value="@php echo $data[$ADDRESS_STRING] ">
+												<input type="text" id="address" class="form-control input-submit" name="address" placeholder="Jln. Bandung" value="@php echo $data[$ADDRESS_STRING] @endphp">
 											</div>
 
 											<div class="col_full">
 												<label for="register-form-username">{{ trans('translate.profile_email') }}:</label>
-												<input type="email" id="email" class="form-control input-submit" name="email" placeholder="user@mail.com" value="@php echo $data[$EMAIL_STRING] " readonly>
-												<input type="hidden" name="hide_email" id="hide_email" value="@php echo $data[$EMAIL_STRING] "/>
+												<input type="email" id="email" class="form-control input-submit" name="email" placeholder="user@mail.com" value="@php echo $data[$EMAIL_STRING] @endphp" readonly>
+												<input type="hidden" name="hide_email" id="hide_email" value="@php echo $data[$EMAIL_STRING] @endphp"/>
 											</div>
 
 											<div class="col_full">
 												<label for="register-form-phone">{{ trans('translate.profile_email_alternate') }} :</label>
-												<input type="email" id="email2" class="form-control input-submit" name="email2" placeholder="user1@mail.com" value="@php echo $data['email2'] ">
-												<input type="email" id="email3" class="form-control input-submit" name="email3" placeholder="user2@mail.com" value="@php echo $data['email3'] ">
-												<input type="hidden" name="hide_email" id="hide_email" value="@php echo $data[$EMAIL_STRING] "/>
-												<input type="hidden" name="hide_email2" id="hide_email2" value="@php echo $data['email2'] "/>
+												<input type="email" id="email2" class="form-control input-submit" name="email2" placeholder="user1@mail.com" value="@php echo $data['email2'] @endphp">
+												<input type="email" id="email3" class="form-control input-submit" name="email3" placeholder="user2@mail.com" value="@php echo $data['email3'] @endphp">
+												<input type="hidden" name="hide_email" id="hide_email" value="@php echo $data[$EMAIL_STRING] @endphp"/>
+												<input type="hidden" name="hide_email2" id="hide_email2" value="@php echo $data['email2'] @endphp"/>
 											</div>
 
 											<div class="col_full">
 												<label for="register-form-password">{{ trans('translate.profile_phone') }}:</label>
-												<input type="text" id="phone" class="form-control input-submit" name="phone" placeholder="02221234689" value="@php echo $data[$PHONE_NUMBER_STRING] "> 
-																		<input type="hidden" name="hide_phone" id="hide_phone" value="@php echo $data[$PHONE_NUMBER_STRING] 
+												<input type="text" id="phone" class="form-control input-submit" name="phone" placeholder="02221234689" value="@php echo $data[$PHONE_NUMBER_STRING] @endphp"> 
+																		<input type="hidden" name="hide_phone" id="hide_phone" value="@php echo $data[$PHONE_NUMBER_STRING] @endphp
 											</div>
 
 											<div class="col_full">
 												<label for="register-form-repassword">{{ trans('translate.profile_fax') }}:</label>
-												<input type="text" id="fax" class="form-control input-submit" name="fax" placeholder="022123456" value="@php echo $data['fax'] ">
-													<input type="hidden" name="hide_fax" id="hide_fax" value="@php echo $data['fax'] "/>
+												<input type="text" id="fax" class="form-control input-submit" name="fax" placeholder="022123456" value="@php echo $data['fax'] @endphp">
+													<input type="hidden" name="hide_fax" id="hide_fax" value="@php echo $data['fax'] @endphp"/>
 											</div>
 
 											<div class="col_full">
 												<label for="register-form-repassword">{{ trans('translate.profile_company') }} :</label>
 												<select class="form-control" id="cmb-perusahaan" name="cmb-perusahaan" disabled>
 													@foreach($data_company as $item)
-														@php if($item->id == $data['company_id']){
+														@php if($item->id == $data['company_id']){@endphp
 															<option value="{{ $item->id }}" selected>{{ $item->name }}</option>
-														@php }else{
+														@php }else{@endphp
 															<option value="{{ $item->id }}">{{ $item->name }}</option>
-														@php }
+														@php }@endphp
 													@endforeach
 												</select>
 											</div> 
@@ -101,14 +101,14 @@
 											<hr>
 											<div class="col_full">
 												<label for="register-form-repassword">{{ trans('translate.profile_picture') }} : </label>
-												@php if($data[$PICTURE_STRING] == ''){
+												@php if($data[$PICTURE_STRING] == ''){@endphp
 													<img src="{{asset('assets/images/default-profile.png')}}" width="240px" alt="gambar default profil picture">
-												@php }else{
+												@php }else{@endphp
 													<img src="{{asset('media/user/'.$data['id'].'/'.$data[$PICTURE_STRING])}}" width="240px" alt="gambar profile picture">
-												@php }
+												@php }@endphp
 												<input class="data-upload-user-picture" id="data-upload-user-picture" name="userPicture" type="file" accept="image/*">
-												<input type="hidden" name="hide_pic_file" id="hide_pic_file" value="@php echo $data[$PICTURE_STRING] "/>
-												<div id="pic-file">@php echo $data[$PICTURE_STRING] </div>
+												<input type="hidden" name="hide_pic_file" id="hide_pic_file" value="@php echo $data[$PICTURE_STRING] @endphp"/>
+												<div id="pic-file">@php echo $data[$PICTURE_STRING] @endphp</div>
 											</div> 
 
 											<div class="col_full nobottommargin">
@@ -120,7 +120,7 @@
 								<div id="tabs-company" class="clearfix tab-pane fade {{ $tabs == 'company' ? 'in active' : '' }}">
 									<form id="form" class="smart-wizard" role="form" method="POST" action="{{ url('/client/company') }}" enctype="multipart/form-data" aria-label="Company Form">
 							{{ csrf_field() }}
-							<input type="hidden" name="hide_id_company" id="hide_id_company" value="@php echo $myComp['id'] "/>
+							<input type="hidden" name="hide_id_company" id="hide_id_company" value="@php echo $myComp['id'] @endphp"/>
 							@if (Session::get('error_company'))
 								<div class="alert alert-error alert-danger">
 									{{ Session::get('error_company') }}
@@ -135,59 +135,59 @@
 							<br>			
 							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.company_name') }} : </label>
-								<input type="text" id="name" class="form-control input-submit" name="name" placeholder="PT. Maju Mundur" value="@php echo $myComp['name'] ">
-								<input type="hidden" name="hide_name" id="hide_name" value="@php echo $myComp['name'] "/>
+								<input type="text" id="name" class="form-control input-submit" name="name" placeholder="PT. Maju Mundur" value="@php echo $myComp['name'] @endphp">
+								<input type="hidden" name="hide_name" id="hide_name" value="@php echo $myComp['name'] @endphp"/>
 							</div>
 
 							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.company_address') }} : </label>
-								<input type="text" id="address" class="form-control input-submit" name="address" placeholder="Jln. Bandung" value="@php echo $myComp[$ADDRESS_STRING] ">
-								<input type="hidden" name="hide_address" id="hide_address" value="@php echo $myComp[$ADDRESS_STRING] "/>
+								<input type="text" id="address" class="form-control input-submit" name="address" placeholder="Jln. Bandung" value="@php echo $myComp[$ADDRESS_STRING] @endphp">
+								<input type="hidden" name="hide_address" id="hide_address" value="@php echo $myComp[$ADDRESS_STRING] @endphp"/>
 							</div>
 
 							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.company_plg_id') }} : </label>
-								<input type="text" id="plg_id" class="form-control input-submit" name="plg_id" placeholder="012345678" value="@php echo $myComp['plg_id'] ">
-								<input type="hidden" name="hide_plg_id" id="hide_plg_id" value="@php echo $myComp['plg_id'] "/>
+								<input type="text" id="plg_id" class="form-control input-submit" name="plg_id" placeholder="012345678" value="@php echo $myComp['plg_id'] @endphp">
+								<input type="hidden" name="hide_plg_id" id="hide_plg_id" value="@php echo $myComp['plg_id'] @endphp"/>
 							</div>
 
 							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.company_nib') }} : </label>
-								<input type="text" id="nib" class="form-control input-submit" name="nib" placeholder="012345678" value="@php echo $myComp['nib'] ">
-								<input type="hidden" name="hide_nib" id="hide_nib" value="@php echo $myComp['nib'] "/>
+								<input type="text" id="nib" class="form-control input-submit" name="nib" placeholder="012345678" value="@php echo $myComp['nib'] @endphp">
+								<input type="hidden" name="hide_nib" id="hide_nib" value="@php echo $myComp['nib'] @endphp"/>
 							</div>
 
 							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.company_email') }} : </label>
-								<input type="email" id="email" class="form-control input-submit" name="email" placeholder="comany@mail.com" value="@php echo $myComp[$EMAIL_STRING] ">
-								<input type="hidden" name="hide_email" id="hide_email" value="@php echo $myComp[$EMAIL_STRING] "/>
+								<input type="email" id="email" class="form-control input-submit" name="email" placeholder="comany@mail.com" value="@php echo $myComp[$EMAIL_STRING] @endphp">
+								<input type="hidden" name="hide_email" id="hide_email" value="@php echo $myComp[$EMAIL_STRING] @endphp"/>
 							</div>
 
 							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.company_city') }} : </label>
-								<input type="text" id="city" class="form-control input-submit" name="city" placeholder="Bandung" value="@php echo $myComp['city'] ">
-								<input type="hidden" name="hide_city" id="hide_city" value="@php echo $myComp['city'] "/>
+								<input type="text" id="city" class="form-control input-submit" name="city" placeholder="Bandung" value="@php echo $myComp['city'] @endphp">
+								<input type="hidden" name="hide_city" id="hide_city" value="@php echo $myComp['city'] @endphp"/>
 							</div>
 
 							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.company_postal_code') }} : </label>
-								<input type="text" id="postal_code" class="form-control input-submit" name="postal_code" placeholder="456123" value="@php echo $myComp['postal_code'] ">
-								<input type="hidden" name="hide_postal_code" id="hide_postal_code" value="@php echo $myComp['postal_code'] "/>
+								<input type="text" id="postal_code" class="form-control input-submit" name="postal_code" placeholder="456123" value="@php echo $myComp['postal_code'] @endphp">
+								<input type="hidden" name="hide_postal_code" id="hide_postal_code" value="@php echo $myComp['postal_code'] @endphp"/>
 							</div>
 							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.company_phone') }} : </label>
-								<input type="text" id="phone" class="form-control input-submit" name="phone" placeholder="022123456" value="@php echo $myComp[$PHONE_NUMBER_STRING] ">
-								<input type="hidden" name="hide_phone" id="hide_phone" value="@php echo $myComp[$PHONE_NUMBER_STRING] "/>
+								<input type="text" id="phone" class="form-control input-submit" name="phone" placeholder="022123456" value="@php echo $myComp[$PHONE_NUMBER_STRING] @endphp">
+								<input type="hidden" name="hide_phone" id="hide_phone" value="@php echo $myComp[$PHONE_NUMBER_STRING] @endphp"/>
 							</div>
 							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.company_fax') }} : </label>
-								<input type="text" id="fax" class="form-control input-submit" name="fax" placeholder="022123456" value="@php echo $myComp['fax'] ">
-								<input type="hidden" name="hide_fax" id="hide_fax" value="@php echo $myComp['fax'] "/>
+								<input type="text" id="fax" class="form-control input-submit" name="fax" placeholder="022123456" value="@php echo $myComp['fax'] @endphp">
+								<input type="hidden" name="hide_fax" id="hide_fax" value="@php echo $myComp['fax'] @endphp"/>
 							</div>
 							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.company_no_npwp') }} : </label>
-								<input type="text" id="npwp_number" class="form-control input-submit" name="npwp_number" placeholder="1423456789" value="@php echo $myComp['npwp_number'] ">
-									<input type="hidden" name="hide_npwp_number" id="hide_npwp_number" value="@php echo $myComp['npwp_number'] "/>
+								<input type="text" id="npwp_number" class="form-control input-submit" name="npwp_number" placeholder="1423456789" value="@php echo $myComp['npwp_number'] @endphp">
+									<input type="hidden" name="hide_npwp_number" id="hide_npwp_number" value="@php echo $myComp['npwp_number'] @endphp"/>
 							</div>
 							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.company_npwp_file') }} : </label>
@@ -196,8 +196,8 @@
 							</div>
 							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.company_no_siup') }} : </label>
-								<input type="text" id="siup_number" class="form-control input-submit" name="siup_number" placeholder="123456789" value="@php echo $myComp['siup_number'] ">
-								<input type="hidden" name="hide_siup_number" id="hide_siup_number" value="@php echo $myComp['siup_number'] "/>
+								<input type="text" id="siup_number" class="form-control input-submit" name="siup_number" placeholder="123456789" value="@php echo $myComp['siup_number'] @endphp">
+								<input type="hidden" name="hide_siup_number" id="hide_siup_number" value="@php echo $myComp['siup_number'] @endphp"/>
 							</div>
 							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.company_siup_date') }} : </label>
@@ -207,20 +207,20 @@
 								}else{
 									$timestamp = date($dmY_STRING, strtotime($myComp[$SIUP_DATE_STRING]));
 								}
-								
-								<input type="text" id="siup_date" class="date form-control input-submit" name="siup_date" placeholder="dd-mm-yyyy" value="@php echo $timestamp " readonly>
-								<input type="hidden" name="hide_siup_date" id="hide_siup_date" value="@php echo $myComp[$SIUP_DATE_STRING] "/>
+								@endphp
+								<input type="text" id="siup_date" class="date form-control input-submit" name="siup_date" placeholder="dd-mm-yyyy" value="@php echo $timestamp @endphp" readonly>
+								<input type="hidden" name="hide_siup_date" id="hide_siup_date" value="@php echo $myComp[$SIUP_DATE_STRING] @endphp"/>
 							</div>
 							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.company_siup_file') }} : </label>
 								<input type="file" id="siup_file" class="form-control input-submit" name="siup_file" placeholder="{{ trans('translate.company_siup_file') }}" accept="application/pdf, image/*">
 								<a id="siup-file" class="btn btn-link" style="color:black !important;" onclick="downloadFileCompany('{{ $myComp['siup_file'] }}')"> {{ $myComp['siup_file'] }} </a>
-								<input type="hidden" name="hide_siup_file" id="hide_siup_file" value="@php echo $myComp['siup_file'] "/>
+								<input type="hidden" name="hide_siup_file" id="hide_siup_file" value="@php echo $myComp['siup_file'] @endphp"/>
 							</div>
 							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.company_no_certificate') }} : </label>
-								<input type="text" id="certificate_number" class="form-control input-submit" name="certificate_number" placeholder="123456789" value="@php echo $myComp['qs_certificate_number'] ">
-								<input type="hidden" name="hide_certificate_number" id="hide_certificate_number" value="@php echo $myComp['qs_certificate_number'] "/>
+								<input type="text" id="certificate_number" class="form-control input-submit" name="certificate_number" placeholder="123456789" value="@php echo $myComp['qs_certificate_number'] @endphp">
+								<input type="hidden" name="hide_certificate_number" id="hide_certificate_number" value="@php echo $myComp['qs_certificate_number'] @endphp"/>
 							</div>
 							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.company_certificate_date') }} : </label>
@@ -230,15 +230,15 @@
 								}else{
 									$timestamp = date($dmY_STRING, strtotime($myComp[$qs_certificate_date_STRING]));
 								}
-								
-								<input type="text" id="certificate_date" class="date form-control input-submit" name="certificate_date" placeholder="{{ trans('translate.company_certificate_date') }}" value="@php echo $timestamp " readonly>
-								<input type="hidden" name="hide_certificate_date" id="hide_certificate_date" value="@php echo $myComp[$qs_certificate_date_STRING] "/>
+								@endphp
+								<input type="text" id="certificate_date" class="date form-control input-submit" name="certificate_date" placeholder="{{ trans('translate.company_certificate_date') }}" value="@php echo $timestamp @endphp" readonly>
+								<input type="hidden" name="hide_certificate_date" id="hide_certificate_date" value="@php echo $myComp[$qs_certificate_date_STRING] @endphp"/>
 							</div>
 							<div class="col_full">
 								<label for="register-form-repassword">{{ trans('translate.company_certificate_file') }} : </label>
 								<input type="file" id="certificate_file" class="form-control input-submit" name="certificate_file" placeholder="{{ trans('translate.company_certificate_file') }}" accept="application/pdf, image/*">
 								<a id="certificate-file" class="btn btn-link" style="color:black !important;" onclick="downloadFileCompany('{{ $myComp['qs_certificate_file'] }}')"> {{ $myComp['qs_certificate_file'] }} </a>
-								<input type="hidden" name="hide_certificate_file" id="hide_certificate_file" value="@php echo $myComp['qs_certificate_file'] "/>
+								<input type="hidden" name="hide_certificate_file" id="hide_certificate_file" value="@php echo $myComp['qs_certificate_file'] @endphp"/>
 							</div> 
 
 							<div class="col_full nobottommargin">

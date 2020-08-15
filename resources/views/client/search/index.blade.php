@@ -25,29 +25,29 @@
 															</tr>
 														</thead>
 														<tbody>
-															@php $no=1; if(count($data)>0){ 
-															@foreach($data as $item)
+															@php $no=1; if(count($data)>0){ @endphp
+															@foreach($data as $item?
 																<tr>
-																	<td>@php echo $no.'. ';  {{ trans('translate.search_result_title') }} : </td>
-																	<td>@php echo $item->title </td>
+																	<td>@php echo $no.'. '; @endphp {{ trans('translate.search_result_title') }} : </td>
+																	<td>@php echo $item->title @endphp</td>
 																</tr>
 																<tr>
 																	<td>{{ trans('translate.search_result_desc') }} : </td>
-																	<td>@php echo $item->description </td>
+																	<td>@php echo $item->description @endphp</td>
 																</tr>
-																@php if($item->jns == 1){ 
+																@php if($item->jns == 1){ @endphp
 																	<tr><td> 
 																		</td></tr>
-																@php }else if($item->jns == 2){ 
+																@php }else if($item->jns == 2){ @endphp
 																	<tr><td> 
 																		</td></tr>
-																@php }else if($item->jns == 4){ 
+																@php }else if($item->jns == 4){ @endphp
 																	<tr><td>
 																			<a class="btn btn-wide btn-danger" href="{{URL::to('pengujian/'.$item->id.'/detail')}}">{{ trans('translate.search_result_exam_detail') }}</a>
 																		</td></tr>
-																@php } $no++; 
+																@php } $no++; @endphp
 															@endforeach
-																@php }else{
+																@php }else{@endphp
 															<div class="table-responsive font-table">
 																<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1">
 																	<caption></caption>
@@ -58,7 +58,7 @@
 																	</thead>
 																</table>
 															</div>
-															@php }
+															@php }@endphp
 													</table>
 												</div>
 											</div>
