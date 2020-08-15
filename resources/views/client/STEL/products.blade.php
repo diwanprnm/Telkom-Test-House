@@ -77,7 +77,7 @@
 			                    <div class="row">
 			                        <div class="col-xs-12 col-md-6">
 			                            <p class="lead">
-			                              {{ trans('translate.stel_rupiah') }}. <?php echo number_format($stel->price); ?><span style="color:red;font-size: 12px;"> {{ trans('translate.stel_exclude') }} ppn (10%)</span></p>
+			                              {{ trans('translate.stel_rupiah') }}. @php echo number_format($stel->price); @endphp<span style="color:red;font-size: 12px;"> {{ trans('translate.stel_exclude') }} ppn (10%)</span></p>
 			                        </div>
 			                        <div class="col-xs-12 col-md-6">
 			                        <form action="products" method="POST">
@@ -86,12 +86,12 @@
 										<input type="hidden" name="name" value="{{ $stel->name }}">
 										<input type="hidden" name="code" value="{{ $stel->code }}">
 										<input type="hidden" name="price" value="{{ $stel->price }}">
-										<?php  
+										@php  
 										$is_exist = false;
 										 foreach (Cart::content() as $item) {
 										 	if($item->id == $stel->id){$is_exist = true;}
 										 } 
-										?>
+										@endphp
 
 									  	@if(($stel->is_buyed == 0) && !$is_exist )
 									  		<input type="submit" class="btn btn-success" value="{{ trans('translate.stel_add_to_cart') }}">
@@ -117,7 +117,7 @@
 				<!-- End of offset1-->	
 
 				<div class="hpadding20">
-					<?php echo $stels->render(); ?> 
+					@php echo $stels->render(); @endphp 
 
 				</div>
 
@@ -139,13 +139,13 @@
 														{!! csrf_field() !!}
 						<button class="btn btn-transparent btn-xs pull-right" tooltip-placement="top" tooltip="Remove" onclick="return confirm('{{ trans('translate.stel_delete_item') }}')"><em class="fa fa-times fa fa-white"></em></button>
 						{!! Form::close() !!}
-						<?php 
+						@php 
 							$res = explode('myTokenProduct', $row->name);
 							$stel_name = $res[0] ? $res[0] : '-';
 							$stel_code = $res[1] ? $res[1] : '-';
-						?>
+						@endphp
 						<p>{{ trans('translate.stel_name') }} : {{$stel_name}}</p>
-						<p>{{ trans('translate.stel_price') }} : {{ trans('translate.stel_rupiah') }} <?php echo number_format($row->qty*$row->price); ?>(<?php echo $row->qty?>)</p>
+						<p>{{ trans('translate.stel_price') }} : {{ trans('translate.stel_rupiah') }} @php echo number_format($row->qty*$row->price); @endphp(@php echo $row->qty@endphp)</p>
 					</div>
 					@endforeach
 				</div>
@@ -153,16 +153,16 @@
 				<!-- TOP TIP -->
 				<div class="filtertip">
 					<div class="padding20" style="background-color: maroon;">
-						<h4>{{ trans('translate.stel_price_total') }}<br>{{ trans('translate.stel_rupiah') }} <?php echo number_format(Cart::subTotal(), 0, '.', ','); ?></h4>
+						<h4>{{ trans('translate.stel_price_total') }}<br>{{ trans('translate.stel_rupiah') }} @php echo number_format(Cart::subTotal(), 0, '.', ','); @endphp</h4>
 					</div>
 				</div>
 				
 				<div class="list-cart padding20">
-				<?php if(Cart::count() > 0){?>
+				@php if(Cart::count() > 0){@endphp
 					<a class="button button-3d nomargin full btn-sky" href="#myModal1"  data-lightbox="inline" >{{ trans('translate.stel_checkout') }}</a>
-				<?php }else{?>
+				@php }else{@endphp
 					<a class="button button-3d nomargin full btn-sky"  >{{ trans('translate.stel_checkout') }}</a>
-				<?php }?>
+				@php }@endphp
 				</div> 
 
 					<!-- Modal -->

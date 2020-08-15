@@ -48,11 +48,11 @@
 									  	@php $no++;@endphp
 									<tr>
 										<td>{{$no}}</td>
-										<?php 
+										@php 
 											$res = explode('myTokenProduct', $row->name);
 											$stel_name = $res[0] ? $res[0] : '-';
 											$stel_code = $res[1] ? $res[1] : '-';
-										?>
+										@endphp
 										<td>{{$stel_name}}</td>
 										<td>{{$stel_code}}</td>
 										<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. {{number_format($row->price)}}</td> 

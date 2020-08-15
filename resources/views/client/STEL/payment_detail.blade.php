@@ -45,50 +45,50 @@
 							</tr>
 						</thead>
 						<tbody>
-						<?php $total = 0;?>
+						@php $total = 0;@endphp
 						@foreach($stels as $keys => $stel)
 							<tr>
 								<td>{{++$keys}}</td>
 								<td>{{$stel->name}}</td>
 								<td>{{$stel->code}}</td> 
-								<td>{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($stel->price), 0, '.', ','); ?></td>
+								<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($stel->price), 0, '.', ','); @endphp</td>
 							  	 <td>{{$stel->qty}}</td> 
-								<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($stel->price * $stel->qty), 0, '.', ','); ?></td>
-								<?php  
+								<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($stel->price * $stel->qty), 0, '.', ','); @endphp</td>
+								@php  
 									if($stel->manual_attachment !="" && $stel->payment_status == 1){
-								?>
+								@endphp
 										<td colspan="6" class="center"><a target="_blank" href="{{ URL::to('/client/downloadstelwatermark/'.$stel->id_attachment_stel) }}">{{ trans('translate.download') }} File</a></td>
-								<?php }
+								@php }
 								else if($stel->attachment !="" && $stel->payment_status == 1){
-								?>
+								@endphp
 									<td colspan="6" class="center"><a target="_blank" href="{!! url("cetakstel?invoice_id={$stel->invoice}&attach={$stel->attachment}&company_name={$stel->company_name}") !!}">{{ trans('translate.download') }} File</a></td>
-								<?php
+								@php
 								}
 									else{
-								?>	
+								@endphp	
 										<td colspan="6" class="center">{{ trans('translate.document_not_found') }}</td>
-								<?php 
+								@php 
 									}
-								?> 
+								@endphp 
 							</tr> 
-							<?php $total +=($stel->price * $stel->qty); ?>
+							@php $total +=($stel->price * $stel->qty); @endphp
 						@endforeach
 						</tbody>
 						<tfoot> 
 							
                         	<tr>
                         		<td colspan="5" class="text-align-right"> </td>
-                        		<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. <?php 
-                        			echo number_format($total, 0, '.', ',');?></td>
+                        		<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. @php 
+                        			echo number_format($total, 0, '.', ',');@endphp</td>
                         	</tr>
                        		<tr>
                         		<td colspan="5" class="text-align-right"> {{ trans('translate.tax') }}</td>
-                        		<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. <?php $tax =  $total * (config("cart.tax")/100);
-                        			echo number_format($tax, 0, '.', ',');?></td>
+                        		<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. @php $tax =  $total * (config("cart.tax")/100);
+                        			echo number_format($tax, 0, '.', ',');@endphp</td>
                         	</tr>
                         	<tr>
                         		<td colspan="5" class="text-align-right"> Total</td>
-                        		<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. <?php echo number_format($total+$tax, 0, '.', ',');?></td>
+                        		<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. @php echo number_format($total+$tax, 0, '.', ',');@endphp</td>
                         	</tr> 
 						</tfoot>
 					</table>

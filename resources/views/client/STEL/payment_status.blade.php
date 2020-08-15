@@ -49,17 +49,17 @@
 										</tr>
 									</thead>
 									<tbody>
-										<?php  if(count($stels)>0){ ?>
+										@php  if(count($stels)>0){ @endphp
 											@foreach($stels as $keys => $stel)
 												<tr>
 													<td>{{++$keys}}</td>
 													<td>{{$stel->created_at}}</td>
 													<td>{{$stel->invoice}}</td>
 													<td>{{$stel->payment_code}}</td> 
-													<td>{{ trans('translate.stel_rupiah') }}. <?php echo number_format(floatval($stel->total), 0, '.', ','); ?></td>
+													<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($stel->total), 0, '.', ','); @endphp</td>
 													
 													<td>
-														<?php
+														@php
 														switch ($stel->payment_status) {
 															case -1:
 																echo "Paid (decline)";
@@ -77,7 +77,7 @@
 																# code...
 																break;
 														}
-														?>
+														@endphp
 
 													</td>
 													<td>{{$stel->update_at}}</td>  
@@ -86,11 +86,11 @@
 												</tr> 
 											@endforeach
 
-										<?php }else{?> 
+										@php }else{@endphp 
 											<tr class="center">
 												<td colspan="7" style="text-align: center;">{{ trans('translate.data_not_found') }}</td>
 											</tr> 
-										<?php }?>
+										@php }@endphp
 									</tbody>
 								</table>
 
