@@ -655,7 +655,7 @@
 	    },
 	    onFinished: function (event, currentIndex)
 	    {
-	        window.location.href = '<?php echo url("/pengujian");?>';
+	        window.location.href = '@php echo url("/pengujian");@endphp';
 	    }
 	});
   	$('ul[role="tablist"]').hide();  

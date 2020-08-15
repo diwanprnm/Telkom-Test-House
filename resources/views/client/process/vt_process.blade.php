@@ -480,7 +480,7 @@
 					        	<fieldset class="lastFieldset">
 									<legend></legend>
 									<h4 class="judulselesai">{{ trans('translate.service_thanks') }}</h4> 
-									<a class="button button3d btn-green" href="<?php echo url('/pengujian');?>">Finish</a>
+									<a class="button button3d btn-green" href="@php echo url('/pengujian');@endphp">Finish</a>
 								</fieldset>
 						
 				        </div>
@@ -655,7 +655,7 @@
 	    },
 	    onFinished: function (event, currentIndex)
 	    {
-	        window.location.href = '<?php echo url("/pengujian");?>';
+	        window.location.href = '@php echo url("/pengujian");@endphp';
 	    }
 	});
   	$('ul[role="tablist"]').hide();  
