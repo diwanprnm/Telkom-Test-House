@@ -28,7 +28,7 @@
 			<div class="container clearfix"> 
 				<form id="form" class="smart-wizard" role="form" method="POST" action="{{ url('/pembayaranstel') }}" enctype="multipart/form-data">
 					{!! csrf_field() !!}
-					<input type="hidden" name="stelsales_id" id="stelsales_id" value="<?php echo $id ?>"/>  
+					<input type="hidden" name="stelsales_id" id="stelsales_id" value="@php echo $id @endphp"/>  
 					<div id="wizard" class="swMain">
 						@if (Session::has('message'))
 				<div class="alert alert-info">{{ Session::get('message') }}</div>

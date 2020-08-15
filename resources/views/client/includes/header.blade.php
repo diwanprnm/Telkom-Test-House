@@ -25,23 +25,23 @@
 				<li><a href="{{URL::to('/client/downloadUsman')}}" class="page-scroll"><img src="{{asset('template-assets/img/baru/PDF.png')}}" width="13" style="margin-top:-4.7px;" alt="logo pdf"></a></li>
 				<li><a href="{!! url('language') !!}/en" class="page-scroll"><img src="{{asset('template-assets/img/baru/united-kingdom.png')}}" width="13" style="margin-top:-4.7px;" alt="bendera inggris"></a></li>
 				<li><a href="{!! url('language') !!}/in" class="page-scroll"><img src="{{asset('template-assets/img/baru/indonesia.png')}}" width="13" style="margin-top:-4.7px;" alt="bendera indonesia"></a></li>
-				<?php
+				@php
 					$currentUser = Auth::user();
 					if($currentUser){
-				?>
-					<li class="dropdown"><button class="page-scroll dropdown-toggle btn-header" type="button" id="menu1" data-toggle="dropdown"><?php echo $currentUser['attributes']['name'];?><span class="caret"></span></button>
+				@endphp
+					<li class="dropdown"><button class="page-scroll dropdown-toggle btn-header" type="button" id="menu1" data-toggle="dropdown">@php echo $currentUser['attributes']['name'];@endphp<span class="caret"></span></button>
 						<ul class="dropdown-menu b-red" role="menu" aria-labelledby="menu1">
 							<li role="presentation"><a role="menuitem" tabindex="-1" href="{{url('/client/profile')}}">{{ trans('translate.profile') }}</a></li>
 							<li role="presentation"><a role="menuitem" tabindex="-1" href="{{url('/client/logout')}}">{{ trans('translate.logout') }}</a></li>
 						</ul></a>
 					</li>
-				<?php		
+				@php		
 					}else{
-				?>
+				@endphp
 					<li><a href="#" class="page-scroll" data-toggle="modal" data-target="#myModallogin"><strong>{{ trans('translate.login') }}</strong></a></li>
-				<?php
+				@php
 					}
-				?>
+				@endphp
 			</ul>
 		</nav>
 	<a href="#0" class="cd-nav-trigger cd-text-replace">Menu<span></span></a>

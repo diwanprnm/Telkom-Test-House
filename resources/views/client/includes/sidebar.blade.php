@@ -13,10 +13,10 @@
 				<span style="color:rgba(107,107,107,1.00); font-weight:bold;">{{ Auth::user()->name }}</span>
 				</div> 
 			</li>
-			<?php 
+			@php 
 				$segment_1 = Request::segment(1);
 				$segment_2 = Request::segment(2);
-			?>
+			@endphp
 				
 			@if( Auth::User()->hasPermission('home_view') )
 			<li @if($segment_1=='home') ? class="start active open" : "" @endif>

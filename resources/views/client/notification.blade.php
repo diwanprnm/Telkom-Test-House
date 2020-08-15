@@ -37,11 +37,11 @@
 												<th class="center" scope="col">{{ trans('translate.notification') }}</th>
 										</thead>
 										<tbody>
-											<?php $no=1; if($notification_data_count>0){ ?>
+											@php $no=1; if($notification_data_count>0){ @endphp
 											@foreach($notification_data as $item)
 											<tr>
 												<td class="center">{{$no}}</td>
-												<td class="left"><a data-id="<?php echo $item['id'];?>" data-url="{{$item['url']}}" class="notifData">
+												<td class="left"><a data-id="@php echo $item['id'];@endphp" data-url="{{$item['url']}}" class="notifData">
 													@if($item['is_read'])
 														{{$item['message']}}
 													@else
@@ -49,9 +49,9 @@
 													@endif
 												</a></td>
 											</tr>
-											<?php $no++ ?>
+											@php $no++ @endphp
 											@endforeach
-											<?php }else{?>
+											@php }else{@endphp
 											<div class="table-responsive font-table">
 												<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1">
 													<caption></caption>
@@ -62,7 +62,7 @@
 													</thead>
 												</table>
 											</div>
-											<?php }?>
+											@php }@endphp
 										</tbody>
 									</table>
 								</div>

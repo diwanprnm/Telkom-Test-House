@@ -217,11 +217,11 @@
 							<div class="col-xs-1 selectContainer">
 								D: <select name="daySIUPP" id="daySIUPP" class="form-control" style="width:auto;" onchange="setDays(monthSIUPP,this,yearSIUPP,1)">
 									@for($i = 1;$i <= 31; $i++)
-										<?php
+										@php
 											if($i < 10){
 												$i = '0'.$i;
 											}
-										?>
+										@endphp
 										<option value="{{$i}}">{{$i}}</option>
 									@endfor
 								</select>
@@ -270,11 +270,11 @@
 							<div class="col-xs-1 selectContainer">
 								D: <select name="daySerti" id="daySerti" class="form-control" style="width:auto;" onchange="setDays(monthSerti,this,yearSerti,0)">
 									@for($i = 1;$i <= 31; $i++)
-										<?php
+										@php
 											if($i < 10){
 												$i = '0'.$i;
 											}
-										?>
+										@endphp
 										<option value="{{$i}}">{{$i}}</option>
 									@endfor
 								</select>

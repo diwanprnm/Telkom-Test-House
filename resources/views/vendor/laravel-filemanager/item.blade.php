@@ -1,6 +1,6 @@
-<?php $file_name = $file_info[$key]['name'];?>
+@php $file_name = $file_info[$key]['name'];@endphp
 @if($type == 'Images')
-<?php $thumb_src = $thumb_url . $file_name;?>
+@php $thumb_src = $thumb_url . $file_name;@endphp
 @endif
 
 <div class="col-sm-4 col-md-3 col-lg-2 img-row">

@@ -14,9 +14,9 @@
 					</tr>
 				</thead>
 				<tbody>
-					<?php 
+					@php 
 						$no=1; if(count($data)>0){
-					?>
+					@endphp
 					@foreach($data as $item)
 					<tr>
 						<td class="center">{{ $no }}</td>
@@ -26,9 +26,9 @@
 						<td class="center">{{ $item['version'] }}</td>
 						<td class="center">{{ $item['type'] }}</td>
 					</tr>
-					<?php $no++ ?>
+					@php $no++ @endphp
 					@endforeach
-					<?php }else{?>
+					@php }else{@endphp
 					<div class="table-responsive font-table">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1">
 							<caption></caption>
@@ -39,7 +39,7 @@
 							</thead>
 						</table>
 					</div>
-					<?php }?>
+					@php }@endphp
 				</tbody>
 			</table>
 		</div>

@@ -31,7 +31,7 @@
         @else
         <i class="fa {{ $file['icon'] }}"></i>
         @endif
-        <?php $file_name = $file['name'];?>
+        @php $file_name = $file['name'];@endphp
         <a href="javascript:useFile('{{ $file_name }}')">
           {{ $file_name }}
         </a>

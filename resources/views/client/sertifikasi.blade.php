@@ -29,15 +29,15 @@
 
 					<div class="col_full">
 						@if( Config::get('app.locale') == 'in')
-							<?php if(count($data)>0){
+							@php if(count($data)>0){
 								echo strip_tags($data[0]->description);
 							}
-							?>
+							@endphp
 						@else
-							<?php if(count($data)>0){
+							@php if(count($data)>0){
 								echo strip_tags($data[0]->description_english);
 							}
-							?>
+							@endphp
 						@endif
 					</div>
 

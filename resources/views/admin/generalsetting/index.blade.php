@@ -138,15 +138,15 @@ table {
 			$('#is_poh').prop('checked', true);
 			$("#poh_manager_urel-div").show();
 			$("#manager_urel-div").hide();
-	<?php
+	@php
 		}else{
-	?>
+	@endphp
 			$('.is_poh').prop('checked', false);
 			$("#manager_urel-div").show();
 			$("#poh_manager_urel-div").hide();
-	<?php
+	@php
 		}
-	?>
+	@endphp
 	$(document).ready(function() {
 	    $('#is_poh').change(function() {
 	        if(this.checked) {
