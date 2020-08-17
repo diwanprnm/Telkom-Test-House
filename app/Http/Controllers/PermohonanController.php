@@ -1082,6 +1082,6 @@ class PermohonanController extends Controller
 			}
 		}
 
-		return $test_number
+		return $test_number;
     }
 }
