@@ -19,16 +19,16 @@ class CompanyControllerTest extends TestCase
         $this->assertTrue(true);
     }
 
- //    public function test_visit_company()
-	// { 
-	//    $response = $this->call('GET', 'admin/company');  
- //       $this->assertEquals(200, $response->status());
-	// }
-	// public function test_search_company()
-	// { 
-	//    $response = $this->call('GET', 'admin/company?search=asda&is_active=&after_date=&before_date=');  
- //       $this->assertEquals(200, $response->status());
-	// }
+    public function test_visit_company()
+	{ 
+	   $response = $this->call('GET', 'admin/company');  
+       $this->assertEquals(200, $response->status());
+	}
+	public function test_search_company()
+	{ 
+	   $response = $this->call('GET', 'admin/company?search=asda&is_active=&after_date=&before_date=');  
+       $this->assertEquals(200, $response->status());
+	}
  //    public function test_stores_company()
 	// { 
 	// 	$user = User::find(1);
