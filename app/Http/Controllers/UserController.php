@@ -40,7 +40,7 @@ class UserController extends Controller
     private const PATH_PROFILE = 'profile_'; 
     private const FAILED_USER_MSG = 'Save Profile Picture to directory failed'; 
     private const FAILED_LOG_MSG = 'Save failed'; 
-    private const NEW_PASSWORD = 'new_password';
+    private const NEW_TEXT = 'new';
     private const PRICE = 'price';
     private const ADMIN_USER = '/admin/user';
     private const ADMIN_USER_CREATE = '/admin/user/create/';
@@ -297,9 +297,9 @@ class UserController extends Controller
         }
         if ($request->has('old_password')){
             if (Hash::check($request->get('old_password'), $user->password)) {
-                if ($request->has(self::NEW_PASSWORD) && $request->has('confirm_new_password')){
-                    if ($request->get(self::NEW_PASSWORD) == $request->get('confirm_new_password')){
-                        $user->password = bcrypt($request->input(self::NEW_PASSWORD));
+                if ($request->has(self::NEW_TEXT.self::PASSWORD) && $request->has('confirm_new_password')){
+                    if ($request->get(self::NEW_TEXT.self::PASSWORD) == $request->get('confirm_new_password')){
+                        $user->password = bcrypt($request->input(self::NEW_TEXT.self::PASSWORD));
                     } else{
                         Session::flash(self::ERROR, 'New password not matched');
                         return back()

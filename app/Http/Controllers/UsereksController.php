@@ -31,7 +31,8 @@ class UsereksController extends Controller
     private const ADMIN_USEREKS = '/admin/usereks';
     private const ADMIN_USEREKS_CREATE = '/admin/usereks/create';
     private const IS_ACTIVE = 'is_active';
-    private const MESSAGE = 'message';
+    private const MESSAGE = 'message'; 
+    private const ERROR = 'error'; 
     private const COMPANY_ID = 'company_id';
     private const EMAIL = 'email';
     private const PASSWORD = 'password';
@@ -42,7 +43,7 @@ class UsereksController extends Controller
     private const MEDIA_USER = '/media/user/';
     private const FAILED_USER_MSG = 'Save Profile Picture to directory failed';
     private const FAILED_LOG_MSG = 'Save failed';
-    private const NEW_PASSWORD = 'new_password';
+    private const NEW_TEXT = 'new';
     private const PRICE = 'price';
     /**
      * Create a new controller instance.
@@ -95,7 +96,7 @@ class UsereksController extends Controller
                     try{
                         $logs->save();    
                     }catch(Illuminate\Database\QueryException $e){
-                        Session::flash('error', 'Failed Create Log');
+                        Session::flash(self::ERROR, 'Failed Create Log');
                         return redirect(self::ADMIN_USEREKS);
                     }
                     
@@ -188,7 +189,7 @@ class UsereksController extends Controller
             if($request->file(self::PICTURE)->move($path_file,$name_file)){
                 $user->picture = $name_file;
             }else{
-                Session::flash('error',self::FAILED_USER_MSG);
+                Session::flash(self::ERROR,self::FAILED_USER_MSG);
                 return redirect(self::ADMIN_USEREKS_CREATE);
             }
         }
@@ -209,7 +210,7 @@ class UsereksController extends Controller
             try{
                 $logs->save();
             }catch(\Exception $e){
-                Session::flash('error', self::FAILED_LOG_MSG);
+                Session::flash(self::ERROR, self::FAILED_LOG_MSG);
                 return redirect(self::ADMIN_USEREKS_CREATE)->withInput();
             }
            
@@ -217,7 +218,7 @@ class UsereksController extends Controller
             Session::flash(self::MESSAGE, 'User successfully created');
             return redirect(self::ADMIN_USEREKS);
         } catch(\Exception $e){ 
-            Session::flash('error', self::FAILED_LOG_MSG);
+            Session::flash(self::ERROR, self::FAILED_LOG_MSG);
             return redirect(self::ADMIN_USEREKS_CREATE)->withInput();
         }
     }
@@ -249,21 +250,21 @@ class UsereksController extends Controller
         }
         if ($request->has('old_password')){
             if (Hash::check($request->get('old_password'), $user->password)) {
-                if ($request->has(self::NEW_PASSWORD) && $request->has('confirm_new_password')){
-                    if ($request->get(self::NEW_PASSWORD) == $request->get('confirm_new_password')){
-                        $user->password = bcrypt($request->input(self::NEW_PASSWORD));
+                if ($request->has(self::NEW_TEXT.self::NEW_PASSWORD) && $request->has('confirm_new_password')){
+                    if ($request->get(self::NEW_TEXT.self::NEW_PASSWORD) == $request->get('confirm_new_password')){
+                        $user->password = bcrypt($request->input(self::NEW_TEXT.self::NEW_PASSWORD));
                     } else{
-                        Session::flash('error', 'New password not matched');
+                        Session::flash(self::ERROR, 'New password not matched');
                         return back()
                             ->withInput($request->all());    
                     }
                 } else{
-                    Session::flash('error', 'Must fill new password and confirm new password');
+                    Session::flash(self::ERROR, 'Must fill new password and confirm new password');
                     return back()
                         ->withInput($request->all());
                 }
             } else{
-                Session::flash('error', 'Wrong Old Password');
+                Session::flash(self::ERROR, 'Wrong Old Password');
                 return back()
                     ->withInput($request->all());
             }
@@ -284,7 +285,7 @@ class UsereksController extends Controller
             if($request->file(self::PICTURE)->move($path_file,$name_file)){
                 $user->picture = $name_file;
             }else{
-                Session::flash('error', self::FAILED_USER_MSG);
+                Session::flash(self::ERROR, self::FAILED_USER_MSG);
                 return redirect(self::ADMIN_USEREKS.'/'.$user->id.'edit');
             }
         }
@@ -306,7 +307,7 @@ class UsereksController extends Controller
             Session::flash(self::MESSAGE, 'User successfully updated');
             return redirect('/admin');
         } catch(Exception $e){
-            Session::flash('error', self::FAILED_LOG_MSG);
+            Session::flash(self::ERROR, self::FAILED_LOG_MSG);
             return redirect('/admin/usereks/'.$user->id.'edit');
         }  
     }
@@ -384,7 +385,7 @@ class UsereksController extends Controller
             if($request->file(self::PICTURE)->move($path_file,$name_file)){
                 $user->picture = $name_file;
             }else{
-                Session::flash('error', self::FAILED_USER_MSG);
+                Session::flash(self::ERROR, self::FAILED_USER_MSG);
                 return redirect(self::ADMIN_USEREKS_CREATE);
             }
         }
@@ -406,7 +407,7 @@ class UsereksController extends Controller
             Session::flash(self::MESSAGE, 'User successfully updated');
             return redirect(self::ADMIN_USEREKS);
         } catch(Exception $e){
-            Session::flash('error', self::FAILED_LOG_MSG);
+            Session::flash(self::ERROR, self::FAILED_LOG_MSG);
             return redirect(self::ADMIN_USEREKS.'/'.$user->id.'edit');
         }
     }
@@ -428,7 +429,7 @@ class UsereksController extends Controller
                 Session::flash(self::MESSAGE, 'User successfully deleted');
                 return redirect(self::ADMIN_USEREKS);
             }catch (Exception $e){
-                Session::flash('error', 'Delete failed');
+                Session::flash(self::ERROR, 'Delete failed');
                 return redirect(self::ADMIN_USEREKS);
             }
         }
@@ -457,7 +458,7 @@ class UsereksController extends Controller
                 Session::flash(self::MESSAGE, 'User successfully deleted');
                 return redirect(self::ADMIN_USEREKS);
             }catch (Exception $e){
-                Session::flash('error', 'Delete failed');
+                Session::flash(self::ERROR, 'Delete failed');
                 return redirect(self::ADMIN_USEREKS);
             }
         }
