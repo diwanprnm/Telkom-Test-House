@@ -30,17 +30,7 @@ use App\Events\Notification;
 use App\NotificationTable;
 
 class ProfileController extends Controller
-{
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    // public function __construct()
-    // {
-        // $this->middleware('auth');
-    // }
-
+{ 
     /**
      * Display a listing of the resource.
      *
@@ -63,10 +53,8 @@ class ProfileController extends Controller
     }
 	
 	public function update(Request $request)
-    {
-		// echo"<pre>";print_r($request->all());exit;
-		$currentUser = Auth::user();
-		// echo"<pre>";print_r($currentUser);
+    { 
+		$currentUser = Auth::user(); 
 		if (Hash::check($request->input('currPass'), $currentUser['attributes']['password'])) {
 			$hashedPassword = $currentUser['attributes']['password'];
 		}else{
@@ -91,7 +79,7 @@ class ProfileController extends Controller
 				->withInput($request->all());
 			}
 		}
-			$path_file = public_path().'/media/user/'.$request->input('hide_id_user').'';
+ 		$path_file = public_path().'/media/user/'.$request->input('hide_id_user').'';
 		if ($request->hasFile('userPicture')) {
 			$type_file = $request->file('userPicture')->getMimeType();
 			$data_type_file = explode('/',$type_file);
@@ -99,9 +87,7 @@ class ProfileController extends Controller
 				return redirect()->back()
 				->with('error_img_type', 1)
 				->withInput($request->all()); 
-			}else{
-				/*$ext_file = $request->file('userPicture')->getClientOriginalName();
-				$name_file = uniqid().'_user_'.$request->input('hide_id_user').'.'.$ext_file;*/
+			}else{ 
 				$name_file = 'profile_'.$request->file('userPicture')->getClientOriginalName();
 				$request->file('userPicture')->move($path_file, $name_file);
 				$fuserPicture = $name_file;
@@ -150,12 +136,10 @@ class ProfileController extends Controller
     }
 	
 	public function updateCompany(Request $request)
-    {
-		// echo"<pre>";print_r($request->all());
+    { 
 		$description = '';
 		$count_commit = 0;
-		$currentUser = Auth::user();
-		// echo"<pre>";print_r($currentUser);
+		$currentUser = Auth::user(); 
 			$temp_id = Uuid::uuid4();
 			$company_id = $request->input('hide_id_company');
 			
@@ -223,9 +207,7 @@ class ProfileController extends Controller
 			$description = $description.'No. NPWP, ';
 		}
 		
-		if ($request->hasFile('npwp_file')) {
-            /*$ext_file = $request->file('npwp_file')->getClientOriginalExtension();
-            $name_file = uniqid().'_npwp_'.$company_id.'.'.$ext_file;*/
+		if ($request->hasFile('npwp_file')) { 
             $name_file = 'npwp_'.$request->file('npwp_file')->getClientOriginalName();
 			$path_file = public_path().'/media/tempCompany/'.$company_id.'';
             if (!file_exists($path_file)) {
@@ -258,9 +240,7 @@ class ProfileController extends Controller
 			$description = $description.'Masa berlaku SIUPP, ';
 		}
 		
-		if ($request->hasFile('siup_file')) {
-            /*$ext_file = $request->file('siup_file')->getClientOriginalExtension();
-            $name_file = uniqid().'_siupp_'.$company_id.'.'.$ext_file;*/
+		if ($request->hasFile('siup_file')) { 
             $name_file = 'siupp_'.$request->file('siup_file')->getClientOriginalName();
 			$path_file = public_path().'/media/tempCompany/'.$company_id.'';
             if (!file_exists($path_file)) {
@@ -294,9 +274,7 @@ class ProfileController extends Controller
 			$description = $description.'Masa berlaku Sertifikat Uji Mutu, ';
 		}
 		
-		if ($request->hasFile('certificate_file')) {
-            /*$ext_file = $request->file('certificate_file')->getClientOriginalExtension();
-            $name_file = uniqid().'_certificate_'.$company_id.'.'.$ext_file;*/
+		if ($request->hasFile('certificate_file')) { 
             $name_file = 'serti_uji_mutu_'.$request->file('certificate_file')->getClientOriginalName();
 			$path_file = public_path().'/media/tempCompany/'.$company_id.'';
             if (!file_exists($path_file)) {
@@ -387,32 +365,22 @@ class ProfileController extends Controller
     }
 	
 	public function insert(Request $request)
-    {
-		// print_r($request->all());exit;
-		// $currentUser = Auth::user();
+    { 
 		$user_id = Uuid::uuid4();
 		
-		if($request->input('hide_is_company_too') == 0){
-			// print_r($request->all());exit;
+		if($request->input('hide_is_company_too') == 0){ 
 			if($request->input('email') == ''){
 				return redirect()->back()
-				->with('error_email', 1)
-				// ->withInput($request->except("password"));
+				->with('error_email', 1) 
 				->withInput($request->all());
 			}
-				$email_exists = $this->cekEmail($request->input('email'));
-				if($email_exists == 1){
-					return redirect()->back()
-					->with('error_email', 2)
-					->withInput($request->all());
-				}
-			// if($request->input('newPass') == '' || $request->input('confnewPass') == ''){
-				// return redirect()->back()
-				// ->with('error_newpass', 1)
-				// ->withInput($request->all());
-			// }
-			if($request->input('newPass') == $request->input('confnewPass')){
-				// $password = $request->input('newPass');
+			$email_exists = $this->cekEmail($request->input('email'));
+			if($email_exists == 1){
+				return redirect()->back()
+				->with('error_email', 2)
+				->withInput($request->all());
+			} 
+			if($request->input('newPass') == $request->input('confnewPass')){ 
 				$hashedPassword = Hash::make($request->input('newPass'));
 			}
 			else{
@@ -432,9 +400,7 @@ class ProfileController extends Controller
 					return redirect()->back()
 					->with('error_img_type', 1)
 					->withInput($request->all());
-				}else{
-					/*$ext_file = $request->file('userPicture')->getClientOriginalName();
-					$name_file = uniqid().'_user_'.$user_id.'.'.$ext_file;*/
+				}else{ 
 					$name_file = 'profile_'.$request->file('userPicture')->getClientOriginalName();
 					if($request->file('userPicture')->move($path_file,$name_file)){
 						$fuserPicture = $name_file;
@@ -471,8 +437,7 @@ class ProfileController extends Controller
 					'email3' => ''.$request->input('email3').'', 
 				]
 			]);
-			$logs = new Logs;
-			// $currentUser = Auth::user();
+			$logs = new Logs; 
 	        $logs->user_id = $user_id;
 	        $logs->id = Uuid::uuid4();
 	        $logs->action = "Register";   
@@ -524,9 +489,7 @@ class ProfileController extends Controller
 			$company->siup_date = $request->input('comp_siup_date');
 			$company->qs_certificate_number = $request->input('comp_qs_certificate_number');
 
-			if ($request->hasFile('comp_npwp_file')) {
-				/*$ext_file = $request->file('comp_npwp_file')->getClientOriginalExtension();
-				$name_file = uniqid().'_npwp_'.$company->id.'.'.$ext_file;*/
+			if ($request->hasFile('comp_npwp_file')) { 
 				$name_file = 'npwp_'.$request->file('comp_npwp_file')->getClientOriginalName();
 				$path_file = public_path().'/media/company/'.$company->id;
 				if (!file_exists($path_file)) {
@@ -539,9 +502,7 @@ class ProfileController extends Controller
 					return redirect('/admin/company/create');
 				}
 			}        
-			if ($request->hasFile('comp_siup_file')) {
-				/*$ext_file = $request->file('comp_siup_file')->getClientOriginalExtension();
-				$name_file = uniqid().'_siup_'.$company->id.'.'.$ext_file;*/
+			if ($request->hasFile('comp_siup_file')) { 
 				$name_file = 'siupp_'.$request->file('comp_siup_file')->getClientOriginalName();
 				$path_file = public_path().'/media/company/'.$company->id;
 				if (!file_exists($path_file)) {
@@ -554,9 +515,7 @@ class ProfileController extends Controller
 					return redirect('/admin/company/create');
 				}
 			}
-			if ($request->hasFile('comp_qs_certificate_file')) {
-				/*$ext_file = $request->file('comp_qs_certificate_file')->getClientOriginalExtension();
-				$name_file = uniqid().'_qs_certificate_'.$company->id.'.'.$ext_file;*/
+			if ($request->hasFile('comp_qs_certificate_file')) { 
 				$name_file = 'serti_uji_mutu_'.$request->file('comp_qs_certificate_file')->getClientOriginalName();
 				$path_file = public_path().'/media/company/'.$company->id;
 				if (!file_exists($path_file)) {
@@ -575,13 +534,10 @@ class ProfileController extends Controller
 			$company->created_by = $user_id;
 			$company->updated_by = $user_id;
 
-			try{
-				
-				// print_r($request->all());exit;
+			try{ 
 				if($request->input('email') == ''){
 					return redirect()->back()
-					->with('error_email', 1)
-					// ->withInput($request->except("password"));
+					->with('error_email', 1) 
 					->withInput($request->all());
 				}
 					$email_exists = $this->cekEmail($request->input('email'));
@@ -595,8 +551,7 @@ class ProfileController extends Controller
 					->with('error_newpass', 1)
 					->withInput($request->all());
 				}
-				if($request->input('newPass') == $request->input('confnewPass')){
-					// $password = $request->input('newPass');
+				if($request->input('newPass') == $request->input('confnewPass')){ 
 					$hashedPassword = Hash::make($request->input('newPass'));
 				}
 				else{
@@ -617,9 +572,7 @@ class ProfileController extends Controller
 						return redirect()->back()
 						->with('error_img_type', 1)
 						->withInput($request->all());
-					}else{
-						/*$ext_file = $request->file('userPicture')->getClientOriginalName();
-						$name_file = uniqid().'_user_'.$user_id.'.'.$ext_file;*/
+					}else{ 
 						$name_file = 'profile_'.$request->file('userPicture')->getClientOriginalName();
 						if($request->file('userPicture')->move($path_file,$name_file)){
 							$fuserPicture = $name_file;
