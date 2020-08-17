@@ -194,9 +194,7 @@ class PermohonanController extends Controller
 	public function submit(Request $request)
 	{
 		$currentUser = Auth::user();
-		$user_id = ''.$currentUser[self::ATTRIBUTES]['id'].'';
-		$user_name = ''.$currentUser[self::ATTRIBUTES]['name'].'';
-		$user_email = ''.$currentUser[self::ATTRIBUTES][self::EMAIL].'';
+		$user_id = ''.$currentUser[self::ATTRIBUTES]['id'].'';  
 		$company_id = ''.$currentUser[self::ATTRIBUTES]['company_id'].'';
 		$nama_pemohon = 
 			$request->input('f1-nama-pemohon');
@@ -530,7 +528,7 @@ class PermohonanController extends Controller
 		        self::MESSAGE=>"Permohonan Baru",
 		        "url"=>"examination/".$exam_id."/edit",
 		        self::IS_READ=>0,
-		        "created_at"=>date(self::DATE_FORMAT),
+		        self::CREATED_AT=>date(self::DATE_FORMAT),
 		        self::UPDATED_AT=>date(self::DATE_FORMAT)
 		    );
 			$notification = new NotificationTable();
@@ -565,8 +563,7 @@ class PermohonanController extends Controller
     }
 
 	public function update(Request $request)
-	{
-		print_r($request->all());
+	{ 
 		$currentUser = Auth::user();
 		$user_id = ''.$currentUser[self::ATTRIBUTES]['id'].'';
 		$company_id = ''.$currentUser[self::ATTRIBUTES]['company_id'].'';
@@ -864,8 +861,7 @@ class PermohonanController extends Controller
 	}
 
 	public function upload(Request $request){
-		$currentUser = Auth::user();
-		$user_id = ''.$currentUser[self::ATTRIBUTES]['id'].'';
+		$currentUser = Auth::user(); 
 		$exam_id = $request->session()->get('exam_id');
 		$path_file = public_path().self::MEDIA_EXAMINATION.$exam_id.'';
 		$name_file = 'form_uji_'.$request->file('fuploaddetailpengujian')->getClientOriginalName();
@@ -878,8 +874,7 @@ class PermohonanController extends Controller
 	}
 
 	public function uploadEdit(Request $request){
-		$currentUser = Auth::user();
-		$user_id = ''.$currentUser[self::ATTRIBUTES]['id'].'';
+		$currentUser = Auth::user(); 
 		$exam_id = $request->get(self::HIDE_EXAM_ID);
 		$path_file = public_path().self::MEDIA_EXAMINATION.$exam_id.'';
 		$name_file = 'form_uji_'.$request->file('fuploaddetailpengujian_edit')->getClientOriginalName();
@@ -1005,7 +1000,7 @@ class PermohonanController extends Controller
 	        self::MESSAGE=>$feedback->email." mengirim feedback ",
 	        "url"=>"feedback/".$feedback->id.'/reply',
 	        self::IS_READ=>0,
-	        "created_at"=>date(self::DATE_FORMAT),
+	        self::CREATED_AT=>date(self::DATE_FORMAT),
 	        self::UPDATED_AT=>date(self::DATE_FORMAT)
 	        );
 		  	$notification = new NotificationTable();
@@ -1070,20 +1065,23 @@ class PermohonanController extends Controller
 			ORDER BY last_numb DESC LIMIT 1
 		";
 		$data = DB::select($query);
+		$test_number = ''.$last_numb.'/'.$a.'/'.$thisYear.'';
 		if (!count($data)){
-			return '001/'.$a.'/'.$thisYear.'';
+			$test_number =  '001/'.$a.'/'.$thisYear.'';
 		}
 		else{
 			$last_numb = $data[0]->last_numb;
 			if($last_numb < 10){
-				return '00'.$last_numb.'/'.$a.'/'.$thisYear.'';
+				$test_number =  '00'.$last_numb.'/'.$a.'/'.$thisYear.'';
 			}
 			else if($last_numb < 100){
-				return '0'.$last_numb.'/'.$a.'/'.$thisYear.'';
+				$test_number =  '0'.$last_numb.'/'.$a.'/'.$thisYear.'';
 			}
 			else{
-				return ''.$last_numb.'/'.$a.'/'.$thisYear.'';
+				$test_number =  ''.$last_numb.'/'.$a.'/'.$thisYear.'';
 			}
 		}
+
+		return $test_number
     }
 }
