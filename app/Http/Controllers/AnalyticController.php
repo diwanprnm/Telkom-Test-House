@@ -44,8 +44,7 @@ class AnalyticController extends Controller
 				AND DATE(l.created_at) = '".$datenow."'	");
 				$log_now = count($log);
 			$sess = DB::select("
-				SELECT DISTINCT(client_ip) FROM tracker_sessions WHERE DATE(created_at) = '".$datenow."'
-			");
+				SELECT DISTINCT(client_ip) FROM tracker_sessions WHERE DATE(created_at) = '".$datenow."'");
 				
 				$sess_now_old = $this->temp_sess_today($datenow);
 				$sess_now = count($sess) - $sess_now_old;
@@ -54,8 +53,7 @@ class AnalyticController extends Controller
 				SELECT * FROM tracker_log l, tracker_route_paths rp 
 				WHERE l.route_path_id = rp.id 
 				AND rp.path NOT LIKE '%admin%' AND rp.path NOT LIKE '%mylogsbl%'
-				AND DATE(l.created_at) = '".$dateyesterday."'
-			");
+				AND DATE(l.created_at) = '".$dateyesterday."'");
 				$log_yesterday = count($log);
             $sess = DB::select("SELECT DISTINCT(client_ip) FROM tracker_sessions WHERE DATE(created_at) = '".$dateyesterday."'");
 				$sess_yesterday_old = $this->temp_sess_today($dateyesterday);
@@ -65,8 +63,7 @@ class AnalyticController extends Controller
 				SELECT * FROM tracker_log l, tracker_route_paths rp 
 				WHERE l.route_path_id = rp.id 
 				AND rp.path NOT LIKE '%admin%' AND rp.path NOT LIKE '%mylogsbl%'
-				AND DATE(l.created_at) BETWEEN '".$datelastweek."' AND '".$datenow."'
-			");
+				AND DATE(l.created_at) BETWEEN '".$datelastweek."' AND '".$datenow."'");
 				$log_lastweek = count($log);
             $sess = DB::select("SELECT DISTINCT(client_ip) FROM tracker_sessions WHERE DATE(created_at) BETWEEN '".$datelastweek."' AND '".$datenow."'");
 				$sess_lastweek_old = $this->temp_sess_today($datelastweek);
