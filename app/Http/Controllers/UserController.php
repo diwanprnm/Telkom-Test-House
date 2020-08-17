@@ -162,17 +162,8 @@ class UserController extends Controller
     {
         $roles = Role::all();
         $companies = Company::where(self::IS_ACTIVE, true)->where('id', '<>', '1')->orderBy('name')->get();
-        $menu = Menu::get()->toArray();
-        $parentMenu = Menu::where("parent_id",0)->get()->toArray();
-        $new = array(); 
-        foreach ($menu as $a){
-            $new[$a[self::PARENT_ID]][] = $a;
-        }
-        $tree = array();
-        
-        foreach ($parentMenu as $value) {
-            $tree[] = $this->createTree($new, array($value));
-        } 
+         
+        $tree = $this->getTree();
       
         return view('admin.user.create')
             ->with('role', $roles)
@@ -382,18 +373,7 @@ class UserController extends Controller
                 ->where("user_id",$currentUser->id)
                 ->get()->toArray();
 
-        $menu = Menu::get()->toArray();
-         $parentMenu = Menu::where("parent_id",0)->get()->toArray();
-
-        $new = array(); 
-        foreach ($menu as $a){
-            $new[$a[self::PARENT_ID]][] = $a;
-        }
-        $tree = array();
-        
-        foreach ($parentMenu as  $value) {
-            $tree[] = $this->createTree($new, array($value));
-        } 
+       $tree = $this->getTree();
 
         return view('admin.user.edit')
             ->with('role', $roles)
@@ -521,6 +501,24 @@ class UserController extends Controller
                 return redirect(self::ADMIN_USER);
             }
         }
+    }
+
+    private function getTree()
+    {
+        $menu = Menu::get()->toArray();
+        $parentMenu = Menu::where("parent_id",0)->get()->toArray();
+
+        $new = array(); 
+        foreach ($menu as $a){
+            $new[$a[self::PARENT_ID]][] = $a;
+        }
+        $tree = array();
+        
+        foreach ($parentMenu as  $value) {
+            $tree[] = $this->createTree($new, array($value));
+        } 
+
+        return $tree;
     }
 	
 	public function softDelete($id)
