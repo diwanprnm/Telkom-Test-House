@@ -526,7 +526,7 @@ class CompanyController extends Controller
         if ($company){
             switch ($name) {
                 case 'npwp': 
-                    $file = Storage::disk(self::MINIO)->url('company/'.$id."/".$company->npwp_file);
+                    $file = Storage::disk(self::MINIO)->url(self::COMPANY_PATH.$id."/".$company->npwp_file);
                      
                     $filename = $company->npwp_file;
                     $tempImage = tempnam(sys_get_temp_dir(), $filename);
@@ -536,7 +536,7 @@ class CompanyController extends Controller
                     break;
 
                 case 'siup':  
-                    $file = Storage::disk(self::MINIO)->url('company/'.$id."/".$company->siup_file);
+                    $file = Storage::disk(self::MINIO)->url(self::COMPANY_PATH.$id."/".$company->siup_file);
                      
                     $filename = $company->npwp_file;
                     $tempImage = tempnam(sys_get_temp_dir(), $filename);
@@ -547,7 +547,7 @@ class CompanyController extends Controller
 
                 case 'qs': 
 
-                    $file = Storage::disk(self::MINIO)->url('company/'.$id."/".$company->qs_certificate_file);
+                    $file = Storage::disk(self::MINIO)->url(self::COMPANY_PATH.$id."/".$company->qs_certificate_file);
                      
                     $filename = $company->qs_certificate_file;
                     $tempImage = tempnam(sys_get_temp_dir(), $filename);
