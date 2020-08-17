@@ -28,6 +28,7 @@ class HomeController extends Controller
 	private const DATA_LAYANAN_NOT_ACTIVE = 'data_layanan_not_active';
 	private const DATA_SALES = 'data_stels';
 	private const TO_LOGIN = '/login';
+	private const MESSAGE = 'message';
 	
 	/**
      * Show the application dashboard.
@@ -72,7 +73,7 @@ class HomeController extends Controller
 			->with('data', $data)
 			->with('data_certification', $data_certification)
 			->with('page', $page)
-			->with('message', $message_slideshow);
+			->with(self::MESSAGE, $message_slideshow);
     }
     
     public function faq()
@@ -290,7 +291,7 @@ class HomeController extends Controller
 				$data= array( 
 	            "from"=>$currentUser->id,
 	            "to"=>$admin['user_id'],
-	            "message"=>$currentUser->company->name." Mengedit data Pengujian",
+	            self::MESSAGE=>$currentUser->company->name." Mengedit data Pengujian",
 	            "url"=>"examination/".$id."/edit",
 	            "is_read"=>0,
 	            "created_at"=>date("Y-m-d H:i:s"),
@@ -300,7 +301,7 @@ class HomeController extends Controller
 				$notification->id = Uuid::uuid4();
 		      	$notification->from = $data['from'];
 		      	$notification->to = $data['to'];
-		      	$notification->message = $data['message'];
+		      	$notification->message = $data[self::MESSAGE];
 		      	$notification->url = $data['url'];
 		      	$notification->is_read = $data['is_read'];
 		      	$notification->created_at = $data['created_at'];
