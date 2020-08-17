@@ -37,7 +37,8 @@ class UserController extends Controller
     private const ADDRESS = 'address'; 
     private const PHONE_NUMBER = 'phone_number'; 
     private const PICTURE = 'picture'; 
-    private const PATH_PROFILE = 'profile_'; 
+    private const PATH_PROFILE = 'profile_';  
+    private const MEDIA_USER = '/media/user/';
     private const FAILED_USER_MSG = 'Save Profile Picture to directory failed'; 
     private const FAILED_LOG_MSG = 'Save failed'; 
     private const NEW_TEXT = 'new';
@@ -212,18 +213,17 @@ class UserController extends Controller
         $user->address = $request->input(self::ADDRESS);
         $user->phone_number = $request->input(self::PHONE_NUMBER);
         $user->fax = $request->input('fax');
-
+        $status = FALSE;
         if ($request->hasFile(self::PICTURE)) { 
             $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
-            $path_file = public_path().'/media/user/'.$user->id;
+            $path_file = public_path().self::MEDIA_USER.$user->id;
             if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
             if($request->file(self::PICTURE)->move($path_file,$name_file)){
                 $user->picture = $name_file;
             }else{
-                Session::flash(self::ERROR, self::FAILED_USER_MSG);
-                return redirect(self::ADMIN_USER_CREATE);
+                Session::flash(self::ERROR, self::FAILED_USER_MSG); 
             }
         }
 
@@ -263,10 +263,14 @@ class UserController extends Controller
            
 
             Session::flash(self::MESSAGE, 'User successfully created');
-            return redirect(self::ADMIN_USER);
-        } catch(\Exception $e){ 
-            Session::flash(self::ERROR, self::FAILED_LOG_MSG);
-            return redirect(self::ADMIN_USER_CREATE)->withInput();
+            $status = TRUE;
+        } catch(\Exception $e){  
+        }
+
+        if($status){
+             return redirect(self::ADMIN_USER);
+        }else{
+             return redirect(self::ADMIN_USER_CREATE)->withInput();
         }
     }
 
@@ -325,7 +329,7 @@ class UserController extends Controller
 
         if ($request->hasFile(self::PICTURE)) { 
             $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
-            $path_file = public_path().'/media/user/'.$user->id;
+            $path_file = public_path().self::MEDIA_USER.$user->id;
             if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
@@ -448,7 +452,7 @@ class UserController extends Controller
 
         if ($request->hasFile(self::PICTURE)) { 
             $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
-            $path_file = public_path().'/media/user/'.$user->id;
+            $path_file = public_path().self::MEDIA_USER.$user->id;
             if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
