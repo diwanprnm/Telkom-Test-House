@@ -129,6 +129,7 @@ class CertificationController extends Controller
         $certification->is_active = $request->input(self::IS_ACTIVE);
         $certification->type = 1;
         $certification->created_by = $currentUser->id;
+        $certification->updated_by = $currentUser->id;
 		$certification->created_at = ''.date('Y-m-d H:i:s').'';
 
         try{
