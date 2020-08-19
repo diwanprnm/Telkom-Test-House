@@ -81,12 +81,16 @@ class BackupController extends Controller
         $currentUser = Auth::user();
         $backup = new BackupHistory();
 
-        $backup->user_id = $currentUser->id;
-        $backup->created_by = $currentUser->id;
-        $backup->file = date('YmdHis').".sql";
-        $backup->is_active = 1;
         try {
             Artisan::call('db:backup');
+            $output = Artisan::output();
+
+            $backup->user_id = $currentUser->id;
+            $backup->created_by = $currentUser->id;
+            $backup->restore_by = '';
+            $backup->updated_by = '';
+            $backup->file = explode(" ",$output)[4];
+            $backup->is_active = 1;
             $backup->save();
 
             $backupFile = Storage::disk('tmp')->get($backup->file);
