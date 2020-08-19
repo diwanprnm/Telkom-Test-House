@@ -18,5 +18,6 @@ class DatabaseSeeder extends Seeder
         $this->call(GeneralSettingsTableSeeder::class);
         $this->call(QuestionerQuestionsTableSeeder::class);
         $this->call(YoutubeTableSeeder::class);
+        $this->call(UserMenuTableSeeder::class);
     }
 }
