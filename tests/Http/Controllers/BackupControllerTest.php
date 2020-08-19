@@ -86,6 +86,14 @@ class BackupControllerTest extends TestCase
         $this->assertTrue($response->headers->get('content-disposition') == "attachment; filename={$backupHistory->file}");
     }
 
+    public function testMediaNotfound()
+    {
+        $user = User::find(1);
+        $this->actingAs($user)->call('GET','admin/backup/BackupTidakAda/media');
+        // mengecek responds header adalah konten download sql, dengan nama sesuai dengan db.
+        $this->assertRedirectedTo('/admin/backup', ['message' => 'Data not found']);
+    }
+
 
     public function testDestroy()
     {
