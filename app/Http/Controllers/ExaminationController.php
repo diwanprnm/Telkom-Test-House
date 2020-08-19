@@ -69,7 +69,6 @@ class ExaminationController extends Controller
 	private const EXAMINATION = 'EXAMINATION';
 	private const STATUS = 'status';
 	private const BEFORE_DATE = 'before_date';
-	private const SPK_DATE = 'spk_date';
 	private const AFTER_DATE = 'after_date';
 	private const UPDATED_AT = 'updated_at';
 	private const MESSAGE = 'message';
@@ -436,109 +435,57 @@ class ExaminationController extends Controller
                 $exam->function_test_date_approval = 0;
                 $exam->location = 0;
             }
+			/* push notif*/
+			
+			if ($exam->function_test_TE == 1){
+				$data= array( 
+					"from"=>self::ADMIN,
+					"to"=>$exam->created_by,
+					self::MESSAGE=>"Hasil Uji Fungsi Memenuhi",
+					"url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
+					self::IS_READ=>0,
+					self::CREATED_AT=>date(self::DATE_FORMAT_1),
+					self::UPDATED_AT=>date(self::DATE_FORMAT_1)
+				);
+			}
+			else if ($exam->function_test_TE == 2){
+				$data= array( 
+					"from"=>self::ADMIN,
+					"to"=>$exam->created_by,
+					self::MESSAGE=>"Hasil Uji Fungsi Tidak Memenuhi",
+					"url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
+					self::IS_READ=>0,
+					self::CREATED_AT=>date(self::DATE_FORMAT_1),
+					self::UPDATED_AT=>date(self::DATE_FORMAT_1)
+				);   
+			}
+			else if ($exam->function_test_TE == 3){
+				$data= array( 
+					"from"=>self::ADMIN,
+					"to"=>$exam->created_by,
+					self::MESSAGE=>"Hasil Uji Fungsi lain-lain",
+					"url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
+					self::IS_READ=>0,
+					self::CREATED_AT=>date(self::DATE_FORMAT_1),
+					self::UPDATED_AT=>date(self::DATE_FORMAT_1)
+				);
+			}else{
+				$data= array( 
+					"from"=>self::ADMIN,
+					"to"=>$exam->created_by,
+					self::MESSAGE=>$status == 1 ? "Tahap Uji Fungsi Completed" : "Tahap Uji Fungsi Not Completed",
+					"url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
+					self::IS_READ=>0,
+					self::CREATED_AT=>date(self::DATE_FORMAT_1),
+					self::UPDATED_AT=>date(self::DATE_FORMAT_1)
+				);
+			}
 
-			if($status == 1){
-				/* push notif*/
-	            
-                if ($exam->function_test_TE == 1){
-                    $data= array( 
-                        "from"=>self::ADMIN,
-                        "to"=>$exam->created_by,
-                        self::MESSAGE=>"Hasil Uji Fungsi Memenuhi",
-                        "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-                        self::IS_READ=>0,
-                        self::CREATED_AT=>date(self::DATE_FORMAT_1),
-                        self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-                    );
-                }
-                else if ($exam->function_test_TE == 2){
-                    $data= array( 
-                        "from"=>self::ADMIN,
-                        "to"=>$exam->created_by,
-                        self::MESSAGE=>"Hasil Uji Fungsi Tidak Memenuhi",
-                        "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-                        self::IS_READ=>0,
-                        self::CREATED_AT=>date(self::DATE_FORMAT_1),
-                        self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-                    );   
-                }
-                else if ($exam->function_test_TE == 3){
-                    $data= array( 
-                        "from"=>self::ADMIN,
-                        "to"=>$exam->created_by,
-                        self::MESSAGE=>"Hasil Uji Fungsi lain-lain",
-                        "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-                        self::IS_READ=>0,
-                        self::CREATED_AT=>date(self::DATE_FORMAT_1),
-                        self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-                    );
-                }else{
-					$data= array( 
-						"from"=>self::ADMIN,
-						"to"=>$exam->created_by,
-						self::MESSAGE=>"Tahap Uji Fungsi Completed",
-						"url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-						self::IS_READ=>0,
-						self::CREATED_AT=>date(self::DATE_FORMAT_1),
-						self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-					);
-				}
+			$notification_id = $notificationService->make($data);
+			$data['id'] = $notification_id;
+			event(new Notification($data));
 
-				$notification_id = $notificationService->make($data);
-			    $data['id'] = $notification_id;
-			    event(new Notification($data));
-
-			}else if($status == -1){
-				/* push notif*/
-		            
-					if ($exam->function_test_TE == 1){
-                        $data= array( 
-                            "from"=>self::ADMIN,
-                            "to"=>$exam->created_by,
-                            self::MESSAGE=>"Hasil Uji Fungsi Memenuhi",
-                            "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-                            self::IS_READ=>0,
-                            self::CREATED_AT=>date(self::DATE_FORMAT_1),
-                            self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-                        );
-                    }
-                    else if ($exam->function_test_TE == 2){
-                        $data= array( 
-                            "from"=>self::ADMIN,
-                            "to"=>$exam->created_by,
-                            self::MESSAGE=>"Hasil Uji Fungsi Tidak Memenuhi",
-                            "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-                            self::IS_READ=>0,
-                            self::CREATED_AT=>date(self::DATE_FORMAT_1),
-                            self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-                        );   
-                    }
-                    else if ($exam->function_test_TE == 3){
-                        $data= array( 
-                            "from"=>self::ADMIN,
-                            "to"=>$exam->created_by,
-                            self::MESSAGE=>"Hasil Uji Fungsi lain-lain",
-                            "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-                            self::IS_READ=>0,
-                            self::CREATED_AT=>date(self::DATE_FORMAT_1),
-                            self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-                        );
-                    }else{
-						$data= array( 
-                            "from"=>self::ADMIN,
-                            "to"=>$exam->created_by,
-                            self::MESSAGE=>"Tahap Uji Fungsi Not Completed",
-                            "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-                            self::IS_READ=>0,
-                            self::CREATED_AT=>date(self::DATE_FORMAT_1),
-                            self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-						);
-					}
-
-		            $notification_id = $notificationService->make($data);
-					$data['id'] = $notification_id;
-					event(new Notification($data));
-
+			if($status == -1){
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Uji Fungsi",$request->input(self::KETERANGAN));
 			}
         }
