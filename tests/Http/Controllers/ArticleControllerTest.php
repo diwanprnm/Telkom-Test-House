@@ -28,7 +28,7 @@ class ArticleControllerTest extends TestCase
     {
         $admin = User::where('role_id', '=', '1')->first();
         $this->actingAs($admin)->call('GET','admin/article');
-        //Status sukses dan judul Certification
+        //Status sukses dan judul ARTIKEL
         $this->assertResponseStatus(200)
             ->see('<h1 class="mainTitle">Artikel</h1>');
     }
@@ -37,7 +37,7 @@ class ArticleControllerTest extends TestCase
     {
         $user = User::where('id', '=', '1')->first();
         $this->actingAs($user)->call('GET','admin/article?search=cari');
-        //Status sukses dan judul Certification
+        //Status sukses dan judul ARTIKEL
         $this->assertResponseStatus(200)
         ->see('<h1 class="mainTitle">ARTIKEL</h1>');
     }
@@ -47,7 +47,7 @@ class ArticleControllerTest extends TestCase
         Article::truncate();
         $user = User::where('id', '=', '1')->first();
         $this->actingAs($user)->call('GET','admin/article?search=cari');
-        //Status sukses dan judul Certification
+        //Status sukses dan judul ARTIKEL
         $this->assertResponseStatus(200)
         ->see('<h1 class="mainTitle">ARTIKEL</h1>')
         ->see('Data not found');
@@ -57,7 +57,7 @@ class ArticleControllerTest extends TestCase
     {
         $user = User::where('id', '=', '1')->first();
         $this->actingAs($user)->call('GET','admin/article/create');
-        //Status sukses dan judul Certification
+        //Status sukses dan judul TAMBAH ARTIKEL BARU
         $this->assertResponseStatus(200)
             ->see('<h1 class="mainTitle">TAMBAH ARTIKEL BARU</h1>');
     }
@@ -93,19 +93,17 @@ class ArticleControllerTest extends TestCase
     {
         $article = Article::latest()->first();
         $user = User::where('id', '=', '1')->first();
-        //visit edit, fill edit artikel form, then submit
-        $this->actingAs($user)
-            ->visit('admin/article/'.$article->id.'/edit')
-            ->see('<h1 class="mainTitle">Edit Artikel</h1>')
-            ->type('Testing Article', 'title')
-            ->type('Good type', 'type')
-            ->select('1', 'is_active')
-            ->type('Teks ini mendeskripsikan isi artikel yang telah di update', 'description')
-            ->type('This text descripted the article that has been updated', 'description_english')
-            ->press('submit');
-        //Response status must be ok, and see flash message "Certification successfully updated"
-        $this->assertResponseStatus(200)
-        ->see('Article successfully updated');
+
+        $this->actingAs($user)->call('PATCH', "admin/article/$article->id", 
+		[ 
+	        'title' => 'Testing Article',
+	        'type' => 'Good type',
+	        'is_active' => 1,
+	        'description' =>  'Teks ini mendeskripsikan isi artikel yang telah di update',
+	        'description_english' => 'This text descripted the article that has been updated',
+        ]);
+        //redirect ke index article dengan pesan Article succesfully updated
+        $this->assertRedirectedTo('admin/article/', ['message' => 'Article successfully updated']);
     }
 
     public function testDestroy()

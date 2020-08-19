@@ -99,17 +99,6 @@ class ArticleController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-
-    }
-
 
     public function edit($id)
     {
@@ -175,8 +164,8 @@ class ArticleController extends Controller
     }
     
     
-	public function autocomplete($query) {
-        $respons_result = Article::autocomplet($query);
-        return response($respons_result);
-    }
+	// public function autocomplete($query) { -
+    //     $respons_result = Article::autocomplet($query)
+    //     return response($respons_result)
+    // } -
 }
