@@ -10,6 +10,9 @@ use App\Certification;
 class CertificationControllerTest extends TestCase
 {
 
+    public function testDeleteSoon(){
+        $this->assertTrue(true);
+    }
     // public function testIndexWithSearch()
     // {
     //     $user = User::where('role_id', '=', '1')->first();
