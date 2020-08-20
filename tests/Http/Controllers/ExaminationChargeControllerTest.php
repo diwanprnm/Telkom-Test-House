@@ -22,7 +22,16 @@ class ExaminationChargeControllerTest extends TestCase
     public function testIndexWithCategoryAndIsActiveFilter()
     {
         $user = User::find(1);
-        $this->actingAs($user)->call('GET','admin/charge?category=Lab+CPE&is_active=1&search=cari');
+        $this->actingAs($user)->call('GET','admin/charge?category=Lab+CPE&is_active=1');
+        //Status sukses dan judul TARIF PENGUJIAN
+        $this->assertResponseStatus(200)
+            ->see('<h1 class="mainTitle">TARIF PENGUJIAN</h1>');
+    }
+
+    public function testIndexWithSearchFilter()
+    {
+        $user = User::find(1);
+        $this->actingAs($user)->call('GET','admin/charge?search=cari');
         //Status sukses dan judul TARIF PENGUJIAN
         $this->assertResponseStatus(200)
             ->see('<h1 class="mainTitle">TARIF PENGUJIAN</h1>');
@@ -69,8 +78,8 @@ class ExaminationChargeControllerTest extends TestCase
         $response->assertResponseStatus('200')
             ->seePageIs('admin/charge')
             ->see('Charge successfully created');
-
         //see in database
+        $this->seeInDatabase('examination_charges', ['device_name' => 'Device name for testing']);
     }
 
     public function testStoreWithSameName()
@@ -92,16 +101,13 @@ class ExaminationChargeControllerTest extends TestCase
         //Status sukses dan judul Nama perangkat sudah ada
         $response->assertResponseStatus('200')
             ->see('Nama Perangkat sudah ada!');
-
-        //check di database
-        $this->seeInDatabase('examination_charges', ['device_name' => 'Device name for testing']);
     }
 
     public function testEdit()
     {
         $examinationCharge = ExaminationCharge::latest()->first();
         $user = User::find(1);
-        $this->actingAs($user)->call('GET','admin/charge/'.$examinationCharge->id.'/edit');
+        $this->actingAs($user)->call('GET',"admin/charge/$examinationCharge->id/edit");
         //Status respond ok, dan terdapat judul h1 "EDIT TARIF"
         $this->assertResponseStatus(200)
             ->see('<h1 class="mainTitle">EDIT TARIF</h1>')
@@ -136,7 +142,18 @@ class ExaminationChargeControllerTest extends TestCase
     public function testExcel()
     {
         $user = User::find(1);
-        $response = $this->actingAs($user)->call('GET','charge/excel?category=Lab+CPE&is_active=1&search=cari');
+        $response = $this->actingAs($user)->call('GET','charge/excel?category=Lab+Device&is_active=1');
+        //Status Ok,
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
+        $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
+        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Gudang.xlsx"');
+    }
+
+    public function testExcelWithSearch()
+    {
+        $user = User::find(1);
+        $response = $this->actingAs($user)->call('GET','charge/excel?search=cari');
         //Status Ok,
         $this->assertResponseStatus(200);
         $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
