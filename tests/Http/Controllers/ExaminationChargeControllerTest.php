@@ -147,7 +147,7 @@ class ExaminationChargeControllerTest extends TestCase
         $this->assertResponseStatus(200);
         $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
         $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
-        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Gudang.xlsx"');
+        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Tarif Pengujian.xlsx"');
     }
 
     public function testExcelWithSearch()
@@ -158,7 +158,7 @@ class ExaminationChargeControllerTest extends TestCase
         $this->assertResponseStatus(200);
         $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
         $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
-        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Gudang.xlsx"');
+        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Tarif Pengujian.xlsx"');
     }
 
     public function testDestroy()

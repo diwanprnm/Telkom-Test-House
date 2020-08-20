@@ -316,7 +316,7 @@ class ExaminationChargeController extends Controller
         $logService->createLog('download_excel', 'Tarif Pengujian','');
 
         // Generate and return the spreadsheet
-        $excel = \App\Services\ExcelService::download($examsArray, 'Data Gudang');
+        $excel = \App\Services\ExcelService::download($examsArray, 'Tarif Pengujian');
         return response($excel['file'], 200, $excel['headers']);
     }
 }
