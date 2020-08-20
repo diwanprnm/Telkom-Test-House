@@ -2734,7 +2734,7 @@ class ExaminationController extends Controller
                             $stream = (String)$response->getBody();
 
                             if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
-                                $attach = ExaminationAttach::where('name', $type)->where(self::EXAMINATION_ID, ''.$id.'')->first();
+                                $attach = ExaminationAttach::where('name', $type)->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
                                 $currentUser = Auth::user();
 
 								if ($attach){
@@ -2745,7 +2745,7 @@ class ExaminationController extends Controller
 								} else{
 									$attach = new ExaminationAttach;
 									$attach->id = Uuid::uuid4();
-									$attach->examination_id = $id; 
+									$attach->examination_id = $exam->id; 
 									$attach->name = $type;
 									$attach->attachment = $name_file;
 									$attach->created_by = $currentUser->id;
