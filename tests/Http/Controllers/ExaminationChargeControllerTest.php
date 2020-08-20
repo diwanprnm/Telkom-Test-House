@@ -19,21 +19,10 @@ class ExaminationChargeControllerTest extends TestCase
             ->see('<h1 class="mainTitle">TARIF PENGUJIAN</h1>');
     }
 
-
-    public function testIndexWithSearchFilter()
-    {
-        $user = User::find(1);
-        $this->actingAs($user)->call('GET','admin/charge?search=cari');
-        //Status sukses dan judul TARIF PENGUJIAN
-        $this->assertResponseStatus(200)
-            ->see('<h1 class="mainTitle">TARIF PENGUJIAN</h1>');
-    }
-
-
     public function testIndexWithCategoryAndIsActiveFilter()
     {
         $user = User::find(1);
-        $this->actingAs($user)->call('GET','admin/charge?category=Lab+CPE&is_active=1');
+        $this->actingAs($user)->call('GET','admin/charge?category=Lab+CPE&is_active=1&search=cari');
         //Status sukses dan judul TARIF PENGUJIAN
         $this->assertResponseStatus(200)
             ->see('<h1 class="mainTitle">TARIF PENGUJIAN</h1>');
@@ -147,7 +136,7 @@ class ExaminationChargeControllerTest extends TestCase
     public function testExcel()
     {
         $user = User::find(1);
-        $response = $this->actingAs($user)->call('GET','charge/excel?category=Lab+CPE&is_active=1');
+        $response = $this->actingAs($user)->call('GET','charge/excel?category=Lab+CPE&is_active=1&search=cari');
         //Status Ok,
         $this->assertResponseStatus(200);
         $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
