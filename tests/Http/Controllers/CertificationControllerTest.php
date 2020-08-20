@@ -77,9 +77,17 @@ class CertificationControllerTest extends TestCase
         //visit index, delete a certificate
         $this->actingAs($user)->call('DELETE','admin/certification/'.$certification->id);
         //Response status redirect to certification.index
-        $this->assertResponseStatus(302) 
-            ->see('Redirecting to <a href="http://localhost/admin/certification">http://localhost/admin/certification</a>');
-        //delete remaining Certificate(s) when test is done
+        $this->assertRedirectedTo('/admin/certification', ['message' => 'Certification successfully deleted']);
+    }
+
+    public function testDestroyNotFound()
+    {
+        $user = User::where('role_id', '=', '1')->first();
+        //visit index, delete a certificate
+        $this->actingAs($user)->call('DELETE','admin/certification/certificationnotfound');
+        //Response status redirect to certification.index
+        $this->assertRedirectedTo('/admin/certification', ['error' => 'Certification not found']);
+        //Delete remaining residual certification data
         Certification::truncate();
     }
 
