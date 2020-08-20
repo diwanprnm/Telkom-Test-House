@@ -245,10 +245,10 @@ class ExaminationChargeController extends Controller
     }
     
     
-	public function autocomplete($query) {
-        $respons_result = ExaminationCharge::autocomplet($query);
-        return response($respons_result);
-    }
+	// public function autocomplete($query) { -
+    //     $respons_result = ExaminationCharge::autocomplet($query)
+    //     return response($respons_result)
+    // } -
 
 
     public function excel(Request $request) 
