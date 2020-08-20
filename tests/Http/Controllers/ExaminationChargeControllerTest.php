@@ -14,7 +14,7 @@ class ExaminationChargeControllerTest extends TestCase
     {
         $user = User::find(1);
         $this->actingAs($user)->call('GET','admin/charge');
-        //Status sukses dan judul Certification
+        //Status sukses dan judul TARIF PENGUJIAN
         $this->assertResponseStatus(200)
             ->see('<h1 class="mainTitle">TARIF PENGUJIAN</h1>');
     }
@@ -24,7 +24,7 @@ class ExaminationChargeControllerTest extends TestCase
     {
         $user = User::find(1);
         $this->actingAs($user)->call('GET','admin/charge?search=cari');
-        //Status sukses dan judul Certification
+        //Status sukses dan judul TARIF PENGUJIAN
         $this->assertResponseStatus(200)
             ->see('<h1 class="mainTitle">TARIF PENGUJIAN</h1>');
     }
@@ -34,7 +34,7 @@ class ExaminationChargeControllerTest extends TestCase
     {
         $user = User::find(1);
         $this->actingAs($user)->call('GET','admin/charge?category=Lab+CPE&is_active=1');
-        //Status sukses dan judul Certification
+        //Status sukses dan judul TARIF PENGUJIAN
         $this->assertResponseStatus(200)
             ->see('<h1 class="mainTitle">TARIF PENGUJIAN</h1>');
     }
@@ -45,7 +45,7 @@ class ExaminationChargeControllerTest extends TestCase
         ExaminationCharge::truncate();
         $user = User::find(1);
         $this->actingAs($user)->call('GET','admin/charge');
-        //Status sukses dan judul Certification
+        //Status sukses dan judul TARIF PENGUJIAN
         $this->assertResponseStatus(200)
             ->see('<h1 class="mainTitle">TARIF PENGUJIAN</h1>')
             ->see('Data not found');            
@@ -55,7 +55,7 @@ class ExaminationChargeControllerTest extends TestCase
     {
         $user = User::find(1);
         $this->actingAs($user)->call('GET','admin/charge/create');
-        //Status sukses dan judul Certification
+        //Status sukses dan judul TAMBAH TARIF
         $this->assertResponseStatus(200)
             ->see('<h1 class="mainTitle">TAMBAH TARIF</h1>');
     }
@@ -65,18 +65,18 @@ class ExaminationChargeControllerTest extends TestCase
         $user = User::find(1);
 
         $response = $this->actingAs($user)
-        ->visit('admin/charge/create')
-        ->type('Device name for testing', 'device_name')
-        ->type('Referensi uji for testing', 'stel')
-        ->select('Lab CPE', 'category')
-        ->type('70', 'duration')
-        ->type('7000000', 'price')
-        ->type('700000', 'vt_price')
-        ->type('70000', 'ta_price')
-        ->select('0', 'is_active')
-        ->press('submit');
+            ->visit('admin/charge/create')
+            ->type('Device name for testing', 'device_name')
+            ->type('Referensi uji for testing', 'stel')
+            ->select('Lab CPE', 'category')
+            ->type('70', 'duration')
+            ->type('7000000', 'price')
+            ->type('700000', 'vt_price')
+            ->type('70000', 'ta_price')
+            ->select('0', 'is_active')
+            ->press('submit');
 
-        //Status sukses dan judul Certification
+        //Status sukses dan pesan Charge successfully created
         $response->assertResponseStatus('200')
             ->seePageIs('admin/charge')
             ->see('Charge successfully created');
@@ -100,7 +100,7 @@ class ExaminationChargeControllerTest extends TestCase
         ->select('0', 'is_active')
         ->press('submit');
 
-        //Status sukses dan judul Certification
+        //Status sukses dan judul Nama perangkat sudah ada
         $response->assertResponseStatus('200')
             ->see('Nama Perangkat sudah ada!');
 
@@ -144,6 +144,17 @@ class ExaminationChargeControllerTest extends TestCase
         $this->seeInDatabase('examination_charges', ['device_name' => 'Device name for testing updated']);
     }
 
+    public function testExcel()
+    {
+        $user = User::find(1);
+        $response = $this->actingAs($user)->call('GET','charge/excel?category=Lab+CPE&is_active=1');
+        //Status Ok,
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
+        $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
+        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Gudang.xlsx"');
+    }
+
     public function testDestroy()
     {
         $examinationCharge = ExaminationCharge::latest()->first();
@@ -161,20 +172,11 @@ class ExaminationChargeControllerTest extends TestCase
 
         //Status redirect, ke halaman charge.index, dan pesan "Charge successfully deleted"
         $this->assertRedirectedTo('/admin/charge', ['error' => 'Charge not found']);
-    }
-
-    public function testExcel()
-    {
-        $user = User::find(1);
-        $response = $this->actingAs($user)->call('GET','charge/excel?category=Lab+CPE&is_active=1');
-        //Status Ok,
-        $this->assertResponseStatus(200);
-        $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
-        $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
-        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Gudang.xlsx"');
 
         //truncate data di examination
         ExaminationCharge::truncate();
     }
+
+
 
 }

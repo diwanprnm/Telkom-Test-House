@@ -149,8 +149,7 @@ class ExaminationChargeController extends Controller
 
             Session::flash($this::MESSAGE, 'Charge successfully created');
             return redirect($this::ADMIN_CHARGE);
-        } catch(Exception $e){
-            return redirect('/admin/charge/create')->with($this::ERROR, 'Save failed');
+        } catch(Exception $e){ return redirect('/admin/charge/create')->with($this::ERROR, 'Save failed');
         }
     }
 
@@ -212,8 +211,7 @@ class ExaminationChargeController extends Controller
 
             Session::flash($this::MESSAGE, 'Charge successfully updated');
             return redirect($this::ADMIN_CHARGE);
-        } catch(Exception $e){
-            return redirect('/admin/charge/'.$charge->id.'/edit')->with($this::ERROR, 'Save failed');
+        } catch(Exception $e){ return redirect('/admin/charge/'.$charge->id.'/edit')->with($this::ERROR, 'Save failed');
         }
     }
 
@@ -232,9 +230,7 @@ class ExaminationChargeController extends Controller
 
                 Session::flash($this::MESSAGE, 'Charge successfully deleted');
                 return redirect($this::ADMIN_CHARGE);
-            }catch (Exception $e){
-                Session::flash($this::ERROR, 'Delete failed');
-                return redirect($this::ADMIN_CHARGE);
+            }catch (Exception $e){ return redirect($this::ADMIN_CHARGE)->with(self::ERROR, 'Delete failed');
             }
         }
         Session::flash($this::ERROR, 'Charge not found');
