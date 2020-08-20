@@ -351,67 +351,8 @@ class ExaminationController extends Controller
 			}
         }
 		if ($request->has(self::FUNCTION_STATUS)){
-			if ($request->hasFile(self::BARANG_FILE)) {
-				$name_file = 'form_penerimaan_barang_'.$request->file(self::BARANG_FILE)->getClientOriginalName();
-				$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
-				if (!file_exists($path_file)) {
-					mkdir($path_file, 0775);
-				}
-				if($request->file(self::BARANG_FILE)->move($path_file,$name_file)){
-					$attach = ExaminationAttach::where('name', 'Bukti Penerimaan & Pengeluaran Perangkat Uji1')->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
-					if ($attach){
-						$attach->attachment = $name_file;
-						$attach->updated_by = $currentUser->id;
-
-						$attach->save();
-					} else{
-						$attach = new ExaminationAttach;
-						$attach->id = Uuid::uuid4();
-						$attach->examination_id = $exam->id; 
-						$attach->name = 'Bukti Penerimaan & Pengeluaran Perangkat Uji1';
-						$attach->attachment = $name_file;
-						$attach->created_by = $currentUser->id;
-						$attach->updated_by = $currentUser->id;
-
-						$attach->save();
-					}
-					
-					 return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
-				}else{
-					Session::flash(self::ERROR, 'Save Bukti Penerimaan & Pengeluaran Perangkat Uji to directory failed');
-					return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
-				}
-			}
-			if ($request->hasFile(self::FUNCTION_FILE)) {
-				$name_file = 'function_'.$request->file(self::FUNCTION_FILE)->getClientOriginalName();
-				$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
-				if (!file_exists($path_file)) {
-					mkdir($path_file, 0775);
-				}
-				if($request->file(self::FUNCTION_FILE)->move($path_file,$name_file)){
-					$attach = ExaminationAttach::where('name', 'Laporan Hasil Uji Fungsi')->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
-					if ($attach){
-						$attach->attachment = $name_file;
-						$attach->updated_by = $currentUser->id;
-
-						$attach->save();
-					} else{
-						$attach = new ExaminationAttach;
-						$attach->id = Uuid::uuid4();
-						$attach->examination_id = $exam->id; 
-						$attach->name = 'Laporan Hasil Uji Fungsi';
-						$attach->attachment = $name_file;
-						$attach->created_by = $currentUser->id;
-						$attach->updated_by = $currentUser->id;
-
-						$attach->save();
-					}
-
-				}else{
-					Session::flash(self::ERROR, 'Save Function Test Report to directory failed');
-					return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
-				}
-			}
+			$this->insertAttachment($request,$exam->id,$currentUser->id,self::BARANG_FILE,'form_penerimaan_barang_','Bukti Penerimaan & Pengeluaran Perangkat Uji1');
+			$this->insertAttachment($request,$exam->id,$currentUser->id,self::FUNCTION_FILE,'function_','Laporan Hasil Uji Fungsi');
 			$status = $request->input(self::FUNCTION_STATUS);
 			if($exam->function_date != null){
 				$exam->contract_date = $exam->function_date;
@@ -589,36 +530,7 @@ class ExaminationController extends Controller
 			}
         }
 		if ($request->has(self::SPB_STATUS)){
-			if ($request->hasFile(self::SPB_FILE)) {
-				$name_file = 'spb_'.$request->file(self::SPB_FILE)->getClientOriginalName();
-				$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
-				if (!file_exists($path_file)) {
-					mkdir($path_file, 0775);
-				}
-				if($request->file(self::SPB_FILE)->move($path_file,$name_file)){
-					$attach = ExaminationAttach::where('name', 'SPB')->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
-
-					if ($attach){
-						$attach->attachment = $name_file;
-						$attach->updated_by = $currentUser->id;
-
-						$attach->save();
-					} else{
-						$attach = new ExaminationAttach;
-						$attach->id = Uuid::uuid4();
-						$attach->examination_id = $exam->id; 
-						$attach->name = 'SPB';
-						$attach->attachment = $name_file;
-						$attach->created_by = $currentUser->id;
-						$attach->updated_by = $currentUser->id;
-
-						$attach->save();
-					}					
-				}else{
-					Session::flash(self::ERROR, 'Save spb to directory failed');
-					return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
-				}
-			}
+			$this->insertAttachment($request,$exam->id,$currentUser->id,self::SPB_FILE,'spb_','SPB');
 			$status = $request->input(self::SPB_STATUS);
             $exam->spb_status = $status;
 			if($status == 1){
@@ -925,68 +837,9 @@ class ExaminationController extends Controller
 				}
 				
 			}
-        }
-		if ($request->hasFile(self::BARANG_FILE2)) {
-			$name_file = 'form_penerimaan_barang2_'.$request->file(self::BARANG_FILE2)->getClientOriginalName();
-			$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
-			if (!file_exists($path_file)) {
-				mkdir($path_file, 0775);
-			}
-			if($request->file(self::BARANG_FILE2)->move($path_file,$name_file)){
-				$attach = ExaminationAttach::where('name', 'Bukti Penerimaan & Pengeluaran Perangkat Uji2')->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
-				if ($attach){
-					$attach->attachment = $name_file;
-					$attach->updated_by = $currentUser->id;
-
-					$attach->save();
-				} else{
-					$attach = new ExaminationAttach;
-					$attach->id = Uuid::uuid4();
-					$attach->examination_id = $exam->id; 
-					$attach->name = 'Bukti Penerimaan & Pengeluaran Perangkat Uji2';
-					$attach->attachment = $name_file;
-					$attach->created_by = $currentUser->id;
-					$attach->updated_by = $currentUser->id;
-
-					$attach->save();
-				}
-				return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
-			}else{
-				Session::flash(self::ERROR, 'Save Bukti Penerimaan & Pengeluaran Perangkat Uji to directory failed');
-				return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
-			}
 		}
-		if ($request->hasFile(self::TANDA_TERIMA)) {
-			$name_file = 'form_tanda_terima_hasil_pengujian_'.$request->file(self::TANDA_TERIMA)->getClientOriginalName();
-			$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
-			if (!file_exists($path_file)) {
-				mkdir($path_file, 0775);
-			}
-			if($request->file(self::TANDA_TERIMA)->move($path_file,$name_file)){
-				$attach = ExaminationAttach::where('name', 'Tanda Terima Hasil Pengujian')->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
-				if ($attach){
-					$attach->attachment = $name_file;
-					$attach->updated_by = $currentUser->id;
-
-					$attach->save();
-				} else{
-					$attach = new ExaminationAttach;
-					$attach->id = Uuid::uuid4();
-					$attach->examination_id = $exam->id; 
-					$attach->name = 'Tanda Terima Hasil Pengujian';
-					$attach->attachment = $name_file;
-					$attach->created_by = $currentUser->id;
-					$attach->updated_by = $currentUser->id;
-
-					$attach->save();
-				}
-				Session::flash(self::MESSAGE, 'Success Save Tanda Terima Hasil Pengujian to directory');
-				return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
-			}else{
-				Session::flash(self::ERROR, 'Save Tanda Terima Hasil Pengujian to directory failed');
-				return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
-			}
-		}
+		$this->insertAttachment($request,$exam->id,$currentUser->id,self::BARANG_FILE2,'form_penerimaan_barang2_','Bukti Penerimaan & Pengeluaran Perangkat Uji2');
+		$this->insertAttachment($request,$exam->id,$currentUser->id,self::TANDA_TERIMA,'form_tanda_terima_hasil_pengujian_','Tanda Terima Hasil Pengujian');
 		if ($request->has(self::QA_STATUS)){
             $status = $request->input(self::QA_STATUS);
             $passed = $request->input('passed');
@@ -3095,5 +2948,43 @@ class ExaminationController extends Controller
         }
             return redirect(self::ADMIN_EXAMINATION_LOC.$examination_attachment->examination_id.self::EDIT_LOC);
 
-    }
+	}
+	
+	public function insertAttachment($request,$exam_id,$currentUser_id,$file_type,$file_name,$attach_name){
+		if ($request->hasFile($file_type)) {
+			$name_file = $file_name.$request->file($file_type)->getClientOriginalName();
+			$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
+			if (!file_exists($path_file)) {
+				mkdir($path_file, 0775);
+			}
+			if($request->file($file_type)->move($path_file,$name_file)){
+				$attach = ExaminationAttach::where('name', $attach_name)->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
+				if ($attach){
+					$attach->attachment = $name_file;
+					$attach->updated_by = $currentUser->id;
+		
+					$attach->save();
+				} else{
+					$attach = new ExaminationAttach;
+					$attach->id = Uuid::uuid4();
+					$attach->examination_id = $exam->id; 
+					$attach->name = $attach_name;
+					$attach->attachment = $name_file;
+					$attach->created_by = $currentUser->id;
+					$attach->updated_by = $currentUser->id;
+		
+					$attach->save();
+				}
+				if($file_type == self::TANDA_TERIMA){
+					Session::flash(self::MESSAGE, 'Success Save '.$attach.' to directory');
+				}
+				if($file_type == self::BARANG_FILE || $file_type == self::BARANG_FILE2 || $file_type == self::TANDA_TERIMA){
+					return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
+				}
+			}else{
+				Session::flash(self::ERROR, 'Save '.$attach_name.' to directory failed');
+				return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
+			}
+		}		
+	}
 }
