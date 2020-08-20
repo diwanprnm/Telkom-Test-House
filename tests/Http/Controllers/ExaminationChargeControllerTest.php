@@ -108,15 +108,6 @@ class ExaminationChargeControllerTest extends TestCase
         $this->seeInDatabase('examination_charges', ['device_name' => 'Device name for testing']);
     }
 
-    public function testShow()
-    {
-        $examinationCharge = ExaminationCharge::latest()->first();
-        $user = User::find(1);
-        $this->actingAs($user)->call('GET',"admin/charge/$examinationCharge->id");
-        //Status Ok,
-        $this->assertResponseStatus('200');
-    }
-
     public function testEdit()
     {
         $examinationCharge = ExaminationCharge::latest()->first();
@@ -175,7 +166,7 @@ class ExaminationChargeControllerTest extends TestCase
     public function testExcel()
     {
         $user = User::find(1);
-        $this->actingAs($user)->call('GET','admin/charge/excel');
+        $this->actingAs($user)->call('GET','admin/charge?category=Lab+CPE&is_active=1');
         //Status Ok,
         $this->assertResponseStatus('200');
 
