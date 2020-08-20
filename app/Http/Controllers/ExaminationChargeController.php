@@ -246,6 +246,8 @@ class ExaminationChargeController extends Controller
                 return redirect($this::ADMIN_CHARGE);
             }
         }
+        Session::flash($this::ERROR, 'Charge not found');
+        return redirect($this::ADMIN_CHARGE);
     }
     
     
