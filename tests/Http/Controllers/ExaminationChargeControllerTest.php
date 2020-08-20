@@ -183,6 +183,12 @@ class ExaminationChargeControllerTest extends TestCase
         ExaminationCharge::truncate();
     }
 
-
+    public function testAutoclomplete()
+    {
+        $user = User::find(1);
+        $this->actingAs($user)->call('GET','admin/adm_charge_autocomplete/asd');
+        //Status sukses
+        $this->assertResponseStatus(200);
+    }
 
 }
