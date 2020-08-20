@@ -378,49 +378,31 @@ class ExaminationController extends Controller
             }
 			/* push notif*/
 			
-			if ($exam->function_test_TE == 1){
-				$data= array( 
-					"from"=>self::ADMIN,
-					"to"=>$exam->created_by,
-					self::MESSAGE=>"Hasil Uji Fungsi Memenuhi",
-					"url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-					self::IS_READ=>0,
-					self::CREATED_AT=>date(self::DATE_FORMAT_1),
-					self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-				);
+			switch ($exam->function_test_TE) {
+				case '1':
+					$message = "Hasil Uji Fungsi Memenuhi";
+					break;
+				case '2':
+					$message = "Hasil Uji Fungsi Tidak Memenuhi";
+					break;
+				case '3':
+					$message = "Hasil Uji Fungsi lain-lain";
+					break;
+				
+				default:
+					$message = $status == 1 ? "Tahap Uji Fungsi Completed" : "Tahap Uji Fungsi Not Completed";
+					break;
 			}
-			else if ($exam->function_test_TE == 2){
-				$data= array( 
-					"from"=>self::ADMIN,
-					"to"=>$exam->created_by,
-					self::MESSAGE=>"Hasil Uji Fungsi Tidak Memenuhi",
-					"url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-					self::IS_READ=>0,
-					self::CREATED_AT=>date(self::DATE_FORMAT_1),
-					self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-				);   
-			}
-			else if ($exam->function_test_TE == 3){
-				$data= array( 
-					"from"=>self::ADMIN,
-					"to"=>$exam->created_by,
-					self::MESSAGE=>"Hasil Uji Fungsi lain-lain",
-					"url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-					self::IS_READ=>0,
-					self::CREATED_AT=>date(self::DATE_FORMAT_1),
-					self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-				);
-			}else{
-				$data= array( 
-					"from"=>self::ADMIN,
-					"to"=>$exam->created_by,
-					self::MESSAGE=>$status == 1 ? "Tahap Uji Fungsi Completed" : "Tahap Uji Fungsi Not Completed",
-					"url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-					self::IS_READ=>0,
-					self::CREATED_AT=>date(self::DATE_FORMAT_1),
-					self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-				);
-			}
+
+			$data= array( 
+				"from"=>"admin",
+				"to"=>$exam->created_by,
+				"message"=>$message,
+				"url"=>"pengujian/".$exam->id."/detail",
+				"is_read"=>0,
+				"created_at"=>date("Y-m-d H:i:s"),
+				"updated_at"=>date("Y-m-d H:i:s")
+			);
 
 			$notification_id = $notificationService->make($data);
 			$data['id'] = $notification_id;
@@ -670,35 +652,19 @@ class ExaminationController extends Controller
                     $spk_created = 1;
                 }
 
-				if($exam->payment_status){
-					
-					$data= array( 
-						"from"=>self::ADMIN,
-						"to"=>$exam->created_by,
-						self::MESSAGE=>"Pembayaran Completed",
-						"url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-						self::IS_READ=>0,
-						self::CREATED_AT=>date(self::DATE_FORMAT_1),
-						self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-					);
+				$data= array( 
+					"from"=>self::ADMIN,
+					"to"=>$exam->created_by,
+					self::MESSAGE=>$exam->payment_status ? "Pembayaran Completed" : "Pembayaran Not Completed",
+					"url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
+					self::IS_READ=>0,
+					self::CREATED_AT=>date(self::DATE_FORMAT_1),
+					self::UPDATED_AT=>date(self::DATE_FORMAT_1)
+				);
 
-					$notification_id = $notificationService->make($data);
-					$data['id'] = $notification_id;
-					event(new Notification($data));
-				}else{
-						$data= array( 
-		                "from"=>self::ADMIN,
-		                "to"=>$exam->created_by,
-		                self::MESSAGE=>"Pembayaran Not Completed",
-		                "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-		                self::IS_READ=>0,
-		                self::CREATED_AT=>date(self::DATE_FORMAT_1),
-		                self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-	                );
-					$notification_id = $notificationService->make($data);
-					$data['id'] = $notification_id;
-					event(new Notification($data));
-				}
+				$notification_id = $notificationService->make($data);
+				$data['id'] = $notification_id;
+				event(new Notification($data));
 				
 			}else if($status == -1){
 				Income::where(self::REFERENCE_ID, '=' ,''.$exam->id.'')->delete();
@@ -719,35 +685,19 @@ class ExaminationController extends Controller
 			
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::PELAKSANAAN_UJI,$request->input(self::KETERANGAN));
 			}else{
-				if($status ){
-					
-					$data= array( 
-		                "from"=>self::ADMIN,
-		                "to"=>$exam->created_by,
-		                self::MESSAGE=>"Pelaksanaan Uji Completed",
-		                "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-		                self::IS_READ=>0,
-		                self::CREATED_AT=>date(self::DATE_FORMAT_1),
-		                self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-	                );
-					$notification_id = $notificationService->make($data);
-					$data['id'] = $notification_id;
-					event(new Notification($data));
-				}else{ 
-					$data= array( 
-		                "from"=>self::ADMIN,
-		                "to"=>$exam->created_by,
-		                self::MESSAGE=>"Pelaksanaan Uji Not Completed",
-		                "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-		                self::IS_READ=>0,
-		                self::CREATED_AT=>date(self::DATE_FORMAT_1),
-		                self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-	                );
-					$notification_id = $notificationService->make($data);
-					$data['id'] = $notification_id;
-					event(new Notification($data));
-				}
-				
+				$data= array( 
+					"from"=>self::ADMIN,
+					"to"=>$exam->created_by,
+					self::MESSAGE=>$status ? "Pelaksanaan Uji Completed" : "Pelaksanaan Uji Not Completed",
+					"url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
+					self::IS_READ=>0,
+					self::CREATED_AT=>date(self::DATE_FORMAT_1),
+					self::UPDATED_AT=>date(self::DATE_FORMAT_1)
+				);
+
+				$notification_id = $notificationService->make($data);
+				$data['id'] = $notification_id;
+				event(new Notification($data));				
 			}
 			if ($request->has('lab_to_gudang_date')){
 				$query_update = "UPDATE equipment_histories
@@ -806,35 +756,15 @@ class ExaminationController extends Controller
 				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Laporan Uji",$request->input(self::KETERANGAN));
 			
 			}else{
-				if($status ){
-					
-					$data= array( 
-		                "from"=>self::ADMIN,
-		                "to"=>$exam->created_by,
-		                self::MESSAGE=>"Laporan Uji Completed",
-		                "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-		                self::IS_READ=>0,
-		                self::CREATED_AT=>date(self::DATE_FORMAT_1),
-	                	self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-	                );
-
-					$notification_id = $notificationService->make($data);
-					$data['id'] = $notification_id;
-					event(new Notification($data));
-				}else{ 
-					$data= array( 
-		                "from"=>self::ADMIN,
-		                "to"=>$exam->created_by,
-		                self::MESSAGE=>"Laporan Uji Not Completed",
-		                "url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-		                self::IS_READ=>0,
-		                self::CREATED_AT=>date(self::DATE_FORMAT_1),
-		                self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-	                );
-					$notification_id = $notificationService->make($data);
-					$data['id'] = $notification_id;
-					event(new Notification($data));
-				}
+				$data= array( 
+					"from"=>self::ADMIN,
+					"to"=>$exam->created_by,
+					self::MESSAGE=>$status ? "Laporan Uji Completed" : "Laporan Uji Not Completed",
+					"url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
+					self::IS_READ=>0,
+					self::CREATED_AT=>date(self::DATE_FORMAT_1),
+					self::UPDATED_AT=>date(self::DATE_FORMAT_1)
+				);
 				
 			}
 		}
@@ -903,34 +833,15 @@ class ExaminationController extends Controller
         if ($request->has(self::CERTIFICATE_STATUS)){
             $status = $request->input(self::CERTIFICATE_STATUS);
             $exam->certificate_status = $status;
-            if($exam->certificate_status){ 
-            	$data= array(  
-					"from"=>self::ADMIN,
-					"to"=>$exam->created_by,
-					self::MESSAGE=>"Sertifikat Completed",
-					"url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-					self::IS_READ=>0,
-					self::CREATED_AT=>date(self::DATE_FORMAT_1),
-					self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-                );
-				$notification_id = $notificationService->make($data);
-			    $data['id'] = $notification_id;
-			    event(new Notification($data));
-            }else{  
-
-            	$data= array( 
-					"from"=>self::ADMIN,
-					"to"=>$exam->created_by,
-					self::MESSAGE=>"Sertifikat Not Completed",
-					"url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
-					self::IS_READ=>0,
-					self::CREATED_AT=>date(self::DATE_FORMAT_1),
-					self::UPDATED_AT=>date(self::DATE_FORMAT_1)
-                );
-				$notification_id = $notificationService->make($data);
-			    $data['id'] = $notification_id;
-			    event(new Notification($data));
-            }
+            $data= array( 
+				"from"=>self::ADMIN,
+				"to"=>$exam->created_by,
+				self::MESSAGE=>$exam->certificate_status ? "Sertifikat Completed" : "Sertifikat Not Completed",
+				"url"=>self::PENGUJIAN_LOC.$exam->id.self::DETAIL_LOC,
+				self::IS_READ=>0,
+				self::CREATED_AT=>date(self::DATE_FORMAT_1),
+				self::UPDATED_AT=>date(self::DATE_FORMAT_1)
+			);
 			if($status == 1){
 				$this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.sertifikat", "Penerbitan Sertfikat");
 			}else if($status == -1){
@@ -1125,97 +1036,13 @@ class ExaminationController extends Controller
     }
 
     public function generateKuitansi(Request $request) {
-    	$client = new Client([
-            self::HEADERS => [self::AUTHORIZATION => config(self::APP_GATEWAY_TPN_2)],
-            self::BASE_URI => config(self::APP_URI_API_TPN),
-            self::TIMEOUT  => 60.0,
-            self::HTTP_ERRORS => false
-        ]);
-
-        $id = $request->input('id');
+    	$id = $request->input('id');
         
-        $exam = Examination::where("id", $id)->first();
-        if($exam){
-            try {
-                $INVOICE_ID = $exam->INVOICE_ID;
-                $res_invoice = $client->request('GET', self::V1_INVOICE.$INVOICE_ID);
-                $invoice = json_decode($res_invoice->getBody());
-                
-                if($INVOICE_ID && $invoice && $invoice->status){
-                    $status_invoice = $invoice->data->status_invoice;
-                    if($status_invoice == "approved"){
-                        $status_faktur = $invoice->data->status_faktur;
-                        if($status_faktur == "received"){
-                            /*SAVE KUITANSI*/
-                            $name_file = 'kuitansi_spb_'.$INVOICE_ID.'.pdf';
-							$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$id;
-							if (!file_exists($path_file)) {
-								mkdir($path_file, 0775);
-							}
-							$response = $client->request('GET', self::V1_INVOICE.$INVOICE_ID.'/exportpdf');
-                            $stream = (String)$response->getBody();
-
-                            if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
-                                $attach = ExaminationAttach::where('name', self::KUITANSI)->where(self::EXAMINATION_ID, ''.$id.'')->first();
-                                $currentUser = Auth::user();
-
-								if ($attach){
-									$attach->attachment = $name_file;
-									$attach->updated_by = $currentUser->id;
-
-									$attach->save();
-								} else{
-									$attach = new ExaminationAttach;
-									$attach->id = Uuid::uuid4();
-									$attach->examination_id = $id; 
-									$attach->name = self::KUITANSI;
-									$attach->attachment = $name_file;
-									$attach->created_by = $currentUser->id;
-									$attach->updated_by = $currentUser->id;
-
-									$attach->save();
-								}
-                                return "Kuitansi Berhasil Disimpan.";
-                            }else{
-                                return "Gagal Menyimpan Kuitansi!";
-                            }
-                        }else{
-                            return $invoice->data->status_faktur;
-                        }
-                    }else{
-                        switch ($status_invoice) {
-                            case 'invoiced':
-                                return "Invoice Baru Dibuat.";
-                                break;
-                            
-                            case 'returned':
-                                return $invoice->data->$status_invoice->message;
-                                break;
-                            
-                            default:
-                                return "Invoice sudah dikirim ke DJP.";
-                                break;
-                        }
-                    }
-                }else{
-                    return "Data Invoice Tidak Ditemukan!";        
-                }
-            } catch(Exception $e){
-                return null;
-            }
-        }else{
-            return "Data Pembelian Tidak Ditemukan!";
-        }
+		$exam = Examination::where("id", $id)->first();
+		$this->generateFromTPN($exam, self::KUITANSI, '/exportpdf');
     }
 
     public function generateTaxInvoice(Request $request) {
-        $client = new Client([
-            self::HEADERS => [self::AUTHORIZATION => config(self::APP_GATEWAY_TPN_2)],
-            self::BASE_URI => config(self::APP_URI_API_TPN),
-            self::TIMEOUT  => 60.0,
-            self::HTTP_ERRORS => false
-        ]);
-
         $id = $request->input('id');
 
         $exam = Examination::select(DB::raw('companies.name as company_name, examination_attachments.tgl as payment_date, examinations.*, devices.name, devices.mark, devices.capacity, devices.model'))
@@ -1242,80 +1069,7 @@ class ExaminationController extends Controller
         })
         ->first();
 
-        if($exam){
-        	$payment_date = $exam->payment_date != '0000-00-00' ? $exam->payment_date : null;
-            /* GENERATE NAMA FILE FAKTUR */
-                $filename = $exam ? $payment_date.'_'.$exam->company_name.'_'.$exam->name.'_'.$exam->mark.'_'.$exam->capacity.'_'.$exam->model : $exam->INVOICE_ID;
-            /* END GENERATE NAMA FILE FAKTUR */
-            try {
-                $INVOICE_ID = $exam->INVOICE_ID;
-                $res_invoice = $client->request('GET', self::V1_INVOICE.$INVOICE_ID);
-                $invoice = json_decode($res_invoice->getBody());
-                if($INVOICE_ID && $invoice && $invoice->status){
-    			    $status_invoice = $invoice->data->status_invoice;
-                    if($status_invoice == "approved"){
-                        $status_faktur = $invoice->data->status_faktur;
-                        if($status_faktur == "received"){
-                            /*SAVE FAKTUR PAJAK*/
-                            $name_file = 'faktur_spb_'.$filename.'.pdf';
-                            $path_file = public_path().self::MEDIA_EXAMINATION_LOC.$id;
-                            if (!file_exists($path_file)) {
-                                mkdir($path_file, 0775);
-                            }
-                            $response = $client->request('GET', self::V1_INVOICE.$INVOICE_ID.'/taxinvoice/pdf');
-                            $stream = (String)$response->getBody();
-
-                            if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
-                                $attach = ExaminationAttach::where('name', self::FAKTUR_PAJAK)->where(self::EXAMINATION_ID, ''.$id.'')->first();
-                                $currentUser = Auth::user();
-
-								if ($attach){
-									$attach->attachment = $name_file;
-									$attach->updated_by = $currentUser->id;
-
-									$attach->save();
-								} else{
-									$attach = new ExaminationAttach;
-									$attach->id = Uuid::uuid4();
-									$attach->examination_id = $id; 
-									$attach->name = self::FAKTUR_PAJAK;
-									$attach->attachment = $name_file;
-									$attach->created_by = $currentUser->id;
-									$attach->updated_by = $currentUser->id;
-
-									$attach->save();
-								}
-                                return "Faktur Pajak Berhasil Disimpan.";
-                            }else{
-                                return "Gagal Menyimpan Faktur Pajak!";
-                            }
-                        }else{
-                            return $invoice->data->status_faktur;
-                        }
-                    }else{
-                        switch ($status_invoice) {
-                            case 'invoiced':
-                                return "Faktur Pajak belum Tersedia, karena Invoice Baru Dibuat.";
-                                break;
-                            
-                            case 'returned':
-                                return $invoice->data->$status_invoice->message;
-                                break;
-                            
-                            default:
-                                return "Faktur Pajak belum Tersedia. Invoice sudah dikirim ke DJP.";
-                                break;
-                        }
-                    }
-                }else{
-                    return "Data Invoice Tidak Ditemukan!";        
-                }
-            } catch(Exception $e){
-                return null;
-            }
-        }else{
-            return "Data Pembelian Tidak Ditemukan!";
-        }
+        $this->generateFromTPN($exam, self::FAKTUR_PAJAK, '/taxinvoice/pdf');
     }
 
     public function api_upload($data, $BILLING_ID){
@@ -2066,31 +1820,7 @@ class ExaminationController extends Controller
 					$manager_urels = self::DOTS;
 				}
 
-				$is_poh = 0;
-				$general_setting_poh = GeneralSetting::where('code', 'poh_manager_urel')->first();
-				if($general_setting_poh){
-					if($general_setting_poh->is_active){
-						$is_poh = 1;
-						if( strpos( $general_setting_poh->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting_poh->value));}
-							else{$manager_urels = $general_setting_poh->value?: '-';}
-					}else{
-						$general_setting = GeneralSetting::where('code', self::MANAGER_UREL)->first();
-						if($general_setting){
-							if( strpos( $general_setting->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting->value));}
-								else{$manager_urels = $general_setting->value?: '-';}
-						}else{
-							$manager_urels = self::DOTS;
-						}	
-					}
-				}else{
-					$general_setting = GeneralSetting::where('code', self::MANAGER_UREL)->first();
-					if($general_setting){
-						if( strpos( $general_setting->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting->value));}
-							else{$manager_urels = $general_setting->value?: '-';}
-					}else{
-						$manager_urels = self::DOTS;
-					}
-				}
+				$manager_urels = $this->manager_urels();
 				
 				if(count($exam->equipment)>0){
 					if( strpos( $exam->equipment[0]->pic, "/" ) !== false ) {$pic = urlencode(urlencode($exam->equipment[0]->pic));}
@@ -2538,31 +2268,7 @@ class ExaminationController extends Controller
     }
 	
 	public function generateSPBData(Request $request) {
-		$is_poh = 0;
-		$general_setting_poh = GeneralSetting::where('code', 'poh_manager_urel')->first();
-		if($general_setting_poh){
-			if($general_setting_poh->is_active){
-				$is_poh = 1;
-				if( strpos( $general_setting_poh->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting_poh->value));}
-					else{$manager_urels = $general_setting_poh->value?: '-';}
-			}else{
-				$general_setting = GeneralSetting::where('code', self::MANAGER_UREL)->first();
-				if($general_setting){
-					if( strpos( $general_setting->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting->value));}
-						else{$manager_urels = $general_setting->value?: '-';}
-				}else{
-					$manager_urels = self::DOTS;
-				}	
-			}
-		}else{
-			$general_setting = GeneralSetting::where('code', self::MANAGER_UREL)->first();
-			if($general_setting){
-				if( strpos( $general_setting->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting->value));}
-					else{$manager_urels = $general_setting->value?: '-';}
-			}else{
-				$manager_urels = self::DOTS;
-			}
-		}
+		$manager_urels = $this->manager_urels();
 		
 		if($this->cekSPBNumber($request->input(self::SPB_NUMBER)) > 0){
 			echo 2; //SPB Number Exists
@@ -2805,24 +2511,24 @@ class ExaminationController extends Controller
 		$kode_barang = urlencode(urlencode($kode_barang));
 		if( strpos( $data[0]->company->name, "/" ) !== false ) {$company_name = urlencode(urlencode($data[0]->company->name));}
 			else{$company_name = $data[0]->company->name?: '-';}
+		if( strpos( $data[0]->device->name, "/" ) !== false ) {$device_name = urlencode(urlencode($data[0]->device->name));}
+			else{$device_name = $data[0]->device->name?: '-';}
 		if( strpos( $data[0]->company->address, "/" ) !== false ) {$company_address = urlencode(urlencode($data[0]->company->address));}
 			else{$company_address = $data[0]->company->address?: '-';}
+		if( strpos( $data[0]->device->mark, "/" ) !== false ) {$device_mark = urlencode(urlencode($data[0]->device->mark));}
+			else{$device_mark = $data[0]->device->mark?: '-';}
 		if( strpos( $data[0]->company->phone, "/" ) !== false ) {$company_phone = urlencode(urlencode($data[0]->company->phone));}
 			else{$company_phone = $data[0]->company->phone?: '-';}
+		if( strpos( $data[0]->device->manufactured_by, "/" ) !== false ) {$device_manufactured_by = urlencode(urlencode($data[0]->device->manufactured_by));}
+			else{$device_manufactured_by = $data[0]->device->manufactured_by?: '-';}
 		if( strpos( $data[0]->company->fax, "/" ) !== false ) {$company_fax = urlencode(urlencode($data[0]->company->fax));}
 			else{$company_fax = $data[0]->company->fax?: '-';}
+		if( strpos( $data[0]->device->model, "/" ) !== false ) {$device_model = urlencode(urlencode($data[0]->device->model));}
+			else{$device_model = $data[0]->device->model?: '-';}
 		if( strpos( $data[0]->user->phone_number, "/" ) !== false ) {$user_phone = urlencode(urlencode($data[0]->user->phone_number));}
 			else{$user_phone = $data[0]->user->phone_number?: '-';}
 		if( strpos( $data[0]->user->fax, "/" ) !== false ) {$user_fax = urlencode(urlencode($data[0]->user->fax));}
 			else{$user_fax = $data[0]->user->fax?: '-';}
-		if( strpos( $data[0]->device->name, "/" ) !== false ) {$device_name = urlencode(urlencode($data[0]->device->name));}
-			else{$device_name = $data[0]->device->name?: '-';}
-		if( strpos( $data[0]->device->mark, "/" ) !== false ) {$device_mark = urlencode(urlencode($data[0]->device->mark));}
-			else{$device_mark = $data[0]->device->mark?: '-';}
-		if( strpos( $data[0]->device->manufactured_by, "/" ) !== false ) {$device_manufactured_by = urlencode(urlencode($data[0]->device->manufactured_by));}
-			else{$device_manufactured_by = $data[0]->device->manufactured_by?: '-';}
-		if( strpos( $data[0]->device->model, "/" ) !== false ) {$device_model = urlencode(urlencode($data[0]->device->model));}
-			else{$device_model = $data[0]->device->model?: '-';}
 		if( strpos( $data[0]->device->serial_number, "/" ) !== false ) {$device_serial_number = urlencode(urlencode($data[0]->device->serial_number));}
 			else{$device_serial_number = $data[0]->device->serial_number?: '-';}
 		if( strpos( $data[0]->ExaminationType->name, "/" ) !== false ) {$exam_type = urlencode(urlencode($data[0]->ExaminationType->name));}
@@ -2953,25 +2659,25 @@ class ExaminationController extends Controller
 	public function insertAttachment($request,$exam_id,$currentUser_id,$file_type,$file_name,$attach_name){
 		if ($request->hasFile($file_type)) {
 			$name_file = $file_name.$request->file($file_type)->getClientOriginalName();
-			$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
+			$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam_id;
 			if (!file_exists($path_file)) {
 				mkdir($path_file, 0775);
 			}
 			if($request->file($file_type)->move($path_file,$name_file)){
-				$attach = ExaminationAttach::where('name', $attach_name)->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
+				$attach = ExaminationAttach::where('name', $attach_name)->where(self::EXAMINATION_ID, ''.$exam_id.'')->first();
 				if ($attach){
 					$attach->attachment = $name_file;
-					$attach->updated_by = $currentUser->id;
+					$attach->updated_by = $currentUser_id;
 		
 					$attach->save();
 				} else{
 					$attach = new ExaminationAttach;
 					$attach->id = Uuid::uuid4();
-					$attach->examination_id = $exam->id; 
+					$attach->examination_id = $exam_id; 
 					$attach->name = $attach_name;
 					$attach->attachment = $name_file;
-					$attach->created_by = $currentUser->id;
-					$attach->updated_by = $currentUser->id;
+					$attach->created_by = $currentUser_id;
+					$attach->updated_by = $currentUser_id;
 		
 					$attach->save();
 				}
@@ -2979,12 +2685,128 @@ class ExaminationController extends Controller
 					Session::flash(self::MESSAGE, 'Success Save '.$attach.' to directory');
 				}
 				if($file_type == self::BARANG_FILE || $file_type == self::BARANG_FILE2 || $file_type == self::TANDA_TERIMA){
-					return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
+					return redirect(self::ADMIN_EXAMINATION_LOC.$exam_id.self::EDIT_LOC);
 				}
 			}else{
 				Session::flash(self::ERROR, 'Save '.$attach_name.' to directory failed');
-				return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
+				return redirect(self::ADMIN_EXAMINATION_LOC.$exam_id.self::EDIT_LOC);
 			}
 		}		
+	}
+
+	public function generateFromTPN($exam, $type, $filelink){
+    	$client = new Client([
+            self::HEADERS => [self::AUTHORIZATION => config(self::APP_GATEWAY_TPN_2)],
+            self::BASE_URI => config(self::APP_URI_API_TPN),
+            self::TIMEOUT  => 60.0,
+            self::HTTP_ERRORS => false
+        ]);
+
+    	if($exam){
+    		if($type == self::FAKTUR_PAJAK){
+    			$payment_date = $exam->payment_date != '0000-00-00' ? $exam->payment_date : null;
+			    /* GENERATE NAMA FILE FAKTUR */
+			    $filename = $exam ? $payment_date.'_'.$exam->company_name.'_'.$exam->name.'_'.$exam->mark.'_'.$exam->capacity.'_'.$exam->model : $exam->INVOICE_ID;
+			    /* END GENERATE NAMA FILE FAKTUR */
+			    $name_file = 'faktur_spb_'.$filename.'.pdf';
+    		}
+            try {
+                $INVOICE_ID = $exam->INVOICE_ID;
+                $res_invoice = $client->request('GET', self::V1_INVOICE.$INVOICE_ID);
+                $invoice = json_decode($res_invoice->getBody());
+                
+                if($INVOICE_ID && $invoice && $invoice->status){
+                    $status_invoice = $invoice->data->status_invoice;
+                    if($status_invoice == "approved"){
+                        $status_faktur = $invoice->data->status_faktur;
+                        if($status_faktur == "received"){
+                            /*SAVE FILE*/
+                            $name_file = $type == self::KUITANSI ? 'kuitansi_spb_'.$INVOICE_ID.'.pdf' : $name_file;
+							$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$id;
+							if (!file_exists($path_file)) {
+								mkdir($path_file, 0775);
+							}
+							$response = $client->request('GET', self::V1_INVOICE.$INVOICE_ID.$filelink);
+                            $stream = (String)$response->getBody();
+
+                            if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
+                                $attach = ExaminationAttach::where('name', $type)->where(self::EXAMINATION_ID, ''.$id.'')->first();
+                                $currentUser = Auth::user();
+
+								if ($attach){
+									$attach->attachment = $name_file;
+									$attach->updated_by = $currentUser->id;
+
+									$attach->save();
+								} else{
+									$attach = new ExaminationAttach;
+									$attach->id = Uuid::uuid4();
+									$attach->examination_id = $id; 
+									$attach->name = $type;
+									$attach->attachment = $name_file;
+									$attach->created_by = $currentUser->id;
+									$attach->updated_by = $currentUser->id;
+
+									$attach->save();
+								}
+                                return $type." Berhasil Disimpan.";
+                            }else{
+                                return "Gagal Menyimpan ".$type."!";
+                            }
+                        }else{
+                            return $invoice->data->status_faktur;
+                        }
+                    }else{
+                        switch ($status_invoice) {
+                            case 'invoiced':
+                                return "Invoice Baru Dibuat.";
+                                break;
+                            
+                            case 'returned':
+                                return $invoice->data->$status_invoice->message;
+                                break;
+                            
+                            default:
+                                return "Invoice sudah dikirim ke DJP.";
+                                break;
+                        }
+                    }
+                }else{
+                    return "Data Invoice Tidak Ditemukan!";        
+                }
+            } catch(Exception $e){
+                return null;
+            }
+        }else{
+            return "Data Pembelian Tidak Ditemukan!";
+        }
+	}
+	
+	public function manager_urels(){
+		$is_poh = 0;
+		$general_setting_poh = GeneralSetting::where('code', 'poh_manager_urel')->first();
+		if($general_setting_poh){
+			if($general_setting_poh->is_active){
+				$is_poh = 1;
+				if( strpos( $general_setting_poh->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting_poh->value));}
+					else{$manager_urels = $general_setting_poh->value?: '-';}
+			}else{
+				$general_setting = GeneralSetting::where('code', self::MANAGER_UREL)->first();
+				if($general_setting){
+					if( strpos( $general_setting->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting->value));}
+						else{$manager_urels = $general_setting->value?: '-';}
+				}else{
+					$manager_urels = self::DOTS;
+				}	
+			}
+		}else{
+			$general_setting = GeneralSetting::where('code', self::MANAGER_UREL)->first();
+			if($general_setting){
+				if( strpos( $general_setting->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting->value));}
+					else{$manager_urels = $general_setting->value?: '-';}
+			}else{
+				$manager_urels = self::DOTS;
+			}
+		}
 	}
 }
