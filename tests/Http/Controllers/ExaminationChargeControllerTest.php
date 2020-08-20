@@ -166,9 +166,12 @@ class ExaminationChargeControllerTest extends TestCase
     public function testExcel()
     {
         $user = User::find(1);
-        $this->actingAs($user)->call('GET','admin/charge?category=Lab+CPE&is_active=1');
+        $response = $this->actingAs($user)->call('GET','charge/excel?category=Lab+CPE&is_active=1');
         //Status Ok,
-        $this->assertResponseStatus('200');
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
+        $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
+        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Gudang.xlsx"');
 
         //truncate data di examination
         ExaminationCharge::truncate();

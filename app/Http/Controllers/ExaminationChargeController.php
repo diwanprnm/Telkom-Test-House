@@ -320,10 +320,7 @@ class ExaminationChargeController extends Controller
         $logService->createLog('download_excel', 'Tarif Pengujian','');
 
         // Generate and return the spreadsheet
-        Excel::create('Data Tarif Pengujian', function($excel) use ($examsArray) {
-                $excel->sheet('sheet1', function($sheet) use ($examsArray) {
-                    $sheet->fromArray($examsArray, null, 'A1', false, false);
-                });
-            })->download('xlsx');
+        $excel = \App\Services\ExcelService::download($examsArray, 'Data Gudang');
+        return response($excel['file'], 200, $excel['headers']);
     }
 }
