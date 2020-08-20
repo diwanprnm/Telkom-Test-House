@@ -1820,7 +1820,9 @@ class ExaminationController extends Controller
 					$manager_urels = self::DOTS;
 				}
 
-				$manager_urels = $this->manager_urels();
+				$general_setting_poh = GeneralSetting::where('code', 'poh_manager_urel')->first();
+				$is_poh = $general_setting_poh && $general_setting_poh->is_active ?  1 : 0;
+				$manager_urels = $this->manager_urels($general_setting_poh);
 				
 				if(count($exam->equipment)>0){
 					if( strpos( $exam->equipment[0]->pic, "/" ) !== false ) {$pic = urlencode(urlencode($exam->equipment[0]->pic));}
@@ -2268,7 +2270,9 @@ class ExaminationController extends Controller
     }
 	
 	public function generateSPBData(Request $request) {
-		$manager_urels = $this->manager_urels();
+		$general_setting_poh = GeneralSetting::where('code', 'poh_manager_urel')->first();
+		$is_poh = $general_setting_poh && $general_setting_poh->is_active ?  1 : 0;
+		$manager_urels = $this->manager_urels($general_setting_poh);
 		
 		if($this->cekSPBNumber($request->input(self::SPB_NUMBER)) > 0){
 			echo 2; //SPB Number Exists
@@ -2722,7 +2726,7 @@ class ExaminationController extends Controller
                         if($status_faktur == "received"){
                             /*SAVE FILE*/
                             $name_file = $type == self::KUITANSI ? 'kuitansi_spb_'.$INVOICE_ID.'.pdf' : $name_file;
-							$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$id;
+							$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
 							if (!file_exists($path_file)) {
 								mkdir($path_file, 0775);
 							}
@@ -2782,12 +2786,9 @@ class ExaminationController extends Controller
         }
 	}
 	
-	public function manager_urels(){
-		$is_poh = 0;
-		$general_setting_poh = GeneralSetting::where('code', 'poh_manager_urel')->first();
+	public function manager_urels($general_setting_poh){
 		if($general_setting_poh){
 			if($general_setting_poh->is_active){
-				$is_poh = 1;
 				if( strpos( $general_setting_poh->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting_poh->value));}
 					else{$manager_urels = $general_setting_poh->value?: '-';}
 			}else{
@@ -2808,5 +2809,6 @@ class ExaminationController extends Controller
 				$manager_urels = self::DOTS;
 			}
 		}
+		return $manager_urels;
 	}
 }
