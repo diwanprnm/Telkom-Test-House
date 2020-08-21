@@ -8,7 +8,7 @@ use App\User;
 class CalibrationChargeControllerTest extends TestCase
 {
 	
-	use WithoutMiddleware;
+	
     /**
      * A basic test example.
      *
@@ -23,74 +23,64 @@ class CalibrationChargeControllerTest extends TestCase
         $this->assertTrue(true);
     }
 
-	// public function testIndex()
-    // {
-		
-		
-	// 	$response = $this->call('GET', 'admin/calibration');	
-    //     $this->assertResponseStatus(200);
-    // } 
-	// public function test_stores()
-	// { 
-	// 	$user = factory(App\User::class)->create(); 
-	// 	$response =  $this->actingAs($user)->call('POST', 'admin/calibration', 
-	// 	[ 
-	// 		'device_name' => str_random(10),
-	//         'price' => mt_rand(0,10000),
-	//         'is_active' => mt_rand(0,1)
-	// public function testIndexAsNonAdmin()
-    // {
-		
-    //     $user = factory(User::class)->make();
-    //     $this->actingAs($user)->call('GET','admin/calibration');
-    //     $this->assertResponseStatus(200);
-    // }
+	 
 
 
-	// public function test_search_company()
-	// { 
-	//    $response = $this->call('GET', 'admin/calibration?search=asda&is_active=&after_date=&before_date=');  
-    //    $this->assertEquals(200, $response->status());
-	// }
-	// public function test_stores()
-	// { 
-	// 	$user = factory(App\User::class)->create(); 
-	// 	$response =  $this->actingAs($user)->call('GET', 'admin/calibration', 
-	// 	[ 
-	// 		'device_name' => str_random(10),
-	//         'price' => mt_rand(0,10000),
-	//         'is_active' => mt_rand(0,1)
+	 public function testIndexAdmin()
+     {
+		$user = User::where('role_id', '=', '1')->first();
+         
+         $this->actingAs($user)->call('GET','admin/calibration');
+         $this->assertResponseStatus(200);
+     }
+
+
+	 public function test_search_company()
+	 { 
+		$response = $this->call('GET', 'admin/calibration?search=cari&is_active=-1');  
+		dd($response);
+		$this->assertEquals(200, $response->status());
+		
+	 }
+	 public function test_stores()
+	 { 
+		$user = User::where('role_id', '=', '1')->first();
+	 	$response =  $this->actingAs($user)->call('GET', 'admin/calibration', 
+	 	[ 
+	 		'device_name' => str_random(10),
+	         'price' => mt_rand(0,10000),
+	         'is_active' => mt_rand(0,1)
 	        
-	//     ]);   
+	     ]);   
 		
-    //     $this->assertEquals(500, $response->status());
+         $this->assertEquals(500, $response->status());
 	    
-	// }
+	 }
 
 	
-	// public function test_update_data()
-	// { 
-	// 	$user = factory(App\User::class)->create(); 
-    //    	$company = CalibrationCharge::latest()->first();
-	// 	$response =  $this->actingAs($user)->call('PUT', 'admin/calibration/'.$company->id, 
-	// 	[ 
-	// 		'device_name' => str_random(10),
-	//         'price' => mt_rand(0,10000),
-	//         'is_active' => mt_rand(0,1)
-	// 		]);   
+	 public function test_update_data()
+	 { 
+		$user = User::where('role_id', '=', '1')->first(); 
+        $company = CalibrationCharge::latest()->first();
+	 	$response =  $this->actingAs($user)->call('PUT', 'admin/calibration/'.$company->id, 
+	 	[ 
+	 		'device_name' => str_random(10),
+	         'price' => mt_rand(0,10000),
+	         'is_active' => mt_rand(0,1)
+	 		]);   
 			
-	// 		$this->assertEquals(302, $response->status());
+	 		$this->assertEquals(302, $response->status());
 			 
-	// 	}
+	 	}
 	
 
 	
-	// public function test_delete()
-	// { 
-	// 	$user = factory(App\User::class)->create(); 
-    //    	$company = CalibrationCharge::latest()->first();
-	// 	$response =  $this->actingAs($user)->call('DELETE', 'admin/calibration/'.$company->id);   
-    //     $this->assertEquals(302, $response->status());
+	 public function test_delete()
+	 { 
+		$user = User::where('role_id', '=', '1')->first(); 
+        $company = CalibrationCharge::latest()->first();
+	 	$response =  $this->actingAs($user)->call('DELETE', 'admin/calibration/'.$company->id);   
+         $this->assertEquals(302, $response->status());
 	    
-	// }
+	}
 }

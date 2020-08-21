@@ -11,7 +11,7 @@ use Session;
 
 use App\CalibrationCharge;
 use App\Logs;
-use App\Services\Logs\LogServices;
+use App\Services\Logs\LogService;
 
 use Excel;
 
@@ -73,14 +73,18 @@ class CalibrationChargeController extends Controller
                     ->orderBy(self::DEVICE)
                     ->paginate($paginate);
 
-                    $logs = new Logs;
+                 /*   $logs = new Logs;
                     $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
                     $logs->action = "Search Calibration Charge";
                     $datasearch = array(self::SEARCH2=>$search);
                     $logs->data = json_encode($datasearch);
                     $logs->created_by = $currentUser->id;
                     $logs->page = self::CALIBRATION;
-                    $logs->save();
+                    $logs->save(); */
+
+                    $logService = new LogService();
+                    $logService->createLog( "Search Calibration Charge",self::CALIBRATION, json_encode( array(self::SEARCH2=>$search)) );
+    
             }else{
                 $query = CalibrationCharge::whereNotNull(self::CREATE);
 
