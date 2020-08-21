@@ -180,6 +180,7 @@ return [
 	'examination_date_payment'=> 'Payment Date',
 	'examination_price_payment'=> 'Amount of Transfer',
 	'examination_upload_payment_file'=> 'Upload',
+	'examination_pay_now'=> 'Pay Now',
 	'examination_model'=> 'Model/Type',
 	'examination_mark'=> 'Brand Name',
 	'examination_capacity'=> 'Capacity',
@@ -328,10 +329,12 @@ return [
 	'stel_payment_detail'	=> 'Payment Detail',
 	'stel_payment_upload'	=> 'Upload Payment',
 	'stel_qty'				=> 'QTY',
-	'stel_payment_method'	=> 'Choose Payment Method',
-	'stel_payment_method_atm'	=> 'Via ATM/Transfer',
+	'stel_payment_method'	=> 'Select Payment Method',
+	'stel_payment_method_atm'	=> 'Via Bank Transfer',
 	'stel_payment_method_credit'=> 'Via Credit Card',
+	'stel_payment_method_va'=> 'Via Virtual Account',
 	'stel_payment_method_bank'  => 'This is list of bank if you take this method',
+	'stel_payment_confirmation'  => 'Payment Confirmation',
 	
 	'stel_placeholder_cc_name'  => 'Full Name',
 	'stel_placeholder_cc_card_number'  => 'Card Number',
@@ -419,4 +422,11 @@ return [
 
 	'payment_alert_1' => 'For ease of payment verification, customer is required to pay according to the nominal listed up to the last 3 digits.',
 	'payment_alert_2' => 'If there is more than one transaction, please do not combine the payments into one.',
+
+	'make_an_order' => 'Place Order',
+
+	'stel_total_payment' => 'Total payment',
+	'stel_payment_before' => 'DOING PAYMENT BEFORE',
+	'stel_transfer_to_va' => 'Transfer to this Virtual Account number',
+	'expired' => 'Expired',
 ];

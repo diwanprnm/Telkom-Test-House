@@ -4673,6 +4673,8 @@ Route::get('/products', 'ProductsController@index');
 Route::resource('/products', 'ProductsController');
 
 Route::get('/purchase_history', 'ProductsController@purchase_history');
+Route::get('/payment_confirmation/{id}', 'ProductsController@payment_confirmation');
+Route::get('/resend_va/{id}', 'ProductsController@api_resend_va');
 Route::get('/payment_status', 'ProductsController@payment_status');
 Route::post('/checkout', 'ProductsController@checkout');
 Route::post('/doCheckout', 'ProductsController@doCheckout');

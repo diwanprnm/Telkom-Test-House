@@ -130,22 +130,18 @@ class ProductsController extends Controller
         
     } 
 
-     public function payment_detail($id)
+    public function payment_confirmation($id)
     { 
         $currentUser = Auth::user();
 
         if($currentUser){
-            $select = array("stels.id", "stels.name","stels.price","stels.code","stels.attachment","stels_sales.invoice","stels_sales.payment_status","companies.name as company_name","stels_sales_detail.id as id_attachment_stel","stels_sales_detail.qty","stels_sales.id_kuitansi","stels_sales.faktur_file","stels_sales_detail.attachment as manual_attachment","stels_sales.id as manual_id"); 
-            $STELSales = STELSalesDetail::select($select)->where("stels_sales_id",$id)
-                        ->join("stels_sales","stels_sales.id","=","stels_sales_detail.stels_sales_id")
-                        ->join("stels","stels.id","=","stels_sales_detail.stels_id")
-                         ->join("users","users.id","=","stels_sales.user_id")
-                         ->join("companies","companies.id","=","users.company_id")
-                        ->get();
-            $page = "payment_detail";
-            return view('client.STEL.payment_detail') 
+            $STELSales = STELSales::where("id", $id)
+                        ->with('sales_detail')
+                        ->with('sales_detail.stel')->get();
+            $page = "payment_confirmation";
+            return view('client.STEL.payment_confirmation') 
             ->with('page', $page)   
-            ->with('stels', $STELSales);     
+            ->with('data', $STELSales);
         }else{
            return redirect("login");
         }
@@ -265,7 +261,7 @@ class ProductsController extends Controller
         }
 
         $details = array();
-        $stel_code_string = '';
+        
         foreach (Cart::content() as $row) {
             $res = explode('myTokenProduct', $row->name);
             $stel_name = $res[0] ? $res[0] : '-';
@@ -279,7 +275,6 @@ class ProductsController extends Controller
                     "total" => $row->price*$row->qty
                 ]
             ;
-            $stel_code_string = $stel_code_string ? $stel_code_string.', '.$res[1] : $res[1];
         }
 
         $data = [
@@ -302,11 +297,6 @@ class ProductsController extends Controller
             "created" => [
                 "by" => $currentUser->name,
                 "reference_id" => $currentUser->id
-            ],
-            "config" => [
-                "kode_wapu" => "01",
-                "afiliasi" => "non-telkom",
-                "tax_invoice_text" => $stel_code_string.'.'
             ],
             "include_tax_invoice" => true,
             "bank" => [
@@ -399,7 +389,8 @@ class ProductsController extends Controller
                 $STELSales->postal_code = $request->input("postal_code");
                 $STELSales->birthdate = $request->input("birthdate");
            } 
-           $STELSales->payment_method = ($request->input("payment_method")=="atm")?1:2;
+           $payment_method = $request->input("payment_method");
+           $STELSales->payment_method = $payment_method == "atm" ? 1 : 2;
            $STELSales->payment_status = 0;
            $STELSales->invoice = $request->input("invoice_number");
            $STELSales->user_id = $currentUser->id;
@@ -408,11 +399,30 @@ class ProductsController extends Controller
            $STELSales->created_at = date("Y-m-d H:i:s");
 
            if($PO_ID){
+                $stel_code_string = '';
+                foreach (Cart::content() as $row) {
+                    $res = explode('myTokenProduct', $row->name);
+                    $stel_code = $res[1] ? $res[1] : '-';
+                    $stel_code_string = $stel_code_string ? $stel_code_string.', '.$res[1] : $res[1];
+                }
+
                 $data = [
                     "draft_id" => $PO_ID,
                     "created" => [
                         "by" => $currentUser->name,
                         "reference_id" => $currentUser->id
+                    ],
+                    "config" => [
+                        "kode_wapu" => "01",
+                        "afiliasi" => "non-telkom",
+                        "tax_invoice_text" => $stel_code_string.'.',
+                        "payment_method" => $payment_method == "atm" ? "internal" : "mps",
+                    ],
+                    "mps" => [
+                        "gateway" => "9f209081-a504-4b8c-be28-15bf9f13828c",
+                        "product_code" => "finpay_vamandiri",
+                        "product_type" => "VA",
+                        "manual_expired" => 20160
                     ]
                 ];
 
@@ -420,6 +430,11 @@ class ProductsController extends Controller
 
                 $STELSales->PO_ID = $PO_ID;
                 $STELSales->BILLING_ID = $billing && $billing->status == true ? $billing->data->_id : null;
+                if($payment_method != "atm"){
+                    $STELSales->VA_number = $billing && $billing->status == true ? $billing->data->mps->va->number : null;
+                    // $STELSales->VA_amount = $billing && $billing->status == true ? $billing->data->mps->va->amount : null;
+                    $STELSales->VA_expired = $billing && $billing->status == true ? $billing->data->mps->va->expired : null;
+                }
             }
 
             try{
@@ -447,7 +462,7 @@ class ProductsController extends Controller
 
                     $data['id'] = $notification->id;
 
-                event(new Notification($data));
+                // event(new Notification($data));
 
 
                     try{  
@@ -478,7 +493,7 @@ class ProductsController extends Controller
                         Session::flash('error', 'Failed To Checkout');
                         return redirect('products');
                     } 
-                return redirect('purchase_history');
+                return redirect('payment_confirmation/'.$STELSales->id);
             } catch(\Illuminate\Database\QueryException $e){
                 
                 Session::flash('error', 'Failed To Checkout');
@@ -505,6 +520,33 @@ class ProductsController extends Controller
             $billing = json_decode($res_billing);
 
             return $billing;
+        } catch(Exception $e){
+            return null;
+        }
+    }
+
+    public function api_resend_va($id){
+        $STELSales = STELSales::find($id);
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json', 
+                            'Authorization' => config("app.gateway_tpn")
+                        ],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+        try {
+            $res_resend = $client->post("v1/billings/mps/resend/".$STELSales->BILLING_ID)->getBody();
+            $resend = json_decode($res_resend);
+            if($resend){
+                $STELSales->VA_number = $resend && $resend->status == true ? $resend->data->mps->va->number : null;
+                // $STELSales->VA_amount = $resend && $resend->status == true ? $resend->data->mps->va->amount : null;
+                $STELSales->VA_expired = $resend && $resend->status == true ? $resend->data->mps->va->expired : null;
+                
+                $STELSales->save();
+            }
+                        
+            return redirect('/payment_confirmation/'.$id);
         } catch(Exception $e){
             return null;
         }

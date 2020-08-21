@@ -83,7 +83,7 @@
               </li>
 
               <li class=" {{ (!empty($page) && ($page == 'purchase_history' || $page == 'products' || $page == 'checkout')) ?'current':''}}">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Stel <i class="icon-angle-down"></i></a>
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ trans('translate.menu_ref') }} <i class="icon-angle-down"></i></a>
                    <ul class="dropdown-menu" role="menu">
                     <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ trans('translate.menu_ref') }}</a>
                         <ul class="dropdown-menu" role="menu">
