@@ -31,6 +31,49 @@ use App\NotificationTable;
 
 class ProfileController extends Controller
 { 
+
+
+    private const PASS_TEXT = 'password';
+    private const NEW_PASS = 'newPass';
+    private const CONFNEWPASS = 'confnewPass';
+    private const ERROR_NEW_PASS = 'error_newpass';
+    private const MEDIA_USER = '/media/user/';
+    private const HIDE_ID_USER = 'hide_id_user';
+    private const USER_PICTURE = 'userPicture';
+    private const IMAGE = 'image';
+    private const ERROR_IMG_TYPE = 'error_img_type';
+    private const PATH_PROFILE = 'profile_';
+    private const USERNAME = 'username';
+    private const EMAIL = 'email';
+    private const ADDRESS = 'address';
+    private const PHONE = 'phone';
+    private const EMAIL2 = 'email2';
+    private const EMAIL3 = 'email3';
+    private const FORMAT_DATE = 'Y-m-d H:i:s';
+    private const PAGE_PROFILE = '/client/profile';
+    private const NPWP_FILE = 'npwp_file';
+    private const MEDIA_COMPANY = '/media/tempCompany/';
+    private const ERROR_COMPANY = 'error_company';
+    private const SIUP_FILE = 'siup_file';
+    private const CERTIFICATE_FILE = 'certificate_file';
+    private const ADMIN_TEXT = 'admin';
+    private const MESSAGE = 'message';
+    private const ADMIN_EDIT = '/edit';
+    private const CREATED_AT = 'created_at';
+    private const UPDATED_AT = 'updated_at';
+    private const ERROR_EMAIL = 'error_email';
+    private const ERROR = 'error';
+    private const COMP_NAME = 'comp_name';
+    private const COMP_ADDRESS = 'comp_address';
+    private const COMP_EMAIL = 'comp_email';
+    private const COMP_NPWP_FILE = 'comp_npwp_file'; 
+    private const PAGE_COMPANY_CREATE = '/admin/company/create';
+    private const comp_siup_file = 'comp_siup_file';
+    private const comp_qs_certificate_file = 'comp_qs_certificate_file';
+    private const USER_NAME = 'user_name';
+    private const USER_EMAIL = 'user_email';
+    private const EMAIL_STEL= 'urelddstelkom@gmail.com';
+    private const STATUS = 'status';
     /**
      * Display a listing of the resource.
      *
@@ -55,44 +98,44 @@ class ProfileController extends Controller
 	public function update(Request $request)
     { 
 		$currentUser = Auth::user(); 
-		if (Hash::check($request->input('currPass'), $currentUser['attributes']['password'])) {
-			$hashedPassword = $currentUser['attributes']['password'];
+		if (Hash::check($request->input('currPass'), $currentUser['attributes'][self::PASS_TEXT])) {
+			$hashedPassword = $currentUser['attributes'][self::PASS_TEXT];
 		}else{
 			return back()
 			->with('error_pass', 1)
 			->withInput($request->all());
 		}
-		if($request->input('newPass') == '' && $request->input('confnewPass') == ''){
+		if($request->input(self::NEW_PASS) == '' && $request->input(self::CONFNEWPASS) == ''){
 		}
 		else{
-			if($request->input('newPass') == '' || $request->input('confnewPass') == ''){
+			if($request->input(self::NEW_PASS) == '' || $request->input(self::CONFNEWPASS) == ''){
 				return back()
-				->with('error_newpass', 1)
+				->with(self::ERROR_NEW_PASS, 1)
 				->withInput($request->all());
 			}
-			if($request->input('newPass') == $request->input('confnewPass')){
-				$hashedPassword = Hash::make($request->input('newPass'));
+			if($request->input(self::NEW_PASS) == $request->input(self::CONFNEWPASS)){
+				$hashedPassword = Hash::make($request->input(self::NEW_PASS));
 			}
 			else{
 				return back()
-				->with('error_newpass', 2)
+				->with(self::ERROR_NEW_PASS, 2)
 				->withInput($request->all());
 			}
 		}
- 		$path_file = public_path().'/media/user/'.$request->input('hide_id_user').'';
-		if ($request->hasFile('userPicture')) {
-			$type_file = $request->file('userPicture')->getMimeType();
+ 		$path_file = public_path().self::MEDIA_USER.$request->input(self::HIDE_ID_USER).'';
+		if ($request->hasFile(self::USER_PICTURE)) {
+			$type_file = $request->file(self::USER_PICTURE)->getMimeType();
 			$data_type_file = explode('/',$type_file);
-			if($data_type_file[0] != 'image')	{
+			if($data_type_file[0] != self::IMAGE)	{
 				return redirect()->back()
-				->with('error_img_type', 1)
+				->with(self::ERROR_IMG_TYPE, 1)
 				->withInput($request->all()); 
 			}else{ 
-				$name_file = 'profile_'.$request->file('userPicture')->getClientOriginalName();
-				$request->file('userPicture')->move($path_file, $name_file);
+				$name_file = self::PATH_PROFILE.$request->file(self::USER_PICTURE)->getClientOriginalName();
+				$request->file(self::USER_PICTURE)->move($path_file, $name_file);
 				$fuserPicture = $name_file;
-				if (File::exists(public_path().'\media\user\\'.$request->input('hide_id_user').'\\'.$request->input('hide_pic_file'))){
-					File::delete(public_path().'\media\user\\'.$request->input('hide_id_user').'\\'.$request->input('hide_pic_file'));
+				if (File::exists(public_path().'\media\user\\'.$request->input(self::HIDE_ID_USER).'\\'.$request->input('hide_pic_file'))){
+					File::delete(public_path().'\media\user\\'.$request->input(self::HIDE_ID_USER).'\\'.$request->input('hide_pic_file'));
 				}
 			}
 		}else{
@@ -102,18 +145,18 @@ class ProfileController extends Controller
 		try{
 			$query_update_user = "UPDATE users
 				SET 
-					name = '".$request->input('username')."',
-					email = '".$request->input('email')."',
+					name = '".$request->input(self::USER_NAME)."',
+					email = '".$request->input(self::EMAIL)."',
 					password = '".$hashedPassword."',
 					picture = '".$fuserPicture."',
-					address = '".$request->input('address')."',
-					phone_number = '".$request->input('phone')."',
+					address = '".$request->input(self::ADDRESS)."',
+					phone_number = '".$request->input(self::PHONE)."',
 					fax = '".$request->input('fax')."',
-					email2 = '".$request->input('email2')."',
-					email3 = '".$request->input('email3')."',
+					email2 = '".$request->input(self::EMAIL2)."',
+					email3 = '".$request->input(self::EMAIL3)."',
 					updated_by = '".$currentUser['attributes']['id']."',
-					updated_at = '".date('Y-m-d H:i:s')."'
-				WHERE id = '".$request->input('hide_id_user')."'
+					updated_at = '".date(self::FORMAT_DATE)."'
+				WHERE id = '".$request->input(self::HIDE_ID_USER)."'
 			";
 
 			$logs = new Logs;
@@ -127,12 +170,12 @@ class ProfileController extends Controller
 	        $logs->save();
 
 
-			$data_update_user = DB::update($query_update_user);
+			DB::update($query_update_user);
             Session::flash('message_profile', 'Profile Has Been Updated');
         } catch(Exception $e){
             Session::flash('error_profile', 'Fail to Update Profile');
         }
-		return redirect('/client/profile');
+		return redirect(self::PAGE_PROFILE);
     }
 	
 	public function updateCompany(Request $request)
@@ -153,8 +196,8 @@ class ProfileController extends Controller
 			$description = $description.'Nama Perusahaan, ';
 		}	
 			
-		if($request->input('address') != $request->input('hide_address')){
-			$temp->address = $request->input('address');
+		if($request->input(self::ADDRESS) != $request->input('hide_address')){
+			$temp->address = $request->input(self::ADDRESS);
 			$count_commit ++ ;
 			$description = $description.'Alamat, ';
 		}	
@@ -177,8 +220,8 @@ class ProfileController extends Controller
 			$description = $description.'Kota, ';
 		}	
 			
-		if($request->input('email') != $request->input('hide_email')){
-			$temp->email = $request->input('email');
+		if($request->input(self::EMAIL) != $request->input('hide_email')){
+			$temp->email = $request->input(self::EMAIL);
 			$count_commit ++ ;
 			$description = $description.'Email, ';
 		}	
@@ -189,8 +232,8 @@ class ProfileController extends Controller
 			$description = $description.'Kode POS, ';
 		}	
 			
-		if($request->input('phone') != $request->input('hide_phone')){
-			$temp->phone_number = $request->input('phone');
+		if($request->input(self::PHONE) != $request->input('hide_phone')){
+			$temp->phone_number = $request->input(self::PHONE);
 			$count_commit ++ ;
 			$description = $description.'No. Telepon, ';
 		}	
@@ -207,9 +250,9 @@ class ProfileController extends Controller
 			$description = $description.'No. NPWP, ';
 		}
 		
-		if ($request->hasFile('npwp_file')) { 
-            $name_file = 'npwp_'.$request->file('npwp_file')->getClientOriginalName();
-			$path_file = public_path().'/media/tempCompany/'.$company_id.'';
+		if ($request->hasFile(self::NPWP_FILE)) { 
+            $name_file = 'npwp_'.$request->file(self::NPWP_FILE)->getClientOriginalName();
+			$path_file = public_path().self::MEDIA_COMPANY.$company_id.'';
             if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
@@ -217,13 +260,13 @@ class ProfileController extends Controller
 			if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
-            if($request->file('npwp_file')->move($path_file,$name_file)){
+            if($request->file(self::NPWP_FILE)->move($path_file,$name_file)){
                 $temp->npwp_file = $name_file;
 				$count_commit ++ ;
 				$description = $description.'File NPWP, ';
             }else{
-                Session::flash('error_company', 'Upload NPWP failed');
-                return redirect('/client/profile');
+                Session::flash(self::ERROR_COMPANY, 'Upload NPWP failed');
+                return redirect(self::PAGE_PROFILE);
             }
         }     	
         
@@ -240,9 +283,9 @@ class ProfileController extends Controller
 			$description = $description.'Masa berlaku SIUPP, ';
 		}
 		
-		if ($request->hasFile('siup_file')) { 
-            $name_file = 'siupp_'.$request->file('siup_file')->getClientOriginalName();
-			$path_file = public_path().'/media/tempCompany/'.$company_id.'';
+		if ($request->hasFile(self::SIUP_FILE)) { 
+            $name_file = 'siupp_'.$request->file(self::SIUP_FILE)->getClientOriginalName();
+			$path_file = public_path().self::MEDIA_COMPANY.$company_id.'';
             if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
@@ -250,13 +293,13 @@ class ProfileController extends Controller
 			if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
-            if($request->file('siup_file')->move($path_file,$name_file)){
+            if($request->file(self::SIUP_FILE)->move($path_file,$name_file)){
                 $temp->siup_file = $name_file;
 				$count_commit ++ ;
 				$description = $description.'File SIUPP, ';
             }else{
-                Session::flash('error_company', 'Upload SIUPP failed');
-                return redirect('/client/profile');
+                Session::flash(self::ERROR_COMPANY, 'Upload SIUPP failed');
+                return redirect(self::PAGE_PROFILE);
             }
         }     	
 		
@@ -274,9 +317,9 @@ class ProfileController extends Controller
 			$description = $description.'Masa berlaku Sertifikat Uji Mutu, ';
 		}
 		
-		if ($request->hasFile('certificate_file')) { 
-            $name_file = 'serti_uji_mutu_'.$request->file('certificate_file')->getClientOriginalName();
-			$path_file = public_path().'/media/tempCompany/'.$company_id.'';
+		if ($request->hasFile(self::CERTIFICATE_FILE)) { 
+            $name_file = 'serti_uji_mutu_'.$request->file(self::CERTIFICATE_FILE)->getClientOriginalName();
+			$path_file = public_path().self::MEDIA_COMPANY.$company_id.'';
             if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
@@ -284,19 +327,19 @@ class ProfileController extends Controller
 			if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
-            if($request->file('certificate_file')->move($path_file,$name_file)){
+            if($request->file(self::CERTIFICATE_FILE)->move($path_file,$name_file)){
                 $temp->qs_certificate_file = $name_file;
 				$count_commit ++ ;
 				$description = $description.'File Sertifikat Uji Mutu, ';
             }else{
-                Session::flash('error_company', 'Upload Certificate failed');
-                return redirect('/client/profile');
+                Session::flash(self::ERROR_COMPANY, 'Upload Certificate failed');
+                return redirect(self::PAGE_PROFILE);
             }
         }     	
 		
 		if($count_commit == 0){
-			Session::flash('error_company', 'Nothing to commit');
-            return redirect('/client/profile');
+			Session::flash(self::ERROR_COMPANY, 'Nothing to commit');
+            return redirect(self::PAGE_PROFILE);
 		}
 		
 		try{
@@ -320,9 +363,9 @@ class ProfileController extends Controller
 	        $currentUser = Auth::user();
 			$data= array( 
 	        "from"=>$currentUser->id,
-	        "to"=>"admin",
+	        "to"=>self::ADMIN_TEXT,
 	        "message"=>$currentUser->company->name." mengedit data Perusahaan ",
-	        "url"=>"tempcompany/".$temp->id.'/edit',
+	        "url"=>"tempcompany/".$temp->id.self::ADMIN_EDIT,
 	        "is_read"=>0,
 	        "created_at"=>date("Y-m-d H:i:s"),
 	        "updated_at"=>date("Y-m-d H:i:s")
@@ -331,11 +374,11 @@ class ProfileController extends Controller
 			$notification->id = Uuid::uuid4();
 	      	$notification->from = $data['from'];
 	      	$notification->to = $data['to'];
-	      	$notification->message = $data['message'];
+	      	$notification->message = $data[self::MESSAGE];
 	      	$notification->url = $data['url'];
 	      	$notification->is_read = $data['is_read'];
-	      	$notification->created_at = $data['created_at'];
-	      	$notification->updated_at = $data['updated_at'];
+	      	$notification->created_at = $data[self::CREATED_AT];
+	      	$notification->updated_at = $data[self::UPDATED_AT];
 	      	$notification->save();
 	      	$data['id'] = $notification->id; 
 	        event(new Notification($data));
@@ -345,9 +388,9 @@ class ProfileController extends Controller
 			$this->sendEmail($currentUser->id, $description, "emails.editCompany", "Permintaan Edit Data Perusahaan");
             Session::flash('message_company', 'Company Data Has Been Commited');
         } catch(Exception $e){
-            Session::flash('error_company', 'Fail to Commit');
+            Session::flash(self::ERROR_COMPANY, 'Fail to Commit');
         }
-		return redirect('/client/profile');
+		return redirect(self::PAGE_PROFILE);
     }
 	
 	public function register(Request $request)
@@ -369,44 +412,44 @@ class ProfileController extends Controller
 		$user_id = Uuid::uuid4();
 		
 		if($request->input('hide_is_company_too') == 0){ 
-			if($request->input('email') == ''){
+			if($request->input(self::EMAIL) == ''){
 				return redirect()->back()
-				->with('error_email', 1) 
+				->with(self::ERROR_EMAIL, 1) 
 				->withInput($request->all());
 			}
-			$email_exists = $this->cekEmail($request->input('email'));
+			$email_exists = $this->cekEmail($request->input(self::EMAIL));
 			if($email_exists == 1){
 				return redirect()->back()
-				->with('error_email', 2)
+				->with(self::ERROR_EMAIL, 2)
 				->withInput($request->all());
 			} 
-			if($request->input('newPass') == $request->input('confnewPass')){ 
-				$hashedPassword = Hash::make($request->input('newPass'));
+			if($request->input(self::NEW_PASS) == $request->input(self::CONFNEWPASS)){ 
+				$hashedPassword = Hash::make($request->input(self::NEW_PASS));
 			}
 			else{
 				return redirect()->back()
-				->with('error_newpass', 2)
+				->with(self::ERROR_NEW_PASS, 2)
 				->withInput($request->all());
 			}
 			
-			$path_file = public_path().'/media/user/'.$user_id.'';
+			$path_file = public_path().self::MEDIA_USER.$user_id.'';
 			if (!file_exists($path_file)) {
 				mkdir($path_file, 0775);
 			}
-			if ($request->hasFile('userPicture')) {
-				$type_file = $request->file('userPicture')->getMimeType();
+			if ($request->hasFile(self::USER_PICTURE)) {
+				$type_file = $request->file(self::USER_PICTURE)->getMimeType();
 				$data_type_file = explode('/',$type_file);
-				if($data_type_file[0] != 'image')	{
+				if($data_type_file[0] != self::IMAGE)	{
 					return redirect()->back()
-					->with('error_img_type', 1)
+					->with(self::ERROR_IMG_TYPE, 1)
 					->withInput($request->all());
 				}else{ 
-					$name_file = 'profile_'.$request->file('userPicture')->getClientOriginalName();
-					if($request->file('userPicture')->move($path_file,$name_file)){
+					$name_file = self::PATH_PROFILE.$request->file(self::USER_PICTURE)->getClientOriginalName();
+					if($request->file(self::USER_PICTURE)->move($path_file,$name_file)){
 						$fuserPicture = $name_file;
 					}
 					else{
-						Session::flash('error', 'Save Profile Picture to directory failed');
+						Session::flash(self::ERROR, 'Save Profile Picture to directory failed');
 						return redirect()->back()
 						->withInput($request->all());
 					}
@@ -420,21 +463,21 @@ class ProfileController extends Controller
 					'id' => ''.$user_id.'', 
 					'role_id' => '2',
 					'company_id' => ''.$request->input('cmb-perusahaan').'', 
-					'name' => ''.$request->input('username').'', 
-					'address' => ''.$request->input('address').'', 
-					'phone_number' => ''.$request->input('phone').'', 
+					'name' => ''.$request->input(self::USER_NAME).'', 
+					self::ADDRESS => ''.$request->input(self::ADDRESS).'', 
+					'phone_number' => ''.$request->input(self::PHONE).'', 
 					'fax' => ''.$request->input('fax').'', 
-					'email' => ''.$request->input('email').'', 
-					'password' => ''.$hashedPassword.'', 
+					self::EMAIL => ''.$request->input(self::EMAIL).'', 
+					self::PASS_TEXT => ''.$hashedPassword.'', 
 					'is_active' => 0, 
 					'remember_token' => ''.Str::random(60).'', 
 					'created_by' => ''.$user_id.'', 
 					'updated_by' => ''.$user_id.'', 
-					'created_at' => ''.date('Y-m-d H:i:s').'', 
-					'updated_at' => ''.date('Y-m-d H:i:s').'',
+					self::CREATED_AT => ''.date(self::FORMAT_DATE).'', 
+					self::UPDATED_AT => ''.date(self::FORMAT_DATE).'',
 					'picture' => ''.$fuserPicture.'',
-					'email2' => ''.$request->input('email2').'', 
-					'email3' => ''.$request->input('email3').'', 
+					self::EMAIL2 => ''.$request->input(self::EMAIL2).'', 
+					self::EMAIL3 => ''.$request->input(self::EMAIL3).'', 
 				]
 			]);
 			$logs = new Logs; 
@@ -449,9 +492,9 @@ class ProfileController extends Controller
 
 			$data= array( 
 	        "from"=>$user_id,
-	        "to"=>"admin",
+	        "to"=>self::ADMIN_TEXT,
 	        "message"=>"Permohonan Aktivasi Akun Baru",
-	        "url"=>"usereks/".$user_id.'/edit',
+	        "url"=>"usereks/".$user_id.self::ADMIN_EDIT,
 	        "is_read"=>0,
 	        "created_at"=>date("Y-m-d H:i:s"),
 	        "updated_at"=>date("Y-m-d H:i:s")
@@ -460,27 +503,27 @@ class ProfileController extends Controller
 			$notification->id = Uuid::uuid4();
 	      	$notification->from = $data['from'];
 	      	$notification->to = $data['to'];
-	      	$notification->message = $data['message'];
+	      	$notification->message = $data[self::MESSAGE];
 	      	$notification->url = $data['url'];
 	      	$notification->is_read = $data['is_read'];
-	      	$notification->created_at = $data['created_at'];
-	      	$notification->updated_at = $data['updated_at'];
+	      	$notification->created_at = $data[self::CREATED_AT];
+	      	$notification->updated_at = $data[self::UPDATED_AT];
 	      	$notification->save();
 	      	$data['id'] = $notification->id; 
 	        event(new Notification($data)); 
 
-			$this->sendRegistrasi($request->input('username'), $request->input('email'), "emails.registrasiCust", "Permintaan Aktivasi Data Akun Baru");
+			$this->sendRegistrasi($request->input(self::USER_NAME), $request->input(self::EMAIL), "emails.registrasiCust", "Permintaan Aktivasi Data Akun Baru");
 			
 			return redirect('/login')->with('send_new_user', 5);
 		}else{
 			$company = new Company;
 			$company->id = Uuid::uuid4();
-			$company->name = $request->input('comp_name');
-			$company->address = $request->input('comp_address');
+			$company->name = $request->input(self::COMP_NAME);
+			$company->address = $request->input(self::COMP_ADDRESS);
 			$company->plg_id = $request->input('comp_plg_id');
 			$company->nib = $request->input('comp_nib');
 			$company->city = $request->input('comp_city');
-			$company->email = $request->input('comp_email');
+			$company->email = $request->input(self::COMP_EMAIL);
 			$company->postal_code = $request->input('comp_postal_code');
 			$company->phone_number = $request->input('comp_phone_number');
 			$company->fax = $request->input('comp_fax');
@@ -489,43 +532,43 @@ class ProfileController extends Controller
 			$company->siup_date = $request->input('comp_siup_date');
 			$company->qs_certificate_number = $request->input('comp_qs_certificate_number');
 
-			if ($request->hasFile('comp_npwp_file')) { 
-				$name_file = 'npwp_'.$request->file('comp_npwp_file')->getClientOriginalName();
-				$path_file = public_path().'/media/company/'.$company->id;
+			if ($request->hasFile(self::COMP_NPWP_FILE)) { 
+				$name_file = 'npwp_'.$request->file(self::COMP_NPWP_FILE)->getClientOriginalName();
+				$path_file = public_path().self::MEDIA_COMPANY.$company->id;
 				if (!file_exists($path_file)) {
 					mkdir($path_file, 0775);
 				}
-				if($request->file('comp_npwp_file')->move($path_file,$name_file)){
+				if($request->file(self::COMP_NPWP_FILE)->move($path_file,$name_file)){
 					$company->npwp_file = $name_file;
 				}else{
-					Session::flash('error', 'Save NPWP to directory failed');
-					return redirect('/admin/company/create');
+					Session::flash(self::ERROR, 'Save NPWP to directory failed');
+					return redirect(self::PAGE_COMPANY_CREATE);
 				}
 			}        
-			if ($request->hasFile('comp_siup_file')) { 
-				$name_file = 'siupp_'.$request->file('comp_siup_file')->getClientOriginalName();
-				$path_file = public_path().'/media/company/'.$company->id;
+			if ($request->hasFile(self::comp_siup_file)) { 
+				$name_file = 'siupp_'.$request->file(self::comp_siup_file)->getClientOriginalName();
+				$path_file = public_path().self::MEDIA_COMPANY.$company->id;
 				if (!file_exists($path_file)) {
 					mkdir($path_file, 0775);
 				}
-				if($request->file('comp_siup_file')->move($path_file,$name_file)){
+				if($request->file(self::comp_siup_file)->move($path_file,$name_file)){
 					$company->siup_file = $name_file;
 				}else{
-					Session::flash('error', 'Save SIUP to directory failed');
-					return redirect('/admin/company/create');
+					Session::flash(self::ERROR, 'Save SIUP to directory failed');
+					return redirect(self::PAGE_COMPANY_CREATE);
 				}
 			}
-			if ($request->hasFile('comp_qs_certificate_file')) { 
-				$name_file = 'serti_uji_mutu_'.$request->file('comp_qs_certificate_file')->getClientOriginalName();
-				$path_file = public_path().'/media/company/'.$company->id;
+			if ($request->hasFile(self::comp_qs_certificate_file)) { 
+				$name_file = 'serti_uji_mutu_'.$request->file(self::comp_qs_certificate_file)->getClientOriginalName();
+				$path_file = public_path().self::MEDIA_COMPANY.$company->id;
 				if (!file_exists($path_file)) {
 					mkdir($path_file, 0775);
 				}
-				if($request->file('comp_qs_certificate_file')->move($path_file,$name_file)){
+				if($request->file(self::comp_qs_certificate_file)->move($path_file,$name_file)){
 					$company->qs_certificate_file = $name_file;
 				}else{
-					Session::flash('error', 'Save QS certificate to directory failed');
-					return redirect('/admin/company/create');
+					Session::flash(self::ERROR, 'Save QS certificate to directory failed');
+					return redirect(self::PAGE_COMPANY_CREATE);
 				}
 			}
 			
@@ -535,50 +578,50 @@ class ProfileController extends Controller
 			$company->updated_by = $user_id;
 
 			try{ 
-				if($request->input('email') == ''){
+				if($request->input(self::EMAIL) == ''){
 					return redirect()->back()
-					->with('error_email', 1) 
+					->with(self::ERROR_EMAIL, 1) 
 					->withInput($request->all());
 				}
-					$email_exists = $this->cekEmail($request->input('email'));
+					$email_exists = $this->cekEmail($request->input(self::EMAIL));
 					if($email_exists == 1){
 						return redirect()->back()
-						->with('error_email', 2)
+						->with(self::ERROR_EMAIL, 2)
 						->withInput($request->all());
 					}
-				if($request->input('newPass') == '' || $request->input('confnewPass') == ''){
+				if($request->input(self::NEW_PASS) == '' || $request->input(self::CONFNEWPASS) == ''){
 					return redirect()->back()
-					->with('error_newpass', 1)
+					->with(self::ERROR_NEW_PASS, 1)
 					->withInput($request->all());
 				}
-				if($request->input('newPass') == $request->input('confnewPass')){ 
-					$hashedPassword = Hash::make($request->input('newPass'));
+				if($request->input(self::NEW_PASS) == $request->input(self::CONFNEWPASS)){ 
+					$hashedPassword = Hash::make($request->input(self::NEW_PASS));
 				}
 				else{
 					return redirect()->back()
-					->with('error_newpass', 2)
+					->with(self::ERROR_NEW_PASS, 2)
 					->withInput($request->all());
 				}
 				$user_id = Uuid::uuid4();
 				
-				$path_file = public_path().'/media/user/'.$user_id.'';
+				$path_file = public_path().self::MEDIA_USER.$user_id.'';
 				if (!file_exists($path_file)) {
 					mkdir($path_file, 0775);
 				}
-				if ($request->hasFile('userPicture')) {
-					$type_file = $request->file('userPicture')->getMimeType();
+				if ($request->hasFile(self::USER_PICTURE)) {
+					$type_file = $request->file(self::USER_PICTURE)->getMimeType();
 					$data_type_file = explode('/',$type_file);
-					if($data_type_file[0] != 'image')	{
+					if($data_type_file[0] != self::IMAGE)	{
 						return redirect()->back()
-						->with('error_img_type', 1)
+						->with(self::ERROR_IMG_TYPE, 1)
 						->withInput($request->all());
 					}else{ 
-						$name_file = 'profile_'.$request->file('userPicture')->getClientOriginalName();
-						if($request->file('userPicture')->move($path_file,$name_file)){
+						$name_file = self::PATH_PROFILE.$request->file(self::USER_PICTURE)->getClientOriginalName();
+						if($request->file(self::USER_PICTURE)->move($path_file,$name_file)){
 							$fuserPicture = $name_file;
 						}
 						else{
-							Session::flash('error', 'Save Profile Picture to directory failed');
+							Session::flash(self::ERROR, 'Save Profile Picture to directory failed');
 							return redirect()->back()
 							->withInput($request->all());
 						}
@@ -592,26 +635,25 @@ class ProfileController extends Controller
 						'id' => ''.$user_id.'', 
 						'role_id' => '2',
 						'company_id' => ''.$company->id.'', 
-						'name' => ''.$request->input('username').'', 
-						'address' => ''.$request->input('address').'', 
-						'phone_number' => ''.$request->input('phone').'', 
+						'name' => ''.$request->input(self::USER_NAME).'', 
+						self::ADDRESS => ''.$request->input(self::ADDRESS).'', 
+						'phone_number' => ''.$request->input(self::PHONE).'', 
 						'fax' => ''.$request->input('fax').'', 
-						'email' => ''.$request->input('email').'', 
-						'password' => ''.$hashedPassword.'', 
+						self::EMAIL => ''.$request->input(self::EMAIL).'', 
+						self::PASS_TEXT => ''.$hashedPassword.'', 
 						'is_active' => 0, 
 						'remember_token' => ''.Str::random(60).'', 
 						'created_by' => ''.$user_id.'', 
 						'updated_by' => ''.$user_id.'', 
-						'created_at' => ''.date('Y-m-d H:i:s').'', 
-						'updated_at' => ''.date('Y-m-d H:i:s').'',
+						self::CREATED_AT => ''.date(self::FORMAT_DATE).'', 
+						self::UPDATED_AT => ''.date(self::FORMAT_DATE).'',
 						'picture' => ''.$fuserPicture.'',
-						'email2' => ''.$request->input('email2').'', 
-						'email3' => ''.$request->input('email3').'', 
+						self::EMAIL2 => ''.$request->input(self::EMAIL2).'', 
+						self::EMAIL3 => ''.$request->input(self::EMAIL3).'', 
 					]
 				]);
 
-				$logs = new Logs;
-				$currentUser = Auth::user();
+				$logs = new Logs; 
 		        $logs->user_id = $user_id;
 		        $logs->id = Uuid::uuid4();
 		        $logs->action = "Create Company";   
@@ -622,9 +664,9 @@ class ProfileController extends Controller
 
 		        $data= array( 
 		        "from"=>$user_id,
-		        "to"=>"admin",
+		        "to"=>self::ADMIN_TEXT,
 		        "message"=>"Permohonan Aktivasi Akun Baru dan Perusahaan Baru",
-		        "url"=>"usereks/".$user_id.'/edit',
+		        "url"=>"usereks/".$user_id.self::ADMIN_EDIT,
 		        "is_read"=>0,
 		        "created_at"=>date("Y-m-d H:i:s"),
 		        "updated_at"=>date("Y-m-d H:i:s")
@@ -633,29 +675,30 @@ class ProfileController extends Controller
 				$notification->id = Uuid::uuid4();
 		      	$notification->from = $data['from'];
 		      	$notification->to = $data['to'];
-		      	$notification->message = $data['message'];
+		      	$notification->message = $data[self::MESSAGE];
 		      	$notification->url = $data['url'];
 		      	$notification->is_read = $data['is_read'];
-		      	$notification->created_at = $data['created_at'];
-		      	$notification->updated_at = $data['updated_at'];
+		      	$notification->created_at = $data[self::CREATED_AT];
+		      	$notification->updated_at = $data[self::UPDATED_AT];
 		      	$notification->save();
 		      	$data['id'] = $notification->id; 
 		        event(new Notification($data)); 
 
 				$this->sendRegistrasiwCompany(
-					$request->input('username'), 
-					$request->input('email'), 
-					$request->input('comp_name'), 
-					$request->input('comp_address').', '.$request->input('comp_city').' '.$request->input('comp_postal_code').'.', 
-					$request->input('comp_email'), 
+					$request->input(self::USER_NAME), 
+					$request->input(self::EMAIL), 
+					$request->input(self::COMP_NAME), 
+					$request->input(self::COMP_ADDRESS).', '.$request->input('comp_city').' '.$request->input('comp_postal_code').'.', 
+					$request->input(self::COMP_EMAIL), 
 					$request->input('comp_phone_number'), 
-					"emails.registrasiCustCompany", "Permintaan Aktivasi Data Perusahaan dan Akun Baru"
+					"emails.registrasiCustCompany", 
+					"Permintaan Aktivasi Data Perusahaan dan Akun Baru"
 				);
 				
 				return redirect('/login')->with('send_new_user', 5);
 			} catch(Exception $e){
-				Session::flash('error', 'Save failed');
-				return redirect('/admin/company/create');
+				Session::flash(self::ERROR, 'Save failed');
+				return redirect(self::PAGE_COMPANY_CREATE);
 			}
 		}
 		
@@ -664,7 +707,7 @@ class ProfileController extends Controller
 	
     function cekEmail($email)
     {
-		$user = User::where('email','=',''.$email.'')->get();
+		$user = User::where(self::EMAIL,'=',''.$email.'')->get();
 		return count($user);
     }
 	
@@ -673,11 +716,11 @@ class ProfileController extends Controller
         $data = User::findOrFail($user);
 		
         Mail::send($message, array(
-			'user_name' => $data->name,
-			'user_email' => $data->email,
+			self::USER_NAME => $data->name,
+			self::USER_EMAIL => $data->email,
 			'desc' => $description
-			), function ($m) use ($data,$subject) {
-            $m->to('urelddstelkom@gmail.com')->subject($subject);
+			), function ($m) use ($subject) {
+            $m->to(self::EMAIL_STEL)->subject($subject);
         });
 
         return true;
@@ -686,10 +729,10 @@ class ProfileController extends Controller
 	public function sendRegistrasi($user_name, $user_email, $message, $subject)
     {
         Mail::send($message, array(
-			'user_name' => $user_name,
-			'user_email' => $user_email
+			self::USER_NAME => $user_name,
+			self::USER_EMAIL => $user_email
 			), function ($m) use ($subject) {
-            $m->to('urelddstelkom@gmail.com')->subject($subject);
+            $m->to(self::EMAIL_STEL)->subject($subject);
         });
 
         return true;
@@ -698,14 +741,14 @@ class ProfileController extends Controller
 	public function sendRegistrasiwCompany($user_name, $user_email, $comp_name, $comp_address, $comp_email, $comp_phone, $message, $subject)
     {
         Mail::send($message, array(
-			'user_name' => $user_name,
-			'user_email' => $user_email,
-			'comp_name' => $comp_name,
-			'comp_address' => $comp_address,
-			'comp_email' => $comp_email,
+			self::USER_NAME => $user_name,
+			self::USER_EMAIL => $user_email,
+			self::COMP_NAME => $comp_name,
+			self::COMP_ADDRESS => $comp_address,
+			self::COMP_EMAIL => $comp_email,
 			'comp_phone' => $comp_phone
 			), function ($m) use ($subject) {
-            $m->to('urelddstelkom@gmail.com')->subject($subject);
+            $m->to(self::EMAIL_STEL)->subject($subject);
         });
 
         return true;
@@ -725,17 +768,17 @@ class ProfileController extends Controller
     }
 
     public function checkRegisterEmail(Request $request){
-    	$email = $request->input('email');
+    	$email = $request->input(self::EMAIL);
     	if(isset($email)){
     		$email_exists = $this->cekEmail($email);
 		 	if($email_exists == 1){ 
-    			return response()->json(['status'=>false,'message'=>'Email Already Exist']);	
+    			return response()->json([self::STATUS=>false,self::MESSAGE=>'Email Already Exist']);	
     		}else{
-    			return response()->json(['status'=>true,'message'=>'Email is Available']);
+    			return response()->json([self::STATUS=>true,self::MESSAGE=>'Email is Available']);
     		}
     		
     	}else{
-    		return response()->json(['status'=>false,'message'=>'Email Is Required']);
+    		return response()->json([self::STATUS=>false,self::MESSAGE=>'Email Is Required']);
     	}
     }
 }
