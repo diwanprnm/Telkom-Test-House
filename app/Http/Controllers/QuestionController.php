@@ -8,6 +8,7 @@ use App\Http\Requests;
 
 use App\Question;
 use App\Logs;
+use App\Services\Logs\LogService;
 
 use Auth;
 use Response;
@@ -57,14 +58,9 @@ class QuestionController extends Controller
                     ->orderBy('name')
                     ->paginate($paginate);
 
-                    $logs = new Logs;
-                    $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                    $logs->action = "Search Question Category";
-                    $datasearch = array("search"=>$search);
-                    $logs->data = json_encode($datasearch);
-                    $logs->created_by = $currentUser->id;
-                    $logs->page = $this::QUESTION;
-                    $logs->save();
+                    $logService = new LogService();
+                    $logService->createLog( "Search Question Category",self::QUESTION, json_encode( array("search"=>$search)) );
+    
             }else{
                 $query = Question::whereNotNull('created_at'); 
                 
@@ -114,14 +110,10 @@ class QuestionController extends Controller
 		try{
 			$question->save();
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;
-            $logs->id = Uuid::uuid4();
-            $logs->action = "Create Question Category";
-            $logs->data = $question;
-            $logs->created_by = $currentUser->id;
-            $logs->page = $this::QUESTION;
-            $logs->save();
+            $logService = new LogService();
+            $logService->createLog( "Create Question Category",self::QUESTION,$question);
+    
+            
 			
             Session::flash($this::MESSA, 'question successfully created');
 			return redirect($this::ADMIN);
@@ -129,17 +121,6 @@ class QuestionController extends Controller
 			Session::flash($this::ERR, 'Save failed');
 			return redirect('/admin/question/create');
 		}
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        
     }
 
     /**
@@ -180,15 +161,10 @@ class QuestionController extends Controller
         try{
             $data->save();
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;
-            $logs->id = Uuid::uuid4();
-            $logs->action = "Update Question Category";
-            $logs->data = $olddata;
-            $logs->created_by = $currentUser->id;
-            $logs->page = $this::QUESTION;
-            $logs->save();
-
+            
+            $logService = new LogService();
+            $logService->createLog( "Update Question Category",self::QUESTION,$olddata);
+            
             Session::flash($this::MESSA, 'Question successfully updated');
             return redirect($this::ADMIN);
         } catch(Exception $e){
@@ -211,14 +187,10 @@ class QuestionController extends Controller
         if ($data){
             try{
                 $data->delete();
-                
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Delete Question Category";
-                $logs->data = $olddata;
-                $logs->created_by = $currentUser->id;
-                $logs->page = $this::QUESTION;
-                $logs->save();
+          
+
+                $logService = new LogService();
+                $logService->createLog( "Delete Question Category",self::QUESTION,$olddata);
 
                 Session::flash($this::MESSA, 'Question successfully deleted');
                 return redirect($this::ADMIN);
