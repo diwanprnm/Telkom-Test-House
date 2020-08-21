@@ -66,8 +66,7 @@ class ProfileController extends Controller
     private const COMP_NAME = 'comp_name';
     private const COMP_ADDRESS = 'comp_address';
     private const COMP_EMAIL = 'comp_email';
-    private const COMP_NPWP_FILE = 'comp_npwp_file';
-    private const MEDIA_COMPANY = '/media/company/';
+    private const COMP_NPWP_FILE = 'comp_npwp_file'; 
     private const PAGE_COMPANY_CREATE = '/admin/company/create';
     private const comp_siup_file = 'comp_siup_file';
     private const comp_qs_certificate_file = 'comp_qs_certificate_file';
