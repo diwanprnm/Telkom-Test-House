@@ -73,14 +73,7 @@ class CalibrationChargeController extends Controller
                     ->orderBy(self::DEVICE)
                     ->paginate($paginate);
 
-                 /*   $logs = new Logs;
-                    $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                    $logs->action = "Search Calibration Charge";
-                    $datasearch = array(self::SEARCH2=>$search);
-                    $logs->data = json_encode($datasearch);
-                    $logs->created_by = $currentUser->id;
-                    $logs->page = self::CALIBRATION;
-                    $logs->save(); */
+                
 
                     $logService = new LogService();
                     $logService->createLog( "Search Calibration Charge",self::CALIBRATION, json_encode( array(self::SEARCH2=>$search)) );
@@ -164,10 +157,7 @@ class CalibrationChargeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-    }
+   
 
     /**
      * Show the form for editing the specified resource.
@@ -211,13 +201,17 @@ class CalibrationChargeController extends Controller
         try{
             $charge->save();
 
-            $logs = new Logs;
+          /*  $logs = new Logs;
             $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
             $logs->action = "Update Calibration Charge";
             $logs->data = $oldData;
             $logs->created_by = $currentUser->id;
             $logs->page = self::CALIBRATION;
-            $logs->save();
+            $logs->save();*/
+
+            $logService = new LogService();
+            $logService->createLog("Update Calibration Charge",self::CALIBRATION,$oldData );
+
 
             Session::flash(self::MESSAGE, 'Charge successfully updated');
             return redirect(self::ADM);

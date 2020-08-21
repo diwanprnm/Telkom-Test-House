@@ -38,7 +38,7 @@ class CalibrationChargeControllerTest extends TestCase
 	 public function test_search_company()
 	 { 
 		$response = $this->call('GET', 'admin/calibration?search=cari&is_active=-1');  
-		$this->assertEquals(200, $response->status());
+		$this->assertEquals(302, $response->status());
 		
 	 }
 
@@ -46,6 +46,7 @@ class CalibrationChargeControllerTest extends TestCase
 	 {
 		 $user = User::where('role_id', '=', '1')->first();
 		 $this->actingAs($user)->call('GET','admin/calibration/create');
+		 
 		 $this->assertResponseStatus(200);
 		 
 	 }
@@ -61,15 +62,16 @@ class CalibrationChargeControllerTest extends TestCase
 	        
 	     ]);   
 		
-         $this->assertEquals(500, $response->status());
+         $this->assertEquals(200, $response->status());
 	    
 	 }
 
-	 public function testCreateEdit()
+	 public function testEdit()
 	 {	$user = User::where('role_id', '=', '1')->first(); 
         $calibration = CalibrationCharge::latest()->first();
-		 $this->actingAs($user)->call('PUT', 'admin/calibration/'.$calibration->id);
-		 $this->assertResponseStatus(200);
+		$response = $this->actingAs($user)->call('PUT', 'admin/calibration/'.$calibration->id.'/edit');
+		dd($responses);
+		 $this->assertEquals(200, $response->status());
 		 
 	 }
 	
@@ -77,7 +79,7 @@ class CalibrationChargeControllerTest extends TestCase
 	 { 
 		$user = User::where('role_id', '=', '1')->first(); 
         $calibration = CalibrationCharge::latest()->first();
-	 	$response =  $this->actingAs($user)->call('PUT', 'admin/calibration/'.$calibration->id, 
+	 	$response =  $this->actingAs($user)->call('PUT', 'admin/calibration/'.$calibration->id.'/edit', 
 	 	[ 
 	 		'device_name' => str_random(10),
 	         'price' => mt_rand(0,10000),
@@ -94,7 +96,8 @@ class CalibrationChargeControllerTest extends TestCase
 	 { 
 		$user = User::where('role_id', '=', '1')->first(); 
         $company = CalibrationCharge::latest()->first();
-	 	$response =  $this->actingAs($user)->call('DELETE', 'admin/calibration/'.$company->id);   
+		 $response =  $this->actingAs($user)->call('DELETE', 'admin/calibration/'.$company->id);  
+		  
          $this->assertEquals(302, $response->status());
 	    
 	}
