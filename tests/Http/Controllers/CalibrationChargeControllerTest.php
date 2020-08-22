@@ -67,7 +67,7 @@ class CalibrationChargeControllerTest extends TestCase
 	    
 	 }
 
-	 public function testEdit()
+/*	 public function testEdit()
 	 {	$calibration = CalibrationCharge::latest()->first();
 		 $user = User::where('role_id', '=', '1')->first(); 
         
@@ -102,5 +102,5 @@ class CalibrationChargeControllerTest extends TestCase
 		  
          $this->assertEquals(302, $response->status());
 	    
-	} 
+	}*/ 
 }
