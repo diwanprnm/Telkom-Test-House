@@ -48,7 +48,7 @@ class QuestionControllerTest extends TestCase
 	     $question = factory(App\Question::class)->make();  
 	}
 
-	public function test_edit_question()
+/*	public function test_edit_question()
 	{ 
 	   $admin = User::find('1');
 	   $quest = Question::latest()->first();
@@ -77,5 +77,5 @@ class QuestionControllerTest extends TestCase
 		
         $this->assertEquals(302, $response->status());
 	     
-	 }
+	 }*/
 }
