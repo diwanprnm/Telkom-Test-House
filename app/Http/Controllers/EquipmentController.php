@@ -25,6 +25,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 use App\Events\Notification;
 use App\NotificationTable;
+use App\Services\Logs\LogService;
 
 class EquipmentController extends Controller
 {
@@ -78,14 +79,10 @@ class EquipmentController extends Controller
                     ->orderBy('name')
                     ->paginate($paginate);
 
-                    $logs = new Logs;
-                    $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                    $logs->action = "Search User";
-                    $datasearch = array("search"=>$search);
-                    $logs->data = json_encode($datasearch);
-                    $logs->created_by = $currentUser->id;
-                    $logs->page = $this::EQUIPMENT;
-                    $logs->save();
+
+                    $logService = new LogService();
+                    $logService->createLog("Search User",self::EQUIPMENT, json_encode( array("search"=>$search)) );
+    
             }else{
                 $query = Equipment::whereNotNull($this::CREATED)
 					->with('EXAMINATIONDEVICE')

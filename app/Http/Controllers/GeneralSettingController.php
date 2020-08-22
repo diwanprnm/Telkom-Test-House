@@ -11,6 +11,7 @@ use App\Http\Requests;
 use App\Logs;
 use App\LogsAdministrator;
 use App\GeneralSetting;
+use App\Services\Logs\LogService;
 
 use Auth;
 use File;

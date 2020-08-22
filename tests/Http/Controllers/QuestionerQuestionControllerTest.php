@@ -19,14 +19,16 @@ class QuestionerQuestionControllerTest extends TestCase
 	}
 	
      public function test_visit()
-	 { 
-	    $response = $this->call('GET', 'admin/questionerquestion');  
-        $this->assertEquals(302, $response->status());
+	 {
+		$user = User::where('role_id', '=', '1')->first();
+    	$response = $this->actingAs($user)->call('GET', 'admin/questionerquestion');  
+        $this->assertEquals(200, $response->status());
 	 }
 	 public function test_search()
 	 { 
-	    $response = $this->call('GET', 'admin/questionerquestion?search=asda');  
-        $this->assertEquals(302, $response->status());
+		$user = User::where('role_id', '=', '1')->first();
+	    $response = $this->actingAs($user)->call('GET', 'admin/questionerquestion?search=asda');  
+        $this->assertEquals(200, $response->status());
 	 }
 
 	 public function test_create()
@@ -39,7 +41,7 @@ class QuestionerQuestionControllerTest extends TestCase
      public function test_stores()
 	 { 
 	 	
-		$user = User::find('1');
+		$user = User::where('role_id', '=', '1')->first();
 	 	$response =  $this->actingAs($user)->call('POST', 'admin/questionerquestion', 
 	 	[ 
 	         'question' => str_random(10),

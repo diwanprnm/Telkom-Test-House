@@ -216,8 +216,7 @@ class CalibrationChargeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        $currentUser = Auth::user(); 
+    { 
         $charge = CalibrationCharge::find($id);
         $oldData = $charge;
         if ($charge){
