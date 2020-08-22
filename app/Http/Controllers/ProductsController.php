@@ -30,13 +30,30 @@ use GuzzleHttp\Client;
 use App\NotificationTable;
 
 class ProductsController extends Controller
-{
+{   
+
+    private const SEARCH = 'search';
+    private const PO_ID_TPN = 'PO_ID_from_TPN';
+    private const UNIQUE_CODE_TPN = 'unique_code_from_TPN';
+    private const STELS = 'stels';
+    private const STELS_ID = 'stels.id';
+    private const PRODUCTS = 'products';
+    private const LOGIN = 'login';
+    private const CREATED_AT = 'created_at';
+    private const UPDATED_AT = 'updated_at';
+    private const EMAIL = 'email';
+    private const MEDIA_STEL = '/media/stel/';
+    private const STELSALES_ID = 'stelsales_id';
+    private const FILEPEMBAYARAN = 'filePembayaran';
+    private const HIDE_FILE_PEMBAYARAN = 'hide_file_pembayaran';
+
+
     public function index(Request $request)
     {   
-        $request->session()->forget('PO_ID_from_TPN');
-        $request->session()->forget('unique_code_from_TPN');
+        $request->session()->forget(self::PO_ID_TPN);
+        $request->session()->forget(self::UNIQUE_CODE_TPN);
         $currentUser = Auth::user();
-        $search = trim($request->input('search'));
+        $search = trim($request->input(self::SEARCH));
         if($currentUser){
             $query_url = "SELECT * FROM youtube WHERE id = 1";
             $data_url = DB::select($query_url);
@@ -47,7 +64,7 @@ class ProductsController extends Controller
             }
 
             $paginate = 10;
-            $stels = \DB::table('stels')
+            $stels = \DB::table(self::STELS)
                 ->selectRaw('stels.*,(SELECT count(*) FROM stels_sales 
                             join stels_sales_detail on (stels_sales.id = stels_sales_detail.stels_sales_id) 
                             join users on(stels_sales.user_id = users.id)
@@ -66,19 +83,19 @@ class ProductsController extends Controller
 						;
 					});
             }
-            $stels = $stels->groupBy('stels.id');
+            $stels = $stels->groupBy(self::STELS_ID);
             
             $stels = $stels->paginate($paginate);
             // $stels = $stels->toSql();
 			// dd($stels);exit;
-            $page = "products";
+            $page = self::PRODUCTS;
             return view('client.STEL.products') 
                 ->with('page', $page)
-                ->with('search', $search)
+                ->with(self::SEARCH, $search)
                 ->with('video_url', $video_url)
-                ->with('stels', $stels);
+                ->with(self::STELS, $stels);
         }else{
-           return  redirect('login');
+           return  redirect(self::LOGIN);
         }
     }
 
@@ -95,13 +112,13 @@ class ProductsController extends Controller
                                 ->with('user.company')
                                 ->with('sales_detail')
                                 ->with('sales_detail.stel');
-            $data = $query->orderBy('created_at', 'desc')->paginate($paginate);
+            $data = $query->orderBy(self::CREATED_AT, 'desc')->paginate($paginate);
             $page = "purchase_history";
             return view('client.STEL.purchase_history') 
             ->with('page', $page)
             ->with('data', $data);     
         }else{
-          return redirect("login");
+          return redirect(self::LOGIN);
         }
         
     } 
@@ -109,7 +126,7 @@ class ProductsController extends Controller
     public function payment_status(Request $request)
     { 
         $currentUser = Auth::user();
-         $search = trim($request->input('search'));
+         $search = trim($request->input(self::SEARCH));
         if($currentUser){
 
             $STELSales = STELSales::where("user_id",$currentUser->id);
@@ -117,15 +134,15 @@ class ProductsController extends Controller
                 $STELSales->where("invoice",$search);
                 $STELSales->orWhere("payment_code",$search);
             }
-            $STELSales = $STELSales->orderBy('updated_at', 'desc');
+            $STELSales = $STELSales->orderBy(self::UPDATED_AT, 'desc');
             $STELSales = $STELSales->get();
             $page = "payment_status";
             return view('client.STEL.payment_status') 
             ->with('page', $page)   
-             ->with('search', $search)
-            ->with('stels', $STELSales);     
+             ->with(self::SEARCH, $search)
+            ->with(self::STELS, $STELSales);     
         }else{
-          return redirect("login");
+          return redirect(self::LOGIN);
         }
         
     } 
@@ -145,9 +162,9 @@ class ProductsController extends Controller
             $page = "payment_detail";
             return view('client.STEL.payment_detail') 
             ->with('page', $page)   
-            ->with('stels', $STELSales);     
+            ->with(self::STELS, $STELSales);     
         }else{
-           return redirect("login");
+           return redirect(self::LOGIN);
         }
         
     } 
@@ -170,24 +187,21 @@ class ProductsController extends Controller
         $jml_pembayaran = str_replace("Rp",'',$jml_pembayaran);
         
         $user_name = ''.$currentUser['attributes']['name'].'';
-        $user_email = ''.$currentUser['attributes']['email'].'';
-        $path_file = public_path().'/media/stel/'.$request->input('stelsales_id').'';
-        if ($request->hasFile('filePembayaran')) {
-            // $ext_file = $request->file('filePembayaran')->getClientOriginalName();
-            // $name_file = uniqid().'_user_'.$request->input('hide_id_exam').'.'.$ext_file;
-            $name_file = 'stel_payment_'.$request->file('filePembayaran')->getClientOriginalName();
-            if($request->file('filePembayaran')->move($path_file,$name_file)){
-                $fPembayaran = $name_file;
-                if (File::exists(public_path().'\media\stel\\'.$request->input('stelsales_id').'\\'.$request->input('hide_file_pembayaran'))){
-                    File::delete(public_path().'\media\stel\\'.$request->input('stelsales_id').'\\'.$request->input('hide_file_pembayaran'));
+        $user_email = ''.$currentUser['attributes'][self::EMAIL].'';
+        $path_file = public_path().self::MEDIA_STEL.$request->input(self::STELSALES_ID).'';
+        if ($request->hasFile(self::FILEPEMBAYARAN)) { 
+            $name_file = 'stel_payment_'.$request->file(self::FILEPEMBAYARAN)->getClientOriginalName();
+            if($request->file(self::FILEPEMBAYARAN)->move($path_file,$name_file)){ 
+                if (File::exists(public_path().'\media\stel\\'.$request->input(self::STELSALES_ID).'\\'.$request->input(self::HIDE_FILE_PEMBAYARAN))){
+                    File::delete(public_path().'\media\stel\\'.$request->input(self::STELSALES_ID).'\\'.$request->input(self::HIDE_FILE_PEMBAYARAN));
                 }
             }else{
                 Session::flash('error', 'Upload Payment Attachment to directory failed');
-                return redirect('/upload_payment/'.$request->input('stelsales_id'));
+                return redirect('/upload_payment/'.$request->input(self::STELSALES_ID));
             }
 
             try{
-                $STELSalesAttach = STELSalesAttach::where("stel_sales_id",$request->input('stelsales_id'))->first();
+                $STELSalesAttach = STELSalesAttach::where("stel_sales_id",$request->input(self::STELSALES_ID))->first();
                 if($STELSalesAttach){
                     $STELSalesAttach->delete();
                 }  
@@ -195,10 +209,10 @@ class ProductsController extends Controller
                 $currentUser = Auth::user(); 
                 $STELSalesAttach->id = Uuid::uuid4(); 
                 $STELSalesAttach->created_by = $currentUser->id;
-                $STELSalesAttach->stel_sales_id = $request->input('stelsales_id');
+                $STELSalesAttach->stel_sales_id = $request->input(self::STELSALES_ID);
                 $STELSalesAttach->attachment = $name_file;
                 $STELSalesAttach->save();
-                $id = $request->input('stelsales_id');
+                $id = $request->input(self::STELSALES_ID);
                 $STELSales = STELSales::find($id);
                 $STELSales->payment_status = $STELSales->payment_status == 0 ? 2 : $STELSales->payment_status;
                 $STELSales->cust_price_payment = $jml_pembayaran;
@@ -210,8 +224,8 @@ class ProductsController extends Controller
                     "message"=>$currentUser->company->name." Upload pembayaran STEL",
                     "url"=>"sales/".$STELSales->id."/edit",
                     "is_read"=>0,
-                    "created_at"=>date("Y-m-d H:i:s"),
-                    "updated_at"=>date("Y-m-d H:i:s")
+                    self::CREATED_AT=>date("Y-m-d H:i:s"),
+                    self::UPDATED_AT=>date("Y-m-d H:i:s")
                 );
                 $notification = new NotificationTable();
                 $notification->id = Uuid::uuid4();
@@ -220,8 +234,8 @@ class ProductsController extends Controller
                   $notification->message = $data['message'];
                   $notification->url = $data['url'];
                   $notification->is_read = $data['is_read'];
-                  $notification->created_at = $data['created_at'];
-                  $notification->updated_at = $data['updated_at'];
+                  $notification->created_at = $data[self::CREATED_AT];
+                  $notification->updated_at = $data[self::UPDATED_AT];
                   $notification->save();
 
                     $data['id'] = $notification->id;
@@ -233,8 +247,6 @@ class ProductsController extends Controller
                 Session::flash('error', 'Upload failed');
                 
             }
-        }else{
-            $fPembayaran = $request->input('hide_file_pembayaran');
         }
 
         return back();
@@ -242,7 +254,7 @@ class ProductsController extends Controller
 
     public function store(Request $request){
         Cart::add(['id' => $request->id, 'name' => $request->name.'myTokenProduct'.$request->code, 'qty' => 1, 'price' => $request->price]);
-        return redirect('products');
+        return redirect(self::PRODUCTS);
     }
 
     public function checkout(Request $request){ 
@@ -287,14 +299,14 @@ class ProductsController extends Controller
                 "name" => "PT TELEKOMUNIKASI INDONESIA, TBK.",
                 "address" => "Telkom Indonesia Graha Merah Putih, Jalan Japati No.1 Bandung, Jawa Barat, 40133",
                 "phone" => "(+62) 812-2483-7500",
-                "email" => "urelddstelkom@gmail.com",
+                self::EMAIL => "urelddstelkom@gmail.com",
                 "npwp" => "01.000.013.1-093.000"
             ],
             "to" => [
                 "name" => $currentUser->company->name ? $currentUser->company->name : "-",
                 "address" => $currentUser->company->address ? $currentUser->company->address : "-",
                 "phone" => $currentUser->company->phone_number ? $currentUser->company->phone_number : "-",
-                "email" => $currentUser->company->email ? $currentUser->company->email : "-",
+                self::EMAIL => $currentUser->company->email ? $currentUser->company->email : "-",
                 "npwp" => $currentUser->company->npwp_number ? $currentUser->company->npwp_number : "-"
             ],
             "product_id" => config("app.product_id_tth"), //product_id TTH
@@ -335,11 +347,11 @@ class ProductsController extends Controller
             $tax = $purchase && $purchase->status ? $purchase->data->tax : Cart::tax();
             $final_price = $purchase && $purchase->status == true ? $purchase->data->final_price : Cart::total();
 */
-            $PO_ID = $request->session()->get('PO_ID_from_TPN') ? $request->session()->get('PO_ID_from_TPN') : ($purchase && $purchase->status ? $purchase->data->_id : null);
-            $request->session()->put('PO_ID_from_TPN', $PO_ID);
+            $PO_ID = $request->session()->get(self::PO_ID_TPN) ? $request->session()->get(self::PO_ID_TPN) : ($purchase && $purchase->status ? $purchase->data->_id : null);
+            $request->session()->put(self::PO_ID_TPN, $PO_ID);
             $total_price = Cart::subtotal();
-            $unique_code = $request->session()->get('unique_code_from_TPN') ? $request->session()->get('unique_code_from_TPN') : ($purchase && $purchase->status ? $purchase->data->unique_code : '0');
-            $request->session()->put('unique_code_from_TPN', $unique_code);
+            $unique_code = $request->session()->get(self::UNIQUE_CODE_TPN) ? $request->session()->get(self::UNIQUE_CODE_TPN) : ($purchase && $purchase->status ? $purchase->data->unique_code : '0');
+            $request->session()->put(self::UNIQUE_CODE_TPN, $unique_code);
             $tax = floor(0.1*($total_price + $unique_code));
             $final_price = $total_price + $unique_code + $tax;
 
@@ -353,7 +365,7 @@ class ProductsController extends Controller
                 ->with('final_price', $final_price)
                 ->with('invoice_number', $invoice_number);
         }else{
-            return redirect('products');
+            return redirect(self::PRODUCTS);
         } 
     }
 
@@ -380,7 +392,7 @@ class ProductsController extends Controller
     }
 
     public function doCheckout(Request $request){  
-        $PO_ID = $request->session()->get('PO_ID_from_TPN');
+        $PO_ID = $request->session()->get(self::PO_ID_TPN);
         $currentUser = Auth::user();
         $STELSales = new STELSales;
         if($currentUser){ 
@@ -392,7 +404,7 @@ class ProductsController extends Controller
                 $STELSales->type = $request->input("type");
                 $STELSales->no_card = $request->input("no_card");
                 $STELSales->no_telp = $request->input("no_telp");
-                $STELSales->email = $request->input("email");
+                $STELSales->email = $request->input(self::EMAIL);
                 $STELSales->country = $request->input("country");
                 $STELSales->province = $request->input("province");
                 $STELSales->city = $request->input("city");
@@ -431,8 +443,8 @@ class ProductsController extends Controller
                     "message"=>"Permohonan Pembelian STEL",
                     "url"=>"sales/".$STELSales->id."/edit",
                     "is_read"=>0,
-                    "created_at"=>date("Y-m-d H:i:s"),
-                    "updated_at"=>date("Y-m-d H:i:s")
+                    self::CREATED_AT=>date("Y-m-d H:i:s"),
+                    self::UPDATED_AT=>date("Y-m-d H:i:s")
                 );
                 $notification = new NotificationTable();
                 $notification->id = Uuid::uuid4();
@@ -441,8 +453,8 @@ class ProductsController extends Controller
                   $notification->message = $data['message'];
                   $notification->url = $data['url'];
                   $notification->is_read = $data['is_read'];
-                  $notification->created_at = $data['created_at'];
-                  $notification->updated_at = $data['updated_at'];
+                  $notification->created_at = $data[self::CREATED_AT];
+                  $notification->updated_at = $data[self::UPDATED_AT];
                   $notification->save();
 
                     $data['id'] = $notification->id;
@@ -471,18 +483,18 @@ class ProductsController extends Controller
 
                         Cart::destroy();
 
-                        $request->session()->forget('PO_ID_from_TPN');
-                        $request->session()->forget('unique_code_from_TPN');
+                        $request->session()->forget(self::PO_ID_TPN);
+                        $request->session()->forget(self::UNIQUE_CODE_TPN);
 
                     } catch(\Illuminate\Database\QueryException $e){ 
                         Session::flash('error', 'Failed To Checkout');
-                        return redirect('products');
+                        return redirect(self::PRODUCTS);
                     } 
                 return redirect('purchase_history');
             } catch(\Illuminate\Database\QueryException $e){
                 
                 Session::flash('error', 'Failed To Checkout');
-                return redirect('products');
+                return redirect(self::PRODUCTS);
             }
         }else{
            return redirect('/');
@@ -514,7 +526,7 @@ class ProductsController extends Controller
     {
         
       Cart::remove($id);
-      return redirect("/products");
+      return redirect("/".self::PRODUCTS);
     }
 
     public function downloadStel($id)
@@ -522,7 +534,7 @@ class ProductsController extends Controller
         $stel = STEL::find($id);
 
         if ($stel){
-            $file = public_path().'/media/stel/'.$stel->attachment;
+            $file = public_path().self::MEDIA_STEL.$stel->attachment;
             $headers = array(
               'Content-Type: application/octet-stream',
             );
@@ -548,7 +560,7 @@ class ProductsController extends Controller
         $stel = STELSales::where("id",$id)->first();
 
         if ($stel){
-            $file = public_path().'/media/stel/'.$stel->id."/".$stel->faktur_file;
+            $file = public_path().self::MEDIA_STEL.$stel->id."/".$stel->faktur_file;
             $headers = array(
               'Content-Type: application/octet-stream',
             );
@@ -562,7 +574,7 @@ class ProductsController extends Controller
         $stel = STELSales::where("id_kuitansi",$id)->first();
 
         if ($stel){
-            $file = public_path().'/media/stel/'.$stel->id."/".$stel->id_kuitansi;
+            $file = public_path().self::MEDIA_STEL.$stel->id."/".$stel->id_kuitansi;
             $headers = array(
               'Content-Type: application/octet-stream',
             );

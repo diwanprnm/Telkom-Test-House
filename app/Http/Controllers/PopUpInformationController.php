@@ -121,13 +121,12 @@ class PopUpInformationController extends Controller
             $file = $request->file($this::IMAGE);
             $ext = $file->getClientOriginalExtension(); 
             $file_name = 'popupinformation_'.$request->file($this::IMAGE)->getClientOriginalName();
-            
-            $is_uploaded = false;
+             
            
-              if (in_array($ext, $allowedImage))
+            if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
-                $is_uploaded = Storage::disk('minio')->put("popupinformation/".$popupinformation->id."/$file_name",(string)$image->encode()); 
+                Storage::disk('minio')->put("popupinformation/".$popupinformation->id."/$file_name",(string)$image->encode()); 
              }else{
                 Session::flash('error', 'Format Not Available');
                 return redirect('/admin/popupinformation/create');
