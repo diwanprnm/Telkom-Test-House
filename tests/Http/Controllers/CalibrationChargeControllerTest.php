@@ -38,6 +38,7 @@ class CalibrationChargeControllerTest extends TestCase
 	 public function test_search_company()
 	 { 
 		$response = $this->call('GET', 'admin/calibration?search=cari&is_active=-1');  
+		
 		$this->assertEquals(302, $response->status());
 		
 	 }
@@ -54,23 +55,24 @@ class CalibrationChargeControllerTest extends TestCase
 	 public function test_stores()
 	 { 
 		$user = User::where('role_id', '=', '1')->first();
-	 	$response =  $this->actingAs($user)->call('GET', 'admin/calibration', 
+	 	$response =  $this->actingAs($user)->call('POST', 'admin/calibration', 
 	 	[ 
 	 		'device_name' => str_random(10),
 	         'price' => mt_rand(0,10000),
 	         'is_active' => mt_rand(0,1)
 	        
 	     ]);   
-		
-         $this->assertEquals(200, $response->status());
+		 
+         $this->assertEquals(302, $response->status());
 	    
 	 }
 
-	/* public function testEdit()
-	 {	$user = User::where('role_id', '=', '1')->first(); 
-        $calibration = CalibrationCharge::latest()->first();
-		$response = $this->actingAs($user)->call('PUT', 'admin/calibration/'.$calibration->id.'/edit');
-		dd($responses);
+	 public function testEdit()
+	 {	$calibration = CalibrationCharge::latest()->first();
+		 $user = User::where('role_id', '=', '1')->first(); 
+        
+		$response = $this->actingAs($user)->call('GET', 'admin/calibration/'.$calibration->id.'/edit');
+		
 		 $this->assertEquals(200, $response->status());
 		 
 	 }
@@ -79,7 +81,7 @@ class CalibrationChargeControllerTest extends TestCase
 	 { 
 		$user = User::where('role_id', '=', '1')->first(); 
         $calibration = CalibrationCharge::latest()->first();
-	 	$response =  $this->actingAs($user)->call('PUT', 'admin/calibration/'.$calibration->id.'/edit', 
+	 	$response =  $this->actingAs($user)->call('PUT', 'admin/calibration/'.$calibration->id, 
 	 	[ 
 	 		'device_name' => str_random(10),
 	         'price' => mt_rand(0,10000),
@@ -100,5 +102,5 @@ class CalibrationChargeControllerTest extends TestCase
 		  
          $this->assertEquals(302, $response->status());
 	    
-	} */
+	} 
 }

@@ -135,13 +135,9 @@ class CalibrationChargeController extends Controller
         try{
             $charge->save();
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Create Calibration Charge";
-            $logs->data = $charge;
-            $logs->created_by = $currentUser->id;
-            $logs->page = self::CALIBRATION;
-            $logs->save();
+           
+            $logService = new LogService();
+            $logService->createLog("Create Calibration Charge",self::CALIBRATION,$charge);
 
             Session::flash(self::MESSAGE, 'Charge successfully created');
             return redirect(self::ADM);
@@ -201,14 +197,6 @@ class CalibrationChargeController extends Controller
         try{
             $charge->save();
 
-          /*  $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Update Calibration Charge";
-            $logs->data = $oldData;
-            $logs->created_by = $currentUser->id;
-            $logs->page = self::CALIBRATION;
-            $logs->save();*/
-
             $logService = new LogService();
             $logService->createLog("Update Calibration Charge",self::CALIBRATION,$oldData );
 
@@ -236,13 +224,9 @@ class CalibrationChargeController extends Controller
             try{
                 $charge->delete();
                 
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Delete Calibration Charge";
-                $logs->data = $oldData;
-                $logs->created_by = $currentUser->id;
-                $logs->page = self::CALIBRATION;
-                $logs->save();
+                
+                $logService = new LogService();
+                $logService->createLog("Delete Calibration Charge",self::CALIBRATION,$oldData);
 
                 Session::flash(self::MESSAGE, 'Charge successfully deleted');
                 return redirect(self::ADM);
