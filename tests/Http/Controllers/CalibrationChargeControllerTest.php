@@ -35,7 +35,7 @@ class CalibrationChargeControllerTest extends TestCase
      }
 
 
-	 public function test_search_company()
+	 public function test_search()
 	 { 
 		$response = $this->call('GET', 'admin/calibration?search=cari&is_active=-1');  
 		
