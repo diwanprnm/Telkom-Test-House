@@ -860,8 +860,7 @@ class PermohonanController extends Controller
 		$exam_hist->save();
 	}
 
-	public function upload(Request $request){
-		$currentUser = Auth::user(); 
+	public function upload(Request $request){ 
 		$exam_id = $request->session()->get('exam_id');
 		$path_file = public_path().self::MEDIA_EXAMINATION.$exam_id.'';
 		$name_file = 'form_uji_'.$request->file('fuploaddetailpengujian')->getClientOriginalName();
@@ -873,8 +872,7 @@ class PermohonanController extends Controller
             ->update([self::ATTACHMENT => ''.$fuploaddetailpengujian_name.'']);
 	}
 
-	public function uploadEdit(Request $request){
-		$currentUser = Auth::user(); 
+	public function uploadEdit(Request $request){ 
 		$exam_id = $request->get(self::HIDE_EXAM_ID);
 		$path_file = public_path().self::MEDIA_EXAMINATION.$exam_id.'';
 		$name_file = 'form_uji_'.$request->file('fuploaddetailpengujian_edit')->getClientOriginalName();
@@ -1064,8 +1062,7 @@ class PermohonanController extends Controller
 			SUBSTRING_INDEX(function_test_NO,'/',-1) = '".$thisYear."'
 			ORDER BY last_numb DESC LIMIT 1
 		";
-		$data = DB::select($query);
-		$test_number = ''.$last_numb.'/'.$a.'/'.$thisYear.'';
+		$data = DB::select($query); 
 		if (!count($data)){
 			$test_number =  '001/'.$a.'/'.$thisYear.'';
 		}

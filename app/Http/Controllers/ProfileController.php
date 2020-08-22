@@ -42,8 +42,7 @@ class ProfileController extends Controller
     private const USER_PICTURE = 'userPicture';
     private const IMAGE = 'image';
     private const ERROR_IMG_TYPE = 'error_img_type';
-    private const PATH_PROFILE = 'profile_';
-    private const USERNAME = 'username';
+    private const PATH_PROFILE = 'profile_'; 
     private const EMAIL = 'email';
     private const ADDRESS = 'address';
     private const PHONE = 'phone';
@@ -68,12 +67,16 @@ class ProfileController extends Controller
     private const COMP_EMAIL = 'comp_email';
     private const COMP_NPWP_FILE = 'comp_npwp_file'; 
     private const PAGE_COMPANY_CREATE = '/admin/company/create';
-    private const comp_siup_file = 'comp_siup_file';
-    private const comp_qs_certificate_file = 'comp_qs_certificate_file';
+    private const COMP_SIUP_FILE = 'comp_siup_file';
+    private const COMP_QS_CERTIFICATE_FILE = 'comp_qs_certificate_file';
     private const USER_NAME = 'user_name';
     private const USER_EMAIL = 'user_email';
     private const EMAIL_STEL= 'urelddstelkom@gmail.com';
     private const STATUS = 'status';
+    private const COMPANY_ID = 'company_id';
+    private const ATTRIBUTES = 'attributes';
+    private const HIDE_PIC_FILE = 'hide_pic_file';
+    private const IS_READ = 'is_read';
     /**
      * Display a listing of the resource.
      *
@@ -86,9 +89,9 @@ class ProfileController extends Controller
 		$data_company = DB::select($query);		
 		$currentUser = Auth::user();
 		if ($currentUser){
-			$myComp = Company::where('id', $currentUser['attributes']['company_id'])->first();
+			$myComp = Company::where('id', $currentUser[self::ATTRIBUTES][self::COMPANY_ID])->first();
             return view('client.profile.index')
-                ->with('data', $currentUser['attributes'])
+                ->with('data', $currentUser[self::ATTRIBUTES])
                 ->with('data_company', $data_company)
                 ->with('tabs', $tabs)
                 ->with('myComp', $myComp);
@@ -98,16 +101,14 @@ class ProfileController extends Controller
 	public function update(Request $request)
     { 
 		$currentUser = Auth::user(); 
-		if (Hash::check($request->input('currPass'), $currentUser['attributes'][self::PASS_TEXT])) {
-			$hashedPassword = $currentUser['attributes'][self::PASS_TEXT];
+		if (Hash::check($request->input('currPass'), $currentUser[self::ATTRIBUTES][self::PASS_TEXT])) {
+			$hashedPassword = $currentUser[self::ATTRIBUTES][self::PASS_TEXT];
 		}else{
 			return back()
 			->with('error_pass', 1)
 			->withInput($request->all());
 		}
-		if($request->input(self::NEW_PASS) == '' && $request->input(self::CONFNEWPASS) == ''){
-		}
-		else{
+		if($request->input(self::NEW_PASS) != '' && $request->input(self::CONFNEWPASS) != ''){  
 			if($request->input(self::NEW_PASS) == '' || $request->input(self::CONFNEWPASS) == ''){
 				return back()
 				->with(self::ERROR_NEW_PASS, 1)
@@ -134,12 +135,12 @@ class ProfileController extends Controller
 				$name_file = self::PATH_PROFILE.$request->file(self::USER_PICTURE)->getClientOriginalName();
 				$request->file(self::USER_PICTURE)->move($path_file, $name_file);
 				$fuserPicture = $name_file;
-				if (File::exists(public_path().'\media\user\\'.$request->input(self::HIDE_ID_USER).'\\'.$request->input('hide_pic_file'))){
-					File::delete(public_path().'\media\user\\'.$request->input(self::HIDE_ID_USER).'\\'.$request->input('hide_pic_file'));
+				if (File::exists(public_path().'\media\user\\'.$request->input(self::HIDE_ID_USER).'\\'.$request->input(self::HIDE_PIC_FILE))){
+					File::delete(public_path().'\media\user\\'.$request->input(self::HIDE_ID_USER).'\\'.$request->input(self::HIDE_PIC_FILE));
 				}
 			}
 		}else{
-			$fuserPicture = $request->input('hide_pic_file');
+			$fuserPicture = $request->input(self::HIDE_PIC_FILE);
 		}
 		
 		try{
@@ -154,7 +155,7 @@ class ProfileController extends Controller
 					fax = '".$request->input('fax')."',
 					email2 = '".$request->input(self::EMAIL2)."',
 					email3 = '".$request->input(self::EMAIL3)."',
-					updated_by = '".$currentUser['attributes']['id']."',
+					updated_by = '".$currentUser[self::ATTRIBUTES]['id']."',
 					updated_at = '".date(self::FORMAT_DATE)."'
 				WHERE id = '".$request->input(self::HIDE_ID_USER)."'
 			";
@@ -364,11 +365,11 @@ class ProfileController extends Controller
 			$data= array( 
 	        "from"=>$currentUser->id,
 	        "to"=>self::ADMIN_TEXT,
-	        "message"=>$currentUser->company->name." mengedit data Perusahaan ",
+	        self::MESSAGE=>$currentUser->company->name." mengedit data Perusahaan ",
 	        "url"=>"tempcompany/".$temp->id.self::ADMIN_EDIT,
 	        "is_read"=>0,
-	        "created_at"=>date("Y-m-d H:i:s"),
-	        "updated_at"=>date("Y-m-d H:i:s")
+	        self::CREATED_AT=>date(self::FORMAT_DATE),
+	        self::UPDATED_AT=>date(self::FORMAT_DATE)
 	        );
 		  	$notification = new NotificationTable();
 			$notification->id = Uuid::uuid4();
@@ -376,7 +377,7 @@ class ProfileController extends Controller
 	      	$notification->to = $data['to'];
 	      	$notification->message = $data[self::MESSAGE];
 	      	$notification->url = $data['url'];
-	      	$notification->is_read = $data['is_read'];
+	      	$notification->is_read = $data[self::IS_READ];
 	      	$notification->created_at = $data[self::CREATED_AT];
 	      	$notification->updated_at = $data[self::UPDATED_AT];
 	      	$notification->save();
@@ -462,7 +463,7 @@ class ProfileController extends Controller
 				[
 					'id' => ''.$user_id.'', 
 					'role_id' => '2',
-					'company_id' => ''.$request->input('cmb-perusahaan').'', 
+					self::COMPANY_ID => ''.$request->input('cmb-perusahaan').'', 
 					'name' => ''.$request->input(self::USER_NAME).'', 
 					self::ADDRESS => ''.$request->input(self::ADDRESS).'', 
 					'phone_number' => ''.$request->input(self::PHONE).'', 
@@ -493,11 +494,11 @@ class ProfileController extends Controller
 			$data= array( 
 	        "from"=>$user_id,
 	        "to"=>self::ADMIN_TEXT,
-	        "message"=>"Permohonan Aktivasi Akun Baru",
+	        self::MESSAGE=>"Permohonan Aktivasi Akun Baru",
 	        "url"=>"usereks/".$user_id.self::ADMIN_EDIT,
 	        "is_read"=>0,
-	        "created_at"=>date("Y-m-d H:i:s"),
-	        "updated_at"=>date("Y-m-d H:i:s")
+	        self::CREATED_AT=>date(self::FORMAT_DATE),
+	        self::UPDATED_AT=>date(self::FORMAT_DATE)
 	        );
 		  	$notification = new NotificationTable();
 			$notification->id = Uuid::uuid4();
@@ -505,7 +506,7 @@ class ProfileController extends Controller
 	      	$notification->to = $data['to'];
 	      	$notification->message = $data[self::MESSAGE];
 	      	$notification->url = $data['url'];
-	      	$notification->is_read = $data['is_read'];
+	      	$notification->is_read = $data[self::IS_READ];
 	      	$notification->created_at = $data[self::CREATED_AT];
 	      	$notification->updated_at = $data[self::UPDATED_AT];
 	      	$notification->save();
@@ -545,26 +546,26 @@ class ProfileController extends Controller
 					return redirect(self::PAGE_COMPANY_CREATE);
 				}
 			}        
-			if ($request->hasFile(self::comp_siup_file)) { 
-				$name_file = 'siupp_'.$request->file(self::comp_siup_file)->getClientOriginalName();
+			if ($request->hasFile(self::COMP_SIUP_FILE)) { 
+				$name_file = 'siupp_'.$request->file(self::COMP_SIUP_FILE)->getClientOriginalName();
 				$path_file = public_path().self::MEDIA_COMPANY.$company->id;
 				if (!file_exists($path_file)) {
 					mkdir($path_file, 0775);
 				}
-				if($request->file(self::comp_siup_file)->move($path_file,$name_file)){
+				if($request->file(self::COMP_SIUP_FILE)->move($path_file,$name_file)){
 					$company->siup_file = $name_file;
 				}else{
 					Session::flash(self::ERROR, 'Save SIUP to directory failed');
 					return redirect(self::PAGE_COMPANY_CREATE);
 				}
 			}
-			if ($request->hasFile(self::comp_qs_certificate_file)) { 
-				$name_file = 'serti_uji_mutu_'.$request->file(self::comp_qs_certificate_file)->getClientOriginalName();
+			if ($request->hasFile(self::COMP_QS_CERTIFICATE_FILE)) { 
+				$name_file = 'serti_uji_mutu_'.$request->file(self::COMP_QS_CERTIFICATE_FILE)->getClientOriginalName();
 				$path_file = public_path().self::MEDIA_COMPANY.$company->id;
 				if (!file_exists($path_file)) {
 					mkdir($path_file, 0775);
 				}
-				if($request->file(self::comp_qs_certificate_file)->move($path_file,$name_file)){
+				if($request->file(self::COMP_QS_CERTIFICATE_FILE)->move($path_file,$name_file)){
 					$company->qs_certificate_file = $name_file;
 				}else{
 					Session::flash(self::ERROR, 'Save QS certificate to directory failed');
@@ -634,7 +635,7 @@ class ProfileController extends Controller
 					[
 						'id' => ''.$user_id.'', 
 						'role_id' => '2',
-						'company_id' => ''.$company->id.'', 
+						self::COMPANY_ID => ''.$company->id.'', 
 						'name' => ''.$request->input(self::USER_NAME).'', 
 						self::ADDRESS => ''.$request->input(self::ADDRESS).'', 
 						'phone_number' => ''.$request->input(self::PHONE).'', 
@@ -665,11 +666,11 @@ class ProfileController extends Controller
 		        $data= array( 
 		        "from"=>$user_id,
 		        "to"=>self::ADMIN_TEXT,
-		        "message"=>"Permohonan Aktivasi Akun Baru dan Perusahaan Baru",
+		        self::MESSAGE=>"Permohonan Aktivasi Akun Baru dan Perusahaan Baru",
 		        "url"=>"usereks/".$user_id.self::ADMIN_EDIT,
 		        "is_read"=>0,
-		        "created_at"=>date("Y-m-d H:i:s"),
-		        "updated_at"=>date("Y-m-d H:i:s")
+		        self::CREATED_AT=>date(self::FORMAT_DATE),
+		        self::UPDATED_AT=>date(self::FORMAT_DATE)
 		        );
 			  	$notification = new NotificationTable();
 				$notification->id = Uuid::uuid4();
@@ -677,7 +678,7 @@ class ProfileController extends Controller
 		      	$notification->to = $data['to'];
 		      	$notification->message = $data[self::MESSAGE];
 		      	$notification->url = $data['url'];
-		      	$notification->is_read = $data['is_read'];
+		      	$notification->is_read = $data[self::IS_READ];
 		      	$notification->created_at = $data[self::CREATED_AT];
 		      	$notification->updated_at = $data[self::UPDATED_AT];
 		      	$notification->save();

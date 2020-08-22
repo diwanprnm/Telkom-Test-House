@@ -85,6 +85,7 @@ class SalesController extends Controller
     private const STELS_SALES_ID = 'stels_sales_id';
     private const USER_COMPANIES_ID = 'users.company_id';
     private const USER_ID = 'users.id';
+    private const STELS_SALES_ATTACHMENT = 'stels_sales_attachment';
 
     public function __construct()
     {
@@ -601,7 +602,7 @@ class SalesController extends Controller
             ->join(self::USERS, 'stels_sales.created_by', '=', self::USER_ID)
             ->join(self::COMPANIES, self::USER_COMPANIES_ID, '=', self::COMPANIES_DOT_ID)
             ->join('stels_sales_detail', self::STELS_SALES_DOT_ID, '=', self::STELS_SALES_DETAIL_STELS_ID)
-            ->leftJoin('stels_sales_attachment', self::STELS_SALES_DOT_ID, '=', 'stels_sales_attachment.stel_sales_id')
+            ->leftJoin(self::STEL_SALES_AT, self::STELS_SALES_DOT_ID, '=', 'stels_sales_attachment.stel_sales_id')
             ->join(self::STELS, self::STELS_SALES_DETAIL_DOT_STELS_ID, '=', self::STELS_ID)
             ->where(self::STELS_SALES_DOT_ID, $request->input('id'))
             ->get();
@@ -879,7 +880,7 @@ class SalesService
     {
         $this->validate($request, [
             self::STELS_SALES_DETAIL_ID => self::REQUIRED,
-            'stels_sales_attachment' => self::REQUIRED,
+            self::STELS_SALES_ATTACHMENT => self::REQUIRED,
             self::STEL_FILE => self::REQUIRED,
         ]);
 
@@ -888,7 +889,7 @@ class SalesService
         $success_count = 0;
         for($i=0;$i<count($request->input(self::STELS_SALES_DETAIL_ID));$i++){
             $STELSalesDetail = STELSalesDetail::find($request->input(self::STELS_SALES_DETAIL_ID)[$i]);
-            $attachment = $request->input('stels_sales_attachment')[$i];
+            $attachment = $request->input(self::STELS_SALES_ATTACHMENT)[$i];
             if(!$attachment){$attachment_count++;}
             if ($request->file(self::STEL_FILE)[$i]) {
 

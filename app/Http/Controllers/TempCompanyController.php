@@ -21,6 +21,21 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 class TempCompanyController extends Controller
 {
+
+
+    private const COMPANY = 'company';
+    private const IS_COMMITED = 'is_commited';
+    private const BEFORE_DATE = 'before_date';
+    private const AFTER_DATE = 'after_date';
+    private const SORT_BY = 'sort_by';
+    private const SORT_TYPE = 'sort_type';
+    private const MESSAGE = 'message';
+    private const MEDIA_COMPANY = '/media/company/';
+    private const MEDIA_TEMPCOMPANY = '/media/tempCompany/';
+    private const ERROR = 'error';
+    private const PAGE_EDIT = '/edit';
+    private const PAGE_TEMPCOMPANY = '/admin/tempcompany';
+    private const CONTENT_TYPE = 'Content-Type: application/octet-stream';
     /**
      * Create a new controller instance.
      *
@@ -53,37 +68,37 @@ class TempCompanyController extends Controller
 			
 			$query = TempCompany::whereNotNull('created_at')
 						->with('user')
-                        ->with('company');
+                        ->with(self::COMPANY);
             
             if ($search != null){
 				$query->where(function($qry) use($search){
-                    $qry->whereHas('company', function ($q) use ($search){
+                    $qry->whereHas(self::COMPANY, function ($q) use ($search){
 							return $q->where('name', 'like', '%'.strtolower($search).'%');
 						});
                 });
             }
-            if ($request->has('is_commited')){
-                $status = $request->get('is_commited');
-				if($request->input('is_commited') != 'all'){
-					$query->where('is_commited', $request->get('is_commited'));
+            if ($request->has(self::IS_COMMITED)){
+                $status = $request->get(self::IS_COMMITED);
+				if($request->input(self::IS_COMMITED) != 'all'){
+					$query->where(self::IS_COMMITED, $request->get(self::IS_COMMITED));
 				}
             }
 
-            if ($request->has('before_date')){
-                $query->where(DB::raw('DATE(created_at)'), '<=', $request->get('before_date'));
-                $before = $request->get('before_date');
+            if ($request->has(self::BEFORE_DATE)){
+                $query->where(DB::raw('DATE(created_at)'), '<=', $request->get(self::BEFORE_DATE));
+                $before = $request->get(self::BEFORE_DATE);
             }
 
-            if ($request->has('after_date')){
-                $query->where(DB::raw('DATE(created_at)'), '>=', $request->get('after_date'));
-                $after = $request->get('after_date');
+            if ($request->has(self::AFTER_DATE)){
+                $query->where(DB::raw('DATE(created_at)'), '>=', $request->get(self::AFTER_DATE));
+                $after = $request->get(self::AFTER_DATE);
             }
 
-            if ($request->has('sort_by')){
-                $sort_by = $request->get('sort_by');
+            if ($request->has(self::SORT_BY)){
+                $sort_by = $request->get(self::SORT_BY);
             }
-            if ($request->has('sort_type')){
-                $sort_type = $request->get('sort_type');
+            if ($request->has(self::SORT_TYPE)){
+                $sort_type = $request->get(self::SORT_TYPE);
             }
 
                 $companies = $query->orderBy($sort_by, $sort_type)->paginate($paginate);
@@ -93,14 +108,14 @@ class TempCompanyController extends Controller
             }
             
             return view('admin.tempcompany.index')
-                ->with('message', $message)
+                ->with(self::MESSAGE, $message)
                 ->with('data', $companies)
                 ->with('search', $search)
                 ->with('status', $status)
-                ->with('before_date', $before)
-                ->with('after_date', $after)
-                ->with('sort_by', $sort_by)
-                ->with('sort_type', $sort_type);
+                ->with(self::BEFORE_DATE, $before)
+                ->with(self::AFTER_DATE, $after)
+                ->with(self::SORT_BY, $sort_by)
+                ->with(self::SORT_TYPE, $sort_type);
         }
     }
 
@@ -145,7 +160,7 @@ class TempCompanyController extends Controller
     public function edit($id)
     {
         $company = TempCompany::where('id', $id)
-                            ->with('company')
+                            ->with(self::COMPANY)
                             ->with('user')
                             ->first();
 
@@ -167,13 +182,13 @@ class TempCompanyController extends Controller
 		$tempcompany = TempCompany::find($id);
 		$company = Company::find($tempcompany->company_id);
 		
-		if ($request->has('is_commited')){
+		if ($request->has(self::IS_COMMITED)){
 			$tempcompany->updated_by = $currentUser->id;
-            $tempcompany->is_commited = $request->input('is_commited');
+            $tempcompany->is_commited = $request->input(self::IS_COMMITED);
 			$tempcompany->save();
         }
 		
-		if($request->input('is_commited') == 1){
+		if($request->input(self::IS_COMMITED) == 1){
 			if ($request->has('name')){
 				$company->name = $request->input('name');
 			}
@@ -205,16 +220,16 @@ class TempCompanyController extends Controller
 				$company->npwp_number = $request->input('npwp_number');
 			}
 			if ($request->has('npwp_file')) {
-				$npwp_file = public_path().'/media/company/'.$company->id.'/'.$company->npwp_file;
-				$npwp_file_temp = public_path().'/media/tempCompany/'.$company->id.'/'.$id.'/'.$tempcompany->npwp_file;
-				$npwp_file_now = public_path().'/media/company/'.$company->id.'/'.$tempcompany->npwp_file;
+				$npwp_file = public_path().self::MEDIA_COMPANY.$company->id.'/'.$company->npwp_file;
+				$npwp_file_temp = public_path().self::MEDIA_TEMPCOMPANY.$company->id.'/'.$id.'/'.$tempcompany->npwp_file;
+				$npwp_file_now = public_path().self::MEDIA_COMPANY.$company->id.'/'.$tempcompany->npwp_file;
 				
 if(copy($npwp_file_temp,$npwp_file_now)){
 					$company->npwp_file = $request->input('npwp_file');
 					if (File::exists($npwp_file)){File::delete($npwp_file);}
 				}else{
-					Session::flash('error', 'Save NPWP to directory failed');
-					return redirect('/admin/tempcompany/'.$id.'/edit');
+					Session::flash(self::ERROR, 'Save NPWP to directory failed');
+					return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT);
 				}
 			}        
 			if ($request->has('siup_number')){
@@ -224,15 +239,15 @@ if(copy($npwp_file_temp,$npwp_file_now)){
 				$company->siup_date = $request->input('siup_date');
 			}
 			if ($request->has('siup_file')) {
-				$siup_file = public_path().'/media/company/'.$company->id.'/'.$company->siup_file;
-				$siup_file_temp = public_path().'/media/tempCompany/'.$company->id.'/'.$id.'/'.$tempcompany->siup_file;
-				$siup_file_now = public_path().'/media/company/'.$company->id.'/'.$tempcompany->siup_file;
+				$siup_file = public_path().self::MEDIA_COMPANY.$company->id.'/'.$company->siup_file;
+				$siup_file_temp = public_path().self::MEDIA_TEMPCOMPANY.$company->id.'/'.$id.'/'.$tempcompany->siup_file;
+				$siup_file_now = public_path().self::MEDIA_COMPANY.$company->id.'/'.$tempcompany->siup_file;
 				if(copy($siup_file_temp,$siup_file_now)){
 					$company->siup_file = $request->input('siup_file');
 					if (File::exists($siup_file)){File::delete($siup_file);}
 				}else{
-					Session::flash('error', 'Save SIUPP to directory failed');
-					return redirect('/admin/tempcompany/'.$id.'/edit');
+					Session::flash(self::ERROR, 'Save SIUPP to directory failed');
+					return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT);
 				}
 			}   
 			if ($request->has('qs_certificate_number')){
@@ -242,30 +257,30 @@ if(copy($npwp_file_temp,$npwp_file_now)){
 				$company->qs_certificate_date = $request->input('qs_certificate_date');
 			}
 			if ($request->has('qs_certificate_file')) {
-				$qs_certificate_file = public_path().'/media/company/'.$company->id.'/'.$company->qs_certificate_file;
-				$qs_certificate_file_temp = public_path().'/media/tempCompany/'.$company->id.'/'.$id.'/'.$tempcompany->qs_certificate_file;
-				$qs_certificate_file_now = public_path().'/media/company/'.$company->id.'/'.$tempcompany->qs_certificate_file;
+				$qs_certificate_file = public_path().self::MEDIA_COMPANY.$company->id.'/'.$company->qs_certificate_file;
+				$qs_certificate_file_temp = public_path().self::MEDIA_TEMPCOMPANY.$company->id.'/'.$id.'/'.$tempcompany->qs_certificate_file;
+				$qs_certificate_file_now = public_path().self::MEDIA_COMPANY.$company->id.'/'.$tempcompany->qs_certificate_file;
 				if(copy($qs_certificate_file_temp,$qs_certificate_file_now)){
 					$company->qs_certificate_file = $request->input('qs_certificate_file');
 					if (File::exists($qs_certificate_file)){File::delete($qs_certificate_file);}
 				}else{
-					Session::flash('error', 'Save Certificate to directory failed');
-					return redirect('/admin/tempcompany/'.$id.'/edit');
+					Session::flash(self::ERROR, 'Save Certificate to directory failed');
+					return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT);
 				}
 			}
 			
 			$company->updated_by = $currentUser->id;
 			try{
 				$company->save();
-				Session::flash('message', 'Company successfully updated');
-				return redirect('/admin/tempcompany');
+				Session::flash(self::MESSAGE, 'Company successfully updated');
+				return redirect(self::PAGE_TEMPCOMPANY);
 			} catch(Exception $e){
-				Session::flash('error', 'Save failed');
-				return redirect('/admin/tempcompany/'.$id.'/edit');
+				Session::flash(self::ERROR, 'Save failed');
+				return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT);
 			}
 		}else{
-			Session::flash('error', 'Update was decline');
-			return redirect('/admin/tempcompany');
+			Session::flash(self::ERROR, 'Update was decline');
+			return redirect(self::PAGE_TEMPCOMPANY);
 		}
     }
 
@@ -278,18 +293,18 @@ if(copy($npwp_file_temp,$npwp_file_now)){
     public function destroy($id)
     {
         $company = TempCompany::find($id);
-		$file = public_path().'/media/tempCompany/'.$company->company_id.'/'.$id;
+		$file = public_path().self::MEDIA_TEMPCOMPANY.$company->company_id.'/'.$id;
 
         if ($company){
             try{
                 $company->delete();
 				File::deleteDirectory($file);
                 
-                Session::flash('message', 'Edit Request successfully deleted');
-                return redirect('/admin/tempcompany');
+                Session::flash(self::MESSAGE, 'Edit Request successfully deleted');
+                return redirect(self::PAGE_TEMPCOMPANY);
             }catch (Exception $e){
-                Session::flash('error', 'Delete failed');
-                return redirect('/admin/tempcompany');
+                Session::flash(self::ERROR, 'Delete failed');
+                return redirect(self::PAGE_TEMPCOMPANY);
             }
         }
     }
@@ -301,27 +316,27 @@ if(copy($npwp_file_temp,$npwp_file_now)){
         if ($company){
             switch ($name) {
                 case 'npwp':
-                    $file = public_path().'/media/tempCompany/'.$company->company_id.'/'.$company->id.'/'.$company->npwp_file;
+                    $file = public_path().self::MEDIA_TEMPCOMPANY.$company->company_id.'/'.$company->id.'/'.$company->npwp_file;
                     $headers = array(
-                      'Content-Type: application/octet-stream',
+                        self::CONTENT_TYPE,
                     );
 
                     return Response::file($file, $headers);
                     break;
 
                 case 'siup':
-                    $file = public_path().'/media/tempCompany/'.$company->company_id.'/'.$company->id.'/'.$company->siup_file;
+                    $file = public_path().self::MEDIA_TEMPCOMPANY.$company->company_id.'/'.$company->id.'/'.$company->siup_file;
                     $headers = array(
-                      'Content-Type: application/octet-stream',
+                      self::CONTENT_TYPE,
                     );
 
                     return Response::file($file, $headers);
                     break;
 
                 case 'qs':
-                    $file = public_path().'/media/tempCompany/'.$company->company_id.'/'.$company->id.'/'.$company->qs_certificate_file;
+                    $file = public_path().self::MEDIA_TEMPCOMPANY.$company->company_id.'/'.$company->id.'/'.$company->qs_certificate_file;
                     $headers = array(
-                      'Content-Type: application/octet-stream',
+                      self::CONTENT_TYPE,
                     );
 
                     return Response::file($file, $headers);

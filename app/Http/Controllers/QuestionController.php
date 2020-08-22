@@ -183,7 +183,7 @@ class QuestionController extends Controller
     {
         $data = Question::find($id);
         $olddata = $data;
-        $currentUser = Auth::user();
+        Auth::user();
         if ($data){
             try{
                 $data->delete();
