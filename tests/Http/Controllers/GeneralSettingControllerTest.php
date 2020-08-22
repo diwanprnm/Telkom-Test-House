@@ -20,47 +20,25 @@ class GeneralSettingControllerTest extends TestCase
         $this->assertTrue(true);
     }
 	 
-   /*  public function test_visit()
+    public function test_visit()
 	 { 
 	    $response = $this->call('GET', 'admin/generalSetting');  
         $this->assertEquals(302, $response->status());
 	 }
 	
-     public function test_stores()
-	 { 
-	 	$user = factory(App\User::class)->create(); 
-       
-	 	$response =  $this->actingAs($user)->call('POST', 'admin/generalSetting', 
-	 	[ 
-             'question' => str_random(10),
-	         'answer' => str_random(10)
-	     ]);   
-		
-         $this->assertEquals(200, $response->status());
-	      
-	 }
-     public function test_update_company()
+     
+   /*  public function test_update()
 	 { 
 	 	$user =User::find('1');
-        	$company = GeneralSetting::latest()->first();
+		 
 	 	$response =  $this->actingAs($user)->call('PUT', 'admin/generalSetting/', 
 	 	[ 
-	         'manager_urel' => str_random(10),
-	        
-	       
+	         'manager_urel' => str_random(10)
 	       
 	    ]);   
-		
-         $this->assertEquals(302, $response->status());
+		//dd($response);
+         $this->assertEquals(200, $response->status());
 	   
-	 }
-	 public function test_delete_question()
-	 { 
-		$admin = User::find('1');
-        $general = GeneralSetting::latest()->first();
-		$response =  $this->actingAs($admin)->call('DELETE', 'admin/generalSetting/'.$general->id);   
-		
-        $this->assertEquals(302, $response->status());
-	     
 	 }*/
+	
 }
