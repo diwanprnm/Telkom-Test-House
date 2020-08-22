@@ -85,9 +85,7 @@ class ProductsController extends Controller
             }
             $stels = $stels->groupBy(self::STELS_ID);
             
-            $stels = $stels->paginate($paginate);
-            // $stels = $stels->toSql();
-			// dd($stels);exit;
+            $stels = $stels->paginate($paginate); 
             $page = self::PRODUCTS;
             return view('client.STEL.products') 
                 ->with('page', $page)
@@ -171,7 +169,7 @@ class ProductsController extends Controller
 
     public function upload_payment($id)
     { 
-        $currentUser = Auth::user();
+        Auth::user();
         $data = STELSales::find($id);
         $page = "upload_payment";
         return view('client.STEL.upload_payment') 
@@ -185,9 +183,7 @@ class ProductsController extends Controller
      
         $jml_pembayaran = str_replace(".",'',$request->input('jml-pembayaran'));
         $jml_pembayaran = str_replace("Rp",'',$jml_pembayaran);
-        
-        $user_name = ''.$currentUser['attributes']['name'].'';
-        $user_email = ''.$currentUser['attributes'][self::EMAIL].'';
+         
         $path_file = public_path().self::MEDIA_STEL.$request->input(self::STELSALES_ID).'';
         if ($request->hasFile(self::FILEPEMBAYARAN)) { 
             $name_file = 'stel_payment_'.$request->file(self::FILEPEMBAYARAN)->getClientOriginalName();
@@ -259,8 +255,7 @@ class ProductsController extends Controller
 
     public function checkout(Request $request){ 
         $currentUser = Auth::user();
-        $countStelsSales =  STELSales::where(array())->count();
-        $invoice_id = 0; 
+        $countStelsSales =  STELSales::where(array())->count(); 
         $fill = 3;
         $STELSales = new STELSales();
         $array_bulan = array(1=>"I","II","III", "IV", "V","VI","VII","VIII","IX","X", "XI","XII");
@@ -340,13 +335,7 @@ class ProductsController extends Controller
             $logs->created_by = $currentUser->id;
             $logs->page = "Client STEL";
             $logs->save();
-            /* DATA DARI TPN  */
-/*
-            $total_price = $purchase && $purchase->status ? $purchase->data->total_price : Cart::subtotal();
-            $unique_code = $purchase && $purchase->status ? $purchase->data->unique_code : '0';
-            $tax = $purchase && $purchase->status ? $purchase->data->tax : Cart::tax();
-            $final_price = $purchase && $purchase->status == true ? $purchase->data->final_price : Cart::total();
-*/
+            /* DATA DARI TPN  */ 
             $PO_ID = $request->session()->get(self::PO_ID_TPN) ? $request->session()->get(self::PO_ID_TPN) : ($purchase && $purchase->status ? $purchase->data->_id : null);
             $request->session()->put(self::PO_ID_TPN, $PO_ID);
             $total_price = Cart::subtotal();
@@ -383,9 +372,9 @@ class ProductsController extends Controller
             
             $params['json'] = $data;
             $res_purchase = $client->post("v1/draftbillings", $params)->getBody();
-            $purchase = json_decode($res_purchase);
+            return json_decode($res_purchase);
 
-            return $purchase;
+            
         } catch(Exception $e){
             return null;
         }
@@ -435,7 +424,7 @@ class ProductsController extends Controller
             }
 
             try{
-                $save = $STELSales->save();
+                $STELSales->save();
 
                 $data= array( 
                     "from"=>$currentUser->name,
@@ -514,9 +503,8 @@ class ProductsController extends Controller
         try {
             $params['json'] = $data;
             $res_billing = $client->post("v1/billings", $params)->getBody();
-            $billing = json_decode($res_billing);
-
-            return $billing;
+            return json_decode($res_billing); 
+            
         } catch(Exception $e){
             return null;
         }

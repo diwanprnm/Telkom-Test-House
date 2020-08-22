@@ -108,9 +108,7 @@ class ProfileController extends Controller
 			->with('error_pass', 1)
 			->withInput($request->all());
 		}
-		if($request->input(self::NEW_PASS) == '' && $request->input(self::CONFNEWPASS) == ''){
-		}
-		else{
+		if($request->input(self::NEW_PASS) != '' && $request->input(self::CONFNEWPASS) != ''){  
 			if($request->input(self::NEW_PASS) == '' || $request->input(self::CONFNEWPASS) == ''){
 				return back()
 				->with(self::ERROR_NEW_PASS, 1)
