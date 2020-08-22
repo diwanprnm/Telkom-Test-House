@@ -17,6 +17,7 @@ use Session;
 class STELClientController extends Controller
 {
     private const STELCLIENT_STRING = 'STELclient';
+    private const CREATED_AT = 'created_at';
     /**
      * Create a new controller instance.
      *
@@ -39,7 +40,7 @@ class STELClientController extends Controller
         $examLab = ExaminationLab::all();
 
         $query = STEL::with('examinationLab')
-            ->whereNotNull('created_at')
+            ->whereNotNull(self::CREATED_AT)
             ->where('stel_type','=',$stel_type)
             ->where('is_active','=','1')
             ;
@@ -80,12 +81,12 @@ class STELClientController extends Controller
 		$paginate = 2;
 		$category = trim($request->input('category'));
 		if ($category != null){
-			$stels = STEL::whereNotNull('created_at')
+			$stels = STEL::whereNotNull(self::CREATED_AT)
 				->where('type','=',''.$category.'')
 				->orderBy('code')
 				->paginate($paginate);
 		}else{
-			$stels = STEL::whereNotNull('created_at')
+			$stels = STEL::whereNotNull(self::CREATED_AT)
 				->orderBy('code')
 				->paginate($paginate);
         }

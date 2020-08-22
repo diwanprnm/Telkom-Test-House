@@ -18,20 +18,12 @@ use App\User;
 
 class ResetPasswordController extends Controller
 {
-    // use RedirectsUsers;
 
-    /**
-     * Get the name of the guest middleware.
-     *
-     * @return string
-     */
-    // protected function guestMiddleware()
-    // {
-        // $guard = $this->getGuard();
-
-        // return $guard ? 'guest:'.$guard : 'guest';
-    // }
-
+    private const STATUS = 'status';
+    private const EMAIL = 'email';
+    private const TOKEN = 'token';
+    private const PASS_TEXT = 'password';
+    private const PASS_CONFIRM_TEXT = 'password_confirmation';
     /**
      * Display the form to request a password reset link.
      *
@@ -80,33 +72,7 @@ class ResetPasswordController extends Controller
     	}else{
 			return redirect()->back()->with(['status'=>false,'message'=>"Email Is Required"]);
     	}
-    }
-
-    /**
-     * Send a reset link to the given user.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    // public function sendResetLinkEmail(Request $request)
-    // {
-        // $this->validateSendResetLinkEmail($request);
-
-        // $broker = $this->getBroker();
-
-        // $response = Password::broker($broker)->sendResetLink(
-            // $this->getSendResetLinkEmailCredentials($request),
-            // $this->resetEmailBuilder()
-        // );
-
-        // switch ($response) {
-            // case Password::RESET_LINK_SENT:
-                // return $this->getSendResetLinkEmailSuccessResponse($response);
-            // case Password::INVALID_USER:
-            // default:
-                // return $this->getSendResetLinkEmailFailureResponse($response);
-        // }
-    // }
+    } 
 	
 	public function sendResetLinkEmail(Request $request)
     {
@@ -115,10 +81,8 @@ class ResetPasswordController extends Controller
 		
 		$now = strtotime(date('Ymdhis'));
 		$time = strtotime("+1 hour",$now);
-		$encryptedValue = Crypt::encrypt($time);
-		// /* $this->validateSendResetLinkEmail($request); */
-		Mail::send('client.emails.password', array('token' => $encryptedValue, 'email' => $request->get('email')), function ($m) use ($user){
-        // /* Mail::send('emails.reminder', ['user' => $user], function ($m) use ($user) { */
+		$encryptedValue = Crypt::encrypt($time); 
+		Mail::send('client.emails.password', array('token' => $encryptedValue, 'email' => $request->get('email')), function ($m) use ($user){ 
             $m->to($user->email)->subject('Update Password Web QA!');
         });
 		
@@ -215,8 +179,7 @@ class ResetPasswordController extends Controller
     public function getReset(Request $request, $token = null)
     {
 		$now = strtotime(date('Ymdhis'));
-		$decrypted = Crypt::decrypt($token);
-		$diff_time = ($now - $decrypted);
+		$decrypted = Crypt::decrypt($token); 
 		if($now < $decrypted){
 			return $this->showResetForm($request, $token);			
 		}else{
@@ -295,7 +258,7 @@ class ResetPasswordController extends Controller
 				remember_token = '".Str::random(60)."'
 			WHERE email = '".$email."'
 		";
-		$data_update_user = DB::update($query_update_user);
+		DB::update($query_update_user);
 		
 		return redirect('/login')->with('send_new_password', 5);
     }
@@ -312,28 +275,8 @@ class ResetPasswordController extends Controller
             'email' => 'required|email',
             'password' => 'required|confirmed|min:6',
         ];
-    }
-
-    /**
-     * Get the password reset validation messages.
-     *
-     * @return array
-     */
-    protected function getResetValidationMessages()
-    {
-        return [];
-    }
-
-    /**
-     * Get the password reset validation custom attributes.
-     *
-     * @return array
-     */
-    protected function getResetValidationCustomAttributes()
-    {
-        return [];
-    }
-
+    } 
+ 
     /**
      * Get the password reset credentials from the request.
      *
