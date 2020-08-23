@@ -33,6 +33,7 @@ use GuzzleHttp\Client;
 
 use App\Services\ExaminationService;
 
+use App\Services\Logs\LogService;
 class ExaminationDoneController extends Controller
 {
 	private const SEARCH = 'search';
@@ -361,21 +362,12 @@ class ExaminationDoneController extends Controller
 				$spk_date,
 				$row->price
 			];
-		}
-        $currentUser = Auth::user();
-        $logs = new Logs;
-        $logs->id = Uuid::uuid4();
-        $logs->user_id = $currentUser->id;
-        $logs->action = "download_excel";   
-        $logs->data = "";
-        $logs->created_by = $currentUser->id;
-        $logs->page = "EXAMINATION DONE";
-        $logs->save();
+		} 
+        $logService = new LogService();  
+        $logService->createLog('download_excel','EXAMINATION DONE');
 
 		// Generate and return the spreadsheet
-		Excel::create('Data Pengujian Lulus', function($excel) use ($examsArray) {
-
-			// Build the spreadsheet, passing in the payments array
+		Excel::create('Data Pengujian Lulus', function($excel) use ($examsArray) { 
 			$excel->sheet('sheet1', function($sheet) use ($examsArray) {
 				$sheet->fromArray($examsArray, null, 'A1', false, false);
 			});

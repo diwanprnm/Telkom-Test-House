@@ -21,6 +21,7 @@ use Excel;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
+use App\Services\Logs\LogService;
 class Log_administratorController extends Controller
 {
 	/**
@@ -248,24 +249,12 @@ class Log_administratorController extends Controller
 				$row->reason,
 				$row->search_date
 			];
-		}
-        $currentUser = Auth::user();
-        $logs = new Logs;
-        $logs->id = Uuid::uuid4();
-        $logs->user_id = $currentUser->id;
-        $logs->action = "download_excel";   
-        $logs->data = "";
-        $logs->created_by = $currentUser->id;
-        $logs->page = "Administrator Log";
-        $logs->save();
+		}  
+        $logService = new LogService();  
+        $logService->createLog('download_excel','Administrator Log');
 
 		// Generate and return the spreadsheet
-		Excel::create('Data Aktivitas Administrator', function($excel) use ($examsArray) {
-
-			// Set the spreadsheet title, creator, and description
-			
-
-			// Build the spreadsheet, passing in the payments array
+		Excel::create('Data Aktivitas Administrator', function($excel) use ($examsArray) {  
 			$excel->sheet('sheet1', function($sheet) use ($examsArray) {
 				$sheet->fromArray($examsArray, null, 'A1', false, false);
 			});
