@@ -20,6 +20,8 @@ use Response;
 use Session;
 use Input;
 use Ramsey\Uuid\Uuid;
+
+use App\Services\Logs\LogService;
 class STELController extends Controller
 {
 
@@ -171,20 +173,7 @@ class STELController extends Controller
 		$stel->created_by = $currentUser->id;
 		$stel->updated_by = $currentUser->id;
 
-		if ($request->hasFile(self::ATTACHMENT)) { 
-            $name_file = 'stel_'.$request->file(self::ATTACHMENT)->getClientOriginalName();
-			$path_file = public_path().'/media/stel';
-			if (!file_exists($path_file)) {
-				mkdir($path_file, 0775);
-			}
-			if($request->file(self::ATTACHMENT)->move($path_file,$name_file)){
-				$stel->attachment = $name_file;
-			}else{
-				Session::flash(self::ERROR, 'Save STEL to directory failed');
-				return redirect(self::ADMIN_CREATE);
-			}
-		}
- 
+		$this->attachment($request, $stel);
 
 		try{
 			$stel->save();
@@ -275,19 +264,8 @@ class STELController extends Controller
         if ($request->has(self::TOTAL)){
             $stel->total = str_replace(",","",$request->input(self::TOTAL));
         }
-        if ($request->hasFile(self::ATTACHMENT)) { 
-            $name_file = 'stel_'.$request->file(self::ATTACHMENT)->getClientOriginalName();
-            $path_file = public_path().'/media/stel';
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file(self::ATTACHMENT)->move($path_file,$name_file)){
-                $stel->attachment = $name_file;
-            }else{
-                Session::flash(self::ERROR, 'Save STEL to directory failed');
-                return redirect(self::ADMIN_CREATE);
-            }
-        }
+
+        $this->attachment($request, $stel);
 
         $stel->updated_by = $currentUser->id;
 
@@ -296,13 +274,7 @@ class STELController extends Controller
         try{
             $stel->save();
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Update STEL";
-            $logs->data = $oldStel;
-            $logs->created_by = $currentUser->id;
-            $logs->page = "STEL";
-            $logs->save();
+            $logService->createLog('Update STEL', 'STEL', $oldStel );
 
             Session::flash(self::MESSAGE, 'STEL successfully updated');
             return redirect(self::ADMIN_STEL);
@@ -376,6 +348,8 @@ class STELController extends Controller
         // the payments table's primary key, the user's first and last name, 
         // the user's e-mail address, the amount paid, and the payment
         // timestamp.
+
+        $logService = new LogService();
 
         $search = trim($request->input(self::SEARCH));
         
@@ -457,5 +431,21 @@ class STELController extends Controller
                 $sheet->fromArray($examsArray, null, 'A1', false, false);
             });
         })->export('xlsx'); 
+    }
+
+    public function attachment($request, $stel){
+        if ($request->hasFile(self::ATTACHMENT)) { 
+            $name_file = 'stel_'.$request->file(self::ATTACHMENT)->getClientOriginalName();
+			$path_file = public_path().'/media/stel';
+			if (!file_exists($path_file)) {
+				mkdir($path_file, 0775);
+			}
+			if($request->file(self::ATTACHMENT)->move($path_file,$name_file)){
+				$stel->attachment = $name_file;
+			}else{
+				Session::flash(self::ERROR, 'Save STEL to directory failed');
+				return redirect(self::ADMIN_CREATE);
+			}
+		}
     }
 }

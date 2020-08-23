@@ -52,7 +52,6 @@ class MenusTableSeeder extends Seeder
             ['id' => '34', 'parent_id' => 0, 'name' => 'Keuangan', 'url' => '#', 'icon' => 'ti-money'],
             ['id' => '35', 'parent_id' => 29, 'name' => 'Rekap Pembelian STEL', 'url' => 'sales', 'icon' => 'ti-money'],
             ['id' => '36', 'parent_id' => 29, 'name' => 'Rekap Pengujian Perangkat', 'url' => 'income', 'icon' => 'ti-money'],
-            ['id' => '37', 'parent_id' => 0, 'name' => 'Web Statistic', 'url' => 'analytic', 'icon' => 'ti-pie-chart'],
         ]);
 
     }
