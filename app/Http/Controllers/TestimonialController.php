@@ -20,6 +20,7 @@ class TestimonialController extends Controller
     private const CREATED_AT = 'created_at';
     private const MESSAGE = 'message';
     private const SEARCH = 'search';
+    private const IS_ACTIVE = 'is_active';
 
     /**
      * Create a new controller instance.
@@ -121,14 +122,14 @@ class TestimonialController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'is_active' => 'boolean',
+            self::IS_ACTIVE => 'boolean',
         ]);
 
         $currentUser = Auth::user();
         $testimonial = Testimonial::find($id);
  
-        if ($request->has('is_active')){
-            $testimonial->is_active = $request->input('is_active');
+        if ($request->has(self::IS_ACTIVE)){
+            $testimonial->is_active = $request->input(self::IS_ACTIVE);
         }
 
         $testimonial->updated_by = $currentUser->id;

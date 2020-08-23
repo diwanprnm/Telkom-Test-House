@@ -84,8 +84,7 @@ class SalesController extends Controller
     private const STELS_SALES_DOT_PAYMENT_STATUS = 'stels_sales.payment_status';
     private const STELS_SALES_ID = 'stels_sales_id';
     private const USER_COMPANIES_ID = 'users.company_id';
-    private const USER_ID = 'users.id';
-    private const STELS_SALES_ATTACHMENT = 'stels_sales_attachment';
+    private const USER_ID = 'users.id'; 
 
     public function __construct()
     {
