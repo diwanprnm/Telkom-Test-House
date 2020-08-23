@@ -60,11 +60,11 @@ class TempCompanyController extends Controller
             $paginate = 10;
             $search = trim($request->input('search'));
             $status = '';
-            $before = null;
-            $after = null;
+            $before_date = null;
+            $after_date = null;
 
-            $sort_by = 'updated_at';
-            $sort_type = 'desc';
+            $sort_by_filter = 'updated_at';
+            $sort_type_filter = 'desc';
 			
 			$query = TempCompany::whereNotNull('created_at')
 						->with('user')

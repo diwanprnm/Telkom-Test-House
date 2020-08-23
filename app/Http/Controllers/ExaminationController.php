@@ -400,8 +400,8 @@ class ExaminationController extends Controller
 				"message"=>$message,
 				"url"=>"pengujian/".$exam->id."/detail",
 				"is_read"=>0,
-				"created_at"=>date("Y-m-d H:i:s"),
-				"updated_at"=>date("Y-m-d H:i:s")
+				"created_at"=>date(self::DATE_FORMAT_1),
+				"updated_at"=>date(self::DATE_FORMAT_1)
 			);
 
 			$notification_id = $notificationService->make($data);
@@ -1108,10 +1108,7 @@ class ExaminationController extends Controller
         $exam = Examination::find($id);
 
         if ($exam){
-            $file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id.'/'.$exam->attachment;
-            $headers = array(
-              self::HEADER_CONTENT_TYPE,
-            );
+            $file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id.'/'.$exam->attachment; 
 
             return Response::file($file);
         }
@@ -1166,11 +1163,7 @@ class ExaminationController extends Controller
             $device = Device::findOrFail($id);
 
             if ($device){
-                $file = public_path().self::MEDIA_DEVICE_LOC.$device->id.'/'.$device->certificate;
-                $headers = array(
-                  'Content-Type: application/pdf',
-                );
-
+                $file = public_path().self::MEDIA_DEVICE_LOC.$device->id.'/'.$device->certificate; 
                 return Response::file($file);
             }
         } else{
@@ -1179,11 +1172,7 @@ class ExaminationController extends Controller
                                 ->first();
 
             if ($exam){
-                $file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->examination_id.'/'.$exam->attachment;
-                $headers = array(
-                  'Content-Type: application/pdf',
-                );
-
+                $file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->examination_id.'/'.$exam->attachment; 
                 return Response::file($file);
             }
         }
@@ -1243,12 +1232,7 @@ class ExaminationController extends Controller
 
         $tempData = $examinationService->requestQuery($request, $search, $type = '', $status = '', $before = null, $after = null);
 
-		$query = $tempData[0];
-		$search = $tempData[1];
-		$type = $tempData[2];
-		$status = $tempData[3];
-		$before = $tempData[4];
-		$after = $tempData[5];
+		$query = $tempData[0]; 
 
 		$data = $query->orderBy(self::UPDATED_AT, 'desc')->get();
 
@@ -2294,8 +2278,7 @@ class ExaminationController extends Controller
 			for($i=0;$i<count($arr_biaya);$i++){
 				$biaya = $biaya + $arr_biaya[$i];
 			}
-			$ppn = 0.1*$biaya;
-			$total_biaya = $biaya + $ppn;
+			$ppn = 0.1*$biaya; 
 			$details [] = 
 	            [
 	                "item" => 'Biaya Uji '.$exam->examinationType->name.' ('.$exam->examinationType->description.')',

@@ -327,8 +327,7 @@ class CompanyController extends Controller
     {
         $currentUser = Auth::user();
 
-        $company = Company::find($id);
-        $oldData = $company;
+        $company = Company::find($id); 
 
         if ($request->has('name')){
             $company->name = $request->input('name');
@@ -484,9 +483,7 @@ class CompanyController extends Controller
      */
     public function destroy($id)
     {
-        $company = Company::find($id);
-        $oldData = $company;
-        $currentUser = Auth::user();
+        $company = Company::find($id);  
         if ($company){
             try{
                 $company->delete(); 
