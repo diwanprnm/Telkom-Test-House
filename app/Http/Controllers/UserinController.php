@@ -249,7 +249,7 @@ class UserinController extends Controller
                     $usersroles->user_id =  $user->id; 
                     $usersroles->user_name =  $user->name; 
                     $usersroles->user_email =  $user->email; 
-                    foreach ($roles as $key => $value) {
+                    foreach ($roles as $value) {
                         $usersroles->$value = 1; 
                     }
                     $usersroles->created_by = $currentUser->id;

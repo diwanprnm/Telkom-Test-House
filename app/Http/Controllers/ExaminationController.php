@@ -1230,7 +1230,7 @@ class ExaminationController extends Controller
 
         $search = trim($request->input(self::SEARCH));
 
-        $tempData = $examinationService->requestQuery($request, $search, $type = '', $status = '', $before = null, $after = null);
+        $tempData = $examinationService->requestQuery($request, $search);
 
 		$query = $tempData[0]; 
 
@@ -2277,8 +2277,7 @@ class ExaminationController extends Controller
 			$biaya = 0;
 			for($i=0;$i<count($arr_biaya);$i++){
 				$biaya = $biaya + $arr_biaya[$i];
-			}
-			$ppn = 0.1*$biaya; 
+			} 
 			$details [] = 
 	            [
 	                "item" => 'Biaya Uji '.$exam->examinationType->name.' ('.$exam->examinationType->description.')',
