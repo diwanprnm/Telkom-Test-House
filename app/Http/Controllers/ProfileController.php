@@ -367,7 +367,7 @@ class ProfileController extends Controller
 	        "to"=>self::ADMIN_TEXT,
 	        self::MESSAGE=>$currentUser->company->name." mengedit data Perusahaan ",
 	        "url"=>"tempcompany/".$temp->id.self::ADMIN_EDIT,
-	        "is_read"=>0,
+	        self::IS_READ=>0,
 	        self::CREATED_AT=>date(self::FORMAT_DATE),
 	        self::UPDATED_AT=>date(self::FORMAT_DATE)
 	        );
@@ -496,7 +496,7 @@ class ProfileController extends Controller
 	        "to"=>self::ADMIN_TEXT,
 	        self::MESSAGE=>"Permohonan Aktivasi Akun Baru",
 	        "url"=>"usereks/".$user_id.self::ADMIN_EDIT,
-	        "is_read"=>0,
+	        self::IS_READ=>0,
 	        self::CREATED_AT=>date(self::FORMAT_DATE),
 	        self::UPDATED_AT=>date(self::FORMAT_DATE)
 	        );
@@ -668,7 +668,7 @@ class ProfileController extends Controller
 		        "to"=>self::ADMIN_TEXT,
 		        self::MESSAGE=>"Permohonan Aktivasi Akun Baru dan Perusahaan Baru",
 		        "url"=>"usereks/".$user_id.self::ADMIN_EDIT,
-		        "is_read"=>0,
+		        self::IS_READ=>0,
 		        self::CREATED_AT=>date(self::FORMAT_DATE),
 		        self::UPDATED_AT=>date(self::FORMAT_DATE)
 		        );

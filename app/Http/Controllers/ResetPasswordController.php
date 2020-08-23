@@ -23,15 +23,13 @@ class ResetPasswordController extends Controller
     private const TOKEN = 'token';
     private const PASS_TEXT = 'password';
     private const PASS_CONFIRM_TEXT = 'password_confirmation';
+    private const CLIENT_EMAIL_PASSWORD = 'client.emails.password';
+    private const UPDATE_PASSWORD_QA = 'Update Password Web QA!';
     /**
      * Display the form to request a password reset link.
      *
      * @return \Illuminate\Http\Response
-     */
-    public function getEmail()
-    {
-        return $this->showLinkRequestForm();
-    }
+     */ 
 
     /**
      * Display the form to request a password reset link.
@@ -81,19 +79,19 @@ class ResetPasswordController extends Controller
 		$now = strtotime(date('Ymdhis'));
 		$time = strtotime("+1 hour",$now);
 		$encryptedValue = Crypt::encrypt($time); 
-		Mail::send('client.emails.password', array(self::TOKEN => $encryptedValue, self::EMAIL => $request->get(self::EMAIL)), function ($m) use ($user){ 
-            $m->to($user->email)->subject('Update Password Web QA!');
+		Mail::send(self::CLIENT_EMAIL_PASSWORD, array(self::TOKEN => $encryptedValue, self::EMAIL => $request->get(self::EMAIL)), function ($m) use ($user){ 
+            $m->to($user->email)->subject(self::UPDATE_PASSWORD_QA);
         });
 		
 		if($user->email2!=NULL){
-			Mail::send('client.emails.password', array(self::TOKEN => $encryptedValue, self::EMAIL => $request->get(self::EMAIL)), function ($m) use ($user){
-				$m->to($user->email2)->subject('Update Password Web QA!');
+			Mail::send(self::CLIENT_EMAIL_PASSWORD, array(self::TOKEN => $encryptedValue, self::EMAIL => $request->get(self::EMAIL)), function ($m) use ($user){
+				$m->to($user->email2)->subject(self::UPDATE_PASSWORD_QA);
 			});
 		}
 		
 		if($user->email3!=NULL){
-			Mail::send('client.emails.password', array(self::TOKEN => $encryptedValue, self::EMAIL => $request->get(self::EMAIL)), function ($m) use ($user){
-				$m->to($user->email3)->subject('Update Password Web QA!');
+			Mail::send(self::CLIENT_EMAIL_PASSWORD, array(self::TOKEN => $encryptedValue, self::EMAIL => $request->get(self::EMAIL)), function ($m) use ($user){
+				$m->to($user->email3)->subject(self::UPDATE_PASSWORD_QA);
 			});
 		}
 		
@@ -182,7 +180,7 @@ class ResetPasswordController extends Controller
 		if($now < $decrypted){
 			return $this->showResetForm($request, $token);			
 		}else{
-			return $this->getEmail();
+			return $this->showLinkRequestForm();
 		}
     }
 
@@ -197,21 +195,22 @@ class ResetPasswordController extends Controller
      */
     public function showResetForm(Request $request, $token = null)
     {
+        $return_page = view('client.reset')->with(compact(self::TOKEN, self::EMAIL));
 		if (is_null($token)) {
-            return $this->getEmail();
+           $return_page =  $this->showLinkRequestForm();
         }
 
         $email = $request->input(self::EMAIL);
 
         if (property_exists($this, 'resetView')) {
-            return view($this->resetView)->with(compact(self::TOKEN, self::EMAIL));
+            $return_page =  view($this->resetView)->with(compact(self::TOKEN, self::EMAIL));
         }
 
         if (view()->exists('client.passwords.reset')) {
-            return view('client.passwords.reset')->with(compact(self::TOKEN, self::EMAIL));
+            $return_page = view('client.passwords.reset')->with(compact(self::TOKEN, self::EMAIL));
         }
 
-        return view('client.reset')->with(compact(self::TOKEN, self::EMAIL));
+        return $return_page;
     }
 
     /**
@@ -235,18 +234,19 @@ class ResetPasswordController extends Controller
     {
 		$email = $request->get(self::EMAIL);
 		$password = $request->get(self::PASS_TEXT);
+        $return_page =  redirect('/login')->with('send_new_password', 5);
 		if($request->input(self::EMAIL) == ''){
-			return redirect()->back()
+			$return_page =  redirect()->back()
             ->withInput($request->only(self::EMAIL))
             ->withErrors([self::EMAIL => 'The email field is required.']);
 		}
 		if($request->input(self::PASS_TEXT) == ''){
-			return redirect()->back()
+			$return_page =   redirect()->back()
             ->withInput($request->only(self::EMAIL))
             ->withErrors([self::PASS_TEXT => 'The password field is required.']);
 		}
 		if($request->input(self::PASS_TEXT) != $request->input(self::PASS_CONFIRM_TEXT)){
-			return redirect()->back()
+			$return_page =   redirect()->back()
             ->withInput($request->only(self::EMAIL))
             ->withErrors([self::PASS_CONFIRM_TEXT => 'The password confirmation does not match.']);
 		}
@@ -258,24 +258,10 @@ class ResetPasswordController extends Controller
 			WHERE email = '".$email."'
 		";
 		DB::update($query_update_user);
-		
-		return redirect('/login')->with('send_new_password', 5);
-    }
 
-    /**
-     * Get the password reset validation rules.
-     *
-     * @return array
-     */
-    protected function getResetValidationRules()
-    {
-        return [
-            self::TOKEN => 'required',
-            self::EMAIL => 'required|email',
-            self::PASS_TEXT => 'required|confirmed|min:6',
-        ];
+        return $return_page;
+		
     } 
- 
     /**
      * Get the password reset credentials from the request.
      *
