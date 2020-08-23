@@ -29,7 +29,9 @@ class FeedbackComplaintControllerTest extends TestCase
 
     public function testIndexAndPresistData()
     {
-        factory(App\Questioner::class)->create();
+        $questioner = factory(App\Questioner::class)->create();
+        factory(App\QuestionerDynamic::class)->create(['question_id' => $questioner->id, 'examination_id' =>$questioner->examination_id ]);
+        factory(App\QuestionerDynamic::class)->create(['question_id' => $questioner->id, 'examination_id' =>$questioner->examination_id, 'order_question' => 2 ]);
 
         //Visit as Admin
         $user = User::where('id', '=', '1')->first();
