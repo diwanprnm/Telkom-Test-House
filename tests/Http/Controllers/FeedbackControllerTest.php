@@ -130,7 +130,7 @@ class FeedbackControllerTest extends TestCase
     public function autocomplete()
     {
         $user = User::where('id', '=', '1')->first();
-        $this->actingAs($user)->call('GET',"admin/adm_feedback_autocomplete/query");
+        $this->actingAs($user)->call('GET',"adm_feedback_autocomplete/query");
         //Response status ok
         $this->assertResponseStatus(200);
     }
