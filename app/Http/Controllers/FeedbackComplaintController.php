@@ -229,7 +229,6 @@ class FeedbackComplaintController extends Controller
         })->store('xlsx');
 
         $file = Storage::disk('tmp')->get("$excelFileName.xlsx");
-
         return response($file, 200, \App\Services\MyHelper::getHeaderExcel("$excelFileName.xlsx"));
     }
 }
