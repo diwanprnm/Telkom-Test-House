@@ -95,48 +95,13 @@ class TopDashboardController extends Controller
 			];
             if (count($data) == 0){
                 $message = 'Data not found';
-            }
-			$id_kab = ExaminationLab::where('name', 'like', '%kabel%')->select('id')->first();
-			$id_ene = ExaminationLab::where('name', 'like', '%energi%')->select('id')->first();
-			$id_tra = ExaminationLab::where('name', 'like', '%transmisi%')->select('id')->first();
-			$id_cpe = ExaminationLab::where('name', 'like', '%cpe%')->select('id')->first();
-			$id_kal = ExaminationLab::where('name', 'like', '%kalibrasi%')->select('id')->first();
+			}
+			
 			for($i=0;$i<12;$i++){
-				$sum_stel = 0; $sum_stel_kab = 0; $sum_stel_ene = 0; $sum_stel_tra = 0; $sum_stel_cpe = 0; $sum_stel_kal = 0;
-				$select = array('stels_sales.cust_price_payment', 'stels.type');
-		        $query = STELSales::selectRaw(implode(",", $select))
-		        		->join("stels_sales_attachment","stels_sales_attachment.stel_sales_id","=",$this::STELS)
-                       	->join("stels_sales_detail","stels_sales_detail.stels_sales_id","=",$this::STELS)
-                       	->join("stels","stels.id","=","stels_sales_detail.stels_id")
-                        ->whereNotNull('stels_sales_attachment.attachment')
-                        ->whereYear($this::UPDATE, '=', $thisYear)
-                        ->whereMonth($this::UPDATE, '=', $i+1);
-                $stels_sales = $query->get();
-		        foreach($stels_sales as $item){
-		        	switch ($item->type) {
-		        		case $id_kab->id:
-		        			$sum_stel_kab += $item->cust_price_payment;
-		        			break;
-		        		case $id_ene->id:
-		        			$sum_stel_ene += $item->cust_price_payment;
-		        			break;
-		        		case $id_tra->id:
-		        			$sum_stel_tra += $item->cust_price_payment;
-		        			break;
-		        		case $id_cpe->id:
-		        			$sum_stel_cpe += $item->cust_price_payment;
-		        			break;
-		        		case $id_kal->id:
-		        			$sum_stel_kal += $item->cust_price_payment;
-		        			break;
-		        		default:
-		        			# code...
-		        			break;
-		        	}
-		        	$sum_stel += $item->cust_price_payment;
-		        }
-				$chart['stel'][$i]=(float)$sum_stel; $chart[$this::KAB][$i]=(float)$sum_stel_kab; $chart[$this::ENE][$i]=(float)$sum_stel_ene;
-				$chart[$this::TRA][$i]=(float)$sum_stel_tra; $chart[$this::CPE][$i]=(float)$sum_stel_cpe; $chart[$this::KAL][$i]=(float)$sum_stel_kal;
+				$sum_stelFunc = $this->sum_stelFunc($thisYear, $i);
+
+				$chart['stel'][$i]=(float)$sum_stelFunc[0]; $chart[$this::KAB][$i]=(float)$sum_stelFunc[1]; $chart[$this::ENE][$i]=(float)$sum_stelFunc[2];
+				$chart[$this::TRA][$i]=(float)$sum_stelFunc[3]; $chart[$this::CPE][$i]=(float)$sum_stelFunc[4]; $chart[$this::KAL][$i]=(float)$sum_stelFunc[5];
 				$jml_device_qa = Income::whereHas($this::EXAM, function ($q){
 						return $q->where($this::EXAMID, 1);
 					})
@@ -218,63 +183,15 @@ class TopDashboardController extends Controller
 	
 	public function searchGrafik(Request $request){
 		if($request->input('type') == 1){
-			$id_kab = ExaminationLab::where('name', 'like', '%kabel%')->select('id')->first();
-			$id_ene = ExaminationLab::where('name', 'like', '%energi%')->select('id')->first();
-			$id_tra = ExaminationLab::where('name', 'like', '%transmisi%')->select('id')->first();
-			$id_cpe = ExaminationLab::where('name', 'like', '%cpe%')->select('id')->first();
-			$id_kal = ExaminationLab::where('name', 'like', '%kalibrasi%')->select('id')->first();
-
 			for($i=0;$i<12;$i++){
-				$sum_stel = 0;
-				$sum_stel_kab = 0;
-				$sum_stel_ene = 0;
-				$sum_stel_tra = 0;
-				$sum_stel_cpe = 0;
-				$sum_stel_kal = 0;
-				$select = array('stels_sales.cust_price_payment', 'stels.type');
-		        $query = STELSales::selectRaw(implode(",", $select))
-		        		->join("stels_sales_attachment","stels_sales_attachment.stel_sales_id","=",$this::STELS)
-                       	->join("stels_sales_detail","stels_sales_detail.stels_sales_id","=",$this::STELS)
-                       	->join("stels","stels.id","=","stels_sales_detail.stels_id")
-                        ->whereNotNull('stels_sales_attachment.attachment')
-                        ->whereYear($this::UPDATE, '=', $request->input($this::KEYW))
-                        ->whereMonth($this::UPDATE, '=', $i+1);
-                $stels_sales = $query->get();
-
-		        foreach($stels_sales as $item){
-		        	switch ($item->type) {
-		        		case $id_kab->id:
-		        			$sum_stel_kab += $item->cust_price_payment;
-		        			break;
-
-		        		case $id_ene->id:
-		        			$sum_stel_ene += $item->cust_price_payment;
-		        			break;
-
-		        		case $id_tra->id:
-		        			$sum_stel_tra += $item->cust_price_payment;
-		        			break;
-
-		        		case $id_cpe->id:
-		        			$sum_stel_cpe += $item->cust_price_payment;
-		        			break;
-
-		        		case $id_kal->id:
-		        			$sum_stel_kal += $item->cust_price_payment;
-		        			break;
-		        		
-		        		default:
-		        			# code...
-		        			break;
-		        	}
-		        	$sum_stel += $item->cust_price_payment;
-		        }
-				$chart['stel'][$i]=(float)$sum_stel;
-				$chart[$this::KAB][$i]=(float)$sum_stel_kab;
-				$chart[$this::ENE][$i]=(float)$sum_stel_ene;
-				$chart[$this::TRA][$i]=(float)$sum_stel_tra;
-				$chart[$this::CPE][$i]=(float)$sum_stel_cpe;
-				$chart[$this::KAL][$i]=(float)$sum_stel_kal;
+				$sum_stelFunc = $this->sum_stelFunc($request->input($this::KEYW), $i);
+                
+				$chart['stel'][$i]=(float)$sum_stelFunc[0];
+				$chart[$this::KAB][$i]=(float)$sum_stelFunc[1];
+				$chart[$this::ENE][$i]=(float)$sum_stelFunc[2];
+				$chart[$this::TRA][$i]=(float)$sum_stelFunc[3];
+				$chart[$this::CPE][$i]=(float)$sum_stelFunc[4];
+				$chart[$this::KAL][$i]=(float)$sum_stelFunc[5];
 			}
 			echo json_encode($chart['stel'])."||";
 			echo json_encode($chart[$this::KAB])."||";
@@ -335,5 +252,49 @@ class TopDashboardController extends Controller
 			echo json_encode($chart[$this::TA])."||";
 			echo json_encode($chart[$this::CAL])."||";
 		}
+	}
+
+	public function sum_stelFunc($year, $i){
+		$id_kab = ExaminationLab::where('name', 'like', '%kabel%')->select('id')->first();
+		$id_ene = ExaminationLab::where('name', 'like', '%energi%')->select('id')->first();
+		$id_tra = ExaminationLab::where('name', 'like', '%transmisi%')->select('id')->first();
+		$id_cpe = ExaminationLab::where('name', 'like', '%cpe%')->select('id')->first();
+		$id_kal = ExaminationLab::where('name', 'like', '%kalibrasi%')->select('id')->first();
+
+		$sum_stel = 0; $sum_stel_kab = 0; $sum_stel_ene = 0; $sum_stel_tra = 0; $sum_stel_cpe = 0; $sum_stel_kal = 0;
+		$select = array('DISTINCT stels_sales.cust_price_payment', 'stels.type');
+		$query = STELSales::selectRaw(implode(",", $select))
+				->join("stels_sales_attachment","stels_sales_attachment.stel_sales_id","=",$this::STELS)
+				->join("stels_sales_detail","stels_sales_detail.stels_sales_id","=",$this::STELS)
+				->join("stels","stels.id","=","stels_sales_detail.stels_id")
+				->whereNotNull('stels_sales_attachment.attachment')
+				->whereYear($this::UPDATE, '=', $year)
+				->whereMonth($this::UPDATE, '=', $i+1);
+		$stels_sales = $query->get();
+		foreach($stels_sales as $item){
+			switch ($item->type) {
+				case $id_kab->id:
+					$sum_stel_kab += $item->cust_price_payment;
+					break;
+				case $id_ene->id:
+					$sum_stel_ene += $item->cust_price_payment;
+					break;
+				case $id_tra->id:
+					$sum_stel_tra += $item->cust_price_payment;
+					break;
+				case $id_cpe->id:
+					$sum_stel_cpe += $item->cust_price_payment;
+					break;
+				case $id_kal->id:
+					$sum_stel_kal += $item->cust_price_payment;
+					break;
+				default:
+					# code...
+					break;
+			}
+			$sum_stel += $item->cust_price_payment;
+		}
+
+		return array($sum_stel, $sum_stel_kab, $sum_stel_ene, $sum_stel_tra, $sum_stel_cpe, $sum_stel_kal);
 	}
 }

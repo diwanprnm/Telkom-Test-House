@@ -16,7 +16,7 @@ use Auth;
 use Session;
 use Excel;
 use Ramsey\Uuid\Uuid;
-
+use App\Services\Logs\LogService;
 class DeviceController extends Controller
 {
 	/**
@@ -43,7 +43,9 @@ class DeviceController extends Controller
      */
     public function index(Request $request)
     {
-        $currentUser = Auth::user();
+		$currentUser = Auth::user();
+		
+		$logService = new LogService();
 
         if ($currentUser){
             $message = null;
@@ -55,129 +57,67 @@ class DeviceController extends Controller
             $after = null;
             $category = null;
             
-            if ($search != null){
-                $dev = DB::table('examinations')
-				->join('devices', 'examinations.device_id', '=', 'devices.id')
-				->join('companies', 'examinations.company_id', '=', 'companies.id')
-				->select(
-						'examinations.price AS totalBiaya','examinations.spk_code','examinations.jns_perusahaan','companies.name AS namaPerusahaan',
-						'devices.id AS deviceId','devices.name AS namaPerangkat','devices.mark AS merk','devices.model AS tipe',
-						'devices.capacity AS kapasitas','devices.test_reference AS standarisasi','devices.valid_from',$this::DEVICEVAL,
-						'devices.manufactured_by','devices.serial_number','devices.cert_number',$this::DEVICEVAL,'companies.address',
-						'companies.city','companies.postal_code','companies.email','companies.phone_number','companies.fax',
-						'companies.npwp_number','companies.siup_number','companies.siup_date','companies.qs_certificate_number',
-						'companies.qs_certificate_date'
-						)
-				->where('examinations.resume_status','=','1')
-				->where('examinations.qa_status','=','1')
-				->where('examinations.qa_passed','=','1')
-				->where('examinations.certificate_status','=','1')
-				->where(function($q) use($search){
+            $dev = DB::table('examinations')
+			->join('devices', 'examinations.device_id', '=', 'devices.id')
+			->join('companies', 'examinations.company_id', '=', 'companies.id')
+			->select(
+					'examinations.price AS totalBiaya','examinations.spk_code','examinations.jns_perusahaan','companies.name AS namaPerusahaan',
+					'devices.id AS deviceId','devices.name AS namaPerangkat','devices.mark AS merk','devices.model AS tipe',
+					'devices.capacity AS kapasitas','devices.test_reference AS standarisasi','devices.valid_from',$this::DEVICEVAL,
+					'devices.manufactured_by','devices.serial_number','devices.cert_number',$this::DEVICEVAL,'companies.address',
+					'companies.city','companies.postal_code','companies.email','companies.phone_number','companies.fax',
+					'companies.npwp_number','companies.siup_number','companies.siup_date','companies.qs_certificate_number',
+					'companies.qs_certificate_date'
+					)
+			->where('examinations.resume_status','=','1')
+			->where('examinations.qa_status','=','1')
+			->where('examinations.qa_passed','=','1')
+			->where('examinations.certificate_status','=','1');
+
+			if ($search != null){
+				$dev->where(function($q) use($search){
 					$q->where('devices.name','like','%'.$search.'%')
 						->orWhere($this::DEVICEVAL,'like','%'.$search.'%')
 						->orWhere('devices.mark','like','%'.$search.'%')
 						->orWhere('devices.model','like','%'.$search.'%');
 				});
-				if ($request->has($this::BEFORE)){
-					$dev->where($this::DEVICEVAL, '>=', $request->get($this::BEFORE));
-					$before = $request->get($this::BEFORE);
+				
+				$logService->createLog('Search Device', 'DEVICE', json_encode($dataSearch) );
+			}
+
+			if ($request->has($this::BEFORE)){
+				$dev->where($this::DEVICEVAL, '>=', $request->get($this::BEFORE));
+				$before = $request->get($this::BEFORE);
+			}
+			if ($request->has($this::AFTER)){
+				$dev->where($this::DEVICEVAL, '<=', $request->get($this::AFTER));
+				$after = $request->get($this::AFTER);
+			}
+			if ($request->has($this::CATEGORY)){
+				switch ($request->get($this::CATEGORY)) {
+					case 'aktif':
+						$dev->where($this::DEVICEVAL, '>=', $datenow);
+						break;		
+					case 'aktif1':
+						$dev->where($this::DEVICEVAL, '>=', $dateMin1Year);
+						$dev->where($this::DEVICEVAL, '<', $datenow);
+						break;
+					default:
+						$dev->where(function($q) use($datenow,$dateMin1Year){
+							$q->where($this::DEVICEVAL, '>=', $datenow)
+								->orWhere($this::DEVICEVAL, '>=', $dateMin1Year);
+						});
+						break;
 				}
-				if ($request->has($this::AFTER)){
-					$dev->where($this::DEVICEVAL, '<=', $request->get($this::AFTER));
-					$after = $request->get($this::AFTER);
-				}
-				if ($request->has($this::CATEGORY)){
-					switch ($request->get($this::CATEGORY)) {
-						case 'aktif':
-							$dev->where($this::DEVICEVAL, '>=', $datenow);
-							break;		
-						case 'aktif1':
-							$dev->where($this::DEVICEVAL, '>=', $dateMin1Year);
-							$dev->where($this::DEVICEVAL, '<', $datenow);
-							break;
-						default:
-							$dev->where(function($q) use($datenow,$dateMin1Year){
-								$q->where($this::DEVICEVAL, '>=', $datenow)
-									->orWhere($this::DEVICEVAL, '>=', $dateMin1Year);
-							});
-							break;
-					}
-					$category = $request->get($this::CATEGORY);
-				}
-				else{
-					$dev->where($this::DEVICEVAL, '>=', $datenow);
-				}
-				$logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Search Device";  
-                $dataSearch = array("search"=>$search); 
-                $logs->data = json_encode($dataSearch);
-                $logs->created_by = $currentUser->id;
-                $logs->page = "DEVICE";
-                $logs->save();
-				$data_excel = $dev->orderBy($this::DEVICEVAL, 'desc')->get();
-				$data = $dev->orderBy($this::DEVICEVAL, 'desc')->paginate($paginate);
-            }else{
-				$dev = DB::table('examinations')
-				->join('devices', 'examinations.device_id', '=', 'devices.id')
-				->join('companies', 'examinations.company_id', '=', 'companies.id')
-				->select(
-						'examinations.price AS totalBiaya','examinations.spk_code','examinations.jns_perusahaan','companies.name AS namaPerusahaan',
-						'devices.id AS deviceId','devices.name AS namaPerangkat','devices.mark AS merk','devices.model AS tipe',
-						'devices.capacity AS kapasitas','devices.test_reference AS standarisasi',
-						'devices.valid_from',
-						$this::DEVICEVAL,
-						'devices.manufactured_by',
-						'devices.serial_number',
-						'devices.cert_number',
-						$this::DEVICEVAL,
-						'companies.address',
-						'companies.city',
-						'companies.postal_code',
-						'companies.email',
-						'companies.phone_number',
-						'companies.fax',
-						'companies.npwp_number',
-						'companies.siup_number',
-						'companies.siup_date',
-						'companies.qs_certificate_number',
-						'companies.qs_certificate_date'
-						)
-				->where('examinations.resume_status','=','1')
-				->where('examinations.qa_status','=','1')
-				->where('examinations.qa_passed','=','1')
-				->where('examinations.certificate_status','=','1');
-				if ($request->has($this::BEFORE)){
-					$dev->where($this::DEVICEVAL, '>=', $request->get($this::BEFORE));
-					$before = $request->get($this::BEFORE);
-				}
-				if ($request->has($this::AFTER)){
-					$dev->where($this::DEVICEVAL, '<=', $request->get($this::AFTER));
-					$after = $request->get($this::AFTER);
-				}
-				if ($request->has($this::CATEGORY)){
-					switch ($request->get($this::CATEGORY)) {
-						case 'aktif':
-							$dev->where($this::DEVICEVAL, '>=', $datenow);
-							break;			
-						case 'aktif1':
-							$dev->where($this::DEVICEVAL, '>=', $dateMin1Year);
-							$dev->where($this::DEVICEVAL, '<', $datenow);
-							break;
-						default:
-							$dev->where(function($q) use($datenow,$dateMin1Year){
-								$q->where($this::DEVICEVAL, '>=', $datenow)
-									->orWhere($this::DEVICEVAL, '>=', $dateMin1Year);
-							});
-							break;
-					}
-					$category = $request->get($this::CATEGORY);
-				}else{
-					$dev->where($this::DEVICEVAL, '>=', $datenow);
-				}
-				$data_excel = $dev->orderBy($this::DEVICEVAL, 'desc')->get();
-				$data = $dev->orderBy($this::DEVICEVAL, 'desc')->paginate($paginate);
-            }
+				$category = $request->get($this::CATEGORY);
+			}
+			else{
+				$dev->where($this::DEVICEVAL, '>=', $datenow);
+			}
+			
+			$data_excel = $dev->orderBy($this::DEVICEVAL, 'desc')->get();
+			$data = $dev->orderBy($this::DEVICEVAL, 'desc')->paginate($paginate);
+
             if (count($data) == 0){
                 $message = 'Data not found';
             }
@@ -199,7 +139,7 @@ class DeviceController extends Controller
 		// the payments table's primary key, the user's first and last name, 
 		// the user's e-mail address, the amount paid, and the payment
 		// timestamp.
-		
+		$logService = new LogService();
 		$data = $request->session()->get('excel_pengujian_sukses');
 		$examsArray = []; 
 
@@ -272,14 +212,7 @@ class DeviceController extends Controller
 			$no++;
 		}
 
-		$logs = new Logs;
-		$currentUser = Auth::user();
-        $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-        $logs->action = "Download Devices";   
-        $logs->data = "";
-        $logs->created_by = $currentUser->id;
-        $logs->page = "DEVICE";
-        $logs->save();
+		$logService->createLog('Download Devices', 'DEVICE', "" );
 
 		// Generate and return the spreadsheet
 		Excel::create('Data Perangkat Lulus Uji', function($excel) use ($examsArray) {
@@ -305,6 +238,7 @@ class DeviceController extends Controller
 	public function update(Request $request, $id)
 	{
 		$currentUser = Auth::user();
+		$logService = new LogService();
 
         $device = Device::find($id);
         $oldDevice = $device;
@@ -347,16 +281,10 @@ class DeviceController extends Controller
        
 
         try{
-            $device->save();
-
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Update Perangkat Lulus Uji";
-            $logs->data = $oldDevice;
-            $logs->created_by = $currentUser->id;
-            $logs->page = "Perangkat Lulus Uji";
-            $logs->save();
-
+			$device->save();
+			
+			$logService->createLog('Update Perangkat Lulus Uji', 'SPerangkat Lulus UjiEL', $oldDevice );
+			
             Session::flash('message', 'Perangkat Lulus Uji successfully updated');
             return redirect('/admin/device');
         } catch(Exception $e){

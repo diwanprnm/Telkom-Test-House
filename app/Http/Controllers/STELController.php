@@ -233,6 +233,7 @@ class STELController extends Controller
     public function update(Request $request, $id)
     {
         $currentUser = Auth::user();
+        $logService = new LogService();
 
         $stel = STEL::find($id);
         $oldStel = $stel;
@@ -298,14 +299,8 @@ class STELController extends Controller
         if ($stel){
             try{
                 $stel->delete();
-                
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Delete STEL";
-                $logs->data = $oldStel;
-                $logs->created_by = $currentUser->id;
-                $logs->page = "STEL";
-                $logs->save();
+
+                $logService->createLog('Delete STEL', "STEL", $oldStel );
 
                 Session::flash(self::MESSAGE, 'STEL successfully deleted');
                 return redirect(self::ADMIN_STEL);
@@ -348,8 +343,6 @@ class STELController extends Controller
         // the payments table's primary key, the user's first and last name, 
         // the user's e-mail address, the amount paid, and the payment
         // timestamp.
-
-        $logService = new LogService();
 
         $search = trim($request->input(self::SEARCH));
         
