@@ -21,6 +21,7 @@ use Hash;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
+use App\Services\Logs\LogService;
 class UserController extends Controller
 {
 
@@ -84,22 +85,10 @@ class UserController extends Controller
 					->where('id', '<>', '1')
 					->where('is_deleted', '=', '0')
                     ->orderBy('name')
-                    ->paginate($paginate);
+                    ->paginate($paginate);  
 
-                    $logs = new Logs;
-                    $logs->user_id = $currentUser->id;
-                    $logs->id = Uuid::uuid4();
-                    $logs->action = "Search User";
-                    $datasearch = array("search"=>$search);
-                    $logs->data = json_encode($datasearch);
-                    $logs->created_by = $currentUser->id;
-                    $logs->page = "USER";
-                    try{
-                        $logs->save();    
-                    }catch(Illuminate\Database\QueryException $e){ 
-                        Session::flash(self::ERROR, 'Failed Create Log');
-                        return redirect(self::ADMIN_USER);
-                    }
+                    $logService = new LogService();  
+                    $logService->createLog('Search User',"USER",json_encode(array("search"=>$search)));
                     
             }else{
                 $query = User::whereNotNull('created_at')
@@ -222,40 +211,25 @@ class UserController extends Controller
         $user->updated_by = $currentUser->id;
 
         try{
-            $user->save();
-            
-            $logs = new Logs;
-            $logs->id = Uuid::uuid4();
-            $logs->user_id = $currentUser->id; 
-            $logs->action = "Create User"; 
-            $logs->data = $user;
-            $logs->created_by = $currentUser->id;
-            $logs->page = "USER";
-            try{
-                $logs->save();
-
-                foreach ($menus as  $value) {
-                    $usersmenus = new UsersMenus;
-                    $usersmenus->user_id =  $user->id; 
-                    $usersmenus->menu_id = $value; 
-                    $usersmenus->created_by = $currentUser->id;
-                    try{
-                        $usersmenus->save();
-                    }catch(\Exception $e){
-                        Session::flash(self::ERROR, self::FAILED_LOG_MSG);
-                        return redirect(self::ADMIN_USER_CREATE)->withInput();
-                    }
+            $user->save(); 
+ 
+            $logService = new LogService();  
+            $logService->createLog('Create User',"USER",json_encode($user));
+         
+            foreach ($menus as  $value) {
+                $usersmenus = new UsersMenus;
+                $usersmenus->user_id =  $user->id; 
+                $usersmenus->menu_id = $value; 
+                $usersmenus->created_by = $currentUser->id;
+                try{
+                    $usersmenus->save();
+                }catch(\Exception $e){
+                    Session::flash(self::ERROR, self::FAILED_LOG_MSG);
+                    return redirect(self::ADMIN_USER_CREATE)->withInput();
                 }
-              
-            }catch(\Exception $e){
-                Session::flash(self::ERROR, self::FAILED_LOG_MSG);
-                return redirect(self::ADMIN_USER_CREATE)->withInput();
-            }
-           
-
+            }  
             Session::flash(self::MESSAGE, 'User successfully created');
             $status = TRUE;
-        } catch(\Exception $e){  
         }
 
         if($status){
@@ -335,16 +309,10 @@ class UserController extends Controller
         $user->updated_by = $currentUser->id;
 
         try{
-            $user->save();
+            $user->save(); 
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;
-            $logs->id = Uuid::uuid4();
-            $logs->action = "Update Profile"; 
-            $logs->data = $oldData;
-            $logs->created_by = $currentUser->id;
-            $logs->page = "PROFILE";
-            $logs->save();
+            $logService = new LogService();  
+            $logService->createLog('Update Profile',"PROFILE",json_encode($oldData));
 
             Session::flash(self::MESSAGE, 'User successfully updated');
             return redirect('/admin');
@@ -448,16 +416,10 @@ class UserController extends Controller
 
         try{
             $user->save();
-            UsersMenus::where("user_id",$user->id)->delete();
-          
+            UsersMenus::where("user_id",$user->id)->delete(); 
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Update User"; 
-            $logs->data = $oldData;
-            $logs->created_by = $currentUser->id;
-            $logs->page = "USER";
-            $logs->save();
+            $logService = new LogService();  
+            $logService->createLog('Update User',"USER",json_encode($oldData));
 
             foreach ($menus as  $value) {
                 $usersmenus = new UsersMenus;
@@ -531,15 +493,10 @@ class UserController extends Controller
 				$user->is_deleted = 1;
 				$user->deleted_by = $currentUser->id;
 				$user->deleted_at = ''.date('Y-m-d H:i:s').'';
-                $user->save();
+                $user->save(); 
 
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Delete User"; 
-                $logs->data = $oldData;
-                $logs->created_by = $currentUser->id;
-                $logs->page = "USER";
-                $logs->save();
+                $logService = new LogService();  
+                $logService->createLog('Delete User',"USER",json_encode($oldData));
 
                 Session::flash(self::MESSAGE, 'User successfully deleted');
                 return redirect(self::ADMIN_USER);
@@ -556,15 +513,11 @@ class UserController extends Controller
     }
 
     public function logout(){
-        //LOG LOGOUT
-        $currentUser = Auth::user();
-        $logs = new Logs;
-        $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-        $logs->action = "Logout"; 
-        $logs->data = "";
-        $logs->created_by = $currentUser->id;
-        $logs->page = "AUTH";
-        $logs->save();
+        //LOG LOGOUT 
+
+        $logService = new LogService();  
+        $logService->createLog('Logout',"AUTH");
+
         Auth::logout();
         return redirect('/admin/login');
     }

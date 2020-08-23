@@ -143,10 +143,10 @@ class GeneralSettingController extends Controller
             $logs_a->save();
 
             Session::flash($this::MESSAGE, 'General Setting successfully updated');
-            return redirect('/admin/generalSetting');
+            return redirect(self::GEN);
         } catch(Exception $e){
             Session::flash($this::ERR, 'Save failed');
-            return redirect('/admin/generalSetting');
+            return redirect(self::GEN);
         }
     }
 
