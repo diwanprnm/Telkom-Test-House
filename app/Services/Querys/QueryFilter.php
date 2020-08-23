@@ -27,6 +27,7 @@ class QueryFilter
     public $sort_type = '';
     public $spbNumber = '';
     public $spkNumber = '';
+    public $status = '';
     public $testingType = '';
     public $examination_type = '';
     public $examination_lab = '';
@@ -186,6 +187,17 @@ class QueryFilter
     {
         if ($this->request->has($requestName )){
             $this->spkNumber = $this->request->get($requestName );
+            if($this->request->input($requestName ) != 'all'){
+                $this->query->where($searchName, $this->request->get($requestName ));
+            }
+        }
+        return $this;
+    }
+
+    public function status($requestName = 'status', $searchName='status')
+    {
+        if ($this->request->has($requestName )){
+            $this->status = $this->request->get($requestName );
             if($this->request->input($requestName ) != 'all'){
                 $this->query->where($searchName, $this->request->get($requestName ));
             }

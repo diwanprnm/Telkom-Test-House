@@ -76,7 +76,7 @@ class FeedbackControllerTest extends TestCase
         $feedback = Feedback::latest()->first();
         $user = User::where('id', '=', '1')->first();
 
-        $response = $this->actingAs($user)
+        $this->actingAs($user)
             ->visit('admin/feedback/'.$feedback->id.'/reply')
             ->see('<h1 class="mainTitle">BALAS FEEDBACK</h1>')
             ->type('This is reply feedback test', 'description')
@@ -99,11 +99,20 @@ class FeedbackControllerTest extends TestCase
         $feedback = Feedback::latest()->first();
         $user = User::where('id', '=', '1')->first();
         //visit index, delete a feedback
-        $this->actingAs($user)->call('POST','admin/feedback/'.$feedback->id.'/destroy');
+        $this->actingAs($user)->call('POST',"admin/feedback/$feedback->id/destroy");
         //Response status redirect to feedback.index
         $this->assertRedirectedTo('/admin/feedback', ['message' => 'Feedback successfully deleted']);
         //delete remaining feedback(s) when test is done
         Feedback::truncate();
+    }
+
+    public function testDestroyFailed()
+    {
+        $user = User::where('id', '=', '1')->first();
+        //visit index, delete a feedback
+        $this->actingAs($user)->call('POST',"admin/feedback/feedbackNotFound/destroy");
+        //Response status redirect to feedback.index
+        $this->assertRedirectedTo('/admin/feedback', ['error' => 'Feedback not found']);
     }
 
     public function testIndexWithoutDataDound()
@@ -116,5 +125,13 @@ class FeedbackControllerTest extends TestCase
         $this->assertResponseStatus(200)
             ->see('<h1 class="mainTitle">QUESTIONS AND ANSWERS (QNA)</h1>')
             ->see('Data not found');
+    }
+
+    public function autocomplete()
+    {
+        $user = User::where('id', '=', '1')->first();
+        $this->actingAs($user)->call('POST',"admin/fadm_feedback_autocomplete/query");
+        //Response status ok
+        $this->assertResponseStatus(200);
     }
 }
