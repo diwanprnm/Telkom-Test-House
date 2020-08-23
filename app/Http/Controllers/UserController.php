@@ -230,7 +230,10 @@ class UserController extends Controller
             }  
             Session::flash(self::MESSAGE, 'User successfully created');
             $status = TRUE;
-        }
+        }catch(Exception $e){
+            Session::flash(self::ERROR, "User Failed created");
+            return redirect(self::ADMIN_USER_CREATE)->withInput();
+        } 
 
         if($status){
              return redirect(self::ADMIN_USER);
