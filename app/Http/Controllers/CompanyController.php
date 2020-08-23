@@ -23,6 +23,8 @@ use Storage;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
+use App\Services\Logs\LogService;
+
 class CompanyController extends Controller
 {
     /**
@@ -120,7 +122,7 @@ class CompanyController extends Controller
             }
 
             if ($request->has(self::SORT_BY)){
-            $sort_by = $request->get(self::SORT_BY);
+                $sort_by = $request->get(self::SORT_BY);
             }
             if ($request->has(self::SORT_TYPE)){
                 $sort_type = $request->get(self::SORT_TYPE);
@@ -273,16 +275,10 @@ class CompanyController extends Controller
         $company->updated_by = $currentUser->id;
 
         try{
-            $company->save();
+            $company->save(); 
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Create Company";
-            $logs->data = $company;
-            $logs->created_by = $currentUser->id;
-            $logs->updated_by = $currentUser->id;
-            $logs->page = self::COMPANY;
-            $logs->save();
+            $logService = new LogService();  
+            $logService->createLog('Create Company',self::COMPANY);
 
             Session::flash(self::MESSAGE, 'Company successfully created');
             return redirect(self::ADMIN_COMPANY);
@@ -467,16 +463,10 @@ class CompanyController extends Controller
         $company->updated_by = $currentUser->id;
 
         try{
-            $company->save();
+            $company->save(); 
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Update Company";
-            $logs->data = $oldData;
-            $logs->created_by = $currentUser->id;
-            $logs->updated_by = $currentUser->id;
-            $logs->page = self::COMPANY;
-            $logs->save();
+            $logService = new LogService();  
+            $logService->createLog('Update Company',self::COMPANY);
 
             Session::flash(self::MESSAGE, 'Company successfully updated');
             return redirect(self::ADMIN_COMPANY);
@@ -499,16 +489,10 @@ class CompanyController extends Controller
         $currentUser = Auth::user();
         if ($company){
             try{
-                $company->delete();
-                
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Delete Company";
-                $logs->data = $oldData;
-                $logs->created_by = $currentUser->id;
-                $logs->updated_by = $currentUser->id;
-                $logs->page = self::COMPANY;
-                $logs->save();
+                $company->delete(); 
+
+                $logService = new LogService();  
+                $logService->createLog('Delete Company',self::COMPANY);
 
                 Session::flash(self::MESSAGE, 'Company successfully deleted');
                 return redirect(self::ADMIN_COMPANY);
@@ -522,7 +506,7 @@ class CompanyController extends Controller
     public function viewMedia($id, $name)
     {
         $company = Company::find($id);
-
+        $response = false;
         if ($company){
             switch ($name) {
                 case 'npwp': 
@@ -532,7 +516,7 @@ class CompanyController extends Controller
                     $tempImage = tempnam(sys_get_temp_dir(), $filename);
                     copy($file, $tempImage);
 
-                    return response()->download($tempImage, $filename);
+                    $response =  response()->download($tempImage, $filename);
                     break;
 
                 case 'siup':  
@@ -542,7 +526,7 @@ class CompanyController extends Controller
                     $tempImage = tempnam(sys_get_temp_dir(), $filename);
                     copy($file, $tempImage);
 
-                    return response()->download($tempImage, $filename);
+                    $response =  response()->download($tempImage, $filename);
                     break;
 
                 case 'qs': 
@@ -553,12 +537,14 @@ class CompanyController extends Controller
                     $tempImage = tempnam(sys_get_temp_dir(), $filename);
                     copy($file, $tempImage);
 
-                    return response()->download($tempImage, $filename);
+                    $response =  response()->download($tempImage, $filename);
                     break;
                 default:
                     return false; 
             }
         }
+
+        return $response;
     }
 	
 	public function excel(Request $request) 

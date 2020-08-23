@@ -86,22 +86,22 @@ class TempCompanyController extends Controller
 
             if ($request->has(self::BEFORE_DATE)){
                 $query->where(DB::raw('DATE(created_at)'), '<=', $request->get(self::BEFORE_DATE));
-                $before = $request->get(self::BEFORE_DATE);
+                $before_date = $request->get(self::BEFORE_DATE);
             }
 
             if ($request->has(self::AFTER_DATE)){
                 $query->where(DB::raw('DATE(created_at)'), '>=', $request->get(self::AFTER_DATE));
-                $after = $request->get(self::AFTER_DATE);
+                $after_date = $request->get(self::AFTER_DATE);
             }
 
             if ($request->has(self::SORT_BY)){
-                $sort_by = $request->get(self::SORT_BY);
+                $sort_by_filter = $request->get(self::SORT_BY);
             }
             if ($request->has(self::SORT_TYPE)){
-                $sort_type = $request->get(self::SORT_TYPE);
+                $sort_type_filter = $request->get(self::SORT_TYPE);
             }
 
-                $companies = $query->orderBy($sort_by, $sort_type)->paginate($paginate);
+            $companies = $query->orderBy($sort_by_filter, $sort_type_filter)->paginate($paginate);
 			
             if (count($companies) == 0){
                 $message = 'Data not found';
@@ -112,10 +112,10 @@ class TempCompanyController extends Controller
                 ->with('data', $companies)
                 ->with('search', $search)
                 ->with('status', $status)
-                ->with(self::BEFORE_DATE, $before)
-                ->with(self::AFTER_DATE, $after)
-                ->with(self::SORT_BY, $sort_by)
-                ->with(self::SORT_TYPE, $sort_type);
+                ->with(self::BEFORE_DATE, $before_date)
+                ->with(self::AFTER_DATE, $after_date)
+                ->with(self::SORT_BY, $sort_by_filter)
+                ->with(self::SORT_TYPE, $sort_type_filter);
         }
     }
 
