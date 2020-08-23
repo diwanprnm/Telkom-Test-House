@@ -293,6 +293,7 @@ class STELController extends Controller
      */
     public function destroy($id)
     {
+        $logService = new LogService();
         $stel = STEL::find($id);
         $oldStel = $stel;
         $currentUser = Auth::user();

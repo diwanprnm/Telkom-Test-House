@@ -198,21 +198,6 @@ class LogController extends Controller
         }
     }
 
-    public function autocomplete($query) {
-        if($request->path() == $this::LOG_PATH){
-            $select = array(
-                $this::LOG_ACTION,$this::LOG_PAGE,$this::LOG_SEARCH,$this::USER_NAME
-            );
-            $respons_result = Logs::select($select)->autocomplet($query);
-        }else{
-            $select = array(
-                $this::LOG_ADMIN_ACTION,$this::LOG_ADMIN_PAGE,$this::LOG_ADMIN__SEARCH,$this::USER_NAME
-            );
-            $respons_result = Logs_administrator::select($select)->autocomplet($query);
-        }
-        return response($respons_result);
-    }
-    
 	public function excel(Request $request) 
 	{
 		// Execute the query used to retrieve the data. In this example
