@@ -234,24 +234,28 @@ class UsereksController extends Controller
             $usereks->name = $request->input('name');
         }
         if ($request->has('old_password')){
+            $msg_old_password = "";
+            $status_old_password = TRUE;
             if (Hash::check($request->get('old_password'), $usereks->password)) {
                 if ($request->has(self::NEW_TEXT.self::NEW_PASSWORD) && $request->has('confirm_new_password')){
                     if ($request->get(self::NEW_TEXT.self::NEW_PASSWORD) == $request->get('confirm_new_password')){
                         $usereks->password = bcrypt($request->input(self::NEW_TEXT.self::NEW_PASSWORD));
-                    } else{
-                        Session::flash(self::ERROR, 'New password not matched');
-                        return back()
-                            ->withInput($request->all());    
+                    } else{ 
+                        $status_old_password = FALSE;
+                        $msg_old_password = 'New password not matched';
                     }
-                } else{
-                    Session::flash(self::ERROR, 'Must fill new password and confirm new password');
-                    return back()
-                        ->withInput($request->all());
+                } else{ 
+                    $status_old_password = FALSE;
+                    $msg_old_password = 'Must fill new password and confirm new password';
                 }
             } else{
-                Session::flash(self::ERROR, 'Wrong Old Password');
-                return back()
-                    ->withInput($request->all());
+                $status_old_password = FALSE;
+                $msg_old_password = 'Wrong Old Password';
+                
+            }
+            if(!$status_old_password){ 
+                Session::flash(self::ERROR, $msg_old_password);
+                return back()->withInput($request->all());
             }
         }
         if ($request->has(self::PRICE)){
@@ -344,19 +348,7 @@ class UsereksController extends Controller
             $usersEks->fax = $request->input('fax');
         }
 
-        if ($request->hasFile(self::PICTURE)) { 
-            $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
-            $path_file = public_path().self::MEDIA_USER.$usersEks->id;
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file(self::PICTURE)->move($path_file,$name_file)){
-                $usersEks->picture = $name_file;
-            }else{
-                Session::flash(self::ERROR, self::FAILED_USER_MSG);
-                return redirect(self::ADMIN_USEREKS_CREATE);
-            }
-        }
+        $this->uploadPicture($request,$usersEks);
 
         $usersEks->updated_by = $currentUser->id;
 
