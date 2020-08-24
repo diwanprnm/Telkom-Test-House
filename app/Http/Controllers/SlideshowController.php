@@ -113,6 +113,7 @@ class SlideshowController extends Controller
         $slideshow->headline = $request->input(self::HEADLINE);
         $slideshow->color = $request->input(self::COLOR);
         $slideshow->timeout = $request->input(self::TIMEOUT,'1');
+        $slideshow->updated_by = $currentUser->id;
 
         if ($request->hasFile(self::IMAGE))
         {
