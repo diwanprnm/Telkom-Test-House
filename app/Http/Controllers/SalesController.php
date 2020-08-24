@@ -4,12 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 
 use App\STEL;
-use App\Logs;
-use App\Logs_administrator;
 use App\STELSales;
 use App\STELSalesAttach;
 use App\STELSalesDetail;
@@ -29,7 +26,6 @@ use File;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
-
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 
