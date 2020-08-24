@@ -75,7 +75,7 @@ class UsereksController extends Controller
 			$roles = Role::where('id', 2);
             
             if ($search != null){
-                $users = User::whereNotNull('created_at')
+                $usersEks = User::whereNotNull('created_at')
                     ->with('role')
                     ->with(self::COMPANY)
                     ->where('name','like','%'.$search.'%')
@@ -124,17 +124,17 @@ class UsereksController extends Controller
                     }
                 }
 
-                $users = $query->orderBy('name')
+                $usersEks = $query->orderBy('name')
                             ->paginate($paginate);
             }
             
-            if (count($users) == 0){
+            if (count($usersEks) == 0){
                 $message = 'Data not found';
             }
             
             return view('admin.usereks.index')
                 ->with(self::MESSAGE, $message)
-                ->with('data', $users)
+                ->with('data', $usersEks)
                 ->with(self::COMPANY, $companies)
                 ->with('role', $roles)
                 ->with(self::SEARCH, $search)
