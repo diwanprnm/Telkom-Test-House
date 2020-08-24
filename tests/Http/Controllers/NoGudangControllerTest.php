@@ -43,7 +43,7 @@ class NoGudangControllerTest extends TestCase
 
         //Make request as Admin
         $admin = User::where('id', '=', '1')->first();
-        $this->actingAs($admin)->call('GET',"admin/nogudang?search=$equipment->name&before_date=2100-01-01&after_date=2020-01-01&nogudang=$equipment->name&type=$examination->examination_type_id&company=$company->company_name&lab=$examination->examination_lab_id");
+        $this->actingAs($admin)->call('GET',"admin/nogudang?search=$equipment->no&before_date=2100-01-01&after_date=2020-01-01&nogudang=$equipment->no&type=$examination->examination_type_id&company=$company->company_name&lab=$examination->examination_lab_id");
 
         //redirect, go to admin/nogudang, and message "Nomor Gudang"
         $this->assertResponseStatus(200)
@@ -56,15 +56,13 @@ class NoGudangControllerTest extends TestCase
     {
         // create and get data
         $equipment = factory(App\Equipment::class)->create();
-        factory(App\EquipmentHistory::class)->create([
-            'examination_id' => $equipment->examination_id,
-        ]);
+        factory(App\EquipmentHistory::class)->create(['examination_id' => $equipment->examination_id,]);
         $examination = App\Examination::find($equipment->examination_id);
         $company = App\Company::find($examination->company_id);
 
         //Make request as Admin
         $admin = User::where('id', '=', '1')->first();
-        $response = $this->actingAs($admin)->call('GET',"nogudang/excel?search=$equipment->name&before_date=2100-01-01&after_date=2020-01-01&nogudang=$equipment->name&type=$examination->examination_type_id&company=$company->company_name&lab=$examination->examination_lab_id");
+        $response = $this->actingAs($admin)->call('GET',"nogudang/excel?search=$equipment->no&before_date=2100-01-01&after_date=2020-01-01&nogudang=$equipment->no&type=$examination->examination_type_id&company=$company->company_name&lab=$examination->examination_lab_id");
 
         //redirect, go to admin/nogudang, and message "Nomor Gudang"
         $this->assertResponseStatus(200);
@@ -74,9 +72,9 @@ class NoGudangControllerTest extends TestCase
 
         //truncate table
         //for Mysql DB::statement('SET FOREIGN_KEY_CHECKS=0;'); -
-        DB::table('equipment_histories')->truncate();
-        DB::table('equipments')->truncate();
-        DB::table('examinations')->truncate();
+        // DB::table('equipment_histories')->truncate();
+        // DB::table('equipments')->truncate();
+        // DB::table('examinations')->truncate();
         //for Mysql DB::statement('SET FOREIGN_KEY_CHECKS=1;'); -
     }
 

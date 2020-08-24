@@ -28,6 +28,7 @@ class IncomeControllerTest extends TestCase
     public function testIndexWithFilter()
     {
         //create data
+        factory(App\Income::class)->create(['inc_type' => 2]);
         $income = factory(App\Income::class)->create();
         $company = App\Company::find($income->company_id);
 
@@ -39,6 +40,22 @@ class IncomeControllerTest extends TestCase
         $this->assertResponseStatus(200)
             ->see('<h1 class="mainTitle">REKAP PENGUJIAN PERANGKAT</h1>')
             ->see($income->reference_number);
+    }
+
+    public function testExcelWithFilterIncTypeCase()
+    {
+        //create data
+        $income = App\Income::latest()->first();
+
+        //visit with filter
+        $admin = User::where('id', '=', '1')->first();
+        $response = $this->actingAs($admin)->call('GET',"income/excel");
+        
+        //response ok, header download sesuai
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
+        $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
+        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Pendapatan.xlsx"');
     }
 
 
@@ -160,4 +177,26 @@ class IncomeControllerTest extends TestCase
         $this->assertResponseStatus(200)
             ->see('/DDS-73/');
     }
+
+    public function testGenerateKuitansiManualCaseAlreadyExist()
+    {
+        factory(App\Kuitansi::class)->create(['number' => '001/DDS-73/'.date('Y')]);
+        $admin = User::where('id', '=', '1')->first();
+        $this->actingAs($admin)->call('POST','admin/kuitansi/generateKuitansi');
+
+        //status ok, and response is text containing "DDS-73" in it
+        $this->assertResponseStatus(200)
+            ->see('002/DDS-73/'.date('Y'));
+    }
+
+    public function testAutoComplete()
+    {
+        $admin = User::where('id', '=', '1')->first();
+        $this->actingAs($admin)->call('GET','admin/adm_inc_autocomplete/query');
+
+        //status ok,
+        $this->assertResponseStatus(200);
+    }
+
+    
 }
