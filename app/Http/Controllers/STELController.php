@@ -159,53 +159,21 @@ class STELController extends Controller
 		if($name_exists == 1){
 			$return_page =  redirect()->back()
 			->with('error_name', 1)
-			->withInput($request->all());
-<<<<<<< HEAD
-		}else{
-            $stel = new STEL;
-            $stel->code = $request->input('code');
-            $stel->stel_type = $request->input(self::STEL_TYPE);
-            $stel->name = $request->input('name');
-            $stel->type = $request->input('type');
-            $stel->version = $request->input(self::VERSION);
-            $stel->year = $request->input('year');
-            $stel->price = str_replace(",","",$request->input(self::PRICE));
-            $stel->total = str_replace(",","",$request->input(self::TOTAL));
-            $stel->is_active = $request->input(self::IS_ACTIVE);
-            $stel->created_by = $currentUser->id;
-            $stel->updated_by = $currentUser->id;
+			->withInput($request->all()); 
+    		$stel = new STEL;
+    		$stel->code = $request->input('code');
+    		$stel->stel_type = $request->input(self::STEL_TYPE);
+    		$stel->name = $request->input('name');
+    		$stel->type = $request->input('type');
+    		$stel->version = $request->input(self::VERSION);
+    		$stel->year = $request->input('year');
+    		$stel->price = str_replace(",","",$request->input(self::PRICE));
+    		$stel->total = str_replace(",","",$request->input(self::TOTAL));
+    		$stel->is_active = $request->input(self::IS_ACTIVE);
+    		$stel->created_by = $currentUser->id;
+    		$stel->updated_by = $currentUser->id;
 
-            if ($request->hasFile(self::ATTACHMENT)) { 
-                $name_file = 'stel_'.$request->file(self::ATTACHMENT)->getClientOriginalName();
-                $path_file = public_path().'/media/stel';
-                if (!file_exists($path_file)) {
-                    mkdir($path_file, 0775);
-                }
-                if($request->file(self::ATTACHMENT)->move($path_file,$name_file)){
-                    $stel->attachment = $name_file;
-                }else{
-                    Session::flash(self::ERROR, 'Save STEL to directory failed');
-                    $return_page =  redirect(self::ADMIN_CREATE);
-                }
-            }
-     
-=======
-		}
-		$stel = new STEL;
-		$stel->code = $request->input('code');
-		$stel->stel_type = $request->input(self::STEL_TYPE);
-		$stel->name = $request->input('name');
-		$stel->type = $request->input('type');
-		$stel->version = $request->input(self::VERSION);
-		$stel->year = $request->input('year');
-		$stel->price = str_replace(",","",$request->input(self::PRICE));
-		$stel->total = str_replace(",","",$request->input(self::TOTAL));
-		$stel->is_active = $request->input(self::IS_ACTIVE);
-		$stel->created_by = $currentUser->id;
-		$stel->updated_by = $currentUser->id;
-
-		$this->attachment($request, $stel);
->>>>>>> 83ed63420322941fbb0b405430a4f6a9953de688
+    		$this->attachment($request, $stel); 
 
             try{
                 $stel->save();
