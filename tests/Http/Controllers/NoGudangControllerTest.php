@@ -43,7 +43,7 @@ class NoGudangControllerTest extends TestCase
 
         //Make request as Admin
         $admin = User::where('id', '=', '1')->first();
-        $this->actingAs($admin)->call('GET',"admin/nogudang?search=$equipment->no&before_date=2100-01-01&after_date=2020-01-01&nogudang=$equipment->no&type=$examination->examination_type_id&company=$company->company_name&lab=$examination->examination_lab_id");
+        $this->actingAs($admin)->call('GET',"admin/nogudang?search=$equipment->name&before_date=2100-01-01&after_date=2020-01-01&nogudang=$equipment->no&type=$examination->examination_type_id&company=$company->company_name&lab=$examination->examination_lab_id");
 
         //redirect, go to admin/nogudang, and message "Nomor Gudang"
         $this->assertResponseStatus(200)
