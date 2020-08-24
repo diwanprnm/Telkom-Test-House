@@ -82,7 +82,7 @@ class DeviceController extends Controller
 						->orWhere('devices.model','like','%'.$search.'%');
 				});
 				
-				$logService->createLog('Search Device', 'DEVICE', json_encode($dataSearch) );
+				$logService->createLog('Search Device', 'DEVICE', json_encode(array("search"=>$search)) );
 			}
 
 			if ($request->has($this::BEFORE)){

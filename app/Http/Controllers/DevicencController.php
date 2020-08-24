@@ -221,8 +221,10 @@ class DevicencController extends Controller
 					$q->whereDate(self::EXAM_DATE,'<',$expDate)
 						->orWhere(self::DEVICE_STAT, '-1');
 				});
-	
+		
 
+		
+			
 		
 
         if ($search != null){
