@@ -22,7 +22,7 @@ class TopDashboardControllerTest extends TestCase
     { 
        $admin = User::find('1');
        $response = $this->actingAs($admin)->call('GET', 'admin/topdashboard');
-       dd($response);
+      
        $this->assertEquals(200, $response->status());
     }*/
 }
