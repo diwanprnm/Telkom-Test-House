@@ -153,46 +153,50 @@ class STELController extends Controller
     public function store(Request $request)
     { 
 		$currentUser = Auth::user();
-			
-			$name_exists = $this->cekNamaSTEL($request->input('name'));
+		$return_page = redirect(self::ADMIN_CREATE);
+
+	    $name_exists = $this->cekNamaSTEL($request->input('name'));
 		if($name_exists == 1){
-			return redirect()->back()
+			$return_page =  redirect()->back()
 			->with('error_name', 1)
-			->withInput($request->all());
-		}
-		$stel = new STEL;
-		$stel->code = $request->input('code');
-		$stel->stel_type = $request->input(self::STEL_TYPE);
-		$stel->name = $request->input('name');
-		$stel->type = $request->input('type');
-		$stel->version = $request->input(self::VERSION);
-		$stel->year = $request->input('year');
-		$stel->price = str_replace(",","",$request->input(self::PRICE));
-		$stel->total = str_replace(",","",$request->input(self::TOTAL));
-		$stel->is_active = $request->input(self::IS_ACTIVE);
-		$stel->created_by = $currentUser->id;
-		$stel->updated_by = $currentUser->id;
+			->withInput($request->all()); 
+    		$stel = new STEL;
+    		$stel->code = $request->input('code');
+    		$stel->stel_type = $request->input(self::STEL_TYPE);
+    		$stel->name = $request->input('name');
+    		$stel->type = $request->input('type');
+    		$stel->version = $request->input(self::VERSION);
+    		$stel->year = $request->input('year');
+    		$stel->price = str_replace(",","",$request->input(self::PRICE));
+    		$stel->total = str_replace(",","",$request->input(self::TOTAL));
+    		$stel->is_active = $request->input(self::IS_ACTIVE);
+    		$stel->created_by = $currentUser->id;
+    		$stel->updated_by = $currentUser->id;
 
-		$this->attachment($request, $stel);
+    		$this->attachment($request, $stel); 
 
-		try{
-			$stel->save();
+            try{
+                $stel->save();
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;
-            $logs->id = Uuid::uuid4();
-            $logs->action = "Create STEL";
-            $logs->data = $stel;
-            $logs->created_by = $currentUser->id;
-            $logs->page = "STEL";
-            $logs->save();
-			
-            Session::flash(self::MESSAGE, 'STEL successfully created');
-			return redirect(self::ADMIN_STEL);
-		} catch(Exception $e){
-			Session::flash(self::ERROR, 'Save failed');
-			return redirect(self::ADMIN_CREATE);
-		}
+                $logs = new Logs;
+                $logs->user_id = $currentUser->id;
+                $logs->id = Uuid::uuid4();
+                $logs->action = "Create STEL";
+                $logs->data = $stel;
+                $logs->created_by = $currentUser->id;
+                $logs->page = "STEL";
+                $logs->save();
+                
+                Session::flash(self::MESSAGE, 'STEL successfully created');
+                $return_page =  redirect(self::ADMIN_STEL);
+            } catch(Exception $e){
+                Session::flash(self::ERROR, 'Save failed');
+                $return_page =  redirect(self::ADMIN_CREATE);
+            }
+        }
+		
+
+        return $return_page;
     }
 
     /**
