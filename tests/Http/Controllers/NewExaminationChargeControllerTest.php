@@ -15,313 +15,310 @@ class NewExaminationChargeControllerTest extends TestCase
      * @return void
      */
 
-    public function testDeleteSoon(){
-        $this->assertTrue(true);
+
+    public function testIndexAsAdmin()
+    {
+        //truncate data
+        //for Mysql DB::statement('SET FOREIGN_KEY_CHECKS=0;'); -
+        DB::table('new_examination_charges_detail')->truncate();
+        DB::table('new_examination_charges')->truncate();
+        DB::table('examination_charges')->truncate();
+        //for Mysql DB::statement('SET FOREIGN_KEY_CHECKS=1;'); -
+
+        //Make request as Admin
+        $admin = User::find(1);
+        $this->actingAs($admin)->call('GET','admin/newcharge');
+
+        //Status sukses dan judul "TARIF PENGUJIAN BARU"
+        $this->assertResponseStatus(200)
+            ->see('<h1 class="mainTitle">TARIF PENGUJIAN BARU</h1>')
+        ;
     }
 
-    // public function testIndexAsAdmin()
-    // {
-    //     //truncate data
-    //     DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-    //     DB::table('new_examination_charges_detail')->truncate();
-    //     DB::table('new_examination_charges')->truncate();
-    //     DB::table('examination_charges')->truncate();
-    //     DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+    public function testIndexWithoutDataExsit()
+    {
+        //Make request as Admin
+        $admin = User::find(1);
+        $this->actingAs($admin)->call('GET','admin/newcharge');
 
-    //     //Make request as Admin
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $this->actingAs($admin)->call('GET','admin/newcharge');
-
-    //     //Status sukses dan judul "TARIF PENGUJIAN BARU"
-    //     $this->assertResponseStatus(200)
-    //         ->see('<h1 class="mainTitle">TARIF PENGUJIAN BARU</h1>')
-    //     ;
-    // }
-
-    // public function testIndexWithoutDataExsit()
-    // {
-    //     //Make request as Admin
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $this->actingAs($admin)->call('GET','admin/newcharge');
-
-    //     //Status sukses dan judul "TARIF PENGUJIAN BARU"
-    //     $this->assertResponseStatus(200)
-    //         ->see('<h1 class="mainTitle">TARIF PENGUJIAN BARU</h1>')
-    //         ->see('Data not found')
-    //     ;
-    // }
+        //Status sukses dan judul "TARIF PENGUJIAN BARU"
+        $this->assertResponseStatus(200)
+            ->see('<h1 class="mainTitle">TARIF PENGUJIAN BARU</h1>')
+            ->see('Data not found')
+        ;
+    }
 
 
-    // public function testCreate()
-    // {
-    //     //Make request as Admin
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $this->actingAs($admin)->call('GET','admin/newcharge/create');
+    public function testCreate()
+    {
+        //Make request as Admin
+        $admin = User::find(1);
+        $this->actingAs($admin)->call('GET','admin/newcharge/create');
 
-    //     $this->assertResponseStatus(200)
-    //         ->see('<h1 class="mainTitle">TAMBAH TARIF BARU</h1>')
-    //     ;
-    // }
+        $this->assertResponseStatus(200)
+            ->see('<h1 class="mainTitle">TAMBAH TARIF BARU</h1>')
+        ;
+    }
 
-    // public function testStore()
-    // {   
-    //     //Make Request
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $this->actingAs($admin)
-    //         ->visit('admin/newcharge/create')
-    //         ->see('<h1 class="mainTitle">TAMBAH TARIF BARU</h1>')
-    //         ->type('NewExaminationCharge name test', 'name')
-    //         ->type('2020-01-01', 'valid_from')
-    //         ->select('This is NewExaminationCharge description test', 'description')
-    //         ->press('submit');
-    //     //check view and see flash message "certificates is successfully created"
-    //     $this->assertResponseStatus(200)
-    //         ->see('New Charge successfully created');
-    // }
-
-
-    // public function testCreateDetail()
-    // {
-    //     //Get Data
-    //     $newExaminationCharge = App\NewExaminationCharge::latest()->first();
-
-    //     //Make request as Admin
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $this->actingAs($admin)->call('GET',"admin/newcharge/$newExaminationCharge->id/createDetail");
-
-    //     //Status ok dan ada "TAMBAH TARIF PENGUJIAN BARU"
-    //     $this->assertResponseStatus(200)
-    //         ->see('<h1 class="mainTitle">Tambah Tarif Pengujian Baru</h1>')
-    //     ;
-    // }
-
-    // public function testPostDetail()
-    // {
-    //     //Get Data
-    //     $newExaminationCharge = App\NewExaminationCharge::latest()->first();
-
-    //     //Make request as Admin
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $this->actingAs($admin)
-    //         ->visit("admin/newcharge/$newExaminationCharge->id/createDetail")
-    //         ->see('<h1 class="mainTitle">TAMBAH TARIF PENGUJIAN BARU</h1>')
-    //         ->type('Device name test', 'device_name')
-    //         ->type('Stel of device', 'stel')
-    //         ->select('Lab Device', 'category')
-    //         ->type('77', 'duration')
-    //         ->type('712000', 'new_price')
-    //         ->type('123000 of device', 'new_vt_price')
-    //         ->type('500000 of device', 'new_ta_price')
-    //         ->press('submit')
-    //     ;
-
-    //     //redirect, go to admin/examination/id, and message "New Charge successfully updated"
-    //     $this->assertResponseStatus(200)
-    //         ->seePageIs("admin/newcharge/$newExaminationCharge->id")
-    //         ->see('New Charge successfully updated')
-    //     ;
-    //     //$this->assertRedirectedTo("admin/newcharge/$newExaminationCharge->id", ['message' => '']);
-    // }
+    public function testStore()
+    {   
+        //Make Request
+        $admin = User::find(1);
+        $this->actingAs($admin)
+            ->visit('admin/newcharge/create')
+            ->see('<h1 class="mainTitle">TAMBAH TARIF BARU</h1>')
+            ->type('NewExaminationCharge name test', 'name')
+            ->type('2020-01-01', 'valid_from')
+            ->select('This is NewExaminationCharge description test', 'description')
+            ->press('submit');
+        //check view and see flash message "New Charge successfully created"
+        $this->assertResponseStatus(200)
+            ->see('New Charge successfully created');
+    }
 
 
-    // public function testIndexWithFilter()
-    // {
-    //     //Get Data
-    //     $newExaminationCharge = App\NewExaminationCharge::latest()->first();
+    public function testCreateDetail()
+    {
+        //Get Data
+        $newExaminationCharge = App\NewExaminationCharge::latest()->first();
 
-    //     //Make request as Admin
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $this->actingAs($admin)->call('GET',"admin/newcharge?search=$newExaminationCharge->name&is_implement=0&after_date=2020-01-01&before_date=2100-01-01");
+        //Make request as Admin
+        $admin = User::find(1);
+        $this->actingAs($admin)->call('GET',"admin/newcharge/$newExaminationCharge->id/createDetail");
 
-    //     //Status sukses dan judul "TARIF PENGUJIAN BARU"
-    //     $this->assertResponseStatus(200)
-    //         ->see('<h1 class="mainTitle">TARIF PENGUJIAN BARU</h1>')
-    //         ->see($newExaminationCharge->name)
-    //         ->see($newExaminationCharge->description)
-    //     ;
-    // }
+        //Status ok dan ada "TAMBAH TARIF PENGUJIAN BARU"
+        $this->assertResponseStatus(200)
+            ->see('<h1 class="mainTitle">Tambah Tarif Pengujian Baru</h1>')
+        ;
+    }
 
+    public function testPostDetail()
+    {
+        //Get Data
+        $newExaminationCharge = App\NewExaminationCharge::latest()->first();
 
-    // public function testCreateButThereIsUnprocessedData()
-    // {
-    //     //make request as Admin
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $this->actingAs($admin)->call('GET','admin/newcharge/create');
+        //Make request as Admin
+        $admin = User::find(1);
+        
+        $this->actingAs($admin)
+            ->visit("admin/newcharge/$newExaminationCharge->id/createDetail")
+            ->see('<h1 class="mainTitle">TAMBAH TARIF PENGUJIAN BARU</h1>')
+            ->type('Device name test', 'device_name')
+            ->type('Stel of device', 'stel')
+            ->select('Lab Device', 'category')
+            ->type('77', 'duration')
+            ->type('712000', 'new_price')
+            ->type('123000', 'new_vt_price')
+            ->type('500000', 'new_ta_price')
+            ->press('submit')
+        ;
 
-    //     //You have not processing data!
-    //     $this->assertRedirectedTo('admin/newcharge', ['error' => 'You have not processing data!']);
-
-    //     //truncate data
-    //     DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-    //     DB::table('new_examination_charges_detail')->truncate();
-    //     DB::table('new_examination_charges')->truncate();
-    //     DB::table('examination_charges')->truncate();
-    //     DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-    // }
-
-
-    // public function testCreateDetailButImplemented()
-    // {
-    //     $newExaminationCharge = factory(App\NewExaminationCharge::class)->create([
-    //         'is_implement' => 1
-    //     ]);
-
-    //     //Make request as Admin
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $this->actingAs($admin)->call('GET',"admin/newcharge/$newExaminationCharge->id/createDetail");
-
-    //     //Status ok dan ada "TAMBAH TARIF PENGUJIAN BARU" admin/newcharge/
-    //     $this->assertRedirectedTo("admin/newcharge/$newExaminationCharge->id", ['error' => 'The data has been processed!']);
-
-    //     DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-    //     DB::table('new_examination_charges_detail')->truncate();
-    //     DB::table('new_examination_charges')->truncate();
-    //     DB::table('examination_charges')->truncate();
-    //     DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-    // }
-
-    // public function testShow()
-    // {
-    //     $newExaminationChargeDetail = factory(App\NewExaminationChargeDetail::class)->create();
-    //     $newExaminationCharge = App\NewExaminationCharge::latest()->first();
-
-    //     //Make request as Admin
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $this->actingAs($admin)->call('GET',"admin/newcharge/$newExaminationCharge->id?category=$newExaminationChargeDetail->category->&search=$newExaminationChargeDetail->name");
-
-    //     //Status sukses dan judul "TARIF PENGUJIAN BARU"
-    //     $this->assertResponseStatus(200)
-    //         ->see('<h1 class="mainTitle">TARIF PENGUJIAN BARU</h1>')
-    //         ->see($newExaminationChargeDetail->name)
-    //         ->see($newExaminationChargeDetail->category)
-    //     ;
-
-    //     // Remove Residual Data
-    //     DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-    //     DB::table('new_examination_charges_detail')->truncate();
-    //     DB::table('new_examination_charges')->truncate();
-    //     DB::table('examination_charges')->truncate();
-    //     DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-    // }
-
-    // public function testEdit()
-    // {
-    //     $newExaminationCharge = factory(App\NewExaminationCharge::class)->create();
-
-    //     //Make request as Admin
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $this->actingAs($admin)->call('GET',"admin/newcharge/$newExaminationCharge->id/edit");
-
-    //     //Status sukses dan judul "TARIF PENGUJIAN BARU"
-    //     $this->assertResponseStatus(200)
-    //         ->see('<h1 class="mainTitle">EDIT TARIF BARU</h1>')
-    //     ;
-
-    // }
-
-    // public function testUpdate()
-    // {   
-    //     //Get Data
-    //     $newExaminationCharge = App\NewExaminationCharge::latest()->first();
-
-    //     //Make request as Admin
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $this->actingAs($admin)->call('PATCH',"admin/newcharge/$newExaminationCharge->id",[
-    //         'name' => 'Change name',
-    //         'valid_from' => '2020-01-01',
-    //         'description' => 'New Description',
-    //         'is_implement' => '1'
-    //     ]);
-
-    //     //Status sukses dan judul "TARIF PENGUJIAN BARU"
-    //     $this->assertRedirectedTo("admin/newcharge", ['message' => 'New Charge successfully updated']);
-
-    //     //delete residual
-    //     DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-    //     DB::table('new_examination_charges')->truncate();
-    //     DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-    // }
+        //redirect, go to admin/examination/id, and message "New Charge successfully updated"
+        $this->assertResponseStatus(200)
+            ->seePageIs("admin/newcharge/$newExaminationCharge->id")
+            ->see('New Charge successfully updated')
+        ;
+    }
 
 
-    // public function testEditDetail()
-    // {
-    //     $newExaminationChargeDetail = factory(App\NewExaminationChargeDetail::class)->create();
+    public function testIndexWithFilter()
+    {
+        //Get Data
+        $newExaminationCharge = App\NewExaminationCharge::latest()->first();
 
-    //     //Make request as Admin
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $response = $this->actingAs($admin)->call('GET',"admin/newcharge/$newExaminationChargeDetail->new_exam_charges_id/editDetail/$newExaminationChargeDetail->id");
+        //Make request as Admin
+        $admin = User::find(1);
+        $this->actingAs($admin)->call('GET',"admin/newcharge?search=$newExaminationCharge->name&is_implement=0&after_date=2020-01-01&before_date=2100-01-01");
 
-    //     //Status sukses dan judul "TARIF PENGUJIAN BARU"
-    //     $this->assertResponseStatus(200)
-    //         ->see('<h1 class="mainTitle">TAMBAH TARIF PENGUJIAN BARU</h1>')
-    //         ->see($newExaminationChargeDetail->name)
-    //     ;
-
-    //     //truncate data
-    //     DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-    //     DB::table('new_examination_charges_detail')->truncate();
-    //     DB::table('new_examination_charges')->truncate();
-    //     DB::table('examination_charges')->truncate();
-    //     DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-    // }
-
-    // public function testUpdateDetail()
-    // {
-    //     $newExaminationChargeDetail = factory(App\NewExaminationChargeDetail::class)->create();
-
-    //     //Make request as Admin
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $response = $this->actingAs($admin)
-    //         ->visit("admin/newcharge/$newExaminationChargeDetail->new_exam_charges_id/editDetail/$newExaminationChargeDetail->id")
-    //         ->see('<h1 class="mainTitle">TAMBAH TARIF PENGUJIAN BARU</h1>')
-    //         ->type('Device name test updateDetail', 'device_name')
-    //         ->type('Stel of device updateDetail', 'stel')
-    //         ->select('Lab Device', 'category')
-    //         ->type('77', 'duration')
-    //         ->type('712000', 'new_price')
-    //         ->type('123000 of device', 'new_vt_price')
-    //         ->type('500000 of device', 'new_ta_price')
-    //         ->press('submit')
-    //     ;
-
-    //     //redirect, go to admin/examination/id, and message "New Charge successfully updated"
-    //     $this->assertResponseStatus(200)
-    //         ->seePageIs("admin/newcharge/$newExaminationChargeDetail->new_exam_charges_id")
-    //         ->see('New Charge successfully updated')
-    //     ;
-    // }
+        //Status sukses dan judul "TARIF PENGUJIAN BARU"
+        $this->assertResponseStatus(200)
+            ->see('<h1 class="mainTitle">TARIF PENGUJIAN BARU</h1>')
+            ->see($newExaminationCharge->name)
+            ->see($newExaminationCharge->description)
+        ;
+    }
 
 
-    // public function testDeleteDetail()
-    // {
-    //     $newExaminationChargeDetail = App\NewExaminationChargeDetail::latest()->first();
-    //     $newExaminationCharge = App\NewExaminationCharge::latest()->first();
+    public function testCreateButThereIsUnprocessedData()
+    {
+        //make request as Admin
+        $admin = User::find(1);
+        $this->actingAs($admin)->call('GET','admin/newcharge/create');
 
-    //     //Make request as Admin
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $response = $this->actingAs($admin)->call('POST',"admin/newcharge/$newExaminationCharge->id/deleteDetail/$newExaminationChargeDetail->id");
+        //You have not processing data!
+        $this->assertRedirectedTo('admin/newcharge', ['error' => 'You have not processing data!']);
 
-    //     //Status sukses dan judul "TARIF PENGUJIAN BARU"
-    //     $this->assertRedirectedTo("admin/newcharge/$newExaminationCharge->id", ['message' => 'New Charge detail successfully deleted']);
-    // }
+        //truncate data
+        //for Mysql DB::statement('SET FOREIGN_KEY_CHECKS=0;'); -
+        DB::table('new_examination_charges_detail')->truncate();
+        DB::table('new_examination_charges')->truncate();
+        DB::table('examination_charges')->truncate();
+        //for Mysql DB::statement('SET FOREIGN_KEY_CHECKS=1;'); -
+    }
 
 
-    // public function testDestroy()
-    // {
-    //     $newExaminationCharge = App\NewExaminationCharge::latest()->first();
+    public function testCreateDetailButImplemented()
+    {
+        $newExaminationCharge = factory(App\NewExaminationCharge::class)->create([
+            'is_implement' => 1
+        ]);
 
-    //     //Make request as Admin
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $response = $this->actingAs($admin)->call('DELETE',"admin/newcharge/$newExaminationCharge->id");
+        //Make request as Admin
+        $admin = User::find(1);
+        $this->actingAs($admin)->call('GET',"admin/newcharge/$newExaminationCharge->id/createDetail");
 
-    //     //Status sukses dan judul "TARIF PENGUJIAN BARU"
-    //     $this->assertRedirectedTo("admin/newcharge", ['message' => 'New Charge successfully deleted']);
+        //Status ok dan ada erro "The data has been processed!" admin/newcharge/id
+        $this->assertRedirectedTo("admin/newcharge/$newExaminationCharge->id", ['error' => 'The data has been processed!']);
 
-    //     //truncate data
-    //     DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-    //     DB::table('new_examination_charges_detail')->truncate();
-    //     DB::table('new_examination_charges')->truncate();
-    //     DB::table('examination_charges')->truncate();
-    //     DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-    // }
+        //for Mysql DB::statement('SET FOREIGN_KEY_CHECKS=0;'); -
+        DB::table('new_examination_charges_detail')->truncate();
+        DB::table('new_examination_charges')->truncate();
+        DB::table('examination_charges')->truncate();
+        //for Mysql DB::statement('SET FOREIGN_KEY_CHECKS=1;'); -
+    }
+
+    public function testShow()
+    {
+        $newExaminationChargeDetail = factory(App\NewExaminationChargeDetail::class)->create();
+        $newExaminationCharge = App\NewExaminationCharge::latest()->first();
+
+        //Make request as Admin
+        $admin = User::find(1);
+        $this->actingAs($admin)->call('GET',"admin/newcharge/$newExaminationCharge->id?category=$newExaminationChargeDetail->category->&search=$newExaminationChargeDetail->name");
+
+        //Status sukses dan judul "TARIF PENGUJIAN BARU"
+        $this->assertResponseStatus(200)
+            ->see('<h1 class="mainTitle">TARIF PENGUJIAN BARU</h1>')
+            ->see($newExaminationChargeDetail->name)
+            ->see($newExaminationChargeDetail->category)
+        ;
+
+        // Remove Residual Data
+        //for Mysql DB::statement('SET FOREIGN_KEY_CHECKS=0;'); -
+        DB::table('new_examination_charges_detail')->truncate();
+        DB::table('new_examination_charges')->truncate();
+        DB::table('examination_charges')->truncate();
+        //for Mysql DB::statement('SET FOREIGN_KEY_CHECKS=1;'); -
+    }
+
+    public function testEdit()
+    {
+        $newExaminationCharge = factory(App\NewExaminationCharge::class)->create();
+
+        //Make request as Admin
+        $admin = User::find(1);
+        $this->actingAs($admin)->call('GET',"admin/newcharge/$newExaminationCharge->id/edit");
+
+        //Status sukses dan judul "TARIF PENGUJIAN BARU"
+        $this->assertResponseStatus(200)
+            ->see('<h1 class="mainTitle">EDIT TARIF BARU</h1>')
+        ;
+
+    }
+
+    public function testUpdate()
+    {   
+        //Get Data
+        $newExaminationCharge = App\NewExaminationCharge::latest()->first();
+
+        //Make request as Admin
+        $admin = User::find(1);
+        $this->actingAs($admin)->call('PATCH',"admin/newcharge/$newExaminationCharge->id",[
+            'name' => 'Change name',
+            'valid_from' => '2020-01-01',
+            'description' => 'New Description',
+            'is_implement' => '1'
+        ]);
+
+        //Status redirect ke admin/newchrage dan pesan "New Charge successfully updated"
+        $this->assertRedirectedTo("admin/newcharge", ['message' => 'New Charge successfully updated']);
+
+        //delete residual
+        //for Mysql DB::statement('SET FOREIGN_KEY_CHECKS=0;'); -
+        DB::table('new_examination_charges')->truncate();
+        //for Mysql DB::statement('SET FOREIGN_KEY_CHECKS=1;'); -
+    }
+
+
+    public function testEditDetail()
+    {
+        $newExaminationChargeDetail = factory(App\NewExaminationChargeDetail::class)->create();
+
+        //Make request as Admin
+        $admin = User::find(1);
+        $this->actingAs($admin)->call('GET',"admin/newcharge/$newExaminationChargeDetail->new_exam_charges_id/editDetail/$newExaminationChargeDetail->id");
+
+        //Status sukses dan judul "TARIF PENGUJIAN BARU"
+        $this->assertResponseStatus(200)
+            ->see('<h1 class="mainTitle">TAMBAH TARIF PENGUJIAN BARU</h1>')
+            ->see($newExaminationChargeDetail->name)
+        ;
+
+        //truncate data
+        //for Mysql DB::statement('SET FOREIGN_KEY_CHECKS=0;'); -
+        DB::table('new_examination_charges_detail')->truncate();
+        DB::table('new_examination_charges')->truncate();
+        DB::table('examination_charges')->truncate();
+        //for Mysql DB::statement('SET FOREIGN_KEY_CHECKS=1;'); -
+    }
+
+    public function testUpdateDetail()
+    {
+        $newExaminationChargeDetail = factory(App\NewExaminationChargeDetail::class)->create();
+
+        //Make request as Admin
+        $admin = User::find(1);
+        $this->actingAs($admin)
+            ->visit("admin/newcharge/$newExaminationChargeDetail->new_exam_charges_id/editDetail/$newExaminationChargeDetail->id")
+            ->see('<h1 class="mainTitle">TAMBAH TARIF PENGUJIAN BARU</h1>')
+            ->type('Device name test updateDetail', 'device_name')
+            ->type('Stel of device updateDetail', 'stel')
+            ->select('Lab Device', 'category')
+            ->type('77', 'duration')
+            ->type('712000', 'new_price')
+            ->type('123000', 'new_vt_price')
+            ->type('500000', 'new_ta_price')
+            ->press('submit')
+        ;
+
+        //success in admin/examination/id, and message "New Charge successfully updated"
+        $this->assertResponseStatus(200)
+            ->seePageIs("admin/newcharge/$newExaminationChargeDetail->new_exam_charges_id")
+            ->see('New Charge successfully updated')
+        ;
+    }
+
+
+    public function testDeleteDetail()
+    {
+        $newExaminationChargeDetail = App\NewExaminationChargeDetail::latest()->first();
+        $newExaminationCharge = App\NewExaminationCharge::latest()->first();
+
+        //Make request as Admin
+        $admin = User::find(1);
+        $this->actingAs($admin)->call('POST',"admin/newcharge/$newExaminationCharge->id/deleteDetail/$newExaminationChargeDetail->id");
+
+        //Status redirect ke admin/charge/id dan pesan "New Charge detail successfully deleted"
+        $this->assertRedirectedTo("admin/newcharge/$newExaminationCharge->id", ['message' => 'New Charge detail successfully deleted']);
+    }
+
+
+    public function testDestroy()
+    {
+        $newExaminationCharge = App\NewExaminationCharge::latest()->first();
+
+        //Make request as Admin
+        $admin = User::find(1);
+        $this->actingAs($admin)->call('DELETE',"admin/newcharge/$newExaminationCharge->id");
+
+        //Status redirect ke admin/newcharge dan pesan "New Charge successfully deleted"
+        $this->assertRedirectedTo("admin/newcharge", ['message' => 'New Charge successfully deleted']);
+
+        //truncate data
+        //for Mysql DB::statement('SET FOREIGN_KEY_CHECKS=0;'); -
+        DB::table('new_examination_charges_detail')->truncate();
+        DB::table('new_examination_charges')->truncate();
+        DB::table('examination_charges')->truncate();
+        //for Mysql DB::statement('SET FOREIGN_KEY_CHECKS=1;'); -
+    }
 }
