@@ -184,7 +184,7 @@ class NewExaminationChargeControllerTest extends TestCase
 
         //Make request as Admin
         $admin = User::find(1);
-        $this->actingAs($admin)->call('GET',"admin/newcharge/$newExaminationCharge->id?category=$newExaminationChargeDetail->category->&search=$newExaminationChargeDetail->name");
+        $this->actingAs($admin)->call('GET',"admin/newcharge/$newExaminationCharge->id?search=$newExaminationChargeDetail->device_name&category=$newExaminationChargeDetail->category");
 
         //Status sukses dan judul "TARIF PENGUJIAN BARU"
         $this->assertResponseStatus(200)
@@ -221,8 +221,6 @@ class NewExaminationChargeControllerTest extends TestCase
         //Get Data
         factory(App\ExaminationCharge::class)->create();
         $newExaminationChargeDetail = factory(App\NewExaminationChargeDetail::class)->create();
-
-        //$newExaminationCharge = App\NewExaminationCharge::latest()->first();
 
         //Make request as Admin
         $admin = User::find(1);
