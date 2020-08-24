@@ -580,3 +580,18 @@ $factory->define(App\TbHSPK::class, function (Faker\Generator $faker) {
         'UPDATED_DT' => Carbon\Carbon::now(),
     ];
 });
+
+$factory->define(App\Kuitansi::class, function (Faker\Generator $faker) {
+    return [
+        'id' => $faker->uuid,
+        'number' => '001/DDS-73/2020',
+        'from' => $faker->word,
+        'price' => $faker->numberBetween(100,900).'000',
+        'for' => $faker->word,
+        'kuitansi_date'=> Carbon\Carbon::now(),
+        'created_by' => 1,
+        'updated_by' => 1,
+        'created_at' => Carbon\Carbon::now(),
+        'updated_at' => Carbon\Carbon::now(),
+    ];
+});
