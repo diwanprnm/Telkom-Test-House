@@ -55,12 +55,18 @@ class DevicencControllerTest extends TestCase
 
         }*/
 
-   /* public function testMoveData()
+    public function testMoveData()
      {
-        $device = App\Device::latest()->first();
+       // $device = App\Device::latest()->first();
+        $device = factory(App\Device::class)->create();
         $admin = User::find('1');
-        $response = $this->actingAs($admin)->call($device->status=-1);
-        
-        $this->assertEquals(200, $response->status());
-        }*/
+        $reason='test';
+        $response = $this->actingAs($admin)->call('GET', 'admin/devicenc/'.$device->id.'/'.$reason.'/moveData',
+        [
+           'status'=>-1
+        ]
+    
+    );
+        $this->assertEquals(302, $response->status());
+        }
 }
