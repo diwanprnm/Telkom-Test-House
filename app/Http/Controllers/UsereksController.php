@@ -35,7 +35,7 @@ class UsereksController extends Controller
     private const ERROR = 'error'; 
     private const COMPANY_ID = 'company_id';
     private const EMAIL = 'email';
-    private const PASSWORD = 'password';
+    private const PASS_TEXT = 'password';
     private const ADDRESS = 'address';
     private const PHONE_NUMBER = 'phone_number';
     private const PICTURE = 'picture';
@@ -68,7 +68,7 @@ class UsereksController extends Controller
             $message = null;
             $paginate = 10;
             $search = trim($request->input(self::SEARCH));
-			$filterCompany = '';
+			$filterCompanyUser = '';
             $status = -1;
 
             $companies = Company::where('id','!=', 1)->get();
@@ -109,7 +109,7 @@ class UsereksController extends Controller
                     ->with(self::COMPANY);
 					
 				if ($request->has(self::COMPANY)){
-                    $filterCompany = $request->get(self::COMPANY);
+                    $filterCompanyUser = $request->get(self::COMPANY);
 					if($request->input(self::COMPANY) != 'all'){
 						$query->whereHas(self::COMPANY, function ($q) use ($request){
 							return $q->where('name', 'like', '%'.$request->get(self::COMPANY).'%');
@@ -138,7 +138,7 @@ class UsereksController extends Controller
                 ->with(self::COMPANY, $companies)
                 ->with('role', $roles)
                 ->with(self::SEARCH, $search)
-				->with('filterCompany', $filterCompany)
+				->with('filterCompany', $filterCompanyUser)
                 ->with('status', $status);
         }
     }
@@ -168,43 +168,43 @@ class UsereksController extends Controller
     {
         $currentUser = Auth::user(); 
         
-        $user = new User;
-        $user->id = Uuid::uuid4();
-        $user->role_id = $request->input(self::ROLE_ID);
-        $user->company_id = $request->input(self::COMPANY_ID);
-        $user->name = $request->input('name');
-        $user->email = $request->input(self::EMAIL);
-        $user->password = bcrypt($request->input(self::PASSWORD));
-        $user->is_active = $request->input(self::IS_ACTIVE);
-        $user->address = $request->input(self::ADDRESS);
-        $user->phone_number = $request->input(self::PHONE_NUMBER);
-        $user->fax = $request->input('fax');
+        $usersEks = new User;
+        $usersEks->id = Uuid::uuid4();
+        $usersEks->role_id = $request->input(self::ROLE_ID);
+        $usersEks->company_id = $request->input(self::COMPANY_ID);
+        $usersEks->name = $request->input('name');
+        $usersEks->email = $request->input(self::EMAIL);
+        $usersEks->password = bcrypt($request->input(self::PASS_TEXT));
+        $usersEks->is_active = $request->input(self::IS_ACTIVE);
+        $usersEks->address = $request->input(self::ADDRESS);
+        $usersEks->phone_number = $request->input(self::PHONE_NUMBER);
+        $usersEks->fax = $request->input('fax');
 
         if ($request->hasFile(self::PICTURE)) { 
             $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
-            $path_file = public_path().self::MEDIA_USER.$user->id;
+            $path_file = public_path().self::MEDIA_USER.$usersEks->id;
             if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
             if($request->file(self::PICTURE)->move($path_file,$name_file)){
-                $user->picture = $name_file;
+                $usersEks->picture = $name_file;
             }else{
                 Session::flash(self::ERROR,self::FAILED_USER_MSG);
                 return redirect(self::ADMIN_USEREKS_CREATE);
             }
         }
 
-        $user->created_by = $currentUser->id;
-        $user->updated_by = $currentUser->id;
+        $usersEks->created_by = $currentUser->id;
+        $usersEks->updated_by = $currentUser->id;
 
         try{
-            $user->save();
+            $usersEks->save();
             
             $logs = new Logs;
             $logs->id = Uuid::uuid4();
             $logs->user_id = $currentUser->id; 
             $logs->action = "Create User"; 
-            $logs->data = $user;
+            $logs->data = $usersEks;
             $logs->created_by = $currentUser->id;
             $logs->page = self::USER_EKSTERNAL;
             try{
@@ -320,14 +320,14 @@ class UsereksController extends Controller
      */
     public function edit($id)
     {
-        $user = User::find($id);
+        $usersEks = User::find($id);
 		$roles = Role::where('id', '=', 2)->get();
         $companies = Company::where('id', '!=', '1')->orderBy('name')->get(); 
 
         return view('admin.usereks.edit')
             ->with('role', $roles)
             ->with(self::COMPANY, $companies)
-            ->with('data', $user);
+            ->with('data', $usersEks);
     }
 
     /**
@@ -341,59 +341,59 @@ class UsereksController extends Controller
     {
         $currentUser = Auth::user(); 
 
-        $user = User::find($id);
-        $oldData = $user;
+        $usersEks = User::find($id);
+        $oldData = $usersEks;
 
         if ($request->has(self::ROLE_ID)){
-            $user->role_id = $request->input(self::ROLE_ID);
+            $usersEks->role_id = $request->input(self::ROLE_ID);
         }
         if ($request->has(self::COMPANY_ID)){
-            $user->company_id = $request->input(self::COMPANY_ID);
+            $usersEks->company_id = $request->input(self::COMPANY_ID);
         }
         if ($request->has('name')){
-            $user->name = $request->input('name');
+            $usersEks->name = $request->input('name');
         }
         if ($request->has(self::EMAIL)){
-            $user->email = $request->input(self::EMAIL);
+            $usersEks->email = $request->input(self::EMAIL);
         }
-        if ($request->has(self::PASSWORD)){
-            $user->password = bcrypt($request->input(self::PASSWORD));
+        if ($request->has(self::PASS_TEXT)){
+            $usersEks->password = bcrypt($request->input(self::PASS_TEXT));
         }
         if ($request->has(self::PRICE)){
-            $user->price = $request->input(self::PRICE);
+            $usersEks->price = $request->input(self::PRICE);
         }
         if ($request->has(self::IS_ACTIVE)){
-            $user->is_active = $request->input(self::IS_ACTIVE);
+            $usersEks->is_active = $request->input(self::IS_ACTIVE);
         }
 
         if ($request->has(self::ADDRESS)){
-            $user->address = $request->input(self::ADDRESS);
+            $usersEks->address = $request->input(self::ADDRESS);
         }
         if ($request->has(self::PHONE_NUMBER)){
-            $user->phone_number = $request->input(self::PHONE_NUMBER);
+            $usersEks->phone_number = $request->input(self::PHONE_NUMBER);
         }
         if ($request->has('fax')){
-            $user->fax = $request->input('fax');
+            $usersEks->fax = $request->input('fax');
         }
 
         if ($request->hasFile(self::PICTURE)) { 
             $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
-            $path_file = public_path().self::MEDIA_USER.$user->id;
+            $path_file = public_path().self::MEDIA_USER.$usersEks->id;
             if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
             if($request->file(self::PICTURE)->move($path_file,$name_file)){
-                $user->picture = $name_file;
+                $usersEks->picture = $name_file;
             }else{
                 Session::flash(self::ERROR, self::FAILED_USER_MSG);
                 return redirect(self::ADMIN_USEREKS_CREATE);
             }
         }
 
-        $user->updated_by = $currentUser->id;
+        $usersEks->updated_by = $currentUser->id;
 
         try{
-            $user->save();
+            $usersEks->save();
 			
             $logs = new Logs;
             $logs->user_id = $currentUser->id;
@@ -408,7 +408,7 @@ class UsereksController extends Controller
             return redirect(self::ADMIN_USEREKS);
         } catch(Exception $e){
             Session::flash(self::ERROR, self::FAILED_LOG_MSG);
-            return redirect(self::ADMIN_USEREKS.'/'.$user->id.'edit');
+            return redirect(self::ADMIN_USEREKS.'/'.$usersEks->id.'edit');
         }
     }
 
@@ -420,11 +420,11 @@ class UsereksController extends Controller
      */
     public function destroy($id)
     {
-		$user = User::find($id);
+		$usersEks = User::find($id);
 
-        if ($user){
+        if ($usersEks){
             try{
-                $user->delete();
+                $usersEks->delete();
                 
                 Session::flash(self::MESSAGE, 'User successfully deleted');
                 return redirect(self::ADMIN_USEREKS);
@@ -438,14 +438,14 @@ class UsereksController extends Controller
 	public function softDelete($id)
     {
 		$currentUser = Auth::user();
-        $user = User::find($id);
-        $oldData = $user;
-        if ($user){
+        $usersEks = User::find($id);
+        $oldData = $usersEks;
+        if ($usersEks){
             try{
-				$user->is_deleted = 1;
-				$user->deleted_by = $currentUser->id;
-				$user->deleted_at = ''.date('Y-m-d H:i:s').'';
-                $user->save();
+				$usersEks->is_deleted = 1;
+				$usersEks->deleted_by = $currentUser->id;
+				$usersEks->deleted_at = ''.date('Y-m-d H:i:s').'';
+                $usersEks->save();
 
                 $logs = new Logs;
                 $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
