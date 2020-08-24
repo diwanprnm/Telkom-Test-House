@@ -162,8 +162,7 @@ class IncomeController extends Controller
 				Session::flash(self::MESSAGE, 'Kuitansi successfully created');
 				Session::flash('id', $kuitansi->id);
 				return redirect('/admin/kuitansi');
-			} catch(\Exception $e){
-				return redirect('/admin/kuitansi/create')->withInput($request->all())->with('error', 'Save failed');
+			} catch(\Exception $e){ return redirect('/admin/kuitansi/create')->withInput($request->all())->with('error', 'Save failed');
 			}
 		}else{
 			Session::flash('error', '"Nomor Kuitansi" is already exist');
@@ -312,18 +311,20 @@ class IncomeController extends Controller
 	
 	public function generateKuitansiManual() {
 		$thisYear = date('Y');
-		$query = "
-			SELECT substr(number,'/',1) + 1 AS last_numb
-			FROM kuitansi WHERE substr(number,'/',-1) = ".$thisYear."
-			ORDER BY last_numb DESC LIMIT 1
-		";
-		$data = DB::select($query);
+        $data = DB::table('kuitansi')
+            ->select(DB::raw("number AS last_numb"))
+            ->where('number', 'like', '%/'.$thisYear)
+            ->orderBy('created_at', 'desc')
+            ->first()
+        ;
+
 		if (!count($data)){
 			return '001/DDS-73/'.$thisYear.'';
 		}
 		else{
-            $last_numb = str_pad($data[0]->last_numb,3,"0");
-            return $last_numb.'/DDS-73/'.$thisYear.'';
+            $last_numb = (int)substr($data->last_numb, 0, 3)+1;
+            $number = str_pad($last_numb,3,"0",STR_PAD_LEFT);
+            return $number.'/DDS-73/'.$thisYear.'';
 		}
     }
 	
