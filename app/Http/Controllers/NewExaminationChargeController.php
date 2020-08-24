@@ -34,6 +34,7 @@ class NewExaminationChargeController extends Controller
     private const CATEGORY = 'category';
     private const CATEGORY_AND_DEVICE_NAME = 'category, device_name';
     private const CREATED_AT_IN_EXAMINATION_CHARGES = 'examination_charges.created_at';
+    private const DATA_NOT_FOUND = 'Data not found';
     private const DATE_FORMAT = "Y-m-d H:i:s";
     private const DESCRIPTION = 'description';
     private const DEVICE_NAME = 'device_name';
@@ -128,7 +129,7 @@ class NewExaminationChargeController extends Controller
         
         //leave message if not found
         if (count($newExaminationCharge) == 0){
-            $dataNotFound = 'Data not found';
+            $dataNotFound = self::DATA_NOT_FOUND;
         }
 
         //return view
@@ -188,8 +189,7 @@ class NewExaminationChargeController extends Controller
             $logService->createLog('Create New Charge', self::NEW_EXAMINATION_CHARGE, $charge);
             Session::flash(self::MESSAGE, 'New Charge successfully created');
             return redirect(self::ADMIN_NEWCHARGE.$charge->id);
-        } catch(Exception $e){
-            return redirect('/admin/newcharge/create')->with(self::ERROR, self::SAVE_FAILED);
+        } catch(Exception $e){ return redirect('/admin/newcharge/create')->with(self::ERROR, self::SAVE_FAILED);
         }
     }
 
@@ -259,11 +259,12 @@ class NewExaminationChargeController extends Controller
         $charge = NewExaminationCharge::find($id);
         $query = NewExaminationChargeDetail::whereNotNull('created_at')->where(self::NEW_EXAM_CHARGES_ID, $id);
         
-        if ($search != null){
-            $query->where(function($qry) use($search){
-                $qry->where(self::DEVICE_NAME, 'like', '%'.strtolower($search).'%')
-                ->orWhere('stel', 'like', '%'.strtolower($search).'%');
-            });
+        if ($search){
+            $query
+                ->where(self::DEVICE_NAME, 'like', '%'.strtolower($search).'%')
+                ->orWhere('stel', 'like', '%'.strtolower($search).'%')
+            ;
+
                 $logService->createLog('Search Charge', self::NEW_EXAMINATION_CHARGE, json_encode(array(self::SEARCH=>$search)));
         }
         
@@ -277,7 +278,7 @@ class NewExaminationChargeController extends Controller
         $examinationCharge = $query->orderByRaw(self::CATEGORY_AND_DEVICE_NAME)->paginate($paginate);
 
         if (count($examinationCharge) == 0){
-            $dataNotFound = 'Data not found';
+            $dataNotFound = self::DATA_NOT_FOUND;
         }
         
         return view('admin.newcharge.show')
@@ -347,8 +348,7 @@ class NewExaminationChargeController extends Controller
             $logService->createLog('Update New Charge', self::NEW_EXAMINATION_CHARGE, $oldData);
             Session::flash(self::MESSAGE, self::NEW_CHARGE_SUCCEED_UPDATED);
             return redirect(self::ADMIN_NEWCHARGE);
-        } catch(Exception $e){
-            return redirect(self::ADMIN_NEWCHARGE.$charge->id.'/edit')->with(self::ERROR, self::SAVE_FAILED);
+        } catch(Exception $e){ return redirect(self::ADMIN_NEWCHARGE.$charge->id.'/edit')->with(self::ERROR, self::SAVE_FAILED);
         }
     }
 
@@ -391,8 +391,7 @@ class NewExaminationChargeController extends Controller
             Session::flash(self::MESSAGE, self::NEW_CHARGE_SUCCEED_UPDATED);
             return redirect(self::ADMIN_NEWCHARGE.$id);
         }
-        Session::flash(self::ERROR, self::SAVE_FAILED);
-        return redirect(self::ADMIN_NEWCHARGE.$id.'/editDetail/'.$exam_id);
+        return redirect(self::ADMIN_NEWCHARGE.$id.'/editDetail/'.$exam_id)->with(self::ERROR, self::SAVE_FAILED);
     }
 
 
@@ -407,37 +406,39 @@ class NewExaminationChargeController extends Controller
         NewExaminationChargeDetail::where(self::NEW_EXAM_CHARGES_ID, $id)->delete();
         $charge = NewExaminationCharge::find($id);
         $logService = new LogService();
-        $oldData = clone $charge;
         if ($charge){
+            $oldData = clone $charge;
             try{
                 $charge->delete();
                 $logService->createLog('Delete Charge', self::NEW_EXAMINATION_CHARGE, $oldData);
                 Session::flash(self::MESSAGE, 'New Charge successfully deleted');
                 return redirect(self::ADMIN_NEWCHARGE);
-            }catch (Exception $e){
-                return redirect(self::ADMIN_NEWCHARGE)->with(self::ERROR, 'Delete failed');
+            }catch (Exception $e){ return redirect(self::ADMIN_NEWCHARGE)->with(self::ERROR, 'Delete failed');
             }
         }
+        return redirect(self::ADMIN_NEWCHARGE)
+            ->with(self::ERROR, self::DATA_NOT_FOUND);
     }
 
     public function deleteDetail($id, $exam_id)
     {
         $charge = NewExaminationChargeDetail::find($exam_id);
         $logService = new LogService();
-        $oldData = clone $charge;
         if ($charge){
+            $oldData = clone $charge;
             try{
                 $charge->delete();
                 $logService->createLog('Delete Charge Detail', self::NEW_EXAMINATION_CHARGE, $oldData);                
                 Session::flash(self::MESSAGE, 'New Charge detail successfully deleted');
                 return redirect(self::ADMIN_NEWCHARGE.$id);
-            }catch (Exception $e){
-                return redirect(self::ADMIN_NEWCHARGE.$id)->with(self::ERROR, 'Delete failed');
+            }catch (Exception $e){ return redirect(self::ADMIN_NEWCHARGE.$id)->with(self::ERROR, 'Delete failed');
             }
         }
+        return redirect(self::ADMIN_NEWCHARGE)
+            ->with(self::ERROR, self::DATA_NOT_FOUND);
     }
 
-    public function implementNew($id){
+    private function implementNew($id){
         $currentUser = Auth::user();
         $logService = new LogService();
 
@@ -454,6 +455,7 @@ class NewExaminationChargeController extends Controller
         ;
         
         $examinationCharge = $query->get();
+        
         for ($i=0; $i <count($examinationCharge) ; $i++) {
             $update = DB::table(self::EXAMINATION_CHARGES)
                 ->where('id', $examinationCharge[$i]->id)
@@ -466,7 +468,7 @@ class NewExaminationChargeController extends Controller
 
         /* implement dengan cek examination_charges.id = new_examination_charges_detail.examination_charges_id */       
         $data = NewExaminationChargeDetail::where("new_exam_charges_id", $id)->get();
-        
+
         for ($i=0; $i <count($data) ; $i++) {
             $update = DB::table(self::EXAMINATION_CHARGES)
                 ->where('id', $data[$i][self::EXAMINATION_CHARGES_ID])
@@ -558,8 +560,7 @@ class NewExaminationChargeController extends Controller
             $charge->save();
             $logService->createLog('Edit New Charge Detail', self::NEW_EXAMINATION_CHARGE, $charge);
             $status = self::SUCCEED;
-        } catch(Exception $e){
-            $status = 'error';
+        } catch(Exception $e){ $status = 'error';
         }
 
         return $status;

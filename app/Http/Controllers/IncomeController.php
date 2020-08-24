@@ -17,6 +17,7 @@ use App\ExaminationType;
 use App\ExaminationLab;
 use App\Services\Logs\LogService;
 use App\Services\Querys\QueryFilter;
+use App\Services\MyHelper;
 
 use Auth;
 use Excel;
@@ -329,34 +330,35 @@ class IncomeController extends Controller
 	public function cetakKuitansi($id, Request $request) {
  
         $manager_urels = '-';
+        $myHelper = new MyHelper();
         
         $is_poh = 0;
 		$general_setting_poh = GeneralSetting::where('code', 'poh_manager_urel')->first();
 		if($general_setting_poh){
 			if($general_setting_poh->is_active){
                 $is_poh = 1;
-                $manager_urels = $this->filterUrlEncode ($general_setting_poh->value);
+                $manager_urels = $myHelper->filterUrlEncode ($general_setting_poh->value);
 			}else{
 				$general_setting = GeneralSetting::where('code', self::MANAGER_UREL)->first();
 				if($general_setting){
-                    $manager_urels = $this->filterUrlEncode ($general_setting->value);
+                    $manager_urels = $myHelper->filterUrlEncode ($general_setting->value);
 				}
 			}
 		}else{
 			$general_setting = GeneralSetting::where('code', self::MANAGER_UREL)->first();
 			if($general_setting){
-                $manager_urels = $this->filterUrlEncode ($general_setting->value);
+                $manager_urels = $myHelper->filterUrlEncode ($general_setting->value);
 			}
 		}
 		
         $data = Kuitansi::find($id)->get()[0];
 
 	    return \Redirect::route('cetakHasilKuitansi', [
-			'nomor' => $this->filterUrlEncode($data->number),
-			'dari' => $this->filterUrlEncode($data->from),
-			'jumlah' => $this->filterUrlEncode($data->price, true),
-			'untuk' => $this->filterUrlEncode($data->for),
-			'tanggal' => $this->filterUrlEncode($data->kuitansi_date),
+			'nomor' => $myHelper->filterUrlEncode($data->number),
+			'dari' => $myHelper->filterUrlEncode($data->from),
+			'jumlah' => $myHelper->filterUrlEncode($data->price, true),
+			'untuk' => $myHelper->filterUrlEncode($data->for),
+			'tanggal' => $myHelper->filterUrlEncode($data->kuitansi_date),
             'is_poh' => $is_poh,
             self::MANAGER_UREL => $manager_urels,
 		]);
@@ -404,20 +406,6 @@ class IncomeController extends Controller
             self::QUERY => $query,
             self::STATUS => $status
         );
-    }
-
-    private function filterUrlEncode ($string, $number=false)
-    {
-        if(!$string && $number){
-            $string = '0';
-        }
-        if(!$string && !$number){
-            $string = '-';
-        }
-        if( $string && strpos( $string, "/" ) ){
-            $string = urlencode(urlencode($string));
-        }
-        return $string;
     }
 
     private function initialQuery($search)
