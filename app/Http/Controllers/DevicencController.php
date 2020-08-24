@@ -13,6 +13,8 @@ use App\Company;
 use App\Logs;
 use App\LogsAdministrator;
 
+use App\Services\Logs\LogService;
+
 use Auth;
 use Session;
 use Excel;
@@ -47,8 +49,6 @@ class DevicencController extends Controller
 	private const EXAM_PAS = 'examinations.qa_passed';
 	private const EXAM_CERTI = 'examinations.certificate_status';
 	private const DEVICE_STAT='devices.status';
-	private const BEFORE = 'before_date';
-	private const AFTER = 'after_date';
 	private const EXAM_DATE = 'examinations.qa_date';
 	private const DEVICE_VAL = 'devices.valid_thru';
 	private const COMPANIES_NAME = 'companies.name';
@@ -101,8 +101,6 @@ class DevicencController extends Controller
             $paginate = 1000;
             $search = trim($request->input($this::SEARCH));
             $search2 = trim($request->input('search2'));
-			$before = null;
-            $after = null;
 
             $tab = $request->input('tab');
             $expDate = Carbon::now()->subMonths(6);
@@ -134,17 +132,6 @@ class DevicencController extends Controller
 						->orWhere(self::DEVICE_STAT, '-1');
 				});
 			
-
-			if ($request->has(self::BEFORE)){
-				$dev->where(self::DEVICE_VAL, '<=', $request->get(self::BEFORE));
-				$before = $request->get(self::BEFORE);
-			}
-
-			if ($request->has(self::AFTER)){
-				$dev->where(self::DEVICE_VAL, '>=', $request->get(self::AFTER));
-				$after = $request->get(self::AFTER);
-			}
-
             if ($search != null){
         		$dev->where(function($q) use($search){
 					$q->where($this::DEVICE_NAME,'like','%'.$search.'%')
@@ -153,15 +140,8 @@ class DevicencController extends Controller
 						->orWhere($this::DEVICE_MOD,'like','%'.$search.'%');
 				});
 				
-
-				$logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Search Device";  
-                $dataSearch = array(self::SEARCH2=>$search); 
-                $logs->data = json_encode($dataSearch);
-                $logs->created_by = $currentUser->id;
-                $logs->page = "DEVICE";
-                $logs->save();
+				$logService = new LogService();
+				$logService->createLog("Search Device","DEVICE", json_encode( array(self::SEARCH2=>$search)) );
 				
             }
 
@@ -173,15 +153,8 @@ class DevicencController extends Controller
 						->orWhere($this::DEVICE_MOD,'like','%'.$search2.'%');
 				});
 				
-
-				$logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Search Device";  
-                $dataSearch = array(self::SEARCH2=>$search); 
-                $logs->data = json_encode($dataSearch);
-                $logs->created_by = $currentUser->id;
-                $logs->page = "DEVICE";
-                $logs->save();
+				$logService = new LogService();
+				$logService->createLog("Search Device","DEVICE", json_encode( array(self::SEARCH2=>$search)) );
 				
             }
 
@@ -205,9 +178,7 @@ class DevicencController extends Controller
                 ->with('data', $data)
                 ->with('dataAfter', $dataAfter)
                 ->with($this::SEARCH, $search)
-                ->with('search2', $search2)
-                ->with(self::BEFORE, $before)
-                ->with(self::AFTER, $after);
+                ->with('search2', $search2);
         }
     }
 
@@ -250,14 +221,9 @@ class DevicencController extends Controller
 					$q->whereDate(self::EXAM_DATE,'<',$expDate)
 						->orWhere(self::DEVICE_STAT, '-1');
 				});
-		if ($request->has(self::BEFORE)){
-			$dev->where(self::DEVICE_VAL, '<=', $request->get(self::BEFORE));
-		}
+	
 
-		if ($request->has(self::AFTER)){
-			$dev->where(self::DEVICE_VAL, '>=', $request->get(self::AFTER));
-			
-		}
+		
 
         if ($search != null){
         	if($tab == 'tab-2'){
@@ -340,14 +306,10 @@ class DevicencController extends Controller
 			];
 			$no++;
 		}
-		$logs = new Logs;
-		$currentUser = Auth::user();
-        $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-        $logs->action = "Download Data Perangkat Tidak Lulus Uji";   
-        $logs->data = "";
-        $logs->created_by = $currentUser->id;
-        $logs->page = "Perangkat Tidak Lulus Uji";
-        $logs->save();
+		
+		$logService = new LogService();
+		$logService->createLog("Download Data Perangkat Tidak Lulus Uji","Perangkat Tidak Lulus Uji", "" );
+				
         // Generate and return the spreadsheet
 		 Excel::create('Data Perangkat Tidak Lulus Uji', function($excel) use ($examsArray)
 		 {
@@ -375,14 +337,9 @@ class DevicencController extends Controller
         		$devicenc->save();
         		$logs_devicenc = $devicenc;
             
-	            $logs = new LogsAdministrator;
-	            $logs->id = Uuid::uuid4();
-	            $logs->user_id = $currentUser->id;
-	            $logs->action = "Memindahkan Data Perangkat Menjadi Layak Uji Ulang";
-	            $logs->page = "Perangkat Tidak Lulus Uji";
-	            $logs->reason = urldecode($reason);
-	            $logs->data = $logs_devicenc;
-	            $logs->save();
+				$logService = new LogService();
+				$logService->createLog("Memindahkan Data Perangkat Menjadi Layak Uji Ulang","Perangkat Tidak Lulus Uji",$logs_devicenc );
+		
 
 	            Session::flash('message', 'Successfully Move Data');
 	            return redirect($this::ADMIN);
