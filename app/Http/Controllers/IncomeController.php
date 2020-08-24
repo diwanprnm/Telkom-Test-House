@@ -312,8 +312,8 @@ class IncomeController extends Controller
 	public function generateKuitansiManual() {
 		$thisYear = date('Y');
 		$query = "
-			SELECT SUBSTRING_INDEX(number,'/',1) + 1 AS last_numb
-			FROM kuitansi WHERE SUBSTRING_INDEX(number,'/',-1) = ".$thisYear."
+			SELECT substr(number,'/',1) + 1 AS last_numb
+			FROM kuitansi WHERE substr(number,'/',-1) = ".$thisYear."
 			ORDER BY last_numb DESC LIMIT 1
 		";
 		$data = DB::select($query);
