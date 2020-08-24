@@ -274,6 +274,22 @@ $factory->define(App\Questioner::class, function (Faker\Generator $faker) {
     ];
 });
 
+$factory->define(App\QuestionerDynamic::class, function (Faker\Generator $faker, $params) {
+    return [
+        'question_id'=> $params['question_id'],
+        'examination_id' => $params['examination_id'],
+        'order_question' => 1,
+        'is_essay' => 1,
+        'questioner_date' => Carbon\Carbon::now(),
+        'eks_answer' => 'a',
+        'perf_answer' => 'a',
+        'created_by' => '1',
+        'updated_by' => '1',
+        'created_at'=> Carbon\Carbon::now(),
+        'updated_at'=> Carbon\Carbon::now()
+    ];
+});
+
 $factory->define(App\Income::class, function (Faker\Generator $faker, $params) {
     if(isset($params['examination'])){
         $examination = $params['examination'];

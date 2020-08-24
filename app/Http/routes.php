@@ -4505,7 +4505,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	
 	Route::post('/examination/{id}/generateSPKCode', 'ExaminationController@generateSPKCodeManual');
 	Route::resource('/log', 'LogController');
-	Route::resource('/log_administrator', 'Log_administratorController');
+	Route::resource('/log_administrator', 'LogController');
 	Route::get('/backup', 'BackupController@index');
 	Route::get('/backup/{id}/delete', 'BackupController@destroy');
 	Route::get('/backup/{id}/media', 'BackupController@viewmedia');
@@ -4562,7 +4562,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::post('/company/importExcel', 'CompanyController@importExcel');
 	Route::get('/income/excel', 'IncomeController@excel');
 	Route::get('/log/excel', 'LogController@excel');
-	Route::get('/log_administrator/excel', 'Log_administratorController@excel');
+	Route::get('/log_administrator/excel', 'LogController@excel');
 	Route::get('/examinationdone/excel', 'ExaminationDoneController@excel');
 	Route::get('/sales/excel', 'SalesController@excel');
 

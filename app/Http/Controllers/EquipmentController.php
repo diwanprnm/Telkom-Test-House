@@ -239,25 +239,7 @@ class EquipmentController extends Controller
      */
     public function show($id)
     {
-        $equipment = Equipment::where($this::EXAM_ID, $id)->get();
-        $EquipmentHistory = EquipmentHistory::where($this::EXAM_ID, $id)->get();
-        $location = Equipment::where($this::EXAM_ID, $id)->first();
-        $examination = DB::table($this::EXAMINATION)
-            ->join($this::DEVICE, $this::EXAMINATIONDEVICE, '=', $this::DEVICEID)
-            ->select(
-                    $this::EXAMID,
-                    $this::DEVICENAME,
-                    $this::DEVICEMODEL
-                    )
-            ->where($this::EXAMID, $id)
-            ->orderBy($this::DEVICENAME)
-            ->first();
-
-        return view('admin.equipment.show')
-            ->with('item', $examination)
-            ->with($this::LOCATION, $location)
-            ->with('data', $equipment)
-            ->with('history', $EquipmentHistory);  
+        $this->show_edit('show', $id);
     }
 
     /**
@@ -268,24 +250,7 @@ class EquipmentController extends Controller
      */
     public function edit($id)
     {
-        $equipment = Equipment::where($this::EXAM_ID, $id)->get();
-        $location = Equipment::where($this::EXAM_ID, $id)->first();
-        $examination = DB::table($this::EXAMINATION)
-			->join($this::DEVICE, $this::EXAMINATIONDEVICE, '=', $this::DEVICEID)
-			->select(
-					$this::EXAMID,
-					$this::DEVICENAME,
-					$this::DEVICEMODEL
-                    )
-                    
-            ->where($this::EXAMID, $id)
-			->orderBy($this::DEVICENAME)
-			->first();
-
-        return view('admin.equipment.edit')
-            ->with('item', $examination)
-            ->with($this::LOCATION, $location)
-            ->with('data', $equipment);
+        $this->show_edit('edit', $id);
     }
 
     /**
@@ -367,5 +332,27 @@ class EquipmentController extends Controller
 	public function autocomplete($query) {
         $respons_result = User::autocomplet($query);
         return response($respons_result);
+    }
+
+    public function show_edit($type, $id){
+        $EquipmentHistory = EquipmentHistory::where($this::EXAM_ID, $id)->get();
+        $equipment = Equipment::where($this::EXAM_ID, $id)->get();
+        $location = Equipment::where($this::EXAM_ID, $id)->first();
+        $examination = DB::table($this::EXAMINATION)
+            ->join($this::DEVICE, $this::EXAMINATIONDEVICE, '=', $this::DEVICEID)
+            ->select(
+                    $this::EXAMID,
+                    $this::DEVICENAME,
+                    $this::DEVICEMODEL
+                    )
+            ->where($this::EXAMID, $id)
+            ->orderBy($this::DEVICENAME)
+            ->first();
+
+        return view($type == 'show' ? 'admin.equipment.show' : 'admin.equipment.edit')
+            ->with('item', $examination)
+            ->with($this::LOCATION, $location)
+            ->with('data', $equipment)
+            ->with('history', $EquipmentHistory);  
     }
 }

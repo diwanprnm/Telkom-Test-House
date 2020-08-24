@@ -20,6 +20,8 @@ use Response;
 use Session;
 use Input;
 use Ramsey\Uuid\Uuid;
+
+use App\Services\Logs\LogService;
 class STELController extends Controller
 {
 
@@ -158,6 +160,7 @@ class STELController extends Controller
 			$return_page =  redirect()->back()
 			->with('error_name', 1)
 			->withInput($request->all());
+<<<<<<< HEAD
 		}else{
             $stel = new STEL;
             $stel->code = $request->input('code');
@@ -186,6 +189,23 @@ class STELController extends Controller
                 }
             }
      
+=======
+		}
+		$stel = new STEL;
+		$stel->code = $request->input('code');
+		$stel->stel_type = $request->input(self::STEL_TYPE);
+		$stel->name = $request->input('name');
+		$stel->type = $request->input('type');
+		$stel->version = $request->input(self::VERSION);
+		$stel->year = $request->input('year');
+		$stel->price = str_replace(",","",$request->input(self::PRICE));
+		$stel->total = str_replace(",","",$request->input(self::TOTAL));
+		$stel->is_active = $request->input(self::IS_ACTIVE);
+		$stel->created_by = $currentUser->id;
+		$stel->updated_by = $currentUser->id;
+
+		$this->attachment($request, $stel);
+>>>>>>> 83ed63420322941fbb0b405430a4f6a9953de688
 
             try{
                 $stel->save();
@@ -249,6 +269,7 @@ class STELController extends Controller
     public function update(Request $request, $id)
     {
         $currentUser = Auth::user();
+        $logService = new LogService();
 
         $stel = STEL::find($id);
         $oldStel = $stel;
@@ -280,19 +301,8 @@ class STELController extends Controller
         if ($request->has(self::TOTAL)){
             $stel->total = str_replace(",","",$request->input(self::TOTAL));
         }
-        if ($request->hasFile(self::ATTACHMENT)) { 
-            $name_file = 'stel_'.$request->file(self::ATTACHMENT)->getClientOriginalName();
-            $path_file = public_path().'/media/stel';
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file(self::ATTACHMENT)->move($path_file,$name_file)){
-                $stel->attachment = $name_file;
-            }else{
-                Session::flash(self::ERROR, 'Save STEL to directory failed');
-                return redirect(self::ADMIN_CREATE);
-            }
-        }
+
+        $this->attachment($request, $stel);
 
         $stel->updated_by = $currentUser->id;
 
@@ -301,13 +311,7 @@ class STELController extends Controller
         try{
             $stel->save();
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Update STEL";
-            $logs->data = $oldStel;
-            $logs->created_by = $currentUser->id;
-            $logs->page = "STEL";
-            $logs->save();
+            $logService->createLog('Update STEL', 'STEL', $oldStel );
 
             Session::flash(self::MESSAGE, 'STEL successfully updated');
             return redirect(self::ADMIN_STEL);
@@ -325,20 +329,15 @@ class STELController extends Controller
      */
     public function destroy($id)
     {
+        $logService = new LogService();
         $stel = STEL::find($id);
         $oldStel = $stel;
         $currentUser = Auth::user();
         if ($stel){
             try{
                 $stel->delete();
-                
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Delete STEL";
-                $logs->data = $oldStel;
-                $logs->created_by = $currentUser->id;
-                $logs->page = "STEL";
-                $logs->save();
+
+                $logService->createLog('Delete STEL', "STEL", $oldStel );
 
                 Session::flash(self::MESSAGE, 'STEL successfully deleted');
                 return redirect(self::ADMIN_STEL);
@@ -462,5 +461,21 @@ class STELController extends Controller
                 $sheet->fromArray($examsArray, null, 'A1', false, false);
             });
         })->export('xlsx'); 
+    }
+
+    public function attachment($request, $stel){
+        if ($request->hasFile(self::ATTACHMENT)) { 
+            $name_file = 'stel_'.$request->file(self::ATTACHMENT)->getClientOriginalName();
+			$path_file = public_path().'/media/stel';
+			if (!file_exists($path_file)) {
+				mkdir($path_file, 0775);
+			}
+			if($request->file(self::ATTACHMENT)->move($path_file,$name_file)){
+				$stel->attachment = $name_file;
+			}else{
+				Session::flash(self::ERROR, 'Save STEL to directory failed');
+				return redirect(self::ADMIN_CREATE);
+			}
+		}
     }
 }

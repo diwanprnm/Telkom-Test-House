@@ -28,6 +28,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 
 use App\NotificationTable;
+use App\Services\NotificationService;
 
 class ProductsController extends Controller
 {   
@@ -180,6 +181,7 @@ class ProductsController extends Controller
 
     public function pembayaranstel(Request $request){
         $currentUser = Auth::user();
+        $notificationService = new NotificationService();
      
         $jml_pembayaran = str_replace(".",'',$request->input('jml-pembayaran'));
         $jml_pembayaran = str_replace("Rp",'',$jml_pembayaran);
@@ -223,18 +225,8 @@ class ProductsController extends Controller
                     self::CREATED_AT=>date("Y-m-d H:i:s"),
                     self::UPDATED_AT=>date("Y-m-d H:i:s")
                 );
-                $notification = new NotificationTable();
-                $notification->id = Uuid::uuid4();
-                $notification->from = $data['from'];
-                  $notification->to = $data['to'];
-                  $notification->message = $data['message'];
-                  $notification->url = $data['url'];
-                  $notification->is_read = $data['is_read'];
-                  $notification->created_at = $data[self::CREATED_AT];
-                  $notification->updated_at = $data[self::UPDATED_AT];
-                  $notification->save();
-
-                    $data['id'] = $notification->id;
+                $notification_id = $notificationService->make($data);
+			    $data['id'] = $notification_id;
 
                 event(new Notification($data));
 
@@ -383,6 +375,7 @@ class ProductsController extends Controller
     public function doCheckout(Request $request){  
         $PO_ID = $request->session()->get(self::PO_ID_TPN);
         $currentUser = Auth::user();
+        $notificationService = new NotificationService();
         $STELSales = new STELSales;
         if($currentUser){ 
            if($request->input("payment_method") == "cc"){
@@ -435,18 +428,8 @@ class ProductsController extends Controller
                     self::CREATED_AT=>date("Y-m-d H:i:s"),
                     self::UPDATED_AT=>date("Y-m-d H:i:s")
                 );
-                $notification = new NotificationTable();
-                $notification->id = Uuid::uuid4();
-                $notification->from = $data['from'];
-                  $notification->to = $data['to'];
-                  $notification->message = $data['message'];
-                  $notification->url = $data['url'];
-                  $notification->is_read = $data['is_read'];
-                  $notification->created_at = $data[self::CREATED_AT];
-                  $notification->updated_at = $data[self::UPDATED_AT];
-                  $notification->save();
-
-                    $data['id'] = $notification->id;
+                $notification_id = $notificationService->make($data);
+			    $data['id'] = $notification_id;
 
                 event(new Notification($data));
 

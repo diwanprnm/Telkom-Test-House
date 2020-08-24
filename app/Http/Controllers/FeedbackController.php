@@ -58,11 +58,10 @@ class FeedbackController extends Controller
         if ($search){
             $queryFilter = New QueryFilter($request, $query->where('subject','like','%'.$search.'%'));
             $logService->createLog('Search Feedback',$this::FEEDBACK, json_encode(array($this::SEARCH=>$search)) );
-        }else if ($request->has($this::STATUS && $request->input($this::STATUS) != 'all')){
-            $queryFilter = New QueryFilter($request, $query->where($this::STATUS, $request->get($this::STATUS)));
         }
 
         $feedbacks = $queryFilter
+                        ->status()
                         ->beforeDate(DB::raw('DATE(created_at)'))
                         ->afterDate(DB::raw('DATE(created_at)'))
                         ->getSortedAndOrderedData('updated_at', 'desc')
@@ -100,17 +99,18 @@ class FeedbackController extends Controller
     {
         $logService = new LogService();
         $feedback = Feedback::find($id);
-        $oldData = clone $feedback;
         if ($feedback){
+            $oldData = clone $feedback;
             try{
                 $feedback->delete();
                 $logService->createLog('Delete Feedback',$this::FEEDBACK, $oldData );
                 Session::flash($this::MESSAGE, 'Feedback successfully deleted');
                 return redirect($this::ADMIN_FEEDBACK);
-            }catch (Exception $e){
-                return redirect($this::ADMIN_FEEDBACK)->with('error', 'Delete failed');
+            }catch (Exception $e){ return redirect($this::ADMIN_FEEDBACK)->with('error', 'Delete failed');
             }
         }
+        return redirect($this::ADMIN_FEEDBACK)
+            ->with('error', 'Feedback not found');
     }
 
     /**
