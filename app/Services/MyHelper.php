@@ -12,15 +12,7 @@ class MyHelper
         return isset($string)? $string : $defaultValue;
     }
 
-    private static function getHeader($fileName = null)
-    {
-        return array(
-            self::CONTENT_TYPE => '',
-            'Content-Description' => 'File Transfer',
-            'Content-Disposition' => "attachment; filename=\"$fileName\"",
-            'filename'=> "\"$fileName\""
-        );
-    }
+
 
     public static function getHeaderExcel($fileName = null)
     {
@@ -34,5 +26,29 @@ class MyHelper
         $header = self::getHeader($fileName);
         $header[self::CONTENT_TYPE] = 'image/*';
         return $header;
+    }
+
+    public function filterUrlEncode($string, $number=false)
+    {
+        if(!$string && $number){
+            $string = '0';
+        }
+        if(!$string && !$number){
+            $string = '-';
+        }
+        if( $string && strpos( $string, "/" ) ){
+            $string = urlencode(urlencode($string));
+        }
+        return $string;
+    }
+
+    private static function getHeader($fileName = null)
+    {
+        return array(
+            self::CONTENT_TYPE => '',
+            'Content-Description' => 'File Transfer',
+            'Content-Disposition' => "attachment; filename=\"$fileName\"",
+            'filename'=> "\"$fileName\""
+        );
     }
 }
