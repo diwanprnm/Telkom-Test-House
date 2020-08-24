@@ -21,6 +21,8 @@ use Hash;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
+
+use App\Services\Logs\LogService;
 class UsereksController extends Controller
 {
 
@@ -85,20 +87,8 @@ class UsereksController extends Controller
                     ->orderBy('name')
                     ->paginate($paginate);
 
-                    $logs = new Logs;
-                    $logs->user_id = $currentUser->id;
-                    $logs->id = Uuid::uuid4();
-                    $logs->action = "Search User";
-                    $datasearch = array("search"=>$search);
-                    $logs->data = json_encode($datasearch);
-                    $logs->created_by = $currentUser->id;
-                    $logs->page = self::USER_EKSTERNAL;
-                    try{
-                        $logs->save();    
-                    }catch(Illuminate\Database\QueryException $e){
-                        Session::flash(self::ERROR, 'Failed Create Log');
-                        return redirect(self::ADMIN_USEREKS);
-                    }
+                    $logService = new LogService();
+                    $logService->createLog('Search User', self::USER_EKSTERNAL, json_encode(array("search"=>$search))); 
                     
             }else{
                 $query = User::whereNotNull('created_at')
@@ -198,21 +188,10 @@ class UsereksController extends Controller
         $usersEks->updated_by = $currentUser->id;
 
         try{
-            $usersEks->save();
-            
-            $logs = new Logs;
-            $logs->id = Uuid::uuid4();
-            $logs->user_id = $currentUser->id; 
-            $logs->action = "Create User"; 
-            $logs->data = $usersEks;
-            $logs->created_by = $currentUser->id;
-            $logs->page = self::USER_EKSTERNAL;
-            try{
-                $logs->save();
-            }catch(\Exception $e){
-                Session::flash(self::ERROR, self::FAILED_LOG_MSG);
-                return redirect(self::ADMIN_USEREKS_CREATE)->withInput();
-            }
+            $usersEks->save(); 
+
+            $logService = new LogService();
+            $logService->createLog('Create User', self::ADMIN_USEREKS_CREATE, $usersEks); 
            
 
             Session::flash(self::MESSAGE, 'User successfully created');
@@ -231,28 +210,28 @@ class UsereksController extends Controller
      */
     public function show($id)
     {
-        $user = User::find($id);
+        $usereks = User::find($id);
         $companies = Company::where('id', '!=', '1')->orderBy('name')->get();
 
         return view('admin.profile.edit')
             ->with(self::COMPANY, $companies)
-            ->with('data', $user);   
+            ->with('data', $usereks);   
     }
 
     public function updateProfile($id, Request $request)
     {
         $currentUser = Auth::user();
 
-        $user = User::find($id);
-        $oldData = $user;
+        $usereks = User::find($id);
+        $oldData = $usereks;
         if ($request->has('name')){
-            $user->name = $request->input('name');
+            $usereks->name = $request->input('name');
         }
         if ($request->has('old_password')){
-            if (Hash::check($request->get('old_password'), $user->password)) {
+            if (Hash::check($request->get('old_password'), $usereks->password)) {
                 if ($request->has(self::NEW_TEXT.self::NEW_PASSWORD) && $request->has('confirm_new_password')){
                     if ($request->get(self::NEW_TEXT.self::NEW_PASSWORD) == $request->get('confirm_new_password')){
-                        $user->password = bcrypt($request->input(self::NEW_TEXT.self::NEW_PASSWORD));
+                        $usereks->password = bcrypt($request->input(self::NEW_TEXT.self::NEW_PASSWORD));
                     } else{
                         Session::flash(self::ERROR, 'New password not matched');
                         return back()
@@ -270,45 +249,39 @@ class UsereksController extends Controller
             }
         }
         if ($request->has(self::PRICE)){
-            $user->price = $request->input(self::PRICE);
+            $usereks->price = $request->input(self::PRICE);
         }
         if ($request->has(self::IS_ACTIVE)){
-            $user->is_active = $request->input(self::IS_ACTIVE);
+            $usereks->is_active = $request->input(self::IS_ACTIVE);
         }
 
         if ($request->hasFile(self::PICTURE)) { 
             $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
-            $path_file = public_path().self::MEDIA_USER.$user->id;
+            $path_file = public_path().self::MEDIA_USER.$usereks->id;
             if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
             if($request->file(self::PICTURE)->move($path_file,$name_file)){
-                $user->picture = $name_file;
+                $usereks->picture = $name_file;
             }else{
                 Session::flash(self::ERROR, self::FAILED_USER_MSG);
-                return redirect(self::ADMIN_USEREKS.'/'.$user->id.'edit');
+                return redirect(self::ADMIN_USEREKS.'/'.$usereks->id.'edit');
             }
         }
 
-        $user->updated_by = $currentUser->id;
+        $usereks->updated_by = $currentUser->id;
 
         try{
-            $user->save();
+            $usereks->save(); 
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;
-            $logs->id = Uuid::uuid4();
-            $logs->action = "Update Profile"; 
-            $logs->data = $oldData;
-            $logs->created_by = $currentUser->id;
-            $logs->page = "PROFILE";
-            $logs->save();
+            $logService = new LogService();
+            $logService->createLog('Update Profile', 'PROFILE', $oldData); 
 
             Session::flash(self::MESSAGE, 'User successfully updated');
             return redirect('/admin');
         } catch(Exception $e){
             Session::flash(self::ERROR, self::FAILED_LOG_MSG);
-            return redirect('/admin/usereks/'.$user->id.'edit');
+            return redirect('/admin/usereks/'.$usereks->id.'edit');
         }  
     }
 
@@ -393,16 +366,10 @@ class UsereksController extends Controller
         $usersEks->updated_by = $currentUser->id;
 
         try{
-            $usersEks->save();
-			
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;
-            $logs->id = Uuid::uuid4();
-            $logs->action = "Update User"; 
-            $logs->data = $oldData;
-            $logs->created_by = $currentUser->id;
-            $logs->page = self::USER_EKSTERNAL;
-            $logs->save();
+            $usersEks->save(); 
+
+            $logService = new LogService();
+            $logService->createLog('Update User', self::USER_EKSTERNAL, $oldData); 
 
             Session::flash(self::MESSAGE, 'User successfully updated');
             return redirect(self::ADMIN_USEREKS);
@@ -465,20 +432,15 @@ class UsereksController extends Controller
     }
 	
 	public function autocomplete($query) {
-        $respons_result = User::autocomplet($query);
-        return response($respons_result);
+        return response(User::autocomplet($query)); 
     }
 
     public function logout(){
-        //LOG LOGOUT
-        $currentUser = Auth::user();
-        $logs = new Logs;
-        $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-        $logs->action = "Logout"; 
-        $logs->data = "";
-        $logs->created_by = $currentUser->id;
-        $logs->page = "AUTH";
-        $logs->save();
+        //LOG LOGOUT 
+
+        $logService = new LogService();
+        $logService->createLog('Logout', "AUTH"); 
+
         Auth::logout();
         return redirect('/admin/login');
     }
