@@ -42,7 +42,7 @@ class DevicencControllerTest extends TestCase
      }
      
 
-    public function testExcelWithFilter()
+  /*  public function testExcelWithFilter()
      {
         //create data
         $company = App\Company::latest()->first();
@@ -53,5 +53,14 @@ class DevicencControllerTest extends TestCase
         $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
         $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Perangkat Tidak Lulus Uji.xlsx"');
 
-        }
+        }*/
+
+   /* public function testMoveData()
+     {
+        $device = App\Device::latest()->first();
+        $admin = User::find('1');
+        $response = $this->actingAs($admin)->call($device->status=-1);
+        
+        $this->assertEquals(200, $response->status());
+        }*/
 }
