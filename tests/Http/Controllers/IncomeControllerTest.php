@@ -28,7 +28,6 @@ class IncomeControllerTest extends TestCase
     public function testIndexWithFilter()
     {
         //create data
-        factory(App\Income::class)->create(['inc_type' => 2]);
         $income = factory(App\Income::class)->create();
         $company = App\Company::find($income->company_id);
 
@@ -41,23 +40,6 @@ class IncomeControllerTest extends TestCase
             ->see('<h1 class="mainTitle">REKAP PENGUJIAN PERANGKAT</h1>')
             ->see($income->reference_number);
     }
-
-    public function testExcelWithFilterIncTypeCase()
-    {
-        //create data
-        $income = App\Income::latest()->first();
-
-        //visit with filter
-        $admin = User::where('id', '=', '1')->first();
-        $response = $this->actingAs($admin)->call('GET',"income/excel");
-        
-        //response ok, header download sesuai
-        $this->assertResponseStatus(200);
-        $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
-        $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
-        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Pendapatan.xlsx"');
-    }
-
 
     public function testExcelWithFilter()
     {
@@ -110,7 +92,7 @@ class IncomeControllerTest extends TestCase
     {
         //create request
         $admin = User::where('id', '=', '1')->first();
-        $response = $this->actingAs($admin)->call('POST','admin/kuitansi',[
+        $this->actingAs($admin)->call('POST','admin/kuitansi',[
             'number' => 123456,
             'from' => 'Income testing',
             'price' => 5000000,
@@ -196,6 +178,13 @@ class IncomeControllerTest extends TestCase
 
         //status ok,
         $this->assertResponseStatus(200);
+
+        App\Income::truncate();
+        App\Examination::truncate();
+        App\ExaminationLab::truncate();
+        App\Device::truncate();
+        App\Company::truncate();
+        App\Kuitansi::truncate();
     }
 
     

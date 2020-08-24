@@ -189,7 +189,7 @@ class IncomeController extends Controller
         if ($search != null){
             $query = $queryFilter
                 ->getQuery()
-                ->where("number", "like", '%'.strtolower($search).'%')
+                ->where(self::NUMBER, "like", '%'.strtolower($search).'%')
                 ->orWhere("from", "like", '%'.strtolower($search).'%')
                 ->orWhere("for", "like", '%'.strtolower($search).'%')
             ;
@@ -281,14 +281,17 @@ class IncomeController extends Controller
 		
 		// Convert each member of the returned collection into an array,
 		// and append it to the payments array.
-			$no = 1;
+            $no = 1;
 		foreach ($data as $row) {
 			if($row->inc_type == 1){
 				$sumber_pendapatan = "Pengujian Perangkat";
-			}
-			else{
-				$sumber_pendapatan = "Pembelian STEL";
-			}
+            }
+            
+            // Query Select inc_type = 1, so this line will never be reach 
+            // else{ -
+            //     $sumber_pendapatan = "Pembelian STEL"; -
+            // } -
+            
 			$examsArray[] = [
 				$no,
 				$sumber_pendapatan.' '.$row->examination->device->name,
@@ -313,7 +316,7 @@ class IncomeController extends Controller
 		$thisYear = date('Y');
         $data = DB::table('kuitansi')
             ->select(DB::raw("number AS last_numb"))
-            ->where('number', 'like', '%/'.$thisYear)
+            ->where(self::NUMBER, 'like', '%/'.$thisYear)
             ->orderBy('created_at', 'desc')
             ->first()
         ;
