@@ -27,7 +27,7 @@ class DevicencControllerTest extends TestCase
      
      public function test_search()
 	 { 
-		$response = $this->call('GET', 'admin/devicenc?search=a&search2=&tab=tab-1');  
+		$response = $this->call('GET', 'admin/devicenc?search=a&search2=&tab=tab-1&after_date=&before_date=');  
 		
 		$this->assertEquals(302, $response->status());
 		
