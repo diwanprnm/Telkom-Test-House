@@ -154,6 +154,24 @@ class UsereksController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    private function uploadPicture($request, $usersEks){
+
+        if ($request->hasFile(self::PICTURE)) { 
+            $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
+            $path_file = public_path().self::MEDIA_USER.$usersEks->id;
+            if (!file_exists($path_file)) {
+                mkdir($path_file, 0775);
+            }
+            if($request->file(self::PICTURE)->move($path_file,$name_file)){
+                $usersEks->picture = $name_file;
+            }else{
+                Session::flash(self::ERROR,self::FAILED_USER_MSG);
+                return redirect(self::ADMIN_USEREKS_CREATE);
+            }
+        }
+        return $usersEks;
+    }
     public function store(Request $request)
     {
         $currentUser = Auth::user(); 
@@ -170,19 +188,7 @@ class UsereksController extends Controller
         $usersEks->phone_number = $request->input(self::PHONE_NUMBER);
         $usersEks->fax = $request->input('fax');
 
-        if ($request->hasFile(self::PICTURE)) { 
-            $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
-            $path_file = public_path().self::MEDIA_USER.$usersEks->id;
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file(self::PICTURE)->move($path_file,$name_file)){
-                $usersEks->picture = $name_file;
-            }else{
-                Session::flash(self::ERROR,self::FAILED_USER_MSG);
-                return redirect(self::ADMIN_USEREKS_CREATE);
-            }
-        }
+        $this->uploadPicture($request,$usersEks); 
 
         $usersEks->created_by = $currentUser->id;
         $usersEks->updated_by = $currentUser->id;
@@ -255,19 +261,8 @@ class UsereksController extends Controller
             $usereks->is_active = $request->input(self::IS_ACTIVE);
         }
 
-        if ($request->hasFile(self::PICTURE)) { 
-            $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
-            $path_file = public_path().self::MEDIA_USER.$usereks->id;
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file(self::PICTURE)->move($path_file,$name_file)){
-                $usereks->picture = $name_file;
-            }else{
-                Session::flash(self::ERROR, self::FAILED_USER_MSG);
-                return redirect(self::ADMIN_USEREKS.'/'.$usereks->id.'edit');
-            }
-        }
+        
+        $this->uploadPicture($request,$usersEks); 
 
         $usereks->updated_by = $currentUser->id;
 
