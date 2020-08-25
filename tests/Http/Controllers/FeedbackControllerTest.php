@@ -127,10 +127,10 @@ class FeedbackControllerTest extends TestCase
             ->see('Data not found');
     }
 
-    public function autocomplete()
+    public function testAutocomplete()
     {
         $user = User::where('id', '=', '1')->first();
-        $this->actingAs($user)->call('GET',"admin/adm_feedback_autocomplete/query");
+        dd($this->actingAs($user)->call('GET',"admin/adm_feedback_autocomplete/query"));
         //Response status ok
         $this->assertResponseStatus(200);
     }
