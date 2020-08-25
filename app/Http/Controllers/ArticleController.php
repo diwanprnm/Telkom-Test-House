@@ -158,13 +158,13 @@ class ArticleController extends Controller
             }catch (Exception $e){ return redirect(self::ADMIN_ARTICLE)->with(self::ERROR, 'Delete failed');
             }
         }
-        // return redirect(self::ADMIN_ARTICLE)
-        //     ->with(self::ERROR, 'Article not found');
+        return redirect(self::ADMIN_ARTICLE)
+            ->with(self::ERROR, 'Article not found');
     }
     
     
-	// public function autocomplete($query) {
-    //     $respons_result = Article::autocomplet($query);
-    //     return response($respons_result);
-    // }
+	public function autocomplete($query) {
+        $respons_result = Article::autocomplet($query);
+        return response($respons_result);
+    }
 }

@@ -117,13 +117,13 @@ class ArticleControllerTest extends TestCase
         Article::truncate();
     }
     
-    // public function testDestroyNotFound()
-    // {
-    //     $user = User::where('id', '=', '1')->first();
-    //     $this->actingAs($user)->call('DELETE','admin/article/articleNotFound');
-    //     //Response status redirect to article.index
-    //     $this->assertRedirectedTo('admin/article/', ['error' => 'Article not found']);
-    // }
+    public function testDestroyNotFound()
+    {
+        $user = User::where('id', '=', '1')->first();
+        $this->actingAs($user)->call('DELETE','admin/article/articleNotFound');
+        //Response status redirect to article.index
+        $this->assertRedirectedTo('admin/article/', ['error' => 'Article not found']);
+    }
 
     public function testAutocomplete()
     {
