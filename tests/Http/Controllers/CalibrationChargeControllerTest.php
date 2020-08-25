@@ -50,14 +50,15 @@ class CalibrationChargeControllerTest extends TestCase
 			'price' => mt_rand(0,10000),
 			'is_active' => mt_rand(0,1)
 		]);   
+		
 		$this->assertEquals(302, $response->status());
 		$calibration = factory(App\CalibrationCharge::class)->make();  
 	}
 
 	public function testEdit()
 	{	
-		$user = User::find('1'); 
 		$calibration = CalibrationCharge::latest()->first();
+		$user = User::find('1'); 
 		$response = $this->actingAs($user)->call('GET', 'admin/calibration/'.$calibration->id.'/edit');
 		$this->assertEquals(200, $response->status());
 	}
@@ -75,17 +76,6 @@ class CalibrationChargeControllerTest extends TestCase
 		$this->assertEquals(302, $response->status());
 	}
 
-	public function testExcel()
-    {
-		// $user = User::find('1'); 
-		// $response = $this->actingAs($user)->call('GET','calibration/excel?search=cari');
-		// //Status Ok, Header data download file excel
-		// $this->assertResponseStatus(200);
-		// $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
-        // $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
-		// $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Tarif Kalibrasi.xlsx"');
-    }
-
 	public function testDestroy()
 	{ 
 		$user = User::find('1'); 
@@ -93,4 +83,20 @@ class CalibrationChargeControllerTest extends TestCase
 		$response =  $this->actingAs($user)->call('DELETE', 'admin/calibration/'.$calibration->id);  
 		$this->assertEquals(302, $response->status());
 	}
+
+	public function autocomplete()
+    {
+        $user = User::where('id', '=', '1')->first();
+        $this->actingAs($user)->call('GET',"adm_calibration_autocomplete/query");
+        //Response status ok
+        $this->assertResponseStatus(200);
+    }
+/*	public function testExcel()
+    {
+        $user = User::where('id', '=', '1')->first();
+        $response = $this->actingAs($user)->call('GET','calibration/excel?search=cari&is_active=-1');
+        //Status Ok, Header data download file excel
+        $this->assertResponseStatus(200);
+        
+    }*/
 }
