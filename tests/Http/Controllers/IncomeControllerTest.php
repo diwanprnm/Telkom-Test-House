@@ -41,7 +41,6 @@ class IncomeControllerTest extends TestCase
             ->see($income->reference_number);
     }
 
-
     public function testExcelWithFilter()
     {
         //create data
@@ -93,7 +92,7 @@ class IncomeControllerTest extends TestCase
     {
         //create request
         $admin = User::where('id', '=', '1')->first();
-        $response = $this->actingAs($admin)->call('POST','admin/kuitansi',[
+        $this->actingAs($admin)->call('POST','admin/kuitansi',[
             'number' => 123456,
             'from' => 'Income testing',
             'price' => 5000000,
@@ -160,4 +159,33 @@ class IncomeControllerTest extends TestCase
         $this->assertResponseStatus(200)
             ->see('/DDS-73/');
     }
+
+    public function testGenerateKuitansiManualCaseAlreadyExist()
+    {
+        factory(App\Kuitansi::class)->create(['number' => '001/DDS-73/'.date('Y')]);
+        $admin = User::where('id', '=', '1')->first();
+        $this->actingAs($admin)->call('POST','admin/kuitansi/generateKuitansi');
+
+        //status ok, and response is text containing "DDS-73" in it
+        $this->assertResponseStatus(200)
+            ->see('002/DDS-73/'.date('Y'));
+    }
+
+    public function testAutoComplete()
+    {
+        $admin = User::where('id', '=', '1')->first();
+        $this->actingAs($admin)->call('GET','admin/adm_inc_autocomplete/query');
+
+        //status ok,
+        $this->assertResponseStatus(200);
+
+        App\Income::truncate();
+        App\Examination::truncate();
+        App\ExaminationLab::truncate();
+        App\Device::truncate();
+        App\Company::truncate();
+        App\Kuitansi::truncate();
+    }
+
+    
 }

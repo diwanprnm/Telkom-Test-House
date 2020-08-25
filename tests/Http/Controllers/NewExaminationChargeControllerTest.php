@@ -184,7 +184,7 @@ class NewExaminationChargeControllerTest extends TestCase
 
         //Make request as Admin
         $admin = User::find(1);
-        $this->actingAs($admin)->call('GET',"admin/newcharge/$newExaminationCharge->id?category=$newExaminationChargeDetail->category->&search=$newExaminationChargeDetail->name");
+        $this->actingAs($admin)->call('GET',"admin/newcharge/$newExaminationCharge->id?search=$newExaminationChargeDetail->device_name&category=$newExaminationChargeDetail->category");
 
         //Status sukses dan judul "TARIF PENGUJIAN BARU"
         $this->assertResponseStatus(200)
@@ -219,11 +219,12 @@ class NewExaminationChargeControllerTest extends TestCase
     public function testUpdate()
     {   
         //Get Data
-        $newExaminationCharge = App\NewExaminationCharge::latest()->first();
+        factory(App\ExaminationCharge::class)->create();
+        $newExaminationChargeDetail = factory(App\NewExaminationChargeDetail::class)->create();
 
         //Make request as Admin
         $admin = User::find(1);
-        $this->actingAs($admin)->call('PATCH',"admin/newcharge/$newExaminationCharge->id",[
+        $this->actingAs($admin)->call('PATCH',"admin/newcharge/$newExaminationChargeDetail->new_exam_charges_id",[
             'name' => 'Change name',
             'valid_from' => '2020-01-01',
             'description' => 'New Description',
@@ -236,6 +237,7 @@ class NewExaminationChargeControllerTest extends TestCase
         //delete residual
         //for Mysql DB::statement('SET FOREIGN_KEY_CHECKS=0;'); -
         DB::table('new_examination_charges')->truncate();
+        DB::table('examination_charges')->truncate();
         //for Mysql DB::statement('SET FOREIGN_KEY_CHECKS=1;'); -
     }
 
@@ -301,7 +303,15 @@ class NewExaminationChargeControllerTest extends TestCase
         //Status redirect ke admin/charge/id dan pesan "New Charge detail successfully deleted"
         $this->assertRedirectedTo("admin/newcharge/$newExaminationCharge->id", ['message' => 'New Charge detail successfully deleted']);
     }
+    public function testDeleteDetailNotFound()
+    {
+        //Make request as Admin
+        $admin = User::find(1);
+        $this->actingAs($admin)->call('POST',"admin/newcharge/DataNotFound/deleteDetail/DataNotFound");
 
+        //Status redirect ke admin/charge/id dan pesan "New Charge detail successfully deleted"
+        $this->assertRedirectedTo("admin/newcharge/", ['error' => 'Data not found']);
+    }
 
     public function testDestroy()
     {
@@ -320,5 +330,16 @@ class NewExaminationChargeControllerTest extends TestCase
         DB::table('new_examination_charges')->truncate();
         DB::table('examination_charges')->truncate();
         //for Mysql DB::statement('SET FOREIGN_KEY_CHECKS=1;'); -
+    }
+
+    public function testDestroyNotFound()
+    {
+        //Make request as Admin
+        $admin = User::find(1);
+        $this->actingAs($admin)->call('DELETE',"admin/newcharge/DataNotFound");
+
+        //Status redirect ke admin/newcharge dan pesan "New Charge successfully deleted"
+        $this->assertRedirectedTo("admin/newcharge/", ['error' => 'Data not found']);
+
     }
 }
