@@ -29,6 +29,7 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use App\Events\Notification;
 use App\NotificationTable;
+use App\Services\NotificationService;
 
 use Carbon\Carbon;
 
@@ -520,6 +521,7 @@ class PermohonanController extends Controller
 
 
 		/* push notif*/
+		$notificationService = new NotificationService();
 		$admins = AdminRole::where('registration_status',1)->get()->toArray();
 		foreach ($admins as $admin) { 
 			$data= array( 
@@ -531,18 +533,9 @@ class PermohonanController extends Controller
 		        self::CREATED_AT=>date(self::DATE_FORMAT),
 		        self::UPDATED_AT=>date(self::DATE_FORMAT)
 		    );
-			$notification = new NotificationTable();
-			$notification->id = Uuid::uuid4();
-		    $notification->from = $data['from'];
-		    $notification->to = $data['to'];
-		    $notification->message = $data[self::MESSAGE];
-		    $notification->url = $data['url'];
-		    $notification->is_read = $data[self::IS_READ];
-		    $notification->created_at = $data[self::CREATED_AT];
-		    $notification->updated_at = $data[self::UPDATED_AT];
-		    $notification->save();
-
-		    $data['id'] = $notification->id;
+			$notification_id = $notificationService->make($data);
+			$data['id'] = $notification_id;
+			
 		    event(new Notification($data)); 
 		}
 		
@@ -967,6 +960,7 @@ class PermohonanController extends Controller
 	
 	public function feedback(Request $request)
 	{
+		$notificationService = new NotificationService();
 		$quest = Question::find($request->input('question'));
 		if(count($quest)>0){
 			$category = $quest->name;
@@ -993,27 +987,17 @@ class PermohonanController extends Controller
 			}
 			
 			$data= array( 
-	        "from"=>$id_user,
-	        "to"=>"admin",
-	        self::MESSAGE=>$feedback->email." mengirim feedback ",
-	        "url"=>"feedback/".$feedback->id.'/reply',
-	        self::IS_READ=>0,
-	        self::CREATED_AT=>date(self::DATE_FORMAT),
-	        self::UPDATED_AT=>date(self::DATE_FORMAT)
+				"from"=>$id_user,
+				"to"=>"admin",
+				self::MESSAGE=>$feedback->email." mengirim feedback ",
+				"url"=>"feedback/".$feedback->id.'/reply',
+				self::IS_READ=>0,
+				self::CREATED_AT=>date(self::DATE_FORMAT),
+				self::UPDATED_AT=>date(self::DATE_FORMAT)
 	        );
-		  	$notification = new NotificationTable();
-			$notification->id = Uuid::uuid4();
-	      	$notification->from = $data['from'];
-	      	$notification->to = $data['to'];
-	      	$notification->message = $data[self::MESSAGE];
-	      	$notification->url = $data['url'];
-	      	$notification->is_read = $data[self::IS_READ];
-	      	$notification->created_at = $data[self::CREATED_AT];
-	      	$notification->updated_at = $data[self::UPDATED_AT];
-	      	$notification->save();
-	      	$data['id'] = $notification->id; 
+		  	$notification_id = $notificationService->make($data);
+			$data['id'] = $notification_id;
 	        event(new Notification($data));
-
 
 			$this->sendFeedbackEmail($request->input(self::EMAIL),$request->input('subject'),$request->input(self::MESSAGE),$request->input('question'));
             Session::flash('message_feedback', 'Feedback successfully send');
