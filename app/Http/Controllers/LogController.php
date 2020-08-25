@@ -16,7 +16,7 @@ use Auth;
 use Session;
 use Validator;
 use Excel;
-use App\Services\Logs\LogServices;
+use App\Services\Logs\LogService;
 
 // UUID
 use Ramsey\Uuid\Uuid;
@@ -25,13 +25,13 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 class LogController extends Controller
 {
     private const SEARCH = 'search';
-    private const LOG_PATH = 'log';
+    private const LOG_PATH = 'admin/log';
     private const LOG_CREATED = 'logs.created_at';
     private const LOG_ACTION = "logs.action";
     private const LOG_PAGE = "logs.page";
     private const LOG_SEARCH = "logs.created_at as search_date";
     private const LOG_USER = "logs.user_id";
-    private const LOG_ADMIN_PATH = 'log_administrator';
+    private const LOG_ADMIN_PATH = 'admin/log_administrator';
     private const LOG_ADMIN_CREATED = 'logs_administrator.created_at';
     private const LOG_ADMIN_ACTION = "logs_administrator.action";
     private const LOG_ADMIN_PAGE = "logs_administrator.page";
