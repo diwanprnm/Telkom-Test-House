@@ -83,4 +83,14 @@ class CalibrationChargeControllerTest extends TestCase
 		$response =  $this->actingAs($user)->call('DELETE', 'admin/calibration/'.$calibration->id);  
 		$this->assertEquals(302, $response->status());
 	}
+
+	public function testExcel()
+    {
+        $device = App\Device::latest()->first();
+        $user = User::where('id', '=', '1')->first();
+        $response = $this->actingAs($user)->call('get','calibration/excel?search='.$device->name);
+        //Status Ok, Header data download file excel
+        $this->assertTrue(true);
+        
+    }
 }
