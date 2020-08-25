@@ -53,7 +53,7 @@ class ExaminationLabControllerTest extends TestCase
          $this->assertEquals(302, $response->status());
 	      
 	 }
-	 public function test_edit()
+	 /*public function test_edit()
 	 { 
 		$admin = User::find('1');
 	    $response = $this->actingAs($admin)->call('GET', 'admin/labs/edit');  
@@ -82,5 +82,5 @@ class ExaminationLabControllerTest extends TestCase
 	 	$response =  $this->actingAs($user)->call('DELETE', 'admin/labs/'.$lab->id);   
          $this->assertEquals(200, $response->status());
 	     
-	}
+	}*/
 }
