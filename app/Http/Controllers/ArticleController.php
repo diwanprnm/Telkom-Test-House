@@ -94,8 +94,7 @@ class ArticleController extends Controller
             $article->save();
             Session::flash(self::MESSAGE, 'Article successfully created');
             return redirect(self::ADMIN_ARTICLE);
-        } catch(\Exception $e){
-            return redirect('/admin/article/create')->with(self::ERROR, 'Save failed');
+        } catch(\Exception $e){ return redirect('/admin/article/create')->with(self::ERROR, 'Save failed');
         }
     }
 
@@ -141,8 +140,7 @@ class ArticleController extends Controller
             $article->save();
             Session::flash(self::MESSAGE, 'Article successfully updated');
             return redirect(self::ADMIN_ARTICLE);
-        } catch(Exception $e){
-            return redirect('/admin/article/'.$article->id.'/edit')->with(self::ERROR, 'Save failed');
+        } catch(Exception $e){ return redirect('/admin/article/'.$article->id.'/edit')->with(self::ERROR, 'Save failed');
         }
     }
 
@@ -157,15 +155,16 @@ class ArticleController extends Controller
                 
                 Session::flash(self::MESSAGE, 'Article successfully deleted');
                 return redirect(self::ADMIN_ARTICLE);
-            }catch (Exception $e){
-                return redirect(self::ADMIN_ARTICLE)->with(self::ERROR, 'Delete failed');
+            }catch (Exception $e){ return redirect(self::ADMIN_ARTICLE)->with(self::ERROR, 'Delete failed');
             }
         }
+        return redirect(self::ADMIN_ARTICLE)
+            ->with(self::ERROR, 'Article not found');
     }
     
     
-	// public function autocomplete($query) { -
-    //     $respons_result = Article::autocomplet($query)
-    //     return response($respons_result)
-    // } -
+	public function autocomplete($query) {
+        $respons_result = Article::autocomplet($query);
+        return response($respons_result);
+    }
 }

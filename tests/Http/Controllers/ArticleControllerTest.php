@@ -112,9 +112,24 @@ class ArticleControllerTest extends TestCase
         //visit index, delete a certificate
         $this->actingAs($user)->call('DELETE','admin/article/'.$article->id);
         //Response status redirect to article.index
-        $this->assertResponseStatus(302) 
-            ->see('Redirecting to <a href="http://localhost/admin/article">http://localhost/admin/article</a>');
+        $this->assertRedirectedTo('admin/article/', ['message' => 'Article successfully deleted']);
         //delete remaining article when test is done
         Article::truncate();
-    }    
+    }
+    
+    public function testDestroyNotFound()
+    {
+        $user = User::where('id', '=', '1')->first();
+        $this->actingAs($user)->call('DELETE','admin/article/articleNotFound');
+        //Response status redirect to article.index
+        $this->assertRedirectedTo('admin/article/', ['error' => 'Article not found']);
+    }
+
+    public function testAutocomplete()
+    {
+        $user = User::where('id', '=', '1')->first();
+        $this->actingAs($user)->call('GET',"admin/adm_article_autocomplete/query");
+        //Response status ok
+        $this->assertResponseStatus(200);
+    }
 }
