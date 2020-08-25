@@ -17,7 +17,8 @@ class LogControllerTest extends TestCase
 
     public function testIndex()
     { 
-        $response = $this->call('GET', 'admin/log');  
+        $admin = User::find('1');
+        $response = $this->actingAs($admin)->call('GET', 'admin/log');
         $this->assertEquals(200, $response->status());
     }
     
