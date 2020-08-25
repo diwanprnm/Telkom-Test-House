@@ -29,10 +29,6 @@ class PopUpInformationControllerTest extends TestCase
         $company = App\Company::latest()->first();
         $admin = User::find('1');
         $response = $this->actingAs($admin)->call('GET', 'admin/popupinformation?search=a'); 
-     /*   $this->seeInDatabase('logs', [
-            'page' => 'CERTIFICATION',
-            'data' => '{"search":"a"}']); 
-           */
 		$this->assertEquals(200, $response->status());
 		
      }

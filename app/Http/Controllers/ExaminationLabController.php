@@ -9,7 +9,7 @@ use App\Http\Requests;
 use App\ExaminationLab;
 use App\Logs;
 use App\ManageProcess;
-
+use App\Services\Logs\LogService;
 use Auth;
 use Session;
 
@@ -58,13 +58,9 @@ class ExaminationLabController extends Controller
                     ->orderBy('name')
                     ->paginate($paginate);
 
-                    $logs = new Logs;
-                    $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                    $logs->action = "Search Examination Lab";
-                    $logs->data = json_encode(array("search"=>$search));
-                    $logs->created_by = $currentUser->id;
-                    $logs->page = $this::EXAM;
-                    $logs->save();
+                    $logService = new LogService();
+				    $logService->createLog("Search Examination Lab",$this::EXAM, json_encode(array("search"=>$search)) );
+				
             }else{
                 $labs = ExaminationLab::whereNotNull('created_at')
                     ->orderBy('name')
@@ -115,24 +111,8 @@ class ExaminationLabController extends Controller
         try{
             $labs->save();
 
-            for ($i=1; $i <= 4; $i++) { 
-                $mp = new ManageProcess;
-                $mp->exam_type_id = $i;
-                $mp->lab_id = $labs->id;
-                $mp->is_active = 1;
-
-                $mp->created_by = $currentUser->id;
-                $mp->updated_by = $currentUser->id;
-                $mp->save();
-            }
-
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Create Examination Lab";
-            $logs->data = $labs;
-            $logs->created_by = $currentUser->id;
-            $logs->page = $this::EXAM;
-            $logs->save();
+            $logService = new LogService();
+			$logService->createLog("Create Examination Lab",$this::EXAM, $labs );	
 
             Session::flash($this::MESSAGE, 'Labs successfully created');
             return redirect($this::LABS);
@@ -208,13 +188,9 @@ class ExaminationLabController extends Controller
         try{
             $labs->save();
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Update Examination Lab";
-            $logs->data = $oldData;
-            $logs->created_by = $currentUser->id;
-            $logs->page = $this::EXAM;
-            $logs->save();
+            $logService = new LogService();
+			$logService->createLog("Update Examination Lab",$this::EXAM, $oldData );	
+
 
             Session::flash($this::MESSAGE, 'Labs successfully updated');
             return redirect($this::LABS);
@@ -241,13 +217,9 @@ class ExaminationLabController extends Controller
                 ManageProcess::where('lab_id', '=' ,''.$id.'')->delete();
                 $labs->delete();
                 
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Delete Examination Lab";
-                $logs->data = $oldData;
-                $logs->created_by = $currentUser->id;
-                $logs->page = $this::EXAM;
-                $logs->save();
+                $logService = new LogService();
+                $logService->createLog("Delete Examination Lab",$this::EXAM, $oldData );	
+    
 
                 Session::flash($this::MESSAGE, 'Labs successfully deleted');
                 return redirect($this::LABS);

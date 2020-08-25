@@ -123,20 +123,20 @@ class LogController extends Controller
                 $select = array(
                     $this::LOG_ADMIN_ACTION,$this::LOG_ADMIN_PAGE,"logs_administrator.reason",$this::LOG_ADMIN_SEARCH,$this::USER_NAME
                 );
-                $datalogs = LogsAdministrator::select($select)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
+                //$datalogs = LogsAdministrator::select($select)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
     
                 $select2 = array(
                     $this::USER_NAME
                 );
-                $datalogs2 = LogsAdministrator::select($select2)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
+               // $datalogs2 = LogsAdministrator::select($select2)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
     
-                $username = $datalogs2->distinct()->orderBy(self::USER_NAME)->get();
+               // $username = $datalogs2->distinct()->orderBy(self::USER_NAME)->get();
     
                 $select3 = array(
                     $this::LOG_ADMIN_ACTION
                 );
-                $datalogs3 = LogsAdministrator::select($select3)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
-                $action = $datalogs3->distinct()->orderBy('logs_administrator.action')->get();
+               // $datalogs3 = LogsAdministrator::select($select3)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
+               // $action = $datalogs3->distinct()->orderBy('logs_administrator.action')->get();
     
                 if ($search != null){
                     $datalogs->where($this::ACTION,'like','%'.$search.'%');
