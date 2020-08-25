@@ -83,7 +83,13 @@ class CalibrationChargeControllerTest extends TestCase
 		$response =  $this->actingAs($user)->call('DELETE', 'admin/calibration/'.$calibration->id);  
 		$this->assertEquals(302, $response->status());
 	}
-
+	public function autocomplete()
+    {
+        $user = User::where('id', '=', '1')->first();
+        $this->actingAs($user)->call('GET',"adm_calibration_autocomplete/query");
+        //Response status ok
+        $this->assertResponseStatus(200);
+    }
 /*	public function testExcel()
     {
         $user = User::where('id', '=', '1')->first();
