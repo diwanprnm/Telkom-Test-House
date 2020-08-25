@@ -236,14 +236,12 @@ class CalibrationChargeController extends Controller
         // the user's e-mail address, the amount paid, and the payment
         // timestamp.
         $search = trim($request->input(self::SEARCH));
+        $status = -1;
        
         $query = CalibrationCharge::whereNotNull(self::CREATE);
 
         if ($search != null){
             $query->where(self::DEVICE,'like','%'.$search.'%');
-
-            $logService = new LogService();
-            $logService->createLog( "Search Calibration Charge",self::CALIBRATION, json_encode( array(self::SEARCH2=>$search)) );
         }
 
         if ($request->has(self::IS_ACTIVE)){

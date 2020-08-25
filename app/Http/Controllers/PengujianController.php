@@ -165,121 +165,68 @@ class PengujianController extends Controller
 				examinations.created_at,
 				(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name';
 			
-            if ($search != null){
-				if($jns > 0){
-					if($status > 0){
-						$data = DB::table(self::EXAMINATIONS)
-						->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
-						->join(self::USERS, self::EXAMINATIONS_CREATED_BY, '=', self::USERS_ID)
-						->join(self::COMPANIES, self::USER_COMPANY_ID, '=', self::COMPANIES_ID)
-						->join(self::EXAMINATION_TYPES, self::EXAMINATIONS_TYPE_ID, '=', self::EXAMINATION_TYPES_ID)
-						->select(DB::raw( $neededColumn ))
-						->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
-						// ->where(self::EXAMINATIONS_CREATED_BY,'=',''.$user_id.'')
-						->where(self::DEVICES_NAME,'like','%'.$search.'%')
-						->where(self::EXAMINATIONS_DOT.$arr_status[$status-1].'','=','1')
-						->where(self::EXAMINATIONS_DOT.$arr_status[$status].'','<','1')
-						->where(self::EXAMINATIONS_TYPE_ID,'=',''.$request->input('jns').'')
-						->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
-						->paginate($paginate);
+				$data = DB::table(self::EXAMINATIONS)
+							->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
+							->join(self::USERS, self::EXAMINATIONS_CREATED_BY, '=', self::USERS_ID)
+							->join(self::COMPANIES, self::USER_COMPANY_ID, '=', self::COMPANIES_ID)
+							->join(self::EXAMINATION_TYPES, self::EXAMINATIONS_TYPE_ID, '=', self::EXAMINATION_TYPES_ID)
+							->select(DB::raw( $neededColumn ))
+							->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'');
+
+				if ($search != null){
+					if($jns > 0){
+						if($status > 0){
+							$data->where(self::DEVICES_NAME,'like','%'.$search.'%')
+							->where(self::EXAMINATIONS_DOT.$arr_status[$status-1].'','=','1')
+							->where(self::EXAMINATIONS_DOT.$arr_status[$status].'','<','1')
+							->where(self::EXAMINATIONS_TYPE_ID,'=',''.$request->input('jns').'')
+							->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
+							->paginate($paginate);
+						}else{
+							$data->where(self::DEVICES_NAME,'like','%'.$search.'%')
+							->where(self::EXAMINATIONS_TYPE_ID,'=',''.$request->input('jns').'')
+							->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
+							->paginate($paginate);
+						}
 					}else{
-						$data = DB::table(self::EXAMINATIONS)
-						->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
-						->join(self::USERS, self::EXAMINATIONS_CREATED_BY, '=', self::USERS_ID)
-						->join(self::COMPANIES, self::USER_COMPANY_ID, '=', self::COMPANIES_ID)
-						->join(self::EXAMINATION_TYPES, self::EXAMINATIONS_TYPE_ID, '=', self::EXAMINATION_TYPES_ID)
-						->select(DB::raw( $neededColumn ))
-						->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
-						// ->where(self::EXAMINATIONS_CREATED_BY,'=',''.$user_id.'')
-						->where(self::DEVICES_NAME,'like','%'.$search.'%')
-						->where(self::EXAMINATIONS_TYPE_ID,'=',''.$request->input('jns').'')
-						->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
-						->paginate($paginate);
+						if($status > 0){
+							$data->where(self::DEVICES_NAME,'like','%'.$search.'%')
+							->where(self::EXAMINATIONS_DOT.$arr_status[$status-1].'','=','1')
+							->where(self::EXAMINATIONS_DOT.$arr_status[$status].'','<','1')
+							->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
+							->paginate($paginate);
+						}else{
+							$data->where(self::DEVICES_NAME,'like','%'.$search.'%')
+							->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
+							->paginate($paginate);
+						}
 					}
 				}else{
-					if($status > 0){
-						$data = DB::table(self::EXAMINATIONS)
-						->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
-						->join(self::USERS, self::EXAMINATIONS_CREATED_BY, '=', self::USERS_ID)
-						->join(self::COMPANIES, self::USER_COMPANY_ID, '=', self::COMPANIES_ID)
-						->join(self::EXAMINATION_TYPES, self::EXAMINATIONS_TYPE_ID, '=', self::EXAMINATION_TYPES_ID)
-						->select(DB::raw( $neededColumn ))
-						->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
-						// ->where(self::EXAMINATIONS_CREATED_BY,'=',''.$user_id.'')
-						->where(self::DEVICES_NAME,'like','%'.$search.'%')
-						->where(self::EXAMINATIONS_DOT.$arr_status[$status-1].'','=','1')
-						->where(self::EXAMINATIONS_DOT.$arr_status[$status].'','<','1')
-						->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
-						->paginate($paginate);
+					if($jns > 0){
+						if($status > 0){
+							$data->where(self::EXAMINATIONS_DOT.$arr_status[$status-1].'','=','1')
+							->where(self::EXAMINATIONS_DOT.$arr_status[$status].'','<','1')
+							->where(self::EXAMINATIONS_TYPE_ID,'=',''.$request->input('jns').'')
+							->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
+							->paginate($paginate);
+						}else{
+							$data->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
+							->where(self::EXAMINATIONS_TYPE_ID,'=',''.$request->input('jns').'')
+							->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
+							->paginate($paginate);
+						}
 					}else{
-						$data = DB::table(self::EXAMINATIONS)
-						->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
-						->join(self::USERS, self::EXAMINATIONS_CREATED_BY, '=', self::USERS_ID)
-						->join(self::COMPANIES, self::USER_COMPANY_ID, '=', self::COMPANIES_ID)
-						->join(self::EXAMINATION_TYPES, self::EXAMINATIONS_TYPE_ID, '=', self::EXAMINATION_TYPES_ID)
-						->select(DB::raw( $neededColumn ))
-						->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
-						// ->where(self::EXAMINATIONS_CREATED_BY,'=',''.$user_id.'')
-						->where(self::DEVICES_NAME,'like','%'.$search.'%')
-						->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
-						->paginate($paginate);
+						if($status > 0){
+							$data->where(self::EXAMINATIONS_DOT.$arr_status[$status-1].'','=','1')
+							->where(self::EXAMINATIONS_DOT.$arr_status[$status].'','<','1')
+							->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
+							->paginate($paginate);
+						}else{
+							$data->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
+							->paginate($paginate);
+						}
 					}
 				}
-            }else{
-                if($jns > 0){
-					if($status > 0){
-						$data = DB::table(self::EXAMINATIONS)
-						->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
-						->join(self::USERS, self::EXAMINATIONS_CREATED_BY, '=', self::USERS_ID)
-						->join(self::COMPANIES, self::USER_COMPANY_ID, '=', self::COMPANIES_ID)
-						->join(self::EXAMINATION_TYPES, self::EXAMINATIONS_TYPE_ID, '=', self::EXAMINATION_TYPES_ID)
-						->select(DB::raw( $neededColumn ))
-						->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
-						// ->where(self::EXAMINATIONS_CREATED_BY,'=',''.$user_id.'')
-						->where(self::EXAMINATIONS_DOT.$arr_status[$status-1].'','=','1')
-						->where(self::EXAMINATIONS_DOT.$arr_status[$status].'','<','1')
-						->where(self::EXAMINATIONS_TYPE_ID,'=',''.$request->input('jns').'')
-						->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
-						->paginate($paginate);
-					}else{
-						$data = DB::table(self::EXAMINATIONS)
-						->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
-						->join(self::USERS, self::EXAMINATIONS_CREATED_BY, '=', self::USERS_ID)
-						->join(self::COMPANIES, self::USER_COMPANY_ID, '=', self::COMPANIES_ID)
-						->join(self::EXAMINATION_TYPES, self::EXAMINATIONS_TYPE_ID, '=', self::EXAMINATION_TYPES_ID)
-						->select(DB::raw( $neededColumn ))
-						->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
-						// ->where(self::EXAMINATIONS_CREATED_BY,'=',''.$user_id.'')
-						->where(self::EXAMINATIONS_TYPE_ID,'=',''.$request->input('jns').'')
-						->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
-						->paginate($paginate);
-					}
-				}else{
-					if($status > 0){
-						$data = DB::table(self::EXAMINATIONS)
-						->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
-						->join(self::USERS, self::EXAMINATIONS_CREATED_BY, '=', self::USERS_ID)
-						->join(self::COMPANIES, self::USER_COMPANY_ID, '=', self::COMPANIES_ID)
-						->join(self::EXAMINATION_TYPES, self::EXAMINATIONS_TYPE_ID, '=', self::EXAMINATION_TYPES_ID)
-						->select(DB::raw( $neededColumn ))
-						->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
-						->where(self::EXAMINATIONS_DOT.$arr_status[$status-1].'','=','1')
-						->where(self::EXAMINATIONS_DOT.$arr_status[$status].'','<','1')
-						->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
-						->paginate($paginate);
-					}else{
-						$data = DB::table(self::EXAMINATIONS)
-						->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
-						->join(self::USERS, self::EXAMINATIONS_CREATED_BY, '=', self::USERS_ID)
-						->join(self::COMPANIES, self::USER_COMPANY_ID, '=', self::COMPANIES_ID)
-						->join(self::EXAMINATION_TYPES, self::EXAMINATIONS_TYPE_ID, '=', self::EXAMINATION_TYPES_ID)
-						->select(DB::raw( $neededColumn ))
-						->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
-						->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
-						->paginate($paginate);
-					}
-				}
-            }
 				$query_exam_type = "SELECT * FROM examination_types";
 				$data_exam_type = DB::select($query_exam_type);
 			
