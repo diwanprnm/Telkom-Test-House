@@ -14,7 +14,6 @@ class ArticleControllerTest extends TestCase
         parent::setUp();
     }
 
-
     public function testIndexAsNonAdmin()
     {
         $user = factory(User::class)->make();

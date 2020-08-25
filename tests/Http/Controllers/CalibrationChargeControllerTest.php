@@ -50,15 +50,13 @@ class CalibrationChargeControllerTest extends TestCase
 			'price' => mt_rand(0,10000),
 			'is_active' => mt_rand(0,1)
 		]);   
-		
 		$this->assertEquals(302, $response->status());
-	
 	}
 
 	public function testEdit()
 	{	
-		$calibration = CalibrationCharge::latest()->first();
 		$user = User::find('1'); 
+		$calibration = CalibrationCharge::latest()->first();
 		$response = $this->actingAs($user)->call('GET', 'admin/calibration/'.$calibration->id.'/edit');
 		$this->assertEquals(200, $response->status());
 	}

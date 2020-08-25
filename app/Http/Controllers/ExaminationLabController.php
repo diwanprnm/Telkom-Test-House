@@ -8,7 +8,6 @@ use App\Http\Requests;
 
 use App\ExaminationLab;
 use App\Logs;
-use App\ManageProcess;
 use App\Services\Logs\LogService;
 use Auth;
 use Session;
@@ -200,11 +199,9 @@ class ExaminationLabController extends Controller
     {
         $labs = ExaminationLab::find($id);
         $oldData = $labs;
-        $currentUser = Auth::user();
 
         if ($labs){
             try{
-                ManageProcess::where('lab_id', '=' ,''.$id.'')->delete();
                 $labs->delete();
                 
                 $logService = new LogService();
