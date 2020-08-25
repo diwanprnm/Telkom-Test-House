@@ -49,5 +49,33 @@ class DeviceControllerTest extends TestCase
 
         }*/
 
-   
+   public function testEdit()
+   {
+    $device = factory(App\Device::class)->create();
+    $admin = User::find('1');
+    $response = $this->actingAs($admin)->call('GET', 'admin/device/'.$device->id.'edit');  
+    $this->assertEquals(200, $response->status());
+   }
+
+    public function test_update()
+	 { 
+        $device = factory(App\Device::class)->create();
+	 	$user =User::find('1');
+		 
+	 	$response =  $this->actingAs($user)->call('GET', 'admin/device/'.$device->id.'/edit', 
+	 	[ 
+             'name' => str_random(10),
+             'mark' => str_random(10),
+             'capacity' => mt_rand(0,10),
+             'manufactured_by' => str_random(10),
+             'serial_number' =>mt_rand(0,10000),
+             'model' => str_random(10),
+             'test_reference' => str_random(10),
+             'cert_number' => mt_rand(0,10000),
+             'valid_from' => str_random(10),
+             'valid_thru' => str_random(10),
+	    ]);   
+         $this->assertEquals(200, $response->status());
+	   
+	 }
 }

@@ -292,4 +292,9 @@ class DeviceController extends Controller
             return redirect('/admin/device/'.$device->id.'/edit');
         }
 	}
+
+	public function show($id)
+    {
+        
+    }
 }
