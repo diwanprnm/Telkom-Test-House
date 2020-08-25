@@ -17,15 +17,6 @@ use Excel;
 
 /**Duplicated var
  * */
-
-
-
-
-
-
-
-
-
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
@@ -67,30 +58,23 @@ class CalibrationChargeController extends Controller
             $search = trim($request->input(self::SEARCH));
             $status = -1;
             
+            $query = CalibrationCharge::whereNotNull(self::CREATE);
+
             if ($search != null){
-                $charge = CalibrationCharge::whereNotNull(self::CREATE)
-                    ->where(self::DEVICE,'like','%'.$search.'%')
-                    ->orderBy(self::DEVICE)
-                    ->paginate($paginate);
+                $query->where(self::DEVICE,'like','%'.$search.'%');
 
-                
-
-                    $logService = new LogService();
-                    $logService->createLog( "Search Calibration Charge",self::CALIBRATION, json_encode( array(self::SEARCH2=>$search)) );
-    
-            }else{
-                $query = CalibrationCharge::whereNotNull(self::CREATE);
-
-                if ($request->has(self::IS_ACTIVE)){
-                    $status = $request->get(self::IS_ACTIVE);
-                    if ($request->get(self::IS_ACTIVE) > -1){
-                        $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
-                    }
-                }
-
-                $charge = $query->orderBy(self::DEVICE)
-                               ->paginate($paginate);
+                $logService = new LogService();
+                $logService->createLog( "Search Calibration Charge",self::CALIBRATION, json_encode( array(self::SEARCH2=>$search)) );
             }
+
+            if ($request->has(self::IS_ACTIVE)){
+                $status = $request->get(self::IS_ACTIVE);
+                if ($request->get(self::IS_ACTIVE) > -1){
+                    $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
+                }
+            }
+
+            $charge = $query->orderBy(self::DEVICE)->paginate($paginate);
             
             if (count($charge) == 0){
                 $message = 'Data not found';

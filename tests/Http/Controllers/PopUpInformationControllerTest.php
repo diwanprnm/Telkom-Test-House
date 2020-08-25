@@ -5,7 +5,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use App\User;
-use App\PopUpInformation;
+use App\Certification;
 
 class PopUpInformationControllerTest extends TestCase
 {

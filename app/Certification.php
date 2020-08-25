@@ -11,7 +11,7 @@ class Certification extends Model
     public $incrementing = false;
 	
 	static function autocomplet($query){
-		return DB::table('ertifications')
+		return DB::table('certifications')
 				->select('title as autosuggest')
 				->where('title', 'like','%'.$query.'%')
                 ->orderBy('title')
