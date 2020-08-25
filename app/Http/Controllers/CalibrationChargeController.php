@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 
 use Auth;
@@ -221,8 +220,12 @@ class CalibrationChargeController extends Controller
     }
 	
 	public function autocomplete($query) {
-        $respons_result = CalibrationCharge::autocomplet($query);
-        return response($respons_result);
+        return CalibrationCharge::select('device_name as autosuggest')
+		->where('device_name', 'like','%'.$query.'%')
+		->orderBy('device_name')
+		->take(5)
+        ->distinct()
+        ->get();
     }
 
     public function excel(Request $request) 
