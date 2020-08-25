@@ -52,7 +52,6 @@ class CalibrationChargeControllerTest extends TestCase
 		]);   
 		
 		$this->assertEquals(302, $response->status());
-		$calibration = factory(App\CalibrationCharge::class)->make();  
 	}
 
 	public function testEdit()
