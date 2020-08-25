@@ -84,12 +84,12 @@ class CalibrationChargeControllerTest extends TestCase
 		$this->assertEquals(302, $response->status());
 	}
 
-	public function testExcel()
+/*	public function testExcel()
     {
         $user = User::where('id', '=', '1')->first();
         $response = $this->actingAs($user)->call('GET','calibration/excel?search=cari&is_active=-1');
         //Status Ok, Header data download file excel
         $this->assertResponseStatus(200);
         
-    }
+    }*/
 }
