@@ -234,30 +234,22 @@ class CalibrationChargeController extends Controller
         // timestamp.
         $search = trim($request->input(self::SEARCH));
        
+        $query = CalibrationCharge::whereNotNull(self::CREATE);
 
         if ($search != null){
-            $charge = CalibrationCharge::whereNotNull(self::CREATE)
-                ->where(self::DEVICE,'like','%'.$search.'%')
-                ->orderBy(self::DEVICE);
+            $query->where(self::DEVICE,'like','%'.$search.'%');
 
-                $logService = new LogService();
-                $logService->createLog('Search Calibration Charge',self::CALIBRATION, json_encode(array(self::SEARCH2=>$search)) );
-
-              
-        }else{
-            $query = CalibrationCharge::whereNotNull(self::CREATE);
-
-            if ($request->has(self::IS_ACTIVE)){
-                 $request->get(self::IS_ACTIVE);
-                if ($request->get(self::IS_ACTIVE) > -1){
-                    $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
-                }
-            }
-
-            $charge = $query->orderBy(self::DEVICE);
+            $logService = new LogService();
+            $logService->createLog( "Search Calibration Charge",self::CALIBRATION, json_encode( array(self::SEARCH2=>$search)) );
         }
 
-        $data = $charge->get();
+        if ($request->has(self::IS_ACTIVE)){
+            $status = $request->get(self::IS_ACTIVE);
+            if ($request->get(self::IS_ACTIVE) > -1){
+                $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
+            }
+        }
+        $data = $query->get();
 
         $examsArray = []; 
 
