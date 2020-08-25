@@ -50,13 +50,15 @@ class CalibrationChargeControllerTest extends TestCase
 			'price' => mt_rand(0,10000),
 			'is_active' => mt_rand(0,1)
 		]);   
+		
 		$this->assertEquals(302, $response->status());
+	
 	}
 
 	public function testEdit()
 	{	
-		$user = User::find('1'); 
 		$calibration = CalibrationCharge::latest()->first();
+		$user = User::find('1'); 
 		$response = $this->actingAs($user)->call('GET', 'admin/calibration/'.$calibration->id.'/edit');
 		$this->assertEquals(200, $response->status());
 	}
@@ -86,9 +88,9 @@ class CalibrationChargeControllerTest extends TestCase
     {
         $device = App\Device::latest()->first();
         $user = User::where('id', '=', '1')->first();
-        $response = $this->actingAs($user)->call('get','calibration/excel?search='.$device->name);
+        $response = $this->actingAs($user)->call('get','feedbackncomplaint/excel?search='.$device->name);
         //Status Ok, Header data download file excel
-        $this->assertTrue(true);
+        $this->assertResponseStatus(200);
         
     }
 }
