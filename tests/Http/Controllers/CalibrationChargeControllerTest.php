@@ -86,9 +86,8 @@ class CalibrationChargeControllerTest extends TestCase
 
 	public function testExcel()
     {
-        $device = App\Device::latest()->first();
         $user = User::where('id', '=', '1')->first();
-        $response = $this->actingAs($user)->call('get','feedbackncomplaint/excel?search='.$device->name);
+        $response = $this->actingAs($user)->call('GET','calibration/excel?search=cari&is_active=-1');
         //Status Ok, Header data download file excel
         $this->assertResponseStatus(200);
         
