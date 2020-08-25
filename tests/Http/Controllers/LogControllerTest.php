@@ -5,6 +5,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Log;
 use App\User;
+use App\Company;
 
 class LogControllerTest extends TestCase
 {
@@ -14,29 +15,23 @@ class LogControllerTest extends TestCase
      * @return void
      */
 
-    public function testDeleteSoon(){
-        $this->assertTrue(true);
-    }
-
-     public function test_visit_company()
-	 { 
-	    $response = $this->call('GET', 'admin/log');  
-        $this->assertEquals(302, $response->status());
-     }
-     
-     public function test_search()
-	 { 
-        $company = App\Company::latest()->first();
-        $device = App\Device::latest()->first();
+    public function testIndex()
+    { 
         $admin = User::find('1');
-        $response = $this->actingAs($admin)->call('GET', 'admin/log?search='.$company->name.'&search2='.$company->name.'&tab=tab-1'); 
-        $this->seeInDatabase('logs', [
-            'page' => 'DEVICE',
-            'data' => '{"search":"'.$company->name.'"}']); 
-           dd($response);
-           
+        $response = $this->actingAs($admin)->call('GET', 'admin/log');
         $this->assertEquals(200, $response->status());
-     }
+    }
+    
+    public function testSearch()
+    { 
+        $admin = User::find('1');
+        $response = $this->actingAs($admin)->call('GET', 'admin/log?search=test&after_date=&before_date=&username=&action='); 
+        $this->seeInDatabase('logs', [
+            'page' => 'LOG',
+            'data' => '{"search":"test"}'
+        ]); 
+        $this->assertEquals(200, $response->status());
+    }
     
     // public function testExcelWithFilter()
     // {
