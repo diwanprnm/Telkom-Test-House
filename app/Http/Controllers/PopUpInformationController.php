@@ -9,6 +9,7 @@ use App\Http\Requests;
 
 use App\Certification;
 use App\Logs;
+use App\Services\Logs\LogService;
 
 use Auth;
 use Session;
@@ -65,13 +66,8 @@ class PopUpInformationController extends Controller
                     ->orderBy($this::CREATED)
                     ->paginate($paginate);
 
-                    $logs = new Logs;
-                    $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                    $logs->action = "Search Pop Up Information";
-                    $logs->data = json_encode(array("search"=>$search));
-                    $logs->created_by = $currentUser->id;
-                    $logs->page = $this::CERTIFICATION;
-                    $logs->save();
+                    $logService = new LogService();
+                    $logService->createLog("Search Pop Up Information", $this::CERTIFICATION, json_encode(array("search"=>$search)) );
             }else{
                 $popupinformations = Certification::whereNotNull($this::CREATED)
                     ->where('type',0)
@@ -142,13 +138,8 @@ class PopUpInformationController extends Controller
         try{
             $popupinformation->save();
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Create Pop Up Information";
-            $logs->data = $popupinformation;
-            $logs->created_by = $currentUser->id;
-            $logs->page = $this::CERTIFICATION;
-            $logs->save();
+            $logService = new LogService();
+            $logService->createLog("Create Pop Up Information", $this::CERTIFICATION, $popupinformation );           
 
             Session::flash($this::MESSAGE, 'Pop Up Information successfully created');
             return redirect($this::ADMIN);
@@ -224,13 +215,8 @@ class PopUpInformationController extends Controller
         try{
             $popupinformation->save();
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Update Pop Up Information";
-            $logs->data = $oldData;
-            $logs->created_by = $currentUser->id;
-            $logs->page = $this::CERTIFICATION;
-            $logs->save();
+            $logService = new LogService();
+            $logService->createLog("Update Pop Up Information", $this::CERTIFICATION, $oldData );           
 
             Session::flash($this::MESSAGE, 'Pop Up Information successfully updated');
             return redirect($this::ADMIN);
@@ -255,13 +241,8 @@ class PopUpInformationController extends Controller
             try{
                 $popupinformation->delete();
 
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Delete Pop Up Information";
-                $logs->data = $oldData;
-                $logs->created_by = $currentUser->id;
-                $logs->page = $this::CERTIFICATION;
-                $logs->save();
+                $logService = new LogService();
+                $logService->createLog("Delete Pop Up Information", $this::CERTIFICATION, $oldData );           
 
                 Session::flash($this::MESSAGE, 'Pop Up Information successfully deleted');
                 return redirect($this::ADMIN);

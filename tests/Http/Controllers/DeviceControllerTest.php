@@ -5,37 +5,31 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use App\User;
-use App\Device;
-use App\Company;
-
-class DevicencControllerTest extends TestCase
+class DeviceControllerTest extends TestCase
 {
-    
     /**
      * A basic test example.
      *
      * @return void
      */
-
-    public function testDeleteSoon(){
+    public function testExample()
+    {
         $this->assertTrue(true);
     }
-
     public function test_visit()
 	 {  $admin = User::find('1');
-		$response = $this->actingAs($admin)->call('GET', 'admin/devicenc');  
+		$response = $this->actingAs($admin)->call('GET', 'admin/device');  
         $this->assertEquals(200, $response->status());
      }
      
      public function test_search()
 	 { 
-        $company = App\Company::latest()->first();
-        $device = App\Device::latest()->first();
+        $device = factory(App\Device::class)->create();
         $admin = User::find('1');
-        $response = $this->actingAs($admin)->call('GET', 'admin/devicenc?search='.$company->name.'&search2='.$company->name.'&tab=tab-1'); 
+        $response = $this->actingAs($admin)->call('GET', 'admin/device?search='.$device->name.'&after_date=&before_date=&category='); 
         $this->seeInDatabase('logs', [
             'page' => 'DEVICE',
-            'data' => '{"search":"'.$company->name.'"}']); 
+            'data' => '{"search":"'.$device->name.'"}']); 
            
 		$this->assertEquals(200, $response->status());
 		
@@ -55,18 +49,33 @@ class DevicencControllerTest extends TestCase
 
         }*/
 
-    public function testMoveData()
-     {
-       // $device = App\Device::latest()->first();
+   public function testEdit()
+   {
+    $device = factory(App\Device::class)->create();
+    $admin = User::find('1');
+    $response = $this->actingAs($admin)->call('GET', 'admin/device/'.$device->id.'edit');  
+    $this->assertEquals(200, $response->status());
+   }
+
+    public function test_update()
+	 { 
         $device = factory(App\Device::class)->create();
-        $admin = User::find('1');
-        $reason='test';
-        $response = $this->actingAs($admin)->call('GET', 'admin/devicenc/'.$device->id.'/'.$reason.'/moveData',
-        [
-           'status'=>-1
-        ]
-    
-    );
-        $this->assertEquals(302, $response->status());
-        }
+	 	$user =User::find('1');
+		 
+	 	$response =  $this->actingAs($user)->call('GET', 'admin/device/'.$device->id.'/edit', 
+	 	[ 
+             'name' => str_random(10),
+             'mark' => str_random(10),
+             'capacity' => mt_rand(0,10),
+             'manufactured_by' => str_random(10),
+             'serial_number' =>mt_rand(0,10000),
+             'model' => str_random(10),
+             'test_reference' => str_random(10),
+             'cert_number' => mt_rand(0,10000),
+             'valid_from' => str_random(10),
+             'valid_thru' => str_random(10),
+	    ]);   
+         $this->assertEquals(200, $response->status());
+	   
+	 }
 }

@@ -17,6 +17,7 @@ use App\ExaminationType;
 use App\ExaminationLab;
 use App\Services\Logs\LogService;
 use App\Services\Querys\QueryFilter;
+use App\Services\MyHelper;
 
 use Auth;
 use Excel;
@@ -161,8 +162,7 @@ class IncomeController extends Controller
 				Session::flash(self::MESSAGE, 'Kuitansi successfully created');
 				Session::flash('id', $kuitansi->id);
 				return redirect('/admin/kuitansi');
-			} catch(\Exception $e){
-				return redirect('/admin/kuitansi/create')->withInput($request->all())->with('error', 'Save failed');
+			} catch(\Exception $e){ return redirect('/admin/kuitansi/create')->withInput($request->all())->with('error', 'Save failed');
 			}
 		}else{
 			Session::flash('error', '"Nomor Kuitansi" is already exist');
@@ -189,7 +189,7 @@ class IncomeController extends Controller
         if ($search != null){
             $query = $queryFilter
                 ->getQuery()
-                ->where("number", "like", '%'.strtolower($search).'%')
+                ->where(self::NUMBER, "like", '%'.strtolower($search).'%')
                 ->orWhere("from", "like", '%'.strtolower($search).'%')
                 ->orWhere("for", "like", '%'.strtolower($search).'%')
             ;
@@ -281,14 +281,17 @@ class IncomeController extends Controller
 		
 		// Convert each member of the returned collection into an array,
 		// and append it to the payments array.
-			$no = 1;
+            $no = 1;
 		foreach ($data as $row) {
 			if($row->inc_type == 1){
 				$sumber_pendapatan = "Pengujian Perangkat";
-			}
-			else{
-				$sumber_pendapatan = "Pembelian STEL";
-			}
+            }
+            
+            // Query Select inc_type = 1, so this line will never be reach 
+            // else{ -
+            //     $sumber_pendapatan = "Pembelian STEL"; -
+            // } -
+            
 			$examsArray[] = [
 				$no,
 				$sumber_pendapatan.' '.$row->examination->device->name,
@@ -311,52 +314,55 @@ class IncomeController extends Controller
 	
 	public function generateKuitansiManual() {
 		$thisYear = date('Y');
-		$query = "
-			SELECT SUBSTRING_INDEX(number,'/',1) + 1 AS last_numb
-			FROM kuitansi WHERE SUBSTRING_INDEX(number,'/',-1) = ".$thisYear."
-			ORDER BY last_numb DESC LIMIT 1
-		";
-		$data = DB::select($query);
+        $data = DB::table('kuitansi')
+            ->select(DB::raw("number AS last_numb"))
+            ->where(self::NUMBER, 'like', '%/'.$thisYear)
+            ->orderBy('created_at', 'desc')
+            ->first()
+        ;
+
 		if (!count($data)){
 			return '001/DDS-73/'.$thisYear.'';
 		}
 		else{
-            $last_numb = str_pad($data[0]->last_numb,3,"0");
-            return $last_numb.'/DDS-73/'.$thisYear.'';
+            $last_numb = (int)substr($data->last_numb, 0, 3)+1;
+            $number = str_pad($last_numb,3,"0",STR_PAD_LEFT);
+            return $number.'/DDS-73/'.$thisYear.'';
 		}
     }
 	
 	public function cetakKuitansi($id, Request $request) {
  
         $manager_urels = '-';
+        $myHelper = new MyHelper();
         
         $is_poh = 0;
 		$general_setting_poh = GeneralSetting::where('code', 'poh_manager_urel')->first();
 		if($general_setting_poh){
 			if($general_setting_poh->is_active){
                 $is_poh = 1;
-                $manager_urels = $this->filterUrlEncode ($general_setting_poh->value);
+                $manager_urels = $myHelper->filterUrlEncode ($general_setting_poh->value);
 			}else{
 				$general_setting = GeneralSetting::where('code', self::MANAGER_UREL)->first();
 				if($general_setting){
-                    $manager_urels = $this->filterUrlEncode ($general_setting->value);
+                    $manager_urels = $myHelper->filterUrlEncode ($general_setting->value);
 				}
 			}
 		}else{
 			$general_setting = GeneralSetting::where('code', self::MANAGER_UREL)->first();
 			if($general_setting){
-                $manager_urels = $this->filterUrlEncode ($general_setting->value);
+                $manager_urels = $myHelper->filterUrlEncode ($general_setting->value);
 			}
 		}
 		
         $data = Kuitansi::find($id)->get()[0];
 
 	    return \Redirect::route('cetakHasilKuitansi', [
-			'nomor' => $this->filterUrlEncode($data->number),
-			'dari' => $this->filterUrlEncode($data->from),
-			'jumlah' => $this->filterUrlEncode($data->price, true),
-			'untuk' => $this->filterUrlEncode($data->for),
-			'tanggal' => $this->filterUrlEncode($data->kuitansi_date),
+			'nomor' => $myHelper->filterUrlEncode($data->number),
+			'dari' => $myHelper->filterUrlEncode($data->from),
+			'jumlah' => $myHelper->filterUrlEncode($data->price, true),
+			'untuk' => $myHelper->filterUrlEncode($data->for),
+			'tanggal' => $myHelper->filterUrlEncode($data->kuitansi_date),
             'is_poh' => $is_poh,
             self::MANAGER_UREL => $manager_urels,
 		]);
@@ -404,20 +410,6 @@ class IncomeController extends Controller
             self::QUERY => $query,
             self::STATUS => $status
         );
-    }
-
-    private function filterUrlEncode ($string, $number=false)
-    {
-        if(!$string && $number){
-            $string = '0';
-        }
-        if(!$string && !$number){
-            $string = '-';
-        }
-        if( $string && strpos( $string, "/" ) ){
-            $string = urlencode(urlencode($string));
-        }
-        return $string;
     }
 
     private function initialQuery($search)
