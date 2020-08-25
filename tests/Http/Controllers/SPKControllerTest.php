@@ -90,7 +90,20 @@ class SPKControllerTest extends TestCase
         ;
     }
 
-    public function testExcel()
+    public function testExcelCover()
+    {
+        //make request
+        $admin = User::where('id', '=', '1')->first();
+        $response = $this->actingAs($admin)->call('GET',"spk/excel");
+        
+        //Status Ok, Header data download file excel
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
+        $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
+        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data SPK.xlsx"');
+    }
+
+    public function testExcelWithFilter()
     {
         //get data
         $examination = App\Examination::latest()->first();
