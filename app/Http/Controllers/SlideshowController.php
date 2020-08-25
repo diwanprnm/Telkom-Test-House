@@ -123,8 +123,7 @@ class SlideshowController extends Controller
  
             if($saveMinio){
                 $slideshow->image = $name_file;
-            }else {
-                return redirect(self::ADMIN_SLIDESHOW_CREATE)->with(self::ERROR, 'Save Image to directory failed');
+            }else { return redirect(self::ADMIN_SLIDESHOW_CREATE)->with(self::ERROR, 'Save Image to directory failed');
             }
         }
         
@@ -138,8 +137,7 @@ class SlideshowController extends Controller
 
             Session::flash(self::MESSAGE, 'Slideshow successfully created');
             return redirect(self::ADMIN_SLIDE_SHOW);
-        } catch(Exception $e){
-            return redirect(self::ADMIN_SLIDESHOW_CREATE)->with(self::ERROR, 'Save failed');
+        } catch(Exception $e){ return redirect(self::ADMIN_SLIDESHOW_CREATE)->with(self::ERROR, 'Save failed');
         }
     }
 
@@ -222,8 +220,7 @@ class SlideshowController extends Controller
             $logService->createLog('Update Slideshow', self::SLIDESHOW, $oldData);
             Session::flash(self::MESSAGE, 'Slideshow successfully updated');
             return redirect(self::ADMIN_SLIDE_SHOW);
-        } catch(Exception $e){
-            return redirect('/admin/slideshow/'.$slideshow->id.'edit')->with(self::ERROR, 'Save failed');
+        } catch(Exception $e){ return redirect('/admin/slideshow/'.$slideshow->id.'edit')->with(self::ERROR, 'Save failed');
         }
     }
 
@@ -237,18 +234,18 @@ class SlideshowController extends Controller
     {
         $logService = new LogService();
         $slideshow = Slideshow::find($id);
-        $oldData = $slideshow;
         if ($slideshow){
             try{
+                $oldData = $slideshow;
                 $slideshow->delete();
                 $logService->createLog('Delete Slideshow', self::SLIDESHOW, $oldData);
 
                 Session::flash(self::MESSAGE, 'Slideshow successfully deleted');
                 return redirect(self::ADMIN_SLIDE_SHOW);
-            }catch (Exception $e){
-                return redirect(self::ADMIN_SLIDE_SHOW)->with(self::ERROR, 'Delete failed');
+            }catch (Exception $e){ return redirect(self::ADMIN_SLIDE_SHOW)->with(self::ERROR, 'Delete failed');
             }
         }
+        return redirect(self::ADMIN_SLIDE_SHOW)->with(self::ERROR, 'Slideshow not found');
     }
 	
 	public function autocomplete($query) {

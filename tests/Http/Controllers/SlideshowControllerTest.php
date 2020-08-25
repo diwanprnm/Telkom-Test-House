@@ -135,15 +135,46 @@ class SlideshowControllerTest extends TestCase
 
     public function testDestroy()
     {
-        //get Slideshow
-        $slideshow = App\Slideshow::latest()->first();
         //make request
+        $slideshow = App\Slideshow::latest()->first();
         $user = User::where('id', '=', '1')->first();
         $this->actingAs($user)->call('DELETE',"admin/slideshow/$slideshow->id");
-        //Status sukses dan judul FEEDBACK DAN COMPLAINT
+
+        //Status sukses dengan pesan Slideshow successfully deleted
         $this->assertRedirectedTo('admin/slideshow', ['message' => 'Slideshow successfully deleted']);
+    }
+
+    public function testDestroyNotFound()
+    {
+        //make request
+        $user = User::where('id', '=', '1')->first();
+        $this->actingAs($user)->call('DELETE',"admin/slideshow/DataNotFound");
+
+        //Status sukses dengan pesan Slideshow successfully deleted
+        $this->assertRedirectedTo('admin/slideshow', ['error' => 'Slideshow not found']);
+    }
+
+    public function testShow()
+    {
+        $admin = User::where('id', '=', '1')->first();
+        $this->actingAs($admin)->call('GET','admin/slideshow/1');
+
+        //status ok,
+        $this->assertResponseStatus(200);
+    }
+
+    public function testAutoComplete()
+    {
+        $admin = User::where('id', '=', '1')->first();
+        $this->actingAs($admin)->call('GET','admin/adm_slideshow_autocomplete/query');
+
+        //status ok,
+        $this->assertResponseStatus(200);
+
         //truncate data
         App\Slideshow::truncate();
     }
+
+
 
 }
