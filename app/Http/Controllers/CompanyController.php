@@ -281,9 +281,9 @@ class CompanyController extends Controller
             $company->npwp_number = $request->input(self::NPWP_NUMBER);
         }
         
-        
+
         $this->uploadFile($request);
-        
+
         if ($request->has(self::SIUP_NUMBER)){
             $company->siup_number = $request->input(self::SIUP_NUMBER);
         }
@@ -514,21 +514,21 @@ class CompanyController extends Controller
             $ext = $file->getClientOriginalExtension(); 
             $file_name = 'npwp_'.$request->file(self::NPWP_FILE)->getClientOriginalName();
             
-            $is_uploaded = false;
+            $is_upload_npwp = false;
             if (in_array($ext, $allowedFile))
             { 
-                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/$file_name",$file->__toString());
+                $is_upload_npwp = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/$file_name",$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
-                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/$file_name",(string)$image->encode()); 
+                $is_upload_npwp = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/$file_name",(string)$image->encode()); 
             }else{
                 Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
                 return redirect(self::ADMIN_CREATE);
             } 
              
-            if($is_uploaded){
+            if($is_upload_npwp){
                 $company->npwp_file = $file_name;
             }else{
                 Session::flash(self::ERROR, 'Save NPWP to directory failed');
@@ -541,21 +541,21 @@ class CompanyController extends Controller
             $ext = $file->getClientOriginalExtension(); 
             $file_name = 'siupp_'.$request->file(self::SIUP_FILE)->getClientOriginalName();
             
-            $is_uploaded = false;
+            $is_uploaded_siup = false;
             if (in_array($ext, $allowedFile))
             {  
-                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/$file_name",$file->__toString());
+                $is_uploaded_siup = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/$file_name",$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
-                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/".$file_name,(string)$image->encode()); 
+                $is_uploaded_siup = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/".$file_name,(string)$image->encode()); 
             }else{
                 Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
                 return redirect(self::ADMIN_CREATE);
             } 
              
-            if($is_uploaded){
+            if($is_uploaded_siup){
                 $company->siup_file = $file_name;
             }else{
                 Session::flash(self::ERROR, 'Save SIUP to directory failed');
@@ -567,21 +567,21 @@ class CompanyController extends Controller
             $ext = $file->getClientOriginalExtension(); 
             $file_name = 'serti_uji_mutu_'.$request->file(self::QS_CERTIFICATE_FILE)->getClientOriginalName();
             
-            $is_uploaded = false;
+            $is_upload_qs = false;
             if (in_array($ext, $allowedFile))
             {  
-                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/$file_name",$file->__toString());
+                $is_upload_qs = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/$file_name",$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
-                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/".$file_name,(string)$image->encode()); 
+                $is_upload_qs = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/".$file_name,(string)$image->encode()); 
             }else{
                 Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
                 return redirect(self::ADMIN_CREATE);
             } 
              
-            if($is_uploaded){
+            if($is_upload_qs){
                 $company->qs_certificate_file = $file_name;
             }else{
                 Session::flash(self::ERROR, 'Save QS certificate to directory failed');
