@@ -7,26 +7,41 @@ use App\Company;
 use App\User;  
 
 class CompanyControllerTest extends TestCase
-{
-	use WithoutMiddleware;
+{ 
     /**
      * A basic test example.
      *
      * @return void
-     */
-
-	public function testDeleteSoon(){
-        $this->assertTrue(true);
-    }
-
+     */ 
     public function test_visit_company()
 	{ 
-	   $response = $this->call('GET', 'admin/company');  
+	   $user = User::find(1);
+	   $response =  $this->actingAs($user)->call('GET', 'admin/company');  
+        
+	 
+       $this->assertEquals(200, $response->status());
+	} 
+    public function test_visit_edit_company()
+	{ 
+
+	   $company = Company::find(1);
+
+	   $user = User::find(1);
+	   $response =  $this->actingAs($user)->call('GET', 'admin/company/'.$company->id.'/edit');  
+       $this->assertEquals(200, $response->status());
+	}
+    public function test_visit_create_company()
+	{ 
+
+	   $company = Company::find(1);
+	   $user = User::find(1);
+	   $response =  $this->actingAs($user)->call('GET', 'admin/company/create');  
        $this->assertEquals(200, $response->status());
 	}
 	public function test_search_company()
 	{ 
-	   $response = $this->call('GET', 'admin/company?search=asda&is_active=&after_date=&before_date=');  
+	   $user = User::find(1);
+	   $response =  $this->actingAs($user)->call('GET', 'admin/company?search=asda&is_active=&after_date=&before_date=');  
        $this->assertEquals(200, $response->status());
 	}
     public function test_stores_company()
@@ -62,7 +77,7 @@ class CompanyControllerTest extends TestCase
 	}
     public function test_update_company()
 	{ 
-		$user = factory(App\User::class)->create(); 
+		$user = User::find(1);
        	$company = Company::latest()->first();
 		$response =  $this->actingAs($user)->call('PUT', 'admin/company/'.$company->id, 
 		[ 
@@ -93,11 +108,21 @@ class CompanyControllerTest extends TestCase
 	}
     public function test_delete_company()
 	{ 
-		$user = factory(App\User::class)->create(); 
+		$user = User::find(1);
        	$company = Company::latest()->first();
 		$response =  $this->actingAs($user)->call('DELETE', 'admin/company/'.$company->id);   
 		// dd($response->getContent());
         $this->assertEquals(302, $response->status());
 	    // $company = factory(App\Company::class)->make();  
 	}
+
+
+
+    public function test_autocomplete_company()
+    {
+        $user = User::find(1);
+        $this->actingAs($user)->call('GET',"admin/adm_company_autocomplete/query");
+        //Response status ok
+        $this->assertResponseStatus(200);
+    }
 }

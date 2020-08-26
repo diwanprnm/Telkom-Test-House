@@ -132,7 +132,7 @@ class CompanyController extends Controller
                         ->paginate($paginate);
              
 			$data_excel = Company::whereNotNull(self::CREATED_AT)->where('id', '<>', '1')->orderBy('updated_at', 'desc')->get();
-			$request->session()->put('excel_pengujian', $data_excel);
+			// $request->session()->put('excel_pengujian', $data_excel);
 			
             if (count($companies) == 0){
                 $message = 'Data not found';
@@ -207,21 +207,7 @@ class CompanyController extends Controller
             Session::flash(self::ERROR, 'Save failed');
             return redirect(self::ADMIN_CREATE);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $company = Company::find($id);
-
-        return view('admin.company.detail')
-            ->with('data', $company);
-    }
+    } 
 
     /**
      * Show the form for editing the specified resource.
