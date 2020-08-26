@@ -19,15 +19,4 @@ class TempCompany extends Model
     {
         return $this->belongsTo('App\User', 'created_by');
     }
-	
-	static function autocomplet($query){
-		return DB::table('temp_company')
-				->join('companies', 'temp_company.company_id', '=', 'companies.id')
-                ->select('companies.name as autosuggest')
-				->where('companies.name', 'like','%'.$query.'%')
-				->orderBy('companies.name')
-                ->take(5)
-				->distinct()
-                ->get(); 
-	}
 }

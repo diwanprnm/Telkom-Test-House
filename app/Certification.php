@@ -9,14 +9,4 @@ class Certification extends Model
 {
     protected $table = "certifications";
     public $incrementing = false;
-	
-	static function autocomplet($query){
-		return DB::table('certifications')
-				->select('title as autosuggest')
-				->where('title', 'like','%'.$query.'%')
-                ->orderBy('title')
-                ->take(5)
-				->distinct()
-                ->get();
-	}
 }

@@ -18,6 +18,9 @@ class STELClientController extends Controller
 {
     private const STELCLIENT_STRING = 'STELclient';
     private const CREATED_AT = 'created_at';
+    private const CODE_AUTOSUGGEST = 'code as autosuggest';
+    private const NAME_AUTOSUGGEST = 'name as autosuggest';
+    
     /**
      * Create a new controller instance.
      *
@@ -96,8 +99,23 @@ class STELClientController extends Controller
 			->header('Content-Type', 'text/html');
     }
 	
-	public function autocomplete($query) {
-        $respons_result = STEL::autocomplet_stel($query);
-        return response($respons_result);
+	public function autocomplete($query, $stel_type) {
+        $where =   [
+            ['stel_type', '=', $stel_type],
+            ['code', 'like', '%'.$query.'%'] 
+        ];
+        $data1 = STEL::select(self::CODE_AUTOSUGGEST)
+				->where($where) 
+				->orderBy('code')
+                ->take(3)
+                ->distinct()
+                ->get();
+		$data2 = STEL::select(self::NAME_AUTOSUGGEST)
+				->where($where) 
+				->orderBy('name')
+                ->take(3)
+				->distinct()
+                ->get(); 
+        return array_merge($data1,$data2);
     }
 }

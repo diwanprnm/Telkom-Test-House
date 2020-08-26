@@ -38,6 +38,17 @@ class DashboardController extends Controller
     private const FUNCSTAT = 'function_status';
     private const CONTRSTAT = 'contract_status';
 
+    private const TABLE_DEVICE = 'devices';
+	private const EXAM_DEVICES_ID = 'examinations.device_id';
+	private const DEVICES_ID = 'devices.id';
+    private const DEVICE_NAME_AUTOSUGGEST = 'devices.name as autosuggest';
+    private const EXAM_REGISTRATION_STATUS = 'examinations.registration_status';
+	private const EXAM_CERTIFICATE_STATUS = 'examinations.certificate_status';
+	private const EXAM_SPB_STATUS = 'examinations.spb_status';
+    private const EXAM_PAYMENT_STATUS = 'examinations.payment_status';
+    private const PAYMENT_STATUS = 'payment_status';
+    private const DEVICE_NAME = 'devices.name';
+
     /**
      * Create a new controller instance.
      *
@@ -113,8 +124,8 @@ class DashboardController extends Controller
         }
 
         if ($request->has($this::COMP)){
-            $query->whereHas(COMP, function ($q) use ($request){
-                return $q->where('name', 'like', '%'.strtolower($request->get(COMP)).'%');
+            $query->whereHas($this::COMP, function ($q) use ($request){
+                return $q->where('name', 'like', '%'.strtolower($request->get($this::COMP)).'%');
             });
         }
 
@@ -138,35 +149,24 @@ class DashboardController extends Controller
                     $status = 2;
                     break;
                 case 3:
-					$query->where($this::REG, 1);
-                    $query->where($this::FUNCSTAT, 1);
-                    $query->where($this::CONTRSTAT, 1);
-                    $query->where($this::SPB, 1);
-                    $query->where($this::PAYSTAT, '!=', 1);
-                    $query->whereHas($this::MEDIA, function ($q) {
-                        return $q->where('name', '=', 'File Pembayaran')
-                                ->where('attachment', '=' ,'');
-                    });
-                    $status = 3;
-                    break;
                 case 4:
                     $query->where($this::REG, 1);
                     $query->where($this::FUNCSTAT, 1);
                     $query->where($this::CONTRSTAT, 1);
                     $query->where($this::SPB, 1);
                     $query->where($this::PAYSTAT, '!=', 1);
-                    $query->whereHas($this::MEDIA, function ($q) {
-                        return $q->where('name', '=', 'File Pembayaran')
-                                ->where('attachment', '!=' ,'');
+                    $query->whereHas($this::MEDIA, function ($q) use ($request) {
+                       $final_q = $request->get($this::STAT) == 3 ? $q->where('name', '=', 'File Pembayaran')->where('attachment', '=' ,'') : $q->where('name', '=', 'File Pembayaran')->where('attachment', '!=' ,'');
+                       return $final_q;
                     });
-					$status = 4;
+					$status = $request->get($this::STAT) == 3 ? $request->get($this::STAT) : 4;
 					break;
 				default:
 					$status = 'all';
 					break;
 			}
-		}
-
+        }
+        
         $data = $query->orderBy('created_at')
                     ->paginate($paginate);
 
@@ -194,7 +194,22 @@ class DashboardController extends Controller
 	}
 	
 	public function autocomplete($query) {
-        $respons_result = Examination::adm_dashboard_autocomplet($query);
-        return response($respons_result);
+        return Examination::join(self::TABLE_DEVICE, self::EXAM_DEVICES_ID, '=', self::DEVICES_ID)
+                ->select(self::DEVICE_NAME_AUTOSUGGEST)
+				->where(function($q){
+					$q->where(self::EXAM_REGISTRATION_STATUS, 0)
+						->orWhere(self::EXAM_REGISTRATION_STATUS, 1)
+						->orWhere(self::EXAM_REGISTRATION_STATUS, -1)
+						->orWhere(self::EXAM_SPB_STATUS, 0)
+						->orWhere(self::EXAM_SPB_STATUS, -1)
+						->orWhere(self::EXAM_SPB_STATUS, 1)
+						->orWhere(self::EXAM_PAYMENT_STATUS, -1);
+				})
+				->where(self::PAYMENT_STATUS, 0)
+                ->where(self::DEVICE_NAME, 'like','%'.$query.'%')
+				->orderBy(self::DEVICE_NAME)
+                ->take(5)
+				->distinct()
+                ->get(); 
     }
 }

@@ -328,11 +328,6 @@ class EquipmentController extends Controller
             }
         }
     }
-	
-	public function autocomplete($query) {
-        $respons_result = User::autocomplet($query);
-        return response($respons_result);
-    }
 
     public function show_edit($type, $id){
         $EquipmentHistory = EquipmentHistory::where($this::EXAM_ID, $id)->get();

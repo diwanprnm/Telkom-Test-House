@@ -46,6 +46,24 @@ class ExaminationDoneController extends Controller
 	private const AFTER_DATE = 'after_date';
 	private const DATE_FORMAT = 'd-m-Y';
 	private const EXAM_LAB = 'examinationLab';
+
+	private const TABLE_DEVICE = 'devices';
+	private const EXAM_DEVICES_ID = 'examinations.device_id';
+	private const DEVICES_ID = 'devices.id';
+	private const TABLE_COMPANIES = 'companies';
+	private const EXAM_COMPANY_ID = 'examinations.company_id';
+	private const COMPANIES_ID = 'companies.id';
+	private const DEVICE_NAME_AUTOSUGGEST = 'devices.name as autosuggest';
+	private const DEVICE_NAME = 'devices.name';
+	private const PAYMENT_STATUS = 'payment_status';
+	private const COMPANY_AUTOSUGGEST = 'companies.name as autosuggest';
+	private const COMPANIES_NAME = 'companies.name';
+	private const EXAM_TYPE_ID = 'examinations.examination_type_id';
+	private const EXAM_REGISTRATION_STATUS = 'examinations.registration_status';
+	private const EXAM_SPB_STATUS = 'examinations.spb_status';
+	private const EXAM_PAYMENT_STATUS = 'examinations.payment_status';
+	private const EXAM_CERTIFICATE_STATUS = 'examinations.certificate_status';
+
 	/**
      * Create a new controller instance.
      *
@@ -375,8 +393,81 @@ class ExaminationDoneController extends Controller
 	}
 	
 	public function autocomplete($query) {
-        $respons_result = Examination::adm_exam_done_autocomplet($query);
-        return response($respons_result);
+		$queries = Examination::join(self::TABLE_DEVICE, self::EXAM_DEVICES_ID, '=', self::DEVICES_ID)
+				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
+                ->select(self::DEVICE_NAME_AUTOSUGGEST)
+				->where(self::DEVICE_NAME, 'like','%'.$query.'%');
+					$queries->where(function($qry){
+						$qry->where(function($q){
+							return $q->where('examination_type_id', '=', '1')
+								->where('registration_status', '=', '1')
+								->where('function_status', '=', '1')
+								->where('contract_status', '=', '1')
+								->where('spb_status', '=', '1')
+								->where(self::PAYMENT_STATUS, '=', '1')
+								->where('spk_status', '=', '1')
+								->where('examination_status', '=', '1')
+								->where('resume_status', '=', '1')
+								->where('qa_status', '=', '1')
+								->where('certificate_status', '=', '1')
+								;
+							})
+						->orWhere(function($q){
+							return $q->where('examination_type_id', '!=', '1')
+								->where('registration_status', '=', '1')
+								->where('function_status', '=', '1')
+								->where('contract_status', '=', '1')
+								->where('spb_status', '=', '1')
+								->where(self::PAYMENT_STATUS, '=', '1')
+								->where('spk_status', '=', '1')
+								->where('examination_status', '=', '1')
+								->where('resume_status', '=', '1')
+								;
+							});
+					});
+				$data1 = $queries->orderBy(self::DEVICE_NAME)
+                ->take(3)
+				->distinct()
+                ->get();
+		
+		$queries = Examination::join(self::TABLE_DEVICE, self::EXAM_DEVICES_ID, '=', self::DEVICES_ID)
+				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
+                ->select(self::COMPANY_AUTOSUGGEST)
+				->where(self::COMPANIES_NAME, 'like','%'.$query.'%');
+					$queries->where(function($qry){
+						$qry->where(function($q){
+							return $q->where(self::EXAM_TYPE_ID, '=', '1')
+								->where(self::EXAM_REGISTRATION_STATUS, '=', '1')
+								->where('examinations.function_status', '=', '1')
+								->where('examinations.contract_status', '=', '1')
+								->where(self::EXAM_SPB_STATUS, '=', '1')
+								->where(self::EXAM_PAYMENT_STATUS, '=', '1')
+								->where('examinations.spk_status', '=', '1')
+								->where('examinations.examination_status', '=', '1')
+								->where('examinations.resume_status', '=', '1')
+								->where('examinations.qa_status', '=', '1')
+								->where(self::EXAM_CERTIFICATE_STATUS, '=', '1')
+								;
+							})
+						->orWhere(function($q){
+							return $q->where(self::EXAM_TYPE_ID, '!=', '1')
+								->where(self::EXAM_REGISTRATION_STATUS, '=', '1')
+								->where('examinations.function_status', '=', '1')
+								->where('examinations.contract_status', '=', '1')
+								->where(self::EXAM_SPB_STATUS, '=', '1')
+								->where(self::EXAM_PAYMENT_STATUS, '=', '1')
+								->where('examinations.spk_status', '=', '1')
+								->where('examinations.examination_status', '=', '1')
+								->where('examinations.resume_status', '=', '1')
+								;
+							});
+					});
+				$data2 = $queries->orderBy(self::COMPANIES_NAME)
+                ->take(3)
+				->distinct()
+                ->get();
+				
+		return array_merge($data1,$data2);
     }
 	
 	function cetakKepuasanKonsumen($id, Request $request)

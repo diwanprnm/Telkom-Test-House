@@ -249,8 +249,12 @@ class SlideshowController extends Controller
     }
 	
 	public function autocomplete($query) {
-        $respons_result = Slideshow::autocomplet($query);
-        return response($respons_result);
+        return Slideshow::select('title as autosuggest')
+				->where(self::TITLE, 'like','%'.$query.'%')
+                ->orderBy(self::TITLE)
+                ->take(5)
+				->distinct()
+                ->get();
     }
 
     public function orderSlideshow(Request $request){

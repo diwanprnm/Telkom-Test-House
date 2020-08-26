@@ -419,7 +419,12 @@ class UsereksController extends Controller
     }
 	
 	public function autocomplete($query) {
-        return response(User::autocomplet($query)); 
+        return User::select('name as autosuggest')
+				->where('name', 'like','%'.$query.'%')
+                ->orderBy('name')
+                ->take(5)
+				->distinct()
+                ->get();
     }
 
     public function logout(){

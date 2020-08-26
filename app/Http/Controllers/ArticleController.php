@@ -164,7 +164,11 @@ class ArticleController extends Controller
     
     
 	public function autocomplete($query) {
-        $respons_result = Article::autocomplet($query);
-        return response($respons_result);
+        return Article::select('title as autosuggest')
+        ->where(self::TITLE, 'like','%'.$query.'%')
+        ->orderBy(self::TITLE)
+        ->take(5)
+        ->distinct()
+        ->get();
     }
 }

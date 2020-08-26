@@ -159,6 +159,17 @@ class ExaminationController extends Controller
 	private const EXAM_ID = 'exam_id';
 	private const DDS_73 = '/DDS-73/';
 
+	private const TABLE_DEVICE = 'devices';
+	private const EXAM_DEVICES_ID = 'examinations.device_id';
+	private const DEVICES_ID = 'devices.id';
+	private const TABLE_COMPANIES = 'companies';
+	private const EXAM_COMPANY_ID = 'examinations.company_id';
+	private const COMPANIES_ID = 'companies.id';
+	private const COMPANY_AUTOSUGGEST = 'companies.name as autosuggest';
+	private const EXAM_CERTIFICATE_STATUS = 'examinations.certificate_status';
+	private const COMPANIES_NAME = 'companies.name';
+	private const DEVICE_NAME_AUTOSUGGEST = 'devices.name as autosuggest';
+	private const DEVICE_NAME = 'devices.name';
 
 	/**
      * Create a new controller instance.
@@ -1061,8 +1072,8 @@ class ExaminationController extends Controller
                  ->whereRaw('examination_attachments.attachment = ""')
             ;
        	})
-       	->join('companies', 'examinations.company_id', '=', 'companies.id')
-        ->join('devices', 'examinations.device_id', '=', 'devices.id')
+       	->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
+        ->join(self::TABLE_DEVICE, self::EXAM_DEVICES_ID, '=', self::DEVICES_ID)
         ->leftJoin(self::EXAMINATION_ATTACHMENTS, function($leftJoin){
             $leftJoin->on(self::EXAMINATIONS_ID, '=', 'examination_attachments.examination_id');
             $leftJoin->on(DB::raw('examination_attachments.name'), DB::raw('='),DB::raw("'File Pembayaran'"));
@@ -2083,8 +2094,26 @@ class ExaminationController extends Controller
 	}
 	
 	public function autocomplete($query) {
-        $respons_result = Examination::adm_exam_autocomplet($query);
-        return response($respons_result);
+		$data1 = Examination::join(self::TABLE_DEVICE, self::EXAM_DEVICES_ID, '=', self::DEVICES_ID)
+				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
+                ->select(self::DEVICE_NAME_AUTOSUGGEST)
+				->where(self::DEVICE_NAME, 'like','%'.$query.'%')
+				->orderBy(self::DEVICE_NAME)
+                ->take(3)
+				->distinct()
+                ->get();
+		
+		$data2 = Examination::join(self::TABLE_DEVICE, self::EXAM_DEVICES_ID, '=', self::DEVICES_ID)
+				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
+                ->select(self::COMPANY_AUTOSUGGEST)
+				->where(self::COMPANIES_NAME, 'like','%'.$query.'%')
+				->orderBy(self::COMPANIES_NAME)
+                ->take(3)
+				->distinct()
+                ->get();
+		
+		$auto_complete_result = array_merge($data1,$data2);
+        return $auto_complete_result;
     }
 	
 	public function checkSPKCode($a) {
@@ -2550,14 +2579,14 @@ class ExaminationController extends Controller
 		$equipment = Equipment::where(self::EXAMINATION_ID, $exam_id)->get();
         $location = Equipment::where(self::EXAMINATION_ID, $exam_id)->first();
         $examination = DB::table(self::EXAMINATIONS)
-			->join('devices', 'examinations.device_id', '=', 'devices.id')
+			->join(self::TABLE_DEVICE, self::EXAM_DEVICES_ID, '=', self::DEVICES_ID)
 			->select(
 					self::EXAMINATIONS_ID,
-					'devices.name',
+					self::DEVICE_NAME,
 					'devices.model'
 					)
             ->where(self::EXAMINATIONS_ID, $exam_id)
-			->orderBy('devices.name')
+			->orderBy(self::DEVICE_NAME)
 			->first();
 
         return view('admin.equipment.edit')
