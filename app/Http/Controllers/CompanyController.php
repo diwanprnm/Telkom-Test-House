@@ -87,11 +87,11 @@ class CompanyController extends Controller
 
             $sort_by = 'name';
             $sort_type = 'asc';
-            
+             $query = Company::whereNotNull(self::CREATED_AT)
+                    ->where('id', '<>', '1');
             if ($search != null){
-                $query = Company::whereNotNull(self::CREATED_AT)
-					->where('id', '<>', '1')
-                    ->where('name','like','%'.$search.'%');
+               
+                    $query->where('name','like','%'.$search.'%');
 				
                     $logs = new Logs;
                     $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
@@ -100,14 +100,12 @@ class CompanyController extends Controller
                     $logs->created_by = $currentUser->id;
                     $logs->page = self::COMPANY;
                     $logs->save();
-            }else{
-                $query = Company::whereNotNull(self::CREATED_AT)->where('id', '<>', '1');
+            } 
 
-                if ($request->has(self::IS_ACTIVE)){
-                    $status = $request->get(self::IS_ACTIVE);
-					if($request->input(self::IS_ACTIVE) != '0'){
-						$query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
-					}
+            if ($request->has(self::IS_ACTIVE)){
+                $status = $request->get(self::IS_ACTIVE);
+                if($request->input(self::IS_ACTIVE) != '0'){
+                    $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
                 }
             }
 
