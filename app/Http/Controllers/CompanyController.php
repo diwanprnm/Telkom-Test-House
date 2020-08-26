@@ -87,7 +87,7 @@ class CompanyController extends Controller
 
             $sort_by = 'name';
             $sort_type = 'asc';
-             $query = Company::whereNotNull(self::CREATED_AT)
+            $query = Company::whereNotNull(self::CREATED_AT)
                     ->where('id', '<>', '1');
             if ($search != null){
                
