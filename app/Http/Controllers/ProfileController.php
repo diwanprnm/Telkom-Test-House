@@ -29,6 +29,8 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use App\Events\Notification;
 use App\NotificationTable;
 
+use App\Services\Logs\LogService;
+
 class ProfileController extends Controller
 { 
 
@@ -158,17 +160,10 @@ class ProfileController extends Controller
 					updated_by = '".$currentUser[self::ATTRIBUTES]['id']."',
 					updated_at = '".date(self::FORMAT_DATE)."'
 				WHERE id = '".$request->input(self::HIDE_ID_USER)."'
-			";
+			"; 
 
-			$logs = new Logs;
-			$currentUser = Auth::user();
-	        $logs->user_id = $currentUser->id;
-	        $logs->id = Uuid::uuid4();
-	        $logs->action = "Update Profile";   
-	        $logs->data = "";
-	        $logs->created_by = $currentUser->id;
-	        $logs->page = "PROFILE";
-	        $logs->save();
+            $logService = new LogService();  
+            $logService->createLog('Update Profile',"PROFILE");
 
 
 			DB::update($query_update_user);
@@ -348,17 +343,10 @@ class ProfileController extends Controller
 			$temp->created_by = $currentUser->id;
 			$temp->updated_by = $currentUser->id;
 			
-			$temp->save();
+			$temp->save(); 
 
-				$logs = new Logs;
-			$currentUser = Auth::user();
-	        $logs->user_id = $currentUser->id;
-	        $logs->id = Uuid::uuid4();
-	        $logs->action = "Update Company";   
-	        $logs->data = "";
-	        $logs->created_by = $currentUser->id;
-	        $logs->page = "PROFILE";
-	        $logs->save();
+            $logService = new LogService();  
+            $logService->createLog('Update Company',"PROFILE");
 
 
 	        $currentUser = Auth::user();
@@ -371,17 +359,17 @@ class ProfileController extends Controller
 	        self::CREATED_AT=>date(self::FORMAT_DATE),
 	        self::UPDATED_AT=>date(self::FORMAT_DATE)
 	        );
-		  	$notification = new NotificationTable();
-			$notification->id = Uuid::uuid4();
-	      	$notification->from = $data['from'];
-	      	$notification->to = $data['to'];
-	      	$notification->message = $data[self::MESSAGE];
-	      	$notification->url = $data['url'];
-	      	$notification->is_read = $data[self::IS_READ];
-	      	$notification->created_at = $data[self::CREATED_AT];
-	      	$notification->updated_at = $data[self::UPDATED_AT];
-	      	$notification->save();
-	      	$data['id'] = $notification->id; 
+		  	$notifProfile = new NotificationTable();
+			$notifProfile->id = Uuid::uuid4();
+	      	$notifProfile->from = $data['from'];
+	      	$notifProfile->to = $data['to'];
+	      	$notifProfile->message = $data[self::MESSAGE];
+	      	$notifProfile->url = $data['url'];
+	      	$notifProfile->is_read = $data[self::IS_READ];
+	      	$notifProfile->created_at = $data[self::CREATED_AT];
+	      	$notifProfile->updated_at = $data[self::UPDATED_AT];
+	      	$notifProfile->save();
+	      	$data['id'] = $notifProfile->id; 
 	        event(new Notification($data));
 
 
@@ -480,15 +468,10 @@ class ProfileController extends Controller
 					self::EMAIL2 => ''.$request->input(self::EMAIL2).'', 
 					self::EMAIL3 => ''.$request->input(self::EMAIL3).'', 
 				]
-			]);
-			$logs = new Logs; 
-	        $logs->user_id = $user_id;
-	        $logs->id = Uuid::uuid4();
-	        $logs->action = "Register";   
-	        $logs->data = "";
-	        $logs->created_by = $user_id;
-	        $logs->page = "REGISTER";
-	        $logs->save(); 
+			]); 
+
+            $logService = new LogService();  
+            $logService->createLog('Register',"REGISTER");
 
 
 			$data= array( 
@@ -500,17 +483,17 @@ class ProfileController extends Controller
 	        self::CREATED_AT=>date(self::FORMAT_DATE),
 	        self::UPDATED_AT=>date(self::FORMAT_DATE)
 	        );
-		  	$notification = new NotificationTable();
-			$notification->id = Uuid::uuid4();
-	      	$notification->from = $data['from'];
-	      	$notification->to = $data['to'];
-	      	$notification->message = $data[self::MESSAGE];
-	      	$notification->url = $data['url'];
-	      	$notification->is_read = $data[self::IS_READ];
-	      	$notification->created_at = $data[self::CREATED_AT];
-	      	$notification->updated_at = $data[self::UPDATED_AT];
-	      	$notification->save();
-	      	$data['id'] = $notification->id; 
+		  	$notifPermohonan = new NotificationTable();
+			$notifPermohonan->id = Uuid::uuid4();
+	      	$notifPermohonan->from = $data['from'];
+	      	$notifPermohonan->to = $data['to'];
+	      	$notifPermohonan->message = $data[self::MESSAGE];
+	      	$notifPermohonan->url = $data['url'];
+	      	$notifPermohonan->is_read = $data[self::IS_READ];
+	      	$notifPermohonan->created_at = $data[self::CREATED_AT];
+	      	$notifPermohonan->updated_at = $data[self::UPDATED_AT];
+	      	$notifPermohonan->save();
+	      	$data['id'] = $notifPermohonan->id; 
 	        event(new Notification($data)); 
 
 			$this->sendRegistrasi($request->input(self::USER_NAME), $request->input(self::EMAIL), "emails.registrasiCust", "Permintaan Aktivasi Data Akun Baru");
@@ -653,15 +636,10 @@ class ProfileController extends Controller
 						self::EMAIL3 => ''.$request->input(self::EMAIL3).'', 
 					]
 				]);
+ 
 
-				$logs = new Logs; 
-		        $logs->user_id = $user_id;
-		        $logs->id = Uuid::uuid4();
-		        $logs->action = "Create Company";   
-		        $logs->data = "";
-		        $logs->created_by = $user_id;
-		        $logs->page = "REGISTER";
-		        $logs->save();
+	            $logService = new LogService();  
+	            $logService->createLog('Create Company',"REGISTER");
 
 		        $data= array( 
 		        "from"=>$user_id,
@@ -672,17 +650,17 @@ class ProfileController extends Controller
 		        self::CREATED_AT=>date(self::FORMAT_DATE),
 		        self::UPDATED_AT=>date(self::FORMAT_DATE)
 		        );
-			  	$notification = new NotificationTable();
-				$notification->id = Uuid::uuid4();
-		      	$notification->from = $data['from'];
-		      	$notification->to = $data['to'];
-		      	$notification->message = $data[self::MESSAGE];
-		      	$notification->url = $data['url'];
-		      	$notification->is_read = $data[self::IS_READ];
-		      	$notification->created_at = $data[self::CREATED_AT];
-		      	$notification->updated_at = $data[self::UPDATED_AT];
-		      	$notification->save();
-		      	$data['id'] = $notification->id; 
+			  	$notifAktivasi = new NotificationTable();
+				$notifAktivasi->id = Uuid::uuid4();
+		      	$notifAktivasi->from = $data['from'];
+		      	$notifAktivasi->to = $data['to'];
+		      	$notifAktivasi->message = $data[self::MESSAGE];
+		      	$notifAktivasi->url = $data['url'];
+		      	$notifAktivasi->is_read = $data[self::IS_READ];
+		      	$notifAktivasi->created_at = $data[self::CREATED_AT];
+		      	$notifAktivasi->updated_at = $data[self::UPDATED_AT];
+		      	$notifAktivasi->save();
+		      	$data['id'] = $notifAktivasi->id; 
 		        event(new Notification($data)); 
 
 				$this->sendRegistrasiwCompany(
