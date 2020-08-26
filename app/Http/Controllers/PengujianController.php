@@ -996,7 +996,7 @@ class PengujianController extends Controller
 					$client->post('notification/notifRescheduleToTE?id='.$exam->id);
 					
 					/* push notif*/
-					$data= array(
+					$dataNotif2 = array(
 						"from"=>$currentUser->id,
 						"to"=>self::ADMIN,
 						self::MESSAGE=>$currentUser->company->name." Update Tanggal Uji Fungsi",
@@ -1004,9 +1004,9 @@ class PengujianController extends Controller
 					);
 					
 				 	$notificationService = new NotificationService();
-	                $notification_id = $notificationService->make($data);
-					$data['id'] = $notification_id;
-					event(new Notification($data));
+	                $notification_id = $notificationService->make($dataNotif2);
+					$dataNotif2['id'] = $notification_id;
+					event(new Notification($dataNotif2));
 
 					return back();
 						
