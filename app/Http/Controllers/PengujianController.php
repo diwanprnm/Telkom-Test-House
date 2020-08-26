@@ -886,7 +886,7 @@ class PengujianController extends Controller
 						"url"=>self::EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM).self::EDIT_LOC
 					);
 					
-					$this->sendNotif($data)
+					$this->sendNotif($data);
 				}
 					return back();
 
@@ -1048,7 +1048,7 @@ class PengujianController extends Controller
 					self::MESSAGE=>$currentUser->company->name." Menyetujui Tanggal Uji Fungsi",
 					"url"=>self::EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM3).self::EDIT_LOC 
 				);
-				$this->sendNotif($data)
+				$this->sendNotif($data);
 		 		return back();
 				
 			} catch(Exception $e){
