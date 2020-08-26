@@ -346,7 +346,7 @@ class UserinController extends Controller
             return redirect('/admin');
         } catch(Exception $e){
             Session::flash(self::ERROR, self::USER_MSG_FAILED);
-            return redirect(self::PAGE_USERIN.'/'.$user->id.'edit');
+            return redirect(self::PAGE_USERIN.'/'.$userIn->id.'edit');
         }  
     }
 

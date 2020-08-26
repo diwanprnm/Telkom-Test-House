@@ -125,25 +125,8 @@ class ProfileController extends Controller
 				->withInput($request->all());
 			}
 		}
- 		$path_file = public_path().self::MEDIA_USER.$request->input(self::HIDE_ID_USER).'';
-		if ($request->hasFile(self::USER_PICTURE)) {
-			$type_file = $request->file(self::USER_PICTURE)->getMimeType();
-			$data_type_file = explode('/',$type_file);
-			if($data_type_file[0] != self::IMAGE)	{
-				return redirect()->back()
-				->with(self::ERROR_IMG_TYPE, 1)
-				->withInput($request->all()); 
-			}else{ 
-				$name_file = self::PATH_PROFILE.$request->file(self::USER_PICTURE)->getClientOriginalName();
-				$request->file(self::USER_PICTURE)->move($path_file, $name_file);
-				$fuserPicture = $name_file;
-				if (File::exists(public_path().'\media\user\\'.$request->input(self::HIDE_ID_USER).'\\'.$request->input(self::HIDE_PIC_FILE))){
-					File::delete(public_path().'\media\user\\'.$request->input(self::HIDE_ID_USER).'\\'.$request->input(self::HIDE_PIC_FILE));
-				}
-			}
-		}else{
-			$fuserPicture = $request->input(self::HIDE_PIC_FILE);
-		}
+ 		
+ 		$this->uploadFileProfile($request);
 		
 		try{
 			$query_update_user = "UPDATE users
@@ -421,33 +404,8 @@ class ProfileController extends Controller
 				return redirect()->back()
 				->with(self::ERROR_NEW_PASS, 2)
 				->withInput($request->all());
-			}
-			
-			$path_file = public_path().self::MEDIA_USER.$user_id.'';
-			if (!file_exists($path_file)) {
-				mkdir($path_file, 0775);
-			}
-			if ($request->hasFile(self::USER_PICTURE)) {
-				$type_file = $request->file(self::USER_PICTURE)->getMimeType();
-				$data_type_file = explode('/',$type_file);
-				if($data_type_file[0] != self::IMAGE)	{
-					return redirect()->back()
-					->with(self::ERROR_IMG_TYPE, 1)
-					->withInput($request->all());
-				}else{ 
-					$name_file = self::PATH_PROFILE.$request->file(self::USER_PICTURE)->getClientOriginalName();
-					if($request->file(self::USER_PICTURE)->move($path_file,$name_file)){
-						$fuserPicture = $name_file;
-					}
-					else{
-						Session::flash(self::ERROR, 'Save Profile Picture to directory failed');
-						return redirect()->back()
-						->withInput($request->all());
-					}
-				}
-			}else{
-				$fuserPicture = '';
-			}
+			} 
+			$this->uploadFileProfile($request);
 			$company_id = $request->input('cmb-perusahaan');
 			$notif_message = "Permohonan Aktivasi Akun Baru";
 			$log_message = "Register";
@@ -676,6 +634,35 @@ class ProfileController extends Controller
     	}else{
     		return response()->json([self::STATUS=>false,self::MESSAGE=>'Email Is Required']);
     	}
+    }
+
+    private function uploadFileProfile($request){
+		$path_file = public_path().self::MEDIA_USER.$request->input(self::HIDE_ID_USER).'';
+    	
+    	if (!file_exists($path_file)) {
+			mkdir($path_file, 0775);
+		} 
+
+		if ($request->hasFile(self::USER_PICTURE)) {
+			$type_file = $request->file(self::USER_PICTURE)->getMimeType();
+			$data_type_file = explode('/',$type_file);
+			if($data_type_file[0] != self::IMAGE)	{
+				return redirect()->back()
+				->with(self::ERROR_IMG_TYPE, 1)
+				->withInput($request->all()); 
+			}else{ 
+				$name_file = self::PATH_PROFILE.$request->file(self::USER_PICTURE)->getClientOriginalName();
+				$request->file(self::USER_PICTURE)->move($path_file, $name_file);
+				$fuserPicture = $name_file;
+				if (File::exists(public_path().'\media\user\\'.$request->input(self::HIDE_ID_USER).'\\'.$request->input(self::HIDE_PIC_FILE))){
+					File::delete(public_path().'\media\user\\'.$request->input(self::HIDE_ID_USER).'\\'.$request->input(self::HIDE_PIC_FILE));
+				}
+			}
+		}else{
+			$fuserPicture = $request->input(self::HIDE_PIC_FILE);
+		}
+
+		return $fuserPicture;
     }
 
     private function createUser($request,$user_id,$company_id,$notif_message,$log_message,$fuserPicture,$hashedPassword){
