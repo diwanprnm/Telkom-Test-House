@@ -235,8 +235,7 @@ class PopUpInformationController extends Controller
     public function destroy($id)
     {
         $popupinformation = Certification::find($id);
-        $oldData = $popupinformation;
-        $currentUser = Auth::user();
+        $oldData = $popupinformation; 
         if ($popupinformation){
             try{
                 $popupinformation->delete();

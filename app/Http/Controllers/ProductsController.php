@@ -47,6 +47,11 @@ class ProductsController extends Controller
     private const STELSALES_ID = 'stelsales_id';
     private const FILEPEMBAYARAN = 'filePembayaran';
     private const HIDE_FILE_PEMBAYARAN = 'hide_file_pembayaran';
+    private const ERROR = 'error';
+    private const MESSAGE = 'message';
+    private const ADMIN = 'admin';
+    private const FORMAT_DATE = 'Y-m-d H:i:s';
+    private const CONTENT_TYPE = 'Content-Type: application/octet-stream';
 
 
     public function index(Request $request)
@@ -151,10 +156,10 @@ class ProductsController extends Controller
         $currentUser = Auth::user();
 
         if($currentUser){
-            $select = array("stels.id", "stels.name","stels.price","stels.code","stels.attachment","stels_sales.invoice","stels_sales.payment_status","companies.name as company_name","stels_sales_detail.id as id_attachment_stel","stels_sales_detail.qty","stels_sales.id_kuitansi","stels_sales.faktur_file","stels_sales_detail.attachment as manual_attachment","stels_sales.id as manual_id"); 
+            $select = array(self::STELS_ID, "stels.name","stels.price","stels.code","stels.attachment","stels_sales.invoice","stels_sales.payment_status","companies.name as company_name","stels_sales_detail.id as id_attachment_stel","stels_sales_detail.qty","stels_sales.id_kuitansi","stels_sales.faktur_file","stels_sales_detail.attachment as manual_attachment","stels_sales.id as manual_id"); 
             $STELSales = STELSalesDetail::select($select)->where("stels_sales_id",$id)
                         ->join("stels_sales","stels_sales.id","=","stels_sales_detail.stels_sales_id")
-                        ->join("stels","stels.id","=","stels_sales_detail.stels_id")
+                        ->join("stels",self::STELS_ID,"=","stels_sales_detail.stels_id")
                          ->join("users","users.id","=","stels_sales.user_id")
                          ->join("companies","companies.id","=","users.company_id")
                         ->get();
@@ -194,7 +199,7 @@ class ProductsController extends Controller
                     File::delete(public_path().'\media\stel\\'.$request->input(self::STELSALES_ID).'\\'.$request->input(self::HIDE_FILE_PEMBAYARAN));
                 }
             }else{
-                Session::flash('error', 'Upload Payment Attachment to directory failed');
+                Session::flash(self::ERROR, 'Upload Payment Attachment to directory failed');
                 return redirect('/upload_payment/'.$request->input(self::STELSALES_ID));
             }
 
@@ -218,21 +223,21 @@ class ProductsController extends Controller
 
                  $data= array( 
                     "from"=>$currentUser->name,
-                    "to"=>"admin",
-                    "message"=>$currentUser->company->name." Upload pembayaran STEL",
+                    "to"=>self::ADMIN,
+                    self::MESSAGE=>$currentUser->company->name." Upload pembayaran STEL",
                     "url"=>"sales/".$STELSales->id."/edit",
                     "is_read"=>0,
-                    self::CREATED_AT=>date("Y-m-d H:i:s"),
-                    self::UPDATED_AT=>date("Y-m-d H:i:s")
+                    self::CREATED_AT=>date(self::FORMAT_DATE),
+                    self::UPDATED_AT=>date(self::FORMAT_DATE)
                 );
                 $notification_id = $notificationService->make($data);
 			    $data['id'] = $notification_id;
 
                 event(new Notification($data));
 
-                Session::flash('message', 'Upload successfully'); 
+                Session::flash(self::MESSAGE, 'Upload successfully'); 
             } catch(Exception $e){
-                Session::flash('error', 'Upload failed');
+                Session::flash(self::ERROR, 'Upload failed');
                 
             }
         }
@@ -399,7 +404,7 @@ class ProductsController extends Controller
            $STELSales->user_id = $currentUser->id;
            $STELSales->total = $request->input("final_price");
            $STELSales->created_by =$currentUser->id;
-           $STELSales->created_at = date("Y-m-d H:i:s");
+           $STELSales->created_at = date(self::FORMAT_DATE);
 
            if($PO_ID){
                 $data = [
@@ -421,12 +426,12 @@ class ProductsController extends Controller
 
                 $data= array( 
                     "from"=>$currentUser->name,
-                    "to"=>"admin",
-                    "message"=>"Permohonan Pembelian STEL",
+                    "to"=>self::ADMIN,
+                    self::MESSAGE=>"Permohonan Pembelian STEL",
                     "url"=>"sales/".$STELSales->id."/edit",
                     "is_read"=>0,
-                    self::CREATED_AT=>date("Y-m-d H:i:s"),
-                    self::UPDATED_AT=>date("Y-m-d H:i:s")
+                    self::CREATED_AT=>date(self::FORMAT_DATE),
+                    self::UPDATED_AT=>date(self::FORMAT_DATE)
                 );
                 $notification_id = $notificationService->make($data);
 			    $data['id'] = $notification_id;
@@ -459,13 +464,13 @@ class ProductsController extends Controller
                         $request->session()->forget(self::UNIQUE_CODE_TPN);
 
                     } catch(\Illuminate\Database\QueryException $e){ 
-                        Session::flash('error', 'Failed To Checkout');
+                        Session::flash(self::ERROR, 'Failed To Checkout');
                         return redirect(self::PRODUCTS);
                     } 
                 return redirect('purchase_history');
             } catch(\Illuminate\Database\QueryException $e){
                 
-                Session::flash('error', 'Failed To Checkout');
+                Session::flash(self::ERROR, 'Failed To Checkout');
                 return redirect(self::PRODUCTS);
             }
         }else{
@@ -507,7 +512,7 @@ class ProductsController extends Controller
         if ($stel){
             $file = public_path().self::MEDIA_STEL.$stel->attachment;
             $headers = array(
-              'Content-Type: application/octet-stream',
+              self::CONTENT_TYPE,
             );
 
             return Response::download($file, $stel->attachment, $headers);
@@ -517,10 +522,10 @@ class ProductsController extends Controller
     public function test_notification(){
         $data= array(
             "id"=>1,
-                "from"=>"admin",
+                "from"=>self::ADMIN,
                 "to"=>"35a35ea3-6fd5-43ae-8b97-ddf7525e94d1",
                 "url"=>"sales",
-                "message"=>"Notification Message"
+                self::MESSAGE=>"Notification Message"
                 );
           event(new Notification($data));
      return "event fired";
@@ -533,7 +538,7 @@ class ProductsController extends Controller
         if ($stel){
             $file = public_path().self::MEDIA_STEL.$stel->id."/".$stel->faktur_file;
             $headers = array(
-              'Content-Type: application/octet-stream',
+              self::CONTENT_TYPE,
             );
 
             return Response::file($file, $headers);
@@ -547,7 +552,7 @@ class ProductsController extends Controller
         if ($stel){
             $file = public_path().self::MEDIA_STEL.$stel->id."/".$stel->id_kuitansi;
             $headers = array(
-              'Content-Type: application/octet-stream',
+              self::CONTENT_TYPE,
             );
 
             return Response::file($file, $headers);
@@ -571,7 +576,7 @@ class ProductsController extends Controller
             if (count($stel)>0){
                 $file = public_path().'/media/stelAttach/'.$id."/".$stel[0]->attachment;
                 $headers = array(
-                  'Content-Type: application/octet-stream',
+                  self::CONTENT_TYPE,
                 );
 
                 return Response::file($file, $headers);
