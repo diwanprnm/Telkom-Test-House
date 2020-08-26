@@ -199,21 +199,10 @@ class UserinController extends Controller
         $user->is_active = $request->input(self::IS_ACTIVE);
         $user->address = $request->input(self::ADDRESS);
         $user->phone_number = $request->input(self::PHONE_NUMBER);
-        $user->fax = $request->input('fax');
+        $user->fax = $request->input('fax'); 
 
-        if ($request->hasFile(self::PICTURE)) { 
-            $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
-            $path_file = public_path().self::MEDIA_USER.$user->id;
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file(self::PICTURE)->move($path_file,$name_file)){
-                $user->picture = $name_file;
-            }else{
-                Session::flash(self::ERROR, self::USER_IMG_FAILED);
-                return redirect(self::PAGE_USERIN_CREATE);
-            }
-        }
+
+        $this->uploadPictureUserin($request,$user); 
 
         $user->created_by = $currentUser->id;
         $user->updated_by = $currentUser->id;
@@ -336,19 +325,8 @@ class UserinController extends Controller
             $userIn->is_active = $request->input(self::IS_ACTIVE);
         }
 
-        if ($request->hasFile(self::PICTURE)) { 
-            $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
-            $path_file = public_path().self::MEDIA_USER.$userIn->id;
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file(self::PICTURE)->move($path_file,$name_file)){
-                $userIn->picture = $name_file;
-            }else{
-                Session::flash(self::ERROR, self::USER_IMG_FAILED);
-                return redirect(self::PAGE_USERIN.'/'.$userIn->id.'edit');
-            }
-        }
+        
+        $this->uploadPictureUserin($request,$userIn); 
 
         $userIn->updated_by = $currentUser->id;
 
@@ -599,6 +577,24 @@ class UserinController extends Controller
         $logs->save();
         Auth::logout();
         return redirect('/admin/login');
+    }
+
+     private function uploadPictureUserin($request, $user){
+
+       if ($request->hasFile(self::PICTURE)) { 
+            $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
+            $path_file = public_path().self::MEDIA_USER.$user->id;
+            if (!file_exists($path_file)) {
+                mkdir($path_file, 0775);
+            }
+            if($request->file(self::PICTURE)->move($path_file,$name_file)){
+                $user->picture = $name_file;
+            }else{
+                Session::flash(self::ERROR, self::USER_IMG_FAILED);
+                return redirect(self::PAGE_USERIN_CREATE);
+            }
+        }
+        return $user;
     }
 
 }
