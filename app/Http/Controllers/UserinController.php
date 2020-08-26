@@ -291,30 +291,30 @@ class UserinController extends Controller
         }
         if ($request->has('old_password')){
 
-            $msg_userin_password = "";
-            $status_userin_password = TRUE;
+            $msg_userin_pass = "";
+            $status_userin_pass = TRUE;
             if (Hash::check($request->get('old_password'), $userIn->password)) {
                 if ($request->has(self::NEW_PASS_TEXT) && $request->has('confirm_new_password')){
                     if ($request->get(self::NEW_PASS_TEXT) == $request->get('confirm_new_password')){
                         $userIn->password = bcrypt($request->input(self::NEW_PASS_TEXT));
                     } else{  
-                        $status_userin_password = FALSE;
-                        $msg_userin_password = 'New password not matched';  
+                        $status_userin_pass = FALSE;
+                        $msg_userin_pass = 'New password not matched';  
                     }
                 } else{ 
 
-                    $status_userin_password = FALSE;
-                    $msg_userin_password = 'Must fill new password and confirm new password';
+                    $status_userin_pass = FALSE;
+                    $msg_userin_pass = 'Must fill new password and confirm new password';
                 }
             } else{
                
-                $status_userin_password = FALSE;
-                $msg_userin_password = 'Wrong Old Password';
+                $status_userin_pass = FALSE;
+                $msg_userin_pass = 'Wrong Old Password';
             }
 
 
-            if(!$status_userin_password){ 
-                Session::flash(self::ERROR, $msg_userin_password);
+            if(!$status_userin_pass){ 
+                Session::flash(self::ERROR, $msg_userin_pass);
                 return back()->withInput($request->all());
             }
         }
