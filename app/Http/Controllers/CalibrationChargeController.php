@@ -109,7 +109,7 @@ class CalibrationChargeController extends Controller
 
         $charge = new CalibrationCharge;
         $charge->id = Uuid::uuid4();
-        $charge->device_name = $request->input('device_name');
+        $charge->device_name = $request->input(self::DEVICE);
         $charge->price = str_replace(",","",$request->input('price'));
         $charge->is_active = $request->input('is_active');
         $charge->created_by = $currentUser->id;
@@ -221,8 +221,8 @@ class CalibrationChargeController extends Controller
 	
 	public function autocomplete($query) {
         return CalibrationCharge::select('device_name as autosuggest')
-		->where('device_name', 'like','%'.$query.'%')
-		->orderBy('device_name')
+		->where(self::DEVICE, 'like','%'.$query.'%')
+		->orderBy(self::DEVICE)
 		->take(5)
         ->distinct()
         ->get();
@@ -235,8 +235,7 @@ class CalibrationChargeController extends Controller
         // the payments table's primary key, the user's first and last name, 
         // the user's e-mail address, the amount paid, and the payment
         // timestamp.
-        $search = trim($request->input(self::SEARCH));
-        $status = -1;
+        $search = trim($request->input(self::SEARCH)); 
        
         $query = CalibrationCharge::whereNotNull(self::CREATE);
 
@@ -244,8 +243,7 @@ class CalibrationChargeController extends Controller
             $query->where(self::DEVICE,'like','%'.$search.'%');
         }
 
-        if ($request->has(self::IS_ACTIVE)){
-            $status = $request->get(self::IS_ACTIVE);
+        if ($request->has(self::IS_ACTIVE)){ 
             if ($request->get(self::IS_ACTIVE) > -1){
                 $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
             }
@@ -273,11 +271,7 @@ class CalibrationChargeController extends Controller
         
 
         $logService = new LogService();
-        $logService->createLog('download_excel',"Tarif Kalibrasi", "");
-
-
-
-
+        $logService->createLog('download_excel',"Tarif Kalibrasi", ""); 
 
         
         // Generate and return the spreadsheet

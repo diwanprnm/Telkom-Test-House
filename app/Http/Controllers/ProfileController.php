@@ -29,6 +29,8 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use App\Events\Notification;
 use App\NotificationTable;
 
+use App\Services\Logs\LogService;
+
 class ProfileController extends Controller
 { 
 
@@ -122,26 +124,8 @@ class ProfileController extends Controller
 				->with(self::ERROR_NEW_PASS, 2)
 				->withInput($request->all());
 			}
-		}
- 		$path_file = public_path().self::MEDIA_USER.$request->input(self::HIDE_ID_USER).'';
-		if ($request->hasFile(self::USER_PICTURE)) {
-			$type_file = $request->file(self::USER_PICTURE)->getMimeType();
-			$data_type_file = explode('/',$type_file);
-			if($data_type_file[0] != self::IMAGE)	{
-				return redirect()->back()
-				->with(self::ERROR_IMG_TYPE, 1)
-				->withInput($request->all()); 
-			}else{ 
-				$name_file = self::PATH_PROFILE.$request->file(self::USER_PICTURE)->getClientOriginalName();
-				$request->file(self::USER_PICTURE)->move($path_file, $name_file);
-				$fuserPicture = $name_file;
-				if (File::exists(public_path().'\media\user\\'.$request->input(self::HIDE_ID_USER).'\\'.$request->input(self::HIDE_PIC_FILE))){
-					File::delete(public_path().'\media\user\\'.$request->input(self::HIDE_ID_USER).'\\'.$request->input(self::HIDE_PIC_FILE));
-				}
-			}
-		}else{
-			$fuserPicture = $request->input(self::HIDE_PIC_FILE);
-		}
+		} 
+ 		$fuserPicture = $this->uploadFileProfile($request);
 		
 		try{
 			$query_update_user = "UPDATE users
@@ -158,17 +142,10 @@ class ProfileController extends Controller
 					updated_by = '".$currentUser[self::ATTRIBUTES]['id']."',
 					updated_at = '".date(self::FORMAT_DATE)."'
 				WHERE id = '".$request->input(self::HIDE_ID_USER)."'
-			";
+			"; 
 
-			$logs = new Logs;
-			$currentUser = Auth::user();
-	        $logs->user_id = $currentUser->id;
-	        $logs->id = Uuid::uuid4();
-	        $logs->action = "Update Profile";   
-	        $logs->data = "";
-	        $logs->created_by = $currentUser->id;
-	        $logs->page = "PROFILE";
-	        $logs->save();
+            $logService = new LogService();  
+            $logService->createLog('Update Profile',"PROFILE");
 
 
 			DB::update($query_update_user);
@@ -348,17 +325,10 @@ class ProfileController extends Controller
 			$temp->created_by = $currentUser->id;
 			$temp->updated_by = $currentUser->id;
 			
-			$temp->save();
+			$temp->save(); 
 
-				$logs = new Logs;
-			$currentUser = Auth::user();
-	        $logs->user_id = $currentUser->id;
-	        $logs->id = Uuid::uuid4();
-	        $logs->action = "Update Company";   
-	        $logs->data = "";
-	        $logs->created_by = $currentUser->id;
-	        $logs->page = "PROFILE";
-	        $logs->save();
+            $logService = new LogService();  
+            $logService->createLog('Update Company',"PROFILE");
 
 
 	        $currentUser = Auth::user();
@@ -371,17 +341,17 @@ class ProfileController extends Controller
 	        self::CREATED_AT=>date(self::FORMAT_DATE),
 	        self::UPDATED_AT=>date(self::FORMAT_DATE)
 	        );
-		  	$notification = new NotificationTable();
-			$notification->id = Uuid::uuid4();
-	      	$notification->from = $data['from'];
-	      	$notification->to = $data['to'];
-	      	$notification->message = $data[self::MESSAGE];
-	      	$notification->url = $data['url'];
-	      	$notification->is_read = $data[self::IS_READ];
-	      	$notification->created_at = $data[self::CREATED_AT];
-	      	$notification->updated_at = $data[self::UPDATED_AT];
-	      	$notification->save();
-	      	$data['id'] = $notification->id; 
+		  	$notifProfile = new NotificationTable();
+			$notifProfile->id = Uuid::uuid4();
+	      	$notifProfile->from = $data['from'];
+	      	$notifProfile->to = $data['to'];
+	      	$notifProfile->message = $data[self::MESSAGE];
+	      	$notifProfile->url = $data['url'];
+	      	$notifProfile->is_read = $data[self::IS_READ];
+	      	$notifProfile->created_at = $data[self::CREATED_AT];
+	      	$notifProfile->updated_at = $data[self::UPDATED_AT];
+	      	$notifProfile->save();
+	      	$data['id'] = $notifProfile->id; 
 	        event(new Notification($data));
 
 
@@ -411,7 +381,9 @@ class ProfileController extends Controller
 	public function insert(Request $request)
     { 
 		$user_id = Uuid::uuid4();
-		
+		$company_id = 0;
+		$notif_message = "";
+		$log_message = "";
 		if($request->input('hide_is_company_too') == 0){ 
 			if($request->input(self::EMAIL) == ''){
 				return redirect()->back()
@@ -431,88 +403,14 @@ class ProfileController extends Controller
 				return redirect()->back()
 				->with(self::ERROR_NEW_PASS, 2)
 				->withInput($request->all());
-			}
-			
-			$path_file = public_path().self::MEDIA_USER.$user_id.'';
-			if (!file_exists($path_file)) {
-				mkdir($path_file, 0775);
-			}
-			if ($request->hasFile(self::USER_PICTURE)) {
-				$type_file = $request->file(self::USER_PICTURE)->getMimeType();
-				$data_type_file = explode('/',$type_file);
-				if($data_type_file[0] != self::IMAGE)	{
-					return redirect()->back()
-					->with(self::ERROR_IMG_TYPE, 1)
-					->withInput($request->all());
-				}else{ 
-					$name_file = self::PATH_PROFILE.$request->file(self::USER_PICTURE)->getClientOriginalName();
-					if($request->file(self::USER_PICTURE)->move($path_file,$name_file)){
-						$fuserPicture = $name_file;
-					}
-					else{
-						Session::flash(self::ERROR, 'Save Profile Picture to directory failed');
-						return redirect()->back()
-						->withInput($request->all());
-					}
-				}
-			}else{
-				$fuserPicture = '';
-			}
-			
-			DB::table('users')->insert([
-				[
-					'id' => ''.$user_id.'', 
-					'role_id' => '2',
-					self::COMPANY_ID => ''.$request->input('cmb-perusahaan').'', 
-					'name' => ''.$request->input(self::USER_NAME).'', 
-					self::ADDRESS => ''.$request->input(self::ADDRESS).'', 
-					'phone_number' => ''.$request->input(self::PHONE).'', 
-					'fax' => ''.$request->input('fax').'', 
-					self::EMAIL => ''.$request->input(self::EMAIL).'', 
-					self::PASS_TEXT => ''.$hashedPassword.'', 
-					'is_active' => 0, 
-					'remember_token' => ''.Str::random(60).'', 
-					'created_by' => ''.$user_id.'', 
-					'updated_by' => ''.$user_id.'', 
-					self::CREATED_AT => ''.date(self::FORMAT_DATE).'', 
-					self::UPDATED_AT => ''.date(self::FORMAT_DATE).'',
-					'picture' => ''.$fuserPicture.'',
-					self::EMAIL2 => ''.$request->input(self::EMAIL2).'', 
-					self::EMAIL3 => ''.$request->input(self::EMAIL3).'', 
-				]
-			]);
-			$logs = new Logs; 
-	        $logs->user_id = $user_id;
-	        $logs->id = Uuid::uuid4();
-	        $logs->action = "Register";   
-	        $logs->data = "";
-	        $logs->created_by = $user_id;
-	        $logs->page = "REGISTER";
-	        $logs->save(); 
+			} 
+			$this->uploadFileProfile($request);
+			$company_id = $request->input('cmb-perusahaan');
+			$notif_message = "Permohonan Aktivasi Akun Baru";
+			$log_message = "Register";
 
-
-			$data= array( 
-	        "from"=>$user_id,
-	        "to"=>self::ADMIN_TEXT,
-	        self::MESSAGE=>"Permohonan Aktivasi Akun Baru",
-	        "url"=>"usereks/".$user_id.self::ADMIN_EDIT,
-	        self::IS_READ=>0,
-	        self::CREATED_AT=>date(self::FORMAT_DATE),
-	        self::UPDATED_AT=>date(self::FORMAT_DATE)
-	        );
-		  	$notification = new NotificationTable();
-			$notification->id = Uuid::uuid4();
-	      	$notification->from = $data['from'];
-	      	$notification->to = $data['to'];
-	      	$notification->message = $data[self::MESSAGE];
-	      	$notification->url = $data['url'];
-	      	$notification->is_read = $data[self::IS_READ];
-	      	$notification->created_at = $data[self::CREATED_AT];
-	      	$notification->updated_at = $data[self::UPDATED_AT];
-	      	$notification->save();
-	      	$data['id'] = $notification->id; 
-	        event(new Notification($data)); 
-
+			$this->createUser($request,$user_id,$company_id,$notif_message,$log_message,$fuserPicture,$hashedPassword);
+			  
 			$this->sendRegistrasi($request->input(self::USER_NAME), $request->input(self::EMAIL), "emails.registrasiCust", "Permintaan Aktivasi Data Akun Baru");
 			
 			return redirect('/login')->with('send_new_user', 5);
@@ -603,87 +501,17 @@ class ProfileController extends Controller
 					->with(self::ERROR_NEW_PASS, 2)
 					->withInput($request->all());
 				}
-				$user_id = Uuid::uuid4();
+				$user_id = Uuid::uuid4(); 
 				
-				$path_file = public_path().self::MEDIA_USER.$user_id.'';
-				if (!file_exists($path_file)) {
-					mkdir($path_file, 0775);
-				}
-				if ($request->hasFile(self::USER_PICTURE)) {
-					$type_file = $request->file(self::USER_PICTURE)->getMimeType();
-					$data_type_file = explode('/',$type_file);
-					if($data_type_file[0] != self::IMAGE)	{
-						return redirect()->back()
-						->with(self::ERROR_IMG_TYPE, 1)
-						->withInput($request->all());
-					}else{ 
-						$name_file = self::PATH_PROFILE.$request->file(self::USER_PICTURE)->getClientOriginalName();
-						if($request->file(self::USER_PICTURE)->move($path_file,$name_file)){
-							$fuserPicture = $name_file;
-						}
-						else{
-							Session::flash(self::ERROR, 'Save Profile Picture to directory failed');
-							return redirect()->back()
-							->withInput($request->all());
-						}
-					}
-				}else{
-					$fuserPicture = '';
-				}
+ 				$fuserPicture = $this->uploadFileProfile($request);
 				$company->save();
-				DB::table('users')->insert([
-					[
-						'id' => ''.$user_id.'', 
-						'role_id' => '2',
-						self::COMPANY_ID => ''.$company->id.'', 
-						'name' => ''.$request->input(self::USER_NAME).'', 
-						self::ADDRESS => ''.$request->input(self::ADDRESS).'', 
-						'phone_number' => ''.$request->input(self::PHONE).'', 
-						'fax' => ''.$request->input('fax').'', 
-						self::EMAIL => ''.$request->input(self::EMAIL).'', 
-						self::PASS_TEXT => ''.$hashedPassword.'', 
-						'is_active' => 0, 
-						'remember_token' => ''.Str::random(60).'', 
-						'created_by' => ''.$user_id.'', 
-						'updated_by' => ''.$user_id.'', 
-						self::CREATED_AT => ''.date(self::FORMAT_DATE).'', 
-						self::UPDATED_AT => ''.date(self::FORMAT_DATE).'',
-						'picture' => ''.$fuserPicture.'',
-						self::EMAIL2 => ''.$request->input(self::EMAIL2).'', 
-						self::EMAIL3 => ''.$request->input(self::EMAIL3).'', 
-					]
-				]);
 
-				$logs = new Logs; 
-		        $logs->user_id = $user_id;
-		        $logs->id = Uuid::uuid4();
-		        $logs->action = "Create Company";   
-		        $logs->data = "";
-		        $logs->created_by = $user_id;
-		        $logs->page = "REGISTER";
-		        $logs->save();
+				$company_id = $company->id;
+				$notif_message = "Permohonan Aktivasi Akun Baru"; 
+				$log_message = "Create Company";
+				
 
-		        $data= array( 
-		        "from"=>$user_id,
-		        "to"=>self::ADMIN_TEXT,
-		        self::MESSAGE=>"Permohonan Aktivasi Akun Baru dan Perusahaan Baru",
-		        "url"=>"usereks/".$user_id.self::ADMIN_EDIT,
-		        self::IS_READ=>0,
-		        self::CREATED_AT=>date(self::FORMAT_DATE),
-		        self::UPDATED_AT=>date(self::FORMAT_DATE)
-		        );
-			  	$notification = new NotificationTable();
-				$notification->id = Uuid::uuid4();
-		      	$notification->from = $data['from'];
-		      	$notification->to = $data['to'];
-		      	$notification->message = $data[self::MESSAGE];
-		      	$notification->url = $data['url'];
-		      	$notification->is_read = $data[self::IS_READ];
-		      	$notification->created_at = $data[self::CREATED_AT];
-		      	$notification->updated_at = $data[self::UPDATED_AT];
-		      	$notification->save();
-		      	$data['id'] = $notification->id; 
-		        event(new Notification($data)); 
+				$this->createUser($request,$user_id,$company_id,$notif_message,$log_message,$fuserPicture,$hashedPassword);
 
 				$this->sendRegistrasiwCompany(
 					$request->input(self::USER_NAME), 
@@ -781,5 +609,85 @@ class ProfileController extends Controller
     	}else{
     		return response()->json([self::STATUS=>false,self::MESSAGE=>'Email Is Required']);
     	}
+    }
+
+    private function uploadFileProfile($request){
+		$path_file = public_path().self::MEDIA_USER.$request->input(self::HIDE_ID_USER).'';
+    	
+    	if (!file_exists($path_file)) {
+			mkdir($path_file, 0775);
+		} 
+
+		if ($request->hasFile(self::USER_PICTURE)) {
+			$type_file = $request->file(self::USER_PICTURE)->getMimeType();
+			$data_type_file = explode('/',$type_file);
+			if($data_type_file[0] != self::IMAGE)	{
+				return redirect()->back()
+				->with(self::ERROR_IMG_TYPE, 1)
+				->withInput($request->all()); 
+			}else{ 
+				$name_file = self::PATH_PROFILE.$request->file(self::USER_PICTURE)->getClientOriginalName();
+				$request->file(self::USER_PICTURE)->move($path_file, $name_file);
+				$fuserPicture = $name_file;
+				if (File::exists(public_path().'\media\user\\'.$request->input(self::HIDE_ID_USER).'\\'.$request->input(self::HIDE_PIC_FILE))){
+					File::delete(public_path().'\media\user\\'.$request->input(self::HIDE_ID_USER).'\\'.$request->input(self::HIDE_PIC_FILE));
+				}
+			}
+		}else{
+			$fuserPicture = $request->input(self::HIDE_PIC_FILE);
+		}
+
+		return $fuserPicture;
+    }
+
+    private function createUser($request,$user_id,$company_id,$notif_message,$log_message,$fuserPicture,$hashedPassword){
+    	DB::table('users')->insert([
+			[
+				'id' => ''.$user_id.'', 
+				'role_id' => '2',
+				self::COMPANY_ID => ''.$company_id.'', 
+				'name' => ''.$request->input(self::USER_NAME).'', 
+				self::ADDRESS => ''.$request->input(self::ADDRESS).'', 
+				'phone_number' => ''.$request->input(self::PHONE).'', 
+				'fax' => ''.$request->input('fax').'', 
+				self::EMAIL => ''.$request->input(self::EMAIL).'', 
+				self::PASS_TEXT => ''.$hashedPassword.'', 
+				'is_active' => 0, 
+				'remember_token' => ''.Str::random(60).'', 
+				'created_by' => ''.$user_id.'', 
+				'updated_by' => ''.$user_id.'', 
+				self::CREATED_AT => ''.date(self::FORMAT_DATE).'', 
+				self::UPDATED_AT => ''.date(self::FORMAT_DATE).'',
+				'picture' => ''.$fuserPicture.'',
+				self::EMAIL2 => ''.$request->input(self::EMAIL2).'', 
+				self::EMAIL3 => ''.$request->input(self::EMAIL3).'', 
+			]
+		]);
+
+
+	    $logService = new LogService();  
+	    $logService->createLog($log_message,"REGISTER");
+
+	    $data= array( 
+	        "from"=>$user_id,
+	        "to"=>self::ADMIN_TEXT,
+	        self::MESSAGE=>$notif_message,
+	        "url"=>"usereks/".$user_id.self::ADMIN_EDIT,
+	        self::IS_READ=>0,
+	        self::CREATED_AT=>date(self::FORMAT_DATE),
+	        self::UPDATED_AT=>date(self::FORMAT_DATE)
+	    );
+	  	$notifAktivasi = new NotificationTable();
+		$notifAktivasi->id = Uuid::uuid4();
+	  	$notifAktivasi->from = $data['from'];
+	  	$notifAktivasi->to = $data['to'];
+	  	$notifAktivasi->message = $data[self::MESSAGE];
+	  	$notifAktivasi->url = $data['url'];
+	  	$notifAktivasi->is_read = $data[self::IS_READ];
+	  	$notifAktivasi->created_at = $data[self::CREATED_AT];
+	  	$notifAktivasi->updated_at = $data[self::UPDATED_AT];
+	  	$notifAktivasi->save();
+	  	$data['id'] = $notifAktivasi->id; 
+	    event(new Notification($data)); 
     }
 }

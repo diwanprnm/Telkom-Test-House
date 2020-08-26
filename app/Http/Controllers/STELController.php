@@ -299,8 +299,7 @@ class STELController extends Controller
     {
         $logService = new LogService();
         $stel = STEL::find($id);
-        $oldStel = $stel;
-        $currentUser = Auth::user();
+        $oldStel = $stel; 
         if ($stel){
             try{
                 $stel->delete();

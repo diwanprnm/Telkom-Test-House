@@ -23,8 +23,8 @@ class ResetPasswordController extends Controller
     private const TOKEN = 'token';
     private const PASS_TEXT = 'password';
     private const PASS_CONFIRM_TEXT = 'password_confirmation';
-    private const CLIENT_EMAIL_PASSWORD = 'client.emails.password';
-    private const UPDATE_PASSWORD_QA = 'Update Password Web QA!';
+    private const CLIENT_EMAIL_PASS_TEXT = 'client.emails.password';
+    private const UPDATE_PASS_QA_TEXT = 'Update Password Web QA!';
     /**
      * Display the form to request a password reset link.
      *
@@ -79,19 +79,19 @@ class ResetPasswordController extends Controller
 		$now = strtotime(date('Ymdhis'));
 		$time = strtotime("+1 hour",$now);
 		$encryptedValue = Crypt::encrypt($time); 
-		Mail::send(self::CLIENT_EMAIL_PASSWORD, array(self::TOKEN => $encryptedValue, self::EMAIL => $request->get(self::EMAIL)), function ($m) use ($user){ 
-            $m->to($user->email)->subject(self::UPDATE_PASSWORD_QA);
+		Mail::send(self::CLIENT_EMAIL_PASS_TEXT, array(self::TOKEN => $encryptedValue, self::EMAIL => $request->get(self::EMAIL)), function ($m) use ($user){ 
+            $m->to($user->email)->subject(self::UPDATE_PASS_QA_TEXT);
         });
 		
 		if($user->email2!=NULL){
-			Mail::send(self::CLIENT_EMAIL_PASSWORD, array(self::TOKEN => $encryptedValue, self::EMAIL => $request->get(self::EMAIL)), function ($m) use ($user){
-				$m->to($user->email2)->subject(self::UPDATE_PASSWORD_QA);
+			Mail::send(self::CLIENT_EMAIL_PASS_TEXT, array(self::TOKEN => $encryptedValue, self::EMAIL => $request->get(self::EMAIL)), function ($m) use ($user){
+				$m->to($user->email2)->subject(self::UPDATE_PASS_QA_TEXT);
 			});
 		}
 		
 		if($user->email3!=NULL){
-			Mail::send(self::CLIENT_EMAIL_PASSWORD, array(self::TOKEN => $encryptedValue, self::EMAIL => $request->get(self::EMAIL)), function ($m) use ($user){
-				$m->to($user->email3)->subject(self::UPDATE_PASSWORD_QA);
+			Mail::send(self::CLIENT_EMAIL_PASS_TEXT, array(self::TOKEN => $encryptedValue, self::EMAIL => $request->get(self::EMAIL)), function ($m) use ($user){
+				$m->to($user->email3)->subject(self::UPDATE_PASS_QA_TEXT);
 			});
 		}
 		

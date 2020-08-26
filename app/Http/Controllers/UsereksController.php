@@ -234,27 +234,27 @@ class UsereksController extends Controller
             $usereks->name = $request->input('name');
         }
         if ($request->has('old_password')){
-            $msg_old_password = "";
-            $status_old_password = TRUE;
+            $msg_old_pass = "";
+            $status_old_pass = TRUE;
             if (Hash::check($request->get('old_password'), $usereks->password)) {
                 if ($request->has(self::NEW_TEXT.self::NEW_PASSWORD) && $request->has('confirm_new_password')){
                     if ($request->get(self::NEW_TEXT.self::NEW_PASSWORD) == $request->get('confirm_new_password')){
                         $usereks->password = bcrypt($request->input(self::NEW_TEXT.self::NEW_PASSWORD));
                     } else{ 
-                        $status_old_password = FALSE;
-                        $msg_old_password = 'New password not matched';
+                        $status_old_pass = FALSE;
+                        $msg_old_pass = 'New password not matched';
                     }
                 } else{ 
-                    $status_old_password = FALSE;
-                    $msg_old_password = 'Must fill new password and confirm new password';
+                    $status_old_pass = FALSE;
+                    $msg_old_pass = 'Must fill new password and confirm new password';
                 }
             } else{
-                $status_old_password = FALSE;
-                $msg_old_password = 'Wrong Old Password';
+                $status_old_pass = FALSE;
+                $msg_old_pass = 'Wrong Old Password';
                 
             }
-            if(!$status_old_password){ 
-                Session::flash(self::ERROR, $msg_old_password);
+            if(!$status_old_pass){ 
+                Session::flash(self::ERROR, $msg_old_pass);
                 return back()->withInput($request->all());
             }
         }

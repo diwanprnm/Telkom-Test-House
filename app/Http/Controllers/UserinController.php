@@ -45,7 +45,7 @@ class UserinController extends Controller
     private const USER_IMG_FAILED = 'Save Profile Picture to directory failed';
     private const PAGE_USERIN_CREATE = '/admin/userin/create';
     private const USER_MSG_FAILED = 'Save Failed';
-    private const NEW_PASSWORD = 'new_password';
+    private const NEW_PASS_TEXT = 'new_password';
     private const PRICE = 'price';
     private const USER_ID = 'user_id';
     private const PAGE_EDIT = '/edit';
@@ -78,7 +78,7 @@ class UserinController extends Controller
 			$roles = Role::where('id', '!=', 2);
             
             if ($search != null){
-                $users = User::whereNotNull('created_at')
+                $usersIn = User::whereNotNull('created_at')
                     ->with('role')
                     ->with(self::COMPANY)
                     ->where('name','like','%'.$search.'%')
@@ -120,17 +120,17 @@ class UserinController extends Controller
                     }
                 }
 
-                $users = $query->orderBy('name')
+                $usersIn = $query->orderBy('name')
                             ->paginate($paginate);
             }
             
-            if (count($users) == 0){
+            if (count($usersIn) == 0){
                 $message = 'Data not found';
             }
             
             return view('admin.userin.index')
                 ->with(self::MESSAGE, $message)
-                ->with('data', $users)
+                ->with('data', $usersIn)
                 ->with(self::COMPANY, $companies)
                 ->with('role', $roles)
                 ->with(self::SEARCH, $search)
@@ -148,20 +148,20 @@ class UserinController extends Controller
         $roles = Role::where('id', '!=', 2)->get();
         $companies = Company::where('id', '=', '1')->orderBy('name')->get();
         $menu = Menu::get()->toArray();
-        $parentMenu = Menu::where("parent_id",0)->get()->toArray();
+        $parentMenu = Menu::where(self::PARENT_ID,0)->get()->toArray();
         $new = array(); 
         foreach ($menu as $a){
             $new[$a[self::PARENT_ID]][] = $a;
         }
-        $tree = array();
+        $treeUserIn = array();
         
         foreach ($parentMenu as $value) {
-            $tree[] = $this->createTree($new, array($value));
+            $treeUserIn[] = $this->createTree($new, array($value));
         } 
       
         return view('admin.userin.create')
             ->with('role', $roles)
-            ->with('tree', $tree)
+            ->with('tree', $treeUserIn)
             ->with(self::COMPANY, $companies);
     }
 
@@ -171,9 +171,9 @@ class UserinController extends Controller
             if(isset($list[$l['id']])){
                 $l['children'] = $this->createTree($list, $list[$l['id']]);
             }
-            $tree[] = $l;
+            $treeUserIn[] = $l;
         } 
-        return $tree;
+        return $treeUserIn;
     }
 
     /**
@@ -199,21 +199,10 @@ class UserinController extends Controller
         $user->is_active = $request->input(self::IS_ACTIVE);
         $user->address = $request->input(self::ADDRESS);
         $user->phone_number = $request->input(self::PHONE_NUMBER);
-        $user->fax = $request->input('fax');
+        $user->fax = $request->input('fax'); 
 
-        if ($request->hasFile(self::PICTURE)) { 
-            $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
-            $path_file = public_path().self::MEDIA_USER.$user->id;
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file(self::PICTURE)->move($path_file,$name_file)){
-                $user->picture = $name_file;
-            }else{
-                Session::flash(self::ERROR, self::USER_IMG_FAILED);
-                return redirect(self::PAGE_USERIN_CREATE);
-            }
-        }
+
+        $this->uploadPictureUserin($request,$user); 
 
         $user->created_by = $currentUser->id;
         $user->updated_by = $currentUser->id;
@@ -295,57 +284,54 @@ class UserinController extends Controller
     {
         $currentUser = Auth::user();
 
-        $user = User::find($id);
-        $oldData = $user;
+        $userIn = User::find($id);
+        $oldData = $userIn;
         if ($request->has('name')){
-            $user->name = $request->input('name');
+            $userIn->name = $request->input('name');
         }
         if ($request->has('old_password')){
-            if (Hash::check($request->get('old_password'), $user->password)) {
-                if ($request->has(self::NEW_PASSWORD) && $request->has('confirm_new_password')){
-                    if ($request->get(self::NEW_PASSWORD) == $request->get('confirm_new_password')){
-                        $user->password = bcrypt($request->input(self::NEW_PASSWORD));
-                    } else{
-                        Session::flash(self::ERROR, 'New password not matched');
-                        return back()
-                            ->withInput($request->all());    
+
+            $msg_userin_pass = "";
+            $status_userin_pass = TRUE;
+            if (Hash::check($request->get('old_password'), $userIn->password)) {
+                if ($request->has(self::NEW_PASS_TEXT) && $request->has('confirm_new_password')){
+                    if ($request->get(self::NEW_PASS_TEXT) == $request->get('confirm_new_password')){
+                        $userIn->password = bcrypt($request->input(self::NEW_PASS_TEXT));
+                    } else{  
+                        $status_userin_pass = FALSE;
+                        $msg_userin_pass = 'New password not matched';  
                     }
-                } else{
-                    Session::flash(self::ERROR, 'Must fill new password and confirm new password');
-                    return back()
-                        ->withInput($request->all());
+                } else{ 
+
+                    $status_userin_pass = FALSE;
+                    $msg_userin_pass = 'Must fill new password and confirm new password';
                 }
             } else{
-                Session::flash(self::ERROR, 'Wrong Old Password');
-                return back()
-                    ->withInput($request->all());
+               
+                $status_userin_pass = FALSE;
+                $msg_userin_pass = 'Wrong Old Password';
+            }
+
+
+            if(!$status_userin_pass){ 
+                Session::flash(self::ERROR, $msg_userin_pass);
+                return back()->withInput($request->all());
             }
         }
         if ($request->has(self::PRICE)){
-            $user->price = $request->input(self::PRICE);
+            $userIn->price = $request->input(self::PRICE);
         }
         if ($request->has(self::IS_ACTIVE)){
-            $user->is_active = $request->input(self::IS_ACTIVE);
+            $userIn->is_active = $request->input(self::IS_ACTIVE);
         }
 
-        if ($request->hasFile(self::PICTURE)) { 
-            $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
-            $path_file = public_path().self::MEDIA_USER.$user->id;
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file(self::PICTURE)->move($path_file,$name_file)){
-                $user->picture = $name_file;
-            }else{
-                Session::flash(self::ERROR, self::USER_IMG_FAILED);
-                return redirect(self::PAGE_USERIN.'/'.$user->id.'edit');
-            }
-        }
+        
+        $this->uploadPictureUserin($request,$userIn); 
 
-        $user->updated_by = $currentUser->id;
+        $userIn->updated_by = $currentUser->id;
 
         try{
-            $user->save();
+            $userIn->save();
 
             $logs = new Logs;
             $logs->user_id = $currentUser->id;
@@ -360,7 +346,7 @@ class UserinController extends Controller
             return redirect('/admin');
         } catch(Exception $e){
             Session::flash(self::ERROR, self::USER_MSG_FAILED);
-            return redirect(self::PAGE_USERIN.'/'.$user->id.'edit');
+            return redirect(self::PAGE_USERIN.'/'.$userIn->id.'edit');
         }  
     }
 
@@ -382,7 +368,7 @@ class UserinController extends Controller
                 ->get()->toArray();
 
         $menu = Menu::get()->toArray();
-         $parentMenu = Menu::where("parent_id",0)->get()->toArray();
+         $parentMenu = Menu::where(self::PARENT_ID,0)->get()->toArray();
 
         $new = array(); 
         foreach ($menu as $a){
@@ -419,61 +405,61 @@ class UserinController extends Controller
         $roles = $request->input('examinations');
         $hide_admin_role = $request->input('hide_admin_role');
 
-        $user = User::find($id);
-        $oldData = $user;
+        $userIn = User::find($id);
+        $oldData = $userIn;
 
         if ($request->has(self::ROLE_ID)){
-            $user->role_id = $request->input(self::ROLE_ID);
+            $userIn->role_id = $request->input(self::ROLE_ID);
         }
         if ($request->has(self::COMPANY_ID)){
-            $user->company_id = $request->input(self::COMPANY_ID);
+            $userIn->company_id = $request->input(self::COMPANY_ID);
         }
         if ($request->has('name')){
-            $user->name = $request->input('name');
+            $userIn->name = $request->input('name');
         }
         if ($request->has(self::EMAIL)){
-            $user->email = $request->input(self::EMAIL);
+            $userIn->email = $request->input(self::EMAIL);
         }
         if ($request->has('password')){
-            $user->password = bcrypt($request->input('password'));
+            $userIn->password = bcrypt($request->input('password'));
         }
         if ($request->has(self::PRICE)){
-            $user->price = $request->input(self::PRICE);
+            $userIn->price = $request->input(self::PRICE);
         }
         if ($request->has(self::IS_ACTIVE)){
-            $user->is_active = $request->input(self::IS_ACTIVE);
+            $userIn->is_active = $request->input(self::IS_ACTIVE);
         }
 
         if ($request->has(self::ADDRESS)){
-            $user->address = $request->input(self::ADDRESS);
+            $userIn->address = $request->input(self::ADDRESS);
         }
         if ($request->has(self::PHONE_NUMBER)){
-            $user->phone_number = $request->input(self::PHONE_NUMBER);
+            $userIn->phone_number = $request->input(self::PHONE_NUMBER);
         }
         if ($request->has('fax')){
-            $user->fax = $request->input('fax');
+            $userIn->fax = $request->input('fax');
         }
 
         if ($request->hasFile(self::PICTURE)) { 
             $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
-            $path_file = public_path().self::MEDIA_USER.$user->id;
+            $path_file = public_path().self::MEDIA_USER.$userIn->id;
             if (!file_exists($path_file)) {
                 mkdir($path_file, 0775);
             }
             if($request->file(self::PICTURE)->move($path_file,$name_file)){
-                $user->picture = $name_file;
+                $userIn->picture = $name_file;
             }else{
                 Session::flash(self::ERROR,self::USER_IMG_FAILED);
                 return redirect(self::PAGE_USERIN_CREATE);
             }
         }
 
-        $user->updated_by = $currentUser->id;
+        $userIn->updated_by = $currentUser->id;
 
         try{
-            $user->save();
-            UsersMenus::where(self::USER_ID,$user->id)->delete();
-            AdminRole::where(self::USER_ID,$user->id)->delete();
+            $userIn->save();
+            UsersMenus::where(self::USER_ID,$userIn->id)->delete();
+            AdminRole::where(self::USER_ID,$userIn->id)->delete();
           
 
             $logs = new Logs;
@@ -486,21 +472,21 @@ class UserinController extends Controller
 
             foreach ($menus as  $value) {
                 $usersmenus = new UsersMenus;
-                $usersmenus->user_id =  $user->id; 
+                $usersmenus->user_id =  $userIn->id; 
                 $usersmenus->menu_id = $value; 
                 $usersmenus->created_by = $currentUser->id;
                 try{
                     $usersmenus->save();
                 }catch(\Exception $e){
                     Session::flash(self::ERROR, self::USER_MSG_FAILED);
-                    return redirect(self::PAGE_USERIN.'/'.$user->id.self::PAGE_EDIT)->withInput();
+                    return redirect(self::PAGE_USERIN.'/'.$userIn->id.self::PAGE_EDIT)->withInput();
                 }
             }
             if($hide_admin_role && $roles){
                 $usersroles = new AdminRole;
-                $usersroles->user_id =  $user->id; 
-                $usersroles->user_name =  $user->name; 
-                $usersroles->user_email =  $user->email; 
+                $usersroles->user_id =  $userIn->id; 
+                $usersroles->user_name =  $userIn->name; 
+                $usersroles->user_email =  $userIn->email; 
                 foreach ($roles as  $value) {
                     $usersroles->$value = 1; 
                 }
@@ -509,7 +495,7 @@ class UserinController extends Controller
                     $usersroles->save();
                 }catch(\Exception $e){
                     Session::flash(self::ERROR, self::USER_MSG_FAILED);
-                    return redirect(self::PAGE_USERIN.'/'.$user->id.self::PAGE_EDIT)->withInput();
+                    return redirect(self::PAGE_USERIN.'/'.$userIn->id.self::PAGE_EDIT)->withInput();
                 }
             }
             
@@ -517,7 +503,7 @@ class UserinController extends Controller
             return redirect(self::PAGE_USERIN);
         } catch(Exception $e){
             Session::flash(self::ERROR, self::USER_MSG_FAILED);
-            return redirect(self::PAGE_USERIN.'/'.$user->id.self::PAGE_EDIT);
+            return redirect(self::PAGE_USERIN.'/'.$userIn->id.self::PAGE_EDIT);
         }
     }
 
@@ -591,6 +577,24 @@ class UserinController extends Controller
         $logs->save();
         Auth::logout();
         return redirect('/admin/login');
+    }
+
+     private function uploadPictureUserin($request, $user){
+
+       if ($request->hasFile(self::PICTURE)) { 
+            $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
+            $path_file = public_path().self::MEDIA_USER.$user->id;
+            if (!file_exists($path_file)) {
+                mkdir($path_file, 0775);
+            }
+            if($request->file(self::PICTURE)->move($path_file,$name_file)){
+                $user->picture = $name_file;
+            }else{
+                Session::flash(self::ERROR, self::USER_IMG_FAILED);
+                return redirect(self::PAGE_USERIN_CREATE);
+            }
+        }
+        return $user;
     }
 
 }

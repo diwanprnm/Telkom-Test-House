@@ -30,8 +30,7 @@ class LogController extends Controller
     private const LOG_ACTION = "logs.action";
     private const LOG_PAGE = "logs.page";
     private const LOG_SEARCH = "logs.created_at as search_date";
-    private const LOG_USER = "logs.user_id";
-    private const LOG_ADMIN_PATH = 'admin/log_administrator';
+    private const LOG_USER = "logs.user_id"; 
     private const LOG_ADMIN_CREATED = 'logs_administrator.created_at';
     private const LOG_ADMIN_ACTION = "logs_administrator.action";
     private const LOG_ADMIN_PAGE = "logs_administrator.page";
@@ -104,7 +103,7 @@ class LogController extends Controller
                     $datalogs->where($this::ACTION,'like','%'.$search.'%');
     
                     $logService = new LogService();
-                    $logService->createLog('Search Log',"LOG", json_encode(array("search"=>$search)) );
+                    $logService->createLog('Search Log',"LOG", json_encode(array(self::SEARCH=>$search)) );
                    
     
                 }
@@ -119,29 +118,11 @@ class LogController extends Controller
                     $after = $request->get($this::AFTER);
                 }
     
-            }else{
-                $select = array(
-                    $this::LOG_ADMIN_ACTION,$this::LOG_ADMIN_PAGE,"logs_administrator.reason",$this::LOG_ADMIN_SEARCH,$this::USER_NAME
-                );
-                //$datalogs = LogsAdministrator::select($select)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
-    
-                $select2 = array(
-                    $this::USER_NAME
-                );
-               // $datalogs2 = LogsAdministrator::select($select2)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
-    
-               // $username = $datalogs2->distinct()->orderBy(self::USER_NAME)->get();
-    
-                $select3 = array(
-                    $this::LOG_ADMIN_ACTION
-                );
-               // $datalogs3 = LogsAdministrator::select($select3)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
-               // $action = $datalogs3->distinct()->orderBy('logs_administrator.action')->get();
-    
+            }else{ 
                 if ($search != null){
                     $datalogs->where($this::ACTION,'like','%'.$search.'%');
                     $logService = new LogService();
-                    $logService->createLog('Search Log',"Administrator Log", json_encode(array("search"=>$search)) );
+                    $logService->createLog('Search Log',"Administrator Log", json_encode(array(self::SEARCH=>$search)) );
                 }
     
                 if ($request->has($this::BEFORE)){
@@ -176,7 +157,7 @@ class LogController extends Controller
                 $sort_type = $request->get($this::SORT_TYPE);
             }
                 
-                $data = $datalogs->orderBy($sort_by, $sort_type)
+            $data = $datalogs->orderBy($sort_by, $sort_type)
                             ->paginate($paginate);
 
             if (count($datalogs) == 0){
