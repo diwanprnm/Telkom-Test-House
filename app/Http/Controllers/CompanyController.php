@@ -501,8 +501,12 @@ class CompanyController extends Controller
 	}
 	
 	public function autocomplete($query) {
-        $respons_result = Company::autocomplet($query);
-        return response($respons_result);
+        return Company::select('name as autosuggest')
+            ->where('name', 'like','%'.$query.'%')
+            ->orderBy('name')
+            ->take(5)
+            ->distinct()
+            ->get(); 
     }
 
     private function uploadFile($request){

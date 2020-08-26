@@ -135,7 +135,11 @@ class FeedbackController extends Controller
     }
 	
 	public function autocomplete($query) {
-        $respons_result = Feedback::adm_feedback_autocomplet($query);
-        return response($respons_result);
+        return Feedback::select('subject as autosuggest')
+				->where('subject', 'like','%'.$query.'%')
+				->orderBy('subject')
+                ->take(5)
+				->distinct()
+                ->get();
     }
 }

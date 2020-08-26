@@ -37,14 +37,4 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Company');
     }
-	
-	static function autocomplet($query){
-		return DB::table('users')
-				->select('name as autosuggest')
-				->where('name', 'like','%'.$query.'%')
-                ->orderBy('name')
-                ->take(5)
-				->distinct()
-                ->get(); 
-	}
 }

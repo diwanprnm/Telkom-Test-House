@@ -242,11 +242,6 @@ class RoleController extends Controller
 	
     function cekNamaSTEL($name)
     {
-		 
 		return  count(STEL::where('name','=',''.$name.'')->get());
-    }
-	
-	public function autocomplete($query) {
-        return response(STEL::adm_stel_autocomplet($query)); 
     }
 }

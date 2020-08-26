@@ -561,8 +561,12 @@ class UserinController extends Controller
     }
 	
 	public function autocomplete($query) {
-        $respons_result = User::autocomplet($query);
-        return response($respons_result);
+        return User::select('name as autosuggest')
+				->where('name', 'like','%'.$query.'%')
+                ->orderBy('name')
+                ->take(5)
+				->distinct()
+                ->get();
     }
 
     public function logout(){

@@ -279,7 +279,11 @@ class FooterController extends Controller
     }
 	
 	public function autocomplete($query) {
-        $respons_result = Footer::autocomplet($query);
-        return response($respons_result);
+        return Footer::select('description as autosuggest')
+				->where('description', 'like','%'.$query.'%')
+                ->orderBy('description')
+                ->take(5)
+				->distinct()
+                ->get()
     }
 }

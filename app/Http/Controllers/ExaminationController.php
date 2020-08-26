@@ -159,6 +159,18 @@ class ExaminationController extends Controller
 	private const EXAM_ID = 'exam_id';
 	private const DDS_73 = '/DDS-73/';
 
+	private const TABLE_DEVICE = 'devices';
+	private const EXAM_DEVICES_ID = 'examinations.device_id';
+	private const DEVICES_ID = 'devices.id';
+	private const TABLE_COMPANIES = 'companies';
+	private const EXAM_COMPANY_ID = 'examinations.company_id';
+	private const COMPANIES_ID = 'companies.id';
+	private const COMPANY_AUTOSUGGEST = 'companies.name as autosuggest';
+	private const EXAM_CERTIFICATE_STATUS = 'examinations.certificate_status';
+	private const DEVICES_VALID_THRU = 'devices.valid_thru';
+	private const COMPANIES_NAME = 'companies.name';
+	private const DEVICE_NAME_AUTOSUGGEST = 'devices.name as autosuggest';
+	private const DEVICE_NAME = 'devices.name';
 
 	/**
      * Create a new controller instance.
@@ -2083,8 +2095,50 @@ class ExaminationController extends Controller
 	}
 	
 	public function autocomplete($query) {
-        $respons_result = Examination::adm_exam_autocomplet($query);
-        return response($respons_result);
+		$datenow = date('Y-m-d');
+		
+        $data1 = Examination::join(self::TABLE_DEVICE, self::EXAM_DEVICES_ID, '=', self::DEVICES_ID)
+				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
+                ->select(self::COMPANY_AUTOSUGGEST)
+				->where(self::EXAM_CERTIFICATE_STATUS,'=','1')
+				->where(self::DEVICES_VALID_THRU, '>=', $datenow)
+                ->where(self::COMPANIES_NAME, 'like','%'.$query.'%')
+				->orderBy(self::COMPANIES_NAME)
+                ->take(2)
+				->distinct()
+                ->get();
+		$data2 = Examination::join(self::TABLE_DEVICE, self::EXAM_DEVICES_ID, '=', self::DEVICES_ID)
+				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
+                ->select(self::DEVICE_NAME_AUTOSUGGEST)
+				->where(self::EXAM_CERTIFICATE_STATUS,'=','1')
+				->where(self::DEVICES_VALID_THRU, '>=', $datenow)
+                ->where(self::DEVICE_NAME, 'like','%'.$query.'%')
+				->orderBy(self::DEVICE_NAME)
+                ->take(2)
+				->distinct()
+                ->get();
+		$data3 = Examination::join(self::TABLE_DEVICE, self::EXAM_DEVICES_ID, '=', self::DEVICES_ID)
+				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
+                ->select('devices.mark as autosuggest')
+				->where(self::EXAM_CERTIFICATE_STATUS,'=','1')
+				->where(self::DEVICES_VALID_THRU, '>=', $datenow)
+                ->where('devices.mark', 'like','%'.$query.'%')
+				->orderBy('devices.mark')
+                ->take(2)
+				->distinct()
+                ->get();
+		$data4 = Examination::join(self::TABLE_DEVICE, self::EXAM_DEVICES_ID, '=', self::DEVICES_ID)
+				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
+                ->select('devices.model as autosuggest')
+				->where(self::EXAM_CERTIFICATE_STATUS,'=','1')
+				->where(self::DEVICES_VALID_THRU, '>=', $datenow)
+                ->where('devices.model', 'like','%'.$query.'%')
+				->orderBy('devices.model')
+                ->take(2)
+				->distinct()
+                ->get();
+		
+		return array_merge($data1,$data2,$data3,$data4);
     }
 	
 	public function checkSPKCode($a) {

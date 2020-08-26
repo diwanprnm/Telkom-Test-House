@@ -218,7 +218,11 @@ class ExaminationLabController extends Controller
     }
 	
 	public function autocomplete($query) {
-        $respons_result = ExaminationLab::autocomplet($query);
-        return response($respons_result);
+        return ExaminationLab::select('name as autosuggest')
+				->where('name', 'like','%'.$query.'%')
+                ->orderBy('name')
+                ->take(5)
+				->distinct()
+                ->get();
     }
 }

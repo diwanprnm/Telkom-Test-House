@@ -42,6 +42,8 @@ class STELController extends Controller
     private const ERROR = 'error';
     private const ADMIN_CREATE = '/admin/stel/create';
     private const ADMIN_STEL = '/admin/stel';
+
+    private const NAME_AUTOSUGGEST = 'name as autosuggest';
     /**
      * Create a new controller instance.
      *
@@ -337,8 +339,12 @@ class STELController extends Controller
     }
 	
 	public function autocomplete($query) {
-        $respons_result = STEL::adm_stel_autocomplet($query);
-        return response($respons_result);
+        return STEL::select(self::NAME_AUTOSUGGEST)
+				->where('name', 'like','%'.$query.'%')
+				->orderBy('name')
+                ->take(5)
+				->distinct()
+                ->get(); 
     }
 
     public function excel(Request $request) 

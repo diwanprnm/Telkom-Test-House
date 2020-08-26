@@ -35,6 +35,7 @@ use App\NotificationTable;
 use App\AdminRole;
 
 use Carbon\Carbon;
+use App\Services\NotificationService;
 
 class PengujianController extends Controller
 {
@@ -47,7 +48,7 @@ class PengujianController extends Controller
 	private const EXAMINATIONS = 'examinations';
 	private const DEVICES = 'devices';
 	private const DEVICES_DOT_ID = 'devices.id';
-	private const EXAMINATIONS_DEVICES_ID = 'examinations.device_id';
+	private const EXAMINATIONS_DEVICES_DOT_ID = 'examinations.device_id';
 	private const EXAMINATIONS_CREATED_BY = 'examinations.created_by';
 	private const USERS_ID = 'users.id';
 	private const USERS = 'users';
@@ -96,6 +97,8 @@ class PengujianController extends Controller
 	private const HIDE_ID_EXAM3 = 'hide_id_exam3';
 	private const EXAM_ID = 'exam_id';
 	private const MY_EXAM_ID = 'my_exam_id';
+
+	private const DEVICES_NAME_AUTOSUGGEST = 'devices.name as autosuggest';
 
     /**
      * Show the application dashboard.
@@ -166,7 +169,7 @@ class PengujianController extends Controller
 				(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name';
 			
 				$data = DB::table(self::EXAMINATIONS)
-							->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
+							->join(self::DEVICES, self::EXAMINATIONS_DEVICES_DOT_ID, '=', self::DEVICES_DOT_ID)
 							->join(self::USERS, self::EXAMINATIONS_CREATED_BY, '=', self::USERS_ID)
 							->join(self::COMPANIES, self::USER_COMPANY_ID, '=', self::COMPANIES_ID)
 							->join(self::EXAMINATION_TYPES, self::EXAMINATIONS_TYPE_ID, '=', self::EXAMINATION_TYPES_ID)
@@ -298,7 +301,7 @@ class PengujianController extends Controller
 		if( $pengujian > 0){
 			if($status > 0){
 				$data = DB::table(self::EXAMINATIONS)
-				->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
+				->join(self::DEVICES, self::EXAMINATIONS_DEVICES_DOT_ID, '=', self::DEVICES_DOT_ID)
 				->select( $neededColumn )
 				->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
 				->where(self::EXAMINATIONS_DOT.$arr_status[$status-1].'','=','1')
@@ -307,7 +310,7 @@ class PengujianController extends Controller
 				->paginate($paginate);
 			}else{
 				$data = DB::table(self::EXAMINATIONS)
-				->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
+				->join(self::DEVICES, self::EXAMINATIONS_DEVICES_DOT_ID, '=', self::DEVICES_DOT_ID)
 				->select( $neededColumn )
 				->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
 				->where(self::EXAMINATIONS_TYPE_ID,'=',''.$request->input(self::PENGUJIAN).'')
@@ -316,7 +319,7 @@ class PengujianController extends Controller
 		}else{
 			if($status > 0){
 				$data = DB::table(self::EXAMINATIONS)
-				->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
+				->join(self::DEVICES, self::EXAMINATIONS_DEVICES_DOT_ID, '=', self::DEVICES_DOT_ID)
 				->select( $neededColumn )
 				->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
 				->where(self::EXAMINATIONS_DOT.$arr_status[$status-1].'','=','1')
@@ -324,7 +327,7 @@ class PengujianController extends Controller
 				->paginate($paginate);
 			}else{
 				$data = DB::table(self::EXAMINATIONS)
-				->join(self::DEVICES, self::EXAMINATIONS_DEVICES_ID, '=', self::DEVICES_DOT_ID)
+				->join(self::DEVICES, self::EXAMINATIONS_DEVICES_DOT_ID, '=', self::DEVICES_DOT_ID)
 				->select( $neededColumn )
 				->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
 				->paginate($paginate);
@@ -1187,8 +1190,16 @@ class PengujianController extends Controller
 	public function autocomplete($query) {
 		$currentUser = Auth::user();
 		$company_id = ''.$currentUser[self::ATTRIBUTES][self::COMPANY_ID].'';
-        $respons_result = Examination::autocomplet_pengujian($query,$company_id);
-        return response($respons_result);
+		return Examination::join(self::DEVICES, self::EXAMINATIONS_DEVICES_DOT_ID, '=', self::DEVICES_DOT_ID)
+				->join('users', 'examinations.created_by', '=', 'users.id')
+				->join('examination_types', self::EXAMINATIONS_TYPE_ID, '=', 'examination_types.id')
+                ->select(self::DEVICES_NAME_AUTOSUGGEST)
+                ->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
+                ->where(self::DEVICES_NAME, 'like','%'.$query.'%')
+				->orderBy(self::DEVICES_NAME)
+                ->take(2)
+				->distinct()
+                ->get();
     }
 	
 	public function checkKuisioner(Request $request) {

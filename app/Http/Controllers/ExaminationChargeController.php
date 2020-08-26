@@ -246,8 +246,12 @@ class ExaminationChargeController extends Controller
     
     
 	public function autocomplete($query) {
-        $respons_result = ExaminationCharge::autocomplet($query);
-        return response($respons_result);
+        return ExaminationCharge::select('device_name as autosuggest')
+                ->where('device_name', 'like','%'.$query.'%')
+				->orderBy('device_name')
+                ->take(5)
+                ->distinct()
+                ->get();
     }
 
 

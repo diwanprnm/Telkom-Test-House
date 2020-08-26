@@ -36,6 +36,17 @@ class DashboardController extends Controller
     private const FUNCSTAT = 'function_status';
     private const CONTRSTAT = 'contract_status';
 
+    private const TABLE_DEVICE = 'devices';
+	private const EXAM_DEVICES_ID = 'examinations.device_id';
+	private const DEVICES_ID = 'devices.id';
+    private const DEVICE_NAME_AUTOSUGGEST = 'devices.name as autosuggest';
+    private const EXAM_REGISTRATION_STATUS = 'examinations.registration_status';
+	private const EXAM_CERTIFICATE_STATUS = 'examinations.certificate_status';
+	private const EXAM_SPB_STATUS = 'examinations.spb_status';
+    private const EXAM_PAYMENT_STATUS = 'examinations.payment_status';
+    private const PAYMENT_STATUS = 'payment_status';
+    private const DEVICE_NAME = 'devices.name';
+
     /**
      * Create a new controller instance.
      *
@@ -88,7 +99,7 @@ class DashboardController extends Controller
                 $qry->whereHas($this::DEVICE, function ($q) use ($search){
                         return $q->where('name', 'like', '%'.strtolower($search).'%');
                     })
-                ->orWhereHas(COMP, function ($q) use ($search){
+                ->orWhereHas($this::COMP, function ($q) use ($search){
                         return $q->where('name', 'like', '%'.strtolower($search).'%');
                     })
                 ->orWhereHas('examinationLab', function ($q) use ($search){
@@ -116,8 +127,8 @@ class DashboardController extends Controller
         }
 
         if ($request->has($this::COMP)){
-            $query->whereHas(COMP, function ($q) use ($request){
-                return $q->where('name', 'like', '%'.strtolower($request->get(COMP)).'%');
+            $query->whereHas($this::COMP, function ($q) use ($request){
+                return $q->where('name', 'like', '%'.strtolower($request->get($this::COMP)).'%');
             });
         }
 
@@ -127,35 +138,24 @@ class DashboardController extends Controller
             });
         }
 		if ($request->has($this::STAT)){
-            $where_1 = array(
-                $this::REG.'!='=>1 
-            );
-
-            $where_2 = array(
-                $this::REG=>1,
-                $this::FUNCSTAT=>1,
-                $this::CONTRSTAT=>1,
-                $this::SPB."!="=>1
-            );
-
-            $where_3 = array(
-                $this::REG=>1,
-                $this::FUNCSTAT=>1,
-                $this::CONTRSTAT=>1,
-                $this::SPB=>1,
-                $this::PAYSTAT." != "=>1,
-            ); 
-			switch ($request->get($this::STAT)) {
+            switch ($request->get($this::STAT)) {
 				case 1:
-					$query->where($where_1);
+					$query->where($this::REG, '!=', '1');
 					$status = 1;
 					break;
 				case 2:
-                    $query->where($where_2); 
+                    $query->where($this::REG, 1);
+                    $query->where($this::FUNCSTAT, 1);
+                    $query->where($this::CONTRSTAT, 1);
+                    $query->where($this::SPB, '!=', 1);
                     $status = 2;
                     break;
                 case 3:
-					$query->where($where_3); 
+					$query->where($this::REG, 1);
+                    $query->where($this::FUNCSTAT, 1);
+                    $query->where($this::CONTRSTAT, 1);
+                    $query->where($this::SPB, 1);
+                    $query->where($this::PAYSTAT, '!=', 1);
                     $query->whereHas($this::MEDIA, function ($q) {
                         return $q->where('name', '=', 'File Pembayaran')
                                 ->where('attachment', '=' ,'');
@@ -163,7 +163,11 @@ class DashboardController extends Controller
                     $status = 3;
                     break;
                 case 4:
-                    $query->where($where_3); 
+                    $query->where($this::REG, 1);
+                    $query->where($this::FUNCSTAT, 1);
+                    $query->where($this::CONTRSTAT, 1);
+                    $query->where($this::SPB, 1);
+                    $query->where($this::PAYSTAT, '!=', 1);
                     $query->whereHas($this::MEDIA, function ($q) {
                         return $q->where('name', '=', 'File Pembayaran')
                                 ->where('attachment', '!=' ,'');
@@ -203,7 +207,22 @@ class DashboardController extends Controller
 	}
 	
 	public function autocomplete($query) {
-        $respons_result = Examination::adm_dashboard_autocomplet($query);
-        return response($respons_result);
+        return Examination::join(self::TABLE_DEVICE, self::EXAM_DEVICES_ID, '=', self::DEVICES_ID)
+                ->select(self::DEVICE_NAME_AUTOSUGGEST)
+				->where(function($q){
+					$q->where(self::EXAM_REGISTRATION_STATUS, 0)
+						->orWhere(self::EXAM_REGISTRATION_STATUS, 1)
+						->orWhere(self::EXAM_REGISTRATION_STATUS, -1)
+						->orWhere(self::EXAM_SPB_STATUS, 0)
+						->orWhere(self::EXAM_SPB_STATUS, -1)
+						->orWhere(self::EXAM_SPB_STATUS, 1)
+						->orWhere(self::EXAM_PAYMENT_STATUS, -1);
+				})
+				->where(self::PAYMENT_STATUS, 0)
+                ->where(self::DEVICE_NAME, 'like','%'.$query.'%')
+				->orderBy(self::DEVICE_NAME)
+                ->take(5)
+				->distinct()
+                ->get(); 
     }
 }

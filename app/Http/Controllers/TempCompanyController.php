@@ -348,6 +348,12 @@ if(copy($npwp_file_temp,$npwp_file_now)){
     }
 	
 	public function autocomplete($query) {
-        return response(TempCompany::autocomplet($query)); 
+        return TempCompany::join('companies', 'temp_company.company_id', '=', 'companies.id')
+                ->select('companies.name as autosuggest')
+				->where('companies.name', 'like','%'.$query.'%')
+				->orderBy('companies.name')
+                ->take(5)
+				->distinct()
+                ->get(); 
     }
 }

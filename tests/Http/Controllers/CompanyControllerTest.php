@@ -100,4 +100,12 @@ class CompanyControllerTest extends TestCase
         $this->assertEquals(302, $response->status());
 	    // $company = factory(App\Company::class)->make();  
 	}
+
+	public function testAutocomplete()
+    {
+        $user = User::find('1'); 
+		$response = $this->actingAs($user)->call('GET',"admin/adm_company_autocomplete/query");
+        //Response status ok
+        $this->assertEquals(200, $response->status());
+    }
 }
