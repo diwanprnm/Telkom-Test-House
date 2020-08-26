@@ -149,35 +149,24 @@ class DashboardController extends Controller
                     $status = 2;
                     break;
                 case 3:
-					$query->where($this::REG, 1);
-                    $query->where($this::FUNCSTAT, 1);
-                    $query->where($this::CONTRSTAT, 1);
-                    $query->where($this::SPB, 1);
-                    $query->where($this::PAYSTAT, '!=', 1);
-                    $query->whereHas($this::MEDIA, function ($q) {
-                        return $q->where('name', '=', 'File Pembayaran')
-                                ->where('attachment', '=' ,'');
-                    });
-                    $status = 3;
-                    break;
                 case 4:
                     $query->where($this::REG, 1);
                     $query->where($this::FUNCSTAT, 1);
                     $query->where($this::CONTRSTAT, 1);
                     $query->where($this::SPB, 1);
                     $query->where($this::PAYSTAT, '!=', 1);
-                    $query->whereHas($this::MEDIA, function ($q) {
-                        return $q->where('name', '=', 'File Pembayaran')
-                                ->where('attachment', '!=' ,'');
+                    $query->whereHas($this::MEDIA, function ($q) use ($request) {
+                       $final_q = $request->get($this::STAT) == 3 ? $q->where('name', '=', 'File Pembayaran')->where('attachment', '=' ,'') : $q->where('name', '=', 'File Pembayaran')->where('attachment', '!=' ,'');
+                       return $final_q;
                     });
-					$status = 4;
+					$status = $request->get($this::STAT) == 3 ? $request->get($this::STAT) : 4;
 					break;
 				default:
 					$status = 'all';
 					break;
 			}
-		}
-
+        }
+        
         $data = $query->orderBy('created_at')
                     ->paginate($paginate);
 
