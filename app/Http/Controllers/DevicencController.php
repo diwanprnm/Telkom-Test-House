@@ -326,8 +326,7 @@ class DevicencController extends Controller
     }
 
     public function moveData($id,$reason = null)
-    {
-        $currentUser = Auth::user();
+    { 
         $logs_devicenc = NULL;
 
         $devicenc = Device::find($id);
