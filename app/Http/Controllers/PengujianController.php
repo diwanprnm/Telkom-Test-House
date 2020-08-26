@@ -797,8 +797,7 @@ class PengujianController extends Controller
 						tgl = '".date(self::DATE_FORMAT2, $timestamp)."',
 						updated_by = '".$currentUser[self::ATTRIBUTES]['id']."',
 						updated_at = '".date(self::DATE_FORMAT1)."'
-					WHERE id = '".$request->input('hide_id_attach')."'
-				";
+					WHERE id = '".$request->input('hide_id_attach')."'";
 				DB::update($query_update_attach);
 				
 				$examination = Examination::find($request->input(self::HIDE_ID_EXAM));
@@ -915,8 +914,7 @@ class PengujianController extends Controller
 						updated_by = '".$currentUser[self::ATTRIBUTES]['id']."',
 						updated_at = '".date(self::DATE_FORMAT1)."',
 						function_test_status_detail = 'Tanggal uji fungsi fix'
-					WHERE id = '".$request->input(self::HIDE_ID_EXAM2)."'
-				";
+					WHERE id = '".$request->input(self::HIDE_ID_EXAM2)."'";
 				DB::update($query_update);
 				
 				$deal_test_date = strtotime($request->input('deal_test_date2'));
