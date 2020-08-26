@@ -309,6 +309,8 @@ class UserController extends Controller
             }
         }
 
+        $this->uploadPicture($request,$user);
+
         $user->updated_by = $currentUser->id;
 
         try{
@@ -401,19 +403,8 @@ class UserController extends Controller
             $user->fax = $request->input('fax');
         }
 
-        if ($request->hasFile(self::PICTURE)) { 
-            $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
-            $path_file = public_path().self::MEDIA_USER.$user->id;
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file(self::PICTURE)->move($path_file,$name_file)){
-                $user->picture = $name_file;
-            }else{
-                Session::flash(self::ERROR, self::FAILED_USER_MSG);
-                return redirect(self::ADMIN_USER_CREATE);
-            }
-        }
+        
+        $this->uploadPicture($request,$user);
 
         $user->updated_by = $currentUser->id;
 
@@ -523,6 +514,24 @@ class UserController extends Controller
 
         Auth::logout();
         return redirect('/admin/login');
+    }
+
+    private function uploadPicture($request, $users){
+
+        if ($request->hasFile(self::PICTURE)) { 
+            $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
+            $path_file = public_path().self::MEDIA_USER.$users->id;
+            if (!file_exists($path_file)) {
+                mkdir($path_file, 0775);
+            }
+            if($request->file(self::PICTURE)->move($path_file,$name_file)){
+                $users->picture = $name_file;
+            }else{
+                Session::flash(self::ERROR,self::FAILED_USER_MSG);
+                return redirect(self::ADMIN_USEREKS_CREATE);
+            }
+        }
+        return $users;
     }
 
 }

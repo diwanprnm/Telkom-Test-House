@@ -362,18 +362,18 @@ class CompanyController extends Controller
         $allowedImage = ['jpeg','jpg','png'];
         $allowedFile = ['pdf'];
         if ($request->hasFile(self::NPWP_FILE)) { 
-            $file = $request->file(self::NPWP_FILE);
-            $ext = $file->getClientOriginalExtension(); 
+            $npwp_file = $request->file(self::NPWP_FILE);
+            $ext = $npwp_file->getClientOriginalExtension(); 
             $file_name = 'npwp_'.$request->file(self::NPWP_FILE)->getClientOriginalName();
             
             $is_uploaded = false;
             if (in_array($ext, $allowedFile))
             { 
-                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/$file_name",$file->__toString());
+                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/$file_name",$npwp_file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
-                $image = Image::make($file);   
+                $image = Image::make($npwp_file);   
                 $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/$file_name",(string)$image->encode()); 
             }else{
                 Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
@@ -389,18 +389,18 @@ class CompanyController extends Controller
         }        
         if ($request->hasFile(self::SIUP_FILE)) {  
 
-            $file = $request->file(self::SIUP_FILE);
-            $ext = $file->getClientOriginalExtension(); 
+            $siup_file = $request->file(self::SIUP_FILE);
+            $ext = $siup_file->getClientOriginalExtension(); 
             $file_name = 'siupp_'.$request->file(self::SIUP_FILE)->getClientOriginalName();
             
             $is_uploaded = false;
             if (in_array($ext, $allowedFile))
             { 
-                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/".$file_name,$file->__toString());
+                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/".$file_name,$siup_file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
-                $image = Image::make($file);   
+                $image = Image::make($siup_file);   
                 $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/".$file_name,(string)$image->encode()); 
             }else{
                 Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
@@ -415,18 +415,18 @@ class CompanyController extends Controller
             }
         }
         if ($request->hasFile(self::QS_CERTIFICATE_FILE)) {  
-            $file = $request->file(self::QS_CERTIFICATE_FILE);
-            $ext = $file->getClientOriginalExtension(); 
+            $qs_file = $request->file(self::QS_CERTIFICATE_FILE);
+            $ext = $qs_file->getClientOriginalExtension(); 
             $file_name = 'serti_uji_mutu_'.$request->file(self::QS_CERTIFICATE_FILE)->getClientOriginalName();
             
             $is_uploaded = false;
             if (in_array($ext, $allowedFile))
             { 
-                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/".$file_name,$file,$file->__toString());
+                $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/".$file_name,$qs_file,$qs_file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
-                $image = Image::make($file);   
+                $image = Image::make($qs_file);   
                 $is_uploaded = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/".$file_name,(string)$image->encode()); 
             }else{
                 Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
