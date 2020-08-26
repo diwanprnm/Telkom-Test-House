@@ -15,6 +15,8 @@ use App\ExaminationLab;
 use App\User;
 use App\Logs;
 
+use App\Services\Logs\LogService;
+
 use Auth;
 use Response;
 
@@ -88,7 +90,7 @@ class DashboardController extends Controller
                 $qry->whereHas($this::DEVICE, function ($q) use ($search){
                         return $q->where('name', 'like', '%'.strtolower($search).'%');
                     })
-                ->orWhereHas(COMP, function ($q) use ($search){
+                ->orWhereHas(self::COMP, function ($q) use ($search){
                         return $q->where('name', 'like', '%'.strtolower($search).'%');
                     })
                 ->orWhereHas('examinationLab', function ($q) use ($search){
@@ -97,15 +99,10 @@ class DashboardController extends Controller
                 ->orWhere('function_test_NO', 'like', '%'.strtolower($search).'%');
             });
 
-            $currentUser = Auth::user();
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Search Dashboard";  
-            $dataSearch = array($this::SEARCH => $search);
-            $logs->data = json_encode($dataSearch);
-            $logs->created_by = $currentUser->id;
-            $logs->page = "DASHBOARD";
-            $logs->save();
+          
+            $logService = new LogService();
+            $logService->createLog("Search Dashboard","DASHBOARD", json_encode( array(self::SEARCH=>$search)) );
+           
         }
 
         if ($request->has('type')){
@@ -127,35 +124,25 @@ class DashboardController extends Controller
             });
         }
 		if ($request->has($this::STAT)){
-            $where_1 = array(
-                $this::REG.'!='=>1 
-            );
-
-            $where_2 = array(
-                $this::REG=>1,
-                $this::FUNCSTAT=>1,
-                $this::CONTRSTAT=>1,
-                $this::SPB."!="=>1
-            );
-
-            $where_3 = array(
-                $this::REG=>1,
-                $this::FUNCSTAT=>1,
-                $this::CONTRSTAT=>1,
-                $this::SPB=>1,
-                $this::PAYSTAT." != "=>1,
-            ); 
+           
 			switch ($request->get($this::STAT)) {
 				case 1:
-					$query->where($where_1);
+					$query->where($this::REG, '!=', '1');
 					$status = 1;
 					break;
 				case 2:
-                    $query->where($where_2); 
+                    $query->where($this::REG, 1);
+                    $query->where($this::FUNCSTAT, 1);
+                    $query->where($this::CONTRSTAT, 1);
+                    $query->where($this::SPB, '!=', 1);
                     $status = 2;
                     break;
                 case 3:
-					$query->where($where_3); 
+					$query->where($this::REG, 1);
+                    $query->where($this::FUNCSTAT, 1);
+                    $query->where($this::CONTRSTAT, 1);
+                    $query->where($this::SPB, 1);
+                    $query->where($this::PAYSTAT, '!=', 1);
                     $query->whereHas($this::MEDIA, function ($q) {
                         return $q->where('name', '=', 'File Pembayaran')
                                 ->where('attachment', '=' ,'');
@@ -163,7 +150,11 @@ class DashboardController extends Controller
                     $status = 3;
                     break;
                 case 4:
-                    $query->where($where_3); 
+                    $query->where($this::REG, 1);
+                    $query->where($this::FUNCSTAT, 1);
+                    $query->where($this::CONTRSTAT, 1);
+                    $query->where($this::SPB, 1);
+                    $query->where($this::PAYSTAT, '!=', 1);
                     $query->whereHas($this::MEDIA, function ($q) {
                         return $q->where('name', '=', 'File Pembayaran')
                                 ->where('attachment', '!=' ,'');
