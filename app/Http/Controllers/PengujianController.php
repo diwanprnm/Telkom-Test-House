@@ -883,7 +883,7 @@ class PengujianController extends Controller
 				/* push notif*/
 				$admins = AdminRole::where('function_status',1)->get()->toArray();
 				foreach ($admins as $admin) { 
-					$data= array(
+					$dataNotif= array(
 						"from"=>$currentUser->id,
 						"to"=>$admin[self::USER_ID],
 						self::MESSAGE=>$currentUser->company->name." Update Tanggal Uji Fungsi",
@@ -891,11 +891,11 @@ class PengujianController extends Controller
 					);
 					
 					$notificationService = new NotificationService();
-	                $notification_id = $notificationService->make($data);
-					$data['id'] = $notification_id;
-					event(new Notification($data));
+	                $notification_id = $notificationService->make($dataNotif);
+					$dataNotif['id'] = $notification_id;
+					event(new Notification($dataNotif));
 				}
-					return back();
+			 	return back();
 
 			} catch(Exception $e){
 				Session::flash(self::ERROR, self::UPDATE_FAILED);
