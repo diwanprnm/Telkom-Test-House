@@ -13,10 +13,7 @@ class DashboardControllerTest extends TestCase
      *
      * @return void
      */
-    public function testExample()
-    {
-        $this->assertTrue(true);
-    }
+    
     public function testIndex()
     {
         $user = User::where('id', '=', '1')->first();
@@ -42,13 +39,11 @@ class DashboardControllerTest extends TestCase
         //Status sukses dan judul FEEDBACK DAN COMPLAINT
         $this->assertResponseStatus(200);
     }
-   /* public function testAutocomplete()
+
+    public function testAutocomplete()
     {
         $user = User::find('1'); 
-		$response = $this->actingAs($user)->call('GET',"admin/adm_dashboard_autocomplete/");
-        //Response status ok
-        dd($response);
-
+		$response = $this->actingAs($user)->call('GET',"adm_dashboard_autocomplete/query");
         $this->assertEquals(200, $response->status());
-    }*/
+    }
 }
