@@ -195,8 +195,7 @@ class ResetPasswordController extends Controller
      */
     public function showResetForm(Request $request, $token = null)
     {
-        $return_page = view('client.reset')->with(compact(self::TOKEN, self::EMAIL));
-		if (is_null($token)) {
+        if (is_null($token)) {
            $return_page =  $this->showLinkRequestForm();
         }
 

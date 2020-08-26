@@ -666,7 +666,7 @@ class ProfileController extends Controller
 
 
 	    $logService = new LogService();  
-	    $logService->createLog($log_message,"REGISTER");
+	    $logService->createLog($log_message,"REGISTER",'',$user_id);
 
 	    $data= array( 
 	        "from"=>$user_id,
