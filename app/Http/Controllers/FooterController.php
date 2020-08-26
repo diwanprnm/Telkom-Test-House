@@ -284,6 +284,6 @@ class FooterController extends Controller
                 ->orderBy('description')
                 ->take(5)
 				->distinct()
-                ->get()
+                ->get();
     }
 }
