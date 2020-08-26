@@ -124,9 +124,8 @@ class ProfileController extends Controller
 				->with(self::ERROR_NEW_PASS, 2)
 				->withInput($request->all());
 			}
-		}
- 		
- 		$this->uploadFileProfile($request);
+		} 
+ 		$fuserPicture = $this->uploadFileProfile($request);
 		
 		try{
 			$query_update_user = "UPDATE users
@@ -502,33 +501,9 @@ class ProfileController extends Controller
 					->with(self::ERROR_NEW_PASS, 2)
 					->withInput($request->all());
 				}
-				$user_id = Uuid::uuid4();
+				$user_id = Uuid::uuid4(); 
 				
-				$path_file = public_path().self::MEDIA_USER.$user_id.'';
-				if (!file_exists($path_file)) {
-					mkdir($path_file, 0775);
-				}
-				if ($request->hasFile(self::USER_PICTURE)) {
-					$type_file = $request->file(self::USER_PICTURE)->getMimeType();
-					$data_type_file = explode('/',$type_file);
-					if($data_type_file[0] != self::IMAGE)	{
-						return redirect()->back()
-						->with(self::ERROR_IMG_TYPE, 1)
-						->withInput($request->all());
-					}else{ 
-						$name_file = self::PATH_PROFILE.$request->file(self::USER_PICTURE)->getClientOriginalName();
-						if($request->file(self::USER_PICTURE)->move($path_file,$name_file)){
-							$fuserPicture = $name_file;
-						}
-						else{
-							Session::flash(self::ERROR, 'Save Profile Picture to directory failed');
-							return redirect()->back()
-							->withInput($request->all());
-						}
-					}
-				}else{
-					$fuserPicture = '';
-				}
+ 				$fuserPicture = $this->uploadFileProfile($request);
 				$company->save();
 
 				$company_id = $company->id;
