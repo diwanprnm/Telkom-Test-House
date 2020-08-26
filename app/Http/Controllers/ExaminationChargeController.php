@@ -57,27 +57,27 @@ class ExaminationChargeController extends Controller
         $status = -1;
         
         if ($search){
-            $examinationCharge = ExaminationCharge::whereNotNull($this::CREATED_AT)
-                ->where($this::DEVICE_NAME,'like','%'.$search.'%')
+            $examinationCharge = ExaminationCharge::whereNotNull(self::CREATED_AT)
+                ->where(self::DEVICE_NAME,'like','%'.$search.'%')
                 ->orWhere('stel','like','%'.$search.'%')
                 ->orderByRaw('category, device_name')
                 ->paginate($paginate);
 
-                $logService->createLog('Search Charge', $this::EXAMINATION_CHARGE, json_encode(array(self::SEARCH=>$search)) );
+                $logService->createLog('Search Charge', self::EXAMINATION_CHARGE, json_encode(array(self::SEARCH=>$search)) );
         }else{
-            $query = ExaminationCharge::whereNotNull($this::CREATED_AT);
+            $query = ExaminationCharge::whereNotNull(self::CREATED_AT);
 
-            if ($request->has($this::CATEGORY)){
-                $category = $request->get($this::CATEGORY);
-                if($request->input($this::CATEGORY) != 'all'){
-                    $query->where($this::CATEGORY, $request->get($this::CATEGORY));
+            if ($request->has(self::CATEGORY)){
+                $category = $request->get(self::CATEGORY);
+                if($request->input(self::CATEGORY) != 'all'){
+                    $query->where(self::CATEGORY, $request->get(self::CATEGORY));
                 }
             }
 
-            if ($request->has($this::IS_ACTIVE)){
-                $status = $request->get($this::IS_ACTIVE);
-                if ($request->get($this::IS_ACTIVE) > -1){
-                    $query->where($this::IS_ACTIVE, $request->get($this::IS_ACTIVE));
+            if ($request->has(self::IS_ACTIVE)){
+                $status = $request->get(self::IS_ACTIVE);
+                if ($request->get(self::IS_ACTIVE) > -1){
+                    $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
                 }
             }
 
@@ -91,10 +91,10 @@ class ExaminationChargeController extends Controller
         
         return view('admin.charge.index')
             ->with('notFound', $notFound)
-            ->with($this::MESSAGE, $message)
+            ->with(self::MESSAGE, $message)
             ->with('data', $examinationCharge)
-            ->with($this::SEARCH, $search)
-            ->with($this::CATEGORY, $category)
+            ->with(self::SEARCH, $search)
+            ->with(self::CATEGORY, $category)
             ->with('status', $status);
         
     }
@@ -109,20 +109,20 @@ class ExaminationChargeController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            $this::DEVICE_NAME => self::REQUIRED,
-            $this::STEL => self::REQUIRED,
-            $this::CATEGORY => self::REQUIRED,
-            $this::DURATION => self::REQUIRED,
-            $this::PRICE => self::REQUIRED,
-            $this::TA_PRICE => self::REQUIRED,
-            $this::VT_PRICE => self::REQUIRED,
-            $this::IS_ACTIVE => 'required|boolean',
+            self::DEVICE_NAME => self::REQUIRED,
+            self::STEL => self::REQUIRED,
+            self::CATEGORY => self::REQUIRED,
+            self::DURATION => self::REQUIRED,
+            self::PRICE => self::REQUIRED,
+            self::TA_PRICE => self::REQUIRED,
+            self::VT_PRICE => self::REQUIRED,
+            self::IS_ACTIVE => 'required|boolean',
         ]);
 
         $currentUser = Auth::user();
         $logService = new LogService();
 			
-		$name_exists = $this->cekNamaPerangkat($request->input($this::DEVICE_NAME));
+		$name_exists = $this->cekNamaPerangkat($request->input(self::DEVICE_NAME));
 		if($name_exists == 1){
 			return redirect()->back()
                 ->with('error_name', 1)
@@ -131,25 +131,25 @@ class ExaminationChargeController extends Controller
 
         $charge = new ExaminationCharge;
         $charge->id = Uuid::uuid4();
-        $charge->device_name = $request->input($this::DEVICE_NAME);
-        $charge->stel = $request->input($this::STEL);
-        $charge->category = $request->input($this::CATEGORY);
-        $charge->duration = str_replace(",","",$request->input($this::DURATION));
-        $charge->price = str_replace(",","",$request->input($this::PRICE));
-        $charge->ta_price = str_replace(",","",$request->input($this::TA_PRICE));
-        $charge->vt_price = str_replace(",","",$request->input($this::VT_PRICE));
-        $charge->is_active = $request->input($this::IS_ACTIVE);
+        $charge->device_name = $request->input(self::DEVICE_NAME);
+        $charge->stel = $request->input(self::STEL);
+        $charge->category = $request->input(self::CATEGORY);
+        $charge->duration = str_replace(",","",$request->input(self::DURATION));
+        $charge->price = str_replace(",","",$request->input(self::PRICE));
+        $charge->ta_price = str_replace(",","",$request->input(self::TA_PRICE));
+        $charge->vt_price = str_replace(",","",$request->input(self::VT_PRICE));
+        $charge->is_active = $request->input(self::IS_ACTIVE);
         $charge->created_by = $currentUser->id;
         $charge->updated_by = $currentUser->id;
 
         try{
             $charge->save();
 
-            $logService->createLog('Create Charge', $this::EXAMINATION_CHARGE, $charge );
+            $logService->createLog('Create Charge', self::EXAMINATION_CHARGE, $charge );
 
-            Session::flash($this::MESSAGE, 'Charge successfully created');
-            return redirect($this::ADMIN_CHARGE);
-        } catch(Exception $e){ return redirect('/admin/charge/create')->with($this::ERROR, 'Save failed');
+            Session::flash(self::MESSAGE, 'Charge successfully created');
+            return redirect(self::ADMIN_CHARGE);
+        } catch(Exception $e){ return redirect('/admin/charge/create')->with(self::ERROR, 'Save failed');
         }
     }
 
@@ -168,7 +168,7 @@ class ExaminationChargeController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            $this::IS_ACTIVE => 'boolean',
+            self::IS_ACTIVE => 'boolean',
         ]);
 
         $currentUser = Auth::user();
@@ -177,29 +177,29 @@ class ExaminationChargeController extends Controller
         $charge = ExaminationCharge::find($id);
         $oldData = $charge;
 
-        if ($request->has($this::DEVICE_NAME)){
-            $charge->device_name = $request->input($this::DEVICE_NAME);
+        if ($request->has(self::DEVICE_NAME)){
+            $charge->device_name = $request->input(self::DEVICE_NAME);
         }
-        if ($request->has($this::STEL)){
-            $charge->stel = $request->input($this::STEL);
+        if ($request->has(self::STEL)){
+            $charge->stel = $request->input(self::STEL);
         }
-        if ($request->has($this::CATEGORY)){
-            $charge->category = $request->input($this::CATEGORY);
+        if ($request->has(self::CATEGORY)){
+            $charge->category = $request->input(self::CATEGORY);
         }
-        if ($request->has($this::DURATION)){
-			$charge->duration = str_replace(",","",$request->input($this::DURATION));
+        if ($request->has(self::DURATION)){
+			$charge->duration = str_replace(",","",$request->input(self::DURATION));
         }
-        if ($request->has($this::PRICE)){
-			$charge->price = str_replace(",","",$request->input($this::PRICE));
+        if ($request->has(self::PRICE)){
+			$charge->price = str_replace(",","",$request->input(self::PRICE));
         }
-        if ($request->has($this::TA_PRICE)){
-			$charge->ta_price = str_replace(",","",$request->input($this::TA_PRICE));
+        if ($request->has(self::TA_PRICE)){
+			$charge->ta_price = str_replace(",","",$request->input(self::TA_PRICE));
         }
-        if ($request->has($this::VT_PRICE)){
-            $charge->vt_price = str_replace(",","",$request->input($this::VT_PRICE));
+        if ($request->has(self::VT_PRICE)){
+            $charge->vt_price = str_replace(",","",$request->input(self::VT_PRICE));
         }
-        if ($request->has($this::IS_ACTIVE)){
-            $charge->is_active = $request->input($this::IS_ACTIVE);
+        if ($request->has(self::IS_ACTIVE)){
+            $charge->is_active = $request->input(self::IS_ACTIVE);
         }
 
         $charge->updated_by = $currentUser->id;
@@ -207,11 +207,11 @@ class ExaminationChargeController extends Controller
         try{
             $charge->save();
 
-            $logService->createLog('Update Charge', $this::EXAMINATION_CHARGE, $oldData );
+            $logService->createLog('Update Charge', self::EXAMINATION_CHARGE, $oldData );
 
-            Session::flash($this::MESSAGE, 'Charge successfully updated');
-            return redirect($this::ADMIN_CHARGE);
-        } catch(Exception $e){ return redirect('/admin/charge/'.$charge->id.'/edit')->with($this::ERROR, 'Save failed');
+            Session::flash(self::MESSAGE, 'Charge successfully updated');
+            return redirect(self::ADMIN_CHARGE);
+        } catch(Exception $e){ return redirect('/admin/charge/'.$charge->id.'/edit')->with(self::ERROR, 'Save failed');
         }
     }
 
@@ -226,29 +226,29 @@ class ExaminationChargeController extends Controller
             try{
                 $charge->delete();
                 
-                $logService->createLog('Delete Charge', $this::EXAMINATION_CHARGE, $oldData );
+                $logService->createLog('Delete Charge', self::EXAMINATION_CHARGE, $oldData );
 
-                Session::flash($this::MESSAGE, 'Charge successfully deleted');
-                return redirect($this::ADMIN_CHARGE);
-            }catch (Exception $e){ return redirect($this::ADMIN_CHARGE)->with(self::ERROR, 'Delete failed');
+                Session::flash(self::MESSAGE, 'Charge successfully deleted');
+                return redirect(self::ADMIN_CHARGE);
+            }catch (Exception $e){ return redirect(self::ADMIN_CHARGE)->with(self::ERROR, 'Delete failed');
             }
         }
-        Session::flash($this::ERROR, 'Charge not found');
-        return redirect($this::ADMIN_CHARGE);
+        Session::flash(self::ERROR, 'Charge not found');
+        return redirect(self::ADMIN_CHARGE);
     }
     
     
 	function cekNamaPerangkat($name)
     {
-		$charge = ExaminationCharge::where($this::DEVICE_NAME,'=',''.$name.'')->get();
+		$charge = ExaminationCharge::where(self::DEVICE_NAME,'=',''.$name.'')->get();
 		return count($charge);
     }
     
     
 	public function autocomplete($query) {
         return ExaminationCharge::select('device_name as autosuggest')
-                ->where('device_name', 'like','%'.$query.'%')
-				->orderBy('device_name')
+                ->where(self::DEVICE_NAME, 'like','%'.$query.'%')
+				->orderBy(self::DEVICE_NAME)
                 ->take(5)
                 ->distinct()
                 ->get();
@@ -263,25 +263,25 @@ class ExaminationChargeController extends Controller
         // the user's e-mail address, the amount paid, and the payment
         // timestamp.
 
-        $search = trim($request->input($this::SEARCH));
+        $search = trim($request->input(self::SEARCH));
         
         if ($search != null){
-            $examinationCharge = ExaminationCharge::whereNotNull($this::CREATED_AT)
-                ->where($this::DEVICE_NAME,'like','%'.$search.'%')
+            $examinationCharge = ExaminationCharge::whereNotNull(self::CREATED_AT)
+                ->where(self::DEVICE_NAME,'like','%'.$search.'%')
                 ->orWhere('stel','like','%'.$search.'%')
-                ->orderBy($this::DEVICE_NAME);
+                ->orderBy(self::DEVICE_NAME);
         }else{
-            $query = ExaminationCharge::whereNotNull($this::CREATED_AT);
+            $query = ExaminationCharge::whereNotNull(self::CREATED_AT);
 
-            if ($request->has($this::CATEGORY) && $request->input($this::CATEGORY) != 'all' ){
-                $query->where($this::CATEGORY, $request->get($this::CATEGORY));
+            if ($request->has(self::CATEGORY) && $request->input(self::CATEGORY) != 'all' ){
+                $query->where(self::CATEGORY, $request->get(self::CATEGORY));
             }
 
-            if ($request->has($this::IS_ACTIVE) && $request->get($this::IS_ACTIVE) > -1 ){
-                $query->where($this::IS_ACTIVE, $request->get($this::IS_ACTIVE));
+            if ($request->has(self::IS_ACTIVE) && $request->get(self::IS_ACTIVE) > -1 ){
+                $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
             }
 
-            $examinationCharge = $query->orderBy($this::DEVICE_NAME);
+            $examinationCharge = $query->orderBy(self::DEVICE_NAME);
         }
 
         $data = $examinationCharge->get();

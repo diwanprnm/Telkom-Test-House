@@ -23,13 +23,14 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 class FeedbackController extends Controller
 {
-    private const SEARCH = 'search';
-    private const FEEDBACK = 'FEEDBACK';
-    private const BEFORE_DATE = 'before_date';
-    private const STATUS = 'status';
-    private const AFTER_DATE = 'after_date';
-    private const MESSAGE = 'message';
     private const ADMIN_FEEDBACK = '/admin/feedback';
+    private const AFTER_DATE = 'after_date';
+    private const BEFORE_DATE = 'before_date';
+    private const FEEDBACK = 'FEEDBACK';
+    private const MESSAGE = 'message';
+    private const SEARCH = 'search';
+    private const STATUS = 'status';
+    private const SUBJECT = 'subject';
 
     //$this::ADMIN_CERTIFICATION
     /**
@@ -56,7 +57,7 @@ class FeedbackController extends Controller
 
         $queryFilter = New QueryFilter($request,$query);
         if ($search){
-            $queryFilter = New QueryFilter($request, $query->where('subject','like','%'.$search.'%'));
+            $queryFilter = New QueryFilter($request, $query->where(self::SUBJECT,'like','%'.$search.'%'));
             $logService->createLog('Search Feedback',$this::FEEDBACK, json_encode(array($this::SEARCH=>$search)) );
         }
 
@@ -136,8 +137,8 @@ class FeedbackController extends Controller
 	
 	public function autocomplete($query) {
         return Feedback::select('subject as autosuggest')
-				->where('subject', 'like','%'.$query.'%')
-				->orderBy('subject')
+				->where(self::SUBJECT, 'like','%'.$query.'%')
+				->orderBy(self::SUBJECT)
                 ->take(5)
 				->distinct()
                 ->get();
