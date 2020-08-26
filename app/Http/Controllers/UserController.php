@@ -193,19 +193,9 @@ class UserController extends Controller
         $user->address = $request->input(self::ADDRESS);
         $user->phone_number = $request->input(self::PHONE_NUMBER);
         $user->fax = $request->input('fax');
-        $status = FALSE;
-        if ($request->hasFile(self::PICTURE)) { 
-            $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
-            $path_file = public_path().self::MEDIA_USER.$user->id;
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file(self::PICTURE)->move($path_file,$name_file)){
-                $user->picture = $name_file;
-            }else{
-                Session::flash(self::ERROR, self::FAILED_USER_MSG); 
-            }
-        }
+        $status = FALSE; 
+
+        $this->uploadPicture($request,$user);
 
         $user->created_by = $currentUser->id;
         $user->updated_by = $currentUser->id;
@@ -294,20 +284,7 @@ class UserController extends Controller
         if ($request->has(self::IS_ACTIVE)){
             $user->is_active = $request->input(self::IS_ACTIVE);
         }
-
-        if ($request->hasFile(self::PICTURE)) { 
-            $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
-            $path_file = public_path().self::MEDIA_USER.$user->id;
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file(self::PICTURE)->move($path_file,$name_file)){
-                $user->picture = $name_file;
-            }else{
-                Session::flash(self::ERROR, self::FAILED_USER_MSG);
-                return redirect(self::ADMIN_USER.'/'.$user->id.'edit');
-            }
-        }
+ 
 
         $this->uploadPicture($request,$user);
 

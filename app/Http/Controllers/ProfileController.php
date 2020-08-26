@@ -399,7 +399,9 @@ class ProfileController extends Controller
 	public function insert(Request $request)
     { 
 		$user_id = Uuid::uuid4();
-		
+		$company_id = 0;
+		$notif_message = "";
+		$log_message = "";
 		if($request->input('hide_is_company_too') == 0){ 
 			if($request->input(self::EMAIL) == ''){
 				return redirect()->back()
@@ -446,56 +448,12 @@ class ProfileController extends Controller
 			}else{
 				$fuserPicture = '';
 			}
-			
-			DB::table('users')->insert([
-				[
-					'id' => ''.$user_id.'', 
-					'role_id' => '2',
-					self::COMPANY_ID => ''.$request->input('cmb-perusahaan').'', 
-					'name' => ''.$request->input(self::USER_NAME).'', 
-					self::ADDRESS => ''.$request->input(self::ADDRESS).'', 
-					'phone_number' => ''.$request->input(self::PHONE).'', 
-					'fax' => ''.$request->input('fax').'', 
-					self::EMAIL => ''.$request->input(self::EMAIL).'', 
-					self::PASS_TEXT => ''.$hashedPassword.'', 
-					'is_active' => 0, 
-					'remember_token' => ''.Str::random(60).'', 
-					'created_by' => ''.$user_id.'', 
-					'updated_by' => ''.$user_id.'', 
-					self::CREATED_AT => ''.date(self::FORMAT_DATE).'', 
-					self::UPDATED_AT => ''.date(self::FORMAT_DATE).'',
-					'picture' => ''.$fuserPicture.'',
-					self::EMAIL2 => ''.$request->input(self::EMAIL2).'', 
-					self::EMAIL3 => ''.$request->input(self::EMAIL3).'', 
-				]
-			]); 
+			$company_id = $request->input('cmb-perusahaan');
+			$notif_message = "Permohonan Aktivasi Akun Baru";
+			$log_message = "Register";
 
-            $logService = new LogService();  
-            $logService->createLog('Register',"REGISTER");
-
-
-			$data= array( 
-	        "from"=>$user_id,
-	        "to"=>self::ADMIN_TEXT,
-	        self::MESSAGE=>"Permohonan Aktivasi Akun Baru",
-	        "url"=>"usereks/".$user_id.self::ADMIN_EDIT,
-	        self::IS_READ=>0,
-	        self::CREATED_AT=>date(self::FORMAT_DATE),
-	        self::UPDATED_AT=>date(self::FORMAT_DATE)
-	        );
-		  	$notifPermohonan = new NotificationTable();
-			$notifPermohonan->id = Uuid::uuid4();
-	      	$notifPermohonan->from = $data['from'];
-	      	$notifPermohonan->to = $data['to'];
-	      	$notifPermohonan->message = $data[self::MESSAGE];
-	      	$notifPermohonan->url = $data['url'];
-	      	$notifPermohonan->is_read = $data[self::IS_READ];
-	      	$notifPermohonan->created_at = $data[self::CREATED_AT];
-	      	$notifPermohonan->updated_at = $data[self::UPDATED_AT];
-	      	$notifPermohonan->save();
-	      	$data['id'] = $notifPermohonan->id; 
-	        event(new Notification($data)); 
-
+			$this->createUser($request,$user_id,$company_id,$notif_message,$log_message,$fuserPicture,$hashedPassword);
+			  
 			$this->sendRegistrasi($request->input(self::USER_NAME), $request->input(self::EMAIL), "emails.registrasiCust", "Permintaan Aktivasi Data Akun Baru");
 			
 			return redirect('/login')->with('send_new_user', 5);
@@ -614,54 +572,13 @@ class ProfileController extends Controller
 					$fuserPicture = '';
 				}
 				$company->save();
-				DB::table('users')->insert([
-					[
-						'id' => ''.$user_id.'', 
-						'role_id' => '2',
-						self::COMPANY_ID => ''.$company->id.'', 
-						'name' => ''.$request->input(self::USER_NAME).'', 
-						self::ADDRESS => ''.$request->input(self::ADDRESS).'', 
-						'phone_number' => ''.$request->input(self::PHONE).'', 
-						'fax' => ''.$request->input('fax').'', 
-						self::EMAIL => ''.$request->input(self::EMAIL).'', 
-						self::PASS_TEXT => ''.$hashedPassword.'', 
-						'is_active' => 0, 
-						'remember_token' => ''.Str::random(60).'', 
-						'created_by' => ''.$user_id.'', 
-						'updated_by' => ''.$user_id.'', 
-						self::CREATED_AT => ''.date(self::FORMAT_DATE).'', 
-						self::UPDATED_AT => ''.date(self::FORMAT_DATE).'',
-						'picture' => ''.$fuserPicture.'',
-						self::EMAIL2 => ''.$request->input(self::EMAIL2).'', 
-						self::EMAIL3 => ''.$request->input(self::EMAIL3).'', 
-					]
-				]);
- 
 
-	            $logService = new LogService();  
-	            $logService->createLog('Create Company',"REGISTER");
+				$company_id = $company->id;
+				$notif_message = "Permohonan Aktivasi Akun Baru"; 
+				$log_message = "Create Company";
+				
 
-		        $data= array( 
-		        "from"=>$user_id,
-		        "to"=>self::ADMIN_TEXT,
-		        self::MESSAGE=>"Permohonan Aktivasi Akun Baru dan Perusahaan Baru",
-		        "url"=>"usereks/".$user_id.self::ADMIN_EDIT,
-		        self::IS_READ=>0,
-		        self::CREATED_AT=>date(self::FORMAT_DATE),
-		        self::UPDATED_AT=>date(self::FORMAT_DATE)
-		        );
-			  	$notifAktivasi = new NotificationTable();
-				$notifAktivasi->id = Uuid::uuid4();
-		      	$notifAktivasi->from = $data['from'];
-		      	$notifAktivasi->to = $data['to'];
-		      	$notifAktivasi->message = $data[self::MESSAGE];
-		      	$notifAktivasi->url = $data['url'];
-		      	$notifAktivasi->is_read = $data[self::IS_READ];
-		      	$notifAktivasi->created_at = $data[self::CREATED_AT];
-		      	$notifAktivasi->updated_at = $data[self::UPDATED_AT];
-		      	$notifAktivasi->save();
-		      	$data['id'] = $notifAktivasi->id; 
-		        event(new Notification($data)); 
+				$this->createUser($request,$user_id,$company_id,$notif_message,$log_message,$fuserPicture,$hashedPassword);
 
 				$this->sendRegistrasiwCompany(
 					$request->input(self::USER_NAME), 
@@ -759,5 +676,56 @@ class ProfileController extends Controller
     	}else{
     		return response()->json([self::STATUS=>false,self::MESSAGE=>'Email Is Required']);
     	}
+    }
+
+    private function createUser($request,$user_id,$company_id,$notif_message,$log_message,$fuserPicture,$hashedPassword){
+    	DB::table('users')->insert([
+			[
+				'id' => ''.$user_id.'', 
+				'role_id' => '2',
+				self::COMPANY_ID => ''.$company_id.'', 
+				'name' => ''.$request->input(self::USER_NAME).'', 
+				self::ADDRESS => ''.$request->input(self::ADDRESS).'', 
+				'phone_number' => ''.$request->input(self::PHONE).'', 
+				'fax' => ''.$request->input('fax').'', 
+				self::EMAIL => ''.$request->input(self::EMAIL).'', 
+				self::PASS_TEXT => ''.$hashedPassword.'', 
+				'is_active' => 0, 
+				'remember_token' => ''.Str::random(60).'', 
+				'created_by' => ''.$user_id.'', 
+				'updated_by' => ''.$user_id.'', 
+				self::CREATED_AT => ''.date(self::FORMAT_DATE).'', 
+				self::UPDATED_AT => ''.date(self::FORMAT_DATE).'',
+				'picture' => ''.$fuserPicture.'',
+				self::EMAIL2 => ''.$request->input(self::EMAIL2).'', 
+				self::EMAIL3 => ''.$request->input(self::EMAIL3).'', 
+			]
+		]);
+
+
+	    $logService = new LogService();  
+	    $logService->createLog($log_message,"REGISTER");
+
+	    $data= array( 
+	        "from"=>$user_id,
+	        "to"=>self::ADMIN_TEXT,
+	        self::MESSAGE=>$notif_message,
+	        "url"=>"usereks/".$user_id.self::ADMIN_EDIT,
+	        self::IS_READ=>0,
+	        self::CREATED_AT=>date(self::FORMAT_DATE),
+	        self::UPDATED_AT=>date(self::FORMAT_DATE)
+	    );
+	  	$notifAktivasi = new NotificationTable();
+		$notifAktivasi->id = Uuid::uuid4();
+	  	$notifAktivasi->from = $data['from'];
+	  	$notifAktivasi->to = $data['to'];
+	  	$notifAktivasi->message = $data[self::MESSAGE];
+	  	$notifAktivasi->url = $data['url'];
+	  	$notifAktivasi->is_read = $data[self::IS_READ];
+	  	$notifAktivasi->created_at = $data[self::CREATED_AT];
+	  	$notifAktivasi->updated_at = $data[self::UPDATED_AT];
+	  	$notifAktivasi->save();
+	  	$data['id'] = $notifAktivasi->id; 
+	    event(new Notification($data)); 
     }
 }
