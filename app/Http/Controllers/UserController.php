@@ -33,7 +33,7 @@ class UserController extends Controller
     private const PARENT_ID = 'parent_id'; 
     private const ROLE_ID = 'role_id'; 
     private const COMPANY_ID = 'company_id'; 
-    private const PASSWORD = 'password'; 
+    private const PASS_TEXT = 'password'; 
     private const EMAIL = 'email'; 
     private const ADDRESS = 'address'; 
     private const PHONE_NUMBER = 'phone_number'; 
@@ -188,7 +188,7 @@ class UserController extends Controller
         $user->company_id = $request->input(self::COMPANY_ID);
         $user->name = $request->input('name');
         $user->email = $request->input(self::EMAIL);
-        $user->password = bcrypt($request->input(self::PASSWORD));
+        $user->password = bcrypt($request->input(self::PASS_TEXT));
         $user->is_active = $request->input(self::IS_ACTIVE);
         $user->address = $request->input(self::ADDRESS);
         $user->phone_number = $request->input(self::PHONE_NUMBER);
@@ -259,9 +259,9 @@ class UserController extends Controller
         }
         if ($request->has('old_password')){
             if (Hash::check($request->get('old_password'), $user->password)) {
-                if ($request->has(self::NEW_TEXT.self::PASSWORD) && $request->has('confirm_new_password')){
-                    if ($request->get(self::NEW_TEXT.self::PASSWORD) == $request->get('confirm_new_password')){
-                        $user->password = bcrypt($request->input(self::NEW_TEXT.self::PASSWORD));
+                if ($request->has(self::NEW_TEXT.self::PASS_TEXT) && $request->has('confirm_new_password')){
+                    if ($request->get(self::NEW_TEXT.self::PASS_TEXT) == $request->get('confirm_new_password')){
+                        $user->password = bcrypt($request->input(self::NEW_TEXT.self::PASS_TEXT));
                     } else{
                         Session::flash(self::ERROR, 'New password not matched');
                         return back()
@@ -360,8 +360,8 @@ class UserController extends Controller
         if ($request->has(self::EMAIL)){
             $user->email = $request->input(self::EMAIL);
         }
-        if ($request->has(self::PASSWORD)){
-            $user->password = bcrypt($request->input(self::PASSWORD));
+        if ($request->has(self::PASS_TEXT)){
+            $user->password = bcrypt($request->input(self::PASS_TEXT));
         }
         if ($request->has(self::PRICE)){
             $user->price = $request->input(self::PRICE);

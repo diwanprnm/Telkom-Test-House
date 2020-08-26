@@ -243,11 +243,8 @@ class CalibrationChargeController extends Controller
             $query->where(self::DEVICE,'like','%'.$search.'%');
         }
 
-        if ($request->has(self::IS_ACTIVE)){
-            $status = $request->get(self::IS_ACTIVE);
-            if ($request->get(self::IS_ACTIVE) > -1){
-                $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
-            }
+        if ($request->has(self::IS_ACTIVE) && $request->get(self::IS_ACTIVE) > -1){ 
+            $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE)); 
         }
         $data = $query->get();
 

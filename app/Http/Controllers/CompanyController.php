@@ -187,7 +187,7 @@ class CompanyController extends Controller
         $company->qs_certificate_number = $request->input(self::QS_CERTIFICATE_NUMBER);
         $company->keterangan = $request->input('keterangan');
  
-        $this->uploadFile($request);
+        $this->uploadFile($request,$company);
 
         
         $company->qs_certificate_date = $request->input(self::QS_CERTIFICATE_DATE);
@@ -282,7 +282,7 @@ class CompanyController extends Controller
         }
         
 
-        $this->uploadFile($request);
+        $this->uploadFile($request,$company);
 
         if ($request->has(self::SIUP_NUMBER)){
             $company->siup_number = $request->input(self::SIUP_NUMBER);
@@ -509,7 +509,7 @@ class CompanyController extends Controller
             ->get(); 
     }
 
-    private function uploadFile($request){
+    private function uploadFile($request,$company){
         $allowedImage = ['jpeg','jpg','png'];
         $allowedFile = ['pdf'];
 

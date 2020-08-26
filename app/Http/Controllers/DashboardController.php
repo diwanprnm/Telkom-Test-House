@@ -15,6 +15,8 @@ use App\ExaminationLab;
 use App\User;
 use App\Logs;
 
+use App\Services\Logs\LogService;
+
 use Auth;
 use Response;
 
@@ -99,7 +101,7 @@ class DashboardController extends Controller
                 $qry->whereHas($this::DEVICE, function ($q) use ($search){
                         return $q->where('name', 'like', '%'.strtolower($search).'%');
                     })
-                ->orWhereHas($this::COMP, function ($q) use ($search){
+                ->orWhereHas(self::COMP, function ($q) use ($search){
                         return $q->where('name', 'like', '%'.strtolower($search).'%');
                     })
                 ->orWhereHas('examinationLab', function ($q) use ($search){
@@ -108,15 +110,10 @@ class DashboardController extends Controller
                 ->orWhere('function_test_NO', 'like', '%'.strtolower($search).'%');
             });
 
-            $currentUser = Auth::user();
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Search Dashboard";  
-            $dataSearch = array($this::SEARCH => $search);
-            $logs->data = json_encode($dataSearch);
-            $logs->created_by = $currentUser->id;
-            $logs->page = "DASHBOARD";
-            $logs->save();
+          
+            $logService = new LogService();
+            $logService->createLog("Search Dashboard","DASHBOARD", json_encode( array(self::SEARCH=>$search)) );
+           
         }
 
         if ($request->has('type')){
@@ -138,7 +135,8 @@ class DashboardController extends Controller
             });
         }
 		if ($request->has($this::STAT)){
-            switch ($request->get($this::STAT)) {
+           
+			switch ($request->get($this::STAT)) {
 				case 1:
 					$query->where($this::REG, '!=', '1');
 					$status = 1;

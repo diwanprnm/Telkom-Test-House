@@ -31,7 +31,8 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 
 use App\Events\Notification;
-use App\NotificationTable;
+use App\NotificationTable; 
+use App\Services\NotificationService;
 use App\AdminRole;
 
 use Carbon\Carbon;
@@ -799,8 +800,7 @@ class PengujianController extends Controller
 						tgl = '".date(self::DATE_FORMAT2, $timestamp)."',
 						updated_by = '".$currentUser[self::ATTRIBUTES]['id']."',
 						updated_at = '".date(self::DATE_FORMAT1)."'
-					WHERE id = '".$request->input('hide_id_attach')."'
-				";
+					WHERE id = '".$request->input('hide_id_attach')."'";
 				DB::update($query_update_attach);
 				
 				$examination = Examination::find($request->input(self::HIDE_ID_EXAM));
@@ -825,8 +825,11 @@ class PengujianController extends Controller
 		                self::MESSAGE=>$currentUser->company->name." membayar SPB nomor".$examination->spb_number,
 		                "url"=>self::EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM).self::EDIT_LOC
 	                );
-
-	                $this->sendNotif($data); 
+ 					
+					$notificationService = new NotificationService();
+	                $notification_id = $notificationService->make($data);
+					$data['id'] = $notification_id;
+					event(new Notification($data));
 		    	}
 				Session::flash(self::MESSAGE, 'Upload successfully');
 			} catch(Exception $e){
@@ -842,11 +845,11 @@ class PengujianController extends Controller
     {
 		$currentUser = Auth::user();
 		if($request->input(self::HIDE_DATE_TYPE) == 1){
-		$exam = Examination::where('id', $request->input(self::HIDE_ID_EXAM))
-		->with(self::EXAMINATION_LAB)
-		->first()
-		;
-		$cust_test_date = strtotime($request->input('cust_test_date'));
+			$exam = Examination::where('id', $request->input(self::HIDE_ID_EXAM))
+			->with(self::EXAMINATION_LAB)
+			->first()
+			;
+			$cust_test_date = strtotime($request->input('cust_test_date'));
 			try{
 				$query_update = "UPDATE examinations
 					SET 
@@ -882,16 +885,19 @@ class PengujianController extends Controller
 				/* push notif*/
 				$admins = AdminRole::where('function_status',1)->get()->toArray();
 				foreach ($admins as $admin) { 
-					$data= array(
+					$dataNotif= array(
 						"from"=>$currentUser->id,
 						"to"=>$admin[self::USER_ID],
 						self::MESSAGE=>$currentUser->company->name." Update Tanggal Uji Fungsi",
 						"url"=>self::EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM).self::EDIT_LOC
 					);
 					
-					$this->sendNotif($data);
+					$notificationService = new NotificationService();
+	                $notification_id = $notificationService->make($dataNotif);
+					$dataNotif['id'] = $notification_id;
+					event(new Notification($dataNotif));
 				}
-					return back();
+			 	return back();
 
 			} catch(Exception $e){
 				Session::flash(self::ERROR, self::UPDATE_FAILED);
@@ -911,8 +917,7 @@ class PengujianController extends Controller
 						updated_by = '".$currentUser[self::ATTRIBUTES]['id']."',
 						updated_at = '".date(self::DATE_FORMAT1)."',
 						function_test_status_detail = 'Tanggal uji fungsi fix'
-					WHERE id = '".$request->input(self::HIDE_ID_EXAM2)."'
-				";
+					WHERE id = '".$request->input(self::HIDE_ID_EXAM2)."'";
 				DB::update($query_update);
 				
 				$deal_test_date = strtotime($request->input('deal_test_date2'));
@@ -946,7 +951,10 @@ class PengujianController extends Controller
 					"url"=>self::EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM2).self::EDIT_LOC
 					);
 					
-					$this->sendNotif($data);
+					$notificationService = new NotificationService();
+	                $notification_id = $notificationService->make($data);
+					$data['id'] = $notification_id;
+					event(new Notification($data));
 
 					return back();
 				
@@ -989,14 +997,17 @@ class PengujianController extends Controller
 					$client->post('notification/notifRescheduleToTE?id='.$exam->id);
 					
 					/* push notif*/
-					$data= array(
+					$dataNotif2 = array(
 						"from"=>$currentUser->id,
 						"to"=>self::ADMIN,
 						self::MESSAGE=>$currentUser->company->name." Update Tanggal Uji Fungsi",
 						"url"=>self::EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM2).self::EDIT_LOC
 					);
 					
-				 	$this->sendNotif($data);
+				 	$notificationService = new NotificationService();
+	                $notification_id = $notificationService->make($dataNotif2);
+					$dataNotif2['id'] = $notification_id;
+					event(new Notification($dataNotif2));
 
 					return back();
 						
@@ -1023,17 +1034,17 @@ class PengujianController extends Controller
 				
 				$deal_test_date = strtotime($request->input('deal_test_date3'));
 				
-				$exam_hist = new ExaminationHistory;
-				$exam_hist->examination_id = $request->input(self::HIDE_ID_EXAM3);
-				$exam_hist->date_action = date(self::DATE_FORMAT1);
-				$exam_hist->tahap = 'Menyetujui Tanggal Uji';
-				$exam_hist->status = 1;
-				$exam_hist->keterangan = date(self::DATE_FORMAT2, $deal_test_date).' dari Kastamer (DISETUJUI)';
-				$exam_hist->created_by = $currentUser->id;
-				$exam_hist->created_at = date(self::DATE_FORMAT1);
-				$exam_hist->save();
+				$exam_hist2 = new ExaminationHistory;
+				$exam_hist2->examination_id = $request->input(self::HIDE_ID_EXAM3);
+				$exam_hist2->date_action = date(self::DATE_FORMAT1);
+				$exam_hist2->tahap = 'Menyetujui Tanggal Uji';
+				$exam_hist2->status = 1;
+				$exam_hist2->keterangan = date(self::DATE_FORMAT2, $deal_test_date).' dari Kastamer (DISETUJUI)';
+				$exam_hist2->created_by = $currentUser->id;
+				$exam_hist2->created_at = date(self::DATE_FORMAT1);
+				$exam_hist2->save();
 
-				$client = new Client([
+				$client2 = new Client([
 					self::HEADERS => [self::CONTENT_TYPE => self::APLLICATION_HEADER_FORM],
 					// Base URI is used with relative requests
 					// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
@@ -1042,7 +1053,7 @@ class PengujianController extends Controller
 					self::TIMEOUT  => 60.0,
 				]);
 				
-				$client->get('notification/notifApproveToTE?id='.$exam->id.'&lab='.$exam->examinationLab->lab_code);
+				$client2->get('notification/notifApproveToTE?id='.$exam->id.'&lab='.$exam->examinationLab->lab_code);
 
 				/* push notif*/
 				$data= array(
@@ -1051,7 +1062,10 @@ class PengujianController extends Controller
 					self::MESSAGE=>$currentUser->company->name." Menyetujui Tanggal Uji Fungsi",
 					"url"=>self::EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM3).self::EDIT_LOC 
 				);
-				$this->sendNotif($data);
+				$notificationService = new NotificationService();
+                $notification_id = $notificationService->make($data);
+				$data['id'] = $notification_id;
+				event(new Notification($data));
 		 		return back();
 				
 			} catch(Exception $e){
@@ -1309,21 +1323,5 @@ class PengujianController extends Controller
 		} catch(Exception $e){
 			echo 0;
 		}
-	}
-
-	private function sendNotif($data){ 
-
-	  	$notification = new NotificationTable();
-		$notification->id = Uuid::uuid4();
-      	$notification->from = $data['from'];
-      	$notification->to = $data['to'];
-      	$notification->message = $data[self::MESSAGE];
-      	$notification->url = $data['url'];
-      	$notification->is_read = 0;
-      	$notification->created_at =date(self::DATE_FORMAT1);
-      	$notification->updated_at = date(self::DATE_FORMAT1);
-      	$notification->save();
-      	$data['id'] = $notification->id; 
-        event(new Notification($data)); 
-	}
+	} 
 }

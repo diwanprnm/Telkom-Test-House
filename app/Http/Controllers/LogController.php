@@ -186,8 +186,7 @@ class LogController extends Controller
 		// the payments table's primary key, the user's first and last name, 
 		// the user's e-mail address, the amount paid, and the payment
 		// timestamp.
-		
-        $search = trim($request->input($this::SEARCH));
+		 
 
         $sort_by = $request->path() == $this::LOG_PATH ? $this::LOG_CREATED : $this::LOG_ADMIN_CREATED;
         $sort_type = 'desc';
