@@ -98,6 +98,7 @@ class CompanyController extends Controller
                     $logs->action = "Search Company";
                     $logs->data = json_encode(array(self::SEARCH=>$search));
                     $logs->created_by = $currentUser->id;
+                    $logs->updated_by = $currentUser->id;
                     $logs->page = self::COMPANY;
                     $logs->save();
             } 

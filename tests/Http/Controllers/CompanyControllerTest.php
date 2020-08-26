@@ -38,12 +38,12 @@ class CompanyControllerTest extends TestCase
 	   $response =  $this->actingAs($user)->call('GET', 'admin/company/create');  
        $this->assertEquals(200, $response->status());
 	}
-	// public function test_search_company()
-	// { 
-	//    $user = User::find(1);
-	//    $response =  $this->actingAs($user)->call('GET', 'admin/company?search=cari');  
- //       $this->assertEquals(200, $response->status());
-	// }
+	public function test_search_company()
+	{ 
+	   $user = User::find(1);
+	   $response =  $this->actingAs($user)->call('GET', 'admin/company?search=cari');  
+       $this->assertEquals(200, $response->status());
+	}
     public function test_stores_company()
 	{ 
 		$user = User::find(1);
