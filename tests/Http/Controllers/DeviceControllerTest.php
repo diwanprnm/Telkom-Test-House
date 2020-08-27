@@ -26,7 +26,7 @@ class DeviceControllerTest extends TestCase
 	 { 
         $device = factory(App\Device::class)->create();
         $admin = User::find('1');
-        $response = $this->actingAs($admin)->call('GET', 'admin/device?search='.$device->name.'&after_date=&before_date=&category='); 
+        $response = $this->actingAs($admin)->call('GET', 'admin/device?search='.$device->name.'&after_date=2020-08-05&before_date=2020-08-20&category=aktif'); 
         $this->seeInDatabase('logs', [
             'page' => 'DEVICE',
             'data' => '{"search":"'.$device->name.'"}']); 
