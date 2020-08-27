@@ -105,6 +105,16 @@ class QuestionprivControllerTest extends TestCase
         $this->assertRedirectedTo('admin/questionpriv',['message' => 'User successfully created']);
     }
 
+    public function testShow()
+    {
+        //Make request as Admin
+        $admin = User::where('id', '=', '1')->first();
+        $this->actingAs($admin)->call('GET','admin/questionpriv/show');
+
+        //assert status ok, title benar, dan ada data yang dicari
+        $this->assertResponseStatus(200);
+    }
+
 
     public function testEdit()
     {
@@ -173,6 +183,16 @@ class QuestionprivControllerTest extends TestCase
         App\Question::truncate();
         App\Questionpriv::truncate();  
         //for Mysql  DB::statement('SET FOREIGN_KEY_CHECKS=1;'); -
+    }
+
+    public function testDestroyDataNotFound()
+    {
+        //Make request as Admin
+        $admin = User::where('id', '=', '1')->first();
+        $this->actingAs($admin)->call('DELETE',"admin/questionpriv/dataNotFound");
+
+        //assert status ok, title benar, dan ada data yang dicari
+        $this->assertRedirectedTo("admin/questionpriv", ['message' => 'Data not found']);
     }
     
 

@@ -193,18 +193,18 @@ class QuestionprivController extends Controller
      */
     public function destroy($id)
     {
-		$questionpriv = Questionpriv::where(self::USER_ID,'=',$id);
-
-        if ($questionpriv){
+		$questionpriv = Questionpriv::where(self::USER_ID,'=',$id)->first();
+        
+        if (count($questionpriv)){
             try{
                 $questionpriv->delete();
                 
                 Session::flash(self::MESSAGE, 'Privilege successfully deleted');
                 return redirect(self::ADMIN_QUESTIONPRIV);
-            }catch (Exception $e){
-                Session::flash(self::ERROR, 'Delete failed');
-                return redirect(self::ADMIN_QUESTIONPRIV);
+            }catch (Exception $e){ return redirect(self::ADMIN_QUESTIONPRIV)->with(self::ERROR, 'Delete failed');
             }
         }
+        return redirect(self::ADMIN_QUESTIONPRIV)
+            ->with(self::MESSAGE, 'Data not found');
     }
 }
