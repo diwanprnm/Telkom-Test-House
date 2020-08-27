@@ -83,7 +83,7 @@ class CompanyControllerTest extends TestCase
        $company = Company::latest()->first();
 	   $id = $company->id;
 	   $name = $company->name;
-	   $response =  $this->actingAs($user)->call('GET', '/company/media/'.$id.'/'.$name);  
+	   $response =  $this->actingAs($user)->call('GET', 'admin/company/media/'.$id.'/'.$name);  
        $this->assertEquals(302, $response->status());
 	}
 	public function test_export_excel()
@@ -97,7 +97,7 @@ class CompanyControllerTest extends TestCase
 	{ 
 	   
 	   $user = User::find(1); 
-	   $response =  $this->actingAs($user)->call('GET', '/company/importExcel');  
+	   $response =  $this->actingAs($user)->call('POST', '/company/importExcel');  
        $this->assertEquals(302, $response->status());
 	}
     public function test_update_company()

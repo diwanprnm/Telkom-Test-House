@@ -131,7 +131,7 @@ class CompanyController extends Controller
                         ->paginate($paginate);
              
 			$data_excel = Company::whereNotNull(self::CREATED_AT)->where('id', '<>', '1')->orderBy('updated_at', 'desc')->get();
-			// $request->session()->put('excel_pengujian', $data_excel);
+			$request->session()->put('excel_pengujian', $data_excel);
 			
             if (count($companies) == 0){
                 $message = 'Data not found';
