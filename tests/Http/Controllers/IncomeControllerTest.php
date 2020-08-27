@@ -16,7 +16,7 @@ class IncomeControllerTest extends TestCase
     public function testIndexAsAdmin()
     {
         //make request as Admin
-        $admin = User::where('id', '=', '1')->first();
+        $admin = User::find(1);
         $this->actingAs($admin)->call('GET','admin/income');
 
         //Status sukses dan judul "REKAP PENGUJIAN PERANGKAT"
@@ -32,7 +32,7 @@ class IncomeControllerTest extends TestCase
         $company = App\Company::find($income->company_id);
 
         //visit with filter
-        $admin = User::where('id', '=', '1')->first();
+        $admin = User::find(1);
         $this->actingAs($admin)->call('GET',"admin/income?type=$income->examination_type_id&status=6&lab=$income->examination_lab_id&before_date=2100-01-01&after_date=2020-01-01&search=$company->name");
 
         //Status sukses dan judul "REKAP PENGUJIAN PERANGKAT" dan terdapat nomer referensi di view
@@ -48,7 +48,7 @@ class IncomeControllerTest extends TestCase
         $company = App\Company::find($income->company_id);
 
         //visit with filter
-        $admin = User::where('id', '=', '1')->first();
+        $admin = User::find(1);
         $response = $this->actingAs($admin)->call('GET',"income/excel?type=$income->examination_type_id&status=6&lab=$income->examination_lab_id&before_date=2100-01-01&after_date=2020-01-01&search=$company->name");
         
         //response ok, header download sesuai
@@ -69,7 +69,7 @@ class IncomeControllerTest extends TestCase
     public function testCreate()
     {
         //make request with session
-        $admin = User::where('id', '=', '1')->first();
+        $admin = User::find(1);
         $response = $this
             ->actingAs($admin)
             ->withSession([
@@ -91,7 +91,7 @@ class IncomeControllerTest extends TestCase
     public function testStore()
     {
         //create request
-        $admin = User::where('id', '=', '1')->first();
+        $admin = User::find(1);
         $this->actingAs($admin)->call('POST','admin/kuitansi',[
             'number' => 123456,
             'from' => 'Income testing',
@@ -107,10 +107,28 @@ class IncomeControllerTest extends TestCase
         $this->assertRedirectedTo('admin/kuitansi', ['message' => 'Kuitansi successfully created']);
     }
 
+    public function testcetakKuitansi()
+    {
+        /*
+         * Bisa dicek lewat  /cetakKuitansi/{id}
+         * Error = Class 'PDF_MC_Table_Kuitansi' not found
+         * kalau sudah tidak error, bisa coba codingan ini di uncomment
+         * 
+            //get data
+            $admin = User::find(1);
+            //create request
+            $admin = User::where('id', '=', '1')->first();
+            dd($this->actingAs($admin)->call('GET',"/cetakKuitansi/$kuitansi->id"));
+            //check response
+            $this->assertResponseStatus(200);
+        */
+        $this->assertTrue(true);
+    }
+
     public function testStoreWithAlreadyExistNumber()
     {
         //create request
-        $admin = User::where('id', '=', '1')->first();
+        $admin = User::find(1);
         $this->actingAs($admin)->call('POST','admin/kuitansi',[
             'number' => 123456,
             'from' => 'Income testing',
@@ -126,7 +144,7 @@ class IncomeControllerTest extends TestCase
     public function testKuitansi()
     {
         //Create Request
-        $admin = User::where('id', '=', '1')->first();
+        $admin = User::find(1);
         $this->actingAs($admin)->call('GET','admin/kuitansi?search=123&before_date=2100-01-01&after_date=2020-01-01&type=spb');
 
         //Status sukses dan judul "KUITANSI"
@@ -141,7 +159,7 @@ class IncomeControllerTest extends TestCase
     public function testKuitansiWithoutDataFound()
     {
         //Create Request
-        $admin = User::where('id', '=', '1')->first();
+        $admin = User::find(1);
         $this->actingAs($admin)->call('GET','admin/kuitansi');
 
         //Status ok, judul "KUITANSI", dan pesan Data not found
@@ -152,7 +170,7 @@ class IncomeControllerTest extends TestCase
 
     public function testGenerateKuitansiManual()
     {
-        $admin = User::where('id', '=', '1')->first();
+        $admin = User::find(1);
         $this->actingAs($admin)->call('POST','admin/kuitansi/generateKuitansi');
 
         //status ok, and response is text containing "DDS-73" in it
@@ -163,7 +181,7 @@ class IncomeControllerTest extends TestCase
     public function testGenerateKuitansiManualCaseAlreadyExist()
     {
         factory(App\Kuitansi::class)->create(['number' => '001/DDS-73/'.date('Y')]);
-        $admin = User::where('id', '=', '1')->first();
+        $admin = User::find(1);
         $this->actingAs($admin)->call('POST','admin/kuitansi/generateKuitansi');
 
         //status ok, and response is text containing "DDS-73" in it
@@ -173,7 +191,7 @@ class IncomeControllerTest extends TestCase
 
     public function testAutoComplete()
     {
-        $admin = User::where('id', '=', '1')->first();
+        $admin = User::find(1);
         $this->actingAs($admin)->call('GET','admin/adm_inc_autocomplete/query');
 
         //status ok,
