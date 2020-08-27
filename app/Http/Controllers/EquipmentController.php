@@ -186,14 +186,10 @@ class EquipmentController extends Controller
 
 			$equipmenth->save();
             
-            $logs = new Logs;
-			$logs->id = Uuid::uuid4();
-            $logs->user_id = $currentUser->id;
-            $logs->action = "Create Equipment"; 
-            $logs->data = $equipment;
-            $logs->created_by = $currentUser->id;
-            $logs->page = $this::EQUIPMENT;
-            $logs->save();
+            
+            $logService = new LogService();
+            $logService->createLog( "Create Equipment",self::EQUIPMENT, $equipment );
+
 
             /* push notif*/
             
@@ -288,13 +284,8 @@ class EquipmentController extends Controller
 				$examination->save();
 			}
             
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Update Equipment"; 
-            $logs->data = "";
-            $logs->created_by = $currentUser->id;
-            $logs->page = $this::EQUIPMENT;
-            $logs->save();
+            $logService = new LogService();
+            $logService->createLog( "Update Equipment",self::EQUIPMENT, "" );
             
             Session::flash($this::MESSAGE, 'Equipment successfully updated');
             return redirect($this::ADMINEQUIP);

@@ -18,7 +18,8 @@ class EquipmentControllerTest extends TestCase
         $this->assertTrue(true);
     }
 
-  /*   public function test_visit()
+
+   /* public function testVisit()
 	 { 
 		$admin = User::find('1');
 		$response = $this->actingAs($admin)->call('GET', 'admin/equipment');
@@ -29,7 +30,7 @@ class EquipmentControllerTest extends TestCase
 		$response = $this->actingAs($admin)->call('GET', 'admin/equipment?search=asd');  
         $this->assertEquals(200, $response->status());
 	 }
-     public function test_stores_()
+     public function testStores()
 	 { 
 	 	$user = factory(App\User::class)->create(); 
        
@@ -47,7 +48,7 @@ class EquipmentControllerTest extends TestCase
          $this->assertEquals(302, $response->status());
 	     
 		}
-     public function test_update_company()
+     public function testUpdate()
 	 { 
 	 	$user = factory(App\User::class)->create(); 
         	$company = Equipment::latest()->first();
@@ -63,10 +64,10 @@ class EquipmentControllerTest extends TestCase
 	     ]);   
          $this->assertEquals(302, $response->status());
 	 }
-     public function test_delete_company()
+     public function testDelete()
 	 { 
 	 	$user = factory(App\User::class)->create(); 
-        	$company = Equipment::latest()->first();
+        $company = Equipment::latest()->first();
 	 	$response =  $this->actingAs($user)->call('DELETE', 'admin/equipment/');  
          $this->assertEquals(302, $response->status());  
 	 } */

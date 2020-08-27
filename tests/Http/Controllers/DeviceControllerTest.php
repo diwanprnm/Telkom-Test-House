@@ -36,17 +36,14 @@ class DeviceControllerTest extends TestCase
      }
      
 
-  /*  public function testExcelWithFilter()
+  /* public function testExcelWithFilter()
      {
         //create data
         $company = App\Company::latest()->first();
         $user = User::find('1');
         $response = $this->actingAs($user)->call('get','devicenc/excel?search='.$company->name);
         $this->assertEquals(200, $response->status());
-        $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
-        $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
-        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Perangkat Tidak Lulus Uji.xlsx"');
-
+       
         }*/
 
    public function testEdit()

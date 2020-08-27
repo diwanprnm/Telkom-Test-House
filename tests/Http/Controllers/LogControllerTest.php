@@ -25,10 +25,10 @@ class LogControllerTest extends TestCase
     public function testSearch()
     { 
         $admin = User::find('1');
-        $response = $this->actingAs($admin)->call('GET', 'admin/log?search=test&after_date=&before_date=&username=&action='); 
+        $response = $this->actingAs($admin)->call('GET', 'admin/log?search=search&before_date=2020-08-21&after_date=2020-08-20&username=admin&action=Create+Calibration+Charge'); 
         $this->seeInDatabase('logs', [
             'page' => 'LOG',
-            'data' => '{"search":"test"}'
+            'data' => '{"search":"search"}'
         ]); 
         $this->assertEquals(200, $response->status());
     }
