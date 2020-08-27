@@ -26,7 +26,7 @@ class RoleControllerTest extends TestCase
 	   $response =  $this->actingAs($user)->call('GET', 'admin/role/'.$role->id);  
        $this->assertEquals(200, $response->status());
 	}
-    public function test_visit_create_company()
+    public function test_visit_create_role()
 	{ 
  
 	   $user = User::find(1);
