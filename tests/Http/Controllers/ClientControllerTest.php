@@ -27,7 +27,7 @@ class ClientControllerTest extends TestCase
     }
     public function testAuthenticate()
     {
-
+    	$user = User::find(1);
     	$response =  $this->actingAs($user)->call('POST', '/client/login', 
 		[ 
 	        'email' => "admin@mail.com",
