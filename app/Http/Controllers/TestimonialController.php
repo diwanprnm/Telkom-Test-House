@@ -138,8 +138,7 @@ class TestimonialController extends Controller
             $testimonial->save();
             Session::flash(self::MESSAGE, 'Information successfully updated');
             return redirect('/admin/testimonial');
-        } catch(Exception $e){
-            return redirect('/admin/testimonial/'.$testimonial->id.'edit')->with('error', 'Save failed');
+        } catch(Exception $e){ return redirect('/admin/testimonial/'.$testimonial->id.'edit')->with('error', 'Save failed');
         }
     }
 
