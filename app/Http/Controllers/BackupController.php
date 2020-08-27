@@ -23,6 +23,7 @@ class BackupController extends Controller
     private const ADMIN_BACKUP = '/admin/backup';
     private const BACKUP_CREATED_AT = 'backup_history.created_at';
     private const BACKUP_DATA = 'backup-data/';
+    private const DATA_NOT_FOUND = 'Data not found';
     private const ERROR = 'error';
     private const MESSAGE = 'message';
     private const MINIO = 'minio';
@@ -62,7 +63,7 @@ class BackupController extends Controller
                     ->paginate($paginate);
         
         if (count($dataBackups) == 0){
-            $message = 'Data not found';
+            $message = self::DATA_NOT_FOUND;
         }
         
         return view('admin.backup.index')
@@ -99,8 +100,7 @@ class BackupController extends Controller
 
             Session::flash(self::MESSAGE, 'Backup successfully created');
             return redirect(self::ADMIN_BACKUP);
-        } catch(Exception $e) {
-            return redirect(self::ADMIN_BACKUP)->with(self::ERROR, 'Backup failed');
+        } catch(Exception $e) { return redirect(self::ADMIN_BACKUP)->with(self::ERROR, 'Backup failed');
         }
     }
 
@@ -124,9 +124,7 @@ class BackupController extends Controller
             } catch(Exception $e) {
                 return redirect(self::ADMIN_BACKUP)->with(self::ERROR, 'Restore failed');
             }
-        }else{
-            Session::flash(self::ERROR, 'Data Not Found');
-            return redirect(self::ADMIN_BACKUP);
+        }else{ return redirect(self::ADMIN_BACKUP)->with(self::ERROR, self::DATA_NOT_FOUND);
         }
     }
 
@@ -140,10 +138,10 @@ class BackupController extends Controller
                 Storage::disk(self::MINIO)->delete(self::BACKUP_DATA.$backupSql->file);
                 Session::flash(self::MESSAGE, 'Backup successfully deleted');
                 return redirect(self::ADMIN_BACKUP);
-            }catch (Exception $e){
-                return redirect(self::ADMIN_BACKUP)->with(self::ERROR, 'Delete failed');
+            }catch (Exception $e){ return redirect(self::ADMIN_BACKUP)->with(self::ERROR, 'Delete failed');
             }
         }
+        return redirect(self::ADMIN_BACKUP)->with(self::ERROR, self::DATA_NOT_FOUND);
     }
 
     public function viewMedia($id)
@@ -151,7 +149,7 @@ class BackupController extends Controller
         $sql = BackupHistory::where("id",$id)->first();
 
         if (!$sql){
-            Session::flash(self::MESSAGE, 'Data not found');
+            Session::flash(self::MESSAGE, self::DATA_NOT_FOUND);
             return redirect(self::ADMIN_BACKUP);
         }
 

@@ -471,9 +471,7 @@ class SalesController extends Controller
             $logs_a_stel_sales_detail = $stel_sales_detail;
             
             // unlink stels_sales_detail.attachment
-            if (\Storage::disk('minio')->exists("stelAttach/$id")){
-                \Storage::disk('minio')->deleteDirectory("stelAttach/$id");
-            }
+            if (\Storage::disk(self::MINIO)->exists("stelAttach/$id")){ \Storage::disk(self::MINIO)->deleteDirectory("stelAttach/$id"); }
 
             // update total stels_sales by stels_sales_detail.stels_sales_id
             if($stel_sales){
@@ -502,7 +500,7 @@ class SalesController extends Controller
     public function viewMedia($id) //bukti pembayaran
     {
         $stel = STELSalesAttach::where("stel_sales_id",$id)->first();
-        if (!$stel){ return redirect('/admin/sales')->with(self::ERROR, self::DATA_NOT_FOUND); }
+        if (!$stel){ return redirect(self::ADMIN_SALES)->with(self::ERROR, self::DATA_NOT_FOUND); }
 
         $fileMinio = Storage::disk(self::MINIO)->get("stel/$stel->stel_sales_id/$stel->attachment");
         return response($fileMinio, 200, \App\Services\MyHelper::getHeaderImage($stel->attachment));
@@ -511,7 +509,7 @@ class SalesController extends Controller
     public function viewWatermark($id) //Stel Detail Attachment
     {
         $stel = STELSalesDetail::where("id",$id)->first();
-        if (!$stel){ return redirect('/admin/sales')->with(self::ERROR, self::DATA_NOT_FOUND); }
+        if (!$stel){ return redirect(self::ADMIN_SALES)->with(self::ERROR, self::DATA_NOT_FOUND); }
 
         $fileMinio = Storage::disk(self::MINIO)->get("stelAttach/$stel->id/$stel->attachment");
         return response($fileMinio, 200, \App\Services\MyHelper::getHeaderImage($stel->attachment));
@@ -520,7 +518,7 @@ class SalesController extends Controller
     public function downloadkuitansistel($id) //download kuitansi
     {
         $stel = STELSales::where("id_kuitansi", 'like', $id . '%' )->first();
-        if (!$stel){ return redirect('/admin/sales')->with(self::ERROR, self::DATA_NOT_FOUND); }
+        if (!$stel){ return redirect(self::ADMIN_SALES)->with(self::ERROR, self::DATA_NOT_FOUND); }
 
         $fileMinio = Storage::disk(self::MINIO)->get("stel/$stel->id/$stel->id_kuitansi");
         return response($fileMinio, 200, \App\Services\MyHelper::getHeaderImage($stel->id_kuitansi));
@@ -529,7 +527,7 @@ class SalesController extends Controller
     public function downloadfakturstel($id) //download faktur
     {
         $stel = STELSales::where("id",$id)->first();
-        if (!$stel){ return redirect('/admin/sales')->with(self::ERROR, self::DATA_NOT_FOUND); }
+        if (!$stel){ return redirect(self::ADMIN_SALES)->with(self::ERROR, self::DATA_NOT_FOUND); }
 
         $fileMinio = Storage::disk(self::MINIO)->get("stel/$stel->id/$stel->faktur_file");
         return response($fileMinio, 200, \App\Services\MyHelper::getHeaderImage($stel->faktur_file));

@@ -104,6 +104,14 @@ class BackupControllerTest extends TestCase
         $this->assertRedirectedTo('/admin/backup', ['message' => 'Backup successfully deleted']);
     }
 
+    public function testDestroyDataNotFound()
+    {
+        $user = User::find(1);
+        $this->actingAs($user)->call('GET','admin/backup/dataNotFound/delete');
+        //Status redirect arah redirect adalah ke backup.index
+        $this->assertRedirectedTo('/admin/backup', ['error' => 'Data not found']);
+    }
+
 
     public function testRestoreWithoutDataFound()
     {
@@ -111,7 +119,7 @@ class BackupControllerTest extends TestCase
         $user = User::find(1);
         $this->actingAs($user)->call('GET','admin/backup/fake_id/restore');
         //Status redirect arah redirect adalah ke backup.index
-        $this->assertRedirectedTo('/admin/backup', ['error' => 'Data Not Found']);
+        $this->assertRedirectedTo('/admin/backup', ['error' => 'Data not found']);
     }
 
 
