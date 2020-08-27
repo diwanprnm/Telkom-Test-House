@@ -57,6 +57,32 @@ class TestimonialControllerTest extends TestCase
         ;
     }
 
+    public function testCreate()
+    {
+        //Make request as Admin
+        $admin = User::where('id', '=', '1')->first();
+        $this->actingAs($admin)->call('GET',"admin/testimonial/create");
+        //assert status ok
+        $this->assertResponseStatus(200);
+    }
+
+    public function testStore()
+    {
+        //Make request as Admin
+        $admin = User::where('id', '=', '1')->first();
+        $this->actingAs($admin)->call('POST',"admin/testimonial");
+        //assert status ok
+        $this->assertResponseStatus(200);
+    }
+
+    public function testShow()
+    {
+        //Make request as Admin
+        $admin = User::where('id', '=', '1')->first();
+        $this->actingAs($admin)->call('GET',"admin/testimonial/id");
+        //assert status ok
+        $this->assertResponseStatus(200);
+    }
 
     public function testEdit()
     {
@@ -93,6 +119,15 @@ class TestimonialControllerTest extends TestCase
             ->see('<h1 class="mainTitle">Testimonial</h1>')
             ->see('Information successfully updated')
         ;
+    }
+
+    public function testDestroy()
+    {
+        //Make request as Admin
+        $admin = User::where('id', '=', '1')->first();
+        $this->actingAs($admin)->call('DELETE',"admin/testimonial/id");
+        //assert status ok
+        $this->assertResponseStatus(200);
 
         //truncate in ends of test
         //for mysql  DB::statement('SET FOREIGN_KEY_CHECKS=0;'); -
@@ -103,6 +138,5 @@ class TestimonialControllerTest extends TestCase
         App\User::where('id','!=', '1')->delete();
         App\Device::truncate();
         //for mysql  DB::statement('SET FOREIGN_KEY_CHECKS=1;'); -
-
     }
 }
