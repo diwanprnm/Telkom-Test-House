@@ -57,7 +57,7 @@ class RoleControllerTest extends TestCase
 	}
 
 
-    public function test_delete_company()
+    public function test_delete_role()
 	{ 
 		$user = User::find(1);
        	$role = Role::latest()->first();

@@ -62,6 +62,7 @@ class RoleController extends Controller
                     $datasearch = array(self::SEARCH=>$search);
                     $logs->data = json_encode($datasearch);
                     $logs->created_by = $currentUser->id;
+                    $logs->updated_by = $currentUser->id;
                     $logs->page = "Role";
                     $logs->save();
             }else{
@@ -117,6 +118,7 @@ class RoleController extends Controller
             $logs->action = "Create Role";
             $logs->data = $role;
             $logs->created_by = $currentUser->id;
+            $logs->updated_by = $currentUser->id;
             $logs->page = "Role";
             $logs->save();
 			
@@ -169,6 +171,7 @@ class RoleController extends Controller
             $logs->action = "Update Role";
             $logs->data = $oldStel;
             $logs->created_by = $currentUser->id;
+            $logs->updated_by = $currentUser->id;
             $logs->page = "Role";
             $logs->save();
 
@@ -200,6 +203,7 @@ class RoleController extends Controller
                 $logs->action = "Delete Role";
                 $logs->data = $oldStel;
                 $logs->created_by = $currentUser->id;
+                $logs->updated_by = $currentUser->id;
                 $logs->page = "Role";
                 $logs->save();
 
