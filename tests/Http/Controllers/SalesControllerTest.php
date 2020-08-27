@@ -91,6 +91,16 @@ class SalesControllerTest extends TestCase
         ;
     }
 
+    public function testCreateOtherAdmin()
+    {
+        //make request
+        $otherAdmin = factory(App\User::class)->create(['role_id'=>1]);
+        $this->actingAs($otherAdmin)->call('GET','admin/sales/create');
+
+        //Status sukses dan judul Tambah Data Pembelian STEL
+        $this->assertResponseStatus(200);
+    }
+
     public function testStore()
     {
         //makes STELS & USER
