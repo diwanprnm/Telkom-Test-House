@@ -44,10 +44,7 @@ class ClientController extends Controller
 	private const TYPE_URL = 'type_url';
 	private const ERROR_CODE = 'error_code';
 	private const EMAIL = 'email';
-	private const KATA_KUNCI = 'password';
-	private const SCHOOL_ID = 'school_id';
-	private const SUCCESS = 'Success';
-	private const MESSAGE = 'message';
+	private const KATA_KUNCI = 'password';   
 
 
 	public function cekLogin(Request $request)
