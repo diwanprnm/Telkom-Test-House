@@ -86,19 +86,19 @@ class ClientController extends Controller
 	public function authenticate(Request $request)
 	{
 		/*START cekDeletedEmail*/
-			$query = DB::table('users')
-			->join('companies', function ($join) use ($request){
-				$join->on('users.company_id', '=', 'companies.id')
-					->where('users.email','=',''.$request->input(self::EMAIL).'');
-			});
-			$query->where(function($q){
-				$q->where('users.is_deleted', '=' , 1)
-					->orWhere('users.is_active', '=' , 0);
-			});
-			$query->orWhere(function($q){
-				$q->where('companies.is_active', '=' , 0);
-			});
-			$user = $query->get();
+		$query = DB::table('users')
+		->join('companies', function ($join) use ($request){
+			$join->on('users.company_id', '=', 'companies.id')
+				->where('users.email','=',''.$request->input(self::EMAIL).'');
+		});
+		$query->where(function($q){
+			$q->where('users.is_deleted', '=' , 1)
+				->orWhere('users.is_active', '=' , 0);
+		});
+		$query->orWhere(function($q){
+			$q->where('companies.is_active', '=' , 0);
+		});
+		$user = $query->get();
 		/*END cekDeletedEmail*/
 
 		if(count($user) == 0){
@@ -111,6 +111,7 @@ class ClientController extends Controller
 		        $logs->action = "Login";   
 		        $logs->data = "";
 		        $logs->created_by = $currentUser->id;
+		        $logs->updated_by = $currentUser->id;
 		        $logs->page = "LOGIN";
 		        $logs->save();
 				if($request->input(self::TYPE_URL) == 1){
