@@ -55,4 +55,13 @@ class RoleControllerTest extends TestCase
 	    ]);    
         $this->assertEquals(302, $response->status());  
 	}
+
+
+    public function test_delete_company()
+	{ 
+		$user = User::find(1);
+       	$role = Role::latest()->first();
+		$response =  $this->actingAs($user)->call('DELETE', 'admin/role/'.$role->id);  
+        $this->assertEquals(302, $response->status()); 
+	} 
 }

@@ -126,18 +126,7 @@ class RoleController extends Controller
 			Session::flash(self::ERROR, 'Save failed');
 			return redirect('/admin/role/create');
 		}
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        
-    }
+    } 
 
     /**
      * Show the form for editing the specified resource.
@@ -238,10 +227,5 @@ class RoleController extends Controller
 
             return Response::file($file, $headers);
         }
-    }
-	
-    function cekNamaSTEL($name)
-    {
-		return  count(STEL::where('name','=',''.$name.'')->get());
-    }
+    } 
 }
