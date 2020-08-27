@@ -11,24 +11,40 @@ class SalesControllerTest extends TestCase
 
     public function testDeleteSoon(){
         $this->assertTrue(true);
+        // for mysql DB::statement('SET FOREIGN_KEY_CHECKS=0;'); //-
+        App\STELSalesDetail::truncate();
+        App\STEL::truncate();
+        App\STELSalesAttach::truncate();
+        App\STELSales::truncate();
+        App\Logs::truncate();
+        App\LogsAdministrator::truncate();
+        App\User::where('id','!=', '1')->delete();
+        App\Company::where('id','!=', '1')->delete();
+        // for mysql DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
     }
 
     // public function testIndexWithoutData()
     // {
-    //     // //truncate data
-    //     DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+    //     /*
+    //      * Error query raw yang dipakai untuk mysql
+    //      * tapi testing pakai sqlite
+    //      */
+
+    //     // truncate data
+    //     // for mysql DB::statement('SET FOREIGN_KEY_CHECKS=0;'); //-
     //     App\STELSalesDetail::truncate();
     //     App\STEL::truncate();
     //     App\STELSalesAttach::truncate();
     //     App\STELSales::truncate();
     //     App\Logs::truncate();
-    //     App\Logs_administrator::truncate();
+    //     App\LogsAdministrator::truncate();
     //     App\User::where('id','!=', '1')->delete();
     //     App\Company::where('id','!=', '1')->delete();
-    //     DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+    //     // for mysql DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
     //     //make request
-    //     $admin = User::where('id', '=', '1')->first();
+    //     $admin = User::find(1);
     //     $this->actingAs($admin)->call('GET','admin/sales');
 
     //     //Status sukses dan judul Rekap Pembelian STEL
@@ -36,19 +52,22 @@ class SalesControllerTest extends TestCase
     //         ->see('<h1 class="mainTitle">Rekap Pembelian STEL</h1>')
     //         ->see('Data not found')
     //     ;
-
-        
     // }
 
     // public function testIndexWithFilter()
     // {
+    //     /*
+    //      * Error query raw yang dipakai untuk mysql
+    //      * tapi testing pakai sqlite
+    //      */
+
     //     $stelsSales = factory(App\STELSales::class)->create(['id'=>'00000000-aaaa-aaaa-aaaa-000000000000']);
     //     $stelSalesDetail = factory(App\STELSalesDetail::class)->create(['stels_sales_id' => $stelsSales->id]);
     //     $stels = App\STEL::find($stelSalesDetail->stels_id);
     //     factory(App\STELSalesAttach::class)->create(['stel_sales_id'=>$stelsSales->id]);
 
     //     //make request
-    //     $admin = User::where('id', '=', '1')->first();
+    //     $admin = User::find(1);
     //     $this->actingAs($admin)->call('GET',"admin/sales?before_date=2100-01-01&after_date=2020-01-01&search=$stels->name");
 
     //     //Status sukses dan judul Rekap Pembelian STEL
@@ -60,83 +79,131 @@ class SalesControllerTest extends TestCase
     // }
 
 
-    // public function testCreate()
-    // {
-    //     //make request
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $this->actingAs($admin)->call('GET','admin/sales/create');
+    public function testCreate()
+    {
+        //make request
+        $admin = User::find(1);
+        $this->actingAs($admin)->call('GET','admin/sales/create');
 
-    //     //Status sukses dan judul Tambah Data Pembelian STEL
-    //     $this->assertResponseStatus(200)
-    //         ->see('<h1 class="mainTitle">Tambah Data Pembelian STEL</h1>')
-    //     ;
-    // }
+        //Status sukses dan judul Tambah Data Pembelian STEL
+        $this->assertResponseStatus(200)
+            ->see('<h1 class="mainTitle">Tambah Data Pembelian STEL</h1>')
+        ;
+    }
 
-    // public function testStore()
-    // {
-    //     //makes STELS & USER
-    //     $stel = factory(App\STEL::class)->create();
-    //     $user = factory(App\User::class)->create(['role_id'=>2]);
+    public function testStore()
+    {
+        //makes STELS & USER
+        $stel = factory(App\STEL::class)->create();
+        $user = factory(App\User::class)->create(['role_id'=>2]);
 
-    //     //make request
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $this->actingAs($admin)->call('POST','admin/sales',[
-    //         'user_id' => $user->id,
-    //         'is_tax' => 1,
-    //         'stels' => [0 => "$stel->id-myToken-$stel->price"]
-    //     ]);
+        //make request
+        $admin = User::find(1);
+        $this->actingAs($admin)->call('POST','admin/sales',[
+            'user_id' => $user->id,
+            'is_tax' => 1,
+            'stels' => [0 => "$stel->id-myToken-$stel->price"]
+        ]);
 
-    //     //Status sukses dan message Sales successfully created
-    //     $this->assertRedirectedTo('admin/sales', ['message' => 'Sales successfully created']);
+        //Status sukses dan message Sales successfully created
+        $this->assertRedirectedTo('/admin/sales', ['message' => 'Sales successfully created']);
 
-    // }
+    }
 
-    // public function testShow()
-    // {
-    //     //get data
-    //     $stelsSalesDetail = App\STELSalesDetail::latest()->first();
-    //     $stel = App\STELSalesDetail::find($stelsSalesDetail->id);
+    public function testShow()
+    {
+        //get data
+        $stelsSalesDetail = App\STELSalesDetail::latest()->first();
+        $stel = App\STELSalesDetail::find($stelsSalesDetail->id);
         
-    //     //make request
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $this->actingAs($admin)->call('GET',"admin/sales/$stelsSalesDetail->stels_sales_id");
+        //make request
+        $admin = User::find(1);
+        $this->actingAs($admin)->call('GET',"admin/sales/$stelsSalesDetail->stels_sales_id");
 
-    //     //Status sukses dan judul Detail Pembelian STEL
-    //     $this->assertResponseStatus(200)
-    //         ->see('<h1 class="mainTitle">Detail Pembelian STEL</h1>')
-    //         ->see($stel->name)
-    //     ;
-    // }
-    // public function sales_detail()
+        //Status sukses dan judul Detail Pembelian STEL
+        $this->assertResponseStatus(200)
+            ->see('<h1 class="mainTitle">Detail Pembelian STEL</h1>')
+            ->see($stel->name)
+        ;
+    }
+
+    public function testSalesDetail()
+    {
+        /*
+         * Sales_detail tidak ada dalam routes
+         * 
+         */
+        $this->assertTrue(true);
+    }
+
+    public function testGenerateKuitansi()
+    {
+        //get data
+        $stelsSales = App\STELSales::latest()->first();
+
+        //make request
+        $admin = User::find(1);
+        $this->actingAs($admin)->call('POST',"admin/sales/$stelsSales->id/generateKuitansi", ['id' => $stelsSales->id]);
+
+        //Response status 200
+        $this->assertResponseStatus(200);
+    }
+
+    // public function testGenerateFaktur()
     // {
-    //     // this for sales_detail ************************************************************************
+    //     /*
+    //      * Error query raw yang dipakai untuk mysql
+    //      * tapi testing pakai sqlite
+    //      * SQLSTATE[HY000]: General error: 1 near "SEPARATOR"
+    //      */
+        
+    //     //get data
+    //     $stelsSales = App\STELSales::latest()->first();
+
+    //     //make request
+    //     $admin = User::find(1);
+    //     dd($this->actingAs($admin)->call('POST',"admin/sales/$stelsSales->id/generateTaxInvoice", ['id' => $stelsSales->id]));
+
+    //     //Response status 200
+    //     $this->assertResponseStatus(200);
     // }
-    
 
     // public function testExcel()
     // {
+    //     /*
+    //      * Error query raw yang dipakai untuk mysql
+    //      * tapi testing pakai sqlite
+    //      */
+
     //     //get data
     //     $stels = App\STEL::latest()->first();
 
     //     //make request
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $response = $this->actingAs($admin)->call('GET',"sales/excel?before_date=2100-01-01&after_date=2020-01-01&search=$stels->name");
+    //     $admin = User::find(1);
+    //     dd($response = $this->actingAs($admin)->call('GET',"sales/excel?before_date=2100-01-01&after_date=2020-01-01&search=$stels->name"));
 
     //     //response ok, header download sesuai
     //     $this->assertResponseStatus(200);
-    //     $this->assertTrue($response->headers->get('content-type') == 'Application/Spreadsheet');
+    //     $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
     //     $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
-    //     $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename=Data Sales.xlsx');
+    //     $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Sales.xlsx"');
     // }
 
     // public function testEdit()
     // {
+
+    //     /*
+    //      * Error query raw yang dipakai untuk mysql
+    //      * tapi testing pakai sqlite
+    //      * General error: 1 RIGHT and FULL OUTER JOINs are not currently supported
+    //      */
+        
     //     //get data
     //     $stelsSalesDetail = App\STELSalesDetail::latest()->first();
         
     //     //make request
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $this->actingAs($admin)->call('GET',"admin/sales/$stelsSalesDetail->stels_sales_id/edit");
+    //     $admin = User::find(1);
+    //     dd($this->actingAs($admin)->call('GET',"admin/sales/$stelsSalesDetail->stels_sales_id/edit"));
 
     //     //Status sukses dan judul Detail Pembelian STEL
     //     $this->assertResponseStatus(200)
@@ -144,25 +211,38 @@ class SalesControllerTest extends TestCase
     //     ;
     // }
 
-    // public function testUpdate()
-    // {
-    //     // this for update()     ************************************************************************
-    // }
+    public function testUpdate()
+    {
+        // this for update()     ************************************************************************
+    }
 
-    // public function api_upload()
-    // {
-    //     // this for api_upload() ************************************************************************
-    // }
+    public function api_upload()
+    {
+        /*
+         * api_upload tidak ada dalam routes
+         */
+        $this->assertTrue(true);
+    }
     
-    // public function api_invoice()
-    // {
-    //     // this for api_invoice()************************************************************************
-    // }
+    public function api_invoice()
+    {
+        /*
+         * api_invoice tidak ada dalam routes
+         */
+        $this->assertTrue(true);
+    }
     
     // public function testUpload()
     // {
+
+    //     /*
+    //      * Error query raw yang dipakai untuk mysql
+    //      * tapi testing pakai sqlite
+    //      * General error: 1 RIGHT and FULL OUTER JOINs are not currently supported
+    //      */
+
     //     //make request
-    //     $admin = User::where('id', '=', '1')->first();
+    //     $admin = User::find(1);
     //     $this->actingAs($admin)->call('GET',"admin/sales/2/upload");
 
     //     //Status sukses dan judul Detail Pembelian STEL
@@ -173,146 +253,168 @@ class SalesControllerTest extends TestCase
 
     // public function testUploadUnidentified()
     // {
+    //     /*
+    //      * Error query raw yang dipakai untuk mysql
+    //      * tapi testing pakai sqlite
+    //      * General error: 1 RIGHT and FULL OUTER JOINs are not currently supported
+    //      */
+
     //     //make request
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $this->actingAs($admin)->call('GET',"admin/sales/1/upload");
+    //     $admin = User::find(1);
+    //     dd($this->actingAs($admin)->call('GET',"admin/sales/1/upload"));
 
     //     //Status sukses dan judul Detail Pembelian STEL
     //     $this->assertRedirectedTo('admin/sales', ['error' => "Can't upload attachment. Undefined INVOICE_ID!"]);
     // }
 
-    // public function testViewMedia()
-    // {
-    //     //save file to minio
-    //     $file = \Storage::disk('local_public')->get("images/testing.jpg");
-    //     \Storage::disk('minio')->put("stel/1/testing.jpg", $file);
+    public function testViewMedia()
+    {
+        // for mysql DB::statement('SET FOREIGN_KEY_CHECKS=0;'); //-
+        App\STELSalesDetail::truncate();
+        App\STEL::truncate();
+        App\STELSalesAttach::truncate();
+        App\STELSales::truncate();
+        App\Logs::truncate();
+        App\LogsAdministrator::truncate();
+        App\User::where('id','!=', '1')->delete();
+        App\Company::where('id','!=', '1')->delete();
+        // for mysql DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-    //     //make request
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $response = $this->actingAs($admin)->call('GET',"admin/downloadbukti/1");
+        $stelsSales = factory(App\STELSales::class)->create();
+        factory(App\STELSalesDetail::class)->create(['stels_sales_id' => $stelsSales->id]);
+        $attach = factory(App\STELSalesAttach::class)->create(['stel_sales_id'=>$stelsSales->id]);
+        $stelAttach = App\STELSalesAttach::where("stel_sales_id",$attach->stel_sales_id)->first();
 
-    //     //response ok, header download dari minio
-    //     $this->assertResponseStatus(200);
-    //     $this->assertTrue($response->headers->get('content-type') == 'image/jpeg');
-    //     $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
-    //     $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename=testing.jpg');
+        //save file to minio
+        $file = \Storage::disk('local_public')->get("images/testing.jpg");
+        \Storage::disk('minio')->put("stel/$stelsSales->id/$stelAttach->attachment", $file);
 
-    //     // Delete file from minio
-    //     \Storage::disk('minio')->delete("stel/1/testing.jpg");
-    // }
+        //make request
+        $admin = User::find(1);
+        $response = $this->actingAs($admin)->call('GET',"admin/downloadbukti/$stelsSales->id");
 
-    // public function testWaterMark()
-    // {
-    //     $stelSalesDetail = App\STELSalesDetail::where('stels_sales_id', '=' ,1)->first();
+        //response ok, header download dari minio
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'image/*');
 
-    //     //save file to minio
-    //     $file = \Storage::disk('local_public')->get("images/testing.jpg");
-    //     \Storage::disk('minio')->put("stelAttach/$stelSalesDetail->id/$stelSalesDetail->attachment", $file);
+        // Delete file from minio
+        \Storage::disk('minio')->delete("stel/$stelsSales->id/$attach->attachment");
+    }
 
-    //     //make request
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $response = $this->actingAs($admin)->call('GET',"admin/downloadstelwatermark/$stelSalesDetail->id");
+    public function testWaterMark()
+    {
+        $stelSalesDetail = App\STELSalesDetail::latest()->first();
 
-    //     //response ok, header download dari minio
-    //     $this->assertResponseStatus(200);
-    //     $this->assertTrue($response->headers->get('content-type') == 'image/jpeg');
-    //     $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
-    //     $this->assertTrue($response->headers->get('content-disposition') == "attachment; filename=$stelSalesDetail->attachment");
+        //dd("stelAttach/$stelSalesDetail->id/$stelSalesDetail->attachment");
+        //save file to minio
+        $file = \Storage::disk('local_public')->get("images/testing.jpg");
+        \Storage::disk('minio')->put("stelAttach/$stelSalesDetail->id/$stelSalesDetail->attachment", $file);
 
-    //     // Delete file from minio
-    //     \Storage::disk('minio')->delete("stelAttach/$stelSalesDetail->id/testing.jpg");
-    // }
+        //make request
+        $admin = User::find(1);
+        $response = $this->actingAs($admin)->call('GET',"admin/downloadstelwatermark/$stelSalesDetail->id");
 
-    // public function testDownloadKuitansiStel()
-    // {
-    //     //get data
-    //     $stelSales = App\STELSales::find(1);
+        //response ok, header download dari minio
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'image/*');
+        $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
+        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="'.$stelSalesDetail->attachment.'"');
 
-    //     //save file to minio
-    //     $file = \Storage::disk('local_public')->get("images/testing.jpg");
-    //     \Storage::disk('minio')->put("stel/$stelSales->id/$stelSales->id_kuitansi", $file);
+        // Delete file from minio
+        \Storage::disk('minio')->delete("stelAttach/$stelSalesDetail->id/$stelSalesDetail->attachment");
+    }
 
-    //     //make request
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $response = $this->actingAs($admin)->call('GET',"admin/downloadkuitansistel/$stelSales->id_kuitansi");
+    public function testDownloadKuitansiStel()
+    {
+        //get data
+        $stelSales = App\STELSales::latest()->first();
 
-    //     //response ok, header download dari minio
-    //     $this->assertResponseStatus(200);
-    //     $this->assertTrue($response->headers->get('content-type') == 'image/jpeg');
-    //     $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
-    //     $this->assertTrue($response->headers->get('content-disposition') == "attachment; filename=$stelSales->id_kuitansi");
+        //save file to minio
+        $file = \Storage::disk('local_public')->get("images/testing.jpg");
+        \Storage::disk('minio')->put("stel/$stelSales->id/$stelSales->id_kuitansi", $file);
 
-    //     // Delete file from minio
-    //     \Storage::disk('minio')->delete("stel/$stelSales->id/$stelSales->id_kuitansi");
-    // }
+        //make request
+        $admin = User::find(1);
+        $id_kuitansi = preg_replace('/\\.[^.\\s]{3,4}$/', '', $stelSales->id_kuitansi);
+        $response = $this->actingAs($admin)->call('GET',"admin/downloadkuitansistel/$id_kuitansi");
 
-    // public function testDownloadFaktur()
-    // {
-    //     //get data
-    //     $stelSales = App\STELSales::find(1);
+        //response ok, header download dari minio
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'image/*');
+        $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
+        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="'.$stelSales->id_kuitansi.'"');
 
-    //     //save file to minio
-    //     $file = \Storage::disk('local_public')->get("images/testing.jpg");
-    //     \Storage::disk('minio')->put("stel/$stelSales->id/$stelSales->faktur_file", $file);
+        // Delete file from minio
+        \Storage::disk('minio')->delete("stel/$stelSales->id/$stelSales->id_kuitansi");
+    }
 
-    //     //make request
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $response = $this->actingAs($admin)->call('GET',"admin/downloadfakturstel/1");
+    public function testDownloadFaktur()
+    {
+        //get data
+        $stelSales = App\STELSales::latest()->first();
 
-    //     //response ok, header download dari minio
-    //     $this->assertResponseStatus(200);
-    //     $this->assertTrue($response->headers->get('content-type') == 'image/jpeg');
-    //     $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
-    //     $this->assertTrue($response->headers->get('content-disposition') == "attachment; filename=$stelSales->faktur_file");
+        //save file to minio
+        $file = \Storage::disk('local_public')->get("images/testing.jpg");
+        \Storage::disk('minio')->put("stel/$stelSales->id/$stelSales->faktur_file", $file);
 
-    //     // Delete file from minio
-    //     \Storage::disk('minio')->delete("stel/$stelSales->id/$stelSales->faktur_file");
-    // }
+        //make request
+        $admin = User::find(1);
+        $response = $this->actingAs($admin)->call('GET',"admin/downloadfakturstel/$stelSales->id");
 
-    // public function testDeleteProduct()
-    // {
-    //     //get data
-    //     $stelsSalesDetail = App\STELSalesDetail::latest()->first();
-    //     $alasan = 'test_alasan_delete';
+        //response ok, header download dari minio
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'image/*');
+        $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
+        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="'.$stelSales->faktur_file.'"');
 
-    //     //make request
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $this->actingAs($admin)->call('GET',"admin/sales/$stelsSalesDetail->id/$alasan/deleteProduct");
+        // Delete file from minio
+        \Storage::disk('minio')->delete("stel/$stelSales->id/$stelSales->faktur_file");
+    }
 
-    //     //Status sukses dan judul Detail Pembelian STEL
-    //     $this->assertRedirectedTo(
-    //         "admin/sales/$stelsSalesDetail->stels_sales_id",
-    //         ['message' => 'Successfully Delete Data'])
-    //     ;
-    // }
+    public function testDeleteProduct()
+    {
+        //get data
+        $stelsSalesDetail = App\STELSalesDetail::latest()->first();
+        $alasan = 'test_alasan_delete';
 
-    // public function testDeleteProductThatNotExsist()
-    // {
-    //     //get data
-    //     $alasan = 'test_alasan_delete';
+        //make request
+        $admin = User::find(1);
+        $this->actingAs($admin)->call('GET',"admin/sales/$stelsSalesDetail->id/$alasan/deleteProduct");
 
-    //     //make request
-    //     $admin = User::where('id', '=', '1')->first();
-    //     $this->actingAs($admin)->call('GET',"admin/sales/ProductThatNotExsist/$alasan/deleteProduct");
+        //Status sukses dan judul Detail Pembelian STEL
+        $this->assertRedirectedTo(
+            "admin/sales/$stelsSalesDetail->stels_sales_id",
+            ['message' => 'Successfully Delete Data'])
+        ;
+    }
 
-    //     //Status sukses dan judul Detail Pembelian STEL
-    //     $this->assertRedirectedTo(
-    //         "admin/sales/",
-    //         ['error' => 'Undefined Data'])
-    //     ;
+    public function testDeleteProductThatNotExsist()
+    {
+        //get data
+        $alasan = 'test_alasan_delete';
 
-    //     // //truncate data
-    //     DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-    //     App\STELSalesDetail::truncate();
-    //     App\STEL::truncate();
-    //     App\STELSalesAttach::truncate();
-    //     App\STELSales::truncate();
-    //     App\Logs::truncate();
-    //     App\Logs_administrator::truncate();
-    //     App\User::where('id','!=', '1')->delete();
-    //     App\Company::where('id','!=', '1')->delete();
-    //     DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-    // }
+        //make request
+        $admin = User::find(1);
+        $this->actingAs($admin)->call('GET',"admin/sales/ProductThatNotExsist/$alasan/deleteProduct");
+
+        //Status sukses dan judul Detail Pembelian STEL
+        $this->assertRedirectedTo(
+            "admin/sales/",
+            ['error' => 'Undefined Data'])
+        ;
+
+        // //truncate data
+        // for mysql DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        App\STELSalesDetail::truncate();
+        App\STEL::truncate();
+        App\STELSalesAttach::truncate();
+        App\STELSales::truncate();
+        App\Logs::truncate();
+        App\LogsAdministrator::truncate();
+        App\User::where('id','!=', '1')->delete();
+        App\Company::where('id','!=', '1')->delete();
+        // for mysql DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+    }
 
 
 }
