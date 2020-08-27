@@ -8,6 +8,7 @@ use App\Http\Requests;
 
 use App\Footer;
 use App\Logs;
+use App\Services\Logs\LogService;
 
 use Auth;
 use Session;
@@ -62,14 +63,9 @@ class FooterController extends Controller
                     ->orderBy('updated_at')
                     ->paginate($paginate);
 
-                    $logs = new Logs;
-                    $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                    $logs->action = "Search Footer"; 
-                    $datasearch = array("search"=>$search);
-                    $logs->data = json_encode($datasearch);
-                    $logs->created_by = $currentUser->id;
-                    $logs->page = $this::FOOTER;
-                    $logs->save();
+                    $logService = new LogService();
+                    $logService->createLog("Search Footer",self::FOOTER, json_encode( array("search"=>$search)) );
+    
             }else{
                 $footers = Footer::whereNotNull('created_at')
                     ->orderBy('updated_at')
@@ -144,13 +140,8 @@ class FooterController extends Controller
         try{
             $footer->save();
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Create Footer";  
-            $logs->data = $footer;
-            $logs->created_by = $currentUser->id;
-            $logs->page = $this::FOOTER;
-            $logs->save();
+            $logService = new LogService();
+            $logService->createLog("Create Footer",self::FOOTER, $footer );
 
             Session::flash($this::MESS, 'Information successfully created');
             $status = true;
@@ -230,13 +221,8 @@ class FooterController extends Controller
         try{
             $footer->save();
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Update Footer";  
-            $logs->data = $oldData;
-            $logs->created_by = $currentUser->id;
-            $logs->page = $this::FOOTER;
-            $logs->save();
+            $logService = new LogService();
+            $logService->createLog("Update Footer",self::FOOTER, $oldData );
 
             Session::flash($this::MESS, 'Information successfully updated');
             return redirect($this::ADM);
@@ -260,14 +246,9 @@ class FooterController extends Controller
         if ($footer){
             try{
                 $footer->delete();
-                
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Delete Footer";  
-                $logs->data = $oldData;
-                $logs->created_by = $currentUser->id;
-                $logs->page = $this::FOOTER;
-                $logs->save();
+  
+                $logService = new LogService();
+                $logService->createLog("Delete Footer",self::FOOTER, $oldData );
                 
                 Session::flash($this::MESS, 'Information successfully deleted');
                 return redirect($this::ADM);
