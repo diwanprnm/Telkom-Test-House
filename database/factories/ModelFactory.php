@@ -459,7 +459,7 @@ $factory->define(App\Testimonial::class, function (Faker\Generator $faker) {
 
 $factory->define(App\STEL::class, function (Faker\Generator $faker) {
     return [
-        'id' => $faker->uuid,
+        'id' => null,
         'code' => 'test_code_'.$faker->word,
         'name' => 'test_name_'.$faker->word,
         'type' => 'test_type_'.$faker->word,
@@ -480,7 +480,7 @@ $factory->define(App\STEL::class, function (Faker\Generator $faker) {
 
 $factory->define(App\STELSales::class, function (Faker\Generator $faker) {
     return [
-        'id' => $faker->uuid,
+        'id' => null,
         'user_id' => function () {
             return factory(App\User::class)->create(['role_id'=>'2'])->id;
         },
@@ -522,7 +522,7 @@ $factory->define(App\STELSalesAttach::class, function (Faker\Generator $faker) {
         'stel_sales_id' => function () {
             return factory(App\STELSales::class)->create()->id;
         },
-        'attachment' => 'testing.jpg',
+        'attachment' => 'testingAttachment.jpg',
         'created_by' => 1,
         'updated_by' => 1,
         'created_at' => Carbon\Carbon::now(),
@@ -533,7 +533,7 @@ $factory->define(App\STELSalesAttach::class, function (Faker\Generator $faker) {
 
 $factory->define(App\STELSalesDetail::class, function (Faker\Generator $faker) {
     return [
-        'id' => $faker->uuid,
+        'id' => null,
         'stels_sales_id' => function () {
             return factory(App\STELSales::class)->create()->id;
         },
