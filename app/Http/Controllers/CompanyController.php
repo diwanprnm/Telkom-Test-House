@@ -401,33 +401,36 @@ class CompanyController extends Controller
 		
 		// Convert each member of the returned collection into an array,
 		// and append it to the payments array.
-			$no = 1;
-		foreach ($data as $row) {
-			if($row->siup_date==''){
-				$siup_date = '';
-			}else{
-				$siup_date = date("d-m-Y", strtotime($row->siup_date));
-			}
-			if($row->qs_certificate_date==''){
-				$qs_certificate_date = '';
-			}else{
-				$qs_certificate_date = date("d-m-Y", strtotime($row->qs_certificate_date));
-			}
-			$examsArray[] = [
-				$no,
-				$row->name,
-				$row->address.", kota ".$row->city.", kode pos ".$row->postal_code,
-				$row->email,
-				$row->phone_number,
-				$row->fax,
-				$row->npwp_number,
-				$row->siup_number,
-				$siup_date,
-				$row->qs_certificate_number,
-				$qs_certificate_date
-			];
-			$no++;
-		}
+        $no = 1;
+        if(!empty($data)){
+            foreach ($data as $row) {
+                if($row->siup_date==''){
+                    $siup_date = '';
+                }else{
+                    $siup_date = date("d-m-Y", strtotime($row->siup_date));
+                }
+                if($row->qs_certificate_date==''){
+                    $qs_certificate_date = '';
+                }else{
+                    $qs_certificate_date = date("d-m-Y", strtotime($row->qs_certificate_date));
+                }
+                $examsArray[] = [
+                    $no,
+                    $row->name,
+                    $row->address.", kota ".$row->city.", kode pos ".$row->postal_code,
+                    $row->email,
+                    $row->phone_number,
+                    $row->fax,
+                    $row->npwp_number,
+                    $row->siup_number,
+                    $siup_date,
+                    $row->qs_certificate_number,
+                    $qs_certificate_date
+                ];
+                $no++;
+            }
+        }
+		
 		// Generate and return the spreadsheet
 		Excel::create('Data Perusahaan', function($excel) use ($examsArray) {
  

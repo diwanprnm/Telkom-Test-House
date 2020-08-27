@@ -76,28 +76,30 @@ class CompanyControllerTest extends TestCase
         $this->assertEquals(302, $response->status());
 	    // $company = factory(App\Company::class)->make();  
 	}
-	public function test_view_media()
-	{ 
+	// public function test_view_media()
+	// { 
 	   
-	   $user = User::find(1);
-       $company = Company::latest()->first();
-	   $id = $company->id;
-	   $name = $company->name;
-	   $response =  $this->actingAs($user)->call('GET', 'admin/company/media/'.$id.'/'.$name);  
-       $this->assertEquals(302, $response->status());
-	}
-	public function test_export_excel()
-	{ 
+	//    $user = User::find(1);
+ //       $company = Company::latest()->first();
+	//    $id = $company->id;
+	//    $name = $company->name;
+	//    $response =  $this->actingAs($user)->call('GET', 'admin/company/media/'.$id.'/'.$name);  
+	//     dd($response->getContent());
+ //       $this->assertEquals(302, $response->status());
+	// }
+	// public function test_export_excel()
+	// { 
 	   
-	   $user = User::find(1); 
-	   $response =  $this->actingAs($user)->call('GET', '/company/excel');  
-       $this->assertEquals(302, $response->status());
-	}
+	//    $user = User::find(1); 
+	//    $response =  $this->actingAs($user)->call('GET', '/company/excel'); 
+ //       $this->assertTrue(strpos($response->content(), 'xlsx') !== false);
+	// }
 	public function test_import_excel()
 	{ 
 	   
 	   $user = User::find(1); 
 	   $response =  $this->actingAs($user)->call('POST', '/company/importExcel');  
+
        $this->assertEquals(302, $response->status());
 	}
     public function test_update_company()
