@@ -186,6 +186,7 @@ class STELController extends Controller
                 $logs->action = "Create STEL";
                 $logs->data = $stel;
                 $logs->created_by = $currentUser->id;
+                $logs->updated_by = $currentUser->id;
                 $logs->page = "STEL";
                 $logs->save();
                 
@@ -422,6 +423,7 @@ class STELController extends Controller
         $logs->action = "download_excel";   
         $logs->data = "";
         $logs->created_by = $currentUser->id;
+        $logs->updated_by = $currentUser->id;
         $logs->page = "STEL/STD";
         $logs->save();
 
@@ -450,5 +452,7 @@ class STELController extends Controller
 				return redirect(self::ADMIN_CREATE);
 			}
 		}
+
+        return $stel;
     }
 }

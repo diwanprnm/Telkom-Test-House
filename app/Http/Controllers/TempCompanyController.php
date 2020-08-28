@@ -224,7 +224,7 @@ class TempCompanyController extends Controller
 				$npwp_file_temp = public_path().self::MEDIA_TEMPCOMPANY.$company->id.'/'.$id.'/'.$tempcompany->npwp_file;
 				$npwp_file_now = public_path().self::MEDIA_COMPANY.$company->id.'/'.$tempcompany->npwp_file;
 				
-if(copy($npwp_file_temp,$npwp_file_now)){
+            if(copy($npwp_file_temp,$npwp_file_now)){
 					$company->npwp_file = $request->input('npwp_file');
 					if (File::exists($npwp_file)){File::delete($npwp_file);}
 				}else{
