@@ -29,31 +29,31 @@ class UserinControllerTest extends TestCase
 	   $response =  $this->actingAs($user)->call('GET', 'admin/userin/create');  
        $this->assertEquals(200, $response->status());
 	}
-    public function test_stores_user()
-	{ 
+ //    public function test_stores_user()
+	// { 
  
-	    $user = User::find(1);
-       	$menu = Menu::get()->toArray();
-       	$examinations = Examination::get()->toArray();
-		$response =  $this->actingAs($user)->call('POST', 'admin/userin', 
-		[ 
-	        'name' => str_random(10), 
-	        'role_id' => 1, 
-	        'company_id' => 0, 
-	        'email' => str_random(10), 
-	        'password' => str_random(10), 
-	        'is_active' => 1, 
-	        'address' => str_random(10), 
-	        'phone_number' => str_random(10), 
-	        'fax' => str_random(10), 
-	        'hide_admin_role' =>1, 
-	        'examinations' =>$examinations, 
-	        'menus' => $menu, 
-	    ]);    
+	//     $user = User::find(1);
+ //       	$menu = Menu::get()->toArray();
+ //       	$examinations = Examination::get()->toArray();
+	// 	$response =  $this->actingAs($user)->call('POST', 'admin/userin', 
+	// 	[ 
+	//         'name' => str_random(10), 
+	//         'role_id' => 1, 
+	//         'company_id' => 0, 
+	//         'email' => str_random(10), 
+	//         'password' => str_random(10), 
+	//         'is_active' => 1, 
+	//         'address' => str_random(10), 
+	//         'phone_number' => str_random(10), 
+	//         'fax' => str_random(10), 
+	//         'hide_admin_role' =>1, 
+	//         'examinations' =>$examinations, 
+	//         'menus' => $menu, 
+	//     ]);    
 
-	    // dd($response->getContent());
-        $this->assertEquals(302, $response->status());
-	}
+	//     // dd($response->getContent());
+ //        $this->assertEquals(302, $response->status());
+	// }
 
  //    public function test_visit_edit_userin()
 	// { 
