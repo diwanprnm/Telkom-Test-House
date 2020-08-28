@@ -61,9 +61,9 @@
 										Perusahaan *
 									</label>
 									<select class="form-control" id="company_id" name="company_id" required>
-										@if ($company)
+										@if (!empty($company))
 											@foreach($company as $item)
-												@if($item->id == $data->company->id)
+												@if(!empty($data->company) && $item->id == $data->company->id)
 													<option value="{{$item->id}}" selected>{{$item->name}}</option>
 												@else
 													<option value="{{$item->id}}">{{$item->name}}</option>
