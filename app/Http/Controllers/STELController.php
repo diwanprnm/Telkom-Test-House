@@ -243,53 +243,56 @@ class STELController extends Controller
         $logService = new LogService();
 
         $stel = STEL::find($id);
-        $oldStel = $stel;
+        if(!empty($stel)){
+            $oldStel = $stel;
 
-        if ($request->has('code')){
-            $stel->code = $request->input('code');
-        }
-        if ($request->has(self::STEL_TYPE)){
-            $stel->stel_type = $request->input(self::STEL_TYPE);
-        }
-        if ($request->has('name')){
-            $stel->name = $request->input('name');
-        }
-        if ($request->has('type')){
-            $stel->type = $request->input('type');
-        }
-        if ($request->has(self::VERSION)){
-            $stel->version = $request->input(self::VERSION);
-        }
-        if ($request->has('year')){
-            $stel->year = $request->input('year');
-        }
-        if ($request->has(self::PRICE)){
-            $stel->price = str_replace(",","",$request->input(self::PRICE));
-        }
-        if ($request->has(self::IS_ACTIVE)){
-            $stel->is_active = $request->input(self::IS_ACTIVE);
-        }
-        if ($request->has(self::TOTAL)){
-            $stel->total = str_replace(",","",$request->input(self::TOTAL));
-        }
+            if ($request->has('code')){
+                $stel->code = $request->input('code');
+            }
+            if ($request->has(self::STEL_TYPE)){
+                $stel->stel_type = $request->input(self::STEL_TYPE);
+            }
+            if ($request->has('name')){
+                $stel->name = $request->input('name');
+            }
+            if ($request->has('type')){
+                $stel->type = $request->input('type');
+            }
+            if ($request->has(self::VERSION)){
+                $stel->version = $request->input(self::VERSION);
+            }
+            if ($request->has('year')){
+                $stel->year = $request->input('year');
+            }
+            if ($request->has(self::PRICE)){
+                $stel->price = str_replace(",","",$request->input(self::PRICE));
+            }
+            if ($request->has(self::IS_ACTIVE)){
+                $stel->is_active = $request->input(self::IS_ACTIVE);
+            }
+            if ($request->has(self::TOTAL)){
+                $stel->total = str_replace(",","",$request->input(self::TOTAL));
+            }
 
-        $this->attachment($request, $stel);
+            $this->attachment($request, $stel);
 
-        $stel->updated_by = $currentUser->id;
+            $stel->updated_by = $currentUser->id;  
+            try{
+                $stel->save();
 
-       
+                $logService->createLog('Update STEL', 'STEL', $oldStel );
 
-        try{
-            $stel->save();
-
-            $logService->createLog('Update STEL', 'STEL', $oldStel );
-
-            Session::flash(self::MESSAGE, 'STEL successfully updated');
+                Session::flash(self::MESSAGE, 'STEL successfully updated');
+                return redirect(self::ADMIN_STEL);
+            } catch(Exception $e){
+                Session::flash(self::ERROR, 'Save failed');
+                return redirect('/admin/stel/'.$stel->id.'/edit');
+            }
+        }else{
+            Session::flash(self::ERROR, 'STEL not Found');
             return redirect(self::ADMIN_STEL);
-        } catch(Exception $e){
-            Session::flash(self::ERROR, 'Save failed');
-            return redirect('/admin/stel/'.$stel->id.'/edit');
         }
+        
     }
 
     /**
@@ -302,8 +305,8 @@ class STELController extends Controller
     {
         $logService = new LogService();
         $stel = STEL::find($id);
-        $oldStel = $stel; 
-        if ($stel){
+        if(!empty($stel)){ 
+            $oldStel = $stel; 
             try{
                 $stel->delete();
 
@@ -315,6 +318,9 @@ class STELController extends Controller
                 Session::flash(self::ERROR, 'Delete failed');
                 return redirect(self::ADMIN_STEL);
             }
+        }else{
+            Session::flash(self::ERROR, 'Delete failed, STEL Not Found');
+            return redirect(self::ADMIN_STEL);
         }
     }
 

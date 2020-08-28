@@ -177,111 +177,115 @@ class TempCompanyController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $currentUser = Auth::user();
-		
+        $currentUser = Auth::user(); 
 		$tempcompany = TempCompany::find($id);
-		$company = Company::find($tempcompany->company_id);
-		
-		if ($request->has(self::IS_COMMITED)){
-			$tempcompany->updated_by = $currentUser->id;
-            $tempcompany->is_commited = $request->input(self::IS_COMMITED);
-			$tempcompany->save();
+		if(!empty($tempcompany)){
+		    $company = Company::find($tempcompany->company_id);
+            if ($request->has(self::IS_COMMITED)){
+                $tempcompany->updated_by = $currentUser->id;
+                $tempcompany->is_commited = $request->input(self::IS_COMMITED);
+                $tempcompany->save();
+            }
+            
+            if($request->input(self::IS_COMMITED) == 1){
+                if ($request->has('name')){
+                    $company->name = $request->input('name');
+                }
+                if ($request->has('address')){
+                    $company->address = $request->input('address');
+                }
+                if ($request->has('plg_id')){
+                    $company->plg_id = $request->input('plg_id');
+                }
+                if ($request->has('nib')){
+                    $company->nib = $request->input('nib');
+                }
+                if ($request->has('city')){
+                    $company->city = $request->input('city');
+                }
+                if ($request->has('email')){
+                    $company->email = $request->input('email');
+                }
+                if ($request->has('postal_code')){
+                    $company->postal_code = $request->input('postal_code');
+                }
+                if ($request->has('phone_number')){
+                    $company->phone_number = $request->input('phone_number');
+                }
+                if ($request->has('fax')){
+                    $company->fax = $request->input('fax');
+                }
+                if ($request->has('npwp_number')){
+                    $company->npwp_number = $request->input('npwp_number');
+                }
+                if ($request->has('npwp_file')) {
+                    $npwp_file = public_path().self::MEDIA_COMPANY.$company->id.'/'.$company->npwp_file;
+                    $npwp_file_temp = public_path().self::MEDIA_TEMPCOMPANY.$company->id.'/'.$id.'/'.$tempcompany->npwp_file;
+                    $npwp_file_now = public_path().self::MEDIA_COMPANY.$company->id.'/'.$tempcompany->npwp_file;
+                    
+                if(copy($npwp_file_temp,$npwp_file_now)){
+                        $company->npwp_file = $request->input('npwp_file');
+                        if (File::exists($npwp_file)){File::delete($npwp_file);}
+                    }else{
+                        Session::flash(self::ERROR, 'Save NPWP to directory failed');
+                        return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT);
+                    }
+                }        
+                if ($request->has('siup_number')){
+                    $company->siup_number = $request->input('siup_number');
+                }
+                if ($request->has('siup_date')){
+                    $company->siup_date = $request->input('siup_date');
+                }
+                if ($request->has('siup_file')) {
+                    $siup_file = public_path().self::MEDIA_COMPANY.$company->id.'/'.$company->siup_file;
+                    $siup_file_temp = public_path().self::MEDIA_TEMPCOMPANY.$company->id.'/'.$id.'/'.$tempcompany->siup_file;
+                    $siup_file_now = public_path().self::MEDIA_COMPANY.$company->id.'/'.$tempcompany->siup_file;
+                    if(copy($siup_file_temp,$siup_file_now)){
+                        $company->siup_file = $request->input('siup_file');
+                        if (File::exists($siup_file)){File::delete($siup_file);}
+                    }else{
+                        Session::flash(self::ERROR, 'Save SIUPP to directory failed');
+                        return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT);
+                    }
+                }   
+                if ($request->has('qs_certificate_number')){
+                    $company->qs_certificate_number = $request->input('qs_certificate_number');
+                }
+                if ($request->has('qs_certificate_date')){
+                    $company->qs_certificate_date = $request->input('qs_certificate_date');
+                }
+                if ($request->has('qs_certificate_file')) {
+                    $qs_certificate_file = public_path().self::MEDIA_COMPANY.$company->id.'/'.$company->qs_certificate_file;
+                    $qs_certificate_file_temp = public_path().self::MEDIA_TEMPCOMPANY.$company->id.'/'.$id.'/'.$tempcompany->qs_certificate_file;
+                    $qs_certificate_file_now = public_path().self::MEDIA_COMPANY.$company->id.'/'.$tempcompany->qs_certificate_file;
+                    if(copy($qs_certificate_file_temp,$qs_certificate_file_now)){
+                        $company->qs_certificate_file = $request->input('qs_certificate_file');
+                        if (File::exists($qs_certificate_file)){File::delete($qs_certificate_file);}
+                    }else{
+                        Session::flash(self::ERROR, 'Save Certificate to directory failed');
+                        return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT);
+                    }
+                }
+                
+                $company->updated_by = $currentUser->id;
+                try{
+                    $company->save();
+                    Session::flash(self::MESSAGE, 'Company successfully updated');
+                    return redirect(self::PAGE_TEMPCOMPANY);
+                } catch(Exception $e){
+                    Session::flash(self::ERROR, 'Save failed');
+                    return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT);
+                }
+            }else{
+                Session::flash(self::ERROR, 'Update was decline');
+                return redirect(self::PAGE_TEMPCOMPANY);
+            }
+        }else{
+            Session::flash(self::ERROR, 'TempCompany Not Found');
+           return redirect(self::PAGE_TEMPCOMPANY);
         }
 		
-		if($request->input(self::IS_COMMITED) == 1){
-			if ($request->has('name')){
-				$company->name = $request->input('name');
-			}
-            if ($request->has('address')){
-                $company->address = $request->input('address');
-            }
-            if ($request->has('plg_id')){
-                $company->plg_id = $request->input('plg_id');
-            }
-			if ($request->has('nib')){
-				$company->nib = $request->input('nib');
-			}
-			if ($request->has('city')){
-				$company->city = $request->input('city');
-			}
-			if ($request->has('email')){
-				$company->email = $request->input('email');
-			}
-			if ($request->has('postal_code')){
-				$company->postal_code = $request->input('postal_code');
-			}
-			if ($request->has('phone_number')){
-				$company->phone_number = $request->input('phone_number');
-			}
-			if ($request->has('fax')){
-				$company->fax = $request->input('fax');
-			}
-			if ($request->has('npwp_number')){
-				$company->npwp_number = $request->input('npwp_number');
-			}
-			if ($request->has('npwp_file')) {
-				$npwp_file = public_path().self::MEDIA_COMPANY.$company->id.'/'.$company->npwp_file;
-				$npwp_file_temp = public_path().self::MEDIA_TEMPCOMPANY.$company->id.'/'.$id.'/'.$tempcompany->npwp_file;
-				$npwp_file_now = public_path().self::MEDIA_COMPANY.$company->id.'/'.$tempcompany->npwp_file;
-				
-            if(copy($npwp_file_temp,$npwp_file_now)){
-					$company->npwp_file = $request->input('npwp_file');
-					if (File::exists($npwp_file)){File::delete($npwp_file);}
-				}else{
-					Session::flash(self::ERROR, 'Save NPWP to directory failed');
-					return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT);
-				}
-			}        
-			if ($request->has('siup_number')){
-				$company->siup_number = $request->input('siup_number');
-			}
-			if ($request->has('siup_date')){
-				$company->siup_date = $request->input('siup_date');
-			}
-			if ($request->has('siup_file')) {
-				$siup_file = public_path().self::MEDIA_COMPANY.$company->id.'/'.$company->siup_file;
-				$siup_file_temp = public_path().self::MEDIA_TEMPCOMPANY.$company->id.'/'.$id.'/'.$tempcompany->siup_file;
-				$siup_file_now = public_path().self::MEDIA_COMPANY.$company->id.'/'.$tempcompany->siup_file;
-				if(copy($siup_file_temp,$siup_file_now)){
-					$company->siup_file = $request->input('siup_file');
-					if (File::exists($siup_file)){File::delete($siup_file);}
-				}else{
-					Session::flash(self::ERROR, 'Save SIUPP to directory failed');
-					return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT);
-				}
-			}   
-			if ($request->has('qs_certificate_number')){
-				$company->qs_certificate_number = $request->input('qs_certificate_number');
-			}
-			if ($request->has('qs_certificate_date')){
-				$company->qs_certificate_date = $request->input('qs_certificate_date');
-			}
-			if ($request->has('qs_certificate_file')) {
-				$qs_certificate_file = public_path().self::MEDIA_COMPANY.$company->id.'/'.$company->qs_certificate_file;
-				$qs_certificate_file_temp = public_path().self::MEDIA_TEMPCOMPANY.$company->id.'/'.$id.'/'.$tempcompany->qs_certificate_file;
-				$qs_certificate_file_now = public_path().self::MEDIA_COMPANY.$company->id.'/'.$tempcompany->qs_certificate_file;
-				if(copy($qs_certificate_file_temp,$qs_certificate_file_now)){
-					$company->qs_certificate_file = $request->input('qs_certificate_file');
-					if (File::exists($qs_certificate_file)){File::delete($qs_certificate_file);}
-				}else{
-					Session::flash(self::ERROR, 'Save Certificate to directory failed');
-					return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT);
-				}
-			}
-			
-			$company->updated_by = $currentUser->id;
-			try{
-				$company->save();
-				Session::flash(self::MESSAGE, 'Company successfully updated');
-				return redirect(self::PAGE_TEMPCOMPANY);
-			} catch(Exception $e){
-				Session::flash(self::ERROR, 'Save failed');
-				return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT);
-			}
-		}else{
-			Session::flash(self::ERROR, 'Update was decline');
-			return redirect(self::PAGE_TEMPCOMPANY);
-		}
     }
 
     /**
@@ -293,11 +297,11 @@ class TempCompanyController extends Controller
     public function destroy($id)
     {
         $company = TempCompany::find($id);
-		$file = public_path().self::MEDIA_TEMPCOMPANY.$company->company_id.'/'.$id;
 
         if ($company){
             try{
                 $company->delete();
+		        $file = public_path().self::MEDIA_TEMPCOMPANY.$company->company_id.'/'.$id;
 				File::deleteDirectory($file);
                 
                 Session::flash(self::MESSAGE, 'Edit Request successfully deleted');
@@ -306,6 +310,9 @@ class TempCompanyController extends Controller
                 Session::flash(self::ERROR, 'Delete failed');
                 return redirect(self::PAGE_TEMPCOMPANY);
             }
+        }else{
+            Session::flash(self::MESSAGE, 'Company Not Found');
+            return redirect(self::PAGE_TEMPCOMPANY);
         }
     }
 	

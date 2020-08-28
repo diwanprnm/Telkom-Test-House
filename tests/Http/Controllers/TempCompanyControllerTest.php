@@ -46,13 +46,13 @@ class TempCompanyControllerTest extends TestCase
 		$response =  $this->actingAs($user)->call('POST', 'admin/tempcompany',[]);    
         $this->assertEquals(200, $response->status());
 	}
- //    public function test_update_tempcompany()
-	// { 
+    public function test_update_tempcompany()
+	{ 
  
-	//     $user = User::find(1); 
-	// 	$response =  $this->actingAs($user)->call('PUT', 'admin/tempcompany/1',[]);    
- //        $this->assertEquals(302, $response->status());  
-	// }
+	    $user = User::find(1);  
+		$response =  $this->actingAs($user)->call('PUT', 'admin/tempcompany/1',[]);    
+        $this->assertEquals(302, $response->status());  
+	}
 
 
     public function test_autocomplete_tempcompany()
@@ -63,10 +63,11 @@ class TempCompanyControllerTest extends TestCase
     }
 
 
- //    public function test_delete_tempcompany()
-	// { 
-	// 	$user = User::find(1); 
-	// 	$response =  $this->actingAs($user)->call('DELETE', 'admin/tempcompany/1');  
- //        $this->assertEquals(302, $response->status()); 
-	// } 
+    public function test_delete_tempcompany()
+	{ 
+		$user = User::find(1); 
+		$response =  $this->actingAs($user)->call('DELETE', 'admin/tempcompany/1');  
+
+        $this->assertEquals(302, $response->status()); 
+	} 
 }
