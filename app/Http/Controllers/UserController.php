@@ -425,6 +425,8 @@ class UserController extends Controller
 
         if ($user){
             try{
+                $data_log = Logs::where('user_id', '=', $id);
+                $data_log->delete();
                 $user->delete();
                 
                 Session::flash(self::MESSAGE, 'User successfully deleted');
