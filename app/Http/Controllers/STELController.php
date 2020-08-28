@@ -89,6 +89,7 @@ class STELController extends Controller
                 $datasearch = array(self::SEARCH=>$search);
                 $logs->data = json_encode($datasearch);
                 $logs->created_by = $currentUser->id;
+                $logs->updated_by = $currentUser->id;
                 $logs->page = "STEL";
                 $logs->save();
             }
