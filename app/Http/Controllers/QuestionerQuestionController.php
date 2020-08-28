@@ -10,6 +10,7 @@ use App\Http\Requests;
 use App\QuestionerQuestion;
 use App\QuestionerDynamic;
 use App\Logs;
+use App\Services\Logs\LogService;
 
 use Auth;
 use Response;
@@ -60,14 +61,9 @@ class QuestionerQuestionController extends Controller
                     ->orderBy($this::ORDER)
                     ->paginate($paginate);
 
-                    $logs = new Logs;
-                    $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                    $logs->action = "Search Question of Questioner";
-                    $datasearch = array("search"=>$search);
-                    $logs->data = json_encode($datasearch);
-                    $logs->created_by = $currentUser->id;
-                    $logs->page = "Question of Questioner";
-                    $logs->save();
+                    $logService = new LogService();
+                    $logService->createLog("Search Question of Questioner","Question of Questioner", json_encode( array("search"=>$search)) );
+    
             }else{
                 $query = QuestionerQuestion::whereNotNull('created_at'); 
                 
@@ -136,14 +132,8 @@ class QuestionerQuestionController extends Controller
 		try{
 			$question->save();
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;
-            $logs->id = Uuid::uuid4();
-            $logs->action = "Create Question of Questioner";
-            $logs->data = $question;
-            $logs->created_by = $currentUser->id;
-            $logs->page = "Question";
-            $logs->save();
+            $logService = new LogService();
+            $logService->createLog("Create Question of Questioner","Question",$question );
 			
             Session::flash($this::MESSA, 'question successfully created');
 			return redirect($this::ADMIN);
@@ -210,14 +200,8 @@ class QuestionerQuestionController extends Controller
         try{
             $data->save();
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;
-            $logs->id = Uuid::uuid4();
-            $logs->action = "Update Question of Questioner";
-            $logs->data = $olddata;
-            $logs->created_by = $currentUser->id;
-            $logs->page = "Question of Questioner";
-            $logs->save();
+            $logService = new LogService();
+            $logService->createLog("Update Question of Questioner","Question of Questioner",$olddata );
 
             Session::flash($this::MESSA, 'Question successfully updated');
             return redirect($this::ADMIN);
@@ -242,14 +226,9 @@ class QuestionerQuestionController extends Controller
             try{
 				QuestionerDynamic::where('question_id', '=' ,''.$id.'')->delete();
                 $data->delete();
-                
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Delete Question of Questioner";
-                $logs->data = $olddata;
-                $logs->created_by = $currentUser->id;
-                $logs->page = "Question";
-                $logs->save();
+               
+                $logService = new LogService();
+                $logService->createLog("Delete Question of Questioner","Question",$olddata );
 
                 Session::flash($this::MESSA, 'Question successfully deleted');
                 return redirect($this::ADMIN);
