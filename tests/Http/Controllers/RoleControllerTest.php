@@ -12,7 +12,7 @@ class RoleControllerTest extends TestCase
      *
      * @return void
      */
-   public function test_visit_role()
+    public function test_visit_role()
 	{ 
 	   $user = User::find(1);
 	   $response =  $this->actingAs($user)->call('GET', 'admin/role');   
