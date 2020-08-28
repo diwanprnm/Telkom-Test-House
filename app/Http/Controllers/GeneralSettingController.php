@@ -30,7 +30,7 @@ class GeneralSettingController extends Controller
      */
 
     private const MESSAGE = 'message';
-    private const GEN = '/admin/generalsetting';
+    private const GEN = '/admin/generalSetting';
     private const ERR = 'error';
     private const MAN = "poh_manager_urel";
 

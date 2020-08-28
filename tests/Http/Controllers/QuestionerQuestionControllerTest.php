@@ -18,27 +18,30 @@ class QuestionerQuestionControllerTest extends TestCase
         $this->assertTrue(true);
 	}
 	
-     public function test_visit()
+     public function testVisit()
 	 {
 		$user = User::where('role_id', '=', '1')->first();
     	$response = $this->actingAs($user)->call('GET', 'admin/questionerquestion');  
         $this->assertEquals(200, $response->status());
 	 }
-	 public function test_search()
+	 public function testSearch()
 	 { 
 		$user = User::where('role_id', '=', '1')->first();
-	    $response = $this->actingAs($user)->call('GET', 'admin/questionerquestion?search=asda');  
+		$response = $this->actingAs($user)->call('GET', 'admin/questionerquestion?search=cari'); 
+		$this->seeInDatabase('logs', [
+            'page' => 'FOOTER',
+            'data' => '{"search":"cari"}']);   
         $this->assertEquals(200, $response->status());
 	 }
 
-	 public function test_create()
+	 public function testCreate()
 	 { 
 		$admin = User::find('1');
 	    $response = $this->actingAs($admin)->call('GET', 'admin/questionerquestion/create');  
         $this->assertEquals(200, $response->status());
 	 }
 
-     public function test_stores()
+     public function testStores()
 	 { 
 	 	
 		$user = User::where('role_id', '=', '1')->first();
@@ -53,7 +56,7 @@ class QuestionerQuestionControllerTest extends TestCase
 		 $this->assertEquals(200, $response->status());
 		 }
 		 
-		 public function test_edit()
+		 public function testEdit()
 		 { 
 		$admin = User::find('1');
 		$questioner = QuestionerQuestion::latest()->first();
@@ -63,7 +66,7 @@ class QuestionerQuestionControllerTest extends TestCase
 
 	     
 	 
-     public function test_update()
+     public function testUpdate()
 	 { 
 		$user = User::find('1');
         $questioner = QuestionerQuestion::latest()->first();
@@ -73,16 +76,14 @@ class QuestionerQuestionControllerTest extends TestCase
 	         'order_question' => str_random(10),
 	         'is_essay' => str_random(10) 
 	     ]);   
-	 	// dd($response->getContent());
          $this->assertEquals(200, $response->status());
 	      $company = factory(App\Company::class)->make();  
 	 }
-     public function test_delete_company()
+     public function testDelete()
 	 { 
 		$user = User::find('1');
         $company = QuestionerQuestion::latest()->first();
 	 	$response =  $this->actingAs($user)->call('DELETE', 'admin/questionerquestion/'.$company->id);   
-	 	// dd($response->getContent());
          $this->assertEquals(200, $response->status());
 	      $company = factory(App\Company::class)->make();  
 	 }

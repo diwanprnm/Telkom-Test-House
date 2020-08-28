@@ -20,11 +20,12 @@ class GeneralSettingControllerTest extends TestCase
         $this->assertTrue(true);
     }
 	 
-  /*  public function test_visit()
+   /* public function testVisit()
 	 {   
 		$admin = User::find('1');
 		$response = $this->actingAs($admin)->call('GET', 'admin/generalSetting');  
-        $this->assertEquals(200, $response->status());
+		dd($response);
+		$this->assertEquals(200, $response->status());
 	 }*/
 	
      
