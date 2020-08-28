@@ -216,6 +216,7 @@ class UserinController extends Controller
             $logs->action = "Create User"; 
             $logs->data = $user;
             $logs->created_by = $currentUser->id;
+            $logs->updated_by = $currentUser->id;
             $logs->page = self::USER_INTERNAL;
             try{
                 $logs->save();
@@ -519,6 +520,9 @@ class UserinController extends Controller
 
         if ($user){
             try{
+
+                $data_log = Logs::where('user_id', '=', $id);
+                $data_log->delete();
                 $user->delete();
                 
                 Session::flash(self::MESSAGE, 'User successfully deleted');
@@ -558,16 +562,7 @@ class UserinController extends Controller
                 return redirect(self::PAGE_USERIN);
             }
         }
-    }
-	
-	public function autocomplete($query) {
-        return User::select('name as autosuggest')
-				->where('name', 'like','%'.$query.'%')
-                ->orderBy('name')
-                ->take(5)
-				->distinct()
-                ->get();
-    }
+    } 
 
     public function logout(){
         //LOG LOGOUT
