@@ -65,6 +65,7 @@
 								</tr>
 							</thead>
 							<tbody>
+							@if (count($data))
 								@php $no=1; @endphp
 								@foreach($data as $item)
 									<tr>
@@ -72,11 +73,11 @@
 										<td class="center">{{ $item->title }}</td>
 										<td class="center"><img src="{{ \Storage::disk('minio')->url('popupinformation/'.$item->image) }}" width="240" alt=""/></td>
 										@if($item->is_active)
-	                                    	<td class="center"><span class="label label-sm label-success">Active</span></td>
-	                                    @else
-	                                    	<td class="center"><span class="label label-sm label-warning">Not Active</span></td>
-	                                    @endif
-	                                    <td class="center">
+											<td class="center"><span class="label label-sm label-success">Active</span></td>
+										@else
+											<td class="center"><span class="label label-sm label-warning">Not Active</span></td>
+										@endif
+										<td class="center">
 											<div>
 												<a href="{{URL::to('admin/popupinformation/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
 												{!! Form::open(array('url' => 'admin/popupinformation/'.$item->id, 'method' => 'DELETE')) !!}
@@ -88,6 +89,10 @@
 									</tr>
 								@php $no++ @endphp
 								@endforeach
+							@else
+								<tr> <td colspan="5" class="center">{{$message}}</td></tr>
+							@endif
+
                             </tbody>
 						</table>
 					</div>
