@@ -49,6 +49,7 @@ INSERT INTO `menus` VALUES ('48', '2', 'Certification', 'certification', '');
 INSERT INTO `menus` VALUES ('49', '2', 'Riwayat SPK', 'spk', '');
 INSERT INTO `menus` VALUES ('50', '2', 'Kategori Pertanyaan', 'question', '');
 INSERT INTO `menus` VALUES ('51', '25', 'User Ekternal', 'usereks', '');
+INSERT INTO `menus` VALUES ('52', '2', 'Video Tutorial', 'videoTutorial', '');
 
 
 INSERT INTO `users_menus` VALUES (1, 1, '1', '1', '', '2017-6-20 00:04:45', '2017-6-20 00:04:45');
@@ -98,3 +99,4 @@ INSERT INTO `users_menus` VALUES (156, 47, '1', '1', '', '2020-6-01 12:43:02', '
 INSERT INTO `users_menus` VALUES (157, 49, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');
 INSERT INTO `users_menus` VALUES (158, 50, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');
 INSERT INTO `users_menus` VALUES (159, 51, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');
+INSERT INTO `users_menus` VALUES (160, 52, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');
