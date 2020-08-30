@@ -59,7 +59,7 @@ class DeviceControllerTest extends TestCase
         $device = factory(App\Device::class)->create();
 	 	$user =User::find('1');
 		 
-	 	$response =  $this->actingAs($user)->call('GET', 'admin/device/'.$device->id.'/edit', 
+	 	$response =  $this->actingAs($user)->call('PUT', 'admin/device/'.$device->id, 
 	 	[ 
              'name' => str_random(10),
              'mark' => str_random(10),
@@ -72,7 +72,7 @@ class DeviceControllerTest extends TestCase
              'valid_from' => str_random(10),
              'valid_thru' => str_random(10),
 	    ]);   
-         $this->assertEquals(200, $response->status());
+         $this->assertEquals(302, $response->status());
 	   
 	 }
 }

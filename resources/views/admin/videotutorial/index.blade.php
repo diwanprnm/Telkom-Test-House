@@ -34,7 +34,7 @@
 				</div>
 			@endif
 			
-			@if($data)
+			@if(count($data))
 			<div class="col-md-12">
 				{!! Form::open(array('url' => 'admin/videoTutorial/'.$data[0]->id, 'method' => 'PUT', 'id' => 'form-update')) !!}
 					{!! csrf_field() !!}
