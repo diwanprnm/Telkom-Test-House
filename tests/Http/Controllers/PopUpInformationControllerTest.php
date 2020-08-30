@@ -10,7 +10,6 @@ use App\Certification;
 
 class PopUpInformationControllerTest extends TestCase
 {
-	use DatabaseTransactions;
     /**
      * A basic test example.
      *
