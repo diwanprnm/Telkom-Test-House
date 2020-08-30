@@ -3,11 +3,12 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+
 use App\QuestionerQuestion; 
 use App\User;
 class QuestionerQuestionControllerTest extends TestCase
 {
-    
+    use DatabaseTransactions;
     /**
      * A basic test example.
      *
@@ -17,91 +18,84 @@ class QuestionerQuestionControllerTest extends TestCase
         $this->assertTrue(true);
 	}
 	
-	// public function testVisit()
-	// {
-	// 	$user = User::where('role_id', '=', '1')->first();
-	// 	$response = $this->actingAs($user)->call('GET', 'admin/questionerquestion');  
-	// 	$this->assertEquals(200, $response->status());
-	// }
+	public function testVisit()
+	{
+		$response = $this->actingAs(User::find('1'))->call('GET', 'admin/questionerquestion');
+		$this->assertEquals(200, $response->status());
+	}
 
-	// public function testVisitwithSearch()
-	// {
-	// 	$user = User::where('role_id', '=', '1')->first();
-	// 	$response = $this->actingAs($user)->call('GET', 'admin/questionerquestion?search=pengajuan');  
-	// 	$this->assertEquals(200, $response->status());
-	// }
+	public function testVisitwithSearch()
+	{
+		$response = $this->actingAs(User::find('1'))->call('GET', 'admin/questionerquestion?search=pengajuan');  
+		$this->assertEquals(200, $response->status());
+	}
 
-	//  public function testSearch()
-	//  { 
-	// 	$user = User::where('role_id', '=', '1')->first();
-	// 	$response = $this->actingAs($user)->call('GET', 'admin/questionerquestion?search=cari'); 
-	// 	$this->seeInDatabase('logs', [
-    //         'page' => 'FOOTER',
-    //         'data' => '{"search":"cari"}']);   
-    //     $this->assertEquals(200, $response->status());
-	//  }
 
-	//  public function testCreate()
-	//  { 
-	// 	$admin = User::find('1');
-	//     $response = $this->actingAs($admin)->call('GET', 'admin/questionerquestion/create');  
-    //     $this->assertEquals(200, $response->status());
-	//  }
+	public function testCreate()
+	{ 
+		$this->actingAs(User::find('1'))->call('GET', 'admin/questionerquestion/create');
+		$this->assertResponseStatus(200);
+	}
 
-    //  public function testStores()
-	//  { 
-	 	
-	// 	$user = User::where('role_id', '=', '1')->first();
-	//  	$response =  $this->actingAs($user)->call('POST', 'admin/questionerquestion', 
-	//  	[ 
-	//          'question' => str_random(10),
-	//          'order_question' => str_random(10),
-	//          'is_essay' => str_random(10) 
-	        
-	//      ]);   
-		
-	// 	 $this->assertEquals(200, $response->status());
-	// 	 }
+	public function testStore()
+	{ 
+		$admin = User::find('1');
+		$this->actingAs($admin)->call('POST', 'admin/questionerquestion',[
+			'question' => 'Saya mau bertanya pak',
+			'order_question' => '30'
+		]);
+		$this->assertRedirectedTo('admin/questionerquestion',['message' => 'Question successfully created']);
+
+		$this->actingAs($admin)->call('POST', 'admin/questionerquestion',[
+			'question' => 'Saya mau bertanya lagi pak',
+			'order_question' => '31',
+			'is_essay' => 'on'
+		]);
+		$this->assertRedirectedTo('admin/questionerquestion',['message' => 'Question successfully created']);
+	}
 		 
-	// 	 public function testEdit()
-	// 	 { 
-	// 	$admin = User::find('1');
-	// 	$questioner = QuestionerQuestion::latest()->first();
-	//     $response = $this->actingAs($admin)->call('GET', 'admin/questionerquestion/'.$questioner->id.'edit');  
-    //     $this->assertEquals(200, $response->status());
-	//  	}
+	public function testEdit()
+	{ 
+		$questioner = QuestionerQuestion::latest()->first();
+		$this->actingAs(User::find('1'))->call('GET', "admin/questionerquestion/$questioner->id/edit");  
+		$this->assertResponseStatus(200);
+	}
 
-	     
-	 
-    //  public function testUpdate()
-	//  { 
-	// 	$user = User::find('1');
-    //     $questioner = QuestionerQuestion::latest()->first();
-	//  	$response =  $this->actingAs($user)->call('PUT', 'admin/questionerquestion/'.$questioner->id, 
-	// 	[ 
-	//          'question' => str_random(10),
-	//          'order_question' => str_random(10),
-	//          'is_essay' => str_random(10) 
-	//      ]);   
-    //      $this->assertEquals(200, $response->status());
-	//       $company = factory(App\Company::class)->make();  
-	//  }
-    //  public function testDelete()
-	//  { 
-	// 	$user = User::find('1');
-    //     $company = QuestionerQuestion::latest()->first();
-	//  	$response =  $this->actingAs($user)->call('DELETE', 'admin/questionerquestion/'.$company->id);   
-    //      $this->assertEquals(200, $response->status());
-	//       $company = factory(App\Company::class)->make();  
-	//  }
+	public function testUpdate()
+	{ 
+		$questioner = QuestionerQuestion::latest()->first();
+		$this->actingAs(User::find('1'))->call('PATCH', "admin/questionerquestion/$questioner->id", [ 
+			'question' => 'Saya bingung pak',
+			'order_question' => '31',
+			'is_essay' => 'on',
+			'is_active' => 1
+		]);
+		$this->assertRedirectedTo('admin/questionerquestion',['message' => 'Question successfully updated']);
+	}
+
+	public function testDelete()
+	{ 
+		$company = QuestionerQuestion::latest()->first();
+		$this->actingAs(User::find('1'))->call('DELETE', "admin/questionerquestion/$company->id");  
+		$this->assertRedirectedTo('admin/questionerquestion',['message' => 'Question successfully deleted']);
+
+		$this->actingAs(User::find('1'))->call('DELETE', "admin/questionerquestion/NotFound");
+		$this->assertRedirectedTo('admin/questionerquestion',['error' => 'Question Not Found']);
+	}
 
 	//after delete
-	// public function testVisitNotFound()
-	// {
-	// 	QuestionerQuestion::truncate();
-	// 	$this->actingAs(User::find('1'))->call('GET', 'admin/questionerquestion');  
-	// 	$this->assertResponseStatus(200)->see('Data not found');
-	// }
+	public function testVisitNotFound()
+	{
+		QuestionerQuestion::truncate();
+		$this->actingAs(User::find('1'))->call('GET', 'admin/questionerquestion');  
+		$this->assertResponseStatus(200)->see('Data not found');
+	}
+
+	public function testCreateWithoutData()
+	{ 
+	   $this->actingAs(User::find('1'))->call('GET', 'admin/questionerquestion/create');
+	   $this->assertResponseStatus(200)->see(1);
+	}
 
 	//seed back
 }
