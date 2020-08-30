@@ -13,17 +13,24 @@ class QuestionerQuestionControllerTest extends TestCase
      *
      * @return void
      */
-
 	public function testDeleteSoon(){
         $this->assertTrue(true);
 	}
 	
-    //  public function testVisit()
-	//  {
+	// public function testVisit()
+	// {
 	// 	$user = User::where('role_id', '=', '1')->first();
-    // 	$response = $this->actingAs($user)->call('GET', 'admin/questionerquestion');  
-    //     $this->assertEquals(200, $response->status());
-	//  }
+	// 	$response = $this->actingAs($user)->call('GET', 'admin/questionerquestion');  
+	// 	$this->assertEquals(200, $response->status());
+	// }
+
+	// public function testVisitwithSearch()
+	// {
+	// 	$user = User::where('role_id', '=', '1')->first();
+	// 	$response = $this->actingAs($user)->call('GET', 'admin/questionerquestion?search=pengajuan');  
+	// 	$this->assertEquals(200, $response->status());
+	// }
+
 	//  public function testSearch()
 	//  { 
 	// 	$user = User::where('role_id', '=', '1')->first();
@@ -87,4 +94,14 @@ class QuestionerQuestionControllerTest extends TestCase
     //      $this->assertEquals(200, $response->status());
 	//       $company = factory(App\Company::class)->make();  
 	//  }
+
+	//after delete
+	// public function testVisitNotFound()
+	// {
+	// 	QuestionerQuestion::truncate();
+	// 	$this->actingAs(User::find('1'))->call('GET', 'admin/questionerquestion');  
+	// 	$this->assertResponseStatus(200)->see('Data not found');
+	// }
+
+	//seed back
 }
