@@ -199,9 +199,9 @@ class EquipmentController extends Controller
               );
               
               $NotificationService = new NotificationService();
-              $NotificationService->make($data);
+              $notification_id = $notificationService->make($data);
 
-              $data['id'] = $notification->id;  
+              $data['id'] = $notification_id;  
               event(new Notification($data));
 
             Session::flash($this::MESSAGE, 'Equipment successfully created');
