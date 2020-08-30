@@ -43,6 +43,12 @@
 				</div>
 			@endif
 
+			@if(isset($message))
+				<div class="alert alert-info">
+					{{ $message }}
+				</div>
+			@endif
+
 			<div class="row">
 				<div class="col-md-6 pull-right" style="margin-bottom:10px">
 					<a style=" color:white !important;" href="{{URL::to('/admin/questionerquestion/create')}}">

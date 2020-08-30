@@ -95,12 +95,11 @@ class QuestionerQuestionController extends Controller
 			ORDER BY last_numb DESC LIMIT 1
 		";
 		$data = DB::select($query);
-		if (count($data)){
+		if (!count($data)){
 			$last_numb = 1;
-		}
-		else{
+		} else{
 			$last_numb = $data[0]->last_numb;
-		}
+        }
 		
         return view('admin.questionerquestion.create')
 			->with('last_numb', $last_numb);
@@ -125,7 +124,6 @@ class QuestionerQuestionController extends Controller
 			$question->is_essay = 0;
 		}
 		$question->is_active = 1;
-	  
 		$question->created_by = $currentUser->id;
 		$question->updated_by = $currentUser->id; 
 
@@ -135,11 +133,9 @@ class QuestionerQuestionController extends Controller
             $logService = new LogService();
             $logService->createLog("Create Question of Questioner","Question",$question );
 			
-            Session::flash($this::MESSA, 'question successfully created');
+            Session::flash($this::MESSA, 'Question successfully created');
 			return redirect($this::ADMIN);
-		} catch(Exception $e){
-			Session::flash($this::ERR, 'Save failed');
-			return redirect('/admin/questionerquestion/create');
+		} catch(Exception $e){ return redirect('/admin/questionerquestion/create')->with($this::ERR, 'Save failed');
 		}
     }
 
@@ -205,9 +201,7 @@ class QuestionerQuestionController extends Controller
 
             Session::flash($this::MESSA, 'Question successfully updated');
             return redirect($this::ADMIN);
-        } catch(Exception $e){
-            Session::flash($this::ERR, 'Save failed');
-            return redirect('/admin/questionerquestion/'.$data->id.'/edit');
+        } catch(Exception $e){ return redirect('/admin/questionerquestion/'.$data->id.'/edit')->with($this::ERR, 'Save failed');
         }
     }
 
@@ -224,7 +218,7 @@ class QuestionerQuestionController extends Controller
         if ($data){
             try{
                 $olddata = clone $data;
-				QuestionerDynamic::find($id)->delete();
+				QuestionerDynamic::where('question_id',$id)->delete();
                 $data->delete();
                
                 $logService = new LogService();
@@ -232,13 +226,9 @@ class QuestionerQuestionController extends Controller
 
                 Session::flash($this::MESSA, 'Question successfully deleted');
                 return redirect($this::ADMIN);
-            }catch (Exception $e){
-                Session::flash($this::ERR, 'Delete failed');
-                return redirect($this::ADMIN);
+            }catch (Exception $e){ return redirect($this::ADMIN)->with($this::ERR, 'Delete failed');
             }
-        }else{
-             Session::flash($this::ERR, 'Question Not Found');
-                return redirect($this::ADMIN);
         }
+        return redirect($this::ADMIN)->with($this::ERR, 'Question Not Found');
     }
 }
