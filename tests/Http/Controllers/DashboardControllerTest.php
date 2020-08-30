@@ -16,7 +16,7 @@ class DashboardControllerTest extends TestCase
     
     public function testIndex()
     {
-        $user = User::where('id', '=', '1')->first();
+        $user = User::find('1');
         $this->actingAs($user)->call('GET','admin/');
 
         $this->assertResponseStatus(200);

@@ -123,17 +123,6 @@ class DashboardController extends Controller
 			}
         }
 
-        if ($request->has($this::COMP)){
-            $query->whereHas($this::COMP, function ($q) use ($request){
-                return $q->where('name', 'like', '%'.strtolower($request->get($this::COMP)).'%');
-            });
-        }
-
-        if ($request->has($this::DEVICE)){
-            $query->whereHas($this::DEVICE, function ($q) use ($request){
-                return $q->where('name', 'like', '%'.strtolower($request->get(DEVICE)).'%');
-            });
-        }
 		if ($request->has($this::STAT)){
            
 			switch ($request->get($this::STAT)) {
@@ -142,22 +131,21 @@ class DashboardController extends Controller
 					$status = 1;
 					break;
 				case 2:
-                    $query->where($this::REG, 1);
-                    $query->where($this::FUNCSTAT, 1);
-                    $query->where($this::CONTRSTAT, 1);
-                    $query->where($this::SPB, '!=', 1);
+                    $query->where($this::REG, 1)
+                        ->where($this::FUNCSTAT, 1)
+                        ->where($this::CONTRSTAT, 1)
+                        ->where($this::SPB, '!=', 1);
                     $status = 2;
                     break;
                 case 3:
                 case 4:
-                    $query->where($this::REG, 1);
-                    $query->where($this::FUNCSTAT, 1);
-                    $query->where($this::CONTRSTAT, 1);
-                    $query->where($this::SPB, 1);
-                    $query->where($this::PAYSTAT, '!=', 1);
-                    $query->whereHas($this::MEDIA, function ($q) use ($request) {
-                       $final_q = $request->get($this::STAT) == 3 ? $q->where('name', '=', 'File Pembayaran')->where('attachment', '=' ,'') : $q->where('name', '=', 'File Pembayaran')->where('attachment', '!=' ,'');
-                       return $final_q;
+                    $query->where($this::REG, 1)
+                        ->where($this::FUNCSTAT, 1)
+                        ->where($this::CONTRSTAT, 1)
+                        ->where($this::SPB, 1)
+                        ->where($this::PAYSTAT, '!=', 1)
+                        ->whereHas($this::MEDIA, function ($q) use ($request) {
+                       return $request->get($this::STAT) == 3 ? $q->where('name', '=', 'File Pembayaran')->where('attachment', '=' ,'') : $q->where('name', '=', 'File Pembayaran')->where('attachment', '!=' ,'');
                     });
 					$status = $request->get($this::STAT) == 3 ? $request->get($this::STAT) : 4;
 					break;
