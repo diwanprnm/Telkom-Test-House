@@ -18,67 +18,62 @@ class FooterControllerTest extends TestCase
     {
         $this->assertTrue(true);
     }
-     public function testVisit()
-	 { 
-		$admin = User::find('1');
-		$response = $this->actingAs($admin)->call('GET', 'admin/footer');
-        $this->assertEquals(200, $response->status());
-	 }
-	 public function test_search()
-	 { $admin = User::find('1');
-        $response = $this->actingAs($admin)->call('GET', 'admin/footer?search=cari'); 
-        $this->seeInDatabase('logs', [
-            'page' => 'FOOTER',
-            'data' => '{"search":"cari"}']);  
-        $this->assertEquals(200, $response->status());
-     }
+
+    public function testIndex()
+    {
+        $this->actingAs(User::find('1'))->call('GET', 'admin/footer?search=cari'); 
+        $this->assertResponseStatus(200)->see('Footer');
+    }
      
-     public function testCreate()
-	 { 
-		$admin = User::find('1');
-		$response = $this->actingAs($admin)->call('GET', 'admin/footer/create');
-        $this->assertEquals(200, $response->status());
-     }
+    public function testCreate()
+    {
+        $this->actingAs(User::find('1'))->call('GET', 'admin/footer/create');
+        $this->assertResponseStatus(200)->see('Tambah Informasi Baru di Footer');
+    }
      
-     public function testStores()
-	 { 
-	 	$user = factory(App\User::class)->create(); 
-       
-	 	$response =  $this->actingAs($user)->call('POST', 'admin/footer', 
-	 	[ 
-             'description' => str_random(10),
-	         'image' => str_random(10),
-	         'is_active' =>mt_rand(0,1) 
-	     ]);   
-         $this->assertEquals(200, $response->status());
-	     
-        }
-        public function testEdit()
-        { 
-            $admin = User::find('1');
-           $response = $this->actingAs($admin)->call('GET', 'admin/footer/edit');
-           $this->assertEquals(200, $response->status());
-        }
+    public function testStores()
+    { 
+        $this->actingAs(User::find('1'))
+            ->visit('admin/footer/create')
+            ->type('Deskripsi footer', 'description')
+            ->type('1', 'is_active')
+            ->attach(base_path().'/public/images/logo_dds.png', 'image')
+            ->press('submit')
+        ;
+        $this->assertResponseStatus(200)->see('Footer successfully created');
+    }
+
+    public function testEdit()
+    {
+        $footer = Footer::latest()->first();
+        $this->actingAs(User::find('1'))->call('GET', "admin/footer/$footer->id/edit");
+        $this->assertResponseStatus(200)->see('Edit Informasi');
+    }
         
         
-   /*  public function testUpdate()
-	 { 
-        $admin = User::find('1');
-        $footer = factory(App\Footer::class)->create();
-	 	$response =  $this->actingAs($admin)->call('PATCH', "admin/footer/$footer->id", 
-	 	[ 
-	         'description' => str_random(10),
-	         'image' => str_random(10),
-	         'is_active' =>mt_rand(0,1) 
-         ]);   
-         dd($response);
-         $this->assertEquals(302, $response->status());
-	 }
-     public function testDelete()
-	 { 
-	 	$user = factory(App\User::class)->create(); 
-        $company = Footer::latest()->first();
-	 	$response =  $this->actingAs($user)->call('DELETE', 'admin/Footer/');  
-         $this->assertEquals(302, $response->status());  
-	 } */
+    public function testUpdate()
+    {
+        $footer = Footer::latest()->first();
+        $this->actingAs(User::find('1'))
+            ->visit("admin/footer/$footer->id/edit")
+            ->type('Deskripsi tentang footer', 'description')
+            ->select('1', 'is_active')
+            ->attach(base_path().'/public/images/testing.jpg', 'image')
+            ->press('submit')
+        ;
+		$this->assertResponseStatus(200)->see('Footer successfully updated');
+    }
+
+    public function testDelete()
+    {
+        $footer = Footer::latest()->first();
+        $this->actingAs(User::find('1'))->call('DELETE', "admin/footer/$footer->id");  
+        $this->assertRedirectedTo('admin/footer',['message' => 'Footer successfully deleted']);
+    }
+
+    public function testDeleteNotFound()
+    {
+        $this->actingAs(User::find('1'))->call('DELETE', "admin/footer/dataNotFound");  
+        $this->assertRedirectedTo('admin/footer',['error' => 'Footer not found']);
+    }
 }
