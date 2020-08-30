@@ -86,11 +86,5 @@ class PopUpInformationControllerTest extends TestCase
 		$this->actingAs(User::find('1'))->call('DELETE', "admin/popupinformation/dataNotFound");
 		$this->assertRedirectedTo('admin/popupinformation');
 	}
-
-	public function testAutocomplete()
-	{
-		$this->actingAs(User::find('1'))->call('DELETE', "admin/popupinformation/dataNotFound");
-		$this->assertRedirectedTo('admin/popupinformation');
-	}
      
 }
