@@ -4,8 +4,10 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-use App\QuestionerQuestion; 
+use App\QuestionerQuestion;
+use App\QuestionerDynamic;
 use App\User;
+
 class QuestionerQuestionControllerTest extends TestCase
 {
     use DatabaseTransactions;
@@ -42,7 +44,8 @@ class QuestionerQuestionControllerTest extends TestCase
 		$admin = User::find('1');
 		$this->actingAs($admin)->call('POST', 'admin/questionerquestion',[
 			'question' => 'Saya mau bertanya pak',
-			'order_question' => '30'
+			'order_question' => '30',
+			'is_essay' => null
 		]);
 		$this->assertRedirectedTo('admin/questionerquestion',['message' => 'Question successfully created']);
 
@@ -71,6 +74,15 @@ class QuestionerQuestionControllerTest extends TestCase
 			'is_active' => 1
 		]);
 		$this->assertRedirectedTo('admin/questionerquestion',['message' => 'Question successfully updated']);
+
+		$questioner = QuestionerQuestion::latest()->first();
+		$this->actingAs(User::find('1'))->call('PATCH', "admin/questionerquestion/$questioner->id", [ 
+			'question' => 'Saya bingung pak',
+			'order_question' => '31',
+			'is_essay' => null,
+			'is_active' => 1
+		]);
+		$this->assertRedirectedTo('admin/questionerquestion',['message' => 'Question successfully updated']);
 	}
 
 	public function testDelete()
@@ -87,15 +99,25 @@ class QuestionerQuestionControllerTest extends TestCase
 	public function testVisitNotFound()
 	{
 		QuestionerQuestion::truncate();
+		QuestionerDynamic::truncate();
 		$this->actingAs(User::find('1'))->call('GET', 'admin/questionerquestion');  
 		$this->assertResponseStatus(200)->see('Data not found');
 	}
 
 	public function testCreateWithoutData()
-	{ 
-	   $this->actingAs(User::find('1'))->call('GET', 'admin/questionerquestion/create');
-	   $this->assertResponseStatus(200)->see(1);
+	{
+		QuestionerQuestion::truncate();
+		QuestionerDynamic::truncate();
+		$this->actingAs(User::find('1'))->call('GET', 'admin/questionerquestion/create');
+		$this->assertResponseStatus(200)->see(1);
 	}
 
-	//seed back
+	public function testShow()
+	{
+		QuestionerQuestion::truncate();
+		QuestionerDynamic::truncate();
+		$this->actingAs(User::find('1'))->call('GET', 'admin/questionerquestion/id');
+		$this->assertResponseStatus(200);
+	}
+
 }
