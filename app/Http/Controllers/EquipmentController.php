@@ -26,6 +26,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use App\Events\Notification;
 use App\NotificationTable;
 use App\Services\Logs\LogService;
+use App\Service\NotificationService;
 
 class EquipmentController extends Controller
 {
@@ -41,7 +42,7 @@ class EquipmentController extends Controller
     private const MESSAGE = 'message';
     private const EXAMINATION = 'examinations';
     private const DEVICE = 'devices';
-    private const EXAMINATIONDEVICE = 'examinations.DEVICEID';
+    private const EXAMINATIONDEVICE = 'examinations.device_id';
     private const DEVICEID = 'devices.id';
     private const EXAMID = 'examinations.id';
     private const DEVICENAME = 'devices.name';
@@ -71,30 +72,24 @@ class EquipmentController extends Controller
             $paginate = 10;
             $search = trim($request->input($this::SEARCH));
 
-            if ($search != null){
-                $equipments = Equipment::whereNotNull($this::CREATED)
-                    ->with('EXAMINATIONDEVICE')
-                    ->with('user')
-                    ->where('name','like','%'.$search.'%')
-                    ->orderBy('name')
-                    ->paginate($paginate);
-
-
-                    $logService = new LogService();
-                    $logService->createLog("Search User",self::EQUIPMENT, json_encode( array("search"=>$search)) );
-    
-            }else{
-                $query = Equipment::whereNotNull($this::CREATED)
-					->with('EXAMINATIONDEVICE')
+            $query = Equipment::whereNotNull($this::CREATED)
+                    ->with('examination.device')
                     ->with('user');
 
-                $equipments = $query->orderBy('name')
-                            ->paginate($paginate);
+            if ($search != null){
+                $query->where('name','like','%'.$search.'%');
 
-                $devices = $query->orderBy('name')
-                            ->groupBy($this::EXAM_ID)
-                            ->paginate($paginate);
+                $logService = new LogService();
+                $logService->createLog("Search User",self::EQUIPMENT, json_encode( array("search"=>$search)) );
+    
             }
+                
+            $equipments = $query->orderBy('name')
+                        ->paginate($paginate);
+
+            $devices = $query->orderBy('name')
+                        ->groupBy($this::EXAM_ID)
+                        ->paginate($paginate);
             
             if (count($equipments) == 0){
                 $message = 'Data not found';
@@ -165,12 +160,12 @@ class EquipmentController extends Controller
 
             $equipment->save();
         }
-
+        
         try{
 			$examination = Examination::where('id', $equipment->examination_id)->first();
 			$examination->contract_date = $request->input($this::EQUIPDATE);
-      $examination->location = 2;
-      $examination->function_test_status_detail = 'Perangkat siap diuji fungsi';
+            $examination->location = 2;
+            $examination->function_test_status_detail = 'Perangkat siap diuji fungsi';
 			$examination->save();
 
 			$equipmenth = new EquipmentHistory;
@@ -203,16 +198,8 @@ class EquipmentController extends Controller
               "updated_at"=>date(self::YMDH)
               );
               
-              $notification = new NotificationTable();
-              $notification->id = Uuid::uuid4();
-              $notification->from = $data['from'];
-              $notification->to = $data['to'];
-              $notification->message = $data[$this::MESSAGE];
-              $notification->url = $data['url'];
-              $notification->is_read = $data['is_read'];
-              $notification->created_at = $data[$this::CREATED];
-              $notification->updated_at = $data['updated_at'];
-              $notification->save();
+              $NotificationService = new NotificationService();
+              $NotificationService->make($data);
 
               $data['id'] = $notification->id;  
               event(new Notification($data));

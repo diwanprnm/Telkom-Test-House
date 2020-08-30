@@ -80,4 +80,12 @@ class ExaminationLabControllerTest extends TestCase
 		$response =  $this->actingAs($admin)->call('DELETE', 'admin/labs/'.$lab->id);   
 		$this->assertEquals(302, $response->status());
 	}
+
+	public function testAutocomplete()
+    {
+        $user = User::find('1'); 
+		$response = $this->actingAs($user)->call('GET',"admin/adm_labs_autocomplete/'cari'");
+        //Response status ok
+        $this->assertEquals(200, $response->status());
+    }
 }

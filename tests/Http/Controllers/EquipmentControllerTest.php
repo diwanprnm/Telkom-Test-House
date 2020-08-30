@@ -19,7 +19,7 @@ class EquipmentControllerTest extends TestCase
     }
 
 
-   /* public function testVisit()
+    public function testVisit()
 	 { 
 		$admin = User::find('1');
 		$response = $this->actingAs($admin)->call('GET', 'admin/equipment');
@@ -27,32 +27,39 @@ class EquipmentControllerTest extends TestCase
 	 }
 	 public function test_search()
 	 { $admin = User::find('1');
-		$response = $this->actingAs($admin)->call('GET', 'admin/equipment?search=asd');  
+		$response = $this->actingAs($admin)->call('GET', 'admin/equipment?search=cari');  
         $this->assertEquals(200, $response->status());
 	 }
-     public function testStores()
+	 public function testCreate()
 	 { 
-	 	$user = factory(App\User::class)->create(); 
-       
-	 	$response =  $this->actingAs($user)->call('POST', 'admin/equipment', 
+		$admin = User::find('1');
+		$response = $this->actingAs($admin)->call('GET', 'admin/equipment/create');
+        $this->assertEquals(200, $response->status());
+	 }
+
+	
+  /*   public function testStores()
+	 { 
+		$admin = User::find('1'); 
+		$examination = factory(App\Examination::class)->create();
+	 	$response =  $this->actingAs($admin)->call('POST', 'admin/equipment', 
 	 	[ 
-             'examination_id' => str_random(10),
+             'examination_id' => $examination->id,
 	         'name' => str_random(10),
-	         'qty' => mt_rand(0,1),
+	         'qty' => mt_rand(0,10),
 	         'unit' => mt_rand(0,10) ,
 	         'description' =>  str_random(10),
 	         'pic' => str_random(10) ,
 	         'remark' =>mt_rand(0,1) 
 	     ]);   
-		
          $this->assertEquals(302, $response->status());
 	     
 		}
      public function testUpdate()
 	 { 
 	 	$user = factory(App\User::class)->create(); 
-        	$company = Equipment::latest()->first();
-	 	$response =  $this->actingAs($user)->call('PUT', 'admin/equipment/', 
+        $equipment = Equipment::latest()->first();
+	 	$response =  $this->actingAs($user)->call('PUT', 'admin/equipment/'.$equipment->id, 
 	 	[ 
 	         'examination_id' => str_random(10),
 	         'name' => str_random(10),
