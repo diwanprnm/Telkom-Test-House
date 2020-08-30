@@ -50,36 +50,36 @@ class QuestionerQuestionController extends Controller
     {
         $currentUser = Auth::user();
 
-        if ($currentUser){
-            $message = null;
-            $paginate = 100;
-            $search = trim($request->input($this::SEARCH));
-            
-            if ($search != null){
-                $data = QuestionerQuestion::whereNotNull('created_at')
-                    ->where($this::QUESTION,'like','%'.$search.'%')
-                    ->orderBy($this::ORDER)
-                    ->paginate($paginate);
+        if (!$currentUser){ return redirect('login'); }
 
-                    $logService = new LogService();
-                    $logService->createLog("Search Question of Questioner","Question of Questioner", json_encode( array("search"=>$search)) );
-    
-            }else{
-                $query = QuestionerQuestion::whereNotNull('created_at'); 
-                
-                $data = $query->orderBy($this::ORDER)
-                            ->paginate($paginate);
-            }
+        $message = null;
+        $paginate = 100;
+        $search = trim($request->input($this::SEARCH));
+        
+        if ($search){
+            $data = QuestionerQuestion::whereNotNull('created_at')
+                ->where($this::QUESTION,'like','%'.$search.'%')
+                ->orderBy($this::ORDER)
+                ->paginate($paginate);
+                $logService = new LogService();
+                $logService->createLog("Search Question of Questioner","Question of Questioner", json_encode( array("search"=>$search)) );
+
+        }else{
+            $query = QuestionerQuestion::whereNotNull('created_at'); 
             
-            if (count($data) == 0){
-                $message = 'Data not found';
-            }
-            
-            return view('admin.questionerquestion.index')
-                ->with($this::MESSA, $message)
-                ->with('data', $data)
-                ->with($this::SEARCH, $search) ;
+            $data = $query->orderBy($this::ORDER)
+                        ->paginate($paginate);
         }
+        
+        if (count($data) == 0){
+            $message = 'Data not found';
+        }
+        
+        return view('admin.questionerquestion.index')
+            ->with($this::MESSA, $message)
+            ->with('data', $data)
+            ->with($this::SEARCH, $search) ;
+        
     }
 
     /**
@@ -95,7 +95,7 @@ class QuestionerQuestionController extends Controller
 			ORDER BY last_numb DESC LIMIT 1
 		";
 		$data = DB::select($query);
-		if (count($data) == 0){
+		if (count($data)){
 			$last_numb = 1;
 		}
 		else{
@@ -220,11 +220,11 @@ class QuestionerQuestionController extends Controller
     public function destroy($id)
     {
         $data = QuestionerQuestion::find($id);
-        $olddata = $data;
-        $currentUser = Auth::user();
+        
         if ($data){
             try{
-				QuestionerDynamic::where('question_id', '=' ,''.$id.'')->delete();
+                $olddata = clone $data;
+				QuestionerDynamic::find($id)->delete();
                 $data->delete();
                
                 $logService = new LogService();
