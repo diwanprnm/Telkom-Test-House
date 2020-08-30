@@ -76,4 +76,16 @@ class FooterControllerTest extends TestCase
         $this->actingAs(User::find('1'))->call('DELETE', "admin/footer/dataNotFound");  
         $this->assertRedirectedTo('admin/footer',['error' => 'Footer not found']);
     }
+
+    public function testShow()
+    {
+        $this->actingAs(User::find('1'))->call('GET', "admin/footer/id");  
+        $this->assertResponseStatus(200);
+    }
+
+    public function testAutocomplete()
+    {
+        $this->actingAs(User::find('1'))->call('GET', "admin/adm_footer_autocomplete/query");  
+        $this->assertResponseStatus(200);
+    }
 }
