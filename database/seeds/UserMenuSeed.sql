@@ -38,7 +38,7 @@ INSERT INTO `menus` VALUES ('37', '22', 'General Setting', 'generalSetting', '')
 INSERT INTO `menus` VALUES ('38', '2', 'Rekap Nomor SPB', 'spb', '');
 INSERT INTO `menus` VALUES ('39', '2', 'Rekap Nomor Gudang', 'nogudang', '');
 INSERT INTO `menus` VALUES ('40', '12', 'Kategori Pertanyaan', 'question', '');
-INSERT INTO `menus` VALUES ('41', '22', 'Administrator Log', 'log_administrator', '');
+INSERT INTO `menus` VALUES ('41', '22', 'Administrator Log', 'logAdministrator', '');
 INSERT INTO `menus` VALUES ('42', '25', 'User Internal', 'userin', '');
 INSERT INTO `menus` VALUES ('43', '22', 'Video Tutorial', 'videoTutorial', '');
 INSERT INTO `menus` VALUES ('44', '12', 'Pop Up Information', 'popupinformation', '');
@@ -49,7 +49,8 @@ INSERT INTO `menus` VALUES ('48', '2', 'Certification', 'certification', '');
 INSERT INTO `menus` VALUES ('49', '2', 'Riwayat SPK', 'spk', '');
 INSERT INTO `menus` VALUES ('50', '2', 'Kategori Pertanyaan', 'question', '');
 INSERT INTO `menus` VALUES ('51', '25', 'User Ekternal', 'usereks', '');
-INSERT INTO `menus` VALUES ('52', '2', 'Video Tutorial', 'videoTutorial', '');
+INSERT INTO `menus` VALUES ('52', '22', 'Video Tutorial', 'videoTutorial', '');
+INSERT INTO `menus` VALUES ('53', '12', 'Pertanyaan Kuestioner', 'questionerquestion', '');
 
 
 INSERT INTO `users_menus` VALUES (1, 1, '1', '1', '', '2017-6-20 00:04:45', '2017-6-20 00:04:45');
@@ -100,3 +101,4 @@ INSERT INTO `users_menus` VALUES (157, 49, '1', '1', '', '2020-6-01 12:43:02', '
 INSERT INTO `users_menus` VALUES (158, 50, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');
 INSERT INTO `users_menus` VALUES (159, 51, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');
 INSERT INTO `users_menus` VALUES (160, 52, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');
+INSERT INTO `users_menus` VALUES (161, 53, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');

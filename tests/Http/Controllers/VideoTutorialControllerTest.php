@@ -3,7 +3,7 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use app\VideoTutorial;
+use App\VideoTutorial;
 use App\User;
 
 class VideoTutorialControllerTest extends TestCase
