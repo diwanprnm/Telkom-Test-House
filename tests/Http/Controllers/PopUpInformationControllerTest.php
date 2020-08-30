@@ -3,83 +3,89 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Http\UploadedFile;
 
 use App\User;
 use App\Certification;
 
 class PopUpInformationControllerTest extends TestCase
 {
+	use DatabaseTransactions;
     /**
      * A basic test example.
      *
      * @return void
      */
-    public function test_visit()
-	{  
-		$admin = User::find('1');
-		$response = $this->actingAs($admin)->call('GET', 'admin/popupinformation');  
-		$this->assertEquals(200, $response->status());
+    public function testIndex()
+	{
+		Certification::truncate();
+		$this->actingAs(User::find('1'))->call('GET', 'admin/popupinformation');  
+		$this->assertResponseStatus(200)
+			->see('Data not found');
 	}
 	
-	public function test_search()
-	{ 
-		$admin = User::find('1');
-		$response = $this->actingAs($admin)->call('GET', 'admin/popupinformation?search=a'); 
-		/*   $this->seeInDatabase('logs', [
-			'page' => 'CERTIFICATION',
-			'data' => '{"search":"a"}']); 
-			*/
-		$this->assertEquals(200, $response->status());
+	public function testIndexWithSearch()
+	{
+		$this->actingAs(User::find('1'))->call('GET', 'admin/popupinformation?search=cari'); 
+		$this->assertResponseStatus(200);
 	}
 
 	public function testCreate()
 	{
-		$admin = User::find('1');
-		$response = $this->actingAs($admin)->call('GET','admin/popupinformation/create');
-		$this->assertEquals(200, $response->status());
+		$this->actingAs(User::find('1'))->call('GET','admin/popupinformation/create');
+		$this->assertResponseStatus(200)->see('Tambah Pop Up Information Baru');
 	}
 
-	public function test_stores()
+	public function testStore()
 	{ 
-		$admin = User::find('1');
-		$response =  $this->actingAs($admin)->call('POST', 'admin/popupinformation', 
-		[ 
-			'title' => str_random(10),
-			'is_active' => mt_rand(0,1)
-		]);
-		
-		$this->assertEquals(200, $response->status());
-	
+		$this->actingAs(User::find('1'))
+			->visit('admin/popupinformation/create')
+			->type('pop up information', 'title')
+			->type(1, 'is_active')
+			->attach(base_path().'/public/images/testing.jpg', 'image')
+            ->press('submit')
+		;
+		$this->assertResponseStatus(200)->see('Pop Up Information successfully created');
+	}
+
+	public function testShow()
+	{	
+		$this->actingAs(User::find('1'))->call('GET', 'admin/popupinformation/id');
+		$this->assertResponseStatus(200);
 	}
 
 	public function testEdit()
-	{	
-		$admin = User::find('1');
-		$response = $this->actingAs($admin)->call('GET', 'admin/popupinformation/edit');
-		$this->assertEquals(200, $response->status());
+	{
+		$popUpInformation = Certification::whereNotNull('created_at')->where('type',0)->first();
+		$this->actingAs(User::find('1'))->call('GET', "admin/popupinformation/$popUpInformation->id/edit");
+		$this->assertResponseStatus(200)->see('Edit Pop Up Information');
 	}
 
-/*	 public function test_update_data()
-	{ 
-	$user = User::where('role_id', '=', '1')->first(); 
-	$response =  $this->actingAs($user)->call('GET', 'admin/popupinformation/edit', 
-	[ 
-		'title' => str_random(10),
-		'is_active' => mt_rand(0,1)
-		]);   
-		$this->assertEquals(200, $response->status());
-			
+	public function testUpdate()
+	{
+		$popUpInformation = Certification::whereNotNull('created_at')->where('type',0)->first();
+		$this->actingAs(User::find('1'))
+			->visit("admin/popupinformation/$popUpInformation->id/edit")
+			->type('pop up information updated', 'title')
+			->type(1, 'is_active')
+			->attach(base_path().'/public/images/testing.jpg', 'image')
+            ->press('submit')
+		;
+		$this->assertResponseStatus(200)->see('Pop Up Information successfully updated');
 	}
 
 
+	public function testDelete()
+	{
+		$popUpInformation = Certification::whereNotNull('created_at')->where('type',0)->first();
+		$this->actingAs(User::find('1'))->call('DELETE', "admin/popupinformation/$popUpInformation->id");
+		$this->assertRedirectedTo('admin/popupinformation');
+	}
 
-	public function test_delete()
-	{ 
-	$user = User::where('role_id', '=', '1')->first(); 
-		$response =  $this->actingAs($user)->call('DELETE', 'admin/popupinformation/');  
-		dd($response); 
-		$this->assertEquals(302, $response->status());
-	
-	}*/
+	public function testDeleteDataNotFound()
+	{
+		$this->actingAs(User::find('1'))->call('DELETE', "admin/popupinformation/dataNotFound");
+		$this->assertRedirectedTo('admin/popupinformation');
+	}
      
 }
