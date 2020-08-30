@@ -14,10 +14,6 @@ class VideoTutorialControllerTest extends TestCase
      * @return void
      */
 
-    public function testDeleteSoon(){
-        $this->assertTrue(true);
-    }
-
     public function testIndex()
     {
         $user = User::where('id', '=', '1')->first();
