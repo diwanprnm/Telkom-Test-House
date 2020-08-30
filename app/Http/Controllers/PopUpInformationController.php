@@ -40,6 +40,7 @@ class PopUpInformationController extends Controller
     private const IS_ACTIVE = 'is_active';
     private const ADMIN = '/admin/popupinformation';
     private const REQUIRED = 'required';
+    private const MINIO = 'minio';
 
     public function __construct()
     {
@@ -121,7 +122,7 @@ class PopUpInformationController extends Controller
         $file_name = 'cert_'.$request->file($this::IMAGE)->getClientOriginalName();
             
         $image = Image::make($file);   
-        Storage::disk('minio')->put("popupinformation/$file_name", (string)$image->encode()); 
+        Storage::disk(self::MINIO)->put("popupinformation/$file_name", (string)$image->encode()); 
 
         $popupinformation->is_active = $request->input($this::IS_ACTIVE);
         $request->input($this::IS_ACTIVE)== 1 ? DB::table('certifications')->where('type', 0)->update([$this::IS_ACTIVE => 0]) : "";
@@ -198,9 +199,9 @@ class PopUpInformationController extends Controller
             $file_name = 'cert_'.$request->file($this::IMAGE)->getClientOriginalName();
                 
             $image = Image::make($file);   
-            Storage::disk('minio')->put("popupinformation/$file_name", (string)$image->encode()); 
+            Storage::disk(self::MINIO)->put("popupinformation/$file_name", (string)$image->encode()); 
 
-            if( Storage::disk('minio')->put("popupinformation/$file_name", (string)$image->encode()) ){
+            if( Storage::disk(self::MINIO)->put("popupinformation/$file_name", (string)$image->encode()) ){
                 $popupinformation->image = $file_name;
             }else{ return redirect($this::CREATE)->with($this::ERROR, 'Save Image to directory failed');
             }
@@ -246,10 +247,5 @@ class PopUpInformationController extends Controller
         return redirect($this::ADMIN)
             ->with($this::ERROR, 'Data not found')
         ;
-    }
-	
-	public function autocomplete($query) {
-        $respons_result = Certification::autocomplet($query);
-        return response($respons_result);
     }
 }
