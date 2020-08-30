@@ -47,62 +47,25 @@ class GeneralSettingController extends Controller
     public function index(Request $request)
     {
         $currentUser = Auth::user();
-        if ($currentUser){
-            $message = null;
-            if($currentUser->id == '1' || $currentUser->email == 'admin@mail.com'){
-                $generalsetting = GeneralSetting::all();
-                if (count($generalsetting) == 0){
-                    $message = 'Data not found';
-                }
-                
-                return view('admin.generalsetting.index')
-                    ->with($this::MESSAGE, $message)
-                    ->with('data', $generalsetting);
-            }else{
-                return view('admin.generalsetting.index')
-                    ->with($this::MESSAGE, 'Access Denied')
-                    ->with('data', null);
+        if (!$currentUser){ return redirect('login');}
+
+        $message = null;
+        if($currentUser->id == '1' || $currentUser->email == 'admin@mail.com'){
+            $generalsetting = GeneralSetting::all();
+
+            if (!count($generalsetting)){
+                $message = 'Data not found';
             }
+            
+            return view('admin.generalsetting.index')
+                ->with($this::MESSAGE, $message)
+                ->with('data', $generalsetting);
         }
+        else { return view('admin.generalsetting.index') ->with($this::MESSAGE, 'Access Denied') >with('data', null); }
+        
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-  
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-  
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
- 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-   
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function update(Request $request, $id)
     {
         $currentUser = Auth::user();
@@ -112,6 +75,7 @@ class GeneralSettingController extends Controller
             $oldGeneralSetting = $generalsetting; 
             $generalsetting->value = $request->input('poh_manager_urel');
             $generalsetting->is_active = 1;
+            
         }else{
             $generalsetting = GeneralSetting::where("code", "manager_urel")->first();
             $oldGeneralSetting = $generalsetting; 
@@ -128,10 +92,8 @@ class GeneralSettingController extends Controller
         try{
             $generalsetting->save();
 
-           
             $logService = new LogService();
             $logService->createLog("Update General Setting","General Setting",$oldGeneralSetting );
-
 
             $logs_a = new LogsAdministrator;
             $logs_a->id = Uuid::uuid4();
@@ -144,17 +106,8 @@ class GeneralSettingController extends Controller
 
             Session::flash($this::MESSAGE, 'General Setting successfully updated');
             return redirect(self::GEN);
-        } catch(Exception $e){
-            Session::flash($this::ERR, 'Save failed');
-            return redirect(self::GEN);
+        } catch(Exception $e){ return redirect(self::GEN)->with($this::ERR, 'Save failed');
         }
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
   
 }

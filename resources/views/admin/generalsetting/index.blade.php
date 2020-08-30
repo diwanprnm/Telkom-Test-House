@@ -40,8 +40,14 @@ table {
 					{{ Session::get('message') }}
 				</div>
 			@endif
+
+			@if ($message)
+				<div class="alert alert-error alert-danger">
+					{{ $message }}
+				</div>
+			@endif
 			
-			@if($data)
+			@if(isset($data[0]))
 			<div class="col-md-12">
 				{!! Form::open(array('url' => 'admin/generalSetting/'.$data[0]->id, 'method' => 'PUT', 'id' => 'form-update')) !!}
 					{!! csrf_field() !!}
@@ -133,7 +139,7 @@ table {
 @if($data)
 <script type="text/javascript">
 	@php
-		if($data[1]->is_active){
+		if(isset($data[1]) && $data[1]->is_active){
 			@endphp		
 			$('#is_poh').prop('checked', true);
 			$("#poh_manager_urel-div").show();
