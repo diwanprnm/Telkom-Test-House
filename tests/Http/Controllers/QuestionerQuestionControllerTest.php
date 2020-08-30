@@ -22,14 +22,14 @@ class QuestionerQuestionControllerTest extends TestCase
 	
 	public function testVisit()
 	{
-		$response = $this->actingAs(User::find('1'))->call('GET', 'admin/questionerquestion');
-		$this->assertEquals(200, $response->status());
+		$this->actingAs(User::find('1'))->call('GET', 'admin/questionerquestion');
+		$this->assertResponseStatus(200);
 	}
 
 	public function testVisitwithSearch()
 	{
-		$response = $this->actingAs(User::find('1'))->call('GET', 'admin/questionerquestion?search=pengajuan');  
-		$this->assertEquals(200, $response->status());
+		$this->actingAs(User::find('1'))->call('GET', 'admin/questionerquestion?search=pengajuan');  
+		$this->assertResponseStatus(200);
 	}
 
 
