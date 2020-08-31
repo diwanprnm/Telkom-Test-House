@@ -19,6 +19,8 @@ class NotificationService
         $notification->message = $data['message'];
         $notification->url = $data['url'];
         $notification->is_read = $data['is_read'];
+        $notification->created_by = $data['created_by'];
+        $notification->updated_by = $data['updated_by'];
         $notification->created_at = date("Y-m-d H:i:s");
         $notification->updated_at = date("Y-m-d H:i:s");
         $notification->save();
