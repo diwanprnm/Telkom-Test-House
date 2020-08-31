@@ -16,51 +16,59 @@ class DeviceControllerTest extends TestCase
     {
         $this->assertTrue(true);
     }
-    public function test_visit()
-	 {  $admin = User::find('1');
-		$response = $this->actingAs($admin)->call('GET', 'admin/device');  
-        $this->assertEquals(200, $response->status());
-     }
+    public function testIndex()
+    {
+        $this->actingAs(User::find('1'))->call('GET', 'admin/device');  
+        $this->assertResponseStatus(200)->see('Perangkat Lulus Uji');
+    }
+
+    public function testtestIndexWithSearch()
+    {
+        $this->actingAs(User::find('1'))->call('GET', 'admin/device?search=cari&after_date=2020-08-05&before_date=2020-08-20&category=aktif'); 
+        $this->assertResponseStatus(200)->see('Perangkat Lulus Uji');
+    }
+
+    public function testIndexCaseCategoryAktif1()
+    {
+        $this->actingAs(User::find('1'))->call('GET', 'admin/device?category=aktif1');  
+        $this->assertResponseStatus(200)->see('Perangkat Lulus Uji');
+    }
+
+    public function testIndexCaseCategoryDefault()
+    {
+        $this->actingAs(User::find('1'))->call('GET', 'admin/device?category=default');  
+        $this->assertResponseStatus(200)->see('Perangkat Lulus Uji');
+    }
      
-     public function test_search()
+
+    public function testExcelWithFilter()
+    {
+        
+        $deviceAktif = factory(App\Device::class)->create(['valid_thru' => '2100-01-01 00:00:00']);
+        $deviceNonAktif = factory(App\Device::class)->create(['valid_thru' => '2020-01-01 00:00:00']);
+        factory(App\Examination::class)->create(['device_id' => $deviceAktif->id]);
+        factory(App\Examination::class)->create(['device_id'=> $deviceNonAktif->id]);
+        
+        $this->actingAs(User::find('1'))->call('GET', 'admin/device');  
+        $response = $this->actingAs(User::find('1'))->call('get','device/excel');
+
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
+        $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
+        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Perangkat Lulus Uji.xlsx"');
+    }
+
+    public function testEdit()
+    {
+        $device = App\Device::latest()->first();
+        $this->actingAs(User::find('1'))->call('GET', 'admin/device/'.$device->id.'/edit');  
+        $this->assertResponseStatus(200)->see($device->name);
+    }
+
+    public function testUpdate()
 	 { 
-        $device = factory(App\Device::class)->create();
-        $admin = User::find('1');
-        $response = $this->actingAs($admin)->call('GET', 'admin/device?search='.$device->name.'&after_date=2020-08-05&before_date=2020-08-20&category=aktif'); 
-        $this->seeInDatabase('logs', [
-            'page' => 'DEVICE',
-            'data' => '{"search":"'.$device->name.'"}']); 
-           
-		$this->assertEquals(200, $response->status());
-		
-     }
-     
-
-  /* public function testExcelWithFilter()
-     {
-        //create data
-        $company = App\Company::latest()->first();
-        $user = User::find('1');
-        $response = $this->actingAs($user)->call('get','devicenc/excel?search='.$company->name);
-        $this->assertEquals(200, $response->status());
-       
-        }*/
-
-   public function testEdit()
-   {
-    $device = factory(App\Device::class)->create();
-    $admin = User::find('1');
-    $response = $this->actingAs($admin)->call('GET', 'admin/device/'.$device->id.'edit');  
-    $this->assertEquals(200, $response->status());
-   }
-
-    public function test_update()
-	 { 
-        $device = factory(App\Device::class)->create();
-	 	$user =User::find('1');
-		 
-	 	$response =  $this->actingAs($user)->call('PUT', 'admin/device/'.$device->id, 
-	 	[ 
+        $device = App\Device::latest()->first();
+	 	$this->actingAs(User::find('1'))->call('PUT', 'admin/device/'.$device->id,  [ 
              'name' => str_random(10),
              'mark' => str_random(10),
              'capacity' => mt_rand(0,10),
@@ -70,9 +78,9 @@ class DeviceControllerTest extends TestCase
              'test_reference' => str_random(10),
              'cert_number' => mt_rand(0,10000),
              'valid_from' => str_random(10),
-             'valid_thru' => str_random(10),
+             'valid_thru' => '2100-01-01',
 	    ]);   
-         $this->assertEquals(302, $response->status());
+        $this->assertRedirectedTo('admin/device', ['message' => 'Perangkat Lulus Uji successfully updated']);
 	   
 	 }
 }
