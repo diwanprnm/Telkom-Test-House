@@ -9,83 +9,64 @@ use App\User;
 
 class ExaminationLabControllerTest extends TestCase
 {
-   
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-	public function testIndex()
-	{ 
-		$admin = User::find('1');
-		$response = $this->actingAs($admin)->call('GET', 'admin/labs');  
-		$this->assertEquals(200, $response->status());
-	}
-
 	public function testSearch()
 	{ 
-		$admin = User::find('1');
-		$response = $this->actingAs($admin)->call('GET', 'admin/labs?search=asda');  
-		$this->assertEquals(200, $response->status());
+		$this->actingAs(User::find('1'))->call('GET', 'admin/labs?search=asda');  
+		$this->assertResponseStatus(200);
 	}
 
 	public function testCreate()
-	{ 
-		$admin = User::find('1');
-		$response = $this->actingAs($admin)->call('GET', 'admin/labs/create');  
-		$this->assertEquals(200, $response->status());
+	{
+		$this->actingAs(User::find('1'))->call('GET', 'admin/labs/create');  
+		$this->assertResponseStatus(200);
 	}
 
 	public function testStore()
 	{ 
-		$admin = User::find('1');
-		$response = $this->actingAs($admin)->call('POST', 'admin/labs', 
-		[ 
-			'name' => str_random(10),
-			'lab_code' => str_random(10),
-			'lab_init' => str_random(10), 
-			'description' => str_random(10),
-			'is_active' => mt_rand(0,1)
+		$this->actingAs(User::find('1'))->call('POST', 'admin/labs', [ 
+			'name' => 'Lab Device',
+			'lab_code' => 123,
+			'lab_init' => 1234, 
+			'description' => 'Ini teks deskripsi',
+			'is_active' => 1,
+			'close_until' => Carbon\Carbon::now(),
+			'open_at' => Carbon\Carbon::now()
 		]);
-		$this->assertEquals(302, $response->status());
+		$this->assertRedirectedTo('admin/labs', ['message' => 'Labs successfully created']);
 	}
 
 	public function testEdit()
-	{ 
-		$admin = User::find('1');
+	{
 		$lab = ExaminationLab::latest()->first();
-		$response = $this->actingAs($admin)->call('GET', 'admin/labs/'.$lab->id.'/edit');  
-		$this->assertEquals(200, $response->status());
+		$this->actingAs(User::find('1'))->call('GET', "admin/labs/$lab->id/edit");  
+		$this->assertResponseStatus(200);
 	}
 
 	public function testUpdate()
-	{ 
-		$admin = User::find('1');
+	{
 		$lab = ExaminationLab::latest()->first();
-		$response =  $this->actingAs($admin)->call('PUT', 'admin/labs/'.$lab->id, 
-		[ 
-			'name' => str_random(10),
-			'lab_code' => str_random(10),
-			'lab_init' => str_random(10) , 
-			'description' => str_random(10) ,
-			'is_active' => mt_rand(0,1)
-		]);   
-		$this->assertEquals(302, $response->status());
+		$this->actingAs(User::find('1'))->call('PUT', 'admin/labs/'.$lab->id, [ 
+			'name' => 'Lab Device',
+			'lab_code' => 123,
+			'lab_init' => 1234, 
+			'description' => 'Ini teks deskripsi',
+			'is_active' => 1,
+			'close_until' => Carbon\Carbon::now(),
+			'open_at' => Carbon\Carbon::now()
+		]);
+		$this->assertRedirectedTo('admin/labs', ['message' => 'Labs successfully updated']);
 	}
 
 	public function testDestroy()
-	{ 
-		$admin = User::find('1');
+	{
 		$lab = ExaminationLab::latest()->first();
-		$response =  $this->actingAs($admin)->call('DELETE', 'admin/labs/'.$lab->id);   
-		$this->assertEquals(302, $response->status());
+		$this->actingAs(User::find('1'))->call('DELETE', 'admin/labs/'.$lab->id);   
+		$this->assertRedirectedTo('admin/labs', ['message' => 'Labs successfully deleted']);
 	}
 
 	public function testAutocomplete()
     {
-        $user = User::find('1'); 
-		$response = $this->actingAs($user)->call('GET',"admin/adm_labs_autocomplete/'cari'");
-        //Response status ok
-        $this->assertEquals(200, $response->status());
+		$this->actingAs(User::find('1'))->call('GET',"admin/adm_labs_autocomplete/cari");
+		$this->assertResponseStatus(200);
     }
 }

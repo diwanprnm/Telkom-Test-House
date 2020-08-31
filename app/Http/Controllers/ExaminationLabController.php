@@ -33,6 +33,10 @@ class ExaminationLabController extends Controller
     private const ACTIVE = 'is_active';
     private const LABS = '/admin/labs';
     private const ERR = 'error';
+    private const NAME = 'name';
+    private const REQUIRED = 'required';
+
+
     public function __construct()
     {
         $this->middleware('auth.admin');
@@ -47,35 +51,35 @@ class ExaminationLabController extends Controller
     {
         $currentUser = Auth::user();
 
-        if ($currentUser){
-            $message = null;
-            $paginate = 10;
-            $search = trim($request->input($this::SEARCH));
-            
-            if ($search != null){
-                $labs = ExaminationLab::whereNotNull('created_at')
-                    ->where('name','like','%'.$search.'%')
-                    ->orderBy('name')
-                    ->paginate($paginate);
+        if (!$currentUser){ return redirect('login');}
 
-                    $logService = new LogService();
-				    $logService->createLog("Search Examination Lab",$this::EXAM, json_encode(array("search"=>$search)) );
-				
-            }else{
-                $labs = ExaminationLab::whereNotNull('created_at')
-                    ->orderBy('name')
-                    ->paginate($paginate);
-            }
+        $message = null;
+        $paginate = 10;
+        $search = trim($request->input($this::SEARCH));
+        
+        if ($search != null){
+            $labs = ExaminationLab::whereNotNull('created_at')
+                ->where('name','like','%'.$search.'%')
+                ->orderBy('name')
+                ->paginate($paginate);
+
+                $logService = new LogService();
+                $logService->createLog("Search Examination Lab",$this::EXAM, json_encode(array("search"=>$search)) );
             
-            if (count($labs) == 0){
-                $message = 'Data not found';
-            }
-            
-            return view('admin.labs.index')
-                ->with($this::MESSAGE, $message)
-                ->with('data', $labs)
-                ->with($this::SEARCH, $search);
+        }else{
+            $labs = ExaminationLab::whereNotNull('created_at')
+                ->orderBy('name')
+                ->paginate($paginate);
         }
+        
+        if (count($labs) == 0){
+            $message = 'Data not found';
+        }
+        
+        return view('admin.labs.index')
+            ->with($this::MESSAGE, $message)
+            ->with('data', $labs)
+            ->with($this::SEARCH, $search);
     }
 
     /**
@@ -96,6 +100,14 @@ class ExaminationLabController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            self::NAME => self::REQUIRED,
+            self::LAB => self::REQUIRED,
+            self::INIT => self::REQUIRED,
+            self::DESC => self::REQUIRED,
+            self::ACTIVE => self::REQUIRED,
+        ]);
+
         $currentUser = Auth::user();
 
         $labs = new ExaminationLab;
@@ -116,9 +128,7 @@ class ExaminationLabController extends Controller
 
             Session::flash($this::MESSAGE, 'Labs successfully created');
             return redirect($this::LABS);
-        } catch(Exception $e){
-            Session::flash($this::ERR, 'Save failed');
-            return redirect('/admin/labs/create');
+        } catch(Exception $e){ return redirect('/admin/labs/create')->with($this::ERR, 'Save failed');
         }
     }
 
@@ -147,11 +157,11 @@ class ExaminationLabController extends Controller
     {
         $currentUser = Auth::user();
 
-        $labs = ExaminationLab::find($id);
-        $oldData = $labs;
+        $labs = ExaminationLab::findOrFail($id);
+        $oldData = clone $labs;
 
-        if ($request->has('name')){
-            $labs->name = $request->input('name');
+        if ($request->has($this::NAME)){
+            $labs->name = $request->input($this::NAME);
         }
         if ($request->has($this::LAB)){
             $labs->lab_code = $request->input($this::LAB);
@@ -183,9 +193,7 @@ class ExaminationLabController extends Controller
 
             Session::flash($this::MESSAGE, 'Labs successfully updated');
             return redirect($this::LABS);
-        } catch(Exception $e){
-            Session::flash($this::ERR, 'Save failed');
-            return redirect('/admin/labs/'.$labs->id.'edit');
+        } catch(Exception $e){ return redirect('/admin/labs/'.$labs->id.'edit')->with($this::ERR, 'Save failed');
         }
     }
 
@@ -197,7 +205,7 @@ class ExaminationLabController extends Controller
      */
     public function destroy($id)
     {
-        $labs = ExaminationLab::find($id);
+        $labs = ExaminationLab::findOrFail($id);
         $oldData = $labs;
 
         if ($labs){
@@ -205,14 +213,11 @@ class ExaminationLabController extends Controller
                 $labs->delete();
                 
                 $logService = new LogService();
-                $logService->createLog("Delete Examination Lab",$this::EXAM, $oldData );	
-    
+                $logService->createLog("Delete Examination Lab",$this::EXAM, $oldData );
 
                 Session::flash($this::MESSAGE, 'Labs successfully deleted');
                 return redirect($this::LABS);
-            }catch (Exception $e){
-                Session::flash($this::ERR, 'Delete failed');
-                return redirect($this::LABS);
+            }catch (Exception $e){ return redirect($this::LABS)->with($this::ERR, 'Delete failed');
             }
         }
     }
