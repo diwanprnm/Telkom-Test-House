@@ -69,7 +69,8 @@ class ExaminationLabController extends Controller
         }else{
             $labs = ExaminationLab::whereNotNull('created_at')
                 ->orderBy('name')
-                ->paginate($paginate);
+                ->paginate($paginate)
+            ;
         }
         
         if (count($labs) == 0){
@@ -205,11 +206,11 @@ class ExaminationLabController extends Controller
      */
     public function destroy($id)
     {
-        $labs = ExaminationLab::findOrFail($id);
-        $oldData = $labs;
+        $labs = ExaminationLab::find($id);
 
         if ($labs){
             try{
+                $oldData = clone $labs;
                 $labs->delete();
                 
                 $logService = new LogService();
@@ -220,14 +221,18 @@ class ExaminationLabController extends Controller
             }catch (Exception $e){ return redirect($this::LABS)->with($this::ERR, 'Delete failed');
             }
         }
+        return redirect($this::LABS)
+            ->with($this::ERR, 'Lab not found')
+        ;
     }
 	
-	public function autocomplete($query) {
+    public function autocomplete($query) {
         return ExaminationLab::select('name as autosuggest')
-				->where('name', 'like','%'.$query.'%')
-                ->orderBy('name')
-                ->take(5)
-				->distinct()
-                ->get();
+            ->where('name', 'like','%'.$query.'%')
+            ->orderBy('name')
+            ->take(5)
+            ->distinct()
+            ->get()
+        ;
     }
 }

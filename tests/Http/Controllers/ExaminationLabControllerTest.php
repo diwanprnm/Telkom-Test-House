@@ -11,6 +11,12 @@ class ExaminationLabControllerTest extends TestCase
 {
 	public function testSearch()
 	{ 
+		$this->actingAs(User::find('1'))->call('GET', 'admin/labs');  
+		$this->assertResponseStatus(200);
+	}
+
+	public function testSearchWithSearch()
+	{ 
 		$this->actingAs(User::find('1'))->call('GET', 'admin/labs?search=asda');  
 		$this->assertResponseStatus(200);
 	}
@@ -60,8 +66,14 @@ class ExaminationLabControllerTest extends TestCase
 	public function testDestroy()
 	{
 		$lab = ExaminationLab::latest()->first();
-		$this->actingAs(User::find('1'))->call('DELETE', 'admin/labs/'.$lab->id);   
+		$this->actingAs(User::find('1'))->call('DELETE', "admin/labs/$lab->id");   
 		$this->assertRedirectedTo('admin/labs', ['message' => 'Labs successfully deleted']);
+	}
+
+	public function testDestroyNotFound()
+	{
+		$this->actingAs(User::find('1'))->call('DELETE', "admin/labs/dataNotFound");   
+		$this->assertRedirectedTo('admin/labs', ['error' => 'Lab not found']);
 	}
 
 	public function testAutocomplete()
