@@ -26,7 +26,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use App\Events\Notification;
 use App\NotificationTable;
 use App\Services\Logs\LogService;
-use App\Service\NotificationService;
+use App\Services\NotificationService;
 
 class EquipmentController extends Controller
 {
@@ -66,42 +66,45 @@ class EquipmentController extends Controller
     public function index(Request $request)
     {
         $currentUser = Auth::user();
+        if (!$currentUser){ return redirect('login');}
 
-        if ($currentUser){
-            $message = null;
-            $paginate = 10;
-            $search = trim($request->input($this::SEARCH));
+        $message = null;
+        $paginate = 10;
+        $search = trim($request->input($this::SEARCH));
 
-            $query = Equipment::whereNotNull($this::CREATED)
-                    ->with('examination.device')
-                    ->with('user');
+        $query = Equipment::whereNotNull($this::CREATED)
+            ->with('examination.device')
+            ->with('user')
+        ;
 
-            if ($search != null){
-                $query->where('name','like','%'.$search.'%');
-
-                $logService = new LogService();
-                $logService->createLog("Search User",self::EQUIPMENT, json_encode( array("search"=>$search)) );
-    
-            }
-                
-            $equipments = $query->orderBy('name')
-                        ->paginate($paginate);
-
-            $devices = $query->orderBy('name')
-                        ->groupBy($this::EXAM_ID)
-                        ->paginate($paginate);
-            
-            if (count($equipments) == 0){
-                $message = 'Data not found';
-            }
-
-            
-            return view('admin.equipment.index')
-                ->with($this::MESSAGE, $message)
-                ->with('data', $devices)
-                ->with('equipments', $equipments)
-                ->with($this::SEARCH, $search);
+        if ($search)
+        {
+            $query->where('name','like','%'.$search.'%');
+            $logService = new LogService();
+            $logService->createLog("Search User",self::EQUIPMENT, json_encode( array("search"=>$search)) );
         }
+            
+        $equipments = $query->orderBy('name')
+            ->paginate($paginate)
+        ;
+
+        $devices = $query->orderBy('name')
+            ->groupBy($this::EXAM_ID)
+            ->paginate($paginate)
+        ;
+        
+        if (!count($equipments))
+        {
+            $message = 'Data not found';
+        }
+
+        return view('admin.equipment.index')
+            ->with($this::MESSAGE, $message)
+            ->with('data', $devices)
+            ->with('equipments', $equipments)
+            ->with($this::SEARCH, $search)
+        ;
+        
     }
 
     /**
@@ -139,7 +142,6 @@ class EquipmentController extends Controller
     {
 		$currentUser = Auth::user();
 
-
         for ($key=0; $key < sizeof($request->input('qty')); $key++) {
             $equipment = new Equipment;
             $equipment->id = Uuid::uuid4();
@@ -151,17 +153,14 @@ class EquipmentController extends Controller
             $equipment->location = 2;
             $equipment->pic = $request->input('pic');
             $equipment->remarks = $request->input('remarks.'.$key);
-
             $equipment->created_by = $currentUser->id;
             $equipment->updated_by = $currentUser->id;
-            
             $equipment->created_at = ''.date($this::YMDH).'';
             $equipment->updated_at = ''.date($this::YMDH).'';
-
             $equipment->save();
         }
         
-        try{
+       try{
 			$examination = Examination::where('id', $equipment->examination_id)->first();
 			$examination->contract_date = $request->input($this::EQUIPDATE);
             $examination->location = 2;
@@ -173,45 +172,37 @@ class EquipmentController extends Controller
 			$equipmenth->examination_id = $equipment->examination_id;
 			$equipmenth->action_date = $request->input($this::EQUIPDATE);
 			$equipmenth->location = 2;
-			
 			$equipmenth->created_by = $currentUser->id;
 			$equipmenth->updated_by = $currentUser->id;
 			$equipmenth->created_at = ''.date($this::YMDH).'';
 			$equipmenth->updated_at = ''.date($this::YMDH).'';
-
 			$equipmenth->save();
-            
-            
+
             $logService = new LogService();
             $logService->createLog( "Create Equipment",self::EQUIPMENT, $equipment );
 
-
             /* push notif*/
-            
-              $data= array( 
-              "from"=>"admin",
-              "to"=>$examination->created_by,
-              "message"=>"Perangkat yang akan diuji, sudah masuk Gudang Urel",
-              "url"=>"pengujian/".$equipment->examination_id."/detail",
-              "is_read"=>0,
-              "created_at"=>date($this::YMDH),
-              "updated_at"=>date(self::YMDH)
-              );
-              
-              $NotificationService = new NotificationService();
-              $notification_id = $notificationService->make($data);
+            $data= array( 
+                "from"=>"admin",
+                "to"=>$examination->created_by,
+                "message"=>"Perangkat yang akan diuji, sudah masuk Gudang Urel",
+                "url"=>"pengujian/".$equipment->examination_id."/detail",
+                "is_read"=>0,
+                "created_by"=>$currentUser->id,
+                "updated_by"=>$currentUser->id,
+                "created_at"=>date($this::YMDH),
+                "updated_at"=>date(self::YMDH)
+            );
 
-              $data['id'] = $notification_id;  
-              event(new Notification($data));
+            $notificationService = new NotificationService();
+            $notification_id = $notificationService->make($data);
 
+            $data['id'] = $notification_id;  
+            event(new Notification($data));
             Session::flash($this::MESSAGE, 'Equipment successfully created');
             return redirect($this::ADMINEQUIP);
-        } catch(\Exception $e){
-           
-			Session::flash($this::ERROR, 'Save Failed');
-            return redirect('/admin/equipment/create')
-                        ->withInput();
-        }
+       } catch(\Exception $e){ return redirect('/admin/equipment/create')->withInput()->with($this::ERROR, 'Save Failed');
+       }
     }
 
     /**
@@ -222,7 +213,14 @@ class EquipmentController extends Controller
      */
     public function show($id)
     {
-        $this->show_edit('show', $id);
+        $data = $this->getData($id);
+
+        return view('admin.equipment.show')
+            ->with('item', $data['examination'])
+            ->with($this::LOCATION, $data['location'])
+            ->with('data', $data['equipment'])
+            ->with('history', $data['equipmentHistory'])
+        ;
     }
 
     /**
@@ -233,7 +231,14 @@ class EquipmentController extends Controller
      */
     public function edit($id)
     {
-        $this->show_edit('edit', $id);
+        $data = $this->getData($id);
+
+        return view('admin.equipment.edit')
+            ->with('item', $data['examination'])
+            ->with($this::LOCATION, $data['location'])
+            ->with('data', $data['equipment'])
+            ->with('history', $data['equipmentHistory'])
+        ;
     }
 
     /**
@@ -248,27 +253,28 @@ class EquipmentController extends Controller
 		$currentUser = Auth::user();
 
         $equipment = Equipment::where($this::EXAM_ID, $id)
-                    ->update([$this::LOCATION => $request->input($this::LOCATION), 
-                        'pic' => $request->input('pic'),
-                        'updated_by' => $currentUser->id]);
+            ->update([
+                $this::LOCATION => $request->input($this::LOCATION), 
+                'pic' => $request->input('pic'),
+                'updated_by' => $currentUser->id]
+        );
 
         try{
-			
 			if($request->input($this::LOCATION) != $request->input('location_id')){
 				$equipmenth = new EquipmentHistory;
 				$equipmenth->id = Uuid::uuid4();
 				$equipmenth->examination_id = $id;
 				$equipmenth->action_date = $request->input($this::EQUIPDATE);
 				$equipmenth->location = $request->input($this::LOCATION);
-				
+				$equipmenth->created_by = $currentUser->id;
 				$equipmenth->updated_by = $currentUser->id;
+				$equipmenth->created_at = ''.date($this::YMDH).'';
 				$equipmenth->updated_at = ''.date($this::YMDH).'';
-
 				$equipmenth->save();
 				
 				$examination = Examination::where('id', $id)->first();
 				$examination->location = $request->input($this::LOCATION);
-				$examination->save();
+                $examination->save();
 			}
             
             $logService = new LogService();
@@ -276,9 +282,7 @@ class EquipmentController extends Controller
             
             Session::flash($this::MESSAGE, 'Equipment successfully updated');
             return redirect($this::ADMINEQUIP);
-        } catch(Exception $e){
-            Session::flash($this::ERROR, 'Save failed');
-            return redirect('/admin/equipment/'.$equipment->id.'edit');
+        } catch(Exception $e){ return redirect('/admin/equipment/'.$equipment->id.'edit')->with($this::ERROR, 'Save failed');
         }
     }
 
@@ -290,9 +294,8 @@ class EquipmentController extends Controller
      */
     public function destroy($id)
     {
-		$equipment = Equipment::find($id);
-		$equipmenth = EquipmentHistory::where('equipment_id', $id);
-
+		$equipment = Equipment::where('examination_id', $id);
+		$equipmenth = EquipmentHistory::where('examination_id', $id);
         if ($equipment){
             try{
                 $equipmenth->delete();
@@ -300,32 +303,35 @@ class EquipmentController extends Controller
                 
                 Session::flash($this::MESSAGE, 'Equipment successfully deleted');
                 return redirect($this::ADMINEQUIP);
-            }catch (Exception $e){
-                Session::flash($this::ERROR, 'Delete failed');
-                return redirect($this::ADMINEQUIP);
+            }catch (Exception $e){ return redirect($this::ADMINEQUIP)->with($this::ERROR, 'Delete failed');
             }
         }
+        return redirect($this::ADMINEQUIP)
+            ->with($this::ERROR, 'Equipment not found')
+        ;
     }
 
-    public function show_edit($type, $id){
+    private function getData($id){
         $EquipmentHistory = EquipmentHistory::where($this::EXAM_ID, $id)->get();
         $equipment = Equipment::where($this::EXAM_ID, $id)->get();
         $location = Equipment::where($this::EXAM_ID, $id)->first();
         $examination = DB::table($this::EXAMINATION)
             ->join($this::DEVICE, $this::EXAMINATIONDEVICE, '=', $this::DEVICEID)
             ->select(
-                    $this::EXAMID,
-                    $this::DEVICENAME,
-                    $this::DEVICEMODEL
-                    )
+                $this::EXAMID,
+                $this::DEVICENAME,
+                $this::DEVICEMODEL
+            )
             ->where($this::EXAMID, $id)
             ->orderBy($this::DEVICENAME)
-            ->first();
+            ->first()
+        ;
 
-        return view($type == 'show' ? 'admin.equipment.show' : 'admin.equipment.edit')
-            ->with('item', $examination)
-            ->with($this::LOCATION, $location)
-            ->with('data', $equipment)
-            ->with('history', $EquipmentHistory);  
+        return array(
+            'equipmentHistory' => $EquipmentHistory,
+            'equipment' => $equipment,
+            'location' => $location,
+            'examination' => $examination,
+        );
     }
 }
