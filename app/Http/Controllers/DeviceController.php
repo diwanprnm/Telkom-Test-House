@@ -74,7 +74,7 @@ class DeviceController extends Controller
 			->where('examinations.qa_passed','=','1')
 			->where('examinations.certificate_status','=','1');
 
-			if ($search != null){
+			if ($search){
 				$dev->where(function($q) use($search){
 					$q->where('devices.name','like','%'.$search.'%')
 						->orWhere($this::DEVICEVAL,'like','%'.$search.'%')
@@ -176,7 +176,6 @@ class DeviceController extends Controller
 		// and append it to the payments array.
 			$no = 1;
 		foreach ($data as $row) {
-		
 			if($row->valid_thru >= date($this::YMD)){
 				$category = 'Aktif';
 			}else{
@@ -214,16 +213,18 @@ class DeviceController extends Controller
 
 		$logService->createLog('Download Devices', 'DEVICE', "" );
 
-		// Generate and return the spreadsheet
-		Excel::create('Data Perangkat Lulus Uji', function($excel) use ($examsArray) {
+        $excel = \App\Services\ExcelService::download($examsArray, 'Data Perangkat Lulus Uji');
+        return response($excel['file'], 200, $excel['headers']);
+	// 	// Generate and return the spreadsheet
+	// 	Excel::create('Data Perangkat Lulus Uji', function($excel) use ($examsArray) {
 
-			// Set the spreadsheet title, creator, and description
+	// 		// Set the spreadsheet title, creator, and description
 
-			// Build the spreadsheet, passing in the payments array
-			$excel->sheet('sheet1', function($sheet) use ($examsArray) {
-				$sheet->fromArray($examsArray, null, 'A1', false, false);
-			});
-		})->export('xlsx');
+	// 		// Build the spreadsheet, passing in the payments array
+	// 		$excel->sheet('sheet1', function($sheet) use ($examsArray) {
+	// 			$sheet->fromArray($examsArray, null, 'A1', false, false);
+	// 		});
+	// 	})->export('xlsx');
 	}
 
 	public function edit($id)
@@ -287,12 +288,15 @@ class DeviceController extends Controller
 			
             Session::flash('message', 'Perangkat Lulus Uji successfully updated');
             return redirect('/admin/device');
-        } catch(Exception $e){
-            Session::flash('error', 'Save failed');
-            return redirect('/admin/device/'.$device->id.'/edit');
+        } catch(Exception $e){ return redirect('/admin/device/'.$device->id.'/edit')->with('error', 'Save failed');
         }
 	}
 
+	/**
+	 * Display a resource.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
 	public function show($id)
     {
         
