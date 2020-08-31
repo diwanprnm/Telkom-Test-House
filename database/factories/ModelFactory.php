@@ -141,7 +141,7 @@ $factory->define(App\Examination::class, function (Faker\Generator $faker) {
         'examination_lab_id' => function () {
             return factory(App\ExaminationLab::class)->create()->id;
         },
-        'spk_code' => $faker->word,
+        'spk_code' => $faker->uuid,
         'registration_status' => '1',
         'function_status' => '1',
         'contract_status' => '1',
