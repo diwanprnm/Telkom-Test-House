@@ -8,6 +8,8 @@ use App\NotificationTable;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
+use Auth;
+
 class NotificationService
 {
     public function make($data)
@@ -19,8 +21,8 @@ class NotificationService
         $notification->message = $data['message'];
         $notification->url = $data['url'];
         $notification->is_read = $data['is_read'];
-        $notification->created_by = $data['created_by'];
-        $notification->updated_by = $data['updated_by'];
+        $notification->created_by = isset($data['created_by']) ? $data['created_by'] : Auth::user()->id;
+        $notification->updated_by = isset($data['updated_by']) ? $data['updated_by'] : Auth::user()->id;
         $notification->created_at = date("Y-m-d H:i:s");
         $notification->updated_at = date("Y-m-d H:i:s");
         $notification->save();
