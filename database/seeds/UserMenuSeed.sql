@@ -38,7 +38,7 @@ INSERT INTO `menus` VALUES ('37', '22', 'General Setting', 'generalSetting', '')
 INSERT INTO `menus` VALUES ('38', '2', 'Rekap Nomor SPB', 'spb', '');
 INSERT INTO `menus` VALUES ('39', '2', 'Rekap Nomor Gudang', 'nogudang', '');
 INSERT INTO `menus` VALUES ('40', '12', 'Kategori Pertanyaan', 'question', '');
-INSERT INTO `menus` VALUES ('41', '22', 'Administrator Log', 'logAdministrator', '');
+INSERT INTO `menus` VALUES ('41', '22', 'Administrator Log', 'log_administrator', '');
 INSERT INTO `menus` VALUES ('42', '25', 'User Internal', 'userin', '');
 INSERT INTO `menus` VALUES ('43', '22', 'Video Tutorial', 'videoTutorial', '');
 INSERT INTO `menus` VALUES ('44', '12', 'Pop Up Information', 'popupinformation', '');
