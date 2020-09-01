@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Foundation\Testing\WithoutEvents;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -8,6 +9,8 @@ use App\EquipmentHistory;
 use App\User;
 class EquipmentControllerTest extends TestCase
 {
+	use WithoutEvents;
+
 	public function testIndexWithSearch()
 	{
 		
@@ -33,7 +36,7 @@ class EquipmentControllerTest extends TestCase
 			'remarks' => array('The remarks'),
 			'equip_date' => Carbon\Carbon::now(),
 		]);
-		$this->assertResponseStatus(302);
+		$this->assertRedirectedTo('/admin/equipment', ['message' => 'Equipment successfully created']);
 	}
 
 	public function testShow()
