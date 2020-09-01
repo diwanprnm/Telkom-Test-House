@@ -176,11 +176,7 @@ class DeviceController extends Controller
 		// and append it to the payments array.
 			$no = 1;
 		foreach ($data as $row) {
-			if($row->valid_thru >= date($this::YMD)){
-				$category = 'Aktif';
-			}else{
-				$category = 'Aktif + 1';
-			}
+			$category = $row->valid_thru >= date($this::YMD) ? 'Aktif' : 'Aktif + 1';
 			$examsArray[] = [
 				$no,
 				// $row->jns_perusahaan,
