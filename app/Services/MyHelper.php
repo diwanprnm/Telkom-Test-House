@@ -28,6 +28,13 @@ class MyHelper
         return $header;
     }
 
+    public static function getHeaderPDF($fileName = null)
+    {
+        $header = self::getHeader($fileName);
+        $header[self::CONTENT_TYPE] = 'application/pdf';
+        return $header;
+    }
+
     public function filterUrlEncode($string, $number=false)
     {
         if(!$string && $number){
