@@ -20,7 +20,6 @@ use App\Services\Logs\LogService;
 use Auth;
 use Response;
 
-
 // UUID
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -49,24 +48,10 @@ class DashboardController extends Controller
     private const PAYMENT_STATUS = 'payment_status';
     private const DEVICE_NAME = 'devices.name';
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('auth.admin');
     }
-    
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-
-
 
     public function index(Request $request)
     {
@@ -79,22 +64,22 @@ class DashboardController extends Controller
         $examType = ExaminationType::all();
 
         $query = Examination::whereNotNull('created_at')
-                            ->where(function($q){
-                                $q->where($this::REG, 0)
-                                    ->orWhere($this::REG, 1)
-									->orWhere($this::REG, -1)
-                                    ->orWhere($this::SPB, 0)
-									->orWhere($this::SPB, -1)
-                                    ->orWhere($this::SPB, 1)
-									->orWhere($this::PAYSTAT, -1);
-                            })
-                            ->where($this::PAYSTAT, 0)
-                            ->with('user')
-                            ->with($this::COMP)
-                            ->with('examinationType')
-                            ->with('examinationLab')
-                            ->with($this::MEDIA)
-                            ->with($this::DEVICE);
+            ->where(function($q){
+                $q->where($this::REG, 0)
+                    ->orWhere($this::REG, 1)
+                    ->orWhere($this::REG, -1)
+                    ->orWhere($this::SPB, 0)
+                    ->orWhere($this::SPB, -1)
+                    ->orWhere($this::SPB, 1)
+                    ->orWhere($this::PAYSTAT, -1);
+            })
+            ->where($this::PAYSTAT, 0)
+            ->with('user')
+            ->with($this::COMP)
+            ->with('examinationType')
+            ->with('examinationLab')
+            ->with($this::MEDIA)
+            ->with($this::DEVICE);
 
         if ($search != null){
             $query->where(function($qry) use($search){
@@ -110,10 +95,8 @@ class DashboardController extends Controller
                 ->orWhere('function_test_NO', 'like', '%'.strtolower($search).'%');
             });
 
-          
             $logService = new LogService();
             $logService->createLog("Search Dashboard","DASHBOARD", json_encode( array(self::SEARCH=>$search)) );
-           
         }
 
         if ($request->has('type')){
@@ -138,6 +121,17 @@ class DashboardController extends Controller
                     $status = 2;
                     break;
                 case 3:
+                    $query->where('registration_status', 1);
+                    $query->where('function_status', 1);
+                    $query->where('contract_status', 1);
+                    $query->where('spb_status', 1);
+                    $query->where('payment_status', '!=', 1);
+                    $query->whereHas('media', function ($q) {
+                        return $q->where('name', '=', 'File Pembayaran')
+                                ->where('attachment', '=' ,'');
+                    });
+                    $status = 3;
+                    break;
                 case 4:
                     $query->where($this::REG, 1)
                         ->where($this::FUNCSTAT, 1)
@@ -173,12 +167,12 @@ class DashboardController extends Controller
 	
 	public function downloadUsman()
     {
-		$file = public_path().'/media/usman/User Manual Situs Jasa Layanan Pelanggan Lab Pengujian [Admin].pdf';
+		$pathToFile = public_path().'/media/usman/User Manual Situs Jasa Layanan Pelanggan Lab Pengujian [Admin].pdf';
+		$name = 'User Manual Situs Jasa Layanan Pelanggan Lab Pengujian [Admin].pdf';
 		$headers = array(
-		  'Content-Type: application/octet-stream',
+		  'Content-Type' => 'application/octet-stream',
 		);
-
-		return Response::download($file, 'User Manual Situs Jasa Layanan Pelanggan Lab Pengujian [Admin].pdf', $headers);
+        return response()->download($pathToFile, $name, $headers);
 	}
 	
 	public function autocomplete($query) {
