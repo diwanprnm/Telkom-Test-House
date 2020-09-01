@@ -44,7 +44,7 @@ class DashboardControllerTest extends TestCase
         $this->assertTrue($response->headers->get('content-type') == 'application/pdf');
 
         if(!$isFileExist){
-            Storage::disk('s3')->delete("usman/$fileName");
+            Storage::disk('minio')->delete("usman/$fileName");
         }
 
     }
