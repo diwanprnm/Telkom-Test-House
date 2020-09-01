@@ -68,122 +68,123 @@ class LogController extends Controller
     {
         $currentUser = Auth::user();
 
-        if ($currentUser){
-            $message = null;
-            $paginate = 10;
-            $search = trim($request->input($this::SEARCH));
+        if (!$currentUser){ return redirect('login');}
 
-            $before = null;
-            $after = null;
-            $filterUsername = '';
-            $filterAction = '';
+        $message = null;
+        $paginate = 10;
+        $search = trim($request->input($this::SEARCH));
 
-            $sort_by = $request->path() == $this::LOG_PATH ? $this::LOG_CREATED : $this::LOG_ADMIN_CREATED;
-            $sort_type = 'desc';
+        $before = null;
+        $after = null;
+        $filterUsername = '';
+        $filterAction = '';
+
+        $sort_by = $request->path() == $this::LOG_PATH ? $this::LOG_CREATED : $this::LOG_ADMIN_CREATED;
+        $sort_type = 'desc';
 
 
 
-            if($request->path() == $this::LOG_PATH){
-    
-                $select = array( $this::LOG_ACTION,$this::LOG_PAGE,$this::LOG_SEARCH,$this::USER_NAME );
-                $datalogs = Logs::select($select)->whereNotNull($this::LOG_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_USER);
-                
-                $select2 = array( $this::USER_NAME );
-                $datalogs2 = Logs::select($select2)->whereNotNull($this::LOG_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_USER);
-                $username = $datalogs2->distinct()->orderBy(self::USERNAME)->get();
-    
-                $select3 = array(  $this::LOG_ACTION );
-                $datalogs3 = Logs::select($select3)->whereNotNull($this::LOG_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_USER);
-                $action = $datalogs3->distinct()->orderBy('logs.action')->get();
-    
-                if ($search != null){
-                    $datalogs->where($this::ACTION,'like','%'.$search.'%');
-    
-                    $logService = new LogService();
-                    $logService->createLog('Search Log',"LOG", json_encode(array(self::SEARCH=>$search)) );
-                }
-    
-                if ($request->has($this::BEFORE)){
-                    $datalogs->where(DB::raw($this::DATE), '<=', $request->get($this::BEFORE));
-                    $before = $request->get($this::BEFORE);
-                }
-    
-                if ($request->has($this::AFTER)){
-                    $datalogs->where(DB::raw($this::DATE), '>=', $request->get($this::AFTER));
-                    $after = $request->get($this::AFTER);
-                }
-    
-            }else{
+        if($request->path() == $this::LOG_PATH){
 
-                $select = array( $this::LOG_ADMIN_ACTION,$this::LOG_ADMIN_PAGE,$this::LOG_ADMIN_SEARCH,$this::USER_NAME );
-                $datalogs = LogsAdministrator::select($select)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
-                
-                $select2 = array( $this::USER_NAME );
-                $datalogs2 = LogsAdministrator::select($select2)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
-                 $username = $datalogs2->distinct()->orderBy(self::USERNAME)->get();
-
-                $select3 = array( $this::LOG_ADMIN_ACTION );
-                $datalogs3 = LogsAdministrator::select($select3)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
-                $action = $datalogs3->distinct()->orderBy($this::LOG_ADMIN_ACTION)->get();
-
-                if ($search != null){
-                    $datalogs->where($this::ACTION,'like','%'.$search.'%');
-                    $logService = new LogService();
-                    $logService->createLog('Search Log',"Administrator Log", json_encode(array(self::SEARCH=>$search)) );
-                }
-    
-                if ($request->has($this::BEFORE)){
-                    $datalogs->where(DB::raw($this::DATE_ADM), '<=', $request->get($this::BEFORE));
-                    $before = $request->get($this::BEFORE);
-                }
-    
-                if ($request->has($this::AFTER)){
-                    $datalogs->where(DB::raw($this::DATE_ADM), '>=', $request->get($this::AFTER));
-                    $after = $request->get($this::AFTER);
-                }
-            }
-
-            if ($request->has($this::USN)){
-                $filterUsername = $request->get($this::USN);
-                if($request->input($this::USN) != 'all'){
-                    $datalogs->where(self::USERNAME, $request->get($this::USN));
-                }
-            }
-
-            if ($request->has($this::ACTION)){
-                $filterAction = $request->get($this::ACTION);
-                if($request->input($this::ACTION) != 'all'){
-                    $datalogs->where($this::ACTION, $request->get($this::ACTION));
-                }
-            }
-
-            if ($request->has($this::SORT_BY)){
-                $sort_by = $request->get($this::SORT_BY);
-            }
-            if ($request->has($this::SORT_TYPE)){
-                $sort_type = $request->get($this::SORT_TYPE);
-            }
-                
-            $data = $datalogs->orderBy($sort_by, $sort_type)
-                            ->paginate($paginate);
-
-            if (count($datalogs) == 0){
-                $message = 'Data not found';
-            }
+            $select = array( $this::LOG_ACTION,$this::LOG_PAGE,$this::LOG_SEARCH,$this::USER_NAME );
+            $datalogs = Logs::select($select)->whereNotNull($this::LOG_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_USER);
             
-            return view($request->path() == $this::LOG_PATH ? 'admin.log.index' : 'admin.log_administrator.index')
-                ->with('message', $message)
-                ->with('data', $data)
-                ->with($this::SEARCH, $search)
-                ->with($this::BEFORE, $before)
-                ->with($this::AFTER, $after)
-                ->with($this::USN, $username)
-                ->with('filterUsername', $filterUsername)
-                ->with($this::ACTION, $action)
-                ->with('filterAction', $filterAction)
-                ->with($this::SORT_BY, $sort_by)
-                ->with($this::SORT_TYPE, $sort_type);
+            $select2 = array( $this::USER_NAME );
+            $datalogs2 = Logs::select($select2)->whereNotNull($this::LOG_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_USER);
+            $username = $datalogs2->distinct()->orderBy(self::USERNAME)->get();
+
+            $select3 = array(  $this::LOG_ACTION );
+            $datalogs3 = Logs::select($select3)->whereNotNull($this::LOG_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_USER);
+            $action = $datalogs3->distinct()->orderBy('logs.action')->get();
+
+            if ($search != null){
+                $datalogs->where($this::ACTION,'like','%'.$search.'%');
+
+                $logService = new LogService();
+                $logService->createLog('Search Log',"LOG", json_encode(array(self::SEARCH=>$search)) );
+            }
+
+            if ($request->has($this::BEFORE)){
+                $datalogs->where(DB::raw($this::DATE), '<=', $request->get($this::BEFORE));
+                $before = $request->get($this::BEFORE);
+            }
+
+            if ($request->has($this::AFTER)){
+                $datalogs->where(DB::raw($this::DATE), '>=', $request->get($this::AFTER));
+                $after = $request->get($this::AFTER);
+            }
+
+        }else{
+
+            $select = array( $this::LOG_ADMIN_ACTION,$this::LOG_ADMIN_PAGE,$this::LOG_ADMIN_SEARCH,$this::USER_NAME );
+            $datalogs = LogsAdministrator::select($select)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
+            
+            $select2 = array( $this::USER_NAME );
+            $datalogs2 = LogsAdministrator::select($select2)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
+                $username = $datalogs2->distinct()->orderBy(self::USERNAME)->get();
+
+            $select3 = array( $this::LOG_ADMIN_ACTION );
+            $datalogs3 = LogsAdministrator::select($select3)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
+            $action = $datalogs3->distinct()->orderBy($this::LOG_ADMIN_ACTION)->get();
+
+            if ($search != null){
+                $datalogs->where($this::ACTION,'like','%'.$search.'%');
+                $logService = new LogService();
+                $logService->createLog('Search Log',"Administrator Log", json_encode(array(self::SEARCH=>$search)) );
+            }
+
+            if ($request->has($this::BEFORE)){
+                $datalogs->where(DB::raw($this::DATE_ADM), '<=', $request->get($this::BEFORE));
+                $before = $request->get($this::BEFORE);
+            }
+
+            if ($request->has($this::AFTER)){
+                $datalogs->where(DB::raw($this::DATE_ADM), '>=', $request->get($this::AFTER));
+                $after = $request->get($this::AFTER);
+            }
         }
+
+        if ($request->has($this::USN)){
+            $filterUsername = $request->get($this::USN);
+            if($request->input($this::USN) != 'all'){
+                $datalogs->where(self::USERNAME, $request->get($this::USN));
+            }
+        }
+
+        if ($request->has($this::ACTION)){
+            $filterAction = $request->get($this::ACTION);
+            if($request->input($this::ACTION) != 'all'){
+                $datalogs->where($this::ACTION, $request->get($this::ACTION));
+            }
+        }
+
+        if ($request->has($this::SORT_BY)){
+            $sort_by = $request->get($this::SORT_BY);
+        }
+        if ($request->has($this::SORT_TYPE)){
+            $sort_type = $request->get($this::SORT_TYPE);
+        }
+            
+        $data = $datalogs->orderBy($sort_by, $sort_type)
+                        ->paginate($paginate);
+
+        if (count($data) == 0){
+            $message = 'Data not found';
+        }
+        
+        return view($request->path() == $this::LOG_PATH ? 'admin.log.index' : 'admin.log_administrator.index')
+            ->with('message', $message)
+            ->with('data', $data)
+            ->with($this::SEARCH, $search)
+            ->with($this::BEFORE, $before)
+            ->with($this::AFTER, $after)
+            ->with($this::USN, $username)
+            ->with('filterUsername', $filterUsername)
+            ->with($this::ACTION, $action)
+            ->with('filterAction', $filterAction)
+            ->with($this::SORT_BY, $sort_by)
+            ->with($this::SORT_TYPE, $sort_type);
+        
     }
 
 	public function excel(Request $request) 
