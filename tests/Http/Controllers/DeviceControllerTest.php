@@ -16,6 +16,7 @@ class DeviceControllerTest extends TestCase
     {
         $this->assertTrue(true);
     }
+
     public function testIndex()
     {
         $this->actingAs(User::find('1'))->call('GET', 'admin/device');  
@@ -39,16 +40,15 @@ class DeviceControllerTest extends TestCase
         $this->actingAs(User::find('1'))->call('GET', 'admin/device?category=default');  
         $this->assertResponseStatus(200)->see('Perangkat Lulus Uji');
     }
-     
+
 
     public function testExcelWithFilter()
     {
-        
         $deviceAktif = factory(App\Device::class)->create(['valid_thru' => '2100-01-01 00:00:00']);
         $deviceNonAktif = factory(App\Device::class)->create(['valid_thru' => '2020-01-01 00:00:00']);
         factory(App\Examination::class)->create(['device_id' => $deviceAktif->id]);
         factory(App\Examination::class)->create(['device_id'=> $deviceNonAktif->id]);
-        
+
         $this->actingAs(User::find('1'))->call('GET', 'admin/device');  
         $response = $this->actingAs(User::find('1'))->call('get','device/excel');
 
@@ -66,21 +66,26 @@ class DeviceControllerTest extends TestCase
     }
 
     public function testUpdate()
-	 { 
+    { 
         $device = App\Device::latest()->first();
-	 	$this->actingAs(User::find('1'))->call('PUT', 'admin/device/'.$device->id,  [ 
-             'name' => str_random(10),
-             'mark' => str_random(10),
-             'capacity' => mt_rand(0,10),
-             'manufactured_by' => str_random(10),
-             'serial_number' =>mt_rand(0,10000),
-             'model' => str_random(10),
-             'test_reference' => str_random(10),
-             'cert_number' => mt_rand(0,10000),
-             'valid_from' => str_random(10),
-             'valid_thru' => '2100-01-01',
-	    ]);   
+        $this->actingAs(User::find('1'))->call('PUT', 'admin/device/'.$device->id,  [ 
+            'name' => str_random(10),
+            'mark' => str_random(10),
+            'capacity' => mt_rand(0,10),
+            'manufactured_by' => str_random(10),
+            'serial_number' =>mt_rand(0,10000),
+            'model' => str_random(10),
+            'test_reference' => str_random(10),
+            'cert_number' => mt_rand(0,10000),
+            'valid_from' => str_random(10),
+            'valid_thru' => '2100-01-01',
+        ]);   
         $this->assertRedirectedTo('admin/device', ['message' => 'Perangkat Lulus Uji successfully updated']);
-	   
-	 }
+    }
+
+    public function testShow()
+    {
+        $this->actingAs(User::find('1'))->call('GET', 'admin/device/id');  
+        $this->assertResponseStatus(200);
+    }
 }

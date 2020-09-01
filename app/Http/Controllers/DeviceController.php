@@ -47,89 +47,89 @@ class DeviceController extends Controller
 		
 		$logService = new LogService();
 
-        if ($currentUser){
-            $message = null;
-            $paginate = 10;
-            $search = trim($request->input($this::SEARCH));
-			$datenow = date($this::YMD);
-			$dateMin1Year = date($this::YMD, strtotime('-1 year'));
-			$before = null;
-            $after = null;
-            $category = null;
-            
-            $dev = DB::table('examinations')
-			->join('devices', 'examinations.device_id', '=', 'devices.id')
-			->join('companies', 'examinations.company_id', '=', 'companies.id')
-			->select(
-					'examinations.price AS totalBiaya','examinations.spk_code','examinations.jns_perusahaan','companies.name AS namaPerusahaan',
-					'devices.id AS deviceId','devices.name AS namaPerangkat','devices.mark AS merk','devices.model AS tipe',
-					'devices.capacity AS kapasitas','devices.test_reference AS standarisasi','devices.valid_from',$this::DEVICEVAL,
-					'devices.manufactured_by','devices.serial_number','devices.cert_number',$this::DEVICEVAL,'companies.address',
-					'companies.city','companies.postal_code','companies.email','companies.phone_number','companies.fax',
-					'companies.npwp_number','companies.siup_number','companies.siup_date','companies.qs_certificate_number',
-					'companies.qs_certificate_date'
-					)
-			->where('examinations.resume_status','=','1')
-			->where('examinations.qa_status','=','1')
-			->where('examinations.qa_passed','=','1')
-			->where('examinations.certificate_status','=','1');
+		if (!$currentUser){ return redirect('login');}
 
-			if ($search){
-				$dev->where(function($q) use($search){
-					$q->where('devices.name','like','%'.$search.'%')
-						->orWhere($this::DEVICEVAL,'like','%'.$search.'%')
-						->orWhere('devices.mark','like','%'.$search.'%')
-						->orWhere('devices.model','like','%'.$search.'%');
-				});
-				
-				$logService->createLog('Search Device', 'DEVICE', json_encode(array("search"=>$search)) );
-			}
+		$message = null;
+		$paginate = 10;
+		$search = trim($request->input($this::SEARCH));
+		$datenow = date($this::YMD);
+		$dateMin1Year = date($this::YMD, strtotime('-1 year'));
+		$before = null;
+		$after = null;
+		$category = null;
+		
+		$dev = DB::table('examinations')
+		->join('devices', 'examinations.device_id', '=', 'devices.id')
+		->join('companies', 'examinations.company_id', '=', 'companies.id')
+		->select(
+				'examinations.price AS totalBiaya','examinations.spk_code','examinations.jns_perusahaan','companies.name AS namaPerusahaan',
+				'devices.id AS deviceId','devices.name AS namaPerangkat','devices.mark AS merk','devices.model AS tipe',
+				'devices.capacity AS kapasitas','devices.test_reference AS standarisasi','devices.valid_from',$this::DEVICEVAL,
+				'devices.manufactured_by','devices.serial_number','devices.cert_number',$this::DEVICEVAL,'companies.address',
+				'companies.city','companies.postal_code','companies.email','companies.phone_number','companies.fax',
+				'companies.npwp_number','companies.siup_number','companies.siup_date','companies.qs_certificate_number',
+				'companies.qs_certificate_date'
+				)
+		->where('examinations.resume_status','=','1')
+		->where('examinations.qa_status','=','1')
+		->where('examinations.qa_passed','=','1')
+		->where('examinations.certificate_status','=','1');
 
-			if ($request->has($this::BEFORE)){
-				$dev->where($this::DEVICEVAL, '>=', $request->get($this::BEFORE));
-				$before = $request->get($this::BEFORE);
-			}
-			if ($request->has($this::AFTER)){
-				$dev->where($this::DEVICEVAL, '<=', $request->get($this::AFTER));
-				$after = $request->get($this::AFTER);
-			}
-			if ($request->has($this::CATEGORY)){
-				switch ($request->get($this::CATEGORY)) {
-					case 'aktif':
-						$dev->where($this::DEVICEVAL, '>=', $datenow);
-						break;		
-					case 'aktif1':
-						$dev->where($this::DEVICEVAL, '>=', $dateMin1Year);
-						$dev->where($this::DEVICEVAL, '<', $datenow);
-						break;
-					default:
-						$dev->where(function($q) use($datenow,$dateMin1Year){
-							$q->where($this::DEVICEVAL, '>=', $datenow)
-								->orWhere($this::DEVICEVAL, '>=', $dateMin1Year);
-						});
-						break;
-				}
-				$category = $request->get($this::CATEGORY);
-			}
-			else{
-				$dev->where($this::DEVICEVAL, '>=', $datenow);
-			}
+		if ($search){
+			$dev->where(function($q) use($search){
+				$q->where('devices.name','like','%'.$search.'%')
+					->orWhere($this::DEVICEVAL,'like','%'.$search.'%')
+					->orWhere('devices.mark','like','%'.$search.'%')
+					->orWhere('devices.model','like','%'.$search.'%');
+			});
 			
-			$data_excel = $dev->orderBy($this::DEVICEVAL, 'desc')->get();
-			$data = $dev->orderBy($this::DEVICEVAL, 'desc')->paginate($paginate);
+			$logService->createLog('Search Device', 'DEVICE', json_encode(array("search"=>$search)) );
+		}
 
-            if (count($data) == 0){
-                $message = 'Data not found';
-            }
-            $request->session()->put('excel_pengujian_sukses', $data_excel);
-            return view('admin.devices.index')
-                ->with('message', $message)
-                ->with('data', $data)
-                ->with($this::SEARCH, $search)
-                ->with($this::BEFORE, $before)
-                ->with($this::CATEGORY, $category)
-                ->with($this::AFTER, $after);
-        }
+		if ($request->has($this::BEFORE)){
+			$dev->where($this::DEVICEVAL, '>=', $request->get($this::BEFORE));
+			$before = $request->get($this::BEFORE);
+		}
+		if ($request->has($this::AFTER)){
+			$dev->where($this::DEVICEVAL, '<=', $request->get($this::AFTER));
+			$after = $request->get($this::AFTER);
+		}
+		if ($request->has($this::CATEGORY)){
+			switch ($request->get($this::CATEGORY)) {
+				case 'aktif':
+					$dev->where($this::DEVICEVAL, '>=', $datenow);
+					break;		
+				case 'aktif1':
+					$dev->where($this::DEVICEVAL, '>=', $dateMin1Year);
+					$dev->where($this::DEVICEVAL, '<', $datenow);
+					break;
+				default:
+					$dev->where(function($q) use($datenow,$dateMin1Year){
+						$q->where($this::DEVICEVAL, '>=', $datenow)
+							->orWhere($this::DEVICEVAL, '>=', $dateMin1Year);
+					});
+					break;
+			}
+			$category = $request->get($this::CATEGORY);
+		}
+		else{
+			$dev->where($this::DEVICEVAL, '>=', $datenow);
+		}
+		
+		$data_excel = $dev->orderBy($this::DEVICEVAL, 'desc')->get();
+		$data = $dev->orderBy($this::DEVICEVAL, 'desc')->paginate($paginate);
+
+		if (count($data) == 0){
+			$message = 'Data not found';
+		}
+		$request->session()->put('excel_pengujian_sukses', $data_excel);
+		return view('admin.devices.index')
+			->with('message', $message)
+			->with('data', $data)
+			->with($this::SEARCH, $search)
+			->with($this::BEFORE, $before)
+			->with($this::CATEGORY, $category)
+			->with($this::AFTER, $after);
     }
 	
 	public function excel(Request $request) 
@@ -215,16 +215,6 @@ class DeviceController extends Controller
 
         $excel = \App\Services\ExcelService::download($examsArray, 'Data Perangkat Lulus Uji');
         return response($excel['file'], 200, $excel['headers']);
-	// 	// Generate and return the spreadsheet
-	// 	Excel::create('Data Perangkat Lulus Uji', function($excel) use ($examsArray) {
-
-	// 		// Set the spreadsheet title, creator, and description
-
-	// 		// Build the spreadsheet, passing in the payments array
-	// 		$excel->sheet('sheet1', function($sheet) use ($examsArray) {
-	// 			$sheet->fromArray($examsArray, null, 'A1', false, false);
-	// 		});
-	// 	})->export('xlsx');
 	}
 
 	public function edit($id)
