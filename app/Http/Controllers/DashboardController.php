@@ -29,24 +29,23 @@ class DashboardController extends Controller
     private const SEARCH = 'search';
     private const REG = 'registration_status';
     private const SPB = 'spb_status';
-    private const PAYSTAT = 'payment_status';
     private const COMP = 'company';
     private const MEDIA = 'media';
     private const DEVICE = 'device';
     private const STAT = 'status';
     private const FUNCSTAT = 'function_status';
     private const CONTRSTAT = 'contract_status';
-
     private const TABLE_DEVICE = 'devices';
 	private const EXAM_DEVICES_ID = 'examinations.device_id';
 	private const DEVICES_ID = 'devices.id';
     private const DEVICE_NAME_AUTOSUGGEST = 'devices.name as autosuggest';
     private const EXAM_REGISTRATION_STATUS = 'examinations.registration_status';
-	private const EXAM_CERTIFICATE_STATUS = 'examinations.certificate_status';
 	private const EXAM_SPB_STATUS = 'examinations.spb_status';
     private const EXAM_PAYMENT_STATUS = 'examinations.payment_status';
     private const PAYMENT_STATUS = 'payment_status';
     private const DEVICE_NAME = 'devices.name';
+    private const FILE_PEMBAYARAN = 'File Pembayaran';
+    private const ATTACHMENT = 'attachment';
 
     public function __construct()
     {
@@ -71,9 +70,9 @@ class DashboardController extends Controller
                     ->orWhere($this::SPB, 0)
                     ->orWhere($this::SPB, -1)
                     ->orWhere($this::SPB, 1)
-                    ->orWhere($this::PAYSTAT, -1);
+                    ->orWhere($this::PAYMENT_STATUS, -1);
             })
-            ->where($this::PAYSTAT, 0)
+            ->where($this::PAYMENT_STATUS, 0)
             ->with('user')
             ->with($this::COMP)
             ->with('examinationType')
@@ -125,10 +124,10 @@ class DashboardController extends Controller
                     $query->where('function_status', 1);
                     $query->where('contract_status', 1);
                     $query->where('spb_status', 1);
-                    $query->where('payment_status', '!=', 1);
+                    $query->where($this::PAYMENT_STATUS, '!=', 1);
                     $query->whereHas('media', function ($q) {
-                        return $q->where('name', '=', 'File Pembayaran')
-                                ->where('attachment', '=' ,'');
+                        return $q->where('name', '=', $this::FILE_PEMBAYARAN)
+                                ->where($this::ATTACHMENT, '=' ,'');
                     });
                     $status = 3;
                     break;
@@ -137,9 +136,9 @@ class DashboardController extends Controller
                         ->where($this::FUNCSTAT, 1)
                         ->where($this::CONTRSTAT, 1)
                         ->where($this::SPB, 1)
-                        ->where($this::PAYSTAT, '!=', 1)
+                        ->where($this::PAYMENT_STATUS, '!=', 1)
                         ->whereHas($this::MEDIA, function ($q) use ($request) {
-                       return $request->get($this::STAT) == 3 ? $q->where('name', '=', 'File Pembayaran')->where('attachment', '=' ,'') : $q->where('name', '=', 'File Pembayaran')->where('attachment', '!=' ,'');
+                       return $request->get($this::STAT) == 3 ? $q->where('name', '=', $this::FILE_PEMBAYARAN)->where($this::ATTACHMENT, '=' ,'') : $q->where('name', '=', $this::FILE_PEMBAYARAN)->where($this::ATTACHMENT, '!=' ,'');
                     });
 					$status = $request->get($this::STAT) == 3 ? $request->get($this::STAT) : 4;
 					break;

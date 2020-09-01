@@ -24,17 +24,19 @@ class DashboardControllerTest extends TestCase
         $this->assertResponseStatus(200)->see('Beranda');
         $this->actingAs(User::find(1))->call('GET','admin?search=cari&type=1&status=4');
         $this->assertResponseStatus(200)->see('Beranda');
+        $this->actingAs(User::find(1))->call('GET','admin?search=cari&type=1&status=default');
+        $this->assertResponseStatus(200)->see('Beranda');
     }
 
     public function testDownloadUserManual()
     {
-		$this->actingAs(User::find(1))->call('GET',"adm_dashboard_autocomplete/query");
+		$this->actingAs(User::find(1))->call('GET','admin/downloadUsman');
         $this->assertResponseStatus(200);
     }
 
     public function testAutocomplete()
     {
-		$response = $this->actingAs(User::find('1'))->call('GET',"adm_dashboard_autocomplete/query");
-        $this->assertEquals(200, $response->status());
+		$this->actingAs(User::find('1'))->call('GET',"adm_dashboard_autocomplete/query");
+        $this->assertResponseStatus(200);
     }
 }
