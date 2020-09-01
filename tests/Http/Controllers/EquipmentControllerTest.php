@@ -33,7 +33,7 @@ class EquipmentControllerTest extends TestCase
 			'remarks' => array('The remarks'),
 			'equip_date' => Carbon\Carbon::now(),
 		]);
-		$this->assertRedirectedTo('/admin/equipment', ['message' => 'Equipment successfully created']);
+		$this->assertResponseStatus(302);
 	}
 
 	public function testShow()
