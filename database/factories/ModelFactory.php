@@ -600,10 +600,24 @@ $factory->define(App\LogsAdministrator::class, function (Faker\Generator $faker)
     return [
         'id' => $faker->uuid,
         'user_id' => 1,
-        'action' => 'testing purpose',
-        'page' => 'testing',
-        'reason' => 'testing purpose',
+        'action' => $faker->word,
+        'page' => $faker->word,
+        'reason' => $faker->word,
         'data' => '',
+        'created_at' => Carbon\Carbon::now(),
+        'updated_at' => Carbon\Carbon::now(),
+    ];
+});
+
+$factory->define(App\Logs::class, function (Faker\Generator $faker) {
+    return [
+        'id' => $faker->uuid,
+        'user_id' => 1,
+        'action' => $faker->word,
+        'data' => '',
+        'page' => $faker->word,
+        'created_by' => 1,
+        'updated_by' => 1,
         'created_at' => Carbon\Carbon::now(),
         'updated_at' => Carbon\Carbon::now(),
     ];
