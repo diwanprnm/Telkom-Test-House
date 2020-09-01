@@ -595,3 +595,16 @@ $factory->define(App\Kuitansi::class, function (Faker\Generator $faker) {
         'updated_at' => Carbon\Carbon::now(),
     ];
 });
+
+$factory->define(App\LogsAdministrator::class, function (Faker\Generator $faker) {
+    return [
+        'id' => $faker->uuid,
+        'user_id' => 1,
+        'action' => 'testing purpose',
+        'page' => 'testing',
+        'reason' => 'testing purpose',
+        'data' => '',
+        'created_at' => Carbon\Carbon::now(),
+        'updated_at' => Carbon\Carbon::now(),
+    ];
+});
