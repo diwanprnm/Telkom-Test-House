@@ -19,6 +19,7 @@ use App\Services\Logs\LogService;
 
 use Auth;
 use Response;
+use Storage;
 
 // UUID
 use Ramsey\Uuid\Uuid;
@@ -166,12 +167,9 @@ class DashboardController extends Controller
 	
 	public function downloadUsman()
     {
-		$pathToFile = public_path().'/media/usman/User Manual Situs Jasa Layanan Pelanggan Lab Pengujian [Admin].pdf';
-		$name = 'User Manual Situs Jasa Layanan Pelanggan Lab Pengujian [Admin].pdf';
-		$headers = array(
-		  'Content-Type' => 'application/octet-stream',
-		);
-        return response()->download($pathToFile, $name, $headers);
+        $fileName = 'User Manual Situs Jasa Layanan Pelanggan Lab Pengujian [Admin].pdf';
+        $fileMinio = Storage::disk('minio')->get("usman/$fileName");
+        return response($fileMinio, 200, \App\Services\MyHelper::getHeaderPDF($fileName));
 	}
 	
 	public function autocomplete($query) {

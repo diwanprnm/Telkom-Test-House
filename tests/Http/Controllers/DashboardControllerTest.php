@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Storage;
 
 use App\User;
 
@@ -30,8 +31,22 @@ class DashboardControllerTest extends TestCase
 
     public function testDownloadUserManual()
     {
-		$this->actingAs(User::find(1))->call('GET','admin/downloadUsman');
+        $fileName = 'User Manual Situs Jasa Layanan Pelanggan Lab Pengujian [Admin].pdf';
+        $isFileExist = Storage::disk('minio')->exists("usman/$fileName");
+
+        if(!$isFileExist){
+            $file = file_get_contents('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
+            Storage::disk('minio')->put("usman/$fileName", $file);
+        }
+
+		$response = $this->actingAs(User::find(1))->call('GET','admin/downloadUsman');
         $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'application/pdf');
+
+        if(!$isFileExist){
+            Storage::disk('s3')->delete("usman/$fileName");
+        }
+
     }
 
     public function testAutocomplete()
