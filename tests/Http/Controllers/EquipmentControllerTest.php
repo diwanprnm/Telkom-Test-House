@@ -49,8 +49,8 @@ class EquipmentControllerTest extends TestCase
 	public function testEdit()
 	{
 		$equipmentHistory = EquipmentHistory::latest()->first();
-		$this->actingAs(User::find('1'))->call('GET', "admin/equipment/$equipmentHistory->examination_id");
-		$this->assertResponseStatus(200)->see('Detail Barang');
+		$this->actingAs(User::find('1'))->call('GET', "admin/equipment/$equipmentHistory->examination_id/edit");
+		$this->assertResponseStatus(200)->see('Edit Barang');
 	}
 
 	public function testUpdate()
@@ -61,14 +61,6 @@ class EquipmentControllerTest extends TestCase
 			'pic' => 'Daniel',
 			'location_id' => 2,
 			'equip_date' => Carbon\Carbon::now(),
-
-			// 'examination_id' => factory(App\Examination::class)->create()->id,
-			// 'name' => 'Nama equipment',
-			// 'qty' => array(1),
-			// 'unit' => array('unit uji device'),
-			// 'description' => array('deskripsi device'),
-			// 'remarks' => array('The remarks'),
-			
 		]);
 		$this->assertRedirectedTo('/admin/equipment', ['message' => 'Equipment successfully updated']);
 	}
@@ -78,6 +70,12 @@ class EquipmentControllerTest extends TestCase
 		$equipmentHistory = EquipmentHistory::latest()->first();
 		$this->actingAs(User::find('1'))->call('DELETE','admin/equipment/'.$equipmentHistory->examination_id);
 		$this->assertRedirectedTo('/admin/equipment', ['message' => 'Equipment successfully deleted']);
+	}
+
+	public function testDeleteNotFound()
+	{
+		$this->actingAs(User::find('1'))->call('DELETE','admin/equipment/dataNotFound');
+		$this->assertRedirectedTo('/admin/equipment', ['error' => 'Equipment not found']);
 	}
 
 }

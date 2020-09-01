@@ -38,9 +38,10 @@ class EquipmentController extends Controller
     private const SEARCH = 'search';
     private const CREATED = 'created_at';
     private const EQUIPMENT = "EQUIPMENT";
+    private const EQUIPMENT_HISTORY = 'equipmentHistory';
     private const EXAM_ID = 'examination_id';
     private const MESSAGE = 'message';
-    private const EXAMINATION = 'examinations';
+    private const EXAMINATIONS = 'examinations';
     private const DEVICE = 'devices';
     private const EXAMINATIONDEVICE = 'examinations.device_id';
     private const DEVICEID = 'devices.id';
@@ -52,6 +53,7 @@ class EquipmentController extends Controller
     private const ADMINEQUIP = '/admin/equipment';
     private const ERROR ='error';
     private const LOCATION = 'location';
+    private const EXAMINATION = 'examination';
 
     public function __construct()
     {
@@ -116,7 +118,7 @@ class EquipmentController extends Controller
     {
 		$exam_id = $request->session()->get('key_exam_id_for_generate_equip_masuk');
 		$in_equip_date = $request->session()->get('key_in_equip_date_for_generate_equip_masuk');
-		$examination = DB::table($this::EXAMINATION)
+		$examination = DB::table($this::EXAMINATIONS)
 			->join($this::DEVICE, $this::EXAMINATIONDEVICE, '=', $this::DEVICEID)
 			->select(
 					$this::EXAMID,
@@ -129,7 +131,7 @@ class EquipmentController extends Controller
         return view('admin.equipment.create')
             ->with('exam_id', $exam_id)
             ->with('in_equip_date', $in_equip_date)
-            ->with('examination', $examination);
+            ->with($this::EXAMINATION, $examination);
     }
 
     /**
@@ -216,10 +218,10 @@ class EquipmentController extends Controller
         $data = $this->getData($id);
 
         return view('admin.equipment.show')
-            ->with('item', $data['examination'])
-            ->with($this::LOCATION, $data['location'])
+            ->with('item', $data[$this::EXAMINATION])
+            ->with($this::LOCATION, $data[$this::LOCATION])
             ->with('data', $data['equipment'])
-            ->with('history', $data['equipmentHistory'])
+            ->with('history', $data[$this::EQUIPMENT_HISTORY])
         ;
     }
 
@@ -234,10 +236,10 @@ class EquipmentController extends Controller
         $data = $this->getData($id);
 
         return view('admin.equipment.edit')
-            ->with('item', $data['examination'])
-            ->with($this::LOCATION, $data['location'])
+            ->with('item', $data[$this::EXAMINATION])
+            ->with($this::LOCATION, $data[$this::LOCATION])
             ->with('data', $data['equipment'])
-            ->with('history', $data['equipmentHistory'])
+            ->with('history', $data[$this::EQUIPMENT_HISTORY])
         ;
     }
 
@@ -293,10 +295,11 @@ class EquipmentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-		$equipment = Equipment::where('examination_id', $id);
-		$equipmenth = EquipmentHistory::where('examination_id', $id);
-        if ($equipment){
+    { 
+		$equipment = Equipment::where($this::EXAM_ID, $id);
+		$equipmenth = EquipmentHistory::where($this::EXAM_ID, $id);
+        if ($equipment->first()){
+            
             try{
                 $equipmenth->delete();
                 $equipment->delete();
@@ -315,7 +318,7 @@ class EquipmentController extends Controller
         $EquipmentHistory = EquipmentHistory::where($this::EXAM_ID, $id)->get();
         $equipment = Equipment::where($this::EXAM_ID, $id)->get();
         $location = Equipment::where($this::EXAM_ID, $id)->first();
-        $examination = DB::table($this::EXAMINATION)
+        $examination = DB::table($this::EXAMINATIONS)
             ->join($this::DEVICE, $this::EXAMINATIONDEVICE, '=', $this::DEVICEID)
             ->select(
                 $this::EXAMID,
@@ -328,10 +331,10 @@ class EquipmentController extends Controller
         ;
 
         return array(
-            'equipmentHistory' => $EquipmentHistory,
+            $this::EQUIPMENT_HISTORY => $EquipmentHistory,
             'equipment' => $equipment,
-            'location' => $location,
-            'examination' => $examination,
+            $this::LOCATION => $location,
+            $this::EXAMINATION => $examination,
         );
     }
 }
