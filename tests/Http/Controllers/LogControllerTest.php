@@ -15,23 +15,53 @@ class LogControllerTest extends TestCase
      * @return void
      */
 
-    public function testIndex()
-    { 
-        $admin = User::find('1');
-        $response = $this->actingAs($admin)->call('GET', 'admin/log');
-        $this->assertEquals(200, $response->status());
-    }
     
-    public function testSearch()
+    public function testLogIndex()
     { 
-        $admin = User::find('1');
-        $response = $this->actingAs($admin)->call('GET', 'admin/log?search=search&before_date=2020-08-21&after_date=2020-08-20&username=admin&action=Create+Calibration+Charge'); 
-        $this->seeInDatabase('logs', [
-            'page' => 'LOG',
-            'data' => '{"search":"search"}'
-        ]); 
-        $this->assertEquals(200, $response->status());
+        $this->actingAs(User::find('1'))->call('GET', 'admin/log?search=search&before_date=2100-01-01&after_date=2020-01-01&username=admin&action=Action'); 
+        $this->assertResponseStatus(200)->see('Log');
     }
+
+    public function testLogAdministratorIndex()
+    { 
+        $this->actingAs(User::find('1'))->call('GET', 'admin/log_administrator?search=search&before_date=2100-01-01&after_date=2020-01-01&username=admin&action=Action'); 
+        $this->assertResponseStatus(200)->see('Administrator Log');
+    }
+
+    public function testLogExcel()
+    { 
+        $response = $this->actingAs(User::find('1'))->call('GET', 'log/excel?search=search&before_date=2100-01-01&after_date=2020-01-01&username=admin&action=Action'); 
+        $this->assertResponseStatus(200);
+        
+        $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
+        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Aktivitas User.xlsx"');
+    }
+
+    public function testLogAdministratorExcel()
+    { 
+        $response = $this->actingAs(User::find('1'))->call('GET', 'log_administrator/excel?search=search&before_date=2100-01-01&after_date=2020-01-01&username=admin&action=Action'); 
+        $this->assertResponseStatus(200);
+
+        $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
+        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Aktivitas Administrator.xlsx"');
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     // public function testExcelWithFilter()
     // {

@@ -10,7 +10,7 @@ use App\Http\Requests;
 
 use App\Article;
 use App\Logs;
-use App\Logs_administrator;
+use App\LogsAdministrator;
 
 use Auth;
 use Session;
@@ -25,6 +25,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 class LogController extends Controller
 {
     private const SEARCH = 'search';
+    private const LOG_EXCEL_PATH = 'log/excel';
     private const LOG_PATH = 'admin/log';
     private const LOG_CREATED = 'logs.created_at';
     private const LOG_ACTION = "logs.action";
@@ -80,22 +81,18 @@ class LogController extends Controller
             $sort_by = $request->path() == $this::LOG_PATH ? $this::LOG_CREATED : $this::LOG_ADMIN_CREATED;
             $sort_type = 'desc';
 
+
+
             if($request->path() == $this::LOG_PATH){
-                $select = array(
-                    $this::LOG_ACTION,$this::LOG_PAGE,$this::LOG_SEARCH,$this::USER_NAME
-                );
+    
+                $select = array( $this::LOG_ACTION,$this::LOG_PAGE,$this::LOG_SEARCH,$this::USER_NAME );
                 $datalogs = Logs::select($select)->whereNotNull($this::LOG_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_USER);
-    
-                $select2 = array(
-                    $this::USER_NAME
-                );
+                
+                $select2 = array( $this::USER_NAME );
                 $datalogs2 = Logs::select($select2)->whereNotNull($this::LOG_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_USER);
-    
                 $username = $datalogs2->distinct()->orderBy(self::USERNAME)->get();
     
-                $select3 = array(
-                    $this::LOG_ACTION
-                );
+                $select3 = array(  $this::LOG_ACTION );
                 $datalogs3 = Logs::select($select3)->whereNotNull($this::LOG_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_USER);
                 $action = $datalogs3->distinct()->orderBy('logs.action')->get();
     
@@ -104,8 +101,6 @@ class LogController extends Controller
     
                     $logService = new LogService();
                     $logService->createLog('Search Log',"LOG", json_encode(array(self::SEARCH=>$search)) );
-                   
-    
                 }
     
                 if ($request->has($this::BEFORE)){
@@ -118,7 +113,19 @@ class LogController extends Controller
                     $after = $request->get($this::AFTER);
                 }
     
-            }else{ 
+            }else{
+
+                $select = array( $this::LOG_ADMIN_ACTION,$this::LOG_ADMIN_PAGE,$this::LOG_ADMIN_SEARCH,$this::USER_NAME );
+                $datalogs = LogsAdministrator::select($select)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
+                
+                $select2 = array( $this::USER_NAME );
+                $datalogs2 = LogsAdministrator::select($select2)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
+                 $username = $datalogs2->distinct()->orderBy(self::USERNAME)->get();
+
+                $select3 = array( $this::LOG_ADMIN_ACTION );
+                $datalogs3 = LogsAdministrator::select($select3)->whereNotNull($this::LOG_ADMIN_CREATED)->join($this::USER,$this::USER_ID,"=",$this::LOG_ADMIN_USER);
+                $action = $datalogs3->distinct()->orderBy($this::LOG_ADMIN_ACTION)->get();
+
                 if ($search != null){
                     $datalogs->where($this::ACTION,'like','%'.$search.'%');
                     $logService = new LogService();
@@ -188,10 +195,10 @@ class LogController extends Controller
 		// timestamp.
 		 
 
-        $sort_by = $request->path() == $this::LOG_PATH ? $this::LOG_CREATED : $this::LOG_ADMIN_CREATED;
+        $sort_by = $request->path() == $this::LOG_EXCEL_PATH ? $this::LOG_CREATED : $this::LOG_ADMIN_CREATED;
         $sort_type = 'desc';
 
-        if($request->path() == $this::LOG_PATH){
+        if($request->path() == $this::LOG_EXCEL_PATH){
             $select = array(
                 $this::LOG_ACTION,$this::LOG_PAGE,$this::LOG_SEARCH,$this::USER_NAME
             );
@@ -238,7 +245,7 @@ class LogController extends Controller
         $examsArray = []; 
         $no = 0;
         
-        if($request->path() == $this::LOG_PATH){
+        if($request->path() == $this::LOG_EXCEL_PATH){
             // Define the Excel spreadsheet headers
             $examsArray[] = [
                 'No',
@@ -264,6 +271,7 @@ class LogController extends Controller
             
             $logService = new LogService();
             $logService->createLog('download_excel',"LOG","" );
+            $fileName = 'Data Aktivitas User';
         }else{
             // Define the Excel spreadsheet headers
             $examsArray[] = [
@@ -291,17 +299,10 @@ class LogController extends Controller
             }  
             $logService = new LogService();  
             $logService->createLog('download_excel','Administrator Log');
+            $fileName = 'Data Aktivitas Administrator';
         }
-    
-		// Generate and return the spreadsheet
-		Excel::create($request->path() == $this::LOG_PATH ? 'Data Aktivitas User' : 'Data Aktivitas Administrator', function($excel) use ($examsArray) {
 
-			// Set the spreadsheet title, creator, and description
-		
-			// Build the spreadsheet, passing in the payments array
-			$excel->sheet('sheet1', function($sheet) use ($examsArray) {
-				$sheet->fromArray($examsArray, null, 'A1', false, false);
-			});
-		})->export('xlsx'); 
+        $excel = \App\Services\ExcelService::download($examsArray, $fileName);
+        return response($excel['file'], 200, $excel['headers']);
 	}
 }
