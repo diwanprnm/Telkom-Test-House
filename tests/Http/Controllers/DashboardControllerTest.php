@@ -13,37 +13,28 @@ class DashboardControllerTest extends TestCase
      *
      * @return void
      */
-    
-    public function testIndex()
-    {
-        $user = User::find('1');
-        $this->actingAs($user)->call('GET','admin/');
-
-        $this->assertResponseStatus(200);
-    }
 
     public function testIndexWithSearch()
     {
-        $company = App\Company::latest()->first();
-        $device = App\Device::latest()->first();
-        
-        //Visit as Admin
-        $user = User::where('id', '=', '1')->first();
-        $this->actingAs($user)->call('GET','admin?search=cari&type=1&status=2');
+        $this->actingAs(User::find(1))->call('GET','admin?search=cari&type=1&status=1');
+        $this->assertResponseStatus(200)->see('Beranda');
+        $this->actingAs(User::find(1))->call('GET','admin?search=cari&type=1&status=2');
+        $this->assertResponseStatus(200)->see('Beranda');
+        $this->actingAs(User::find(1))->call('GET','admin?search=cari&type=1&status=3');
+        $this->assertResponseStatus(200)->see('Beranda');
+        $this->actingAs(User::find(1))->call('GET','admin?search=cari&type=1&status=4');
+        $this->assertResponseStatus(200)->see('Beranda');
+    }
 
-        //check search log in db
-        $this->seeInDatabase('logs', [
-            'page' => 'DASHBOARD',
-            'data' => '{"search":"cari"}']);
-
-        //Status sukses dan judul FEEDBACK DAN COMPLAINT
+    public function testDownloadUserManual()
+    {
+		$this->actingAs(User::find(1))->call('GET',"adm_dashboard_autocomplete/query");
         $this->assertResponseStatus(200);
     }
 
     public function testAutocomplete()
     {
-        $user = User::find('1'); 
-		$response = $this->actingAs($user)->call('GET',"adm_dashboard_autocomplete/query");
+		$response = $this->actingAs(User::find('1'))->call('GET',"adm_dashboard_autocomplete/query");
         $this->assertEquals(200, $response->status());
     }
 }
