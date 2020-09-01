@@ -37,6 +37,7 @@ class EquipmentController extends Controller
      */
     private const SEARCH = 'search';
     private const CREATED = 'created_at';
+    private const EQUIPMENT_LC = 'equipment';
     private const EQUIPMENT = "EQUIPMENT";
     private const EQUIPMENT_HISTORY = 'equipmentHistory';
     private const EXAM_ID = 'examination_id';
@@ -220,7 +221,7 @@ class EquipmentController extends Controller
         return view('admin.equipment.show')
             ->with('item', $data[$this::EXAMINATION])
             ->with($this::LOCATION, $data[$this::LOCATION])
-            ->with('data', $data['equipment'])
+            ->with('data', $data[$this::EQUIPMENT_LC])
             ->with('history', $data[$this::EQUIPMENT_HISTORY])
         ;
     }
@@ -238,7 +239,7 @@ class EquipmentController extends Controller
         return view('admin.equipment.edit')
             ->with('item', $data[$this::EXAMINATION])
             ->with($this::LOCATION, $data[$this::LOCATION])
-            ->with('data', $data['equipment'])
+            ->with('data', $data[$this::EQUIPMENT_LC])
             ->with('history', $data[$this::EQUIPMENT_HISTORY])
         ;
     }
@@ -332,7 +333,7 @@ class EquipmentController extends Controller
 
         return array(
             $this::EQUIPMENT_HISTORY => $EquipmentHistory,
-            'equipment' => $equipment,
+            $this::EQUIPMENT_LC => $equipment,
             $this::LOCATION => $location,
             $this::EXAMINATION => $examination,
         );
