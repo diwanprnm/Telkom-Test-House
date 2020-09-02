@@ -19,7 +19,12 @@ class ExaminationNewChargeClientControllerTest extends TestCase
         $this->call('GET','NewChargeclient');
         $this->assertResponseStatus(200)->see($newExaminationChargeDetail->duration);
     }
-
+    public function testIndexFilter()
+    {
+        $this->call('GET','NewChargeclient?search=cari&category=Lab+CPE');
+        $this->assertResponseStatus(200);
+    }
+    
     public function testFilter()
     {
         $this->call('POST','filterNewCharge', [''] );
