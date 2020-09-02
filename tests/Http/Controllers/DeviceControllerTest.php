@@ -81,6 +81,7 @@ class DeviceControllerTest extends TestCase
             'valid_thru' => '2100-01-01',
         ]);   
         $this->assertRedirectedTo('admin/device', ['message' => 'Perangkat Lulus Uji successfully updated']);
+        $this->disableExceptionHandling();
     }
 
     public function testShow()
