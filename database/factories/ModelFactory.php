@@ -622,3 +622,18 @@ $factory->define(App\Logs::class, function (Faker\Generator $faker) {
         'updated_at' => Carbon\Carbon::now(),
     ];
 });
+
+$factory->define(App\CalibrationCharge::class, function (Faker\Generator $faker) {
+    return [
+        'id' => $faker->uuid,
+        'device_name' => $faker->word,
+        'price' => $faker->numberBetween(100,900).'000',
+        'is_active' => 1,
+        'created_by' => 1,
+        'updated_by' => 1,
+        'created_at' => Carbon\Carbon::now(),
+        'updated_at' => Carbon\Carbon::now()
+    ];
+});
+
+

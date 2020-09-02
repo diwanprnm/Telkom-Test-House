@@ -51,40 +51,40 @@ class CalibrationChargeController extends Controller
     {
         $currentUser = Auth::user();
        
-        if ($currentUser){
-            $message = null;
-            $paginate = 10;
-            $search = trim($request->input(self::SEARCH));
-            $status = -1;
-            
-            $query = CalibrationCharge::whereNotNull(self::CREATE);
+        if (!$currentUser){ return redirect('login');}
 
-            if ($search != null){
-                $query->where(self::DEVICE,'like','%'.$search.'%');
+        $message = null;
+        $paginate = 10;
+        $search = trim($request->input(self::SEARCH));
+        $status = -1;
+        
+        $query = CalibrationCharge::whereNotNull(self::CREATE);
 
-                $logService = new LogService();
-                $logService->createLog( "Search Calibration Charge",self::CALIBRATION, json_encode( array(self::SEARCH2=>$search)) );
-            }
-
-            if ($request->has(self::IS_ACTIVE)){
-                $status = $request->get(self::IS_ACTIVE);
-                if ($request->get(self::IS_ACTIVE) > -1){
-                    $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
-                }
-            }
-
-            $charge = $query->orderBy(self::DEVICE)->paginate($paginate);
-            
-            if (count($charge) == 0){
-                $message = 'Data not found';
-            }
-            
-            return view('admin.calibration.index')
-                ->with(self::MESSAGE, $message)
-                ->with('data', $charge)
-                ->with(self::SEARCH, $search)
-                ->with('status', $status);
+        if ($search != null){
+            $query->where(self::DEVICE,'like','%'.$search.'%');
+            $logService = new LogService();
+            $logService->createLog( "Search Calibration Charge",self::CALIBRATION, json_encode( array(self::SEARCH2=>$search)) );
         }
+
+        if ($request->has(self::IS_ACTIVE)){
+            $status = $request->get(self::IS_ACTIVE);
+            if ($request->get(self::IS_ACTIVE) > -1){
+                $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
+            }
+        }
+
+        $charge = $query->orderBy(self::DEVICE)->paginate($paginate);
+        
+        if (count($charge) == 0){
+            $message = 'Data not found';
+        }
+        
+        return view('admin.calibration.index')
+            ->with(self::MESSAGE, $message)
+            ->with('data', $charge)
+            ->with(self::SEARCH, $search)
+            ->with('status', $status);
+        
     }
 
     /**
@@ -124,19 +124,9 @@ class CalibrationChargeController extends Controller
 
             Session::flash(self::MESSAGE, 'Charge successfully created');
             return redirect(self::ADM);
-        } catch(Exception $e){
-            Session::flash(self::ERR, 'Save failed');
-            return redirect('/admin/calibration/create');
+        } catch(Exception $e){ return redirect('/admin/calibration/create')->with(self::ERR, 'Save failed');
         }
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-   
 
     /**
      * Show the form for editing the specified resource.
@@ -186,9 +176,7 @@ class CalibrationChargeController extends Controller
 
             Session::flash(self::MESSAGE, 'Charge successfully updated');
             return redirect(self::ADM);
-        } catch(Exception $e){
-            Session::flash(self::ERR, 'Save failed');
-            return redirect('/admin/calibration/'.$charge->id.'/edit');
+        } catch(Exception $e){ return redirect('/admin/calibration/'.$charge->id.'/edit')->with(self::ERR, 'Save failed');
         }
     }
 
@@ -201,22 +189,21 @@ class CalibrationChargeController extends Controller
     public function destroy($id)
     { 
         $charge = CalibrationCharge::find($id);
-        $oldData = $charge;
+        
         if ($charge){
             try{
+                $oldData = clone $charge;
                 $charge->delete();
-                
-                
+
                 $logService = new LogService();
                 $logService->createLog("Delete Calibration Charge",self::CALIBRATION,$oldData);
 
                 Session::flash(self::MESSAGE, 'Charge successfully deleted');
                 return redirect(self::ADM);
-            }catch (Exception $e){
-                Session::flash(self::ERR, 'Delete failed');
-                return redirect(self::ADM);
+            }catch (Exception $e){ return redirect(self::ADM)->with(self::ERR, 'Delete failed');
             }
         }
+        return redirect(self::ADM)->with(self::ERR, 'Charge not found');
     }
 	
 	public function autocomplete($query) {
@@ -271,17 +258,7 @@ class CalibrationChargeController extends Controller
         $logService = new LogService();
         $logService->createLog('download_excel',"Tarif Kalibrasi", ""); 
 
-        
-        // Generate and return the spreadsheet
-        Excel::create('Data Tarif Kalibrasi', function($excel) use ($examsArray) {
-
-            // Set the spreadsheet title, creator, and description
-           
-
-            // Build the spreadsheet, passing in the payments array
-            $excel->sheet('sheet1', function($sheet) use ($examsArray) {
-                $sheet->fromArray($examsArray, null, 'A1', false, false);
-            });
-        })->export('xlsx'); 
+        $excel = \App\Services\ExcelService::download($examsArray, 'Data Tarif Kalibrasi');
+        return response($excel['file'], 200, $excel['headers']);
     }
 }
