@@ -21,6 +21,7 @@ class ExaminationNewChargeClientControllerTest extends TestCase
     }
     public function testIndexFilter()
     {
+        factory(App\NewExaminationChargeDetail::class)->create();
         $this->call('GET','NewChargeclient?search=cari&category=Lab+CPE');
         $this->assertResponseStatus(200);
     }
