@@ -26,27 +26,18 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         return $app;
     }
 
-    protected function setUp()
-    {
-        /**
-         * This disables the exception handling to display the stacktrace on the console
-         * the same way as it shown on the browser
-         */
-        parent::setUp();
-        $this->disableExceptionHandling();
-    }
-
+    // Use this version if you're on PHP 7
     protected function disableExceptionHandling()
     {
         $this->app->instance(ExceptionHandler::class, new class extends Handler {
             public function __construct() {}
-
-            public function report(\Exception $e)
+            
+            public function report(Exception $e)
             {
                 // no-op
             }
-
-            public function render($request, \Exception $e) {
+            
+            public function render($request, Exception $e) {
                 throw $e;
             }
         });

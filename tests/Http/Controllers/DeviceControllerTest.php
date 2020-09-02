@@ -81,7 +81,24 @@ class DeviceControllerTest extends TestCase
             'valid_thru' => '2100-01-01',
         ]);   
         $this->assertRedirectedTo('admin/device', ['message' => 'Perangkat Lulus Uji successfully updated']);
-        $this->disableExceptionHandling();
+    }
+
+    public function testUpdateFail()
+    { 
+        $device = App\Device::latest()->first();
+        $response = $this->actingAs(User::find('1'))->call('PUT', 'admin/device/'.$device->ids,  [ 
+            'name' => str_random(10),
+            'mark' => str_random(10),
+            'capacity' => mt_rand(0,10),
+            'manufactured_by' => str_random(10),
+            'serial_number' =>mt_rand(0,10000),
+            'model' => str_random(10),
+            'test_reference' => str_random(10),
+            'cert_number' => mt_rand(0,10000),
+            'valid_from' => str_random(10),
+            'valid_thru' => '2100-01-01',
+        ]);   
+        $this->assertResponseStatus(405);
     }
 
     public function testShow()
