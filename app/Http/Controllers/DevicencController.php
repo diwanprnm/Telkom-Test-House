@@ -31,32 +31,32 @@ class DevicencController extends Controller
      */
 	private const SEARCH = 'search';
 	private const SEARCH2 = "search";
-	private const EXAM = 'examinations';
+	private const EXAMINATIONS = 'examinations';
 	private const DEVICE = 'devices';
-	private const EDI = 'examinations.device_id';
-	private const DEV_ID = 'devices.id';
+	private const EXAMINATIONS_DEVICE_ID = 'examinations.device_id';
+	private const DEVICE_ID = 'devices.id';
 	private const COMPANIES = 'companies';
 	private const COMP_ID = 'companies.id';
 	private const DEVICE_NAME = 'devices.name';
 	private const DEVICE_MARK = 'devices.mark';
-	private const DEVICE_MOD = 'devices.model';
+	private const DEVICE_MODEL = 'devices.model';
 	private const QA_DATE = 'qa_date';
 	private const ADMIN = '/admin/devicenc/';
-	private const EXAM_COMP = 'examinations.company_id';
-	private const EXAM_TYPE = 'examinations.examination_type_id';
-	private const EXAM_STAT = 'examinations.resume_status';
-	private const EXAM_STATUS = 'examinations.qa_status';
-	private const EXAM_PAS = 'examinations.qa_passed';
-	private const EXAM_CERTI = 'examinations.certificate_status';
-	private const DEVICE_STAT='devices.status';
-	private const EXAM_DATE = 'examinations.qa_date';
-	private const DEVICE_VAL = 'devices.valid_thru';
+	private const EXAMINATIONS_COMP = 'examinations.company_id';
+	private const EXAMINATIONS_TYPE_ID = 'examinations.examination_type_id';
+	private const EXAMINATIONS_RESUME_STATUS = 'examinations.resume_status';
+	private const EXAMINATIONS_QA_STATUS = 'examinations.qa_status';
+	private const EXAMINATIONS_QA_PASSED = 'examinations.qa_passed';
+	private const EXAMINATIONS_CERTIFICATION_STATUTS = 'examinations.certificate_status';
+	private const DEVICE_STATUS='devices.status';
+	private const EXAMINATIONS_QA_DATE = 'examinations.qa_date';
+	private const DEVICE_VALID_THRU = 'devices.valid_thru';
 	private const COMPANIES_NAME = 'companies.name';
 	
 	public const DATA = ['examinations.price AS totalBiaya',
 	'examinations.spk_code',
 	'examinations.jns_perusahaan',
-	self::EXAM_DATE,
+	self::EXAMINATIONS_QA_DATE,
 	'companies.name AS namaPerusahaan',
 	'devices.id as device_id',
 	'devices.name AS namaPerangkat',
@@ -65,7 +65,7 @@ class DevicencController extends Controller
 	'devices.capacity AS kapasitas',
 	'devices.test_reference AS standarisasi',
 	'devices.valid_from',
-	self::DEVICE_VAL,
+	self::DEVICE_VALID_THRU,
 	'devices.serial_number',
 	'devices.manufactured_by',
 	self::COMPANIES_NAME,
@@ -95,91 +95,89 @@ class DevicencController extends Controller
     {
         $currentUser = Auth::user();
 
-        if ($currentUser){
-            $message = null;
-            $messageAfter = null;
-            $paginate = 1000;
-            $search = trim($request->input($this::SEARCH));
-            $search2 = trim($request->input('search2'));
+        if (!$currentUser){ return redirect('login');}
 
-            $tab = $request->input('tab');
-            $expDate = Carbon::now()->subMonths(6);
-            $where = array(
-            	self::EXAM_TYPE=>1,
-            	self::EXAM_STAT=>1,
-            	self::EXAM_STATUS=>1,
-            	self::EXAM_PAS=>1,
-            	self::EXAM_CERTI=>1,
-            	self::EXAM_DATE=>$expDate,
-            	self::DEVICE_STAT=>1
-            );
-            $dev = DB::table($this::EXAM)
-			->join($this::DEVICE, $this::EDI, '=', $this::DEV_ID)
-			->join($this::COMPANIES, self::EXAM_COMP, '=', $this::COMP_ID)
+		$message = null;
+		$messageAfter = null;
+		$paginate = 1000;
+		$search = trim($request->input($this::SEARCH));
+		$search2 = trim($request->input('search2'));
+
+		$tab = $request->input('tab');
+		$expDate = Carbon::now()->subMonths(6);
+		$where = array(
+			self::EXAMINATIONS_TYPE_ID=>1,
+			self::EXAMINATIONS_RESUME_STATUS=>1,
+			self::EXAMINATIONS_QA_STATUS=>1,
+			self::EXAMINATIONS_QA_PASSED=>-1,
+			self::EXAMINATIONS_CERTIFICATION_STATUTS=>1,
+		);
+		$dev = DB::table($this::EXAMINATIONS)
+			->join($this::DEVICE, $this::EXAMINATIONS_DEVICE_ID, '=', $this::DEVICE_ID)
+			->join($this::COMPANIES, self::EXAMINATIONS_COMP, '=', $this::COMP_ID)
 			->select(self::DATA)
 			->where($where) 
-			->whereDate(self::EXAM_DATE,'>=',$expDate)
-			->where(self::DEVICE_STAT, 1);
+			->whereDate(self::EXAMINATIONS_QA_DATE,'>=',$expDate)
+			->where(self::DEVICE_STATUS, 1);
 
-			$afterDev = 
-			DB::table($this::EXAM)
-			->join($this::DEVICE, $this::EDI, '=', $this::DEV_ID)
-			->join($this::COMPANIES, self::EXAM_COMP, '=', $this::COMP_ID)
+		$afterDev = 
+		DB::table($this::EXAMINATIONS)
+			->join($this::DEVICE, $this::EXAMINATIONS_DEVICE_ID, '=', $this::DEVICE_ID)
+			->join($this::COMPANIES, self::EXAMINATIONS_COMP, '=', $this::COMP_ID)
 			->select(self::DATA)  
 			->where($where) 
 			->where(function($q) use($expDate){
-					$q->whereDate(self::EXAM_DATE,'<',$expDate)
-						->orWhere(self::DEVICE_STAT, '-1');
-				});
+				$q->whereDate(self::EXAMINATIONS_QA_DATE,'<',$expDate)
+					->orWhere(self::DEVICE_STATUS, '-1');
+			});
+		
+		if ($search != null){
+			$dev->where(function($q) use($search){
+				$q->where($this::DEVICE_NAME,'like','%'.$search.'%')
+					->orWhere(self::COMPANIES_NAME,'like','%'.$search.'%')
+					->orWhere(self::DEVICE_MARK,'like','%'.$search.'%')
+					->orWhere($this::DEVICE_MODEL,'like','%'.$search.'%');
+			});
 			
-            if ($search != null){
-        		$dev->where(function($q) use($search){
-					$q->where($this::DEVICE_NAME,'like','%'.$search.'%')
-						->orWhere(self::COMPANIES_NAME,'like','%'.$search.'%')
-						->orWhere(self::DEVICE_MARK,'like','%'.$search.'%')
-						->orWhere($this::DEVICE_MOD,'like','%'.$search.'%');
-				});
-				
-				$logService = new LogService();
-				$logService->createLog("Search Device","DEVICE", json_encode( array(self::SEARCH2=>$search)) );
-				
-            }
+			$logService = new LogService();
+			$logService->createLog("Search Device","DEVICE", json_encode( array(self::SEARCH2=>$search)) );
+			
+		}
 
-            if ($search2 != null){
-        		$afterDev->where(function($q) use($search2){
-					$q->where($this::DEVICE_NAME,'like','%'.$search2.'%')
-						->orWhere(self::COMPANIES_NAME,'like','%'.$search2.'%')
-						->orWhere(self::DEVICE_MARK,'like','%'.$search2.'%')
-						->orWhere($this::DEVICE_MOD,'like','%'.$search2.'%');
-				});
-				
-				$logService = new LogService();
-				$logService->createLog("Search Device","DEVICE", json_encode( array(self::SEARCH2=>$search)) );
-				
-            }
+		if ($search2 != null){
+			$afterDev->where(function($q) use($search2){
+				$q->where($this::DEVICE_NAME,'like','%'.$search2.'%')
+					->orWhere(self::COMPANIES_NAME,'like','%'.$search2.'%')
+					->orWhere(self::DEVICE_MARK,'like','%'.$search2.'%')
+					->orWhere($this::DEVICE_MODEL,'like','%'.$search2.'%');
+			});
+			
+			$logService = new LogService();
+			$logService->createLog("Search Device","DEVICE", json_encode( array(self::SEARCH2=>$search)) );
+		}
 
-			$data = $dev->orderBy($this::QA_DATE, 'desc')->paginate($paginate);
-            
-            if (count($data) == 0){
-                $message = 'Data not found';
-            }
-			
-			$dataAfter = $afterDev->orderBy($this::QA_DATE, 'desc')->paginate($paginate);
-			$dataAfter->setPageName('other_page');
-            
-            if (count($dataAfter) == 0){
-                $messageAfter = 'Data not found';
-            }
-			
-            return view('admin.devicenc.index')
-                ->with('tab', $tab)
-                ->with('message', $message)
-                ->with('messageAfter', $messageAfter)
-                ->with('data', $data)
-                ->with('dataAfter', $dataAfter)
-                ->with($this::SEARCH, $search)
-                ->with('search2', $search2);
-        }
+		$data = $dev->orderBy($this::QA_DATE, 'desc')->paginate($paginate);
+		
+		if (count($data) == 0){
+			$message = 'Data not found';
+		}
+		
+		$dataAfter = $afterDev->orderBy($this::QA_DATE, 'desc')->paginate($paginate);
+		$dataAfter->setPageName('other_page');
+		
+		if (count($dataAfter) == 0){
+			$messageAfter = 'Data not found';
+		}
+		
+		return view('admin.devicenc.index')
+			->with('tab', $tab)
+			->with('message', $message)
+			->with('messageAfter', $messageAfter)
+			->with('data', $data)
+			->with('dataAfter', $dataAfter)
+			->with($this::SEARCH, $search)
+			->with('search2', $search2)
+		;
     }
 
     public function excel(Request $request) 
@@ -192,48 +190,40 @@ class DevicencController extends Controller
         $search = trim($request->input($this::SEARCH));
         $tab = $request->input('tab');
         $expDate = Carbon::now()->subMonths(6);   
-        $dev = DB::table($this::EXAM)
-		->join($this::DEVICE, $this::EDI, '=', $this::DEV_ID)
-		->join($this::COMPANIES, self::EXAM_COMP, '=', $this::COMP_ID)
-		->select(self::DATA
-				
-				)
-		->where(self::EXAM_TYPE,'=','1')
-		->where(self::EXAM_STAT,'=','1')
-		->where(self::EXAM_STATUS,'=','1')
-		->where(self::EXAM_PAS,'=','-1')
-		->where(self::EXAM_CERTI,'=','1')
-		->whereDate(self::EXAM_DATE,'>=',$expDate)
-		->where(self::DEVICE_STAT, 1)
+        $dev = DB::table($this::EXAMINATIONS)
+			->join($this::DEVICE, $this::EXAMINATIONS_DEVICE_ID, '=', $this::DEVICE_ID)
+			->join($this::COMPANIES, self::EXAMINATIONS_COMP, '=', $this::COMP_ID)
+			->select(self::DATA)
+			->where(self::EXAMINATIONS_TYPE_ID,'=','1')
+			->where(self::EXAMINATIONS_RESUME_STATUS,'=','1')
+			->where(self::EXAMINATIONS_QA_STATUS,'=','1')
+			->where(self::EXAMINATIONS_QA_PASSED,'=','-1')
+			->where(self::EXAMINATIONS_CERTIFICATION_STATUTS,'=','1')
+			->whereDate(self::EXAMINATIONS_QA_DATE,'>=',$expDate)
+			->where(self::DEVICE_STATUS, 1)
 		;
-		$afterDev = DB::table($this::EXAM)
-		->join($this::DEVICE, $this::EDI, '=', $this::DEV_ID)
-		->join($this::COMPANIES, self::EXAM_COMP, '=', $this::COMP_ID)
-		->select(self::DATA
-				
-				)
-		->where(self::EXAM_TYPE,'=','1')
-		->where(self::EXAM_STAT,'=','1')
-		->where(self::EXAM_STATUS,'=','1')
-		->where(self::EXAM_PAS,'=','-1')
-		->where(self::EXAM_CERTI,'=','1')
-		->where(function($q) use($expDate){
-					$q->whereDate(self::EXAM_DATE,'<',$expDate)
-						->orWhere(self::DEVICE_STAT, '-1');
-				});
-		
-
-		
-			
-		
+		$afterDev = DB::table($this::EXAMINATIONS)
+			->join($this::DEVICE, $this::EXAMINATIONS_DEVICE_ID, '=', $this::DEVICE_ID)
+			->join($this::COMPANIES, self::EXAMINATIONS_COMP, '=', $this::COMP_ID)
+			->select(self::DATA)
+			->where(self::EXAMINATIONS_TYPE_ID,'=','1')
+			->where(self::EXAMINATIONS_RESUME_STATUS,'=','1')
+			->where(self::EXAMINATIONS_QA_STATUS,'=','1')
+			->where(self::EXAMINATIONS_QA_PASSED,'=','-1')
+			->where(self::EXAMINATIONS_CERTIFICATION_STATUTS,'=','1')
+			->where(function($q) use($expDate){
+			$q->whereDate(self::EXAMINATIONS_QA_DATE,'<',$expDate)
+				->orWhere(self::DEVICE_STATUS, '-1');
+		});
 
         if ($search != null){
         	if($tab == 'tab-2'){
+				
         		$afterDev->where(function($q) use($search){
 					$q->where($this::DEVICE_NAME,'like','%'.$search.'%')
 						->orWhere(self::COMPANIES_NAME,'like','%'.$search.'%')
 						->orWhere(self::DEVICE_MARK,'like','%'.$search.'%')
-						->orWhere($this::DEVICE_MOD,'like','%'.$search.'%');
+						->orWhere($this::DEVICE_MODEL,'like','%'.$search.'%');
 				});
 
 				$data = $afterDev->orderBy($this::QA_DATE, 'desc')->get();
@@ -242,7 +232,7 @@ class DevicencController extends Controller
 					$q->where($this::DEVICE_NAME,'like','%'.$search.'%')
 						->orWhere(self::COMPANIES_NAME,'like','%'.$search.'%')
 						->orWhere(self::DEVICE_MARK,'like','%'.$search.'%')
-						->orWhere($this::DEVICE_MOD,'like','%'.$search.'%');
+						->orWhere($this::DEVICE_MODEL,'like','%'.$search.'%');
 				});
 
 				$data = $dev->orderBy($this::QA_DATE, 'desc')->get();
@@ -281,7 +271,6 @@ class DevicencController extends Controller
         // and append it to the payments array.
         $no = 1;
 		foreach ($data as $row) {
-		
 			$examsArray[] = [
 				$no,
 				// $row->jns_perusahaan,
@@ -311,46 +300,33 @@ class DevicencController extends Controller
 		
 		$logService = new LogService();
 		$logService->createLog("Download Data Perangkat Tidak Lulus Uji","Perangkat Tidak Lulus Uji", "" );
-				
-        // Generate and return the spreadsheet
-		 Excel::create('Data Perangkat Tidak Lulus Uji', function($excel) use ($examsArray)
-		 {
-
-            // Set the spreadsheet title, creator, and description
-            // Build the spreadsheet, passing in the payments array
-            $excel->sheet('sheet1', function($sheet) use ($examsArray) {
-                $sheet->fromArray($examsArray, null, 'A1', false, false);
-            });
-		 })->export('xlsx'); 
 		
+		$excel = \App\Services\ExcelService::download($examsArray, 'Data Perangkat Tidak Lulus Uji');
+		return response($excel['file'], 200, $excel['headers']);		
     }
 
     public function moveData($id,$reason = null)
     { 
         $logs_devicenc = NULL;
-
         $devicenc = Device::find($id);
 
         if($devicenc){
-        	$devicenc->status = '-1';
-
         	try{
-        		$devicenc->save();
-        		$logs_devicenc = $devicenc;
-            
+				$devicenc->status = '-1';
+				$devicenc->save();
+				
+        		$logs_devicenc = clone $devicenc;
 				$logService = new LogService();
 				$logService->createLog("Memindahkan Data Perangkat Menjadi Layak Uji Ulang","Perangkat Tidak Lulus Uji",$logs_devicenc );
 		
-
 	            Session::flash('message', 'Successfully Move Data');
 	            return redirect($this::ADMIN);
-        	} catch(Exception $e){
-	            Session::flash('error', 'Move failed');
-	            return redirect($this::ADMIN);
+        	} catch(Exception $e){ return redirect($this::ADMIN)->with('error', 'Move failed');
 		    }
         }else{
-            Session::flash('error', 'Undefined Data');
-            return redirect($this::ADMIN);
+			return redirect($this::ADMIN)
+				->with('error', 'Undefined Data')
+			;
         }
 
     }
