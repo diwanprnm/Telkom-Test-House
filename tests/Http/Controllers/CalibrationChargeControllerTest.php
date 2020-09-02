@@ -27,7 +27,7 @@ class CalibrationChargeControllerTest extends TestCase
 			'price' => mt_rand(0,10000),
 			'is_active' => mt_rand(0,1)
 		]);
-        $this->assertRedirectedTo('admin/calibration', ['message' => 'Charge successfully created']);
+		$this->assertRedirectedTo('admin/calibration', ['message' => 'Charge successfully created']);
 	}
 
 	public function testEdit()
@@ -45,33 +45,34 @@ class CalibrationChargeControllerTest extends TestCase
 			'price' => mt_rand(0,10000),
 			'is_active' => mt_rand(0,1)
 		]);
-        $this->assertRedirectedTo('admin/calibration', ['message' => 'Charge successfully updated']);
+		$this->assertRedirectedTo('admin/calibration', ['message' => 'Charge successfully updated']);
 	}
 
+	public function testAutocomplete()
+	{
+		$this->actingAs(User::find('1'))->call('GET',"admin/adm_calibration_autocomplete/'cari'");
+		$this->assertResponseStatus(200);
+	}
+
+	public function testExcel()
+	{
+		$response = $this->actingAs(User::find(1))->call('GET','calibration/excel?search=cari&is_active=1');
+		$this->assertResponseStatus(200);
+		$this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
+		$this->assertTrue($response->headers->get('content-description') == 'File Transfer');
+		$this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Tarif Kalibrasi.xlsx"');
+	}
+	
 	public function testDestroy()
 	{
 		$calibration = CalibrationCharge::latest()->first();
 		$this->actingAs(User::find('1'))->call('DELETE', "admin/calibration/$calibration->id");  
-        $this->assertRedirectedTo('admin/calibration', ['message' => 'Charge successfully deleted']);
+		$this->assertRedirectedTo('admin/calibration', ['message' => 'Charge successfully deleted']);
 	}
 
 	public function testDestroyNotFound()
 	{ 
 		$this->actingAs(User::find('1'))->call('DELETE', 'admin/calibration/dataNotFound');  
-        $this->assertRedirectedTo('admin/calibration', ['error' => 'Charge not found']);
+		$this->assertRedirectedTo('admin/calibration', ['error' => 'Charge not found']);
 	}
-
-	public function testAutocomplete()
-    {
-		$this->actingAs(User::find('1'))->call('GET',"admin/adm_calibration_autocomplete/'cari'");
-        $this->assertResponseStatus(200);
-    }
-	public function testExcel()
-    {
-        $response = $this->actingAs(User::find(1))->call('GET','calibration/excel?search=cari&is_active=-1');
-        $this->assertResponseStatus(200);
-        $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
-        $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
-        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Tarif Kalibrasi.xlsx"');
-    }
 }
