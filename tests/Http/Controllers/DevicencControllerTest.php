@@ -40,7 +40,7 @@ class DevicencControllerTest extends TestCase
         $deviceLayakUjiUlang = factory(App\Device::class)->create(['status' => 1]);
         factory(App\Examination::class)->create(['qa_passed' => -1, 'examination_type_id' => 1,'device_id' => $deviceLayakUjiUlang->id]);
 
-        $response = $this->actingAs(User::find('1'))->call('get',"devicenc/excel?search=$deviceLayakUjiUlang->name&tab=tab-2");
+        $response = $this->actingAs(User::find('1'))->call('get',"devicenc/excel?search=$deviceLayakUjiUlang->name&tab=tab-1");
         $this->assertEquals(200, $response->status());
         $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
         $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
@@ -63,6 +63,14 @@ class DevicencControllerTest extends TestCase
     {
         $device = factory(App\Device::class)->create();
         $response = $this->actingAs(User::find('1'))->call('GET', "admin/devicenc/$device->id/test-reason/moveData", [
+            'status'=>1
+        ]);
+        $this->assertEquals(302, $response->status());
+    }
+
+    public function testMoveDataNotFound()
+    {
+        $response = $this->actingAs(User::find('1'))->call('GET', "admin/devicenc/dataNotFound/test-reason/moveData", [
             'status'=>1
         ]);
         $this->assertEquals(302, $response->status());
