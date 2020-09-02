@@ -1,8 +1,5 @@
 <?php
 
-use App\Exceptions\Handler;
-use Illuminate\Contracts\Debug\ExceptionHandler;
-
 class TestCase extends Illuminate\Foundation\Testing\TestCase
 {
     /**
@@ -24,25 +21,5 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 
         return $app;
-    }
-
-    protected function disableExceptionHandling()
-    {
-        app()->instance(ExceptionHandler::class, new PassThroughHandler);
-    }
-}
-
-class PassThroughHandler extends Handler
-{
-    public function __construct() {}
-
-    public function report(Exception $e)
-    {
-        // no-op
-    }
-
-    public function render($request, Exception $e)
-    {
-        throw $e;
     }
 }
