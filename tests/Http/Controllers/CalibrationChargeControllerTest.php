@@ -62,6 +62,15 @@ class CalibrationChargeControllerTest extends TestCase
 		$this->assertTrue($response->headers->get('content-description') == 'File Transfer');
 		$this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Tarif Kalibrasi.xlsx"');
 	}
+
+	public function testExcelData()
+	{
+		$response = $this->actingAs(User::find(1))->call('GET','calibration/excel');
+		$this->assertResponseStatus(200);
+		$this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
+		$this->assertTrue($response->headers->get('content-description') == 'File Transfer');
+		$this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Tarif Kalibrasi.xlsx"');
+	}
 	
 	public function testDestroy()
 	{
