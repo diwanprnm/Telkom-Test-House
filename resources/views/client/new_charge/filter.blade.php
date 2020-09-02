@@ -14,32 +14,32 @@
 					</tr>
 				</thead>
 				<tbody>
-					@php 
-						$no=1; if(count($data)>0){
-					@endphp
-					@foreach($data as $item)
-					<tr>
-						<td class="center">@php echo $no; @endphp</td>
-						<td class="center">{{ $item['stel'] }}</td>
-						<td class="center">{{ $item['device_name'] }}</td>
-						<td class="center">{{ $item['category'] }}</td>
-						<td class="center">{{ $item['duration'] }}</td>
-						<td class="center">{{ $item['price'] }}</td>
-					</tr>
-					@php $no++ @endphp
-					@endforeach
-					@php }else{@endphp
-					<div class="table-responsive font-table">
-						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1">
-							<caption></caption>
-							<thead>
-								<tr class="center">
-									<th colspan="3" style="text-align: center;" scope="colgroup">{{ trans('translate.data_not_found') }}</th>
-								</tr>
-							</thead>
-						</table>
-					</div>
-					@php }@endphp
+					@php $no=1; @endphp
+
+					@if (count($data)>0)
+						@foreach($data as $item)
+						<tr>
+							<td class="center">@php echo $no; @endphp</td>
+							<td class="center">{{ $item['stel'] }}</td>
+							<td class="center">{{ $item['device_name'] }}</td>
+							<td class="center">{{ $item['category'] }}</td>
+							<td class="center">{{ $item['duration'] }}</td>
+							<td class="center">{{ $item['price'] }}</td>
+						</tr>
+						@php $no++ @endphp
+						@endforeach
+					@else
+						<div class="table-responsive font-table">
+							<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1">
+								<caption></caption>
+								<thead>
+									<tr class="center">
+										<th colspan="3" style="text-align: center;" scope="colgroup">{{ trans('translate.data_not_found') }}</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+					@endif
 				</tbody>
 			</table>
 		</div>

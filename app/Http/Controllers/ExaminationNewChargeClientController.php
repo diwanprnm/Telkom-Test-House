@@ -13,6 +13,7 @@ use App\ExaminationLab;
 
 use App\NewExaminationCharge;
 use App\NewExaminationChargeDetail;
+use App\ExaminationCharge;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -20,6 +21,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 class ExaminationNewChargeClientController extends Controller
 {
     private const CATEGORY = 'category';
+    private const DEVICE_NAME = 'device_name';
 
     /**
      * Display a listing of the resource.
@@ -32,32 +34,40 @@ class ExaminationNewChargeClientController extends Controller
             $paginate = 10;
             $search = trim($request->input('search'));
 			$category = trim($request->input(self::CATEGORY));
+            $dateNewCharge = null;
+            $examinationCharge = null;
+            $page = "NewChargeclient";
 
             $examLab = ExaminationLab::all();
-
             $newCharge = NewExaminationCharge::where("is_implement",0)->orderBy("valid_from","desc")->limit(1)->get();
-            $dateNewCharge = date("j M Y", strtotime($newCharge[0]->valid_from));
-            $query = DB::table('new_examination_charges_detail')
-                ->join('new_examination_charges', 'new_examination_charges_detail.new_exam_charges_id', '=', 'new_examination_charges.id')
-                ->where('new_examination_charges.id','=',$newCharge[0]->id);
 
-            if ($search != null){
-                $query = $query->where('new_examination_charges_detail.device_name','like','%'.$search.'%');
-            }
-			
-            if ($request->has(self::CATEGORY)){
-                $category = $request->get(self::CATEGORY);
-                if($request->input(self::CATEGORY) != 'all'){
-                    $query->where(self::CATEGORY, $request->get(self::CATEGORY));
+            if(count($newCharge))
+            {
+                $dateNewCharge = date("j M Y", strtotime($newCharge[0]->valid_from));
+                $query = DB::table('new_examination_charges_detail')
+                    ->join('new_examination_charges', 'new_examination_charges_detail.new_exam_charges_id', '=', 'new_examination_charges.id')
+                    ->where('new_examination_charges.id','=',$newCharge[0]->id)
+                ;
+            
+                if ($search){
+                    $query = $query->where('new_examination_charges_detail.device_name','like','%'.$search.'%');
+                }
+                
+                if ($request->has(self::CATEGORY)){
+                    $category = $request->get(self::CATEGORY);
+                    if($request->input(self::CATEGORY) != 'all'){
+                        $query->where(self::CATEGORY, $request->get(self::CATEGORY));
+                    }
+                }
+
+                $examinationCharge = $query->orderByRaw('new_examination_charges_detail.category, new_examination_charges_detail.device_name')
+                        ->paginate($paginate);
+                        
+                if (count($examinationCharge) == 0){
+                    $message = 'Data not found';
                 }
             }
 
-			$examinationCharge = $query->orderByRaw('new_examination_charges_detail.category, new_examination_charges_detail.device_name')
-                    ->paginate($paginate);
-            if (count($examinationCharge) == 0){
-                $message = 'Data not found';
-            }
-			 $page = "NewChargeclient";
             return view('client.new_charge.index')
                 ->with('dateNewCharge', $dateNewCharge)
                 ->with('examLab', $examLab)
@@ -76,11 +86,11 @@ class ExaminationNewChargeClientController extends Controller
 		if ($category != null){
 			$data = ExaminationCharge::whereNotNull('created_at')
 				->where(self::CATEGORY,'=',''.$category.'')
-				->orderBy('device_name')
+				->orderBy(self::DEVICE_NAME)
 				->paginate($paginate);
 		}else{
 			$data = ExaminationCharge::whereNotNull('created_at')
-				->orderBy('device_name')
+				->orderBy(self::DEVICE_NAME)
 				->paginate($paginate);
 		}
 		return response()
@@ -90,8 +100,8 @@ class ExaminationNewChargeClientController extends Controller
 	
 	public function autocomplete($query) {
         return ExaminationCharge::select('device_name as autosuggest')
-                ->where('device_name', 'like','%'.$query.'%')
-				->orderBy('device_name')
+                ->where(self::DEVICE_NAME, 'like','%'.$query.'%')
+				->orderBy(self::DEVICE_NAME)
                 ->take(5)
                 ->distinct()
                 ->get();
