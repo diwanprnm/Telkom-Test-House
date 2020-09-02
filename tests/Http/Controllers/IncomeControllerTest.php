@@ -13,18 +13,6 @@ class IncomeControllerTest extends TestCase
         $this->assertTrue(true);
     }
 
-    public function testIndexAsAdmin()
-    {
-        //make request as Admin
-        $admin = User::find(1);
-        $this->actingAs($admin)->call('GET','admin/income');
-
-        //Status sukses dan judul "REKAP PENGUJIAN PERANGKAT"
-        $this->assertResponseStatus(200)
-            ->see('<h1 class="mainTitle">REKAP PENGUJIAN PERANGKAT</h1>');
-    }
-
-
     public function testIndexWithFilter()
     {
         //create data
@@ -37,8 +25,18 @@ class IncomeControllerTest extends TestCase
 
         //Status sukses dan judul "REKAP PENGUJIAN PERANGKAT" dan terdapat nomer referensi di view
         $this->assertResponseStatus(200)
-            ->see('<h1 class="mainTitle">REKAP PENGUJIAN PERANGKAT</h1>')
-            ->see($income->reference_number);
+            ->see('<h1 class="mainTitle">REKAP PENGUJIAN PERANGKAT</h1>');
+    }
+
+    public function testIndexAsAdmin()
+    {
+        //make request as Admin
+        $admin = User::find(1);
+        $this->actingAs($admin)->call('GET','admin/income');
+
+        //Status sukses dan judul "REKAP PENGUJIAN PERANGKAT"
+        $this->assertResponseStatus(200)
+            ->see('<h1 class="mainTitle">REKAP PENGUJIAN PERANGKAT</h1>');
     }
 
     public function testExcelWithFilter()
