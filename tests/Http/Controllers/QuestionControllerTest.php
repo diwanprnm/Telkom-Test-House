@@ -69,13 +69,18 @@ class QuestionControllerTest extends TestCase
         $this->assertEquals(302, $response->status());
 	     
 	}
-     public function test_delete_question()
-	 { 
+	public function test_delete_question()
+	{ 
 		$admin = User::find('1');
-        $quest = Question::latest()->first();
+		$quest = Question::latest()->first();
 		$response =  $this->actingAs($admin)->call('DELETE', 'admin/question/'.$quest->id);   
-		
-        $this->assertEquals(302, $response->status());
-	     
-	 }
+
+		$this->assertEquals(302, $response->status());
+	}
+
+	public function testDeleteQuestionNotFound()
+	{ 
+		$response =  $this->actingAs(User::find('1'))->call('DELETE', 'admin/question/dataNotFound');   
+		$this->assertEquals(302, $response->status());
+	}
 }

@@ -47,36 +47,38 @@ class QuestionController extends Controller
     {
         $currentUser = Auth::user();
 
-        if ($currentUser){
-            $message = null;
-            $paginate = 10;
-            $search = trim($request->input($this::SEARCH));
-            
-            if ($search != null){
-                $data = Question::whereNotNull('created_at')
-                    ->where('name','like','%'.$search.'%')
-                    ->orderBy('name')
-                    ->paginate($paginate);
+        if (!$currentUser){ return redirect('login');}
 
-                    $logService = new LogService();
-                    $logService->createLog( "Search Question Category",self::QUESTION, json_encode( array("search"=>$search)) );
-    
-            }else{
-                $query = Question::whereNotNull('created_at'); 
-                
-                $data = $query->orderBy('name')
-                            ->paginate($paginate);
-            }
+        $message = null;
+        $paginate = 10;
+        $search = trim($request->input($this::SEARCH));
+        
+        if ($search){
+            $data = Question::whereNotNull('created_at')
+                ->where('name','like','%'.$search.'%')
+                ->orderBy('name')
+                ->paginate($paginate)
+            ;
+
+            $logService = new LogService();
+            $logService->createLog( "Search Question Category",self::QUESTION, json_encode( array("search"=>$search)) );
+
+        }else{
+            $query = Question::whereNotNull('created_at'); 
             
-            if (count($data) == 0){
-                $message = 'Data not found';
-            }
-            
-            return view('admin.question.index')
-                ->with($this::MESSA, $message)
-                ->with('data', $data)
-                ->with($this::SEARCH, $search) ;
+            $data = $query->orderBy('name')
+                        ->paginate($paginate);
         }
+        
+        if (count($data) == 0){
+            $message = 'Data not found';
+        }
+        
+        return view('admin.question.index')
+            ->with($this::MESSA, $message)
+            ->with('data', $data)
+            ->with($this::SEARCH, $search) ;
+        
     }
 
     /**
@@ -117,9 +119,7 @@ class QuestionController extends Controller
 			
             Session::flash($this::MESSA, 'question successfully created');
 			return redirect($this::ADMIN);
-		} catch(Exception $e){
-			Session::flash($this::ERR, 'Save failed');
-			return redirect('/admin/question/create');
+		} catch(Exception $e){ return redirect('/admin/question/create')->with($this::ERR, 'Save failed');
 		}
     }
 
@@ -167,9 +167,7 @@ class QuestionController extends Controller
             
             Session::flash($this::MESSA, 'Question successfully updated');
             return redirect($this::ADMIN);
-        } catch(Exception $e){
-            Session::flash($this::ERR, 'Save failed');
-            return redirect('/admin/question/'.$data->id.'/edit');
+        } catch(Exception $e){ return redirect('/admin/question/'.$data->id.'/edit')->with($this::ERR, 'Save failed');
         }
     }
 
@@ -194,9 +192,7 @@ class QuestionController extends Controller
 
                 Session::flash($this::MESSA, 'Question successfully deleted');
                 return redirect($this::ADMIN);
-            }catch (Exception $e){
-                Session::flash($this::ERR, 'Delete failed');
-                return redirect($this::ADMIN);
+            }catch (Exception $e){ return redirect($this::ADMIN)->with($this::ERR, 'Delete failed');
             }
         }else{
              Session::flash($this::ERR, 'Question Not Found');
