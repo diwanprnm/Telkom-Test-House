@@ -63,9 +63,7 @@ class ExaminationNewChargeClientController extends Controller
                 $examinationCharge = $query->orderByRaw('new_examination_charges_detail.category, new_examination_charges_detail.device_name')
                         ->paginate($paginate);
                         
-                if (count($examinationCharge) == 0){
-                    $message = 'Data not found';
-                }
+                if (count($examinationCharge) == 0){ $message = 'Data not found'; }
             }
 
             return view('client.new_charge.index')

@@ -15,8 +15,9 @@ class ExaminationNewChargeClientControllerTest extends TestCase
 
     public function testIndex()
     {
+        $newExaminationChargeDetail = factory(App\NewExaminationChargeDetail::class)->create();
         $this->call('GET','NewChargeclient');
-        $this->assertResponseStatus(200)->see(factory(App\NewExaminationChargeDetail::class)->create()->duration);
+        $this->assertResponseStatus(200)->see($newExaminationChargeDetail->duration);
     }
 
     public function testFilter()
