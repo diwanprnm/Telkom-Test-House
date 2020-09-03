@@ -36,29 +36,29 @@ class ProfileControllerTest extends TestCase
 	    
         $this->assertEquals(302, $response->status()); 
 	}
-    public function test_update_company()
-	{ 
-	    $user = User::find(1);  
-	    $company = Company::find(1);  
-		$response =  $this->actingAs($user)->call('POST', '/client/company', 
-		[ 
-	        'hide_id_company' => $company->id,   
-	        'name' => str_random(10),   
-	        'address' => str_random(10), 
-	        'plg_id' => str_random(10), 
-	        'nib' => 1, 
-	        'city' => str_random(10), 
-	        'email' => str_random(10), 
-	        'postal_code' => str_random(10), 
-	        'phone' => str_random(10) , 
-	        'fax' => str_random(10) , 
-	        'npwp_number' => str_random(10), 
-	        'siup_number' => str_random(10) ,
-	        'certificate_number' => str_random(10) ,
-	    ]);    
+ //    public function test_update_company()
+	// { 
+	//     $user = User::find(1);  
+	//     $company = Company::find(1);  
+	// 	$response =  $this->actingAs($user)->call('POST', '/client/company', 
+	// 	[ 
+	//         'hide_id_company' => $company->id,   
+	//         'name' => str_random(10),   
+	//         'address' => str_random(10), 
+	//         'plg_id' => str_random(10), 
+	//         'nib' => 1, 
+	//         'city' => str_random(10), 
+	//         'email' => str_random(10), 
+	//         'postal_code' => str_random(10), 
+	//         'phone' => str_random(10) , 
+	//         'fax' => str_random(10) , 
+	//         'npwp_number' => str_random(10), 
+	//         'siup_number' => str_random(10) ,
+	//         'certificate_number' => str_random(10) ,
+	//     ]);    
 	    
-        $this->assertEquals(302, $response->status()); 
-	}
+ //        $this->assertEquals(302, $response->status()); 
+	// }
     public function test_check_registrasi_email()
 	{ 
 	    $user = User::find(1);   
