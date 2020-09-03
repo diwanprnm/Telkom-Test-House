@@ -63,9 +63,7 @@ class FunctionTestController extends Controller
             ->paginate($paginate)
         ;
         
-        if (count($query) == 0){
-            $message = 'Data not found';
-        }
+        if (count($query) == 0){ $message = 'Data not found'; }
         
         return view('admin.functiontest.index')
             ->with('data', $data)

@@ -47,36 +47,36 @@ class FaqController extends Controller
     {
         $currentUser = Auth::user();
 
-        if ($currentUser){
-            $message = null;
-            $paginate = 10;
-            $search = trim($request->input(self::SEARCH));
-            
-            if ($search != null){
-                $faq = Faq::whereNotNull('created_at')
-                    ->where(self::QUESTION,'like','%'.$search.'%')
-                    ->orderBy(self::QUESTION)
-                    ->paginate($paginate);
+        if (!$currentUser){ return redirect('login');}
 
-                    $logService = new LogService();
-                    $logService->createLog('Search Faq', 'Faq', json_encode(array(self::SEARCH=>$search)));
+        $message = null;
+        $paginate = 10;
+        $search = trim($request->input(self::SEARCH));
+        
+        if ($search != null){
+            $faq = Faq::whereNotNull('created_at')
+                ->where(self::QUESTION,'like','%'.$search.'%')
+                ->orderBy(self::QUESTION)
+                ->paginate($paginate);
 
-            }else{
-                $query = Faq::whereNotNull('created_at'); 
-                
-                $faq = $query->orderBy(self::QUESTION)
-                            ->paginate($paginate);
-            }
+                $logService = new LogService();
+                $logService->createLog('Search Faq', 'Faq', json_encode(array(self::SEARCH=>$search)));
+
+        }else{
+            $query = Faq::whereNotNull('created_at'); 
             
-            if (count($faq) == 0){
-                $message = 'Data not found';
-            }
-            
-            return view('admin.faq.index')
-                ->with(self::MESSAGE, $message)
-                ->with('data', $faq)
-                ->with(self::SEARCH, $search);
+            $faq = $query->orderBy(self::QUESTION)
+                        ->paginate($paginate);
         }
+        
+        if (count($faq) == 0){
+            $message = 'Data not found';
+        }
+        
+        return view('admin.faq.index')
+            ->with(self::MESSAGE, $message)
+            ->with('data', $faq)
+            ->with(self::SEARCH, $search);
     }
 
     /**
