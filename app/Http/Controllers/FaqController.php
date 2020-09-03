@@ -10,6 +10,7 @@ use App\Http\Requests;
 
 use App\Logs;
 use App\Faq;
+use App\Services\Logs\LogService;
 
 use Auth;
 use File;
@@ -57,14 +58,9 @@ class FaqController extends Controller
                     ->orderBy(self::QUESTION)
                     ->paginate($paginate);
 
-                    $logs = new Logs;
-                    $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                    $logs->action = "Search Faq";
-                    $datasearch = array(self::SEARCH=>$search);
-                    $logs->data = json_encode($datasearch);
-                    $logs->created_by = $currentUser->id;
-                    $logs->page = "Faq";
-                    $logs->save();
+                    $logService = new LogService();
+                    $logService->createLog('Search Faq', 'Faq', json_encode(array(self::SEARCH=>$search)));
+
             }else{
                 $query = Faq::whereNotNull('created_at'); 
                 
@@ -106,27 +102,19 @@ class FaqController extends Controller
         $faq->id = Uuid::uuid4();
         $faq->question = $request->input(self::QUESTION);
         $faq->answer = $request->input(self::ANSWER);
-      
+        $faq->is_active = 1;
         $faq->created_by = $currentUser->id;
         $faq->updated_by = $currentUser->id; 
 
         try{
             $faq->save();
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;
-            $logs->id = Uuid::uuid4();
-            $logs->action = "Create Faq";
-            $logs->data = $faq;
-            $logs->created_by = $currentUser->id;
-            $logs->page = "Faq";
-            $logs->save();
+            $logService = new LogService();
+            $logService->createLog('Create Faq', 'Faq', $faq);
             
             Session::flash(self::MESSAGE, 'FAQ successfully created');
             return redirect(self::ADMIN_FAQ_LOC);
-        } catch(Exception $e){
-            Session::flash(self::ERROR, 'Save failed');
-            return redirect('/admin/faq/create');
+        } catch(Exception $e){ return redirect('/admin/faq/create')->with(self::ERROR, 'Save failed');
         }
     }
 
@@ -182,20 +170,12 @@ class FaqController extends Controller
         try{
             $faq->save();
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;
-            $logs->id = Uuid::uuid4();
-            $logs->action = "Update Faq";
-            $logs->data = $oldFaq;
-            $logs->created_by = $currentUser->id;
-            $logs->page = "Faq";
-            $logs->save();
+            $logService = new LogService();
+            $logService->createLog('Update Faq', 'Faq', $oldFaq);
 
             Session::flash(self::MESSAGE, 'FAQ successfully updated');
             return redirect(self::ADMIN_FAQ_LOC);
-        } catch(Exception $e){
-            Session::flash(self::ERROR, 'Save failed');
-            return redirect('/admin/faq/'.$faq->id.'/edit');
+        } catch(Exception $e){ return redirect("/admin/faq/$faq->id/edit")->with(self::ERROR, 'Save failed');
         }
     }
 
@@ -208,29 +188,23 @@ class FaqController extends Controller
     public function destroy($id)
     {
         $faq = Faq::find($id);
-        $oldFaq = $faq;
-        $currentUser = Auth::user();
+        
         if ($faq){
             try{
+                $oldFaq = clone $faq;
                 $faq->delete();
                 
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Delete Faq";
-                $logs->data = $oldFaq;
-                $logs->created_by = $currentUser->id;
-                $logs->page = "Faq";
-                $logs->save();
+                $logService = new LogService();
+                $logService->createLog('Delete Faq', 'Faq', $oldFaq);
 
                 Session::flash(self::MESSAGE, 'FAQ successfully deleted');
                 return redirect(self::ADMIN_FAQ_LOC);
-            }catch (Exception $e){
-                Session::flash(self::ERROR, 'Delete failed');
-                return redirect(self::ADMIN_FAQ_LOC);
+            }catch (Exception $e){ return redirect(self::ADMIN_FAQ_LOC)->with(self::ERROR, 'Delete failed');
             }
         }else{
-             Session::flash(self::ERROR, 'Role Not Found');
-                return redirect(self::ADMIN_FAQ_LOC);
+            return redirect(self::ADMIN_FAQ_LOC)
+                ->with(self::ERROR, 'FAQ Not Found')
+            ;
         }
     }    
 }
