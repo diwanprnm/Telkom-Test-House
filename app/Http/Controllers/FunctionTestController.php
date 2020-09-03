@@ -13,7 +13,7 @@ use App\Examination;
 use App\ExaminationType;
 use App\ExaminationLab;
 use App\User;
-use App\Logs;
+use App\Services\Logs\LogService;
 
 use Auth;
 use Session;
@@ -45,29 +45,30 @@ class FunctionTestController extends Controller
     public function index(Request $request)
     {
         $currentUser = Auth::user();
+        $message = '';
 
-        if ($currentUser){ 
-            $paginate = 10;
+        if (!$currentUser){ return redirect('login');}
 
-            $query = Examination::whereNotNull('created_at')
-                                ->where("registration_status", "!=", 0)
-								->where("function_status", "!=" ,1)
-								->whereNotNull("cust_test_date")
-                                ->with('device')
-                                ->with('company')
-                                ;
+        $paginate = 10;
 
-			$data = $query->orderBy('updated_at', 'desc')
-                        ->paginate($paginate);
-			
-            if (count($query) == 0){
-                $message = 'Data not found';
-            }
-			
-            return view('admin.functiontest.index')
-                ->with('data', $data)
-                ->with('message', $message);
-        }
+        $query = Examination::whereNotNull('created_at')
+            ->where("registration_status", "!=", 0)
+            ->where("function_status", "!=" ,1)
+            ->whereNotNull("cust_test_date")
+            ->with('device')
+            ->with('company')
+        ;
+
+        $data = $query->orderBy('updated_at', 'desc')
+            ->paginate($paginate)
+        ;
+        
+        if (count($query) == 0){ $message = 'Data not found'; }
+        
+        return view('admin.functiontest.index')
+            ->with('data', $data)
+            ->with('message', $message)
+        ;   
     }
 
     public function excel(Request $request) 
@@ -79,12 +80,12 @@ class FunctionTestController extends Controller
         // timestamp.
 
         $query = Examination::whereNotNull('created_at')
-                                ->where("registration_status", "!=", 0)
-                                ->where("function_status", "!=" ,1)
-                                ->whereNotNull("cust_test_date")
-                                ->with('device')
-                                ->with('company')
-                                ;
+            ->where("registration_status", "!=", 0)
+            ->where("function_status", "!=" ,1)
+            ->whereNotNull("cust_test_date")
+            ->with('device')
+            ->with('company')
+        ;
 
         $data = $query->orderBy('updated_at', 'desc')->get();
 
@@ -135,22 +136,10 @@ class FunctionTestController extends Controller
                 $hasil
             ];
         }
-        $currentUser = Auth::user();
-        $logs = new Logs;
-        $logs->user_id = $currentUser->id;
-        $logs->id = Uuid::uuid4();
-        $logs->action = "download_excel";   
-        $logs->data = "";
-        $logs->created_by = $currentUser->id;
-        $logs->page = "Rekap Uji Fungsi";
-        $logs->save();
+        $logService = new LogService();
+        $logService->createLog('download_excel', 'Rekap Uji Fungsi', '');
 
-        // Generate and return the spreadsheet
-        Excel::create('Data Uji Fungsi', function($excel) use ($examsArray) { 
-            // Build the spreadsheet, passing in the payments array
-            $excel->sheet('sheet1', function($sheet) use ($examsArray) {
-                $sheet->fromArray($examsArray, null, 'A1', false, false);
-            });
-        })->export('xlsx'); 
+        $excel = \App\Services\ExcelService::download($examsArray, 'Data Uji Fungsi');
+		return response($excel['file'], 200, $excel['headers']);
     }
 }

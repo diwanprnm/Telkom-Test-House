@@ -14,7 +14,6 @@ use App\ExaminationAttach;
 use App\ExaminationLab;
 use App\ExaminationHistory;
 use App\User;
-use App\Logs;
 use App\Income;
 
 use Auth;
@@ -32,8 +31,8 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 
 use App\Services\ExaminationService;
-
 use App\Services\Logs\LogService;
+
 class ExaminationDoneController extends Controller
 {
 	private const SEARCH = 'search';
@@ -84,39 +83,41 @@ class ExaminationDoneController extends Controller
     {
         $currentUser = Auth::user();
 
-        if ($currentUser){
-            $message = null;
-            $paginate = 5;
-            $search = trim($request->input(self::SEARCH));
-            $type = '';
-            $before = null;
-            $after = null;
+        if (!$currentUser){ return redirect('login');}
 
-            $examType = ExaminationType::all();
+		$message = null;
+		$paginate = 5;
+		$search = trim($request->input(self::SEARCH));
+		$type = '';
+		$before = null;
+		$after = null;
 
-            $query = Examination::whereNotNull(self::CREATED_AT)
-                                ->with('user')
-                                ->with(self::COMPANY)
-                                ->with(self::EXAMINATION_TYPE)
-                                ->with(self::EXAM_LAB)
-                                ->with(self::MEDIA)
-                                ->with(self::DEVICE)
-								;
-			$query->where(function($qry){
-				$qry->where(function($q){
-					return $q->where('examinations.examination_type_id', '=', '1')
-							->where('examinations.registration_status', '=', '1')
-							->where('examinations.function_status', '=', '1')
-							->where('examinations.contract_status', '=', '1')
-							->where('examinations.spb_status', '=', '1')
-							->where('examinations.payment_status', '=', '1')
-							->where('examinations.spk_status', '=', '1')
-							->where('examinations.examination_status', '=', '1')
-							->where('examinations.resume_status', '=', '1')
-							->where('examinations.qa_status', '=', '1')
-							->where('examinations.certificate_status', '=', '1')
-					;
-					})
+		$examType = ExaminationType::all();
+
+		$query = Examination::whereNotNull(self::CREATED_AT)
+			->with('user')
+			->with(self::COMPANY)
+			->with(self::EXAMINATION_TYPE)
+			->with(self::EXAM_LAB)
+			->with(self::MEDIA)
+			->with(self::DEVICE)
+		;
+
+		$query->where(function($qry){
+			$qry->where(function($q){
+				return $q->where('examinations.examination_type_id', '=', '1')
+					->where('examinations.registration_status', '=', '1')
+					->where('examinations.function_status', '=', '1')
+					->where('examinations.contract_status', '=', '1')
+					->where('examinations.spb_status', '=', '1')
+					->where('examinations.payment_status', '=', '1')
+					->where('examinations.spk_status', '=', '1')
+					->where('examinations.examination_status', '=', '1')
+					->where('examinations.resume_status', '=', '1')
+					->where('examinations.qa_status', '=', '1')
+					->where('examinations.certificate_status', '=', '1')
+				;
+			})
 				->orWhere(function($q){
 					return $q->where('examination_type_id', '!=', '1')
 						->where('registration_status', '=', '1')
@@ -128,8 +129,19 @@ class ExaminationDoneController extends Controller
 						->where('examination_status', '=', '1')
 						->where('resume_status', '=', '1')
 						;
-					});
-			});
+				});
+		});
+
+		$query->where(function($qry) use($search){
+			$qry->whereHas(self::DEVICE, function ($q) use ($search){
+					return $q->where('name', 'like', '%'.strtolower($search).'%');
+				})
+			->orWhereHas(self::COMPANY, function ($q) use ($search){
+					return $q->where('name', 'like', '%'.strtolower($search).'%');
+				});
+		});
+		
+		if ($search != null){
 			$query->where(function($qry) use($search){
 				$qry->whereHas(self::DEVICE, function ($q) use ($search){
 						return $q->where('name', 'like', '%'.strtolower($search).'%');
@@ -139,75 +151,57 @@ class ExaminationDoneController extends Controller
 					});
 			});
 			
-			if ($search != null){
-                $query->where(function($qry) use($search){
-                    $qry->whereHas(self::DEVICE, function ($q) use ($search){
-							return $q->where('name', 'like', '%'.strtolower($search).'%');
-						})
-					->orWhereHas(self::COMPANY, function ($q) use ($search){
-							return $q->where('name', 'like', '%'.strtolower($search).'%');
-						});
-                });
+			$logService = new LogService();
+			$logService->createLog(self::SEARCH, 'EXAMINATION DONE', json_encode(array(self::SEARCH=>$search)) );
+		}
 
-                $logs = new Logs;
-                $logs->id = Uuid::uuid4();
-                $logs->user_id = $currentUser->id;
-                $logs->action = self::SEARCH;  
-                $dataSearch = array(self::SEARCH => $search);
-                $logs->data = json_encode($dataSearch);
-                $logs->created_by = $currentUser->id;
-                $logs->page = "EXAMINATION DONE";
-                $logs->save();
-            }
-
-            if ($request->has('type')){
-                $type = $request->get('type');
-                if($request->input('type') != 'all'){
-					$query->where('examination_type_id', $request->get('type'));
-				}
-            }
-
-            if ($request->has(self::COMPANY)){
-                $query->whereHas(self::COMPANY, function ($q) use ($request){
-                    return $q->where('name', 'like', '%'.strtolower($request->get(self::COMPANY)).'%');
-                });
-            }
-
-            if ($request->has(self::DEVICE)){
-                $query->whereHas(self::DEVICE, function ($q) use ($request){
-                    return $q->where('name', 'like', '%'.strtolower($request->get(self::DEVICE)).'%');
-                });
-            }
-            
-			if ($request->has(self::BEFORE_DATE)){
-				$query->where('spk_date', '<=', $request->get(self::BEFORE_DATE));
-				$before = $request->get(self::BEFORE_DATE);
+		if ($request->has('type')){
+			$type = $request->get('type');
+			if($request->input('type') != 'all'){
+				$query->where('examination_type_id', $request->get('type'));
 			}
+		}
 
-			if ($request->has(self::AFTER_DATE)){
-				$query->where('spk_date', '>=', $request->get(self::AFTER_DATE));
-				$after = $request->get(self::AFTER_DATE);
-			}
+		if ($request->has(self::COMPANY)){
+			$query->whereHas(self::COMPANY, function ($q) use ($request){
+				return $q->where('name', 'like', '%'.strtolower($request->get(self::COMPANY)).'%');
+			});
+		}
 
-			$data_excel = $query->orderBy('updated_at', 'desc')->get();
-            $data = $query->orderBy('updated_at', 'desc')
-                        ->paginate($paginate);
-						
-			$request->session()->put('excel_pengujian_lulus', $data_excel);
+		if ($request->has(self::DEVICE)){
+			$query->whereHas(self::DEVICE, function ($q) use ($request){
+				return $q->where('name', 'like', '%'.strtolower($request->get(self::DEVICE)).'%');
+			});
+		}
+		
+		if ($request->has(self::BEFORE_DATE)){
+			$query->where('spk_date', '<=', $request->get(self::BEFORE_DATE));
+			$before = $request->get(self::BEFORE_DATE);
+		}
 
-            if (count($query) == 0){
-                $message = 'Data not found';
-            }
-			
-            return view('admin.examinationdone.index')
-                ->with('message', $message)
-                ->with('data', $data)
-                ->with('type', $examType)
-                ->with(self::SEARCH, $search)
-                ->with('filterType', $type)
-				->with(self::BEFORE_DATE, $before)
-                ->with(self::AFTER_DATE, $after);
-        }
+		if ($request->has(self::AFTER_DATE)){
+			$query->where('spk_date', '>=', $request->get(self::AFTER_DATE));
+			$after = $request->get(self::AFTER_DATE);
+		}
+
+		$data_excel = $query->orderBy('updated_at', 'desc')->get();
+		$data = $query->orderBy('updated_at', 'desc')
+					->paginate($paginate);
+					
+		$request->session()->put('excel_pengujian_lulus', $data_excel);
+
+		if (count($query) == 0){ $message = 'Data not found'; }
+		
+		return view('admin.examinationdone.index')
+			->with('message', $message)
+			->with('data', $data)
+			->with('type', $examType)
+			->with(self::SEARCH, $search)
+			->with('filterType', $type)
+			->with(self::BEFORE_DATE, $before)
+			->with(self::AFTER_DATE, $after)
+		;
+        
     }
 
     /**
@@ -219,43 +213,42 @@ class ExaminationDoneController extends Controller
     public function show($id)
     {
         $exam = Examination::where('id', $id)
-                            ->with('user')
-                            ->with(self::COMPANY)
-                            ->with(self::EXAMINATION_TYPE)
-                            ->with(self::EXAM_LAB)
-                            ->with(self::DEVICE)
-                            ->with(self::MEDIA)
-                            ->first();
+			->with('user')
+			->with(self::COMPANY)
+			->with(self::EXAMINATION_TYPE)
+			->with(self::EXAM_LAB)
+			->with(self::DEVICE)
+			->with(self::MEDIA)
+			->first()
+		;
 							
 		$exam_history = ExaminationHistory::whereNotNull(self::CREATED_AT)
-					->with('user')
-                    ->where('examination_id', $id)
-                    ->orderBy(self::CREATED_AT, 'DESC')
-                    ->get();
+			->with('user')
+			->where('examination_id', $id)
+			->orderBy(self::CREATED_AT, 'DESC')
+			->get()
+		;
 
         return view('admin.examinationdone.show')
 			->with('exam_history', $exam_history)
-            ->with('data', $exam);
+			->with('data', $exam)
+		;
     }
 	
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {
 		$examinationService = new ExaminationService();
         $exam = Examination::where('id', $id)
-                            ->with(self::COMPANY)
-                            ->with(self::EXAMINATION_TYPE)
-                            ->with(self::EXAM_LAB)
-                            ->with(self::DEVICE)
-                            ->with(self::MEDIA)
-							->with('examinationHistory')
-							->with('questioner')
-                            ->first();
+			->with(self::COMPANY)
+			->with(self::EXAMINATION_TYPE)
+			->with(self::EXAM_LAB)
+			->with(self::DEVICE)
+			->with(self::MEDIA)
+			->with('examinationHistory')
+			->with('questioner')
+			->first()
+		;
 
         $labs = ExaminationLab::all();
 		
@@ -276,7 +269,8 @@ class ExaminationDoneController extends Controller
 			->with('data_lab', $tempData[0])
             ->with('data_gudang', $tempData[1])
 			->with('exam_approve_date', $tempData[2])
-			->with('exam_schedule', $tempData[3]);
+			->with('exam_schedule', $tempData[3])
+		;
     }
 	
 	public function excel(Request $request) 
@@ -325,31 +319,26 @@ class ExaminationDoneController extends Controller
 		// Convert each member of the returned collection into an array,
 		// and append it to the payments array.
 		foreach ($data as $row) {
-			if($row->company->siup_date==''){
-				$siup_date = '';
-			}else{
-				$siup_date = date(self::DATE_FORMAT, strtotime($row->company->siup_date));
+			if($row->company->siup_date==''){ $siup_date = '';
+			}else{ $siup_date = date(self::DATE_FORMAT, strtotime($row->company->siup_date));
 			}
-			if($row->company->qs_certificate_date==''){
-				$qs_certificate_date = '';
-			}else{
-				$qs_certificate_date = date(self::DATE_FORMAT, strtotime($row->company->qs_certificate_date));
+
+			if($row->company->qs_certificate_date==''){ $qs_certificate_date = '';
+			}else{ $qs_certificate_date = date(self::DATE_FORMAT, strtotime($row->company->qs_certificate_date));
 			}
-			if($row->device->valid_from==''){
-				$valid_from = '';
-			}else{
-				$valid_from = date(self::DATE_FORMAT, strtotime($row->device->valid_from));
+
+			if($row->device->valid_from==''){ $valid_from = '';
+			}else{ $valid_from = date(self::DATE_FORMAT, strtotime($row->device->valid_from));
 			}
-			if($row->device->valid_thru==''){
-				$valid_thru = '';
-			}else{
-				$valid_thru = date(self::DATE_FORMAT, strtotime($row->device->valid_thru));
+			
+			if($row->device->valid_thru==''){ $valid_thru = '';
+			}else{ $valid_thru = date(self::DATE_FORMAT, strtotime($row->device->valid_thru));
 			}
-			if($row->spk_date==''){
-				$spk_date = '';
-			}else{
-				$spk_date = date(self::DATE_FORMAT, strtotime($row->spk_date));
+
+			if($row->spk_date==''){ $spk_date = '';
+			}else{ $spk_date = date(self::DATE_FORMAT, strtotime($row->spk_date));
 			}
+
 			$examsArray[] = [
 				"".$row->examinationType->name." (".$row->examinationType->description.")",
 				$row->user->name,
@@ -384,12 +373,15 @@ class ExaminationDoneController extends Controller
         $logService = new LogService();  
         $logService->createLog('download_excel','EXAMINATION DONE');
 
-		// Generate and return the spreadsheet
-		Excel::create('Data Pengujian Lulus', function($excel) use ($examsArray) { 
-			$excel->sheet('sheet1', function($sheet) use ($examsArray) {
-				$sheet->fromArray($examsArray, null, 'A1', false, false);
-			});
-		})->export('xlsx'); 
+		$excel = \App\Services\ExcelService::download($examsArray, 'Data Pengujian Lulus');
+		return response($excel['file'], 200, $excel['headers']);	
+
+		// // Generate and return the spreadsheet
+		// Excel::create('Data Pengujian Lulus', function($excel) use ($examsArray) { 
+		// 	$excel->sheet('sheet1', function($sheet) use ($examsArray) {
+		// 		$sheet->fromArray($examsArray, null, 'A1', false, false);
+		// 	});
+		// })->export('xlsx'); 
 	}
 	
 	public function autocomplete($query) {
@@ -467,7 +459,7 @@ class ExaminationDoneController extends Controller
 				->distinct()
                 ->get();
 				
-		return array_merge($data1,$data2);
+		if( is_array($data1) && is_array($data2) ) { return array_merge($data1,$data2);} 
     }
 	
 	function cetakKepuasanKonsumen($id, Request $request)
