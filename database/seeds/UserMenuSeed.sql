@@ -51,6 +51,8 @@ INSERT INTO `menus` VALUES ('50', '2', 'Kategori Pertanyaan', 'question', '');
 INSERT INTO `menus` VALUES ('51', '25', 'User Ekternal', 'usereks', '');
 INSERT INTO `menus` VALUES ('52', '22', 'Video Tutorial', 'videoTutorial', '');
 INSERT INTO `menus` VALUES ('53', '12', 'Pertanyaan Kuestioner', 'questionerquestion', '');
+INSERT INTO `menus` VALUES ('54', '2', 'Rekap Uji Fungsi', 'functiontest', '');
+INSERT INTO `menus` VALUES ('55', '9', 'FAQ', 'faq', '');
 
 
 INSERT INTO `users_menus` VALUES (1, 1, '1', '1', '', '2017-6-20 00:04:45', '2017-6-20 00:04:45');
@@ -104,3 +106,5 @@ INSERT INTO `users_menus` VALUES (50, 50, '1', '1', '', '2020-6-01 12:43:02', '2
 INSERT INTO `users_menus` VALUES (51, 51, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');
 INSERT INTO `users_menus` VALUES (52, 52, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');
 INSERT INTO `users_menus` VALUES (53, 53, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');
+INSERT INTO `users_menus` VALUES (54, 54, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');
+INSERT INTO `users_menus` VALUES (55, 55, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');
