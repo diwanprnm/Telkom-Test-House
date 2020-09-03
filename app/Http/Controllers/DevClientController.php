@@ -142,6 +142,7 @@ class DevClientController extends Controller
 				->distinct()
                 ->get();
 		
-		return array_merge($data1,$data2,$data3,$data4);
+		if( is_array($data1) && is_array($data2) && is_array($data3) &&is_array($data4) ){ return array_merge($data1,$data2,$data3,$data4); }
+		return null;
     }
 }
