@@ -36,12 +36,11 @@ class ExaminationChargeClientController extends Controller
 
             $examLab = ExaminationLab::all();
             
+            $query = ExaminationCharge::whereNotNull(self::CREATED_AT)
+                ->where('is_active', 1);
+
             if ($search != null){
-                $query = ExaminationCharge::whereNotNull(self::CREATED_AT)
-		            ->where('is_active', 1)
-                    ->where(self::DEVICE_NAME,'like','%'.$search.'%');
-            }else{
-                $query = ExaminationCharge::whereNotNull(self::CREATED_AT)->where('is_active', 1);
+                $query = $query->where(self::DEVICE_NAME,'like','%'.$search.'%');
             }
 			
             if ($request->has(self::CATEGORY)){
@@ -89,8 +88,8 @@ class ExaminationChargeClientController extends Controller
 	
 	public function autocomplete($query) {
         return ExaminationCharge::select('device_name as autosuggest')
-                ->where('device_name', 'like','%'.$query.'%')
-				->orderBy('device_name')
+                ->where(self::DEVICE_NAME, 'like','%'.$query.'%')
+				->orderBy(self::DEVICE_NAME)
                 ->take(5)
                 ->distinct()
                 ->get();
