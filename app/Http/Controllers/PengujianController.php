@@ -168,7 +168,7 @@ class PengujianController extends Controller
 				examinations.created_at,
 				(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name';
 			
-				$data = DB::table(self::EXAMINATIONS)
+				$query = DB::table(self::EXAMINATIONS)
 							->join(self::DEVICES, self::EXAMINATIONS_DEVICES_DOT_ID, '=', self::DEVICES_DOT_ID)
 							->join(self::USERS, self::EXAMINATIONS_CREATED_BY, '=', self::USERS_ID)
 							->join(self::COMPANIES, self::USER_COMPANY_ID, '=', self::COMPANIES_ID)
@@ -179,60 +179,45 @@ class PengujianController extends Controller
 				if ($search != null){
 					if($jns > 0){
 						if($status > 0){
-							$data->where(self::DEVICES_NAME,'like','%'.$search.'%')
+							$query->where(self::DEVICES_NAME,'like','%'.$search.'%')
 							->where(self::EXAMINATIONS_DOT.$arr_status[$status-1].'','=','1')
 							->where(self::EXAMINATIONS_DOT.$arr_status[$status].'','<','1')
-							->where(self::EXAMINATIONS_TYPE_ID,'=',''.$request->input('jns').'')
-							->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
-							->paginate($paginate);
+							->where(self::EXAMINATIONS_TYPE_ID,'=',''.$request->input('jns').'');
 						}else{
-							$data->where(self::DEVICES_NAME,'like','%'.$search.'%')
-							->where(self::EXAMINATIONS_TYPE_ID,'=',''.$request->input('jns').'')
-							->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
-							->paginate($paginate);
+							$query->where(self::DEVICES_NAME,'like','%'.$search.'%')
+							->where(self::EXAMINATIONS_TYPE_ID,'=',''.$request->input('jns').'');
 						}
 					}else{
 						if($status > 0){
-							$data->where(self::DEVICES_NAME,'like','%'.$search.'%')
+							$query->where(self::DEVICES_NAME,'like','%'.$search.'%')
 							->where(self::EXAMINATIONS_DOT.$arr_status[$status-1].'','=','1')
-							->where(self::EXAMINATIONS_DOT.$arr_status[$status].'','<','1')
-							->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
-							->paginate($paginate);
+							->where(self::EXAMINATIONS_DOT.$arr_status[$status].'','<','1');
 						}else{
-							$data->where(self::DEVICES_NAME,'like','%'.$search.'%')
-							->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
-							->paginate($paginate);
+							$query->where(self::DEVICES_NAME,'like','%'.$search.'%');
 						}
 					}
 				}else{
 					if($jns > 0){
 						if($status > 0){
-							$data->where(self::EXAMINATIONS_DOT.$arr_status[$status-1].'','=','1')
+							$query->where(self::EXAMINATIONS_DOT.$arr_status[$status-1].'','=','1')
 							->where(self::EXAMINATIONS_DOT.$arr_status[$status].'','<','1')
-							->where(self::EXAMINATIONS_TYPE_ID,'=',''.$request->input('jns').'')
-							->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
-							->paginate($paginate);
+							->where(self::EXAMINATIONS_TYPE_ID,'=',''.$request->input('jns').'');
 						}else{
-							$data->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
-							->where(self::EXAMINATIONS_TYPE_ID,'=',''.$request->input('jns').'')
-							->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
-							->paginate($paginate);
+							$query->where(self::EXAMINATIONS_COMPANY_ID,'=',''.$company_id.'')
+							->where(self::EXAMINATIONS_TYPE_ID,'=',''.$request->input('jns').'');
 						}
 					}else{
 						if($status > 0){
-							$data->where(self::EXAMINATIONS_DOT.$arr_status[$status-1].'','=','1')
-							->where(self::EXAMINATIONS_DOT.$arr_status[$status].'','<','1')
-							->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
-							->paginate($paginate);
-						}else{
-							$data->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')
-							->paginate($paginate);
+							$query->where(self::EXAMINATIONS_DOT.$arr_status[$status-1].'','=','1')
+							->where(self::EXAMINATIONS_DOT.$arr_status[$status].'','<','1');
 						}
 					}
 				}
 				$query_exam_type = "SELECT * FROM examination_types";
 				$data_exam_type = DB::select($query_exam_type);
 			
+			$data = $query->orderBy(self::EXAMINATIONS_UPDATED_AT, 'desc')->paginate($paginate);
+
             if (count($data) == 0){
                 $message = self::DATA_NOT_FOUND;
             }
@@ -256,7 +241,6 @@ class PengujianController extends Controller
                 ->with(self::STATUS, $status)
                 ->with('data_stels', $data_stels)
 				->with('data_kuisioner', $data_kuisioner)
-				->with('message_stels', $message_stels)
 				->with(self::USER_ID, $user_id);
         }else{
 			return  redirect('login');
@@ -590,7 +574,9 @@ class PengujianController extends Controller
                 ->with('data_attach', $data_attach)
                 ->with('data_kuisioner', $data_kuisioner)
                 ->with(self::MESSAGE, $message);
-        }
+		}else{
+			return  redirect('login');
+		}
     }
 	
 	public function download($id, $attach, $jns)
@@ -887,6 +873,7 @@ class PengujianController extends Controller
 					$dataNotif= array(
 						"from"=>$currentUser->id,
 						"to"=>$admin[self::USER_ID],
+						"is_read"=>0,
 						self::MESSAGE=>$currentUser->company->name." Update Tanggal Uji Fungsi",
 						"url"=>self::EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM).self::EDIT_LOC
 					);
@@ -999,6 +986,7 @@ class PengujianController extends Controller
 					$dataNotif2 = array(
 						"from"=>$currentUser->id,
 						"to"=>self::ADMIN,
+						"is_read"=>0,
 						self::MESSAGE=>$currentUser->company->name." Update Tanggal Uji Fungsi",
 						"url"=>self::EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM2).self::EDIT_LOC
 					);

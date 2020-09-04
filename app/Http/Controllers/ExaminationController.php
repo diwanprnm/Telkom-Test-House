@@ -15,7 +15,7 @@ use App\ExaminationAttach;
 use App\ExaminationLab;
 use App\ExaminationHistory;
 use App\User;
-use App\Api_logs;
+use App\ApiLogs;
 use App\Logs;
 use App\LogsAdministrator;
 use App\Income;
@@ -47,7 +47,6 @@ use App\Services\NotificationService;
 
 class ExaminationController extends Controller
 {
-
 	private const SEARCH = 'search';
 	private const CREATED_AT = 'created_at';
 	private const COMPANY = 'company';
@@ -152,7 +151,7 @@ class ExaminationController extends Controller
 	private const SN_PERANGKAT = 'sn_perangkat';
 	private const ID_EXAM = 'id_exam';
 	private const J_F_Y = 'j F Y';
-	private const EQUIPMENT = 'Equipment';
+	private const EQUIPMENT = 'equipment';
 	private const DOTS = '...............................';
 	private const MANAGER_UREL = 'manager_urel';
 	private const TTH_02 = '/TTH-02/';
@@ -298,8 +297,8 @@ class ExaminationController extends Controller
             ->with('labs', $labs)
             ->with('data_lab', $tempData[0])
             ->with('data_gudang', $tempData[1])
-			->with('exam_approve_date', $tempData[2])
-			->with('exam_schedule', $tempData[3])
+			->with('exam_schedule', $tempData[2])
+			->with('exam_approve_date', $tempData[3])
 			->with('admin_roles', $admins);
     }
 
@@ -313,7 +312,9 @@ class ExaminationController extends Controller
     public function update(Request $request, $id)
     {
 		$currentUser = Auth::user();
+		$logService = new LogService();
 		$notificationService = new NotificationService();
+		$examinationService = new ExaminationService();
 
         $exam = Examination::find($id);
 			$device = Device::findOrFail($exam->device_id);
@@ -341,7 +342,7 @@ class ExaminationController extends Controller
 			    $data['id'] = $notification_id;
 			    event(new Notification($data));
 				
-				$this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.registrasi", "Acc Registrasi");
+				$examinationService->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.registrasi", "Acc Registrasi");
 			}else if($status == -1){
 				/* push notif*/
 			     $data= array( 
@@ -358,12 +359,12 @@ class ExaminationController extends Controller
 			    $data['id'] = $notification_id;
 				event(new Notification($data));
 				
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::REGISTRASI,$request->input(self::KETERANGAN));
+				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::REGISTRASI,$request->input(self::KETERANGAN));
 			}
         }
 		if ($request->has(self::FUNCTION_STATUS)){
-			$this->insertAttachment($request,$exam->id,$currentUser->id,self::BARANG_FILE,'form_penerimaan_barang_','Bukti Penerimaan & Pengeluaran Perangkat Uji1');
-			$this->insertAttachment($request,$exam->id,$currentUser->id,self::FUNCTION_FILE,'function_','Laporan Hasil Uji Fungsi');
+			$examinationService->insertAttachment($request,$exam->id,$currentUser->id,self::BARANG_FILE,'form_penerimaan_barang_','Bukti Penerimaan & Pengeluaran Perangkat Uji1');
+			$examinationService->insertAttachment($request,$exam->id,$currentUser->id,self::FUNCTION_FILE,'function_','Laporan Hasil Uji Fungsi');
 			$status = $request->input(self::FUNCTION_STATUS);
 			if($exam->function_date != null){
 				$exam->contract_date = $exam->function_date;
@@ -420,7 +421,7 @@ class ExaminationController extends Controller
 			event(new Notification($data));
 
 			if($status == -1){
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Uji Fungsi",$request->input(self::KETERANGAN));
+				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Uji Fungsi",$request->input(self::KETERANGAN));
 			}
         }
         $spk_created = 0;
@@ -478,7 +479,7 @@ class ExaminationController extends Controller
 				->first();
 
 				if ($exam->spk_code == null && $exam->company_id == '0fbf131c-32e3-4c9a-b6e0-a0f217cb2830'){
-                    $spk_number_forOTR = $this->generateSPKCode($exam_forOTR->examinationLab->lab_code,$exam_forOTR->examinationType->name,date('Y'));
+                    $spk_number_forOTR = $examinationService->generateSPKCode($exam_forOTR->examinationLab->lab_code,$exam_forOTR->examinationType->name,date('Y'));
                     $exam->spk_code = $spk_number_forOTR;
                     $exam->spk_date = date(self::DATE_FORMAT_2);
                     $spk_created = 1;
@@ -519,11 +520,11 @@ class ExaminationController extends Controller
 				}
 				
 			}else if($status == -1){
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Tinjauan Pustaka",$request->input(self::KETERANGAN));
+				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Tinjauan Pustaka",$request->input(self::KETERANGAN));
 			}
         }
 		if ($request->has(self::SPB_STATUS)){
-			$this->insertAttachment($request,$exam->id,$currentUser->id,self::SPB_FILE,'spb_','SPB');
+			$examinationService->insertAttachment($request,$exam->id,$currentUser->id,self::SPB_FILE,'spb_','SPB');
 			$status = $request->input(self::SPB_STATUS);
             $exam->spb_status = $status;
 			if($status == 1){
@@ -547,10 +548,10 @@ class ExaminationController extends Controller
 			    $data['id'] = $notification_id;
 			    event(new Notification($data));
 
-				$this->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.spb", "Upload SPB",$path_file."/".$attach_name);
+				$examinationService->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.spb", "Upload SPB",$path_file."/".$attach_name);
 			}else if($status == -1){
 				$exam->price = str_replace(".",'',$request->input('exam_price'));
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"SPB",$request->input(self::KETERANGAN));
+				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"SPB",$request->input(self::KETERANGAN));
 			}
         }
 		
@@ -621,7 +622,8 @@ class ExaminationController extends Controller
             $status = $request->input(self::PAYMENT_STATUS);
             $exam->payment_status = $status;
 			if($status == 1){
-				if($this->cekRefID($exam->id) == 0){
+				$income = Income::where(self::REFERENCE_ID, $exam->id)->first();
+				if(!$income){
 					$income = new Income;
 					$income->id = Uuid::uuid4();
 					$income->company_id = $exam->company_id;
@@ -630,16 +632,13 @@ class ExaminationController extends Controller
 					$income->reference_number = $exam->spb_number;
 					$income->tgl = $exam->spb_date;
 					$income->created_by = $currentUser->id;
-
-				}else{
-					$income = Income::where(self::REFERENCE_ID, $exam->id)->first();
 				}
 					// ($item->payment_method == 1)?'ATM':'Kartu Kredit'
 					$income->price = ($request->input(self::CUST_PRICE_PAYMENT) != NULL) ? str_replace(".",'',$request->input(self::CUST_PRICE_PAYMENT)) : 0;
 					$income->updated_by = $currentUser->id;
 					$income->save();
 
-				$this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.pembayaran", "ACC Pembayaran");
+				$examinationService->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.pembayaran", "ACC Pembayaran");
 				
 				$client = new Client([
 					self::HEADERS => [self::CONTENT_TYPE => self::APPLICATION_HEADER],
@@ -657,7 +656,7 @@ class ExaminationController extends Controller
 				->first();
 
                 if ($exam->spk_code == null){
-                    $spk_number_forOTR = $this->generateSPKCode($exam_forOTR->examinationLab->lab_code,$exam_forOTR->examinationType->name,date('Y'));
+                    $spk_number_forOTR = $examinationService->generateSPKCode($exam_forOTR->examinationLab->lab_code,$exam_forOTR->examinationType->name,date('Y'));
                     $exam->spk_code = $spk_number_forOTR;
                     $exam->spk_date = date(self::DATE_FORMAT_2);
                     $spk_created = 1;
@@ -679,14 +678,14 @@ class ExaminationController extends Controller
 				
 			}else if($status == -1){
 				Income::where(self::REFERENCE_ID, '=' ,''.$exam->id.'')->delete();
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::PEMBAYARAN,$request->input(self::KETERANGAN));
+				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::PEMBAYARAN,$request->input(self::KETERANGAN));
 			}
         }
         if ($request->has(self::SPK_STATUS)){
             $status = $request->input(self::SPK_STATUS);
             $exam->spk_status = $status;
 			if($status == -1){
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::PEMBUATAN_SPK,$request->input(self::KETERANGAN));
+				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::PEMBUATAN_SPK,$request->input(self::KETERANGAN));
 			}
         }
         if ($request->has(self::EXAMINATION_STATUS)){
@@ -694,7 +693,7 @@ class ExaminationController extends Controller
             $exam->examination_status = $status;
 			if($status == -1){
 			
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::PELAKSANAAN_UJI,$request->input(self::KETERANGAN));
+				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::PELAKSANAAN_UJI,$request->input(self::KETERANGAN));
 			}else{
 				$data= array( 
 					"from"=>self::ADMIN,
@@ -727,7 +726,7 @@ class ExaminationController extends Controller
 	                    'contents'=>json_encode(['by'=>$currentUser->name, self::REFERENCE_ID => $currentUser->id]),
 	                );
 
-	                $this->api_upload($data_upload,$exam->BILLING_ID);
+	                $examinationService->api_upload($data_upload,$exam->BILLING_ID);
 			}
 			if ($request->hasFile(self::REV_LAP_UJI)) {
 				$name_file = 'rev_lap_uji_'.$request->file(self::REV_LAP_UJI)->getClientOriginalName();
@@ -743,7 +742,7 @@ class ExaminationController extends Controller
 		                    'contents'=>json_encode(['by'=>$currentUser->name, self::REFERENCE_ID => $currentUser->id]),
 		                );
 
-		                $this->api_upload($data_upload,$exam->BILLING_ID);
+		                $examinationService->api_upload($data_upload,$exam->BILLING_ID);
 		            }
 					
 					$attach = new ExaminationAttach;
@@ -764,7 +763,7 @@ class ExaminationController extends Controller
             $exam->resume_status = $status;
 			
 			if($status == -1){
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Laporan Uji",$request->input(self::KETERANGAN));
+				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Laporan Uji",$request->input(self::KETERANGAN));
 			
 			}else{
 				$data= array( 
@@ -779,8 +778,8 @@ class ExaminationController extends Controller
 				
 			}
 		}
-		$this->insertAttachment($request,$exam->id,$currentUser->id,self::BARANG_FILE2,'form_penerimaan_barang2_','Bukti Penerimaan & Pengeluaran Perangkat Uji2');
-		$this->insertAttachment($request,$exam->id,$currentUser->id,self::TANDA_TERIMA,'form_tanda_terima_hasil_pengujian_','Tanda Terima Hasil Pengujian');
+		$examinationService->insertAttachment($request,$exam->id,$currentUser->id,self::BARANG_FILE2,'form_penerimaan_barang2_','Bukti Penerimaan & Pengeluaran Perangkat Uji2');
+		$examinationService->insertAttachment($request,$exam->id,$currentUser->id,self::TANDA_TERIMA,'form_tanda_terima_hasil_pengujian_','Tanda Terima Hasil Pengujian');
 		if ($request->has(self::QA_STATUS)){
             $status = $request->input(self::QA_STATUS);
             $passed = $request->input('passed');
@@ -838,7 +837,7 @@ class ExaminationController extends Controller
             }
            
 			if($status == -1){
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::SIDANG_QA,$request->input(self::KETERANGAN));
+				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::SIDANG_QA,$request->input(self::KETERANGAN));
 			}
         }
         if ($request->has(self::CERTIFICATE_STATUS)){
@@ -854,9 +853,9 @@ class ExaminationController extends Controller
 				self::UPDATED_AT=>date(self::DATE_FORMAT_1)
 			);
 			if($status == 1){
-				$this->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.sertifikat", "Penerbitan Sertfikat");
+				$examinationService->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.sertifikat", "Penerbitan Sertfikat");
 			}else if($status == -1){
-				$this->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Pembuatan Sertifikat",$request->input(self::KETERANGAN));
+				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Pembuatan Sertifikat",$request->input(self::KETERANGAN));
 			}
         }
         if ($request->has('resume_date')){
@@ -898,8 +897,8 @@ class ExaminationController extends Controller
 						"by" => $currentUser->name,
                     	self::REFERENCE_ID => $currentUser->id
 					]
-	            ];
-				$this->api_cancel_billing($exam->BILLING_ID, $data_cancel_billing);
+				];
+				$examinationService->api_cancel_billing($exam->BILLING_ID, $data_cancel_billing);
 			}
 			$data_billing = [
                 "draft_id" => $request->input(self::PO_ID),
@@ -909,7 +908,7 @@ class ExaminationController extends Controller
                 ]
             ];
 
-            $billing = $this->api_billing($data_billing);
+            $billing = $examinationService->api_billing($data_billing);
 
             $exam->PO_ID = $request->input(self::PO_ID);
             $exam->BILLING_ID = $billing && $billing->status ? $billing->data->_id : null;
@@ -949,7 +948,7 @@ class ExaminationController extends Controller
 				$res_exam_schedule = $client->get(self::SPK_ADD_NOTIF_ID_URI.$exam->id.self::SPK_NUMBER_URI.$spk_number_forOTR);
 				$exam_schedule = $res_exam_schedule->getStatusCode() == '200' ? json_decode($res_exam_schedule->getBody()) : null;
 				if($exam_schedule && !$exam_schedule->status){
-					$api_logs = new Api_logs;
+					$api_logs = new ApiLogs;
 					$api_logs->send_to = "OTR";
 					$api_logs->route = self::SPK_ADD_NOTIF_ID_URI.$exam->id.self::SPK_NUMBER_URI.$spk_number_forOTR;
 					$api_logs->status = $exam_schedule->status;
@@ -961,7 +960,7 @@ class ExaminationController extends Controller
 
 					$api_logs->save();
 				}elseif ($exam_schedule == null) {
-					$api_logs = new Api_logs;
+					$api_logs = new ApiLogs;
 					$api_logs->send_to = "OTR";
 					$api_logs->route = self::SPK_ADD_NOTIF_ID_URI.$exam->id.self::SPK_NUMBER_URI.$spk_number_forOTR;
 					$api_logs->status = 0;
@@ -994,13 +993,7 @@ class ExaminationController extends Controller
 				$exam_hist->created_at = date(self::DATE_FORMAT_1);
 				$exam_hist->save();
 
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Update ".$request->input(self::STATUS);   
-                $logs->data = $exam;
-                $logs->created_by = $currentUser->id;
-                $logs->page = self::EXAMINATION;
-                $logs->save();
+				$logService->createLog("Update ".$request->input(self::STATUS), self::EXAMINATION, $exam);
 
             Session::flash(self::MESSAGE, 'Examination successfully updated');
             return redirect(self::ADMIN_EXAMINATION);
@@ -1010,94 +1003,41 @@ class ExaminationController extends Controller
         }
     }
 
-    public function api_cancel_billing($BILLING_ID,$data){
-        $client = new Client([
-            self::HEADERS => [self::CONTENT_TYPE => self::JSON_HEADER, 
-                            self::AUTHORIZATION => config(self::APP_GATEWAY_TPN_2)
-                        ],
-            self::BASE_URI => config(self::APP_URI_API_TPN),
-            self::TIMEOUT  => 60.0,
-            self::HTTP_ERRORS => false
-        ]);
-        try {
-            $params['json'] = $data;
-            $res_cancel_billing = $client->put("v1/billings/".$BILLING_ID."/cancel", $params)->getBody();
-            return json_decode($res_cancel_billing);
-        } catch(Exception $e){
-            return null;
-        }
-    }
-
-    public function api_billing($data){
-        $client = new Client([
-            self::HEADERS => [self::CONTENT_TYPE => self::JSON_HEADER, 
-                            self::AUTHORIZATION => config(self::APP_GATEWAY_TPN_2)
-                        ],
-            self::BASE_URI => config(self::APP_URI_API_TPN),
-            self::TIMEOUT  => 60.0,
-            self::HTTP_ERRORS => false
-        ]);
-        try {
-            $params['json'] = $data;
-            $res_billing = $client->post("v1/billings", $params)->getBody();
-            return json_decode($res_billing);
-        } catch(Exception $e){
-            return null;
-        }
-    }
-
-    public function generateKuitansi(Request $request) {
-    	$id = $request->input('id');
-        
-		$exam = Examination::where("id", $id)->first();
-		$this->generateFromTPN($exam, self::KUITANSI, '/exportpdf');
-    }
-
-    public function generateTaxInvoice(Request $request) {
-        $id = $request->input('id');
-
-        $exam = Examination::select(DB::raw('companies.name as company_name, examination_attachments.tgl as payment_date, examinations.*, devices.name, devices.mark, devices.capacity, devices.model'))
-    	->where(self::EXAMINATIONS_ID, $id)
-    	->whereNotExists(function ($query) {
-           	$query->select(DB::raw(1))
-                 ->from(self::EXAMINATION_ATTACHMENTS)
-                 ->whereRaw('examination_attachments.examination_id = examinations.id')
-                 ->whereRaw('examination_attachments.name = "Faktur Pajak"')
-            ;
-       	})->orWhereExists(function ($query) {
-           	$query->select(DB::raw(1))
-                 ->from(self::EXAMINATION_ATTACHMENTS)
-                 ->whereRaw('examination_attachments.examination_id = examinations.id')
-                 ->whereRaw('examination_attachments.name = "Faktur Pajak"')
-                 ->whereRaw('examination_attachments.attachment = ""')
-            ;
-       	})
-       	->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
-        ->join(self::TABLE_DEVICE, self::EXAM_DEVICES_ID, '=', self::DEVICES_ID)
-        ->leftJoin(self::EXAMINATION_ATTACHMENTS, function($leftJoin){
-            $leftJoin->on(self::EXAMINATIONS_ID, '=', 'examination_attachments.examination_id');
-            $leftJoin->on(DB::raw('examination_attachments.name'), DB::raw('='),DB::raw("'File Pembayaran'"));
-        })
-        ->first();
-
-        $this->generateFromTPN($exam, self::FAKTUR_PAJAK, '/taxinvoice/pdf');
-    }
-
-    public function api_upload($data, $BILLING_ID){
-        $client = new Client([
-            self::HEADERS => [self::AUTHORIZATION => config(self::APP_GATEWAY_TPN_2)],
-            self::BASE_URI => config(self::APP_URI_API_TPN),
-            self::TIMEOUT  => 60.0,
-            self::HTTP_ERRORS => false
-        ]);
-        try {
-            $params['multipart'] = $data;
-            $res_upload = $client->post("v1/billings/".$BILLING_ID."/deliver", $params)->getBody(); //BILLING_ID
-            return json_decode($res_upload);
-
-        } catch(Exception $e){
-            return null;
-        }
+    public function generateFromTPN(Request $request) {
+		$examinationService = new ExaminationService();
+		$id = $request->input('id');
+		$type = $request->input('type');
+		$filelink = $request->input('filelink');
+		
+		if($type == self::KUITANSI){
+			$exam = Examination::where("id", $id)->first();
+		}else{
+			$exam = Examination::select(DB::raw('companies.name as company_name, examination_attachments.tgl as payment_date, examinations.*, devices.name, devices.mark, devices.capacity, devices.model'))
+			->where(self::EXAMINATIONS_ID, $id)
+			->whereNotExists(function ($query) {
+				$query->select(DB::raw(1))
+					->from(self::EXAMINATION_ATTACHMENTS)
+					->whereRaw('examination_attachments.examination_id = examinations.id')
+					->whereRaw('examination_attachments.name = "Faktur Pajak"')
+				;
+			})->orWhereExists(function ($query) {
+				$query->select(DB::raw(1))
+					->from(self::EXAMINATION_ATTACHMENTS)
+					->whereRaw('examination_attachments.examination_id = examinations.id')
+					->whereRaw('examination_attachments.name = "Faktur Pajak"')
+					->whereRaw('examination_attachments.attachment = ""')
+				;
+			})
+			->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
+			->join(self::TABLE_DEVICE, self::EXAM_DEVICES_ID, '=', self::DEVICES_ID)
+			->leftJoin(self::EXAMINATION_ATTACHMENTS, function($leftJoin){
+				$leftJoin->on(self::EXAMINATIONS_ID, '=', 'examination_attachments.examination_id');
+				$leftJoin->on(DB::raw('examination_attachments.name'), DB::raw('='),DB::raw("'File Pembayaran'"));
+			})
+			->first();
+		}
+		
+		return $examinationService->generateFromTPN($exam, $type, $filelink);
     }
 
     public function downloadForm($id)
@@ -1111,17 +1051,6 @@ class ExaminationController extends Controller
             );
 
             return Response::download($file, $exam->attachment, $headers);
-        }
-    }
-
-    public function printForm($id)
-    {
-        $exam = Examination::find($id);
-
-        if ($exam){
-            $file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id.'/'.$exam->attachment; 
-
-            return Response::file($file);
         }
     }
 
@@ -1168,66 +1097,6 @@ class ExaminationController extends Controller
         }
     }
 
-    public function printMedia($id, $name)
-    {
-        if (strcmp($name, 'certificate') == 0){
-            $device = Device::findOrFail($id);
-
-            if ($device){
-                $file = public_path().self::MEDIA_DEVICE_LOC.$device->id.'/'.$device->certificate; 
-                return Response::file($file);
-            }
-        } else{
-            $exam = ExaminationAttach::where(self::EXAMINATION_ID, $id)
-                                ->where('name','like','%'.$name.'%')
-                                ->first();
-
-            if ($exam){
-                $file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->examination_id.'/'.$exam->attachment; 
-                return Response::file($file);
-            }
-        }
-    }
-
-    /**
-     * Send an e-mail notification to the user.
-     *
-     * @param  Request  $request
-     * @return Response
-     */
-    public function sendEmailNotification($user, $dev_name, $exam_type, $exam_type_desc, $message, $subject)
-    {
-        $data = User::findOrFail($user);
-		
-        Mail::send($message, array(
-			self::USER_NAME => $data->name,
-			self::DEV_NAME => $dev_name,
-			self::EXAM_TYPE => $exam_type,
-			self::EXAM_TYPE_DESC => $exam_type_desc
-			), function ($m) use ($data,$subject) {
-            $m->to($data->email)->subject($subject);
-        });
-
-        return true;
-    }
-	
-	public function sendEmailNotification_wAttach($user, $dev_name, $exam_type, $exam_type_desc, $message, $subject, $attach)
-    {
-        $data = User::findOrFail($user);
-		
-        Mail::send($message, array(
-			self::USER_NAME => $data->name,
-			self::DEV_NAME => $dev_name,
-			self::EXAM_TYPE => $exam_type,
-			self::EXAM_TYPE_DESC => $exam_type_desc
-			), function ($m) use ($data,$subject,$attach) {
-            $m->to($data->email)->subject($subject);
-			$m->attach($attach);
-        });
-
-        return true;
-    }
-	
 	public function excel(Request $request) 
 	{
 		// Execute the query used to retrieve the data. In this example
@@ -1241,9 +1110,14 @@ class ExaminationController extends Controller
 
         $search = trim($request->input(self::SEARCH));
 
-        $tempData = $examinationService->requestQuery($request, $search);
+        $tempData = $examinationService->requestQuery($request, $search, $type = '', $status = '', $before = null, $after = null);
 
-		$query = $tempData[0]; 
+		$query = $tempData[0];
+		$search = $tempData[1];
+		$type = $tempData[2];
+		$status = $tempData[3];
+		$before = $tempData[4];
+		$after = $tempData[5];
 
 		$data = $query->orderBy(self::UPDATED_AT, 'desc')->get();
 
@@ -1662,7 +1536,9 @@ class ExaminationController extends Controller
 	public function updaterevisi(Request $request)
     {
 		$currentUser = Auth::user();
+		$logService = new LogService();
 		$notificationService = new NotificationService();
+		$examinationService = new ExaminationService();
 		
 		$device = Device::findOrFail($request->input('id_perangkat'));
 
@@ -1706,14 +1582,7 @@ class ExaminationController extends Controller
         try{
             $device->save();
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;
-            $logs->id = Uuid::uuid4();
-            $logs->action = "update";   
-            $logs->data = $device;
-            $logs->created_by = $currentUser->id;
-            $logs->page = "REVISI";
-            $logs->save();
+			$logService->createLog("update", "REVISI", $device);
 
             /* push notif*/
 			$data= array( 
@@ -1731,7 +1600,7 @@ class ExaminationController extends Controller
 			event(new Notification($data));
 
             Session::flash(self::MESSAGE, 'Examination successfully updated');
-			$this->sendEmailRevisi(
+			$examinationService->sendEmailRevisi(
 				$request->input('exam_created'),
 				$request->input(self::EXAM_TYPE),
 				$request->input('exam_desc'),
@@ -1761,207 +1630,30 @@ class ExaminationController extends Controller
 	
 	public function tanggalkontrak(Request $request)
     {
-		$client = new Client([
-			self::HEADERS => [self::CONTENT_TYPE => self::APPLICATION_HEADER],
-			// Base URI is used with relative requests
-			// self::BASE_URI => 'http://37.72.172.144/telkomtesthouse/public/v1/',
-			self::BASE_URI => config(self::APP_URI_API_BSP),
-			// You can set any number of default request options.
-			self::TIMEOUT  => 60.0,
-		]);
-		
-		$currentUser = Auth::user();
-		
-		$exam_id = $request->input('hide_id_exam');
-		$contract_date = $request->input(self::CONTRACT_DATE);
-			$contract_date_ina_temp = strtotime($contract_date);
-			$contract_date_ina = date(self::J_F_Y, $contract_date_ina_temp);
-		
-		$exam = Examination::where('id', $exam_id)
-				->with('user')
-				->with(self::COMPANY)
-				->with(self::DEVICE)
-				->with(self::EXAMINATION_LAB)
-				->with(self::EQUIPMENT)
-				->first();
-			
-			try{
-				$query_update = "UPDATE examinations
-					SET 
-						contract_date = '".$contract_date."',
-						updated_by = '".$currentUser['attributes']['id']."',
-						updated_at = '".date(self::DATE_FORMAT_1)."'
-					WHERE id = '".$exam_id."'
-				";
-				DB::update($query_update);
-				
-				$res_manager_lab = $client->get('user/getManagerLabInfo?labCode='.$exam->examinationLab->lab_code)->getBody();
-				$manager_lab = json_decode($res_manager_lab);
-				
-				$res_manager_urel = $client->get('user/getManagerLabInfo?groupId=MU')->getBody();
-				$manager_urel = json_decode($res_manager_urel);
-				
-				if(count($manager_lab->data) == 1){
-					if( strpos( $manager_lab->data[0]->name, "/" ) !== false ) {$manager_labs = urlencode(urlencode($manager_lab->data[0]->name));}
-						else{$manager_labs = $manager_lab->data[0]->name?: '-';}
-				}else{
-					$manager_labs = self::DOTS;
-				}
-				
-				if(count($manager_urel->data) == 1){
-					if( strpos( $manager_urel->data[0]->name, "/" ) !== false ) {$manager_urels = urlencode(urlencode($manager_urel->data[0]->name));}
-						else{$manager_urels = $manager_urel->data[0]->name?: '-';}
-				}else{
-					$manager_urels = self::DOTS;
-				}
-
-				$general_setting_poh = GeneralSetting::where('code', 'poh_manager_urel')->first();
-				$is_poh = $general_setting_poh && $general_setting_poh->is_active ?  1 : 0;
-				$manager_urels = $this->manager_urels($general_setting_poh);
-				
-				if(count($exam->equipment)>0){
-					if( strpos( $exam->equipment[0]->pic, "/" ) !== false ) {$pic = urlencode(urlencode($exam->equipment[0]->pic));}
-						else{$pic = $exam->equipment[0]->pic?: '-';}
-				}else{
-					$pic = self::DOTS;
-				}
-				
-				$data = Array([
-					'no_reg' => $exam->function_test_NO,
-					'jns_pengujian' => $exam->examination_type_id,
-					'nama_pemohon' => $exam->user->name,
-					'alamat_pemohon' => $exam->user->address,
-					'nama_perusahaan' => $exam->company->name,
-					'alamat_perusahaan' => $exam->company->address,
-					'plg_id' => $exam->company->plg_id,
-					'nib' => $exam->company->nib,
-					self::NAMA_PERANGKAT => $exam->device->name,
-					'merek_perangkat' => $exam->device->mark,
-					self::MODEL_PERANGKAT => $exam->device->model,
-					self::KAPASITAS_PERANGKAT => $exam->device->capacity,
-					'referensi_perangkat' => $exam->device->test_reference,
-					self::PEMBUAT_PERANGKAT => $exam->device->manufactured_by,
-					'is_loc_test' => $exam->is_loc_test,
-					self::CONTRACT_DATE => $contract_date_ina,
-					'manager_lab' => $manager_labs,
-					self::MANAGER_UREL => $manager_urels,
-					'pic' => $pic,
-					'is_poh' => $is_poh
-				]);
-				
-				$request->session()->put('key_contract', $data);
-				Session::flash(self::MESSAGE, 'Contract successfully created');
-				echo 1;
-			} catch(Exception $e){
-				Session::flash(self::ERROR, 'Contract failed');
-				echo 0;
-			}
+		$examinationService = new ExaminationService();
+		try{
+			$data = $examinationService->tanggalkontrak($request);
+			$request->session()->put('key_contract', $data);
+			Session::flash(self::MESSAGE, 'Contract successfully created');
+			echo 1;
+		} catch(Exception $e){
+			Session::flash(self::ERROR, 'Contract failed');
+			echo 0;
+		}
     }
 	
 	public function tandaterima(Request $request)
     {
-		$exam_id = $request->input('hide_id_exam');
-		$exam = Examination::where('id', $exam_id)
-				->with('user')
-				->with(self::DEVICE)
-				->with(self::MEDIA)
-				->first();
-			$no_laporan = '-';
-			foreach ($exam->media as $item) {
-				if($item->name == self::LAPORAN_UJI && $item->no != ''){
-					$no_laporan = $item->no;
-				}
-			}
-			try{
-				
-				$data = Array([
-					'nama_pemohon' => $exam->user->name,
-					'alamat_pemohon' => $exam->user->address,
-					self::NAMA_PERANGKAT => $exam->device->name,
-					'merek_perangkat' => $exam->device->mark,
-					self::MODEL_PERANGKAT => $exam->device->model,
-					self::KAPASITAS_PERANGKAT => $exam->device->capacity,
-					'referensi_perangkat' => $exam->device->test_reference,
-					self::PEMBUAT_PERANGKAT => $exam->device->manufactured_by,
-					'cert_number' => $exam->device->cert_number,
-					'no_laporan' => $no_laporan
-				]);
-				
-				$request->session()->put('key_tanda_terima', $data);
-				
-				Session::flash(self::MESSAGE, 'Tanda Terima successfully created');
-				echo 1;
-			} catch(Exception $e){
-				Session::flash(self::ERROR, 'Tanda Terima failed');
-				echo 0;
-			}
-    }
-	
-	public function sendEmailRevisi(
-		$user, 
-		$exam_type, 
-		$exam_type_desc, 
-		$perangkat1, 
-		$perangkat2, 
-		$merk_perangkat1, 
-		$merk_perangkat2, 
-		$kapasitas_perangkat1, 
-		$kapasitas_perangkat2, 
-		$pembuat_perangkat1, 
-		$pembuat_perangkat2, 
-		$model_perangkat1, 
-		$model_perangkat2, 
-		$ref_perangkat1, 
-		$ref_perangkat2, 
-		$sn_perangkat1, 
-		$sn_perangkat2, 
-		$message,
-		$subject
-	)
-    {
-        $data = User::findOrFail($user);
-		
-        Mail::send($message, array(
-			self::USER_NAME => $data->name,
-			self::EXAM_TYPE => $exam_type,
-			self::EXAM_TYPE_DESC => $exam_type_desc,
-			'perangkat1' => $perangkat1,
-			'perangkat2' => $perangkat2,
-			'merk_perangkat1' => $merk_perangkat1,
-			'merk_perangkat2' => $merk_perangkat2,
-			'kapasitas_perangkat1' => $kapasitas_perangkat1,
-			'kapasitas_perangkat2' => $kapasitas_perangkat2,
-			'pembuat_perangkat1' => $pembuat_perangkat1,
-			'pembuat_perangkat2' => $pembuat_perangkat2,
-			'model_perangkat1' => $model_perangkat1,
-			'model_perangkat2' => $model_perangkat2,
-			'ref_perangkat1' => $ref_perangkat1,
-			'ref_perangkat2' => $ref_perangkat2,
-			'sn_perangkat1' => $sn_perangkat1,
-			'sn_perangkat2' => $sn_perangkat2
-			), function ($m) use ($data,$subject) {
-            $m->to($data->email)->subject($subject);
-        });
-
-        return true;
-    }
-	
-	public function sendEmailFailure($user, $dev_name, $exam_type, $exam_type_desc, $message, $subject, $tahap, $keterangan)
-    {
-        $data = User::findOrFail($user);
-		
-        Mail::send($message, array(
-			self::USER_NAME => $data->name,
-			self::DEV_NAME => $dev_name,
-			self::EXAM_TYPE => $exam_type,
-			self::EXAM_TYPE_DESC => $exam_type_desc,
-			'tahap' => $tahap,
-			self::KETERANGAN => $keterangan
-			), function ($m) use ($data,$subject) {
-            $m->to($data->email)->subject($subject);
-        });
-
-        return true;
+		$examinationService = new ExaminationService();
+		try{
+			$data = $examinationService->tandaterima($request);
+			$request->session()->put('key_tanda_terima', $data);
+			Session::flash(self::MESSAGE, 'Tanda Terima successfully created');
+			echo 1;
+		} catch(Exception $e){
+			Session::flash(self::ERROR, 'Tanda Terima failed');
+			echo 0;
+		}
     }
 	
 	public function destroy($id,$page,$reason = null)
@@ -1969,6 +1661,7 @@ class ExaminationController extends Controller
 		$currentUser = Auth::user();
 		$logs_a_exam = NULL;
 		$logs_a_device = NULL;
+		$logService = new LogService();
 		
 		$exam_attach = ExaminationAttach::where(self::EXAMINATION_ID, '=' ,''.$id.'')->get();
 		$exam = Examination::find($id);
@@ -2011,14 +1704,7 @@ class ExaminationController extends Controller
 					File::deleteDirectory(public_path().'\media\\examination\\'.$id);
 				}
 
-				$logs = new LogsAdministrator;
-				$logs->id = Uuid::uuid4();
-				$logs->user_id = $currentUser->id;
-				$logs->action = "Hapus Data Pengujian";
-				$logs->page = $page;
-				$logs->reason = urldecode($reason);
-				$logs->data = $logs_a_exam.$logs_a_device;
-				$logs->save();
+				$logService->createAdminLog("Hapus Data Pengujian", $page, $logs_a_exam.$logs_a_device, urldecode($reason));
 
 				Session::flash(self::MESSAGE, 'Examination successfully deleted');
 				return redirect(self::ADMIN_EXAMINATION);
@@ -2033,6 +1719,7 @@ class ExaminationController extends Controller
 	{
 		$currentUser = Auth::user();
 		$logs_a_exam = NULL;
+		$logService = new LogService();
 
         if ($currentUser){
 			$exam = Examination::find($id);
@@ -2066,22 +1753,8 @@ class ExaminationController extends Controller
 					$exam_hist->created_at = date(self::DATE_FORMAT_1);
 					$exam_hist->save();
 
-					$logs = new Logs;
-					$logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-					$logs->action = "Reset Uji Fungsi";
-					$logs->data = $exam;
-					$logs->created_by = $currentUser->id;
-					$logs->page = self::EXAMINATION;
-					$logs->save();
-
-					$logs_a = new LogsAdministrator;
-					$logs_a->id = Uuid::uuid4();
-					$logs_a->user_id = $currentUser->id;
-					$logs_a->action = "Reset Uji Fungsi";
-					$logs_a->page = "Pengujian -> Change Status";
-					$logs_a->reason = urldecode($reason);
-					$logs_a->data = $logs_a_exam;
-					$logs_a->save();
+					$logService->createLog("Reset Uji Fungsi", self::EXAMINATION, $exam);
+					$logService->createAdminLog("Reset Uji Fungsi", "Pengujian -> Change Status", $exam, urldecode($reason));
 					
 					Session::flash(self::MESSAGE, 'Function Test successfully reset');
 					return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
@@ -2116,138 +1789,17 @@ class ExaminationController extends Controller
         return $auto_complete_result;
     }
 	
-	public function checkSPKCode($a) {
-        $query_exam = "SELECT * FROM examinations WHERE spk_code = '".$a."'";
-		$data_exam = DB::select($query_exam);
-		return count($data_exam);
-    }
-	
 	public function generateSPKCodeManual(Request $request) {
-		return $this->generateSPKCode($request->input('lab_code'),$request->input(self::EXAM_TYPE),$request->input('year'));
-    }
-	
-	public function generateSPKCode($a,$b,$c) {
-
-		$query = "
-			SELECT 
-			SUBSTRING_INDEX(SUBSTRING_INDEX(spk_code,'/',2),'/',-1) + 1 AS last_numb
-			FROM examinations WHERE 
-			SUBSTRING_INDEX(spk_code,'/',1) = '".$a."' AND
-			SUBSTRING_INDEX(spk_code,'/',-1) = '".$c."'
-			ORDER BY last_numb DESC LIMIT 1
-		";
-		$data = DB::select($query);
-		if (!count($data)){
-			return ''.$a.'/001/'.$b.'/'.$c.'';
-		}
-		else{
-			$last_numb = $data[0]->last_numb;
-			if($last_numb < 10){
-				return ''.$a.'/00'.$last_numb.'/'.$b.'/'.$c.'';
-			}
-			else if($last_numb < 100){
-				return ''.$a.'/0'.$last_numb.'/'.$b.'/'.$c.'';
-			}
-			else{
-				return ''.$a.'/'.$last_numb.'/'.$b.'/'.$c.'';
-			}
-		}
-    }
-	
-	public function generateSPBNumber() {
-		$thisYear = date('Y');
-		$query = "
-			SELECT SUBSTRING_INDEX(spb_number,'/',1) + 1 AS last_numb
-			FROM examinations WHERE SUBSTRING_INDEX(spb_number,'/',-1) = ".$thisYear." AND spb_number LIKE '%TTH-02%'
-			ORDER BY last_numb DESC LIMIT 1
-		";
-		$data = DB::select($query);
-		if (!count($data)){
-			return '001/TTH-02/'.$thisYear.'';
-		}
-		else{
-			$last_numb = $data[0]->last_numb;
-			if($last_numb < 10){
-				return '00'.$last_numb.self::TTH_02.$thisYear.'';
-			}
-			else if($last_numb < 100){
-				return '0'.$last_numb.self::TTH_02.$thisYear.'';
-			}
-			else{
-				return ''.$last_numb.self::TTH_02.$thisYear.'';
-			}
-		}
-    }
-	
-	public function generateSPBParam(Request $request) {
-		$request->session()->put('key_exam_id_for_generate_spb', $request->input(self::EXAM_ID));
-		$request->session()->put('key_spb_number_for_generate_spb', $request->input(self::SPB_NUMBER));
-		$request->session()->put('key_spb_date_for_generate_spb', $request->input(self::SPB_DATE));
-		echo 1;
-    }
-	
-	public function generateEquipParam(Request $request) {
-		$request->session()->put('key_exam_id_for_generate_equip_masuk', $request->input(self::EXAM_ID));
-		$request->session()->put('key_in_equip_date_for_generate_equip_masuk', $request->input('in_equip_date'));
-		echo 1;
-    }
-	
-	public function generateKuitansiParam(Request $request) {
-		$kode = $this->generateKuitansiManual();
-		$exam_id = $request->input(self::EXAM_ID);
-		$exam = Examination::where('id', $exam_id)
-					->with(self::DEVICE)
-					->with(self::COMPANY)
-					->first();
-		$request->session()->put('key_jenis_for_kuitansi', 1);
-		$request->session()->put('key_id_for_kuitansi', $exam_id);
-		$request->session()->put('key_kode_for_kuitansi', $kode);
-		$request->session()->put('key_from_for_kuitansi', $exam->company->name);
-		$request->session()->put('key_price_for_kuitansi', $exam->cust_price_payment?: '0');
-		$request->session()->put('key_for_for_kuitansi', "Pengujian Perangkat ".$exam->device->name." (".$kode.")");
-		echo 1;
-    }
-	
-	public function generateKuitansiParamSTEL(Request $request) {
-		$kode = $this->generateKuitansiManual();
-		$exam_id = $request->input(self::EXAM_ID);
-		$query_stels = "SELECT DISTINCT
-				s. code AS stel,
-				ss. cust_price_payment,
-				c. name
-			FROM
-				stels s,
-				stels_sales ss,
-				stels_sales_detail ssd,
-				companies c,
-				users u
-			WHERE
-				s.id = ssd.stels_id
-			AND ss.id = ssd.stels_sales_id
-			AND ss.user_id = u.id
-			AND u.company_id = c.id
-			AND ss.id = '".$exam_id."'
-			ORDER BY s.code";
-		$data_stels = DB::select($query_stels);
-			$stel = $data_stels[0]->stel;
-		for ($i=1;$i<count($data_stels);$i++) {
-			$stel = $stel.", ".$data_stels[$i]->stel;
-		}
-			$stel = $stel.".";
-		$request->session()->put('key_jenis_for_kuitansi', 2);
-		$request->session()->put('key_id_for_kuitansi', $exam_id);
-		$request->session()->put('key_kode_for_kuitansi', $kode);
-		$request->session()->put('key_from_for_kuitansi', $data_stels[0]->name);
-		$request->session()->put('key_price_for_kuitansi', $data_stels[0]->cust_price_payment?: '0');
-		$request->session()->put('key_for_for_kuitansi', $stel);
-		echo 1;
+		$examinationService = new ExaminationService();
+		return $examinationService->generateSPKCode($request->input('lab_code'),$request->input(self::EXAM_TYPE),$request->input('year'));
     }
 	
 	public function generateSPB(Request $request) {
+		$examinationService = new ExaminationService();
 		$exam_id = $request->session()->get('key_exam_id_for_generate_spb');
 		$spb_number = $request->session()->get('key_spb_number_for_generate_spb');
 		if($spb_number == "" || $spb_number == null){
-			$spb_number = $this->generateSPBNumber();
+			$spb_number = $examinationService->generateSPBNumber();
 		}
 		$spb_date = $request->session()->get('key_spb_date_for_generate_spb');
 		$exam = Examination::where('id', $exam_id)
@@ -2282,12 +1834,27 @@ class ExaminationController extends Controller
 		;
     }
 	
+	public function generateSPBParam(Request $request) {
+		$request->session()->put('key_exam_id_for_generate_spb', $request->input(self::EXAM_ID));
+		$request->session()->put('key_spb_number_for_generate_spb', $request->input(self::SPB_NUMBER));
+		$request->session()->put('key_spb_date_for_generate_spb', $request->input(self::SPB_DATE));
+		echo 1;
+    }
+	
+	public function generateEquipParam(Request $request) {
+		$request->session()->put('key_exam_id_for_generate_equip_masuk', $request->input(self::EXAM_ID));
+		$request->session()->put('key_in_equip_date_for_generate_equip_masuk', $request->input('in_equip_date'));
+		echo 1;
+    }
+	
 	public function generateSPBData(Request $request) {
+		$examinationService = new ExaminationService();
 		$general_setting_poh = GeneralSetting::where('code', 'poh_manager_urel')->first();
 		$is_poh = $general_setting_poh && $general_setting_poh->is_active ?  1 : 0;
-		$manager_urels = $this->manager_urels($general_setting_poh);
+		$manager_urels = $examinationService->manager_urels($general_setting_poh);
 		
-		if($this->cekSPBNumber($request->input(self::SPB_NUMBER)) > 0){
+		$check_spb_number = Examination::where(self::SPB_NUMBER, $request->input(self::SPB_NUMBER))->first();
+		if($check_spb_number){
 			echo 2; //SPB Number Exists
 		}else{
 			$exam_id = $request->input(self::EXAM_ID);
@@ -2302,7 +1869,7 @@ class ExaminationController extends Controller
 						->with(self::EXAMINATION_TYPE)
 						->first()
 			;
-/* Kirim Draft ke TPN */
+			/* Kirim Draft ke TPN */
 			$biaya = 0;
 			for($i=0;$i<count($arr_biaya);$i++){
 				$biaya = $biaya + $arr_biaya[$i];
@@ -2351,7 +1918,7 @@ class ExaminationController extends Controller
 	                "branch_office" => "KCP KAMPUS TELKOM BANDUNG"         
 	            ]
 	        ];
-	        $purchase = $this->api_purchase($data_draft);
+	        $purchase = $examinationService->api_purchase($data_draft);
 	        $total_price = $biaya;
             $PO_ID = $purchase && $purchase->status ? $purchase->data->_id : null;
             $unique_code = $purchase && $purchase->status ? $purchase->data->unique_code : '0';
@@ -2359,7 +1926,7 @@ class ExaminationController extends Controller
             $final_price = $total_price + $unique_code + $tax;
             array_push($arr_nama_perangkat, 'Unique Code');
             array_push($arr_biaya, $unique_code);
-/* END Kirim Draft ke TPN */
+			/* END Kirim Draft ke TPN */
 			$data = []; 
 			$data[] = [
 				self::SPB_NUMBER => $spb_number,
@@ -2377,38 +1944,6 @@ class ExaminationController extends Controller
 		}
     }
 
-    public function api_purchase($data){
-        $client = new Client([
-            self::HEADERS => [self::CONTENT_TYPE => self::JSON_HEADER, 
-                            self::AUTHORIZATION => config(self::APP_GATEWAY_TPN_2)
-                        ],
-            self::BASE_URI => config(self::APP_URI_API_TPN),
-            self::TIMEOUT  => 60.0,
-            self::HTTP_ERRORS => false,
-            'verify' => false
-        ]);
-        try {
-            
-            $params['json'] = $data;
-            $res_purchase = $client->post("v1/draftbillings", $params)->getBody();
-            return json_decode($res_purchase);
-        } catch(Exception $e){
-            return null;
-        }
-    }
-	
-	function cekSPBNumber($spb_number)
-    {
-		$exam = Examination::where(self::SPB_NUMBER,'=',''.$spb_number.'')->get();
-		return count($exam);
-    }
-	
-	function cekRefID($exam_id)
-    {
-		$income = Income::where(self::REFERENCE_ID,'=',''.$exam_id.'')->get();
-		return count($income);
-    }
-	
 	function cetakUjiFungsi($id)
     {
 		$client = new Client([
@@ -2499,19 +2034,21 @@ class ExaminationController extends Controller
 	
 	function cetakFormBarang($id, Request $request)
     {
+		$examinationService = new ExaminationService();
 		$data = Examination::where('id','=',$id)
 		->with(self::EXAMINATION_TYPE)
 		->with(self::EXAMINATION_LAB)
 		->with(self::COMPANY)
-		->with('User')
+		->with('user')
 		->with(self::DEVICE)
 		->with(self::EQUIPMENT)
 		->get();
-		if(isset($data[0]->equipment[0]->no)){
+		
+		if(isset($data[0]->equipment[0]->location)){
 			if ($data[0]->equipment[0]->no) {
 				$kode_barang = $data[0]->equipment[0]->no;
 			}else{
-				$kode_barang = $this->generateKodeBarang($data[0]->ExaminationLab->lab_init,$this->romawi(date('n')),date('Y'));
+				$kode_barang = $examinationService->generateKodeBarang($data[0]->ExaminationLab->lab_init,$examinationService->romawi(date('n')),date('Y'));
 				$query_update = "UPDATE equipments
 					SET no = '".$kode_barang."'
 					WHERE examination_id = '".$id."'
@@ -2595,61 +2132,6 @@ class ExaminationController extends Controller
             ->with('data', $equipment);
     }
 	
-	public function generateKuitansiManual() {
-		$thisYear = date('Y');
-		$query = "
-			SELECT SUBSTRING_INDEX(number,'/',1) + 1 AS last_numb
-			FROM kuitansi WHERE SUBSTRING_INDEX(number,'/',-1) = ".$thisYear."
-			ORDER BY last_numb DESC LIMIT 1
-		";
-		$data = DB::select($query);
-		if (!count($data)){
-			return '001/DDS-73/'.$thisYear.'';
-		}
-		else{
-			$last_numb = $data[0]->last_numb;
-			if($last_numb < 10){
-				return '00'.$last_numb.self::DDS_73.$thisYear.'';
-			}
-			else if($last_numb < 100){
-				return '0'.$last_numb.self::DDS_73.$thisYear.'';
-			}
-			else{
-				return ''.$last_numb.self::DDS_73.$thisYear.'';
-			}
-		}
-    }
-	
-	public function generateKodeBarang($a,$b,$c) {
-		$query = "
-			SELECT
-				SUBSTRING_INDEX(no, '/', 1) + 1 AS last_numb
-			FROM
-				equipments
-			WHERE
-			SUBSTRING_INDEX(no, '/', -1) = ".$c."
-			ORDER BY
-				last_numb DESC
-			LIMIT 1
-		";
-		$data = DB::select($query);
-		if (!count($data)){
-			return '001/'.$a.'/'.$b.'/'.$c.'';
-		}
-		else{
-			$last_numb = $data[0]->last_numb;
-			if($last_numb < 10){
-				return '00'.$last_numb.'/'.$a.'/'.$b.'/'.$c.'';
-			}
-			else if($last_numb < 100){
-				return '0'.$last_numb.'/'.$a.'/'.$b.'/'.$c.'';
-			}
-			else{
-				return ''.$last_numb.'/'.$a.'/'.$b.'/'.$c.'';
-			}
-		}
-    }
-	
 	public function deleteRevLapUji($id)
     {
         $examination_attachment = ExaminationAttach::find($id);
@@ -2670,156 +2152,5 @@ class ExaminationController extends Controller
             return redirect(self::ADMIN_EXAMINATION_LOC.$examination_attachment->examination_id.self::EDIT_LOC);
 
 	}
-	
-	public function insertAttachment($request,$exam_id,$currentUser_id,$file_type,$file_name,$attach_name){
-		if ($request->hasFile($file_type)) {
-			$name_file = $file_name.$request->file($file_type)->getClientOriginalName();
-			$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam_id;
-			if (!file_exists($path_file)) {
-				mkdir($path_file, 0775);
-			}
-			if($request->file($file_type)->move($path_file,$name_file)){
-				$attach = ExaminationAttach::where('name', $attach_name)->where(self::EXAMINATION_ID, ''.$exam_id.'')->first();
-				if ($attach){
-					$attach->attachment = $name_file;
-					$attach->updated_by = $currentUser_id;
-		
-					$attach->save();
-				} else{
-					$attach = new ExaminationAttach;
-					$attach->id = Uuid::uuid4();
-					$attach->examination_id = $exam_id; 
-					$attach->name = $attach_name;
-					$attach->attachment = $name_file;
-					$attach->created_by = $currentUser_id;
-					$attach->updated_by = $currentUser_id;
-		
-					$attach->save();
-				}
-				if($file_type == self::TANDA_TERIMA){
-					Session::flash(self::MESSAGE, 'Success Save '.$attach.' to directory');
-				}
-				if($file_type == self::BARANG_FILE || $file_type == self::BARANG_FILE2 || $file_type == self::TANDA_TERIMA){
-					return redirect(self::ADMIN_EXAMINATION_LOC.$exam_id.self::EDIT_LOC);
-				}
-			}else{
-				Session::flash(self::ERROR, 'Save '.$attach_name.' to directory failed');
-				return redirect(self::ADMIN_EXAMINATION_LOC.$exam_id.self::EDIT_LOC);
-			}
-		}		
-	}
 
-	public function generateFromTPN($exam, $type, $filelink){
-    	$client = new Client([
-            self::HEADERS => [self::AUTHORIZATION => config(self::APP_GATEWAY_TPN_2)],
-            self::BASE_URI => config(self::APP_URI_API_TPN),
-            self::TIMEOUT  => 60.0,
-            self::HTTP_ERRORS => false
-        ]);
-
-    	if($exam){
-    		if($type == self::FAKTUR_PAJAK){
-    			$payment_date = $exam->payment_date != '0000-00-00' ? $exam->payment_date : null;
-			    /* GENERATE NAMA FILE FAKTUR */
-			    $filename = $exam ? $payment_date.'_'.$exam->company_name.'_'.$exam->name.'_'.$exam->mark.'_'.$exam->capacity.'_'.$exam->model : $exam->INVOICE_ID;
-			    /* END GENERATE NAMA FILE FAKTUR */
-			    $name_file = 'faktur_spb_'.$filename.'.pdf';
-    		}
-            try {
-                $INVOICE_ID = $exam->INVOICE_ID;
-                $res_invoice = $client->request('GET', self::V1_INVOICE.$INVOICE_ID);
-                $invoice = json_decode($res_invoice->getBody());
-                
-                if($INVOICE_ID && $invoice && $invoice->status){
-                    $status_invoice = $invoice->data->status_invoice;
-                    if($status_invoice == "approved"){
-                        $status_faktur = $invoice->data->status_faktur;
-                        if($status_faktur == "received"){
-                            /*SAVE FILE*/
-                            $name_file = $type == self::KUITANSI ? 'kuitansi_spb_'.$INVOICE_ID.'.pdf' : $name_file;
-							$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
-							if (!file_exists($path_file)) {
-								mkdir($path_file, 0775);
-							}
-							$response = $client->request('GET', self::V1_INVOICE.$INVOICE_ID.$filelink);
-                            $stream = (String)$response->getBody();
-
-                            if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
-                                $attach = ExaminationAttach::where('name', $type)->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
-                                $currentUser = Auth::user();
-
-								if ($attach){
-									$attach->attachment = $name_file;
-									$attach->updated_by = $currentUser->id;
-
-									$attach->save();
-								} else{
-									$attach = new ExaminationAttach;
-									$attach->id = Uuid::uuid4();
-									$attach->examination_id = $exam->id; 
-									$attach->name = $type;
-									$attach->attachment = $name_file;
-									$attach->created_by = $currentUser->id;
-									$attach->updated_by = $currentUser->id;
-
-									$attach->save();
-								}
-                                return $type." Berhasil Disimpan.";
-                            }else{
-                                return "Gagal Menyimpan ".$type."!";
-                            }
-                        }else{
-                            return $invoice->data->status_faktur;
-                        }
-                    }else{
-                        switch ($status_invoice) {
-                            case 'invoiced':
-                                return "Invoice Baru Dibuat.";
-                                break;
-                            
-                            case 'returned':
-                                return $invoice->data->$status_invoice->message;
-                                break;
-                            
-                            default:
-                                return "Invoice sudah dikirim ke DJP.";
-                                break;
-                        }
-                    }
-                }else{
-                    return "Data Invoice Tidak Ditemukan!";        
-                }
-            } catch(Exception $e){
-                return null;
-            }
-        }else{
-            return "Data Pembelian Tidak Ditemukan!";
-        }
-	}
-	
-	public function manager_urels($general_setting_poh){
-		if($general_setting_poh){
-			if($general_setting_poh->is_active){
-				if( strpos( $general_setting_poh->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting_poh->value));}
-					else{$manager_urels = $general_setting_poh->value?: '-';}
-			}else{
-				$general_setting = GeneralSetting::where('code', self::MANAGER_UREL)->first();
-				if($general_setting){
-					if( strpos( $general_setting->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting->value));}
-						else{$manager_urels = $general_setting->value?: '-';}
-				}else{
-					$manager_urels = self::DOTS;
-				}	
-			}
-		}else{
-			$general_setting = GeneralSetting::where('code', self::MANAGER_UREL)->first();
-			if($general_setting){
-				if( strpos( $general_setting->value, "/" ) !== false ) {$manager_urels = urlencode(urlencode($general_setting->value));}
-					else{$manager_urels = $general_setting->value?: '-';}
-			}else{
-				$manager_urels = self::DOTS;
-			}
-		}
-		return $manager_urels;
-	}
 }

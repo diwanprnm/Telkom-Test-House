@@ -437,6 +437,9 @@ class PermohonanController extends Controller
 					$exam_no_reg = DB::table(self::EXAMINATIONS)->where('id', ''.$exam_id.'')->first();
 			$device_id = 
 				$request->input('hide_device_id');
+		}else{
+			$exam_id = Uuid::uuid4();
+			$device_id = Uuid::uuid4();
 		}
 		$currentUser = Auth::user();
 		$user_id = ''.$currentUser[self::ATTRIBUTES]['id'].'';
@@ -584,9 +587,81 @@ class PermohonanController extends Controller
 			$fuploadnpwp_name = $request->input(self::HIDE_NPWP_FILE);
 		}
 
+		if ($request->hasFile(self::FUPLOADUJI)) {
+			$name_file = 'ref_uji_'.$request->file(self::FUPLOADUJI)->getClientOriginalName();
+			if($request->file(self::FUPLOADUJI)->move($path_file, $name_file)){
+				$fuploadrefuji_name = $name_file;
+				if ($type == 'update'){
+					if (File::exists(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_REF_UJI_FILE))){
+						File::delete(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_REF_UJI_FILE));
+					}
+				}
+			}else{
+				$fuploadrefuji_name = $type == 'update' ? $request->input(self::HIDE_REF_UJI_FILE) : '';
+			}
+		}else{
+			if($type == 'submit'){
+				// case QA
+				$res = explode('/',$request->input('path_ref'));   
+				$fuploadrefuji_name = $res[count($res)-1];
+					$url = str_replace(" ", "%20", $request->input('path_ref'));
+				file_put_contents($path_file.'/'.$fuploadrefuji_name, @fopen($url,'r'));
+			}else{
+				$fuploadrefuji_name = $request->input(self::HIDE_REF_UJI_FILE);
+			}
+		}
+		if($jns_pengujian == 1 && $jns_perusahaan !=self::PABRIKAN){
+			if ($request->hasFile(self::FUPLOADPRINSIPAL)) {
+				$name_file = 'prinsipal_'.$request->file(self::FUPLOADPRINSIPAL)->getClientOriginalName();
+				if($request->file(self::FUPLOADPRINSIPAL)->move($path_file, $name_file)){
+					$fuploadprinsipal_name = $name_file;
+					if ($type == 'update'){
+						if (File::exists(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_PRINSIPAL_FILE))){
+							File::delete(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_PRINSIPAL_FILE));
+						}
+					}
+				}else{
+					$fuploadprinsipal_name = $type == 'update' ? $request->input(self::HIDE_PRINSIPAL_FILE) : '';
+				}
+			}else{
+				$fuploadprinsipal_name = $type == 'update' ? $request->input(self::HIDE_PRINSIPAL_FILE) : '';
+			}
+		}else if($jns_pengujian == 2){
+			if ($request->hasFile(self::FUPLOADSP3)) {
+				$name_file = 'sp3_'.$request->file(self::FUPLOADSP3)->getClientOriginalName();
+				if($request->file(self::FUPLOADSP3)->move($path_file, $name_file)){
+					$fuploadsp3_name = $name_file;
+					if ($type == 'update'){
+						if (File::exists(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_SP3_FILE))){
+							File::delete(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_SP3_FILE));
+						}
+					}
+				}else{
+					$fuploadsp3_name = $type == 'update' ? $request->input(self::HIDE_SP3_FILE) : '';
+				}
+			}else{
+				$fuploadsp3_name = $type == 'update' ? $request->input(self::HIDE_SP3_FILE) : '';
+			}
+		}
+		
+		if ($request->hasFile(self::FUPLOADDLL)) {
+			$name_file = 'dll_'.$request->file(self::FUPLOADDLL)->getClientOriginalName();
+			if($request->file(self::FUPLOADDLL)->move($path_file,$name_file)){
+				$fuploaddll_name = $name_file;
+				if ($type == 'update'){
+					if (File::exists(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_DLL_FILE))){
+						File::delete(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_DLL_FILE));
+					}
+				}
+			}else{
+				$fuploaddll_name = $type == 'update' ? $request->input(self::HIDE_DLL_FILE) : '';
+			}
+		}else{
+			$fuploaddll_name = $type == 'update' ? $request->input(self::HIDE_DLL_FILE) : '';
+		}
+
 		if ($type == 'submit') {
 			$device = new Device;
-			$device_id = Uuid::uuid4();
 			$device->id = $device_id;
 			$device->name = ''.$nama_perangkat.'';
 			$device->mark = ''.$merek_perangkat.'';
@@ -612,12 +687,12 @@ class PermohonanController extends Controller
 			}
 
 			$exam = new Examination;
-			$exam_id = Uuid::uuid4();
 			$exam->id = $exam_id;
 			$exam->examination_type_id = ''.$jns_pengujian.'';
 			$exam->company_id = ''.$company_id.'';
 			$exam->device_id = ''.$device_id.'';
-				$examLab = DB::table('stels')->where('code', ''.$referensi_perangkat.'')->first();
+				$ref_perangkat = explode(",", $referensi_perangkat);
+				$examLab = DB::table('stels')->where('code', ''.$ref_perangkat[0].'')->first();
 				if(count($examLab)==0){
 					$exam->examination_lab_id = NULL;
 				}
@@ -748,70 +823,9 @@ class PermohonanController extends Controller
 		}
 
 		else{
-			if ($request->hasFile(self::FUPLOADUJI)) {
-				$name_file = 'ref_uji_'.$request->file(self::FUPLOADUJI)->getClientOriginalName();
-				if($request->file(self::FUPLOADUJI)->move($path_file, $name_file)){
-					$fuploadrefuji_name = $name_file;
-					if (File::exists(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_REF_UJI_FILE))){
-						File::delete(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_REF_UJI_FILE));
-					}
-				}else{
-					$fuploadrefuji_name = $request->input(self::HIDE_REF_UJI_FILE);
-				}
-			}else{
-					$fuploadrefuji_name = $request->input(self::HIDE_REF_UJI_FILE);
-
-			}
-			if($jns_pengujian == 1 && $jns_perusahaan !=self::PABRIKAN){
-				if ($request->hasFile(self::FUPLOADPRINSIPAL)) {
-					$name_file = 'prinsipal_'.$request->file(self::FUPLOADPRINSIPAL)->getClientOriginalName();
-					if($request->file(self::FUPLOADPRINSIPAL)->move($path_file, $name_file)){
-						$fuploadprinsipal_name = $name_file;
-						if (File::exists(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_PRINSIPAL_FILE))){
-							File::delete(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_PRINSIPAL_FILE));
-						}
-					}else{
-						$fuploadprinsipal_name = $request->input(self::HIDE_PRINSIPAL_FILE);
-					}
-				}else{
-					$fuploadprinsipal_name = $request->input(self::HIDE_PRINSIPAL_FILE);
-				}
-			}else if($jns_pengujian == 2){
-				if ($request->hasFile(self::FUPLOADSP3)) {
-					$name_file = 'sp3_'.$request->file(self::FUPLOADSP3)->getClientOriginalName();
-					if($request->file(self::FUPLOADSP3)->move($path_file, $name_file)){
-						$fuploadsp3_name = $name_file;
-						if (File::exists(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_SP3_FILE))){
-							File::delete(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_SP3_FILE));
-						}
-					}else{
-						$fuploadsp3_name = $request->input(self::HIDE_SP3_FILE);
-					}
-				}else{
-					$fuploadsp3_name = $request->input(self::HIDE_SP3_FILE);
-				}
-			}
-			
-			if ($request->hasFile(self::FUPLOADDLL)) {
-				$name_file = 'dll_'.$request->file(self::FUPLOADDLL)->getClientOriginalName();
-				if($request->file(self::FUPLOADDLL)->move($path_file,$name_file)){
-					$fuploaddll_name = $name_file;
-					if (File::exists(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_DLL_FILE))){
-						File::delete(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_DLL_FILE));
-					}
-				}else{
-					$fuploaddll_name = $request->input(self::HIDE_DLL_FILE);
-				}
-			}else{
-				$fuploaddll_name = $request->input(self::HIDE_DLL_FILE);
-			}
-			
-			$examLab = DB::table('stels')->where('code', ''.$referensi_perangkat.'')->first();
-			if(count($examLab)>0){
-				$idLab = $examLab->type;
-			}else{
-				$idLab = "";
-			}
+			$ref_perangkat = explode(",", $referensi_perangkat);
+			$examLab = DB::table('stels')->where('code', ''.$ref_perangkat[0].'')->first();
+			$idLab = count($examLab)>0 ? $examLab->type : $exam_no_reg->examination_lab_id;
 			$query_update_company = "UPDATE examinations
 				SET 
 					examination_lab_id = '".$idLab."',
@@ -841,7 +855,7 @@ class PermohonanController extends Controller
 			$query_update_ref_uji = "UPDATE examination_attachments
 				SET 
 					attachment = '".$fuploadrefuji_name."'
-				WHERE examination_id = '".$exam_id."' AND `name` = self::REFERENSI_UJI
+				WHERE examination_id = '".$exam_id."' AND `name` = '.self::REFERENSI_UJI.'
 			";
 			
 			DB::update($query_update_ref_uji);
@@ -864,7 +878,7 @@ class PermohonanController extends Controller
 			$query_update_dll = "UPDATE examination_attachments
 				SET 
 					attachment = '".$fuploaddll_name."'
-				WHERE examination_id = '".$exam_id."' AND `name` = self::FILE_LAINNYA
+				WHERE examination_id = '".$exam_id."' AND `name` = '.self::FILE_LAINNYA.'
 			";
 			DB::update($query_update_dll);
 			

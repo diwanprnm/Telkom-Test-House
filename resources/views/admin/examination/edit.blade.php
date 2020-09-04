@@ -1713,7 +1713,7 @@
 								@if($find_kuitansi == 1)
 									-
 								@else
-									<a onclick="checkKuitansi('@php echo $data->id @endphp')"> Cek Kuitansi</a>
+									<a onclick="checkFromTPN('@php echo $data->id @endphp', 'Kuitansi', '/exportpdf')"> Cek Kuitansi</a>
 								@endif
 							</div>
 							<div class="col-md-6">
@@ -1721,7 +1721,7 @@
 									@if($find_faktur == 1)
 										-
 									@else
-										<a onclick="checkTaxInvoice('@php echo $data->id @endphp')"> Cek Faktur Pajak</a>
+										<a onclick="checkFromTPN('@php echo $data->id @endphp', 'Faktur Pajak', '/taxinvoice/pdf')"> Cek Faktur Pajak</a>
 									@endif
 								</div>
 							</div>
@@ -4260,37 +4260,11 @@
 		}); */
 	}
 	
-	function makeKuitansi(a){
-		var APP_URL = {!! json_encode(url('/admin/kuitansi/create')) !!};		
+	function checkFromTPN(a,b,c){
 		$.ajax({
 			type: "POST",
-			url : "generateKuitansiParam",
-			data: {'_token':"{{ csrf_token() }}", 'exam_id':a},
-			beforeSend: function(){
-				
-			},
-			success: function(response){
-				if(response == 1){
-					window.open(APP_URL, 'mywin','status=0,toolbar=0,location=0,menubar=0,directories=0,resizable=0,scrollbars=0,width=720,height=500');
-				}else{
-					alert("Gagal mengambil data");
-				}
-			},
-			error:function(){
-				alert("Gagal mengambil data");
-			}
-		});
-		
-		/* $("#1").load("../loadDataKet",{pgw_id6:res[3]}, function() {
-			document.getElementById("overlay").style.display="none";
-		}); */
-	}
-	
-	function checkKuitansi(a){
-		$.ajax({
-			type: "POST",
-			url : "generateKuitansiSPB",
-			data: {'_token':"{{ csrf_token() }}", 'id':a},
+			url : "generateFromTPN",
+			data: {'_token':"{{ csrf_token() }}", 'id':a, 'type':b, 'filelink':c},
 			beforeSend: function(){
 				document.getElementById("overlay").style.display="inherit";
 			},
@@ -4298,7 +4272,7 @@
 				console.log(response);
 				if(response){
 					alert(response);
-					if(response == "Kuitansi Berhasil Disimpan."){location.reload();}
+					if(response == b+" Berhasil Disimpan."){location.reload();}
 				}else{
 					alert("Gagal mengambil data (s)");
 				}
@@ -4310,40 +4284,6 @@
 				document.getElementById("overlay").style.display="none";
 			}
 		});
-		
-		/* $("#1").load("../loadDataKet",{pgw_id6:res[3]}, function() {
-			document.getElementById("overlay").style.display="none";
-		}); */
-	}
-
-	function checkTaxInvoice(a){
-		$.ajax({
-			type: "POST",
-			url : "generateTaxInvoiceSPB",
-			data: {'_token':"{{ csrf_token() }}", 'id':a},
-			beforeSend: function(){
-				document.getElementById("overlay").style.display="inherit";
-			},
-			success: function(response){
-				console.log(response);
-				if(response){
-					alert(response);
-					if(response == "Faktur Pajak Berhasil Disimpan."){location.reload();}
-				}else{
-					alert("Gagal mengambil data (s)");
-				}
-				document.getElementById("overlay").style.display="none";
-			},
-			error:function(response){
-				console.log(response);
-				alert("Gagal mengambil data (e)");
-				document.getElementById("overlay").style.display="none";
-			}
-		});
-		
-		/* $("#1").load("../loadDataKet",{pgw_id6:res[3]}, function() {
-			document.getElementById("overlay").style.display="none";
-		}); */
 	}
 
 	function masukkanBarang(a,b){

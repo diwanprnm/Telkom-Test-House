@@ -104,7 +104,7 @@
 						<input type="text" name="spb_date" id="spb_date" class="form-control" value="{{ $timestamp }}" required readonly/>
 						<span class="input-group-btn">
 							<button type="button" class="btn btn-default">
-								<em class="glyphicon glyphicon-calendar"></empty>
+								<em class="glyphicon glyphicon-calendar"></em>
 							</button>
 						</span>
 					</p>

@@ -18,23 +18,23 @@ return [
     'url_api_bsp' => env('url_api_bsp', 'http://revitalisasiotr-otr.apps.playcourt.id/api/'),
     
     /* ENV DEV TPN */
-/*
+
     'url_api_tpn' => env('url_api_tpn', 'http://telkompartner-tpncms-dev.vsan-apps.playcourt.id/api/'),    
     'gateway_tpn' => env('gateway_tpn', 'apiKey 4ZU03BLNm1ebXSlQa4ou3y:6MHfjHpbOVv3FKTFAf8jIv'),
     'product_id_tth' => env('product_id_tth', '5e5377a0c5f8d40010fc4594'),
     'gateway_tpn_2' => env('gateway_tpn_2', 'apiKey 6PVO8UeiCOgdc3tZgxfXNx:1ujXtoe5tcTCJnRNCb6MmC'),
-    'product_id_tth_2' => env('product_id_tth_2', '5e9817b8a621010011844698'),
-*/
+    'product_id_tth_2' => env('product_id_tth_2', '5ea2ce4992a56f001066d48d'),
+
     /* END ENV DEV TPN */
 
     /* ENV PROD TPN */
-
+/*
     'url_api_tpn' => env('url_api_tpn', 'https://partner.telkom.co.id/api/'),
     'gateway_tpn' => env('gateway_tpn', 'apiKey 1w4kG2nmIYPiHfjxIEeSsh:3fhd4B65RoTRp2HCUhJbsJ'),
     'product_id_tth' => env('product_id_tth', '5e5377a0c5f8d40010fc4594'),
     'gateway_tpn_2' => env('gateway_tpn_2', 'apiKey 0ODyxA3NcofUgCJuoKBp7J:24ZhRwJddUuZvBjluUZRhR'),
     'product_id_tth_2' => env('product_id_tth_2', '5ea2ce4992a56f001066d48d'),
-
+*/
     /* END ENV PROD TPN */
     'IS_ENABLED_NOTIFICATION' => env('IS_ENABLED_NOTIFICATION', true),
 
