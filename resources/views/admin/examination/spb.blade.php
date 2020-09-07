@@ -143,7 +143,7 @@
 					<td>
 						<div class="form-group">
 							<!-- <textarea class="form-control" rows="1" name="nama_perangkat" required>1 Unit {{ $data->device->name }}, merk {{ $data->device->mark }}, type {{ $data->device->model }}, kapasitas {{ $data->device->capacity }}</textarea> -->
-							<input type="text" class="form-control" name="nama_perangkat[]" value="{{ $data->device->name }}, merk {{ $data->device->mark }}, type {{ $data->device->model }}, kapasitas {{ $data->device->capacity }}" required>
+							<input type="text" class="form-control" name="nama_perangkat[]" value="{{ $data->device->name }}, merek {{ $data->device->mark }}, tipe {{ $data->device->model }}, kapasitas {{ $data->device->capacity }}" required>
 						</div>
 					</td>
 					<td>

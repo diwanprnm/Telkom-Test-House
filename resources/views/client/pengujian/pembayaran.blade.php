@@ -1,7 +1,7 @@
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
-    <title>{{ trans('translate.examination_payment') }} - Telkom DDS</title>
+    <title>{{ trans('translate.examination_payment') }} - Telkom DDB</title>
 @section('content')
  		 
 		<!-- Content
@@ -41,8 +41,7 @@
 										</div>
 									@endif
 									<!-- start: WIZARD FORM -->
-									<form id="form" class="smart-wizard" role="form" method="POST" action="{{ url('/pengujian/pembayaran') }}" enctype="multipart/form-data">
-										{!! csrf_field() !!}
+									<form id="form" class="smart-wizard" role="form" method="POST" action="{{ url('doCheckoutSPB') }}" onsubmit="javascript:document.getElementById('submit-btn').style.display = 'none';document.getElementById('submit-msg').style.display = 'block';">
 										<input type="hidden" name="hide_id_user" id="hide_id_user" value="<?php echo $data->created_by ?>"/>
 										<input type="hidden" name="hide_id_exam" id="hide_id_exam" value="<?php echo $data->examination_id ?>"/>
 										<input type="hidden" name="hide_id_attach" id="hide_id_attach" value="<?php echo $data->id ?>"/>
@@ -52,54 +51,57 @@
 												<table class="table table-condensed">
 													<thead>
 														<tr>
-															<th colspan="3">{{ trans('translate.examination_upload_payment') }}</th>
+															<th colspan="3">{{ trans('translate.stel_payment_confirmation') }}</th>
 														</tr>
 													</thead>
 													<tbody>
 														<tr>
-															<th colspan="3"></th>
+															<td>{{ trans('translate.examination_number_payment') }} : {{ $spb_number }}</td>
 														</tr>
 														<tr>
-															<th colspan="3">{{ trans('translate.examination_file_payment') }}</th>
+															<td>{{ trans('translate.service_application_name') }} : {{ $examinationsData[0]->device->name }}, {{ $examinationsData[0]->device->mark }}, {{ $examinationsData[0]->device->model }}, {{ $examinationsData[0]->device->capacity }}</td>
 														</tr>
 														<tr>
+															<td>{{ trans('translate.stel_total_payment') }} : </td>
+														</tr>
+														<tr class="with_pph">
 															<td>
-																<input class="data-upload-pembayaran" id="data-upload-pembayaran" name="filePembayaran" type="file" accept="application/pdf,image/*" required>
-																<input type="hidden" name="hide_file_pembayaran" id="hide_file_pembayaran" value="<?php echo $data->attachment ?>"/>
-																<div id="file-pembayaran"><?php echo $data->attachment ?></div>
+																<span style="font-weight: bold; font-size:150%; color: #fa8231;">{{ trans('translate.stel_rupiah') }}. {{ number_format($examinationsData[0]->price, 0, ",", ".") }},-</span>&nbsp;
+																<label style="font-size:70%; text-transform: none;">({{ trans('translate.examination_payment_this_nominal') }})</label>
 															</td>
 														</tr>
-														<tr>
-															<td>{{ trans('translate.examination_number_payment') }} : 
-															<input type="text" id="no-pembayaran" class="no-pembayaran form-control" name="no-pembayaran" placeholder="<?php echo $spb_number ?>" value="<?php echo $spb_number ?>" readonly></td>
+														<tr class="is_pph" style="display: none;">
+															<td>
+																<span style="font-size:100%; color: #fa8231; text-decoration: line-through;	">{{ trans('translate.stel_rupiah') }}. {{ number_format($examinationsData[0]->price, 0, ",", ".") }},-</span>
+															</td>
 														</tr>
-														<tr>
-															<?php 
-																if($data->tgl == '' or $data->tgl == '0000-00-00' or $data->tgl == NULL){
-																	// $timestamp = date('d-m-Y');
-																	$timestamp = $spb_date;
-																}else{
-																	// $timestamp = date('d-m-Y', strtotime($data->tgl));
-																	$timestamp = $data->tgl;
-																}
-															?>
-															<td>{{ trans('translate.examination_date_payment') }} : 
-															<input type="text" id="tgl-pembayaran" class="date tgl-pembayaran form-control" name="tgl-pembayaran" placeholder="Tanggal ..." value="<?php echo $timestamp; ?>" readonly required></td>
+														<tr class="is_pph" style="display: none;">
+															<td>
+																@php 
+																	$pph = floor(($examinationsData[0]->price + $examinationsData[0]->unique_code)*0.02); 
+																	$amount = $examinationsData[0]->price - $pph;
+																@endphp
+																<span style="font-weight: bold; font-size:150%; color: #fa8231;">{{ trans('translate.stel_rupiah') }}. {{ number_format($amount, 0, ",", ".") }},-</span>
+																<label style="font-size:70%; text-transform: none;">({{ trans('translate.examination_payment_nominal_without_pph') }})</label>
+															</td>
 														</tr>
-														<tr>
-															<td>{{ trans('translate.examination_price_payment') }} : 
-															<input type="text" id="jml-pembayaran" class="jml-pembayaran form-control" name="jml-pembayaran" placeholder="<?php echo $price ?>" value="<?php echo $price ?>" required></td>
-														</tr>
-												</table>
-											</div>
-											<div class="row">
-												<div class=" pull-right col-xs-12">
-													<a class="button button-3d btn-sky" href="{{url('/pengujian')}}">{{ trans('translate.back') }}</a>
-													<button type="submit" class="button button-3d btn-sky pull-right" style="margin-bottom:10px;">
-														{{ trans('translate.examination_upload_payment_file') }}
-													</button>
+												</table>		
+												<div class="check-layout">
+													<div class="col-md-4">
+														<label style="text-transform: none;"><input type="checkbox" id="is_pph" name="is_pph"> {{ trans('translate.examination_payment_will_pay') }}</label>
+													</div>
 												</div>
-											</div>										
+												<span style="font-weight: bold; text-decoration-line: underline; text-underline-position: under;">{{ trans('translate.stel_payment_method') }}</span>
+												<div class="check-layout">
+													<div class="col-md-4">
+														<input type="radio" name="payment_method" value="atm"> {{ trans('translate.stel_payment_method_atm') }}
+													</div>
+													<div class="col-md-4">
+														<input type="radio" name="payment_method" value="va" checked> {{ trans('translate.stel_payment_method_va') }}
+													</div>
+												</div>
+												<button id="submit-btn" class="button full button-3d btn-sky">{{ trans('translate.stel_payment_confirmation') }}</button> <p hidden id="submit-msg">Please Wait ...</p>
+											</div>								
 										</div>
 									</div>
 									</form>
@@ -113,7 +115,7 @@
 				</div>
 
 
-				<input type="hidden" name="spb_date" id="spd_date" value="<?php echo $examinationsData->spb_date;?>">
+				<input type="hidden" name="spb_date" id="spd_date" value="<?php echo $examinationsData[0]->spb_date;?>">
 				</div>
 
 			</div>
@@ -125,11 +127,18 @@
  
 @section('content_js')
  		<script type="text/javascript">	
- 	// 		$('.date').datepicker({  
-		// 	"format": "dd-mm-yyyy",
-		// 	"setDate": new Date(),
-		// 	"autoclose": true
-		// });
+	
+	 	$(document).ready(function() {
+		    $('#is_pph').change(function() {
+		    	if(this.checked) {
+		            $(".is_pph").show();
+		            $(".with_pph").hide();
+		        }else{
+		        	$(".with_pph").show();
+		            $(".is_pph").hide();
+		        }
+		    });
+		});
 
 		/* Dengan Rupiah */
 		var jml_pembayaran = document.getElementById('jml-pembayaran');

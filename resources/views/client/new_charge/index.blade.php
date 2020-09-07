@@ -1,7 +1,7 @@
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
-    <title>{{ trans('translate.new_charge') }} {{ $dateNewCharge }} - Telkom DDS</title>
+    <title>{{ trans('translate.new_charge') }} {{ $dateNewCharge }} - Telkom DDB</title>
 @section('content')
  		<!-- Page Title
 		============================================= -->

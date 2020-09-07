@@ -380,7 +380,7 @@ return [
 	'subtitle_vt_process' => 'Pengujian perangkat telekomunikasi yang sifatnya berdasarkan pesanan oleh customer. Pengujian dilakukan berdasarkan referensi yang disepakati bersama antara user (Divisi Operasional/Kantor Pusat/Telkom Group) dan Divisi Digital Service (DDS) disertai Nota Dinas.',
 	'subtitle_cal_process' => 'Kalibrasi alat pengukuran',
 	
-	'stel_term_condition_num1'	=> 'Harga total yang tercantum pada keranjang belanja belum termasuk PPn 10%.',
+	'stel_term_condition_num1'	=> 'Harga total yang tercantum pada keranjang belanja belum termasuk PPN 10% & biaya payment gateway dari pihak ketiga.',
 	'stel_term_condition_num2'	=> 'Dokumen STEL yang dibeli akan dibubuhi watermark sesuai dengan nama perusahaan yang membeli, dan tidak dapat digunakan pada perusahaan lain.',
 	'stel_term_condition_num3'	=> 'Dokumen STEL yang anda beli tidak memiliki masa berlaku hingga dikeluarkan versi yang terbaru, dan segera hubungi staff kami jika terjadi perubahan versi.',
 	'stel_term_condition_num4'	=> 'Jika dokumen STEL sudah diberikan dan ternyata terjadi kesalahan pembelian karena kelalaian customer bukan menjadi tanggung jawab PT. Telkom Indonesia, Tbk.',
@@ -432,4 +432,13 @@ return [
 	'stel_payment_before' => 'SEGERA LAKUKAN PEMBAYARAN SEBELUM',
 	'stel_transfer_to_va' => 'Transfer pembayaran ke nomor Virtual Account',
 	'expired' => 'Kadaluarsa',
+	'stel_total_expired' => 'Nomor Virtual Account ini sudah kadaluarsa, klik',
+	'here' => 'disini',
+	'stel_total_resend' => 'untuk mengirim ulang Nomor Virtual Account yang baru',
+
+	'examination_payment_total' => 'Total Biaya Pengujian',
+	'examination_payment_cut' => 'dipotong',
+	'examination_payment_this_nominal' => 'TERMASUK PPh',
+	'examination_payment_will_pay' => 'SAYA AKAN MEMBAYAR TANPA PPh',
+	'examination_payment_nominal_without_pph' => 'TIDAK TERMASUK PPh',
 ];

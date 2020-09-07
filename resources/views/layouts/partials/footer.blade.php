@@ -14,7 +14,7 @@
 
                             <div class="widget clearfix">
 
-                                <img src="{{url('images/logo_dds.png')}}" alt="" class="footer-logo">
+                                <img src="{{url('images/TTHMain.png')}}" alt="" class="footer-logo">
 
                                 <p>
                                     <b>{{ trans('translate.header_title') }}.</b>
@@ -95,7 +95,7 @@
                 <div class="container clearfix">
 
                     <div class="col_half">
-                        Copyrights &copy; 2017 All Rights Reserved by Telkom Digital Service</div>
+                        Copyrights &copy; 2017 All Rights Reserved by Telkom Divisi Digital Business</div>
                     </div>
 
                 </div>

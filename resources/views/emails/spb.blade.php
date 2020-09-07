@@ -51,19 +51,39 @@
 		<br><br>
 	</p>
 	<p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-		Berkenaan dengan pendaftaran Uji {!! $exam_type !!} ({!! $exam_type_desc !!}) perangkat saudara/i sebagaimana telah dinyatakan 'memenuhi' dalam proses uji fungsi, terlampir kami sampaikan SPB (Surat Pemberitahuan Biaya) Uji perangkat dimaksud.
+		Berkenaan dengan pendaftaran uji {!! $exam_type !!} ({!! $exam_type_desc !!}) perangkat Bapak/Ibu yang sudah memenuhi proses uji fungsi, maka SPB dengan nomor <strong>{!! $spb_number !!} telah terbit dan dapat mengunduhnya di web </strong> <a href="https://www.telkomtesthouse.co.id">www.telkomtesthouse.co.id</a> atau lampiran email ini.
 		<br><br>
-		Copy bukti transfer (dengan <strong>mencantumkan nomor SPB untuk memudahkan identifikasi transaksi</strong>) beserta copy NPWP, mohon disampaikan via email urelddstelkom@gmail.com apabila pembayaran sudah dilakukan.
+		Kami sampaikan juga <strong>pembayaran SPB</strong> dapat dilakukan dengan <strong>dua cara pembayaran</strong>, yaitu:
+		<ul style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
+			<li>Pembayaran dengan <strong>Bank Transfer</strong></li>
+		  	<li>Pembayaran dengan <strong>Virtual Account Mandiri</strong></li>
+		</ul>
+	</p>
+	<p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
+		<br>
+		Silakan klik tautan di bawah ini untuk memilih cara pembayaran yang dikehendaki.
+		<br>
+		<a href="{{ $link = url('pengujian/'.$id.'/pembayaran') }}"><p style="text-align:center">{{ $link }}</p></a>
+	</p>
+	<p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
+		<br>
+		Mohon periksa kembali biaya dan ketentuan-ketentuan yang berlaku demi kelancaran proses pembayaran.
 		<br><br>
 		Salam hangat,
 		<br>
-		Lab Uji IAS PT. Telekomunikasi Indonesia, Tbk.
+		Telkom Test House - Laboratorium Quality Assurance – DDB
+		<br>
+		PT. Telekomunikasi Indonesia, Tbk.
+		<br>
+		Jl. Gegerkalong Hilir No. 47 Sukasari Bandung
+		<br>
+		45012
 		<br><br>
 		---
 		<br><br>
 	</p>
 	<p style="font-style:italic; font-family:Helvetica; font-size:0.88em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-		Email ini dihasilkan secara otomatis oleh sistem dan mohon untuk tidak membalas email ini. Informasi lebih lanjut hubungi Urel Care di 022 - 4571145 dari ponsel, atau manfaatkan fasilitas webmail di urelddstelkom@gmail.com untuk menghubungi staff User Relation kami.
+		Email ini dihasilkan secara otomatis oleh sistem dan mohon untuk tidak membalas email ini. Informasi lebih lanjut hubungi User Relation di <strong>0812 2483 7500</strong> (Telepon & WA) atau <strong>cstelkomtesthouse@gmail.com.</strong>
 	</p>
 </div>
 

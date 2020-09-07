@@ -398,7 +398,7 @@ class ProductsController extends Controller
            $STELSales->created_by =$currentUser->id;
            $STELSales->created_at = date("Y-m-d H:i:s");
 
-           if($PO_ID){
+            if($PO_ID){
                 $stel_code_string = '';
                 foreach (Cart::content() as $row) {
                     $res = explode('myTokenProduct', $row->name);
@@ -419,7 +419,7 @@ class ProductsController extends Controller
                         "payment_method" => $payment_method == "atm" ? "internal" : "mps",
                     ],
                     "mps" => [
-                        "gateway" => "9f209081-a504-4b8c-be28-15bf9f13828c",
+                        "gateway" => "020dc744-91a9-4668-8a54-f92e2a1c7957",
                         "product_code" => "finpay_vamandiri",
                         "product_type" => "VA",
                         "manual_expired" => 20160

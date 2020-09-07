@@ -97,52 +97,18 @@ class ClientController extends Controller
 		        $logs->created_by = $currentUser->id;
 		        $logs->page = "LOGIN";
 		        $logs->save();
-				if($request->input('type_url') == 1){
-					return redirect('/#portfolio');
-				}else if($request->input('type_url') == 2){
-					return redirect('/');
-				}else{
-					return back();
-				}
-			}else{
-				if($request->input('type_url') == 1){
-					return redirect('/#portfolio')
-					->with('type_url', 1)
-					->with('error_code', 5)
-					->withInput($request->all())
-					->withErrors('Email or Password Not Match');
-				}else if($request->input('type_url') == 2){
-					return redirect('/')->with('error_code', 5)
-					->with('type_url', 2)
-					->with('error_code', 5)
-					->withInput($request->all())
-					->withErrors('Email or Password Not Match');
-				}else{
-					return back()->with('error_code', 5)
-					->with('error_code', 5)
-					->withInput($request->all())
-					->withErrors('Email or Password Not Match');;
-				}
-			}
-		}else{
-			if($request->input('type_url') == 1){
-				return redirect('/#portfolio')
-				->with('type_url', 1)
-				->with('error_code', 5)
-				->withInput($request->all())
-				->withErrors('User not found or User Banned by admin');
-			}else if($request->input('type_url') == 2){
-				return redirect('/')->with('error_code', 5)
-				->with('type_url', 2)
-				->with('error_code', 5)
-				->withInput($request->all())
-				->withErrors('User not found or User Banned by admin');
+		        return redirect()->back();
 			}else{
 				return back()->with('error_code', 5)
 				->with('error_code', 5)
 				->withInput($request->all())
-				->withErrors('User not found or User Banned by admin');;
+				->withErrors('Email or Password Not Match');
 			}
+		}else{
+			return back()->with('error_code', 5)
+			->with('error_code', 5)
+			->withInput($request->all())
+			->withErrors('User not found or User Banned by admin');
 		}
 	}
 	

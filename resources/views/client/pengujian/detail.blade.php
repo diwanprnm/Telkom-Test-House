@@ -4,7 +4,7 @@
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
-    <title>{{ trans('translate.examination_detail') }} - Telkom DDS</title>
+    <title>{{ trans('translate.examination_detail') }} - Telkom DDB</title>
 	
 @section('content')
 <style type="text/css">
@@ -553,7 +553,7 @@
                       </tr>
                       <tr>
                         <td>16</td>
-                        <td>Kontor Telkom DDS dalam kondisi nyaman, bersih dan sudah sesuai kondisi keseluruhannya.</td> 
+                        <td>Kontor Telkom DDB dalam kondisi nyaman, bersih dan sudah sesuai kondisi keseluruhannya.</td> 
                         <td><input type="number" min="1" max="7" name="quest16_eks" class="form-control" value="1" placeholder="1-7" required></td>
                         <td><input type="number" min="1" max="7" name="quest16_perf" class="form-control" value="1" placeholder="1-7" required></td>
                       </tr>
@@ -571,7 +571,7 @@
                       </tr>
                       <tr>
                         <td>19</td>
-                        <td>Pihak Telkom DDS terutama pihak UREL yang melayani proses pengajuan hingga pelaporan sudah memahami kebutuhan kastamer.</td> 
+                        <td>Pihak Telkom DDB terutama pihak UREL yang melayani proses pengajuan hingga pelaporan sudah memahami kebutuhan kastamer.</td> 
                         <td><input type="number" min="1" max="7" name="quest19_eks" class="form-control" value="1" placeholder="1-7" required></td>
                         <td><input type="number" min="1" max="7" name="quest19_perf" class="form-control" value="1" placeholder="1-7" required></td>
                       </tr>

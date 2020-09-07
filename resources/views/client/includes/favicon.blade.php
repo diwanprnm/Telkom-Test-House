@@ -1,1 +1,1 @@
-<link rel="shortcut icon" href="{{asset('assets/images/favicons.png')}}"/>
+<link rel="shortcut icon" href="{{asset('assets/images/TTHMainlogogram-favicon.png')}}"/>

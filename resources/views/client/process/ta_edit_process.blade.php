@@ -1,7 +1,7 @@
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
-    <title>TA - Telkom DDS</title>
+    <title>TA - Telkom DDB</title>
 @section('content')
  	<link rel="stylesheet" href="{{url('vendor/jquerystep/main.css')}}" type="text/css" />
     <link rel="stylesheet" href="{{url('vendor/jquerystep/jquery.steps.css')}}" type="text/css" /> 

@@ -4,7 +4,7 @@
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
-    <title>{{ trans('translate.examination') }} - Telkom DDS</title>
+    <title>{{ trans('translate.examination') }} - Telkom DDB</title>
     <!-- Bootstrap Css -->
 	<!-- <link href="{{ asset('template-assets/bootstrap-assets/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css"/> -->
 
@@ -323,12 +323,14 @@
 									@endif
 								@endif
 								
-								<?php if($item->spb_status == 1 and $item->payment_status != 1){ ?>
+								<?php if($item->spb_status == 1 && $item->payment_status != 1){ ?>
 									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/pembayaran')}}">{{ trans('translate.examination_payment') }}</a>
 									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/downloadSPB')}}">{{ trans('translate.download') }} SPB</a>
-									<div class="alert alert-warning" style="font-weight: bold;">
-										{{ trans('translate.payment_alert_1') }}<br>{{ trans('translate.payment_alert_2') }}
-									</div> 
+									@if($item->payment_method == 2 && $item->VA_expired < date("Y-m-d H:i:s"))
+										<div class="alert alert-warning" style="font-weight: bold;">
+											{{ trans('translate.stel_total_expired') }} <a href="{{url('/resend_va_spb/'.$data[0]->id)}}"> {{ trans('translate.here') }} </a> {{ trans('translate.stel_total_resend') }}. 
+										</div> 
+									@endif
 								<?php } ?>
 								
 								<?php if($item->registration_status != 1){ ?>
@@ -1210,7 +1212,7 @@
                       </tr>
                       <tr>
                         <td>16</td>
-                        <td>Kontor Telkom DDS dalam kondisi nyaman, bersih dan sudah sesuai kondisi keseluruhannya.</td> 
+                        <td>Kontor Telkom DDB dalam kondisi nyaman, bersih dan sudah sesuai kondisi keseluruhannya.</td> 
                         <td><input type="number" min="1" max="7" name="quest16_eks" class="form-control" value="1" placeholder="1-7" required></td>
                         <td><input type="number" min="1" max="7" name="quest16_perf" class="form-control" value="1" placeholder="1-7" required></td>
                       </tr>
@@ -1228,7 +1230,7 @@
                       </tr>
                       <tr>
                         <td>19</td>
-                        <td>Pihak Telkom DDS terutama pihak UREL yang melayani proses pengajuan hingga pelaporan sudah memahami kebutuhan kastamer.</td> 
+                        <td>Pihak Telkom DDB terutama pihak UREL yang melayani proses pengajuan hingga pelaporan sudah memahami kebutuhan kastamer.</td> 
                         <td><input type="number" min="1" max="7" name="quest19_eks" class="form-control" value="1" placeholder="1-7" required></td>
                         <td><input type="number" min="1" max="7" name="quest19_perf" class="form-control" value="1" placeholder="1-7" required></td>
                       </tr>

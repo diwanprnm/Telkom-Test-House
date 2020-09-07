@@ -124,6 +124,8 @@ class PengujianController extends Controller
 								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
+								examinations.payment_method,
+								examinations.VA_expired,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
 								))
 						->where('examinations.company_id','=',''.$company_id.'')
@@ -176,6 +178,8 @@ class PengujianController extends Controller
 								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
+								examinations.payment_method,
+								examinations.VA_expired,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
 								))
 						->where('examinations.company_id','=',''.$company_id.'')
@@ -228,6 +232,8 @@ class PengujianController extends Controller
 								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
+								examinations.payment_method,
+								examinations.VA_expired,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
 								))
 						->where('examinations.company_id','=',''.$company_id.'')
@@ -279,6 +285,8 @@ class PengujianController extends Controller
 								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
+								examinations.payment_method,
+								examinations.VA_expired,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
 								))
 						->where('examinations.company_id','=',''.$company_id.'')
@@ -332,6 +340,8 @@ class PengujianController extends Controller
 								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
+								examinations.payment_method,
+								examinations.VA_expired,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
 								))
 						->where('examinations.company_id','=',''.$company_id.'')
@@ -383,6 +393,8 @@ class PengujianController extends Controller
 								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
+								examinations.payment_method,
+								examinations.VA_expired,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
 								))
 						->where('examinations.company_id','=',''.$company_id.'')
@@ -434,6 +446,8 @@ class PengujianController extends Controller
 								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
+								examinations.payment_method,
+								examinations.VA_expired,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
 								))
 						->where('examinations.company_id','=',''.$company_id.'')
@@ -484,6 +498,8 @@ class PengujianController extends Controller
 								examinations.function_test_date_approval,
 								examinations.resume_date,
 								examinations.created_at,
+								examinations.payment_method,
+								examinations.VA_expired,
 								(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name'
 								))
 						->where('examinations.company_id','=',''.$company_id.'')
@@ -1050,11 +1066,14 @@ class PengujianController extends Controller
 	
 	public function pembayaran($id, Request $request)
     {
-		$examination = Examination::find($id);
 		$currentUser = Auth::user();
 		$user_id = ''.$currentUser['attributes']['id'].'';
 		$company_id = ''.$currentUser['attributes']['company_id'].'';
         if ($currentUser){
+			$examination = Examination::find($id);
+			if($examination->payment_method != 0){
+				return redirect('payment_confirmation_spb/'.$examination->id);
+			}
             $message = null;
             $paginate = 2;
             $search = trim($request->input('search'));
@@ -1069,9 +1088,7 @@ class PengujianController extends Controller
 				->first();
 
 
-		 	$examinationsData = DB::table('examinations')
-				->where('id', '=', ''.$id.'') 
-				->first();
+		 	$examinationsData = Examination::where('id', $id)->with('device')->get();
 			
             // print_r($data);exit;
             if (count($data) == 0){
@@ -1087,9 +1104,11 @@ class PengujianController extends Controller
                 ->with('data', $data)
                 ->with('examinationsData', $examinationsData);
                 // ->with('search', $search);
+        }else{
+           return redirect("login");
         }
     }
-	
+/*	
 	public function uploadPembayaran(Request $request)
     {
 		$currentUser = Auth::user();
@@ -1187,7 +1206,125 @@ class PengujianController extends Controller
 		
 		return back();
     }
-	
+	*/
+
+    public function doCheckout(Request $request){
+    	$currentUser = Auth::user();
+        $exam = Examination::where('id', $request->input('hide_id_exam'))->with('device')->first();
+        if($currentUser){ 
+           $payment_method = $request->input("payment_method");
+           $exam->include_pph = $request->has('is_pph') ? 1 : 0;
+           $exam->payment_method = $payment_method == "atm" ? 1 : 2;
+
+            if($exam){
+                $data = [
+                    "draft_id" => $exam->PO_ID,
+                    "include_pph" => $request->has('is_pph') ? true : false,
+                    "created" => [
+                        "by" => $currentUser->name,
+                        "reference_id" => $currentUser->id
+                    ],
+                    "config" => [
+                        "kode_wapu" => "01",
+                        "afiliasi" => "non-telkom",
+                        "tax_invoice_text" => $exam->device->name.', '.$exam->device->mark.', '.$exam->device->capacity.', '.$exam->device->model,
+                        "payment_method" => $payment_method == "atm" ? "internal" : "mps",
+                    ],
+                    "mps" => [
+                        "gateway" => "020dc744-91a9-4668-8a54-f92e2a1c7957",
+                        "product_code" => "finpay_vamandiri",
+                        "product_type" => "VA",
+                        "manual_expired" => 20160
+                    ]
+                ];
+
+                $billing = $this->api_billing($data);
+
+                $exam->BILLING_ID = $billing && $billing->status == true ? $billing->data->_id : null;
+                $exam->unique_code = $billing && $billing->status == true ? $billing->data->draft->unique_code : 0;
+                if($payment_method != "atm"){
+                    $exam->VA_number = $billing && $billing->status == true ? $billing->data->mps->va->number : null;
+                    $exam->VA_expired = $billing && $billing->status == true ? $billing->data->mps->va->expired : null;
+                }
+            }
+
+            try{
+                $exam->save();
+                return redirect('payment_confirmation_spb/'.$exam->id);
+            } catch(\Illuminate\Database\QueryException $e){
+                dd($e);
+                Session::flash('error', 'Failed To Checkout');
+                return back();
+            }
+        }else{
+           return back();
+        } 
+        
+    }
+
+    public function payment_confirmation($id)
+    { 
+        $currentUser = Auth::user();
+
+        if($currentUser){
+            $exam = Examination::where('id', $id)->with('device')->get();
+            if($exam[0]->payment_method == 0){
+				return redirect('pengujian/'.$id.'/pembayaran');
+			}
+            return view('client.pengujian.payment_confirmation') 
+            ->with('data', $exam);
+        }else{
+           return redirect("login");
+        }
+        
+    } 
+
+    public function api_billing($data){
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json', 
+                            'Authorization' => config("app.gateway_tpn_2")
+                        ],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+        try {
+            $params['json'] = $data;
+            $res_billing = $client->post("v1/billings", $params)->getBody();
+            $billing = json_decode($res_billing);
+
+            return $billing;
+        } catch(Exception $e){
+            return null;
+        }
+    }
+
+    public function api_resend_va($id){
+        $exam = Examination::find($id);
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json', 
+                            'Authorization' => config("app.gateway_tpn")
+                        ],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+        try {
+            $res_resend = $client->post("v1/billings/mps/resend/".$exam->BILLING_ID)->getBody();
+            $resend = json_decode($res_resend);
+            if($resend){
+                $exam->VA_number = $resend && $resend->status == true ? $resend->data->mps->va->number : null;
+                $exam->VA_expired = $resend && $resend->status == true ? $resend->data->mps->va->expired : null;
+                
+                $exam->save();
+            }
+                        
+            return redirect('/payment_confirmation_spb/'.$id);
+        } catch(Exception $e){
+            return null;
+        }
+    }
+
 	public function updateTanggalUji(Request $request)
     {
 		$currentUser = Auth::user();

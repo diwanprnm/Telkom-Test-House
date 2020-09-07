@@ -1,7 +1,7 @@
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
-    <title>{{ trans('translate.stel_payment_confirmation') }} - Telkom DDS</title>
+    <title>{{ trans('translate.stel_payment_confirmation') }} - Telkom DDB</title>
 @section('content') 
  <!-- Page Title
 		============================================= -->
@@ -108,7 +108,7 @@
 									<img src="http://localhost/telkomdds/public/images/bank/mandiri.png" style="height:5%;">
 									@if($data[0]->VA_expired < date("Y-m-d H:i:s"))
 									<p class="alert alert-warning"><span style="font-size:250%;">{{ $data[0]->VA_number }}</span><br>
-										This Virtual Account Number was Expired, click <a href="{{url('/resend_va/'.$data[0]->id)}}"> here </a> to resend a new Virtual Account Number. 
+										{{ trans('translate.stel_total_expired') }} <a href="{{url('/resend_va/'.$data[0]->id)}}"> {{ trans('translate.here') }} </a> {{ trans('translate.stel_total_resend') }}. 
 									</p>
 									@else
 									<p><span style="font-size:250%;">{{ $data[0]->VA_number }}</span><br></p>

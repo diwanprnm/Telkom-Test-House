@@ -377,7 +377,7 @@ return [
 	'subtitle_vt_process' => 'Telecommunication device testing that is order-based by customer. Test is conducted based upon mutually agreed reference among user (Operational Division/Headquarter/Telkom Group) and Divisi Digital Service (DDS) accompanied by office memo.',
 	'subtitle_cal_process' => 'Calibration of measurement tools.',
 	
-	'stel_term_condition_num1'	=> 'Total price listed on shopping cart is/are 10 % tax excluded.',
+	'stel_term_condition_num1'	=> 'Total price listed on shopping cart is/are 10 % tax excluded and payment gateway fees from third parties excluded.',
 	'stel_term_condition_num2'	=> 'Document(s) you bought will be given a watermark represent your company name, and cannot be used by another company.',
 	'stel_term_condition_num3'	=> 'Document(s) you bought doesn’t/don’t have validity period till the new version is released, and contact immediately our staff if there has/have been changed of document version.',
 	'stel_term_condition_num4'	=> 'In case the STEL document(s) had been issued and turns out that the item was purchased by customer mistake is not responsibility of PT. Telkom Indonesia, Tbk.',
@@ -429,4 +429,13 @@ return [
 	'stel_payment_before' => 'DOING PAYMENT BEFORE',
 	'stel_transfer_to_va' => 'Transfer to this Virtual Account number',
 	'expired' => 'Expired',
+	'stel_total_expired' => 'This Virtual Account Number was Expired, click',
+	'here' => 'here',
+	'stel_total_resend' => 'to resend a new Virtual Account Number',
+
+	'examination_payment_total' => 'Total Payment',
+	'examination_payment_cut' => 'without',
+	'examination_payment_this_nominal' => 'PPh INCLUDED',
+	'examination_payment_will_pay' => 'I WILL PAY WITHOUT PPh',
+	'examination_payment_nominal_without_pph' => 'PPh EXCLUDED',
 ];
