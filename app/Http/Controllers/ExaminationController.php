@@ -1597,10 +1597,10 @@ class ExaminationController extends Controller
 				$cancel_billing = $this->api_cancel_billing($exam->BILLING_ID, $data_cancel_billing);
 				if($cancel_billing && $cancel_billing->status){
 					$exam->BILLING_ID = null;
-					$exam->unique_code = 0;
 					$exam->include_pph = 0;
 					$exam->payment_method = 0;
 					$exam->VA_number = null;
+					$exam->VA_amount = null;
 					$exam->VA_expired = null;
 				}
 			}
@@ -3625,12 +3625,8 @@ $notification->id = Uuid::uuid4();
             $request->session()->put('PO_ID_from_TPN', $PO_ID);*/
 	        $total_price = $biaya;
             $PO_ID = $purchase && $purchase->status ? $purchase->data->_id : null;
-            $unique_code = $purchase && $purchase->status ? $purchase->data->unique_code : '0';
-            // $request->session()->put('unique_code_from_TPN', $unique_code);
-            $tax = floor(0.1*($total_price + $unique_code));
-            $final_price = $total_price + $unique_code + $tax;
-            array_push($arr_nama_perangkat, 'Kode Unik');
-            array_push($arr_biaya, $unique_code);
+            $tax = floor(0.1*$total_price);
+            $final_price = $total_price + $tax;
 /* END Kirim Draft ke TPN */
 			$data = []; 
 			$data[] = [
@@ -3638,7 +3634,6 @@ $notification->id = Uuid::uuid4();
 				'spb_date' => $spb_date,
 				'arr_nama_perangkat' => $arr_nama_perangkat,
 				'arr_biaya' => $arr_biaya,
-				'unique_code' => $unique_code,
 				'exam' => $exam,
 				'manager_urel' => $manager_urels,
 				'is_poh' => $is_poh

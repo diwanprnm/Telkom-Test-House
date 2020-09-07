@@ -19,18 +19,13 @@
 							</tr>
 						</thead>
 						<tbody>
-							@php $price = ceil(($data[0]->price/1.1) - $data[0]->unique_code); @endphp
+							@php $price = ceil(($data[0]->price/1.1)); @endphp
 							<tr>
 								<td>1. </td>
 								<td>{{$data[0]->device->name.', '.$data[0]->device->mark.', '.$data[0]->device->capacity.', '.$data[0]->device->model}}</td>
 								<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($price)}}</td> 
 							</tr> 
-							<tr>
-								<td> </td>
-								<td>Unique Code</td>
-								<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($data[0]->unique_code)}}</td> 
-							</tr> 
-							@php $tax = floor(($price + $data[0]->unique_code)*0.1); @endphp
+							@php $tax = floor(0.1*$price); @endphp
 							<tr>
 								<td></td>
 								<td>PPN 10%</td>
@@ -44,7 +39,7 @@
 								<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($data[0]->price)}}</td> 
 							</tr> 
 							@if($data[0]->include_pph)
-							@php $pph = floor(($price + $data[0]->unique_code)*0.02); @endphp
+							@php $pph = floor(0.02*$price); @endphp
 							<tr style="font-weight: bold">
 								<td> </td>
 								<td align="right">pph</td>
@@ -102,7 +97,11 @@
 									@endif
 								</div>
 								<div><p>{{ trans('translate.stel_total_payment') }} :</p>
-									<div><span style="font-size:250%; color: #fa8231;">{{ trans('translate.stel_rupiah') }}. {{ number_format($amount, 0, ",", ".") }},-</span><br></div>
+									<div>
+										<span style="font-size:250%; color: #fa8231;">{{ trans('translate.stel_rupiah') }}. {{ number_format($data[0]->VA_amount, 0, ",", ".") }},- (*)</span>
+										<br>
+										<p>(*) {{ trans('translate.stel_payment_included_va') }} {{ trans('translate.stel_rupiah') }}. {{ number_format($data[0]->VA_amount - $amount, 0, ",", ".") }},-</p>
+									</div>
 								</div>
 							</div>
 						</div>

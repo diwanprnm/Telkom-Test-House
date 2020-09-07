@@ -1241,10 +1241,15 @@ class PengujianController extends Controller
                 $billing = $this->api_billing($data);
 
                 $exam->BILLING_ID = $billing && $billing->status == true ? $billing->data->_id : null;
-                $exam->unique_code = $billing && $billing->status == true ? $billing->data->draft->unique_code : 0;
                 if($payment_method != "atm"){
                     $exam->VA_number = $billing && $billing->status == true ? $billing->data->mps->va->number : null;
+                    $exam->VA_amount = $billing && $billing->status == true ? $billing->data->mps->va->amount : null;
                     $exam->VA_expired = $billing && $billing->status == true ? $billing->data->mps->va->expired : null;
+                }
+
+                if(!$exam->VA_number){
+                    Session::flash('error', 'Failed To Generate VA, please try again');
+                    return back();
                 }
             }
 
@@ -1314,6 +1319,7 @@ class PengujianController extends Controller
             $resend = json_decode($res_resend);
             if($resend){
                 $exam->VA_number = $resend && $resend->status == true ? $resend->data->mps->va->number : null;
+                $exam->VA_amount = $billing && $billing->status == true ? $billing->data->mps->va->amount : null;
                 $exam->VA_expired = $resend && $resend->status == true ? $resend->data->mps->va->expired : null;
                 
                 $exam->save();

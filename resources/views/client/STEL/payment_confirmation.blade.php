@@ -52,18 +52,9 @@
 							@endforeach
 						</tbody>
 						<tfoot>
-							@php $unique_code = ($data[0]->total/1.1) - $total; @endphp
-                        	<tr>
-                        		<td colspan="5" align="right"> {{ trans('translate.stel_unique_code') }}</td>
-                        		<td align="right">{{ trans('translate.stel_rupiah') }}. @php echo number_format($unique_code, 0, '.', ','); @endphp</td>
-                        	</tr>
-                        	<tr>
-                        		<td colspan="5" align="right">Sub Total</td>
-                        		<td align="right">{{ trans('translate.stel_rupiah') }}. @php echo number_format($total + $unique_code, 0, '.', ','); @endphp</td>
-                        	</tr>
                        		<tr>
                         		<td colspan="5" align="right"> {{ trans('translate.tax') }}</td>
-                        		<td align="right">{{ trans('translate.stel_rupiah') }}. @php $tax =  ($total + $unique_code) * (config("cart.tax")/100);
+                        		<td align="right">{{ trans('translate.stel_rupiah') }}. @php $tax =  ($total) * (config("cart.tax")/100);
                         			echo number_format($tax, 0, '.', ','); @endphp</td>
                         	</tr>
                         	<tr style="font-weight: bold;">
@@ -115,7 +106,11 @@
 									@endif
 								</div>
 								<div><p>{{ trans('translate.stel_total_payment') }} :</p>
-									<div><span style="font-size:250%; color: #fa8231;">{{ trans('translate.stel_rupiah') }}. {{ number_format($data[0]->total, 0, ",", ".") }},-</span><br></div>
+									<div>
+										<span style="font-size:250%; color: #fa8231;">{{ trans('translate.stel_rupiah') }}. {{ number_format($data[0]->VA_amount, 0, ",", ".") }},- (*)</span>
+										<br>
+										<p>(*) {{ trans('translate.stel_payment_included_va') }} {{ trans('translate.stel_rupiah') }}. {{ number_format($data[0]->VA_amount - $data[0]->total, 0, ",", ".") }},-</p>
+									</div>
 								</div>
 							</div>
 <!-- 

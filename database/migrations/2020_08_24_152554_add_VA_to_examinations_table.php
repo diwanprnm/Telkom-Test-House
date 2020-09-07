@@ -17,6 +17,7 @@ class AddVAToExaminationsTable extends Migration
             $table->integer('include_pph');
             $table->integer('payment_method');
             $table->string('VA_number')->nullable();
+            $table->double('VA_amount', 15, 0)->nullable();
             $table->string('VA_expired')->timestamp()->nullable();
         });
     }

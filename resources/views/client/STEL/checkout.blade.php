@@ -60,19 +60,11 @@
 								@endforeach
 							</tbody>
 							<tfoot>
-								<tr class="list-total-harga">
-									<td colspan="5" align="right">{{ trans('translate.stel_unique_code') }}</td> 
-									<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($unique_code)}}</td> 
-								</tr> 
-								<tr class="list-total-harga">
-									<td colspan="5" align="right">Sub Total</td> 
-									<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($total_price + $unique_code)}}</td> 
-								</tr> 
-								<tr class="list-total-harga">
+								<tr>
 									<td colspan="5" align="right">{{ trans('translate.tax') }}</td> 
 									<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($tax)}}</td> 
 								</tr> 
-								<tr class="list-total-harga" style="font-weight: bold">
+								<tr style="font-weight: bold">
 									<td colspan="5" align="right">Total</td>
 									<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($final_price)}}</td> 
 								</tr> 
@@ -81,9 +73,6 @@
 						{{ trans('translate.stel_payment_method') }}
 						<br>
 						<div class="check-layout">
-							<div class="col-md-4">
-								<input type="radio" name="payment_method" value="atm"> {{ trans('translate.stel_payment_method_atm') }}
-							</div>
 							<div class="col-md-4">
 								<input type="radio" name="payment_method" value="va" checked> {{ trans('translate.stel_payment_method_va') }}
 							</div>

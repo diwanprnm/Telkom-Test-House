@@ -31,6 +31,9 @@
 									<div class="col-md-12">
 									@if (Session::get('error'))
 										<div class="alert alert-error alert-danger">
+											<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											  <span aria-hidden="true">&times;</span>
+											</button>
 											{{ Session::get('error') }}
 										</div>
 									@endif
@@ -64,21 +67,21 @@
 														<tr>
 															<td>{{ trans('translate.stel_total_payment') }} : </td>
 														</tr>
-														<tr class="with_pph">
+														<tr class="with_pph" style="display: none;">
 															<td>
 																<span style="font-weight: bold; font-size:150%; color: #fa8231;">{{ trans('translate.stel_rupiah') }}. {{ number_format($examinationsData[0]->price, 0, ",", ".") }},-</span>&nbsp;
 																<label style="font-size:70%; text-transform: none;">({{ trans('translate.examination_payment_this_nominal') }})</label>
 															</td>
 														</tr>
-														<tr class="is_pph" style="display: none;">
+														<tr class="is_pph">
 															<td>
 																<span style="font-size:100%; color: #fa8231; text-decoration: line-through;	">{{ trans('translate.stel_rupiah') }}. {{ number_format($examinationsData[0]->price, 0, ",", ".") }},-</span>
 															</td>
 														</tr>
-														<tr class="is_pph" style="display: none;">
+														<tr class="is_pph">
 															<td>
 																@php 
-																	$pph = floor(($examinationsData[0]->price + $examinationsData[0]->unique_code)*0.02); 
+																	$pph = floor(0.02*$examinationsData[0]->price); 
 																	$amount = $examinationsData[0]->price - $pph;
 																@endphp
 																<span style="font-weight: bold; font-size:150%; color: #fa8231;">{{ trans('translate.stel_rupiah') }}. {{ number_format($amount, 0, ",", ".") }},-</span>
@@ -88,14 +91,10 @@
 												</table>		
 												<div class="check-layout">
 													<div class="col-md-4">
-														<label style="text-transform: none;"><input type="checkbox" id="is_pph" name="is_pph"> {{ trans('translate.examination_payment_will_pay') }}</label>
+														<label style="text-transform: none;"><input type="checkbox" id="is_pph" name="is_pph" checked=""> {{ trans('translate.examination_payment_will_pay') }}</label>
 													</div>
 												</div>
-												<span style="font-weight: bold; text-decoration-line: underline; text-underline-position: under;">{{ trans('translate.stel_payment_method') }}</span>
 												<div class="check-layout">
-													<div class="col-md-4">
-														<input type="radio" name="payment_method" value="atm"> {{ trans('translate.stel_payment_method_atm') }}
-													</div>
 													<div class="col-md-4">
 														<input type="radio" name="payment_method" value="va" checked> {{ trans('translate.stel_payment_method_va') }}
 													</div>

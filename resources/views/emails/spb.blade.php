@@ -53,20 +53,14 @@
 	<p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
 		Berkenaan dengan pendaftaran uji {!! $exam_type !!} ({!! $exam_type_desc !!}) perangkat Bapak/Ibu yang sudah memenuhi proses uji fungsi, maka SPB dengan nomor <strong>{!! $spb_number !!} telah terbit dan dapat mengunduhnya di web </strong> <a href="https://www.telkomtesthouse.co.id">www.telkomtesthouse.co.id</a> atau lampiran email ini.
 		<br><br>
-		Kami sampaikan juga <strong>pembayaran SPB</strong> dapat dilakukan dengan <strong>dua cara pembayaran</strong>, yaitu:
-		<ul style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-			<li>Pembayaran dengan <strong>Bank Transfer</strong></li>
-		  	<li>Pembayaran dengan <strong>Virtual Account Mandiri</strong></li>
-		</ul>
+		Kami sampaikan juga <strong>pembayaran SPB</strong> dilakukan melalui <strong>Virtual Account Bank Mandiri.</strong>
 	</p>
 	<p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-		<br>
-		Silakan klik tautan di bawah ini untuk memilih cara pembayaran yang dikehendaki.
+		Silakan klik tautan di bawah ini untuk melakukan proses pembayaran.
 		<br>
 		<a href="{{ $link = url('pengujian/'.$id.'/pembayaran') }}"><p style="text-align:center">{{ $link }}</p></a>
 	</p>
 	<p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-		<br>
 		Mohon periksa kembali biaya dan ketentuan-ketentuan yang berlaku demi kelancaran proses pembayaran.
 		<br><br>
 		Salam hangat,

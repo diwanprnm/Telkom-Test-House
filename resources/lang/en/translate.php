@@ -432,6 +432,7 @@ return [
 	'stel_total_expired' => 'This Virtual Account Number was Expired, click',
 	'here' => 'here',
 	'stel_total_resend' => 'to resend a new Virtual Account Number',
+	'stel_payment_included_va' => 'be charged a payment gateway from a third parties, amounting to',
 
 	'examination_payment_total' => 'Total Payment',
 	'examination_payment_cut' => 'without',

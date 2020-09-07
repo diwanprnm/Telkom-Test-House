@@ -432,8 +432,13 @@ class ProductsController extends Controller
                 $STELSales->BILLING_ID = $billing && $billing->status == true ? $billing->data->_id : null;
                 if($payment_method != "atm"){
                     $STELSales->VA_number = $billing && $billing->status == true ? $billing->data->mps->va->number : null;
-                    // $STELSales->VA_amount = $billing && $billing->status == true ? $billing->data->mps->va->amount : null;
+                    $STELSales->VA_amount = $billing && $billing->status == true ? $billing->data->mps->va->amount : null;
                     $STELSales->VA_expired = $billing && $billing->status == true ? $billing->data->mps->va->expired : null;
+                }
+                
+                if(!$STELSales->VA_number){
+                    Session::flash('error', 'Failed To Generate VA, please try again');
+                    return redirect('products');
                 }
             }
 

@@ -435,6 +435,7 @@ return [
 	'stel_total_expired' => 'Nomor Virtual Account ini sudah kadaluarsa, klik',
 	'here' => 'disini',
 	'stel_total_resend' => 'untuk mengirim ulang Nomor Virtual Account yang baru',
+	'stel_payment_included_va' => 'dikenakan biaya payment gateway dari pihak ketiga sebesar',
 
 	'examination_payment_total' => 'Total Biaya Pengujian',
 	'examination_payment_cut' => 'dipotong',
