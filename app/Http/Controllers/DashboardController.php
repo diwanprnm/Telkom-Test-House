@@ -169,7 +169,7 @@ class DashboardController extends Controller
     {
         $fileName = 'User Manual Situs Jasa Layanan Pelanggan Lab Pengujian [Admin].pdf';
         $fileMinio = Storage::disk('minio')->get("usman/$fileName");
-        return response($fileMinio, 200, \App\Services\MyHelper::getHeaderPDF($fileName));
+        return response($fileMinio, 200, \App\Services\MyHelper::getHeaderOctet($fileName));
 	}
 	
 	public function autocomplete($query) {

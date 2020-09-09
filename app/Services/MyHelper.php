@@ -12,7 +12,12 @@ class MyHelper
         return isset($string)? $string : $defaultValue;
     }
 
-
+    public static function getHeaderOctet($fileName = null)
+    {
+        $header = self::getHeader($fileName);
+        $header[self::CONTENT_TYPE] = 'application/octet-stream';
+        return $header;
+    }
 
     public static function getHeaderExcel($fileName = null)
     {

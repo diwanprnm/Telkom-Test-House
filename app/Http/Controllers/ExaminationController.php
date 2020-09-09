@@ -31,6 +31,7 @@ use Mail;
 use Session;
 use Response;
 use Excel;
+use Storage;
 
 // UUID
 use Ramsey\Uuid\Uuid;
@@ -88,7 +89,7 @@ class ExaminationController extends Controller
 	private const KETERANGAN = 'keterangan';
 	private const REGISTRASI = 'Registrasi';
 	private const BARANG_FILE = 'barang_file';
-	private const MEDIA_EXAMINATION_LOC = '/media/examination/';
+	private const MEDIA_EXAMINATION_LOC = 'examination/';
 	private const EDIT_LOC = '/edit';
 	private const ADMIN_EXAMINATION_LOC = '/admin/examination/';
 	private const ERROR = 'error';
@@ -120,7 +121,7 @@ class ExaminationController extends Controller
 	private const SPB_DATE = 'spb_date';
 	private const PO_ID = 'PO_ID';
 	private const CERTIFICATE_DATE = 'certificate_file';
-	private const MEDIA_DEVICE_LOC = '/media/device/';
+	private const MEDIA_DEVICE_LOC = 'device/';
 	private const SPK_NUMBER_URI = '&spkNumber=';
 	private const SPK_ADD_NOTIF_ID_URI = 'spk/addNotif?id=';
 	private const EXAMINATIONS = 'examinations';
@@ -1045,12 +1046,9 @@ class ExaminationController extends Controller
         $exam = Examination::find($id);
 
         if ($exam){
-            $file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id.'/'.$exam->attachment;
-            $headers = array(
-              self::HEADER_CONTENT_TYPE,
-            );
-
-            return Response::download($file, $exam->attachment, $headers);
+			$fileName = $exam->attachment;
+			$fileMinio = Storage::disk('minio')->get(self::MEDIA_EXAMINATION_LOC.$exam->id.'/'.$fileName);
+			return response($fileMinio, 200, \App\Services\MyHelper::getHeaderOctet($fileName));
         }
     }
 
@@ -1060,12 +1058,9 @@ class ExaminationController extends Controller
             $device = Device::findOrFail($id);
 
             if ($device){
-                $file = public_path().self::MEDIA_DEVICE_LOC.$device->id.'/'.$device->certificate;
-                $headers = array(
-                  self::HEADER_CONTENT_TYPE,
-                );
-
-                return Response::download($file, $device->attachment, $headers);
+				$fileName = $device->certificate;
+				$fileMinio = Storage::disk('minio')->get(self::MEDIA_DEVICE_LOC.$device->id.'/'.$fileName);
+				return response($fileMinio, 200, \App\Services\MyHelper::getHeaderOctet($fileName));
             }
         } else{
             $exam = ExaminationAttach::where(self::EXAMINATION_ID, $id)
@@ -1073,12 +1068,9 @@ class ExaminationController extends Controller
                                 ->first();
 
             if ($exam){
-                $file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->examination_id.'/'.$exam->attachment;
-                $headers = array(
-                  self::HEADER_CONTENT_TYPE,
-                );
-
-                return Response::download($file, $exam->attachment, $headers);
+				$fileName = $exam->attachment;
+				$fileMinio = Storage::disk('minio')->get(self::MEDIA_EXAMINATION_LOC.$exam->examination_id.'/'.$fileName);
+				return response($fileMinio, 200, \App\Services\MyHelper::getHeaderOctet($fileName));
             }
         }
     }
@@ -1088,12 +1080,9 @@ class ExaminationController extends Controller
         $data = ExaminationAttach::find($id);
 
         if ($data){
-            $file = public_path().self::MEDIA_EXAMINATION_LOC.$data->examination_id.'/'.$data->attachment;
-            $headers = array(
-              self::HEADER_CONTENT_TYPE,
-            );
-
-            return Response::download($file, $data->attachment, $headers);
+			$fileName = $data->attachment;
+			$fileMinio = Storage::disk('minio')->get(self::MEDIA_EXAMINATION_LOC.$data->examination_id.'/'.$fileName);
+			return response($fileMinio, 200, \App\Services\MyHelper::getHeaderOctet($fileName));
         }
     }
 

@@ -30,6 +30,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use App\Events\Notification;
 use App\NotificationTable;
 use App\Services\NotificationService;
+use App\Services\FileService;
 
 use Carbon\Carbon;
 
@@ -45,7 +46,7 @@ class PermohonanController extends Controller
 	private const MODEL_PERANGKAT = 'model_perangkat';
 	private const KAPASITAS_PERANGKAT = 'kapasitas_perangkat';
 	private const FUPLOADSIUPP = 'fuploadsiupp';
-	private const MEDIA_COMPANY_LOC = '\media\\company\\';
+	private const MEDIA_COMPANY_LOC = 'company/';
 	private const HIDE_SIUPP_FILE = 'hide_siupp_file';
 	private const FUPLOADLAMPIRAN = 'fuploadlampiran';
 	private const HIDE_SERTIFIKAT_FILE = 'hide_sertifikat_file';
@@ -78,7 +79,7 @@ class PermohonanController extends Controller
 	private const HIDE_EXAM_ID = 'hide_exam_id';
 	private const EXAMINATIONS = 'examinations';
 	private const HIDE_REF_UJI_FILE = 'hide_ref_uji_file';
-	private const MEDIA_EXAMINATION_LOC = '\media\\examination\\';
+	private const MEDIA_EXAMINATION_LOC = 'examination/';
 	private const HIDE_PRINSIPAL_FILE = 'hide_prinsipal_file';
 	private const HIDE_SP3_FILE = 'hide_sp3_file';
 	private const HIDE_DLL_FILE = 'hide_dll_file';
@@ -217,11 +218,11 @@ class PermohonanController extends Controller
 	}
 
 	public function upload(Request $request){ 
+		$fileService = new FileService();
 		$exam_id = $request->session()->get('exam_id');
-		$path_file = public_path().self::MEDIA_EXAMINATION.$exam_id.'';
-		$name_file = 'form_uji_'.$request->file('fuploaddetailpengujian')->getClientOriginalName();
-		$request->file('fuploaddetailpengujian')->move($path_file, $name_file);
-		$fuploaddetailpengujian_name = $name_file;
+
+		$file = $fileService->uploadFile($request->file('fuploaddetailpengujian'), 'form_uji_', self::MEDIA_EXAMINATION_LOC.$exam_id);
+		$fuploaddetailpengujian_name = $file ? $file : '';
 		
 		DB::table(self::EXAMINATIONS)
             ->where('id', ''.$exam_id.'')
@@ -229,17 +230,18 @@ class PermohonanController extends Controller
 	}
 
 	public function uploadEdit(Request $request){ 
-		$exam_id = $request->get(self::HIDE_EXAM_ID);
-		$path_file = public_path().self::MEDIA_EXAMINATION.$exam_id.'';
-		$name_file = 'form_uji_'.$request->file('fuploaddetailpengujian_edit')->getClientOriginalName();
-		$request->file('fuploaddetailpengujian_edit')->move($path_file, $name_file);
-		$fuploaddetailpengujian_name = $name_file;
-		if (File::exists(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input('hide_attachment_file_edit'))){
-				File::delete(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input('hide_attachment_file_edit'));
-			}
+		$fileService = new FileService();
+		$exam_id = $request->session()->get(self::HIDE_EXAM_ID);
+
+		$file = $fileService->uploadFile($request->file('fuploaddetailpengujian_edit'), 'form_uji_', self::MEDIA_EXAMINATION_LOC.$exam_id);
+		$fuploaddetailpengujian_name = $file ? $file : '';
+
+		$exam = Examination::find($exam_id);
+		$fileService->deleteFile(self::MEDIA_EXAMINATION_LOC.$exam_id.'/'.$exam->attachment);
+
 		DB::table(self::EXAMINATIONS)
             ->where('id', ''.$exam_id.'')
-            ->update([self::ATTACHMENT => ''.$fuploaddetailpengujian_name.'']);
+			->update([self::ATTACHMENT => ''.$fuploaddetailpengujian_name.'']);
 	}
 	
 	public function cekSNjnsPengujian(Request $request){
@@ -431,6 +433,7 @@ class PermohonanController extends Controller
 	
 	public function submit_update($request, $type)
 	{
+		$fileService = new FileService();
 		if($type == 'update'){
 			$exam_id = $request->input(self::HIDE_EXAM_ID);
 					$request->session()->put(self::HIDE_EXAM_ID, $exam_id);
@@ -539,65 +542,40 @@ class PermohonanController extends Controller
 		}
 
 		$request->session()->put('key', $data);
-
-		$path_file = public_path().self::MEDIA_EXAMINATION.$exam_id.'';
-		$path_file_company = public_path().'/media/company/'.$company_id.'';
-
-		if ($type == 'submit' && !file_exists($path_file_company)) {
-			mkdir($path_file_company, 0775);
-		}
-		
+/*
+		UPLOAD COMPANY FILE
+*/
 		if ($request->hasFile(self::FUPLOADSIUPP)) {
-			$name_file = 'siupp_'.$request->file(self::FUPLOADSIUPP)->getClientOriginalName();
-			if($request->file(self::FUPLOADSIUPP)->move($path_file_company, $name_file)){
-				$fuploadsiupp_name = $name_file;
-				if (File::exists(public_path().self::MEDIA_COMPANY_LOC.$company_id.'\\'.$request->input(self::HIDE_SIUPP_FILE))){
-					File::delete(public_path().self::MEDIA_COMPANY_LOC.$company_id.'\\'.$request->input(self::HIDE_SIUPP_FILE));
-				}
-			}else{
-				$fuploadsiupp_name = $request->input(self::HIDE_SIUPP_FILE);
-			}
+			$file = $fileService->uploadFile($request->file(self::FUPLOADSIUPP), 'siupp_', self::MEDIA_COMPANY_LOC.$company_id);
+			$fuploadsiupp_name = $file ? $file : $request->input(self::HIDE_SIUPP_FILE);
+			$fileService->deleteFile(self::MEDIA_COMPANY_LOC.$company_id.'/'.$request->input(self::HIDE_SIUPP_FILE));
 		}else{
 			$fuploadsiupp_name = $request->input(self::HIDE_SIUPP_FILE);
 		}
+
 		if ($request->hasFile(self::FUPLOADLAMPIRAN)) {
-			$name_file = 'serti_uji_mutu_'.$request->file(self::FUPLOADLAMPIRAN)->getClientOriginalName();
-			if($request->file(self::FUPLOADLAMPIRAN)->move($path_file_company, $name_file)){
-				$fuploadlampiran_name = $name_file;
-				if (File::exists(public_path().self::MEDIA_COMPANY_LOC.$company_id.'\\'.$request->input(self::HIDE_SERTIFIKAT_FILE))){
-					File::delete(public_path().self::MEDIA_COMPANY_LOC.$company_id.'\\'.$request->input(self::HIDE_SERTIFIKAT_FILE));
-				}
-			}else{
-				$fuploadlampiran_name = $request->input(self::HIDE_SERTIFIKAT_FILE);
-			}
+			$file = $fileService->uploadFile($request->file(self::FUPLOADLAMPIRAN), 'serti_uji_mutu_', self::MEDIA_COMPANY_LOC.$company_id);
+			$fuploadlampiran_name = $file ? $file : $request->input(self::HIDE_SERTIFIKAT_FILE);
+			$fileService->deleteFile(self::MEDIA_COMPANY_LOC.$company_id.'/'.$request->input(self::HIDE_SERTIFIKAT_FILE));
 		}else{
-			$fuploadlampiran_name = $request->input('hide_sertifikat_file');
+			$fuploadlampiran_name = $request->input(self::HIDE_SERTIFIKAT_FILE);
 		}
+
 		if ($request->hasFile(self::UPLOADNPWP)) {
-			$name_file = 'npwp_'.$request->file(self::UPLOADNPWP)->getClientOriginalName();
-			if($request->file(self::UPLOADNPWP)->move($path_file_company, $name_file)){
-				$fuploadnpwp_name = $name_file;
-				if (File::exists(public_path().self::MEDIA_COMPANY_LOC.$company_id.'\\'.$request->input(self::HIDE_NPWP_FILE))){
-					File::delete(public_path().self::MEDIA_COMPANY_LOC.$company_id.'\\'.$request->input(self::HIDE_NPWP_FILE));
-				}
-			}else{
-				$fuploadnpwp_name = $request->input(self::HIDE_NPWP_FILE);
-			}
+			$file = $fileService->uploadFile($request->file(self::UPLOADNPWP), 'npwp_', self::MEDIA_COMPANY_LOC.$company_id);
+			$fuploadnpwp_name = $file ? $file : $request->input(self::HIDE_NPWP_FILE);
+			$fileService->deleteFile(self::MEDIA_COMPANY_LOC.$company_id.'/'.$request->input(self::HIDE_SERTHIDE_NPWP_FILEFIKAT_FILE));
 		}else{
 			$fuploadnpwp_name = $request->input(self::HIDE_NPWP_FILE);
 		}
-
+/*
+		UPLOAD EXAMINATION FILE
+*/
 		if ($request->hasFile(self::FUPLOADUJI)) {
-			$name_file = 'ref_uji_'.$request->file(self::FUPLOADUJI)->getClientOriginalName();
-			if($request->file(self::FUPLOADUJI)->move($path_file, $name_file)){
-				$fuploadrefuji_name = $name_file;
-				if ($type == 'update'){
-					if (File::exists(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_REF_UJI_FILE))){
-						File::delete(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_REF_UJI_FILE));
-					}
-				}
-			}else{
-				$fuploadrefuji_name = $type == 'update' ? $request->input(self::HIDE_REF_UJI_FILE) : '';
+			$file = $fileService->uploadFile($request->file(self::FUPLOADUJI), 'ref_uji_', self::MEDIA_EXAMINATION_LOC.$exam_id);
+			$fuploadrefuji_name = $file ? $file : ($type == 'update' ? $request->input(self::HIDE_REF_UJI_FILE) : '');
+			if ($type == 'update'){
+				$fileService->deleteFile(self::MEDIA_EXAMINATION_LOC.$exam_id.'/'.$request->input(self::HIDE_REF_UJI_FILE));
 			}
 		}else{
 			if($type == 'submit'){
@@ -605,39 +583,30 @@ class PermohonanController extends Controller
 				$res = explode('/',$request->input('path_ref'));   
 				$fuploadrefuji_name = $res[count($res)-1];
 					$url = str_replace(" ", "%20", $request->input('path_ref'));
-				file_put_contents($path_file.'/'.$fuploadrefuji_name, @fopen($url,'r'));
+				$file = $fileService->uploadFile(@fopen($url,'r'), '', self::MEDIA_EXAMINATION_LOC.$exam_id);
+				// Storage::disk('minio')->put(self::MEDIA_EXAMINATION_LOC.$exam_id."/$fuploadrefuji_name", file_get_contents(@fopen($url,'r')));
+				// file_put_contents($path_file.'/'.$fuploadrefuji_name, @fopen($url,'r'));
 			}else{
 				$fuploadrefuji_name = $request->input(self::HIDE_REF_UJI_FILE);
 			}
 		}
+
 		if($jns_pengujian == 1 && $jns_perusahaan !=self::PABRIKAN){
 			if ($request->hasFile(self::FUPLOADPRINSIPAL)) {
-				$name_file = 'prinsipal_'.$request->file(self::FUPLOADPRINSIPAL)->getClientOriginalName();
-				if($request->file(self::FUPLOADPRINSIPAL)->move($path_file, $name_file)){
-					$fuploadprinsipal_name = $name_file;
-					if ($type == 'update'){
-						if (File::exists(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_PRINSIPAL_FILE))){
-							File::delete(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_PRINSIPAL_FILE));
-						}
-					}
-				}else{
-					$fuploadprinsipal_name = $type == 'update' ? $request->input(self::HIDE_PRINSIPAL_FILE) : '';
+				$file = $fileService->uploadFile($request->file(self::FUPLOADPRINSIPAL), 'prinsipal_', self::MEDIA_EXAMINATION_LOC.$exam_id);
+				$fuploadprinsipal_name = $file ? $file : ($type == 'update' ? $request->input(self::HIDE_PRINSIPAL_FILE) : '');
+				if ($type == 'update'){
+					$fileService->deleteFile(self::MEDIA_EXAMINATION_LOC.$exam_id.'/'.$request->input(self::HIDE_PRINSIPAL_FILE));
 				}
 			}else{
 				$fuploadprinsipal_name = $type == 'update' ? $request->input(self::HIDE_PRINSIPAL_FILE) : '';
 			}
 		}else if($jns_pengujian == 2){
 			if ($request->hasFile(self::FUPLOADSP3)) {
-				$name_file = 'sp3_'.$request->file(self::FUPLOADSP3)->getClientOriginalName();
-				if($request->file(self::FUPLOADSP3)->move($path_file, $name_file)){
-					$fuploadsp3_name = $name_file;
-					if ($type == 'update'){
-						if (File::exists(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_SP3_FILE))){
-							File::delete(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_SP3_FILE));
-						}
-					}
-				}else{
-					$fuploadsp3_name = $type == 'update' ? $request->input(self::HIDE_SP3_FILE) : '';
+				$file = $fileService->uploadFile($request->file(self::FUPLOADSP3), 'sp3_', self::MEDIA_EXAMINATION_LOC.$exam_id);
+				$fuploadsp3_name = $file ? $file : ($type == 'update' ? $request->input(self::HIDE_SP3_FILE) : '');
+				if ($type == 'update'){
+					$fileService->deleteFile(self::MEDIA_EXAMINATION_LOC.$exam_id.'/'.$request->input(self::HIDE_SP3_FILE));
 				}
 			}else{
 				$fuploadsp3_name = $type == 'update' ? $request->input(self::HIDE_SP3_FILE) : '';
@@ -645,21 +614,15 @@ class PermohonanController extends Controller
 		}
 		
 		if ($request->hasFile(self::FUPLOADDLL)) {
-			$name_file = 'dll_'.$request->file(self::FUPLOADDLL)->getClientOriginalName();
-			if($request->file(self::FUPLOADDLL)->move($path_file,$name_file)){
-				$fuploaddll_name = $name_file;
-				if ($type == 'update'){
-					if (File::exists(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_DLL_FILE))){
-						File::delete(public_path().self::MEDIA_EXAMINATION_LOC.$exam_id.'\\'.$request->input(self::HIDE_DLL_FILE));
-					}
-				}
-			}else{
-				$fuploaddll_name = $type == 'update' ? $request->input(self::HIDE_DLL_FILE) : '';
+			$file = $fileService->uploadFile($request->file(self::FUPLOADDLL), 'dll_', self::MEDIA_EXAMINATION_LOC.$exam_id);
+			$fuploaddll_name = $file ? $file : ($type == 'update' ? $request->input(self::HIDE_DLL_FILE) : '');
+			if ($type == 'update'){
+				$fileService->deleteFile(self::MEDIA_EXAMINATION_LOC.$exam_id.'/'.$request->input(self::HIDE_DLL_FILE));
 			}
 		}else{
 			$fuploaddll_name = $type == 'update' ? $request->input(self::HIDE_DLL_FILE) : '';
 		}
-
+		
 		if ($type == 'submit') {
 			$device = new Device;
 			$device->id = $device_id;
@@ -726,10 +689,6 @@ class PermohonanController extends Controller
 				// Do Exception
 			}
 
-			if (!file_exists($path_file)) {
-				mkdir($path_file, 0775);
-			}
-			
 			if($jns_pengujian == 1){
 				if($jns_perusahaan != self::PABRIKAN){
 					DB::table(self::EXAMINATION_ATTACHMENTS)->insert([

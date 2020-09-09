@@ -1313,25 +1313,6 @@
 		xhr.send();
 	}
 	
-	$('.upload-form').click(function(){
-		$.ajax({
-			url : "uploadPermohonanEdit",
-			data:new FormData($("#form-permohonan-edit")[0]),
-			// dataType:'json',
-			async:false,
-			type:'post',
-			processData: false,
-			contentType: false,
-			beforeSend: function(){
-				// document.getElementById("overlay").style.display="inherit";
-			},
-			success:function(response){
-				// document.getElementById("overlay").style.display="none";
-				console.log(response);
-			}
-		});
-	});
-
 	function reSchedule(a,b,c,d,e){
 		if(c==1){
 			$('#reschedule-modal-content').modal('show');

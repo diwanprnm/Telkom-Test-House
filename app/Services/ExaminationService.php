@@ -17,6 +17,7 @@ use GuzzleHttp\Client;
 
 use Mail;
 use Session;
+use App\Services\FileService;
 
 class ExaminationService
 {
@@ -55,7 +56,7 @@ class ExaminationService
 	private const FAKTUR_PAJAK = 'Faktur Pajak';
 	private const V1_INVOICE = 'v1/invoices/';
 	private const KUITANSI = 'Kuitansi';
-	private const MEDIA_EXAMINATION_LOC = '/media/examination/';
+	private const MEDIA_EXAMINATION_LOC = 'examination/';
 	private const EXAMINATION_ID = 'examination_id';
 	private const APPLICATION_HEADER = 'application/x-www-form-urlencoded';
 	private const CONTRACT_DATE = 'contract_date';
@@ -725,12 +726,10 @@ class ExaminationService
 
 	public function insertAttachment($request,$exam_id,$currentUser_id,$file_type,$file_name,$attach_name){
 		if ($request->hasFile($file_type)) {
-			$name_file = $file_name.$request->file($file_type)->getClientOriginalName();
-			$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam_id;
-			if (!file_exists($path_file)) {
-				mkdir($path_file, 0775);
-			}
-			if($request->file($file_type)->move($path_file,$name_file)){
+			$fileService = new FileService();
+			$name_file = $fileService->uploadFile($request->file($file_type), $file_name, self::MEDIA_EXAMINATION_LOC.$exam_id);
+
+			if($name_file){
 				$attach = ExaminationAttach::where('name', $attach_name)->where(self::EXAMINATION_ID, ''.$exam_id.'')->first();
 				if ($attach){
 					$attach->attachment = $name_file;
