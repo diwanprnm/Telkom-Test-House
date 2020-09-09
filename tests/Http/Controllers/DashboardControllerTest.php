@@ -41,7 +41,7 @@ class DashboardControllerTest extends TestCase
 
 		$response = $this->actingAs(User::find(1))->call('GET','admin/downloadUsman');
         $this->assertResponseStatus(200);
-        $this->assertTrue($response->headers->get('content-type') == 'application/pdf');
+        $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
 
         if(!$isFileExist){
             Storage::disk('minio')->delete("usman/$fileName");
