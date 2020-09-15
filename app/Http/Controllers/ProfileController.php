@@ -56,7 +56,7 @@ class ProfileController extends Controller
     private const FORMAT_DATE = 'Y-m-d H:i:s';
     private const PAGE_PROFILE = '/client/profile';
     private const NPWP_FILE = 'npwp_file';
-    private const MEDIA_COMPANY = '/media/tempCompany/';
+    private const MEDIA_COMPANY = '/tempCompany/';
     private const ERROR_COMPANY = 'error_company';
     private const SIUP_FILE = 'siup_file';
     private const CERTIFICATE_FILE = 'certificate_file';
@@ -81,7 +81,10 @@ class ProfileController extends Controller
     private const COMPANY_ID = 'company_id';
     private const ATTRIBUTES = 'attributes';
     private const HIDE_PIC_FILE = 'hide_pic_file';
-    private const IS_READ = 'is_read';
+    private const IS_READ = 'is_read'; 
+    private const FORMAT_NOT_AVAILABLE = 'Format Not Available';
+
+    private const MINIO = 'minio';
     /**
      * Display a listing of the resource.
      *
@@ -231,18 +234,28 @@ class ProfileController extends Controller
 			$description = $description.'No. NPWP, ';
 		}
 		
-		if ($request->hasFile(self::NPWP_FILE)) { 
-            $name_file = 'npwp_'.$request->file(self::NPWP_FILE)->getClientOriginalName();
-			$path_file = public_path().self::MEDIA_COMPANY.$company_id.'';
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
+		if ($request->hasFile(self::NPWP_FILE)) {   
+            $file = $request->file(self::NPWP_FILE);
+            $ext = $file->getClientOriginalExtension(); 
+            $file_name = 'npwp_'.$request->file(self::NPWP_FILE)->getClientOriginalName();
+            $allowedImage = ['jpeg','jpg','png'];
+        	$allowedFile = ['pdf'];
+            $is_upload_npwp = false;
+            if (in_array($ext, $allowedFile))
+            { 
+                $is_upload_npwp = Storage::disk(self::MINIO)->put(self::MEDIA_COMPANY.$company_id."/$file_name",$file->__toString());
             }
-				$path_file = $path_file.'/'.$temp_id.'';
-			if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file(self::NPWP_FILE)->move($path_file,$name_file)){
-                $temp->npwp_file = $name_file;
+            else if (in_array($ext, $allowedImage))
+            { 
+                $image = Image::make($file);   
+                $is_upload_npwp = Storage::disk(self::MINIO)->put(self::MEDIA_COMPANY.$company_id."/$file_name",(string)$image->encode()); 
+            }else{
+                Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
+                return redirect(self::PAGE_PROFILE);
+            } 
+             
+            if($is_upload_npwp){ 
+                $temp->npwp_file = $file_name;
 				$count_commit ++ ;
 				$description = $description.'File NPWP, ';
             }else{
@@ -264,18 +277,29 @@ class ProfileController extends Controller
 			$description = $description.'Masa berlaku SIUPP, ';
 		}
 		
-		if ($request->hasFile(self::SIUP_FILE)) { 
-            $name_file = 'siupp_'.$request->file(self::SIUP_FILE)->getClientOriginalName();
-			$path_file = public_path().self::MEDIA_COMPANY.$company_id.'';
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
+		if ($request->hasFile(self::SIUP_FILE)) {  
+
+            $file = $request->file(self::SIUP_FILE);
+            $ext = $file->getClientOriginalExtension(); 
+            $file_name = 'siupp_'.$request->file(self::SIUP_FILE)->getClientOriginalName();
+            $allowedImage = ['jpeg','jpg','png'];
+        	$allowedFile = ['pdf'];
+            $is_upload_siup = false;
+            if (in_array($ext, $allowedFile))
+            { 
+                $is_upload_siup = Storage::disk(self::MINIO)->put(self::MEDIA_COMPANY.$company_id."/$file_name",$file->__toString());
             }
-				$path_file = $path_file.'/'.$temp_id.'';
-			if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file(self::SIUP_FILE)->move($path_file,$name_file)){
-                $temp->siup_file = $name_file;
+            else if (in_array($ext, $allowedImage))
+            { 
+                $image = Image::make($file);   
+                $is_upload_siup = Storage::disk(self::MINIO)->put(self::MEDIA_COMPANY.$company_id."/$file_name",(string)$image->encode()); 
+            }else{
+                Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
+                return redirect(self::PAGE_PROFILE);
+            } 
+             
+            if($is_upload_siup){ 
+                $temp->siup_file = $file_name;
 				$count_commit ++ ;
 				$description = $description.'File SIUPP, ';
             }else{
@@ -298,20 +322,32 @@ class ProfileController extends Controller
 			$description = $description.'Masa berlaku Sertifikat Uji Mutu, ';
 		}
 		
-		if ($request->hasFile(self::CERTIFICATE_FILE)) { 
-            $name_file = 'serti_uji_mutu_'.$request->file(self::CERTIFICATE_FILE)->getClientOriginalName();
-			$path_file = public_path().self::MEDIA_COMPANY.$company_id.'';
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
+		if ($request->hasFile(self::CERTIFICATE_FILE)) {  
+
+
+            $file = $request->file(self::CERTIFICATE_FILE);
+            $ext = $file->getClientOriginalExtension(); 
+            $file_name = 'serti_uji_mutu_'.$request->file(self::CERTIFICATE_FILE)->getClientOriginalName();
+            $allowedImage = ['jpeg','jpg','png'];
+        	$allowedFile = ['pdf'];
+            $is_upload_siup = false;
+            if (in_array($ext, $allowedFile))
+            { 
+                $is_upload_siup = Storage::disk(self::MINIO)->put(self::MEDIA_COMPANY.$company_id."/$file_name",$file->__toString());
             }
-				$path_file = $path_file.'/'.$temp_id.'';
-			if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file(self::CERTIFICATE_FILE)->move($path_file,$name_file)){
-                $temp->qs_certificate_file = $name_file;
+            else if (in_array($ext, $allowedImage))
+            { 
+                $image = Image::make($file);   
+                $is_upload_siup = Storage::disk(self::MINIO)->put(self::MEDIA_COMPANY.$company_id."/$file_name",(string)$image->encode()); 
+            }else{
+                Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
+                return redirect(self::PAGE_PROFILE);
+            } 
+             
+            if($is_upload_siup){ 
+                $temp->siup_file = $file_name;
 				$count_commit ++ ;
-				$description = $description.'File Sertifikat Uji Mutu, ';
+				$description = $description.'File Sertifikat Uji Mutu,  ';
             }else{
                 Session::flash(self::ERROR_COMPANY, 'Upload Certificate failed');
                 return redirect(self::PAGE_PROFILE);
