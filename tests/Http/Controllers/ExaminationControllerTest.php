@@ -32,18 +32,18 @@ class ExaminationControllerTest extends TestCase
 		$this->assertEquals(200, $response->status());
     }
     
-    public function testUpdate()
-	{
-		$examination = Examination::latest()->first();
-		$response = $this->actingAs(User::find('1'))->call('PUT', "admin/examination/$examination->id", [ 
-            'status' => 'Registrasi',
-            'registration_status' => mt_rand(0,1),
-            'examination_lab_id' => '08242962-6386-4f57-af8b-6f06103cdc81',
-            'is_loc_test' => '1',
-            'keterangan' => 'OK'
-		]);
-		$this->assertEquals(302, $response->status());
-    }
+ //    public function testUpdate()
+	// {
+	// 	$examination = Examination::latest()->first();
+	// 	$response = $this->actingAs(User::find('1'))->call('PUT', "admin/examination/$examination->id", [ 
+ //            'status' => 'Registrasi',
+ //            'registration_status' => mt_rand(0,1),
+ //            'examination_lab_id' => '08242962-6386-4f57-af8b-6f06103cdc81',
+ //            'is_loc_test' => '1',
+ //            'keterangan' => 'OK'
+	// 	]);
+	// 	$this->assertEquals(302, $response->status());
+ //    }
     
     public function testGenerateFromTPN(){
         $examination = Examination::latest()->first();
