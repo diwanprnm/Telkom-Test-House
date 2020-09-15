@@ -13,6 +13,8 @@ class AddVAToStelsTable extends Migration
     public function up()
     {
         Schema::table('stels_sales', function (Blueprint $table) {
+            $table->string('VA_name')->nullable();
+            $table->string('VA_image_url')->nullable();
             $table->string('VA_number')->nullable();
             $table->double('VA_amount', 15, 0)->nullable();
             $table->string('VA_expired')->timestamp()->nullable();

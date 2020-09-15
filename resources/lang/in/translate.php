@@ -332,10 +332,11 @@ return [
 	'stel_payment_detail'	=> 'Detail Pembayaran',
 	'stel_payment_upload'	=> 'Upload Pembayaran',
 	'stel_qty'				=> 'Jumlah',
-	'stel_payment_method'	=> 'Pilih Metoda Pembayaran',
+	'stel_select_payment_method'	=> 'Pilih Metoda Pembayaran',
+	'stel_payment_method'	=> 'Metoda Pembayaran',
 	'stel_payment_method_atm'	=> 'Metoda Transfer ke Bank',
 	'stel_payment_method_credit'=> 'Metoda Pembayaran Kartu Kredit',
-	'stel_payment_method_va'	=> 'Metoda Virtual Account',
+	'stel_payment_method_va'	=> 'Mandiri Virtual Account',
 	'stel_payment_method_bank'  => 'Pembayaran melalui metode ini dapat melalui beberapa bank yang ada pada list dibawah ini',
 	'stel_payment_confirmation'  => 'Konfirmasi Pembayaran',
 	

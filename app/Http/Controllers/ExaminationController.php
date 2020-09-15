@@ -1599,6 +1599,8 @@ class ExaminationController extends Controller
 					$exam->BILLING_ID = null;
 					$exam->include_pph = 0;
 					$exam->payment_method = 0;
+					$exam->VA_name = null;
+					$exam->VA_image_url = null;
 					$exam->VA_number = null;
 					$exam->VA_amount = null;
 					$exam->VA_expired = null;
@@ -1606,13 +1608,39 @@ class ExaminationController extends Controller
 			}
 			/*$data_billing = [
                 "draft_id" => $request->input('PO_ID'),
+                "include_pph" => true,
                 "created" => [
                     "by" => $currentUser->name,
                     "reference_id" => $currentUser->id
+                ],
+                "config" => [
+                    "kode_wapu" => "01",
+                    "afiliasi" => "non-telkom",
+                    "tax_invoice_text" => $exam->device->name.', '.$exam->device->mark.', '.$exam->device->capacity.', '.$exam->device->model,
+                    "payment_method" => "mps",
+                ],
+                "mps" => [
+                    "gateway" => "020dc744-91a9-4668-8a54-f92e2a1c7957",
+                    "product_code" => "finpay_vamandiri",
+                    "product_type" => "VA",
+                    "manual_expired" => 20160
                 ]
             ];
 
-            $billing = $this->api_billing($data_billing);*/
+            $billing = $this->api_billing($data_billing);
+
+            $exam->BILLING_ID = $billing && $billing->status == true ? $billing->data->_id : null;
+
+            if($exam->BILLING_ID && $billing->data->mps->va->number){
+            	$exam->include_pph = 1;
+            	$exam->payment_method = 2;
+            	$exam->VA_number = $billing && $billing->status == true ? $billing->data->mps->va->number : null;
+	            $exam->VA_amount = $billing && $billing->status == true ? $billing->data->mps->va->amount : null;
+	            $exam->VA_expired = $billing && $billing->status == true ? $billing->data->mps->va->expired : null;
+            }else{
+            	Session::flash('error', 'Failed To Generate VA, please try again');
+                return redirect('/admin/examination/'.$exam->id.'/edit');
+            }*/
 
             $exam->PO_ID = $request->input('PO_ID');
             // $exam->BILLING_ID = $billing && $billing->status == true ? $billing->data->_id : null;

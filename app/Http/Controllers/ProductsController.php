@@ -341,7 +341,9 @@ class ProductsController extends Controller
                 ->with('tax', $tax)
                 ->with('unique_code', $unique_code)
                 ->with('final_price', $final_price)
-                ->with('invoice_number', $invoice_number);
+                ->with('invoice_number', $invoice_number)
+                ->with('payment_method', $this->api_get_payment_methods())
+                ;
         }else{
             return redirect('products');
         } 
@@ -369,6 +371,26 @@ class ProductsController extends Controller
         }
     }
 
+    public function api_get_payment_methods(){
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json', 
+                            'Authorization' => config("app.gateway_tpn")
+                        ],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false,
+            'verify' => false
+        ]);
+        try {
+            $res_payment_method = $client->get("v1/products/".config("app.product_id_tth")."/paymentmethods")->getBody();
+            $payment_method = json_decode($res_payment_method);
+
+            return $payment_method;
+        } catch(Exception $e){
+            return null;
+        }
+    }
+
     public function doCheckout(Request $request){  
         $PO_ID = $request->session()->get('PO_ID_from_TPN');
         $currentUser = Auth::user();
@@ -389,8 +411,8 @@ class ProductsController extends Controller
                 $STELSales->postal_code = $request->input("postal_code");
                 $STELSales->birthdate = $request->input("birthdate");
            } 
-           $payment_method = $request->input("payment_method");
-           $STELSales->payment_method = $payment_method == "atm" ? 1 : 2;
+           $mps_info = explode('||', $request->input("payment_method"));
+           $STELSales->payment_method = $mps_info[2] == "atm" ? 1 : 2;
            $STELSales->payment_status = 0;
            $STELSales->invoice = $request->input("invoice_number");
            $STELSales->user_id = $currentUser->id;
@@ -416,12 +438,12 @@ class ProductsController extends Controller
                         "kode_wapu" => "01",
                         "afiliasi" => "non-telkom",
                         "tax_invoice_text" => $stel_code_string.'.',
-                        "payment_method" => $payment_method == "atm" ? "internal" : "mps",
+                        "payment_method" => $mps_info[2] == "atm" ? "internal" : "mps",
                     ],
                     "mps" => [
-                        "gateway" => "020dc744-91a9-4668-8a54-f92e2a1c7957",
-                        "product_code" => "finpay_vamandiri",
-                        "product_type" => "VA",
+                        "gateway" => $mps_info[0],
+                        "product_code" => $mps_info[1],
+                        "product_type" => $mps_info[2],
                         "manual_expired" => 20160
                     ]
                 ];
@@ -430,7 +452,9 @@ class ProductsController extends Controller
 
                 $STELSales->PO_ID = $PO_ID;
                 $STELSales->BILLING_ID = $billing && $billing->status == true ? $billing->data->_id : null;
-                if($payment_method != "atm"){
+                if($mps_info[2] != "atm"){
+                    $STELSales->VA_name = $mps_info ? $mps_info[3] : null;
+                    $STELSales->VA_image_url = $mps_info ? $mps_info[4] : null;
                     $STELSales->VA_number = $billing && $billing->status == true ? $billing->data->mps->va->number : null;
                     $STELSales->VA_amount = $billing && $billing->status == true ? $billing->data->mps->va->amount : null;
                     $STELSales->VA_expired = $billing && $billing->status == true ? $billing->data->mps->va->expired : null;
@@ -545,7 +569,7 @@ class ProductsController extends Controller
             $resend = json_decode($res_resend);
             if($resend){
                 $STELSales->VA_number = $resend && $resend->status == true ? $resend->data->mps->va->number : null;
-                // $STELSales->VA_amount = $resend && $resend->status == true ? $resend->data->mps->va->amount : null;
+                $STELSales->VA_amount = $resend && $resend->status == true ? $resend->data->mps->va->amount : null;
                 $STELSales->VA_expired = $resend && $resend->status == true ? $resend->data->mps->va->expired : null;
                 
                 $STELSales->save();

@@ -1102,10 +1102,32 @@ class PengujianController extends Controller
                 ->with('spb_date', $examination->spb_date)
                 ->with('price', $examination->price)
                 ->with('data', $data)
-                ->with('examinationsData', $examinationsData);
+                ->with('examinationsData', $examinationsData)
+                ->with('payment_method', $this->api_get_payment_methods())
+                ;
                 // ->with('search', $search);
         }else{
            return redirect("login");
+        }
+    }
+
+    public function api_get_payment_methods(){
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json', 
+                            'Authorization' => config("app.gateway_tpn")
+                        ],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false,
+            'verify' => false
+        ]);
+        try {
+            $res_payment_method = $client->get("v1/products/".config("app.product_id_tth_2")."/paymentmethods")->getBody();
+            $payment_method = json_decode($res_payment_method);
+
+            return $payment_method;
+        } catch(Exception $e){
+            return null;
         }
     }
 /*	
@@ -1212,9 +1234,9 @@ class PengujianController extends Controller
     	$currentUser = Auth::user();
         $exam = Examination::where('id', $request->input('hide_id_exam'))->with('device')->first();
         if($currentUser){ 
-           $payment_method = $request->input("payment_method");
-           $exam->include_pph = $request->has('is_pph') ? 1 : 0;
-           $exam->payment_method = $payment_method == "atm" ? 1 : 2;
+        	$mps_info = explode('||', $request->input("payment_method"));
+           	$exam->include_pph = $request->has('is_pph') ? 1 : 0;
+           	$exam->payment_method = $mps_info[2] == "atm" ? 1 : 2;
 
             if($exam){
                 $data = [
@@ -1228,12 +1250,12 @@ class PengujianController extends Controller
                         "kode_wapu" => "01",
                         "afiliasi" => "non-telkom",
                         "tax_invoice_text" => $exam->device->name.', '.$exam->device->mark.', '.$exam->device->capacity.', '.$exam->device->model,
-                        "payment_method" => $payment_method == "atm" ? "internal" : "mps",
+                        "payment_method" => $mps_info[2] == "atm" ? "internal" : "mps",
                     ],
                     "mps" => [
-                        "gateway" => "020dc744-91a9-4668-8a54-f92e2a1c7957",
-                        "product_code" => "finpay_vamandiri",
-                        "product_type" => "VA",
+                        "gateway" => $mps_info[0],
+                        "product_code" => $mps_info[1],
+                        "product_type" => $mps_info[2],
                         "manual_expired" => 20160
                     ]
                 ];
@@ -1241,7 +1263,9 @@ class PengujianController extends Controller
                 $billing = $this->api_billing($data);
 
                 $exam->BILLING_ID = $billing && $billing->status == true ? $billing->data->_id : null;
-                if($payment_method != "atm"){
+                if($mps_info[2] != "atm"){
+                	$exam->VA_name = $mps_info ? $mps_info[3] : null;
+                    $exam->VA_image_url = $mps_info ? $mps_info[4] : null;
                     $exam->VA_number = $billing && $billing->status == true ? $billing->data->mps->va->number : null;
                     $exam->VA_amount = $billing && $billing->status == true ? $billing->data->mps->va->amount : null;
                     $exam->VA_expired = $billing && $billing->status == true ? $billing->data->mps->va->expired : null;

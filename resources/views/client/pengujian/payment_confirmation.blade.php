@@ -87,7 +87,7 @@
 							<div style="text-align:center">
 								<div><p><b>{{ trans('translate.stel_payment_before') }}</b></p><center><p style="font-size:180%;">( {{ $data[0]->VA_expired }} WIB )</p></center></div>
 								<div><p>{{ trans('translate.stel_transfer_to_va') }} :</p>
-									<img src="http://localhost/telkomdds/public/images/bank/mandiri.png" style="height:5%;">
+									<img src="{{ $data[0]->VA_image_url }}" style="height:5%;">
 									@if($data[0]->VA_expired < date("Y-m-d H:i:s"))
 									<p class="alert alert-warning"><span style="font-size:250%;">{{ $data[0]->VA_number }}</span><br>
 										{{ trans('translate.stel_total_expired') }} <a href="{{url('/resend_va_spb/'.$data[0]->id)}}"> {{ trans('translate.here') }} </a> {{ trans('translate.stel_total_resend') }}. 

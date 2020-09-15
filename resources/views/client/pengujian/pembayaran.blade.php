@@ -3,7 +3,31 @@
     ============================================= -->
     <title>{{ trans('translate.examination_payment') }} - Telkom DDB</title>
 @section('content')
- 		 
+		<style type="text/css">
+			.input_hidden {
+			    position: absolute;
+			    left: -9999px;
+			}
+
+			.selected {
+			    background-color: #ccc;
+			}
+
+			#sites label {
+			    display: inline-block;
+			    cursor: pointer;
+			}
+
+
+			#sites label:hover {
+			    background-color: #efefef;
+			}
+
+			#sites label img {
+			    padding: 3px;
+			    
+			}
+		</style>
 		<!-- Content
 		============================================= -->
 		<section id="content">
@@ -94,10 +118,21 @@
 														<label style="text-transform: none;"><input type="checkbox" id="is_pph" name="is_pph" checked=""> {{ trans('translate.examination_payment_will_pay') }}</label>
 													</div>
 												</div>
-												<div class="check-layout">
-													<div class="col-md-4">
-														<input type="radio" name="payment_method" value="va" checked> {{ trans('translate.stel_payment_method_va') }}
-													</div>
+												<label>{{ trans('translate.stel_payment_method') }} : </label>
+												<div id="sites" class="check-layout">
+													@if($payment_method->status)
+														@foreach($payment_method->data->VA as $row)
+															@if(strpos(strtolower($row->productName), 'mandiri'))
+																<input type="radio" name="payment_method" id="{{ $row->productCode }}" value="{{ $row->gateway }}||{{ $row->productCode }}||{{ $row->productType }}||{{ $row->productName }}||{{ $row->productImageUrl }}" checked="" />
+																<label class="selected" for="{{ $row->productCode }}"><img src="{{ $row->productImageUrl }}" alt="{{ $row->productName }}" style="width: 180px;height: 100px;" />{{ $row->productName }}</label>
+															@else
+																<input type="radio" name="payment_method" id="{{ $row->productCode }}" value="{{ $row->gateway }}||{{ $row->productCode }}||{{ $row->productType }}||{{ $row->productName }}||{{ $row->productImageUrl }}" />
+																<label for="{{ $row->productCode }}"><img src="{{ $row->productImageUrl }}" alt="{{ $row->productName }}" style="width: 180px;height: 100px;"/>{{ $row->productName }}</label>
+															@endif
+														@endforeach
+													@else
+														NOT FOUND, PLEASE REFRESH THIS PAGE
+													@endif
 												</div>
 												<button id="submit-btn" class="button full button-3d btn-sky">{{ trans('translate.stel_payment_confirmation') }}</button> <p hidden id="submit-msg">Please Wait ...</p>
 											</div>								
@@ -137,6 +172,11 @@
 		            $(".is_pph").hide();
 		        }
 		    });
+		});
+
+		$('#sites input:radio').addClass('input_hidden');
+		$('#sites label').click(function() {
+		    $(this).addClass('selected').siblings().removeClass('selected');
 		});
 
 		/* Dengan Rupiah */

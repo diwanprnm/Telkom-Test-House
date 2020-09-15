@@ -329,10 +329,11 @@ return [
 	'stel_payment_detail'	=> 'Payment Detail',
 	'stel_payment_upload'	=> 'Upload Payment',
 	'stel_qty'				=> 'QTY',
-	'stel_payment_method'	=> 'Select Payment Method',
+	'stel_select_payment_method'	=> 'Select Payment Method',
+	'stel_payment_method'	=> 'Payment Method',
 	'stel_payment_method_atm'	=> 'Via Bank Transfer',
 	'stel_payment_method_credit'=> 'Via Credit Card',
-	'stel_payment_method_va'=> 'Via Virtual Account',
+	'stel_payment_method_va'=> 'Mandiri Virtual Account',
 	'stel_payment_method_bank'  => 'This is list of bank if you take this method',
 	'stel_payment_confirmation'  => 'Payment Confirmation',
 	
