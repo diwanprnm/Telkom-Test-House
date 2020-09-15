@@ -18,6 +18,10 @@ use Auth;
 use Session;
 use Hash;
 
+use File;
+use Image;
+use Storage;
+
 // UUID
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -41,7 +45,7 @@ class UserinController extends Controller
     private const PHONE_NUMBER = 'phone_number';
     private const PICTURE = 'picture';
     private const PATH_PROFILE = 'profile_';
-    private const MEDIA_USER = '/media/user/';
+    private const MEDIA_USER = '/user/';
     private const USER_IMG_FAILED = 'Save Profile Picture to directory failed';
     private const PAGE_USERIN_CREATE = '/admin/userin/create';
     private const USER_MSG_FAILED = 'Save Failed';
@@ -442,17 +446,7 @@ class UserinController extends Controller
         }
 
         if ($request->hasFile(self::PICTURE)) { 
-            $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
-            $path_file = public_path().self::MEDIA_USER.$userIn->id;
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file(self::PICTURE)->move($path_file,$name_file)){
-                $userIn->picture = $name_file;
-            }else{
-                Session::flash(self::ERROR,self::USER_IMG_FAILED);
-                return redirect(self::PAGE_USERIN_CREATE);
-            }
+            $this->uploadPictureUserin($request,$userIn);
         }
 
         $userIn->updated_by = $currentUser->id;
@@ -580,18 +574,20 @@ class UserinController extends Controller
 
      private function uploadPictureUserin($request, $user){
 
-       if ($request->hasFile(self::PICTURE)) { 
-            $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
-            $path_file = public_path().self::MEDIA_USER.$user->id;
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file(self::PICTURE)->move($path_file,$name_file)){
-                $user->picture = $name_file;
+       if ($request->hasFile(self::PICTURE)) {  
+            $file = $request->file(self::PICTURE);
+            $ext = $file->getClientOriginalExtension(); 
+            $file_name = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
+
+            $image = Image::make($file);   
+            $uploadedUserIn = Storage::disk('minio')->put(self::MEDIA_USER.$user->id."/$file_name",(string)$image->encode()); 
+             if($uploadedUserIn){
+                $user->picture = $file_name;
             }else{
                 Session::flash(self::ERROR, self::USER_IMG_FAILED);
                 return redirect(self::PAGE_USERIN_CREATE);
-            }
+            } 
+
         }
         return $user;
     }

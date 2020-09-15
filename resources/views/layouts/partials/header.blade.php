@@ -1,6 +1,9 @@
 @php
   $currentUser = Auth::user();
-  $currentUserAttr = $currentUser['attributes'];
+  if(!empty($currentUser)){
+
+    $currentUserAttr = $currentUser['attributes'];
+  } 
 @endphp
 
 <!-- Header

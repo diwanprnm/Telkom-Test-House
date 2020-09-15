@@ -204,7 +204,7 @@
                         </li>
                         <li class="dropdown current-user">
                             <a href class="dropdown-toggle" data-toggle="dropdown">
-                                <img src="{{ asset("media/user/".Auth::user()->id."/".Auth::user()->picture) }}" alt="{{ Auth::user()->name }}" width="32" height="32"> <span class="username">{{ Auth::user()->name }} <em class="ti-angle-down"></em></span>
+                                <img src="{{ \Storage::disk('minio')->url('user/'.Auth::user()->id.'/'.Auth::user()->picture) }}" alt="{{ Auth::user()->name }}" width="32" height="32"> <span class="username">{{ Auth::user()->name }} <em class="ti-angle-down"></em></span>
                             </a>
                             <ul class="dropdown-menu dropdown-dark">
 								<li>

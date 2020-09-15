@@ -104,7 +104,7 @@
 												@php if($data[$PICTURE_STRING] == ''){@endphp
 													<img src="{{asset('assets/images/default-profile.png')}}" width="240px" alt="gambar default profil picture">
 												@php }else{@endphp
-													<img src="{{asset('media/user/'.$data['id'].'/'.$data[$PICTURE_STRING])}}" width="240px" alt="gambar profile picture">
+													<img src="{{ \Storage::disk('minio')->url('user/'.$data['id'].'/'.$data[$PICTURE_STRING]) }}" width="240px" alt="gambar profile picture">
 												@php }@endphp
 												<input class="data-upload-user-picture" id="data-upload-user-picture" name="userPicture" type="file" accept="image/*">
 												<input type="hidden" name="hide_pic_file" id="hide_pic_file" value="@php echo $data[$PICTURE_STRING] @endphp"/>

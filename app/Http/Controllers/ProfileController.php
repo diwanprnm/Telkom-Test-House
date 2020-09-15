@@ -17,10 +17,13 @@ use App\TempCompany;
 use App\Logs;
 
 use Auth;
-use File;
 use Mail;
 use Input;
 use Session;
+
+use File;
+use Image;
+use Storage;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -39,7 +42,7 @@ class ProfileController extends Controller
     private const NEW_PASS = 'newPass';
     private const CONFNEWPASS = 'confnewPass';
     private const ERROR_NEW_PASS = 'error_newpass';
-    private const MEDIA_USER = '/media/user/';
+    private const MEDIA_USER = '/user/';
     private const HIDE_ID_USER = 'hide_id_user';
     private const USER_PICTURE = 'userPicture';
     private const IMAGE = 'image';
@@ -611,13 +614,7 @@ class ProfileController extends Controller
     	}
     }
 
-    private function uploadFileProfile($request){
-		$path_file = public_path().self::MEDIA_USER.$request->input(self::HIDE_ID_USER).'';
-    	
-    	if (!file_exists($path_file)) {
-			mkdir($path_file, 0775);
-		} 
-
+    private function uploadFileProfile($request){ 
 		if ($request->hasFile(self::USER_PICTURE)) {
 			$type_file = $request->file(self::USER_PICTURE)->getMimeType();
 			$data_type_file = explode('/',$type_file);
@@ -626,13 +623,16 @@ class ProfileController extends Controller
 				->with(self::ERROR_IMG_TYPE, 1)
 				->withInput($request->all()); 
 			}else{ 
-				$name_file = self::PATH_PROFILE.$request->file(self::USER_PICTURE)->getClientOriginalName();
-				$request->file(self::USER_PICTURE)->move($path_file, $name_file);
-				$fuserPicture = $name_file;
-				if (File::exists(public_path().'\media\user\\'.$request->input(self::HIDE_ID_USER).'\\'.$request->input(self::HIDE_PIC_FILE))){
-					File::delete(public_path().'\media\user\\'.$request->input(self::HIDE_ID_USER).'\\'.$request->input(self::HIDE_PIC_FILE));
-				}
-			}
+				$file = $request->file(self::USER_PICTURE);
+	            $ext = $file->getClientOriginalExtension(); 
+	            $file_name = self::PATH_PROFILE.$request->file(self::USER_PICTURE)->getClientOriginalName();
+
+	            $image = Image::make($file);   
+	            Storage::disk('minio')->put(self::MEDIA_USER.$request->input(self::HIDE_ID_USER)."/$file_name",(string)$image->encode()); 
+	             
+	            $fuserPicture = $file_name; 
+			} 
+
 		}else{
 			$fuserPicture = $request->input(self::HIDE_PIC_FILE);
 		}

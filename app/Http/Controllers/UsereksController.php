@@ -17,6 +17,9 @@ use Auth;
 use Session;
 use Hash;
 
+use File;
+use Image;
+use Storage;
 // UUID
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -42,7 +45,7 @@ class UsereksController extends Controller
     private const PHONE_NUMBER = 'phone_number';
     private const PICTURE = 'picture';
     private const PATH_PROFILE = 'profile_';
-    private const MEDIA_USER = '/media/user/';
+    private const MEDIA_USER = '/user/';
     private const FAILED_USER_MSG = 'Save Profile Picture to directory failed';
     private const FAILED_LOG_MSG = 'Save failed';
     private const NEW_TEXT = 'new';
@@ -157,18 +160,19 @@ class UsereksController extends Controller
 
     private function uploadPicture($request, $usersEks){
 
-        if ($request->hasFile(self::PICTURE)) { 
-            $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
-            $path_file = public_path().self::MEDIA_USER.$usersEks->id;
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file(self::PICTURE)->move($path_file,$name_file)){
-                $usersEks->picture = $name_file;
+        if ($request->hasFile(self::PICTURE)) {   
+            $file = $request->file(self::PICTURE);
+            $ext = $file->getClientOriginalExtension(); 
+            $file_name = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
+
+            $image = Image::make($file);   
+            $uploadedUserIn = Storage::disk('minio')->put(self::MEDIA_USER.$usersEks->id."/$file_name",(string)$image->encode()); 
+             if($uploadedUserIn){
+                $usersEks->picture = $file_name;
             }else{
-                Session::flash(self::ERROR,self::FAILED_USER_MSG);
+                Session::flash(self::ERROR, self::FAILED_USER_MSG);
                 return redirect(self::ADMIN_USEREKS_CREATE);
-            }
+            } 
         }
         return $usersEks;
     }
