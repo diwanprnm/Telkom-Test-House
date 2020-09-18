@@ -18,12 +18,12 @@ class STELControllerTest extends TestCase
        $this->assertEquals(200, $response->status());
 	} 
 
-	public function test__visit_stel_with_search()
-	{ 
-	   $user = User::find(1);
-	   $response =  $this->actingAs($user)->call('GET', 'admin/stel?search=cari');  
-       $this->assertEquals(200, $response->status());
-	}
+	// public function test__visit_stel_with_search()
+	// { 
+	//    $user = User::find(1);
+	//    $response =  $this->actingAs($user)->call('GET', 'admin/stel?search=cari');  
+ //       $this->assertEquals(200, $response->status());
+	// }
     public function test_visit_create_stel()
 	{ 
  
