@@ -24,7 +24,7 @@ class UsereksControllerTest extends TestCase
 	public function test_visit_usereks_with_search()
 	{ 
 		$admin = User::find('1');
-	   	$response =  $this->actingAs($admin)->call('GET', 'admin/usereks?search=cari&is_active=1');  
+	   	$response =  $this->actingAs($admin)->call('GET', 'admin/usereks?search=cari&company=com&is_active=1');  
        	$this->assertEquals(200, $response->status());
 	}
 
@@ -54,6 +54,7 @@ class UsereksControllerTest extends TestCase
 	    ]);    
 
 		$this->assertEquals(302, $response->status());
+		$user = factory(App\User::class)->make();  
 	}
 
 	public function testShow()
@@ -107,7 +108,8 @@ class UsereksControllerTest extends TestCase
 	{ 
 		$admin = User::find('1');
 		$user = User::latest()->first(); 
-		$response = $this->actingAs($admin)->call('DELETE', 'admin/usereks/'.$user->id);  
+		$response = $this->actingAs($admin)->call('DELETE', 'admin/usereks/'.$user->id); 
+		// dd($response->getContent()); 
         $this->assertEquals(302, $response->status()); 
 	} 
 }
