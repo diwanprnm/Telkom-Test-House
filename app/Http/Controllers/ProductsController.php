@@ -30,7 +30,9 @@ use GuzzleHttp\Client;
 use App\NotificationTable;
 use App\Services\NotificationService;
 
-use App\Services\Logs\LogService;
+use App\Services\Logs\LogService; 
+use App\Services\FileService;
+
 
 class ProductsController extends Controller
 {   
@@ -110,15 +112,17 @@ class ProductsController extends Controller
         $currentUser = Auth::user();
         if($currentUser){
             $paginate = 10; 
-             $query = STELSales::whereHas('user', function ($query) use ($currentUser) {
-                                    $query->where('company_id', $currentUser->company_id);
-                                })
-                                ->with('user')
-                                ->with('user.company')
-                                ->with('sales_detail')
-                                ->with('sales_detail.stel');
-            $data = $query->orderBy(self::CREATED_AT, 'desc')->paginate($paginate);
-            
+              $select = array("stels_sales.*","users.name","stels_sales_detail.id","stels.code"); 
+             $query = STELSales::select($select)
+                        ->join("stels_sales_detail","stels_sales.id","=","stels_sales_detail.stels_sales_id")
+                        ->join("stels","stels_sales_detail.stels_id","=","stels.id")
+                         ->join("users","users.id","=","stels_sales.user_id")
+                         ->join("companies","companies.id","=","users.company_id")
+                         ->where("users.company_id",$currentUser->company_id)  
+                         ->orderBy("stels_sales.created_at", 'desc');
+                         
+            $data = $query->paginate($paginate);
+
             $page = "purchase_history";
             return view('client.STEL.purchase_history') 
             ->with('page', $page)
@@ -178,7 +182,7 @@ class ProductsController extends Controller
     public function upload_payment($id)
     { 
         Auth::user();
-        $data = STELSales::find($id);
+        $data = STELSales::find($id); 
         $page = "upload_payment";
         return view('client.STEL.upload_payment') 
         ->with('page', $page) 
@@ -193,18 +197,11 @@ class ProductsController extends Controller
         $jml_pembayaran = str_replace(".",'',$request->input('jml-pembayaran'));
         $jml_pembayaran = str_replace("Rp",'',$jml_pembayaran);
          
-        $path_file = public_path().self::MEDIA_STEL.$request->input(self::STELSALES_ID).'';
-        if ($request->hasFile(self::FILEPEMBAYARAN)) { 
-            $name_file = 'stel_payment_'.$request->file(self::FILEPEMBAYARAN)->getClientOriginalName();
-            if($request->file(self::FILEPEMBAYARAN)->move($path_file,$name_file)){ 
-                if (File::exists(public_path().'\media\stel\\'.$request->input(self::STELSALES_ID).'\\'.$request->input(self::HIDE_FILE_PEMBAYARAN))){
-                    File::delete(public_path().'\media\stel\\'.$request->input(self::STELSALES_ID).'\\'.$request->input(self::HIDE_FILE_PEMBAYARAN));
-                }
-            }else{
-                Session::flash(self::ERROR, 'Upload Payment Attachment to directory failed');
-                return redirect('/upload_payment/'.$request->input(self::STELSALES_ID));
-            }
-
+        $path_file = public_path().self::MEDIA_STEL.$request->input(self::STELSALES_ID).''; 
+        if ($request->hasFile(self::FILEPEMBAYARAN)) {  
+            $fileService = new FileService();  
+            $file = $fileService->uploadFile($request->file(self::FILEPEMBAYARAN), 'stel_payment_', "/stel/");
+            $name_file = $file ? $file : '';
             try{
                 $STELSalesAttach = STELSalesAttach::where("stel_sales_id",$request->input(self::STELSALES_ID))->first();
                 if($STELSalesAttach){
@@ -235,7 +232,7 @@ class ProductsController extends Controller
                 $notification_id = $notificationService->make($data);
 			    $data['id'] = $notification_id;
 
-                event(new Notification($data));
+                // event(new Notification($data));
 
                 Session::flash(self::MESSAGE, 'Upload successfully'); 
             } catch(Exception $e){
