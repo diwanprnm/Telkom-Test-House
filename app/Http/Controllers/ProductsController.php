@@ -107,16 +107,14 @@ class ProductsController extends Controller
     {
         $currentUser = Auth::user();
         if($currentUser){
-            $paginate = 10;
-
-            $query = STELSales::whereHas('user', function ($query) use ($currentUser) {
-                                    $query->where('company_id', $currentUser->company_id);
-                                })
-                                ->with('user')
-                                ->with('user.company')
-                                ->with('sales_detail')
-                                ->with('sales_detail.stel');
-            $data = $query->orderBy(self::CREATED_AT, 'desc')->paginate($paginate);
+            $paginate = 10; 
+             $query = \DB::table("stels_sales")
+                        ->where("users.company_id",$currentUser->company_id)  
+                         ->join("users","users.id","=","stels_sales.user_id")
+                         ->join("companies","companies.id","=","users.company_id")
+                         ->orderBy("stels_sales.created_at", 'desc');
+                         
+            $data = $query->paginate($paginate);
             $page = "purchase_history";
             return view('client.STEL.purchase_history') 
             ->with('page', $page)
