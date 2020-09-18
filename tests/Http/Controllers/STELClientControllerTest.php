@@ -12,19 +12,15 @@ class STELClientControllerTest extends TestCase
      *
      * @return void
      */
-     public function test_visit_index()
+    public function test_visit_index()
 	{ 
-	   $user = User::find(1);
-	   $response =  $this->actingAs($user)->call('GET', '/STELclient');   
-	 
-       $this->assertEquals(200, $response->status());
+		$response =  $this->call('GET', '/STELclient');  
+       	$this->assertEquals(200, $response->status());
 	} 
 
 	public function test_stores_filter()
 	{ 
-		$user = User::find(1);
-       
-		$response =  $this->actingAs($user)->call('POST', '/filterSTEL', 
+		$response =  $this->call('POST', '/filterSTEL', 
 		[ 
 	        'category' => str_random(10) 
 	    ]);    
@@ -33,8 +29,7 @@ class STELClientControllerTest extends TestCase
 
 	public function test_visit_autocomplete()
 	{ 
-		 $user = User::find(1);
-        $this->actingAs($user)->call('GET',"/stel_autocomplete/query/asd");
+		$this->call('GET',"/stel_autocomplete/query/asd");
         //Response status ok
         
         $this->assertResponseStatus(200); 
