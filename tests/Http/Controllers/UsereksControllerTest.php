@@ -22,15 +22,15 @@ class UsereksControllerTest extends TestCase
        $this->assertEquals(200, $response->status());
 	} 
 
-	public function test__visit_usereks_with_search()
+	public function test_visit_usereks_with_search()
 	{ 
 	   $user = User::find(1);
-	   $response =  $this->actingAs($user)->call('GET', 'admin/usereks?search=cari&company=com&role=admin&is_active=1');  
+	   $response =  $this->actingAs($user)->call('GET', 'admin/usereks?search=cari&company=com&is_active=1');  
        $this->assertEquals(200, $response->status());
 	}
-	 public function test_stores_user()
+
+	public function test_stores_user()
 	{ 
- 
 	    $user = User::find(1);
        	$menu = Menu::get()->toArray(); 
 		$response =  $this->actingAs($user)->call('POST', 'admin/usereks', 

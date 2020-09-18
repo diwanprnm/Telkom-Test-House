@@ -77,49 +77,39 @@ class UsereksController extends Controller
             $status = -1;
 
             $companies = Company::where('id','!=', 1)->get();
-			$roles = Role::where('id', 2);
+            $roles = Role::where('id', 2);
             
-            if ($search != null){
-                $usersEks = User::whereNotNull('created_at')
+            $query = User::whereNotNull('created_at')
                     ->with('role')
                     ->with(self::COMPANY)
-                    ->where('name','like','%'.$search.'%')
 					->where(self::ROLE_ID, '=', '2')
 					->where('id', '<>', '1')
-					->where('is_deleted', '=', '0')
-                    ->orderBy('name')
-                    ->paginate($paginate);
-
-                    $logService = new LogService();
-                    $logService->createLog('Search User', self::USER_EKSTERNAL, json_encode(array("search"=>$search))); 
-                    
-            }else{
-                $query = User::whereNotNull('created_at')
-					->where(self::ROLE_ID, '=', '2')
-					->where('id', '<>', '1')
-					->where('is_deleted', '=', '0')
-                    ->with('role')
-                    ->with(self::COMPANY);
-					
-				if ($request->has(self::COMPANY)){
-                    $filterCompanyUser = $request->get(self::COMPANY);
-					if($request->input(self::COMPANY) != 'all'){
-						$query->whereHas(self::COMPANY, function ($q) use ($request){
-							return $q->where('name', 'like', '%'.$request->get(self::COMPANY).'%');
-						});
-					}
-                }
-
-                if ($request->has(self::IS_ACTIVE)){
-					$status = $request->get(self::IS_ACTIVE);
-                    if ($request->get(self::IS_ACTIVE) > -1){
-                        $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
-                    }
-                }
-
-                $usersEks = $query->orderBy('name')
-                            ->paginate($paginate);
+					->where('is_deleted', '=', '0');
+            
+            if ($search != null){
+                $query->where('name','like','%'.$search.'%');
+                
+                $logService = new LogService();
+                $logService->createLog('Search User', self::USER_EKSTERNAL, json_encode(array("search"=>$search)));     
             }
+					
+            if ($request->has(self::COMPANY)){
+                $filterCompanyUser = $request->get(self::COMPANY);
+                if($request->input(self::COMPANY) != 'all'){
+                    $query->whereHas(self::COMPANY, function ($q) use ($request){
+                        return $q->where('name', 'like', '%'.$request->get(self::COMPANY).'%');
+                    });
+                }
+            }
+
+            if ($request->has(self::IS_ACTIVE)){
+                $status = $request->get(self::IS_ACTIVE);
+                if ($request->get(self::IS_ACTIVE) > -1){
+                    $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
+                }
+            }
+
+            $usersEks = $query->orderBy('name')->paginate($paginate);
             
             if (count($usersEks) == 0){
                 $message = 'Data not found';
