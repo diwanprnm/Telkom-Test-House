@@ -24,8 +24,8 @@ use Storage;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
-
 use App\Services\Logs\LogService;
+use App\Services\FileService;
 class UsereksController extends Controller
 {
 
@@ -88,7 +88,7 @@ class UsereksController extends Controller
             
             if ($search != null){
                 $query->where('name','like','%'.$search.'%');
-                
+
                 $logService = new LogService();
                 $logService->createLog('Search User', self::USER_EKSTERNAL, json_encode(array("search"=>$search)));     
             }
@@ -141,31 +141,6 @@ class UsereksController extends Controller
             ->with(self::COMPANY, $companies);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-
-    private function uploadPicture($request, $usersEks){
-
-        if ($request->hasFile(self::PICTURE)) {   
-            $file = $request->file(self::PICTURE);
-            $ext = $file->getClientOriginalExtension(); 
-            $file_name = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
-
-            $image = Image::make($file);   
-            $uploadedUserIn = Storage::disk('minio')->put(self::MEDIA_USER.$usersEks->id."/$file_name",(string)$image->encode()); 
-             if($uploadedUserIn){
-                $usersEks->picture = $file_name;
-            }else{
-                Session::flash(self::ERROR, self::FAILED_USER_MSG);
-                return redirect(self::ADMIN_USEREKS_CREATE);
-            } 
-        }
-        return $usersEks;
-    }
     public function store(Request $request)
     {
         $currentUser = Auth::user(); 
@@ -182,7 +157,8 @@ class UsereksController extends Controller
         $usersEks->phone_number = $request->input(self::PHONE_NUMBER);
         $usersEks->fax = $request->input('fax');
 
-        $this->uploadPicture($request,$usersEks); 
+        // $fileService = new FileService();
+        // $fileService->uploadFile($request->file(self::PICTURE), '', self::MEDIA_USER.$usersEks->id);
 
         $usersEks->created_by = $currentUser->id;
         $usersEks->updated_by = $currentUser->id;
@@ -216,66 +192,6 @@ class UsereksController extends Controller
         return view('admin.profile.edit')
             ->with(self::COMPANY, $companies)
             ->with('data', $usereks);   
-    }
-
-    public function updateProfile($id, Request $request)
-    {
-        $currentUser = Auth::user();
-
-        $usereks = User::find($id);
-        $oldData = $usereks;
-        if ($request->has('name')){
-            $usereks->name = $request->input('name');
-        }
-        if ($request->has('old_password')){
-            $msg_old_pass = "";
-            $status_old_pass = TRUE;
-            if (Hash::check($request->get('old_password'), $usereks->password)) {
-                if ($request->has(self::NEW_TEXT.self::NEW_PASSWORD) && $request->has('confirm_new_password')){
-                    if ($request->get(self::NEW_TEXT.self::NEW_PASSWORD) == $request->get('confirm_new_password')){
-                        $usereks->password = bcrypt($request->input(self::NEW_TEXT.self::NEW_PASSWORD));
-                    } else{ 
-                        $status_old_pass = FALSE;
-                        $msg_old_pass = 'New password not matched';
-                    }
-                } else{ 
-                    $status_old_pass = FALSE;
-                    $msg_old_pass = 'Must fill new password and confirm new password';
-                }
-            } else{
-                $status_old_pass = FALSE;
-                $msg_old_pass = 'Wrong Old Password';
-                
-            }
-            if(!$status_old_pass){ 
-                Session::flash(self::ERROR, $msg_old_pass);
-                return back()->withInput($request->all());
-            }
-        }
-        if ($request->has(self::PRICE)){
-            $usereks->price = $request->input(self::PRICE);
-        }
-        if ($request->has(self::IS_ACTIVE)){
-            $usereks->is_active = $request->input(self::IS_ACTIVE);
-        }
-
-        
-        $this->uploadPicture($request,$usersEks); 
-
-        $usereks->updated_by = $currentUser->id;
-
-        try{
-            $usereks->save(); 
-
-            $logService = new LogService();
-            $logService->createLog('Update Profile', 'PROFILE', $oldData); 
-
-            Session::flash(self::MESSAGE, 'User successfully updated');
-            return redirect('/admin');
-        } catch(Exception $e){
-            Session::flash(self::ERROR, self::FAILED_LOG_MSG);
-            return redirect('/admin/usereks/'.$usereks->id.'edit');
-        }  
     }
 
     /**
@@ -342,7 +258,8 @@ class UsereksController extends Controller
             $usersEks->fax = $request->input('fax');
         }
 
-        $this->uploadPicture($request,$usersEks);
+        // $fileService = new FileService();
+        // $fileService->uploadFile($request->file(self::PICTURE), '', self::MEDIA_USER.$usersEks->id);
 
         $usersEks->updated_by = $currentUser->id;
 
@@ -395,13 +312,8 @@ class UsereksController extends Controller
 				$usersEks->deleted_at = ''.date('Y-m-d H:i:s').'';
                 $usersEks->save();
 
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Delete User"; 
-                $logs->data = $oldData;
-                $logs->created_by = $currentUser->id;
-                $logs->page = "USER EKSTERNAL";
-                $logs->save();
+                $logService = new LogService();
+                $logService->createLog( "Delete User","USER EKSTERNAL",$oldData);
 
                 Session::flash(self::MESSAGE, 'User successfully deleted');
                 return redirect(self::ADMIN_USEREKS);
@@ -411,24 +323,4 @@ class UsereksController extends Controller
             }
         }
     }
-	
-	public function autocomplete($query) {
-        return User::select('name as autosuggest')
-				->where('name', 'like','%'.$query.'%')
-                ->orderBy('name')
-                ->take(5)
-				->distinct()
-                ->get();
-    }
-
-    public function logout(){
-        //LOG LOGOUT 
-
-        $logService = new LogService();
-        $logService->createLog('Logout', "AUTH"); 
-
-        Auth::logout();
-        return redirect('/admin/login');
-    }
-
 }
