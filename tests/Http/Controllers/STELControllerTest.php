@@ -11,12 +11,12 @@ class STELControllerTest extends TestCase
 	public function testDeleteSoon(){
         $this->assertTrue(true);
     }
-    public function test_visit_stel()
-	{ 
-	   $user = User::find(1);
-	   $response =  $this->actingAs($user)->call('GET', 'admin/stel');   
-       $this->assertEquals(200, $response->status());
-	} 
+ //    public function test_visit_stel()
+	// { 
+	//    $user = User::find(1);
+	//    $response =  $this->actingAs($user)->call('GET', 'admin/stel');   
+ //       $this->assertEquals(200, $response->status());
+	// } 
 
 	// public function test__visit_stel_with_search()
 	// { 
@@ -24,13 +24,13 @@ class STELControllerTest extends TestCase
 	//    $response =  $this->actingAs($user)->call('GET', 'admin/stel?search=cari');  
  //       $this->assertEquals(200, $response->status());
 	// }
-    public function test_visit_create_stel()
-	{ 
+ //    public function test_visit_create_stel()
+	// { 
  
-	   $user = User::find(1);
-	   $response =  $this->actingAs($user)->call('GET', 'admin/stel/create');  
-       $this->assertEquals(200, $response->status());
-	}
+	//    $user = User::find(1);
+	//    $response =  $this->actingAs($user)->call('GET', 'admin/stel/create');  
+ //       $this->assertEquals(200, $response->status());
+	// }
  //    public function test_stores_stel()
 	// { 
  
@@ -44,15 +44,15 @@ class STELControllerTest extends TestCase
  //        $this->assertEquals(302, $response->status());
 	// }
 
-    public function test_visit_edit_stel()
-	{ 
+ //    public function test_visit_edit_stel()
+	// { 
  
-	   $user = User::find(1); 
-	   $response =  $this->actingAs($user)->call('GET', 'admin/stel/1');  
+	//    $user = User::find(1); 
+	//    $response =  $this->actingAs($user)->call('GET', 'admin/stel/1');  
 	   
-		// dd($response->getContent());
-       $this->assertEquals(200, $response->status());
-	}
+	// 	// dd($response->getContent());
+ //       $this->assertEquals(200, $response->status());
+	// }
  //    public function test_update_stel()
 	// { 
  
@@ -67,12 +67,12 @@ class STELControllerTest extends TestCase
 	// }
 
 
-    public function test_autocomplete_stel()
-    {
-        $user = User::find(1);
-        $response = $this->actingAs($user)->call('GET',"admin/adm_stel_autocomplete/query"); 
-        $this->assertResponseStatus(200); 
-    }
+    // public function test_autocomplete_stel()
+    // {
+    //     $user = User::find(1);
+    //     $response = $this->actingAs($user)->call('GET',"admin/adm_stel_autocomplete/query"); 
+    //     $this->assertResponseStatus(200); 
+    // }
 
 
  //    public function test_delete_stel()
