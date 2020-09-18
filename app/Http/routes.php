@@ -4604,8 +4604,8 @@ Route::get('/client/downloadUsman', 'HomeController@downloadUsman');
 Route::get('mylogsbl', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
  
-Route::get('/stel_autocomplete/{query}', 'STELClientController@autocomplete')->name('stel_autocomplete');
-Route::get('/stsel_autocomplete/{query}', 'STELClientController@autocomplete')->name('stsel_autocomplete');
+Route::get('/stel_autocomplete/{query}/{type}', 'STELClientController@autocomplete')->name('stel_autocomplete');
+Route::get('/stsel_autocomplete/{query}/{type}', 'STELClientController@autocomplete')->name('stsel_autocomplete');
 Route::get('/charge_client_autocomplete/{query}', 'ExaminationChargeClientController@autocomplete')->name('charge_client_autocomplete');
 Route::get('/new_charge_client_autocomplete/{query}', 'ExaminationNewChargeClientController@autocomplete')->name('new_charge_client_autocomplete');
 Route::get('/dev_client_autocomplete/{query}', 'DevClientController@autocomplete')->name('dev_client_autocomplete');

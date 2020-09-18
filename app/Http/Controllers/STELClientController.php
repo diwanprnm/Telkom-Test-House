@@ -115,7 +115,11 @@ class STELClientController extends Controller
 				->orderBy('name')
                 ->take(3)
 				->distinct()
-                ->get(); 
-        return array_merge($data1,$data2);
+                ->get();  
+        if(count($data1) > 0 && count($data2) >0 ){  
+            return array_merge($data1,$data2);
+        }else{
+            return [];
+        }
     }
 }
