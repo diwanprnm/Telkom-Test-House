@@ -196,8 +196,7 @@ class ProductsController extends Controller
      
         $jml_pembayaran = str_replace(".",'',$request->input('jml-pembayaran'));
         $jml_pembayaran = str_replace("Rp",'',$jml_pembayaran);
-         
-        $path_file = public_path().self::MEDIA_STEL.$request->input(self::STELSALES_ID).''; 
+          
         if ($request->hasFile(self::FILEPEMBAYARAN)) {  
             $fileService = new FileService();  
             $file = $fileService->uploadFile($request->file(self::FILEPEMBAYARAN), 'stel_payment_', "/stel/");
@@ -498,13 +497,14 @@ class ProductsController extends Controller
     {
         $stel = STEL::find($id);
 
-        if ($stel){
-            $file = public_path().self::MEDIA_STEL.$stel->attachment;
-            $headers = array(
-              self::CONTENT_TYPE,
-            );
+        if ($stel){ 
+            $file = Storage::disk("minio")->url("/stel/".$stel->attachment);
+                     
+            $filename = $stel->attachment;
+            $tempImage = tempnam(sys_get_temp_dir(), $filename);
+            copy($file, $tempImage);
 
-            return Response::download($file, $stel->attachment, $headers);
+            return response()->download($tempImage, $filename); 
         }
     }
 
@@ -524,13 +524,14 @@ class ProductsController extends Controller
     {
         $stel = STELSales::where("id",$id)->first();
 
-        if ($stel){
-            $file = public_path().self::MEDIA_STEL.$stel->id."/".$stel->faktur_file;
-            $headers = array(
-              self::CONTENT_TYPE,
-            );
+        if ($stel){ 
+            $file = Storage::disk("minio")->url("/stel/".$stel->id."/".$stel->faktur_file);
+                     
+            $filename = $stel->faktur_file;
+            $tempImage = tempnam(sys_get_temp_dir(), $filename);
+            copy($file, $tempImage);
 
-            return Response::file($file, $headers);
+            return response()->download($tempImage, $filename);
         }
     }
 	
@@ -538,13 +539,15 @@ class ProductsController extends Controller
     {
         $stel = STELSales::where("id_kuitansi",$id)->first();
 
-        if ($stel){
-            $file = public_path().self::MEDIA_STEL.$stel->id."/".$stel->id_kuitansi;
-            $headers = array(
-              self::CONTENT_TYPE,
-            );
+        if ($stel){ 
 
-            return Response::file($file, $headers);
+            $file = Storage::disk("minio")->url("/stel/".$stel->id."/".$stel->id_kuitansi);
+                     
+            $filename = $stel->id_kuitansi;
+            $tempImage = tempnam(sys_get_temp_dir(), $filename);
+            copy($file, $tempImage);
+
+            return response()->download($tempImage, $filename);
         }
     }
 	
@@ -562,13 +565,17 @@ class ProductsController extends Controller
                  ->where('stels_sales_detail.id', '=', $id);
             });
             $stel = $query->get();
-            if (count($stel)>0){
-                $file = public_path().'/media/stelAttach/'.$id."/".$stel[0]->attachment;
-                $headers = array(
-                  self::CONTENT_TYPE,
-                );
+            if (count($stel)>0){ 
 
-                return Response::file($file, $headers);
+                $file = Storage::disk("minio")->url("/media/stelAttach/".$id."/".$stel[0]->attachment);
+                     
+                $filename = $stel[0]->attachment;
+                $tempImage = tempnam(sys_get_temp_dir(), $filename);
+                copy($file, $tempImage);
+
+                return response()->download($tempImage, $filename);
+
+
             }else{
                return redirect()->back();
             }
