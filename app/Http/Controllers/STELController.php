@@ -19,9 +19,13 @@ use File;
 use Response;
 use Session;
 use Input;
+
+use Storage;
 use Ramsey\Uuid\Uuid;
 
 use App\Services\Logs\LogService;
+use App\Services\FileService;
+
 class STELController extends Controller
 {
 
@@ -159,7 +163,8 @@ class STELController extends Controller
 		$return_page = redirect(self::ADMIN_CREATE);
 
 	    $name_exists = $this->cekNamaSTEL($request->input('name'));
-		if($name_exists == 1){
+       
+		if($name_exists == 0){
 			$return_page =  redirect()->back()
 			->with('error_name', 1)
 			->withInput($request->all()); 
@@ -176,30 +181,24 @@ class STELController extends Controller
     		$stel->created_by = $currentUser->id;
     		$stel->updated_by = $currentUser->id;
 
-    		$this->attachment($request, $stel); 
+    		$fileService = new FileService();
+            $file = $fileService->uploadFile($request->file(self::ATTACHMENT), 'stel_', '/stel/');
+            $stel->attachment = $file ? $file : '';
 
             try{
-                $stel->save();
-
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;
-                $logs->id = Uuid::uuid4();
-                $logs->action = "Create STEL";
-                $logs->data = $stel;
-                $logs->created_by = $currentUser->id;
-                $logs->updated_by = $currentUser->id;
-                $logs->page = "STEL";
-                $logs->save();
+                $stel->save(); 
+                $logService = new LogService();  
+                $logService->createLog('Create STEL',"STEL",$stel);
                 
                 Session::flash(self::MESSAGE, 'STEL successfully created');
                 $return_page =  redirect(self::ADMIN_STEL);
             } catch(Exception $e){
+
+                die();
                 Session::flash(self::ERROR, 'Save failed');
                 $return_page =  redirect(self::ADMIN_CREATE);
             }
-        }
-		
-
+        } 
         return $return_page;
     }
 
@@ -275,7 +274,9 @@ class STELController extends Controller
                 $stel->total = str_replace(",","",$request->input(self::TOTAL));
             }
 
-            $this->attachment($request, $stel);
+            $fileService = new FileService();
+            $file = $fileService->uploadFile($request->file(self::ATTACHMENT), 'stel_', '/stel/');
+            $stel->attachment = $file ? $file : '';
 
             $stel->updated_by = $currentUser->id;  
             try{
@@ -329,13 +330,15 @@ class STELController extends Controller
     {
         $stel = STEL::find($id);
 
-        if ($stel){
-            $file = public_path().'/media/stel/'.$stel->attachment;
-            $headers = array(
-              'Content-Type: application/octet-stream',
-            );
+        if ($stel){ 
 
-            return Response::file($file, $headers);
+            $file = Storage::disk("minio")->url("/stel/".$stel->attachment);
+                     
+            $filename = $stel->attachment;
+            $tempImage = tempnam(sys_get_temp_dir(), $filename);
+            copy($file, $tempImage);
+
+            return response()->download($tempImage, $filename); 
         }
     }
 	
@@ -443,23 +446,5 @@ class STELController extends Controller
                 $sheet->fromArray($examsArray, null, 'A1', false, false);
             });
         })->export('xlsx'); 
-    }
-
-    public function attachment($request, $stel){
-        if ($request->hasFile(self::ATTACHMENT)) { 
-            $name_file = 'stel_'.$request->file(self::ATTACHMENT)->getClientOriginalName();
-			$path_file = public_path().'/media/stel';
-			if (!file_exists($path_file)) {
-				mkdir($path_file, 0775);
-			}
-			if($request->file(self::ATTACHMENT)->move($path_file,$name_file)){
-				$stel->attachment = $name_file;
-			}else{
-				Session::flash(self::ERROR, 'Save STEL to directory failed');
-				return redirect(self::ADMIN_CREATE);
-			}
-		}
-
-        return $stel;
-    }
+    } 
 }

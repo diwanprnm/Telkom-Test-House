@@ -32,10 +32,10 @@ class UserinControllerTest extends TestCase
     public function test_stores_user()
 	{ 
  
-	    $user = User::find(1);
+	    $admin = User::find(1);
        	$menu = Menu::get()->toArray();
        	$examinations = Examination::get()->toArray();
-		$response =  $this->actingAs($user)->call('POST', 'admin/userin', 
+		$response =  $this->actingAs($admin)->call('POST', 'admin/userin', 
 		[ 
 	        'name' => str_random(10), 
 	        'role_id' => 1, 
@@ -52,24 +52,26 @@ class UserinControllerTest extends TestCase
 	    ]);    
 
 	    // dd($response->getContent());
-        $this->assertEquals(200, $response->status());
+        $this->assertEquals(302, $response->status());
 	}
 
     public function test_visit_edit_userin()
 	{ 
  
-	   $user = User::find(1); 
-	   $response =  $this->actingAs($user)->call('GET', 'admin/userin/'.$user->id.'/edit');  
+	   $admin = User::find(1); 
+	   $user = User::latest()->first(); 
+	   $response =  $this->actingAs($admin)->call('GET', 'admin/userin/'.$user->id.'/edit');  
 	    
        $this->assertEquals(200, $response->status());
 	}
     public function test_update_userin()
 	{ 
  
-	    $user = User::find(1); 
+	    $admin = User::find(1); 
        	$menu = Menu::get()->toArray();  
+       	$user = User::latest()->first(); 
        	$examinations = Examination::get()->toArray();
-		$response =  $this->actingAs($user)->call('PUT', 'admin/userin/'.$user->id, 
+		$response =  $this->actingAs($admin)->call('PUT', 'admin/userin/'.$user->id, 
 		[ 
 	        'name' => str_random(10), 
 	        'role_id' => 1, 
@@ -85,30 +87,21 @@ class UserinControllerTest extends TestCase
 	        'menus' => $menu, 
 	    ]);    
 	    
-        $this->assertEquals(200, $response->status());  
-	}
- //    public function test_update_profile_userin()
-	// {  
-	//     $user = User::find(1);  
-	// 	$response =  $this->actingAs($user)->call('PUT', '/userin/profile/'.$user->id, 
-	// 	[ 
-	//         'name' => str_random(10)  
-	//     ]);    
-	    
- //        $this->assertEquals(302, $response->status());  
-	// } 
+        $this->assertEquals(302, $response->status());  
+	} 
 
     public function test_softdelete_userin()
 	{ 
+		$admin = User::find(1); 
 		$user = User::latest()->first(); 
-		$response =  $this->actingAs($user)->call('POST', 'admin/userin/'.$user->id.'/softDelete');  
-        $this->assertEquals(200, $response->status()); 
+		$response =  $this->actingAs($admin)->call('POST', 'admin/userin/'.$user->id.'/softDelete');  
+        $this->assertEquals(302, $response->status()); 
 	} 
-    // public function test_delete_userin()
-	// { 
-	// 	$user = User::latest()->first(); 
-	// 	$response =  $this->actingAs($user)->call('DELETE', 'admin/userin/'.$user->id); 
-	// 	// dd($response->getContent()); 
-    //     $this->assertEquals(200, $response->status()); 
-	// } 
+    public function test_delete_userin()
+	{ 
+		$user = User::latest()->first(); 
+		$response =  $this->actingAs($user)->call('DELETE', 'admin/userin/'.$user->id); 
+		// dd($response->getContent()); 
+        $this->assertEquals(302, $response->status()); 
+	} 
 }

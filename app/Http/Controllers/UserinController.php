@@ -26,6 +26,9 @@ use Storage;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
+
+use App\Services\Logs\LogService;
+
 class UserinController extends Controller
 {
 
@@ -92,22 +95,9 @@ class UserinController extends Controller
 					->where('is_deleted', '=', '0')
                     ->orderBy('name')
                     ->paginate($paginate);
-
-                    $logs = new Logs;
-                    $logs->user_id = $currentUser->id;
-                    $logs->id = Uuid::uuid4();
-                    $logs->action = "Search User";
-                    $datasearch = array(self::SEARCH=>$search);
-                    $logs->data = json_encode($datasearch);
-                    $logs->created_by = $currentUser->id;
-                    $logs->page = self::USER_INTERNAL;
-                    try{
-                        $logs->save();    
-                    }catch(Illuminate\Database\QueryException $e){ 
-                        Session::flash(self::ERROR, 'Failed Create Log');
-                        return redirect(self::PAGE_USERIN);
-                    }
-                    
+ 
+                    $logService = new LogService();
+                    $logService->createLog('Search User', self::USER_INTERNAL, json_encode(array("search"=>$search)));     
             }else{
                 $query = User::whereNotNull('created_at')
 					->where(self::ROLE_ID, '!=', '2')
@@ -283,78 +273,7 @@ class UserinController extends Controller
         return view('admin.profile.edit')
             ->with(self::COMPANY, $companies)
             ->with('data', $user);   
-    }
-
-    public function updateProfile($id, Request $request)
-    {
-        $currentUser = Auth::user();
-
-        $userIn = User::find($id);
-        $oldData = $userIn;
-        if ($request->has('name')){
-            $userIn->name = $request->input('name');
-        }
-        if ($request->has('old_password')){
-
-            $msg_userin_pass = "";
-            $status_userin_pass = TRUE;
-            if (Hash::check($request->get('old_password'), $userIn->password)) {
-                if ($request->has(self::NEW_PASS_TEXT) && $request->has('confirm_new_password')){
-                    if ($request->get(self::NEW_PASS_TEXT) == $request->get('confirm_new_password')){
-                        $userIn->password = bcrypt($request->input(self::NEW_PASS_TEXT));
-                    } else{  
-                        $status_userin_pass = FALSE;
-                        $msg_userin_pass = 'New password not matched';  
-                    }
-                } else{ 
-
-                    $status_userin_pass = FALSE;
-                    $msg_userin_pass = 'Must fill new password and confirm new password';
-                }
-            } else{
-               
-                $status_userin_pass = FALSE;
-                $msg_userin_pass = 'Wrong Old Password';
-            }
-
-
-            if(!$status_userin_pass){ 
-                Session::flash(self::ERROR, $msg_userin_pass);
-                return back()->withInput($request->all());
-            }
-        }
-        if ($request->has(self::PRICE)){
-            $userIn->price = $request->input(self::PRICE);
-        }
-        if ($request->has(self::IS_ACTIVE)){
-            $userIn->is_active = $request->input(self::IS_ACTIVE);
-        }
-
-        
-        $this->uploadPictureUserin($request,$userIn); 
-
-        $userIn->updated_by = $currentUser->id;
-
-        try{
-            $userIn->save();
-
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;
-            $logs->id = Uuid::uuid4();
-            $logs->action = "Update Profile"; 
-            $logs->data = $oldData;
-            $logs->created_by = $currentUser->id;
-            $logs->page = "PROFILE";
-            $logs->save();
-
-            Session::flash(self::MESSAGE, 'User successfully updated');
-            return redirect('/admin');
-        } catch(Exception $e){
-            Session::flash(self::ERROR, self::USER_MSG_FAILED);
-            return redirect(self::PAGE_USERIN.'/'.$userIn->id.'edit');
-        }  
-    }
-
+    } 
     /**
      * Show the form for editing the specified resource.
      *
@@ -454,17 +373,10 @@ class UserinController extends Controller
         try{
             $userIn->save();
             UsersMenus::where(self::USER_ID,$userIn->id)->delete();
-            AdminRole::where(self::USER_ID,$userIn->id)->delete();
-          
+            AdminRole::where(self::USER_ID,$userIn->id)->delete(); 
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-            $logs->action = "Update User"; 
-            $logs->data = $oldData;
-            $logs->created_by = $currentUser->id;
-            $logs->page = self::USER_INTERNAL;
-            $logs->save();
-
+            $logService = new LogService();
+            $logService->createLog('Update User', self::USER_INTERNAL, $oldData); 
             foreach ($menus as  $value) {
                 $usersmenus = new UsersMenus;
                 $usersmenus->user_id =  $userIn->id; 
@@ -539,15 +451,11 @@ class UserinController extends Controller
 				$user->is_deleted = 1;
 				$user->deleted_by = $currentUser->id;
 				$user->deleted_at = ''.date('Y-m-d H:i:s').'';
-                $user->save();
+                $user->save(); 
 
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Delete User"; 
-                $logs->data = $oldData;
-                $logs->created_by = $currentUser->id;
-                $logs->page = self::USER_INTERNAL;
-                $logs->save();
+
+                $logService = new LogService();
+                $logService->createLog( "Delete User",self::USER_INTERNAL,$oldData);
 
                 Session::flash(self::MESSAGE, 'User successfully deleted');
                 return redirect(self::PAGE_USERIN);

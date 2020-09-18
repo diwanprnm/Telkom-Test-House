@@ -30,6 +30,8 @@ use GuzzleHttp\Client;
 use App\NotificationTable;
 use App\Services\NotificationService;
 
+use App\Services\Logs\LogService;
+
 class ProductsController extends Controller
 {   
 
@@ -108,13 +110,15 @@ class ProductsController extends Controller
         $currentUser = Auth::user();
         if($currentUser){
             $paginate = 10; 
-             $query = \DB::table("stels_sales")
-                        ->where("users.company_id",$currentUser->company_id)  
-                         ->join("users","users.id","=","stels_sales.user_id")
-                         ->join("companies","companies.id","=","users.company_id")
-                         ->orderBy("stels_sales.created_at", 'desc');
-                         
-            $data = $query->paginate($paginate);
+             $query = STELSales::whereHas('user', function ($query) use ($currentUser) {
+                                    $query->where('company_id', $currentUser->company_id);
+                                })
+                                ->with('user')
+                                ->with('user.company')
+                                ->with('sales_detail')
+                                ->with('sales_detail.stel');
+            $data = $query->orderBy(self::CREATED_AT, 'desc')->paginate($paginate);
+            
             $page = "purchase_history";
             return view('client.STEL.purchase_history') 
             ->with('page', $page)
@@ -250,7 +254,7 @@ class ProductsController extends Controller
 
     public function checkout(Request $request){ 
         $currentUser = Auth::user();
-        $countStelsSales =  STELSales::where(array())->count(); 
+        $countStelsSales =   \DB::table("stels_sales")->count(); 
         $fill = 3;
         $STELSales = new STELSales();
         $array_bulan = array(1=>"I","II","III", "IV", "V","VI","VII","VIII","IX","X", "XI","XII");
@@ -321,15 +325,11 @@ class ProductsController extends Controller
 
         $purchase = $this->api_purchase($data);
 
-        if($request->input('agree')){
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;
-            $logs->id = Uuid::uuid4();
-            $logs->action = "Checkout Stel";   
-            $logs->data = "";
-            $logs->created_by = $currentUser->id;
-            $logs->page = "Client STEL";
-            $logs->save();
+        if($request->input('agree')){ 
+
+            $logService = new LogService();
+            $logService->createLog('Checkout Stel', "Client STEL");    
+
             /* DATA DARI TPN  */ 
             $PO_ID = $request->session()->get(self::PO_ID_TPN) ? $request->session()->get(self::PO_ID_TPN) : ($purchase && $purchase->status ? $purchase->data->_id : null);
             $request->session()->put(self::PO_ID_TPN, $PO_ID);
@@ -434,7 +434,7 @@ class ProductsController extends Controller
                 $notification_id = $notificationService->make($data);
 			    $data['id'] = $notification_id;
 
-                event(new Notification($data));
+                // event(new Notification($data));
 
 
                     try{  
@@ -445,16 +445,10 @@ class ProductsController extends Controller
                             $STELSalesDetail->qty = 1;
                             $STELSalesDetail->save();
                         }
+ 
 
-                        $logs = new Logs;
-                        $currentUser = Auth::user();
-                        $logs->user_id = $currentUser->id;
-                        $logs->id = Uuid::uuid4();
-                        $logs->action = "Order Stel";   
-                        $logs->data = "";
-                        $logs->created_by = $currentUser->id;
-                        $logs->page = "Client STEL";
-                        $logs->save();
+                        $logService = new LogService();
+                        $logService->createLog('Order Stel', "Client STEL");    
 
                         Cart::destroy();
 
