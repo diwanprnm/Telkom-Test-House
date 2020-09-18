@@ -6,35 +6,32 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use App\User;  
 class STELClientControllerTest extends TestCase
-{
-	public function testDeleteSoon(){
-        $this->assertTrue(true);
-    }
+{ 
     /**
      * A basic test example.
      *
      * @return void
      */
- //    public function test_visit_index()
-	// { 
-	// 	$response =  $this->call('GET', '/STELclient');  
- //       	$this->assertEquals(200, $response->status());
-	// } 
+    public function test_visit_index()
+	{ 
+		$response =  $this->call('GET', '/STELclient');  
+       	$this->assertEquals(200, $response->status());
+	} 
 
-	// public function test_stores_filter()
-	// { 
-	// 	$response =  $this->call('POST', '/filterSTEL', 
-	// 	[ 
-	//         'category' => str_random(10) 
-	//     ]);    
- //        $this->assertEquals(200, $response->status()); 
-	// }
+	public function test_stores_filter()
+	{ 
+		$response =  $this->call('POST', '/filterSTEL', 
+		[ 
+	        'category' => str_random(10) 
+	    ]);    
+        $this->assertEquals(200, $response->status()); 
+	}
 
-	// public function test_visit_autocomplete()
-	// { 
-	// 	$this->call('GET',"/stel_autocomplete/query/asd");
- //        //Response status ok
+	public function test_visit_autocomplete()
+	{ 
+		$this->call('GET',"/stel_autocomplete/query/asd");
+        //Response status ok
         
- //        $this->assertResponseStatus(200); 
-	// }
+        $this->assertResponseStatus(200); 
+	}
 }
