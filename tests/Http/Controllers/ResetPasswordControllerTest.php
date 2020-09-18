@@ -64,6 +64,6 @@ class ResetPasswordControllerTest extends TestCase
 	public function test_validateSendResetLinkEmail()
 	{  
 		$object = app('App\Http\Controllers\ResetPasswordController');
-		$this->invokeMethod($object, 'resetEmailBuilder',);
+		$this->invokeMethod($object, 'resetEmailBuilder');
 	}
 }
