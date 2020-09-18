@@ -104,11 +104,11 @@ class UserinControllerTest extends TestCase
 		$response =  $this->actingAs($user)->call('POST', 'admin/userin/'.$user->id.'/softDelete');  
         $this->assertEquals(200, $response->status()); 
 	} 
-    public function test_delete_userin()
-	{ 
-		$user = User::latest()->first(); 
-		$response =  $this->actingAs($user)->call('DELETE', 'admin/userin/'.$user->id); 
-		// dd($response->getContent()); 
-        $this->assertEquals(200, $response->status()); 
-	} 
+    // public function test_delete_userin()
+	// { 
+	// 	$user = User::latest()->first(); 
+	// 	$response =  $this->actingAs($user)->call('DELETE', 'admin/userin/'.$user->id); 
+	// 	// dd($response->getContent()); 
+    //     $this->assertEquals(200, $response->status()); 
+	// } 
 }
