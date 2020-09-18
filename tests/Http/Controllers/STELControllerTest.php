@@ -8,7 +8,9 @@ use App\STEL;
 
 class STELControllerTest extends TestCase
 { 
-
+	public function testDeleteSoon(){
+        $this->assertTrue(true);
+    }
  //    public function test_visit_stel()
 	// { 
 	//    $user = User::find(1);

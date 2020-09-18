@@ -7,6 +7,9 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\User;  
 class STELClientControllerTest extends TestCase
 {
+	public function testDeleteSoon(){
+        $this->assertTrue(true);
+    }
     /**
      * A basic test example.
      *

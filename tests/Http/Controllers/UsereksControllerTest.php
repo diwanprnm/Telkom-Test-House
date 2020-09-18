@@ -8,6 +8,9 @@ use App\User;
 use App\Company; 
 class UsereksControllerTest extends TestCase
 {
+	public function testDeleteSoon(){
+        $this->assertTrue(true);
+    }
     /**
      * A basic test example.
      *
