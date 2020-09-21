@@ -19,6 +19,7 @@ use Session;
 use Cart;
 use Response;
 use File;
+use Storage;
 
 
 use Ramsey\Uuid\Uuid;
@@ -231,7 +232,7 @@ class ProductsController extends Controller
                 $notification_id = $notificationService->make($data);
 			    $data['id'] = $notification_id;
 
-                // event(new Notification($data));
+                event(new Notification($data));
 
                 Session::flash(self::MESSAGE, 'Upload successfully'); 
             } catch(Exception $e){
@@ -430,7 +431,7 @@ class ProductsController extends Controller
                 $notification_id = $notificationService->make($data);
 			    $data['id'] = $notification_id;
 
-                // event(new Notification($data));
+                event(new Notification($data));
 
 
                     try{  
@@ -488,8 +489,10 @@ class ProductsController extends Controller
 
     public function destroy($id)
     {
-        
-      Cart::remove($id);
+        $cart = Cart::content()->where('rowId',$id); 
+        if(count($cart) > 0 ){
+            Cart::remove($id);
+        }
       return redirect("/".self::PRODUCTS);
     }
 

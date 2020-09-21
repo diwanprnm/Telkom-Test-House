@@ -5,6 +5,9 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\User; 
 use App\STELSales;  
+use App\STEL;  
+ 
+use App\Http\Controllers\ProductsController; 
 class ProductsControllerTest extends TestCase
 {
     /**
@@ -97,5 +100,64 @@ class ProductsControllerTest extends TestCase
 		// dd($response->getContent());
         $this->assertEquals(200, $response->status());  
 	}
+    public function test_doCheckout()
+	{   
+        $user = User::where('role_id', '=', '2')->first();
+		$response =  $this->actingAs($user)->call('POST', '/doCheckout', 
+		[ 
+	        'payment_method' => 'CC', 
+	        'name' => str_random(10), 
+	        'exp' => str_random(10), 
+	        'cvv' => str_random(10), 
+	        'cvc' => str_random(10), 
+	        'type' => str_random(10), 
+	        'no_card' => str_random(10), 
+	        'no_telp' => str_random(10), 
+	        'email' => str_random(10), 
+	        'country' => str_random(2), 
+	        'province' => str_random(2), 
+	        'postal_code' => str_random(2), 
+	        'birthdate' => str_random(2) 
+	    ]);   
+		// dd($response->getContent());
+        $this->assertEquals(302, $response->status());  
+	}
+
+
+	public function invokeMethod(&$object, $methodName, array $parameters = array())
+	{
+	    $reflection = new \ReflectionClass(get_class($object));
+	    $method = $reflection->getMethod($methodName);
+	    $method->setAccessible(true);
+
+	    return $method->invokeArgs($object, $parameters);
+	}
+
+	public function test_api_billing()
+	{  
+		$data = [];
+		$object = app('App\Http\Controllers\ProductsController');
+		$this->invokeMethod($object, 'api_billing',array($data));
+	} 
+
+
+    public function test_destroy()
+	{ 
+		$user = User::latest()->first(); 
+		$stel = factory(App\STEL::class)->create();
+		$id = $stel->id;  
+		$response =  $this->actingAs($user)->call('DELETE', '/products/'.$id); 
+		// dd($response->getContent()); 
+        $this->assertEquals(302, $response->status()); 
+	} 
+
+ //    public function test_downloadStel()
+	// { 
+	// 	$user = User::latest()->first(); 
+	// 	$stel = factory(App\STEL::class)->create();
+	// 	$response =  $this->actingAs($user)->call('GET', '/products/'.$stel->id.'/stel'); 
+	// 	// dd($response->getContent()); 
+ //        $this->assertEquals(302, $response->status()); 
+	// } 
 }
 	
