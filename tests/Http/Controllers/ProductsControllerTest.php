@@ -105,7 +105,7 @@ class ProductsControllerTest extends TestCase
         $user = User::where('role_id', '=', '2')->first();
 		$response =  $this->actingAs($user)->call('POST', '/doCheckout', 
 		[ 
-	        'payment_method' => 'CC', 
+	        'payment_method' => 'cc', 
 	        'name' => str_random(10), 
 	        'exp' => str_random(10), 
 	        'cvv' => str_random(10), 

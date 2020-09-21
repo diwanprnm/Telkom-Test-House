@@ -38,26 +38,25 @@ class UsereksControllerTest extends TestCase
 		$this->assertEquals(200, $response->status());
 	}
 
-	// public function test_stores_user()
-	// { 
-	// 	$admin = User::find('1');
+	public function test_stores_user()
+	{ 
+		$admin = User::find('1');
 		   
-	// 	$response = $this->actingAs($admin)->call('POST', 'admin/usereks', 
-	// 	[ 
-	//         'name' => str_random(10), 
-	//         'role_id' => 2, 
-	//         'company_id' => 1, 
-	//         'email' => str_random(10), 
-	//         'password' => str_random(10), 
-	//         'is_active' => 1, 
-	//         'address' => str_random(10), 
-	//         'phone_number' => str_random(10), 
-	//         'fax' => str_random(10)
-	//     ]);    
+		$response = $this->actingAs($admin)->call('POST', 'admin/usereks', 
+		[ 
+	        'name' => str_random(10), 
+	        'role_id' => 2, 
+	        'company_id' => 1, 
+	        'email' => str_random(10), 
+	        'password' => str_random(10), 
+	        'is_active' => 1, 
+	        'address' => str_random(10), 
+	        'phone_number' => str_random(10), 
+	        'fax' => str_random(10)
+	    ]);    
 
-	// 	$this->assertEquals(302, $response->status());
-	// 	$user = factory(App\User::class)->make();  
-	// }
+		$this->assertEquals(200, $response->status()); 
+	}
 
 	public function testShow()
 	{
