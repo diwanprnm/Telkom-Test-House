@@ -94,9 +94,9 @@
 												<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
 												<td class="left">{{ $item->name }}</td>
 												<td class="left">{{ $item->code }}</td>
-												<td class="center">@php echo number_format($item->price, 0, '.', ','); @endphp</td>
+												<td class="center">@php echo number_format((float)$item->price, 0, '.', ','); @endphp</td>
 												<td class="center">{{ $item->version }}</td>
-												<td class="center">{{ $item->examinationLab->name }}</td>
+												<td class="center">{{ @$item->examinationLab->name }}</td>
 											</tr>
 											@php $no++ @endphp
 											@endforeach

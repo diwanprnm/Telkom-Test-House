@@ -12,29 +12,27 @@ class STELClientControllerTest extends TestCase
      *
      * @return void
      */
-    public function testDeleteSoon(){
-        $this->assertTrue(true);
-    }
- //    public function test_visit_index()
-	// { 
-	// 	$response =  $this->call('GET', '/STELclient');  
- //       	$this->assertEquals(200, $response->status());
-	// } 
+     
+    public function test_visit_index()
+	{ 
+		$response =  $this->call('GET', '/STELclient');  
+       	$this->assertEquals(200, $response->status());
+	} 
 
-	// public function test_stores_filter()
-	// { 
-	// 	$response =  $this->call('POST', '/filterSTEL', 
-	// 	[ 
-	//         'category' => str_random(10) 
-	//     ]);    
- //        $this->assertEquals(200, $response->status()); 
-	// }
+	public function test_stores_filter()
+	{ 
+		$response =  $this->call('POST', '/filterSTEL', 
+		[ 
+	        'category' => str_random(10) 
+	    ]);    
+        $this->assertEquals(200, $response->status()); 
+	}
 
-	// public function test_visit_autocomplete()
-	// { 
-	// 	$this->call('GET',"/stel_autocomplete/query/asd");
- //        //Response status ok
+	public function test_visit_autocomplete()
+	{ 
+		$this->call('GET',"/stel_autocomplete/query/asd");
+        //Response status ok
         
- //        $this->assertResponseStatus(200); 
-	// }
+        $this->assertResponseStatus(200); 
+	}
 }
