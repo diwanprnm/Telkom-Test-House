@@ -87,6 +87,8 @@
 										</thead>
 										<tbody>
 											@php $no=1; if(count($data)>0){ @endphp
+
+											@if(!empty($data))
 											@foreach($data as $item)
 											<tr>
 												<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
@@ -98,6 +100,7 @@
 											</tr>
 											@php $no++ @endphp
 											@endforeach
+											@endif
 											@php }else{@endphp
 											<div class="table-responsive font-table">
 												<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer" id="sample-table-1">

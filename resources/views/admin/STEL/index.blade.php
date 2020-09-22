@@ -176,34 +176,36 @@
 							</thead>
 							<tbody>
 								@php $no=1; @endphp
-								@foreach($data as $item)
-									<tr>
-										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
-										<td class="center">{{ $item->id }}</td>
-										<td class="center">{{ $item->code }}</td>
-										<td class="center">{{ $item->name }}</td>
-										<td class="center">{{ $item->examinationLab->name }}</td>
-										<td class="center">{{ $item->version }}</td>
-										<td class="center">{{ $item->year }}</td>
-	                                    <td class="center">@php echo number_format($item->price, 0, '.', ','); @endphp</td>
-	                                    <td class="center">@php echo number_format($item->total, 0, '.', ','); @endphp</td>
-	                                    @if($item->is_active)
-	                                    	<td class="center"><span class="label label-sm label-success">Active</span></td>
-	                                    @else
-	                                    	<td class="center"><span class="label label-sm label-warning">Not Active</span></td>
-	                                    @endif
-	                                    <td class="center">
-											<div>
-												<a href="{{URL::to('admin/stel/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
-												{!! Form::open(array('url' => 'admin/stel/'.$item->id, 'method' => 'DELETE')) !!}
-													{!! csrf_field() !!}
-													<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')"><em class="fa fa-times fa fa-white"></em></button>
-												{!! Form::close() !!}
-											</div>
-										</td>
-									</tr>
-								@php $no++ @endphp
-								@endforeach
+								@if(!empty($data))
+									@foreach($data as $item)
+										<tr>
+											<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
+											<td class="center">{{ $item->id }}</td>
+											<td class="center">{{ $item->code }}</td>
+											<td class="center">{{ $item->name }}</td>
+											<td class="center">{{ $item->examinationLab->name }}</td>
+											<td class="center">{{ $item->version }}</td>
+											<td class="center">{{ $item->year }}</td>
+		                                    <td class="center">@php echo number_format($item->price, 0, '.', ','); @endphp</td>
+		                                    <td class="center">@php echo number_format($item->total, 0, '.', ','); @endphp</td>
+		                                    @if($item->is_active)
+		                                    	<td class="center"><span class="label label-sm label-success">Active</span></td>
+		                                    @else
+		                                    	<td class="center"><span class="label label-sm label-warning">Not Active</span></td>
+		                                    @endif
+		                                    <td class="center">
+												<div>
+													<a href="{{URL::to('admin/stel/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
+													{!! Form::open(array('url' => 'admin/stel/'.$item->id, 'method' => 'DELETE')) !!}
+														{!! csrf_field() !!}
+														<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')"><em class="fa fa-times fa fa-white"></em></button>
+													{!! Form::close() !!}
+												</div>
+											</td>
+										</tr>
+									@php $no++ @endphp
+									@endforeach
+								@endif
                             </tbody>
 						</table>
 					</div>
