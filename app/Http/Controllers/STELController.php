@@ -125,6 +125,7 @@ class STELController extends Controller
             if (count($stels) == 0){
                 $message = 'Data not found';
             }
+
             
             return view('admin.STEL.index')
                 ->with(self::EXAM_LAB, $examLab)
@@ -182,9 +183,12 @@ class STELController extends Controller
     		$stel->updated_by = $currentUser->id;
 
     		$fileService = new FileService();
-            $file = $fileService->uploadFile($request->file(self::ATTACHMENT), 'stel_', '/stel/');
-            $stel->attachment = $file ? $file : '';
-
+            if ($request->hasFile(self::ATTACHMENT)) { 
+                $file = $fileService->uploadFile($request->file(self::ATTACHMENT), 'stel_', '/stel/');
+                $stel->attachment = $file ? $file : '';
+            }else{
+                $stel->attachment = "";
+            }
             try{
                 $stel->save(); 
                 $logService = new LogService();  
@@ -275,8 +279,12 @@ class STELController extends Controller
             }
 
             $fileService = new FileService();
+            if ($request->hasFile(self::ATTACHMENT)) { 
             $file = $fileService->uploadFile($request->file(self::ATTACHMENT), 'stel_', '/stel/');
             $stel->attachment = $file ? $file : '';
+            }else{
+                $stel->attachment = "";
+            }
 
             $stel->updated_by = $currentUser->id;  
             try{
