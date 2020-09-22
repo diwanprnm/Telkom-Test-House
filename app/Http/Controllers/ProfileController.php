@@ -262,6 +262,8 @@ class ProfileController extends Controller
                 Session::flash(self::ERROR_COMPANY, 'Upload NPWP failed');
                 return redirect(self::PAGE_PROFILE);
             }
+        }else{
+        	$temp->npwp_file = "";
         }     	
         
 		if($request->input('siup_number') != $request->input('hide_siup_number')){
@@ -306,6 +308,8 @@ class ProfileController extends Controller
                 Session::flash(self::ERROR_COMPANY, 'Upload SIUPP failed');
                 return redirect(self::PAGE_PROFILE);
             }
+        }else{
+        	$temp->siup_file = "";
         }     	
 		
 		if($request->input('certificate_number') != $request->input('hide_certificate_number')){
@@ -330,28 +334,30 @@ class ProfileController extends Controller
             $file_name = 'serti_uji_mutu_'.$request->file(self::CERTIFICATE_FILE)->getClientOriginalName();
             $allowedImage = ['jpeg','jpg','png'];
         	$allowedFile = ['pdf'];
-            $is_upload_siup = false;
+            $is_upload_qs_certificate_file = false;
             if (in_array($ext, $allowedFile))
             { 
-                $is_upload_siup = Storage::disk(self::MINIO)->put(self::MEDIA_COMPANY.$company_id."/$file_name",$file->__toString());
+                $is_upload_qs_certificate_file = Storage::disk(self::MINIO)->put(self::MEDIA_COMPANY.$company_id."/$file_name",$file->__toString());
             }
             else if (in_array($ext, $allowedImage))
             { 
                 $image = Image::make($file);   
-                $is_upload_siup = Storage::disk(self::MINIO)->put(self::MEDIA_COMPANY.$company_id."/$file_name",(string)$image->encode()); 
+                $is_upload_qs_certificate_file = Storage::disk(self::MINIO)->put(self::MEDIA_COMPANY.$company_id."/$file_name",(string)$image->encode()); 
             }else{
                 Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
                 return redirect(self::PAGE_PROFILE);
             } 
              
-            if($is_upload_siup){ 
-                $temp->siup_file = $file_name;
+            if($is_upload_qs_certificate_file){ 
+                $temp->qs_certificate_file = $file_name;
 				$count_commit ++ ;
 				$description = $description.'File Sertifikat Uji Mutu,  ';
             }else{
                 Session::flash(self::ERROR_COMPANY, 'Upload Certificate failed');
                 return redirect(self::PAGE_PROFILE);
             }
+        }else{
+        	$temp->qs_certificate_file = "";
         }     	
 		
 		if($count_commit == 0){
@@ -389,6 +395,8 @@ class ProfileController extends Controller
 	      	$notifProfile->is_read = $data[self::IS_READ];
 	      	$notifProfile->created_at = $data[self::CREATED_AT];
 	      	$notifProfile->updated_at = $data[self::UPDATED_AT];
+	      	$notifProfile->created_by = $currentUser->id;
+	      	$notifProfile->updated_by = $currentUser->id;
 	      	$notifProfile->save();
 	      	$data['id'] = $notifProfile->id; 
 	        event(new Notification($data));
