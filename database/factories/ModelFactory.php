@@ -636,4 +636,32 @@ $factory->define(App\CalibrationCharge::class, function (Faker\Generator $faker)
     ];
 });
 
+$factory->define(App\TempCompany::class, function (Faker\Generator $faker) {
+    return [
+        'id' => $faker->uuid, 
+        'company_id' => function () {
+            return factory(App\Company::class)->create()->id;
+        },
+        'name' => $faker->word,
+        'address' => str_random(10),
+        'city' => str_random(10),
+        'email' => $faker->safeEmail,
+        'postal_code' => str_random(10),
+        'phone_number' =>mt_rand(0,10000),
+        'fax' => str_random(10),
+        'npwp_number' => mt_rand(0,10000),
+        'npwp_file' => str_random(10),
+        'siup_number' => str_random(10),
+        'siup_file' => str_random(10), 
+        'siup_date' => str_random(10), 
+        'qs_certificate_number' => str_random(10),
+        'qs_certificate_file' => str_random(10),
+        'qs_certificate_date' => str_random(10), 
+        'is_commited' => mt_rand(0,1),
+        'created_by' => mt_rand(0,1),
+        'created_at' => Carbon\Carbon::now(),
+        'updated_by' => mt_rand(0,1),
+        'updated_at' => Carbon\Carbon::now(),
+    ];
+});
 
