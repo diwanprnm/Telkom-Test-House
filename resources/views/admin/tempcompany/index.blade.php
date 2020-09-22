@@ -151,7 +151,7 @@
 									<tr>
 										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
 										<td class="center">{{ @$item->user->name }} ({{ @$item->user->email }})</td>
-										<td class="center">{{ $item->company->name }}</td>
+										<td class="center">{{ @$item->company->name }}</td>
 										<td class="center">
 											@if($item->name != NULL)Nama Perusahaan, @endif($item->name != NULL)
 											@if($item->address != NULL)Alamat, @endif($item->address != NULL)
