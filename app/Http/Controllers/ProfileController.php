@@ -399,7 +399,7 @@ class ProfileController extends Controller
 	      	$notifProfile->updated_by = $currentUser->id;
 	      	$notifProfile->save();
 	      	$data['id'] = $notifProfile->id; 
-	        event(new Notification($data));
+	        // event(new Notification($data));
 
 
 
