@@ -12,7 +12,8 @@ class TempCompanyControllerTest extends TestCase
    public function test_visit_tempcompany()
 	{ 
 	   $user = User::find(1);
-	   factory(App\TempCompany::class)->create();
+	   $tempCompany = factory(App\TempCompany::class)->create();
+	   factory(App\User::class)->create(["company_id"=>$tempCompany->company_id]);
 	   $response =  $this->actingAs($user)->call('GET', 'admin/tempcompany');   
        $this->assertEquals(200, $response->status());
 	} 
@@ -20,7 +21,8 @@ class TempCompanyControllerTest extends TestCase
 	public function test__visit_tempcompany_with_search()
 	{ 
 	   $user = User::find(1);
-	   factory(App\TempCompany::class)->create();
+	   $tempCompany = factory(App\TempCompany::class)->create(); 
+	   factory(App\User::class)->create(["company_id"=>$tempCompany->company_id]);
 	   $response =  $this->actingAs($user)->call('GET', 'admin/tempcompany?search=cari');  
        $this->assertEquals(200, $response->status());
 	}
