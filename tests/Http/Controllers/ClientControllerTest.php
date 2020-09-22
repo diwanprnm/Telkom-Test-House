@@ -36,4 +36,40 @@ class ClientControllerTest extends TestCase
 		// dd($response->getContent());
         $this->assertEquals(302, $response->status()); 
     }
+    public function testAuthenticate_type_url_1()
+    {
+        $user = User::find(1);
+        $response =  $this->actingAs($user)->call('POST', '/client/login', 
+        [ 
+            'email' => "admin@mail.com",
+            'password' => "admin",
+            'type_url' => "1"
+        ]);   
+        // dd($response->getContent());
+        $this->assertEquals(302, $response->status()); 
+    }
+    public function testAuthenticate_type_url_2()
+    {
+        $user = User::find(1);
+        $response =  $this->actingAs($user)->call('POST', '/client/login', 
+        [ 
+            'email' => "admin@mail.com",
+            'password' => "admin",
+            'type_url' => "2"
+        ]);   
+        // dd($response->getContent());
+        $this->assertEquals(302, $response->status()); 
+    }
+    public function testAuthenticate_type_url_3()
+    {
+        $user = User::find(1);
+        $response =  $this->actingAs($user)->call('POST', '/client/login', 
+        [ 
+            'email' => "admin@mail.com",
+            'password' => "admin",
+            'type_url' => "3"
+        ]);   
+        // dd($response->getContent());
+        $this->assertEquals(302, $response->status()); 
+    }
 }
