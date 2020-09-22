@@ -43,7 +43,7 @@ class TopDashboardController extends Controller
 	public function index(Request $request)
     {
 		$message = null; $search = null; $currentUser = Auth::user();	$thisYear = date('Y');
-      if ($currentUser){
+      	if ($currentUser){
 			$pemohon = DB::select("
 				select count(distinct created_by) as jml
 				from examinations;
@@ -102,30 +102,22 @@ class TopDashboardController extends Controller
 
 				$chart['stel'][$i]=(float)$sum_stelFunc[0]; $chart[$this::KAB][$i]=(float)$sum_stelFunc[1]; $chart[$this::ENE][$i]=(float)$sum_stelFunc[2];
 				$chart[$this::TRA][$i]=(float)$sum_stelFunc[3]; $chart[$this::CPE][$i]=(float)$sum_stelFunc[4]; $chart[$this::KAL][$i]=(float)$sum_stelFunc[5];
-				$jml_device_qa = Income::whereHas($this::EXAM, function ($q){
-						return $q->where($this::EXAMID, 1);
-					})
+				$jml_device_qa = Income::where("reference_id", '=', 1)
 		        ->whereYear($this::CREATED, '=', $thisYear)
 		        ->whereMonth($this::CREATED, '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
-		        $jml_device_vt = Income::whereHas($this::EXAM, function ($q){
-						return $q->where($this::EXAMID, 3);
-					})
+		        $jml_device_vt = Income::where("reference_id", '=', 3)
 		        ->whereYear($this::CREATED, '=', $thisYear)
 		        ->whereMonth($this::CREATED, '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
-		        $jml_device_ta = Income::whereHas($this::EXAM, function ($q){
-						return $q->where($this::EXAMID, 2);
-					})
+		        $jml_device_ta = Income::where("reference_id", '=', 2)
 		        ->whereYear($this::CREATED, '=', $thisYear)
 		        ->whereMonth($this::CREATED, '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
-		        $jml_device_cal = Income::whereHas($this::EXAM, function ($q){
-						return $q->where($this::EXAMID, 4);
-					})
+		        $jml_device_cal = Income::where("reference_id", '=', 4)
 		        ->whereYear($this::CREATED, '=', $thisYear)
 		        ->whereMonth($this::CREATED, '=', $i+1)
 		        ->select($this::PRICE)
@@ -157,29 +149,7 @@ class TopDashboardController extends Controller
                 ->with($this::TA, $chart[$this::TA])
                 ->with($this::CAL, $chart[$this::CAL]);
         }
-    }
-	
-	public function temp_sess_today($b){
-		
-		$temp_sess = DB::select("
-			SELECT COUNT(DISTINCT
-					(s1.client_ip)) AS jml
-				FROM
-					tracker_sessions s1
-				RIGHT JOIN (
-					SELECT DISTINCT
-						(s2.client_ip)
-					FROM
-						tracker_sessions s2
-					WHERE
-						DATE(s2.created_at) < '".$b."'
-				) AS test_join ON s1.client_ip = test_join.client_ip
-				WHERE
-					DATE(s1.created_at) = '".$b."'
-		");
-		
-		return $temp_sess[0]->jml;
-	}
+    } 
 	
 	public function searchGrafik(Request $request){
 		if($request->input('type') == 1){
@@ -201,33 +171,25 @@ class TopDashboardController extends Controller
 			echo json_encode($chart[$this::KAL])."||";
 		}else{
 			for($i=0;$i<12;$i++){
-				$jml_device_qa = Income::whereHas($this::EXAM, function ($q){
-						return $q->where($this::EXAMID, 1);
-					})
+				$jml_device_qa = Income::where("reference_id", '=', 1)
 		        ->whereYear($this::CREATED, '=', $request->input($this::KEYW))
 		        ->whereMonth($this::CREATED, '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
 
-		        $jml_device_vt = Income::whereHas($this::EXAM, function ($q){
-						return $q->where($this::EXAMID, 3);
-					})
+		        $jml_device_vt = Income::where("reference_id", '=', 3)
 		        ->whereYear($this::CREATED, '=', $request->input($this::KEYW))
 		        ->whereMonth($this::CREATED, '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
 
-		        $jml_device_ta = Income::whereHas($this::EXAM, function ($q){
-						return $q->where($this::EXAMID, 2);
-					})
+		        $jml_device_ta = Income::where("reference_id", '=', 2)
 		        ->whereYear($this::CREATED, '=', $request->input($this::KEYW))
 		        ->whereMonth($this::CREATED, '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
 
-		        $jml_device_cal = Income::whereHas($this::EXAM, function ($q){
-						return $q->where($this::EXAMID, 4);
-					})
+		        $jml_device_cal = Income::where("reference_id", '=', 4)
 		        ->whereYear($this::CREATED, '=', $request->input($this::KEYW))
 		        ->whereMonth($this::CREATED, '=', $i+1)
 		        ->select($this::PRICE)

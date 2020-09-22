@@ -6,13 +6,11 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use App\User;
 
+use App\Http\Controllers\TopDashboardController; 
 
 class TopDashboardControllerTest extends TestCase
 {
-    public function testExample()
-    {
-        $this->assertTrue(true);
-    }
+   
 
     //SQLSTATE[HY000]: General error: 1 no such function: YEAR
     
@@ -35,11 +33,11 @@ class TopDashboardControllerTest extends TestCase
     //     $this->assertResponseStatus(200)->see('Top Dashboard');
     // }
 
-    // public function testSearchGrafikType1()
-    // { 
-    //    $this->actingAs(User::find('1'))->call('POST', 'admin/topdashboard/searchGrafik', ['type' => 1, 'keyword' => 2020]); 
-    //    $this->assertResponseStatus(200);
-    // }
+    public function testSearchGrafikType1()
+    { 
+       $this->actingAs(User::find('1'))->call('POST', 'admin/topdashboard/searchGrafik', ['type' => 1, 'keyword' => 2020]); 
+       $this->assertResponseStatus(200);
+    }
 
     
     // public function testSearchGrafikType2()
@@ -47,6 +45,21 @@ class TopDashboardControllerTest extends TestCase
     //     $this->actingAs(User::find('1'))->call('POST', 'admin/topdashboard/searchGrafik', ['type' => 2, 'keyword' => 2020]);
     //     $this->assertResponseStatus(200);
     // }
+
+    public function invokeMethod(&$object, $methodName, array $parameters = array())
+    {
+        $reflection = new \ReflectionClass(get_class($object));
+        $method = $reflection->getMethod($methodName);
+        $method->setAccessible(true);
+
+        return $method->invokeArgs($object, $parameters);
+    }
+
+    public function test_sum_stelFunc()
+    {  
+        $object = app('App\Http\Controllers\TopDashboardController');
+        $this->invokeMethod($object, 'sum_stelFunc',[2020,1]);
+    }
 
     
 }
