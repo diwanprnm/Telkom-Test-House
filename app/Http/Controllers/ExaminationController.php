@@ -214,7 +214,7 @@ class ExaminationController extends Controller
 			$data = $query->orderBy(self::UPDATED_AT, 'desc')
                         ->paginate($paginate);
 			
-            if (count($query) == 0){
+            if (count(array($query)) == 0){
                 $message = 'Data not found';
             }
 			

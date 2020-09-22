@@ -564,7 +564,7 @@ class PermohonanController extends Controller
 		if ($request->hasFile(self::UPLOADNPWP)) {
 			$file = $fileService->uploadFile($request->file(self::UPLOADNPWP), 'npwp_', self::MEDIA_COMPANY_LOC.$company_id);
 			$fuploadnpwp_name = $file ? $file : $request->input(self::HIDE_NPWP_FILE);
-			$fileService->deleteFile(self::MEDIA_COMPANY_LOC.$company_id.'/'.$request->input(self::HIDE_SERTHIDE_NPWP_FILEFIKAT_FILE));
+			$fileService->deleteFile(self::MEDIA_COMPANY_LOC.$company_id.'/'.$request->input(self::HIDE_NPWP_FILE));
 		}else{
 			$fuploadnpwp_name = $request->input(self::HIDE_NPWP_FILE);
 		}
@@ -656,7 +656,7 @@ class PermohonanController extends Controller
 			$exam->device_id = ''.$device_id.'';
 				$ref_perangkat = explode(",", $referensi_perangkat);
 				$examLab = DB::table('stels')->where('code', ''.$ref_perangkat[0].'')->first();
-				if(count($examLab)==0){
+				if(count(array($examLab))==0){
 					$exam->examination_lab_id = NULL;
 				}
 				else{
