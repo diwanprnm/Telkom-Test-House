@@ -447,5 +447,5 @@ return [
 	'payment_via_virtual_account' => 'PEMBAYARAN MELALUI VIRTUAL ACCOUNT',
 	'choose_bank' => 'Pilih Bank',
 
-	'cancel_payment' => 'Batalkan Pembayaran',
+	'choose_another_bank' => 'Pilih Bank Lain',
 ];

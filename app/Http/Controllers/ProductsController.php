@@ -591,7 +591,7 @@ class ProductsController extends Controller
             ->first()
         ;
 
-        Session::flash('message', 'Please choose another bank to complete cancel payment process!');
+        Session::flash('message', "Please choose another bank. If you leave or move to another page, your process will not be saved!");
         return view('client.STEL.cancel') 
             ->with('STELSales', $STELSales)
             ->with('payment_method', $this->api_get_payment_methods());

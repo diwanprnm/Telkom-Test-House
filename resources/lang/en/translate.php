@@ -444,5 +444,5 @@ return [
 	'payment_via_virtual_account' => 'PAYMENT VIA VIRTUAL ACCOUNT',
 	'choose_bank' => 'Choose Bank',
 
-	'cancel_payment' => 'Cancel Payment',
+	'choose_another_bank' => 'Choose Another Bank',
 ];

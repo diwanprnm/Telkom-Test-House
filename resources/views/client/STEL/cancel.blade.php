@@ -23,7 +23,7 @@
 		<section id="content"> 
 			<div class="container clearfix"> 
 				@if (Session::get('error'))
-					<div class="alert alert-error alert-danger">
+					<div class="alert alert-error alert-danger" style="text-align: center; font-weight: bold; font-size: 110%;">
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						  <span aria-hidden="true">&times;</span>
 						</button>
@@ -31,7 +31,7 @@
 					</div>
 				@endif
 				@if (Session::get('message'))
-					<div class="alert alert-info">
+					<div class="alert alert-warning" style="text-align: center; font-weight: bold; font-size: 110%;">
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						  <span aria-hidden="true">&times;</span>
 						</button>

@@ -30,7 +30,7 @@
 							<div class="panel-body">
 								<div class="col-md-12">
 								@if (Session::get('error'))
-									<div class="alert alert-error alert-danger">
+									<div class="alert alert-error alert-danger" style="text-align: center; font-weight: bold; font-size: 110%;">
 										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 										  <span aria-hidden="true">&times;</span>
 										</button>
@@ -39,7 +39,7 @@
 								@endif
 								
 								@if (Session::get('message'))
-									<div class="alert alert-info">
+									<div class="alert alert-warning" style="text-align: center; font-weight: bold; font-size: 110%;">
 										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 										  <span aria-hidden="true">&times;</span>
 										</button>
@@ -81,7 +81,7 @@
 													<tr class="is_pph">
 														<td>
 															@php 
-																$pph = floor(0.02*$examinationsData[0]->price); 
+																$pph = floor(0.02*($examinationsData[0]->price/1.1)); 
 																$amount = $examinationsData[0]->price - $pph;
 															@endphp
 															<span style="font-weight: bold; font-size:150%; color: #fa8231;">{{ trans('translate.stel_rupiah') }}. {{ number_format($amount, 0, ",", ".") }},-</span>

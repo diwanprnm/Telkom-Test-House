@@ -164,7 +164,7 @@
 				@endif
 				<div class="col_full">
 					<a href="{{url('/purchase_history')}}" class="button full button-3d btn-sky">{{ trans('translate.done') }}</a> 
-					<a class="label label-sm label-danger pull-right" style="line-height: 2;" href="{{url('/cancel_va/'.$data[0]->id)}}" onclick="javascript:if (!confirm('Are you sure want to cancel this payment?')) {return false;}"><i class="fa fa-close"></i> {{ trans('translate.cancel_payment') }}</a>
+					<a href="{{url('/cancel_va/'.$data[0]->id)}}" class="button full button-3d btn-grey" style="background-color: #dfe6e9; color: #636e72;" onclick="javascript:if (!confirm('Are you sure want to change to another bank?')) {return false;}">{{ trans('translate.choose_another_bank') }}</a>
 				</div>
 			</div>  
 		</section><!-- #content end -->

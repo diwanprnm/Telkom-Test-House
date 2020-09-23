@@ -1467,7 +1467,7 @@ class PengujianController extends Controller
 
 			$exam->save();
 
-	        Session::flash('message', 'Successfully, please choose another bank!');
+	        Session::flash('message', "Please choose another bank. If you leave or move to another page, your process will not be saved!");
 	        return redirect('pengujian/'.$id.'/pembayaran');
 		}
     }
