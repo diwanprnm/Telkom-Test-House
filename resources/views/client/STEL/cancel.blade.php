@@ -30,12 +30,18 @@
 						{{ Session::get('error') }}
 					</div>
 				@endif
-				<form id="form-checkout" class="nobottommargin" role="form" method="POST" action="{{ url('doCheckout') }}" onsubmit="javascript:document.getElementById('submit-btn').style.display = 'none';document.getElementById('submit-msg').style.display = 'block';">
+				@if (Session::get('message'))
+					<div class="alert alert-info">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						  <span aria-hidden="true">&times;</span>
+						</button>
+						{{ Session::get('message') }}
+					</div>
+				@endif
+				<form id="form-checkout" class="nobottommargin" role="form" method="POST" action="{{ url('doCancel') }}" onsubmit="javascript:document.getElementById('submit-btn').style.display = 'none';document.getElementById('submit-msg').style.display = 'block';">
 				<div class="row">    
-					<input type="hidden" name="invoice_number" value="{{$invoice_number}}"><br>
-					<input type="hidden" name="final_price" value="{{$final_price}}"><br>
 					<div class="row"> 
-					<p> No. Invoice	: {{$invoice_number}} </p> 
+					<p> No. Invoice	: {{$STELSales->invoice}} </p> 
 						<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
 							<thead>
 								<tr>
@@ -48,32 +54,29 @@
 								</tr>
 							</thead>
 							<tbody>
-								@php $no = 0;@endphp
-								  @foreach(Cart::content() as $row)
+								@php $no = 0; $sub_total = 0;@endphp
+								  @foreach($STELSales->sales_detail as $row)
 								  	@php $no++;@endphp
 								<tr>
 									<td>{{$no}}</td>
-									<?php 
-										$res = explode('myTokenProduct', $row->name);
-										$stel_name = $res[0] ? $res[0] : '-';
-										$stel_code = $res[1] ? $res[1] : '-';
-									?>
-									<td>{{$stel_name}}</td>
-									<td>{{$stel_code}}</td>
-									<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($row->price)}}</td> 
+									<td>{{$row->stel->name}}</td>
+									<td>{{$row->stel->code}}</td>
+									<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($row->stel->price)}}</td> 
 									<td align="center">{{$row->qty}}</td> 
-									<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($row->price*$row->qty)}}</td> 
+									<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($row->stel->price*$row->qty)}}</td> 
 								</tr> 
+									@php $sub_total += $row->stel->price*$row->qty; @endphp
 								@endforeach
 							</tbody>
 							<tfoot>
 								<tr>
+									@php $tax = 0.1*$sub_total; @endphp
 									<td colspan="5" align="right">{{ trans('translate.tax') }}</td> 
 									<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($tax)}}</td> 
 								</tr> 
 								<tr style="font-weight: bold">
 									<td colspan="5" align="right">Total</td>
-									<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($final_price)}}</td> 
+									<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($STELSales->total)}}</td> 
 								</tr> 
 							</tfoot>
 						</table> 
@@ -95,6 +98,7 @@
 							</div>
 						</div>
 						<input type="hidden" id="hide_va_name">
+						<input type="hidden" name="id" value="{{ $STELSales->id }}">
 						<button id="submit-btn" class="button full button-3d btn-sky">{{ trans('translate.make_an_order') }}</button> <p hidden id="submit-msg">Please Wait ...</p>
 					</div> 
 				</div>
@@ -113,7 +117,7 @@
 			if(!$("#form-checkout").valid()){
 				return false;
 			}
-			if (!confirm('Are you sure with '+$('#hide_va_name').val()+' payment?')) {
+			if (!confirm('Are you sure with '+$('#hide_va_name').val()+' payment')) {
 			 	return false;
 			}
 		});

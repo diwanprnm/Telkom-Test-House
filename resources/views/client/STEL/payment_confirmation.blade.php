@@ -162,7 +162,10 @@
 						</div>
 					</div> 		
 				@endif
-				<div class="col_full"><a href="{{url('/purchase_history')}}" class="button full button-3d btn-sky">{{ trans('translate.done') }}</a> <p hidden id="submit-msg">Please Wait ...</p></div>
+				<div class="col_full">
+					<a href="{{url('/purchase_history')}}" class="button full button-3d btn-sky">{{ trans('translate.done') }}</a> 
+					<a class="label label-sm label-danger pull-right" style="line-height: 2;" href="{{url('/cancel_va/'.$data[0]->id)}}" onclick="javascript:if (!confirm('Are you sure want to cancel this payment?')) {return false;}"><i class="fa fa-close"></i> {{ trans('translate.cancel_payment') }}</a>
+				</div>
 			</div>  
 		</section><!-- #content end -->
 @endsection

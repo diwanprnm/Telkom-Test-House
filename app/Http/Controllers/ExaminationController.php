@@ -1594,17 +1594,7 @@ class ExaminationController extends Controller
                     	"reference_id" => $currentUser->id
 					]
 	            ];
-				$cancel_billing = $this->api_cancel_billing($exam->BILLING_ID, $data_cancel_billing);
-				if($cancel_billing && $cancel_billing->status){
-					$exam->BILLING_ID = null;
-					$exam->include_pph = 0;
-					$exam->payment_method = 0;
-					$exam->VA_name = null;
-					$exam->VA_image_url = null;
-					$exam->VA_number = null;
-					$exam->VA_amount = null;
-					$exam->VA_expired = null;
-				}
+				$this->api_cancel_billing($exam->BILLING_ID, $data_cancel_billing);
 			}
 			/*$data_billing = [
                 "draft_id" => $request->input('PO_ID'),
@@ -1641,8 +1631,15 @@ class ExaminationController extends Controller
             	Session::flash('error', 'Failed To Generate VA, please try again');
                 return redirect('/admin/examination/'.$exam->id.'/edit');
             }*/
-
             $exam->PO_ID = $request->input('PO_ID');
+            $exam->BILLING_ID = null;
+			$exam->include_pph = 0;
+			$exam->payment_method = 0;
+			$exam->VA_name = null;
+			$exam->VA_image_url = null;
+			$exam->VA_number = null;
+			$exam->VA_amount = null;
+			$exam->VA_expired = null;
             // $exam->BILLING_ID = $billing && $billing->status == true ? $billing->data->_id : null;
         }
 
@@ -2165,7 +2162,8 @@ class ExaminationController extends Controller
 			'exam_type' => $exam_type,
 			'exam_type_desc' => $exam_type_desc,
 			'spb_number' => $spb_number,
-			'id' => $exam_id
+			'id' => $exam_id,
+			'payment_method' => $this->api_get_payment_methods()
 			), function ($m) use ($data,$subject,$attach) {
             $m->to($data->email)->subject($subject);
 			$m->attach($attach);
@@ -3664,7 +3662,8 @@ $notification->id = Uuid::uuid4();
 				'arr_biaya' => $arr_biaya,
 				'exam' => $exam,
 				'manager_urel' => $manager_urels,
-				'is_poh' => $is_poh
+				'is_poh' => $is_poh,
+				'payment_method' => $this->api_get_payment_methods()
 			];
 
 			$request->session()->put('key_exam_for_spb', $data);
@@ -3689,6 +3688,26 @@ $notification->id = Uuid::uuid4();
             $purchase = json_decode($res_purchase);
 
             return $purchase;
+        } catch(Exception $e){
+            return null;
+        }
+    }
+
+    public function api_get_payment_methods(){
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json', 
+                            'Authorization' => config("app.gateway_tpn")
+                        ],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false,
+            'verify' => false
+        ]);
+        try {
+            $res_payment_method = $client->get("v1/products/".config("app.product_id_tth_2")."/paymentmethods")->getBody();
+            $payment_method = json_decode($res_payment_method);
+
+            return $payment_method;
         } catch(Exception $e){
             return null;
         }

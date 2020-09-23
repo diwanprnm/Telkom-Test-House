@@ -329,7 +329,7 @@ return [
 	'stel_payment_detail'	=> 'Payment Detail',
 	'stel_payment_upload'	=> 'Upload Payment',
 	'stel_qty'				=> 'QTY',
-	'stel_select_payment_method'	=> 'Select Payment Method',
+	'stel_select_payment_method'	=> 'Choose Payment Method',
 	'stel_payment_method'	=> 'Payment Method',
 	'stel_payment_method_atm'	=> 'Via Bank Transfer',
 	'stel_payment_method_credit'=> 'Via Credit Card',
@@ -440,4 +440,9 @@ return [
 	'examination_payment_this_nominal' => 'PPh INCLUDED',
 	'examination_payment_will_pay' => 'I WILL PAY WITHOUT PPh',
 	'examination_payment_nominal_without_pph' => 'PPh EXCLUDED',
+
+	'payment_via_virtual_account' => 'PAYMENT VIA VIRTUAL ACCOUNT',
+	'choose_bank' => 'Choose Bank',
+
+	'cancel_payment' => 'Cancel Payment',
 ];

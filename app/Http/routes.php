@@ -3440,7 +3440,7 @@ Route::get('cetakKontrak', function(Illuminate\Http\Request $request){
 Route::get('cetakSPB', function(Illuminate\Http\Request $request){
 	// Instanciation of inherited class
 		$data = $request->session()->get('key_exam_for_spb');
-		// echo"<pre>";print_r($data);exit;
+		// echo"<pre>";print_r($data[0]);exit;
 	$pdf = new PDF_MC_Tables();
 		$is_poh = $data[0]['is_poh'];
 		$manager_urel = $data[0]['manager_urel'];
@@ -3474,6 +3474,7 @@ Route::get('cetakSPB', function(Illuminate\Http\Request $request){
 		$total_biaya = $biaya + $ppn;
 		$terbilang = $pdf->terbilang($total_biaya, 3);
 		$spb_date = date('j', strtotime($data[0]['spb_date']))." ".strftime('%B %Y', strtotime($data[0]['spb_date']));
+		$payment_method = $data[0]['payment_method']->data->VA;
 	// $pdf->judul_kop('FORM TINJAUAN KONTRAK','Contract Review Form');
 	$pdf->AliasNbPages();
 	$pdf->AddPage();
@@ -3544,7 +3545,21 @@ Route::get('cetakSPB', function(Illuminate\Http\Request $request){
 	$pdf->SetFont('helvetica','',9);
 	$pdf->SetWidths(array(20,7,153));
 	$pdf->SetAligns(array('C','L','L'));
-	$pdf->Row(array('','1. ','Pembayaran dilakukan melalui Virtual Account Bank Mandiri. Saudara wajib mengikuti petunjuk yang ada di website Telkom Test House atau e-mail petunjuk pembayaran.'));
+	$pdf->Row(array('','1. ','Pembayaran dilakukan melalui Virtual Account dengan pilihan bank sebagai berikut :'));
+	for($i=0;$i<count($payment_method);$i++){
+		$pdf->SetFont('ZapfDingbats','', 5);
+		$pdf->SetX(40.00125);
+		$pdf->Cell(5, 5, "l", 0, 0);
+		$pdf->SetFont('helvetica','',9);
+		$pdf->Cell(8,5,$payment_method[$i]->productName,0,0,'L');
+		$pdf->Ln();
+	}
+		$pdf->SetX(37.00125);
+		$pdf->Cell(0,5,'Saudara wajib mengikuti petunjuk yang ada di website Telkom Test House atau e-mail petunjuk',0,0,'L');
+		$pdf->Ln();
+		$pdf->SetX(37.00125);
+		$pdf->Cell(0,5,'pembayaran.',0,0,'L');
+		$pdf->Ln();
 	$pdf->Row(array('','2. ','Pembayaran dilakukan'));	
 		$pdf->SetFont('helvetica','B',9);
 		$pdf->SetXY(70.00125,$pdf->GetY()-5);
@@ -4623,8 +4638,12 @@ Route::get('/payment_confirmation/{id}', 'ProductsController@payment_confirmatio
 Route::get('/payment_confirmation_spb/{id}', 'PengujianController@payment_confirmation');
 Route::get('/resend_va/{id}', 'ProductsController@api_resend_va');
 Route::get('/resend_va_spb/{id}', 'PengujianController@api_resend_va');
+Route::get('/cancel_va/{id}', 'ProductsController@api_cancel_va');
+Route::get('/cancel_va_spb/{id}', 'PengujianController@api_cancel_va');
+Route::post('/doCancel', 'ProductsController@doCancel');
+Route::post('/doCancelSPB', 'PengujianController@doCancel');
 Route::get('/payment_status', 'ProductsController@payment_status');
-Route::post('/checkout', 'ProductsController@checkout');
+Route::get('/checkout', 'ProductsController@checkout');
 Route::post('/doCheckout', 'ProductsController@doCheckout');
 Route::post('/doCheckoutSPB', 'PengujianController@doCheckout');
 Route::get('/payment_detail/{id}', 'ProductsController@payment_detail');

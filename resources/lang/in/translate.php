@@ -443,4 +443,9 @@ return [
 	'examination_payment_this_nominal' => 'TERMASUK PPh',
 	'examination_payment_will_pay' => 'SAYA AKAN MEMBAYAR TANPA PPh',
 	'examination_payment_nominal_without_pph' => 'TIDAK TERMASUK PPh',
+
+	'payment_via_virtual_account' => 'PEMBAYARAN MELALUI VIRTUAL ACCOUNT',
+	'choose_bank' => 'Pilih Bank',
+
+	'cancel_payment' => 'Batalkan Pembayaran',
 ];

@@ -189,7 +189,7 @@
 									<li>{{ trans('translate.stel_term_condition_num6') }}</li>
 								</ul>
 							</div>
-							   <form class="form-horizontal" role="form" method="POST" action="{{ url('checkout') }}" onsubmit="javascript:document.getElementById('submit-btn').style.display = 'none';document.getElementById('submit-msg').style.display = 'block';">
+							   <form class="form-horizontal" role="form" method="GET" action="{{ url('checkout') }}" onsubmit="javascript:document.getElementById('submit-btn').style.display = 'none';document.getElementById('submit-msg').style.display = 'block';">
                         {{ csrf_field() }}
 							<div style="padding: 20px;">
 								<input type="checkbox" name="agree" required value="1"> {{ trans('translate.stel_agree_statement') }}

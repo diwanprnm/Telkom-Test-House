@@ -3,149 +3,128 @@
     ============================================= -->
     <title>{{ trans('translate.examination_payment') }} - Telkom DDB</title>
 @section('content')
-		<style type="text/css">
-			.input_hidden {
-			    position: absolute;
-			    left: -9999px;
-			}
+<!-- Page Title
+		============================================= -->
+		<section id="page-title">
 
-			.selected {
-			    background-color: #ccc;
-			}
+			<div class="container clearfix">
+				<h1>{{ trans('translate.stel_payment_confirmation') }}</h1>
+				
+				<ol class="breadcrumb">
+					<li><a href="{{ url('/') }}">{{ trans('translate.home') }}</a></li>
+					<li>{{ trans('translate.menu_testing') }}</li>
+					<li><a href="{{ url('/pengujian') }}"></a>{{ trans('translate.examination') }}</li>
+					<li class="active">{{ trans('translate.examination_payment') }}</li>
+				</ol>
+			</div>
 
-			#sites label {
-			    display: inline-block;
-			    cursor: pointer;
-			}
-
-
-			#sites label:hover {
-			    background-color: #efefef;
-			}
-
-			#sites label img {
-			    padding: 3px;
-			    
-			}
-		</style>
+		</section><!-- #page-title end -->
 		<!-- Content
 		============================================= -->
 		<section id="content">
-
 			<div class="content-wrap"> 
 				<div class="container clearfix">
-					@if (Session::get('message'))
-						<div class="done_sent">
-	                       <div class="done">
-	                           <i class="fa fa-check-circle" aria-hidden="true"></i>
-	                       </div>
-	                       <div class="content">
-	                           <h3 style="margin-bottom: 1%;">{{ trans('translate.payment_attach_sent') }}</h3>
-	                           <p>{{ trans('translate.an_attach_has_been_sent') }}</p>
-	                       </div>
-	                       <div class="footer">
-	                           <a href="{{ url('/pengujian') }}" style="color:#299ec0 !important">{{ trans('translate.done') }}</a>
-	                       </div>
-	                   </div>
-	                @else
-						<div class="container-fluid container-fullw bg-white">
-							 <div class="col-md-12">
-							<div class="panel panel-white" id="panel1">
-								<div class="panel-body">
-									<div class="col-md-12">
-									@if (Session::get('error'))
-										<div class="alert alert-error alert-danger">
-											<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-											  <span aria-hidden="true">&times;</span>
-											</button>
-											{{ Session::get('error') }}
-										</div>
-									@endif
-									
-									@if (Session::get('message'))
-										<div class="alert alert-info">
-											{{ Session::get('message') }}
-										</div>
-									@endif
-									<!-- start: WIZARD FORM -->
-									<form id="form" class="smart-wizard" role="form" method="POST" action="{{ url('doCheckoutSPB') }}" onsubmit="javascript:document.getElementById('submit-btn').style.display = 'none';document.getElementById('submit-msg').style.display = 'block';">
-										<input type="hidden" name="hide_id_user" id="hide_id_user" value="<?php echo $data->created_by ?>"/>
-										<input type="hidden" name="hide_id_exam" id="hide_id_exam" value="<?php echo $data->examination_id ?>"/>
-										<input type="hidden" name="hide_id_attach" id="hide_id_attach" value="<?php echo $data->id ?>"/>
-										{{ csrf_field() }}
-										<div id="wizard" class="swMain">
-											<div class="form-group">
-												<table class="table table-condensed">
-													<thead>
-														<tr>
-															<th colspan="3">{{ trans('translate.stel_payment_confirmation') }}</th>
-														</tr>
-													</thead>
-													<tbody>
-														<tr>
-															<td>{{ trans('translate.examination_number_payment') }} : {{ $spb_number }}</td>
-														</tr>
-														<tr>
-															<td>{{ trans('translate.service_application_name') }} : {{ $examinationsData[0]->device->name }}, {{ $examinationsData[0]->device->mark }}, {{ $examinationsData[0]->device->model }}, {{ $examinationsData[0]->device->capacity }}</td>
-														</tr>
-														<tr>
-															<td>{{ trans('translate.stel_total_payment') }} : </td>
-														</tr>
-														<tr class="with_pph" style="display: none;">
-															<td>
-																<span style="font-weight: bold; font-size:150%; color: #fa8231;">{{ trans('translate.stel_rupiah') }}. {{ number_format($examinationsData[0]->price, 0, ",", ".") }},-</span>&nbsp;
-																<label style="font-size:70%; text-transform: none;">({{ trans('translate.examination_payment_this_nominal') }})</label>
-															</td>
-														</tr>
-														<tr class="is_pph">
-															<td>
-																<span style="font-size:100%; color: #fa8231; text-decoration: line-through;	">{{ trans('translate.stel_rupiah') }}. {{ number_format($examinationsData[0]->price, 0, ",", ".") }},-</span>
-															</td>
-														</tr>
-														<tr class="is_pph">
-															<td>
-																@php 
-																	$pph = floor(0.02*$examinationsData[0]->price); 
-																	$amount = $examinationsData[0]->price - $pph;
-																@endphp
-																<span style="font-weight: bold; font-size:150%; color: #fa8231;">{{ trans('translate.stel_rupiah') }}. {{ number_format($amount, 0, ",", ".") }},-</span>
-																<label style="font-size:70%; text-transform: none;">({{ trans('translate.examination_payment_nominal_without_pph') }})</label>
-															</td>
-														</tr>
-												</table>		
-												<div class="check-layout">
+					<div class="container-fluid container-fullw bg-white">
+						 <div class="col-md-12">
+						<div class="panel panel-white" id="panel1">
+							<div class="panel-body">
+								<div class="col-md-12">
+								@if (Session::get('error'))
+									<div class="alert alert-error alert-danger">
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										  <span aria-hidden="true">&times;</span>
+										</button>
+										{{ Session::get('error') }}
+									</div>
+								@endif
+								
+								@if (Session::get('message'))
+									<div class="alert alert-info">
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										  <span aria-hidden="true">&times;</span>
+										</button>
+										{{ Session::get('message') }}
+									</div>
+								@endif
+								<!-- start: WIZARD FORM -->
+								<form id="form-checkout" class="nobottommargin" role="form" method="POST" action="{{ url('doCheckoutSPB') }}" onsubmit="javascript:document.getElementById('submit-btn').style.display = 'none';document.getElementById('submit-msg').style.display = 'block';">
+									<input type="hidden" name="hide_id_user" id="hide_id_user" value="<?php echo $data->created_by ?>"/>
+									<input type="hidden" name="hide_id_exam" id="hide_id_exam" value="<?php echo $data->examination_id ?>"/>
+									<input type="hidden" name="hide_id_attach" id="hide_id_attach" value="<?php echo $data->id ?>"/>
+									{{ csrf_field() }}
+									<div id="wizard" class="swMain">
+										<div class="form-group">
+											<table class="table table-condensed">
+												<thead>
+													<tr>
+														<th colspan="3">{{ trans('translate.examination_number_payment') }} : {{ $spb_number }}</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>{{ trans('translate.service_application_name') }} : {{ $examinationsData[0]->device->name }}, {{ $examinationsData[0]->device->mark }}, {{ $examinationsData[0]->device->model }}, {{ $examinationsData[0]->device->capacity }}</td>
+													</tr>
+													<tr>
+														<td>{{ trans('translate.stel_total_payment') }} : </td>
+													</tr>
+													<tr class="with_pph" style="display: none;">
+														<td>
+															<span style="font-weight: bold; font-size:150%; color: #fa8231;">{{ trans('translate.stel_rupiah') }}. {{ number_format($examinationsData[0]->price, 0, ",", ".") }},-</span>&nbsp;
+															<label style="font-size:70%; text-transform: none;">({{ trans('translate.examination_payment_this_nominal') }})</label>
+														</td>
+													</tr>
+													<tr class="is_pph">
+														<td>
+															<span style="font-size:100%; color: #fa8231; text-decoration: line-through;	">{{ trans('translate.stel_rupiah') }}. {{ number_format($examinationsData[0]->price, 0, ",", ".") }},-</span>
+														</td>
+													</tr>
+													<tr class="is_pph">
+														<td>
+															@php 
+																$pph = floor(0.02*$examinationsData[0]->price); 
+																$amount = $examinationsData[0]->price - $pph;
+															@endphp
+															<span style="font-weight: bold; font-size:150%; color: #fa8231;">{{ trans('translate.stel_rupiah') }}. {{ number_format($amount, 0, ",", ".") }},-</span>
+															<label style="font-size:70%; text-transform: none;">({{ trans('translate.examination_payment_nominal_without_pph') }})</label>
+														</td>
+													</tr>
+												</tbody>
+												<tfoot>
+													<tr>
+														<td>
+															<label style="text-transform: none;"><input type="checkbox" id="is_pph" name="is_pph" checked=""> {{ trans('translate.examination_payment_will_pay') }}</label>
+														</td>
+													</tr>
+												</tfoot>
+											</table>
+											<div class="form-group"> 
+												<div class="row">
 													<div class="col-md-4">
-														<label style="text-transform: none;"><input type="checkbox" id="is_pph" name="is_pph" checked=""> {{ trans('translate.examination_payment_will_pay') }}</label>
+														<label>{{ trans('translate.payment_via_virtual_account') }} : </label>
+														@if($payment_method->status)
+															<select class="form-control cs-select cs-skin-elastic" name="payment_method" id="payment_method" value="{{ old('payment_method') }}" required="">
+																<option value=""><label>{{ trans('translate.choose_bank') }}</option>
+																@foreach($payment_method->data->VA as $row)
+																	<option value="{{ $row->gateway }}||{{ $row->productCode }}||{{ $row->productType }}||{{ $row->productName }}||{{ $row->productImageUrl }}">{{ $row->productName }}</option>
+																@endforeach
+															</select>
+														@else
+															NOT FOUND, PLEASE REFRESH THIS PAGE
+														@endif
 													</div>
 												</div>
-												<label>{{ trans('translate.stel_payment_method') }} : </label>
-												<div id="sites" class="check-layout">
-													@if($payment_method->status)
-														@foreach($payment_method->data->VA as $row)
-															@if(strpos(strtolower($row->productName), 'mandiri'))
-																<input type="radio" name="payment_method" id="{{ $row->productCode }}" value="{{ $row->gateway }}||{{ $row->productCode }}||{{ $row->productType }}||{{ $row->productName }}||{{ $row->productImageUrl }}" checked="" />
-																<label class="selected" for="{{ $row->productCode }}"><img src="{{ $row->productImageUrl }}" alt="{{ $row->productName }}" style="width: 180px;height: 100px;" />{{ $row->productName }}</label>
-															@else
-																<input type="radio" name="payment_method" id="{{ $row->productCode }}" value="{{ $row->gateway }}||{{ $row->productCode }}||{{ $row->productType }}||{{ $row->productName }}||{{ $row->productImageUrl }}" />
-																<label for="{{ $row->productCode }}"><img src="{{ $row->productImageUrl }}" alt="{{ $row->productName }}" style="width: 180px;height: 100px;"/>{{ $row->productName }}</label>
-															@endif
-														@endforeach
-													@else
-														NOT FOUND, PLEASE REFRESH THIS PAGE
-													@endif
-												</div>
-												<button id="submit-btn" class="button full button-3d btn-sky">{{ trans('translate.stel_payment_confirmation') }}</button> <p hidden id="submit-msg">Please Wait ...</p>
-											</div>								
-										</div>
+											</div>
+											<input type="hidden" id="hide_va_name">
+											<button id="submit-btn" class="button full button-3d btn-sky">{{ trans('translate.stel_payment_confirmation') }}</button> <p hidden id="submit-msg">Please Wait ...</p>
+										</div>								
 									</div>
-									</form>
-									<!-- end: WIZARD FORM -->
-									</div>
+								</div>
+								</form>
+								<!-- end: WIZARD FORM -->
 								</div>
 							</div>
 						</div>
-						</div>
-					@endif
+					</div>
 				</div>
 
 
@@ -172,11 +151,20 @@
 		            $(".is_pph").hide();
 		        }
 		    });
-		});
 
-		$('#sites input:radio').addClass('input_hidden');
-		$('#sites label').click(function() {
-		    $(this).addClass('selected').siblings().removeClass('selected');
+		    $('#payment_method').on('change', function() {
+				var res = this.value.split("||");
+				$('#hide_va_name').val(res[3]);
+			});
+
+		    $('#submit-btn').click(function () {
+				if(!$("#form-checkout").valid()){
+					return false;
+				}
+				if (!confirm('Are you sure with '+$('#hide_va_name').val()+' payment?')) {
+				 	return false;
+				}
+			});
 		});
 
 		/* Dengan Rupiah */
