@@ -232,7 +232,9 @@ class PermohonanController extends Controller
 	public function uploadEdit(Request $request){ 
 		$fileService = new FileService();
 		$exam_id = $request->session()->get(self::HIDE_EXAM_ID);
-
+		if(is_array($exam_id)){
+			$exam_id = $exam_id[0];
+		}
 		$file = $fileService->uploadFile($request->file('fuploaddetailpengujian_edit'), 'form_uji_', self::MEDIA_EXAMINATION_LOC.$exam_id);
 		$fuploaddetailpengujian_name = $file ? $file : '';
 
@@ -326,12 +328,13 @@ class PermohonanController extends Controller
 	public function feedback(Request $request)
 	{
 		$notificationService = new NotificationService();
-		$quest = Question::find($request->input('question'));
-		if(count($quest)>0){
+		$quest = Question::find($request->input('question')); 
+		if(count((array)$quest)>0){
 			$category = $quest->name;
 		}else{
 			$category = '-';
 		}
+		$currentUser = Auth::user();
 		$feedback = new Feedback;
         $feedback->id = Uuid::uuid4();
         $feedback->category = $category;
@@ -339,12 +342,14 @@ class PermohonanController extends Controller
         $feedback->subject = ''.$request->input('subject').'';
         $feedback->message = ''.$request->input(self::MESSAGE).'';
         $feedback->created_at = ''.date(self::DATE_FORMAT).'';
+        $feedback->created_by = $currentUser->id;
         $feedback->updated_at = ''.date(self::DATE_FORMAT).'';
+        $feedback->updated_by = $currentUser->id;
 
         try{
             $feedback->save();
 
-            $currentUser = Auth::user();
+            
 			if($currentUser){
 				$id_user = $currentUser->id;
 			}else{
@@ -363,7 +368,7 @@ class PermohonanController extends Controller
 		  	$notification_id = $notificationService->make($data);
 			$data['id'] = $notification_id;
 	        event(new Notification($data));
-
+	        
 			$this->sendFeedbackEmail($request->input(self::EMAIL),$request->input('subject'),$request->input(self::MESSAGE),$request->input('question'));
             Session::flash('message_feedback', 'Feedback successfully send');
         } catch(Exception $e){
