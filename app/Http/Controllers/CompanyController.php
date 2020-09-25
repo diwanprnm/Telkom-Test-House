@@ -24,6 +24,7 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 use App\Services\Logs\LogService;
+use App\Services\FileService;
 
 class CompanyController extends Controller
 {
@@ -185,8 +186,23 @@ class CompanyController extends Controller
         $company->siup_date = $request->input(self::SIUP_DATE);
         $company->qs_certificate_number = $request->input(self::QS_CERTIFICATE_NUMBER);
         $company->keterangan = $request->input('keterangan');
- 
-        $this->uploadFile($request,$company);
+  
+        if ($request->hasFile(self::NPWP_FILE)) { 
+            $fileService = new FileService();  
+            $file = $fileService->uploadFile($request->file(self::NPWP_FILE), 'npwp_', "/".self::COMPANY_PATH.$company->id."/");  
+            $company->npwp_file = $file ? $file : '';
+        }
+
+        if ($request->hasFile(self::SIUP_FILE)) {  
+            $fileService = new FileService();  
+            $file = $fileService->uploadFile($request->file(self::SIUP_FILE), 'siupp_', "/".self::COMPANY_PATH.$company->id."/");  
+            $company->siup_file = $file ? $file : '';
+        } 
+        if ($request->hasFile(self::QS_CERTIFICATE_FILE)) {  
+            $fileService = new FileService();  
+            $file = $fileService->uploadFile($request->file(self::SIUP_FILE), 'serti_uji_mutu_', "/".self::COMPANY_PATH.$company->id."/");  
+            $company->qs_certificate_file = $file ? $file : '';
+        }
 
         
         $company->qs_certificate_date = $request->input(self::QS_CERTIFICATE_DATE);
@@ -267,7 +283,24 @@ class CompanyController extends Controller
         }
         
 
-        $this->uploadFile($request,$company);
+        if ($request->hasFile(self::NPWP_FILE)) { 
+            $fileService = new FileService();  
+            $file = $fileService->uploadFile($request->file(self::NPWP_FILE), 'npwp_', "/".self::COMPANY_PATH.$company->id."/");  
+            $company->npwp_file = $file ? $file : '';
+        }
+
+        if ($request->hasFile(self::SIUP_FILE)) {  
+            $fileService = new FileService();  
+            $file = $fileService->uploadFile($request->file(self::SIUP_FILE), 'siupp_', "/".self::COMPANY_PATH.$company->id."/");  
+            $company->siup_file = $file ? $file : '';
+        } 
+        if ($request->hasFile(self::QS_CERTIFICATE_FILE)) {  
+            $fileService = new FileService();  
+            $file = $fileService->uploadFile($request->file(self::SIUP_FILE), 'serti_uji_mutu_', "/".self::COMPANY_PATH.$company->id."/");  
+            $company->qs_certificate_file = $file ? $file : '';
+        }
+
+        
 
         if ($request->has(self::SIUP_NUMBER)){
             $company->siup_number = $request->input(self::SIUP_NUMBER);
@@ -366,7 +399,7 @@ class CompanyController extends Controller
                     $response =  response()->download($tempImage, $filename);
                     break;
                 default:
-                    return false; 
+                    return ""; 
             }
         }
 
@@ -415,7 +448,7 @@ class CompanyController extends Controller
                     $qs_certificate_date = date("d-m-Y", strtotime($row->qs_certificate_date));
                 }
                 $examsArray[] = [
-                    $no,
+                    (string)$no,
                     $row->name,
                     $row->address.", kota ".$row->city.", kode pos ".$row->postal_code,
                     $row->email,
@@ -495,90 +528,5 @@ class CompanyController extends Controller
             ->take(5)
             ->distinct()
             ->get(); 
-    }
-
-    private function uploadFile($request,$company){
-        $allowedImage = ['jpeg','jpg','png'];
-        $allowedFile = ['pdf'];
-
-        if ($request->hasFile(self::NPWP_FILE)) { 
-            $file = $request->file(self::NPWP_FILE);
-            $ext = $file->getClientOriginalExtension(); 
-            $file_name = 'npwp_'.$request->file(self::NPWP_FILE)->getClientOriginalName();
-            
-            $is_upload_npwp = false;
-            if (in_array($ext, $allowedFile))
-            { 
-                $is_upload_npwp = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/$file_name",$file->__toString());
-            }
-            else if (in_array($ext, $allowedImage))
-            { 
-                $image = Image::make($file);   
-                $is_upload_npwp = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/$file_name",(string)$image->encode()); 
-            }else{
-                Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
-                return redirect(self::ADMIN_CREATE);
-            } 
-             
-            if($is_upload_npwp){
-                $company->npwp_file = $file_name;
-            }else{
-                Session::flash(self::ERROR, 'Save NPWP to directory failed');
-                return redirect(self::ADMIN_CREATE);
-            }
-        }        
-        if ($request->hasFile(self::SIUP_FILE)) {  
-
-            $file = $request->file(self::SIUP_FILE);
-            $ext = $file->getClientOriginalExtension(); 
-            $file_name = 'siupp_'.$request->file(self::SIUP_FILE)->getClientOriginalName();
-            
-            $is_uploaded_siup = false;
-            if (in_array($ext, $allowedFile))
-            {  
-                $is_uploaded_siup = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/$file_name",$file->__toString());
-            }
-            else if (in_array($ext, $allowedImage))
-            { 
-                $image = Image::make($file);   
-                $is_uploaded_siup = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/".$file_name,(string)$image->encode()); 
-            }else{
-                Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
-                return redirect(self::ADMIN_CREATE);
-            } 
-             
-            if($is_uploaded_siup){
-                $company->siup_file = $file_name;
-            }else{
-                Session::flash(self::ERROR, 'Save SIUP to directory failed');
-                return redirect(self::ADMIN_CREATE);
-            }
-        }
-        if ($request->hasFile(self::QS_CERTIFICATE_FILE)) {  
-            $file = $request->file(self::QS_CERTIFICATE_FILE);
-            $ext = $file->getClientOriginalExtension(); 
-            $file_name = 'serti_uji_mutu_'.$request->file(self::QS_CERTIFICATE_FILE)->getClientOriginalName();
-            
-            $is_upload_qs = false;
-            if (in_array($ext, $allowedFile))
-            {  
-                $is_upload_qs = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/$file_name",$file->__toString());
-            }
-            else if (in_array($ext, $allowedImage))
-            { 
-                $image = Image::make($file);   
-                $is_upload_qs = Storage::disk(self::MINIO)->put(self::COMPANY_PATH.$company->id."/".$file_name,(string)$image->encode()); 
-            }else{
-                Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
-                return redirect(self::ADMIN_CREATE);
-            } 
-             
-            if($is_upload_qs){
-                $company->qs_certificate_file = $file_name;
-            }else{
-                Session::flash(self::ERROR, 'Save QS certificate to directory failed');
-                return redirect(self::ADMIN_CREATE);
-            }
-        }
-    }
+    } 
 }

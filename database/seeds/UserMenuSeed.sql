@@ -1,3 +1,4 @@
+DELETE FROM menus;
 INSERT INTO `menus` VALUES ('1', '0', 'Beranda', '', 'ti-dashboard');
 INSERT INTO `menus` VALUES ('2', '0', 'Pengujian', '#', 'ti-files');
 INSERT INTO `menus` VALUES ('3', '2', 'Pengujian', 'examination', '');
