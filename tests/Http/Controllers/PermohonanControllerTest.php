@@ -85,17 +85,17 @@ class PermohonanControllerTest extends TestCase
        $this->assertEquals(200, $response->status());
 	}  
 
-	public function test_feedback()
-	{ 
-	   $question = factory(App\Question::class)->create();
-	   $user = User::find(1);
-	     $response =  $this->actingAs($user)->call('POST', '/client/feedback', [ 
-	       'question' => $question->id,  
-	       'subject' => str_random(10),
-	       'message' => str_random(10), 
-	       'email' => "admin@gmail.com" 
-	    ]);   
-       $this->assertEquals(200, $response->status());
-	} 
+	// public function test_feedback()
+	// { 
+	//    $question = factory(App\Question::class)->create();
+	//    $user = User::find(1);
+	//      $response =  $this->actingAs($user)->call('POST', '/client/feedback', [ 
+	//        'question' => $question->id,  
+	//        'subject' => str_random(10),
+	//        'message' => str_random(10), 
+	//        'email' => "admin@gmail.com" 
+	//     ]);   
+ //       $this->assertEquals(200, $response->status());
+	// } 
  
 }
