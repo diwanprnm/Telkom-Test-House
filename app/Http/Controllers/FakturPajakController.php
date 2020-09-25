@@ -56,13 +56,13 @@ class FakturPajakController extends Controller
         $filterCompany = '';
         $companies = Company::where('id','!=', 1)->get();
 
-        $spb = Examination::select(DB::raw('examinations.id as _id, "SPB" as type, users.name as user_name, companies.name as company_name, CONCAT(devices.name, ", tipe ", devices.model, ", kapasitas ", devices.capacity) as description, 
+        $spb = Examination::select(DB::raw('examinations.id as _id, "SPB" as type, users.name as user_name, companies.name as company_name, devices.name as device_name,devices.model,devices.capacity,
             (
                 SELECT attachment
                 FROM
                     examination_attachments
                 WHERE
-                    examination_id = _id
+                    examination_id = examinations.id
                 AND
                     name = "Kuitansi"
             ) as id_kuitansi,
@@ -71,7 +71,7 @@ class FakturPajakController extends Controller
                 FROM
                     examination_attachments
                 WHERE
-                    examination_id = _id
+                    examination_id = examinations.id
                 AND
                     name = "Faktur Pajak"
             ) as faktur_file, 
@@ -80,7 +80,7 @@ class FakturPajakController extends Controller
                 FROM
                     examination_attachments
                 WHERE
-                    examination_id = _id
+                    examination_id = examinations.id
                 AND
                     name = "Pembayaran"
             ) as payment_date'))
@@ -98,20 +98,20 @@ class FakturPajakController extends Controller
                         ->where('examination_attachments.attachment', '!=', '');
                     });
                 })
-            ->distinct('_id')
+            ->distinct('examinations.id')
         ;
 
         $stel = STELSales::select(DB::raw('stels_sales.id as _id, "STEL" as type, users.name as user_name, companies.name as company_name, 
                             (
-                                SELECT GROUP_CONCAT(stels.code SEPARATOR ", ")
+                                SELECT stels.code 
                                 FROM
                                     stels,
                                     stels_sales_detail
                                 WHERE
-                                    stels_sales_detail.stels_sales_id = _id
+                                    stels_sales_detail.stels_sales_id = stels_sales.id
                                 AND
                                     stels_sales_detail.stels_id = stels.id
-                            ) as description,
+                            ) as description,stels.type,stels.code, 
                             stels_sales.id_kuitansi, stels_sales.faktur_file, DATE(stels_sales_attachment.updated_at) as payment_date'))
             ->join('users', 'stels_sales.created_by', '=', 'users.id')
             ->join('companies', 'users.company_id', '=', 'companies.id')

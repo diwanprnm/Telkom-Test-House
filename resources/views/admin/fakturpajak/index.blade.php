@@ -151,7 +151,12 @@
 											<td class="center">{{ $item->type }}</td>
 											<td class="center">{{ $item->user_name }}</td>
 											<td class="center">{{ $item->company_name }}</td>
-											<td class="center">{{ $item->description }}</td>
+											<td class="center">{{ 
+												$item->device_name." ,Tipe ".  
+												$item->model." , kapasitas".
+												$item->capacity
+
+											}}</td>
 											<td class="center">{{ $item->payment_date ? $item->payment_date : '0000-00-00' }}</td>
 											<td class="center">
 												@if($item->type == 'SPB')	
