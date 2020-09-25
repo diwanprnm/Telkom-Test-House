@@ -406,13 +406,18 @@ class PermohonanController extends Controller
     }
 	
 	public function generateFunctionTestNumber($a) { 
+		if($a == "CAL"){
+			$where = "SUBSTR(function_test_NO,'5',3) = '".$a."' AND";
+		}else{
+			$where = "SUBSTR(function_test_NO,'5',2) = '".$a."' AND";
+		}
 		$thisYear = date('Y');
 		$query = "
 			SELECT 
 			SUBSTR(function_test_NO,'1',3) + 1 AS last_numb
 			FROM examinations 
 			WHERE 
-			SUBSTR(function_test_NO,'5',2) = '".$a."' AND
+			".$where."
 			SUBSTR(function_test_NO,'8',4) = '".$thisYear."'
 			ORDER BY last_numb DESC LIMIT 1
 		";
