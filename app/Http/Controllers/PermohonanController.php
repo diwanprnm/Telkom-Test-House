@@ -368,7 +368,7 @@ class PermohonanController extends Controller
 		  	$notification_id = $notificationService->make($data);
 			$data['id'] = $notification_id;
 	        event(new Notification($data));
-	        
+
 			$this->sendFeedbackEmail($request->input(self::EMAIL),$request->input('subject'),$request->input(self::MESSAGE),$request->input('question'));
             Session::flash('message_feedback', 'Feedback successfully send');
         } catch(Exception $e){
@@ -405,15 +405,15 @@ class PermohonanController extends Controller
         return true;
     }
 	
-	public function generateFunctionTestNumber($a) {
+	public function generateFunctionTestNumber($a) { 
 		$thisYear = date('Y');
 		$query = "
 			SELECT 
-			SUBSTRING_INDEX(function_test_NO,'/',1) + 1 AS last_numb
+			SUBSTR(function_test_NO,'1',3) + 1 AS last_numb
 			FROM examinations 
 			WHERE 
-			SUBSTRING_INDEX(SUBSTRING_INDEX(function_test_NO,'/',2),'/',-1) = '".$a."' AND
-			SUBSTRING_INDEX(function_test_NO,'/',-1) = '".$thisYear."'
+			SUBSTR(function_test_NO,'5',2) = '".$a."' AND
+			SUBSTR(function_test_NO,'8',4) = '".$thisYear."'
 			ORDER BY last_numb DESC LIMIT 1
 		";
 		$data = DB::select($query); 
@@ -544,6 +544,8 @@ class PermohonanController extends Controller
 				'descPengujian' => $jns_pengujian_desc,
 				'no_reg' => $no_reg
 			]);
+		}else{
+			$data = array();
 		}
 
 		$request->session()->put('key', $data);
