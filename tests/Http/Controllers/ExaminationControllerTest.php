@@ -269,12 +269,12 @@ class ExaminationControllerTest extends TestCase
  
         $this->assertEquals(200, $response->status());
     }
-    public function test_generateSPB()
-    {
-        $examination = factory(App\Examination::class)->create(); 
-        $response = $this->actingAs(User::find('1'))->call('POST', 'admin/examination/generateSPB');  
-        $this->assertEquals(200, $response->status());
-    }
+    // public function test_generateSPB()
+    // {
+    //     $examination = factory(App\Examination::class)->create(); 
+    //     $response = $this->actingAs(User::find('1'))->call('POST', 'admin/examination/generateSPB');  
+    //     $this->assertEquals(200, $response->status());
+    // }
 
     public function test_generateSPBParam(){
         $examination = factory(App\Examination::class)->create(); 
