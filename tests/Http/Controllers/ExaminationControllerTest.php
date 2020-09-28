@@ -161,14 +161,14 @@ class ExaminationControllerTest extends TestCase
     }
 
 
-    public function testExcelWithFilter()
-    { 
-        //create response
-        $response = $this->actingAs(User::find('1'))->call('get',"/examination/excel");
-        //assert response
-        $this->assertEquals(200, $response->status());
-        $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
-        $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
-        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Pengujian.xlsx"');
-    }
+    // public function testExcelWithFilter()
+    // { 
+    //     //create response
+    //     $response = $this->actingAs(User::find('1'))->call('get',"/examination/excel");
+    //     //assert response
+    //     $this->assertEquals(200, $response->status());
+    //     $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
+    //     $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
+    //     $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Pengujian.xlsx"');
+    // }
 }
