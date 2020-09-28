@@ -637,12 +637,20 @@ class ExaminationService
 	}
 
 	public function generateSPKCode($a,$b,$c) {
+		$total_string_lab_code = strlen($a);
+		$delimiter_year = 0;
+		if($b == "CAL"){
+			$delimiter_year = 10;
+		}else{
+			$delimiter_year = 9;
+		}
+		$delimiter = $total_string_lab_code + $delimiter_year;
 		$query = "
 			SELECT 
-			SUBSTRING_INDEX(SUBSTRING_INDEX(spk_code,'/',2),'/',-1) + 1 AS last_numb
+			SUBSTR(spk_code,".($total_string_lab_code+2).",3)+1 AS last_numb 
 			FROM examinations WHERE 
-			SUBSTRING_INDEX(spk_code,'/',1) = '".$a."' AND
-			SUBSTRING_INDEX(spk_code,'/',-1) = '".$c."'
+			SUBSTR(spk_code,1,".$total_string_lab_code.") = '".$a."' AND
+			SUBSTR(spk_code,".$delimiter.",4) = '".$c."' 
 			ORDER BY last_numb DESC LIMIT 1
 		";
 		$data = DB::select($query);
@@ -666,8 +674,9 @@ class ExaminationService
 	public function generateSPBNumber() {
 		$thisYear = date('Y');
 		$query = "
-			SELECT SUBSTRING_INDEX(spb_number,'/',1) + 1 AS last_numb
-			FROM examinations WHERE SUBSTRING_INDEX(spb_number,'/',-1) = ".$thisYear." AND spb_number LIKE '%TTH-02%'
+			SELECT SUBSTR(spb_number,12,4) + 1 AS last_numb
+			FROM examinations WHERE SUBSTR(spb_number,12,4)  = ".$thisYear." 
+			AND spb_number LIKE '%TTH-02%'
 			ORDER BY last_numb DESC LIMIT 1
 		";
 		$data = DB::select($query);

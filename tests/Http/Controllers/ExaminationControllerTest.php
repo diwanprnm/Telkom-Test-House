@@ -101,64 +101,64 @@ class ExaminationControllerTest extends TestCase
             Storage::disk('minio')->delete($path);
         }
     }
-    public function testDownloadMediaDevices()
-    {
-        $device = factory(App\Device::class)->create();
-        $path = "device/".$device->id."/".$device->certificate;
-        $isFileExist = Storage::disk('minio')->exists($path);
+    // public function testDownloadMediaDevices()
+    // {
+    //     $device = factory(App\Device::class)->create();
+    //     $path = "device/".$device->id."/".$device->certificate;
+    //     $isFileExist = Storage::disk('minio')->exists($path);
 
-        if(!$isFileExist){
-            $file = file_get_contents('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
-            Storage::disk('minio')->put($path, $file);
-        }
+    //     if(!$isFileExist){
+    //         $file = file_get_contents('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
+    //         Storage::disk('minio')->put($path, $file);
+    //     }
 
-        $response = $this->actingAs(User::find(1))->call('GET','admin/examination/media/download/'.$device->id."/certificate");
-        $this->assertResponseStatus(200);
-        $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
+    //     $response = $this->actingAs(User::find(1))->call('GET','admin/examination/media/download/'.$device->id."/certificate");
+    //     $this->assertResponseStatus(200);
+    //     $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
 
-        if(!$isFileExist){
-            Storage::disk('minio')->delete($path);
-        }
-    }
-    public function testDownloadMediaExam()
-    {
-        $exam = factory(App\Examination::class)->create();
-        $examAttach = factory(App\ExaminationAttach::class)->create(['examination_id'=>$exam->id,'name'=>'exam']);
-        $path = "examination/".$exam->id."/".$examAttach->attachment;
-        $isFileExist = Storage::disk('minio')->exists($path);
+    //     if(!$isFileExist){
+    //         Storage::disk('minio')->delete($path);
+    //     }
+    // }
+    // public function testDownloadMediaExam()
+    // {
+    //     $exam = factory(App\Examination::class)->create();
+    //     $examAttach = factory(App\ExaminationAttach::class)->create(['examination_id'=>$exam->id,'name'=>'exam']);
+    //     $path = "examination/".$exam->id."/".$examAttach->attachment;
+    //     $isFileExist = Storage::disk('minio')->exists($path);
 
-        if(!$isFileExist){
-            $file = file_get_contents('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
-            Storage::disk('minio')->put($path, $file);
-        }
+    //     if(!$isFileExist){
+    //         $file = file_get_contents('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
+    //         Storage::disk('minio')->put($path, $file);
+    //     }
 
-        $response = $this->actingAs(User::find(1))->call('GET','admin/examination/media/download/'.$exam->id."/exam");
-        $this->assertResponseStatus(200);
-        $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
+    //     $response = $this->actingAs(User::find(1))->call('GET','admin/examination/media/download/'.$exam->id."/exam");
+    //     $this->assertResponseStatus(200);
+    //     $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
 
-        if(!$isFileExist){
-            Storage::disk('minio')->delete($path);
-        }
-    }
-    public function testDownloadRefUjiFile()
-    {
-        $examAttach = factory(App\ExaminationAttach::class)->create();
-        $path = "examination/".$examAttach->examination_id."/".$examAttach->attachment;
-        $isFileExist = Storage::disk('minio')->exists($path);
+    //     if(!$isFileExist){
+    //         Storage::disk('minio')->delete($path);
+    //     }
+    // }
+    // public function testDownloadRefUjiFile()
+    // {
+    //     $examAttach = factory(App\ExaminationAttach::class)->create();
+    //     $path = "examination/".$examAttach->examination_id."/".$examAttach->attachment;
+    //     $isFileExist = Storage::disk('minio')->exists($path);
 
-        if(!$isFileExist){
-            $file = file_get_contents('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
-            Storage::disk('minio')->put($path, $file);
-        }
+    //     if(!$isFileExist){
+    //         $file = file_get_contents('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
+    //         Storage::disk('minio')->put($path, $file);
+    //     }
 
-        $response = $this->actingAs(User::find(1))->call('GET','admin/examination/media/download/'.$examAttach->id); 
-        $this->assertResponseStatus(200);
-        $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
+    //     $response = $this->actingAs(User::find(1))->call('GET','admin/examination/media/download/'.$examAttach->id); 
+    //     $this->assertResponseStatus(200);
+    //     $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
 
-        if(!$isFileExist){
-            Storage::disk('minio')->delete($path);
-        }
-    }
+    //     if(!$isFileExist){
+    //         Storage::disk('minio')->delete($path);
+    //     }
+    // }
 
 
     // public function testExcelWithFilter()
@@ -171,4 +171,170 @@ class ExaminationControllerTest extends TestCase
     //     $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
     //     $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Pengujian.xlsx"');
     // }
+
+
+
+    public function test_visit_revisi()
+    {
+        $examination = factory(App\Examination::class)->create();
+        $stels = factory(App\STEL::class)->create();
+        $response = $this->actingAs(User::find('1'))->call('GET', 'admin/examination/revisi/'.$examination->id);  
+        $this->assertEquals(200, $response->status());
+    }
+
+
+    public function test_updaterevisi(){
+        $examination = factory(App\Examination::class)->create();
+        $device = factory(App\Device::class)->create();
+        $user = User::find('1');
+        $response = $this->actingAs($user)->call('POST', "admin/examination/revisi", 
+        [ 
+            'nama_perangkat' =>str_random(10),
+            'hidden_nama_perangkat' =>str_random(10),
+            'merk_perangkat' =>str_random(10),
+            'hidden_merk_perangkat' =>str_random(10),
+            'kapasitas_perangkat' =>str_random(10),
+            'hidden_kapasitas_perangkat' =>str_random(10),
+            'pembuat_perangkat' =>str_random(10),
+            'hidden_pembuat_perangkat' =>str_random(10),
+            'model_perangkat' =>str_random(10),
+            'hidden_model_perangkat' =>str_random(10),
+            'mb-ref-perangkat' =>str_random(10),
+            'ref_perangkat' =>str_random(10),
+            'hidden_ref_perangkat' =>str_random(10),
+            'sn_perangkat' =>str_random(10),
+            'hidden_sn_perangkat' =>str_random(10),
+            'id_perangkat' =>$device->id,
+            'exam_created' =>$user->id,
+            'exam_type' =>1,
+            'exam_desc' =>str_random(10),
+            'id_exam' =>$examination->id 
+        ]);
+        $this->assertEquals(302, $response->status());
+    }
+    public function test_tanggalKontrak(){
+        $examination = factory(App\Examination::class)->create(); 
+        $user = User::find('1');
+        $response = $this->actingAs($user)->call('POST', "admin/examination/".$examination->id."/tanggalkontrak", 
+        [  
+            'hide_id_exam' =>$examination->id,
+            'contract_date' => '2020-12-12' 
+        ]);
+        $this->assertEquals(200, $response->status());
+    }
+    public function test_tandaterima(){
+        $examination = factory(App\Examination::class)->create(); 
+        $user = User::find('1');
+        $response = $this->actingAs($user)->call('POST', "admin/examination/".$examination->id."/tandaterima", 
+        [  
+            'hide_id_exam' =>$examination->id,
+            'contract_date' => '2020-12-12' 
+        ]);
+        $this->assertEquals(200, $response->status());
+    }
+
+
+    public function test_destroy()
+    {
+        $examination = factory(App\Examination::class)->create(); 
+        $response = $this->actingAs(User::find('1'))->call('GET', 'admin/examination/harddelete/'.$examination->id.'/revisi/TESTING');  
+        $this->assertEquals(302, $response->status());
+    }
+
+    public function test_resetUjiFungsi()
+    {
+        $examination = factory(App\Examination::class)->create(); 
+        $response = $this->actingAs(User::find('1'))->call('GET', 'admin/examination/resetUjiFungsi/'.$examination->id.'/TESTING');  
+        $this->assertEquals(302, $response->status());
+    }
+
+     public function test_autocomplete()
+    {
+        $user = User::find(1);
+        $this->actingAs($user)->call('GET',"admin/adm_exam_autocomplete/query");
+        //Response status ok
+        $this->assertResponseStatus(200); 
+    }
+
+    public function test_generateSPKCode()
+    {
+        $spk_code = str_random(10);
+        $examination = factory(App\Examination::class)->create(['spk_code'=>$spk_code.'/001/CAL/2020']); 
+        $response = $this->actingAs(User::find('1'))->call('POST', 'admin/examination/'.$examination->id.'/generateSPKCode',
+            [
+                'lab_code'=>$spk_code,
+                'exam_type'=>'CAL',
+                'year'=>'2020',
+            ]);  
+ 
+        $this->assertEquals(200, $response->status());
+    }
+    public function test_generateSPB()
+    {
+        $examination = factory(App\Examination::class)->create(); 
+        $response = $this->actingAs(User::find('1'))->call('POST', 'admin/examination/generateSPB');  
+        $this->assertEquals(200, $response->status());
+    }
+
+    public function test_generateSPBParam(){
+        $examination = factory(App\Examination::class)->create(); 
+        $user = User::find('1');
+        $response = $this->actingAs($user)->call('POST', "admin/examination/".$examination->id."/generateSPBParam", 
+        [  
+            'exam_id' =>$examination->id,
+            'spb_number' =>str_random(10),
+            'spb_date' => '2020-12-12' 
+        ]);
+        $this->assertEquals(200, $response->status());
+    }
+    public function test_generateEquipParam(){
+        $examination = factory(App\Examination::class)->create(); 
+        $user = User::find('1');
+        $response = $this->actingAs($user)->call('POST', "admin/examination/".$examination->id."/generateEquipParam", 
+        [  
+            'exam_id' =>$examination->id, 
+            'in_equip_date' => '2020-12-12' 
+        ]);
+        $this->assertEquals(200, $response->status());
+    }
+
+
+    // public function test_visit_generateSPB()
+    // {
+    //     $examination = factory(App\Examination::class)->create(); 
+    //     $response = $this->actingAs(User::find('1'))->call('GET', 'admin/examination/generateSPB');  
+    //     $this->assertEquals(200, $response->status());
+    // }
+    
+    public function test_cetakUjiFungsi()
+    {
+        $examination = factory(App\Examination::class)->create(); 
+        $response = $this->actingAs(User::find('1'))->call('GET', 'cetakUjiFungsi/'.$examination->id);  
+        $this->assertEquals(302, $response->status());
+    }
+    
+    public function test_cetakFormBarang()
+    {
+        $examination = factory(App\Examination::class)->create(); 
+        $response = $this->actingAs(User::find('1'))->call('GET', 'cetakFormBarang/'.$examination->id);  
+        $this->assertEquals(302, $response->status());
+    }
+    public function test_visit_generateEquip()
+    { 
+        $examination = factory(App\Examination::class)->create(); 
+        $equipment = factory(App\Equipment::class)->create(['examination_id'=>$examination->id]);
+        Session::push('key_exam_id_for_generate_equip_masuk', $examination->id);
+        $response = $this->actingAs(User::find('1'))->call('GET', 'admin/examination/generateEquip');  
+        $this->assertEquals(200, $response->status());
+    } 
+
+    public function test_deleteRevLapUji(){ 
+        $examinationAttach = factory(App\ExaminationAttach::class)->create(); 
+        $user = User::find('1');
+        $response = $this->actingAs($user)->call('GET', "admin/examination/".$examinationAttach->id."/deleteRevLapUji");
+        $this->assertEquals(302, $response->status());
+    }
+
+
+
 }

@@ -1774,7 +1774,7 @@ class ExaminationController extends Controller
 				->distinct()
                 ->get();
 		
-		$auto_complete_result = array_merge($data1,$data2);
+		$auto_complete_result = array_merge((array)$data1,(array)$data2);
         return $auto_complete_result;
     }
 	
@@ -2113,8 +2113,7 @@ class ExaminationController extends Controller
 					)
             ->where(self::EXAMINATIONS_ID, $exam_id)
 			->orderBy(self::DEVICE_NAME)
-			->first();
-
+			->first(); 
         return view('admin.equipment.edit')
             ->with('item', $examination)
             ->with(self::LOCATION, $location)
