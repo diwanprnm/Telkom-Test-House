@@ -203,24 +203,7 @@ class SalesController extends Controller
             ->with('faktur_file', $STELSales->faktur_file) 
             ->with('price_total', $STELSales->total)
         ;
-    }  
-
-    public function sales_detail($id)
-    { 
-        $currentUser = Auth::user();
-        if($currentUser){
-            $select = array(self::STELS_NAME,self::STELS_PRICE,self::STELS_CODE,self::STELS_SALES_DETAIL_QTY); 
-            $STELSales = STELSalesDetail::select($select)->where(self::STELS_SALES_ID,$id)
-                        ->join(self::STELS,self::STELS_ID,"=",self::STELS_SALES_DETAIL_DOT_STELS_ID)
-                        ->get();
-            $page = "payment_detail";
-            return view('client.STEL.payment_detail') 
-            ->with('page', $page)   
-            ->with(self::STELS, $STELSales) ;     
-        }else{
-            redirect(self::LOGIN);
-        }
-    }  
+    }   
 
     public function excel(Request $request) 
     {

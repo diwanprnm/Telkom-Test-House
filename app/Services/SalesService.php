@@ -74,7 +74,7 @@ class SalesService
             ->paymentAllStatus()
             ->beforeDate(DB::raw('DATE(stels_sales.created_at)'))
             ->afterDate(DB::raw('DATE(stels_sales.created_at)'))
-            ->getSortedAndOrderedData('created_at','desc')
+            ->getSortedAndOrderedData('stels_sales.created_at','desc')
         ;
         //get the data and sort them
         return array(
@@ -91,22 +91,22 @@ class SalesService
         $select = array(self::STELS_SALES_DOT_ID,"stels_sales.created_at",self::STELS_SALES_INVOICE, self::STELS_SALES_DOT_PAYMENT_STATUS,"stels_sales.payment_method","stels_sales.total","stels_sales.cust_price_payment",self::AS_COMPANY_NAME,
         DB::raw('stels_sales.id as _id,
                 (
-                    SELECT GROUP_CONCAT(stels.name SEPARATOR ", ")
+                    SELECT GROUP_CONCAT(stels.name , ",")
                     FROM
                         stels,
                         stels_sales_detail
                     WHERE
-                        stels_sales_detail.stels_sales_id = _id
+                        stels_sales_detail.stels_sales_id = stels_sales.id
                     AND
                         stels_sales_detail.stels_id = stels.id
                 ) as stel_name
                 ,(
-                    SELECT GROUP_CONCAT(stels.code SEPARATOR ", ")
+                    SELECT GROUP_CONCAT(stels.code,", ")
                     FROM
                         stels,
                         stels_sales_detail
                     WHERE
-                        stels_sales_detail.stels_sales_id = _id
+                        stels_sales_detail.stels_sales_id = stels_sales.id
                     AND
                         stels_sales_detail.stels_id = stels.id
                 ) as stel_code')

@@ -9,29 +9,8 @@ use App\User;
 class SalesControllerTest extends TestCase
 {
 
-    public function testDeleteSoon(){
-        $this->assertTrue(true);
-        // for mysql DB::statement('SET FOREIGN_KEY_CHECKS=0;'); //-
-        App\STELSalesDetail::truncate();
-        App\STEL::truncate();
-        App\STELSalesAttach::truncate();
-        App\STELSales::truncate();
-        App\Logs::truncate();
-        App\LogsAdministrator::truncate();
-        App\User::where('id','!=', '1')->delete();
-        App\Company::where('id','!=', '1')->delete();
-        // for mysql DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-
-    }
-
-    // public function testIndexWithoutData()
-    // {
-    //     /*
-    //      * Error query raw yang dipakai untuk mysql
-    //      * tapi testing pakai sqlite
-    //      */
-
-    //     // truncate data
+    // public function testDeleteSoon(){
+    //     $this->assertTrue(true);
     //     // for mysql DB::statement('SET FOREIGN_KEY_CHECKS=0;'); //-
     //     App\STELSalesDetail::truncate();
     //     App\STEL::truncate();
@@ -43,41 +22,15 @@ class SalesControllerTest extends TestCase
     //     App\Company::where('id','!=', '1')->delete();
     //     // for mysql DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-    //     //make request
-    //     $admin = User::find(1);
-    //     $this->actingAs($admin)->call('GET','admin/sales');
-
-    //     //Status sukses dan judul Rekap Pembelian STEL
-    //     $this->assertResponseStatus(200)
-    //         ->see('<h1 class="mainTitle">Rekap Pembelian STEL</h1>')
-    //         ->see('Data not found')
-    //     ;
     // }
 
-    // public function testIndexWithFilter()
-    // {
-    //     /*
-    //      * Error query raw yang dipakai untuk mysql
-    //      * tapi testing pakai sqlite
-    //      */
-
-    //     $stelsSales = factory(App\STELSales::class)->create(['id'=>'00000000-aaaa-aaaa-aaaa-000000000000']);
-    //     $stelSalesDetail = factory(App\STELSalesDetail::class)->create(['stels_sales_id' => $stelsSales->id]);
-    //     $stels = App\STEL::find($stelSalesDetail->stels_id);
-    //     factory(App\STELSalesAttach::class)->create(['stel_sales_id'=>$stelsSales->id]);
-
-    //     //make request
-    //     $admin = User::find(1);
-    //     $this->actingAs($admin)->call('GET',"admin/sales?before_date=2100-01-01&after_date=2020-01-01&search=$stels->name");
-
-    //     //Status sukses dan judul Rekap Pembelian STEL
-    //     $this->assertResponseStatus(200)
-    //         ->see('<h1 class="mainTitle">Rekap Pembelian STEL</h1>')
-    //         ->see($stels->name)
-    //         ->see($stelsSales->created_at)
-    //     ;
-    // }
-
+    public function testIndexWithoutData()
+    {
+       
+        $admin = User::find(1);
+        $response = $this->actingAs($admin)->call('GET','admin/sales'); 
+        $this->assertEquals(200, $response->status());
+    } 
 
     public function testCreate()
     {
@@ -128,23 +81,11 @@ class SalesControllerTest extends TestCase
         
         //make request
         $admin = User::find(1);
-        $this->actingAs($admin)->call('GET',"admin/sales/$stelsSalesDetail->stels_sales_id");
+        $response = $this->actingAs($admin)->call('GET',"admin/sales/$stelsSalesDetail->stels_sales_id");
 
         //Status sukses dan judul Detail Pembelian STEL
-        $this->assertResponseStatus(200)
-            ->see('<h1 class="mainTitle">Detail Pembelian STEL</h1>')
-            ->see($stel->name)
-        ;
-    }
-
-    public function testSalesDetail()
-    {
-        /*
-         * Sales_detail tidak ada dalam routes
-         * 
-         */
-        $this->assertTrue(true);
-    }
+        $this->assertEquals(200, $response->status());
+    } 
 
     public function testGenerateKuitansi()
     {
@@ -178,26 +119,26 @@ class SalesControllerTest extends TestCase
     //     $this->assertResponseStatus(200);
     // }
 
-    // public function testExcel()
-    // {
-    //     /*
-    //      * Error query raw yang dipakai untuk mysql
-    //      * tapi testing pakai sqlite
-    //      */
+    public function testExcel()
+    {
+        /*
+         * Error query raw yang dipakai untuk mysql
+         * tapi testing pakai sqlite
+         */
 
-    //     //get data
-    //     $stels = App\STEL::latest()->first();
+        //get data
+        $stels = App\STEL::latest()->first();
 
-    //     //make request
-    //     $admin = User::find(1);
-    //     dd($response = $this->actingAs($admin)->call('GET',"sales/excel?before_date=2100-01-01&after_date=2020-01-01&search=$stels->name"));
+        //make request
+        $admin = User::find(1);
+        $response = $this->actingAs($admin)->call('GET',"sales/excel?before_date=2100-01-01&after_date=2020-01-01&search=$stels->name");
 
-    //     //response ok, header download sesuai
-    //     $this->assertResponseStatus(200);
-    //     $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
-    //     $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
-    //     $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Sales.xlsx"');
-    // }
+        //response ok, header download sesuai
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
+        $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
+        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Sales.xlsx"');
+    }
 
     // public function testEdit()
     // {
