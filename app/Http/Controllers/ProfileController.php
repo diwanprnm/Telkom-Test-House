@@ -32,8 +32,10 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use App\Events\Notification;
 use App\NotificationTable;
 
-use App\Services\Logs\LogService;
+use App\Services\Logs\LogService; 
+use App\Services\FileService;
 
+use App\Services\NotificationService;
 class ProfileController extends Controller
 { 
 
@@ -130,8 +132,11 @@ class ProfileController extends Controller
 				->with(self::ERROR_NEW_PASS, 2)
 				->withInput($request->all());
 			}
-		} 
- 		$fuserPicture = $this->uploadFileProfile($request);
+		}  
+
+		$fileService = new FileService();  
+        $file = $fileService->uploadFile($request->file(self::USER_PICTURE), self::PATH_PROFILE, "/".self::MEDIA_USER.$request->input(self::HIDE_ID_USER)."/");  
+        $fuserPicture = $file ? $file : '';
 		
 		try{
 			$query_update_user = "UPDATE users
@@ -235,33 +240,10 @@ class ProfileController extends Controller
 		}
 		
 		if ($request->hasFile(self::NPWP_FILE)) {   
-            $file = $request->file(self::NPWP_FILE);
-            $ext = $file->getClientOriginalExtension(); 
-            $file_name = 'npwp_'.$request->file(self::NPWP_FILE)->getClientOriginalName();
-            $allowedImage = ['jpeg','jpg','png'];
-        	$allowedFile = ['pdf'];
-            $is_upload_npwp = false;
-            if (in_array($ext, $allowedFile))
-            { 
-                $is_upload_npwp = Storage::disk(self::MINIO)->put(self::MEDIA_COMPANY.$company_id."/$file_name",$file->__toString());
-            }
-            else if (in_array($ext, $allowedImage))
-            { 
-                $image = Image::make($file);   
-                $is_upload_npwp = Storage::disk(self::MINIO)->put(self::MEDIA_COMPANY.$company_id."/$file_name",(string)$image->encode()); 
-            }else{
-                Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
-                return redirect(self::PAGE_PROFILE);
-            } 
-             
-            if($is_upload_npwp){ 
-                $temp->npwp_file = $file_name;
-				$count_commit ++ ;
-				$description = $description.'File NPWP, ';
-            }else{
-                Session::flash(self::ERROR_COMPANY, 'Upload NPWP failed');
-                return redirect(self::PAGE_PROFILE);
-            }
+            $fileService = new FileService();  
+            $file = $fileService->uploadFile($request->file(self::NPWP_FILE), 'npwp_', "/".self::MEDIA_COMPANY.$currentUser->company->id."/");  
+            $count_commit ++ ; 
+            $temp->npwp_file = $file; 
         }else{
         	$temp->npwp_file = "";
         }     	
@@ -279,35 +261,12 @@ class ProfileController extends Controller
 			$description = $description.'Masa berlaku SIUPP, ';
 		}
 		
-		if ($request->hasFile(self::SIUP_FILE)) {  
+		if ($request->hasFile(self::SIUP_FILE)) {   
 
-            $file = $request->file(self::SIUP_FILE);
-            $ext = $file->getClientOriginalExtension(); 
-            $file_name = 'siupp_'.$request->file(self::SIUP_FILE)->getClientOriginalName();
-            $allowedImage = ['jpeg','jpg','png'];
-        	$allowedFile = ['pdf'];
-            $is_upload_siup = false;
-            if (in_array($ext, $allowedFile))
-            { 
-                $is_upload_siup = Storage::disk(self::MINIO)->put(self::MEDIA_COMPANY.$company_id."/$file_name",$file->__toString());
-            }
-            else if (in_array($ext, $allowedImage))
-            { 
-                $image = Image::make($file);   
-                $is_upload_siup = Storage::disk(self::MINIO)->put(self::MEDIA_COMPANY.$company_id."/$file_name",(string)$image->encode()); 
-            }else{
-                Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
-                return redirect(self::PAGE_PROFILE);
-            } 
-             
-            if($is_upload_siup){ 
-                $temp->siup_file = $file_name;
-				$count_commit ++ ;
-				$description = $description.'File SIUPP, ';
-            }else{
-                Session::flash(self::ERROR_COMPANY, 'Upload SIUPP failed');
-                return redirect(self::PAGE_PROFILE);
-            }
+            $fileService = new FileService();  
+            $file = $fileService->uploadFile($request->file(self::SIUP_FILE), 'siupp_', "/".self::MEDIA_COMPANY.$currentUser->company->id."/");   
+            $temp->siup_file = $file ? $file : '';
+				$count_commit ++ ; 
         }else{
         	$temp->siup_file = "";
         }     	
@@ -326,36 +285,11 @@ class ProfileController extends Controller
 			$description = $description.'Masa berlaku Sertifikat Uji Mutu, ';
 		}
 		
-		if ($request->hasFile(self::CERTIFICATE_FILE)) {  
-
-
-            $file = $request->file(self::CERTIFICATE_FILE);
-            $ext = $file->getClientOriginalExtension(); 
-            $file_name = 'serti_uji_mutu_'.$request->file(self::CERTIFICATE_FILE)->getClientOriginalName();
-            $allowedImage = ['jpeg','jpg','png'];
-        	$allowedFile = ['pdf'];
-            $is_upload_qs_certificate_file = false;
-            if (in_array($ext, $allowedFile))
-            { 
-                $is_upload_qs_certificate_file = Storage::disk(self::MINIO)->put(self::MEDIA_COMPANY.$company_id."/$file_name",$file->__toString());
-            }
-            else if (in_array($ext, $allowedImage))
-            { 
-                $image = Image::make($file);   
-                $is_upload_qs_certificate_file = Storage::disk(self::MINIO)->put(self::MEDIA_COMPANY.$company_id."/$file_name",(string)$image->encode()); 
-            }else{
-                Session::flash(self::ERROR, self::FORMAT_NOT_AVAILABLE);
-                return redirect(self::PAGE_PROFILE);
-            } 
-             
-            if($is_upload_qs_certificate_file){ 
-                $temp->qs_certificate_file = $file_name;
-				$count_commit ++ ;
-				$description = $description.'File Sertifikat Uji Mutu,  ';
-            }else{
-                Session::flash(self::ERROR_COMPANY, 'Upload Certificate failed');
-                return redirect(self::PAGE_PROFILE);
-            }
+		if ($request->hasFile(self::CERTIFICATE_FILE)) {   
+            $fileService = new FileService();  
+            $file = $fileService->uploadFile($request->file(self::SIUP_FILE), 'serti_uji_mutu_', "/".self::MEDIA_COMPANY.$currentUser->company->id."/");  
+            $temp->qs_certificate_file = $file;
+			$count_commit ++ ; 
         }else{
         	$temp->qs_certificate_file = "";
         }     	
@@ -451,7 +385,11 @@ class ProfileController extends Controller
 				->with(self::ERROR_NEW_PASS, 2)
 				->withInput($request->all());
 			} 
-			$this->uploadFileProfile($request);
+			
+			$fileService = new FileService();  
+	        $file = $fileService->uploadFile($request->file(self::USER_PICTURE), self::PATH_PROFILE, "/".self::MEDIA_USER.$request->input(self::HIDE_ID_USER)."/");  
+	        $fuserPicture = $file ? $file : '';
+
 			$company_id = $request->input('cmb-perusahaan');
 			$notif_message = "Permohonan Aktivasi Akun Baru";
 			$log_message = "Register";
@@ -478,44 +416,21 @@ class ProfileController extends Controller
 			$company->siup_date = $request->input('comp_siup_date');
 			$company->qs_certificate_number = $request->input('comp_qs_certificate_number');
 
-			if ($request->hasFile(self::COMP_NPWP_FILE)) { 
-				$name_file = 'npwp_'.$request->file(self::COMP_NPWP_FILE)->getClientOriginalName();
-				$path_file = public_path().self::MEDIA_COMPANY.$company->id;
-				if (!file_exists($path_file)) {
-					mkdir($path_file, 0775);
-				}
-				if($request->file(self::COMP_NPWP_FILE)->move($path_file,$name_file)){
-					$company->npwp_file = $name_file;
-				}else{
-					Session::flash(self::ERROR, 'Save NPWP to directory failed');
-					return redirect(self::PAGE_COMPANY_CREATE);
-				}
+			if ($request->hasFile(self::COMP_NPWP_FILE)) {  
+
+				 $fileService = new FileService();  
+	            $file = $fileService->uploadFile($request->file(self::COMP_NPWP_FILE), 'npwp_', "/".self::MEDIA_COMPANY.$company->id."/");  
+	            $company->npwp_file = $file ? $file : '';
 			}        
 			if ($request->hasFile(self::COMP_SIUP_FILE)) { 
-				$name_file = 'siupp_'.$request->file(self::COMP_SIUP_FILE)->getClientOriginalName();
-				$path_file = public_path().self::MEDIA_COMPANY.$company->id;
-				if (!file_exists($path_file)) {
-					mkdir($path_file, 0775);
-				}
-				if($request->file(self::COMP_SIUP_FILE)->move($path_file,$name_file)){
-					$company->siup_file = $name_file;
-				}else{
-					Session::flash(self::ERROR, 'Save SIUP to directory failed');
-					return redirect(self::PAGE_COMPANY_CREATE);
-				}
+				$fileService = new FileService();  
+	            $file = $fileService->uploadFile($request->file(self::COMP_SIUP_FILE), 'siupp_', "/".self::MEDIA_COMPANY.$company->id."/");  
+	            $company->siup_file = $file ? $file : '';
 			}
 			if ($request->hasFile(self::COMP_QS_CERTIFICATE_FILE)) { 
-				$name_file = 'serti_uji_mutu_'.$request->file(self::COMP_QS_CERTIFICATE_FILE)->getClientOriginalName();
-				$path_file = public_path().self::MEDIA_COMPANY.$company->id;
-				if (!file_exists($path_file)) {
-					mkdir($path_file, 0775);
-				}
-				if($request->file(self::COMP_QS_CERTIFICATE_FILE)->move($path_file,$name_file)){
-					$company->qs_certificate_file = $name_file;
-				}else{
-					Session::flash(self::ERROR, 'Save QS certificate to directory failed');
-					return redirect(self::PAGE_COMPANY_CREATE);
-				}
+				$fileService = new FileService();  
+	            $file = $fileService->uploadFile($request->file(self::COMP_QS_CERTIFICATE_FILE), 'serti_uji_mutu_', "/".self::COMPANY_PATH.$company->id."/");  
+	            $company->qs_certificate_file = $file ? $file : '';
 			}
 			
 			$company->qs_certificate_date = $request->input('comp_qs_certificate_date');
@@ -550,7 +465,10 @@ class ProfileController extends Controller
 				}
 				$user_id = Uuid::uuid4(); 
 				
- 				$fuserPicture = $this->uploadFileProfile($request);
+ 				$fileService = new FileService();  
+		        $file = $fileService->uploadFile($request->file(self::USER_PICTURE), self::PATH_PROFILE, "/".self::MEDIA_USER.$request->input(self::HIDE_ID_USER)."/");  
+		        $fuserPicture = $file ? $file : '';
+
 				$company->save();
 
 				$company_id = $company->id;
@@ -656,33 +574,7 @@ class ProfileController extends Controller
     	}else{
     		return response()->json([self::STATUS=>false,self::MESSAGE=>'Email Is Required']);
     	}
-    }
-
-    private function uploadFileProfile($request){ 
-		if ($request->hasFile(self::USER_PICTURE)) {
-			$type_file = $request->file(self::USER_PICTURE)->getMimeType();
-			$data_type_file = explode('/',$type_file);
-			if($data_type_file[0] != self::IMAGE)	{
-				return redirect()->back()
-				->with(self::ERROR_IMG_TYPE, 1)
-				->withInput($request->all()); 
-			}else{ 
-				$file = $request->file(self::USER_PICTURE);
-	            $ext = $file->getClientOriginalExtension(); 
-	            $file_name = self::PATH_PROFILE.$request->file(self::USER_PICTURE)->getClientOriginalName();
-
-	            $image = Image::make($file);   
-	            Storage::disk('minio')->put(self::MEDIA_USER.$request->input(self::HIDE_ID_USER)."/$file_name",(string)$image->encode()); 
-	             
-	            $fuserPicture = $file_name; 
-			} 
-
-		}else{
-			$fuserPicture = $request->input(self::HIDE_PIC_FILE);
-		}
-
-		return $fuserPicture;
-    }
+    } 
 
     private function createUser($request,$user_id,$company_id,$notif_message,$log_message,$fuserPicture,$hashedPassword){
     	DB::table('users')->insert([
@@ -710,7 +602,7 @@ class ProfileController extends Controller
 
 
 	    $logService = new LogService();  
-	    $logService->createLog($log_message,"REGISTER",'',$user_id);
+	    $logService->createLog($log_message,"REGISTER",'',$user_id); 
 
 	    $data= array( 
 	        "from"=>$user_id,
@@ -719,19 +611,14 @@ class ProfileController extends Controller
 	        "url"=>"usereks/".$user_id.self::ADMIN_EDIT,
 	        self::IS_READ=>0,
 	        self::CREATED_AT=>date(self::FORMAT_DATE),
+	        "created_by"=>$user_id,
+	        "updated_by"=>$user_id,
 	        self::UPDATED_AT=>date(self::FORMAT_DATE)
 	    );
-	  	$notifAktivasi = new NotificationTable();
-		$notifAktivasi->id = Uuid::uuid4();
-	  	$notifAktivasi->from = $data['from'];
-	  	$notifAktivasi->to = $data['to'];
-	  	$notifAktivasi->message = $data[self::MESSAGE];
-	  	$notifAktivasi->url = $data['url'];
-	  	$notifAktivasi->is_read = $data[self::IS_READ];
-	  	$notifAktivasi->created_at = $data[self::CREATED_AT];
-	  	$notifAktivasi->updated_at = $data[self::UPDATED_AT];
-	  	$notifAktivasi->save();
-	  	$data['id'] = $notifAktivasi->id; 
-	    event(new Notification($data)); 
+			
+		$notificationService = new NotificationService();
+        $notification_id = $notificationService->make($data);
+		$data['id'] = $notification_id;
+		// event(new Notification($data));
     }
 }

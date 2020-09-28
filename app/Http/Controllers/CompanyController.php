@@ -200,7 +200,7 @@ class CompanyController extends Controller
         } 
         if ($request->hasFile(self::QS_CERTIFICATE_FILE)) {  
             $fileService = new FileService();  
-            $file = $fileService->uploadFile($request->file(self::SIUP_FILE), 'serti_uji_mutu_', "/".self::COMPANY_PATH.$company->id."/");  
+            $file = $fileService->uploadFile($request->file(self::QS_CERTIFICATE_FILE), 'serti_uji_mutu_', "/".self::COMPANY_PATH.$company->id."/");  
             $company->qs_certificate_file = $file ? $file : '';
         }
 
