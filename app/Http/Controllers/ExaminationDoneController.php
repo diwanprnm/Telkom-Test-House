@@ -374,14 +374,7 @@ class ExaminationDoneController extends Controller
         $logService->createLog('download_excel','EXAMINATION DONE');
 
 		$excel = \App\Services\ExcelService::download($examsArray, 'Data Pengujian Lulus');
-		return response($excel['file'], 200, $excel['headers']);	
-
-		// // Generate and return the spreadsheet
-		// Excel::create('Data Pengujian Lulus', function($excel) use ($examsArray) { 
-		// 	$excel->sheet('sheet1', function($sheet) use ($examsArray) {
-		// 		$sheet->fromArray($examsArray, null, 'A1', false, false);
-		// 	});
-		// })->export('xlsx'); 
+		return response($excel['file'], 200, $excel['headers']);	 
 	}
 	
 	public function autocomplete($query) {

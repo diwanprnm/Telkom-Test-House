@@ -47,16 +47,15 @@ class ProductsController extends Controller
     private const LOGIN = 'login';
     private const CREATED_AT = 'created_at';
     private const UPDATED_AT = 'updated_at';
-    private const EMAIL = 'email';
-    private const MEDIA_STEL = '/media/stel/';
+    private const EMAIL = 'email'; 
     private const STELSALES_ID = 'stelsales_id';
-    private const FILEPEMBAYARAN = 'filePembayaran';
-    private const HIDE_FILE_PEMBAYARAN = 'hide_file_pembayaran';
+    private const FILEPEMBAYARAN = 'filePembayaran'; 
     private const ERROR = 'error';
     private const MESSAGE = 'message';
     private const ADMIN = 'admin';
-    private const FORMAT_DATE = 'Y-m-d H:i:s';
-    private const CONTENT_TYPE = 'Content-Type: application/octet-stream';
+    private const FORMAT_DATE = 'Y-m-d H:i:s'; 
+    private const MINIO = 'minio'; 
+    private const STEL_URL = '/stel/'; 
 
 
     public function index(Request $request)
@@ -200,7 +199,7 @@ class ProductsController extends Controller
           
         if ($request->hasFile(self::FILEPEMBAYARAN)) {  
             $fileService = new FileService();  
-            $file = $fileService->uploadFile($request->file(self::FILEPEMBAYARAN), 'stel_payment_', "/stel/");
+            $file = $fileService->uploadFile($request->file(self::FILEPEMBAYARAN), 'stel_payment_', self::STEL_URL);
             $name_file = $file ? $file : '';
             try{
                 $STELSalesAttach = STELSalesAttach::where("stel_sales_id",$request->input(self::STELSALES_ID))->first();
@@ -413,7 +412,7 @@ class ProductsController extends Controller
                 $billing = $this->api_billing($data);
 
                 $STELSales->PO_ID = $PO_ID;
-                $STELSales->BILLING_ID = $billing && $billing->status == true ? $billing->data->_id : null;
+                $STELSales->BILLING_ID = $billing && $billing->status ? $billing->data->_id : null;
             }
 
             try{
@@ -501,7 +500,7 @@ class ProductsController extends Controller
         $stel = STEL::find($id);
 
         if ($stel){ 
-            $file = Storage::disk("minio")->url("/stel/".$stel->attachment);
+            $file = Storage::disk(self::MINIO)->url(self::STEL_URL.$stel->attachment);
                      
             $filename = $stel->attachment;
             $tempImage = tempnam(sys_get_temp_dir(), $filename);
@@ -528,7 +527,7 @@ class ProductsController extends Controller
         $stel = STELSales::where("id",$id)->first();
 
         if ($stel){ 
-            $file = Storage::disk("minio")->url("/stel/".$stel->id."/".$stel->faktur_file);
+            $file = Storage::disk(self::MINIO)->url(self::STEL_URL.$stel->id."/".$stel->faktur_file);
                      
             $filename = $stel->faktur_file;
             $tempImage = tempnam(sys_get_temp_dir(), $filename);
@@ -544,7 +543,7 @@ class ProductsController extends Controller
 
         if ($stel){ 
 
-            $file = Storage::disk("minio")->url("/stel/".$stel->id."/".$stel->id_kuitansi);
+            $file = Storage::disk(self::MINIO)->url(self::STEL_URL.$stel->id."/".$stel->id_kuitansi);
                      
             $filename = $stel->id_kuitansi;
             $tempImage = tempnam(sys_get_temp_dir(), $filename);
@@ -570,7 +569,7 @@ class ProductsController extends Controller
             $stel = $query->get();
             if (count($stel)>0){ 
 
-                $file = Storage::disk("minio")->url("/media/stelAttach/".$id."/".$stel[0]->attachment);
+                $file = Storage::disk(self::MINIO)->url("/media/stelAttach/".$id."/".$stel[0]->attachment);
                      
                 $filename = $stel[0]->attachment;
                 $tempImage = tempnam(sys_get_temp_dir(), $filename);

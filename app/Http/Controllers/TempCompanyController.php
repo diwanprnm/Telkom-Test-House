@@ -30,7 +30,7 @@ class TempCompanyController extends Controller
     private const SORT_BY = 'sort_by';
     private const SORT_TYPE = 'sort_type';
     private const MESSAGE = 'message';
-    private const MEDIA_COMPANY = '/media/company/';
+    private const MEDIA_COMPANY = 'company/';
     private const MEDIA_TEMPCOMPANY = 'tempCompany/';
     private const ERROR = 'error';
     private const PAGE_EDIT = '/edit';

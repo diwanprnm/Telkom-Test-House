@@ -125,17 +125,9 @@ class ExaminationController extends Controller
 	private const SPK_NUMBER_URI = '&spkNumber=';
 	private const SPK_ADD_NOTIF_ID_URI = 'spk/addNotif?id=';
 	private const EXAMINATIONS = 'examinations';
-	private const ADMIN_EXAMINATION = '/admin/examination';
-	private const JSON_HEADER = 'application/json';
-	private const AUTHORIZATION = 'Authorization';
-	private const APP_GATEWAY_TPN_2 = 'app.gateway_tpn_2';
-	private const APP_URI_API_TPN = 'app.url_api_tpn';
-	private const V1_INVOICE = 'v1/invoices/';
+	private const ADMIN_EXAMINATION = '/admin/examination';  
 	private const EXAMINATIONS_ID = 'examinations.id';
-	private const EXAMINATION_ATTACHMENTS = 'examination_attachments';
-	private const HEADER_CONTENT_TYPE = 'Content-Type: application/octet-stream';
-	private const USER_NAME = 'user_name';
-	private const DEV_NAME = 'dev_name';
+	private const EXAMINATION_ATTACHMENTS = 'examination_attachments';  
 	private const EXAM_TYPE = 'exam_type';
 	private const EXAM_TYPE_DESC = 'exam_type_desc';
 	private const COMPLETED = 'Completed';
@@ -152,12 +144,9 @@ class ExaminationController extends Controller
 	private const SN_PERANGKAT = 'sn_perangkat';
 	private const ID_EXAM = 'id_exam';
 	private const J_F_Y = 'j F Y';
-	private const EQUIPMENT = 'equipment';
-	private const DOTS = '...............................';
-	private const MANAGER_UREL = 'manager_urel';
-	private const TTH_02 = '/TTH-02/';
-	private const EXAM_ID = 'exam_id';
-	private const DDS_73 = '/DDS-73/';
+	private const EQUIPMENT = 'equipment'; 
+	private const MANAGER_UREL = 'manager_urel'; 
+	private const EXAM_ID = 'exam_id'; 
 
 	private const TABLE_DEVICE = 'devices';
 	private const EXAM_DEVICES_ID = 'examinations.device_id';
@@ -165,8 +154,7 @@ class ExaminationController extends Controller
 	private const TABLE_COMPANIES = 'companies';
 	private const EXAM_COMPANY_ID = 'examinations.company_id';
 	private const COMPANIES_ID = 'companies.id';
-	private const COMPANY_AUTOSUGGEST = 'companies.name as autosuggest';
-	private const EXAM_CERTIFICATE_STATUS = 'examinations.certificate_status';
+	private const COMPANY_AUTOSUGGEST = 'companies.name as autosuggest'; 
 	private const COMPANIES_NAME = 'companies.name';
 	private const DEVICE_NAME_AUTOSUGGEST = 'devices.name as autosuggest';
 	private const DEVICE_NAME = 'devices.name';
@@ -1100,14 +1088,10 @@ class ExaminationController extends Controller
 
         $search = trim($request->input(self::SEARCH));
 
-        $tempData = $examinationService->requestQuery($request, $search, $type = '', $status = '', $before = null, $after = null);
+        $tempData = $examinationService->requestQuery($request, $search, '', '', null, null);
 
 		$query = $tempData[0];
-		$search = $tempData[1];
-		$type = $tempData[2];
-		$status = $tempData[3];
-		$before = $tempData[4];
-		$after = $tempData[5];
+		 
 
 		$data = $query->orderBy(self::UPDATED_AT, 'desc')->get();
 
@@ -1494,16 +1478,7 @@ class ExaminationController extends Controller
 			];
 		}
 		
-		$logService->createLog("download_excel", $this::EXAMINATION, "");
-
-		// // Generate and return the spreadsheet
-		// Excel::create('Data Pengujian', function($excel) use ($examsArray) {
-		// 	// Build the spreadsheet, passing in the payments array
-		// 	$excel->sheet('sheet1', function($sheet) use ($examsArray) {
-		// 		$sheet->fromArray($examsArray, null, 'A1', false, false);
-		// 	});
-		// })->export('xlsx');
-
+		$logService->createLog("download_excel", $this::EXAMINATION, ""); 
 
 		$excel = \App\Services\ExcelService::download($examsArray, 'Data Pengujian');
         return response($excel['file'], 200, $excel['headers']);
@@ -1651,8 +1626,7 @@ class ExaminationController extends Controller
     }
 	
 	public function destroy($id,$page,$reason = null)
-	{
-		$currentUser = Auth::user();
+	{ 
 		$logs_a_exam = NULL;
 		$logs_a_device = NULL;
 		$logService = new LogService();
@@ -1711,8 +1685,7 @@ class ExaminationController extends Controller
 	
 	public function resetUjiFungsi($id,$reason = null)
 	{
-		$currentUser = Auth::user();
-		$logs_a_exam = NULL;
+		$currentUser = Auth::user(); 
 		$logService = new LogService();
 
         if ($currentUser){
@@ -1779,8 +1752,7 @@ class ExaminationController extends Controller
 				->distinct()
                 ->get();
 		
-		$auto_complete_result = array_merge((array)$data1,(array)$data2);
-        return $auto_complete_result;
+		return array_merge((array)$data1,(array)$data2); 
     }
 	
 	public function generateSPKCodeManual(Request $request) {

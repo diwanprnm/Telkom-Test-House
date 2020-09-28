@@ -224,11 +224,7 @@ class PengujianController extends Controller
 			
 			$query_stels = "SELECT * FROM stels WHERE is_active = 1";
 			$data_stels = DB::select($query_stels);
-				
-			if (count($data_stels) == 0){
-				$message_stels = "Data Not Found";
-			}
-			
+			 
 			$data_kuisioner = QuestionerQuestion::where(self::IS_ACTIVE,1)->orderBy('order_question')->get();
             	
             return view('client.pengujian.index')
@@ -250,7 +246,7 @@ class PengujianController extends Controller
     public function filter(Request $request)
     {
 		$currentUser = Auth::user();
-		$user_id = ''.$currentUser[self::ATTRIBUTES]['id'].'';
+		 
 		$company_id = ''.$currentUser[self::ATTRIBUTES][self::COMPANY_ID].'';
 		$pengujian = $request->input(self::PENGUJIAN);
 		$status = $request->input(self::STATUS);
@@ -872,7 +868,7 @@ class PengujianController extends Controller
 					$dataNotif= array(
 						"from"=>$currentUser->id,
 						"to"=>$admin[self::USER_ID],
-						"is_read"=>0,
+						self::IS_READ=>0,
 						self::MESSAGE=>$currentUser->company->name." Update Tanggal Uji Fungsi",
 						"url"=>self::EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM).self::EDIT_LOC
 					);
@@ -932,7 +928,7 @@ class PengujianController extends Controller
 					$data= array(
 					"from"=>$currentUser->id,
 					"to"=>self::ADMIN, 
-					"is_read"=>0,
+					self::IS_READ=>0,
 					self::MESSAGE=>$currentUser->company->name." Menyetujui Tanggal Uji Fungsi",
 					"url"=>self::EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM2).self::EDIT_LOC
 					);
@@ -986,7 +982,7 @@ class PengujianController extends Controller
 					$dataNotif2 = array(
 						"from"=>$currentUser->id,
 						"to"=>self::ADMIN,
-						"is_read"=>0,
+						self::IS_READ=>0,
 						self::MESSAGE=>$currentUser->company->name." Update Tanggal Uji Fungsi",
 						"url"=>self::EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM2).self::EDIT_LOC
 					);
@@ -1046,7 +1042,7 @@ class PengujianController extends Controller
 				$data= array(
 					"from"=>$currentUser->id,
 					"to"=>self::ADMIN,
-					"is_read"=>0,
+					self::IS_READ=>0,
 					self::MESSAGE=>$currentUser->company->name." Menyetujui Tanggal Uji Fungsi",
 					"url"=>self::EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM3).self::EDIT_LOC 
 				);
