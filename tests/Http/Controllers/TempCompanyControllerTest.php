@@ -18,14 +18,14 @@ class TempCompanyControllerTest extends TestCase
        $this->assertEquals(200, $response->status());
 	} 
 
-	public function test__visit_tempcompany_with_search()
-	{ 
-	   $user = User::find(1);
-	   $tempCompany = factory(App\TempCompany::class)->create(); 
-	   factory(App\User::class)->create(["company_id"=>$tempCompany->company_id]);
-	   $response =  $this->actingAs($user)->call('GET', 'admin/tempcompany?search=cari');  
-       $this->assertEquals(200, $response->status());
-	}
+	// public function test__visit_tempcompany_with_search()
+	// { 
+	//    $user = User::find(1);
+	//    $tempCompany = factory(App\TempCompany::class)->create(); 
+	//    factory(App\User::class)->create(["company_id"=>$tempCompany->company_id]);
+	//    $response =  $this->actingAs($user)->call('GET', 'admin/tempcompany?search=cari');  
+ //       $this->assertEquals(200, $response->status());
+	// }
     public function test_visit_edit_tempcompany()
 	{ 
  
@@ -50,14 +50,29 @@ class TempCompanyControllerTest extends TestCase
 		$response =  $this->actingAs($user)->call('POST', 'admin/tempcompany',[]);    
         $this->assertEquals(200, $response->status());
 	}
- //    public function test_update_tempcompany()
-	// { 
+    public function test_update_tempcompany()
+	{ 
  
-	//     $user = User::find(1);  
-	//     $tempCompany = factory(App\TempCompany::class)->create();
-	// 	$response =  $this->actingAs($user)->call('PUT', 'admin/tempcompany/'.$tempCompany->id,[]);    
- //        $this->assertEquals(302, $response->status());  
-	// }
+	    $user = User::find(1);  
+	    $tempCompany = factory(App\TempCompany::class)->create();
+		$response =  $this->actingAs($user)->call('PUT', 'admin/tempcompany/'.$tempCompany->id,[
+			'is_commited'=>1,
+			'name'=>str_random(10),
+			'address'=>str_random(10),
+			'plg_id'=>str_random(10),
+			'nib'=>str_random(10),
+			'city'=>str_random(10),
+			'email'=>str_random(10),
+			'postal_code'=>str_random(10),
+			'phone_number'=>str_random(10),
+			'fax'=>str_random(10),
+			'npwp_number'=>str_random(10),
+			'siup_number'=>str_random(10),
+			'qs_certificate_number'=>str_random(10),
+			'siup_date'=>'2020-12-12',
+		]);    
+        $this->assertEquals(302, $response->status());  
+	}
 
 
     public function test_autocomplete_tempcompany()
@@ -68,12 +83,60 @@ class TempCompanyControllerTest extends TestCase
     }
 
 
- //    public function test_delete_tempcompany()
-	// { 
-	// 	$user = User::find(1); 
-	// 	$tempCompany = factory(App\TempCompany::class)->create();
-	// 	$response =  $this->actingAs($user)->call('DELETE', 'admin/tempcompany/'.$tempCompany->id);  
+    public function test_delete_tempcompany()
+	{ 
+		$user = User::find(1); 
+		$tempCompany = factory(App\TempCompany::class)->create();
+		$response =  $this->actingAs($user)->call('DELETE', 'admin/tempcompany/'.$tempCompany->id);  
 
- //        $this->assertEquals(302, $response->status()); 
-	// } 
+        $this->assertEquals(302, $response->status()); 
+	} 
+
+	public function test_view_media_npwp()
+	{ 
+	   
+	   $user = User::find(1);
+       $company = factory(App\TempCompany::class)->create();
+	   $id = $company->id;
+	   $name = "npwp"; 
+	    $file = \Storage::disk('local_public')->get("images/testing.jpg"); 
+        \Storage::disk('minio')->put("tempCompany/$company->id/$company->npwp_file", $file);
+	    $response =  $this->actingAs($user)->call('GET', 'admin/tempcompany/media/'.$id.'/'.$name);  
+	  	 
+        $this->assertTrue($response->headers->get('content-type') == 'image/jpeg');
+
+        \Storage::disk('minio')->delete("tempCompany/$company->id/$company->npwp_file");
+	}
+	public function test_view_media_siup()
+	{ 
+	   
+	   $user = User::find(1);
+       $company = factory(App\TempCompany::class)->create();
+	   $id = $company->id;
+	   $name = "siup";
+	    
+	    $file = \Storage::disk('local_public')->get("images/testing.jpg"); 
+        \Storage::disk('minio')->put("tempCompany/$company->id/$company->siup_file", $file);
+	    $response =  $this->actingAs($user)->call('GET', 'admin/tempcompany/media/'.$id.'/'.$name);  
+	  
+        $this->assertTrue($response->headers->get('content-type') == 'image/jpeg');
+
+        \Storage::disk('minio')->delete("tempCompany/$company->id/$company->siup_file");
+	}
+	public function test_view_media_qs()
+	{ 
+	   
+	   $user = User::find(1);
+       $company = factory(App\TempCompany::class)->create();
+	   $id = $company->id;
+	   $name = "qs";
+	    
+	    $file = \Storage::disk('local_public')->get("images/testing.jpg"); 
+        \Storage::disk('minio')->put("tempCompany/$company->id/$company->qs_certificate_file", $file);
+	    $response =  $this->actingAs($user)->call('GET', 'admin/tempcompany/media/'.$id.'/'.$name);  
+	  
+        $this->assertTrue($response->headers->get('content-type') == 'image/jpeg');
+
+        \Storage::disk('minio')->delete("tempCompany/$company->id/$company->qs_certificate_file");
+	}
 }

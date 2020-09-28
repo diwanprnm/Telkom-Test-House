@@ -14,7 +14,7 @@ use Auth;
 use Session;
 use File;
 use Response;
-
+use Storage;
 // UUID
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -31,11 +31,13 @@ class TempCompanyController extends Controller
     private const SORT_TYPE = 'sort_type';
     private const MESSAGE = 'message';
     private const MEDIA_COMPANY = '/media/company/';
-    private const MEDIA_TEMPCOMPANY = '/media/tempCompany/';
+    private const MEDIA_TEMPCOMPANY = 'tempCompany/';
     private const ERROR = 'error';
     private const PAGE_EDIT = '/edit';
     private const PAGE_TEMPCOMPANY = '/admin/tempcompany';
     private const CONTENT_TYPE = 'Content-Type: application/octet-stream';
+
+    private const MINIO = 'minio';
     /**
      * Create a new controller instance.
      *
@@ -321,36 +323,42 @@ class TempCompanyController extends Controller
         $company = TempCompany::find($id);
 
         if ($company){
-            switch ($name) {
-                case 'npwp':
-                    $file = public_path().self::MEDIA_TEMPCOMPANY.$company->company_id.'/'.$company->id.'/'.$company->npwp_file;
-                    $headers = array(
-                        self::CONTENT_TYPE,
-                    );
+            switch ($name) { 
+                case 'npwp':  
+                    $file = Storage::disk(self::MINIO)->url(self::MEDIA_TEMPCOMPANY.$id."/".$company->npwp_file);
+                     
+                    $filename = $company->npwp_file;
+                    $tempImage = tempnam(sys_get_temp_dir(), $filename);
+                    copy($file, $tempImage);
 
-                    return Response::file($file, $headers);
+                    $response =  response()->download($tempImage, $filename);
                     break;
 
-                case 'siup':
-                    $file = public_path().self::MEDIA_TEMPCOMPANY.$company->company_id.'/'.$company->id.'/'.$company->siup_file;
-                    $headers = array(
-                      self::CONTENT_TYPE,
-                    );
+                case 'siup':  
+                    $file = Storage::disk(self::MINIO)->url(self::MEDIA_TEMPCOMPANY.$id."/".$company->siup_file);
+                     
+                    $filename = $company->siup_file;
+                    $tempImage = tempnam(sys_get_temp_dir(), $filename);
+                    copy($file, $tempImage);
 
-                    return Response::file($file, $headers);
+                    $response =  response()->download($tempImage, $filename);
                     break;
 
-                case 'qs':
-                    $file = public_path().self::MEDIA_TEMPCOMPANY.$company->company_id.'/'.$company->id.'/'.$company->qs_certificate_file;
-                    $headers = array(
-                      self::CONTENT_TYPE,
-                    );
+                case 'qs': 
 
-                    return Response::file($file, $headers);
+                    $file = Storage::disk(self::MINIO)->url(self::MEDIA_TEMPCOMPANY.$id."/".$company->qs_certificate_file);
+                     
+                    $filename = $company->qs_certificate_file;
+                    $tempImage = tempnam(sys_get_temp_dir(), $filename);
+                    copy($file, $tempImage);
+
+                    $response =  response()->download($tempImage, $filename);
                     break;
                  default:
                     return false;
             }
+
+            return $response;
         }
     }
 	

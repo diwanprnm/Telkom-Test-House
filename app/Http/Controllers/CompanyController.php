@@ -381,7 +381,7 @@ class CompanyController extends Controller
                 case 'siup':  
                     $file = Storage::disk(self::MINIO)->url(self::COMPANY_PATH.$id."/".$company->siup_file);
                      
-                    $filename = $company->npwp_file;
+                    $filename = $company->siup_file;
                     $tempImage = tempnam(sys_get_temp_dir(), $filename);
                     copy($file, $tempImage);
 
