@@ -101,64 +101,64 @@ class ExaminationControllerTest extends TestCase
             Storage::disk('minio')->delete($path);
         }
     }
-    // public function testDownloadMediaDevices()
-    // {
-    //     $device = factory(App\Device::class)->create();
-    //     $path = "device/".$device->id."/".$device->certificate;
-    //     $isFileExist = Storage::disk('minio')->exists($path);
+    public function testDownloadMediaDevices()
+    {
+        $device = factory(App\Device::class)->create();
+        $path = "device/".$device->id."/".$device->certificate;
+        $isFileExist = Storage::disk('minio')->exists($path);
 
-    //     if(!$isFileExist){
-    //         $file = file_get_contents('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
-    //         Storage::disk('minio')->put($path, $file);
-    //     }
+        if(!$isFileExist){
+            $file = file_get_contents('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
+            Storage::disk('minio')->put($path, $file);
+        }
 
-    //     $response = $this->actingAs(User::find(1))->call('GET','admin/examination/media/download/'.$device->id."/certificate");
-    //     $this->assertResponseStatus(200);
-    //     $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
+        $response = $this->actingAs(User::find(1))->call('GET','admin/examination/media/download/'.$device->id."/certificate");
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
 
-    //     if(!$isFileExist){
-    //         Storage::disk('minio')->delete($path);
-    //     }
-    // }
-    // public function testDownloadMediaExam()
-    // {
-    //     $exam = factory(App\Examination::class)->create();
-    //     $examAttach = factory(App\ExaminationAttach::class)->create(['examination_id'=>$exam->id,'name'=>'exam']);
-    //     $path = "examination/".$exam->id."/".$examAttach->attachment;
-    //     $isFileExist = Storage::disk('minio')->exists($path);
+        if(!$isFileExist){
+            Storage::disk('minio')->delete($path);
+        }
+    }
+    public function testDownloadMediaExam()
+    {
+        $exam = factory(App\Examination::class)->create();
+        $examAttach = factory(App\ExaminationAttach::class)->create(['examination_id'=>$exam->id,'name'=>'exam']);
+        $path = "examination/".$exam->id."/".$examAttach->attachment;
+        $isFileExist = Storage::disk('minio')->exists($path);
 
-    //     if(!$isFileExist){
-    //         $file = file_get_contents('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
-    //         Storage::disk('minio')->put($path, $file);
-    //     }
+        if(!$isFileExist){
+            $file = file_get_contents('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
+            Storage::disk('minio')->put($path, $file);
+        }
 
-    //     $response = $this->actingAs(User::find(1))->call('GET','admin/examination/media/download/'.$exam->id."/exam");
-    //     $this->assertResponseStatus(200);
-    //     $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
+        $response = $this->actingAs(User::find(1))->call('GET','admin/examination/media/download/'.$exam->id."/exam");
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
 
-    //     if(!$isFileExist){
-    //         Storage::disk('minio')->delete($path);
-    //     }
-    // }
-    // public function testDownloadRefUjiFile()
-    // {
-    //     $examAttach = factory(App\ExaminationAttach::class)->create();
-    //     $path = "examination/".$examAttach->examination_id."/".$examAttach->attachment;
-    //     $isFileExist = Storage::disk('minio')->exists($path);
+        if(!$isFileExist){
+            Storage::disk('minio')->delete($path);
+        }
+    }
+    public function testDownloadRefUjiFile()
+    {
+        $examAttach = factory(App\ExaminationAttach::class)->create();
+        $path = "examination/".$examAttach->examination_id."/".$examAttach->attachment;
+        $isFileExist = Storage::disk('minio')->exists($path);
 
-    //     if(!$isFileExist){
-    //         $file = file_get_contents('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
-    //         Storage::disk('minio')->put($path, $file);
-    //     }
+        if(!$isFileExist){
+            $file = file_get_contents('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
+            Storage::disk('minio')->put($path, $file);
+        }
 
-    //     $response = $this->actingAs(User::find(1))->call('GET','admin/examination/media/download/'.$examAttach->id); 
-    //     $this->assertResponseStatus(200);
-    //     $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
+        $response = $this->actingAs(User::find(1))->call('GET','admin/examination/media/download/'.$examAttach->id); 
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
 
-    //     if(!$isFileExist){
-    //         Storage::disk('minio')->delete($path);
-    //     }
-    // }
+        if(!$isFileExist){
+            Storage::disk('minio')->delete($path);
+        }
+    }
 
 
     // public function testExcelWithFilter()
