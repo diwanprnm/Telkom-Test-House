@@ -166,7 +166,7 @@ class ExaminationControllerTest extends TestCase
         //create response
         $response = $this->actingAs(User::find('1'))->call('get',"/examination/excel");
         //assert response
-        $this->assertEquals(200, $response->status());
+        $this->assertResponseStatus(200);
         $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
         $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
         $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Pengujian.xlsx"');
