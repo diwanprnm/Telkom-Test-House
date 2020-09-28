@@ -46,6 +46,7 @@ class STELController extends Controller
     private const ERROR = 'error';
     private const ADMIN_CREATE = '/admin/stel/create';
     private const ADMIN_STEL = '/admin/stel';
+    private const STEL_URL = '/stel/';
 
     private const NAME_AUTOSUGGEST = 'name as autosuggest';
     /**
@@ -184,7 +185,7 @@ class STELController extends Controller
 
     		$fileService = new FileService();
             if ($request->hasFile(self::ATTACHMENT)) { 
-                $file = $fileService->uploadFile($request->file(self::ATTACHMENT), 'stel_', '/stel/');
+                $file = $fileService->uploadFile($request->file(self::ATTACHMENT), 'stel_', self::STEL_URL);
                 $stel->attachment = $file ? $file : '';
             }else{
                 $stel->attachment = "";
@@ -280,7 +281,7 @@ class STELController extends Controller
 
             $fileService = new FileService();
             if ($request->hasFile(self::ATTACHMENT)) { 
-            $file = $fileService->uploadFile($request->file(self::ATTACHMENT), 'stel_', '/stel/');
+            $file = $fileService->uploadFile($request->file(self::ATTACHMENT), 'stel_', self::STEL_URL);
             $stel->attachment = $file ? $file : '';
             }else{
                 $stel->attachment = "";
@@ -340,7 +341,7 @@ class STELController extends Controller
 
         if ($stel){ 
 
-            $file = Storage::disk("minio")->url("/stel/".$stel->attachment);
+            $file = Storage::disk("minio")->url(self::STEL_URL.$stel->attachment);
                      
             $filename = $stel->attachment;
             $tempImage = tempnam(sys_get_temp_dir(), $filename);

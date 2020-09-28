@@ -52,7 +52,7 @@ class UserinController extends Controller
     private const USER_IMG_FAILED = 'Save Profile Picture to directory failed';
     private const PAGE_USERIN_CREATE = '/admin/userin/create';
     private const USER_MSG_FAILED = 'Save Failed';
-    private const NEW_PASS_TEXT = 'new_password';
+    private const PASS_TEXT = 'password';
     private const PRICE = 'price';
     private const USER_ID = 'user_id';
     private const PAGE_EDIT = '/edit';
@@ -189,7 +189,7 @@ class UserinController extends Controller
         $user->company_id = $request->input(self::COMPANY_ID);
         $user->name = $request->input('name');
         $user->email = $request->input(self::EMAIL);
-        $user->password = bcrypt($request->input('password'));
+        $user->password = bcrypt($request->input(self::PASS_TEXT));
         $user->is_active = $request->input(self::IS_ACTIVE);
         $user->address = $request->input(self::ADDRESS);
         $user->phone_number = $request->input(self::PHONE_NUMBER);
@@ -344,8 +344,8 @@ class UserinController extends Controller
         if ($request->has(self::EMAIL)){
             $userIn->email = $request->input(self::EMAIL);
         }
-        if ($request->has('password')){
-            $userIn->password = bcrypt($request->input('password'));
+        if ($request->has(self::PASS_TEXT)){
+            $userIn->password = bcrypt($request->input(self::PASS_TEXT));
         }
         if ($request->has(self::PRICE)){
             $userIn->price = $request->input(self::PRICE);
@@ -483,8 +483,7 @@ class UserinController extends Controller
      private function uploadPictureUserin($request, $user){
 
        if ($request->hasFile(self::PICTURE)) {  
-            $file = $request->file(self::PICTURE);
-            $ext = $file->getClientOriginalExtension(); 
+            $file = $request->file(self::PICTURE); 
             $file_name = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
 
             $image = Image::make($file);   

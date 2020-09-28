@@ -50,8 +50,7 @@ class CompanyController extends Controller
     private const PHONE_NUMBER = 'phone_number';
     private const NPWP_NUMBER = 'npwp_number';
     private const SIUP_NUMBER = 'siup_number';
-    private const ERROR = 'error';
-    private const FORMAT_NOT_AVAILABLE = 'Format Not Available';
+    private const ERROR = 'error'; 
     private const ADMIN_CREATE = '/admin/company/create';
     private const ADMIN_COMPANY = '/admin/company';
     private const SIUP_FILE = 'siup_file';

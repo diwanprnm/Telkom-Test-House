@@ -46,9 +46,7 @@ class ProfileController extends Controller
     private const ERROR_NEW_PASS = 'error_newpass';
     private const MEDIA_USER = '/user/';
     private const HIDE_ID_USER = 'hide_id_user';
-    private const USER_PICTURE = 'userPicture';
-    private const IMAGE = 'image';
-    private const ERROR_IMG_TYPE = 'error_img_type';
+    private const USER_PICTURE = 'userPicture'; 
     private const PATH_PROFILE = 'profile_'; 
     private const EMAIL = 'email';
     private const ADDRESS = 'address';
@@ -81,12 +79,8 @@ class ProfileController extends Controller
     private const EMAIL_STEL= 'urelddstelkom@gmail.com';
     private const STATUS = 'status';
     private const COMPANY_ID = 'company_id';
-    private const ATTRIBUTES = 'attributes';
-    private const HIDE_PIC_FILE = 'hide_pic_file';
-    private const IS_READ = 'is_read'; 
-    private const FORMAT_NOT_AVAILABLE = 'Format Not Available';
-
-    private const MINIO = 'minio';
+    private const ATTRIBUTES = 'attributes'; 
+    private const IS_READ = 'is_read';   
     /**
      * Display a listing of the resource.
      *
