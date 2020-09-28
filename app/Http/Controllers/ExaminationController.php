@@ -1088,6 +1088,7 @@ class ExaminationController extends Controller
 
 	public function excel(Request $request) 
 	{
+
 		// Execute the query used to retrieve the data. In this example
 		// we're joining hypothetical users and payments tables, retrieving
 		// the payments table's primary key, the user's first and last name, 
@@ -1495,13 +1496,17 @@ class ExaminationController extends Controller
 		
 		$logService->createLog("download_excel", $this::EXAMINATION, "");
 
-		// Generate and return the spreadsheet
-		Excel::create('Data Pengujian', function($excel) use ($examsArray) {
-			// Build the spreadsheet, passing in the payments array
-			$excel->sheet('sheet1', function($sheet) use ($examsArray) {
-				$sheet->fromArray($examsArray, null, 'A1', false, false);
-			});
-		})->export('xlsx');
+		// // Generate and return the spreadsheet
+		// Excel::create('Data Pengujian', function($excel) use ($examsArray) {
+		// 	// Build the spreadsheet, passing in the payments array
+		// 	$excel->sheet('sheet1', function($sheet) use ($examsArray) {
+		// 		$sheet->fromArray($examsArray, null, 'A1', false, false);
+		// 	});
+		// })->export('xlsx');
+
+
+		$excel = \App\Services\ExcelService::download($examsArray, 'Data Pengujian');
+        return response($excel['file'], 200, $excel['headers']);
 	}
 	
 	public function revisi($id)
