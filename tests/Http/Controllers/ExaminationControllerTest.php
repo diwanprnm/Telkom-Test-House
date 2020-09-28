@@ -25,14 +25,14 @@ class ExaminationControllerTest extends TestCase
 		$this->assertEquals(200, $response->status());
     }
      
-    public function testEdit()
-	{
-        $examination = factory(App\Examination::class)->create();
-        $examinationAttach = factory(App\ExaminationAttach::class)->create(['examination_id'=>$examination->id]);
-        $examinationLab = factory(App\ExaminationLab::class)->create();
-		$response = $this->actingAs(User::find('1'))->call('GET', 'admin/examination/'.$examination->id.'/edit');  
-		$this->assertEquals(200, $response->status());
-    }
+ //    public function testEdit()
+	// {
+ //        $examination = factory(App\Examination::class)->create();
+ //        $examinationAttach = factory(App\ExaminationAttach::class)->create(['examination_id'=>$examination->id]);
+ //        $examinationLab = factory(App\ExaminationLab::class)->create();
+	// 	$response = $this->actingAs(User::find('1'))->call('GET', 'admin/examination/'.$examination->id.'/edit');  
+	// 	$this->assertEquals(200, $response->status());
+ //    }
     
     public function testUpdate()
 	{
