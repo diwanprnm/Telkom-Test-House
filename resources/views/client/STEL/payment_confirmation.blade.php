@@ -3,27 +3,12 @@
     ============================================= -->
     <title>{{ trans('translate.stel_payment_confirmation') }} - Telkom DDB</title>
 @section('content') 
- <!-- Page Title
-		============================================= -->
-		<section id="page-title">
-
-			<div class="container clearfix">
-				<h1>{{ trans('translate.stel_payment_confirmation') }}</h1>
-				
-				<ol class="breadcrumb">
-					<li><a href="#">STEL</a></li>
-					<li><a href="{{url('/purchase_history')}}">{{ trans('translate.payment_status') }}</a></li>
-				<li class="active">{{ trans('translate.stel_payment_confirmation') }}</li>
-				</ol>
-			</div>
-
-		</section><!-- #page-title end -->
-
 		<!-- Content
 		============================================= -->
 		<section id="content"> 
 			<div class="container clearfix"> 
-				<div class="row">    
+				<div class="row">
+					<br>    
 					<p> No. Invoice	: {{ $data[0]->invoice }} <a href="javascript:void(0)" class="collapsible" style="text-decoration: underline !important;">{{ trans('translate.examination_detail') }}</a></p> 
 					<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%" style="display: none;">
 						<thead>
