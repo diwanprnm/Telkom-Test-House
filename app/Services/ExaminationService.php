@@ -421,22 +421,22 @@ class ExaminationService
      */
     public function sendEmailNotification($user, $dev_name, $exam_type, $exam_type_desc, $message, $subject){
         $data = User::findOrFail($user);
-		
-        Mail::send($message, array(
+		return true;
+        $send_email = Mail::send($message, array(
 			self::USER_NAME => $data->name,
 			self::DEV_NAME => $dev_name,
 			self::EXAM_TYPE => $exam_type,
 			self::EXAM_TYPE_DESC => $exam_type_desc
 			), function ($m) use ($data,$subject) {
             $m->to($data->email)->subject($subject);
-        });
+        }); 
 
         return true;
     }
 	
 	public function sendEmailNotification_wAttach($user, $dev_name, $exam_type, $exam_type_desc, $message, $subject, $attach){
         $data = User::findOrFail($user);
-		
+		return true;
         Mail::send($message, array(
 			self::USER_NAME => $data->name,
 			self::DEV_NAME => $dev_name,
@@ -472,7 +472,7 @@ class ExaminationService
 		$subject
 	){
         $data = User::findOrFail($user);
-		
+		return true;
         Mail::send($message, array(
 			self::USER_NAME => $data->name,
 			self::EXAM_TYPE => $exam_type,
@@ -500,7 +500,7 @@ class ExaminationService
 	
 	public function sendEmailFailure($user, $dev_name, $exam_type, $exam_type_desc, $message, $subject, $tahap, $keterangan){
         $data = User::findOrFail($user);
-		
+		return true;
         Mail::send($message, array(
 			self::USER_NAME => $data->name,
 			self::DEV_NAME => $dev_name,
