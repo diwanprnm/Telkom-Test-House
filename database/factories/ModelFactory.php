@@ -208,6 +208,19 @@ $factory->define(App\ExaminationAttach::class, function (Faker\Generator $faker)
         'tgl'=> Carbon\Carbon::now(),
     ];
 });
+$factory->define(App\ExaminationHistory::class, function (Faker\Generator $faker) {
+    return [ 
+        'examination_id' => function () {
+            return factory(App\Examination::class)->create()->id;
+        },
+        'date_action' => $faker->word,
+        'tahap' =>1,
+        'status' =>1,
+        'keterangan' =>1,
+        'created_by' => '1', 
+        'created_at'=> Carbon\Carbon::now()
+    ];
+});
 
 $factory->define(App\Questioner::class, function (Faker\Generator $faker) {
     return [

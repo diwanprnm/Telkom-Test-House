@@ -319,8 +319,7 @@ class PengujianController extends Controller
 		}
 		
 		return response()
-			->view('client.pengujian.filter', $data, 200)
-			->with(self::USER_ID, $user_id)
+			->view('client.pengujian.filter', $data, 200) 
             ->header(self::CONTENT_TYPE, 'text/html');
     }
 	
@@ -932,7 +931,8 @@ class PengujianController extends Controller
 				/* push notif*/
 					$data= array(
 					"from"=>$currentUser->id,
-					"to"=>self::ADMIN,
+					"to"=>self::ADMIN, 
+					"is_read"=>0,
 					self::MESSAGE=>$currentUser->company->name." Menyetujui Tanggal Uji Fungsi",
 					"url"=>self::EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM2).self::EDIT_LOC
 					);
@@ -1046,6 +1046,7 @@ class PengujianController extends Controller
 				$data= array(
 					"from"=>$currentUser->id,
 					"to"=>self::ADMIN,
+					"is_read"=>0,
 					self::MESSAGE=>$currentUser->company->name." Menyetujui Tanggal Uji Fungsi",
 					"url"=>self::EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM3).self::EDIT_LOC 
 				);
