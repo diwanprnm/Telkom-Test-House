@@ -147,7 +147,7 @@ class NotificationController extends Controller
     }
 	
 	public function createTree(&$list, $parent){
-
+        $tree = [];
         foreach ($parent as $l){
             if(isset($list[$l['id']])){
                 $l['children'] = $this->createTree($list, $list[$l['id']]);
