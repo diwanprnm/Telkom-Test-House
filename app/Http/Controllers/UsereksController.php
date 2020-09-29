@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-
+use Illuminate\Support\Facades\DB;
 use App\Company;
 use App\Role;
 use App\User;
@@ -77,40 +77,40 @@ class UsereksController extends Controller
             $status = -1;
 
             $companies = Company::where('id','!=', 1)->get();
-            $roles = Role::where('id', 2);
+            $roles = Role::where('id', 2); 
             
-            $query = User::whereNotNull('created_at')
-                    ->with('role')
-                    ->with(self::COMPANY)
-					->where(self::ROLE_ID, '=', '2')
-					->where('id', '<>', '1')
-					->where('is_deleted', '=', '0');
-            
+            $query = User::select(DB::raw('users.*,companies.name as company_name,roles.name as role_name'))
+                    ->where(self::ROLE_ID, '=', '2')
+                    ->where('users.id', '<>', '1')
+                    ->where('users.is_deleted', '=', '0')
+                    ->join("roles", "roles.id", '=', "users.role_id")
+                    ->join("companies", "companies.id", '=', "users.company_id");
+
             if ($search != null){
-                $query->where('name','like','%'.$search.'%');
+                $query->where('users.name','like','%'.$search.'%');
 
                 $logService = new LogService();
                 $logService->createLog('Search User', self::USER_EKSTERNAL, json_encode(array("search"=>$search)));     
             }
+
+
 					
             if ($request->has(self::COMPANY)){
                 $filterCompanyUser = $request->get(self::COMPANY);
                 if($request->input(self::COMPANY) != 'all'){
-                    $query->whereHas(self::COMPANY, function ($q) use ($request){
-                        return $q->where('name', 'like', '%'.$request->get(self::COMPANY).'%');
-                    });
+                    $query->where('companies.name',$filterCompanyUser);
                 }
             }
 
             if ($request->has(self::IS_ACTIVE)){
                 $status = $request->get(self::IS_ACTIVE);
                 if ($request->get(self::IS_ACTIVE) > -1){
-                    $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
+                    $query->where("users.is_active", $request->get(self::IS_ACTIVE));
                 }
             }
 
             $usersEks = $query->orderBy('name')->paginate($paginate);
-            
+
             if (count($usersEks) == 0){
                 $message = 'Data not found';
             }
@@ -157,9 +157,11 @@ class UsereksController extends Controller
         $usersEks->phone_number = $request->input(self::PHONE_NUMBER);
         $usersEks->fax = $request->input('fax');
 
-        // $fileService = new FileService();
-        // $fileService->uploadFile($request->file(self::PICTURE), '', self::MEDIA_USER.$usersEks->id);
+        if ($request->hasFile(self::PICTURE)) { 
+            $fileService = new FileService();
+            $fileService->uploadFile($request->file(self::PICTURE), '', self::MEDIA_USER.$usersEks->id);
 
+        }
         $usersEks->created_by = $currentUser->id;
         $usersEks->updated_by = $currentUser->id;
 
@@ -240,10 +242,7 @@ class UsereksController extends Controller
         }
         if ($request->has(self::PASS_TEXT)){
             $usersEks->password = bcrypt($request->input(self::PASS_TEXT));
-        }
-        if ($request->has(self::PRICE)){
-            $usersEks->price = $request->input(self::PRICE);
-        }
+        } 
         if ($request->has(self::IS_ACTIVE)){
             $usersEks->is_active = $request->input(self::IS_ACTIVE);
         }
@@ -257,17 +256,17 @@ class UsereksController extends Controller
         if ($request->has('fax')){
             $usersEks->fax = $request->input('fax');
         }
-
-        // $fileService = new FileService();
-        // $fileService->uploadFile($request->file(self::PICTURE), '', self::MEDIA_USER.$usersEks->id);
-
+        if ($request->hasFile(self::PICTURE)) { 
+            $fileService = new FileService();
+            $fileService->uploadFile($request->file(self::PICTURE), '', self::MEDIA_USER.$usersEks->id);
+        }
         $usersEks->updated_by = $currentUser->id;
 
         try{
             $usersEks->save(); 
 
             $logService = new LogService();
-            $logService->createLog('Update User', self::USER_EKSTERNAL, $oldData); 
+            // $logService->createLog('Update User', self::USER_EKSTERNAL, $oldData); 
 
             Session::flash(self::MESSAGE, 'User successfully updated');
             return redirect(self::ADMIN_USEREKS);
@@ -286,11 +285,14 @@ class UsereksController extends Controller
     public function destroy($id)
     {
 		$usersEks = User::find($id);
-
+         $oldData = $usersEks;
         if ($usersEks){
             try{
                 $usersEks->delete();
-                
+
+                $logService = new LogService();
+                // $logService->createLog("Delete User",self::USER_EKSTERNAL,$oldData);
+
                 Session::flash(self::MESSAGE, 'User successfully deleted');
                 return redirect(self::ADMIN_USEREKS);
             }catch (Exception $e){
@@ -313,7 +315,7 @@ class UsereksController extends Controller
                 $usersEks->save();
 
                 $logService = new LogService();
-                $logService->createLog( "Delete User","USER EKSTERNAL",$oldData);
+                // $logService->createLog("Delete User",self::USER_EKSTERNAL,$oldData);
 
                 Session::flash(self::MESSAGE, 'User successfully deleted');
                 return redirect(self::ADMIN_USEREKS);

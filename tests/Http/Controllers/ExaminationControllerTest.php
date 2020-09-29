@@ -10,6 +10,7 @@ use App\Examination;
 use Illuminate\Support\Facades\Storage;
 use App\Events\Notification;
 
+use App\Services\ExaminationService;
 class ExaminationControllerTest extends TestCase
 {
     public function testIndex()
@@ -269,12 +270,45 @@ class ExaminationControllerTest extends TestCase
  
         $this->assertEquals(200, $response->status());
     }
-    // public function test_generateSPB()
-    // {
-    //     $examination = factory(App\Examination::class)->create(); 
-    //     $response = $this->actingAs(User::find('1'))->call('POST', 'admin/examination/generateSPB');  
-    //     $this->assertEquals(200, $response->status());
-    // }
+     public function test_generateSPB_get()
+    {
+        $device = factory(App\Device::class)->create(); 
+        $examination = factory(App\Examination::class)->create(['device_id'=>$device->id,'examination_type_id'=>2]); 
+        $examinationCharges = factory(App\NewExaminationCharge::class)->create(); 
+ 
+        session(['key_exam_id_for_generate_spb' => $examination->id]);
+        session(['key_spb_number_for_generate_spb' => '']);
+        session(['key_spb_date_for_generate_spb' => '2020-12-12']);
+        $response = $this->actingAs(User::find('1'))->call('GET', 'admin/examination/generateSPB');  
+        $this->assertEquals(200, $response->status());
+    }
+    public function test_generateSPB()
+    {
+        $examinationService = new ExaminationService();
+        $spb_number = $examinationService->generateSPBNumber();
+        $examination = factory(App\Examination::class)->create(['spb_number'=>$spb_number]); 
+        $response = $this->actingAs(User::find('1'))->call('POST', 'admin/examination/generateSPB',
+            [
+                'spb_number'=>$spb_number,
+                'exam_id'=>$examination->id,
+                'spb_date'=>'2020-12-12',
+                'arr_biaya[]'=>array(1200,1200),
+            ]);  
+        $this->assertEquals(200, $response->status());
+    }
+    public function test_generateSPB_noexist()
+    { 
+        $spb_number = 0;
+        $examination = factory(App\Examination::class)->create(['spb_number'=>$spb_number]); 
+        $response = $this->actingAs(User::find('1'))->call('POST', 'admin/examination/generateSPB',
+            [
+                'spb_number'=>$spb_number,
+                'exam_id'=>$examination->id,
+                'spb_date'=>'2020-12-12',
+                'arr_biaya[]'=>array(1200,1200),
+            ]);  
+        $this->assertEquals(200, $response->status());
+    }
 
     public function test_generateSPBParam(){
         $examination = factory(App\Examination::class)->create(); 

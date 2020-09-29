@@ -197,4 +197,65 @@ class PengujianControllerTest extends TestCase
         //Response status ok
         $this->assertResponseStatus(200); 
     }
+
+     public function test_downloadSPB()
+    {
+        $exam = factory(App\Examination::class)->create();
+        $examAttach = factory(App\ExaminationAttach::class)->create(['name'=>'spb','examination_id'=>$exam->id]);
+        $path = "examination/".$exam->id."/".$examAttach->attachment;
+        $isFileExist = Storage::disk('minio')->exists($path);
+
+        if(!$isFileExist){
+            $file = file_get_contents('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
+            Storage::disk('minio')->put($path, $file);
+        }
+        $user = factory(App\User::class)->create(['role_id' => 2]);
+        $response = $this->actingAs($user)->call('GET','pengujian/'.$exam->id."/downloadSPB");
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
+
+        if(!$isFileExist){
+            Storage::disk('minio')->delete($path);
+        }
+    }
+     public function test_downloadLaporanPengujian()
+    {
+        $exam = factory(App\Examination::class)->create();
+        $examAttach = factory(App\ExaminationAttach::class)->create(['name'=>'Laporan Uji','examination_id'=>$exam->id]);
+        $path = "examination/".$exam->id."/".$examAttach->attachment;
+        $isFileExist = Storage::disk('minio')->exists($path);
+
+        if(!$isFileExist){
+            $file = file_get_contents('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
+            Storage::disk('minio')->put($path, $file);
+        }
+        $user = factory(App\User::class)->create(['role_id' => 2]);
+        $response = $this->actingAs($user)->call('GET','pengujian/'.$exam->id."/downloadLaporanPengujian");
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
+
+        if(!$isFileExist){
+            Storage::disk('minio')->delete($path);
+        }
+    }
+     public function test_downloadSertifikat()
+    {
+        $device = factory(App\Device::class)->create();
+        $exam = factory(App\Examination::class)->create(["device_id"=>$device->id]);
+        $path = "device/".$device->id."/".$device->certificate;
+        $isFileExist = Storage::disk('minio')->exists($path);
+
+        if(!$isFileExist){
+            $file = file_get_contents('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
+            Storage::disk('minio')->put($path, $file);
+        }
+        $user = factory(App\User::class)->create(['role_id' => 2]);
+        $response = $this->actingAs($user)->call('GET','pengujian/'.$exam->id."/downloadSertifikat");
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
+
+        if(!$isFileExist){
+            Storage::disk('minio')->delete($path);
+        }
+    }
 }

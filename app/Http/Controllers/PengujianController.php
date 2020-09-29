@@ -12,6 +12,7 @@ use Mail;
 use Session;
 use File;
 use Response;
+use Storage;
 
 use App\Device;
 use App\Examination;
@@ -80,7 +81,7 @@ class PengujianController extends Controller
 	private const TIMEOUT = 'timeout';
 	private const APLLICATION_HEADER_OCTET = 'Content-Type: application/octet-stream';
 	private const DOWNLOAD_FAILED = 'Download Failed';
-	private const MEDIA_EXAMINATION_LOC = '/media/examination/';
+	private const MEDIA_EXAMINATION_LOC = 'examination/';
 	private const DATE_FORMAT1 = 'Y-m-d H:i:s';
 	private const HIDE_ID_EXAM = 'hide_id_exam';
 	private const FILE_PEMBAYARAN = 'filePembayaran';
@@ -602,12 +603,11 @@ class PengujianController extends Controller
 			return back()->with(self::MESSAGE, $message);
 		}
 		else{
-			$attach = $data_attach[0]->attachment;
-			$file = public_path().self::MEDIA_EXAMINATION_LOC.$id.'/'.$attach;
-			$headers = array(
-			  self::APLLICATION_HEADER_OCTET,
-			);
-			
+			$attach = $data_attach[0]->attachment; 
+			$fileName = $attach;
+			$fileMinio = Storage::disk('minio')->get(self::MEDIA_EXAMINATION_LOC.$id.'/'.$attach);
+				
+
 			$exam_hist = new ExaminationHistory;
 			$exam_hist->examination_id = $id;
 			$exam_hist->date_action = date(self::DATE_FORMAT1);
@@ -618,7 +618,7 @@ class PengujianController extends Controller
 			$exam_hist->created_at = date(self::DATE_FORMAT1);
 			$exam_hist->save();
 
-			return Response::download($file, $attach, $headers);
+			return response($fileMinio, 200, \App\Services\MyHelper::getHeaderOctet($fileName));
 		}
     }
 	
@@ -641,15 +641,14 @@ class PengujianController extends Controller
 			foreach ($data_attach as $item) {
 				if($item->name == 'Laporan Uji' && $rev_uji == 0){
 					$file = $item->attachment;
+					$attach = $item->attachment;
 				}
 				if($item->name == 'Revisi Laporan Uji' && $rev_uji == 0){
-					$rev_uji = 1;
-					$file = public_path().self::MEDIA_EXAMINATION_LOC.$id.'/'.$item->attachment;
+					$rev_uji = 1; 
 					$attach = $item->attachment;
 				}
 			}
-			// $attach = 'Laporan Uji'; //name
-			// $file = $data_attach[0]->attachment; //link here
+			 
 			$headers = array(
 			  self::APLLICATION_HEADER_OCTET,
 			);
@@ -664,11 +663,11 @@ class PengujianController extends Controller
 			$exam_hist->created_at = date(self::DATE_FORMAT1);
 			$exam_hist->save();
 
-			if($rev_uji == 1){
-				return Response::download($file, $attach, $headers);
-			}else{
-				return redirect($file);
-			}
+			 
+			$fileName = $attach;
+			$fileMinio = Storage::disk('minio')->get(self::MEDIA_EXAMINATION_LOC.$id.'/'.$attach);
+			return response($fileMinio, 200, \App\Services\MyHelper::getHeaderOctet($fileName));
+			 
 		}
     }
 	
@@ -677,7 +676,7 @@ class PengujianController extends Controller
     	$currentUser = Auth::user();
 		$examination = Examination::where('id', $id)->with('device')->get();
 		$data_attach = $examination[0]->device;
-		if (count($data_attach) == 0){
+		if (count((array)$data_attach) == 0){
 			$message = self::DATA_NOT_FOUND;
 			$attach = NULL;
 			Session::flash('error_download_certificate', self::DOWNLOAD_FAILED);
@@ -697,15 +696,14 @@ class PengujianController extends Controller
 			$exam_hist->created_at = date(self::DATE_FORMAT1);
 			$exam_hist->save();
 			
-			$jns = 'device';
+			$jns = 'device/';
 			$id = $data_attach->id;
-			$attach = $data_attach->certificate;
-			$file = public_path().'/media/'.$jns.'/'.$id.'/'.$attach;
-			$headers = array(
-			  self::APLLICATION_HEADER_OCTET,
-			);
+			$attach = $data_attach->certificate;  
 
-			return Response::download($file, $attach, $headers);
+
+			$fileName = $attach;
+			$fileMinio = Storage::disk('minio')->get($jns.$id.'/'.$attach);
+			return response($fileMinio, 200, \App\Services\MyHelper::getHeaderOctet($fileName)); 
 		}
     }
 	
