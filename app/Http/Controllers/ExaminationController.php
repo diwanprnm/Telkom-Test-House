@@ -535,7 +535,7 @@ class ExaminationController extends Controller
 
 	            $notification_id = $notificationService->make($data);
 			    $data['id'] = $notification_id;
-			    event(new Notification($data));
+			    // event(new Notification($data));
 
 				$examinationService->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.spb", "Penerbitan Surat Pemberitahuan Biaya (SPB) untuk ".$exam->function_test_NO,$path_file."/".$attach_name,$request->input('spb_number'),$exam->id);
 			}else if($status == -1){

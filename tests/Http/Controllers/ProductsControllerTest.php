@@ -82,14 +82,14 @@ class ProductsControllerTest extends TestCase
 	}
     public function test_checkout()
 	{   
-        $user = User::where('role_id', '=', '2')->first();
+        $user = factory(App\User::class)->create(['role_id'=>2]);
 		$response =  $this->actingAs($user)->call('GET', '/checkout');   
 		// dd($response->getContent());
         $this->assertEquals(302, $response->status());  
 	}
     public function test_doCheckout()
 	{   
-        $user = User::where('role_id', '=', '2')->first();
+        $user = factory(App\User::class)->create(['role_id'=>2]);
 		$response =  $this->actingAs($user)->call('POST', '/doCheckout', 
 		[ 
 	        'payment_method' => 'ak||001||atm', 

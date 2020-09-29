@@ -41,7 +41,7 @@ class ProfileControllerTest extends TestCase
 	}
     public function test_update_company()
 	{ 
-	    $user = User::where("role_id","=","2")->first();   
+	    $user = factory(App\User::class)->create(['role_id'=>2]);
 		$response =  $this->actingAs($user)->call('POST', '/client/company', 
 		[ 
 	        'hide_id_company' => $user->company_id,   
