@@ -127,13 +127,13 @@ class CompanyControllerTest extends TestCase
 	public function test_export_excel()
 	{ 
 	   
-	   // $user = User::find(1); 
-	   // $response =  $this->actingAs($user)->call('GET', '/company/excel'); 
+	   $user = User::find(1); 
+	   $response =  $this->actingAs($user)->call('GET', '/company/excel'); 
 	    
-	    // $this->assertEquals(200, $response->status());
-	    // $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
-	    // $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
-	    // $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Perusahaan.xlsx"');
+	    $this->assertEquals(200, $response->status());
+	    $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
+	    $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
+	    $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Perusahaan.xlsx"');
 	}
 	public function test_import_excel()
 	{ 
