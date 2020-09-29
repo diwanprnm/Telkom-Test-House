@@ -1416,7 +1416,7 @@ class PengujianController extends Controller
         $exam = Examination::find($id);
         $client = new Client([
             'headers' => ['Content-Type' => 'application/json', 
-                            'Authorization' => config("app.gateway_tpn")
+                            'Authorization' => config("app.gateway_tpn_2")
                         ],
             'base_uri' => config("app.url_api_tpn"),
             'timeout'  => 60.0,

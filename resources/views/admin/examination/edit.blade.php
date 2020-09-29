@@ -3017,6 +3017,7 @@
 				@endif
 				@endif
 
+				@php $rev_uji = 0; $lap_uji_url = null; $lap_uji_attach = null @endphp
 				@if(isset($admin_roles[0]))
 				@if($admin_roles[0]->resume_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-lap-uji')) !!}
@@ -3027,7 +3028,6 @@
 							Step Laporan Uji
 						</legend>
 						<div class="row">
-							@php $rev_uji = 0; $lap_uji_url = null; $lap_uji_attach = null @endphp
 							@foreach($data->media as $item)
 								@if($item->name == 'Laporan Uji')
 									@if($rev_uji == 0)
