@@ -462,15 +462,10 @@ class CompanyController extends Controller
                 $no++;
             }
         }
-		
-		// Generate and return the spreadsheet
-		Excel::create('Data Perusahaan', function($excel) use ($examsArray) {
- 
-			// Build the spreadsheet, passing in the payments array
-			$excel->sheet('sheet1', function($sheet) use ($examsArray) {
-				$sheet->fromArray($examsArray, null, 'A1', false, false);
-			});
-		})->export('xlsx');
+		 
+
+        $excel = \App\Services\ExcelService::download($examsArray, 'Data Perusahaan');
+        return response($excel['file'], 200, $excel['headers']);    
 	}
 	
 	public function importExcel(Request $request)
