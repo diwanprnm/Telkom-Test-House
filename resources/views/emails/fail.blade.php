@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>DDS</title>
+	<title>DDB</title>
 <style>
 	.header{
 		margin-top:2%;
@@ -51,7 +51,7 @@
 		<br><br>
 	</p>
 	<p style="font-family:Helvetica, sans-serif; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-		Dokumen pengajuan Uji {!! $exam_type !!} ({!! $exam_type_desc !!}) Anda telah diperiksa oleh staff User Relation Lab Infrastructure Assurance DDS Telkom. 
+		Dokumen pengajuan Uji {!! $exam_type !!} ({!! $exam_type_desc !!}) Anda telah diperiksa oleh staff User Relation Lab Infrastructure Assurance DDB Telkom. 
 		Namun, pengujian terhenti pada tahap {!! $tahap !!}, <strong>dengan alasan {!! $keterangan !!}.</strong>
 		<br><br>
 		Mohon untuk melakukan <strong>koordinasi terlebih dahulu</strong> dengan menghubungi staff User Relation di (022) 4571145 atau dengan mengirimkan email ke urelddstelkom@gmail.com .
@@ -64,7 +64,7 @@
 		<br><br>
 	</p>
 	<p style="font-style:italic; font-family:Helvetica, sans-serif; font-size:0.88em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-		Email ini dihasilkan secara otomatis oleh sistem dan mohon untuk tidak membalas email ini. Informasi lebih lanjut hubungi Urel Care di 022 - 4571145 dari ponsel, atau manfaatkan fasilitas webmail di urelddstelkom@gmail.com untuk menghubungi staff User Relation kami.
+		Email ini dihasilkan secara otomatis oleh sistem dan mohon untuk tidak membalas email ini. Informasi lebih lanjut hubungi User Relation di <strong>0812 2483 7500</strong> (Telepon & WA) atau <strong>cstelkomtesthouse@gmail.com.</strong>
 	</p>
 </div>
 

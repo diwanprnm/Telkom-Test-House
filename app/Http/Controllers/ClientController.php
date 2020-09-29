@@ -39,8 +39,6 @@ class ClientController extends Controller
 {	
 	protected $loginPath = '/client/login';
 	private const TO_PORTOFOLO = '/#portfolio';
-	private const USER_NOT_MATCH = 'Email or Password Not Match';
-	private const USER_BANNED = 'User not found or User Banned by admin';
 	private const TYPE_URL = 'type_url';
 	private const ERROR_CODE = 'error_code';
 	private const EMAIL = 'email';
@@ -111,53 +109,19 @@ class ClientController extends Controller
 		        $logs->updated_by = $currentUser->id;
 		        $logs->page = "LOGIN";
 		        $logs->save();
-				if($request->input(self::TYPE_URL) == 1){
-					return redirect(self::TO_PORTOFOLO);
-				}else if($request->input(self::TYPE_URL) == 2){
-					return redirect('/');
-				}else{
-					return back();
-				}
-			}else{
-				if($request->input(self::TYPE_URL) == 1){
-					return redirect(self::TO_PORTOFOLO)
-					->with(self::TYPE_URL, 1)
-					->with(self::ERROR_CODE, 5)
-					->withInput($request->all())
-					->withErrors(self::USER_NOT_MATCH);
-				}else if($request->input(self::TYPE_URL) == 2){
-					return redirect('/')->with(self::ERROR_CODE, 5)
-					->with(self::TYPE_URL, 2)
-					->with(self::ERROR_CODE, 5)
-					->withInput($request->all())
-					->withErrors(self::USER_NOT_MATCH);
-				}else{
-					return back()->with(self::ERROR_CODE, 5)
-					->with(self::ERROR_CODE, 5)
-					->withInput($request->all())
-					->withErrors(self::USER_NOT_MATCH);
-				}
-			}
-		}else{
-			if($request->input(self::TYPE_URL) == 1){
-				return redirect(self::TO_PORTOFOLO)
-				->with(self::TYPE_URL, 1)
-				->with(self::ERROR_CODE, 5)
-				->withInput($request->all())
-				->withErrors(self::USER_BANNED);
-			}else if($request->input(self::TYPE_URL) == 2){
-				return redirect('/')->with(self::ERROR_CODE, 5)
-				->with(self::TYPE_URL, 2)
-				->with(self::ERROR_CODE, 5)
-				->withInput($request->all())
-				->withErrors(self::USER_BANNED);
 			}else{
 				return back()->with(self::ERROR_CODE, 5)
 				->with(self::ERROR_CODE, 5)
 				->withInput($request->all())
-				->withErrors(self::USER_BANNED);
+				->withErrors('Email or Password Not Match');
 			}
+		}else{
+			return back()->with(self::ERROR_CODE, 5)
+			->with(self::ERROR_CODE, 5)
+			->withInput($request->all())
+			->withErrors('User not found or User Banned by admin');
 		}
+
 	}
 }
 

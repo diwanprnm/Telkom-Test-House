@@ -41,6 +41,12 @@ class CreateStelsSalesTable extends Migration
             $table->string('PO_ID')->nullable();
             $table->string('BILLING_ID')->nullable();
             $table->string('INVOICE_ID')->nullable();
+            $table->string('VA_name')->nullable();
+            $table->string('VA_image_url')->nullable();
+            $table->string('VA_number')->nullable();
+            $table->double('VA_amount', 15, 0)->nullable();
+            $table->string('VA_expired')->timestamp()->nullable();
+
             $table->uuid('created_by'); 
             $table->uuid('updated_by');
             $table->timestamps();

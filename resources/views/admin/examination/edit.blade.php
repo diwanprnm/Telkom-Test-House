@@ -1671,7 +1671,7 @@
 						</legend>
 						<div class="row">
 							<div class="col-md-12">
-								<div class="form-group">
+								<div class="form-group" style="display: none;">
 									<label>
 										Bukti Pembayaran
 									</label>
@@ -1696,6 +1696,25 @@
 									@else
 										<label>
 											: (Kosong)
+										</label>
+									@endif
+								</div>
+								<div class="form-group">
+									<label>
+										Billing Status
+									</label>
+										
+									@if($data->PO_ID && $data->BILLING_ID == '')
+										<label>
+											: (Drafted)
+										</label>
+									@elseif($data->PO_ID && $data->BILLING_ID && $data->payment_status != 1)
+										<label>
+											: (Created)
+										</label>
+									@elseif($data->PO_ID && $data->BILLING_ID && $data->payment_status)
+										<label>
+											: (Paid)
 										</label>
 									@endif
 								</div>
@@ -1826,7 +1845,7 @@
 						</legend>
 						<div class="row">
 							<div class="col-md-12">
-								<div class="form-group">
+								<div class="form-group" style="display: none;">
 									<label>
 										Bukti Pembayaran
 									</label>
@@ -1850,6 +1869,25 @@
 									@else
 										<label>
 											: (Kosong)
+										</label>
+									@endif
+								</div>
+								<div class="form-group">
+									<label>
+										Billing Status
+									</label>
+										
+									@if($data->PO_ID && $data->BILLING_ID == '')
+										<label>
+											: (Drafted)
+										</label>
+									@elseif($data->PO_ID && $data->BILLING_ID && $data->payment_status != 1)
+										<label>
+											: (Created)
+										</label>
+									@elseif($data->PO_ID && $data->BILLING_ID && $data->payment_status)
+										<label>
+											: (Paid)
 										</label>
 									@endif
 								</div>
@@ -1912,7 +1950,7 @@
 						</legend>
 						<div class="row">
 							<div class="col-md-12">
-								<div class="form-group">
+								<div class="form-group" style="display: none;">
 									<label>
 										Bukti Pembayaran
 									</label>
@@ -1936,6 +1974,25 @@
 									@else
 										<label>
 											: (Kosong)
+										</label>
+									@endif
+								</div>
+								<div class="form-group">
+									<label>
+										Billing Status
+									</label>
+										
+									@if($data->PO_ID && $data->BILLING_ID == '')
+										<label>
+											: (Drafted)
+										</label>
+									@elseif($data->PO_ID && $data->BILLING_ID && $data->payment_status != 1)
+										<label>
+											: (Created)
+										</label>
+									@elseif($data->PO_ID && $data->BILLING_ID && $data->payment_status)
+										<label>
+											: (Paid)
 										</label>
 									@endif
 								</div>

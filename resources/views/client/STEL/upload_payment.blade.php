@@ -12,7 +12,7 @@
 				
 				<ol class="breadcrumb">
 					<li><a href="#">STEL</a></li>
-					<li><a href="{{url('/payment_status')}}">{{ trans('translate.payment_status') }}</a></li>
+					<li><a href="{{url('/purchase_history')}}">{{ trans('translate.payment_status') }}</a></li>
 					<li class="active">{{ trans('translate.stel_payment_upload') }}</li>
 				</ol>
 		</div>
@@ -30,9 +30,9 @@
 					{!! csrf_field() !!}
 					<input type="hidden" name="stelsales_id" id="stelsales_id" value="@php echo $id @endphp"/>  
 					<div id="wizard" class="swMain">
-						@if (Session::has('message'))
-				<div class="alert alert-info">{{ Session::get('message') }}</div>
-			@endif
+						@if(Session::has('message'))
+							<div class="alert alert-info">{{ Session::get('message') }}</div>
+						@endif
 						<div class="form-group">
 							<table class="table table-condensed">
 								<caption></caption>

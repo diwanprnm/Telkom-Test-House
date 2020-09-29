@@ -39,7 +39,7 @@
 											<th scope="col">Total</th> 
 											<th scope="col">PIC</th>   
 											<th scope="col">Status</th>
-											<th colspan="2" class="center" scope="col">Action</th>
+											<th scope="col">Action</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -88,11 +88,20 @@
 															break;
 													}
 													@endphp
-												<td><a href="{!! url("upload_payment/{$item->id}") !!}">{{ trans('translate.examination_upload_payment') }}</a></td> 
-												<td><a href="javascript:void(0)" class="collapsible">{{ trans('translate.examination_detail') }}</a></td> 
+												<td>
+													@if($data[$i]->payment_status == 0 || $data[$i]->payment_status == 2)
+														@if($data[$i]->payment_method == 2 && $data[$i]->VA_expired < date("Y-m-d H:i:s"))
+															<a class="label label-sm label-danger" style="line-height: 2;" href="{{url('/payment_confirmation/'.$item->id)}}">{{ trans('translate.expired') }}</a>
+														@else
+															<a class="label label-sm label-warning" style="line-height: 2;" href="{{url('/payment_confirmation/'.$item->id)}}">{{ trans('translate.examination_pay_now') }}</a>
+														@endif
+														|| 
+													@endif
+														<a href="javascript:void(0)" class="collapsible">{{ trans('translate.examination_detail') }}</a>
+												</td>
 											</tr> 
 											<tr class="content" style="display: none;">
-												<td colspan="8" class="center">
+												<td colspan="7" class="center">
 													<table class="table table-striped" style="width: 100%;">
 														<caption></caption>
 														<thead>
@@ -189,7 +198,7 @@
 													</table>
 												</td>
 											</tr>
-											<tr class="content" style="display: none;"><td colspan="8"></td></tr>
+											<tr class="content" style="display: none;"><td colspan="7"></td></tr>
 										@php $no++;$i++; @endphp
 										@endforeach
 										@php }else{@endphp 

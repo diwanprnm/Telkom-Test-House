@@ -434,14 +434,18 @@ class ExaminationService
         return true;
     }
 	
-	public function sendEmailNotification_wAttach($user, $dev_name, $exam_type, $exam_type_desc, $message, $subject, $attach){
+	public function sendEmailNotification_wAttach($user, $dev_name, $exam_type, $exam_type_desc, $message, $subject, $attach, $spb_number = null, $exam_id = null){
         $data = User::findOrFail($user);
 		return true;
         Mail::send($message, array(
 			self::USER_NAME => $data->name,
 			self::DEV_NAME => $dev_name,
 			self::EXAM_TYPE => $exam_type,
-			self::EXAM_TYPE_DESC => $exam_type_desc
+			self::EXAM_TYPE_DESC => $exam_type_desc,
+			'spb_number' => $spb_number,
+			'id' => $exam_id,
+			'payment_method' => $this->api_get_payment_methods()
+
 			), function ($m) use ($data,$subject,$attach) {
             $m->to($data->email)->subject($subject);
 			$m->attach($attach);
@@ -450,6 +454,23 @@ class ExaminationService
         return true;
     }
 	
+	public function api_get_payment_methods(){
+        $client = new Client([
+			self::HEADERS => [self::AUTHORIZATION => config(self::APP_GATEWAY_TPN_2)],
+            self::BASE_URI => config(self::APP_URI_API_TPN),
+            self::TIMEOUT  => 60.0,
+            self::HTTP_ERRORS => false
+        ]);
+        try {
+            $res_payment_method = $client->get("v1/products/".config("app.product_id_tth_2")."/paymentmethods")->getBody();
+            $payment_method = json_decode($res_payment_method);
+
+            return $payment_method;
+        } catch(Exception $e){
+            return null;
+        }
+    }
+
 	public function sendEmailRevisi(
 		$user, 
 		$exam_type, 

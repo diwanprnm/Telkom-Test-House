@@ -180,6 +180,7 @@ return [
 	'examination_date_payment'=> 'Payment Date',
 	'examination_price_payment'=> 'Amount of Transfer',
 	'examination_upload_payment_file'=> 'Upload',
+	'examination_pay_now'=> 'Pay Now',
 	'examination_model'=> 'Model/Type',
 	'examination_mark'=> 'Brand Name',
 	'examination_capacity'=> 'Capacity',
@@ -328,10 +329,13 @@ return [
 	'stel_payment_detail'	=> 'Payment Detail',
 	'stel_payment_upload'	=> 'Upload Payment',
 	'stel_qty'				=> 'QTY',
-	'stel_payment_method'	=> 'Choose Payment Method',
-	'stel_payment_method_atm'	=> 'Via ATM/Transfer',
+	'stel_select_payment_method'	=> 'Choose Payment Method',
+	'stel_payment_method'	=> 'Payment Method',
+	'stel_payment_method_atm'	=> 'Via Bank Transfer',
 	'stel_payment_method_credit'=> 'Via Credit Card',
+	'stel_payment_method_va'=> 'Mandiri Virtual Account',
 	'stel_payment_method_bank'  => 'This is list of bank if you take this method',
+	'stel_payment_confirmation'  => 'Payment Confirmation',
 	
 	'stel_placeholder_cc_name'  => 'Full Name',
 	'stel_placeholder_cc_card_number'  => 'Card Number',
@@ -374,7 +378,7 @@ return [
 	'subtitle_vt_process' => 'Telecommunication device testing that is order-based by customer. Test is conducted based upon mutually agreed reference among user (Operational Division/Headquarter/Telkom Group) and Divisi Digital Service (DDS) accompanied by office memo.',
 	'subtitle_cal_process' => 'Calibration of measurement tools.',
 	
-	'stel_term_condition_num1'	=> 'Total price listed on shopping cart is/are 10 % tax excluded.',
+	'stel_term_condition_num1'	=> 'Total price listed on shopping cart is/are 10 % tax excluded and payment gateway fees from third parties excluded.',
 	'stel_term_condition_num2'	=> 'Document(s) you bought will be given a watermark represent your company name, and cannot be used by another company.',
 	'stel_term_condition_num3'	=> 'Document(s) you bought doesn’t/don’t have validity period till the new version is released, and contact immediately our staff if there has/have been changed of document version.',
 	'stel_term_condition_num4'	=> 'In case the STEL document(s) had been issued and turns out that the item was purchased by customer mistake is not responsibility of PT. Telkom Indonesia, Tbk.',
@@ -419,4 +423,26 @@ return [
 
 	'payment_alert_1' => 'For ease of payment verification, customer is required to pay according to the nominal listed up to the last 3 digits.',
 	'payment_alert_2' => 'If there is more than one transaction, please do not combine the payments into one.',
+
+	'make_an_order' => 'Place Order',
+
+	'stel_total_payment' => 'Total payment',
+	'stel_payment_before' => 'DOING PAYMENT BEFORE',
+	'stel_transfer_to_va' => 'Transfer to this Virtual Account number',
+	'expired' => 'Expired',
+	'stel_total_expired' => 'This Virtual Account Number was Expired, click',
+	'here' => 'here',
+	'stel_total_resend' => 'to resend a new Virtual Account Number',
+	'stel_payment_included_va' => 'be charged a payment gateway from a third parties, amounting to',
+
+	'examination_payment_total' => 'Total Payment',
+	'examination_payment_cut' => 'without',
+	'examination_payment_this_nominal' => 'PPh INCLUDED',
+	'examination_payment_will_pay' => 'I WILL PAY WITHOUT PPh',
+	'examination_payment_nominal_without_pph' => 'PPh EXCLUDED',
+
+	'payment_via_virtual_account' => 'PAYMENT VIA VIRTUAL ACCOUNT',
+	'choose_bank' => 'Choose Bank',
+
+	'choose_another_bank' => 'Choose Another Bank',
 ];

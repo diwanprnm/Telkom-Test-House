@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>DDS</title>
+	<title>DDB</title>
 <style>
 	.header{
 		margin-top:2%;
@@ -53,9 +53,9 @@
 	<p style="font-family:Helvetica, sans-serif; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
 		Terimakasih atas kerjasamanya yang baik selama ini.
 		<br><br>
-		Rangkaian proses pengujian perangkat saudara/i di Lab IAS DDS Telkom saat ini <strong>sudah selesai</strong> dilaksanakan. Laporan Hasil Uji (LHU) dan Sertifikat (untuk uji QA) dapat diambil langsung di alamat berikut dengan <strong>memperlihatkan bukti pengambilan perangkat</strong> dari warehouse LAB IAS DDS Telkom.
+		Rangkaian proses pengujian perangkat saudara/i di Lab IAS DDB Telkom saat ini <strong>sudah selesai</strong> dilaksanakan. Laporan Hasil Uji (LHU) dan Sertifikat (untuk uji QA) dapat diambil langsung di alamat berikut dengan <strong>memperlihatkan bukti pengambilan perangkat</strong> dari warehouse LAB IAS DDB Telkom.
 		<br><br>
-		Lab Pengujian Infrastructure Assurance DDS
+		Lab Pengujian Infrastructure Assurance DDB
 		<br>
 		PT. Telekomunikasi Indonesia, Tbk
 		<br>
@@ -71,7 +71,7 @@
 		<br><br>
 	</p>
 	<p style="font-style:italic; font-family:Helvetica, sans-serif; font-size:0.88em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-		Email ini dihasilkan secara otomatis oleh sistem dan mohon untuk tidak membalas email ini. Informasi lebih lanjut hubungi Urel Care di 022 - 4571145 dari ponsel, atau manfaatkan fasilitas webmail di urelddstelkom@gmail.com untuk menghubungi staff User Relation kami.
+		Email ini dihasilkan secara otomatis oleh sistem dan mohon untuk tidak membalas email ini. Informasi lebih lanjut hubungi User Relation di <strong>0812 2483 7500</strong> (Telepon & WA) atau <strong>cstelkomtesthouse@gmail.com.</strong>
 	</p>
 </div>
 

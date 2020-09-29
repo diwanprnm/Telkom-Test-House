@@ -181,6 +181,7 @@ return [
 	'examination_date_payment'=> 'Tanggal Pembayaran',
 	'examination_price_payment'=> 'Jumlah Biaya yang ditransfer',
 	'examination_upload_payment_file'=> 'Unggah',
+	'examination_pay_now'=> 'Bayar Sekarang',
 	'examination_model'=> 'Model/Tipe',
 	'examination_mark'=> 'Merk/Pabrik',
 	'examination_capacity'=> 'Kapasitas',
@@ -331,10 +332,13 @@ return [
 	'stel_payment_detail'	=> 'Detail Pembayaran',
 	'stel_payment_upload'	=> 'Upload Pembayaran',
 	'stel_qty'				=> 'Jumlah',
-	'stel_payment_method'	=> 'Pilih Metoda Pembayaran',
-	'stel_payment_method_atm'	=> 'Metoda Transfer Melalui ATM',
+	'stel_select_payment_method'	=> 'Pilih Metoda Pembayaran',
+	'stel_payment_method'	=> 'Metoda Pembayaran',
+	'stel_payment_method_atm'	=> 'Metoda Transfer ke Bank',
 	'stel_payment_method_credit'=> 'Metoda Pembayaran Kartu Kredit',
+	'stel_payment_method_va'	=> 'Mandiri Virtual Account',
 	'stel_payment_method_bank'  => 'Pembayaran melalui metode ini dapat melalui beberapa bank yang ada pada list dibawah ini',
+	'stel_payment_confirmation'  => 'Konfirmasi Pembayaran',
 	
 	'stel_placeholder_cc_name'  => 'Nama Lengkap',
 	'stel_placeholder_cc_card_number'  => 'Nomor Kartu',
@@ -360,7 +364,7 @@ return [
 	'pass_reset_email_sent' => 'Email Aktivasi Password Baru',
 	'an_email_has_been_sent' => 'Email Aktivasi telah dikirim ke email anda,',
 	'follow_the_direction' => 'Ikuti link pada email tersebut, untuk mengatur ulang password anda.',
-	'done' => 'OK',
+	'done' => 'Selesai',
 	'back' => 'Kembali',
 	'certificate' => 'Sertifikat',
 	'from_customer' => 'dari Kastamer',
@@ -377,7 +381,7 @@ return [
 	'subtitle_vt_process' => 'Pengujian perangkat telekomunikasi yang sifatnya berdasarkan pesanan oleh customer. Pengujian dilakukan berdasarkan referensi yang disepakati bersama antara user (Divisi Operasional/Kantor Pusat/Telkom Group) dan Divisi Digital Service (DDS) disertai Nota Dinas.',
 	'subtitle_cal_process' => 'Kalibrasi alat pengukuran',
 	
-	'stel_term_condition_num1'	=> 'Harga total yang tercantum pada keranjang belanja belum termasuk PPn 10%.',
+	'stel_term_condition_num1'	=> 'Harga total yang tercantum pada keranjang belanja belum termasuk PPN 10% & biaya payment gateway dari pihak ketiga.',
 	'stel_term_condition_num2'	=> 'Dokumen STEL yang dibeli akan dibubuhi watermark sesuai dengan nama perusahaan yang membeli, dan tidak dapat digunakan pada perusahaan lain.',
 	'stel_term_condition_num3'	=> 'Dokumen STEL yang anda beli tidak memiliki masa berlaku hingga dikeluarkan versi yang terbaru, dan segera hubungi staff kami jika terjadi perubahan versi.',
 	'stel_term_condition_num4'	=> 'Jika dokumen STEL sudah diberikan dan ternyata terjadi kesalahan pembelian karena kelalaian customer bukan menjadi tanggung jawab PT. Telkom Indonesia, Tbk.',
@@ -422,4 +426,26 @@ return [
 
 	'payment_alert_1' => 'Untuk kemudahan verifikasi pembayaran, kepada pelanggan mohon untuk membayar tagihan sesuai nominal yang tertera hingga 3 digit terakhir.',
 	'payment_alert_2' => 'Jika ada lebih dari satu transaksi, harap tidak menggabungkan pembayarannya menjadi satu.',
+
+	'make_an_order' => 'Buatkan Pesanan',
+
+	'stel_total_payment' => 'Jumlah yang harus dibayar',
+	'stel_payment_before' => 'SEGERA LAKUKAN PEMBAYARAN SEBELUM',
+	'stel_transfer_to_va' => 'Transfer pembayaran ke nomor Virtual Account',
+	'expired' => 'Kadaluarsa',
+	'stel_total_expired' => 'Nomor Virtual Account ini sudah kadaluarsa, klik',
+	'here' => 'disini',
+	'stel_total_resend' => 'untuk mengirim ulang Nomor Virtual Account yang baru',
+	'stel_payment_included_va' => 'dikenakan biaya payment gateway dari pihak ketiga sebesar',
+
+	'examination_payment_total' => 'Total Biaya Pengujian',
+	'examination_payment_cut' => 'dipotong',
+	'examination_payment_this_nominal' => 'TERMASUK PPh',
+	'examination_payment_will_pay' => 'SAYA AKAN MEMBAYAR TANPA PPh',
+	'examination_payment_nominal_without_pph' => 'TIDAK TERMASUK PPh',
+
+	'payment_via_virtual_account' => 'PEMBAYARAN MELALUI VIRTUAL ACCOUNT',
+	'choose_bank' => 'Pilih Bank',
+
+	'choose_another_bank' => 'Pilih Bank Lain',
 ];

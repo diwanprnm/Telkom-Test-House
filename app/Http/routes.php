@@ -190,7 +190,7 @@ Route::get('/clear-cache', function() {
 // 		$this->Rotate(90); 
 // 		$this->Image('./assets/images/Telkom-Indonesia-Corporate-Logo1.jpg',-108,12,40);
 // 		$this->Cell(-75);
-// 		$this->Cell(0,17,'Divisi Digital Business (DDS)',0,0,'L');
+// 		$this->Cell(0,17,'Divisi Digital Business (DDB)',0,0,'L');
 // 		$this->Ln(7);
 // 		$this->Cell(-75);
 // 		$this->SetFont('helvetica','B',10);
@@ -2929,10 +2929,10 @@ if($data[0]['jnsPengujian'] == 4){
 	$pdf->Cell(185,5,"APPLICANT'S NAME & COMPANY STAMP",0,0,'R');
 	$pdf->Ln(6);
 	$pdf->SetFont('','U');
-	$pdf->Cell(10,5,"User Relation, Divisi Digital Service, Telp. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
+	$pdf->Cell(10,5,"User Relation, Divisi Digital Business, Telp. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
 	$pdf->Ln(4);
 	$pdf->SetFont('','I');
-	$pdf->Cell(10,5,"Divisi Digital Service, User Relation, Phone. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
+	$pdf->Cell(10,5,"Divisi Digital Business, User Relation, Phone. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
 	$pdf->Ln(6);
 	$pdf->SetFont('helvetica','',8);
 	if($data[0]['initPengujian'] == 'QA'){
@@ -3407,11 +3407,11 @@ Route::get('cetakKontrak', function(Illuminate\Http\Request $request){
 	$pdf->Ln(5);
 	$pdf->setX(10.00125);
 	$pdf->SetFont('','U');
-	$pdf->Cell(10,5,"User Relation, Divisi Digital Service, Telp. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
+	$pdf->Cell(10,5,"User Relation, Divisi Digital Business, Telp. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
 	$pdf->Ln(4);
 	$pdf->setX(10.00125);
 	$pdf->SetFont('','I');
-	$pdf->Cell(10,5,"Divisi Digital Service, User Relation, Phone. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
+	$pdf->Cell(10,5,"Divisi Digital Business, User Relation, Phone. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
 	$pdf->Ln();
 	if($data[0]['is_loc_test'] == 1){
 		$pdf->Cell(185,1,"TLKM02/F/007 Versi 01",0,0,'R');
@@ -3432,7 +3432,8 @@ Route::get('cetakSPB', function(Illuminate\Http\Request $request){
 		$manager_urel = $data[0]['manager_urel'];
 		$spb_number = $data[0]['spb_number'];
 		$company_name = $data[0]['exam']['company']['name'];
-		$user_name = $data[0]['exam']['user']['name'];
+		$no_reg = $data[0]['exam']['function_test_NO'];
+		$test_reference = $data[0]['exam']['device']['test_reference'];
 		if($data[0]['exam']['company']['address'] != null){
 			if($data[0]['exam']['company']['postal_code'] != null){
 				$company_address = $data[0]['exam']['company']['address'].", ".$data[0]['exam']['company']['city'].", ".$data[0]['exam']['company']['postal_code'].".";
@@ -3458,6 +3459,7 @@ Route::get('cetakSPB', function(Illuminate\Http\Request $request){
 		$total_biaya = $biaya + $ppn;
 		$terbilang = $pdf->terbilang($total_biaya, 3);
 		$spb_date = date('j', strtotime($data[0]['spb_date']))." ".strftime('%B %Y', strtotime($data[0]['spb_date']));
+		$payment_method = $data[0]['payment_method']->data->VA;
 	// $pdf->judul_kop('FORM TINJAUAN KONTRAK','Contract Review Form');
 	$pdf->AliasNbPages();
 	$pdf->AddPage();
@@ -3496,17 +3498,19 @@ Route::get('cetakSPB', function(Illuminate\Http\Request $request){
 	$pdf->SetFont('helvetica','',9);
 	$pdf->SetWidths(array(13,7,160));
 	$pdf->SetAligns(array('C','L','L'));
-	$pdf->Row(array('','1. ','Menunjuk Contract Review Saudara tanggal '.$contract_date.' perihal permohonan uji mutu ('.$exam_type.'), dengan ini kami beritahukan bahwa biaya pengujian yang harus dibayar adalah :'));	
+	$pdf->Row(array('','I. ','Merujuk Kontrak Pengujian Saudara tanggal '.$contract_date.' perihal permohonan uji mutu ('.$no_reg.'), dengan ini kami beritahukan bahwa biaya pengujian yang harus dibayar adalah :'));
 	
 	$pdf->Ln(1);
 	$pdf->SetFont('helvetica','B',9);
 	$pdf->SetWidths(array(17,8,125,27));
 	$pdf->SetAligns(array('L','C','C','C'));
-	$pdf->RowRect(array('','No','Nama Perangkat','Biaya (Rp.)'));	
+	$pdf->RowRect(array('','No','Nama','Biaya (Rp.)'));
 	$pdf->SetFont('helvetica','',9);
 	$pdf->SetAligns(array('L','L','L','R'));
 	for($i=0;$i<count($data[0]['arr_nama_perangkat']);$i++){
-		$pdf->RowRect(array('',($i+1).'.',$data[0]['arr_nama_perangkat'][$i],number_format($data[0]['arr_biaya'][$i],0,",",".").",-"));	
+		$item = $i == 0 ? $data[0]['arr_nama_perangkat'][$i].' ('.$test_reference.')' : $data[0]['arr_nama_perangkat'][$i];
+		$no = $data[0]['arr_nama_perangkat'][$i] == 'Kode Unik' ? '' : ($i+1).'.';
+		$pdf->RowRect(array('',$no,$item,number_format($data[0]['arr_biaya'][$i],0,",",".").",-"));
 	}
 	$pdf->RowRect(array('','','PPN 10 %',number_format($ppn,0,",",".").",-"));
 	$pdf->SetFont('helvetica','B',9);
@@ -3520,99 +3524,55 @@ Route::get('cetakSPB', function(Illuminate\Http\Request $request){
 	$pdf->SetFont('helvetica','',9);
 	$pdf->SetWidths(array(13,7,160));
 	$pdf->SetAligns(array('C','L','L'));
-	$pdf->Row(array('','2. ','Ketentuan dan tata cara pembayaran diatur sebagai berikut :'));	
+	$pdf->Row(array('','II. ','Ketentuan dan tata cara pembayaran diatur sebagai berikut :'));	
 	
 	$pdf->Ln(1);
 	$pdf->SetFont('helvetica','',9);
 	$pdf->SetWidths(array(20,7,153));
 	$pdf->SetAligns(array('C','L','L'));
-	$pdf->Row(array('','a. ','Pembayaran dilakukan dengan cara transfer ke rekening nomor'));	
-		$pdf->SetFont('helvetica','B',9);
-		$pdf->SetXY(128.00125,$pdf->GetY()-5);
-		$pdf->Cell(0,5,'131-0096022712 an. Divisi RisTI',0,0,'L');
+	$pdf->Row(array('','1. ','Pembayaran dilakukan melalui Virtual Account dengan pilihan bank sebagai berikut :'));
+	for($i=0;$i<count($payment_method);$i++){
+		$pdf->SetFont('ZapfDingbats','', 5);
+		$pdf->SetX(40.00125);
+		$pdf->Cell(5, 5, "l", 0, 0);
+		$pdf->SetFont('helvetica','',9);
+		$pdf->Cell(8,5,$payment_method[$i]->productName,0,0,'L');
+		$pdf->Ln();
+	}
+		$pdf->SetX(37.00125);
+		$pdf->Cell(0,5,'Saudara wajib mengikuti petunjuk yang ada di website Telkom Test House atau e-mail petunjuk',0,0,'L');
 		$pdf->Ln();
 		$pdf->SetX(37.00125);
-		$pdf->Cell(0,5,'TELKOM, Bank Mandiri KCP KAMPUS TELKOM BANDUNG.',0,0,'L');
+		$pdf->Cell(0,5,'pembayaran.',0,0,'L');
 		$pdf->Ln();
-		$pdf->SetFont('helvetica','',9);
-	$pdf->Row(array('','b. ','Transfer Rekening'));	
-		$pdf->SetFont('helvetica','BU',9);
-		$pdf->SetXY(64.00125,$pdf->GetY()-5);
-		$pdf->Cell(0,5,'harus mencantumkan Nomor surat SPB',0,0,'L');
-		$pdf->SetFont('helvetica','',9);
-		$pdf->SetX(125.00125);
-		$pdf->Cell(0,5,'yang dibayarkan (untuk memudahkan',0,0,'L');
-		$pdf->Ln();
-		$pdf->SetX(37.00125);
-		$pdf->Cell(0,5,'penerbitan faktur pajak).',0,0,'L');
-		$pdf->Ln();
-	$pdf->Row(array('','c. ','Untuk memudahkan proses Administrasi keuangan dan penerbitan faktur pajak, mohon dapat dikirimkan'));	
-		$pdf->Ln();
-		$pdf->SetFont('helvetica','B',9);
-		$pdf->SetXY(37.00125,$pdf->GetY()-5);
-		$pdf->Cell(0,5,'copy Bukti Transfer dari Bank yang mencantumkan nomor SPB yang dibayar',0,0,'L');
-		$pdf->SetFont('helvetica','',9);
-		$pdf->Ln();
-		$pdf->SetX(37.00125);
-		$pdf->Cell(0,5,'serta copy NPWP melalui web',0,0,'L');
-		$pdf->SetX(81.00125);
-		$pdf->SetFont('helvetica','U',9);
-		$pdf->Cell(0,5,'www.telkomtesthouse.co.id dan email sontang@telkom.co.id',0,0,'L');
-		$pdf->SetFont('helvetica','',9);
-		$pdf->Ln();
-	$pdf->Row(array('','d. ','Menunjuk Surat Keterangan Bebas PPH Direktorat Jenderal Pajak'));	
-		$pdf->SetFont('helvetica','B',9);
-		$pdf->SetXY(130.00125,$pdf->GetY()-5);
-		$pdf->Cell(0,5,' No. KET-00007/POTPUT/WPJ.19/',0,0,'L');
-		$pdf->Ln();
-		$pdf->SetX(37.00125);
-		$pdf->Cell(0,5,'KP.04/2017',0,0,'L');
-		$pdf->SetFont('helvetica','',9);
-		$pdf->SetX(54.00125);
-		$pdf->Cell(0,5,', tanggal ',0,0,'L');
-		$pdf->SetX(67.00125);
-		$pdf->SetFont('helvetica','B',9);
-		$pdf->Cell(0,5,'9 Agustus 2017 ',0,0,'L');
-		$pdf->SetFont('helvetica','',9);
-		$pdf->SetX(91.00125);
-		$pdf->Cell(0,5,'perihal  Surat Keterangan Bebas Pemotongan, dan/atau',0,0,'L');
-		$pdf->Ln();
-		$pdf->SetX(37.00125);
-		$pdf->Cell(0,5,'Pemungutan PPh 23, ',0,0,'L');
-		$pdf->SetFont('helvetica','BU',9);
-		$pdf->SetX(68.00125);
-		$pdf->Cell(0,5,'maka biaya yang ditransfer sesuai dengan biaya terbilang di atas',0,0,'L');
-		$pdf->Ln();
-		$pdf->SetX(37.00125);
-		$pdf->Cell(0,5,'(Poin No.1).',0,0,'L');
-		$pdf->SetFont('helvetica','',9);
-		$pdf->Ln();
-	$pdf->Row(array('','e. ','Pembayaran dilakukan'));	
+	$pdf->Row(array('','2. ','Pembayaran dilakukan'));
 		$pdf->SetFont('helvetica','B',9);
 		$pdf->SetXY(70.00125,$pdf->GetY()-5);
-		$pdf->Cell(0,5,'paling lambat 14 Hari Kalender setelah penerbitan SPB.',0,0,'L');
+		$pdf->Cell(0,5,'paling lambat 14 (empat belas) hari kalender setelah penerbitan SPB.',0,0,'L');
 		$pdf->SetFont('helvetica','',9);
-		$pdf->SetX(155.00125);
-		$pdf->Cell(0,5,'Apabila pada tenggang',0,0,'L');
 		$pdf->Ln();
 		$pdf->SetX(37.00125);
-		$pdf->Cell(0,5,'waktu tersebut customer tidak melakukan pembayaran, kontrak ini tidak berlaku.',0,0,'L');
+		$pdf->Cell(0,5,'Apabila pada tenggang waktu tersebut Saudara tidak melakukan pembayaran, SPB ini tidak berlaku.',0,0,'L');
 		$pdf->Ln();
-	$pdf->Row(array('','f. ','Apabila dalam waktu 7 (tujuh) hari kerja setelah pembayaran, Saudara belum melengkapi nomor NPWP maka kami anggap Saudara tidak membutuhkan Faktur Pajak Standar.'));	
-	$pdf->Row(array('','g. ','Perangkat sampel Uji harus sudah diambil paling lama 10(sepuluh) hari kerja setelah selesai pengujian, apabila sampai batas waktu yang ditetapkan perangkat uji belum diambil, maka penyimpanan perangkat & segala akibatnya menjadi tanggung jawab Saudara.'));	
-	// $pdf->Row(array('','f. ','Estimasi pengujian dilaksanakan paling lambat bulan Juli 2017'));	
-	
-	$pdf->Ln(3);
-	$pdf->SetFont('helvetica','',9);
-	$pdf->SetWidths(array(13,7,160));
-	$pdf->SetAligns(array('C','L','L'));
-	$pdf->Row(array('','3. ','Atas perhatian dan kerjasama Saudara kami ucapkan terimakasih.'));	
+	$pdf->Row(array('','3. ','Perangkat sampel uji harus sudah diambil'));
+		$pdf->SetFont('helvetica','B',9);
+		$pdf->SetXY(98.00125,$pdf->GetY()-5);
+		$pdf->Cell(0,5,'paling lambat 14 (empat belas) hari kalender setelah',0,0,'L');
+		$pdf->Ln();
+		$pdf->SetX(37.00125);
+		$pdf->Cell(0,5,'pemberitahuan selesai uji,',0,0,'L');
+		$pdf->SetFont('helvetica','',9);
+		$pdf->SetX(78.00125);
+		$pdf->Cell(0,5,'apabila sampai batas waktu yang ditetapkan perangkat uji belum diambil',0,0,'L');
+		$pdf->Ln();
+		$pdf->SetX(37.00125);
+		$pdf->Cell(0,5,'maka penyimpanan perangkat & segala akibatnya menjadi tanggung jawab Saudara.',0,0,'L');
 	
 /*Footer Manual*/
 	
 /*End Footer Manual*/
 
-	$pdf->Ln(3);
+	$pdf->Ln(20);
 	$pdf->Cell(9);
 	$pdf->Cell(150,5,"Bandung, ".$spb_date,0,0,'L');
 	$pdf->Ln(20);
@@ -4102,10 +4062,10 @@ array('as' => 'cetak', function(
 		$pdf->Cell(185,5,"APPLICANT'S NAME & COMPANY STAMP",0,0,'R');
 		$pdf->Ln(6);
 		$pdf->SetFont('','U');
-		$pdf->Cell(10,5,"User Relation, Divisi Digital Service, Telp. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
+		$pdf->Cell(10,5,"User Relation, Divisi Digital Business, Telp. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
 		$pdf->Ln(4);
 		$pdf->SetFont('','I');
-		$pdf->Cell(10,5,"Divisi Digital Service, User Relation, Phone. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
+		$pdf->Cell(10,5,"Divisi Digital Business, User Relation, Phone. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
 		$pdf->Ln(4);
 		$pdf->SetFont('helvetica','',8);
 		if($initPengujian == 'QA'){
@@ -4249,10 +4209,10 @@ array('as' => 'cetakHasilKuitansi', function(
 	// $pdf->Cell(185,5,"APPLICANT'S NAME & COMPANY STAMP",0,0,'R');
 	// $pdf->Ln(6);
 	// $pdf->SetFont('','U');
-	// $pdf->Cell(10,5,"User Relation, Divisi Digital Service, Telp. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
+	// $pdf->Cell(10,5,"User Relation, Divisi Digital Business, Telp. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
 	// $pdf->Ln(4);
 	// $pdf->SetFont('','I');
-	// $pdf->Cell(10,5,"Divisi Digital Service, User Relation, Phone. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
+	// $pdf->Cell(10,5,"Divisi Digital Business, User Relation, Phone. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
 	// $pdf->Ln(6);
 	// $pdf->SetFont('helvetica','',8);
 	// $pdf->Cell(185,5,"IASO2/F/002 Versi 01",0,0,'R');
@@ -4654,9 +4614,18 @@ Route::get('/products', 'ProductsController@index');
 Route::resource('/products', 'ProductsController');
 
 Route::get('/purchase_history', 'ProductsController@purchase_history');
+Route::get('/payment_confirmation/{id}', 'ProductsController@payment_confirmation');
+Route::get('/payment_confirmation_spb/{id}', 'PengujianController@payment_confirmation');
+Route::get('/resend_va/{id}', 'ProductsController@api_resend_va');
+Route::get('/resend_va_spb/{id}', 'PengujianController@api_resend_va');
+Route::get('/cancel_va/{id}', 'ProductsController@api_cancel_va');
+Route::get('/cancel_va_spb/{id}', 'PengujianController@api_cancel_va');
+Route::post('/doCancel', 'ProductsController@doCancel');
+Route::post('/doCancelSPB', 'PengujianController@doCancel');
 Route::get('/payment_status', 'ProductsController@payment_status');
-Route::post('/checkout', 'ProductsController@checkout');
+Route::get('/checkout', 'ProductsController@checkout');
 Route::post('/doCheckout', 'ProductsController@doCheckout');
+Route::post('/doCheckoutSPB', 'PengujianController@doCheckout');
 Route::get('/payment_detail/{id}', 'ProductsController@payment_detail');
 Route::get('/test_notification', 'ProductsController@test_notification');
 Route::get('/upload_payment/{id}', 'ProductsController@upload_payment');
@@ -4771,7 +4740,7 @@ array('as' => 'cetakBuktiPenerimaanPerangkat', function(
 	 	$pdf->SetFont('helvetica','',10); 
 		$pdf->setX(10.00125);
 		$pdf->Cell(40, 4, 'Pemilik', 1, 0, 'C');
-		$pdf->Cell(40, 4, 'DDS', 1, 0, 'C');
+		$pdf->Cell(40, 4, 'DDB', 1, 0, 'C');
 		 
 		$pdf->setX(10.00125);
 		$pdf->drawTextBox('('.$pic.')', 40, 25, 'C', 'B', 1);
@@ -4782,7 +4751,7 @@ array('as' => 'cetakBuktiPenerimaanPerangkat', function(
 	  	$pdf->SetFont('helvetica','',10); 
 	 	$pdf->setXY(120,$pdf->getY()-25);
 		$pdf->Cell(40, 4, 'Pemilik', 1, 0, 'C');
-		$pdf->Cell(40, 4, 'DDS', 1, 0, 'C'); 
+		$pdf->Cell(40, 4, 'DDB', 1, 0, 'C'); 
 		$pdf->setX(120);
 		$pdf->drawTextBox('(...............................)', 40, 25, 'C', 'B', 1);
 		$pdf->setXY(160,$pdf->getY() -25);
@@ -4823,7 +4792,7 @@ Route::get('cetakTandaTerima', function(Illuminate\Http\Request $request){
 
 	$pdf->SetFont('helvetica','B',12);
 	$pdf->Cell(10);
-	$pdf->Cell(0,15,'DDS - PT. TELKOM',0,0,'L');
+	$pdf->Cell(0,15,'DDB - PT. TELKOM',0,0,'L');
 	$pdf->Ln();
 	$pdf->SetFont('helvetica','',12);
 	$pdf->Cell(10);
@@ -4869,7 +4838,7 @@ Route::get('cetakTandaTerima', function(Illuminate\Http\Request $request){
 	$pdf->Cell(0,5,"Bandung,".date("d-m-Y"),0,0,'C');
 	$pdf->setY($pdf->getY()+8); 
 	$pdf->Cell(20);
-	$pdf->Cell(180,5,"DDS - PT. TELKOM",0,0,'L');
+	$pdf->Cell(180,5,"DDB - PT. TELKOM",0,0,'L');
 	$pdf->Cell(0,5,"Penerima",0,0,'L');
 	$pdf->setY($pdf->getY()+28); 
 	$pdf->Cell(8);
@@ -4879,11 +4848,11 @@ Route::get('cetakTandaTerima', function(Illuminate\Http\Request $request){
 	$pdf->Ln(10);
 	$pdf->SetFont('','U');
 	$pdf->Cell(5);
-	$pdf->Cell(10,5,"User Relation, Divisi Digital Service, Telp. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
+	$pdf->Cell(10,5,"User Relation, Divisi Digital Business, Telp. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
 	$pdf->Ln(4);
 	$pdf->SetFont('','I');
 	$pdf->Cell(5);
-	$pdf->Cell(10,5,"Divisi Digital Service, User Relation, Phone. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
+	$pdf->Cell(10,5,"Divisi Digital Business, User Relation, Phone. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
 	$pdf->Ln(6);
 	$pdf->SetFont('helvetica','',8);
 	$pdf->Cell(260,5,"TLKM02/F/010 Versi 01",0,0,'R');
@@ -4961,7 +4930,7 @@ Route::get('/cetakKuisioner', array('as' => 'cetakKuisioner', function(Illuminat
 	 	 
 		// $pdf->SetFont('helvetica','B',14);
 		// $pdf->setXY(10.00125, $pdf->getY() + 4); 
-		// $pdf->Cell(10,4,"Harap Diisikan penilaian anda terhadap layanan QT/TA/VT - Telkom DDS.",0,0,'L');
+		// $pdf->Cell(10,4,"Harap Diisikan penilaian anda terhadap layanan QT/TA/VT - Telkom DDB.",0,0,'L');
 
 
 		$pdf->SetFont('helvetica','',8);
@@ -4972,7 +4941,7 @@ Route::get('/cetakKuisioner', array('as' => 'cetakKuisioner', function(Illuminat
 		$pdf->Cell(10,4,"sebuah pernyataan bagi Anda. Sedangkan, tingkat kepuasan menunjukkan seberapa puas pengalaman Anda setelah melakukan pengujian di ",0,0,'L');
  
 		$pdf->setXY(10.00125, $pdf->getY() + 4); 
-		$pdf->Cell(10,4,"Infrasutructure Assurance (IAS) Divisi Digital Service (DDS) PT. Telekomuniasi Indonesia, Tbk.",0,0,'L');
+		$pdf->Cell(10,4,"Infrasutructure Assurance (IAS) Divisi Digital Business (DDB) PT. Telekomuniasi Indonesia, Tbk.",0,0,'L');
 		 
 		$pdf->setXY(10.00125, $pdf->getY() + 6); 
 		$pdf->Cell(10,4,"Besar pengharapan kami agar pengisian survey ini dapat dikerjakan dengan sebaik-baiknya. Atas kerja samanya, kami ucapkan terimakasih. ",0,0,'L');

@@ -23,6 +23,14 @@
 	<div class="content-wrap"> 
 
 		<div class="container clearfix box">
+			@if (Session::get('error'))
+				<div class="alert alert-error alert-danger">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					  <span aria-hidden="true">&times;</span>
+					</button>
+					{{ Session::get('error') }}
+				</div>
+			@endif
 
 			<div class="row">
 				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 left-content"></div>
@@ -179,18 +187,18 @@
 									<li>{{ trans('translate.stel_term_condition_num6') }}</li>
 								</ul>
 							</div>
-							   <form class="form-horizontal" role="form" method="POST" action="{{ url('checkout') }}" onsubmit="javascript:document.getElementById('submit-btn').style.display = 'none';document.getElementById('submit-msg').style.display = 'block';">
-                        {{ csrf_field() }}
-							<div style="padding: 20px;">
-								<input type="checkbox" name="agree" required value="1"> {{ trans('translate.stel_agree_statement') }}
-							</div>
-							<div id="submit-btn" class="section nomargin" style="padding: 10px;">
-								<button class="button button-3d btn-blue" type="submit">{{ trans('translate.stel_agree') }}</button> 
-								<a class="button button-3d btn-grey" onClick="$.magnificPopup.close();return false;">{{ trans('translate.stel_not_agree') }}</a>
-							</div>
-							<div id="submit-msg" class="section nomargin" style="padding: 10px;" hidden="">
-								<p>Please Wait ...</p>
-							</div>
+							<form class="form-horizontal" role="form" method="GET" action="{{ url('checkout') }}" onsubmit="javascript:document.getElementById('submit-btn').style.display = 'none';document.getElementById('submit-msg').style.display = 'block';">
+                        		{{ csrf_field() }}
+								<div style="padding: 20px;">
+									<input type="checkbox" name="agree" required value="1"> {{ trans('translate.stel_agree_statement') }}
+								</div>
+								<div id="submit-btn" class="section nomargin" style="padding: 10px;">
+									<button class="button button-3d btn-blue" type="submit">{{ trans('translate.stel_agree') }}</button> 
+									<a class="button button-3d btn-grey" onClick="$.magnificPopup.close();return false;">{{ trans('translate.stel_not_agree') }}</a>
+								</div>
+								<div id="submit-msg" class="section nomargin" style="padding: 10px;" hidden="">
+									<p>Please Wait ...</p>
+								</div>
 							</form>
 						</div>
 					</div>

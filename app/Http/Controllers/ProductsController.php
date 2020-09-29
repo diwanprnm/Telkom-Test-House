@@ -157,24 +157,20 @@ class ProductsController extends Controller
         
     } 
 
-     public function payment_detail($id)
+    public function payment_confirmation($id)
     { 
         $currentUser = Auth::user();
 
         if($currentUser){
-            $select = array(self::STELS_ID, "stels.name","stels.price","stels.code","stels.attachment","stels_sales.invoice","stels_sales.payment_status","companies.name as company_name","stels_sales_detail.id as id_attachment_stel","stels_sales_detail.qty","stels_sales.id_kuitansi","stels_sales.faktur_file","stels_sales_detail.attachment as manual_attachment","stels_sales.id as manual_id"); 
-            $STELSales = STELSalesDetail::select($select)->where("stels_sales_id",$id)
-                        ->join("stels_sales","stels_sales.id","=","stels_sales_detail.stels_sales_id")
-                        ->join("stels",self::STELS_ID,"=","stels_sales_detail.stels_id")
-                         ->join("users","users.id","=","stels_sales.user_id")
-                         ->join("companies","companies.id","=","users.company_id")
-                        ->get();
-            $page = "payment_detail";
-            return view('client.STEL.payment_detail') 
+            $STELSales = STELSales::where("id", $id)
+                        ->with('sales_detail')
+                        ->with('sales_detail.stel')->get();
+            $page = "payment_confirmation";
+            return view('client.STEL.payment_confirmation') 
             ->with('page', $page)   
-            ->with(self::STELS, $STELSales);     
+            ->with('data', $STELSales);
         }else{
-           return redirect(self::LOGIN);
+           return redirect("login");
         }
         
     } 
@@ -267,11 +263,9 @@ class ProductsController extends Controller
         }
 
         $details = array();
-        $stel_code_string = '';
         foreach (Cart::content() as $row) {
             $res = explode('myTokenProduct', $row->name);
             $stel_name = $res[0] ? $res[0] : '-';
-            $stel_code = $res[1] ? $res[1] : '-';
             $details [] = 
                 [
                     "item" => $stel_code,
@@ -281,7 +275,6 @@ class ProductsController extends Controller
                     "total" => $row->price*$row->qty
                 ]
             ;
-            $stel_code_string = $stel_code_string ? $stel_code_string.', '.$res[1] : $res[1];
         }
 
         $data = [
@@ -304,11 +297,6 @@ class ProductsController extends Controller
             "created" => [
                 "by" => $currentUser->name,
                 "reference_id" => $currentUser->id
-            ],
-            "config" => [
-                "kode_wapu" => "01",
-                "afiliasi" => "non-telkom",
-                "tax_invoice_text" => $stel_code_string.'.'
             ],
             "include_tax_invoice" => true,
             "bank" => [
@@ -343,7 +331,9 @@ class ProductsController extends Controller
                 ->with('tax', $tax)
                 ->with('unique_code', $unique_code)
                 ->with('final_price', $final_price)
-                ->with('invoice_number', $invoice_number);
+                ->with('invoice_number', $invoice_number)
+                ->with('payment_method', $this->api_get_payment_methods())
+            ;
         }else{
             return redirect(self::PRODUCTS);
         } 
@@ -371,6 +361,26 @@ class ProductsController extends Controller
         }
     }
 
+    public function api_get_payment_methods(){
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json', 
+                            'Authorization' => config("app.gateway_tpn")
+                        ],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false,
+            'verify' => false
+        ]);
+        try {
+            $res_payment_method = $client->get("v1/products/".config("app.product_id_tth")."/paymentmethods")->getBody();
+            $payment_method = json_decode($res_payment_method);
+
+            return $payment_method;
+        } catch(Exception $e){
+            return null;
+        }
+    }
+
     public function doCheckout(Request $request){  
         $PO_ID = $request->session()->get(self::PO_ID_TPN);
         $currentUser = Auth::user();
@@ -392,7 +402,8 @@ class ProductsController extends Controller
                 $STELSales->postal_code = $request->input("postal_code");
                 $STELSales->birthdate = $request->input("birthdate");
            } 
-           $STELSales->payment_method = ($request->input("payment_method")=="atm")?1:2;
+           $mps_info = explode('||', $request->input("payment_method"));
+           $STELSales->payment_method = $mps_info[2] == "atm" ? 1 : 2;
            $STELSales->payment_status = 0;
            $STELSales->invoice = $request->input("invoice_number");
            $STELSales->user_id = $currentUser->id;
@@ -401,11 +412,30 @@ class ProductsController extends Controller
            $STELSales->created_at = date(self::FORMAT_DATE);
 
            if($PO_ID){
+                $stel_code_string = '';
+                foreach (Cart::content() as $row) {
+                    $res = explode('myTokenProduct', $row->name);
+                    $stel_code = $res[1] ? $res[1] : '-';
+                    $stel_code_string = $stel_code_string ? $stel_code_string.', '.$res[1] : $res[1];
+                }
+
                 $data = [
                     "draft_id" => $PO_ID,
                     "created" => [
                         "by" => $currentUser->name,
                         "reference_id" => $currentUser->id
+                    ],
+                    "config" => [
+                        "kode_wapu" => "01",
+                        "afiliasi" => "non-telkom",
+                        "tax_invoice_text" => $stel_code_string.'.',
+                        "payment_method" => $mps_info[2] == "atm" ? "internal" : "mps",
+                    ],
+                    "mps" => [
+                        "gateway" => $mps_info[0],
+                        "product_code" => $mps_info[1],
+                        "product_type" => $mps_info[2],
+                        "manual_expired" => 20160
                     ]
                 ];
 
@@ -413,6 +443,18 @@ class ProductsController extends Controller
 
                 $STELSales->PO_ID = $PO_ID;
                 $STELSales->BILLING_ID = $billing && $billing->status ? $billing->data->_id : null;
+                if($mps_info[2] != "atm"){
+                    $STELSales->VA_name = $mps_info ? $mps_info[3] : null;
+                    $STELSales->VA_image_url = $mps_info ? $mps_info[4] : null;
+                    $STELSales->VA_number = $billing && $billing->status == true ? $billing->data->mps->va->number : null;
+                    $STELSales->VA_amount = $billing && $billing->status == true ? $billing->data->mps->va->amount : null;
+                    $STELSales->VA_expired = $billing && $billing->status == true ? $billing->data->mps->va->expired : null;
+                }
+                if(!$STELSales->VA_number){
+                    $request->session()->forget('PO_ID_from_TPN');
+                    Session::flash('error', 'Failed to generate '.$mps_info[3].', please choose another bank!');
+                    return back();
+                }
             }
 
             try{
@@ -455,7 +497,7 @@ class ProductsController extends Controller
                         Session::flash(self::ERROR, 'Failed To Checkout');
                         return redirect(self::PRODUCTS);
                     } 
-                return redirect('purchase_history');
+                return redirect('payment_confirmation/'.$STELSales->id);
             } catch(\Illuminate\Database\QueryException $e){
                 
                 Session::flash(self::ERROR, 'Failed To Checkout');
@@ -481,6 +523,227 @@ class ProductsController extends Controller
             $res_billing = $client->post("v1/billings", $params)->getBody();
             return json_decode($res_billing); 
             
+        } catch(Exception $e){
+            return null;
+        }
+    }
+
+    public function api_resend_va($id){
+        $STELSales = STELSales::find($id);
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json', 
+                            'Authorization' => config("app.gateway_tpn")
+                        ],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+        try {
+            $res_resend = $client->post("v1/billings/mps/resend/".$STELSales->BILLING_ID)->getBody();
+            $resend = json_decode($res_resend);
+            if($resend){
+                $STELSales->VA_number = $resend && $resend->status == true ? $resend->data->mps->va->number : null;
+                $STELSales->VA_amount = $resend && $resend->status == true ? $resend->data->mps->va->amount : null;
+                $STELSales->VA_expired = $resend && $resend->status == true ? $resend->data->mps->va->expired : null;
+                
+                $STELSales->save();
+            }
+                        
+            return redirect('/payment_confirmation/'.$id);
+        } catch(Exception $e){
+            return null;
+        }
+    }
+
+    public function api_cancel_va($id){
+        $STELSales = STELSales::where('id', $id)
+            ->with('user')
+            ->with('user.company')
+            ->with('sales_detail')
+            ->with('sales_detail.stel')
+            ->first()
+        ;
+
+        Session::flash('message', "Please choose another bank. If you leave or move to another page, your process will not be saved!");
+        return view('client.STEL.cancel') 
+            ->with('STELSales', $STELSales)
+            ->with('payment_method', $this->api_get_payment_methods());
+    }
+
+    public function doCancel(Request $request){
+        $currentUser = Auth::user();
+        if($currentUser){ 
+            $STELSales = STELSales::where('id', $request->input('id'))
+                ->with('user')
+                ->with('user.company')
+                ->with('sales_detail')
+                ->with('sales_detail.stel')
+                ->first()
+            ;
+            $PO_ID = $this->regeneratePO($STELSales);
+            $last_BILLING_ID = $STELSales->BILLING_ID;
+           
+            $mps_info = explode('||', $request->input("payment_method"));
+
+            if($PO_ID){
+                $stel_code_string = '';
+                foreach ($STELSales->sales_detail as $row) {
+                    $stel_code_string = $stel_code_string ? $stel_code_string.', '.$row->stel->code : $row->stel->code;
+                }
+
+                $data = [
+                    "draft_id" => $PO_ID,
+                    "created" => [
+                        "by" => $currentUser->name,
+                        "reference_id" => $currentUser->id
+                    ],
+                    "config" => [
+                        "kode_wapu" => "01",
+                        "afiliasi" => "non-telkom",
+                        "tax_invoice_text" => $stel_code_string.'.',
+                        "payment_method" => $mps_info[2] == "atm" ? "internal" : "mps",
+                    ],
+                    "mps" => [
+                        "gateway" => $mps_info[0],
+                        "product_code" => $mps_info[1],
+                        "product_type" => $mps_info[2],
+                        "manual_expired" => 20160
+                    ]
+                ];
+
+                $billing = $this->api_billing($data);
+
+                $STELSales->PO_ID = $PO_ID;
+                $STELSales->BILLING_ID = $billing && $billing->status == true ? $billing->data->_id : null;
+                if($mps_info[2] != "atm"){
+                    $STELSales->VA_name = $mps_info ? $mps_info[3] : null;
+                    $STELSales->VA_image_url = $mps_info ? $mps_info[4] : null;
+                    $STELSales->VA_number = $billing && $billing->status == true ? $billing->data->mps->va->number : null;
+                    $STELSales->VA_amount = $billing && $billing->status == true ? $billing->data->mps->va->amount : null;
+                    $STELSales->VA_expired = $billing && $billing->status == true ? $billing->data->mps->va->expired : null;
+                }
+                
+                if(!$STELSales->VA_number){
+                    Session::flash('error', 'Failed to generate '.$mps_info[3].', please choose another bank!');
+                    return back();
+                }
+            }
+
+            try{
+                $save = $STELSales->save();
+
+                if($last_BILLING_ID){
+                    $data_cancel_billing = [
+                        "canceled" => [
+                            "message" => "-",
+                            "by" => $currentUser->name,
+                            "reference_id" => $currentUser->id
+                        ]
+                    ];
+                    $this->api_cancel_billing($last_BILLING_ID, $data_cancel_billing);
+                }
+
+                $data= array( 
+                    "from"=>$currentUser->name,
+                    "to"=>"admin",
+                    "message"=>"Permohonan Pembelian STEL",
+                    "url"=>"sales/".$STELSales->id."/edit",
+                    "is_read"=>0,
+                    "created_at"=>date("Y-m-d H:i:s"),
+                    "updated_at"=>date("Y-m-d H:i:s")
+                );
+                $notification = new NotificationTable();
+                $notification->id = Uuid::uuid4();
+                $notification->from = $data['from'];
+                  $notification->to = $data['to'];
+                  $notification->message = $data['message'];
+                  $notification->url = $data['url'];
+                  $notification->is_read = $data['is_read'];
+                  $notification->created_at = $data['created_at'];
+                  $notification->updated_at = $data['updated_at'];
+                  $notification->save();
+
+                    $data['id'] = $notification->id;
+
+                // event(new Notification($data));
+
+                return redirect('payment_confirmation/'.$STELSales->id);
+            } catch(\Illuminate\Database\QueryException $e){
+                
+                Session::flash('error', 'Failed To Checkout');
+                return redirect('products');
+            }
+        }else{
+           return redirect('/');
+        } 
+    }
+
+    public function regeneratePO($STELSales){
+        $currentUser = Auth::user();
+        $details = array();
+
+        foreach ($STELSales->sales_detail as $row) {
+            $details [] = 
+                [
+                    "item" => $row->stel->code,
+                    "description" => $row->stel->name,
+                    "quantity" => $row->qty,
+                    "price" => $row->stel->price,
+                    "total" => $row->stel->price*$row->qty
+                ]
+            ;
+        }
+
+        $data = [
+            "from" => [
+                "name" => "PT TELEKOMUNIKASI INDONESIA, TBK.",
+                "address" => "Telkom Indonesia Graha Merah Putih, Jalan Japati No.1 Bandung, Jawa Barat, 40133",
+                "phone" => "(+62) 812-2483-7500",
+                "email" => "urelddstelkom@gmail.com",
+                "npwp" => "01.000.013.1-093.000"
+            ],
+            "to" => [
+                "name" => $currentUser->company->name ? $currentUser->company->name : "-",
+                "address" => $currentUser->company->address ? $currentUser->company->address : "-",
+                "phone" => $currentUser->company->phone_number ? $currentUser->company->phone_number : "-",
+                "email" => $currentUser->company->email ? $currentUser->company->email : "-",
+                "npwp" => $currentUser->company->npwp_number ? $currentUser->company->npwp_number : "-"
+            ],
+            "product_id" => config("app.product_id_tth"), //product_id TTH
+            "details" => $details,
+            "created" => [
+                "by" => $currentUser->name,
+                "reference_id" => $currentUser->id
+            ],
+            "include_tax_invoice" => true,
+            "bank" => [
+                "owner" => "Divisi RisTI TELKOM",
+                "account_number" => "131-0096022712",
+                "bank_name" => "BANK MANDIRI",
+                "branch_office" => "KCP KAMPUS TELKOM BANDUNG"         
+            ]
+        ];
+
+        $purchase = $this->api_purchase($data);
+
+        return $purchase && $purchase->status ? $purchase->data->_id : null;
+    }
+
+    public function api_cancel_billing($BILLING_ID,$data){
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json', 
+                            'Authorization' => config("app.gateway_tpn")
+                        ],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+        try {
+            $params['json'] = $data;
+            $res_cancel_billing = $client->put("v1/billings/".$BILLING_ID."/cancel", $params)->getBody();
+            $cancel_billing = json_decode($res_cancel_billing);
+
+            return $cancel_billing;
         } catch(Exception $e){
             return null;
         }
