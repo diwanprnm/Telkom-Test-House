@@ -51,8 +51,8 @@ class CreateExaminationsTable extends Migration
             $table->string('BILLING_ID')->nullable();
             $table->string('INVOICE_ID')->nullable();
             $table->integer('unique_code')->default(0);
-            $table->integer('include_pph');
-            $table->integer('payment_method');
+            $table->integer('include_pph')->default(0);
+            $table->integer('payment_method')->default(0);
             $table->string('VA_name')->nullable();
             $table->string('VA_image_url')->nullable();
             $table->string('VA_number')->nullable();
