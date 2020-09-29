@@ -157,9 +157,11 @@ class UsereksController extends Controller
         $usersEks->phone_number = $request->input(self::PHONE_NUMBER);
         $usersEks->fax = $request->input('fax');
 
-        // $fileService = new FileService();
-        // $fileService->uploadFile($request->file(self::PICTURE), '', self::MEDIA_USER.$usersEks->id);
+        if ($request->hasFile(self::PICTURE)) { 
+            $fileService = new FileService();
+            $fileService->uploadFile($request->file(self::PICTURE), '', self::MEDIA_USER.$usersEks->id);
 
+        }
         $usersEks->created_by = $currentUser->id;
         $usersEks->updated_by = $currentUser->id;
 
@@ -240,10 +242,7 @@ class UsereksController extends Controller
         }
         if ($request->has(self::PASS_TEXT)){
             $usersEks->password = bcrypt($request->input(self::PASS_TEXT));
-        }
-        if ($request->has(self::PRICE)){
-            $usersEks->price = $request->input(self::PRICE);
-        }
+        } 
         if ($request->has(self::IS_ACTIVE)){
             $usersEks->is_active = $request->input(self::IS_ACTIVE);
         }
@@ -257,17 +256,17 @@ class UsereksController extends Controller
         if ($request->has('fax')){
             $usersEks->fax = $request->input('fax');
         }
-
-        // $fileService = new FileService();
-        // $fileService->uploadFile($request->file(self::PICTURE), '', self::MEDIA_USER.$usersEks->id);
-
+        if ($request->hasFile(self::PICTURE)) { 
+            $fileService = new FileService();
+            $fileService->uploadFile($request->file(self::PICTURE), '', self::MEDIA_USER.$usersEks->id);
+        }
         $usersEks->updated_by = $currentUser->id;
 
         try{
             $usersEks->save(); 
 
             $logService = new LogService();
-            $logService->createLog('Update User', self::USER_EKSTERNAL, $oldData); 
+            // $logService->createLog('Update User', self::USER_EKSTERNAL, $oldData); 
 
             Session::flash(self::MESSAGE, 'User successfully updated');
             return redirect(self::ADMIN_USEREKS);
@@ -286,11 +285,14 @@ class UsereksController extends Controller
     public function destroy($id)
     {
 		$usersEks = User::find($id);
-
+         $oldData = $usersEks;
         if ($usersEks){
             try{
                 $usersEks->delete();
-                
+
+                $logService = new LogService();
+                // $logService->createLog("Delete User",self::USER_EKSTERNAL,$oldData);
+
                 Session::flash(self::MESSAGE, 'User successfully deleted');
                 return redirect(self::ADMIN_USEREKS);
             }catch (Exception $e){
@@ -313,7 +315,7 @@ class UsereksController extends Controller
                 $usersEks->save();
 
                 $logService = new LogService();
-                $logService->createLog( "Delete User","USER EKSTERNAL",$oldData);
+                // $logService->createLog("Delete User",self::USER_EKSTERNAL,$oldData);
 
                 Session::flash(self::MESSAGE, 'User successfully deleted');
                 return redirect(self::ADMIN_USEREKS);
