@@ -10,6 +10,7 @@ use App\Examination;
 use Illuminate\Support\Facades\Storage;
 use App\Events\Notification;
 
+use App\Services\ExaminationService;
 class ExaminationControllerTest extends TestCase
 {
     public function testIndex()
@@ -281,12 +282,20 @@ class ExaminationControllerTest extends TestCase
         $response = $this->actingAs(User::find('1'))->call('GET', 'admin/examination/generateSPB');  
         $this->assertEquals(200, $response->status());
     }
-    // public function test_generateSPB()
-    // {
-    //     $examination = factory(App\Examination::class)->create(); 
-    //     $response = $this->actingAs(User::find('1'))->call('POST', 'admin/examination/generateSPB');  
-    //     $this->assertEquals(200, $response->status());
-    // }
+    public function test_generateSPB()
+    {
+        $examinationService = new ExaminationService();
+        $spb_number = $examinationService->generateSPBNumber();
+        $examination = factory(App\Examination::class)->create(['spb_number'=>$spb_number]); 
+        $response = $this->actingAs(User::find('1'))->call('POST', 'admin/examination/generateSPB',
+            [
+                'spb_number'=>$spb_number,
+                'exam_id'=>$examination->id,
+                'spb_date'=>'2020-12-12',
+                'arr_biaya[]'=>array(1200,1200),
+            ]);  
+        $this->assertEquals(200, $response->status());
+    }
 
     public function test_generateSPBParam(){
         $examination = factory(App\Examination::class)->create(); 
