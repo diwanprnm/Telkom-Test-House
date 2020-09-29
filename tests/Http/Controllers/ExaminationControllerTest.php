@@ -269,6 +269,18 @@ class ExaminationControllerTest extends TestCase
  
         $this->assertEquals(200, $response->status());
     }
+     public function test_generateSPB_get()
+    {
+        $device = factory(App\Device::class)->create(); 
+        $examination = factory(App\Examination::class)->create(['device_id'=>$device->id,'examination_type_id'=>2]); 
+        $examinationCharges = factory(App\NewExaminationCharge::class)->create(); 
+ 
+        session(['key_exam_id_for_generate_spb' => $examination->id]);
+        session(['key_spb_number_for_generate_spb' => '']);
+        session(['key_spb_date_for_generate_spb' => '2020-12-12']);
+        $response = $this->actingAs(User::find('1'))->call('GET', 'admin/examination/generateSPB');  
+        $this->assertEquals(200, $response->status());
+    }
     // public function test_generateSPB()
     // {
     //     $examination = factory(App\Examination::class)->create(); 
