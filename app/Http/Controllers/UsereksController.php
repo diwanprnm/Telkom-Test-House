@@ -77,14 +77,7 @@ class UsereksController extends Controller
             $status = -1;
 
             $companies = Company::where('id','!=', 1)->get();
-            $roles = Role::where('id', 2);
-            
-     //        $query = User::whereNotNull('created_at')
-     //                ->with('role')
-     //                ->with(self::COMPANY)
-					// ->where(self::ROLE_ID, '=', '2')
-					// ->where('id', '<>', '1')
-					// ->where('is_deleted', '=', '0');
+            $roles = Role::where('id', 2); 
             
             $query = User::select(DB::raw('users.*,companies.name as company_name,roles.name as role_name'))
                     ->where(self::ROLE_ID, '=', '2')
