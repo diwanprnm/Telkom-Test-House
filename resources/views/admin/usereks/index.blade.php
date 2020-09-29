@@ -148,12 +148,12 @@
 										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
 										<td class="center">{{ $item->name }}</td>
 										@if($item->company)
-											<td class="center">{{ $item->company->name }}</td>
+											<td class="center">{{ $item->company_name }}</td>
 										@else
 											<td class="center">-</td>
 										@endif
 										<td class="center">{{ $item->email }}</td>
-										<td class="center">{{ $item->role->name }}</td>
+										<td class="center">{{ $item->role_name }}</td>
 	                                    @if($item->is_active)
 	                                    	<td class="center"><span class="label label-sm label-success">Active</span></td>
 	                                    @else
