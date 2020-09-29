@@ -50,6 +50,14 @@ class CreateExaminationsTable extends Migration
             $table->string('PO_ID')->nullable();
             $table->string('BILLING_ID')->nullable();
             $table->string('INVOICE_ID')->nullable();
+            $table->integer('unique_code')->default(0);
+            $table->integer('include_pph');
+            $table->integer('payment_method');
+            $table->string('VA_name')->nullable();
+            $table->string('VA_image_url')->nullable();
+            $table->string('VA_number')->nullable();
+            $table->double('VA_amount', 15, 0)->nullable();
+            $table->string('VA_expired')->timestamp()->nullable();
             $table->unique('spk_code');
             $table->date('spk_date')->nullable();
             $table->string('spb_number')->nullable();

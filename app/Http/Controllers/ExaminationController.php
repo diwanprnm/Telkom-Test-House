@@ -535,9 +535,9 @@ class ExaminationController extends Controller
 
 	            $notification_id = $notificationService->make($data);
 			    $data['id'] = $notification_id;
-			    // event(new Notification($data));
+			    event(new Notification($data));
 
-				$examinationService->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.spb", "Upload SPB",$path_file."/".$attach_name);
+				$examinationService->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.spb", "Penerbitan Surat Pemberitahuan Biaya (SPB) untuk ".$exam->function_test_NO,$path_file."/".$attach_name,$request->input('spb_number'),$exam->id);
 			}else if($status == -1){
 				$exam->price = str_replace(".",'',$request->input('exam_price'));
 				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"SPB",$request->input(self::KETERANGAN));
@@ -889,6 +889,7 @@ class ExaminationController extends Controller
 				];
 				$examinationService->api_cancel_billing($exam->BILLING_ID, $data_cancel_billing);
 			}
+			/*
 			$data_billing = [
                 "draft_id" => $request->input(self::PO_ID),
                 "created" => [
@@ -896,11 +897,19 @@ class ExaminationController extends Controller
                     self::REFERENCE_ID => $currentUser->id
                 ]
             ];
+			$billing = $examinationService->api_billing($data_billing);
+			*/
+			$exam->PO_ID = $request->input(self::PO_ID);
+			$exam->BILLING_ID = null;
+			$exam->include_pph = 0;
+			$exam->payment_method = 0;
+			$exam->VA_name = null;
+			$exam->VA_image_url = null;
+			$exam->VA_number = null;
+			$exam->VA_amount = null;
+			$exam->VA_expired = null;
 
-            $billing = $examinationService->api_billing($data_billing);
-
-            $exam->PO_ID = $request->input(self::PO_ID);
-            $exam->BILLING_ID = $billing && $billing->status ? $billing->data->_id : null;
+            // $exam->BILLING_ID = $billing && $billing->status ? $billing->data->_id : null;
         }
 
         if ($request->hasFile(self::CERTIFICATE_DATE)) {
@@ -1871,11 +1880,6 @@ class ExaminationController extends Controller
 	                "by" => $exam->user->name,
 	                self::REFERENCE_ID => $exam->user->id
 	            ],
-	            "config" => [
-	                "kode_wapu" => "01",
-	                "afiliasi" => "non-telkom",
-	                "tax_invoice_text" => $details[0]['description']
-	            ],
 	            "include_tax_invoice" => true,
 	            "bank" => [
 	                "owner" => "Divisi RisTI TELKOM",
@@ -1887,11 +1891,8 @@ class ExaminationController extends Controller
 	        $purchase = $examinationService->api_purchase($data_draft);
 	        $total_price = $biaya;
             $PO_ID = $purchase && $purchase->status ? $purchase->data->_id : null;
-            $unique_code = $purchase && $purchase->status ? $purchase->data->unique_code : '0';
-            $tax = floor(0.1*($total_price + $unique_code));
-            $final_price = $total_price + $unique_code + $tax;
-            array_push($arr_nama_perangkat, 'Unique Code');
-            array_push($arr_biaya, $unique_code);
+            $tax = floor(0.1*$total_price);
+            $final_price = $total_price + $tax;
 			/* END Kirim Draft ke TPN */
 			$data = []; 
 			$data[] = [
@@ -1899,10 +1900,10 @@ class ExaminationController extends Controller
 				self::SPB_DATE => $spb_date,
 				'arr_nama_perangkat' => $arr_nama_perangkat,
 				'arr_biaya' => $arr_biaya,
-				'unique_code' => $unique_code,
 				'exam' => $exam,
 				self::MANAGER_UREL => $manager_urels,
-				'is_poh' => $is_poh
+				'is_poh' => $is_poh,
+				'payment_method' => $examinationService->api_get_payment_methods()
 			];
 
 			$request->session()->put('key_exam_for_spb', $data);

@@ -1671,7 +1671,7 @@
 						</legend>
 						<div class="row">
 							<div class="col-md-12">
-								<div class="form-group">
+								<div class="form-group" style="display: none;">
 									<label>
 										Bukti Pembayaran
 									</label>
@@ -1696,6 +1696,25 @@
 									@else
 										<label>
 											: (Kosong)
+										</label>
+									@endif
+								</div>
+								<div class="form-group">
+									<label>
+										Billing Status
+									</label>
+										
+									@if($data->PO_ID && $data->BILLING_ID == '')
+										<label>
+											: (Drafted)
+										</label>
+									@elseif($data->PO_ID && $data->BILLING_ID && $data->payment_status != 1)
+										<label>
+											: (Created)
+										</label>
+									@elseif($data->PO_ID && $data->BILLING_ID && $data->payment_status)
+										<label>
+											: (Paid)
 										</label>
 									@endif
 								</div>
@@ -1826,7 +1845,7 @@
 						</legend>
 						<div class="row">
 							<div class="col-md-12">
-								<div class="form-group">
+								<div class="form-group" style="display: none;">
 									<label>
 										Bukti Pembayaran
 									</label>
@@ -1850,6 +1869,25 @@
 									@else
 										<label>
 											: (Kosong)
+										</label>
+									@endif
+								</div>
+								<div class="form-group">
+									<label>
+										Billing Status
+									</label>
+										
+									@if($data->PO_ID && $data->BILLING_ID == '')
+										<label>
+											: (Drafted)
+										</label>
+									@elseif($data->PO_ID && $data->BILLING_ID && $data->payment_status != 1)
+										<label>
+											: (Created)
+										</label>
+									@elseif($data->PO_ID && $data->BILLING_ID && $data->payment_status)
+										<label>
+											: (Paid)
 										</label>
 									@endif
 								</div>
@@ -1912,7 +1950,7 @@
 						</legend>
 						<div class="row">
 							<div class="col-md-12">
-								<div class="form-group">
+								<div class="form-group" style="display: none;">
 									<label>
 										Bukti Pembayaran
 									</label>
@@ -1936,6 +1974,25 @@
 									@else
 										<label>
 											: (Kosong)
+										</label>
+									@endif
+								</div>
+								<div class="form-group">
+									<label>
+										Billing Status
+									</label>
+										
+									@if($data->PO_ID && $data->BILLING_ID == '')
+										<label>
+											: (Drafted)
+										</label>
+									@elseif($data->PO_ID && $data->BILLING_ID && $data->payment_status != 1)
+										<label>
+											: (Created)
+										</label>
+									@elseif($data->PO_ID && $data->BILLING_ID && $data->payment_status)
+										<label>
+											: (Paid)
 										</label>
 									@endif
 								</div>
@@ -2690,6 +2747,7 @@
 				@endif
 				@endif
 
+				@php $rev_uji = 0; $lap_uji_url = null; $lap_uji_attach = null @endphp
 				@if(isset($admin_roles[0]))
 				@if($admin_roles[0]->resume_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-lap-uji')) !!}
@@ -2700,7 +2758,6 @@
 							Step Laporan Uji
 						</legend>
 						<div class="row">
-							@php $rev_uji = 0; $lap_uji_url = null; $lap_uji_attach = null @endphp
 							@foreach($data->media as $item)
 								@if($item->name == 'Laporan Uji')
 									@if($rev_uji == 0)

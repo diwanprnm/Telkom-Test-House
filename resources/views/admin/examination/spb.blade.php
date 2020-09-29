@@ -141,7 +141,7 @@
 				<tr>
 					<td>
 						<div class="form-group">
-							<input type="text" class="form-control" name="nama_perangkat[]" value="{{ $data->device->name }}, merk {{ $data->device->mark }}, type {{ $data->device->model }}, kapasitas {{ $data->device->capacity }}" required>
+						<input type="text" class="form-control" name="nama_perangkat[]" value="{{ $data->device->name }}, merek {{ $data->device->mark }}, tipe {{ $data->device->model }}, kapasitas {{ $data->device->capacity }}" required>
 						</div>
 					</td>
 					<td>

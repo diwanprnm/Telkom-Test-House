@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>DDS</title>
+	<title>DDB</title>
 	<style>
 		@import url(//fonts.googleapis.com/css?family=Lato:700);
 

@@ -134,7 +134,7 @@
         $('input[type=radio][name=payment_method]').change(function(){
             var payment_method = $(this).val();
             console.log(payment_method);
-            if(payment_method == "cc"){
+            if(payment_method == "va"){
                 $(".metoda").css("display","none");
                 $(".metodb").css("display","block");
                  $(".metodb .sm-form-control").prop('required',true);

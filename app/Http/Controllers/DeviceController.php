@@ -242,9 +242,6 @@ class DeviceController extends Controller
         if ($request->has($this::MANUFACTURE)){
             $device->manufactured_by = $request->input($this::MANUFACTURE);
         }
-        if ($request->has($this::MANUFACTURE)){
-            $device->manufactured_by = $request->input($this::MANUFACTURE);
-        }
         if ($request->has('serial_number')){
             $device->serial_number = $request->input('serial_number');
         }
