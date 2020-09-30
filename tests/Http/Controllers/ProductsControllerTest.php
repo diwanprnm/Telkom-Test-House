@@ -93,32 +93,32 @@ class ProductsControllerTest extends TestCase
     public function test_checkout()
 	{   
         $user = factory(App\User::class)->create(['role_id'=>2]);
-		$response =  $this->actingAs($user)->call('GET', '/checkout');   
+		$response =  $this->actingAs($user)->call('GET', '/checkout?agree=1');   
+		// dd($response->getContent());
+        $this->assertEquals(200, $response->status());  
+	}
+    public function test_doCheckout()
+	{   
+        $user = factory(App\User::class)->create(['role_id'=>2]);
+		$response =  $this->actingAs($user)->call('POST', '/doCheckout', 
+		[ 
+	        'payment_method' => 'ak||001||atm||1', 
+	        'name' => str_random(10), 
+	        'exp' => str_random(10), 
+	        'cvv' => str_random(10), 
+	        'cvc' => str_random(10), 
+	        'type' => str_random(10), 
+	        'no_card' => str_random(10), 
+	        'no_telp' => str_random(10), 
+	        'email' => str_random(10), 
+	        'country' => str_random(2), 
+	        'province' => str_random(2), 
+	        'postal_code' => str_random(2), 
+	        'birthdate' => str_random(2) 
+	    ]);   
 		// dd($response->getContent());
         $this->assertEquals(302, $response->status());  
 	}
- //    public function test_doCheckout()
-	// {   
- //        $user = factory(App\User::class)->create(['role_id'=>2]);
-	// 	$response =  $this->actingAs($user)->call('POST', '/doCheckout', 
-	// 	[ 
-	//         'payment_method' => 'ak||001||atm', 
-	//         'name' => str_random(10), 
-	//         'exp' => str_random(10), 
-	//         'cvv' => str_random(10), 
-	//         'cvc' => str_random(10), 
-	//         'type' => str_random(10), 
-	//         'no_card' => str_random(10), 
-	//         'no_telp' => str_random(10), 
-	//         'email' => str_random(10), 
-	//         'country' => str_random(2), 
-	//         'province' => str_random(2), 
-	//         'postal_code' => str_random(2), 
-	//         'birthdate' => str_random(2) 
-	//     ]);   
-	// 	// dd($response->getContent());
- //        $this->assertEquals(302, $response->status());  
-	// }
 
 
 	public function invokeMethod(&$object, $methodName, array $parameters = array())
@@ -141,16 +141,16 @@ class ProductsControllerTest extends TestCase
 		$object = app('App\Http\Controllers\ProductsController');
 		$this->invokeMethod($object, 'api_get_payment_methods');
 	} 
-	// public function test_resend_va()
-	// { 
-	//    $user = User::find(1);
-	//    $stelsSales = factory(App\STELSales::class)->create();
-	//    $stelSalesDetail = factory(App\STELSalesDetail::class)->create(['stels_sales_id' => $stelsSales->id]);
+	public function test_resend_va()
+	{ 
+	   $user = User::find(1);
+	   $stelsSales = factory(App\STELSales::class)->create();
+	   $stelSalesDetail = factory(App\STELSalesDetail::class)->create(['stels_sales_id' => $stelsSales->id]);
 
-	//    $response =  $this->actingAs($user)->call('GET', '/resend_va/'.$stelsSales->id);  
+	   $response =  $this->actingAs($user)->call('GET', '/resend_va/'.$stelsSales->id);  
 	    
- //       $this->assertEquals(302, $response->status());
-	// } 
+       $this->assertEquals(302, $response->status());
+	} 
 
 	public function test_cancel_va()
 	{ 
