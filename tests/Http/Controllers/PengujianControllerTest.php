@@ -59,7 +59,7 @@ class PengujianControllerTest extends TestCase
        $this->assertEquals(200, $response->status());
 	} 
 
-	  public function test_pembayaran()
+	  public function test_detail()
 	{ 
 	   // $user = User::find(1);
 	   $user = factory(App\User::class)->create(['role_id' => 2]);
@@ -67,6 +67,19 @@ class PengujianControllerTest extends TestCase
 	    $examinationAttach = factory(App\ExaminationAttach::class)->create(['examination_id' => $examination->id]);
 	    $examinationHistory = factory(App\ExaminationHistory::class)->create(['examination_id' => $examination->id]);
 	    $response =  $this->actingAs($user)->call('GET', '/pengujian/'.$examination->id."/detail");
+        
+	 
+       $this->assertEquals(200, $response->status());
+	}
+
+	  public function test_pembayaran()
+	{ 
+	   // $user = User::find(1);
+	   $user = factory(App\User::class)->create(['role_id' => 2]);
+	    $examination = factory(App\Examination::class)->create(['company_id'=>$user->company_id,'created_by'=>$user->id]);
+	    $examinationAttach = factory(App\ExaminationAttach::class)->create(['examination_id' => $examination->id,'name'=>"File Pembayaran"]);
+	    $examinationHistory = factory(App\ExaminationHistory::class)->create(['examination_id' => $examination->id]);
+	    $response =  $this->actingAs($user)->call('GET', '/pengujian/'.$examination->id."/pembayaran");
         
 	 
        $this->assertEquals(200, $response->status());

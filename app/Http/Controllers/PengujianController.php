@@ -732,7 +732,7 @@ class PengujianController extends Controller
 
 				$examinationsData = Examination::where('id', $id)->with('device')->get();
 			
-            if (!count($data)){
+            if (!count((array)$data)){
                 $message = self::DATA_NOT_FOUND;
 				$data = NULL;
             }
