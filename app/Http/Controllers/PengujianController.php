@@ -824,7 +824,7 @@ class PengujianController extends Controller
 					$notificationService = new NotificationService();
 	                $notification_id = $notificationService->make($data);
 					$data['id'] = $notification_id;
-					event(new Notification($data));
+					// event(new Notification($data));
 		    	}
 				Session::flash(self::MESSAGE, 'Upload successfully');
 			} catch(Exception $e){
@@ -1142,7 +1142,7 @@ class PengujianController extends Controller
 					$notificationService = new NotificationService();
 	                $notification_id = $notificationService->make($dataNotif);
 					$dataNotif['id'] = $notification_id;
-					event(new Notification($dataNotif));
+					// event(new Notification($dataNotif));
 				}
 			 	return back();
 
@@ -1201,7 +1201,7 @@ class PengujianController extends Controller
 					$notificationService = new NotificationService();
 	                $notification_id = $notificationService->make($data);
 					$data['id'] = $notification_id;
-					event(new Notification($data));
+					// event(new Notification($data));
 
 					return back();
 				
@@ -1254,7 +1254,7 @@ class PengujianController extends Controller
 				 	$notificationService = new NotificationService();
 	                $notification_id = $notificationService->make($dataNotif2);
 					$dataNotif2['id'] = $notification_id;
-					event(new Notification($dataNotif2));
+					// event(new Notification($dataNotif2));
 
 					return back();
 						
@@ -1312,7 +1312,7 @@ class PengujianController extends Controller
 				$notificationService = new NotificationService();
                 $notification_id = $notificationService->make($data);
 				$data['id'] = $notification_id;
-				event(new Notification($data));
+				// event(new Notification($data));
 		 		return back();
 				
 			} catch(Exception $e){
@@ -1541,7 +1541,7 @@ class PengujianController extends Controller
 	      	$notification->updated_at = $data[self::UPDATED_AT];
 	      	$notification->save();
 	      	$data['id'] = $notification->id; 
-	        event(new Notification($data));
+	        // event(new Notification($data));
 
 			echo 1;
 		} catch(Exception $e){

@@ -34,8 +34,7 @@ class TempCompanyController extends Controller
     private const MEDIA_TEMPCOMPANY = 'tempCompany/';
     private const ERROR = 'error';
     private const PAGE_EDIT = '/edit';
-    private const PAGE_TEMPCOMPANY = '/admin/tempcompany';
-    private const CONTENT_TYPE = 'Content-Type: application/octet-stream';
+    private const PAGE_TEMPCOMPANY = '/admin/tempcompany'; 
 
     private const MINIO = 'minio';
     /**

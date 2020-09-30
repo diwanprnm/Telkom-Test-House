@@ -427,7 +427,7 @@ class UserinController extends Controller
         if ($user){
             try{
 
-                $data_log = Logs::where('user_id', '=', $id);
+                $data_log = Logs::where(self::USER_ID, '=', $id);
                 $data_log->delete();
                 $user->delete();
                 

@@ -43,12 +43,9 @@ class UsereksController extends Controller
     private const PASS_TEXT = 'password';
     private const ADDRESS = 'address';
     private const PHONE_NUMBER = 'phone_number';
-    private const PICTURE = 'picture';
-    private const PATH_PROFILE = 'profile_';
-    private const MEDIA_USER = '/user/';
-    private const FAILED_USER_MSG = 'Save Profile Picture to directory failed';
-    private const FAILED_LOG_MSG = 'Save failed';
-    private const NEW_TEXT = 'new';
+    private const PICTURE = 'picture'; 
+    private const MEDIA_USER = '/user/'; 
+    private const FAILED_LOG_MSG = 'Save failed'; 
     private const PRICE = 'price';
     /**
      * Create a new controller instance.

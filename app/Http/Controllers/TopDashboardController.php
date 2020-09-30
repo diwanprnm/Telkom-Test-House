@@ -16,23 +16,22 @@ use App\ExaminationLab;
 class TopDashboardController extends Controller
 {
 
-	private const STELS = "stels_sales.id";
-	private const UPDATE = 'stels_sales_attachment.updated_at';
+	private const STELS = "stels_sales.id"; 
 	private const KAB = 'stel_kab';
 	private const ENE = 'stel_ene';
 	private const TRA = 'stel_tra';
 	private const CPE = 'stel_cpe';
-	private const KAL = 'stel_kal';
-	private const EXAM = 'examination';
-	private const EXAMID = 'examination_type_id';
-	private const CREATED = 'created_at';
+	private const KAL = 'stel_kal';   
 	private const PRICE = 'price' ;
 	private const DEVICE = 'device';
 	private const QA = 'device_qa';
 	private const VT = 'device_vt';
 	private const TA = 'device_ta';
 	private const CAL = 'device_cal';
-	private const KEYW = 'keyword';
+	private const KEYW = 'keyword'; 
+	private const YEAR = 'SUBSTR(created_at, 1, 4)';
+	private const MONTH = 'SUBSTR(created_at, 6, 2)';
+	private const REF_ID = 'reference_id';
 
 
 	public function __construct()
@@ -102,25 +101,25 @@ class TopDashboardController extends Controller
 
 				$chart['stel'][$i]=(float)$sum_stelFunc[0]; $chart[$this::KAB][$i]=(float)$sum_stelFunc[1]; $chart[$this::ENE][$i]=(float)$sum_stelFunc[2];
 				$chart[$this::TRA][$i]=(float)$sum_stelFunc[3]; $chart[$this::CPE][$i]=(float)$sum_stelFunc[4]; $chart[$this::KAL][$i]=(float)$sum_stelFunc[5];
-				$jml_device_qa = Income::where("reference_id", '=', 1)
+				$jml_device_qa = Income::where(self::REF_ID, '=', 1)
 		        
-				 ->where(DB::raw("SUBSTR(created_at, 1, 4)"), '=', $thisYear)
-				->where(DB::raw("SUBSTR(created_at, 6, 2)"), '=', $i+1)
+				 ->where(DB::raw(self::YEAR), '=', $thisYear)
+				->where(DB::raw(self::MONTH), '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
-		        $jml_device_vt = Income::where("reference_id", '=', 3)
-		        ->where(DB::raw("SUBSTR(created_at, 1, 4)"), '=', $thisYear)
-				->where(DB::raw("SUBSTR(created_at, 6, 2)"), '=', $i+1)
+		        $jml_device_vt = Income::where(self::REF_ID, '=', 3)
+		        ->where(DB::raw(self::YEAR), '=', $thisYear)
+				->where(DB::raw(self::MONTH), '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
-		        $jml_device_ta = Income::where("reference_id", '=', 2)
-		         ->where(DB::raw("SUBSTR(created_at, 1, 4)"), '=', $thisYear)
-				->where(DB::raw("SUBSTR(created_at, 6, 2)"), '=', $i+1)
+		        $jml_device_ta = Income::where(self::REF_ID, '=', 2)
+		         ->where(DB::raw(self::YEAR), '=', $thisYear)
+				->where(DB::raw(self::MONTH), '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
-		        $jml_device_cal = Income::where("reference_id", '=', 4)
-		        ->where(DB::raw("SUBSTR(created_at, 1, 4)"), '=', $thisYear)
-				->where(DB::raw("SUBSTR(created_at, 6, 2)"), '=', $i+1)
+		        $jml_device_cal = Income::where(self::REF_ID, '=', 4)
+		        ->where(DB::raw(self::YEAR), '=', $thisYear)
+				->where(DB::raw(self::MONTH), '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
 
@@ -172,25 +171,25 @@ class TopDashboardController extends Controller
 			echo json_encode($chart[$this::KAL])."||";
 		}else{
 			for($i=0;$i<12;$i++){
-				$jml_device_qa = Income::where("reference_id", '=', 1)
-		        ->whereYear(DB::raw("SUBSTR(created_at, 1, 4)"), '=', $request->input($this::KEYW))
-		        ->whereMonth(DB::raw("SUBSTR(created_at, 6, 2)"), '=', $i+1)
+				$jml_device_qa = Income::where(self::REF_ID, '=', 1)
+		        ->whereYear(DB::raw(self::YEAR), '=', $request->input($this::KEYW))
+		        ->whereMonth(DB::raw(self::MONTH), '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
 
-		        $jml_device_vt = Income::where("reference_id", '=', 3)
-		         ->whereYear(DB::raw("SUBSTR(created_at, 1, 4)"), '=', $request->input($this::KEYW))
-		        ->whereMonth(DB::raw("SUBSTR(created_at, 6, 2)"), '=', $i+1)
+		        $jml_device_vt = Income::where(self::REF_ID, '=', 3)
+		         ->whereYear(DB::raw(self::YEAR), '=', $request->input($this::KEYW))
+		        ->whereMonth(DB::raw(self::MONTH), '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
 
-		        $jml_device_ta = Income::where("reference_id", '=', 2)
-		         ->whereYear(DB::raw("SUBSTR(created_at, 1, 4)"), '=', $request->input($this::KEYW))
-		        ->whereMonth(DB::raw("SUBSTR(created_at, 6, 2)"), '=', $i+1)
+		        $jml_device_ta = Income::where(self::REF_ID, '=', 2)
+		         ->whereYear(DB::raw(self::YEAR), '=', $request->input($this::KEYW))
+		        ->whereMonth(DB::raw(self::MONTH), '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
 
-		        $jml_device_cal = Income::where("reference_id", '=', 4)
+		        $jml_device_cal = Income::where(self::REF_ID, '=', 4)
 		        ->whereYear(DB::raw("SUBSTR(tgl, 1, 4)"), '=', $request->input($this::KEYW))
 		        ->whereMonth(DB::raw("SUBSTR(tgl, 6, 2)"), '=', $i+1)
 		        ->select($this::PRICE)

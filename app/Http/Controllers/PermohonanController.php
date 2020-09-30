@@ -52,8 +52,7 @@ class PermohonanController extends Controller
 	private const HIDE_SERTIFIKAT_FILE = 'hide_sertifikat_file';
 	private const UPLOADNPWP = 'fuploadnpwp';
 	private const HIDE_NPWP_FILE = 'hide_npwp_file';
-	private const DATE_FORMAT = 'Y-m-d H:i:s';
-	private const MEDIA_EXAMINATION = '/media/examination/';
+	private const DATE_FORMAT = 'Y-m-d H:i:s'; 
 	private const FUPLOADUJI = 'fuploadrefuji';
 	private const PABRIKAN = 'Pabrikan';
 	private const FUPLOADPRINSIPAL = 'fuploadprinsipal';
@@ -595,9 +594,7 @@ class PermohonanController extends Controller
 				$res = explode('/',$request->input('path_ref'));   
 				$fuploadrefuji_name = $res[count($res)-1];
 					$url = str_replace(" ", "%20", $request->input('path_ref'));
-				$file = $fileService->uploadFile(@fopen($url,'r'), '', self::MEDIA_EXAMINATION_LOC.$exam_id);
-				// Storage::disk('minio')->put(self::MEDIA_EXAMINATION_LOC.$exam_id."/$fuploadrefuji_name", file_get_contents(@fopen($url,'r')));
-				// file_put_contents($path_file.'/'.$fuploadrefuji_name, @fopen($url,'r'));
+				$file = $fileService->uploadFile(@fopen($url,'r'), '', self::MEDIA_EXAMINATION_LOC.$exam_id); 
 			}else{
 				$fuploadrefuji_name = $request->input(self::HIDE_REF_UJI_FILE);
 			}
