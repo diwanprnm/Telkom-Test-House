@@ -666,7 +666,7 @@ class ProductsController extends Controller
 
                 $data['id'] = $notification->id;
 
-                // event(new Notification($data));
+                event(new Notification($data));
 
                 return redirect('payment_confirmation/'.$STELSales->id);
             } catch(\Illuminate\Database\QueryException $e){
