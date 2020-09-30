@@ -36,15 +36,15 @@
 					<input type="hidden" name="final_price" value="{{$final_price}}"><br>
 					<div class="row"> 
 					<p> No. Invoice	: {{$invoice_number}} </p> 
-						<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
+						<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%" aria-describedby="mydesc">
 							<thead>
 								<tr>
-									<th>No</th>
-									<th>{{ trans('translate.stel_name') }}</th>
+									<th scope="col">No</th>
+									<th scope="col">{{ trans('translate.stel_name') }}</th>
 										<th>{{ trans('translate.stel_code') }}</th>
-									<th>{{ trans('translate.stel_price') }}</th> 
-									<th>{{ trans('translate.stel_qty') }}</th>
-									<th>Total</th> 
+									<th scope="col">{{ trans('translate.stel_price') }}</th> 
+									<th scope="col">{{ trans('translate.stel_qty') }}</th>
+									<th scope="col">Total</th> 
 								</tr>
 							</thead>
 							<tbody>

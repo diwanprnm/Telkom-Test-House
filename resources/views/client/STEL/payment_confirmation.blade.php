@@ -10,15 +10,15 @@
 				<div class="row">
 					<br>    
 					<p> No. Invoice	: {{ $data[0]->invoice }} <a href="javascript:void(0)" class="collapsible" style="text-decoration: underline !important;">{{ trans('translate.examination_detail') }}</a></p> 
-					<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%" style="display: none;">
+					<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%" style="display: none;" aria-describedby="mydesc">
 						<thead>
 							<tr>
-								<th>No</th>
-								<th>{{ trans('translate.stel_name') }}</th>
-								<th>{{ trans('translate.stel_code') }}</th>
-								<th>{{ trans('translate.stel_price') }}</th> 
-								<th>{{ trans('translate.stel_qty') }}</th>
-								<th>Total</th> 
+								<th scope="col">No</th>
+								<th scope="col">{{ trans('translate.stel_name') }}</th>
+								<th scope="col">{{ trans('translate.stel_code') }}</th>
+								<th scope="col">{{ trans('translate.stel_price') }}</th> 
+								<th scope="col">{{ trans('translate.stel_qty') }}</th>
+								<th scope="col">Total</th> 
 							</tr>
 						</thead>
 						<tbody>
@@ -62,7 +62,7 @@
 							{{ trans('translate.payment_alert_1') }}<br>{{ trans('translate.payment_alert_2') }}
 						</div> 
 						<div class="col-md-3" style="font-weight: bold;font-size: 175%;">
-							<img src="http://localhost/telkomdds/public/images/bank/mandiri.png">
+							<img src="http://localhost/telkomdds/public/images/bank/mandiri.png" alt="mandiri">
 							BANK MANDIRI
 						</div>
 						<div class="col-md-9" style="font-weight: bold;font-size: 240%;margin-top: -3%;">
@@ -79,9 +79,10 @@
 						<div>
 							<div style="text-align:center;font-weight:bold;font-size: 150%;">Virtual Account </div>
 							<div style="text-align:center">
-								<div><p><b>{{ trans('translate.stel_payment_before') }}</b></p><center><p style="font-size:180%;">( {{ $data[0]->VA_expired }} WIB )</p></center></div>
+								<div><p><strong>{{ trans('translate.stel_payment_before') }}</strong></p>
+									<p style="font-size:180%;">( {{ $data[0]->VA_expired }} WIB )</p></div>
 								<div><p>{{ trans('translate.stel_transfer_to_va') }} :</p>
-									<img src="{{ $data[0]->VA_image_url }}" style="height:5%;">
+									<img alt="va-image" src="{{ $data[0]->VA_image_url }}" style="height:5%;">
 									@if($data[0]->VA_expired < date("Y-m-d H:i:s"))
 									<p class="alert alert-warning"><span style="font-size:250%;">{{ $data[0]->VA_number }}</span><br>
 										{{ trans('translate.stel_total_expired') }} <a href="{{url('/resend_va/'.$data[0]->id)}}"> {{ trans('translate.here') }} </a> {{ trans('translate.stel_total_resend') }}. 

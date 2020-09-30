@@ -92,7 +92,7 @@
               <li class=" {{ (!empty($page) && ($page == 'purchase_history' || $page == 'products' || $page == 'checkout')) ?'current':''}}">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">Stel <em class="icon-angle-down"></em></a>
                    <ul class="dropdown-menu" role="menu">
-                    <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ trans('translate.menu_ref') }} <i class="icon-angle-down"></i></a>
+                    <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ trans('translate.menu_ref') }} <em class="icon-angle-down"></em></a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="{{url('STELclient')}}">{{ trans('translate.stel') }}</a></li>
                             <li><a href="{{url('STSELclient')}}">{{ trans('translate.stels') }}</a></li>
