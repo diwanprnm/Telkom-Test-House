@@ -103,34 +103,35 @@ class TopDashboardController extends Controller
 				$chart['stel'][$i]=(float)$sum_stelFunc[0]; $chart[$this::KAB][$i]=(float)$sum_stelFunc[1]; $chart[$this::ENE][$i]=(float)$sum_stelFunc[2];
 				$chart[$this::TRA][$i]=(float)$sum_stelFunc[3]; $chart[$this::CPE][$i]=(float)$sum_stelFunc[4]; $chart[$this::KAL][$i]=(float)$sum_stelFunc[5];
 				$jml_device_qa = Income::where("reference_id", '=', 1)
-		        ->whereYear($this::CREATED, '=', $thisYear)
-		        ->whereMonth($this::CREATED, '=', $i+1)
+		        
+				 ->where(DB::raw("SUBSTR(created_at, 1, 4)"), '=', $thisYear)
+				->where(DB::raw("SUBSTR(created_at, 6, 2)"), '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
 		        $jml_device_vt = Income::where("reference_id", '=', 3)
-		        ->whereYear($this::CREATED, '=', $thisYear)
-		        ->whereMonth($this::CREATED, '=', $i+1)
+		        ->where(DB::raw("SUBSTR(created_at, 1, 4)"), '=', $thisYear)
+				->where(DB::raw("SUBSTR(created_at, 6, 2)"), '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
 		        $jml_device_ta = Income::where("reference_id", '=', 2)
-		        ->whereYear($this::CREATED, '=', $thisYear)
-		        ->whereMonth($this::CREATED, '=', $i+1)
+		         ->where(DB::raw("SUBSTR(created_at, 1, 4)"), '=', $thisYear)
+				->where(DB::raw("SUBSTR(created_at, 6, 2)"), '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
 		        $jml_device_cal = Income::where("reference_id", '=', 4)
-		        ->whereYear($this::CREATED, '=', $thisYear)
-		        ->whereMonth($this::CREATED, '=', $i+1)
+		        ->where(DB::raw("SUBSTR(created_at, 1, 4)"), '=', $thisYear)
+				->where(DB::raw("SUBSTR(created_at, 6, 2)"), '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
-				$jml_device = DB::select("
-					SELECT sum(price) AS jml
-					from incomes where YEAR(tgl) = ".$thisYear."
-					AND MONTH(tgl) = ".($i+1)."
-					;
-				");
-				$chart[$this::DEVICE][$i]=(float)$jml_device[0]->jml;  $chart[$this::QA][$i] = (float)$jml_device_qa;
-				$chart[$this::VT][$i] = (float)$jml_device_vt;  $chart[$this::TA][$i] = (float)$jml_device_ta;
-				$chart[$this::CAL][$i] = (float)$jml_device_cal;
+
+		        $jml_device = Income::where(DB::raw("SUBSTR(tgl, 1, 4)"), '=', $thisYear)
+				->where(DB::raw("SUBSTR(tgl, 6, 2)"), '=', $i+1)
+		        ->select($this::PRICE)
+		        ->sum($this::PRICE);
+
+				@$chart[$this::DEVICE][$i]=(float)$jml_device[0]->jml;  $chart[$this::QA][$i] = (float)$jml_device_qa;
+				@$chart[$this::VT][$i] = (float)$jml_device_vt;  $chart[$this::TA][$i] = (float)$jml_device_ta;
+				@$chart[$this::CAL][$i] = (float)$jml_device_cal;
 			}
             return view('admin.topdashboard.index')
                 ->with('search', $search)
@@ -172,33 +173,33 @@ class TopDashboardController extends Controller
 		}else{
 			for($i=0;$i<12;$i++){
 				$jml_device_qa = Income::where("reference_id", '=', 1)
-		        ->whereYear($this::CREATED, '=', $request->input($this::KEYW))
-		        ->whereMonth($this::CREATED, '=', $i+1)
+		        ->whereYear(DB::raw("SUBSTR(created_at, 1, 4)"), '=', $request->input($this::KEYW))
+		        ->whereMonth(DB::raw("SUBSTR(created_at, 6, 2)"), '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
 
 		        $jml_device_vt = Income::where("reference_id", '=', 3)
-		        ->whereYear($this::CREATED, '=', $request->input($this::KEYW))
-		        ->whereMonth($this::CREATED, '=', $i+1)
+		         ->whereYear(DB::raw("SUBSTR(created_at, 1, 4)"), '=', $request->input($this::KEYW))
+		        ->whereMonth(DB::raw("SUBSTR(created_at, 6, 2)"), '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
 
 		        $jml_device_ta = Income::where("reference_id", '=', 2)
-		        ->whereYear($this::CREATED, '=', $request->input($this::KEYW))
-		        ->whereMonth($this::CREATED, '=', $i+1)
+		         ->whereYear(DB::raw("SUBSTR(created_at, 1, 4)"), '=', $request->input($this::KEYW))
+		        ->whereMonth(DB::raw("SUBSTR(created_at, 6, 2)"), '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
 
 		        $jml_device_cal = Income::where("reference_id", '=', 4)
-		        ->whereYear($this::CREATED, '=', $request->input($this::KEYW))
-		        ->whereMonth($this::CREATED, '=', $i+1)
+		        ->whereYear(DB::raw("SUBSTR(tgl, 1, 4)"), '=', $request->input($this::KEYW))
+		        ->whereMonth(DB::raw("SUBSTR(tgl, 6, 2)"), '=', $i+1)
 		        ->select($this::PRICE)
 		        ->sum($this::PRICE);
 
 				$jml_device = DB::select("
 					SELECT sum(price) AS jml
-					from incomes where YEAR(tgl) = ".$request->input($this::KEYW)."
-					AND MONTH(tgl) = ".($i+1)."
+					from incomes where SUBSTR(tgl, 1, 4) = ".$request->input($this::KEYW)."
+					AND SUBSTR(tgl, 6, 2) = ".($i+1)."
 					;
 				");
 
@@ -230,8 +231,8 @@ class TopDashboardController extends Controller
 				->join("stels_sales_detail","stels_sales_detail.stels_sales_id","=",$this::STELS)
 				->join("stels","stels.id","=","stels_sales_detail.stels_id")
 				->whereNotNull('stels_sales_attachment.attachment')
-				->whereYear($this::UPDATE, '=', $year)
-				->whereMonth($this::UPDATE, '=', $i+1);
+				->where(DB::raw("SUBSTR(stels_sales.updated_at, 1, 4)"), '=', $year)
+				->where(DB::raw("SUBSTR(stels_sales.updated_at, 6, 2)"), '=', $i+1);
 		$stels_sales = $query->get();
 		foreach($stels_sales as $item){
 			switch ($item->type) {
