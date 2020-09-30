@@ -172,7 +172,7 @@ class ProductsControllerTest extends TestCase
 		$response =  $this->actingAs($user)->call('POST', '/doCancel', 
 		[ 
 	        'id' => $stelsSales->id,
-	        'payment_method'=>"A||A||atm||1"
+	        'payment_method'=>"A||A||va||1"
 	    ]);   
 		// dd($response->getContent());
         $this->assertEquals(302, $response->status());  
