@@ -32,6 +32,7 @@ class UserController extends Controller
     private const COMPANY = 'company'; 
     private const PARENT_ID = 'parent_id'; 
     private const ROLE_ID = 'role_id'; 
+    private const USER_ID = 'user_id'; 
     private const COMPANY_ID = 'company_id'; 
     private const PASS_TEXT = 'password'; 
     private const EMAIL = 'email'; 
@@ -320,7 +321,7 @@ class UserController extends Controller
     
         $select = array('menus.id');
         $menu_user = Menu::selectRaw(implode(",", $select))->join("users_menus","menus.id","=","users_menus.menu_id")
-                ->where("user_id",$currentUser->id)
+                ->where(self::USER_ID,$currentUser->id)
                 ->get()->toArray();
 
        $tree = $this->getTree();
@@ -387,7 +388,7 @@ class UserController extends Controller
 
         try{
             $user->save();
-            UsersMenus::where("user_id",$user->id)->delete(); 
+            UsersMenus::where(self::USER_ID,$user->id)->delete(); 
 
             $logService = new LogService();  
             $logService->createLog('Update User',"USER",json_encode($oldData));
@@ -425,7 +426,7 @@ class UserController extends Controller
 
         if ($user){
             try{
-                $data_log = Logs::where('user_id', '=', $id);
+                $data_log = Logs::where(self::USER_ID, '=', $id);
                 $data_log->delete();
                 $user->delete();
                 

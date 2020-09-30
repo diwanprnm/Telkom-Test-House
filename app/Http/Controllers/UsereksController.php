@@ -45,8 +45,7 @@ class UsereksController extends Controller
     private const PHONE_NUMBER = 'phone_number';
     private const PICTURE = 'picture'; 
     private const MEDIA_USER = '/user/'; 
-    private const FAILED_LOG_MSG = 'Save failed'; 
-    private const PRICE = 'price';
+    private const FAILED_LOG_MSG = 'Save failed';  
     /**
      * Create a new controller instance.
      *
@@ -222,8 +221,7 @@ class UsereksController extends Controller
     {
         $currentUser = Auth::user(); 
 
-        $usersEks = User::find($id);
-        $oldData = $usersEks;
+        $usersEks = User::find($id); 
 
         if ($request->has(self::ROLE_ID)){
             $usersEks->role_id = $request->input(self::ROLE_ID);
@@ -261,9 +259,7 @@ class UsereksController extends Controller
 
         try{
             $usersEks->save(); 
-
-            $logService = new LogService();
-            // $logService->createLog('Update User', self::USER_EKSTERNAL, $oldData); 
+ 
 
             Session::flash(self::MESSAGE, 'User successfully updated');
             return redirect(self::ADMIN_USEREKS);
