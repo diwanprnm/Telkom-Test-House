@@ -62,11 +62,11 @@ class TopDashboardControllerTest extends TestCase
     }
 
     
-    // public function testSearchGrafikType2()
-    // { 
-    //     $this->actingAs(User::find('1'))->call('POST', 'admin/topdashboard/searchGrafik', ['type' => 2, 'keyword' => 2020]);
-    //     $this->assertResponseStatus(200);
-    // }
+    public function testSearchGrafikType2()
+    { 
+        $this->actingAs(User::find('1'))->call('POST', 'admin/topdashboard/searchGrafik', ['type' => 2, 'keyword' => 2020]);
+        $this->assertResponseStatus(200);
+    }
 
     public function invokeMethod(&$object, $methodName, array $parameters = array())
     {
