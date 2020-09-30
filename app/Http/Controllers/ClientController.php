@@ -37,9 +37,7 @@ use App\Services\Logs\LogService;
 */
 class ClientController extends Controller
 {	
-	protected $loginPath = '/client/login';
-	private const TO_PORTOFOLO = '/#portfolio';
-	private const TYPE_URL = 'type_url';
+	protected $loginPath = '/client/login';  
 	private const ERROR_CODE = 'error_code';
 	private const EMAIL = 'email';
 	private const KATA_KUNCI = 'password';   

@@ -62,6 +62,19 @@ class ExaminationDoneController extends Controller
 	private const EXAM_SPB_STATUS = 'examinations.spb_status';
 	private const EXAM_PAYMENT_STATUS = 'examinations.payment_status';
 	private const EXAM_CERTIFICATE_STATUS = 'examinations.certificate_status';
+	private const EXAM_FUNCTION_STATUS = 'examinations.function_status';
+	private const EXAM_CONTRACT_STATUS = 'examinations.contract_status';
+	private const EXAM_SPK_STATUS = 'examinations.spk_status';
+	private const EXAM_EXAMINATION_STATUS = 'examinations.examination_status';
+	private const EXAM_RESUME_STATUS = 'examinations.resume_status';
+	private const EXAMINATION_TYPE_ID = 'examination_type_id';
+	private const REGISTRATION_STATUS = 'registration_status';
+	private const FUNCTION_STATUS = 'function_status';
+	private const CONTRACT_STATUS = 'contract_status';
+	private const SPB_STATUS = 'spb_status';
+	private const SPK_STATUS = 'spk_status';
+	private const EXAMINATION_STATUS = 'examination_status';
+	private const RESUME_STATUS = 'resume_status';
 
 	/**
      * Create a new controller instance.
@@ -107,27 +120,27 @@ class ExaminationDoneController extends Controller
 			$qry->where(function($q){
 				return $q->where('examinations.examination_type_id', '=', '1')
 					->where('examinations.registration_status', '=', '1')
-					->where('examinations.function_status', '=', '1')
-					->where('examinations.contract_status', '=', '1')
+					->where(self::EXAM_FUNCTION_STATUS, '=', '1')
+					->where(self::EXAM_CONTRACT_STATUS, '=', '1')
 					->where('examinations.spb_status', '=', '1')
 					->where('examinations.payment_status', '=', '1')
-					->where('examinations.spk_status', '=', '1')
-					->where('examinations.examination_status', '=', '1')
-					->where('examinations.resume_status', '=', '1')
+					->where(self::EXAM_SPK_STATUS, '=', '1')
+					->where(self::EXAM_EXAMINATION_STATUS, '=', '1')
+					->where(self::EXAM_RESUME_STATUS, '=', '1')
 					->where('examinations.qa_status', '=', '1')
 					->where('examinations.certificate_status', '=', '1')
 				;
 			})
 				->orWhere(function($q){
-					return $q->where('examination_type_id', '!=', '1')
-						->where('registration_status', '=', '1')
-						->where('function_status', '=', '1')
-						->where('contract_status', '=', '1')
-						->where('spb_status', '=', '1')
+					return $q->where(self::EXAMINATION_TYPE_ID, '!=', '1')
+						->where(self::REGISTRATION_STATUS, '=', '1')
+						->where(self::FUNCTION_STATUS, '=', '1')
+						->where(self::CONTRACT_STATUS, '=', '1')
+						->where(self::SPB_STATUS, '=', '1')
 						->where('payment_status', '=', '1')
-						->where('spk_status', '=', '1')
-						->where('examination_status', '=', '1')
-						->where('resume_status', '=', '1')
+						->where(self::SPK_STATUS, '=', '1')
+						->where(self::EXAMINATION_STATUS, '=', '1')
+						->where(self::RESUME_STATUS, '=', '1')
 						;
 				});
 		});
@@ -158,7 +171,7 @@ class ExaminationDoneController extends Controller
 		if ($request->has('type')){
 			$type = $request->get('type');
 			if($request->input('type') != 'all'){
-				$query->where('examination_type_id', $request->get('type'));
+				$query->where(self::EXAMINATION_TYPE_ID, $request->get('type'));
 			}
 		}
 
@@ -384,29 +397,29 @@ class ExaminationDoneController extends Controller
 				->where(self::DEVICE_NAME, 'like','%'.$query.'%');
 					$queries->where(function($qry){
 						$qry->where(function($q){
-							return $q->where('examination_type_id', '=', '1')
-								->where('registration_status', '=', '1')
-								->where('function_status', '=', '1')
-								->where('contract_status', '=', '1')
-								->where('spb_status', '=', '1')
+							return $q->where(self::EXAMINATION_TYPE_ID, '=', '1')
+								->where(self::REGISTRATION_STATUS, '=', '1')
+								->where(self::FUNCTION_STATUS, '=', '1')
+								->where(self::CONTRACT_STATUS, '=', '1')
+								->where(self::SPB_STATUS, '=', '1')
 								->where(self::PAYMENT_STATUS, '=', '1')
-								->where('spk_status', '=', '1')
-								->where('examination_status', '=', '1')
-								->where('resume_status', '=', '1')
+								->where(self::SPK_STATUS, '=', '1')
+								->where(self::EXAMINATION_STATUS, '=', '1')
+								->where(self::RESUME_STATUS, '=', '1')
 								->where('qa_status', '=', '1')
 								->where('certificate_status', '=', '1')
 								;
 							})
 						->orWhere(function($q){
-							return $q->where('examination_type_id', '!=', '1')
-								->where('registration_status', '=', '1')
-								->where('function_status', '=', '1')
-								->where('contract_status', '=', '1')
-								->where('spb_status', '=', '1')
+							return $q->where(self::EXAMINATION_TYPE_ID, '!=', '1')
+								->where(self::REGISTRATION_STATUS, '=', '1')
+								->where(self::FUNCTION_STATUS, '=', '1')
+								->where(self::CONTRACT_STATUS, '=', '1')
+								->where(self::SPB_STATUS, '=', '1')
 								->where(self::PAYMENT_STATUS, '=', '1')
-								->where('spk_status', '=', '1')
-								->where('examination_status', '=', '1')
-								->where('resume_status', '=', '1')
+								->where(self::SPK_STATUS, '=', '1')
+								->where(self::EXAMINATION_STATUS, '=', '1')
+								->where(self::RESUME_STATUS, '=', '1')
 								;
 							});
 					});
@@ -423,13 +436,13 @@ class ExaminationDoneController extends Controller
 						$qry->where(function($q){
 							return $q->where(self::EXAM_TYPE_ID, '=', '1')
 								->where(self::EXAM_REGISTRATION_STATUS, '=', '1')
-								->where('examinations.function_status', '=', '1')
-								->where('examinations.contract_status', '=', '1')
+								->where(self::EXAM_FUNCTION_STATUS, '=', '1')
+								->where(self::EXAM_CONTRACT_STATUS, '=', '1')
 								->where(self::EXAM_SPB_STATUS, '=', '1')
 								->where(self::EXAM_PAYMENT_STATUS, '=', '1')
-								->where('examinations.spk_status', '=', '1')
-								->where('examinations.examination_status', '=', '1')
-								->where('examinations.resume_status', '=', '1')
+								->where(self::EXAM_SPK_STATUS, '=', '1')
+								->where(self::EXAM_EXAMINATION_STATUS, '=', '1')
+								->where(self::EXAM_RESUME_STATUS, '=', '1')
 								->where('examinations.qa_status', '=', '1')
 								->where(self::EXAM_CERTIFICATE_STATUS, '=', '1')
 								;
@@ -437,13 +450,13 @@ class ExaminationDoneController extends Controller
 						->orWhere(function($q){
 							return $q->where(self::EXAM_TYPE_ID, '!=', '1')
 								->where(self::EXAM_REGISTRATION_STATUS, '=', '1')
-								->where('examinations.function_status', '=', '1')
-								->where('examinations.contract_status', '=', '1')
+								->where(self::EXAM_FUNCTION_STATUS, '=', '1')
+								->where(self::EXAM_CONTRACT_STATUS, '=', '1')
 								->where(self::EXAM_SPB_STATUS, '=', '1')
 								->where(self::EXAM_PAYMENT_STATUS, '=', '1')
-								->where('examinations.spk_status', '=', '1')
-								->where('examinations.examination_status', '=', '1')
-								->where('examinations.resume_status', '=', '1')
+								->where(self::EXAM_SPK_STATUS, '=', '1')
+								->where(self::EXAM_EXAMINATION_STATUS, '=', '1')
+								->where(self::EXAM_RESUME_STATUS, '=', '1')
 								;
 							});
 					});

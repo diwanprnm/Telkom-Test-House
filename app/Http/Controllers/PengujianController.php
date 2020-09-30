@@ -99,6 +99,20 @@ class PengujianController extends Controller
 	private const HIDE_ID_EXAM3 = 'hide_id_exam3';
 	private const EXAM_ID = 'exam_id';
 	private const MY_EXAM_ID = 'my_exam_id';
+	private const LOGIN = 'login';
+	private const MINIO = 'minio';
+	private const DEVICE = 'device';
+	private const PAYMENT_METHOD = 'payment_method';
+	private const EMAIL = 'email';
+	private const PAGE_PEMBAYARAN = '/pembayaran';
+	private const REFERENCE_ID = 'reference_id';
+	private const QUERY_UPDATED_AT = "',updated_at = '";
+	private const APPLICATION_JSON = "application/json";
+	private const TPN_2 = "app.gateway_tpn_2";
+	private const URI_API_TPN = "app.url_api_tpn";
+	private const HTTP_ERRORS = "http_errors";
+
+
 
 	private const DEVICES_NAME_AUTOSUGGEST = 'devices.name as autosuggest';
 
@@ -243,7 +257,7 @@ class PengujianController extends Controller
 				->with('data_kuisioner', $data_kuisioner)
 				->with(self::USER_ID, $user_id);
         }else{
-			return  redirect('login');
+			return  redirect(self::LOGIN);
 		}
     }
 	 
@@ -574,7 +588,7 @@ class PengujianController extends Controller
                 ->with('data_kuisioner', $data_kuisioner)
                 ->with(self::MESSAGE, $message);
 		}else{
-			return  redirect('login');
+			return  redirect(self::LOGIN);
 		}
     }
 	
@@ -605,7 +619,7 @@ class PengujianController extends Controller
 		else{
 			$attach = $data_attach[0]->attachment; 
 			$fileName = $attach;
-			$fileMinio = Storage::disk('minio')->get(self::MEDIA_EXAMINATION_LOC.$id.'/'.$attach);
+			$fileMinio = Storage::disk(self::MINIO)->get(self::MEDIA_EXAMINATION_LOC.$id.'/'.$attach);
 				
 
 			$exam_hist = new ExaminationHistory;
@@ -629,7 +643,7 @@ class PengujianController extends Controller
 			SELECT name, attachment FROM examination_attachments WHERE examination_id = '".$id."' AND (name = 'Laporan Uji' OR name = 'Revisi Laporan Uji') AND attachment != '' ORDER BY created_at DESC
 		";
 		$data_attach = DB::select($query_attach);
-		$file = NULL;
+		 
 		$attach = NULL;
 		if (count($data_attach) == 0){
 			$message = self::DATA_NOT_FOUND;
@@ -640,7 +654,7 @@ class PengujianController extends Controller
 			$rev_uji = 0;
 			foreach ($data_attach as $item) {
 				if($item->name == 'Laporan Uji' && $rev_uji == 0){
-					$file = $item->attachment;
+					 
 					$attach = $item->attachment;
 				}
 				if($item->name == 'Revisi Laporan Uji' && $rev_uji == 0){
@@ -648,10 +662,7 @@ class PengujianController extends Controller
 					$attach = $item->attachment;
 				}
 			}
-			 
-			$headers = array(
-			  self::APLLICATION_HEADER_OCTET,
-			);
+			  
 			
 			$exam_hist = new ExaminationHistory;
 			$exam_hist->examination_id = $id;
@@ -665,7 +676,7 @@ class PengujianController extends Controller
 
 			 
 			$fileName = $attach;
-			$fileMinio = Storage::disk('minio')->get(self::MEDIA_EXAMINATION_LOC.$id.'/'.$attach);
+			$fileMinio = Storage::disk(self::MINIO)->get(self::MEDIA_EXAMINATION_LOC.$id.'/'.$attach);
 			return response($fileMinio, 200, \App\Services\MyHelper::getHeaderOctet($fileName));
 			 
 		}
@@ -674,7 +685,7 @@ class PengujianController extends Controller
 	public function downloadSertifikat($id)
     {
     	$currentUser = Auth::user();
-		$examination = Examination::where('id', $id)->with('device')->get();
+		$examination = Examination::where('id', $id)->with(self::DEVICE)->get();
 		$data_attach = $examination[0]->device;
 		if (count((array)$data_attach) == 0){
 			$message = self::DATA_NOT_FOUND;
@@ -702,7 +713,7 @@ class PengujianController extends Controller
 
 
 			$fileName = $attach;
-			$fileMinio = Storage::disk('minio')->get($jns.$id.'/'.$attach);
+			$fileMinio = Storage::disk(self::MINIO)->get($jns.$id.'/'.$attach);
 			return response($fileMinio, 200, \App\Services\MyHelper::getHeaderOctet($fileName)); 
 		}
     }
@@ -730,7 +741,7 @@ class PengujianController extends Controller
 				->where('name', '=', 'File Pembayaran')
 				->first();
 
-				$examinationsData = Examination::where('id', $id)->with('device')->get();
+				$examinationsData = Examination::where('id', $id)->with(self::DEVICE)->get();
 			
             if (!count((array)$data)){
                 $message = self::DATA_NOT_FOUND;
@@ -744,12 +755,12 @@ class PengujianController extends Controller
                 ->with('price', $examination->price)
                 ->with('data', $data)
 				->with('examinationsData', $examinationsData)
-				->with('payment_method', $examinationService->api_get_payment_methods())
+				->with(self::PAYMENT_METHOD, $examinationService->api_get_payment_methods())
                 ->with(self::USER_ID, $user_id)
                 ->with('paginate', $paginate)
                 ->with(self::SEARCH, $search);
         }else{
-			return redirect("login");
+			return redirect(self::LOGIN);
 		}
     }
 	
@@ -757,7 +768,7 @@ class PengujianController extends Controller
     {
 		$currentUser = Auth::user();
 		$user_name = ''.$currentUser[self::ATTRIBUTES]['name'].'';
-		$user_email = ''.$currentUser[self::ATTRIBUTES]['email'].'';
+		$user_email = ''.$currentUser[self::ATTRIBUTES][self::EMAIL].'';
 		$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM).'';
 		if ($request->hasFile(self::FILE_PEMBAYARAN)) {
 			$name_file = 'spb_payment_'.$request->file(self::FILE_PEMBAYARAN)->getClientOriginalName();
@@ -768,7 +779,7 @@ class PengujianController extends Controller
 				}
             }else{
                 Session::flash(self::ERROR, 'Upload Payment Attachment to directory failed');
-                return redirect('/pengujian/'.$request->input(self::HIDE_ID_EXAM).'/pembayaran');
+                return redirect('/pengujian/'.$request->input(self::HIDE_ID_EXAM).self::PAGE_PEMBAYARAN);
             }
 		}else{
 			$fPembayaran = $request->input(self::HIDE_FILE_PEMBAYARAN);
@@ -783,8 +794,7 @@ class PengujianController extends Controller
 						attachment = '".$fPembayaran."',
 						no = '".$request->input('no-pembayaran')."',
 						tgl = '".date(self::DATE_FORMAT2, $timestamp)."',
-						updated_by = '".$currentUser[self::ATTRIBUTES]['id']."',
-						updated_at = '".date(self::DATE_FORMAT1)."'
+						updated_by = '".$currentUser[self::ATTRIBUTES]['id'].self::QUERY_UPDATED_AT.date(self::DATE_FORMAT1)."'
 					WHERE id = '".$request->input('hide_id_attach')."'";
 				DB::update($query_update_attach);
 				
@@ -814,7 +824,7 @@ class PengujianController extends Controller
 					$notificationService = new NotificationService();
 	                $notification_id = $notificationService->make($data);
 					$data['id'] = $notification_id;
-					// event(new Notification($data));
+					event(new Notification($data));
 		    	}
 				Session::flash(self::MESSAGE, 'Upload successfully');
 			} catch(Exception $e){
@@ -831,28 +841,28 @@ class PengujianController extends Controller
         $exam = Examination::where('id', $request->input('hide_id_exam'))
 					->with('user')
 					->with('company')
-					->with('device')
+					->with(self::DEVICE)
 					->with('examinationType')
 					->first()
 		;
         if($currentUser){ 
-			$mps_info = explode('||', $request->input("payment_method"));
+			$mps_info = explode('||', $request->input(self::PAYMENT_METHOD));
 			$exam->include_pph = $request->has('is_pph') ? 1 : 0;
 			$exam->payment_method = $mps_info[2] == "atm" ? 1 : 2;
 
             if($exam){
                 $data = [
                     "draft_id" => $exam->PO_ID,
-                    "include_pph" => $request->has('is_pph') ? true : false,
+                    "include_pph" => $request->has('is_pph'),
                     "created" => [
                         "by" => $currentUser->name,
-                        "reference_id" => $currentUser->id
+                        self::REFERENCE_ID => $currentUser->id
                     ],
                     "config" => [
                         "kode_wapu" => "01",
                         "afiliasi" => "non-telkom",
                         "tax_invoice_text" => $exam->device->name.', '.$exam->device->mark.', '.$exam->device->capacity.', '.$exam->device->model,
-                        "payment_method" => $mps_info[2] == "atm" ? "internal" : "mps",
+                        self::PAYMENT_METHOD => $mps_info[2] == "atm" ? "internal" : "mps",
                     ],
                     "mps" => [
                         "gateway" => $mps_info[0],
@@ -864,15 +874,15 @@ class PengujianController extends Controller
 
                 $billing = $this->api_billing($data);
 
-                $exam->BILLING_ID = $billing && $billing->status == true ? $billing->data->_id : null;
+                $exam->BILLING_ID = $billing && $billing->status? $billing->data->_id : null;
 				if($mps_info[2] != "atm"){
                 	$exam->VA_name = $mps_info ? $mps_info[3] : null;
                     $exam->VA_image_url = $mps_info ? $mps_info[4] : null;
-                    $exam->VA_number = $billing && $billing->status == true ? $billing->data->mps->va->number : null;
-                    $exam->VA_expired = $billing && $billing->status == true ? $billing->data->mps->va->expired : null;
+                    $exam->VA_number = $billing && $billing->status? $billing->data->mps->va->number : null;
+                    $exam->VA_expired = $billing && $billing->status? $billing->data->mps->va->expired : null;
 				}
 				if(!$exam->VA_number){
-                    Session::flash('error', 'Failed to generate '.$mps_info[3].', please choose another bank!');
+                    Session::flash(self::ERROR, 'Failed to generate '.$mps_info[3].', please choose another bank!');
                     $exam->PO_ID = $this->regeneratePO($exam);
                     $exam->BILLING_ID = null;
 					$exam->include_pph = 0;
@@ -892,7 +902,7 @@ class PengujianController extends Controller
                 return redirect('payment_confirmation_spb/'.$exam->id);
             } catch(\Illuminate\Database\QueryException $e){
                 dd($e);
-                Session::flash('error', 'Failed To Checkout');
+                Session::flash(self::ERROR, 'Failed To Checkout');
                 return back();
             }
         }else{
@@ -917,21 +927,21 @@ class PengujianController extends Controller
                 "name" => "PT TELEKOMUNIKASI INDONESIA, TBK.",
                 "address" => "Telkom Indonesia Graha Merah Putih, Jalan Japati No.1 Bandung, Jawa Barat, 40133",
                 "phone" => "(+62) 812-2483-7500",
-                "email" => "urelddstelkom@gmail.com",
+                self::EMAIL => "urelddstelkom@gmail.com",
                 "npwp" => "01.000.013.1-093.000"
             ],
             "to" => [
                 "name" => $exam->company->name ? $exam->company->name : "-",
                 "address" => $exam->company->address ? $exam->company->address : "-",
                 "phone" => $exam->company->phone_number ? $exam->company->phone_number : "-",
-                "email" => $exam->company->email ? $exam->company->email : "-",
+                self::EMAIL => $exam->company->email ? $exam->company->email : "-",
                 "npwp" => $exam->company->npwp_number ? $exam->company->npwp_number : "-"
             ],
             "product_id" => config("app.product_id_tth_2"), //product_id TTH untuk Pengujian
             "details" => $details,
             "created" => [
                 "by" => $exam->user->name,
-                "reference_id" => $exam->user->id
+                self::REFERENCE_ID => $exam->user->id
             ],
             "include_tax_invoice" => true,
             "bank" => [
@@ -948,21 +958,20 @@ class PengujianController extends Controller
 
     public function api_purchase($data){
         $client = new Client([
-            'headers' => ['Content-Type' => 'application/json', 
-                            'Authorization' => config("app.gateway_tpn_2")
+            self::HEADERS => [self::CONTENT_TYPE => self::APPLICATION_JSON, 
+                            'Authorization' => config(self::TPN_2)
                         ],
-            'base_uri' => config("app.url_api_tpn"),
-            'timeout'  => 60.0,
-            'http_errors' => false,
+            self::BASE_URI => config(self::URI_API_TPN),
+            self::TIMEOUT  => 60.0,
+            self::HTTP_ERRORS => false,
             'verify' => false
         ]);
         try {
             
             $params['json'] = $data;
             $res_purchase = $client->post("v1/draftbillings", $params)->getBody();
-            $purchase = json_decode($res_purchase);
+            return json_decode($res_purchase); 
 
-            return $purchase;
         } catch(Exception $e){
             return null;
         }
@@ -973,33 +982,31 @@ class PengujianController extends Controller
         $currentUser = Auth::user();
 
         if($currentUser){
-            $exam = Examination::where('id', $id)->with('device')->get();
+            $exam = Examination::where('id', $id)->with(self::DEVICE)->get();
             if($exam[0]->payment_method == 0){
-				return redirect('pengujian/'.$id.'/pembayaran');
+				return redirect('pengujian/'.$id.self::PAGE_PEMBAYARAN);
 			}
             return view('client.pengujian.payment_confirmation') 
             ->with('data', $exam);
         }else{
-           return redirect("login");
+           return redirect(self::LOGIN);
         }
         
     } 
 
     public function api_billing($data){
         $client = new Client([
-            'headers' => ['Content-Type' => 'application/json', 
-                            'Authorization' => config("app.gateway_tpn_2")
+            self::HEADERS => [self::CONTENT_TYPE => self::APPLICATION_JSON, 
+                            'Authorization' => config(self::TPN_2)
                         ],
-            'base_uri' => config("app.url_api_tpn"),
-            'timeout'  => 60.0,
-            'http_errors' => false
+            self::BASE_URI => config(self::URI_API_TPN),
+            self::TIMEOUT  => 60.0,
+            self::HTTP_ERRORS => false
         ]);
         try {
             $params['json'] = $data;
             $res_billing = $client->post("v1/billings", $params)->getBody();
-            $billing = json_decode($res_billing);
-
-            return $billing;
+            return  json_decode($res_billing); 
         } catch(Exception $e){
             return null;
         }
@@ -1008,19 +1015,19 @@ class PengujianController extends Controller
     public function api_resend_va($id){
         $exam = Examination::find($id);
         $client = new Client([
-            'headers' => ['Content-Type' => 'application/json', 
+            self::HEADERS => [self::CONTENT_TYPE => self::APPLICATION_JSON, 
                             'Authorization' => config("app.gateway_tpn")
                         ],
-            'base_uri' => config("app.url_api_tpn"),
-            'timeout'  => 60.0,
-            'http_errors' => false
+            self::BASE_URI => config(self::URI_API_TPN),
+            self::TIMEOUT  => 60.0,
+            self::HTTP_ERRORS => false
         ]);
         try {
             $res_resend = $client->post("v1/billings/mps/resend/".$exam->BILLING_ID)->getBody();
             $resend = json_decode($res_resend);
             if($resend){
-                $exam->VA_number = $resend && $resend->status == true ? $resend->data->mps->va->number : null;
-                $exam->VA_expired = $resend && $resend->status == true ? $resend->data->mps->va->expired : null;
+                $exam->VA_number = $resend && $resend->status? $resend->data->mps->va->number : null;
+                $exam->VA_expired = $resend && $resend->status? $resend->data->mps->va->expired : null;
                 
                 $exam->save();
             }
@@ -1039,9 +1046,9 @@ class PengujianController extends Controller
 	        if($exam->BILLING_ID){
 				$data_cancel_billing = [
 	            	"canceled" => [
-						"message" => "-",
+						self::MESSAGE => "-",
 						"by" => $currentUser->name,
-	                	"reference_id" => $currentUser->id
+	                	self::REFERENCE_ID => $currentUser->id
 					]
 	            ];
 				$this->api_cancel_billing($exam->BILLING_ID, $data_cancel_billing);
@@ -1059,26 +1066,24 @@ class PengujianController extends Controller
 
 			$exam->save();
 
-	        Session::flash('message', "Please choose another bank. If you leave or move to another page, your process will not be saved!");
-	        return redirect('pengujian/'.$id.'/pembayaran');
+	        Session::flash(self::MESSAGE, "Please choose another bank. If you leave or move to another page, your process will not be saved!");
+	        return redirect('pengujian/'.$id.self::PAGE_PEMBAYARAN);
 		}
 	}
 	
     public function api_cancel_billing($BILLING_ID,$data){
         $client = new Client([
-            'headers' => ['Content-Type' => 'application/json', 
-                            'Authorization' => config("app.gateway_tpn_2")
+            self::HEADERS => [self::CONTENT_TYPE => self::APPLICATION_JSON, 
+                            'Authorization' => config(self::TPN_2)
                         ],
-            'base_uri' => config("app.url_api_tpn"),
-            'timeout'  => 60.0,
-            'http_errors' => false
+            self::BASE_URI => config(self::URI_API_TPN),
+            self::TIMEOUT  => 60.0,
+            self::HTTP_ERRORS => false
         ]);
         try {
             $params['json'] = $data;
             $res_cancel_billing = $client->put("v1/billings/".$BILLING_ID."/cancel", $params)->getBody();
-            $cancel_billing = json_decode($res_cancel_billing);
-
-            return $cancel_billing;
+            return json_decode($res_cancel_billing); 
         } catch(Exception $e){
             return null;
         }
@@ -1097,8 +1102,7 @@ class PengujianController extends Controller
 				$query_update = "UPDATE examinations
 					SET 
 						cust_test_date = '".date(self::DATE_FORMAT2, $cust_test_date)."',
-						updated_by = '".$currentUser[self::ATTRIBUTES]['id']."',
-						updated_at = '".date(self::DATE_FORMAT1)."',
+						updated_by = '".$currentUser[self::ATTRIBUTES]['id'].self::QUERY_UPDATED_AT.date(self::DATE_FORMAT1)."',
 						function_test_status_detail = 'Pengajuan uji fungsi baru'
 					WHERE id = '".$request->input(self::HIDE_ID_EXAM)."'
 				";
@@ -1117,8 +1121,7 @@ class PengujianController extends Controller
 				Session::flash(self::MESSAGE, 'Update successfully');
 				$client = new Client([
 					self::HEADERS => [self::CONTENT_TYPE => self::APLLICATION_HEADER_FORM],
-					// Base URI is used with relative requests
-					// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+					// Base URI is used with relative requests 
 					self::BASE_URI => config(self::APP_URL_API_BSP),
 					// You can set any number of default request options.
 					self::TIMEOUT  => 60.0,
@@ -1139,7 +1142,7 @@ class PengujianController extends Controller
 					$notificationService = new NotificationService();
 	                $notification_id = $notificationService->make($dataNotif);
 					$dataNotif['id'] = $notification_id;
-					// event(new Notification($dataNotif));
+					event(new Notification($dataNotif));
 				}
 			 	return back();
 
@@ -1158,8 +1161,7 @@ class PengujianController extends Controller
 					SET 
 						function_test_date_approval = '1',
 						function_test_reason = '',
-						updated_by = '".$currentUser[self::ATTRIBUTES]['id']."',
-						updated_at = '".date(self::DATE_FORMAT1)."',
+						updated_by = '".$currentUser[self::ATTRIBUTES]['id'].self::QUERY_UPDATED_AT.date(self::DATE_FORMAT1)."',
 						function_test_status_detail = 'Tanggal uji fungsi fix'
 					WHERE id = '".$request->input(self::HIDE_ID_EXAM2)."'";
 				DB::update($query_update);
@@ -1199,7 +1201,7 @@ class PengujianController extends Controller
 					$notificationService = new NotificationService();
 	                $notification_id = $notificationService->make($data);
 					$data['id'] = $notification_id;
-					// event(new Notification($data));
+					event(new Notification($data));
 
 					return back();
 				
@@ -1212,8 +1214,7 @@ class PengujianController extends Controller
 						SET 
 							urel_test_date = '".date(self::DATE_FORMAT2, $urel_test_date)."',
 							function_test_reason = '".$request->input('alasan')."',
-							updated_by = '".$currentUser[self::ATTRIBUTES]['id']."',
-							updated_at = '".date(self::DATE_FORMAT1)."',
+							updated_by = '".$currentUser[self::ATTRIBUTES]['id'].self::QUERY_UPDATED_AT.date(self::DATE_FORMAT1)."',
 							function_test_status_detail = 'Pengajuan ulang uji fungsi'
 						WHERE id = '".$request->input(self::HIDE_ID_EXAM2)."'
 					";
@@ -1253,7 +1254,7 @@ class PengujianController extends Controller
 				 	$notificationService = new NotificationService();
 	                $notification_id = $notificationService->make($dataNotif2);
 					$dataNotif2['id'] = $notification_id;
-					// event(new Notification($dataNotif2));
+					event(new Notification($dataNotif2));
 
 					return back();
 						
@@ -1271,8 +1272,7 @@ class PengujianController extends Controller
 					SET 
 						function_test_date_approval = '1',
 						function_test_reason = '',
-						updated_by = '".$currentUser[self::ATTRIBUTES]['id']."',
-						updated_at = '".date(self::DATE_FORMAT1)."',
+						updated_by = '".$currentUser[self::ATTRIBUTES]['id'].self::QUERY_UPDATED_AT.date(self::DATE_FORMAT1)."',
 						function_test_status_detail = 'Tanggal uji fungsi fix'
 					WHERE id = '".$request->input(self::HIDE_ID_EXAM3)."'
 				";
@@ -1312,7 +1312,7 @@ class PengujianController extends Controller
 				$notificationService = new NotificationService();
                 $notification_id = $notificationService->make($data);
 				$data['id'] = $notification_id;
-				// event(new Notification($data));
+				event(new Notification($data));
 		 		return back();
 				
 			} catch(Exception $e){
@@ -1541,7 +1541,7 @@ class PengujianController extends Controller
 	      	$notification->updated_at = $data[self::UPDATED_AT];
 	      	$notification->save();
 	      	$data['id'] = $notification->id; 
-	        // event(new Notification($data));
+	        event(new Notification($data));
 
 			echo 1;
 		} catch(Exception $e){

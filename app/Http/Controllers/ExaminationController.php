@@ -158,6 +158,7 @@ class ExaminationController extends Controller
 	private const COMPANIES_NAME = 'companies.name';
 	private const DEVICE_NAME_AUTOSUGGEST = 'devices.name as autosuggest';
 	private const DEVICE_NAME = 'devices.name';
+	private const MINIO = 'minio';
 
 	/**
      * Create a new controller instance.
@@ -329,7 +330,7 @@ class ExaminationController extends Controller
 				);
 				$notification_id = $notificationService->make($data);
 			    $data['id'] = $notification_id;
-			    // event(new Notification($data));
+			    event(new Notification($data));
 				
 				$examinationService->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.registrasi", "Acc Registrasi");
 			}else if($status == -1){
@@ -346,7 +347,7 @@ class ExaminationController extends Controller
 				
 				$notification_id = $notificationService->make($data);
 			    $data['id'] = $notification_id;
-				// event(new Notification($data));
+				event(new Notification($data));
 				
 				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::REGISTRASI,$request->input(self::KETERANGAN));
 			}
@@ -407,7 +408,7 @@ class ExaminationController extends Controller
 
 			$notification_id = $notificationService->make($data);
 			$data['id'] = $notification_id;
-			// event(new Notification($data));
+			event(new Notification($data));
 
 			if($status == -1){
 				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Uji Fungsi",$request->input(self::KETERANGAN));
@@ -490,7 +491,7 @@ class ExaminationController extends Controller
 					
 					$notification_id = $notificationService->make($data);
 					$data['id'] = $notification_id;
-					// event(new Notification($data));
+					event(new Notification($data));
 				}else{
 					/* push notif*/
 		            $data= array( 
@@ -505,7 +506,7 @@ class ExaminationController extends Controller
 
 					$notification_id = $notificationService->make($data);
 					$data['id'] = $notification_id;
-					// event(new Notification($data));
+					event(new Notification($data));
 				}
 				
 			}else if($status == -1){
@@ -535,7 +536,7 @@ class ExaminationController extends Controller
 
 	            $notification_id = $notificationService->make($data);
 			    $data['id'] = $notification_id;
-			    // event(new Notification($data));
+			    event(new Notification($data));
 
 				$examinationService->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.spb", "Penerbitan Surat Pemberitahuan Biaya (SPB) untuk ".$exam->function_test_NO,$path_file."/".$attach_name,$request->input('spb_number'),$exam->id);
 			}else if($status == -1){
@@ -663,7 +664,7 @@ class ExaminationController extends Controller
 
 				$notification_id = $notificationService->make($data);
 				$data['id'] = $notification_id;
-				// event(new Notification($data));
+				event(new Notification($data));
 				
 			}else if($status == -1){
 				Income::where(self::REFERENCE_ID, '=' ,''.$exam->id.'')->delete();
@@ -696,7 +697,7 @@ class ExaminationController extends Controller
 
 				$notification_id = $notificationService->make($data);
 				$data['id'] = $notification_id;
-				// event(new Notification($data));				
+				event(new Notification($data));				
 			}
 			if ($request->has('lab_to_gudang_date')){
 				$query_update = "UPDATE equipment_histories
@@ -803,7 +804,7 @@ class ExaminationController extends Controller
 
 				$notification_id = $notificationService->make($data);
 			    $data['id'] = $notification_id;
-			    // event(new Notification($data));
+			    event(new Notification($data));
 
             }else{ 
 
@@ -821,7 +822,7 @@ class ExaminationController extends Controller
 				
 				$notification_id = $notificationService->make($data);
 			    $data['id'] = $notification_id;
-			    // event(new Notification($data));
+			    event(new Notification($data));
 
             }
            
@@ -1044,7 +1045,7 @@ class ExaminationController extends Controller
 
         if ($exam){
 			$fileName = $exam->attachment;
-			$fileMinio = Storage::disk('minio')->get(self::MEDIA_EXAMINATION_LOC.$exam->id.'/'.$fileName);
+			$fileMinio = Storage::disk(self::MINIO)->get(self::MEDIA_EXAMINATION_LOC.$exam->id.'/'.$fileName);
 			return response($fileMinio, 200, \App\Services\MyHelper::getHeaderOctet($fileName));
         }
     }
@@ -1056,7 +1057,7 @@ class ExaminationController extends Controller
 
             if ($device){
 				$fileName = $device->certificate;
-				$fileMinio = Storage::disk('minio')->get(self::MEDIA_DEVICE_LOC.$device->id.'/'.$fileName);
+				$fileMinio = Storage::disk(self::MINIO)->get(self::MEDIA_DEVICE_LOC.$device->id.'/'.$fileName);
 				return response($fileMinio, 200, \App\Services\MyHelper::getHeaderOctet($fileName));
             }
         } else{
@@ -1066,7 +1067,7 @@ class ExaminationController extends Controller
 
             if ($exam){
 				$fileName = $exam->attachment;
-				$fileMinio = Storage::disk('minio')->get(self::MEDIA_EXAMINATION_LOC.$exam->examination_id.'/'.$fileName);
+				$fileMinio = Storage::disk(self::MINIO)->get(self::MEDIA_EXAMINATION_LOC.$exam->examination_id.'/'.$fileName);
 				return response($fileMinio, 200, \App\Services\MyHelper::getHeaderOctet($fileName));
             }
         }
@@ -1078,7 +1079,7 @@ class ExaminationController extends Controller
 
         if ($data){
 			$fileName = $data->attachment;
-			$fileMinio = Storage::disk('minio')->get(self::MEDIA_EXAMINATION_LOC.$data->examination_id.'/'.$fileName);
+			$fileMinio = Storage::disk(self::MINIO)->get(self::MEDIA_EXAMINATION_LOC.$data->examination_id.'/'.$fileName);
 			return response($fileMinio, 200, \App\Services\MyHelper::getHeaderOctet($fileName));
         }
     }
@@ -1575,7 +1576,7 @@ class ExaminationController extends Controller
 
 			$notification_id = $notificationService->make($data);
 			$data['id'] = $notification_id;
-			// event(new Notification($data));
+			event(new Notification($data));
 
             Session::flash(self::MESSAGE, 'Examination successfully updated');
 			$examinationService->sendEmailRevisi(
@@ -1636,7 +1637,7 @@ class ExaminationController extends Controller
 	
 	public function destroy($id,$page,$reason = null)
 	{ 
-		$logs_a_exam = NULL;
+		 
 		$logs_a_device = NULL;
 		$logService = new LogService();
 		

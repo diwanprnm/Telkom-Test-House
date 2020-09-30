@@ -33,6 +33,8 @@ class DevClientController extends Controller
 	private const COMPANIES_NAME = 'companies.name';
 	private const DEVICE_NAME_AUTOSUGGEST = 'devices.name as autosuggest';
 	private const DEVICE_NAME = 'devices.name';
+	private const DEVICE_MARK = 'devices.mark';
+	private const DEVICE_MODEL = 'devices.model';
     /**
      * Display a listing of the resource.
      *
@@ -56,19 +58,19 @@ class DevClientController extends Controller
 						".self::DEVICE_DOT_VALID_THRU;
             if ($search != null){
                 $dev = DB::table('examinations')
-				->join('devices', 'examinations.device_id', '=', 'devices.id')
-				->join('companies', 'examinations.company_id', '=', 'companies.id')
+				->join(self::TABLE_DEVICE, self::EXAM_DEVICES_ID, '=', self::DEVICES_ID)
+				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
 				->select($select)
 				->where('examinations.resume_status','=','1')
 				->where('examinations.qa_status','=','1')
 				->where('examinations.qa_passed','=','1')
-				->where('examinations.certificate_status','=','1')
+				->where(self::EXAM_CERTIFICATE_STATUS,'=','1')
 				->where(self::DEVICE_DOT_VALID_THRU, '>=', $datenow)
 				->where(function($query) use ($search){
 					$query->where('companies.name', 'LIKE', '%'.$search.'%');
 					$query->orWhere('devices.name', 'LIKE', '%'.$search.'%');
-					$query->orWhere('devices.mark', 'LIKE', '%'.$search.'%');
-					$query->orWhere('devices.model', 'LIKE', '%'.$search.'%');
+					$query->orWhere(self::DEVICE_MARK, 'LIKE', '%'.$search.'%');
+					$query->orWhere(self::DEVICE_MODEL, 'LIKE', '%'.$search.'%');
 				})
 
 				->orderBy(self::DEVICE_DOT_VALID_THRU, 'desc')
@@ -76,13 +78,13 @@ class DevClientController extends Controller
 
             }else{
 				$dev = DB::table('examinations')
-				->join('devices', 'examinations.device_id', '=', 'devices.id')
-				->join('companies', 'examinations.company_id', '=', 'companies.id')
+				->join(self::TABLE_DEVICE, self::EXAM_DEVICES_ID, '=', self::DEVICES_ID)
+				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
 				->select($select)
 				->where('examinations.resume_status','=','1')
 				->where('examinations.qa_status','=','1')
 				->where('examinations.qa_passed','=','1')
-				->where('examinations.certificate_status','=','1')
+				->where(self::EXAM_CERTIFICATE_STATUS,'=','1')
 				->where(self::DEVICE_DOT_VALID_THRU, '>=', $datenow)
 				->orderBy(self::DEVICE_DOT_VALID_THRU, 'desc')
 				->paginate($paginate);
@@ -126,8 +128,8 @@ class DevClientController extends Controller
                 ->select('devices.mark as autosuggest')
 				->where(self::EXAM_CERTIFICATE_STATUS,'=','1')
 				->where(self::DEVICES_VALID_THRU, '>=', $datenow)
-                ->where('devices.mark', 'like','%'.$query.'%')
-				->orderBy('devices.mark')
+                ->where(self::DEVICE_MARK, 'like','%'.$query.'%')
+				->orderBy(self::DEVICE_MARK)
                 ->take(2)
 				->distinct()
                 ->get();
@@ -136,8 +138,8 @@ class DevClientController extends Controller
                 ->select('devices.model as autosuggest')
 				->where(self::EXAM_CERTIFICATE_STATUS,'=','1')
 				->where(self::DEVICES_VALID_THRU, '>=', $datenow)
-                ->where('devices.model', 'like','%'.$query.'%')
-				->orderBy('devices.model')
+                ->where(self::DEVICE_MODEL, 'like','%'.$query.'%')
+				->orderBy(self::DEVICE_MODEL)
                 ->take(2)
 				->distinct()
                 ->get();
