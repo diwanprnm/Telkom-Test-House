@@ -266,6 +266,7 @@ class ProductsController extends Controller
         foreach (Cart::content() as $row) {
             $res = explode('myTokenProduct', $row->name);
             $stel_name = $res[0] ? $res[0] : '-';
+            $stel_code = $res[1] ? $res[1] : '-';
             $details [] = 
                 [
                     "item" => $stel_code,

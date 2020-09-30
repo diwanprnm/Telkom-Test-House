@@ -54,10 +54,10 @@
 									{{ csrf_field() }}
 									<div id="wizard" class="swMain">
 										<div class="form-group">
-											<table class="table table-condensed">
+											<table class="table table-condensed" aria-describedby="mydesc">
 												<thead>
 													<tr>
-														<th colspan="3">{{ trans('translate.examination_number_payment') }} : {{ $spb_number }}</th>
+														<th colspan="3" scope="col">{{ trans('translate.examination_number_payment') }} : {{ $spb_number }}</th>
 													</tr>
 												</thead>
 												<tbody>
