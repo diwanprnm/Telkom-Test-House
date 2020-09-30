@@ -55,7 +55,7 @@ class ProductsController extends Controller
     private const ADMIN = 'admin';
     private const FORMAT_DATE = 'Y-m-d H:i:s'; 
     private const MINIO = 'minio'; 
-    private const STEL_URL = '/stel/'; 
+    private const STEL_URL = 'stel/'; 
 
 
     public function index(Request $request)
@@ -656,15 +656,15 @@ class ProductsController extends Controller
                 $notification = new NotificationTable();
                 $notification->id = Uuid::uuid4();
                 $notification->from = $data['from'];
-                  $notification->to = $data['to'];
-                  $notification->message = $data['message'];
-                  $notification->url = $data['url'];
-                  $notification->is_read = $data['is_read'];
-                  $notification->created_at = $data['created_at'];
-                  $notification->updated_at = $data['updated_at'];
-                  $notification->save();
+                $notification->to = $data['to'];
+                $notification->message = $data['message'];
+                $notification->url = $data['url'];
+                $notification->is_read = $data['is_read'];
+                $notification->created_at = $data['created_at'];
+                $notification->updated_at = $data['updated_at'];
+                $notification->save();
 
-                    $data['id'] = $notification->id;
+                $data['id'] = $notification->id;
 
                 // event(new Notification($data));
 
@@ -772,20 +772,7 @@ class ProductsController extends Controller
 
             return response()->download($tempImage, $filename); 
         }
-    }
-
-    public function test_notification(){
-        $data= array(
-            "id"=>1,
-                "from"=>self::ADMIN,
-                "to"=>"35a35ea3-6fd5-43ae-8b97-ddf7525e94d1",
-                "url"=>"sales",
-                self::MESSAGE=>"Notification Message"
-                );
-          event(new Notification($data));
-     return "event fired";
-    }
-	
+    } 
 	public function downloadfakturstel($id)
     {
         $stel = STELSales::where("id",$id)->first();
@@ -833,7 +820,7 @@ class ProductsController extends Controller
             $stel = $query->get();
             if (count($stel)>0){ 
 
-                $file = Storage::disk(self::MINIO)->url("/media/stelAttach/".$id."/".$stel[0]->attachment);
+                $file = Storage::disk(self::MINIO)->url("stelAttach/".$id."/".$stel[0]->attachment);
                      
                 $filename = $stel[0]->attachment;
                 $tempImage = tempnam(sys_get_temp_dir(), $filename);
