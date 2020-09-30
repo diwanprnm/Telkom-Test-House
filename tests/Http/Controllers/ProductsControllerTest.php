@@ -172,7 +172,7 @@ class ProductsControllerTest extends TestCase
 		$response =  $this->actingAs($user)->call('POST', '/doCancel', 
 		[ 
 	        'id' => $stelsSales->id,
-	        'payment_method'=>"A||A||va||1"
+	        'payment_method'=>"A||A||atm||1||1"
 	    ]);   
 		// dd($response->getContent());
         $this->assertEquals(302, $response->status());  
@@ -221,7 +221,7 @@ class ProductsControllerTest extends TestCase
     public function test_downloadkuitansistel()
 	{ 
 		$user = User::latest()->first(); 
-		$id_kuitansi = mt_rand(0,4);
+		$id_kuitansi = mt_rand(0,200);
 		$stelsSales = factory(App\STELSales::class)->create(['created_by'=>$user->id,"id_kuitansi"=>$id_kuitansi]); 
 	    
 	    $file = \Storage::disk('local_public')->get("images/testing.jpg"); 
