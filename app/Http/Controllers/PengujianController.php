@@ -985,9 +985,10 @@ class PengujianController extends Controller
             $exam = Examination::where('id', $id)->with(self::DEVICE)->get();
             if($exam[0]->payment_method == 0){
 				return redirect('pengujian/'.$id.self::PAGE_PEMBAYARAN);
-			}
-            return view('client.pengujian.payment_confirmation') 
-            ->with('data', $exam);
+			}else{
+				return view('client.pengujian.payment_confirmation') 
+            	->with('data', $exam);	
+			} 
         }else{
            return redirect(self::LOGIN);
         }
