@@ -1427,7 +1427,7 @@ class PengujianController extends Controller
             $resend = json_decode($res_resend);
             if($resend){
                 $exam->VA_number = $resend && $resend->status == true ? $resend->data->mps->va->number : null;
-                $exam->VA_amount = $billing && $billing->status == true ? $billing->data->mps->va->amount : null;
+                $exam->VA_amount = $resend && $resend->status == true ? $resend->data->mps->va->amount : null;
                 $exam->VA_expired = $resend && $resend->status == true ? $resend->data->mps->va->expired : null;
                 
                 $exam->save();
