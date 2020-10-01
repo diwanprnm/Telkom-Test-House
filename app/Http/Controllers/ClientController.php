@@ -106,7 +106,8 @@ class ClientController extends Controller
 		        $logs->created_by = $currentUser->id;
 		        $logs->updated_by = $currentUser->id;
 		        $logs->page = "LOGIN";
-		        $logs->save();
+				$logs->save();
+				return redirect()->back();
 			}else{
 				return back()->with(self::ERROR_CODE, 5)
 				->with(self::ERROR_CODE, 5)

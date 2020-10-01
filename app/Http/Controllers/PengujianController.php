@@ -872,13 +872,14 @@ class PengujianController extends Controller
                     ]
                 ];
 
-                $billing = $this->api_billing($data);
-
+				$billing = $this->api_billing($data);
+				
                 $exam->BILLING_ID = $billing && $billing->status? $billing->data->_id : null;
 				if($mps_info[2] != "atm"){
                 	$exam->VA_name = $mps_info ? $mps_info[3] : null;
                     $exam->VA_image_url = $mps_info ? $mps_info[4] : null;
-                    $exam->VA_number = $billing && $billing->status? $billing->data->mps->va->number : null;
+					$exam->VA_number = $billing && $billing->status? $billing->data->mps->va->number : null;
+					$exam->VA_amount = $billing && $billing->status? $billing->data->mps->va->amount : null;
                     $exam->VA_expired = $billing && $billing->status? $billing->data->mps->va->expired : null;
 				}
 				if(!$exam->VA_number){
@@ -1027,7 +1028,8 @@ class PengujianController extends Controller
             $res_resend = $client->post("v1/billings/mps/resend/".$exam->BILLING_ID)->getBody();
             $resend = json_decode($res_resend);
             if($resend){
-                $exam->VA_number = $resend && $resend->status? $resend->data->mps->va->number : null;
+				$exam->VA_number = $resend && $resend->status? $resend->data->mps->va->number : null;
+				$exam->VA_amount = $resend && $resend->status? $resend->data->mps->va->amount : null;
                 $exam->VA_expired = $resend && $resend->status? $resend->data->mps->va->expired : null;
                 
                 $exam->save();
