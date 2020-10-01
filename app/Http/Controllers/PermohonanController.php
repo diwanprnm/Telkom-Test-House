@@ -365,13 +365,9 @@ class PermohonanController extends Controller
 				self::UPDATED_AT=>date(self::DATE_FORMAT)
 	        );
 		  	$notification_id = $notificationService->make($data);
-			$data['id'] = $notification_id;
-			try{
-
-	        	event(new Notification($data));
-			}catch(Exception $e){
-
-			}
+			$data['id'] = $notification_id; 
+	        
+	        //event(new Notification($data)); 
 
 			$this->sendFeedbackEmail($request->input(self::EMAIL),$request->input('subject'),$request->input(self::MESSAGE),$request->input('question'));
             Session::flash('message_feedback', 'Feedback successfully send');
