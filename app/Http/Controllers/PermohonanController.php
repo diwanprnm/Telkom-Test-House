@@ -366,7 +366,12 @@ class PermohonanController extends Controller
 	        );
 		  	$notification_id = $notificationService->make($data);
 			$data['id'] = $notification_id;
-	        event(new Notification($data));
+			try{
+
+	        	event(new Notification($data));
+			}catch(Exception $e){
+
+			}
 
 			$this->sendFeedbackEmail($request->input(self::EMAIL),$request->input('subject'),$request->input(self::MESSAGE),$request->input('question'));
             Session::flash('message_feedback', 'Feedback successfully send');
