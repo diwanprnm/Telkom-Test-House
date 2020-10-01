@@ -798,7 +798,7 @@ class PermohonanController extends Controller
 		else{
 			$ref_perangkat = explode(",", $referensi_perangkat);
 			$examLab = DB::table('stels')->where('code', ''.$ref_perangkat[0].'')->first();
-			$idLab = count($examLab)>0 ? $examLab->type : $exam_no_reg->examination_lab_id;
+			$idLab = count((array)$examLab)>0 ? $examLab->type : $exam_no_reg->examination_lab_id;
 			$query_update_company = "UPDATE examinations
 				SET 
 					examination_lab_id = '".$idLab."',

@@ -76,12 +76,53 @@ class PermohonanControllerTest extends TestCase
 	       'merk_perangkat' => 1
 	    ]);   
        $this->assertEquals(200, $response->status());
-	}  public function test_submitPermohonan()
+	}
+
+	public function test_submitPermohonan()
 	{ 
 	   
 	   $user = User::find(1);
 	    $stel = factory(App\STEL::class)->create();
 	    $response =  $this->actingAs($user)->call('POST', '/submitPermohonan', [ 
+	       'f1-nama-pemohon' => str_random(10), 
+	       'f1-alamat-pemohon' => str_random(10), 
+	       'f1-alamat-pemohon' => str_random(10), 
+	       'f1-telepon-pemohon' => str_random(10), 
+	       'f1-faksimile-pemohon' => str_random(10), 
+	       'f1-faksimile-pemohon' => str_random(10), 
+	       'jns_perusahaan' => 1, 
+	       'f1-nama-perusahaan' => str_random(10), 
+	       'f1-alamat-perusahaan' => str_random(10), 
+	       'f1-plg_id-perusahaan' => str_random(10), 
+	       'f1-nib-perusahaan' => str_random(10), 
+	       'f1-telepon-perusahaan' => str_random(10), 
+	       'f1-faksimile-perusahaan' => str_random(10), 
+	       'f1-email-perusahaan' => str_random(10), 
+	       'hide_npwpPerusahaan' => str_random(10), 
+	       'hide_jns_pengujian' => 1, 
+	       'lokasi_pengujian' => str_random(10), 
+	       'f1-nama-perangkat' => str_random(10), 
+	       'f1-merek-perangkat' => str_random(10), 
+	       'f1-kapasitas-perangkat' => str_random(10), 
+	       'f1-pembuat-perangkat' => str_random(10), 
+	       'f1-serialNumber-perangkat' => str_random(10), 
+	       'f1-model-perangkat' => str_random(10), 
+	       'f1-jns-referensi-perangkat' => 1,  
+	       'f1-cmb-ref-perangkat' => $stel->code.",1",
+	       'f1-no-siupp' => str_random(10),
+	       'f1-tgl-siupp' => "2020-09-20",
+	       'f1-batas-waktu' => "12",
+	    ]);   
+       $this->assertEquals(200, $response->status());
+	} 
+	public function test_updatePermohonan()
+	{ 
+	   
+	   $user = User::find(1);
+	    $stel = factory(App\STEL::class)->create();
+	    $exam = factory(App\Examination::class)->create();
+	    $response =  $this->actingAs($user)->call('POST', '/updatePermohonan', [ 
+	       'hide_exam_id' => $exam->id, 
 	       'f1-nama-pemohon' => str_random(10), 
 	       'f1-alamat-pemohon' => str_random(10), 
 	       'f1-alamat-pemohon' => str_random(10), 
