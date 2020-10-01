@@ -84,16 +84,16 @@ class ExaminationControllerTest extends TestCase
 		$this->assertEquals(200, $response->status());
     }
     
-    public function testGenerateFromTPN_nonkuitansi(){
-        $examination = factory(App\Examination::class)->create();
-        $examinationAttach = factory(App\ExaminationAttach::class)->create(['examination_id'=>$examination->id,"name"=>"Faktur Pajak"]);
-        $response = $this->actingAs(User::find('1'))->call('POST', "admin/examination/'.$examination->id.'/generateFromTPN", [ 
-            'id' => $examination->id,
-            'type' => 'Faktur Pajak',
-            'filelink' => '/exportpdf'
-        ]);
-        $this->assertEquals(200, $response->status());
-    }
+    // public function testGenerateFromTPN_nonkuitansi(){
+    //     $examination = factory(App\Examination::class)->create();
+    //     $examinationAttach = factory(App\ExaminationAttach::class)->create(['examination_id'=>$examination->id,"name"=>"Faktur Pajak"]);
+    //     $response = $this->actingAs(User::find('1'))->call('POST', "admin/examination/'.$examination->id.'/generateFromTPN", [ 
+    //         'id' => $examination->id,
+    //         'type' => 'Faktur Pajak',
+    //         'filelink' => '/exportpdf'
+    //     ]);
+    //     $this->assertEquals(200, $response->status());
+    // }
 
     public function testDownloadForm()
     {
@@ -176,13 +176,13 @@ class ExaminationControllerTest extends TestCase
 
     public function testExcelWithFilter()
     { 
-        //create response
-        // $response = $this->actingAs(User::find('1'))->call('get',"/examination/excel");
-        // //assert response
-        // $this->assertResponseStatus(200);
-        // $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
-        // $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
-        // $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Pengujian.xlsx"');
+        // create response
+        $response = $this->actingAs(User::find('1'))->call('get',"/examination/excel");
+        //assert response
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
+        $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
+        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Pengujian.xlsx"');
     }
 
 
@@ -308,6 +308,21 @@ class ExaminationControllerTest extends TestCase
             ]);  
         $this->assertEquals(200, $response->status());
     }
+    public function test_generateSPB_nospbnumber()
+    {
+        $examinationService = new ExaminationService();
+        $spb_number = "01";
+        $examination = factory(App\Examination::class)->create(['spb_number'=>$spb_number]); 
+        $response = $this->actingAs(User::find('1'))->call('POST', 'admin/examination/generateSPB',
+            [
+                'spb_number'=>$spb_number,
+                'exam_id'=>$examination->id,
+                'spb_date'=>'2020-12-12',
+                'arr_biaya[]'=>array(1200,1200),
+                'arr_nama_perangkat'=>array("b","a"),
+            ]);  
+        $this->assertEquals(200, $response->status());
+    }
 
     public function test_generateSPBParam(){
         $examination = factory(App\Examination::class)->create(); 
@@ -348,8 +363,12 @@ class ExaminationControllerTest extends TestCase
     
     public function test_cetakFormBarang()
     {
-        $examination = factory(App\Examination::class)->create(); 
-        $response = $this->actingAs(User::find('1'))->call('GET', 'cetakFormBarang/'.$examination->id);  
+        $user = factory(App\User::class)->create(['role_id'=>2]); 
+        $device = factory(App\Device::class)->create(); 
+        $examLab = factory(App\ExaminationLab::class)->create(); 
+        $examination = factory(App\Examination::class)->create(['device_id'=>$device->id,"examination_lab_id"=>$examLab->id]); 
+        $equipment = factory(App\Equipment::class)->create(["examination_id"=>$examination->id]); 
+        $response = $this->actingAs($user)->call('GET', 'cetakFormBarang/'.$examination->id);  
         $this->assertEquals(302, $response->status());
     }
     public function test_visit_generateEquip()
