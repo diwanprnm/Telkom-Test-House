@@ -289,7 +289,7 @@ class ProductsController extends Controller
                 "name" => $currentUser->company->name ? $currentUser->company->name : "-",
                 "address" => $currentUser->company->address ? $currentUser->company->address : "-",
                 "phone" => $currentUser->company->phone_number ? $currentUser->company->phone_number : "-",
-                "email" => $currentUser->company->email ? $currentUser->company->email : "-",
+                "email" => $currentUser->email ? $currentUser->email : "-",
                 "npwp" => $currentUser->company->npwp_number ? $currentUser->company->npwp_number : "-"
             ],
             "product_id" => config("app.product_id_tth"), //product_id TTH
@@ -733,7 +733,7 @@ class ProductsController extends Controller
                 "name" => $currentUser->company->name ? $currentUser->company->name : "-",
                 "address" => $currentUser->company->address ? $currentUser->company->address : "-",
                 "phone" => $currentUser->company->phone_number ? $currentUser->company->phone_number : "-",
-                "email" => $currentUser->company->email ? $currentUser->company->email : "-",
+                "email" => $currentUser->email ? $currentUser->email : "-",
                 "npwp" => $currentUser->company->npwp_number ? $currentUser->company->npwp_number : "-"
             ],
             "product_id" => config("app.product_id_tth"), //product_id TTH

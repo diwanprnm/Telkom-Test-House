@@ -3628,7 +3628,7 @@ $notification->id = Uuid::uuid4();
 	                "name" => $exam->company->name ? $exam->company->name : "-",
 	                "address" => $exam->company->address ? $exam->company->address : "-",
 	                "phone" => $exam->company->phone_number ? $exam->company->phone_number : "-",
-	                "email" => $exam->company->email ? $exam->company->email : "-",
+	                "email" => $exam->user->email ? $exam->user->email : "-",
 	                "npwp" => $exam->company->npwp_number ? $exam->company->npwp_number : "-"
 	            ],
 	            "product_id" => config("app.product_id_tth_2"), //product_id TTH untuk Pengujian
