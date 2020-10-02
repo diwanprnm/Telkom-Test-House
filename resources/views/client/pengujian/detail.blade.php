@@ -5,7 +5,7 @@
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
-    <title>{{ trans('translate.examination_detail') }} - Telkom DDS</title>
+    <title>{{ trans('translate.examination_detail') }} - Telkom DDB</title>
 	
 @section('content')
 <style type="text/css">
@@ -556,7 +556,7 @@
                       </tr>
                       <tr>
                         <td>16</td>
-                        <td>Kontor Telkom DDS dalam kondisi nyaman, bersih dan sudah sesuai kondisi keseluruhannya.</td> 
+                        <td>Kontor Telkom DDB dalam kondisi nyaman, bersih dan sudah sesuai kondisi keseluruhannya.</td> 
                         <td><input type="number" min="1" max="7" name="quest16_eks" class="form-control" value="1" placeholder="1-7" required></td>
                         <td><input type="number" min="1" max="7" name="quest16_perf" class="form-control" value="1" placeholder="1-7" required></td>
                       </tr>
@@ -574,7 +574,7 @@
                       </tr>
                       <tr>
                         <td>19</td>
-                        <td>Pihak Telkom DDS terutama pihak UREL yang melayani proses pengajuan hingga pelaporan sudah memahami kebutuhan kastamer.</td> 
+                        <td>Pihak Telkom DDB terutama pihak UREL yang melayani proses pengajuan hingga pelaporan sudah memahami kebutuhan kastamer.</td> 
                         <td><input type="number" min="1" max="7" name="quest19_eks" class="form-control" value="1" placeholder="1-7" required></td>
                         <td><input type="number" min="1" max="7" name="quest19_perf" class="form-control" value="1" placeholder="1-7" required></td>
                       </tr>
@@ -669,7 +669,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <p>Survey ini terdiri dari dua bagian, yaitu tingkat kepentingan dan tingkat kepuasan Anda. Tingkat kepentingan menunjukan seberapa penting sebuah pernyataan bagi Anda. Sedangkan, tingkat kepuasan menunjukkan seberapa puas pengalaman Anda setelah melakukan pengujian di Infrasutructure Assurance (IAS) Divisi Digital Service (DDS) PT. Telekomuniasi Indonesia, Tbk.
+                    <p>Survey ini terdiri dari dua bagian, yaitu tingkat kepentingan dan tingkat kepuasan Anda. Tingkat kepentingan menunjukan seberapa penting sebuah pernyataan bagi Anda. Sedangkan, tingkat kepuasan menunjukkan seberapa puas pengalaman Anda setelah melakukan pengujian di Infrasutructure Assurance (IAS) Divisi Digital Business (DDB) PT. Telekomuniasi Indonesia, Tbk.
                     </p>
                     <p>Besar pengharapan kami agar pengisian survey ini dapat dikerjakan dengan sebaik-baiknya. Atas kerja samanya, kami ucapkan terimakasih.</p>
                     <p>
@@ -852,7 +852,7 @@
           </div>
           <div class="modal-body pre-scrollable">
                <div class="row">
-                    <h2>Silakan Ambil Barang di Gudang DDS Telkom, Sebelum mengunduh Sertifikat. Terima Kasih</h2>
+                    <h2>Silakan Ambil Barang di Gudang DDB Telkom, Sebelum mengunduh Sertifikat. Terima Kasih</h2>
                 </div>
           </div>
           <div class="modal-footer">

@@ -935,7 +935,7 @@ class PengujianController extends Controller
                 "name" => $exam->company->name ? $exam->company->name : "-",
                 "address" => $exam->company->address ? $exam->company->address : "-",
                 "phone" => $exam->company->phone_number ? $exam->company->phone_number : "-",
-                self::EMAIL => $exam->company->email ? $exam->company->email : "-",
+                self::EMAIL => $exam->user->email ? $exam->user->email : "-",
                 "npwp" => $exam->company->npwp_number ? $exam->company->npwp_number : "-"
             ],
             "product_id" => config("app.product_id_tth_2"), //product_id TTH untuk Pengujian
@@ -1018,7 +1018,7 @@ class PengujianController extends Controller
         $exam = Examination::find($id);
         $client = new Client([
             self::HEADERS => [self::CONTENT_TYPE => self::APPLICATION_JSON, 
-                            'Authorization' => config("app.gateway_tpn")
+                            'Authorization' => config(self::TPN_2)
                         ],
             self::BASE_URI => config(self::URI_API_TPN),
             self::TIMEOUT  => 60.0,

@@ -290,7 +290,7 @@ class ProductsController extends Controller
                 "name" => $currentUser->company->name ? $currentUser->company->name : "-",
                 "address" => $currentUser->company->address ? $currentUser->company->address : "-",
                 "phone" => $currentUser->company->phone_number ? $currentUser->company->phone_number : "-",
-                self::EMAIL => $currentUser->company->email ? $currentUser->company->email : "-",
+                self::EMAIL => $currentUser->email ? $currentUser->email : "-",
                 "npwp" => $currentUser->company->npwp_number ? $currentUser->company->npwp_number : "-"
             ],
             "product_id" => config("app.product_id_tth"), //product_id TTH
@@ -700,14 +700,14 @@ class ProductsController extends Controller
                 "name" => "PT TELEKOMUNIKASI INDONESIA, TBK.",
                 "address" => "Telkom Indonesia Graha Merah Putih, Jalan Japati No.1 Bandung, Jawa Barat, 40133",
                 "phone" => "(+62) 812-2483-7500",
-                "email" => "urelddstelkom@gmail.com",
+                self::EMAIL => "urelddstelkom@gmail.com",
                 "npwp" => "01.000.013.1-093.000"
             ],
             "to" => [
                 "name" => $currentUser->company->name ? $currentUser->company->name : "-",
                 "address" => $currentUser->company->address ? $currentUser->company->address : "-",
                 "phone" => $currentUser->company->phone_number ? $currentUser->company->phone_number : "-",
-                "email" => $currentUser->company->email ? $currentUser->company->email : "-",
+                self::EMAIL => $currentUser->email ? $currentUser->email : "-",
                 "npwp" => $currentUser->company->npwp_number ? $currentUser->company->npwp_number : "-"
             ],
             "product_id" => config("app.product_id_tth"), //product_id TTH

@@ -1,7 +1,7 @@
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
-    <title>S-TSEL - Telkom DDS</title>
+    <title>S-TSEL - Telkom DDB</title>
 @section('content')
  		<!-- Page Title
 		============================================= -->

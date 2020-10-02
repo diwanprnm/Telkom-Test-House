@@ -1,7 +1,7 @@
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
-    <title>{{ trans('translate.stel_payment_detail') }} - Telkom DDS</title>
+    <title>{{ trans('translate.stel_payment_detail') }} - Telkom DDB</title>
 @section('content') 
  <!-- Page Title
 		============================================= -->
@@ -21,7 +21,7 @@
 		<!-- Content
 		============================================= -->
 		<section id="content"> 
-			<<div class="container clearfix"> 
+			<div class="container clearfix"> 
 			@if (Session::get('error'))
 				<div class="alert alert-error alert-danger" style="text-align: center; font-weight: bold; font-size: 110%;">
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -53,11 +53,11 @@
 								  	@php $no++;@endphp
 								<tr>
 									<td>{{$no}}</td>
-									<?php 
+									@php 
 										$res = explode('myTokenProduct', $row->name);
 										$stel_name = $res[0] ? $res[0] : '-';
 										$stel_code = $res[1] ? $res[1] : '-';
-									?>
+									@endphp
 									<td>{{$stel_name}}</td>
 									<td>{{$stel_code}}</td>
 									<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($row->price)}}</td> 
