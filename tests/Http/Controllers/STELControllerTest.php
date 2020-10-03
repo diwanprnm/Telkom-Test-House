@@ -55,7 +55,7 @@ class STELControllerTest extends TestCase
 	   $user = User::find(1); 
 
        $stel = STEL::latest()->first();
-	   $response =  $this->actingAs($user)->call('GET', 'admin/stel/'.$stel->id);  
+	   $response =  $this->actingAs($user)->call('GET', 'admin/stel/'.$stel->id."/edit");  
 	   
 		// dd($response->getContent());
        $this->assertEquals(200, $response->status());
