@@ -55,6 +55,7 @@ class SalesService
     protected const USER_COMPANIES_ID = 'users.company_id';
     protected const USER_ID = 'users.id';
     protected const V1_INVOICE = 'v1/invoices/';
+    private const STELS_SALES_ATTACHMENT = 'stels_sales_attachment';
     
     public function getData(Request $request)
     {
@@ -278,20 +279,15 @@ class SalesService
 
     public function saveSTELFiles($request, $STELSales, $data)
     {
-        $this->validate($request, [
-            self::STELS_SALES_DETAIL_ID => self::REQUIRED,
-            self::STELS_SALES_ATTACHMENT => self::REQUIRED,
-            self::STEL_FILE => self::REQUIRED,
-        ]);
-
+        
         $notifUploadSTEL = null;
         $attachment_count = 0;
         $success_count = 0;
-        for($i=0;$i<count($request->input(self::STELS_SALES_DETAIL_ID));$i++){
+        for($i=0;$i<count((array)$request->input(self::STELS_SALES_DETAIL_ID));$i++){
             $STELSalesDetail = STELSalesDetail::find($request->input(self::STELS_SALES_DETAIL_ID)[$i]);
             $attachment = $request->input(self::STELS_SALES_ATTACHMENT)[$i];
             if(!$attachment){$attachment_count++;}
-            if ($request->file(self::STEL_FILE)[$i]) {
+            if (@$request->file(self::STEL_FILE)[$i]) {
 
                 $file = $request->file(self::STEL_FILE)[$i];
                 $name_file = 'stel_file_'.$request->file(self::STEL_FILE)[$i]->getClientOriginalName();

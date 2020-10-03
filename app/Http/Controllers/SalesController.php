@@ -84,7 +84,10 @@ class SalesController extends Controller
     private const STELS_SALES_ID = 'stels_sales_id';
     private const USER_COMPANIES_ID = 'users.company_id';
     private const USER_ID = 'users.id'; 
-    
+
+    protected const STELS_SALES_DETAIL_ID = 'stels_sales_detail_id'; 
+    protected const STEL_FILE = 'stel_file';
+
     public function __construct()
     {
         $this->middleware('auth.admin');
@@ -272,7 +275,7 @@ class SalesController extends Controller
     public function edit($id)
     {
         $select = array(self::STELS_SALES_DOT_ID,"stels_sales.id_kuitansi","stels_sales.faktur_file","stels_sales_attachment.attachment",self::STELS_SALES_ATTACHMENT_DOT_STEL_SALES_ID);  
-        $stel = STELSalesAttach::select($select)->rightJoin(self::STELS_SALES,self::STELS_SALES_DOT_ID,"=",self::STELS_SALES_ATTACHMENT_DOT_STEL_SALES_ID)
+        $stel = STELSalesAttach::select($select)->join(self::STELS_SALES,self::STELS_SALES_DOT_ID,"=",self::STELS_SALES_ATTACHMENT_DOT_STEL_SALES_ID)
                 ->where(self::STELS_SALES_DOT_ID,$id)->first();
 				
 		$select = array(self::STELS_NAME,self::STELS_PRICE,self::STELS_CODE,self::STELS_SALES_DETAIL_QTY,self::STELS_SALES_DETAIL_DOT_ID,self::STELS_SALES_DETAIL_ATTACHMENT,"stels.attachment as stelAttach",self::STELS_SALES_INVOICE, self::AS_COMPANY_NAME,self::STELS_SALES_DOT_PAYMENT_STATUS); 
@@ -291,6 +294,9 @@ class SalesController extends Controller
     {
         $this->validate($request, [
             self::PAYMENT_STATUS => self::REQUIRED,
+            self::STELS_SALES_DETAIL_ID => self::REQUIRED,
+            self::STELS_SALES_ATTACHMENT => self::REQUIRED,
+            self::STEL_FILE => self::REQUIRED,
         ]);
 
 		$currentUser = Auth::user();
@@ -337,7 +343,7 @@ class SalesController extends Controller
                     "url"=>self::PAYMENT_DETAIL.$STELSales->id,
                     self::IS_READ=>0,
                 ));
-                event(new Notification($data));
+                // event(new Notification($data));
                 
                 // Create log
                 $logService->createLog('Upload Dokumen Pembelian STEL', self::SALES,$oldStel);
@@ -364,7 +370,7 @@ class SalesController extends Controller
                         "url"=>self::PAYMENT_DETAIL.$STELSales->id,
                         self::IS_READ=>0,
                     ));
-                    event(new Notification($data));
+                    // event(new Notification($data));
                 }
 
                 //create log
@@ -394,28 +400,7 @@ class SalesController extends Controller
         } catch(Exception $e){
             return null;
         }
-    }
-
-    public function api_invoice($data_invoices){
-        $client = new Client([
-            self::HEADERS => [self::AUTHORIZATION => config(self::APP_GATEWAY_TPN)],
-            self::BASE_URI => config(self::APP_URL_API_TPN),
-            self::TIMEOUT  => 60.0,
-            self::HTTP_ERROR => false
-        ]);
-        try {
-            $param_invoices['json'] = $data_invoices;
-            $res_invoices = $client->post("v1/invoices", $param_invoices)->getBody()->getContents();
-            return json_decode($res_invoices);
-
-            /*get
-                $invoice->status; //if true lanjut, else panggil lagi API ny
-                $invoice->data->_id; //INVOICE_ID
-            */
-        } catch(Exception $e){
-            return null;
-        }
-    }
+    } 
 
     public function upload($id)
     {
@@ -569,7 +554,7 @@ class SalesController extends Controller
         /* GENERATE NAMA FILE FAKTUR */
         $stel = STELSales::select(DB::raw('companies.name as company_name, 
             (
-                SELECT GROUP_CONCAT(stels.code SEPARATOR ", ")
+                SELECT GROUP_CONCAT(stels.code,",")
                 FROM
                     stels,
                     stels_sales_detail

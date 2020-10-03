@@ -85,33 +85,24 @@ class SalesControllerTest extends TestCase
         $this->assertResponseStatus(200);
     }
 
-    // public function testGenerateFaktur()
-    // {
-    //     /*
-    //      * Error query raw yang dipakai untuk mysql
-    //      * tapi testing pakai sqlite
-    //      * SQLSTATE[HY000]: General error: 1 near "SEPARATOR"
-    //      */
+    public function testGenerateFaktur()
+    {  
+        $users = factory(App\User::class)->create();
+        $stelsSales = factory(App\STELSales::class)->create(['created_by'=>$users->id]);
+        $STELSalesAttach = factory(App\STELSalesAttach::class)->create(['stel_sales_id'=>$stelsSales->id]);
+        $stelsSalesDetail = factory(App\STELSalesDetail::class)->create(["stels_sales_id"=>$stelsSales->id]);
         
-    //     //get data
-    //     $stelsSales = App\STELSales::latest()->first();
+        //make request
+        $admin = User::find(1);
+        $response = $this->actingAs($admin)->call('POST',"admin/sales/$stelsSales->id/generateTaxInvoice", ['id' => $stelsSales->id]);
 
-    //     //make request
-    //     $admin = User::find(1);
-    //     dd($this->actingAs($admin)->call('POST',"admin/sales/$stelsSales->id/generateTaxInvoice", ['id' => $stelsSales->id]));
-
-    //     //Response status 200
-    //     $this->assertResponseStatus(200);
-    // }
+        //Response status 200
+        $this->assertEquals(200, $response->status());
+    }
 
     public function testExcel()
     {
-        /*
-         * Error query raw yang dipakai untuk mysql
-         * tapi testing pakai sqlite
-         */
-
-        //get data
+        
         $stels = App\STEL::latest()->first();
 
         //make request
@@ -125,49 +116,38 @@ class SalesControllerTest extends TestCase
         $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Sales.xlsx"');
     }
 
-    // public function testEdit()
-    // {
-
-    //     /*
-    //      * Error query raw yang dipakai untuk mysql
-    //      * tapi testing pakai sqlite
-    //      * General error: 1 RIGHT and FULL OUTER JOINs are not currently supported
-    //      */
+    public function testEdit()
+    {
+ 
+         
+        $admin = User::find(1);
+        $users = factory(App\User::class)->create(['role_id'=>2]);
+        $STELSales = factory(App\STELSales::class)->create(['user_id'=>$users->id]);
+        $STELSalesAttach = factory(App\STELSalesAttach::class)->create(['stel_sales_id'=>$STELSales->id]);
+        $stelsSalesDetail = factory(App\STELSalesDetail::class)->create(["stels_sales_id"=>$STELSales->id]);
         
-    //     //get data
-    //     $stelsSalesDetail = App\STELSalesDetail::latest()->first();
-        
-    //     //make request
-    //     $admin = User::find(1);
-    //     dd($this->actingAs($admin)->call('GET',"admin/sales/$stelsSalesDetail->stels_sales_id/edit"));
+        $response = $this->actingAs($admin)->call('GET',"admin/sales/$stelsSalesDetail->stels_sales_id/edit");
 
-    //     //Status sukses dan judul Detail Pembelian STEL
-    //     $this->assertResponseStatus(200)
-    //         ->see('<h1 class="mainTitle">Update Status Sales</h1>')
-    //     ;
-    // }
+        
+        $this->assertEquals(200, $response->status());
+    }
 
     public function testUpdate()
     {
-        // this for update()     ************************************************************************
-    }
+        $STELSales = factory(App\STELSales::class)->create();  
 
-    public function api_upload()
-    {
-        /*
-         * api_upload tidak ada dalam routes
-         */
-        $this->assertTrue(true);
-    }
-    
-    public function api_invoice()
-    {
-        /*
-         * api_invoice tidak ada dalam routes
-         */
-        $this->assertTrue(true);
-    }
-    
+        $stelsSalesDetail = factory(App\STELSalesDetail::class)->create(["stels_sales_id"=>$STELSales->id]);
+        $admin = User::find(1);
+        $response = $this->actingAs($admin)->call('PUT','admin/sales/'.$STELSales->id,
+            [
+                "payment_status"=>1,
+                "stels_sales_detail_id"=>[$stelsSalesDetail->id],
+                "stels_sales_attachment"=>["1.jpg"],
+                "stel_file"=>["1.jpg"],
+            ]);
+        $this->assertEquals(302, $response->status());
+
+    }  
     // public function testUpload()
     // {
 
