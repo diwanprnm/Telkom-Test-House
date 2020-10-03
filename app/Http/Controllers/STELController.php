@@ -339,8 +339,7 @@ class STELController extends Controller
     {
         $stel = STEL::find($id);
 
-        if ($stel){ 
-
+        if ($stel){  
             $file = Storage::disk("minio")->url(self::STEL_URL.$stel->attachment);
                      
             $filename = $stel->attachment;
@@ -445,15 +444,8 @@ class STELController extends Controller
         $logs->updated_by = $currentUser->id;
         $logs->page = "STEL/STD";
         $logs->save();
-
-        // Generate and return the spreadsheet
-        Excel::create('Data STEL/STD', function($excel) use ($examsArray) {
  
-
-            // Build the spreadsheet, passing in the payments array
-            $excel->sheet('sheet1', function($sheet) use ($examsArray) {
-                $sheet->fromArray($examsArray, null, 'A1', false, false);
-            });
-        })->export('xlsx'); 
+        $excel = \App\Services\ExcelService::download($examsArray, 'Data STEL/STD');
+        return response($excel['file'], 200, $excel['headers']);
     } 
 }

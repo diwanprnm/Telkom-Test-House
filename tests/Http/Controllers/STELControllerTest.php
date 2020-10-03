@@ -98,4 +98,37 @@ class STELControllerTest extends TestCase
 		$response =  $this->actingAs($user)->call('DELETE', 'admin/stel/'.$stel->id);  
         $this->assertEquals(302, $response->status()); 
 	} 
+
+	  public function testExcel()
+    {
+         
+        //make request
+        $admin = User::find(1);
+        $response = $this->actingAs($admin)->call('GET',"/stel/excel");
+
+        //response ok, header download sesuai
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
+        $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
+        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data STEL/STD.xlsx"');
+    }
+
+     public function testViewMedia()
+    {
+         
+
+        $stel = factory(App\STEL::class)->create(['attachment'=>str_random(10).".jpg"]); 
+        //save file to minio
+        $file = \Storage::disk('local_public')->get("images/testing.jpg");
+        \Storage::disk('minio')->put("stel/$stel->attachment", $file);
+
+        //make request
+        $admin = User::find(1); 
+        $response = $this->actingAs($admin)->call('GET',"admin/stel/media/".$stel->id); 
+ 
+        $this->assertTrue($response->headers->get('content-type') == 'image/jpeg');
+
+        // Delete file from minio
+        \Storage::disk('minio')->delete("stel/$stel->attachment");
+    }
 }
