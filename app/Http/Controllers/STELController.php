@@ -435,15 +435,10 @@ class STELController extends Controller
                 $row->is_active == '1' ? 'Active' : 'Not Active'
             ];
         }
-        $currentUser = Auth::user();
-        $logs = new Logs;
-        $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-        $logs->action = "download_excel";   
-        $logs->data = "";
-        $logs->created_by = $currentUser->id;
-        $logs->updated_by = $currentUser->id;
-        $logs->page = "STEL/STD";
-        $logs->save();
+        $currentUser = Auth::user(); 
+
+        $logService = new LogService();  
+        $logService->createLog('download_excel',"STEL/STD",array());
  
         $excel = \App\Services\ExcelService::download($examsArray, 'Data STEL/STD');
         return response($excel['file'], 200, $excel['headers']);
