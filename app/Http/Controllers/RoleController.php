@@ -19,6 +19,7 @@ use Session;
 use Input;
 
 use Ramsey\Uuid\Uuid;
+use App\Services\Logs\LogService;
 class RoleController extends Controller
 {
 
@@ -54,22 +55,15 @@ class RoleController extends Controller
                 $stels = Role::whereNotNull('created_at')
                     ->where('name','like','%'.$search.'%')
                     ->orderBy('name')
-                    ->paginate($paginate);
-
-                    $logs = new Logs;
-                    $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                    $logs->action = "Search Role";
-                    $datasearch = array(self::SEARCH=>$search);
-                    $logs->data = json_encode($datasearch);
-                    $logs->created_by = $currentUser->id;
-                    $logs->updated_by = $currentUser->id;
-                    $logs->page = "Role";
-                    $logs->save();
+                    ->paginate($paginate)
+                ;
+                $logService = new LogService();
+                $logService->createLog('Search Role', 'Role',json_encode(array(self::SEARCH=>$search)) );
             }else{
                 $query = Role::whereNotNull('created_at'); 
-                
                 $stels = $query->orderBy('name')
-                            ->paginate($paginate);
+                    ->paginate($paginate)
+                ;
             }
             
             if (count($stels) == 0){
@@ -79,7 +73,8 @@ class RoleController extends Controller
             return view('admin.role.index')
                 ->with(self::MESSAGE, $message)
                 ->with('data', $stels)
-                ->with(self::SEARCH, $search) ;
+                ->with(self::SEARCH, $search)
+            ;
         }
     }
 
@@ -112,15 +107,8 @@ class RoleController extends Controller
 		try{
 			$role->save();
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;
-            $logs->id = Uuid::uuid4();
-            $logs->action = "Create Role";
-            $logs->data = $role;
-            $logs->created_by = $currentUser->id;
-            $logs->updated_by = $currentUser->id;
-            $logs->page = "Role";
-            $logs->save();
+            $logService = new LogService();
+            $logService->createLog('Create Role', 'Role', $role );
 			
             Session::flash(self::MESSAGE, 'role successfully created');
 			return redirect(self::ADMIN_ROLE);
@@ -176,15 +164,8 @@ class RoleController extends Controller
         try{
             $stel->save();
 
-            $logs = new Logs;
-            $logs->user_id = $currentUser->id;
-            $logs->id = Uuid::uuid4();
-            $logs->action = "Update Role";
-            $logs->data = $oldStel;
-            $logs->created_by = $currentUser->id;
-            $logs->updated_by = $currentUser->id;
-            $logs->page = "Role";
-            $logs->save();
+            $logService = new LogService();
+            $logService->createLog('Update Role', 'Role', $oldStel );
 
             Session::flash(self::MESSAGE, 'Role successfully updated');
             return redirect(self::ADMIN_ROLE);
@@ -204,19 +185,12 @@ class RoleController extends Controller
     {
         $role = Role::find($id);
         $oldStel = $role;
-        $currentUser = Auth::user();
         if ($role){
             try{
                 $role->delete();
                 
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Delete Role";
-                $logs->data = $oldStel;
-                $logs->created_by = $currentUser->id;
-                $logs->updated_by = $currentUser->id;
-                $logs->page = "Role";
-                $logs->save();
+                $logService = new LogService();
+                $logService->createLog('Delete Role', 'Role', $oldStel );
 
                 Session::flash(self::MESSAGE, 'Role successfully deleted');
                 return redirect(self::ADMIN_ROLE);

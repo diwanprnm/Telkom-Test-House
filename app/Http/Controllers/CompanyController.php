@@ -91,16 +91,9 @@ class CompanyController extends Controller
                     ->where('id', '<>', '1');
             if ($search != null){
                
-                    $query->where('name','like','%'.$search.'%');
-				
-                    $logs = new Logs;
-                    $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                    $logs->action = "Search Company";
-                    $logs->data = json_encode(array(self::SEARCH=>$search));
-                    $logs->created_by = $currentUser->id;
-                    $logs->updated_by = $currentUser->id;
-                    $logs->page = self::COMPANY;
-                    $logs->save();
+                $query->where('name','like','%'.$search.'%');
+                $logService = new LogService();
+                $logService->createLog('Search Company', 'self::COMPANY', json_encode(array(self::SEARCH=>$search)) );
             } 
 
             if ($request->has(self::IS_ACTIVE)){
@@ -500,15 +493,10 @@ class CompanyController extends Controller
 					]; 
 				}
 				if(!empty($insert)){
-					Company::insert($insert);
-                    $logs = new Logs;
-                    $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                    $logs->action = "Import Company";
-                    $logs->data = "";
-                    $logs->created_by = $currentUser->id;
-                    $logs->page = self::COMPANY;
-                    $logs->save();
-						return back()->with(self::MESSAGE,'Insert Record successfully.'); 
+                    Company::insert($insert);
+                    $logService = new LogService();
+                    $logService->createLog('Import Company', self::COMPANY, '' );
+					return back()->with(self::MESSAGE,'Insert Record successfully.'); 
 				}
 			}
 		}

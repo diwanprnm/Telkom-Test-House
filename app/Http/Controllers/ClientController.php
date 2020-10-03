@@ -97,16 +97,8 @@ class ClientController extends Controller
 		if(count($user) == 0){
 			$credentials = $request->only(self::EMAIL, self::KATA_KUNCI);
 			if (Auth::attempt($credentials)) {
-				$logs = new Logs;
-				$currentUser = Auth::user();
-		        $logs->user_id = $currentUser->id;
-		        $logs->id = Uuid::uuid4();
-		        $logs->action = "Login";   
-		        $logs->data = "";
-		        $logs->created_by = $currentUser->id;
-		        $logs->updated_by = $currentUser->id;
-		        $logs->page = "LOGIN";
-				$logs->save();
+				$logService = new LogService();
+				$logService->createLog('Login', 'LOGIN', '' );
 				return redirect()->back();
 			}else{
 				return back()->with(self::ERROR_CODE, 5)

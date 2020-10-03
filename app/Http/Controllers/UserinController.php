@@ -204,17 +204,10 @@ class UserinController extends Controller
         try{
             $user->save();
             
-            $logs = new Logs;
-            $logs->id = Uuid::uuid4();
-            $logs->user_id = $currentUser->id; 
-            $logs->action = "Create User"; 
-            $logs->data = $user;
-            $logs->created_by = $currentUser->id;
-            $logs->updated_by = $currentUser->id;
-            $logs->page = self::USER_INTERNAL;
-            try{
-                $logs->save();
+            $logService = new LogService();
+            $logService->createLog('Create User', self::USER_INTERNAL, $user);
 
+            try{
                 foreach ($menus as $value) {
                     $usersmenus = new UsersMenus;
                     $usersmenus->user_id =  $user->id; 
@@ -468,14 +461,9 @@ class UserinController extends Controller
 
     public function logout(){
         //LOG LOGOUT
-        $currentUser = Auth::user();
-        $logs = new Logs;
-        $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-        $logs->action = "Logout"; 
-        $logs->data = "";
-        $logs->created_by = $currentUser->id;
-        $logs->page = "AUTH";
-        $logs->save();
+        $logService = new LogService();
+        $logService->createLog('Logout', 'AUTH', '' );
+
         Auth::logout();
         return redirect('/admin/login');
     }

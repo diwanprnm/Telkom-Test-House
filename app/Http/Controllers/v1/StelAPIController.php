@@ -19,7 +19,8 @@ use GuzzleHttp\Client;
 
 use App\Events\Notification;
 use App\NotificationTable;
- 
+use App\Services\Logs\LogService;
+
 class StelAPIController extends AppBaseController
 {    
     public function getStelData(Request $param)
@@ -143,14 +144,8 @@ class StelAPIController extends AppBaseController
                         $data['id'] = $notification->id; 
                         event(new Notification($data));
 
-                        $logs = new Logs;
-                        $logs->user_id = 1;
-                        $logs->id = Uuid::uuid4();
-                        $logs->action = "Update Status Pembayaran STEL";
-                        $logs->data = $oldStel;
-                        $logs->created_by = 1;
-                        $logs->page = "SALES";
-                        $logs->save();
+                        $logService = new LogService();
+                        $logService->createLog('Update Status Pembayaran STEL', 'SALES', $oldStel );
                     }else{
                         $updated_count -= 1;
                     }
