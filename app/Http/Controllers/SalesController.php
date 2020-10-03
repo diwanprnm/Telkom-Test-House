@@ -359,7 +359,7 @@ class SalesController extends Controller
                         "url"=>self::PAYMENT_DETAIL.$STELSales->id,
                         self::IS_READ=>0,
                     ));
-                    event(new Notification($data));
+                    // event(new Notification($data));
                 } else if($STELSales->payment_status == -1) {
 
                     // Make PAYMENT REJECTED notification & event
