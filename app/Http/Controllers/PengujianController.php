@@ -1525,26 +1525,19 @@ class PengujianController extends Controller
 			/* ====== */
 
 			$data= array( 
-	        "from"=>$currentUser->id,
-	        "to"=>self::ADMIN,
-	        self::MESSAGE=>$currentUser->company->name." Mengisi Kuisioner",
-	        "url"=>"examinationdone/".$request->input(self::EXAM_ID).self::EDIT_LOC,
-	        self::IS_READ=>0,
-	        self::CREATED_AT=>date(self::DATE_FORMAT1),
-	        self::UPDATED_AT=>date(self::DATE_FORMAT1)
-	        );
-		  	$notification = new NotificationTable();
-			$notification->id = Uuid::uuid4();
-	      	$notification->from = $data['from'];
-	      	$notification->to = $data['to'];
-	      	$notification->message = $data[self::MESSAGE];
-	      	$notification->url = $data['url'];
-	      	$notification->is_read = $data[self::IS_READ];
-	      	$notification->created_at = $data[self::CREATED_AT];
-	      	$notification->updated_at = $data[self::UPDATED_AT];
-	      	$notification->save();
-	      	$data['id'] = $notification->id; 
-	        // event(new Notification($data));
+				"from"=>$currentUser->id,
+				"to"=>self::ADMIN,
+				self::MESSAGE=>$currentUser->company->name." Mengisi Kuisioner",
+				"url"=>"examinationdone/".$request->input(self::EXAM_ID).self::EDIT_LOC,
+				self::IS_READ=>0,
+				self::CREATED_AT=>date(self::DATE_FORMAT1),
+				self::UPDATED_AT=>date(self::DATE_FORMAT1)
+			);
+			
+			$notificationService = new NotificationService();
+			$data['id'] = $notificationService->make($data);
+			  
+	        // event(new Notification($data))
 
 			echo 1;
 		} catch(Exception $e){

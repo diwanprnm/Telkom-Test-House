@@ -19,6 +19,7 @@ use App\Footer;
 use App\AdminRole;
 use App\ExaminationLab;
 use App\Company;
+use App\Services\NotificationService;
 
 class HomeController extends Controller
 {
@@ -289,28 +290,18 @@ class HomeController extends Controller
 			$admins = AdminRole::where('registration_status',1)->get()->toArray();
 			foreach ($admins as $admin) { 
 				$data= array( 
-	            "from"=>$currentUser->id,
-	            "to"=>$admin['user_id'],
-	            self::MESSAGE=>$currentUser->company->name." Mengedit data Pengujian",
-	            "url"=>"examination/".$id."/edit",
-	            "is_read"=>0,
-	            "created_at"=>date("Y-m-d H:i:s"),
-	            "updated_at"=>date("Y-m-d H:i:s")
-	        	);
-			  	$notification = new NotificationTable();
-				$notification->id = Uuid::uuid4();
-		      	$notification->from = $data['from'];
-		      	$notification->to = $data['to'];
-		      	$notification->message = $data[self::MESSAGE];
-		      	$notification->url = $data['url'];
-		      	$notification->is_read = $data['is_read'];
-		      	$notification->created_at = $data['created_at'];
-		      	$notification->updated_at = $data['updated_at'];
-		      	$notification->save();
+					"from"=>$currentUser->id,
+					"to"=>$admin['user_id'],
+					self::MESSAGE=>$currentUser->company->name." Mengedit data Pengujian",
+					"url"=>"examination/".$id."/edit",
+					"is_read"=>0,
+					"created_at"=>date("Y-m-d H:i:s"),
+					"updated_at"=>date("Y-m-d H:i:s")
+				);
+				$notificationService = new NotificationService();
+				$data['id'] = $notificationService->make($data);
 
-		      $data['id'] = $notification->id;
-		     
-		      event(new Notification($data));
+				event(new Notification($data));
 		  	}
 			$data =  array();
 

@@ -29,6 +29,7 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use App\Events\Notification;
 use App\NotificationTable;
+use App\Services\NotificationService;
  
 class ExaminationAPIController extends AppBaseController
 {
@@ -885,19 +886,11 @@ class ExaminationAPIController extends AppBaseController
 								"created_at"=>date("Y-m-d H:i:s"),
 								"updated_at"=>date("Y-m-d H:i:s")
 							);
-						  	$notification = new NotificationTable();
-							$notification->id = Uuid::uuid4();
-						  	$notification->from = $data['from'];
-						  	$notification->to = $data['to'];
-						  	$notification->message = $data['message'];
-						  	$notification->url = $data['url'];
-						  	$notification->is_read = $data['is_read'];
-						  	$notification->created_at = $data['created_at'];
-						  	$notification->updated_at = $data['updated_at'];
-						  	$notification->save();
 
-						  $data['id'] = $notification->id;
-						  event(new Notification($data));  
+							$notificationService = new NotificationService();
+							$data['id'] = $notificationService->make($data);
+
+							event(new Notification($data));  
 						}
 					  	$data= array( 
 							"from"=>"admin",
@@ -908,18 +901,8 @@ class ExaminationAPIController extends AppBaseController
 							"created_at"=>date("Y-m-d H:i:s"),
 							"updated_at"=>date("Y-m-d H:i:s")
 					 	);
-						$notification = new NotificationTable();
-						$notification->id = Uuid::uuid4();
-						$notification->from = $data['from'];
-						$notification->to = $data['to'];
-						$notification->message = $data['message'];
-						$notification->url = $data['url'];
-						$notification->is_read = $data['is_read'];
-						$notification->created_at = $data['created_at'];
-						$notification->updated_at = $data['updated_at'];
-						$notification->save();
-
-						$data['id'] = $notification->id;
+						$notificationService = new NotificationService();
+						$data['id'] = $notificationService->make($data);
 						event(new Notification($data));
 						return $this->sendResponse($examinations, 'Function Date Found');
 					}else{
@@ -930,7 +913,7 @@ class ExaminationAPIController extends AppBaseController
 					$examinations->function_test_status_detail = 'TE menjadwal ulang tanggal';
 					if($examinations->save()){
 						
-						 $data= array( 
+					$data= array( 
 						"from"=>$id_user,
 						"to"=>"admin",
 						"message"=>"Test Engineer memberikan Tanggal Uji Fungsi",
@@ -938,7 +921,7 @@ class ExaminationAPIController extends AppBaseController
 						"is_read"=>0,
 						"created_at"=>date("Y-m-d H:i:s"),
 						"updated_at"=>date("Y-m-d H:i:s")
-					 );
+					);
 					 
 					$exam_hist = new ExaminationHistory;
 					$exam_hist->examination_id = $param->id;
@@ -950,21 +933,11 @@ class ExaminationAPIController extends AppBaseController
 					$exam_hist->created_at = date('Y-m-d H:i:s');
 					$exam_hist->save();
 					 
-					  $notification = new NotificationTable();
-	$notification->id = Uuid::uuid4();
-					  $notification->from = $data['from'];
-					  $notification->to = $data['to'];
-					  $notification->message = $data['message'];
-					  $notification->url = $data['url'];
-					  $notification->is_read = $data['is_read'];
-					  $notification->created_at = $data['created_at'];
-					  $notification->updated_at = $data['updated_at'];
-					  $notification->save();
-
-					  $data['id'] = $notification->id;
-					  event(new Notification($data));  
+					$notificationService = new NotificationService();
+					$data['id'] = $notificationService->make($data);
+					event(new Notification($data));  
 					  
-					  $data= array( 
+					$data= array( 
 						"from"=>"admin",
 						"to"=>$examinations->created_by,
 						"message"=>"Test Engineer mengajukan Tanggal Uji Fungsi",
@@ -972,22 +945,13 @@ class ExaminationAPIController extends AppBaseController
 						"is_read"=>0,
 						"created_at"=>date("Y-m-d H:i:s"),
 						"updated_at"=>date("Y-m-d H:i:s")
-					 );
-					  $notification = new NotificationTable();
-	$notification->id = Uuid::uuid4();
-					  $notification->from = $data['from'];
-					  $notification->to = $data['to'];
-					  $notification->message = $data['message'];
-					  $notification->url = $data['url'];
-					  $notification->is_read = $data['is_read'];
-					  $notification->created_at = $data['created_at'];
-					  $notification->updated_at = $data['updated_at'];
-					  $notification->save();
+					);
 
-					 $data['id'] = $notification->id;
-					  event(new Notification($data));
+					$notificationService = new NotificationService();
+					$data['id'] = $notificationService->make($data);
+					event(new Notification($data));
 
-						return $this->sendResponse($examinations, 'Function Date Found');
+					return $this->sendResponse($examinations, 'Function Date Found');					
 					}else{
 						return $this->sendError('Failed to Update Function Date ');
 					}
@@ -1042,19 +1006,10 @@ class ExaminationAPIController extends AppBaseController
 		                "created_at"=>date("Y-m-d H:i:s"),
 		                "updated_at"=>date("Y-m-d H:i:s")
 		                );
-					  	$notification = new NotificationTable();
-						$notification->id = Uuid::uuid4();
-				      	$notification->from = $data['from'];
-				      	$notification->to = $data['to'];
-				      	$notification->message = $data['message'];
-				      	$notification->url = $data['url'];
-				      	$notification->is_read = $data['is_read'];
-				      	$notification->created_at = $data['created_at'];
-				      	$notification->updated_at = $data['updated_at'];
-				      	$notification->save();
+						$notificationService = new NotificationService();
+						$data['id'] = $notificationService->make($data);
+						event(new Notification($data));
 					}
-	                $data['id'] = $notification->id;
-			      	event(new Notification($data));
 				}else if($param->location == 2){
 					$admins = AdminRole::where('examination_status',1)->get()->toArray();
 					foreach ($admins as $admin) {  
@@ -1067,17 +1022,8 @@ class ExaminationAPIController extends AppBaseController
 			                "created_at"=>date("Y-m-d H:i:s"),
 			                "updated_at"=>date("Y-m-d H:i:s")
 		                );
-					  	$notification = new NotificationTable();
-						$notification->id = Uuid::uuid4();
-				      	$notification->from = $data['from'];
-				      	$notification->to = $data['to'];
-				      	$notification->message = $data['message'];
-				      	$notification->url = $data['url'];
-				      	$notification->is_read = $data['is_read'];
-				      	$notification->created_at = $data['created_at'];
-				      	$notification->updated_at = $data['updated_at'];
-				      	$notification->save();
-	 					$data['id'] = $notification->id; 
+						$notificationService = new NotificationService();
+						$data['id'] = $notificationService->make($data);
 		                event(new Notification($data));
 	            	}
 				}
@@ -1150,22 +1096,12 @@ class ExaminationAPIController extends AppBaseController
 				                "created_at"=>date("Y-m-d H:i:s"),
 				                "updated_at"=>date("Y-m-d H:i:s")
 			             	);
-						  	$notification = new NotificationTable();
-							$notification->id = Uuid::uuid4();
-					      	$notification->from = $data['from'];
-					      	$notification->to = $data['to'];
-					      	$notification->message = $data['message'];
-					      	$notification->url = $data['url'];
-					      	$notification->is_read = $data['is_read'];
-					      	$notification->created_at = $data['created_at'];
-					      	$notification->updated_at = $data['updated_at'];
-					      	$notification->save();
-					     	$data['id'] = $notification->id;
-					     	event(new Notification($data));
+							$notificationService = new NotificationService();
+							$data['id'] = $notificationService->make($data);
+							event(new Notification($data));
 					    }
 
 				      	$data= array(
-				        
 			                "from"=>"admin",
 			                "to"=>$id_user,
 			                "message"=>"Test Engineer mengedit data Pengujian",
@@ -1173,19 +1109,10 @@ class ExaminationAPIController extends AppBaseController
 			                "is_read"=>0,
 			                "created_at"=>date("Y-m-d H:i:s"),
 			                "updated_at"=>date("Y-m-d H:i:s")
-			             );
+			            );
 
-					  	$notification = new NotificationTable();
-						$notification->id = Uuid::uuid4();
-				      	$notification->from = $data['from'];
-				      	$notification->to = $data['to'];
-				      	$notification->message = $data['message'];
-				      	$notification->url = $data['url'];
-				      	$notification->is_read = $data['is_read'];
-				      	$notification->created_at = $data['created_at'];
-				      	$notification->updated_at = $data['updated_at'];
-				      	$notification->save(); 
-				      	$data['id'] = $notification->id;
+						$notificationService = new NotificationService();
+						$data['id'] = $notificationService->make($data);
 				       	event(new Notification($data));
 						$this->updaterevisi($a,$param,$examinations);
 						return $this->sendResponse($device, 'Device Found');
@@ -1347,44 +1274,23 @@ class ExaminationAPIController extends AppBaseController
 			                "created_at"=>date("Y-m-d H:i:s"),
 			                "updated_at"=>date("Y-m-d H:i:s")
 			            );
-					  	$notification = new NotificationTable();
-						$notification->id = Uuid::uuid4();
-				      	$notification->from = $data['from'];
-				      	$notification->to = $data['to'];
-				      	$notification->message = $data['message'];
-				      	$notification->url = $data['url'];
-				      	$notification->is_read = $data['is_read'];
-				      	$notification->created_at = $data['created_at'];
-				      	$notification->updated_at = $data['updated_at'];
-				      	$notification->save();
-				     
-				      	$data['id'] = $notification->id;
-				      	event(new Notification($data));
+						$notificationService = new NotificationService();
+						$data['id'] = $notificationService->make($data);
+						event(new Notification($data));
 					}
 
-				       $data= array( 
-		                "from"=>"admin",
-		                "to"=>$id_user,
-		                "message"=>"Test Engineer memberikan Hasil Uji Fungsi",
-		                "url"=>"examination/".$param->id."/edit",
-		                "is_read"=>0,
-		                "created_at"=>date("Y-m-d H:i:s"),
-		                "updated_at"=>date("Y-m-d H:i:s")
-		             );
-					  $notification = new NotificationTable();
-$notification->id = Uuid::uuid4();
-				      $notification->from = $data['from'];
-				      $notification->to = $data['to'];
-				      $notification->message = $data['message'];
-				      $notification->url = $data['url'];
-				      $notification->is_read = $data['is_read'];
-				      $notification->created_at = $data['created_at'];
-				      $notification->updated_at = $data['updated_at'];
-				      $notification->save();
-
-				     
-				      $data['id'] = $notification->id;
-				      event(new Notification($data));
+					$data= array( 
+						"from"=>"admin",
+						"to"=>$id_user,
+						"message"=>"Test Engineer memberikan Hasil Uji Fungsi",
+						"url"=>"examination/".$param->id."/edit",
+						"is_read"=>0,
+						"created_at"=>date("Y-m-d H:i:s"),
+						"updated_at"=>date("Y-m-d H:i:s")
+					);
+					$notificationService = new NotificationService();
+					$data['id'] = $notificationService->make($data);
+					event(new Notification($data));
     				return $this->sendResponse($examinations, 'Examination Found');
     			}else{
     				return $this->sendError('Failed to Update ');
@@ -1461,24 +1367,14 @@ $notification->id = Uuid::uuid4();
 						"created_at"=>date("Y-m-d H:i:s"),
 						"updated_at"=>date("Y-m-d H:i:s")
 					);
-					  $notification = new NotificationTable();
-					  $notification->id = Uuid::uuid4();
-					  $notification->from = $data['from'];
-					  $notification->to = $data['to'];
-					  $notification->message = $data['message'];
-					  $notification->url = $data['url'];
-					  $notification->is_read = $data['is_read'];
-					  $notification->created_at = $data['created_at'];
-					  $notification->updated_at = $data['updated_at'];
-					  $notification->save();
+					$notificationService = new NotificationService();
+					$data['id'] = $notificationService->make($data);
+					event(new Notification($data));
 
-					  $data['id'] = $notification->id;
-					  event(new Notification($data));
-
-    				return $this->sendResponse($attach, 'Resume Found');
-    			}else{
-    				return $this->sendError('Failed to Input Resume');
-    			}
+					return $this->sendResponse($attach, 'Resume Found');
+				}else{
+					return $this->sendError('Failed to Input Resume');
+				}
 			} else{
 				$attach = new ExaminationAttach;
 				$attach->id = Uuid::uuid4();
@@ -1500,24 +1396,14 @@ $notification->id = Uuid::uuid4();
 						"created_at"=>date("Y-m-d H:i:s"),
 						"updated_at"=>date("Y-m-d H:i:s")
 					);
-					  $notification = new NotificationTable();
-					  $notification->id = Uuid::uuid4();
-					  $notification->from = $data['from'];
-					  $notification->to = $data['to'];
-					  $notification->message = $data['message'];
-					  $notification->url = $data['url'];
-					  $notification->is_read = $data['is_read'];
-					  $notification->created_at = $data['created_at'];
-					  $notification->updated_at = $data['updated_at'];
-					  $notification->save();
+					$notificationService = new NotificationService();
+					$data['id'] = $notificationService->make($data);
+					event(new Notification($data));
 
-					  $data['id'] = $notification->id;
-					  event(new Notification($data));
-					  
-    				return $this->sendResponse($attach, 'Resume Found');
-    			}else{
-    				return $this->sendError('Failed to Input Resume');
-    			}
+					return $this->sendResponse($attach, 'Resume Found');
+				}else{
+					return $this->sendError('Failed to Input Resume');
+				}
 			}
     	}else{
     		return $this->sendError('ID Examination or name or attachment or Ref. No link Is Required');
@@ -1866,17 +1752,8 @@ $notification->id = Uuid::uuid4();
 				                "created_at"=>date("Y-m-d H:i:s"),
 				                "updated_at"=>date("Y-m-d H:i:s")
 			                );
-						  	$notification = new NotificationTable();
-							$notification->id = Uuid::uuid4();
-					      	$notification->from = $notif_data['from'];
-					      	$notification->to = $notif_data['to'];
-					      	$notification->message = $notif_data['message'];
-					      	$notification->url = $notif_data['url'];
-					      	$notification->is_read = $notif_data['is_read'];
-					      	$notification->created_at = $notif_data['created_at'];
-					      	$notification->updated_at = $notif_data['updated_at'];
-					      	$notification->save();
-					      	$notif_data['id'] = $notification->id; 
+							$notificationService = new NotificationService();
+							$data['id'] = $notificationService->make($data);
 					        event(new Notification($notif_data));
 				    	}
                     }else{

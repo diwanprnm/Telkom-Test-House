@@ -306,28 +306,17 @@ class ProfileController extends Controller
 
 	        $currentUser = Auth::user();
 			$data= array( 
-	        "from"=>$currentUser->id,
-	        "to"=>self::ADMIN_TEXT,
-	        self::MESSAGE=>$currentUser->company->name." mengedit data Perusahaan ",
-	        "url"=>"tempcompany/".$temp->id.self::ADMIN_EDIT,
-	        self::IS_READ=>0,
-	        self::CREATED_AT=>date(self::FORMAT_DATE),
-	        self::UPDATED_AT=>date(self::FORMAT_DATE)
+				"from"=>$currentUser->id,
+				"to"=>self::ADMIN_TEXT,
+				self::MESSAGE=>$currentUser->company->name." mengedit data Perusahaan ",
+				"url"=>"tempcompany/".$temp->id.self::ADMIN_EDIT,
+				self::IS_READ=>0,
+				self::CREATED_AT=>date(self::FORMAT_DATE),
+				self::UPDATED_AT=>date(self::FORMAT_DATE)
 	        );
-		  	$notifProfile = new NotificationTable();
-			$notifProfile->id = Uuid::uuid4();
-	      	$notifProfile->from = $data['from'];
-	      	$notifProfile->to = $data['to'];
-	      	$notifProfile->message = $data[self::MESSAGE];
-	      	$notifProfile->url = $data['url'];
-	      	$notifProfile->is_read = $data[self::IS_READ];
-	      	$notifProfile->created_at = $data[self::CREATED_AT];
-	      	$notifProfile->updated_at = $data[self::UPDATED_AT];
-	      	$notifProfile->created_by = $currentUser->id;
-	      	$notifProfile->updated_by = $currentUser->id;
-	      	$notifProfile->save();
-	      	$data['id'] = $notifProfile->id; 
-	        // event(new Notification($data));
+			$notificationService = new NotificationService();
+			$data['id'] = $notificationService->make($data);
+	        // event(new Notification($data))
 
 
 
