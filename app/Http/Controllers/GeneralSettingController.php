@@ -94,15 +94,7 @@ class GeneralSettingController extends Controller
 
             $logService = new LogService();
             $logService->createLog("Update General Setting","General Setting",$oldGeneralSetting );
-
-            $logs_a = new LogsAdministrator;
-            $logs_a->id = Uuid::uuid4();
-            $logs_a->user_id = $currentUser->id;
-            $logs_a->action = "Update Manager URel atau POH";
-            $logs_a->page = "General Setting";
-            $logs_a->reason = $request->input('keterangan');
-            $logs_a->data = $oldGeneralSetting;
-            $logs_a->save();
+            $logService->createAdminLog('Update Manager URel atau POH' , 'General Setting', $oldGeneralSetting, $request->input('keterangan') );
 
             Session::flash($this::MESSAGE, 'General Setting successfully updated');
             return redirect(self::GEN);
