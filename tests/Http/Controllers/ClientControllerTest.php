@@ -34,6 +34,6 @@ class ClientControllerTest extends TestCase
 	        'password' => "admin" 
 	    ]);   
 		// dd($response->getContent());
-        $this->assertEquals(200, $response->status()); 
+        $this->assertEquals(302, $response->status()); 
     } 
 }

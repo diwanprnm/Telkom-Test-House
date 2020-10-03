@@ -7,22 +7,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\User;
 
 class SalesControllerTest extends TestCase
-{
-
-    // public function testDeleteSoon(){
-    //     $this->assertTrue(true);
-    //     // for mysql DB::statement('SET FOREIGN_KEY_CHECKS=0;'); //-
-    //     App\STELSalesDetail::truncate();
-    //     App\STEL::truncate();
-    //     App\STELSalesAttach::truncate();
-    //     App\STELSales::truncate();
-    //     App\Logs::truncate();
-    //     App\LogsAdministrator::truncate();
-    //     App\User::where('id','!=', '1')->delete();
-    //     App\Company::where('id','!=', '1')->delete();
-    //     // for mysql DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-
-    // }
+{ 
 
     public function testIndexWithoutData()
     {
