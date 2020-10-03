@@ -427,7 +427,7 @@ class STELController extends Controller
                 $row->id,
                 $row->code,
                 $row->name,
-                $row->examinationLab->name,
+                @$row->examinationLab->name,
                 $row->version,
                 $row->year,
                 number_format($row->price, 0, '.', ','),
