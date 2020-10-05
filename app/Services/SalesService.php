@@ -248,7 +248,7 @@ class SalesService
             try {
                 $fileService = new FileService();  
                 $file = $fileService->uploadFile($request->file(self::KUITANSI_FILE), 'kuitansi_stel_', "/".self::MEDIA_STEL.$STELSales->id."/");  
-                $STELSales->id_kuitansi = $name_file;
+                $STELSales->id_kuitansi = $file;
             } catch (\Exception $e) {
                 Session::flash(self::ERROR, 'Save Receipt to directory failed');
                 return redirect(self::ADMIN_SALES.'/'.$STELSales->id.self::EDIT);

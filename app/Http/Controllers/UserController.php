@@ -502,15 +502,12 @@ class UserController extends Controller
 
     private function uploadPicture($request, $users){
 
-        if ($request->hasFile(self::PICTURE)) { 
-            $name_file = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
-            $path_file = public_path().self::MEDIA_USER.$users->id;
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file(self::PICTURE)->move($path_file,$name_file)){
-                $users->picture = $name_file;
-            }else{
+        if ($request->hasFile(self::PICTURE)) {
+            try {
+                $fileService = new FileService();  
+                $file = $fileService->uploadFile($request->file(self::PICTURE), '', "/".self::MEDIA_USER.$users->id."/");  
+                $users->picture = $file;
+            } catch (\Exception $e) {
                 Session::flash(self::ERROR,self::FAILED_USER_MSG);
                 return redirect(self::ADMIN_USEREKS_CREATE);
             }
