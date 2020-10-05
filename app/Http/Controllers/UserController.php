@@ -22,6 +22,7 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 use App\Services\Logs\LogService;
+use App\Services\FileService;
 class UserController extends Controller
 {
 
