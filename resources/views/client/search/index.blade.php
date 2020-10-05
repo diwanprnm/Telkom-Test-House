@@ -26,7 +26,7 @@
 														</thead>
 														<tbody>
 															@php $no=1; if(count($data)>0){ @endphp
-															@foreach($data as $item?
+															@foreach($data as $item) @endphp
 																<tr>
 																	<td>@php echo $no.'. '; @endphp {{ trans('translate.search_result_title') }} : </td>
 																	<td>@php echo $item->title @endphp</td>
