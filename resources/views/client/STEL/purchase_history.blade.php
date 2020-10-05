@@ -79,6 +79,7 @@
 															break; 
 														case 2:
 															echo '<td class="center"><span class="label label-sm label-warning" style="line-height: 2;">Paid (waiting confirmation)</span></td>';
+															break;
 														case 3:
 															echo '<td class="center"><span class="label label-sm label-info" style="line-height: 2;">Paid (delivered)</span></td>';
 															break; 
