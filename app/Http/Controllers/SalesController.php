@@ -363,7 +363,7 @@ class SalesController extends Controller
                 $row->invoice,
                 number_format($row->cust_price_payment, 0, '.', ','),
                 $payment_status,
-                ($row->payment_method == 1)?'ATM':'Kartu Kredit',
+                ($row->payment_method == 1)?'ATM':$row->VA_name,
                 $row->stel_code
             ];
         }
