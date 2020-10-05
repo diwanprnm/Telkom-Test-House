@@ -99,6 +99,9 @@ class ProductsControllerTest extends TestCase
 	}
     public function test_doCheckout()
 	{   
+		session(['PO_ID_from_TPN' => '123123']);
+
+	    $stelsSales = factory(App\STELSales::class)->create();
         $user = factory(App\User::class)->create(['role_id'=>2]);
 		$response =  $this->actingAs($user)->call('POST', '/doCheckout', 
 		[ 
