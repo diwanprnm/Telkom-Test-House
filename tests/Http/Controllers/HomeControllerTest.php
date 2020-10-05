@@ -111,7 +111,7 @@ class HomeControllerTest extends TestCase
 	    
 	    $file_name = "User Manual Situs Jasa Layanan Pelanggan Lab Pengujian [Customer].pdf";
         $file = \Storage::disk('local_public')->get("images/testing.jpg");
-        \Storage::disk('minio')->put($file_name, $file);
+        \Storage::disk('minio')->put("usman/".$file_name, $file);
 
         //make request
         $admin = User::find(1); 
