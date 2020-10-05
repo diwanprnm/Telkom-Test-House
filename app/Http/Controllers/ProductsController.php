@@ -112,7 +112,7 @@ class ProductsController extends Controller
         $currentUser = Auth::user();
         if($currentUser){
             $paginate = 10; 
-              $select = array("stels_sales.*","users.name","stels_sales_detail.id","stels.code"); 
+              $select = array("stels_sales.*","users.name","stels.code"); 
              $query = STELSales::select($select)
                         ->join("stels_sales_detail","stels_sales.id","=","stels_sales_detail.stels_sales_id")
                         ->join("stels","stels_sales_detail.stels_id","=","stels.id")

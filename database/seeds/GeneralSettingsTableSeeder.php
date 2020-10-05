@@ -22,7 +22,7 @@ class GeneralSettingsTableSeeder extends Seeder
         ]);
         DB::table('general_settings')->insert([
 			'code' => 'poh_manager_urel',
-			'value' => 'Henrina',
+			'value' => 'Anna Mulyani',
 			'created_by' => '1',
 			'created_at' => date("Y-m-d H:i:s"),
 		]);

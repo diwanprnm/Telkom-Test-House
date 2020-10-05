@@ -89,7 +89,7 @@ class SalesService
 
     public function initialQuery()
     {
-        $select = array(self::STELS_SALES_DOT_ID,"stels_sales.created_at",self::STELS_SALES_INVOICE, self::STELS_SALES_DOT_PAYMENT_STATUS,"stels_sales.payment_method","stels_sales.total","stels_sales.cust_price_payment",self::AS_COMPANY_NAME,
+        $select = array(self::STELS_SALES_DOT_ID,"stels_sales.created_at",self::STELS_SALES_INVOICE, self::STELS_SALES_DOT_PAYMENT_STATUS,"stels_sales.payment_method","stels_sales.VA_name","stels_sales.total","stels_sales.cust_price_payment",self::AS_COMPANY_NAME,
         DB::raw('stels_sales.id as _id,
                 (
                     SELECT GROUP_CONCAT(stels.name , ",")
