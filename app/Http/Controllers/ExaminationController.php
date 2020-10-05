@@ -1847,7 +1847,7 @@ class ExaminationController extends Controller
 			;
 			/* Kirim Draft ke TPN */
 			$biaya = 0;
-			for($i=0;$i<count($arr_biaya);$i++){
+			for($i=0;$i<count((array)$arr_biaya);$i++){
 				$biaya = $biaya + $arr_biaya[$i];
 			} 
 			$details [] = 
