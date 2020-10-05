@@ -202,19 +202,5 @@ class RoleController extends Controller
              Session::flash(self::ERROR, 'Role Not Found');
                 return redirect(self::ADMIN_ROLE);
         }
-    }
-
-    public function viewMedia($id)
-    {
-        $stel = STEL::find($id);
-
-        if ($stel){
-            $file = public_path().'/media/stel/'.$stel->attachment;
-            $headers = array(
-              'Content-Type: application/octet-stream',
-            );
-
-            return Response::file($file, $headers);
-        }
     } 
 }

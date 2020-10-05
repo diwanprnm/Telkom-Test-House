@@ -86,9 +86,8 @@ class ProfileControllerTest extends TestCase
 		[  
 	        'hide_is_company_too' => 0,
 	        'email' => str_random(10),
-	        'newPass' => str_random(10),
-	        'confnewPass' => str_random(10),
-	        'newPass' => str_random(10),
+	        'newPass' => "password",
+	        'confnewPass' => "password"
 	    ]);      
 	    
         $this->assertEquals(302, $response->status()); 
