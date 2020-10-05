@@ -94,16 +94,24 @@ class HomeControllerTest extends TestCase
 	 
        	$this->assertEquals(302, $response->status());
 	} 
- //    public function test_visit_search()
-	// { 
+    public function test_visit_search()
+	{ 
 	    
-	//    	$user = User::find(1);
+	   	$user = User::find(1);
        
-	// 	$response =  $this->actingAs($user)->call('POST', '/global/search', 
-	// 	[ 
-	//         'globalSearch' => str_random(10) 
-	//     ]);   
-	// 	// dd($response->getContent());
- //        $this->assertEquals(302, $response->status());
-	// } 
+		$response =  $this->actingAs($user)->call('POST', '/global/search', 
+		[ 
+	        'globalSearch' => str_random(10) 
+	    ]);   
+		// dd($response->getContent());
+        $this->assertEquals(200, $response->status());
+	} 
+    public function test_download_usman()
+	{  
+
+        //make request
+        $admin = User::find(1); 
+        $response = $this->actingAs($admin)->call('GET',"/client/downloadUsman");  
+        $this->assertTrue($response->headers->get('content-type') == 'application/pdf'); 
+	} 
 }

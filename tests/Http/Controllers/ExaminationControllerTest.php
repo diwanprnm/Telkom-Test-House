@@ -315,7 +315,7 @@ class ExaminationControllerTest extends TestCase
         $examination = factory(App\Examination::class)->create(['spb_number'=>$spb_number]); 
         $response = $this->actingAs(User::find('1'))->call('POST', 'admin/examination/generateSPB',
             [
-                'spb_number'=>$spb_number,
+                'spb_number'=>"02",
                 'exam_id'=>$examination->id,
                 'spb_date'=>'2020-12-12',
                 'arr_biaya[]'=>array(1200,1200),

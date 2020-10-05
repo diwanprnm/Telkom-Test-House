@@ -88,15 +88,9 @@ class STELController extends Controller
                     ->orWhere('code', 'like', '%'.strtolower($search).'%');
                 });
 
-                $logs = new Logs;
-                $logs->user_id = $currentUser->id;$logs->id = Uuid::uuid4();
-                $logs->action = "Search STEL";
-                $datasearch = array(self::SEARCH=>$search);
-                $logs->data = json_encode($datasearch);
-                $logs->created_by = $currentUser->id;
-                $logs->updated_by = $currentUser->id;
-                $logs->page = "STEL";
-                $logs->save();
+                $logService = new LogService();
+                $logService->createLog('Search STEL', "STEL", json_encode(array(self::SEARCH=>$search)) );
+
             }
             
             if ($request->has(self::CATEGORY)){

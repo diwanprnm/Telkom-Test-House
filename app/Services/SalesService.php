@@ -15,6 +15,7 @@ use App\Services\Querys\QueryFilter;
 use App\Services\Logs\LogService;
 use App\Services\NotificationService;
 use App\Services\SalesService;
+use App\Services\FileService;
 
 use Auth;
 use Session; 
@@ -243,15 +244,13 @@ class SalesService
     //Save Receipt files *************************************************************************
     public function saveReceiptAndInvoiceFiles($request, $STELSales)
     {
+        //Save Kuitansi files *************************************************************************
         if ($request->hasFile(self::KUITANSI_FILE)) {
-            $name_file = 'kuitansi_stel_'.$request->file(self::KUITANSI_FILE)->getClientOriginalName();
-            $path_file = public_path().self::MEDIA_STEL.$STELSales->id;
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file(self::KUITANSI_FILE)->move($path_file,$name_file)){
-                $STELSales->id_kuitansi = $name_file;					
-            }else{
+            try {
+                $fileService = new FileService();  
+                $file = $fileService->uploadFile($request->file(self::KUITANSI_FILE), 'kuitansi_stel_', "/".self::MEDIA_STEL.$STELSales->id."/");  
+                $STELSales->id_kuitansi = $file;
+            } catch (\Exception $e) {
                 Session::flash(self::ERROR, 'Save Receipt to directory failed');
                 return redirect(self::ADMIN_SALES.'/'.$STELSales->id.self::EDIT);
             }
@@ -259,14 +258,11 @@ class SalesService
     
         //Save Invoice files *************************************************************************
         if ($request->hasFile(self::FAKTUR_FILE)) {
-            $name_file = 'faktur_stel_'.$request->file(self::FAKTUR_FILE)->getClientOriginalName();
-            $path_file = public_path().self::MEDIA_STEL.$STELSales->id;
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file(self::FAKTUR_FILE)->move($path_file,$name_file)){
-                $STELSales->faktur_file = $name_file;					
-            }else{
+            try {
+                $fileService = new FileService();  
+                $file = $fileService->uploadFile($request->file(self::FAKTUR_FILE), 'faktur_stel_', "/".self::MEDIA_STEL.$STELSales->id."/");  
+                $STELSales->faktur_file = $file;
+            } catch (\Exception $e) {
                 Session::flash(self::ERROR, 'Save Invoice to directory failed');
                 return redirect(self::ADMIN_SALES.'/'.$STELSales->id.self::EDIT);
             }

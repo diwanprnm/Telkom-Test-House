@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Jobs\ChangeLocale;
 use Auth;
 use Response;
+use Storage;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -380,12 +381,13 @@ class HomeController extends Controller
 	
 	public function downloadUsman()
     {
-		$file = public_path().'/media/usman/User Manual Situs Jasa Layanan Pelanggan Lab Pengujian [Customer].pdf';
-		$headers = array(
-		  'Content-Type: application/octet-stream',
-		);
+		$filename = "User Manual Situs Jasa Layanan Pelanggan Lab Pengujian [Customer].pdf";
+		$file = Storage::disk("minio")->url("usman/".$filename);
+                      
+        $tempImage = tempnam(sys_get_temp_dir(), $filename);
+        copy($file, $tempImage);
 
-		return Response::download($file, 'User Manual Situs Jasa Layanan Pelanggan Lab Pengujian [Customer].pdf', $headers);
+        return response()->download($tempImage, $filename); 
 	}
 
 	private function getInitialQuery($currentUser)

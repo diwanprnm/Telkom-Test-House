@@ -23,7 +23,7 @@ class RoleControllerTest extends TestCase
  
 	   $user = User::find(1);
 	   $role = Role::find(1);
-	   $response =  $this->actingAs($user)->call('GET', 'admin/role/'.$role->id);  
+	   $response =  $this->actingAs($user)->call('GET', 'admin/role/'.$role->id."/edit");  
 	   
 		// dd($response->getContent());
        $this->assertEquals(200, $response->status());
