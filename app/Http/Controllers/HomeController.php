@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Jobs\ChangeLocale;
 use Auth;
 use Response;
+use Storage;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -382,8 +383,7 @@ class HomeController extends Controller
     {
 		$filename = "User Manual Situs Jasa Layanan Pelanggan Lab Pengujian [Customer].pdf";
 		$file = Storage::disk("minio")->url("usman/".$filename);
-                     
-        $filename = $stel->attachment;
+                      
         $tempImage = tempnam(sys_get_temp_dir(), $filename);
         copy($file, $tempImage);
 
