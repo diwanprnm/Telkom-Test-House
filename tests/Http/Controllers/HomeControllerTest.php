@@ -107,18 +107,11 @@ class HomeControllerTest extends TestCase
         $this->assertEquals(200, $response->status());
 	} 
     public function test_download_usman()
-	{ 
-	    
-	    $file_name = "User Manual Situs Jasa Layanan Pelanggan Lab Pengujian [Customer].pdf";
-        $file = \Storage::disk('local_public')->get("images/testing.jpg");
-        \Storage::disk('minio')->put("usman/".$file_name, $file);
+	{  
 
         //make request
         $admin = User::find(1); 
         $response = $this->actingAs($admin)->call('GET',"/client/downloadUsman");  
-        $this->assertTrue($response->headers->get('content-type') == 'application/pdf');
-
-        // Delete file from minio
-        \Storage::disk('minio')->delete("usman/".$file_name);
+        $this->assertTrue($response->headers->get('content-type') == 'application/pdf'); 
 	} 
 }
