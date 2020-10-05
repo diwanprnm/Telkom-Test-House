@@ -115,8 +115,7 @@ class HomeControllerTest extends TestCase
 
         //make request
         $admin = User::find(1); 
-        $response = $this->actingAs($admin)->call('GET',"/client/downloadUsman"); 
- 	echo $response->headers->get('content-type') ;
+        $response = $this->actingAs($admin)->call('GET',"/client/downloadUsman");  
         $this->assertTrue($response->headers->get('content-type') == 'application/pdf');
 
         // Delete file from minio
