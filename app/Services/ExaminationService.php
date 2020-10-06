@@ -266,7 +266,7 @@ class ExaminationService
 			    /* GENERATE NAMA FILE FAKTUR */
 			    $filename = $exam ? $payment_date.'_'.$exam->company_name.'_'.$exam->name.'_'.$exam->mark.'_'.$exam->capacity.'_'.$exam->model : $exam->INVOICE_ID;
 			    /* END GENERATE NAMA FILE FAKTUR */
-				$name_file = trim(preg_replace('/\s\s+/', ' ', 'faktur_spb_'.$filename.'.pdf'));
+				$name_file = trim(preg_replace(array('/\s\s+/','/\//','/\\\/','/\:/','/\*/','/\?/','/\"/','/\</','/\>/','/\|/'), '', 'faktur_spb_'.$filename.'.pdf'));
     		}
             try {
                 $INVOICE_ID = $exam->INVOICE_ID;
