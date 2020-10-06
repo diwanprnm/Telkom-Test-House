@@ -249,7 +249,7 @@ class SalesService
             try {
                 $fileService = new FileService();  
                 $file = $fileService->uploadFile($request->file(self::KUITANSI_FILE), 'kuitansi_stel_', "/".self::MEDIA_STEL.$STELSales->id."/");  
-                $STELSales->id_kuitansi = $file;
+                $STELSales->id_kuitansi = $file ? $file : '';
             } catch (\Exception $e) {
                 Session::flash(self::ERROR, 'Save Receipt to directory failed');
                 return redirect(self::ADMIN_SALES.'/'.$STELSales->id.self::EDIT);
@@ -261,7 +261,7 @@ class SalesService
             try {
                 $fileService = new FileService();  
                 $file = $fileService->uploadFile($request->file(self::FAKTUR_FILE), 'faktur_stel_', "/".self::MEDIA_STEL.$STELSales->id."/");  
-                $STELSales->faktur_file = $file;
+                $STELSales->faktur_file = $file ? $file : '';
             } catch (\Exception $e) {
                 Session::flash(self::ERROR, 'Save Invoice to directory failed');
                 return redirect(self::ADMIN_SALES.'/'.$STELSales->id.self::EDIT);

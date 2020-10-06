@@ -507,7 +507,7 @@ class UserController extends Controller
             try {
                 $fileService = new FileService();  
                 $file = $fileService->uploadFile($request->file(self::PICTURE), '', "/".self::MEDIA_USER.$users->id."/");  
-                $users->picture = $file;
+                $users->picture = $file ? $file : '';
             } catch (\Exception $e) {
                 Session::flash(self::ERROR,self::FAILED_USER_MSG);
                 return redirect(self::ADMIN_USEREKS_CREATE);
