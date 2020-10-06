@@ -72,7 +72,7 @@ class CheckTaxInvoiceTPN extends Command
                                  * Tgs: Belum ditest
                                  */
                                 $name_file = 'faktur_stel_'.$INVOICE_ID.'.pdf';
-                                $path_file = '/media/stel/'.$data->id;
+                                $path_file = 'stel/'.$data->id;
                                 $response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/taxinvoice/pdf');
                                 $stream = (String)$response->getBody();
 
