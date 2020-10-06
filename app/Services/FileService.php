@@ -27,7 +27,8 @@ class FileService
     }
     
 
-    public function uploadPDFfromStream($stream = null, $fileName = '', $path = ''){
+    public function uploadPDFfromStream($stream = null, $fileName = '', $path = '')
+    {
         return Storage::disk('minio')->put($path."/$fileName", file_get_contents("Content-type: application/octet-stream;Content-disposition: attachment ".$stream)); 
     }
 
@@ -37,5 +38,11 @@ class FileService
 		if(!$isFileExist){
             Storage::disk('minio')->delete($path);
         }
+    }
+
+
+    public function isFileExists($path)
+    {
+        return Storage::disk('minio')->exists($path);
     }
 }
