@@ -40,7 +40,7 @@ class ProfileControllerTest extends TestCase
 	        'email3' => str_random(10) 
 	    ]);    
 	    
-        $this->assertEquals(200, $response->status()); 
+        $this->assertEquals(302, $response->status()); 
 	}
     public function test_update_company()
 	{ 
