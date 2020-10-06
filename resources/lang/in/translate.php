@@ -448,4 +448,6 @@ return [
 	'choose_bank' => 'Pilih Bank',
 
 	'choose_another_bank' => 'Pilih Bank Lain',
+
+	'payment_process' => 'Proses Pembayaran',
 ];

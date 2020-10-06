@@ -1902,7 +1902,8 @@ class ExaminationController extends Controller
             'headers' => ['Authorization' => config("app.gateway_tpn_2")],
             'base_uri' => config("app.url_api_tpn"),
             'timeout'  => 60.0,
-            'http_errors' => false
+            'http_errors' => false,
+            'verify' => false
         ]);
 
         $id = $request->input('id');
@@ -1946,7 +1947,7 @@ class ExaminationController extends Controller
                         $status_faktur = $invoice->data->status_faktur;
                         if($status_faktur == "received"){
                             /*SAVE FAKTUR PAJAK*/
-                            $name_file = 'faktur_spb_'.$filename.'.pdf';
+                            $name_file = trim(preg_replace('/\s\s+/', ' ', 'faktur_spb_'.$filename.'.pdf'));
                             $path_file = public_path().'/media/examination/'.$id;
                             if (!file_exists($path_file)) {
                                 mkdir($path_file, 0775);
