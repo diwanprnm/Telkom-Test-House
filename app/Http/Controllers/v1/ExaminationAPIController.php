@@ -1992,7 +1992,7 @@ class ExaminationAPIController extends AppBaseController
                         $status_faktur = $invoice->data->status_faktur;
                         if($status_invoice == "approved" && $status_faktur == "received"){
                             /*SAVE FAKTUR PAJAK*/
-							$name_file = trim(preg_replace('/\s\s+/', ' ', 'faktur_spb_'.$filename.'.pdf'));
+							$name_file = trim(preg_replace(array('/\s\s+/','/\//','/\\\/','/\:/','/\*/','/\?/','/\"/','/\</','/\>/','/\|/'), '', 'faktur_spb_'.$filename.'.pdf'));
 
                             $path_file = public_path().'/media/examination/'.$data->id;
                             if (!file_exists($path_file)) {
