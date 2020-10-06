@@ -278,16 +278,22 @@ class ExaminationService
                     if($status_invoice == "approved"){
                         $status_faktur = $invoice->data->status_faktur;
                         if($status_faktur == "received"){
-                            /*SAVE FILE*/
-                            $name_file = $type == self::KUITANSI ? 'kuitansi_spb_'.$INVOICE_ID.'.pdf' : $name_file;
-							$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
-							if (!file_exists($path_file)) {
-								mkdir($path_file, 0775);
-							}
-							$response = $client->request('GET', self::V1_INVOICE.$INVOICE_ID.$filelink);
-                            $stream = (String)$response->getBody();
+							/* 
+							 * SAVE FILE
+							 * TODO-Chris
+							 * Ket: Pengaplikasian upload ke minio dari stream API
+							 * Tgs: Belum ditest
+							 */
 
-                            if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
+							$name_file = $type == self::KUITANSI ? "kuitansi_spb_$INVOICE_ID.pdf" : $name_file;
+							$path_file = self::MEDIA_EXAMINATION_LOC.$exam->id;
+							$response = $client->request('GET', self::V1_INVOICE.$INVOICE_ID.$filelink);
+							$stream = (String)$response->getBody();
+
+							$fileService = new FileService();
+							$isUploaded = $fileService->uploadPDFfromStream($stream, $name_file, $path_file);
+
+							if($isUploaded){
                                 $attach = ExaminationAttach::where('name', $type)->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
                                 $currentUser = Auth::user();
 
