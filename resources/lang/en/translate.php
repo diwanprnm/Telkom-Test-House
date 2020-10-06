@@ -445,4 +445,6 @@ return [
 	'choose_bank' => 'Choose Bank',
 
 	'choose_another_bank' => 'Choose Another Bank',
+
+	'payment_process' => 'Payment Process',
 ];

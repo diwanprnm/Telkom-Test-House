@@ -306,7 +306,7 @@
 								@endif
 								
 								@php if($item->spb_status == 1 && $item->payment_status != 1){ @endphp
-									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/pembayaran')}}">{{ trans('translate.process') }} {{ trans('translate.examination_payment') }}</a>
+									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/pembayaran')}}">{{ trans('translate.payment_process') }}</a>
 									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/downloadSPB')}}">{{ trans('translate.download') }} SPB</a>
 									@if($item->payment_method == 2 && $item->VA_expired < date("Y-m-d H:i:s"))
 										<div class="alert alert-warning" style="font-weight: bold;">
