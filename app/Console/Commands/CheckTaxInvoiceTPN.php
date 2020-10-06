@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\STELSales;
+use App\Services\FileService;
 
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
@@ -64,20 +65,22 @@ class CheckTaxInvoiceTPN extends Command
                             $status_invoice = $invoice->data->status_invoice;
                             $status_faktur = $invoice->data->status_faktur;
                             if($status_invoice == "approved" && $status_faktur == "received"){
-                                /*SAVE FAKTUR PAJAK*/
+                                /*
+                                 * SAVE FAKTUR PAJAK
+                                 * TODO-Chris
+                                 * Ket: Pengaplikasian upload ke minio dari stream API
+                                 * Tgs: Belum ditest
+                                 */
                                 $name_file = 'faktur_stel_'.$INVOICE_ID.'.pdf';
-
-                                $path_file = public_path().'/media/stel/'.$data->id;
-                                if (!file_exists($path_file)) {
-                                    mkdir($path_file, 0775);
-                                }
-
+                                $path_file = '/media/stel/'.$data->id;
                                 $response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/taxinvoice/pdf');
                                 $stream = (String)$response->getBody();
 
-                                if(file_put_contents($path_file.'/'.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment ".$stream)){
+                                $fileService = new FileService();
+                                $isUploaded = $fileService->uploadPDFfromStream($stream, $name_file, $path_file);
+
+                                if($isUploaded){
                                     $STELSales->faktur_file = $name_file;
-                                    // $STELSales->save();
                                     $updated_count = $STELSales->save() ? $updated_count += 1 : $updated_count;
                                 }
                             }
@@ -91,7 +94,7 @@ class CheckTaxInvoiceTPN extends Command
         }else{
             $this->info('checkTaxInvoiceTPN Command Run successfully! Nothing to update.');
         }
-        // $this->line('Display this on the screen');
-        // $this->error('Something went wrong!');
+        // $this->line('Display this on the screen')
+        // $this->error('Something went wrong!')
     }
 }
