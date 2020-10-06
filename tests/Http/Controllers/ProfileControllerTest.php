@@ -23,21 +23,24 @@ class ProfileControllerTest extends TestCase
 	}
     public function test_update_user()
 	{ 
-	    $user = User::where("role_id","=","2")->first();  
+		$password = Hash::make("password");
+	    $user =   factory(App\User::class)->create(['role_id' => '2','password'=>$password]);
 		$response =  $this->actingAs($user)->call('POST', '/client/profile', 
 		[ 
 	        'hide_id_user' => $user->id,  
 	        'username' => str_random(10),  
 	        'email' => str_random(10), 
-	        'address' => str_random(10), 
-	        'password' => str_random(10), 
+	        'address' => str_random(10),  
+	        'currPass' => "password", 
+	        'newPass' => "password", 
+	        'confnewPass' => "password", 
 	        'phone_number' => 1, 
 	        'fax' => str_random(10), 
 	        'email2' => str_random(10), 
 	        'email3' => str_random(10) 
 	    ]);    
 	    
-        $this->assertEquals(302, $response->status()); 
+        $this->assertEquals(200, $response->status()); 
 	}
     public function test_update_company()
 	{ 
