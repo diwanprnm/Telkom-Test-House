@@ -302,8 +302,8 @@ class TempCompanyController extends Controller
         if ($company){
             try{
                 $company->delete();
-		        $file = public_path().self::MEDIA_TEMPCOMPANY.$company->company_id.'/'.$id;
-				File::deleteDirectory($file);
+		        $file = self::MEDIA_TEMPCOMPANY.$company->company_id.'/'.$id;
+				Storage::disk('minio')->deleteDirectory($file);
                 
                 Session::flash(self::MESSAGE, 'Edit Request successfully deleted');
                 return redirect(self::PAGE_TEMPCOMPANY);
