@@ -418,11 +418,12 @@ class ExaminationController extends Controller
         if ($request->has(self::CONTRACT_STATUS)){
 			if ($request->hasFile(self::CONTRACT_FILE)) {
 				$name_file = 'contract_'.$request->file(self::CONTRACT_FILE)->getClientOriginalName();
-				$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
-				if (!file_exists($path_file)) {
-					mkdir($path_file, 0775);
-				}
-				if($request->file(self::CONTRACT_FILE)->move($path_file,$name_file)){
+				$path_file = self::MEDIA_EXAMINATION_LOC.$exam->id;
+
+				$fileService = new FileService();
+				$fileUploaded = $fileService->uploadFile($request->file(self::CONTRACT_FILE), $path_file, $name_file);
+
+				if($fileUploaded){
 					$attach = ExaminationAttach::where('name', self::TINJAUAN_KONTRAK)->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
 
 					if ($attach){
@@ -449,7 +450,7 @@ class ExaminationController extends Controller
 			$status = $request->input(self::CONTRACT_STATUS);
             $exam->contract_status = $status;
 			if($status == 1){
-				$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$id;
+				$path_file = self::MEDIA_EXAMINATION_LOC.$id;
 				$attach = ExaminationAttach::where('name', self::TINJAUAN_KONTRAK)->where(self::EXAMINATION_ID, ''.$id.'')->first();
 					$attach_name = $attach->attachment;
 				
@@ -519,7 +520,7 @@ class ExaminationController extends Controller
             $exam->spb_status = $status;
 			if($status == 1){
 				$exam->price = str_replace(".",'',$request->input('exam_price'));
-				$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$id;
+				$path_file = self::MEDIA_EXAMINATION_LOC.$id;
 				$attach = ExaminationAttach::where('name', 'SPB')->where(self::EXAMINATION_ID, ''.$id.'')->first();
 					$attach_name = $attach->attachment;
 
@@ -551,11 +552,12 @@ class ExaminationController extends Controller
 			}
 			if ($request->hasFile(self::KUITANSI_FILE)) {
 				$name_file = 'kuitansi_'.$request->file(self::KUITANSI_FILE)->getClientOriginalName();
-				$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
-				if (!file_exists($path_file)) {
-					mkdir($path_file, 0775);
-				}
-				if($request->file(self::KUITANSI_FILE)->move($path_file,$name_file)){
+				$path_file = self::MEDIA_EXAMINATION_LOC.$exam->id;
+
+				$fileService = new FileService();
+				$fileUploaded = $fileService->uploadFile($request->file(self::KUITANSI_FILE), $path_file, $name_file);
+
+				if($fileUploaded){
 					$attach = ExaminationAttach::where('name', self::KUITANSI)->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
 
 					if ($attach){
@@ -581,11 +583,12 @@ class ExaminationController extends Controller
 			}
 			if ($request->hasFile(self::FAKTUR_FILE)) {
 				$name_file = 'faktur_'.$request->file(self::FAKTUR_FILE)->getClientOriginalName();
-				$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
-				if (!file_exists($path_file)) {
-					mkdir($path_file, 0775);
-				}
-				if($request->file(self::FAKTUR_FILE)->move($path_file,$name_file)){
+				$path_file = self::MEDIA_EXAMINATION_LOC.$exam->id;
+
+				$fileService = new FileService();
+				$fileUploaded = $fileService->uploadFile($request->file(self::FAKTUR_FILE), $path_file, $name_file);
+
+				if($fileUploaded){
 					$attach = ExaminationAttach::where('name', self::FAKTUR_PAJAK)->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
 
 					if ($attach){
@@ -720,11 +723,12 @@ class ExaminationController extends Controller
 			}
 			if ($request->hasFile(self::REV_LAP_UJI)) {
 				$name_file = 'rev_lap_uji_'.$request->file(self::REV_LAP_UJI)->getClientOriginalName();
-				$path_file = public_path().self::MEDIA_EXAMINATION_LOC.$exam->id;
-				if (!file_exists($path_file)) {
-					mkdir($path_file, 0775);
-				}
-				if($request->file(self::REV_LAP_UJI)->move($path_file,$name_file)){
+				$path_file = self::MEDIA_EXAMINATION_LOC.$exam->id;
+				
+				$fileService = new FileService();
+				$fileUploaded = $fileService->uploadFile($request->file(self::REV_LAP_UJI), $path_file, $name_file);
+
+				if($fileUploaded){
                     /*TPN api_upload*/
 		            if($exam->BILLING_ID != null){
 		                $data_upload [] = array(
@@ -915,11 +919,12 @@ class ExaminationController extends Controller
 
         if ($request->hasFile(self::CERTIFICATE_DATE)) {
 			$name_file = 'sertifikat_'.$request->file(self::CERTIFICATE_DATE)->getClientOriginalName();
-			$path_file = public_path().self::MEDIA_DEVICE_LOC.$exam->device_id;
-            if (!file_exists($path_file)) {
-                mkdir($path_file, 0775);
-            }
-            if($request->file(self::CERTIFICATE_DATE)->move($path_file,$name_file)){
+			$path_file = self::MEDIA_DEVICE_LOC.$exam->device_id;
+			
+			$fileService = new FileService();
+			$fileUploaded = $fileService->uploadFile($request->file(self::CERTIFICATE_DATE), $path_file, $name_file);
+
+            if($fileUploaded){
                 $device = Device::findOrFail($exam->device_id);
                 if ($device){
                     $device->certificate = $name_file;
@@ -1678,8 +1683,8 @@ class ExaminationController extends Controller
 				$exam->delete();
 				$device->delete();
 				
-				if (File::exists(public_path().'\media\\examination\\'.$id)){
-					File::deleteDirectory(public_path().'\media\\examination\\'.$id);
+				if (Storage::disk('minio')->exists('examination\\'.$id)){
+					Storage::disk('minio')->deleteDirectory('examination\\'.$id);
 				}
 
 				$logService->createAdminLog("Hapus Data Pengujian", $page, $logs_a_exam.$logs_a_device, urldecode($reason));
@@ -2103,10 +2108,10 @@ class ExaminationController extends Controller
     {
         $examination_attachment = ExaminationAttach::find($id);
         if($examination_attachment){
-            
+
             // unlink stels_sales_detail.attachment
-            if (File::exists(public_path().'\media\examination\\'.$examination_attachment->examination_id.'\\'.$examination_attachment->attachment)){
-                File::delete(public_path().'\media\examination\\'.$examination_attachment->examination_id.'\\'.$examination_attachment->attachment);
+            if (Storage::disk('minio')->exists('examination\\'.$examination_attachment->examination_id.'\\'.$examination_attachment->attachment)){
+                Storage::disk('minio')->deleteDirectory('examination\\'.$examination_attachment->examination_id.'\\'.$examination_attachment->attachment);
             }
 
             // delete stels_sales_detail
