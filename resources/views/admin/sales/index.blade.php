@@ -203,7 +203,7 @@
 													?>
 
 											</td>
-											<td class="center">{{ ($item->payment_method == 1) ? 'ATM' : $VA_name }}</td> 
+											<td class="center">{{ ($item->payment_method == 1) ? 'ATM' : $item->VA_name }}</td> 
 											<td class="center">{{ $item->stel_code }}</td>
 											<td class="center">
 												<div>
