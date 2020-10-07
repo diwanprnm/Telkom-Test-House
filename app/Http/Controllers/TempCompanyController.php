@@ -18,6 +18,7 @@ use Storage;
 // UUID
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
+use App\Services\FileService;
 
 class TempCompanyController extends Controller
 {
@@ -220,13 +221,15 @@ class TempCompanyController extends Controller
                     $company->npwp_number = $request->input('npwp_number');
                 }
                 if ($request->has('npwp_file')) {
-                    $npwp_file = public_path().self::MEDIA_COMPANY.$company->id.'/'.$company->npwp_file;
-                    $npwp_file_temp = public_path().self::MEDIA_TEMPCOMPANY.$company->id.'/'.$id.'/'.$tempcompany->npwp_file;
-                    $npwp_file_now = public_path().self::MEDIA_COMPANY.$company->id.'/'.$tempcompany->npwp_file;
+                    $npwp_file = self::MEDIA_COMPANY.$company->id.'/'.$company->npwp_file;
+                    $npwp_file_temp = self::MEDIA_TEMPCOMPANY.$company->id.'/'.$id.'/'.$tempcompany->npwp_file;
+                    $npwp_file_now = self::MEDIA_COMPANY.$company->id.'/'.$tempcompany->npwp_file;
                     
-                if(copy($npwp_file_temp,$npwp_file_now)){
+                if(Storage::disk('minio')->copy($npwp_file_temp,$npwp_file_now)){
                         $company->npwp_file = $request->input('npwp_file');
-                        if (File::exists($npwp_file)){File::delete($npwp_file);}
+                        if (Storage::disk('minio')->exists($npwp_file)){
+                            Storage::disk('minio')->delete($npwp_file);
+                        }
                     }else{
                         Session::flash(self::ERROR, 'Save NPWP to directory failed');
                         return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT);
@@ -239,12 +242,14 @@ class TempCompanyController extends Controller
                     $company->siup_date = $request->input('siup_date');
                 }
                 if ($request->has('siup_file')) {
-                    $siup_file = public_path().self::MEDIA_COMPANY.$company->id.'/'.$company->siup_file;
-                    $siup_file_temp = public_path().self::MEDIA_TEMPCOMPANY.$company->id.'/'.$id.'/'.$tempcompany->siup_file;
-                    $siup_file_now = public_path().self::MEDIA_COMPANY.$company->id.'/'.$tempcompany->siup_file;
-                    if(copy($siup_file_temp,$siup_file_now)){
+                    $siup_file = self::MEDIA_COMPANY.$company->id.'/'.$company->siup_file;
+                    $siup_file_temp = self::MEDIA_TEMPCOMPANY.$company->id.'/'.$id.'/'.$tempcompany->siup_file;
+                    $siup_file_now = self::MEDIA_COMPANY.$company->id.'/'.$tempcompany->siup_file;
+                    if(Storage::disk('minio')->copy($siup_file_temp,$siup_file_now)){
                         $company->siup_file = $request->input('siup_file');
-                        if (File::exists($siup_file)){File::delete($siup_file);}
+                        if (Storage::disk('minio')->exists($siup_file)){
+                            Storage::disk('minio')->delete($siup_file);
+                        }
                     }else{
                         Session::flash(self::ERROR, 'Save SIUPP to directory failed');
                         return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT);
@@ -257,12 +262,13 @@ class TempCompanyController extends Controller
                     $company->qs_certificate_date = $request->input('qs_certificate_date');
                 }
                 if ($request->has('qs_certificate_file')) {
-                    $qs_certificate_file = public_path().self::MEDIA_COMPANY.$company->id.'/'.$company->qs_certificate_file;
-                    $qs_certificate_file_temp = public_path().self::MEDIA_TEMPCOMPANY.$company->id.'/'.$id.'/'.$tempcompany->qs_certificate_file;
-                    $qs_certificate_file_now = public_path().self::MEDIA_COMPANY.$company->id.'/'.$tempcompany->qs_certificate_file;
+                    $qs_certificate_file = self::MEDIA_COMPANY.$company->id.'/'.$company->qs_certificate_file;
+                    $qs_certificate_file_temp = self::MEDIA_TEMPCOMPANY.$company->id.'/'.$id.'/'.$tempcompany->qs_certificate_file;
+                    $qs_certificate_file_now = self::MEDIA_COMPANY.$company->id.'/'.$tempcompany->qs_certificate_file;
                     if(copy($qs_certificate_file_temp,$qs_certificate_file_now)){
                         $company->qs_certificate_file = $request->input('qs_certificate_file');
-                        if (File::exists($qs_certificate_file)){File::delete($qs_certificate_file);}
+                        if (Storage::disk('minio')->exists($qs_certificate_file)){
+                            Storage::disk('minio')->delete($qs_certificate_file);}
                     }else{
                         Session::flash(self::ERROR, 'Save Certificate to directory failed');
                         return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT);
