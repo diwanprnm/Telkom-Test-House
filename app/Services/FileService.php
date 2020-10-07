@@ -39,10 +39,4 @@ class FileService
             Storage::disk('minio')->delete($path);
         }
     }
-
-
-    public function isFileExists($path)
-    {
-        return Storage::disk('minio')->exists($path);
-    }
 }
