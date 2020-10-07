@@ -196,7 +196,7 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
 		
-		// Anouar\Fpdf\FpdfServiceProvider::class,
+		Anouar\Fpdf\FpdfServiceProvider::class,
         Unisharp\Ckeditor\ServiceProvider::class,
         // Unisharp\Laravelfilemanager\LaravelFilemanagerServiceProvider::class,
 		Maatwebsite\Excel\ExcelServiceProvider::class,
@@ -256,7 +256,7 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
         'Image' => Intervention\Image\Facades\Image::class,
-		// 'FPDF' => setasign\Fpdf\Facades\Fpdf::class,
+		'Fpdf'	  => 'Anouar\Fpdf\Facades\Fpdf',
 		'Excel'     => Maatwebsite\Excel\Facades\Excel::class,
 		// 'Tracker' => PragmaRX\Tracker\Vendor\Laravel\Facade::class,
         'Cart' => Gloudemans\Shoppingcart\Facades\Cart::class,
