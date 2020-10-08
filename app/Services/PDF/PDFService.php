@@ -10,6 +10,7 @@ use App\Services\PDF\PDFMCTablesKonsumen;
 use App\Services\PDF\PDFMCTable;
 use App\Services\PDF\PDFMCTables;
 use App\Services\PDF\PDFMCTandaTerima;
+use App\Services\PDF\PDFMCTableKuitansi;
 
 //CETAK PDF
 use App\Services\PDF\CetakComplaint;
@@ -17,6 +18,7 @@ use App\Services\PDF\CetakKepuasanKonsumen;
 use App\Services\PDF\CetakBuktiPenerimaanPerangkat;
 use App\Services\PDF\CetakUjiFungsi;
 use App\Services\PDF\CetakTandaTerima;
+use App\Services\PDF\CetakHasilKuitansi;
 
 
 class PDFService
@@ -53,6 +55,13 @@ class PDFService
 	public function cetakTandaTerima($data)
 	{
 		$cetakTandaTerima = new CetakTandaTerima();
-		return $cetakTandaTerima->makePDF($data, new PDFMCTandaTerima);
+		return $cetakTandaTerima->makePDF($data, new PDFMCTandaTerima());
+	}
+
+
+	public function CetakHasilKuitansi($data)
+	{
+		$cetakHasilKuitansi = new CetakHasilKuitansi();
+		return $cetakHasilKuitansi->makePDF($data, new PDFMCTableKuitansi('L','mm','A5'));
 	}
 }

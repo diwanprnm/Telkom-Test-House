@@ -357,7 +357,7 @@ class IncomeController extends Controller
 		
         $data = Kuitansi::find($id)->get()[0];
 
-	    return \Redirect::route('cetakHasilKuitansi', [
+        $PDFData = array(
 			'nomor' => $myHelper->filterUrlEncode($data->number),
 			'dari' => $myHelper->filterUrlEncode($data->from),
 			'jumlah' => $myHelper->filterUrlEncode($data->price, true),
@@ -365,7 +365,9 @@ class IncomeController extends Controller
 			'tanggal' => $myHelper->filterUrlEncode($data->kuitansi_date),
             'is_poh' => $is_poh,
             self::MANAGER_UREL => $manager_urels,
-		]);
+        );
+        $PDF = new \App\Services\PDF\PDFService();
+        $PDF->CetakHasilKuitansi($PDFData);
     }
 	
 	private function cekKuitansi($number)
