@@ -2,16 +2,18 @@
 
 namespace App\Services\PDF;
 
+//PLUGIN
 use Anouar\Fpdf\Fpdf as FPDF;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Client;
-use Illuminate\Http\Request;
-use Session;
 
+
+//PDFMC
 use App\Services\PDF\PDFMCTablesKonsumen;
+use App\Services\PDF\PDFMCTables;
 
-use App\Services\PDF\CetakComplaints;
+//CETAK PDF
+use App\Services\PDF\CetakComplaint;
 use App\Services\PDF\CetakKepuasanKonsumen;
+use App\Services\PDF\CetakBuktiPenerimaanPerangkat;
 
 
 class PDFService
@@ -26,5 +28,11 @@ class PDFService
 	{
 		$cetakKepuasanKonsumen = new CetakKepuasanKonsumen();
 		return $cetakKepuasanKonsumen->makePDF($data, new PDFMCTablesKonsumen());
+	}
+
+	public function cetakBuktiPenerimaanPerangkat($data)
+	{
+		$cetakBuktiPenerimaanPerangkat = new CetakBuktiPenerimaanPerangkat();
+		return $cetakBuktiPenerimaanPerangkat->makePDF($data, new PDFMCTables());
 	}
 }

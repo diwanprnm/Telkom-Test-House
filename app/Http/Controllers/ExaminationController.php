@@ -2010,13 +2010,14 @@ class ExaminationController extends Controller
     {
 		$examinationService = new ExaminationService();
 		$data = Examination::where('id','=',$id)
-		->with(self::EXAMINATION_TYPE)
-		->with(self::EXAMINATION_LAB)
-		->with(self::COMPANY)
-		->with('user')
-		->with(self::DEVICE)
-		->with(self::EQUIPMENT)
-		->get();
+			->with(self::EXAMINATION_TYPE)
+			->with(self::EXAMINATION_LAB)
+			->with(self::COMPANY)
+			->with('user')
+			->with(self::DEVICE)
+			->with(self::EQUIPMENT)
+			->get()
+		;
 		
 		if(isset($data[0]->equipment[0]->location)){
 			if ($data[0]->equipment[0]->no) {
@@ -2063,9 +2064,9 @@ class ExaminationController extends Controller
 			else{$exam_type_desc = $data[0]->ExaminationType->description?: '-';}
 		if( strpos( $data[0]->contract_date, "/" ) !== false ) {$timestamp = strtotime($data[0]->contract_date);$contract_date = urlencode(urlencode(date(self::DATE_FORMAT_3, $timestamp)));}
 			else{$timestamp = strtotime($data[0]->contract_date);$contract_date = date(self::DATE_FORMAT_3, $timestamp)?: '-';}
-		
-		$request->session()->put('key_exam_for_equipment', $data[0]->equipment);
-		return \Redirect::route('cetakBuktiPenerimaanPerangkat', [
+
+		$PDFData = array(
+			'request' => $request,
 			'kode_barang' => $kode_barang,
 			'company_name' => $company_name,
 			'company_address' => $company_address,
@@ -2080,8 +2081,13 @@ class ExaminationController extends Controller
 			'device_serial_number' => $device_serial_number,
 			self::EXAM_TYPE => $exam_type,
 			self::EXAM_TYPE_DESC => $exam_type_desc,
-			self::CONTRACT_DATE => $contract_date
-		]);
+			self::CONTRACT_DATE => $contract_date,
+			'equipment' => $data[0]->equipment,
+			'currentUser' => Auth::user()
+		);
+		
+		$PDF = new \App\Services\PDF\PDFService();
+		$PDF->cetakBuktiPenerimaanPerangkat($PDFData);
     }
 	
 	public function generateEquip(Request $request)
