@@ -1986,7 +1986,8 @@ class ExaminationController extends Controller
 		}else{
 			$tgl_uji_fungsi = '-';
 		}
-		return \Redirect::route('cetakHasilUjiFungsi', [
+
+		$PDFData = array(
 			'no_reg' => $no_reg,
 			'company_name' => $company_name,
 			'company_address' => $company_address,
@@ -2002,8 +2003,12 @@ class ExaminationController extends Controller
 			'tgl_uji_fungsi' => $tgl_uji_fungsi,
 			'nik_te' => $nik_te,
 			'name_te' => $name_te,
-			'pic' => $pic
-		]);
+			'pic' => $pic,
+			'currentUser' => Auth::user()
+		);
+
+		$PDF = new \App\Services\PDF\PDFService();
+		$PDF->cetakUjiFungsi($PDFData);
     }
 	
 	function cetakFormBarang($id, Request $request)

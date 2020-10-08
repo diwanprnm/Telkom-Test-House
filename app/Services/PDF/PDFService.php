@@ -14,6 +14,7 @@ use App\Services\PDF\PDFMCTables;
 use App\Services\PDF\CetakComplaint;
 use App\Services\PDF\CetakKepuasanKonsumen;
 use App\Services\PDF\CetakBuktiPenerimaanPerangkat;
+use App\Services\PDF\CetakUjiFungsi;
 
 
 class PDFService
@@ -34,5 +35,12 @@ class PDFService
 	{
 		$cetakBuktiPenerimaanPerangkat = new CetakBuktiPenerimaanPerangkat();
 		return $cetakBuktiPenerimaanPerangkat->makePDF($data, new PDFMCTables());
+	}
+
+
+	public function cetakUjiFungsi($data)
+	{
+		$cetakUjiFungsi = new CetakUjiFungsi();
+		return $cetakUjiFungsi->makePDF($data, new PDFMCTables());
 	}
 }
