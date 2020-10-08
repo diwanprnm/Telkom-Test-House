@@ -7,6 +7,7 @@ use Anouar\Fpdf\Fpdf as FPDF;
 
 //PDFMC
 use App\Services\PDF\PDFMCTablesKonsumen;
+use App\Services\PDF\PDFMCTable;
 use App\Services\PDF\PDFMCTables;
 use App\Services\PDF\PDFMCTandaTerima;
 
@@ -38,14 +39,14 @@ class PDFService
 	public function cetakBuktiPenerimaanPerangkat($data)
 	{
 		$cetakBuktiPenerimaanPerangkat = new CetakBuktiPenerimaanPerangkat();
-		return $cetakBuktiPenerimaanPerangkat->makePDF($data, new PDFMCTables());
+		return $cetakBuktiPenerimaanPerangkat->makePDF($data, new PDFMCTable());
 	}
 
 
 	public function cetakUjiFungsi($data)
 	{
 		$cetakUjiFungsi = new CetakUjiFungsi();
-		return $cetakUjiFungsi->makePDF($data, new PDFMCTables());
+		return $cetakUjiFungsi->makePDF($data, new PDFMCTable());
 	}
 
 
