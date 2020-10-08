@@ -487,15 +487,16 @@ class ExaminationDoneController extends Controller
 	function cetakComplaint($id, Request $request)
     {
 		$data = Examination::where('id','=',$id)
-		->with('User')
-		->with(self::EXAMINATION_TYPE)
-		->with('ExaminationLab')
-		->with(self::COMPANY)
-		->with(self::DEVICE)
-		->with('Questioner')
-		->get();
+			->with('User')
+			->with(self::EXAMINATION_TYPE)
+			->with('ExaminationLab')
+			->with(self::COMPANY)
+			->with(self::DEVICE)
+			->with('Questioner')
+			->get()
+		;
 		
-		$request->session()->put('key_exam_for_complaint', $data);
-		return \Redirect::route('cetakComplaints');
+		$PDF = new \App\Services\PDF\PDFService();
+		return $PDF->cetakComplaint($data);
     }
 }
