@@ -5,7 +5,7 @@ namespace App\Services\PDF;
 class CetakComplaint
 {
 
-    public function buatPDF($questioner, $pdf)
+    public function makePDF($questioner, $pdf)
     {
         
         $pdf->AddPage();

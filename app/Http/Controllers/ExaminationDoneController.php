@@ -480,8 +480,8 @@ class ExaminationDoneController extends Controller
 		->with('QuestionerDynamic.qq')
 		->get();
 		
-		$request->session()->put('key_exam_for_questioner', $data);
-		return \Redirect::route('cetakKuisioner');
+		$PDF = new \App\Services\PDF\PDFService();
+		return $PDF->cetakKepuasanKonsumen($data);
     }
 	
 	function cetakComplaint($id, Request $request)
