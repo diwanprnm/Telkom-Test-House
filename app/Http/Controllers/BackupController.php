@@ -121,8 +121,7 @@ class BackupController extends Controller
 
                 Session::flash(self::MESSAGE, 'Restore successfully created');
                 return redirect(self::ADMIN_BACKUP);
-            } catch(Exception $e) {
-                return redirect(self::ADMIN_BACKUP)->with(self::ERROR, 'Restore failed');
+            } catch(Exception $e) {return redirect(self::ADMIN_BACKUP)->with(self::ERROR, 'Restore failed');
             }
         }else{ return redirect(self::ADMIN_BACKUP)->with(self::ERROR, self::DATA_NOT_FOUND);
         }

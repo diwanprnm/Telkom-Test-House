@@ -223,8 +223,7 @@ class CertificationController extends Controller
 
                 Session::flash(self::MESSAGE, 'Certification successfully deleted');
                 return redirect(self::ADMIN_CERTIFICATION);
-            }catch (Exception $e){
-                return redirect(self::ADMIN_CERTIFICATION)->with(self::ERROR, 'Delete failed');
+            }catch (Exception $e){return redirect(self::ADMIN_CERTIFICATION)->with(self::ERROR, 'Delete failed');
             }
         }
         return redirect(self::ADMIN_CERTIFICATION)->with(self::ERROR, 'Certification not found');
