@@ -78,7 +78,14 @@ class PDFService
 
 	public function cetakSPB($data)
 	{
-		$cetakSPB = new cetakSPB();
+		$cetakSPB = new CetakSPB();
 		$cetakSPB->makePDF($data, new PDFMCTables());
+	}
+
+
+	public function cetakKontrak($data)
+	{
+		$cetakKontrak = new CetakKontrak();
+		$cetakKontrak->makePDF($data, new PDFMCTable());
 	}
 }
