@@ -1389,8 +1389,8 @@ class PengujianController extends Controller
 		AND e.id = '".$id."'
 		";
 		$data = DB::select($query);
-            
-		return \Redirect::route('cetak', [
+		
+		$PDFData = array(
 			'namaPemohon' => urlencode(urlencode($data[0]->namaPemohon)) ?: '-',
 			'alamatPemohon' => urlencode(urlencode($data[0]->alamatPemohon)) ?: '-',
 			'telpPemohon' => urlencode(urlencode($data[0]->telpPemohon)) ?: '-',
@@ -1417,7 +1417,10 @@ class PengujianController extends Controller
 			'plg_idPerusahaan' => urlencode(urlencode($data[0]->plg_idPerusahaan)) ?: '-',
 			'nibPerusahaan' => urlencode(urlencode($data[0]->nibPerusahaan)) ?: '-',
 			'npwpPerusahaan' => urlencode(urlencode($data[0]->npwpPerusahaan)) ?: '-'
-		]);
+		);
+		
+		$PDF = new \App\Services\PDF\PDFService();
+		return $PDF->cetakPengujian($PDFData);
     }
 	
 	public function testimonial(Request $request)

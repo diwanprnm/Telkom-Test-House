@@ -11,6 +11,7 @@ use App\Services\PDF\PDFMCTable;
 use App\Services\PDF\PDFMCTables;
 use App\Services\PDF\PDFMCTandaTerima;
 use App\Services\PDF\PDFMCTableKuitansi;
+use App\Services\PDF\PDFMCTablePermohonan;
 
 //CETAK PDF
 use App\Services\PDF\CetakComplaint;
@@ -19,6 +20,7 @@ use App\Services\PDF\CetakBuktiPenerimaanPerangkat;
 use App\Services\PDF\CetakUjiFungsi;
 use App\Services\PDF\CetakTandaTerima;
 use App\Services\PDF\CetakHasilKuitansi;
+use App\Services\PDF\CetakPengujian;
 
 
 class PDFService
@@ -63,5 +65,12 @@ class PDFService
 	{
 		$cetakHasilKuitansi = new CetakHasilKuitansi();
 		return $cetakHasilKuitansi->makePDF($data, new PDFMCTableKuitansi('L','mm','A5'));
+	}
+
+
+	public function cetakPengujian($data)
+	{
+		$cetakPengujian = new CetakPengujian();
+		return $cetakPengujian->makePDF($data, new PDFMCTablePermohonan());
 	}
 }
