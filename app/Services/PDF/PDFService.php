@@ -2,9 +2,6 @@
 
 namespace App\Services\PDF;
 
-//PLUGIN
-use Anouar\Fpdf\Fpdf as FPDF;
-
 //PDFMC
 use App\Services\PDF\PDFMCTablesKonsumen;
 use App\Services\PDF\PDFMCTable;
@@ -64,7 +61,7 @@ class PDFService
 	}
 
 
-	public function CetakHasilKuitansi($data)
+	public function cetakHasilKuitansi($data)
 	{
 		$cetakHasilKuitansi = new CetakHasilKuitansi();
 		return $cetakHasilKuitansi->makePDF($data, new PDFMCTableKuitansi('L','mm','A5'));
@@ -96,5 +93,12 @@ class PDFService
 	{
 		$cetakSTEL = new CetakSTEL();
 		$cetakSTEL->makePDF($data, new WatermarkSTEL());
+	}
+
+
+	public function cetakPermohonan($data)
+	{
+		$cetakPermohonan = new CetakPermohonan();
+		$cetakPermohonan->makePDF($data, new PDFMCTablePermohonan());
 	}
 }
