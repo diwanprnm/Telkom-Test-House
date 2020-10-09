@@ -21,6 +21,7 @@ use App\Services\PDF\CetakUjiFungsi;
 use App\Services\PDF\CetakTandaTerima;
 use App\Services\PDF\CetakHasilKuitansi;
 use App\Services\PDF\CetakPengujian;
+use App\Services\PDF\CetakSPB;
 
 
 class PDFService
@@ -72,5 +73,12 @@ class PDFService
 	{
 		$cetakPengujian = new CetakPengujian();
 		return $cetakPengujian->makePDF($data, new PDFMCTablePermohonan());
+	}
+
+
+	public function cetakSPB($data)
+	{
+		$cetakSPB = new cetakSPB();
+		$cetakSPB->makePDF($data, new PDFMCTables());
 	}
 }
