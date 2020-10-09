@@ -19,6 +19,5 @@ class UserMenuTableSeeder extends Seeder
     public function run()
     {
         \DB::unprepared(\File::get(base_path('database/seeds/UserMenuSeed.sql')));
-        \DB::update('update users set id = 1 where email = ?', ['admin@mail.com']);
     }
 }

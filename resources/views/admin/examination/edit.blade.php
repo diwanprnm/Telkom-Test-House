@@ -1477,7 +1477,7 @@
 								</div>
 							</div>
 							<input type="hidden" name="spb_date" id="spb_date" value="{{ $data->spb_date }}">
-							<input type="hidden" name="PO_ID" id="PO_ID" value="{{ $data->PO_ID }}">
+							<input type="hidden" name="PO_ID" id="PO_ID">
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
