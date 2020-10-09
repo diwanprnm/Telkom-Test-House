@@ -12,6 +12,7 @@ use App\Services\PDF\PDFMCTables;
 use App\Services\PDF\PDFMCTandaTerima;
 use App\Services\PDF\PDFMCTableKuitansi;
 use App\Services\PDF\PDFMCTablePermohonan;
+use App\Services\PDF\WatermarkSTEL;
 
 //CETAK PDF
 use App\Services\PDF\CetakComplaint;
@@ -22,6 +23,7 @@ use App\Services\PDF\CetakTandaTerima;
 use App\Services\PDF\CetakHasilKuitansi;
 use App\Services\PDF\CetakPengujian;
 use App\Services\PDF\CetakSPB;
+use App\Services\PDF\CetakSTEL;
 
 
 class PDFService
@@ -87,5 +89,12 @@ class PDFService
 	{
 		$cetakKontrak = new CetakKontrak();
 		$cetakKontrak->makePDF($data, new PDFMCTable());
+	}
+
+
+	public function cetakSTEL($data)
+	{
+		$cetakSTEL = new CetakSTEL();
+		$cetakSTEL->makePDF($data, new WatermarkSTEL());
 	}
 }
