@@ -231,9 +231,7 @@ class TempCompanyController extends Controller
                         if (Storage::disk(self::MINIO)->exists($npwp_file)){
                             Storage::disk(self::MINIO)->delete($npwp_file);
                         }
-                    }else{
-                        Session::flash(self::ERROR, 'Save NPWP to directory failed');
-                        return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT);
+                    }else{ return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT)->with(self::ERROR, 'Save NPWP to directory failed');
                     }
                 }        
                 if ($request->has('siup_number')){
@@ -251,10 +249,7 @@ class TempCompanyController extends Controller
                         if (Storage::disk(self::MINIO)->exists($siup_file)){
                             Storage::disk(self::MINIO)->delete($siup_file);
                         }
-                    }else{
-                        Session::flash(self::ERROR, 'Save SIUPP to directory failed');
-                        return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT);
-                    }
+                    }else{ return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT)->with(self::ERROR, 'Save SIUPP to directory failed'); }
                 }   
                 if ($request->has('qs_certificate_number')){
                     $company->qs_certificate_number = $request->input('qs_certificate_number');
@@ -271,10 +266,7 @@ class TempCompanyController extends Controller
                         if (Storage::disk(self::MINIO)->exists($qs_certificate_file)){
                             Storage::disk(self::MINIO)->delete($qs_certificate_file);
                         }
-                    }else{
-                        Session::flash(self::ERROR, 'Save Certificate to directory failed');
-                        return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT);
-                    }
+                    }else{ return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT)->with(self::ERROR, 'Save Certificate to directory failed'); }
                 }
                 
                 $company->updated_by = $currentUser->id;
@@ -282,18 +274,9 @@ class TempCompanyController extends Controller
                     $company->save();
                     Session::flash(self::MESSAGE, 'Company successfully updated');
                     return redirect(self::PAGE_TEMPCOMPANY);
-                } catch(Exception $e){
-                    Session::flash(self::ERROR, 'Save failed');
-                    return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT);
-                }
-            }else{
-                Session::flash(self::ERROR, 'Update was decline');
-                return redirect(self::PAGE_TEMPCOMPANY);
-            }
-        }else{
-            Session::flash(self::ERROR, 'TempCompany Not Found');
-           return redirect(self::PAGE_TEMPCOMPANY);
-        }
+                } catch(Exception $e){ return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT)->with(self::ERROR, 'Save failed'); }
+            }else{ return redirect(self::PAGE_TEMPCOMPANY)->with(self::ERROR, 'Update was decline'); }
+        }else{ return redirect(self::PAGE_TEMPCOMPANY)->with(self::ERROR, 'TempCompany Not Found'); }
 		
     }
 
@@ -326,44 +309,43 @@ class TempCompanyController extends Controller
     {
         $company = TempCompany::find($id);
 
-        if ($company){
-            switch ($name) { 
-                case 'npwp':  
-                    $file = Storage::disk(self::MINIO)->url(self::MEDIA_TEMPCOMPANY.$id."/".$company->npwp_file);
-                     
-                    $filename = $company->npwp_file;
-                    $tempImage = tempnam(sys_get_temp_dir(), $filename);
-                    copy($file, $tempImage);
+        if (!$company){ return redirect(self::PAGE_TEMPCOMPANY)->with(self::MESSAGE, 'Company Not Found');}
 
-                    $response =  response()->download($tempImage, $filename);
-                    break;
+        switch ($name) { 
+            case 'npwp':  
+                $file = Storage::disk(self::MINIO)->url(self::MEDIA_TEMPCOMPANY.$id."/".$company->npwp_file);
+                    
+                $filename = $company->npwp_file;
+                $tempImage = tempnam(sys_get_temp_dir(), $filename);
+                copy($file, $tempImage);
 
-                case 'siup':  
-                    $file = Storage::disk(self::MINIO)->url(self::MEDIA_TEMPCOMPANY.$id."/".$company->siup_file);
-                     
-                    $filename = $company->siup_file;
-                    $tempImage = tempnam(sys_get_temp_dir(), $filename);
-                    copy($file, $tempImage);
+                $response =  response()->download($tempImage, $filename);
+                break;
 
-                    $response =  response()->download($tempImage, $filename);
-                    break;
+            case 'siup':  
+                $file = Storage::disk(self::MINIO)->url(self::MEDIA_TEMPCOMPANY.$id."/".$company->siup_file);
+                    
+                $filename = $company->siup_file;
+                $tempImage = tempnam(sys_get_temp_dir(), $filename);
+                copy($file, $tempImage);
 
-                case 'qs': 
+                $response =  response()->download($tempImage, $filename);
+                break;
 
-                    $file = Storage::disk(self::MINIO)->url(self::MEDIA_TEMPCOMPANY.$id."/".$company->qs_certificate_file);
-                     
-                    $filename = $company->qs_certificate_file;
-                    $tempImage = tempnam(sys_get_temp_dir(), $filename);
-                    copy($file, $tempImage);
+            case 'qs': 
 
-                    $response =  response()->download($tempImage, $filename);
-                    break;
-                 default:
-                    return 0;
-            }
+                $file = Storage::disk(self::MINIO)->url(self::MEDIA_TEMPCOMPANY.$id."/".$company->qs_certificate_file);
+                    
+                $filename = $company->qs_certificate_file;
+                $tempImage = tempnam(sys_get_temp_dir(), $filename);
+                copy($file, $tempImage);
 
-            return $response;
+                $response =  response()->download($tempImage, $filename);
+                break;
+                default:
+                return 0;
         }
+        return $response;
     }
 	
 	public function autocomplete($query) {

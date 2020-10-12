@@ -21,7 +21,7 @@ class TempCompanyControllerTest extends TestCase
 
 	public function test__visit_tempcompany_with_search()
 	{ 
-		$this->actingAs(User::find(1))->call('GET', 'admin/tempcompany?is_commited=1&search=cari&before_date=2020-12-31&after_date=2020-01-01&sort_by=$sort_type=desc');  
+		$this->actingAs(User::find(1))->call('GET', 'admin/tempcompany?is_commited=1&search=cari&before_date=2020-12-31&after_date=2020-01-01&sort_by=&sort_type=desc');  
     	$this->assertResponseStatus(200);
 	}
 
@@ -59,7 +59,8 @@ class TempCompanyControllerTest extends TestCase
  
 	    $user = User::find(1);  
 		$tempCompany = factory(App\TempCompany::class)->create();
-		$file = new UploadedFile(public_path().'assets/images/testing.jpg' ,'testing.jpg', 'image/*', null, true);
+		$path = public_path('images').'/testing.jpg';
+		$file = new UploadedFile($path, 'testing.jpg', filesize($path), 'image/*', null, true);
 
 		$response =  $this->actingAs($user)->call('PATCH', 'admin/tempcompany/'.$tempCompany->id,[
 			'is_commited'=>1,
