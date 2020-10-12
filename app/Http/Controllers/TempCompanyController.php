@@ -36,7 +36,6 @@ class TempCompanyController extends Controller
     private const ERROR = 'error';
     private const PAGE_EDIT = '/edit';
     private const PAGE_TEMPCOMPANY = '/admin/tempcompany'; 
-
     private const MINIO = 'minio';
     /**
      * Create a new controller instance.
@@ -57,68 +56,70 @@ class TempCompanyController extends Controller
     {
         $currentUser = Auth::user();
 
-        if ($currentUser){
-            $message = null;
-            $paginate = 10;
-            $search = trim($request->input('search'));
-            $status = '';
-            $before_date = null;
-            $after_date = null;
+        if (!$currentUser){ return redirect('login');}
 
-            $sort_by_filter = 'updated_at';
-            $sort_type_filter = 'desc';
-			
-			$query = TempCompany::whereNotNull('created_at')
-						->with('user')
-                        ->with(self::COMPANY);
-            
-            if ($search != null){
-				$query->where(function($qry) use($search){
-                    $qry->whereHas(self::COMPANY, function ($q) use ($search){
-							return $q->where('name', 'like', '%'.strtolower($search).'%');
-						});
-                });
-            }
-            if ($request->has(self::IS_COMMITED)){
-                $status = $request->get(self::IS_COMMITED);
-				if($request->input(self::IS_COMMITED) != 'all'){
-					$query->where(self::IS_COMMITED, $request->get(self::IS_COMMITED));
-				}
-            }
+        $message = null;
+        $paginate = 10;
+        $search = trim($request->input('search'));
+        $status = '';
+        $before_date = null;
+        $after_date = null;
 
-            if ($request->has(self::BEFORE_DATE)){
-                $query->where(DB::raw('DATE(created_at)'), '<=', $request->get(self::BEFORE_DATE));
-                $before_date = $request->get(self::BEFORE_DATE);
-            }
-
-            if ($request->has(self::AFTER_DATE)){
-                $query->where(DB::raw('DATE(created_at)'), '>=', $request->get(self::AFTER_DATE));
-                $after_date = $request->get(self::AFTER_DATE);
-            }
-
-            if ($request->has(self::SORT_BY)){
-                $sort_by_filter = $request->get(self::SORT_BY);
-            }
-            if ($request->has(self::SORT_TYPE)){
-                $sort_type_filter = $request->get(self::SORT_TYPE);
-            }
-
-            $companies = $query->orderBy($sort_by_filter, $sort_type_filter)->paginate($paginate);
-			
-            if (count($companies) == 0){
-                $message = 'Data not found';
-            }
-            
-            return view('admin.tempcompany.index')
-                ->with(self::MESSAGE, $message)
-                ->with('data', $companies)
-                ->with('search', $search)
-                ->with('status', $status)
-                ->with(self::BEFORE_DATE, $before_date)
-                ->with(self::AFTER_DATE, $after_date)
-                ->with(self::SORT_BY, $sort_by_filter)
-                ->with(self::SORT_TYPE, $sort_type_filter);
+        $sort_by_filter = 'updated_at';
+        $sort_type_filter = 'desc';
+        
+        $query = TempCompany::whereNotNull('created_at')
+                    ->with('user')
+                    ->with(self::COMPANY);
+        
+        if ($search != null){
+            $query->where(function($qry) use($search){
+                $qry->whereHas(self::COMPANY, function ($q) use ($search){
+                        return $q->where('name', 'like', '%'.strtolower($search).'%');
+                    });
+            });
         }
+        if ($request->has(self::IS_COMMITED)){
+            $status = $request->get(self::IS_COMMITED);
+            if($request->input(self::IS_COMMITED) != 'all'){
+                $query->where(self::IS_COMMITED, $request->get(self::IS_COMMITED));
+            }
+        }
+
+        if ($request->has(self::BEFORE_DATE)){
+            $query->where(DB::raw('DATE(created_at)'), '<=', $request->get(self::BEFORE_DATE));
+            $before_date = $request->get(self::BEFORE_DATE);
+        }
+
+        if ($request->has(self::AFTER_DATE)){
+            $query->where(DB::raw('DATE(created_at)'), '>=', $request->get(self::AFTER_DATE));
+            $after_date = $request->get(self::AFTER_DATE);
+        }
+
+        if ($request->has(self::SORT_BY)){
+            $sort_by_filter = $request->get(self::SORT_BY);
+        }
+        if ($request->has(self::SORT_TYPE)){
+            $sort_type_filter = $request->get(self::SORT_TYPE);
+        }
+
+        $companies = $query->orderBy($sort_by_filter, $sort_type_filter)->paginate($paginate);
+        
+        if (count($companies) == 0){
+            $message = 'Data not found';
+        }
+        
+        return view('admin.tempcompany.index')
+            ->with(self::MESSAGE, $message)
+            ->with('data', $companies)
+            ->with('search', $search)
+            ->with('status', $status)
+            ->with(self::BEFORE_DATE, $before_date)
+            ->with(self::AFTER_DATE, $after_date)
+            ->with(self::SORT_BY, $sort_by_filter)
+            ->with(self::SORT_TYPE, $sort_type_filter)
+        ;
+        
     }
 
     /**
@@ -225,10 +226,10 @@ class TempCompanyController extends Controller
                     $npwp_file_temp = self::MEDIA_TEMPCOMPANY.$company->id.'/'.$id.'/'.$tempcompany->npwp_file;
                     $npwp_file_now = self::MEDIA_COMPANY.$company->id.'/'.$tempcompany->npwp_file;
                     
-                if(Storage::disk('minio')->copy($npwp_file_temp,$npwp_file_now)){
+                if(Storage::disk(self::MINIO)->copy($npwp_file_temp,$npwp_file_now)){
                         $company->npwp_file = $request->input('npwp_file');
-                        if (Storage::disk('minio')->exists($npwp_file)){
-                            Storage::disk('minio')->delete($npwp_file);
+                        if (Storage::disk(self::MINIO)->exists($npwp_file)){
+                            Storage::disk(self::MINIO)->delete($npwp_file);
                         }
                     }else{
                         Session::flash(self::ERROR, 'Save NPWP to directory failed');
@@ -245,10 +246,10 @@ class TempCompanyController extends Controller
                     $siup_file = self::MEDIA_COMPANY.$company->id.'/'.$company->siup_file;
                     $siup_file_temp = self::MEDIA_TEMPCOMPANY.$company->id.'/'.$id.'/'.$tempcompany->siup_file;
                     $siup_file_now = self::MEDIA_COMPANY.$company->id.'/'.$tempcompany->siup_file;
-                    if(Storage::disk('minio')->copy($siup_file_temp,$siup_file_now)){
+                    if(Storage::disk(self::MINIO)->copy($siup_file_temp,$siup_file_now)){
                         $company->siup_file = $request->input('siup_file');
-                        if (Storage::disk('minio')->exists($siup_file)){
-                            Storage::disk('minio')->delete($siup_file);
+                        if (Storage::disk(self::MINIO)->exists($siup_file)){
+                            Storage::disk(self::MINIO)->delete($siup_file);
                         }
                     }else{
                         Session::flash(self::ERROR, 'Save SIUPP to directory failed');
@@ -267,8 +268,9 @@ class TempCompanyController extends Controller
                     $qs_certificate_file_now = self::MEDIA_COMPANY.$company->id.'/'.$tempcompany->qs_certificate_file;
                     if(copy($qs_certificate_file_temp,$qs_certificate_file_now)){
                         $company->qs_certificate_file = $request->input('qs_certificate_file');
-                        if (Storage::disk('minio')->exists($qs_certificate_file)){
-                            Storage::disk('minio')->delete($qs_certificate_file);}
+                        if (Storage::disk(self::MINIO)->exists($qs_certificate_file)){
+                            Storage::disk(self::MINIO)->delete($qs_certificate_file);
+                        }
                     }else{
                         Session::flash(self::ERROR, 'Save Certificate to directory failed');
                         return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT);
@@ -309,14 +311,11 @@ class TempCompanyController extends Controller
             try{
                 $company->delete();
 		        $file = self::MEDIA_TEMPCOMPANY.$company->company_id.'/'.$id;
-				Storage::disk('minio')->deleteDirectory($file);
+				Storage::disk(self::MINIO)->deleteDirectory($file);
                 
                 Session::flash(self::MESSAGE, 'Edit Request successfully deleted');
                 return redirect(self::PAGE_TEMPCOMPANY);
-            }catch (Exception $e){
-                Session::flash(self::ERROR, 'Delete failed');
-                return redirect(self::PAGE_TEMPCOMPANY);
-            }
+            }catch (Exception $e){ return redirect(self::PAGE_TEMPCOMPANY)->with(self::ERROR, 'Delete failed');}
         }else{
             Session::flash(self::MESSAGE, 'Company Not Found');
             return redirect(self::PAGE_TEMPCOMPANY);
@@ -360,7 +359,7 @@ class TempCompanyController extends Controller
                     $response =  response()->download($tempImage, $filename);
                     break;
                  default:
-                    return false;
+                    return 0;
             }
 
             return $response;

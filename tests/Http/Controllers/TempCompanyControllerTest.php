@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Http\UploadedFile;
 
 use App\User;  
 use App\TempCompany;
@@ -18,23 +19,26 @@ class TempCompanyControllerTest extends TestCase
        $this->assertEquals(200, $response->status());
 	} 
 
-	// public function test__visit_tempcompany_with_search()
-	// { 
-	//    $user = User::find(1);
-	//    $tempCompany = factory(App\TempCompany::class)->create(); 
-	//    factory(App\User::class)->create(["company_id"=>$tempCompany->company_id]);
-	//    $response =  $this->actingAs($user)->call('GET', 'admin/tempcompany?search=cari');  
- //       $this->assertEquals(200, $response->status());
-	// }
-    public function test_visit_edit_tempcompany()
+	public function test__visit_tempcompany_with_search()
 	{ 
- 
-	   $user = User::find(1);
-	   $tempCompany = factory(App\TempCompany::class)->create();
-	   $response =  $this->actingAs($user)->call('GET', 'admin/tempcompany/'.$tempCompany->id);  
-	    
-       $this->assertEquals(200, $response->status());
+		$this->actingAs(User::find(1))->call('GET', 'admin/tempcompany?is_commited=1&search=cari&before_date=2020-12-31&after_date=2020-01-01&sort_by=$sort_type=desc');  
+    	$this->assertResponseStatus(200);
 	}
+
+    public function test_visit_show_tempcompany()
+	{ 
+	   $tempCompany = App\TempCompany::latest()->first();
+	   $this->actingAs(User::find(1))->call('GET', "admin/tempcompany/$tempCompany->id");  
+	   $this->assertResponseStatus(200);
+	}
+
+	public function test_visit_edit_tempcompany()
+	{ 
+	   $tempCompany = App\TempCompany::latest()->first();
+	   $this->actingAs(User::find(1))->call('GET', "admin/tempcompany/$tempCompany->id/edit");  
+	   $this->assertResponseStatus(200);
+	}
+
     public function test_visit_create_tempcompany()
 	{ 
  
@@ -54,8 +58,10 @@ class TempCompanyControllerTest extends TestCase
 	{ 
  
 	    $user = User::find(1);  
-	    $tempCompany = factory(App\TempCompany::class)->create();
-		$response =  $this->actingAs($user)->call('PUT', 'admin/tempcompany/'.$tempCompany->id,[
+		$tempCompany = factory(App\TempCompany::class)->create();
+		$file = new UploadedFile(public_path().'assets/images/testing.jpg' ,'testing.jpg', 'image/*', null, true);
+
+		$response =  $this->actingAs($user)->call('PATCH', 'admin/tempcompany/'.$tempCompany->id,[
 			'is_commited'=>1,
 			'name'=>str_random(10),
 			'address'=>str_random(10),
@@ -70,7 +76,8 @@ class TempCompanyControllerTest extends TestCase
 			'siup_number'=>str_random(10),
 			'qs_certificate_number'=>str_random(10),
 			'siup_date'=>'2020-12-12',
-		]);    
+			'qs_certificate_date' => Carbon\Carbon::now(),
+		],[],['npwp_file' => $file, 'siup_file' => $file, 'qs_certificate_file' => $file]);    
         $this->assertEquals(302, $response->status());  
 	}
 
@@ -82,14 +89,17 @@ class TempCompanyControllerTest extends TestCase
         $this->assertResponseStatus(200); 
     }
 
+	public function test_delete_not_found_tempcompany()
+	{
+		$this->actingAs(User::find(1))->call('DELETE', 'admin/tempcompany/noDataFound');  
+        $this->assertResponseStatus(302); 
+	} 
 
     public function test_delete_tempcompany()
-	{ 
-		$user = User::find(1); 
+	{
 		$tempCompany = factory(App\TempCompany::class)->create();
-		$response =  $this->actingAs($user)->call('DELETE', 'admin/tempcompany/'.$tempCompany->id);  
-
-        $this->assertEquals(302, $response->status()); 
+		$this->actingAs(User::find(1))->call('DELETE', 'admin/tempcompany/'.$tempCompany->id);  
+        $this->assertResponseStatus(302); 
 	} 
 
 	public function test_view_media_npwp()
@@ -138,5 +148,12 @@ class TempCompanyControllerTest extends TestCase
         $this->assertTrue($response->headers->get('content-type') == 'image/jpeg');
 
         \Storage::disk('minio')->delete("tempCompany/$company->id/$company->qs_certificate_file");
+	}
+
+	public function test_view_media_default()
+	{
+		$company = factory(App\TempCompany::class)->create();
+		$this->actingAs(User::find(1))->call('GET', "admin/tempcompany/media/$company->id/default");  
+		$this->assertResponseStatus(200)->see(0);
 	}
 }
