@@ -297,7 +297,7 @@ class PengujianControllerTest extends TestCase
 	    $response =  $this->actingAs($user)->call('GET', '/cetakPengujian/'.$examination->id);
         
 	 
-       $this->assertEquals(302, $response->status());
+       $this->assertEquals(200, $response->status());
 	}
 
 
