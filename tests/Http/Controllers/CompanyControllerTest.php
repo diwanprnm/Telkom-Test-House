@@ -14,12 +14,9 @@ class CompanyControllerTest extends TestCase
      * @return void
      */ 
     public function test_visit_company()
-	{ 
-	   $user = User::find(1);
-	   $response =  $this->actingAs($user)->call('GET', 'admin/company');  
-        
-	 
-       $this->assertEquals(200, $response->status());
+	{
+	   $this->actingAs(User::find(1))->call('GET', 'admin/company?is_active=1&search=cari&before_date=2020-12-31&after_date=2020-01-01&sort_by=$sort_type=desc');
+	   $this->assertResponseStatus(200); 
 	} 
     public function test_visit_edit_company()
 	{ 
@@ -124,16 +121,24 @@ class CompanyControllerTest extends TestCase
 
         \Storage::disk('minio')->delete("company/$company->id/$company->qs_certificate_file");
 	}
+
+	public function test_view_media_default()
+	{
+		$company = factory(App\Company::class)->create();
+		$this->actingAs(User::find(1))->call('GET', "admin/company/media/$company->id/default");  
+		$this->assertResponseStatus(200)->see(0);
+	}
+
 	public function test_export_excel()
 	{ 
-	   
-	   $user = User::find(1); 
-	   $response =  $this->actingAs($user)->call('GET', '/company/excel'); 
-	    
-	    $this->assertEquals(200, $response->status());
-	    $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
-	    $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
-	    $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Perusahaan.xlsx"');
+		$user = User::find(1);
+		$this->actingAs($user)->call('GET', 'admin/company');
+		$response =  $this->actingAs($user)->call('GET', '/company/excel'); 
+
+		$this->assertEquals(200, $response->status());
+		$this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
+		$this->assertTrue($response->headers->get('content-description') == 'File Transfer');
+		$this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Perusahaan.xlsx"');
 	}
 	public function test_import_excel()
 	{ 

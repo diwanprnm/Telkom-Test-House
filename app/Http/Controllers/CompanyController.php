@@ -77,69 +77,70 @@ class CompanyController extends Controller
     {
         $currentUser = Auth::user();
 
-        if ($currentUser){
-            $message = null;
-            $paginate = 10;
-            $search = trim($request->input(self::SEARCH));
-            $status = '';
-            $before = null;
-            $after = null;
+        if (!$currentUser){ return redirect('login');}
 
-            $sort_by = 'name';
-            $sort_type = 'asc';
-            $query = Company::whereNotNull(self::CREATED_AT)
-                    ->where('id', '<>', '1');
-            if ($search != null){
-               
-                $query->where('name','like','%'.$search.'%');
-                $logService = new LogService();
-                $logService->createLog('Search Company', 'self::COMPANY', json_encode(array(self::SEARCH=>$search)) );
-            } 
+        $message = null;
+        $paginate = 10;
+        $search = trim($request->input(self::SEARCH));
+        $status = '';
+        $before = null;
+        $after = null;
 
-            if ($request->has(self::IS_ACTIVE)){
-                $status = $request->get(self::IS_ACTIVE);
-                if($request->input(self::IS_ACTIVE) != '0'){
-                    $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
-                }
-            }
-
-            if ($request->has(self::BEFORE_DATE)){
-                $query->where(DB::raw('DATE(created_at)'), '<=', $request->get(self::BEFORE_DATE));
-                $before = $request->get(self::BEFORE_DATE);
-            }
-
-            if ($request->has(self::AFTER_DATE)){
-                $query->where(DB::raw('DATE(created_at)'), '>=', $request->get(self::AFTER_DATE));
-                $after = $request->get(self::AFTER_DATE);
-            }
-
-            if ($request->has(self::SORT_BY)){
-                $sort_by = $request->get(self::SORT_BY);
-            }
-            if ($request->has(self::SORT_TYPE)){
-                $sort_type = $request->get(self::SORT_TYPE);
-            }
+        $sort_by = 'name';
+        $sort_type = 'asc';
+        $query = Company::whereNotNull(self::CREATED_AT)
+                ->where('id', '<>', '1');
+        if ($search != null){
             
-            $companies = $query->orderBy($sort_by, $sort_type)
-                        ->paginate($paginate);
-             
-			$data_excel = Company::whereNotNull(self::CREATED_AT)->where('id', '<>', '1')->orderBy('updated_at', 'desc')->get();
-			$request->session()->put('excel_pengujian', $data_excel);
-			
-            if (count($companies) == 0){
-                $message = 'Data not found';
+            $query->where('name','like','%'.$search.'%');
+            $logService = new LogService();
+            $logService->createLog('Search Company', 'self::COMPANY', json_encode(array(self::SEARCH=>$search)) );
+        } 
+
+        if ($request->has(self::IS_ACTIVE)){
+            $status = $request->get(self::IS_ACTIVE);
+            if($request->input(self::IS_ACTIVE) != '0'){
+                $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
             }
-            
-            return view('admin.company.index')
-                ->with(self::MESSAGE, $message)
-                ->with('data', $companies)
-                ->with(self::SEARCH, $search)
-                ->with('status', $status)
-                ->with(self::BEFORE_DATE, $before)
-                ->with(self::AFTER_DATE, $after)
-                ->with(self::SORT_BY, $sort_by)
-                ->with(self::SORT_TYPE, $sort_type);
         }
+
+        if ($request->has(self::BEFORE_DATE)){
+            $query->where(DB::raw('DATE(created_at)'), '<=', $request->get(self::BEFORE_DATE));
+            $before = $request->get(self::BEFORE_DATE);
+        }
+
+        if ($request->has(self::AFTER_DATE)){
+            $query->where(DB::raw('DATE(created_at)'), '>=', $request->get(self::AFTER_DATE));
+            $after = $request->get(self::AFTER_DATE);
+        }
+
+        if ($request->has(self::SORT_BY)){
+            $sort_by = $request->get(self::SORT_BY);
+        }
+        if ($request->has(self::SORT_TYPE)){
+            $sort_type = $request->get(self::SORT_TYPE);
+        }
+        
+        $companies = $query->orderBy($sort_by, $sort_type)
+                    ->paginate($paginate);
+            
+        $data_excel = Company::whereNotNull(self::CREATED_AT)->where('id', '<>', '1')->orderBy('updated_at', 'desc')->get();
+        $request->session()->put('excel_pengujian', $data_excel);
+        
+        if (count($companies) == 0){
+            $message = 'Data not found';
+        }
+        
+        return view('admin.company.index')
+            ->with(self::MESSAGE, $message)
+            ->with('data', $companies)
+            ->with(self::SEARCH, $search)
+            ->with('status', $status)
+            ->with(self::BEFORE_DATE, $before)
+            ->with(self::AFTER_DATE, $after)
+            ->with(self::SORT_BY, $sort_by)
+            ->with(self::SORT_TYPE, $sort_type)
+        ;
     }
 
     /**
@@ -179,23 +180,7 @@ class CompanyController extends Controller
         $company->qs_certificate_number = $request->input(self::QS_CERTIFICATE_NUMBER);
         $company->keterangan = $request->input('keterangan');
   
-        if ($request->hasFile(self::NPWP_FILE)) { 
-            $fileService = new FileService();  
-            $file = $fileService->uploadFile($request->file(self::NPWP_FILE), 'npwp_', "/".self::COMPANY_PATH.$company->id."/");  
-            $company->npwp_file = $file ? $file : '';
-        }
-
-        if ($request->hasFile(self::SIUP_FILE)) {  
-            $fileService = new FileService();  
-            $file = $fileService->uploadFile($request->file(self::SIUP_FILE), 'siupp_', "/".self::COMPANY_PATH.$company->id."/");  
-            $company->siup_file = $file ? $file : '';
-        } 
-        if ($request->hasFile(self::QS_CERTIFICATE_FILE)) {  
-            $fileService = new FileService();  
-            $file = $fileService->uploadFile($request->file(self::QS_CERTIFICATE_FILE), 'serti_uji_mutu_', "/".self::COMPANY_PATH.$company->id."/");  
-            $company->qs_certificate_file = $file ? $file : '';
-        }
-
+        $company = $this->storeFile($request, $company);
         
         $company->qs_certificate_date = $request->input(self::QS_CERTIFICATE_DATE);
         $company->is_active = $request->input(self::IS_ACTIVE);
@@ -210,10 +195,7 @@ class CompanyController extends Controller
 
             Session::flash(self::MESSAGE, 'Company successfully created');
             return redirect(self::ADMIN_COMPANY);
-        } catch(Exception $e){
-            Session::flash(self::ERROR, 'Save failed');
-            return redirect(self::ADMIN_CREATE);
-        }
+        } catch(Exception $e){ return redirect(self::ADMIN_CREATE)->with(self::ERROR, 'Save failed');}
     } 
 
     /**
@@ -274,25 +256,7 @@ class CompanyController extends Controller
             $company->npwp_number = $request->input(self::NPWP_NUMBER);
         }
         
-
-        if ($request->hasFile(self::NPWP_FILE)) { 
-            $fileService = new FileService();  
-            $file = $fileService->uploadFile($request->file(self::NPWP_FILE), 'npwp_', "/".self::COMPANY_PATH.$company->id."/");  
-            $company->npwp_file = $file ? $file : '';
-        }
-
-        if ($request->hasFile(self::SIUP_FILE)) {  
-            $fileService = new FileService();  
-            $file = $fileService->uploadFile($request->file(self::SIUP_FILE), 'siupp_', "/".self::COMPANY_PATH.$company->id."/");  
-            $company->siup_file = $file ? $file : '';
-        } 
-        if ($request->hasFile(self::QS_CERTIFICATE_FILE)) {  
-            $fileService = new FileService();  
-            $file = $fileService->uploadFile($request->file(self::SIUP_FILE), 'serti_uji_mutu_', "/".self::COMPANY_PATH.$company->id."/");  
-            $company->qs_certificate_file = $file ? $file : '';
-        }
-
-        
+        $company = $this->storeFile($request, $company);        
 
         if ($request->has(self::SIUP_NUMBER)){
             $company->siup_number = $request->input(self::SIUP_NUMBER);
@@ -323,10 +287,7 @@ class CompanyController extends Controller
 
             Session::flash(self::MESSAGE, 'Company successfully updated');
             return redirect(self::ADMIN_COMPANY);
-        } catch(Exception $e){
-            Session::flash(self::ERROR, 'Save failed');
-            return redirect(self::ADMIN_COMPANY.$company->id.'/edit');
-        }
+        } catch(Exception $e){ return redirect(self::ADMIN_COMPANY.$company->id.'/edit')->with(self::ERROR, 'Save failed'); }
     }
 
     /**
@@ -347,10 +308,7 @@ class CompanyController extends Controller
 
                 Session::flash(self::MESSAGE, 'Company successfully deleted');
                 return redirect(self::ADMIN_COMPANY);
-            }catch (Exception $e){
-                Session::flash(self::ERROR, 'Delete failed');
-                return redirect(self::ADMIN_COMPANY);
-            }
+            }catch (Exception $e){ return redirect(self::ADMIN_COMPANY)->with(self::ERROR, 'Delete failed'); }
         }
     }
 
@@ -391,7 +349,7 @@ class CompanyController extends Controller
                     $response =  response()->download($tempImage, $filename);
                     break;
                 default:
-                    return ""; 
+                    return 0; 
             }
         }
 
@@ -510,5 +468,25 @@ class CompanyController extends Controller
             ->take(5)
             ->distinct()
             ->get(); 
-    } 
+    }
+
+    private function storeFile($request, $company)
+    {
+        $fileService = new FileService(); 
+
+        if ($request->hasFile(self::NPWP_FILE)) { 
+            $file = $fileService->uploadFile($request->file(self::NPWP_FILE), 'npwp_', "/".self::COMPANY_PATH.$company->id."/");  
+            $company->npwp_file = $file ? $file : '';
+        }
+        if ($request->hasFile(self::SIUP_FILE)) {
+            $file = $fileService->uploadFile($request->file(self::SIUP_FILE), 'siupp_', "/".self::COMPANY_PATH.$company->id."/");  
+            $company->siup_file = $file ? $file : '';
+        } 
+        if ($request->hasFile(self::QS_CERTIFICATE_FILE)) {
+            $file = $fileService->uploadFile($request->file(self::QS_CERTIFICATE_FILE), 'serti_uji_mutu_', "/".self::COMPANY_PATH.$company->id."/");  
+            $company->qs_certificate_file = $file ? $file : '';
+        }
+
+        return $company;
+    }
 }
