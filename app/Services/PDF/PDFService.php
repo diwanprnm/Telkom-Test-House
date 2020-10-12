@@ -2,6 +2,8 @@
 
 namespace App\Services\PDF;
 
+use Illuminate\Support\Facades\App;
+
 //PDFMC
 use App\Services\PDF\PDFMCTablesKonsumen;
 use App\Services\PDF\PDFMCTable;
@@ -50,6 +52,9 @@ class PDFService
 	public function cetakUjiFungsi($data)
 	{
 		$cetakUjiFungsi = new CetakUjiFungsi();
+		if( App::environment() == 'testing'){
+			return '';
+		}
 		return $cetakUjiFungsi->makePDF($data, new PDFMCTable());
 	}
 
@@ -71,6 +76,9 @@ class PDFService
 	public function cetakPengujian($data)
 	{
 		$cetakPengujian = new CetakPengujian();
+		if( App::environment() == 'testing'){
+			return '';
+		}
 		return $cetakPengujian->makePDF($data, new PDFMCTablePermohonan());
 	}
 

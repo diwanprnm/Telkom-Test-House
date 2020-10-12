@@ -169,7 +169,7 @@ class PDFMCTableKuitansi extends FPDF{
 		$this->Rect( $margin, $margin , ($pageHeight - $lineHeight) - $margin , ($pageWidth - $lineWidth) - $margin);
 		$this->SetFont('helvetica','B',14);
 		$this->Rotate(90); 
-		$this->Image('./assets/images/Telkom-Indonesia-Corporate-Logo1.jpg',-108,12,40);
+		$this->Image(public_path().'/assets/images/Telkom-Indonesia-Corporate-Logo1.jpg',-108,12,40);
 		$this->Cell(-75);
 		$this->Cell(0,17,'Divisi Digital Business (DDB)',0,0,'L');
 		$this->Ln(7);

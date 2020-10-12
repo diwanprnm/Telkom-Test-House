@@ -183,7 +183,7 @@ class PDFMCTables extends FPDF{
 				// $uji_name = 'Not Applicable';
 				// break;
 		// }
-		// $this->Image('./assets/images/Telkom-Indonesia-Corporate-Logo1.jpg',165,5,40);
+		// $this->Image(public_path().'/assets/images/Telkom-Indonesia-Corporate-Logo1.jpg',165,5,40);
 		// $this->Ln(5);
 	}
 	//Page footer

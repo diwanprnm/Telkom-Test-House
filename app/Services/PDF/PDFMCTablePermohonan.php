@@ -182,7 +182,7 @@ class PDFMCTablePermohonan extends FPDF{
 				// $uji_name = 'Not Applicable';
 				// break;
 		// }
-		$this->Image('./assets/images/Telkom-Indonesia-Corporate-Logo1.jpg',10,3,27);
+		$this->Image(public_path().'/assets/images/Telkom-Indonesia-Corporate-Logo1.jpg',10,3,27);
 		$this->SetFont('helvetica','B',12);
 		$this->SetFont('','BU');
 		$this->SetTextColor(0, 0, 0);
