@@ -9,6 +9,7 @@ class CetakSPB
         $is_poh = $data[0]['is_poh'];
 		$manager_urel = $data[0]['manager_urel'];
 		$spb_number = $data[0]['spb_number'];
+		$user_name = $data[0]['exam']['user']['name'];
 		$company_name = $data[0]['exam']['company']['name'];
 		$no_reg = $data[0]['exam']['function_test_NO'];
 		$test_reference = $data[0]['exam']['device']['test_reference'];
@@ -37,7 +38,7 @@ class CetakSPB
 		$total_biaya = $biaya + $ppn;
 		$terbilang = $pdf->terbilang($total_biaya, 3);
 		$spb_date = date('j', strtotime($data[0]['spb_date']))." ".strftime('%B %Y', strtotime($data[0]['spb_date']));
-		$payment_method = $data[0]['payment_method']->data->VA;
+//		$payment_method = $data[0]['payment_method']->data->VA;
 	// $pdf->judul_kop('FORM TINJAUAN KONTRAK','Contract Review Form');
 	$pdf->AliasNbPages();
 	$pdf->AddPage();
@@ -175,6 +176,3 @@ class CetakSPB
 	exit;
     }
 }
-
-    
-// });
