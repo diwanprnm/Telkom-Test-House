@@ -38,7 +38,7 @@ class CetakSPB
 		$total_biaya = $biaya + $ppn;
 		$terbilang = $pdf->terbilang($total_biaya, 3);
 		$spb_date = date('j', strtotime($data[0]['spb_date']))." ".strftime('%B %Y', strtotime($data[0]['spb_date']));
-//		$payment_method = $data[0]['payment_method']->data->VA;
+		$payment_method = $data[0]['payment_method']->data->VA;
 	// $pdf->judul_kop('FORM TINJAUAN KONTRAK','Contract Review Form');
 	$pdf->AliasNbPages();
 	$pdf->AddPage();
