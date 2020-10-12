@@ -45,6 +45,7 @@ class PDFService
 	public function cetakBuktiPenerimaanPerangkat($data)
 	{
 		$cetakBuktiPenerimaanPerangkat = new CetakBuktiPenerimaanPerangkat();
+		if( App::environment() == 'testing'){ return ''; }
 		return $cetakBuktiPenerimaanPerangkat->makePDF($data, new PDFMCTable());
 	}
 
@@ -52,9 +53,7 @@ class PDFService
 	public function cetakUjiFungsi($data)
 	{
 		$cetakUjiFungsi = new CetakUjiFungsi();
-		if( App::environment() == 'testing'){
-			return '';
-		}
+		if( App::environment() == 'testing'){ return ''; }
 		return $cetakUjiFungsi->makePDF($data, new PDFMCTable());
 	}
 
@@ -76,9 +75,7 @@ class PDFService
 	public function cetakPengujian($data)
 	{
 		$cetakPengujian = new CetakPengujian();
-		if( App::environment() == 'testing'){
-			return '';
-		}
+		if( App::environment() == 'testing'){ return ''; }
 		return $cetakPengujian->makePDF($data, new PDFMCTablePermohonan());
 	}
 

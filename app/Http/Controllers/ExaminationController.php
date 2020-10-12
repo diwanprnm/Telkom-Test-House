@@ -183,41 +183,39 @@ class ExaminationController extends Controller
 		$logService = new LogService();
 		$examinationService = new ExaminationService();
 
-        if ($currentUser){
-            $message = null;
-            $paginate = 5;
-			$search = trim($request->input(self::SEARCH));
-			
-            $examType = ExaminationType::all();
+        if (!$currentUser){ return redirect('login');}
+		$message = null;
+		$paginate = 5;
+		$search = trim($request->input(self::SEARCH));
+		
+		$examType = ExaminationType::all();
 
-			$tempData = $examinationService->requestQuery($request, $search, $type = '', $status = '', $before = null, $after = null);
+		$tempData = $examinationService->requestQuery($request, $search, $type = '', $status = '', $before = null, $after = null);
 
-            $query = $tempData[0];
-            $search = $tempData[1];
-            $type = $tempData[2];
-            $status = $tempData[3];
-			$before = $tempData[4];
-			$after = $tempData[5];
-			
-			$search != null ? $logService->createLog(self::SEARCH, $this::EXAMINATION, json_encode(array(self::SEARCH => $search)) ) : '';
+		$query = $tempData[0];
+		$search = $tempData[1];
+		$type = $tempData[2];
+		$status = $tempData[3];
+		$before = $tempData[4];
+		$after = $tempData[5];
+		
+		$search != null ? $logService->createLog(self::SEARCH, $this::EXAMINATION, json_encode(array(self::SEARCH => $search)) ) : '';
 
-			$data = $query->orderBy(self::UPDATED_AT, 'desc')
-                        ->paginate($paginate);
-			
-            if (count(array($query)) == 0){
-                $message = 'Data not found';
-            }
-			
-            return view('admin.examination.index')
-                ->with(self::MESSAGE, $message)
-                ->with('data', $data)
-                ->with('type', $examType)
-                ->with(self::SEARCH, $search)
-                ->with('filterType', $type)
-                ->with(self::STATUS, $status)
-				->with(self::BEFORE_DATE, $before)
-                ->with(self::AFTER_DATE, $after);
-        }
+		$data = $query->orderBy(self::UPDATED_AT, 'desc')
+					->paginate($paginate);
+		
+		if (count(array($query)) == 0){ $message = 'Data not found'; }
+		
+		return view('admin.examination.index')
+			->with(self::MESSAGE, $message)
+			->with('data', $data)
+			->with('type', $examType)
+			->with(self::SEARCH, $search)
+			->with('filterType', $type)
+			->with(self::STATUS, $status)
+			->with(self::BEFORE_DATE, $before)
+			->with(self::AFTER_DATE, $after)
+		;
     }
 
     /**
@@ -1261,35 +1259,70 @@ class ExaminationController extends Controller
 
 			/*Tahap Pengujian*/
 			$tahap = self::REGISTRASI;
-			if($row->registration_status != 1){
-				$tahap = self::REGISTRASI;
+			if(	$row->registration_status != 1){ $tahap = self::REGISTRASI;
 			}
-			if($row->registration_status == 1 && $row->function_status != 1){
-				$tahap = self::UJI_FUNGSI;
+			if(	$row->registration_status == 1 
+				&& $row->function_status != 1){ $tahap = self::UJI_FUNGSI;
 			}
-			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status != 1){
-				$tahap = self::TINJAUAN_KONTRAK;
+			if(	$row->registration_status == 1
+				&& $row->function_status == 1
+				&& $row->contract_status != 1){ $tahap = self::TINJAUAN_KONTRAK;
 			}
-			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status == 1 && $row->spb_status != 1){
-				$tahap = 'SPB';
+			if(	$row->registration_status == 1
+				&& $row->function_status == 1
+				&& $row->contract_status == 1
+				&& $row->spb_status != 1){ $tahap = 'SPB';
 			}
-			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status == 1 && $row->spb_status == 1 && $row->payment_status != 1){
-				$tahap = self::PEMBAYARAN;
+			if(	$row->registration_status == 1
+				&& $row->function_status == 1
+				&& $row->contract_status == 1
+				&& $row->spb_status == 1
+				&& $row->payment_status != 1){ $tahap = self::PEMBAYARAN;
 			}
-			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status == 1 && $row->spb_status == 1 && $row->payment_status == 1 && $row->spk_status != 1){
-				$tahap = self::PEMBUATAN_SPK;
+			if(	$row->registration_status == 1
+				&& $row->function_status == 1
+				&& $row->contract_status == 1
+				&& $row->spb_status == 1
+				&& $row->payment_status == 1
+				&& $row->spk_status != 1){ $tahap = self::PEMBUATAN_SPK;
 			}
-			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status == 1 && $row->spb_status == 1 && $row->payment_status == 1 && $row->spk_status == 1 && $row->examination_status != 1){
-				$tahap = self::PELAKSANAAN_UJI;
+			if(	$row->registration_status == 1
+				&& $row->function_status == 1
+				&& $row->contract_status == 1
+				&& $row->spb_status == 1
+				&& $row->payment_status == 1
+				&& $row->spk_status == 1
+				&& $row->examination_status != 1){ $tahap = self::PELAKSANAAN_UJI;
 			}
-			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status == 1 && $row->spb_status == 1 && $row->payment_status == 1 && $row->spk_status == 1 && $row->examination_status == 1 && $row->resume_status != 1){
-				$tahap = self::LAPORAN_UJI;
+			if(	$row->registration_status == 1
+				&& $row->function_status == 1
+				&& $row->contract_status == 1
+				&& $row->spb_status == 1
+				&& $row->payment_status == 1
+				&& $row->spk_status == 1
+				&& $row->examination_status == 1
+				&& $row->resume_status != 1){ $tahap = self::LAPORAN_UJI;
 			}
-			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status == 1 && $row->spb_status == 1 && $row->payment_status == 1 && $row->spk_status == 1 && $row->examination_status == 1 && $row->resume_status == 1 && $row->qa_status != 1){
-				$tahap = self::SIDANG_QA;
+			if(	$row->registration_status == 1
+				&& $row->function_status == 1
+				&& $row->contract_status == 1
+				&& $row->spb_status == 1
+				&& $row->payment_status == 1
+				&& $row->spk_status == 1
+				&& $row->examination_status == 1
+				&& $row->resume_status == 1
+				&& $row->qa_status != 1){ $tahap = self::SIDANG_QA;
 			}
-			if($row->registration_status == 1 && $row->function_status == 1 && $row->contract_status == 1 && $row->spb_status == 1 && $row->payment_status == 1 && $row->spk_status == 1 && $row->examination_status == 1 && $row->resume_status == 1 && $row->qa_status == 1 && $row->certificate_status != 1){
-				$tahap = 'Penerbitan Sertifikat';
+			if(	$row->registration_status == 1
+				&& $row->function_status == 1
+				&& $row->contract_status == 1
+				&& $row->spb_status == 1
+				&& $row->payment_status == 1
+				&& $row->spk_status == 1
+				&& $row->examination_status == 1
+				&& $row->resume_status == 1
+				&& $row->qa_status == 1
+				&& $row->certificate_status != 1){ $tahap = 'Penerbitan Sertifikat';
 			}
 
 			/*End Tahap Pengujian*/

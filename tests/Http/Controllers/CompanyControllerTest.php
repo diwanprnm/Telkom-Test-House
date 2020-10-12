@@ -15,7 +15,7 @@ class CompanyControllerTest extends TestCase
      */ 
     public function test_visit_company()
 	{
-	   $this->actingAs(User::find(1))->call('GET', 'admin/company?is_active=1&search=cari&before_date=2020-12-31&after_date=2020-01-01&sort_by=$sort_type=desc');
+	   $this->actingAs(User::find(1))->call('GET', 'admin/company?is_active=1&search=cari&before_date=2020-12-31&after_date=2020-01-01&sort_by=created_at&sort_type=desc');
 	   $this->assertResponseStatus(200); 
 	} 
     public function test_visit_edit_company()

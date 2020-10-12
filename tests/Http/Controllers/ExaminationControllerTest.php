@@ -41,7 +41,7 @@ class ExaminationControllerTest extends TestCase
         $examinationAttach = factory(App\ExaminationAttach::class)->create(['examination_id'=>$examination->id,"name"=>"Tinjauan Kontrak"]);
         $examinationAttach = factory(App\ExaminationAttach::class)->create(['examination_id'=>$examination->id,"name"=>"SPB"]);
         $income = factory(App\Income::class)->create(['reference_id'=>$examination->id]);
-		$response = $this->actingAs(User::find('1'))->call('PUT', "admin/examination/$examination->id", [ 
+        $post = array(
             'status' => 'Registrasi',
             'registration_status' => 1,
             'function_status' => 1,
@@ -70,8 +70,14 @@ class ExaminationControllerTest extends TestCase
             'spb_number' => str_random(10),
             'PO_ID' => str_random(10),
             'keterangan' => 'OK'
-		]);
-		$this->assertEquals(302, $response->status());
+        );
+        
+        $response = $this->actingAs(User::find('1'))->call('PUT', "admin/examination/$examination->id", $post);
+        $this->assertEquals(302, $response->status());
+
+        $post['registration_status'] = -1;
+        $response = $this->actingAs(User::find('1'))->call('PUT', "admin/examination/$examination->id", $post);
+        $this->assertEquals(302, $response->status());
     }
     
     public function testGenerateFromTPN(){
@@ -363,13 +369,15 @@ class ExaminationControllerTest extends TestCase
     
     public function test_cetakFormBarang()
     {
-        $user = factory(App\User::class)->create(['role_id'=>2]); 
         $device = factory(App\Device::class)->create(); 
         $examLab = factory(App\ExaminationLab::class)->create(); 
         $examination = factory(App\Examination::class)->create(['device_id'=>$device->id,"examination_lab_id"=>$examLab->id]); 
-        $equipment = factory(App\Equipment::class)->create(["examination_id"=>$examination->id]); 
-        $response = $this->actingAs($user)->call('GET', 'cetakFormBarang/'.$examination->id);  
-        $this->assertEquals(302, $response->status());
+        $response = $this->actingAs(User::find('1'))->call('GET', 'cetakFormBarang/'.$examination->id);  
+        $this->assertResponseStatus(302);
+
+        factory(App\Equipment::class)->create(["examination_id"=>$examination->id]);
+        $response = $this->actingAs(User::find('1'))->call('GET', 'cetakFormBarang/'.$examination->id);  
+        $this->assertResponseStatus(200);
     }
     public function test_visit_generateEquip()
     { 

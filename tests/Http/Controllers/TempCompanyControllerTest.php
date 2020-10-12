@@ -21,7 +21,7 @@ class TempCompanyControllerTest extends TestCase
 
 	public function test__visit_tempcompany_with_search()
 	{ 
-		$this->actingAs(User::find(1))->call('GET', 'admin/tempcompany?is_commited=1&search=cari&before_date=2020-12-31&after_date=2020-01-01&sort_by=&sort_type=desc');  
+		$this->actingAs(User::find(1))->call('GET', 'admin/tempcompany?is_commited=1&search=cari&before_date=2020-12-31&after_date=2020-01-01&sort_by=created_at&sort_type=desc');  
     	$this->assertResponseStatus(200);
 	}
 
