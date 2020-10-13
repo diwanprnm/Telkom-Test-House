@@ -192,6 +192,21 @@ $factory->define(App\Examination::class, function (Faker\Generator $faker) {
     ];
 });
 
+$factory->define(App\ExaminationType::class, function (Faker\Generator $faker) {
+    return [
+        'id'  => $faker->numberBetween(1000,9000),
+        'name' => $faker->word,
+        'description' => $faker->word,
+        'picture' => $faker->word.'.jpg',
+        'created_by' => '1',
+        'updated_by' => '1',
+        'created_at'=> Carbon\Carbon::now(),
+        'updated_at'=> Carbon\Carbon::now(),
+    ];
+});
+
+
+
 $factory->define(App\ExaminationAttach::class, function (Faker\Generator $faker) {
     return [
         'id' => $faker->uuid,

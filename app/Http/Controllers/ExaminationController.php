@@ -1328,12 +1328,12 @@ class ExaminationController extends Controller
 			/*End Tahap Pengujian*/
 
 			/*ExaminationType*/
-			if(!isset($row->examinationType->name)){
+			if(!$row->examinationType->name){
 				$examType_name = '';
 			}else{
 				$examType_name = $row->examinationType->name;
 			}
-			if(!isset($row->examinationType->description)){
+			if(!$row->examinationType->description){
 				$examType_desc = '';
 			}else{
 				$examType_desc = $row->examinationType->description;
@@ -1341,27 +1341,27 @@ class ExaminationController extends Controller
 			/*EndExaminationType*/
 			
 			/*User*/
-			if(!isset($row->user->name)){
+			if(!$row->user->name){
 				$user_name = '';
 			}else{
 				$user_name = $row->user->name;
 			}
-			if(!isset($row->user->email)){
+			if(!$row->user->email){
 				$user_email = '';
 			}else{
 				$user_email = $row->user->email;
 			}
-			if(!isset($row->user->address)){
+			if(!$row->user->address){
 				$user_address = '';
 			}else{
 				$user_address = $row->user->address;
 			}
-			if(!isset($row->user->phone_number)){
+			if(!$row->user->phone_number){
 				$user_phone_number = '';
 			}else{
 				$user_phone_number = $row->user->phone_number;
 			}
-			if(!isset($row->user->fax)){
+			if(!$row->user->fax){
 				$user_fax = '';
 			}else{
 				$user_fax = $row->user->fax;
@@ -1369,62 +1369,62 @@ class ExaminationController extends Controller
 			/*EndUser*/
 			
 			/*Company*/
-			if(!isset($row->company->siup_date)){
+			if(!$row->company->siup_date){
 				$siup_date = '';
 			}else{
 				$siup_date = date(self::DATE_FORMAT_3, strtotime($row->company->siup_date));
 			}
-			if(!isset($row->company->qs_certificate_date)){
+			if(!$row->company->qs_certificate_date){
 				$qs_certificate_date = '';
 			}else{
 				$qs_certificate_date = date(self::DATE_FORMAT_3, strtotime($row->company->qs_certificate_date));
 			}
-			if(!isset($row->company->name)){
+			if(!$row->company->name){
 				$company_name = '';
 			}else{
 				$company_name = $row->company->name;
 			}
-			if(!isset($row->company->address)){
+			if(!$row->company->address){
 				$company_address = '';
 			}else{
 				$company_address = $row->company->address;
 			}
-			if(!isset($row->company->city)){
+			if(!$row->company->city){
 				$company_city = '';
 			}else{
 				$company_city = $row->company->city;
 			}
-			if(!isset($row->company->postal_code)){
+			if(!$row->company->postal_code){
 				$company_postal_code = '';
 			}else{
 				$company_postal_code = $row->company->postal_code;
 			}
-			if(!isset($row->company->email)){
+			if(!$row->company->email){
 				$company_email = '';
 			}else{
 				$company_email = $row->company->email;
 			}
-			if(!isset($row->company->phone_number)){
+			if(!$row->company->phone_number){
 				$company_phone_number = '';
 			}else{
 				$company_phone_number = $row->company->phone_number;
 			}
-			if(!isset($row->company->fax)){
+			if(!$row->company->fax){
 				$company_fax = '';
 			}else{
 				$company_fax = $row->company->fax;
 			}
-			if(!isset($row->company->npwp_number)){
+			if(!$row->company->npwp_number){
 				$company_npwp_number = '';
 			}else{
 				$company_npwp_number = $row->company->npwp_number;
 			}
-			if(!isset($row->company->siup_number)){
+			if(!$row->company->siup_number){
 				$company_siup_number = '';
 			}else{
 				$company_siup_number = $row->company->siup_number;
 			}
-			if(!isset($row->company->qs_certificate_number)){
+			if(!$row->company->qs_certificate_number){
 				$company_qs_certificate_number = '';
 			}else{
 				$company_qs_certificate_number = $row->company->qs_certificate_number;
@@ -1432,47 +1432,47 @@ class ExaminationController extends Controller
 			/*EndCompany*/
 			
 			/*Device*/
-			if(!isset($row->device->valid_from)){
+			if(!$row->device->valid_from){
 				$valid_from = '';
 			}else{
 				$valid_from = date(self::DATE_FORMAT_3, strtotime($row->device->valid_from));
 			}
-			if(!isset($row->device->valid_thru)){
+			if(!$row->device->valid_thru){
 				$valid_thru = '';
 			}else{
 				$valid_thru = date(self::DATE_FORMAT_3, strtotime($row->device->valid_thru));
 			}
-			if(!isset($row->device->name)){
+			if(!$row->device->name){
 				$device_name = '';
 			}else{
 				$device_name = $row->device->name;
 			}
-			if(!isset($row->device->mark)){
+			if(!$row->device->mark){
 				$device_mark = '';
 			}else{
 				$device_mark = $row->device->mark;
 			}
-			if(!isset($row->device->capacity)){
+			if(!$row->device->capacity){
 				$device_capacity = '';
 			}else{
 				$device_capacity = $row->device->capacity;
 			}
-			if(!isset($row->device->manufactured_by)){
+			if(!$row->device->manufactured_by){
 				$device_manufactured_by = '';
 			}else{
 				$device_manufactured_by = $row->device->manufactured_by;
 			}
-			if(!isset($row->device->serial_number)){
+			if(!$row->device->serial_number){
 				$device_serial_number = '';
 			}else{
 				$device_serial_number = $row->device->serial_number;
 			}
-			if(!isset($row->device->model)){
+			if(!$row->device->model){
 				$device_model = '';
 			}else{
 				$device_model = $row->device->model;
 			}
-			if(!isset($row->device->test_reference)){
+			if(!$row->device->test_reference){
 				$device_test_reference = '';
 			}else{
 				$device_test_reference = $row->device->test_reference;
@@ -1615,7 +1615,7 @@ class ExaminationController extends Controller
 
 			$notification_id = $notificationService->make($data);
 			$data['id'] = $notification_id;
-			// event(new Notification($data));
+			// event(new Notification($data)); *-
 
             Session::flash(self::MESSAGE, 'Examination successfully updated');
 			$examinationService->sendEmailRevisi(
@@ -1640,10 +1640,7 @@ class ExaminationController extends Controller
 				"Revisi Data Permohonan Uji"
 			);
             return redirect(self::ADMIN_EXAMINATION_LOC.$request->input(self::ID_EXAM).'');
-        } catch(Exception $e){
-            Session::flash(self::ERROR, 'Save failed');
-            return redirect('/admin/examination/revisi/'.$request->input(self::ID_EXAM).'');
-        }
+        } catch(Exception $e){ return redirect('/admin/examination/revisi/'.$request->input(self::ID_EXAM).'')->with(self::ERROR, 'Save failed'); }
     }
 	
 	public function tanggalkontrak(Request $request)
@@ -1725,10 +1722,7 @@ class ExaminationController extends Controller
 
 				Session::flash(self::MESSAGE, 'Examination successfully deleted');
 				return redirect(self::ADMIN_EXAMINATION);
-			}catch (Exception $e){
-				Session::flash(self::ERROR, 'Delete failed');
-				return redirect(self::ADMIN_EXAMINATION);
-			}
+			}catch (Exception $e){ return redirect(self::ADMIN_EXAMINATION)->with(self::ERROR, 'Delete failed'); }
 		}
 	}
 	
@@ -1774,10 +1768,7 @@ class ExaminationController extends Controller
 					
 					Session::flash(self::MESSAGE, 'Function Test successfully reset');
 					return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
-				}catch (Exception $e){
-					Session::flash(self::ERROR, 'Reset failed');
-					return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
-				}
+				}catch (Exception $e){ return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC)->with(self::ERROR, 'Reset failed'); }
 			}
 		}
 	}

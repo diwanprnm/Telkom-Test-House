@@ -15,6 +15,78 @@ class ExaminationControllerTest extends TestCase
 {
     public function testIndex()
 	{
+        $device = factory(App\Device::class)->create([
+            'name' => '',
+            'mark' => '',
+            'capacity' => '',
+            'manufactured_by' => '',
+            'serial_number' => '',
+            'model' => '',
+            'test_reference' => '',
+            'valid_from' => null,
+            'valid_thru' => null,
+        ]);
+
+        $company = factory(App\Company::class)->create([
+            'name' => '',
+            'address' => '',
+            'city' => null,
+            'email' => '',
+            'postal_code' => null,
+            'phone_number' => null,
+            'fax' => null,
+            'npwp_number' => null,
+            'siup_number' => null,
+            'siup_date' => null, 
+            'qs_certificate_number' => null,
+            'qs_certificate_date' => null,
+        ]);
+
+        $user = factory(App\User::class)->create([
+                'role_id' =>2,
+                'company_id' => $company->id,
+                'name' => '',
+                'address' => null,
+                'phone_number' => null,
+                'fax' => null,
+        ]);
+
+        $examinationType = factory(App\ExaminationType::class)->create([
+            'name' => '',
+            'description' => null,
+        ]);
+
+        factory(App\Examination::class)->create([
+            'registration_status' => '-1',
+            'function_status' => '-1',
+            'contract_status' => '-1',
+            'spb_status' => '-1',
+            'payment_status' => '-1',
+            'spk_status' => '-1',
+            'examination_status'  => '-1',
+            'resume_status' => '1',
+            'qa_status'  => '1',
+            'certificate_status'  => '1',
+        ]);
+
+        factory(App\Examination::class)->create([
+            'examination_type_id' => $examinationType->id,
+            'company_id' => $company->id,
+            'device_id' => $device->id,
+            'created_by' => $user->id,
+            'registration_status' => '0',
+            'function_status' => '0',
+            'contract_status' => '0',
+            'spb_status' => '0',
+            'payment_status' => '0',
+            'spk_status' => '0',
+            'examination_status'  => '0',
+            'resume_status' => '0',
+            'qa_status'  => '0',
+            'certificate_status'  => '0',
+            'spk_date' => '',
+        ]);
+        
 		$response = $this->actingAs(User::find('1'))->call('GET', 'admin/examination?search=&type=1&status=1&after_date=2020-09-01&before_date=2020-09-01');  
 		$this->assertEquals(200, $response->status());
     }
@@ -181,7 +253,7 @@ class ExaminationControllerTest extends TestCase
 
 
     public function testExcelWithFilter()
-    { 
+    {       
         // create response
         $response = $this->actingAs(User::find('1'))->call('get',"/examination/excel");
         //assert response
@@ -227,7 +299,8 @@ class ExaminationControllerTest extends TestCase
             'exam_created' =>$user->id,
             'exam_type' =>1,
             'exam_desc' =>str_random(10),
-            'id_exam' =>$examination->id 
+            'id_exam' =>$examination->id,
+            'cmb-ref-perangkat' => str_random(10)
         ]);
         $this->assertEquals(302, $response->status());
     }
