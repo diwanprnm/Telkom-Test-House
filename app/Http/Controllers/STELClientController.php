@@ -59,9 +59,7 @@ class STELClientController extends Controller
         if ($request->has('type')){
             $type = $request->get('type');
             if($request->input('type') != 'all'){
-                $query->whereHas('examinationLab', function ($q) use ($type){
-                    return $q->where('id', $type);
-                });
+                $query->where('type', $type); 
             }
         }
         

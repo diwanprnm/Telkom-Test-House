@@ -100,7 +100,7 @@ class QuestionprivController extends Controller
 
 		$questionpriv = Questionpriv::where(self::USER_ID,'=',$request->input(self::USER_ID))->get();
 
-		if(!count($questionpriv) && count($request->input(self::CHECK_PRIVILEGE)) )
+		if(!count((array)$questionpriv) && count((array)$request->input(self::CHECK_PRIVILEGE)) )
 		{
 			$currentUser = Auth::user();
 			for($i=0;$i<count($request->input(self::CHECK_PRIVILEGE));$i++){
