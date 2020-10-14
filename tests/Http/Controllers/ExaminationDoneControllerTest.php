@@ -68,7 +68,7 @@ class ExaminationDoneControllerTest extends TestCase
     public function testCetakComplaint()
     {
         $examination = factory(App\Examination::class)->create();
-        $this->actingAs(User::find(1))->call('GET',"cetakKepuasanKonsumen/$examination->id");
+        $this->actingAs(User::find(1))->call('GET',"cetakComplaint/$examination->id");
         $this->assertResponseStatus(200);
     }
 }

@@ -25,7 +25,7 @@ class UsereksControllerTest extends TestCase
 	public function test_visit_usereks_with_search()
 	{ 
 		$admin = User::find('1');
-	   	$response =  $this->actingAs($admin)->call('GET', 'admin/usereks?search=cari&is_active=1');  
+	   	$response =  $this->actingAs($admin)->call('GET', 'admin/usereks?search=cari&is_active=1&company=perusahaan');  
        	$this->assertEquals(200, $response->status());
 	}
 

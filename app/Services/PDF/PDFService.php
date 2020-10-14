@@ -86,6 +86,7 @@ class PDFService
 
 	public function cetakSPB($data)
 	{
+		//dipanggil dari routes
 		$cetakSPB = new CetakSPB();
 		$cetakSPB->makePDF($data, new PDFMCTables());
 	}
@@ -93,6 +94,7 @@ class PDFService
 
 	public function cetakKontrak($data)
 	{
+		//dipanggil dari routes
 		$cetakKontrak = new CetakKontrak();
 		$cetakKontrak->makePDF($data, new PDFMCTable());
 	}
@@ -100,6 +102,7 @@ class PDFService
 
 	public function cetakSTEL($data)
 	{
+		//dipanggil dari routes
 		$cetakSTEL = new CetakSTEL();
 		$cetakSTEL->makePDF($data, new WatermarkSTEL());
 	}
@@ -107,6 +110,7 @@ class PDFService
 
 	public function cetakPermohonan($data)
 	{
+		//dipanggil dari routes
 		$cetakPermohonan = new CetakPermohonan();
 		$cetakPermohonan->makePDF($data, new PDFMCTablePermohonan());
 	}

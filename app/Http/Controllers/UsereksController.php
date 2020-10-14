@@ -46,6 +46,7 @@ class UsereksController extends Controller
     private const PICTURE = 'picture'; 
     private const MEDIA_USER = '/user/'; 
     private const FAILED_LOG_MSG = 'Save failed';  
+    private const OLD_DATA = 'old_data';  
     /**
      * Create a new controller instance.
      *
@@ -65,61 +66,61 @@ class UsereksController extends Controller
     {
         $currentUser = Auth::user();
 
-        if ($currentUser){
-            $message = null;
-            $paginate = 10;
-            $search = trim($request->input(self::SEARCH));
-			$filterCompanyUser = '';
-            $status = -1;
+        if (!$currentUser){ return redirect('login');}
 
-            $companies = Company::where('id','!=', 1)->get();
-            $roles = Role::where('id', 2); 
-            
-            $query = User::select(DB::raw('users.*,companies.name as company_name,roles.name as role_name'))
-                    ->where(self::ROLE_ID, '=', '2')
-                    ->where('users.id', '<>', '1')
-                    ->where('users.is_deleted', '=', '0')
-                    ->join("roles", "roles.id", '=', "users.role_id")
-                    ->join("companies", "companies.id", '=', "users.company_id");
+        $message = null;
+        $paginate = 10;
+        $search = trim($request->input(self::SEARCH));
+        $filterCompanyUser = '';
+        $status = -1;
 
-            if ($search != null){
-                $query->where('users.name','like','%'.$search.'%');
+        $companies = Company::where('id','!=', 1)->get();
+        $roles = Role::where('id', 2); 
+        
+        $query = User::select(DB::raw('users.*,companies.name as company_name,roles.name as role_name'))
+                ->where(self::ROLE_ID, '=', '2')
+                ->where('users.id', '<>', '1')
+                ->where('users.is_deleted', '=', '0')
+                ->join("roles", "roles.id", '=', "users.role_id")
+                ->join("companies", "companies.id", '=', "users.company_id");
 
-                $logService = new LogService();
-                $logService->createLog('Search User', self::USER_EKSTERNAL, json_encode(array("search"=>$search)));     
-            }
+        if ($search != null){
+            $query->where('users.name','like','%'.$search.'%');
 
-
-					
-            if ($request->has(self::COMPANY)){
-                $filterCompanyUser = $request->get(self::COMPANY);
-                if($request->input(self::COMPANY) != 'all'){
-                    $query->where('companies.name',$filterCompanyUser);
-                }
-            }
-
-            if ($request->has(self::IS_ACTIVE)){
-                $status = $request->get(self::IS_ACTIVE);
-                if ($request->get(self::IS_ACTIVE) > -1){
-                    $query->where("users.is_active", $request->get(self::IS_ACTIVE));
-                }
-            }
-
-            $usersEks = $query->orderBy('name')->paginate($paginate);
-
-            if (count($usersEks) == 0){
-                $message = 'Data not found';
-            }
-            
-            return view('admin.usereks.index')
-                ->with(self::MESSAGE, $message)
-                ->with('data', $usersEks)
-                ->with(self::COMPANY, $companies)
-                ->with('role', $roles)
-                ->with(self::SEARCH, $search)
-				->with('filterCompany', $filterCompanyUser)
-                ->with('status', $status);
+            $logService = new LogService();
+            $logService->createLog('Search User', self::USER_EKSTERNAL, json_encode(array("search"=>$search)));     
         }
+                
+        if ($request->has(self::COMPANY)){
+            $filterCompanyUser = $request->get(self::COMPANY);
+            if($request->input(self::COMPANY) != 'all'){
+                $query->where('companies.name',$filterCompanyUser);
+            }
+        }
+
+        if ($request->has(self::IS_ACTIVE)){
+            $status = $request->get(self::IS_ACTIVE);
+            if ($request->get(self::IS_ACTIVE) > -1){
+                $query->where("users.is_active", $request->get(self::IS_ACTIVE));
+            }
+        }
+
+        $usersEks = $query->orderBy('name')->paginate($paginate);
+
+        if (count($usersEks) == 0){
+            $message = 'Data not found';
+        }
+        
+        return view('admin.usereks.index')
+            ->with(self::MESSAGE, $message)
+            ->with('data', $usersEks)
+            ->with(self::COMPANY, $companies)
+            ->with('role', $roles)
+            ->with(self::SEARCH, $search)
+            ->with('filterCompany', $filterCompanyUser)
+            ->with('status', $status)
+        ;
+        
     }
 
     /**
@@ -140,6 +141,7 @@ class UsereksController extends Controller
     public function store(Request $request)
     {
         $currentUser = Auth::user(); 
+        $fileService = new FileService();
         
         $usersEks = new User;
         $usersEks->id = Uuid::uuid4();
@@ -154,9 +156,7 @@ class UsereksController extends Controller
         $usersEks->fax = $request->input('fax');
 
         if ($request->hasFile(self::PICTURE)) { 
-            $fileService = new FileService();
             $fileService->uploadFile($request->file(self::PICTURE), '', self::MEDIA_USER.$usersEks->id);
-
         }
         $usersEks->created_by = $currentUser->id;
         $usersEks->updated_by = $currentUser->id;
@@ -170,9 +170,7 @@ class UsereksController extends Controller
 
             Session::flash(self::MESSAGE, 'User successfully created');
             return redirect(self::ADMIN_USEREKS);
-        } catch(\Exception $e){ 
-            Session::flash(self::ERROR, self::FAILED_LOG_MSG);
-            return redirect(self::ADMIN_USEREKS_CREATE)->withInput();
+        } catch(\Exception $e){ return redirect(self::ADMIN_USEREKS_CREATE)->withInput()->with(self::ERROR, self::FAILED_LOG_MSG);
         }
     }
 
@@ -220,7 +218,7 @@ class UsereksController extends Controller
     public function update(Request $request, $id)
     {
         $currentUser = Auth::user(); 
-
+        $fileService = new FileService();
         $usersEks = User::find($id); 
 
         if ($request->has(self::ROLE_ID)){
@@ -252,7 +250,6 @@ class UsereksController extends Controller
             $usersEks->fax = $request->input('fax');
         }
         if ($request->hasFile(self::PICTURE)) { 
-            $fileService = new FileService();
             $fileService->uploadFile($request->file(self::PICTURE), '', self::MEDIA_USER.$usersEks->id);
         }
         $usersEks->updated_by = $currentUser->id;
@@ -263,9 +260,7 @@ class UsereksController extends Controller
 
             Session::flash(self::MESSAGE, 'User successfully updated');
             return redirect(self::ADMIN_USEREKS);
-        } catch(Exception $e){
-            Session::flash(self::ERROR, self::FAILED_LOG_MSG);
-            return redirect(self::ADMIN_USEREKS.'/'.$usersEks->id.'edit');
+        } catch(Exception $e){ return redirect(self::ADMIN_USEREKS.'/'.$usersEks->id.'edit')->with(self::ERROR, self::FAILED_LOG_MSG);
         }
     }
 
@@ -278,19 +273,17 @@ class UsereksController extends Controller
     public function destroy($id)
     {
 		$usersEks = User::find($id);
-         $oldData = $usersEks;
         if ($usersEks){
+            $oldData = $usersEks;
             try{
                 $usersEks->delete();
 
                 $logService = new LogService();
-                // $logService->createLog("Delete User",self::USER_EKSTERNAL,$oldData);
+                $logService->createLog("Delete User",self::USER_EKSTERNAL, $oldData->id );
 
                 Session::flash(self::MESSAGE, 'User successfully deleted');
                 return redirect(self::ADMIN_USEREKS);
-            }catch (Exception $e){
-                Session::flash(self::ERROR, 'Delete failed');
-                return redirect(self::ADMIN_USEREKS);
+            }catch (Exception $e){ return redirect(self::ADMIN_USEREKS)->with(self::ERROR, 'Delete failed');
             }
         }
     }
@@ -299,23 +292,23 @@ class UsereksController extends Controller
     {
 		$currentUser = Auth::user();
         $usersEks = User::find($id);
+        
+        if (!$usersEks){ return redirect(self::ADMIN_USEREKS)->with(self::ERROR, 'Data not found'); }
+
         $oldData = $usersEks;
-        if ($usersEks){
-            try{
-				$usersEks->is_deleted = 1;
-				$usersEks->deleted_by = $currentUser->id;
-				$usersEks->deleted_at = ''.date('Y-m-d H:i:s').'';
-                $usersEks->save();
+        try{
+            $usersEks->is_deleted = 1;
+            $usersEks->deleted_by = $currentUser->id;
+            $usersEks->deleted_at = ''.date('Y-m-d H:i:s').'';
+            $usersEks->save();
 
-                $logService = new LogService();
-                // $logService->createLog("Delete User",self::USER_EKSTERNAL,$oldData);
+            $logService = new LogService();
+            $logService->createLog( "Delete User",self::USER_EKSTERNAL, $oldData->id );
 
-                Session::flash(self::MESSAGE, 'User successfully deleted');
-                return redirect(self::ADMIN_USEREKS);
-            }catch (Exception $e){
-                Session::flash(self::ERROR, 'Delete failed');
-                return redirect(self::ADMIN_USEREKS);
-            }
+            Session::flash(self::MESSAGE, 'User successfully deleted');
+            return redirect(self::ADMIN_USEREKS);
+        }catch (Exception $e){ return redirect(self::ADMIN_USEREKS)->with(self::ERROR, 'Delete failed');
         }
+        
     }
 }
