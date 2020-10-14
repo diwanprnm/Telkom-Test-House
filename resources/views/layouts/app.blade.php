@@ -177,7 +177,7 @@
                        <li class="dropdown notification">
                           <a href class="dropdown-toggle" data-toggle="dropdown">
                                 <span class="dot-badge partition-red notification-count">@php echo $notification_count;@endphp</span> 
-                                <em class="ti-comment"></em> 
+                                <i class="ti-comment"></i> 
                                 <span translate="topbar.messages.MAIN" class="ng-scope ">Notification</span>
                             </a>
                             <ul class="dropdown-menu dropdown-light dropdown-messages dropdown-large"> 
