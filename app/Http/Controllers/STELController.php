@@ -96,10 +96,8 @@ class STELController extends Controller
         
         if ($request->has(self::CATEGORY)){
             $category = $request->get(self::CATEGORY);
-            if($request->input(self::CATEGORY) != 'all'){
-                $query->whereHas(self::EXAMINATION_LAB, function ($q) use ($category){
-                    return $q->where('id', $category);
-                });
+            if($request->input(self::CATEGORY) != 'all'){ 
+                 $query->where('type', $request->input(self::CATEGORY));
             }
         }
 
@@ -371,10 +369,8 @@ class STELController extends Controller
 
             if ($request->has(self::CATEGORY)){
                 $category = $request->get(self::CATEGORY);
-                if($request->input(self::CATEGORY) != 'all'){
-                    $query->whereHas(self::EXAMINATION_LAB, function ($q) use ($category){
-                        return $q->where('id', $category);
-                    });
+                if($request->input(self::CATEGORY) != 'all'){ 
+                    $query->where('type', $request->input(self::CATEGORY));
                 }
             }
 
@@ -385,8 +381,7 @@ class STELController extends Controller
             $stels = $query->orderBy('name');
         }
 
-        $data = $stels->get();
-
+        $data = $stels->get(); 
         $examsArray = []; 
 
         // Define the Excel spreadsheet headers
@@ -406,7 +401,7 @@ class STELController extends Controller
         // and append it to the payments array.
         foreach ($data as $row) {
             $examsArray[] = [
-                $row->id,
+                (string)$row->id,
                 $row->code,
                 $row->name,
                 @$row->examinationLab->name,

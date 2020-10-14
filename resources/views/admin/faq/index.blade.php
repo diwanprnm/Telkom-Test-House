@@ -154,16 +154,7 @@
 				};
 				document.location.href = baseUrl+'/admin/faq?'+jQuery.param(params);
 	        }
-	    });
-
-	    document.getElementById("filter").onclick = function() {
-            var baseUrl = "{{URL::to('/')}}";
-            var params = {};
-			var search_value = document.getElementById("search_value").value;
-          	
-          	params['search'] = search_value;
-			document.location.href = baseUrl+'/admin/faq?'+jQuery.param(params);
-	    };
+	    }); 
 	});
 </script>
 @endsection

@@ -262,7 +262,7 @@ class LogController extends Controller
             foreach ($data as $row) {
                 $no ++;
                 $examsArray[] = [
-                    $no,
+                    (string)$no,
                     $row->name,
                     $row->action,
                     $row->page,

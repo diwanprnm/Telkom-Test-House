@@ -133,7 +133,7 @@ uncomment this part if you haven't added this code anywhere else
 			<div class="swiper-wrapper">
 			
 				@foreach($data_slideshow as $item)
-				<div class="swiper-slide dark" data-timeout="{{ $item->timeout*1000 }}" style="background-image: url('media/slideshow/@php echo $item->image @endphp');">
+				<div class="swiper-slide dark" data-timeout="{{ $item->timeout*1000 }}" style="background-image: url(<?php echo \Storage::disk('minio')->url('slideshow/'.$item->image); ?>);">
 					<div class="container clearfix"> 
 					</div>
 				</div>
@@ -211,13 +211,13 @@ uncomment this part if you haven't added this code anywhere else
 				@if ($count_partners > 5)
 					<ul class="clients-grid grid-6 nobottommargin clearfix">
 						@foreach($partners as $item)
-							<li><a href="#"><img src="{{asset('media/footer/'.$item->image)}}" alt="partners"></a></li>
+							<li><a href="#"><img src="{{ \Storage::disk('minio')->url('footer/'.$item->image) }}" alt="partners"></a></li>
 						@endforeach
 					</ul>
 				@else
 					<ul class="clients-grid grid-{{$count_partners}} nobottommargin clearfix">
 						@foreach($partners as $item)
-							<li><a href="#"><img src="{{asset('media/footer/'.$item->image)}}" alt="partners"></a></li>
+							<li><a href="#"><img src="{{ \Storage::disk('minio')->url('footer/'.$item->image) }}" alt="partners"></a></li>
 						@endforeach
 					</ul>
 				@endif
@@ -234,8 +234,8 @@ uncomment this part if you haven't added this code anywhere else
 
 	</section><!-- #content end -->
 	@if($data_pop_up_information)
-		<a class="image-popup-no-margins" href="media/popupinformation/@php echo $data_pop_up_information[0]->image  @endphp" style = "display: none;">
-			<img src="media/popupinformation/@php echo $data_pop_up_information[0]->image @endphp" style="width: 100%; height: auto;" alt="pop-up information">
+		<a class="image-popup-no-margins" href="{{ \Storage::disk('minio')->url('popupinformation/'.$data_pop_up_information[0]->image) }}" style = "display: none;">
+			<img src="{{ \Storage::disk('minio')->url('popupinformation/'.$data_pop_up_information[0]->image) }}" style="width: 100%; height: auto;" alt="pop-up information">
 		</a>
 	@endif
 @endsection
