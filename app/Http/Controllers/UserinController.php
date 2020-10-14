@@ -183,34 +183,34 @@ class UserinController extends Controller
         $roles = $request->input('examinations');
         $hide_admin_role = $request->input('hide_admin_role');
         
-        $user = new User;
-        $user->id = Uuid::uuid4();
-        $user->role_id = $request->input(self::ROLE_ID);
-        $user->company_id = $request->input(self::COMPANY_ID);
-        $user->name = $request->input('name');
-        $user->email = $request->input(self::EMAIL);
-        $user->password = bcrypt($request->input(self::PASS_TEXT));
-        $user->is_active = $request->input(self::IS_ACTIVE);
-        $user->address = $request->input(self::ADDRESS);
-        $user->phone_number = $request->input(self::PHONE_NUMBER);
-        $user->fax = $request->input('fax'); 
+        $userIn = new User;
+        $userIn->id = Uuid::uuid4();
+        $userIn->role_id = $request->input(self::ROLE_ID);
+        $userIn->company_id = $request->input(self::COMPANY_ID);
+        $userIn->name = $request->input('name');
+        $userIn->email = $request->input(self::EMAIL);
+        $userIn->password = bcrypt($request->input(self::PASS_TEXT));
+        $userIn->is_active = $request->input(self::IS_ACTIVE);
+        $userIn->address = $request->input(self::ADDRESS);
+        $userIn->phone_number = $request->input(self::PHONE_NUMBER);
+        $userIn->fax = $request->input('fax'); 
 
 
-        $this->uploadPictureUserin($request,$user); 
+        $this->uploadPictureUserin($request,$userIn); 
 
-        $user->created_by = $currentUser->id;
-        $user->updated_by = $currentUser->id;
+        $userIn->created_by = $currentUser->id;
+        $userIn->updated_by = $currentUser->id;
 
         try{
-            $user->save();
+            $userIn->save();
             
             $logService = new LogService();
-            $logService->createLog('Create User', self::USER_INTERNAL, $user);
+            $logService->createLog('Create User', self::USER_INTERNAL, $userIn);
 
             try{
                 foreach ($menus as $value) {
                     $usersmenus = new UsersMenus;
-                    $usersmenus->user_id =  $user->id; 
+                    $usersmenus->user_id =  $userIn->id; 
                     $usersmenus->menu_id = $value; 
                     $usersmenus->created_by = $currentUser->id;
                     try{
@@ -223,9 +223,9 @@ class UserinController extends Controller
 
                 if($hide_admin_role && $roles){
                     $usersroles = new AdminRole;
-                    $usersroles->user_id =  $user->id; 
-                    $usersroles->user_name =  $user->name; 
-                    $usersroles->user_email =  $user->email; 
+                    $usersroles->user_id =  $userIn->id; 
+                    $usersroles->user_name =  $userIn->name; 
+                    $usersroles->user_email =  $userIn->email; 
                     foreach ($roles as $value) {
                         $usersroles->$value = 1; 
                     }

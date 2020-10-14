@@ -412,7 +412,7 @@ class ProfileController extends Controller
 			}
 			if ($request->hasFile(self::COMP_QS_CERTIFICATE_FILE)) { 
 				$fileService = new FileService();  
-	            $file = $fileService->uploadFile($request->file(self::COMP_QS_CERTIFICATE_FILE), 'serti_uji_mutu_', "/".self::COMPANY_PATH.$company->id."/");  
+	            $file = $fileService->uploadFile($request->file(self::COMP_QS_CERTIFICATE_FILE), 'serti_uji_mutu_', "/".self::MEDIA_COMPANY.$company->id."/");  
 	            $company->qs_certificate_file = $file ? $file : '';
 			}
 			

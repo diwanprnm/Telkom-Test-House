@@ -38,7 +38,7 @@ class ProductsControllerTest extends TestCase
     public function test_payment_status()
 	{ 
 	   $user = User::find(1);
-	   $response =  $this->actingAs($user)->call('GET', '/payment_status');  
+	   $response =  $this->actingAs($user)->call('GET', '/payment_status?search=cari');  
 	    
        $this->assertEquals(200, $response->status());
 	} 
@@ -118,8 +118,24 @@ class ProductsControllerTest extends TestCase
 	        'province' => str_random(2), 
 	        'postal_code' => str_random(2), 
 	        'birthdate' => str_random(2) 
-	    ]);   
-		// dd($response->getContent());
+	    ]);
+		$this->assertEquals(302, $response->status());
+		$response =  $this->actingAs($user)->call('POST', '/doCheckout', 
+		[ 
+	        'payment_method' => 'ak||001||cc||1', 
+	        'name' => str_random(10), 
+	        'exp' => str_random(10), 
+	        'cvv' => str_random(10), 
+	        'cvc' => str_random(10), 
+	        'type' => str_random(10), 
+	        'no_card' => str_random(10), 
+	        'no_telp' => str_random(10), 
+	        'email' => str_random(10), 
+	        'country' => str_random(2), 
+	        'province' => str_random(2), 
+	        'postal_code' => str_random(2), 
+	        'birthdate' => str_random(2) 
+	    ]);
         $this->assertEquals(302, $response->status());  
 	}
 

@@ -302,7 +302,7 @@ class HomeController extends Controller
 				$notificationService = new NotificationService();
 				$data['id'] = $notificationService->make($data);
 
-				event(new Notification($data));
+				// event(new Notification($data));
 		  	}
 			$data =  array();
 
