@@ -26,6 +26,7 @@ services:
       - 4001:8080
     depends_on:
       - mysql_tth
+      - redis
     expose:
       - "8080"
 
