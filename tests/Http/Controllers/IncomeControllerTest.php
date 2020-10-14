@@ -105,24 +105,6 @@ class IncomeControllerTest extends TestCase
         $this->assertRedirectedTo('admin/kuitansi', ['message' => 'Kuitansi successfully created']);
     }
 
-    public function testcetakKuitansi()
-    {
-        /*
-         * Bisa dicek lewat  /cetakKuitansi/{id}
-         * Error = Class 'PDF_MC_Table_Kuitansi' not found
-         * kalau sudah tidak error, bisa coba codingan ini di uncomment
-         * 
-            //get data
-            $admin = User::find(1);
-            //create request
-            $admin = User::where('id', '=', '1')->first();
-            dd($this->actingAs($admin)->call('GET',"/cetakKuitansi/$kuitansi->id"));
-            //check response
-            $this->assertResponseStatus(200);
-        */
-        $this->assertTrue(true);
-    }
-
     public function testStoreWithAlreadyExistNumber()
     {
         //create request
@@ -154,18 +136,6 @@ class IncomeControllerTest extends TestCase
         App\Kuitansi::truncate();
     }
 
-    public function testKuitansiWithoutDataFound()
-    {
-        //Create Request
-        $admin = User::find(1);
-        $this->actingAs($admin)->call('GET','admin/kuitansi');
-
-        //Status ok, judul "KUITANSI", dan pesan Data not found
-        $this->assertResponseStatus(200)
-        ->see('<h1 class="mainTitle">KUITANSI</h1>')
-        ->see('Data not found');
-    }
-
     public function testGenerateKuitansiManual()
     {
         $admin = User::find(1);
@@ -187,6 +157,32 @@ class IncomeControllerTest extends TestCase
             ->see('002/DDS-73/'.date('Y'));
     }
 
+    public function testCetakKuitansi()
+    {
+        $kuitansi = factory(App\Kuitansi::class)->create();
+
+        $this->actingAs(User::find(1))->call('GET',"/cetakKuitansi/$kuitansi->id");
+        $this->assertResponseStatus(200);
+    }
+
+
+    public function testExcelImproveCoverage()
+    {
+        //create data
+        $income = factory(App\Income::class)->create();
+        $company = App\Company::find($income->company_id);
+
+        //visit with filter
+        $admin = User::find(1);
+        $response = $this->actingAs($admin)->call('GET',"income/excel?type=$income->examination_type_id&status=6&lab=$income->examination_lab_id&before_date=2100-01-01&after_date=2020-01-01&search=$company->name");
+        
+        //response ok, header download sesuai
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
+        $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
+        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data Pendapatan.xlsx"');
+    }
+
     public function testAutoComplete()
     {
         $admin = User::find(1);
@@ -201,6 +197,19 @@ class IncomeControllerTest extends TestCase
         App\Device::truncate();
         App\Company::where('id','!=', '1')->delete();
         App\Kuitansi::truncate();
+    }
+
+
+    public function testKuitansiWithoutDataFound()
+    {
+        //Create Request
+        $admin = User::find(1);
+        $this->actingAs($admin)->call('GET','admin/kuitansi');
+
+        //Status ok, judul "KUITANSI", dan pesan Data not found
+        $this->assertResponseStatus(200)
+        ->see('<h1 class="mainTitle">KUITANSI</h1>')
+        ->see('Data not found');
     }
 
     
