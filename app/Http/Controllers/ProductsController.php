@@ -292,35 +292,7 @@ class ProductsController extends Controller
             ;
         }
 
-        $data = [
-            "from" => [
-                "name" => "PT TELEKOMUNIKASI INDONESIA, TBK.",
-                self::ADDRESS => "Telkom Indonesia Graha Merah Putih, Jalan Japati No.1 Bandung, Jawa Barat, 40133",
-                self::PRONE => "(+62) 812-2483-7500",
-                self::EMAIL => "urelddstelkom@gmail.com",
-                "npwp" => "01.000.013.1-093.000"
-            ],
-            "to" => [
-                "name" => $currentUser->company->name ? $currentUser->company->name : "-",
-                self::ADDRESS => $currentUser->company->address ? $currentUser->company->address : "-",
-                self::PRONE => $currentUser->company->phone_number ? $currentUser->company->phone_number : "-",
-                self::EMAIL => $currentUser->email ? $currentUser->email : "-",
-                "npwp" => $currentUser->company->npwp_number ? $currentUser->company->npwp_number : "-"
-            ],
-            "product_id" => config(self::APP_DOT_PRODUCT_ID_TTH), //product_id TTH
-            "details" => $details,
-            self::CREATED => [
-                "by" => $currentUser->name,
-                self::REFERENCE_ID => $currentUser->id
-            ],
-            "include_tax_invoice" => true,
-            "bank" => [
-                "owner" => "Divisi RisTI TELKOM",
-                "account_number" => "131-0096022712",
-                "bank_name" => "BANK MANDIRI",
-                "branch_office" => "KCP KAMPUS TELKOM BANDUNG"         
-            ]
-        ];
+        $data = $this->getDataCompany();
 
         $purchase = $this->api_purchase($data);
 
@@ -691,35 +663,7 @@ class ProductsController extends Controller
             ;
         }
 
-        $data = [
-            "from" => [
-                "name" => "PT TELEKOMUNIKASI INDONESIA, TBK.",
-                self::ADDRESS => "Telkom Indonesia Graha Merah Putih, Jalan Japati No.1 Bandung, Jawa Barat, 40133",
-                self::PRONE => "(+62) 812-2483-7500",
-                self::EMAIL => "urelddstelkom@gmail.com",
-                "npwp" => "01.000.013.1-093.000"
-            ],
-            "to" => [
-                "name" => $currentUser->company->name ? $currentUser->company->name : "-",
-                self::ADDRESS => $currentUser->company->address ? $currentUser->company->address : "-",
-                self::PRONE => $currentUser->company->phone_number ? $currentUser->company->phone_number : "-",
-                self::EMAIL => $currentUser->email ? $currentUser->email : "-",
-                "npwp" => $currentUser->company->npwp_number ? $currentUser->company->npwp_number : "-"
-            ],
-            "product_id" => config(self::APP_DOT_PRODUCT_ID_TTH), //product_id TTH
-            "details" => $details,
-            self::CREATED => [
-                "by" => $currentUser->name,
-                self::REFERENCE_ID => $currentUser->id
-            ],
-            "include_tax_invoice" => true,
-            "bank" => [
-                "owner" => "Divisi RisTI TELKOM",
-                "account_number" => "131-0096022712",
-                "bank_name" => "BANK MANDIRI",
-                "branch_office" => "KCP KAMPUS TELKOM BANDUNG"         
-            ]
-        ];
+        $data = $this->getDataCompany();
 
         $purchase = $this->api_purchase($data);
 
@@ -825,6 +769,40 @@ class ProductsController extends Controller
         }else{ return redirect()->back();
         }
 
+    }
+
+    private function getDataCompany(){ 
+        $data = [
+            "from" => [
+                "name" => "PT TELEKOMUNIKASI INDONESIA, TBK.",
+                self::ADDRESS => "Telkom Indonesia Graha Merah Putih, Jalan Japati No.1 Bandung, Jawa Barat, 40133",
+                self::PRONE => "(+62) 812-2483-7500",
+                self::EMAIL => "urelddstelkom@gmail.com",
+                "npwp" => "01.000.013.1-093.000"
+            ],
+            "to" => [
+                "name" => $currentUser->company->name ? $currentUser->company->name : "-",
+                self::ADDRESS => $currentUser->company->address ? $currentUser->company->address : "-",
+                self::PRONE => $currentUser->company->phone_number ? $currentUser->company->phone_number : "-",
+                self::EMAIL => $currentUser->email ? $currentUser->email : "-",
+                "npwp" => $currentUser->company->npwp_number ? $currentUser->company->npwp_number : "-"
+            ],
+            "product_id" => config(self::APP_DOT_PRODUCT_ID_TTH), //product_id TTH
+            "details" => $details,
+            self::CREATED => [
+                "by" => $currentUser->name,
+                self::REFERENCE_ID => $currentUser->id
+            ],
+            "include_tax_invoice" => true,
+            "bank" => [
+                "owner" => "Divisi RisTI TELKOM",
+                "account_number" => "131-0096022712",
+                "bank_name" => "BANK MANDIRI",
+                "branch_office" => "KCP KAMPUS TELKOM BANDUNG"         
+            ]
+        ];
+
+        return $data;
     }
 
 
