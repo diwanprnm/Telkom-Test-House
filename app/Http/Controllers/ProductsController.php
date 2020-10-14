@@ -292,7 +292,7 @@ class ProductsController extends Controller
             ;
         }
 
-        $data = $this->getDataCompany($currentUser,$details);
+        $data = $this->getDataPurchase($currentUser,$details);
 
         $purchase = $this->api_purchase($data);
 
@@ -397,27 +397,9 @@ class ProductsController extends Controller
                     $res = explode(self::MY_TOKEN_PRODUCT, $row->name);
                     $stel_code = $res[1] ? $res[1] : '-';
                     $stel_code_string = $stel_code_string ? $stel_code_string.', '.$res[1] : $res[1];
-                }
-
-                $data = [
-                    "draft_id" => $PO_ID,
-                    self::CREATED => [
-                        "by" => $currentUser->name,
-                        self::REFERENCE_ID => $currentUser->id
-                    ],
-                    "config" => [
-                        "kode_wapu" => "01",
-                        "afiliasi" => "non-telkom",
-                        "tax_invoice_text" => $stel_code_string.'.',
-                        self::PAYMENT_METHOD => $mps_info[2] == "atm" ? "internal" : "mps",
-                    ],
-                    "mps" => [
-                        "gateway" => $mps_info[0],
-                        "product_code" => $mps_info[1],
-                        "product_type" => $mps_info[2],
-                        "manual_expired" => 20160
-                    ]
-                ];
+                } 
+                
+                $data = $this->getDataBilling($PO_ID,$currentUser,$stel_code_string,$mps_info);
 
                 $billing = $this->api_billing($data);
 
@@ -569,25 +551,7 @@ class ProductsController extends Controller
                     $stel_code_string = $stel_code_string ? $stel_code_string.', '.$row->stel->code : $row->stel->code;
                 }
 
-                $data = [
-                    "draft_id" => $PO_ID,
-                    self::CREATED => [
-                        "by" => $currentUser->name,
-                        self::REFERENCE_ID => $currentUser->id
-                    ],
-                    "config" => [
-                        "kode_wapu" => "01",
-                        "afiliasi" => "non-telkom",
-                        "tax_invoice_text" => $stel_code_string.'.',
-                        self::PAYMENT_METHOD => $mps_info[2] == "atm" ? "internal" : "mps",
-                    ],
-                    "mps" => [
-                        "gateway" => $mps_info[0],
-                        "product_code" => $mps_info[1],
-                        "product_type" => $mps_info[2],
-                        "manual_expired" => 20160
-                    ]
-                ];
+                $data = $this->getDataBilling($PO_ID,$currentUser,$stel_code_string,$mps_info);
 
                 $billing = $this->api_billing($data);
 
@@ -663,7 +627,7 @@ class ProductsController extends Controller
             ;
         }
 
-        $data = $this->getDataCompany($currentUser,$details);
+        $data = $this->getDataPurchase($currentUser,$details);
 
         $purchase = $this->api_purchase($data);
 
@@ -771,7 +735,7 @@ class ProductsController extends Controller
 
     }
 
-    private function getDataCompany($currentUser,$details){ 
+    private function getDataPurchase($currentUser,$details){ 
         $data = [
             "from" => [
                 "name" => "PT TELEKOMUNIKASI INDONESIA, TBK.",
@@ -799,6 +763,30 @@ class ProductsController extends Controller
                 "account_number" => "131-0096022712",
                 "bank_name" => "BANK MANDIRI",
                 "branch_office" => "KCP KAMPUS TELKOM BANDUNG"         
+            ]
+        ];
+
+        return $data;
+    }
+
+    private function getDataBilling($PO_ID,$currentUser,$stel_code_string,$mps_info){  
+        $data = [
+            "draft_id" => $PO_ID,
+            self::CREATED => [
+                "by" => $currentUser->name,
+                self::REFERENCE_ID => $currentUser->id
+            ],
+            "config" => [
+                "kode_wapu" => "01",
+                "afiliasi" => "non-telkom",
+                "tax_invoice_text" => $stel_code_string.'.',
+                self::PAYMENT_METHOD => $mps_info[2] == "atm" ? "internal" : "mps",
+            ],
+            "mps" => [
+                "gateway" => $mps_info[0],
+                "product_code" => $mps_info[1],
+                "product_type" => $mps_info[2],
+                "manual_expired" => 20160
             ]
         ];
 
