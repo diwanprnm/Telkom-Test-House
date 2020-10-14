@@ -28,6 +28,13 @@ class ExaminationDoneControllerTest extends TestCase
         $this->assertResponseStatus(200)->see('Detail pengujian');
     }
 
+    public function testEdit()
+    {
+        $examination = factory(App\Examination::class)->create();
+        $this->actingAs(User::find(1))->call('GET',"admin/examinationdone/$examination->id/edit");
+        $this->assertResponseStatus(200);
+    }
+
     public function testExcel()
     {
         $company = factory(App\Company::class)->create(['siup_date' => '', 'qs_certificate_date' => '',]);
@@ -47,6 +54,21 @@ class ExaminationDoneControllerTest extends TestCase
     public function testAutocomplete()
     {
         $this->actingAs(User::find(1))->call('GET','admin/adm_exam_done_autocomplete/query');
+        $this->assertResponseStatus(200);
+    }
+
+    public function testCetakKepuasanKonsumen()
+    {
+        $examination = factory(App\Examination::class)->create();
+        $this->actingAs(User::find(1))->call('GET',"cetakKepuasanKonsumen/$examination->id");
+        $this->assertResponseStatus(200);
+    }
+
+
+    public function testCetakComplaint()
+    {
+        $examination = factory(App\Examination::class)->create();
+        $this->actingAs(User::find(1))->call('GET',"cetakKepuasanKonsumen/$examination->id");
         $this->assertResponseStatus(200);
     }
 }

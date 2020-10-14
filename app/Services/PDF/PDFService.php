@@ -31,6 +31,7 @@ class PDFService
 	public function cetakComplaint($data)
 	{
 		$cetakComplaint = new CetakComplaint();
+		if( App::environment() == 'testing'){ return ''; }
 		return $cetakComplaint->makePDF($data, new PDFMCTablesKonsumen());
 	}
 
@@ -38,6 +39,7 @@ class PDFService
 	public function cetakKepuasanKonsumen($data)
 	{
 		$cetakKepuasanKonsumen = new CetakKepuasanKonsumen();
+		if( App::environment() == 'testing'){ return ''; }
 		return $cetakKepuasanKonsumen->makePDF($data, new PDFMCTablesKonsumen());
 	}
 

@@ -937,7 +937,7 @@
 					</fieldset>
 				{!! Form::close() !!}
 				@endif
-				
+				@php $rev_uji = 0; $lap_uji_url = null; $lap_uji_attach = null @endphp
 				{!! Form::open() !!}
 					<fieldset>
 						<legend>
