@@ -18,21 +18,26 @@ class STELControllerTest extends TestCase
 	public function test__visit_stel_with_search()
 	{ 
 	   $user = User::find(1);
-	   $response =  $this->actingAs($user)->call('GET', 'admin/stel?search=cari');  
+	   $response =  $this->actingAs($user)->call('GET', 'admin/stel?search=cari&category=VA&year=2020&is_active=1');  
        $this->assertEquals(200, $response->status());
 	}
     public function test_visit_create_stel()
-	{ 
- 
+	{
 	   $user = User::find(1);
 	   $response =  $this->actingAs($user)->call('GET', 'admin/stel/create');  
        $this->assertEquals(200, $response->status());
 	}
+
+	public function test_show()
+	{
+		$response =  $this->actingAs(User::find(1))->call('GET', 'admin/stel/1234');  
+		$this->assertResponseStatus(200);
+	}
+
     public function test_stores_stel()
-	{ 
- 
+	{
 	    $user = User::find(1);
-       
+  
 		$response =  $this->actingAs($user)->call('POST', 'admin/stel', 
 		[ 
 	        'code' => str_random(10), 
@@ -100,17 +105,36 @@ class STELControllerTest extends TestCase
 	} 
 
 	  public function testExcel()
-    {
-         
+    {         
         //make request
-        // $admin = User::find(1);
-        // $response = $this->actingAs($admin)->call('GET',"/stel/excel");
-
-        // //response ok, header download sesuai
-        // $this->assertResponseStatus(200);
-        // $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
-        // $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
-        // $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data STEL/STD.xlsx"');
+        $response = $this->actingAs( User::find(1))->call('GET',"/stel/excel");
+        //response ok, header download sesuai
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
+        $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
+        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data STEL-STD.xlsx"');
+	}
+	
+	public function testExcelWithFilter()
+    {         
+        //make request
+        $response = $this->actingAs( User::find(1))->call('GET',"/stel/excel?search=cari");
+        //response ok, header download sesuai
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
+        $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
+        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data STEL-STD.xlsx"');
+	}
+	
+	public function testExcelWithOtherFilter()
+    {         
+        //make request
+        $response = $this->actingAs( User::find(1))->call('GET',"/stel/excel?category=abc&is_active=1");
+        //response ok, header download sesuai
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'application/vnd.ms-excel');
+        $this->assertTrue($response->headers->get('content-description') == 'File Transfer');
+        $this->assertTrue($response->headers->get('content-disposition') == 'attachment; filename="Data STEL-STD.xlsx"');
     }
 
      public function testViewMedia()

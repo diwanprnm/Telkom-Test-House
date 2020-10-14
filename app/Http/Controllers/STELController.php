@@ -68,70 +68,71 @@ class STELController extends Controller
     {
         $currentUser = Auth::user();
 
-        if ($currentUser){
-            $message = null;
-            $paginate = 10;
-            $search = trim($request->input(self::SEARCH));
-            $category = '';
-            $year = '';
-            $status = -1;
+        if (!$currentUser){ return redirect('login');}
 
-            $examLab = ExaminationLab::all();
-            
-            $query = STEL::whereNotNull(self::CREATED_AT)->with(self::EXAMINATION_LAB);
+        $message = null;
+        $paginate = 10;
+        $search = trim($request->input(self::SEARCH));
+        $category = '';
+        $year = '';
+        $status = -1;
 
-            $tahun = STEL::whereNotNull(self::CREATED_AT)->with(self::EXAMINATION_LAB)->select('year')->orderBy('year','desc')->distinct()->get();
+        $examLab = ExaminationLab::all();
+        
+        $query = STEL::whereNotNull(self::CREATED_AT)->with(self::EXAMINATION_LAB);
 
-            if ($search != null){
-                $query->where(function($qry) use($search){
-                    $qry->where('name', 'like', '%'.strtolower($search).'%')
-                    ->orWhere('code', 'like', '%'.strtolower($search).'%');
-                });
+        $tahun = STEL::whereNotNull(self::CREATED_AT)->with(self::EXAMINATION_LAB)->select('year')->orderBy('year','desc')->distinct()->get();
 
-                $logService = new LogService();
-                $logService->createLog('Search STEL', "STEL", json_encode(array(self::SEARCH=>$search)) );
+        if ($search != null){
+            $query->where(function($qry) use($search){
+                $qry->where('name', 'like', '%'.strtolower($search).'%')
+                ->orWhere('code', 'like', '%'.strtolower($search).'%');
+            });
 
-            }
-            
-            if ($request->has(self::CATEGORY)){
-                $category = $request->get(self::CATEGORY);
-				if($request->input(self::CATEGORY) != 'all'){
-					$query->whereHas(self::EXAMINATION_LAB, function ($q) use ($category){
-                        return $q->where('id', $category);
-                    });
-				}
-            }
+            $logService = new LogService();
+            $logService->createLog('Search STEL', "STEL", json_encode(array(self::SEARCH=>$search)) );
 
-            if ($request->has('year') && $request->input('year') != 'all'){ 
-                $year = $request->get('year');
-                $query->where('year', $request->get('year'));
-            
-            }
-
-            if ($request->has(self::IS_ACTIVE)){
-                $status = $request->get(self::IS_ACTIVE);
-                if ($request->get(self::IS_ACTIVE) > -1){
-					$query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
-                }
-            }
-                
-            $stels = $query->orderBy('name')->paginate($paginate);
-            
-            if (count($stels) == 0){
-                $message = 'Data not found';
-            }
-
-            
-            return view('admin.STEL.index')
-                ->with(self::EXAM_LAB, $examLab)
-                ->with(self::MESSAGE, $message)
-                ->with('data', $stels)
-                ->with(self::SEARCH, $search)
-                ->with(self::CATEGORY, $category)
-                ->with('tahun', $tahun)
-                ->with('year', $year)
-                ->with('status', $status);
         }
+        
+        if ($request->has(self::CATEGORY)){
+            $category = $request->get(self::CATEGORY);
+            if($request->input(self::CATEGORY) != 'all'){
+                $query->whereHas(self::EXAMINATION_LAB, function ($q) use ($category){
+                    return $q->where('id', $category);
+                });
+            }
+        }
+
+        if ($request->has('year') && $request->input('year') != 'all'){ 
+            $year = $request->get('year');
+            $query->where('year', $request->get('year'));
+        
+        }
+
+        if ($request->has(self::IS_ACTIVE)){
+            $status = $request->get(self::IS_ACTIVE);
+            if ($request->get(self::IS_ACTIVE) > -1){
+                $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
+            }
+        }
+            
+        $stels = $query->orderBy('name')->paginate($paginate);
+        
+        if (count($stels) == 0){
+            $message = 'Data not found';
+        }
+
+        
+        return view('admin.STEL.index')
+            ->with(self::EXAM_LAB, $examLab)
+            ->with(self::MESSAGE, $message)
+            ->with('data', $stels)
+            ->with(self::SEARCH, $search)
+            ->with(self::CATEGORY, $category)
+            ->with('tahun', $tahun)
+            ->with('year', $year)
+            ->with('status', $status)
+        ;
     }
 
     /**
@@ -191,11 +192,7 @@ class STELController extends Controller
                 
                 Session::flash(self::MESSAGE, 'STEL successfully created');
                 $return_page =  redirect(self::ADMIN_STEL);
-            } catch(Exception $e){
-
-                die();
-                Session::flash(self::ERROR, 'Save failed');
-                $return_page =  redirect(self::ADMIN_CREATE);
+            } catch(Exception $e){ $return_page =  redirect(self::ADMIN_CREATE)->with(self::ERROR, 'Save failed');
             }
         } 
         return $return_page;
@@ -209,7 +206,7 @@ class STELController extends Controller
      */
     public function show($id)
     {
-        
+        //code goes here
     }
 
     /**
@@ -289,13 +286,9 @@ class STELController extends Controller
 
                 Session::flash(self::MESSAGE, 'STEL successfully updated');
                 return redirect(self::ADMIN_STEL);
-            } catch(Exception $e){
-                Session::flash(self::ERROR, 'Save failed');
-                return redirect('/admin/stel/'.$stel->id.'/edit');
+            } catch(Exception $e){ return redirect('/admin/stel/'.$stel->id.'/edit')->with(self::ERROR, 'Save failed');
             }
-        }else{
-            Session::flash(self::ERROR, 'STEL not Found');
-            return redirect(self::ADMIN_STEL);
+        }else{ return redirect(self::ADMIN_STEL)->with(self::ERROR, 'STEL not Found');
         }
         
     }
@@ -310,22 +303,17 @@ class STELController extends Controller
     {
         $logService = new LogService();
         $stel = STEL::find($id);
-        if(!empty($stel)){ 
-            $oldStel = $stel; 
-            try{
-                $stel->delete();
+        if(empty($stel)){ return redirect(self::ADMIN_STEL)->with(self::ERROR, 'Delete failed, STEL Not Found'); }
 
-                $logService->createLog('Delete STEL', "STEL", $oldStel );
+        $oldStel = $stel; 
+        try{
+            $stel->delete();
 
-                Session::flash(self::MESSAGE, 'STEL successfully deleted');
-                return redirect(self::ADMIN_STEL);
-            }catch (Exception $e){
-                Session::flash(self::ERROR, 'Delete failed');
-                return redirect(self::ADMIN_STEL);
-            }
-        }else{
-            Session::flash(self::ERROR, 'Delete failed, STEL Not Found');
+            $logService->createLog('Delete STEL', "STEL", $oldStel );
+
+            Session::flash(self::MESSAGE, 'STEL successfully deleted');
             return redirect(self::ADMIN_STEL);
+        }catch (Exception $e){ return redirect(self::ADMIN_STEL)->with(self::ERROR, 'Delete failed');
         }
     }
 
@@ -333,15 +321,15 @@ class STELController extends Controller
     {
         $stel = STEL::find($id);
 
-        if ($stel){  
-            $file = Storage::disk("minio")->url(self::STEL_URL.$stel->attachment);
-                     
-            $filename = $stel->attachment;
-            $tempImage = tempnam(sys_get_temp_dir(), $filename);
-            copy($file, $tempImage);
+        if (!$stel){   return redirect(self::ADMIN_STEL)->with(self::ERROR, 'STEL Not Found'); }
 
-            return response()->download($tempImage, $filename); 
-        }
+        $file = Storage::disk("minio")->url(self::STEL_URL.$stel->attachment);
+                    
+        $filename = $stel->attachment;
+        $tempImage = tempnam(sys_get_temp_dir(), $filename);
+        copy($file, $tempImage);
+
+        return response()->download($tempImage, $filename); 
     }
 	
     function cekNamaSTEL($name)
@@ -432,9 +420,9 @@ class STELController extends Controller
         $currentUser = Auth::user(); 
 
         $logService = new LogService();  
-        $logService->createLog('download_excel',"STEL/STD",array());
+        $logService->createLog('download_excel',"STEL/STD","");
  
-        $excel = \App\Services\ExcelService::download($examsArray, 'Data STEL/STD');
+        $excel = \App\Services\ExcelService::download($examsArray, 'Data STEL-STD');
         return response($excel['file'], 200, $excel['headers']);
     } 
 }
