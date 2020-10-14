@@ -112,7 +112,7 @@
                             $html .= '<li '.$is_active.'>  <a >
                                 <div class="item-content">
                                     <div class="item-media">
-                                        <em class="'.$value[0]['icon'].' "></em>
+                                        <i class="'.$value[0]['icon'].' "></i>
                                     </div>
                                     <div class="item-inner">
                                         <span class="title"> '.$value[0]['name'].' </span><em class="icon-arrow"></em>
@@ -133,7 +133,7 @@
                           $html .= '<li '.$is_active.'> <a href="'.url("admin/".$value[0]['url']).'">
                                     <div class="item-content">
                                         <div class="item-media">
-                                            <em class="'.$value[0]['icon'].' "></em>
+                                            <i class="'.$value[0]['icon'].' "></i>
                                         </div>
                                         <div class="item-inner">
                                             <span class="title"> '.$value[0]['name'].' </span>
