@@ -787,7 +787,7 @@ class PermohonanController extends Controller
 				$notification_id = $notificationService->make($data);
 				$data['id'] = $notification_id;
 				
-				event(new Notification($data)); 
+				//event(new Notification($data)); 
 			}
 		}
 
