@@ -292,7 +292,7 @@ class ProductsController extends Controller
             ;
         }
 
-        $data = $this->getDataCompany($currentUser);
+        $data = $this->getDataCompany($currentUser,$details);
 
         $purchase = $this->api_purchase($data);
 
@@ -663,7 +663,7 @@ class ProductsController extends Controller
             ;
         }
 
-        $data = $this->getDataCompany($currentUser);
+        $data = $this->getDataCompany($currentUser,$details);
 
         $purchase = $this->api_purchase($data);
 
@@ -771,7 +771,7 @@ class ProductsController extends Controller
 
     }
 
-    private function getDataCompany($currentUser){ 
+    private function getDataCompany($currentUser,$details){ 
         $data = [
             "from" => [
                 "name" => "PT TELEKOMUNIKASI INDONESIA, TBK.",
