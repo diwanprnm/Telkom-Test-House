@@ -112,7 +112,7 @@
                             $html .= '<li '.$is_active.'>  <a >
                                 <div class="item-content">
                                     <div class="item-media">
-                                        <i class="'.$value[0]['icon'].' "></i>
+                                        <em class="'.$value[0]['icon'].' "></em>
                                     </div>
                                     <div class="item-inner">
                                         <span class="title"> '.$value[0]['name'].' </span><em class="icon-arrow"></em>
@@ -133,7 +133,7 @@
                           $html .= '<li '.$is_active.'> <a href="'.url("admin/".$value[0]['url']).'">
                                     <div class="item-content">
                                         <div class="item-media">
-                                            <i class="'.$value[0]['icon'].' "></i>
+                                            <em class="'.$value[0]['icon'].' "></em>
                                         </div>
                                         <div class="item-inner">
                                             <span class="title"> '.$value[0]['name'].' </span>
@@ -177,7 +177,7 @@
                        <li class="dropdown notification">
                           <a href class="dropdown-toggle" data-toggle="dropdown">
                                 <span class="dot-badge partition-red notification-count">@php echo $notification_count;@endphp</span> 
-                                <i class="ti-comment"></i> 
+                                <em class="ti-comment"></em> 
                                 <span translate="topbar.messages.MAIN" class="ng-scope ">Notification</span>
                             </a>
                             <ul class="dropdown-menu dropdown-light dropdown-messages dropdown-large"> 
