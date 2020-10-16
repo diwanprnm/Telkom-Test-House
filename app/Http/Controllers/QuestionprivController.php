@@ -98,9 +98,9 @@ class QuestionprivController extends Controller
             self::USER_ID => self::REQUIRED,
         ]);
 
-		$questionpriv = Questionpriv::where(self::USER_ID,'=',$request->input(self::USER_ID))->get();
+        $questionpriv = Questionpriv::where(self::USER_ID,'=',$request->input(self::USER_ID))->get();
 
-		if(!count((array)$questionpriv) && count((array)$request->input(self::CHECK_PRIVILEGE)) )
+		if(!count($questionpriv) && $request->has(self::CHECK_PRIVILEGE) )
 		{
 			$currentUser = Auth::user();
 			for($i=0;$i<count($request->input(self::CHECK_PRIVILEGE));$i++){
@@ -193,11 +193,11 @@ class QuestionprivController extends Controller
      */
     public function destroy($id)
     {
-		$questionpriv = Questionpriv::where(self::USER_ID,'=',$id)->first();
+		$questionpriv = Questionpriv::where(self::USER_ID,'=',$id)->get();
         
         if (count($questionpriv)){
             try{
-                $questionpriv->delete();
+                Questionpriv::where(self::USER_ID,'=',$id)->delete();
                 
                 Session::flash(self::MESSAGE, 'Privilege successfully deleted');
                 return redirect(self::ADMIN_QUESTIONPRIV);
