@@ -51,7 +51,7 @@
 				</div>	 
 				@if($data[0]->payment_method == 1)
 					<div class="row metoda"> 
-						<div class="text-right">
+						<div style="text-align: center">
 							<p>{{ trans('translate.stel_total_payment') }} : 
 								<span style="font-weight: bold; font-size:250%; color: #fa8231;">{{ trans('translate.stel_rupiah') }}. {{ number_format($data[0]->total, 0, ",", ".") }},-</span>
 								<!-- The button used to copy the text -->
