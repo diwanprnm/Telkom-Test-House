@@ -1908,7 +1908,6 @@ class ExaminationAPIController extends AppBaseController
                         if($status_invoice == "approved" && $status_faktur == "received"){
 							/* 
 							 * SAVE KUITANSI
-							 * TODO-Chris
 							 * Ket: Pengaplikasian upload ke minio dari stream API
 							 * Tgs: Belum ditest
 							 */
@@ -2000,7 +1999,6 @@ class ExaminationAPIController extends AppBaseController
 
 							/* 
 							 * SAVE FAKTUR PAJAK
-							 * TODO-Chris
 							 * Ket: Pengaplikasian upload ke minio dari stream API
 							 * Tgs: Belum ditest
 							 */

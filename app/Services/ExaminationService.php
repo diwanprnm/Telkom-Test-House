@@ -280,7 +280,6 @@ class ExaminationService
                         if($status_faktur == "received"){
 							/* 
 							 * SAVE FILE
-							 * TODO-Chris
 							 * Ket: Pengaplikasian upload ke minio dari stream API
 							 * Tgs: Belum ditest
 							 */

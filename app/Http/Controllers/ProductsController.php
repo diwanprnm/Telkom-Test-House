@@ -80,6 +80,7 @@ class ProductsController extends Controller
     private const TIMEOUT = 'timeout';
     private const HTTP_ERRORS = 'http_errors';
     private const FAILED_TO_CHECKOUT = 'Failed To Checkout';
+    private const DATA_NOT_FOUND = 'Data not found.';
 
 
     public function index(Request $request)
@@ -664,7 +665,7 @@ class ProductsController extends Controller
     {
         $stel = STEL::find($id);
 
-        if (!$stel){  return redirect()->back()->with(self::ERROR, 'Data not found.'); }
+        if (!$stel){  return redirect()->back()->with(self::ERROR, self::DATA_NOT_FOUND); }
 
         $file = Storage::disk(self::MINIO)->url(self::STEL_URL.$stel->attachment);
                     
@@ -679,7 +680,7 @@ class ProductsController extends Controller
     {
         $stel = STELSales::where("id",$id)->first();
 
-        if (!$stel){  return redirect()->back()->with(self::ERROR, 'Data not found.'); }
+        if (!$stel){  return redirect()->back()->with(self::ERROR, self::DATA_NOT_FOUND); }
         $file = Storage::disk(self::MINIO)->url(self::STEL_URL.$stel->id."/".$stel->faktur_file);
                     
         $filename = $stel->faktur_file;
@@ -693,7 +694,7 @@ class ProductsController extends Controller
     {
         $stel = STELSales::where("id_kuitansi",$id)->first();
 
-        if (!$stel){  return redirect()->back()->with(self::ERROR, 'Data not found.'); }
+        if (!$stel){  return redirect()->back()->with(self::ERROR, self::DATA_NOT_FOUND); }
 
         $file = Storage::disk(self::MINIO)->url(self::STEL_URL.$stel->id."/".$stel->id_kuitansi);
                     
@@ -736,7 +737,7 @@ class ProductsController extends Controller
     }
 
     private function getDataPurchase($currentUser,$details){ 
-        $data = [
+        return [
             "from" => [
                 "name" => "PT TELEKOMUNIKASI INDONESIA, TBK.",
                 self::ADDRESS => "Telkom Indonesia Graha Merah Putih, Jalan Japati No.1 Bandung, Jawa Barat, 40133",
@@ -765,12 +766,10 @@ class ProductsController extends Controller
                 "branch_office" => "KCP KAMPUS TELKOM BANDUNG"         
             ]
         ];
-
-        return $data;
     }
 
     private function getDataBilling($PO_ID,$currentUser,$stel_code_string,$mps_info){  
-        $data = [
+        return [
             "draft_id" => $PO_ID,
             self::CREATED => [
                 "by" => $currentUser->name,
@@ -789,8 +788,6 @@ class ProductsController extends Controller
                 "manual_expired" => 20160
             ]
         ];
-
-        return $data;
     }
 
 

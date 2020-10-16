@@ -80,7 +80,6 @@ class PengujianController extends Controller
 	private const APP_URL_API_BSP = 'app.url_api_bsp';
 	private const BASE_URI = 'base_uri';
 	private const TIMEOUT = 'timeout';
-	private const APLLICATION_HEADER_OCTET = 'Content-Type: application/octet-stream';
 	private const DOWNLOAD_FAILED = 'Download Failed';
 	private const MEDIA_EXAMINATION_LOC = 'examination/';
 	private const DATE_FORMAT1 = 'Y-m-d H:i:s';
@@ -112,9 +111,7 @@ class PengujianController extends Controller
 	private const TPN_2 = "app.gateway_tpn_2";
 	private const URI_API_TPN = "app.url_api_tpn";
 	private const HTTP_ERRORS = "http_errors";
-
-
-
+	private const AUTHORIZATION = 'Authorization';
 	private const DEVICES_NAME_AUTOSUGGEST = 'devices.name as autosuggest';
 
     /**
@@ -597,7 +594,6 @@ class PengujianController extends Controller
     {
 		/* 
 		 * DOWNLOAD FILE DARI MINIO
-		 * TODO-Chris
 		 * Ket: Download dari minio ke TEMP lalu download ke user via response
 		 * Tgs: Belum ditest
 		 */
@@ -606,7 +602,7 @@ class PengujianController extends Controller
 		$filename = $attach;
 		$tempFile = tempnam(sys_get_temp_dir(), $filename);
 		copy($file, $tempFile);
-		$response =  response()->download($tempFile, $filename);
+		return response()->download($tempFile, $filename);
     }
 	
 	public function downloadSPB($id)
@@ -781,7 +777,6 @@ class PengujianController extends Controller
 			$name_file = 'spb_payment_'.$request->file(self::FILE_PEMBAYARAN)->getClientOriginalName();
 			/*
 			 * UPLOAD PEMBAYARAN KE MINIO
-			 * TODO-Chris
 			 * Ket: Upload pembayran ke minio
 			 * Tgs: Belum ditest				 
 			 */
@@ -974,7 +969,7 @@ class PengujianController extends Controller
     public function api_purchase($data){
         $client = new Client([
             self::HEADERS => [self::CONTENT_TYPE => self::APPLICATION_JSON, 
-                            'Authorization' => config(self::TPN_2)
+                            self::AUTHORIZATION => config(self::TPN_2)
                         ],
             self::BASE_URI => config(self::URI_API_TPN),
             self::TIMEOUT  => 60.0,
@@ -1013,7 +1008,7 @@ class PengujianController extends Controller
     public function api_billing($data){
         $client = new Client([
             self::HEADERS => [self::CONTENT_TYPE => self::APPLICATION_JSON, 
-                            'Authorization' => config(self::TPN_2)
+                            self::AUTHORIZATION => config(self::TPN_2)
                         ],
             self::BASE_URI => config(self::URI_API_TPN),
             self::TIMEOUT  => 60.0,
@@ -1032,7 +1027,7 @@ class PengujianController extends Controller
         $exam = Examination::find($id);
         $client = new Client([
             self::HEADERS => [self::CONTENT_TYPE => self::APPLICATION_JSON, 
-                            'Authorization' => config(self::TPN_2)
+                            self::AUTHORIZATION => config(self::TPN_2)
                         ],
             self::BASE_URI => config(self::URI_API_TPN),
             self::TIMEOUT  => 60.0,
@@ -1091,7 +1086,7 @@ class PengujianController extends Controller
     public function api_cancel_billing($BILLING_ID,$data){
         $client = new Client([
             self::HEADERS => [self::CONTENT_TYPE => self::APPLICATION_JSON, 
-                            'Authorization' => config(self::TPN_2)
+                            self::AUTHORIZATION => config(self::TPN_2)
                         ],
             self::BASE_URI => config(self::URI_API_TPN),
             self::TIMEOUT  => 60.0,

@@ -45,8 +45,7 @@ class UsereksController extends Controller
     private const PHONE_NUMBER = 'phone_number';
     private const PICTURE = 'picture'; 
     private const MEDIA_USER = '/user/'; 
-    private const FAILED_LOG_MSG = 'Save failed';  
-    private const OLD_DATA = 'old_data';  
+    private const FAILED_LOG_MSG = 'Save failed';
     /**
      * Create a new controller instance.
      *

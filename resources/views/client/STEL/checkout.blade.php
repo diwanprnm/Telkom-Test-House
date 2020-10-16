@@ -36,7 +36,7 @@
 					<input type="hidden" name="final_price" value="{{$final_price}}"><br>
 					<div class="row"> 
 					<p> No. Invoice	: {{$invoice_number}} </p> 
-						<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%" aria-describedby="mydesc">
+						<table id="datatable1" class="table table-striped table-bordered full-width" aria-describedby="mydesc">
 							<thead>
 								<tr>
 									<th scope="col">No</th>
@@ -60,20 +60,20 @@
 									@endphp
 									<td>{{$stel_name}}</td>
 									<td>{{$stel_code}}</td>
-									<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($row->price)}}</td> 
-									<td align="center">{{$row->qty}}</td> 
-									<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($row->price*$row->qty)}}</td> 
+									<td class="text-right">{{ trans('translate.stel_rupiah') }}. {{number_format($row->price)}}</td> 
+									<td class="text-center">{{$row->qty}}</td> 
+									<td class="text-right">{{ trans('translate.stel_rupiah') }}. {{number_format($row->price*$row->qty)}}</td> 
 								</tr> 
 								@endforeach
 							</tbody>
 							<tfoot>
 								<tr>
-									<td colspan="5" align="right">{{ trans('translate.tax') }}</td> 
-									<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($tax)}}</td> 
+									<td colspan="5" class="text-right">{{ trans('translate.tax') }}</td> 
+									<td class="text-right">{{ trans('translate.stel_rupiah') }}. {{number_format($tax)}}</td> 
 								</tr> 
 								<tr style="font-weight: bold">
-									<td colspan="5" align="right">Total</td>
-									<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($final_price)}}</td> 
+									<td colspan="5" class="text-right">Total</td>
+									<td class="text-right">{{ trans('translate.stel_rupiah') }}. {{number_format($final_price)}}</td> 
 								</tr> 
 							</tfoot>
 						</table> 
@@ -103,6 +103,17 @@
 		</section><!-- #content end -->
 		@endsection
 @section('content_js')
+<style>
+	table .no-border {
+		border-collapse: separate;
+		border-spacing: 0;
+	}
+	table .full-width {
+		width: 100%;
+	}
+
+</style>
+
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#payment_method').on('change', function() {

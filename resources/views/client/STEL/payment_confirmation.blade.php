@@ -10,7 +10,7 @@
 				<div class="row">
 					<br>    
 					<p> No. Invoice	: {{ $data[0]->invoice }} <a href="javascript:void(0)" class="collapsible" style="text-decoration: underline !important;">{{ trans('translate.examination_detail') }}</a></p> 
-					<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%" style="display: none;" aria-describedby="mydesc">
+					<table id="datatable1" class="table table-striped table-bordered full-width" style="display: none;" aria-describedby="mydesc">
 						<thead>
 							<tr>
 								<th scope="col">No</th>
@@ -29,29 +29,29 @@
 								<td>{{$no}}</td>
 								<td>{{$row->stel->name}}</td>
 								<td>{{$row->stel->code}}</td>
-								<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($row->stel->price)}}</td> 
-								<td align="center">{{$row->qty}}</td> 
-								<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($row->stel->price*$row->qty)}}</td> 
+								<td class="text-right">{{ trans('translate.stel_rupiah') }}. {{number_format($row->stel->price)}}</td> 
+								<td class="text-center">{{$row->qty}}</td> 
+								<td class="text-right">{{ trans('translate.stel_rupiah') }}. {{number_format($row->stel->price*$row->qty)}}</td> 
 							</tr> 
 								@php $total +=($row->stel->price * $row->qty); @endphp
 							@endforeach
 						</tbody>
 						<tfoot>
                        		<tr>
-                        		<td colspan="5" align="right"> {{ trans('translate.tax') }}</td>
-                        		<td align="right">{{ trans('translate.stel_rupiah') }}. @php $tax =  ($total) * (config("cart.tax")/100);
+                        		<td colspan="5" class="text-right"> {{ trans('translate.tax') }}</td>
+                        		<td class="text-right">{{ trans('translate.stel_rupiah') }}. @php $tax =  ($total) * (config("cart.tax")/100);
                         			echo number_format($tax, 0, '.', ','); @endphp</td>
                         	</tr>
                         	<tr style="font-weight: bold;">
-                        		<td colspan="5" align="right"> Total</td>
-                        		<td align="right">{{ trans('translate.stel_rupiah') }}. @php echo number_format($data[0]->total, 0, '.', ','); @endphp</td>
+                        		<td colspan="5" class="text-right"> Total</td>
+                        		<td class="text-right">{{ trans('translate.stel_rupiah') }}. @php echo number_format($data[0]->total, 0, '.', ','); @endphp</td>
                         	</tr> 
 						</tfoot>
 					</table> 
 				</div>	 
 				@if($data[0]->payment_method == 1)
 					<div class="row metoda"> 
-						<div style="text-align: center">
+						<div class="text-right">
 							<p>{{ trans('translate.stel_total_payment') }} : 
 								<span style="font-weight: bold; font-size:250%; color: #fa8231;">{{ trans('translate.stel_rupiah') }}. {{ number_format($data[0]->total, 0, ",", ".") }},-</span>
 								<!-- The button used to copy the text -->
@@ -157,6 +157,16 @@
 @endsection
 
 @section('content_js')
+<style>
+	table .no-border {
+		border-collapse: separate;
+		border-spacing: 0;
+	}
+	table .full-width {
+		width: 100%;
+	}
+
+</style>
 
 <script type="text/javascript">
 	var coll = document.getElementsByClassName("collapsible");

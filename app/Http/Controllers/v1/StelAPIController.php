@@ -212,7 +212,6 @@ class StelAPIController extends AppBaseController
                             if($status_invoice == "approved" && $status_faktur == "received"){
                                 /* 
                                  * SAVE KUITANSI
-                                 * TODO-Chris
                                  * Ket: Pengaplikasian upload ke minio dari stream API
                                  * Tgs: Belum ditest
                                  */
@@ -291,7 +290,6 @@ class StelAPIController extends AppBaseController
                             if($status_invoice == "approved" && $status_faktur == "received"){
                                 /* 
                                  * SAVE FAKTUR PAJAK
-                                 * TODO-Chris
                                  * Ket: Pengaplikasian upload ke minio dari stream API
                                  * Tgs: Belum ditest
                                  */

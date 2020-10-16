@@ -412,7 +412,6 @@ class STELController extends Controller
                 $row->is_active == '1' ? 'Active' : 'Not Active'
             ];
         }
-        $currentUser = Auth::user(); 
 
         $logService = new LogService();  
         $logService->createLog('download_excel',"STEL/STD","");

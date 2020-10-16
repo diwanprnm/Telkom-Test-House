@@ -160,6 +160,7 @@ class ExaminationController extends Controller
 	private const DEVICE_NAME_AUTOSUGGEST = 'devices.name as autosuggest';
 	private const DEVICE_NAME = 'devices.name';
 	private const MINIO = 'minio';
+	private const EXAMINATION_LOC = 'examination\\';
 
 	/**
      * Create a new controller instance.
@@ -1714,8 +1715,8 @@ class ExaminationController extends Controller
 				$exam->delete();
 				$device->delete();
 				
-				if (Storage::disk('minio')->exists('examination\\'.$id)){
-					Storage::disk('minio')->deleteDirectory('examination\\'.$id);
+				if (Storage::disk(self::MINIO)->exists(self::EXAMINATION_LOC.$id)){
+					Storage::disk(self::MINIO)->deleteDirectory(self::EXAMINATION_LOC.$id);
 				}
 
 				$logService->createAdminLog("Hapus Data Pengujian", $page, $logs_a_exam.$logs_a_device, urldecode($reason));
@@ -1735,7 +1736,6 @@ class ExaminationController extends Controller
 			$exam = Examination::find($id);
 			if ($exam){
 				try{
-					$logs_a_exam = $exam;
 					Equipment::where(self::EXAMINATION_ID, '=' ,''.$exam->id.'')->delete();
 					EquipmentHistory::where(self::EXAMINATION_ID, '=' ,''.$exam->id.'')->delete();
 					
@@ -2146,8 +2146,8 @@ class ExaminationController extends Controller
         if($examination_attachment){
 
             // unlink stels_sales_detail.attachment
-            if (Storage::disk('minio')->exists('examination\\'.$examination_attachment->examination_id.'\\'.$examination_attachment->attachment)){
-                Storage::disk('minio')->deleteDirectory('examination\\'.$examination_attachment->examination_id.'\\'.$examination_attachment->attachment);
+            if (Storage::disk(self::MINIO)->exists(self::EXAMINATION_LOC.$examination_attachment->examination_id.'\\'.$examination_attachment->attachment)){
+                Storage::disk(self::MINIO)->deleteDirectory(self::EXAMINATION_LOC.$examination_attachment->examination_id.'\\'.$examination_attachment->attachment);
             }
 
             // delete stels_sales_detail

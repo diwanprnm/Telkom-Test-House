@@ -83,6 +83,10 @@ class PermohonanController extends Controller
 	private const HIDE_SP3_FILE = 'hide_sp3_file';
 	private const HIDE_DLL_FILE = 'hide_dll_file';
 	private const TOKEN = '|token|';
+	private const SUBMIT = 'submit';
+	private const UPDATE = 'update';
+	private const UPDATE_BY_EQUAL = "', updated_by = '";
+	private const UPDATE_AT_EQUAL = "', updated_at = '";
 
     /**
      * Show the application dashboard.
@@ -194,7 +198,7 @@ class PermohonanController extends Controller
 	
 	public function submit(Request $request)
 	{
-		$this->submit_update($request, 'submit');
+		$this->submit_update($request, self::SUBMIT);
 	}
 	
 	public function sendProgressEmail($message)
@@ -213,7 +217,7 @@ class PermohonanController extends Controller
 
 	public function update(Request $request)
 	{ 
-		$this->submit_update($request, 'update');
+		$this->submit_update($request, self::UPDATE);
 	}
 
 	public function upload(Request $request){ 
@@ -444,7 +448,7 @@ class PermohonanController extends Controller
 	public function submit_update($request, $type)
 	{
 		$fileService = new FileService();
-		if($type == 'update'){
+		if($type == self::UPDATE){
 			$exam_id = $request->input(self::HIDE_EXAM_ID);
 					$request->session()->put(self::HIDE_EXAM_ID, $exam_id);
 					$exam_no_reg = DB::table(self::EXAMINATIONS)->where('id', ''.$exam_id.'')->first();
@@ -520,7 +524,7 @@ class PermohonanController extends Controller
 			$request->input('f1-sertifikat-sistem-mutu');
 		$batas_waktu_sistem = 
 			$request->input('f1-batas-waktu');
-		$no_reg = $type == 'update' ? $exam_no_reg->function_test_NO : $this->generateFunctionTestNumber($jns_pengujian_name);
+		$no_reg = $type == self::UPDATE ? $exam_no_reg->function_test_NO : $this->generateFunctionTestNumber($jns_pengujian_name);
 		
 		if($request->ajax()){
 			$data = Array([
@@ -585,12 +589,12 @@ class PermohonanController extends Controller
 */
 		if ($request->hasFile(self::FUPLOADUJI)) {
 			$file = $fileService->uploadFile($request->file(self::FUPLOADUJI), 'ref_uji_', self::MEDIA_EXAMINATION_LOC.$exam_id);
-			$fuploadrefuji_name = $file ? $file : ($type == 'update' ? $request->input(self::HIDE_REF_UJI_FILE) : '');
-			if ($type == 'update'){
+			$fuploadrefuji_name = $file ? $file : ($type == self::UPDATE ? $request->input(self::HIDE_REF_UJI_FILE) : '');
+			if ($type == self::UPDATE){
 				$fileService->deleteFile(self::MEDIA_EXAMINATION_LOC.$exam_id.'/'.$request->input(self::HIDE_REF_UJI_FILE));
 			}
 		}else{
-			if($type == 'submit'){
+			if($type == self::SUBMIT){
 				// case QA
 				$res = explode('/',$request->input('path_ref'));   
 				$fuploadrefuji_name = $res[count($res)-1];
@@ -604,36 +608,36 @@ class PermohonanController extends Controller
 		if($jns_pengujian == 1 && $jns_perusahaan !=self::PABRIKAN){
 			if ($request->hasFile(self::FUPLOADPRINSIPAL)) {
 				$file = $fileService->uploadFile($request->file(self::FUPLOADPRINSIPAL), 'prinsipal_', self::MEDIA_EXAMINATION_LOC.$exam_id);
-				$fuploadprinsipal_name = $file ? $file : ($type == 'update' ? $request->input(self::HIDE_PRINSIPAL_FILE) : '');
-				if ($type == 'update'){
+				$fuploadprinsipal_name = $file ? $file : ($type == self::UPDATE ? $request->input(self::HIDE_PRINSIPAL_FILE) : '');
+				if ($type == self::UPDATE){
 					$fileService->deleteFile(self::MEDIA_EXAMINATION_LOC.$exam_id.'/'.$request->input(self::HIDE_PRINSIPAL_FILE));
 				}
 			}else{
-				$fuploadprinsipal_name = $type == 'update' ? $request->input(self::HIDE_PRINSIPAL_FILE) : '';
+				$fuploadprinsipal_name = $type == self::UPDATE ? $request->input(self::HIDE_PRINSIPAL_FILE) : '';
 			}
 		}else if($jns_pengujian == 2){
 			if ($request->hasFile(self::FUPLOADSP3)) {
 				$file = $fileService->uploadFile($request->file(self::FUPLOADSP3), 'sp3_', self::MEDIA_EXAMINATION_LOC.$exam_id);
-				$fuploadsp3_name = $file ? $file : ($type == 'update' ? $request->input(self::HIDE_SP3_FILE) : '');
-				if ($type == 'update'){
+				$fuploadsp3_name = $file ? $file : ($type == self::UPDATE ? $request->input(self::HIDE_SP3_FILE) : '');
+				if ($type == self::UPDATE){
 					$fileService->deleteFile(self::MEDIA_EXAMINATION_LOC.$exam_id.'/'.$request->input(self::HIDE_SP3_FILE));
 				}
 			}else{
-				$fuploadsp3_name = $type == 'update' ? $request->input(self::HIDE_SP3_FILE) : '';
+				$fuploadsp3_name = $type == self::UPDATE ? $request->input(self::HIDE_SP3_FILE) : '';
 			}
 		}
 		
 		if ($request->hasFile(self::FUPLOADDLL)) {
 			$file = $fileService->uploadFile($request->file(self::FUPLOADDLL), 'dll_', self::MEDIA_EXAMINATION_LOC.$exam_id);
-			$fuploaddll_name = $file ? $file : ($type == 'update' ? $request->input(self::HIDE_DLL_FILE) : '');
-			if ($type == 'update'){
+			$fuploaddll_name = $file ? $file : ($type == self::UPDATE ? $request->input(self::HIDE_DLL_FILE) : '');
+			if ($type == self::UPDATE){
 				$fileService->deleteFile(self::MEDIA_EXAMINATION_LOC.$exam_id.'/'.$request->input(self::HIDE_DLL_FILE));
 			}
 		}else{
-			$fuploaddll_name = $type == 'update' ? $request->input(self::HIDE_DLL_FILE) : '';
+			$fuploaddll_name = $type == self::UPDATE ? $request->input(self::HIDE_DLL_FILE) : '';
 		}
 		
-		if ($type == 'submit') {
+		if ($type == self::SUBMIT) {
 			$device = new Device;
 			$device->id = $device_id;
 			$device->name = ''.$nama_perangkat.'';
@@ -752,9 +756,9 @@ class PermohonanController extends Controller
 					siup_date = '".date(self::DATE_FORMAT2, strtotime($tgl_siupp))."',
 					qs_certificate_number = '".$sertifikat_sistem_mutu."',
 					qs_certificate_file = '".$fuploadlampiran_name."',
-					qs_certificate_date = '".date(self::DATE_FORMAT2, strtotime($batas_waktu_sistem))."',
-					updated_by = '".$user_id."',
-					updated_at = '".date(self::DATE_FORMAT)."'
+					qs_certificate_date = '".date(self::DATE_FORMAT2, strtotime($batas_waktu_sistem)).
+					self::UPDATE_BY_EQUAL.$user_id.
+					self::UPDATE_AT_EQUAL.date(self::DATE_FORMAT)."'
 				WHERE id = (SELECT company_id FROM users WHERE id = '".$user_id."')
 			";
 
@@ -799,9 +803,9 @@ class PermohonanController extends Controller
 				SET 
 					examination_lab_id = '".$idLab."',
 					jns_perusahaan = '".$jns_perusahaan."',
-					is_loc_test = '".$lokasi_pengujian."',
-					updated_by = '".$user_id."',
-					updated_at = '".date(self::DATE_FORMAT)."'
+					is_loc_test = '".$lokasi_pengujian.
+					self::UPDATE_BY_EQUAL.$user_id.
+					self::UPDATE_AT_EQUAL.date(self::DATE_FORMAT)."'
 				WHERE id = '".$exam_id."'
 			";
 			DB::update($query_update_company);
@@ -814,9 +818,9 @@ class PermohonanController extends Controller
 					manufactured_by = '".$pembuat_perangkat."',
 					serial_number = '".$serialNumber_perangkat."',
 					model = '".$model_perangkat."',
-					test_reference = '".$referensi_perangkat."',
-					updated_by = '".$user_id."',
-					updated_at = '".date(self::DATE_FORMAT)."'
+					test_reference = '".$referensi_perangkat.
+					self::UPDATE_BY_EQUAL.$user_id.
+					self::UPDATE_AT_EQUAL.date(self::DATE_FORMAT)."'
 				WHERE id = '".$device_id."'
 			";
 			DB::update($query_update_device);
@@ -864,9 +868,9 @@ class PermohonanController extends Controller
 					siup_date = '".date(self::DATE_FORMAT2, strtotime($tgl_siupp))."',
 					qs_certificate_number = '".$sertifikat_sistem_mutu."',
 					qs_certificate_file = '".$fuploadlampiran_name."',
-					qs_certificate_date = '".date(self::DATE_FORMAT2, strtotime($batas_waktu_sistem))."',
-					updated_by = '".$user_id."',
-					updated_at = '".date(self::DATE_FORMAT)."'
+					qs_certificate_date = '".date(self::DATE_FORMAT2, strtotime($batas_waktu_sistem)).
+					self::UPDATE_BY_EQUAL.$user_id.
+					self::UPDATE_AT_EQUAL.date(self::DATE_FORMAT)."'
 				WHERE id = (SELECT company_id FROM users WHERE id = '".$user_id."')
 			";
 			DB::update($query_update_companie);
