@@ -43,12 +43,11 @@ INSERT INTO `menus` VALUES ('41', '0', 'User & Role Management', '#', 'ti-hand-o
 INSERT INTO `menus` VALUES ('42', '41', 'User Role', 'role', '');
 INSERT INTO `menus` VALUES ('43', '41', 'User Internal', 'userin', '');
 INSERT INTO `menus` VALUES ('44', '41', 'User Eksternal', 'usereks', '');
-INSERT INTO `menus` VALUES ('45', '41', 'Role Pengujian', 'privilege', '');
-INSERT INTO `menus` VALUES ('46', '41', 'Role Pertanyaan', 'questionpriv', '');
-INSERT INTO `menus` VALUES ('47', '0', 'Keuangan', '#', 'ti-money');
-INSERT INTO `menus` VALUES ('48', '47', 'Rekap Pembelian STEL', 'sales', 'ti-money');
-INSERT INTO `menus` VALUES ('49', '47', 'Rekap Pengujian Perangkat', 'income', 'ti-money');
-INSERT INTO `menus` VALUES ('50', '0', 'Web Statistic', 'analytic', 'ti-pie-chart');
+INSERT INTO `menus` VALUES ('45', '41', 'Role Pertanyaan', 'questionpriv', '');
+INSERT INTO `menus` VALUES ('46', '0', 'Keuangan', '#', 'ti-money');
+INSERT INTO `menus` VALUES ('47', '47', 'Rekap Pembelian STEL', 'sales', 'ti-money');
+INSERT INTO `menus` VALUES ('48', '47', 'Rekap Pengujian Perangkat', 'income', 'ti-money');
+INSERT INTO `menus` VALUES ('49', '0', 'Web Statistic', 'analytic', 'ti-pie-chart');
 
 INSERT INTO `users_menus` VALUES (1, 1, '1', '1', '', '2017-6-20 00:04:45', '2017-6-20 00:04:45');
 INSERT INTO `users_menus` VALUES (2, 2, '1', '1', '', '2017-6-20 00:04:46', '2017-6-20 00:04:46');
@@ -99,4 +98,3 @@ INSERT INTO `users_menus` VALUES (46, 46, '1', '1', '', '2020-6-01 12:43:02', '2
 INSERT INTO `users_menus` VALUES (47, 47, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');
 INSERT INTO `users_menus` VALUES (48, 48, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');
 INSERT INTO `users_menus` VALUES (49, 49, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');
-INSERT INTO `users_menus` VALUES (50, 50, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');
