@@ -45,8 +45,8 @@ INSERT INTO `menus` VALUES ('43', '41', 'User Internal', 'userin', '');
 INSERT INTO `menus` VALUES ('44', '41', 'User Eksternal', 'usereks', '');
 INSERT INTO `menus` VALUES ('45', '41', 'Role Pertanyaan', 'questionpriv', '');
 INSERT INTO `menus` VALUES ('46', '0', 'Keuangan', '#', 'ti-money');
-INSERT INTO `menus` VALUES ('47', '47', 'Rekap Pembelian STEL', 'sales', 'ti-money');
-INSERT INTO `menus` VALUES ('48', '47', 'Rekap Pengujian Perangkat', 'income', 'ti-money');
+INSERT INTO `menus` VALUES ('47', '46', 'Rekap Pembelian STEL', 'sales', 'ti-money');
+INSERT INTO `menus` VALUES ('48', '46', 'Rekap Pengujian Perangkat', 'income', 'ti-money');
 INSERT INTO `menus` VALUES ('49', '0', 'Web Statistic', 'analytic', 'ti-pie-chart');
 
 INSERT INTO `users_menus` VALUES (1, 1, '1', '1', '', '2017-6-20 00:04:45', '2017-6-20 00:04:45');

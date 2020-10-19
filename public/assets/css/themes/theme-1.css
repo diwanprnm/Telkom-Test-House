@@ -146,7 +146,7 @@ header .dropdown-off-sidebar {
 #sidebar nav > ul > li a:active:focus {
   background: #e6e6e6 !important;
 }
-#sidebar nav > ul > li > a .item-media > i {
+#sidebar nav > ul > li > a .item-media > em {
   color: #FF3E41 !important;
 }
 #sidebar nav > ul > li > a .item-media .fa-stack .fa-square {
@@ -185,7 +185,7 @@ header .dropdown-off-sidebar {
 #sidebar nav > ul > li.active > a .item-inner {
   color: #ffffff !important;
 }
-#sidebar nav > ul > li.active > a .item-media > i {
+#sidebar nav > ul > li.active > a .item-media > em {
   color: #ffffff !important;
 }
 #sidebar nav > ul > li.active > a .item-media .fa-stack .fa-square {
