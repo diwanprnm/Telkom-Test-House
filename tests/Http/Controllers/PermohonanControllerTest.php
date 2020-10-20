@@ -111,9 +111,12 @@ class PermohonanControllerTest extends TestCase
 	       'f1-cmb-ref-perangkat' => $stel->code.",1",
 	       'f1-no-siupp' => str_random(10),
 	       'f1-tgl-siupp' => "2020-09-20",
-	       'f1-batas-waktu' => "12",
-	    ]);   
-       $this->assertEquals(200, $response->status());
+		   'f1-batas-waktu' => "12",
+		   'path_ref' => 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
+	    ]);
+	   $this->assertEquals(200, $response->status());
+	   $examination = App\Examination::latest()->first();
+	   Storage::disk('minio')->delete("examination/$examination->id/dummy.pdf");
 	} 
 	public function test_updatePermohonan()
 	{ 

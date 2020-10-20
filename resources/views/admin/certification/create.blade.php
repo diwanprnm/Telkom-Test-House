@@ -32,6 +32,13 @@
 				</ul>
 			</div>
 		@endif
+
+		@if (count(session('error')))
+			<div class="alert alert-danger">
+				<p>{{session('error')}}</p>
+			</div>
+		@endif
+
 		<!-- start: RESPONSIVE TABLE -->
 		<div class="container-fluid container-fullw bg-white">
 			<div class="col-md-12">
