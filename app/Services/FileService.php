@@ -132,30 +132,3 @@ class FileService
     }
 
 }
-
-/*
- * File Proprties
- * ~ Path
- * ~ Prefix
- * ~ OldFile
- *
- * $fileProperties = array(
- *  'path' => "pathFile/id",
- *  'prefix' => "prefix_file",
- *  'oldFile' => 'oldFile.pdf',
- * )
- * 
- *  
- *
-
-    public function call()
-    {
-        $fileService = new FileService();
-        $fileProperties = array(
-            'path' => "pathFile/id",
-            'prefix' => "prefix_file",
-            'oldFile' => 'oldFile.pdf',
-        );
-        $fileService->minioUpload('file', $fileProperties);
-    }
-*/
