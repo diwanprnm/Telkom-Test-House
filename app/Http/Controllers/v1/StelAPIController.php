@@ -216,12 +216,16 @@ class StelAPIController extends AppBaseController
                                  * Tgs: Belum ditest
                                  */
                                 $name_file = "kuitansi_stel_$INVOICE_ID.pdf";
-                                $path_file = "stel/$data->id";
+                                $path_file = "stel/$data->id/";
                                 $response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/exportpdf');
                                 $stream = (String)$response->getBody();
 
                                 $fileService = new FileService();
-                                $isUploaded = $fileService->uploadPDFfromStream($stream, $name_file, $path_file);
+                                $fileProperties = array(
+                                    'path' => $path_file,
+                                    'fileName' => $name_file
+                                );
+                                $isUploaded = $fileService->uploadFromStream($stream, $fileProperties);
 
                                 if($isUploaded){
                                     $STELSales->id_kuitansi = $name_file;
@@ -294,12 +298,16 @@ class StelAPIController extends AppBaseController
                                  * Tgs: Belum ditest
                                  */
                                 $name_file = "faktur_stel_$filename.pdf";
-                                $path_file = "stel/$data->id";
+                                $path_file = "stel/$data->id/";
                                 $response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/taxinvoice/pdf');
                                 $stream = (String)$response->getBody();
 
                                 $fileService = new FileService();
-                                $isUploaded = $fileService->uploadPDFfromStream($stream, $name_file, $path_file);
+                                $fileProperties = array(
+                                    'path' => $path_file,
+                                    'fileName' => $name_file
+                                );
+                                $isUploaded = $fileService->uploadFromStream($stream, $fileProperties);
 
                                 if($isUploaded){
                                     $STELSales->faktur_file = $name_file;

@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Slideshow;
 use App\Logs;
 use App\Services\Logs\LogService;
+use App\Services\FileService;
 
 use Auth;
 use Session;
@@ -34,6 +35,7 @@ class SlideshowController extends Controller
     private const SLIDESHOW = 'SLIDESHOW';
     private const TIMEOUT = 'timeout';
     private const TITLE = 'title';
+    private const SLIDESHOW_PATH = "slideshow/";
     /**
      * Create a new controller instance.
      *
@@ -117,12 +119,16 @@ class SlideshowController extends Controller
 
         if ($request->hasFile(self::IMAGE))
         {
-            $name_file = 'slide_'.$request->file(self::IMAGE)->getClientOriginalName(); 
-            $image_ori = Image::make($request->file(self::IMAGE));
-            $saveMinio = Storage::disk('minio')->put("slideshow/$name_file",(string) $image_ori->encode());
+
+            $fileService = new FileService();
+            $fileProperties = array(
+                'path' => self::SLIDESHOW_PATH,
+                'prefix' => "slide_"
+            );
+            $fileService->upload($request->file($this::IMAGE), $fileProperties);
  
-            if($saveMinio){
-                $slideshow->image = $name_file;
+            if($fileService->isUploaded()){
+                $slideshow->image = $fileService->getFileName();
             }else { return redirect(self::ADMIN_SLIDESHOW_CREATE)->with(self::ERROR, 'Save Image to directory failed');
             }
         }
@@ -200,13 +206,18 @@ class SlideshowController extends Controller
         if ($request->has(self::TIMEOUT)){
             $slideshow->timeout = $request->input(self::TIMEOUT);
         }
-        if ($request->file(self::IMAGE)) {
-            $name_file = 'slide_'.$request->file(self::IMAGE)->getClientOriginalName(); 
-            $image_ori = Image::make($request->file(self::IMAGE));
-            $saveMinio = Storage::disk('minio')->put("slideshow/$name_file",(string) $image_ori->encode());
- 
-            if($saveMinio){
-                $slideshow->image =  $name_file;
+        if ($request->file(self::IMAGE)) { 
+
+            $fileService = new FileService();
+            $fileProperties = array(
+                'path' => self::SLIDESHOW_PATH,
+                'prefix' => "slide_",
+                'oldFile' => $slideshow->image
+            );
+            $fileService->upload($request->file($this::IMAGE), $fileProperties);
+
+            if($fileService->isUploaded()){
+                $slideshow->image =  $fileService->getFileName();
             }else {
                 return redirect(self::ADMIN_SLIDESHOW_CREATE)->with(self::ERROR, 'Save Image to directory failed');
             }
@@ -239,6 +250,13 @@ class SlideshowController extends Controller
                 $oldData = $slideshow;
                 $slideshow->delete();
                 $logService->createLog('Delete Slideshow', self::SLIDESHOW, $oldData);
+
+                $fileService = new FileService();
+                $fileProperties = array(
+                    'path' => self::SLIDESHOW_PATH,
+                    'fileName' => $slideshow->image,
+                );
+                $fileService->deleteFile($fileProperties);
 
                 Session::flash(self::MESSAGE, 'Slideshow successfully deleted');
                 return redirect(self::ADMIN_SLIDE_SHOW);

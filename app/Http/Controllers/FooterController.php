@@ -9,6 +9,7 @@ use App\Http\Requests;
 use App\Footer;
 use App\Logs;
 use App\Services\Logs\LogService;
+use App\Services\FileService;
 
 use Auth;
 use Session;
@@ -38,6 +39,7 @@ class FooterController extends Controller
     private const ACT = 'is_active';
     private const ADM = '/admin/footer';
     private const REQUIRED = 'required';
+    private const FOOTER_PATH = 'footer/';
 
     public function __construct()
     {
@@ -121,14 +123,15 @@ class FooterController extends Controller
         $status  = false;
         if ($request->hasFile($this::IMAGE)) { 
             
-            $file = $request->file($this::IMAGE);
-            $file_name = 'footer_'.$request->file($this::IMAGE)->getClientOriginalName();
+            $fileService = new FileService();
+            $fileProperties = array(
+                'path' => self::FOOTER_PATH,
+                'prefix' => "footer_"
+            );
+            $fileService->upload($request->file(self::IMAGE), $fileProperties);
 
-            $image = Image::make($file);   
-            $is_uploaded = Storage::disk('minio')->put("footer/$file_name",(string)$image->encode()); 
-
-            if($is_uploaded){
-                $footer->image = $file_name;
+            if($fileService->isUploaded()){
+                $footer->image = $fileService->getFileName();
             }else{ Session::flash($this::ERR, 'Save Image to directory failed'); 
             }
         }        
@@ -209,14 +212,18 @@ class FooterController extends Controller
         if ($request->hasFile($this::IMAGE)) {
          
             
-            $file = $request->file($this::IMAGE);
-            $file_name = 'footer_'.$request->file($this::IMAGE)->getClientOriginalName();
 
-            $image = Image::make($file);   
-            $is_uploaded = Storage::disk('minio')->put("footer/$file_name",(string)$image->encode()); 
+            $fileService = new FileService();
+            $fileProperties = array(
+                'path' => self::FOOTER_PATH,
+                'prefix' => "footer_",
+                'oldFile' => $footer->image
+            );
+            $fileService->upload($request->file(self::IMAGE), $fileProperties);
 
-            if($is_uploaded){
-                $footer->image = $file_name;
+
+            if($fileService->isUploaded()){
+                $footer->image = $fileService->getFileName();
             }else{ return redirect($this::CREATE)->with($this::ERR, 'Save Image to directory failed');
             }
         }
@@ -249,6 +256,13 @@ class FooterController extends Controller
             try{
                 $oldData = clone $footer;
                 $footer->delete();
+
+                $fileService = new FileService();
+                $fileProperties = array(
+                    'path' => self::FOOTER_PATH,
+                    'fileName' => $footer->image
+                );
+                $fileService->deleteFile($fileProperties);
   
                 $logService = new LogService();
                 $logService->createLog("Delete Footer",self::FOOTER, $oldData );

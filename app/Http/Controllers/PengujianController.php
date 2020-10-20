@@ -592,11 +592,6 @@ class PengujianController extends Controller
 	
 	public function download($id, $attach, $jns)
     {
-		/* 
-		 * DOWNLOAD FILE DARI MINIO
-		 * Ket: Download dari minio ke TEMP lalu download ke user via response
-		 * Tgs: Belum ditest
-		 */
 		$file = Storage::disk(self::MINIO)->url($jns.'/'.$id.'/'.$attach);
                      
 		$filename = $attach;
@@ -772,20 +767,23 @@ class PengujianController extends Controller
 		$currentUser = Auth::user();
 		$user_name = ''.$currentUser[self::ATTRIBUTES]['name'].'';
 		$user_email = ''.$currentUser[self::ATTRIBUTES][self::EMAIL].'';
-		$path_file = self::MEDIA_EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM).'';
 		if ($request->hasFile(self::FILE_PEMBAYARAN)) {
-			$name_file = 'spb_payment_'.$request->file(self::FILE_PEMBAYARAN)->getClientOriginalName();
-			/*
-			 * UPLOAD PEMBAYARAN KE MINIO
-			 * Ket: Upload pembayran ke minio
-			 * Tgs: Belum ditest				 
-			 */
-			$fileService = new FileService();
-			$fileUploaded = $fileService->uploadFile($request->file(self::FILE_PEMBAYARAN), $path_file, $name_file);
 
-			if($fileUploaded){
-                $fPembayaran = $fileUploaded;
-				$fileService->deleteFile('examination\\'.$request->input(self::HIDE_ID_EXAM).'\\'.$request->input(self::HIDE_FILE_PEMBAYARAN));
+			$fileService = new FileService();
+            $fileProperties = array(
+                'path' => self::MEDIA_EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM).'/',
+                'prefix' => "spb_payment_"
+            );
+			$fileService->upload($request->file(self::FILE_PEMBAYARAN), $fileProperties);
+
+			if($fileService->isUploaded()){
+				$fPembayaran = $fileService->getFileName();
+				$fileService = new FileService();
+				$fileProperties = array(
+					'path' => self::MEDIA_EXAMINATION_LOC.$request->input(self::HIDE_ID_EXAM).'/',
+					'fileName' => $request->input(self::HIDE_FILE_PEMBAYARAN)
+				);
+				$fileService->deleteFile($fileProperties);
             }else{
                 Session::flash(self::ERROR, 'Upload Payment Attachment to directory failed');
                 return redirect('/pengujian/'.$request->input(self::HIDE_ID_EXAM).self::PAGE_PEMBAYARAN);

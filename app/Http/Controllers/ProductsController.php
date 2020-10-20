@@ -210,10 +210,17 @@ class ProductsController extends Controller
         $jml_pembayaran = str_replace(".",'',$request->input('jml-pembayaran'));
         $jml_pembayaran = str_replace("Rp",'',$jml_pembayaran);
           
-        if ($request->hasFile(self::FILEPEMBAYARAN)) {  
-            $fileService = new FileService();  
-            $file = $fileService->uploadFile($request->file(self::FILEPEMBAYARAN), 'stel_payment_', self::STEL_URL);
-            $name_file = $file ? $file : '';
+        if ($request->hasFile(self::FILEPEMBAYARAN)) { 
+
+            $fileService = new FileService();
+            $fileProperties = array(
+                'path' => self::STEL_URL,
+                'prefix' => "stel_payment_"
+            );
+            $fileService->upload($request->file($this::FILEPEMBAYARAN), $fileProperties);
+
+
+            $name_file = $fileService->isUploaded() ? $fileService->getFileName() : '';
             try{
                 $STELSalesAttach = STELSalesAttach::where("stel_sales_id",$request->input(self::STELSALES_ID))->first();
                 if($STELSalesAttach){

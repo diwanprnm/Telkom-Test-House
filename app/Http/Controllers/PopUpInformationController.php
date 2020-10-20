@@ -10,6 +10,7 @@ use App\Http\Requests;
 use App\Certification;
 use App\Logs;
 use App\Services\Logs\LogService;
+use App\Services\FileService;
 
 use Auth;
 use Session;
@@ -40,7 +41,7 @@ class PopUpInformationController extends Controller
     private const IS_ACTIVE = 'is_active';
     private const ADMIN = '/admin/popupinformation';
     private const REQUIRED = 'required';
-    private const MINIO = 'minio';
+    private const POPUPINFORMATION_PATH = "popupinformation/";
 
     public function __construct()
     {
@@ -117,17 +118,18 @@ class PopUpInformationController extends Controller
         $popupinformation = new Certification;
         $popupinformation->id = Uuid::uuid4();
         $popupinformation->title = $request->input($this::TITLE);
-   
-        $file = $request->file($this::IMAGE);
-        $file_name = 'cert_'.$request->file($this::IMAGE)->getClientOriginalName();
-            
-        $image = Image::make($file);   
-        Storage::disk(self::MINIO)->put("popupinformation/$file_name", (string)$image->encode()); 
+
+        $fileService = new FileService();
+        $fileProperties = array(
+            'path' => self::POPUPINFORMATION_PATH,
+            'prefix' => "cert_"
+        );
+        $fileService->upload($request->file($this::IMAGE), $fileProperties);
 
         $popupinformation->is_active = $request->input($this::IS_ACTIVE);
         $request->input($this::IS_ACTIVE)== 1 ? DB::table('certifications')->where('type', 0)->update([$this::IS_ACTIVE => 0]) : "";
         $popupinformation->type = 0;
-        $popupinformation->image = $file_name;
+        $popupinformation->image = $fileService->getFileName();
         $popupinformation->created_by = $currentUser->id;
         $popupinformation->updated_by = $currentUser->id;
 
@@ -195,14 +197,16 @@ class PopUpInformationController extends Controller
         }
         if ($request->file($this::IMAGE)) {
 
-            $file = $request->file($this::IMAGE);
-            $file_name = 'cert_'.$request->file($this::IMAGE)->getClientOriginalName();
-                
-            $image = Image::make($file);   
-            Storage::disk(self::MINIO)->put("popupinformation/$file_name", (string)$image->encode()); 
+            $fileService = new FileService();
+            $fileProperties = array(
+                'path' => self::POPUPINFORMATION_PATH,
+                'prefix' => "cert_",
+                'oldFile' => $popupinformation->image
+            );
+            $fileService->upload($request->file($this::IMAGE), $fileProperties);
 
-            if( Storage::disk(self::MINIO)->put("popupinformation/$file_name", (string)$image->encode()) ){
-                $popupinformation->image = $file_name;
+            if( $fileService->isUploaded() ){
+                $popupinformation->image = $fileService->getFileName();
             }else{ return redirect($this::CREATE)->with($this::ERROR, 'Save Image to directory failed');
             }
         }
@@ -235,6 +239,13 @@ class PopUpInformationController extends Controller
             try{
                 $oldData = $popupinformation; 
                 $popupinformation->delete();
+
+                $fileService = new FileService();
+                $fileProperties = array(
+                    'path' => self::POPUPINFORMATION_PATH,
+                    'fileName' => $popupinformation->image
+                );
+                $fileService->deleteFile($fileProperties);
 
                 $logService = new LogService();
                 $logService->createLog("Delete Pop Up Information", $this::CERTIFICATION, $oldData );           

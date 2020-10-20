@@ -417,13 +417,16 @@ class ExaminationController extends Controller
         $spk_created = 0;
         if ($request->has(self::CONTRACT_STATUS)){
 			if ($request->hasFile(self::CONTRACT_FILE)) {
-				$name_file = 'contract_'.$request->file(self::CONTRACT_FILE)->getClientOriginalName();
-				$path_file = self::MEDIA_EXAMINATION_LOC.$exam->id;
 
 				$fileService = new FileService();
-				$fileUploaded = $fileService->uploadFile($request->file(self::CONTRACT_FILE), $path_file, $name_file);
+				$fileProperties = array(
+					'path' => self::MEDIA_EXAMINATION_LOC.$exam->id.'/',
+					'prefix' => "contract_"
+				);
+				$fileService->upload($request->file($this::IMAGE), $fileProperties);
 
-				if($fileUploaded){
+				if($fileService->isUploaded()){
+					$name_file = $fileService->getFileName();
 					$attach = ExaminationAttach::where('name', self::TINJAUAN_KONTRAK)->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
 
 					if ($attach){
@@ -551,13 +554,15 @@ class ExaminationController extends Controller
 				$exam->cust_price_payment = str_replace(".",'',$request->input(self::CUST_PRICE_PAYMENT));
 			}
 			if ($request->hasFile(self::KUITANSI_FILE)) {
-				$name_file = 'kuitansi_'.$request->file(self::KUITANSI_FILE)->getClientOriginalName();
-				$path_file = self::MEDIA_EXAMINATION_LOC.$exam->id;
-
 				$fileService = new FileService();
-				$fileUploaded = $fileService->uploadFile($request->file(self::KUITANSI_FILE), $path_file, $name_file);
+				$fileProperties = array(
+					'path' => self::MEDIA_EXAMINATION_LOC.$exam->id."/",
+					'prefix' => "kuitansi_"
+				);
+				$fileService->upload($request->file($this::IMAGE), $fileProperties);
+				$name_file = $fileService->getFileName();
 
-				if($fileUploaded){
+				if($fileService->isUploaded()){
 					$attach = ExaminationAttach::where('name', self::KUITANSI)->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
 
 					if ($attach){
@@ -582,13 +587,15 @@ class ExaminationController extends Controller
 				}
 			}
 			if ($request->hasFile(self::FAKTUR_FILE)) {
-				$name_file = 'faktur_'.$request->file(self::FAKTUR_FILE)->getClientOriginalName();
-				$path_file = self::MEDIA_EXAMINATION_LOC.$exam->id;
-
 				$fileService = new FileService();
-				$fileUploaded = $fileService->uploadFile($request->file(self::FAKTUR_FILE), $path_file, $name_file);
+				$fileProperties = array(
+					'path' => self::MEDIA_EXAMINATION_LOC.$exam->id."/",
+					'prefix' => "faktur_"
+				);
+				$fileService->upload($request->file($this::IMAGE), $fileProperties);
+				$name_file = $fileService->getFileName();
 
-				if($fileUploaded){
+				if($fileService->isUploaded()){
 					$attach = ExaminationAttach::where('name', self::FAKTUR_PAJAK)->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();
 
 					if ($attach){
@@ -722,13 +729,15 @@ class ExaminationController extends Controller
 	                $examinationService->api_upload($data_upload,$exam->BILLING_ID);
 			}
 			if ($request->hasFile(self::REV_LAP_UJI)) {
-				$name_file = 'rev_lap_uji_'.$request->file(self::REV_LAP_UJI)->getClientOriginalName();
-				$path_file = self::MEDIA_EXAMINATION_LOC.$exam->id;
-				
 				$fileService = new FileService();
-				$fileUploaded = $fileService->uploadFile($request->file(self::REV_LAP_UJI), $path_file, $name_file);
+				$fileProperties = array(
+					'path' => self::MEDIA_EXAMINATION_LOC.$exam->id."/",
+					'prefix' => "rev_lap_uji_"
+				);
+				$fileService->upload($request->file($this::IMAGE), $fileProperties);
+				$name_file = $fileService->getFileName();
 
-				if($fileUploaded){
+				if($fileService->isUploaded()){
                     /*TPN api_upload*/
 		            if($exam->BILLING_ID != null){
 		                $data_upload [] = array(
@@ -918,13 +927,15 @@ class ExaminationController extends Controller
         }
 
         if ($request->hasFile(self::CERTIFICATE_DATE)) {
-			$name_file = 'sertifikat_'.$request->file(self::CERTIFICATE_DATE)->getClientOriginalName();
-			$path_file = self::MEDIA_DEVICE_LOC.$exam->device_id;
-			
 			$fileService = new FileService();
-			$fileUploaded = $fileService->uploadFile($request->file(self::CERTIFICATE_DATE), $path_file, $name_file);
+			$fileProperties = array(
+				'path' => self::MEDIA_DEVICE_LOC.$exam->device_id."/",
+				'prefix' => "sertifikat_"
+			);
+			$fileService->upload($request->file($this::IMAGE), $fileProperties);
+			$name_file = $fileService->getFileName();
 
-            if($fileUploaded){
+            if($fileService->isUploaded()){
                 $device = Device::findOrFail($exam->device_id);
                 if ($device){
                     $device->certificate = $name_file;

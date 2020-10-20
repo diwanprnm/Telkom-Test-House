@@ -1906,18 +1906,17 @@ class ExaminationAPIController extends AppBaseController
                         $status_invoice = $invoice->data->status_invoice;
                         $status_faktur = $invoice->data->status_faktur;
                         if($status_invoice == "approved" && $status_faktur == "received"){
-							/* 
-							 * SAVE KUITANSI
-							 * Ket: Pengaplikasian upload ke minio dari stream API
-							 * Tgs: Belum ditest
-							 */
 							$name_file = "kuitansi_spb_$INVOICE_ID.pdf";
-							$path_file = "examination/$data->id";
+							$path_file = "examination/$data->id/";
 							$response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/exportpdf');
 							$stream = (String)$response->getBody();
 
 							$fileService = new FileService();
-							$isUploaded = $fileService->uploadPDFfromStream($stream, $name_file, $path_file);
+							$fileProperties = array(
+								'path' => $path_file,
+								'fileName' => $name_file
+							);
+							$isUploaded = $fileService->uploadFromStream($stream, $fileProperties);
 
 							if($isUploaded){
                                 $attach = ExaminationAttach::where('name', 'Kuitansi')->where('examination_id', ''.$data->id.'')->first();
@@ -2003,12 +2002,16 @@ class ExaminationAPIController extends AppBaseController
 							 * Tgs: Belum ditest
 							 */
 							$name_file = trim(preg_replace(array('/\s\s+/','/\//','/\\\/','/\:/','/\*/','/\?/','/\"/','/\</','/\>/','/\|/'), '', 'faktur_spb_'.$filename.'.pdf'));
-							$path_file = "examination/$data->id";
+							$path_file = "examination/$data->id/";
 							$response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/taxinvoice/pdf');
 							$stream = (String)$response->getBody();
 
 							$fileService = new FileService();
-							$isUploaded = $fileService->uploadPDFfromStream($stream, $name_file, $path_file);
+							$fileProperties = array(
+								'path' => $path_file,
+								'fileName' => $name_file
+							);
+							$isUploaded = $fileService->uploadFromStream($stream, $fileProperties);
 
 							if($isUploaded){
                                 $attach = ExaminationAttach::where('name', 'Faktur Pajak')->where('examination_id', ''.$data->id.'')->first();

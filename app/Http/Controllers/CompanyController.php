@@ -470,21 +470,49 @@ class CompanyController extends Controller
             ->get(); 
     }
 
-    private function storeFile($request, $company)
+    private function storeFile($request, $company, $update = false)
     {
-        $fileService = new FileService(); 
+        $npwp = '';
+        $siupFile = '';
+        $qs_certificate_file = '';
 
-        if ($request->hasFile(self::NPWP_FILE)) { 
-            $file = $fileService->uploadFile($request->file(self::NPWP_FILE), 'npwp_', "/".self::COMPANY_PATH.$company->id."/");  
-            $company->npwp_file = $file ? $file : '';
+        if ($update)
+        {
+            $npwp = $company->npwp_file;
+            $siupFile = $company->siup_file;
+            $qs_certificate_file = $company->qs_certificate_file;
+        }
+
+        if ($request->hasFile(self::NPWP_FILE)) {
+            $fileService = new FileService();
+            $fileProperties = array(
+                'path' => "/".self::COMPANY_PATH.$company->id."/",
+                'prefix' => 'npwp_',
+                'oldFile' => $npwp
+            );
+            $fileService->upload($request->file($this::PICTURE), $fileProperties);
+            $company->npwp_file = $fileService->isUploaded() ? $fileService->getFileName() : '';
         }
         if ($request->hasFile(self::SIUP_FILE)) {
-            $file = $fileService->uploadFile($request->file(self::SIUP_FILE), 'siupp_', "/".self::COMPANY_PATH.$company->id."/");  
-            $company->siup_file = $file ? $file : '';
+            $fileService = new FileService();
+            $fileProperties = array(
+                'path' => "/".self::COMPANY_PATH.$company->id."/",
+                'prefix' => 'siupp_',
+                'oldFile' => $siupFile
+            );
+            $fileService->upload($request->file($this::PICTURE), $fileProperties);
+            $company->siup_file = $fileService->isUploaded() ? $fileService->getFileName() : '';
         } 
         if ($request->hasFile(self::QS_CERTIFICATE_FILE)) {
-            $file = $fileService->uploadFile($request->file(self::QS_CERTIFICATE_FILE), 'serti_uji_mutu_', "/".self::COMPANY_PATH.$company->id."/");  
-            $company->qs_certificate_file = $file ? $file : '';
+
+            $fileService = new FileService();
+            $fileProperties = array(
+                'path' => "/".self::COMPANY_PATH.$company->id."/",
+                'prefix' => 'siupp_',
+                'oldFile' => $qs_certificate_file
+            );
+            $fileService->upload($request->file($this::PICTURE), $fileProperties);
+            $company->qs_certificate_file = $fileService->isUploaded() ? $fileService->getFileName() : '';
         }
 
         return $company;

@@ -9,6 +9,7 @@ use App\Jobs\ChangeLocale;
 use App\User;
 use App\BackupHistory;
 use App\Services\Logs\LogService;
+use App\Services\FileService;
 
 use Auth;
 use Response;
@@ -26,7 +27,6 @@ class BackupController extends Controller
     private const DATA_NOT_FOUND = 'Data not found';
     private const ERROR = 'error';
     private const MESSAGE = 'message';
-    private const MINIO = 'minio';
     private const SEARCH = 'search';
     
     public function __construct()
@@ -95,7 +95,12 @@ class BackupController extends Controller
             $backup->save();
 
             $backupFile = Storage::disk('tmp')->get($backup->file);
-            Storage::disk(self::MINIO)->put(self::BACKUP_DATA.$backup->file, $backupFile );
+            $fileService = new FileService();
+            $fileProperties = array(
+                'fileName' => $backup->file,
+                'path' => self::BACKUP_DATA
+            );
+            $fileService->uploadFromStream($backupFile, $fileProperties);
             File::delete(storage_path('/tmp/'.$backup->file));
 
             Session::flash(self::MESSAGE, 'Backup successfully created');
@@ -110,7 +115,13 @@ class BackupController extends Controller
         $backups = BackupHistory::find($id); 
         if($backups){
             try {
-                $file = Storage::disk(self::MINIO)->get(self::BACKUP_DATA.$backups->file);
+                $fileService = new FileService();
+                $fileProperties = array(
+                    'fileName' => $backups->file,
+                    'path' => self::BACKUP_DATA
+                );
+                $file = $fileService->get($fileProperties);
+                
                 Storage::disk('tmp')->put($backups->file,$file);
                 /**
                  * This just triger backup list
@@ -134,7 +145,12 @@ class BackupController extends Controller
         if ($backupSql ){
             try{
                 BackupHistory::where('id', '=' ,''.$id.'')->delete(); 
-                Storage::disk(self::MINIO)->delete(self::BACKUP_DATA.$backupSql->file);
+                $fileService = new FileService();
+                $fileProperties = array(
+                    'path' => self::BACKUP_DATA,
+                    'fileName' => $backupSql->file
+                );
+                $fileService->deleteFile($fileProperties);
                 Session::flash(self::MESSAGE, 'Backup successfully deleted');
                 return redirect(self::ADMIN_BACKUP);
             }catch (Exception $e){ return redirect(self::ADMIN_BACKUP)->with(self::ERROR, 'Delete failed');
@@ -152,7 +168,13 @@ class BackupController extends Controller
             return redirect(self::ADMIN_BACKUP);
         }
 
-        $file = Storage::disk(self::MINIO)->get(self::BACKUP_DATA.$sql->file);
+        $fileService = new FileService();
+        $fileProperties = array(
+            'fileName' => $sql->file,
+            'path' => self::BACKUP_DATA
+        );
+        $file = $fileService->get($fileProperties);
+
         $headers = [
             'Content-Type' => 'text/sql',
             'Content-Description' => 'File Transfer',

@@ -178,8 +178,13 @@ class STELController extends Controller
 
     		$fileService = new FileService();
             if ($request->hasFile(self::ATTACHMENT)) { 
-                $file = $fileService->uploadFile($request->file(self::ATTACHMENT), 'stel_', self::STEL_URL);
-                $stel->attachment = $file ? $file : '';
+                $fileService = new FileService();
+                $fileProperties = array(
+                    'path' => self::STEL_URL,
+                    'prefix' => "stel_"
+                );
+                $fileService->upload($request->file($this::ATTACHMENT), $fileProperties);
+                $stel->attachment = $fileService->isUploaded() ? $fileService->getFileName() : '';
             }else{
                 $stel->attachment = "";
             }
@@ -269,9 +274,15 @@ class STELController extends Controller
             }
 
             $fileService = new FileService();
-            if ($request->hasFile(self::ATTACHMENT)) { 
-            $file = $fileService->uploadFile($request->file(self::ATTACHMENT), 'stel_', self::STEL_URL);
-            $stel->attachment = $file ? $file : '';
+            if ($request->hasFile(self::ATTACHMENT)) {
+                $fileService = new FileService();
+                $fileProperties = array(
+                    'path' => self::STEL_URL,
+                    'prefix' => "stel_",
+                    'oldFile' => $stel->attachment
+                );
+                $fileService->upload($request->file($this::IMAGE), $fileProperties);
+            $stel->attachment = $fileService->isUploaded() ? $fileService->getFileName() : '';
             }else{
                 $stel->attachment = "";
             }

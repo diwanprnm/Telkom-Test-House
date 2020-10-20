@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Certification;
 use App\Services\Logs\LogService;
+use App\Services\FileService;
 
 use Auth;
 use Session;
@@ -21,6 +22,7 @@ class CertificationController extends Controller
     private const ADMIN_CERTIFICATION = '/admin/certification';
     private const ADMIN_CERTIFICATION_CREATE = '/admin/certification/create';
     private const CERTIFICATION = 'CERTIFICATION';
+    private const CERTIFICATION_PATH = "certification/";
     private const CREATED_AT = 'created_at';
     private const ERROR = 'error';
     private const IMAGE = 'image';
@@ -115,14 +117,18 @@ class CertificationController extends Controller
 
         if ($request->hasFile(self::IMAGE)) {
 
-            $name_file = 'cert_'.$request->file(self::IMAGE)->getClientOriginalName(); 
-            $image_ori = Image::make($request->file(self::IMAGE));
-            $saveMinio = Storage::disk('minio')->put("certification/$name_file",(string) $image_ori->encode());
- 
-            if($saveMinio){
-                $certification->image = $name_file;
-            }else{ return redirect(self::ADMIN_CERTIFICATION_CREATE)->with(self::ERROR, 'Save Image to directory failed');
+            $fileService = new FileService();
+            $fileProperties = array(
+                'path' => self::CERTIFICATION_PATH,
+                'prefix' => "cert_",
+            );
+            $fileService->upload($request->file(self::IMAGE), $fileProperties);
+
+            if(!$fileService->isUploaded()){
+                return redirect(self::ADMIN_CERTIFICATION_CREATE)->with(self::ERROR, 'Save Image to directory failed');
             }
+            
+            $certification->image = $fileService->getFileName();
         }
         
         $certification->is_active = $request->input(self::IS_ACTIVE);
@@ -180,14 +186,19 @@ class CertificationController extends Controller
         }
         if ($request->file(self::IMAGE)) {
 
-            $name_file = 'cert_'.$request->file(self::IMAGE)->getClientOriginalName(); 
-            $image_ori = Image::make($request->file(self::IMAGE)); 
-            $saveMinio = Storage::disk('minio')->put("certification/$name_file",(string) $image_ori->encode());
+            $fileService = new FileService();
+            $fileProperties = array(
+                'path' => self::CERTIFICATION_PATH,
+                'prefix' => "cert_",
+                'oldFile' => $certification->image
+            );
+            $fileService->upload($request->file(self::IMAGE), $fileProperties);
 
-            if($saveMinio){
-                $certification->image = $name_file;
-            }else{ return redirect(self::ADMIN_CERTIFICATION_CREATE)->with(self::ERROR, 'Save Image to directory failed');
+            if(!$fileService->isUploaded()){
+                return redirect(self::ADMIN_CERTIFICATION_CREATE)->with(self::ERROR, 'Save Image to directory failed');
             }
+
+            $certification->image = $fileService->getFileName();
         }
 
         $certification->updated_by = $currentUser->id;
@@ -218,6 +229,13 @@ class CertificationController extends Controller
             $oldData = clone $certification;
             
             try{
+                $fileService = new FileService();
+                $fileProperties = array(
+                    'path' => self::CERTIFICATION_PATH,
+                    'fileName' => $certification->image
+                );
+                $fileService->deleteFile($fileProperties);
+
                 $certification->delete();
                 $logService->createLog('Delete Certification', self::CERTIFICATION, $oldData );
 

@@ -221,11 +221,16 @@ class PermohonanController extends Controller
 	}
 
 	public function upload(Request $request){ 
-		$fileService = new FileService();
 		$exam_id = $request->session()->get('exam_id');
+		
+		$fileService = new FileService();
+		$fileProperties = array(
+			'path' => self::MEDIA_EXAMINATION_LOC.$exam_id."/",
+			'prefix' => "form_uji_"
+		);
+		$fileService->upload($request->file('fuploaddetailpengujian'), $fileProperties);
+		$fuploaddetailpengujian_name = $fileService->isUploaded() ? $fileService->getFileName() : '';
 
-		$file = $fileService->uploadFile($request->file('fuploaddetailpengujian'), 'form_uji_', self::MEDIA_EXAMINATION_LOC.$exam_id);
-		$fuploaddetailpengujian_name = $file ? $file : '';
 		
 		DB::table(self::EXAMINATIONS)
             ->where('id', ''.$exam_id.'')
@@ -238,8 +243,12 @@ class PermohonanController extends Controller
 		if(is_array($exam_id)){
 			$exam_id = $exam_id[0];
 		}
-		$file = $fileService->uploadFile($request->file('fuploaddetailpengujian_edit'), 'form_uji_', self::MEDIA_EXAMINATION_LOC.$exam_id);
-		$fuploaddetailpengujian_name = $file ? $file : '';
+		$fileProperties = array(
+			'path' => self::MEDIA_EXAMINATION_LOC.$exam_id."/",
+			'prefix' => "form_uji_"
+		);
+		$fileService->upload($request->file('fuploaddetailpengujian_edit'), $fileProperties);
+		$fuploaddetailpengujian_name = $fileService->isUploaded() ? $fileService->getFileName() : '';
 
 		$exam = Examination::find($exam_id);
 		$fileService->deleteFile(self::MEDIA_EXAMINATION_LOC.$exam_id.'/'.$exam->attachment);
@@ -457,6 +466,7 @@ class PermohonanController extends Controller
 		}else{
 			$exam_id = Uuid::uuid4();
 			$device_id = Uuid::uuid4();
+			$request->session()->put('my_exam_id_for_testing', $exam_id);
 		}
 		$currentUser = Auth::user();
 		$user_id = ''.$currentUser[self::ATTRIBUTES]['id'].'';
@@ -598,8 +608,13 @@ class PermohonanController extends Controller
 				// case QA
 				$res = explode('/',$request->input('path_ref'));   
 				$fuploadrefuji_name = $res[count($res)-1];
-					$url = str_replace(" ", "%20", $request->input('path_ref'));
-				$file = $fileService->uploadFile(@fopen($url,'r'), '', self::MEDIA_EXAMINATION_LOC.$exam_id); 
+				$url = str_replace(" ", "%20", $request->input('path_ref'));
+				$fileProperties = array(
+					'fileName' => $fuploadrefuji_name,
+					'path' => self::MEDIA_EXAMINATION_LOC.$exam_id.'/'
+				);
+				$stream = file_get_contents($url);
+				$fileService->uploadFromStream($stream, $fileProperties);
 			}else{
 				$fuploadrefuji_name = $request->input(self::HIDE_REF_UJI_FILE);
 			}

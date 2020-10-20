@@ -430,6 +430,13 @@ class UserController extends Controller
                 $data_log = Logs::where(self::USER_ID, '=', $id);
                 $data_log->delete();
                 $user->delete();
+
+                $fileService = new FileService();
+                $fileProperties = array(
+                    'path' => self::MEDIA_USER.$user->id.'/',
+                    'fileName' => $user->picture
+                );
+                $fileService->deleteFile($fileProperties);
                 
                 Session::flash(self::MESSAGE, 'User successfully deleted');
                 return redirect(self::ADMIN_USER);
@@ -504,10 +511,15 @@ class UserController extends Controller
     private function uploadPicture($request, $users){
 
         if ($request->hasFile(self::PICTURE)) {
-            try {
-                $fileService = new FileService();  
-                $file = $fileService->uploadFile($request->file(self::PICTURE), '', "/".self::MEDIA_USER.$users->id."/");  
-                $users->picture = $file ? $file : '';
+            try {                
+                $fileService = new FileService();
+                $fileProperties = array(
+                    'path' => "/".self::MEDIA_USER.$users->id."/",
+                    'prefix' => ""
+                );
+                $fileService->upload($request->file($this::PICTURE), $fileProperties);
+                
+                $users->picture = $fileService->isUploaded() ? $fileService->getFileName() : '';
             } catch (\Exception $e) {
                 Session::flash(self::ERROR,self::FAILED_USER_MSG);
                 return redirect(self::ADMIN_USEREKS_CREATE);

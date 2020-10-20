@@ -28,6 +28,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 
 use App\Services\Logs\LogService;
+use App\Services\FileService;
 
 class UserinController extends Controller
 {
@@ -47,7 +48,7 @@ class UserinController extends Controller
     private const ADDRESS = 'address';
     private const PHONE_NUMBER = 'phone_number';
     private const PICTURE = 'picture';
-    private const PATH_PROFILE = 'profile_';
+    private const PROFILE_PREFIX = 'profile_';
     private const MEDIA_USER = '/user/';
     private const USER_IMG_FAILED = 'Save Profile Picture to directory failed';
     private const PAGE_USERIN_CREATE = '/admin/userin/create';
@@ -420,10 +421,17 @@ class UserinController extends Controller
         if ($user){
             try{
 
+                $fileService = new FileService();
+                $fileProperties = array(
+                    'path' => self::MEDIA_USER.$user->id.'/',
+                    'fileName' => $user->picture
+                );
+                $fileService->deleteFile($fileProperties);
+
                 $data_log = Logs::where(self::USER_ID, '=', $id);
                 $data_log->delete();
                 $user->delete();
-                
+
                 Session::flash(self::MESSAGE, 'User successfully deleted');
                 return redirect(self::PAGE_USERIN);
             }catch (Exception $e){
@@ -470,14 +478,18 @@ class UserinController extends Controller
 
      private function uploadPictureUserin($request, $user){
 
-       if ($request->hasFile(self::PICTURE)) {  
-            $file = $request->file(self::PICTURE); 
-            $file_name = self::PATH_PROFILE.$request->file(self::PICTURE)->getClientOriginalName();
+       if ($request->hasFile(self::PICTURE)) {
 
-            $image = Image::make($file);   
-            $uploadedUserIn = Storage::disk('minio')->put(self::MEDIA_USER.$user->id."/$file_name",(string)$image->encode()); 
-             if($uploadedUserIn){
-                $user->picture = $file_name;
+            $fileService = new FileService();
+            $fileProperties = array(
+                'path' => self::MEDIA_USER.$user->id.'/',
+                'prefix' => self::PROFILE_PREFIX
+            );
+            $fileService->upload($request->file($this::PICTURE), $fileProperties);
+
+
+             if($fileService->isUploaded()){
+                $user->picture = $fileService->getFileName();
             }else{
                 Session::flash(self::ERROR, self::USER_IMG_FAILED);
                 return redirect(self::PAGE_USERIN_CREATE);

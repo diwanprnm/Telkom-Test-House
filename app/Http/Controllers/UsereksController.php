@@ -154,8 +154,13 @@ class UsereksController extends Controller
         $usersEks->phone_number = $request->input(self::PHONE_NUMBER);
         $usersEks->fax = $request->input('fax');
 
-        if ($request->hasFile(self::PICTURE)) { 
-            $fileService->uploadFile($request->file(self::PICTURE), '', self::MEDIA_USER.$usersEks->id);
+        if ($request->hasFile(self::PICTURE)) {
+            $fileProperties = array(
+                'path' => self::MEDIA_USER.$usersEks->id.'/',
+                'prefix' => ""
+            );
+            $fileService->upload($request->file($this::IMAGE), $fileProperties);
+            $usersEks->picture = $fileService->isUploaded() ? $fileService->getFileName() : '';
         }
         $usersEks->created_by = $currentUser->id;
         $usersEks->updated_by = $currentUser->id;
@@ -248,8 +253,15 @@ class UsereksController extends Controller
         if ($request->has('fax')){
             $usersEks->fax = $request->input('fax');
         }
-        if ($request->hasFile(self::PICTURE)) { 
-            $fileService->uploadFile($request->file(self::PICTURE), '', self::MEDIA_USER.$usersEks->id);
+        if ($request->hasFile(self::PICTURE)) {
+            $fileService = new FileService();
+            $fileProperties = array(
+                'path' => self::MEDIA_USER.$usersEks->id.'/',
+                'prefix' => "",
+                'oldFile' => $usersEks->picture
+            );
+            $fileService->upload($request->file($this::IMAGE), $fileProperties);
+            $usersEks->picture = $fileService->isUploaded() ? $fileService->getFileName() : '';
         }
         $usersEks->updated_by = $currentUser->id;
 
@@ -276,6 +288,13 @@ class UsereksController extends Controller
             $oldData = $usersEks;
             try{
                 $usersEks->delete();
+
+                $fileService = new FileService();
+                $fileProperties = array(
+                    'path' => self::MEDIA_USER.$usersEks->id.'/',
+                    'fileName' => $usersEks->picture
+                );
+                $fileService->deleteFile($fileProperties);
 
                 $logService = new LogService();
                 $logService->createLog("Delete User",self::USER_EKSTERNAL, $oldData->id );
