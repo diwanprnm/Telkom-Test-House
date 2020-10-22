@@ -256,7 +256,7 @@ class CompanyController extends Controller
             $company->npwp_number = $request->input(self::NPWP_NUMBER);
         }
         
-        $company = $this->storeFile($request, $company);        
+        $company = $this->storeFile($request, $company, true);        
 
         if ($request->has(self::SIUP_NUMBER)){
             $company->siup_number = $request->input(self::SIUP_NUMBER);

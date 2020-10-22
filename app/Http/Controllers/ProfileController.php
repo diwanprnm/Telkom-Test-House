@@ -47,7 +47,7 @@ class ProfileController extends Controller
     private const MEDIA_USER = '/user/';
     private const HIDE_ID_USER = 'hide_id_user';
     private const USER_PICTURE = 'userPicture'; 
-    private const PATH_PROFILE = 'profile_'; 
+    private const PROFILE_PREFIX = 'profile_'; 
     private const EMAIL = 'email';
     private const ADDRESS = 'address';
     private const PHONE = 'phone';
@@ -128,9 +128,13 @@ class ProfileController extends Controller
 			}
 		}  
 
-		$fileService = new FileService();  
-        $file = $fileService->uploadFile($request->file(self::USER_PICTURE), self::PATH_PROFILE, "/".self::MEDIA_USER.$request->input(self::HIDE_ID_USER)."/");  
-        $fuserPicture = $file ? $file : '';
+		$fileService = new FileService();
+		$fileProperties = array(
+			'path' => self::MEDIA_USER.$request->input(self::HIDE_ID_USER)."/",
+			'prefix' => self::PROFILE_PREFIX
+		);
+		$fileService->upload($request->file($this::USER_PICTURE), $fileProperties);
+        $fuserPicture = $fileService->isUploaded() ? $fileService->getFileName() : '';
 		
 		try{
 			$query_update_user = "UPDATE users
@@ -233,11 +237,16 @@ class ProfileController extends Controller
 			$description = $description.'No. NPWP, ';
 		}
 		
+		//Upload NPWP File
+		$fileService = new FileService();
+		$fileProperties = array(
+			'path' => self::MEDIA_COMPANY.$currentUser->company->id."/",
+			'prefix' => "npwp_"
+		);
 		if ($request->hasFile(self::NPWP_FILE)) {   
-            $fileService = new FileService();  
-            $file = $fileService->uploadFile($request->file(self::NPWP_FILE), 'npwp_', "/".self::MEDIA_COMPANY.$currentUser->company->id."/");  
+			$fileService->upload($request->file($this::NPWP_FILE), $fileProperties);
             $count_commit ++ ; 
-            $temp->npwp_file = $file; 
+            $temp->npwp_file = $fileService->getFileName(); 
         }else{
         	$temp->npwp_file = "";
         }     	
@@ -255,12 +264,16 @@ class ProfileController extends Controller
 			$description = $description.'Masa berlaku SIUPP, ';
 		}
 		
+		//Upload SIUP FILE
+		$fileService = new FileService();
+		$fileProperties = array(
+			'path' => self::MEDIA_COMPANY.$currentUser->company->id."/",
+			'prefix' => "siupp_"
+		);
 		if ($request->hasFile(self::SIUP_FILE)) {   
-
-            $fileService = new FileService();  
-            $file = $fileService->uploadFile($request->file(self::SIUP_FILE), 'siupp_', "/".self::MEDIA_COMPANY.$currentUser->company->id."/");   
-            $temp->siup_file = $file ? $file : '';
-				$count_commit ++ ; 
+			$fileService->upload($request->file($this::SIUP_FILE), $fileProperties);
+            $temp->siup_file = $fileService->getFileName();
+			$count_commit ++ ; 
         }else{
         	$temp->siup_file = "";
         }     	
@@ -279,10 +292,15 @@ class ProfileController extends Controller
 			$description = $description.'Masa berlaku Sertifikat Uji Mutu, ';
 		}
 		
+		//Upload Serti Uji Mutu
+		$fileService = new FileService();
+		$fileProperties = array(
+			'path' => self::MEDIA_COMPANY.$currentUser->company->id."/",
+			'prefix' => "serti_uji_mutu_"
+		);
 		if ($request->hasFile(self::CERTIFICATE_FILE)) {   
-            $fileService = new FileService();  
-            $file = $fileService->uploadFile($request->file(self::SIUP_FILE), 'serti_uji_mutu_', "/".self::MEDIA_COMPANY.$currentUser->company->id."/");  
-            $temp->qs_certificate_file = $file;
+			$fileService->upload($request->file($this::CERTIFICATE_FILE), $fileProperties);
+            $temp->qs_certificate_file = $fileService->getFileName();
 			$count_commit ++ ; 
         }else{
         	$temp->qs_certificate_file = "";
@@ -369,9 +387,13 @@ class ProfileController extends Controller
 				->withInput($request->all());
 			} 
 			
-			$fileService = new FileService();  
-	        $file = $fileService->uploadFile($request->file(self::USER_PICTURE), self::PATH_PROFILE, "/".self::MEDIA_USER.$request->input(self::HIDE_ID_USER)."/");  
-	        $fuserPicture = $file ? $file : '';
+			$fileService = new FileService();
+			$fileProperties = array(
+				'path' => self::MEDIA_USER.$request->input(self::HIDE_ID_USER)."/",
+				'prefix' => self::PROFILE_PREFIX
+			);
+			$fileService->upload($request->file($this::USER_PICTURE), $fileProperties);
+	        $fuserPicture = $fileService->getFileName();
 
 			$company_id = $request->input('cmb-perusahaan');
 			$notif_message = "Permohonan Aktivasi Akun Baru";
@@ -399,21 +421,37 @@ class ProfileController extends Controller
 			$company->siup_date = $request->input('comp_siup_date');
 			$company->qs_certificate_number = $request->input('comp_qs_certificate_number');
 
-			if ($request->hasFile(self::COMP_NPWP_FILE)) {  
-
-				 $fileService = new FileService();  
-	            $file = $fileService->uploadFile($request->file(self::COMP_NPWP_FILE), 'npwp_', "/".self::MEDIA_COMPANY.$company->id."/");  
-	            $company->npwp_file = $file ? $file : '';
-			}        
-			if ($request->hasFile(self::COMP_SIUP_FILE)) { 
-				$fileService = new FileService();  
-	            $file = $fileService->uploadFile($request->file(self::COMP_SIUP_FILE), 'siupp_', "/".self::MEDIA_COMPANY.$company->id."/");  
-	            $company->siup_file = $file ? $file : '';
+			//Upload NPWP FILE
+			$fileService = new FileService();
+			$fileProperties = array(
+				'path' => self::MEDIA_COMPANY.$company->id."/",
+				'prefix' => "npwp_"
+			);
+			if ($request->hasFile(self::COMP_NPWP_FILE)) {
+				$fileService->upload($request->file($this::COMP_NPWP_FILE), $fileProperties);
+	            $company->npwp_file = $fileService->getFileName();
 			}
+
+			//Upload SIUP
+			$fileService = new FileService();
+			$fileProperties = array(
+				'path' => self::MEDIA_COMPANY.$company->id."/",
+				'prefix' => "siupp_"
+			);
+			if ($request->hasFile(self::COMP_SIUP_FILE)) { 
+				$fileService->upload($request->file($this::COMP_NPWP_FILE), $fileProperties);
+	            $company->siup_file = $fileService->getFileName();
+			}
+
+			//Upload Serti Uji Mutu
+			$fileService = new FileService();
+			$fileProperties = array(
+				'path' => self::MEDIA_COMPANY.$company->id."/",
+				'prefix' => "serti_uji_mutu_"
+			);
 			if ($request->hasFile(self::COMP_QS_CERTIFICATE_FILE)) { 
-				$fileService = new FileService();  
-	            $file = $fileService->uploadFile($request->file(self::COMP_QS_CERTIFICATE_FILE), 'serti_uji_mutu_', "/".self::MEDIA_COMPANY.$company->id."/");  
-	            $company->qs_certificate_file = $file ? $file : '';
+				$fileService->upload($request->file($this::COMP_QS_CERTIFICATE_FILE), $fileProperties);
+	            $company->qs_certificate_file = $fileService->getFileName();
 			}
 			
 			$company->qs_certificate_date = $request->input('comp_qs_certificate_date');
@@ -448,9 +486,13 @@ class ProfileController extends Controller
 				}
 				$user_id = Uuid::uuid4(); 
 				
- 				$fileService = new FileService();  
-		        $file = $fileService->uploadFile($request->file(self::USER_PICTURE), self::PATH_PROFILE, "/".self::MEDIA_USER.$request->input(self::HIDE_ID_USER)."/");  
-		        $fuserPicture = $file ? $file : '';
+				$fileService = new FileService();
+				$fileProperties = array(
+					'path' => self::MEDIA_USER.$request->input(self::HIDE_ID_USER)."/",
+					'prefix' => self::PROFILE_PREFIX
+				);
+				$fileService->upload($request->file($this::USER_PICTURE), $fileProperties);
+		        $fuserPicture = $fileService->getFileName();
 
 				$company->save();
 
