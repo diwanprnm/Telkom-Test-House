@@ -439,7 +439,7 @@ class ProfileController extends Controller
 				'prefix' => "siupp_"
 			);
 			if ($request->hasFile(self::COMP_SIUP_FILE)) { 
-				$fileService->upload($request->file($this::COMP_NPWP_FILE), $fileProperties);
+				$fileService->upload($request->file($this::COMP_SIUP_FILE), $fileProperties);
 	            $company->siup_file = $fileService->getFileName();
 			}
 

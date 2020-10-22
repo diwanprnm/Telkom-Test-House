@@ -210,8 +210,6 @@ class FooterController extends Controller
             $footer->is_active = $request->input($this::ACT);
         }
         if ($request->hasFile($this::IMAGE)) {
-         
-            
 
             $fileService = new FileService();
             $fileProperties = array(
@@ -220,7 +218,6 @@ class FooterController extends Controller
                 'oldFile' => $footer->image
             );
             $fileService->upload($request->file(self::IMAGE), $fileProperties);
-
 
             if($fileService->isUploaded()){
                 $footer->image = $fileService->getFileName();

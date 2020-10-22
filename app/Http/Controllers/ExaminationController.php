@@ -423,7 +423,7 @@ class ExaminationController extends Controller
 					'path' => self::MEDIA_EXAMINATION_LOC.$exam->id.'/',
 					'prefix' => "contract_"
 				);
-				$fileService->upload($request->file($this::IMAGE), $fileProperties);
+				$fileService->upload($request->file($this::CONTRACT_FILE), $fileProperties);
 
 				if($fileService->isUploaded()){
 					$name_file = $fileService->getFileName();
@@ -559,7 +559,7 @@ class ExaminationController extends Controller
 					'path' => self::MEDIA_EXAMINATION_LOC.$exam->id."/",
 					'prefix' => "kuitansi_"
 				);
-				$fileService->upload($request->file($this::IMAGE), $fileProperties);
+				$fileService->upload($request->file($this::KUITANSI_FILE), $fileProperties);
 				$name_file = $fileService->getFileName();
 
 				if($fileService->isUploaded()){
@@ -592,7 +592,7 @@ class ExaminationController extends Controller
 					'path' => self::MEDIA_EXAMINATION_LOC.$exam->id."/",
 					'prefix' => "faktur_"
 				);
-				$fileService->upload($request->file($this::IMAGE), $fileProperties);
+				$fileService->upload($request->file($this::FAKTUR_FILE), $fileProperties);
 				$name_file = $fileService->getFileName();
 
 				if($fileService->isUploaded()){
@@ -734,7 +734,7 @@ class ExaminationController extends Controller
 					'path' => self::MEDIA_EXAMINATION_LOC.$exam->id."/",
 					'prefix' => "rev_lap_uji_"
 				);
-				$fileService->upload($request->file($this::IMAGE), $fileProperties);
+				$fileService->upload($request->file($this::REV_LAP_UJI), $fileProperties);
 				$name_file = $fileService->getFileName();
 
 				if($fileService->isUploaded()){
@@ -932,7 +932,7 @@ class ExaminationController extends Controller
 				'path' => self::MEDIA_DEVICE_LOC.$exam->device_id."/",
 				'prefix' => "sertifikat_"
 			);
-			$fileService->upload($request->file($this::IMAGE), $fileProperties);
+			$fileService->upload($request->file($this::CERTIFICATE_DATE), $fileProperties);
 			$name_file = $fileService->getFileName();
 
             if($fileService->isUploaded()){
