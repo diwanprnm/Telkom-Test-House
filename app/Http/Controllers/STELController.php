@@ -281,7 +281,7 @@ class STELController extends Controller
                     'prefix' => "stel_",
                     'oldFile' => $stel->attachment
                 );
-                $fileService->upload($request->file($this::IMAGE), $fileProperties);
+                $fileService->upload($request->file($this::ATTACHMENT), $fileProperties);
             $stel->attachment = $fileService->isUploaded() ? $fileService->getFileName() : '';
             }else{
                 $stel->attachment = "";
