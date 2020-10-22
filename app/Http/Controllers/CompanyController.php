@@ -490,7 +490,7 @@ class CompanyController extends Controller
                 'prefix' => 'npwp_',
                 'oldFile' => $npwp
             );
-            $fileService->upload($request->file($this::PICTURE), $fileProperties);
+            $fileService->upload($request->file($this::NPWP_FILE), $fileProperties);
             $company->npwp_file = $fileService->isUploaded() ? $fileService->getFileName() : '';
         }
         if ($request->hasFile(self::SIUP_FILE)) {
@@ -500,7 +500,7 @@ class CompanyController extends Controller
                 'prefix' => 'siupp_',
                 'oldFile' => $siupFile
             );
-            $fileService->upload($request->file($this::PICTURE), $fileProperties);
+            $fileService->upload($request->file($this::SIUP_FILE), $fileProperties);
             $company->siup_file = $fileService->isUploaded() ? $fileService->getFileName() : '';
         } 
         if ($request->hasFile(self::QS_CERTIFICATE_FILE)) {
@@ -511,7 +511,7 @@ class CompanyController extends Controller
                 'prefix' => 'siupp_',
                 'oldFile' => $qs_certificate_file
             );
-            $fileService->upload($request->file($this::PICTURE), $fileProperties);
+            $fileService->upload($request->file($this::QS_CERTIFICATE_FILE), $fileProperties);
             $company->qs_certificate_file = $fileService->isUploaded() ? $fileService->getFileName() : '';
         }
 
