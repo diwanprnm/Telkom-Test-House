@@ -162,7 +162,7 @@ $factory->define(App\Examination::class, function (Faker\Generator $faker) {
         'qa_date'  => Carbon\Carbon::now(),
         'certificate_date'  => Carbon\Carbon::now(),
         'jns_perusahaan' => $faker->word,
-        'price' => $faker->numberBetween(1000,9000),
+        'price' => $faker->numberBetween(1000,9000)."000",
         'spk_date' => Carbon\Carbon::now(),
         'keterangan' => $faker->sentence(3, true),
         'urel_test_date' => Carbon\Carbon::now(),
@@ -173,7 +173,7 @@ $factory->define(App\Examination::class, function (Faker\Generator $faker) {
         'contract_date' => Carbon\Carbon::now(),
         'testing_start' => Carbon\Carbon::now(),
         'testing_end' => Carbon\Carbon::now(),
-        'spb_number' => $faker->numberBetween(1000,9000),
+        'spb_number' => "SPB_".$faker->numberBetween(1000,9000)."_TESTING",
         'spb_date' => Carbon\Carbon::now(),
         'qa_passed' => '1',
         'is_spk_created' => '1',
@@ -689,6 +689,29 @@ $factory->define(App\TempCompany::class, function (Faker\Generator $faker) {
         'created_by' => mt_rand(0,1),
         'created_at' => Carbon\Carbon::now(),
         'updated_by' => mt_rand(0,1),
+        'updated_at' => Carbon\Carbon::now(),
+    ];
+});
+
+
+$factory->define(App\SPB::class, function (Faker\Generator $faker) {
+    return [
+        'id'  => $faker->uuid,
+        'company_id' => function () {
+            return factory(App\Company::class)->create()->id;
+        },
+        'examination_id' =>  function () {
+            return factory(App\Examination::class)->create()->id;
+        },        
+        'attachment_spb' => $faker->word.'.pdf',
+        'spb_upload_date' => Carbon\Carbon::now(),
+        'attachment_payment' => $faker->word.'.pdf',
+        'payment_upload_date' => Carbon\Carbon::now(),
+        'is_valid' => 1,
+        'status' => 1,
+        'created_by' => 1,
+        'created_at' => Carbon\Carbon::now(),
+        'updated_by' => 1,
         'updated_at' => Carbon\Carbon::now(),
     ];
 });

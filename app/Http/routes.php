@@ -321,6 +321,7 @@ Route::group(['prefix' => '/v1', 'middlewareGroups' => 'api'], function () {
 	Route::get('/checkTaxInvoiceSPBTPN', 'v1\ExaminationAPIController@checkTaxInvoiceTPN');
 	Route::get('/checkKuitansiSPBTPN', 'v1\ExaminationAPIController@checkKuitansiTPN');
 	Route::get('/checkReturnedSPBTPN', 'v1\ExaminationAPIController@checkReturnedTPN');
+	Route::get('/spbReminder7Day', 'v1\ReminderController@remider7Day');
 });
 
 Route::get('/do_backup', 'BackupController@backup'); 
