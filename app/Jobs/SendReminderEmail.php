@@ -13,14 +13,14 @@ class SendReminderEmail extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 
-    protected $user;
+    protected $spb;
     /**
      * Create a new job instance.
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct($spb)
     {
-        $this->user = $user;
+        $this->spb = $spb;
     }
 
     /**
@@ -29,13 +29,8 @@ class SendReminderEmail extends Job implements ShouldQueue
      */
     public function handle(Mailer $mailer)
     {
-        $testTo = array(
-            'mail' => 'danielchristianto77@gmail.com',
-            'name' => 'Daniel Christianto Widodo'
-        );
-
-        $mailer->send('emails.reminder', ['user' => $this->user], function ($m) use ($testTo) {
-            $m->to($testTo['mail'])->subject('Your Reminder!');
+        $mailer->send('emails.reminderSPB', ['data' => $this->spb], function ($m) {
+            $m->to($this->spb['customerEmail'])->subject($this->spb['subject']);
         });
     }
 }

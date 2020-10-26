@@ -25,6 +25,7 @@ class SPB extends Model
         return DB::table('spb')
             ->select(
                 'users.name as customerName',
+                'users.email as customerEmail',
                 'examinations.spb_number as spbNumber',
                 'spb.created_at as createdAt',
                 'examinations.payment_method as paymentMethod',
@@ -35,6 +36,7 @@ class SPB extends Model
             ->join('companies', 'examinations.company_id', '=', 'companies.id')
             ->join('users', 'users.company_id', '=', 'companies.id')
             ->whereDate('spb.created_at', '=' ,$date)
+            ->where('examinations.payment_status', '=' , 0)
             ->get()
         ;
     }
