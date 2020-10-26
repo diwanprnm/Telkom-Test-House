@@ -323,6 +323,7 @@ Route::group(['prefix' => '/v1', 'middlewareGroups' => 'api'], function () {
 	Route::get('/checkReturnedSPBTPN', 'v1\ExaminationAPIController@checkReturnedTPN');
 	Route::get('/spbReminder7Day', 'v1\ReminderController@remider7Day');
 	Route::get('/spbReminder13Day', 'v1\ReminderController@remider13Day');
+	Route::get('/spbRevision', 'v1\SPBRevisionController@SPBRevision');
 });
 
 Route::get('/do_backup', 'BackupController@backup'); 

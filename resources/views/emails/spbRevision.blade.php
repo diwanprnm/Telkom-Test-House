@@ -47,46 +47,47 @@
 	<p style="font-style:italic; font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
 		Kepada Yth.<br>
 		Bapak/Ibu {!! $data['customerName'] !!}<br><br>
-	</p>
+    </p>
+    
 
     <p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-		Kami memberitahukan kembali bahwa Surat Pemberitahuan Biaya (SPB) {{ $data['SPBNumber'] }}
-		sudah terbit di <strong><a href="www.telkomtesthouse.co.id">www.telkomtesthouse.co.id</a></strong>
-		dan Bapak/Ibu mempunyai sisa waktu {{ $data['remainingDay'] }} hari untuk pembayaran.
-	</p>
-
-
-	<p style="text-align:center; font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00);">
-		Pada tanggal: {{ $data['dueDate'] }} <br>
-		Jam: {{ $data['dueHour'] }}
-	</p>
-
-	<p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-		Metode pembayaran yang telah dipilih adalah {{ $data['paymentMethod'] }} dengan nominal
-		{{ $data['price'] }} @if ($data['includePPH'])
-			(Dengan PPH).
-		@else
-			(Tanpa PPH).
-		@endif
-		@if ($data['paymentMethod'])
-			Apabila Bapak/Ibu tidak melakukan pembayaran hingga tenggat waktu, Virtual Account akan otomatis tidak berlaku.
-		@endif
-	</p>
+        Kami memohon maaf atas kejadian ini. 
+    </p>
 
     <p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-		Tata cara pembayaran dengan : {{ $data['paymentMethod']  }}
-		<ul style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00);">
+        Kami memberitahukan bahwa terjadi perubahan harga biaya uji yang sebelum nya mengacu pada SPB 
+        [No. SPB]<!--#ini#-->, oleh karena itu kami menerbitkan revisi SPB dengan nomor [No. SPB Revisi]<!--#ini#--> yang <strong>sudah terbit</strong> dan
+        Bapak/Ibu <strong>dapat mengunduhnya di web <a href="www.telkomtesthouse.co.id">www.telkomtesthouse.co.id</a></strong> atau lampiran email ini.
+        Mohon untuk <strong>mengabaikan email sebelumnya.</strong>
+    </p>
+
+
+    <p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
+        Kami sampaikan juga <strong>pembayaran SPB</strong> dapat dilakukan dengan <strong>dua cara pembayaran</strong>, yaitu:
+        <ul>
+            <li>Pembayaran dengan <strong>Bank Transfer</strong></li>
+            <li>Pembayaran dengan <strong>Virtual Account Bank Mandiri</strong></li>
+        </ul>
+    </p>
+
+    <p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
+        Silakan klik tautan di bawah ini untuk memilih cara pembayaran yang dikehendaki.
+        <a href="">[tautan ke halaman pemilihan pembayaran]</a><!--#ini#-->
+    </p>
+
+    <p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
+        Mohon periksa kembali biaya dan ketentuan-ketentuan yang berlaku demi kelancaran proses pembayaran.
+    </p>
+
+    <p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
+		Tata cara pembayaran dengan : {{ $data['paymentMethod']  }}<!--#ini#-->
+		<ul style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00);"><!--#ini#-->
 			@for ($i = 0; $i < count($data['howToPay']->data->VA); $i++)
 			    <li>{{ $data['howToPay']->data->VA[$i]->productName }}</li>
 			@endfor
 		</ul>
-	</p>
-	
-
-	<p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-		Mohon ikuti ketentuan-ketentuan yang berlaku demi kelancaran proses pembayaran.
     </p>
-
+    <br><br>
 
 
 	<p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">

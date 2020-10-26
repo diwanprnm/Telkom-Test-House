@@ -12,22 +12,15 @@ use Response;
 use App\Company;
 use App\User;
 use Carbon\Carbon;
-
-
 use App\Jobs\SendReminderEmail;
-/**
- * @resource Content
- *
- * Class CompanyAPIController,
- * list of all api related to company
- * - GET companies
- */
+
+
 class ReminderController extends AppBaseController
 {   
     public function remider7Day(Request $request)
     {
         $date = Carbon::now()->subDays(7)->format('Y-m-d');
-        $SPBs = \App\SPB::getSPBFromDate($date);
+        $SPBs = \App\Examination::getUnpaidSpbByDate($date);
 
         foreach ($SPBs as $SPB){
             $emailContent = $this->setData($SPB, '7', "Tersisa 7 Hari Lagi untuk Membayar Pengujian $SPB->spbNumber");
@@ -38,7 +31,7 @@ class ReminderController extends AppBaseController
     public function remider13Day(Request $request)
     {
         $date = Carbon::now()->subDays(13)->format('Y-m-d');
-        $SPBs = \App\SPB::getSPBFromDate($date);
+        $SPBs = \App\Examination::getUnpaidSpbByDate($date);
 
         foreach ($SPBs as $SPB){
             $emailContent = $this->setData($SPB, '13', "Tersisa 1 Hari Lagi untuk Membayar SPB $SPB->spbNumber");
@@ -47,15 +40,14 @@ class ReminderController extends AppBaseController
     }
 
     private function setData($SPB, $days, $subject){
-        $remain = 14-$days;
         return array(
             'customerName' => $SPB->customerName,
             'customerEmail' => $SPB->customerEmail,
             'subject' => $subject,
             'SPBNumber' => $SPB->spbNumber,
-            'remainingDay' => $remain,
-            'dueDate' => Carbon::now()->addDays($remain)->format('Y-m-d'),
-            'dueHour' => Carbon::createFromFormat('Y-m-d H:i:s', $SPB->createdAt)->format('H:i:s'),
+            'remainingDay' => 14-$days,
+            'dueDate' => Carbon::createFromFormat('Y-m-d H:i:s', $SPB->expiredDate)->format('d-m-Y'),
+            'dueHour' => Carbon::createFromFormat('Y-m-d H:i:s', $SPB->expiredDate)->format('H:i:s'),
             'paymentMethod' => $SPB->paymentMethod,
             'price' => "Rp " . number_format($SPB->price,2,',','.'),
             'includePPH' => $SPB->includePPH,
