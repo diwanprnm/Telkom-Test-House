@@ -156,14 +156,14 @@
 	        }
 	    });
 
-	    document.getElementById("filter").onclick = function() {
-            var baseUrl = "{{URL::to('/')}}";
-            var params = {};
-			var search_value = document.getElementById("search_value").value;
+	  //   document.getElementById("filter").onclick = function() {
+   //          var baseUrl = "{{URL::to('/')}}";
+   //          var params = {};
+			// var search_value = document.getElementById("search_value").value;
           	
-          	params['search'] = search_value;
-			document.location.href = baseUrl+'/admin/role?'+jQuery.param(params);
-	    };
+   //        	params['search'] = search_value;
+			// document.location.href = baseUrl+'/admin/role?'+jQuery.param(params);
+	  //   };
 	});
 </script>
 @endsection
