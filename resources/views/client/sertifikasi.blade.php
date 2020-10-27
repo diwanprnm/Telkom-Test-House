@@ -51,10 +51,10 @@
 					<article class="portfolio-item pf-media pf-icons">
 						<div class="portfolio-image">
 							<a href="#">
-								<img src="{{ asset('media/certification/'.$item->image) }}" alt="Open Imagination">
+								<img src="{{ \Storage::disk('minio')->url('certification/'.$item->image) }} " alt="Open Imagination">
 							</a>
 							<div class="portfolio-overlay">
-								<a href="{{ asset('media/certification/'.$item->image) }}" class="center-icon" data-lightbox="image"><em class="icon-line-search"></em></a>
+								<a href="{{ \Storage::disk('minio')->url('certification/'.$item->image)}} " class="center-icon" data-lightbox="image"><em class="icon-line-search"></em></a>
 							</div>
 						</div>
 						<div class="portfolio-desc">

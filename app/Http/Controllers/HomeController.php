@@ -65,7 +65,7 @@ class HomeController extends Controller
 		
 		$query_certification = "SELECT * FROM certifications WHERE is_active = 1 AND type = 1 ORDER BY created_at";
 		$data_certification = DB::select($query_certification);
-			
+		$message_slideshow = "";
 		if (count($data_certification) == 0){
 			$message_slideshow = 'Data not found';
 		}

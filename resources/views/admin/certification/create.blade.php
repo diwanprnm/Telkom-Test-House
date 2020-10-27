@@ -23,7 +23,7 @@
 			</div>
 		</section>
 		<!-- end: PAGE TITLE -->
-		@if (count($errors) > 0)
+		@if (count((array)$errors) > 0)
 			<div class="alert alert-danger">
 				<ul>
 					@foreach ($errors->all() as $error)
@@ -33,7 +33,7 @@
 			</div>
 		@endif
 
-		@if (count(session('error')))
+		@if (count((array)session('error')))
 			<div class="alert alert-danger">
 				<p>{{session('error')}}</p>
 			</div>
