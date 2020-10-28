@@ -416,7 +416,7 @@ class SalesController extends Controller
                     ->join(self::COMPANIES,self::COMPANIES_DOT_ID,"=",self::USER_COMPANIES_ID)
                     ->get();
         
-        if($STELSales[0]->BILLING_ID && !$STELSales[0]->INVOICE_ID){
+        if($STELSales[0]->BILLING_ID && $STELSales[0]->INVOICE_ID != ''){
             Session::flash(self::ERROR, "Can't upload attachment. Undefined INVOICE_ID!");
             return redirect(self::ADMIN_SALES.'/');
         }else{
