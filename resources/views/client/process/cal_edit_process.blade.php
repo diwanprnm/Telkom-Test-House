@@ -748,7 +748,7 @@ $("#siupp-file").click(function() {
 	});
 	
 	function downloadFile(file){
-		var path = "{{ URL::asset('media/examination') }}";
+		var path = "{{ \Storage::disk('minio')->url('examination')}}";
 		var id_exam = $('#hide_exam_id').val();
 		//Get file name from url.
 		var url = path+'/'+id_exam+'/'+file;
@@ -774,7 +774,7 @@ $("#siupp-file").click(function() {
 	}
 	
 	function downloadFileCompany(file){
-		var path = "{{ URL::asset('media/company') }}";
+		var path = "{{ \Storage::disk('minio')->url('company')}}";
 		var company_id = $('#hide_company_id').val();
 		//Get file name from url.
 		var url = path+'/'+company_id+'/'+file;
