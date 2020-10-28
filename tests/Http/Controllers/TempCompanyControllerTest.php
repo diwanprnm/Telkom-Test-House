@@ -111,7 +111,7 @@ class TempCompanyControllerTest extends TestCase
 	   $id = $company->id;
 	   $name = "npwp"; 
 	    $file = \Storage::disk('local_public')->get("images/testing.jpg"); 
-        \Storage::disk('minio')->put("tempCompany/$company->id/$company->npwp_file", $file);
+        \Storage::disk('minio')->put("tempCompany/$company->company_id/$company->id/$company->npwp_file", $file);
 	    $response =  $this->actingAs($user)->call('GET', 'admin/tempcompany/media/'.$id.'/'.$name);  
 	  	 
         $this->assertTrue($response->headers->get('content-type') == 'image/jpeg');
@@ -127,7 +127,7 @@ class TempCompanyControllerTest extends TestCase
 	   $name = "siup";
 	    
 	    $file = \Storage::disk('local_public')->get("images/testing.jpg"); 
-        \Storage::disk('minio')->put("tempCompany/$company->id/$company->siup_file", $file);
+        \Storage::disk('minio')->put("tempCompany/$company->company_id/$company->id/$company->siup_file", $file);
 	    $response =  $this->actingAs($user)->call('GET', 'admin/tempcompany/media/'.$id.'/'.$name);  
 	  
         $this->assertTrue($response->headers->get('content-type') == 'image/jpeg');
@@ -143,7 +143,7 @@ class TempCompanyControllerTest extends TestCase
 	   $name = "qs";
 	    
 	    $file = \Storage::disk('local_public')->get("images/testing.jpg"); 
-        \Storage::disk('minio')->put("tempCompany/$company->id/$company->qs_certificate_file", $file);
+        \Storage::disk('minio')->put("tempCompany/$company->company_id/$company->id/$company->qs_certificate_file", $file);
 	    $response =  $this->actingAs($user)->call('GET', 'admin/tempcompany/media/'.$id.'/'.$name);  
 	  
         $this->assertTrue($response->headers->get('content-type') == 'image/jpeg');
