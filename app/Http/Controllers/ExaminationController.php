@@ -882,9 +882,6 @@ class ExaminationController extends Controller
 		if ($request->has('testing_end')){
             $exam->testing_end = $request->input('testing_end');
         }
-		if ($request->has(self::SPB_NUMBER)){
-            $exam->spb_number = $request->input(self::SPB_NUMBER);
-        }
 		if ($request->has(self::SPB_DATE)){
             $exam->spb_date = $request->input(self::SPB_DATE);
         }
@@ -893,6 +890,7 @@ class ExaminationController extends Controller
 				Session::flash(self::ERROR, 'SPB Already Paid');
                 return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
 			}
+			$examinationService->send_revision( $exam, $request->input('spb_number') );
 			if($exam->BILLING_ID){
 				$data_cancel_billing = [
 	            	"canceled" => [
@@ -926,6 +924,10 @@ class ExaminationController extends Controller
             // $exam->BILLING_ID = $billing && $billing->status ? $billing->data->_id : null;
         }
 
+		if ($request->has(self::SPB_NUMBER)){
+            $exam->spb_number = $request->input(self::SPB_NUMBER);
+		}
+		
         if ($request->hasFile(self::CERTIFICATE_DATE)) {
 			$fileService = new FileService();
 			$fileProperties = array(

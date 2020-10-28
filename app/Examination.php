@@ -59,25 +59,4 @@ class Examination extends Model
     {
         return $this->hasMany('App\ExaminationAttach', 'examination_id')->orderBy('created_at', 'DESC');
     }
-
-    public static function getUnpaidSpbByDate($date)
-    {
-        return DB::table('examinations')
-            ->select(
-                'users.name as customerName',
-                'users.email as customerEmail',
-                'examinations.spb_number as spbNumber',
-                'examinations.VA_expired as expiredDate',
-                'examinations.payment_method as paymentMethod',
-                'examinations.price as price',
-                'examinations.include_pph as includePPH'
-                )
-            ->join('companies', 'examinations.company_id', '=', 'companies.id')
-            ->join('users', 'users.company_id', '=', 'companies.id')
-            ->whereDate('spb.created_at', '=' ,$date)
-            ->where('examinations.payment_status', '!=' , 1)
-            ->where('examinations.VA_expired', '!=' , null)
-            ->get()
-        ;
-    }
 }

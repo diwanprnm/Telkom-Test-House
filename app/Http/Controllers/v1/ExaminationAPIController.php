@@ -23,6 +23,7 @@ use App\User;
 use Mail;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
+use Carbon\Carbon;
 
 // UUID
 use Ramsey\Uuid\Uuid;
@@ -2101,5 +2102,76 @@ class ExaminationAPIController extends AppBaseController
         }else{
             return 'checkReturnedSPBTPN Command Run successfully! Nothing to update.';
         }
-    }
+	}
+	
+	public function spbReminder()
+	{
+		//send data for 7 day old unpaid spb
+		$date = Carbon::now()->subDays(7)->format('Y-m-d');
+        $SPB7 = $this->getUnpaidSpbByDate($date);
+		//send to each data
+        foreach ($SPB7 as $SPB){
+			//set data required
+			$emailContent = $this->setData($SPB, '7', "Tersisa 7 Hari Lagi untuk Membayar Pengujian $SPB->registrationNumber");
+			//send email
+			Mail::send('emails.reminderSPB', ['data' => $emailContent], function ($m) use($emailContent) {
+				$m->to($emailContent['customerEmail'])->subject( $emailContent['subject'] );
+			});
+		}
+		
+		//send data for 13 day old unpaid spb
+        $date = Carbon::now()->subDays(13)->format('Y-m-d');
+        $SPB13 = $this->getUnpaidSpbByDate($date);
+		//send to each data
+        foreach ($SPB13 as $SPB){
+			//set data required
+			$emailContent = $this->setData($SPB, '13', "Tersisa 1 Hari Lagi untuk Membayar SPB $SPB->spbNumber");
+			//send email
+			Mail::send('emails.reminderSPB', ['data' => $emailContent], function ($m) use($emailContent) {
+				$m->to($emailContent['customerEmail'])->subject( $emailContent['subject'] );
+			});
+        }
+	}
+
+	private function getUnpaidSpbByDate($date)
+	{
+		return DB::table('examinations')
+			->select(
+				'users.name as customerName',
+				'users.email as customerEmail',
+				'examinations.spb_number as spbNumber',
+				'examinations.function_test_NO as registrationNumber',
+				'examinations.VA_expired as expiredDate',
+				'examinations.VA_name as paymentMethod',
+				'examinations.VA_amount as price',
+				'examinations.include_pph as includePPH'
+				)
+			->join('companies', 'examinations.company_id', '=', 'companies.id')
+			->join('users', 'users.company_id', '=', 'companies.id')
+			->whereDate('examinations.VA_expired', '=' ,$date)
+			->where('examinations.payment_status', '!=' , 1)
+			->where('examinations.VA_expired', '!=' , null)
+			->where('examinations.payment_method', '=' , 2)
+			->get()
+		;
+	}
+
+    private function setData($SPB, $days, $subject){
+        return array(
+            'customerName' => $SPB->customerName,
+            'customerEmail' => $SPB->customerEmail,
+            'subject' => $subject,
+            'SPBNumber' => $SPB->spbNumber,
+            'remainingDay' => 14-$days,
+            'dueDate' => Carbon::createFromFormat('Y-m-d H:i:s', $SPB->expiredDate)->format('d-m-Y'),
+            'dueHour' => Carbon::createFromFormat('Y-m-d H:i:s', $SPB->expiredDate)->format('H:i:s'),
+            'paymentMethod' => $SPB->paymentMethod,
+            'price' => "Rp " . number_format($SPB->price,2,',','.'),
+            'includePPH' => $SPB->includePPH
+        );
+	}
+	
+
+
+
 }

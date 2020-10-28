@@ -189,6 +189,11 @@ $factory->define(App\Examination::class, function (Faker\Generator $faker) {
         'PO_ID' => $faker->word,
         'BILLING_ID' => $faker->word,
         'INVOICE_ID' => $faker->word,
+        'VA_name' => 'VA_Mandiri_Test',
+        'VA_image_url' => 'image_url_test',
+        'VA_number' => $faker->numberBetween(1000,9000).$faker->numberBetween(1000,9000),
+        'VA_amount' => $faker->numberBetween(1000,9000).'000',
+        'VA_expired' => Carbon\Carbon::now(),
     ];
 });
 

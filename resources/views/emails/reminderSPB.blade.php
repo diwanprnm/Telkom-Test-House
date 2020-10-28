@@ -46,7 +46,7 @@
 	<h3 style="font-family:Arial; font-size:1.2em; color:rgba(110,110,110,1.00);"></h3>
 	<p style="font-style:italic; font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
 		Kepada Yth.<br>
-		Bapak/Ibu {!! $data['customerName'] !!}<br><br>
+		Bapak/Ibu {{ $data['customerName'] }}<br><br>
 	</p>
 
     <p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
@@ -54,7 +54,6 @@
 		sudah terbit di <strong><a href="www.telkomtesthouse.co.id">www.telkomtesthouse.co.id</a></strong>
 		dan Bapak/Ibu mempunyai sisa waktu {{ $data['remainingDay'] }} hari untuk pembayaran.
 	</p>
-
 
 	<p style="text-align:center; font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00);">
 		Pada tanggal: {{ $data['dueDate'] }} <br>
@@ -68,26 +67,12 @@
 		@else
 			(Tanpa PPH).
 		@endif
-		@if ($data['paymentMethod'])
-			Apabila Bapak/Ibu tidak melakukan pembayaran hingga tenggat waktu, Virtual Account akan otomatis tidak berlaku.
-		@endif
+		Apabila Bapak/Ibu tidak melakukan pembayaran hingga tenggat waktu, Virtual Account akan otomatis tidak berlaku.
 	</p>
-
-    <p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-		Tata cara pembayaran dengan : {{ $data['paymentMethod']  }}
-		<ul style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00);">
-			@for ($i = 0; $i < count($data['howToPay']->data->VA); $i++)
-			    <li>{{ $data['howToPay']->data->VA[$i]->productName }}</li>
-			@endfor
-		</ul>
-	</p>
-	
 
 	<p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
 		Mohon ikuti ketentuan-ketentuan yang berlaku demi kelancaran proses pembayaran.
     </p>
-
-
 
 	<p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
 		<br>

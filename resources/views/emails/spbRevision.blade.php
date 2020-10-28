@@ -46,7 +46,7 @@
 	<h3 style="font-family:Arial; font-size:1.2em; color:rgba(110,110,110,1.00);"></h3>
 	<p style="font-style:italic; font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
 		Kepada Yth.<br>
-		Bapak/Ibu {!! $data['customerName'] !!}<br><br>
+		Bapak/Ibu {{ $data['customerName'] }}<br><br>
     </p>
     
 
@@ -56,36 +56,18 @@
 
     <p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
         Kami memberitahukan bahwa terjadi perubahan harga biaya uji yang sebelum nya mengacu pada SPB 
-        [No. SPB]<!--#ini#-->, oleh karena itu kami menerbitkan revisi SPB dengan nomor [No. SPB Revisi]<!--#ini#--> yang <strong>sudah terbit</strong> dan
+		{{ $data['spbNumber'] }}, oleh karena itu kami menerbitkan revisi SPB dengan nomor {{ $data['spbRevisionNumber'] }} yang <strong>sudah terbit</strong> dan
         Bapak/Ibu <strong>dapat mengunduhnya di web <a href="www.telkomtesthouse.co.id">www.telkomtesthouse.co.id</a></strong> atau lampiran email ini.
         Mohon untuk <strong>mengabaikan email sebelumnya.</strong>
     </p>
 
-
-    <p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-        Kami sampaikan juga <strong>pembayaran SPB</strong> dapat dilakukan dengan <strong>dua cara pembayaran</strong>, yaitu:
-        <ul>
-            <li>Pembayaran dengan <strong>Bank Transfer</strong></li>
-            <li>Pembayaran dengan <strong>Virtual Account Bank Mandiri</strong></li>
-        </ul>
-    </p>
-
     <p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
         Silakan klik tautan di bawah ini untuk memilih cara pembayaran yang dikehendaki.
-        <a href="">[tautan ke halaman pemilihan pembayaran]</a><!--#ini#-->
+		<a href="{{ $data['link'] }}">{{ $data['link'] }}</a><!--#ini#-->
     </p>
 
     <p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
         Mohon periksa kembali biaya dan ketentuan-ketentuan yang berlaku demi kelancaran proses pembayaran.
-    </p>
-
-    <p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-		Tata cara pembayaran dengan : {{ $data['paymentMethod']  }}<!--#ini#-->
-		<ul style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00);"><!--#ini#-->
-			@for ($i = 0; $i < count($data['howToPay']->data->VA); $i++)
-			    <li>{{ $data['howToPay']->data->VA[$i]->productName }}</li>
-			@endfor
-		</ul>
     </p>
     <br><br>
 

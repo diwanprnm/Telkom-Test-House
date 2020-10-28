@@ -57,7 +57,7 @@ class CreateExaminationsTable extends Migration
             $table->string('VA_image_url')->nullable();
             $table->string('VA_number')->nullable();
             $table->double('VA_amount', 15, 0)->nullable();
-            $table->string('VA_expired')->timestamp()->nullable();
+            $table->dateTime('VA_expired')->nullable();
             $table->unique('spk_code');
             $table->date('spk_date')->nullable();
             $table->string('spb_number')->nullable();

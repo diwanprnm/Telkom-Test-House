@@ -820,5 +820,35 @@ class ExaminationService
 		}
 		return $manager_urels;
 	}
+
+
+	public function send_revision($exam, $spbRevisionNumber)
+	{
+		//get user (name and email)
+		$user = DB::table('companies')
+			->select(
+				'users.name',
+				'users.email'
+				)
+			->join('users', 'users.company_id', '=', 'companies.id')
+			->where('companies.id', '=' , $exam->company_id)
+			->first()
+		;
+		
+		//format data for email
+		$dataEmail = array(
+			'customerEmail' => $user->email,
+			'customerName' => $user->name,
+			'registrationNumber' => $exam->funtion_test_NO,
+			'spbNumber' => $exam->spb_number,
+			'spbRevisionNumber' => $spbRevisionNumber,
+			'link' => url('pengujian/'.$exam->id.'/pembayaran')
+		);
+
+		//send mail
+		Mail::send('emails.spbRevision', ['data' => $dataEmail], function ($m) use ($dataEmail) {
+            $m->to($dataEmail['customerEmail'])->subject( "Revisi Surat Pemberitahuan Biaya (SPB) untuk ".$dataEmail['registrationNumber'] );
+        });
+	}
 	
 }
