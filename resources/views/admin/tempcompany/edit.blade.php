@@ -34,6 +34,11 @@
 							Edit Perusahaan
 						</legend>
 						<div class="row">
+							@if(!empty(Session::get('error')))
+								<div class="alert alert-error alert-danger">
+									 {{ Session::get('error') }}
+								</div>
+							@endif
 							<div class="col-md-12">
 								<label><strong>-</strong> Nama Perusahaan : {{ $data->company->name }}</label>
 								@if($data->name != NULL)

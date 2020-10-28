@@ -262,7 +262,7 @@
 @section('content_js')
 <script type="text/javascript">
  	function downloadFileCompany(file){
-		var path = "{{ URL::asset('media/company') }}";
+		var path = "{{ \Storage::disk('minio')->url('company')}}";
 		var company_id = $('#hide_id_company').val();
 		//Get file name from url.
 		var url = path+'/'+company_id+'/'+file;

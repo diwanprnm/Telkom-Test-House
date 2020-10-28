@@ -56,7 +56,8 @@ class ProfileController extends Controller
     private const FORMAT_DATE = 'Y-m-d H:i:s';
     private const PAGE_PROFILE = '/client/profile';
     private const NPWP_FILE = 'npwp_file';
-    private const MEDIA_COMPANY = '/tempCompany/';
+    private const MEDIA_COMPANY = '/company/';
+    private const TEMP_MEDIA_COMPANY = '/tempCompany/';
     private const ERROR_COMPANY = 'error_company';
     private const SIUP_FILE = 'siup_file';
     private const CERTIFICATE_FILE = 'certificate_file';
@@ -74,7 +75,7 @@ class ProfileController extends Controller
     private const PAGE_COMPANY_CREATE = '/admin/company/create';
     private const COMP_SIUP_FILE = 'comp_siup_file';
     private const COMP_QS_CERTIFICATE_FILE = 'comp_qs_certificate_file';
-    private const USER_NAME = 'user_name';
+    private const USER_NAME = 'username';
     private const USER_EMAIL = 'user_email';
     private const EMAIL_STEL= 'urelddstelkom@gmail.com';
     private const STATUS = 'status';
@@ -240,7 +241,7 @@ class ProfileController extends Controller
 		//Upload NPWP File
 		$fileService = new FileService();
 		$fileProperties = array(
-			'path' => self::MEDIA_COMPANY.$currentUser->company->id."/",
+			'path' => self::TEMP_MEDIA_COMPANY.$currentUser->company->id."/".$temp_id."/",
 			'prefix' => "npwp_"
 		);
 		if ($request->hasFile(self::NPWP_FILE)) {   
@@ -267,7 +268,7 @@ class ProfileController extends Controller
 		//Upload SIUP FILE
 		$fileService = new FileService();
 		$fileProperties = array(
-			'path' => self::MEDIA_COMPANY.$currentUser->company->id."/",
+			'path' => self::TEMP_MEDIA_COMPANY.$currentUser->company->id."/".$temp_id."/",
 			'prefix' => "siupp_"
 		);
 		if ($request->hasFile(self::SIUP_FILE)) {   
@@ -295,7 +296,7 @@ class ProfileController extends Controller
 		//Upload Serti Uji Mutu
 		$fileService = new FileService();
 		$fileProperties = array(
-			'path' => self::MEDIA_COMPANY.$currentUser->company->id."/",
+			'path' => self::TEMP_MEDIA_COMPANY.$currentUser->company->id."/".$temp_id."/",
 			'prefix' => "serti_uji_mutu_"
 		);
 		if ($request->hasFile(self::CERTIFICATE_FILE)) {   
@@ -535,7 +536,7 @@ class ProfileController extends Controller
         $data = User::findOrFail($user);
 		
         Mail::send($message, array(
-			self::USER_NAME => $data->name,
+			'user_name' => $data->name,
 			self::USER_EMAIL => $data->email,
 			'desc' => $description
 			), function ($m) use ($subject) {
@@ -560,7 +561,7 @@ class ProfileController extends Controller
 	public function sendRegistrasiwCompany($user_name, $user_email, $comp_name, $comp_address, $comp_email, $comp_phone, $message, $subject)
     {
         Mail::send($message, array(
-			self::USER_NAME => $user_name,
+			"user_name" => $user_name,
 			self::USER_EMAIL => $user_email,
 			self::COMP_NAME => $comp_name,
 			self::COMP_ADDRESS => $comp_address,
