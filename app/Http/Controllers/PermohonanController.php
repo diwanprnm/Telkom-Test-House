@@ -243,15 +243,15 @@ class PermohonanController extends Controller
 		if(is_array($exam_id)){
 			$exam_id = $exam_id[0];
 		}
+		$exam = Examination::find($exam_id); 
 		$fileProperties = array(
 			'path' => self::MEDIA_EXAMINATION_LOC.$exam_id."/",
-			'prefix' => "form_uji_"
+			'prefix' => "form_uji_",
+			'oldFile'=>$exam->attachment
 		);
 		$fileService->upload($request->file('fuploaddetailpengujian_edit'), $fileProperties);
 		$fuploaddetailpengujian_name = $fileService->isUploaded() ? $fileService->getFileName() : '';
 
-		$exam = Examination::find($exam_id);
-		$fileService->deleteFile(self::MEDIA_EXAMINATION_LOC.$exam_id.'/'.$exam->attachment);
 
 		DB::table(self::EXAMINATIONS)
             ->where('id', ''.$exam_id.'')
