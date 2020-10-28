@@ -76,6 +76,7 @@ class ProfileController extends Controller
     private const COMP_SIUP_FILE = 'comp_siup_file';
     private const COMP_QS_CERTIFICATE_FILE = 'comp_qs_certificate_file';
     private const USER_NAME = 'username';
+    private const USER_NAME2 = 'user_name';
     private const USER_EMAIL = 'user_email';
     private const EMAIL_STEL= 'urelddstelkom@gmail.com';
     private const STATUS = 'status';
@@ -536,7 +537,7 @@ class ProfileController extends Controller
         $data = User::findOrFail($user);
 		
         Mail::send($message, array(
-			'user_name' => $data->name,
+			self::USER_NAME2 => $data->name,
 			self::USER_EMAIL => $data->email,
 			'desc' => $description
 			), function ($m) use ($subject) {
@@ -549,7 +550,7 @@ class ProfileController extends Controller
 	public function sendRegistrasi($user_name, $user_email, $message, $subject)
     {
         Mail::send($message, array(
-			self::USER_NAME => $user_name,
+			self::USER_NAME2 => $user_name,
 			self::USER_EMAIL => $user_email
 			), function ($m) use ($subject) {
             $m->to(self::EMAIL_STEL)->subject($subject);
@@ -561,7 +562,7 @@ class ProfileController extends Controller
 	public function sendRegistrasiwCompany($user_name, $user_email, $comp_name, $comp_address, $comp_email, $comp_phone, $message, $subject)
     {
         Mail::send($message, array(
-			"user_name" => $user_name,
+			self::USER_NAME2 => $user_name,
 			self::USER_EMAIL => $user_email,
 			self::COMP_NAME => $comp_name,
 			self::COMP_ADDRESS => $comp_address,
