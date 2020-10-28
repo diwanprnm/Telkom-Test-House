@@ -98,7 +98,7 @@ class SalesService
                         stels,
                         stels_sales_detail
                     WHERE
-                        stels_sales_detail.stels_sales_id = stels_sales.id
+                        stels_sales_detail.stels_sales_id = _id
                     AND
                         stels_sales_detail.stels_id = stels.id
                 ) as stel_name
@@ -108,7 +108,7 @@ class SalesService
                         stels,
                         stels_sales_detail
                     WHERE
-                        stels_sales_detail.stels_sales_id = stels_sales.id
+                        stels_sales_detail.stels_sales_id = _id
                     AND
                         stels_sales_detail.stels_id = stels.id
                 ) as stel_code')

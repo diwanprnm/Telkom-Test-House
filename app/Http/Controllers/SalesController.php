@@ -275,9 +275,9 @@ class SalesController extends Controller
     public function edit($id)
     {
         $select = array(self::STELS_SALES_DOT_ID,"stels_sales.id_kuitansi","stels_sales.faktur_file","stels_sales_attachment.attachment",self::STELS_SALES_ATTACHMENT_DOT_STEL_SALES_ID);  
-        $stel = STELSalesAttach::select($select)->rightJoin(self::STELS_SALES,self::STELS_SALES_DOT_ID,"=",self::STELS_SALES_ATTACHMENT_DOT_STEL_SALES_ID)
-                ->where(self::STELS_SALES_DOT_ID,$id)->first();
-				
+        $stel = STELSales::select($select)->leftJoin(self::STELS_SALES_ATTACHMENT,self::STELS_SALES_ATTACHMENT_DOT_STEL_SALES_ID,"=",self::STELS_SALES_DOT_ID)
+                ->where(self::STELS_SALES_DOT_ID,$id)->first();        
+        
 		$select = array(self::STELS_NAME,self::STELS_PRICE,self::STELS_CODE,self::STELS_SALES_DETAIL_QTY,self::STELS_SALES_DETAIL_DOT_ID,self::STELS_SALES_DETAIL_ATTACHMENT,"stels.attachment as stelAttach",self::STELS_SALES_INVOICE, self::AS_COMPANY_NAME,self::STELS_SALES_DOT_PAYMENT_STATUS); 
 		$STELSales = STELSalesDetail::select($select)->where(self::STELS_SALES_ID,$id)
 					->join(self::STELS_SALES,self::STELS_SALES_DOT_ID,"=",self::STELS_SALES_DETAIL_STELS_ID)
