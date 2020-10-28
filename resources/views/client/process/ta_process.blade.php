@@ -740,7 +740,7 @@
 	});
 
 	function downloadFile(file){
-		var path = "{{ URL::asset('media/company') }}";
+		var path = "{{ \Storage::disk('minio')->url('company')}}";
 		// var id_user = $('#hide_id_user').val();
 		var company_id = $('#hide_company_id').val();
 		//Get file name from url.
