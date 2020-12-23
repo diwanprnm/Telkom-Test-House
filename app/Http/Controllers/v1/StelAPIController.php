@@ -188,7 +188,7 @@ class StelAPIController extends AppBaseController
 
     public function checkKuitansiTPN()
     {
-        $stel = STELSales::where('id_kuitansi', '')->whereNotNull('INVOICE_ID')->get();
+        $stel = STELSales::whereNull('id_kuitansi')->whereNotNull('INVOICE_ID')->get();
         if(count($stel)>0){
             $client = new Client([
                 'headers' => ['Authorization' => config("app.gateway_tpn")],
@@ -247,7 +247,7 @@ class StelAPIController extends AppBaseController
 
     public function checkTaxInvoiceTPN()
     {
-        $stel = STELSales::where('faktur_file', '')->whereNotNull('INVOICE_ID')->get();
+        $stel = STELSales::whereNull('faktur_file')->whereNotNull('INVOICE_ID')->get();
         if(count($stel)>0){
             $client = new Client([
                 'headers' => ['Authorization' => config("app.gateway_tpn")],
@@ -328,7 +328,7 @@ class StelAPIController extends AppBaseController
 
     public function checkReturnedTPN()
     {
-        $stel = STELSales::where('faktur_file', '')->whereNotNull('INVOICE_ID')->get();
+        $stel = STELSales::whereNull('faktur_file')->whereNotNull('INVOICE_ID')->get();
         if(count($stel)>0){
             $client = new Client([
                 'headers' => ['Authorization' => config("app.gateway_tpn")],

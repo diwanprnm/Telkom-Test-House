@@ -1745,7 +1745,7 @@ class ExaminationAPIController extends AppBaseController
 
                     	$admins = AdminRole::where('payment_status',1)->get()->toArray();
 						foreach ($admins as $admin) {  
-							$notif_data= array( 
+							$data= array( 
 				                "from"=>'admin-digimon',
 				                "to"=>$admin['user_id'],
 				                "message"=>$Examination->company->name." membayar SPB nomor".$Examination->spb_number,
@@ -1756,7 +1756,7 @@ class ExaminationAPIController extends AppBaseController
 			                );
 							$notificationService = new NotificationService();
 							$data['id'] = $notificationService->make($data);
-					        event(new Notification($notif_data));
+					        event(new Notification($data));
 				    	}
                     }else{
                         $updated_count -= 1;

@@ -71,6 +71,8 @@
             left: 0;
             right: 0;
             margin: auto;
+            display: block;
+    		text-align: -webkit-center;
         }
         
     </style>

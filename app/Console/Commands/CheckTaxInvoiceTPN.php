@@ -76,7 +76,11 @@ class CheckTaxInvoiceTPN extends Command
                                 $stream = (String)$response->getBody();
 
                                 $fileService = new FileService();
-                                $isUploaded = $fileService->uploadPDFfromStream($stream, $name_file, $path_file);
+                                $fileProperties = array(
+                                    'path' => $path_file,
+                                    'fileName' => $name_file
+                                );
+                                $isUploaded = $fileService->uploadFromStream($stream, $fileProperties);
 
                                 if($isUploaded){
                                     $STELSales->faktur_file = $name_file;

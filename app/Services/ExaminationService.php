@@ -290,7 +290,11 @@ class ExaminationService
 							$stream = (String)$response->getBody();
 
 							$fileService = new FileService();
-							$isUploaded = $fileService->uploadPDFfromStream($stream, $name_file, $path_file);
+							$fileProperties = array(
+								'path' => $path_file,
+								'fileName' => $name_file
+							);
+							$isUploaded = $fileService->uploadFromStream($stream, $fileProperties);
 
 							if($isUploaded){
                                 $attach = ExaminationAttach::where('name', $type)->where(self::EXAMINATION_ID, ''.$exam->id.'')->first();

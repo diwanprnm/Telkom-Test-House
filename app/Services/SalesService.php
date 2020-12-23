@@ -138,10 +138,6 @@ class SalesService
 
     public function saveFakturPajak($status_invoice, $invoice, $filename, $request, $client, $INVOICE_ID, $STELSales )
     {
-        $this->validate($request, [
-            'id' => self::REQUIRED,
-        ]);
-
         if($status_invoice == "approved"){
             $status_faktur = $invoice->data->status_faktur;
             if($status_faktur == "received"){
@@ -190,10 +186,6 @@ class SalesService
 
     public function saveKuitansi($invoice, $INVOICE_ID, $request, $client, $STELSales)
     {
-        $this->validate($request, [
-            'id' => self::REQUIRED,
-        ]);
-
         $status_invoice = $invoice->data->status_invoice;
         if($status_invoice == "approved"){
             $status_faktur = $invoice->data->status_faktur;
