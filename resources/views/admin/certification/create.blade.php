@@ -23,22 +23,6 @@
 			</div>
 		</section>
 		<!-- end: PAGE TITLE -->
-		@if (count((array)$errors) > 0)
-			<div class="alert alert-danger">
-				<ul>
-					@foreach ($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-			</div>
-		@endif
-
-		@if (count((array)session('error')))
-			<div class="alert alert-danger">
-				<p>{{session('error')}}</p>
-			</div>
-		@endif
-
 		<!-- start: RESPONSIVE TABLE -->
 		<div class="container-fluid container-fullw bg-white">
 			<div class="col-md-12">

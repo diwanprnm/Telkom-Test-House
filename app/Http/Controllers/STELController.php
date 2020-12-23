@@ -317,6 +317,12 @@ class STELController extends Controller
         $oldStel = $stel; 
         try{
             $stel->delete();
+            $fileService = new FileService();
+            $fileProperties = array(
+                'path' => self::STEL_URL,
+                'fileName' => $oldStel->attachment
+            );
+            $fileService->deleteFile($fileProperties);
 
             $logService->createLog('Delete STEL', "STEL", $oldStel );
 
@@ -365,34 +371,39 @@ class STELController extends Controller
         // timestamp.
 
         $search = trim($request->input(self::SEARCH));
-        
         $category = '';
-        $status = $request->get(self::IS_ACTIVE);
+        $year = '';
+        $status = -1;
+
+        $query = STEL::whereNotNull(self::CREATED_AT)->with(self::EXAMINATION_LAB);
 
         if ($search != null){
-            $stels = STEL::whereNotNull(self::CREATED_AT)
-                ->with(self::EXAMINATION_LAB)
-                ->where('name','like','%'.$search.'%')
-                ->orWhere('code','like','%'.$search.'%')
-                ->orderBy('code');
-        }else{
-            $query = STEL::whereNotNull(self::CREATED_AT)->with(self::EXAMINATION_LAB);
-
-            if ($request->has(self::CATEGORY)){
-                $category = $request->get(self::CATEGORY);
-                if($request->input(self::CATEGORY) != 'all'){ 
-                    $query->where('type', $request->input(self::CATEGORY));
-                }
+            $query->where(function($qry) use($search){
+                $qry->where('name', 'like', '%'.strtolower($search).'%')
+                ->orWhere('code', 'like', '%'.strtolower($search).'%');
+            });
+        }
+        
+        if ($request->has(self::CATEGORY)){
+            $category = $request->get(self::CATEGORY);
+            if($request->input(self::CATEGORY) != 'all'){ 
+                 $query->where('type', $request->input(self::CATEGORY));
             }
-
-            if ($request->has(self::IS_ACTIVE) && $status > -1){  
-                $query->where(self::IS_ACTIVE, $status); 
-            }
-            
-            $stels = $query->orderBy('name');
         }
 
-        $data = $stels->get(); 
+        if ($request->has('year') && $request->input('year') != 'all'){ 
+            $year = $request->get('year');
+            $query->where('year', $request->get('year'));
+        }
+
+        if ($request->has(self::IS_ACTIVE)){
+            $status = $request->get(self::IS_ACTIVE);
+            if ($request->get(self::IS_ACTIVE) > -1){
+                $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
+            }
+        }
+
+        $data = $query->get(); 
         $examsArray = []; 
 
         // Define the Excel spreadsheet headers

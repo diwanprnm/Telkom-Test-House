@@ -91,7 +91,6 @@ class CompanyController extends Controller
         $query = Company::whereNotNull(self::CREATED_AT)
                 ->where('id', '<>', '1');
         if ($search != null){
-            
             $query->where('name','like','%'.$search.'%');
             $logService = new LogService();
             $logService->createLog('Search Company', 'self::COMPANY', json_encode(array(self::SEARCH=>$search)) );
@@ -99,7 +98,7 @@ class CompanyController extends Controller
 
         if ($request->has(self::IS_ACTIVE)){
             $status = $request->get(self::IS_ACTIVE);
-            if($request->input(self::IS_ACTIVE) != '0'){
+            if($request->input(self::IS_ACTIVE) != 'all'){
                 $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
             }
         }
@@ -121,11 +120,10 @@ class CompanyController extends Controller
             $sort_type = $request->get(self::SORT_TYPE);
         }
         
-        $companies = $query->orderBy($sort_by, $sort_type)
-                    ->paginate($paginate);
-            
-        $data_excel = Company::whereNotNull(self::CREATED_AT)->where('id', '<>', '1')->orderBy('updated_at', 'desc')->get();
+        $data_excel = $query->orderBy($sort_by, $sort_type)->get();
         $request->session()->put('excel_pengujian', $data_excel);
+
+        $companies = $query->orderBy($sort_by, $sort_type)->paginate($paginate);
         
         if (count($companies) == 0){
             $message = 'Data not found';
@@ -364,8 +362,8 @@ class CompanyController extends Controller
 		// the user's e-mail address, the amount paid, and the payment
 		// timestamp.
 		
-		$data = $request->session()->get('excel_pengujian');
-		$examsArray = []; 
+        $data = $request->session()->get('excel_pengujian');
+        $examsArray = []; 
 
 		// Define the Excel spreadsheet headers
 		$examsArray[] = [

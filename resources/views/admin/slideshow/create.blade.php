@@ -63,7 +63,7 @@
 									<label>
 										Gambar *
 									</label>
-									<input type="file" name="image" class="form-control" accept="image/jpg, image/jpeg, image/png" required>
+									<input type="file" name="image" class="form-control" accept="image/*" required>
 								</div>
 							</div>
 							<div class="col-md-6">
