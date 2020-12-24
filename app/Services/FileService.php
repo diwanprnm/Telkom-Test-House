@@ -20,7 +20,7 @@ class FileService
 
     public function upload($file, $fileProperties)
     {
-        $fileProperties = $this->filterFileProperties($fileProperties);
+        $this->filterFileProperties($fileProperties);
 
         if(!empty($file)){
             $this->uploadFileToMinio($file);
@@ -33,19 +33,19 @@ class FileService
 
     public function get($fileProperties)
     {
-        $fileProperties = $this->filterFileProperties($fileProperties);
+        $this->filterFileProperties($fileProperties);
 
         return Storage::disk('minio')->get("$this->path$this->fileName");
     }
 
     public function uploadFromStream($stream, $fileProperties)
     {
-        $fileProperties = $this->filterFileProperties($fileProperties);
+        $this->filterFileProperties($fileProperties);
         return Storage::disk('minio')->put($this->path.$this->fileName, $stream);
     }
 
     public function deleteFile($fileProperties){
-        $fileProperties = $this->filterFileProperties($fileProperties);
+        $this->filterFileProperties($fileProperties);
         $this->deleteFileFromMinio("$this->path$this->fileName");
     }
 

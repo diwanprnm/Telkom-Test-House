@@ -23,7 +23,7 @@ class BackupController extends Controller
 {
     private const ADMIN_BACKUP = '/admin/backup';
     private const BACKUP_CREATED_AT = 'backup_history.created_at';
-    private const BACKUP_DATA = 'backup-data/';
+    private const BACKUP_DATA = 'db/';
     private const DATA_NOT_FOUND = 'Data not found';
     private const ERROR = 'error';
     private const MESSAGE = 'message';

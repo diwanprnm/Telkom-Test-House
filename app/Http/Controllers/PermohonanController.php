@@ -880,9 +880,8 @@ class PermohonanController extends Controller
 			$query_update_ref_uji = "UPDATE examination_attachments
 				SET 
 					attachment = '".$fuploadrefuji_name."'
-				WHERE examination_id = '".$exam_id."' AND `name` = '.self::REFERENSI_UJI.'
+				WHERE examination_id = '".$exam_id."' AND `name` = '".self::REFERENSI_UJI."'
 			";
-			
 			DB::update($query_update_ref_uji);
 			if($jns_pengujian == 1 && $jns_perusahaan != self::PABRIKAN){
 				$query_update_attach = "UPDATE examination_attachments
@@ -903,7 +902,7 @@ class PermohonanController extends Controller
 			$query_update_dll = "UPDATE examination_attachments
 				SET 
 					attachment = '".$fuploaddll_name."'
-				WHERE examination_id = '".$exam_id."' AND `name` = '.self::FILE_LAINNYA.'
+				WHERE examination_id = '".$exam_id."' AND `name` = '".self::FILE_LAINNYA."'
 			";
 			DB::update($query_update_dll);
 			
