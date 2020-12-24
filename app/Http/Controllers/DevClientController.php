@@ -46,7 +46,7 @@ class DevClientController extends Controller
             $paginate = 10;
             $search = trim($request->input('search'));
 			$datenow = date('Y-m-d');
-            $select = "'companies.name AS namaPerusahaan',
+            $select = ['companies.name AS namaPerusahaan',
 						'devices.name AS namaPerangkat',
 						'devices.mark AS merk',
 						'devices.manufactured_by',
@@ -55,7 +55,7 @@ class DevClientController extends Controller
 						'devices.test_reference AS standarisasi',
 						'devices.cert_number',
 						'devices.valid_from',
-						".self::DEVICE_DOT_VALID_THRU;
+						self::DEVICE_DOT_VALID_THRU];
             if ($search != null){
                 $dev = DB::table('examinations')
 				->join(self::TABLE_DEVICE, self::EXAM_DEVICES_ID, '=', self::DEVICES_ID)

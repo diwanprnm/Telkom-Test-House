@@ -251,7 +251,7 @@ class ProfileController extends Controller
             $temp->npwp_file = $fileService->getFileName(); 
         }else{
         	$temp->npwp_file = "";
-        }     	
+        }
         
 		if($request->input('siup_number') != $request->input('hide_siup_number')){
 			$temp->siup_number = $request->input('siup_number');

@@ -198,10 +198,9 @@ class ExaminationDoneController extends Controller
 		}
 
 		$data_excel = $query->orderBy('updated_at', 'desc')->get();
-		$data = $query->orderBy('updated_at', 'desc')
-					->paginate($paginate);
-					
 		$request->session()->put('excel_pengujian_lulus', $data_excel);
+		
+		$data = $query->orderBy('updated_at', 'desc')->paginate($paginate);
 
 		if (count($query) == 0){ $message = 'Data not found'; }
 		

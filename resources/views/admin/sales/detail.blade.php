@@ -18,8 +18,7 @@
 			</div>
 			
 			<div class="modal-body">
-				<table class="table-full-width">
-					<caption>Keterangan</caption>
+				<table style="width: 100%;"><caption></caption>
 					<tr>
 						<th scope="col">
 							<div class="form-group">
@@ -31,8 +30,7 @@
 				</table>
 			</div><!-- /.modal-content -->
 			<div class="modal-footer">
-				<table class="table-full-width">
-					<caption>Submit</caption>
+				<table style="width: 100%;"><caption></caption>
 					<tr>
 						<th scope="col">
 							<button type="button" id="btn-modal-delete_detail" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>

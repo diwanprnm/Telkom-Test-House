@@ -225,15 +225,13 @@ class TempCompanyController extends Controller
                     $npwp_file = self::MEDIA_COMPANY.$company->id.'/'.$company->npwp_file;
                     $npwp_file_temp = self::MEDIA_TEMPCOMPANY.$company->id.'/'.$id.'/'.$tempcompany->npwp_file;
                     $npwp_file_now = self::MEDIA_COMPANY.$company->id.'/'.$tempcompany->npwp_file;
-                    
-                if(Storage::disk(self::MINIO)->copy($npwp_file_temp,$npwp_file_now)){
+                    if(Storage::disk('minio')->put($npwp_file_now, Storage::disk('minio')->get($npwp_file_temp))){
                         $company->npwp_file = $request->input('npwp_file');
-                        if (Storage::disk(self::MINIO)->exists($npwp_file)){
+                        if (Storage::disk(self::MINIO)->exists($npwp_file) && $company->npwp_file != $tempcompany->npwp_file){
                             Storage::disk(self::MINIO)->delete($npwp_file);
                         }
-                    }else{ return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT)->with(self::ERROR, 'Save NPWP to directory failed');
-                    }
-                }        
+                    }else{ return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT)->with(self::ERROR, 'Save NPWP to directory failed'); }
+                }
                 if ($request->has('siup_number')){
                     $company->siup_number = $request->input('siup_number');
                 }
@@ -244,9 +242,9 @@ class TempCompanyController extends Controller
                     $siup_file = self::MEDIA_COMPANY.$company->id.'/'.$company->siup_file;
                     $siup_file_temp = self::MEDIA_TEMPCOMPANY.$company->id.'/'.$id.'/'.$tempcompany->siup_file;
                     $siup_file_now = self::MEDIA_COMPANY.$company->id.'/'.$tempcompany->siup_file;
-                    if(Storage::disk(self::MINIO)->copy($siup_file_temp,$siup_file_now)){
+                    if(Storage::disk('minio')->put($siup_file_now, Storage::disk('minio')->get($siup_file_temp))){
                         $company->siup_file = $request->input('siup_file');
-                        if (Storage::disk(self::MINIO)->exists($siup_file)){
+                        if (Storage::disk(self::MINIO)->exists($siup_file) && $company->siup_file != $tempcompany->siup_file){
                             Storage::disk(self::MINIO)->delete($siup_file);
                         }
                     }else{ return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT)->with(self::ERROR, 'Save SIUPP to directory failed'); }
@@ -261,9 +259,9 @@ class TempCompanyController extends Controller
                     $qs_certificate_file = self::MEDIA_COMPANY.$company->id.'/'.$company->qs_certificate_file;
                     $qs_certificate_file_temp = self::MEDIA_TEMPCOMPANY.$company->id.'/'.$id.'/'.$tempcompany->qs_certificate_file;
                     $qs_certificate_file_now = self::MEDIA_COMPANY.$company->id.'/'.$tempcompany->qs_certificate_file;
-                    if(copy($qs_certificate_file_temp,$qs_certificate_file_now)){
+                    if(Storage::disk('minio')->put($qs_certificate_file_now, Storage::disk('minio')->get($qs_certificate_file_temp))){
                         $company->qs_certificate_file = $request->input('qs_certificate_file');
-                        if (Storage::disk(self::MINIO)->exists($qs_certificate_file)){
+                        if (Storage::disk(self::MINIO)->exists($qs_certificate_file) && $company->qs_certificate_file != $tempcompany->qs_certificate_file){
                             Storage::disk(self::MINIO)->delete($qs_certificate_file);
                         }
                     }else{ return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT)->with(self::ERROR, 'Save Certificate to directory failed'); }

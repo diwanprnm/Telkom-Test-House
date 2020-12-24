@@ -117,12 +117,14 @@ class DeviceController extends Controller
 		}
 		
 		$data_excel = $dev->orderBy($this::DEVICEVAL, 'desc')->get();
+		$request->session()->put('excel_pengujian_sukses', $data_excel);
+		
 		$data = $dev->orderBy($this::DEVICEVAL, 'desc')->paginate($paginate);
 
 		if (count($data) == 0){
 			$message = 'Data not found';
 		}
-		$request->session()->put('excel_pengujian_sukses', $data_excel);
+		
 		return view('admin.devices.index')
 			->with('message', $message)
 			->with('data', $data)

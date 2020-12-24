@@ -143,19 +143,18 @@ class SalesService
             if($status_faktur == "received"){
                 /*SAVE FAKTUR PAJAK*/
                 $name_file = 'faktur_stel_'.$filename.'.pdf';
-                $path_file = storage_path('tmp/');
-                if (!file_exists($path_file)) {
-                    mkdir($path_file, 0775);
-                }
-
+                $path_file = "stel/".$request->input('id')."/";
                 $response = $client->request('GET', self::V1_INVOICE.$INVOICE_ID.'/taxinvoice/pdf');
                 $stream = (String)$response->getBody();
 
-                if(file_put_contents($path_file.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment; ".$stream)){
-                    $fileFaktur = Storage::disk('tmp')->get($name_file);
-                    Storage::disk(self::MINIO)->put("stel/$request->input('id')/$name_file", $fileFaktur );
-                    File::delete(storage_path("tmp/$name_file"));
+                $fileService = new FileService();
+                $fileProperties = array(
+                    'path' => $path_file,
+                    'fileName' => $name_file
+                );
+                $isUploaded = $fileService->uploadFromStream($stream, $fileProperties);
 
+                if($isUploaded){
                     $STELSales->faktur_file = $name_file;
                     $STELSales->save();
                     $result = "Faktur Pajak Berhasil Disimpan.";
@@ -192,18 +191,19 @@ class SalesService
             if($status_faktur == "received"){
                 /*SAVE KUITANSI*/
                 $name_file = 'kuitansi_stel_'.$INVOICE_ID.'.pdf';
-                $path_file = storage_path('tmp/');
-                if (!file_exists($path_file)) {
-                    mkdir($path_file, 0775);
-                }
+                $path_file = "stel/".$request->input('id')."/";
                 $response = $client->request('GET', self::V1_INVOICE.$INVOICE_ID.'/exportpdf');
                 $stream = (String)$response->getBody();
+                
+                $fileService = new FileService();
+                $fileProperties = array(
+                    'path' => $path_file,
+                    'fileName' => $name_file
+                );
 
-                if(file_put_contents($path_file.$name_file, "Content-type: application/octet-stream;Content-disposition: attachment; ".$stream)){
-                    $fileKuitansi = Storage::disk('tmp')->get($name_file);
-                    Storage::disk(self::MINIO)->put("stel/$request->input('id')/$name_file", $fileKuitansi );
-                    File::delete(storage_path("tmp/$name_file"));
+                $isUploaded = $fileService->uploadFromStream($stream, $fileProperties);
 
+                if($isUploaded){
                     $STELSales->id_kuitansi = $name_file;
                     $STELSales->save();
                     $result = "Kuitansi Berhasil Disimpan.";
