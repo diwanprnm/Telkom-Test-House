@@ -368,7 +368,7 @@ class ProductsController extends Controller
         } catch(Exception $e){ return null;
         }
     }
-
+    
     public function doCheckout(Request $request){  
         $PO_ID = $request->session()->get(self::PO_ID_TPN);
         $currentUser = Auth::user();
@@ -442,7 +442,7 @@ class ProductsController extends Controller
                 $notification_id = $notificationService->make($data);
 			    $data['id'] = $notification_id;
 
-                event(new Notification($data));
+                // event(new Notification($data));
 
 
                     try{  

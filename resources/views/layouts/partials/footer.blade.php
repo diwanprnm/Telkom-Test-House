@@ -76,7 +76,7 @@
                 <div class="container clearfix">
 
                     <div class="col_half">
-                        Copyrights &copy; 2017 All Rights Reserved by Telkom Digital Service</div>
+                        Copyrights &copy; 2017 All Rights Reserved by Telkom Divisi Digital Business</div>
                     </div>
 
                 </div>

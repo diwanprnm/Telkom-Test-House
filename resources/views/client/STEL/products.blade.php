@@ -31,7 +31,6 @@
 					{{ Session::get('error') }}
 				</div>
 			@endif
-
 			<div class="row">
 				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 left-content"></div>
 				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 right-content"><a href="#videoStory" class="btn btn-default btn-lg more pull-right" id="videoLink">{{ trans('translate.video_guide') }} <i class="fa fa-play-circle" aria-hidden="true">&nbsp;</i></a></div>

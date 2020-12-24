@@ -24,7 +24,6 @@ return [
     'product_id_tth' => env('product_id_tth', '5e5377a0c5f8d40010fc4594'),
     'gateway_tpn_2' => env('gateway_tpn_2', 'apiKey 6PVO8UeiCOgdc3tZgxfXNx:1ujXtoe5tcTCJnRNCb6MmC'),
     'product_id_tth_2' => env('product_id_tth_2', '5ea2ce4992a56f001066d48d'),
-
     /* END ENV DEV TPN */
 
     /* ENV PROD TPN */

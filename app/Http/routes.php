@@ -19,7 +19,6 @@ Route::get('/clear-cache', function() {
     $exitCode = Artisan::call('cache:clear');
     return '<h1>Cache facade value cleared</h1>';
 });
-
 Route::get('cetakstel', function(Illuminate\Http\Request $request){
 	$PDFData = $request;
 	$PDF = new \App\Services\PDF\PDFService();

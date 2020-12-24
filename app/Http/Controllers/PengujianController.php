@@ -761,7 +761,27 @@ class PengujianController extends Controller
 			return redirect(self::LOGIN);
 		}
     }
-	
+
+    public function api_get_payment_methods(){
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json', 
+                            'Authorization' => config("app.gateway_tpn_2")
+                        ],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false,
+            'verify' => false
+        ]);
+        try {
+            $res_payment_method = $client->get("v1/products/".config("app.product_id_tth_2")."/paymentmethods")->getBody();
+            $payment_method = json_decode($res_payment_method);
+
+            return $payment_method;
+        } catch(Exception $e){
+            return null;
+        }
+    }
+/*	
 	public function uploadPembayaran(Request $request)
     {
 		$currentUser = Auth::user();
@@ -1098,7 +1118,269 @@ class PengujianController extends Controller
             return null;
         }
     }
-	
+	*/
+
+    public function doCheckout(Request $request){
+    	$currentUser = Auth::user();
+    	$exam = Examination::where('id', $request->input('hide_id_exam'))
+						->with('user')
+						->with('company')
+						->with('device')
+						->with('examinationType')
+						->first()
+			;
+        if($currentUser){ 
+        	$mps_info = explode('||', $request->input("payment_method"));
+           	$exam->include_pph = $request->has('is_pph') ? 1 : 0;
+           	$exam->payment_method = $mps_info[2] == "atm" ? 1 : 2;
+
+            if($exam){
+    			$data = [
+                    "draft_id" => $exam->PO_ID,
+                    "include_pph" => $request->has('is_pph') ? true : false,
+                    "created" => [
+                        "by" => $currentUser->name,
+                        "reference_id" => $currentUser->id
+                    ],
+                    "config" => [
+                        "kode_wapu" => "01",
+                        "afiliasi" => "non-telkom",
+                        "tax_invoice_text" => $exam->device->name.', '.$exam->device->mark.', '.$exam->device->capacity.', '.$exam->device->model,
+                        "payment_method" => $mps_info[2] == "atm" ? "internal" : "mps",
+                    ],
+                    "mps" => [
+                        "gateway" => $mps_info[0],
+                        "product_code" => $mps_info[1],
+                        "product_type" => $mps_info[2],
+                        "manual_expired" => 20160
+                    ]
+                ];
+
+                $billing = $this->api_billing($data);
+                // dd($billing);
+
+                $exam->BILLING_ID = $billing && $billing->status == true ? $billing->data->_id : null;
+                if($mps_info[2] != "atm"){
+                	$exam->VA_name = $mps_info ? $mps_info[3] : null;
+                    $exam->VA_image_url = $mps_info ? $mps_info[4] : null;
+                    $exam->VA_number = $billing && $billing->status == true ? $billing->data->mps->va->number : null;
+                    $exam->VA_amount = $billing && $billing->status == true ? $billing->data->mps->va->amount : null;
+                    $exam->VA_expired = $billing && $billing->status == true ? $billing->data->mps->va->expired : null;
+                }
+
+                if(!$exam->VA_number){
+                    Session::flash('error', 'Failed to generate '.$mps_info[3].', please choose another bank!');
+                    $exam->PO_ID = $this->regeneratePO($exam);
+                    $exam->BILLING_ID = null;
+					$exam->include_pph = 0;
+					$exam->payment_method = 0;
+					$exam->VA_name = null;
+					$exam->VA_image_url = null;
+					$exam->VA_number = null;
+					$exam->VA_amount = null;
+					$exam->VA_expired = null;
+                    $exam->save();
+                    return back();
+                }
+            }
+
+            try{
+                $exam->save();
+                return redirect('payment_confirmation_spb/'.$exam->id);
+            } catch(\Illuminate\Database\QueryException $e){
+                dd($e);
+                Session::flash('error', 'Failed To Checkout');
+                return back();
+            }
+        }else{
+           return back();
+        } 
+        
+    }
+
+    public function regeneratePO($exam){
+		$details [] = 
+            [
+                "item" => 'Biaya Uji '.$exam->examinationType->name.' ('.$exam->examinationType->description.')',
+                "description" => $exam->device->name.', '.$exam->device->mark.', '.$exam->device->capacity.', '.$exam->device->model,
+                "quantity" => 1,
+                "price" => $exam->price/1.1,
+                "total" => $exam->price/1.1
+            ]
+        ;
+
+		$data_draft = [
+            "from" => [
+                "name" => "PT TELEKOMUNIKASI INDONESIA, TBK.",
+                "address" => "Telkom Indonesia Graha Merah Putih, Jalan Japati No.1 Bandung, Jawa Barat, 40133",
+                "phone" => "(+62) 812-2483-7500",
+                "email" => "urelddstelkom@gmail.com",
+                "npwp" => "01.000.013.1-093.000"
+            ],
+            "to" => [
+                "name" => $exam->company->name ? $exam->company->name : "-",
+                "address" => $exam->company->address ? $exam->company->address : "-",
+                "phone" => $exam->company->phone_number ? $exam->company->phone_number : "-",
+                "email" => $exam->user->email ? $exam->user->email : "-",
+                "npwp" => $exam->company->npwp_number ? $exam->company->npwp_number : "-"
+            ],
+            "product_id" => config("app.product_id_tth_2"), //product_id TTH untuk Pengujian
+            "details" => $details,
+            "created" => [
+                "by" => $exam->user->name,
+                "reference_id" => $exam->user->id
+            ],
+            "include_tax_invoice" => true,
+            "bank" => [
+                "owner" => "Divisi RisTI TELKOM",
+                "account_number" => "131-0096022712",
+                "bank_name" => "BANK MANDIRI",
+                "branch_office" => "KCP KAMPUS TELKOM BANDUNG"         
+            ]
+        ];
+        $purchase = $this->api_purchase($data_draft);
+
+        return $purchase && $purchase->status ? $purchase->data->_id : null;
+    }
+
+    public function api_purchase($data){
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json', 
+                            'Authorization' => config("app.gateway_tpn_2")
+                        ],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false,
+            'verify' => false
+        ]);
+        try {
+            
+            $params['json'] = $data;
+            $res_purchase = $client->post("v1/draftbillings", $params)->getBody();
+            $purchase = json_decode($res_purchase);
+
+            return $purchase;
+        } catch(Exception $e){
+            return null;
+        }
+    }
+
+    public function payment_confirmation($id)
+    { 
+        $currentUser = Auth::user();
+
+        if($currentUser){
+            $exam = Examination::where('id', $id)->with('device')->get();
+            if($exam[0]->payment_method == 0){
+				return redirect('pengujian/'.$id.'/pembayaran');
+			}
+            return view('client.pengujian.payment_confirmation') 
+            ->with('data', $exam);
+        }else{
+           return redirect("login");
+        }
+        
+    } 
+
+    public function api_billing($data){
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json', 
+                            'Authorization' => config("app.gateway_tpn_2")
+                        ],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+        try {
+            $params['json'] = $data;
+            $res_billing = $client->post("v1/billings", $params)->getBody();
+            $billing = json_decode($res_billing);
+
+            return $billing;
+        } catch(Exception $e){
+            return null;
+        }
+    }
+
+    public function api_resend_va($id){
+        $exam = Examination::find($id);
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json', 
+                            'Authorization' => config("app.gateway_tpn_2")
+                        ],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+        try {
+            $res_resend = $client->post("v1/billings/mps/resend/".$exam->BILLING_ID)->getBody();
+            $resend = json_decode($res_resend);
+            if($resend){
+                $exam->VA_number = $resend && $resend->status == true ? $resend->data->mps->va->number : null;
+                $exam->VA_amount = $resend && $resend->status == true ? $resend->data->mps->va->amount : null;
+                $exam->VA_expired = $resend && $resend->status == true ? $resend->data->mps->va->expired : null;
+                
+                $exam->save();
+            }
+                        
+            return redirect('/payment_confirmation_spb/'.$id);
+        } catch(Exception $e){
+            return null;
+        }
+    }
+
+    public function api_cancel_va($id){
+    	$currentUser = Auth::user();
+
+        if($currentUser){
+	        $exam = Examination::find($id);
+	        if($exam->BILLING_ID){
+				$data_cancel_billing = [
+	            	"canceled" => [
+						"message" => "-",
+						"by" => $currentUser->name,
+	                	"reference_id" => $currentUser->id
+					]
+	            ];
+				$this->api_cancel_billing($exam->BILLING_ID, $data_cancel_billing);
+			}
+
+			$exam->PO_ID = $this->regeneratePO($exam);
+	        $exam->BILLING_ID = null;
+			$exam->include_pph = 0;
+			$exam->payment_method = 0;
+			$exam->VA_name = null;
+			$exam->VA_image_url = null;
+			$exam->VA_number = null;
+			$exam->VA_amount = null;
+			$exam->VA_expired = null;
+
+			$exam->save();
+
+	        Session::flash('message', "Please choose another bank. If you leave or move to another page, your process will not be saved!");
+	        return redirect('pengujian/'.$id.'/pembayaran');
+		}
+    }
+    public function api_cancel_billing($BILLING_ID,$data){
+        $client = new Client([
+            'headers' => ['Content-Type' => 'application/json', 
+                            'Authorization' => config("app.gateway_tpn_2")
+                        ],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+        try {
+            $params['json'] = $data;
+            $res_cancel_billing = $client->put("v1/billings/".$BILLING_ID."/cancel", $params)->getBody();
+            $cancel_billing = json_decode($res_cancel_billing);
+
+            return $cancel_billing;
+        } catch(Exception $e){
+            return null;
+        }
+    }
+
 	public function updateTanggalUji(Request $request)
     {
 		$currentUser = Auth::user();
