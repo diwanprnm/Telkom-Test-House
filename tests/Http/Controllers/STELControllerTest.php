@@ -141,16 +141,16 @@ class STELControllerTest extends TestCase
     {
          
 
-        $stel = factory(App\STEL::class)->create(['attachment'=>str_random(10).".pdf"]); 
+        $stel = factory(App\STEL::class)->create(['attachment'=>str_random(10).".jpg"]); 
         //save file to minio
-        $file = file_get_contents('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
-		Storage::disk('minio')->put("stel/$stel->attachment", $file);
+        $file = \Storage::disk('local_public')->get("images/testing.jpg");
+		\Storage::disk('minio')->put("stel/$stel->attachment", $file);
 
         //make request
         $admin = User::find(1); 
         $response = $this->actingAs($admin)->call('GET',"admin/stel/media/".$stel->id); 
 		$this->assertResponseStatus(200);
-        $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
+        $this->assertTrue($response->headers->get('content-type') == 'image/*');
 
         // Delete file from minio
         \Storage::disk('minio')->delete("stel/$stel->attachment");
