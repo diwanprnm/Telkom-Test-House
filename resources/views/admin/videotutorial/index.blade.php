@@ -49,7 +49,7 @@
 								</label>
 							</div>
 							<div class="col-md-10 form-group">
-								<input type="text" name="profile_url" class="form-control" placeholder="https://www.youtube.com/embed/[id]" value="{{ $data[0]->profile_url }}" required>
+								<input type="text" name="profile_url" class="form-control" placeholder="https://www.youtube.com/embed/[id]" value="{{ $data[0]->profile_url }}">
 							</div>
 	                      	
 	                      	<div class="col-md-2">
@@ -58,7 +58,7 @@
 								</label>
 							</div>
 							<div class="col-md-10 form-group">
-								<input type="text" name="buy_stel_url" class="form-control" placeholder="https://www.youtube.com/embed/[id]" value="{{ $data[0]->buy_stel_url }}" required>
+								<input type="text" name="buy_stel_url" class="form-control" placeholder="https://www.youtube.com/embed/[id]" value="{{ $data[0]->buy_stel_url }}">
 							</div>
 	                      
 						 	<div class="col-md-2">
@@ -67,7 +67,7 @@
 								</label>
 							</div>
 							<div class="col-md-10 form-group">
-								<input type="text" name="qa_url" class="form-control" placeholder="https://www.youtube.com/embed/[id]" value="{{ $data[0]->qa_url }}" required>
+								<input type="text" name="qa_url" class="form-control" placeholder="https://www.youtube.com/embed/[id]" value="{{ $data[0]->qa_url }}">
 							</div>
 	                      	
 	                      	<div class="col-md-2">
@@ -76,7 +76,7 @@
 								</label>
 							</div>
 							<div class="col-md-10 form-group">
-								<input type="text" name="ta_url" class="form-control" placeholder="https://www.youtube.com/embed/[id]" value="{{ $data[0]->ta_url }}" required>
+								<input type="text" name="ta_url" class="form-control" placeholder="https://www.youtube.com/embed/[id]" value="{{ $data[0]->ta_url }}">
 							</div>
 	                      
 						 	<div class="col-md-2">
@@ -85,7 +85,7 @@
 								</label>
 							</div>
 							<div class="col-md-10 form-group">
-								<input type="text" name="vt_url" class="form-control" placeholder="https://www.youtube.com/embed/[id]" value="{{ $data[0]->vt_url }}" required>
+								<input type="text" name="vt_url" class="form-control" placeholder="https://www.youtube.com/embed/[id]" value="{{ $data[0]->vt_url }}">
 							</div>
 	                      	
 	                      	<div class="col-md-2">
@@ -94,7 +94,7 @@
 								</label>
 							</div>
 							<div class="col-md-10 form-group">
-								<input type="text" name="playlist_url" class="form-control" placeholder="https://www.youtube.com/embed?list=[id]" value="{{ $data[0]->playlist_url }}" required>
+								<input type="text" name="playlist_url" class="form-control" placeholder="https://www.youtube.com/embed?list=[id]" value="{{ $data[0]->playlist_url }}">
 							</div>
 	                      
 	                        <div class="col-md-12">
