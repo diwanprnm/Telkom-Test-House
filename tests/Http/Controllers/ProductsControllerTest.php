@@ -217,7 +217,8 @@ class ProductsControllerTest extends TestCase
 	    
 	    $response =  $this->actingAs($user)->call('GET', '/products/'.$stel->id.'/stel');  
 	  
-        $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'image/*');
 
         \Storage::disk('minio')->delete("stel/$stel->attachment");
 
@@ -232,7 +233,8 @@ class ProductsControllerTest extends TestCase
 	    
 	    $response =  $this->actingAs($user)->call('GET', 'client/downloadfakturstel/'.$stelsSales->id);  
 	  
-        $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'image/*');
 
         \Storage::disk('minio')->delete("stel/$stelsSales->id/$stelsSales->faktur_file");
 
@@ -248,7 +250,8 @@ class ProductsControllerTest extends TestCase
 	    
 	    $response =  $this->actingAs($user)->call('GET', 'client/downloadkuitansistel/'.$id_kuitansi);  
 	  
-        $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'image/*');
 
         \Storage::disk('minio')->delete("stel/$stelsSales->id/$stelsSales->id_kuitansi");
 
@@ -263,7 +266,8 @@ class ProductsControllerTest extends TestCase
 	    
 	    $response =  $this->actingAs($user)->call('GET', 'client/downloadstelwatermark/'.$stelSalesDetail->id);  
 	  
-        $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'image/*');
 
         \Storage::disk('minio')->delete("stelAttach/$stelSalesDetail->id/$stelSalesDetail->attachment");
 

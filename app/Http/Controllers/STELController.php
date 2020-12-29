@@ -335,16 +335,10 @@ class STELController extends Controller
     public function viewMedia($id)
     {
         $stel = STEL::find($id);
-
         if (!$stel){   return redirect(self::ADMIN_STEL)->with(self::ERROR, 'STEL Not Found'); }
 
-        $file = Storage::disk("minio")->url(self::STEL_URL.$stel->attachment);
-        
-        $filename = $stel->attachment;
-        $tempImage = tempnam(sys_get_temp_dir(), $filename);
-        copy($file, $tempImage);
-
-        return response()->download($tempImage, $filename); 
+        $fileMinio = Storage::disk('minio')->get("stel/$stel->attachment");
+        return response($fileMinio, 200, \App\Services\MyHelper::getHeaderImage($stel->attachment));
     }
 	
     function cekNamaSTEL($name)

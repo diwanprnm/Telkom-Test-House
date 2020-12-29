@@ -311,34 +311,18 @@ class TempCompanyController extends Controller
 
         switch ($name) { 
             case 'npwp':  
-                $file = Storage::disk(self::MINIO)->url(self::MEDIA_TEMPCOMPANY.$company->company_id."/".$id."/".$company->npwp_file);
-                    
-                $filename = $company->npwp_file;
-                $tempImage = tempnam(sys_get_temp_dir(), $filename);
-                copy($file, $tempImage);
-
-                $response =  response()->download($tempImage, $filename);
+                $file = Storage::disk(self::MINIO)->get(self::MEDIA_TEMPCOMPANY.$company->company_id."/".$id."/".$company->npwp_file);
+                $response = response($file, 200, \App\Services\MyHelper::getHeaderImage($company->npwp_file));
                 break;
 
             case 'siup':  
-                $file = Storage::disk(self::MINIO)->url(self::MEDIA_TEMPCOMPANY.$company->company_id."/".$id."/".$company->siup_file);
-                    
-                $filename = $company->siup_file;
-                $tempImage = tempnam(sys_get_temp_dir(), $filename);
-                copy($file, $tempImage);
-
-                $response =  response()->download($tempImage, $filename);
+                $file = Storage::disk(self::MINIO)->get(self::MEDIA_TEMPCOMPANY.$company->company_id."/".$id."/".$company->siup_file);
+                $response = response($file, 200, \App\Services\MyHelper::getHeaderImage($company->siup_file));
                 break;
 
             case 'qs': 
-
-                $file = Storage::disk(self::MINIO)->url(self::MEDIA_TEMPCOMPANY.$company->company_id."/".$id."/".$company->qs_certificate_file);
-                    
-                $filename = $company->qs_certificate_file;
-                $tempImage = tempnam(sys_get_temp_dir(), $filename);
-                copy($file, $tempImage);
-
-                $response =  response()->download($tempImage, $filename);
+                $file = Storage::disk(self::MINIO)->get(self::MEDIA_TEMPCOMPANY.$company->company_id."/".$id."/".$company->qs_certificate_file);
+                $response = response($file, 200, \App\Services\MyHelper::getHeaderImage($company->qs_certificate_file));
                 break;
                 default:
                 return 0;
