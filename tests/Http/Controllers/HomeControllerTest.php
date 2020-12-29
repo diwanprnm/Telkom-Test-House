@@ -117,9 +117,9 @@ class HomeControllerTest extends TestCase
             Storage::disk('minio')->put("usman/$fileName", $file);
 		}
 		
-        $admin = User::find(1); 
-        $response = $this->actingAs($admin)->call('GET',"/client/downloadUsman");  
-		$this->assertTrue($response->headers->get('content-type') == 'application/pdf'); 
+		$response = $this->actingAs(User::find(1))->call('GET','client/downloadUsman');
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
 		
 		if(!$isFileExist){
             Storage::disk('minio')->delete("usman/$fileName");
