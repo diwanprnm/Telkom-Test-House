@@ -108,10 +108,21 @@ class HomeControllerTest extends TestCase
 	} 
     public function test_download_usman()
 	{  
+		//make request
+		$fileName = "User Manual Situs Jasa Layanan Pelanggan Lab Pengujian [Customer].pdf";
+        $isFileExist = Storage::disk('minio')->exists("usman/$fileName");
 
-        //make request
+        if(!$isFileExist){
+            $file = file_get_contents('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
+            Storage::disk('minio')->put("usman/$fileName", $file);
+		}
+		
         $admin = User::find(1); 
         $response = $this->actingAs($admin)->call('GET',"/client/downloadUsman");  
-        $this->assertTrue($response->headers->get('content-type') == 'application/pdf'); 
+		$this->assertTrue($response->headers->get('content-type') == 'application/pdf'); 
+		
+		if(!$isFileExist){
+            Storage::disk('minio')->delete("usman/$fileName");
+        }
 	} 
 }

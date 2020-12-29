@@ -150,7 +150,7 @@ class STELControllerTest extends TestCase
         $admin = User::find(1); 
         $response = $this->actingAs($admin)->call('GET',"admin/stel/media/".$stel->id); 
  
-        $this->assertTrue($response->headers->get('content-type') == 'image/jpeg');
+        $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
 
         // Delete file from minio
         \Storage::disk('minio')->delete("stel/$stel->attachment");

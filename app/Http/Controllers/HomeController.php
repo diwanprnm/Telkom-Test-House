@@ -381,13 +381,9 @@ class HomeController extends Controller
 	
 	public function downloadUsman()
     {
-		$filename = "User Manual Situs Jasa Layanan Pelanggan Lab Pengujian [Customer].pdf";
-		$file = Storage::disk("minio")->url("usman/".$filename);
-                      
-        $tempImage = tempnam(sys_get_temp_dir(), $filename);
-        copy($file, $tempImage);
-
-        return response()->download($tempImage, $filename); 
+		$fileName = "User Manual Situs Jasa Layanan Pelanggan Lab Pengujian [Customer].pdf";
+        $fileMinio = Storage::disk('minio')->get("usman/$fileName");
+        return response($fileMinio, 200, \App\Services\MyHelper::getHeaderOctet($fileName));
 	}
 
 	private function getInitialQuery($currentUser)
