@@ -193,6 +193,7 @@ uncomment this part if you haven't added this code anywhere else
 					<h2>{{ trans('translate.video_tutorial') }}</h2>
 				</div>
 				<div id="root">
+				@if($playlist_url)
 				  <iframe
 						  title="video tutorial"
 				          src="{{ $playlist_url }}&listType=playlist&index=0"
@@ -200,6 +201,7 @@ uncomment this part if you haven't added this code anywhere else
 				          allowfullscreen="1"
 				          id="iframe_yt"
 				          ></iframe>
+				@endif
 				</div>
 				
 				<div class="clear"></div>
