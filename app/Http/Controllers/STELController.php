@@ -338,13 +338,11 @@ class STELController extends Controller
 
         if (!$stel){   return redirect(self::ADMIN_STEL)->with(self::ERROR, 'STEL Not Found'); }
 
-        $file = Storage::disk("minio")->url(self::STEL_URL.$stel->attachment);
+        $stream = Storage::disk("minio")->get(self::STEL_URL.$stel->attachment);
                     
         $filename = $stel->attachment;
-        $tempImage = tempnam(sys_get_temp_dir(), $filename);
-        copy($file, $tempImage);
 
-        return response()->download($tempImage, $filename); 
+        return response()->download($stream, $filename); 
     }
 	
     function cekNamaSTEL($name)
