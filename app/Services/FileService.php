@@ -91,7 +91,7 @@ class FileService
     private function uploadFileToMinio($file)
     {
         $this->fileName = $this->prefix.$file->getClientOriginalName();
-        $this->fileExtension = $file->getClientOriginalExtension();
+        $this->fileExtension = strtolower($file->getClientOriginalExtension());
 
         if (in_array($this->fileExtension, $this->allowedImage)){
             
