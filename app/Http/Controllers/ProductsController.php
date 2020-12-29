@@ -674,13 +674,9 @@ class ProductsController extends Controller
 
         if (!$stel){  return redirect()->back()->with(self::ERROR, self::DATA_NOT_FOUND); }
 
-        $file = Storage::disk(self::MINIO)->url(self::STEL_URL.$stel->attachment);
+        $file = Storage::disk(self::MINIO)->get(self::STEL_URL.$stel->attachment);
                     
-        $filename = $stel->attachment;
-        $tempImage = tempnam(sys_get_temp_dir(), $filename);
-        copy($file, $tempImage);
-
-        return response()->download($tempImage, $filename); 
+        return response($file, 200, \App\Services\MyHelper::getHeaderImage($stel->attachment));
         
     } 
 	public function downloadfakturstel($id)
@@ -688,13 +684,9 @@ class ProductsController extends Controller
         $stel = STELSales::where("id",$id)->first();
 
         if (!$stel){  return redirect()->back()->with(self::ERROR, self::DATA_NOT_FOUND); }
-        $file = Storage::disk(self::MINIO)->url(self::STEL_URL.$stel->id."/".$stel->faktur_file);
+        $file = Storage::disk(self::MINIO)->get(self::STEL_URL.$stel->id."/".$stel->faktur_file);
                     
-        $filename = $stel->faktur_file;
-        $tempImage = tempnam(sys_get_temp_dir(), $filename);
-        copy($file, $tempImage);
-
-        return response()->download($tempImage, $filename);
+        return response($file, 200, \App\Services\MyHelper::getHeaderImage($stel->faktur_file));
     }
 	
 	public function downloadkuitansistel($id)
@@ -703,13 +695,9 @@ class ProductsController extends Controller
 
         if (!$stel){  return redirect()->back()->with(self::ERROR, self::DATA_NOT_FOUND); }
 
-        $file = Storage::disk(self::MINIO)->url(self::STEL_URL.$stel->id."/".$stel->id_kuitansi);
+        $file = Storage::disk(self::MINIO)->get(self::STEL_URL.$stel->id."/".$stel->id_kuitansi);
                     
-        $filename = $stel->id_kuitansi;
-        $tempImage = tempnam(sys_get_temp_dir(), $filename);
-        copy($file, $tempImage);
-
-        return response()->download($tempImage, $filename);
+        return response($file, 200, \App\Services\MyHelper::getHeaderImage($stel->id_kuitansi));
     }
 	
     public function viewWatermark($id)
@@ -729,13 +717,9 @@ class ProductsController extends Controller
         $stel = $query->get();
         if (count($stel)){ 
 
-            $file = Storage::disk(self::MINIO)->url("stelAttach/".$id."/".$stel[0]->attachment);
+            $file = Storage::disk(self::MINIO)->get("stelAttach/".$id."/".$stel[0]->attachment);
                     
-            $filename = $stel[0]->attachment;
-            $tempImage = tempnam(sys_get_temp_dir(), $filename);
-            copy($file, $tempImage);
-
-            return response()->download($tempImage, $filename);
+            return response($file, 200, \App\Services\MyHelper::getHeaderImage($stel[0]->attachment));
 
 
         }else{ return redirect()->back();

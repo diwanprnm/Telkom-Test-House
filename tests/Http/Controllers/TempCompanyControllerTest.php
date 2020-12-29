@@ -114,7 +114,8 @@ class TempCompanyControllerTest extends TestCase
         \Storage::disk('minio')->put("tempCompany/$company->company_id/$company->id/$company->npwp_file", $file);
 	    $response =  $this->actingAs($user)->call('GET', 'admin/tempcompany/media/'.$id.'/'.$name);  
 	  	 
-        $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'image/*');
 
         \Storage::disk('minio')->delete("tempCompany/$company->id/$company->npwp_file");
 	}
@@ -130,7 +131,8 @@ class TempCompanyControllerTest extends TestCase
         \Storage::disk('minio')->put("tempCompany/$company->company_id/$company->id/$company->siup_file", $file);
 	    $response =  $this->actingAs($user)->call('GET', 'admin/tempcompany/media/'.$id.'/'.$name);  
 	  
-        $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'image/*');
 
         \Storage::disk('minio')->delete("tempCompany/$company->id/$company->siup_file");
 	}
@@ -146,7 +148,8 @@ class TempCompanyControllerTest extends TestCase
         \Storage::disk('minio')->put("tempCompany/$company->company_id/$company->id/$company->qs_certificate_file", $file);
 	    $response =  $this->actingAs($user)->call('GET', 'admin/tempcompany/media/'.$id.'/'.$name);  
 	  
-        $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
+        $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'image/*');
 
         \Storage::disk('minio')->delete("tempCompany/$company->id/$company->qs_certificate_file");
 	}
