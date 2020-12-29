@@ -47,10 +47,13 @@ pipeline {
                         script{
                             if ( env.BRANCH_NAME == 'master' ){
                                 envStage = "Production"
+                                envAPP_ENV="production"
                             } else if ( env.BRANCH_NAME == 'release' ){
                                 envStage = "Staging"
+                                envAPP_ENV="stage"
                             } else if ( env.BRANCH_NAME == 'develop'){
                                 envStage = "Development"
+                                envAPP_ENV="local"
         }   }   }   }   }   }
         stage('Test & Build') {
             parallel {
@@ -98,7 +101,7 @@ pipeline {
                         unstash 'ws'
                         script{
                             env.nodeName = "${env.NODE_NAME}"
-                            sh "docker build --rm --no-cache --pull -t ${params.DOCKER_IMAGE_NAME}:${BUILD_NUMBER}-${commitId} ."
+                            sh "docker build --build-arg ARGS_APP_ENV=${envAPP_ENV} --rm --no-cache --pull -t ${params.DOCKER_IMAGE_NAME}:${BUILD_NUMBER}-${commitId} ."
         }   }   }   }   }
         stage ('Deployment'){
             steps{
