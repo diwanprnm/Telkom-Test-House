@@ -18,7 +18,7 @@ use App\User;
 
 class UploadProductionController extends Controller
 {
-    private const PROD_URL = 'https://telkomtesthouse.co.id/media/';
+    private const PROD_URL = 'http://old-telkomtesthouse-telkomtesthouse-dev.vsan-apps.playcourt.id/media/';
     
 	/**
      * Create a new controller instance.
