@@ -4,6 +4,10 @@ namespace App\Services\PDF;
 
 class CetakBuktiPenerimaanPerangkat{
 
+	private function doubledecode($var){
+        return urldecode(urldecode($var));
+    }
+
     public function makePDF($data, $pdf)
     {
         $request  = $data['request'];
@@ -33,7 +37,7 @@ class CetakBuktiPenerimaanPerangkat{
 			$pic_urel = '...............................';
 		}
         
-		$pdf->judul_kop('Bukti Penerimaan & Pengeluaran Perangkat Uji','Nomor: '.urldecode($kode_barang));
+		$pdf->judul_kop('Bukti Penerimaan & Pengeluaran Perangkat Uji','Nomor: '.$this->doubledecode($kode_barang));
 		$pdf->AliasNbPages();
 		$pdf->AddPage();
 		 
@@ -44,7 +48,7 @@ class CetakBuktiPenerimaanPerangkat{
 		$pdf->SetFont('','U');
 		$pdf->Cell(10,5,"Nama Perangkat",0,0,'L');
 		$pdf->SetWidths(array(0.00125,80,85,110));
-		$pdf->Row(array("","",":",urldecode($device_name))); 
+		$pdf->Row(array("","",":",$this->doubledecode($device_name))); 
 		/*Pemilik Perangkat*/
 		$y = $pdf->getY(); 
 		$pdf->SetFont('helvetica','',10);
@@ -52,7 +56,7 @@ class CetakBuktiPenerimaanPerangkat{
 		$pdf->SetFont('','U');
 		$pdf->Cell(10,5,"Pemilik Perangkat",0,0,'L');
 		$pdf->SetWidths(array(0.00125,80,85,110));
-		$pdf->Row(array("","",":",urldecode($company_name)));
+		$pdf->Row(array("","",":",$this->doubledecode($company_name)));
 		/*Alamat*/ 
 		$y = $pdf->getY(); 
 		$pdf->SetFont('helvetica','',10);
@@ -60,7 +64,7 @@ class CetakBuktiPenerimaanPerangkat{
 		$pdf->SetFont('','U');
 		$pdf->Cell(10,5,"Alamat",0,0,'L');
 		$pdf->SetWidths(array(0.00125,80,85,110));
-		$pdf->Row(array("","",":",urldecode($company_address)));
+		$pdf->Row(array("","",":",$this->doubledecode($company_address)));
 		
 		/*Phone & Fax*/
 		$y = $pdf->getY(); 
@@ -69,7 +73,7 @@ class CetakBuktiPenerimaanPerangkat{
 		$pdf->SetFont('','U');
 		$pdf->Cell(10,5,"Phone & Fax",0,0,'L');
 		$pdf->SetWidths(array(0.00125,110,115,100));
-		$pdf->Row(array("","",":",urldecode($user_phone).'/'.urldecode($user_fax))); 
+		$pdf->Row(array("","",":",$this->doubledecode($user_phone).'/'.$this->doubledecode($user_fax))); 
 
 		/*Jenis Pengujian*/ 
 		$y = $pdf->getY(); 
@@ -78,7 +82,7 @@ class CetakBuktiPenerimaanPerangkat{
 		$pdf->SetFont('','U');
 		$pdf->Cell(10,5,"Jenis Pengujian",0,0,'L');
 		$pdf->SetWidths(array(0.00125,80,85,110));
-		$pdf->Row(array("","",":",urldecode($exam_type).'/'.urldecode($exam_type_desc))); 
+		$pdf->Row(array("","",":",$this->doubledecode($exam_type).'/'.$this->doubledecode($exam_type_desc))); 
 	 	
 
 	 	//LIST Perangkat
@@ -140,9 +144,9 @@ class CetakBuktiPenerimaanPerangkat{
 
 		//TANGGAL PENERIMAAN & PENGEMBALIAN
 		$pdf->setXY(13,$pdf->getY() - 22);
-		$pdf->Cell(18,10,'TGL '.urldecode($contract_date),0,0,'L');  
+		$pdf->Cell(18,10,'TGL '.$this->doubledecode($contract_date),0,0,'L');  
 		$pdf->setX(53);
-		$pdf->Cell(18,10,'TGL '.urldecode($contract_date),0,0,'L'); 
+		$pdf->Cell(18,10,'TGL '.$this->doubledecode($contract_date),0,0,'L'); 
 		$pdf->setX(123);
 		$pdf->Cell(18,10,'TGL ..................',0,0,'L'); 
 		$pdf->setX(163);
