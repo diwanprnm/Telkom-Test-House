@@ -7,6 +7,9 @@ class CetakUjiFungsi
 {
     private const UNDERSCORES = '____________________________';
 
+    private function doubledecode($var){
+        return urldecode(urldecode($var));
+    }
 
     public function makePDF($data, $pdf)
     {
@@ -43,13 +46,13 @@ class CetakUjiFungsi
         $pdf->SetWidths(array(0.00125,50,140));
         $pdf->SetAligns(array('L','R','L'));
         // $pdf->SetFont('','BI'); -*
-        $pdf->RowRect(array('','No. Registrasi',urldecode($no_reg)));	
-        $pdf->RowRect(array('','Nama Perusahaan',urldecode($company_name)));	
-        $pdf->RowRect(array('','Alamat',urldecode($company_address)));	
-        $pdf->RowRect(array('','Telepon / Fax',urldecode($company_phone).' / '.urldecode($company_fax)));	
-        $pdf->RowRect(array('','Nama Perangkat',urldecode($device_name)));	
-        $pdf->RowRect(array('','Merek / Buatan',urldecode($device_mark).' / '.urldecode($device_manufactured_by)));	
-        $pdf->RowRect(array('','Tipe / Serial Number',urldecode($device_model).' / '.urldecode($device_serial_number)));	
+        $pdf->RowRect(array('','No. Registrasi',$this->doubledecode($no_reg)));	
+        $pdf->RowRect(array('','Nama Perusahaan',$this->doubledecode($company_name)));	
+        $pdf->RowRect(array('','Alamat',$this->doubledecode($company_address)));	
+        $pdf->RowRect(array('','Telepon / Fax',$this->doubledecode($company_phone).' / '.$this->doubledecode($company_fax)));	
+        $pdf->RowRect(array('','Nama Perangkat',$this->doubledecode($device_name)));	
+        $pdf->RowRect(array('','Merek / Buatan',$this->doubledecode($device_mark).' / '.$this->doubledecode($device_manufactured_by)));	
+        $pdf->RowRect(array('','Tipe / Serial Number',$this->doubledecode($device_model).' / '.$this->doubledecode($device_serial_number)));	
         $pdf->Ln(1);
         $pdf->Rect(10,$pdf->getY(),190,40);	
         $pdf->SetFont('','B');
@@ -88,7 +91,7 @@ class CetakUjiFungsi
         $pdf->setY($pdf->getY()+58);
         $pdf->SetWidths(array(5.00125,20,160));
         $pdf->SetAligns(array('L','L','L'));
-        $pdf->Row(array('','Catatan:',urldecode($catatan)));	
+        $pdf->Row(array('','Catatan:',$this->doubledecode($catatan)));	
         $pdf->Cell(18,50,'Beri tanda',0,0,'L');
         $pdf->SetFont('ZapfDingbats','', 10);
         $pdf->Cell(4, 50, "4", 0, 0);
@@ -98,7 +101,7 @@ class CetakUjiFungsi
         $pdf->Cell(35,50,'HASIL UJI FUNGSI',0,0,'L');
         $pdf->SetFont('','');
         $pdf->Cell(-78);
-        $pdf->Cell(180,73,'Bandung, '.urldecode($tgl_uji_fungsi),0,0,'C');
+        $pdf->Cell(180,73,'Bandung, '.$this->doubledecode($tgl_uji_fungsi),0,0,'C');
         $pdf->Ln(-13);
         $pdf->Cell(180,110,'Diketahui oleh:',0,0,'C');
         $pdf->Ln(-7);
