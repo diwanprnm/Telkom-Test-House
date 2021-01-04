@@ -952,7 +952,7 @@ class PengujianController extends Controller
 
 		$data_draft = [
             "from" => [
-                "name" => "PT TELEKOMUNIKASI INDONESIA, TBK.",
+                "name" => "PT TELKOM INDONESIA (PERSERO)",
                 "address" => "Telkom Indonesia Graha Merah Putih, Jalan Japati No.1 Bandung, Jawa Barat, 40133",
                 "phone" => "(+62) 812-2483-7500",
                 self::EMAIL => "urelddstelkom@gmail.com",
@@ -1211,7 +1211,7 @@ class PengujianController extends Controller
 
 		$data_draft = [
             "from" => [
-                "name" => "PT TELEKOMUNIKASI INDONESIA, TBK.",
+                "name" => "PT TELKOM INDONESIA (PERSERO)",
                 "address" => "Telkom Indonesia Graha Merah Putih, Jalan Japati No.1 Bandung, Jawa Barat, 40133",
                 "phone" => "(+62) 812-2483-7500",
                 "email" => "urelddstelkom@gmail.com",
