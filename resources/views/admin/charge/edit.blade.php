@@ -64,7 +64,11 @@
 										Kategori *
 									</label>
 									<select name="category" class="cs-select cs-skin-elastic" required>
-										@if($data->category == 'Lab CPE')
+
+										@foreach ($labs as $lab)
+											<option value="{{$lab->description}}" @if ($data->category == $lab->description) selected @endif >{{$lab->description}}</option>
+										@endforeach
+										{{-- @if($data->category == 'Lab CPE')
 											<option value="Lab CPE" selected>Lab CPE</option>
 										@else
 											<option value="Lab CPE">Lab CPE</option>
@@ -98,7 +102,7 @@
 											<option value="Lab EMC" selected>Lab EMC</option>
 										@else
 											<option value="Lab EMC">Lab EMC</option>
-										@endif
+										@endif --}}
 									</select>
 								</div>
 							</div>
