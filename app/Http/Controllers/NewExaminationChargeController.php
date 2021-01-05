@@ -14,6 +14,7 @@ use Excel;
 
 use App\Logs;
 use App\ExaminationCharge;
+use App\ExaminationLab;
 use App\NewExaminationCharge;
 use App\NewExaminationChargeDetail;
 
@@ -211,10 +212,11 @@ class NewExaminationChargeController extends Controller
                     ;
 
             $examinationCharge = $query->orderByRaw(self::CATEGORY_AND_DEVICE_NAME)->get();
-
+            $examinationLabs = ExaminationLab::where('is_active', 1)->orderBy('lab_code', 'asc')->get();
             return view('admin.newcharge.createDetail')
                 ->with('id', $id)
                 ->with(self::EXAMINATION_CHARGE, $examinationCharge)
+                ->with('labs', $examinationLabs)
             ;
         }else{
             Session::flash(self::ERROR, 'The data has been processed!');
@@ -280,13 +282,16 @@ class NewExaminationChargeController extends Controller
         if (count($examinationCharge) == 0){
             $dataNotFound = self::DATA_NOT_FOUND;
         }
-        
+
+        $examinationLabs = ExaminationLab::where('is_active', 1)->orderBy('lab_code', 'asc')->get();
         return view('admin.newcharge.show')
             ->with('charge', $charge)
             ->with('dataNotFound', $dataNotFound)
             ->with('data', $examinationCharge)
             ->with(self::SEARCH, $search)
-            ->with(self::CATEGORY, $category);
+            ->with(self::CATEGORY, $category)
+            ->with('labs',$examinationLabs)
+        ;
     }
 
     /**
@@ -371,12 +376,14 @@ class NewExaminationChargeController extends Controller
         ;
         $examinationCharge = $query->orderByRaw(self::CATEGORY_AND_DEVICE_NAME)->get();
 
+        $examinationLabs = ExaminationLab::where('is_active', 1)->orderBy('lab_code', 'asc')->get();
         return view('admin.newcharge.editDetail')
             ->with('id', $id)
             ->with('exam_id', $exam_id)
             ->with('data', $newChargeDetail)
             ->with(self::EXAMINATION_CHARGE, $examinationCharge)
             ->with(self::IS_IMPLEMENT, $newCharge->is_implement)
+            ->with('labs',$examinationLabs)
         ;
     }
 
