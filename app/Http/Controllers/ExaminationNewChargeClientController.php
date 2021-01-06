@@ -40,7 +40,7 @@ class ExaminationNewChargeClientController extends Controller
 
             $examLab = ExaminationLab::all();
             $newCharge = NewExaminationCharge::where("is_implement",0)->orderBy("valid_from","desc")->limit(1)->get();
-            $examinationLabs = ExaminationLab::where('is_active', 1)->orderBy('lab_code', 'asc')->get();
+            $examinationLabs = ExaminationLab::orderBy('lab_code', 'asc')->get();
 
             if(count($newCharge))
             {

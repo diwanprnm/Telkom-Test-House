@@ -57,7 +57,7 @@ class ExaminationChargeClientController extends Controller
                 $message = 'Data not found';
             }
             $page = "Chargeclient";
-            $examinationLabs = ExaminationLab::where('is_active', 1)->orderBy('lab_code', 'asc')->get();
+            $examinationLabs = ExaminationLab::orderBy('lab_code', 'asc')->get();
             return view('client.charge.index')
                 ->with('examLab', $examLab)
                 ->with('message', $message)

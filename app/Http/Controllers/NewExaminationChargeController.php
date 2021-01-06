@@ -212,7 +212,7 @@ class NewExaminationChargeController extends Controller
                     ;
 
             $examinationCharge = $query->orderByRaw(self::CATEGORY_AND_DEVICE_NAME)->get();
-            $examinationLabs = ExaminationLab::where('is_active', 1)->orderBy('lab_code', 'asc')->get();
+            $examinationLabs = ExaminationLab::orderBy('lab_code', 'asc')->get();
             return view('admin.newcharge.createDetail')
                 ->with('id', $id)
                 ->with(self::EXAMINATION_CHARGE, $examinationCharge)
@@ -283,7 +283,7 @@ class NewExaminationChargeController extends Controller
             $dataNotFound = self::DATA_NOT_FOUND;
         }
 
-        $examinationLabs = ExaminationLab::where('is_active', 1)->orderBy('lab_code', 'asc')->get();
+        $examinationLabs = ExaminationLab::orderBy('lab_code', 'asc')->get();
         return view('admin.newcharge.show')
             ->with('charge', $charge)
             ->with('dataNotFound', $dataNotFound)
@@ -376,7 +376,7 @@ class NewExaminationChargeController extends Controller
         ;
         $examinationCharge = $query->orderByRaw(self::CATEGORY_AND_DEVICE_NAME)->get();
 
-        $examinationLabs = ExaminationLab::where('is_active', 1)->orderBy('lab_code', 'asc')->get();
+        $examinationLabs = ExaminationLab::orderBy('lab_code', 'asc')->get();
         return view('admin.newcharge.editDetail')
             ->with('id', $id)
             ->with('exam_id', $exam_id)
