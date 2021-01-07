@@ -34,7 +34,7 @@ class NewExaminationChargeControllerTest extends TestCase
             ->see('<h1 class="mainTitle">TARIF PENGUJIAN BARU</h1>')
         ;
     }
-/*
+
     public function testIndexWithoutDataExsit()
     {
         //Make request as Admin
@@ -342,5 +342,4 @@ class NewExaminationChargeControllerTest extends TestCase
         $this->assertRedirectedTo("admin/newcharge/", ['error' => 'Data not found']);
 
     }
-    */
 }
