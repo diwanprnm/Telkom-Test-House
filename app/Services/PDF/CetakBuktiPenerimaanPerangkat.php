@@ -154,7 +154,7 @@ class CetakBuktiPenerimaanPerangkat{
 		
 		$y = $pdf->getY();  
 		$pdf->setY($pdf->getY() + 50);
-		$pdf->Cell(180,10,'TLKM02/F/007 Versi 01',0,0,'R'); 
+		$pdf->Cell(180,10,'TLKM02/F/007 Versi 01',0,0,'L'); 
 
 		// $pdf->Cell(18,10,'Dokumen ini tidak terkendali apabila diunduh',0,0,'L'); 
 		$pdf->Output();
