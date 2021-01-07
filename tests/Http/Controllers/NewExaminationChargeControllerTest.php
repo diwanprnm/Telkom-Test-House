@@ -15,7 +15,7 @@ class NewExaminationChargeControllerTest extends TestCase
      * @return void
      */
 
-/*
+
     public function testIndexAsAdmin()
     {
         //truncate data
@@ -34,7 +34,7 @@ class NewExaminationChargeControllerTest extends TestCase
             ->see('<h1 class="mainTitle">TARIF PENGUJIAN BARU</h1>')
         ;
     }
-
+/*
     public function testIndexWithoutDataExsit()
     {
         //Make request as Admin
@@ -341,5 +341,6 @@ class NewExaminationChargeControllerTest extends TestCase
         //Status redirect ke admin/newcharge dan pesan "New Charge successfully deleted"
         $this->assertRedirectedTo("admin/newcharge/", ['error' => 'Data not found']);
 
-    }*/
+    }
+    */
 }
