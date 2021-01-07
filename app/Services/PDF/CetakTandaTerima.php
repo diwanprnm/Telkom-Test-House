@@ -60,7 +60,7 @@ class CetakTandaTerima
     
         $pdf->setY($pdf->getY()+8); 
         $pdf->Cell(130);
-        $pdf->Cell(0,5,"Bandung,".date("d-m-Y"),0,0,'C');
+        $pdf->Cell(0,5,"Bandung, ".date("d-m-Y"),0,0,'C');
         $pdf->setY($pdf->getY()+8); 
         $pdf->Cell(20);
         $pdf->Cell(180,5,"DDB - PT. TELKOM",0,0,'L');
@@ -73,14 +73,15 @@ class CetakTandaTerima
         $pdf->Ln(10);
         $pdf->SetFont('','U');
         $pdf->Cell(5);
-        $pdf->Cell(10,5,"User Relation, Divisi Digital Business, Telp. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
+        $pdf->Cell(10,5,"Telkom Test House, Telp. (+62) 812-2483-7500",0,0,'L');
         $pdf->Ln(4);
         $pdf->SetFont('','I');
         $pdf->Cell(5);
-        $pdf->Cell(10,5,"Divisi Digital Business, User Relation, Phone. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
+        $pdf->Cell(10,5,"Telkom Test House, Phone. (+62) 812-2483-7500",0,0,'L');
         $pdf->Ln(6);
+        $pdf->setX(20.00125);
         $pdf->SetFont('helvetica','',8);
-        $pdf->Cell(260,5,"TLKM02/F/010 Versi 01",0,0,'R');
+        $pdf->Cell(260,5,"TLKM02/F/010 Versi 01",0,0,'L');
     
     /*Footer Manual*/
         
