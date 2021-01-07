@@ -15,7 +15,7 @@ class NewExaminationChargeControllerTest extends TestCase
      * @return void
      */
 
-
+/*
     public function testIndexAsAdmin()
     {
         //truncate data
@@ -91,7 +91,7 @@ class NewExaminationChargeControllerTest extends TestCase
             ->see('<h1 class="mainTitle">Tambah Tarif Pengujian Baru</h1>')
         ;
     }
-/*
+
     public function testPostDetail()
     {
         //Get Data
@@ -119,7 +119,7 @@ class NewExaminationChargeControllerTest extends TestCase
             ->see('New Charge successfully updated')
         ;
     }
-*/
+
 
     public function testIndexWithFilter()
     {
@@ -263,7 +263,7 @@ class NewExaminationChargeControllerTest extends TestCase
         DB::table('examination_charges')->truncate();
         //for Mysql DB::statement('SET FOREIGN_KEY_CHECKS=1;'); -
     }
-/*
+
     public function testUpdateDetail()
     {
         $newExaminationChargeDetail = factory(App\NewExaminationChargeDetail::class)->create();
@@ -289,7 +289,7 @@ class NewExaminationChargeControllerTest extends TestCase
             ->see('New Charge successfully updated')
         ;
     }
-*/
+
 
     public function testDeleteDetail()
     {
@@ -341,5 +341,5 @@ class NewExaminationChargeControllerTest extends TestCase
         //Status redirect ke admin/newcharge dan pesan "New Charge successfully deleted"
         $this->assertRedirectedTo("admin/newcharge/", ['error' => 'Data not found']);
 
-    }
+    }*/
 }
