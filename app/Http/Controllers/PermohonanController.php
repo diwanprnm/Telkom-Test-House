@@ -23,7 +23,7 @@ use App\ExaminationHistory;
 use App\Footer;
 use App\Question;
 use App\AdminRole;
-
+use App\Company;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -534,6 +534,7 @@ class PermohonanController extends Controller
 		$batas_waktu_sistem = 
 			$request->input('f1-batas-waktu');
 		$no_reg = $type == self::UPDATE ? $exam_no_reg->function_test_NO : $this->generateFunctionTestNumber($jns_pengujian_name);
+		$kotaPerusahaan = Company::select('city')->where('id', $company_id)->first()->city;
 		
 		if($request->ajax()){
 			$data = Array([
@@ -560,7 +561,8 @@ class PermohonanController extends Controller
 				'jnsPengujian' => $jns_pengujian,
 				'initPengujian' => $jns_pengujian_name,
 				'descPengujian' => $jns_pengujian_desc,
-				'no_reg' => $no_reg
+				'no_reg' => $no_reg,
+				'kotaPerusahaan' => $kotaPerusahaan
 			]);
 		}else{
 			$data = array();

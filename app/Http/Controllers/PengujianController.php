@@ -1643,6 +1643,7 @@ class PengujianController extends Controller
 			c.fax AS faxPerusahaan,
 			c.email AS emailPerusahaan,
 			c.npwp_number AS npwpPerusahaan,
+			c.city AS kotaPerusahaan,
 			d.`name` AS nama_perangkat,
 			d.mark AS merk_perangkat,
 			d.capacity AS kapasitas_perangkat,
@@ -1691,7 +1692,8 @@ class PengujianController extends Controller
 			'no_reg' => $data[0]->function_test_NO ? : '-',
 			'plg_idPerusahaan' => $data[0]->plg_idPerusahaan  ? : '-',
 			'nibPerusahaan' => $data[0]->nibPerusahaan  ? : '-',
-			'npwpPerusahaan' => $data[0]->npwpPerusahaan  ? : '-'
+			'npwpPerusahaan' => $data[0]->npwpPerusahaan  ? : '-',
+			'kotaPerusahaan' => $data[0]->kotaPerusahaan ? : '-',
 		);
 		
 		$PDF = new \App\Services\PDF\PDFService();

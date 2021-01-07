@@ -153,9 +153,11 @@ class PDFMCTablePermohonan extends FPDF{
 	
 	public $judul;
 	public $title;
-	function judul_kop($judul,$title) {
+	public $kotaPerusahaan;
+	function judul_kop($judul, $title, $kotaPerusahaan) {
 		$this->judul = $judul;
 		$this->title = $title;
+		$this->kotaPerusahaan = ucwords(strtolower($kotaPerusahaan));
 	}
 	
 	function Header()
@@ -207,7 +209,7 @@ class PDFMCTablePermohonan extends FPDF{
 	{
 		$this->SetY(-55);
 		$this->SetFont('helvetica','',10);
-		$this->Cell(150,5,"     Bandung,",0,0,'R');
+		$this->Cell(150,5,"$this->kotaPerusahaan, ",0,0,'R');
 		$this->Ln(18);
 		$this->SetFont('','U');
 		$this->Cell(185,5,"                                        ",0,0,'R');
@@ -220,23 +222,23 @@ class PDFMCTablePermohonan extends FPDF{
 		$this->Cell(185,5,"Applicant's Name & Company Stamp",0,0,'R');
 		$this->Ln(6);
 		$this->SetFont('','U');
-		$this->Cell(10,5,"User Relation, Divisi Digital Business, Telp. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
+		$this->Cell(10,5,"Telkom Test House, Telp. (+62) 812-2483-7500",0,0,'L');
 		$this->Ln(4);
 		$this->SetFont('','I');
-		$this->Cell(10,5,"Divisi Digital Business, User Relation, Phone. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
+		$this->Cell(10,5,"Telkom Test House, Phone. (+62) 812-2483-7500",0,0,'L');
 		$this->Ln(4);
 		$this->SetFont('helvetica','',8);
 		if($this->param1 == 'QA'){
-			$this->Cell(185,5,"TLKM02/F/001 Versi 02",0,0,'R');		
+			$this->Cell(185,5,"TLKM02/F/001 Versi 02",0,0,'L');		
 		}
 		else if($this->param1 == 'TA'){
-			$this->Cell(185,5,"TLKM02/F/002 Versi 02",0,0,'R');		
+			$this->Cell(185,5,"TLKM02/F/002 Versi 02",0,0,'L');		
 		}
 		else if($this->param1 == 'VT'){
-			$this->Cell(185,5,"TLKM02/F/003 Versi 02",0,0,'R');		
+			$this->Cell(185,5,"TLKM02/F/003 Versi 02",0,0,'L');		
 		}
 		else if($this->param1 == 'CAL'){
-			$this->Cell(185,5,"TLKM02/F/004 Versi 02",0,0,'R');		
+			$this->Cell(185,5,"TLKM02/F/004 Versi 02",0,0,'L');		
 		}
 		/*//Position at 1.5 cm from bottom
 		$this->SetY(-6);

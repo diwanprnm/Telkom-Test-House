@@ -209,7 +209,7 @@ class PDFMCTable extends FPDF{
 		//Arial italic 8
 		$this->SetFont('helvetica','I',11);
 		//Page number
-		$this->Cell(0,0.1,'Page '.$this->PageNo().'/{nb}',0,0,'C');
+		$this->Cell(0,0.1,'Page '.$this->PageNo().'/{nb}',0,0,'R');
 		
 		// $this->Cell(130,0.1,'Bandung',0,0,'R');
 		

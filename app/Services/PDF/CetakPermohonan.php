@@ -21,10 +21,13 @@ class CetakPermohonan
         else if($data[0]['initPengujian'] == 'CAL'){
             $kop = 'KALIBRASI';
         }
+
+       
         $pdf->judul_kop(
-        // 'PERMOHONAN UJI MUTU ('.$data[0]['initPengujian'].')', //IAS
-        'PERMOHONAN UJI '.$kop.' - '.strtoupper(urldecode($data[0]['descPengujian'])),
-        $data[0]['descPengujian'].' Testing Application');
+            'PERMOHONAN UJI '.$kop.' - '.strtoupper(urldecode($data[0]['descPengujian'])),
+            $data[0]['descPengujian'].' Testing Application',
+            $data[0]['kotaPerusahaan']
+        );
         $pdf->AliasNbPages();
         $pdf->AddPage();
     /*Data Pemohon*/

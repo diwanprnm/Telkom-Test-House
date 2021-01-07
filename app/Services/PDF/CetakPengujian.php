@@ -50,9 +50,10 @@ class CetakPengujian
 			$kop = 'KALIBRASI';
 		}
 		$pdf->judul_kop(
-		// 'PERMOHONAN UJI MUTU ('.urldecode($initPengujian).')', //IASO2/F/002 Versi 01
-		'PERMOHONAN UJI '.$kop.' - '.strtoupper(urldecode($descPengujian)),
-		urldecode($descPengujian).' Testing Application');
+			'PERMOHONAN UJI '.$kop.' - '.strtoupper(urldecode($descPengujian)),
+			urldecode($descPengujian).' Testing Application',
+			$data['kotaPerusahaan']
+		);
 		$pdf->AliasNbPages();
 		$pdf->AddPage();
 	/*Data Pemohon*/

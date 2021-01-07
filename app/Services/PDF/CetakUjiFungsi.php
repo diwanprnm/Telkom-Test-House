@@ -134,7 +134,7 @@ class CetakUjiFungsi
         
         $pdf->Ln(70);
         $pdf->SetFont('helvetica','',8);
-        $pdf->Cell(185,5,"TLKM02/F/005 Versi 02",0,0,'R');
+        $pdf->Cell(185,5,"TLKM02/F/005 Versi 02",0,0,'L');
 
     /*Footer Manual*/
         
