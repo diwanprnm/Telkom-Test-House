@@ -476,7 +476,7 @@ class ExaminationDoneController extends Controller
 		->with(self::COMPANY)
 		->with(self::DEVICE)
 		->with('Questioner')
-		->with('QuestionerDynamic.qq')
+		->with('QuestionerDynamic')
 		->get();
 		
 		$PDF = new \App\Services\PDF\PDFService();

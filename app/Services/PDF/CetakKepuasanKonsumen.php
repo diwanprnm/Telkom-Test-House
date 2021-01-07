@@ -8,7 +8,7 @@ class CetakKepuasanKonsumen
 
 	public function makePDF($questioner, $pdf)
 	{
-		// $pdf->AliasNbPages(); -*
+		$pdf->AliasNbPages();
 		$pdf->AddPage();
 
 		$y = $pdf->getY();
@@ -121,7 +121,8 @@ class CetakKepuasanKonsumen
 		// $pdf->RowRect(array('',$questioner[0]->questioner[0]->quest6)); -*
 		$pdf->Ln(6);
 		$pdf->SetFont('helvetica','',8);
-		$pdf->Cell(185,5,"TLKM05/F/002 Versi 01",0,0,'R');
+		$pdf->setX(10.00125);
+		$pdf->Cell(185,5,"TLKM05/F/002 Versi 01",0,0,'L');
 		$pdf->Output();
 		exit;
 	}
