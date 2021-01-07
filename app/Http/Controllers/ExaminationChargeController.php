@@ -12,6 +12,7 @@ use Input;
 
 use App\Logs;
 use App\ExaminationCharge;
+use App\ExaminationLab;
 
 use App\Services\Logs\LogService;
 
@@ -88,6 +89,13 @@ class ExaminationChargeController extends Controller
         if (count($examinationCharge) == 0){
             $notFound = 'Data not found';
         }
+
+        $examinationLabs = ExaminationLab::where('is_active', 1)
+            ->orderBy('lab_code', 'asc')
+            ->get()
+        ;
+
+        
         
         return view('admin.charge.index')
             ->with('notFound', $notFound)
@@ -95,14 +103,22 @@ class ExaminationChargeController extends Controller
             ->with('data', $examinationCharge)
             ->with(self::SEARCH, $search)
             ->with(self::CATEGORY, $category)
-            ->with('status', $status);
+            ->with('status', $status)
+            ->with('labs',  $examinationLabs);
         
     }
 
 
     public function create()
     {
-        return view('admin.charge.create');
+        $examinationLabs = ExaminationLab::where('is_active', 1)
+            ->orderBy('lab_code', 'asc')
+            ->get()
+        ;
+
+        return view('admin.charge.create')
+            ->with('labs',  $examinationLabs)
+        ;
     }
 
 
@@ -154,14 +170,18 @@ class ExaminationChargeController extends Controller
     }
 
 
-
-
     public function edit($id)
     {
         $charge = ExaminationCharge::find($id);
+        $examinationLabs = ExaminationLab::where('is_active', 1)
+            ->orderBy('lab_code', 'asc')
+            ->get()
+        ;
 
         return view('admin.charge.edit')
-            ->with('data', $charge);
+            ->with('data', $charge)
+            ->with('labs',  $examinationLabs)
+        ;
     }
 
 

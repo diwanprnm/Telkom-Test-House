@@ -72,12 +72,9 @@
 									@if (!old('category'))
 										<option value="" disabled selected>Select...</option>
 									@endif
-										<option value="Lab CPE" @if(old('category') == 'Lab CPE') {{'selected'}} @endif >Lab CPE</option>
-										<option value="Lab Device" @if(old('category') == 'Lab Device') {{'selected'}} @endif >Lab Device</option>
-										<option value="Lab Energi" @if(old('category') == 'Lab Energi') {{'selected'}} @endif>Lab Energi</option>
-										<option value="Lab Kabel" @if(old('category') == 'Lab Kabel') {{'selected'}} @endif>Lab Kabel</option>
-										<option value="Lab Transmisi" @if(old('category') == 'Lab Transmisi') {{'selected'}} @endif>Lab Transmisi</option>
-										<option value="Lab EMC" @if(old('category') == 'Lab EMC') {{'selected'}} @endif>Lab EMC</option>
+										@foreach ($labs as $lab)
+											<option value="{{$lab->description}}" @if (old('category') == $lab->description) selected @endif >{{$lab->description}}</option>
+										@endforeach
 									</select>
 								</div>
 							</div>

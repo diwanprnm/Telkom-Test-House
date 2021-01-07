@@ -16,7 +16,8 @@ RUN chmod -R 775 /var/www/data/html \
     && sed -i -e "s|${ARGS_APP_ENV}host|localhost|g" ./.env.example
 
 RUN apk update \
-    && apk add mysql-client
+    && apk add mysql-client \
+    && apk add ghostscript
 
 USER user
 

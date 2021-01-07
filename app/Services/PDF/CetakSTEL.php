@@ -2,6 +2,9 @@
 
 namespace App\Services\PDF;
 use Storage;
+use Illuminate\Support\Facades\File; 
+use App\Services\PDF\ConvertPDF;
+
 
 class CetakStel
 {
@@ -14,12 +17,15 @@ class CetakStel
 		// $pdf = new Fpdf('P','in',array(8.5,11)); *-
 		
 		$minioPath = "stel/$attach";
+		$tmpPath = "$attach-watermark-stel.pdf";
 		//$minioPath = "usman/User Manual Situs Jasa Layanan Pelanggan Lab Pengujian [Admin].pdf";
 		$fileFromMinio = Storage::disk('minio')->get($minioPath);
-		Storage::disk('tmp')->put("$attach-watermark-stel.pdf",$fileFromMinio);
-		$tempPath = storage_path("tmp/$attach-watermark-stel.pdf");
+		Storage::disk('tmp')->put($tmpPath, $fileFromMinio);
 
-		$pagecount = $pdf->setSourceFile($tempPath);
+		// convert pdf to version 1.4
+		ConvertPDF::toCompatible(storage_path('tmp').'/convert-'.$tmpPath, storage_path('tmp').'/'.$tmpPath);
+
+		$pagecount = $pdf->setSourceFile(storage_path('tmp').'/convert-'.$tmpPath);
 		for ($i=1; $i <= $pagecount ; $i++) { 
 			$pdf->AddPage();
 			//Import the first page of the file
@@ -44,7 +50,10 @@ class CetakStel
 			$pdf->Rect(70, 0, 75, 297, 'F');
 		}
 		$pdf->Output();
+
+		//Delete temporary files
 		File::delete(storage_path("tmp/$attach-watermark-stel.pdf"));
+		File::delete(storage_path("tmp/convert-$attach-watermark-stel.pdf"));
 		exit;
 	}
 }

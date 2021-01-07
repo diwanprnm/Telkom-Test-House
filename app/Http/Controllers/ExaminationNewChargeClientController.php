@@ -40,6 +40,7 @@ class ExaminationNewChargeClientController extends Controller
 
             $examLab = ExaminationLab::all();
             $newCharge = NewExaminationCharge::where("is_implement",0)->orderBy("valid_from","desc")->limit(1)->get();
+            $examinationLabs = ExaminationLab::orderBy('lab_code', 'asc')->get();
 
             if(count($newCharge))
             {
@@ -73,7 +74,9 @@ class ExaminationNewChargeClientController extends Controller
                 ->with('data', $examinationCharge)
                 ->with('search', $search)
                 ->with('page', $page)
-				->with(self::CATEGORY, $category);
+				->with(self::CATEGORY, $category)
+                ->with('labs', $examinationLabs)
+            ;
     }
 	
 	

@@ -56,14 +56,17 @@ class ExaminationChargeClientController extends Controller
             if (count($examinationCharge) == 0){
                 $message = 'Data not found';
             }
-			 $page = "Chargeclient";
+            $page = "Chargeclient";
+            $examinationLabs = ExaminationLab::orderBy('lab_code', 'asc')->get();
             return view('client.charge.index')
                 ->with('examLab', $examLab)
                 ->with('message', $message)
                 ->with('data', $examinationCharge)
                 ->with('search', $search)
-                 ->with('page', $page)
-				->with(self::CATEGORY, $category);
+                ->with('page', $page)
+                ->with(self::CATEGORY, $category)
+                ->with('labs', $examinationLabs)
+            ;
     }
 	
 	
