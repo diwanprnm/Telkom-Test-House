@@ -447,16 +447,19 @@ class CetakKontrak
         $pdf->Ln(5);
         $pdf->setX(10.00125);
         $pdf->SetFont('','U');
-        $pdf->Cell(10,5,"User Relation, Divisi Digital Business, Telp. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
+        $pdf->Cell(10,5,"Telkom Test House, Telp. (+62) 812-2483-7500",0,0,'L');
         $pdf->Ln(4);
         $pdf->setX(10.00125);
         $pdf->SetFont('','I');
-        $pdf->Cell(10,5,"Divisi Digital Business, User Relation, Phone. 62-22-4571050, 4571101 Fax. 62-22-2012255",0,0,'L');
+        $pdf->Cell(10,5,"Telkom Test House, Phone. (+62) 812-2483-7500",0,0,'L');
+        $pdf->Ln();
         $pdf->Ln();
         if($data[0]['is_loc_test'] == 1){
-            $pdf->Cell(185,1,"TLKM02/F/007 Versi 01",0,0,'R');
+            $pdf->setX(10.00125);
+            $pdf->Cell(10,5,"TLKM02/F/007 Versi 01",0,0,'L');
         }else{
-            $pdf->Cell(185,1,"TLKM02/F/006 Versi 02",0,0,'R');
+            $pdf->setX(10.00125);
+            $pdf->Cell(10,5,"TLKM02/F/006 Versi 02",0,0,'L');
         }
     /*End Footer Manual*/
         $pdf->Output();
