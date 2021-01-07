@@ -193,7 +193,6 @@ class IncomeControllerTest extends TestCase
 
         App\Income::truncate();
         App\Examination::truncate();
-        App\ExaminationLab::truncate();
         App\Device::truncate();
         App\Company::where('id','!=', '1')->delete();
         App\Kuitansi::truncate();
