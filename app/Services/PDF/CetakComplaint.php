@@ -9,7 +9,7 @@ class CetakComplaint
     {
         
         $pdf->AddPage();
-        // $pdf->AliasNbPages(); <- untuk apa ini?
+        $pdf->AliasNbPages();
      
         $pdf->Ln(6); 
         $pdf->SetFont('helvetica','',10); 
