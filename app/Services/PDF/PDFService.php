@@ -20,7 +20,6 @@ use App\Services\PDF\CetakBuktiPenerimaanPerangkat;
 use App\Services\PDF\CetakUjiFungsi;
 use App\Services\PDF\CetakTandaTerima;
 use App\Services\PDF\CetakHasilKuitansi;
-use App\Services\PDF\CetakPengujian;
 use App\Services\PDF\CetakSPB;
 use App\Services\PDF\CetakSTEL;
 
@@ -78,9 +77,9 @@ class PDFService
 
 	public function cetakPengujian($data)
 	{
-		$cetakPengujian = new CetakPengujian();
+		$cetakPermohonan = new CetakPermohonan();
 		if( App::environment() == 'testing'){ return ''; }
-		return $cetakPengujian->makePDF($data, new PDFMCTablePermohonan());
+		return $cetakPermohonan->makePDF($this->convertDataPermohonan($data), new PDFMCTablePermohonan());
 	}
 
 
@@ -113,5 +112,32 @@ class PDFService
 		//dipanggil dari routes
 		$cetakPermohonan = new CetakPermohonan();
 		$cetakPermohonan->makePDF($data, new PDFMCTablePermohonan());
+	}
+
+	private function convertDataPermohonan($data){
+		return array([
+			'nama_pemohon' => $data['namaPemohon'],
+			'initPengujian' => $data['initPengujian'],
+			'kotaPerusahaan' => $data['kotaPerusahaan'],
+			'no_reg' => $data['no_reg'],
+			'alamat_pemohon' => $data['alamatPemohon'],
+			'telepon_pemohon' => $data['telpPemohon'],
+			'email_pemohon' => $data['emailPemohon'],
+			'jns_perusahaan' => $data['jnsPerusahaan'],
+			'nama_perusahaan' => $data['namaPerusahaan'],
+			'alamat_perusahaan' => $data['alamatPerusahaan'],
+			'jnsPengujian' => $data['jnsPengujian'],
+			'telepon_perusahaan' => $data['telpPerusahaan'],
+			'email_perusahaan' => $data['emailPerusahaan'],
+			'npwp_perusahaan' => $data['npwpPerusahaan'],
+			'nama_perangkat' => $data['nama_perangkat'],
+			'merek_perangkat' => $data['merk_perangkat'],
+			'model_perangkat' => $data['model_perangkat'],
+			'kapasitas_perangkat' => $data['kapasitas_perangkat'],
+			'referensi_perangkat' => $data['referensi_perangkat'],
+			'pembuat_perangkat' => $data['pembuat_perangkat'],
+			'plg_id_perusahaan' => $data['plg_idPerusahaan'],
+			'nib_perusahaan' => $data['nibPerusahaan'],
+		]);
 	}
 }
