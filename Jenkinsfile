@@ -5,7 +5,7 @@ env.nodeName = "PHP"
 pipeline {
     parameters {
         string(name: 'PRODUCTION_NAMESPACE',       description: 'Production Namespace',                 defaultValue: 'telkomtesthouse-prod')
-        string(name: 'STAGING_NAMESPACE',          description: 'Staging Namespace',                    defaultValue: '')
+        string(name: 'STAGING_NAMESPACE',          description: 'Staging Namespace',                    defaultValue: 'telkomtesthouse-stage')
         string(name: 'DEVELOPMENT_NAMESPACE',      description: 'Development Namespace',                defaultValue: 'telkomtesthouse-dev')
 
         string(name: 'DOCKER_IMAGE_NAME',          description: 'Docker Image Name',                    defaultValue: 'telkomtesthouse-dev')
