@@ -906,7 +906,7 @@ class PengujianController extends Controller
                 	$exam->VA_name = $mps_info ? $mps_info[3] : null;
                     $exam->VA_image_url = $mps_info ? $mps_info[4] : null;
 					$exam->VA_number = $billing && $billing->status? $billing->data->mps->va->number : null;
-					$exam->VA_amount = $billing && $billing->status? $billing->data->mps->va->amount : null;
+					$exam->VA_amount = $billing && $billing->status? $billing->data->mps->total_amount : null;
                     $exam->VA_expired = $billing && $billing->status? $billing->data->mps->va->expired : null;
 				}
 				if(!$exam->VA_number){
@@ -1056,7 +1056,7 @@ class PengujianController extends Controller
             $resend = json_decode($res_resend);
             if($resend){
 				$exam->VA_number = $resend && $resend->status? $resend->data->mps->va->number : null;
-				$exam->VA_amount = $resend && $resend->status? $resend->data->mps->va->amount : null;
+				$exam->VA_amount = $resend && $resend->status? $resend->data->mps->total_amount : null;
                 $exam->VA_expired = $resend && $resend->status? $resend->data->mps->va->expired : null;
                 
                 $exam->save();
@@ -1164,7 +1164,7 @@ class PengujianController extends Controller
                 	$exam->VA_name = $mps_info ? $mps_info[3] : null;
                     $exam->VA_image_url = $mps_info ? $mps_info[4] : null;
                     $exam->VA_number = $billing && $billing->status == true ? $billing->data->mps->va->number : null;
-                    $exam->VA_amount = $billing && $billing->status == true ? $billing->data->mps->va->amount : null;
+                    $exam->VA_amount = $billing && $billing->status == true ? $billing->data->mps->total_amount : null;
                     $exam->VA_expired = $billing && $billing->status == true ? $billing->data->mps->va->expired : null;
                 }
 
@@ -1317,7 +1317,7 @@ class PengujianController extends Controller
             $resend = json_decode($res_resend);
             if($resend){
                 $exam->VA_number = $resend && $resend->status == true ? $resend->data->mps->va->number : null;
-                $exam->VA_amount = $resend && $resend->status == true ? $resend->data->mps->va->amount : null;
+                $exam->VA_amount = $resend && $resend->status == true ? $resend->data->mps->total_amount : null;
                 $exam->VA_expired = $resend && $resend->status == true ? $resend->data->mps->va->expired : null;
                 
                 $exam->save();

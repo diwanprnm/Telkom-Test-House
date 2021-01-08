@@ -417,7 +417,7 @@ class ProductsController extends Controller
                     $STELSales->VA_name = $mps_info ? $mps_info[3] : null;
                     $STELSales->VA_image_url = $mps_info ? $mps_info[4] : null;
                     $STELSales->VA_number = $billing && $billing->status ? $billing->data->mps->va->number : null;
-                    $STELSales->VA_amount = $billing && $billing->status ? $billing->data->mps->va->amount : null;
+                    $STELSales->VA_amount = $billing && $billing->status ? $billing->data->mps->total_amount : null;
                     $STELSales->VA_expired = $billing && $billing->status ? $billing->data->mps->va->expired : null;
                 }
                 if(!$STELSales->VA_number){
@@ -512,7 +512,7 @@ class ProductsController extends Controller
             $resend = json_decode($res_resend);
             if($resend){
                 $STELSales->VA_number = $resend && $resend->status ? $resend->data->mps->va->number : null;
-                $STELSales->VA_amount = $resend && $resend->status ? $resend->data->mps->va->amount : null;
+                $STELSales->VA_amount = $resend && $resend->status ? $resend->data->mps->total_amount : null;
                 $STELSales->VA_expired = $resend && $resend->status ? $resend->data->mps->va->expired : null;
                 
                 $STELSales->save();
@@ -569,7 +569,7 @@ class ProductsController extends Controller
                     $STELSales->VA_name = $mps_info ? $mps_info[3] : null;
                     $STELSales->VA_image_url = $mps_info ? $mps_info[4] : null;
                     $STELSales->VA_number = $billing && $billing->status ? $billing->data->mps->va->number : null;
-                    $STELSales->VA_amount = $billing && $billing->status  ? $billing->data->mps->va->amount : null;
+                    $STELSales->VA_amount = $billing && $billing->status  ? $billing->data->mps->total_amount : null;
                     $STELSales->VA_expired = $billing && $billing->status  ? $billing->data->mps->va->expired : null;
                 }
                 
