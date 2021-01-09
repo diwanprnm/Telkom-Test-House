@@ -207,9 +207,9 @@ class PDFMCTablePermohonan extends FPDF{
 	//Page footer
 	function Footer()
 	{
-		$this->SetY(-55);
+		$this->SetY(-50);
 		$this->SetFont('helvetica','',10);
-		$this->Cell(150,5,"$this->kotaPerusahaan, ",0,0,'R');
+		$this->Cell(0,5,"$this->kotaPerusahaan, ____________________",0,0,'R');
 		$this->Ln(18);
 		$this->SetFont('','U');
 		$this->Cell(185,5,"                                        ",0,0,'R');
@@ -220,7 +220,7 @@ class PDFMCTablePermohonan extends FPDF{
 		$this->Ln(4);
 		$this->SetFont('','I');
 		$this->Cell(185,5,"Applicant's Name & Company Stamp",0,0,'R');
-		$this->Ln(6);
+		$this->Ln(1);
 		$this->SetFont('','U');
 		$this->Cell(10,5,"Telkom Test House, Telp. (+62) 812-2483-7500",0,0,'L');
 		$this->Ln(4);
@@ -229,25 +229,20 @@ class PDFMCTablePermohonan extends FPDF{
 		$this->Ln(4);
 		$this->SetFont('helvetica','',8);
 		if($this->param1 == 'QA'){
-			$this->Cell(185,5,"TLKM02/F/001 Versi 02",0,0,'L');		
+			$this->Cell(185,5,"TLKM02/F/001 Versi 03",0,0,'L');		
 		}
 		else if($this->param1 == 'TA'){
-			$this->Cell(185,5,"TLKM02/F/002 Versi 02",0,0,'L');		
+			$this->Cell(185,5,"TLKM02/F/002 Versi 03",0,0,'L');		
 		}
 		else if($this->param1 == 'VT'){
-			$this->Cell(185,5,"TLKM02/F/003 Versi 02",0,0,'L');		
+			$this->Cell(185,5,"TLKM02/F/003 Versi 03",0,0,'L');		
 		}
-		else if($this->param1 == 'CAL'){
-			$this->Cell(185,5,"TLKM02/F/004 Versi 02",0,0,'L');		
+		else if($this->param1 == 'KAL'){
+			$this->Cell(185,5,"TLKM02/F/004 Versi 03",0,0,'L');		
 		}
-		/*//Position at 1.5 cm from bottom
-		$this->SetY(-6);
-		//Arial italic 8
-		$this->SetFont('helvetica','I',11);
-		//Page number
-		$this->Cell(0,0.1,'Page '.$this->PageNo().'/{nb}',0,0,'C');
-		
-		// $this->Cell(130,0.1,'Bandung',0,0,'R');*/
+		//Position at 1.5 cm from bottom
+		$this->SetXY(-10,-11);
+		$this->Cell(4,0.1,'Hal '.$this->PageNo().' dari {nb}',0,0,'R');
 		
 	}
 	
