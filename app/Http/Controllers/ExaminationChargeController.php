@@ -90,12 +90,7 @@ class ExaminationChargeController extends Controller
             $notFound = 'Data not found';
         }
 
-        $examinationLabs = ExaminationLab::where('is_active', 1)
-            ->orderBy('lab_code', 'asc')
-            ->get()
-        ;
-
-        
+        $examinationLabs = ExaminationLab::orderBy('lab_code', 'asc')->get();        
         
         return view('admin.charge.index')
             ->with('notFound', $notFound)
@@ -111,10 +106,7 @@ class ExaminationChargeController extends Controller
 
     public function create()
     {
-        $examinationLabs = ExaminationLab::where('is_active', 1)
-            ->orderBy('lab_code', 'asc')
-            ->get()
-        ;
+        $examinationLabs = ExaminationLab::orderBy('lab_code', 'asc')->get();
 
         return view('admin.charge.create')
             ->with('labs',  $examinationLabs)
@@ -173,10 +165,7 @@ class ExaminationChargeController extends Controller
     public function edit($id)
     {
         $charge = ExaminationCharge::find($id);
-        $examinationLabs = ExaminationLab::where('is_active', 1)
-            ->orderBy('lab_code', 'asc')
-            ->get()
-        ;
+        $examinationLabs = ExaminationLab::orderBy('lab_code', 'asc')->get();
 
         return view('admin.charge.edit')
             ->with('data', $charge)

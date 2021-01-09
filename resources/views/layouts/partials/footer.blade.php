@@ -14,7 +14,7 @@
 
                             <div class="widget clearfix">
 
-                                <img src="{{url('images/logo_dds.png')}}" alt="logo dds" class="footer-logo">
+                                <img src="{{url('images/TTHMain.png')}}" alt="Logo DDB" class="footer-logo">
 
                                 <p>
                                     <strong>{{ trans('translate.header_title') }}.</strong>
