@@ -134,11 +134,11 @@ class CetakBuktiPenerimaanPerangkat{
 
 		//TANGGAL PENERIMAAN & PENGEMBALIAN
 		$pdf->setXY(10,$pdf->getY() - 22);
-		$pdf->Cell(40,10,'TGL '.$this->doubledecode($contract_date),0,0,'C');  
-		$pdf->Cell(40,10,'TGL '.$this->doubledecode($contract_date),0,0,'C'); 
+		$pdf->Cell(40,10,'Tgl '.$this->doubledecode($contract_date),0,0,'C');  
+		$pdf->Cell(40,10,'Tgl '.$this->doubledecode($contract_date),0,0,'C'); 
 		$pdf->setX(127);
-		$pdf->Cell(40,10,'TGL ..................',0,0,'L');
-		$pdf->Cell(40,10,'TGL ..................',0,0,'L'); 
+		$pdf->Cell(40,10,'Tgl ..................',0,0,'L');
+		$pdf->Cell(40,10,'Tgl ..................',0,0,'L'); 
 
 		$pdf->Output();
 		exit;

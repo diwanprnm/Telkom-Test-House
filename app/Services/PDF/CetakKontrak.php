@@ -17,7 +17,7 @@ class CetakKontrak
         $pdf->AliasNbPages();
         $pdf->AddPage();
         $pdf->SetFont('helvetica','B',9);
-        $pdf->Cell(190,1,"No. Reg ".$data[0]['no_reg'],0,0,'R');
+        $pdf->Cell(190,1,"No. Reg. ".$data[0]['no_reg'],0,0,'R');
         $pdf->Ln(1);
     /*Data Pemohon*/
         $pdf->SetFont('helvetica','B',11);
@@ -275,7 +275,7 @@ class CetakKontrak
             $pdf->Cell(10,4,"Kekeliruan pada penamaan perangkat dan referensi uji yang digunakan pada laporan hasil uji bukan tanggung jawab",0,0,'L');
             $pdf->Ln(4);
             $pdf->Cell(1,4,"",0,0,'L');
-            $pdf->Cell(10,4,"TELKOM.*",0,0,'L');
+            $pdf->Cell(10,4,"TELKOM.",0,0,'L');
             $y = $pdf->getY();
             $pdf->Ln(5);
             $pdf->SetFont('helvetica','',10);
@@ -287,7 +287,7 @@ class CetakKontrak
             $pdf->Cell(10,4,"web www.telkomtesthouse.co.id.",0,0,'L');
         }else{		
             $pdf->Cell(4,4,"1.",0,0,'L');
-            $pdf->Cell(10,4,"Biaya uji sesuai Surat Perintah Bayar (SPB) yang telah diterbitkan oleh TELKOM",0,0,'L');
+            $pdf->Cell(10,4,"Biaya uji sesuai Surat Perintah Bayar (SPB) yang telah diterbitkan oleh TELKOM.",0,0,'L');
             $y = $pdf->getY();
             $pdf->Ln(5);
             $pdf->SetFont('helvetica','',10);
@@ -318,7 +318,7 @@ class CetakKontrak
             $pdf->Cell(10,4,"Laporan hasil uji dan/atau sertifikat Quality Assurance (QA) test diberikan apabila sampel uji sudah diambil oleh",0,0,'L');
             $pdf->Ln(4);
             $pdf->Cell(1,4,"",0,0,'L');
-            $pdf->Cell(10,4,"pelanggan. Setelah menerima laporan hasil uji dan/atau sertifikat QA test, pelanggan telah memahami hasil uji",0,0,'L');
+            $pdf->Cell(10,4,"pelanggan. Setelah menerima laporan hasil uji dan/atau sertifikat QA test, pelanggan telah memahami hasil uji.",0,0,'L');
             $y = $pdf->getY();
             $pdf->Ln(5);
             $pdf->SetFont('helvetica','',10);
@@ -388,7 +388,7 @@ class CetakKontrak
         }else{
             $pdf->drawTextBox('('.$data[0]['manager_urel'].')', 63, 23, 'C', 'B', 1);
         }
-        
+        /*
         $pdf->Ln(5);
         $pdf->setX(10.00125);
         $pdf->SetFont('','U');
@@ -399,6 +399,7 @@ class CetakKontrak
         $pdf->Cell(10,5,"Telkom Test House, Phone. (+62) 812-2483-7500",0,0,'L');
         $pdf->Ln();
         $pdf->Ln();
+        */
     /*End Footer Manual*/
         $pdf->Output();
         exit;
