@@ -1979,8 +1979,8 @@ class ExaminationController extends Controller
 			else{$company_name = $data[0]->company->name?: '-';}
 		if( strpos( $data[0]->company->address, "/" ) !== false ) {$company_address = urlencode(urlencode($data[0]->company->address));}
 			else{$company_address = $data[0]->company->address?: '-';}
-		if( strpos( $data[0]->company->phone, "/" ) !== false ) {$company_phone = urlencode(urlencode($data[0]->company->phone));}
-			else{$company_phone = $data[0]->company->phone?: '-';}
+		if( strpos( $data[0]->company->phone_number, "/" ) !== false ) {$company_phone = urlencode(urlencode($data[0]->company->phone));}
+			else{$company_phone = $data[0]->company->phone_number?: '-';}
 		if( strpos( $data[0]->company->fax, "/" ) !== false ) {$company_fax = urlencode(urlencode($data[0]->company->fax));}
 			else{$company_fax = $data[0]->company->fax?: '-';}
 		if( strpos( $data[0]->device->name, "/" ) !== false ) {$device_name = urlencode(urlencode($data[0]->device->name));}
