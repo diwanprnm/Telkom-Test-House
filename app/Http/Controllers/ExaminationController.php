@@ -287,8 +287,8 @@ class ExaminationController extends Controller
             ->with('labs', $labs)
             ->with('data_lab', $tempData[0])
             ->with('data_gudang', $tempData[1])
-			->with('exam_schedule', $tempData[2])
-			->with('exam_approve_date', $tempData[3])
+			->with('exam_approve_date', $tempData[2])
+			->with('exam_schedule', $tempData[3])
 			->with('admin_roles', $admins);
     }
 
