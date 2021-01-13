@@ -272,9 +272,11 @@ class ExaminationChargeController extends Controller
         
         if ($search != null){
             $examinationCharge = ExaminationCharge::whereNotNull(self::CREATED_AT)
-                ->where(self::DEVICE_NAME,'like','%'.$search.'%')
-                ->orWhere('stel','like','%'.$search.'%')
-                ->orderBy(self::DEVICE_NAME);
+            ->where(function($q) use ($search){
+                $q->where(self::DEVICE_NAME,'like','%'.$search.'%')
+                    ->orWhere('stel','like','%'.$search.'%');
+            })
+            ->orderBy(self::DEVICE_NAME);
         }else{
             $query = ExaminationCharge::whereNotNull(self::CREATED_AT);
 

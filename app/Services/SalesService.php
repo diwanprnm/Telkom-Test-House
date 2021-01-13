@@ -125,10 +125,13 @@ class SalesService
     {
         $search = trim(strip_tags($request->input(self::SEARCH,'')));
         if($search!=''){
-            $dataSales = $dataSales->where('invoice','like','%'.$search.'%')
-            ->orWhere('companies.name', 'like', '%'.$search.'%')
-            ->orWhere('stels.name', 'like', '%'.$search.'%')
-            ->orWhere('stels.code', 'like', '%'.$search.'%');
+            $dataSales = $dataSales->where(function($q) use ($search){
+                $q->where('invoice','like','%'.$search.'%')
+                    ->orWhere('companies.name', 'like', '%'.$search.'%')
+                    ->orWhere('stels.name', 'like', '%'.$search.'%')
+                    ->orWhere('stels.code', 'like', '%'.$search.'%')
+                ;
+            });
         }
         return array(
             'dataSales' => $dataSales,

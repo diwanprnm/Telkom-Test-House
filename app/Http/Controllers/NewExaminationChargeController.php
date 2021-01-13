@@ -262,12 +262,11 @@ class NewExaminationChargeController extends Controller
         $query = NewExaminationChargeDetail::whereNotNull('created_at')->where(self::NEW_EXAM_CHARGES_ID, $id);
         
         if ($search){
-            $query
-                ->where(self::DEVICE_NAME, 'like', '%'.strtolower($search).'%')
-                ->orWhere('stel', 'like', '%'.strtolower($search).'%')
-            ;
-
-                $logService->createLog('Search Charge', self::NEW_EXAMINATION_CHARGE, json_encode(array(self::SEARCH=>$search)));
+            $query->where( function($q) use ($search){
+                $q->where(self::DEVICE_NAME, 'like', '%'.strtolower($search).'%')
+                ->orWhere('stel', 'like', '%'.strtolower($search).'%');
+            });
+            $logService->createLog('Search Charge', self::NEW_EXAMINATION_CHARGE, json_encode(array(self::SEARCH=>$search)));
         }
         
         if ($request->has(self::CATEGORY)){
