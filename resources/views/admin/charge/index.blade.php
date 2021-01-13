@@ -155,7 +155,7 @@
 									<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
 									<td class="center">{{ $item->device_name }}</td>
 									<td class="center">{{ $item->stel }}</td>
-									<td class="center">{{ $item->ExaminationLab->name }}</td>
+									<td class="center">{{ $item->examinationLab['name'] }}</td>
 									<td class="center">{{number_format($item->duration, 0, '.', ',')}}</td>
 									<td class="center">{{number_format($item->price, 0, '.', ',')}}</td>
 									<td class="center">{{number_format($item->vt_price, 0, '.', ',')}}</td>
