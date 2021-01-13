@@ -6,6 +6,7 @@ use Anouar\Fpdf\Fpdf as FPDF;
 class PDFMCTablesKonsumen extends FPDF{
 	var $widths;
 	var $aligns;
+	var $kodeForm = '(Kode Form)';
 	
 	function SetWidths($w)
 	{
@@ -17,6 +18,11 @@ class PDFMCTablesKonsumen extends FPDF{
 	{
 		//Set the array of column alignments
 		$this->aligns=$a;
+	}
+
+	function setData($data)
+	{
+		$this->kodeForm = $data['kodeForm'];
 	}
 
 	function Row($data)
@@ -165,14 +171,10 @@ class PDFMCTablesKonsumen extends FPDF{
 	//Page footer
 	function Footer()
 	{
-		//Position at 1.5 cm from bottom
-		$this->SetY(-6);
-		//Arial italic 8
-		$this->SetFont('helvetica','I',11);
-		//Page number
-		$this->Cell(0,0.1,'Page '.$this->PageNo().'/{nb}',0,0,'R');
-		
-		// $this->Cell(130,0.1,'Bandung',0,0,'R');
+		$this->SetXY(10,-20);
+		$this->SetFont('helvetica','',10);
+		$this->Cell(95,11,$this->kodeForm,0,0,'L');
+		$this->Cell(95,11,'Hal '.$this->PageNo().' dari {nb}',0,0,'R');
 		
 	}
 	

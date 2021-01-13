@@ -10,6 +10,7 @@ class CetakKepuasanKonsumen
 	{
 		$pdf->AliasNbPages();
 		$pdf->AddPage();
+		$pdf->setData(['kodeForm'=>'TLKM05/F/002 Versi 01']);
 
 		$y = $pdf->getY();
 		$pdf->SetFont('helvetica','B',11);
@@ -122,7 +123,7 @@ class CetakKepuasanKonsumen
 		$pdf->Ln(6);
 		$pdf->SetFont('helvetica','',8);
 		$pdf->setX(10.00125);
-		$pdf->Cell(185,5,"TLKM05/F/002 Versi 01",0,0,'L');
+		$pdf->Cell(185,5,"",0,0,'L');
 		$pdf->Output();
 		exit;
 	}
