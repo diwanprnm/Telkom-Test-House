@@ -10,6 +10,7 @@ class CetakComplaint
         
         $pdf->AddPage();
         $pdf->AliasNbPages();
+        $pdf->setData(['kodeForm'=>'IASO4/F/001 Versi 01']);
      
         $pdf->Ln(6); 
         $pdf->SetFont('helvetica','',10); 
@@ -45,9 +46,6 @@ class CetakComplaint
         $pdf->SetMargins(0,0,0);
         $pdf->Cell(90, 40, 'Signature Of Receipt :', 1, 0, 'L');
         $pdf->Cell(90, 40, 'Name Of Receipt', 1, 0, 'LT'); 
-        $pdf->Ln(6);
-        $pdf->SetFont('helvetica','',8);
-        $pdf->Cell(185,5,"IASO4/F/001 Versi 01",0,0,'R');
     
         $pdf->Output();
         exit;
