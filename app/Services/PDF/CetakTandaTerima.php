@@ -8,6 +8,9 @@ class CetakTandaTerima
     {
         $pdf->AliasNbPages();
         $pdf->AddPage('landscape');
+        $pdf->setData([
+            'kodeForm' => 'TLKM02/F/010 Versi 01'
+        ]);
         $pageWidth = 210;
         $pageHeight = 295;
         $lineWidth = 10;
@@ -59,16 +62,15 @@ class CetakTandaTerima
         $pdf->Cell(0,0,'Demikian Tanda Terima Sertifikat/Laporan Hasil Pengujian ini dibuat untuk dipergunakan sebagaimana mestinya.',0,0,'L');
     
         $pdf->setY($pdf->getY()+8); 
-        $pdf->Cell(130);
-        $pdf->Cell(0,5,"Bandung, ".date("d-m-Y"),0,0,'C');
-        $pdf->setY($pdf->getY()+8); 
-        $pdf->Cell(20);
-        $pdf->Cell(180,5,"DDB - PT. TELKOM",0,0,'L');
-        $pdf->Cell(0,5,"Penerima",0,0,'L');
+        $pdf->Cell(190); $pdf->Cell(50,5,"Bandung, ".date("d-m-Y"),0,0,'C');
+
+        $pdf->setY($pdf->getY()+5); 
+        $pdf->Cell(20); $pdf->Cell(50,5,"DDB - PT. TELKOM",0,0,'C');
+        $pdf->Cell(120); $pdf->Cell(50,5,"Penerima",0,0,'C');
+
         $pdf->setY($pdf->getY()+28); 
-        $pdf->Cell(8);
-        $pdf->Cell(175,5,"(____________________________)",0,0,'L');
-        $pdf->Cell(0,5,"(____________________________)",0,0,'L');
+        $pdf->Cell(20); $pdf->Cell(50,5,"(____________________________)",0,0,'C');
+        $pdf->Cell(120);$pdf->Cell(50,5,"(____________________________)",0,0,'C');
         
         $pdf->Ln(10);
         $pdf->SetFont('','U');
@@ -78,10 +80,6 @@ class CetakTandaTerima
         $pdf->SetFont('','I');
         $pdf->Cell(5);
         $pdf->Cell(10,5,"Telkom Test House, Phone. (+62) 812-2483-7500",0,0,'L');
-        $pdf->Ln(6);
-        $pdf->setX(20.00125);
-        $pdf->SetFont('helvetica','',8);
-        $pdf->Cell(260,5,"TLKM02/F/010 Versi 01",0,0,'L');
     
     /*Footer Manual*/
         
