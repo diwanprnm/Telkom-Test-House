@@ -73,7 +73,7 @@
 										<option value="" disabled selected>Select...</option>
 									@endif
 										@foreach ($labs as $lab)
-											<option value="{{$lab->description}}" @if (old('category') == $lab->description) selected @endif >{{$lab->description}}</option>
+											<option value="{{$lab->id}}" @if (old('category') == $lab->id) selected @endif >{{$lab->name}}</option>
 										@endforeach
 									</select>
 								</div>

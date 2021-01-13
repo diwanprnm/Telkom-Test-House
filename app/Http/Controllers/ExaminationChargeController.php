@@ -58,7 +58,7 @@ class ExaminationChargeController extends Controller
         $status = -1;
         
         if ($search){
-            $examinationCharge = ExaminationCharge::whereNotNull(self::CREATED_AT)
+            $examinationCharge = ExaminationCharge::with('ExaminationLab')->whereNotNull(self::CREATED_AT)
                 ->where(self::DEVICE_NAME,'like','%'.$search.'%')
                 ->orWhere('stel','like','%'.$search.'%')
                 ->orderByRaw('category, device_name')
@@ -66,7 +66,7 @@ class ExaminationChargeController extends Controller
 
                 $logService->createLog('Search Charge', self::EXAMINATION_CHARGE, json_encode(array(self::SEARCH=>$search)) );
         }else{
-            $query = ExaminationCharge::whereNotNull(self::CREATED_AT);
+            $query = ExaminationCharge::with('ExaminationLab')->whereNotNull(self::CREATED_AT);
 
             if ($request->has(self::CATEGORY)){
                 $category = $request->get(self::CATEGORY);

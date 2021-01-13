@@ -36,7 +36,7 @@
 										<option value="all">{{ trans('translate.charge_all_category') }}</option>
 									@endif
 									@foreach ($labs as $lab)
-										<option value="{{$lab->description}}" @if ($category == $lab->description) selected @endif >{{$lab->description}}</option>
+										<option value="{{$lab->id}}" @if ($category == $lab->id) selected @endif >{{$lab->name}}</option>
 									@endforeach
 								</select>
 							</div>
@@ -89,7 +89,7 @@
 														<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
 														<td class="left">{{ $item->device_name }}</td>
 														<td class="left">{{ $item->stel }}</td>
-														<td class="center">{{ $item->category }}</td>
+														<td class="center">{{ $item->labsName }}</td>
 														<td class="center">{{ $item->duration }}</td>
 														<td class="center">{{ number_format($item->new_price, 0, '.', ',') }} </td>
 														<td class="center">{{ number_format($item->new_vt_price, 0, '.', ',') }} </td>

@@ -20,4 +20,8 @@ class NewExaminationChargeDetail extends Model
         return $this->belongsTo('App\ExaminationCharge', 'examination_charges_id');
     }
 
+    public function examinationLab()
+    {
+        return $this->belongsTo('App\ExaminationLab', 'category');
+    }
 }

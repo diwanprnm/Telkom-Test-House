@@ -102,7 +102,7 @@
 									</label>
 									<select name="old_category" class="cmb-category">
 										@foreach ($labs as $lab)
-											<option value="{{$lab->description}}" @if ($data->old_category == $lab->description) selected @endif >{{$lab->description}}</option>
+											<option value="{{$lab->id}}" @if ($data->old_category == $lab->id) selected @endif >{{$lab->name}}</option>
 										@endforeach
 									</select>
 								</div>
@@ -114,7 +114,7 @@
 									</label>
 									<select name="category" class="cmb-category" required>
 										@foreach ($labs as $lab)
-											<option value="{{$lab->description}}" @if ($data->category == $lab->description) selected @endif >{{$lab->description}}</option>
+											<option value="{{$lab->id}}" @if ($data->category == $lab->id) selected @endif >{{$lab->name}}</option>
 										@endforeach
 									</select>
 								</div>

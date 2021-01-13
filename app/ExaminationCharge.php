@@ -14,4 +14,9 @@ class ExaminationCharge extends Model
     {
         return $this->hasMany('App\newExaminationChargeDetail');
     }
+
+    public function examinationLab()
+    {
+        return $this->belongsTo('App\ExaminationLab', 'category');
+    }
 }

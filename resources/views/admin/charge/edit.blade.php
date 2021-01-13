@@ -66,43 +66,8 @@
 									<select name="category" class="cs-select cs-skin-elastic" required>
 
 										@foreach ($labs as $lab)
-											<option value="{{$lab->description}}" @if ($data->category == $lab->description) selected @endif >{{$lab->description}}</option>
+											<option value="{{$lab->id}}" @if ($data->category == $lab->id) selected @endif >{{$lab->name}}</option>
 										@endforeach
-										{{-- @if($data->category == 'Lab CPE')
-											<option value="Lab CPE" selected>Lab CPE</option>
-										@else
-											<option value="Lab CPE">Lab CPE</option>
-										@endif
-										
-										@if($data->category == 'Lab Device')
-											<option value="Lab Device" selected>Lab Device</option>
-										@else
-											<option value="Lab Device">Lab Device</option>
-										@endif
-
-										@if($data->category == 'Lab Energi')
-											<option value="Lab Energi" selected>Lab Energi</option>
-										@else
-											<option value="Lab Energi">Lab Energi</option>
-										@endif
-
-										@if($data->category == 'Lab Kabel')
-											<option value="Lab Kabel" selected>Lab Kabel</option>
-										@else
-											<option value="Lab Kabel">Lab Kabel</option>
-										@endif
-
-										@if($data->category == 'Lab Transmisi')
-											<option value="Lab Transmisi" selected>Lab Transmisi</option>
-										@else
-											<option value="Lab Transmisi">Lab Transmisi</option>
-										@endif
-
-										@if($data->category == 'Lab EMC')
-											<option value="Lab EMC" selected>Lab EMC</option>
-										@else
-											<option value="Lab EMC">Lab EMC</option>
-										@endif --}}
 									</select>
 								</div>
 							</div>
