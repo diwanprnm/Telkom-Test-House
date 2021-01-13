@@ -6,6 +6,7 @@ use Anouar\Fpdf\Fpdf as FPDF;
 class PDFMCTandaTerima extends FPDF{
 	var $widths;
 	var $aligns;
+	var $kodeForm;
 	
 	function SetWidths($w)
 	{
@@ -17,6 +18,11 @@ class PDFMCTandaTerima extends FPDF{
 	{
 		//Set the array of column alignments
 		$this->aligns=$a;
+	}
+
+	function setData($data)
+	{
+		$this->kodeForm = $data['kodeForm'];
 	}
 
 	function Row($data)
@@ -300,5 +306,12 @@ class PDFMCTandaTerima extends FPDF{
 		}
 		$this->x=$this->lMargin;
 		return $nl;
+	}
+
+	function Footer()
+	{
+		$this->SetXY(13, -15);
+		$this->SetFont('helvetica','',11);
+		$this->Cell(50,0.1,$this->kodeForm,0,0,'R');	
 	}
 }

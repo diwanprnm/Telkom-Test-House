@@ -36,7 +36,7 @@ class ExaminationChargeClientController extends Controller
 
             $examLab = ExaminationLab::all();
             
-            $query = ExaminationCharge::whereNotNull(self::CREATED_AT)
+            $query = ExaminationCharge::with('ExaminationLab')->whereNotNull(self::CREATED_AT)
                 ->where('is_active', 1);
 
             if ($search != null){

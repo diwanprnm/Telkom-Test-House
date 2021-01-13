@@ -47,6 +47,8 @@ class ExaminationNewChargeClientController extends Controller
                 $dateNewCharge = date("j M Y", strtotime($newCharge[0]->valid_from));
                 $query = DB::table('new_examination_charges_detail')
                     ->join('new_examination_charges', 'new_examination_charges_detail.new_exam_charges_id', '=', 'new_examination_charges.id')
+                    ->join('examination_labs', 'examination_labs.id', '=', 'new_examination_charges_detail.category')
+                    ->select('new_examination_charges_detail.*', 'new_examination_charges.*', 'examination_labs.name AS labsName' )
                     ->where('new_examination_charges.id','=',$newCharge[0]->id)
                 ;
             
@@ -66,7 +68,6 @@ class ExaminationNewChargeClientController extends Controller
                         
                 if (count($examinationCharge) == 0){ $message = 'Data not found'; }
             }
-
             return view('client.new_charge.index')
                 ->with('dateNewCharge', $dateNewCharge)
                 ->with('examLab', $examLab)

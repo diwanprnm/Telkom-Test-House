@@ -253,9 +253,11 @@ class NoGudangController extends Controller
         
         if ($search){
             $isNull = false;
-            $query->where(DB::raw('companies.name'), 'like', '%'.strtolower($search).'%')
-                ->orWhere(DB::raw('devices.name'), 'like', '%'.strtolower($search).'%')
-                ->orWhere(DB::raw('no'), 'like', '%'.strtolower($search).'%');
+            $query->where( function($q) use ($search) {
+                $q->where(DB::raw('companies.name'), 'like', '%'.strtolower($search).'%')
+                    ->orWhere(DB::raw('devices.name'), 'like', '%'.strtolower($search).'%')
+                    ->orWhere(DB::raw('no'), 'like', '%'.strtolower($search).'%');
+            });
         }
         
         return array(

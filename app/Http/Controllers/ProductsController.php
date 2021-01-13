@@ -161,8 +161,9 @@ class ProductsController extends Controller
 
         $STELSales = STELSales::where("user_id",$currentUser->id);
         if ($search != null){
-            $STELSales->where("invoice",$search);
-            $STELSales->orWhere("payment_code",$search);
+            $STELSales->where(function($q) use ($search){
+                $q->where("invoice",$search)->orWhere("payment_code",$search);
+            });
         }
         $STELSales = $STELSales->orderBy(self::UPDATED_AT, 'desc');
         $STELSales = $STELSales->get();

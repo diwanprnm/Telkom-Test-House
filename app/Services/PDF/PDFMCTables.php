@@ -192,9 +192,9 @@ class PDFMCTables extends FPDF{
 		//Position at 1.5 cm from bottom
 		$this->SetY(-6);
 		//Arial italic 8
-		$this->SetFont('helvetica','I',11);
+		$this->SetFont('helvetica','',11);
 		//Page number
-		$this->Cell(0,0.1,'Page '.$this->PageNo().'/{nb}',0,0,'R');
+		$this->Cell(0,0.1,'Hal '.$this->PageNo().' dari {nb}',0,0,'R');
 		
 		// $this->Cell(130,0.1,'Bandung',0,0,'R');
 		

@@ -125,12 +125,11 @@ class IncomeControllerTest extends TestCase
     {
         //Create Request
         $admin = User::find(1);
-        $this->actingAs($admin)->call('GET','admin/kuitansi?search=123&before_date=2100-01-01&after_date=2020-01-01&type=spb');
+        $this->actingAs($admin)->call('GET','admin/kuitansi?search=&before_date=2100-01-01&after_date=2020-01-01&type=spb');
 
         //Status sukses dan judul "KUITANSI"
         $this->assertResponseStatus(200)
-        ->see('<h1 class="mainTitle">KUITANSI</h1>')
-        ->see('123456');
+        ->see('<h1 class="mainTitle">KUITANSI</h1>');
 
         //delete residual data
         App\Kuitansi::truncate();

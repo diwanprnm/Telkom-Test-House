@@ -189,9 +189,11 @@ class IncomeController extends Controller
         if ($search != null){
             $query = $queryFilter
                 ->getQuery()
-                ->where(self::NUMBER, "like", '%'.strtolower($search).'%')
-                ->orWhere("from", "like", '%'.strtolower($search).'%')
-                ->orWhere("for", "like", '%'.strtolower($search).'%')
+                ->where(function($q) use ($search){
+                    $q->where(self::NUMBER, "like", '%'.strtolower($search).'%')
+                        ->orWhere("from", "like", '%'.strtolower($search).'%')
+                        ->orWhere("for", "like", '%'.strtolower($search).'%');
+                })
             ;
             $queryFilter = $queryFilter->updateQuery($query);
             $logService->createLog(self::SEARCH, 'KUITANSI', json_encode(array(self::SEARCH => $search)) );

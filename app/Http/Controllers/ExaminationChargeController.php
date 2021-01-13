@@ -56,35 +56,31 @@ class ExaminationChargeController extends Controller
         $search = trim(strip_tags($request->input(self::SEARCH,'')));
         $category = '';
         $status = -1;
-        
+
+        $query = ExaminationCharge::with('ExaminationLab')->whereNotNull(self::CREATED_AT);
+
         if ($search){
-            $examinationCharge = ExaminationCharge::whereNotNull(self::CREATED_AT)
-                ->where(self::DEVICE_NAME,'like','%'.$search.'%')
-                ->orWhere('stel','like','%'.$search.'%')
-                ->orderByRaw('category, device_name')
-                ->paginate($paginate);
-
-                $logService->createLog('Search Charge', self::EXAMINATION_CHARGE, json_encode(array(self::SEARCH=>$search)) );
-        }else{
-            $query = ExaminationCharge::whereNotNull(self::CREATED_AT);
-
-            if ($request->has(self::CATEGORY)){
-                $category = $request->get(self::CATEGORY);
-                if($request->input(self::CATEGORY) != 'all'){
-                    $query->where(self::CATEGORY, $request->get(self::CATEGORY));
-                }
-            }
-
-            if ($request->has(self::IS_ACTIVE)){
-                $status = $request->get(self::IS_ACTIVE);
-                if ($request->get(self::IS_ACTIVE) > -1){
-                    $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
-                }
-            }
-
-            $examinationCharge = $query->orderByRaw('category, device_name')
-                                        ->paginate($paginate);
+            $query->where(function($q) use ($search){
+                $q->where(self::DEVICE_NAME,'like','%'.$search.'%')->orWhere('stel','like','%'.$search.'%');
+            });
+            $logService->createLog('Search Charge', self::EXAMINATION_CHARGE, json_encode(array(self::SEARCH=>$search)) );
         }
+
+        if ($request->has(self::CATEGORY)){
+            $category = $request->get(self::CATEGORY);
+            if($request->input(self::CATEGORY) != 'all'){
+                $query->where(self::CATEGORY, $request->get(self::CATEGORY));
+            }
+        }
+
+        if ($request->has(self::IS_ACTIVE)){
+            $status = $request->get(self::IS_ACTIVE);
+            if ($request->get(self::IS_ACTIVE) > -1){
+                $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
+            }
+        }
+
+        $examinationCharge = $query->orderByRaw('category, device_name')->paginate($paginate);
         
         if (count($examinationCharge) == 0){
             $notFound = 'Data not found';
@@ -276,9 +272,11 @@ class ExaminationChargeController extends Controller
         
         if ($search != null){
             $examinationCharge = ExaminationCharge::whereNotNull(self::CREATED_AT)
-                ->where(self::DEVICE_NAME,'like','%'.$search.'%')
-                ->orWhere('stel','like','%'.$search.'%')
-                ->orderBy(self::DEVICE_NAME);
+            ->where(function($q) use ($search){
+                $q->where(self::DEVICE_NAME,'like','%'.$search.'%')
+                    ->orWhere('stel','like','%'.$search.'%');
+            })
+            ->orderBy(self::DEVICE_NAME);
         }else{
             $query = ExaminationCharge::whereNotNull(self::CREATED_AT);
 

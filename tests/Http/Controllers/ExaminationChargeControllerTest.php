@@ -60,13 +60,14 @@ class ExaminationChargeControllerTest extends TestCase
 
     public function testStore()
     {
+        $lab = App\ExaminationLab::first();
         $user = User::find(1);
 
         $response = $this->actingAs($user)
             ->visit('admin/charge/create')
             ->type('Device name for testing', 'device_name')
             ->type('Referensi uji for testing', 'stel')
-            ->select('Lab CPE', 'category')
+            ->select($lab->id, 'category')
             ->type('70', 'duration')
             ->type('7000000', 'price')
             ->type('700000', 'vt_price')
@@ -84,13 +85,14 @@ class ExaminationChargeControllerTest extends TestCase
 
     public function testStoreWithSameName()
     {
+        $lab = App\ExaminationLab::first();
         $user = User::find(1);
 
         $response = $this->actingAs($user)
         ->visit('admin/charge/create')
         ->type('Device name for testing', 'device_name')
         ->type('Referensi uji for testing same name', 'stel')
-        ->select('Lab Kabel', 'category')
+        ->select($lab->id, 'category')
         ->type('701', 'duration')
         ->type('70000001', 'price')
         ->type('7000001', 'vt_price')
@@ -116,13 +118,14 @@ class ExaminationChargeControllerTest extends TestCase
 
     public function testUpdate()
     {
+        $lab = App\ExaminationLab::first();
         $examinationCharge = ExaminationCharge::latest()->first();
         $user = User::find(1);
         $this->actingAs($user)
             ->visit('admin/charge/'.$examinationCharge->id.'/edit')
             ->type('Device name for testing updated', 'device_name')
             ->type('Referensi uji for testing updated', 'stel')
-            ->select('Lab Energi', 'category')
+            ->select($lab->id, 'category')
             ->type('771', 'duration')
             ->type('77000001', 'price')
             ->type('7700001', 'vt_price')

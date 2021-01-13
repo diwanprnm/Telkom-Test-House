@@ -258,16 +258,15 @@ class NewExaminationChargeController extends Controller
         
         //get initial data
         $logService = new LogService();
-        $charge = NewExaminationCharge::find($id);
+        $charge = NewExaminationCharge::with('ExaminationLab')->find($id);
         $query = NewExaminationChargeDetail::whereNotNull('created_at')->where(self::NEW_EXAM_CHARGES_ID, $id);
         
         if ($search){
-            $query
-                ->where(self::DEVICE_NAME, 'like', '%'.strtolower($search).'%')
-                ->orWhere('stel', 'like', '%'.strtolower($search).'%')
-            ;
-
-                $logService->createLog('Search Charge', self::NEW_EXAMINATION_CHARGE, json_encode(array(self::SEARCH=>$search)));
+            $query->where( function($q) use ($search){
+                $q->where(self::DEVICE_NAME, 'like', '%'.strtolower($search).'%')
+                ->orWhere('stel', 'like', '%'.strtolower($search).'%');
+            });
+            $logService->createLog('Search Charge', self::NEW_EXAMINATION_CHARGE, json_encode(array(self::SEARCH=>$search)));
         }
         
         if ($request->has(self::CATEGORY)){
@@ -282,7 +281,6 @@ class NewExaminationChargeController extends Controller
         if (count($examinationCharge) == 0){
             $dataNotFound = self::DATA_NOT_FOUND;
         }
-
         $examinationLabs = ExaminationLab::orderBy('lab_code', 'asc')->get();
         return view('admin.newcharge.show')
             ->with('charge', $charge)
