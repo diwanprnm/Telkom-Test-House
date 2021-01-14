@@ -199,7 +199,7 @@
 										@endforeach
 									</select>
 									@foreach($data_stels as $item)
-										<input type="hidden" id="{{$item->stel}}" name="{{$item->stel}}" value="{{URL::to('/media/stelAttach/'.$item->id_folder.'/'.$item->file)}}">
+										<input type="hidden" id="{{$item->stel}}" name="{{$item->stel}}" value="{{Storage::disk('minio')->url("stelAttach/$item->id_folder/$item->file")}}">
 									@endforeach
 							 	</div>
 				              	<div class="form-group">
