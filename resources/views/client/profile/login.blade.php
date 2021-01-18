@@ -68,6 +68,8 @@
 									</div>
 								</div>
 
+								{!! Form::hidden('redirect_to', old('redirect_to', URL::previous()) ) !!}
+
 							</form>
 						 
 						</div> 

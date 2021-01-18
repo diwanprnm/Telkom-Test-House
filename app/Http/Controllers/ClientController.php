@@ -99,7 +99,7 @@ class ClientController extends Controller
 			if (Auth::attempt($credentials)) {
 				$logService = new LogService();
 				$logService->createLog('Login', 'LOGIN', '' );
-				return redirect()->back();
+				return redirect()->intended($request->redirect_to);
 			}else{
 				return back()->with(self::ERROR_CODE, 5)
 				->with(self::ERROR_CODE, 5)
