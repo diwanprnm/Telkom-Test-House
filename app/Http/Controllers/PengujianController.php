@@ -119,6 +119,14 @@ class PengujianController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct()
+    {
+		parent::__construct();
+		$this->middleware('client', ['only' => [
+            'index'
+        ]]);
+	}
 	 
     public function index(Request $request)
     {

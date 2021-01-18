@@ -69,7 +69,11 @@ Route::get('/about', 'HomeController@about');
 Route::get('/sertifikasi', 'HomeController@sertifikasi');
 Route::get('/contact', 'HomeController@contact');
 Route::get('/procedure', 'HomeController@procedure');
-Route::get('/process', 'HomeController@process');
+Route::get('/process', 'HomeController@process')->middleware(['client']);
+Route::get('/purchase_history', 'ProductsController@purchase_history')->middleware(['client']); ///346
+Route::get('/pengujian', 'PengujianController@index')->middleware(['client']); //261 tidak bisa kenapa?
+Route::get('/products', 'ProductsController@index')->middleware(['client']); //346 tidak bisa kenapa?
+
 Route::get('/detailprocess/{id}', 'HomeController@detail_process');
 Route::get('/editprocess/{jenis_uji}/{id}', 'HomeController@edit_process');
 Route::get('/faq', 'HomeController@faq');
@@ -257,7 +261,6 @@ Route::post('/updatePermohonan', 'PermohonanController@update');
 // Route::get('/cetakPermohonan', 'PermohonanController@cetak');
 Route::post('/cekLogin', 'ClientController@cekLogin');
 Route::resource('/pengujian', 'PengujianController');
-Route::get('/pengujian', 'PengujianController@index');
 Route::get('/pengujian/{id}/detail', 'PengujianController@detail');
 Route::post('/testimonial', 'PengujianController@testimonial');
 Route::post('/cekAmbilBarang', 'PengujianController@cekAmbilBarang');
@@ -341,10 +344,7 @@ Route::get('/do_backup', 'BackupController@backup');
 
 Route::get('/login', 'ProfileController@login');
  
-Route::get('/products', 'ProductsController@index'); 
 Route::resource('/products', 'ProductsController');
-
-Route::get('/purchase_history', 'ProductsController@purchase_history');
 Route::get('/payment_confirmation/{id}', 'ProductsController@payment_confirmation');
 Route::get('/payment_confirmation_spb/{id}', 'PengujianController@payment_confirmation');
 Route::get('/resend_va/{id}', 'ProductsController@api_resend_va');

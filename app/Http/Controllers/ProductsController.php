@@ -82,6 +82,13 @@ class ProductsController extends Controller
     private const FAILED_TO_CHECKOUT = 'Failed To Checkout';
     private const DATA_NOT_FOUND = 'Data not found.';
 
+    public function __construct()
+    {
+        parent::__construct();
+		$this->middleware('client', ['only' => [
+            'index'
+        ]]);
+	}
 
     public function index(Request $request)
     {   
