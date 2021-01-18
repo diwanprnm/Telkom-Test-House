@@ -112,7 +112,11 @@ class ExaminationControllerTest extends TestCase
 		$examination = factory(App\Examination::class)->create();
         $examinationAttach = factory(App\ExaminationAttach::class)->create(['examination_id'=>$examination->id,"name"=>"Tinjauan Kontrak"]);
         $examinationAttach = factory(App\ExaminationAttach::class)->create(['examination_id'=>$examination->id,"name"=>"SPB"]);
+		$examinationLab = App\ExaminationLab::latest()->first();
         $income = factory(App\Income::class)->create(['reference_id'=>$examination->id]);
+        $attachmentPathToMinio = "examination/$examination->id/$examinationAttach->attachment";
+        $file = file_get_contents('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
+        Storage::disk('minio')->put($attachmentPathToMinio, $file);
         $post = array(
             'status' => 'Registrasi',
             'registration_status' => 1,
@@ -127,7 +131,7 @@ class ExaminationControllerTest extends TestCase
             'certificate_status' => 1,
             'exam_price' => mt_rand(0,100),
             'cust_price_payment' => mt_rand(0,100),
-            'examination_lab_id' => '08242962-6386-4f57-af8b-6f06103cdc81',
+            'examination_lab_id' => $examinationLab->id,
             'is_loc_test' => '1',
             'lab_to_gudang_date' => '2020-12-12',
             'resume_date' => '2020-12-12',
@@ -150,6 +154,9 @@ class ExaminationControllerTest extends TestCase
         $post['registration_status'] = -1;
         $response = $this->actingAs(User::find('1'))->call('PUT', "admin/examination/$examination->id", $post);
         $this->assertEquals(302, $response->status());
+
+        //delete file testing
+        Storage::disk('minio')->delete($attachmentPathToMinio);
     }
     
     public function testGenerateFromTPN(){
