@@ -582,7 +582,7 @@ class ProfileController extends Controller
 		}else{
 			$query = "SELECT * FROM companies WHERE id != '1' AND is_active = 1 ORDER BY name";
 			$data = DB::select($query);
-			
+			session()->put('intendedUrl', \URL::previous());
 			return view('client.profile.login')
 				->with('data', $data);
 		}
