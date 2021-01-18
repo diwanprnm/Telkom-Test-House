@@ -17,6 +17,7 @@ use GuzzleHttp\Client;
 
 use Mail;
 use Session;
+use Storage;
 use App\Services\FileService;
 
 class ExaminationService
@@ -430,7 +431,6 @@ class ExaminationService
      */
     public function sendEmailNotification($user, $dev_name, $exam_type, $exam_type_desc, $message, $subject){
         $data = User::findOrFail($user);
-		return true;
         $send_email = Mail::send($message, array(
 			self::USER_NAME => $data->name,
 			self::DEV_NAME => $dev_name,
@@ -445,7 +445,7 @@ class ExaminationService
 	
 	public function sendEmailNotification_wAttach($user, $dev_name, $exam_type, $exam_type_desc, $message, $subject, $attach, $spb_number = null, $exam_id = null){
         $data = User::findOrFail($user);
-		return true;
+		$attachment = Storage::disk('minio')->url($attach);
         Mail::send($message, array(
 			self::USER_NAME => $data->name,
 			self::DEV_NAME => $dev_name,
@@ -455,9 +455,9 @@ class ExaminationService
 			'id' => $exam_id,
 			'payment_method' => $this->api_get_payment_methods()
 
-			), function ($m) use ($data,$subject,$attach) {
+			), function ($m) use ($data,$subject,$attachment) {
             $m->to($data->email)->subject($subject);
-			$m->attach($attach);
+			$m->attach($attachment);
         });
 
         return true;
@@ -502,7 +502,6 @@ class ExaminationService
 		$subject
 	){
         $data = User::findOrFail($user);
-		return true;
         Mail::send($message, array(
 			self::USER_NAME => $data->name,
 			self::EXAM_TYPE => $exam_type,
@@ -530,7 +529,6 @@ class ExaminationService
 	
 	public function sendEmailFailure($user, $dev_name, $exam_type, $exam_type_desc, $message, $subject, $tahap, $keterangan){
         $data = User::findOrFail($user);
-		return true;
         Mail::send($message, array(
 			self::USER_NAME => $data->name,
 			self::DEV_NAME => $dev_name,
