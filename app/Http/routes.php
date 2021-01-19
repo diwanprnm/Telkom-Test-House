@@ -70,9 +70,9 @@ Route::get('/sertifikasi', 'HomeController@sertifikasi');
 Route::get('/contact', 'HomeController@contact');
 Route::get('/procedure', 'HomeController@procedure');
 Route::get('/process', 'HomeController@process')->middleware(['client']);
-Route::get('/purchase_history', 'ProductsController@purchase_history')->middleware(['client']); ///346
-Route::get('/pengujian', 'PengujianController@index')->middleware(['client']); //261 tidak bisa kenapa?
-Route::get('/products', 'ProductsController@index')->middleware(['client']); //346 tidak bisa kenapa?
+Route::get('/purchase_history', 'ProductsController@purchase_history')->middleware(['client']);
+Route::get('/pengujian', 'PengujianController@index')->middleware(['client']);
+Route::get('/products', 'ProductsController@index')->middleware(['client']);
 
 Route::get('/detailprocess/{id}', 'HomeController@detail_process');
 Route::get('/editprocess/{jenis_uji}/{id}', 'HomeController@edit_process');

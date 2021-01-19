@@ -124,7 +124,10 @@ class PengujianController extends Controller
     {
 		parent::__construct();
 		$this->middleware('client', ['only' => [
-            'index'
+            'index',
+			'detail',
+			'pembayaran',
+			'payment_confirmation'
         ]]);
 	}
 	 
