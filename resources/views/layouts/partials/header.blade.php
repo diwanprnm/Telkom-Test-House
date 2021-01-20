@@ -56,17 +56,7 @@
                 <ul class="dropdown-menu" role="menu">
                   <li><a href="{{url('procedure')}}">{{ trans('translate.procedure') }}</a></li>
                   <li><a href="{{url('process')}}">{{ trans('translate.process') }}</a></li>
-                  @php
-                  if($currentUser){
-                  @endphp 
                   <li><a href="{{ url('pengujian')}}">{{ trans('translate.examination') }}</a></li>
-                  @php   
-                  }else{
-                    @endphp
-                  <li><a href="{{ url('login')}}">{{ trans('translate.examination') }}</a></li>
-                  @php
-                  }
-                  @endphp
                   @php
                   if(!empty($new_charge[0])){
                     @endphp

@@ -11,6 +11,7 @@ use App\Services\PDF\PDFMCTables;
 use App\Services\PDF\PDFMCTandaTerima;
 use App\Services\PDF\PDFMCTableKuitansi;
 use App\Services\PDF\PDFMCTablePermohonan;
+use App\Services\PDF\PDFMCDefault;
 use App\Services\PDF\WatermarkSTEL;
 
 //CETAK PDF
@@ -112,6 +113,12 @@ class PDFService
 		//dipanggil dari routes
 		$cetakPermohonan = new CetakPermohonan();
 		$cetakPermohonan->makePDF($data, new PDFMCTablePermohonan());
+	}
+
+	public function cetakTechnicalMeetingUjiLokasi($data)
+	{
+		$cetakTechnicalMeetingUjiLokasi = new CetakTechnicalMeetingUjiLokasi();
+		$cetakTechnicalMeetingUjiLokasi->makePDF($data, new PDFMCDefault());
 	}
 
 	private function convertDataPermohonan($data){

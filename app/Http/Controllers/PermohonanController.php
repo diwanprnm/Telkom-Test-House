@@ -13,7 +13,6 @@ use Input;
 use File;
 use Session;
 use Response;
-use Storage;
 
 use App\Device;
 use App\Examination;
@@ -633,13 +632,13 @@ class PermohonanController extends Controller
 				// case QA
 				$res = explode('/',$request->input('path_ref'));   
 				$fuploadrefuji_name = $res[count($res)-1];
-				// $url = str_replace(" ", "%20", $request->input('path_ref'));
+				$url = str_replace(" ", "%20", $request->input('path_ref'));
 				$fileService = new FileService();
 				$fileProperties = array(
 					'fileName' => $fuploadrefuji_name,
 					'path' => self::MEDIA_EXAMINATION_LOC.$exam_id.'/'
 				);
-				$stream = Storage::disk('minio')->get($res[count($res)-3]."/".$res[count($res)-2]."/".$res[count($res)-1]);
+				$stream = file_get_contents($url);
 				$fileService->uploadFromStream($stream, $fileProperties);
 			}else{
 				$fuploadrefuji_name = $request->input(self::HIDE_REF_UJI_FILE);

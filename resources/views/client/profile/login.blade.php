@@ -67,9 +67,6 @@
 										<a href="{{ url('/register') }}" class="fright">{{ trans('translate.have_not_account') }}</a>	
 									</div>
 								</div>
-
-								{!! Form::hidden('redirect_to', old('redirect_to', URL::previous()) ) !!}
-
 							</form>
 						 
 						</div> 
