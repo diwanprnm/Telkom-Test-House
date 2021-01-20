@@ -738,7 +738,7 @@ class ProductsController extends Controller
     private function getDataPurchase($currentUser,$details){ 
         return [
             "from" => [
-                "name" => "PT. TELKOM INDONESIA (PERSERO) TBK",
+                "name" => "PT. TELKOM INDONESIA (PERSERO) Tbk",
                 self::ADDRESS => "Telkom Indonesia Graha Merah Putih, Jalan Japati No.1 Bandung, Jawa Barat, 40133",
                 self::PRONE => "(+62) 812-2483-7500",
                 self::EMAIL => "urelddstelkom@gmail.com",
