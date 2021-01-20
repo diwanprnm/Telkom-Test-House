@@ -85,13 +85,18 @@ class ExaminationService
 	private const KETERANGAN = 'keterangan';
     
     public function requestQuery($request, $search, $type, $status, $before, $after){
-		$query = Examination::whereNotNull(self::CREATED_AT)
-							->with('user')
-							->with(self::COMPANY)
-							->with(self::EXAMINATION_TYPE)
-							->with(self::EXAMINATION_LAB)
-							->with(self::MEDIA)
-							->with(self::DEVICE);
+		$query = Examination::select([
+				'devices.*',
+				'examinations.*'
+			])
+			->join('users', 'users.company_id', '=', 'examinations.company_id')
+			->join('companies',  'companies.id', '=', 'examinations.company_id')
+			->join('examination_types', 'examination_types.id', '=', 'examinations.examination_type_id')
+			->join('examination_labs', 'examination_labs.id', '=', 'examinations.examination_lab_id')
+			->join('devices', 'devices.id', '=', 'examinations.device_id')
+			->whereNotNull('examinations.created_at')
+		;
+
 		$query->where(function($q){
 			return $q->where(self::REGISTRATION_STATUS, '!=', '1')
 				->orWhere(self::FUNCTION_STATUS, '!=', '1')
@@ -106,7 +111,10 @@ class ExaminationService
 				->orWhere(self::LOCATION, '!=', '1')
 				;
 			})
-			;
+		;
+		
+		$selectedExamLab = $request->get('selected_exam_lab', '');
+
 		if ($search != null){
 			$query->where(function($qry) use($search){
 				$qry->whereHas(self::DEVICE, function ($q) use ($search){
@@ -119,7 +127,8 @@ class ExaminationService
 						return $q->where('name', 'like', '%'.strtolower($search).'%');
 					})
 				->orWhere('function_test_NO', 'like', '%'.strtolower($search).'%')
-				->orWhere('spk_code', 'like', '%'.strtolower($search).'%');
+				->orWhere('spk_code', 'like', '%'.strtolower($search).'%')
+				->orWhere('spb_number', 'like', '%'.strtolower($search).'%');
 			});
 		}
 
@@ -226,12 +235,26 @@ class ExaminationService
 		
 		if ($request->has(self::BEFORE_DATE)){
 			$query->where(self::SPK_DATE, '<=', $request->get(self::BEFORE_DATE));
-			$before = $request->get(self::BEFORE_DATE);
+			$before = $request->get(self::BEFORE_DATE, '');
 		}
 
 		if ($request->has(self::AFTER_DATE)){
 			$query->where(self::SPK_DATE, '>=', $request->get(self::AFTER_DATE));
-			$after = $request->get(self::AFTER_DATE);
+			$after = $request->get(self::AFTER_DATE, '');
+		}
+
+		if ($request->has('before_date_exam')){
+			$query->where('function_date', '<=', $request->get('before_date_exam'));
+			$beforeDateExam = $request->get('before_date_exam', '');
+		}
+
+		if ($request->has('after_date_exam')){
+			$query->where('function_date', '>=', $request->get('after_date_exam'));
+			$afterDateExam = $request->get('after_date_exam', '');
+		}
+
+		if ($request->has('selected_exam_lab') && $selectedExamLab != 'all'){
+			$query->where('examination_lab_id', '=', $request->get('selected_exam_lab'));
 		}
 
 		return array($query, $search, $type, $status, $before, $after);

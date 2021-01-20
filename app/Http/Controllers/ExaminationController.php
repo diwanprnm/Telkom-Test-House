@@ -187,8 +187,13 @@ class ExaminationController extends Controller
         if (!$currentUser){ return redirect('login');}
 		$message = null;
 		$paginate = 5;
-		$search = trim($request->input(self::SEARCH));
-		
+		$search = trim($request->get(self::SEARCH,''));
+		$afterDateExam = $request->get('after_date_exam','');
+		$beforeDateExam = $request->get('before_date_exam','');
+		$selectedExamLab = $request->get('selected_exam_lab','');
+		$sortFrom = $sortFromQuery = $request->get('sort_from','examinations.created_at');
+		$sortBy = $request->get('sort_by','dsc');
+		$examinationLab = \App\ExaminationLab::select('id', 'name')->get();
 		$examType = ExaminationType::all();
 
 		$tempData = $examinationService->requestQuery($request, $search, $type = '', $status = '', $before = null, $after = null);
@@ -202,8 +207,16 @@ class ExaminationController extends Controller
 		
 		$search != null ? $logService->createLog(self::SEARCH, $this::EXAMINATION, json_encode(array(self::SEARCH => $search)) ) : '';
 
-		$data = $query->orderBy(self::UPDATED_AT, 'desc')
-					->paginate($paginate);
+		if($sortFrom == 'created_at'){
+			$sortFromQuery = 'examinations.created_at';
+		} if ( $sortFrom == 'device_name'){
+			$sortFromQuery = 'devices.name';
+		}
+		
+		$data = $query
+			->orderBy($sortFromQuery, $sortBy)
+			->paginate($paginate)
+		;
 		
 		if (count(array($query)) == 0){ $message = 'Data not found'; }
 		
@@ -216,6 +229,12 @@ class ExaminationController extends Controller
 			->with(self::STATUS, $status)
 			->with(self::BEFORE_DATE, $before)
 			->with(self::AFTER_DATE, $after)
+			->with('after_date_exam', $afterDateExam)
+			->with('before_date_exam', $beforeDateExam)
+			->with(self::EXAMINATION_LAB, $examinationLab)
+			->with('selected_exam_lab', $selectedExamLab)
+			->with('sort_from', $sortFrom)
+			->with('sort_by', $sortBy)
 		;
     }
 
@@ -1115,13 +1134,24 @@ class ExaminationController extends Controller
 		$examinationService = new ExaminationService();
 
         $search = trim($request->input(self::SEARCH));
+		$sortFrom = $sortFromQuery = $request->get('sort_from', 'examinations.created_at');
+		$sortBy = $request->get('sort_by', 'dsc');
+
 
         $tempData = $examinationService->requestQuery($request, $search, '', '', null, null);
 
 		$query = $tempData[0];
 		 
+		if($sortFrom == 'created_at'){
+			$sortFromQuery = 'examinations.created_at';
+		} if ( $sortFrom == 'device_name'){
+			$sortFromQuery = 'devices.name';
+		}
 
-		$data = $query->orderBy(self::UPDATED_AT, 'desc')->get();
+		$data = $query
+			->orderBy($sortFromQuery, $sortBy)
+			->get()
+		;
 
 		$examsArray = []; 
 
@@ -1165,7 +1195,8 @@ class ExaminationController extends Controller
 			self::LAPORAN_UJI,
 			self::SIDANG_QA,
 			'Penerbitan Sertifikat',
-			'Total Biaya'
+			'Total Biaya',
+			'Tanggal Registrasi'
 		]; 
 		
 		// Convert each member of the returned collection into an array,
@@ -1537,7 +1568,8 @@ class ExaminationController extends Controller
 				$status_resu,
 				$status_qa,
 				$status_cert,
-				$row->price
+				$row->price,
+				date('d-m-Y', strtotime($row->created_at)),
 			];
 		}
 		
