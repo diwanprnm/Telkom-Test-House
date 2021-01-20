@@ -80,8 +80,7 @@ class PermohonanControllerTest extends TestCase
 
 	public function test_submitPermohonan()
 	{ 
-	   Storage::disk('minio')->put('test/test/test.pdf', file_get_contents('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'));
-	   $user = User::find(1);
+	   	$user = User::find(1);
 	    $stel = factory(App\STEL::class)->create();
 	    $response =  $this->actingAs($user)->call('POST', '/submitPermohonan', [ 
 	       'f1-nama-pemohon' => str_random(10), 
@@ -112,12 +111,11 @@ class PermohonanControllerTest extends TestCase
 	       'f1-no-siupp' => str_random(10),
 	       'f1-tgl-siupp' => "2020-09-20",
 		   'f1-batas-waktu' => "12",
-		   'path_ref' => 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/test/test/test.pdf'
+		   'path_ref' => 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
 	    ]);
 	   $this->assertEquals(200, $response->status());
 	   $examination = App\Examination::latest()->first();
 	   Storage::disk('minio')->delete("examination/$examination->id/dummy.pdf");
-	   Storage::disk('minio')->delete("test/test/test.pdf");
 	} 
 	public function test_updatePermohonan()
 	{ 
