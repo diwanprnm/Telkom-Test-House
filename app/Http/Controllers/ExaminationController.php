@@ -1905,7 +1905,7 @@ class ExaminationController extends Controller
 
 			$data_draft = [
 	            "from" => [
-	                "name" => "PT TELKOM INDONESIA (PERSERO)",
+	                "name" => "PT. TELKOM INDONESIA (PERSERO) TBK",
 	                "address" => "Telkom Indonesia Graha Merah Putih, Jalan Japati No.1 Bandung, Jawa Barat, 40133",
 	                "phone" => "(+62) 812-2483-7500",
 	                "email" => "urelddstelkom@gmail.com",
