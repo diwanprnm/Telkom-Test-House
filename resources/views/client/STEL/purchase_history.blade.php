@@ -131,7 +131,7 @@
 	@php  
 		 if($item_detail->attachment !="" && ($payment_status == 1 || $payment_status == 3)){
 	@endphp
-		<td colspan="6" class="center"><a target="_blank" href="{!! url("cetakstel?invoice_id={$invoice}&attach={$item_detail->stel->attachment}&company_name={$company_name}") !!}">{{ trans('translate.download') }} File</a></td>
+		<td colspan="6" class="center"><a target="_blank" href="{{ URL::to('/client/downloadstelwatermark/'.$item_detail->id) }}">{{ trans('translate.download') }} File</a></td>
 	@php
 	}
 		else{
