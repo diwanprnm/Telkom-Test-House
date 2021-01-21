@@ -239,10 +239,22 @@
 									</div>
 		                        </div>
 		                    </div>
-
-{{-- SORT BY  --}}
-
 							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Urutkan Berdasarkan
+										</label>
+										<select id="sort_from" name="sort_from" class="cs-select cs-skin-elastic" required>
+											<option value="created_at" @if ($sort_from == 'created_at') selected @endif >Tanggal Registrasi</option>
+											<option value="device_name" @if ($sort_from == 'device_name') selected @endif  >Nama Perangkat</option>
+										</select>
+										<select id="sort_by" name="sort_by" class="cs-select cs-skin-elastic" required>
+											<option value="asc" @if ($sort_by == 'asc') selected @endif  >ASC</option>
+											<option value="dsc" @if ($sort_by == 'dsc') selected @endif>DESC</option>
+										</select>
+									</div>
+		                        </div>
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
@@ -266,34 +278,7 @@
 											@endforeach
 										</select>
 									</div>
-		                        </div>
-		                        <div class="col-md-6">
-									<div class="col-md-6 no-padding">
-										<div class="form-group">
-											<label>
-												Urutkan Berdasarkan
-											</label>
-											<select id="sort_from" name="sort_from" class="cs-select cs-skin-elastic" required>
-												<option value="created_at" @if ($sort_from == 'created_at') selected @endif >Tanggal Registrasi</option>
-												<option value="device_name" @if ($sort_from == 'device_name') selected @endif  >Nama Perangkat</option>
-											</select>
-										</div>
-									</div>
-									<div class="col-md-1 no-padding">
-									</div>
-									<div class="col-md-5 no-padding">
-										<div class="form-group">
-											<label>
-												Urutkan Secara
-											</label>
-											<select id="sort_by" name="sort_by" class="cs-select cs-skin-elastic" required>
-												<option value="asc" @if ($sort_by == 'asc') selected @endif  >Ascending (A-Z)</option>
-												<option value="dsc" @if ($sort_by == 'dsc') selected @endif>Descending (Z-A)</option>
-											</select>
-										</div>
-									</div>
-
-		                        </div>
+		                        </div>       
 		                    </div>
 							<div class="col-md-12">
 								<button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
