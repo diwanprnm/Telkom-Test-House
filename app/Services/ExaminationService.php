@@ -386,7 +386,7 @@ class ExaminationService
         try {
             
             $params['json'] = $data;
-            $res_purchase = $client->post("v1/draftbillings", $params)->getBody();
+            $res_purchase = $client->post("v3/draftbillings", $params)->getBody();
             return json_decode($res_purchase);
         } catch(Exception $e){
             return null;
@@ -404,7 +404,7 @@ class ExaminationService
         ]);
         try {
             $params['json'] = $data;
-            $res_billing = $client->post("v1/billings", $params)->getBody();
+            $res_billing = $client->post("v3/billings", $params)->getBody();
             return json_decode($res_billing);
         } catch(Exception $e){
             return null;
@@ -422,7 +422,7 @@ class ExaminationService
         ]);
         try {
             $params['json'] = $data;
-            $res_cancel_billing = $client->put("v1/billings/".$BILLING_ID."/cancel", $params)->getBody();
+            $res_cancel_billing = $client->put("v3/billings/".$BILLING_ID."/cancel", $params)->getBody();
             return json_decode($res_cancel_billing);
         } catch(Exception $e){
             return null;
@@ -438,7 +438,7 @@ class ExaminationService
         ]);
         try {
             $params['multipart'] = $data;
-            $res_upload = $client->post("v1/billings/".$BILLING_ID."/deliver", $params)->getBody(); //BILLING_ID
+            $res_upload = $client->post("v3/billings/".$BILLING_ID."/deliver", $params)->getBody(); //BILLING_ID
             return json_decode($res_upload);
 
         } catch(Exception $e){
@@ -494,7 +494,7 @@ class ExaminationService
             self::HTTP_ERRORS => false
         ]);
         try {
-            $res_payment_method = $client->get("v1/products/".config("app.product_id_tth_2")."/paymentmethods")->getBody();
+            $res_payment_method = $client->get("v3/products/".config("app.product_id_tth_2")."/paymentmethods")->getBody();
             $payment_method = json_decode($res_payment_method);
 
             return $payment_method;

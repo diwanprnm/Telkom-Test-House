@@ -394,7 +394,7 @@ class SalesController extends Controller
         ]);
         try {
             $params['multipart'] = $data;
-            $res_upload = $client->post("v1/billings/".$BILLING_ID."/deliver", $params)->getBody(); //BILLING_ID
+            $res_upload = $client->post("v3/billings/".$BILLING_ID."/deliver", $params)->getBody(); //BILLING_ID
             return json_decode($res_upload);
 
         } catch(Exception $e){

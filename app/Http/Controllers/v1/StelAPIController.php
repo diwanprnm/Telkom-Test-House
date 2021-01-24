@@ -160,7 +160,7 @@ class StelAPIController extends AppBaseController
         ]);
         try {
             $param_invoices['json'] = $data_invoices;
-            $res_invoices = $client->post("v1/invoices", $param_invoices)->getBody()->getContents();
+            $res_invoices = $client->post("v3/invoices", $param_invoices)->getBody()->getContents();
             $invoice = json_decode($res_invoices);
 
             return $invoice;
@@ -177,7 +177,7 @@ class StelAPIController extends AppBaseController
             'http_errors' => false
         ]);
         try {
-            $res_billing = $client->get("v1/billings/".$id_billing."")->getBody()->getContents();
+            $res_billing = $client->get("v3/billings/".$id_billing."")->getBody()->getContents();
             $billing = json_decode($res_billing);
 
             return $billing;

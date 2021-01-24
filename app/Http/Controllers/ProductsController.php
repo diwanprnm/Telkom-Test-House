@@ -352,7 +352,7 @@ class ProductsController extends Controller
         try {
             
             $params['json'] = $data;
-            $res_purchase = $client->post("v1/draftbillings", $params)->getBody();
+            $res_purchase = $client->post("v3/draftbillings", $params)->getBody();
             return json_decode($res_purchase);
 
             
@@ -371,7 +371,7 @@ class ProductsController extends Controller
             'verify' => false
         ]);
         try {
-            $res_payment_method = $client->get("v1/products/".config(self::APP_DOT_PRODUCT_ID_TTH)."/paymentmethods")->getBody();
+            $res_payment_method = $client->get("v3/products/".config(self::APP_DOT_PRODUCT_ID_TTH)."/paymentmethods")->getBody();
             return json_decode($res_payment_method);
         } catch(Exception $e){ return null;
         }
@@ -498,7 +498,7 @@ class ProductsController extends Controller
         ]);
         try {
             $params['json'] = $data;
-            $res_billing = $client->post("v1/billings", $params)->getBody();
+            $res_billing = $client->post("v3/billings", $params)->getBody();
             return json_decode($res_billing); 
             
         } catch(Exception $e){ return null;
@@ -516,7 +516,7 @@ class ProductsController extends Controller
             self::HTTP_ERRORS => false
         ]);
         try {
-            $res_resend = $client->post("v1/billings/mps/resend/".$STELSales->BILLING_ID)->getBody();
+            $res_resend = $client->post("v3/billings/mps/resend/".$STELSales->BILLING_ID)->getBody();
             $resend = json_decode($res_resend);
             if($resend){
                 $STELSales->VA_number = $resend && $resend->status ? $resend->data->mps->va->number : null;
@@ -661,7 +661,7 @@ class ProductsController extends Controller
         ]);
         try {
             $params['json'] = $data;
-            $res_cancel_billing = $client->put("v1/billings/".$BILLING_ID."/cancel", $params)->getBody();
+            $res_cancel_billing = $client->put("v3/billings/".$BILLING_ID."/cancel", $params)->getBody();
             return json_decode($res_cancel_billing);
         } catch(Exception $e){ return null;
         }
