@@ -584,7 +584,20 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								@php echo $data->appends(array('search' => $search,'type' => $filterType,'status' => $status,'before_date' => $before_date,'after_date' => $after_date))->links(); @endphp
+								@php
+									echo $data->appends(array(
+										'search' => $search,
+										'type' => $filterType,
+										'status' => $status,
+										'before_date' => $before_date,
+										'after_date' => $after_date,
+										'before_date_exam' => $before_date_exam,
+										'after_date_exam' => $after_date_exam,
+										'sort_by' => $sort_by,
+										'sort_from' => $sort_from,
+										'selected_exam_lab' => $selected_exam_lab
+									))->links();
+								@endphp
 							</div>
 						</div>
 					</div>
