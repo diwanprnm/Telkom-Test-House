@@ -59,7 +59,7 @@ class SalesController extends Controller
     private const TIMEOUT = 'timeout';
     private const USERS = 'users';
     private const USER_ID_R = 'user_id';
-    private const V1_INVOICE = 'v1/invoices/';
+    private const V1_INVOICE = 'v3/invoices/';
 
     //Databse related const
     private const AS_COMPANY_NAME = 'companies.name as company_name';
@@ -394,7 +394,7 @@ class SalesController extends Controller
         ]);
         try {
             $params['multipart'] = $data;
-            $res_upload = $client->post("v1/billings/".$BILLING_ID."/deliver", $params)->getBody(); //BILLING_ID
+            $res_upload = $client->post("v3/billings/".$BILLING_ID."/deliver", $params)->getBody(); //BILLING_ID
             return json_decode($res_upload);
 
         } catch(Exception $e){

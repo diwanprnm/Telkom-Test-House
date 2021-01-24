@@ -1611,7 +1611,7 @@ class ExaminationAPIController extends AppBaseController
             $client = new Client([
 				'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
 				// Base URI is used with relative requests
-				// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+				// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v3/',
 				'base_uri' => config("app.url_api_bsp"),
 				// You can set any number of default request options.
 				'timeout'  => 60.0,
@@ -1843,7 +1843,7 @@ class ExaminationAPIController extends AppBaseController
         ]);
         try {
             $param_invoices['json'] = $data_invoices;
-            $res_invoices = $client->post("v1/invoices", $param_invoices)->getBody()->getContents();
+            $res_invoices = $client->post("v3/invoices", $param_invoices)->getBody()->getContents();
             $invoice = json_decode($res_invoices);
 
             return $invoice;
@@ -1860,7 +1860,7 @@ class ExaminationAPIController extends AppBaseController
             'http_errors' => false
         ]);
         try {
-            $res_billing = $client->get("v1/billings/".$id_billing."")->getBody()->getContents();
+            $res_billing = $client->get("v3/billings/".$id_billing."")->getBody()->getContents();
             $billing = json_decode($res_billing);
 
             return $billing;
@@ -1900,7 +1900,7 @@ class ExaminationAPIController extends AppBaseController
             foreach ($exam as $data) {
                 try {
                     $INVOICE_ID = $data->INVOICE_ID;
-                    $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
+                    $res_invoice = $client->request('GET', 'v3/invoices/'.$INVOICE_ID);
                     $invoice = json_decode($res_invoice->getBody());
                     
                     if($invoice && $invoice->status == true){
@@ -1909,7 +1909,7 @@ class ExaminationAPIController extends AppBaseController
                         if($status_invoice == "approved" && $status_faktur == "received"){
 							$name_file = "kuitansi_spb_$INVOICE_ID.pdf";
 							$path_file = "examination/$data->id/";
-							$response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/exportpdf');
+							$response = $client->request('GET', 'v3/invoices/'.$INVOICE_ID.'/exportpdf');
 							$stream = (String)$response->getBody();
 
 							$fileService = new FileService();
@@ -1989,7 +1989,7 @@ class ExaminationAPIController extends AppBaseController
                 /* END GENERATE NAMA FILE FAKTUR */
     		    try {
                     $INVOICE_ID = $data->INVOICE_ID;
-                    $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
+                    $res_invoice = $client->request('GET', 'v3/invoices/'.$INVOICE_ID);
                     $invoice = json_decode($res_invoice->getBody());
                     
                     if($invoice && $invoice->status == true){
@@ -2004,7 +2004,7 @@ class ExaminationAPIController extends AppBaseController
 							 */
 							$name_file = trim(preg_replace(array('/\s\s+/','/\//','/\\\/','/\:/','/\*/','/\?/','/\"/','/\</','/\>/','/\|/'), '', 'faktur_spb_'.$filename.'.pdf'));
 							$path_file = "examination/$data->id/";
-							$response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/taxinvoice/pdf');
+							$response = $client->request('GET', 'v3/invoices/'.$INVOICE_ID.'/taxinvoice/pdf');
 							$stream = (String)$response->getBody();
 
 							$fileService = new FileService();
@@ -2077,13 +2077,13 @@ class ExaminationAPIController extends AppBaseController
                 if($Examination){
                     try {
                         $INVOICE_ID = $Examination->INVOICE_ID;
-                        $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
+                        $res_invoice = $client->request('GET', 'v3/invoices/'.$INVOICE_ID);
                         $invoice = json_decode($res_invoice->getBody());
                         
                         if($invoice && $invoice->status == true){
                             $status_invoice = $invoice->data->status_invoice;
                             if($status_invoice == "returned"){
-                                $res_billing = $client->request('GET', 'v1/invoices?filterobjid-billing._id='.$Examination->BILLING_ID);
+                                $res_billing = $client->request('GET', 'v3/invoices?filterobjid-billing._id='.$Examination->BILLING_ID);
                                 $billing = json_decode($res_billing->getBody());
                                 foreach ($billing->data as $data_billing) {
                                     if($data_billing->status_faktur == "received"){

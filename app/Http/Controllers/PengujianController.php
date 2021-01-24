@@ -784,7 +784,7 @@ class PengujianController extends Controller
             'verify' => false
         ]);
         try {
-            $res_payment_method = $client->get("v1/products/".config("app.product_id_tth_2")."/paymentmethods")->getBody();
+            $res_payment_method = $client->get("v3/products/".config("app.product_id_tth_2")."/paymentmethods")->getBody();
             $payment_method = json_decode($res_payment_method);
 
             return $payment_method;
@@ -1008,7 +1008,7 @@ class PengujianController extends Controller
         try {
             
             $params['json'] = $data;
-            $res_purchase = $client->post("v1/draftbillings", $params)->getBody();
+            $res_purchase = $client->post("v3/draftbillings", $params)->getBody();
             return json_decode($res_purchase); 
 
         } catch(Exception $e){
@@ -1045,7 +1045,7 @@ class PengujianController extends Controller
         ]);
         try {
             $params['json'] = $data;
-            $res_billing = $client->post("v1/billings", $params)->getBody();
+            $res_billing = $client->post("v3/billings", $params)->getBody();
             return  json_decode($res_billing); 
         } catch(Exception $e){
             return null;
@@ -1063,7 +1063,7 @@ class PengujianController extends Controller
             self::HTTP_ERRORS => false
         ]);
         try {
-            $res_resend = $client->post("v1/billings/mps/resend/".$exam->BILLING_ID)->getBody();
+            $res_resend = $client->post("v3/billings/mps/resend/".$exam->BILLING_ID)->getBody();
             $resend = json_decode($res_resend);
             if($resend){
 				$exam->VA_number = $resend && $resend->status? $resend->data->mps->va->number : null;
@@ -1123,7 +1123,7 @@ class PengujianController extends Controller
         ]);
         try {
             $params['json'] = $data;
-            $res_cancel_billing = $client->put("v1/billings/".$BILLING_ID."/cancel", $params)->getBody();
+            $res_cancel_billing = $client->put("v3/billings/".$BILLING_ID."/cancel", $params)->getBody();
             return json_decode($res_cancel_billing); 
         } catch(Exception $e){
             return null;
@@ -1267,7 +1267,7 @@ class PengujianController extends Controller
         try {
             
             $params['json'] = $data;
-            $res_purchase = $client->post("v1/draftbillings", $params)->getBody();
+            $res_purchase = $client->post("v3/draftbillings", $params)->getBody();
             $purchase = json_decode($res_purchase);
 
             return $purchase;
@@ -1304,7 +1304,7 @@ class PengujianController extends Controller
         ]);
         try {
             $params['json'] = $data;
-            $res_billing = $client->post("v1/billings", $params)->getBody();
+            $res_billing = $client->post("v3/billings", $params)->getBody();
             $billing = json_decode($res_billing);
 
             return $billing;
@@ -1324,7 +1324,7 @@ class PengujianController extends Controller
             'http_errors' => false
         ]);
         try {
-            $res_resend = $client->post("v1/billings/mps/resend/".$exam->BILLING_ID)->getBody();
+            $res_resend = $client->post("v3/billings/mps/resend/".$exam->BILLING_ID)->getBody();
             $resend = json_decode($res_resend);
             if($resend){
                 $exam->VA_number = $resend && $resend->status == true ? $resend->data->mps->va->number : null;
@@ -1383,7 +1383,7 @@ class PengujianController extends Controller
         ]);
         try {
             $params['json'] = $data;
-            $res_cancel_billing = $client->put("v1/billings/".$BILLING_ID."/cancel", $params)->getBody();
+            $res_cancel_billing = $client->put("v3/billings/".$BILLING_ID."/cancel", $params)->getBody();
             $cancel_billing = json_decode($res_cancel_billing);
 
             return $cancel_billing;

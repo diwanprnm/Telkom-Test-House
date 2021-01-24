@@ -160,7 +160,7 @@ class StelAPIController extends AppBaseController
         ]);
         try {
             $param_invoices['json'] = $data_invoices;
-            $res_invoices = $client->post("v1/invoices", $param_invoices)->getBody()->getContents();
+            $res_invoices = $client->post("v3/invoices", $param_invoices)->getBody()->getContents();
             $invoice = json_decode($res_invoices);
 
             return $invoice;
@@ -177,7 +177,7 @@ class StelAPIController extends AppBaseController
             'http_errors' => false
         ]);
         try {
-            $res_billing = $client->get("v1/billings/".$id_billing."")->getBody()->getContents();
+            $res_billing = $client->get("v3/billings/".$id_billing."")->getBody()->getContents();
             $billing = json_decode($res_billing);
 
             return $billing;
@@ -188,7 +188,7 @@ class StelAPIController extends AppBaseController
 
     public function checkKuitansiTPN()
     {
-        $stel = STELSales::whereNull('id_kuitansi')->whereNotNull('INVOICE_ID')->get();
+        $stel = STELSales::where('id_kuitansi', '')->whereNotNull('INVOICE_ID')->get();
         if(count($stel)>0){
             $client = new Client([
                 'headers' => ['Authorization' => config("app.gateway_tpn")],
@@ -203,7 +203,7 @@ class StelAPIController extends AppBaseController
                 if($STELSales){
                     try {
                         $INVOICE_ID = $STELSales->INVOICE_ID;
-                        $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
+                        $res_invoice = $client->request('GET', 'v3/invoices/'.$INVOICE_ID);
                         $invoice = json_decode($res_invoice->getBody());
                         
                         if($invoice && $invoice->status == true){
@@ -217,7 +217,7 @@ class StelAPIController extends AppBaseController
                                  */
                                 $name_file = "kuitansi_stel_$INVOICE_ID.pdf";
                                 $path_file = "stel/$data->id/";
-                                $response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/exportpdf');
+                                $response = $client->request('GET', 'v3/invoices/'.$INVOICE_ID.'/exportpdf');
                                 $stream = (String)$response->getBody();
 
                                 $fileService = new FileService();
@@ -247,7 +247,7 @@ class StelAPIController extends AppBaseController
 
     public function checkTaxInvoiceTPN()
     {
-        $stel = STELSales::whereNull('faktur_file')->whereNotNull('INVOICE_ID')->get();
+        $stel = STELSales::where('faktur_file', '')->whereNotNull('INVOICE_ID')->get();
         if(count($stel)>0){
             $client = new Client([
                 'headers' => ['Authorization' => config("app.gateway_tpn")],
@@ -285,7 +285,7 @@ class StelAPIController extends AppBaseController
                     /* END GENERATE NAMA FILE FAKTUR */
                     try {
                         $INVOICE_ID = $STELSales->INVOICE_ID;
-                        $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
+                        $res_invoice = $client->request('GET', 'v3/invoices/'.$INVOICE_ID);
                         $invoice = json_decode($res_invoice->getBody());
                         
                         if($invoice && $invoice->status == true){
@@ -299,7 +299,7 @@ class StelAPIController extends AppBaseController
                                  */
                                 $name_file = "faktur_stel_$filename.pdf";
                                 $path_file = "stel/$data->id/";
-                                $response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/taxinvoice/pdf');
+                                $response = $client->request('GET', 'v3/invoices/'.$INVOICE_ID.'/taxinvoice/pdf');
                                 $stream = (String)$response->getBody();
 
                                 $fileService = new FileService();
@@ -344,13 +344,13 @@ class StelAPIController extends AppBaseController
                 if($STELSales){
                     try {
                         $INVOICE_ID = $STELSales->INVOICE_ID;
-                        $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
+                        $res_invoice = $client->request('GET', 'v3/invoices/'.$INVOICE_ID);
                         $invoice = json_decode($res_invoice->getBody());
                         
                         if($invoice && $invoice->status == true){
                             $status_invoice = $invoice->data->status_invoice;
                             if($status_invoice == "returned"){
-                                $res_billing = $client->request('GET', 'v1/invoices?filterobjid-billing._id='.$STELSales->BILLING_ID);
+                                $res_billing = $client->request('GET', 'v3/invoices?filterobjid-billing._id='.$STELSales->BILLING_ID);
                                 $billing = json_decode($res_billing->getBody());
                                 foreach ($billing->data as $data_billing) {
                                     if($data_billing->status_faktur == "received"){
