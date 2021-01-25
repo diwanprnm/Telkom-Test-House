@@ -894,7 +894,7 @@ class PengujianController extends Controller
                     "include_pph" => $request->has('is_pph'),
                     "created" => [
                         "by" => $currentUser->name,
-                        self::REFERENCE_ID => $currentUser->id
+                        self::REFERENCE_ID => '1'
                     ],
                     "config" => [
                         "kode_wapu" => "01",
@@ -980,7 +980,7 @@ class PengujianController extends Controller
             "details" => $details,
             "created" => [
                 "by" => $exam->user->name,
-                self::REFERENCE_ID => $exam->user->id
+                self::REFERENCE_ID => '1'
             ],
             "include_tax_invoice" => true,
             "bank" => [
@@ -1089,7 +1089,7 @@ class PengujianController extends Controller
 	            	"canceled" => [
 						self::MESSAGE => "-",
 						"by" => $currentUser->name,
-	                	self::REFERENCE_ID => $currentUser->id
+	                	self::REFERENCE_ID => '1'
 					]
 	            ];
 				$this->api_cancel_billing($exam->BILLING_ID, $data_cancel_billing);
@@ -1151,7 +1151,7 @@ class PengujianController extends Controller
                     "include_pph" => $request->has('is_pph') ? true : false,
                     "created" => [
                         "by" => $currentUser->name,
-                        "reference_id" => $currentUser->id
+                        "reference_id" => '1'
                     ],
                     "config" => [
                         "kode_wapu" => "01",
@@ -1239,7 +1239,7 @@ class PengujianController extends Controller
             "details" => $details,
             "created" => [
                 "by" => $exam->user->name,
-                "reference_id" => $exam->user->id
+                "reference_id" => '1'
             ],
             "include_tax_invoice" => true,
             "bank" => [
@@ -1350,7 +1350,7 @@ class PengujianController extends Controller
 	            	"canceled" => [
 						"message" => "-",
 						"by" => $currentUser->name,
-	                	"reference_id" => $currentUser->id
+	                	"reference_id" => '1'
 					]
 	            ];
 				$this->api_cancel_billing($exam->BILLING_ID, $data_cancel_billing);

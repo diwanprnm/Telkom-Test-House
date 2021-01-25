@@ -58,7 +58,7 @@ class CheckTaxInvoiceTPN extends Command
                 if($STELSales){
                     try {
                         $INVOICE_ID = $STELSales->INVOICE_ID;
-                        $res_invoice = $client->request('GET', 'v1/invoices/'.$INVOICE_ID);
+                        $res_invoice = $client->request('GET', 'v3/invoices/'.$INVOICE_ID);
                         $invoice = json_decode($res_invoice->getBody());
                         
                         if($invoice && $invoice->status == true){
@@ -72,7 +72,7 @@ class CheckTaxInvoiceTPN extends Command
                                  */
                                 $name_file = 'faktur_stel_'.$INVOICE_ID.'.pdf';
                                 $path_file = 'stel/'.$data->id;
-                                $response = $client->request('GET', 'v1/invoices/'.$INVOICE_ID.'/taxinvoice/pdf');
+                                $response = $client->request('GET', 'v3/invoices/'.$INVOICE_ID.'/taxinvoice/pdf');
                                 $stream = (String)$response->getBody();
 
                                 $fileService = new FileService();

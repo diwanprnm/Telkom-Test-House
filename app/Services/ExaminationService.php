@@ -55,7 +55,7 @@ class ExaminationService
 	private const DATE_FORMAT_1 = 'Y-m-d H:i:s';
 	private const HTTP_ERRORS = 'http_errors';
 	private const FAKTUR_PAJAK = 'Faktur Pajak';
-	private const V1_INVOICE = 'v1/invoices/';
+	private const V1_INVOICE = 'v3/invoices/';
 	private const KUITANSI = 'Kuitansi';
 	private const MEDIA_EXAMINATION_LOC = 'examination/';
 	private const EXAMINATION_ID = 'examination_id';

@@ -59,7 +59,7 @@ class SalesController extends Controller
     private const TIMEOUT = 'timeout';
     private const USERS = 'users';
     private const USER_ID_R = 'user_id';
-    private const V1_INVOICE = 'v1/invoices/';
+    private const V1_INVOICE = 'v3/invoices/';
 
     //Databse related const
     private const AS_COMPANY_NAME = 'companies.name as company_name';
@@ -319,7 +319,7 @@ class SalesController extends Controller
         if($STELSales->BILLING_ID != null && $data != null){
             $data [] = array(
                 'name'=>"delivered",
-                'contents'=>json_encode(['by'=>$currentUser->name, "reference_id" => $currentUser->id]),
+                'contents'=>json_encode(['by'=>$currentUser->name, "reference_id" => '1']),
             );
             $this->api_upload($data,$STELSales->BILLING_ID);
         }
