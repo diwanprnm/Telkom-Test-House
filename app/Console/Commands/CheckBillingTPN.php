@@ -79,7 +79,7 @@ class CheckBillingTPN extends Command
         ]);
         try {
             $param_invoices['json'] = $data_invoices;
-            $res_invoices = $client->post("v1/invoices", $param_invoices)->getBody()->getContents();
+            $res_invoices = $client->post("v3/invoices", $param_invoices)->getBody()->getContents();
             $invoice = json_decode($res_invoices);
 
             /*get

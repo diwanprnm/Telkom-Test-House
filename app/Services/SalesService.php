@@ -55,7 +55,7 @@ class SalesService
     protected const STELS_SALES_INVOICE = 'stels_sales.invoice';
     protected const USER_COMPANIES_ID = 'users.company_id';
     protected const USER_ID = 'users.id';
-    protected const V1_INVOICE = 'v1/invoices/';
+    protected const V1_INVOICE = 'v3/invoices/';
     private const STELS_SALES_ATTACHMENT = 'stels_sales_attachment';
     
     public function getData(Request $request)

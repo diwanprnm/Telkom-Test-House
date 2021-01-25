@@ -1611,7 +1611,7 @@ class ExaminationAPIController extends AppBaseController
             $client = new Client([
 				'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
 				// Base URI is used with relative requests
-				// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v3/',
+				// 'base_uri' => 'http://37.72.172.144/telkomtesthouse/public/v1/',
 				'base_uri' => config("app.url_api_bsp"),
 				// You can set any number of default request options.
 				'timeout'  => 60.0,

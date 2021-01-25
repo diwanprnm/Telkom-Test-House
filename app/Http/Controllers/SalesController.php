@@ -319,7 +319,7 @@ class SalesController extends Controller
         if($STELSales->BILLING_ID != null && $data != null){
             $data [] = array(
                 'name'=>"delivered",
-                'contents'=>json_encode(['by'=>$currentUser->name, "reference_id" => $currentUser->id]),
+                'contents'=>json_encode(['by'=>$currentUser->name, "reference_id" => '1']),
             );
             $this->api_upload($data,$STELSales->BILLING_ID);
         }

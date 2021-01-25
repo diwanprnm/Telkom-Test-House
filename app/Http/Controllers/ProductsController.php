@@ -595,7 +595,7 @@ class ProductsController extends Controller
                         "canceled" => [
                             self::MESSAGE => "-",
                             "by" => $currentUser->name,
-                            self::REFERENCE_ID => $currentUser->id
+                            self::REFERENCE_ID => '1'
                         ]
                     ];
                     $this->api_cancel_billing($last_BILLING_ID, $data_cancel_billing);
@@ -755,7 +755,7 @@ class ProductsController extends Controller
             "details" => $details,
             self::CREATED => [
                 "by" => $currentUser->name,
-                self::REFERENCE_ID => $currentUser->id
+                self::REFERENCE_ID => '1'
             ],
             "include_tax_invoice" => true,
             "bank" => [
@@ -772,7 +772,7 @@ class ProductsController extends Controller
             "draft_id" => $PO_ID,
             self::CREATED => [
                 "by" => $currentUser->name,
-                self::REFERENCE_ID => $currentUser->id
+                self::REFERENCE_ID => '1'
             ],
             "config" => [
                 "kode_wapu" => "01",
