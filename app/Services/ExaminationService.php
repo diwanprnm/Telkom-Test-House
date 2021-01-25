@@ -94,6 +94,7 @@ class ExaminationService
 			->join('examination_types', 'examination_types.id', '=', 'examinations.examination_type_id')
 			->join('examination_labs', 'examination_labs.id', '=', 'examinations.examination_lab_id')
 			->join('devices', 'devices.id', '=', 'examinations.device_id')
+			->groupBy('examinations.id')
 			->whereNotNull('examinations.created_at')
 		;
 
