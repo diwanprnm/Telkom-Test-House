@@ -723,7 +723,7 @@ class ExaminationController extends Controller
 			if(!$request->hasFile(self::REV_LAP_UJI) && $request->has('hide_attachment_form-lap-uji') && $exam->resume_status == 0 && $exam->BILLING_ID != null){
 	                $data_upload [] = array(
 	                    'name'=>"delivered",
-	                    'contents'=>json_encode(['by'=>$currentUser->name, self::REFERENCE_ID => $currentUser->id]),
+	                    'contents'=>json_encode(['by'=>$currentUser->name, self::REFERENCE_ID => '1']),
 	                );
 
 	                $examinationService->api_upload($data_upload,$exam->BILLING_ID);
@@ -742,7 +742,7 @@ class ExaminationController extends Controller
 		            if($exam->BILLING_ID != null){
 		                $data_upload [] = array(
 		                    'name'=>"delivered",
-		                    'contents'=>json_encode(['by'=>$currentUser->name, self::REFERENCE_ID => $currentUser->id]),
+		                    'contents'=>json_encode(['by'=>$currentUser->name, self::REFERENCE_ID => '1']),
 		                );
 
 		                $examinationService->api_upload($data_upload,$exam->BILLING_ID);
@@ -896,7 +896,7 @@ class ExaminationController extends Controller
 	            	"canceled" => [
 						self::MESSAGE => "-",
 						"by" => $currentUser->name,
-                    	self::REFERENCE_ID => $currentUser->id
+                    	self::REFERENCE_ID => '1'
 					]
 				];
 				$examinationService->api_cancel_billing($exam->BILLING_ID, $data_cancel_billing);
@@ -906,7 +906,7 @@ class ExaminationController extends Controller
                 "draft_id" => $request->input(self::PO_ID),
                 "created" => [
                     "by" => $currentUser->name,
-                    self::REFERENCE_ID => $currentUser->id
+                    self::REFERENCE_ID => '1'
                 ]
             ];
 			$billing = $examinationService->api_billing($data_billing);
@@ -1922,7 +1922,7 @@ class ExaminationController extends Controller
 	            "details" => $details,
 	            "created" => [
 	                "by" => $exam->user->name,
-	                self::REFERENCE_ID => $exam->user->id
+	                self::REFERENCE_ID => '1'
 	            ],
 	            "include_tax_invoice" => true,
 	            "bank" => [
