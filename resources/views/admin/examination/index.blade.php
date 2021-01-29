@@ -211,7 +211,7 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
-											Tanggal Uji
+											Tanggal Uji Fungsi
 										</label>
 										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
 											<input type="text" placeholder="Dari Tanggal" value="{{ $after_date_exam }}" name="after_date_exam" id="after_date_exam" class="form-control"/>
@@ -243,7 +243,7 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
-											Urutkan Berdasarkan
+											Sort by :
 										</label>
 										<select id="sort_from" name="sort_from" class="cs-select cs-skin-elastic" required>
 											<option value="created_at" @if ($sort_from == 'created_at') selected @endif >Tanggal Registrasi</option>
