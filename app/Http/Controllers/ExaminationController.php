@@ -191,7 +191,8 @@ class ExaminationController extends Controller
 		$afterDateExam = $request->get('after_date_exam','');
 		$beforeDateExam = $request->get('before_date_exam','');
 		$selectedExamLab = $request->get('selected_exam_lab','');
-		$sortFrom = $sortFromQuery = $request->get('sort_from','examinations.created_at');
+		$sortFromQuery = 'examinations.updated_at';
+		$sortFrom = $request->get('sort_from','updated_at');
 		$sortBy = $request->get('sort_by','dsc');
 		$examinationLab = \App\ExaminationLab::select('id', 'name')->get();
 		$examType = ExaminationType::all();
@@ -207,9 +208,11 @@ class ExaminationController extends Controller
 		
 		$search != null ? $logService->createLog(self::SEARCH, $this::EXAMINATION, json_encode(array(self::SEARCH => $search)) ) : '';
 
-		if($sortFrom == 'created_at'){
+		if($sortFrom == 'updated_at'){
+			$sortFromQuery = 'examinations.updated_at';
+		} if($sortFrom == 'created_at'){
 			$sortFromQuery = 'examinations.created_at';
-		} if ( $sortFrom == 'device_name'){
+		} if ($sortFrom == 'device_name'){
 			$sortFromQuery = 'devices.name';
 		}
 		
