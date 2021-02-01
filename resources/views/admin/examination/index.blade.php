@@ -246,6 +246,7 @@
 											Sort by :
 										</label>
 										<select id="sort_from" name="sort_from" class="cs-select cs-skin-elastic" required>
+											<option value="updated_at" @if ($sort_from == 'updated_at') selected @endif >Tangggal Update</option>
 											<option value="created_at" @if ($sort_from == 'created_at') selected @endif >Tanggal Registrasi</option>
 											<option value="device_name" @if ($sort_from == 'device_name') selected @endif  >Nama Perangkat</option>
 										</select>

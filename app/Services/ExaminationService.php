@@ -244,16 +244,19 @@ class ExaminationService
 			$after = $request->get(self::AFTER_DATE, '');
 		}
 
-		if ($request->has('before_date_exam')){
-			$query->where('function_date', '<=', $request->get('before_date_exam'));
-			$beforeDateExam = $request->get('before_date_exam', '');
+		if ($request->has('before_date_exam') || $request->has('after_date_exam'))
+		{
+			$query->where('function_test_date_approval', '=', '1');
+			if ($request->has('before_date_exam')){
+				$query->where(DB::raw('COALESCE(`function_date`,`deal_test_date`)'), '<=', $request->get('before_date_exam'));
+				$beforeDateExam = $request->get('before_date_exam', '');
+			}
+			if ($request->has('after_date_exam')){
+				$query->where(DB::raw('COALESCE(`function_date`,`deal_test_date`)'), '>=', $request->get('after_date_exam'));
+				$afterDateExam = $request->get('after_date_exam', '');
+			}
 		}
-
-		if ($request->has('after_date_exam')){
-			$query->where('function_date', '>=', $request->get('after_date_exam'));
-			$afterDateExam = $request->get('after_date_exam', '');
-		}
-
+		
 		if ($request->has('selected_exam_lab') && $selectedExamLab != 'all'){
 			$query->where('examination_lab_id', '=', $request->get('selected_exam_lab'));
 		}
