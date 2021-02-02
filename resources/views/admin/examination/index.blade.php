@@ -206,12 +206,86 @@
 										</p>
 									</div>
 		                        </div>
-								<div class="col-md-12">
-		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
-		                                Filter
-		                            </button>
+		                    </div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Tanggal Uji Fungsi
+										</label>
+										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
+											<input type="text" placeholder="Dari Tanggal" value="{{ $after_date_exam }}" name="after_date_exam" id="after_date_exam" class="form-control"/>
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-default">
+													<em class="glyphicon glyphicon-calendar"></em>
+												</button>
+											</span>
+										</p>
+									</div>
+		                        </div>
+		                        <div class="col-md-6">
+									<div class="form-group">
+										<label>
+											&nbsp;
+										</label>
+										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
+											<input type="text" placeholder="Sampai Tanggal" value="{{ $before_date_exam }}" name="before_date_exam" id="before_date_exam" class="form-control"/>
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-default">
+													<em class="glyphicon glyphicon-calendar"></em>
+												</button>
+											</span>
+										</p>
+									</div>
 		                        </div>
 		                    </div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Sort by :
+										</label>
+										<select id="sort_from" name="sort_from" class="cs-select cs-skin-elastic" required>
+											<option value="updated_at" @if ($sort_from == 'updated_at') selected @endif >Update Terakhir</option>
+											<option value="created_at" @if ($sort_from == 'created_at') selected @endif >Tanggal Registrasi</option>
+											<option value="device_name" @if ($sort_from == 'device_name') selected @endif  >Nama Perangkat</option>
+										</select>
+										<select id="sort_by" name="sort_by" class="cs-select cs-skin-elastic" required>
+											<option value="asc" @if ($sort_by == 'asc') selected @endif  >ASC</option>
+											<option value="dsc" @if ($sort_by == 'dsc') selected @endif>DESC</option>
+										</select>
+									</div>
+		                        </div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Lab
+										</label>
+										<select id="exam_lab" name="exam_lab" class="cs-select cs-skin-elastic" required>
+											@if($selected_exam_lab == '')
+												<option value="" disabled selected>Select...</option>
+											@endif
+											@if($selected_exam_lab == 'all')
+                                                <option value="all" selected>All</option>
+											@else
+                                                <option value="all">All</option>
+                                            @endif
+											@foreach($examinationLab as $lab)
+												@if($selected_exam_lab == $lab->id)
+													<option value="{{ $lab->id }}" selected>{{ $lab->name }}</option>
+												@else
+													<option value="{{ $lab->id }}">{{ $lab->name }}</option>
+												@endif
+											@endforeach
+										</select>
+									</div>
+		                        </div>       
+		                    </div>
+							<div class="col-md-12">
+								<button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
+									Filter
+								</button>
+							</div>
 						</fieldset>
 			    	</div>
 			    </div>
@@ -511,7 +585,20 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								@php echo $data->appends(array('search' => $search,'type' => $filterType,'status' => $status,'before_date' => $before_date,'after_date' => $after_date))->links(); @endphp
+								@php
+									echo $data->appends(array(
+										'search' => $search,
+										'type' => $filterType,
+										'status' => $status,
+										'before_date' => $before_date,
+										'after_date' => $after_date,
+										'before_date_exam' => $before_date_exam,
+										'after_date_exam' => $after_date_exam,
+										'sort_by' => $sort_by,
+										'sort_from' => $sort_from,
+										'selected_exam_lab' => $selected_exam_lab
+									))->links();
+								@endphp
 							</div>
 						</div>
 					</div>
@@ -524,6 +611,12 @@
 @endsection
 
 @section('content_js')
+<style>
+	.no-padding{
+		padding-left: 0px;
+		padding-right: 0px;
+	}
+</style>
 <script src={{ asset("vendor/maskedinput/jquery.maskedinput.min.js") }}></script>
 <script src={{ asset("vendor/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js") }}></script>
 <script src={{ asset("vendor/autosize/autosize.min.js") }}></script>
@@ -602,76 +695,71 @@
 		$('#search_value').keydown(function(event) {
 	        if (event.keyCode == 13) {
 	            var baseUrl = "{{URL::to('/')}}";
-				var params = {
-					search:document.getElementById("search_value").value,
-					type:document.getElementById("type").value,
-					status:document.getElementById("status").value,
-					after_date:document.getElementById("after_date").value,
-					before_date:document.getElementById("before_date").value
-				};
+				params = getParam();
 				document.location.href = baseUrl+'/admin/examination?'+jQuery.param(params);
 	        }
 	    });
 
 	    document.getElementById("filter").onclick = function() {
             var baseUrl = "{{URL::to('/')}}";
-            var params = {};
-			var search_value = document.getElementById("search_value").value;
-            var status = document.getElementById("status");
-            var type = document.getElementById("type");
-			var statusValue = status.options[status.selectedIndex].value;
-			var typeValue = type.options[type.selectedIndex].value;
-			var before = document.getElementById("before_date");
-            var after = document.getElementById("after_date");
-			var beforeValue = before.value;
-			var afterValue = after.value;
-			
-			if (beforeValue != ''){
-				params['before_date'] = beforeValue;
-			}
-			if (afterValue != ''){
-				params['after_date'] = afterValue;
-			}
-			
-			if (statusValue != ''){
-				params['status'] = statusValue;
-			}
-			if (typeValue != ''){
-				params['type'] = typeValue;
-			}
-				params['search'] = search_value;
+			params = getParam();
 			document.location.href = baseUrl+'/admin/examination?'+jQuery.param(params);
 	    };
 
 	    document.getElementById("excel").onclick = function() {
             var baseUrl = "{{URL::to('/')}}";
-            var params = {};
-			var search_value = document.getElementById("search_value").value;
-            var status = document.getElementById("status");
-            var type = document.getElementById("type");
-			var statusValue = status.options[status.selectedIndex].value;
-			var typeValue = type.options[type.selectedIndex].value;
-			var before = document.getElementById("before_date");
-            var after = document.getElementById("after_date");
-			var beforeValue = before.value;
-			var afterValue = after.value;
-			
-			if (beforeValue != ''){
-				params['before_date'] = beforeValue;
-			}
-			if (afterValue != ''){
-				params['after_date'] = afterValue;
-			}
-			
-			if (statusValue != ''){
-				params['status'] = statusValue;
-			}
-			if (typeValue != ''){
-				params['type'] = typeValue;
-			}
-				params['search'] = search_value;
+			params = getParam();
 			document.location.href = baseUrl+'/examination/excel?'+jQuery.param(params);
 	    };
 	});
+
+	function getParam() {
+		var params = {};
+		var search_value = document.getElementById("search_value").value;
+		var beforeValue = document.getElementById("before_date").value;
+		var afterValue = document.getElementById("after_date").value;
+		var beforeDateExam = document.getElementById("before_date_exam").value;
+		var afterDateExam = document.getElementById("after_date_exam").value;
+		var sortFrom = document.getElementById("sort_from").value;
+		var sortBy = document.getElementById("sort_by").value;
+		var examLab = document.getElementById("exam_lab");
+		var status = document.getElementById("status");
+		var type = document.getElementById("type");
+		var selectedExamLab = examLab.options[examLab.selectedIndex].value;
+		var statusValue = status.options[status.selectedIndex].value;
+		var typeValue = type.options[type.selectedIndex].value;
+		
+		if (search_value != ''){
+			params['search'] = search_value;
+		}
+		if (beforeValue != ''){
+			params['before_date'] = beforeValue;
+		}
+		if (afterValue != ''){
+			params['after_date'] = afterValue;
+		}
+		if (beforeDateExam != ''){
+			params['before_date_exam'] = beforeDateExam;
+		}
+		if (afterDateExam != ''){
+			params['after_date_exam'] = afterDateExam;
+		}
+		if (sortFrom != ''){
+			params['sort_from'] = sortFrom;
+		}
+		if (sortBy != ''){
+			params['sort_by'] = sortBy;
+		}
+		if (selectedExamLab != ''){
+			params['selected_exam_lab'] = selectedExamLab;
+		}
+		if (statusValue != ''){
+			params['status'] = statusValue;
+		}
+		if (typeValue != ''){
+			params['type'] = typeValue;
+		}
+		return params;
+	}
 </script>
 @endsection

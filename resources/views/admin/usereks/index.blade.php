@@ -177,7 +177,11 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								@php echo $data->appends(array('search' => $search,'is_active' => $status))->links(); @endphp
+								@php echo $data->appends(array(
+										'search' => $search,
+										'is_active' => $status,
+										'company' => $filterCompany
+									))->links(); @endphp
 							</div>
 						</div>
 					</div>
