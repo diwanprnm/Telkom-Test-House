@@ -854,15 +854,8 @@ class ExaminationService
 	public function send_revision($exam, $spbRevisionNumber)
 	{
 		//get user (name and email)
-		$user = DB::table('companies')
-			->select(
-				'users.name',
-				'users.email'
-				)
-			->join('users', 'users.company_id', '=', 'companies.id')
-			->where('companies.id', '=' , $exam->company_id)
-			->first()
-		;
+        $user = User::findOrFail($exam->created_by);
+
 		
 		//format data for email
 		$dataEmail = array(

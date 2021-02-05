@@ -539,7 +539,7 @@ class ExaminationController extends Controller
 				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Tinjauan Pustaka",$request->input(self::KETERANGAN));
 			}
         }
-		if ($request->has(self::SPB_STATUS)){
+		if ($request->has(self::SPB_STATUS) && !$request->has(self::PO_ID)){
 			$examinationService->insertAttachment($request,$exam->id,$currentUser->id,self::SPB_FILE,'spb_','SPB');
 			$status = $request->input(self::SPB_STATUS);
             $exam->spb_status = $status;
