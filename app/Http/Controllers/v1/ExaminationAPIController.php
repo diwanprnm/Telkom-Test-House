@@ -975,6 +975,13 @@ class ExaminationAPIController extends AppBaseController
 		}else{
 			$id_user = 1;
 		}
+		$examination = Examination::where('id', $param->id)->first();
+		
+		// Modified request if is_loc_test = 1
+		if ($param->location = 2 && $examination->is_loc_test = 1){
+			$param->location = 1;
+		}
+
     	if(!empty($param->id) && !empty($param->date) && !empty($param->location)){
 			$equip_hist = new EquipmentHistory;
 			$equip_hist->id = Uuid::uuid4();
@@ -988,7 +995,6 @@ class ExaminationAPIController extends AppBaseController
 
 			if($equip_hist->save()){
 				if($param->location == 2){$examination_status = 1;}else{$examination_status = 0;}
-				$examination = Examination::where('id', $param->id)->first();
 				$examination->examination_status = $examination_status;
 				$examination->location = $param->location;
 				$examination->save();
