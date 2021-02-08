@@ -6,6 +6,8 @@
 	$currentUser = Auth::user();
 	$is_admin_mail = $currentUser['email'];
 	$is_super = $currentUser['id'];
+	$type_of_test = $data['is_loc_test'] ? "Technical Meeting" : "Uji Fungsi";
+	$type_of_test_result = $data['is_loc_test'] ? "Sesuai" : "Memenuhi";
 @endphp
 
 <input type="hide" id="hide_exam_id" name="hide_exam_id">
@@ -681,7 +683,7 @@
 									<table class="table table-bordered"><caption></caption>
 										<thead>
 											<tr>
-												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal Uji Fungsi</th>
+												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal {{$type_of_test}}</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -718,7 +720,7 @@
 									<div class="col-md-6 center">
 										<div class="form-group">
 											<h4 style="display:inline">
-												Jadwal FIX Uji Fungsi : 
+												Jadwal FIX {{$type_of_test}} : 
 												@if($data->function_date != null)
 													@php echo $data->function_date; @endphp
 												@else
@@ -774,13 +776,13 @@
 								<div class="col-md-12 center">
 									<div class="form-group">
 										<h4 style="display:inline">
-											Hasil Uji Fungsi
+											Hasil {{$type_of_test}}
 										</h4>
 										<h4 style="display:inline">
 											: @if($data->function_test_TE == 1)
-												Memenuhi
+												{{$type_of_test_result}}
 											@elseif($data->function_test_TE == 2)
-												Tidak Memenuhi
+												Tidak {{$type_of_test_result}}
 											@elseif($data->function_test_TE == 3)
 												dll
 											@else
@@ -790,11 +792,11 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<a href="{{URL::to('/cetakUjiFungsi/'.$data->id)}}" target="_blank"> Buatkan Laporan Uji Fungsi</a>
+									<a href="{{URL::to('/cetakUjiFungsi/'.$data->id)}}" target="_blank"> Buatkan Laporan {{$type_of_test}}</a>
 								</div>
 								<div class="form-group">
 									<label>
-										Hasil Uji Fungsi File *
+										Hasil {{$type_of_test}} File *
 									</label>
 									<input type="file" name="function_file" id="function_file" class="form-control" accept="application/pdf"/>
 								</div>
@@ -803,7 +805,7 @@
 									@foreach($data->media as $item)
 										@if($item->name == 'Laporan Hasil Uji Fungsi' && $item->attachment != '')
 											@php $function_attach = $item->attachment; @endphp
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil Uji Fungsi "@php echo $function_attach; @endphp"</a>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil {{$type_of_test}} "@php echo $function_attach; @endphp"</a>
 										@endif
 									@endforeach
 									<input type="hidden" id="function_name" value="@php echo $function_attach; @endphp">
@@ -916,7 +918,7 @@
 									<table class="table table-bordered"><caption></caption>
 										<thead>
 											<tr>
-												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal Uji Fungsi</th>
+												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal {{$type_of_test}}</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -953,7 +955,7 @@
 									<div class="col-md-6 center">
 										<div class="form-group">
 											<h4 style="display:inline">
-												Jadwal FIX Uji Fungsi : 
+												Jadwal FIX {{$type_of_test}} : 
 												@if($data->function_date != null)
 													@php echo $data->function_date; @endphp
 												@else
@@ -1001,13 +1003,13 @@
 								<div class="col-md-12 center">
 									<div class="form-group">
 										<h4 style="display:inline">
-											Hasil Uji Fungsi
+											Hasil {{$type_of_test}}
 										</h4>
 										<h4 style="display:inline">
 											: @if($data->function_test_TE == 1)
-												Memenuhi
+												{{$type_of_test_result}}
 											@elseif($data->function_test_TE == 2)
-												Tidak Memenuhi
+												Tidak {{$type_of_test_result}}
 											@elseif($data->function_test_TE == 3)
 												dll
 											@else
@@ -1018,7 +1020,7 @@
 								</div>
 								<div class="form-group">
 									<label>
-										Hasil Uji Fungsi File *
+										Hasil {{$type_of_test}} File *
 									</label>
 								</div>
 								<div class="form-group">
@@ -1026,7 +1028,7 @@
 									@foreach($data->media as $item)
 										@if($item->name == 'Laporan Hasil Uji Fungsi' && $item->attachment != '')
 											@php $function_attach = $item->attachment; @endphp
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil Uji Fungsi "@php echo $function_attach; @endphp"</a>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil {{$type_of_test}} "@php echo $function_attach; @endphp"</a>
 										@endif
 									@endforeach
 								</div>
@@ -1086,7 +1088,7 @@
 									<table class="table table-bordered"><caption></caption>
 										<thead>
 											<tr>
-												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal Uji Fungsi</th>
+												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal {{$type_of_test}}</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -1123,7 +1125,7 @@
 									<div class="col-md-6 center">
 										<div class="form-group">
 											<h4 style="display:inline">
-												Jadwal FIX Uji Fungsi : 
+												Jadwal FIX {{$type_of_test}} :
 												@if($data->function_date != null)
 													@php echo $data->function_date; @endphp
 												@else
@@ -1171,13 +1173,13 @@
 								<div class="col-md-12 center">
 									<div class="form-group">
 										<h4 style="display:inline">
-											Hasil Uji Fungsi
+											Hasil {{$type_of_test}}
 										</h4>
 										<h4 style="display:inline">
 											: @if($data->function_test_TE == 1)
-												Memenuhi
+												{{$type_of_test_result}}
 											@elseif($data->function_test_TE == 2)
-												Tidak Memenuhi
+												Tidak {{$type_of_test_result}}
 											@elseif($data->function_test_TE == 3)
 												dll
 											@else
@@ -1188,7 +1190,7 @@
 								</div>
 								<div class="form-group">
 									<label>
-										Hasil Uji Fungsi File *
+										Hasil {{$type_of_test}} File *
 									</label>
 								</div>
 								<div class="form-group">
@@ -1196,7 +1198,7 @@
 									@foreach($data->media as $item)
 										@if($item->name == 'Laporan Hasil Uji Fungsi' && $item->attachment != '')
 											@php $function_attach = $item->attachment; @endphp
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil Uji Fungsi "@php echo $function_attach; @endphp"</a>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil {{$type_of_test}} "@php echo $function_attach; @endphp"</a>
 										@endif
 									@endforeach
 								</div>
