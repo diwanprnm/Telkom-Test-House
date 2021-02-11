@@ -739,6 +739,7 @@
 								@endif
 							</div>							
 
+							@if (!$data['is_loc_test'])
 							<div class="col-md-12">
 								<div class="form-group">
 									<label for="form-field-select-2">
@@ -753,6 +754,7 @@
 									</select>
 								</div>
 							</div>
+							
 								@if($data->function_date != null)
 									@php $in_equip_date = $data->function_date; @endphp
 								@elseif($data->function_date == null && $data->urel_test_date != null)
@@ -762,7 +764,9 @@
 								@else
 									@php $in_equip_date = $data->cust_test_date; @endphp
 								@endif
+
 							<input type="hidden" id="hide_count_equipment_form-function-test" value="{{ count($data->equipment) }}">
+									
 								@if(count($data->equipment)==0 && $data->function_test_date_approval == 1)
 								<div class="col-md-12">
 									<div class="form-group">
@@ -770,6 +774,8 @@
 									</div>									
 								</div>									
 								@endif
+							@endif
+
 							<input type="hidden" id="hide_test_TE_form-function-test" value="{{ $data->function_test_TE }}">
 							<div class="col-md-12">
 								@if($data->function_test_TE != 0 && $data->function_test_date_approval == 1)
@@ -816,6 +822,8 @@
 								</div>
 								@endif
 							</div>
+
+							@if (!$data['is_loc_test'])
 							@if($data->function_test_TE == 1 && $data->function_test_date_approval == 1)
 								<div class="col-md-12">
 									<div class="form-group">
@@ -843,6 +851,8 @@
 									</div>
 								</div>
 							@endif
+							@endif
+
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
