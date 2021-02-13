@@ -376,7 +376,12 @@ class ExaminationController extends Controller
         }
 		if ($request->has(self::FUNCTION_STATUS)){
 			$examinationService->insertAttachment($request,$exam->id,$currentUser->id,self::BARANG_FILE,'form_penerimaan_barang_','Bukti Penerimaan & Pengeluaran Perangkat Uji1');
+			if($exam->is_loc_test){
+				$examinationService->insertAttachment($request,$exam->id,$currentUser->id,self::FUNCTION_FILE,'function_','Laporan Hasil Technical Meeting');
+			}else{
 			$examinationService->insertAttachment($request,$exam->id,$currentUser->id,self::FUNCTION_FILE,'function_','Laporan Hasil Uji Fungsi');
+			}
+			
 			$status = $request->input(self::FUNCTION_STATUS);
 			if($exam->function_date != null){
 				$exam->contract_date = $exam->function_date;
