@@ -994,14 +994,16 @@ class ExaminationAPIController extends AppBaseController
 			$equip_hist->action_date = $param->date;
 
 			if($equip_hist->save()){
-				if($param->location == 2){$examination_status = 1;}else{$examination_status = 0;}
+				if($param->location == 2 || 1){$examination_status = 1;}else{$examination_status = 0;}
 				$examination->examination_status = $examination_status;
 				$examination->location = $param->location;
 				$examination->save();
 				
 				$equip = Equipment::where("examination_id",$param->id)->first();
-				$equip->location = $param->location;
-				$equip->save();
+				if($equip){
+					$equip->location = $param->location;
+					$equip->save();
+				}
 				if($param->location == 3){
 					$admins = AdminRole::where('examination_status',1)->get()->toArray();
 					foreach ($admins as $admin) {  
@@ -1035,8 +1037,6 @@ class ExaminationAPIController extends AppBaseController
 		                event(new Notification($data));
 	            	}
 				}
-				
-		        event(new Notification($data));
 				return $this->sendResponse($equip_hist, 'History Found');
 			}else{
 				return $this->sendError('Failed to Input History');
