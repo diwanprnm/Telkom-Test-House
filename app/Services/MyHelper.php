@@ -12,6 +12,14 @@ class MyHelper
         return isset($string)? $string : $defaultValue;
     }
 
+    public static function setDefault($string, $defaultValue)
+    {
+        if (isset($string) && $string){
+            return $string;
+        }
+        return $defaultValue;
+    }
+
     public static function getHeaderOctet($fileName = null)
     {
         $header = self::getHeader($fileName);

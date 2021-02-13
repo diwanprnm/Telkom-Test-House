@@ -8,6 +8,7 @@
 	$is_super = $currentUser['id'];
 	$type_of_test = $data['is_loc_test'] ? "Technical Meeting" : "Uji Fungsi";
 	$type_of_test_result = $data['is_loc_test'] ? "Sesuai" : "Memenuhi";
+	$url_generate_test = $data['is_loc_test'] ? "/cetakTechnicalMeeting/" : "/cetakUjiFungsi/" ;
 @endphp
 
 <input type="hide" id="hide_exam_id" name="hide_exam_id">
@@ -811,7 +812,7 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<a href="{{URL::to('/cetakUjiFungsi/'.$data->id)}}" target="_blank"> Buatkan Laporan {{$type_of_test}}</a>
+									<a href="{{URL::to($url_generate_test.$data->id)}}" target="_blank"> Buatkan Laporan {{$type_of_test}}</a>
 								</div>
 								<div class="form-group">
 									<label>
