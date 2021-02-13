@@ -443,6 +443,7 @@
 									<label for="form-field-select-2">
 										Lokasi Pengujian *
 									</label>
+									<input id="hide_is_loc_test" type="hidden" value="{{ $data->is_loc_test }}">
 									<select name="is_loc_test" class="cs-select cs-skin-elastic" required>
 										@if($data->is_loc_test == 1)
 											<option value="0">Uji Lab Telkom</option>
@@ -809,9 +810,9 @@
 								<div class="form-group">
 									@php $function_attach = ''; @endphp
 									@foreach($data->media as $item)
-										@if($item->name == 'Laporan Hasil Uji Fungsi' && $item->attachment != '')
+										@if($item->name == 'Laporan Hasil '.$type_of_test && $item->attachment != '')
 											@php $function_attach = $item->attachment; @endphp
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil {{$type_of_test}} "@php echo $function_attach; @endphp"</a>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil '.$type_of_test)}}"> Download Hasil {{$type_of_test}} "@php echo $function_attach; @endphp"</a>
 										@endif
 									@endforeach
 									<input type="hidden" id="function_name" value="@php echo $function_attach; @endphp">
@@ -4515,19 +4516,37 @@
 			}			
 		}else{
 			if(document.getElementById('hide_approval_form-function-test').value == 0){
-				alert("Belum Ada Tanggal Uji Fungsi FIX!");
-				return false;
+				if(document.getElementById('hide_is_loc_test').value == 1){
+					alert("Belum Ada Tanggal Technical Meeting FIX!");
+					return false;
+				}else{
+					alert("Belum Ada Tanggal Uji Fungsi FIX!");
+					return false;
+				}
 			}
-			if(document.getElementById('hide_count_equipment_form-function-test').value == 0){
-				alert("Uji Fungsi Belum dilakukan, Masukkan Barang terlebih dahulu!");
-				return false;
+			if(document.getElementById('hide_is_loc_test').value == 0){
+				if(document.getElementById('hide_count_equipment_form-function-test').value == 0){
+					alert("Uji Fungsi Belum dilakukan, Masukkan Barang terlebih dahulu!");
+					return false;
+				}
 			}
 			if(document.getElementById('hide_test_TE_form-function-test').value == 0){
-				alert("Belum Ada Hasil Uji Fungsi!");
-				return false;
+				if(document.getElementById('hide_is_loc_test').value == 1){
+					alert("Belum Ada Hasil Technical Meeting!");
+					return false;
+				}else{
+					alert("Belum Ada Hasil Uji Fungsi!");
+					return false;
+				}
 			}
 			if(function_file.value == '' && function_name.value == ''){
-				alert("File Laporan Hasil Uji Fungsi belum diunggah");$('#function_file').focus();return false;
+				if(document.getElementById('hide_is_loc_test').value == 1){
+					alert("File Laporan Hasil Technical Meeting belum diunggah");$('#function_file').focus();return false;
+					return false;
+				}else{
+					alert("File Laporan Hasil Uji Fungsi belum diunggah");$('#function_file').focus();return false;
+					return false;
+				}
 			}
 			if(barang_file.value == '' && barang_name.value == ''){
 				alert("File Bukti Penerimaan & Pengeluaran Perangkat Uji belum diunggah");$('#barang_file').focus();return false;
