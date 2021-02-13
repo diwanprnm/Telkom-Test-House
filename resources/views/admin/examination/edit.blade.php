@@ -367,7 +367,7 @@
 													</td>
 												</tr>
 												<tr>
-													<td>Nomor Form Uji:</td>
+													<td>Nomor Registrasi:</td>
 													<td>
 														{{ $data->function_test_NO }}
 													</td>
@@ -377,6 +377,18 @@
 													<td>
 														@if($data->examinationLab)
 															{{ $data->examinationLab->name }}
+														@endif
+													</td>
+												</tr>
+												<tr>
+													<td>Tanggal Uji Fungsi:</td>
+													<td>
+														@if($data->function_test_date_approval)
+															@if($data->function_date != null)
+																{{ $data->function_date }}
+															@else
+																{{ $data->deal_test_date }}
+															@endif
 														@endif
 													</td>
 												</tr>

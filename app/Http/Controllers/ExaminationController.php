@@ -539,7 +539,7 @@ class ExaminationController extends Controller
 				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Tinjauan Pustaka",$request->input(self::KETERANGAN));
 			}
         }
-		if ($request->has(self::SPB_STATUS) && !$request->has(self::PO_ID)){
+		if ($request->has(self::SPB_STATUS)){
 			$examinationService->insertAttachment($request,$exam->id,$currentUser->id,self::SPB_FILE,'spb_','SPB');
 			$status = $request->input(self::SPB_STATUS);
             $exam->spb_status = $status;
@@ -563,8 +563,7 @@ class ExaminationController extends Controller
 	            $notification_id = $notificationService->make($data);
 			    $data['id'] = $notification_id;
 			    // event(new Notification($data));
-
-				$examinationService->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.spb", "Penerbitan Surat Pemberitahuan Biaya (SPB) untuk ".$exam->function_test_NO,$path_file."/".$attach_name,$request->input('spb_number'),$exam->id);
+				$exam->PO_ID ? $examinationService->send_revision($exam, $request->input('spb_number')) : $examinationService->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.spb", "Penerbitan Surat Pemberitahuan Biaya (SPB) untuk ".$exam->function_test_NO,$path_file."/".$attach_name,$request->input('spb_number'),$exam->id);
 			}else if($status == -1){
 				$exam->price = str_replace(".",'',$request->input('exam_price'));
 				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"SPB",$request->input(self::KETERANGAN));
@@ -912,7 +911,7 @@ class ExaminationController extends Controller
 				Session::flash(self::ERROR, 'SPB Already Paid');
                 return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
 			}
-			$examinationService->send_revision( $exam, $request->input('spb_number') );
+			
 			if($exam->BILLING_ID){
 				$data_cancel_billing = [
 	            	"canceled" => [
