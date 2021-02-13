@@ -2106,6 +2106,17 @@ class ExaminationController extends Controller
 		$res_manager_urel = $client->get('user/getManagerLabInfo?groupId=MU')->getBody();
 		$manager_urel = json_decode($res_manager_urel);
 
+		$tgl_uji_fungsi = '-';
+		if($data->function_test_date_approval == 1){
+			if($data->function_date != null){
+				if( strpos( $data->function_date, "/" ) !== false ) {$tgl_uji_fungsi = urlencode(urlencode(date(self::J_F_Y, strtotime($data->function_date))));}
+					else{$tgl_uji_fungsi = date(self::J_F_Y, strtotime($data->function_date))?: '-';}
+			}else{
+				if( strpos( $data->deal_test_date, "/" ) !== false ) {$tgl_uji_fungsi = urlencode(urlencode(date(self::J_F_Y, strtotime($data->deal_test_date))));}
+					else{$tgl_uji_fungsi = date(self::J_F_Y, strtotime($data->deal_test_date))?: '-';}
+			}
+		}
+
 		$PDFData = array(
 			'deviceName' => \App\Services\MyHelper::setDefault($data->device['name'], '-'),
 			'deviceMark' => \App\Services\MyHelper::setDefault($data->device['mark'], '-'),
@@ -2116,7 +2127,7 @@ class ExaminationController extends Controller
 			'examinationFunctionTestPIC' => \App\Services\MyHelper::setDefault($data['function_test_PIC'], '-'),
 			'companyAddress' => \App\Services\MyHelper::setDefault($data->company['address'], '-'),
 			'companyCity' => \App\Services\MyHelper::setDefault($data->company['city'], '-'),
-			'examinationFunctionDate' => \App\Services\MyHelper::setDefault($data['function_date'], '-'),
+			'examinationFunctionDate' => \App\Services\MyHelper::setDefault($tgl_uji_fungsi, '-'),
 			'userName' => \App\Services\MyHelper::setDefault($user['name'], '-'),
 			'adminName' => Auth::user()->name,
 			'managerLab' => \App\Services\MyHelper::setDefault($manager_lab->data[0]->name, '-'),

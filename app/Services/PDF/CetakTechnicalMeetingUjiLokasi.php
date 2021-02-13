@@ -43,7 +43,7 @@ class CetakTechnicalMeetingUjiLokasi
         // Table body
         $pdf->SetFont('helvetica','',10);
         $pdf->SetWidths(array(20,50,40,40,40));
-        $pdf->Row(array('1.', $data['deviceName'], $data['deviceMark'].'/'.$data['deviceModel'], $data['deviceCapacity'], $data['deviceTestReference']  ));
+        $pdf->Row(array('1', $data['deviceName'], $data['deviceMark'].'/'.$data['deviceModel'], $data['deviceCapacity'], $data['deviceTestReference']  ));
 
 
         // DATA SHEET FORM UJI - SECTION
@@ -56,10 +56,10 @@ class CetakTechnicalMeetingUjiLokasi
 
 
         // KESEPAKATAN TEST ENGINER - SECTION
-        $pdf->Cell(190,10,'C. Kesepakatan Test Engineer, Lokasi Uji, dan Jadwal Uji'); $pdf->ln(8);
+        $pdf->Cell(190,10,'C. Kesepakatan Test Engineer dan Lokasi Uji'); $pdf->ln(8);
         //table head
 		$pdf->SetFont('helvetica','B',10);
-        $pdf->Cell(55,7,'Test Enginer.',1,0,'C');
+        $pdf->Cell(55,7,'Test Engineer',1,0,'C');
         $pdf->Cell(55,7,'Uji Lokasi',1,0,'C');
         $pdf->Ln(7);
         //table body
@@ -87,7 +87,7 @@ class CetakTechnicalMeetingUjiLokasi
         $pdf->Ln(25); 
         $pdf->Cell(5,7,''); $pdf->Cell(60,7,'( '.$data['userName'].' )',0,0,'C'); $pdf->Cell(60,7,'( '.$data['examinationFunctionTestPIC'].' )',0,0,'C'); $pdf->Cell(60,7,'( '.$data['adminName'].' )',0,0,'C');
         $pdf->Ln(9);
-        $pdf->Cell(65,7,''); $pdf->Cell(120,7,'Mengetahui',0,0,'C'); $pdf->Ln(5);
+        $pdf->Cell(65,7,''); $pdf->Cell(120,7,'Mengetahui,',0,0,'C'); $pdf->Ln(5);
         $pdf->Cell(65,7,''); $pdf->Cell(60,7,'Manager Laboratorium QA',0,0,'C'); $pdf->Cell(60,7,'Manager UREL',0,0,'C');
         $pdf->Ln(25);
         $pdf->Cell(65,7,''); $pdf->Cell(60,7,'( '.$data['managerLab'].' )',0,0,'C'); $pdf->Cell(60,7,'( '.$data['managerUrel'].' )',0,0,'C'); $pdf->Ln(7);
