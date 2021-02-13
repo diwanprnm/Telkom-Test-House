@@ -2108,20 +2108,20 @@ class ExaminationController extends Controller
 		$manager_urel = json_decode($res_manager_urel);
 
 		$PDFData = array(
-			'deviceName' => \App\Services\Myhelper::setDefault($data->device['name'], '-'),
-			'deviceMark' => \App\Services\Myhelper::setDefault($data->device['mark'], '-'),
-			'deviceModel' => \App\Services\Myhelper::setDefault($data->device['model'], '-'),
-			'deviceCapacity' => \App\Services\Myhelper::setDefault($data->device['capacity'], '-'),
-			'deviceTestReference' => \App\Services\Myhelper::setDefault($data->device['test_reference'], '-'),
-			'examinationFunctionTestTE' => \App\Services\Myhelper::setDefault($data['function_test_TE'], '0'),
-			'examinationFunctionTestPIC' => \App\Services\Myhelper::setDefault($data['function_test_PIC'], '-'),
-			'companyAddress' => \App\Services\Myhelper::setDefault($data->company['address'], '-'),
-			'companyCity' => \App\Services\Myhelper::setDefault($data->company['city'], '-'),
-			'examinationFunctionDate' => \App\Services\Myhelper::setDefault($data['function_date'], '-'),
-			'userName' => \App\Services\Myhelper::setDefault($user['name'], '-'),
+			'deviceName' => \App\Services\MyHelper::setDefault($data->device['name'], '-'),
+			'deviceMark' => \App\Services\MyHelper::setDefault($data->device['mark'], '-'),
+			'deviceModel' => \App\Services\MyHelper::setDefault($data->device['model'], '-'),
+			'deviceCapacity' => \App\Services\MyHelper::setDefault($data->device['capacity'], '-'),
+			'deviceTestReference' => \App\Services\MyHelper::setDefault($data->device['test_reference'], '-'),
+			'examinationFunctionTestTE' => \App\Services\MyHelper::setDefault($data['function_test_TE'], '0'),
+			'examinationFunctionTestPIC' => \App\Services\MyHelper::setDefault($data['function_test_PIC'], '-'),
+			'companyAddress' => \App\Services\MyHelper::setDefault($data->company['address'], '-'),
+			'companyCity' => \App\Services\MyHelper::setDefault($data->company['city'], '-'),
+			'examinationFunctionDate' => \App\Services\MyHelper::setDefault($data['function_date'], '-'),
+			'userName' => \App\Services\MyHelper::setDefault($user['name'], '-'),
 			'adminName' => Auth::user()->name,
-			'managerLab' => \App\Services\Myhelper::setDefault($manager_lab->data[0]->name, '-'),
-			'managerUrel' => \App\Services\Myhelper::setDefault($manager_urel->data[0]->name, '-')
+			'managerLab' => \App\Services\MyHelper::setDefault($manager_lab->data[0]->name, '-'),
+			'managerUrel' => \App\Services\MyHelper::setDefault($manager_urel->data[0]->name, '-')
 		);
 
 		$PDF = new \App\Services\PDF\PDFService();
