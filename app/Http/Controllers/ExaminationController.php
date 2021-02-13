@@ -2083,6 +2083,51 @@ class ExaminationController extends Controller
 		$PDF->cetakUjiFungsi($PDFData);
     }
 	
+	function cetakTechnicalMeeting($id)
+    {
+		$client = new Client([
+			self::HEADERS => [self::CONTENT_TYPE => self::APPLICATION_HEADER],
+			self::BASE_URI => config(self::APP_URI_API_BSP),
+			self::TIMEOUT  => 60.0,
+		]);
+	
+		$data = Examination::where('id','=',$id)
+			->with(self::COMPANY)
+			->with(self::DEVICE)
+			->with(self::EQUIPMENT)
+			->with(self::EXAMINATION_LAB)
+			->first()
+		;
+
+		$user = User::where('id', '=', $data['created_by'])->first();
+
+		$res_manager_lab = $client->get('user/getManagerLabInfo?labCode='.$data->examinationLab->lab_code)->getBody();
+		$manager_lab = json_decode($res_manager_lab);
+		
+		$res_manager_urel = $client->get('user/getManagerLabInfo?groupId=MU')->getBody();
+		$manager_urel = json_decode($res_manager_urel);
+
+		$PDFData = array(
+			'deviceName' => \App\Services\Myhelper::setDefault($data->device['name'], '-'),
+			'deviceMark' => \App\Services\Myhelper::setDefault($data->device['mark'], '-'),
+			'deviceModel' => \App\Services\Myhelper::setDefault($data->device['model'], '-'),
+			'deviceCapacity' => \App\Services\Myhelper::setDefault($data->device['capacity'], '-'),
+			'deviceTestReference' => \App\Services\Myhelper::setDefault($data->device['test_reference'], '-'),
+			'examinationFunctionTestTE' => \App\Services\Myhelper::setDefault($data['function_test_TE'], '0'),
+			'examinationFunctionTestPIC' => \App\Services\Myhelper::setDefault($data['function_test_PIC'], '-'),
+			'companyAddress' => \App\Services\Myhelper::setDefault($data->company['address'], '-'),
+			'companyCity' => \App\Services\Myhelper::setDefault($data->company['city'], '-'),
+			'examinationFunctionDate' => \App\Services\Myhelper::setDefault($data['function_date'], '-'),
+			'userName' => \App\Services\Myhelper::setDefault($user['name'], '-'),
+			'adminName' => Auth::user()->name,
+			'managerLab' => \App\Services\Myhelper::setDefault($manager_lab->data[0]->name, '-'),
+			'managerUrel' => \App\Services\Myhelper::setDefault($manager_urel->data[0]->name, '-')
+		);
+
+		$PDF = new \App\Services\PDF\PDFService();
+		return $PDF->cetakTechnicalMeetingUjiLokasi($PDFData);
+	}
+	
 	function cetakFormBarang($id, Request $request)
     {
 		$examinationService = new ExaminationService();
