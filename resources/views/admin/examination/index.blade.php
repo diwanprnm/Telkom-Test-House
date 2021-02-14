@@ -549,6 +549,18 @@
 																@endif
 															</td>
 														</tr>
+														<tr>
+															<td>Tanggal Uji Fungsi:</td>
+															<td>
+																@if($item->function_test_date_approval)
+																	@if($item->function_date != null)
+																		{{ $item->function_date }}
+																	@else
+																		{{ $item->deal_test_date }}
+																	@endif
+																@endif
+															</td>
+														</tr>
 													</tbody>
 												</table>
 											</div>

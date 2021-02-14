@@ -38,16 +38,6 @@
                                         </address>
                                         <abbr title="Customer Service"><strong>{{ trans('translate.service_company_cs') }}:</strong></abbr><br> (+62) 812-2483-7500<br>
                                         <abbr title="Email Address"><strong>{{ trans('translate.service_company_email') }}:</strong></abbr> urelddstelkom@gmail.com<br><br>
-                                        <address>
-                                            <strong>{{ trans('translate.bank_account') }}:</strong><br>
-                                            BANK MANDIRI
-                                            <br>
-                                            KCP KAMPUS TELKOM BANDUNG
-                                            <br>
-                                            131-0096022712
-                                            <br>
-                                            a/n Divisi RisTI TELKOM
-                                        </address>
                                     </div>
 
                                     <div class="row socials">

@@ -6,6 +6,9 @@
 	$currentUser = Auth::user();
 	$is_admin_mail = $currentUser['email'];
 	$is_super = $currentUser['id'];
+	$type_of_test = $data['is_loc_test'] ? "Technical Meeting" : "Uji Fungsi";
+	$type_of_test_result = $data['is_loc_test'] ? "Sesuai" : "Memenuhi";
+	$url_generate_test = $data['is_loc_test'] ? "/cetakTechnicalMeeting/" : "/cetakUjiFungsi/" ;
 @endphp
 
 <input type="hide" id="hide_exam_id" name="hide_exam_id">
@@ -365,7 +368,7 @@
 													</td>
 												</tr>
 												<tr>
-													<td>Nomor Form Uji:</td>
+													<td>Nomor Registrasi:</td>
 													<td>
 														{{ $data->function_test_NO }}
 													</td>
@@ -375,6 +378,18 @@
 													<td>
 														@if($data->examinationLab)
 															{{ $data->examinationLab->name }}
+														@endif
+													</td>
+												</tr>
+												<tr>
+													<td>Tanggal Uji Fungsi:</td>
+													<td>
+														@if($data->function_test_date_approval)
+															@if($data->function_date != null)
+																{{ $data->function_date }}
+															@else
+																{{ $data->deal_test_date }}
+															@endif
 														@endif
 													</td>
 												</tr>
@@ -441,6 +456,7 @@
 									<label for="form-field-select-2">
 										Lokasi Pengujian *
 									</label>
+									<input id="hide_is_loc_test" type="hidden" value="{{ $data->is_loc_test }}">
 									<select name="is_loc_test" class="cs-select cs-skin-elastic" required>
 										@if($data->is_loc_test == 1)
 											<option value="0">Uji Lab Telkom</option>
@@ -681,7 +697,7 @@
 									<table class="table table-bordered"><caption></caption>
 										<thead>
 											<tr>
-												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal Uji Fungsi</th>
+												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal {{$type_of_test}}</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -718,7 +734,7 @@
 									<div class="col-md-6 center">
 										<div class="form-group">
 											<h4 style="display:inline">
-												Jadwal FIX Uji Fungsi : 
+												Jadwal FIX {{$type_of_test}} : 
 												@if($data->function_date != null)
 													@php echo $data->function_date; @endphp
 												@else
@@ -737,6 +753,7 @@
 								@endif
 							</div>							
 
+							@if (!$data['is_loc_test'])
 							<div class="col-md-12">
 								<div class="form-group">
 									<label for="form-field-select-2">
@@ -751,6 +768,7 @@
 									</select>
 								</div>
 							</div>
+							
 								@if($data->function_date != null)
 									@php $in_equip_date = $data->function_date; @endphp
 								@elseif($data->function_date == null && $data->urel_test_date != null)
@@ -760,7 +778,9 @@
 								@else
 									@php $in_equip_date = $data->cust_test_date; @endphp
 								@endif
+
 							<input type="hidden" id="hide_count_equipment_form-function-test" value="{{ count($data->equipment) }}">
+									
 								@if(count($data->equipment)==0 && $data->function_test_date_approval == 1)
 								<div class="col-md-12">
 									<div class="form-group">
@@ -768,19 +788,21 @@
 									</div>									
 								</div>									
 								@endif
+							@endif
+
 							<input type="hidden" id="hide_test_TE_form-function-test" value="{{ $data->function_test_TE }}">
 							<div class="col-md-12">
 								@if($data->function_test_TE != 0 && $data->function_test_date_approval == 1)
 								<div class="col-md-12 center">
 									<div class="form-group">
 										<h4 style="display:inline">
-											Hasil Uji Fungsi
+											Hasil {{$type_of_test}}
 										</h4>
 										<h4 style="display:inline">
 											: @if($data->function_test_TE == 1)
-												Memenuhi
+												{{$type_of_test_result}}
 											@elseif($data->function_test_TE == 2)
-												Tidak Memenuhi
+												Tidak {{$type_of_test_result}}
 											@elseif($data->function_test_TE == 3)
 												dll
 											@else
@@ -790,20 +812,20 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<a href="{{URL::to('/cetakUjiFungsi/'.$data->id)}}" target="_blank"> Buatkan Laporan Uji Fungsi</a>
+									<a href="{{URL::to($url_generate_test.$data->id)}}" target="_blank"> Buatkan Laporan {{$type_of_test}}</a>
 								</div>
 								<div class="form-group">
 									<label>
-										Hasil Uji Fungsi File *
+										Hasil {{$type_of_test}} File *
 									</label>
 									<input type="file" name="function_file" id="function_file" class="form-control" accept="application/pdf"/>
 								</div>
 								<div class="form-group">
 									@php $function_attach = ''; @endphp
 									@foreach($data->media as $item)
-										@if($item->name == 'Laporan Hasil Uji Fungsi' && $item->attachment != '')
+										@if($item->name == 'Laporan Hasil '.$type_of_test && $item->attachment != '')
 											@php $function_attach = $item->attachment; @endphp
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil Uji Fungsi "@php echo $function_attach; @endphp"</a>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil '.$type_of_test)}}"> Download Hasil {{$type_of_test}} "@php echo $function_attach; @endphp"</a>
 										@endif
 									@endforeach
 									<input type="hidden" id="function_name" value="@php echo $function_attach; @endphp">
@@ -814,6 +836,8 @@
 								</div>
 								@endif
 							</div>
+
+							@if (!$data['is_loc_test'])
 							@if($data->function_test_TE == 1 && $data->function_test_date_approval == 1)
 								<div class="col-md-12">
 									<div class="form-group">
@@ -841,6 +865,8 @@
 									</div>
 								</div>
 							@endif
+							@endif
+
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
@@ -916,7 +942,7 @@
 									<table class="table table-bordered"><caption></caption>
 										<thead>
 											<tr>
-												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal Uji Fungsi</th>
+												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal {{$type_of_test}}</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -953,7 +979,7 @@
 									<div class="col-md-6 center">
 										<div class="form-group">
 											<h4 style="display:inline">
-												Jadwal FIX Uji Fungsi : 
+												Jadwal FIX {{$type_of_test}} : 
 												@if($data->function_date != null)
 													@php echo $data->function_date; @endphp
 												@else
@@ -1001,13 +1027,13 @@
 								<div class="col-md-12 center">
 									<div class="form-group">
 										<h4 style="display:inline">
-											Hasil Uji Fungsi
+											Hasil {{$type_of_test}}
 										</h4>
 										<h4 style="display:inline">
 											: @if($data->function_test_TE == 1)
-												Memenuhi
+												{{$type_of_test_result}}
 											@elseif($data->function_test_TE == 2)
-												Tidak Memenuhi
+												Tidak {{$type_of_test_result}}
 											@elseif($data->function_test_TE == 3)
 												dll
 											@else
@@ -1018,7 +1044,7 @@
 								</div>
 								<div class="form-group">
 									<label>
-										Hasil Uji Fungsi File *
+										Hasil {{$type_of_test}} File *
 									</label>
 								</div>
 								<div class="form-group">
@@ -1026,7 +1052,7 @@
 									@foreach($data->media as $item)
 										@if($item->name == 'Laporan Hasil Uji Fungsi' && $item->attachment != '')
 											@php $function_attach = $item->attachment; @endphp
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil Uji Fungsi "@php echo $function_attach; @endphp"</a>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil {{$type_of_test}} "@php echo $function_attach; @endphp"</a>
 										@endif
 									@endforeach
 								</div>
@@ -1086,7 +1112,7 @@
 									<table class="table table-bordered"><caption></caption>
 										<thead>
 											<tr>
-												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal Uji Fungsi</th>
+												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal {{$type_of_test}}</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -1123,7 +1149,7 @@
 									<div class="col-md-6 center">
 										<div class="form-group">
 											<h4 style="display:inline">
-												Jadwal FIX Uji Fungsi : 
+												Jadwal FIX {{$type_of_test}} :
 												@if($data->function_date != null)
 													@php echo $data->function_date; @endphp
 												@else
@@ -1171,13 +1197,13 @@
 								<div class="col-md-12 center">
 									<div class="form-group">
 										<h4 style="display:inline">
-											Hasil Uji Fungsi
+											Hasil {{$type_of_test}}
 										</h4>
 										<h4 style="display:inline">
 											: @if($data->function_test_TE == 1)
-												Memenuhi
+												{{$type_of_test_result}}
 											@elseif($data->function_test_TE == 2)
-												Tidak Memenuhi
+												Tidak {{$type_of_test_result}}
 											@elseif($data->function_test_TE == 3)
 												dll
 											@else
@@ -1188,7 +1214,7 @@
 								</div>
 								<div class="form-group">
 									<label>
-										Hasil Uji Fungsi File *
+										Hasil {{$type_of_test}} File *
 									</label>
 								</div>
 								<div class="form-group">
@@ -1196,7 +1222,7 @@
 									@foreach($data->media as $item)
 										@if($item->name == 'Laporan Hasil Uji Fungsi' && $item->attachment != '')
 											@php $function_attach = $item->attachment; @endphp
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil Uji Fungsi "@php echo $function_attach; @endphp"</a>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil {{$type_of_test}} "@php echo $function_attach; @endphp"</a>
 										@endif
 									@endforeach
 								</div>
@@ -4503,19 +4529,37 @@
 			}			
 		}else{
 			if(document.getElementById('hide_approval_form-function-test').value == 0){
-				alert("Belum Ada Tanggal Uji Fungsi FIX!");
-				return false;
+				if(document.getElementById('hide_is_loc_test').value == 1){
+					alert("Belum Ada Tanggal Technical Meeting FIX!");
+					return false;
+				}else{
+					alert("Belum Ada Tanggal Uji Fungsi FIX!");
+					return false;
+				}
 			}
-			if(document.getElementById('hide_count_equipment_form-function-test').value == 0){
-				alert("Uji Fungsi Belum dilakukan, Masukkan Barang terlebih dahulu!");
-				return false;
+			if(document.getElementById('hide_is_loc_test').value == 0){
+				if(document.getElementById('hide_count_equipment_form-function-test').value == 0){
+					alert("Uji Fungsi Belum dilakukan, Masukkan Barang terlebih dahulu!");
+					return false;
+				}
 			}
 			if(document.getElementById('hide_test_TE_form-function-test').value == 0){
-				alert("Belum Ada Hasil Uji Fungsi!");
-				return false;
+				if(document.getElementById('hide_is_loc_test').value == 1){
+					alert("Belum Ada Hasil Technical Meeting!");
+					return false;
+				}else{
+					alert("Belum Ada Hasil Uji Fungsi!");
+					return false;
+				}
 			}
 			if(function_file.value == '' && function_name.value == ''){
-				alert("File Laporan Hasil Uji Fungsi belum diunggah");$('#function_file').focus();return false;
+				if(document.getElementById('hide_is_loc_test').value == 1){
+					alert("File Laporan Hasil Technical Meeting belum diunggah");$('#function_file').focus();return false;
+					return false;
+				}else{
+					alert("File Laporan Hasil Uji Fungsi belum diunggah");$('#function_file').focus();return false;
+					return false;
+				}
 			}
 			if(barang_file.value == '' && barang_name.value == ''){
 				alert("File Bukti Penerimaan & Pengeluaran Perangkat Uji belum diunggah");$('#barang_file').focus();return false;

@@ -12,7 +12,6 @@
 */
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
-
 use Illuminate\Http\Request;
 
 Route::get('/clear-cache', function() {
@@ -58,6 +57,7 @@ Route::get('/cetakPengujian/{id}', 'PengujianController@details');
 
 Route::get('/cetakKuitansi/{id}', 'IncomeController@cetakKuitansi');
 Route::get('/cetakUjiFungsi/{id}', 'ExaminationController@cetakUjiFungsi');
+Route::get('/cetakTechnicalMeeting/{id}', 'ExaminationController@cetakTechnicalMeeting');
 Route::get('/', 'PermohonanController@createPermohonan');
 Route::get('/health', function (){
 	return 'ok';

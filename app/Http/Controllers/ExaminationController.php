@@ -376,7 +376,12 @@ class ExaminationController extends Controller
         }
 		if ($request->has(self::FUNCTION_STATUS)){
 			$examinationService->insertAttachment($request,$exam->id,$currentUser->id,self::BARANG_FILE,'form_penerimaan_barang_','Bukti Penerimaan & Pengeluaran Perangkat Uji1');
+			if($exam->is_loc_test){
+				$examinationService->insertAttachment($request,$exam->id,$currentUser->id,self::FUNCTION_FILE,'function_','Laporan Hasil Technical Meeting');
+			}else{
 			$examinationService->insertAttachment($request,$exam->id,$currentUser->id,self::FUNCTION_FILE,'function_','Laporan Hasil Uji Fungsi');
+			}
+			
 			$status = $request->input(self::FUNCTION_STATUS);
 			if($exam->function_date != null){
 				$exam->contract_date = $exam->function_date;
@@ -563,8 +568,7 @@ class ExaminationController extends Controller
 	            $notification_id = $notificationService->make($data);
 			    $data['id'] = $notification_id;
 			    // event(new Notification($data));
-
-				$examinationService->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.spb", "Penerbitan Surat Pemberitahuan Biaya (SPB) untuk ".$exam->function_test_NO,$path_file."/".$attach_name,$request->input('spb_number'),$exam->id);
+				$exam->PO_ID ? $examinationService->send_revision($exam, $request->input('spb_number')) : $examinationService->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.spb", "Penerbitan Surat Pemberitahuan Biaya (SPB) untuk ".$exam->function_test_NO,$path_file."/".$attach_name,$request->input('spb_number'),$exam->id);
 			}else if($status == -1){
 				$exam->price = str_replace(".",'',$request->input('exam_price'));
 				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"SPB",$request->input(self::KETERANGAN));
@@ -912,7 +916,7 @@ class ExaminationController extends Controller
 				Session::flash(self::ERROR, 'SPB Already Paid');
                 return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
 			}
-			$examinationService->send_revision( $exam, $request->input('spb_number') );
+			
 			if($exam->BILLING_ID){
 				$data_cancel_billing = [
 	            	"canceled" => [
@@ -2082,6 +2086,62 @@ class ExaminationController extends Controller
 		$PDF = new \App\Services\PDF\PDFService();
 		$PDF->cetakUjiFungsi($PDFData);
     }
+	
+	function cetakTechnicalMeeting($id)
+    {
+		$client = new Client([
+			self::HEADERS => [self::CONTENT_TYPE => self::APPLICATION_HEADER],
+			self::BASE_URI => config(self::APP_URI_API_BSP),
+			self::TIMEOUT  => 60.0,
+		]);
+	
+		$data = Examination::where('id','=',$id)
+			->with(self::COMPANY)
+			->with(self::DEVICE)
+			->with(self::EQUIPMENT)
+			->with(self::EXAMINATION_LAB)
+			->first()
+		;
+
+		$user = User::where('id', '=', $data['created_by'])->first();
+
+		$res_manager_lab = $client->get('user/getManagerLabInfo?labCode='.$data->examinationLab->lab_code)->getBody();
+		$manager_lab = json_decode($res_manager_lab);
+		
+		$res_manager_urel = $client->get('user/getManagerLabInfo?groupId=MU')->getBody();
+		$manager_urel = json_decode($res_manager_urel);
+
+		$tgl_uji_fungsi = '-';
+		if($data->function_test_date_approval == 1){
+			if($data->function_date != null){
+				if( strpos( $data->function_date, "/" ) !== false ) {$tgl_uji_fungsi = urlencode(urlencode(date(self::J_F_Y, strtotime($data->function_date))));}
+					else{$tgl_uji_fungsi = date(self::J_F_Y, strtotime($data->function_date))?: '-';}
+			}else{
+				if( strpos( $data->deal_test_date, "/" ) !== false ) {$tgl_uji_fungsi = urlencode(urlencode(date(self::J_F_Y, strtotime($data->deal_test_date))));}
+					else{$tgl_uji_fungsi = date(self::J_F_Y, strtotime($data->deal_test_date))?: '-';}
+			}
+		}
+
+		$PDFData = array(
+			'deviceName' => \App\Services\MyHelper::setDefault($data->device['name'], '-'),
+			'deviceMark' => \App\Services\MyHelper::setDefault($data->device['mark'], '-'),
+			'deviceModel' => \App\Services\MyHelper::setDefault($data->device['model'], '-'),
+			'deviceCapacity' => \App\Services\MyHelper::setDefault($data->device['capacity'], '-'),
+			'deviceTestReference' => \App\Services\MyHelper::setDefault($data->device['test_reference'], '-'),
+			'examinationFunctionTestTE' => \App\Services\MyHelper::setDefault($data['function_test_TE'], '0'),
+			'examinationFunctionTestPIC' => \App\Services\MyHelper::setDefault($data['function_test_PIC'], '-'),
+			'companyAddress' => \App\Services\MyHelper::setDefault($data->company['address'], '-'),
+			'companyCity' => \App\Services\MyHelper::setDefault($data->company['city'], '-'),
+			'examinationFunctionDate' => \App\Services\MyHelper::setDefault($tgl_uji_fungsi, '-'),
+			'userName' => \App\Services\MyHelper::setDefault($user['name'], '-'),
+			'adminName' => Auth::user()->name,
+			'managerLab' => \App\Services\MyHelper::setDefault($manager_lab->data[0]->name, '-'),
+			'managerUrel' => \App\Services\MyHelper::setDefault($manager_urel->data[0]->name, '-')
+		);
+
+		$PDF = new \App\Services\PDF\PDFService();
+		return $PDF->cetakTechnicalMeetingUjiLokasi($PDFData);
+	}
 	
 	function cetakFormBarang($id, Request $request)
     {
