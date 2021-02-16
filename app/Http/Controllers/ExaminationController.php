@@ -1153,6 +1153,8 @@ class ExaminationController extends Controller
 			$sortFromQuery = 'examinations.created_at';
 		} if ( $sortFrom == 'device_name'){
 			$sortFromQuery = 'devices.name';
+		} if ( $sortFrom == 'updated_at'){
+			$sortFromQuery = 'examinations.updated_at';
 		}
 
 		$data = $query
