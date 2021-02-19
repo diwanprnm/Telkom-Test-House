@@ -610,14 +610,14 @@ class ExaminationService
 		$res_manager_urel = $client->get('user/getManagerLabInfo?groupId=MU')->getBody();
 		$manager_urel = json_decode($res_manager_urel);
 		
-		if(count($manager_lab->data) == 1){
+		if($manager_lab->data){
 			if( strpos( $manager_lab->data[0]->name, "/" ) !== false ) {$manager_labs = urlencode(urlencode($manager_lab->data[0]->name));}
 				else{$manager_labs = $manager_lab->data[0]->name?: '-';}
 		}else{
 			$manager_labs = self::DOTS;
 		}
 		
-		if(count($manager_urel->data) == 1){
+		if($manager_urel->data){
 			if( strpos( $manager_urel->data[0]->name, "/" ) !== false ) {$manager_urels = urlencode(urlencode($manager_urel->data[0]->name));}
 				else{$manager_urels = $manager_urel->data[0]->name?: '-';}
 		}else{
