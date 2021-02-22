@@ -29,6 +29,7 @@ use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use App\Events\Notification;
+use App\Services\Logs\LogService;
 use App\NotificationTable;
 use App\Services\NotificationService;
 use App\Services\FileService;
@@ -906,6 +907,7 @@ class ExaminationAPIController extends AppBaseController
 						$notificationService = new NotificationService();
 						$data['id'] = $notificationService->make($data);
 						event(new Notification($data));
+						$examinations->is_loc_test ? $this->masukkan_barang($examinations) : '';
 						return $this->sendResponse($examinations, 'Function Date Found');
 					}else{
 						return $this->sendError('Failed to Update Function Date ');
@@ -964,6 +966,64 @@ class ExaminationAPIController extends AppBaseController
     	}else{
     		return $this->sendError('ID Examination or Date or PIC or Date Type or Approval Status Is Required');
     	}
+    }
+
+	private function masukkan_barang($data)
+    {
+		$currentUser = Auth::user();
+		if($currentUser){
+			$id_user = $currentUser->id;
+		}else{
+			$id_user = 1;
+		}
+
+		$equipment = new Equipment;
+		$equipment->id = Uuid::uuid4();
+		$equipment->examination_id = $data->id;
+		$equipment->name = 'name';
+		$equipment->qty = 1;
+		$equipment->unit = 'Unit';
+		$equipment->description = $data->device->name;
+		$equipment->location = 2;
+		$equipment->pic = $data->user->name;
+		$equipment->remarks = 'Uji Lokasi';
+		$equipment->created_by = $id_user;
+		$equipment->updated_by = $id_user;
+		$equipment->created_at = ''.date('Y-m-d H:i:s').'';
+		$equipment->updated_at = ''.date('Y-m-d H:i:s').'';
+		$equipment->save();
+        
+       try{
+			$examination = Examination::where('id', $equipment->examination_id)->first();
+			if($examination->function_date != null){
+				$in_equip_date = $examination->function_date;
+			}elseif($examination->function_date == null && $examination->urel_test_date != null){
+				$in_equip_date = $examination->urel_test_date;
+			}elseif($examination->urel_test_date == null && $examination->deal_test_date != null){
+				$in_equip_date = $examination->deal_test_date;
+			}else{
+				$in_equip_date = $examination->cust_test_date;
+			}
+			$examination->contract_date = $in_equip_date;
+            $examination->location = 2;
+            $examination->function_test_status_detail = 'Perangkat siap diuji fungsi';
+			$examination->save();
+
+			$equipmenth = new EquipmentHistory;
+			$equipmenth->id = Uuid::uuid4();
+			$equipmenth->examination_id = $equipment->examination_id;
+			$equipmenth->action_date = $in_equip_date;
+			$equipmenth->location = 2;
+			$equipmenth->created_by = $id_user;
+			$equipmenth->updated_by = $id_user;
+			$equipmenth->created_at = ''.date('Y-m-d H:i:s').'';
+			$equipmenth->updated_at = ''.date('Y-m-d H:i:s').'';
+			$equipmenth->save();
+
+            $logService = new LogService();
+            $logService->createLog( "Create Equipment",'EQUIPMENT', $equipment );
+       } catch(\Exception $e){ 
+       }
     }
 	
 	public function updateEquipLoc(Request $param)
