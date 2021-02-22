@@ -694,7 +694,7 @@ class ExaminationService
 	public function generateSPKCode($a,$b,$c) {
 		$total_string_lab_code = strlen($a);
 		$delimiter_year = 0;
-		if($b == "CAL"){
+		if($b == "KAL"){
 			$delimiter_year = 10;
 		}else{
 			$delimiter_year = 9;

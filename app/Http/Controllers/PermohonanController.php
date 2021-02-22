@@ -419,7 +419,7 @@ class PermohonanController extends Controller
     }
 	
 	public function generateFunctionTestNumber($a) { 
-		if($a == "CAL"){
+		if($a == "KAL"){
 			$where = "SUBSTR(function_test_NO,'5',3) = '".$a."' AND";
 		}else{
 			$where = "SUBSTR(function_test_NO,'5',2) = '".$a."' AND";
