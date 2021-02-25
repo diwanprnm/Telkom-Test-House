@@ -990,7 +990,7 @@ class ExaminationController extends Controller
 			if($spk_created == 1){
 				$res_exam_schedule = $client->get(self::SPK_ADD_NOTIF_ID_URI.$exam->id.self::SPK_NUMBER_URI.$spk_number_forOTR);
 				$exam_schedule = $res_exam_schedule->getStatusCode() == '200' ? json_decode($res_exam_schedule->getBody()) : null;
-				if($exam_schedule && !$exam_schedule->status){
+				if($exam_schedule && $exam_schedule->status){
 					$api_logs = new ApiLogs;
 					$api_logs->send_to = "OTR";
 					$api_logs->route = self::SPK_ADD_NOTIF_ID_URI.$exam->id.self::SPK_NUMBER_URI.$spk_number_forOTR;

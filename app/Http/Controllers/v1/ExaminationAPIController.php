@@ -1782,7 +1782,7 @@ class ExaminationAPIController extends AppBaseController
 
 							$res_exam_schedule = $client->get('spk/addNotif?id='.$Examination->id.'&spkNumber='.$spk_number_forOTR);
 							$exam_schedule = $res_exam_schedule->getStatusCode() == '200' ? json_decode($res_exam_schedule->getBody()) : null;
-							if($exam_schedule && $exam_schedule->status == false){
+							if($exam_schedule && $exam_schedule->status){
 								$api_logs = new ApiLogs;
 								$api_logs->send_to = "OTR";
 								$api_logs->route = 'spk/addNotif?id='.$exam->id.'&spkNumber='.$spk_number_forOTR;
