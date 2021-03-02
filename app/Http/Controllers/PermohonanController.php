@@ -419,19 +419,18 @@ class PermohonanController extends Controller
     }
 	
 	public function generateFunctionTestNumber($a) { 
-		if($a == "KAL"){
-			$where = "SUBSTR(function_test_NO,'5',3) = '".$a."' AND";
-		}else{
-			$where = "SUBSTR(function_test_NO,'5',2) = '".$a."' AND";
-		}
 		$thisYear = date('Y');
+		if($a == "KAL"){
+			$where = "SUBSTR(function_test_NO,'5',3) = '".$a."' AND SUBSTR(function_test_NO,'9',4) = '".$thisYear."'";
+		}else{
+			$where = "SUBSTR(function_test_NO,'5',2) = '".$a."' AND SUBSTR(function_test_NO,'8',4) = '".$thisYear."'";
+		}
 		$query = "
 			SELECT 
 			SUBSTR(function_test_NO,'1',3) + 1 AS last_numb
 			FROM examinations 
 			WHERE 
 			".$where."
-			SUBSTR(function_test_NO,'8',4) = '".$thisYear."'
 			ORDER BY last_numb DESC LIMIT 1
 		";
 		$data = DB::select($query); 
