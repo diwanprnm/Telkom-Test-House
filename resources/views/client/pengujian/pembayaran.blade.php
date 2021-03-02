@@ -82,7 +82,7 @@
 														<td>
 															@php 
 																$pph = 0.02*floor($examinationsData[0]->price/1.1);
-																$amount = $examinationsData[0]->price - $pph;
+																$amount = floor($examinationsData[0]->price - $pph);
 															@endphp
 															<span style="font-weight: bold; font-size:150%; color: #fa8231;">{{ trans('translate.stel_rupiah') }}. {{ number_format($amount, 0, ",", ".") }},-</span>
 															<label style="font-size:70%; text-transform: none;">({{ trans('translate.examination_payment_nominal_without_pph') }})</label>
