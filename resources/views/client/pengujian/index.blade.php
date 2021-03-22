@@ -320,7 +320,6 @@
 								@php } @endphp
 								
 								@php if(
-				$item->examination_type_id == 2 &&
 				  $item->registration_status == 1 &&
                   $item->function_status == 1 &&
                   $item->contract_status == 1 &&
