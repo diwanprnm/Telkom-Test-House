@@ -24,6 +24,7 @@ use App\Equipment;
 use App\Questioner;
 use App\QuestionerQuestion;
 use App\QuestionerDynamic;
+use App\GeneralSetting;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -1626,14 +1627,16 @@ class PengujianController extends Controller
 	
 	public function sendProgressEmail($message)
     {
-		$data = DB::table(self::USERS)
+		if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+			$data = DB::table(self::USERS)
 				->where('role_id', 1)
 				->where(self::IS_ACTIVE, 1)
 				->get();
 		
-		Mail::send('client.pengujian.email', array('data' => $message), function ($m) use ($data) {
-            $m->to($data[0]->email)->subject("Upload Bukti Pembayaran");
-        });
+			Mail::send('client.pengujian.email', array('data' => $message), function ($m) use ($data) {
+				$m->to($data[0]->email)->subject("Upload Bukti Pembayaran");
+			});
+		}
 
         return true;
     }

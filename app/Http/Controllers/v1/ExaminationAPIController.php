@@ -18,6 +18,7 @@ use App\TbMSPK;
 use App\TbHSPK;
 use App\Income;
 use App\ApiLogs;
+use App\GeneralSetting;
 
 use App\User;
 use Mail;
@@ -1287,29 +1288,31 @@ class ExaminationAPIController extends AppBaseController
 		$subject
 	)
     {
-        $data = User::findOrFail($user);
+        if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+			$data = User::findOrFail($user);
 		
-        Mail::send($message, array(
-			'user_name' => $data->name,
-			'exam_type' => $exam_type,
-			'exam_type_desc' => $exam_type_desc,
-			'perangkat1' => $perangkat1,
-			'perangkat2' => $perangkat2,
-			'merk_perangkat1' => $merk_perangkat1,
-			'merk_perangkat2' => $merk_perangkat2,
-			'kapasitas_perangkat1' => $kapasitas_perangkat1,
-			'kapasitas_perangkat2' => $kapasitas_perangkat2,
-			'pembuat_perangkat1' => $pembuat_perangkat1,
-			'pembuat_perangkat2' => $pembuat_perangkat2,
-			'model_perangkat1' => $model_perangkat1,
-			'model_perangkat2' => $model_perangkat2,
-			'ref_perangkat1' => $ref_perangkat1,
-			'ref_perangkat2' => $ref_perangkat2,
-			'sn_perangkat1' => $sn_perangkat1,
-			'sn_perangkat2' => $sn_perangkat2
-			), function ($m) use ($data,$subject) {
-            $m->to($data->email)->subject($subject);
-        });
+			Mail::send($message, array(
+				'user_name' => $data->name,
+				'exam_type' => $exam_type,
+				'exam_type_desc' => $exam_type_desc,
+				'perangkat1' => $perangkat1,
+				'perangkat2' => $perangkat2,
+				'merk_perangkat1' => $merk_perangkat1,
+				'merk_perangkat2' => $merk_perangkat2,
+				'kapasitas_perangkat1' => $kapasitas_perangkat1,
+				'kapasitas_perangkat2' => $kapasitas_perangkat2,
+				'pembuat_perangkat1' => $pembuat_perangkat1,
+				'pembuat_perangkat2' => $pembuat_perangkat2,
+				'model_perangkat1' => $model_perangkat1,
+				'model_perangkat2' => $model_perangkat2,
+				'ref_perangkat1' => $ref_perangkat1,
+				'ref_perangkat2' => $ref_perangkat2,
+				'sn_perangkat1' => $sn_perangkat1,
+				'sn_perangkat2' => $sn_perangkat2
+				), function ($m) use ($data,$subject) {
+				$m->to($data->email)->subject($subject);
+			});
+		}
 
         return true;
     }
@@ -1850,16 +1853,18 @@ class ExaminationAPIController extends AppBaseController
      */
     public function sendEmailNotification($user, $dev_name, $exam_type, $exam_type_desc, $message, $subject)
     {
-        $data = User::findOrFail($user);
+        if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+			$data = User::findOrFail($user);
 		
-        Mail::send($message, array(
-			'user_name' => $data->name,
-			'dev_name' => $dev_name,
-			'exam_type' => $exam_type,
-			'exam_type_desc' => $exam_type_desc
-			), function ($m) use ($data,$subject) {
-            $m->to($data->email)->subject($subject);
-        });
+			Mail::send($message, array(
+				'user_name' => $data->name,
+				'dev_name' => $dev_name,
+				'exam_type' => $exam_type,
+				'exam_type_desc' => $exam_type_desc
+				), function ($m) use ($data,$subject) {
+				$m->to($data->email)->subject($subject);
+			});
+		}
 
         return true;
     }
@@ -2172,31 +2177,33 @@ class ExaminationAPIController extends AppBaseController
 	
 	public function spbReminder()
 	{
-		//send data for 7 day old unpaid spb
-		$date = Carbon::now()->subDays(7)->format('Y-m-d');
-        $SPB7 = $this->getUnpaidSpbByDate($date);
-		//send to each data
-        foreach ($SPB7 as $SPB){
-			//set data required
-			$emailContent = $this->setData($SPB, '7', "Tersisa 7 Hari Lagi untuk Membayar Pengujian $SPB->registrationNumber");
-			//send email
-			Mail::send('emails.reminderSPB', ['data' => $emailContent], function ($m) use($emailContent) {
-				$m->to($emailContent['customerEmail'])->subject( $emailContent['subject'] );
-			});
+		if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+			//send data for 7 day old unpaid spb
+			$date = Carbon::now()->subDays(7)->format('Y-m-d');
+			$SPB7 = $this->getUnpaidSpbByDate($date);
+			//send to each data
+			foreach ($SPB7 as $SPB){
+				//set data required
+				$emailContent = $this->setData($SPB, '7', "Tersisa 7 Hari Lagi untuk Membayar Pengujian $SPB->registrationNumber");
+				//send email
+				Mail::send('emails.reminderSPB', ['data' => $emailContent], function ($m) use($emailContent) {
+					$m->to($emailContent['customerEmail'])->subject( $emailContent['subject'] );
+				});
+			}
+			
+			//send data for 13 day old unpaid spb
+			$date = Carbon::now()->subDays(13)->format('Y-m-d');
+			$SPB13 = $this->getUnpaidSpbByDate($date);
+			//send to each data
+			foreach ($SPB13 as $SPB){
+				//set data required
+				$emailContent = $this->setData($SPB, '13', "Tersisa 1 Hari Lagi untuk Membayar SPB $SPB->spbNumber");
+				//send email
+				Mail::send('emails.reminderSPB', ['data' => $emailContent], function ($m) use($emailContent) {
+					$m->to($emailContent['customerEmail'])->subject( $emailContent['subject'] );
+				});
+			}
 		}
-		
-		//send data for 13 day old unpaid spb
-        $date = Carbon::now()->subDays(13)->format('Y-m-d');
-        $SPB13 = $this->getUnpaidSpbByDate($date);
-		//send to each data
-        foreach ($SPB13 as $SPB){
-			//set data required
-			$emailContent = $this->setData($SPB, '13', "Tersisa 1 Hari Lagi untuk Membayar SPB $SPB->spbNumber");
-			//send email
-			Mail::send('emails.reminderSPB', ['data' => $emailContent], function ($m) use($emailContent) {
-				$m->to($emailContent['customerEmail'])->subject( $emailContent['subject'] );
-			});
-        }
 	}
 
 	private function getUnpaidSpbByDate($date)

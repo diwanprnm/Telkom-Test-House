@@ -14,6 +14,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Encryption\DecryptException;
 
 use App\User;
+use App\GeneralSetting;
 
 class ResetPasswordController extends Controller
 {
@@ -79,21 +80,23 @@ class ResetPasswordController extends Controller
 		$now = strtotime(date('Ymdhis'));
 		$time = strtotime("+1 hour",$now);
 		$encryptedValue = Crypt::encrypt($time); 
-		Mail::send(self::CLIENT_EMAIL_PASS_TEXT, array(self::TOKEN => $encryptedValue, self::EMAIL => $request->get(self::EMAIL)), function ($m) use ($user){ 
-            $m->to($user->email)->subject(self::UPDATE_PASS_QA_TEXT);
-        });
-		
-		if($user->email2!=NULL){
-			Mail::send(self::CLIENT_EMAIL_PASS_TEXT, array(self::TOKEN => $encryptedValue, self::EMAIL => $request->get(self::EMAIL)), function ($m) use ($user){
-				$m->to($user->email2)->subject(self::UPDATE_PASS_QA_TEXT);
-			});
-		}
-		
-		if($user->email3!=NULL){
-			Mail::send(self::CLIENT_EMAIL_PASS_TEXT, array(self::TOKEN => $encryptedValue, self::EMAIL => $request->get(self::EMAIL)), function ($m) use ($user){
-				$m->to($user->email3)->subject(self::UPDATE_PASS_QA_TEXT);
-			});
-		}
+        if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+            Mail::send(self::CLIENT_EMAIL_PASS_TEXT, array(self::TOKEN => $encryptedValue, self::EMAIL => $request->get(self::EMAIL)), function ($m) use ($user){ 
+                $m->to($user->email)->subject(self::UPDATE_PASS_QA_TEXT);
+            });
+            
+            if($user->email2!=NULL){
+                Mail::send(self::CLIENT_EMAIL_PASS_TEXT, array(self::TOKEN => $encryptedValue, self::EMAIL => $request->get(self::EMAIL)), function ($m) use ($user){
+                    $m->to($user->email2)->subject(self::UPDATE_PASS_QA_TEXT);
+                });
+            }
+            
+            if($user->email3!=NULL){
+                Mail::send(self::CLIENT_EMAIL_PASS_TEXT, array(self::TOKEN => $encryptedValue, self::EMAIL => $request->get(self::EMAIL)), function ($m) use ($user){
+                    $m->to($user->email3)->subject(self::UPDATE_PASS_QA_TEXT);
+                });
+            }
+        }
 		
 		return redirect()->back()->with(self::STATUS, $request->get(self::EMAIL));
     }

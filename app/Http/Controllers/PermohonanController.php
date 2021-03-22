@@ -24,6 +24,7 @@ use App\Footer;
 use App\Question;
 use App\AdminRole;
 use App\Company;
+use App\GeneralSetting;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -203,14 +204,16 @@ class PermohonanController extends Controller
 	
 	public function sendProgressEmail($message)
     {
-		$data = DB::table(self::USERS)
+		if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+			$data = DB::table(self::USERS)
 				->where('role_id', 1)
 				->where('is_active', 1)
 				->get();
 		
-		Mail::send(self::CLIENT_PERMOHONAN_EMAIL, array('data' => $message), function ($m) use ($data) {
-            $m->to($data[0]->email)->subject("Permohonan Pengujian Baru");
-        });
+			Mail::send(self::CLIENT_PERMOHONAN_EMAIL, array('data' => $message), function ($m) use ($data) {
+				$m->to($data[0]->email)->subject("Permohonan Pengujian Baru");
+			});
+		}
 
         return true;
     }
@@ -391,29 +394,31 @@ class PermohonanController extends Controller
 	
 	public function sendFeedbackEmail($email,$subject,$message,$question)
     {
-		$data = DB::table(self::USERS)
+		if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+			$data = DB::table(self::USERS)
 				->join('question_privileges', 'users.id', '=', 'question_privileges.user_id')
 				->select('users.email')
 				->where('question_privileges.question_id', '=', $question)
 				->where('users.is_active', 1)
 				->get();
-		if(count($data)){
-			foreach($data as $row){
-				$emails = $row->email;
+			if(count($data)){
+				foreach($data as $row){
+					$emails = $row->email;
+					Mail::send(self::CLIENT_PERMOHONAN_EMAIL, array('data' => $message. ". This message from ".$email.""), function ($m) use ($emails,$subject) {
+						$m->to($emails)->subject($subject);
+					});
+				}
+			}else{
+				$data = DB::table(self::USERS)
+					->where('id', 1)
+					->select(self::EMAIL)
+					->get();
+				$emails = $data[0]->email;
 				Mail::send(self::CLIENT_PERMOHONAN_EMAIL, array('data' => $message. ". This message from ".$email.""), function ($m) use ($emails,$subject) {
 					$m->to($emails)->subject($subject);
 				});
-			}
-		}else{
-			$data = DB::table(self::USERS)
-				->where('id', 1)
-				->select(self::EMAIL)
-				->get();
-			$emails = $data[0]->email;
-			Mail::send(self::CLIENT_PERMOHONAN_EMAIL, array('data' => $message. ". This message from ".$email.""), function ($m) use ($emails,$subject) {
-				$m->to($emails)->subject($subject);
-			});
-		} 
+			} 
+		}
 
         return true;
     }
