@@ -673,13 +673,14 @@ class PengujianController extends Controller
 				}
 			}
 			  
-			
+			$examhist = ExaminationHistory::where(self::EXAMINATION_ID, "=", $id)->where("tahap", "=", "Download Laporan Uji");
+			$count_download = count($examhist->get());	
 			$exam_hist = new ExaminationHistory;
 			$exam_hist->examination_id = $id;
 			$exam_hist->date_action = date(self::DATE_FORMAT1);
 			$exam_hist->tahap = 'Download Laporan Uji';
 			$exam_hist->status = 1;
-			$exam_hist->keterangan = '';
+			$exam_hist->keterangan = 'Download ke-'.($count_download+1);
 			$exam_hist->created_by = $currentUser->id;
 			$exam_hist->created_at = date(self::DATE_FORMAT1);
 			$exam_hist->save();

@@ -1332,21 +1332,50 @@
 					{!! Form::open() !!}
 						<fieldset>
 							<legend>
-								Histori Download Sertifikat
+								Histori Download Laporan Pengujian dan Sertifikat
 							</legend>
 							<div class="row">
 								<div class="col-md-12">
 									<div class="form-group">
-										@php $count = 0; @endphp
+										@php $count_l = 0; $count_s = 0; @endphp
 										@foreach($data->examinationHistory as $item)
 										@php
+											if( strpos( $item->tahap, "Download Laporan Uji" ) !== false ) 
+											{
+												$count_l++;
+											}
 											if( strpos( $item->tahap, "Download Sertifikat" ) !== false ) 
 											{
-												$count++;
+												$count_s++;
 											}
 										@endphp
 										@endforeach
-										Sertifikat Sudah terdownload sebanyak {{ $count }} kali
+										Laporan Pengujian sudah terdownload sebanyak {{ $count_l }} kali, dan Sertifikat sudah terdownload sebanyak {{ $count_s }} kali.
+									</div>
+									<div class="form-group" style="overflow-y: scroll; height: 300px;">
+										<table class="table table-bordered"><caption></caption>
+											<thead>
+												<tr>
+													<th colspan="4" scope="col">Riwayat Download</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td><strong>PIC</td>
+													<td><strong>File yang di-download</td>
+													<td><strong>Keterangan</td>
+													<td><strong>Waktu Download</td>
+												</tr>
+												@foreach($exam_hist as $data)
+												<tr>
+													<td>@php echo $data->user->name; @endphp</td>
+													<td>@php echo substr(strstr($data->tahap," "), 1); @endphp</td>
+													<td>@php echo $data->keterangan; @endphp</td>
+													<td>@php echo $data->created_at; @endphp</td>
+												</tr>
+												@endforeach
+											</tbody>
+										</table>
 									</div>
 								</div>
 							</div>
