@@ -15,6 +15,7 @@ use App\User;
 use App\Company;
 use App\TempCompany;
 use App\Logs;
+use App\GeneralSetting;
 
 use Auth;
 use Mail;
@@ -534,43 +535,49 @@ class ProfileController extends Controller
 	
 	public function sendEmail($user, $description, $message, $subject)
     {
-        $data = User::findOrFail($user);
+        if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+			$data = User::findOrFail($user);
 		
-        Mail::send($message, array(
-			self::USER_NAME2 => $data->name,
-			self::USER_EMAIL => $data->email,
-			'desc' => $description
-			), function ($m) use ($subject) {
-            $m->to(self::EMAIL_STEL)->subject($subject);
-        });
+			Mail::send($message, array(
+				self::USER_NAME2 => $data->name,
+				self::USER_EMAIL => $data->email,
+				'desc' => $description
+				), function ($m) use ($subject) {
+				$m->to(self::EMAIL_STEL)->subject($subject);
+			});
+		}
 
         return true;
     }
 	
 	public function sendRegistrasi($user_name, $user_email, $message, $subject)
     {
-        Mail::send($message, array(
-			self::USER_NAME2 => $user_name,
-			self::USER_EMAIL => $user_email
-			), function ($m) use ($subject) {
-            $m->to(self::EMAIL_STEL)->subject($subject);
-        });
+        if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+			Mail::send($message, array(
+				self::USER_NAME2 => $user_name,
+				self::USER_EMAIL => $user_email
+				), function ($m) use ($subject) {
+				$m->to(self::EMAIL_STEL)->subject($subject);
+			});
+		}
 
         return true;
     }
 	
 	public function sendRegistrasiwCompany($user_name, $user_email, $comp_name, $comp_address, $comp_email, $comp_phone, $message, $subject)
     {
-        Mail::send($message, array(
-			self::USER_NAME2 => $user_name,
-			self::USER_EMAIL => $user_email,
-			self::COMP_NAME => $comp_name,
-			self::COMP_ADDRESS => $comp_address,
-			self::COMP_EMAIL => $comp_email,
-			'comp_phone' => $comp_phone
-			), function ($m) use ($subject) {
-            $m->to(self::EMAIL_STEL)->subject($subject);
-        });
+        if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+			Mail::send($message, array(
+				self::USER_NAME2 => $user_name,
+				self::USER_EMAIL => $user_email,
+				self::COMP_NAME => $comp_name,
+				self::COMP_ADDRESS => $comp_address,
+				self::COMP_EMAIL => $comp_email,
+				'comp_phone' => $comp_phone
+				), function ($m) use ($subject) {
+				$m->to(self::EMAIL_STEL)->subject($subject);
+			});
+		}
 
         return true;
     }

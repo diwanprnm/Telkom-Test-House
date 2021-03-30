@@ -251,6 +251,12 @@ class ExaminationDoneController extends Controller
     public function edit($id)
     {
 		$examinationService = new ExaminationService();
+		$query_exam_hist = ExaminationHistory::where('examination_id', $id)->where(function($q){
+			return $q->where('tahap', 'Download Laporan Uji')
+				->orWhere('tahap', 'Download Sertifikat');
+			})->with('user');
+		$exam_hist = $query_exam_hist->orderBy('created_at', 'desc')->get();
+		
         $exam = Examination::where('id', $id)
 			->with(self::COMPANY)
 			->with(self::EXAMINATION_TYPE)
@@ -282,6 +288,7 @@ class ExaminationDoneController extends Controller
             ->with('data_gudang', $tempData[1])
 			->with('exam_approve_date', $tempData[2])
 			->with('exam_schedule', $tempData[3])
+			->with('exam_hist', $exam_hist)
 		;
     }
 	

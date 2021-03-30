@@ -2679,7 +2679,7 @@
 					</fieldset>
 				@endif
 
-				@if(isset($admin_roles[0]))
+				<!-- @if(isset($admin_roles[0]))
 				@if($admin_roles[0]->receipt_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-tanda-terima')) !!}
 					{!! csrf_field() !!}
@@ -2770,7 +2770,7 @@
 							</div>
 						</div>
 					</fieldset>
-				@endif
+				@endif -->
 				@endif
 
 				@php $rev_uji = 0; $lap_uji_url = null; $lap_uji_attach = null @endphp
@@ -3802,7 +3802,7 @@
 					@endif
 
 					@if($data->examination_type_id == 1)
-						@if(isset($admin_roles[0]))
+						<!-- @if(isset($admin_roles[0]))
 						@if($admin_roles[0]->receipt_status)
 						{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-tanda-terima')) !!}
 							{!! csrf_field() !!}
@@ -3894,7 +3894,7 @@
 								</div>
 							</fieldset>
 						@endif
-					@endif
+					@endif -->
 
 					@if(isset($admin_roles[0]))
 					@if($admin_roles[0]->certificate_status)

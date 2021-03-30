@@ -24,6 +24,7 @@ use App\Equipment;
 use App\Questioner;
 use App\QuestionerQuestion;
 use App\QuestionerDynamic;
+use App\GeneralSetting;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -672,13 +673,14 @@ class PengujianController extends Controller
 				}
 			}
 			  
-			
+			$examhist = ExaminationHistory::where(self::EXAMINATION_ID, "=", $id)->where("tahap", "=", "Download Laporan Uji");
+			$count_download = count($examhist->get());	
 			$exam_hist = new ExaminationHistory;
 			$exam_hist->examination_id = $id;
 			$exam_hist->date_action = date(self::DATE_FORMAT1);
 			$exam_hist->tahap = 'Download Laporan Uji';
 			$exam_hist->status = 1;
-			$exam_hist->keterangan = '';
+			$exam_hist->keterangan = 'Download ke-'.($count_download+1);
 			$exam_hist->created_by = $currentUser->id;
 			$exam_hist->created_at = date(self::DATE_FORMAT1);
 			$exam_hist->save();
@@ -1626,14 +1628,16 @@ class PengujianController extends Controller
 	
 	public function sendProgressEmail($message)
     {
-		$data = DB::table(self::USERS)
+		if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+			$data = DB::table(self::USERS)
 				->where('role_id', 1)
 				->where(self::IS_ACTIVE, 1)
 				->get();
 		
-		Mail::send('client.pengujian.email', array('data' => $message), function ($m) use ($data) {
-            $m->to($data[0]->email)->subject("Upload Bukti Pembayaran");
-        });
+			Mail::send('client.pengujian.email', array('data' => $message), function ($m) use ($data) {
+				$m->to($data[0]->email)->subject("Upload Bukti Pembayaran");
+			});
+		}
 
         return true;
     }
