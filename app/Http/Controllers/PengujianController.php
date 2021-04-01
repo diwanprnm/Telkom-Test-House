@@ -1628,7 +1628,7 @@ class PengujianController extends Controller
 	
 	public function sendProgressEmail($message)
     {
-		if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+		if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			$data = DB::table(self::USERS)
 				->where('role_id', 1)
 				->where(self::IS_ACTIVE, 1)
