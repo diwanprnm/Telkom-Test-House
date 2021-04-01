@@ -204,7 +204,7 @@ class PermohonanController extends Controller
 	
 	public function sendProgressEmail($message)
     {
-		if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+		if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			$data = DB::table(self::USERS)
 				->where('role_id', 1)
 				->where('is_active', 1)
@@ -394,7 +394,7 @@ class PermohonanController extends Controller
 	
 	public function sendFeedbackEmail($email,$subject,$message,$question)
     {
-		if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+		if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			$data = DB::table(self::USERS)
 				->join('question_privileges', 'users.id', '=', 'question_privileges.user_id')
 				->select('users.email')

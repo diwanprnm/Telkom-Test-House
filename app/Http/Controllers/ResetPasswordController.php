@@ -80,7 +80,7 @@ class ResetPasswordController extends Controller
 		$now = strtotime(date('Ymdhis'));
 		$time = strtotime("+1 hour",$now);
 		$encryptedValue = Crypt::encrypt($time); 
-        if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+        if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
             Mail::send(self::CLIENT_EMAIL_PASS_TEXT, array(self::TOKEN => $encryptedValue, self::EMAIL => $request->get(self::EMAIL)), function ($m) use ($user){ 
                 $m->to($user->email)->subject(self::UPDATE_PASS_QA_TEXT);
             });

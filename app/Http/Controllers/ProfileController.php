@@ -535,7 +535,7 @@ class ProfileController extends Controller
 	
 	public function sendEmail($user, $description, $message, $subject)
     {
-        if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+        if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			$data = User::findOrFail($user);
 		
 			Mail::send($message, array(
@@ -552,7 +552,7 @@ class ProfileController extends Controller
 	
 	public function sendRegistrasi($user_name, $user_email, $message, $subject)
     {
-        if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+        if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			Mail::send($message, array(
 				self::USER_NAME2 => $user_name,
 				self::USER_EMAIL => $user_email
@@ -566,7 +566,7 @@ class ProfileController extends Controller
 	
 	public function sendRegistrasiwCompany($user_name, $user_email, $comp_name, $comp_address, $comp_email, $comp_phone, $message, $subject)
     {
-        if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+        if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			Mail::send($message, array(
 				self::USER_NAME2 => $user_name,
 				self::USER_EMAIL => $user_email,

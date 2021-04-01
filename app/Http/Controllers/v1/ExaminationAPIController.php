@@ -1288,7 +1288,7 @@ class ExaminationAPIController extends AppBaseController
 		$subject
 	)
     {
-        if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+        if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			$data = User::findOrFail($user);
 		
 			Mail::send($message, array(
@@ -1853,7 +1853,7 @@ class ExaminationAPIController extends AppBaseController
      */
     public function sendEmailNotification($user, $dev_name, $exam_type, $exam_type_desc, $message, $subject)
     {
-        if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+        if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			$data = User::findOrFail($user);
 		
 			Mail::send($message, array(
@@ -2177,7 +2177,7 @@ class ExaminationAPIController extends AppBaseController
 	
 	public function spbReminder()
 	{
-		if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+		if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			//send data for 7 day old unpaid spb
 			$date = Carbon::now()->subDays(7)->format('Y-m-d');
 			$SPB7 = $this->getUnpaidSpbByDate($date);

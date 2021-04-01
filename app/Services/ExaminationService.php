@@ -457,7 +457,7 @@ class ExaminationService
      * @return Response
      */
     public function sendEmailNotification($user, $dev_name, $exam_type, $exam_type_desc, $message, $subject){
-		if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+		if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			$data = User::findOrFail($user);
 			$send_email = Mail::send($message, array(
 				self::USER_NAME => $data->name,
@@ -473,7 +473,7 @@ class ExaminationService
     }
 	
 	public function sendEmailNotification_wAttach($user, $dev_name, $exam_type, $exam_type_desc, $message, $subject, $attach, $spb_number = null, $exam_id = null){
-        if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+        if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			$data = User::findOrFail($user);
 			$attachment = Storage::disk('minio')->url($attach);
 			Mail::send($message, array(
@@ -532,7 +532,7 @@ class ExaminationService
 		$message,
 		$subject
 	){
-        if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+        if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			$data = User::findOrFail($user);
 			Mail::send($message, array(
 				self::USER_NAME => $data->name,
@@ -561,7 +561,7 @@ class ExaminationService
 	}
 	
 	public function sendEmailFailure($user, $dev_name, $exam_type, $exam_type_desc, $message, $subject, $tahap, $keterangan){
-        if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+        if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			$data = User::findOrFail($user);
 			Mail::send($message, array(
 				self::USER_NAME => $data->name,
@@ -861,7 +861,7 @@ class ExaminationService
 
 	public function send_revision($exam, $spbRevisionNumber)
 	{
-		if(GeneralSetting::where('code', 'send_email')->first()->is_active){
+		if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			//get user (name and email)
 			$user = User::findOrFail($exam->created_by);
 
