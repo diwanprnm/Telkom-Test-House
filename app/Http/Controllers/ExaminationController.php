@@ -747,6 +747,14 @@ class ExaminationController extends Controller
         }
         if ($request->has(self::RESUME_STATUS)){
 			if(!$request->hasFile(self::REV_LAP_UJI) && $request->has('hide_attachment_form-lap-uji') && $exam->resume_status == 0 && $exam->BILLING_ID != null){
+					$data_upload [] = 
+						[
+							'name' => "file",
+							'contents' => fopen($request->input('hide_attachment_form-lap-uji'), 'r'),
+							'filename' => 'Laporan Uji.pdf'
+						]
+					;
+
 	                $data_upload [] = array(
 	                    'name'=>"delivered",
 	                    'contents'=>json_encode(['by'=>$currentUser->name, self::REFERENCE_ID => '1']),
@@ -766,6 +774,13 @@ class ExaminationController extends Controller
 				if($fileService->isUploaded()){
                     /*TPN api_upload*/
 		            if($exam->BILLING_ID != null){
+						$data_upload [] = 
+							[
+								'name' => "file",
+								'contents' => fopen(Storage::disk(self::MINIO)->url(self::MEDIA_EXAMINATION_LOC.$exam->id.'/'.$name_file), 'r'),
+								'filename' => $request->file(self::REV_LAP_UJI)->getClientOriginalName()
+							]
+						;
 		                $data_upload [] = array(
 		                    'name'=>"delivered",
 		                    'contents'=>json_encode(['by'=>$currentUser->name, self::REFERENCE_ID => '1']),
