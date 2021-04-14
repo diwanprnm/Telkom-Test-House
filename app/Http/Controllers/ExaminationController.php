@@ -1954,8 +1954,8 @@ class ExaminationController extends Controller
 	                "item" => 'Biaya Uji '.$exam->examinationType->name.' ('.$exam->examinationType->description.')',
 	                "description" => $exam->device->name.', '.$exam->device->mark.', '.$exam->device->capacity.', '.$exam->device->model,
 	                "quantity" => 1,
-	                "price" => $biaya,
-	                "total" => $biaya
+	                "price" => ceil($biaya),
+	                "total" => ceil($biaya)
 	            ]
 	        ;
 
