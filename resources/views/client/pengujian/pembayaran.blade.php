@@ -168,13 +168,14 @@
 		});
 
 		/* Dengan Rupiah */
+		/*
 		var jml_pembayaran = document.getElementById('jml-pembayaran');
 		jml_pembayaran.value = formatRupiah(jml_pembayaran.value, 'Rp. ');
 		jml_pembayaran.addEventListener('keyup', function(e)
 		{
 			jml_pembayaran.value = formatRupiah(this.value, 'Rp. ');
 		}); 
-		
+		*/
 		/* Fungsi */
 		function formatRupiah(angka, prefix)
 		{

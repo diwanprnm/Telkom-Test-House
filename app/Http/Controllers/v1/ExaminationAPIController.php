@@ -2179,8 +2179,9 @@ class ExaminationAPIController extends AppBaseController
 	{
 		if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			//send data for 7 day old unpaid spb
-			$date = Carbon::now()->subDays(7)->format('Y-m-d');
-			$SPB7 = $this->getUnpaidSpbByDate($date);
+			$from = Carbon::now()->subDays(-7)->format('Y-m-d H:i');
+			$to = Carbon::now()->subDays(-7)->subMinutes(-10)->format('Y-m-d H:i');
+			$SPB7 = $this->getUnpaidSpbByDate($from, $to);
 			//send to each data
 			foreach ($SPB7 as $SPB){
 				//set data required
@@ -2192,8 +2193,9 @@ class ExaminationAPIController extends AppBaseController
 			}
 			
 			//send data for 13 day old unpaid spb
-			$date = Carbon::now()->subDays(13)->format('Y-m-d');
-			$SPB13 = $this->getUnpaidSpbByDate($date);
+			$from = Carbon::now()->subDays(-13)->format('Y-m-d H:i');
+			$to = Carbon::now()->subDays(-13)->subMinutes(-10)->format('Y-m-d H:i');
+			$SPB13 = $this->getUnpaidSpbByDate($from, $to);
 			//send to each data
 			foreach ($SPB13 as $SPB){
 				//set data required
@@ -2206,7 +2208,7 @@ class ExaminationAPIController extends AppBaseController
 		}
 	}
 
-	private function getUnpaidSpbByDate($date)
+	private function getUnpaidSpbByDate($from, $to)
 	{
 		return DB::table('examinations')
 			->select(
@@ -2221,7 +2223,7 @@ class ExaminationAPIController extends AppBaseController
 				)
 			->join('companies', 'examinations.company_id', '=', 'companies.id')
 			->join('users', 'users.company_id', '=', 'companies.id')
-			->whereDate('examinations.VA_expired', '=' ,$date)
+			->whereBetween('examinations.VA_expired', [$from, $to])
 			->where('examinations.payment_status', '!=' , 1)
 			->where('examinations.VA_expired', '!=' , null)
 			->where('examinations.payment_method', '=' , 2)
