@@ -51,23 +51,21 @@
 		<br><br>
 	</p>
 	<p style="font-family:Helvetica, sans-serif; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-		Terimakasih atas kerjasamanya yang baik selama ini.
-		<br><br>
-		Rangkaian proses pengujian perangkat saudara/i di Lab IAS DDB Telkom saat ini <strong>sudah selesai</strong> dilaksanakan. Laporan Hasil Uji (LHU) dan Sertifikat (untuk uji QA) dapat diambil langsung di alamat berikut dengan <strong>memperlihatkan bukti pengambilan perangkat</strong> dari warehouse LAB IAS DDB Telkom.
-		<br><br>
-		Lab Pengujian Infrastructure Assurance DDB
+		Permohonan uji perangkat anda di Telkom Test House <strong>sudah selesai</strong>. @if($is_loc_test == 0)Perangkat sampel uji agar segera diambil kembali sebagai syarat untuk @else Anda dapat @endif mengunduh Laporan Hasil Uji (LHU) dan Sertifikat di <a href="www.telkomtesthouse.co.id">www.telkomtesthouse.co.id</a> @if($is_loc_test == 0) .
 		<br>
-		PT. Telekomunikasi Indonesia, Tbk
+		Dokumen tersebut nanti dapat anda unduh @endif dengan cara <strong><i>masuk/login</i></strong> terlebih dahulu, lalu pilih menu <strong><i>pengujian/testing > status pengujian/progress</i></strong> dan tekan tombol <strong>unduh laporan & unduh sertifikat/<i>download report & download certificate</i></strong> yang terletak <strong>di kanan bawah</strong> dari permohonan uji anda.
+		<br><br>
+		Terimakasih atas kerjasama anda.
+		<br>
+		Untuk info lebih lanjut silakan hubungi kami di <strong>+62 812 2483 7500</strong>
+		<br><br>
+		Salam hangat
+		<br>
+		Telkom Test House, PT. Telekomunikasi Indonesia, Tbk
 		<br>
 		Jl. Gegerkalong Hilir No. 47 Sukasari Bandung
 		<br>
 		45012
-		<br><br>
-		Salam hangat,
-		<br>
-		Lab Uji IAS PT. Telekomunikasi Indonesia, Tbk.
-		<br><br>
-		---
 		<br><br>
 	</p>
 	<p style="font-style:italic; font-family:Helvetica, sans-serif; font-size:0.88em; color:rgba(146,146,146,1.00); margin-top:-7px;">
