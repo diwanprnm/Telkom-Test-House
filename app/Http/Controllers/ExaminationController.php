@@ -354,7 +354,7 @@ class ExaminationController extends Controller
 			    $data['id'] = $notification_id;
 			    // event(new Notification($data));
 				
-				$examinationService->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.registrasi", "Acc Registrasi");
+				$examinationService->sendEmailNotification($exam,$device, "emails.registrasi", "Acc Registrasi");
 			}else if($status == -1){
 				/* push notif*/
 			     $data= array( 
@@ -664,7 +664,7 @@ class ExaminationController extends Controller
 					$income->updated_by = $currentUser->id;
 					$income->save();
 
-				$examinationService->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.pembayaran", "ACC Pembayaran");
+				$examinationService->sendEmailNotification($exam,$device, "emails.pembayaran", "ACC Pembayaran");
 				
 				$client = new Client([
 					self::HEADERS => [self::CONTENT_TYPE => self::APPLICATION_HEADER],
@@ -897,7 +897,7 @@ class ExaminationController extends Controller
 				self::UPDATED_AT=>date(self::DATE_FORMAT_1)
 			);
 			if($status == 1){
-				$examinationService->sendEmailNotification($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.sertifikat", "Penerbitan Sertfikat");
+				$examinationService->sendEmailNotification($exam,$device, "emails.sertifikat", "Penerbitan Sertifikat QA [".$device->name." | ".$device->mark." | ".$device->model." | ".$device->capacity."]");
 			}else if($status == -1){
 				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Pembuatan Sertifikat",$request->input(self::KETERANGAN));
 			}

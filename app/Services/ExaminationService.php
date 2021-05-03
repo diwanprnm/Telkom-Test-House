@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Auth;
 use App\Examination;
+use App\ExaminationType;
 use App\User;
 use App\Logs;
 use App\LogsAdministrator;
@@ -456,16 +457,18 @@ class ExaminationService
      * @param  Request  $request
      * @return Response
      */
-    public function sendEmailNotification($user, $dev_name, $exam_type, $exam_type_desc, $message, $subject){
+    public function sendEmailNotification($exam, $device, $message, $subject){
 		if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
-			$data = User::findOrFail($user);
+			$user = User::findOrFail($exam->created_by);
+			$exam_type = ExaminationType::findOrFail($exam->examination_type_id);
 			$send_email = Mail::send($message, array(
-				self::USER_NAME => $data->name,
-				self::DEV_NAME => $dev_name,
-				self::EXAM_TYPE => $exam_type,
-				self::EXAM_TYPE_DESC => $exam_type_desc
-				), function ($m) use ($data,$subject) {
-				$m->to($data->email)->subject($subject);
+				'is_loc_test' => $exam->is_loc_test,
+				self::USER_NAME => $user->name,
+				self::DEV_NAME => $device->name,
+				self::EXAM_TYPE => $exam_type->name,
+				self::EXAM_TYPE_DESC => $exam_type->description
+				), function ($m) use ($user,$subject) {
+				$m->to($user->email)->subject($subject);
 			}); 
 		}
 
