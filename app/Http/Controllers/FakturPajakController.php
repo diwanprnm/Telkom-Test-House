@@ -102,16 +102,7 @@ class FakturPajakController extends Controller
         ;
 
         $stel = STELSales::select(DB::raw('stels_sales.id as _id, "STEL" as type, users.name as user_name, companies.name as company_name, 
-                            (
-                                SELECT stels.code 
-                                FROM
-                                    stels,
-                                    stels_sales_detail
-                                WHERE
-                                    stels_sales_detail.stels_sales_id = stels_sales.id
-                                AND
-                                    stels_sales_detail.stels_id = stels.id
-                            ) as description,stels.type,stels.code, 
+                            stels.name as description,stels.type,stels.code, 
                             stels_sales.id_kuitansi, stels_sales.faktur_file, DATE(stels_sales_attachment.updated_at) as payment_date'))
             ->join('users', 'stels_sales.created_by', '=', 'users.id')
             ->join('companies', 'users.company_id', '=', 'companies.id')
