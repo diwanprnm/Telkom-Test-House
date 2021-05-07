@@ -228,6 +228,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::get('/uploadStelAttach', 'UploadProductionController@uploadStelAttach');
 	Route::get('/uploadTempCompany', 'UploadProductionController@uploadTempCompany');
 	Route::get('/uploadUser', 'UploadProductionController@uploadUser');
+	Route::get('/deletePengujian', 'UploadProductionController@deletePengujian');
 
 	Route::get('/adm_dashboard_autocomplete/{query}', 'DashboardController@autocomplete')->name('adm_dashboard_autocomplete');
 	
