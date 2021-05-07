@@ -16,9 +16,35 @@ use App\STELSalesDetail;
 use App\TempCompany;
 use App\User;
 
+use Illuminate\Support\Facades\DB;
+use App\Services\Logs\LogService;
+use GuzzleHttp\Client;
+use Storage;
+
+use App\Income;
+use App\Questioner;
+use App\Equipment;
+use App\EquipmentHistory;
+use App\ExaminationHistory;
+use App\QuestionerDynamic;
+
 class UploadProductionController extends Controller
 {
     private const PROD_URL = 'http://old-telkomtesthouse-telkomtesthouse-dev.vsan-apps.playcourt.id/media/';
+
+    private const EXAMINATION_ID = 'examination_id';
+    private const HEADERS = 'headers';
+    private const CONTENT_TYPE = 'Content-type';
+	private const APPLICATION_HEADER = 'application/x-www-form-urlencoded';
+	private const BASE_URI = 'base_uri';
+	private const APP_URI_API_BSP = 'app.url_api_bsp';
+	private const TIMEOUT = 'timeout';
+    private const SPK_NUMBER_URI = '&spkNumber=';
+    private const ERROR = 'error';
+    private const ADMIN_EXAMINATION = '/admin/examination';
+    private const REFERENCE_ID = 'reference_id';
+    private const MINIO = 'minio';
+    private const EXAMINATION_LOC = 'examination\\';
     
 	/**
      * Create a new controller instance.
@@ -177,5 +203,70 @@ class UploadProductionController extends Controller
             $this->upload('user/'.$value->id.'/',$value->picture);
         }
     }
+
+    public function deletePengujian()
+    {
+        $data = Examination::where(DB::raw('YEAR(created_at)'), '<', '2021')->where('spk_code', NULL)->get();
+        print_r(count($data).'<br>');
+        $count = 0;
+        foreach($data as $value){
+            $delete = $this->destroy($value->id, 'Pengujian', '-');
+            $count += $delete;
+        }
+        print_r($count.' deleted');
+    }
+
+    public function destroy($id,$page,$reason = null)
+	{ 
+		$logs_a_device = NULL;
+		$logService = new LogService();
+		
+		$exam_attach = ExaminationAttach::where(self::EXAMINATION_ID, '=' ,''.$id.'')->get();
+		$exam = Examination::find($id);
+			$device_id = $exam['device_id'];
+		$device = Device::find($device_id);
+		if ($exam_attach && $exam && $device){
+			/* DELETE SPK FROM OTR */
+			if($exam->spk_code){
+				$client = new Client([
+					self::HEADERS => [self::CONTENT_TYPE => self::APPLICATION_HEADER],
+					// Base URI is used with relative requests
+					// self::BASE_URI => 'http://37.72.172.144/telkomtesthouse/public/v1/',
+					self::BASE_URI => config(self::APP_URI_API_BSP),
+					// You can set any number of default request options.
+					self::TIMEOUT  => 60.0,
+				]);
+				
+				$res_delete_spk = $client->get('spk/delete?examId='.$exam->id.self::SPK_NUMBER_URI.$exam->spk_code)->getBody();
+				$delete_spk = json_decode($res_delete_spk);
+				if(!$delete_spk->status){
+					Session::flash(self::ERROR, $delete_spk->message.' (message from OTR)');
+					return redirect(self::ADMIN_EXAMINATION);
+				}
+			}
+			/* END DELETE SPK FROM OTR */
+			try{
+				$logs_a_exam = $exam;
+				$logs_a_device = $device;
+				Income::where(self::REFERENCE_ID, '=' ,''.$id.'')->delete();
+				Questioner::where(self::EXAMINATION_ID, '=' ,''.$id.'')->delete();
+				Equipment::where(self::EXAMINATION_ID, '=' ,''.$id.'')->delete();
+				EquipmentHistory::where(self::EXAMINATION_ID, '=' ,''.$id.'')->delete();
+				ExaminationHistory::where(self::EXAMINATION_ID, '=' ,''.$id.'')->delete();
+				ExaminationAttach::where(self::EXAMINATION_ID, '=' ,''.$id.'')->delete();
+				QuestionerDynamic::where(self::EXAMINATION_ID, '=' ,''.$id.'')->delete();
+				$exam->delete();
+				$device->delete();
+				
+				if (Storage::disk(self::MINIO)->exists(self::EXAMINATION_LOC.$id)){
+					Storage::disk(self::MINIO)->deleteDirectory(self::EXAMINATION_LOC.$id);
+				}
+
+				$logService->createAdminLog("Hapus Data Pengujian", $page, $logs_a_exam.$logs_a_device, urldecode($reason));
+
+				return 1;
+			}catch (Exception $e){ return 0; }
+		}
+	}
 
 }
