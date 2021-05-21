@@ -155,15 +155,14 @@ class STELController extends Controller
     public function store(Request $request)
     { 
 		$currentUser = Auth::user();
-		$return_page = redirect(self::ADMIN_CREATE);
+		$return_page =  redirect()->back()
+			->with('error_name', 1)
+			->withInput($request->all()); 
 
 	    $name_exists = $this->cekNamaSTEL($request->input('name'));
        
 		if($name_exists == 0){
-			$return_page =  redirect()->back()
-			->with('error_name', 1)
-			->withInput($request->all()); 
-    		$stel = new STEL;
+			$stel = new STEL;
     		$stel->code = $request->input('code');
     		$stel->stel_type = $request->input(self::STEL_TYPE);
     		$stel->name = $request->input('name');
