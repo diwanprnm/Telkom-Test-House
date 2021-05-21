@@ -805,6 +805,7 @@ class ExaminationController extends Controller
 			}
             $status = $request->input(self::RESUME_STATUS);
             $exam->resume_status = $status;
+			$exam->examination_type_id > 1 ? $exam->qa_status = $exam->certificate_status = $status : 0;
 			
 			if($status == -1){
 				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Laporan Uji",$request->input(self::KETERANGAN));
