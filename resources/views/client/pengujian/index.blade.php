@@ -296,15 +296,20 @@
 								
 								@if($item->registration_status == '1' && $item->function_status != '1')
 									@if($item->deal_test_date == NULL)
-									<a class="button button-3d download_progress_btn edit_btn nomargin btn-blue btn-sky" onclick="reSchedule('@php echo $item->id @endphp','@php echo $item->cust_test_date @endphp','1','@php echo $item->deal_test_date @endphp','@php echo $item->urel_test_date @endphp')">{{ trans('translate.examination_reschedule_test_date') }}</a>
+									<a class="button button-3d download_progress_btn edit_btn nomargin btn-blue btn-sky" onclick="reSchedule('@php echo $item->id @endphp','@php echo $item->cust_test_date @endphp','1','@php echo $item->deal_test_date @endphp','@php echo $item->urel_test_date @endphp','@php echo $item->function_test_TE_temp @endphp','@php echo $item->function_test_date_temp @endphp')">{{ trans('translate.examination_reschedule_test_date') }}</a>
 									@elseif($item->deal_test_date != NULL && $item->urel_test_date == NULL && $item->function_test_date_approval == 0)
-									<a class="button button-3d download_progress_btn edit_btn nomargin btn-blue btn-sky" onclick="reSchedule('@php echo $item->id @endphp','@php echo $item->cust_test_date @endphp','2','@php echo $item->deal_test_date @endphp','@php echo $item->urel_test_date @endphp')">{{ trans('translate.examination_reschedule_test_date') }}</a>
-									<a class="button button-3d download_progress_btn edit_btn nomargin btn-blue btn-sky" onclick="reSchedule('@php echo $item->id @endphp','@php echo $item->cust_test_date @endphp','3','@php echo $item->deal_test_date @endphp','@php echo $item->urel_test_date @endphp')">{{ trans('translate.examination_approve_test_date') }}</a>
+									<a class="button button-3d download_progress_btn edit_btn nomargin btn-blue btn-sky" onclick="reSchedule('@php echo $item->id @endphp','@php echo $item->cust_test_date @endphp','2','@php echo $item->deal_test_date @endphp','@php echo $item->urel_test_date @endphp','@php echo $item->function_test_TE_temp @endphp','@php echo $item->function_test_date_temp @endphp')">{{ trans('translate.examination_reschedule_test_date') }}</a>
+									<a class="button button-3d download_progress_btn edit_btn nomargin btn-blue btn-sky" onclick="reSchedule('@php echo $item->id @endphp','@php echo $item->cust_test_date @endphp','3','@php echo $item->deal_test_date @endphp','@php echo $item->urel_test_date @endphp','@php echo $item->function_test_TE_temp @endphp','@php echo $item->function_test_date_temp @endphp')">{{ trans('translate.examination_approve_test_date') }}</a>
 									@elseif($item->urel_test_date != NULL && $item->function_date == NULL)
-									<a class="button button-3d download_progress_btn edit_btn nomargin btn-blue btn-sky" onclick="reSchedule('@php echo $item->id @endphp','@php echo $item->cust_test_date @endphp','2','@php echo $item->deal_test_date @endphp','@php echo $item->urel_test_date @endphp')">{{ trans('translate.examination_reschedule_test_date') }}</a>
+									<a class="button button-3d download_progress_btn edit_btn nomargin btn-blue btn-sky" onclick="reSchedule('@php echo $item->id @endphp','@php echo $item->cust_test_date @endphp','2','@php echo $item->deal_test_date @endphp','@php echo $item->urel_test_date @endphp','@php echo $item->function_test_TE_temp @endphp','@php echo $item->function_test_date_temp @endphp')">{{ trans('translate.examination_reschedule_test_date') }}</a>
 									@endif
 								@endif
-								
+								<!-- jika function_test_TE_temp == 1, tampilkan alert ini -->
+								@if($item->function_test_TE_temp == 1)
+								<div class="alert alert-warning" style="font-weight: bold;">
+									{{ trans('translate.uf_warning') }} {{ $item->function_test_date_temp }}. 
+								</div> 
+								@endif
 								@php if($item->spb_status == 1 && $item->payment_status != 1){ @endphp
 									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/pembayaran')}}">{{ trans('translate.payment_process') }}</a>
 									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/downloadSPB')}}">{{ trans('translate.download') }} SPB</a>
@@ -1040,6 +1045,28 @@
 
       </div>
     </div> 
+
+	<div id="modal_status_uf" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
+      <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Status Uji Fungsi</h4>
+          </div>
+          <div class="modal-body pre-scrollable">
+               <div class="row">
+                    <h2 id='h2_modal_status_uf'> </h2>
+                </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
+          </div>
+        </div>
+
+      </div>
+    </div> 
   
   <div id="modal_status_download" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
       <div class="modal-dialog modal-lg">
@@ -1315,7 +1342,13 @@
 		xhr.send();
 	}
 	
-	function reSchedule(a,b,c,d,e){
+	function reSchedule(a,b,c,d,e,f,g){
+		// jika function_test_TE_temp == 1, tidak bisa memilih tanggal dan munculkan alert
+		if(f==1){
+			document.getElementById("h2_modal_status_uf").innerHTML = "{{ trans('translate.uf_warning') }} "+g;
+			$('#modal_status_uf').modal('show');
+			return false;
+		}
 		if(c==1){
 			$('#reschedule-modal-content').modal('show');
 			$('#hide_id_exam').val(a);

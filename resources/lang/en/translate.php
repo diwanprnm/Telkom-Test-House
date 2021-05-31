@@ -447,4 +447,5 @@ return [
 	'choose_another_bank' => 'Choose Another Bank',
 
 	'payment_process' => 'Payment Process',
+	'uf_warning' => 'You have failed the Function Test twice. You can reapply a Function Test 2 months since the last Function Test, i.e. ',
 ];

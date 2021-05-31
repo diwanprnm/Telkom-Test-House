@@ -194,6 +194,8 @@ class PengujianController extends Controller
 				examinations.created_at,
 				examinations.payment_method,
 				examinations.VA_expired,
+				examinations.function_test_date_temp,
+				examinations.function_test_TE_temp,
 				(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name';
 			
 				$query = DB::table(self::EXAMINATIONS)
