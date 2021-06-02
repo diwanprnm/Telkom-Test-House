@@ -213,7 +213,7 @@ class HomeController extends Controller
 			
 			$data =  array();
 	    	$page = self::PROCESS;
-			return view('client.process.'.$category.'_process')
+			return view('client.process.v2')
 				->with('data', $data)
 				->with('userData', $userData[0])
 				->with('jns_pengujian', $category)
