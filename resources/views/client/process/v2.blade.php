@@ -21,6 +21,7 @@
 		    position: relative;
 		}
         .text-normal{
+			top: 4px;
             font-weight: normal !important;
         }
         .text-bold{
@@ -85,7 +86,7 @@
 					            <h2>First Step</h2>
 					            <fieldset>
 									<div class="form-group">
-										<label for="f1-jns-perusahaan" class="text-bold">{{ trans('translate.service_company_type') }} : </label>
+										<label for="f1-jns-perusahaan" class="text-bold">{{ trans('translate.service_company_type') }}: </label>
 										<input type="radio" name="jns_perusahaan" value="Agen" placeholder="{{ trans('translate.service_company_agent') }}"  checked>
 										<input type="radio" name="jns_perusahaan" value="Pabrikan" placeholder="{{ trans('translate.service_company_branch') }}" >
 									</div>
@@ -94,12 +95,12 @@
 									<input type="hidden"   id="f1-fjns-referensi-perangkat" name="f1-jns-referensi-perangkat" value='0' > 
 									<div class="form-group txt-ref-perangkat">
 										<label for="f1-referensi-perangkat">{{ trans('translate.service_device_test_reference') }} *</label>
-										<select multiple class="chosen-select" id="f1-referensi-perangkat" name="f1-referensi-perangkat[]" placeholder="{{ trans('translate.service_device_test_reference') }}" > 
+										<select multiple name="f1-referensi-perangkat[]" placeholder="{{ trans('translate.service_device_test_reference') }}" id="f1-referensi-perangkat" class="chosen-select required error"> 
 											@foreach($data_stels as $item)
 												@if(in_array($item->lab,$data_layanan_not_active))
-													<option value="{{ $item->stel }}" disabled>{{ $item->stel }} || {{ $item->device_name }}</option>
+													<option value="" disabled>{{ $item->stel }} || {{ $item->device_name }}</option>
 												@else
-													<option value="{{ $item->stel }}">{{ $item->stel }} || {{ $item->device_name }}</option>
+													<option value="">{{ $item->stel }} || {{ $item->device_name }}</option>
 												@endif
 											@endforeach
 										</select>
@@ -131,6 +132,7 @@
 
 
 									<div class="form-group"> 
+										<label for="lokasi_pengujian" class="text-bold">{{ trans('translate.service_label_testing_site') }}: </label>
 										<input type="radio" name="lokasi_pengujian" value="0" placeholder="{{ trans('translate.service_lab_testing') }}" checked>
 										<input type="radio" name="lokasi_pengujian" value="1" placeholder="{{ trans('translate.service_loc_testing') }}">
 									</div>
@@ -141,10 +143,10 @@
 					            <fieldset>
 									<legend></legend>
 
-									@unless ($jns_pengujian == 'cal')
+									@unless ($jns_pengujian == 'cal' || $jns_pengujian == 'qa')
 										<div class="form-group col-xs-12">
-											<label>{{ trans('translate.service_upload_reference_test') }}<span class="text-danger">*</span></label>
-											<input class="data-upload-berkas f1-file-ref-uji required" id="fileInput-ref-uji" name="fuploadrefuji" type="file" accept="application/pdf,image/*">
+											<label>{{ trans('translate.service_upload_reference_test') }}<span class="text-danger"></span></label>
+											<input class="data-upload-berkas f1-file-ref-uji" id="fileInput-ref-uji" name="fuploadrefuji" type="file" accept="application/pdf,image/*">
 											<div id="ref-uji-file"></div>
 											<div id="attachment-file">
 												*{{ trans('translate.maximum_filesize') }}
@@ -152,10 +154,13 @@
 										</div> 
 									@endunless
 
+									@if ($jns_pengujian == 'ta')
+										
+									@endif
 
 									<div class="dv-dll">
 										<div class="form-group col-xs-12">
-											<label>{{ trans('translate.service_upload_another_file') }}</label>
+											<label>{{ trans('translate.service_upload_another_file') }}</label><span class="text-danger">*</span></label>
 											<input class="data-upload-berkas f1-file-dll required" id="fileInput-dll" name="fuploaddll" type="file" accept="application/pdf,image/*" >
 											<div id="dll-file"></div>
 											<div id="attachment-file">
@@ -205,9 +210,12 @@
 	    transitionEffect: "slideLeft",
 	    onStepChanging: function (event, currentIndex, newIndex)
 	    {  
-	    	console.log(newIndex);
+	    	console.log('curret: '+currentIndex+' ** newIndex: '+newIndex);
 	    	if(!form.valid() && (newIndex > currentIndex)){ 
-	    		return false;
+				if(currentIndex == 0 && !$('#f1_referensi_perangkat_chosen ul li.search-choice').length){
+					$('#f1_referensi_perangkat_chosen .search-field input').addClass( "error" );//.removeClass( "myClass noClass" ).addClass( "yourClass" );
+				}
+				return false;
 	    	}
 
 			//UI
@@ -216,11 +224,64 @@
 
 	    	form.trigger("focus"); 
 	        form.validate().settings.ignore = ":disabled,:hidden"; 
-	       	console.log(currentIndex);
 
-			if(currentIndex == 1){
-				$("body").addClass("loading");
-				setTimeout($("body").removeClass("loading"), 3000);
+			if(currentIndex == 0){
+				let error = false;
+				$( "#formBTNprevious" ).hide();
+				$('#f1_referensi_perangkat_chosen .search-field input').removeAttr("style")
+				if(!$('#f1_referensi_perangkat_chosen ul li.search-choice').length){
+					$('#f1_referensi_perangkat_chosen .search-field input').addClass( "error" );//.removeClass( "myClass noClass" ).addClass( "yourClass" );
+					error = true;
+					return !error;
+				}
+
+				$.ajax({
+					type: "POST",
+					url : "../cekPermohonan",
+					data: {'_token':"{{ csrf_token() }}", 'jnsPelanggan':jnsPelanggan, 'serialNumber_perangkat':serialNumber_perangkat, 'nama_perangkat':nama_perangkat, 'model_perangkat':model_perangkat, 'merk_perangkat':merk_perangkat, 'kapasitas_perangkat':kapasitas_perangkat},
+					// dataType:'json',
+					type:'post',
+					success: function(data){
+						console.log(data);
+						if(data == 1){
+							alert("Perangkat[Nama, Merk, Model, Kapasitas] dan Jenis Pengujian sudah ada!"); 
+							error = true;
+						}else{
+							var formData = new FormData($('#form-permohonan')[0]);
+							$( "#formBTNfinish" ).hide();
+							$( "#formBTNnext" ).hide();
+
+							$.ajax({
+								beforeSend: function(){ 
+									$("body").addClass("loading");	
+								},
+								type: "POST",
+								url : "../submitPermohonan",
+								// data: {'_token':"{{ csrf_token() }}", 'nama_pemohon':nama_pemohon, 'nama_pemohons':nama_pemohon},
+								// data:new FormData($("#form-permohonan")[0]),
+								data:formData,
+								// dataType:'json', 
+								processData: false,  
+								contentType: false,
+								success: function(data){
+									$("body").removeClass("loading"); 
+									window.open("../cetakPermohonan");
+									$(".actions").hide(); 
+								},
+								error:function(){
+									$( "#formBTNprevious" ).show();
+									$( "#formBTNfinish" ).show();
+									$( "#formBTNnext" ).show();
+									$("body").removeClass("loading");
+									error = true;
+									alert("Gagal mengambil data"); 
+									// formWizard.steps("previous"); 
+								}
+							}); 
+						}
+					}
+				});
+				return !error;
 			}
 
 	       	if(newIndex == 4){ 
@@ -250,45 +311,7 @@
 				$("#f4-preview-12").html($(".f1-file-dll").val());
 	       	}  
 	        if(newIndex == 5){
-				if($('#hide_cekSNjnsPengujian').val() == 1){
-					alert("Perangkat[Nama, Merk, Model, Kapasitas] dan Jenis Pengujian sudah ada!"); 
-					return false;
-				}else{
-					var formData = new FormData($('#form-permohonan')[0]);
-					var error = false;
-					$( "#formBTNprevious" ).hide();
-					$( "#formBTNfinish" ).hide();
-					$( "#formBTNnext" ).hide();
-
-					$.ajax({
-						beforeSend: function(){ 
-							$("body").addClass("loading");	
-						},
-						type: "POST",
-						url : "../submitPermohonan",
-						// data: {'_token':"{{ csrf_token() }}", 'nama_pemohon':nama_pemohon, 'nama_pemohons':nama_pemohon},
-						// data:new FormData($("#form-permohonan")[0]),
-						data:formData,
-						// dataType:'json', 
-						processData: false,  
-						contentType: false,
-						success: function(data){
-							$("body").removeClass("loading"); 
-							window.open("../cetakPermohonan");
-
-							$(".actions").hide(); 
-						},
-						error:function(){
-							$( "#formBTNprevious" ).show();
-							$( "#formBTNfinish" ).show();
-							$( "#formBTNnext" ).show();
-							$("body").removeClass("loading");
-							error = true;
-							alert("Gagal mengambil data"); 
-							// formWizard.steps("previous"); 
-						}
-					}); 
-				}
+				
 	        }
 
 	        if(newIndex == 3){
@@ -472,7 +495,7 @@
 			textNormal.includes(x.htmlFor) && x.classList.add("text-normal");
 		});
 
-		if ({{jns_pengujian}} == )
+		$('#f1_referensi_perangkat_chosen .search-field input').removeAttr("style");
 	},1000);
  </script>
 @endsection
