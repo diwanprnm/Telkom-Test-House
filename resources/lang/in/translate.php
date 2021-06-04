@@ -46,6 +46,7 @@ return [
 	'service_device_test_reference'	=> 'Referensi Uji',
 	'service_device_document'		=> 'Dokumen Pendukung',
 	
+	'service_label_testing_site'		=> 'Lokasi Pengetesan',
 	'service_lab_testing'				=> "Uji Lab Telkom",
 	'service_loc_testing'				=> "Uji Lokasi",
 	
@@ -61,7 +62,7 @@ return [
 	'service_upload_reference_test_no'	=> 'No Referensi Uji',
 	'service_upload_reference_test_date'=> 'Tanggal Referensi Uji',
 	'service_upload_support_principals'	=> 'Surat Dukungan Prinsipal',
-	'service_upload_another_file'		=> 'File Lainnya',
+	'service_upload_another_file'		=> 'Dokumen Spesifikasi/Datasheet',
 	'service_upload_support_principals_no'	=> 'No Surat Dukungan Prinsipal',
 	'service_upload_support_principals_date'=> 'Tanggal Surat Dukungan Prinsipal',
 	'service_upload_sp3'				=> 'PLG ID dan NIB',

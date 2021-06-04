@@ -46,6 +46,7 @@ return [
 	'service_device_test_reference'	 	=> 'Test Reference',
 	'service_device_document'			=> 'Supporting Documents',
 	
+	'service_label_testing_site'		=> 'Test Location',
 	'service_lab_testing'				=> "Telkom's Lab Testing",
 	'service_loc_testing'				=> "Onsite Testing",
 	
@@ -61,7 +62,7 @@ return [
 	'service_upload_reference_test_no'	=> 'No Test Reference',
 	'service_upload_reference_test_date'=> 'Date of Test Reference',
 	'service_upload_support_principals'	=> 'Support Principals',
-	'service_upload_another_file'		=> 'Another File',
+	'service_upload_another_file'		=> 'Specification Document/Datasheet',
 	'service_upload_support_principals_no'	=> 'No Support Principals',
 	'service_upload_support_principals_date'=> 'Date of Support Principals',
 	'service_upload_sp3'				=> 'PLG ID & NIB',
