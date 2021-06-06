@@ -211,14 +211,14 @@ class PDFMCTablePermohonan extends FPDF{
 	//Page footer
 	function Footer()
 	{
-		$this->SetY(-45);
+		$this->SetY(-48);
 		$this->SetFont('helvetica','',10);
 		$this->Cell(0,5,"$this->kotaPerusahaan, $this->date",0,0,'R');
-		$this->Ln(13);
+		$this->Ln(18);
 		$this->SetFont('','U');
 		$this->Cell(185,5,"$this->nama_pemohon",0,0,'R');
 		$this->SetFont('helvetica','',8);
-		$this->Ln(6);
+		$this->Ln(4);
 		$this->SetFont('','U');
 		$this->Cell(185,5,"NAMA PEMOHON & CAP PERUSAHAAN",0,0,'R');
 		$this->Ln(4);

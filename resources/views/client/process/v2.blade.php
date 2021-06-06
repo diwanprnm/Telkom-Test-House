@@ -229,12 +229,13 @@
 
 			//UI
 			$( '#formBTNprevious' ).show();
-			(newIndex == 0 || newIndex == null) && $( '#formBTNprevious' ).hide();
+			$( '#formBTNfinish' ).hide();
+			//(newIndex == 0 || newIndex == null) && $( '#formBTNprevious' ).hide();
 
 	    	form.trigger("focus"); 
 	        form.validate().settings.ignore = ":disabled,:hidden"; 
 
-			if(currentIndex == 0){
+			if(newIndex == 0){
 				let error = false;
 				$( "#formBTNprevious" ).hide();
 				$('#f1_referensi_perangkat_chosen .search-field input').removeAttr("style")
@@ -244,113 +245,123 @@
 					return !error;
 				}
 
-				$.ajax({
-					type: "POST",
-					url : "../cekPermohonan",
-					data: {'_token':"{{ csrf_token() }}", 'jnsPelanggan':jnsPelanggan, 'serialNumber_perangkat':serialNumber_perangkat, 'nama_perangkat':nama_perangkat, 'model_perangkat':model_perangkat, 'merk_perangkat':merk_perangkat, 'kapasitas_perangkat':kapasitas_perangkat},
-					// dataType:'json',
-					type:'post',
-					success: function(data){
-						console.log(data);
-						if(data == 1){
-							alert("Perangkat[Nama, Merk, Model, Kapasitas] dan Jenis Pengujian sudah ada!"); 
-							error = true;
-						}else{
-							var formData = new FormData($('#form-permohonan')[0]);
-							$( "#formBTNfinish" ).hide();
-							$( "#formBTNnext" ).hide();
+				// $.ajax({
+				// 	type: "POST",
+				// 	url : "../cekPermohonan",
+				// 	data: {'_token':"{{ csrf_token() }}", 'jnsPelanggan':jnsPelanggan, 'serialNumber_perangkat':serialNumber_perangkat, 'nama_perangkat':nama_perangkat, 'model_perangkat':model_perangkat, 'merk_perangkat':merk_perangkat, 'kapasitas_perangkat':kapasitas_perangkat},
+				// 	// dataType:'json',
+				// 	type:'post',
+				// 	success: function(data){
+				// 		console.log(data);
+				// 		if(data == 1){
+				// 			alert("Perangkat[Nama, Merk, Model, Kapasitas] dan Jenis Pengujian sudah ada!"); 
+				// 			error = true;
+				// 		}else{
+				// 			var formData = new FormData($('#form-permohonan')[0]);
+				// 			$( "#formBTNfinish" ).hide();
+				// 			$( "#formBTNnext" ).hide();
 
-							$.ajax({
-								beforeSend: function(){ 
-									$("body").addClass("loading");	
-								},
-								type: "POST",
-								url : "../submitPermohonan",
-								// data: {'_token':"{{ csrf_token() }}", 'nama_pemohon':nama_pemohon, 'nama_pemohons':nama_pemohon},
-								// data:new FormData($("#form-permohonan")[0]),
-								data:formData,
-								// dataType:'json', 
-								processData: false,  
-								contentType: false,
-								success: function(data){
-									$("body").removeClass("loading"); 
-									window.open("../cetakPermohonan");
-									$(".actions").hide(); 
-								},
-								error:function(){
-									$( "#formBTNprevious" ).show();
-									$( "#formBTNfinish" ).show();
-									$( "#formBTNnext" ).show();
-									$("body").removeClass("loading");
-									error = true;
-									alert("Gagal mengambil data"); 
-									// formWizard.steps("previous"); 
-								}
-							}); 
-						}
-					}
-				});
-				return !error;
+				// 			$.ajax({
+				// 				beforeSend: function(){ 
+				// 					$("body").addClass("loading");	
+				// 				},
+				// 				type: "POST",
+				// 				url : "../submitPermohonan",
+				// 				// data: {'_token':"{{ csrf_token() }}", 'nama_pemohon':nama_pemohon, 'nama_pemohons':nama_pemohon},
+				// 				// data:new FormData($("#form-permohonan")[0]),
+				// 				data:formData,
+				// 				// dataType:'json', 
+				// 				processData: false,  
+				// 				contentType: false,
+				// 				success: function(data){
+				// 					$("body").removeClass("loading"); 
+				// 					window.open("../cetakPermohonan");
+				// 					$(".actions").hide(); 
+				// 				},
+				// 				error:function(){
+				// 					$( "#formBTNprevious" ).show();
+				// 					$( "#formBTNfinish" ).show();
+				// 					$( "#formBTNnext" ).show();
+				// 					$("body").removeClass("loading");
+				// 					error = true;
+				// 					alert("Gagal mengambil data"); 
+				// 					// formWizard.steps("previous"); 
+				// 				}
+				// 			}); 
+				// 		}
+				// 	}
+				// });
+				// return !error;
 			}
 
-	       	if(newIndex == 4){ 
-	       		$('.actions > ul > li:nth-child(2) a').text("Save");
-	       	 	$("#f2-preview-7").html($("#f1-plg_id-perusahaan").val());
-	       	 	$("#f2-preview-8").html($("#f1-nib-perusahaan").val());
+			if(newIndex == 1){
+				$( '#formBTNprevious' ).show();
+			}
 
-	       	 	$("#f3-preview-1").html($("#f1-nama-perangkat").val());
-				$("#f3-preview-2").html($("#f1-merek-perangkat").val());
-				$("#f3-preview-3").html($("#f1-model-perangkat").val());
-				$("#f3-preview-4").html($("#f1-kapasitas-perangkat").val());
-					var stel = $(".chosen-select").val().join(",");
-				$("#f3-preview-5").html(stel);
-				// $("#f3-preview-5").html($("#f1-referensi-perangkat").val());
-				$("#f3-preview-6").html($("#f1-pembuat-perangkat").val());
-				$("#f3-preview-7").html($("#f1-serialNumber-perangkat").val());
+			if(newIndex == 2){
+				$( '#formBTNprevious' ).hide();
+				$( "#formBTNnext" ).hide();
+			}
 
-				$("#f4-preview-2").html($("#f1-no-siupp").val());
-				$("#f4-preview-1").html($('#hide_siupp_file').val());
-				$("#f4-preview-3").html($("#f1-tgl-siupp").val()); 
-				$("#f4-preview-5").html($("#f1-sertifikat-sistem-mutu").val());
-				$("#f4-preview-6").html($("#hide_sertifikat_file").val());
-				$("#f4-preview-7").html($("#f1-batas-waktu").val());
-				$("#f4-preview-11").html($("#hide_npwp_file").val());
-				$("#f4-preview-file-ref-uji").html($(".f1-file-ref-uji").val());
-				$("#f4-preview-file-sp3").html($(".f1-file-sp3").val());
-				$("#f4-preview-12").html($(".f1-file-dll").val());
-	       	}  
-	        if(newIndex == 5){
+
+	       	// if(newIndex == 4){ 
+	       	// 	$('.actions > ul > li:nth-child(2) a').text("Save");
+	       	//  	$("#f2-preview-7").html($("#f1-plg_id-perusahaan").val());
+	       	//  	$("#f2-preview-8").html($("#f1-nib-perusahaan").val());
+
+	       	//  	$("#f3-preview-1").html($("#f1-nama-perangkat").val());
+			// 	$("#f3-preview-2").html($("#f1-merek-perangkat").val());
+			// 	$("#f3-preview-3").html($("#f1-model-perangkat").val());
+			// 	$("#f3-preview-4").html($("#f1-kapasitas-perangkat").val());
+			// 		var stel = $(".chosen-select").val().join(",");
+			// 	$("#f3-preview-5").html(stel);
+			// 	// $("#f3-preview-5").html($("#f1-referensi-perangkat").val());
+			// 	$("#f3-preview-6").html($("#f1-pembuat-perangkat").val());
+			// 	$("#f3-preview-7").html($("#f1-serialNumber-perangkat").val());
+
+			// 	$("#f4-preview-2").html($("#f1-no-siupp").val());
+			// 	$("#f4-preview-1").html($('#hide_siupp_file').val());
+			// 	$("#f4-preview-3").html($("#f1-tgl-siupp").val()); 
+			// 	$("#f4-preview-5").html($("#f1-sertifikat-sistem-mutu").val());
+			// 	$("#f4-preview-6").html($("#hide_sertifikat_file").val());
+			// 	$("#f4-preview-7").html($("#f1-batas-waktu").val());
+			// 	$("#f4-preview-11").html($("#hide_npwp_file").val());
+			// 	$("#f4-preview-file-ref-uji").html($(".f1-file-ref-uji").val());
+			// 	$("#f4-preview-file-sp3").html($(".f1-file-sp3").val());
+			// 	$("#f4-preview-12").html($(".f1-file-dll").val());
+	       	// }  
+	        // if(newIndex == 5){
 				
-	        }
+	        // }
 
-	        if(newIndex == 3){
-				$('.actions > ul > li:nth-child(2) a').text("Next");
+	        // if(newIndex == 3){
+			// 	$('.actions > ul > li:nth-child(2) a').text("Next");
 				
-				var e = document.getElementById("f1-referensi-perangkat");
-				if(e.value==''){
-					alert("Please Choose Test Reference");
-					e.focus();
-					return false;
-				}
+			// 	var e = document.getElementById("f1-referensi-perangkat");
+			// 	if(e.value==''){
+			// 		alert("Please Choose Test Reference");
+			// 		e.focus();
+			// 		return false;
+			// 	}
 
-	        	var jnsPelanggan = $('#hide_jns_pengujian').val();
-				var serialNumber_perangkat = $('#f1-serialNumber-perangkat').val();
-				var nama_perangkat = $('#f1-nama-perangkat').val();
-				var model_perangkat = $('#f1-model-perangkat').val();
-				var merk_perangkat = $('#f1-merek-perangkat').val();
-				var kapasitas_perangkat = $('#f1-kapasitas-perangkat').val();
-				$.ajax({
-					type: "POST",
-					url : "../cekPermohonan",
-					data: {'_token':"{{ csrf_token() }}", 'jnsPelanggan':jnsPelanggan, 'serialNumber_perangkat':serialNumber_perangkat, 'nama_perangkat':nama_perangkat, 'model_perangkat':model_perangkat, 'merk_perangkat':merk_perangkat, 'kapasitas_perangkat':kapasitas_perangkat},
-					// dataType:'json',
-					type:'post',
-					success: function(data){
-						console.log(data);
-						$('#hide_cekSNjnsPengujian').val(data); 
-					}
-				});
-	        }  
+	        // 	var jnsPelanggan = $('#hide_jns_pengujian').val();
+			// 	var serialNumber_perangkat = $('#f1-serialNumber-perangkat').val();
+			// 	var nama_perangkat = $('#f1-nama-perangkat').val();
+			// 	var model_perangkat = $('#f1-model-perangkat').val();
+			// 	var merk_perangkat = $('#f1-merek-perangkat').val();
+			// 	var kapasitas_perangkat = $('#f1-kapasitas-perangkat').val();
+			// 	$.ajax({
+			// 		type: "POST",
+			// 		url : "../cekPermohonan",
+			// 		data: {'_token':"{{ csrf_token() }}", 'jnsPelanggan':jnsPelanggan, 'serialNumber_perangkat':serialNumber_perangkat, 'nama_perangkat':nama_perangkat, 'model_perangkat':model_perangkat, 'merk_perangkat':merk_perangkat, 'kapasitas_perangkat':kapasitas_perangkat},
+			// 		// dataType:'json',
+			// 		type:'post',
+			// 		success: function(data){
+			// 			console.log(data);
+			// 			$('#hide_cekSNjnsPengujian').val(data); 
+			// 		}
+			// 	});
+	        // }  
 
 
 	        if(newIndex < currentIndex ){ 
