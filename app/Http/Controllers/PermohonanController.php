@@ -566,7 +566,9 @@ class PermohonanController extends Controller
 				'initPengujian' => $jns_pengujian_name,
 				'descPengujian' => $jns_pengujian_desc,
 				'no_reg' => $no_reg,
-				'kotaPerusahaan' => $kotaPerusahaan
+				'kotaPerusahaan' => $kotaPerusahaan,
+				'user_name' => Auth::user()->name,
+				'date' => date('d-m-Y')
 			]);
 		}else{
 			$data = array();

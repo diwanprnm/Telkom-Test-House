@@ -1667,7 +1667,8 @@ class PengujianController extends Controller
 			d.test_reference AS referensi_perangkat,
 			d.serial_number AS serialNumber,
 			e.jns_perusahaan AS jnsPerusahaan,
-			e.function_test_NO
+			e.function_test_NO,
+			e.created_at
 		FROM
 			examinations e,
 			devices d,
@@ -1709,6 +1710,7 @@ class PengujianController extends Controller
 			'nibPerusahaan' => $data[0]->nibPerusahaan  ? : '-',
 			'npwpPerusahaan' => $data[0]->npwpPerusahaan  ? : '-',
 			'kotaPerusahaan' => $data[0]->kotaPerusahaan ? : '-',
+			'date' => Carbon::parse($data[0]->created_at ?? date('d-m-Y') )->format('d-m-Y')
 		);
 		
 		$PDF = new \App\Services\PDF\PDFService();

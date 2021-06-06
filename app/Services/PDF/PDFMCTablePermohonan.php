@@ -154,10 +154,14 @@ class PDFMCTablePermohonan extends FPDF{
 	public $judul;
 	public $title;
 	public $kotaPerusahaan;
-	function judul_kop($judul, $title, $kotaPerusahaan) {
+	public $date;
+	public $nama_pemohon;
+	function data_param($judul, $title, $kotaPerusahaan, $date, $nama_pemohon) {
 		$this->judul = $judul;
 		$this->title = $title;
 		$this->kotaPerusahaan = ucwords(strtolower($kotaPerusahaan));
+		$this->date = $date;
+		$this->nama_pemohon = $nama_pemohon;
 	}
 	
 	function Header()
@@ -207,12 +211,12 @@ class PDFMCTablePermohonan extends FPDF{
 	//Page footer
 	function Footer()
 	{
-		$this->SetY(-50);
+		$this->SetY(-45);
 		$this->SetFont('helvetica','',10);
-		$this->Cell(0,5,"$this->kotaPerusahaan, ____________________",0,0,'R');
-		$this->Ln(18);
+		$this->Cell(0,5,"$this->kotaPerusahaan, $this->date",0,0,'R');
+		$this->Ln(13);
 		$this->SetFont('','U');
-		$this->Cell(185,5,"                                        ",0,0,'R');
+		$this->Cell(185,5,"$this->nama_pemohon",0,0,'R');
 		$this->SetFont('helvetica','',8);
 		$this->Ln(6);
 		$this->SetFont('','U');
