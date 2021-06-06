@@ -155,7 +155,16 @@
 									@endunless
 
 									@if ($jns_pengujian == 'ta')
-										
+										<div class="dv-srt-sp3">
+											<div class="form-group col-xs-12">
+												<label>{{ trans('translate.service_upload_sp3') }}<span class="text-danger">*</span></label>
+												<input class="data-upload-berkas f1-file-sp3 required" id="fileInput-sp3" name="fuploadsp3" type="file" accept="application/pdf,image/*">
+												<div id="sp3-file"></div>
+												<div id="attachment-file">
+													*{{ trans('translate.maximum_filesize') }}
+												</div>
+											</div>
+										</div> 
 									@endif
 
 									<div class="dv-dll">
