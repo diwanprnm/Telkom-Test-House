@@ -52,9 +52,13 @@ class SalesController extends Controller
     private const MINIO = 'minio';
     private const PAYMENT_DETAIL = 'payment_detail/';
     private const PAYMENT_STATUS = 'payment_status';
+    private const PAYMENT_STATUS2 = 'payment_status2';
+    private const PAYMENT_STATUS3 = 'payment_status3';
     private const REQUIRED = 'required';
     private const SALES = 'SALES';
     private const SEARCH = 'search';
+    private const SEARCH2 = 'search2';
+    private const SEARCH3 = 'search3';
     private const STELS = 'stels';
     private const TIMEOUT = 'timeout';
     private const USERS = 'users';
@@ -99,20 +103,41 @@ class SalesController extends Controller
         $message = null;
         $paginate = 10;
         $salesService = new SalesService();
-        // gate Sales Data
-        $data = $salesService->getData($request);
+        $tab = $request->input('tab');
+        // get Sales Data
+        $data = $salesService->getDataByStatus($request, 0);
+        $data2 = $salesService->getDataByStatus($request, 1);
+        $data3 = $salesService->getDataByStatus($request, 3);
         // give message if data not found
         if (count($data['data']->paginate($paginate)) == 0){
             $message = self::DATA_NOT_FOUND;
         }
+        if (count($data2['data']->paginate($paginate)) == 0){
+            $message = self::DATA_NOT_FOUND;
+        }
+        if (count($data3['data']->paginate($paginate)) == 0){
+            $message = self::DATA_NOT_FOUND;
+        }
+        
         //return view to saves index with data
         return view('admin.sales.index')
+            ->with('tab', $tab)
             ->with(self::MESSAGE, $message)
             ->with('data', $data['data']->paginate($paginate))
             ->with(self::SEARCH, $data[self::SEARCH])
-            ->with(self::PAYMENT_STATUS, $data['paymentStatus'])
             ->with('before_date', $data['before'])
-            ->with('after_date', $data['after']);
+            ->with('after_date', $data['after'])
+
+            ->with('data2', $data2['data']->paginate($paginate))
+            ->with(self::SEARCH2, $data2[self::SEARCH])
+            ->with('before_date2', $data2['before'])
+            ->with('after_date2', $data2['after'])
+
+            ->with('data3', $data3['data']->paginate($paginate))
+            ->with(self::SEARCH3, $data3[self::SEARCH])
+            ->with('before_date3', $data3['before'])
+            ->with('after_date3', $data3['after'])
+            ;
     }
 
 
