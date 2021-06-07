@@ -630,24 +630,19 @@
 
 	document.getElementById("filter3").onclick = function() {
 		var baseUrl = "{{URL::to('/')}}";
-		var params = {}; 
-		var tab = $('.tabs .current').attr('data-tab');
-		var search_value = document.getElementById("search_value3").value;
-		var before = document.getElementById("before_date3");
-		var after = document.getElementById("after_date3");
-		var beforeValue = before.value;
-		var afterValue = after.value;
-		
-		if (beforeValue != ''){
-			params['before_date'] = beforeValue;
-		}
-		if (afterValue != ''){
-			params['after_date'] = afterValue;
-		}
-		
-		params['payment_status'] = 3;
-		params['search'] = search_value;
-		params['tab'] = tab;
+		var params = {
+			search:document.getElementById("search_value").value,
+			search2:document.getElementById("search_value2").value,
+			search3:document.getElementById("search_value3").value,
+			before:document.getElementById("before_date").value,
+			before2:document.getElementById("before_date2").value,
+			before3:document.getElementById("before_date3").value,
+			after:document.getElementById("after_date").value,
+			after2:document.getElementById("after_date2").value,
+			after3:document.getElementById("after_date3").value,
+			tab:$('.tabs .current').attr('data-tab'),
+			payment_status:3
+		};
 		document.location.href = baseUrl+'/admin/sales?'+jQuery.param(params);
 	};
 
