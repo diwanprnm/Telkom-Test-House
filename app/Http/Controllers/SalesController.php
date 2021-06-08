@@ -105,17 +105,9 @@ class SalesController extends Controller
         $salesService = new SalesService();
         $tab = $request->input('tab');
         // get Sales Data
-        $data = $salesService->getDataByStatus($request, 0);
-        $data2 = $salesService->getDataByStatus($request, 1);
-        $data3 = $salesService->getDataByStatus($request, 3);
-        // give message if data not found
+        $data = $salesService->getData($request);
+        // give message if data not found 
         if (count($data['data']->paginate($paginate)) == 0){
-            $message = self::DATA_NOT_FOUND;
-        }
-        if (count($data2['data']->paginate($paginate)) == 0){
-            $message = self::DATA_NOT_FOUND;
-        }
-        if (count($data3['data']->paginate($paginate)) == 0){
             $message = self::DATA_NOT_FOUND;
         }
         
@@ -124,19 +116,11 @@ class SalesController extends Controller
             ->with('tab', $tab)
             ->with(self::MESSAGE, $message)
             ->with('data', $data['data']->paginate($paginate))
+            ->with('data2', $data['data']->paginate($paginate))
+            ->with('data3', $data['data']->paginate($paginate))
             ->with(self::SEARCH, $data[self::SEARCH])
             ->with('before_date', $data['before'])
             ->with('after_date', $data['after'])
-
-            ->with('data2', $data2['data']->paginate($paginate))
-            ->with(self::SEARCH2, $data2[self::SEARCH])
-            ->with('before_date2', $data2['before'])
-            ->with('after_date2', $data2['after'])
-
-            ->with('data3', $data3['data']->paginate($paginate))
-            ->with(self::SEARCH3, $data3[self::SEARCH])
-            ->with('before_date3', $data3['before'])
-            ->with('after_date3', $data3['after'])
             ;
     }
 
@@ -235,7 +219,6 @@ class SalesController extends Controller
 
     public function excel(Request $request) 
     {
-
         $currentUser = Auth::user();
         if (!$currentUser){return redirect(self::LOGIN);}
         
@@ -243,7 +226,7 @@ class SalesController extends Controller
         $salesService = new SalesService();
 
         // gate Sales Data
-        $data = $salesService->getData($request)['data']->get();
+        $data = $salesService->getDataByStatus($request, $request->input('payment_status'));
 
         // Define the Excel spreadsheet headers
         $examsArray[] = [
@@ -265,10 +248,9 @@ class SalesController extends Controller
             '2' => 'Paid (waiting confirmation)',
             '3' => 'Paid (delivered)'
         );
-        
         // Convert each ot the returned collection into an array, and append it to the payments array
         $no = 0;
-        foreach ($data as $row) {
+        foreach ($data['data']->get() as $row) {
             $no ++;
             
             if ($paymentStatusList[$row->payment_status]){

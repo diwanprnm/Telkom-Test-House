@@ -64,17 +64,23 @@ class SalesService
     
     public function getData(Request $request)
     {
+        $search = $request->input('search') ? $request->input('search') : NULL;
+        $before = $request->input('before') ? $request->input('before') : NULL;
+        $after = $request->input('after') ? $request->input('after') : NULL;
         $logService = new LogService();
         //query awal untuk sales controller
         $dataSales = $this->initialQuery(); 
         //inisial service sales dan queryFilter
         $queryFilter = new QueryFilter($request, $dataSales);
         //filter search if has input create log.
-        $searchFiltered = $this->search($request, $dataSales);
+        $searchFiltered = $this->search($search, $before, $after, $dataSales);
         if ($searchFiltered[self::SEARCH]!=''){
             $queryFilter = new QueryFilter($request, $searchFiltered['dataSales']);
             $logService->createLog('Search Sales','Sales',json_encode(array(self::SEARCH=>$searchFiltered[self::SEARCH])));
         }
+
+        $query = $queryFilter->getQuery()->where("payment_status", $status);
+
         //filterquery
         $queryFilter
             ->paymentAllStatus()
@@ -82,7 +88,7 @@ class SalesService
             ->afterDate(DB::raw('DATE(stels_sales.created_at)'))
             ->getSortedAndOrderedData('stels_sales.created_at','desc')
         ;
-        //get the data and sort them
+        //get the data and sort them 
         return array(
             'data' => $queryFilter->getQuery(),
             $this::SEARCH => $searchFiltered[$this::SEARCH],

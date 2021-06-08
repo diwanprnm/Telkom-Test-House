@@ -246,7 +246,7 @@
 		        </div>
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table">
-	                    <input id="search_value2" type="text" placeholder="Search" id="form-field-17" class="form-control " value="{{ $search2 }}">
+	                    <input id="search_value2" type="text" placeholder="Search" id="form-field-17" class="form-control " value="{{ $search }}">
 	                    <em class="ti-search"></em>
 	                </span>
 	            </div>
@@ -263,7 +263,7 @@
 											Tanggal
 										</label>
 										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-											<input type="text" placeholder="Dari Tanggal" value="{{ $after_date2 }}" name="after_date2" id="after_date2" class="form-control"/>
+											<input type="text" placeholder="Dari Tanggal" value="{{ $after_date }}" name="after_date2" id="after_date2" class="form-control"/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
 													<em class="glyphicon glyphicon-calendar"></em>
@@ -278,7 +278,7 @@
 											&nbsp;
 										</label>
 										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-											<input type="text" placeholder="Sampai Tanggal" value="{{ $before_date2 }}" name="before_date2" id="before_date2" class="form-control"/>
+											<input type="text" placeholder="Sampai Tanggal" value="{{ $before_date }}" name="before_date2" id="before_date2" class="form-control"/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
 													<em class="glyphicon glyphicon-calendar"></em>
@@ -362,7 +362,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								{{ $data2->appends(array('search2' => $search2,'before_date2' => $before_date2,'after_date2' => $after_date2, 'tab' => 'tab-paid-success'))->links() }}
+								{{ $data2->appends(array('search2' => $search,'before_date2' => $before_date,'after_date2' => $after_date, 'tab' => 'tab-paid-success'))->links() }}
 							</div>
 						</div>
 					</div>
@@ -378,7 +378,7 @@
 		        </div>
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table">
-	                    <input id="search_value3" type="text" placeholder="Search" id="form-field-17" class="form-control " value="{{ $search3 }}">
+	                    <input id="search_value3" type="text" placeholder="Search" id="form-field-17" class="form-control " value="{{ $search }}">
 	                    <em class="ti-search"></em>
 	                </span>
 	            </div>
@@ -395,7 +395,7 @@
 											Tanggal
 										</label>
 										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-											<input type="text" placeholder="Dari Tanggal" value="{{ $after_date3 }}" name="after_date3" id="after_date3" class="form-control"/>
+											<input type="text" placeholder="Dari Tanggal" value="{{ $after_date }}" name="after_date3" id="after_date3" class="form-control"/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
 													<em class="glyphicon glyphicon-calendar"></em>
@@ -410,7 +410,7 @@
 											&nbsp;
 										</label>
 										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-											<input type="text" placeholder="Sampai Tanggal" value="{{ $before_date3 }}" name="before_date3" id="before_date3" class="form-control"/>
+											<input type="text" placeholder="Sampai Tanggal" value="{{ $before_date }}" name="before_date3" id="before_date3" class="form-control"/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
 													<em class="glyphicon glyphicon-calendar"></em>
@@ -422,7 +422,7 @@
 							</div>
 							<div class="row"> 
 								<div class="col-md-12">
-		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
+		                            <button id="filter3" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 		                                Filter
 		                            </button>
 		                        </div>
@@ -494,14 +494,14 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								{{ $data3->appends(array('search3' => $search3,'before_date3' => $before_date3,'after_date3' => $after_date3, 'tab' => 'tab-paid-deliverd'))->links() }}
+								{{ $data3->appends(array('search3' => $search,'before_date3' => $before_date,'after_date3' => $after_date, 'tab' => 'tab-paid-deliverd'))->links() }}
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<!-- end: RESPONSIVE TABLE -->
+		<!-- end: RESPONSIVE TABLE --> 
 	</div>
 </div>
 @endsection
@@ -648,70 +648,55 @@
 
 	document.getElementById("excel").onclick = function() {
 		var baseUrl = "{{URL::to('/')}}";
-		var params = {}; 
-		var tab = $('.tabs .current').attr('data-tab');
-		var search_value = document.getElementById("search_value").value;
-		var before = document.getElementById("before_date");
-		var after = document.getElementById("after_date");
-		var beforeValue = before.value;
-		var afterValue = after.value;
-		
-		if (beforeValue != ''){
-			params['before_date'] = beforeValue;
-		}
-		if (afterValue != ''){
-			params['after_date'] = afterValue;
-		}
-		
-		params['payment_status'] = 0;
-		params['search'] = search_value;
-		params['tab'] = tab;
+		var params = {
+			search:document.getElementById("search_value").value,
+			search2:document.getElementById("search_value2").value,
+			search3:document.getElementById("search_value3").value,
+			before:document.getElementById("before_date").value,
+			before2:document.getElementById("before_date2").value,
+			before3:document.getElementById("before_date3").value,
+			after:document.getElementById("after_date").value,
+			after2:document.getElementById("after_date2").value,
+			after3:document.getElementById("after_date3").value,
+			tab:$('.tabs .current').attr('data-tab'),
+			payment_status:0
+		};
 		document.location.href = baseUrl+'/sales/excel?'+jQuery.param(params);
 	};
 
 	document.getElementById("excel2").onclick = function() {
 		var baseUrl = "{{URL::to('/')}}";
-		var params = {}; 
-		var tab = $('.tabs .current').attr('data-tab');
-		var search_value = document.getElementById("search_value2").value;
-		var before = document.getElementById("before_date2");
-		var after = document.getElementById("after_date2");
-		var beforeValue = before.value;
-		var afterValue = after.value;
-		
-		if (beforeValue != ''){
-			params['before_date'] = beforeValue;
-		}
-		if (afterValue != ''){
-			params['after_date'] = afterValue;
-		}
-
-		params['payment_status'] = 1;
-		params['search'] = search_value;
-		params['tab'] = tab;
+		var params = {
+			search:document.getElementById("search_value").value,
+			search2:document.getElementById("search_value2").value,
+			search3:document.getElementById("search_value3").value,
+			before:document.getElementById("before_date").value,
+			before2:document.getElementById("before_date2").value,
+			before3:document.getElementById("before_date3").value,
+			after:document.getElementById("after_date").value,
+			after2:document.getElementById("after_date2").value,
+			after3:document.getElementById("after_date3").value,
+			tab:$('.tabs .current').attr('data-tab'),
+			payment_status:1
+		};
 		document.location.href = baseUrl+'/sales/excel?'+jQuery.param(params);
 	};
 
 	document.getElementById("excel3").onclick = function() {
 		var baseUrl = "{{URL::to('/')}}";
-		var params = {}; 
-		var tab = $('.tabs .current').attr('data-tab');
-		var search_value = document.getElementById("search_value3").value;
-		var before = document.getElementById("before_date3");
-		var after = document.getElementById("after_date3");
-		var beforeValue = before.value;
-		var afterValue = after.value;
-		
-		if (beforeValue != ''){
-			params['before_date'] = beforeValue;
-		}
-		if (afterValue != ''){
-			params['after_date'] = afterValue;
-		}
-		
-		params['payment_status'] = 3;
-		params['search'] = search_value;
-		params['tab'] = tab;
+		var params = {
+			search:document.getElementById("search_value").value,
+			search2:document.getElementById("search_value2").value,
+			search3:document.getElementById("search_value3").value,
+			before:document.getElementById("before_date").value,
+			before2:document.getElementById("before_date2").value,
+			before3:document.getElementById("before_date3").value,
+			after:document.getElementById("after_date").value,
+			after2:document.getElementById("after_date2").value,
+			after3:document.getElementById("after_date3").value,
+			tab:$('.tabs .current').attr('data-tab'),
+			payment_status:3
+		};
 		document.location.href = baseUrl+'/sales/excel?'+jQuery.param(params);
 	};
 </script>>
