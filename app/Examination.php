@@ -59,4 +59,9 @@ class Examination extends Model
     {
         return $this->hasMany('App\ExaminationAttach', 'examination_id')->orderBy('created_at', 'DESC');
     }
+
+    public function history_uf()
+    {
+        return $this->hasMany('App\HistoryUF', 'examination_id')->orderBy('created_at', 'DESC');
+    }
 }
