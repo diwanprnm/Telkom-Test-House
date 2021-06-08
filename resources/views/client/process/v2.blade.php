@@ -31,19 +31,29 @@
   <div class="overlay"></div>
 <!-- Page Title
 		============================================= -->
+		@php
+			$examintaionType = [
+				'qa' => [
+					'number' => 1,
+					'name' => 'QUALITY ASSURANCE TESTING PROCESS'
+				],
+				'ta' => [
+					'number' => 2,
+					'name' => 'TYPE APPROVAL TESTING PROCESS'
+				],
+				'vt' => [
+					'number' => 3,
+					'name' => 'VOLUNTARY TEST TESTING PROCESS',
+				],
+				'cal' => [
+					'number' => 4,
+					'name' => 'CALIBRATION TESTING PROCESS',
+				]
+			]
+		@endphp
 		<section id="page-title">
-
 			<div class="container clearfix">
-                @php
-                    $header = [
-                        'qa' => 'QUALITY ASSURANCE TESTING PROCESS',
-                        'ta' => 'TYPE APPROVAL TESTING PROCESS',
-                        'vt' => 'VOLUNTARY TEST TESTING PROCESS',
-                        'cal' => 'CALIBRATION TESTING PROCESS'
-                    ]
-                @endphp
-				<h1>{{ $header[$jns_pengujian] ?? 'TESTING PROCESS' }}</h1>
-				
+				<h1>{{ $examintaionType[$jns_pengujian]['name'] ?? 'TESTING PROCESS' }}</h1>
 				<ol class="breadcrumb">
 					<li><a href="{{ url('/') }}">Home</a></li>
 					<li>Testing</li>
@@ -106,28 +116,28 @@
 										</select>
 									</div>
 									  <div class="form-group">
-										<label for="f1-nama-perangkat">{{ trans('translate.service_device_equipment') }} *</label>
-										<input type="text" name="f1-nama-perangkat" placeholder="Laptop/Phone, Etc." id="f1-nama-perangkat" class="required">
+										<label for="device_name">{{ trans('translate.service_device_equipment') }} *</label>
+										<input type="text" name="device_name" placeholder="Laptop/Phone, Etc." id="device_name" class="required">
 									</div>
 									<div class="form-group">
-										<label for="f1-merek-perangkat">{{ trans('translate.service_device_mark') }} *</label>
-										<input type="text" name="f1-merek-perangkat" placeholder="{{ trans('translate.service_device_mark') }}"  id="f1-merek-perangkat" class="required">
+										<label for="device_mark">{{ trans('translate.service_device_mark') }} *</label>
+										<input type="text" name="device_mark" placeholder="{{ trans('translate.service_device_mark') }}"  id="device_mark" class="required">
 									</div>
 									<div class="form-group">
-										<label for="f1-kapasitas-perangkat">{{ trans('translate.service_device_capacity') }} *</label>
-										<input type="text" name="f1-kapasitas-perangkat" placeholder="10 GHz"   id="f1-kapasitas-perangkat" class="required">
+										<label for="device_capacity">{{ trans('translate.service_device_capacity') }} *</label>
+										<input type="text" name="device_capacity" placeholder="10 GHz"   id="device_capacity" class="required">
 									</div>
 									<div class="form-group">
 										<label for="f1-pembuat-perangkat">{{ trans('translate.service_device_manufactured_by') }} *</label>
 										<input type="text" name="f1-pembuat-perangkat" placeholder="Jakarta" id="f1-pembuat-perangkat" class="required">
 									</div>
 									<div class="form-group">
-										<label for="f1-serialNumber-perangkat">{{ trans('translate.service_device_serial_number') }} *</label>
-										<input type="text" name="f1-serialNumber-perangkat" placeholder="123456789456"  id="f1-serialNumber-perangkat" class="required">
+										<label for="serial_number">{{ trans('translate.service_device_serial_number') }} *</label>
+										<input type="text" name="serial_number" placeholder="123456789456"  id="serial_number" class="required">
 									</div>
 									<div class="form-group">
-										<label for="f1-model-perangkat">{{ trans('translate.service_device_model') }} *</label>
-										<input type="text" name="f1-model-perangkat" placeholder="L123456"   id="f1-model-perangkat" class="required">
+										<label for="device_model">{{ trans('translate.service_device_model') }} *</label>
+										<input type="text" name="device_model" placeholder="L123456"   id="device_model" class="required">
 									</div>
 
 
@@ -222,86 +232,69 @@
 	    	console.log('curret: '+currentIndex+' ** newIndex: '+newIndex);
 	    	if(!form.valid() && (newIndex > currentIndex)){ 
 				if(currentIndex == 0 && !$('#f1_referensi_perangkat_chosen ul li.search-choice').length){
-					$('#f1_referensi_perangkat_chosen .search-field input').addClass( "error" );//.removeClass( "myClass noClass" ).addClass( "yourClass" );
+					$('#f1_referensi_perangkat_chosen .search-field input').addClass( "error" );
 				}
 				return false;
 	    	}
 
 			//UI
-			$( '#formBTNprevious' ).show();
 			$( '#formBTNfinish' ).hide();
-			//(newIndex == 0 || newIndex == null) && $( '#formBTNprevious' ).hide();
-
 	    	form.trigger("focus"); 
 	        form.validate().settings.ignore = ":disabled,:hidden"; 
 
-			if(newIndex == 0){
-				let error = false;
-				$( "#formBTNprevious" ).hide();
+			if(currentIndex == 0 && newIndex == 1){
+				let status = true;
 				$('#f1_referensi_perangkat_chosen .search-field input').removeAttr("style")
 				if(!$('#f1_referensi_perangkat_chosen ul li.search-choice').length){
-					$('#f1_referensi_perangkat_chosen .search-field input').addClass( "error" );//.removeClass( "myClass noClass" ).addClass( "yourClass" );
-					error = true;
-					return !error;
+					$('#f1_referensi_perangkat_chosen .search-field input').addClass( "error" );
+					status = false;
+					return status;
 				}
 
-				// $.ajax({
-				// 	type: "POST",
-				// 	url : "../cekPermohonan",
-				// 	data: {'_token':"{{ csrf_token() }}", 'jnsPelanggan':jnsPelanggan, 'serialNumber_perangkat':serialNumber_perangkat, 'nama_perangkat':nama_perangkat, 'model_perangkat':model_perangkat, 'merk_perangkat':merk_perangkat, 'kapasitas_perangkat':kapasitas_perangkat},
-				// 	// dataType:'json',
-				// 	type:'post',
-				// 	success: function(data){
-				// 		console.log(data);
-				// 		if(data == 1){
-				// 			alert("Perangkat[Nama, Merk, Model, Kapasitas] dan Jenis Pengujian sudah ada!"); 
-				// 			error = true;
-				// 		}else{
-				// 			var formData = new FormData($('#form-permohonan')[0]);
-				// 			$( "#formBTNfinish" ).hide();
-				// 			$( "#formBTNnext" ).hide();
+				let dataTaken = {
+						'_token':"{{ csrf_token() }}",
+						'examinationType':{{ $examintaionType[$jns_pengujian]['number']}},
+						'serialNumber_perangkat':$('#serial_number').val(),
+						'nama_perangkat':$('#device_name').val(),
+						'model_perangkat':$('#device_model').val(),
+						'merk_perangkat':$('#device_mark').val(),
+						'kapasitas_perangkat':$('#device_capacity').val()
+					};
 
-				// 			$.ajax({
-				// 				beforeSend: function(){ 
-				// 					$("body").addClass("loading");	
-				// 				},
-				// 				type: "POST",
-				// 				url : "../submitPermohonan",
-				// 				// data: {'_token':"{{ csrf_token() }}", 'nama_pemohon':nama_pemohon, 'nama_pemohons':nama_pemohon},
-				// 				// data:new FormData($("#form-permohonan")[0]),
-				// 				data:formData,
-				// 				// dataType:'json', 
-				// 				processData: false,  
-				// 				contentType: false,
-				// 				success: function(data){
-				// 					$("body").removeClass("loading"); 
-				// 					window.open("../cetakPermohonan");
-				// 					$(".actions").hide(); 
-				// 				},
-				// 				error:function(){
-				// 					$( "#formBTNprevious" ).show();
-				// 					$( "#formBTNfinish" ).show();
-				// 					$( "#formBTNnext" ).show();
-				// 					$("body").removeClass("loading");
-				// 					error = true;
-				// 					alert("Gagal mengambil data"); 
-				// 					// formWizard.steps("previous"); 
-				// 				}
-				// 			}); 
-				// 		}
-				// 	}
-				// });
-				// return !error;
+				console.log(dataTaken);
+				$("body").addClass("loading");
+				$.ajax({
+					async: false,
+					type: "POST",
+					url : "../cekPermohonan",
+					data: dataTaken,
+					type:'post',
+					success: function (resp){
+						status = resp['status'];
+						status == false && resp['code'] == 2 && alert(" {{ trans('translate.service_device_already_exist') }} ");
+						status == false && resp['code'] == 1 && alert(" {{ trans('translate.service_device_not_6_months_yet') }} ");
+						status == true &&  $( "#formBTNprevious" ).show();
+					}
+				});
+				setTimeout( $("body").removeClass("loading"), 3000); 
+				return status;
 			}
 
-			if(newIndex == 1){
-				$( '#formBTNprevious' ).show();
-			}
-
-			if(newIndex == 2){
+			if (currentIndex == 1 && newIndex == 0){
 				$( '#formBTNprevious' ).hide();
+				$( "#formBTNnext" ).show();
+			}
+
+			if(currentIndex == 1 && newIndex == 2){
 				$( "#formBTNnext" ).hide();
 			}
+
+			if (currentIndex == 2 && newIndex == 1){
+				$( '#formBTNprevious' ).show();
+				$( "#formBTNnext" ).show();
+			}
+
+
 
 
 	       	// if(newIndex == 4){ 
@@ -501,7 +494,7 @@
 		var strUser = e.options[e.selectedIndex].text;
 		var res = strUser.split('||');
 		var deviceName = res[1].replace(/spesifikasi telekomunikasi |spesifikasi telekomunikasi perangkat |telecommunication specification |spesifikasi perangkat |perangkat /gi,"");
-		$('#f1-nama-perangkat').val(deviceName);
+		$('#device_name').val(deviceName);
 	});
 
 	setTimeout(() => {
