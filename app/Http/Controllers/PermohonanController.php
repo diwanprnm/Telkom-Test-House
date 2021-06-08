@@ -268,7 +268,7 @@ class PermohonanController extends Controller
 				FROM
 					examinations e, devices d
 				WHERE e.device_id = d.id
-				AND	e.examination_type_id = '".$request->input('jnsPelanggan')."'
+				AND	e.examination_type_id = '".$request->input('examinationType')."'
 				AND	TRIM(d.name) = '".trim($request->input(self::NAMA_PERANGKAT), " ")."'
 				AND	TRIM(d.model) = '".trim($request->input(self::MODEL_PERANGKAT), " ")."'
 				AND	TRIM(d.mark) = '".trim($request->input('merk_perangkat'), " ")."'
@@ -279,17 +279,30 @@ class PermohonanController extends Controller
 		if(count($data)){
 			if($data[0]->qa_passed == "-1"){
 				if($data[0]->qa_date >= $expDate && $data[0]->status_device == 1){
-					$qa_date = date(self::DATE_FORMAT2, strtotime("+6 months", strtotime($data[0]->qa_date)));
-					echo '2qa_date'.$data[0]->qa_date.'qa_date'.$qa_date;
+					$code = 2;
+					$status = false;
+					$remarks = 'QA passed = -1 and not yet 6 months';
 				}else{
-					echo '-1qa_date'.$data[0]->qa_date.'qa_date'.$data[0]->id_exam;
+					$code = -1;
+					$status = true;
+					$remarks = 'QA passed = -1 but already passed than 6 months';
 				}
 			}else{
-				echo 1;
+				$code = 1;
+				$status = false;
+				$remarks = 'device already recorded () in database';
 			}			
 		}else{
-			echo 0;
+			$code = 0;
+			$status = true;
+			$remarks = 'device is eligible';
 		}
+
+		return response()->json([
+			'code' => $code,
+			'status' => $status,
+			'remarks' => $remarks,
+		]);
 	}
 		
 	public function getInfo(Request $request){
