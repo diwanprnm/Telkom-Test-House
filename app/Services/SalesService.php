@@ -62,7 +62,7 @@ class SalesService
     protected const V1_INVOICE = 'v3/invoices/';
     private const STELS_SALES_ATTACHMENT = 'stels_sales_attachment';
     
-    public function getData(Request $request)
+    public function getData(Request $request, $status = 0)
     {
         $search = $request->input('search') ? $request->input('search') : NULL;
         $before = $request->input('before') ? $request->input('before') : NULL;
@@ -83,7 +83,7 @@ class SalesService
 
         //filterquery
         $queryFilter
-            ->paymentAllStatus()
+            ->updateQuery($query)
             ->beforeDate(DB::raw('DATE(stels_sales.created_at)'))
             ->afterDate(DB::raw('DATE(stels_sales.created_at)'))
             ->getSortedAndOrderedData('stels_sales.created_at','desc')
@@ -91,10 +91,10 @@ class SalesService
         //get the data and sort them 
         return array(
             'data' => $queryFilter->getQuery(),
-            $this::SEARCH => $searchFiltered[$this::SEARCH],
+            $this::SEARCH => $search,
             'paymentStatus' => $queryFilter->paymentStatus,
-            'before' => $queryFilter->before,
-            'after' => $queryFilter->after,
+            'before' => $before,
+            'after' => $after,
         );
     }
 
