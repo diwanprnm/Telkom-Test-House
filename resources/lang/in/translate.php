@@ -45,6 +45,8 @@ return [
 	'service_device_model'			=> 'Model/Tipe',
 	'service_device_test_reference'	=> 'Referensi Uji',
 	'service_device_document'		=> 'Dokumen Pendukung',
+	'service_device_already_exist'	=> 'Perangkat[Nama, Merk, Model, Kapasitas] dan Jenis Pengujian sudah ada!',
+	'service_device_not_6_months_yet' => 'Perangkat pada jenis pengujian ini telah gagal sebelumnya dan belum melewati masa 6 bulan.',
 	
 	'service_label_testing_site'		=> 'Lokasi Pengetesan',
 	'service_lab_testing'				=> "Uji Lab Telkom",
