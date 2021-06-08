@@ -271,8 +271,8 @@
 					type:'post',
 					success: function (resp){
 						status = resp['status'];
-						status == false && resp['code'] == 2 && alert(" {{ trans('translate.service_device_already_exist') }} ");
-						status == false && resp['code'] == 1 && alert(" {{ trans('translate.service_device_not_6_months_yet') }} ");
+						status == false && resp['code'] == 1 && alert(" {{ trans('translate.service_device_already_exist') }} ");
+						status == false && resp['code'] == 2 && alert(" {{ trans('translate.service_device_not_6_months_yet') }} ");
 						status == true &&  $( "#formBTNprevious" ).show();
 					}
 				});
