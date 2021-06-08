@@ -56,6 +56,7 @@ class ExaminationController extends Controller
 	private const EXAMINATION_LAB = 'examinationLab';
 	private const MEDIA = 'media';
 	private const DEVICE = 'device';
+	private const HISTORY_UF = 'history_uf';
 	private const REGISTRATION_STATUS = 'registration_status';
 	private const FUNCTION_STATUS = 'function_status';
 	private const CONTRACT_STATUS = 'contract_status';
@@ -288,6 +289,7 @@ class ExaminationController extends Controller
                             ->with(self::DEVICE)
                             ->with(self::MEDIA)
                             ->with(self::EQUIPMENT)
+							->with(self::HISTORY_UF)
                             ->first();
 
         $labs = ExaminationLab::all();

@@ -306,7 +306,7 @@
 								@endif
 								<!-- jika function_test_TE_temp == 1, tampilkan alert ini -->
 								@if($item->function_test_TE_temp == 1)
-								<div class="alert alert-warning" style="font-weight: bold;">
+								<div class="alert" style="background-color : #ffcccc; color : #1e272e;text-align : left;">
 									{{ trans('translate.uf_warning') }} {{ $item->function_test_date_temp }}. 
 								</div> 
 								@endif
@@ -314,7 +314,7 @@
 									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/pembayaran')}}">{{ trans('translate.payment_process') }}</a>
 									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/downloadSPB')}}">{{ trans('translate.download') }} SPB</a>
 									@if($item->payment_method == 2 && $item->VA_expired < date("Y-m-d H:i:s"))
-										<div class="alert alert-warning" style="font-weight: bold;">
+										<div class="alert" style="background-color : #ffcccc; color : #1e272e;text-align : left;">
 											{{ trans('translate.stel_total_expired') }} <a href="{{url('/resend_va_spb/'.$data[0]->id)}}"> {{ trans('translate.here') }} </a> {{ trans('translate.stel_total_resend') }}. 
 										</div> 
 									@endif
