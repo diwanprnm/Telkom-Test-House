@@ -11,6 +11,38 @@
 	$url_generate_test = $data['is_loc_test'] ? "/cetakTechnicalMeeting/" : "/cetakUjiFungsi/" ;
 @endphp
 
+<div id="modal_status_uf" class="modal fade" role="dialog"  tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Status Uji Fungsi</h4>
+          </div>
+          <div class="modal-body">
+               	<div class="row">
+				   <div class="col-md-12">
+						<div class="form-group">
+							<h4 id='h2_modal_status_uf'> </h4>
+						</div>
+					</div>
+                </div>
+          </div>
+          <div class="modal-footer">
+				<table style="width: 100%;"><caption></caption>
+					<tr>
+						<th scope="col">
+							<button type="button" class="btn btn-danger" style="width:100%" data-dismiss="modal"><em class="fa fa-check-square-o"></em> OK</button>
+						</th>
+					</tr>
+				</table>
+			</div>
+        </div>
+
+      </div>
+    </div> 
+
 <input type="hide" id="hide_exam_id" name="hide_exam_id">
 <div class="modal fade" id="myModal_reset_uf" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog">
@@ -689,7 +721,8 @@
 							Step Uji Fungsi
 						</legend>
 						@if($is_super == '1' || $is_admin_mail == 'admin@mail.com')
-							<a class="btn btn-wide btn-primary pull-left" style="margin-bottom:10px" data-toggle="modal" data-target="#myModal_reset_uf" onclick="document.getElementById('hide_exam_id').value = '{{ $data->id }}'">Reset Uji Fungsi</a>
+							<a class="btn btn-wide btn-primary" style="margin-bottom:10px" onclick="resetUF('{{ $data->id }}','{{ $data->function_test_TE_temp }}','{{ $data->function_test_date_temp }}')">Reset Uji Fungsi</a>
+							<a class="btn btn-wide btn-primary" style="margin-bottom:10px" onclick="ijinkanUF('{{ $data->id }}')">Ijinkan Kembali Uji Fungsi</a>
 						@endif
 						<div class="row">
 							<div class="col-md-12">
@@ -4046,7 +4079,30 @@
 		rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
 		return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
 	}
-		
+
+	function resetUF(a,b,c){
+		document.getElementById('hide_exam_id').value = a;
+		if(b == 1){
+			document.getElementById("h2_modal_status_uf").innerHTML = "Pengujian ini sudah 2 kali gagal melakukan Uji Fungsi. <br> Fungsi Reset dapat digunakan kembali 2 bulan sejak Uji Fungsi terakhir, yaitu "+c;
+			$('#modal_status_uf').modal('show');
+			$('#myModal_reset_uf').modal('hide');
+			return false;
+		}else{
+			// data-toggle="modal" data-target="#myModal_reset_uf";
+			$('#myModal_status_uf').modal('hide');
+			$('#myModal_reset_uf').modal('show');
+			return false;
+		}
+	}
+
+	function ijinkanUF(a){
+		var baseUrl = "{{URL::to('/')}}";
+		if (confirm('Are you sure want to give Function Test access to this data ?')) {
+			document.getElementById("overlay").style.display="inherit";	
+			document.location.href = baseUrl+'/admin/examination/ijinkanUjiFungsi/'+a;   
+		}
+	}
+
 	function generateSPKCode(a,b,c){
 		$.ajax({
 			type: "POST",

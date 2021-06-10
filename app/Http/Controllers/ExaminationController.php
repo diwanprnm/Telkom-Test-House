@@ -1845,6 +1845,42 @@ class ExaminationController extends Controller
 		}
 	}
 	
+	public function ijinkanUjiFungsi($id)
+	{
+		$currentUser = Auth::user(); 
+		$logService = new LogService();
+
+        if ($currentUser){
+			$exam = Examination::find($id);
+			if ($exam){
+				try{
+					$exam->function_test_TE_temp = 0;
+					$exam->function_test_date_temp = NULL;
+					$exam->updated_by = $currentUser->id;
+					$exam->updated_at = date(self::DATE_FORMAT_1);
+					
+					$exam->save();
+					
+					$exam_hist = new ExaminationHistory;
+					$exam_hist->examination_id = $exam->id;
+					$exam_hist->date_action = date(self::DATE_FORMAT_1);
+					$exam_hist->tahap = self::UJI_FUNGSI;
+					$exam_hist->status = self::NOT_COMPLETED;
+					$exam_hist->keterangan = 'Data Uji Fungsi diaktifkan kembali oleh Super Admin URel';
+					$exam_hist->created_by = $currentUser->id;
+					$exam_hist->created_at = date(self::DATE_FORMAT_1);
+					$exam_hist->save();
+
+					$logService->createLog("Aktifkan Kembali Uji Fungsi", self::EXAMINATION, $exam);
+					$logService->createAdminLog("Aktifkan Kembali Fungsi", "Pengujian -> Change Status", $exam, '-');
+					
+					Session::flash(self::MESSAGE, 'Function Test access successfully granted');
+					return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
+				}catch (Exception $e){ return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC)->with(self::ERROR, 'Failed to give Function Test access'); }
+			}
+		}
+	}
+	
 	public function autocomplete($query) {
 		$data1 = Examination::join(self::TABLE_DEVICE, self::EXAM_DEVICES_ID, '=', self::DEVICES_ID)
 				->join(self::TABLE_COMPANIES, self::EXAM_COMPANY_ID, '=', self::COMPANIES_ID)
