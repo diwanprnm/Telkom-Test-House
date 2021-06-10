@@ -143,21 +143,53 @@ class ProductsController extends Controller
         $currentUser = Auth::user();
         if(!$currentUser){ return redirect(self::LOGIN);}
         $paginate = 10; 
-            $select = array("stels_sales.*","users.name"); 
-            $query = STELSales::select($select)->distinct('stels_sales.id')
-                    ->join("stels_sales_detail","stels_sales.id","=","stels_sales_detail.stels_sales_id")
-                    ->join("stels","stels_sales_detail.stels_id","=","stels.id")
-                        ->join("users","users.id","=","stels_sales.user_id")
-                        ->join("companies","companies.id","=",self::USERS_DOT_COMPANY_ID)
-                        ->where(self::USERS_DOT_COMPANY_ID,$currentUser->company_id)  
-                        ->orderBy("stels_sales.created_at", 'desc');
-                        
-        $data = $query->paginate($paginate);
+        $tab = $request->input('tab') ? $request->input('tab') : 'unpaid';
+        $select = array("stels_sales.*","users.name"); 
+        $query = STELSales::select($select)->distinct('stels_sales.id')
+            ->join("stels_sales_detail","stels_sales.id","=","stels_sales_detail.stels_sales_id")
+            ->join("stels","stels_sales_detail.stels_id","=","stels.id")
+            ->join("users","users.id","=","stels_sales.user_id")
+            ->join("companies","companies.id","=",self::USERS_DOT_COMPANY_ID)
+            ->where(self::USERS_DOT_COMPANY_ID,$currentUser->company_id)
+        ;
+        $query_unpaid = STELSales::select($select)->distinct('stels_sales.id')
+            ->join("stels_sales_detail","stels_sales.id","=","stels_sales_detail.stels_sales_id")
+            ->join("stels","stels_sales_detail.stels_id","=","stels.id")
+            ->join("users","users.id","=","stels_sales.user_id")
+            ->join("companies","companies.id","=",self::USERS_DOT_COMPANY_ID)
+            ->where(self::USERS_DOT_COMPANY_ID,$currentUser->company_id)
+            ->where("stels_sales.payment_status", 0)
+        ;
+        $query_success = STELSales::select($select)->distinct('stels_sales.id')
+            ->join("stels_sales_detail","stels_sales.id","=","stels_sales_detail.stels_sales_id")
+            ->join("stels","stels_sales_detail.stels_id","=","stels.id")
+            ->join("users","users.id","=","stels_sales.user_id")
+            ->join("companies","companies.id","=",self::USERS_DOT_COMPANY_ID)
+            ->where(self::USERS_DOT_COMPANY_ID,$currentUser->company_id)
+            ->where("stels_sales.payment_status", 1)
+        ;
+        $query_delivered = STELSales::select($select)->distinct('stels_sales.id')
+            ->join("stels_sales_detail","stels_sales.id","=","stels_sales_detail.stels_sales_id")
+            ->join("stels","stels_sales_detail.stels_id","=","stels.id")
+            ->join("users","users.id","=","stels_sales.user_id")
+            ->join("companies","companies.id","=",self::USERS_DOT_COMPANY_ID)
+            ->where(self::USERS_DOT_COMPANY_ID,$currentUser->company_id)
+            ->where("stels_sales.payment_status", 3)
+        ;
+
+        $data = $query->orderBy("stels_sales.created_at", 'desc')->paginate($paginate);
+        $data_unpaid = $query_unpaid->orderBy("stels_sales.created_at", 'desc')->paginate($paginate, ['*'], 'pageUnpaid');
+        $data_success = $query_success->orderBy("stels_sales.created_at", 'desc')->paginate($paginate, ['*'], 'pageSuccess');
+        $data_delivered = $query_delivered->orderBy("stels_sales.created_at", 'desc')->paginate($paginate, ['*'], 'pageDelivered');
 
         $page = "purchase_history";
         return view('client.STEL.purchase_history') 
+        ->with('tab', $tab)
         ->with('page', $page)
-        ->with('data', $data);
+        ->with('data', $data)
+        ->with('data_unpaid', $data_unpaid)
+        ->with('data_success', $data_success)
+        ->with('data_delivered', $data_delivered);
     } 
 
     public function payment_status(Request $request)

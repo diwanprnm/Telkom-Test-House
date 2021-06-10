@@ -99,8 +99,8 @@
 
 			<ul class="tabs">
 				<li class="btn tab-unpaid" data-tab="tab-unpaid">Unpaid</li>
-				<li class="btn tab-paid-success" data-tab="tab-paid-success">Paid (Success)</li>
-				<li class="btn tab-paid-delivered" data-tab="tab-paid-delivered">Paid (Delivered)</li>
+				<li class="btn tab-paid-success" data-tab="tab-paid-success">Success</li>
+				<li class="btn tab-paid-delivered" data-tab="tab-paid-delivered">Delivered</li>
 			</ul>
 
 			<input type="hidden" name="hidden_tab" id="hidden_tab" value="{{ $tab }}">
@@ -326,7 +326,7 @@
 											<td class="center">{{ $item->created_at }}</td>
 											<td class="center">{{ $item->invoice }}</td>
 											<td class="center">{{ number_format($item->cust_price_payment, 0, '.', ',') }}</td>
-											<td class="center"> Paid (success) </td>
+											<td class="center"> Success </td>
 											<td class="center">{{ ($item->payment_method == 1)?'ATM':$item->VA_name}}</td> 
 											<td class="center">{{ $item->stel_code }}</td>
 											<td class="center">
@@ -458,7 +458,7 @@
 											<td class="center">{{ $item->created_at }}</td>
 											<td class="center">{{ $item->invoice }}</td>
 											<td class="center">{{ number_format($item->cust_price_payment, 0, '.', ',') }}</td>
-											<td class="center"> Paid (delivered) </td>
+											<td class="center"> Delivered </td>
 											<td class="center">{{ ($item->payment_method == 1)?'ATM':$item->VA_name}}</td> 
 											<td class="center">{{ $item->stel_code }}</td>
 											<td class="center">
