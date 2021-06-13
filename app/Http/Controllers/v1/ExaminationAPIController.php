@@ -1394,12 +1394,12 @@ class ExaminationAPIController extends AppBaseController
 		$uf_hist->created_by = $data->updated_by;
 		$uf_hist->created_at = date('Y-m-d H:i:s');
 		
-		if($data->function_test_TE == 0){
+		if($data->function_test_TE == 2){
 			// cek di HistoryUF berdasarkan examination_id, yang memiliki 
-			// a. function_test_TE = 0
+			// a. function_test_TE = 2
 			// b. now() < function_test_date + 2bulan
 			$uf_hist_temp = HistoryUF::where('examination_id', $data->id)
-							->where('function_test_TE', 0)
+							->where('function_test_TE', 2)
 							->whereRaw("NOW() < DATE_ADD(function_test_date, INTERVAL +2 MONTH)")
 							->orderBy('function_test_date', 'DESC')
 							->limit(1);
@@ -1409,8 +1409,7 @@ class ExaminationAPIController extends AppBaseController
 				$examinations = Examination::find($data->id);
 				if($examinations){
 					$examinations->function_test_TE_temp = 1;
-					$examinations->function_test_date_temp = date('Y-m-d', strtotime("+2 months", strtotime($function_test_date)));
-					; //+2bulan mm
+					$examinations->function_test_date_temp = date('Y-m-d', strtotime("+2 months", strtotime($function_test_date)));//+2bulan mm
 					$examinations->save();
 				}
 			}

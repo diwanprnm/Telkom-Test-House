@@ -99,8 +99,8 @@
 
 			<ul class="tabs">
 				<li class="btn tab-unpaid" data-tab="tab-unpaid">Unpaid</li>
-				<li class="btn tab-paid-success" data-tab="tab-paid-success">Success</li>
-				<li class="btn tab-paid-delivered" data-tab="tab-paid-delivered">Delivered</li>
+				<li class="btn tab-paid" data-tab="tab-paid">Paid</li>
+				<li class="btn tab-delivered" data-tab="tab-delivered">Delivered</li>
 			</ul>
 
 			<input type="hidden" name="hidden_tab" id="hidden_tab" value="{{ $tab }}">
@@ -237,7 +237,7 @@
 				</div>
 			</div>
 
-			<div id="tab-paid-success" class="row tab-content">
+			<div id="tab-paid" class="row tab-content">
 		        <div class="col-md-6">
 		        <a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse2" style="margin-right: 10px;"><em class="ti-filter"></em> Filter</a>
 					<button id="excel2" type="submit" class="btn btn-info pull-left">
@@ -318,15 +318,15 @@
 							</thead>
 							<tbody> 
 								@php $no = 1; @endphp
-								@if(count($data_paid_success)>0)
-									@foreach($data_paid_success as $keys => $item)
+								@if(count($data_paid)>0)
+									@foreach($data_paid as $keys => $item)
 										<tr>
-											<td class="center">{{ $no+(($data_paid_success->currentPage()-1)*$data_paid_success->perPage()) }}</td>
+											<td class="center">{{ $no+(($data_paid->currentPage()-1)*$data_paid->perPage()) }}</td>
 											<td class="center">{{ $item->company_name }}</td>
 											<td class="center">{{ $item->created_at }}</td>
 											<td class="center">{{ $item->invoice }}</td>
 											<td class="center">{{ number_format($item->cust_price_payment, 0, '.', ',') }}</td>
-											<td class="center"> Success </td>
+											<td class="center"> Paid </td>
 											<td class="center">{{ ($item->payment_method == 1)?'ATM':$item->VA_name}}</td> 
 											<td class="center">{{ $item->stel_code }}</td>
 											<td class="center">
@@ -362,14 +362,14 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								{{ $data_paid_success->appends(array('search' => $search,'search2' => $search,'search3' => $search,'before_date' => $before_date,'before_date2' => $before_date,'before_date3' => $before_date,'after_date' => $after_date,'after_date2' => $after_date,'after_date3' => $after_date, 'tab' => 'tab-paid-success'))->links() }}
+								{{ $data_paid->appends(array('search' => $search,'search2' => $search,'search3' => $search,'before_date' => $before_date,'before_date2' => $before_date,'before_date3' => $before_date,'after_date' => $after_date,'after_date2' => $after_date,'after_date3' => $after_date, 'tab' => 'tab-paid'))->links() }}
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<div id="tab-paid-delivered" class="row tab-content">
+			<div id="tab-delivered" class="row tab-content">
 		        <div class="col-md-6">
 		        <a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse3" style="margin-right: 10px;"><em class="ti-filter"></em> Filter</a>
 					<button id="excel3" type="submit" class="btn btn-info pull-left">
@@ -450,10 +450,10 @@
 							</thead>
 							<tbody> 
 								@php $no = 1; @endphp
-								@if(count($data_paid_delivery)>0)
-									@foreach($data_paid_delivery as $keys => $item)
+								@if(count($data_delivered)>0)
+									@foreach($data_delivered as $keys => $item)
 										<tr>
-											<td class="center">{{ $no+(($data_paid_delivery->currentPage()-1)*$data_paid_delivery->perPage()) }}</td>
+											<td class="center">{{ $no+(($data_delivered->currentPage()-1)*$data_delivered->perPage()) }}</td>
 											<td class="center">{{ $item->company_name }}</td>
 											<td class="center">{{ $item->created_at }}</td>
 											<td class="center">{{ $item->invoice }}</td>
@@ -494,7 +494,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								{{ $data_paid_delivery->appends(array('search' => $search,'search2' => $search,'search3' => $search,'before_date' => $before_date,'before_date2' => $before_date,'before_date3' => $before_date,'after_date' => $after_date,'after_date2' => $after_date,'after_date3' => $after_date, 'tab' => 'tab-paid-deliverd'))->links() }}
+								{{ $data_delivered->appends(array('search' => $search,'search2' => $search,'search3' => $search,'before_date' => $before_date,'before_date2' => $before_date,'before_date3' => $before_date,'after_date' => $after_date,'after_date2' => $after_date,'after_date3' => $after_date, 'tab' => 'tab-paid-deliverd'))->links() }}
 							</div>
 						</div>
 					</div>

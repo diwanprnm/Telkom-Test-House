@@ -404,7 +404,9 @@ class ExaminationController extends Controller
                 $exam->urel_test_date = NULL;
                 $exam->function_date = NULL;
                 $exam->function_test_reason = NULL;
+				$exam->function_test_TE = 0;
                 $exam->function_test_date_approval = 0;
+				$exam->function_test_status_detail = NULL;
                 $exam->location = 0;
             }
 			/* push notif*/

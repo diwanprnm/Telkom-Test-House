@@ -722,7 +722,9 @@
 						</legend>
 						@if($is_super == '1' || $is_admin_mail == 'admin@mail.com')
 							<a class="btn btn-wide btn-primary" style="margin-bottom:10px" onclick="resetUF('{{ $data->id }}','{{ $data->function_test_TE_temp }}','{{ $data->function_test_date_temp }}')">Reset Uji Fungsi</a>
-							<a class="btn btn-wide btn-primary" style="margin-bottom:10px" onclick="ijinkanUF('{{ $data->id }}')">Ijinkan Kembali Uji Fungsi</a>
+							@if($data->function_test_TE_temp)
+								<a class="btn btn-wide btn-primary" style="margin-bottom:10px" onclick="ijinkanUF('{{ $data->id }}')">Ijinkan Kembali Uji Fungsi</a>
+							@endif
 						@endif
 						<div class="row">
 							<div class="col-md-12">
@@ -732,7 +734,7 @@
 							</div>
 							<div class="col-md-12">
 								<div class="form-group">
-									<label>
+									<label style="font-weight: bold;">
 										Tanggal {{$type_of_test}}
 									</label>
 									@if($data->function_test_date_approval == 1)
@@ -750,7 +752,7 @@
 										</label>
 									@endif
 									<br>
-									<label>
+									<label style="font-weight: bold;">
 										Engineer
 									</label>
 									@if($data->function_test_date_approval == 1)
@@ -765,14 +767,6 @@
 								</div>
 							</div>
 							<input type="hidden" id="hide_approval_form-function-test" value="{{ $data->function_test_date_approval }}">
-							@if($data->function_test_reason != '' && $data->function_test_date_approval != 1)
-							<div class="col-md-12">
-								<div class="form-group">
-									<label for="alasan">Alasan Jadwal Ulang:</label>
-									<textarea class="form-control" rows="2" name="reason" id="reason" readonly>{{ $data->function_test_reason }}</textarea>	
-								</div>
-							</div>
-							@endif
 							<div class="col-md-12">
 								<div class="form-group">
 									<label class="pull-right">
@@ -787,33 +781,30 @@
 											<tr>
 												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal {{$type_of_test}}</th>
 											</tr>
+											<tr>
+												<th>Pengajuan Tanggal Customer</th>
+												<th>Jadwal dari Test Engineer</th>
+												<th>Pengajuan Ulang dari Customer</th>
+												<th>Jadwal dari Test Engineer</th>
+											</tr>
 										</thead>
 										<tbody>
 											<tr>
-												<td>Pengajuan Tanggal Customer</td>
-												<td>Jadwal dari Test Engineer</td>
-												<td>Pengajuan Ulang dari Customer</td>
-												<td>Jadwal dari Test Engineer</td>
-											</tr>
-											<tr>
-												<td>
-													<strong>@php echo $data->cust_test_date; @endphp</strong>
-												</td>
-												<td>
-													<strong>@php echo $data->deal_test_date; @endphp</strong>
-												</td>
-												<td>
-													<strong>@php echo $data->urel_test_date; @endphp</strong>
-												</td>
-												<td>
-													<strong>@php echo $data->function_date; @endphp</strong>
-												</td>
+												<td> @php echo $data->cust_test_date; @endphp </td>
+												<td> @php echo $data->deal_test_date; @endphp </td>
+												<td> @php echo $data->urel_test_date; @endphp </td>
+												<td> @php echo $data->function_date; @endphp </td>
 											</tr>
 										</tbody>
 									</table>
+									@if($data->function_test_reason != '' && $data->function_test_date_approval != 1)
+									<div class="form-group">
+										<label for="alasan">Alasan Jadwal Ulang:</label>
+										<textarea class="form-control" rows="2" name="reason" id="reason" readonly>{{ $data->function_test_reason }}</textarea>	
+									</div>
+									@endif
 								</div>
-							</div>							
-
+							</div>
 							@if (!$data['is_loc_test'])
 								<div class="col-md-12">
 									<div class="form-group">
@@ -862,7 +853,7 @@
 										</h4>
 									</div>
 									<div class="form-group">
-										<label>
+										<label style="font-weight: bold;">
 											Hasil
 										</label>
 										<label>
@@ -894,14 +885,15 @@
 									@endif
 								</div>
 							@endif
-
-							<div class="col-md-12">
-								<div class="form-group">
-									<label class="pull-right">
-										<a class="history-uf-button" data-toggle="collapse" href="#collapse_history_uf">Lihat Riwayat Tidak {{$type_of_test_result}}</a>
-									</label>
+							@if(count($data->history_uf)>0)
+								<div class="col-md-12">
+									<div class="form-group">
+										<label class="pull-right">
+											<a class="history-uf-button" data-toggle="collapse" href="#collapse_history_uf">Lihat Riwayat Tidak {{$type_of_test_result}}</a>
+										</label>
+									</div>
 								</div>
-							</div>
+							@endif
 							<div class="col-md-12">
 								<div id="collapse_history_uf" class="form-group collapse">
 									<table class="table table-bordered"><caption></caption>
@@ -910,7 +902,7 @@
 												<th colspan="4" scope="col">Riwayat {{$type_of_test}}</th>
 											</tr>
 											<tr>
-												<th>No.</th>
+												<th>Uji Fungsi ke-</th>
 												<th>Tanggal</th>
 												<th>Engineer</th>
 												<th>Catatan</th>
@@ -919,7 +911,7 @@
 										<tbody>
 											@php $no = 1; $count = 0; @endphp
 											@foreach($data->history_uf as $item)
-												@if($item->function_test_TE == 0)
+												@if($item->function_test_TE == 2)
 													<tr>
 														<td> {{ $no++ }}</td>
 														<td> {{ $item->function_test_date }}</td>
@@ -936,6 +928,7 @@
 									</table>
 								</div>							
 							</div>
+							@if($data->function_test_TE != 0 && $data->function_test_date_approval == 1)
 							<div class="col-md-12">
 								<div class="form-group">
 									<h4 style="display:inline">Dokumen</h4>
@@ -979,6 +972,7 @@
 								@endif
 								@endif
 							</div>
+							@endif
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
@@ -2070,7 +2064,7 @@
 							Step Pelaksanaan Uji
 						</legend>
 						<div class="row">
-						@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
+						@if(1 != 1)
 							@php
 								$start_date = new DateTime(date('Y-m-d'));
 								$end_date = new DateTime($exam_schedule->data[0]->targetDt);
@@ -2608,7 +2602,7 @@
 									@php $rev_uji = 1; $lap_uji_url = URL::to('/admin/examination/media/download/'.$item->id); $lap_uji_attach = $item->attachment;@endphp
 								@endif
 							@endforeach
-							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
+							@if(1 != 1)
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
@@ -2828,7 +2822,7 @@
 									@endif
 								@endif
 							@endforeach
-							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
+							@if(1 != 1)
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
@@ -2997,7 +2991,7 @@
 									@endif
 								@endif
 							@endforeach
-							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
+							@if(1 != 1)
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>

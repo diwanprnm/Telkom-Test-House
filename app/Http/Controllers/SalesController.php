@@ -116,8 +116,8 @@ class SalesController extends Controller
             ->with('tab', $tab)
             ->with(self::MESSAGE, $message)
             ->with('data_unpaid', $salesService->getData($request, 0)['data']->paginate($paginate, ['*'], 'pageUnpaid') )
-            ->with('data_paid_success', $salesService->getData($request, 1)['data']->paginate($paginate, ['*'], 'pagePaid'))
-            ->with('data_paid_delivery', $salesService->getData($request, 3)['data']->paginate($paginate, ['*'], 'pageDelivered'))
+            ->with('data_paid', $salesService->getData($request, 1)['data']->paginate($paginate, ['*'], 'pagePaid'))
+            ->with('data_delivered', $salesService->getData($request, 3)['data']->paginate($paginate, ['*'], 'pageDelivered'))
             ->with(self::SEARCH, $data[self::SEARCH])
             ->with('before_date', $data['before'])
             ->with('after_date', $data['after'])
@@ -244,9 +244,9 @@ class SalesController extends Controller
         $paymentStatusList = array(
             '-1'=> 'Paid (decline)',
             '0' => 'Unpaid',
-            '1' => 'Paid (success)',
+            '1' => 'Paid',
             '2' => 'Paid (waiting confirmation)',
-            '3' => 'Paid (delivered)'
+            '3' => 'Delivered'
         );
         // Convert each ot the returned collection into an array, and append it to the payments array
         $no = 0;
@@ -256,7 +256,7 @@ class SalesController extends Controller
             if ($paymentStatusList[$row->payment_status]){
                 $payment_status = $paymentStatusList[$row->payment_status];
             }else{
-                $payment_status = "Paid (success)";
+                $payment_status = "Paid";
             }
 
             $examsArray[] = [

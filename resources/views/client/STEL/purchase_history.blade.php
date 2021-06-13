@@ -28,7 +28,7 @@
 				<div class="container-fluid container-fullw bg-white">
 					<ul class="nav nav-tabs clearfix">
 						<li class="{{ $tab == 'unpaid' ? 'active' : '' }}"><a href="#tab-unpaid" data-toggle="tab"><strong>Unpaid</strong></a></li>
-						<li class="{{ $tab == 'success' ? 'active' : '' }}"><a href="#tab-success" data-toggle="tab"><strong>Success</strong></a></li>
+						<li class="{{ $tab == 'paid' ? 'active' : '' }}"><a href="#tab-paid" data-toggle="tab"><strong>Paid</strong></a></li>
 						<li class="{{ $tab == 'delivered' ? 'active' : '' }}"><a href="#tab-delivered" data-toggle="tab"><strong>Delivered</strong></a></li>
 					</ul>
 					<div class="tab-content">
@@ -200,8 +200,8 @@
 								</div>
 							</div>
 						</div>
-						<!-- tab success -->
-						<div id="tab-success" class="row clearfix tab-pane fade {{ $tab == 'success' ? 'in active' : '' }}">
+						<!-- tab paid -->
+						<div id="tab-paid" class="row clearfix tab-pane fade {{ $tab == 'paid' ? 'in active' : '' }}">
 							<div class="col-md-12">
 								<div class="table-responsive">
 									<table id="datatable1" class="table table-striped table-bordered" style="width: 100%;">
@@ -219,10 +219,10 @@
 										</thead>
 										<tbody>
 											@php $no = 1; $i = 0; @endphp
-											@if($data_success)
-											@foreach($data_success as $keys => $item)
-												@php if($data_success[$i]->sales_detail){ $data_stel_name = ""; $data_stel_code = ""; $count = 0 @endphp
-													@foreach($data_success[$i]->sales_detail as $item_detail)
+											@if($data_paid)
+											@foreach($data_paid as $keys => $item)
+												@php if($data_paid[$i]->sales_detail){ $data_stel_name = ""; $data_stel_code = ""; $count = 0 @endphp
+													@foreach($data_paid[$i]->sales_detail as $item_detail)
 														@php 
 														if($item_detail->stel && $count < 2){
 															if($data_stel_name == ""){
@@ -238,12 +238,12 @@
 													@endforeach
 												@php } $out = strlen($data_stel_code) > 25 ? substr($data_stel_code,0, 25)."..." : $data_stel_code; @endphp
 												<tr>
-													<td>{{$no+(($data_success->currentPage()-1)*$data_success->perPage())}}</td>
+													<td>{{$no+(($data_paid->currentPage()-1)*$data_paid->perPage())}}</td>
 													<td>{{$item->created_at}}</td>
 													<td>{{ $out }}</td>
 													<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item->total), 0, '.', ','); @endphp</td>
 													<td>{{$item->user->name}}</td>  
-													<td class="center"><span class="label label-sm label-success" style="line-height: 2;">Success</span></td>
+													<td class="center"><span class="label label-sm label-success" style="line-height: 2;">Paid</span></td>
 													<td><a href="javascript:void(0)" class="collapsible">{{ trans('translate.examination_detail') }}</a></td>
 												</tr> 
 												<tr class="content" style="display: none;">
@@ -263,8 +263,8 @@
 															</thead>
 															<tbody>
 																@php $total = 0; $invoice = $item->invoice; $company_name = $item->user->company->name; 
-																if($data_success[$i]->sales_detail){ @endphp
-																	@foreach($data_success[$i]->sales_detail as $keys => $item_detail)
+																if($data_paid[$i]->sales_detail){ @endphp
+																	@foreach($data_paid[$i]->sales_detail as $keys => $item_detail)
 																		@php if($item_detail->stel){ @endphp
 																			<tr>
 																				<td>{{++$keys}}</td>
@@ -296,7 +296,7 @@
 															</tbody>
 															<tfoot> 
 																@php
-																	$unique_code = ($data_success[$i]->total/1.1) - $total;
+																	$unique_code = ($data_paid[$i]->total/1.1) - $total;
 																@endphp
 																<tr>
 																	<td colspan="5" class="text-align-right"> {{ trans('translate.stel_unique_code') }}</td>
@@ -324,7 +324,7 @@
 																</tr>
 																<tr style="font-weight: bold;">
 																	<td colspan="5" class="text-align-right"> Total</td>
-																	<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. @php echo number_format($data_success[$i]->total, 0, '.', ',');@endphp</td>
+																	<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. @php echo number_format($data_paid[$i]->total, 0, '.', ',');@endphp</td>
 																	<td class="center">
 																		@if($item->id_kuitansi != '')
 																			<a target="_blank" href="{{ URL::to('/client/downloadkuitansistel/'.$item->id_kuitansi) }}">
@@ -359,7 +359,7 @@
 							<div class="row">
 								<div class="col-md-12 col-sm-12">
 									<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-										@php echo $data_success->links(); @endphp
+										@php echo $data_paid->links(); @endphp
 									</div>
 								</div>
 							</div>

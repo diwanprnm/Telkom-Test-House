@@ -62,6 +62,6 @@ class Examination extends Model
 
     public function history_uf()
     {
-        return $this->hasMany('App\HistoryUF', 'examination_id')->orderBy('created_at', 'DESC');
+        return $this->hasMany('App\HistoryUF', 'examination_id')->where('function_test_TE', 2)->orderBy('created_at', 'ASC');
     }
 }

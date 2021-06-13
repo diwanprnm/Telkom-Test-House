@@ -160,7 +160,7 @@ class ProductsController extends Controller
             ->where(self::USERS_DOT_COMPANY_ID,$currentUser->company_id)
             ->where("stels_sales.payment_status", 0)
         ;
-        $query_success = STELSales::select($select)->distinct('stels_sales.id')
+        $query_paid = STELSales::select($select)->distinct('stels_sales.id')
             ->join("stels_sales_detail","stels_sales.id","=","stels_sales_detail.stels_sales_id")
             ->join("stels","stels_sales_detail.stels_id","=","stels.id")
             ->join("users","users.id","=","stels_sales.user_id")
@@ -179,7 +179,7 @@ class ProductsController extends Controller
 
         $data = $query->orderBy("stels_sales.created_at", 'desc')->paginate($paginate);
         $data_unpaid = $query_unpaid->orderBy("stels_sales.created_at", 'desc')->paginate($paginate, ['*'], 'pageUnpaid');
-        $data_success = $query_success->orderBy("stels_sales.created_at", 'desc')->paginate($paginate, ['*'], 'pageSuccess');
+        $data_paid = $query_paid->orderBy("stels_sales.created_at", 'desc')->paginate($paginate, ['*'], 'pagePaid');
         $data_delivered = $query_delivered->orderBy("stels_sales.created_at", 'desc')->paginate($paginate, ['*'], 'pageDelivered');
 
         $page = "purchase_history";
@@ -188,7 +188,7 @@ class ProductsController extends Controller
         ->with('page', $page)
         ->with('data', $data)
         ->with('data_unpaid', $data_unpaid)
-        ->with('data_success', $data_success)
+        ->with('data_paid', $data_paid)
         ->with('data_delivered', $data_delivered);
     } 
 
