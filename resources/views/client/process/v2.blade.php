@@ -92,7 +92,7 @@
 							<h2>First Step</h2>
 							<fieldset>
 								<div class="form-group">
-									<label for="f1-jns-perusahaan" class="text-bold">{{ trans('translate.service_company_type') }}: </label>
+									<label for="f1-jns-perusahaan" class="text-bold required">{{ trans('translate.service_company_type') }}: </label>
 									<input type="radio" name="jns_perusahaan" value="Agen" placeholder="{{ trans('translate.service_company_agent') }}"  checked>
 									<input type="radio" name="jns_perusahaan" value="Pabrikan" placeholder="{{ trans('translate.service_company_branch') }}" >
 								</div>
@@ -110,30 +110,30 @@
 								</div>
 									<div class="form-group">
 									<label for="device_name">{{ trans('translate.service_device_equipment') }} *</label>
-									<input type="text" name="device_name" placeholder="Laptop/Phone, Etc." id="device_name" class="">
+									<input type="text" name="device_name" placeholder="Laptop/Phone, Etc." id="device_name" class="required">
 								</div>
 								<div class="form-group">
 									<label for="device_mark">{{ trans('translate.service_device_mark') }} *</label>
-									<input type="text" name="device_mark" placeholder="{{ trans('translate.service_device_mark') }}"  id="device_mark" class="">
+									<input type="text" name="device_mark" placeholder="{{ trans('translate.service_device_mark') }}"  id="device_mark" class="required">
 								</div>
 								<div class="form-group">
 									<label for="device_capacity">{{ trans('translate.service_device_capacity') }} *</label>
-									<input type="text" name="device_capacity" placeholder="10 GHz"   id="device_capacity" class="">
+									<input type="text" name="device_capacity" placeholder="10 GHz"   id="device_capacity" class="required">
 								</div>
 								<div class="form-group">
 									<label for="f1-pembuat-perangkat">{{ trans('translate.service_device_manufactured_by') }} *</label>
-									<input type="text" name="f1-pembuat-perangkat" placeholder="Jakarta" id="f1-pembuat-perangkat" class="">
+									<input type="text" name="f1-pembuat-perangkat" placeholder="Jakarta" id="f1-pembuat-perangkat" class="required">
 								</div>
 								<div class="form-group">
 									<label for="serial_number">{{ trans('translate.service_device_serial_number') }} *</label>
-									<input type="text" name="serial_number" placeholder="123456789456"  id="serial_number" class="">
+									<input type="text" name="serial_number" placeholder="123456789456"  id="serial_number" class="required">
 								</div>
 								<div class="form-group">
 									<label for="device_model">{{ trans('translate.service_device_model') }} *</label>
-									<input type="text" name="device_model" placeholder="L123456"   id="device_model" class="">
+									<input type="text" name="device_model" placeholder="L123456"   id="device_model" class="required">
 								</div>
 								<div class="form-group"> 
-									<label for="lokasi_pengujian" class="text-bold">{{ trans('translate.service_label_testing_site') }}: </label>
+									<label for="lokasi_pengujian" class="text-bold required">{{ trans('translate.service_label_testing_site') }}: </label>
 									<input type="radio" name="lokasi_pengujian" value="0" placeholder="{{ trans('translate.service_lab_testing') }}" checked>
 									<input type="radio" name="lokasi_pengujian" value="1" placeholder="{{ trans('translate.service_loc_testing') }}">
 								</div>
@@ -155,8 +155,8 @@
 								@if ($jns_pengujian == 'ta')
 									<div class="dv-srt-sp3">
 										<div class="form-group col-xs-12">
-											<label>{{ trans('translate.service_upload_sp3') }}<span class="text-danger">*</span></label>
-											<input class="data-upload-berkas f1-file-sp3 " id="fileInput-sp3" name="fuploadsp3" type="file" accept="application/pdf,image/*">
+											<label>{{ trans('translate.service_upload_sp3') }}<span class="text-danger required">*</span></label>
+											<input class="data-upload-berkas f1-file-sp3 required" id="fileInput-sp3" name="fuploadsp3" type="file" accept="application/pdf,image/*">
 											<div id="sp3-file"></div>
 											<div id="attachment-file">
 												*{{ trans('translate.maximum_filesize') }}
@@ -166,8 +166,8 @@
 								@endif
 								<div class="dv-dll">
 									<div class="form-group col-xs-12">
-										<label>{{ trans('translate.service_upload_another_file') }}</label><span class="text-danger">*</span></label>
-										<input class="data-upload-berkas f1-file-dll " id="fileInput-dll" name="fuploaddll" type="file" accept="application/pdf,image/*" >
+										<label>{{ trans('translate.service_upload_another_file') }}</label><span class="text-danger required">*</span></label>
+										<input class="data-upload-berkas f1-file-dll required" id="fileInput-dll" name="fuploaddll" type="file" accept="application/pdf,image/*" >
 										<div id="dll-file"></div>
 										<div id="attachment-file">
 											*{{ trans('translate.maximum_filesize') }}
@@ -204,6 +204,17 @@
 	        required: true,extension: "jpeg|jpg|png|pdf"
 	    }
 	});
+
+
+	$( document ).ready(function() {
+		$('.chosen-container .search-field').focusout(()=>{
+			$('.chosen-choices .search-choice').length && $('.chosen-choices .search-field input').removeClass('error');
+			$('.chosen-choices .search-field input').removeAttr('style');
+		});
+	});
+
+
+
 	const jns_pengujian = "{{$jns_pengujian}}";
 	var formWizard = form.children("div").steps({
 	    headerTag: "h2",
@@ -211,7 +222,6 @@
 	    autoFocus: true,
 	    transitionEffect: "slideLeft",
 	    onStepChanging: function (event, currentIndex, newIndex){  
-	    	console.log('curret: '+currentIndex+' ** newIndex: '+newIndex);
 	    	if(!form.valid() && (newIndex > currentIndex)){ 
 
 	    	}
@@ -219,7 +229,18 @@
 	    	form.trigger("focus"); 
 	        form.validate().settings.ignore = ":disabled,:hidden";
 
+			if (currentIndex == 0){
+				$('.chosen-choices .search-field input').removeAttr('style');
+				if (jns_pengujian != 'qa' && !$('.chosen-choices .search-choice span').length){
+					$('.chosen-choices .search-field input').addClass('error');
+					return false;
+				}
+			}
+
 			if (currentIndex == 1 && newIndex == 2){
+				if(!form.valid()){
+					return false;
+				}
 				let isUploaded = false;
 				let examinationReferenceField = '';
 				//extracting examination test reference;
@@ -229,7 +250,7 @@
 					choice.each((i, element) => {
 						examinationReferencePool.push( element.innerHTML.split('||')[0].trim() )
 					});
-					examinationReferenceField = examinationReferencePool.join(', ');
+					examinationReferenceField = examinationReferencePool.join(',');
 				}else{
 					choice = $('.chosen-single span');
 					examinationReferenceField = choice[0].innerHTML.split('||')[0].trim();
