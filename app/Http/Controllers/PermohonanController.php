@@ -199,6 +199,14 @@ class PermohonanController extends Controller
 	
 	public function submit(Request $request)
 	{
+		//UNTUK TESTING AJAX call permohonan
+		// return response()->json([
+		// 	'status' => true,
+		// 	'data' => [
+		// 		'file_dll' => $request->file('fuploaddll')->getClientOriginalName(),
+		// 		'examinationReference' => $request->input('f1-referensi-perangkat')
+		// 	]
+		// ]);
 		$this->submit_update($request, self::SUBMIT);
 	}
 	

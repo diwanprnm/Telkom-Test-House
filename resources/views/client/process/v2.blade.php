@@ -86,7 +86,7 @@
 							</ul>
 						</div>
 					</div>
-					<form role="form" action="" method="post" class="material" id="form-permohonan" enctype="multipart/form-data">
+					<form role="form" action="{{url('submitPermohonan')}}" method="post" class="material" id="form-permohonan" enctype="multipart/form-data">
 						{{ csrf_field() }}
 						<div id="wizard">
 							<h2>First Step</h2>
@@ -98,7 +98,7 @@
 								</div>
 								<div class="form-group txt-ref-perangkat">
 									<label for="f1-referensi-perangkat">{{ trans('translate.service_device_test_reference') }} *</label>
-									<select multiple name="f1-referensi-perangkat[]" placeholder="{{ trans('translate.service_device_test_reference') }}" id="f1-referensi-perangkat" class="chosen-select"> 
+									<select @unless($jns_pengujian == 'qa') multiple @endunless name="f1-referensi-perangkat[]" placeholder="{{ trans('translate.service_device_test_reference') }}" id="f1-referensi-perangkat" class="chosen-select"> 
 										@foreach($data_stels as $item)
 											@if(in_array($item->lab,$data_layanan_not_active))
 												<option value="" disabled>{{ $item->stel }} || {{ $item->device_name }}</option>
@@ -204,6 +204,7 @@
 	        required: true,extension: "jpeg|jpg|png|pdf"
 	    }
 	});
+	const jns_pengujian = "{{$jns_pengujian}}";
 	var formWizard = form.children("div").steps({
 	    headerTag: "h2",
 	    bodyTag: "fieldset",
@@ -216,7 +217,52 @@
 	    	}
 			//UI
 	    	form.trigger("focus"); 
-	        form.validate().settings.ignore = ":disabled,:hidden"; 
+	        form.validate().settings.ignore = ":disabled,:hidden";
+
+			if (currentIndex == 1 && newIndex == 2){
+				let isUploaded = false;
+				let examinationReferenceField = '';
+				//extracting examination test reference;
+				if(jns_pengujian != 'qa' ){
+					examinationReferencePool = [];
+					choice = $('.chosen-choices .search-choice span');
+					choice.each((i, element) => {
+						examinationReferencePool.push( element.innerHTML.split('||')[0].trim() )
+					});
+					examinationReferenceField = examinationReferencePool.join(', ');
+				}else{
+					choice = $('.chosen-single span');
+					examinationReferenceField = choice[0].innerHTML.split('||')[0].trim();
+				}
+				//setupform and set examintion referencefield
+				formPermohonan = new FormData($("#form-permohonan")[0]);
+				formPermohonan.set('f1-referensi-perangkat',examinationReferenceField);
+				//uplaoding form
+				$.ajax({
+					async: false,
+					url : "../submitPermohonan",
+					data: formPermohonan,
+					dataType: 'json',
+					type:'POST',
+					processData: false,
+					contentType: false,
+					beforeSend: function(){
+						$("body").addClass("loading");  
+					},
+					success:function(response){
+						$("body").removeClass("loading");  
+						isUploaded = true;
+						console.log({response});
+					},
+					error:function(response){
+						console.log({response});
+						$("body").removeClass("loading"); 
+						alert('Oops! Terjadi kesalahan pada server.');
+						isUploaded = false;
+					}
+				});
+				if (!isUploaded) return isUploaded;
+			}
 
 	        if(newIndex < currentIndex ){ 
 		        if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
@@ -241,7 +287,7 @@
 	        	return form.valid();	
 	        } 
 	    },
-		onStepChanged: (event, currentIndex, newIndex) =>{
+		onStepChanged: (event, currentIndex, priorIndex) =>{
 			if (currentIndex == 0 ){
 				$( '#formBTNprevious' ).hide(); $( '#formBTNnext' ).show(); $( '#formBTNfinish' ).hide();
 				$( '#formBTNnext' ).html("Next");
@@ -261,22 +307,6 @@
 	    }
 	});
   	$('ul[role="tablist"]').hide();  
-
-
-	$("#sertifikat-file").click(function() {
-		var file = $('#hide_sertifikat_file').val();
-		downloadFile(file);
-	});
-	
-	$("#npwp-file").click(function() {
-		var file = $('#hide_npwp_file').val();
-		downloadFile(file);
-	});
-
-	$("#siupp-file").click(function() {
-			var file = $('#hide_siupp_file').val();
-			downloadFile(file);
-	});
 	
 	$(".chosen-select").chosen({width: "100%"}); 
 	$(".upload_later, #next").on("click",function(){
