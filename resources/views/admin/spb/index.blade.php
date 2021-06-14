@@ -172,10 +172,17 @@
 											@else
                                                 <option value="1">SUDAH</option>
                                             @endif
+											<!-- if payment_status == 0 && spb_date > now -->
                                             @if($filterPayment_status == '0')
                                                 <option value="0" selected>BELUM</option>
 											@else
                                                 <option value="0">BELUM</option>
+                                            @endif
+											<!-- if payment_status == 0 && spb_date < now -->
+                                            @if($filterPayment_status == '-1')
+                                                <option value="-1" selected>KADALUARSA</option>
+											@else
+                                                <option value="-1">KADALUARSA</option>
                                             @endif
 										</select>
 									</div>
@@ -283,11 +290,15 @@
 											<td class="center">{{ $item->device->capacity }}</td>
 											<td class="center">{{ number_format($item->price, 0, '.', ',') }}</td>
 											<td class="center">
-												@if($item->payment_status == '1')
+											@if($item->payment_status == '1')
 													SUDAH
-												@else
+											@else 
+												@if ($item->spb_date < date("Y-m-d")) 
+													KADALUARSA
+												@else 
 													BELUM
 												@endif
+											@endif
 											</td>
 											<td class="center">
 												@foreach($item->media as $attach)
