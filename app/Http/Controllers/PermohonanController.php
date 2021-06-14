@@ -64,12 +64,12 @@ class PermohonanController extends Controller
 	private const EXAMINATION_ID = 'examination_id';
 	private const CREATED_AT = 'created_at';
 	private const CREATED_BY = 'created_by';
-	private const FILE_PEMBAYARAN = 'File Pembayaran';
 	private const UPDATED_AT = 'updated_at';
 	private const UPDATED_BY = 'updated_by';
 	private const REFERENSI_UJI = 'Referensi Uji';
 	private const TINJAUAN_KONTRAK = 'Tinjauan Kontrak';
 	private const LAPORAN_UJI = 'Laporan Uji';
+	private const FILE_PEMBAYARAN = 'File Pembayaran';
 	private const FILE_LAINNYA = 'File Lainnya';
 	private const DATE_FORMAT2 = 'Y-m-d';
 	private const MESSAGE = 'message';
@@ -499,67 +499,50 @@ class PermohonanController extends Controller
 		}
 		//Populate request data
 		$jns_perusahaan = $request->input(self::JENIS_PERUSAHAAN);
-		$jns_pengujian = $request->input('hide_jns_pengujian');
-		$exam_type = DB::table('examination_types')->where('id', ''.$jns_pengujian.'')->first();
-		$jns_pengujian_name = ''.$exam_type->name.'';
-		$jns_pengujian_desc = ''.$exam_type->description.'';
-		$lokasi_pengujian = $request->input('lokasi_pengujian');
-		$nama_perangkat = $request->input('f1-nama-perangkat');
-		$merek_perangkat = $request->input('f1-merek-perangkat');
-		$kapasitas_perangkat = $request->input('f1-kapasitas-perangkat');
-		$pembuat_perangkat = $request->input('f1-pembuat-perangkat');
-		$serialNumber_perangkat = $request->input('f1-serialNumber-perangkat');
-		$model_perangkat = $request->input('f1-model-perangkat');
-		$referensi_perangkat = $request->input('referensi_perangkat');
+		$jns_pengujian = $request->input('kode_jenis_pengujian');
+		$exam_type = DB::table('examination_types')->where('id', $jns_pengujian)->first();
+		$jns_pengujian_name = $exam_type->name;
+		$jns_pengujian_desc = $exam_type->description;
+		$lokasi_pengujian = $request->input('examination_location');
+		$nama_perangkat = $request->input('device_name');
+		$merek_perangkat = $request->input('device_mark');
+		$kapasitas_perangkat = $request->input('device_capacity');
+		$pembuat_perangkat = $request->input('device_made_in');
+		$serialNumber_perangkat = $request->input('device_serial_number');
+		$model_perangkat = $request->input('device_model');
+		$referensi_perangkat = $request->input('test_reference');
+		$dll = $sp3 = $refUji = '-'; 
+		$request->hasFile('dllFile') && $dll = $request->file('dllFile')->getClientOriginalName();
+		$request->hasFile('sp3File') && $sp3 = $request->file('sp3File')->getClientOriginalName();
+		$request->hasFile('refUjiFile') && $dll = $request->file('refUjiFile')->getClientOriginalName();
+		//TODO 14 June 23:45;
+		dd([
+			$jns_perusahaan,
+			$jns_pengujian,
+			$jns_pengujian_name,
+			$jns_pengujian_desc,
+			$lokasi_pengujian,
+			$nama_perangkat,
+			$merek_perangkat,
+			$kapasitas_perangkat,
+			$pembuat_perangkat,
+			$serialNumber_perangkat,
+			$model_perangkat,
+			$referensi_perangkat,
+			$dll,
+			$sp3,
+			$refUji
+		]);
 		//get no reg
 		$no_reg = $type == self::UPDATE ? $exam_no_reg->function_test_NO : $this->generateFunctionTestNumber($jns_pengujian_name);
 		$kotaPerusahaan = Company::select('city')->where('id', $company_id)->first()->city;
 	
-		//UPLOAD COMPANY FILE
+		//UPLOAD File to Minio
+		$this->uploadFile($request, 'ref_uji', $exam_id);
+		$this->uploadFile($request, 'dll', $exam_id);
+		$this->uploadFile($request, 'sp3', $exam_id);
 
-/*
-		UPLOAD EXAMINATION FILE
-*/
-
-		//Upload Referensi Uji
-		$fileService = new FileService();
-		$fileProperties = array(
-			'path' => self::MEDIA_EXAMINATION_LOC.$exam_id."/",
-			'prefix' => "ref_uji_",
-			'oldFile' => ($type == self::UPDATE) ? $request->input(self::HIDE_REF_UJI_FILE, "") : ""
-		);
-		if ($request->hasFile(self::FUPLOADUJI)) {
-			$fileService->upload($request->file($this::FUPLOADUJI), $fileProperties);
-			$fuploadrefuji_name = $fileService->isUploaded() ? $fileService->getFileName() : ($type == self::UPDATE ? $request->input(self::HIDE_REF_UJI_FILE) : '');
-		}
-		//Upload SP3
-		$fileService = new FileService();
-		$fileProperties = array(
-			'path' => self::MEDIA_EXAMINATION_LOC.$exam_id."/",
-			'prefix' => "sp3_",
-			'oldFile' => ($type == self::UPDATE) ? $request->input(self::HIDE_SP3_FILE, "") : ""
-		);
-		if ($request->hasFile(self::FUPLOADSP3)) {
-			$fileService->upload($request->file($this::FUPLOADSP3), $fileProperties);
-			$fuploadsp3_name = $fileService->isUploaded() ? $fileService->getFileName() : ($type == self::UPDATE ? $request->input(self::HIDE_SP3_FILE) : '');
-		}else{
-			$fuploadsp3_name = $type == self::UPDATE ? $request->input(self::HIDE_SP3_FILE) : '';
-		}
-		//Upload DLL
-		$fileService = new FileService();
-		$fileProperties = array(
-			'path' => self::MEDIA_EXAMINATION_LOC.$exam_id."/",
-			'prefix' => "dll_",
-			'oldFile' => ($type == self::UPDATE) ? $request->input(self::HIDE_DLL_FILE, "") : ""
-		);
-
-		if ($request->hasFile(self::FUPLOADDLL)) {
-			$fileService->upload($request->file($this::FUPLOADDLL), $fileProperties);
-			$fuploaddll_name = $fileService->isUploaded() ? $fileService->getFileName() : ($type == self::UPDATE ? $request->input(self::HIDE_DLL_FILE) : '');
-		}else{
-			$fuploaddll_name = $type == self::UPDATE ? $request->input(self::HIDE_DLL_FILE) : '';
-		}
-		
+		//Update Device table
 		if ($type == self::SUBMIT) {
 			$device = new Device;
 			$device->id = $device_id;
@@ -579,12 +562,7 @@ class PermohonanController extends Controller
 			$device->updated_by = ''.$user_id.'';
 			$device->created_at = ''.date(self::DATE_FORMAT).'';
 			$device->updated_at = ''.date(self::DATE_FORMAT).'';
-
-			try{
-				$device->save();
-			} catch(Exception $e){
-				// do exception
-			}
+			$device->save();
 
 			$exam = new Examination;
 			$exam->id = $exam_id;
@@ -618,74 +596,8 @@ class PermohonanController extends Controller
 			$exam->is_loc_test = $lokasi_pengujian;
 			$exam->keterangan = ''.$request->input('hide_cekSNjnsPengujian').'';
 			$exam->function_test_NO = ''.$no_reg.'';
-
-			try{
-				$exam->save();
-				$request->session()->put('exam_id', $exam_id);
-			} catch(Exception $e){
-				// Do Exception
-			}
-
-			if($jns_pengujian == 1){
-				if($jns_perusahaan != self::PABRIKAN){
-					DB::table(self::EXAMINATION_ATTACHMENTS)->insert([
-						['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => self::FILE_PEMBAYARAN, self::ATTACHMENT => '', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).''],
-						['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => self::REFERENSI_UJI, self::ATTACHMENT => ''.$fuploadrefuji_name.'', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).''],
-						['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => 'Surat Dukungan Prinsipal', self::ATTACHMENT => ''.$fuploadprinsipal_name.'', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).''],
-						['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => self::TINJAUAN_KONTRAK, self::ATTACHMENT => '', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).''],
-						['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => self::LAPORAN_UJI, self::ATTACHMENT => '', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).''],
-						['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => self::FILE_LAINNYA, self::ATTACHMENT => ''.$fuploaddll_name.'', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).''],
-						['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => 'Laporan Hasil Uji Fungsi', self::ATTACHMENT => '', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).'']
-					]);
-				}else{
-					DB::table(self::EXAMINATION_ATTACHMENTS)->insert([
-						['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => self::FILE_PEMBAYARAN, self::ATTACHMENT => '', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).''],
-						['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => self::REFERENSI_UJI, self::ATTACHMENT => ''.$fuploadrefuji_name.'', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).''],
-						['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => self::TINJAUAN_KONTRAK, self::ATTACHMENT => '', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).''],
-						['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => self::LAPORAN_UJI, self::ATTACHMENT => '', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).''],
-						['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => self::FILE_LAINNYA, self::ATTACHMENT => ''.$fuploaddll_name.'', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).''],
-						['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => 'Laporan Hasil Uji Fungsi', self::ATTACHMENT => '', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).'']
-					]);
-				}
-			}else if($jns_pengujian == 2){
-				DB::table(self::EXAMINATION_ATTACHMENTS)->insert([
-					['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => self::FILE_PEMBAYARAN, self::ATTACHMENT => '', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).''],
-					['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => self::REFERENSI_UJI, self::ATTACHMENT => ''.$fuploadrefuji_name.'', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).''],
-					['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => 'SP3', self::ATTACHMENT => ''.$fuploadsp3_name.'', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).''],
-					['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => self::TINJAUAN_KONTRAK, self::ATTACHMENT => '', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).''],
-					['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => self::FILE_LAINNYA, self::ATTACHMENT => ''.$fuploaddll_name.'', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).''],
-					['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => self::LAPORAN_UJI, self::ATTACHMENT => '', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).'']
-				]);
-			}else{
-				DB::table(self::EXAMINATION_ATTACHMENTS)->insert([
-					['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => self::FILE_PEMBAYARAN, self::ATTACHMENT => '', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).''],
-					['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => self::REFERENSI_UJI, self::ATTACHMENT => ''.$fuploadrefuji_name.'', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).''],
-					['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => self::TINJAUAN_KONTRAK, self::ATTACHMENT => '', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).''],
-					['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => self::FILE_LAINNYA, self::ATTACHMENT => ''.$fuploaddll_name.'', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).''],
-					['id' => Uuid::uuid4(), self::EXAMINATION_ID => ''.$exam_id.'', 'name' => self::LAPORAN_UJI, self::ATTACHMENT => '', 'no' => '', 'tgl' => '', self::CREATED_BY => ''.$user_id.'', self::UPDATED_BY => ''.$user_id.'', self::CREATED_AT => ''.date(self::DATE_FORMAT).'', self::UPDATED_AT => ''.date(self::DATE_FORMAT).'']
-				]);
-			}
-			
-			$plg_id = $request->input(self::F1_PLG_ID_PERUSAHAAN) ? $request->input(self::F1_PLG_ID_PERUSAHAAN) : '-' ;
-			$nib = $request->input(self::F1_NIB_PERUSAHAAN) ? $request->input(self::F1_NIB_PERUSAHAAN) : '-' ;
-
-			$query_update = "UPDATE companies
-				SET 
-					npwp_file = '".$fuploadnpwp_name."',
-					plg_id = '".$plg_id."',
-					nib = '".$nib."',
-					siup_number = '".$no_siupp."',
-					siup_file = '".$fuploadsiupp_name."',
-					siup_date = '".date(self::DATE_FORMAT2, strtotime($tgl_siupp))."',
-					qs_certificate_number = '".$sertifikat_sistem_mutu."',
-					qs_certificate_file = '".$fuploadlampiran_name."',
-					qs_certificate_date = '".date(self::DATE_FORMAT2, strtotime($batas_waktu_sistem)).
-					self::UPDATE_BY_EQUAL.$user_id.
-					self::UPDATE_AT_EQUAL.date(self::DATE_FORMAT)."'
-				WHERE id = (SELECT company_id FROM users WHERE id = '".$user_id."')
-			";
-
-			DB::update($query_update);
+			$exam->save();
+			$request->session()->put('exam_id', $exam_id);
 			
 			$exam_hist = new ExaminationHistory;
 			$exam_hist->examination_id = $exam_id;
@@ -713,7 +625,6 @@ class PermohonanController extends Controller
 				);
 				$notification_id = $notificationService->make($data);
 				$data['id'] = $notification_id;
-				
 				//event(new Notification($data)); 
 			}
 		}
@@ -777,26 +688,6 @@ class PermohonanController extends Controller
 			";
 			DB::update($query_update_dll);
 			
-			$plg_id = $request->input(self::F1_PLG_ID_PERUSAHAAN) ? $request->input(self::F1_PLG_ID_PERUSAHAAN) : '-' ;
-			$nib = $request->input(self::F1_NIB_PERUSAHAAN) ? $request->input(self::F1_NIB_PERUSAHAAN) : '-' ;
-
-			$query_update_companie = "UPDATE companies
-				SET 
-					npwp_file = '".$fuploadnpwp_name."',
-					plg_id = '".$plg_id."',
-					nib = '".$nib."',
-					siup_number = '".$no_siupp."',
-					siup_file = '".$fuploadsiupp_name."',
-					siup_date = '".date(self::DATE_FORMAT2, strtotime($tgl_siupp))."',
-					qs_certificate_number = '".$sertifikat_sistem_mutu."',
-					qs_certificate_file = '".$fuploadlampiran_name."',
-					qs_certificate_date = '".date(self::DATE_FORMAT2, strtotime($batas_waktu_sistem)).
-					self::UPDATE_BY_EQUAL.$user_id.
-					self::UPDATE_AT_EQUAL.date(self::DATE_FORMAT)."'
-				WHERE id = (SELECT company_id FROM users WHERE id = '".$user_id."')
-			";
-			DB::update($query_update_companie);
-			
 			$exam_hist = new ExaminationHistory;
 			$exam_hist->examination_id = $exam_id;
 			$exam_hist->date_action = date(self::DATE_FORMAT);
@@ -809,19 +700,51 @@ class PermohonanController extends Controller
 		}
 	}
 
-	private function uploadFile(){
+	private function uploadFile($request, $type, $exam_id){
 		$fileService = new FileService();
 		$fileProperties = array(
-			'path' => self::MEDIA_EXAMINATION_LOC.$exam_id."/",
-			'prefix' => "dll_",
-			'oldFile' => ($type == self::UPDATE) ? $request->input(self::HIDE_DLL_FILE, "") : ""
+			'ref_uji' => [
+				'inputName' => 'referensiUji',
+				'path' => self::MEDIA_EXAMINATION_LOC.$exam_id."/",
+				'prefix' => "ref_uji_",
+				'oldFile' => ($type == self::UPDATE) ? $request->input(self::HIDE_REF_UJI_FILE, "") : "",
+				'attachName' => 'Referensi Uji'
+			],
+			'dll' => [
+				'inputName' => 'dll',
+				'path' => self::MEDIA_EXAMINATION_LOC.$exam_id."/",
+				'prefix' => "dll_",
+				'oldFile' => ($type == self::UPDATE) ? $request->input(self::HIDE_DLL_FILE, "") : "",
+				'attachName' => 'File Lainnya'
+			],
+			'sp3' => [
+				'inputName' => 'sp3',
+				'path' => self::MEDIA_EXAMINATION_LOC.$exam_id."/",
+				'prefix' => "sp3_",
+				'oldFile' => ($type == self::UPDATE) ? $request->input(self::HIDE_SP3_FILE, "") : "",
+				'attachName' => 'SP3'
+			]
 		);
 
-		if ($request->hasFile(self::FUPLOADDLL)) {
-			$fileService->upload($request->file($this::FUPLOADDLL), $fileProperties);
-			$fuploaddll_name = $fileService->isUploaded() ? $fileService->getFileName() : ($type == self::UPDATE ? $request->input(self::HIDE_DLL_FILE) : '');
-		}else{
-			$fuploaddll_name = $type == self::UPDATE ? $request->input(self::HIDE_DLL_FILE) : '';
+		if(!$fileProperties.include($type)) return false;
+
+		if ($request->hasFile(  $fileProperties[$type]['inputName']  )) {
+			$fileService->upload( $fileProperties[$type]['inputName'], $fileProperties);
+			$uploadedFileName = $fileService->isUploaded() ? $fileService->getFileName() : ($type == self::UPDATE ? $request->input(self::HIDE_DLL_FILE) : '');
+			//TODO input examination attachment();
+			DB::table('examination_attachments')->insert([
+				'id' => Uuid::uuid4(),
+				'examination_id' => $exam_id,
+				'name' => $fileProperties[$type]['attachName'],
+				'attachment' => $uploadedFileName,
+				'no' => '',
+				'tgl' => '',
+				self::CREATED_BY => Auth::user()->id,
+				self::UPDATED_BY => Auth::user()->id,
+				self::CREATED_AT => date(self::DATE_FORMAT),
+				self::UPDATED_AT => date(self::DATE_FORMAT)
+			]);
 		}
+		return true;
 	}
 }

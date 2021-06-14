@@ -91,14 +91,15 @@
 						<div id="wizard">
 							<h2>First Step</h2>
 							<fieldset>
+								<input type="hidden" name="kode_jenis_pengujian" value="{{$examintaionType[$jns_pengujian]['number']}}"/>
 								<div class="form-group">
 									<label for="f1-jns-perusahaan" class="text-bold required">{{ trans('translate.service_company_type') }}: </label>
 									<input type="radio" name="jns_perusahaan" value="Agen" placeholder="{{ trans('translate.service_company_agent') }}"  checked>
 									<input type="radio" name="jns_perusahaan" value="Pabrikan" placeholder="{{ trans('translate.service_company_branch') }}" >
 								</div>
 								<div class="form-group txt-ref-perangkat">
-									<label for="f1-referensi-perangkat">{{ trans('translate.service_device_test_reference') }} *</label>
-									<select @unless($jns_pengujian == 'qa') multiple @endunless name="f1-referensi-perangkat[]" placeholder="{{ trans('translate.service_device_test_reference') }}" id="f1-referensi-perangkat" class="chosen-select"> 
+									<label for="test_reference">{{ trans('translate.service_device_test_reference') }} *</label>
+									<select @unless($jns_pengujian == 'qa') multiple @endunless name="test_reference[]" placeholder="{{ trans('translate.service_device_test_reference') }}" id="test_reference" class="chosen-select"> 
 										@foreach($data_stels as $item)
 											@if(in_array($item->lab,$data_layanan_not_active))
 												<option value="" disabled>{{ $item->stel }} || {{ $item->device_name }}</option>
@@ -121,21 +122,21 @@
 									<input type="text" name="device_capacity" placeholder="10 GHz"   id="device_capacity" class="required">
 								</div>
 								<div class="form-group">
-									<label for="f1-pembuat-perangkat">{{ trans('translate.service_device_manufactured_by') }} *</label>
-									<input type="text" name="f1-pembuat-perangkat" placeholder="Jakarta" id="f1-pembuat-perangkat" class="required">
+									<label for="device_made_in">{{ trans('translate.service_device_manufactured_by') }} *</label>
+									<input type="text" name="device_made_in" placeholder="Jakarta" id="device_made_in" class="required">
 								</div>
 								<div class="form-group">
-									<label for="serial_number">{{ trans('translate.service_device_serial_number') }} *</label>
-									<input type="text" name="serial_number" placeholder="123456789456"  id="serial_number" class="required">
+									<label for="device_serial_number">{{ trans('translate.service_device_serial_number') }} *</label>
+									<input type="text" name="device_serial_number" placeholder="123456789456"  id="device_serial_number" class="required">
 								</div>
 								<div class="form-group">
 									<label for="device_model">{{ trans('translate.service_device_model') }} *</label>
 									<input type="text" name="device_model" placeholder="L123456"   id="device_model" class="required">
 								</div>
 								<div class="form-group"> 
-									<label for="lokasi_pengujian" class="text-bold required">{{ trans('translate.service_label_testing_site') }}: </label>
-									<input type="radio" name="lokasi_pengujian" value="0" placeholder="{{ trans('translate.service_lab_testing') }}" checked>
-									<input type="radio" name="lokasi_pengujian" value="1" placeholder="{{ trans('translate.service_loc_testing') }}">
+									<label for="examination_location" class="text-bold required">{{ trans('translate.service_label_testing_site') }}: </label>
+									<input type="radio" name="examination_location" value="0" placeholder="{{ trans('translate.service_lab_testing') }}" checked>
+									<input type="radio" name="examination_location" value="1" placeholder="{{ trans('translate.service_loc_testing') }}">
 								</div>
 							</fieldset>
 
@@ -145,7 +146,7 @@
 								@unless ($jns_pengujian == 'cal' || $jns_pengujian == 'qa')
 									<div class="form-group col-xs-12">
 										<label>{{ trans('translate.service_upload_reference_test') }}<span class="text-danger"></span></label>
-										<input class="data-upload-berkas f1-file-ref-uji" id="fileInput-ref-uji" name="fuploadrefuji" type="file" accept="application/pdf,image/*">
+										<input class="data-upload-berkas f1-file-ref-uji" id="fileInput-ref-uji" name="refUjiFile" type="file" accept="application/pdf,image/*">
 										<div id="ref-uji-file"></div>
 										<div id="attachment-file">
 											*{{ trans('translate.maximum_filesize') }}
@@ -156,7 +157,7 @@
 									<div class="dv-srt-sp3">
 										<div class="form-group col-xs-12">
 											<label>{{ trans('translate.service_upload_sp3') }}<span class="text-danger required">*</span></label>
-											<input class="data-upload-berkas f1-file-sp3 required" id="fileInput-sp3" name="fuploadsp3" type="file" accept="application/pdf,image/*">
+											<input class="data-upload-berkas f1-file-sp3 required" id="fileInput-sp3" name="sp3File" type="file" accept="application/pdf,image/*">
 											<div id="sp3-file"></div>
 											<div id="attachment-file">
 												*{{ trans('translate.maximum_filesize') }}
@@ -167,7 +168,7 @@
 								<div class="dv-dll">
 									<div class="form-group col-xs-12">
 										<label>{{ trans('translate.service_upload_another_file') }}</label><span class="text-danger required">*</span></label>
-										<input class="data-upload-berkas f1-file-dll required" id="fileInput-dll" name="fuploaddll" type="file" accept="application/pdf,image/*" >
+										<input class="data-upload-berkas f1-file-dll required" id="fileInput-dll" name="dllFile" type="file" accept="application/pdf,image/*" >
 										<div id="dll-file"></div>
 										<div id="attachment-file">
 											*{{ trans('translate.maximum_filesize') }}
@@ -211,6 +212,20 @@
 			$('.chosen-choices .search-choice').length && $('.chosen-choices .search-field input').removeClass('error');
 			$('.chosen-choices .search-field input').removeAttr('style');
 		});
+
+		setTimeout(() => {
+			const textNormal = [
+				'jns_perusahaan-1',
+				'jns_perusahaan-2',
+				'lokasi_pengujian-11',
+				'lokasi_pengujian-12'
+			]
+			document.querySelectorAll("label").forEach((x) => {
+				textNormal.includes(x.htmlFor) && x.classList.add("text-normal");
+			});
+
+			$('#f1_referensi_perangkat_chosen .search-field input').removeAttr("style");
+		},1000);
 	});
 
 
@@ -257,7 +272,7 @@
 				}
 				//setupform and set examintion referencefield
 				formPermohonan = new FormData($("#form-permohonan")[0]);
-				formPermohonan.set('f1-referensi-perangkat',examinationReferenceField);
+				formPermohonan.set('test_reference',examinationReferenceField);
 				//uplaoding form
 				$.ajax({
 					async: false,
@@ -389,27 +404,14 @@
 
   <script src="{{url('vendor/chosen/chosen.jquery.js')}}" type="text/javascript"></script>
   <script type="text/javascript">
-	$("#f1-referensi-perangkat").change(function(){
+	$("#test_reference").change(function(){
 		$(".chosen-select").trigger("chosen:updated");
-		var e = document.getElementById("f1-referensi-perangkat");
+		var e = document.getElementById("test_reference");
 		var strUser = e.options[e.selectedIndex].text;
 		var res = strUser.split('||');
 		var deviceName = res[1].replace(/spesifikasi telekomunikasi |spesifikasi telekomunikasi perangkat |telecommunication specification |spesifikasi perangkat |perangkat /gi,"");
+		deviceName = deviceName.trim();
 		$('#device_name').val(deviceName);
 	});
-
-	setTimeout(() => {
-		const textNormal = [
-			'jns_perusahaan-1',
-			'jns_perusahaan-2',
-			'lokasi_pengujian-11',
-			'lokasi_pengujian-12'
-		]
-		document.querySelectorAll("label").forEach((x) => {
-			textNormal.includes(x.htmlFor) && x.classList.add("text-normal");
-		});
-
-		$('#f1_referensi_perangkat_chosen .search-field input').removeAttr("style");
-	},1000);
  </script>
 @endsection
