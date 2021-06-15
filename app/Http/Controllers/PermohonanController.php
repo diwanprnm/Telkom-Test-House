@@ -493,8 +493,8 @@ class PermohonanController extends Controller
 			$exam_no_reg = DB::table(self::EXAMINATIONS)->where('id', ''.$exam_id.'')->first();
 			$device_id = $request->input('hide_device_id');
 		}else{
-			$exam_id = Uuid::uuid4();
-			$device_id = Uuid::uuid4();
+			$exam_id = Uuid::uuid4()->toString();
+			$device_id = Uuid::uuid4()->toString();
 			$request->session()->put('my_exam_id_for_testing', $exam_id);
 		}
 		//Populate request data
@@ -511,12 +511,22 @@ class PermohonanController extends Controller
 		$serialNumber_perangkat = $request->input('device_serial_number');
 		$model_perangkat = $request->input('device_model');
 		$referensi_perangkat = $request->input('test_reference');
+		$no_reg = $type == self::UPDATE ? $exam_no_reg->function_test_NO : $this->generateFunctionTestNumber($jns_pengujian_name);
+
+
+		//TODO 14 June 23:45;
 		$dll = $sp3 = $refUji = '-'; 
 		$request->hasFile('dllFile') && $dll = $request->file('dllFile')->getClientOriginalName();
 		$request->hasFile('sp3File') && $sp3 = $request->file('sp3File')->getClientOriginalName();
 		$request->hasFile('refUjiFile') && $dll = $request->file('refUjiFile')->getClientOriginalName();
-		//TODO 14 June 23:45;
+		
+		//UPLOAD File to Minio
+		$this->uploadFile($request, 'refUji', $exam_id);
+		$this->uploadFile($request, 'dll', $exam_id);
+		$this->uploadFile($request, 'sp3', $exam_id);
+		//TODO UPLOAD AND EXAM
 		dd([
+			$exam_id,
 			$jns_perusahaan,
 			$jns_pengujian,
 			$jns_pengujian_name,
@@ -531,16 +541,9 @@ class PermohonanController extends Controller
 			$referensi_perangkat,
 			$dll,
 			$sp3,
-			$refUji
+			$refUji,
+			$no_reg
 		]);
-		//get no reg
-		$no_reg = $type == self::UPDATE ? $exam_no_reg->function_test_NO : $this->generateFunctionTestNumber($jns_pengujian_name);
-		$kotaPerusahaan = Company::select('city')->where('id', $company_id)->first()->city;
-	
-		//UPLOAD File to Minio
-		$this->uploadFile($request, 'ref_uji', $exam_id);
-		$this->uploadFile($request, 'dll', $exam_id);
-		$this->uploadFile($request, 'sp3', $exam_id);
 
 		//Update Device table
 		if ($type == self::SUBMIT) {
@@ -608,7 +611,6 @@ class PermohonanController extends Controller
 			$exam_hist->created_by = $currentUser->id;
 			$exam_hist->created_at = date(self::DATE_FORMAT);
 			$exam_hist->save();
-
 
 			/* push notif*/
 			$notificationService = new NotificationService();
@@ -702,48 +704,66 @@ class PermohonanController extends Controller
 
 	private function uploadFile($request, $type, $exam_id){
 		$fileService = new FileService();
-		$fileProperties = array(
-			'ref_uji' => [
-				'inputName' => 'referensiUji',
+		$fileDetail = array(
+			'refUji' => [
+				'inputName' => 'refUjiFile',
 				'path' => self::MEDIA_EXAMINATION_LOC.$exam_id."/",
 				'prefix' => "ref_uji_",
-				'oldFile' => ($type == self::UPDATE) ? $request->input(self::HIDE_REF_UJI_FILE, "") : "",
+				'oldFile' => $request->input(self::HIDE_REF_UJI_FILE, ""),
 				'attachName' => 'Referensi Uji'
 			],
 			'dll' => [
-				'inputName' => 'dll',
+				'inputName' => 'dllFile',
 				'path' => self::MEDIA_EXAMINATION_LOC.$exam_id."/",
 				'prefix' => "dll_",
-				'oldFile' => ($type == self::UPDATE) ? $request->input(self::HIDE_DLL_FILE, "") : "",
+				'oldFile' => $request->input(self::HIDE_DLL_FILE, ""),
 				'attachName' => 'File Lainnya'
 			],
 			'sp3' => [
-				'inputName' => 'sp3',
+				'inputName' => 'sp3File',
 				'path' => self::MEDIA_EXAMINATION_LOC.$exam_id."/",
 				'prefix' => "sp3_",
-				'oldFile' => ($type == self::UPDATE) ? $request->input(self::HIDE_SP3_FILE, "") : "",
+				'oldFile' => $request->input(self::HIDE_SP3_FILE, ""),
 				'attachName' => 'SP3'
 			]
 		);
 
-		if(!$fileProperties.include($type)) return false;
+		if( !array_key_exists($type, $fileDetail) ) return false;
 
-		if ($request->hasFile(  $fileProperties[$type]['inputName']  )) {
-			$fileService->upload( $fileProperties[$type]['inputName'], $fileProperties);
-			$uploadedFileName = $fileService->isUploaded() ? $fileService->getFileName() : ($type == self::UPDATE ? $request->input(self::HIDE_DLL_FILE) : '');
+		$fileProperties = [
+			'path' => $fileDetail[$type]['path'],
+			'prefix' => $fileDetail[$type]['prefix'],
+			'olfFile' => $fileDetail[$type]['oldFile']
+		];
+
+		if ($request->hasFile(  $fileDetail[$type]['inputName']  )) {
+			$fileService->upload( $request[$fileDetail[$type]['inputName']], $fileProperties);
+			$uploadedFileName = $fileService->isUploaded() ? $fileService->getFileName() : ($type == self::UPDATE ? $fileDetail[$type]['oldFile'] : '');
 			//TODO input examination attachment();
-			DB::table('examination_attachments')->insert([
-				'id' => Uuid::uuid4(),
-				'examination_id' => $exam_id,
-				'name' => $fileProperties[$type]['attachName'],
-				'attachment' => $uploadedFileName,
-				'no' => '',
-				'tgl' => '',
-				self::CREATED_BY => Auth::user()->id,
-				self::UPDATED_BY => Auth::user()->id,
-				self::CREATED_AT => date(self::DATE_FORMAT),
-				self::UPDATED_AT => date(self::DATE_FORMAT)
-			]);
+			$examinationAttachment = DB::table('examination_attachments')
+				->where('examination_id', '=', $exam_id)
+				->where('name', '=', $fileDetail[$type]['attachName'])
+				->get()
+			;
+			if (count($examinationAttachment)){
+				$examinationAttachment->attachment = $uploadedFileName;
+				$examinationAttachment->updated_by = Auth::user()->id;
+				$examinationAttachment->updated_at = date(self::DATE_FORMAT);
+				$examinationAttachment->save();
+			}else {
+				DB::table('examination_attachments')->insert([
+					'id' => Uuid::uuid4(),
+					'examination_id' => $exam_id,
+					'name' => $fileDetail[$type]['attachName'],
+					'attachment' => $uploadedFileName,
+					'no' => '',
+					'tgl' => '',
+					self::CREATED_BY => Auth::user()->id,
+					self::UPDATED_BY => Auth::user()->id,
+					self::CREATED_AT => date(self::DATE_FORMAT),
+					self::UPDATED_AT => date(self::DATE_FORMAT)
+				]);
+			}
 		}
 		return true;
 	}

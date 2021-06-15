@@ -146,7 +146,7 @@
 								@unless ($jns_pengujian == 'cal' || $jns_pengujian == 'qa')
 									<div class="form-group col-xs-12">
 										<label>{{ trans('translate.service_upload_reference_test') }}<span class="text-danger"></span></label>
-										<input class="data-upload-berkas f1-file-ref-uji" id="fileInput-ref-uji" name="refUjiFile" type="file" accept="application/pdf,image/*">
+										<input class="data-upload-berkas f1-file-ref-uji" id="refUjiFile" name="refUjiFile" type="file" accept="application/pdf,image/*">
 										<div id="ref-uji-file"></div>
 										<div id="attachment-file">
 											*{{ trans('translate.maximum_filesize') }}
@@ -157,7 +157,7 @@
 									<div class="dv-srt-sp3">
 										<div class="form-group col-xs-12">
 											<label>{{ trans('translate.service_upload_sp3') }}<span class="text-danger required">*</span></label>
-											<input class="data-upload-berkas f1-file-sp3 required" id="fileInput-sp3" name="sp3File" type="file" accept="application/pdf,image/*">
+											<input class="data-upload-berkas f1-file-sp3 required" id="sp3File" name="sp3File" type="file" accept="application/pdf,image/*">
 											<div id="sp3-file"></div>
 											<div id="attachment-file">
 												*{{ trans('translate.maximum_filesize') }}
@@ -168,7 +168,7 @@
 								<div class="dv-dll">
 									<div class="form-group col-xs-12">
 										<label>{{ trans('translate.service_upload_another_file') }}</label><span class="text-danger required">*</span></label>
-										<input class="data-upload-berkas f1-file-dll required" id="fileInput-dll" name="dllFile" type="file" accept="application/pdf,image/*" >
+										<input class="data-upload-berkas f1-file-dll required" id="dllFile" name="dllFile" type="file" accept="application/pdf,image/*" >
 										<div id="dll-file"></div>
 										<div id="attachment-file">
 											*{{ trans('translate.maximum_filesize') }}
@@ -217,8 +217,9 @@
 			const textNormal = [
 				'jns_perusahaan-1',
 				'jns_perusahaan-2',
-				'lokasi_pengujian-11',
-				'lokasi_pengujian-12'
+				'jns_perusahaan-3',
+				'examination_location-11',
+				'examination_location-12'
 			]
 			document.querySelectorAll("label").forEach((x) => {
 				textNormal.includes(x.htmlFor) && x.classList.add("text-normal");
