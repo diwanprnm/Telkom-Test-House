@@ -19,6 +19,7 @@ use App\TbHSPK;
 use App\Income;
 use App\ApiLogs;
 use App\GeneralSetting;
+use App\HistoryUF;
 
 use App\User;
 use Mail;
@@ -1359,6 +1360,8 @@ class ExaminationAPIController extends AppBaseController
 						"created_at"=>date("Y-m-d H:i:s"),
 						"updated_at"=>date("Y-m-d H:i:s")
 					);
+					$this->insertHistoryUF($examinations);
+
 					$notificationService = new NotificationService();
 					$data['id'] = $notificationService->make($data);
 					event(new Notification($data));
@@ -1373,6 +1376,47 @@ class ExaminationAPIController extends AppBaseController
     		return $this->sendError('ID Examination or Catatan or Function Result or PIC Is Required');
     	}
     }
+
+	public function insertHistoryUF($data){
+		// 1. get function_test_date
+		$function_test_date = null;
+		if($data->function_test_date_approval){
+			$function_test_date = $data->function_date != null ? $data->function_date : $data->deal_test_date;
+		}
+		// 2. inset to history_uf
+		$uf_hist = new HistoryUF;
+		$uf_hist->id = Uuid::uuid4();
+		$uf_hist->examination_id = $data->id;
+		$uf_hist->catatan = $data->catatan;
+		$uf_hist->function_test_TE = $data->function_test_TE;
+		$uf_hist->function_test_PIC = $data->function_test_PIC;
+		$uf_hist->function_test_date = $function_test_date;
+		$uf_hist->created_by = $data->updated_by;
+		$uf_hist->created_at = date('Y-m-d H:i:s');
+		
+		if($data->function_test_TE == 2){
+			// cek di HistoryUF berdasarkan examination_id, yang memiliki 
+			// a. function_test_TE = 2
+			// b. now() < function_test_date + 2bulan
+			$uf_hist_temp = HistoryUF::where('examination_id', $data->id)
+							->where('function_test_TE', 2)
+							->whereRaw("NOW() < DATE_ADD(function_test_date, INTERVAL +2 MONTH)")
+							->orderBy('function_test_date', 'DESC')
+							->limit(1);
+							;
+			// 3. update examinations ketika gagal 2 kali
+			if( $uf_hist_temp->count() > 0 ){ //if gagal 2x
+				$examinations = Examination::find($data->id);
+				if($examinations){
+					$examinations->function_test_TE_temp = 1;
+					$examinations->function_test_date_temp = date('Y-m-d', strtotime("+2 months", strtotime($function_test_date)));//+2bulan mm
+					$examinations->save();
+				}
+			}
+		}
+
+		$uf_hist->save();
+	}
 	
 	public function updateSpkStat(Request $param)
     {

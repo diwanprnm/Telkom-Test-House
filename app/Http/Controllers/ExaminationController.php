@@ -56,6 +56,7 @@ class ExaminationController extends Controller
 	private const EXAMINATION_LAB = 'examinationLab';
 	private const MEDIA = 'media';
 	private const DEVICE = 'device';
+	private const HISTORY_UF = 'history_uf';
 	private const REGISTRATION_STATUS = 'registration_status';
 	private const FUNCTION_STATUS = 'function_status';
 	private const CONTRACT_STATUS = 'contract_status';
@@ -288,6 +289,7 @@ class ExaminationController extends Controller
                             ->with(self::DEVICE)
                             ->with(self::MEDIA)
                             ->with(self::EQUIPMENT)
+							->with(self::HISTORY_UF)
                             ->first();
 
         $labs = ExaminationLab::all();
@@ -402,7 +404,9 @@ class ExaminationController extends Controller
                 $exam->urel_test_date = NULL;
                 $exam->function_date = NULL;
                 $exam->function_test_reason = NULL;
+				$exam->function_test_TE = 0;
                 $exam->function_test_date_approval = 0;
+				$exam->function_test_status_detail = NULL;
                 $exam->location = 0;
             }
 			/* push notif*/
@@ -1839,6 +1843,42 @@ class ExaminationController extends Controller
 					Session::flash(self::MESSAGE, 'Function Test successfully reset');
 					return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
 				}catch (Exception $e){ return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC)->with(self::ERROR, 'Reset failed'); }
+			}
+		}
+	}
+	
+	public function ijinkanUjiFungsi($id)
+	{
+		$currentUser = Auth::user(); 
+		$logService = new LogService();
+
+        if ($currentUser){
+			$exam = Examination::find($id);
+			if ($exam){
+				try{
+					$exam->function_test_TE_temp = 0;
+					$exam->function_test_date_temp = NULL;
+					$exam->updated_by = $currentUser->id;
+					$exam->updated_at = date(self::DATE_FORMAT_1);
+					
+					$exam->save();
+					
+					$exam_hist = new ExaminationHistory;
+					$exam_hist->examination_id = $exam->id;
+					$exam_hist->date_action = date(self::DATE_FORMAT_1);
+					$exam_hist->tahap = self::UJI_FUNGSI;
+					$exam_hist->status = self::NOT_COMPLETED;
+					$exam_hist->keterangan = 'Data Uji Fungsi diaktifkan kembali oleh Super Admin URel';
+					$exam_hist->created_by = $currentUser->id;
+					$exam_hist->created_at = date(self::DATE_FORMAT_1);
+					$exam_hist->save();
+
+					$logService->createLog("Aktifkan Kembali Uji Fungsi", self::EXAMINATION, $exam);
+					$logService->createAdminLog("Aktifkan Kembali Fungsi", "Pengujian -> Change Status", $exam, '-');
+					
+					Session::flash(self::MESSAGE, 'Function Test access successfully granted');
+					return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
+				}catch (Exception $e){ return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC)->with(self::ERROR, 'Failed to give Function Test access'); }
 			}
 		}
 	}

@@ -450,4 +450,5 @@ return [
 	'choose_another_bank' => 'Pilih Bank Lain',
 
 	'payment_process' => 'Proses Pembayaran',
+	'uf_warning' => 'Anda sudah 2 kali gagal melakukan Uji Fungsi. Anda bisa mengajukan kembali Uji Fungsi 2 bulan sejak Uji Fungsi terakhir, yaitu ',
 ];

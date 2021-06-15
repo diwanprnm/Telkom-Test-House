@@ -52,9 +52,13 @@ class SalesController extends Controller
     private const MINIO = 'minio';
     private const PAYMENT_DETAIL = 'payment_detail/';
     private const PAYMENT_STATUS = 'payment_status';
+    private const PAYMENT_STATUS2 = 'payment_status2';
+    private const PAYMENT_STATUS3 = 'payment_status3';
     private const REQUIRED = 'required';
     private const SALES = 'SALES';
     private const SEARCH = 'search';
+    private const SEARCH2 = 'search2';
+    private const SEARCH3 = 'search3';
     private const STELS = 'stels';
     private const TIMEOUT = 'timeout';
     private const USERS = 'users';
@@ -99,20 +103,25 @@ class SalesController extends Controller
         $message = null;
         $paginate = 10;
         $salesService = new SalesService();
-        // gate Sales Data
+        $tab = $request->input('tab');
+        // get Sales Data
         $data = $salesService->getData($request);
-        // give message if data not found
+        // give message if data not found 
         if (count($data['data']->paginate($paginate)) == 0){
             $message = self::DATA_NOT_FOUND;
         }
+        
         //return view to saves index with data
         return view('admin.sales.index')
+            ->with('tab', $tab)
             ->with(self::MESSAGE, $message)
-            ->with('data', $data['data']->paginate($paginate))
+            ->with('data_unpaid', $salesService->getData($request, 0)['data']->paginate($paginate, ['*'], 'pageUnpaid') )
+            ->with('data_paid', $salesService->getData($request, 1)['data']->paginate($paginate, ['*'], 'pagePaid'))
+            ->with('data_delivered', $salesService->getData($request, 3)['data']->paginate($paginate, ['*'], 'pageDelivered'))
             ->with(self::SEARCH, $data[self::SEARCH])
-            ->with(self::PAYMENT_STATUS, $data['paymentStatus'])
             ->with('before_date', $data['before'])
-            ->with('after_date', $data['after']);
+            ->with('after_date', $data['after'])
+            ;
     }
 
 
@@ -210,7 +219,6 @@ class SalesController extends Controller
 
     public function excel(Request $request) 
     {
-
         $currentUser = Auth::user();
         if (!$currentUser){return redirect(self::LOGIN);}
         
@@ -218,7 +226,7 @@ class SalesController extends Controller
         $salesService = new SalesService();
 
         // gate Sales Data
-        $data = $salesService->getData($request)['data']->get();
+        $data = $salesService->getDataByStatus($request, $request->input('payment_status'));
 
         // Define the Excel spreadsheet headers
         $examsArray[] = [
@@ -236,20 +244,19 @@ class SalesController extends Controller
         $paymentStatusList = array(
             '-1'=> 'Paid (decline)',
             '0' => 'Unpaid',
-            '1' => 'Paid (success)',
+            '1' => 'Paid',
             '2' => 'Paid (waiting confirmation)',
-            '3' => 'Paid (delivered)'
+            '3' => 'Delivered'
         );
-        
         // Convert each ot the returned collection into an array, and append it to the payments array
         $no = 0;
-        foreach ($data as $row) {
+        foreach ($data['data']->get() as $row) {
             $no ++;
             
             if ($paymentStatusList[$row->payment_status]){
                 $payment_status = $paymentStatusList[$row->payment_status];
             }else{
-                $payment_status = "Paid (success)";
+                $payment_status = "Paid";
             }
 
             $examsArray[] = [

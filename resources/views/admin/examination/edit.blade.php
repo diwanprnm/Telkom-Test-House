@@ -11,6 +11,38 @@
 	$url_generate_test = $data['is_loc_test'] ? "/cetakTechnicalMeeting/" : "/cetakUjiFungsi/" ;
 @endphp
 
+<div id="modal_status_uf" class="modal fade" role="dialog"  tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Status Uji Fungsi</h4>
+          </div>
+          <div class="modal-body">
+               	<div class="row">
+				   <div class="col-md-12">
+						<div class="form-group">
+							<h4 id='h2_modal_status_uf'> </h4>
+						</div>
+					</div>
+                </div>
+          </div>
+          <div class="modal-footer">
+				<table style="width: 100%;"><caption></caption>
+					<tr>
+						<th scope="col">
+							<button type="button" class="btn btn-danger" style="width:100%" data-dismiss="modal"><em class="fa fa-check-square-o"></em> OK</button>
+						</th>
+					</tr>
+				</table>
+			</div>
+        </div>
+
+      </div>
+    </div> 
+
 <input type="hide" id="hide_exam_id" name="hide_exam_id">
 <div class="modal fade" id="myModal_reset_uf" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog">
@@ -689,85 +721,107 @@
 							Step Uji Fungsi
 						</legend>
 						@if($is_super == '1' || $is_admin_mail == 'admin@mail.com')
-							<a class="btn btn-wide btn-primary pull-left" style="margin-bottom:10px" data-toggle="modal" data-target="#myModal_reset_uf" onclick="document.getElementById('hide_exam_id').value = '{{ $data->id }}'">Reset Uji Fungsi</a>
+							<a class="btn btn-wide btn-primary" style="margin-bottom:10px" onclick="resetUF('{{ $data->id }}','{{ $data->function_test_TE_temp }}','{{ $data->function_test_date_temp }}')">Reset Uji Fungsi</a>
+							@if($data->function_test_TE_temp)
+								<a class="btn btn-wide btn-primary" style="margin-bottom:10px" onclick="ijinkanUF('{{ $data->id }}')">Ijinkan Kembali Uji Fungsi</a>
+							@endif
 						@endif
 						<div class="row">
 							<div class="col-md-12">
 								<div class="form-group">
+									<h4 style="display:inline">Pengajuan {{$type_of_test}}</h4>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label style="font-weight: bold;">
+										Tanggal {{$type_of_test}}
+									</label>
+									@if($data->function_test_date_approval == 1)
+										<label>
+											:  
+											@if($data->function_date != null)
+												@php echo $data->function_date; @endphp
+											@else
+												@php echo $data->deal_test_date; @endphp
+											@endif
+										</label>
+									@else
+										<label>
+											: -
+										</label>
+									@endif
+									<br>
+									<label style="font-weight: bold;">
+										Engineer
+									</label>
+									@if($data->function_test_date_approval == 1)
+										<label>
+											: {{ $data->function_test_PIC }}
+										</label>
+									@else
+										<label>
+											: -
+										</label>
+									@endif
+								</div>
+							</div>
+							<input type="hidden" id="hide_approval_form-function-test" value="{{ $data->function_test_date_approval }}">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label class="pull-right">
+										<a class="history-tanggal-uf-button" data-toggle="collapse" href="#collapse_history_tanggal_uf">Lihat Detail</a>
+									</label>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div id="collapse_history_tanggal_uf" class="form-group collapse">
 									<table class="table table-bordered"><caption></caption>
 										<thead>
 											<tr>
 												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal {{$type_of_test}}</th>
 											</tr>
+											<tr>
+												<th>Pengajuan Tanggal Customer</th>
+												<th>Jadwal dari Test Engineer</th>
+												<th>Pengajuan Ulang dari Customer</th>
+												<th>Jadwal dari Test Engineer</th>
+											</tr>
 										</thead>
 										<tbody>
 											<tr>
-												<td>Pengajuan Tanggal Customer</td>
-												<td>Jadwal dari Test Engineer</td>
-												<td>Pengajuan Ulang dari Customer</td>
-												<td>Jadwal dari Test Engineer</td>
-											</tr>
-											<tr>
-												<td>
-													<strong>@php echo $data->cust_test_date; @endphp</strong>
-												</td>
-												<td>
-													<strong>@php echo $data->deal_test_date; @endphp</strong>
-												</td>
-												<td>
-													<strong>@php echo $data->urel_test_date; @endphp</strong>
-												</td>
-												<td>
-													<strong>@php echo $data->function_date; @endphp</strong>
-												</td>
+												<td> @php echo $data->cust_test_date; @endphp </td>
+												<td> @php echo $data->deal_test_date; @endphp </td>
+												<td> @php echo $data->urel_test_date; @endphp </td>
+												<td> @php echo $data->function_date; @endphp </td>
 											</tr>
 										</tbody>
 									</table>
-
 									@if($data->function_test_reason != '' && $data->function_test_date_approval != 1)
+									<div class="form-group">
 										<label for="alasan">Alasan Jadwal Ulang:</label>
-										<textarea class="form-control" rows="2" name="reason" id="reason" readonly>{{ $data->function_test_reason }}</textarea>
+										<textarea class="form-control" rows="2" name="reason" id="reason" readonly>{{ $data->function_test_reason }}</textarea>	
+									</div>
 									@endif
 								</div>
-								<input type="hidden" id="hide_approval_form-function-test" value="{{ $data->function_test_date_approval }}">
-								@if($data->function_test_date_approval == 1)
-									<div class="col-md-6 center">
-										<div class="form-group">
-											<h4 style="display:inline">
-												Jadwal FIX {{$type_of_test}} : 
-												@if($data->function_date != null)
-													@php echo $data->function_date; @endphp
-												@else
-													@php echo $data->deal_test_date; @endphp
-												@endif
-											</h4>
-										</div>
-									</div>
-									<div class="col-md-6 center">
-										<div class="form-group">
-											<h4 style="display:inline">
-												Disetujui oleh : {{ $data->function_test_PIC }}
-											</h4>
-										</div>
-									</div>
-								@endif
-							</div>							
-
-							@if (!$data['is_loc_test'])
-							<div class="col-md-12">
-								<div class="form-group">
-									<label for="form-field-select-2">
-										Lokasi Barang Sebelum Uji Fungsi
-									</label>
-									<select id="masukkan_barang" name="masukkan_barang" class="cs-select cs-skin-elastic">
-										@if(count($data->equipment)==0)
-											<option value="1" selected>Customer (Applicant)</option>
-										@else
-											<option value="2" selected>URel (Store)</option>
-										@endif
-									</select>
-								</div>
 							</div>
+							@if (!$data['is_loc_test'])
+								<div class="col-md-12">
+									<div class="form-group">
+										<h4 style="display:inline">Lokasi Barang</h4>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<select id="masukkan_barang" name="masukkan_barang" class="cs-select cs-skin-elastic">
+											@if(count($data->equipment)==0)
+												<option value="1" selected>Customer (Applicant)</option>
+											@else
+												<option value="2" selected>URel (Store)</option>
+											@endif
+										</select>
+									</div>
+								</div>
 							
 								@if($data->function_date != null)
 									@php $in_equip_date = $data->function_date; @endphp
@@ -779,27 +833,32 @@
 									@php $in_equip_date = $data->cust_test_date; @endphp
 								@endif
 
-							<input type="hidden" id="hide_count_equipment_form-function-test" value="{{ count($data->equipment) }}">
+								<input type="hidden" id="hide_count_equipment_form-function-test" value="{{ count($data->equipment) }}">
 									
 								@if(count($data->equipment)==0 && $data->function_test_date_approval == 1)
 								<div class="col-md-12">
 									<div class="form-group">
-										<a onclick="masukkanBarang('{{ $data->id }}','{{ $in_equip_date }}')"> Masukkan Barang</a>
+										<a onclick="masukkanBarang('{{ $data->id }}','{{ $in_equip_date }}')"> Perbarui Lokasi Barang</a>
 									</div>									
 								</div>									
 								@endif
 							@endif
 
 							<input type="hidden" id="hide_test_TE_form-function-test" value="{{ $data->function_test_TE }}">
-							<div class="col-md-12">
-								@if($data->function_test_TE != 0 && $data->function_test_date_approval == 1)
-								<div class="col-md-12 center">
+							@if($data->function_test_TE != 0 && $data->function_test_date_approval == 1)
+								<div class="col-md-12">
 									<div class="form-group">
 										<h4 style="display:inline">
-											Hasil {{$type_of_test}}
+											Laporan {{$type_of_test}}
 										</h4>
-										<h4 style="display:inline">
-											: @if($data->function_test_TE == 1)
+									</div>
+									<div class="form-group">
+										<label style="font-weight: bold;">
+											Hasil
+										</label>
+										<label>
+											:  
+											@if($data->function_test_TE == 1)
 												{{$type_of_test_result}}
 											@elseif($data->function_test_TE == 2)
 												Tidak {{$type_of_test_result}}
@@ -808,15 +867,77 @@
 											@else
 												Tidak Ada
 											@endif
-										</h4>
+										</label>
+									</div>
+									<div class="form-group">
+										<label for="catatan">Catatan :</label>
+										<textarea class="form-control" rows="5" name="catatan" id="catatan" readonly disabled>{{ $data->catatan }}</textarea>
+									</div>
+									<div class="form-group">
+										<a href="{{URL::to($url_generate_test.$data->id)}}" target="_blank"> Buatkan Laporan {{$type_of_test}}</a>
+									</div>
+									@if (!$data['is_loc_test'])
+									@if($data->function_test_TE == 1 && $data->function_test_date_approval == 1)
+										<div class="form-group">
+											<a href="{{URL::to('/cetakFormBarang/'.$data->id)}}" target="_blank"> Buatkan Bukti Penerimaan Perangkat</a>
+										</div>
+									@endif
+									@endif
+								</div>
+							@endif
+							@if(count($data->history_uf)>0)
+								<div class="col-md-12">
+									<div class="form-group">
+										<label class="pull-right">
+											<a class="history-uf-button" data-toggle="collapse" href="#collapse_history_uf">Lihat Riwayat Tidak {{$type_of_test_result}}</a>
+										</label>
 									</div>
 								</div>
+							@endif
+							<div class="col-md-12">
+								<div id="collapse_history_uf" class="form-group collapse">
+									<table class="table table-bordered"><caption></caption>
+										<thead>
+											<tr>
+												<th colspan="4" scope="col">Riwayat {{$type_of_test}}</th>
+											</tr>
+											<tr>
+												<th style="width: 17%;">Uji Fungsi ke-</th>
+												<th style="width: 17%;">Tanggal</th>
+												<th style="width: 30%;">Engineer</th>
+												<th>Catatan</th>
+											</tr>
+										</thead>
+										<tbody>
+											@php $no = 1; $count = 0; @endphp
+											@foreach($data->history_uf as $item)
+												@if($item->function_test_TE == 2)
+													<tr>
+														<td> {{ $no++ }}</td>
+														<td> {{ $item->function_test_date }}</td>
+														<td> {{ $item->function_test_PIC}}</td>
+														<td> {{ $item->catatan }}</td>
+													</tr>
+													@php $count++; @endphp
+												@endif
+											@endforeach
+											@if($count == 0)
+												<tr style="text-align: center;"><td colspan="4">Data Not Found</td></tr>
+											@endif
+										</tbody>
+									</table>
+								</div>							
+							</div>
+							@if($data->function_test_TE != 0 && $data->function_test_date_approval == 1)
+							<div class="col-md-12">
 								<div class="form-group">
-									<a href="{{URL::to($url_generate_test.$data->id)}}" target="_blank"> Buatkan Laporan {{$type_of_test}}</a>
+									<h4 style="display:inline">Dokumen</h4>
 								</div>
+							</div>
+							<div class="col-md-12">
 								<div class="form-group">
 									<label>
-										Hasil {{$type_of_test}} File *
+										Laporan {{$type_of_test}} : *
 									</label>
 									<input type="file" name="function_file" id="function_file" class="form-control" accept="application/pdf"/>
 								</div>
@@ -830,29 +951,14 @@
 									@endforeach
 									<input type="hidden" id="function_name" value="@php echo $function_attach; @endphp">
 								</div>
-								<div class="form-group">
-									<label for="catatan">Catatan :</label>
-									<textarea class="form-control" rows="5" name="catatan" id="catatan" readonly disabled>{{ $data->catatan }}</textarea>
-								</div>
-								@endif
-							</div>
-
-							@if (!$data['is_loc_test'])
-							@if($data->function_test_TE == 1 && $data->function_test_date_approval == 1)
-								<div class="col-md-12">
-									<div class="form-group">
-										<a href="{{URL::to('/cetakFormBarang/'.$data->id)}}" target="_blank"> Buatkan Bukti Penerimaan & Pengeluaran Perangkat Uji</a>
-									</div>
-								</div>
-								<div class="col-md-12">
+								@if (!$data['is_loc_test'])
+								@if($data->function_test_TE == 1 && $data->function_test_date_approval == 1)
 									<div class="form-group">
 										<label>
-											Bukti Penerimaan & Pengeluaran Perangkat Uji File *
+											Bukti Penerimaan Perangkat : *
 										</label>
 										<input type="file" name="barang_file" id="barang_file" class="form-control" accept="application/pdf"/>
 									</div>
-								</div>
-								<div class="col-md-12">
 									<div class="form-group">
 										@php $barang_attach = ''; @endphp
 										@foreach($data->media as $item)
@@ -863,10 +969,10 @@
 										@endforeach
 										<input type="hidden" id="barang_name" value="@php echo $barang_attach; @endphp">
 									</div>
-								</div>
+								@endif
+								@endif
+							</div>
 							@endif
-							@endif
-
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
@@ -939,79 +1045,99 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="form-group">
+									<h4 style="display:inline">Pengajuan {{$type_of_test}}</h4>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label style="font-weight: bold;">
+										Tanggal {{$type_of_test}}
+									</label>
+									@if($data->function_test_date_approval == 1)
+										<label>
+											:  
+											@if($data->function_date != null)
+												@php echo $data->function_date; @endphp
+											@else
+												@php echo $data->deal_test_date; @endphp
+											@endif
+										</label>
+									@else
+										<label>
+											: -
+										</label>
+									@endif
+									<br>
+									<label style="font-weight: bold;">
+										Engineer
+									</label>
+									@if($data->function_test_date_approval == 1)
+										<label>
+											: {{ $data->function_test_PIC }}
+										</label>
+									@else
+										<label>
+											: -
+										</label>
+									@endif
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label class="pull-right">
+										<a class="history-tanggal-uf-button" data-toggle="collapse" href="#collapse_history_tanggal_uf">Lihat Detail</a>
+									</label>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div id="collapse_history_tanggal_uf" class="form-group collapse">
 									<table class="table table-bordered"><caption></caption>
 										<thead>
 											<tr>
 												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal {{$type_of_test}}</th>
 											</tr>
+											<tr>
+												<th>Pengajuan Tanggal Customer</th>
+												<th>Jadwal dari Test Engineer</th>
+												<th>Pengajuan Ulang dari Customer</th>
+												<th>Jadwal dari Test Engineer</th>
+											</tr>
 										</thead>
 										<tbody>
 											<tr>
-												<td>Pengajuan Tanggal Customer</td>
-												<td>Jadwal dari Test Engineer</td>
-												<td>Pengajuan Ulang dari Customer</td>
-												<td>Jadwal dari Test Engineer</td>
-											</tr>
-											<tr>
-												<td>
-													<strong>@php echo $data->cust_test_date; @endphp</strong>
-												</td>
-												<td>
-													<strong>@php echo $data->deal_test_date; @endphp</strong>
-												</td>
-												<td>
-													<strong>@php echo $data->urel_test_date; @endphp</strong>
-												</td>
-												<td>
-													<strong>@php echo $data->function_date; @endphp</strong>
-												</td>
+												<td> @php echo $data->cust_test_date; @endphp </td>
+												<td> @php echo $data->deal_test_date; @endphp </td>
+												<td> @php echo $data->urel_test_date; @endphp </td>
+												<td> @php echo $data->function_date; @endphp </td>
 											</tr>
 										</tbody>
 									</table>
-
 									@if($data->function_test_reason != '' && $data->function_test_date_approval != 1)
+									<div class="form-group">
 										<label for="alasan">Alasan Jadwal Ulang:</label>
-										<textarea class="form-control" rows="2" readonly>{{ $data->function_test_reason }}</textarea>
+										<textarea class="form-control" rows="2" name="reason" id="reason" readonly>{{ $data->function_test_reason }}</textarea>	
+									</div>
 									@endif
 								</div>
-
-								@if($data->function_test_date_approval == 1)
-									<div class="col-md-6 center">
-										<div class="form-group">
-											<h4 style="display:inline">
-												Jadwal FIX {{$type_of_test}} : 
-												@if($data->function_date != null)
-													@php echo $data->function_date; @endphp
-												@else
-													@php echo $data->deal_test_date; @endphp
-												@endif
-											</h4>
-										</div>
-									</div>
-									<div class="col-md-6 center">
-										<div class="form-group">
-											<h4 style="display:inline">
-												Disetujui oleh : {{ $data->function_test_PIC }}
-											</h4>
-										</div>
-									</div>
-								@endif
-							</div>							
-
-							<div class="col-md-12">
-								<div class="form-group">
-									<label for="form-field-select-2">
-										Lokasi Barang Sebelum Uji Fungsi
-									</label>
-									<select class="cs-select cs-skin-elastic">
-										@if(count($data->equipment)==0)
-											<option value="1" selected>Customer (Applicant)</option>
-										@else
-											<option value="2" selected>URel (Store)</option>
-										@endif
-									</select>
-								</div>
 							</div>
+							@if (!$data['is_loc_test'])
+								<div class="col-md-12">
+									<div class="form-group">
+										<h4 style="display:inline">Lokasi Barang</h4>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<select id="masukkan_barang" name="masukkan_barang" class="cs-select cs-skin-elastic">
+											@if(count($data->equipment)==0)
+												<option value="1" selected>Customer (Applicant)</option>
+											@else
+												<option value="2" selected>URel (Store)</option>
+											@endif
+										</select>
+									</div>
+								</div>
+							
 								@if($data->function_date != null)
 									@php $in_equip_date = $data->function_date; @endphp
 								@elseif($data->function_date == null && $data->urel_test_date != null)
@@ -1022,15 +1148,21 @@
 									@php $in_equip_date = $data->cust_test_date; @endphp
 								@endif
 
-							<div class="col-md-12">
-								@if($data->function_test_TE != 0 && $data->function_test_date_approval == 1)
-								<div class="col-md-12 center">
+							@endif
+							@if($data->function_test_TE != 0 && $data->function_test_date_approval == 1)
+								<div class="col-md-12">
 									<div class="form-group">
 										<h4 style="display:inline">
-											Hasil {{$type_of_test}}
+											Laporan {{$type_of_test}}
 										</h4>
-										<h4 style="display:inline">
-											: @if($data->function_test_TE == 1)
+									</div>
+									<div class="form-group">
+										<label style="font-weight: bold;">
+											Hasil
+										</label>
+										<label>
+											:  
+											@if($data->function_test_TE == 1)
 												{{$type_of_test_result}}
 											@elseif($data->function_test_TE == 2)
 												Tidak {{$type_of_test_result}}
@@ -1039,38 +1171,95 @@
 											@else
 												Tidak Ada
 											@endif
-										</h4>
+										</label>
+									</div>
+									<div class="form-group">
+										<label for="catatan">Catatan :</label>
+										<textarea class="form-control" rows="5" name="catatan" id="catatan" readonly disabled>{{ $data->catatan }}</textarea>
+									</div>
+									<div class="form-group">
+										<a href="{{URL::to($url_generate_test.$data->id)}}" target="_blank"> Buatkan Laporan {{$type_of_test}}</a>
+									</div>
+									@if (!$data['is_loc_test'])
+									@if($data->function_test_TE == 1 && $data->function_test_date_approval == 1)
+										<div class="form-group">
+											<a href="{{URL::to('/cetakFormBarang/'.$data->id)}}" target="_blank"> Buatkan Bukti Penerimaan Perangkat</a>
+										</div>
+									@endif
+									@endif
+								</div>
+							@endif
+							@if(count($data->history_uf)>0)
+								<div class="col-md-12">
+									<div class="form-group">
+										<label class="pull-right">
+											<a class="history-uf-button" data-toggle="collapse" href="#collapse_history_uf">Lihat Riwayat Tidak {{$type_of_test_result}}</a>
+										</label>
 									</div>
 								</div>
+							@endif
+							<div class="col-md-12">
+								<div id="collapse_history_uf" class="form-group collapse">
+									<table class="table table-bordered"><caption></caption>
+										<thead>
+											<tr>
+												<th colspan="4" scope="col">Riwayat {{$type_of_test}}</th>
+											</tr>
+											<tr>
+												<th style="width: 17%;">Uji Fungsi ke-</th>
+												<th style="width: 17%;">Tanggal</th>
+												<th style="width: 30%;">Engineer</th>
+												<th>Catatan</th>
+											</tr>
+										</thead>
+										<tbody>
+											@php $no = 1; $count = 0; @endphp
+											@foreach($data->history_uf as $item)
+												@if($item->function_test_TE == 2)
+													<tr>
+														<td> {{ $no++ }}</td>
+														<td> {{ $item->function_test_date }}</td>
+														<td> {{ $item->function_test_PIC}}</td>
+														<td> {{ $item->catatan }}</td>
+													</tr>
+													@php $count++; @endphp
+												@endif
+											@endforeach
+											@if($count == 0)
+												<tr style="text-align: center;"><td colspan="4">Data Not Found</td></tr>
+											@endif
+										</tbody>
+									</table>
+								</div>							
+							</div>
+							@if($data->function_test_TE != 0 && $data->function_test_date_approval == 1)
+							<div class="col-md-12">
+								<div class="form-group">
+									<h4 style="display:inline">Dokumen</h4>
+								</div>
+							</div>
+							<div class="col-md-12">
 								<div class="form-group">
 									<label>
-										Hasil {{$type_of_test}} File *
+										Laporan {{$type_of_test}} : *
 									</label>
 								</div>
 								<div class="form-group">
 									@php $function_attach = ''; @endphp
 									@foreach($data->media as $item)
-										@if($item->name == 'Laporan Hasil Uji Fungsi' && $item->attachment != '')
+										@if($item->name == 'Laporan Hasil '.$type_of_test && $item->attachment != '')
 											@php $function_attach = $item->attachment; @endphp
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil {{$type_of_test}} "@php echo $function_attach; @endphp"</a>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil '.$type_of_test)}}"> Download Hasil {{$type_of_test}} "@php echo $function_attach; @endphp"</a>
 										@endif
 									@endforeach
 								</div>
-								<div class="form-group">
-									<label for="catatan">Catatan :</label>
-									<textarea class="form-control" rows="5" readonly disabled>{{ $data->catatan }}</textarea>
-								</div>
-								@endif
-							</div>
-							@if($data->function_test_TE == 1 && $data->function_test_date_approval == 1)
-								<div class="col-md-12">
+								@if (!$data['is_loc_test'])
+								@if($data->function_test_TE == 1 && $data->function_test_date_approval == 1)
 									<div class="form-group">
 										<label>
-											Bukti Penerimaan & Pengeluaran Perangkat Uji File *
+											Bukti Penerimaan Perangkat : *
 										</label>
 									</div>
-								</div>
-								<div class="col-md-12">
 									<div class="form-group">
 										@php $barang_attach = ''; @endphp
 										@foreach($data->media as $item)
@@ -1080,14 +1269,16 @@
 											@endif
 										@endforeach
 									</div>
-								</div>
+								@endif
+								@endif
+							</div>
 							@endif
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
 										Status *
 									</label>
-									<select class="cs-select cs-skin-elastic">
+									<select name="function_status" class="cs-select cs-skin-elastic">
 										@if($data->function_status == 0)
 											<option value="0" selected>Choose Status</option>
 										@elseif($data->function_status == 1)
@@ -1109,79 +1300,99 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="form-group">
+									<h4 style="display:inline">Pengajuan {{$type_of_test}}</h4>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label style="font-weight: bold;">
+										Tanggal {{$type_of_test}}
+									</label>
+									@if($data->function_test_date_approval == 1)
+										<label>
+											:  
+											@if($data->function_date != null)
+												@php echo $data->function_date; @endphp
+											@else
+												@php echo $data->deal_test_date; @endphp
+											@endif
+										</label>
+									@else
+										<label>
+											: -
+										</label>
+									@endif
+									<br>
+									<label style="font-weight: bold;">
+										Engineer
+									</label>
+									@if($data->function_test_date_approval == 1)
+										<label>
+											: {{ $data->function_test_PIC }}
+										</label>
+									@else
+										<label>
+											: -
+										</label>
+									@endif
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label class="pull-right">
+										<a class="history-tanggal-uf-button" data-toggle="collapse" href="#collapse_history_tanggal_uf">Lihat Detail</a>
+									</label>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div id="collapse_history_tanggal_uf" class="form-group collapse">
 									<table class="table table-bordered"><caption></caption>
 										<thead>
 											<tr>
 												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal {{$type_of_test}}</th>
 											</tr>
+											<tr>
+												<th>Pengajuan Tanggal Customer</th>
+												<th>Jadwal dari Test Engineer</th>
+												<th>Pengajuan Ulang dari Customer</th>
+												<th>Jadwal dari Test Engineer</th>
+											</tr>
 										</thead>
 										<tbody>
 											<tr>
-												<td>Pengajuan Tanggal Customer</td>
-												<td>Jadwal dari Test Engineer</td>
-												<td>Pengajuan Ulang dari Customer</td>
-												<td>Jadwal dari Test Engineer</td>
-											</tr>
-											<tr>
-												<td>
-													<strong>@php echo $data->cust_test_date; @endphp</strong>
-												</td>
-												<td>
-													<strong>@php echo $data->deal_test_date; @endphp</strong>
-												</td>
-												<td>
-													<strong>@php echo $data->urel_test_date; @endphp</strong>
-												</td>
-												<td>
-													<strong>@php echo $data->function_date; @endphp</strong>
-												</td>
+												<td> @php echo $data->cust_test_date; @endphp </td>
+												<td> @php echo $data->deal_test_date; @endphp </td>
+												<td> @php echo $data->urel_test_date; @endphp </td>
+												<td> @php echo $data->function_date; @endphp </td>
 											</tr>
 										</tbody>
 									</table>
-
 									@if($data->function_test_reason != '' && $data->function_test_date_approval != 1)
+									<div class="form-group">
 										<label for="alasan">Alasan Jadwal Ulang:</label>
-										<textarea class="form-control" rows="2" readonly>{{ $data->function_test_reason }}</textarea>
+										<textarea class="form-control" rows="2" name="reason" id="reason" readonly>{{ $data->function_test_reason }}</textarea>	
+									</div>
 									@endif
 								</div>
-
-								@if($data->function_test_date_approval == 1)
-									<div class="col-md-6 center">
-										<div class="form-group">
-											<h4 style="display:inline">
-												Jadwal FIX {{$type_of_test}} :
-												@if($data->function_date != null)
-													@php echo $data->function_date; @endphp
-												@else
-													@php echo $data->deal_test_date; @endphp
-												@endif
-											</h4>
-										</div>
-									</div>
-									<div class="col-md-6 center">
-										<div class="form-group">
-											<h4 style="display:inline">
-												Disetujui oleh : {{ $data->function_test_PIC }}
-											</h4>
-										</div>
-									</div>
-								@endif
-							</div>							
-
-							<div class="col-md-12">
-								<div class="form-group">
-									<label for="form-field-select-2">
-										Lokasi Barang Sebelum Uji Fungsi
-									</label>
-									<select class="cs-select cs-skin-elastic">
-										@if(count($data->equipment)==0)
-											<option value="1" selected>Customer (Applicant)</option>
-										@else
-											<option value="2" selected>URel (Store)</option>
-										@endif
-									</select>
-								</div>
 							</div>
+							@if (!$data['is_loc_test'])
+								<div class="col-md-12">
+									<div class="form-group">
+										<h4 style="display:inline">Lokasi Barang</h4>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<select id="masukkan_barang" name="masukkan_barang" class="cs-select cs-skin-elastic">
+											@if(count($data->equipment)==0)
+												<option value="1" selected>Customer (Applicant)</option>
+											@else
+												<option value="2" selected>URel (Store)</option>
+											@endif
+										</select>
+									</div>
+								</div>
+							
 								@if($data->function_date != null)
 									@php $in_equip_date = $data->function_date; @endphp
 								@elseif($data->function_date == null && $data->urel_test_date != null)
@@ -1192,15 +1403,21 @@
 									@php $in_equip_date = $data->cust_test_date; @endphp
 								@endif
 
-							<div class="col-md-12">
-								@if($data->function_test_TE != 0 && $data->function_test_date_approval == 1)
-								<div class="col-md-12 center">
+							@endif
+							@if($data->function_test_TE != 0 && $data->function_test_date_approval == 1)
+								<div class="col-md-12">
 									<div class="form-group">
 										<h4 style="display:inline">
-											Hasil {{$type_of_test}}
+											Laporan {{$type_of_test}}
 										</h4>
-										<h4 style="display:inline">
-											: @if($data->function_test_TE == 1)
+									</div>
+									<div class="form-group">
+										<label style="font-weight: bold;">
+											Hasil
+										</label>
+										<label>
+											:  
+											@if($data->function_test_TE == 1)
 												{{$type_of_test_result}}
 											@elseif($data->function_test_TE == 2)
 												Tidak {{$type_of_test_result}}
@@ -1209,38 +1426,95 @@
 											@else
 												Tidak Ada
 											@endif
-										</h4>
+										</label>
+									</div>
+									<div class="form-group">
+										<label for="catatan">Catatan :</label>
+										<textarea class="form-control" rows="5" name="catatan" id="catatan" readonly disabled>{{ $data->catatan }}</textarea>
+									</div>
+									<div class="form-group">
+										<a href="{{URL::to($url_generate_test.$data->id)}}" target="_blank"> Buatkan Laporan {{$type_of_test}}</a>
+									</div>
+									@if (!$data['is_loc_test'])
+									@if($data->function_test_TE == 1 && $data->function_test_date_approval == 1)
+										<div class="form-group">
+											<a href="{{URL::to('/cetakFormBarang/'.$data->id)}}" target="_blank"> Buatkan Bukti Penerimaan Perangkat</a>
+										</div>
+									@endif
+									@endif
+								</div>
+							@endif
+							@if(count($data->history_uf)>0)
+								<div class="col-md-12">
+									<div class="form-group">
+										<label class="pull-right">
+											<a class="history-uf-button" data-toggle="collapse" href="#collapse_history_uf">Lihat Riwayat Tidak {{$type_of_test_result}}</a>
+										</label>
 									</div>
 								</div>
+							@endif
+							<div class="col-md-12">
+								<div id="collapse_history_uf" class="form-group collapse">
+									<table class="table table-bordered"><caption></caption>
+										<thead>
+											<tr>
+												<th colspan="4" scope="col">Riwayat {{$type_of_test}}</th>
+											</tr>
+											<tr>
+												<th style="width: 17%;">Uji Fungsi ke-</th>
+												<th style="width: 17%;">Tanggal</th>
+												<th style="width: 30%;">Engineer</th>
+												<th>Catatan</th>
+											</tr>
+										</thead>
+										<tbody>
+											@php $no = 1; $count = 0; @endphp
+											@foreach($data->history_uf as $item)
+												@if($item->function_test_TE == 2)
+													<tr>
+														<td> {{ $no++ }}</td>
+														<td> {{ $item->function_test_date }}</td>
+														<td> {{ $item->function_test_PIC}}</td>
+														<td> {{ $item->catatan }}</td>
+													</tr>
+													@php $count++; @endphp
+												@endif
+											@endforeach
+											@if($count == 0)
+												<tr style="text-align: center;"><td colspan="4">Data Not Found</td></tr>
+											@endif
+										</tbody>
+									</table>
+								</div>							
+							</div>
+							@if($data->function_test_TE != 0 && $data->function_test_date_approval == 1)
+							<div class="col-md-12">
+								<div class="form-group">
+									<h4 style="display:inline">Dokumen</h4>
+								</div>
+							</div>
+							<div class="col-md-12">
 								<div class="form-group">
 									<label>
-										Hasil {{$type_of_test}} File *
+										Laporan {{$type_of_test}} : *
 									</label>
 								</div>
 								<div class="form-group">
 									@php $function_attach = ''; @endphp
 									@foreach($data->media as $item)
-										@if($item->name == 'Laporan Hasil Uji Fungsi' && $item->attachment != '')
+										@if($item->name == 'Laporan Hasil '.$type_of_test && $item->attachment != '')
 											@php $function_attach = $item->attachment; @endphp
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil {{$type_of_test}} "@php echo $function_attach; @endphp"</a>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil '.$type_of_test)}}"> Download Hasil {{$type_of_test}} "@php echo $function_attach; @endphp"</a>
 										@endif
 									@endforeach
 								</div>
-								<div class="form-group">
-									<label for="catatan">Catatan :</label>
-									<textarea class="form-control" rows="5" readonly disabled>{{ $data->catatan }}</textarea>
-								</div>
-								@endif
-							</div>
-							@if($data->function_test_TE == 1 && $data->function_test_date_approval == 1)
-								<div class="col-md-12">
+								@if (!$data['is_loc_test'])
+								@if($data->function_test_TE == 1 && $data->function_test_date_approval == 1)
 									<div class="form-group">
 										<label>
-											Bukti Penerimaan & Pengeluaran Perangkat Uji File *
+											Bukti Penerimaan Perangkat : *
 										</label>
 									</div>
-								</div>
-								<div class="col-md-12">
 									<div class="form-group">
 										@php $barang_attach = ''; @endphp
 										@foreach($data->media as $item)
@@ -1250,14 +1524,16 @@
 											@endif
 										@endforeach
 									</div>
-								</div>
+								@endif
+								@endif
+							</div>
 							@endif
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
 										Status *
 									</label>
-									<select class="cs-select cs-skin-elastic">
+									<select name="function_status" class="cs-select cs-skin-elastic">
 										@if($data->function_status == 0)
 											<option value="0" selected>Choose Status</option>
 										@elseif($data->function_status == 1)
@@ -4256,6 +4532,22 @@
 			}
 		});
 
+		$('.history-uf-button').click(function () {
+			if(this.text == 'Lihat Riwayat Tidak {{$type_of_test_result}}'){
+				this.text = 'Tutup Riwayat Tidak {{$type_of_test_result}}';
+			}else{
+				this.text = 'Lihat Riwayat Tidak {{$type_of_test_result}}';
+			}
+		});
+
+		$('.history-tanggal-uf-button').click(function () {
+			if(this.text == 'Lihat Detail'){
+				this.text = 'Tutup Detail';
+			}else{
+				this.text = 'Lihat Detail';
+			}
+		});
+
 	});
 
 	var exam_price = document.getElementById('exam_price');
@@ -4285,7 +4577,30 @@
 		rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
 		return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
 	}
-		
+
+	function resetUF(a,b,c){
+		document.getElementById('hide_exam_id').value = a;
+		if(b == 1){
+			document.getElementById("h2_modal_status_uf").innerHTML = "Pengujian ini sudah 2 kali gagal melakukan Uji Fungsi. <br> Fungsi Reset dapat digunakan kembali 2 bulan sejak Uji Fungsi terakhir, yaitu "+c;
+			$('#modal_status_uf').modal('show');
+			$('#myModal_reset_uf').modal('hide');
+			return false;
+		}else{
+			// data-toggle="modal" data-target="#myModal_reset_uf";
+			$('#myModal_status_uf').modal('hide');
+			$('#myModal_reset_uf').modal('show');
+			return false;
+		}
+	}
+
+	function ijinkanUF(a){
+		var baseUrl = "{{URL::to('/')}}";
+		if (confirm('Are you sure want to give Function Test access to this data ?')) {
+			document.getElementById("overlay").style.display="inherit";	
+			document.location.href = baseUrl+'/admin/examination/ijinkanUjiFungsi/'+a;   
+		}
+	}
+
 	function generateSPKCode(a,b,c){
 		$.ajax({
 			type: "POST",
@@ -4562,7 +4877,7 @@
 				}
 			}
 			if(barang_file.value == '' && barang_name.value == ''){
-				alert("File Bukti Penerimaan & Pengeluaran Perangkat Uji belum diunggah");$('#barang_file').focus();return false;
+				alert("File Bukti Penerimaan Perangkat belum diunggah");$('#barang_file').focus();return false;
 			}
 		}
 	});

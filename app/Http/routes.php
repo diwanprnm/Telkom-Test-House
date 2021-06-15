@@ -93,6 +93,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::get('/examination/revisi/{id}', 'ExaminationController@revisi');
 	Route::get('/examination/harddelete/{id}/{page}/{reason}', 'ExaminationController@destroy');
 	Route::get('/examination/resetUjiFungsi/{id}/{reason}', 'ExaminationController@resetUjiFungsi');
+	Route::get('/examination/ijinkanUjiFungsi/{id}', 'ExaminationController@ijinkanUjiFungsi');
 	Route::post('/examination/revisi', 'ExaminationController@updaterevisi');
 	Route::post('/examination/{id}/tanggalkontrak', 'ExaminationController@tanggalkontrak');
 	Route::post('/examination/{id}/generateSPBParam', 'ExaminationController@generateSPBParam');
