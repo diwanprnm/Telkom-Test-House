@@ -91,7 +91,11 @@
 						<div id="wizard">
 							<h2>First Step</h2>
 							<fieldset>
-								<input type="hidden" name="kode_jenis_pengujian" value="{{$examintaionType[$jns_pengujian]['number']}}"/>
+								<input type="hidden" name="kode_jenis_pengujian" value="{{$examintaionType[$jns_pengujian]['number'] ?? ''}}"/>
+								<input type="hidden" name="hide_company_id" id="hide_company_id" value="{{$userData->company_id ?? ''}}">
+								<input type="hidden" name="hide_exam_id" id="hide_exam_id" value="{{$userData->id ?? ''}}"/>
+								<input type="hidden" name="hide_device_id" id="hide_device_id" value="{{$userData->device_id ?? ''}}"/> 
+
 								<div class="form-group">
 									<label for="f1-jns-perusahaan" class="text-bold required">{{ trans('translate.service_company_type') }}: </label>
 									<input type="radio" name="jns_perusahaan" value="Agen" placeholder="{{ trans('translate.service_company_agent') }}"  checked>
@@ -195,6 +199,8 @@
 
  <script type="text/javascript" src="{{url('vendor/jquerystep/jquery.steps.js')}}"></script>
  <script>
+ 	const jns_pengujian = "{{$jns_pengujian}}";
+	const jns_pengujian_number = "{{$examintaionType[$jns_pengujian]['number']}}"
  	$(window).bind('beforeunload',function(){
 	    return 'are you sure you want to leave and your data will be lost?';
 	});  
@@ -231,7 +237,7 @@
 
 
 
-	const jns_pengujian = "{{$jns_pengujian}}";
+	
 	var formWizard = form.children("div").steps({
 	    headerTag: "h2",
 	    bodyTag: "fieldset",
@@ -246,11 +252,59 @@
 	        form.validate().settings.ignore = ":disabled,:hidden";
 
 			if (currentIndex == 0){
+				
+				let result = false;
 				$('.chosen-choices .search-field input').removeAttr('style');
 				if (jns_pengujian != 'qa' && !$('.chosen-choices .search-choice span').length){
 					$('.chosen-choices .search-field input').addClass('error');
 					return false;
+				}else if(!form.valid()){
+					return false;
+				}else{
+					$("body").addClass("loading")
 				}
+
+				$.ajax({
+					async: false,
+					type:'POST',
+					url : "../cekPermohonan",
+					data: {
+						'_token':"{{csrf_token()}}",
+						'examinationType' : jns_pengujian_number,
+						'nama_perangkat' : $('#device_name').val(),
+						'model_perangkat' : $('#device_model').val(),
+						'merk_perangkat' : $('#device_mark').val(),
+						'kapasitas_perangkat' : $('#device_capacity').val()
+						//'serialNumber_perangkat' : $('#device_serial_number').val(),
+					},
+					//dataType: 'json',	
+					//contentType: "application/json; charset=utf-8",
+					beforeSend: () => {
+						console.log('loading dulu ya');
+						$("body").addClass("loading");
+					},
+					success:(response) => {
+						$("body").removeClass("loading");  
+						result = response['status'];
+						if(response['code'] == 1){
+							alert("{{trans('translate.service_device_already_exist') }}");
+						}else if (response['code'] == 2){
+							alert("{{ trans('translate.service_device_not_6_months_yet') }}");
+						}else{
+							//Add below 2 lines for every Index(Steps).   
+							result = true;                         
+							//is_async_step = true;
+							//form.steps("next");
+						}
+					},
+					error:(response)=>{
+						$("body").removeClass("loading"); 
+						alert('Oops! Terjadi kesalahan pada server.');
+						result = false;
+					}
+				});
+				if (!result) return result;
+				
 			}
 
 			if (currentIndex == 1 && newIndex == 2){
@@ -277,19 +331,20 @@
 				//uplaoding form
 				$.ajax({
 					async: false,
+					type:'POST',
 					url : "../submitPermohonan",
 					data: formPermohonan,
 					dataType: 'json',
-					type:'POST',
 					processData: false,
-					contentType: false,
+					contentType: false,		
+					//contentType: "application/json; charset=utf-8",
 					beforeSend: function(){
 						$("body").addClass("loading");  
 					},
 					success:function(response){
 						$("body").removeClass("loading");  
+						console.log('berhasil', {response});
 						isUploaded = true;
-						console.log({response});
 					},
 					error:function(response){
 						console.log({response});
@@ -301,28 +356,28 @@
 				if (!isUploaded) return isUploaded;
 			}
 
-	        if(newIndex < currentIndex ){ 
-		        if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
-		        $( ".number li:eq("+(newIndex)+" ) button" ).removeClass("done").addClass("active");
-		        $( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active");
+			if(newIndex < currentIndex ){ 
+				if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
+				$( ".number li:eq("+(newIndex)+" ) button" ).removeClass("done").addClass("active");
+				$( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active");
 
-		        $(".form-group input").removeClass("error");
-		        $(".form-group span").removeClass("material-bar");
-		        $('body').scrollTop(10);
-	        	return true;
-	        }else{
-	        	if(form.valid()){
-	        		$('body').scrollTop(10);
-	        		if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
-			        $( ".number li:eq("+(newIndex)+" ) button" ).removeClass("done").addClass("active");
-			        $( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active");
-			        if (newIndex == 6) {
-			        	$( ".number li:eq("+(newIndex)+" ) button" ).removeClass("active").addClass("done");
-			        	$( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active").addClass("done");
-			        }
-	        	}
-	        	return form.valid();	
-	        } 
+				$(".form-group input").removeClass("error");
+				$(".form-group span").removeClass("material-bar");
+				$('body').scrollTop(10);
+				return true;
+			}else{
+				if(form.valid()){
+					$('body').scrollTop(10);
+					if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
+					$( ".number li:eq("+(newIndex)+" ) button" ).removeClass("done").addClass("active");
+					$( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active");
+					if (newIndex == 6) {
+						$( ".number li:eq("+(newIndex)+" ) button" ).removeClass("active").addClass("done");
+						$( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active").addClass("done");
+					}
+				}
+				return form.valid();	
+			} 
 	    },
 		onStepChanged: (event, currentIndex, priorIndex) =>{
 			if (currentIndex == 0 ){
