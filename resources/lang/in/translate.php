@@ -70,6 +70,7 @@ return [
 	'service_upload_sp3'				=> 'PLG ID dan NIB',
 	'service_upload_sp3_no'				=> 'No PLG ID dan NIB',
 	'service_upload_sp3_date'			=> 'Tanggal PLG ID dan NIB',
+	'service_upload_sp3_file'			=> 'Dokumen PLG ID dan NIB',
 	
 	'service_preview'			=> 'Pratinjau',
 	'service_preview_exam_type'	=> 'Jenis Pengujian',

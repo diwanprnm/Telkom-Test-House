@@ -70,6 +70,7 @@ return [
 	'service_upload_sp3'				=> 'PLG ID & NIB',
 	'service_upload_sp3_no'				=> 'No PLG ID & NIB',
 	'service_upload_sp3_date'			=> 'Date of PLG ID & NIB',
+	'service_upload_sp3_file'			=> 'PLG ID & NIB Document',
 	
 	'service_preview'			=> 'Preview',
 	'service_preview_exam_type'	=> 'Examination Type',
