@@ -26,6 +26,7 @@ use App\Question;
 use App\AdminRole;
 use App\Company;
 use App\GeneralSetting;
+use App\User;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -79,9 +80,9 @@ class PermohonanController extends Controller
 	private const CLIENT_PERMOHONAN_EMAIL = 'client.permohonan.email';
 	private const HIDE_EXAM_ID = 'hide_exam_id';
 	private const EXAMINATIONS = 'examinations';
-	private const HIDE_REF_UJI_FILE = 'hide_ref_uji_file';
 	private const MEDIA_EXAMINATION_LOC = 'examination/';
 	private const HIDE_PRINSIPAL_FILE = 'hide_prinsipal_file';
+	private const HIDE_REF_UJI_FILE = 'hide_ref_uji_file';
 	private const HIDE_SP3_FILE = 'hide_sp3_file';
 	private const HIDE_DLL_FILE = 'hide_dll_file';
 	private const TOKEN = '|token|';
@@ -226,42 +227,26 @@ class PermohonanController extends Controller
 		return $result;
 	}
 
-	public function upload(Request $request){ 
-		$exam_id = $request->session()->get('exam_id');
-		
-		$fileService = new FileService();
-		$fileProperties = array(
-			'path' => self::MEDIA_EXAMINATION_LOC.$exam_id."/",
-			'prefix' => "form_uji_"
-		);
-		$fileService->upload($request->file('fuploaddetailpengujian'), $fileProperties);
-		$fuploaddetailpengujian_name = $fileService->isUploaded() ? $fileService->getFileName() : '';
-
-		
-		DB::table(self::EXAMINATIONS)
-            ->where('id', ''.$exam_id.'')
-            ->update([self::ATTACHMENT => ''.$fuploaddetailpengujian_name.'']);
-	}
-
 	public function uploadEdit(Request $request){ 
 		$fileService = new FileService();
-		$exam_id = $request->session()->get(self::HIDE_EXAM_ID);
-		if(is_array($exam_id)){
-			$exam_id = $exam_id[0];
-		}
-		$exam = Examination::find($exam_id); 
+		$exam_id = $request->input('hide_exam_id');
+		$exam = Examination::find($exam_id);
+		$exam_attachment = $exam->attachment;
+		$exam->registration_status = 1;
+		$exam->save();
+
 		$fileProperties = array(
 			'path' => self::MEDIA_EXAMINATION_LOC.$exam_id."/",
 			'prefix' => "form_uji_",
-			'oldFile'=>$exam->attachment
+			'oldFile'=> $exam_attachment
 		);
 		$fileService->upload($request->file('fuploaddetailpengujian_edit'), $fileProperties);
-		$fuploaddetailpengujian_name = $fileService->isUploaded() ? $fileService->getFileName() : '';
-
-
-		DB::table(self::EXAMINATIONS)
-            ->where('id', ''.$exam_id.'')
-			->update([self::ATTACHMENT => ''.$fuploaddetailpengujian_name.'']);
+		if ($fileService->isUploaded()){
+			DB::table(self::EXAMINATIONS)
+				->where('id', $exam_id)
+				->update([self::ATTACHMENT => $fileService->getFileName()])
+			;
+		}
 	}
 	
 	public function cekSNjnsPengujian(Request $request){
@@ -271,6 +256,7 @@ class PermohonanController extends Controller
 				FROM
 					examinations e, devices d
 				WHERE e.device_id = d.id
+				AND	e.id <> '".$request->input('exam_id', '')."'
 				AND	e.examination_type_id = '".$request->input('examinationType')."'
 				AND	TRIM(d.name) = '".trim($request->input(self::NAMA_PERANGKAT), " ")."'
 				AND	TRIM(d.model) = '".trim($request->input(self::MODEL_PERANGKAT), " ")."'
@@ -508,8 +494,6 @@ class PermohonanController extends Controller
 		$test_reference = $request->input('test_reference');
 		$no_reg = $type == self::UPDATE ? $exam_no_reg->function_test_NO : $this->generateFunctionTestNumber($examination_type_name);
 
-
-		//Update Device table
 		if ($type == self::SUBMIT) {
 			$device = new Device;
 			$device->id = $device_id;
@@ -590,45 +574,45 @@ class PermohonanController extends Controller
 			}
 		}
 
-		// else{
-		// 	$ref_perangkat = explode(",", $referensi_perangkat);
-		// 	$examLab = DB::table('stels')->where('code', ''.$ref_perangkat[0].'')->first();
-		// 	$idLab = count((array)$examLab)>0 ? $examLab->type : $exam_no_reg->examination_lab_id;
-		// 	$query_update_company = "UPDATE examinations
-		// 		SET 
-		// 			examination_lab_id = '".$idLab."',
-		// 			jns_perusahaan = '".$jns_perusahaan."',
-		// 			is_loc_test = '".$lokasi_pengujian.
-		// 			self::UPDATE_BY_EQUAL.$user_id.
-		// 			self::UPDATE_AT_EQUAL.date(self::DATE_FORMAT)."'
-		// 		WHERE id = '".$exam_id."'
-		// 	";
-		// 	DB::update($query_update_company);
+		else{
+			$ref_perangkat = explode(",", $test_reference);
+			$examLab = DB::table('stels')->where('code', $ref_perangkat[0])->first();
+			$idLab = count((array)$examLab)>0 ? $examLab->type : $exam_no_reg->examination_lab_id;
+			$query_update_company = "UPDATE examinations
+				SET 
+					examination_lab_id = '".$idLab."',
+					jns_perusahaan = '".$company_type."',
+					is_loc_test = '".$examination_location.
+					self::UPDATE_BY_EQUAL.$user_id.
+					self::UPDATE_AT_EQUAL.date(self::DATE_FORMAT)."'
+				WHERE id = '".$exam_id."'
+			";
+			DB::update($query_update_company);
 			
-		// 	$query_update_device = "UPDATE devices
-		// 		SET 
-		// 			name = '".$nama_perangkat."',
-		// 			mark = '".$merek_perangkat."',
-		// 			capacity = '".$kapasitas_perangkat."',
-		// 			manufactured_by = '".$pembuat_perangkat."',
-		// 			serial_number = '".$serialNumber_perangkat."',
-		// 			model = '".$model_perangkat."',
-		// 			test_reference = '".$referensi_perangkat.
-		// 			self::UPDATE_BY_EQUAL.$user_id.
-		// 			self::UPDATE_AT_EQUAL.date(self::DATE_FORMAT)."'
-		// 		WHERE id = '".$device_id."'
-		// 	";
+			$query_update_device = "UPDATE devices
+				SET 
+					name = '".$device_name."',
+					mark = '".$device_mark."',
+					capacity = '".$device_capacity."',
+					manufactured_by = '".$device_made_in."',
+					serial_number = '".$device_serial_number."',
+					model = '".$device_model."',
+					test_reference = '".$test_reference.
+					self::UPDATE_BY_EQUAL.$user_id.
+					self::UPDATE_AT_EQUAL.date(self::DATE_FORMAT)."'
+				WHERE id = '".$device_id."'
+			";
 			
-		// 	$exam_hist = new ExaminationHistory;
-		// 	$exam_hist->examination_id = $exam_id;
-		// 	$exam_hist->date_action = date(self::DATE_FORMAT);
-		// 	$exam_hist->tahap = 'Edit Form Permohonan';
-		// 	$exam_hist->status = 1;
-		// 	$exam_hist->keterangan = '';
-		// 	$exam_hist->created_by = $currentUser->id;
-		// 	$exam_hist->created_at = date(self::DATE_FORMAT);
-		// 	$exam_hist->save();
-		// }
+			$exam_hist = new ExaminationHistory;
+			$exam_hist->examination_id = $exam_id;
+			$exam_hist->date_action = date(self::DATE_FORMAT);
+			$exam_hist->tahap = 'Edit Form Permohonan';
+			$exam_hist->status = 1;
+			$exam_hist->keterangan = '';
+			$exam_hist->created_by = $currentUser->id;
+			$exam_hist->created_at = date(self::DATE_FORMAT);
+			$exam_hist->save();
+		}
 
 		//UPLOAD File to Minio
 		$this->uploadFile($request, 'refUji', $exam_id);
@@ -706,5 +690,42 @@ class PermohonanController extends Controller
 			}
 		}
 		return true;
+	}
+
+	public function cetak($exam_id){
+		// get data
+		$exam = Examination::find($exam_id);
+		$device = Device::find($exam->device_id);
+		$company = Company::find($exam->company_id);
+		$exam_type = ExaminationType::find($exam->examination_type_id);
+		$user = User::find($exam->created_by);
+		//setup pdf data
+		$PDFData = array([
+			'initPengujian' => $exam_type->name,
+			'kotaPerusahaan' => $company->city,
+			'date' => Carbon::parse($exam->created_at)->format('d-m-Y'),
+			'nama_pemohon' => $user->name,
+			'no_reg' => $exam->function_test_NO,
+			'alamat_pemohon' => $user->address,
+			'telepon_pemohon' => $user->phone_number,
+			'email_pemohon' => $user->email,
+			'nama_perusahaan' => $company->name,
+			'alamat_perusahaan' => $company->address,
+			'jns_perusahaan' => $exam->jns_perusahaan,
+			'plg_id_perusahaan' => $company->plg_id,
+			'nib_perusahaan' => $company->nib,
+			'telepon_perusahaan' => $company->phone_number,
+			'email_perusahaan' => $company->email,
+			'npwp_perusahaan' => $company->npwp_number,
+			'nama_perangkat' => $device->name,
+			'merek_perangkat' => $device->mark,
+			'model_perangkat' => $device->model,
+			'kapasitas_perangkat' => $device->capacity,
+			'referensi_perangkat' => $device->test_reference,
+			'pembuat_perangkat' => $device->manufactured_by,
+			'jnsPengujian' => $exam->examination_type_id,
+		]);
+		$PDF = new \App\Services\PDF\PDFService();
+		return $PDF->cetakPermohonan($PDFData);	
 	}
 }
