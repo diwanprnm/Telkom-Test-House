@@ -10,6 +10,7 @@ use App\Logs;
 use App\LogsAdministrator;
 use App\ExaminationAttach;
 use App\GeneralSetting;
+use App\Services\EmailEditorService;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use Illuminate\Support\Facades\DB;
@@ -562,19 +563,24 @@ class ExaminationService
 
         return true;
 	}
-	
+	// modify function for send email
 	public function sendEmailFailure($user, $dev_name, $exam_type, $exam_type_desc, $message, $subject, $tahap, $keterangan){
+		$email_editors = new EmailEditorService();
+		$email = $email_editors->selectBy($message);
+
         if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			$data = User::findOrFail($user);
+			$content = str_replace('&', '&amp;', $email->content);
 			Mail::send($message, array(
+				'content' => $content,
 				self::USER_NAME => $data->name,
 				self::DEV_NAME => $dev_name,
 				self::EXAM_TYPE => $exam_type,
 				self::EXAM_TYPE_DESC => $exam_type_desc,
 				'tahap' => $tahap,
 				self::KETERANGAN => $keterangan
-				), function ($m) use ($data,$subject) {
-				$m->to($data->email)->subject($subject);
+				), function ($m) use ($data,$email) {
+				$m->to($data->email)->subject($email->subject);
 			});
 		}
 

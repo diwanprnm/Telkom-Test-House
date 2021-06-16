@@ -10,6 +10,8 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+
+use App\Http\Controllers\EmailEditorController;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -213,6 +215,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::resource('/fakturpajak', 'FakturPajakController');
 	Route::resource('/videoTutorial', 'VideoTutorialController');
 	Route::post('/orderSlideshow', 'SlideshowController@orderSlideshow');
+	Route::resource('/email_editors', 'EmailEditorController');
 });
 	Route::get('/uploadCertification', 'UploadProductionController@uploadCertification');
 	Route::get('/uploadCompany', 'UploadProductionController@uploadCompany');
