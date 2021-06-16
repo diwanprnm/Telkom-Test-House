@@ -67,7 +67,7 @@
 		<div class="content-wrap">  
 			<div class="container">  
 				<div class="content">
-						<div class="col-md-12">
+					<div class="col-md-12">
 						<div class="step-process step ">
 							<div class="garis"></div>
 							<ul class="number">
@@ -231,9 +231,87 @@
 				textNormal.includes(x.htmlFor) && x.classList.add("text-normal");
 			});
 
-			$('#f1_referensi_perangkat_chosen .search-field input').removeAttr("style");
+			
 		},1000);
 	});
+
+	const checkSNjnsPengujian = () =>{
+		return $.ajax({
+			type:'POST',
+			url : "../cekPermohonan",
+			data: {
+				'_token':"{{csrf_token()}}",
+				'exam_id' : $('#hide_exam_id').val(),
+				'examinationType' : jns_pengujian_number,
+				'nama_perangkat' : $('#device_name').val(),
+				'model_perangkat' : $('#device_model').val(),
+				'merk_perangkat' : $('#device_mark').val(),
+				'kapasitas_perangkat' : $('#device_capacity').val()
+			},
+			beforeSend: () => {
+				console.log('loading dulu ya');
+				$("body").addClass("loading");
+			},
+			success:(response) => {
+				$("body").removeClass("loading");  
+				result = response['status'];
+				if(response['code'] == 1){
+					formWizard.steps("previous");
+					alert("{{trans('translate.service_device_already_exist') }}");
+				}else if (response['code'] == 2){
+					formWizard.steps("previous");
+					alert("{{ trans('translate.service_device_not_6_months_yet') }}");
+				}
+			},
+			error:(response)=>{
+				$("body").removeClass("loading"); 
+				formWizard.steps("previous");
+				alert('Oops! Terjadi kesalahan pada server.');
+			}
+		});
+	}
+
+	const uploadForm = () =>{
+		let isUploaded = false;
+		let examinationReferenceField = '';
+		//extracting examination test reference;
+		if(jns_pengujian != 'qa' ){
+			examinationReferencePool = [];
+			choice = $('.chosen-choices .search-choice span');
+			choice.each((i, element) => {
+				examinationReferencePool.push( element.innerHTML.split('||')[0].trim() )
+			});
+			examinationReferenceField = examinationReferencePool.join(',');
+		}else{
+			choice = $('.chosen-single span');
+			examinationReferenceField = choice[0].innerHTML.split('||')[0].trim();
+		}
+		//setupform and set examintion referencefield
+		formPermohonan = new FormData($("#form-permohonan")[0]);
+		formPermohonan.set('test_reference',examinationReferenceField);
+		//uplaoding form
+		return $.ajax({
+			type:'POST',
+			url : "../submitPermohonan",
+			data: formPermohonan,
+			processData: false,
+			contentType: false,
+			beforeSend: function(){
+				$("body").addClass("loading");  
+			},
+			success:function(response){
+				$("body").removeClass("loading");  
+				console.log('berhasil', {response});
+				isUploaded = true;
+			},
+			error:function(response){
+				console.log({response});
+				$("body").removeClass("loading"); 
+				formWizard.steps("previous");
+				alert('Oops! Terjadi kesalahan pada server.');
+			}
+		});
+	}
 
 
 
@@ -252,108 +330,21 @@
 	        form.validate().settings.ignore = ":disabled,:hidden";
 
 			if (currentIndex == 0){
-				
-				let result = false;
-				$('.chosen-choices .search-field input').removeAttr('style');
 				if (jns_pengujian != 'qa' && !$('.chosen-choices .search-choice span').length){
 					$('.chosen-choices .search-field input').addClass('error');
+					$('.chosen-choices .search-field input').removeAttr("style");
 					return false;
-				}else if(!form.valid()){
-					return false;
-				}else{
-					$("body").addClass("loading")
+				}else if (!form.valid()){
+					return false;	
 				}
-
-				$.ajax({
-					async: false,
-					type:'POST',
-					url : "../cekPermohonan",
-					data: {
-						'_token':"{{csrf_token()}}",
-						'examinationType' : jns_pengujian_number,
-						'nama_perangkat' : $('#device_name').val(),
-						'model_perangkat' : $('#device_model').val(),
-						'merk_perangkat' : $('#device_mark').val(),
-						'kapasitas_perangkat' : $('#device_capacity').val()
-						//'serialNumber_perangkat' : $('#device_serial_number').val(),
-					},
-					//dataType: 'json',	
-					//contentType: "application/json; charset=utf-8",
-					beforeSend: () => {
-						console.log('loading dulu ya');
-						$("body").addClass("loading");
-					},
-					success:(response) => {
-						$("body").removeClass("loading");  
-						result = response['status'];
-						if(response['code'] == 1){
-							alert("{{trans('translate.service_device_already_exist') }}");
-						}else if (response['code'] == 2){
-							alert("{{ trans('translate.service_device_not_6_months_yet') }}");
-						}else{
-							//Add below 2 lines for every Index(Steps).   
-							result = true;                         
-							//is_async_step = true;
-							//form.steps("next");
-						}
-					},
-					error:(response)=>{
-						$("body").removeClass("loading"); 
-						alert('Oops! Terjadi kesalahan pada server.');
-						result = false;
-					}
-				});
-				if (!result) return result;
-				
+				checkSNjnsPengujian();
 			}
 
 			if (currentIndex == 1 && newIndex == 2){
 				if(!form.valid()){
 					return false;
 				}
-				let isUploaded = false;
-				let examinationReferenceField = '';
-				//extracting examination test reference;
-				if(jns_pengujian != 'qa' ){
-					examinationReferencePool = [];
-					choice = $('.chosen-choices .search-choice span');
-					choice.each((i, element) => {
-						examinationReferencePool.push( element.innerHTML.split('||')[0].trim() )
-					});
-					examinationReferenceField = examinationReferencePool.join(',');
-				}else{
-					choice = $('.chosen-single span');
-					examinationReferenceField = choice[0].innerHTML.split('||')[0].trim();
-				}
-				//setupform and set examintion referencefield
-				formPermohonan = new FormData($("#form-permohonan")[0]);
-				formPermohonan.set('test_reference',examinationReferenceField);
-				//uplaoding form
-				$.ajax({
-					async: false,
-					type:'POST',
-					url : "../submitPermohonan",
-					data: formPermohonan,
-					dataType: 'json',
-					processData: false,
-					contentType: false,		
-					//contentType: "application/json; charset=utf-8",
-					beforeSend: function(){
-						$("body").addClass("loading");  
-					},
-					success:function(response){
-						$("body").removeClass("loading");  
-						console.log('berhasil', {response});
-						isUploaded = true;
-					},
-					error:function(response){
-						console.log({response});
-						$("body").removeClass("loading"); 
-						alert('Oops! Terjadi kesalahan pada server.');
-						isUploaded = false;
-					}
-				});
-				if (!isUploaded) return isUploaded;
+				uploadForm();
 			}
 
 			if(newIndex < currentIndex ){ 
