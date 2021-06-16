@@ -13782,6 +13782,10 @@ body:not(.no-transition) #wrapper,
 	text-align: left;
     width: 16% !important;
 }
+.step.step-process-edit > ul > li{
+	text-align: left;
+    width: 7% !important;
+}
 
 .step >  ul > li:not(:first-child){
     margin-left: 3% !important;
