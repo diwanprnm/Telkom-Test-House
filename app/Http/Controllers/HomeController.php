@@ -310,7 +310,8 @@ class HomeController extends Controller
 				return redirect("/process");
 			}
 	    	$page = self::PROCESS;
-			return view('client.process.'.$category.'_edit_process')
+			//return view('client.process.'.$category.'_edit_process')
+			return view('client.process.v2_edit')
 				->with('data', $data)
 				->with('userData', $userData[0])
 				->with('jns_pengujian', $category)
