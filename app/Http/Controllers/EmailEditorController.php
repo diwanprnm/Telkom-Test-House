@@ -14,6 +14,8 @@ use Ramsey\Uuid\Uuid;
 
 use App\Http\Requests;
 
+use function JmesPath\search;
+
 class EmailEditorController extends Controller
 {
     public function __construct()
@@ -26,9 +28,29 @@ class EmailEditorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $currentUser = Auth::user();
+        $logService = new LogService();
+        if (!$currentUser) {return redirect('login');}
+        
+        $limit = 10;
+        $search = trim($request->input('search'));
+
+        $query = EmailEditor::whereNotNull('created_at');
+
+        if ($search) {
+            $query->where('name','like','%'.strtolower($search).'%')
+            ->orWhere('subject', 'like', '%'.strtolower($search).'%')
+            ->orWhere('dir_name', 'like', '%'.strtolower($search).'%');
+            $logService->createLog('Search Email Editor', 'Email Editors', json_encode(array("search"=>$search)) );
+        }
+
+        $data_emails = $query->orderBy('created_at', 'desc')->paginate($limit);
+
+        return view('admin.email_editors.index')
+            ->with('data', $data_emails)
+            ->with('search', $search);
     }
 
     /**
@@ -58,7 +80,6 @@ class EmailEditorController extends Controller
         $email->subject = $request->input('subject');
         $email->content = $request->input('content');
         $email->dir_name = $request->input('dir_name');
-        // $email->signature = $request->input('signature');
         $email->created_by = $currentUser->id;
         $email->updated_by = $currentUser->id;
 
@@ -153,6 +174,20 @@ class EmailEditorController extends Controller
      */
     public function destroy($id)
     {
-        //
+		$email = EmailEditor::find($id);
+
+        if ($email){
+            try{
+                $data_log = Logs::where('id', '=', $id);
+                $data_log->delete();
+                $email->delete();
+                
+                Session::flash('message', 'Email successfully deleted');
+                return redirect('admin/email_editors');
+            }catch (Exception $e){
+                Session::flash('error', 'Delete failed');
+                return redirect('admin/email_editors');
+            }
+        }
     }
 }

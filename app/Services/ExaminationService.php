@@ -571,8 +571,9 @@ class ExaminationService
         if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			$data = User::findOrFail($user);
 			$content = str_replace('&', '&amp;', $email->content);
-			Mail::send($message, array(
-				'content' => $content,
+			Mail::send(array(
+				'content' => $content, 
+			), array(
 				self::USER_NAME => $data->name,
 				self::DEV_NAME => $dev_name,
 				self::EXAM_TYPE => $exam_type,
@@ -580,7 +581,10 @@ class ExaminationService
 				'tahap' => $tahap,
 				self::KETERANGAN => $keterangan
 				), function ($m) use ($data,$email) {
-				$m->to($data->email)->subject($email->subject);
+				$m->to($data->email)
+				->subject($email->subject)
+				->setBody($email->content, "text/html")
+				;
 			});
 		}
 
