@@ -565,18 +565,15 @@ class ExaminationService
         return true;
 	}
 	// modify function for send email
-	public function sendEmailFailure($user, $dev_name, $exam_type, $exam_type_desc, $message, $subject, $tahap, $keterangan){
+	public function sendEmailFailure($user, $dev_name, $exam_type, $exam_type_desc, $dir_name, $subject, $tahap, $keterangan){
 		$email_editors = new EmailEditorService();
-		$email = $email_editors->selectBy($message);
+		$email = $email_editors->selectBy($dir_name);
 
         if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			$data = User::findOrFail($user);
-			$content = str_replace('&', '&amp;', $email->content);
-		
-			$content = $this->parseEmailBody($data->name, $dev_name, $exam_type_desc, $exam_type, $tahap, $keterangan, $content);
-
-			Mail::send($message, array(
-					'content', $content,
+			$content = $this->parsingDataEmailFailure($email->content, $data->name, $dev_name, $exam_type, $exam_type_desc, $tahap, $keterangan);
+			Mail::send('emails.editor', array(
+				'content' => $content
 				), function ($m) use ($data,$email) {
 				$m->to($data->email)->subject($email->subject);
 			});
@@ -585,7 +582,7 @@ class ExaminationService
         return true;
     }
 
-	public function parseEmailBody($user, $dev_name, $exam_type_desc, $exam_type, $tahap, $keterangan, $content) {
+	public function parsingDataEmailFailure($user, $dev_name, $exam_type_desc, $exam_type, $tahap, $keterangan, $content) {
 		$content = str_replace(self::USER_NAME, $user, $content);
 		$content = str_replace(self::DEV_NAME, $dev_name, $content);
 		$content = str_replace(self::EXAM_TYPE_DESC, $exam_type_desc, $content);
