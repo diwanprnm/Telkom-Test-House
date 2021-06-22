@@ -570,9 +570,9 @@ class ExaminationService
 
         if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			$data = User::findOrFail($user);
-			$content = str_replace('&', '&amp;', $email->content);
-			$content = $this->parsingDataEmailFailure($content, $data->name, $dev_name, $exam_type, $exam_type_desc, $tahap, $keterangan);
-			Mail::send('editor.blade', array(
+			// $content = str_replace('&', '&amp;', $email->content);
+			$content = $this->parsingDataEmailFailure($email->content, $data->name, $dev_name, $exam_type, $exam_type_desc, $tahap, $keterangan);
+			Mail::send('emails.editor', array(
 				'content' => $content
 				), function ($m) use ($data,$email) {
 				$m->to($data->email)->subject($email->subject);
