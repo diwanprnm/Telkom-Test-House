@@ -80,11 +80,12 @@ class ExaminationService
 	private const BARANG_FILE2 = 'barang_file2';
 	private const ADMIN_EXAMINATION_LOC = '/admin/examination/';
 	private const EDIT_LOC = '/edit';
-	private const USER_NAME = 'user_name';
-	private const DEV_NAME = 'dev_name';
-	private const EXAM_TYPE = 'exam_type';
-	private const EXAM_TYPE_DESC = 'exam_type_desc';
-	private const KETERANGAN = 'keterangan';
+	private const USER_NAME = '@user_name';
+	private const DEV_NAME = '@dev_name';
+	private const EXAM_TYPE = '@exam_type';
+	private const EXAM_TYPE_DESC = '@exam_type_desc';
+	private const KETERANGAN = '@keterangan';
+	private const TAHAP = '@tahap';
     
     public function requestQuery($request, $search, $type, $status, $before, $after){
 		$query = Examination::select([
@@ -571,25 +572,28 @@ class ExaminationService
         if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			$data = User::findOrFail($user);
 			$content = str_replace('&', '&amp;', $email->content);
-			Mail::send(array(
-				'content' => $content, 
-			), array(
-				self::USER_NAME => $data->name,
-				self::DEV_NAME => $dev_name,
-				self::EXAM_TYPE => $exam_type,
-				self::EXAM_TYPE_DESC => $exam_type_desc,
-				'tahap' => $tahap,
-				self::KETERANGAN => $keterangan
+		
+			$content = $this->parseEmailBody($data->name, $dev_name, $exam_type_desc, $exam_type, $tahap, $keterangan, $content);
+
+			Mail::send($message, array(
+					'content', $content,
 				), function ($m) use ($data,$email) {
-				$m->to($data->email)
-				->subject($email->subject)
-				->setBody($email->content, "text/html")
-				;
+				$m->to($data->email)->subject($email->subject);
 			});
 		}
 
         return true;
     }
+
+	public function parseEmailBody($user, $dev_name, $exam_type_desc, $exam_type, $tahap, $keterangan, $content) {
+		$content = str_replace(self::USER_NAME, $user, $content);
+		$content = str_replace(self::DEV_NAME, $dev_name, $content);
+		$content = str_replace(self::EXAM_TYPE_DESC, $exam_type_desc, $content);
+		$content = str_replace(self::EXAM_TYPE, $exam_type, $content);
+		$content = str_replace(self::TAHAP, $tahap, $content);
+		$content = str_replace(self::KETERANGAN, $keterangan, $content);
+		return $content;
+	}
 
 	public function tanggalkontrak($request){
 		$client = new Client([
