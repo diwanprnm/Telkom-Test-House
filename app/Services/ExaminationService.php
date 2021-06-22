@@ -564,32 +564,33 @@ class ExaminationService
         return true;
 	}
 	// modify function for send email
-	public function sendEmailFailure($user, $dev_name, $exam_type, $exam_type_desc, $message, $subject, $tahap, $keterangan){
+	public function sendEmailFailure($user, $dev_name, $exam_type, $exam_type_desc, $dir_name, $subject, $tahap, $keterangan){
 		$email_editors = new EmailEditorService();
-		$email = $email_editors->selectBy($message);
+		$email = $email_editors->selectBy($dir_name);
 
         if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			$data = User::findOrFail($user);
 			$content = str_replace('&', '&amp;', $email->content);
-			Mail::send(array(
-				'content' => $content, 
-			), array(
-				self::USER_NAME => $data->name,
-				self::DEV_NAME => $dev_name,
-				self::EXAM_TYPE => $exam_type,
-				self::EXAM_TYPE_DESC => $exam_type_desc,
-				'tahap' => $tahap,
-				self::KETERANGAN => $keterangan
+			$content = $this->parsingDataEmailFailure($content, $data->name, $dev_name, $exam_type, $exam_type_desc, $tahap, $keterangan);
+			Mail::send('editor.blade', array(
+				'content' => $content
 				), function ($m) use ($data,$email) {
-				$m->to($data->email)
-				->subject($email->subject)
-				->setBody($email->content, "text/html")
-				;
+				$m->to($data->email)->subject($email->subject);
 			});
 		}
 
         return true;
     }
+
+	public function parsingDataEmailFailure($content, $user_name, $dev_name, $exam_type, $exam_type_desc, $tahap, $keterangan){
+		$content = str_replace("@user_name", $user_name, $content);
+		$content = str_replace("@dev_name", $dev_name, $content);
+		$content = str_replace("@exam_type_desc", $exam_type_desc, $content);
+		$content = str_replace("@exam_type", $exam_type, $content);
+		$content = str_replace("@tahap", $tahap, $content);
+		$content = str_replace("@keterangan", $keterangan, $content);
+		return $content;
+	}
 
 	public function tanggalkontrak($request){
 		$client = new Client([
