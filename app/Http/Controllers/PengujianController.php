@@ -745,28 +745,14 @@ class PengujianController extends Controller
             $message = null;
             $paginate = 2;
             $search = trim($request->input(self::SEARCH,''));
-            
-			$data = DB::table('examination_attachments')
-				->select('examination_attachments.*')
-				->join(self::EXAMINATIONS, 'examination_attachments.examination_id', '=', 'examinations.id')
-				->where(self::EXAMINATION_ID, '=', ''.$id.'')
-				->where(self::EXAMINATIONS_COMPANY_ID, '=', ''.$company_id.'')
-				->where('name', '=', 'File Pembayaran')
-				->first();
-
-				$examinationsData = Examination::where('id', $id)->with(self::DEVICE)->get();
-			
-            if (!count((array)$data)){
-                $message = self::DATA_NOT_FOUND;
-				$data = NULL;
-            }
+            $examinationsData = Examination::where('id', $id)->with(self::DEVICE)->get();
 			
             return view('client.pengujian.pembayaran')
                 ->with(self::MESSAGE, $message)
                 ->with('spb_number', $examination->spb_number)
                 ->with('spb_date', $examination->spb_date)
                 ->with('price', $examination->price)
-                ->with('data', $data)
+                ->with('id', $id)
 				->with('examinationsData', $examinationsData)
 				->with(self::PAYMENT_METHOD, $examinationService->api_get_payment_methods())
                 ->with(self::USER_ID, $user_id)

@@ -48,9 +48,7 @@
 								@endif
 								<!-- start: WIZARD FORM -->
 								<form id="form-checkout" class="nobottommargin" role="form" method="POST" action="{{ url('doCheckoutSPB') }}" onsubmit="javascript:document.getElementById('submit-btn').style.display = 'none';document.getElementById('submit-msg').style.display = 'block';">
-									<input type="hidden" name="hide_id_user" id="hide_id_user" value="{{ $data->created_by }}"/>
-									<input type="hidden" name="hide_id_exam" id="hide_id_exam" value="{{ $data->examination_id }}"/>
-									<input type="hidden" name="hide_id_attach" id="hide_id_attach" value="{{ $data->id }}"/>
+									<input type="hidden" name="hide_id_exam" id="hide_id_exam" value="{{ $id }}"/>
 									{{ csrf_field() }}
 									<div id="wizard" class="swMain">
 										<div class="form-group">
