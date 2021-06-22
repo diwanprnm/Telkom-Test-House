@@ -80,11 +80,12 @@ class ExaminationService
 	private const BARANG_FILE2 = 'barang_file2';
 	private const ADMIN_EXAMINATION_LOC = '/admin/examination/';
 	private const EDIT_LOC = '/edit';
-	private const USER_NAME = 'user_name';
-	private const DEV_NAME = 'dev_name';
-	private const EXAM_TYPE = 'exam_type';
-	private const EXAM_TYPE_DESC = 'exam_type_desc';
-	private const KETERANGAN = 'keterangan';
+	private const USER_NAME = '@user_name';
+	private const DEV_NAME = '@dev_name';
+	private const EXAM_TYPE = '@exam_type';
+	private const EXAM_TYPE_DESC = '@exam_type_desc';
+	private const KETERANGAN = '@keterangan';
+	private const TAHAP = '@tahap';
     
     public function requestQuery($request, $search, $type, $status, $before, $after){
 		$query = Examination::select([
@@ -570,7 +571,6 @@ class ExaminationService
 
         if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			$data = User::findOrFail($user);
-			// $content = str_replace('&', '&amp;', $email->content);
 			$content = $this->parsingDataEmailFailure($email->content, $data->name, $dev_name, $exam_type, $exam_type_desc, $tahap, $keterangan);
 			Mail::send('emails.editor', array(
 				'content' => $content
@@ -582,13 +582,13 @@ class ExaminationService
         return true;
     }
 
-	public function parsingDataEmailFailure($content, $user_name, $dev_name, $exam_type, $exam_type_desc, $tahap, $keterangan){
-		$content = str_replace("@user_name", $user_name, $content);
-		$content = str_replace("@dev_name", $dev_name, $content);
-		$content = str_replace("@exam_type_desc", $exam_type_desc, $content);
-		$content = str_replace("@exam_type", $exam_type, $content);
-		$content = str_replace("@tahap", $tahap, $content);
-		$content = str_replace("@keterangan", $keterangan, $content);
+	public function parsingDataEmailFailure($user, $dev_name, $exam_type_desc, $exam_type, $tahap, $keterangan, $content) {
+		$content = str_replace(self::USER_NAME, $user, $content);
+		$content = str_replace(self::DEV_NAME, $dev_name, $content);
+		$content = str_replace(self::EXAM_TYPE_DESC, $exam_type_desc, $content);
+		$content = str_replace(self::EXAM_TYPE, $exam_type, $content);
+		$content = str_replace(self::TAHAP, $tahap, $content);
+		$content = str_replace(self::KETERANGAN, $keterangan, $content);
 		return $content;
 	}
 
