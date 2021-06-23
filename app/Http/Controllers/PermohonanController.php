@@ -222,7 +222,7 @@ class PermohonanController extends Controller
 	}
 
 	public function update(Request $request)
-	{ 
+	{
 		$result = $this->submit_update($request, self::UPDATE);
 		return $result;
 	}
@@ -578,31 +578,27 @@ class PermohonanController extends Controller
 			$ref_perangkat = explode(",", $test_reference);
 			$examLab = DB::table('stels')->where('code', $ref_perangkat[0])->first();
 			$idLab = count((array)$examLab)>0 ? $examLab->type : $exam_no_reg->examination_lab_id;
-			$query_update_company = "UPDATE examinations
-				SET 
-					examination_lab_id = '".$idLab."',
-					jns_perusahaan = '".$company_type."',
-					is_loc_test = '".$examination_location.
-					self::UPDATE_BY_EQUAL.$user_id.
-					self::UPDATE_AT_EQUAL.date(self::DATE_FORMAT)."'
-				WHERE id = '".$exam_id."'
-			";
-			DB::update($query_update_company);
 			
-			$query_update_device = "UPDATE devices
-				SET 
-					name = '".$device_name."',
-					mark = '".$device_mark."',
-					capacity = '".$device_capacity."',
-					manufactured_by = '".$device_made_in."',
-					serial_number = '".$device_serial_number."',
-					model = '".$device_model."',
-					test_reference = '".$test_reference.
-					self::UPDATE_BY_EQUAL.$user_id.
-					self::UPDATE_AT_EQUAL.date(self::DATE_FORMAT)."'
-				WHERE id = '".$device_id."'
-			";
-			
+			$examinations = Examination::find($exam_id);
+			$examinations->examination_lab_id = $idLab;
+			$examinations->jns_perusahaan = $company_type;
+			$examinations->is_loc_test = $examination_location;
+			$examinations->updated_by = $user_id;
+			$examinations->updated_at = Carbon::now();
+			$examinations->save();
+
+			$device = Device::find($device_id);
+			$device->name = $device_name;
+			$device->mark = $device_mark;
+			$device->capacity = $device_capacity;
+			$device->manufactured_by = $device_made_in;
+			$device->serial_number = $device_serial_number;
+			$device->model = $device_model;
+			$device->test_reference = $test_reference;
+			$device->updated_by = $user_id;
+			$device->updated_at = Carbon::now();
+			$device->save();
+
 			$exam_hist = new ExaminationHistory;
 			$exam_hist->examination_id = $exam_id;
 			$exam_hist->date_action = date(self::DATE_FORMAT);
