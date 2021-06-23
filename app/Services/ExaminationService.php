@@ -6,15 +6,11 @@ use Auth;
 use App\Examination;
 use App\ExaminationType;
 use App\User;
-use App\Logs;
-use App\LogsAdministrator;
 use App\ExaminationAttach;
 use App\GeneralSetting;
 use App\Services\EmailEditorService;
 use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use Illuminate\Support\Facades\DB;
-use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 
 use Mail;
@@ -463,11 +459,24 @@ class ExaminationService
 		$email_editors = new EmailEditorService();
 		$email = $email_editors->selectBy($dir_name);
 
-		if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
-			$user = User::findOrFail($exam->created_by);
-			$exam_type = ExaminationType::findOrFail($exam->examination_type_id);
-			$content = $this->parsingSendEmailRegistration($email->content, $user->name, $exam_type->description, $exam_type->name);
+		$user = User::findOrFail($exam->created_by);
+		$exam_type = ExaminationType::findOrFail($exam->examination_type_id);
+		switch ($dir_name) {
+			case 'emails.registration':
+				$content = $this->parsingSendEmailRegistration($email->content, $user->name, $exam_type->description, $exam_type->name);
+				break;
+			case 'emails.pembayaran':
+				$content = $this->parsingEmailPembayaran($email->content, $user->name);
+				break;
+			case 'emails.sertifikat':
+				$content = $this->parsingEmailSertifikat($email->content, $user->name, $exam->is_loc_test);
+				break;
+			default:
+				$content = null;
+				break;
+		}
 
+		if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			Mail::send('emails.editor', array(
 					'content' => $content
 				), function ($m) use ($user,$subject) {
@@ -482,6 +491,17 @@ class ExaminationService
 		$content = str_replace('@user_name', $user_name, $content);
 		$content = str_replace('@exam_type_desc', $exam_type_desc, $content);
 		$content = str_replace('@exam_type', $exam_type, $content);
+		return $content;
+	}
+
+	public function parsingEmailPembayaran($content, $user_name){
+		$content = str_replace('@user_name', $user_name, $content);
+		return $content;
+	}
+
+	public function parsingEmailSertifikat($content, $user_name, $is_loc_test){
+		$content = str_replace('@user_name', $user_name, $content);
+		$content = str_replace('$is_loc_test', $is_loc_test, $content);
 		return $content;
 	}
 	
