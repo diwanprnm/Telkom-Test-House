@@ -1,7 +1,31 @@
 @extends('layouts.client')
 <!-- Document Title
+	@php
+		$examintaionType = [
+			'qa' => [
+				'number' => 1,
+				'code' => 'QA',
+				'name' => 'QUALITY ASSURANCE TESTING PROCESS'
+			],
+			'ta' => [
+				'number' => 2,
+				'code' => 'TA',
+				'name' => 'TYPE APPROVAL TESTING PROCESS'
+			],
+			'vt' => [
+				'number' => 3,
+				'code' => 'VT',
+				'name' => 'VOLUNTARY TEST TESTING PROCESS'
+			],
+			'cal' => [
+				'number' => 4,
+				'code' => 'KAL',
+				'name' => 'CALIBRATION TESTING PROCESS'
+			]
+		]
+	@endphp
     ============================================= -->
-    <title>TA - Telkom DDB</title>
+    <title>{{ $examintaionType[$jns_pengujian]['code']}} - Telkom DDB</title>
 @section('content')
  	<link rel="stylesheet" href="{{url('vendor/jquerystep/main.css')}}" type="text/css" />
     <link rel="stylesheet" href="{{url('vendor/jquerystep/jquery.steps.css')}}" type="text/css" /> 
@@ -29,26 +53,6 @@
 	 </style>
   <div class="overlay"></div>
 <!-- Page Title ============================================= -->
-	@php
-		$examintaionType = [
-			'qa' => [
-				'number' => 1,
-				'name' => 'QUALITY ASSURANCE TESTING PROCESS'
-			],
-			'ta' => [
-				'number' => 2,
-				'name' => 'TYPE APPROVAL TESTING PROCESS'
-			],
-			'vt' => [
-				'number' => 3,
-				'name' => 'VOLUNTARY TEST TESTING PROCESS',
-			],
-			'cal' => [
-				'number' => 4,
-				'name' => 'CALIBRATION TESTING PROCESS',
-			]
-		]
-	@endphp
 	<section id="page-title">
 		<div class="container clearfix">
 			<h1>{{ $examintaionType[$jns_pengujian]['name'] ?? 'TESTING PROCESS' }}</h1>
