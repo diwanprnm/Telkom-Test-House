@@ -64,7 +64,7 @@ return [
 	'service_upload_reference_test_no'	=> 'No Referensi Uji',
 	'service_upload_reference_test_date'=> 'Tanggal Referensi Uji',
 	'service_upload_support_principals'	=> 'Surat Dukungan Prinsipal',
-	'service_upload_another_file'		=> 'Dokumen Spesifikasi/Datasheet',
+	'service_upload_another_file'		=> 'Dokumen Spesifikasi',
 	'service_upload_support_principals_no'	=> 'No Surat Dukungan Prinsipal',
 	'service_upload_support_principals_date'=> 'Tanggal Surat Dukungan Prinsipal',
 	'service_upload_sp3'				=> 'PLG ID dan NIB',
