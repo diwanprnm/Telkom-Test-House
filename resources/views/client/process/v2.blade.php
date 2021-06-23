@@ -295,9 +295,10 @@
 		formPermohonan = new FormData($("#form-permohonan")[0]);
 		formPermohonan.set('test_reference',examinationReferenceField);
 		//uplaoding form
-		return $.ajax({
+		$.ajax({
 			type:'POST',
 			url : "../submitPermohonan",
+			async: false,
 			data: formPermohonan,
 			processData: false,
 			contentType: false,
@@ -316,6 +317,7 @@
 				alert('Oops! Terjadi kesalahan pada server.');
 			}
 		});
+		return $isUploaded;
 	}
 
 
@@ -348,7 +350,7 @@
 				}else if (!form.valid()){
 					return false;	
 				}
-				checkSNjnsPengujian();
+				return checkSNjnsPengujian();
 			}
 
 			if (currentIndex == 1 && newIndex == 2){
