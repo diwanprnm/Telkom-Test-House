@@ -627,7 +627,7 @@ class ExaminationService
 
         if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			$data = User::findOrFail($user);
-			$content = $this->parsingDataEmailFailure($email->content, $data->name, $dev_name, $exam_type, $exam_type_desc, $tahap, $keterangan);
+			$content = $this->parsingDataEmailFailure($email->content, $data->name, $exam_type, $exam_type_desc, $tahap, $keterangan);
 			Mail::send('emails.editor', array(
 				'content' => $content
 				), function ($m) use ($data,$email) {
@@ -638,10 +638,9 @@ class ExaminationService
         return true;
     }
 
-	public function parsingDataEmailFailure($user, $dev_name, $exam_type_desc, $exam_type, $tahap, $keterangan, $content) {
-		$content = str_replace('@username', $user, $content);
-		$content = str_replace('@dev_name', $dev_name, $content);
-		$content = str_replace('@examp_type_desc', $exam_type_desc, $content);
+	public function parsingDataEmailFailure($content, $user_name, $exam_type, $exam_type_desc, $tahap, $keterangan) {
+		$content = str_replace('@user_name', $user_name, $content);
+		$content = str_replace('@exam_type_desc', $exam_type_desc, $content);
 		$content = str_replace('@exam_type', $exam_type, $content);
 		$content = str_replace('@tahap', $tahap, $content);
 		$content = str_replace('@keterangan', $keterangan, $content);
