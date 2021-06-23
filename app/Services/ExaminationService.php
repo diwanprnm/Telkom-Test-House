@@ -468,7 +468,7 @@ class ExaminationService
 			$exam_type = ExaminationType::findOrFail($exam->examination_type_id);
 			$content = $this->parsingSendEmailRegistration($email->content, $user->name, $exam_type->description, $exam_type->name);
 
-			$send_email = Mail::send('emails.editor', array(
+			Mail::send('emails.editor', array(
 					'content' => $content
 				), function ($m) use ($user,$subject) {
 				$m->to($user->email)->subject($subject);
@@ -485,19 +485,17 @@ class ExaminationService
 		return $content;
 	}
 	
-	public function sendEmailNotification_wAttach($user, $dev_name, $exam_type, $exam_type_desc, $message, $subject, $attach, $spb_number = null, $exam_id = null){
-        if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
+	public function sendEmailNotification_wAttach($user, $dev_name, $exam_type, $exam_type_desc, $dir_name, $subject, $attach, $spb_number = null, $exam_id = null){
+        $email_editors = new EmailEditorService();
+		$email = $email_editors->selectBy($dir_name);
+		
+		if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			$data = User::findOrFail($user);
 			$attachment = Storage::disk('minio')->url($attach);
-			Mail::send($message, array(
-				self::USER_NAME => $data->name,
-				self::DEV_NAME => $dev_name,
-				self::EXAM_TYPE => $exam_type,
-				self::EXAM_TYPE_DESC => $exam_type_desc,
-				'spb_number' => $spb_number,
-				'id' => $exam_id,
-				'payment_method' => $this->api_get_payment_methods()
+			$content = $this->parsingSendEmailNotification_wAttach($email->content, $data->name, $exam_type_desc, $exam_type, $spb_number, $exam_id);
 
+			Mail::send('emails.editor', array(
+					'content' => $content
 				), function ($m) use ($data,$subject,$attachment) {
 				$m->to($data->email)->subject($subject);
 				$m->attach($attachment);
@@ -506,7 +504,21 @@ class ExaminationService
 
         return true;
     }
-	
+	public function parsingSendEmailNotification_wAttach($content, $user_name, $exam_type_desc, $exam_type, $spb_number, $exam_id){
+		$content = str_replace('@user_name', $user_name, $content);
+		$content = str_replace('@exam_type_desc', $exam_type_desc, $content);
+		$content = str_replace('@exam_type', $exam_type, $content);
+		$content = str_replace('@spb_number', $spb_number, $content);
+		$payment_method = $this->api_get_payment_methods();
+		$list = "";
+		for ($i = 0; $i < count($payment_method->data->VA); $i++){
+			$list = $list."<li>".$payment_method->data->VA[$i]->productName."</li>";
+		}
+		$payment_method_list = '<ul style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00);">'.$list.'</ul>';
+		$content = str_replace('@payment_method_list', $payment_method_list, $content);
+		$content = str_replace('@link', url('pengujian/'.$exam_id.'/pembayaran'), $content);
+		return $content;
+	}
 	public function api_get_payment_methods(){
         $client = new Client([
 			self::HEADERS => [self::AUTHORIZATION => config(self::APP_GATEWAY_TPN_2)],
@@ -928,28 +940,30 @@ class ExaminationService
 	}
 
 
-	public function send_revision($exam, $spbRevisionNumber)
+	public function send_revision($exam, $spbRevisionNumber, $dir_name)
 	{
+		$email_editors = new EmailEditorService();
+		$email = $email_editors->selectBy($dir_name);
+
 		if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
-			//get user (name and email)
 			$user = User::findOrFail($exam->created_by);
+			$exam_type = ExaminationType::findOrFail($exam->examination_type_id);
+			$content = $this->parsingSendRevision($email->content, $user->name, $exam->spb_number, $spbRevisionNumber, $exam->id);
 
-			
-			//format data for email
-			$dataEmail = array(
-				'customerEmail' => $user->email,
-				'customerName' => $user->name,
-				'registrationNumber' => $exam->funtion_test_NO,
-				'spbNumber' => $exam->spb_number,
-				'spbRevisionNumber' => $spbRevisionNumber,
-				'link' => url('pengujian/'.$exam->id.'/pembayaran')
-			);
-
-			//send mail
-			Mail::send('emails.spbRevision', ['data' => $dataEmail], function ($m) use ($dataEmail) {
-				$m->to($dataEmail['customerEmail'])->subject( "Revisi Surat Pemberitahuan Biaya (SPB) untuk ".$dataEmail['registrationNumber'] );
-			});
+			Mail::send('emails.editor', array(
+					'content' => $content
+				), function ($m) use ($user,$exam) {
+				$m->to($user->email)->subject("Revisi Surat Pemberitahuan Biaya (SPB) untuk ".$exam->function_test_NO);
+			}); 
 		}
+	}
+
+	public function parsingSendRevision($content, $user_name, $spb_number, $spbRevisionNumber, $exam_id){
+		$content = str_replace('@user_name', $user_name, $content);
+		$content = str_replace('@spb_number', $spb_number, $content);
+		$content = str_replace('@spbRevisionNumber', $spbRevisionNumber, $content);
+		$content = str_replace('@link', url('pengujian/'.$exam_id.'/pembayaran'), $content);
+		return $content;
 	}
 	
 }

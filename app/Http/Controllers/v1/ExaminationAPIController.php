@@ -34,6 +34,7 @@ use App\Services\Logs\LogService;
 use App\NotificationTable;
 use App\Services\NotificationService;
 use App\Services\FileService;
+use App\Services\EmailEditorService;
  
 class ExaminationAPIController extends AppBaseController
 {
@@ -2177,6 +2178,9 @@ class ExaminationAPIController extends AppBaseController
 	
 	public function spbReminder()
 	{
+		$email_editors = new EmailEditorService();
+		$email = $email_editors->selectBy('emails.reminderSPB');
+		
 		if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			//send data for 7 day old unpaid spb
 			$from = Carbon::now()->subDays(-7)->format('Y-m-d H:i');
@@ -2185,24 +2189,42 @@ class ExaminationAPIController extends AppBaseController
 			//send to each data
 			foreach ($SPB7 as $SPB){
 				//set data required
-				$emailContent = $this->setData($SPB, '7', "Tersisa 7 Hari Lagi untuk Membayar Pengujian $SPB->registrationNumber");
+				$user = User::findOrFail($SPB->createdBy);
+				$content = $this->parsingSpbReminder(
+					$email->content, 
+					$user->name, 
+					$SPB->spbNumber, 
+					7, 
+					$SPB->expiredDate, 
+					$SPB->paymentMethod, 
+					$SPB->price, 
+					$SPB->includePPH);
 				//send email
-				Mail::send('emails.reminderSPB', ['data' => $emailContent], function ($m) use($emailContent) {
-					$m->to($emailContent['customerEmail'])->subject( $emailContent['subject'] );
+				Mail::send('emails.editor', ['content' => $content], function ($m) use($user,$SPB) {
+					$m->to($user->email)->subject( "Tersisa 7 Hari Lagi untuk Membayar Pengujian $SPB->registrationNumber" );
 				});
 			}
 			
-			//send data for 13 day old unpaid spb
-			$from = Carbon::now()->subDays(-13)->format('Y-m-d H:i');
-			$to = Carbon::now()->subDays(-13)->subMinutes(-10)->format('Y-m-d H:i');
+			//send data for 1 day old unpaid spb
+			$from = Carbon::now()->subDays(-1)->format('Y-m-d H:i');
+			$to = Carbon::now()->subDays(-1)->subMinutes(-10)->format('Y-m-d H:i');
 			$SPB13 = $this->getUnpaidSpbByDate($from, $to);
 			//send to each data
 			foreach ($SPB13 as $SPB){
 				//set data required
-				$emailContent = $this->setData($SPB, '13', "Tersisa 1 Hari Lagi untuk Membayar SPB $SPB->spbNumber");
+				$user = User::findOrFail($SPB->createdBy);
+				$content = $this->parsingSpbReminder(
+					$email->content, 
+					$user->name, 
+					$SPB->spbNumber, 
+					1, 
+					$SPB->expiredDate, 
+					$SPB->paymentMethod, 
+					$SPB->price, 
+					$SPB->includePPH);
 				//send email
-				Mail::send('emails.reminderSPB', ['data' => $emailContent], function ($m) use($emailContent) {
-					$m->to($emailContent['customerEmail'])->subject( $emailContent['subject'] );
+				Mail::send('emails.editor', ['content' => $content], function ($m) use($user,$SPB) {
+					$m->to($user->email)->subject( "Tersisa 1 Hari Lagi untuk Membayar Pengujian $SPB->registrationNumber" );
 				});
 			}
 		}
@@ -2219,7 +2241,8 @@ class ExaminationAPIController extends AppBaseController
 				'examinations.VA_expired as expiredDate',
 				'examinations.VA_name as paymentMethod',
 				'examinations.VA_amount as price',
-				'examinations.include_pph as includePPH'
+				'examinations.include_pph as includePPH',
+				'examinations.created_by as createdBy'
 				)
 			->join('companies', 'examinations.company_id', '=', 'companies.id')
 			->join('users', 'users.company_id', '=', 'companies.id')
@@ -2231,22 +2254,19 @@ class ExaminationAPIController extends AppBaseController
 		;
 	}
 
-    private function setData($SPB, $days, $subject){
-        return array(
-            'customerName' => $SPB->customerName,
-            'customerEmail' => $SPB->customerEmail,
-            'subject' => $subject,
-            'SPBNumber' => $SPB->spbNumber,
-            'remainingDay' => 14-$days,
-            'dueDate' => Carbon::createFromFormat('Y-m-d H:i:s', $SPB->expiredDate)->format('d-m-Y'),
-            'dueHour' => Carbon::createFromFormat('Y-m-d H:i:s', $SPB->expiredDate)->format('H:i:s'),
-            'paymentMethod' => $SPB->paymentMethod,
-            'price' => "Rp " . number_format($SPB->price,2,',','.'),
-            'includePPH' => $SPB->includePPH
-        );
+    private function parsingSpbReminder($content, $user_name, $spb_number, $remainingDay, $expiredDate, $paymentMethod, $price, $includePPH){
+		$content = str_replace('@user_name', $user_name, $content);
+		$content = str_replace('@spb_number', $spb_number, $content);
+		$content = str_replace('@remainingDay', $remainingDay, $content);
+			$dueDate = Carbon::createFromFormat('Y-m-d H:i:s', $expiredDate)->format('d-m-Y');
+			$dueHour = Carbon::createFromFormat('Y-m-d H:i:s', $expiredDate)->format('H:i:s');
+		$content = str_replace('@dueDate', $dueDate, $content);
+		$content = str_replace('@dueHour', $dueHour, $content);
+			$price = "Rp " . number_format($price,2,',','.');
+		$content = str_replace('@price', $price, $content);
+		$content = str_replace('@paymentMethod', $paymentMethod, $content);
+			$includePPH = $includePPH ? '(Dengan PPH).' : '(Tanpa PPH).';
+		$content = str_replace('@includePPH', $includePPH, $content);
+		return $content;
 	}
-	
-
-
-
 }

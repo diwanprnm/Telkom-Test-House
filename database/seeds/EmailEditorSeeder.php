@@ -60,7 +60,7 @@ class EmailEditorSeeder extends Seeder
                 </div>
                 <div class="content" style="width:75%;background-color:rgba(255,255,255,1.00);border: 3px #ff3e41 solid;border-radius:15px;position:relative;margin-left:auto;margin-right:auto;padding-left:25px;padding-right:25px;padding-top:5px;padding-bottom:5px;">
                     <div style="text-align:right;">
-                        <img style="width:15%;" src="http://37.72.172.144/telkom-dds-web/public/assets/images/Telkom-Indonesia-Corporate-Logo1.jpg" alt="logo telkom">
+                        <img style="width:15%;" src="{{ url("images/logo_telkom.png") }}" alt="logo telkom">
                     </div>
                     <h3 style="font-family:Arial, serif; font-size:1.2em; color:rgba(110,110,110,1.00);"></h3>
                     <p style="font-style:italic; font-family:Helvetica, sans-serif; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
@@ -149,7 +149,7 @@ class EmailEditorSeeder extends Seeder
                 </div>
                 <div class="content" style="width:75%;background-color:rgba(255,255,255,1.00);border: 3px #ff3e41 solid;border-radius:15px;position:relative;margin-left:auto;margin-right:auto;padding-left:25px;padding-right:25px;padding-top:5px;padding-bottom:5px;">
                     <div style="text-align:right;">
-                        <img style="width:15%;" src="http://37.72.172.144/telkom-dds-web/public/assets/images/Telkom-Indonesia-Corporate-Logo1.jpg" alt="logo telkom">
+                        <img style="width:15%;" src="{{ url("images/logo_telkom.png") }}" alt="logo telkom">
                     </div>
                     <h3 style="font-family:Arial, serif; font-size:1.2em; color:rgba(110,110,110,1.00);"></h3>
                     <p style="font-style:italic; font-family:Helvetica, sans-serif; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
@@ -259,7 +259,7 @@ class EmailEditorSeeder extends Seeder
                 </div>
                 <div class="content" style="width:75%;background-color:rgba(255,255,255,1.00);border: 3px #ff3e41 solid;border-radius:15px;position:relative;margin-left:auto;margin-right:auto;padding-left:25px;padding-right:25px;padding-top:5px;padding-bottom:5px;">
                     <div style="text-align:right;">
-                        <img alt="telkom" style="width:15%;" src="http://37.72.172.144/telkom-dds-web/public/assets/images/Telkom-Indonesia-Corporate-Logo1.jpg">
+                        <img alt="telkom" style="width:15%;" src="{{ url("images/logo_telkom.png") }}">
                     </div>
                     <h3 style="font-family:Arial; font-size:1.2em; color:rgba(110,110,110,1.00);"></h3>
                     <p style="font-style:italic; font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
@@ -272,16 +272,12 @@ class EmailEditorSeeder extends Seeder
                         Berkenaan dengan pendaftaran uji @exam_type (@exam_type_desc) perangkat Bapak/Ibu yang sudah memenuhi proses uji fungsi, maka SPB dengan nomor <strong>@spb_number telah terbit dan dapat mengunduhnya di web </strong> <a href="https://www.telkomtesthouse.co.id">www.telkomtesthouse.co.id</a> atau lampiran email ini.
                         <br><br>
                         Kami sampaikan juga <strong>pembayaran SPB</strong> dilakukan melalui <strong>Virtual Account</strong> dengan pilihan sebagai berikut :
-                        <ul style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00);">
-                            @for ($i = 0; $i < count($payment_method->data->VA); $i++)
-                                <li>{{ $payment_method->data->VA[$i]->productName }}</li>
-                            @endfor
-                        </ul>
+                        @payment_method_list
                     </p>
                     <p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
                         Silakan klik tautan di bawah ini untuk melakukan proses pembayaran.
                         <br>
-                        <a href="{{ $link = url("pengujian/".$id."/pembayaran") }}"><p style="text-align:center">{{ $link }}</p></a>
+                        <a href="@link"><p style="text-align:center">@link</p></a>
                     </p>
                     <p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
                         Mohon periksa kembali biaya dan ketentuan-ketentuan yang berlaku demi kelancaran proses pembayaran.
@@ -359,12 +355,12 @@ class EmailEditorSeeder extends Seeder
                 </div>
                 <div class="content" style="width:75%;background-color:rgba(255,255,255,1.00);border: 3px #ff3e41 solid;border-radius:15px;position:relative;margin-left:auto;margin-right:auto;padding-left:25px;padding-right:25px;padding-top:5px;padding-bottom:5px;">
                     <div style="text-align:right;">
-                    <img alt="telkom" style="width:15%;" src={{ asset("images/logo_telkom.png") }} alt="logo telkom test house">
+                    <img alt="telkom" style="width:15%;" src="{{ url("images/logo_telkom.png") }}" alt="logo telkom test house">
                     </div>
                     <h3 style="font-family:Arial; font-size:1.2em; color:rgba(110,110,110,1.00);"></h3>
                     <p style="font-style:italic; font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
                         Kepada Yth.<br>
-                        Bapak/Ibu {{ $data["customerName"] }}<br><br>
+                        Bapak/Ibu @user_name<br><br>
                     </p>
                     
                 
@@ -374,14 +370,14 @@ class EmailEditorSeeder extends Seeder
                 
                     <p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
                         Kami memberitahukan bahwa terjadi perubahan harga biaya uji yang sebelum nya mengacu pada SPB 
-                        {{ $data["spbNumber"] }}, oleh karena itu kami menerbitkan revisi SPB dengan nomor {{ $data["spbRevisionNumber"] }} yang <strong>sudah terbit</strong> dan
+                        @spb_number, oleh karena itu kami menerbitkan revisi SPB dengan nomor @spbRevisionNumber yang <strong>sudah terbit</strong> dan
                         Bapak/Ibu <strong>dapat mengunduhnya di web <a href="www.telkomtesthouse.co.id">www.telkomtesthouse.co.id</a></strong> atau lampiran email ini.
                         Mohon untuk <strong>mengabaikan email sebelumnya.</strong>
                     </p>
                 
                     <p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
                         Silakan klik tautan di bawah ini untuk memilih cara pembayaran yang dikehendaki.
-                        <a href="{{ $data["link"] }}">{{ $data["link"] }}</a><!--#ini#-->
+                        <a href="@link">@link</a><!--#ini#-->
                     </p>
                 
                     <p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
@@ -461,32 +457,28 @@ class EmailEditorSeeder extends Seeder
                 </div>
                 <div class="content" style="width:75%;background-color:rgba(255,255,255,1.00);border: 3px #ff3e41 solid;border-radius:15px;position:relative;margin-left:auto;margin-right:auto;padding-left:25px;padding-right:25px;padding-top:5px;padding-bottom:5px;">
                     <div style="text-align:right;">
-                    <img alt="telkom" style="width:15%;" src={{ asset("images/logo_telkom.png") }} alt="logo telkom test house">
+                    <img alt="telkom" style="width:15%;" src="{{ url("images/logo_telkom.png") }}" alt="logo telkom test house">
                     </div>
                     <h3 style="font-family:Arial; font-size:1.2em; color:rgba(110,110,110,1.00);"></h3>
                     <p style="font-style:italic; font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
                         Kepada Yth.<br>
-                        Bapak/Ibu {{ $data["customerName"] }}<br><br>
+                        Bapak/Ibu @user_name<br><br>
                     </p>
                 
                     <p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-                        Kami memberitahukan kembali bahwa Surat Pemberitahuan Biaya (SPB) {{ $data["SPBNumber"] }}
+                        Kami memberitahukan kembali bahwa Surat Pemberitahuan Biaya (SPB) @spb_number
                         sudah terbit di <strong><a href="www.telkomtesthouse.co.id">www.telkomtesthouse.co.id</a></strong>
-                        dan Bapak/Ibu mempunyai sisa waktu {{ $data["remainingDay"] }} hari untuk pembayaran.
+                        dan Bapak/Ibu mempunyai sisa waktu @remainingDay hari untuk pembayaran.
                     </p>
                 
                     <p style="text-align:center; font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00);">
-                        Pada tanggal: {{ $data["dueDate"] }} <br>
-                        Jam: {{ $data["dueHour"] }}
+                        Pada tanggal: @dueDate <br>
+                        Jam: @dueHour
                     </p>
                 
                     <p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-                        Metode pembayaran yang telah dipilih adalah {{ $data["paymentMethod"] }} dengan nominal
-                        {{ $data["price"] }} @if ($data["includePPH"])
-                            (Dengan PPH).
-                        @else
-                            (Tanpa PPH).
-                        @endif
+                        Metode pembayaran yang telah dipilih adalah @paymentMethod dengan nominal
+                        @price @includePPH
                         Apabila Bapak/Ibu tidak melakukan pembayaran hingga tenggat waktu, Virtual Account akan otomatis tidak berlaku.
                     </p>
                 
@@ -565,7 +557,7 @@ class EmailEditorSeeder extends Seeder
                 </div>
                 <div class="content" style="width:75%;background-color:rgba(255,255,255,1.00);border: 3px #ff3e41 solid;border-radius:15px;position:relative;margin-left:auto;margin-right:auto;padding-left:25px;padding-right:25px;padding-top:5px;padding-bottom:5px;">
                     <div style="text-align:right;">
-                        <img style="width:15%;" src="http://37.72.172.144/telkom-dds-web/public/assets/images/Telkom-Indonesia-Corporate-Logo1.jpg" alt="logo telkom">
+                        <img style="width:15%;" src="{{ url("images/logo_telkom.png") }}" alt="logo telkom">
                     </div>
                     <h3 style="font-family:Arial, serif; font-size:1.2em; color:rgba(110,110,110,1.00);"></h3>
                     <p style="font-style:italic; font-family:Helvetica, sans-serif; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
@@ -646,7 +638,7 @@ class EmailEditorSeeder extends Seeder
                 </div>
                 <div class="content" style="width:75%;background-color:rgba(255,255,255,1.00);border: 3px #ff3e41 solid;border-radius:15px;position:relative;margin-left:auto;margin-right:auto;padding-left:25px;padding-right:25px;padding-top:5px;padding-bottom:5px;">
                     <div style="text-align:right;">
-                        <img style="width:15%;" src="http://37.72.172.144/telkom-dds-web/public/assets/images/Telkom-Indonesia-Corporate-Logo1.jpg" alt="logo telkom">
+                        <img style="width:15%;" src="{{ url("images/logo_telkom.png") }}" alt="logo telkom">
                     </div>
                     <h3 style="font-family:Arial, serif; font-size:1.2em; color:rgba(110,110,110,1.00);"></h3>
                     <p style="font-style:italic; font-family:Helvetica, sans-serif; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
@@ -733,7 +725,7 @@ class EmailEditorSeeder extends Seeder
                 </div>
                 <div class="content" style="width:75%;background-color:rgba(255,255,255,1.00);border: 3px #ff3e41 solid;border-radius:15px;position:relative;margin-left:auto;margin-right:auto;padding-left:25px;padding-right:25px;padding-top:5px;padding-bottom:5px;">
                     <div style="text-align:right;">
-                        <img style="width:15%;" src="http://37.72.172.144/telkom-dds-web/public/assets/images/Telkom-Indonesia-Corporate-Logo1.jpg" alt="logo telkom">
+                        <img style="width:15%;" src="{{ url("images/logo_telkom.png") }}" alt="logo telkom">
                     </div>
                     <h3 style="font-family:Arial, serif; font-size:1.2em; color:rgba(110,110,110,1.00);"></h3>
                     <p style="font-style:italic; font-family:Helvetica, sans-serif; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
@@ -815,7 +807,7 @@ class EmailEditorSeeder extends Seeder
                 </div>
                 <div class="content" style="width:75%;background-color:rgba(255,255,255,1.00);border: 3px #ff3e41 solid;border-radius:15px;position:relative;margin-left:auto;margin-right:auto;padding-left:25px;padding-right:25px;padding-top:5px;padding-bottom:5px;">
                     <div style="text-align:right;">
-                        <img style="width:15%;" src="http://37.72.172.144/telkom-dds-web/public/assets/images/Telkom-Indonesia-Corporate-Logo1.jpg" alt="logo telkom">
+                        <img style="width:15%;" src="{{ url("images/logo_telkom.png") }}" alt="logo telkom">
                     </div>
                     <h3 style="font-family:Arial, serif; font-size:1.2em; color:rgba(110,110,110,1.00);"></h3>
                     <p style="font-style:italic; font-family:Helvetica, sans-serif; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
@@ -896,7 +888,7 @@ class EmailEditorSeeder extends Seeder
                 </div>
                 <div class="content" style="width:75%;background-color:rgba(255,255,255,1.00);border: 3px #ff3e41 solid;border-radius:15px;position:relative;margin-left:auto;margin-right:auto;padding-left:25px;padding-right:25px;padding-top:5px;padding-bottom:5px;">
                     <div style="text-align:right;">
-                        <img style="width:15%;" src="http://37.72.172.144/telkom-dds-web/public/assets/images/Telkom-Indonesia-Corporate-Logo1.jpg" alt="logo telkom">
+                        <img style="width:15%;" src="{{ url("images/logo_telkom.png") }}" alt="logo telkom">
                     </div>
                     <h3 style="font-family:Arial, serif; font-size:1.2em; color:rgba(110,110,110,1.00);"></h3>
                     <p style="font-style:italic; font-family:Helvetica, sans-serif; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
