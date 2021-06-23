@@ -178,8 +178,8 @@
 									@endif
 									<div class="dv-dll">
 										<div class="form-group col-xs-12">
-											<label>{{ trans('translate.service_upload_another_file') }}</label><span class="text-danger required">*</span></label>
-											<input class="data-upload-berkas f1-file-dll @if (!$userData->filedll) required @endif" id="dllFile" name="dllFile" type="file" accept="application/pdf,image/*" data-target-id="f4-preview-12" data-old-filename="{{$userData->filedll}}">
+											<label>{{ trans('translate.service_upload_another_file') }}</label>
+											<input class="data-upload-berkas f1-file-dll" id="dllFile" name="dllFile" type="file" accept="application/pdf,image/*" data-target-id="f4-preview-12" data-old-filename="{{$userData->filedll}}">
 											<div id="attachment-file">*{{ trans('translate.maximum_filesize') }}</div>
 											<a id="dll-file" class="btn btn-link link-download-file">{{$userData->filedll}}</a>
 										</div>
