@@ -601,7 +601,7 @@ class ExaminationService
 		$ref_perangkat1,
 		$ref_perangkat2,
 		$sn_perangkat1,
-		$sn_perangkat2,
+		$sn_perangkat2
 	) {
 		$content = str_replace('@username', $username, $content);
 		$content = str_replace('@exam_type_desc', $exam_type_desc, $content);
