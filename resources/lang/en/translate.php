@@ -45,7 +45,7 @@ return [
 	'service_device_model'				=> 'Model/Type',
 	'service_device_test_reference'	 	=> 'Test Reference',
 	'service_device_document'			=> 'Supporting Documents',
-	'service_device_already_exist'		=> 'Device[Name, Manufacturer, Model, Capacity] and Examination Type is already exist!',
+	'service_device_already_exist'		=> 'Device[Name, Mark, Model, Capacity] and Examination Type is already exist!',
 	'service_device_not_6_months_yet'	=> "This device has failed before and it hasn't been past 6 months",
 	
 	'service_label_testing_site'		=> 'Test Location',
