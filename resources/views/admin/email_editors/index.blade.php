@@ -37,7 +37,7 @@
 				</div>
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table right">
-	                    <input id="search_value" type="text" placeholder="Search email editor" id="form-field-17" 
+	                    <input id="search_value" type="text" placeholder="Search" id="form-field-17" 
 							class="form-control" value="{{ $search }}">
 	                    <em class="ti-search"></em>
 	                </span>

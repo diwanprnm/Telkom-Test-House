@@ -459,14 +459,14 @@ class ExaminationService
      * @param  Request  $request
      * @return Response
      */
-    public function sendEmailNotification($exam, $device, $message, $subject){
+    public function sendEmailNotification($exam, $device, $dir_name, $subject){
 		$email_editors = new EmailEditorService();
-		$email = $email_editors->selectBy($message);
+		$email = $email_editors->selectBy($dir_name);
 
 		if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			$user = User::findOrFail($exam->created_by);
 			$exam_type = ExaminationType::findOrFail($exam->examination_type_id);
-			$content = $this->parsingSendEmailRegistration($email->content, $user->name, $exam_type->description, $exam_type->name, $device->name, $exam->is_loc_test);
+			$content = $this->parsingSendEmailRegistration($email->content, $user->name, $exam_type->description, $exam_type->name);
 
 			$send_email = Mail::send('emails.editor', array(
 					'content' => $content
@@ -478,11 +478,9 @@ class ExaminationService
         return true;
     }
 
-	public function parsingSendEmailRegistration($content, $username, $exam_type_desc, $exam_type, $dev_name, $is_loc_test) {
-		$content = str_replace('@is_loc_test', $is_loc_test, $content);
-		$content = str_replace('@username', $username, $content);
-		$content = str_replace('@dev_name', $dev_name, $content);
-		$content = str_replace('@examp_type_desc', $exam_type_desc, $content);
+	public function parsingSendEmailRegistration($content, $user_name, $exam_type_desc, $exam_type) {
+		$content = str_replace('@user_name', $user_name, $content);
+		$content = str_replace('@exam_type_desc', $exam_type_desc, $content);
 		$content = str_replace('@exam_type', $exam_type, $content);
 		return $content;
 	}
@@ -550,29 +548,28 @@ class ExaminationService
 		$email_editors = new EmailEditorService();
 		$email = $email_editors->selectBy($message);
 
-		$content = $this->parsingSendEmailRevisi(
-			$email->content,
-			$user, 
-			$exam_type, 
-			$exam_type_desc, 
-			$perangkat1, 
-			$perangkat2, 
-			$merk_perangkat1, 
-			$merk_perangkat2, 
-			$kapasitas_perangkat1, 
-			$kapasitas_perangkat2, 
-			$pembuat_perangkat1, 
-			$pembuat_perangkat2, 
-			$model_perangkat1, 
-			$model_perangkat2, 
-			$ref_perangkat1, 
-			$ref_perangkat2, 
-			$sn_perangkat1, 
-			$sn_perangkat2, 
-		);
-
-        if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
+		if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			$data = User::findOrFail($user);
+			$content = $this->parsingSendEmailRevisi(
+				$email->content,
+				$data->name, 
+				$exam_type, 
+				$exam_type_desc, 
+				$perangkat1, 
+				$perangkat2, 
+				$merk_perangkat1, 
+				$merk_perangkat2, 
+				$kapasitas_perangkat1, 
+				$kapasitas_perangkat2, 
+				$pembuat_perangkat1, 
+				$pembuat_perangkat2, 
+				$model_perangkat1, 
+				$model_perangkat2, 
+				$ref_perangkat1, 
+				$ref_perangkat2, 
+				$sn_perangkat1, 
+				$sn_perangkat2
+			);
 			Mail::send('emails.editor', array(
 					'content' => $content,
 				), function ($m) use ($data,$subject) {
@@ -585,7 +582,7 @@ class ExaminationService
 
 	public function parsingSendEmailRevisi(
 		$content,
-		$username,
+		$user_name,
 		$exam_type,
 		$exam_type_desc,
 		$perangkat1,
@@ -603,7 +600,7 @@ class ExaminationService
 		$sn_perangkat1,
 		$sn_perangkat2
 	) {
-		$content = str_replace('@username', $username, $content);
+		$content = str_replace('@user_name', $user_name, $content);
 		$content = str_replace('@exam_type_desc', $exam_type_desc, $content);
 		$content = str_replace('@exam_type', $exam_type, $content);
 		$content = str_replace('@perangkat1', $perangkat1, $content);
