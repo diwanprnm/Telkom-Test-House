@@ -648,9 +648,7 @@ class EmailEditorSeeder extends Seeder
                         <br><br>
                     </p>
                     <p style="font-family:Helvetica, sans-serif; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-                        Permohonan uji perangkat anda di Telkom Test House <strong>sudah selesai</strong>. @if($is_loc_test == 0)Perangkat sampel uji agar segera diambil kembali sebagai syarat untuk @else Anda dapat @endif mengunduh Laporan Hasil Uji (LHU) dan Sertifikat di <a href="www.telkomtesthouse.co.id">www.telkomtesthouse.co.id</a> @if($is_loc_test == 0) .
-                        <br>
-                        Dokumen tersebut nanti dapat anda unduh @endif dengan cara <strong><i>masuk/login</i></strong> terlebih dahulu, lalu pilih menu <strong><i>pengujian/testing > status pengujian/progress</i></strong> dan tekan tombol <strong>unduh laporan & unduh sertifikat/<i>download report & download certificate</i></strong> yang terletak <strong>di kanan bawah</strong> dari permohonan uji anda.
+                        Permohonan uji perangkat anda di Telkom Test House <strong>sudah selesai</strong>. @text1 mengunduh Laporan Hasil Uji (LHU) dan Sertifikat di <a href="www.telkomtesthouse.co.id">www.telkomtesthouse.co.id</a> @text2 dengan cara <strong><i>masuk/login</i></strong> terlebih dahulu, lalu pilih menu <strong><i>pengujian/testing > status pengujian/progress</i></strong> dan tekan tombol <strong>unduh laporan & unduh sertifikat/<i>download report & download certificate</i></strong> yang terletak <strong>di kanan bawah</strong> dari permohonan uji anda.
                         <br><br>
                         Terimakasih atas kerjasama anda.
                         <br>
@@ -761,6 +759,83 @@ class EmailEditorSeeder extends Seeder
                 'updated_at' => date("Y-m-d H:i:s")
             ],[
                 'id' => '9', 
+                'name' => 'Akun Baru', 
+                'subject' => 'Permintaan Aktivasi Data Akun Baru', 
+                'dir_name' => 'emails.registrasiCust', 
+                'content' => '<!doctype html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>DDB</title>
+                <style>
+                    .header{
+                        margin-top:2%;
+                        margin-bottom:2%;
+                        
+                        }
+                    .content{
+                        width:80%;
+                        min-height:450px;
+                        background-color:rgba(255,255,255,1.00);
+                        border: 3px #7bd4f8 solid;
+                        border-radius:15px;
+                        position:relative;
+                        margin-left:auto;
+                        margin-right:auto;
+                        padding-left:25px;
+                        padding-right:25px;
+                        padding-top:5px;
+                        padding-bottom:5px;
+                        
+                        }
+                    
+                    @font-face{
+                        font-family:font-bold;
+                        src:url("http://37.72.172.144/ficlip/asset_mail/HVD%20Fonts%20-%20BrandonText-Bold.otf");
+                    }
+                    @font-face{
+                        font-family:font-regular;
+                        src:url("http://37.72.172.144/ficlip/asset_mail/HVD%20Fonts%20-%20BrandonText-Regular.otf");
+                    }
+                </style>
+                </head>
+                <body>
+                <div class="header" style="margin-top:2%;margin-bottom:2%;">
+                    
+                </div>
+                <div class="content" style="width:75%;background-color:rgba(255,255,255,1.00);border: 3px #ff3e41 solid;border-radius:15px;position:relative;margin-left:auto;margin-right:auto;padding-left:25px;padding-right:25px;padding-top:5px;padding-bottom:5px;">
+                    <div style="text-align:right;">
+                        <img style="width:15%;" src="{{ url("images/logo_telkom.png") }}" alt="logo telkom">
+                    </div>
+                    <h3 style="font-family:Arial, serif; font-size:1.2em; color:rgba(110,110,110,1.00);"></h3>
+                    <p style="font-style:italic; font-family:Helvetica, sans-serif; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
+                        <strong>== PEMBERITAHUAN ==</strong>
+                        <br><br>
+                    </p>
+                    <p style="font-family:Helvetica, sans-serif; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
+                        Kastamer atas nama @user_name dan email @user_email, mengajukan permohonan aktivasi akun baru.
+                        <br><br>
+                        Silakan lakukan konfirmasi terhadap nama di atas. Data selengkapnya, dapat dilihat pada aplikasi. 
+                        <br><br>
+                        Salam hangat,
+                        <br>
+                        ---
+                        <br><br>
+                    </p>
+                    <p style="font-style:italic; font-family:Helvetica, sans-serif; font-size:0.88em; color:rgba(146,146,146,1.00); margin-top:-7px;">
+                        Email ini dihasilkan secara otomatis oleh sistem dan mohon untuk tidak membalas email ini. Informasi lebih lanjut hubungi User Relation di <strong>0812 2483 7500</strong> (Telepon & WA) atau <strong>cstelkomtesthouse@gmail.com.</strong>
+                    </p>
+                </div>
+                
+                </body>
+                </html>',
+                'signature' => '',
+                'created_by' => '1',
+                'updated_by' => '1',
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ],[
+                'id' => '10', 
                 'name' => 'Perusahaan dan Akun Baru', 
                 'subject' => 'Permintaan Aktivasi Data Perusahaan dan Akun Baru', 
                 'dir_name' => 'emails.registrasiCustCompany', 
@@ -841,7 +916,7 @@ class EmailEditorSeeder extends Seeder
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
             ],[
-                'id' => '10', 
+                'id' => '11', 
                 'name' => 'Permohonan Edit Perusahaan', 
                 'subject' => 'Permintaan Edit Data Perusahaan', 
                 'dir_name' => 'emails.editCompany', 

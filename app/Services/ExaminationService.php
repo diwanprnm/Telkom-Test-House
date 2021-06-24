@@ -464,15 +464,18 @@ class ExaminationService
 		switch ($dir_name) {
 			case 'emails.registration':
 				$content = $this->parsingSendEmailRegistration($email->content, $user->name, $exam_type->description, $exam_type->name);
+				$subject = $email->subject;
 				break;
 			case 'emails.pembayaran':
 				$content = $this->parsingEmailPembayaran($email->content, $user->name);
+				$subject = $email->subject;
 				break;
 			case 'emails.sertifikat':
 				$content = $this->parsingEmailSertifikat($email->content, $user->name, $exam->is_loc_test);
 				break;
 			default:
 				$content = null;
+				$subject = null;
 				break;
 		}
 
@@ -501,7 +504,10 @@ class ExaminationService
 
 	public function parsingEmailSertifikat($content, $user_name, $is_loc_test){
 		$content = str_replace('@user_name', $user_name, $content);
-		$content = str_replace('$is_loc_test', $is_loc_test, $content);
+			$text1 = $is_loc_test ? 'Anda dapat' : 'Perangkat sampel uji agar segera diambil kembali sebagai syarat untuk';
+			$text2 = $is_loc_test == 0 ? ' .<br>Dokumen tersebut nanti dapat anda unduh' : '';
+		$content = str_replace('@text1', $text1, $content);
+		$content = str_replace('@text2', $text2, $content);
 		return $content;
 	}
 	

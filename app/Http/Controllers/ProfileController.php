@@ -538,24 +538,33 @@ class ProfileController extends Controller
 
 	public function parseEditCompany($content, $user_name, $user_email, $description){
 		$content = str_replace('@user_name', $user_name, $content);
-		$content = str_replace('@user_mail', $user_email, $content);
+		$content = str_replace('@user_email', $user_email, $content);
 		$content = str_replace('@desc', $description, $content);
 		return $content;
 	}
 	
-	public function sendRegistrasi($user_name, $user_email, $message, $subject)
+	public function sendRegistrasi($user_name, $user_email, $dir_name, $subject)
     {
+		$email_editors = new EmailEditorService();
+		$email = $email_editors->selectBy($dir_name);
+		$content = $this->parseEmailRegistration($email->content, $user_name, $user_email);
+
         if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
-			Mail::send($message, array(
-				self::USER_NAME2 => $user_name,
-				self::USER_EMAIL => $user_email
-				), function ($m) use ($subject) {
-				$m->to(self::EMAIL_STEL)->subject($subject);
+			Mail::send('emails.editor', array(
+					'content' => $content
+				), function ($m) use ($email) {
+				$m->to(self::EMAIL_STEL)->subject($email->subject);
 			});
 		}
 
         return true;
     }
+
+	public function parseEmailRegistration($content, $user_name, $user_email){
+		$content = str_replace('@user_name', $user_name, $content);
+		$content = str_replace('@user_email', $user_email, $content);
+		return $content;
+	}
 	
 	public function sendRegistrasiwCompany($user_name, $user_email, $comp_name, $comp_address, $comp_email, $comp_phone, $message, $subject)
     {
@@ -566,8 +575,8 @@ class ProfileController extends Controller
         if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			Mail::send('emails.editor', array(
 					'content' => $content
-				), function ($m) use ($subject) {
-				$m->to(self::EMAIL_STEL)->subject($subject);
+				), function ($m) use ($email) {
+				$m->to(self::EMAIL_STEL)->subject($email->subject);
 			});
 		}
 
