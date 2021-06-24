@@ -302,7 +302,7 @@
 				alert('Oops! Terjadi kesalahan pada server.');
 			}
 		});
-		return $isUploaded;
+		return isUploaded;
 	}
 
 
@@ -337,9 +337,9 @@
 				if(!form.valid()){
 					return false;
 				}
-				responseuploadForm = checkSNjnsPengujian();
-				if (!responseuploadForm){
-					return responseuploadForm;
+				responseUploadForm = uploadForm();
+				if (!responseUploadForm){
+					return responseUploadForm;
 				}
 			}
 
