@@ -162,7 +162,7 @@
 										<div class="form-group col-xs-12">
 											<label>{{ trans('translate.service_upload_reference_test') }}<span class="text-danger"></span></label>
 											<input class="data-upload-berkas f1-file-ref-uji" id="refUjiFile" name="refUjiFile" type="file" accept="application/pdf,image/*" data-target-id="f4-preview-11" data-old-filename="{{$userData->fileref_uji}}">
-											<div id="attachment-file"> *{{ trans('translate.maximum_filesize') }} </div>
+											<div class="attachment-file"> *{{ trans('translate.maximum_filesize') }} </div>
 											<a id="ref-uji-file" class="btn btn-link link-download-file" >{{$userData->fileref_uji}}</a>
 										</div> 
 									@endunless
@@ -171,7 +171,7 @@
 											<div class="form-group col-xs-12">
 												<label>{{ trans('translate.service_upload_sp3') }}<span class="text-danger required">*</span></label>
 												<input class="data-upload-berkas f1-file-sp3 @if (!$userData->filesrt_sp3) required @endif" id="sp3File" name="sp3File" type="file" accept="application/pdf,image/*" data-target-id="f4-preview-13" data-old-filename="{{$userData->filesrt_sp3}}">
-												<div id="attachment-file"> *{{ trans('translate.maximum_filesize') }} </div>
+												<div class="attachment-file"> *{{ trans('translate.maximum_filesize') }} </div>
 												<a id="sp3-file" class="btn btn-link link-download-file">{{$userData->filesrt_sp3}}</a>
 											</div>
 										</div> 
@@ -180,7 +180,7 @@
 										<div class="form-group col-xs-12">
 											<label>{{ trans('translate.service_upload_another_file') }}</label>
 											<input class="data-upload-berkas f1-file-dll" id="dllFile" name="dllFile" type="file" accept="application/pdf,image/*" data-target-id="f4-preview-12" data-old-filename="{{$userData->filedll}}">
-											<div id="attachment-file">*{{ trans('translate.maximum_filesize') }}</div>
+											<div class="attachment-file"> *{{ trans('translate.maximum_filesize') }}</div>
 											<a id="dll-file" class="btn btn-link link-download-file">{{$userData->filedll}}</a>
 										</div>
 									</div>
@@ -220,9 +220,11 @@
 	});
 
 	const checkSNjnsPengujian = () =>{
-		return $.ajax({
+		isUploaded = false;
+		$.ajax({
 			type:'POST',
 			url : "../../cekPermohonan",
+			async: false,
 			data: {
 				'_token':"{{csrf_token()}}",
 				'exam_id' : $('#hide_exam_id').val(),
@@ -239,12 +241,15 @@
 			success:(response) => {
 				$("body").removeClass("loading");  
 				result = response['status'];
+				console.log(response);
 				if(response['code'] == 1){
 					formWizard.steps("previous");
 					alert("{{trans('translate.service_device_already_exist') }}");
 				}else if (response['code'] == 2){
 					formWizard.steps("previous");
 					alert("{{ trans('translate.service_device_not_6_months_yet') }}");
+				}else{
+					isUploaded = true;
 				}
 			},
 			error:(response)=>{
@@ -253,6 +258,7 @@
 				alert('Oops! Terjadi kesalahan pada server.');
 			}
 		});
+		return isUploaded;
 	}
 
 	const uploadForm = () =>{
@@ -274,9 +280,10 @@
 		formPermohonan = new FormData($("#form-permohonan")[0]);
 		formPermohonan.set('test_reference',examinationReferenceField);
 		//uplaoding form
-		return $.ajax({
+		$.ajax({
 			type:'POST',
 			url : "../../updatePermohonan",
+			async: false,
 			data: formPermohonan,
 			processData: false,
 			contentType: false,
@@ -295,6 +302,7 @@
 				alert('Oops! Terjadi kesalahan pada server.');
 			}
 		});
+		return $isUploaded;
 	}
 
 
@@ -319,14 +327,20 @@
 					$('.chosen-choices .search-field input').addClass('error');
 					return false;
 				}
-				checkSNjnsPengujian();
+				responseCheckSNjns = checkSNjnsPengujian();
+				if (!responseCheckSNjns){
+					return responseCheckSNjns;
+				}
 			}
 
 			if (currentIndex == 1 && newIndex == 2){
 				if(!form.valid()){
 					return false;
 				}
-				uploadForm();
+				responseuploadForm = checkSNjnsPengujian();
+				if (!responseuploadForm){
+					return responseuploadForm;
+				}
 			}
 
 

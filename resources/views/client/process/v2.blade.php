@@ -157,7 +157,7 @@
 										<label>{{ trans('translate.service_upload_reference_test') }}<span class="text-danger"></span></label>
 										<input class="data-upload-berkas f1-file-ref-uji" id="refUjiFile" name="refUjiFile" type="file" accept="application/pdf,image/*">
 										<div id="ref-uji-file"></div>
-										<div id="attachment-file">
+										<div class="attachment-file">
 											*{{ trans('translate.maximum_filesize') }}
 										</div>
 									</div> 
@@ -168,7 +168,7 @@
 											<label>{{ trans('translate.service_upload_sp3') }}<span class="text-danger required">*</span></label>
 											<input class="data-upload-berkas f1-file-sp3 required" id="sp3File" name="sp3File" type="file" accept="application/pdf,image/*">
 											<div id="sp3-file"></div>
-											<div id="attachment-file">
+											<div class="attachment-file">
 												*{{ trans('translate.maximum_filesize') }}
 											</div>
 										</div>
@@ -176,10 +176,10 @@
 								@endif
 								<div class="dv-dll">
 									<div class="form-group col-xs-12">
-										<label>{{ trans('translate.service_upload_another_file') }}
+										<label>{{ trans('translate.service_upload_another_file') }}</label>
 										<input class="data-upload-berkas f1-file-dll" id="dllFile" name="dllFile" type="file" accept="application/pdf,image/*" >
 										<div id="dll-file"></div>
-										<div id="attachment-file">
+										<div class="attachment-file">
 											*{{ trans('translate.maximum_filesize') }}
 										</div>
 									</div>
@@ -241,9 +241,11 @@
 	});
 
 	const checkSNjnsPengujian = () =>{
-		return $.ajax({
+		isUploaded = false;
+		$.ajax({
 			type:'POST',
 			url : "../cekPermohonan",
+			async: false,
 			data: {
 				'_token':"{{csrf_token()}}",
 				'exam_id' : $('#hide_exam_id').val(),
@@ -266,6 +268,8 @@
 				}else if (response['code'] == 2){
 					formWizard.steps("previous");
 					alert("{{ trans('translate.service_device_not_6_months_yet') }}");
+				} else {
+					isUploaded = true;
 				}
 			},
 			error:(response)=>{
@@ -274,6 +278,7 @@
 				alert('Oops! Terjadi kesalahan pada server.');
 			}
 		});
+		return isUploaded;
 	}
 
 	const uploadForm = () =>{
@@ -350,14 +355,20 @@
 				}else if (!form.valid()){
 					return false;	
 				}
-				return checkSNjnsPengujian();
+				responseCheckSNjns = checkSNjnsPengujian();
+				if (!responseCheckSNjns){
+					return responseCheckSNjns;
+				}
 			}
 
 			if (currentIndex == 1 && newIndex == 2){
 				if(!form.valid()){
 					return false;
 				}
-				uploadForm();
+				responseuploadForm = checkSNjnsPengujian();
+				if (!responseuploadForm){
+					return responseuploadForm;
+				}
 			}
 
 			if(newIndex < currentIndex ){ 
