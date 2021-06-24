@@ -867,7 +867,6 @@ class ExaminationService
 		if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			//get user (name and email)
 			$user = User::findOrFail($exam->created_by);
-
 			
 			//format data for email
 			$dataEmail = array(
