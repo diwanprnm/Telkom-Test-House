@@ -14151,6 +14151,9 @@ body.loading .overlay {
     font-size: 14px;
     margin-top: 10px;
 }
+.attachment-file {
+    font-size: 8px;
+}
 .list-progress .number p {
     font-size: 12px;
     width: 70px;
