@@ -358,7 +358,7 @@
 	        		if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
 			        $( ".number li:eq("+(newIndex)+" ) button" ).removeClass("done").addClass("active");
 			        $( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active");
-			        if (newIndex == 6) {
+			        if (newIndex == 2) {
 			        	$( ".number li:eq("+(newIndex)+" ) button" ).removeClass("active").addClass("done");
 			        	$( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active").addClass("done");
 			        }
