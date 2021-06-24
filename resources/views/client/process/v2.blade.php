@@ -102,7 +102,7 @@
 
 								<div class="form-group">
 									<label for="f1-jns-perusahaan" class="text-bold required">{{ trans('translate.service_company_type') }}: </label>
-									<input type="radio" name="jns_perusahaan" value="Agen" placeholder="{{ trans('translate.service_company_agent') }}"  checked>
+									<input type="radio" name="jns_perusahaan" value="Agen" placeholder="{{ trans('translate.service_company_agent') }}"  checked></label>
 									<input type="radio" name="jns_perusahaan" value="Pabrikan" placeholder="{{ trans('translate.service_company_branch') }}" >
 								</div>
 								<div class="form-group txt-ref-perangkat">
@@ -322,7 +322,7 @@
 				alert('Oops! Terjadi kesalahan pada server.');
 			}
 		});
-		return $isUploaded;
+		return isUploaded;
 	}
 
 
@@ -365,9 +365,9 @@
 				if(!form.valid()){
 					return false;
 				}
-				responseuploadForm = checkSNjnsPengujian();
-				if (!responseuploadForm){
-					return responseuploadForm;
+				responseUploadForm = uploadForm();
+				if (!responseUploadForm){
+					return responseUploadForm;
 				}
 			}
 

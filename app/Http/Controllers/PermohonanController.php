@@ -629,21 +629,21 @@ class PermohonanController extends Controller
 				'inputName' => 'refUjiFile',
 				'path' => self::MEDIA_EXAMINATION_LOC.$exam_id."/",
 				'prefix' => "ref_uji_",
-				'oldFile' => $request->input(self::HIDE_REF_UJI_FILE, ""),
+				'oldFile' => $request->input(self::HIDE_REF_UJI_FILE, ''),
 				'attachName' => 'Referensi Uji'
 			],
 			'dll' => [
 				'inputName' => 'dllFile',
 				'path' => self::MEDIA_EXAMINATION_LOC.$exam_id."/",
 				'prefix' => "dll_",
-				'oldFile' => $request->input(self::HIDE_DLL_FILE, ""),
+				'oldFile' => $request->input(self::HIDE_DLL_FILE, ''),
 				'attachName' => 'File Lainnya'
 			],
 			'sp3' => [
 				'inputName' => 'sp3File',
 				'path' => self::MEDIA_EXAMINATION_LOC.$exam_id."/",
 				'prefix' => "sp3_",
-				'oldFile' => $request->input(self::HIDE_SP3_FILE, ""),
+				'oldFile' => $request->input(self::HIDE_SP3_FILE, ''),
 				'attachName' => 'SP3'
 			]
 		);
@@ -660,12 +660,14 @@ class PermohonanController extends Controller
 			$fileService->upload( $request[$fileDetail[$type]['inputName']], $fileProperties);
 			$uploadedFileName = $fileService->isUploaded() ? $fileService->getFileName() : $fileDetail[$type]['oldFile'];
 			//TODO input examination attachment();
-			$examinationAttachment = DB::table('examination_attachments')
-				->where('examination_id', '=', $exam_id)
+			
+			$examinationAttachment = ExaminationAttach::where('examination_id', '=', $exam_id)
 				->where('name', '=', $fileDetail[$type]['attachName'])
-				->get()
-			;
-			if (count($examinationAttachment)){
+				->where('name', '=', $fileDetail[$type]['attachName'])
+				->first();
+
+			//dd($examinationAttachment);
+			if (($examinationAttachment)){
 				$examinationAttachment->attachment = $uploadedFileName;
 				$examinationAttachment->updated_by = Auth::user()->id;
 				$examinationAttachment->updated_at = Carbon::now();
