@@ -56,11 +56,19 @@ table {
 							Manage General Information
 						</legend>
 						<div class="row">
-						 	<div class="col-md-12">
+						 	<div class="col-md-3">
 								<div class="form-group">
 									<label>
 										<input type="checkbox" id="is_poh" name="is_poh">
 										POH
+									</label>
+								</div> 
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label>
+										<input checked="checked" type="checkbox" id="is_send_email_active" name="is_send_email_active">
+										Aktifkan Send Email
 									</label>
 								</div> 
 							</div>
@@ -95,7 +103,7 @@ table {
 								<div class="modal-content">
 									<div class="modal-header">
 										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-										<h4 class="modal-title"><em class="fa fa-eyes-open"></em>Setting Manager URel atau POH Akan Diganti, Mohon Berikan Keterangan!</h4>
+										<h4 class="modal-title"><em class="fa fa-eyes-open"></em>Setting Manager URel, POH dan/atau Aktifasi Send Email Akan Diganti, Mohon Berikan Keterangan!</h4>
 									</div>
 									
 									<div class="modal-body">
