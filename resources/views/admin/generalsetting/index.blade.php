@@ -147,6 +147,18 @@ table {
 @if($data)
 <script type="text/javascript">
 	@php
+		if(isset($data[2]) && $data[2]->is_active) {
+	@endphp
+			$('#is_send_email_active').prop('checked', true);
+	@php
+		} else {
+	@endphp
+		$('#is_send_email_active').prop('checked', false);
+	@php
+		}
+	@endphp
+
+	@php
 		if(isset($data[1]) && $data[1]->is_active){
 			@endphp		
 			$('#is_poh').prop('checked', true);
