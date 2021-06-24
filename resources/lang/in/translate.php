@@ -48,7 +48,7 @@ return [
 	'service_device_already_exist'	=> 'Perangkat[Nama, Merk, Model, Kapasitas] dan Jenis Pengujian sudah ada!',
 	'service_device_not_6_months_yet' => 'Perangkat pada jenis pengujian ini telah gagal sebelumnya dan belum melewati masa 6 bulan.',
 	
-	'service_label_testing_site'		=> 'Lokasi Pengetesan',
+	'service_label_testing_site'		=> 'Lokasi Pengujian',
 	'service_lab_testing'				=> "Uji Lab Telkom",
 	'service_loc_testing'				=> "Uji Lokasi",
 	

@@ -108,7 +108,7 @@
 								<div class="form-group txt-ref-perangkat">
 									<label for="test_reference">{{ trans('translate.service_device_test_reference') }} *</label>
 									<select @unless($jns_pengujian == 'qa') multiple @endunless name="test_reference[]" placeholder="{{ trans('translate.service_device_test_reference') }}" id="test_reference" class="chosen-select"> 
-										<option value="" selected>{{ trans('translate.examination_choose_stel') }}</option>
+										@if($jns_pengujian == 'qa')<option value="" selected disabled>{{ trans('translate.examination_choose_stel') }}</option>@endif
 										@foreach($data_stels as $item)
 											@if(in_array($item->lab,$data_layanan_not_active))
 												<option value="" disabled>{{ $item->stel }} || {{ $item->device_name }}</option>
