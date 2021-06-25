@@ -527,7 +527,9 @@ class ProfileController extends Controller
 
         if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			Mail::send('emails.editor', array(
-					'content' => $content
+					'logo' => $email->logo,
+					'content' => $content,
+					'signature' => $email->signature
 				), function ($m) use ($subject) {
 				$m->to(self::EMAIL_STEL)->subject($subject);
 			});
@@ -551,7 +553,9 @@ class ProfileController extends Controller
 
         if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			Mail::send('emails.editor', array(
-					'content' => $content
+					'logo' => $email->logo,
+					'content' => $content,
+					'signature' => $email->signature
 				), function ($m) use ($email) {
 				$m->to(self::EMAIL_STEL)->subject($email->subject);
 			});
@@ -574,7 +578,9 @@ class ProfileController extends Controller
 
         if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			Mail::send('emails.editor', array(
-					'content' => $content
+					'logo' => $email->logo,
+					'content' => $content,
+					'signature' => $email->signature
 				), function ($m) use ($email) {
 				$m->to(self::EMAIL_STEL)->subject($email->subject);
 			});

@@ -54,7 +54,6 @@
 									<th class="center" id="name">Nama</th>
 									<th class="center" id="subject">Subjek Email</th>
 									<th class="center" id="dir_file">Direktori File</th>
-									<th class="center" id="signature">Signature</th>
 									<th class="center" id="action">Aksi</th>
 								</tr>
 							</thead>
@@ -63,15 +62,10 @@
 								@foreach($data as $item)
 									<tr>
 										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
-										<td class="center">{{ $item->name }}</td>
-										<td class="center">{{ $item->subject }}</td>
-										<td class="center">{{ $item->dir_name }}</td>
-										<td class="center">
-                                            @if($item->signature != '')
-                                            <a href="{{ URL::to('/admin/email_editors/media/'.$data->id.'/signature') }}" target="_blank">Lihat File Signature</a>
-                                            @endif
-                                        </td>
-										<td class="center">
+										<td class="left">{{ $item->name }}</td>
+										<td class="left">{{ $item->subject }}</td>
+										<td class="left">{{ $item->dir_name }}</td>
+										<td class="left">
 											<div>
 												<a href="{{URL::to('admin/email_editors/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
 												{!! Form::open(array('url' => 'admin/email_editors/'.$item->id, 'method' => 'DELETE')) !!}
@@ -162,14 +156,14 @@
 	        }
 	    });
 
-	    document.getElementById("filter").onclick = function() {
-            var baseUrl = "{{URL::to('/')}}";
-            var params = {};
-			var search_value = document.getElementById("search_value").value;
+	    // document.getElementById("filter").onclick = function() {
+        //     var baseUrl = "{{URL::to('/')}}";
+        //     var params = {};
+		// 	var search_value = document.getElementById("search_value").value;
 
-			params['search'] = search_value;
-			document.location.href = baseUrl+'/admin/email_editors?'+jQuery.param(params);
-	    };
+		// 	params['search'] = search_value;
+		// 	document.location.href = baseUrl+'/admin/email_editors?'+jQuery.param(params);
+	    // };
 	});
 </script>>
 @endsection

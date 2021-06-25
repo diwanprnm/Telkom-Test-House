@@ -481,7 +481,9 @@ class ExaminationService
 
 		if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			Mail::send('emails.editor', array(
-					'content' => $content
+					'logo' => $email->logo,
+					'content' => $content,
+					'signature' => $email->signature
 				), function ($m) use ($user,$subject) {
 				$m->to($user->email)->subject($subject);
 			}); 
@@ -521,7 +523,9 @@ class ExaminationService
 			$content = $this->parsingSendEmailNotification_wAttach($email->content, $data->name, $exam_type_desc, $exam_type, $spb_number, $exam_id);
 
 			Mail::send('emails.editor', array(
-					'content' => $content
+					'logo' => $email->logo,
+					'content' => $content,
+					'signature' => $email->signature
 				), function ($m) use ($data,$subject,$attachment) {
 				$m->to($data->email)->subject($subject);
 				$m->attach($attachment);
@@ -609,7 +613,9 @@ class ExaminationService
 				$sn_perangkat2
 			);
 			Mail::send('emails.editor', array(
+					'logo' => $email->logo,
 					'content' => $content,
+					'signature' => $email->signature
 				), function ($m) use ($data,$subject) {
 				$m->to($data->email)->subject($subject);
 			});
@@ -667,7 +673,9 @@ class ExaminationService
 			$data = User::findOrFail($user);
 			$content = $this->parsingDataEmailFailure($email->content, $data->name, $exam_type, $exam_type_desc, $tahap, $keterangan);
 			Mail::send('emails.editor', array(
-				'content' => $content
+					'logo' => $email->logo,
+					'content' => $content,
+					'signature' => $email->signature
 				), function ($m) use ($data,$email) {
 				$m->to($data->email)->subject($email->subject);
 			});
@@ -977,7 +985,9 @@ class ExaminationService
 			$content = $this->parsingSendRevision($email->content, $user->name, $exam->spb_number, $spbRevisionNumber, $exam->id);
 
 			Mail::send('emails.editor', array(
-					'content' => $content
+					'logo' => $email->logo,
+					'content' => $content,
+					'signature' => $email->signature
 				), function ($m) use ($user,$exam) {
 				$m->to($user->email)->subject("Revisi Surat Pemberitahuan Biaya (SPB) untuk ".$exam->function_test_NO);
 			}); 

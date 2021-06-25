@@ -18,8 +18,9 @@ class CreateEmailEditorTable extends Migration
             $table->string('name');
             $table->string('subject');
             $table->string('dir_name');
+            $table->string('logo');
             $table->text('content');
-            $table->string('signature');
+            $table->text('signature');
             $table->uuid('created_by');
             $table->uuid('updated_by');
             $table->timestamps();

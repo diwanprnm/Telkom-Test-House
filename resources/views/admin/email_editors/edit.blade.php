@@ -54,7 +54,7 @@
 									<label>
 										Direktori File *
 									</label>
-									<input type="text" name="dir_name" class="form-control" placeholder="Direktori File" value="{{ $data->dir_name }}" required>
+									<input type="text" name="dir_name" class="form-control" placeholder="Direktori File" value="{{ $data->dir_name }}" required disabled>
 								</div>
 							</div>
 	                        <div class="col-md-12">
@@ -68,18 +68,6 @@
 									<textarea type="text" id="content" name="content" class="form-control" placeholder="Konten Email ..."><?= $content ?></textarea>
 								</div>
 							</div>
-	            			<div class="col-md-12">
-								<div class="form-group">
-									<label>
-										Signature
-									</label>
-									@if($data->signature != '')
-										<a href="{{ URL::to('/admin/email_editors/media/'.$data->id.'/signature') }}" target="_blank">Lihat File Signature</a>
-									@endif
-									<input type="file" id="signature" name="signature" accept="application/pdf, image/*">
-								</div>
-							</div>
-	                        
 	                        <div class="col-md-12">
 	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
 	                                Submit

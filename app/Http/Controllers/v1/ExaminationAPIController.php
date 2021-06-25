@@ -2200,7 +2200,11 @@ class ExaminationAPIController extends AppBaseController
 					$SPB->price, 
 					$SPB->includePPH);
 				//send email
-				Mail::send('emails.editor', ['content' => $content], function ($m) use($user,$SPB) {
+				Mail::send('emails.editor', [
+					'logo' => $email->logo,
+					'content' => $content,
+					'signature' => $email->signature
+				], function ($m) use($user,$SPB) {
 					$m->to($user->email)->subject( "Tersisa 7 Hari Lagi untuk Membayar Pengujian $SPB->registrationNumber" );
 				});
 			}
@@ -2223,7 +2227,11 @@ class ExaminationAPIController extends AppBaseController
 					$SPB->price, 
 					$SPB->includePPH);
 				//send email
-				Mail::send('emails.editor', ['content' => $content], function ($m) use($user,$SPB) {
+				Mail::send('emails.editor', [
+					'logo' => $email->logo,
+					'content' => $content,
+					'signature' => $email->signature
+				], function ($m) use($user,$SPB) {
 					$m->to($user->email)->subject( "Tersisa 1 Hari Lagi untuk Membayar Pengujian $SPB->registrationNumber" );
 				});
 			}

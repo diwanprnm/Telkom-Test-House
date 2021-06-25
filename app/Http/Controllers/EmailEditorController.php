@@ -34,7 +34,7 @@ class EmailEditorController extends Controller
         $logService = new LogService();
         if (!$currentUser) {return redirect('login');}
         
-        $limit = 10;
+        $limit = 100;
         $search = trim($request->input('search'));
 
         $query = EmailEditor::whereNotNull('created_at');
@@ -145,9 +145,6 @@ class EmailEditorController extends Controller
         }
         if ($request->has('content')){
             $email->content = $request->input('content');
-        }
-        if ($request->has('signature')){
-            $email->signature = $request->input('signature');
         }
 
         $email->updated_by = $currentUser->id;
