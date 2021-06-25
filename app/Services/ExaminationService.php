@@ -462,7 +462,7 @@ class ExaminationService
 		$user = User::findOrFail($exam->created_by);
 		$exam_type = ExaminationType::findOrFail($exam->examination_type_id);
 		switch ($dir_name) {
-			case 'emails.registration':
+			case 'emails.registrasi':
 				$content = $this->parsingSendEmailRegistration($email->content, $user->name, $exam_type->description, $exam_type->name);
 				$subject = $email->subject;
 				break;
