@@ -180,9 +180,9 @@
                                             @endif
 											<!-- if payment_status == 0 && spb_date < now -->
                                             @if($filterPayment_status == '-1')
-                                                <option value="-1" selected>KADALUARSA</option>
+                                                <option value="-1" selected>KEDALUWARSA</option>
 											@else
-                                                <option value="-1">KADALUARSA</option>
+                                                <option value="-1">KEDALUWARSA</option>
                                             @endif
 										</select>
 									</div>
@@ -294,7 +294,7 @@
 													SUDAH
 											@else 
 												@if ($item->spb_date < date("Y-m-d")) 
-													KADALUARSA
+													KEDALUWARSA
 												@else 
 													BELUM
 												@endif

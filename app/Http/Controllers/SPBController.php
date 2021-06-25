@@ -227,7 +227,7 @@ class SPBController extends Controller
                     break; 
                 case '0':
                     if($row->spb_date < date("Y-m-d")){
-                        $status_bayar = 'KADALUARSA';
+                        $status_bayar = 'KEDALUWARSA';
                     }
                     else {$status_bayar = 'BELUM';}
                     break;
