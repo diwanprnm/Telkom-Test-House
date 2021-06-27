@@ -64,14 +64,6 @@ table {
 									</label>
 								</div> 
 							</div>
-							<div class="col-md-3">
-								<div class="form-group">
-									<label>
-										<input checked="checked" type="checkbox" id="is_send_email_active" name="is_send_email_active">
-										Aktifkan Send Email
-									</label>
-								</div> 
-							</div>
 	                        <div class="col-md-12">
                         		<div id="poh_manager_urel-div" class="form-group">
 									<label>
@@ -133,6 +125,31 @@ table {
 							</div><!-- /.modal -->
 						</div>
 					</fieldset>
+					<fieldset>
+						<legend>
+							Aktifasi Fungsi Send Email
+						</legend>
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label>
+										<input checked="checked" type="checkbox" id="is_send_email_active" name="is_send_email_active">
+											Pengaktifan Fungsi Send Email
+									</label>
+								</div> 
+							</div>
+	                        <div class="col-md-12">
+	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
+	                                Submit
+	                            </button>
+	                            <a style=" color:white !important;" href="{{URL::to('/admin')}}">
+									<button type="button" class="btn btn-wide btn-red btn-squared btn-marginleft pull-left">
+									Cancel
+									</button>
+								</a>
+	                        </div>
+						</div>
+					</fieldset>
 				{!! Form::close() !!}
 			</div>
 			@endif
@@ -153,7 +170,7 @@ table {
 	@php
 		} else {
 	@endphp
-		$('#is_send_email_active').prop('checked', false);
+			$('#is_send_email_active').prop('checked', false);
 	@php
 		}
 	@endphp
