@@ -83,11 +83,6 @@ table {
 	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
 	                                Submit
 	                            </button>
-	                            <a style=" color:white !important;" href="{{URL::to('/admin')}}">
-									<button type="button" class="btn btn-wide btn-red btn-squared btn-marginleft pull-left">
-									Cancel
-									</button>
-								</a>
 	                        </div>
 						</div>
 						<div class="modal fade" id="myModal_update" tabindex="-1" role="dialog" aria-hidden="true">
@@ -142,15 +137,16 @@ table {
 	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
 	                                Submit
 	                            </button>
-	                            <a style=" color:white !important;" href="{{URL::to('/admin')}}">
-									<button type="button" class="btn btn-wide btn-red btn-squared btn-marginleft pull-left">
-									Cancel
-									</button>
-								</a>
+
 	                        </div>
 						</div>
 					</fieldset>
 				{!! Form::close() !!}
+				<a style=" color:white !important;" href="{{URL::to('/admin')}}">
+					<button type="button" class="btn btn-wide btn-red btn-squared btn-marginleft pull-right">
+					Cancel
+					</button>
+				</a>
 			</div>
 			@endif
 		</div>
