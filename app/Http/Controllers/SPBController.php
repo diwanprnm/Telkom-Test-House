@@ -73,6 +73,25 @@ class SPBController extends Controller
             $queryFilter= new QueryFilter($request, $query);
             $logService->createLog(self::SEARCH, 'Rekap Nomor SPB', json_encode(array(self::SEARCH => $search)));
         }
+        $paymentStatus = $request->input('payment_status'); 
+        switch ($paymentStatus) {
+            case 'all':
+                # code...
+                break;
+            case '1':
+                $query = $queryFilter->getQuery()->where("payment_status", 1);
+                break; 
+            case '0':
+                $query = $queryFilter->getQuery()->where("payment_status", 0)->whereRaw("spb_date > CURDATE()");
+                break;
+            case '-1':
+                $query = $queryFilter->getQuery()->where("payment_status", 0)->whereRaw("spb_date < CURDATE()");
+                break;
+
+            default:
+                # code...
+                break;
+        }
 
         $queryFilter
             ->beforeDate(self::SPB_DATE)
@@ -80,7 +99,6 @@ class SPBController extends Controller
             ->spbNumber()
             ->examination_type()
             ->companyName()
-            ->paymentStatus()
             ->getSortedAndOrderedData($sort_by, $sort_type)
         ;
 
@@ -105,7 +123,7 @@ class SPBController extends Controller
             ->with('after_date', $queryFilter->after)
             ->with('filterType', $queryFilter->examination_type)
             ->with('filterCompany', $queryFilter->companyName)
-            ->with('filterPayment_status', $queryFilter->paymentStatus)
+            ->with('filterPayment_status', $paymentStatus)
             ->with('sort_by', $queryFilter->sort_by)
             ->with('sort_type', $queryFilter->sort_type);
 
@@ -138,13 +156,33 @@ class SPBController extends Controller
             });
             $queryFilter= new QueryFilter($request, $query);
         }
+        
+        $paymentStatus = $request->input('payment_status'); 
+        switch ($paymentStatus) {
+            case 'all':
+                # code...
+                break;
+            case '1':
+                $query = $queryFilter->getQuery()->where("payment_status", 1);
+                break; 
+            case '0':
+                $query = $queryFilter->getQuery()->where("payment_status", 0)->whereRaw("spb_date > CURDATE()");
+                break;
+            case '-1':
+                $query = $queryFilter->getQuery()->where("payment_status", 0)->whereRaw("spb_date < CURDATE()");
+                break;
+
+            default:
+                # code...
+                break;
+        }
+
         $queryFilter
             ->beforeDate(self::SPB_DATE)
             ->afterDate(self::SPB_DATE)
             ->spbNumber()
             ->examination_type()
             ->companyName()
-            ->paymentStatus()
             ->getSortedAndOrderedData($sort_by, $sort_type)
         ;
 
@@ -183,7 +221,20 @@ class SPBController extends Controller
             $device_model = MyHelper::filterDefault($row->device->model);
 
             $price = $row->price;
-            $status_bayar = $row->payment_status == '1' ? 'SUDAH' : 'BELUM';
+            switch ($row->payment_status) {
+                case '1':
+                    $status_bayar = 'SUDAH';
+                    break; 
+                case '0':
+                    if($row->spb_date < date("Y-m-d")){
+                        $status_bayar = 'KEDALUWARSA';
+                    }
+                    else {$status_bayar = 'BELUM';}
+                    break;
+                default:
+                    # code...
+                    break;
+            }
             
             $examsArray[] = [
                 "".$examType_name." (".$examType_desc.")",
