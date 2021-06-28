@@ -7,31 +7,18 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
-use Illuminate\View\Middleware\ShareErrorsFromSession;
-
-use App\Http\Requests;
 
 use App\User;
 use App\Company;
 use App\TempCompany;
-use App\Logs;
 use App\GeneralSetting;
+use App\Services\EmailEditorService;
 
 use Auth;
 use Mail;
-use Input;
 use Session;
 
-use File;
-use Image;
-use Storage;
-
 use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
-
-
-use App\Events\Notification;
-use App\NotificationTable;
 
 use App\Services\Logs\LogService; 
 use App\Services\FileService;
@@ -39,8 +26,6 @@ use App\Services\FileService;
 use App\Services\NotificationService;
 class ProfileController extends Controller
 { 
-
-
     private const PASS_TEXT = 'password';
     private const NEW_PASS = 'newPass';
     private const CONFNEWPASS = 'confnewPass';
@@ -535,13 +520,16 @@ class ProfileController extends Controller
 	
 	public function sendEmail($user, $description, $message, $subject)
     {
+		$email_editors = new EmailEditorService();
+		$email = $email_editors->selectBy($message);
+		$data = User::findOrFail($user);
+		$content = $this->parseEditCompany($email->content, $data->name, $data->email, $description);
+
         if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
-			$data = User::findOrFail($user);
-		
-			Mail::send($message, array(
-				self::USER_NAME2 => $data->name,
-				self::USER_EMAIL => $data->email,
-				'desc' => $description
+			Mail::send('emails.editor', array(
+					'logo' => $email->logo,
+					'content' => $content,
+					'signature' => $email->signature
 				), function ($m) use ($subject) {
 				$m->to(self::EMAIL_STEL)->subject($subject);
 			});
@@ -549,38 +537,67 @@ class ProfileController extends Controller
 
         return true;
     }
+
+	public function parseEditCompany($content, $user_name, $user_email, $description){
+		$content = str_replace('@user_name', $user_name, $content);
+		$content = str_replace('@user_email', $user_email, $content);
+		$content = str_replace('@desc', $description, $content);
+		return $content;
+	}
 	
-	public function sendRegistrasi($user_name, $user_email, $message, $subject)
+	public function sendRegistrasi($user_name, $user_email, $dir_name, $subject)
     {
+		$email_editors = new EmailEditorService();
+		$email = $email_editors->selectBy($dir_name);
+		$content = $this->parseEmailRegistration($email->content, $user_name, $user_email);
+
         if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
-			Mail::send($message, array(
-				self::USER_NAME2 => $user_name,
-				self::USER_EMAIL => $user_email
-				), function ($m) use ($subject) {
-				$m->to(self::EMAIL_STEL)->subject($subject);
+			Mail::send('emails.editor', array(
+					'logo' => $email->logo,
+					'content' => $content,
+					'signature' => $email->signature
+				), function ($m) use ($email) {
+				$m->to(self::EMAIL_STEL)->subject($email->subject);
 			});
 		}
 
         return true;
     }
+
+	public function parseEmailRegistration($content, $user_name, $user_email){
+		$content = str_replace('@user_name', $user_name, $content);
+		$content = str_replace('@user_email', $user_email, $content);
+		return $content;
+	}
 	
 	public function sendRegistrasiwCompany($user_name, $user_email, $comp_name, $comp_address, $comp_email, $comp_phone, $message, $subject)
     {
+		$email_editors = new EmailEditorService();
+		$email = $email_editors->selectBy($message);
+		$content = $this->parseEmailRegistrationWithCompany($email->content, $user_name, $user_email, $comp_name, $comp_address, $comp_email, $comp_phone);
+
         if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
-			Mail::send($message, array(
-				self::USER_NAME2 => $user_name,
-				self::USER_EMAIL => $user_email,
-				self::COMP_NAME => $comp_name,
-				self::COMP_ADDRESS => $comp_address,
-				self::COMP_EMAIL => $comp_email,
-				'comp_phone' => $comp_phone
-				), function ($m) use ($subject) {
-				$m->to(self::EMAIL_STEL)->subject($subject);
+			Mail::send('emails.editor', array(
+					'logo' => $email->logo,
+					'content' => $content,
+					'signature' => $email->signature
+				), function ($m) use ($email) {
+				$m->to(self::EMAIL_STEL)->subject($email->subject);
 			});
 		}
 
         return true;
     }
+
+	public function parseEmailRegistrationWithCompany($content, $user_name, $user_email, $comp_name, $comp_address, $comp_email, $comp_phone){
+		$content = str_replace('@user_name', $user_name, $content);
+		$content = str_replace('@user_email', $user_email, $content);
+		$content = str_replace('@comp_name', $comp_name, $content);
+		$content = str_replace('@comp_address', $comp_address, $content);
+		$content = str_replace('@comp_email', $comp_email, $content);
+		$content = str_replace('@comp_phone', $comp_phone, $content);
+		return $content;
+	}
 
     public function login(){
     	$currentUser = Auth::user();

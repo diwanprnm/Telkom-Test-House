@@ -20,5 +20,6 @@ class DatabaseSeeder extends Seeder
         $this->call(QuestionerQuestionsTableSeeder::class);
         $this->call(YoutubeTableSeeder::class);
         $this->call(UserMenuTableSeeder::class);
+        $this->call(EmailEditorSeeder::class);
     }
 }
