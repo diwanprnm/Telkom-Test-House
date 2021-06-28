@@ -162,6 +162,16 @@
 										</div>
 									</div> 
 								@endunless
+								<div id="principal_file_div">
+									<div class="form-group col-xs-12 agen_file">
+										<label>{{ trans('translate.service_upload_support_principals') }}<span class="text-danger required">*</span></label>
+										<input class="data-upload-berkas f1-file-dll required" id="principal_file" name="principalFile" type="file" accept="application/pdf,image/*" >
+										<div id="dll-file"></div>
+										<div class="attachment-file">
+											*{{ trans('translate.maximum_filesize') }}
+										</div>
+									</div>
+								</div>
 								@if ($jns_pengujian == 'ta')
 									<div class="dv-srt-sp3">
 										<div class="form-group col-xs-12">
@@ -176,8 +186,8 @@
 								@endif
 								<div class="dv-dll">
 									<div class="form-group col-xs-12">
-										<label>{{ trans('translate.service_upload_another_file') }}</label>
-										<input class="data-upload-berkas f1-file-dll" id="dllFile" name="dllFile" type="file" accept="application/pdf,image/*" >
+										<label>{{ trans('translate.service_upload_another_file') }}<span class="text-danger required">*</span></label>
+										<input class="data-upload-berkas f1-file-dll required" id="dllFile" name="dllFile" type="file" accept="application/pdf,image/*" >
 										<div id="dll-file"></div>
 										<div class="attachment-file">
 											*{{ trans('translate.maximum_filesize') }}
@@ -225,18 +235,10 @@
 		});
 
 		setTimeout(() => {
-			const textNormal = [
-				'jns_perusahaan-1',
-				'jns_perusahaan-2',
-				'jns_perusahaan-3',
-				'examination_location-11',
-				'examination_location-12'
-			]
 			document.querySelectorAll("label").forEach((x) => {
-				textNormal.includes(x.htmlFor) && x.classList.add("text-normal");
-			});
-
-			
+				labelWithTextNormal = (x.htmlFor.substring(0, 14) == 'jns_perusahaan' ||  x.htmlFor.substring(0, 20) == 'examination_location');
+				labelWithTextNormal && x.classList.add("text-normal");
+			});			
 		},1000);
 	});
 
@@ -355,6 +357,8 @@
 				}else if (!form.valid()){
 					return false;	
 				}
+				isCompanyTypeAgen = ($('input[name="jns_perusahaan"]:checked').val() == 'Agen');
+				isCompanyTypeAgen ? $('#principal_file_div').show() : $('#principal_file_div').hide();
 				responseCheckSNjns = checkSNjnsPengujian();
 				if (!responseCheckSNjns){
 					return responseCheckSNjns;

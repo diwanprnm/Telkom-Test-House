@@ -106,6 +106,7 @@
 									<input type="hidden" name="hide_ref_uji_file" id="hide_ref_uji_file" value="{{$userData->fileref_uji}}">
 									<input type="hidden" name="hide_sp3_file" id="hide_sp3_file" value="{{$userData->filesrt_sp3}}">
 									<input type="hidden" name="hide_dll_file" id="hide_dll_file" value="{{$userData->filedll}}">
+									<input type="hidden" name="hide_prinsipal_file" id="hide_prinsipal_file" value="{{$userData->filesrt_prinsipal}}">
 									<div class="form-group">
 										<label for="f1-jns-perusahaan" class="text-bold required">{{ trans('translate.service_company_type') }}: </label>
 										<input type="radio" name="jns_perusahaan" value="Agen" placeholder="{{ trans('translate.service_company_agent') }}" @if ($userData->jnsPerusahaan == 'Agen') checked  @endif >
@@ -166,6 +167,14 @@
 											<a id="ref-uji-file" class="btn btn-link link-download-file" >{{$userData->fileref_uji}}</a>
 										</div> 
 									@endunless
+									<div id="principal_file_div">
+										<div class="form-group col-xs-12 agen_file">
+											<label>{{ trans('translate.service_upload_support_principals') }}<span class="text-danger required">*</span></label>
+											<input class="data-upload-berkas f1-file-dll required" id="principal_file" name="principalFile" type="file" accept="application/pdf,image/*" data-old-filename="{{$userData->filesrt_prinsipal}}" >
+											<div class="attachment-file"> *{{ trans('translate.maximum_filesize') }}</div>
+											<a id="principal-file" class="btn btn-link link-download-file" >{{$userData->filesrt_prinsipal}}</a>
+										</div>
+									</div>
 									@if ($jns_pengujian == 'ta')
 										<div class="dv-srt-sp3">
 											<div class="form-group col-xs-12">
@@ -178,8 +187,8 @@
 									@endif
 									<div class="dv-dll">
 										<div class="form-group col-xs-12">
-											<label>{{ trans('translate.service_upload_another_file') }}</label>
-											<input class="data-upload-berkas f1-file-dll" id="dllFile" name="dllFile" type="file" accept="application/pdf,image/*" data-target-id="f4-preview-12" data-old-filename="{{$userData->filedll}}">
+											<label>{{ trans('translate.service_upload_another_file') }}<span class="text-danger required">*</span></label>
+											<input class="data-upload-berkas f1-file-dll required" id="dllFile" name="dllFile" type="file" accept="application/pdf,image/*" data-target-id="f4-preview-12" data-old-filename="{{$userData->filedll}}">
 											<div class="attachment-file"> *{{ trans('translate.maximum_filesize') }}</div>
 											<a id="dll-file" class="btn btn-link link-download-file">{{$userData->filedll}}</a>
 										</div>
@@ -327,6 +336,8 @@
 					$('.chosen-choices .search-field input').addClass('error');
 					return false;
 				}
+				isCompanyTypeAgen = ($('input[name="jns_perusahaan"]:checked').val() == 'Agen');
+				isCompanyTypeAgen ? $('#principal_file_div').show() : $('#principal_file_div').hide();
 				responseCheckSNjns = checkSNjnsPengujian();
 				if (!responseCheckSNjns){
 					return responseCheckSNjns;
@@ -446,14 +457,9 @@
 			$('.chosen-choices .search-field input').removeAttr('style');
 		});
 		// Text must be normal not bold
-		const textNormal = [
-			'jns_perusahaan-6',
-			'jns_perusahaan-7',
-			'examination_location-15',
-			'examination_location-16'
-		]
 		document.querySelectorAll("label").forEach((x) => {
-			textNormal.includes(x.htmlFor) && x.classList.add("text-normal");
+			labelWithTextNormal = (x.htmlFor.substring(0, 14) == 'jns_perusahaan' ||  x.htmlFor.substring(0, 20) == 'examination_location');
+			labelWithTextNormal && x.classList.add("text-normal");
 		});
 		//hiding ui ? (code already exist before)
 		$('ul[role="tablist"]').hide();
