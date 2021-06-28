@@ -614,7 +614,7 @@ class PermohonanController extends Controller
 		$this->uploadFile($request, 'refUji', $exam_id);
 		$this->uploadFile($request, 'dll', $exam_id);
 		$this->uploadFile($request, 'sp3', $exam_id);
-
+		$this->uploadFile($request, 'principal', $exam_id);
 
 		return json_encode([
 			'success' => true,
@@ -645,6 +645,13 @@ class PermohonanController extends Controller
 				'prefix' => "sp3_",
 				'oldFile' => $request->input(self::HIDE_SP3_FILE, ''),
 				'attachName' => 'SP3'
+			],
+			'principal' => [
+				'inputName' => 'principalFile',
+				'path' => self::MEDIA_EXAMINATION_LOC.$exam_id."/",
+				'prefix' => "prinsipal_",
+				'oldFile' => $request->input(self::HIDE_PRINSIPAL_FILE, ''),
+				'attachName' => 'Surat Dukungan Prinsipal'
 			]
 		);
 
