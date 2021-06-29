@@ -162,16 +162,18 @@
 										</div>
 									</div> 
 								@endunless
-								<div id="principal_file_div">
-									<div class="form-group col-xs-12 agen_file">
-										<label>{{ trans('translate.service_upload_support_principals') }}<span class="text-danger required">*</span></label>
-										<input class="data-upload-berkas f1-file-dll required" id="principal_file" name="principalFile" type="file" accept="application/pdf,image/*" >
-										<div id="dll-file"></div>
-										<div class="attachment-file">
-											*{{ trans('translate.maximum_filesize') }}
+								@if ($jns_pengujian == 'qa')
+									<div id="principal_file_div">
+										<div class="form-group col-xs-12 agen_file">
+											<label>{{ trans('translate.service_upload_support_principals') }}<span class="text-danger required">*</span></label>
+											<input class="data-upload-berkas f1-file-dll required" id="principal_file" name="principalFile" type="file" accept="application/pdf,image/*" >
+											<div id="dll-file"></div>
+											<div class="attachment-file">
+												*{{ trans('translate.maximum_filesize') }}
+											</div>
 										</div>
 									</div>
-								</div>
+								@endif
 								@if ($jns_pengujian == 'ta')
 									<div class="dv-srt-sp3">
 										<div class="form-group col-xs-12">

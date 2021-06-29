@@ -167,14 +167,16 @@
 											<a id="ref-uji-file" class="btn btn-link link-download-file" >{{$userData->fileref_uji}}</a>
 										</div> 
 									@endunless
-									<div id="principal_file_div">
-										<div class="form-group col-xs-12 agen_file">
-											<label>{{ trans('translate.service_upload_support_principals') }}<span class="text-danger required">*</span></label>
-											<input class="data-upload-berkas f1-file-dll required" id="principal_file" name="principalFile" type="file" accept="application/pdf,image/*" data-old-filename="{{$userData->filesrt_prinsipal}}" >
-											<div class="attachment-file"> *{{ trans('translate.maximum_filesize') }}</div>
-											<a id="principal-file" class="btn btn-link link-download-file" >{{$userData->filesrt_prinsipal}}</a>
+									@if ($jns_pengujian == 'qa')
+										<div id="principal_file_div">
+											<div class="form-group col-xs-12 agen_file">
+												<label>{{ trans('translate.service_upload_support_principals') }}<span class="text-danger required">*</span></label>
+												<input class="data-upload-berkas f1-file-dll required" id="principal_file" name="principalFile" type="file" accept="application/pdf,image/*" data-old-filename="{{$userData->filesrt_prinsipal}}" >
+												<div class="attachment-file"> *{{ trans('translate.maximum_filesize') }}</div>
+												<a id="principal-file" class="btn btn-link link-download-file" >{{$userData->filesrt_prinsipal}}</a>
+											</div>
 										</div>
-									</div>
+									@endif
 									@if ($jns_pengujian == 'ta')
 										<div class="dv-srt-sp3">
 											<div class="form-group col-xs-12">
