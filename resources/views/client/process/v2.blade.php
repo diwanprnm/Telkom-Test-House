@@ -188,8 +188,8 @@
 								@endif
 								<div class="dv-dll">
 									<div class="form-group col-xs-12">
-										<label>{{ trans('translate.service_upload_another_file') }}<span class="text-danger required">*</span></label>
-										<input class="data-upload-berkas f1-file-dll required" id="dllFile" name="dllFile" type="file" accept="application/pdf,image/*" >
+										<label>{{ trans('translate.service_upload_another_file') }}</label>
+										<input class="data-upload-berkas f1-file-dll" id="dllFile" name="dllFile" type="file" accept="application/pdf,image/*" >
 										<div id="dll-file"></div>
 										<div class="attachment-file">
 											*{{ trans('translate.maximum_filesize') }}
