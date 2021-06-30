@@ -213,7 +213,7 @@ class HomeController extends Controller
 			
 			$data =  array();
 	    	$page = self::PROCESS;
-			return view('client.process.'.$category.'_process')
+			return view('client.process.v2')
 				->with('data', $data)
 				->with('userData', $userData[0])
 				->with('jns_pengujian', $category)
@@ -310,7 +310,8 @@ class HomeController extends Controller
 				return redirect("/process");
 			}
 	    	$page = self::PROCESS;
-			return view('client.process.'.$category.'_edit_process')
+			//return view('client.process.'.$category.'_edit_process')
+			return view('client.process.v2_edit')
 				->with('data', $data)
 				->with('userData', $userData[0])
 				->with('jns_pengujian', $category)
@@ -391,6 +392,6 @@ class HomeController extends Controller
 		return "SELECT DISTINCT s.code as stel ,s.name as device_name, s.type as lab, ssd.attachment as file, ssd.id as id_folder
 				FROM stels s,stels_sales ss,stels_sales_detail ssd, companies c , users u
 				WHERE s.id = ssd.stels_id AND s.is_active = 1 AND ss.id = ssd.stels_sales_id AND ss.user_id = u.id AND u.company_id = c.id
-				AND (ss.payment_status = 1 or ss.payment_status = 3) AND c.id = '".$currentUser->company->id."'";
+				AND (ss.payment_status = 3) AND c.id = '".$currentUser->company->id."'";
 	}
 }

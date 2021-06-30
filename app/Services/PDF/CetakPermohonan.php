@@ -28,10 +28,12 @@ class CetakPermohonan
             $subHeader = 'Calibration';
         }
        
-        $pdf->judul_kop(
+        $pdf->data_param(
 			'PERMOHONAN '.$kop,
 			$subHeader.' Application',
-			$data[0]['kotaPerusahaan']
+			$data[0]['kotaPerusahaan'],
+            $data[0]['date'],
+            $data[0]['nama_pemohon']
         );
 
         //Initial Halaman

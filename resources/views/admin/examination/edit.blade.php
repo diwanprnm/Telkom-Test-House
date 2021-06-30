@@ -4809,10 +4809,10 @@
 				$('#myModalketerangan_registrasi').modal('hide');
 			}
 		}else{
-			if(!document.getElementById('hide_attachment_form-registrasi').value){
-				alert("Form Uji belum ditanda tangan / di-upload oleh kastamer!");
-				return false;
-			}
+			// if(!document.getElementById('hide_attachment_form-registrasi').value){
+			// 	alert("Form Uji belum ditanda tangan / di-upload oleh kastamer!");
+			// 	return false;
+			// }
 			if(!document.getElementById('examination_lab_id').value){
 				alert("Pilih Laboratorium Pengujian!");
 				$('#examination_lab_id').focus();

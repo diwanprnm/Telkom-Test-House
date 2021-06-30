@@ -39,7 +39,7 @@ class EmailEditorSeeder extends Seeder
             ],[
                 'id' => '3', 
                 'name' => 'Step SPB', 
-                'subject' => 'Penerbitan Surat Pemberitahuan Biaya (SPB) untuk [no_registrasi]', 
+                'subject' => 'Penerbitan Surat Pemberitahuan Biaya (SPB) untuk @no_registrasi', 
                 'dir_name' => 'emails.spb', 
                 'logo' => 'images/TTHMain.png',
                 'content' => '<p><i>Kepada Yth.&nbsp;</i><br><i>Bapak/Ibu @user_name&nbsp;</i><br><br>&nbsp;</p><p>Berkenaan dengan pendaftaran uji @exam_type (@exam_type_desc) perangkat Bapak/Ibu yang sudah memenuhi proses uji fungsi, maka SPB dengan nomor <strong>@spb_number telah terbit dan dapat mengunduhnya di web </strong><a href="https://www.telkomtesthouse.co.id">www.telkomtesthouse.co.id</a> atau lampiran email ini.&nbsp;<br><br>Kami sampaikan juga <strong>pembayaran SPB</strong> dilakukan melalui <strong>Virtual Account</strong> dengan pilihan sebagai berikut : @payment_method_list</p><p>Silakan klik tautan di bawah ini untuk melakukan proses pembayaran.&nbsp;<br>&nbsp;</p><p><a href="@link">@link</a></p><p>&nbsp;</p><p>Mohon periksa kembali biaya dan ketentuan-ketentuan yang berlaku demi kelancaran proses pembayaran.&nbsp;</p>',
@@ -51,7 +51,7 @@ class EmailEditorSeeder extends Seeder
             ],[
                 'id' => '4', 
                 'name' => 'Step SPB (Revisi)', 
-                'subject' => 'Revisi Surat Pemberitahuan Biaya (SPB) untuk [no_registrasi]', 
+                'subject' => 'Revisi Surat Pemberitahuan Biaya (SPB) untuk @no_registrasi', 
                 'dir_name' => 'emails.spbRevision', 
                 'logo' => 'images/TTHMain.png',
                 'content' => '<p><i>Kepada Yth.</i><br><i>Bapak/Ibu @user_name</i><br><br>&nbsp;</p><p>Kami memohon maaf atas kejadian ini.</p><p>Kami memberitahukan bahwa terjadi perubahan harga biaya uji yang sebelum nya mengacu pada SPB @spb_number, oleh karena itu kami menerbitkan revisi SPB dengan nomor @spbRevisionNumber yang <strong>sudah terbit</strong> dan Bapak/Ibu <strong>dapat mengunduhnya di web </strong><a href="www.telkomtesthouse.co.id"><strong>www.telkomtesthouse.co.id</strong></a> atau lampiran email ini. Mohon untuk <strong>mengabaikan email sebelumnya.</strong></p><p>Silakan klik tautan di bawah ini untuk memilih cara pembayaran yang dikehendaki. <a href="@link">@link</a></p><p>Mohon periksa kembali biaya dan ketentuan-ketentuan yang berlaku demi kelancaran proses pembayaran.</p>',
@@ -63,7 +63,7 @@ class EmailEditorSeeder extends Seeder
             ],[
                 'id' => '5', 
                 'name' => 'Step SPB (Reminder)', 
-                'subject' => 'Tersisa [sisa_waktu] hari lagi untuk membayar SPB [no_spb]', 
+                'subject' => 'Tersisa @sisa_waktu hari lagi untuk membayar SPB @no_spb', 
                 'dir_name' => 'emails.reminderSPB', 
                 'logo' => 'images/TTHMain.png',
                 'content' => '<p><i>Kepada Yth.</i><br><i>Bapak/Ibu @user_name</i><br><br>&nbsp;</p><p>Kami memberitahukan kembali bahwa Surat Pemberitahuan Biaya (SPB) @spb_number sudah terbit di <a href="www.telkomtesthouse.co.id"><strong>www.telkomtesthouse.co.id</strong></a> dan Bapak/Ibu mempunyai sisa waktu @remainingDay hari untuk pembayaran.</p><p>Pada tanggal: @dueDate&nbsp;<br>Jam: @dueHour</p><p>Metode pembayaran yang telah dipilih adalah @paymentMethod dengan nominal @price @includePPH Apabila Bapak/Ibu tidak melakukan pembayaran hingga tenggat waktu, Virtual Account akan otomatis tidak berlaku.</p><p>Mohon ikuti ketentuan-ketentuan yang berlaku demi kelancaran proses pembayaran.</p>',
@@ -87,7 +87,7 @@ class EmailEditorSeeder extends Seeder
             ],[
                 'id' => '7', 
                 'name' => 'Step Sertifikat', 
-                'subject' => 'Penerbitan Sertifikat QA [device_name | device_mark | device_model | device_capacity]', 
+                'subject' => 'Penerbitan Sertifikat QA [@device_name | @device_mark | @device_model | @device_capacity]', 
                 'dir_name' => 'emails.sertifikat', 
                 'logo' => 'images/TTHMain.png',
                 'content' => '<p><i>Kepada Yth.&nbsp;</i><br><i>Bapak/Ibu @user_name&nbsp;</i><br><br>&nbsp;</p><p>Permohonan uji perangkat anda di Telkom Test House <strong>sudah selesai</strong>. @text1 mengunduh Laporan Hasil Uji (LHU) dan Sertifikat di <a href="www.telkomtesthouse.co.id">www.telkomtesthouse.co.id</a> @text2 dengan cara <i><strong>masuk/login</strong></i> terlebih dahulu, lalu pilih menu <i><strong>pengujian/testing &gt; status pengujian/progress</strong></i> dan tekan tombol <strong>unduh laporan &amp; unduh sertifikat/</strong><i><strong>download report &amp; download certificate</strong></i> yang terletak <strong>di kanan bawah</strong> dari permohonan uji anda.&nbsp;<br><br>Terimakasih atas kerjasama anda.&nbsp;<br>Untuk info lebih lanjut silakan hubungi kami di <strong>+62 812 2483 7500</strong></p>',
