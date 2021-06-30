@@ -32,39 +32,7 @@ class PermohonanControllerTest extends TestCase
        $this->assertEquals(200, $response->status());
 	} 
 
-	 public function test_uploadPermohonan()
-	{ 
-	   
-	   $user = User::find(1);
-	   $path = public_path("images/testing.jpg"); 
-	   $name = "testing.jpg";
-	   $file = new UploadedFile($path, $name, null, 'image/png', null, true);
-
-	   $response =  $this->actingAs($user)->call('POST', '/uploadPermohonan', [ 
-	        
-	        'fuploaddetailpengujian' =>  $file
-	    ]);   
-       $this->assertEquals(200, $response->status());
-	} 
-
-
-	 public function test_uploadPermohonanEdit()
-	{  
-		$examination = factory(App\Examination::class)->create();
-	    Session::push('hide_exam_id', $examination->id);
-	    $user = User::find(1);
-	    $path = public_path("images/testing.jpg"); 
-	    $name = "testing.jpg";
-	    $file = new UploadedFile($path, $name, null, 'image/png', null, true);
-
-	    $response =  $this->actingAs($user)->call('POST', '/uploadPermohonanEdit', [ 
-	       'fuploaddetailpengujian' =>  $file
-	    ]);   
-       $this->assertEquals(200, $response->status());
-	} 
-
-	
-	 public function test_cekPermohonan()
+	public function test_cekPermohonan()
 	{ 
 	   
 	   $user = User::find(1);
@@ -117,6 +85,7 @@ class PermohonanControllerTest extends TestCase
 	   $examination = App\Examination::latest()->first();
 	   Storage::disk('minio')->delete("examination/$examination->id/dummy.pdf");
 	} 
+	
 	public function test_updatePermohonan()
 	{ 
 	   
