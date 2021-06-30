@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
-use Illuminate\View\Middleware\ShareErrorsFromSession;
-use App\Http\Requests;
 
 use App\Logs;
 use App\LogsAdministrator;
@@ -66,27 +63,34 @@ class GeneralSettingController extends Controller
     }
 
     
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $currentUser = Auth::user();
+        
+        $generalsettingSendEmail = GeneralSetting::where("code", "send_email")->first();
+        $generalsettingPOH = GeneralSetting::where("code", $this::MAN)->first();
+        $generalsetting = GeneralSetting::where("code", "manager_urel")->first();
 
+        $generalsettingSendEmail->is_active = 0;
+        $generalsettingPOH->is_active = 0;
+        $oldGeneralSetting = $generalsetting; 
+        $generalsetting->value = $request->input('manager_urel');
+
+        if ($request->has('is_send_email_active')){
+            $oldGeneralSetting = $generalsettingSendEmail; 
+            $generalsettingSendEmail->is_active = 1;
+            $generalsettingSendEmail->updated_by = $currentUser->id;
+        } 
+        
         if ($request->has('is_poh')){
-            $generalsetting = GeneralSetting::where("code", $this::MAN)->first();
-            $oldGeneralSetting = $generalsetting; 
-            $generalsetting->value = $request->input('poh_manager_urel');
-            $generalsetting->is_active = 1;
-            
-        }else{
-            $generalsetting = GeneralSetting::where("code", "manager_urel")->first();
-            $oldGeneralSetting = $generalsetting; 
-            $generalsetting->value = $request->input('manager_urel');
-
-            $generalsettingPOH = GeneralSetting::where("code", $this::MAN)->first();
-            $generalsettingPOH->is_active = 0;
+            $oldGeneralSetting = $generalsettingPOH; 
+            $generalsettingPOH->value = $request->input('poh_manager_urel');
+            $generalsettingPOH->is_active = 1;
             $generalsettingPOH->updated_by = $currentUser->id; 
-            $generalsettingPOH->save();
         }
-
+        
+        $generalsettingPOH->save();
+        $generalsettingSendEmail->save();
         $generalsetting->updated_by = $currentUser->id; 
 
         try{
