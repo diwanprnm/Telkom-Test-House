@@ -410,13 +410,17 @@ return [
 	'unautorizhed_layanan_message' => 'You do not have permission to access this page because all Laboratorium has been closed',
 
 	'attention' => 'ATTENTION',
-	'message_close_lab' => 'Registration of Equipment Testing in TELKOM DDS Quality Assurance Laboratorium has been closed. Thank You',
-	'message_close_lab_separate' => 'Registration of Equipment Testing in some Laboratorium has been closed : ',
+	'message_close_lab' => 'All Telkom Test House services are closed and will reopen on',
+	'thankyou' => 'Thankyou',
+	'message_close_lab_separate' => 'Some of the Telkom Test House services are closed.',
+	'message_close_separate' => 'Closed labs :',
+	'message_open_lab_separate' =>'Labs that are open:',
 	'close_until' => 'close until',
+	'open_at' => 'open at',
 	'available_stel' => 'This is a list of test references that can still register for testing : ',
 
-	'qs_certifcate_date_expired_message1' => 'Quality System Certificate Period Has Passed (expired)',
-	'qs_certifcate_date_expired_message2' => 'Please contact our staff to renew your Quality System Certificate Date.',
+	'qs_certifcate_date_expired_message1' => 'Your Company Quality System Certificate Expired.',
+	'qs_certifcate_date_expired_message2' => 'Please contact our staff to update it.',
 
 	'tax_invoice' => 'Tax Invoice',
 	'receipt' => 'Receipt',
