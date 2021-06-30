@@ -26,5 +26,11 @@ class GeneralSettingsTableSeeder extends Seeder
 			'created_by' => '1',
 			'created_at' => date("Y-m-d H:i:s"),
 		]);
+        DB::table('general_settings')->insert([
+			'code' => 'send_email',
+			'value' => 'Send Email',
+			'created_by' => '1',
+			'created_at' => date("Y-m-d H:i:s"),
+		]);
     }
 }
