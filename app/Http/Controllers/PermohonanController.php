@@ -522,7 +522,7 @@ class PermohonanController extends Controller
 			$exam->device_id = $device_id;
 			//$ref_perangkat = explode(",", $test_reference);
 			$examLab = DB::table('stels')->where('code', ''.explode(",", $test_reference)[0].'')->first();
-			$exam->examination_lab_id = (count(array($examLab))==0 ? NULL : $examLab->type);
+			$exam->examination_lab_id = ($examLab ? $examLab->type : NULL);
 			$exam->spk_code = NULL;
 			$exam->registration_status = 0;
 			$exam->function_status = 0;
