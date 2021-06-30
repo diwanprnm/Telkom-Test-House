@@ -26,12 +26,6 @@ Route::get('cetakstel', function(Illuminate\Http\Request $request){
 	return $PDF->cetakSTEL($PDFData);
 });
 
-Route::get('cetakPermohonan', function(Illuminate\Http\Request $request){
-	$PDFData = $request->session()->get('key');
-	$PDF = new \App\Services\PDF\PDFService();
-	return $PDF->cetakPermohonan($PDFData);	
-});
-
 Route::get('cetakKontrak', function(Illuminate\Http\Request $request){
 	$PDFData = $request->session()->get('key_contract');
 	$PDF =  new \App\Services\PDF\PDFService();
@@ -263,7 +257,7 @@ Route::post('/cekPermohonan', 'PermohonanController@cekSNjnsPengujian');
 Route::post('/getPemohon', 'PermohonanController@getInfo');
 Route::post('/downloadFile', 'PermohonanController@downloadFile');
 Route::post('/updatePermohonan', 'PermohonanController@update');
-// Route::get('/cetakPermohonan', 'PermohonanController@cetak');
+Route::get('/cetakPermohonan/{exam_id}', 'PermohonanController@cetak');
 Route::post('/cekLogin', 'ClientController@cekLogin');
 Route::resource('/pengujian', 'PengujianController');
 Route::get('/pengujian/{id}/detail', 'PengujianController@detail');

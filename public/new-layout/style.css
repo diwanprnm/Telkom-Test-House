@@ -13778,6 +13778,14 @@ body:not(.no-transition) #wrapper,
 .step > ul > li{
     text-align:center;
 }
+.step.step-process > ul > li{
+	text-align: left;
+    width: 16% !important;
+}
+.step.step-process-edit > ul > li{
+	text-align: left;
+    width: 7% !important;
+}
 
 .step >  ul > li:not(:first-child){
     margin-left: 3% !important;
@@ -14142,6 +14150,9 @@ body.loading .overlay {
 #attachment-file {
     font-size: 14px;
     margin-top: 10px;
+}
+.attachment-file {
+    font-size: 8px;
 }
 .list-progress .number p {
     font-size: 12px;
