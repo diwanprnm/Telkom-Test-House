@@ -84,7 +84,7 @@
 							</legend>
 							<div class="row">
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group typeHTML">
 										<label>
 											Tipe Pengujian
 										</label>
@@ -108,7 +108,7 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group tahapHTML">
 										<label>
 											Tahap Pengujian
 										</label>
@@ -241,7 +241,7 @@
 		                    </div>
 							<div class="row">
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group sortHTML">
 										<label>
 											Sort by :
 										</label>
@@ -257,7 +257,7 @@
 									</div>
 		                        </div>
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group labHTML">
 										<label>
 											Lab
 										</label>
@@ -284,6 +284,9 @@
 							<div class="col-md-12">
 								<button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 									Filter
+								</button>
+								<button id="reset-filter" class="btn btn-wide btn-white btn-squared pull-right" style="margin-right: 10px;">
+									Reset
 								</button>
 							</div>
 						</fieldset>
@@ -640,6 +643,11 @@
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
 <script src={{ asset("assets/js/form-elements.js") }}></script>
 <script type="text/javascript">
+	var typeHTML = document.getElementById("type").outerHTML;
+	var tahapHTML = document.getElementById("status").outerHTML;
+	var labHTML = document.getElementById("exam_lab").outerHTML;
+	var sortFromHTML = document.getElementById("sort_from").outerHTML;
+	var sortByHTML = document.getElementById("sort_by").outerHTML;
 	jQuery(document).ready(function() {
 		FormElements.init();
 
@@ -723,6 +731,23 @@
 			params = getParam();
 			document.location.href = baseUrl+'/examination/excel?'+jQuery.param(params);
 	    };
+
+		
+        document.getElementById("reset-filter").onclick = function() {
+            $('.cs-select').remove();
+            $('.typeHTML').append(typeHTML);
+            $('.labHTML').append(labHTML);
+			$('.tahapHTML').append(tahapHTML);
+			$('.sortHTML').append(sortFromHTML).append(sortByHTML);
+			$('#after_date').val(null);
+			$('#before_date').val(null);
+			$('#after_date_exam').val(null);
+			$('#before_date_exam').val(null);
+            [].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {	
+                new SelectFx(el);
+            } );
+
+        };
 	});
 
 	function getParam() {
