@@ -80,7 +80,7 @@
 							</div>
 							<div class="row">
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group spbHTML">
 										<label>
 											Nomor SPB
 										</label>
@@ -104,7 +104,7 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group typeHTML">
 										<label>
 											Tipe Pengujian
 										</label>
@@ -130,7 +130,7 @@
 							</div>
 							<div class="row">
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group companyHTML">
 										<label>
 											Nama Perusahaan
 										</label>
@@ -154,7 +154,7 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group paymentStatusHTML">
 										<label>
 											Status Bayar
 										</label>
@@ -188,7 +188,7 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group sortHTML">
 										<label>
 											Sort by :
 										</label>
@@ -238,6 +238,9 @@
 		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 		                                Filter
 		                            </button>
+									<button id="reset-filter" class="btn btn-wide btn-white btn-squared pull-right" style="margin-right: 10px;">
+                                        Reset
+                                    </button>
 		                        </div>
 		                    </div>
 						</fieldset>
@@ -358,6 +361,12 @@
 	$('#company').trigger("chosen:updated");
 </script>
 <script type="text/javascript">
+	var spbHTML = document.getElementById("spb").outerHTML;
+	var typeHTML = document.getElementById("type").outerHTML;
+	var companyHTML = document.getElementById("company").outerHTML;
+	var paymentStatusHTML = document.getElementById("payment_status").outerHTML;
+	var sortByHTML = document.getElementById("sort_by").outerHTML;
+	var sortTypeHTML = document.getElementById("sort_type").outerHTML;
 	jQuery(document).ready(function() {       
 		$('#search_value').keydown(function(event) {
 	        if (event.keyCode == 13) {
@@ -480,6 +489,20 @@
 			}
 			document.location.href = baseUrl+'/spb/excel?'+jQuery.param(params);
 	    };
+
+		document.getElementById("reset-filter").onclick = function() {
+            $('.cs-select').remove();
+            $('.typeHTML').append(typeHTML);
+            $('.paymentStatusHTML').append(paymentStatusHTML);
+			$('.spbHTML').append(spbHTML);
+			$('.companyHTML').append(companyHTML);
+			$('.sortHTML').append(sortByHTML).append(sortTypeHTML);
+			$('#after_date').val(null);
+			$('#before_date').val(null);
+            [].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {	
+                new SelectFx(el);
+            } );
+        };
 	});
 </script>
 @endsection

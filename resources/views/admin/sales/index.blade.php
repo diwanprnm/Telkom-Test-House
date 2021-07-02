@@ -425,6 +425,9 @@
 		                            <button id="filter3" type="submit" class="btn btn-wide btn-green btn-squared pull-right filter">
 		                                Filter
 		                            </button>
+									<button id="reset-filter" class="btn btn-wide btn-white btn-squared pull-right" style="margin-right: 10px;">
+                                        Reset
+                                    </button>
 		                        </div>
 							</div>
 						</fieldset>
@@ -638,5 +641,18 @@
 		};
 		document.location.href = baseUrl+'/sales/excel?'+jQuery.param(params);
 	};
+
+	document.getElementById("reset-filter").onclick = function() {
+            $('.cs-select').remove();
+            $('.typeHTML').append(typeHTML);
+            $('.statusHTML').append(statusHTML);
+			$('#after_date').val(null);
+			$('#before_date').val(null);
+            [].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {	
+                new SelectFx(el);
+            } );
+        };
+
+
 </script>>
 @endsection
