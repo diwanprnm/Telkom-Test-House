@@ -7,14 +7,14 @@
 		<section id="page-title">
 			<div class="row">
 				<div class="col-sm-8">
-					<h1 class="mainTitle">Tambah STEL/STD Baru</h1>
+					<h1 class="mainTitle">Tambah Referensi Uji Baru</h1>
 				</div>
 				<ol class="breadcrumb">
 					<li>
 						<span>Beranda</span>
 					</li>
 					<li>
-						<span>STEL/STD</span>
+						<span>Referensi Uji</span>
 					</li>
 					<li class="active">
 						<span>Tambah</span>
@@ -35,7 +35,7 @@
 					{{ csrf_field() }}
     				<fieldset>
 						<legend>
-							Tambah STEL/STD Baru
+							Tambah Referensi Uji Baru
 						</legend>
 						<div class="row">
 							<div class="col-md-6">

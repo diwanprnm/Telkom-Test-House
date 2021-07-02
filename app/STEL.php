@@ -11,6 +11,11 @@ class STEL extends Model
 
     public function examinationLab()
     {
-        return $this->belongsTo('App\ExaminationLab', 'type');
+        return $this->belongsTo('App\ExaminationLab', 'type')->orderBy('name');
+    }
+
+    public function stelMaster()
+    {
+        return $this->belongsTo('App\STELMaster', 'stels_master_id');
     }
 }

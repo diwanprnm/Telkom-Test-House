@@ -79,7 +79,7 @@ class STELController extends Controller
 
         $examLab = ExaminationLab::all();
         
-        $query = STEL::whereNotNull(self::CREATED_AT)->with(self::EXAMINATION_LAB);
+        $query = STEL::whereNotNull(self::CREATED_AT)->orderBy('is_active', 'DESC')->with(self::EXAMINATION_LAB)->with('stelMaster');
 
         $tahun = STEL::whereNotNull(self::CREATED_AT)->with(self::EXAMINATION_LAB)->select('year')->orderBy('year','desc')->distinct()->get();
 
@@ -114,7 +114,10 @@ class STELController extends Controller
             }
         }
             
-        $stels = $query->orderBy('name')->paginate($paginate);
+        $stels = $query
+            ->orderBy('stel_type')
+            ->orderBy('code')
+            ->paginate($paginate);
         
         if (count($stels) == 0){
             $message = 'Data not found';
@@ -247,29 +250,26 @@ class STELController extends Controller
             if ($request->has('code')){
                 $stel->code = $request->input('code');
             }
-            if ($request->has(self::STEL_TYPE)){
-                $stel->stel_type = $request->input(self::STEL_TYPE);
-            }
             if ($request->has('name')){
                 $stel->name = $request->input('name');
-            }
-            if ($request->has('type')){
-                $stel->type = $request->input('type');
-            }
-            if ($request->has(self::VERSION)){
-                $stel->version = $request->input(self::VERSION);
             }
             if ($request->has('year')){
                 $stel->year = $request->input('year');
             }
+            if ($request->has(self::VERSION)){
+                $stel->version = $request->input(self::VERSION);
+            }
             if ($request->has(self::PRICE)){
                 $stel->price = str_replace(",","",$request->input(self::PRICE));
             }
+            if ($request->has('type')){
+                $stel->type = $request->input('type');
+            }
+            if ($request->has('publish_date')){
+                $stel->publish_date = $request->input('publish_date');
+            }
             if ($request->has(self::IS_ACTIVE)){
                 $stel->is_active = $request->input(self::IS_ACTIVE);
-            }
-            if ($request->has(self::TOTAL)){
-                $stel->total = str_replace(",","",$request->input(self::TOTAL));
             }
 
             $fileService = new FileService();
