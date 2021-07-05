@@ -7,7 +7,7 @@
 		<section id="page-title">
 			<div class="row">
 				<div class="col-sm-8">
-					<h1 class="mainTitle">Tambah Dokumen {{ $type }} Baru</h1>
+					<h1 class="mainTitle">Tambah Dokumen Baru</h1>
 				</div>
 				<ol class="breadcrumb">
 					<li>
@@ -103,7 +103,7 @@
 							<div class="col-md-4">
 								<div class="form-group">
 									<label>
-										Dipublishkan pada tanggal *
+										Diterbitkan pada tanggal *
 									</label>
 									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
 										<input type="text" placeholder="Publish at .." value="{{ old('publish_date') }}" name="publish_date" id="publish_date" class="form-control"/>
@@ -121,7 +121,7 @@
 										Status *
 									</label>
 									<select name="is_active" class="cs-select cs-skin-elastic" required>
-										<option value="" disabled selected>Select...</option>
+										<option value="" disabled>Select...</option>
 										<option value="1">Active</option>
 										<option value="0">Inactive</option>
 									</select>
@@ -167,10 +167,10 @@
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
 <script src={{ asset("assets/js/form-elements.js") }}></script>
 <script type="text/javascript">
-	reset_code();
 	jQuery(document).ready(function() {
 		FormElements.init();
 	});
+	reset_code();
 
 	$("#year").on("keyup change", function(){
 		reset_code();
@@ -181,6 +181,8 @@
 	});
 
 	function reset_code(){
+		var res = $("#code").val().split("Versi");
+		var res_code = res[0].split("-");
 		code = '{{ $type }} {{ $stelMaster->code }}-'+$("#year").val()+' Versi '+$("#version").val();
 		$("#code").val(code);
 	}

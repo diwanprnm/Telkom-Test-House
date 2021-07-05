@@ -79,64 +79,59 @@
 		<div class="container-fluid container-fullw bg-white">
 			<div class="row">
 				<div class="col-md-12">
-					{!! Form::open(array('url' => 'admin/stel/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data')) !!}
-						{!! csrf_field() !!}
-						<fieldset>
-							<legend>
-								Edit Referensi Uji
-							</legend>
-							<div class="row">
-								<div class="col-md-4">
-									<div class="form-group">
-										<label>
-											Tipe Referensi Uji *
-										</label>
-										<select name="type" class="cs-select cs-skin-elastic" required>
-											<!-- <option value="" disabled selected>Select...</option> -->
-											<option value="1" @if($data->type == '1') selected @endif>STEL</option>
-											<option value="2" @if($data->type == '2') selected @endif>S-TSEL</option>
-											<option value="3" @if($data->type == '3') selected @endif>PED / STD</option>
-											<option value="4" @if($data->type == '4') selected @endif>INTERNAL</option>
-											<option value="5" @if($data->type == '5') selected @endif>PERDIRJEN</option>
-											<option value="6" @if($data->type == '6') selected @endif>PERMENKOMINFO</option>
-											<option value="7" @if($data->type == '7') selected @endif>Lainnya ...</option>
-										</select>
-									</div>
-								</div>
-								<div class="col-md-4">
-									<div class="form-group">
-										<label>
-											Kode *
-										</label>
-										<input type="text" id="code" name="code" class="form-control" placeholder="No. Dokumen" value="{{$data->code}}" required>
-									</div>
-								</div>
-								<div class="col-md-4">
-									<div class="form-group">
-										<label>
-											Bahasa *
-										</label>
-										<select name="lang" class="cs-select cs-skin-elastic" required>
-											<!-- <option value="" disabled selected>Select...</option> -->
-											<option value="IDN" @if($data->lang == 'IDN') selected @endif>IDN</option>
-											<option value="ENG" @if($data->lang == 'ENG') selected @endif>ENG</option>
-										</select>
-									</div>
-								</div>
-								<div class="col-md-12">
-									<button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
-										Submit
-									</button>
-									<a style=" color:white !important;" href="{{URL::to('/admin/stel')}}">
-										<button type="button" class="btn btn-wide btn-red btn-squared btn-marginleft pull-left">
-										Cancel
-										</button>
-									</a>
+					<fieldset>
+						<legend>
+							Detail Referensi Uji
+						</legend>
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>
+										Tipe *
+									</label>
+									<select name="type" class="cs-select cs-skin-elastic" required>
+										<!-- <option value="" disabled selected>Select...</option> -->
+										@if($data->type == '1')<option value="1" selected>STEL</option>@endif
+										@if($data->type == '2')<option value="2" selected>S-TSEL</option>@endif
+										@if($data->type == '3')<option value="3" selected>PED / STD</option>@endif
+										@if($data->type == '4')<option value="4" selected>INTERNAL</option>@endif
+										@if($data->type == '5')<option value="5" selected>PERDIRJEN</option>@endif
+										@if($data->type == '6')<option value="6" selected>PERMENKOMINFO</option>@endif
+										@if($data->type == '7')<option value="7" selected>Lainnya ...</option>@endif
+									</select>
 								</div>
 							</div>
-						</fieldset>
-					{!! Form::close() !!}
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>
+										Kode *
+									</label>
+									<input type="text" id="code" name="code" class="form-control" placeholder="No. Dokumen" value="{{$data->code}}" readonly>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>
+										Bahasa *
+									</label>
+									<select name="lang" class="cs-select cs-skin-elastic" required>
+										<!-- <option value="" disabled selected>Select...</option> -->
+										@if($data->lang == 'IDN')<option value="IDN" selected>IDN</option>@endif
+										@if($data->lang == 'ENG')<option value="ENG" selected>ENG</option>@endif
+									</select>
+								</div>
+							</div>
+							<div class="col-md-12">
+	                            <a style=" color:white !important;" href="{{URL::to('/admin/stel')}}">
+									<button type="button" class="btn btn-wide btn-red btn-squared pull-left">
+									Cancel
+									</button>
+								</a>
+	                        </div>
+						</div>
+					</fieldset>
 				</div>
+				@if($data->type < 4)
 				<div class="col-md-6 pull-right" style="margin-bottom:10px">
 					<a style=" color:white !important;" href="{{URL::to('/admin/stel/create/'.$data->id)}}">
 						<button type="button" class="btn btn-wide btn-green btn-squared pull-right" >
@@ -144,6 +139,7 @@
 						</button>         
 					</a>
 		        </div>
+				@endif
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer"><caption></caption>

@@ -96,7 +96,7 @@
 										<label>
 											Tahun *
 										</label>
-										<input type="number" id="year" name="year" class="form-control" placeholder="Tahun" value="{{ old('year') }}" required>
+										<input type="text" id="year" name="year" class="form-control" placeholder="Tahun" value="{{ old('year') }}" required>
 									</div>
 								</div>
 								<div class="col-md-4">
@@ -135,7 +135,7 @@
 								<div class="col-md-4">
 									<div class="form-group">
 										<label>
-											Dipublishkan pada tanggal *
+											Diterbitkan pada tanggal *
 										</label>
 										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
 											<input type="text" placeholder="Publish at .." value="{{ old('publish_date') }}" name="publish_date" id="publish_date" class="form-control"/>
@@ -209,32 +209,71 @@
 			switch(val) {
 				case '1':
 					type_name = 'STEL';
+					$("#master_code").prop('required', true);
+					$("#year").prop('required', true);
+					$("#version").prop('required', true);
+					$("#code").prop('readonly', true);
+					code = type_name+' '+$("#master_code").val()+'-'+$("#year").val()+' Versi '+$("#version").val();
+					$("#code").val(code);
 					break;
 				case '2':
 					type_name = 'S-TSEL';
+					$("#master_code").prop('required', true);
+					$("#year").prop('required', true);
+					$("#version").prop('required', true);
+					$("#code").prop('readonly', true);
+					code = type_name+' '+$("#master_code").val()+'-'+$("#year").val()+' Versi '+$("#version").val();
+					$("#code").val(code);
 					break;
 				case '3':
-					type_name = 'PED / STD';
+					type_name = 'STD';
+					$("#master_code").prop('required', true);
+					$("#year").prop('required', true);
+					$("#version").prop('required', true);
+					$("#code").prop('readonly', false);
+					code = type_name+' '+$("#master_code").val()+'-'+$("#year").val()+' Versi '+$("#version").val();
+					$("#code").val(code);
 					break;
 				case '4':
-					type_name = 'INTERNAL';
+					type_name = 'TLKM/I/KAL';
+					$("#master_code").prop('required', true);
+					$("#year").prop('required', false);
+					$("#version").prop('required', true);
+					$("#code").prop('readonly', true);
+					code = type_name+'/'+$("#master_code").val()+' '+$("#version").val();
+					$("#code").val(code);
 					break;
 				case '5':
-					type_name = 'PERDIRJEN';
+					type_name = 'Perdirjen';
+					$("#master_code").prop('required', true);
+					$("#year").prop('required', true);
+					$("#version").prop('required', false);
+					$("#code").prop('readonly', false);
+					code = type_name+' '+$("#master_code").val()+'/Dirjen/'+$("#year").val();
+					$("#code").val(code);
 					break;
 				case '6':
-					type_name = 'PERMENKOMINFO';
+					type_name = 'Permenkominfo';
+					$("#master_code").prop('required', true);
+					$("#year").prop('required', true);
+					$("#version").prop('required', false);
+					$("#code").prop('readonly', true);
+					code = type_name+' '+$("#master_code").val();
+					$("#code").val(code);
 					break;
 				case '7':
-					type_name = 'Lainnya ...';
+					$("#master_code").prop('required', false);
+					$("#year").prop('required', false);
+					$("#version").prop('required', false);
+					$("#code").prop('readonly', false);
 					break;
 					
 				default:
-					type_name = 'STEL';
+				$("#master_code").prop('required', false);
+				$("#year").prop('required', false);
+				$("#version").prop('required', false);
+				$("#code").prop('readonly', false);
 			}
-			
-			code = type_name+' '+$("#master_code").val()+'-'+$("#year").val()+' Versi '+$("#version").val();
-			$("#code").val(code);
 		}
 	};
 
@@ -252,33 +291,49 @@
 
 	function reset_code(){
 		switch($("#stel_type").val()) {
-			case 1:
+			case '1':
 				type_name = 'STEL';
+				$("#code").prop('readonly', true);
+				code = type_name+' '+$("#master_code").val()+'-'+$("#year").val()+' Versi '+$("#version").val();
+				$("#code").val(code);
 				break;
-			case 2:
+			case '2':
 				type_name = 'S-TSEL';
+				$("#code").prop('readonly', true);
+				code = type_name+' '+$("#master_code").val()+'-'+$("#year").val()+' Versi '+$("#version").val();
+				$("#code").val(code);
 				break;
-			case 3:
-				type_name = 'PED / STD';
+			case '3':
+				type_name = 'STD';
+				$("#code").prop('readonly', false);
+				code = type_name+' '+$("#master_code").val()+'-'+$("#year").val()+' Versi '+$("#version").val();
+				$("#code").val(code);
 				break;
-			case 4:
-				type_name = 'INTERNAL';
+			case '4':
+				type_name = 'TLKM/I/KAL';
+				$("#code").prop('readonly', true);
+				code = type_name+'/'+$("#master_code").val()+' '+$("#version").val();
+				$("#code").val(code);
 				break;
-			case 5:
-				type_name = 'PERDIRJEN';
+			case '5':
+				type_name = 'Perdirjen';
+				$("#code").prop('readonly', false);
+				code = type_name+' '+$("#master_code").val()+'/Dirjen/'+$("#year").val();
+				$("#code").val(code);
 				break;
-			case 6:
-				type_name = 'PERMENKOMINFO';
+			case '6':
+				type_name = 'Permenkominfo';
+				$("#code").prop('readonly', true);
+				code = type_name+' '+$("#master_code").val();
+				$("#code").val(code);
 				break;
-			case 7:
-				type_name = 'Lainnya ...';
+			case '7':
+				$("#code").prop('readonly', false);
 				break;
 				
 			default:
-				type_name = 'STEL';
+				$("#code").prop('readonly', false);
 		}
-		code = type_name+' '+$("#master_code").val()+'-'+$("#year").val()+' Versi '+$("#version").val();
-		$("#code").val(code);
 	}
 	
 	$('#txt-price').priceFormat({

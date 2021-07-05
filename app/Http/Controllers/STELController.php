@@ -435,7 +435,7 @@ class STELController extends Controller
             $stel->updated_by = $currentUser->id;  
             try{
                 if($request->input('is_active') == 1){
-                    $another_stel = STEL::where('stels_master_id', $stel->stels_master_id)->get();
+                    $another_stel = STEL::where('stels_master_id', $stel->stels_master_id)->whereNotIn('id', [$stel])->get();
                     foreach ($another_stel as $item) {
                         $item->is_active = 0;
                         $item->save();

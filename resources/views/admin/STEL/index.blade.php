@@ -204,6 +204,13 @@
 									</tr>
 								@php $no++ @endphp
 								@endforeach
+								@if($no == 1)
+								<tr>
+									<td colspan=9 class="center">
+										Data Not Found
+									</td>
+								</tr>
+								@endif
                             </tbody>
 						</table>
 					</div>

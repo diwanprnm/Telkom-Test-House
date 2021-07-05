@@ -92,7 +92,7 @@
 							<div class="col-md-4">
 								<div class="form-group">
 									<label>
-										Dipublishkan pada tanggal *
+										Diterbitkan pada tanggal *
 									</label>
 									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
 										<input type="text" placeholder="Publish at .." value="{{ $data->publish_date }}" name="publish_date" id="publish_date" class="form-control"/>
@@ -167,6 +167,52 @@
 		FormElements.init();
 	});
 
+	val = '{{ $data->stel_type }}';
+	init_form(val);
+
+	function init_form(val){
+		switch(val) {
+			case '1':
+				type_name = 'STEL';
+				$("#year").prop('required', true);
+				$("#version").prop('required', true);
+				break;
+			case '2':
+				type_name = 'S-TSEL';
+				$("#year").prop('required', true);
+				$("#version").prop('required', true);
+				break;
+			case '3':
+				type_name = 'STD';
+				$("#year").prop('required', true);
+				$("#version").prop('required', true);
+				break;
+			case '4':
+				type_name = 'TLKM/I/KAL';
+				$("#year").prop('required', false);
+				$("#version").prop('required', true);
+				break;
+			case '5':
+				type_name = 'Perdirjen';
+				$("#year").prop('required', true);
+				$("#version").prop('required', false);
+				break;
+			case '6':
+				type_name = 'Permenkominfo';
+				$("#year").prop('required', true);
+				$("#version").prop('required', false);
+				break;
+			case '7':
+				$("#year").prop('required', false);
+				$("#version").prop('required', false);
+				break;
+				
+			default:
+				$("#year").prop('required', false);
+				$("#version").prop('required', false);
+		}
+	}
+
 	$("#year").on("keyup change", function(){
 		reset_code();
 	});
@@ -176,10 +222,24 @@
 	});
 
 	function reset_code(){
-		var res = $("#code").val().split("Versi");
-		var res_code = res[0].split("-");
-		code = res_code[0]+'-'+res_code[1]+'-'+$("#year").val()+' Versi '+$("#version").val();
-		$("#code").val(code);
+		switch(val) {
+			case '1':
+			case '2':
+			case '3':
+				var res = $("#code").val().split("Versi");
+				var res_code = res[0].split("-");
+				code = res_code[0]+'-'+res_code[1]+'-'+$("#year").val()+' Versi '+$("#version").val();
+				$("#code").val(code);
+				break;
+			case '4':
+				var res = $("#code").val().split(" ");
+				code = res[0]+' '+$("#version").val();
+				$("#code").val(code);
+				break;
+				
+			default:
+				
+		}
 	}
 
 	$('#txt-price').priceFormat({
