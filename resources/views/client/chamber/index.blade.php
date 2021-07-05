@@ -24,7 +24,7 @@
 				background-color: green;
 			}
 			.before-month, .after-month{
-				font-size: 10px !important;
+				/* font-size: 10px !important; */
 			}
 			.pb-calendar .before-today{
 				opacity: 0.3;	
