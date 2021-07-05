@@ -170,6 +170,9 @@
 	val = '{{ $data->stel_type }}';
 	init_form(val);
 
+	value="{{ old('code') }}";
+	if(value){init_form(val)};
+
 	function init_form(val){
 		switch(val) {
 			case '1':

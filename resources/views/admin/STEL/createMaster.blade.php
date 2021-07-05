@@ -204,6 +204,78 @@
 		FormElements.init();
 	});
 
+	value="{{ old('stel_type') }}";
+	if(value){
+		switch(value) {
+			case '1':
+				type_name = 'STEL';
+				$("#master_code").prop('required', true);
+				$("#year").prop('required', true);
+				$("#version").prop('required', true);
+				$("#code").prop('readonly', true);
+				code = type_name+' '+$("#master_code").val()+'-'+$("#year").val()+' Versi '+$("#version").val();
+				$("#code").val(code);
+				break;
+			case '2':
+				type_name = 'S-TSEL';
+				$("#master_code").prop('required', true);
+				$("#year").prop('required', true);
+				$("#version").prop('required', true);
+				$("#code").prop('readonly', true);
+				code = type_name+' '+$("#master_code").val()+'-'+$("#year").val()+' Versi '+$("#version").val();
+				$("#code").val(code);
+				break;
+			case '3':
+				type_name = 'STD';
+				$("#master_code").prop('required', true);
+				$("#year").prop('required', true);
+				$("#version").prop('required', true);
+				$("#code").prop('readonly', false);
+				code = type_name+' '+$("#master_code").val()+'-'+$("#year").val()+' Versi '+$("#version").val();
+				$("#code").val(code);
+				break;
+			case '4':
+				type_name = 'TLKM/I/KAL';
+				$("#master_code").prop('required', true);
+				$("#year").prop('required', false);
+				$("#version").prop('required', true);
+				$("#code").prop('readonly', true);
+				code = type_name+'/'+$("#master_code").val()+' '+$("#version").val();
+				$("#code").val(code);
+				break;
+			case '5':
+				type_name = 'Perdirjen';
+				$("#master_code").prop('required', true);
+				$("#year").prop('required', true);
+				$("#version").prop('required', false);
+				$("#code").prop('readonly', false);
+				code = type_name+' '+$("#master_code").val()+'/Dirjen/'+$("#year").val();
+				$("#code").val(code);
+				break;
+			case '6':
+				type_name = 'Permenkominfo';
+				$("#master_code").prop('required', true);
+				$("#year").prop('required', true);
+				$("#version").prop('required', false);
+				$("#code").prop('readonly', true);
+				code = type_name+' '+$("#master_code").val();
+				$("#code").val(code);
+				break;
+			case '7':
+				$("#master_code").prop('required', false);
+				$("#year").prop('required', false);
+				$("#version").prop('required', false);
+				$("#code").prop('readonly', false);
+				break;
+				
+			default:
+			$("#master_code").prop('required', false);
+			$("#year").prop('required', false);
+			$("#version").prop('required', false);
+			$("#code").prop('readonly', false);
+		}
+	};
+
 	SelectFx.prototype.options = {
 		onChange: function (val) { 
 			switch(val) {
