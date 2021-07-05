@@ -95,12 +95,7 @@
 				                </div>
 				          </div>
 				          <div class="modal-footer">
-				          	@if(count($data_layanan_active) == 0)
-				          		<button type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
-				          	@else
-				          		<button id="ok_qa" type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
-				          		<a id="next_qa" href="{{url('detailprocess/qa')}}" class="button button3d btn-sky">{{ trans('translate.process') }}</a>
-				          	@endif
+				          		<a id="next_qa" href="{{url('detailprocess/qa')}}" class="button button3d btn-sky">{{ trans('translate.next') }}</a>
 				          </div>
 				        </div>
 
@@ -336,47 +331,5 @@
 		type:'inline',
 		midClick: true // Allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source in href.
   	});
-
-	$("#next_qa").hide();
-	$("#next_ta").hide();
-	$("#next_vt").hide();
-	$("#next_cal").hide();
-
-  	$("#chosen-qa").change(function(){
-		if(this.value != ""){
-			$("#ok_qa").hide();			
-			$("#next_qa").show();			
-		}else{
-			$("#next_qa").hide();	
-			$("#ok_qa").show();
-		}
-	});
-  	$("#chosen-ta").change(function(){
-		if(this.value != ""){
-			$("#ok_ta").hide();			
-			$("#next_ta").show();			
-		}else{
-			$("#next_ta").hide();	
-			$("#ok_ta").show();
-		}
-	});
-  	$("#chosen-vt").change(function(){
-		if(this.value != ""){
-			$("#ok_vt").hide();			
-			$("#next_vt").show();			
-		}else{
-			$("#next_vt").hide();	
-			$("#ok_vt").show();
-		}
-	});
-  	$("#chosen-cal").change(function(){
-		if(this.value != ""){
-			$("#ok_cal").hide();			
-			$("#next_cal").show();			
-		}else{
-			$("#next_cal").hide();	
-			$("#ok_cal").show();
-		}
-	});
 </script>
 @endsection
