@@ -104,7 +104,10 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::put('/user/profile/{id}', 'UserController@updateProfile');
 	Route::resource('/article', 'ArticleController');
 	Route::resource('/examination', 'ExaminationController');
+	Route::get('stel/createMaster', 'STELController@createMaster');
+	Route::post('stel/storeMaster', 'STELController@storeMaster');
 	Route::resource('/stel', 'STELController');
+	Route::get('stel/create/{stels_master_id}', 'STELController@create');
 	Route::resource('/charge', 'ExaminationChargeController');
 	Route::resource('/newcharge', 'NewExaminationChargeController');
 	Route::get('/newcharge/{id}/createDetail', 'NewExaminationChargeController@createDetail');

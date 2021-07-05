@@ -16,7 +16,7 @@
 				</div>
 				<ol class="breadcrumb">
 					<li>
-						<span>Beranda</span>
+						<span>Data Master</span>
 					</li>
 					<li class="active">
 						<span>Referensi Uji</span>
@@ -150,9 +150,9 @@
 
 			<div class="row">
 				<div class="col-md-6 pull-right" style="margin-bottom:10px">
-					<a style=" color:white !important;" href="{{URL::to('/admin/stel/create')}}">
+					<a style=" color:white !important;" href="{{URL::to('/admin/stel/createMaster')}}">
 						<button type="button" class="btn btn-wide btn-green btn-squared pull-right" >
-						Tambah STEL
+						Tambah Referensi Uji
 						</button>         
 					</a>
 		        </div>
@@ -162,10 +162,10 @@
 							<thead>
 								<tr>
 									<th class="center" scope="col">No</th>
-									<th class="center" scope="col">No. Dokumen</th>
-									<th class="center" scope="col">Nama</th>
-									<th class="center" scope="col">Bahasa</th>
-									<th class="center" scope="col">Lab</th>
+									<th class="left" scope="col">No. Dokumen</th>
+									<th class="left" scope="col">Nama</th>
+									<th class="left" scope="col">Bahasa</th>
+									<th class="left" scope="col">Lab</th>
 									<th class="center" scope="col">Status</th>
                                     <th class="center" colspan="2" scope="col">Aksi</th>
 									<th class="center" scope="col"></th>
@@ -199,7 +199,7 @@
 											</div>
 										</td>
 										<td class="center">
-											<a href="{{URL::to('admin/stel/'.$item->id)}}" class="btn btn-wide btn-primary btn-margin" tooltip-placement="top" tooltip="Detail">Detail </a>
+											<a href="{{URL::to('admin/stel/'.$item->stels_master_id)}}" class="btn btn-wide btn-primary btn-margin" tooltip-placement="top" tooltip="Detail">Detail </a>
 										</td>
 									</tr>
 								@php $no++ @endphp

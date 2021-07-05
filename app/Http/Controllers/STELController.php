@@ -9,6 +9,7 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Http\Requests;
 
 use App\STEL;
+use App\STELMaster;
 use App\ExaminationLab;
 use App\Logs;
 
@@ -21,7 +22,9 @@ use Session;
 use Input;
 
 use Storage;
+// UUID
 use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 use App\Services\Logs\LogService;
 use App\Services\FileService;
@@ -141,10 +144,140 @@ class STELController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function createMaster()
     {
+        $type_id = [0 => '1', 1 => '2',2 => '3', 3 => '4',4 => '5', 5 => '6',6 => '7'];
+        $type_name = [0 => 'STEL', 1 => 'S-TSEL',2 => 'PED / STD', 3 => 'INTERNAL',4 => 'PERDIRJEN', 5 => 'PERMENKOMINFO',6 => 'Lainnya ...'];
+        $type = collect($type_id)->zip($type_name)->transform(function ($values) {
+            return [
+                'id' => $values[0],
+                'name' => $values[1],
+            ];
+        });
         $examLab = ExaminationLab::all();
+        return view('admin.STEL.createMaster')
+            ->with('type', $type)
+            ->with('examLab', $examLab)
+        ;
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeMaster(Request $request)
+    {
+        $currentUser = Auth::user();
+		$code_exists = $this->cekKodeSTEL($request->input('master_code'));
+       
+		if($code_exists == 0){
+            $stelMaster = new STELMaster;
+            $stelMaster->id = Uuid::uuid4();
+    		$stelMaster->type = $request->input('stel_type');
+            $stelMaster->code = $request->input('master_code');
+    		$stelMaster->lang = $request->input('lang');
+    		$stelMaster->total = 1;
+    		$stelMaster->created_by = $currentUser->id;
+    		$stelMaster->updated_by = $currentUser->id;
+
+            $name_exists = $this->cekNamaSTEL($request->input('name'));
+
+            if($name_exists == 0){
+                try{
+                    $stelMaster->save(); 
+
+                    $stel = new STEL;
+                    $stel->code = $request->input('code');
+                    $stel->stel_type = $request->input(self::STEL_TYPE);
+                    $stel->name = $request->input('name');
+                    $stel->type = $request->input('type');
+                    $stel->version = $request->input(self::VERSION);
+                    $stel->year = $request->input('year');
+                    $stel->price = str_replace(",","",$request->input(self::PRICE));
+                    $stel->total = 1;
+                    $stel->is_active = $request->input(self::IS_ACTIVE);
+                    $stel->publish_date = $request->input('publish_date');
+                    $stel->stels_master_id = $stelMaster->id;
+                    $stel->created_by = $currentUser->id;
+                    $stel->updated_by = $currentUser->id;
+        
+                    $fileService = new FileService();
+                    if ($request->hasFile(self::ATTACHMENT)) { 
+                        $fileService = new FileService();
+                        $fileProperties = array(
+                            'path' => self::STEL_URL,
+                            'prefix' => "stel_"
+                        );
+                        $fileService->upload($request->file($this::ATTACHMENT), $fileProperties);
+                        $stel->attachment = $fileService->isUploaded() ? $fileService->getFileName() : '';
+                    }else{
+                        $stel->attachment = "";
+                    }
+                    try{
+                        $stel->save(); 
+                        $logService = new LogService();  
+                        $logService->createLog('Create Referensi Uji',"Referensi Uji",$stel);
+                        
+                        Session::flash(self::MESSAGE, 'Referensi Uji successfully created');
+                        $return_page =  redirect(self::ADMIN_STEL.'/'.$stel->stels_master_id);
+                    } catch(Exception $e){ $return_page =  redirect(self::ADMIN_CREATE)->with(self::ERROR, 'Save failed');
+                    }
+                } catch(Exception $e){ $return_page =  redirect(self::ADMIN_CREATE)->with(self::ERROR, 'Save failed');
+                }
+            }else{
+                $return_page =  redirect()->back()
+                ->with(self::ERROR, 'Nama Dokumen sudah ada!')
+                ->withInput($request->all()); 
+            }
+        }else{
+            $return_page =  redirect()->back()
+            ->with(self::ERROR, 'Kode sudah ada!')
+			->withInput($request->all()); 
+        } 
+        return $return_page;
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create($stels_master_id)
+    {
+        $stelMaster = STELMaster::findOrFail($stels_master_id);
+        $examLab = ExaminationLab::all();
+        switch ($stelMaster->type) {
+            case '1':
+                $type = 'STEL';
+                break;
+            case '2':
+                $type = 'S-TSEL';
+                break;
+            case '3':
+                $type = 'PED / STD';
+                break;
+            case '4':
+                $type = 'INTERNAL';
+                break;
+            case '5':
+                $type = 'PERDIRJEN';
+                break;
+            case '6':
+                $type = 'PERMENKOMINFO';
+                break;
+            case '7':
+                $type = 'Lainnya ...';
+                break;
+            
+            default:
+                $type = '';
+                break;
+        }
         return view('admin.STEL.create')
+            ->with('type',$type)
+            ->with('stelMaster',$stelMaster)
             ->with(self::EXAM_LAB,$examLab)
         ;
     }
@@ -156,8 +289,8 @@ class STELController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    { 
-		$currentUser = Auth::user();
+    {
+        $currentUser = Auth::user();
 		$return_page =  redirect()->back()
 			->with('error_name', 1)
 			->withInput($request->all()); 
@@ -173,8 +306,11 @@ class STELController extends Controller
     		$stel->version = $request->input(self::VERSION);
     		$stel->year = $request->input('year');
     		$stel->price = str_replace(",","",$request->input(self::PRICE));
-    		$stel->total = str_replace(",","",$request->input(self::TOTAL));
+    		$stel->total = 1;
     		$stel->is_active = $request->input(self::IS_ACTIVE);
+                // if aktif, inactivekan yang lain
+            $stel->publish_date = $request->input('publish_date');
+            $stel->stels_master_id = $request->input('stels_master_id');
     		$stel->created_by = $currentUser->id;
     		$stel->updated_by = $currentUser->id;
 
@@ -191,12 +327,19 @@ class STELController extends Controller
                 $stel->attachment = "";
             }
             try{
+                if($request->input('is_active') == 1){
+                    $another_stel = STEL::where('stels_master_id', $stel->stels_master_id)->get();
+                    foreach ($another_stel as $item) {
+                        $item->is_active = 0;
+                        $item->save();
+                    }
+                }
                 $stel->save(); 
                 $logService = new LogService();  
-                $logService->createLog('Create STEL',"STEL",$stel);
+                $logService->createLog('Create Referensi Uji',"Referensi Uji",$stel);
                 
-                Session::flash(self::MESSAGE, 'STEL successfully created');
-                $return_page =  redirect(self::ADMIN_STEL);
+                Session::flash(self::MESSAGE, 'Referensi Uji successfully created');
+                $return_page =  redirect(self::ADMIN_STEL.'/'.$stel->stels_master_id);
             } catch(Exception $e){ $return_page =  redirect(self::ADMIN_CREATE)->with(self::ERROR, 'Save failed');
             }
         } 
@@ -211,7 +354,10 @@ class STELController extends Controller
      */
     public function show($id)
     {
-        //code goes here
+        $data = STELMaster::with('stels')->findOrFail($id);
+        return view('admin.STEL.show')
+            ->with('data', $data)
+        ;
     }
 
     /**
@@ -288,6 +434,13 @@ class STELController extends Controller
 
             $stel->updated_by = $currentUser->id;  
             try{
+                if($request->input('is_active') == 1){
+                    $another_stel = STEL::where('stels_master_id', $stel->stels_master_id)->get();
+                    foreach ($another_stel as $item) {
+                        $item->is_active = 0;
+                        $item->save();
+                    }
+                }
                 $stel->save();
 
                 $logService->createLog('Update STEL', 'STEL', $oldStel );
@@ -315,6 +468,8 @@ class STELController extends Controller
 
         $oldStel = $stel; 
         try{
+            $stelMaster = STELMaster::where('id',$stel->stels_master_id)->with('stels')->first();
+            if($stelMaster->stels->count() <= 1){$stelMaster->delete();}
             $stel->delete();
             $fileService = new FileService();
             $fileProperties = array(
@@ -343,6 +498,12 @@ class STELController extends Controller
     function cekNamaSTEL($name)
     {
 		$stels = STEL::where('name','=',''.$name.'')->get();
+		return count($stels);
+    }
+	
+    function cekKodeSTEL($code)
+    {
+		$stels = STELMaster::where('code','=',''.$code.'')->get();
 		return count($stels);
     }
 	
