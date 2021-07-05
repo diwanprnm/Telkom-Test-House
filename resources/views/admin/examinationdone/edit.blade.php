@@ -2,6 +2,15 @@
 
 @section('content')
 
+@php
+	$currentUser = Auth::user();
+	$is_admin_mail = $currentUser['email'];
+	$is_super = $currentUser['id'];
+	$type_of_test = $data['is_loc_test'] ? "Technical Meeting" : "Uji Fungsi";
+	$type_of_test_result = $data['is_loc_test'] ? "Sesuai" : "Memenuhi";
+	$url_generate_test = $data['is_loc_test'] ? "/cetakTechnicalMeeting/" : "/cetakUjiFungsi/" ;
+@endphp
+
 <div class="main-content" >
 	<div class="wrap-content container" id="container">
 		<!-- start: PAGE TITLE -->
@@ -192,9 +201,10 @@
 									<div class="form-group">
 										<table class="table table-condensed"><caption></caption>
 											<thead>
-											@if($data->keterangan == -1)
+											@if(strpos($data->keterangan, 'qa_date') !== false)
+												@php $data_ket = explode("qa_date",$data->keterangan); @endphp
 												<tr>
-													<th colspan="3" class="center" scope="col"><p style="color:red">Perangkat ini sudah pernah diuji, dengan status "Tidak Lulus Uji"</p></th>
+													<th colspan="3" class="center" scope="col"><p style="color:red">Perangkat ini sudah pernah diuji, dengan status "Tidak Lulus Uji" berdasarkan keputusan Sidang QA tanggal {{ $data_ket[1] }}</p></th>
 												</tr>
 											@endif
 												<tr>
@@ -251,7 +261,13 @@
 													</td>
 												</tr>	
 												<tr>
-													<td>Nomor Form Uji:</td>
+													<td>Serial Number:</td>
+													<td>
+														{{ $data->device->serial_number }}
+													</td>
+												</tr>
+												<tr>
+													<td>Nomor Registrasi:</td>
 													<td>
 														{{ $data->function_test_NO }}
 													</td>
@@ -264,6 +280,18 @@
 														@endif
 													</td>
 												</tr>
+												<tr>
+													<td>Tanggal Uji Fungsi:</td>
+													<td>
+														@if($data->function_test_date_approval)
+															@if($data->function_date != null)
+																{{ $data->function_date }}
+															@else
+																{{ $data->deal_test_date }}
+															@endif
+														@endif
+													</td>
+												</tr>
 											</tbody>
 										</table>
 									</div>
@@ -272,8 +300,8 @@
 							</div>
 					</div>
 				</div>
-				{!! Form::open() !!}
-					<fieldset>
+				
+				<fieldset>
 						<legend>
 							Step Registrasi
 						</legend>
@@ -281,41 +309,34 @@
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>
-										Tanda Tangan Form Uji
+										Form Uji
 									</label>
+									<input type="hidden" value="{{ $data->attachment }}">
 									@if($data->attachment != null)
 										<label>
-											: Sudah di tanda tangan
+											: <a href="{{URL::to('/admin/examination/download/'.$data->id)}}"> Download</a>
 										</label>
-								</div>
-										<div class="form-group">
-											<a href="{{URL::to('/admin/examination/download/'.$data->id)}}"> Download Form Uji</a>
-										</div>
 									@else
 										<label>
-											: Belum di tanda tangan
+											: (Kosong)
 										</label>
 									@endif
+								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
-										Laboratorium Pengujian
+										Laboratorium Pengujian *
 									</label>
-									<select name="examination_lab_id" class="cs-select cs-skin-elastic" disabled>
+									<select class="cs-select cs-skin-elastic">
 										@if($data->examination_lab_id != null)
 											@foreach($labs as $item)
 												@if($item->id == $data->examination_lab_id)
 													<option value="{{$item->id}}" selected>{{$item->name}}</option>
-												@else
-													<option value="{{$item->id}}">{{$item->name}}</option>
 												@endif
 											@endforeach
 										@else
 											<option value="" disabled selected>Select...</option>
-											@foreach($labs as $item)
-												<option value="{{$item->id}}">{{$item->name}}</option>
-											@endforeach
 										@endif
 									</select>
 								</div>
@@ -323,15 +344,13 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
-										Lokasi Pengujian
+										Lokasi Pengujian *
 									</label>
-									<select name="is_loc_test" class="cs-select cs-skin-elastic" disabled>
+									<select class="cs-select cs-skin-elastic" required>
 										@if($data->is_loc_test == 1)
-											<option value="0">Uji Lab Telkom</option>
 											<option value="1" selected>Uji Lokasi</option>
 										@else
 											<option value="0" selected>Uji Lab Telkom</option>
-											<option value="1">Uji Lokasi</option>
 										@endif
 									</select>
 								</div>
@@ -341,18 +360,12 @@
 									<label for="form-field-select-2">
 										Status *
 									</label>
-									<select name="registration_status" class="cs-select cs-skin-elastic" disabled>
+									<select class="cs-select cs-skin-elastic">
 										@if($data->registration_status == 0)
 											<option value="0" selected>Choose Status</option>
-											<option value="1">Completed</option>
-											<option value="-1">Not Completed</option>
 										@elseif($data->registration_status == 1)
-											<option value="0">Choose Status</option>
 											<option value="1" selected>Completed</option>
-											<option value="-1">Not Completed</option>
 										@else
-											<option value="0">Choose Status</option>
-											<option value="1">Completed</option>
 											<option value="-1" selected>Not Completed</option>
 										@endif
 									</select>
@@ -360,9 +373,7 @@
 							</div>
 						</div>
 					</fieldset>
-				{!! Form::close() !!}
 				
-				{!! Form::open() !!}
     				<fieldset>
 						<legend>
 							Step Uji Fungsi
@@ -370,69 +381,99 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="form-group">
+									<h4 style="display:inline">Pengajuan {{$type_of_test}}</h4>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label style="font-weight: bold;">
+										Tanggal {{$type_of_test}}
+									</label>
+									@if($data->function_test_date_approval == 1)
+										<label>
+											:  
+											@if($data->function_date != null)
+												@php echo $data->function_date; @endphp
+											@else
+												@php echo $data->deal_test_date; @endphp
+											@endif
+										</label>
+									@else
+										<label>
+											: -
+										</label>
+									@endif
+									<br>
+									<label style="font-weight: bold;">
+										Engineer
+									</label>
+									@if($data->function_test_date_approval == 1)
+										<label>
+											: {{ $data->function_test_PIC }}
+										</label>
+									@else
+										<label>
+											: -
+										</label>
+									@endif
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label class="pull-right">
+										<a class="history-tanggal-uf-button" data-toggle="collapse" href="#collapse_history_tanggal_uf">Lihat Detail</a>
+									</label>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div id="collapse_history_tanggal_uf" class="form-group collapse">
 									<table class="table table-bordered"><caption></caption>
 										<thead>
 											<tr>
-												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal Uji Fungsi</th>
+												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal {{$type_of_test}}</th>
+											</tr>
+											<tr>
+												<th>Pengajuan Tanggal Customer</th>
+												<th>Jadwal dari Test Engineer</th>
+												<th>Pengajuan Ulang dari Customer</th>
+												<th>Jadwal dari Test Engineer</th>
 											</tr>
 										</thead>
 										<tbody>
 											<tr>
-												<td>Pengajuan Tanggal Customer</td>
-												<td>Jadwal dari Test Engineer</td>
-												<td>Pengajuan Ulang dari Customer</td>
-												<td>Jadwal dari Test Engineer</td>
-											</tr>
-											<tr>
-												<td>
-													<strong>@php echo $data->cust_test_date; @endphp</strong>
-												</td>
-												<td>
-													<strong>@php echo $data->deal_test_date; @endphp</strong>
-												</td>
-												<td>
-													<strong>@php echo $data->urel_test_date; @endphp</strong>
-												</td>
-												<td>
-													<strong>@php echo $data->function_date; @endphp</strong>
-												</td>
+												<td> @php echo $data->cust_test_date; @endphp </td>
+												<td> @php echo $data->deal_test_date; @endphp </td>
+												<td> @php echo $data->urel_test_date; @endphp </td>
+												<td> @php echo $data->function_date; @endphp </td>
 											</tr>
 										</tbody>
 									</table>
-
 									@if($data->function_test_reason != '' && $data->function_test_date_approval != 1)
+									<div class="form-group">
 										<label for="alasan">Alasan Jadwal Ulang:</label>
-										<textarea class="form-control" rows="2" name="reason" id="reason" readonly>{{ $data->function_test_reason }}</textarea>
+										<textarea class="form-control" rows="2" name="reason" id="reason" readonly>{{ $data->function_test_reason }}</textarea>	
+									</div>
 									@endif
 								</div>
-								@if($data->function_test_date_approval == 1)
-									<div class="col-md-12 center">
-										<div class="form-group">
-											<h4 style="display:inline">Jadwal FIX Uji Fungsi</h4>
-											@if($data->function_date != null)		
-												<h4 style="display:inline">: @php echo $data->function_date; @endphp</h4>
-											@else
-												<h4 style="display:inline">: @php echo $data->deal_test_date; @endphp</h4>
-											@endif
-										</div>
-									</div>
-								@endif
-							</div>							
-
-							<div class="col-md-12">
-								<div class="form-group">
-									<label for="form-field-select-2">
-										Lokasi Barang Sebelum Uji Fungsi
-									</label>
-									<select name="masukkan_barang" class="cs-select cs-skin-elastic">
-										@if(count($data->equipment)==0)
-											<option value="1" selected>Customer (Applicant)</option>
-										@else
-											<option value="2" selected>URel (Store)</option>
-										@endif
-									</select>
-								</div>
 							</div>
+							@if (!$data['is_loc_test'])
+								<div class="col-md-12">
+									<div class="form-group">
+										<h4 style="display:inline">Lokasi Barang</h4>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<select id="masukkan_barang" name="masukkan_barang" class="cs-select cs-skin-elastic">
+											@if(count($data->equipment)==0)
+												<option value="1" selected>Customer (Applicant)</option>
+											@else
+												<option value="2" selected>URel (Store)</option>
+											@endif
+										</select>
+									</div>
+								</div>
+							
 								@if($data->function_date != null)
 									@php $in_equip_date = $data->function_date; @endphp
 								@elseif($data->function_date == null && $data->urel_test_date != null)
@@ -442,69 +483,143 @@
 								@else
 									@php $in_equip_date = $data->cust_test_date; @endphp
 								@endif
-							
-							<div class="col-md-12">
-								<div class="form-group">
-									@foreach($data->media as $item)
-										@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan & Pengeluaran Perangkat Uji</a>
-										@endif
-									@endforeach
-								</div>
-							</div>
-							<div class="col-md-12">
-								@if($data->function_test_TE != 0)
-								<div class="col-md-12 center">
+
+							@endif
+							@if($data->function_test_TE != 0 && $data->function_test_date_approval == 1)
+								<div class="col-md-12">
 									<div class="form-group">
 										<h4 style="display:inline">
-											Hasil Uji Fungsi
+											Laporan {{$type_of_test}}
 										</h4>
-										<h4 style="display:inline">
-											: @if($data->function_test_TE == 1)
-												Memenuhi
+									</div>
+									<div class="form-group">
+										<label style="font-weight: bold;">
+											Hasil
+										</label>
+										<label>
+											:  
+											@if($data->function_test_TE == 1)
+												{{$type_of_test_result}}
 											@elseif($data->function_test_TE == 2)
-												Tidak Memenuhi
+												Tidak {{$type_of_test_result}}
 											@elseif($data->function_test_TE == 3)
 												dll
 											@else
 												Tidak Ada
 											@endif
-										</h4>
+										</label>
+									</div>
+									<div class="form-group">
+										<label for="catatan">Catatan :</label>
+										<textarea class="form-control" rows="5" name="catatan" id="catatan" readonly disabled>{{ $data->catatan }}</textarea>
+									</div>
+									<div class="form-group">
+										<a href="{{URL::to($url_generate_test.$data->id)}}" target="_blank"> Buatkan Laporan {{$type_of_test}}</a>
+									</div>
+									@if (!$data['is_loc_test'])
+									@if($data->function_test_TE == 1 && $data->function_test_date_approval == 1)
+										<div class="form-group">
+											<a href="{{URL::to('/cetakFormBarang/'.$data->id)}}" target="_blank"> Buatkan Bukti Penerimaan Perangkat</a>
+										</div>
+									@endif
+									@endif
+								</div>
+							@endif
+							@if(count($data->history_uf)>0)
+								<div class="col-md-12">
+									<div class="form-group">
+										<label class="pull-right">
+											<a class="history-uf-button" data-toggle="collapse" href="#collapse_history_uf">Lihat Riwayat Tidak {{$type_of_test_result}}</a>
+										</label>
 									</div>
 								</div>
-								@endif
+							@endif
+							<div class="col-md-12">
+								<div id="collapse_history_uf" class="form-group collapse">
+									<table class="table table-bordered"><caption></caption>
+										<thead>
+											<tr>
+												<th colspan="4" scope="col">Riwayat {{$type_of_test}}</th>
+											</tr>
+											<tr>
+												<th style="width: 17%;">Uji Fungsi ke-</th>
+												<th style="width: 17%;">Tanggal</th>
+												<th style="width: 30%;">Engineer</th>
+												<th>Catatan</th>
+											</tr>
+										</thead>
+										<tbody>
+											@php $no = 1; $count = 0; @endphp
+											@foreach($data->history_uf as $item)
+												@if($item->function_test_TE == 2)
+													<tr>
+														<td> {{ $no++ }}</td>
+														<td> {{ $item->function_test_date }}</td>
+														<td> {{ $item->function_test_PIC}}</td>
+														<td> {{ $item->catatan }}</td>
+													</tr>
+													@php $count++; @endphp
+												@endif
+											@endforeach
+											@if($count == 0)
+												<tr style="text-align: center;"><td colspan="4">Data Not Found</td></tr>
+											@endif
+										</tbody>
+									</table>
+								</div>							
+							</div>
+							@if($data->function_test_TE != 0 && $data->function_test_date_approval == 1)
+							<div class="col-md-12">
+								<div class="form-group">
+									<h4 style="display:inline">Dokumen</h4>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										Laporan {{$type_of_test}} : *
+									</label>
+								</div>
 								<div class="form-group">
 									@php $function_attach = ''; @endphp
 									@foreach($data->media as $item)
-										@if($item->name == 'Laporan Hasil Uji Fungsi' && $item->attachment != '')
+										@if($item->name == 'Laporan Hasil '.$type_of_test && $item->attachment != '')
 											@php $function_attach = $item->attachment; @endphp
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil Uji Fungsi')}}"> Download Hasil Uji Fungsi "@php echo $function_attach; @endphp"</a>
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Laporan Hasil '.$type_of_test)}}"> Download Hasil {{$type_of_test}} "@php echo $function_attach; @endphp"</a>
 										@endif
 									@endforeach
-									<input type="hidden" id="function_name" value="@php echo $function_attach; @endphp">
 								</div>
-								<div class="form-group">
-									<label for="catatan">Catatan :</label>
-									<textarea class="form-control" rows="5" name="catatan" id="catatan" readonly>{{ $data->catatan }}</textarea>
-								</div>
+								@if (!$data['is_loc_test'])
+								@if($data->function_test_TE == 1 && $data->function_test_date_approval == 1)
+									<div class="form-group">
+										<label>
+											Bukti Penerimaan Perangkat : *
+										</label>
+									</div>
+									<div class="form-group">
+										@php $barang_attach = ''; @endphp
+										@foreach($data->media as $item)
+											@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
+												@php $barang_attach = $item->attachment; @endphp
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan & Pengeluaran Perangkat Uji "@php echo $barang_attach; @endphp"</a>
+											@endif
+										@endforeach
+									</div>
+								@endif
+								@endif
 							</div>
+							@endif
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
 										Status *
 									</label>
-									<select name="function_status" class="cs-select cs-skin-elastic" disabled>
+									<select name="function_status" class="cs-select cs-skin-elastic">
 										@if($data->function_status == 0)
 											<option value="0" selected>Choose Status</option>
-											<option value="1">Completed</option>
-											<option value="-1">Not Completed</option>
 										@elseif($data->function_status == 1)
-											<option value="0">Choose Status</option>
 											<option value="1" selected>Completed</option>
-											<option value="-1">Not Completed</option>
 										@else
-											<option value="0">Choose Status</option>
-											<option value="1">Completed</option>
 											<option value="-1" selected>Not Completed</option>
 										@endif
 									</select>
@@ -512,15 +627,18 @@
 							</div>
 						</div>
 					</fieldset>
-				{!! Form::close() !!}
-
-				{!! Form::open() !!}
+					
     				<fieldset>
 						<legend>
 							Step Tinjauan Kontrak
 						</legend>
 						<div class="row">
 							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										Tinjauan Kontrak File *
+									</label>
+								</div>
 								<div class="form-group">
 									@php $contract_attach = ''; @endphp
 									@foreach($data->media as $item)
@@ -529,7 +647,6 @@
 											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Tinjauan Kontrak')}}"> Download Tinjauan Kontrak "@php echo $contract_attach; @endphp"</a>
 										@endif
 									@endforeach
-									<input type="hidden" id="contract_name" value="@php echo $contract_attach; @endphp">
 								</div>
 							</div>
 							<div class="col-md-6">
@@ -537,18 +654,12 @@
 									<label for="form-field-select-2">
 										Status *
 									</label>
-									<select name="contract_status" class="cs-select cs-skin-elastic" disabled>
+									<select class="cs-select cs-skin-elastic">
 										@if($data->contract_status == 0)
 											<option value="0" selected>Choose Status</option>
-											<option value="1">Completed</option>
-											<option value="-1">Not Completed</option>
 										@elseif($data->contract_status == 1)
-											<option value="0">Choose Status</option>
 											<option value="1" selected>Completed</option>
-											<option value="-1">Not Completed</option>
 										@else
-											<option value="0">Choose Status</option>
-											<option value="1">Completed</option>
 											<option value="-1" selected>Not Completed</option>
 										@endif
 									</select>
@@ -556,16 +667,18 @@
 							</div>
 						</div>
 					</fieldset>
-				{!! Form::close() !!}
-
-				{!! Form::open() !!}
+					
     				<fieldset>
 						<legend>
 							Step SPB
 						</legend>
-					@if($data->registration_status == 1 && $data->function_status == 1)
 						<div class="row">
-							<div class="col-md-6">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										SPB File *
+									</label>
+								</div>
 								<div class="form-group">
 									@php $spb_attach = ''; @endphp
 									@foreach($data->media as $item)
@@ -574,140 +687,147 @@
 											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/SPB')}}"> Download SPB "@php echo $spb_attach; @endphp"</a>
 										@endif
 									@endforeach
-									<input type="hidden" id="spb_name" value="@php echo $spb_attach; @endphp">
 								</div>
 							</div>
-	                        <div class="col-md-6">
+							<div class="col-md-6">
 								<div class="form-group">
-									<label for="form-field-select-2">
-										Status *
+									<label>
+										Nomor SPB *
 									</label>
-									<select name="spb_status" class="cs-select cs-skin-elastic" disabled>
-										@if($data->spb_status == 0)
-											<option value="0" selected>Choose Status</option>
-											<option value="1">Completed</option>
-											<option value="-1">Not Completed</option>
-										@elseif($data->spb_status == 1)
-											<option value="0">Choose Status</option>
-											<option value="1" selected>Completed</option>
-											<option value="-1">Not Completed</option>
-										@else
-											<option value="0">Choose Status</option>
-											<option value="1">Completed</option>
-											<option value="-1" selected>Not Completed</option>
-										@endif
-									</select>
+									<input type="text" name="spb_number" id="spb_number" class="form-control" placeholder="Nomor SPB" value="{{ $data->spb_number }}" readonly required>
 								</div>
 							</div>
-						</div>
-					@endif
-						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
 										Total Biaya *
 									</label>
-									<input type="text" name="exam_price" id="exam_price" class="form-control" placeholder="Total Biaya" value="{{ $data->price }}" readonly>
+									<input type="text" class="form-control" placeholder="Total Biaya" value="{{ $data->price }}" readonly required>
 								</div>
 							</div>
-							<input type="hidden" name="spb_number" id="spb_number" value="{{ $data->spb_number }}">
-							<input type="hidden" name="spb_date" id="spb_date" value="{{ $data->spb_date }}">
-						</div>
-					</fieldset>
-				{!! Form::close() !!}
-
-				{!! Form::open() !!}
-    				<fieldset>
-						<legend>
-							Step Pembayaran
-						</legend>
-						<div class="row">
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>
-										Status Pembayaran
-									</label>
-										@php $status = 0 @endphp
-									@foreach($data->media as $item)
-										@if($item->name == 'File Pembayaran' && $item->attachment !='')
-											@php $status = 1; break; @endphp
-										@endif
-									@endforeach
-
-									@if($status)
-										<label>
-											: Sudah di bayar, pada {{ $item->updated_at }}
-										</label>
-										</div>
-										<div class="form-group">
-											<label>
-												Banyak Uang *
-											</label>
-											<input type="text" name="cust_price_payment" id="cust_price_payment" class="form-control" placeholder="Banyak Uang" value="{{ $data->cust_price_payment }}" readonly>
-										</div>
-										<div class="form-group">
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/File Pembayaran')}}"> Download Bukti Pembayaran</a>
-										</div>
-									@else
-										<label>
-											: Belum di bayar
-										</label>
-									@endif
-							</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										@php $kuitansi_attach = ''; @endphp
-										@foreach($data->media as $item)
-											@if($item->name == 'Kuitansi' && $item->attachment != '')
-												@php $kuitansi_attach = $item->attachment; @endphp
-												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/kuitansi')}}"> Download Kuitansi "@php echo $kuitansi_attach; @endphp"</a>
-											@endif
-										@endforeach
-										<input type="hidden" id="kuitansi_name" value="@php echo $kuitansi_attach; @endphp">
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										@php $faktur_attach = ''; @endphp
-										@foreach($data->media as $item)
-											@if($item->name == 'Faktur Pajak' && $item->attachment != '')
-												@php $faktur_attach = $item->attachment; @endphp
-												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/faktur')}}"> Download Faktur Pajak "@php echo $faktur_attach; @endphp"</a>
-											@endif
-										@endforeach
-										<input type="hidden" id="faktur_name" value="@php echo $faktur_attach; @endphp">
-									</div>
-								</div>
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
 										Status *
 									</label>
-									<select name="payment_status" class="cs-select cs-skin-elastic" disabled>
-										@if($data->payment_status == 0)
+									<select class="cs-select cs-skin-elastic">
+										@if($data->spb_status == 0)
 											<option value="0" selected>Choose Status</option>
-											<option value="1">Completed</option>
-											<option value="-1">Not Completed</option>
-										@elseif($data->payment_status == 1)
-											<option value="0">Choose Status</option>
+										@elseif($data->spb_status == 1)
 											<option value="1" selected>Completed</option>
-											<option value="-1">Not Completed</option>
 										@else
-											<option value="0">Choose Status</option>
-											<option value="1">Completed</option>
 											<option value="-1" selected>Not Completed</option>
 										@endif
 									</select>
 								</div>
-								<input type="hidden" name="spb_number" id="spb_number" value="{{ $data->spb_number }}">
-								<input type="hidden" name="exam_price" id="exam_price" value="{{ $data->price }}">
-								<input type="hidden" name="spb_date" id="spb_date" value="{{ $data->spb_date }}">
 							</div>
 						</div>
 					</fieldset>
-				{!! Form::close() !!}
 
-				{!! Form::open() !!}
+    				<fieldset>
+						<legend>
+							Step Pembayaran
+						</legend>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group" style="display: none;">
+									<label>
+										Bukti Pembayaran
+									</label>
+										@php $status = 0 @endphp
+									@foreach($data->media as $item)
+										@if($item->name == 'File Pembayaran' && $item->attachment !='')
+											@php $status = 1;  @endphp
+										@endif
+									@endforeach
+
+									@if($status)
+										<label>
+											: <a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/File Pembayaran')}}"> Download</a>
+										</label>
+										<div class="form-group">
+											<label>
+												Banyak Uang (Rp.) *
+											</label>
+											<input type="text" class="formatPrice form-control" placeholder="Banyak Uang" value="{{ $data->cust_price_payment }}" readonly required>
+										</div>
+									@else
+										<label>
+											: (Kosong)
+										</label>
+									@endif
+								</div>
+								<div class="form-group">
+									<label>
+										Billing Status
+									</label>
+										
+									@if($data->PO_ID && $data->BILLING_ID == '')
+										<label>
+											: (Drafted)
+										</label>
+									@elseif($data->PO_ID && $data->BILLING_ID && $data->payment_status != 1)
+										<label>
+											: (Created)
+										</label>
+									@elseif($data->PO_ID && $data->BILLING_ID && $data->payment_status)
+										<label>
+											: (Paid)
+										</label>
+									@endif
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Kuitansi File
+									</label>
+								</div>
+								<div class="form-group">
+									@php $kuitansi_attach = ''; @endphp
+									@foreach($data->media as $item)
+										@if($item->name == 'Kuitansi' && $item->attachment != '')
+											@php $kuitansi_attach = $item->attachment; @endphp
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/kuitansi')}}"> Download Kuitansi "@php echo $kuitansi_attach; @endphp"</a>
+										@endif
+									@endforeach
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Faktur Pajak File
+									</label>
+								</div>
+								<div class="form-group">
+									@php $faktur_attach = ''; @endphp
+									@foreach($data->media as $item)
+										@if($item->name == 'Faktur Pajak' && $item->attachment != '')
+											@php $faktur_attach = $item->attachment; @endphp
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/faktur')}}"> Download Faktur Pajak "@php echo $faktur_attach; @endphp"</a>
+										@endif
+									@endforeach
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Status *
+									</label>
+									<select class="cs-select cs-skin-elastic">
+										@if($data->payment_status == 0)
+											<option value="0" selected>Choose Status</option>
+										@elseif($data->payment_status == 1)
+											<option value="1" selected>Completed</option>
+										@else
+											<option value="-1" selected>Not Completed</option>
+										@endif
+									</select>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+
     				<fieldset>
 						<legend>
 							Step Pembuatan SPK
@@ -718,50 +838,45 @@
 									<label>
 										Tanggal SPK Dikeluarkan *
 									</label>
-									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-										<input type="text" name="spk_date" class="form-control" value="{{ $data->spk_date }}" readonly/>
+									<p class="input-group input-append" data-date-format="yyyy-mm-dd">
+										<input type="text" class="form-control" value="{{ $data->spk_date }}" readonly required/>
+										<span class="input-group-btn">
+											<button type="button" class="btn btn-default">
+												<em class="glyphicon glyphicon-calendar"></em>
+											</button>
+										</span>
 									</p>
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="form-field-select-2">
-										Status *
+									<label>
+										Nomor SPK *
 									</label>
-									<select name="spk_status" class="cs-select cs-skin-elastic" disabled>
-										@if($data->spk_status == 0)
-											<option value="0" selected>Choose Status</option>
-											<option value="1">Completed</option>
-											<option value="-1">Not Completed</option>
-										@elseif($data->spk_status == 1)
-											<option value="0">Choose Status</option>
-											<option value="1" selected>Completed</option>
-											<option value="-1">Not Completed</option>
-										@else
-											<option value="0">Choose Status</option>
-											<option value="1">Completed</option>
-											<option value="-1" selected>Not Completed</option>
-										@endif
-									</select>
+										<input type="text" class="form-control" placeholder="Nomor SPK" value="{{ $data->spk_code }}" required readonly>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group">
-									<label>
-										Nomor SPK *
+									<label for="form-field-select-2">
+										Status *
 									</label>
-										<input type="text" name="spk_code" id="spk_code" class="form-control" placeholder="Nomor SPK" value="{{ $data->spk_code }}" required 
-										@php if($data->spk_code != null){echo "readonly";}@endphp
-										>
+									<select class="cs-select cs-skin-elastic">
+										@if($data->spk_status == 0)
+											<option value="0" selected>Choose Status</option>
+										@elseif($data->spk_status == 1)
+											<option value="1" selected>Completed</option>
+										@else
+											<option value="-1" selected>Not Completed</option>
+										@endif
+									</select>
 								</div>
 							</div>
 	                    </div>
 					</fieldset>
-				{!! Form::close() !!}
 
-				{!! Form::open() !!}
     				<fieldset>
 						<legend>
 							Step Pelaksanaan Uji
@@ -769,42 +884,44 @@
 						<div class="row">
 						@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
 							@php
-								$start_date = new DateTime($exam_schedule->data[0]->targetDt);
-								$end_date = new DateTime(date('Y-m-d'));
-								$interval = $start_date->diff($end_date);
+								$start_date = new DateTime(date('Y-m-d'));
+								$end_date = new DateTime($exam_schedule->data[0]->targetDt);
+								if($start_date>$end_date){
+									$sisa_spk = 0;
+								}else{
+									$interval = $start_date->diff($end_date);
+									$sisa_spk = $interval->days;
+								}
 							@endphp
 							<div class="col-md-12">
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>
-											Tanggal Mulai Uji
-										</label>
-										<label>
-											: {{ $exam_schedule->data[0]->startTestDt }}
-										</label>
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>
-											Tanggal Selesai Uji
-										</label>
-										<label>
-											: {{ $exam_schedule->data[0]->targetDt }}
-										</label>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-12">
 								<div class="form-group">
-									<label>
-										Sisa SPK
-									</label>
-									<label>
-										: {{ $interval->days }} hari
-									</label>
+									<table class="table table-bordered"><caption></caption>
+										<thead>
+											<tr>
+												<th colspan="4" scope="col">Riwayat Pelaksanaan Uji</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>Tanggal Approve Manager Lab</td>
+												<td>Target Selesai Uji</td>
+												<td>Sisa Waktu Pengujian</td>
+											</tr>
+											<tr>
+												<td>
+													<strong>{{ $exam_schedule->data[0]->startTestDt }}</strong>
+												</td>
+												<td>
+													<strong>{{ $exam_schedule->data[0]->targetDt }}</strong>
+												</td>
+												<td>
+													<strong>{{ $sisa_spk }} hari</strong>
+												</td>
+											</tr>
+										</tbody>
+									</table>
 								</div>
-							</div>
+							</div>	
 							@if(count($data_lab)>0)
 								<div class="col-md-12">
 									<div class="form-group">
@@ -815,36 +932,56 @@
 								</div>
 							@endif
 							<div class="col-md-12">
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>
-											Mulai Uji
-										</label>
-										<label>
-											: {{ $exam_schedule->data[0]->actualStartTestDt }}
-										</label>
-									</div>
+								<div class="form-group">
+									<table class="table table-bordered"><caption></caption>
+										<tbody>
+											<tr>
+												<th scope="col">Mulai Uji oleh Test Engineer</th>
+												<th scope="col">Selesai Uji oleh Test Engineer</th>
+											</tr>
+											<tr>
+												<td>
+													<strong>{{ $exam_schedule->data[0]->actualStartTestDt }}</strong>
+												</td>
+												<td>
+													<strong>{{ $exam_schedule->data[0]->actualFinishTestDt }}</strong>
+												</td>
+											</tr>
+										</tbody>
+									</table>
 								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>
-											Selesai Uji
-										</label>
-										<label>
-											: {{ $exam_schedule->data[0]->actualFinishTestDt }}
-										</label>
-									</div>
-								</div>
-								@if(count($data_gudang)>1)
+							</div>
+							@if(count($data_gudang)>1)
 								<div class="col-md-12">
 									<div class="form-group">
-										<label>
-											Barang pindah dari Lab ke Gudang tanggal : {{ $data_gudang[0]->action_date }}
+										<label for="form-field-select-2"> 
+											Barang pindah dari Lab ke Gudang tanggal : 
+											@if($data_gudang[0]->action_date != NULL AND $data_gudang[0]->action_date != '0000-00-00')
+												tanggal : {{ $data_gudang[0]->action_date }}
+											@endif
 										</label>
 									</div>
 								</div>
-								@endif
-							</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Tanggal Barang Dikembalikan *
+										</label>
+										<p class="input-group input-append" data-date-format="yyyy-mm-dd">
+											@if($data_gudang[0]->action_date != NULL AND $data_gudang[0]->action_date != '0000-00-00')
+												<input type="text" class="form-control" value="{{ $data_gudang[0]->action_date }}" readonly required/>
+											@else
+												<input type="text" class="form-control" value="" readonly required/>
+											@endif
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-default">
+													<em class="glyphicon glyphicon-calendar"></em>
+												</button>
+											</span>
+										</p>
+									</div>
+								</div>
+							@endif
 						@endif
 							<div class="col-md-12">
 								<div class="form-group">
@@ -889,10 +1026,8 @@
 							</div>
 						</div>
 					</fieldset>
-				{!! Form::close() !!}
-				
+
 				@if($data->examination_type_id !='1')
-				{!! Form::open() !!}
 					<fieldset>
 						<legend>
 							Edit Lokasi Barang
@@ -906,10 +1041,16 @@
 										@endif
 									@endforeach
 								</div>
-								
 								<div class="form-group">
+									<label>
+										Bukti Penerimaan & Pengeluaran Perangkat Uji File *
+									</label>
+								</div>
+								<div class="form-group">
+									@php $barang_attach2 = ''; @endphp
 									@foreach($data->media as $item)
 										@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji2' && $item->attachment != '')
+											@php $barang_attach2 = $item->attachment; @endphp
 											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji2')}}"> Download Bukti Pengeluaran Perangkat Uji</a>
 										@endif
 									@endforeach
@@ -920,7 +1061,7 @@
 									<label for="form-field-select-2">
 										Lokasi Barang Sekarang
 									</label>
-									<select name="update_barang" class="cs-select cs-skin-elastic" disabled>
+									<select class="cs-select cs-skin-elastic">
 										@if(count($data->equipment)==0)
 											<option value="2" selected>URel (Store)</option>
 										@elseif($data->equipment[0]->location==1)
@@ -935,11 +1076,9 @@
 							</div>
 						</div>
 					</fieldset>
-				{!! Form::close() !!}
 				@endif
 				@php $rev_uji = 0; $lap_uji_url = null; $lap_uji_attach = null @endphp
-				{!! Form::open() !!}
-					<fieldset>
+				<fieldset>
 						<legend>
 							Step Laporan Uji
 						</legend>
@@ -947,7 +1086,6 @@
 							@foreach($data->media as $item)
 								@if($item->name == 'Laporan Uji')
 									@php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;@endphp
-									<input type="hidden" id="hide_attachment_form-lap-uji" value="{{ $item->attachment }}">
 									@if($item->attachment != '')
 									<div class="col-md-12">
 										<div class="form-group">
@@ -987,26 +1125,26 @@
 								@endif
 							@endforeach
 							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>
-										Mulai Pembuatan Laporan
-									</label>
-									<label>
-										: {{ $exam_schedule->data[0]->startReportDt }}
-									</label>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Mulai Pembuatan Laporan
+										</label>
+										<label>
+											: {{ $exam_schedule->data[0]->startReportDt }}
+										</label>
+									</div>
 								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>
-										Selesai Pembuatan Laporan
-									</label>
-									<label>
-										: {{ $exam_schedule->data[0]->finishReportDt }}
-									</label>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Selesai Pembuatan Laporan
+										</label>
+										<label>
+											: {{ $exam_schedule->data[0]->finishReportDt }}
+										</label>
+									</div>
 								</div>
-							</div>
 							@endif
 							@if($data->examination_type_id =='2' || $data->examination_type_id =='3')
 							<div class="col-md-12">
@@ -1014,14 +1152,12 @@
 									<label>
 										Revisi Laporan Uji*
 									</label>
-									<input type="file" name="rev_lap_uji_file" id="rev_lap_uji_file" class="form-control" accept="application/pdf, image/*">
 								</div>
 								<div class="form-group">
-									<table class="table table-bordered">
-										<caption></caption>
+									<table class="table table-bordered"><caption></caption>
 										<thead>
 											<tr>
-												<th colspan="5" scope="colgroup">Riwayat Revisi Laporan Uji</th>
+												<th colspan="5" scope="col">Riwayat Revisi Laporan Uji</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -1081,28 +1217,27 @@
 									<label>
 										Tanggal Laporan Diterbitkan*
 									</label>
-									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-										<input type="text" name="resume_date" class="form-control" value="{{ $data->resume_date }}" readonly/>
+									<p class="input-group input-append" data-date-format="yyyy-mm-dd">
+										<input type="text" class="form-control" value="{{ $data->resume_date }}" readonly required/>
+										<span class="input-group-btn">
+											<button type="button" class="btn btn-default">
+												<em class="glyphicon glyphicon-calendar"></em>
+											</button>
+										</span>
 									</p>
 								</div>
 							</div>
-	                        <div class="col-md-12">
+	                        <div class="col-md-6">
 								<div class="form-group">
 									<label for="form-field-select-2">
 										Status *
 									</label>
-									<select name="resume_status" class="cs-select cs-skin-elastic" disabled>
+									<select class="cs-select cs-skin-elastic">
 										@if($data->resume_status == 0)
 											<option value="0" selected>Choose Status</option>
-											<option value="1">Completed</option>
-											<option value="-1">Not Completed</option>
 										@elseif($data->resume_status == 1)
-											<option value="0">Choose Status</option>
 											<option value="1" selected>Completed</option>
-											<option value="-1">Not Completed</option>
 										@else
-											<option value="0">Choose Status</option>
-											<option value="1">Completed</option>
 											<option value="-1" selected>Not Completed</option>
 										@endif
 									</select>
@@ -1110,9 +1245,6 @@
 							</div>
 						</div>
 					</fieldset>
-				{!! Form::close() !!}
-				
-					{!! Form::open() !!}
 						@if(count($data->questioner)>0)
 							<fieldset>
 								<legend>
@@ -1130,11 +1262,8 @@
 								</div>	
 							</fieldset>
 						@endif
-					{!! Form::close() !!}
-				
-				@if($data->examination_type_id !='2' && $data->examination_type_id !='3' && $data->examination_type_id !='4')
-					{!! Form::open() !!}
-	    				<fieldset>
+				@if($data->examination_type_id =='1')
+						<fieldset>
 							<legend>
 								Step Sidang QA
 							</legend>
@@ -1148,16 +1277,16 @@
 											@if($data->qa_passed == 1)
 											<div class="radio">
 												<div class="radio clip-radio radio-primary">
-														<input type="radio" value="1" name="passed" id="passed" checked>
+														<input type="radio" value="1" checked>
 														<label for="passed">
 															Lulus
 														</label>
 												</div>
 											</div>
-											@else
+											@elseif($data->qa_passed == -1)
 											<div class="radio">
 												<div class="radio clip-radio radio-primary">
-													<input type="radio" value="-1" name="passed" id="notPassed" checked>
+													<input type="radio" value="-1" checked>
 													<label for="notPassed">
 														Tidak Lulus
 													</label>
@@ -1173,8 +1302,13 @@
 										<label>
 											Tanggal Verifikasi *
 										</label>
-										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-											<input type="text" name="qa_date" class="form-control" value="{{ $data->qa_date }}" readonly/>
+										<p class="input-group input-append" data-date-format="yyyy-mm-dd">
+											<input type="text" class="form-control" value="{{ $data->qa_date }}" readonly required/>
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-default">
+													<em class="glyphicon glyphicon-calendar"></em>
+												</button>
+											</span>
 										</p>
 									</div>
 								</div>
@@ -1183,18 +1317,12 @@
 										<label for="form-field-select-2">
 											Status *
 										</label>
-										<select name="qa_status" class="cs-select cs-skin-elastic" disabled>
+										<select class="cs-select cs-skin-elastic">
 											@if($data->qa_status == 0)
 												<option value="0" selected>Choose Status</option>
-												<option value="1">Completed</option>
-												<option value="-1">Not Completed</option>
 											@elseif($data->qa_status == 1)
-												<option value="0">Choose Status</option>
 												<option value="1" selected>Completed</option>
-												<option value="-1">Not Completed</option>
 											@else
-												<option value="0">Choose Status</option>
-												<option value="1">Completed</option>
 												<option value="-1" selected>Not Completed</option>
 											@endif
 										</select>
@@ -1202,34 +1330,41 @@
 								</div>
 							</div>
 						</fieldset>
-					{!! Form::close() !!}
-					
-					{!! Form::open() !!}
+
 						<fieldset>
 							<legend>
 								Edit Lokasi Barang
 							</legend>
 							<div class="row">
-								<div class="form-group">
-									@foreach($data->media as $item)
-										@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan Perangkat Uji</a>
-										@endif
-									@endforeach
-								</div>
-								<div class="form-group">
-									@foreach($data->media as $item)
-										@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji2' && $item->attachment != '')
-											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji2')}}"> Download Bukti Pengeluaran Perangkat Uji</a>
-										@endif
-									@endforeach
+								<div class="col-md-12">
+									<div class="form-group">
+										@foreach($data->media as $item)
+											@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji1' && $item->attachment != '')
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji1')}}"> Download Bukti Penerimaan Perangkat Uji</a>
+											@endif
+										@endforeach
+									</div>
+									<div class="form-group">
+										<label>
+											Bukti Penerimaan & Pengeluaran Perangkat Uji File *
+										</label>
+									</div>
+									<div class="form-group">
+										@php $barang_attach2 = ''; @endphp
+										@foreach($data->media as $item)
+											@if($item->name == 'Bukti Penerimaan & Pengeluaran Perangkat Uji2' && $item->attachment != '')
+												@php $barang_attach2 = $item->attachment; @endphp
+												<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/Bukti Penerimaan & Pengeluaran Perangkat Uji2')}}"> Download Bukti Pengeluaran Perangkat Uji</a>
+											@endif
+										@endforeach
+									</div>
 								</div>
 								<div class="col-md-12">
 									<div class="form-group">
 										<label for="form-field-select-2">
 											Lokasi Barang Sekarang
 										</label>
-										<select name="update_barang" class="cs-select cs-skin-elastic" disabled>
+										<select class="cs-select cs-skin-elastic">
 											@if(count($data->equipment)==0)
 												<option value="2" selected>URel (Store)</option>
 											@elseif($data->equipment[0]->location==1)
@@ -1244,9 +1379,7 @@
 								</div>
 							</div>
 						</fieldset>
-					{!! Form::close() !!}
-					
-					{!! Form::open() !!}
+
 	    				<fieldset>
 							<legend>
 								Step Penerbitan Sertifikat
@@ -1256,29 +1389,26 @@
 								<div>
 									<div class="col-md-12">
 										<div class="form-group">
+											<label>
+												Sertifikat File *
+											</label>
+										</div>
+										<div class="form-group">
+										@php $certificate_name = ''; @endphp
 										@if($data->certificate_status)
 											@if($data->device->certificate)
+												@php $certificate_name = $data->device->cert_number; @endphp
 												<a href="{{URL::to('/admin/examination/media/download/'.$data->device_id.'/certificate')}}"> Download Certificate {{ $data->device->cert_number }}</a>
 											@endif
 										@endif
 										</div>
 									</div>
-									<div class="col-md-6">
+									<div class="col-md-7">
 										<div class="form-group">
 											<label>
 												Nomor Sertifikat *
 											</label>
-												<input type="text" name="cert_number" id="cert_number" class="form-control" placeholder="Nomor Sertifikat" value="{{ $data->device->cert_number }}" readonly/>
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<label>
-												Tanggal *
-											</label>
-											<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-												<input type="text" name="certificate_date" class="form-control" value="{{ $data->certificate_date }}" readonly/>
-											</p>
+												<input type="text" class="form-control" placeholder="Nomor Sertifikat" value="{{ $data->device->cert_number }}" readonly required>
 										</div>
 									</div>
 									<div class="col-md-6">
@@ -1286,8 +1416,13 @@
 											<label>
 												Tanggal Mulai Berlaku *
 											</label>
-											<p id="validFrom" class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
-												<input type="text" name="valid_from" id="valid_from" class="form-control" value="{{ $data->device->valid_from }}" readonly/>
+											<p class="input-group input-append" data-date-format="yyyy-mm-dd" />
+												<input type="text" class="form-control" value="{{ $data->device->valid_from }}" readonly required/>
+												<span class="input-group-btn">
+													<button type="button" class="btn btn-default">
+														<em class="glyphicon glyphicon-calendar"></em>
+													</button>
+												</span>
 											</p>
 										</div>
 									</div>
@@ -1296,8 +1431,13 @@
 											<label>
 												Tanggal Akhir Berlaku *
 											</label>
-											<p id="validThru" class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd" />
-												<input type="text" name="valid_thru" id="valid_thru" class="form-control" value="{{ $data->device->valid_thru }}" readonly/>
+											<p class="input-group input-append" data-date-format="yyyy-mm-dd" />
+												<input type="text" class="form-control" value="{{ $data->device->valid_thru }}" readonly required/>
+												<span class="input-group-btn">
+													<button type="button" class="btn btn-default">
+														<em class="glyphicon glyphicon-calendar"></em>
+													</button>
+												</span>
 											</p>
 										</div>
 									</div>
@@ -1308,18 +1448,12 @@
 										<label for="form-field-select-2">
 											Status *
 										</label>
-										<select name="certificate_status" class="cs-select cs-skin-elastic" disabled>
+										<select name="certificate_status" class="cs-select cs-skin-elastic">
 											@if($data->certificate_status == 0)
 												<option value="0" selected>Choose Status</option>
-												<option value="1">Completed</option>
-												<option value="-1">Not Completed</option>
 											@elseif($data->certificate_status == 1)
-												<option value="0">Choose Status</option>
 												<option value="1" selected>Completed</option>
-												<option value="-1">Not Completed</option>
 											@else
-												<option value="0">Choose Status</option>
-												<option value="1">Completed</option>
 												<option value="-1" selected>Not Completed</option>
 											@endif
 										</select>
@@ -1327,9 +1461,7 @@
 								</div>
 							</div>
 						</fieldset>
-					{!! Form::close() !!}
-					
-					{!! Form::open() !!}
+
 						<fieldset>
 							<legend>
 								Histori Download Laporan Pengujian dan Sertifikat
@@ -1380,7 +1512,6 @@
 								</div>
 							</div>
 						</fieldset>
-					{!! Form::close() !!}
 				@endif
 			</div>
 		</div>

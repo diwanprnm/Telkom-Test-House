@@ -45,7 +45,10 @@ return [
 	'service_device_model'			=> 'Model/Tipe',
 	'service_device_test_reference'	=> 'Referensi Uji',
 	'service_device_document'		=> 'Dokumen Pendukung',
+	'service_device_already_exist'	=> 'Perangkat[Nama, Merk, Model, Kapasitas] dan Jenis Pengujian sudah ada!',
+	'service_device_not_6_months_yet' => 'Perangkat pada jenis pengujian ini telah gagal sebelumnya dan belum melewati masa 6 bulan.',
 	
+	'service_label_testing_site'		=> 'Lokasi Pengujian',
 	'service_lab_testing'				=> "Uji Lab Telkom",
 	'service_loc_testing'				=> "Uji Lokasi",
 	
@@ -61,12 +64,13 @@ return [
 	'service_upload_reference_test_no'	=> 'No Referensi Uji',
 	'service_upload_reference_test_date'=> 'Tanggal Referensi Uji',
 	'service_upload_support_principals'	=> 'Surat Dukungan Prinsipal',
-	'service_upload_another_file'		=> 'File Lainnya',
+	'service_upload_another_file'		=> 'Dokumen Spesifikasi',
 	'service_upload_support_principals_no'	=> 'No Surat Dukungan Prinsipal',
 	'service_upload_support_principals_date'=> 'Tanggal Surat Dukungan Prinsipal',
 	'service_upload_sp3'				=> 'PLG ID dan NIB',
 	'service_upload_sp3_no'				=> 'No PLG ID dan NIB',
 	'service_upload_sp3_date'			=> 'Tanggal PLG ID dan NIB',
+	'service_upload_sp3_file'			=> 'Dokumen PLG ID dan NIB',
 	
 	'service_preview'			=> 'Pratinjau',
 	'service_preview_exam_type'	=> 'Jenis Pengujian',

@@ -572,7 +572,7 @@ class ExaminationController extends Controller
 	            $notification_id = $notificationService->make($data);
 			    $data['id'] = $notification_id;
 			    // event(new Notification($data));
-				$exam->PO_ID ? $examinationService->send_revision($exam, $request->input('spb_number')) : $examinationService->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.spb", "Penerbitan Surat Pemberitahuan Biaya (SPB) untuk ".$exam->function_test_NO,$path_file."/".$attach_name,$request->input('spb_number'),$exam->id);
+				$exam->PO_ID ? $examinationService->send_revision($exam, $request->input('spb_number'), 'emails.spbRevision') : $examinationService->sendEmailNotification_wAttach($exam->created_by,$device->name,$exam_type->name,$exam_type->description, "emails.spb", "Penerbitan Surat Pemberitahuan Biaya (SPB) untuk ".$exam->function_test_NO,$path_file."/".$attach_name,$request->input('spb_number'),$exam->id);
 			}else if($status == -1){
 				$exam->price = str_replace(".",'',$request->input('exam_price'));
 				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"SPB",$request->input(self::KETERANGAN));

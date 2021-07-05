@@ -10,6 +10,8 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+
+use App\Http\Controllers\EmailEditorController;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -22,12 +24,6 @@ Route::get('cetakstel', function(Illuminate\Http\Request $request){
 	$PDFData = $request;
 	$PDF = new \App\Services\PDF\PDFService();
 	return $PDF->cetakSTEL($PDFData);
-});
-
-Route::get('cetakPermohonan', function(Illuminate\Http\Request $request){
-	$PDFData = $request->session()->get('key');
-	$PDF = new \App\Services\PDF\PDFService();
-	return $PDF->cetakPermohonan($PDFData);	
 });
 
 Route::get('cetakKontrak', function(Illuminate\Http\Request $request){
@@ -214,6 +210,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::resource('/fakturpajak', 'FakturPajakController');
 	Route::resource('/videoTutorial', 'VideoTutorialController');
 	Route::post('/orderSlideshow', 'SlideshowController@orderSlideshow');
+	Route::resource('/email_editors', 'EmailEditorController');
 });
 	Route::get('/uploadCertification', 'UploadProductionController@uploadCertification');
 	Route::get('/uploadCompany', 'UploadProductionController@uploadCompany');
@@ -260,7 +257,7 @@ Route::post('/cekPermohonan', 'PermohonanController@cekSNjnsPengujian');
 Route::post('/getPemohon', 'PermohonanController@getInfo');
 Route::post('/downloadFile', 'PermohonanController@downloadFile');
 Route::post('/updatePermohonan', 'PermohonanController@update');
-// Route::get('/cetakPermohonan', 'PermohonanController@cetak');
+Route::get('/cetakPermohonan/{exam_id}', 'PermohonanController@cetak');
 Route::post('/cekLogin', 'ClientController@cekLogin');
 Route::resource('/pengujian', 'PengujianController');
 Route::get('/pengujian/{id}/detail', 'PengujianController@detail');

@@ -745,28 +745,14 @@ class PengujianController extends Controller
             $message = null;
             $paginate = 2;
             $search = trim($request->input(self::SEARCH,''));
-            
-			$data = DB::table('examination_attachments')
-				->select('examination_attachments.*')
-				->join(self::EXAMINATIONS, 'examination_attachments.examination_id', '=', 'examinations.id')
-				->where(self::EXAMINATION_ID, '=', ''.$id.'')
-				->where(self::EXAMINATIONS_COMPANY_ID, '=', ''.$company_id.'')
-				->where('name', '=', 'File Pembayaran')
-				->first();
-
-				$examinationsData = Examination::where('id', $id)->with(self::DEVICE)->get();
-			
-            if (!count((array)$data)){
-                $message = self::DATA_NOT_FOUND;
-				$data = NULL;
-            }
+            $examinationsData = Examination::where('id', $id)->with(self::DEVICE)->get();
 			
             return view('client.pengujian.pembayaran')
                 ->with(self::MESSAGE, $message)
                 ->with('spb_number', $examination->spb_number)
                 ->with('spb_date', $examination->spb_date)
                 ->with('price', $examination->price)
-                ->with('data', $data)
+                ->with('id', $id)
 				->with('examinationsData', $examinationsData)
 				->with(self::PAYMENT_METHOD, $examinationService->api_get_payment_methods())
                 ->with(self::USER_ID, $user_id)
@@ -1669,7 +1655,8 @@ class PengujianController extends Controller
 			d.test_reference AS referensi_perangkat,
 			d.serial_number AS serialNumber,
 			e.jns_perusahaan AS jnsPerusahaan,
-			e.function_test_NO
+			e.function_test_NO,
+			e.created_at
 		FROM
 			examinations e,
 			devices d,
@@ -1711,6 +1698,7 @@ class PengujianController extends Controller
 			'nibPerusahaan' => $data[0]->nibPerusahaan  ? : '-',
 			'npwpPerusahaan' => $data[0]->npwpPerusahaan  ? : '-',
 			'kotaPerusahaan' => $data[0]->kotaPerusahaan ? : '-',
+			'date' => Carbon::parse($data[0]->created_at ?? date('d-m-Y') )->format('d-m-Y')
 		);
 		
 		$PDF = new \App\Services\PDF\PDFService();
@@ -1779,16 +1767,13 @@ class PengujianController extends Controller
 	
 	public function checkKuisioner(Request $request) {
 		$currentUser = Auth::user();
-		$expDate = Carbon::now()->subMonths(3);
+		$expDate = Carbon::now()->subMonths(3)->format('Y-m-d');
 		$company_id = $currentUser->company_id;
 		$exam_id = $request->input('id');
-		// $quest = Questioner::where(self::EXAMINATION_ID, "=", $request->input('id'))
-		$query = Questioner::with('user')
-				->whereDate('questioner_date', '>=', $expDate)
-	            ->orWhere(self::EXAMINATION_ID, $exam_id);
-		$query->whereHas('user', function ($query) use ($company_id) {
+		$query = Questioner::with('user')->whereHas('user', function ($query) use ($company_id) {
             $query->where(self::COMPANY_ID, $company_id);
         });
+		$query->whereDate('questioner_date', '>=', $expDate)->orderBy('questioner_date', 'DESC');
 		// ->where("created_by", "=", $currentUser->id)
 		$quest = $query->select('complaint')->get();
 		$is_exists = count($quest);

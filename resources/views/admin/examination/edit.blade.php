@@ -902,9 +902,9 @@
 												<th colspan="4" scope="col">Riwayat {{$type_of_test}}</th>
 											</tr>
 											<tr>
-												<th>Uji Fungsi ke-</th>
-												<th>Tanggal</th>
-												<th>Engineer</th>
+												<th style="width: 17%;">Uji Fungsi ke-</th>
+												<th style="width: 17%;">Tanggal</th>
+												<th style="width: 30%;">Engineer</th>
 												<th>Catatan</th>
 											</tr>
 										</thead>
@@ -1206,9 +1206,9 @@
 												<th colspan="4" scope="col">Riwayat {{$type_of_test}}</th>
 											</tr>
 											<tr>
-												<th>Uji Fungsi ke-</th>
-												<th>Tanggal</th>
-												<th>Engineer</th>
+												<th style="width: 17%;">Uji Fungsi ke-</th>
+												<th style="width: 17%;">Tanggal</th>
+												<th style="width: 30%;">Engineer</th>
 												<th>Catatan</th>
 											</tr>
 										</thead>
@@ -1461,9 +1461,9 @@
 												<th colspan="4" scope="col">Riwayat {{$type_of_test}}</th>
 											</tr>
 											<tr>
-												<th>Uji Fungsi ke-</th>
-												<th>Tanggal</th>
-												<th>Engineer</th>
+												<th style="width: 17%;">Uji Fungsi ke-</th>
+												<th style="width: 17%;">Tanggal</th>
+												<th style="width: 30%;">Engineer</th>
 												<th>Catatan</th>
 											</tr>
 										</thead>
@@ -4809,10 +4809,10 @@
 				$('#myModalketerangan_registrasi').modal('hide');
 			}
 		}else{
-			if(!document.getElementById('hide_attachment_form-registrasi').value){
-				alert("Form Uji belum ditanda tangan / di-upload oleh kastamer!");
-				return false;
-			}
+			// if(!document.getElementById('hide_attachment_form-registrasi').value){
+			// 	alert("Form Uji belum ditanda tangan / di-upload oleh kastamer!");
+			// 	return false;
+			// }
 			if(!document.getElementById('examination_lab_id').value){
 				alert("Pilih Laboratorium Pengujian!");
 				$('#examination_lab_id').focus();

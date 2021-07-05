@@ -45,7 +45,10 @@ return [
 	'service_device_model'				=> 'Model/Type',
 	'service_device_test_reference'	 	=> 'Test Reference',
 	'service_device_document'			=> 'Supporting Documents',
+	'service_device_already_exist'		=> 'Device[Name, Mark, Model, Capacity] and Examination Type is already exist!',
+	'service_device_not_6_months_yet'	=> 'This device has failed before and it hasn\'t been past 6 months',
 	
+	'service_label_testing_site'		=> 'Test Location',
 	'service_lab_testing'				=> "Telkom's Lab Testing",
 	'service_loc_testing'				=> "Onsite Testing",
 	
@@ -61,12 +64,13 @@ return [
 	'service_upload_reference_test_no'	=> 'No Test Reference',
 	'service_upload_reference_test_date'=> 'Date of Test Reference',
 	'service_upload_support_principals'	=> 'Support Principals',
-	'service_upload_another_file'		=> 'Another File',
+	'service_upload_another_file'		=> 'Datasheet',
 	'service_upload_support_principals_no'	=> 'No Support Principals',
 	'service_upload_support_principals_date'=> 'Date of Support Principals',
 	'service_upload_sp3'				=> 'PLG ID & NIB',
 	'service_upload_sp3_no'				=> 'No PLG ID & NIB',
 	'service_upload_sp3_date'			=> 'Date of PLG ID & NIB',
+	'service_upload_sp3_file'			=> 'PLG ID & NIB Document',
 	
 	'service_preview'			=> 'Preview',
 	'service_preview_exam_type'	=> 'Examination Type',
