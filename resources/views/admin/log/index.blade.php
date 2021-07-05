@@ -85,7 +85,7 @@
 										<label>
 											Username
 										</label>
-										<select class="form-control" id="username" name="username" class="chosen-username">
+										<select class="form-control" id="username" name="username">
 												@if ($filterUsername == '')
 													<option value="" disabled selected> - Pilih Username - </option>
 												@endif
@@ -109,7 +109,7 @@
 										<label>
 											Action
 										</label>
-										<select class="form-control" id="action" name="action" class="chosen-action">
+										<select class="form-control" id="action" name="action">
 												@if ($filterAction == '')
 													<option value="" disabled selected> - Pilih Action - </option>
 												@endif
@@ -344,6 +344,10 @@
 			for (var i = 0; i < actionOptions.length; i++) {
 				actionOptions[i].selected = actionOptions[i].defaultSelected
 			}
+			$('#username').chosen();
+			$('#username').val('').trigger("chosen:updated");
+			$('#action').chosen();
+			$('#action').val('').trigger("chosen:updated");
             // [].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {	
             //     new SelectFx(el);
             // } );
