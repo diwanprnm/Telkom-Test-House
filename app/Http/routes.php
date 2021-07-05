@@ -337,6 +337,7 @@ Route::group(['prefix' => '/v1', 'middlewareGroups' => 'api'], function () {
 	Route::get('/checkKuitansiSPBTPN', 'v1\ExaminationAPIController@checkKuitansiTPN');
 	Route::get('/checkReturnedSPBTPN', 'v1\ExaminationAPIController@checkReturnedTPN');
 	Route::get('/spbReminder', 'v1\ExaminationAPIController@spbReminder');
+	Route::get('/getDateRentedChamber', 'v1\ChamberAPIController@getDateRented');
 });
 
 Route::get('/do_backup', 'BackupController@backup'); 
@@ -379,3 +380,4 @@ Route::get('/cetakKepuasanKonsumen/{id}', 'ExaminationDoneController@cetakKepuas
 Route::get('/cetakComplaint/{id}', 'ExaminationDoneController@cetakComplaint');
 Route::post('/updateNotif', 'NotificationController@updateNotif');
 Route::get('/all_notifications', 'NotificationController@index');
+Route::get('/rent_chamber', 'ChamberController@index');
