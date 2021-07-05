@@ -139,13 +139,11 @@ $( document ).ready(function() {
 	//initcalendarbyajx
 	const initCalendarByAjax = async () => {
 		await getDateRentedChamber( resp => {
-			resp = JSON.parse(resp);
 			bookedDates = resp.map( dateRecord =>{
 				return dateRecord['date'].replace(/-/g, '');
 			});
 		});
-		console.log(bookedDates);
-		pbCalendar.update_view();
+        pbCalendar.update_view();
 	}
 	//invoke ajax call
 	initCalendarByAjax();
