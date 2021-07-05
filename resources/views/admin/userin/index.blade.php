@@ -40,7 +40,7 @@
 							</legend>
 							<div class="row">
 								<div class="col-md-4">
-									<div class="form-group">
+									<div class="form-group statusHTML">
 										<label>
 											Status
 										</label>
@@ -71,6 +71,9 @@
 		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 		                                Filter
 		                            </button>
+									<button id="reset-filter" class="btn btn-wide btn-white btn-squared pull-right" style="margin-right: 10px;">
+                                        Reset
+                                    </button>
 		                        </div>
 							</div>
 						</fieldset>
@@ -171,6 +174,7 @@
 <script src={{ asset("vendor/bootstrap-timepicker/bootstrap-timepicker.min.js") }}></script>
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
 <script type="text/javascript">
+	var statusHTML = document.getElementById("is_active").outerHTML;
 	$( function() {
 		$( "#search_value" ).autocomplete({
 			minLength: 3,
@@ -237,6 +241,13 @@
 				params['search'] = search_value;
 			document.location.href = baseUrl+'/admin/userin?'+jQuery.param(params);
 	    };
+		document.getElementById("reset-filter").onclick = function() {
+			$('.cs-select').remove();
+            $('.statusHTML').append(statusHTML);
+            [].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {	
+                new SelectFx(el);
+            } );
+		};
 	});
 </script>
 @endsection

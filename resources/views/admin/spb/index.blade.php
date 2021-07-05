@@ -80,7 +80,7 @@
 							</div>
 							<div class="row">
 								<div class="col-md-6">
-									<div class="form-group spbHTML">
+									<div class="form-group">
 										<label>
 											Nomor SPB
 										</label>
@@ -361,9 +361,7 @@
 	$('#company').trigger("chosen:updated");
 </script>
 <script type="text/javascript">
-	var spbHTML = document.getElementById("spb").outerHTML;
 	var typeHTML = document.getElementById("type").outerHTML;
-	var companyHTML = document.getElementById("company").outerHTML;
 	var paymentStatusHTML = document.getElementById("payment_status").outerHTML;
 	var sortByHTML = document.getElementById("sort_by").outerHTML;
 	var sortTypeHTML = document.getElementById("sort_type").outerHTML;
@@ -494,11 +492,11 @@
             $('.cs-select').remove();
             $('.typeHTML').append(typeHTML);
             $('.paymentStatusHTML').append(paymentStatusHTML);
-			$('.spbHTML').append(spbHTML);
-			$('.companyHTML').append(companyHTML);
 			$('.sortHTML').append(sortByHTML).append(sortTypeHTML);
 			$('#after_date').val(null);
 			$('#before_date').val(null);
+			$('#spb').chosen().val('').trigger('chosen:updated');
+			$('#company').chosen().val('').trigger('chosen:updated');
             [].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {	
                 new SelectFx(el);
             } );

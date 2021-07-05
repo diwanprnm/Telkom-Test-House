@@ -80,7 +80,7 @@
 							</div>
 							<div class="row">
 								<div class="col-md-6">
-									<div class="form-group nogudangHTML">
+									<div class="form-group">
 										<label>
 											Nomor Gudang
 										</label>
@@ -130,7 +130,7 @@
 							</div>
 							<div class="row">
 								<div class="col-md-6">
-									<div class="form-group companyHTML">
+									<div class="form-group">
 										<label>
 											Nama Perusahaan
 										</label>
@@ -286,9 +286,7 @@
 	$('#company').trigger("chosen:updated");
 </script>
 <script type="text/javascript">
-	var nogudangHTML = document.getElementById("nogudang").outerHTML;
 	var typeHTML = document.getElementById("type").outerHTML;
-	var companyHTML =document.getElementById("company").outerHTML;
 	var labHTML = document.getElementById("lab").outerHTML;
 	jQuery(document).ready(function() {       
 		$('#search_value').keydown(function(event) {
@@ -423,11 +421,11 @@
 		document.getElementById("reset-filter").onclick = function() {
             $('.cs-select').remove();
             $('.typeHTML').append(typeHTML);
-            $('.statusHTML').append(statusHTML);
-			$('.companyHTML').append(companyHTML);
 			$('.labHTML').append(labHTML);
 			$('#before_date').val(null);
 			$('#after_date').val(null);
+			$('#nogudang').chosen().val('').trigger('chosen:updated');
+			$('#company').chosen().val('').trigger('chosen:updated');
             [].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {	
                 new SelectFx(el);
             } );

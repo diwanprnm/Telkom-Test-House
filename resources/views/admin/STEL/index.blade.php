@@ -72,7 +72,7 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-									<div class="form-group yearHTML">
+									<div class="form-group">
 										<label>
 											Tahun
 										</label>
@@ -245,7 +245,6 @@
 </script>
 <script type="text/javascript">
 	var categoryHTML = document.getElementById('category').outerHTML;
-	var yearHTML = document.getElementById('year').outerHTML;
 	var isActiveHTML = document.getElementById('is_active').outerHTML;
 	$( function() {
 		$( "#search_value" ).autocomplete({
@@ -349,9 +348,9 @@
 
 		document.getElementById("reset-filter").onclick = function() {
             $('.cs-select').remove();
-            $('.typeHTML').append(typeHTML);
             $('.isActiveHTML').append(isActiveHTML);
 			$('.categoryHTML').append(categoryHTML);
+			$('#year').chosen().val('').trigger('chosen:updated');
             [].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {	
                 new SelectFx(el);
             } );

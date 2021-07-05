@@ -333,24 +333,12 @@
 	    };
 
 		document.getElementById("reset-filter").onclick = function() {
-            // $('.cs-select').remove();
-            // $('.actionHTML').append(actionHTML);
-            // $('.usernameHTML').append(usernameHTML);
 			$('#before_date').val(null);
 			$('#after_date').val(null);
-			for (var i = 0; i < usernameOptions.length; i++) {
-				usernameOptions[i].selected = usernameOptions[i].defaultSelected
-			}
-			for (var i = 0; i < actionOptions.length; i++) {
-				actionOptions[i].selected = actionOptions[i].defaultSelected
-			}
 			$('#username').chosen();
 			$('#username').val('').trigger("chosen:updated");
 			$('#action').chosen();
 			$('#action').val('').trigger("chosen:updated");
-            // [].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {	
-            //     new SelectFx(el);
-            // } );
         };
 	});
 </script>>
