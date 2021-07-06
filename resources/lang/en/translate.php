@@ -424,7 +424,7 @@ return [
 	'open_at' => 'open at',
 	'available_stel' => 'This is a list of test references that can still register for testing : ',
 
-	'qs_certifcate_date_expired_message1' => 'Your Company Quality System Certificate Expired.',
+	'qs_certifcate_date_expired_message1' => 'Your Company Quality System Certificate Expired on',
 	'qs_certifcate_date_expired_message2' => 'Please contact our staff to update it.',
 
 	'tax_invoice' => 'Tax Invoice',
