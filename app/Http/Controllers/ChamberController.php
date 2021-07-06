@@ -15,7 +15,9 @@ class ChamberController extends Controller
      */
     public function index()
     {
-        return view('client.chamber.index');
+        $page = "pengujian";
+        return view('client.process.rent_chamber')
+            ->with('page', $page);
     }
 
     /**

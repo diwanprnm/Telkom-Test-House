@@ -69,7 +69,7 @@ Route::get('/process', 'HomeController@process')->middleware(['client']);
 Route::get('/purchase_history', 'ProductsController@purchase_history')->middleware(['client']);
 Route::get('/pengujian', 'PengujianController@index')->middleware(['client']);
 Route::get('/products', 'ProductsController@index')->middleware(['client']);
-
+Route::get('/detailprocess/rentChamber', 'ChamberController@index');
 Route::get('/detailprocess/{id}', 'HomeController@detail_process');
 Route::get('/editprocess/{jenis_uji}/{id}', 'HomeController@edit_process');
 Route::get('/faq', 'HomeController@faq');
@@ -380,4 +380,3 @@ Route::get('/cetakKepuasanKonsumen/{id}', 'ExaminationDoneController@cetakKepuas
 Route::get('/cetakComplaint/{id}', 'ExaminationDoneController@cetakComplaint');
 Route::post('/updateNotif', 'NotificationController@updateNotif');
 Route::get('/all_notifications', 'NotificationController@index');
-Route::get('/rent_chamber', 'ChamberController@index');
