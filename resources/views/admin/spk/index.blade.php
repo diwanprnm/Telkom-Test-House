@@ -343,11 +343,32 @@
 	$('#company').trigger("chosen:updated");
 </script>
 <script type="text/javascript">
-	var spkHTML = document.getElementById("spk").outerHTML;
-	var typeHTML = document.getElementById('type').outerHTML;
-	var labHTML = document.getElementById("lab").outerHTML;
-	var sortByHTML = document.getElementById("sort_by").outerHTML;
-	var sortTypeHTML = document.getElementById("sort_type").outerHTML;
+	var typeHTML = '<select id="type" name="type" class="cs-select cs-skin-elastic" required>'+
+												'<option value="" disabled selected>Select...</option>'+
+                                               	'<option value="all">All</option>'+
+											@foreach($type as $item)
+													'<option value="{{ $item->id }}">{{ $item->name }}</option>'+
+											@endforeach
+										'</select>'
+	var labHTML = '<select id="lab" name="lab" class="cs-select cs-skin-elastic" required>'+
+					'<option value="" disabled selected>Select...</option>'+
+					'<option value="all">All</option>'+
+				@foreach($type as $item)
+						'<option value="{{ $item->id }}">{{ $item->name }}</option>'+
+				@endforeach
+			'</select>'
+	var sortByHTML = '<select id="sort_by" name="sort_by" class="cs-select cs-skin-elastic" required>'+
+												'<option value="" disabled selected>Select...</option>'+
+                                                '<option value="spk_date">Tanggal SPK Dikeluarkan</option>'+
+                                                '<option value="SPK_NUMBER">Nomor SPK</option>'+
+                                               '<option value="TESTING_TYPE">Tipe Pengujian</option>'+
+                                                '<option value="COMPANY_NAME">Nama Perusahaan</option>'+'</select>'
+
+	var sortTypeHTML = '<select id="sort_type" name="sort_type" class="cs-select cs-skin-elastic" required>'+
+												'<option value="" disabled selected>Select...</option>'+
+                                                '<option value="asc">ASC</option>'+
+                                               ' <option value="desc">DESC</option>'+
+										'</select>'
 	jQuery(document).ready(function() {       
 		$('#search_value').keydown(function(event) {
 	        if (event.keyCode == 13) {

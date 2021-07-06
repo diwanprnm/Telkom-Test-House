@@ -229,7 +229,13 @@
 	});
 </script>
 <script type="text/javascript">
-	var statusHTML = document.getElementById('is_commited').outerHTML;
+	var statusHTML = '<select id="is_commited" name="is_commited" class="cs-select cs-skin-elastic" required>'+
+												'<option value="" disabled selected>Select...</option>'+
+												'<option value="all">All</option>'+
+												'<option value="1">Approve</option>'+
+												'<option value="-1">Decline</option>'+
+												'<option value="0">Not Process</option>'+
+										'</select>'
 	$( function() {
 		$( "#search_value" ).autocomplete({
 			minLength: 3,

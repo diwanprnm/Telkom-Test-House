@@ -286,9 +286,33 @@
 	});
 </script>
 <script type="text/javascript">
-	var typeHTML = document.getElementById("type").outerHTML;
-	var statusHTML = document.getElementById("status").outerHTML;
-	var labHTML = document.getElementById("lab").outerHTML;
+	var typeHTML = '<select id="type" name="type" class="cs-select cs-skin-elastic" required>'+
+				'<option value="" disabled selected>Select...</option>'+
+				'<option value="all">All</option>'+
+			@foreach($type as $item)
+					'<option value="{{ $item->id }}">{{ $item->name }}</option>'+
+			@endforeach
+				'</select>'
+	var statusHTML = '<select id="status" name="status" class="cs-select cs-skin-elastic" required>'+
+					'<option value="" disabled selected>Select...</option>'+
+					'<option value="all">All</option>'+
+					'<option value="1">Registrasi</option>'+
+					'<option value="2">Uji Fungsi</option>'+
+					'<option value="3">Tinjauan Kontrak</option>'+
+					'<option value="4">SPB</option>'+
+					'<option value="5">Pembayaran</option>'+
+					'<option value="6">Pembuatan SPK</option>'+
+					'<option value="7">Pelaksanaan Uji</option>'+
+					'<option value="8">Laporan Uji</option>'+
+					'<option value="9">Sidang QA</option>'+
+					'<option value="10">Penerbitan Sertifikat</option>'+'</select>'
+	var labHTML = '<select id="lab" name="lab" class="cs-select cs-skin-elastic" required>'+
+		'<option value="" disabled selected>Select...</option>'+
+				'<option value="all">All</option>'+
+			@foreach($type as $item)
+					'<option value="{{ $item->id }}">{{ $item->name }}</option>'+
+			@endforeach
+				'</select>'
 	$( function() {
 		$( "#search_value" ).autocomplete({
 			minLength: 3,

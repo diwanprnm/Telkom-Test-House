@@ -229,7 +229,13 @@
 	});
 </script>
 <script type="text/javascript">
-	var statusHTML = document.getElementById('is_implement').outerHTML;
+	var statusHTML = '<select id="is_implement" name="is_implement" class="cs-select cs-skin-elastic" required>'+
+						'<option value="" disabled selected>Select...</option>'+
+						'<option value="all">All</option>'+
+						'<option value="1">Done</option>'+
+						'<option value="0">Not Process</option>'+
+						'<option value="-1">Cancel</option>'+ '</select>'
+
 	jQuery(document).ready(function() {       
 		$('#search_value').keydown(function(event) {
 	        if (event.keyCode == 13) {

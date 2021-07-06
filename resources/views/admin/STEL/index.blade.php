@@ -244,8 +244,19 @@
 	$('#year').trigger("chosen:updated");
 </script>
 <script type="text/javascript">
-	var categoryHTML = document.getElementById('category').outerHTML;
-	var isActiveHTML = document.getElementById('is_active').outerHTML;
+	var categoryHTML = '<select id="category" name="category" class="cs-select cs-skin-elastic" required>'+
+												'<option value="" disabled selected>Select...</option>'+
+                                                '<option value="all">All</option>'+
+                                            @foreach ($examLab as $dataLab)
+													'<option value="{{$dataLab->id}}">{{$dataLab->name}}</option>'+
+											@endforeach
+									'</select>'
+	var isActiveHTML = '<select id="is_active" name="is_active" class="cs-select cs-skin-elastic" required>'+
+												'<option value="-1" disabled selected>Select...</option>'+
+                                                '<option value="-2">All</option>'+
+												'<option value="1">Active</option>'+
+												'<option value="0">Not Active</option>'+
+										'</select>'
 	$( function() {
 		$( "#search_value" ).autocomplete({
 			minLength: 3,

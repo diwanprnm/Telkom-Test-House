@@ -196,7 +196,11 @@
 	});
 </script>
 <script type="text/javascript">
-	var categoryHTML = document.getElementById('category').outerHTML
+	var categoryHTML = '<select id="category" name="category" class="cs-select cs-skin-elastic" required>'+
+						'<option value="" disabled selected>Select...</option>'+
+						'<option value="aktif">Aktif</option>'+
+						'<option value="aktif1">Aktif + 1</option>'+
+						'<option value="all">Aktif DAN Aktif + 1</option>'+'</select>'
 	$( function() {
 		$( "#search_value" ).autocomplete({
 			minLength: 3,

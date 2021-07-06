@@ -286,8 +286,20 @@
 	$('#company').trigger("chosen:updated");
 </script>
 <script type="text/javascript">
-	var typeHTML = document.getElementById("type").outerHTML;
-	var labHTML = document.getElementById("lab").outerHTML;
+	var typeHTML = '<select id="type" name="type" class="cs-select cs-skin-elastic" required>'+
+												'<option value="" disabled selected>Select...</option>'+
+                                               	'<option value="all">All</option>'+
+											@foreach($type as $item)
+													'<option value="{{ $item->id }}">{{ $item->name }}</option>'+
+											@endforeach
+										'</select>'
+	var labHTML = '<select id="lab" name="lab" class="cs-select cs-skin-elastic" required>'+
+												'<option value="" disabled selected>Select...</option>'+
+                                               	'<option value="all">All</option>'+
+											@foreach($type as $item)
+													'<option value="{{ $item->id }}">{{ $item->name }}</option>'+
+											@endforeach
+										'</select>'
 	jQuery(document).ready(function() {       
 		$('#search_value').keydown(function(event) {
 	        if (event.keyCode == 13) {

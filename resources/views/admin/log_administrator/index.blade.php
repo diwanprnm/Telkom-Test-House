@@ -334,6 +334,7 @@
 		document.getElementById("reset-filter").onclick = function() {
 			$('#before_date').val(null);
 			$('#after_date').val(null);
+			$('#action').chosen().val('').trigger('chosen:updated');
         };
 	});
 </script>>

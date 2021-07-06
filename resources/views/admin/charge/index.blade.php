@@ -213,8 +213,18 @@
 <script src={{ asset("vendor/bootstrap-timepicker/bootstrap-timepicker.min.js") }}></script>
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
 <script type="text/javascript">
-	var categoryHTML = document.getElementById("category").outerHTML;
-	var statusHTML = document.getElementById("is_active").outerHTML;
+	var categoryHTML = '<select id="category" name="category" class="cs-select cs-skin-elastic" required>'+
+						'<option value="" disabled selected>Select...</option>'+
+						'<option value="all">All</option>'+
+					@foreach ($labs as $lab)
+						'<option value="{{$lab->id}}" @if ($category == $lab->id) selected @endif >{{$lab->name}}</option>'+
+					@endforeach
+					'</select>'
+	var statusHTML = '<select id="is_active" name="is_active" class="cs-select cs-skin-elastic" required>'+
+												'<option value="-1" disabled selected>Select...</option>'+
+                                                '<option value="-2">All</option>'+
+												'<option value="1">Active</option>'+
+												'<option value="0">Not Active</option>'+'</select>'
 	$( function() {
 		$( "#search_value" ).autocomplete({
 			minLength: 3,

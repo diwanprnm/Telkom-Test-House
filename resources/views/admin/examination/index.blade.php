@@ -643,11 +643,42 @@
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
 <script src={{ asset("assets/js/form-elements.js") }}></script>
 <script type="text/javascript">
-	var typeHTML = document.getElementById("type").outerHTML;
-	var tahapHTML = document.getElementById("status").outerHTML;
-	var labHTML = document.getElementById("exam_lab").outerHTML;
-	var sortFromHTML = document.getElementById("sort_from").outerHTML;
-	var sortByHTML = document.getElementById("sort_by").outerHTML;
+	var typeHTML = '<select id="type" name="type" class="cs-select cs-skin-elastic" required>'+
+					'<option value="" disabled selected>Select...</option>'+
+					'<option value="all">All</option>'+
+			@foreach($type as $item)
+					'<option value="{{ $item->id }}">{{ $item->name }}</option>'+
+			@endforeach
+					'</select>'
+	var tahapHTML = '<select id="status" name="status" class="cs-select cs-skin-elastic" required>'+
+					'<option value="" disabled selected>Select...</option>'+
+					'<option value="all">All</option>'+
+					'<option value="1">Registrasi</option>'+
+					'<option value="2">Uji Fungsi</option>'+
+					'<option value="3">Tinjauan Kontrak</option>'+
+					'<option value="4">SPB</option>'+
+					'<option value="5">Pembayaran</option>'+
+					'<option value="6">Pembuatan SPK</option>'+
+					'<option value="7">Pelaksanaan Uji</option>'+
+					'<option value="8">Laporan Uji</option>'+
+					'<option value="9">Sidang QA</option>'+
+					'<option value="10">Penerbitan Sertifikat</option>'+'</select>'
+	var labHTML = '<select id="exam_lab" name="exam_lab" class="cs-select cs-skin-elastic" required>'+
+					'<option value="" disabled selected>Select...</option>'+
+					'<option value="all">All</option>'+
+				@foreach($examinationLab as $lab)
+						'<option value="{{ $lab->id }}">{{ $lab->name }}</option>'+
+				@endforeach
+					'</select>'
+	var sortFromHTML = '<select id="sort_from" name="sort_from" class="cs-select cs-skin-elastic" required>'+
+							'<option value="updated_at" @if ($sort_by == "updated_at") selected @endif>Update Terakhir</option>'+
+							'<option value="created_at" @if ($sort_by == "created_at") selected @endif>Tanggal Registrasi</option>'+
+							'<option value="device_name" @if ($sort_by == "device_name") selected @endif>Nama Perangkat</option>'+
+						'</select>'
+	var sortByHTML = '<select id="sort_by" name="sort_by" class="cs-select cs-skin-elastic" required>'+
+											'<option value="asc" @if ($sort_by == "asc") selected @endif>ASC</option>'+
+											'<option value="dsc" @if ($sort_by == "dsc") selected @endif>DESC</option>'+
+										'</select>'
 	jQuery(document).ready(function() {
 		FormElements.init();
 

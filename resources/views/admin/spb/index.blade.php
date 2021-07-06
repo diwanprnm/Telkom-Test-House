@@ -361,10 +361,32 @@
 	$('#company').trigger("chosen:updated");
 </script>
 <script type="text/javascript">
-	var typeHTML = document.getElementById("type").outerHTML;
-	var paymentStatusHTML = document.getElementById("payment_status").outerHTML;
-	var sortByHTML = document.getElementById("sort_by").outerHTML;
-	var sortTypeHTML = document.getElementById("sort_type").outerHTML;
+	var typeHTML = '<select id="type" name="type" class="cs-select cs-skin-elastic" required>'+
+												'<option value="" disabled selected>Select...</option>'+
+                                               	'<option value="all">All</option>'+
+											@foreach($type as $item)
+													'<option value="{{ $item->id }}">{{ $item->name }}</option>'+
+											@endforeach
+										'</select>'
+	var paymentStatusHTML = '<select id="payment_status" name="payment_status" class="cs-select cs-skin-elastic" required>'+
+												'<option value="" disabled selected>Select...</option>'+
+                                                '<option value="all">All</option>'+
+                                                '<option value="1">SUDAH</option>'+
+                                                '<option value="0">BELUM</option>'+
+                                                '<option value="-1">KEDALUWARSA</option>'+
+										'</select>'
+	var sortByHTML = '<select id="sort_by" name="sort_by" class="cs-select cs-skin-elastic" required>'+
+												'<option value="" disabled selected>Select...</option>'+
+                                                '<option value="spb_date">Tanggal SPB Dikeluarkan</option>'+
+                                                '<option value="spb_number">Nomor SPB</option>'+
+                                                '<option value="examination_type_id">Tipe Pengujian</option>'+
+                                                '<option value="company_name">Nama Perusahaan</option>'+
+										'</select>'
+	var sortTypeHTML = '<select id="sort_type" name="sort_type" class="cs-select cs-skin-elastic" required>'+
+												'<option value="" disabled selected>Select...</option>'+
+                                                '<option value="asc">ASC</option>'+
+                                               ' <option value="desc">DESC</option>'+
+										'</select>'
 	jQuery(document).ready(function() {       
 		$('#search_value').keydown(function(event) {
 	        if (event.keyCode == 13) {

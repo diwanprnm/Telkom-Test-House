@@ -216,7 +216,11 @@
 	});
 </script>
 <script type="text/javascript">
-	var statusHTML = document.getElementById("is_active").outerHTML;
+	var statusHTML = '<select id="is_active" name="is_active" class="cs-select cs-skin-elastic" required>'+
+					'<option value="" disabled selected>Select...</option>'+
+					'<option value="all">All</option>'+
+					'<option value="1">Replied</option>'+
+					'<option value="0">Not Replied</option>'+'</select>'
 	$( function() {
 		$( "#search_value" ).autocomplete({
 			minLength: 3,

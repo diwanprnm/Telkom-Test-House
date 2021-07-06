@@ -400,7 +400,13 @@
 	});
 </script>
 <script type="text/javascript">
-var typeHTML = document.getElementById("type").outerHTML;
+var typeHTML = '<select id="type" name="type" class="cs-select cs-skin-elastic" required>'+
+				'<option value="" disabled selected>Select...</option>'+
+				'<option value="all">All</option>'+
+			@foreach($type as $item)
+					'<option value="{{ $item->id }}">{{ $item->name }}</option>'+
+			@endforeach
+		'</select>'
 	$( function() {
 		$( "#search_value" ).autocomplete({
 			minLength: 3,
