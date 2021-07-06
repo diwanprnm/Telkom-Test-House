@@ -160,7 +160,8 @@ class HomeController extends Controller
 				->with('data_stels_qa', $data_stels_qa)
 				->with(self::DATA_SALES, $data_stels)
 				->with('data', $data)
-				->with('page', $page);   
+				->with('page', $page)
+				->with('certificate_date', $currentUser->company->qs_certificate_date);   
 		}else{
 			return redirect(self::TO_LOGIN);
 		}

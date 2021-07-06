@@ -88,6 +88,7 @@ return [
 	'service_previous'		=> 'Previous',
 	'service_next'			=> 'Next',
 	'service_save'			=> 'Save',
+	'next'					=> 'Next',
     
 	'contact'     		=> 'Contact',
     'contact_us'		=> 'Contact Us',

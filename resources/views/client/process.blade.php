@@ -96,10 +96,10 @@
 				          </div>
 				          <div class="modal-footer">
 				          	@if(count($data_layanan_active) == 0)
-				          		<button type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
+				          		<button type="button" class="button button3d btn-sky" data-dismiss="modal">{{ trans('translate.close') }}</button>
 				          	@else
-				          		<button id="ok_qa" type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
-				          		<a id="next_qa" href="{{url('detailprocess/qa')}}" class="button button3d btn-sky">{{ trans('translate.process') }}</a>
+				          		<button id="ok_qa" type="button" class="button button3d btn-sky" data-dismiss="modal">{{ trans('translate.close') }}</button>
+				          		<a id="next_qa" href="{{url('detailprocess/qa')}}" class="button button3d btn-sky">{{ trans('translate.next') }}</a>
 				          	@endif
 				          </div>
 				        </div>
@@ -122,7 +122,7 @@
 							@if(count($data_layanan))
 								<a class="button button-3d nomargin btn-sky" data-toggle="modal" data-target="#modal_status_layanan_ta">{{ trans('translate.process') }}</a>
 							@else
-								<a href="{{url('detailprocess/ta')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
+								<a href="{{url('detailprocess/ta')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.next') }}</a>
 							@endif
 						@endif
 					</div>
@@ -158,10 +158,10 @@
 				          </div>
 				          <div class="modal-footer">
 				          	@if(count($data_layanan_active) == 0)
-				          		<button type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
+				          		<button type="button" class="button button3d btn-sky" data-dismiss="modal">{{ trans('translate.close') }}</button>
 				          	@else
-				          		<button id="ok_ta" type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
-				          		<a id="next_ta" href="{{url('detailprocess/ta')}}" class="button button3d btn-sky">{{ trans('translate.process') }}</a>
+				          		<button id="ok_ta" type="button" class="button button3d btn-sky" data-dismiss="modal">{{ trans('translate.close') }}</button>
+				          		<a id="next_ta" href="{{url('detailprocess/ta')}}" class="button button3d btn-sky">{{ trans('translate.next') }}</a>
 				          	@endif
 				          </div>
 				        </div>
@@ -220,10 +220,10 @@
 				          </div>
 				          <div class="modal-footer">
 				          	@if(count($data_layanan_active) == 0)
-				          		<button type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
+				          		<button type="button" class="button button3d btn-sky" data-dismiss="modal">{{ trans('translate.close') }}</button>
 				          	@else
-				          		<button id="ok_vt" type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
-				          		<a id="next_vt" href="{{url('detailprocess/vt')}}" class="button button3d btn-sky">{{ trans('translate.process') }}</a>
+				          		<button id="ok_vt" type="button" class="button button3d btn-sky" data-dismiss="modal">{{ trans('translate.close') }}</button>
+				          		<a id="next_vt" href="{{url('detailprocess/vt')}}" class="button button3d btn-sky">{{ trans('translate.next') }}</a>
 				          	@endif
 				          </div>
 				        </div>
@@ -245,7 +245,7 @@
 							@if(count($data_layanan))
 								<a class="button button-3d nomargin btn-sky" data-toggle="modal" data-target="#modal_status_layanan_cal">{{ trans('translate.process') }}</a>
 							@else
-								<a href="{{url('detailprocess/cal')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
+								<a href="{{url('detailprocess/cal')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.next') }}</a>
 							@endif
 						@endif
 					</div>
@@ -279,10 +279,10 @@
 				          </div>
 				          <div class="modal-footer">
 				          	@if(count($data_layanan_active) == 0)
-				          		<button type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
+				          		<button type="button" class="button button3d btn-sky" data-dismiss="modal">{{ trans('translate.close') }}</button>
 				          	@else
-				          		<button id="ok_cal" type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
-				          		<a id="next_cal" href="{{url('detailprocess/cal')}}" class="button button3d btn-sky">{{ trans('translate.process') }}</a>
+				          		<button id="ok_cal" type="button" class="button button3d btn-sky" data-dismiss="modal">{{ trans('translate.close') }}</button>
+				          		<a id="next_cal" href="{{url('detailprocess/cal')}}" class="button button3d btn-sky">{{ trans('translate.next') }}</a>
 				          	@endif
 				          </div>
 				        </div>
@@ -302,12 +302,12 @@
 			          </div>
 			          <div class="modal-body pre-scrollable">
 			               <div class="row">
-			               		<h2>{{ trans('translate.qs_certifcate_date_expired_message1') }}
+			               		<h2>{{ trans('translate.qs_certifcate_date_expired_message1') }}  {{ date('d M Y', strtotime($certificate_date)) }}.
 			               		{{ trans('translate.qs_certifcate_date_expired_message2') }}</h2>
 			                </div>
 			          </div>
 			          <div class="modal-footer">
-			          	<button type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
+			          	<button type="button" class="button button3d btn-sky" data-dismiss="modal">{{ trans('translate.close') }}</button>
 			          </div>
 			        </div>
 
@@ -337,46 +337,6 @@
 		midClick: true // Allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source in href.
   	});
 
-	$("#next_qa").hide();
-	$("#next_ta").hide();
-	$("#next_vt").hide();
-	$("#next_cal").hide();
-
-  	$("#chosen-qa").change(function(){
-		if(this.value != ""){
-			$("#ok_qa").hide();			
-			$("#next_qa").show();			
-		}else{
-			$("#next_qa").hide();	
-			$("#ok_qa").show();
-		}
-	});
-  	$("#chosen-ta").change(function(){
-		if(this.value != ""){
-			$("#ok_ta").hide();			
-			$("#next_ta").show();			
-		}else{
-			$("#next_ta").hide();	
-			$("#ok_ta").show();
-		}
-	});
-  	$("#chosen-vt").change(function(){
-		if(this.value != ""){
-			$("#ok_vt").hide();			
-			$("#next_vt").show();			
-		}else{
-			$("#next_vt").hide();	
-			$("#ok_vt").show();
-		}
-	});
-  	$("#chosen-cal").change(function(){
-		if(this.value != ""){
-			$("#ok_cal").hide();			
-			$("#next_cal").show();			
-		}else{
-			$("#next_cal").hide();	
-			$("#ok_cal").show();
-		}
-	});
+	
 </script>
 @endsection

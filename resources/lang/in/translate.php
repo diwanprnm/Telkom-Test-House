@@ -88,6 +88,7 @@ return [
 	'service_previous'		=> 'Sebelumnya',
 	'service_next'			=> 'Berikutnya',
 	'service_save'			=> 'Simpan',
+	'next'					=> 'Lanjut',
     
 	'contact'     		=> 'Kontak',
     'contact_us'		=> 'Kontak Kami',
@@ -418,7 +419,7 @@ return [
 
 	'attention' => 'PEMBERITAHUAN',
 	'message_close_lab' => 'Semua Layanan Telkom Test House tutup dan akan buka kembali tanggal',
-	'thankyou' => 'Terimakasih',
+	'thankyou' => 'Terima Kasih',
 	'message_close_lab_separate' => 'Sebagian Layanan Telkom Test House tutup.',
 	'message_close_separate' => 'Lab yang tutup :',
 	'message_open_lab_separate' =>'Lab yang buka :',
@@ -426,7 +427,7 @@ return [
 	'open_at' => 'buka pada',
 	'available_stel' => 'Berikut adalah daftar referensi uji yang masih dapat melakukan registrasi pengujian : ',
 
-	'qs_certifcate_date_expired_message1' => 'Sertifikat Sistem Mutu Perusahaan Anda Kedaluwarsa.',
+	'qs_certifcate_date_expired_message1' => 'Sertifikat Sistem Mutu Perusahaan Anda Kedaluwarsa pada tanggal',
 	'qs_certifcate_date_expired_message2' => 'Silakan hubungi petugas kami untuk memperbaharuinya.',
 
 	'tax_invoice' => 'Faktur Pajak',
