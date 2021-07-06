@@ -93,7 +93,7 @@ class STELController extends Controller
             });
 
             $logService = new LogService();
-            $logService->createLog('Search STEL', "STEL", json_encode(array(self::SEARCH=>$search)) );
+            $logService->createLog('Search Referensi Uji', "Referensi Uji", json_encode(array(self::SEARCH=>$search)) );
 
         }
         
@@ -247,36 +247,10 @@ class STELController extends Controller
     public function create($stels_master_id)
     {
         $stelMaster = STELMaster::findOrFail($stels_master_id);
+        $stel = STEL::where('stels_master_id', $stels_master_id)->first();
         $examLab = ExaminationLab::all();
-        switch ($stelMaster->type) {
-            case '1':
-                $type = 'STEL';
-                break;
-            case '2':
-                $type = 'S-TSEL';
-                break;
-            case '3':
-                $type = 'PED / STD';
-                break;
-            case '4':
-                $type = 'INTERNAL';
-                break;
-            case '5':
-                $type = 'PERDIRJEN';
-                break;
-            case '6':
-                $type = 'PERMENKOMINFO';
-                break;
-            case '7':
-                $type = 'Lainnya ...';
-                break;
-            
-            default:
-                $type = '';
-                break;
-        }
         return view('admin.STEL.create')
-            ->with('type',$type)
+            ->with('code',$stel->code)
             ->with('stelMaster',$stelMaster)
             ->with(self::EXAM_LAB,$examLab)
         ;
@@ -435,7 +409,7 @@ class STELController extends Controller
             $stel->updated_by = $currentUser->id;  
             try{
                 if($request->input('is_active') == 1){
-                    $another_stel = STEL::where('stels_master_id', $stel->stels_master_id)->whereNotIn('id', [$stel])->get();
+                    $another_stel = STEL::where('stels_master_id', $stel->stels_master_id)->whereNotIn('id', [$stel->id])->get();
                     foreach ($another_stel as $item) {
                         $item->is_active = 0;
                         $item->save();
@@ -443,13 +417,13 @@ class STELController extends Controller
                 }
                 $stel->save();
 
-                $logService->createLog('Update STEL', 'STEL', $oldStel );
+                $logService->createLog('Update Referensi Uji', 'Referensi Uji', $oldStel );
 
-                Session::flash(self::MESSAGE, 'STEL successfully updated');
+                Session::flash(self::MESSAGE, 'Referensi Uji successfully updated');
                 return redirect(self::ADMIN_STEL);
             } catch(Exception $e){ return redirect('/admin/stel/'.$stel->id.'/edit')->with(self::ERROR, 'Save failed');
             }
-        }else{ return redirect(self::ADMIN_STEL)->with(self::ERROR, 'STEL not Found');
+        }else{ return redirect(self::ADMIN_STEL)->with(self::ERROR, 'Referensi Uji not Found');
         }
         
     }
@@ -464,7 +438,7 @@ class STELController extends Controller
     {
         $logService = new LogService();
         $stel = STEL::find($id);
-        if(empty($stel)){ return redirect(self::ADMIN_STEL)->with(self::ERROR, 'Delete failed, STEL Not Found'); }
+        if(empty($stel)){ return redirect(self::ADMIN_STEL)->with(self::ERROR, 'Delete failed, Referensi Uji Not Found'); }
 
         $oldStel = $stel; 
         try{
@@ -478,9 +452,9 @@ class STELController extends Controller
             );
             $fileService->deleteFile($fileProperties);
 
-            $logService->createLog('Delete STEL', "STEL", $oldStel );
+            $logService->createLog('Delete Referensi Uji', "Referensi Uji", $oldStel );
 
-            Session::flash(self::MESSAGE, 'STEL successfully deleted');
+            Session::flash(self::MESSAGE, 'Referensi Uji successfully deleted');
             return redirect(self::ADMIN_STEL);
         }catch (Exception $e){ return redirect(self::ADMIN_STEL)->with(self::ERROR, 'Delete failed');
         }
@@ -489,7 +463,7 @@ class STELController extends Controller
     public function viewMedia($id)
     {
         $stel = STEL::find($id);
-        if (!$stel){   return redirect(self::ADMIN_STEL)->with(self::ERROR, 'STEL Not Found'); }
+        if (!$stel){   return redirect(self::ADMIN_STEL)->with(self::ERROR, 'Referensi Uji Not Found'); }
 
         $fileMinio = Storage::disk('minio')->get("stel/$stel->attachment");
         return response($fileMinio, 200, \App\Services\MyHelper::getHeaderImage($stel->attachment));
@@ -590,9 +564,9 @@ class STELController extends Controller
         }
 
         $logService = new LogService();  
-        $logService->createLog('download_excel',"STEL/STD","");
+        $logService->createLog('download_excel',"Referensi Uji","");
  
-        $excel = \App\Services\ExcelService::download($examsArray, 'Data STEL-STD');
+        $excel = \App\Services\ExcelService::download($examsArray, 'Data Referensi Uji');
         return response($excel['file'], 200, $excel['headers']);
     } 
 }

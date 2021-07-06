@@ -38,7 +38,7 @@
 					{!! csrf_field() !!}
     				<fieldset>
 						<legend>
-							Tambah Dokumen {{ $type }}
+							Tambah Dokumen
 						</legend>
 						<input type="hidden" id="stel_type" name="stel_type" value="{{ $stelMaster->type }}"/>
 						<input type="hidden" id="stels_master_id" name="stels_master_id" value="{{ $stelMaster->id }}"/>
@@ -170,7 +170,31 @@
 	jQuery(document).ready(function() {
 		FormElements.init();
 	});
+	var master_code = '{{ $code }}'.split($("#stel_type").val() == '4' ? " Versi " : "-");
+	init_form($("#stel_type").val());
 	reset_code();
+
+	value="{{ old('stel_type') }}";
+	if(value){init_form($("#stel_type").val())};
+
+	function init_form(val){
+		switch(val) {
+			case '1':
+			case '2':
+			case '3':
+				$("#year").prop('required', true);
+				$("#version").prop('required', true);
+				break;
+			case '4':
+				$("#year").prop('required', false);
+				$("#version").prop('required', true);
+				break;
+				
+			default:
+				$("#year").prop('required', true);
+				$("#version").prop('required', true);
+		}
+	}
 
 	$("#year").on("keyup change", function(){
 		reset_code();
@@ -181,9 +205,11 @@
 	});
 
 	function reset_code(){
-		var res = $("#code").val().split("Versi");
-		var res_code = res[0].split("-");
-		code = '{{ $type }} {{ $stelMaster->code }}-'+$("#year").val()+' Versi '+$("#version").val();
+		if($("#stel_type").val() == '4'){
+			code = master_code[0]+' Versi '+$("#version").val();
+		}else{
+			code = master_code[0]+'-'+master_code[1]+'-'+$("#year").val()+' Versi '+$("#version").val();
+		}
 		$("#code").val(code);
 	}
 	

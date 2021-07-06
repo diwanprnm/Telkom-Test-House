@@ -236,7 +236,7 @@
 				break;
 			case '4':
 				var res = $("#code").val().split(" ");
-				code = res[0]+' '+$("#version").val();
+				code = res[0]+' Versi '+$("#version").val();
 				$("#code").val(code);
 				break;
 				

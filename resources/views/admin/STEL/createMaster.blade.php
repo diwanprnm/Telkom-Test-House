@@ -240,7 +240,7 @@
 				$("#year").prop('required', false);
 				$("#version").prop('required', true);
 				$("#code").prop('readonly', true);
-				code = type_name+'/'+$("#master_code").val()+' '+$("#version").val();
+				code = type_name+'/'+$("#master_code").val()+' Versi '+$("#version").val();
 				$("#code").val(code);
 				break;
 			case '5':
@@ -277,7 +277,8 @@
 	};
 
 	SelectFx.prototype.options = {
-		onChange: function (val) { 
+		onChange: function () {
+			val = $("#stel_type").val();
 			switch(val) {
 				case '1':
 					type_name = 'STEL';
@@ -312,7 +313,7 @@
 					$("#year").prop('required', false);
 					$("#version").prop('required', true);
 					$("#code").prop('readonly', true);
-					code = type_name+'/'+$("#master_code").val()+' '+$("#version").val();
+					code = type_name+'/'+$("#master_code").val()+' Versi '+$("#version").val();
 					$("#code").val(code);
 					break;
 				case '5':
@@ -384,7 +385,7 @@
 			case '4':
 				type_name = 'TLKM/I/KAL';
 				$("#code").prop('readonly', true);
-				code = type_name+'/'+$("#master_code").val()+' '+$("#version").val();
+				code = type_name+'/'+$("#master_code").val()+' Versi '+$("#version").val();
 				$("#code").val(code);
 				break;
 			case '5':

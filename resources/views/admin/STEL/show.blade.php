@@ -131,7 +131,7 @@
 						</div>
 					</fieldset>
 				</div>
-				@if($data->type < 4)
+				@if($data->type < 5)
 				<div class="col-md-6 pull-right" style="margin-bottom:10px">
 					<a style=" color:white !important;" href="{{URL::to('/admin/stel/create/'.$data->id)}}">
 						<button type="button" class="btn btn-wide btn-green btn-squared pull-right" >
