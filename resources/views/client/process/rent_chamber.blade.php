@@ -30,19 +30,16 @@
 			padding: 5rem 0;
 		}
 		.pb-calendar{
-			width: 90%;
+			width: 60%;
+			transform: translate(20%, 0%);
 		}
 		.pb-calendar .schedule-dot-item.blue{
-			/* top: -50px !important;
-			position: absolute !important;
-			width: 17px !important;
-			height: 17px !important;
 			background-color: blue;
-			width: 25px !important; */
+			width: 30px !important;
 		}
 		.pb-calendar .schedule-dot-item.red{
 			background-color: red;
-			width: 40px !important;
+			width: 30px !important;
 		}
 		.pb-calendar .schedule-dot-item.green{
 			background-color: green;
@@ -52,6 +49,11 @@
 		}
 		.pb-calendar .before-today{
 			opacity: 0.3;	
+		}
+		.center-div{
+			position: absolute;
+			
+			margin: auto;
 		}
 	</style>
   <div class="overlay"></div>
@@ -106,7 +108,7 @@
 							<fieldset>
 								<legend></legend>
 								<div class="content-wrap">
-									<div class="container clearfix">
+									<div class="container clearfix center-div">
 										<div class="padding-y-md rounded border-danger">
 											<div id="pb-calendar" class="pb-calendar">
 											</div>
@@ -143,7 +145,7 @@
 				</div>
 				<div class="modal-footer">
 				  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				  <button type="button" class="btn btn-primary" id="modal-rent-button">Rent</button>
+				  <button type="button" class="btn btn-primary" data-dismiss="modal" id="modal-rent-button">Rent</button>
 				</div>
 			  </div>
 			</div>
@@ -166,8 +168,6 @@
 	    }
 	});
 
-
-
 	
 	var formWizard = form.children("div").steps({
 	    headerTag: "h2",
@@ -183,11 +183,11 @@
 	        form.validate().settings.ignore = ":disabled,:hidden";
 
 			if (currentIndex == 0){
-				
+				// do nothing this is text
 			}
 
 			if (currentIndex == 1 && newIndex == 2){
-				
+				// do nothing
 			}
 
 			if(newIndex < currentIndex ){ 
@@ -245,6 +245,7 @@ $( document ).ready(function() {
 	let current_yyyymm_ = moment().format("YYYYMM");
 	let current_month = moment().format("MM");
 	let bookedDates = [];
+	let toBeBookedDates = [];
 	const can_not_rent_chamber = "{{ trans('translate.can_not_rent_chamber') }}";
 	const rent_chamber_confirmation = "{{ trans('translate.rent_chamber_confirmation') }}";
 	const rent_chamber_duration = "{{ trans('translate.rent_chamber_duration') }}";
@@ -256,6 +257,11 @@ $( document ).ready(function() {
 			bookedDates.forEach((bookedDate)=>{
 				temp_schedule_list_[bookedDate] = [
 					{'ID' : bookedDateId++, style :"red"}
+				];
+			})
+			toBeBookedDates.forEach((toBeBookedDate)=>{
+				temp_schedule_list_[toBeBookedDate] = [
+					{'ID' : bookedDateId++, style :"blue"}
 				];
 			})
 			callback_(temp_schedule_list_);
@@ -285,19 +291,15 @@ $( document ).ready(function() {
 					"<p>"+rent_chamber_confirmation + moment(serializeDate).format('DD-MMM-YYYY')+'</p>'+
 					`<div class="form-group">
 						<p class="text-normal" for="rent_duration"> ${rent_chamber_duration}:</p>
+						<input type="hidden" id="rent_date" name="rent_date" value="${serializeDate}">
 						<select class="form-control" id="rent_duration" name="rent_duration">
 							<option>1</option>
 							<option>2</option>
-							<option>3</option>
-							<option>4</option>
-							<option>5</option>
 						</select>
 					</div>`
 				
 				);
 			}
-			
-			
 			$('#myModal').modal('toggle');
 		},
 
@@ -315,6 +317,28 @@ $( document ).ready(function() {
 	}
 	//invoke ajax call
 	initCalendarByAjax();
+
+	//onclick rent
+	$('#modal-rent-button').click(() => {
+		let rentDuration = parseInt($("#rent_duration").find(":selected").text());
+		let rentDate = $('#rent_date').val();
+		checkAvaliableAndBooked(rentDate, rentDuration);
+		console.log(toBeBookedDates);
+		pbCalendar.update_view();
+	});
+
+	const checkAvaliableAndBooked = (date, numDays) =>{
+		const dates = [];
+		let isAvailable = false;
+		for (i=0; i<numDays; i++){
+			dates.push(parseInt(date)+i+'');
+		}
+		const found = dates.some(r=> bookedDates.indexOf(r) >= 0)
+		if (!found) {toBeBookedDates = dates}
+		else {alert("The date you selected is not available!");}
+		//console.log(toBeBookedDates);
+		return !found;
+	}
 });
 
 const getDateRentedChamber = handleData => {
@@ -325,5 +349,7 @@ const getDateRentedChamber = handleData => {
 		}
 	});
 }
+
+
 </script>
 @endsection
