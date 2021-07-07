@@ -494,7 +494,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								{{ $data_delivered->appends(array('search' => $search,'search2' => $search,'search3' => $search,'before_date' => $before_date,'before_date2' => $before_date,'before_date3' => $before_date,'after_date' => $after_date,'after_date2' => $after_date,'after_date3' => $after_date, 'tab' => 'tab-paid-deliverd'))->links() }}
+								{{ $data_delivered->appends(array('search' => $search,'search2' => $search,'search3' => $search,'before_date' => $before_date,'before_date2' => $before_date,'before_date3' => $before_date,'after_date' => $after_date,'after_date2' => $after_date,'after_date3' => $after_date, 'tab' => 'tab-delivered'))->links() }}
 							</div>
 						</div>
 					</div>
