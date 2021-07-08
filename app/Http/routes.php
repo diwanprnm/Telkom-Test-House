@@ -380,3 +380,6 @@ Route::get('/cetakKepuasanKonsumen/{id}', 'ExaminationDoneController@cetakKepuas
 Route::get('/cetakComplaint/{id}', 'ExaminationDoneController@cetakComplaint');
 Route::post('/updateNotif', 'NotificationController@updateNotif');
 Route::get('/all_notifications', 'NotificationController@index');
+
+//dummy deleted soon!
+Route::post('/testForm', 'ChamberController@testForm');

@@ -49,7 +49,7 @@ class CreateChamberTable extends Migration
             $table->string('VA_expired')->timestamp()->nullable();
 
             $table->uuid('created_by'); 
-            $table->uuid('updated_by');
+            $table->uuid('updated_by')->nullable();
             $table->timestamps();
             
             $table->foreign('user_id')->references('id')->on('users');

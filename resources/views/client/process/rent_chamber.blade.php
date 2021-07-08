@@ -44,6 +44,12 @@
 		.pb-calendar .schedule-dot-item.green{
 			background-color: green;
 		}
+		.pb-calendar .before-month .schedule-dot-list,
+		.pb-calendar .after-month .schedule-dot-list{
+			display: none;
+			width: 0;
+			height: 0;
+		}
 		.before-month, .after-month{
 			/* font-size: 10px !important; */
 		}
@@ -95,7 +101,7 @@
 							</ul>
 						</div>
 					</div>
-					<form role="form" action="{{url('submitPermohonan')}}" method="post" class="material" id="form-permohonan" enctype="multipart/form-data">
+					<form role="form" action="{{url('testForm')}}" method="post" class="material" id="form-permohonan" enctype="multipart/form-data" onsubmit="return false">
 						{{ csrf_field() }}
 						<div id="wizard">
 							<h2>First Step</h2>
@@ -112,15 +118,15 @@
 										<div class="padding-y-md rounded border-danger">
 											<div id="pb-calendar" class="pb-calendar">
 											</div>
+											* Silahkan klik tanggal yang diinginkan untuk rent chamber.<br>
+											* Garis bawah merah menandakan chamber sudah di booking.<br>
+											* Tidak bisa menyewa dihari Sabtu dan Minggu
 										</div>
-										* Silahkan klik tanggal yang diinginkan untuk rent chamber.<br>
-										* Garis bawah merah menandakan chamber sudah di booking.<br>
-										* Tidak bisa menyewa dihari Sabtu dan Minggu
 									</div>
-									
 								</div>
+								<input type="hidden" id="dates" name="dates">
+								<button id="buttonSubmitHelper">Sumbit helper</button> (deleted soon)
 							</fieldset>
-
 							<h2>Third Step</h2>
 							<fieldset>
 								<legend></legend>
@@ -297,7 +303,6 @@ $( document ).ready(function() {
 							<option>2</option>
 						</select>
 					</div>`
-				
 				);
 			}
 			$('#myModal').modal('toggle');
@@ -330,15 +335,36 @@ $( document ).ready(function() {
 	const checkAvaliableAndBooked = (date, numDays) =>{
 		const dates = [];
 		let isAvailable = false;
+		let holidayCount = 0;
 		for (i=0; i<numDays; i++){
-			dates.push(parseInt(date)+i+'');
+			willBeBookedDates = moment(date).add(i+holidayCount, 'days');
+			dates.push(willBeBookedDates.format('YYYYMMDD'));
+			if (willBeBookedDates.day() == 5){
+				holidayCount += 2;
+			}
 		}
 		const found = dates.some(r=> bookedDates.indexOf(r) >= 0)
-		if (!found) {toBeBookedDates = dates}
+		if (!found) {
+			toBeBookedDates = dates;
+			$('input[name=dates]').val(JSON.stringify(toBeBookedDates));
+		}
 		else {alert("The date you selected is not available!");}
-		//console.log(toBeBookedDates);
 		return !found;
 	}
+
+
+	$('#buttonSubmitHelper').click(()=> {
+		$.ajax({
+			url: "{{url('testForm')}}",
+			type: 'POST',
+			data: new FormData($("#form-permohonan")[0]),
+			processData: false,
+			contentType: false,
+			success: function(msg) {
+				alert('Email Sent');
+			}               
+		});
+	});
 });
 
 const getDateRentedChamber = handleData => {

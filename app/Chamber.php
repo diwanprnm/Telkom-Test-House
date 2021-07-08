@@ -9,5 +9,6 @@ class Chamber extends Model
     //
     protected $table = "chamber";
     public $incrementing = false;
+    public $timestamps = true;
     public $guarded = [];
 }
