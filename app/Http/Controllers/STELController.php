@@ -11,8 +11,12 @@ use App\Http\Requests;
 
 use App\STEL;
 use App\STELMaster;
+use App\STELSales;
+use App\STELSalesDetail;
 use App\ExaminationLab;
 use App\Logs;
+use App\LogsAdministrator;
+use App\NotificationTable;
 
 use Excel;
 
@@ -321,6 +325,7 @@ class STELController extends Controller
                     }
                 }
                 $stel->save(); 
+                $this->cek_STEL_pelanggan($stel->stels_master_id, $stel->id, $stel->publish_date);
                 $logService = new LogService();  
                 $logService->createLog('Create Referensi Uji',"Referensi Uji",$stel);
                 
@@ -330,6 +335,95 @@ class STELController extends Controller
             }
         } 
         return $return_page;
+    }
+
+    function cek_STEL_pelanggan($stels_master_id, $stels_id, $publish_date){
+        /* 
+            cek STEL terhadap master, jika tanggal [bayar/delivered] masih dalam 365hari publish date, tambahkan yang baru ke stels_sales
+            1. get stels_sales_detail.stels_id from stels.id
+            2. get stels_sales.payment_status = 1 or 3 from stels_sales_detail.stels_sales_id
+            3. get created_at from notification where message = Pembayaran Stel Telah diterima AND url = 'payment_detail/stels_sales.id'
+            3. get created_at from logs where action = Update Status Pembayaran STEL AND data like "payment_status":3
+            4. if 3 true, beri notifikasi email dan tambah stels_salesnya.
+        */
+
+        /*
+            1. get stels_sales_detail.stels_id from stels.id
+            2. get stels_sales.payment_status = 1 or 3 from stels_sales_detail.stels_sales_id
+        */
+        $data = STELSales::join('stels_sales_detail', 'stels_sales.id', '=', 'stels_sales_detail.stels_sales_id')
+            ->join('stels', 'stels_sales_detail.stels_id', '=', 'stels.id')
+            ->join('stels_master', 'stels.stels_master_id', '=', 'stels_master.id')
+            ->where('stels.stels_master_id', $stels_master_id)
+            ->where('stels.id', '!=', $stels_id)
+            ->whereIn('stels_sales.payment_status', [1,3])
+            ->orderBy('stels.created_at', 'DESC')
+            ->select('stels_sales.*','stels.price')
+        ->get();
+
+        /*
+            3. get created_at from notification where message = Pembayaran Stel Telah diterima AND url = 'payment_detail/stels_sales.id'
+            3. get created_at from logs where action = Update Status Pembayaran STEL AND data like "payment_status":3
+        */
+
+        foreach ($data as $item) {
+            // $notification = NotificationTable::where('message', 'Pembayaran Stel Telah diterima')->where('url', 'payment_detail/'.$item->id)->orderBy('created_at', 'DESC')->first();
+            // $notification ? $this->insertSTELSales($item, $stels_id) : '';
+            $query1 = '"id":'.$item->id;$query2 = '"payment_status":3';
+            $logs = Logs::where('action', 'Update Status Pembayaran STEL')->where('data', 'like','%'.$query1.'%')->where('data', 'like','%'.$query2.'%')->orderBy('created_at', 'DESC')->first();
+            if($logs){
+                $tgl = date('Y-m-d', strtotime($logs->created_at));
+                $diff = (strtotime($publish_date) - strtotime($tgl));
+                $days = floor($diff / (60 * 60 * 24));
+                $days <= 365 ? $this->insertSTELSales($item, $stels_id) : '';
+            }
+        }
+    }
+
+    public function insertSTELSales($item, $stels_id){
+        $currentUser = Auth::user();
+        $logService = new LogService();
+        
+        $tax = 0.1*$item->price;
+
+        $sales = new STELSales;
+        $sales->user_id = $item->user_id;
+        $sales->invoice = '';
+        $sales->name = '';
+        $sales->exp = '';
+        $sales->cvc = '';
+        $sales->cvv = '';
+        $sales->type = '';
+        $sales->no_card = '';
+        $sales->no_telp = '';
+        $sales->email = '';
+        $sales->country = '';
+        $sales->province = '';
+        $sales->city = '';
+        $sales->postal_code = '';
+        $sales->birthdate = '';
+        $sales->payment_method = 1;
+        $sales->payment_status = 1;
+        $sales->total = $item->price + $tax;
+        $sales->cust_price_payment = $item->price + $tax;
+        $sales->created_by = $item->user_id;
+        $sales->updated_by = $currentUser->id;
+
+        try{
+            if($sales->save()){
+                $STELSalesDetail = new STELSalesDetail;
+                $STELSalesDetail->stels_sales_id = $sales->id;
+                $STELSalesDetail->stels_id = $stels_id;
+                $STELSalesDetail->qty = 1;
+                $STELSalesDetail->created_by = $item->user_id;
+                $STELSalesDetail->updated_by = $item->user_id;
+                $STELSalesDetail->save();
+            }
+            // send notification email
+            $logService->createAdminLog('Tambah Data Pembelian STEL', 'Rekap Pembelian STEL', $sales.$STELSalesDetail, '' );
+        } catch(Exception $e){ 
+            
+        }
     }
 
     /**
