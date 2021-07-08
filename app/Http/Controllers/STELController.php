@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
@@ -81,15 +82,27 @@ class STELController extends Controller
         $status = -1;
 
         $examLab = ExaminationLab::all();
-        
-        $query = STEL::whereNotNull(self::CREATED_AT)->orderBy('is_active', 'DESC')->with(self::EXAMINATION_LAB)->with('stelMaster');
+        $stelMaster = STELMaster::with('stels')->get();
+        $arrayWhere = array();
+        foreach ($stelMaster as $item) {
+            array_push($arrayWhere, $item->stels[0]->id);
+        };
+
+        $query = STEL::join('examination_labs', 'stels.type', '=', 'examination_labs.id')
+            ->whereNotNull('stels.'.self::CREATED_AT)
+            ->whereIn('stels.id', $arrayWhere)
+            ->with('stelMaster');
+
+        // $query->whereHas(self::EXAMINATION_LAB, function ($q){
+        //     return $q->orderBy('name');
+        // });
 
         $tahun = STEL::whereNotNull(self::CREATED_AT)->with(self::EXAMINATION_LAB)->select('year')->orderBy('year','desc')->distinct()->get();
 
         if ($search != null){
             $query->where(function($qry) use($search){
-                $qry->where('name', 'like', '%'.strtolower($search).'%')
-                ->orWhere('code', 'like', '%'.strtolower($search).'%');
+                $qry->where('stels.name', 'like', '%'.strtolower($search).'%')
+                ->orWhere('stels.code', 'like', '%'.strtolower($search).'%');
             });
 
             $logService = new LogService();
@@ -100,26 +113,28 @@ class STELController extends Controller
         if ($request->has(self::CATEGORY)){
             $category = $request->get(self::CATEGORY);
             if($request->input(self::CATEGORY) != 'all'){ 
-                 $query->where('type', $request->input(self::CATEGORY));
+                 $query->where('stels.type', $request->input(self::CATEGORY));
             }
         }
 
         if ($request->has('year') && $request->input('year') != 'all'){ 
             $year = $request->get('year');
-            $query->where('year', $request->get('year'));
+            $query->where('stels.year', $request->get('year'));
         
         }
 
         if ($request->has(self::IS_ACTIVE)){
             $status = $request->get(self::IS_ACTIVE);
             if ($request->get(self::IS_ACTIVE) > -1){
-                $query->where(self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
+                $query->where('stels.'.self::IS_ACTIVE, $request->get(self::IS_ACTIVE));
             }
         }
             
         $stels = $query
-            ->orderBy('stel_type')
-            ->orderBy('code')
+            ->orderBy('stels.is_active', 'DESC')
+            ->orderBy('examination_labs.name')
+            ->orderBy('stels.stel_type')
+            ->orderBy('stels.code')
             ->paginate($paginate);
         
         if (count($stels) == 0){
