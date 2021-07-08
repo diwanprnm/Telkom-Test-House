@@ -179,7 +179,7 @@
 										<td class="left">{{ $item->code }}</td>
 										<td class="left">{{ $item->name }}</td>
 										<td class="left">{{ $item->stelMaster->lang }}</td>
-										<td class="left">{{ @$item->examinationLab->name }}</td>
+										<td class="left">{{ $item->lab_name }}</td>
 										@if($item->is_active)
 	                                    	<td class="center"><span class="label label-sm label-success">Active</span></td>
 	                                    @else

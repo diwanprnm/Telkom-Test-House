@@ -91,11 +91,8 @@ class STELController extends Controller
         $query = STEL::join('examination_labs', 'stels.type', '=', 'examination_labs.id')
             ->whereNotNull('stels.'.self::CREATED_AT)
             ->whereIn('stels.id', $arrayWhere)
+            ->select('stels.*', 'examination_labs.name as lab_name')
             ->with('stelMaster');
-
-        // $query->whereHas(self::EXAMINATION_LAB, function ($q){
-        //     return $q->orderBy('name');
-        // });
 
         $tahun = STEL::whereNotNull(self::CREATED_AT)->with(self::EXAMINATION_LAB)->select('year')->orderBy('year','desc')->distinct()->get();
 
