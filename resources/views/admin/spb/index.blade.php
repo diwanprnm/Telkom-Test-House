@@ -511,6 +511,7 @@
 	    };
 
 		document.getElementById("reset-filter").onclick = function() {
+			var baseUrl = "{{URL::to('/')}}";
             $('.cs-select').remove();
             $('.typeHTML').append(typeHTML);
             $('.paymentStatusHTML').append(paymentStatusHTML);
@@ -522,6 +523,7 @@
             [].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {	
                 new SelectFx(el);
             } );
+			document.location.href = baseUrl+'/admin/spb';
         };
 	});
 </script>

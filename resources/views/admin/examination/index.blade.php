@@ -765,6 +765,7 @@
 
 		
         document.getElementById("reset-filter").onclick = function() {
+			var baseUrl = "{{URL::to('/')}}";
             $('.cs-select').remove();
             $('.typeHTML').append(typeHTML);
             $('.labHTML').append(labHTML);
@@ -777,7 +778,7 @@
             [].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {	
                 new SelectFx(el);
             } );
-
+			document.location.href = baseUrl+'/admin/examination';
         };
 	});
 
