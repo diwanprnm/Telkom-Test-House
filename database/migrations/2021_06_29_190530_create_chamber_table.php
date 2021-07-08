@@ -13,7 +13,7 @@ class CreateChamberTable extends Migration
     public function up()
     {
         Schema::create('chamber', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->uuid('id')->primary();
             $table->uuid('user_id');
             $table->uuid('company_id');
             $table->string('invoice'); // CMB No.urut/Bulan Romawi/Tahun ex : CMB 0001/VII/2021
