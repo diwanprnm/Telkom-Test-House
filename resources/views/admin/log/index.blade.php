@@ -333,14 +333,12 @@
 	    };
 
 		document.getElementById("reset-filter").onclick = function() {
-			var baseUrl = "{{URL::to('/')}}";
 			$('#before_date').val(null);
 			$('#after_date').val(null);
 			$('#username').chosen();
 			$('#username').val('').trigger("chosen:updated");
 			$('#action').chosen();
 			$('#action').val('').trigger("chosen:updated");
-			document.location.href = baseUrl+'/admin/log';
         };
 	});
 </script>>

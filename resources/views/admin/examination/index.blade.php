@@ -252,7 +252,7 @@
 										</select>
 										<select id="sort_by" name="sort_by" class="cs-select cs-skin-elastic" required>
 											<option value="asc" @if ($sort_by == 'asc') selected @endif  >ASC</option>
-											<option value="dsc" @if ($sort_by == 'dsc') selected @endif>DESC</option>
+											<option value="desc" @if ($sort_by == 'desc') selected @endif>DESC</option>
 										</select>
 									</div>
 		                        </div>
@@ -671,14 +671,14 @@
 				@endforeach
 					'</select>'
 	var sortFromHTML = '<select id="sort_from" name="sort_from" class="cs-select cs-skin-elastic" required>'+
-							'<option value="updated_at" @if ($sort_by == "updated_at") selected @endif>Update Terakhir</option>'+
-							'<option value="created_at" @if ($sort_by == "created_at") selected @endif>Tanggal Registrasi</option>'+
-							'<option value="device_name" @if ($sort_by == "device_name") selected @endif>Nama Perangkat</option>'+
+							'<option value="updated_at" selected>Update Terakhir</option>'+
+							'<option value="created_at">Tanggal Registrasi</option>'+
+							'<option value="device_name">Nama Perangkat</option>'+
 						'</select>'
 	var sortByHTML = '<select id="sort_by" name="sort_by" class="cs-select cs-skin-elastic" required>'+
-											'<option value="asc" @if ($sort_by == "asc") selected @endif>ASC</option>'+
-											'<option value="dsc" @if ($sort_by == "dsc") selected @endif>DESC</option>'+
-										'</select>'
+						'<option value="asc">ASC</option>'+
+						'<option value="desc" selected>DESC</option>'+
+					'</select>'
 	jQuery(document).ready(function() {
 		FormElements.init();
 
@@ -765,8 +765,7 @@
 
 		
         document.getElementById("reset-filter").onclick = function() {
-			var baseUrl = "{{URL::to('/')}}";
-            $('.cs-select').remove();
+			$('.cs-select').remove();
             $('.typeHTML').append(typeHTML);
             $('.labHTML').append(labHTML);
 			$('.tahapHTML').append(tahapHTML);
@@ -778,7 +777,6 @@
             [].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {	
                 new SelectFx(el);
             } );
-			document.location.href = baseUrl+'/admin/examination';
         };
 	});
 

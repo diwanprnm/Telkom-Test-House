@@ -376,16 +376,16 @@
                                                 '<option value="-1">KEDALUWARSA</option>'+
 										'</select>'
 	var sortByHTML = '<select id="sort_by" name="sort_by" class="cs-select cs-skin-elastic" required>'+
-												'<option value="" disabled selected>Select...</option>'+
+												'<option value="" disabled>Select...</option>'+
                                                 '<option value="spb_date">Tanggal SPB Dikeluarkan</option>'+
-                                                '<option value="spb_number">Nomor SPB</option>'+
+                                                '<option value="spb_number" selected>Nomor SPB</option>'+
                                                 '<option value="examination_type_id">Tipe Pengujian</option>'+
                                                 '<option value="company_name">Nama Perusahaan</option>'+
 										'</select>'
 	var sortTypeHTML = '<select id="sort_type" name="sort_type" class="cs-select cs-skin-elastic" required>'+
-												'<option value="" disabled selected>Select...</option>'+
+												'<option value="" disabled>Select...</option>'+
                                                 '<option value="asc">ASC</option>'+
-                                               ' <option value="desc">DESC</option>'+
+                                               ' <option value="desc" selected>DESC</option>'+
 										'</select>'
 	jQuery(document).ready(function() {       
 		$('#search_value').keydown(function(event) {
@@ -511,8 +511,7 @@
 	    };
 
 		document.getElementById("reset-filter").onclick = function() {
-			var baseUrl = "{{URL::to('/')}}";
-            $('.cs-select').remove();
+			$('.cs-select').remove();
             $('.typeHTML').append(typeHTML);
             $('.paymentStatusHTML').append(paymentStatusHTML);
 			$('.sortHTML').append(sortByHTML).append(sortTypeHTML);
@@ -523,7 +522,6 @@
             [].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {	
                 new SelectFx(el);
             } );
-			document.location.href = baseUrl+'/admin/spb';
         };
 	});
 </script>

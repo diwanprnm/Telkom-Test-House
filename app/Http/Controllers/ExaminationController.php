@@ -194,7 +194,7 @@ class ExaminationController extends Controller
 		$selectedExamLab = $request->get('selected_exam_lab','');
 		$sortFromQuery = 'examinations.updated_at';
 		$sortFrom = $request->get('sort_from','updated_at');
-		$sortBy = $request->get('sort_by','dsc');
+		$sortBy = $request->get('sort_by','desc');
 		$examinationLab = \App\ExaminationLab::select('id', 'name')->get();
 		$examType = ExaminationType::all();
 
@@ -1162,7 +1162,7 @@ class ExaminationController extends Controller
 
         $search = trim($request->input(self::SEARCH));
 		$sortFrom = $sortFromQuery = $request->get('sort_from', 'examinations.created_at');
-		$sortBy = $request->get('sort_by', 'dsc');
+		$sortBy = $request->get('sort_by', 'desc');
 
 
         $tempData = $examinationService->requestQuery($request, $search, '', '', null, null);

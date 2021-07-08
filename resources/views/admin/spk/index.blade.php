@@ -358,16 +358,16 @@
 				@endforeach
 			'</select>'
 	var sortByHTML = '<select id="sort_by" name="sort_by" class="cs-select cs-skin-elastic" required>'+
-												'<option value="" disabled selected>Select...</option>'+
-                                                '<option value="spk_date">Tanggal SPK Dikeluarkan</option>'+
+												'<option value="" disabled>Select...</option>'+
+                                                '<option value="spk_date" selected>Tanggal SPK Dikeluarkan</option>'+
                                                 '<option value="SPK_NUMBER">Nomor SPK</option>'+
-                                               '<option value="TESTING_TYPE">Tipe Pengujian</option>'+
+                                               	'<option value="TESTING_TYPE">Tipe Pengujian</option>'+
                                                 '<option value="COMPANY_NAME">Nama Perusahaan</option>'+'</select>'
 
 	var sortTypeHTML = '<select id="sort_type" name="sort_type" class="cs-select cs-skin-elastic" required>'+
-												'<option value="" disabled selected>Select...</option>'+
+												'<option value="" disabled>Select...</option>'+
                                                 '<option value="asc">ASC</option>'+
-                                               ' <option value="desc">DESC</option>'+
+                                               	'<option value="desc" selected>DESC</option>'+
 										'</select>'
 	jQuery(document).ready(function() {       
 		$('#search_value').keydown(function(event) {
@@ -492,8 +492,7 @@
 	    };
 
 		document.getElementById("reset-filter").onclick = function() {
-			var baseUrl = "{{URL::to('/')}}";
-            $('.cs-select').remove();
+			$('.cs-select').remove();
             $('.typeHTML').append(typeHTML);
 			$('.labHTML').append(labHTML);
 			$('.sortHTML').append(sortByHTML).append(sortTypeHTML);
@@ -504,7 +503,6 @@
             [].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {	
                 new SelectFx(el);
             } );
-			document.location.href = baseUrl+'/admin/spk';
         };
 	});
 </script>
