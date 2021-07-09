@@ -84,7 +84,7 @@
 							</legend>
 							<div class="row">
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group typeHTML">
 										<label>
 											Tipe Pengujian
 										</label>
@@ -108,7 +108,7 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group tahapHTML">
 										<label>
 											Tahap Pengujian
 										</label>
@@ -241,7 +241,7 @@
 		                    </div>
 							<div class="row">
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group sortHTML">
 										<label>
 											Sort by :
 										</label>
@@ -252,12 +252,12 @@
 										</select>
 										<select id="sort_by" name="sort_by" class="cs-select cs-skin-elastic" required>
 											<option value="asc" @if ($sort_by == 'asc') selected @endif  >ASC</option>
-											<option value="dsc" @if ($sort_by == 'dsc') selected @endif>DESC</option>
+											<option value="desc" @if ($sort_by == 'desc') selected @endif>DESC</option>
 										</select>
 									</div>
 		                        </div>
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group labHTML">
 										<label>
 											Lab
 										</label>
@@ -284,6 +284,9 @@
 							<div class="col-md-12">
 								<button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 									Filter
+								</button>
+								<button id="reset-filter" class="btn btn-wide btn-white btn-squared pull-right" style="margin-right: 10px;">
+									Reset
 								</button>
 							</div>
 						</fieldset>
@@ -640,6 +643,42 @@
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
 <script src={{ asset("assets/js/form-elements.js") }}></script>
 <script type="text/javascript">
+	var typeHTML = '<select id="type" name="type" class="cs-select cs-skin-elastic" required>'+
+					'<option value="" disabled selected>Select...</option>'+
+					'<option value="all">All</option>'+
+			@foreach($type as $item)
+					'<option value="{{ $item->id }}">{{ $item->name }}</option>'+
+			@endforeach
+					'</select>'
+	var tahapHTML = '<select id="status" name="status" class="cs-select cs-skin-elastic" required>'+
+					'<option value="" disabled selected>Select...</option>'+
+					'<option value="all">All</option>'+
+					'<option value="1">Registrasi</option>'+
+					'<option value="2">Uji Fungsi</option>'+
+					'<option value="3">Tinjauan Kontrak</option>'+
+					'<option value="4">SPB</option>'+
+					'<option value="5">Pembayaran</option>'+
+					'<option value="6">Pembuatan SPK</option>'+
+					'<option value="7">Pelaksanaan Uji</option>'+
+					'<option value="8">Laporan Uji</option>'+
+					'<option value="9">Sidang QA</option>'+
+					'<option value="10">Penerbitan Sertifikat</option>'+'</select>'
+	var labHTML = '<select id="exam_lab" name="exam_lab" class="cs-select cs-skin-elastic" required>'+
+					'<option value="" disabled selected>Select...</option>'+
+					'<option value="all">All</option>'+
+				@foreach($examinationLab as $lab)
+						'<option value="{{ $lab->id }}">{{ $lab->name }}</option>'+
+				@endforeach
+					'</select>'
+	var sortFromHTML = '<select id="sort_from" name="sort_from" class="cs-select cs-skin-elastic" required>'+
+							'<option value="updated_at" selected>Update Terakhir</option>'+
+							'<option value="created_at">Tanggal Registrasi</option>'+
+							'<option value="device_name">Nama Perangkat</option>'+
+						'</select>'
+	var sortByHTML = '<select id="sort_by" name="sort_by" class="cs-select cs-skin-elastic" required>'+
+						'<option value="asc">ASC</option>'+
+						'<option value="desc" selected>DESC</option>'+
+					'</select>'
 	jQuery(document).ready(function() {
 		FormElements.init();
 
@@ -723,6 +762,22 @@
 			params = getParam();
 			document.location.href = baseUrl+'/examination/excel?'+jQuery.param(params);
 	    };
+
+		
+        document.getElementById("reset-filter").onclick = function() {
+			$('.cs-select').remove();
+            $('.typeHTML').append(typeHTML);
+            $('.labHTML').append(labHTML);
+			$('.tahapHTML').append(tahapHTML);
+			$('.sortHTML').append(sortFromHTML).append(sortByHTML);
+			$('#after_date').val(null);
+			$('#before_date').val(null);
+			$('#after_date_exam').val(null);
+			$('#before_date_exam').val(null);
+            [].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {	
+                new SelectFx(el);
+            } );
+        };
 	});
 
 	function getParam() {

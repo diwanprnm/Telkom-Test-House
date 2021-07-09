@@ -161,6 +161,9 @@
 		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right filter">
 		                                Filter
 		                            </button>
+									<button id="reset-filter" class="btn btn-wide btn-white btn-squared pull-right" style="margin-right: 10px;">
+                                        Reset
+                                    </button>
 		                        </div>
 							</div>
 						</fieldset>
@@ -293,6 +296,9 @@
 		                            <button id="filter2" type="submit" class="btn btn-wide btn-green btn-squared pull-right filter">
 		                                Filter
 		                            </button>
+									<button id="reset-filter2" class="btn btn-wide btn-white btn-squared pull-right" style="margin-right: 10px;">
+                                        Reset
+                                    </button>
 		                        </div>
 							</div>
 						</fieldset>
@@ -425,6 +431,9 @@
 		                            <button id="filter3" type="submit" class="btn btn-wide btn-green btn-squared pull-right filter">
 		                                Filter
 		                            </button>
+									<button id="reset-filter3" class="btn btn-wide btn-white btn-squared pull-right" style="margin-right: 10px;">
+                                        Reset
+                                    </button>
 		                        </div>
 							</div>
 						</fieldset>
@@ -583,6 +592,7 @@
 			
 			document.location.href = baseUrl+'/admin/sales?'+jQuery.param(params);
 		});
+
 	});
 
 	document.getElementById("excel").onclick = function() {
@@ -638,5 +648,24 @@
 		};
 		document.location.href = baseUrl+'/sales/excel?'+jQuery.param(params);
 	};
+
+	document.getElementById("reset-filter").onclick = function() {
+		$('#after_date').val(null);
+		$('#before_date').val(null);
+	};
+
+
+	document.getElementById("reset-filter2").onclick = function() {
+		$('#after_date2').val(null);
+		$('#before_date2').val(null);
+	};
+
+
+	document.getElementById("reset-filter3").onclick = function() {
+		$('#after_date3').val(null);
+		$('#before_date3').val(null);
+	};
+
+
 </script>>
 @endsection
