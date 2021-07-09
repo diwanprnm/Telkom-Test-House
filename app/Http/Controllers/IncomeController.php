@@ -177,8 +177,8 @@ class IncomeController extends Controller
         $message = null;
         $paginate = 10;
         $search = trim(strip_tags($request->input(self::SEARCH,'')));
-        $before = null;
-        $after = null;
+        $before = $request->input('before_date') ? $request->input('before_date') : null;
+        $after = $request->input('after_date') ? $request->input('after_date') : null;
         $type = '';
         $sort_by = self::KUITANSI_DATE;
         $sort_type = 'desc';
@@ -380,7 +380,7 @@ class IncomeController extends Controller
 
     private function filterStatus($query, Request $request)
     {
-        $status = '';
+        $status = $request->input('status') ? $request->input('status') : '';
 
         $bussinessStep = array(
             '',
@@ -407,8 +407,6 @@ class IncomeController extends Controller
                     break;
                 }
             }
-        }else {
-            $status = 'all';
         }
         return array(
             self::QUERY => $query,

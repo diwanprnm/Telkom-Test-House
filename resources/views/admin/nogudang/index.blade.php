@@ -104,7 +104,7 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group typeHTML">
 										<label>
 											Tipe Pengujian
 										</label>
@@ -154,7 +154,7 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group labHTML">
 										<label>
 											Lab
 										</label>
@@ -181,6 +181,9 @@
 		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 		                                Filter
 		                            </button>
+									<button id="reset-filter" class="btn btn-wide btn-white btn-squared pull-right" style="margin-right: 10px;">
+                                        Reset
+                                    </button>
 		                        </div>
 		                    </div>
 						</fieldset>
@@ -283,6 +286,20 @@
 	$('#company').trigger("chosen:updated");
 </script>
 <script type="text/javascript">
+	var typeHTML = '<select id="type" name="type" class="cs-select cs-skin-elastic" required>'+
+												'<option value="" disabled selected>Select...</option>'+
+                                               	'<option value="all">All</option>'+
+											@foreach($type as $item)
+													'<option value="{{ $item->id }}">{{ $item->name }}</option>'+
+											@endforeach
+										'</select>'
+	var labHTML = '<select id="lab" name="lab" class="cs-select cs-skin-elastic" required>'+
+												'<option value="" disabled selected>Select...</option>'+
+                                               	'<option value="all">All</option>'+
+											@foreach($type as $item)
+													'<option value="{{ $item->id }}">{{ $item->name }}</option>'+
+											@endforeach
+										'</select>'
 	jQuery(document).ready(function() {       
 		$('#search_value').keydown(function(event) {
 	        if (event.keyCode == 13) {
@@ -412,6 +429,19 @@
 /*end sorting*/			
 			document.location.href = baseUrl+'/nogudang/excel?'+jQuery.param(params);
 	    };
+
+		document.getElementById("reset-filter").onclick = function() {
+			$('.cs-select').remove();
+            $('.typeHTML').append(typeHTML);
+			$('.labHTML').append(labHTML);
+			$('#before_date').val(null);
+			$('#after_date').val(null);
+			$('#nogudang').chosen().val('').trigger('chosen:updated');
+			$('#company').chosen().val('').trigger('chosen:updated');
+            [].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {	
+                new SelectFx(el);
+            } );
+        };
 	});
 </script>
 @endsection
