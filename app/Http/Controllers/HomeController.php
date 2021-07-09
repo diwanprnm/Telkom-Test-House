@@ -136,7 +136,7 @@ class HomeController extends Controller
 			$query_stels = "SELECT code as stel, name as device_name , type as lab FROM stels WHERE is_active = 1 ORDER BY name";
 				$data_stels = DB::select($query_stels);
 
-            $query_layanan = ExaminationLab::where(self::IS_ACTIVE, 0);
+            $query_layanan = ExaminationLab::where(self::IS_ACTIVE, 0)->where('lab_code', '!=', '026');
             $data_layanan = $query_layanan->orderBy('lab_code')->get();
 
             $data_layanan_not_active = array();
@@ -144,7 +144,7 @@ class HomeController extends Controller
 				array_push($data_layanan_not_active, $data->id);
 			}
 
-            $query_layanan_active = ExaminationLab::where(self::IS_ACTIVE, 1);
+            $query_layanan_active = ExaminationLab::where(self::IS_ACTIVE, 1)->where('lab_code', '!=', '026');
             $data_layanan_active = $query_layanan_active->get();
 
 	    	$data = array();
@@ -160,7 +160,8 @@ class HomeController extends Controller
 				->with('data_stels_qa', $data_stels_qa)
 				->with(self::DATA_SALES, $data_stels)
 				->with('data', $data)
-				->with('page', $page);   
+				->with('page', $page)
+				->with('certificate_date', $currentUser->company->qs_certificate_date);   
 		}else{
 			return redirect(self::TO_LOGIN);
 		}
