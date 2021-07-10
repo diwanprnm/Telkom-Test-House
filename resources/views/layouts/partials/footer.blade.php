@@ -67,12 +67,7 @@
                 <div class="container clearfix">
 
                     <div class="col_half">
-                        Copyrights &copy; 
-                        <?php
-                        $tanggal= mktime(date("m"),date("d"),date("Y"));
-                        echo .date("d-M-Y",$tanggal).;
-                        ?>
-                        2021 All Rights Reserved by Telkom Divisi Digital Business
+                        Copyrights &copy; 2021 All Rights Reserved by Telkom Divisi Digital Business
                     </div>
 
                 </div>
