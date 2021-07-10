@@ -10,7 +10,7 @@
 
                     <div class="col_half">
 
-                        <div class="col_one_third">
+                        <div class="col_half">
 
                             <div class="widget clearfix">
 
@@ -33,11 +33,12 @@
                                     <div class="row">
                                         <address>
                                             <strong>{{ trans('translate.service_company_address') }}:</strong><br>
-                                            Jl. Gegerkalong Hilir, Sukarasa, Sukasari<br>
+                                            Jl. Gegerkalong Hilir No.47, Gegerkalong, Kec. Sukasari<br>
                                             Kota Bandung, Jawa Barat 40152<br>
                                         </address>
                                         <abbr title="Customer Service"><strong>{{ trans('translate.service_company_cs') }}:</strong></abbr><br> (+62) 812-2483-7500<br>
-                                        <abbr title="Email Address"><strong>{{ trans('translate.service_company_email') }}:</strong></abbr> urelddstelkom@gmail.com<br><br>
+                                        <abbr title="Email Address"><strong>{{ trans('translate.service_company_email') }}:</strong></abbr><br> cstth@telkom.co.id<br>
+                                        <abbr title="Email Address"><strong>{{ trans('translate.service_operational_time') }}:</strong></abbr><br> {{ trans('translate.operational_time') }}<br><br>
                                     </div>
 
                                     <div class="row socials">
@@ -51,7 +52,7 @@
 
                     <div class="col_half col_last">
 
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.1685974795096!2d107.58720671477981!3d-6.870391795035161!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e696fb70ca4d%3A0x2efb189c3faad3f6!2sTelkom+Professional+Certification+Center!5e0!3m2!1sen!2sid!4v1496372958432" title="video telkom profesioanl certification" width="600" height="450" style="border:0" allowfullscreen></iframe>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.1452685831173!2d107.58507161477266!3d-6.873191795033207!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e690b9ba28d9%3A0x5628e04b612c3acc!2sLaboratorium%20Quality%20Assurance%20Divisi%20Digital%20Service%20PT.%20Telekomunikasi%20Indonesia!5e0!3m2!1sid!2sid!4v1625904522553!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
 
                     </div>
 
@@ -66,7 +67,12 @@
                 <div class="container clearfix">
 
                     <div class="col_half">
-                        Copyrights &copy; 2017 All Rights Reserved by Telkom Divisi Digital Business</div>
+                        Copyrights &copy; 
+                        <?php
+                        $tanggal= mktime(date("m"),date("d"),date("Y"));
+                        echo .date("d-M-Y",$tanggal).;
+                        ?>
+                        2021 All Rights Reserved by Telkom Divisi Digital Business
                     </div>
 
                 </div>

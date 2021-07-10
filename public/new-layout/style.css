@@ -579,7 +579,7 @@ span.middot {
 .sidebar { width: 240px; }
 .col_full { width: 100%; }
 .col_half { width: 48%; }
-.col_one_third { width: 30.63%; }
+.col_one_third { width: 30.631%; }
 .col_two_third { width: 65.33%; }
 .col_one_fourth { width: 22%; }
 .col_three_fourth { width: 74%; }
@@ -613,7 +613,7 @@ body.stretched .container-fullwidth {
 	position: relative;
 	margin-right: 4%;
 	margin-bottom: 50px;
-	float: left;
+	float: center;
 }
 
 .postcontent,
