@@ -1528,7 +1528,7 @@ ul.sub-menu li ul.sub-menu li ul.sub-menu li a {
 /* ---------------------------------------------------------------------- */
 #app > footer {
   background-color: #ffffff;
-  border-top: 1px solid #27195f;
+  border-top: 1px solid #c8c7cc;
   bottom: 0;
   right: 0;
   left: 0;
@@ -3897,7 +3897,7 @@ a.text-light:hover {
   width: 30px;
   height: 30px;
   float: left;
-  margin-right: 1px;
+  margin-right: 10px;
 }
 .panel-note .panel-footer .avatar-note img {
   -moz-border-radius: 2px;

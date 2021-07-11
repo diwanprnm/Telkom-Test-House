@@ -10,7 +10,7 @@
 
                     <div class="col_half">
 
-                        <div class="col_half">
+                        <div class="col_one_third">
 
                             <div class="widget clearfix">
 
@@ -25,6 +25,10 @@
 
                             </div>
 
+                        </div>
+
+                        <div class="col_one_third">
+                            &nbsp;&nbsp;&nbsp;&nbsp;
                         </div>
 
                         <div class="col_one_third">
