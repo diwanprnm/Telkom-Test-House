@@ -117,6 +117,7 @@ class ProductsController extends Controller
                         ) as is_buyed'
             )
             ->where("stels.is_active",1)
+            ->whereIn("stels.stel_type",[1,2,3])
             ;
 
         if ($search != null){
@@ -128,7 +129,7 @@ class ProductsController extends Controller
         }
         $stels = $stels->groupBy(self::STELS_ID);
         
-        $stels = $stels->paginate($paginate); 
+        $stels = $stels->orderBy('stels.stel_type')->orderBy('stels.code')->paginate($paginate); 
         $page = self::PRODUCTS;
         return view('client.STEL.products') 
             ->with('page', $page)

@@ -8,12 +8,12 @@
 		<section id="page-title">
 
 			<div class="container clearfix">
-				<h1>STSEL</h1>
+				<h1>S-TSEL</h1>
 				
 				<ol class="breadcrumb">
 					<li><a href="#">{{ trans('translate.menu_testing') }}</a></li>
 					<li><a href="#">{{ trans('translate.menu_ref') }}</a></li>
-					<li class="active">STSEL</li>
+					<li class="active">S-TSEL</li>
 				</ol>
 			</div>
 
