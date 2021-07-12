@@ -84,7 +84,7 @@
 							Detail Referensi Uji
 						</legend>
 						<div class="row">
-							<div class="col-md-4">
+							<div class="col-md-3">
 								<div class="form-group">
 									<label>
 										Tipe *
@@ -101,7 +101,7 @@
 									</select>
 								</div>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-3">
 								<div class="form-group">
 									<label>
 										Kode *
@@ -109,7 +109,21 @@
 									<input type="text" id="code" name="code" class="form-control" placeholder="No. Dokumen" value="{{$data->code}}" readonly>
 								</div>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label>
+										Lab *
+									</label>
+									<select name="type" class="cs-select cs-skin-elastic" required>
+										@foreach ($examLab as $item)
+											@if ($data->lab == $item->id)
+												<option value="{{$item->id}}" selected>{{$item->name}}</option>
+											@endif
+										@endforeach
+									</select>
+								</div>
+							</div>
+							<div class="col-md-3">
 								<div class="form-group">
 									<label>
 										Bahasa *

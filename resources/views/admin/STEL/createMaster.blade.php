@@ -39,7 +39,7 @@
 								Tambah Referensi Uji
 							</legend>
 							<div class="row">
-								<div class="col-md-4">
+								<div class="col-md-3">
 									<div class="form-group">
 										<label>
 											Tipe Referensi Uji *
@@ -52,7 +52,7 @@
 										</select>
 									</div>
 								</div>
-								<div class="col-md-4">
+								<div class="col-md-3">
 									<div class="form-group">
 										<label>
 											Kode *
@@ -60,7 +60,24 @@
 										<input type="text" id="master_code" name="master_code" class="form-control" placeholder="Kode" value="{{ old('master_code') }}" required>
 									</div>
 								</div>
-								<div class="col-md-4">
+								<div class="col-md-3">
+									<div class="form-group">
+										<label>
+											Lab *
+										</label>
+										<select name="type" class="cs-select cs-skin-elastic" required>
+											@foreach ($examLab as $dataLab)
+												<option value="" disabled>Select...</option>
+												@if (old('type') == $dataLab->id)
+													<option value="{{$dataLab->id}}" selected>{{$dataLab->name}}</option>
+												@else
+													<option value="{{$dataLab->id}}">{{$dataLab->name}}</option>
+												@endif
+											@endforeach
+										</select>
+									</div>
+								</div>
+								<div class="col-md-3">
 									<div class="form-group">
 										<label>
 											Bahasa *
@@ -91,7 +108,7 @@
 										<input type="text" name="name" class="form-control" placeholder="Nama Dokumen" value="{{ old('name') }}" required>
 									</div>
 								</div>
-								<div class="col-md-4">
+								<div class="col-md-6">
 									<div class="form-group">
 										<label>
 											Tahun *
@@ -99,7 +116,7 @@
 										<input type="text" id="year" name="year" class="form-control" placeholder="Tahun" value="{{ old('year') }}" required>
 									</div>
 								</div>
-								<div class="col-md-4">
+								<div class="col-md-6">
 									<div class="form-group">
 										<label>
 											Versi *
@@ -113,23 +130,6 @@
 											Harga *
 										</label>
 										<input type="text" id="txt-price" name="price" class="form-control" placeholder="Harga" value="{{ old('price') }}" required>
-									</div>
-								</div>
-								<div class="col-md-4">
-									<div class="form-group">
-										<label>
-											Lab *
-										</label>
-										<select name="type" class="cs-select cs-skin-elastic" required>
-											@foreach ($examLab as $dataLab)
-												<option value="" disabled>Select...</option>
-												@if (old('type') == $dataLab->id)
-													<option value="{{$dataLab->id}}" selected>{{$dataLab->name}}</option>
-												@else
-													<option value="{{$dataLab->id}}">{{$dataLab->name}}</option>
-												@endif
-											@endforeach
-										</select>
 									</div>
 								</div>
 								<div class="col-md-4">

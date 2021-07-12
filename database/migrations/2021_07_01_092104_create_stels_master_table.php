@@ -16,6 +16,7 @@ class CreateStelsMasterTable extends Migration
             $table->uuid('id');
             $table->enum('type', ['1','2','3','4','5','6','7']);
             $table->string('code');
+            $table->string('lab');
             $table->enum('lang', ['IDN', 'ENG'])->default('IDN');
             $table->integer('total');
             

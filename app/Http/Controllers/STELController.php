@@ -193,7 +193,8 @@ class STELController extends Controller
             $stelMaster->id = Uuid::uuid4();
     		$stelMaster->type = $request->input('stel_type');
             $stelMaster->code = $request->input('master_code');
-    		$stelMaster->lang = $request->input('lang');
+    		$stelMaster->lab = $request->input('type');
+            $stelMaster->lang = $request->input('lang');
     		$stelMaster->total = 1;
     		$stelMaster->created_by = $currentUser->id;
     		$stelMaster->updated_by = $currentUser->id;
@@ -434,8 +435,10 @@ class STELController extends Controller
      */
     public function show($id)
     {
-        $data = STELMaster::with('stels')->findOrFail($id);
+        $examLab = ExaminationLab::all();
+        $data = STELMaster::with('examinationLab')->with('stels')->findOrFail($id);
         return view('admin.STEL.show')
+            ->with(self::EXAM_LAB, $examLab)
             ->with('data', $data)
         ;
     }
@@ -487,9 +490,6 @@ class STELController extends Controller
             }
             if ($request->has(self::PRICE)){
                 $stel->price = str_replace(",","",$request->input(self::PRICE));
-            }
-            if ($request->has('type')){
-                $stel->type = $request->input('type');
             }
             if ($request->has('publish_date')){
                 $stel->publish_date = $request->input('publish_date');

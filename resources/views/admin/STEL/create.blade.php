@@ -40,6 +40,7 @@
 						<legend>
 							Tambah Dokumen
 						</legend>
+						<input type="hidden" id="type" name="type" value="{{ $stelMaster->lab }}"/>
 						<input type="hidden" id="stel_type" name="stel_type" value="{{ $stelMaster->type }}"/>
 						<input type="hidden" id="stels_master_id" name="stels_master_id" value="{{ $stelMaster->id }}"/>
 						<div class="row">
@@ -59,7 +60,7 @@
 									<input type="text" name="name" class="form-control" placeholder="Nama Dokumen" value="{{ old('name') }}" required>
 								</div>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-6">
 								<div class="form-group">
 									<label>
 										Tahun *
@@ -67,7 +68,7 @@
 									<input type="number" id="year" name="year" class="form-control" placeholder="Tahun" value="{{ old('year') }}" required>
 								</div>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-6">
 								<div class="form-group">
 									<label>
 										Versi *
@@ -81,23 +82,6 @@
 										Harga *
 									</label>
 									<input type="text" id="txt-price" name="price" class="form-control" placeholder="Harga" value="{{ old('price') }}" required>
-								</div>
-							</div>
-	                        <div class="col-md-4">
-								<div class="form-group">
-									<label>
-										Lab *
-									</label>
-									<select name="type" class="cs-select cs-skin-elastic" required>
-										@foreach ($examLab as $dataLab)
-											<option value="" disabled>Select...</option>
-											@if (old('type') == $dataLab->id)
-												<option value="{{$dataLab->id}}" selected>{{$dataLab->name}}</option>
-											@else
-												<option value="{{$dataLab->id}}">{{$dataLab->name}}</option>
-											@endif
-										@endforeach
-									</select>
 								</div>
 							</div>
 							<div class="col-md-4">

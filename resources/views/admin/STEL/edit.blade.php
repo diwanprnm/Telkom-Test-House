@@ -49,7 +49,7 @@
 									<input type="text" name="name" class="form-control" placeholder="Nama Dokumen" value="{{$data->name}}" required>
 								</div>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-6">
 								<div class="form-group">
 									<label>
 										Tahun *
@@ -57,7 +57,7 @@
 									<input type="number" id="year" name="year" class="form-control" placeholder="Tahun" value="{{$data->year}}" required>
 								</div>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-6">
 								<div class="form-group">
 									<label>
 										Versi *
@@ -71,22 +71,6 @@
 										Harga *
 									</label>
 									<input type="text" id="txt-price" name="price" class="form-control" placeholder="Harga" value="{{$data->price}}" required>
-								</div>
-							</div>
-	                        <div class="col-md-4">
-								<div class="form-group">
-									<label>
-										Lab *
-									</label>
-									<select name="type" class="cs-select cs-skin-elastic" required>
-										@foreach ($examLab as $dataLab)
-											@if ($data->type == $dataLab->id)
-												<option value="{{$dataLab->id}}" selected>{{$dataLab->name}}</option>
-											@else
-												<option value="{{$dataLab->id}}">{{$dataLab->name}}</option>
-											@endif
-										@endforeach
-									</select>
 								</div>
 							</div>
 							<div class="col-md-4">
