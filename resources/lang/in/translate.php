@@ -290,7 +290,7 @@ return [
 	'supported'	=> 'Didukung Oleh',
 	'menu_company'    		=> 'Perusahaan',
 	'menu_testing'    		=> 'Pengujian',
-	'menu_ref'		=> 'Referensi',
+	'menu_ref'		=> 'Daftar Referensi',
 	
 	'header_title'		=> 'Layanan Pengujian Perangkat Telekomunikasi',
 	'see_product'		=> 'Beli Dokumen STEL',

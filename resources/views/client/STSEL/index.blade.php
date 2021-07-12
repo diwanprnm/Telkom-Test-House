@@ -1,19 +1,19 @@
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
-    <title>S-TSEL - Telkom DDB</title>
+    <title>{{ $page }} - Telkom DDB</title>
 @section('content')
  		<!-- Page Title
 		============================================= -->
 		<section id="page-title">
 
 			<div class="container clearfix">
-				<h1>S-TSEL</h1>
+				<h1>{{ $page }}</h1>
 				
 				<ol class="breadcrumb">
 					<li><a href="#">{{ trans('translate.menu_testing') }}</a></li>
 					<li><a href="#">{{ trans('translate.menu_ref') }}</a></li>
-					<li class="active">S-TSEL</li>
+					<li class="active">{{ $page }}</li>
 				</ol>
 			</div>
 
@@ -137,5 +137,27 @@
 @endsection
  
 @section('content_js')
-	<script type="text/javascript" src="{{url('assets/js/search/stsel.js')}}"></script>
+<script type="text/javascript">
+	jQuery(document).ready(function() {
+		$('#search_stsel').keydown(function(event) {
+			if (event.keyCode == 13) {
+				var baseUrl = "{{URL::to('/')}}";
+				var params = {
+					search:document.getElementById("search_stsel").value,
+					type:document.getElementById("cmb-category").value
+				};
+				document.location.href = '{{ $page }}?'+jQuery.param(params);
+			}
+		});
+	});
+	
+	function filter(){
+		var baseUrl = "{{URL::to('/')}}";
+		var params = {
+			search:document.getElementById("search_stsel").value,
+			type:document.getElementById("cmb-category").value
+		};
+		document.location.href = '{{ $page }}?'+jQuery.param(params);
+	}	
+</script>
 @endsection

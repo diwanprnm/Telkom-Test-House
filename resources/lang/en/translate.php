@@ -288,7 +288,7 @@ return [
     'supported'	=> 'Supported By',
     'menu_company'    		=> 'Company',
 	'menu_testing'    		=> 'Testing',
-	'menu_ref'		=> 'Reference',
+	'menu_ref'		=> 'Reference List',
 	
 	'header_title'		=> 'Telecommunication Device Testing Service',
 	'see_product'		=> 'Buy STEL(s)',
