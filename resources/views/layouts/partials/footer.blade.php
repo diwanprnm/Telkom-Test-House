@@ -10,16 +10,14 @@
 
                     <div class="col_half">
 
-                        <div class="col_one_third">
+                        <div class="col_one_third" width=50% ;>
 
-                            <div class="widget clearfix">
+                            <div class="widget clearfix" style="width:160%;">
 
-                                <img src="{{url('images/TTHMain.png')}}" alt="Logo DDB" class="footer-logo">
+                                <img src="{{url('images/TTHMain.png')}}" alt="Logo DDB" class="footer-logo" margin-bottom= -30px>
 
                                 <p>
                                     <strong>{{ trans('translate.header_title') }}.</strong>
-                                    <br><br>
-                                    <a href="{{ url('/faq') }}">FAQ</a>
                                 </p>
                                 
 
@@ -27,11 +25,11 @@
 
                         </div>
 
-                        <div class="col_one_third">
+                        <div class="col_one_third" margin-left=-5% ; margin-right=-5% ;>
                             &nbsp;&nbsp;&nbsp;&nbsp;
                         </div>
 
-                        <div class="col_one_third">
+                        <div class="col_one_third col_last">
 
                                 <div style="background: url('images/world-map.png') no-repeat center center; background-size: 100%;">
                                     <div class="row">
@@ -41,8 +39,8 @@
                                             Kota Bandung, Jawa Barat 40152<br>
                                         </address>
                                         <abbr title="Customer Service"><strong>{{ trans('translate.service_company_cs') }}:</strong></abbr><br> (+62) 812-2483-7500<br>
-                                        <abbr title="Email Address"><strong>{{ trans('translate.service_company_email') }}:</strong></abbr><br> cstth@telkom.co.id<br>
-                                        <abbr title="Email Address"><strong>{{ trans('translate.service_operational_time') }}:</strong></abbr><br> {{ trans('translate.operational_time') }}<br><br>
+                                        <abbr title="Email Address"><strong>{{ trans('translate.service_company_email') }}:</strong></abbr><br> cstth@telkom.co.id<br><br>
+                                        <abbr title="Email Address"><strong>{{ trans('translate.service_operational_time') }}:</strong></abbr><br>{{ trans('translate.operational_time') }}<br><br>
                                     </div>
 
                                     <div class="row socials">
@@ -71,7 +69,7 @@
                 <div class="container clearfix">
 
                     <div class="col_half">
-                        Copyrights &copy; 2021 All Rights Reserved by Telkom Divisi Digital Business
+                        Copyrights &copy; <?php echo date("Y"); ?> All Rights Reserved by Telkom Divisi Digital Business
                     </div>
 
                 </div>
