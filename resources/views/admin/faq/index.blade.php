@@ -56,7 +56,8 @@
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer"><caption></caption>
 							<thead>
 								<tr>
-									<th class="center" scope="col">No</th> 
+									<th class="center" scope="col">No</th>
+									<th class="center" scope="col">Kategory</th> 
 									<th class="center" scope="col">Pertanyaan</th> 
 									<th class="center" scope="col">Jawaban</th> 
                                     <th class="center" scope="col">Aksi</th>
@@ -67,6 +68,7 @@
 								@foreach($data as $item)
 									<tr>
 										 <td class="center">{{ $no }}</td>
+										 <td class="center">{{ $item->category }}</td>
 										 <td class="center">{{ $item->question }}</td>
 										 <td class="center">{{ $item->answer }}</td>
 										 

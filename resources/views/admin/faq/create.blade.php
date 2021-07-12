@@ -41,6 +41,80 @@
 	                        <div class="col-md-12">
 								<div class="form-group">
 									<label>
+										Kategory
+									</label>
+									<select id="category" name="category" class="cs-select cs-skin-elastic" required>
+										@if (old('category') == '1')
+											<option value="1" selected>Registrasi Akun</option>
+											<option value="2">STEL dan Pengujian Perangkat</option>
+											<option value="3">Uji Fungsi</option>
+											<option value="4">Invoice dan Pembayaran</option>
+											<option value="5">SPK</option>
+											<option value="6">Kapabilitas TTH</option>
+											<option value="7">Pengambilan Laporan dan Sertifikat</option>
+										@elseif(old('category') == '2')
+											<option value="1">Registrasi Akun</option>
+											<option value="2" selected>STEL dan Pengujian Perangkat</option>
+											<option value="3">Uji Fungsi</option>
+											<option value="4">Invoice dan Pembayaran</option>
+											<option value="5">SPK</option>
+											<option value="6">Kapabilitas TTH</option>
+											<option value="7">Pengambilan Laporan dan Sertifikat</option>
+										@elseif (old('category') == '3')
+											<option value="1">Registrasi Akun</option>
+											<option value="2">STEL dan Pengujian Perangkat</option>
+											<option value="3"selected>Uji Fungsi</option>
+											<option value="4">Invoice dan Pembayaran</option>
+											<option value="5">SPK</option>
+											<option value="6">Kapabilitas TTH</option>
+											<option value="7">Pengambilan Laporan dan Sertifikat</option>
+										@elseif (old('category') == '4')
+											<option value="1">Registrasi Akun</option>
+											<option value="2">STEL dan Pengujian Perangkat</option>
+											<option value="3">Uji Fungsi</option>
+											<option value="4" selected>Invoice dan Pembayaran</option>
+											<option value="5">SPK</option>
+											<option value="6">Kapabilitas TTH</option>
+											<option value="7">Pengambilan Laporan dan Sertifikat</option>
+										@elseif (old('category') == '5')
+											<option value="1">Registrasi Akun</option>
+											<option value="2">STEL dan Pengujian Perangkat</option>
+											<option value="3">Uji Fungsi</option>
+											<option value="4">Invoice dan Pembayaran</option>
+											<option value="5" selected>SPK</option>
+											<option value="6">Kapabilitas TTH</option>
+											<option value="7">Pengambilan Laporan dan Sertifikat</option>
+										@elseif (old('category') == '6')
+											<option value="1">Registrasi Akun</option>
+											<option value="2">STEL dan Pengujian Perangkat</option>
+											<option value="3">Uji Fungsi</option>
+											<option value="4">Invoice dan Pembayaran</option>
+											<option value="5">SPK</option>
+											<option value="6" selected>Kapabilitas TTH</option>
+											<option value="7">Pengambilan Laporan dan Sertifikat</option>
+										@elseif (old('category') == '7')
+											<option value="1">Registrasi Akun</option>
+											<option value="2">STEL dan Pengujian Perangkat</option>
+											<option value="3">Uji Fungsi</option>
+											<option value="4">Invoice dan Pembayaran</option>
+											<option value="5">SPK</option>
+											<option value="6">Kapabilitas TTH</option>
+											<option value="7" selected>Pengambilan Laporan dan Sertifikat</option>
+										@else
+											<option value="" disabled selected>Select Category</option>
+											<option value="1">Registrasi Akun</option>
+											<option value="2">STEL dan Pengujian Perangkat</option>
+											<option value="3">Uji Fungsi</option>
+											<option value="4">Invoice dan Pembayaran</option>
+											<option value="5">SPK</option>
+											<option value="6">Kapabilitas TTH</option>
+											<option value="7">Pengambilan Laporan dan Sertifikat</option>
+										@endif
+									</select>
+								</div>	
+
+								<div class="form-group">
+									<label>
 										Pertanyaan *
 									</label>
 									<input type="text" name="question" class="form-control" value="{{ old('question') }}" placeholder="Pertanyaan" required>
@@ -50,7 +124,7 @@
 									<label>
 										Jawaban *
 									</label>
-									<input type="text" name="answer" class="form-control" value="{{ old('answer') }}" placeholder="Jawaban" required>
+									<textarea type="text" id="answer" name="answer" class="form-control" placeholder="Jawaban...."></textarea>
 								</div>
 							</div> 
 	                        <div class="col-md-12">
@@ -83,4 +157,19 @@
 <script src={{ asset("vendor/bootstrap-datepicker/bootstrap-datepicker.min.js") }}></script>
 <script src={{ asset("vendor/bootstrap-timepicker/bootstrap-timepicker.min.js") }}></script>
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script> 
+<script src="https://cdn.ckeditor.com/ckeditor5/28.0.0/classic/ckeditor.js"></script>
+<script type="text/javascript">
+	jQuery(document).ready(function() {
+		FormElements.init();
+	});
+		ClassicEditor
+			.create(document.querySelector('#answer'))
+			.then(answer => {
+				console.log("ini isi contentnya");
+				console.log(answer.getData());
+			})
+			.catch(err => {
+				console.log(err);
+			});
+</script>
 @endsection

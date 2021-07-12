@@ -3,20 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
-use Illuminate\View\Middleware\ShareErrorsFromSession;
-use App\Http\Requests;
 
-use App\Logs;
 use App\Faq;
 use App\Services\Logs\LogService;
 
 use Auth;
-use File;
-use Response;
 use Session;
-use Input;
 
 use Ramsey\Uuid\Uuid;
 
@@ -97,11 +90,13 @@ class FaqController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->all());
         $currentUser = Auth::user(); 
         $faq = new Faq;
         $faq->id = Uuid::uuid4();
         $faq->question = $request->input(self::QUESTION);
         $faq->answer = $request->input(self::ANSWER);
+        $faq->category = $request->input('category');
         $faq->is_active = 1;
         $faq->created_by = $currentUser->id;
         $faq->updated_by = $currentUser->id; 
@@ -163,6 +158,10 @@ class FaqController extends Controller
 
         if ($request->has(self::ANSWER)){
             $faq->answer = $request->input(self::ANSWER);
+        }
+
+        if ($request->has('category')){
+            $faq->category = $request->input('category'); 
         }
 
         $faq->updated_by = $currentUser->id; 
