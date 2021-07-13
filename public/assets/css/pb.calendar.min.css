@@ -103,7 +103,7 @@
 	display: inline-block;
 	width: 30px;
 	height: 28px;
-	line-height: 28px
+	line-height: 200%
 }
 
 @media screen and (max-width:767px) {
@@ -149,7 +149,7 @@
 	text-align: center;
 	font-size: 26px;
 	font-weight: 500;
-	line-height: 26px;
+	line-height: 200%;
 	padding: 10px 5px;
 	height: 80px
 }
@@ -204,9 +204,9 @@
 	.pb-calendar>.calendar-head-frame>.row>.col {
 		font-size: 20px;
 		font-weight: 500;
-		line-height: 20px;
+		line-height: 200%;
 		padding: 7px 2px;
-		height: 70px
+		height: 50px
 	}
 }
 
@@ -215,9 +215,9 @@
 	.pb-calendar>.calendar-head-frame>.row>.col {
 		font-size: 18px;
 		font-weight: 500;
-		line-height: 18px;
+		line-height: 200%;
 		padding: 7px 4px;
-		height: 70px
+		height: 50px
 	}
 }
 
@@ -226,7 +226,7 @@
 	.pb-calendar>.calendar-head-frame>.row>.col {
 		font-size: 14px;
 		font-weight: 500;
-		line-height: 14px;
+		line-height: 200%;
 		padding: 5px 3px;
 		height: 50px
 	}

@@ -33,9 +33,19 @@
 			width: 60%;
 			transform: translate(20%, 0%);
 		}
-		.pb-calendar .schedule-dot-item.blue{
+		.row.rowday col{
+		}
+		.pb-calendar .row-day .red{
+			background-color: red;
+			color: white !important;
+		}
+		.pb-calendar .row-day .blue{
 			background-color: blue;
-			width: 30px !important;
+			color: white !important;
+		}
+		.red{
+			background-color: red !important;
+			color: white !important;
 		}
 		.pb-calendar .schedule-dot-item.red{
 			background-color: red;
@@ -51,15 +61,36 @@
 			height: 0;
 		}
 		.before-month, .after-month{
+			background: transparent !important;
 			/* font-size: 10px !important; */
 		}
 		.pb-calendar .before-today{
 			opacity: 0.3;	
 		}
+		.rounded-corner {
+			border-radius: 15px;
+			border: 5px solid white; 
+		}
 		.center-div{
 			position: absolute;
-			
 			margin: auto;
+		}
+		.css-class-to-highlight a,
+		.css-class-to-highlight span{
+			background-color: red !important;
+			color: white !important;
+		}
+		.material .material-input{
+			padding-top: 0px; 
+		}
+		#numberOfDaysSelect{
+			width: 100% !important;
+		}
+		#endOfBookingDate{
+			font-size: 18px;
+		}
+		label{
+			color: gray;
 		}
 	</style>
   <div class="overlay"></div>
@@ -116,11 +147,40 @@
 								<div class="content-wrap">
 									<div class="container clearfix center-div">
 										<div class="padding-y-md rounded border-danger">
+
+											<div class="row">
+												<div class="col-md-4">
+													<div class="form-group">
+														<label for="exampleFormControlInput1">Tanggal sewa</label>
+														<input type="text" class="form-control date" id="exampleFormControlInput1" placeholder="YYYY-MM-DD">
+													</div>
+												</div>
+
+												<div class="col-md-4">
+													<div class="form-group">
+														<label for="exampleFormControlSelect1">Durasi penyewaan</label>
+														<select class="form-control" id="duratonOfRent">
+														  <option>1</option>
+														  <option>2</option>
+														</select>
+													  </div>
+												</div>
+
+												<div class="col-md-4">
+													<div class="form-group">
+														<label>
+															Sampai dengan
+														</label>
+														<p id="endOfBookingDate">..</p>
+													</div>
+												</div>
+
+											</div>
+											<br/>
+											<br/>
+											
 											<div id="pb-calendar" class="pb-calendar">
 											</div>
-											* Silahkan klik tanggal yang diinginkan untuk rent chamber.<br>
-											* Garis bawah merah menandakan chamber sudah di booking.<br>
-											* Tidak bisa menyewa dihari Sabtu dan Minggu
 										</div>
 									</div>
 								</div>
@@ -161,174 +221,128 @@
 
 @section('content_js')
 
- <script type="text/javascript" src="{{url('vendor/jquerystep/jquery.steps.js')}}"></script>
- <script>
- 	$(window).bind('beforeunload',function(){
-	    return 'are you sure you want to leave and your data will be lost?';
-	});  
-  	var form = $("#form-permohonan");
-	form.validate({
-	    errorPlacement: function errorPlacement(error, element) { element.before(error); },
-	    rules: { 
-	        required: true,extension: "jpeg|jpg|png|pdf"
-	    }
-	});
-
-	
-	var formWizard = form.children("div").steps({
-	    headerTag: "h2",
-	    bodyTag: "fieldset",
-	    autoFocus: true,
-	    transitionEffect: "slideLeft",
-	    onStepChanging: function (event, currentIndex, newIndex){  
-	    	if(!form.valid() && (newIndex > currentIndex)){ 
-
-	    	}
-			//UI
-	    	form.trigger("focus"); 
-	        form.validate().settings.ignore = ":disabled,:hidden";
-
-			if (currentIndex == 0){
-				// do nothing this is text
-			}
-
-			if (currentIndex == 1 && newIndex == 2){
-				// do nothing
-			}
-
-			if(newIndex < currentIndex ){ 
-				if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
-				$( ".number li:eq("+(newIndex)+" ) button" ).removeClass("done").addClass("active");
-				$( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active");
-
-				$(".form-group input").removeClass("error");
-				$(".form-group span").removeClass("material-bar");
-				$('body').scrollTop(10);
-				return true;
-			}else{
-				if(form.valid()){
-					$('body').scrollTop(10);
-					if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
-					$( ".number li:eq("+(newIndex)+" ) button" ).removeClass("done").addClass("active");
-					$( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active");
-					if (newIndex == 2) {
-						$( ".number li:eq("+(newIndex)+" ) button" ).removeClass("active").addClass("done");
-						$( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active").addClass("done");
-					}
-				}
-				return form.valid();	
-			} 
-	    },
-		onStepChanged: (event, currentIndex, priorIndex) =>{
-			if (currentIndex == 0 ){
-				$( '#formBTNprevious' ).hide(); $( '#formBTNnext' ).show(); $( '#formBTNfinish' ).hide();
-				$( '#formBTNnext' ).html("Next");
-			} else if (currentIndex == 1 ){
-				$( '#formBTNprevious' ).show(); $( '#formBTNnext' ).show(); $( '#formBTNfinish' ).hide();
-				$( '#formBTNnext' ).html("Save");
-			} else if (currentIndex == 2 ){
-				$( '#formBTNprevious' ).hide(); $( '#formBTNnext' ).hide(); $( '#formBTNfinish' ).show();
-			}
-		},
-	    onFinishing: function (event, currentIndex){
-	        form.validate().settings.ignore = ":disabled";
-	        return form.valid();
-	    },
-	    onFinished: function (event, currentIndex){
-	        window.location.href = '@php echo url("/pengujian");@endphp';
-	    }
-	});
-  	$('ul[role="tablist"]').hide();  
-	
-</script>
-
+<script type="text/javascript" src="{{url('vendor/jquerystep/jquery.steps.js')}}"></script>
 <script type="text/javascript" src="{{url('assets/js/moment.js')}}"></script>
 <script type="text/javascript" src="{{url('assets/js/pb.calendar.min.js')}}"></script>
 <script>
+$(window).bind('beforeunload',function(){
+	return 'are you sure you want to leave and your data will be lost?';
+});  
+var form = $("#form-permohonan");
+form.validate({
+	errorPlacement: function errorPlacement(error, element) { element.before(error); },
+	rules: { 
+		required: true,extension: "jpeg|jpg|png|pdf"
+	}
+});
+
+var formWizard = form.children("div").steps({
+	headerTag: "h2",
+	bodyTag: "fieldset",
+	autoFocus: true,
+	transitionEffect: "slideLeft",
+	onStepChanging: function (event, currentIndex, newIndex){  
+		if(!form.valid() && (newIndex > currentIndex)){ 
+
+		}
+		//UI
+		form.trigger("focus"); 
+		form.validate().settings.ignore = ":disabled,:hidden";
+
+		if (currentIndex == 0){
+			// do nothing this is text
+		}
+
+		if (currentIndex == 1 && newIndex == 2){
+			// do nothing
+		}
+
+		if(newIndex < currentIndex ){ 
+			if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
+			$( ".number li:eq("+(newIndex)+" ) button" ).removeClass("done").addClass("active");
+			$( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active");
+
+			$(".form-group input").removeClass("error");
+			$(".form-group span").removeClass("material-bar");
+			$('body').scrollTop(10);
+			return true;
+		}else{
+			if(form.valid()){
+				$('body').scrollTop(10);
+				if(newIndex > 0) $( ".number li:eq("+(newIndex-1)+") button" ).removeClass("active").addClass("done");
+				$( ".number li:eq("+(newIndex)+" ) button" ).removeClass("done").addClass("active");
+				$( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active");
+				if (newIndex == 2) {
+					$( ".number li:eq("+(newIndex)+" ) button" ).removeClass("active").addClass("done");
+					$( ".number li:eq("+(newIndex+1)+" ) button" ).removeClass("active").addClass("done");
+				}
+			}
+			return form.valid();	
+		} 
+	},
+	onStepChanged: (event, currentIndex, priorIndex) =>{
+		if (currentIndex == 0 ){
+			$( '#formBTNprevious' ).hide(); $( '#formBTNnext' ).show(); $( '#formBTNfinish' ).hide();
+			$( '#formBTNnext' ).html("Next");
+		} else if (currentIndex == 1 ){
+			$( '#formBTNprevious' ).show(); $( '#formBTNnext' ).show(); $( '#formBTNfinish' ).hide();
+			$( '#formBTNnext' ).html("Save");
+		} else if (currentIndex == 2 ){
+			$( '#formBTNprevious' ).hide(); $( '#formBTNnext' ).hide(); $( '#formBTNfinish' ).show();
+		}
+	},
+	onFinishing: function (event, currentIndex){
+		form.validate().settings.ignore = ":disabled";
+		return form.valid();
+	},
+	onFinished: function (event, currentIndex){
+		window.location.href = '@php echo url("/pengujian");@endphp';
+	}
+});
+$('ul[role="tablist"]').hide();
 
 $( document ).ready(function() {
 	const currentDate = new Date();
+	const can_not_rent_chamber = "{{ trans('translate.can_not_rent_chamber') }}";
+	const rent_chamber_confirmation = "{{ trans('translate.rent_chamber_confirmation') }}";
+	const rent_chamber_duration = "{{ trans('translate.rent_chamber_duration') }}";
+	const minDate = moment(new Date()).add(7, 'days').format('YYYY-MM-DD');
+	const myDatePicker = $('.date');
 	let current_yyyymm_ = moment().format("YYYYMM");
 	let current_month = moment().format("MM");
 	let bookedDates = [];
 	let toBeBookedDates = [];
-	const can_not_rent_chamber = "{{ trans('translate.can_not_rent_chamber') }}";
-	const rent_chamber_confirmation = "{{ trans('translate.rent_chamber_confirmation') }}";
-	const rent_chamber_duration = "{{ trans('translate.rent_chamber_duration') }}";
+	myDatePicker.val(minDate);
 
 	let pbCalendarOption = {
-		schedule_list :(callback_, yyyymm_) => {
-			var temp_schedule_list_ = {};
-			let bookedDateId = 1;
-			bookedDates.forEach((bookedDate)=>{
-				temp_schedule_list_[bookedDate] = [
-					{'ID' : bookedDateId++, style :"red"}
-				];
-			})
-			toBeBookedDates.forEach((toBeBookedDate)=>{
-				temp_schedule_list_[toBeBookedDate] = [
-					{'ID' : bookedDateId++, style :"blue"}
-				];
-			})
-			callback_(temp_schedule_list_);
-		},
-		schedule_dot_item_render :(dot_item_el_, schedule_data_) => {
-			dot_item_el_.addClass(schedule_data_['style'],true);
-			return dot_item_el_;
-		},
-		'day_selectable' : true,
+		'day_selectable' : false,
 		'min_yyyymm' :moment(currentDate),
-		//'max_yyyymm' :moment( new Date(currentDate.setMonth(currentDate.getMonth()+2)) ),
 		'next_month_button' :'<img src="{{ URL::asset('assets/images/arrow-next.png') }}" class="icon">',
 		'prev_month_button' :'<img src="{{ URL::asset('assets/images/arrow-prev.png') }}" class="icon">',
 		'min_clickable_from_today' : 7,
-
-		callback_selected_day : (serializeDate) => {
-			// exception untuk tidak bisa diklik
-			if ( moment(serializeDate).day() == 6 || moment(serializeDate).day() == 0  ){return false;}
-			//modal messages
-			if (bookedDates.includes(serializeDate) ){
-				$('#modal-rent-button').hide();
-				$('.modal-body.messages').html("{{ trans('translate.can_not_rent_chamber') }}" + moment(serializeDate).format('DD-MMM-YYYY'));
-
-			}else{
-				$('#modal-rent-button').show();
-				$('.modal-body.messages').html(
-					"<p>"+rent_chamber_confirmation + moment(serializeDate).format('DD-MMM-YYYY')+'</p>'+
-					`<div class="form-group">
-						<p class="text-normal" for="rent_duration"> ${rent_chamber_duration}:</p>
-						<input type="hidden" id="rent_date" name="rent_date" value="${serializeDate}">
-						<select class="form-control" id="rent_duration" name="rent_duration">
-							<option>1</option>
-							<option>2</option>
-						</select>
-					</div>`
-				);
-			}
-			$('#myModal').modal('toggle');
-		},
-
+		'callback_changed_month': (event) => {
+			setDayLabelWithClass(bookedDates,'red');
+			setDayLabelWithClass(toBeBookedDates,'blue');
+		}
 	}
-	//initializebystatic
 	let pbCalendar = $("#pb-calendar").pb_calendar(pbCalendarOption);
-	//initcalendarbyajx
+
 	const initCalendarByAjax = async () => {
 		await getDateRentedChamber( resp => {
 			bookedDates = resp.map( dateRecord =>{
 				return dateRecord['date'].replace(/-/g, '');
 			});
 		});
-        pbCalendar.update_view();
+		setDayLabelWithClass(bookedDates,'red');
+		initDatePicker();
+		$("#pb-calendar").append(indonesiaNotes);
 	}
-	//invoke ajax call
-	initCalendarByAjax();
 
 	//onclick rent
 	$('#modal-rent-button').click(() => {
 		let rentDuration = parseInt($("#rent_duration").find(":selected").text());
 		let rentDate = $('#rent_date').val();
 		checkAvaliableAndBooked(rentDate, rentDuration);
-		console.log(toBeBookedDates);
 		pbCalendar.update_view();
 	});
 
@@ -352,19 +366,58 @@ $( document ).ready(function() {
 		return !found;
 	}
 
-
-	$('#buttonSubmitHelper').click(()=> {
-		$.ajax({
-			url: "{{url('testForm')}}",
-			type: 'POST',
-			data: new FormData($("#form-permohonan")[0]),
-			processData: false,
-			contentType: false,
-			success: function(msg) {
-				alert('Email Sent');
-			}               
+	const calculateEndDate = () => {
+		numberOfDay = parseInt($("#duratonOfRent").find(":selected").text());
+		startRentDate = myDatePicker.val();
+		let isAvailable = checkAvaliableAndBooked(startRentDate, numberOfDay)
+		if(isAvailable){
+			pbCalendar.update_view();
+			setDayLabelWithClass(toBeBookedDates,'blue');
+			setDayLabelWithClass(bookedDates,'red');
+			date = moment(toBeBookedDates[toBeBookedDates.length-1]);
+			$('#endOfBookingDate').html(`${indonesiaDayName[date.day()]}, ${date.format('DD')} ${indonesiaMonthName[date.month()]} ${date.year()}`);
+		}
+	}
+	
+	const initDatePicker = () => {
+		myDatePicker.datepicker({
+			minDate: minDate,
+			dateFormat: 'yy-mm-dd', 
+			autoclose: true,
+			numberOfMonths: 2 ,
+			showButtonPanel: true,
+			firstDay: 1,
+			beforeShowDay: function(d) {
+				date = moment(d).format('YYYYMMDD');
+				dates = bookedDates;
+				if(dates.includes(date)){
+					return [false, "css-class-to-highlight"];
+				} else if(d.getDay() == 6 || d.getDay() == 0){
+					return [false, "no"];
+				}
+				return [true, dates.includes(date) ? "css-class-to-highlight" : ""];
+			},
+			defaultDate: '2021-07-20',
 		});
-	});
+	}
+	initCalendarByAjax();
+	calculateEndDate();
+	
+	myDatePicker.change(calculateEndDate);
+	$('#duratonOfRent').change(calculateEndDate);
+
+	// $('#buttonSubmitHelper').click(()=> {
+	// 	$.ajax({
+	// 		url: "{{url('testForm')}}",
+	// 		type: 'POST',
+	// 		data: new FormData($("#form-permohonan")[0]),
+	// 		processData: false,
+	// 		contentType: false,
+	// 		success: function(msg) {
+	// 			alert('Email Sent');
+	// 		}               
+	// 	});
+	// });
 });
 
 const getDateRentedChamber = handleData => {
@@ -375,6 +428,12 @@ const getDateRentedChamber = handleData => {
 		}
 	});
 }
+const indonesiaDayName = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+const indonesiaMonthName = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+const setDayLabelWithClass = (list, color) => list.forEach( item => $(`.row-day .col[data-day-yyyymmdd='${item}']`).addClass(`${color} rounded-corner`) );
+const indonesiaNotes = `
+	* Tanda merah menandakan chamber sudah di booking.<br>
+	* Tidak bisa menyewa dihari Sabtu dan Minggu`;
 
 
 </script>
