@@ -57,7 +57,7 @@
 									<label>
 										Nama Dokumen *
 									</label>
-									<input type="text" name="name" class="form-control" placeholder="Nama Dokumen" value="{{ old('name') }}" required>
+									<input type="text" name="name" class="form-control" placeholder="Nama Dokumen" value="{{ old('name') ? old('name') : $stelMaster->type < 3 ? 'Spesifikasi Telekomunikasi' : '' }}" required>
 								</div>
 							</div>
 							<div class="col-md-6">

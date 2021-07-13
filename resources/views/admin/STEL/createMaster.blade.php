@@ -105,7 +105,7 @@
 										<label>
 											Nama Dokumen *
 										</label>
-										<input type="text" name="name" class="form-control" placeholder="Nama Dokumen" value="{{ old('name') }}" required>
+										<input type="text" id="name" name="name" class="form-control" placeholder="Nama Dokumen" value="{{ old('name') }}" required>
 									</div>
 								</div>
 								<div class="col-md-6">
@@ -283,6 +283,7 @@
 				case '1':
 					type_name = 'STEL';
 					$("#master_code").prop('required', true);
+					$("#name").val('Spesifikasi Telekomunikasi');
 					$("#year").prop('required', true);
 					$("#version").prop('required', true);
 					$("#code").prop('readonly', true);
@@ -292,6 +293,7 @@
 				case '2':
 					type_name = 'S-TSEL';
 					$("#master_code").prop('required', true);
+					$("#name").val('Spesifikasi Telekomunikasi');
 					$("#year").prop('required', true);
 					$("#version").prop('required', true);
 					$("#code").prop('readonly', true);
@@ -301,6 +303,7 @@
 				case '3':
 					type_name = 'STD';
 					$("#master_code").prop('required', true);
+					$("#name").val('');
 					$("#year").prop('required', true);
 					$("#version").prop('required', true);
 					$("#code").prop('readonly', false);
@@ -310,6 +313,7 @@
 				case '4':
 					type_name = 'TLKM/I/KAL';
 					$("#master_code").prop('required', true);
+					$("#name").val('');
 					$("#year").prop('required', false);
 					$("#version").prop('required', true);
 					$("#code").prop('readonly', true);
@@ -319,6 +323,7 @@
 				case '5':
 					type_name = 'Perdirjen';
 					$("#master_code").prop('required', true);
+					$("#name").val('');
 					$("#year").prop('required', true);
 					$("#version").prop('required', false);
 					$("#code").prop('readonly', false);
@@ -328,6 +333,7 @@
 				case '6':
 					type_name = 'Permenkominfo';
 					$("#master_code").prop('required', true);
+					$("#name").val('');
 					$("#year").prop('required', true);
 					$("#version").prop('required', false);
 					$("#code").prop('readonly', true);
@@ -336,6 +342,7 @@
 					break;
 				case '7':
 					$("#master_code").prop('required', false);
+					$("#name").val('');
 					$("#year").prop('required', false);
 					$("#version").prop('required', false);
 					$("#code").prop('readonly', false);
@@ -343,6 +350,7 @@
 					
 				default:
 				$("#master_code").prop('required', false);
+				$("#name").val('');
 				$("#year").prop('required', false);
 				$("#version").prop('required', false);
 				$("#code").prop('readonly', false);
