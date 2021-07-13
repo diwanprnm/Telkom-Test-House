@@ -3,6 +3,27 @@
     ============================================= -->
     <title>{{ trans('translate.payment_status') }} - Telkom DDB</title>
 @section('content')
+<style>
+	.tooltip-text {
+		width: 2000%;
+		position: absolute;
+		display: none;
+		/* background: ghostwhite; */
+		padding: 10px;
+		font-size: 12px;
+		border-radius: 3px; 
+		transition: opacity 1s ease-out;
+		bottom: -50%;
+		margin-left: -1950%;
+	}
+
+	/* .fa.fa-warning:hover + .tooltip-text { */
+	.fa-warning:hover .tooltip-text, .fa-info-circle:hover .tooltip-text {
+		display: block;
+		text-align: center;
+		animation: fadeIn 2s;
+	}
+</style>
  <!-- Page Title
 	============================================= -->
 	<section id="page-title">
@@ -30,6 +51,7 @@
 						<li class="{{ $tab == 'unpaid' ? 'active' : '' }}"><a href="#tab-unpaid" data-toggle="tab"><strong>Unpaid</strong></a></li>
 						<li class="{{ $tab == 'paid' ? 'active' : '' }}"><a href="#tab-paid" data-toggle="tab"><strong>Paid</strong></a></li>
 						<li class="{{ $tab == 'delivered' ? 'active' : '' }}"><a href="#tab-delivered" data-toggle="tab"><strong>Delivered</strong></a></li>
+						<li class="{{ $tab == 'expired' ? 'active' : '' }}"><a href="#tab-expired" data-toggle="tab"><strong>Expired</strong></a></li>
 					</ul>
 					<div class="tab-content">
 						<!-- tab unpaid -->
@@ -76,7 +98,7 @@
 													<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item->total), 0, '.', ','); @endphp</td>
 													<td>{{$item->user->name}}</td>  
 													<td class="center"><span class="label label-sm label-default" style="line-height: 2;">Unpaid</span></td>
-													<td>
+													<td colspan="5">
 														@if($data_unpaid[$i]->payment_method == 2 && $data_unpaid[$i]->VA_expired < date("Y-m-d H:i:s"))
 															<a class="label label-sm label-danger" style="line-height: 2;" href="{{url('/payment_confirmation/'.$item->id)}}">{{ trans('translate.expired') }}</a>
 														@else
@@ -84,6 +106,14 @@
 														@endif
 														||
 														<a href="javascript:void(0)" class="collapsible">{{ trans('translate.examination_detail') }}</a>
+														<a class="right">
+															<em class="fa fa-warning warning">
+															<span class="tooltip-text alert alert-warning">
+																<em class="fa fa-warning"></em>
+																Transaksi ini memiliki dokumen yang kedaluwarsa. Silakan hubungi staff kami untuk menghapus transaksi ini, lalu anda dapat melakukan transaksi ulang.
+															</span>
+															</em>
+														</a>
 													</td>
 												</tr> 
 												<tr class="content" style="display: none;">
@@ -113,7 +143,16 @@
 																				<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item_detail->stel->price), 0, '.', ','); @endphp</td> 
 																				<td class="right">{{$item_detail->qty}}</td> 
 																				<td class="right">@php echo number_format(floatval($item_detail->stel->price * $item_detail->qty), 0, '.', ','); @endphp</td>
-																				<td colspan="6" class="center">{{ trans('translate.document_not_found') }}</td>
+																				<td colspan="6" class="center">{{ trans('translate.document_not_found') }}
+																					<a>
+																					<em class="fa fa-info-circle info">
+																					<span class="tooltip-text alert alert-info">
+																						<em class="fa fa-info-circle"></em>
+																						Pembaruan Tersedia
+																					</span>
+																					</em>
+																					</a>
+																				</td>
 																		</tr> 	
 																		@php $total +=($item_detail->stel->price * $item_detail->qty);@endphp
 																		@php }else{@endphp 
@@ -378,7 +417,16 @@
 													<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item->total), 0, '.', ','); @endphp</td>
 													<td>{{$item->user->name}}</td>  
 													<td class="center"><span class="label label-sm label-info" style="line-height: 2;">Delivered</span></td>
-													<td><a href="javascript:void(0)" class="collapsible">{{ trans('translate.examination_detail') }}</a><span class="glyphicon glyphicon-search" aria-hidden="true"></span></td>
+													<td><a href="javascript:void(0)" class="collapsible">{{ trans('translate.examination_detail') }}</a>
+														<a class="right">
+															<em class="fa fa-warning warning">
+															<span class="tooltip-text alert alert-warning">
+																<em class="fa fa-warning"></em>
+																Transaksi ini memiliki dokumen yang kedaluwarsa. Silakan lakukan transaksi baru untuk memperbarui dokumen tersebut.
+															</span>
+															</em>
+														</a>
+													</td>
 												</tr> 
 												<tr class="content" style="display: none;">
 													<td colspan="7" class="center">
@@ -408,9 +456,27 @@
 																				<td class="right">{{$item_detail->qty}}</td> 
 																				<td class="right">@php echo number_format(floatval($item_detail->stel->price * $item_detail->qty), 0, '.', ','); @endphp</td>
 																				@if($item_detail->attachment !="")
-																					<td colspan="6"><a target="_blank" href="{{ URL::to('/client/downloadstelwatermark/'.$item_detail->id) }}">{{ trans('translate.download') }} File</a></td>
+																					<td colspan="6"><a target="_blank" href="{{ URL::to('/client/downloadstelwatermark/'.$item_detail->id) }}">{{ trans('translate.download') }} File</a>
+																						<a>
+																						<em class="fa fa-info-circle info">
+																						<span class="tooltip-text alert alert-info">
+																							<em class="fa fa-info-circle"></em>
+																							Pembaruan Tersedia
+																						</span>
+																						</em>
+																						</a>
+																					</td>
 																				@else
-																					<td colspan="6" class="center">{{ trans('translate.document_not_found') }}</td>
+																					<td colspan="6" class="center">{{ trans('translate.document_not_found') }}
+																						<a>
+																						<em class="fa fa-info-circle info">
+																						<span class="tooltip-text alert alert-info">
+																							<em class="fa fa-info-circle"></em>
+																							Pembaruan Tersedia
+																						</span>
+																						</em>
+																						</a>
+																					</td>
 																				@endif
 																			</tr> 
 																		@php $total +=($item_detail->stel->price * $item_detail->qty);@endphp
@@ -479,6 +545,52 @@
 								<div class="col-md-12 col-sm-12">
 									<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
 										@php echo $data_delivered->links(); @endphp
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- tab expired -->
+						<div id="tab-expired" class="row clearfix tab-pane fade {{ $tab == 'expired' ? 'in active' : '' }}">
+							<div class="col-md-12">
+								<div class="table-responsive">
+									<table id="datatable1" class="table table-striped table-bordered" style="width: 100%;">
+										<caption></caption>
+										<thead>
+											<tr>
+												<th scope="col">No</th>
+												<th scope="col">{{ trans('translate.stel_name') }}</th>
+												<th scope="col">{{ trans('translate.stel_code') }}</th>
+											</tr>
+										</thead>
+										<tbody>
+											@if($data_expired)
+											@foreach($data_expired as $keys => $item)
+												<tr>
+													<td>{{++$keys}}</td>
+													<td>{{$item->name}}</td>
+													<td>{{$item->code}}</td>
+												</tr> 
+											@endforeach
+											@else
+												<div class="col-md-12">
+													<div class="table-responsive">
+														<table class="table table-striped">
+															<caption></caption>
+															<tr class="center">
+																<th style="text-align: center;" scope="col">{{ trans('translate.data_not_found') }}</th>
+															</tr> 
+														</table>
+													</div>
+												</div>
+											@endif
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12 col-sm-12">
+									<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
+										@php echo $data_expired->links(); @endphp
 									</div>
 								</div>
 							</div>

@@ -177,11 +177,20 @@ class ProductsController extends Controller
             ->where(self::USERS_DOT_COMPANY_ID,$currentUser->company_id)
             ->where("stels_sales.payment_status", 3)
         ;
+        $query_expired = STELSales::select('stels.*')
+            ->join("stels_sales_detail","stels_sales.id","=","stels_sales_detail.stels_sales_id")
+            ->join("stels","stels_sales_detail.stels_id","=","stels.id")
+            ->join("users","users.id","=","stels_sales.user_id")
+            ->join("companies","companies.id","=",self::USERS_DOT_COMPANY_ID)
+            ->where(self::USERS_DOT_COMPANY_ID,$currentUser->company_id)
+            ->where("stels.is_active", 0)
+        ;
 
         $data = $query->orderBy("stels_sales.created_at", 'desc')->paginate($paginate);
         $data_unpaid = $query_unpaid->orderBy("stels_sales.created_at", 'desc')->paginate($paginate, ['*'], 'pageUnpaid');
         $data_paid = $query_paid->orderBy("stels_sales.created_at", 'desc')->paginate($paginate, ['*'], 'pagePaid');
         $data_delivered = $query_delivered->orderBy("stels_sales.created_at", 'desc')->paginate($paginate, ['*'], 'pageDelivered');
+        $data_expired = $query_expired->orderBy("stels_sales.created_at", 'desc')->paginate($paginate, ['*'], 'pageExpired');
 
         $page = "purchase_history";
         return view('client.STEL.purchase_history') 
@@ -190,7 +199,9 @@ class ProductsController extends Controller
         ->with('data', $data)
         ->with('data_unpaid', $data_unpaid)
         ->with('data_paid', $data_paid)
-        ->with('data_delivered', $data_delivered);
+        ->with('data_delivered', $data_delivered)
+        ->with('data_expired', $data_expired)
+        ;
     } 
 
     public function payment_status(Request $request)
