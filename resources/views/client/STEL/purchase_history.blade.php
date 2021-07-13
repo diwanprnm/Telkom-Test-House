@@ -75,8 +75,10 @@
 											@php $no = 1; $i = 0; @endphp
 											@if($data_unpaid)
 											@foreach($data_unpaid as $keys => $item)
+												@php $update = 0; @endphp
 												@php if($data_unpaid[$i]->sales_detail){ $data_stel_name = ""; $data_stel_code = ""; $count = 0 @endphp
 													@foreach($data_unpaid[$i]->sales_detail as $item_detail)
+														@php if($item_detail->stel->is_active == 0) {$update = 1;} @endphp
 														@php 
 														if($item_detail->stel && $count < 2){
 															if($data_stel_name == ""){
@@ -106,6 +108,7 @@
 														@endif
 														||
 														<a href="javascript:void(0)" class="collapsible">{{ trans('translate.examination_detail') }}</a>
+														@if($update)
 														<a class="right">
 															<em class="fa fa-warning warning">
 															<span class="tooltip-text alert alert-warning">
@@ -114,6 +117,7 @@
 															</span>
 															</em>
 														</a>
+														@endif
 													</td>
 												</tr> 
 												<tr class="content" style="display: none;">
@@ -144,6 +148,7 @@
 																				<td class="right">{{$item_detail->qty}}</td> 
 																				<td class="right">@php echo number_format(floatval($item_detail->stel->price * $item_detail->qty), 0, '.', ','); @endphp</td>
 																				<td colspan="6" class="center">{{ trans('translate.document_not_found') }}
+																					@if($item_detail->stel->is_active == 0)
 																					<a>
 																					<em class="fa fa-info-circle info">
 																					<span class="tooltip-text alert alert-info">
@@ -152,6 +157,7 @@
 																					</span>
 																					</em>
 																					</a>
+																					@endif
 																				</td>
 																		</tr> 	
 																		@php $total +=($item_detail->stel->price * $item_detail->qty);@endphp
@@ -394,8 +400,10 @@
 											@php $no = 1; $i = 0; @endphp
 											@if($data_delivered)
 											@foreach($data_delivered as $keys => $item)
+												@php $update = 0; @endphp
 												@php if($data_delivered[$i]->sales_detail){ $data_stel_name = ""; $data_stel_code = ""; $count = 0 @endphp
 													@foreach($data_delivered[$i]->sales_detail as $item_detail)
+														@php if($item_detail->stel->is_active == 0) {$update = 1;} @endphp
 														@php 
 														if($item_detail->stel && $count < 2){
 															if($data_stel_name == ""){
@@ -418,6 +426,7 @@
 													<td>{{$item->user->name}}</td>  
 													<td class="center"><span class="label label-sm label-info" style="line-height: 2;">Delivered</span></td>
 													<td><a href="javascript:void(0)" class="collapsible">{{ trans('translate.examination_detail') }}</a>
+														@if($update)
 														<a class="right">
 															<em class="fa fa-warning warning">
 															<span class="tooltip-text alert alert-warning">
@@ -426,6 +435,7 @@
 															</span>
 															</em>
 														</a>
+														@endif
 													</td>
 												</tr> 
 												<tr class="content" style="display: none;">
@@ -457,6 +467,7 @@
 																				<td class="right">@php echo number_format(floatval($item_detail->stel->price * $item_detail->qty), 0, '.', ','); @endphp</td>
 																				@if($item_detail->attachment !="")
 																					<td colspan="6"><a target="_blank" href="{{ URL::to('/client/downloadstelwatermark/'.$item_detail->id) }}">{{ trans('translate.download') }} File</a>
+																						@if($item_detail->stel->is_active == 0)
 																						<a>
 																						<em class="fa fa-info-circle info">
 																						<span class="tooltip-text alert alert-info">
@@ -465,9 +476,11 @@
 																						</span>
 																						</em>
 																						</a>
+																						@endif
 																					</td>
 																				@else
 																					<td colspan="6" class="center">{{ trans('translate.document_not_found') }}
+																						@if($item_detail->stel->is_active == 0)
 																						<a>
 																						<em class="fa fa-info-circle info">
 																						<span class="tooltip-text alert alert-info">
@@ -476,6 +489,7 @@
 																						</span>
 																						</em>
 																						</a>
+																						@endif
 																					</td>
 																				@endif
 																			</tr> 
