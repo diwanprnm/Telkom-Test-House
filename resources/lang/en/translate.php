@@ -289,6 +289,7 @@ return [
     'menu_company'    		=> 'Company',
 	'menu_testing'    		=> 'Testing',
 	'menu_ref'		=> 'Reference List',
+	'menu_reference'		=> 'Test Reference',
 	
 	'header_title'		=> 'Telecommunication Device Testing Service',
 	'see_product'		=> 'Buy STEL(s)',

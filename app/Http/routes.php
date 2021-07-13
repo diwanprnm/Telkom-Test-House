@@ -266,7 +266,7 @@ Route::resource('/pengujian', 'PengujianController');
 Route::get('/pengujian/{id}/detail', 'PengujianController@detail');
 Route::post('/testimonial', 'PengujianController@testimonial');
 Route::post('/cekAmbilBarang', 'PengujianController@cekAmbilBarang');
-Route::get('{path}', 'STELClientController@index')->where('path', '(STEL|S-TSEL|STD|INTERNAL|PERDIRJEN|PERMENKOMINFO|ANOTHER)');
+Route::get('{path}', 'STELClientController@index')->where('path', '(STEL|S-TSEL|STD|PERDIRJEN|PERMENKOMINFO|ANOTHER)');
 Route::resource('/Chargeclient', 'ExaminationChargeClientController');
 Route::get('/Chargeclient', 'ExaminationChargeClientController@index');
 Route::resource('/NewChargeclient', 'ExaminationNewChargeClientController');

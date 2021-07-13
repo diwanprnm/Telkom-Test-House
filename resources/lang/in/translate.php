@@ -291,6 +291,7 @@ return [
 	'menu_company'    		=> 'Perusahaan',
 	'menu_testing'    		=> 'Pengujian',
 	'menu_ref'		=> 'Daftar Referensi',
+	'menu_reference'		=> 'Ref. Uji',
 	
 	'header_title'		=> 'Layanan Pengujian Perangkat Telekomunikasi',
 	'see_product'		=> 'Beli Dokumen STEL',
