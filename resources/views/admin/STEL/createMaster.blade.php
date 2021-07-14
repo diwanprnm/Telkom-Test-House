@@ -283,7 +283,7 @@
 				case '1':
 					type_name = 'STEL';
 					$("#master_code").prop('required', true);
-					$("#name").val('Spesifikasi Telekomunikasi');
+					$("#name").val() == '' ? $("#name").val('Spesifikasi Telekomunikasi') : '';
 					$("#year").prop('required', true);
 					$("#version").prop('required', true);
 					$("#code").prop('readonly', true);
@@ -293,7 +293,7 @@
 				case '2':
 					type_name = 'S-TSEL';
 					$("#master_code").prop('required', true);
-					$("#name").val('Spesifikasi Telekomunikasi');
+					$("#name").val() == '' ? $("#name").val('Spesifikasi Telekomunikasi') : '';
 					$("#year").prop('required', true);
 					$("#version").prop('required', true);
 					$("#code").prop('readonly', true);

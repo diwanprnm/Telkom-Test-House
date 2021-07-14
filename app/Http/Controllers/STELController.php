@@ -17,9 +17,13 @@ use App\ExaminationLab;
 use App\Logs;
 use App\LogsAdministrator;
 use App\NotificationTable;
-
+use App\Services\NotificationService;
+use App\Services\EmailEditorService;
+use App\GeneralSetting;
+use App\User;
 use Excel;
 
+use Mail;
 use Auth;
 use File;
 use Response;
@@ -57,6 +61,7 @@ class STELController extends Controller
     private const STEL_URL = '/stel/';
 
     private const NAME_AUTOSUGGEST = 'name as autosuggest';
+    private const IS_READ = 'is_read';
     /**
      * Create a new controller instance.
      *
@@ -359,7 +364,7 @@ class STELController extends Controller
             ->where('stels.id', '!=', $stels_id)
             ->whereIn('stels_sales.payment_status', [1,3])
             ->orderBy('stels.created_at', 'DESC')
-            ->select('stels_sales.*','stels.price')
+            ->select('stels_sales.*','stels.price','stels.code')
         ->get();
 
         /*
@@ -420,12 +425,58 @@ class STELController extends Controller
                 $STELSalesDetail->updated_by = $item->user_id;
                 $STELSalesDetail->save();
             }
-            // send notification email
+            /* push notif*/
+
+            $user = User::where('id', $item->user_id)->first();
+            $users = User::where('company_id', $user->company_id)->get();
+            foreach ($users as $cust) { 
+                $dataNotif= array(
+                    "from"=>$currentUser->id,
+                    "to"=>$cust->id,
+                    self::IS_READ=>0,
+                    self::MESSAGE=>'Update Referensi Uji Tersedia',
+                    "url"=>'purchase_history'
+                );
+                
+                $notificationService = new NotificationService();
+                $notification_id = $notificationService->make($dataNotif);
+                $dataNotif['id'] = $notification_id;
+                // event(new Notification($dataNotif));
+
+                $this->sendEmailNotification($cust, $item->code, 'emails.updateSTEL');
+            }
             $logService->createAdminLog('Tambah Data Pembelian STEL', 'Rekap Pembelian STEL', $sales.$STELSalesDetail, '' );
         } catch(Exception $e){ 
             
         }
     }
+
+    public function sendEmailNotification($user, $stel_code, $dir_name){
+		$email_editors = new EmailEditorService();
+		$email = $email_editors->selectBy($dir_name);
+
+        $content = $this->parsingSendEmailNotification($email->content, $user->name, $stel_code);
+		$subject = $email->subject;
+
+		if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
+			Mail::send('emails.editor', array(
+					'logo' => $email->logo,
+					'content' => $content,
+					'signature' => $email->signature
+				), function ($m) use ($user,$subject) {
+				$m->to($user->email)->subject($subject);
+			}); 
+		}
+
+        return true;
+    }
+
+    public function parsingSendEmailNotification($content, $user_name, $stel_code){
+		$content = str_replace('@user_name', $user_name, $content);
+        $content = str_replace('@stel_code', $stel_code, $content);
+        $content = str_replace('@link', url('purchase_history'), $content);
+		return $content;
+	}
 
     /**
      * Display the specified resource.
