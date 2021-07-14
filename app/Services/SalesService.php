@@ -389,7 +389,6 @@ class SalesService
             ->join('companies', 'users.company_id', '=', 'companies.id')
             ->where('stels.stels_master_id', '=', $stel->stels_master_id)
             ->where('companies.id', '=', $user->company_id)
-            ->where('stels.id', '!=', $stel->id)
             ->select('stels_sales_detail.*')
         ->get();
         foreach ($data as $item) {
