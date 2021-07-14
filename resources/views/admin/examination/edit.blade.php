@@ -435,6 +435,22 @@
 				</div>
 				@if(isset($admin_roles[0]))
 				@if($admin_roles[0]->registration_status)
+					<!-- Datasheet, Prinsipal, PLG_ID & NIB -->
+					@php 
+						$datasheet = 0; $datasheet_file = ''; $datasheet_link = '';
+						$prinsipal = 0; $prinsipal_file = ''; $prinsipal_link = '';
+						
+					@endphp
+					@foreach($data->media as $item)
+						@if($item->name == 'File Lainnya')
+							@php 
+								$datasheet = 1;
+								$datasheet_file = $item->attachment;
+								$datasheet_link = URL::to('/admin/examination/media/download/'.$data->id.'/'.$item->name);
+							@endphp
+						@endif
+						
+					@endforeach
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'id' => 'form-registrasi')) !!}
 					{!! csrf_field() !!}
 					<input type="hidden" name="status" class="form-control" value="Registrasi"/>
@@ -459,6 +475,36 @@
 										</label>
 									@endif
 								</div>
+								<div class="form-group">
+									<label>
+										Datasheet
+									</label>
+									@if($datasheet_file != null)
+										<label>
+											: <a href="{{ $datasheet_link }}"> Download</a>
+										</label>
+									@else
+										<label>
+											: (Kosong)
+										</label>
+									@endif
+								</div>
+								@if($prinsipal)
+								<div class="form-group">
+									<label>
+										Datasheet
+									</label>
+									@if($prinsipal_file != null)
+										<label>
+											: <a href="{{ $datasheet_link }}"> Download</a>
+										</label>
+									@else
+										<label>
+											: (Kosong)
+										</label>
+									@endif
+								</div>
+								@endif
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
@@ -3287,9 +3333,7 @@
 						<div class="row">
 							@foreach($data->media as $item)
 								@if($item->name == 'Laporan Uji')
-									@if($rev_uji == 0)
-										@php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;@endphp
-									@endif
+									@php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;@endphp
 									@if($item->attachment != '')
 									<div class="col-md-12">
 										<div class="form-group">
@@ -3326,9 +3370,6 @@
 										</div>
 									</div>
 									@endif
-								@endif
-								@if($item->name == 'Revisi Laporan Uji' && $rev_uji == 0)
-									@php $rev_uji = 1; $lap_uji_url = URL::to('/admin/examination/media/download/'.$item->id); $lap_uji_attach = $item->attachment;@endphp
 								@endif
 							@endforeach
 							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
@@ -3461,9 +3502,7 @@
 						<div class="row">
 							@foreach($data->media as $item)
 								@if($item->name == 'Laporan Uji')
-									@if($rev_uji == 0)
-										@php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;@endphp
-									@endif
+									@php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;@endphp
 									@if($item->attachment != '')
 									<div class="col-md-12">
 										<div class="form-group">
@@ -3500,9 +3539,6 @@
 										</div>
 									</div>
 									@endif
-								@endif
-								@if($item->name == 'Revisi Laporan Uji' && $rev_uji == 0)
-									@php $rev_uji = 1; $lap_uji_url = URL::to('/admin/examination/media/download/'.$item->id); $lap_uji_attach = $item->attachment;@endphp
 								@endif
 							@endforeach
 							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
