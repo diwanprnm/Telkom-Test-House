@@ -70,7 +70,9 @@
 										 <td class="center">{{ $no }}</td>
 										 <td class="center">{{ $item->category }}</td>
 										 <td class="center">{{ $item->question }}</td>
-										 <td class="center">{{ $item->answer }}</td>
+										 <td class="center answer" contenteditable="true">
+											{{ $item->answer }}
+										</td>
 										 
 	                                    <td class="center">
 											<div>
@@ -114,7 +116,20 @@
 <script src={{ asset("vendor/bootstrap-datepicker/bootstrap-datepicker.min.js") }}></script>
 <script src={{ asset("vendor/bootstrap-timepicker/bootstrap-timepicker.min.js") }}></script>
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/29.0.0/classic/ckeditor.js"></script>
 <script type="text/javascript">
+	jQuery(document).ready(function() {
+		FormElements.init();
+	});
+		ClassicEditor
+			.create(document.querySelector('.answer'))
+			.then(answer => {
+				console.log("ini isi contentnya");
+				console.log(answer.getData());
+			})
+			.catch(err => {
+				console.log(err);
+			});
 	$( function() {
 		$( "#search_value" ).autocomplete({
 			minLength: 3,

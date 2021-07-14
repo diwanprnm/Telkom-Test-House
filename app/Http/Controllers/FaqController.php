@@ -21,6 +21,16 @@ class FaqController extends Controller
     private const ANSWER = 'answer';
     private const ADMIN_FAQ_LOC = '/admin/faq';
     private const ERROR = 'error';
+
+    private static $CATEGORY = [
+        '1' => 'Registrasi Akun',
+        '2' => 'STEL dan Pengujian Perangkat',
+        '3' => 'Uji Fungsi',
+        '4' => 'Invoice dan Pembayaran',
+        '5' => 'SPK',
+        '6' => 'Kapabilitas TTH',
+        '7' => 'Pengambilan Laporan dan Sertifikat'
+    ];
     /**
      * Create a new controller instance.
      *
@@ -65,6 +75,10 @@ class FaqController extends Controller
         if (count($faq) == 0){
             $message = 'Data not found';
         }
+        for ($i=0; $i < count($faq); $i++) { 
+            $temp = $faq[$i]->category;
+            $faq[$i]->category = self::$CATEGORY[$temp];
+        }
         
         return view('admin.faq.index')
             ->with(self::MESSAGE, $message)
@@ -96,7 +110,7 @@ class FaqController extends Controller
         $faq->question = $request->input(self::QUESTION);
         $faq->answer = $request->input(self::ANSWER);
         $faq->category = $request->input('category');
-        $faq->is_active = 1;
+        $faq->is_active = $request->input('status');
         $faq->created_by = $currentUser->id;
         $faq->updated_by = $currentUser->id; 
 

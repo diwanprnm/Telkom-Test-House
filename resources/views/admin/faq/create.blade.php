@@ -56,6 +56,18 @@
 								</div>	
 
 								<div class="form-group">
+									<label for="form-field-select-2">
+										Status *
+									</label>
+									<select name="status" class="cs-select cs-skin-elastic" required>
+										<option value="" disabled selected>Select...</option>
+										<option value="1">Active</option>
+										<option value="0">Not Active</option>
+										
+									</select>
+								</div>
+
+								<div class="form-group">
 									<label>
 										Pertanyaan *
 									</label>
