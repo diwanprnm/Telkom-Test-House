@@ -90,7 +90,6 @@ class FaqController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
         $currentUser = Auth::user(); 
         $faq = new Faq;
         $faq->id = Uuid::uuid4();

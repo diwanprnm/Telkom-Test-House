@@ -11,7 +11,7 @@
 				</div>
 				<ol class="breadcrumb">
 					<li>
-						<span>Beranda</span>
+						<span>Customer Relation</span>
 					</li>
 					<li>
 						<span>FAQ</span>
@@ -41,75 +41,17 @@
 	                        <div class="col-md-12">
 								<div class="form-group">
 									<label>
-										Kategory
+										Kategori
 									</label>
 									<select id="category" name="category" class="cs-select cs-skin-elastic" required>
-										@if (old('category') == '1')
-											<option value="1" selected>Registrasi Akun</option>
-											<option value="2">STEL dan Pengujian Perangkat</option>
-											<option value="3">Uji Fungsi</option>
-											<option value="4">Invoice dan Pembayaran</option>
-											<option value="5">SPK</option>
-											<option value="6">Kapabilitas TTH</option>
-											<option value="7">Pengambilan Laporan dan Sertifikat</option>
-										@elseif(old('category') == '2')
-											<option value="1">Registrasi Akun</option>
-											<option value="2" selected>STEL dan Pengujian Perangkat</option>
-											<option value="3">Uji Fungsi</option>
-											<option value="4">Invoice dan Pembayaran</option>
-											<option value="5">SPK</option>
-											<option value="6">Kapabilitas TTH</option>
-											<option value="7">Pengambilan Laporan dan Sertifikat</option>
-										@elseif (old('category') == '3')
-											<option value="1">Registrasi Akun</option>
-											<option value="2">STEL dan Pengujian Perangkat</option>
-											<option value="3"selected>Uji Fungsi</option>
-											<option value="4">Invoice dan Pembayaran</option>
-											<option value="5">SPK</option>
-											<option value="6">Kapabilitas TTH</option>
-											<option value="7">Pengambilan Laporan dan Sertifikat</option>
-										@elseif (old('category') == '4')
-											<option value="1">Registrasi Akun</option>
-											<option value="2">STEL dan Pengujian Perangkat</option>
-											<option value="3">Uji Fungsi</option>
-											<option value="4" selected>Invoice dan Pembayaran</option>
-											<option value="5">SPK</option>
-											<option value="6">Kapabilitas TTH</option>
-											<option value="7">Pengambilan Laporan dan Sertifikat</option>
-										@elseif (old('category') == '5')
-											<option value="1">Registrasi Akun</option>
-											<option value="2">STEL dan Pengujian Perangkat</option>
-											<option value="3">Uji Fungsi</option>
-											<option value="4">Invoice dan Pembayaran</option>
-											<option value="5" selected>SPK</option>
-											<option value="6">Kapabilitas TTH</option>
-											<option value="7">Pengambilan Laporan dan Sertifikat</option>
-										@elseif (old('category') == '6')
-											<option value="1">Registrasi Akun</option>
-											<option value="2">STEL dan Pengujian Perangkat</option>
-											<option value="3">Uji Fungsi</option>
-											<option value="4">Invoice dan Pembayaran</option>
-											<option value="5">SPK</option>
-											<option value="6" selected>Kapabilitas TTH</option>
-											<option value="7">Pengambilan Laporan dan Sertifikat</option>
-										@elseif (old('category') == '7')
-											<option value="1">Registrasi Akun</option>
-											<option value="2">STEL dan Pengujian Perangkat</option>
-											<option value="3">Uji Fungsi</option>
-											<option value="4">Invoice dan Pembayaran</option>
-											<option value="5">SPK</option>
-											<option value="6">Kapabilitas TTH</option>
-											<option value="7" selected>Pengambilan Laporan dan Sertifikat</option>
-										@else
-											<option value="" disabled selected>Select Category</option>
-											<option value="1">Registrasi Akun</option>
-											<option value="2">STEL dan Pengujian Perangkat</option>
-											<option value="3">Uji Fungsi</option>
-											<option value="4">Invoice dan Pembayaran</option>
-											<option value="5">SPK</option>
-											<option value="6">Kapabilitas TTH</option>
-											<option value="7">Pengambilan Laporan dan Sertifikat</option>
-										@endif
+										<option value="" disabled selected>Select Category</option>
+										<option value="1" @if (old('category') == '1') selected @endif>Registrasi Akun</option>
+										<option value="2" @if (old('category') == '2') selected @endif>STEL dan Pengujian Perangkat</option>
+										<option value="3" @if (old('category') == '3') selected @endif>Uji Fungsi</option>
+										<option value="4" @if (old('category') == '4') selected @endif>Invoice dan Pembayaran</option>
+										<option value="5" @if (old('category') == '5') selected @endif>SPK</option>
+										<option value="6" @if (old('category') == '6') selected @endif>Kapabilitas TTH</option>
+										<option value="7" @if (old('category') == '7') selected @endif>Pengambilan Laporan dan Sertifikat</option>
 									</select>
 								</div>	
 
@@ -157,6 +99,7 @@
 <script src={{ asset("vendor/bootstrap-datepicker/bootstrap-datepicker.min.js") }}></script>
 <script src={{ asset("vendor/bootstrap-timepicker/bootstrap-timepicker.min.js") }}></script>
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script> 
+<script src={{ asset("assets/js/form-elements.js") }}></script>
 <script src="https://cdn.ckeditor.com/ckeditor5/28.0.0/classic/ckeditor.js"></script>
 <script type="text/javascript">
 	jQuery(document).ready(function() {

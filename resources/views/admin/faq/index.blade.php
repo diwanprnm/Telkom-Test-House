@@ -11,7 +11,7 @@
 				</div>
 				<ol class="breadcrumb">
 					<li>
-						<span>Beranda</span>
+						<span>Customer Relation</span>
 					</li>
 					<li class="active">
 						<span>FAQ</span>
@@ -57,7 +57,7 @@
 							<thead>
 								<tr>
 									<th class="center" scope="col">No</th>
-									<th class="center" scope="col">Kategory</th> 
+									<th class="center" scope="col">Kategori</th> 
 									<th class="center" scope="col">Pertanyaan</th> 
 									<th class="center" scope="col">Jawaban</th> 
                                     <th class="center" scope="col">Aksi</th>
