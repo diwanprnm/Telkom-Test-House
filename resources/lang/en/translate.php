@@ -1,6 +1,7 @@
 <?php
 
 return [
+	'locale'			=> 'English',
     'home' 				=> 'Home',
 	
     'about'     		=> 'About',
@@ -457,4 +458,10 @@ return [
 
 	'payment_process' => 'Payment Process',
 	'uf_warning' => 'You have failed the Function Test twice. You can reapply a Function Test 2 months since the last Function Test, i.e. ',
+
+	//RENT CHAMBER
+	'rent_chamber_client_label_rent_date' => 'Rent date',
+	'rent_chamber_client_label_rent_duration' => 'Rent duration',
+	'rent_chamber_client_label_rent_until' => 'Rent until',
+	'rent_chamber_client_notes' => "<strong>NOTES</strong></br>* The red mark indicates the chamber has been rented.<br>* The blue mark indicates the chamber you have selected<br>* Cannot rent on Saturday and Sunday",
 ];

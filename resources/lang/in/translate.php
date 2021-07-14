@@ -1,6 +1,7 @@
 <?php
 
 return [
+	'locale'			=> 'Indonesia',
     'home' 				=> 'Beranda', // home
 	
     'about'     		=> 'Tentang', // about
@@ -460,4 +461,10 @@ return [
 
 	'payment_process' => 'Proses Pembayaran',
 	'uf_warning' => 'Anda sudah 2 kali gagal melakukan Uji Fungsi. Anda bisa mengajukan kembali Uji Fungsi 2 bulan sejak Uji Fungsi terakhir, yaitu ',
+
+	//RENT CHAMBER
+	'rent_chamber_client_label_rent_date' => 'Tanggal sewa',
+	'rent_chamber_client_label_rent_duration' => 'Durasi sewa',
+	'rent_chamber_client_label_rent_until' => 'Sampai dengan',
+	'rent_chamber_client_notes' => "<strong>CATATAN</strong></br>* Tanda merah menandakan chamber sudah di booking.</br>* Tanda biru menandakan chamber yang anda pilih.</br>* Tidak bisa menyewa dihari Sabtu dan Minggu.",
 ];

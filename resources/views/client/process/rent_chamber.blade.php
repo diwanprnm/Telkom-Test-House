@@ -33,8 +33,6 @@
 			width: 60%;
 			transform: translate(20%, 0%);
 		}
-		.row.rowday col{
-		}
 		.pb-calendar .row-day .red{
 			background-color: red;
 			color: white !important;
@@ -59,6 +57,9 @@
 			display: none;
 			width: 0;
 			height: 0;
+		}
+		.pb-calendar .calendar-body-frame{
+			margin-bottom: 2rem;
 		}
 		.before-month, .after-month{
 			background: transparent !important;
@@ -144,48 +145,42 @@
 							<h2>Second Step</h2>
 							<fieldset>
 								<legend></legend>
-								<div class="content-wrap">
-									<div class="container clearfix center-div">
-										<div class="padding-y-md rounded border-danger">
 
-											<div class="row">
-												<div class="col-md-4">
-													<div class="form-group">
-														<label for="exampleFormControlInput1">Tanggal sewa</label>
-														<input type="text" class="form-control date" id="exampleFormControlInput1" placeholder="YYYY-MM-DD">
-													</div>
-												</div>
-
-												<div class="col-md-4">
-													<div class="form-group">
-														<label for="exampleFormControlSelect1">Durasi penyewaan</label>
-														<select class="form-control" id="duratonOfRent">
-														  <option>1</option>
-														  <option>2</option>
-														</select>
-													  </div>
-												</div>
-
-												<div class="col-md-4">
-													<div class="form-group">
-														<label>
-															Sampai dengan
-														</label>
-														<p id="endOfBookingDate">..</p>
-													</div>
-												</div>
-
-											</div>
-											<br/>
-											<br/>
-											
-											<div id="pb-calendar" class="pb-calendar">
+									<div class="row">
+										<div class="col-md-4">
+											<div class="form-group">
+												<label for="exampleFormControlInput1">{{ trans('translate.rent_chamber_client_label_rent_date') }}</label>
+												<input type="text" class="form-control date" id="exampleFormControlInput1" placeholder="YYYY-MM-DD">
 											</div>
 										</div>
+
+										<div class="col-md-4">
+											<div class="form-group">
+												<label for="exampleFormControlSelect1">{{ trans('translate.rent_chamber_client_label_rent_duration') }}</label>
+												<select class="form-control" id="duratonOfRent">
+													<option value="1">1</option>
+													<option value="2">2</option>
+												</select>
+												</div>
+										</div>
+
+										<div class="col-md-4">
+											<div class="form-group">
+												<label>
+													{{ trans('translate.rent_chamber_client_label_rent_until') }}
+												</label>
+												<p id="endOfBookingDate">..</p>
+											</div>
+										</div>
+
 									</div>
-								</div>
+									<br/>
+									<br/>
+									
+									<div id="pb-calendar" class="pb-calendar">
+									</div>
 								<input type="hidden" id="dates" name="dates">
-								<button id="buttonSubmitHelper">Sumbit helper</button> (deleted soon)
+								{{-- <button id="buttonSubmitHelper">Sumbit helper</button> (deleted soon) --}}
 							</fieldset>
 							<h2>Third Step</h2>
 							<fieldset>
@@ -199,7 +194,7 @@
 			</div> 
 		</div> 
 
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		{{-- <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 			<div class="modal-dialog" role="document">
 			  <div class="modal-content">
 				<div class="modal-header">
@@ -215,7 +210,7 @@
 				</div>
 			  </div>
 			</div>
-		</div>
+		</div> --}}
 	</section><!-- #content end -->
 @endsection 
 
@@ -225,10 +220,21 @@
 <script type="text/javascript" src="{{url('assets/js/moment.js')}}"></script>
 <script type="text/javascript" src="{{url('assets/js/pb.calendar.min.js')}}"></script>
 <script>
+var form = $("#form-permohonan");
+const indonesiaDayName = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+const indonesiaMonthName = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+const can_not_rent_chamber = "{{ trans('translate.can_not_rent_chamber') }}";
+const rent_chamber_confirmation = "{{ trans('translate.rent_chamber_confirmation') }}";
+const rent_chamber_duration = "{{ trans('translate.rent_chamber_duration') }}";
+const chamberNotes = "{!! trans('translate.rent_chamber_client_notes') !!}";;
+const locale = "{{ trans('translate.locale') }}";
+const currentDate = new Date();
+let bookedDates = [];
+let toBeBookedDates = [];
+
 $(window).bind('beforeunload',function(){
 	return 'are you sure you want to leave and your data will be lost?';
 });  
-var form = $("#form-permohonan");
 form.validate({
 	errorPlacement: function errorPlacement(error, element) { element.before(error); },
 	rules: { 
@@ -302,17 +308,12 @@ var formWizard = form.children("div").steps({
 $('ul[role="tablist"]').hide();
 
 $( document ).ready(function() {
-	const currentDate = new Date();
-	const can_not_rent_chamber = "{{ trans('translate.can_not_rent_chamber') }}";
-	const rent_chamber_confirmation = "{{ trans('translate.rent_chamber_confirmation') }}";
-	const rent_chamber_duration = "{{ trans('translate.rent_chamber_duration') }}";
-	const minDate = moment(new Date()).add(7, 'days').format('YYYY-MM-DD');
 	const myDatePicker = $('.date');
+	const minDate = moment(new Date()).add(7, 'days').format('YYYY-MM-DD');
 	let current_yyyymm_ = moment().format("YYYYMM");
 	let current_month = moment().format("MM");
-	let bookedDates = [];
-	let toBeBookedDates = [];
-	myDatePicker.val(minDate);
+	
+
 
 	let pbCalendarOption = {
 		'day_selectable' : false,
@@ -335,50 +336,13 @@ $( document ).ready(function() {
 		});
 		setDayLabelWithClass(bookedDates,'red');
 		initDatePicker();
-		$("#pb-calendar").append(indonesiaNotes);
+		$("#pb-calendar").append(chamberNotes);
+		nearestAvailableDate = getNearestAvailableDate();
+		toBeBookedDates = toBeBookedDates.push(nearestAvailableDate)
+		myDatePicker.val(nearestAvailableDate);
+		calculateEndDate();
 	}
 
-	//onclick rent
-	$('#modal-rent-button').click(() => {
-		let rentDuration = parseInt($("#rent_duration").find(":selected").text());
-		let rentDate = $('#rent_date').val();
-		checkAvaliableAndBooked(rentDate, rentDuration);
-		pbCalendar.update_view();
-	});
-
-	const checkAvaliableAndBooked = (date, numDays) =>{
-		const dates = [];
-		let isAvailable = false;
-		let holidayCount = 0;
-		for (i=0; i<numDays; i++){
-			willBeBookedDates = moment(date).add(i+holidayCount, 'days');
-			dates.push(willBeBookedDates.format('YYYYMMDD'));
-			if (willBeBookedDates.day() == 5){
-				holidayCount += 2;
-			}
-		}
-		const found = dates.some(r=> bookedDates.indexOf(r) >= 0)
-		if (!found) {
-			toBeBookedDates = dates;
-			$('input[name=dates]').val(JSON.stringify(toBeBookedDates));
-		}
-		else {alert("The date you selected is not available!");}
-		return !found;
-	}
-
-	const calculateEndDate = () => {
-		numberOfDay = parseInt($("#duratonOfRent").find(":selected").text());
-		startRentDate = myDatePicker.val();
-		let isAvailable = checkAvaliableAndBooked(startRentDate, numberOfDay)
-		if(isAvailable){
-			pbCalendar.update_view();
-			setDayLabelWithClass(toBeBookedDates,'blue');
-			setDayLabelWithClass(bookedDates,'red');
-			date = moment(toBeBookedDates[toBeBookedDates.length-1]);
-			$('#endOfBookingDate').html(`${indonesiaDayName[date.day()]}, ${date.format('DD')} ${indonesiaMonthName[date.month()]} ${date.year()}`);
-		}
-	}
-	
 	const initDatePicker = () => {
 		myDatePicker.datepicker({
 			minDate: minDate,
@@ -397,11 +361,91 @@ $( document ).ready(function() {
 				}
 				return [true, dates.includes(date) ? "css-class-to-highlight" : ""];
 			},
-			defaultDate: '2021-07-20',
 		});
 	}
+
+	// //onclick rent
+	// $('#modal-rent-button').click(() => {
+	// 	let rentDuration = parseInt($("#rent_duration").find(":selected").val());
+	// 	let rentDate = $('#rent_date').val();
+	// 	checkAvaliableAndBooked(rentDate, rentDuration);
+	// 	pbCalendar.update_view();
+	// });
+
+	const checkAvaliableAndBooked = (date, numDays) =>{
+		const dates = [];
+		let isAvailable = false;
+		let holidayCount = 0;
+		for (i=0; i<numDays; i++){
+			willBeBookedDates = moment(date).add(i+holidayCount, 'days');
+			dates.push(willBeBookedDates.format('YYYYMMDD'));
+			if (willBeBookedDates.day() == 5){
+				holidayCount += 2;
+			}
+		}
+		const found = dates.some(r=> bookedDates.indexOf(r) >= 0)
+		if (!found) {
+			toBeBookedDates = dates;
+			$('input[name=dates]').val(JSON.stringify(toBeBookedDates));
+		}
+		else {
+			myDatePicker.val(moment(toBeBookedDates[0]).format('YYYY-MM-DD'));
+			$("#duratonOfRent").val(toBeBookedDates.length);
+			alert("The date you selected is not available!");
+		}
+		return !found;
+	}
+
+	const calculateEndDate = () => {
+		numberOfDay = parseInt($("#duratonOfRent").find(":selected").text());
+		startRentDate = myDatePicker.val();
+		let isAvailable = checkAvaliableAndBooked(startRentDate, numberOfDay)
+		if(isAvailable){
+			pbCalendar.update_view();
+			setMonthCalendarView(startRentDate);
+			setDayLabelWithClass(toBeBookedDates,'blue');
+			setDayLabelWithClass(bookedDates,'red');
+			date = moment(toBeBookedDates[toBeBookedDates.length-1]);
+			rentUntilText = date.format('dddd, DD MMMM YYYY')
+			if (locale == 'Indonesia'){
+				rentUntilText = `${indonesiaDayName[date.day()]}, ${date.format('DD')} ${indonesiaMonthName[date.month()]} ${date.year()}`;
+			}
+			$('#endOfBookingDate').html(rentUntilText);
+		}
+	}
+
+	const setMonthCalendarView = (startRentDate = new Date) => {
+		//trigger("click");
+		const nextButton = $('#pb-calendar .control-btn.next-btn');
+		const prevButton = $('#pb-calendar .control-btn.prev-btn');
+		let firstDayOfMonth = $('#pb-calendar .row-day .col:not(.before-month):first').data('day-yyyymmdd');
+		let yearMonthRentDate = parseInt(moment(startRentDate, 'YYYY-MM-DD').format('YYYYMM'))
+		let yearMonthCalendarView = parseInt(moment(firstDayOfMonth, 'YYYYMMDD').format('YYYYMM'));
+		
+		if ( yearMonthRentDate < yearMonthCalendarView){
+			prevButton.trigger("click");
+			setMonthCalendarView(startRentDate);
+		} else if ( yearMonthRentDate > yearMonthCalendarView ){
+			nextButton.trigger("click");
+			setMonthCalendarView(startRentDate);
+		}
+	}
+
+	const getNearestAvailableDate = () => {
+		let lastCheckedDate = moment(minDate, 'YYYY-MM-DD')
+		let nearestAvailableDate = false;
+		while (!nearestAvailableDate){
+			if( bookedDates.includes(lastCheckedDate.format('YYYYMMDD')) || lastCheckedDate.day() == '6' || lastCheckedDate.day() == '0'){
+				lastCheckedDate.add(1, 'days');
+			}else{
+				nearestAvailableDate = lastCheckedDate.format('YYYY-MM-DD');
+			}
+		}
+		return nearestAvailableDate;
+	}
+	
 	initCalendarByAjax();
-	calculateEndDate();
+	
 	
 	myDatePicker.change(calculateEndDate);
 	$('#duratonOfRent').change(calculateEndDate);
@@ -420,6 +464,7 @@ $( document ).ready(function() {
 	// });
 });
 
+const setDayLabelWithClass = (list, color) => list.forEach( item => $(`.row-day .col[data-day-yyyymmdd='${item}']`).addClass(`${color} rounded-corner`) );
 const getDateRentedChamber = handleData => {
 	return $.ajax({
 		url:"{{URL::to('/v1/getDateRentedChamber')}}",  
@@ -428,13 +473,5 @@ const getDateRentedChamber = handleData => {
 		}
 	});
 }
-const indonesiaDayName = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-const indonesiaMonthName = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-const setDayLabelWithClass = (list, color) => list.forEach( item => $(`.row-day .col[data-day-yyyymmdd='${item}']`).addClass(`${color} rounded-corner`) );
-const indonesiaNotes = `
-	* Tanda merah menandakan chamber sudah di booking.<br>
-	* Tidak bisa menyewa dihari Sabtu dan Minggu`;
-
-
 </script>
 @endsection
