@@ -328,6 +328,12 @@ class STELController extends Controller
                     foreach ($another_stel as $item) {
                         $item->is_active = 0;
                         $item->save();
+                        // Beritahu semua transaksi bahwa ada update STEL
+                        $STELSalesDetail = STELSalesDetail::where('stels_id', $item->id)->get();
+                        foreach ($STELSalesDetail as $item_detail) {
+                            $item_detail->temp_alert = 1;
+                            $item_detail->save();
+                        }
                     }
                 }
                 $stel->save(); 
@@ -368,25 +374,22 @@ class STELController extends Controller
         ->get();
 
         /*
-            3. get created_at from notification where message = Pembayaran Stel Telah diterima AND url = 'payment_detail/stels_sales.id'
             3. get created_at from logs where action = Update Status Pembayaran STEL AND data like "payment_status":3
         */
 
         foreach ($data as $item) {
-            // $notification = NotificationTable::where('message', 'Pembayaran Stel Telah diterima')->where('url', 'payment_detail/'.$item->id)->orderBy('created_at', 'DESC')->first();
-            // $notification ? $this->insertSTELSales($item, $stels_id) : '';
             $query1 = '"id":'.$item->id;$query2 = '"payment_status":3';
             $logs = Logs::where('action', 'Update Status Pembayaran STEL')->where('data', 'like','%'.$query1.'%')->where('data', 'like','%'.$query2.'%')->orderBy('created_at', 'DESC')->first();
             if($logs){
                 $tgl = date('Y-m-d', strtotime($logs->created_at));
                 $diff = (strtotime($publish_date) - strtotime($tgl));
                 $days = floor($diff / (60 * 60 * 24));
-                $days <= 365 ? $this->insertSTELSales($item, $stels_id) : '';
+                $days <= 365 ? $this->insertSTELSales($item, $stels_id, $stels_master_id) : '';
             }
         }
     }
 
-    public function insertSTELSales($item, $stels_id){
+    public function insertSTELSales($item, $stels_id, $stels_master_id){
         $currentUser = Auth::user();
         $logService = new LogService();
         
@@ -424,6 +427,15 @@ class STELController extends Controller
                 $STELSalesDetail->created_by = $item->user_id;
                 $STELSalesDetail->updated_by = $item->user_id;
                 $STELSalesDetail->save();
+
+                $stel = STEL::where('stels_master_id', $stels_master_id)->get();
+                foreach ($stel as $item) {
+                    $STELSalesDetail = STELSalesDetail::where('stels_sales_id', $sales->id)->where('stels_id', $item->id)->get();
+                    foreach ($STELSalesDetail as $item_detail) {
+                        $item_detail->temp_alert = 2;
+                        $item_detail->save();
+                    }
+                }
             }
             /* push notif*/
 
