@@ -384,12 +384,12 @@ class STELController extends Controller
                 $tgl = date('Y-m-d', strtotime($logs->created_at));
                 $diff = (strtotime($publish_date) - strtotime($tgl));
                 $days = floor($diff / (60 * 60 * 24));
-                $days <= 365 ? $this->insertSTELSales($item, $stels_id, $stels_master_id) : '';
+                $days <= 365 ? $this->insertSTELSales($item, $stels_id) : '';
             }
         }
     }
 
-    public function insertSTELSales($item, $stels_id, $stels_master_id){
+    public function insertSTELSales($item, $stels_id){
         $currentUser = Auth::user();
         $logService = new LogService();
         
@@ -428,18 +428,12 @@ class STELController extends Controller
                 $STELSalesDetail->updated_by = $item->user_id;
                 $STELSalesDetail->save();
 
-                $stel = STEL::where('stels_master_id', $stels_master_id)->get();
-                foreach ($stel as $item) {
-                    $STELSalesDetail = STELSalesDetail::where('stels_sales_id', $sales->id)->where('stels_id', $item->id)->get();
-                    foreach ($STELSalesDetail as $item_detail) {
-                        $item_detail->temp_alert = 2;
-                        $item_detail->save();
-                    }
-                }
+                // update temp_alert
+                $this->updateTempAlert($STELSalesDetail);
             }
             /* push notif*/
 
-            $user = User::where('id', $item->user_id)->first();
+            $user = User::where('id', $sales->user_id)->first();
             $users = User::where('company_id', $user->company_id)->get();
             foreach ($users as $cust) { 
                 $dataNotif= array(
@@ -460,6 +454,23 @@ class STELController extends Controller
             $logService->createAdminLog('Tambah Data Pembelian STEL', 'Rekap Pembelian STEL', $sales.$STELSalesDetail, '' );
         } catch(Exception $e){ 
             
+        }
+    }
+
+    public function updateTempAlert($STELSalesDetail){
+        $stel = STEL::where('id', $STELSalesDetail->stels_id)->first();
+        $user = User::where('id', $STELSalesDetail->created_by)->first();
+        $data = STELSalesDetail::join('stels', 'stels_sales_detail.stels_id', '=', 'stels.id')
+            ->join('stels_master', 'stels.stels_master_id', '=', 'stels_master.id')
+            ->join('users', 'stels_sales_detail.created_by', '=', 'users.id')
+            ->join('companies', 'users.company_id', '=', 'companies.id')
+            ->where('stels.stels_master_id', '=', $stel->stels_master_id)
+            ->where('companies.id', '=', $user->company_id)
+            ->select('stels_sales_detail.*')
+        ->get();
+        foreach ($data as $item) {
+            $item->temp_alert = 2;
+            $item->save();
         }
     }
 
