@@ -16,6 +16,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 use App\Events\Notification;
 use App\NotificationTable;
+use App\Faq;
 use App\Footer;
 use App\AdminRole;
 use App\ExaminationLab;
@@ -80,7 +81,7 @@ class HomeController extends Controller
     
     public function faq()
     {
-    	$data = array();
+    	$data = Faq::where('is_active')->orderBy('category')->get();
     	$page = "faq";
 		return view('client.faq')
 			->with('data', $data)
