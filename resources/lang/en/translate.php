@@ -457,4 +457,10 @@ return [
 
 	'payment_process' => 'Payment Process',
 	'uf_warning' => 'You have failed the Function Test twice. You can reapply a Function Test 2 months since the last Function Test, i.e. ',
+
+	'chamber_history'  => 'Chamber History',
+	'chamber_booking_date'  => 'Booking Date',
+	'chamber_until'  => 'until',
+	'chamber_duration'  => 'Duration',
+	'chamber_days'  => 'day(s)',
 ];

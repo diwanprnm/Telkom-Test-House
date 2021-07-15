@@ -460,4 +460,10 @@ return [
 
 	'payment_process' => 'Proses Pembayaran',
 	'uf_warning' => 'Anda sudah 2 kali gagal melakukan Uji Fungsi. Anda bisa mengajukan kembali Uji Fungsi 2 bulan sejak Uji Fungsi terakhir, yaitu ',
+
+	'chamber_history'  => 'Riwayat Chamber',
+	'chamber_booking_date'  => 'Tanggal Sewa',
+	'chamber_until'  => 'sampai',
+	'chamber_duration'  => 'Durasi',
+	'chamber_days'  => 'hari',
 ];
