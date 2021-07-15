@@ -68,7 +68,7 @@ class ChamberController extends Controller
             ->join("users","users.id","=","chamber.user_id")
             ->join("companies","companies.id","=",'users.company_id')
             ->where('users.company_id',$currentUser->company_id)
-            ->where("chamber.payment_status", 3)
+            ->where("chamber.payment_status", 2)
         ;
 
         $data = $query->orderBy("chamber.created_at", 'desc')->paginate($paginate);
@@ -111,7 +111,7 @@ class ChamberController extends Controller
     }
 
     public function doCheckout(Request $request){
-    	$currentUser = Auth::user();
+        $currentUser = Auth::user();
     	$chamber = Chamber::where('id', $request->input('hide_id'))->first();
         if($currentUser){ 
         	$mps_info = explode('||', $request->input("payment_method"));

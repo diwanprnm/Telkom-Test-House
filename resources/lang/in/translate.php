@@ -464,9 +464,10 @@ return [
 
 	//RENT CHAMBER
 	'chamber_history'  => 'Riwayat Chamber',
-	'rent_chamber_client_label_rent_date' => 'Tanggal sewa',
-	'rent_chamber_client_label_rent_duration' => 'Durasi sewa',
+	'rent_chamber_client_label_rent_date' => 'Tanggal Sewa',
+	'rent_chamber_client_label_rent_duration' => 'Durasi Sewa',
 	'rent_chamber_client_label_rent_until' => 'Sampai dengan',
 	'chamber_days'  => 'hari',
 	'rent_chamber_client_notes' => "<strong>CATATAN</strong></br>* Tanda merah menandakan chamber sudah di booking.</br>* Tanda biru menandakan chamber yang anda pilih.</br>* Tidak bisa menyewa dihari Sabtu dan Minggu.",
+	'rent_chamber_client_label_waiting_confirmation'  => 'Menunggu Konfirmasi',
 ];

@@ -43,7 +43,7 @@
 												<th scope="col">No</th>
 												<th scope="col">{{ trans('translate.stel_payment_status_order_date') }}</th>
                                                 <th scope="col">{{ trans('translate.rent_chamber_client_label_rent_date') }}</th>
-                                                <th scope="col">{{ trans('translate.rent_chamber_client_label_rent_duration') }} [{{ trans('translate.chamber_days') }}]</th>
+                                                <th scope="col">{{ trans('translate.rent_chamber_client_label_rent_duration') }}</th>
 												<th scope="col">Total</th> 
 												<th scope="col">PIC</th>   
 												<th scope="col" class="center">Status</th>
@@ -63,15 +63,17 @@
                                                             {{ trans('translate.rent_chamber_client_label_rent_until') }} {{$item->end_date}} 
                                                         @endif
                                                     </td>
-                                                    <td>{{$item->duration}} </td>
+                                                    <td>{{$item->duration}} {{ trans('translate.chamber_days') }}</td>
 													<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item->total), 0, '.', ','); @endphp</td>
 													<td>{{$item->user->name}}</td>  
-													<td class="center"><span class="label label-sm label-default" style="line-height: 2;">Unpaid</span></td>
+													<td class="center"><span class="label label-sm label-default" style="line-height: 2;">{{ $item->spb_number ? 'Unpaid' : trans('translate.rent_chamber_client_label_waiting_confirmation') }}</span></td>
 													<td>
-														@if($data_unpaid[$i]->payment_method == 2 && $data_unpaid[$i]->VA_expired < date("Y-m-d H:i:s"))
-															<a class="label label-sm label-danger" style="line-height: 2;" href="{{URL::to('chamber_history/'.$item->id.'/pembayaran')}}">{{ trans('translate.expired') }}</a>
-														@else
-                                                            <a class="label label-sm label-warning" style="line-height: 2;" href="{{URL::to('chamber_history/'.$item->id.'/pembayaran')}}">{{ trans('translate.examination_pay_now') }}</a>
+														@if($item->spb_number)
+															@if($data_unpaid[$i]->payment_method == 2 && $data_unpaid[$i]->VA_expired < date("Y-m-d H:i:s"))
+																<a class="label label-sm label-danger" style="line-height: 2;" href="{{URL::to('chamber_history/'.$item->id.'/pembayaran')}}">{{ trans('translate.expired') }}</a>
+															@else
+																<a class="label label-sm label-warning" style="line-height: 2;" href="{{URL::to('chamber_history/'.$item->id.'/pembayaran')}}">{{ trans('translate.examination_pay_now') }}</a>
+															@endif
 														@endif
 													</td>
 												</tr> 
@@ -112,7 +114,7 @@
                                                 <th scope="col">No</th>
 												<th scope="col">{{ trans('translate.stel_payment_status_order_date') }}</th>
                                                 <th scope="col">{{ trans('translate.rent_chamber_client_label_rent_date') }}</th>
-                                                <th scope="col">{{ trans('translate.rent_chamber_client_label_rent_duration') }} [{{ trans('translate.chamber_days') }}]</th>
+                                                <th scope="col">{{ trans('translate.rent_chamber_client_label_rent_duration') }}</th>
 												<th scope="col">Total</th> 
 												<th scope="col">PIC</th>   
 												<th scope="col" class="center">Status</th>
@@ -132,7 +134,7 @@
                                                             {{ trans('translate.rent_chamber_client_label_rent_until') }} {{$item->end_date}} 
                                                         @endif
                                                     </td>
-                                                    <td>{{$item->duration}} </td>
+                                                    <td>{{$item->duration}} {{ trans('translate.chamber_days') }}</td>
 													<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item->total), 0, '.', ','); @endphp</td>
 													<td>{{$item->user->name}}</td>  
 													<td class="center"><span class="label label-sm label-success" style="line-height: 2;">Paid</span></td>
@@ -174,7 +176,7 @@
                                                 <th scope="col">No</th>
 												<th scope="col">{{ trans('translate.stel_payment_status_order_date') }}</th>
                                                 <th scope="col">{{ trans('translate.rent_chamber_client_label_rent_date') }}</th>
-                                                <th scope="col">{{ trans('translate.rent_chamber_client_label_rent_duration') }} [{{ trans('translate.chamber_days') }}]</th>
+                                                <th scope="col">{{ trans('translate.rent_chamber_client_label_rent_duration') }}</th>
 												<th scope="col">Total</th> 
 												<th scope="col">PIC</th>   
 												<th scope="col" class="center">Status</th>
@@ -194,7 +196,7 @@
                                                             {{ trans('translate.rent_chamber_client_label_rent_until') }} {{$item->end_date}} 
                                                         @endif
                                                     </td>
-                                                    <td>{{$item->duration}} </td>
+                                                    <td>{{$item->duration}} {{ trans('translate.chamber_days') }}</td>
 													<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item->total), 0, '.', ','); @endphp</td>
 													<td>{{$item->user->name}}</td>  
 													<td class="center"><span class="label label-sm label-info" style="line-height: 2;">Approved</span></td>

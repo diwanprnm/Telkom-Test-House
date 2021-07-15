@@ -15,31 +15,35 @@
 							<tr>
 								<th scope="col">No</th>
 								<th scope="col">Item</th>
-								<th scope="col">Total ({{ trans('translate.stel_rupiah') }}.)</th> 
+								<th scope="col" align="right">Total ({{ trans('translate.stel_rupiah') }}.)</th> 
 							</tr>
 						</thead>
 						<tbody>
-							@php $price = ceil(($data[0]->price/1.1)); @endphp
 							<tr>
 								<td>1. </td>
-								<td>{{$data[0]->start_date}}</td>
-								<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($price)}}</td> 
+								<td>{{ trans('translate.rent_chamber_client_label_rent_date') }} : 
+									{{$data[0]->start_date}} 
+									@if($data[0]->start_date != $data[0]->end_date) 
+										{{ trans('translate.rent_chamber_client_label_rent_until') }} {{$data[0]->end_date}} 
+									@endif
+									{{$data[0]->duration}} {{ trans('translate.chamber_days') }}
+								</td>
+								<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($data[0]->price)}}</td> 
 							</tr> 
-							@php $tax = floor(0.1*$price); @endphp
 							<tr>
 								<td></td>
 								<td>PPN 10%</td>
-								<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($tax)}}</td> 
+								<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($data[0]->tax)}}</td> 
 							</tr> 
 						</tbody>
 						<tfoot>
                         	<tr style="font-weight: bold">
 								<td> </td>
 								<td align="right">{{ trans('translate.examination_payment_total') }}</td>
-								<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($data[0]->price)}}</td> 
+								<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($data[0]->total)}}</td> 
 							</tr> 
 							@if($data[0]->include_pph)
-							@php $pph = floor(0.02*$price); @endphp
+							@php $pph = floor(0.02*$data[0]->price); @endphp
 							<tr style="font-weight: bold">
 								<td> </td>
 								<td align="right">pph</td>
@@ -48,13 +52,13 @@
 							<tr style="font-weight: bold">
 								<td> </td>
 								<td align="right">{{ trans('translate.examination_payment_total') }} {{ trans('translate.examination_payment_cut') }} pph</td>
-								<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($data[0]->price - $pph)}}</td> 
+								<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($data[0]->total - $pph)}}</td> 
 							</tr> 
 							@endif
 						</tfoot>
 					</table> 
 				</div>	
-				@php $amount = $data[0]->include_pph ? $data[0]->price - $pph : $data[0]->price @endphp
+				@php $amount = $data[0]->include_pph ? $data[0]->total - $pph : $data[0]->total @endphp
 				@if($data[0]->payment_method == 1)
 					<div class="row metoda"> 
 						<div style="text-align: center">

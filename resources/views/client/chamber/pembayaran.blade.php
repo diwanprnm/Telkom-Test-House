@@ -72,20 +72,20 @@
 													</tr>
 													<tr class="with_pph" style="display: none;">
 														<td>
-															<span style="font-weight: bold; font-size:150%; color: #fa8231;">{{ trans('translate.stel_rupiah') }}. {{ number_format($data->price, 0, ",", ".") }},-</span>&nbsp;
+															<span style="font-weight: bold; font-size:150%; color: #fa8231;">{{ trans('translate.stel_rupiah') }}. {{ number_format($data->total, 0, ",", ".") }},-</span>&nbsp;
 															<label style="font-size:70%; text-transform: none;">({{ trans('translate.examination_payment_this_nominal') }})</label>
 														</td>
 													</tr>
 													<tr class="is_pph">
 														<td>
-															<span style="font-size:100%; color: #fa8231; text-decoration: line-through;	">{{ trans('translate.stel_rupiah') }}. {{ number_format($data->price, 0, ",", ".") }},-</span>
+															<span style="font-size:100%; color: #fa8231; text-decoration: line-through;	">{{ trans('translate.stel_rupiah') }}. {{ number_format($data->total, 0, ",", ".") }},-</span>
 														</td>
 													</tr>
 													<tr class="is_pph">
 														<td>
 															@php 
-																$pph = 0.02*floor($data->price/1.1);
-																$amount = floor($data->price - $pph);
+																$pph = 0.02*floor($data->price);
+																$amount = floor($data->total - $pph);
 															@endphp
 															<span style="font-weight: bold; font-size:150%; color: #fa8231;">{{ trans('translate.stel_rupiah') }}. {{ number_format($amount, 0, ",", ".") }},-</span>
 															<label style="font-size:70%; text-transform: none;">({{ trans('translate.examination_payment_nominal_without_pph') }})</label>
