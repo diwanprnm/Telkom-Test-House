@@ -568,9 +568,7 @@
 												</table>
 											</div>
 											<div class=" pull-left">
-					                        	@if($item->attachment != '')
-					                        		<a class="btn btn-wide btn-primary pull-left" style="margin-left:10px" href="{{URL::to('cetakPengujian/'.$item->id)}}" target="_blank">></em> Form Uji</a>
-												@endif
+												<a class="btn btn-wide btn-primary pull-left" style="margin-left:10px" href="{{URL::to('cetakPengujian/'.$item->id)}}" target="_blank"><em class="ti-download"></em> Form Uji</a>
 												
 												@foreach($item->media as $item_SPB)
 													@if($item_SPB->name == 'SPB')
