@@ -100,6 +100,10 @@
               <li class="{{ (!empty($page) && $page == '#tutorial') ?'current':''}}">
                 <a id="click-section-playlist" href="{{url('/')}}#tutorial">{{ trans('translate.video_tutorial') }}</a>
               </li>  
+
+              <li class=" {{ (!empty($page) && $page == 'faq') ?'current':''}}">
+                  <a href="{{url('faq')}}">FAQ</a>
+              </li>
                  
             </ul>
 

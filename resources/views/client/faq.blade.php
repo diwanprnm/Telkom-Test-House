@@ -1,5 +1,7 @@
 @extends('layouts.client')
-
+<!-- Document Title
+    ============================================= -->
+    <title>FAQ - Telkom DDB</title>
 @section('content')
  		<!-- Page Title
 		============================================= -->
@@ -9,7 +11,6 @@
 				<h1>FAQ</h1>
 				
 				<ol class="breadcrumb">
-					<li><a href="{{url('/')}}">Home</a></li>
 					<li class="active">FAQ</li>
 				</ol>
 			</div>
