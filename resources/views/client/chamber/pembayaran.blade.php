@@ -59,10 +59,10 @@
 												</thead>
 												<tbody>
 													<tr>
-														<td>{{ trans('translate.chamber_booking_date') }} : 
+														<td>{{ trans('translate.rent_chamber_client_label_rent_date') }} : 
 														{{$data->start_date}} 
                                                         @if($data->start_date != $data->end_date) 
-                                                            {{ trans('translate.chamber_until') }} {{$data->end_date}} 
+                                                            {{ trans('translate.rent_chamber_client_label_rent_until') }} {{$data->end_date}} 
                                                         @endif
 														{{$data->duration}} {{ trans('translate.chamber_days') }}
 														</td>

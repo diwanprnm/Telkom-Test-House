@@ -42,8 +42,8 @@
 											<tr>
 												<th scope="col">No</th>
 												<th scope="col">{{ trans('translate.stel_payment_status_order_date') }}</th>
-                                                <th scope="col">{{ trans('translate.chamber_booking_date') }}</th>
-                                                <th scope="col">{{ trans('translate.chamber_duration') }} [{{ trans('translate.chamber_days') }}]</th>
+                                                <th scope="col">{{ trans('translate.rent_chamber_client_label_rent_date') }}</th>
+                                                <th scope="col">{{ trans('translate.rent_chamber_client_label_rent_duration') }} [{{ trans('translate.chamber_days') }}]</th>
 												<th scope="col">Total</th> 
 												<th scope="col">PIC</th>   
 												<th scope="col" class="center">Status</th>
@@ -60,7 +60,7 @@
                                                     <td>
                                                         {{$item->start_date}} 
                                                         @if($item->start_date != $item->end_date) 
-                                                            {{ trans('translate.chamber_until') }} {{$item->end_date}} 
+                                                            {{ trans('translate.rent_chamber_client_label_rent_until') }} {{$item->end_date}} 
                                                         @endif
                                                     </td>
                                                     <td>{{$item->duration}} </td>
@@ -111,8 +111,8 @@
                                             <tr>
                                                 <th scope="col">No</th>
 												<th scope="col">{{ trans('translate.stel_payment_status_order_date') }}</th>
-                                                <th scope="col">{{ trans('translate.chamber_booking_date') }}</th>
-                                                <th scope="col">{{ trans('translate.chamber_duration') }} [{{ trans('translate.chamber_days') }}]</th>
+                                                <th scope="col">{{ trans('translate.rent_chamber_client_label_rent_date') }}</th>
+                                                <th scope="col">{{ trans('translate.rent_chamber_client_label_rent_duration') }} [{{ trans('translate.chamber_days') }}]</th>
 												<th scope="col">Total</th> 
 												<th scope="col">PIC</th>   
 												<th scope="col" class="center">Status</th>
@@ -129,7 +129,7 @@
                                                     <td>
                                                         {{$item->start_date}} 
                                                         @if($item->start_date != $item->end_date) 
-                                                            {{ trans('translate.chamber_until') }} {{$item->end_date}} 
+                                                            {{ trans('translate.rent_chamber_client_label_rent_until') }} {{$item->end_date}} 
                                                         @endif
                                                     </td>
                                                     <td>{{$item->duration}} </td>
@@ -173,8 +173,8 @@
                                             <tr>
                                                 <th scope="col">No</th>
 												<th scope="col">{{ trans('translate.stel_payment_status_order_date') }}</th>
-                                                <th scope="col">{{ trans('translate.chamber_booking_date') }}</th>
-                                                <th scope="col">{{ trans('translate.chamber_duration') }} [{{ trans('translate.chamber_days') }}]</th>
+                                                <th scope="col">{{ trans('translate.rent_chamber_client_label_rent_date') }}</th>
+                                                <th scope="col">{{ trans('translate.rent_chamber_client_label_rent_duration') }} [{{ trans('translate.chamber_days') }}]</th>
 												<th scope="col">Total</th> 
 												<th scope="col">PIC</th>   
 												<th scope="col" class="center">Status</th>
@@ -191,7 +191,7 @@
                                                     <td>
                                                         {{$item->start_date}} 
                                                         @if($item->start_date != $item->end_date) 
-                                                            {{ trans('translate.chamber_until') }} {{$item->end_date}} 
+                                                            {{ trans('translate.rent_chamber_client_label_rent_until') }} {{$item->end_date}} 
                                                         @endif
                                                     </td>
                                                     <td>{{$item->duration}} </td>
