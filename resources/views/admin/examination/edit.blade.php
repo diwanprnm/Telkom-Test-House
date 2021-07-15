@@ -439,6 +439,7 @@
 					@php 
 						$datasheet = 0; $datasheet_file = ''; $datasheet_link = '';
 						$prinsipal = 0; $prinsipal_file = ''; $prinsipal_link = '';
+						$sp3 = 0; $sp3_file = ''; $sp3_link = '';
 						
 					@endphp
 					@foreach($data->media as $item)
@@ -449,7 +450,23 @@
 								$datasheet_link = URL::to('/admin/examination/media/download/'.$data->id.'/'.$item->name);
 							@endphp
 						@endif
-						
+
+						@if($item->name == 'Surat Dukungan Prinsipal')
+							@php 
+								$prinsipal = 1;
+								$prinsipal_file = $item->attachment;
+								$prinsipal_link = URL::to('/admin/examination/media/download/'.$data->id.'/'.$item->name);
+							@endphp
+						@endif
+
+						@if($item->name == 'SP3')
+							@php 
+								$sp3 = 1;
+								$sp3_file = $item->attachment;
+								$sp3_link = URL::to('/admin/examination/media/download/'.$data->id.'/'.$item->name);
+							@endphp
+						@endif
+
 					@endforeach
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'id' => 'form-registrasi')) !!}
 					{!! csrf_field() !!}
@@ -492,11 +509,11 @@
 								@if($prinsipal)
 								<div class="form-group">
 									<label>
-										Datasheet
+										Prinsipal
 									</label>
 									@if($prinsipal_file != null)
 										<label>
-											: <a href="{{ $datasheet_link }}"> Download</a>
+											: <a href="{{ $prinsipal_link }}"> Download</a>
 										</label>
 									@else
 										<label>
@@ -504,7 +521,22 @@
 										</label>
 									@endif
 								</div>
+
+								<div class="form-group">
+									<label>
+										SP3
+									</label>
+									@if($sp3_file != null)
+										<label>
+											: <a href="{{ $sp3_link }}"> Download</a>
+										</label>
+									@else
+										<label>
+											: (Kosong)
+										</label>
+									@endif
 								@endif
+								
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
