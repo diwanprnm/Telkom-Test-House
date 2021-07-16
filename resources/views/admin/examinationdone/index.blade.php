@@ -307,17 +307,17 @@
 															</td>
 														</tr>
 														<tr>
-															<td>Perangkat:</td>
-															<td>
-																{{ $item->device->name }}
-															</td>
-														</tr>	
-														<tr>
 															<td>Referensi Uji:</td>
 															<td>
 																{{ $item->device->test_reference }}
 															</td>
 														</tr>
+														<tr>
+															<td>Perangkat:</td>
+															<td>
+																{{ $item->device->name }}
+															</td>
+														</tr>	
 														<tr>
 															<td>Merek:</td>
 															<td>
