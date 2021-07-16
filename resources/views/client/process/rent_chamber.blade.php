@@ -337,9 +337,9 @@ $( document ).ready(function() {
 		setDayLabelWithClass(bookedDates,'red');
 		initDatePicker();
 		$("#pb-calendar").append(chamberNotes);
-		nearestAvailableDate = getNearestAvailableDate();
-		toBeBookedDates = toBeBookedDates.push(nearestAvailableDate)
-		myDatePicker.val(nearestAvailableDate);
+		nearestAvailableDate = getNearestAvailableDate( moment(minDate, 'YYYY-MM-DD') );
+		toBeBookedDates.push(nearestAvailableDate.format('YYYYMMDD'))
+		myDatePicker.val(nearestAvailableDate.format('YYYY-MM-DD'));
 		calculateEndDate();
 	}
 
@@ -375,26 +375,37 @@ $( document ).ready(function() {
 	const checkAvaliableAndBooked = (date, numDays) =>{
 		const dates = [];
 		let isAvailable = false;
-		let holidayCount = 0;
+		let willBeBookedDates = moment(date, 'YYYY-MM-DD');
 		for (i=0; i<numDays; i++){
-			willBeBookedDates = moment(date).add(i+holidayCount, 'days');
+			willBeBookedDates = getNearestAvailableDate(willBeBookedDates);
 			dates.push(willBeBookedDates.format('YYYYMMDD'));
-			if (willBeBookedDates.day() == 5){
-				holidayCount += 2;
-			}
+			willBeBookedDates.add(1, 'days');
 		}
-		const found = dates.some(r=> bookedDates.indexOf(r) >= 0)
-		if (!found) {
-			toBeBookedDates = dates;
-			$('input[name=dates]').val(JSON.stringify(toBeBookedDates));
-		}
-		else {
-			myDatePicker.val(moment(toBeBookedDates[0]).format('YYYY-MM-DD'));
-			$("#duratonOfRent").val(toBeBookedDates.length);
-			alert("The date you selected is not available!");
-		}
-		return !found;
+		toBeBookedDates = dates;
+		$('input[name=dates]').val(JSON.stringify(toBeBookedDates));
+		return true;
 	}
+
+
+	// 	for (i=0; i<numDays; i++){
+	// 		willBeBookedDates = moment(date).add(i+holidayCount, 'days');
+	// 		dates.push(willBeBookedDates.format('YYYYMMDD'));
+	// 		if (willBeBookedDates.day() == 5){
+	// 			holidayCount += 2;
+	// 		}
+	// 	}
+	// 	const found = dates.some(r=> bookedDates.indexOf(r) >= 0)
+	// 	if (!found) {
+	// 		toBeBookedDates = dates;
+	// 		$('input[name=dates]').val(JSON.stringify(toBeBookedDates));
+	// 	}
+	// 	else {
+	// 		myDatePicker.val(moment(toBeBookedDates[0]).format('YYYY-MM-DD'));
+	// 		$("#duratonOfRent").val(toBeBookedDates.length);
+	// 		alert("The date you selected is not available!");
+	// 	}
+	// 	return !found;
+	// }
 
 	const calculateEndDate = () => {
 		numberOfDay = parseInt($("#duratonOfRent").find(":selected").text());
@@ -405,7 +416,7 @@ $( document ).ready(function() {
 			setMonthCalendarView(startRentDate);
 			setDayLabelWithClass(toBeBookedDates,'blue');
 			setDayLabelWithClass(bookedDates,'red');
-			date = moment(toBeBookedDates[toBeBookedDates.length-1]);
+			date = moment(toBeBookedDates[toBeBookedDates.length-1], 'YYYYMMDD');
 			rentUntilText = date.format('dddd, DD MMMM YYYY')
 			if (locale == 'Indonesia'){
 				rentUntilText = `${indonesiaDayName[date.day()]}, ${date.format('DD')} ${indonesiaMonthName[date.month()]} ${date.year()}`;
@@ -431,14 +442,16 @@ $( document ).ready(function() {
 		}
 	}
 
-	const getNearestAvailableDate = () => {
-		let lastCheckedDate = moment(minDate, 'YYYY-MM-DD')
+	const getNearestAvailableDate = (lastCheckedDate) => {
+		if (!lastCheckedDate instanceof moment){
+			console.error(`The parameter passed to getNearestAvailableDate isn't instace of moment.js`)
+		}
 		let nearestAvailableDate = false;
 		while (!nearestAvailableDate){
 			if( bookedDates.includes(lastCheckedDate.format('YYYYMMDD')) || lastCheckedDate.day() == '6' || lastCheckedDate.day() == '0'){
 				lastCheckedDate.add(1, 'days');
 			}else{
-				nearestAvailableDate = lastCheckedDate.format('YYYY-MM-DD');
+				nearestAvailableDate = lastCheckedDate;
 			}
 		}
 		return nearestAvailableDate;

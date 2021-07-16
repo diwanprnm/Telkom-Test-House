@@ -17,23 +17,23 @@ class ChamberAPIController extends AppBaseController
 		$rentedDates = [
 			[
 				'id' => 1,
-				'date' => '20210630'
+				'date' => '20210802'
 			],
 			[
 				'id' => 2,
-				'date' => '20210701'
+				'date' => '20210803'
 			],
 			[
 				'id' => 3,
-				'date' => '20210702'
+				'date' => '20210804'
 			],
 			[
 				'id' => 4,
-				'date' => '20210709'
+				'date' => '20210806'
 			],
 			[
 				'id' => 5,
-				'date' => '20210722'
+				'date' => '20210809'
 			],
 			[
 				'id' => 6,
