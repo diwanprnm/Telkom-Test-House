@@ -313,6 +313,18 @@
 															</td>
 														</tr>	
 														<tr>
+															<td>Referensi Uji:</td>
+															<td>
+																{{ $item->device->test_reference }}
+															</td>
+														</tr>
+														<tr>
+															<td>Merek:</td>
+															<td>
+																{{ $item->device->mark }}
+															</td>
+														</tr>	
+														<tr>
 															<td>Model / Tipe:</td>
 															<td>
 																{{ $item->device->model }}
@@ -325,7 +337,13 @@
 															</td>
 														</tr>	
 														<tr>
-															<td>Nomor Form Uji:</td>
+															<td>Serial Number:</td>
+															<td>
+																{{ $item->device->serial_number }}
+															</td>
+														</tr>	
+														<tr>
+															<td>Nomor Registrasi:</td>
 															<td>
 																{{ $item->function_test_NO }}
 															</td>
@@ -335,6 +353,18 @@
 															<td>
 																@if($item->examinationLab)
 																	{{ $item->examinationLab->name }}
+																@endif
+															</td>
+														</tr>
+														<tr>
+															<td>Tanggal Uji Fungsi:</td>
+															<td>
+																@if($item->function_test_date_approval)
+																	@if($item->function_date != null)
+																		{{ $item->function_date }}
+																	@else
+																		{{ $item->deal_test_date }}
+																	@endif
 																@endif
 															</td>
 														</tr>

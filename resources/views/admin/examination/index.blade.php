@@ -515,6 +515,12 @@
 															</td>
 														</tr>	
 														<tr>
+															<td>Referensi Uji:</td>
+															<td>
+																{{ $item->device->test_reference }}
+															</td>
+														</tr>
+														<tr>
 															<td>Merek:</td>
 															<td>
 																{{ $item->device->mark }}
