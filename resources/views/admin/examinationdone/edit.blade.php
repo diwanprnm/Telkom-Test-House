@@ -237,15 +237,15 @@
 													</td>
 												</tr>
 												<tr>
-													<td>Perangkat:</td>
-													<td>
-														{{ $data->device->name }}
-													</td>
-												</tr>	
-												<tr>
 													<td>Referensi Uji:</td>
 													<td>
 														{{ $data->device->test_reference }}
+													</td>
+												</tr>	
+												<tr>
+													<td>Perangkat:</td>
+													<td>
+														{{ $data->device->name }}
 													</td>
 												</tr>	
 												<tr>
