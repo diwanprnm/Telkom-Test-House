@@ -413,8 +413,8 @@ class STELController extends Controller
         $sales->birthdate = '';
         $sales->payment_method = 1;
         $sales->payment_status = 1;
-        $sales->total = $item->price + $tax;
-        $sales->cust_price_payment = $item->price + $tax;
+        $sales->total = 0;
+        $sales->cust_price_payment = 0;
         $sales->created_by = $item->user_id;
         $sales->updated_by = $currentUser->id;
 

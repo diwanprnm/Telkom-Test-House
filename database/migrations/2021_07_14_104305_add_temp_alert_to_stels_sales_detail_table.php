@@ -13,7 +13,7 @@ class AddTempAlertToStelsSalesDetailTable extends Migration
     public function up()
     {
         Schema::table('stels_sales_detail', function (Blueprint $table) {
-            $table->enum('temp_alert', ['0', '1', '2'])->default('0');
+            $table->integer('temp_alert')->default('0');
         });
     }
 

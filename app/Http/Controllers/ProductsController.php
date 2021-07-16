@@ -184,6 +184,7 @@ class ProductsController extends Controller
             ->join("companies","companies.id","=",self::USERS_DOT_COMPANY_ID)
             ->where(self::USERS_DOT_COMPANY_ID,$currentUser->company_id)
             ->where("stels.is_active", 0)
+            ->where("stels_sales_detail.temp_alert", 3)
         ;
 
         $data = $query->orderBy("stels_sales.created_at", 'desc')->paginate($paginate);

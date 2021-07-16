@@ -459,4 +459,7 @@ return [
 	'purchase_history_updateSTEL_delivered_warning' => 'This transaction has expired documents. Please make a new transaction to update the document.',
 	'purchase_history_updateSTEL_delivered_info' => 'This transaction has expired documents. You get the latest documents for free.',
 	'purchase_history_updateSTEL_available' => 'Update Available',
+	'purchase_history_updateSTEL_warning' => 'This transaction has expired documents',
+
+	'message_not_found_products' => 'The document you are looking for was not found. Please search using other keywords.',
 ];

@@ -462,4 +462,7 @@ return [
 	'purchase_history_updateSTEL_delivered_warning' => 'Transaksi ini memiliki dokumen yang kedaluwarsa. Silakan lakukan transaksi baru untuk memperbarui dokumen tersebut.',
 	'purchase_history_updateSTEL_delivered_info' => 'Transaksi ini memiliki dokumen yang kedaluwarsa. Anda mendapatkan dokumen terbaru dengan gratis.',
 	'purchase_history_updateSTEL_available' => 'Pembaruan Tersedia',
+	'purchase_history_updateSTEL_warning' => 'Transaksi ini memiliki dokumen yang kedaluwarsa',
+
+	'message_not_found_products' => 'Dokumen yang anda cari tidak ditemukan. Silakan mencari menggunakan kata kunci yang lain.',
 ];

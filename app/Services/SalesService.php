@@ -353,6 +353,7 @@ class SalesService
 
                 if($is_uploaded){
                     $STELSalesDetail->attachment = $name_file;
+                    $STELSalesDetail->temp_alert = 0;
                     $STELSalesDetail->save();
                     // update temp_alert
                     $this->updateTempAlert($STELSalesDetail);
@@ -389,10 +390,11 @@ class SalesService
             ->join('companies', 'users.company_id', '=', 'companies.id')
             ->where('stels.stels_master_id', '=', $stel->stels_master_id)
             ->where('companies.id', '=', $user->company_id)
+            ->where('stels_sales_detail.id', '!=', $STELSalesDetail->id)
             ->select('stels_sales_detail.*')
         ->get();
         foreach ($data as $item) {
-            $item->temp_alert = 0;
+            $item->temp_alert = 3;
             $item->save();
         }
     }

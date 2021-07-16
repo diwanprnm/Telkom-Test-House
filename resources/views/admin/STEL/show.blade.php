@@ -89,16 +89,19 @@
 									<label>
 										Tipe *
 									</label>
-									<select name="type" class="cs-select cs-skin-elastic" required>
-										<!-- <option value="" disabled selected>Select...</option> -->
-										@if($data->type == '1')<option value="1" selected>STEL</option>@endif
-										@if($data->type == '2')<option value="2" selected>S-TSEL</option>@endif
-										@if($data->type == '3')<option value="3" selected>PED / STD</option>@endif
-										@if($data->type == '4')<option value="4" selected>INTERNAL</option>@endif
-										@if($data->type == '5')<option value="5" selected>PERDIRJEN</option>@endif
-										@if($data->type == '6')<option value="6" selected>PERMENKOMINFO</option>@endif
-										@if($data->type == '7')<option value="7" selected>Lainnya ...</option>@endif
-									</select>
+									<?php
+										switch ($data->type) {
+											case '1':$type = 'STEL';break;
+											case '2':$type = 'S-TSEL';break;
+											case '3':$type = 'PED / STD';break;
+											case '4':$type = 'INTERNAL';break;
+											case '5':$type = 'PERDIRJEN';break;
+											case '6':$type = 'PERMENKOMINFO';break;
+											case '7':$type = 'Lainnya ...';break;
+											default:$type = 'STEL';break;
+										}
+									?>
+									<input type="text" id="stel_type" name="stel_type" class="form-control" placeholder="Tipe Dokumen" value="{{$type}}" readonly>
 								</div>
 							</div>
 							<div class="col-md-3">
@@ -114,13 +117,11 @@
 									<label>
 										Lab *
 									</label>
-									<select name="type" class="cs-select cs-skin-elastic" required>
-										@foreach ($examLab as $item)
-											@if ($data->lab == $item->id)
-												<option value="{{$item->id}}" selected>{{$item->name}}</option>
-											@endif
-										@endforeach
-									</select>
+									@foreach ($examLab as $item)
+										@if ($data->lab == $item->id)
+											<input type="text" id="type" name="type" class="form-control" placeholder="Lab" value="{{$item->name}}" readonly>
+										@endif
+									@endforeach
 								</div>
 							</div>
 							<div class="col-md-3">
@@ -128,20 +129,9 @@
 									<label>
 										Bahasa *
 									</label>
-									<select name="lang" class="cs-select cs-skin-elastic" required>
-										<!-- <option value="" disabled selected>Select...</option> -->
-										@if($data->lang == 'IDN')<option value="IDN" selected>IDN</option>@endif
-										@if($data->lang == 'ENG')<option value="ENG" selected>ENG</option>@endif
-									</select>
+									<input type="text" id="lang" name="code" class="form-control" placeholder="Bahasa" value="{{ $data->lang == 'IDN' ? 'IDN' : 'ENG' }}" readonly>
 								</div>
 							</div>
-							<div class="col-md-12">
-	                            <a style=" color:white !important;" href="{{URL::to('/admin/stel')}}">
-									<button type="button" class="btn btn-wide btn-red btn-squared pull-left">
-									Cancel
-									</button>
-								</a>
-	                        </div>
 						</div>
 					</fieldset>
 				</div>
@@ -200,6 +190,13 @@
                             </tbody>
 						</table>
 					</div>
+				</div>
+				<div class="col-md-12">
+					<a style=" color:white !important;" href="{{URL::to('/admin/stel')}}">
+						<button type="button" class="btn btn-wide btn-red btn-squared pull-right">
+						Back
+						</button>
+					</a>
 				</div>
 			</div>
 		</div>
