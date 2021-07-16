@@ -92,6 +92,11 @@
 		}
 		label{
 			color: gray;
+			padding: 1rem 0 0 0;
+		}
+		.date-tobe-booked a{
+			background-color: blue !important;
+			color: white !important;
 		}
 	</style>
   <div class="overlay"></div>
@@ -170,6 +175,11 @@
 													{{ trans('translate.rent_chamber_client_label_rent_until') }}
 												</label>
 												<p id="endOfBookingDate">..</p>
+											</div>
+										</div>
+
+										<div class="col-md-12">
+											<div id="rent-chamber-notes">
 											</div>
 										</div>
 
@@ -326,7 +336,7 @@ $( document ).ready(function() {
 			setDayLabelWithClass(toBeBookedDates,'blue');
 		}
 	}
-	let pbCalendar = $("#pb-calendar").pb_calendar(pbCalendarOption);
+	//let pbCalendar = $("#pb-calendar").pb_calendar(pbCalendarOption);
 
 	const initCalendarByAjax = async () => {
 		await getDateRentedChamber( resp => {
@@ -336,7 +346,7 @@ $( document ).ready(function() {
 		});
 		setDayLabelWithClass(bookedDates,'red');
 		initDatePicker();
-		$("#pb-calendar").append(chamberNotes);
+		$("#rent-chamber-notes").html(chamberNotes);
 		nearestAvailableDate = getNearestAvailableDate( moment(minDate, 'YYYY-MM-DD') );
 		toBeBookedDates.push(nearestAvailableDate.format('YYYYMMDD'))
 		myDatePicker.val(nearestAvailableDate.format('YYYY-MM-DD'));
@@ -359,7 +369,7 @@ $( document ).ready(function() {
 				} else if(d.getDay() == 6 || d.getDay() == 0){
 					return [false, "no"];
 				}
-				return [true, dates.includes(date) ? "css-class-to-highlight" : ""];
+				return [true, toBeBookedDates.includes(date) ? "date-tobe-booked" : ""];
 			},
 		});
 	}
@@ -412,7 +422,7 @@ $( document ).ready(function() {
 		startRentDate = myDatePicker.val();
 		let isAvailable = checkAvaliableAndBooked(startRentDate, numberOfDay)
 		if(isAvailable){
-			pbCalendar.update_view();
+			//pbCalendar.update_view();
 			setMonthCalendarView(startRentDate);
 			setDayLabelWithClass(toBeBookedDates,'blue');
 			setDayLabelWithClass(bookedDates,'red');
