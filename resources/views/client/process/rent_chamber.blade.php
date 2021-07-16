@@ -158,8 +158,8 @@
 											<div class="form-group">
 												<label for="exampleFormControlSelect1">{{ trans('translate.rent_chamber_client_label_rent_duration') }}</label>
 												<select class="form-control" id="duratonOfRent">
-													<option value="1">1</option>
-													<option value="2">2</option>
+													<option value="1">1 {{ trans('translate.chamber_days') }}</option>
+													<option value="2">2 {{ trans('translate.chamber_days') }}</option>
 												</select>
 												</div>
 										</div>

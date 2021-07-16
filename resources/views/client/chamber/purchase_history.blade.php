@@ -29,7 +29,7 @@
 					<ul class="nav nav-tabs clearfix">
 						<li class="{{ $tab == 'unpaid' ? 'active' : '' }}"><a href="#tab-unpaid" data-toggle="tab"><strong>Unpaid</strong></a></li>
 						<li class="{{ $tab == 'paid' ? 'active' : '' }}"><a href="#tab-paid" data-toggle="tab"><strong>Paid</strong></a></li>
-						<li class="{{ $tab == 'approved' ? 'active' : '' }}"><a href="#tab-approved" data-toggle="tab"><strong>Approved</strong></a></li>
+						<li class="{{ $tab == 'verified' ? 'active' : '' }}"><a href="#tab-verified" data-toggle="tab"><strong>Verified</strong></a></li>
 					</ul>
 					<div class="tab-content">
 						<!-- tab unpaid -->
@@ -66,7 +66,7 @@
                                                     <td>{{$item->duration}} {{ trans('translate.chamber_days') }}</td>
 													<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item->total), 0, '.', ','); @endphp</td>
 													<td>{{$item->user->name}}</td>  
-													<td class="center"><span class="label label-sm label-default" style="line-height: 2;">{{ $item->spb_number ? 'Unpaid' : trans('translate.rent_chamber_client_label_waiting_confirmation') }}</span></td>
+													<td class="center"><span class="label label-sm label-default" style="line-height: 2;">{{ $item->spb_number ? 'Unpaid' : trans('translate.rent_chamber_client_label_waiting_verification') }}</span></td>
 													<td>
 														@if($item->spb_number)
 															@if($data_unpaid[$i]->payment_method == 2 && $data_unpaid[$i]->VA_expired < date("Y-m-d H:i:s"))
@@ -165,8 +165,8 @@
 								</div>
 							</div>
 						</div>
-						<!-- tab approved -->
-						<div id="tab-approved" class="row clearfix tab-pane fade {{ $tab == 'approved' ? 'in active' : '' }}">
+						<!-- tab verified -->
+						<div id="tab-verified" class="row clearfix tab-pane fade {{ $tab == 'verified' ? 'in active' : '' }}">
 							<div class="col-md-12">
 								<div class="table-responsive">
 									<table id="datatable1" class="table table-striped table-bordered" style="width: 100%;">
@@ -185,10 +185,10 @@
 										</thead>
 										<tbody>
 											@php $no = 1; $i = 0; @endphp
-											@if($data_approved)
-											@foreach($data_approved as $keys => $item)
+											@if($data_verified)
+											@foreach($data_verified as $keys => $item)
 												<tr>
-													<td>{{$no+(($data_approved->currentPage()-1)*$data_approved->perPage())}}</td>
+													<td>{{$no+(($data_verified->currentPage()-1)*$data_verified->perPage())}}</td>
 													<td>{{$item->created_at}}</td>
                                                     <td>
                                                         {{$item->start_date}} 
@@ -199,7 +199,7 @@
                                                     <td>{{$item->duration}} {{ trans('translate.chamber_days') }}</td>
 													<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item->total), 0, '.', ','); @endphp</td>
 													<td>{{$item->user->name}}</td>  
-													<td class="center"><span class="label label-sm label-info" style="line-height: 2;">Approved</span></td>
+													<td class="center"><span class="label label-sm label-info" style="line-height: 2;">Verified</span></td>
 												</tr> 
 											@php $no++;$i++; @endphp
 											@endforeach
@@ -222,7 +222,7 @@
 							<div class="row">
 								<div class="col-md-12 col-sm-12">
 									<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-										@php echo $data_approved->links(); @endphp
+										@php echo $data_verified->links(); @endphp
 									</div>
 								</div>
 							</div>

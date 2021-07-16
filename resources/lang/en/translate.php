@@ -466,5 +466,5 @@ return [
 	'rent_chamber_client_label_rent_until' => 'Rent until',
 	'chamber_days'  => 'day(s)',
 	'rent_chamber_client_notes' => "<strong>NOTES</strong></br>* The red mark indicates the chamber has been rented.<br>* The blue mark indicates the chamber you have selected<br>* Cannot rent on Saturday and Sunday",
-	'rent_chamber_client_label_waiting_confirmation'  => 'Waiting Confirmation',
+	'rent_chamber_client_label_waiting_verification'  => 'Waiting Verification',
 ];
