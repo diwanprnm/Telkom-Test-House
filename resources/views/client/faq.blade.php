@@ -34,11 +34,6 @@
 
 						<div class="divider"><em class="icon-circle"></em></div>
 						<div class="col_one_fourth nobottommargin">
-							<h4>REGISTRASI AKUN</h4> <!-- CATEGORY -->
-							<div class="panel panel-default">
-								
-							</div>
-							<div class="line"></div>
 							@foreach ($data as $category_key => $values)
 							<h4>{{ strtoupper($category_key)}}
 								<div class="panel panel-defaul">
@@ -54,9 +49,9 @@
 										</div>
 									</div>
 									@endfor
-									<div class="line"></div>
 								</div>
 							@endforeach
+							<div class="line"></div>
 						</div>
 					</div>
 					
