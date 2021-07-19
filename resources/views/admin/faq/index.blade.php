@@ -60,6 +60,7 @@
 									<th class="center" scope="col">Kategori</th> 
 									<th class="center" scope="col">Pertanyaan</th> 
 									<th class="center" scope="col">Jawaban</th> 
+									<th class="center" scope="col">Status</th>
                                     <th class="center" scope="col">Aksi</th>
 								</tr>
 							</thead>
@@ -67,10 +68,15 @@
 								@php $no=1; @endphp
 								@foreach($data as $item)
 									<tr>
-										 <td class="center">{{ $no }}</td>
-										 <td class="center">{{ $item->category }}</td>
-										 <td class="center">{{ $item->question }}</td>
-										 <td class="center">{!! $item->answer !!}</td>
+										<td class="center">{{ $no }}</td>
+										<td class="center">{{ $item->category }}</td>
+										<td class="center">{{ $item->question }}</td>
+										<td class="center">{!! $item->answer !!}</td>
+										@if($item->is_active)
+											<td class="center"><span class="label label-sm label-success">Active</span></td>
+										@else
+											<td class="center"><span class="label label-sm label-warning">Not Active</span></td>
+										@endif
 										 
 	                                    <td class="center">
 											<div>
