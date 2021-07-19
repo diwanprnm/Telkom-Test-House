@@ -177,6 +177,10 @@ class FaqController extends Controller
             $faq->category = $request->input('category'); 
         }
 
+        if ($request->has('status')){
+            $faq->is_active = $request->input('status');
+        }
+
         $faq->updated_by = $currentUser->id; 
 
         try{
