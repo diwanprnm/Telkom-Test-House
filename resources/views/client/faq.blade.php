@@ -33,28 +33,32 @@
 						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa, velit, eum, delectus aliquid dolore numquam dolorem assumenda nisi nemo eveniet et illo tempore voluptatem cum in repudiandae pariatur. Architecto, exercitationem perspiciatis nam quod tenetur alias necessitatibus quibusdam eum accusamus a.</p>
 
 						<div class="divider"><em class="icon-circle"></em></div>
-						<?php
-							for ($i=0; $i <7 ; $i++) { 
-						?>
-								<div class="col_one_fourth nobottommargin {{ fmod($i+1, 4) == 0 ? 'col_last' : '' }}">
-									<h4>REGISTRASI AKUN</h4>
-									<div class="panel panel-default">
-										<div class="panel-heading">
-											<h6 class="panel-title">
-												<a class="accordion-toggle" data-toggle="collapse" data-target="#collapse{{ $i }}" href="javascript:void(0);">Berapa lama waktu yang dibutuhkan untuk aktivasi akun baru?</a>
-											</h6>
-										</div>
-										<div id="collapse{{ $i }}" class="panel-collapse collapse">
-											<div class="panel-body">
-												Setelah pelanggan melakukan registrasi akun, Admin akan melakukan approval terlebih dahulu paling lama 1 hari. Kemudian Admin akan menghubungi pelanggan bahwa akun sudah aktif dan dapat digunakan. 
-											</div>
-										</div>
-									</div>
-									<div class="line"></div>
+						<div class="col_one_fourth nobottommargin">
+							<h4>REGISTRASI AKUN</h4> <!-- CATEGORY -->
+							<div class="panel panel-default">
+								<div class="panel-heading"> <!-- QUESTION -->
+									<h6 class="panel-title">
+										<a class="accordion-toggle" data-toggle="collapse" data-target="#collapse-cat1" href="javascript:void(0);">1. Berapa lama waktu yang dibutuhkan untuk aktivasi akun baru?</a>
+									</h6>
 								</div>
-						<?php	
-							}
-						?>
+								<div id="collapse-cat1" class="panel-collapse collapse"> <!-- ANSWER -->
+									<div class="panel-body">
+										Setelah pelanggan melakukan registrasi akun, Admin akan melakukan approval terlebih dahulu paling lama 1 hari. Kemudian Admin akan menghubungi pelanggan bahwa akun sudah aktif dan dapat digunakan. 
+									</div>
+								</div>
+								<div class="panel-heading"> <!-- QUESTION -->
+									<h6 class="panel-title">
+										<a class="accordion-toggle" data-toggle="collapse" data-target="#collapse-cat2" href="javascript:void(0);">2. Berapa lama waktu yang dibutuhkan untuk aktivasi akun baru?</a>
+									</h6>
+								</div>
+								<div id="collapse-cat2" class="panel-collapse collapse"> <!-- ANSWER -->
+									<div class="panel-body">
+										Setelah pelanggan melakukan registrasi akun, Admin akan melakukan approval terlebih dahulu paling lama 1 hari. Kemudian Admin akan menghubungi pelanggan bahwa akun sudah aktif dan dapat digunakan. 
+									</div>
+								</div>
+							</div>
+							<div class="line"></div>
+						</div>
 					</div>
 					
 				</div>
