@@ -24,13 +24,13 @@ class STELControllerTest extends TestCase
     public function test_visit_create_stel()
 	{
 	   $user = User::find(1);
-	   $response =  $this->actingAs($user)->call('GET', 'admin/stel/create');  
+	   $response =  $this->actingAs($user)->call('GET', 'admin/stel/create/1');  
        $this->assertEquals(200, $response->status());
 	}
 
 	public function test_show()
 	{
-		$response =  $this->actingAs(User::find(1))->call('GET', 'admin/stel/1234');  
+		$response =  $this->actingAs(User::find(1))->call('GET', 'admin/stel/1');  
 		$this->assertResponseStatus(200);
 	}
 
