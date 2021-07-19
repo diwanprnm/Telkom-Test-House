@@ -370,11 +370,17 @@
 													</td>
 												</tr>
 												<tr>
+													<td>Referensi Uji:</td>
+													<td>
+														{{ $data->device->test_reference }}
+													</td>
+												</tr>	
+												<tr>
 													<td>Perangkat:</td>
 													<td>
 														{{ $data->device->name }}
 													</td>
-												</tr>	
+												</tr>
 												<tr>
 													<td>Merek:</td>
 													<td>
@@ -435,6 +441,39 @@
 				</div>
 				@if(isset($admin_roles[0]))
 				@if($admin_roles[0]->registration_status)
+					<!-- Datasheet, Prinsipal, PLG_ID & NIB -->
+					@php 
+						$datasheet = 0; $datasheet_file = ''; $datasheet_link = '';
+						$prinsipal = 0; $prinsipal_file = ''; $prinsipal_link = '';
+						$sp3 = 0; $sp3_file = ''; $sp3_link = '';
+						
+					@endphp
+					@foreach($data->media as $item)
+						@if($item->name == 'File Lainnya')
+							@php 
+								$datasheet = 1;
+								$datasheet_file = $item->attachment;
+								$datasheet_link = URL::to('/admin/examination/media/download/'.$data->id.'/'.$item->name);
+							@endphp
+						@endif
+
+						@if($item->name == 'Surat Dukungan Prinsipal')
+							@php 
+								$prinsipal = 1;
+								$prinsipal_file = $item->attachment;
+								$prinsipal_link = URL::to('/admin/examination/media/download/'.$data->id.'/'.$item->name);
+							@endphp
+						@endif
+
+						@if($item->name == 'SP3')
+							@php 
+								$sp3 = 1;
+								$sp3_file = $item->attachment;
+								$sp3_link = URL::to('/admin/examination/media/download/'.$data->id.'/'.$item->name);
+							@endphp
+						@endif
+
+					@endforeach
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'id' => 'form-registrasi')) !!}
 					{!! csrf_field() !!}
 					<input type="hidden" name="status" class="form-control" value="Registrasi"/>
@@ -448,15 +487,51 @@
 									<label>
 										Form Uji
 									</label>
-									<input type="hidden" id="hide_attachment_form-registrasi" value="{{ $data->attachment }}">
-									@if($data->attachment != null)
+									<label>
+										: <a href="{{URL::to('cetakPengujian/'.$data->id)}}" target="_blank"> Download</a>
+									</label>
+									<br>
+									<label>
+										Datasheet
+									</label>
+									@if($datasheet_file != null)
 										<label>
-											: <a href="{{URL::to('/admin/examination/download/'.$data->id)}}"> Download</a>
+											: <a href="{{ $datasheet_link }}"> Download</a>
 										</label>
 									@else
 										<label>
 											: (Kosong)
 										</label>
+									@endif
+									@if($prinsipal)
+										<br>
+										<label>
+											Prinsipal
+										</label>
+										@if($prinsipal_file != null)
+											<label>
+												: <a href="{{ $prinsipal_link }}"> Download</a>
+											</label>
+										@else
+											<label>
+												: (Kosong)
+											</label>
+										@endif
+									@endif
+									@if($sp3)
+										<br>
+										<label>
+											PLG_ID & NIB
+										</label>
+										@if($sp3_file != null)
+											<label>
+												: <a href="{{ $sp3_link }}"> Download</a>
+											</label>
+										@else
+											<label>
+												: (Kosong)
+											</label>
+										@endif
 									@endif
 								</div>
 							</div>
@@ -563,6 +638,39 @@
 					</fieldset>
 				{!! Form::close() !!}
 				@else
+					<!-- Datasheet, Prinsipal, PLG_ID & NIB -->
+					@php 
+						$datasheet = 0; $datasheet_file = ''; $datasheet_link = '';
+						$prinsipal = 0; $prinsipal_file = ''; $prinsipal_link = '';
+						$sp3 = 0; $sp3_file = ''; $sp3_link = '';
+						
+					@endphp
+					@foreach($data->media as $item)
+						@if($item->name == 'File Lainnya')
+							@php 
+								$datasheet = 1;
+								$datasheet_file = $item->attachment;
+								$datasheet_link = URL::to('/admin/examination/media/download/'.$data->id.'/'.$item->name);
+							@endphp
+						@endif
+
+						@if($item->name == 'Surat Dukungan Prinsipal')
+							@php 
+								$prinsipal = 1;
+								$prinsipal_file = $item->attachment;
+								$prinsipal_link = URL::to('/admin/examination/media/download/'.$data->id.'/'.$item->name);
+							@endphp
+						@endif
+
+						@if($item->name == 'SP3')
+							@php 
+								$sp3 = 1;
+								$sp3_file = $item->attachment;
+								$sp3_link = URL::to('/admin/examination/media/download/'.$data->id.'/'.$item->name);
+							@endphp
+						@endif
+
+					@endforeach
     				<fieldset>
 						<legend>
 							Step Registrasi
@@ -573,15 +681,51 @@
 									<label>
 										Form Uji
 									</label>
-									<input type="hidden" value="{{ $data->attachment }}">
-									@if($data->attachment != null)
+									<label>
+										: <a href="{{URL::to('cetakPengujian/'.$data->id)}}" target="_blank"> Download</a>
+									</label>
+									<br>
+									<label>
+										Datasheet
+									</label>
+									@if($datasheet_file != null)
 										<label>
-											: <a href="{{URL::to('/admin/examination/download/'.$data->id)}}"> Download</a>
+											: <a href="{{ $datasheet_link }}"> Download</a>
 										</label>
 									@else
 										<label>
 											: (Kosong)
 										</label>
+									@endif
+									@if($prinsipal)
+										<br>
+										<label>
+											Prinsipal
+										</label>
+										@if($prinsipal_file != null)
+											<label>
+												: <a href="{{ $prinsipal_link }}"> Download</a>
+											</label>
+										@else
+											<label>
+												: (Kosong)
+											</label>
+										@endif
+									@endif
+									@if($sp3)
+										<br>
+										<label>
+											PLG_ID & NIB
+										</label>
+										@if($sp3_file != null)
+											<label>
+												: <a href="{{ $sp3_link }}"> Download</a>
+											</label>
+										@else
+											<label>
+												: (Kosong)
+											</label>
+										@endif
 									@endif
 								</div>
 							</div>
@@ -637,6 +781,39 @@
 					</fieldset>
 				@endif
 				@else
+					<!-- Datasheet, Prinsipal, PLG_ID & NIB -->
+					@php 
+						$datasheet = 0; $datasheet_file = ''; $datasheet_link = '';
+						$prinsipal = 0; $prinsipal_file = ''; $prinsipal_link = '';
+						$sp3 = 0; $sp3_file = ''; $sp3_link = '';
+						
+					@endphp
+					@foreach($data->media as $item)
+						@if($item->name == 'File Lainnya')
+							@php 
+								$datasheet = 1;
+								$datasheet_file = $item->attachment;
+								$datasheet_link = URL::to('/admin/examination/media/download/'.$data->id.'/'.$item->name);
+							@endphp
+						@endif
+
+						@if($item->name == 'Surat Dukungan Prinsipal')
+							@php 
+								$prinsipal = 1;
+								$prinsipal_file = $item->attachment;
+								$prinsipal_link = URL::to('/admin/examination/media/download/'.$data->id.'/'.$item->name);
+							@endphp
+						@endif
+
+						@if($item->name == 'SP3')
+							@php 
+								$sp3 = 1;
+								$sp3_file = $item->attachment;
+								$sp3_link = URL::to('/admin/examination/media/download/'.$data->id.'/'.$item->name);
+							@endphp
+						@endif
+
+					@endforeach
     				<fieldset>
 						<legend>
 							Step Registrasi
@@ -647,15 +824,51 @@
 									<label>
 										Form Uji
 									</label>
-									<input type="hidden" value="{{ $data->attachment }}">
-									@if($data->attachment != null)
+									<label>
+										: <a href="{{URL::to('cetakPengujian/'.$data->id)}}" target="_blank"> Download</a>
+									</label>
+									<br>
+									<label>
+										Datasheet
+									</label>
+									@if($datasheet_file != null)
 										<label>
-											: <a href="{{URL::to('/admin/examination/download/'.$data->id)}}"> Download</a>
+											: <a href="{{ $datasheet_link }}"> Download</a>
 										</label>
 									@else
 										<label>
 											: (Kosong)
 										</label>
+									@endif
+									@if($prinsipal)
+										<br>
+										<label>
+											Prinsipal
+										</label>
+										@if($prinsipal_file != null)
+											<label>
+												: <a href="{{ $prinsipal_link }}"> Download</a>
+											</label>
+										@else
+											<label>
+												: (Kosong)
+											</label>
+										@endif
+									@endif
+									@if($sp3)
+										<br>
+										<label>
+											PLG_ID & NIB
+										</label>
+										@if($sp3_file != null)
+											<label>
+												: <a href="{{ $sp3_link }}"> Download</a>
+											</label>
+										@else
+											<label>
+												: (Kosong)
+											</label>
+										@endif
 									@endif
 								</div>
 							</div>
@@ -3287,9 +3500,7 @@
 						<div class="row">
 							@foreach($data->media as $item)
 								@if($item->name == 'Laporan Uji')
-									@if($rev_uji == 0)
-										@php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;@endphp
-									@endif
+									@php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;@endphp
 									@if($item->attachment != '')
 									<div class="col-md-12">
 										<div class="form-group">
@@ -3326,9 +3537,6 @@
 										</div>
 									</div>
 									@endif
-								@endif
-								@if($item->name == 'Revisi Laporan Uji' && $rev_uji == 0)
-									@php $rev_uji = 1; $lap_uji_url = URL::to('/admin/examination/media/download/'.$item->id); $lap_uji_attach = $item->attachment;@endphp
 								@endif
 							@endforeach
 							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
@@ -3461,9 +3669,7 @@
 						<div class="row">
 							@foreach($data->media as $item)
 								@if($item->name == 'Laporan Uji')
-									@if($rev_uji == 0)
-										@php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;@endphp
-									@endif
+									@php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;@endphp
 									@if($item->attachment != '')
 									<div class="col-md-12">
 										<div class="form-group">
@@ -3500,9 +3706,6 @@
 										</div>
 									</div>
 									@endif
-								@endif
-								@if($item->name == 'Revisi Laporan Uji' && $rev_uji == 0)
-									@php $rev_uji = 1; $lap_uji_url = URL::to('/admin/examination/media/download/'.$item->id); $lap_uji_attach = $item->attachment;@endphp
 								@endif
 							@endforeach
 							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')

@@ -307,9 +307,21 @@
 															</td>
 														</tr>
 														<tr>
+															<td>Referensi Uji:</td>
+															<td>
+																{{ $item->device->test_reference }}
+															</td>
+														</tr>
+														<tr>
 															<td>Perangkat:</td>
 															<td>
 																{{ $item->device->name }}
+															</td>
+														</tr>	
+														<tr>
+															<td>Merek:</td>
+															<td>
+																{{ $item->device->mark }}
 															</td>
 														</tr>	
 														<tr>
@@ -325,7 +337,13 @@
 															</td>
 														</tr>	
 														<tr>
-															<td>Nomor Form Uji:</td>
+															<td>Serial Number:</td>
+															<td>
+																{{ $item->device->serial_number }}
+															</td>
+														</tr>	
+														<tr>
+															<td>Nomor Registrasi:</td>
 															<td>
 																{{ $item->function_test_NO }}
 															</td>
@@ -338,13 +356,23 @@
 																@endif
 															</td>
 														</tr>
+														<tr>
+															<td>Tanggal Uji Fungsi:</td>
+															<td>
+																@if($item->function_test_date_approval)
+																	@if($item->function_date != null)
+																		{{ $item->function_date }}
+																	@else
+																		{{ $item->deal_test_date }}
+																	@endif
+																@endif
+															</td>
+														</tr>
 													</tbody>
 												</table>
 											</div>
 											<div class=" pull-left">
-					                        	@if($item->attachment != '')
-					                        		<a class="btn btn-wide btn-primary pull-left" style="margin-left:10px" href="{{URL::to('/admin/examination/download/'.$item->id)}}"><em class="ti-download"></em> Form Uji</a>
-												@endif
+												<a class="btn btn-wide btn-primary pull-left" style="margin-left:10px" href="{{URL::to('cetakPengujian/'.$item->id)}}" target="_blank"><em class="ti-download"></em> Form Uji</a>
 												
 												@foreach($item->media as $item_SPB)
 													@if($item_SPB->name == 'SPB')

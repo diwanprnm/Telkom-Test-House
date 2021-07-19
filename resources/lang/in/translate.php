@@ -89,6 +89,10 @@ return [
 	'service_next'			=> 'Berikutnya',
 	'service_save'			=> 'Simpan',
 	'next'					=> 'Lanjut',
+
+	'service_operational_time'	=> 'Jam Operasional',
+
+	'operational_time'	=> 'Senin - Jumat : 09.00 - 17.00 ',
     
 	'contact'     		=> 'Kontak',
     'contact_us'		=> 'Kontak Kami',

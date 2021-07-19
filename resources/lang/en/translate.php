@@ -89,6 +89,10 @@ return [
 	'service_next'			=> 'Next',
 	'service_save'			=> 'Save',
 	'next'					=> 'Next',
+
+	'service_operational_time'	=> 'Operational Time',
+
+	'operational_time'	=> 'Mon - Fri : 09.00 am - 17.00 pm',
     
 	'contact'     		=> 'Contact',
     'contact_us'		=> 'Contact Us',
