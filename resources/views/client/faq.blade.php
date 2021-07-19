@@ -36,28 +36,27 @@
 						<div class="col_one_fourth nobottommargin">
 							<h4>REGISTRASI AKUN</h4> <!-- CATEGORY -->
 							<div class="panel panel-default">
-								<div class="panel-heading"> <!-- QUESTION -->
-									<h6 class="panel-title">
-										<a class="accordion-toggle" data-toggle="collapse" data-target="#collapse-cat1" href="javascript:void(0);">1. Berapa lama waktu yang dibutuhkan untuk aktivasi akun baru?</a>
-									</h6>
-								</div>
-								<div id="collapse-cat1" class="panel-collapse collapse"> <!-- ANSWER -->
-									<div class="panel-body">
-										Setelah pelanggan melakukan registrasi akun, Admin akan melakukan approval terlebih dahulu paling lama 1 hari. Kemudian Admin akan menghubungi pelanggan bahwa akun sudah aktif dan dapat digunakan. 
-									</div>
-								</div>
-								<div class="panel-heading"> <!-- QUESTION -->
-									<h6 class="panel-title">
-										<a class="accordion-toggle" data-toggle="collapse" data-target="#collapse-cat2" href="javascript:void(0);">2. Berapa lama waktu yang dibutuhkan untuk aktivasi akun baru?</a>
-									</h6>
-								</div>
-								<div id="collapse-cat2" class="panel-collapse collapse"> <!-- ANSWER -->
-									<div class="panel-body">
-										Setelah pelanggan melakukan registrasi akun, Admin akan melakukan approval terlebih dahulu paling lama 1 hari. Kemudian Admin akan menghubungi pelanggan bahwa akun sudah aktif dan dapat digunakan. 
-									</div>
-								</div>
+								
 							</div>
 							<div class="line"></div>
+							@foreach ($data as $category_key => $values)
+							<h4>{{ strtoupper($category_key)}}
+								<div class="panel panel-defaul">
+									@for($i = 0; $i < count($values); $i++)
+									<div class="panel-heading"> <!-- QUESTION -->
+										<h6 class="panel-title">
+											<a class="accordion-toggle" data-toggle="collapse" data-target="#collapse-cat{{$i}}" href="javascript:void(0);">{{$i+1}}. {{$values[$i]->question}}</a>
+										</h6>
+									</div>
+									<div id="collapse-cat{{$i}}" class="panel-collapse collapse"> <!-- ANSWER -->
+										<div class="panel-body">
+											{!! $values[$i]->answer !!} 
+										</div>
+									</div>
+									@endfor
+									<div class="line"></div>
+								</div>
+							@endforeach
 						</div>
 					</div>
 					

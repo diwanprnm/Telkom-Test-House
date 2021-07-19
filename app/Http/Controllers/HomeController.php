@@ -32,6 +32,15 @@ class HomeController extends Controller
 	private const DATA_SALES = 'data_stels';
 	private const TO_LOGIN = '/login';
 	private const MESSAGE = 'message';
+	private static $CATEGORY = [
+        '1' => 'Registrasi Akun',
+        '2' => 'STEL dan Pengujian Perangkat',
+        '3' => 'Uji Fungsi',
+        '4' => 'Invoice dan Pembayaran',
+        '5' => 'SPK',
+        '6' => 'Kapabilitas TTH',
+        '7' => 'Pengambilan Laporan dan Sertifikat'
+    ];
 	
 	/**
      * Show the application dashboard.
@@ -81,10 +90,19 @@ class HomeController extends Controller
     
     public function faq()
     {
-    	$data = Faq::where('is_active')->orderBy('category')->get();
+		$categoriesPair = [];
+    	$data = Faq::where('is_active', 1)->orderBy('category')->get();
+		for ($i = 0; $i < count($data); $i++) {
+			foreach (self::$CATEGORY as $key => $value) {
+				if ($key == $data[$i]->category) {
+					$data[$i]->category = $value;
+					$categoriesPair[$value][] = $data[$i];
+				}
+			}
+		}
     	$page = "faq";
 		return view('client.faq')
-			->with('data', $data)
+			->with('data', $categoriesPair)
 			->with('page', $page);
     }
 
