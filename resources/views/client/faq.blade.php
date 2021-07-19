@@ -40,9 +40,9 @@
 									<h4>REGISTRASI AKUN</h4>
 									<div class="panel panel-default">
 										<div class="panel-heading">
-											<h4 class="panel-title">
+											<h6 class="panel-title">
 												<a class="accordion-toggle" data-toggle="collapse" data-target="#collapse{{ $i }}" href="javascript:void(0);">Berapa lama waktu yang dibutuhkan untuk aktivasi akun baru?</a>
-											</h4>
+											</h6>
 										</div>
 										<div id="collapse{{ $i }}" class="panel-collapse collapse">
 											<div class="panel-body">
