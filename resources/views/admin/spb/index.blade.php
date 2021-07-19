@@ -104,7 +104,7 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group typeHTML">
 										<label>
 											Tipe Pengujian
 										</label>
@@ -130,7 +130,7 @@
 							</div>
 							<div class="row">
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group companyHTML">
 										<label>
 											Nama Perusahaan
 										</label>
@@ -154,7 +154,7 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group paymentStatusHTML">
 										<label>
 											Status Bayar
 										</label>
@@ -188,7 +188,7 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group sortHTML">
 										<label>
 											Sort by :
 										</label>
@@ -238,6 +238,9 @@
 		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 		                                Filter
 		                            </button>
+									<button id="reset-filter" class="btn btn-wide btn-white btn-squared pull-right" style="margin-right: 10px;">
+                                        Reset
+                                    </button>
 		                        </div>
 		                    </div>
 						</fieldset>
@@ -358,6 +361,32 @@
 	$('#company').trigger("chosen:updated");
 </script>
 <script type="text/javascript">
+	var typeHTML = '<select id="type" name="type" class="cs-select cs-skin-elastic" required>'+
+												'<option value="" disabled selected>Select...</option>'+
+                                               	'<option value="all">All</option>'+
+											@foreach($type as $item)
+													'<option value="{{ $item->id }}">{{ $item->name }}</option>'+
+											@endforeach
+										'</select>'
+	var paymentStatusHTML = '<select id="payment_status" name="payment_status" class="cs-select cs-skin-elastic" required>'+
+												'<option value="" disabled selected>Select...</option>'+
+                                                '<option value="all">All</option>'+
+                                                '<option value="1">SUDAH</option>'+
+                                                '<option value="0">BELUM</option>'+
+                                                '<option value="-1">KEDALUWARSA</option>'+
+										'</select>'
+	var sortByHTML = '<select id="sort_by" name="sort_by" class="cs-select cs-skin-elastic" required>'+
+												'<option value="" disabled>Select...</option>'+
+                                                '<option value="spb_date">Tanggal SPB Dikeluarkan</option>'+
+                                                '<option value="spb_number" selected>Nomor SPB</option>'+
+                                                '<option value="examination_type_id">Tipe Pengujian</option>'+
+                                                '<option value="company_name">Nama Perusahaan</option>'+
+										'</select>'
+	var sortTypeHTML = '<select id="sort_type" name="sort_type" class="cs-select cs-skin-elastic" required>'+
+												'<option value="" disabled>Select...</option>'+
+                                                '<option value="asc">ASC</option>'+
+                                               ' <option value="desc" selected>DESC</option>'+
+										'</select>'
 	jQuery(document).ready(function() {       
 		$('#search_value').keydown(function(event) {
 	        if (event.keyCode == 13) {
@@ -480,6 +509,20 @@
 			}
 			document.location.href = baseUrl+'/spb/excel?'+jQuery.param(params);
 	    };
+
+		document.getElementById("reset-filter").onclick = function() {
+			$('.cs-select').remove();
+            $('.typeHTML').append(typeHTML);
+            $('.paymentStatusHTML').append(paymentStatusHTML);
+			$('.sortHTML').append(sortByHTML).append(sortTypeHTML);
+			$('#after_date').val(null);
+			$('#before_date').val(null);
+			$('#spb').chosen().val('').trigger('chosen:updated');
+			$('#company').chosen().val('').trigger('chosen:updated');
+            [].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {	
+                new SelectFx(el);
+            } );
+        };
 	});
 </script>
 @endsection

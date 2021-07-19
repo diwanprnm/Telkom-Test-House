@@ -78,8 +78,8 @@ class FeedbackController extends Controller
             ->with($this::MESSAGE, $message)
             ->with($this::SEARCH, $search)
             ->with($this::STATUS, MyHelper::filterDefault($request->input($this::STATUS)))
-            ->with($this::BEFORE_DATE, MyHelper::filterDefault($request->input('before')))
-            ->with($this::AFTER_DATE, MyHelper::filterDefault($request->input('after')))
+            ->with($this::BEFORE_DATE, MyHelper::filterDefault($request->input('before_date')))
+            ->with($this::AFTER_DATE, MyHelper::filterDefault($request->input('after_date')))
             ->with('sort_by', MyHelper::filterDefault($request->input('sort_by')))
             ->with('sort_type', MyHelper::filterDefault($request->input('sort_type')));
     }

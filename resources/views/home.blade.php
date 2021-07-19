@@ -186,8 +186,23 @@
 <script src={{ asset("vendor/bootstrap-timepicker/bootstrap-timepicker.min.js") }}></script>
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
 <script type="text/javascript">
-    var typeHTML = document.getElementById("type").outerHTML;
-    var statusHTML = document.getElementById("status").outerHTML;
+    // var typeHTML = document.getElementById("type").outerHTML;
+    var typeHTML = '<select id="type" name="type" class="cs-select cs-skin-elastic" required>'+
+                        '<option value="" disabled selected>Select...</option>'+
+                        '<option value="all">All</option>'+
+                        @foreach($type as $item)
+                            '<option value="{{ $item->id }}">{{ $item->name }}</option>'+
+                        @endforeach
+                    '</select>';
+    // var statusHTML = document.getElementById("status").outerHTML;
+    var statusHTML = '<select id="status" name="status" class="cs-select cs-skin-elastic" required>'+
+                        '<option value="" disabled selected>Select...</option>'+
+                        '<option value="all">All</option>'+
+                        '<option value="1">Konfirmasi Registrasi oleh Admin</option>'+
+                        '<option value="2">Menunggu SPB</option>'+
+                        '<option value="3">Menunggu Pembayaran oleh User</option>'+
+                        '<option value="4">User telah melakukan Pembayaran</option>'+
+                    '</select>';
 	$( function() {
 		$( "#search_value" ).autocomplete({
 			minLength: 3,

@@ -233,16 +233,16 @@ class PDFMCTablePermohonan extends FPDF{
 		$this->Ln(4);
 		$this->SetFont('helvetica','',8);
 		if($this->param1 == 'QA'){
-			$this->Cell(185,5,"TLKM02/F/001 Versi 03",0,0,'L');		
+			$this->Cell(185,5,"TLKM02/F/001 Versi 04",0,0,'L');		
 		}
 		else if($this->param1 == 'TA'){
-			$this->Cell(185,5,"TLKM02/F/002 Versi 03",0,0,'L');		
+			$this->Cell(185,5,"TLKM02/F/002 Versi 04",0,0,'L');		
 		}
 		else if($this->param1 == 'VT'){
-			$this->Cell(185,5,"TLKM02/F/003 Versi 03",0,0,'L');		
+			$this->Cell(185,5,"TLKM02/F/003 Versi 04",0,0,'L');		
 		}
 		else if($this->param1 == 'KAL'){
-			$this->Cell(185,5,"TLKM02/F/004 Versi 03",0,0,'L');		
+			$this->Cell(185,5,"TLKM02/F/004 Versi 04",0,0,'L');		
 		}
 		//Position at 1.5 cm from bottom
 		$this->SetXY(-10,-11);

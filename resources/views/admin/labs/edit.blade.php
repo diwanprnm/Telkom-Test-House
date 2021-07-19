@@ -91,7 +91,7 @@
 								</div>
 							</div>
 							<div id="is_not_active_date">
-								<div class="col-md-6">
+								<!-- <div class="col-md-6">
 									<div class="form-group">
 										<label>
 											Tutup Sampai *
@@ -105,7 +105,7 @@
 											</span>
 										</p>
 									</div>
-								</div>
+								</div> -->
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>

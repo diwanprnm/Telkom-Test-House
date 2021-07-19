@@ -48,7 +48,7 @@
 							</legend>
 							<div class="row">
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group categoryHTML">
 										<label>
 											Kategori
 										</label>
@@ -98,7 +98,7 @@
 							</div>
 							<div class="row">
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group isActiveHTML">
 										<label>
 											Status
 										</label>
@@ -129,6 +129,9 @@
 		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 		                                Filter
 		                            </button>
+									<button id="reset-filter" class="btn btn-wide btn-white btn-squared pull-right" style="margin-right: 10px;">
+                                        Reset
+                                    </button>
 		                        </div>
 							</div>
 						</fieldset>
@@ -248,6 +251,19 @@
 	$('#year').trigger("chosen:updated");
 </script>
 <script type="text/javascript">
+	var categoryHTML = '<select id="category" name="category" class="cs-select cs-skin-elastic" required>'+
+												'<option value="" disabled selected>Select...</option>'+
+                                                '<option value="all">All</option>'+
+                                            @foreach ($examLab as $dataLab)
+													'<option value="{{$dataLab->id}}">{{$dataLab->name}}</option>'+
+											@endforeach
+									'</select>'
+	var isActiveHTML = '<select id="is_active" name="is_active" class="cs-select cs-skin-elastic" required>'+
+												'<option value="-1" disabled selected>Select...</option>'+
+                                                '<option value="-2">All</option>'+
+												'<option value="1">Active</option>'+
+												'<option value="0">Not Active</option>'+
+										'</select>'
 	$( function() {
 		$( "#search_value" ).autocomplete({
 			minLength: 3,
@@ -347,6 +363,16 @@
 			}
 			document.location.href = baseUrl+'/stel/excel?'+jQuery.param(params);
 	    };
+
+		document.getElementById("reset-filter").onclick = function() {
+            $('.cs-select').remove();
+            $('.isActiveHTML').append(isActiveHTML);
+			$('.categoryHTML').append(categoryHTML);
+			$('#year').chosen().val('').trigger('chosen:updated');
+            [].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {	
+                new SelectFx(el);
+            } );
+        };
 	});
 </script>
 @endsection
