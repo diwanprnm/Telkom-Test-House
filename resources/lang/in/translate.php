@@ -295,7 +295,8 @@ return [
 	'supported'	=> 'Didukung Oleh',
 	'menu_company'    		=> 'Perusahaan',
 	'menu_testing'    		=> 'Pengujian',
-	'menu_ref'		=> 'Referensi',
+	'menu_ref'		=> 'Daftar Referensi',
+	'menu_reference'		=> 'Ref. Uji',
 	
 	'header_title'		=> 'Layanan Pengujian Perangkat Telekomunikasi',
 	'see_product'		=> 'Beli Dokumen STEL',
@@ -464,4 +465,13 @@ return [
 
 	'payment_process' => 'Proses Pembayaran',
 	'uf_warning' => 'Anda sudah 2 kali gagal melakukan Uji Fungsi. Anda bisa mengajukan kembali Uji Fungsi 2 bulan sejak Uji Fungsi terakhir, yaitu ',
+
+	'purchase_history_updateSTEL_unpaid' => 'Transaksi ini memiliki dokumen yang kedaluwarsa. Silakan hubungi staff kami untuk menghapus transaksi ini, lalu anda dapat melakukan transaksi ulang.',
+	'purchase_history_updateSTEL_paid' => 'Anda mendapatkan dokumen ini dengan gratis.',
+	'purchase_history_updateSTEL_delivered_warning' => 'Transaksi ini memiliki dokumen yang kedaluwarsa. Silakan lakukan transaksi baru untuk memperbarui dokumen tersebut.',
+	'purchase_history_updateSTEL_delivered_info' => 'Transaksi ini memiliki dokumen yang kedaluwarsa. Anda mendapatkan dokumen terbaru dengan gratis.',
+	'purchase_history_updateSTEL_available' => 'Pembaruan Tersedia',
+	'purchase_history_updateSTEL_warning' => 'Transaksi ini memiliki dokumen yang kedaluwarsa',
+
+	'message_not_found_products' => 'Dokumen yang anda cari tidak ditemukan. Silakan mencari menggunakan kata kunci yang lain.',
 ];

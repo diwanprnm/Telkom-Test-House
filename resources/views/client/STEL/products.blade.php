@@ -70,55 +70,70 @@
 				<!-- End of padding --> 
 				<div class="clearfix"></div> 
 				<div id="products" class=" list-group">
-				 	@foreach($stels as $stel) 
-			        <div class="item  col-xs-4 col-lg-4 list-group-item">
-			            <div class="thumbnail">
-			                <img class="group list-group-image" src="images/product/note.png" width="240px" alt="" />
-			                <div class="caption">
-			                    <h4 class="group inner list-group-item-heading">
-			                       {{$stel->name}}
-			                    </h4>
-			                   	<p class="group inner list-group-item-text">
-			                    	{{ trans('translate.stel_code') }}	:	{{$stel->code}}
-								</p>
-			                    <div class="row">
-			                        <div class="col-xs-12 col-md-6">
-			                            <p class="lead">
-			                              {{ trans('translate.stel_rupiah') }}. @php echo number_format($stel->price); @endphp<span style="color:red;font-size: 12px;"> {{ trans('translate.stel_exclude') }} ppn (10%)</span></p>
-			                        </div>
-			                        <div class="col-xs-12 col-md-6">
-			                        <form action="products" method="POST">
-										{!! csrf_field() !!}
-										<input type="hidden" name="id" value="{{ $stel->id }}">
-										<input type="hidden" name="name" value="{{ $stel->name }}">
-										<input type="hidden" name="code" value="{{ $stel->code }}">
-										<input type="hidden" name="price" value="{{ $stel->price }}">
-										@php  
-										$is_exist = false;
-										 foreach (Cart::content() as $item) {
-										 	if($item->id == $stel->id){$is_exist = true;}
-										 } 
-										@endphp
+					@if($stels->count() > 0)
+						@foreach($stels as $stel) 
+						<div class="item  col-xs-4 col-lg-4 list-group-item">
+							<div class="thumbnail">
+								<img class="group list-group-image" src="images/product/note.png" width="240px" alt="" />
+								<div class="caption">
+									<h4 class="group inner list-group-item-heading">
+									{{$stel->name}}
+									</h4>
+									<p class="group inner list-group-item-text">
+										{{ trans('translate.stel_code') }}	:	{{$stel->code}}
+									</p>
+									<div class="row">
+										<div class="col-xs-12 col-md-6">
+											<p class="lead">
+											{{ trans('translate.stel_rupiah') }}. @php echo number_format($stel->price); @endphp<span style="color:red;font-size: 12px;"> {{ trans('translate.stel_exclude') }} ppn (10%)</span></p>
+										</div>
+										<div class="col-xs-12 col-md-6">
+										<form action="products" method="POST">
+											{!! csrf_field() !!}
+											<input type="hidden" name="id" value="{{ $stel->id }}">
+											<input type="hidden" name="name" value="{{ $stel->name }}">
+											<input type="hidden" name="code" value="{{ $stel->code }}">
+											<input type="hidden" name="price" value="{{ $stel->price }}">
+											@php  
+											$is_exist = false;
+											foreach (Cart::content() as $item) {
+												if($item->id == $stel->id){$is_exist = true;}
+											} 
+											@endphp
 
-									  	@if(($stel->is_buyed == 0) && !$is_exist )
-									  		<input type="submit" class="btn btn-success" value="{{ trans('translate.stel_add_to_cart') }}">
-										@else
-											@if($is_exist)
-												<label style="color:red;">{{ trans('translate.stel_in_cart') }}</label>
+											@if(($stel->is_buyed == 0) && !$is_exist )
+												<input type="submit" class="btn btn-success" value="{{ trans('translate.stel_add_to_cart') }}">
 											@else
-												<label style="color:red;">{{ trans('translate.stel_buyed') }}</label>
+												@if($is_exist)
+													<label style="color:red;">{{ trans('translate.stel_in_cart') }}</label>
+												@else
+													<label style="color:red;">{{ trans('translate.stel_buyed') }}</label>
+												@endif
+											
 											@endif
-										
-										@endif
-									</form>
-			                            
-			                        </div>
-			                    </div>
-			                </div>
-			            </div>
-			        </div>
+										</form>
+											
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 
-			        @endforeach
+						@endforeach
+					@else
+						<div class="item  col-xs-4 col-lg-4 list-group-item">
+							<div class="thumbnail">
+								<div class="caption">
+									<h4 class="group inner list-group-item-heading">
+										{{ trans('translate.data_not_found') }}
+									</h4>
+									<p class="group inner list-group-item-text">
+										{{ trans('translate.message_not_found_products') }}
+									</p>
+								</div>
+							</div>
+						</div>
+					@endif
 			         
 			    </div>
 				<!-- End of offset1-->	

@@ -12,14 +12,14 @@
 		<section id="page-title">
 			<div class="row">
 				<div class="col-sm-8">
-					<h1 class="mainTitle">STEL/STD</h1>
+					<h1 class="mainTitle">Referensi Uji</h1>
 				</div>
 				<ol class="breadcrumb">
 					<li>
-						<span>Beranda</span>
+						<span>Data Master</span>
 					</li>
 					<li class="active">
-						<span>STEL/STD</span>
+						<span>Referensi Uji</span>
 					</li>
 				</ol>
 			</div>
@@ -118,9 +118,9 @@
 											@endif
 											
 											@if ($status == '0')
-												<option value="0" selected>Not Active</option>
+												<option value="0" selected>Inactive</option>
 											@else
-												<option value="0">Not Active</option>
+												<option value="0">Inactive</option>
 											@endif
 										</select>
 									</div>
@@ -153,9 +153,9 @@
 
 			<div class="row">
 				<div class="col-md-6 pull-right" style="margin-bottom:10px">
-					<a style=" color:white !important;" href="{{URL::to('/admin/stel/create')}}">
+					<a style=" color:white !important;" href="{{URL::to('/admin/stel/createMaster')}}">
 						<button type="button" class="btn btn-wide btn-green btn-squared pull-right" >
-						Tambah STEL
+						Tambah Referensi Uji
 						</button>         
 					</a>
 		        </div>
@@ -165,16 +165,13 @@
 							<thead>
 								<tr>
 									<th class="center" scope="col">No</th>
-									<th class="center" scope="col">Id</th>
-									<th class="center" scope="col">Kode</th>
-									<th class="center" scope="col">Nama</th>
-									<th class="center" scope="col">Tipe</th>
-									<th class="center" scope="col">Versi</th>
-									<th class="center" scope="col">Tahun</th>
-                                    <th class="center" scope="col">Harga</th>
-                                    <th class="center" scope="col">Total</th>
-                                    <th class="center" scope="col">Status</th>
-                                    <th class="center" scope="col">Aksi</th>
+									<th class="left" scope="col">No. Dokumen</th>
+									<th class="left" scope="col">Nama</th>
+									<th class="left" scope="col">Bahasa</th>
+									<th class="left" scope="col">Lab</th>
+									<th class="center" scope="col">Status</th>
+                                    <th class="center" colspan="2" scope="col">Aksi</th>
+									<th class="center" scope="col"></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -182,31 +179,41 @@
 								@foreach($data as $item)
 									<tr>
 										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
-										<td class="center">{{ $item->id }}</td>
-										<td class="center">{{ $item->code }}</td>
-										<td class="center">{{ $item->name }}</td>
-										<td class="center">{{ @$item->examinationLab->name }}</td>
-										<td class="center">{{ $item->version }}</td>
-										<td class="center">{{ $item->year }}</td>
-	                                    <td class="center">@php echo number_format((float)$item->price, 0, '.', ','); @endphp</td>
-	                                    <td class="center">@php echo number_format((float)$item->total, 0, '.', ','); @endphp</td>
-	                                    @if($item->is_active)
+										<td class="left">{{ $item->code }}</td>
+										<td class="left">{{ $item->name }}</td>
+										<td class="left">{{ $item->stelMaster->lang }}</td>
+										<td class="left">{{ $item->lab_name }}</td>
+										@if($item->is_active)
 	                                    	<td class="center"><span class="label label-sm label-success">Active</span></td>
 	                                    @else
-	                                    	<td class="center"><span class="label label-sm label-warning">Not Active</span></td>
+	                                    	<td class="center"><span class="label label-sm label-warning">Inactive</span></td>
 	                                    @endif
 	                                    <td class="center">
 											<div>
 												<a href="{{URL::to('admin/stel/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
+											</div>
+										</td>
+										<td class="center">
+											<div>
 												{!! Form::open(array('url' => 'admin/stel/'.$item->id, 'method' => 'DELETE')) !!}
 													{!! csrf_field() !!}
 													<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')"><em class="fa fa-times fa fa-white"></em></button>
 												{!! Form::close() !!}
 											</div>
 										</td>
+										<td class="center">
+											<a href="{{URL::to('admin/stel/'.$item->stels_master_id)}}" class="btn btn-wide btn-primary btn-margin" tooltip-placement="top" tooltip="Detail">Detail </a>
+										</td>
 									</tr>
 								@php $no++ @endphp
 								@endforeach
+								@if($no == 1)
+								<tr>
+									<td colspan=9 class="center">
+										Data Not Found
+									</td>
+								</tr>
+								@endif
                             </tbody>
 						</table>
 					</div>

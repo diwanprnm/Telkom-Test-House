@@ -293,7 +293,8 @@ return [
     'supported'	=> 'Supported By',
     'menu_company'    		=> 'Company',
 	'menu_testing'    		=> 'Testing',
-	'menu_ref'		=> 'Reference',
+	'menu_ref'		=> 'Reference List',
+	'menu_reference'		=> 'Test Reference',
 	
 	'header_title'		=> 'Telecommunication Device Testing Service',
 	'see_product'		=> 'Buy STEL(s)',
@@ -461,4 +462,13 @@ return [
 
 	'payment_process' => 'Payment Process',
 	'uf_warning' => 'You have failed the Function Test twice. You can reapply a Function Test 2 months since the last Function Test, i.e. ',
+
+	'purchase_history_updateSTEL_unpaid' => 'This transaction has expired documents. Please contact our staff to delete this transaction, then you can re-transaction.',
+	'purchase_history_updateSTEL_paid' => 'You get this document for free.',
+	'purchase_history_updateSTEL_delivered_warning' => 'This transaction has expired documents. Please make a new transaction to update the document.',
+	'purchase_history_updateSTEL_delivered_info' => 'This transaction has expired documents. You get the latest documents for free.',
+	'purchase_history_updateSTEL_available' => 'Update Available',
+	'purchase_history_updateSTEL_warning' => 'This transaction has expired documents',
+
+	'message_not_found_products' => 'The document you are looking for was not found. Please search using other keywords.',
 ];
