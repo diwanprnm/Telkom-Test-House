@@ -23,15 +23,15 @@ class STELControllerTest extends TestCase
 	}
     public function test_visit_create_stel()
 	{
-	//    $user = User::find(1);
-	//    $response =  $this->actingAs($user)->call('GET', 'admin/stel/create/1');  
-    //    $this->assertEquals(200, $response->status());
+	   $user = User::find(1);
+	   $response =  $this->actingAs($user)->call('GET', 'admin/stel/create/1');  
+       $this->assertEquals(200, $response->status());
 	}
 
 	public function test_show()
 	{
-		// $response =  $this->actingAs(User::find(1))->call('GET', 'admin/stel/1');  
-		// $this->assertResponseStatus(200);
+		$response =  $this->actingAs(User::find(1))->call('GET', 'admin/stel/1');  
+		$this->assertResponseStatus(200);
 	}
 
     public function test_stores_stel()
@@ -97,14 +97,14 @@ class STELControllerTest extends TestCase
 
     public function test_delete_stel()
 	{ 
-		// $user = User::find(1); 
+		$user = User::find(1); 
 
-       	// $stel = STEL::latest()->first();
-		// $response =  $this->actingAs($user)->call('DELETE', 'admin/stel/'.$stel->id);  
-        // $this->assertEquals(302, $response->status()); 
+       	$stel = STEL::latest()->first();
+		$response =  $this->actingAs($user)->call('DELETE', 'admin/stel/'.$stel->id);  
+        $this->assertEquals(302, $response->status()); 
 	} 
-/*
-	public function testExcel()
+
+	  public function testExcel()
     {         
         //make request
         $response = $this->actingAs( User::find(1))->call('GET',"/stel/excel");
@@ -155,5 +155,4 @@ class STELControllerTest extends TestCase
         // Delete file from minio
         \Storage::disk('minio')->delete("stel/$stel->attachment");
     }
-*/
 }
