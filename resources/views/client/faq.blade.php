@@ -38,8 +38,8 @@
 							@foreach ($data as $category_key => $values)
 
 							<h4>{{ strtoupper($category_key)}}
-								<div class="panel panel-defaul">
-									@foreach($i = 0; $i < count($values); $i++)
+								<div class="panel panel-default">
+									@for($i = 0; $i < count($values); $i++)
 									@php $cat++; @endphp
 									<div class="panel-heading"> <!-- QUESTION -->
 										<h6 class="panel-title">

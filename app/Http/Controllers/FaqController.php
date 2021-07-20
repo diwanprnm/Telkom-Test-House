@@ -68,7 +68,7 @@ class FaqController extends Controller
         }else{
             $query = Faq::whereNotNull('created_at'); 
             
-            $faq = $query->orderBy(self::QUESTION)
+            $faq = $query->orderBy('category')
                         ->paginate($paginate);
         }
         
