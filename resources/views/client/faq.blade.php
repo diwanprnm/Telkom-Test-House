@@ -33,29 +33,28 @@
 						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa, velit, eum, delectus aliquid dolore numquam dolorem assumenda nisi nemo eveniet et illo tempore voluptatem cum in repudiandae pariatur. Architecto, exercitationem perspiciatis nam quod tenetur alias necessitatibus quibusdam eum accusamus a.</p>
 
 						<div class="divider"><em class="icon-circle"></em></div>
-						<div class="col_one_fourth nobottommargin">
-							@php $cat = 1; @endphp
-							@foreach ($data as $category_key => $values)
-
+						@php $cat = 1; @endphp
+						@foreach ($data as $category_key => $values)
+						<div class="col_one_fourth nobottommargin {{ $i = 4 ? 'col_last' : '' }}">
 							<h4>{{ strtoupper($category_key)}}
-								<div class="panel panel-default">
-									@for($i = 0; $i < count($values); $i++)
-									@php $cat++; @endphp
-									<div class="panel-heading"> <!-- QUESTION -->
-										<h6 class="panel-title">
-											<a class="accordion-toggle" data-toggle="collapse" data-target="#collapse-cat{{$cat}}" href="javascript:void(0);">{{$i+1}}. {{$values[$i]->question}}</a>
-										</h6>
-									</div>
-									<div id="collapse-cat{{$cat}}" class="panel-collapse collapse"> <!-- ANSWER -->
-										<div class="panel-body">
-											{!! $values[$i]->answer !!} 
-										</div>
-									</div>
-									@endfor
+							<div class="panel panel-default">
+								@for($i = 0; $i < count($values); $i++)
+								@php $cat++; @endphp
+								<div class="panel-heading"> <!-- QUESTION -->
+									<h6 class="panel-title">
+										<a class="accordion-toggle" data-toggle="collapse" data-target="#collapse-cat{{$cat}}" href="javascript:void(0);">{{$i+1}}. {{$values[$i]->question}}</a>
+									</h6>
 								</div>
-							@endforeach
-							<div class="line"></div>
+								<div id="collapse-cat{{$cat}}" class="panel-collapse collapse"> <!-- ANSWER -->
+									<div class="panel-body">
+										{!! $values[$i]->answer !!} 
+									</div>
+								</div>
+								@endfor
+							</div>
 						</div>
+						@endforeach
+						<div class="line"></div>
 					</div>
 					
 				</div>
