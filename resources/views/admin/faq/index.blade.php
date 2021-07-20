@@ -57,9 +57,9 @@
 							<thead>
 								<tr>
 									<th class="center" scope="col">No</th>
-									<th class="center" scope="col">Kategori</th> 
-									<th class="center" scope="col">Pertanyaan</th> 
-									<th class="center" scope="col">Jawaban</th> 
+									<th scope="col">Kategori</th> 
+									<th scope="col">Pertanyaan</th> 
+									<th scope="col">Jawaban</th> 
 									<th class="center" scope="col">Status</th>
                                     <th class="center" scope="col">Aksi</th>
 								</tr>
@@ -68,10 +68,10 @@
 								@php $no=1; @endphp
 								@foreach($data as $item)
 									<tr>
-										<td class="center">{{ $no }}</td>
-										<td class="center">{{ $item->category }}</td>
-										<td class="center">{{ $item->question }}</td>
-										<td class="center">{!! $item->answer !!}</td>
+										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
+										<td>{{ $item->category }}</td>
+										<td>{{ $item->question }}</td>
+										<td>{!! $item->answer !!}</td>
 										@if($item->is_active)
 											<td class="center"><span class="label label-sm label-success">Active</span></td>
 										@else
