@@ -230,7 +230,7 @@
 <script type="text/javascript" src="{{url('assets/js/moment.js')}}"></script>
 <script type="text/javascript" src="{{url('assets/js/pb.calendar.min.js')}}"></script>
 <script>
-var form = $("#form-permohonan");
+
 const indonesiaDayName = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
 const indonesiaMonthName = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 const can_not_rent_chamber = "{{ trans('translate.can_not_rent_chamber') }}";
@@ -238,9 +238,18 @@ const rent_chamber_confirmation = "{{ trans('translate.rent_chamber_confirmation
 const rent_chamber_duration = "{{ trans('translate.rent_chamber_duration') }}";
 const chamberNotes = "{!! trans('translate.rent_chamber_client_notes') !!}";;
 const locale = "{{ trans('translate.locale') }}";
+const form = $("#form-permohonan");
 const currentDate = new Date();
+let sendFormRentChamber;
 let bookedDates = [];
 let toBeBookedDates = [];
+let messagesServerError = "Server error when submiting data.";
+let messagesChamberHasBeenRented = "The date you requested is already rented by other customer.";
+if (locale == 'Indonesia'){
+	messagesServerError = "Kesalahan pada server saat pengiriman data.";
+	messagesChamberHasBeenRented = "Tanggal yang anda minta baru saja di sewa pelanggan lain.";
+
+}
 
 $(window).bind('beforeunload',function(){
 	return 'are you sure you want to leave and your data will be lost?';
@@ -252,7 +261,7 @@ form.validate({
 	}
 });
 
-var formWizard = form.children("div").steps({
+const formWizard = form.children("div").steps({
 	headerTag: "h2",
 	bodyTag: "fieldset",
 	autoFocus: true,
@@ -270,7 +279,11 @@ var formWizard = form.children("div").steps({
 		}
 
 		if (currentIndex == 1 && newIndex == 2){
-			// do nothing
+			let succedd = sendFormRentChamber();
+			console.log(succedd);
+			if (!succedd){
+				return false;
+			}
 		}
 
 		if(newIndex < currentIndex ){ 
@@ -315,6 +328,7 @@ var formWizard = form.children("div").steps({
 		window.location.href = '@php echo url("/pengujian");@endphp';
 	}
 });
+
 $('ul[role="tablist"]').hide();
 
 $( document ).ready(function() {
@@ -322,8 +336,6 @@ $( document ).ready(function() {
 	const minDate = moment(new Date()).add(7, 'days').format('YYYY-MM-DD');
 	let current_yyyymm_ = moment().format("YYYYMM");
 	let current_month = moment().format("MM");
-	
-
 
 	let pbCalendarOption = {
 		'day_selectable' : false,
@@ -374,13 +386,6 @@ $( document ).ready(function() {
 		});
 	}
 
-	// //onclick rent
-	// $('#modal-rent-button').click(() => {
-	// 	let rentDuration = parseInt($("#rent_duration").find(":selected").val());
-	// 	let rentDate = $('#rent_date').val();
-	// 	checkAvaliableAndBooked(rentDate, rentDuration);
-	// 	pbCalendar.update_view();
-	// });
 
 	const checkAvaliableAndBooked = (date, numDays) =>{
 		const dates = [];
@@ -396,6 +401,13 @@ $( document ).ready(function() {
 		return true;
 	}
 
+	// //onclick rent
+	// $('#modal-rent-button').click(() => {
+	// 	let rentDuration = parseInt($("#rent_duration").find(":selected").val());
+	// 	let rentDate = $('#rent_date').val();
+	// 	checkAvaliableAndBooked(rentDate, rentDuration);
+	// 	pbCalendar.update_view();
+	// });
 
 	// 	for (i=0; i<numDays; i++){
 	// 		willBeBookedDates = moment(date).add(i+holidayCount, 'days');
@@ -472,19 +484,42 @@ $( document ).ready(function() {
 	
 	myDatePicker.change(calculateEndDate);
 	$('#duratonOfRent').change(calculateEndDate);
-
 	// $('#buttonSubmitHelper').click(()=> {
-	// 	$.ajax({
-	// 		url: "{{url('testForm')}}",
-	// 		type: 'POST',
-	// 		data: new FormData($("#form-permohonan")[0]),
-	// 		processData: false,
-	// 		contentType: false,
-	// 		success: function(msg) {
-	// 			alert('Email Sent');
-	// 		}               
-	// 	});
+	// 	sendFormRentChamber();
 	// });
+
+	sendFormRentChamber = () => {
+		let isSuccedd = false;
+		$.ajax({
+			url: "{{url('testForm')}}",
+			type: 'POST',
+			async: false,
+			data: new FormData($("#form-permohonan")[0]),
+			processData: false,
+			contentType: false,
+			beforeSend: function(){
+				$("body").addClass("loading");  
+			},
+			success: (res) => {
+				$("body").removeClass("loading"); 
+				isSuccedd = res.success; 
+				console.log(res, res['success']);
+				if (!res.success){
+					alert(messagesChamberHasBeenRented);
+					initCalendarByAjax();
+				}
+			},
+			error: (err) => {
+				$("body").removeClass("loading");  
+				alert(messagesServerError);
+				console.error(messagesServerError, err);
+				initCalendarByAjax();
+				isSuccedd = false;
+			}
+		});
+		return isSuccedd;
+	}
+
 });
 
 const setDayLabelWithClass = (list, color) => list.forEach( item => $(`.row-day .col[data-day-yyyymmdd='${item}']`).addClass(`${color} rounded-corner`) );

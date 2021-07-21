@@ -451,26 +451,42 @@ class ChamberController extends Controller
         $dates = (json_decode( $request->dates));
         $currentUser = Auth::user();
         if (!$currentUser){ return redirect('login');}
+        $serializeDates = [];
+        
+        foreach ($dates as $date){ array_push($serializeDates, Carbon::createFromFormat('Ymd', $date)->format('Y-m-d'));}
+        $response = [
+            'success' => false,
+            'message' => 'The chamber has been booked'
+        ];
+
+        $isChamberBooked = Chamber_detail::whereIn('date', $serializeDates)->count();
+        if ($isChamberBooked){
+            return $response;
+        }
 
         $chamber = new Chamber;
         $chamber->id = Uuid::uuid4();
         $chamber->user_id = $currentUser->id;
         $chamber->company_id = $currentUser->company_id;
         $chamber->invoice = $this->getNextInvoice();
-        $chamber->start_date = $dates[0];
-        $chamber->end_date = end($dates);
-        $chamber->duration = count($dates);
+        $chamber->start_date = $serializeDates[0];
+        $chamber->end_date = end($serializeDates);
+        $chamber->duration = count($serializeDates);
         $chamber->created_by = $currentUser->id;
         $chamber->save();
 
         $chamberDetails = [];
-        foreach ($dates as $date){
+        foreach ($serializeDates as $date){
             $chamberDetail = new Chamber_detail;
-            $chamberDetail->date = Carbon::createFromFormat('Ymd', $date)->format('Y-m-d');
+            $chamberDetail->date = $date;
             $chamberDetail->chamber_id = $chamber->id;
             $chamberDetail->save();
         }
-        dd('ok');
+
+        $response['success'] = true;
+        $response['message'] = "You have successfully rent the chamber";
+
+        return response()->json($response);
     }
 
 
