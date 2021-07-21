@@ -216,6 +216,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::resource('/videoTutorial', 'VideoTutorialController');
 	Route::post('/orderSlideshow', 'SlideshowController@orderSlideshow');
 	Route::resource('/email_editors', 'EmailEditorController');
+	Route::resource('/chamber', 'ChamberAdminController');
 });
 	Route::get('/uploadCertification', 'UploadProductionController@uploadCertification');
 	Route::get('/uploadCompany', 'UploadProductionController@uploadCompany');
