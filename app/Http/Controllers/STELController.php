@@ -168,7 +168,7 @@ class STELController extends Controller
     public function createMaster()
     {
         $type_id = [0 => '1', 1 => '2',2 => '3', 3 => '4',4 => '5', 5 => '6',6 => '7'];
-        $type_name = [0 => 'STEL', 1 => 'S-TSEL',2 => 'PED / STD', 3 => 'INTERNAL',4 => 'PERDIRJEN', 5 => 'PERMENKOMINFO',6 => 'Lainnya ...'];
+        $type_name = [0 => 'STEL', 1 => 'S-TSEL',2 => 'PED / STD / KJN', 3 => 'INSTRUKSI KERJA',4 => 'PERDIRJEN', 5 => 'PERMENKOMINFO',6 => 'Lainnya ...'];
         $type = collect($type_id)->zip($type_name)->transform(function ($values) {
             return [
                 'id' => $values[0],
