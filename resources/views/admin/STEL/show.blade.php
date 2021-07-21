@@ -93,8 +93,8 @@
 										switch ($data->type) {
 											case '1':$type = 'STEL';break;
 											case '2':$type = 'S-TSEL';break;
-											case '3':$type = 'PED / STD';break;
-											case '4':$type = 'INTERNAL';break;
+											case '3':$type = 'PED / STD / KJN';break;
+											case '4':$type = 'INSTRUKSI KERJA';break;
 											case '5':$type = 'PERDIRJEN';break;
 											case '6':$type = 'PERMENKOMINFO';break;
 											case '7':$type = 'Lainnya ...';break;

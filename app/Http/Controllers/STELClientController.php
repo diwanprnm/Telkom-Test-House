@@ -57,7 +57,7 @@ class STELClientController extends Controller
             case 'PERMENKOMINFO':
                 $stel_type = 6;
                 break;
-            case 'ANOTHER':
+            case 'OTHER':
                 $stel_type = 7;
                 break;
         

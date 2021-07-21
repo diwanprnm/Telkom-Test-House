@@ -248,7 +248,7 @@
 				$("#master_code").prop('required', true);
 				$("#year").prop('required', true);
 				$("#version").prop('required', false);
-				$("#code").prop('readonly', false);
+				$("#code").prop('readonly', true);
 				code = type_name+' '+$("#master_code").val()+'/Dirjen/'+$("#year").val();
 				$("#code").val(code);
 				break;
@@ -326,7 +326,7 @@
 					$("#name").val('');
 					$("#year").prop('required', true);
 					$("#version").prop('required', false);
-					$("#code").prop('readonly', false);
+					$("#code").prop('readonly', true);
 					code = type_name+' '+$("#master_code").val()+'/Dirjen/'+$("#year").val();
 					$("#code").val(code);
 					break;
@@ -398,7 +398,7 @@
 				break;
 			case '5':
 				type_name = 'Perdirjen';
-				$("#code").prop('readonly', false);
+				$("#code").prop('readonly', true);
 				code = type_name+' '+$("#master_code").val()+'/Dirjen/'+$("#year").val();
 				$("#code").val(code);
 				break;

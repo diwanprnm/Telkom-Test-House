@@ -86,10 +86,10 @@
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="{{url('STEL')}}">STEL</a></li>
                             <li><a href="{{url('S-TSEL')}}">S-TSEL</a></li>
-                            <li><a href="{{url('STD')}}">PED/STD</a></li>
+                            <li><a href="{{url('STD')}}">PED/STD/KJN</a></li>
                             <li><a href="{{url('PERMENKOMINFO')}}">PERMENKOMINFO</a></li>
                             <li><a href="{{url('PERDIRJEN')}}">PERDIRJEN</a></li>
-                            <li><a href="{{url('ANOTHER')}}">ANOTHER</a></li>
+                            <li><a href="{{url('OTHER')}}">OTHER(s)</a></li>
                         </ul>
                     </li>
                     <li>
