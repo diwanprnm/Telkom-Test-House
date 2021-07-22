@@ -33,7 +33,7 @@
 			@endif
 			<div class="row">
 				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 left-content"></div>
-				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 right-content"><a href="#videoStory" class="btn btn-default btn-lg more pull-right" id="videoLink">{{ trans('translate.video_guide') }} <i class="fa fa-play-circle" aria-hidden="true">&nbsp;</i></a></div>
+				<!-- <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 right-content"><a href="#videoStory" class="btn btn-default btn-lg more pull-right" id="videoLink">{{ trans('translate.video_guide') }} <i class="fa fa-play-circle" aria-hidden="true">&nbsp;</i></a></div> -->
 			</div>
 			<div id="videoStory" class="mfp-hide" style="max-width: 75%; margin: 0 auto;">
 				<iframe title="video story" width="853" height="480" src="{{ $video_url }}" allowfullscreen></iframe>

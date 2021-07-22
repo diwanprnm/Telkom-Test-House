@@ -137,24 +137,24 @@
 										</div>
 										<div class="form-group">
 											<label for="f1-nama-perusahaan">{{ trans('translate.service_company_name') }}</label>
-											<input type="text" name="f1-nama-perusahaan" placeholder="PT. Maju Jaya" id="f1-nama-perusahaan" readonly value="{{$userData->namaPerusahaan}}">
+											<input type="text" name="f1-nama-perusahaan" placeholder="{{ trans('translate.example') }}PT. Maju Jaya" id="f1-nama-perusahaan" readonly value="{{$userData->namaPerusahaan}}">
 										</div>
 										<div class="form-group">
 											<label for="f1-alamat-perusahaan">{{ trans('translate.service_company_address') }}</label>
-											<input type="text" name="f1-alamat-perusahaan" placeholder="Jln. Bandung" id="f1-alamat-perusahaan" readonly value="{{$userData->alamatPerusahaan}}">
+											<input type="text" name="f1-alamat-perusahaan" placeholder="{{ trans('translate.example') }}Jln. Bandung" id="f1-alamat-perusahaan" readonly value="{{$userData->alamatPerusahaan}}">
 										</div>
 										<div class="form-group">
 											<label for="f1-telepon-perusahaan">{{ trans('translate.service_company_phone') }}</label>
-											 <input type="text" name="f1-telepon-perusahaan" placeholder="022123456"  id="f1-telepon-perusahaan" readonly value="{{$userData->telpPerusahaan}}">
+											 <input type="text" name="f1-telepon-perusahaan" placeholder="{{ trans('translate.example') }}022123456"  id="f1-telepon-perusahaan" readonly value="{{$userData->telpPerusahaan}}">
 										</div>
 										<div class="form-group">
 											<label for="f1-faksimile-perusahaan">{{ trans('translate.service_company_fax') }}</label>
-											 <input type="text" name="f1-faksimile-perusahaan" placeholder="022123456"  id="f1-faksimile-perusahaan" readonly
+											 <input type="text" name="f1-faksimile-perusahaan" placeholder="{{ trans('translate.example') }}022123456"  id="f1-faksimile-perusahaan" readonly
 											  value="{{$userData->faxPerusahaan}}">
 										</div>
 										<div class="form-group">
 											<label for="f1-email-perusahaan">{{ trans('translate.service_company_email') }}</label>
-											 <input type="text" name="f1-email-perusahaan" placeholder="company@mail.com" id="f1-email-perusahaan" readonly
+											 <input type="text" name="f1-email-perusahaan" placeholder="{{ trans('translate.example') }}company@mail.com" id="f1-email-perusahaan" readonly
 											  value="{{$userData->emailPerusahaan}}">
 										</div>
 										<div class="form-group" style="margin-top:-30px; margin-bottom:30px; height:25px; font-size: 80%;">
@@ -200,7 +200,7 @@
 										</div>
 										<div class="form-group">
 											<label for="f1-pembuat-perangkat">{{ trans('translate.service_device_manufactured_by') }} *</label>
-											<input type="text" name="f1-pembuat-perangkat" placeholder="Jakarta" id="f1-pembuat-perangkat" class="required" value="{{$userData->pembuat_perangkat}}">
+											<input type="text" name="f1-pembuat-perangkat" placeholder="Indonesia" id="f1-pembuat-perangkat" class="required" value="{{$userData->pembuat_perangkat}}">
 										</div>
 										<div class="form-group">
 											<label for="f1-serialNumber-perangkat">{{ trans('translate.service_device_serial_number') }} *</label>

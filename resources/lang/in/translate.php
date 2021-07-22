@@ -38,7 +38,7 @@ return [
 	
 	'service_device'				=> 'Data Perangkat', // Device Information
 	'service_device_equipment'		=> 'Nama Perangkat', // Device
-	'service_device_mark'			=> 'Merk/Pabrik', // Merk
+	'service_device_mark'			=> 'Telkom', // Merk
 	'service_device_capacity'		=> 'Kapasitas/Kecepatan', // Capacity
 	'service_device_manufactured_by'=> 'Negara Pembuat', // Made in
 	'service_device_serial_number'	=> 'Nomor Seri',
@@ -180,6 +180,7 @@ return [
 	'examination_date_begin'	=> 'Mulai',
 	'examination_date_end' 		=> 'Selesai',
 	'examination_spk_code' 		=> 'Nomor SPK',
+	'example'					=> 'cth :',
 	
 	'examination_function_test_date'=> 'Tanggal Uji Fungsi',
 	'examination_reschedule_test_date'=> 'Uji Fungsi',

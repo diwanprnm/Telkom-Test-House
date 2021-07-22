@@ -198,7 +198,7 @@
 										</div>
 										<div class="form-group">
 											<label for="f1-pembuat-perangkat">{{ trans('translate.service_device_manufactured_by') }} *</label>
-											<input type="text" name="f1-pembuat-perangkat" placeholder="Jakarta" id="f1-pembuat-perangkat" class="required" value="{{$userData->pembuat_perangkat}}">
+											<input type="text" name="f1-pembuat-perangkat" placeholder="Indonesia" id="f1-pembuat-perangkat" class="required" value="{{$userData->pembuat_perangkat}}">
 										</div>
 										<div class="form-group">
 											<label for="f1-serialNumber-perangkat">{{ trans('translate.service_device_serial_number') }} *</label>
