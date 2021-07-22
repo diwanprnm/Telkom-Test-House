@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 
+use App\Chamber;
+
 class ChamberAdminController extends Controller
 {
 
@@ -16,13 +18,19 @@ class ChamberAdminController extends Controller
     public function index(Request $request)
     {
         //initial var
-        $paginate = 10;
+        $paginate = 1;
         $search = trim(strip_tags($request->input('search','')));
-        $dataNotFound='';
-        $data = (object) [];
+        $statuses = ['unpaid', 'paid', 'delivered'];
 
+        $rentChamber = new \stdClass();
+        $rentChamber->unpaid = Chamber::paginate($paginate, ['*'], 'pageUnpaid');
+        $rentChamber->paid = Chamber::paginate($paginate, ['*'], 'pagePaid');
+        $rentChamber->delivered = Chamber::paginate($paginate, ['*'], 'pageDelivered');
         
-        return view('admin.chamber.index')->with('data', $data);
+        return view('admin.chamber.index')
+            ->with('data', $rentChamber)
+            ->with('statuses', $statuses)
+        ;
     }
 
     public function create()
