@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\EmailEditor;
 use App\Services\Logs\LogService;
+use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 use Session;
@@ -80,6 +81,8 @@ class EmailEditorController extends Controller
         $email->subject = $request->input('subject');
         $email->content = $request->input('content');
         $email->dir_name = $request->input('dir_name');
+        $email->signature = $request->input('signature');
+        $email->logo = $request->input('logo');
         $email->created_by = $currentUser->id;
         $email->updated_by = $currentUser->id;
 
@@ -160,6 +163,39 @@ class EmailEditorController extends Controller
         } catch(Exception $e){
             Session::flash('error', 'email failed to updated');
             return redirect('/admin/email_editors'.'/'.$email->id.'/edit');
+        }
+    }
+
+        /**
+     * Update the all logo and signature in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateLogoSignature(Request $request)
+    {
+        $currentUser = Auth::user();
+        $oldEmails = EmailEditor::whereNotNull('created_at');
+        $updateEmails = DB::table('email_editors');
+        $updateFields = array();
+        if ($request->has('logo')){
+           $updateFields += ['logo' => $request['logo']];
+        }
+        if ($request->has('signature')) {
+            $updateFields += ['signature' => $request['signature']];
+        }
+        $updateFields += ['updated_by' => $currentUser->id];
+
+        try {
+            $updateEmails->update($updateFields);
+            $logService = new LogService();  
+            $logService->createLog('Update Email',"EmailEditors",json_encode($oldEmails));
+            
+            Session::flash('message', 'Logo Signature successfully updated');
+            return redirect('/admin/email_editors');
+        }catch(Exception $e){
+            Session::flash('error', 'Logo Signature failed to updated');
+            return redirect('/admin/email_editors');
         }
     }
 
