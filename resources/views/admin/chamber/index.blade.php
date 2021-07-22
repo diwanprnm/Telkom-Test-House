@@ -110,9 +110,9 @@
 	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><em class="ti-filter"></em>
 						Filter
 					</a>
-					<button id="excel" type="submit" class="btn btn-info pull-left">
+					<!-- <button id="excel" type="submit" class="btn btn-info pull-left">
                         Export to Excel
-                    </button>
+                    </button> -->
 				</div>
 				<div class="col-md-6">
 	                <span class="input-icon input-icon-right search-table">
@@ -217,10 +217,10 @@ $(document).ready(() => {
 	});
 	
 	// Set destination when button excel click
-	$('#excel').click(()=>{
-		let param = getFilterParam();
-		document.location.href = baseUrl+'/admin/chamber/excel?'+$.param(param);
-	});
+	// $('#excel').click(()=>{
+	// 	let param = getFilterParam();
+	// 	document.location.href = baseUrl+'/admin/chamber/excel?'+$.param(param);
+	// });
 	
 });
 

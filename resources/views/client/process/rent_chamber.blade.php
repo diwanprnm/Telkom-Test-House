@@ -196,7 +196,7 @@
 							<fieldset>
 								<legend></legend>
 								<h4 class="judulselesai">{{ trans('translate.service_thanks') }}</h4> 
-								{{-- <a class="button button3d btn-green" href="@php echo url('/pengujian');@endphp">Finish</a> --}}
+								{{-- <a class="button button3d btn-green" href="@php echo url('/chamber_history');@endphp">Finish</a> --}}
 							</fieldset>
 						</div>
 					</form>
@@ -325,7 +325,7 @@ const formWizard = form.children("div").steps({
 		return form.valid();
 	},
 	onFinished: function (event, currentIndex){
-		window.location.href = '@php echo url("/pengujian");@endphp';
+		window.location.href = '@php echo url("/chamber_history");@endphp';
 	}
 });
 
