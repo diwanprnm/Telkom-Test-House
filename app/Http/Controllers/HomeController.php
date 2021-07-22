@@ -11,11 +11,6 @@ use Auth;
 use Response;
 use Storage;
 
-use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
-
-use App\Events\Notification;
-use App\NotificationTable;
 use App\Faq;
 use App\Footer;
 use App\AdminRole;
@@ -88,10 +83,13 @@ class HomeController extends Controller
 			->with(self::MESSAGE, $message_slideshow);
     }
     
-    public function faq()
+    public function faq(Request $request)
     {
 		$categoriesPair = [];
-    	$data = Faq::where('is_active', 1)->orderBy('category')->get();
+        $search = trim($request->input('search'));
+    	$data = Faq::where('is_active', 1)
+			->where('question', 'like', '%'.strtolower($search).'%')
+			->orderBy('category')->get();
 		for ($i = 0; $i < count($data); $i++) {
 			foreach (self::$CATEGORY as $key => $value) {
 				if ($key == $data[$i]->category) {
