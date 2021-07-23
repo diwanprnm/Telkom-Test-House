@@ -101,7 +101,9 @@ class HomeController extends Controller
     	$page = "faq";
 		return view('client.faq')
 			->with('data', $categoriesPair)
-			->with('page', $page);
+			->with('page', $page)
+			->with('search', $search)
+			;
     }
 
     public function contact()
