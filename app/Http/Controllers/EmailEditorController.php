@@ -179,7 +179,12 @@ class EmailEditorController extends Controller
         $updateEmails = DB::table('email_editors');
         $updateFields = array();
         if ($request->has('logo')){
-           $updateFields += ['logo' => $request['logo']];
+            $fileService = new FileService();
+            $fileProperties = array(
+                'path' => 'logo/'
+            );
+            $fileService->upload($request->file('logo'), $fileProperties);
+            $updateFields += ['logo' => $request['logo']];
         }
         if ($request->has('signature')) {
             $updateFields += ['signature' => $request['signature']];
