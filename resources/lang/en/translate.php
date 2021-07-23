@@ -89,6 +89,11 @@ return [
 	'service_previous'		=> 'Previous',
 	'service_next'			=> 'Next',
 	'service_save'			=> 'Save',
+	'next'					=> 'Next',
+
+	'service_operational_time'	=> 'Operational Time',
+
+	'operational_time'	=> 'Mon - Fri : 09.00 am - 17.00 pm',
     
 	'contact'     		=> 'Contact',
     'contact_us'		=> 'Contact Us',
@@ -289,7 +294,8 @@ return [
     'supported'	=> 'Supported By',
     'menu_company'    		=> 'Company',
 	'menu_testing'    		=> 'Testing',
-	'menu_ref'		=> 'Reference',
+	'menu_ref'		=> 'Reference List',
+	'menu_reference'		=> 'Test Reference',
 	
 	'header_title'		=> 'Telecommunication Device Testing Service',
 	'see_product'		=> 'Buy STEL(s)',
@@ -420,13 +426,17 @@ return [
 	'unautorizhed_layanan_message' => 'You do not have permission to access this page because all Laboratorium has been closed',
 
 	'attention' => 'ATTENTION',
-	'message_close_lab' => 'Registration of Equipment Testing in TELKOM DDS Quality Assurance Laboratorium has been closed. Thank You',
-	'message_close_lab_separate' => 'Registration of Equipment Testing in some Laboratorium has been closed : ',
+	'message_close_lab' => 'All Telkom Test House services are closed and will reopen on',
+	'thankyou' => 'Thankyou',
+	'message_close_lab_separate' => 'Some of the Telkom Test House services are closed.',
+	'message_close_separate' => 'Closed labs :',
+	'message_open_lab_separate' =>'Labs that are open:',
 	'close_until' => 'close until',
+	'open_at' => 'open at',
 	'available_stel' => 'This is a list of test references that can still register for testing : ',
 
-	'qs_certifcate_date_expired_message1' => 'Quality System Certificate Period Has Passed (expired)',
-	'qs_certifcate_date_expired_message2' => 'Please contact our staff to renew your Quality System Certificate Date.',
+	'qs_certifcate_date_expired_message1' => 'Your Company Quality System Certificate Expired on',
+	'qs_certifcate_date_expired_message2' => 'Please contact our staff to update it.',
 
 	'tax_invoice' => 'Tax Invoice',
 	'receipt' => 'Receipt',
@@ -467,4 +477,12 @@ return [
 	'chamber_days'  => 'day(s)',
 	'rent_chamber_client_notes' => "<label>NOTES</label></br>* The red mark indicates the chamber has been rented.<br>* The blue mark indicates the chamber you have selected<br>* Cannot rent on Saturday and Sunday",
 	'rent_chamber_client_label_waiting_verification'  => 'Waiting Verification',
+	'purchase_history_updateSTEL_unpaid' => 'This transaction has expired documents. Please contact our staff to delete this transaction, then you can re-transaction.',
+	'purchase_history_updateSTEL_paid' => 'You get this document for free.',
+	'purchase_history_updateSTEL_delivered_warning' => 'This transaction has expired documents. Please make a new transaction to update the document.',
+	'purchase_history_updateSTEL_delivered_info' => 'This transaction has expired documents. You get the latest documents for free.',
+	'purchase_history_updateSTEL_available' => 'Update Available',
+	'purchase_history_updateSTEL_warning' => 'This transaction has expired documents',
+
+	'message_not_found_products' => 'The document you are looking for was not found. Please search using other keywords.',
 ];

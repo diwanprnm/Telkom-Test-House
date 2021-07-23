@@ -38,8 +38,34 @@ class STELClientController extends Controller
         $paginate = 10;
         $search = trim($request->input('search'));
         $type = '';
-        $stel_type = $request->path() == self::STELCLIENT_STRING ? 1 : 2;
+        switch ($request->path()) {
+            case 'STEL':
+                $stel_type = 1;
+                break;
+            case 'S-TSEL':
+                $stel_type = 2;
+                break;
+            case 'STD':
+                $stel_type = 3;
+                break;
+            case 'INTERNAL':
+                $stel_type = 4;
+                break;
+            case 'PERDIRJEN':
+                $stel_type = 5;
+                break;
+            case 'PERMENKOMINFO':
+                $stel_type = 6;
+                break;
+            case 'OTHER':
+                $stel_type = 7;
+                break;
         
+            default:
+                $stel_type = 1;
+                break;
+        }
+
         $examLab = ExaminationLab::all();
 
         $query = STEL::with('examinationLab')
@@ -63,16 +89,16 @@ class STELClientController extends Controller
             }
         }
         
-        $stels = $query->orderBy('name')->paginate($paginate);
+        $stels = $query->orderBy('code')->paginate($paginate);
         
         if (count($stels) == 0){
             $message = 'Data not found';
         }
-        return view($request->path() == self::STELCLIENT_STRING ? 'client.STEL.index' : 'client.STSEL.index')
+        return view('client.STSEL.index')
             ->with('examLab', $examLab)
             ->with('message', $message)
             ->with('data', $stels)
-            ->with('page', $request->path() == self::STELCLIENT_STRING ? 'STEL' : 'STSEL')
+            ->with('page', $request->path())
             ->with('search', $search)
             ->with('type', $type);
     }

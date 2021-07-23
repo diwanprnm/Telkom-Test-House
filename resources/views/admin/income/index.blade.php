@@ -43,7 +43,7 @@
 							</legend>
 							<div class="row">
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group typeHTML">
 										<label>
 											Tipe Pengujian
 										</label>
@@ -67,7 +67,7 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group statusHTML">
 										<label>
 											Tahap Pengujian
 										</label>
@@ -168,7 +168,7 @@
 							</div>
 							<div class="row">
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group labHTML">
 										<label>
 											Lab
 										</label>
@@ -195,6 +195,9 @@
 		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 		                                Filter
 		                            </button>
+									<button id="reset-filter" class="btn btn-wide btn-white btn-squared pull-right" style="margin-right: 10px;">
+                                        Reset
+                                    </button>
 		                        </div>
 							</div>
 						</fieldset>
@@ -283,6 +286,33 @@
 	});
 </script>
 <script type="text/javascript">
+	var typeHTML = '<select id="type" name="type" class="cs-select cs-skin-elastic" required>'+
+				'<option value="" disabled selected>Select...</option>'+
+				'<option value="all">All</option>'+
+			@foreach($type as $item)
+					'<option value="{{ $item->id }}">{{ $item->name }}</option>'+
+			@endforeach
+				'</select>'
+	var statusHTML = '<select id="status" name="status" class="cs-select cs-skin-elastic" required>'+
+					'<option value="" disabled selected>Select...</option>'+
+					'<option value="all">All</option>'+
+					'<option value="1">Registrasi</option>'+
+					'<option value="2">Uji Fungsi</option>'+
+					'<option value="3">Tinjauan Kontrak</option>'+
+					'<option value="4">SPB</option>'+
+					'<option value="5">Pembayaran</option>'+
+					'<option value="6">Pembuatan SPK</option>'+
+					'<option value="7">Pelaksanaan Uji</option>'+
+					'<option value="8">Laporan Uji</option>'+
+					'<option value="9">Sidang QA</option>'+
+					'<option value="10">Penerbitan Sertifikat</option>'+'</select>'
+	var labHTML = '<select id="lab" name="lab" class="cs-select cs-skin-elastic" required>'+
+		'<option value="" disabled selected>Select...</option>'+
+				'<option value="all">All</option>'+
+			@foreach($type as $item)
+					'<option value="{{ $item->id }}">{{ $item->name }}</option>'+
+			@endforeach
+				'</select>'
 	$( function() {
 		$( "#search_value" ).autocomplete({
 			minLength: 3,
@@ -407,6 +437,19 @@
 				params['search'] = search_value;
 			document.location.href = baseUrl+'/income/excel?'+jQuery.param(params);
 	    };
+
+
+		document.getElementById("reset-filter").onclick = function() {
+            $('.cs-select').remove();
+            $('.typeHTML').append(typeHTML);
+            $('.statusHTML').append(statusHTML);
+			$('.labHTML').append(labHTML);
+			$('#after_date').val(null);
+			$('#before_date').val(null);
+            [].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {	
+                new SelectFx(el);
+            } );
+        };
 	});
 </script>>
 @endsection

@@ -54,8 +54,8 @@ class SPKController extends Controller
         $noDataFound = '';
         $paginate = 10;
         $search = trim(strip_tags($request->input(self::SEARCH,'')));
-        $sort_by = self::TBMSPK_SPK_NUMBER;
-        $sort_type = 'desc';
+        $sort_by = $request->input('sort_by') ? $request->input('sort_by') : 'spk_date';
+        $sort_type = $request->input('sort_type') ? $request->input('sort_type') : 'desc';
         $examType = ExaminationType::all();
         $companies = Company::where('id','!=', 1)->get();
         $examLab = ExaminationLab::all();

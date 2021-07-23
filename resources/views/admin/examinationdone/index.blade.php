@@ -47,7 +47,7 @@
 							</legend>
 							<div class="row">
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group typeHTML">
 										<label>
 											Tipe Pengujian
 										</label>
@@ -99,6 +99,9 @@
 		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 		                                Filter
 		                            </button>
+									<button id="reset-filter" class="btn btn-wide btn-white btn-squared pull-right" style="margin-right: 10px;">
+                                        Reset
+                                    </button>
 		                        </div>
 		                    </div>
 						</fieldset>
@@ -304,9 +307,21 @@
 															</td>
 														</tr>
 														<tr>
+															<td>Referensi Uji:</td>
+															<td>
+																{{ $item->device->test_reference }}
+															</td>
+														</tr>
+														<tr>
 															<td>Perangkat:</td>
 															<td>
 																{{ $item->device->name }}
+															</td>
+														</tr>	
+														<tr>
+															<td>Merek:</td>
+															<td>
+																{{ $item->device->mark }}
 															</td>
 														</tr>	
 														<tr>
@@ -322,7 +337,13 @@
 															</td>
 														</tr>	
 														<tr>
-															<td>Nomor Form Uji:</td>
+															<td>Serial Number:</td>
+															<td>
+																{{ $item->device->serial_number }}
+															</td>
+														</tr>	
+														<tr>
+															<td>Nomor Registrasi:</td>
 															<td>
 																{{ $item->function_test_NO }}
 															</td>
@@ -335,13 +356,23 @@
 																@endif
 															</td>
 														</tr>
+														<tr>
+															<td>Tanggal Uji Fungsi:</td>
+															<td>
+																@if($item->function_test_date_approval)
+																	@if($item->function_date != null)
+																		{{ $item->function_date }}
+																	@else
+																		{{ $item->deal_test_date }}
+																	@endif
+																@endif
+															</td>
+														</tr>
 													</tbody>
 												</table>
 											</div>
 											<div class=" pull-left">
-					                        	@if($item->attachment != '')
-					                        		<a class="btn btn-wide btn-primary pull-left" style="margin-left:10px" href="{{URL::to('/admin/examination/download/'.$item->id)}}"><em class="ti-download"></em> Form Uji</a>
-												@endif
+												<a class="btn btn-wide btn-primary pull-left" style="margin-left:10px" href="{{URL::to('cetakPengujian/'.$item->id)}}" target="_blank"><em class="ti-download"></em> Form Uji</a>
 												
 												@foreach($item->media as $item_SPB)
 													@if($item_SPB->name == 'SPB')
@@ -397,6 +428,13 @@
 	});
 </script>
 <script type="text/javascript">
+var typeHTML = '<select id="type" name="type" class="cs-select cs-skin-elastic" required>'+
+				'<option value="" disabled selected>Select...</option>'+
+				'<option value="all">All</option>'+
+			@foreach($type as $item)
+					'<option value="{{ $item->id }}">{{ $item->name }}</option>'+
+			@endforeach
+		'</select>'
 	$( function() {
 		$( "#search_value" ).autocomplete({
 			minLength: 3,
@@ -473,6 +511,16 @@
 				params['search'] = search_value;
 			document.location.href = baseUrl+'/admin/examinationdone?'+jQuery.param(params);
 	    };
+
+		document.getElementById("reset-filter").onclick = function() {
+            $('.cs-select').remove();
+            $('.typeHTML').append(typeHTML);
+			$('#after_date').val(null);
+			$('#before_date').val(null);
+            [].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {	
+                new SelectFx(el);
+            } );
+        };
 	});
 </script>
 @endsection

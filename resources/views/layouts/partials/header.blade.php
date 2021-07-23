@@ -80,13 +80,17 @@
                   <a href="{{url('Devclient')}}">{{ trans('translate.devic_test_passed') }}</a>
               </li>
 
-              <li class=" {{ (!empty($page) && ($page == 'purchase_history' || $page == 'products' || $page == 'checkout')) ?'current':''}}">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Stel <em class="icon-angle-down"></em></a>
+              <li class=" {{ (!empty($page) && ($page == 'STEL' || $page == 'S-TSEL' || $page == 'STD' || $page == 'PERMENKOMINFO' || $page == 'PERDIRJEN' || $page == 'ANOTHER' || $page == 'purchase_history' || $page == 'products' || $page == 'checkout')) ?'current':''}}">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ trans('translate.menu_reference') }} <em class="icon-angle-down"></em></a>
                    <ul class="dropdown-menu" role="menu">
                     <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ trans('translate.menu_ref') }}</a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="{{url('STELclient')}}">{{ trans('translate.stel') }}</a></li>
-                            <li><a href="{{url('STSELclient')}}">{{ trans('translate.stels') }}</a></li>
+                            <li><a href="{{url('STEL')}}">STEL</a></li>
+                            <li><a href="{{url('S-TSEL')}}">S-TSEL</a></li>
+                            <li><a href="{{url('STD')}}">PED/STD/KJN</a></li>
+                            <li><a href="{{url('PERMENKOMINFO')}}">PERMENKOMINFO</a></li>
+                            <li><a href="{{url('PERDIRJEN')}}">PERDIRJEN</a></li>
+                            <li><a href="{{url('OTHER')}}">OTHER(s)</a></li>
                         </ul>
                     </li>
                     <li>

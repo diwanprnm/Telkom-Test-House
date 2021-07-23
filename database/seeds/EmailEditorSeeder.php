@@ -144,6 +144,18 @@ class EmailEditorSeeder extends Seeder
                 'updated_by' => '1',
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
+            ],[
+                'id' => '12', 
+                'name' => 'Update Referensi Uji', 
+                'subject' => 'Update Referensi Uji', 
+                'dir_name' => 'emails.updateSTEL', 
+                'logo' => 'images/TTHMain.png',
+                'content' => '<p><i>Kepada Yth.&nbsp;</i><br><i>Bapak/Ibu @user_name&nbsp;</i><br><br>&nbsp;</p><p>Dokumen @stel_code telah diperbarui.&nbsp;<br>Silakan klik tautan di bawah ini untuk informasi lebih lanjut.&nbsp;</p><p><a href="@link">@link</a> pada tab (Paid)</p>',
+                'signature' => 'Salam hangat,&nbsp;<br>Lab Uji IAS PT. Telekomunikasi Indonesia, Tbk.&nbsp;<br><br>---&nbsp;<br><br>&nbsp;</p><p><i>Email ini dihasilkan secara otomatis oleh sistem dan mohon untuk tidak membalas email ini. Informasi lebih lanjut hubungi User Relation di <strong>0812 2483 7500</strong> (Telepon &amp; WA) atau <strong>cstelkomtesthouse@gmail.com.</strong></i>',
+                'created_by' => '1',
+                'updated_by' => '1',
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
             ]
         ]);
     }

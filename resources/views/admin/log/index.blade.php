@@ -81,11 +81,11 @@
 							</div>
 							<div class="row">
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group usernameHTML">
 										<label>
 											Username
 										</label>
-										<select class="form-control" id="username" name="username" class="chosen-username">
+										<select class="form-control" id="username" name="username">
 												@if ($filterUsername == '')
 													<option value="" disabled selected> - Pilih Username - </option>
 												@endif
@@ -105,11 +105,11 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group actionHTML">
 										<label>
 											Action
 										</label>
-										<select class="form-control" id="action" name="action" class="chosen-action">
+										<select class="form-control" id="action" name="action">
 												@if ($filterAction == '')
 													<option value="" disabled selected> - Pilih Action - </option>
 												@endif
@@ -137,6 +137,9 @@
 		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 		                                Filter
 		                            </button>
+									<button id="reset-filter" class="btn btn-wide btn-white btn-squared pull-right" style="margin-right: 10px;">
+                                        Reset
+                                    </button>
 		                        </div>
 		                    </div>
 						</fieldset>
@@ -221,6 +224,8 @@
 	$('#action').trigger("chosen:updated");
 </script>
 <script type="text/javascript">
+	var usernameOptions = document.querySelectorAll('username');
+	var actionOptions = document.querySelectorAll('action');
 	jQuery(document).ready(function() {       
 		$('#search_value').keydown(function(event) {
 	        if (event.keyCode == 13) {
@@ -326,6 +331,15 @@
 /*end sorting*/
 			document.location.href = baseUrl+'/log/excel?'+jQuery.param(params);
 	    };
+
+		document.getElementById("reset-filter").onclick = function() {
+			$('#before_date').val(null);
+			$('#after_date').val(null);
+			$('#username').chosen();
+			$('#username').val('').trigger("chosen:updated");
+			$('#action').chosen();
+			$('#action').val('').trigger("chosen:updated");
+        };
 	});
 </script>>
 @endsection

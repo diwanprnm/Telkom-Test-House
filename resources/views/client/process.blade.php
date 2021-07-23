@@ -75,37 +75,31 @@
 				            <button type="button" class="close" data-dismiss="modal">&times;</button>
 				            <h2 class="modal-title">{{ trans('translate.attention') }}</h2>
 				          </div>
-				          <div class="modal-body pre-scrollable" style="padding-bottom: 20%;">
+				          <div class="modal-body pre-scrollable">
 				               <div class="row">
 				               		@if(count($data_layanan_active) == 0)
-				                    	<h2>{{ trans('translate.message_close_lab') }}</h2>
+				                    	<h2>{{ trans('translate.message_close_lab') }} {{ date('d M Y', strtotime($data_layanan[0]->open_at)) }}. <br> {{ trans('translate.thankyou') }}. </h2>	
 				                    @else
 				                    	<p>
-				                    		<strong style="font-size: 130%;">{{ trans('translate.message_close_lab_separate') }}</strong><br>
+				                    		<strong style="font-size: 130%;">{{ trans('translate.message_close_lab_separate') }}<br>{{ trans('translate.message_close_separate') }} </strong><br>
 				                    		@foreach($data_layanan as $data)
-				                    			<em class="fa fa-angle-right"></em> {{ $data->name }} {{ trans('translate.close_until') }} {{ date('d M Y', strtotime($data->close_until)) }}.<br>
+				                    			<em class="fa fa-angle-right"></em> {{ $data->name }} {{ trans('translate.open_at') }} {{ date('d M Y', strtotime($data->open_at)) }}.<br>
+				                    		@endforeach
+											<strong style="font-size: 130%;">{{ trans('translate.message_open_lab_separate') }} </strong><br>
+				                    		@foreach($data_layanan_active as $data)
+				                    			<em class="fa fa-angle-right"></em> {{ $data->name }}.<br>
 				                    		@endforeach
 				                    	</p>
-				                    	<h4>{{ trans('translate.available_stel') }}</h4>
-					                    	<select id="chosen-qa" class="chosen-select" placeholder="{{ trans('translate.service_device_test_reference') }}" class="required"> 
-												<option value="" selected>{{ trans('translate.examination_choose_stel') }}</option>
-											@foreach($data_stels_qa as $item)
-												@if(in_array($item->lab,$data_layanan_not_active))
-													<option value="{{ $item->stel }}" disabled>{{ $item->stel }} || {{ $item->device_name }}</option>
-												@else
-													<option value="{{ $item->stel }}">{{ $item->stel }} || {{ $item->device_name }}</option>
-												@endif
-											@endforeach
-										</select>
+				                    	
 				                    @endif
 				                </div>
 				          </div>
 				          <div class="modal-footer">
 				          	@if(count($data_layanan_active) == 0)
-				          		<button type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
+				          		<button type="button" class="button button3d btn-sky" data-dismiss="modal">{{ trans('translate.close') }}</button>
 				          	@else
-				          		<button id="ok_qa" type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
-				          		<a id="next_qa" href="{{url('detailprocess/qa')}}" class="button button3d btn-sky">{{ trans('translate.process') }}</a>
+				          		<button id="ok_qa" type="button" class="button button3d btn-sky" data-dismiss="modal">{{ trans('translate.close') }}</button>
+				          		<a id="next_qa" href="{{url('detailprocess/qa')}}" class="button button3d btn-sky">{{ trans('translate.next') }}</a>
 				          	@endif
 				          </div>
 				        </div>
@@ -128,7 +122,7 @@
 							@if(count($data_layanan))
 								<a class="button button-3d nomargin btn-sky" data-toggle="modal" data-target="#modal_status_layanan_ta">{{ trans('translate.process') }}</a>
 							@else
-								<a href="{{url('detailprocess/ta')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
+								<a href="{{url('detailprocess/ta')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.next') }}</a>
 							@endif
 						@endif
 					</div>
@@ -144,37 +138,30 @@
 				            <button type="button" class="close" data-dismiss="modal">&times;</button>
 				            <h2 class="modal-title">{{ trans('translate.attention') }}</h2>
 				          </div>
-				          <div class="modal-body pre-scrollable" style="padding-bottom: 20%;">
+				          <div class="modal-body pre-scrollable">
 				               <div class="row">
 				               		@if(count($data_layanan_active) == 0)
-				                    	<h2>{{ trans('translate.message_close_lab') }}</h2>
+									   <h2>{{ trans('translate.message_close_lab') }} {{ date('d M Y', strtotime($data_layanan[0]->open_at)) }}. <br> {{ trans('translate.thankyou') }}. </h2>	
 				                    @else
-				                    	<p>
-				                    		<Strong style="font-size: 130%;">{{ trans('translate.message_close_lab_separate') }}</strong><br>
+										<p>
+				                    		<strong style="font-size: 130%;">{{ trans('translate.message_close_lab_separate') }}<br>{{ trans('translate.message_close_separate') }} </strong><br>
 				                    		@foreach($data_layanan as $data)
-				                    			<em class="fa fa-angle-right"></em> {{ $data->name }} {{ trans('translate.close_until') }} {{ date('d M Y', strtotime($data->close_until)) }}.<br>
+				                    			<em class="fa fa-angle-right"></em> {{ $data->name }} {{ trans('translate.open_at') }} {{ date('d M Y', strtotime($data->open_at)) }}.<br>
+				                    		@endforeach
+											<strong style="font-size: 130%;">{{ trans('translate.message_open_lab_separate') }} </strong><br>
+				                    		@foreach($data_layanan_active as $data)
+				                    			<em class="fa fa-angle-right"></em> {{ $data->name }}.<br>
 				                    		@endforeach
 				                    	</p>
-				                    	<h4>{{ trans('translate.available_stel') }}</h4>
-					                    	<select id="chosen-ta" class="chosen-select" placeholder="{{ trans('translate.service_device_test_reference') }}" class="required"> 
-												<option value="" selected>{{ trans('translate.examination_choose_stel') }}</option>
-											@foreach($data_stels as $item)
-												@if(in_array($item->lab,$data_layanan_not_active))
-													<option value="{{ $item->stel }}" disabled>{{ $item->stel }} || {{ $item->device_name }}</option>
-												@else
-													<option value="{{ $item->stel }}">{{ $item->stel }} || {{ $item->device_name }}</option>
-												@endif
-											@endforeach
-										</select>
 				                    @endif
 				                </div>
 				          </div>
 				          <div class="modal-footer">
 				          	@if(count($data_layanan_active) == 0)
-				          		<button type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
+				          		<button type="button" class="button button3d btn-sky" data-dismiss="modal">{{ trans('translate.close') }}</button>
 				          	@else
-				          		<button id="ok_ta" type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
-				          		<a id="next_ta" href="{{url('detailprocess/ta')}}" class="button button3d btn-sky">{{ trans('translate.process') }}</a>
+				          		<button id="ok_ta" type="button" class="button button3d btn-sky" data-dismiss="modal">{{ trans('translate.close') }}</button>
+				          		<a id="next_ta" href="{{url('detailprocess/ta')}}" class="button button3d btn-sky">{{ trans('translate.next') }}</a>
 				          	@endif
 				          </div>
 				        </div>
@@ -213,37 +200,30 @@
 				            <button type="button" class="close" data-dismiss="modal">&times;</button>
 				            <h2 class="modal-title">{{ trans('translate.attention') }}</h2>
 				          </div>
-				          <div class="modal-body pre-scrollable" style="padding-bottom: 20%;">
+				          <div class="modal-body pre-scrollable">
 				               <div class="row">
 				               		@if(count($data_layanan_active) == 0)
-				                    	<h2>{{ trans('translate.message_close_lab') }}</h2>
+									   <h2>{{ trans('translate.message_close_lab') }} {{ date('d M Y', strtotime($data_layanan[0]->open_at)) }}. <br> {{ trans('translate.thankyou') }}. </h2>	
 				                    @else
-				                    	<p>
-				                    		<strong style="font-size: 130%;">{{ trans('translate.message_close_lab_separate') }}</strong><br>
+										<p>
+				                    		<strong style="font-size: 130%;">{{ trans('translate.message_close_lab_separate') }}<br>{{ trans('translate.message_close_separate') }} </strong><br>
 				                    		@foreach($data_layanan as $data)
-				                    			<em class="fa fa-angle-right"></em> {{ $data->name }} {{ trans('translate.close_until') }} {{ date('d M Y', strtotime($data->close_until)) }}.<br>
+				                    			<em class="fa fa-angle-right"></em> {{ $data->name }} {{ trans('translate.open_at') }} {{ date('d M Y', strtotime($data->open_at)) }}.<br>
+				                    		@endforeach
+											<strong style="font-size: 130%;">{{ trans('translate.message_open_lab_separate') }} </strong><br>
+				                    		@foreach($data_layanan_active as $data)
+				                    			<em class="fa fa-angle-right"></em> {{ $data->name }}.<br>
 				                    		@endforeach
 				                    	</p>
-				                    	<h4>{{ trans('translate.available_stel') }}</h4>
-					                    	<select id="chosen-vt" class="chosen-select" placeholder="{{ trans('translate.service_device_test_reference') }}" class="required"> 
-												<option value="" selected>{{ trans('translate.examination_choose_stel') }}</option>
-											@foreach($data_stels as $item)
-												@if(in_array($item->lab,$data_layanan_not_active))
-													<option value="{{ $item->stel }}" disabled>{{ $item->stel }} || {{ $item->device_name }}</option>
-												@else
-													<option value="{{ $item->stel }}">{{ $item->stel }} || {{ $item->device_name }}</option>
-												@endif
-											@endforeach
-										</select>
 				                    @endif
 				                </div>
 				          </div>
 				          <div class="modal-footer">
 				          	@if(count($data_layanan_active) == 0)
-				          		<button type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
+				          		<button type="button" class="button button3d btn-sky" data-dismiss="modal">{{ trans('translate.close') }}</button>
 				          	@else
-				          		<button id="ok_vt" type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
-				          		<a id="next_vt" href="{{url('detailprocess/vt')}}" class="button button3d btn-sky">{{ trans('translate.process') }}</a>
+				          		<button id="ok_vt" type="button" class="button button3d btn-sky" data-dismiss="modal">{{ trans('translate.close') }}</button>
+				          		<a id="next_vt" href="{{url('detailprocess/vt')}}" class="button button3d btn-sky">{{ trans('translate.next') }}</a>
 				          	@endif
 				          </div>
 				        </div>
@@ -265,7 +245,7 @@
 							@if(count($data_layanan))
 								<a class="button button-3d nomargin btn-sky" data-toggle="modal" data-target="#modal_status_layanan_cal">{{ trans('translate.process') }}</a>
 							@else
-								<a href="{{url('detailprocess/cal')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
+								<a href="{{url('detailprocess/cal')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.next') }}</a>
 							@endif
 						@endif
 					</div>
@@ -278,37 +258,31 @@
 				            <button type="button" class="close" data-dismiss="modal">&times;</button>
 				            <h2 class="modal-title">{{ trans('translate.attention') }}</h2>
 				          </div>
-				          <div class="modal-body pre-scrollable" style="padding-bottom: 20%;">
+				          <div class="modal-body pre-scrollable">
 				               <div class="row">
 				               		@if(count($data_layanan_active) == 0)
-				                    	<h2 style="text-align: justify;">{{ trans('translate.message_close_lab') }}</h2>
+									   <h2>{{ trans('translate.message_close_lab') }} {{ date('d M Y', strtotime($data_layanan[0]->open_at)) }}. <br> {{ trans('translate.thankyou') }}. </h2>	
 				                    @else
-				                    	<p>
-				                    		<strong style="font-size: 130%;">{{ trans('translate.message_close_lab_separate') }}</strong><br>
+									<p>
+				                    		<strong style="font-size: 130%;">{{ trans('translate.message_close_lab_separate') }}<br>{{ trans('translate.message_close_separate') }} </strong><br>
 				                    		@foreach($data_layanan as $data)
-				                    			<em class="fa fa-angle-right"></em> {{ $data->name }} {{ trans('translate.close_until') }} {{ date('d M Y', strtotime($data->close_until)) }}.<br>
+				                    			<em class="fa fa-angle-right"></em> {{ $data->name }} {{ trans('translate.open_at') }} {{ date('d M Y', strtotime($data->open_at)) }}.<br>
+				                    		@endforeach
+											<strong style="font-size: 130%;">{{ trans('translate.message_open_lab_separate') }} </strong><br>
+				                    		@foreach($data_layanan_active as $data)
+				                    			<em class="fa fa-angle-right"></em> {{ $data->name }}.<br>
 				                    		@endforeach
 				                    	</p>
-				                    	<h4>{{ trans('translate.available_stel') }}</h4>
-					                    	<select id="chosen-cal" class="chosen-select" placeholder="{{ trans('translate.service_device_test_reference') }}" class="required"> 
-												<option value="" selected>{{ trans('translate.examination_choose_stel') }}</option>
-											@foreach($data_stels as $item)
-												@if(in_array($item->lab,$data_layanan_not_active))
-													<option value="{{ $item->stel }}" disabled>{{ $item->stel }} || {{ $item->device_name }}</option>
-												@else
-													<option value="{{ $item->stel }}">{{ $item->stel }} || {{ $item->device_name }}</option>
-												@endif
-											@endforeach
-										</select>
+				                    	
 				                    @endif
 				                </div>
 				          </div>
 				          <div class="modal-footer">
 				          	@if(count($data_layanan_active) == 0)
-				          		<button type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
+				          		<button type="button" class="button button3d btn-sky" data-dismiss="modal">{{ trans('translate.close') }}</button>
 				          	@else
-				          		<button id="ok_cal" type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
-				          		<a id="next_cal" href="{{url('detailprocess/cal')}}" class="button button3d btn-sky">{{ trans('translate.process') }}</a>
+				          		<button id="ok_cal" type="button" class="button button3d btn-sky" data-dismiss="modal">{{ trans('translate.close') }}</button>
+				          		<a id="next_cal" href="{{url('detailprocess/cal')}}" class="button button3d btn-sky">{{ trans('translate.next') }}</a>
 				          	@endif
 				          </div>
 				        </div>
@@ -337,14 +311,14 @@
 			            <button type="button" class="close" data-dismiss="modal">&times;</button>
 			            <h2 class="modal-title">{{ trans('translate.attention') }}</h2>
 			          </div>
-			          <div class="modal-body pre-scrollable" style="padding-bottom: 20%;">
+			          <div class="modal-body pre-scrollable">
 			               <div class="row">
-			               		<h2>{{ trans('translate.qs_certifcate_date_expired_message1') }}
+			               		<h2>{{ trans('translate.qs_certifcate_date_expired_message1') }}  {{ date('d M Y', strtotime($certificate_date)) }}.
 			               		{{ trans('translate.qs_certifcate_date_expired_message2') }}</h2>
 			                </div>
 			          </div>
 			          <div class="modal-footer">
-			          	<button type="button" class="button button3d btn-sky" data-dismiss="modal">OK</button>
+			          	<button type="button" class="button button3d btn-sky" data-dismiss="modal">{{ trans('translate.close') }}</button>
 			          </div>
 			        </div>
 
@@ -374,46 +348,6 @@
 		midClick: true // Allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source in href.
   	});
 
-	$("#next_qa").hide();
-	$("#next_ta").hide();
-	$("#next_vt").hide();
-	$("#next_cal").hide();
-
-  	$("#chosen-qa").change(function(){
-		if(this.value != ""){
-			$("#ok_qa").hide();			
-			$("#next_qa").show();			
-		}else{
-			$("#next_qa").hide();	
-			$("#ok_qa").show();
-		}
-	});
-  	$("#chosen-ta").change(function(){
-		if(this.value != ""){
-			$("#ok_ta").hide();			
-			$("#next_ta").show();			
-		}else{
-			$("#next_ta").hide();	
-			$("#ok_ta").show();
-		}
-	});
-  	$("#chosen-vt").change(function(){
-		if(this.value != ""){
-			$("#ok_vt").hide();			
-			$("#next_vt").show();			
-		}else{
-			$("#next_vt").hide();	
-			$("#ok_vt").show();
-		}
-	});
-  	$("#chosen-cal").change(function(){
-		if(this.value != ""){
-			$("#ok_cal").hide();			
-			$("#next_cal").show();			
-		}else{
-			$("#next_cal").hide();	
-			$("#ok_cal").show();
-		}
-	});
+	
 </script>
 @endsection

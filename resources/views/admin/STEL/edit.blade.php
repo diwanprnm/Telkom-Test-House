@@ -7,14 +7,14 @@
 		<section id="page-title">
 			<div class="row">
 				<div class="col-sm-8">
-					<h1 class="mainTitle">Edit STEL/STD</h1>
+					<h1 class="mainTitle">Edit Referensi Uji</h1>
 				</div>
 				<ol class="breadcrumb">
 					<li>
 						<span>Beranda</span>
 					</li>
 					<li>
-						<span>STEL/STD</span>
+						<span>Referensi Uji</span>
 					</li>
 					<li class="active">
 						<span>Edit</span>
@@ -30,38 +30,18 @@
 					{!! csrf_field() !!}
     				<fieldset>
 						<legend>
-							Edit STEL/STD
+							Edit Referensi Uji
 						</legend>
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Tipe Referensi Uji *
+										No. Dokumen *
 									</label>
-									<select name="stel_type" class="cs-select cs-skin-elastic" required>
-										@if($data->stel_type == '1')
-											<option value="1" selected>STEL</option>
-										@else
-											<option value="1">STEL</option>
-										@endif
-
-										@if($data->stel_type == '2')
-											<option value="2" selected>S-TSEL</option>
-										@else
-											<option value="2">S-TSEL</option>
-										@endif
-									</select>
+									<input type="text" id="code" name="code" class="form-control" placeholder="No. Dokumen" value="{{$data->code}}" required readonly>
 								</div>
 							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>
-										Kode Dokumen *
-									</label>
-									<input type="text" name="code" class="form-control" placeholder="Kode Dokumen" value="{{$data->code}}" required>
-								</div>
-							</div>
-	                        <div class="col-md-12">
+	                        <div class="col-md-6">
 								<div class="form-group">
 									<label>
 										Nama Dokumen *
@@ -69,20 +49,20 @@
 									<input type="text" name="name" class="form-control" placeholder="Nama Dokumen" value="{{$data->name}}" required>
 								</div>
 							</div>
-	                        <div class="col-md-4">
+							<div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Tipe Dokumen *
+										Tahun *
 									</label>
-									<select name="type" class="cs-select cs-skin-elastic" required>
-										@foreach ($examLab as $dataLab)
-											@if ($data->type == $dataLab->id)
-												<option value="{{$dataLab->id}}" selected>{{$dataLab->name}}</option>
-											@else
-												<option value="{{$dataLab->id}}">{{$dataLab->name}}</option>
-											@endif
-										@endforeach
-									</select>
+									<input type="number" id="year" name="year" class="form-control" placeholder="Tahun" value="{{$data->year}}" required>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Versi *
+									</label>
+									<input type="text" id="version" name="version" class="form-control" placeholder="Versi" value="{{$data->version}}" required>
 								</div>
 							</div>
 	                        <div class="col-md-4">
@@ -93,15 +73,22 @@
 									<input type="text" id="txt-price" name="price" class="form-control" placeholder="Harga" value="{{$data->price}}" required>
 								</div>
 							</div>
-	                        <div class="col-md-4">
+							<div class="col-md-4">
 								<div class="form-group">
 									<label>
-										Total Dokumen *
+										Diterbitkan pada tanggal *
 									</label>
-									<input type="text" id="txt-total" name="total" class="form-control" placeholder="Total Dokumen" value="{{$data->total}}" required>
+									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
+										<input type="text" placeholder="Publish at .." value="{{ $data->publish_date }}" name="publish_date" id="publish_date" class="form-control"/>
+										<span class="input-group-btn">
+											<button type="button" class="btn btn-default">
+												<em class="glyphicon glyphicon-calendar"></em>
+											</button>
+										</span>
+									</p>
 								</div>
 							</div>
-	                        <div class="col-md-4">
+							<div class="col-md-4">
 								<div class="form-group">
 									<label for="form-field-select-2">
 										Status *
@@ -109,31 +96,15 @@
 									<select name="is_active" class="cs-select cs-skin-elastic" required>
 										@if($data->is_active)
 											<option value="1" selected>Active</option>
-											<option value="0">Not Active</option>
+											<option value="0">Inactive</option>
 										@else
 											<option value="1">Active</option>
-											<option value="0" selected>Not Active</option>
+											<option value="0" selected>Inactive</option>
 										@endif
 									</select>
 								</div>
 							</div>
-	                        <div class="col-md-4">
-								<div class="form-group">
-									<label>
-											Versi *
-									</label>
-									<input type="text" name="version" class="form-control" placeholder="Versi" value="{{$data->version}}" required>
-								</div>
-							</div>
-	                        <div class="col-md-4">
-								<div class="form-group">
-									<label>
-										Tahun *
-									</label>
-									<input type="number" name="year" class="form-control" placeholder="Tahun" value="{{$data->year}}" required>
-								</div>
-							</div>
-							<div class="col-md-6">
+	                        <div class="col-md-6">
 								<div class="form-group">
 									<label>
 										File *
@@ -174,14 +145,91 @@
 <script src={{ asset("vendor/bootstrap-datepicker/bootstrap-datepicker.min.js") }}></script>
 <script src={{ asset("vendor/bootstrap-timepicker/bootstrap-timepicker.min.js") }}></script>
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
+<script src={{ asset("assets/js/form-elements.js") }}></script>
 <script type="text/javascript">
+	jQuery(document).ready(function() {
+		FormElements.init();
+	});
+
+	val = '{{ $data->stel_type }}';
+	init_form(val);
+
+	value="{{ old('code') }}";
+	if(value){init_form(val)};
+
+	function init_form(val){
+		switch(val) {
+			case '1':
+				type_name = 'STEL';
+				$("#year").prop('required', true);
+				$("#version").prop('required', true);
+				break;
+			case '2':
+				type_name = 'S-TSEL';
+				$("#year").prop('required', true);
+				$("#version").prop('required', true);
+				break;
+			case '3':
+				type_name = 'STD';
+				$("#year").prop('required', true);
+				$("#version").prop('required', true);
+				break;
+			case '4':
+				type_name = 'TLKM/I/KAL';
+				$("#year").prop('required', false);
+				$("#version").prop('required', true);
+				break;
+			case '5':
+				type_name = 'Perdirjen';
+				$("#year").prop('required', true);
+				$("#version").prop('required', false);
+				break;
+			case '6':
+				type_name = 'Permenkominfo';
+				$("#year").prop('required', true);
+				$("#version").prop('required', false);
+				break;
+			case '7':
+				$("#year").prop('required', false);
+				$("#version").prop('required', false);
+				break;
+				
+			default:
+				$("#year").prop('required', false);
+				$("#version").prop('required', false);
+		}
+	}
+
+	$("#year").on("keyup change", function(){
+		reset_code();
+	});
+
+	$("#version").keyup(function(){
+		reset_code();
+	});
+
+	function reset_code(){
+		switch(val) {
+			case '1':
+			case '2':
+			case '3':
+				var res = $("#code").val().split("Versi");
+				var res_code = res[0].split("-");
+				code = res_code[0]+'-'+res_code[1]+'-'+$("#year").val()+' Versi '+$("#version").val();
+				$("#code").val(code);
+				break;
+			case '4':
+				var res = $("#code").val().split(" ");
+				code = res[0]+' Versi '+$("#version").val();
+				$("#code").val(code);
+				break;
+				
+			default:
+				
+		}
+	}
+
 	$('#txt-price').priceFormat({
-		prefix: '',
-		clearPrefix: true,
-		centsLimit: 0
-	}); 
-	
-	$('#txt-total').priceFormat({
 		prefix: '',
 		clearPrefix: true,
 		centsLimit: 0

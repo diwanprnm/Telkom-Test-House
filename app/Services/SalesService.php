@@ -353,7 +353,10 @@ class SalesService
 
                 if($is_uploaded){
                     $STELSalesDetail->attachment = $name_file;
+                    $STELSalesDetail->temp_alert = 0;
                     $STELSalesDetail->save();
+                    // update temp_alert
+                    $this->updateTempAlert($STELSalesDetail);
                     $notifUploadSTEL = 1;
                     $success_count++;
 
@@ -377,4 +380,22 @@ class SalesService
             'data' => $data,
         );
     } 
+
+    public function updateTempAlert($STELSalesDetail){
+        $stel = STEL::where('id', $STELSalesDetail->stels_id)->first();
+        $user = User::where('id', $STELSalesDetail->created_by)->first();
+        $data = STELSalesDetail::join('stels', 'stels_sales_detail.stels_id', '=', 'stels.id')
+            ->join('stels_master', 'stels.stels_master_id', '=', 'stels_master.id')
+            ->join('users', 'stels_sales_detail.created_by', '=', 'users.id')
+            ->join('companies', 'users.company_id', '=', 'companies.id')
+            ->where('stels.stels_master_id', '=', $stel->stels_master_id)
+            ->where('companies.id', '=', $user->company_id)
+            ->where('stels_sales_detail.id', '!=', $STELSalesDetail->id)
+            ->select('stels_sales_detail.*')
+        ->get();
+        foreach ($data as $item) {
+            $item->temp_alert = 3;
+            $item->save();
+        }
+    }
 }

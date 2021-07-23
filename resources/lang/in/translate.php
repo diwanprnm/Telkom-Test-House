@@ -89,6 +89,11 @@ return [
 	'service_previous'		=> 'Sebelumnya',
 	'service_next'			=> 'Berikutnya',
 	'service_save'			=> 'Simpan',
+	'next'					=> 'Lanjut',
+
+	'service_operational_time'	=> 'Jam Operasional',
+
+	'operational_time'	=> 'Senin - Jumat : 09.00 - 17.00 ',
     
 	'contact'     		=> 'Kontak',
     'contact_us'		=> 'Kontak Kami',
@@ -291,7 +296,8 @@ return [
 	'supported'	=> 'Didukung Oleh',
 	'menu_company'    		=> 'Perusahaan',
 	'menu_testing'    		=> 'Pengujian',
-	'menu_ref'		=> 'Referensi',
+	'menu_ref'		=> 'Daftar Referensi',
+	'menu_reference'		=> 'Ref. Uji',
 	
 	'header_title'		=> 'Layanan Pengujian Perangkat Telekomunikasi',
 	'see_product'		=> 'Beli Dokumen STEL',
@@ -423,13 +429,17 @@ return [
 	'unautorizhed_layanan_message' => 'Anda tidak berhak mengakses halaman ini dikarenakan semua Laboratorium sudah ditutup',
 
 	'attention' => 'PEMBERITAHUAN',
-	'message_close_lab' => 'Pendaftaran Pengujian Perangkat di Lab Quality Assurance TELKOM DDS Sudah Ditutup. Terima Kasih',
-	'message_close_lab_separate' => 'Pendaftaran Pengujian Perangkat di beberapa Lab TELKOM DDS Sudah Ditutup : ',
+	'message_close_lab' => 'Semua Layanan Telkom Test House tutup dan akan buka kembali tanggal',
+	'thankyou' => 'Terima Kasih',
+	'message_close_lab_separate' => 'Sebagian Layanan Telkom Test House tutup.',
+	'message_close_separate' => 'Lab yang tutup :',
+	'message_open_lab_separate' =>'Lab yang buka :',
 	'close_until' => 'ditutup sampai',
+	'open_at' => 'buka pada',
 	'available_stel' => 'Berikut adalah daftar referensi uji yang masih dapat melakukan registrasi pengujian : ',
 
-	'qs_certifcate_date_expired_message1' => 'Tanggal Sertifikat Sistem Mutu sudah Kadaluarsa (expired)',
-	'qs_certifcate_date_expired_message2' => 'Silakan hubungi petugas kami untuk memperbaharui Tanggal Sertifikat Sistem Mutu Anda.',
+	'qs_certifcate_date_expired_message1' => 'Sertifikat Sistem Mutu Perusahaan Anda Kedaluwarsa pada tanggal',
+	'qs_certifcate_date_expired_message2' => 'Silakan hubungi petugas kami untuk memperbaharuinya.',
 
 	'tax_invoice' => 'Faktur Pajak',
 	'receipt' => 'Kuitansi',
@@ -470,4 +480,12 @@ return [
 	'chamber_days'  => 'hari',
 	'rent_chamber_client_notes' => "<label>CATATAN</label></br>* Tanda merah menandakan chamber sudah di booking.</br>* Tanda biru menandakan chamber yang anda pilih.</br>* Tidak bisa menyewa dihari Sabtu dan Minggu.",
 	'rent_chamber_client_label_waiting_verification'  => 'Menunggu Verifikasi',
+	'purchase_history_updateSTEL_unpaid' => 'Transaksi ini memiliki dokumen yang kedaluwarsa. Silakan hubungi staff kami untuk menghapus transaksi ini, lalu anda dapat melakukan transaksi ulang.',
+	'purchase_history_updateSTEL_paid' => 'Anda mendapatkan dokumen ini dengan gratis.',
+	'purchase_history_updateSTEL_delivered_warning' => 'Transaksi ini memiliki dokumen yang kedaluwarsa. Silakan lakukan transaksi baru untuk memperbarui dokumen tersebut.',
+	'purchase_history_updateSTEL_delivered_info' => 'Transaksi ini memiliki dokumen yang kedaluwarsa. Anda mendapatkan dokumen terbaru dengan gratis.',
+	'purchase_history_updateSTEL_available' => 'Pembaruan Tersedia',
+	'purchase_history_updateSTEL_warning' => 'Transaksi ini memiliki dokumen yang kedaluwarsa',
+
+	'message_not_found_products' => 'Dokumen yang anda cari tidak ditemukan. Silakan mencari menggunakan kata kunci yang lain.',
 ];

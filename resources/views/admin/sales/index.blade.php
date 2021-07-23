@@ -52,27 +52,7 @@
 			</div>
 		</section>
 		<!-- end: PAGE TITLE -->
-		@if (count($errors) > 0)
-			<div class="alert alert-danger">
-				<ul>
-					@foreach ($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-			</div>
-		@endif
-
-		@if (Session::get('error'))
-			<div class="alert alert-error alert-danger">
-				{{ Session::get('error') }}
-			</div>
-		@endif
 		
-		@if (Session::get('message'))
-			<div class="alert alert-info">
-				{{ Session::get('message') }}
-			</div>
-		@endif
 		<!-- start: RESPONSIVE TABLE -->
 		<div class="container-fluid container-fullw bg-white">
 			@if (Session::get('error'))
@@ -161,6 +141,9 @@
 		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right filter">
 		                                Filter
 		                            </button>
+									<button id="reset-filter" class="btn btn-wide btn-white btn-squared pull-right" style="margin-right: 10px;">
+                                        Reset
+                                    </button>
 		                        </div>
 							</div>
 						</fieldset>
@@ -293,6 +276,9 @@
 		                            <button id="filter2" type="submit" class="btn btn-wide btn-green btn-squared pull-right filter">
 		                                Filter
 		                            </button>
+									<button id="reset-filter2" class="btn btn-wide btn-white btn-squared pull-right" style="margin-right: 10px;">
+                                        Reset
+                                    </button>
 		                        </div>
 							</div>
 						</fieldset>
@@ -425,6 +411,9 @@
 		                            <button id="filter3" type="submit" class="btn btn-wide btn-green btn-squared pull-right filter">
 		                                Filter
 		                            </button>
+									<button id="reset-filter3" class="btn btn-wide btn-white btn-squared pull-right" style="margin-right: 10px;">
+                                        Reset
+                                    </button>
 		                        </div>
 							</div>
 						</fieldset>
@@ -494,7 +483,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								{{ $data_delivered->appends(array('search' => $search,'search2' => $search,'search3' => $search,'before_date' => $before_date,'before_date2' => $before_date,'before_date3' => $before_date,'after_date' => $after_date,'after_date2' => $after_date,'after_date3' => $after_date, 'tab' => 'tab-paid-deliverd'))->links() }}
+								{{ $data_delivered->appends(array('search' => $search,'search2' => $search,'search3' => $search,'before_date' => $before_date,'before_date2' => $before_date,'before_date3' => $before_date,'after_date' => $after_date,'after_date2' => $after_date,'after_date3' => $after_date, 'tab' => 'tab-delivered'))->links() }}
 							</div>
 						</div>
 					</div>
@@ -583,6 +572,7 @@
 			
 			document.location.href = baseUrl+'/admin/sales?'+jQuery.param(params);
 		});
+
 	});
 
 	document.getElementById("excel").onclick = function() {
@@ -638,5 +628,24 @@
 		};
 		document.location.href = baseUrl+'/sales/excel?'+jQuery.param(params);
 	};
+
+	document.getElementById("reset-filter").onclick = function() {
+		$('#after_date').val(null);
+		$('#before_date').val(null);
+	};
+
+
+	document.getElementById("reset-filter2").onclick = function() {
+		$('#after_date2').val(null);
+		$('#before_date2').val(null);
+	};
+
+
+	document.getElementById("reset-filter3").onclick = function() {
+		$('#after_date3').val(null);
+		$('#before_date3').val(null);
+	};
+
+
 </script>>
 @endsection

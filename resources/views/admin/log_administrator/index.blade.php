@@ -137,6 +137,9 @@
 		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 		                                Filter
 		                            </button>
+									<button id="reset-filter" class="btn btn-wide btn-white btn-squared pull-right" style="margin-right: 10px;">
+                                        Reset
+                                    </button>
 		                        </div>
 		                    </div>
 						</fieldset>
@@ -327,6 +330,12 @@
 /*end sorting*/
 			document.location.href = baseUrl+'/log_administrator/excel?'+jQuery.param(params);
 	    };
+
+		document.getElementById("reset-filter").onclick = function() {
+			$('#before_date').val(null);
+			$('#after_date').val(null);
+			$('#action').chosen().val('').trigger('chosen:updated');
+        };
 	});
 </script>>
 @endsection

@@ -3,6 +3,27 @@
     ============================================= -->
     <title>{{ trans('translate.payment_status') }} - Telkom DDB</title>
 @section('content')
+<style>
+	.tooltip-text {
+		width: 2000%;
+		position: absolute;
+		display: none;
+		/* background: ghostwhite; */
+		padding: 10px;
+		font-size: 12px;
+		border-radius: 3px; 
+		transition: opacity 1s ease-out;
+		bottom: -50%;
+		margin-left: -1950%;
+	}
+
+	/* .fa.fa-warning:hover + .tooltip-text { */
+	.fa-warning:hover .tooltip-text, .fa-info-circle:hover .tooltip-text {
+		display: block;
+		text-align: left;
+		animation: fadeIn 2s;
+	}
+</style>
  <!-- Page Title
 	============================================= -->
 	<section id="page-title">
@@ -30,6 +51,7 @@
 						<li class="{{ $tab == 'unpaid' ? 'active' : '' }}"><a href="#tab-unpaid" data-toggle="tab"><strong>Unpaid</strong></a></li>
 						<li class="{{ $tab == 'paid' ? 'active' : '' }}"><a href="#tab-paid" data-toggle="tab"><strong>Paid</strong></a></li>
 						<li class="{{ $tab == 'delivered' ? 'active' : '' }}"><a href="#tab-delivered" data-toggle="tab"><strong>Delivered</strong></a></li>
+						<li class="{{ $tab == 'expired' ? 'active' : '' }}"><a href="#tab-expired" data-toggle="tab"><strong>Old Document</strong></a></li>
 					</ul>
 					<div class="tab-content">
 						<!-- tab unpaid -->
@@ -53,8 +75,14 @@
 											@php $no = 1; $i = 0; @endphp
 											@if($data_unpaid)
 											@foreach($data_unpaid as $keys => $item)
+												@php $update = 0; $update1 = 0; $update2 = 0; @endphp
 												@php if($data_unpaid[$i]->sales_detail){ $data_stel_name = ""; $data_stel_code = ""; $count = 0 @endphp
 													@foreach($data_unpaid[$i]->sales_detail as $item_detail)
+														@php 
+														if($item_detail->temp_alert == 1) {
+															$update1 = 1;
+														} 
+														@endphp
 														@php 
 														if($item_detail->stel && $count < 2){
 															if($data_stel_name == ""){
@@ -73,10 +101,10 @@
 													<td>{{$no+(($data_unpaid->currentPage()-1)*$data_unpaid->perPage())}}</td>
 													<td>{{$item->created_at}}</td>
 													<td>{{ $out }}</td>
-													<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item->total), 0, '.', ','); @endphp</td>
+													<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item->total), 0, '.', ','); @endphp @if ($item->total == 0) (Free) @endif</td>
 													<td>{{$item->user->name}}</td>  
 													<td class="center"><span class="label label-sm label-default" style="line-height: 2;">Unpaid</span></td>
-													<td>
+													<td colspan="5">
 														@if($data_unpaid[$i]->payment_method == 2 && $data_unpaid[$i]->VA_expired < date("Y-m-d H:i:s"))
 															<a class="label label-sm label-danger" style="line-height: 2;" href="{{url('/payment_confirmation/'.$item->id)}}">{{ trans('translate.expired') }}</a>
 														@else
@@ -84,6 +112,16 @@
 														@endif
 														||
 														<a href="javascript:void(0)" class="collapsible">{{ trans('translate.examination_detail') }}</a>
+														@if($update1)
+														<a class="right">
+															<em class="fa fa-warning warning">
+															<span class="tooltip-text alert alert-warning">
+																<em class="fa fa-warning"></em>
+																{{ trans('translate.purchase_history_updateSTEL_unpaid') }}
+															</span>
+															</em>
+														</a>
+														@endif
 													</td>
 												</tr> 
 												<tr class="content" style="display: none;">
@@ -97,7 +135,7 @@
 																	<th scope="col">{{ trans('translate.stel_code') }}</th>
 																	<th scope="col">{{ trans('translate.stel_price') }}</th>
 																	<th scope="col">{{ trans('translate.stel_qty') }}</th>  
-																	<th scope="col">Total</th>  
+																	<th scope="col" class="right">Total ({{ trans('translate.stel_rupiah') }}.)</th>  
 																	<th scope="col">Action</th>
 																</tr>
 															</thead>
@@ -106,16 +144,34 @@
 																if($data_unpaid[$i]->sales_detail){ @endphp
 																	@foreach($data_unpaid[$i]->sales_detail as $keys => $item_detail)
 																		@php if($item_detail->stel){ @endphp
+																			@if($item_detail->stel->is_active == 0)
+																			<tr style="font-style: italic;text-decoration: line-through;">
+																			@else
 																			<tr>
+																			@endif
 																				<td>{{++$keys}}</td>
 																				<td>{{$item_detail->stel->name}}</td>
 																				<td>{{$item_detail->stel->code}}</td>
-																				<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item_detail->stel->price), 0, '.', ','); @endphp</td> 
-																				<td>{{$item_detail->qty}}</td> 
-																				<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item_detail->stel->price * $item_detail->qty), 0, '.', ','); @endphp</td>
-																				<td colspan="6" class="center">{{ trans('translate.document_not_found') }}</td>
+																				@php
+																					$price = $data_unpaid[$i]->total ? $item_detail->stel->price : 0;
+																				@endphp
+																				<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($price), 0, '.', ','); @endphp @if ($price == 0) (Free) @endif</td> 
+																				<td class="right">{{$item_detail->qty}}</td> 
+																				<td class="right">@php echo number_format(floatval($price * $item_detail->qty), 0, '.', ','); @endphp</td>
+																				<td colspan="6" class="center">{{ trans('translate.document_not_found') }}
+																					@if($item_detail->stel->is_active == 0)
+																					<a>
+																					<em class="fa fa-info-circle info">
+																					<span class="tooltip-text alert alert-info">
+																						<em class="fa fa-info-circle"></em>
+																						{{ trans('translate.purchase_history_updateSTEL_available') }}
+																					</span>
+																					</em>
+																					</a>
+																					@endif
+																				</td>
 																		</tr> 	
-																		@php $total +=($item_detail->stel->price * $item_detail->qty);@endphp
+																		@php $total +=($price * $item_detail->qty);@endphp
 																		@php }else{@endphp 
 																			<tr>
 																				<td>{{++$keys}}</td>
@@ -131,26 +187,11 @@
 																@php }@endphp
 															</tbody>
 															<tfoot> 
-																@php
-																	$unique_code = ($data_unpaid[$i]->total/1.1) - $total;
-																@endphp
 																<tr>
-																	<td colspan="5" class="text-align-right"> {{ trans('translate.stel_unique_code') }}</td>
-																	<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. @php 
-																		echo 	number_format($unique_code, 0, '.', ',');@endphp</td>
-																	<td class="center"> === </td>
-																</tr>
-																<tr>
-																	<td colspan="5" class="text-align-right">Sub Total</td>
-																	<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. @php 
-																		echo 	number_format($total + $unique_code, 0, '.', ',');@endphp</td>
-																	<td class="center"> === </td>
-																</tr>
-																<tr>
-																	<td colspan="5" class="text-align-right"> {{ trans('translate.tax') }}</td>
-																	<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. @php $tax =  ($total + $unique_code) * (config("cart.tax")/100);
+																	<td colspan="5" class="right"> {{ trans('translate.tax') }}</td>
+																	<td class="right">@php $tax =  ($total) * (config("cart.tax")/100);
 																		echo	number_format($tax, 0, '.', ',');@endphp</td>
-																	<td class="center">
+																	<td>
 																		@if($item->faktur_file != '')
 																			<a target="_blank" href="{{ URL::to('/client/downloadfakturstel/'.$item->id) }}">
 																				{{ trans('translate.download') }} {{ trans('translate.tax_invoice') }}
@@ -159,9 +200,9 @@
 																	</td>
 																</tr>
 																<tr style="font-weight: bold;">
-																	<td colspan="5" class="text-align-right"> Total</td>
-																	<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. @php echo number_format($data_unpaid[$i]->total, 0, '.', ',');@endphp</td>
-																	<td class="center">
+																	<td colspan="5" class="right"> Total</td>
+																	<td class="right">@php echo number_format($data_unpaid[$i]->total, 0, '.', ',');@endphp @if ($data_unpaid[$i]->total == 0) (Free) @endif</td>
+																	<td>
 																		@if($item->id_kuitansi != '')
 																			<a target="_blank" href="{{ URL::to('/client/downloadkuitansistel/'.$item->id_kuitansi) }}">
 																				{{ trans('translate.download') }} {{ trans('translate.receipt') }}
@@ -221,8 +262,17 @@
 											@php $no = 1; $i = 0; @endphp
 											@if($data_paid)
 											@foreach($data_paid as $keys => $item)
+												@php $update = 0; $update1 = 0; $update2 = 0; $update3 = 0; @endphp
 												@php if($data_paid[$i]->sales_detail){ $data_stel_name = ""; $data_stel_code = ""; $count = 0 @endphp
 													@foreach($data_paid[$i]->sales_detail as $item_detail)
+														@php 
+														if($item_detail->stel->is_active == 1 && $item_detail->temp_alert == 2) {
+															$update2 = 1;
+														} 
+														if($item_detail->stel->is_active == 0 && $item_detail->temp_alert == 2) {
+															$update3 = 1;
+														} 
+														@endphp
 														@php 
 														if($item_detail->stel && $count < 2){
 															if($data_stel_name == ""){
@@ -241,10 +291,31 @@
 													<td>{{$no+(($data_paid->currentPage()-1)*$data_paid->perPage())}}</td>
 													<td>{{$item->created_at}}</td>
 													<td>{{ $out }}</td>
-													<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item->total), 0, '.', ','); @endphp</td>
+													<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item->total), 0, '.', ','); @endphp @if ($item->total == 0) (Free) @endif</td>
 													<td>{{$item->user->name}}</td>  
 													<td class="center"><span class="label label-sm label-success" style="line-height: 2;">Paid</span></td>
-													<td><a href="javascript:void(0)" class="collapsible">{{ trans('translate.examination_detail') }}</a></td>
+													<td><a href="javascript:void(0)" class="collapsible">{{ trans('translate.examination_detail') }}</a>
+														@if($update2)
+														<a class="right">
+															<em class="fa fa-info-circle info">
+															<span class="tooltip-text alert alert-info">
+																<em class="fa fa-info-circle"></em>
+																{{ trans('translate.purchase_history_updateSTEL_paid') }}
+															</span>
+															</em>
+														</a>
+														@endif
+														@if($update3)
+														<a class="right">
+															<em class="fa fa-warning warning">
+															<span class="tooltip-text alert alert-warning">
+																<em class="fa fa-warning"></em>
+																{{ trans('translate.purchase_history_updateSTEL_warning') }}
+															</span>
+															</em>
+														</a>
+														@endif
+													</td>
 												</tr> 
 												<tr class="content" style="display: none;">
 													<td colspan="7" class="center">
@@ -257,7 +328,7 @@
 																	<th scope="col">{{ trans('translate.stel_code') }}</th>
 																	<th scope="col">{{ trans('translate.stel_price') }}</th>
 																	<th scope="col">{{ trans('translate.stel_qty') }}</th>  
-																	<th scope="col">Total</th>  
+																	<th scope="col" class="right">Total ({{ trans('translate.stel_rupiah') }}.)</th>  
 																	<th scope="col">Action</th>
 																</tr>
 															</thead>
@@ -266,20 +337,49 @@
 																if($data_paid[$i]->sales_detail){ @endphp
 																	@foreach($data_paid[$i]->sales_detail as $keys => $item_detail)
 																		@php if($item_detail->stel){ @endphp
+																			@if($item_detail->stel->is_active == 0)
+																			<tr style="font-style: italic;text-decoration: line-through;">
+																			@else
 																			<tr>
+																			@endif
 																				<td>{{++$keys}}</td>
 																				<td>{{$item_detail->stel->name}}</td>
 																				<td>{{$item_detail->stel->code}}</td>
-																				<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item_detail->stel->price), 0, '.', ','); @endphp</td> 
-																				<td>{{$item_detail->qty}}</td> 
-																				<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item_detail->stel->price * $item_detail->qty), 0, '.', ','); @endphp</td>
+																				@php
+																					$price = $data_paid[$i]->total ? $item_detail->stel->price : 0;
+																				@endphp
+																				<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($price), 0, '.', ','); @endphp @if ($price == 0) (Free) @endif</td> 
+																				<td class="right">{{$item_detail->qty}}</td> 
+																				<td class="right">@php echo number_format(floatval($price * $item_detail->qty), 0, '.', ','); @endphp</td>
 																				@if($item_detail->attachment !="")
-																					<td colspan="6" class="center"><a target="_blank" href="{{ URL::to('/client/downloadstelwatermark/'.$item_detail->id) }}">{{ trans('translate.download') }} File</a></td>
+																					<td colspan="6"><a target="_blank" href="{{ URL::to('/client/downloadstelwatermark/'.$item_detail->id) }}">{{ trans('translate.download') }} File</a>
+																						@if($item_detail->temp_alert)
+																						<a>
+																						<em class="fa fa-info-circle info">
+																						<span class="tooltip-text alert alert-info">
+																							<em class="fa fa-info-circle"></em>
+																							{{ trans('translate.purchase_history_updateSTEL_available') }}
+																						</span>
+																						</em>
+																						</a>
+																						@endif
+																					</td>
 																				@else
-																					<td colspan="6" class="center">{{ trans('translate.document_not_found') }}</td>
+																					<td colspan="6" class="center">{{ trans('translate.document_not_found') }}
+																						@if($item_detail->temp_alert)
+																						<a>
+																						<em class="fa fa-info-circle info">
+																						<span class="tooltip-text alert alert-info">
+																							<em class="fa fa-info-circle"></em>
+																							{{ trans('translate.purchase_history_updateSTEL_available') }}
+																						</span>
+																						</em>
+																						</a>
+																						@endif
+																					</td>
 																				@endif
 																			</tr> 
-																		@php $total +=($item_detail->stel->price * $item_detail->qty);@endphp
+																		@php $total +=($price * $item_detail->qty);@endphp
 																		@php }else{@endphp 
 																			<tr>
 																				<td>{{++$keys}}</td>
@@ -295,26 +395,11 @@
 																@php }@endphp
 															</tbody>
 															<tfoot> 
-																@php
-																	$unique_code = ($data_paid[$i]->total/1.1) - $total;
-																@endphp
 																<tr>
-																	<td colspan="5" class="text-align-right"> {{ trans('translate.stel_unique_code') }}</td>
-																	<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. @php 
-																		echo 	number_format($unique_code, 0, '.', ',');@endphp</td>
-																	<td class="center"> === </td>
-																</tr>
-																<tr>
-																	<td colspan="5" class="text-align-right">Sub Total</td>
-																	<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. @php 
-																		echo 	number_format($total + $unique_code, 0, '.', ',');@endphp</td>
-																	<td class="center"> === </td>
-																</tr>
-																<tr>
-																	<td colspan="5" class="text-align-right"> {{ trans('translate.tax') }}</td>
-																	<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. @php $tax =  ($total + $unique_code) * (config("cart.tax")/100);
+																	<td colspan="5" class="right"> {{ trans('translate.tax') }}</td>
+																	<td class="right">@php $tax =  ($total) * (config("cart.tax")/100);
 																		echo	number_format($tax, 0, '.', ',');@endphp</td>
-																	<td class="center">
+																	<td>
 																		@if($item->faktur_file != '')
 																			<a target="_blank" href="{{ URL::to('/client/downloadfakturstel/'.$item->id) }}">
 																				{{ trans('translate.download') }} {{ trans('translate.tax_invoice') }}
@@ -323,9 +408,9 @@
 																	</td>
 																</tr>
 																<tr style="font-weight: bold;">
-																	<td colspan="5" class="text-align-right"> Total</td>
-																	<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. @php echo number_format($data_paid[$i]->total, 0, '.', ',');@endphp</td>
-																	<td class="center">
+																	<td colspan="5" class="right"> Total</td>
+																	<td class="right">@php echo number_format($data_paid[$i]->total, 0, '.', ',');@endphp @if ($data_paid[$i]->total == 0) (Free) @endif</td>
+																	<td>
 																		@if($item->id_kuitansi != '')
 																			<a target="_blank" href="{{ URL::to('/client/downloadkuitansistel/'.$item->id_kuitansi) }}">
 																				{{ trans('translate.download') }} {{ trans('translate.receipt') }}
@@ -385,8 +470,20 @@
 											@php $no = 1; $i = 0; @endphp
 											@if($data_delivered)
 											@foreach($data_delivered as $keys => $item)
+												@php $update = 0; $update1 = 0; $update2 = 0; $update3 = 0; @endphp
 												@php if($data_delivered[$i]->sales_detail){ $data_stel_name = ""; $data_stel_code = ""; $count = 0 @endphp
 													@foreach($data_delivered[$i]->sales_detail as $item_detail)
+														@php 
+														if($item_detail->temp_alert == 1) {
+															$update1 = 1;
+														} 
+														if($item_detail->temp_alert == 2) {
+															$update2 = 1;
+														} 
+														if($item_detail->temp_alert == 3) {
+															$update3 = 1;
+														} 
+														@endphp
 														@php 
 														if($item_detail->stel && $count < 2){
 															if($data_stel_name == ""){
@@ -405,10 +502,41 @@
 													<td>{{$no+(($data_delivered->currentPage()-1)*$data_delivered->perPage())}}</td>
 													<td>{{$item->created_at}}</td>
 													<td>{{ $out }}</td>
-													<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item->total), 0, '.', ','); @endphp</td>
+													<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item->total), 0, '.', ','); @endphp @if ($item->total == 0) (Free) @endif</td>
 													<td>{{$item->user->name}}</td>  
 													<td class="center"><span class="label label-sm label-info" style="line-height: 2;">Delivered</span></td>
-													<td><a href="javascript:void(0)" class="collapsible">{{ trans('translate.examination_detail') }}</a></td>
+													<td><a href="javascript:void(0)" class="collapsible">{{ trans('translate.examination_detail') }}</a>
+														@if($update1)
+														<a class="right">
+															<em class="fa fa-warning warning">
+															<span class="tooltip-text alert alert-warning">
+																<em class="fa fa-warning"></em>
+																{{ trans('translate.purchase_history_updateSTEL_delivered_warning') }}
+															</span>
+															</em>
+														</a>
+														@endif
+														@if($update2)
+														<a class="right">
+															<em class="fa fa-info-circle info">
+															<span class="tooltip-text alert alert-info">
+																<em class="fa fa-info-circle"></em>
+																{{ trans('translate.purchase_history_updateSTEL_delivered_info') }}
+															</span>
+															</em>
+														</a>
+														@endif
+														@if($update3)
+														<a class="right">
+															<em class="fa fa-warning warning">
+															<span class="tooltip-text alert alert-warning">
+																<em class="fa fa-warning"></em>
+																{{ trans('translate.purchase_history_updateSTEL_warning') }}
+															</span>
+															</em>
+														</a>
+														@endif
+													</td>
 												</tr> 
 												<tr class="content" style="display: none;">
 													<td colspan="7" class="center">
@@ -421,7 +549,7 @@
 																	<th scope="col">{{ trans('translate.stel_code') }}</th>
 																	<th scope="col">{{ trans('translate.stel_price') }}</th>
 																	<th scope="col">{{ trans('translate.stel_qty') }}</th>  
-																	<th scope="col">Total</th>  
+																	<th scope="col" class="right">Total ({{ trans('translate.stel_rupiah') }}.)</th>  
 																	<th scope="col">Action</th>
 																</tr>
 															</thead>
@@ -430,20 +558,49 @@
 																if($data_delivered[$i]->sales_detail){ @endphp
 																	@foreach($data_delivered[$i]->sales_detail as $keys => $item_detail)
 																		@php if($item_detail->stel){ @endphp
+																			@if($item_detail->stel->is_active == 0)
+																			<tr style="font-style: italic;text-decoration: line-through;">
+																			@else
 																			<tr>
+																			@endif
 																				<td>{{++$keys}}</td>
 																				<td>{{$item_detail->stel->name}}</td>
 																				<td>{{$item_detail->stel->code}}</td>
-																				<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item_detail->stel->price), 0, '.', ','); @endphp</td> 
-																				<td>{{$item_detail->qty}}</td> 
-																				<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item_detail->stel->price * $item_detail->qty), 0, '.', ','); @endphp</td>
+																				@php
+																					$price = $data_delivered[$i]->total ? $item_detail->stel->price : 0;
+																				@endphp
+																				<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($price), 0, '.', ','); @endphp @if ($price == 0) (Free) @endif</td> 
+																				<td class="right">{{$item_detail->qty}}</td> 
+																				<td class="right">@php echo number_format(floatval($price * $item_detail->qty), 0, '.', ','); @endphp</td>
 																				@if($item_detail->attachment !="")
-																					<td colspan="6" class="center"><a target="_blank" href="{{ URL::to('/client/downloadstelwatermark/'.$item_detail->id) }}">{{ trans('translate.download') }} File</a></td>
+																					<td colspan="6"><a target="_blank" href="{{ URL::to('/client/downloadstelwatermark/'.$item_detail->id) }}">{{ trans('translate.download') }} File</a>
+																						@if($item_detail->temp_alert == 1 OR $item_detail->temp_alert == 2)
+																						<a>
+																						<em class="fa fa-info-circle info">
+																						<span class="tooltip-text alert alert-info">
+																							<em class="fa fa-info-circle"></em>
+																							{{ trans('translate.purchase_history_updateSTEL_available') }}
+																						</span>
+																						</em>
+																						</a>
+																						@endif
+																					</td>
 																				@else
-																					<td colspan="6" class="center">{{ trans('translate.document_not_found') }}</td>
+																					<td colspan="6" class="center">{{ trans('translate.document_not_found') }}
+																						@if($item_detail->temp_alert == 1 OR $item_detail->temp_alert == 2)
+																						<a>
+																						<em class="fa fa-info-circle info">
+																						<span class="tooltip-text alert alert-info">
+																							<em class="fa fa-info-circle"></em>
+																							{{ trans('translate.purchase_history_updateSTEL_available') }}
+																						</span>
+																						</em>
+																						</a>
+																						@endif
+																					</td>
 																				@endif
 																			</tr> 
-																		@php $total +=($item_detail->stel->price * $item_detail->qty);@endphp
+																		@php $total +=($price * $item_detail->qty);@endphp
 																		@php }else{@endphp 
 																			<tr>
 																				<td>{{++$keys}}</td>
@@ -459,26 +616,11 @@
 																@php }@endphp
 															</tbody>
 															<tfoot> 
-																@php
-																	$unique_code = ($data_delivered[$i]->total/1.1) - $total;
-																@endphp
 																<tr>
-																	<td colspan="5" class="text-align-right"> {{ trans('translate.stel_unique_code') }}</td>
-																	<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. @php 
-																		echo 	number_format($unique_code, 0, '.', ',');@endphp</td>
-																	<td class="center"> === </td>
-																</tr>
-																<tr>
-																	<td colspan="5" class="text-align-right">Sub Total</td>
-																	<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. @php 
-																		echo 	number_format($total + $unique_code, 0, '.', ',');@endphp</td>
-																	<td class="center"> === </td>
-																</tr>
-																<tr>
-																	<td colspan="5" class="text-align-right"> {{ trans('translate.tax') }}</td>
-																	<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. @php $tax =  ($total + $unique_code) * (config("cart.tax")/100);
+																	<td colspan="5" class="right"> {{ trans('translate.tax') }}</td>
+																	<td class="right">@php $tax =  ($total) * (config("cart.tax")/100);
 																		echo	number_format($tax, 0, '.', ',');@endphp</td>
-																	<td class="center">
+																	<td>
 																		@if($item->faktur_file != '')
 																			<a target="_blank" href="{{ URL::to('/client/downloadfakturstel/'.$item->id) }}">
 																				{{ trans('translate.download') }} {{ trans('translate.tax_invoice') }}
@@ -487,9 +629,9 @@
 																	</td>
 																</tr>
 																<tr style="font-weight: bold;">
-																	<td colspan="5" class="text-align-right"> Total</td>
-																	<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. @php echo number_format($data_delivered[$i]->total, 0, '.', ',');@endphp</td>
-																	<td class="center">
+																	<td colspan="5" class="right"> Total</td>
+																	<td class="right">@php echo number_format($data_delivered[$i]->total, 0, '.', ',');@endphp @if ($data_delivered[$i]->total == 0) (Free) @endif</td>
+																	<td>
 																		@if($item->id_kuitansi != '')
 																			<a target="_blank" href="{{ URL::to('/client/downloadkuitansistel/'.$item->id_kuitansi) }}">
 																				{{ trans('translate.download') }} {{ trans('translate.receipt') }}
@@ -524,6 +666,52 @@
 								<div class="col-md-12 col-sm-12">
 									<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
 										@php echo $data_delivered->links(); @endphp
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- tab expired -->
+						<div id="tab-expired" class="row clearfix tab-pane fade {{ $tab == 'expired' ? 'in active' : '' }}">
+							<div class="col-md-12">
+								<div class="table-responsive">
+									<table id="datatable1" class="table table-striped table-bordered" style="width: 100%;">
+										<caption></caption>
+										<thead>
+											<tr>
+												<th scope="col">No</th>
+												<th scope="col">{{ trans('translate.stel_name') }}</th>
+												<th scope="col">{{ trans('translate.stel_code') }}</th>
+											</tr>
+										</thead>
+										<tbody>
+											@if($data_expired)
+											@foreach($data_expired as $keys => $item)
+												<tr>
+													<td>{{++$keys}}</td>
+													<td>{{$item->name}}</td>
+													<td>{{$item->code}}</td>
+												</tr> 
+											@endforeach
+											@else
+												<div class="col-md-12">
+													<div class="table-responsive">
+														<table class="table table-striped">
+															<caption></caption>
+															<tr class="center">
+																<th style="text-align: center;" scope="col">{{ trans('translate.data_not_found') }}</th>
+															</tr> 
+														</table>
+													</div>
+												</div>
+											@endif
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12 col-sm-12">
+									<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
+										@php echo $data_expired->links(); @endphp
 									</div>
 								</div>
 							</div>
