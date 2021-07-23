@@ -279,6 +279,7 @@ $(document).ready(() => {
 });
 const url = new URL(window.location.href);
 currentTab = url.searchParams.get("tab") ?? 'tab-unpaid';
+
 // Get url parameter from filter
 const getFilterParam = () =>  {
 	return {
@@ -297,10 +298,8 @@ const setFilterByParam = () =>  {
 	$(`.${currentTab}`).addClass('current');
 };
 
+//Set pagination url manual.
 const setPaginationUrl = ( param ) => {
-	//let baseURL = url.toString().split("?")[0];
-	let currentPage;
-	let currentLink;
 	let paginationLink = $('ul.pagination li a');
 	paginationLink.each( function (element) {
 		param.pageUnpaid = new URL(this.href).searchParams.get("pageUnpaid") ?? new URL(url).searchParams.get("pageUnpaid") ;
