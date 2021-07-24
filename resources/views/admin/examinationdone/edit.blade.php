@@ -1173,21 +1173,9 @@
 									</div>
 									<div class="col-md-12">
 										<div class="form-group">
-											<div class="col-md-4">
-												<div class="form-group">
-													<a href="{{$item->attachment}}&isCover=true&isIsi=false"> Download Sampul/Judul Laporan </a>
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group">
-													<a href="{{$item->attachment}}&isCover=false&isIsi=true"> Download Isi Laporan </a>
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group">
-													<a href="{{$item->attachment}}"> Download Keseluruhan Laporan </a>
-												</div>
-											</div>
+											<label>
+												No. Laporan Uji : {{$item->no}}
+											</label>
 										</div>
 									</div>
 									@else
