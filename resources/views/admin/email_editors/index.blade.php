@@ -29,35 +29,50 @@
 				</ol>
 			</div>
 		</section>
+
+
 		<!-- end: PAGE TITLE -->
 		<!-- start: RESPONSIVE TABLE -->
 		<div class="container-fluid container-fullw bg-white">
-	        <div class="row">
-				<div class="col-md-6">
-					<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><em class="ti-update"></em> Update Logo</a>
-				</div>
-				<div class="col-md-12 panel panel-info">
-					<div id="collapse1" class="panel-collapse collapse">
-						{!! Form::open(array('url' => 'admin/email_editors/update_logo_signature', 'method' => 'POST', 'enctype' => 'multipart/form-data')) !!}
-						{!! csrf_field() !!}
-						<fieldset>
-							<legend>
-								Update Logo
-							</legend>
-							<div class="row">
-								<div class="col-md-12">
-									<img src="{{ \Storage::disk('minio')->url('email_editors/'.$data[0]->logo) }}" width="240" alt="Logo"/>
-									<input type="file" name="image" class="form-control" accept="image/jpg, image/jpeg, image/png" required>
-								</div>
-								<div class="col-md-12">
-									<button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
-										Update
-									</button>
-								</div>
+			<div class="col-md-12 panel panel-info">
+				<div class="panel">					{!! Form::open(array('url' => 'admin/email_editors/update_logo_signature', 'method' => 'POST', 'enctype' => 'multipart/form-data')) !!}
+					{!! csrf_field() !!}
+					<fieldset>
+						<legend>
+							Update Logo
+						</legend>
+						<div class="row">
+							<div class="col-md-12">
+								@if (isset($data[0])) 
+								<img src="{{ \Storage::disk('minio')->url('logo/'.$data[0]->logo) }}" width="240" alt="Logo"/>
+								@endif
+								<input type="file" name="logo" class="form-control" accept="image/jpg, image/jpeg, image/png" required>
 							</div>
-						</fieldset>
-					</div>
+							<div class="col-md-12">
+								<button type="submit" class="btn btn-wide btn-green btn-squared pull-right">
+									Update
+								</button>
+							</div>
+						</div>
+					</fieldset>
+					{!! Form::close() !!}
+
 				</div>
+			</div>
+	        <div class="row">
+				<div class="col-md-12">
+	                <span class="input-icon input-icon-right search-table right">
+						{!! Form::open(array('url' => 'admin/email_editors', 'method' => 'GET', 'enctype' => 'multipart/form-data')) !!}
+						{!! csrf_field() !!}
+	                    <input id="search_value" type="text" name="search" placeholder="Search" id="form-field-17" 
+							class="form-control" value="{{ $search }}">
+	                    <em class="ti-search"></em>
+						{!! Form::close() !!}
+	                </span>
+	            </div>
+	        </div>
+
+	        <div class="row">
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer"><caption> </caption>
@@ -83,7 +98,7 @@
 												<a href="{{URL::to('admin/email_editors/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
 												{!! Form::open(array('url' => 'admin/email_editors/'.$item->id, 'method' => 'DELETE')) !!}
 													{!! csrf_field() !!}
-													<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')"><em class="fa fa-times fa fa-white"></em></button>
+												<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')"><em class="fa fa-times fa fa-white"></em></button>
 												{!! Form::close() !!}
 											</div>
 										</td>
@@ -105,11 +120,8 @@
 		</div>
 		<!-- end: RESPONSIVE TABLE -->
 		<div class="col-md-12 panel panel-info">
-			<div class="col-md-6">
-				<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse2" style="margin-right: 10px;"><em class="ti-update"></em> Update Signature</a>
-			</div>
 			<div class="col-md-12 panel panel-info">
-				<div id="collapse2" class="panel-collapse collapse">
+				<div class="panel">
 					{!! Form::open(array('url' => 'admin/email_editors/update_logo_signature', 'method' => 'POST', 'enctype' => 'multipart/form-data')) !!}
 					{!! csrf_field() !!}
 					<fieldset>
@@ -118,13 +130,12 @@
 						</legend>
 						<div class="row">
 							<div class="col-md-12">
-								<?php 
-									$signature = str_replace('&', '&amp;', $data[0]->signature);
-								?>
-								<textarea type="text" id="signature" name="signature" class="form-control" placeholder="Signature ..."><?= $signature ?></textarea>
+								@if (isset($data[0]))
+								<textarea type="text" id="signature" name="signature" class="form-control" placeholder="Signature ...">{!! str_replace('&', '&amp;', $data[0]->signature); !!}</textarea>
+								@endif
 							</div>
 							<div class="col-md-12">
-								<button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
+								<button type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 									Update
 								</button>
 							</div>
@@ -132,7 +143,7 @@
 					</fieldset>
 				</div>
 			</div>
-
+			
 		</div>
 	</div>
 </div>

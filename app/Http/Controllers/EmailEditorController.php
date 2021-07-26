@@ -6,16 +6,12 @@ use Illuminate\Http\Request;
 use App\EmailEditor;
 use App\Services\Logs\LogService;
 use Illuminate\Support\Facades\DB;
-use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
+use App\Services\FileService;
 
 use Session;
 use Auth;
 
 use Ramsey\Uuid\Uuid;
-
-use App\Http\Requests;
-
-use function JmesPath\search;
 
 class EmailEditorController extends Controller
 {
@@ -36,7 +32,8 @@ class EmailEditorController extends Controller
         if (!$currentUser) {return redirect('login');}
         
         $limit = 100;
-        $search = trim($request->input('search'));
+
+        $search = trim($request->search);
 
         $query = EmailEditor::whereNotNull('created_at');
 
@@ -178,14 +175,16 @@ class EmailEditorController extends Controller
         $oldEmails = EmailEditor::whereNotNull('created_at');
         $updateEmails = DB::table('email_editors');
         $updateFields = array();
-        if ($request->has('logo')){
+
+        if ($request->file('logo')) {
             $fileService = new FileService();
             $fileProperties = array(
                 'path' => 'logo/'
             );
             $fileService->upload($request->file('logo'), $fileProperties);
-            $updateFields += ['logo' => $request['logo']];
+            $updateFields += ['logo' => $fileService->getFileName()];
         }
+
         if ($request->has('signature')) {
             $updateFields += ['signature' => $request['signature']];
         }
