@@ -134,7 +134,7 @@
 									<label for="device_made_in">{{ trans('translate.service_device_manufactured_by') }} *</label>
 									<input type="text" name="device_made_in" placeholder="Jakarta" id="device_made_in" class="required">
 								</div>
-								<div class="form-group">
+								<div class="form-group" id="device-serial-number-form-group">
 									<label for="device_serial_number">{{ trans('translate.service_device_serial_number') }} *</label>
 									<input type="text" name="device_serial_number" placeholder="123456789456"  id="device_serial_number" class="required">
 								</div>
@@ -186,9 +186,9 @@
 										</div>
 									</div> 
 								@endif
-								<div class="dv-dll">
+								<div class="dv-dll" id="dll-file-form-group">
 									<div class="form-group col-xs-12">
-										<label>{{ trans('translate.service_upload_another_file') }}</label>
+										<label>{{ trans('translate.service_upload_another_file') }}<span class="text-danger"></span></label>
 										<input class="data-upload-berkas f1-file-dll" id="dllFile" name="dllFile" type="file" accept="application/pdf,image/*" >
 										<div id="dll-file"></div>
 										<div class="attachment-file">
@@ -481,14 +481,75 @@
 
   <script src="{{url('vendor/chosen/chosen.jquery.js')}}" type="text/javascript"></script>
   <script type="text/javascript">
-	$("#test_reference").change(function(){
+  	const referensiUjiList = {!! json_encode($data_stels) !!};
+	const serialNumberRequrement = {
+		'Lab Energi'	: 'mandatory',
+		'Lab Transmisi'	: 'mandatory',
+		'Lab CPE'		: 'mandatory',
+		'Lab Kabel'		: 'not mandatory',
+		'Lab Kal'		: 'not mandatory',
+		'Lab EMC'		: 'not mandatory',
+	}
+	const dataseetMandatory = {
+		'lab'			: ['Lab Transmisi', 'Lab Energi', 'Lab Device'],
+		'testType'		: ['qa', 'ta', 'vt']
+	}
+	let lab = '';
+
+	const setSerialNumberMandatory = ( mandatoryStatus = 'not mandatory' ) => {
+		const deviceSerialNumberLabel = $('#device-serial-number-form-group label');
+		const deviceSerialNumberInput = $('#device_serial_number');
+		let serialNumberLabelText = deviceSerialNumberLabel.html();
+		if ( mandatoryStatus == 'not mandatory' ){
+			deviceSerialNumberInput.removeClass('required');
+			deviceSerialNumberInput.removeClass('error');
+			if (serialNumberLabelText.substring(serialNumberLabelText.length -2) == ' *'  ){
+				deviceSerialNumberLabel.html(serialNumberLabelText.substring(0, serialNumberLabelText.length -2));
+			}
+		} else if ( mandatoryStatus == 'mandatory' ){
+			deviceSerialNumberInput.addClass('required');
+			if (serialNumberLabelText.substring(serialNumberLabelText.length -2) != ' *'  ){
+				deviceSerialNumberLabel.html(serialNumberLabelText+' *');
+			}
+		}
+	}
+
+	const setDataseetMandatory = ( isMandatory = false ) => {
+		dataseetInput = $('#dll-file-form-group input');
+		dataseetRequiredLabel = $('#dll-file-form-group label span');
+
+		if (isMandatory){
+			dataseetInput.addClass('required');
+			dataseetRequiredLabel.html('*');
+		}else{
+			dataseetInput.removeClass('required');
+			dataseetInput.removeClass('error');
+			dataseetRequiredLabel.html('');
+		}
+	}
+
+	$("#test_reference").change(function(event){
 		$(".chosen-select").trigger("chosen:updated");
 		var e = document.getElementById("test_reference");
+		if (e.options[e.selectedIndex] == undefined) {
+			leb = '';
+			return false;
+		}
 		var strUser = e.options[e.selectedIndex].text;
 		var res = strUser.split('||');
 		var deviceName = res[1].replace(/spesifikasi telekomunikasi |spesifikasi telekomunikasi perangkat |telecommunication specification |spesifikasi perangkat |perangkat /gi,"");
+		let documentName = res[0].trim();
 		deviceName = deviceName.trim();
 		$('#device_name').val(deviceName);
-	});
+
+		referensiUjiList.forEach((referensiUji)=>{		
+			referensiUji.stel == documentName && (lab = referensiUji.labDescription);
+		});
+
+		setSerialNumberMandatory( serialNumberRequrement[lab] );
+		setDataseetMandatory( dataseetMandatory.lab.includes(lab) && dataseetMandatory.testType.includes(jns_pengujian)  )
+	});	
+
+
  </script>
 @endsection
