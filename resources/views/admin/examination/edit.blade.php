@@ -3278,30 +3278,20 @@
 									@if($rev_uji == 0)
 										@php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;@endphp
 									@endif
-									@if($item->attachment != '')
 									<div class="col-md-12">
 										<div class="form-group">
 											<label>
-												Laporan Hasil Pengujian dari OTR :
+												Laporan Hasil Pengujian dari OTR : @if($item->attachment != '') <a href="{{$item->attachment}}"> Download</a> @else Belum Tersedia @endif
 											</label>
 										</div>
 									</div>
 									<div class="col-md-12">
 										<div class="form-group">
 											<label>
-												No. Laporan Uji : {{$item->no}}
+												No. Laporan Uji : @if($item->attachment != '') {{ $item->no }} @else Belum Tersedia @endif
 											</label>
 										</div>
 									</div>
-									@else
-									<div class="col-md-12">
-										<div class="form-group">
-											<label>
-												Laporan Hasil Pengujian dari OTR : Belum Tersedia
-											</label>
-										</div>
-									</div>
-									@endif
 								@endif
 								@if($item->name == 'Revisi Laporan Uji' && $rev_uji == 0)
 									@php $rev_uji = 1; $lap_uji_url = URL::to('/admin/examination/media/download/'.$item->id); $lap_uji_attach = $item->attachment;@endphp
@@ -3489,30 +3479,20 @@
 							@foreach($data->media as $item)
 								@if($item->name == 'Laporan Uji')
 									@php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;@endphp
-									@if($item->attachment != '')
 									<div class="col-md-12">
 										<div class="form-group">
 											<label>
-												Laporan Hasil Pengujian dari OTR :
+												Laporan Hasil Pengujian dari OTR : @if($item->attachment != '') <a href="{{$item->attachment}}"> Download</a> @else Belum Tersedia @endif
 											</label>
 										</div>
 									</div>
-									<div class="col-md-12">
-										<div class="form-group">
-										<label>
-												No. Laporan Uji : {{ $item->no }}
-											</label>
-										</div>
-									</div>
-									@else
 									<div class="col-md-12">
 										<div class="form-group">
 											<label>
-												Laporan Hasil Pengujian dari OTR : Belum Tersedia
+												No. Laporan Uji : @if($item->attachment != '') {{ $item->no }} @else Belum Tersedia @endif
 											</label>
 										</div>
 									</div>
-									@endif
 								@endif
 							@endforeach
 							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
@@ -3646,30 +3626,20 @@
 							@foreach($data->media as $item)
 								@if($item->name == 'Laporan Uji')
 									@php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;@endphp
-									@if($item->attachment != '')
 									<div class="col-md-12">
 										<div class="form-group">
 											<label>
-												Laporan Hasil Pengujian dari OTR :
+												Laporan Hasil Pengujian dari OTR : @if($item->attachment != '') <a href="{{$item->attachment}}"> Download</a> @else Belum Tersedia @endif
 											</label>
 										</div>
 									</div>
 									<div class="col-md-12">
 										<div class="form-group">
 											<label>
-												No. Laporan Uji : {{$item->no}}
+												No. Laporan Uji : @if($item->attachment != '') {{ $item->no }} @else Belum Tersedia @endif
 											</label>
 										</div>
 									</div>
-									@else
-									<div class="col-md-12">
-										<div class="form-group">
-											<label>
-												Laporan Hasil Pengujian dari OTR : Belum Tersedia
-											</label>
-										</div>
-									</div>
-									@endif
 								@endif
 							@endforeach
 							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
