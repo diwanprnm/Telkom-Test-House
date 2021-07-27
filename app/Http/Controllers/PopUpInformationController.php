@@ -110,7 +110,7 @@ class PopUpInformationController extends Controller
         $this->validate($request, [
             self::TITLE => self::REQUIRED,
             self::IS_ACTIVE => 'required|boolean',
-            self::IMAGE => 'required|mimes:jpg,jpeg,png'
+            self::IMAGE => 'required|mimes:jpg,jpeg,png,jfif'
         ]);
 
         $currentUser = Auth::user();
@@ -181,7 +181,7 @@ class PopUpInformationController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            self::IMAGE => 'mimes:jpg,jpeg,png'
+            self::IMAGE => 'mimes:jpg,jpeg,png,jfif'
         ]);
 
         $currentUser = Auth::user();
