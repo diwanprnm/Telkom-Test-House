@@ -3500,7 +3500,7 @@
 									<div class="col-md-12">
 										<div class="form-group">
 										<label>
-												No. Laporan Uji : {{$item->no}}
+												No. Laporan Uji : {{ $item->no }}
 											</label>
 										</div>
 									</div>
