@@ -786,7 +786,7 @@ class ProductsController extends Controller
                 "name" => "PT. TELKOM INDONESIA (PERSERO) Tbk",
                 self::ADDRESS => "Telkom Indonesia Graha Merah Putih, Jalan Japati No.1 Bandung, Jawa Barat, 40133",
                 self::PRONE => "(+62) 812-2483-7500",
-                self::EMAIL => "urelddstelkom@gmail.com",
+                self::EMAIL => "cstth@telkom.co.id",
                 "npwp" => "01.000.013.1-093.000"
             ],
             "to" => [

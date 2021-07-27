@@ -64,7 +64,7 @@ class ProfileController extends Controller
     private const USER_NAME = 'username';
     private const USER_NAME2 = 'user_name';
     private const USER_EMAIL = 'user_email';
-    private const EMAIL_STEL= 'urelddstelkom@gmail.com';
+    private const EMAIL_STEL= 'cstth@telkom.co.id';
     private const STATUS = 'status';
     private const COMPANY_ID = 'company_id';
     private const ATTRIBUTES = 'attributes'; 
