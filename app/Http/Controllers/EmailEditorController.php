@@ -215,9 +215,11 @@ class EmailEditorController extends Controller
 
         if ($email){
             try{
-                $data_log = Logs::where('id', '=', $id);
-                $data_log->delete();
+                $oldEmail = clone $email;
                 $email->delete();
+                
+                $logService = new LogService();
+                $logService->createLog('Delete Email', 'Email Editor', $oldEmail);
                 
                 Session::flash('message', 'Email successfully deleted');
                 return redirect('admin/email_editors');
