@@ -61,7 +61,7 @@
 		<br>
 		45012
 		<br><br>
-		Mohon untuk melakukan <strong>koordinasi terlebih dahulu</strong> terkait slot waktu uji fungsi dan kelengkapan perangkat dengan menghubungi staff User Relation di (022) 4571145 atau dengan mengirimkan email ke urelddstelkom@gmail.com .
+		Mohon untuk melakukan <strong>koordinasi terlebih dahulu</strong> terkait slot waktu uji fungsi dan kelengkapan perangkat dengan menghubungi staff User Relation di (022) 4571145 atau dengan mengirimkan email ke cstth@telkom.co.id .
 		<br><br>
 		Salam hangat,
 		<br>

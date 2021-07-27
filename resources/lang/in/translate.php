@@ -34,7 +34,7 @@ return [
 	'service_company_cs'		=> 'Customer Service TTH',
 	'service_company_fax'		=> 'Faksimil',
 	'service_company_email'		=> 'Email',
-	'service_company_confirm'	=> '*Apabila ada perubahan data perusahaan, silakan email ke Admin urelddstelkom@gmail.com',
+	'service_company_confirm'	=> '*Apabila ada perubahan data perusahaan, silakan email ke Admin cstth@telkom.co.id',
 	
 	'service_device'				=> 'Data Perangkat', // Device Information
 	'service_device_equipment'		=> 'Nama Perangkat', // Device

@@ -2005,7 +2005,7 @@ class ExaminationController extends Controller
 	                "name" => "PT. TELKOM INDONESIA (PERSERO) Tbk",
 	                "address" => "Telkom Indonesia Graha Merah Putih, Jalan Japati No.1 Bandung, Jawa Barat, 40133",
 	                "phone" => "(+62) 812-2483-7500",
-	                "email" => "urelddstelkom@gmail.com",
+	                "email" => "cstth@telkom.co.id",
 	                "npwp" => "01.000.013.1-093.000"
 	            ],
 	            "to" => [
