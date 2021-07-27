@@ -195,10 +195,10 @@ class EmailEditorController extends Controller
             $logService = new LogService();  
             $logService->createLog('Update Email',"EmailEditors",json_encode($oldEmails));
             
-            Session::flash('message', 'Logo Signature successfully updated');
+            Session::flash('message', 'Logo or Signature Successfully Updated');
             return redirect('/admin/email_editors');
         }catch(Exception $e){
-            Session::flash('error', 'Logo Signature failed to updated');
+            Session::flash('error', 'Logo or Signature Failed to Updated');
             return redirect('/admin/email_editors');
         }
     }
