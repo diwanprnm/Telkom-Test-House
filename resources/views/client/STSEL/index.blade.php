@@ -80,7 +80,6 @@
 												<th class="center" scope="col">{{ trans('translate.stel_name') }}</th>
 												<th class="center" scope="col">{{ trans('translate.stel_code') }}</th>
 												<th class="center" scope="col">{{ trans('translate.stel_price') }}</th>
-												<th class="center" scope="col">{{ trans('translate.stel_version') }}</th>
 												<th class="center" scope="col">{{ trans('translate.stel_category') }}</th>
 											</tr>
 										</thead>
@@ -92,7 +91,6 @@
 												<td class="left">{{ $item->name }}</td>
 												<td class="left">{{ $item->code }}</td>
 												<td class="center">@php echo number_format($item->price, 0, '.', ','); @endphp</td>
-												<td class="center">{{ $item->version }}</td>
 												<td class="center">{{ $item->examinationLab->name }}</td>
 											</tr>
 											@php $no++ @endphp
