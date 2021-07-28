@@ -183,7 +183,7 @@
 								@for ($i = 0; $i < count($data->$status); $i++)
 								<tr>
 									<td class="center">{{$i+1}}</td>
-									<td class="center">{{'company_name'}}</td>
+									<td class="center">{{$data->$status[$i]->company_name}}</td>
 									<td class="center">{{$data->$status[$i]->start_date}}</td>
 
 									<td class="center">{{$data->$status[$i]->invoice}}</td>
@@ -192,7 +192,16 @@
 
 									<td class="center">{{$data->$status[$i]->payment_method ?? '-'}}</td>
 									<td class="center">{{$data->$status[$i]->PO_ID ?? '-'}}</td>
-									<td class="center">{{'action here'}}</td> 
+									<td class="center">
+										<div>
+											<a href="{{URL::to('admin/chamber/'.$data->$status[$i]->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
+										</div>
+									</td>
+									<td class="center">
+										<div>
+											<a href="{{URL::to('admin/chamber/'.$data->$status[$i]->id.'/upload')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Upload"><em class="fa fa-upload"></em></a>
+										</div>
+									</td>
 								</tr>
 								@endfor
 							@else
