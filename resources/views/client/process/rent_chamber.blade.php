@@ -87,7 +87,7 @@
 		#numberOfDaysSelect{
 			width: 100% !important;
 		}
-		#endOfBookingDate{
+		#list-of-rent-date{
 			font-size: 18px;
 		}
 		label{
@@ -154,14 +154,14 @@
 									<div class="row">
 										<div class="col-md-4">
 											<div class="form-group">
-												<label for="exampleFormControlInput1">{{ trans('translate.rent_chamber_client_label_rent_date') }}</label>
+												<label for="exampleFormControlInput1">{{ trans('translate.rent_chamber_client_label_choose_date') }}</label>
 												<input type="text" class="form-control date" id="exampleFormControlInput1" placeholder="YYYY-MM-DD">
 											</div>
 										</div>
 
 										<div class="col-md-4">
 											<div class="form-group">
-												<label for="exampleFormControlSelect1">{{ trans('translate.rent_chamber_client_label_rent_duration') }}</label>
+												<label for="exampleFormControlSelect1">{{ trans('translate.rent_chamber_client_label_choose_duration') }}</label>
 												<select class="form-control" id="duratonOfRent">
 													<option value="1">1 {{ trans('translate.chamber_days') }}</option>
 													<option value="2">2 {{ trans('translate.chamber_days') }}</option>
@@ -172,9 +172,9 @@
 										<div class="col-md-4">
 											<div class="form-group">
 												<label>
-													{{ trans('translate.rent_chamber_client_label_rent_until') }}
+													{{ trans('translate.rent_chamber_client_label_rent_date') }}
 												</label>
-												<p id="endOfBookingDate">..</p>
+												<p id="list-of-rent-date">...</p>
 											</div>
 										</div>
 
@@ -248,7 +248,6 @@ let messagesChamberHasBeenRented = "The date you requested is already rented by 
 if (locale == 'Indonesia'){
 	messagesServerError = "Kesalahan pada server saat pengiriman data.";
 	messagesChamberHasBeenRented = "Tanggal yang anda minta baru saja di sewa pelanggan lain.";
-
 }
 
 $(window).bind('beforeunload',function(){
@@ -438,12 +437,29 @@ $( document ).ready(function() {
 			setMonthCalendarView(startRentDate);
 			setDayLabelWithClass(toBeBookedDates,'blue');
 			setDayLabelWithClass(bookedDates,'red');
-			date = moment(toBeBookedDates[toBeBookedDates.length-1], 'YYYYMMDD');
-			rentUntilText = date.format('dddd, DD MMMM YYYY')
-			if (locale == 'Indonesia'){
-				rentUntilText = `${indonesiaDayName[date.day()]}, ${date.format('DD')} ${indonesiaMonthName[date.month()]} ${date.year()}`;
-			}
-			$('#endOfBookingDate').html(rentUntilText);
+			
+			listOfDate = toBeBookedDates.map((date)=>{
+				let dateMoment = moment(date, 'YYYYMMDD');
+				if (locale == 'Indonesia'){
+					textDate = dateMoment.format('DD')+' '+indonesiaMonthName[ parseInt(dateMoment.format('MM'))-1 ]+' '+dateMoment.format('YYYY');
+				}else{
+					textDate = moment(startRentDate, 'YYYYMMDD').format('DD MMMM YYYY');
+				}
+				return textDate;
+			});
+
+			textListOfDate = listOfDate.reduce((text, current)=>{
+				return `${text}, <br>${current}`;
+			});
+
+			console.log(textListOfDate)
+
+			textListOfDate = textListOfDate.replace(/,(?=[^,]*$)/, ' &');
+
+			console.log(textListOfDate)
+
+			
+			$('#list-of-rent-date').html(textListOfDate);
 		}
 	}
 
@@ -491,7 +507,7 @@ $( document ).ready(function() {
 	sendFormRentChamber = () => {
 		let isSuccedd = false;
 		$.ajax({
-			url: "{{url('testForm')}}",
+			url: "{{url('chamber')}}",
 			type: 'POST',
 			async: false,
 			data: new FormData($("#form-permohonan")[0]),

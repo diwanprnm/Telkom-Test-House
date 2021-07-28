@@ -187,7 +187,7 @@
 									<td class="center">{{$data->$status[$i]->start_date}}</td>
 
 									<td class="center">{{$data->$status[$i]->invoice}}</td>
-									<td class="center">{{'Rp. '.$data->$status[$i]->total}}</td>
+									<td class="center">{{ "Rp " . number_format($data->$status[$i]->total,0,'','.') . ",-" }}</td>
 									<td class="center">{{$status}}</td>
 
 									<td class="center">{{$data->$status[$i]->payment_method ?? '-'}}</td>
