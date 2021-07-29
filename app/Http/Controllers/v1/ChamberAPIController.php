@@ -11,10 +11,10 @@ use Response;
 class ChamberAPIController extends AppBaseController
 {
     
-    public function getDateRented(Request $param)
+    public function getDateRented()
     {
-		$rentedDates = DB::table('chamber_detail')->select('chamber_id as id', 'date')->get();
-		return response()->json($rentedDates);
+      $rentedDates = DB::table('chamber_detail')->select('chamber_id as id', 'date')->get();
+      return response()->json($rentedDates);
     }
 	 
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Session;
+use Auth;
 
 // Services
 use App\Services\Querys\QueryFilter;
@@ -12,6 +14,7 @@ use App\Services\Logs\LogService;
 
 // Models
 use App\Chamber;
+use App\Chamber_detail;
 
 class ChamberAdminController extends Controller
 {
@@ -61,12 +64,56 @@ class ChamberAdminController extends Controller
 
     public function edit($id)
     {
-        //
+        $chambers = DB::table('chamber')
+            ->select('chamber.*', 'companies.name as company_name')
+            ->join('companies', 'companies.id', '=', 'chamber.company_id')
+            ->where('chamber.id', $id)
+            ->first()
+        ;
+        $chamber_details = Chamber_detail::where('chamber_id',$chambers->id)->get();
+
+        return view('admin.chamber.edit')
+            ->with('data', $chambers)
+            ->with('dataDetail', $chamber_details)
+        ;
     }
 
     public function update(Request $request, $id)
     {
-        //
+        // Forn Vaildation
+        $this->validate($request, [
+            'start_date' => 'required',
+            'price' => 'required',
+        ]);
+
+        // Update Record
+        Chamber_detail::where('chamber_id',$id)->delete();
+        $chamber = Chamber::find($id);
+        $chamber->start_date = $request->input('start_date');
+        $chamber->end_date = $request->input('end_date', null);
+        $chamber->price = (int) preg_replace("/[^0-9]/", "", $request->input('price', 0) );
+        $chamber->tax = $chamber->price * 0.1;
+        $chamber->total = $chamber->price * 1.1;
+        $chamber->duration = $chamber->end_date ? 2 : 1;
+        $chamber->updated_by = Auth::user()->id;
+        $chamber->save();
+
+        // List Dates
+        $chamberDetails = [];
+        array_push($chamberDetails, $request->input('start_date'));
+        if ($request->input('end_date')){
+            array_push($chamberDetails, $request->input('end_date'));
+        }
+
+        // Create detail corresponding to List dates
+        foreach ($chamberDetails as $date){
+            $chamberDetail = new Chamber_detail;
+            $chamberDetail->date = $date;
+            $chamberDetail->chamber_id = $chamber->id;
+            $chamberDetail->save();
+        }
+        Session::flash('message', 'Chamber data successfully updated');
+        return redirect("admin/chamber/$id/edit");
     }
 
     public function destroy($id)
