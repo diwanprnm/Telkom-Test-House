@@ -292,9 +292,9 @@ currentTab = url.searchParams.get("tab") ?? 'tab-unpaid';
 // Get url parameter from filter
 const getFilterParam = () =>  {
 	return {
-		search:	$('#filter_search_input').val(),
-		after: $('#filter_after_date_input').val(),
-		before:	$('#filter_before_date_input').val(),
+		search: $('#filter_search_input').val(),
+		after_date: $('#filter_after_date_input').val(),
+		before_date: $('#filter_before_date_input').val(),
 		tab: $('.tabs .current').attr('data-tab'),
 	}
 };
@@ -302,8 +302,8 @@ const getFilterParam = () =>  {
 // Set filter from url parameter
 const setFilterByParam = () =>  {
 	$('#filter_search_input').val(url.searchParams.get("search"));
-	$('#filter_after_date_input').val(url.searchParams.get("after"));
-	$('#filter_before_date_input').val(url.searchParams.get("before"));
+	$('#filter_after_date_input').val(url.searchParams.get("after_date"));
+	$('#filter_before_date_input').val(url.searchParams.get("before_date"));
 	$(`.${currentTab}`).addClass('current');
 };
 

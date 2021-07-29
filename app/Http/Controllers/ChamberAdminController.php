@@ -8,12 +8,15 @@ use App\Http\Requests;
 
 // Services
 use App\Services\Querys\QueryFilter;
+use App\Services\Logs\LogService;
 
 // Models
 use App\Chamber;
 
 class ChamberAdminController extends Controller
 {
+
+    private $request;
 
     public function __construct()
     {
@@ -26,6 +29,7 @@ class ChamberAdminController extends Controller
         $paginate = 2;
         $search = trim(strip_tags($request->input('search','')));
         $statuses = ['unpaid', 'paid', 'delivered'];
+        $this->request = $request;
 
         // Get data
         $rentChamber = new \stdClass();        
@@ -73,10 +77,30 @@ class ChamberAdminController extends Controller
 
     private function getChamberByPaymentStatus($paymentStatus = 0)
     {
-        return DB::table('chamber')
+        // Initial
+        $logService = new LogService();
+        $search = $this->request->input('search', '');
+        $dataRentChambers = DB::table('chamber')
             ->join('companies', 'companies.id', '=', 'chamber.company_id')
             ->select('chamber.id as id', 'chamber.start_date as start_date', 'chamber.invoice as invoice', 'chamber.total as total', 'chamber.payment_status as payment_status', 'companies.name as company_name')
             ->where('chamber.payment_status', $paymentStatus)
+        ;
+
+        // If search something crate log
+        if($search){
+            $dataRentChambers = $dataRentChambers->where(function($q) use ($search){
+                $q->where('chamber.invoice','like','%'.$search.'%')->orWhere('companies.name', 'like', '%'.$search.'%');
+            });
+            $logService->createLog('Search Rent Chamber','Chamber',json_encode( ['search' => $search] ));
+        }
+
+        // Filter the query then return it
+        $queryFilter = new QueryFilter($this->request, $dataRentChambers);
+        return $queryFilter
+            ->beforeDate(DB::raw('DATE(chamber.start_date)'))
+            ->afterDate(DB::raw('DATE(chamber.start_date)'))
+            ->getSortedAndOrderedData('chamber.created_at','desc')
+            ->getQuery()
         ;
     }
 
