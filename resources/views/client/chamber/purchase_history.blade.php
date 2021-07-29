@@ -60,7 +60,7 @@
                                                     <td>
                                                         {{$item->start_date}} 
                                                         @if($item->start_date != $item->end_date) 
-                                                            {{ trans('translate.rent_chamber_client_label_rent_until') }} {{$item->end_date}} 
+                                                            & {{$item->end_date}} 
                                                         @endif
                                                     </td>
                                                     <td>{{$item->duration}} {{ trans('translate.chamber_days') }}</td>
@@ -131,7 +131,7 @@
                                                     <td>
                                                         {{$item->start_date}} 
                                                         @if($item->start_date != $item->end_date) 
-                                                            {{ trans('translate.rent_chamber_client_label_rent_until') }} {{$item->end_date}} 
+                                                            & {{$item->end_date}} 
                                                         @endif
                                                     </td>
                                                     <td>{{$item->duration}} {{ trans('translate.chamber_days') }}</td>
@@ -193,7 +193,7 @@
                                                     <td>
                                                         {{$item->start_date}} 
                                                         @if($item->start_date != $item->end_date) 
-                                                            {{ trans('translate.rent_chamber_client_label_rent_until') }} {{$item->end_date}} 
+                                                            & {{$item->end_date}} 
                                                         @endif
                                                     </td>
                                                     <td>{{$item->duration}} {{ trans('translate.chamber_days') }}</td>

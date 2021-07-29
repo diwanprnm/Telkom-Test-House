@@ -477,6 +477,7 @@ return [
 	'rent_chamber_client_label_choose_date' => 'Pilih Tanggal',
 	'rent_chamber_client_label_choose_duration' => 'Pilih Durasi',
 	'rent_chamber_client_label_rent_date' => 'Tanggal Sewa',
+	'rent_chamber_client_label_rent_duration' => 'Durasi',
 	'chamber_days'  => 'hari',
 	'rent_chamber_client_notes' => "<label>CATATAN</label></br>* Tanda merah menandakan chamber sudah di booking.</br>* Tanda biru menandakan chamber yang anda pilih.</br>* Tidak bisa menyewa dihari Sabtu dan Minggu.",
 	'rent_chamber_client_label_waiting_verification'  => 'Menunggu Verifikasi',
