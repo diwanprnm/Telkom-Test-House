@@ -453,7 +453,7 @@ class HomeController extends Controller
 		{
 			$records = DB::table('stels')
 				->join('examination_labs', 'examination_labs.id', '=', 'stels.type')
-				->select('stels.code as stel', 'stels.name as name', 'stels.type as lab', 'examination_labs.description as labInit')
+				->select('stels.code as stel', 'stels.name as device_name', 'stels.type as lab', 'examination_labs.description as labInit')
 				->where('stels.is_active', 1)
 				->where('stels.stel_type', 4)
 				->get()
