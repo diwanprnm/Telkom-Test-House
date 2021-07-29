@@ -1,35 +1,35 @@
 @extends('layouts.app')
 
 @section('content')
+<style type="text/css">
+	ul.tabs{
+		margin: 0px;
+		padding: 0px;
+		list-style: none;
+		margin-bottom: 10px;
+	}
+	ul.tabs li{
+		background: none;
+		color: #222;
+		display: inline-block;
+		padding: 10px 15px;
+		cursor: pointer;
+	}
 
-<style>
+	ul.tabs li.current{
+		background: #FF3E41;
+		color: #ffffff;
+	}
 
-.tab button {
-  background-color: inherit;
-  float: left;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 14px 16px;
-  transition: 0.3s;
-  font-size: 17px;
-}
+	.tab-content{
+		display: none;
+		/*background: #FF3E41;
+		padding: 15px;*/
+	}
 
-/* Change background color of buttons on hover */
-.btn:hover {
-  background-color: rgb(219, 171, 67);
-}
-
-/* Create an active/current tablink class */
-.btn.active {
-  background-color: rgb(0, 46, 253);
-}
-.tabcontent {
-  display: none;
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-top: none;
-}
+	.tab-content.current{
+		display: inherit;
+	}
 </style>
 <div class="main-content" >
 	<div class="wrap-content container" id="container">
@@ -93,8 +93,8 @@
 										Konten/Isi *
 									</label>
 									<ul class="tabs">
-										<li class="btn tab-1 tablinks" data-tab="tab-1" id="defaultOpen" onclick="openTab(event, 'Input')">Write</li>
-										<li class="btn tab-2 tablinks" data-tab="tab-2" id="previewtab" onclick="openTab(event, 'Preview');updateFields()">Preview</li>
+										<li class="btn tab-1 current" data-tab="tab-1" id="defaultOpen" onclick="openTab(event, 'Input')">Editor</li>
+										<li class="btn tab-2" data-tab="tab-2" id="previewtab" onclick="openTab(event, 'Preview');updateFields()">Preview</li>
 									</ul>
 
 									<div id="Input" class="tabcontent">
@@ -173,6 +173,20 @@
 	  document.getElementById(tab).style.display = "block";
 	  evt.currentTarget.className += " active";
 	}
+
+	jQuery(document).ready(function() {
+		FormElements.init();
+
+		$('ul.tabs li').click(function(){
+			var tab_id = $(this).attr('data-tab');
+
+			$('ul.tabs li').removeClass('current');
+			$('.tab-content').removeClass('current');
+
+			$(this).addClass('current');
+			$("#"+tab_id).addClass('current');
+		})
+	});
 
 	document.getElementById("defaultOpen").click();
 
