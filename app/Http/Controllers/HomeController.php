@@ -11,11 +11,7 @@ use Auth;
 use Response;
 use Storage;
 
-use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
-
-use App\Events\Notification;
-use App\NotificationTable;
+use App\Faq;
 use App\Footer;
 use App\AdminRole;
 use App\ExaminationLab;
@@ -31,6 +27,15 @@ class HomeController extends Controller
 	private const DATA_SALES = 'data_stels';
 	private const TO_LOGIN = '/login';
 	private const MESSAGE = 'message';
+	private static $CATEGORY = [
+        '1' => 'Registrasi Akun',
+        '2' => 'STEL dan Pengujian Perangkat',
+        '3' => 'Uji Fungsi',
+        '4' => 'Invoice dan Pembayaran',
+        '5' => 'SPK',
+        '6' => 'Kapabilitas TTH',
+        '7' => 'Pengambilan Laporan dan Sertifikat'
+    ];
 	
 	/**
      * Show the application dashboard.
@@ -78,13 +83,27 @@ class HomeController extends Controller
 			->with(self::MESSAGE, $message_slideshow);
     }
     
-    public function faq()
+    public function faq(Request $request)
     {
-    	$data = array();
+		$categoriesPair = [];
+        $search = trim($request->input('search'));
+    	$data = Faq::where('is_active', 1)
+			->where('question', 'like', '%'.strtolower($search).'%')
+			->orderBy('category')->get();
+		for ($i = 0; $i < count($data); $i++) {
+			foreach (self::$CATEGORY as $key => $value) {
+				if ($key == $data[$i]->category) {
+					$data[$i]->category = $value;
+					$categoriesPair[$value][] = $data[$i];
+				}
+			}
+		}
     	$page = "faq";
 		return view('client.faq')
-			->with('data', $data)
-			->with('page', $page);
+			->with('data', $categoriesPair)
+			->with('page', $page)
+			->with('search', $search)
+			;
     }
 
     public function contact()
