@@ -438,27 +438,19 @@ $( document ).ready(function() {
 			setDayLabelWithClass(toBeBookedDates,'blue');
 			setDayLabelWithClass(bookedDates,'red');
 			
+			// Create list date
 			listOfDate = toBeBookedDates.map((date)=>{
 				let dateMoment = moment(date, 'YYYYMMDD');
 				if (locale == 'Indonesia'){
 					textDate = dateMoment.format('DD')+' '+indonesiaMonthName[ parseInt(dateMoment.format('MM'))-1 ]+' '+dateMoment.format('YYYY');
 				}else{
-					textDate = moment(startRentDate, 'YYYYMMDD').format('DD MMMM YYYY');
+					textDate = moment(dateMoment, 'YYYYMMDD').format('DD MMMM YYYY');
 				}
 				return textDate;
 			});
 
-			textListOfDate = listOfDate.reduce((text, current)=>{
-				return `${text}, <br>${current}`;
-			});
-
-			console.log(textListOfDate)
-
-			textListOfDate = textListOfDate.replace(/,(?=[^,]*$)/, ' &');
-
-			console.log(textListOfDate)
-
-			
+			// format list date then set into html
+			textListOfDate = listOfDate.reduce((text, current)=> `${text}, <br>${current}`).replace(/,(?=[^,]*$)/, ' &');
 			$('#list-of-rent-date').html(textListOfDate);
 		}
 	}
