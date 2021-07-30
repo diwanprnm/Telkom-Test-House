@@ -164,7 +164,7 @@
 									<th class="center" scope="col">Status</th>
 									<th class="center" scope="col">Payment Method</th> 
 									<th class="center" scope="col">Document Code</th> 
-									<th class="center" colspan="2"  scope="colgroup">Action</th>  
+									<th class="center" colspan="2" scope="colgroup">Action</th>  
 								</tr>
 							</thead>
 							<tbody> 

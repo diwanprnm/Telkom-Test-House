@@ -1163,42 +1163,20 @@
 									@if($rev_uji == 0)
 										@php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;@endphp
 									@endif
-									@if($item->attachment != '')
 									<div class="col-md-12">
 										<div class="form-group">
 											<label>
-												Laporan Hasil Pengujian dari OTR :
+												Laporan Hasil Pengujian dari OTR : @if($item->attachment != '') <a href="{{$item->attachment}}"> Download</a> @else Belum Tersedia @endif
 											</label>
 										</div>
 									</div>
 									<div class="col-md-12">
 										<div class="form-group">
-											<div class="col-md-4">
-												<div class="form-group">
-													<a href="{{$item->attachment}}&isCover=true&isIsi=false"> Download Sampul/Judul Laporan </a>
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group">
-													<a href="{{$item->attachment}}&isCover=false&isIsi=true"> Download Isi Laporan </a>
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group">
-													<a href="{{$item->attachment}}"> Download Keseluruhan Laporan </a>
-												</div>
-											</div>
-										</div>
-									</div>
-									@else
-									<div class="col-md-12">
-										<div class="form-group">
 											<label>
-												Laporan Hasil Pengujian dari OTR : Belum Tersedia
+												No. Laporan Uji : @if($item->attachment != '') {{ $item->no }} @else Belum Tersedia @endif
 											</label>
 										</div>
 									</div>
-									@endif
 								@endif
 								@if($item->name == 'Revisi Laporan Uji' && $rev_uji == 0)
 									@php $rev_uji = 1; $lap_uji_url = URL::to('/admin/examination/media/download/'.$item->id); $lap_uji_attach = $item->attachment;@endphp

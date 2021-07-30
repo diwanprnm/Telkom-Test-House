@@ -219,27 +219,27 @@
 							 	</div>
 				              	<div class="form-group">
 									<label for="f1-nama-perangkat">{{ trans('translate.service_device_equipment') }} *</label>
-									<input type="text" name="f1-nama-perangkat" placeholder="Laptop/Phone, Etc." id="f1-nama-perangkat" class="required" value="{{$userData->nama_perangkat}}">
+									<input type="text" name="f1-nama-perangkat" placeholder="{{ trans('translate.example') }}Laptop/Phone, Etc." id="f1-nama-perangkat" class="required" value="{{$userData->nama_perangkat}}">
 								</div>
 								<div class="form-group">
 									<label for="f1-merek-perangkat">{{ trans('translate.service_device_mark') }} *</label>
-									<input type="text" name="f1-merek-perangkat" placeholder="Samsung/Huawei/ Etc."  id="f1-merek-perangkat" class="required" value="{{$userData->merk_perangkat}}">
+									<input type="text" name="f1-merek-perangkat" placeholder="{{ trans('translate.example') }}Samsung/Huawei/ Etc."  id="f1-merek-perangkat" class="required" value="{{$userData->merk_perangkat}}">
 								</div>
 								<div class="form-group">
 									<label for="f1-kapasitas-perangkat">{{ trans('translate.service_device_capacity') }} *</label>
-									<input type="text" name="f1-kapasitas-perangkat" placeholder="3.0"   id="f1-kapasitas-perangkat" class="required" value="{{$userData->kapasitas_perangkat}}">
+									<input type="text" name="f1-kapasitas-perangkat" placeholder="{{ trans('translate.example') }}3.0"   id="f1-kapasitas-perangkat" class="required" value="{{$userData->kapasitas_perangkat}}">
 								</div>
 								<div class="form-group">
 									<label for="f1-pembuat-perangkat">{{ trans('translate.service_device_manufactured_by') }} *</label>
-									<input type="text" name="f1-pembuat-perangkat" placeholder="Jakarta" id="f1-pembuat-perangkat" class="required" value="{{$userData->pembuat_perangkat}}">
+									<input type="text" name="f1-pembuat-perangkat" placeholder="{{ trans('translate.example') }}Indonesia" id="f1-pembuat-perangkat" class="required" value="{{$userData->pembuat_perangkat}}">
 								</div>
 								<div class="form-group">
 									<label for="f1-serialNumber-perangkat">{{ trans('translate.service_device_serial_number') }} *</label>
-									<input type="text" name="f1-serialNumber-perangkat" placeholder="123456789456"  id="f1-serialNumber-perangkat" class="required" value="{{$userData->serialNumber}}">
+									<input type="text" name="f1-serialNumber-perangkat" placeholder="{{ trans('translate.example') }}123456789456"  id="f1-serialNumber-perangkat" class="required" value="{{$userData->serialNumber}}">
 								</div>
 								<div class="form-group">
 									<label for="f1-model-perangkat">{{ trans('translate.service_device_model') }} *</label>
-									<input type="text" name="f1-model-perangkat" placeholder="L123456"   id="f1-model-perangkat" class="required" value="{{$userData->model_perangkat}}">
+									<input type="text" name="f1-model-perangkat" placeholder="{{ trans('translate.example') }}L123456"   id="f1-model-perangkat" class="required" value="{{$userData->model_perangkat}}">
 								</div>
 								<input type="hidden"   id="f1-fjns-referensi-perangkat" name="f1-jns-referensi-perangkat" value='1'>  
 				            </fieldset>

@@ -12,7 +12,7 @@ class FileService
     private $path = '';
     private $prefix = '';
     private $oldFile = '';
-    private $allowedImage = ['jpeg','jpg','png'];
+    private $allowedImage = ['jpeg','jpg','png','jfif'];
     private $allowedFile = ['pdf'];
     private $detail = '';
     private $isUploaded = false;
@@ -99,7 +99,7 @@ class FileService
             $this->isUploaded = Storage::disk('minio')->put("$this->path/$this->fileName",(string)$image->encode()); 
         }elseif (in_array($this->fileExtension, $this->allowedFile)){
             $this->isUploaded = Storage::disk('minio')->put("$this->path/$this->fileName", file_get_contents($file));
-        }else { $this->detail = 'The file included are neither images(jpg, jpeg, png) nor pdf'; }
+        }else { $this->detail = 'The file included are neither images(jpg, jpeg, png, jfif) nor pdf'; }
     }
 
     private function removeOldFile()

@@ -5,16 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\EmailEditor;
 use App\Services\Logs\LogService;
-use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
+use Illuminate\Support\Facades\DB;
+use App\Services\FileService;
 
 use Session;
 use Auth;
 
 use Ramsey\Uuid\Uuid;
-
-use App\Http\Requests;
-
-use function JmesPath\search;
 
 class EmailEditorController extends Controller
 {
@@ -35,7 +32,8 @@ class EmailEditorController extends Controller
         if (!$currentUser) {return redirect('login');}
         
         $limit = 100;
-        $search = trim($request->input('search'));
+
+        $search = trim($request->search);
 
         $query = EmailEditor::whereNotNull('created_at');
 
@@ -80,6 +78,8 @@ class EmailEditorController extends Controller
         $email->subject = $request->input('subject');
         $email->content = $request->input('content');
         $email->dir_name = $request->input('dir_name');
+        $email->signature = $request->input('signature');
+        $email->logo = $request->input('logo');
         $email->created_by = $currentUser->id;
         $email->updated_by = $currentUser->id;
 
@@ -163,6 +163,46 @@ class EmailEditorController extends Controller
         }
     }
 
+        /**
+     * Update the all logo and signature in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateLogoSignature(Request $request)
+    {
+        $currentUser = Auth::user();
+        $oldEmails = EmailEditor::whereNotNull('created_at');
+        $updateEmails = DB::table('email_editors');
+        $updateFields = array();
+
+        if ($request->file('logo')) {
+            $fileService = new FileService();
+            $fileProperties = array(
+                'path' => 'logo/'
+            );
+            $fileService->upload($request->file('logo'), $fileProperties);
+            $updateFields += ['logo' => $fileService->getFileName()];
+        }
+
+        if ($request->has('signature')) {
+            $updateFields += ['signature' => $request['signature']];
+        }
+        $updateFields += ['updated_by' => $currentUser->id];
+
+        try {
+            $updateEmails->update($updateFields);
+            $logService = new LogService();  
+            $logService->createLog('Update Email',"EmailEditors",json_encode($oldEmails));
+            
+            Session::flash('message', 'Logo or Signature Successfully Updated');
+            return redirect('/admin/email_editors');
+        }catch(Exception $e){
+            Session::flash('error', 'Logo or Signature Failed to Updated');
+            return redirect('/admin/email_editors');
+        }
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -175,9 +215,11 @@ class EmailEditorController extends Controller
 
         if ($email){
             try{
-                $data_log = Logs::where('id', '=', $id);
-                $data_log->delete();
+                $oldEmail = clone $email;
                 $email->delete();
+                
+                $logService = new LogService();
+                $logService->createLog('Delete Email', 'Email Editor', $oldEmail);
                 
                 Session::flash('message', 'Email successfully deleted');
                 return redirect('admin/email_editors');
