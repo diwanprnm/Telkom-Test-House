@@ -120,27 +120,27 @@
 								</div>
 									<div class="form-group">
 									<label for="device_name">{{ trans('translate.service_device_equipment') }} *</label>
-									<input type="text" name="device_name" placeholder="Laptop/Phone, Etc." id="device_name" class="required">
+									<input type="text" name="device_name" placeholder="{{ trans('translate.example') }} Laptop/Phone, Etc." id="device_name" class="required">
 								</div>
 								<div class="form-group">
 									<label for="device_mark">{{ trans('translate.service_device_mark') }} *</label>
-									<input type="text" name="device_mark" placeholder="{{ trans('translate.service_device_mark') }}"  id="device_mark" class="required">
+									<input type="text" name="device_mark" placeholder="{{ trans('translate.example') }} {{ trans('translate.service_device_mark') }}"  id="device_mark" class="required">
 								</div>
 								<div class="form-group">
 									<label for="device_capacity">{{ trans('translate.service_device_capacity') }} *</label>
-									<input type="text" name="device_capacity" placeholder="10 GHz"   id="device_capacity" class="required">
+									<input type="text" name="device_capacity" placeholder="{{ trans('translate.example') }} 10 GHz" id="device_capacity" class="required">
 								</div>
 								<div class="form-group">
 									<label for="device_made_in">{{ trans('translate.service_device_manufactured_by') }} *</label>
-									<input type="text" name="device_made_in" placeholder="Jakarta" id="device_made_in" class="required">
+									<input type="text" name="device_made_in" placeholder="{{ trans('translate.example') }} Indonesia" id="device_made_in" class="required">
 								</div>
 								<div class="form-group">
 									<label for="device_serial_number">{{ trans('translate.service_device_serial_number') }} *</label>
-									<input type="text" name="device_serial_number" placeholder="123456789456"  id="device_serial_number" class="required">
+									<input type="text" name="device_serial_number" placeholder="{{ trans('translate.example') }} 123456789456" id="device_serial_number" class="required">
 								</div>
 								<div class="form-group">
 									<label for="device_model">{{ trans('translate.service_device_model') }} *</label>
-									<input type="text" name="device_model" placeholder="L123456"   id="device_model" class="required">
+									<input type="text" name="device_model" placeholder="{{ trans('translate.example') }} L123456" id="device_model" class="required">
 								</div>
 								<div class="form-group"> 
 									<label for="examination_location" class="text-bold required">{{ trans('translate.service_label_testing_site') }}: </label>

@@ -111,7 +111,7 @@ class FooterController extends Controller
         $this->validate($request, [
             $this::DESC => self::REQUIRED,
             $this::ACT => 'required|boolean',
-            $this::IMAGE => 'required|mimes:jpg,jpeg,png'
+            $this::IMAGE => 'required|mimes:jpg,jpeg,png,jfif'
         ]);
 
         $currentUser = Auth::user();
@@ -195,7 +195,7 @@ class FooterController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            $this::IMAGE => 'mimes:jpg,jpeg,png'
+            $this::IMAGE => 'mimes:jpg,jpeg,png,jfif'
         ]);
 
         $currentUser = Auth::user();
