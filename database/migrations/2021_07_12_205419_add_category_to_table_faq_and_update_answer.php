@@ -14,7 +14,7 @@ class AddCategoryToTableFaqAndUpdateAnswer extends Migration
     {
         Schema::table('faq', function (Blueprint $table) {
             $table->text("answer")->change();
-            $table->enum("category", [1, 2, 3, 4, 5, 6, 7]);
+            $table->enum("category", [1, 2, 3, 4, 5, 6, 7])->nullable();
         });
     }
 
