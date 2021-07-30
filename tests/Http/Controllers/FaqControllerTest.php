@@ -39,9 +39,11 @@ class FaqControllerTest extends TestCase
 
     public function testStore()
     {
-        $this->actingAs(User::find(1))->call('POST', 'admin/faq', [
+        $response = $this->actingAs(User::find(1))->call('POST', 'admin/faq', [
             'question' => 'saya mau bertanya pak',
-            'answer' => 'ya silahkan, langsung saja'
+            'category' => '1',
+            'status' => '1',
+            'answer' => 'ya silahkan langsung saja'
         ]);
         $this->assertRedirectedTo('admin/faq', ['message' => 'FAQ successfully created']);
     }
