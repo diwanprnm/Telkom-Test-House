@@ -29,16 +29,52 @@
 				</ol>
 			</div>
 		</section>
+
+
 		<!-- end: PAGE TITLE -->
 		<!-- start: RESPONSIVE TABLE -->
 		<div class="container-fluid container-fullw bg-white">
-	        <div class="row">
-				<div class="col-md-6">
+			@if (Session::get('error'))
+				<div class="alert alert-error alert-danger">
+					{{ Session::get('error') }}
 				</div>
+			@endif
+			
+			@if (Session::get('message'))
+				<div class="alert alert-info">
+					{{ Session::get('message') }}
+				</div>
+			@endif
+			<div class="col-md-12 panel panel-info">
+				<div class="panel">					
+					{!! Form::open(array('url' => 'admin/email_editors/update_logo_signature', 'method' => 'POST', 'enctype' => 'multipart/form-data')) !!}
+					{!! csrf_field() !!}
+					<fieldset>
+						<legend>
+							Update Logo
+						</legend>
+						<div class="row">
+							<div class="col-md-12">
+								@if (isset($data[0])) 
+								<img src="{{ \Storage::disk('minio')->url('logo/'.$data[0]->logo) }}" width="240" alt="Logo"/>
+								@endif
+								<input type="file" name="logo" class="form-control" accept="image/jpg, image/jpeg, image/png" required>
+							</div>
+							<div class="col-md-12">
+								<button type="submit" class="btn btn-wide btn-green btn-squared pull-right">
+									Update
+								</button>
+							</div>
+						</div>
+					</fieldset>
+					{!! Form::close() !!}
+				</div>
+			</div>
+	        <div class="row">
+				<div class="col-md-6"></div>
 				<div class="col-md-6">
-	                <span class="input-icon input-icon-right search-table right">
-	                    <input id="search_value" type="text" placeholder="Search" id="form-field-17" 
-							class="form-control" value="{{ $search }}">
+					<span class="input-icon input-icon-right search-table">
+						<input id="search_value" type="text" name="search" placeholder="Search" id="form-field-17" class="form-control" value="{{ $search }}">
 	                    <em class="ti-search"></em>
 	                </span>
 	            </div>
@@ -54,7 +90,7 @@
 									<th class="center" id="name">Nama</th>
 									<th class="center" id="subject">Subjek Email</th>
 									<th class="center" id="dir_file">Direktori File</th>
-									<th class="center" id="action">Aksi</th>
+									<th class="center" colspan="2" scope="colgroup">Aksi</th>  
 								</tr>
 							</thead>
 							<tbody>
@@ -65,12 +101,16 @@
 										<td class="left">{{ $item->name }}</td>
 										<td class="left">{{ $item->subject }}</td>
 										<td class="left">{{ $item->dir_name }}</td>
-										<td class="left">
+										<td class="center">
 											<div>
 												<a href="{{URL::to('admin/email_editors/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
+											</div>
+										</td>
+										<td class="center">
+											<div>
 												{!! Form::open(array('url' => 'admin/email_editors/'.$item->id, 'method' => 'DELETE')) !!}
 													{!! csrf_field() !!}
-													<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')"><em class="fa fa-times fa fa-white"></em></button>
+												<button class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Remove" onclick="return confirm('Are you sure want to delete ?')"><em class="fa fa-times fa fa-white"></em></button>
 												{!! Form::close() !!}
 											</div>
 										</td>
@@ -91,6 +131,29 @@
 			</div>
 		</div>
 		<!-- end: RESPONSIVE TABLE -->
+		<div class="col-md-12 panel panel-info">
+			<div class="panel">
+				{!! Form::open(array('url' => 'admin/email_editors/update_logo_signature', 'method' => 'POST', 'enctype' => 'multipart/form-data')) !!}
+				{!! csrf_field() !!}
+				<fieldset>
+					<legend>
+						Update Signature
+					</legend>
+					<div class="row">
+						<div class="col-md-12">
+							@if (isset($data[0]))
+							<textarea type="text" id="signature" name="signature" class="form-control" placeholder="Signature ...">{!! str_replace('&', '&amp;', $data[0]->signature); !!}</textarea>
+							@endif
+						</div>
+						<div class="col-md-12">
+							<button type="submit" class="btn btn-wide btn-green btn-squared pull-right">
+								Update
+							</button>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+		</div>
 	</div>
 </div>
 @endsection
@@ -105,6 +168,7 @@
 <script src={{ asset("vendor/bootstrap-datepicker/bootstrap-datepicker.min.js") }}></script>
 <script src={{ asset("vendor/bootstrap-timepicker/bootstrap-timepicker.min.js") }}></script>
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/28.0.0/classic/ckeditor.js"></script>
 <script src={{ asset("assets/js/form-elements.js") }}></script>
 <script type="text/javascript">
 	jQuery(document).ready(function() {
@@ -155,15 +219,15 @@
 				document.location.href = baseUrl+'/admin/email_editors?'+jQuery.param(params);
 	        }
 	    });
-
-	    // document.getElementById("filter").onclick = function() {
-        //     var baseUrl = "{{URL::to('/')}}";
-        //     var params = {};
-		// 	var search_value = document.getElementById("search_value").value;
-
-		// 	params['search'] = search_value;
-		// 	document.location.href = baseUrl+'/admin/email_editors?'+jQuery.param(params);
-	    // };
 	});
+	ClassicEditor
+		.create(document.querySelector('#signature'))
+		.then(content => {
+			console.log("ini isi contentnya");
+			console.log(content.getData());
+		})
+		.catch(err => {
+			console.log(err);
+		});
 </script>>
 @endsection
