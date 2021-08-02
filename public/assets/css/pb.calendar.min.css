@@ -147,11 +147,11 @@
 	width: 14.28571429%;
 	vertical-align: top;
 	text-align: center;
-	font-size: 26px;
+	font-size: 12px;
 	font-weight: 500;
-	line-height: 200%;
+	line-height: 100%;
 	padding: 10px 5px;
-	height: 80px
+	height: 20px
 }
 
 .pb-calendar>.calendar-body-frame>.row>.col>.schedule-dot-list,
@@ -206,7 +206,7 @@
 		font-weight: 500;
 		line-height: 200%;
 		padding: 7px 2px;
-		height: 50px
+		height: 10px
 	}
 }
 
@@ -217,7 +217,7 @@
 		font-weight: 500;
 		line-height: 200%;
 		padding: 7px 4px;
-		height: 50px
+		height: 10px
 	}
 }
 
@@ -228,7 +228,7 @@
 		font-weight: 500;
 		line-height: 200%;
 		padding: 5px 3px;
-		height: 50px
+		height: 10px
 	}
 }
 

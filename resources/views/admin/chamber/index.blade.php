@@ -1,25 +1,51 @@
 @extends('layouts.app')
 
 @section('content')
-
+<link rel="stylesheet" href="{{url('assets/css/pb.calendar.min.css')}}" type="text/css">
 <style type="text/css">
 	ul.tabs{
-		margin: 0px;
 		padding: 0px;
 		list-style: none;
-		margin-bottom: 10px;
+		margin-bottom: 17px;
 	}
 	ul.tabs li{
 		background: none;
 		color: #222;
 		display: inline-block;
-		padding: 10px 15px;
+		/* padding: 10px 15px; */
 		cursor: pointer;
 	}
 	ul.tabs li.current{
 		background: #FF3E41;
 		color: #ffffff;
 	}
+
+	.row.calendar-view{
+		position: absolute;
+		margin: -22px -15px;
+	}
+
+	.calendar-view-body{
+		position: relative;
+		margin-top: 10px;
+	}
+
+	.pb-calendar{
+		position: relative;
+		margin: auto;
+		width: 40%;
+	}
+
+	.pb-calendar .row-day .red{
+		background-color: red;
+		color: white !important;
+	}
+
+	.rounded-corner {
+			border-radius: 15px;
+			border: 2px solid white; 
+		}
+
 </style>
 
 <div class="main-content" >
@@ -86,7 +112,23 @@
 		        </div>
 		    </div>
 
-			
+			<div class="row calendar-view">
+		        <div class="col-md-6 ">
+	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse-calendar" style="margin-right: 10px;"><em class="ti-calendar"></em>
+						Calendar View
+					</a>
+				</div>
+			</div>
+
+			<div class="row calendar-view-body">
+				<div class="col-md-12 panel panel-info">
+					<div id="collapse-calendar" class="panel-collapse collapse">
+						<div id="pb-calendar" class="pb-calendar">
+						</div>
+					</div>
+				</div>
+			</div>
+
 
 			<ul class="tabs">
 				<li class="btn tab-unpaid" data-tab="tab-unpaid">Unpaid</li>
@@ -243,12 +285,15 @@
 <script src={{ asset("vendor/bootstrap-timepicker/bootstrap-timepicker.min.js") }}></script>
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
 <script src={{ asset("assets/js/form-elements.js") }}></script>
+<script type="text/javascript" src="{{url('assets/js/moment.js')}}"></script>
+<script type="text/javascript" src="{{url('assets/js/pb.calendar.min.js')}}"></script>
 <script type="text/javascript">
 	
 
 $(document).ready(() => {
 	// Initialization
 	const baseUrl = "{{URL::to('/')}}";
+	let bookedDates = [];
 	FormElements.init();
 	setFilterByParam();
 	setPaginationUrl(getFilterParam());
@@ -279,11 +324,28 @@ $(document).ready(() => {
 		document.location.href = baseUrl+'/admin/chamber?'+$.param(param);
 	});
 
-	// // Set destination when button excel click
-	// $('#excel').click(()=>{
-	// 	let param = getFilterParam();
-	// 	document.location.href = baseUrl+'/admin/chamber/excel?'+$.param(param);
-	// });
+	// initialize calendar view
+	let pbCalendarOption = {
+		'day_selectable' : false,
+		'next_month_button' :'<img src="{{ URL::asset('assets/images/arrow-next.png') }}" class="icon">',
+		'prev_month_button' :'<img src="{{ URL::asset('assets/images/arrow-prev.png') }}" class="icon">',
+		'callback_changed_month': (event) => {
+			setDayLabelWithClass(bookedDates,'red');
+		}
+	}
+
+	let pbCalendar = $("#pb-calendar").pb_calendar(pbCalendarOption);
+
+	const initCalendarByAjax = async () => {
+		await getDateRentedChamber( resp => {
+			bookedDates = resp.map( dateRecord =>{
+				return dateRecord['date'].replace(/-/g, '');
+			});
+		});
+		setDayLabelWithClass(bookedDates,'red');
+	}
+
+	initCalendarByAjax();
 	
 });
 const url = new URL(window.location.href);
@@ -318,6 +380,19 @@ const setPaginationUrl = ( param ) => {
 	});
 	
 }
+
+// Getting all date that have been rented
+const getDateRentedChamber = handleData => {
+	return $.ajax({
+		url:"{{URL::to('/v1/getDateRentedChamber')}}",  
+		success:function(data) {
+			handleData(data); 
+		}
+	});
+}
+
+// Setup calender coloring
+const setDayLabelWithClass = (list, color) => list.forEach( item => $(`.row-day .col[data-day-yyyymmdd='${item}']`).addClass(`${color} rounded-corner`) );
 
 </script>
 @endsection
