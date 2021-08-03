@@ -472,4 +472,5 @@ return [
 	'purchase_history_updateSTEL_warning' => 'This transaction has expired documents',
 
 	'message_not_found_products' => 'The document you are looking for was not found. Please search using other keywords.',
+	'request_cancelation' => 'Request Cancelation',
 ];

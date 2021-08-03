@@ -304,6 +304,11 @@
 									<a class="button button-3d download_progress_btn edit_btn nomargin btn-blue btn-sky" onclick="reSchedule('@php echo $item->id @endphp','@php echo $item->cust_test_date @endphp','2','@php echo $item->deal_test_date @endphp','@php echo $item->urel_test_date @endphp','@php echo $item->function_test_TE_temp @endphp','@php echo $item->function_test_date_temp @endphp')">{{ trans('translate.examination_reschedule_test_date') }}</a>
 									@endif
 								@endif
+								
+								@php if($item->registration_status != 1){ @endphp
+									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{url('editprocess/'.$item->jns_pengujian.'/'.$item->id)}}">{{ trans('translate.examination_edit') }}</a>
+								@php } @endphp
+
 								<!-- jika function_test_TE_temp == 1, tampilkan alert ini -->
 								@if($item->function_test_TE_temp == 1)
 								<div class="alert" style="background-color : #ffcccc; color : #1e272e;text-align : left;">
@@ -313,17 +318,18 @@
 								@php if($item->spb_status == 1 && $item->payment_status != 1){ @endphp
 									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/pembayaran')}}">{{ trans('translate.payment_process') }}</a>
 									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/downloadSPB')}}">{{ trans('translate.download') }} SPB</a>
-									@if($item->payment_method == 2 && $item->VA_expired < date("Y-m-d H:i:s"))
-										<div class="alert" style="background-color : #ffcccc; color : #1e272e;text-align : left;">
-											{{ trans('translate.stel_total_expired') }} <a href="{{url('/resend_va_spb/'.$data[0]->id)}}"> {{ trans('translate.here') }} </a> {{ trans('translate.stel_total_resend') }}. 
-										</div> 
-									@endif
 								@php } @endphp
-								
-								@php if($item->registration_status != 1){ @endphp
-									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{url('editprocess/'.$item->jns_pengujian.'/'.$item->id)}}">{{ trans('translate.examination_edit') }}</a>
-								@php } @endphp
-								
+
+								@if($item->registration_status == 1 && $item->function_status == 1 && $item->contract_status == 1 && $item->spb_status == 1 && $item->payment_status == 0)  
+									<a class="button button-3d nomargin btn-blue btn-sky" href="javascript:void(0)" onclick="return reqCancel('{{$item->id}}');">{{ trans('translate.request_cancelation') }}</a>
+								@endif
+
+								@if($item->payment_method == 2 && $item->VA_expired < date("Y-m-d H:i:s"))
+									<div class="alert" style="background-color : #ffcccc; color : #1e272e;text-align : left;">
+										{{ trans('translate.stel_total_expired') }} <a href="{{url('/resend_va_spb/'.$data[0]->id)}}"> {{ trans('translate.here') }} </a> {{ trans('translate.stel_total_resend') }}. 
+									</div> 
+								@endif
+
 								@php if(
 				  $item->registration_status == 1 &&
                   $item->function_status == 1 &&
@@ -1491,6 +1497,28 @@
 				$('#modal_complain').modal('hide');
 				if(response==1){
 					// window.location.href = '/telkomdds/public'+link;
+					window.open(link);
+				}else{
+					$('#modal_status_barang').modal('show');
+				}
+			}
+		});
+	}
+
+	function reqCancel(a){
+		var link = document.getElementById('link').value;
+		$.ajax({
+			type: "POST",
+			url : "reqCancel",
+			data: {'_token':"{{ csrf_token() }}", 'exam_id':a},
+			beforeSend: function(){
+				document.getElementById("overlay").style.display="inherit";
+			},
+			success:function(response){
+				document.getElementById("overlay").style.display="none";
+				console.log(response);
+				$('#modal_complain').modal('hide');
+				if(response==1){
 					window.open(link);
 				}else{
 					$('#modal_status_barang').modal('show');
