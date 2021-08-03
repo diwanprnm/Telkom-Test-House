@@ -38,7 +38,7 @@ return [
 	
 	'service_device'					=> 'Device\'s  Data',
 	'service_device_equipment'			=> 'Device Name',
-	'service_device_mark'				=> 'Telkom',
+	'service_device_mark'				=> 'Brand Name',
 	'service_device_capacity'			=> 'Capacity/Speed/Rate',
 	'service_device_manufactured_by'	=> 'Made In',
 	'service_device_serial_number'	 	=> 'Serial Number',
