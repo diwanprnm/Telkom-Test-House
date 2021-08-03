@@ -473,4 +473,5 @@ return [
 
 	'message_not_found_products' => 'The document you are looking for was not found. Please search using other keywords.',
 	'request_cancelation' => 'Request Cancelation',
+	'reason_cancelation' => 'Reason for Cancelation',
 ];

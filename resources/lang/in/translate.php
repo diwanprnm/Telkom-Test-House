@@ -476,4 +476,5 @@ return [
 
 	'message_not_found_products' => 'Dokumen yang anda cari tidak ditemukan. Silakan mencari menggunakan kata kunci yang lain.',
 	'request_cancelation' => 'Batalkan Pengujian',
+	'reason_cancelation' => 'Alasan Pembatalan',
 ];

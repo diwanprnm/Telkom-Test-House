@@ -581,6 +581,30 @@
 </div>
 </form>
 
+<div id="modal_request_cancel" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog modal-lg">
+
+	<!-- Modal content-->
+	<div class="modal-content">
+		<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">&times;</button>
+		<h2 class="modal-title">{{ trans('translate.attention') }}</h2>
+		</div>
+		<div class="modal-body pre-scrollable">
+			<div class="row">
+				<h4>{{ trans('translate.reason_cancelation') }}</h4>
+				
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="button button3d btn-sky" data-dismiss="modal">Cancel</button>
+			<button id="btn-cancel" type="button" class="button button3d btn-sky" data-dismiss="modal">Submit</button>
+		</div>
+	</div>
+
+	</div>
+</div>
+
 <input type="hidden" name="link" id="link"> 
    <div id="modal_kuisioner" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
       <div class="modal-dialog modal-lg">
@@ -1506,26 +1530,29 @@
 	}
 
 	function reqCancel(a){
-		var link = document.getElementById('link').value;
-		$.ajax({
-			type: "POST",
-			url : "reqCancel",
-			data: {'_token':"{{ csrf_token() }}", 'exam_id':a},
-			beforeSend: function(){
-				document.getElementById("overlay").style.display="inherit";
-			},
-			success:function(response){
-				document.getElementById("overlay").style.display="none";
-				console.log(response);
-				$('#modal_complain').modal('hide');
-				if(response==1){
-					window.open(link);
-				}else{
-					$('#modal_status_barang').modal('show');
-				}
-			}
-		});
+		$("#my_exam_id").val(a);
+		$('#modal_request_cancel').modal('show');
 	}
+
+	$('#btn-cancel').click(function () {
+		var baseUrl = "{{URL::to('/')}}";
+		if (confirm('Perhatian, permohonan pembatalan uji ini mengakibatkan anda tidak dapat memproses Kembali permohonan uji ini, apakah anda yakin?')) {
+			var a = document.getElementById('my_exam_id').value;
+			$.ajax({
+				type: "POST",
+				url : "reqCancel",
+				data: {'_token':"{{ csrf_token() }}", 'my_exam_id':a},
+				beforeSend: function(){
+					// document.getElementById("overlay").style.display="inherit";
+				},
+				success:function(response){
+					// document.getElementById("overlay").style.display="none";
+					console.log(response);
+					location.reload();
+				}
+			});
+		}
+	});
 </script>
 
 @endsection

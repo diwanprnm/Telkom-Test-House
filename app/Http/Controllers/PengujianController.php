@@ -1750,6 +1750,14 @@ class PengujianController extends Controller
 		
 	}
 	
+	public function reqCancel(Request $request)
+    { 
+		return $request->input(self::MY_EXAM_ID);
+		$exam = Examination::find($request->input(self::MY_EXAM_ID))->first();
+		$exam->is_cancel = 1;
+		return $exam->save() ? 1 : 0;
+	}
+	
 	public function autocomplete($query) {
 		$currentUser = Auth::user();
 		$company_id = ''.$currentUser[self::ATTRIBUTES][self::COMPANY_ID].'';

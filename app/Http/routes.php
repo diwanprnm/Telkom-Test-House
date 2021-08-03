@@ -268,6 +268,7 @@ Route::resource('/pengujian', 'PengujianController');
 Route::get('/pengujian/{id}/detail', 'PengujianController@detail');
 Route::post('/testimonial', 'PengujianController@testimonial');
 Route::post('/cekAmbilBarang', 'PengujianController@cekAmbilBarang');
+Route::post('/reqCancel', 'PengujianController@reqCancel');
 Route::get('{path}', 'STELClientController@index')->where('path', '(STEL|S-TSEL|STD|PERDIRJEN|PERMENKOMINFO|OTHER)');
 Route::resource('/Chargeclient', 'ExaminationChargeClientController');
 Route::get('/Chargeclient', 'ExaminationChargeClientController@index');
