@@ -38,7 +38,7 @@ return [
 	
 	'service_device'				=> 'Data Perangkat', // Device Information
 	'service_device_equipment'		=> 'Nama Perangkat', // Device
-	'service_device_mark'			=> 'Telkom', // Merk
+	'service_device_mark'			=> 'Merk/Pabrik', // Merk
 	'service_device_capacity'		=> 'Kapasitas/Kecepatan', // Capacity
 	'service_device_manufactured_by'=> 'Negara Pembuat', // Made in
 	'service_device_serial_number'	=> 'Nomor Seri',
