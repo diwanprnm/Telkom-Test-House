@@ -290,10 +290,17 @@
 								</table>
 							</div>
 							<div class="option-progress right"> 
-
+							@if($item->is_cancel == 0)
 								<a class="button button-3d nomargin btn-blue btn-sky" href="{{URL::to('cetakPengujian/'.$item->id.'')}}" target="_blank">{{ trans('translate.examination_print') }}</a>
+							@endif
 								<a class="button button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/detail')}}">{{ trans('translate.examination_detail') }}</a>
-								
+								<!-- jika is_cancel == 1, tampilkan alert ini -->
+								@if($item->is_cancel == 1)
+								<div class="alert" style="background-color : #ffcccc; color : #1e272e;text-align : left;">
+									{{ trans('translate.cancel_warning') }} 
+								</div> 
+								@endif
+							@if($item->is_cancel == 0)
 								@if($item->registration_status == '1' && $item->function_status != '1')
 									@if($item->deal_test_date == NULL)
 									<a class="button button-3d download_progress_btn edit_btn nomargin btn-blue btn-sky" onclick="reSchedule('@php echo $item->id @endphp','@php echo $item->cust_test_date @endphp','1','@php echo $item->deal_test_date @endphp','@php echo $item->urel_test_date @endphp','@php echo $item->function_test_TE_temp @endphp','@php echo $item->function_test_date_temp @endphp')">{{ trans('translate.examination_reschedule_test_date') }}</a>
@@ -359,6 +366,7 @@
                 ){ @endphp
 									<a class="button button-3d edit_btn download_progress_btn nomargin btn-blue btn-sky" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->nama_perangkat }}','{{ URL::to('pengujian/'.$item->id.'/downloadSertifikat') }}','device', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})', '{{$item->id}}');">{{ trans('translate.download') }} {{ trans('translate.certificate') }}</a>
 								@php } @endphp
+							@endif
 							</div>
 						</div>
 						@endforeach
@@ -592,8 +600,25 @@
 		</div>
 		<div class="modal-body pre-scrollable">
 			<div class="row">
-				<h4>{{ trans('translate.reason_cancelation') }}</h4>
-				
+				<h4>{{ trans('translate.reason_cancelation') }} : </h4>
+				<div class="form-group">
+					@php $no = 1; @endphp
+					@foreach($data_cancel_reason as $item)
+					<div class="material-group-item">
+						<input type="radio" class="reason" name="reason" value="{{ $item->id }}||{{ $item->name }}" placeholder="{{ $item->name }}" id="reason-{{ $item->id }}"> 
+						<label for="reason-{{ $item->id }}" style="font-weight:normal;">{{ $item->name }}</label>
+					</div>
+					@php $no++; @endphp
+					@endforeach
+					<div class="material-group-item">
+						<input type="radio" class="reason" name="reason" value="0" placeholder="{{ trans('translate.other_reason') }}" id="reason-0"> 
+						<label for="reason-0" style="font-weight:normal;">{{ trans('translate.other_reason') }}</label>
+					</div>
+				</div>
+				<div class="form-group other_reason" style="display:none;">
+					<label>{{ trans('translate.other_reason') }}</label>
+					<input type="text" id="other_reason" name="other_reason" placeholder ="{{ trans('translate.other_reason') }}" class="form-control">
+				</div>
 			</div>
 		</div>
 		<div class="modal-footer">
@@ -1214,6 +1239,11 @@
           });
         }
     }
+
+		$(".reason").change(function(){
+			var reason = $('input[name="reason"]:checked').val();
+			reason == 0 ? $(".other_reason").show() : $(".other_reason").hide();
+		});
 	});
 </script>
 <script type="text/javascript" >
@@ -1535,13 +1565,20 @@
 	}
 
 	$('#btn-cancel').click(function () {
+		rad_validation = ($('input[name=reason]:checked'));
+		if(rad_validation.length == 0 || (rad_validation[0].value == 0 && $("#other_reason").val() == '')){
+			alert('Reason is Required');
+			return false;
+		}
 		var baseUrl = "{{URL::to('/')}}";
-		if (confirm('Perhatian, permohonan pembatalan uji ini mengakibatkan anda tidak dapat memproses Kembali permohonan uji ini, apakah anda yakin?')) {
+		if (confirm("{{ trans('translate.message_request_cancelation') }}")) {
 			var a = document.getElementById('my_exam_id').value;
+			var b = rad_validation[0].value;
+			var c = document.getElementById('other_reason').value;
 			$.ajax({
 				type: "POST",
 				url : "reqCancel",
-				data: {'_token':"{{ csrf_token() }}", 'my_exam_id':a},
+				data: {'_token':"{{ csrf_token() }}", 'my_exam_id':a, 'reason':b, 'other_reason':c},
 				beforeSend: function(){
 					// document.getElementById("overlay").style.display="inherit";
 				},
