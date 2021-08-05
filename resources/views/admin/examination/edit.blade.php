@@ -340,6 +340,16 @@
 													<th colspan="3" class="center" scope="col"><p style="color:red">Perangkat ini sudah pernah diuji, dengan status "Tidak Lulus Uji" berdasarkan keputusan Sidang QA tanggal {{ $data_ket[1] }}</p></th>
 												</tr>
 											@endif
+											@if($data->is_cancel)
+												<tr>
+													<th colspan="3" class="center" scope="col"><p style="color:red">Perangkat ini dibatalkan oleh kastamer dengan alasan {{ $data->reason_cancel }}</p></th>
+												</tr>
+											@endif
+											@if($data->spb_number && $data->payment_status == 0 && $data->spb_date < date('Y-m-d', strtotime('-3 month')))
+												<tr>
+													<th colspan="3" class="center" scope="col"><p style="color:red">SPB sudah melebihi 3 bulan batas pembayaran.</p></th>
+												</tr>
+											@endif
 												<tr>
 													<th colspan="3" scope="col">Detail Informasi</th>
 												</tr>

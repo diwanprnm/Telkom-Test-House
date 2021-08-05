@@ -1776,7 +1776,7 @@ class ExaminationAPIController extends AppBaseController
                     $updated_count = $invoice && $invoice->status == true ? $updated_count += 1 : $updated_count;
 
                     $spk_created = 0;
-                    if ($Examination->spk_code == null){
+                    if ($Examination->spk_code == null && $Examination->is_cancel == 0){
 	                    $spk_number_forOTR = $this->generateSPKCode($Examination->examinationLab->lab_code,$Examination->examinationType->name,date('Y'));
 	                    $Examination->spk_code = $spk_number_forOTR;
 	                    $Examination->spk_date = date('Y-m-d');

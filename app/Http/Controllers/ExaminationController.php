@@ -503,7 +503,7 @@ class ExaminationController extends Controller
 				->with(self::EXAMINATION_LAB)
 				->first();
 
-				if ($exam->spk_code == null && $exam->company_id == '0fbf131c-32e3-4c9a-b6e0-a0f217cb2830'){
+				if ($exam->spk_code == null && $exam->company_id == '0fbf131c-32e3-4c9a-b6e0-a0f217cb2830' && $exam->is_cancel == 0){
                     $spk_number_forOTR = $examinationService->generateSPKCode($exam_forOTR->examinationLab->lab_code,$exam_forOTR->examinationType->name,date('Y'));
                     $exam->spk_code = $spk_number_forOTR;
                     $exam->spk_date = date(self::DATE_FORMAT_2);
@@ -685,7 +685,7 @@ class ExaminationController extends Controller
 				->with(self::EXAMINATION_LAB)
 				->first();
 
-                if ($exam->spk_code == null){
+                if ($exam->spk_code == null && $exam->is_cancel == 0){
                     $spk_number_forOTR = $examinationService->generateSPKCode($exam_forOTR->examinationLab->lab_code,$exam_forOTR->examinationType->name,date('Y'));
                     $exam->spk_code = $spk_number_forOTR;
                     $exam->spk_date = date(self::DATE_FORMAT_2);

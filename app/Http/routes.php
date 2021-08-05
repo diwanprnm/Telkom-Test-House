@@ -216,6 +216,8 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::resource('/email_editors', 'EmailEditorController');
 	Route::post('/email_editors/update_logo_signature', 'EmailEditorController@updateLogoSignature');
 
+	Route::resource('/examinationcancel', 'ExaminationCancelController');
+
 });
 	Route::get('/uploadCertification', 'UploadProductionController@uploadCertification');
 	Route::get('/uploadCompany', 'UploadProductionController@uploadCompany');
