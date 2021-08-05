@@ -356,7 +356,7 @@ class SalesService
                     $STELSalesDetail->temp_alert = 0;
                     $STELSalesDetail->save();
                     // update temp_alert
-                    $this->updateTempAlert($STELSalesDetail);
+                    $this->updateTempAlert($STELSalesDetail, $STELSales->user_id);
                     $notifUploadSTEL = 1;
                     $success_count++;
 
@@ -381,9 +381,9 @@ class SalesService
         );
     } 
 
-    public function updateTempAlert($STELSalesDetail){
+    public function updateTempAlert($STELSalesDetail, $user_id){
         $stel = STEL::where('id', $STELSalesDetail->stels_id)->first();
-        $user = User::where('id', $STELSalesDetail->created_by)->first();
+        $user = User::where('id', $user_id)->first();
         $data = STELSalesDetail::join('stels', 'stels_sales_detail.stels_id', '=', 'stels.id')
             ->join('stels_master', 'stels.stels_master_id', '=', 'stels_master.id')
             ->join('users', 'stels_sales_detail.created_by', '=', 'users.id')

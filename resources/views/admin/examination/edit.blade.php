@@ -3004,7 +3004,7 @@
 				@if($admin_roles[0]->equipment_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-barang')) !!}
 					{!! csrf_field() !!}
-					<input type="hidden" name="status" class="form-control" value=""/>
+					<input type="hidden" name="status" class="form-control" value="Edit Lokasi Barang"/>
 					<input type="hidden" name="keterangan" class="form-control" value=""/>
 					<fieldset>
 						<legend>
@@ -4060,7 +4060,7 @@
 					@if($admin_roles[0]->equipment_status)
 					{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-barang')) !!}
 						{!! csrf_field() !!}
-						<input type="hidden" name="status" class="form-control" value=""/>
+						<input type="hidden" name="status" class="form-control" value="Edit Lokasi Barang"/>
 						<input type="hidden" name="keterangan" class="form-control" value=""/>
 						<fieldset>
 							<legend>
