@@ -1792,10 +1792,10 @@ class PengujianController extends Controller
 
 		// save history examination
 			$tahap = '';
-			if($exam->registration_status == 0){$tahap == 'Registrasi';}
-			if($exam->function_status == 0){$tahap == 'Uji Fungsi';}
-			if($exam->contract_status == 0){$tahap == 'Tinjauan Kontrak';}
-			if($exam->spb_status == 0){$tahap == 'SPB';}
+			if($exam->registration_status == 0){$tahap = 'Registrasi';}
+			if($exam->function_status == 0){$tahap = 'Uji Fungsi';}
+			if($exam->contract_status == 0){$tahap = 'Tinjauan Kontrak';}
+			if($exam->spb_status == 0){$tahap = 'SPB';}
 			$exam_hist = new ExaminationHistory;
 			$exam_hist->examination_id = $exam->id;
 			$exam_hist->date_action = date(self::DATE_FORMAT1);
