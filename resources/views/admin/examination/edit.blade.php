@@ -2781,7 +2781,7 @@
 							Step Pelaksanaan Uji
 						</legend>
 						<div class="row">
-						@if(1 != 1)
+						@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
 							@php
 								$start_date = new DateTime(date('Y-m-d'));
 								$end_date = new DateTime($exam_schedule->data[0]->targetDt);
@@ -3297,7 +3297,7 @@
 									@php $rev_uji = 1; $lap_uji_url = URL::to('/admin/examination/media/download/'.$item->id); $lap_uji_attach = $item->attachment;@endphp
 								@endif
 							@endforeach
-							@if(1 != 1)
+							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
@@ -3495,7 +3495,7 @@
 									</div>
 								@endif
 							@endforeach
-							@if(1 != 1)
+							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
@@ -3642,7 +3642,7 @@
 									</div>
 								@endif
 							@endforeach
-							@if(1 != 1)
+							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
