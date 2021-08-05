@@ -2781,7 +2781,7 @@
 							Step Pelaksanaan Uji
 						</legend>
 						<div class="row">
-						@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
+						@if(1 != 1)
 							@php
 								$start_date = new DateTime(date('Y-m-d'));
 								$end_date = new DateTime($exam_schedule->data[0]->targetDt);
@@ -3004,7 +3004,7 @@
 				@if($admin_roles[0]->equipment_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-barang')) !!}
 					{!! csrf_field() !!}
-					<input type="hidden" name="status" class="form-control" value=""/>
+					<input type="hidden" name="status" class="form-control" value="Edit Lokasi Barang"/>
 					<input type="hidden" name="keterangan" class="form-control" value=""/>
 					<fieldset>
 						<legend>
@@ -3297,7 +3297,7 @@
 									@php $rev_uji = 1; $lap_uji_url = URL::to('/admin/examination/media/download/'.$item->id); $lap_uji_attach = $item->attachment;@endphp
 								@endif
 							@endforeach
-							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
+							@if(1 != 1)
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
@@ -3495,7 +3495,7 @@
 									</div>
 								@endif
 							@endforeach
-							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
+							@if(1 != 1)
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
@@ -3642,7 +3642,7 @@
 									</div>
 								@endif
 							@endforeach
-							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
+							@if(1 != 1)
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
@@ -4060,7 +4060,7 @@
 					@if($admin_roles[0]->equipment_status)
 					{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-barang')) !!}
 						{!! csrf_field() !!}
-						<input type="hidden" name="status" class="form-control" value=""/>
+						<input type="hidden" name="status" class="form-control" value="Edit Lokasi Barang"/>
 						<input type="hidden" name="keterangan" class="form-control" value=""/>
 						<fieldset>
 							<legend>

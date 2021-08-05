@@ -56,7 +56,7 @@ return [
     */
 
     // 'from' => ['address' => null, 'name' => null],
-    'from' => ['address' => 'noreply.infia@gmail.com', 'name' => 'System Admin'],
+    'from' => ['address' => 'cstth@telkom.co.id', 'name' => 'Telkom Test House'],
 
     /*
     |--------------------------------------------------------------------------
