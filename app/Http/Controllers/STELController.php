@@ -355,7 +355,7 @@ class STELController extends Controller
             1. get stels_sales_detail.stels_id from stels.id
             2. get stels_sales.payment_status = 1 or 3 from stels_sales_detail.stels_sales_id
             3. get created_at from notification where message = Pembayaran Stel Telah diterima AND url = 'payment_detail/stels_sales.id'
-            3. get created_at from logs where action = Update Status Pembayaran STEL AND data like "payment_status":3
+            3. get created_at from logs where action = Upload Dokumen Pembelian STEL AND data like "payment_status":3
             4. if 3 true, beri notifikasi email dan tambah stels_salesnya.
         */
 
@@ -374,12 +374,12 @@ class STELController extends Controller
         ->get();
 
         /*
-            3. get created_at from logs where action = Update Status Pembayaran STEL AND data like "payment_status":3
+            3. get created_at from logs where action = Upload Dokumen Pembelian STEL AND data like "payment_status":3
         */
 
         foreach ($data as $item) {
             $query1 = '"id":'.$item->id;$query2 = '"payment_status":3';
-            $logs = Logs::where('action', 'Update Status Pembayaran STEL')->where('data', 'like','%'.$query1.'%')->where('data', 'like','%'.$query2.'%')->orderBy('created_at', 'DESC')->first();
+            $logs = Logs::where('action', 'Upload Dokumen Pembelian STEL')->where('data', 'like','%'.$query1.'%')->where('data', 'like','%'.$query2.'%')->orderBy('created_at', 'DESC')->first();
             if($logs){
                 $tgl = date('Y-m-d', strtotime($logs->created_at));
                 $diff = (strtotime($publish_date) - strtotime($tgl));
@@ -462,7 +462,8 @@ class STELController extends Controller
         $user = User::where('id', $STELSalesDetail->created_by)->first();
         $data = STELSalesDetail::join('stels', 'stels_sales_detail.stels_id', '=', 'stels.id')
             ->join('stels_master', 'stels.stels_master_id', '=', 'stels_master.id')
-            ->join('users', 'stels_sales_detail.created_by', '=', 'users.id')
+            ->join('stels_sales', 'stels_sales_detail.stels_sales_id', '=', 'stels_sales.id')
+            ->join('users', 'stels_sales.user_id', '=', 'users.id')
             ->join('companies', 'users.company_id', '=', 'companies.id')
             ->where('stels.stels_master_id', '=', $stel->stels_master_id)
             ->where('companies.id', '=', $user->company_id)
