@@ -29,7 +29,7 @@ class ChamberAdminController extends Controller
     public function index(Request $request)
     {
         // Initial var
-        $paginate = 2;
+        $paginate = 10;
         $search = trim(strip_tags($request->input('search','')));
         $statuses = ['unpaid', 'paid', 'delivered'];
         $this->request = $request;
@@ -37,8 +37,8 @@ class ChamberAdminController extends Controller
         // Get data
         $rentChamber = new \stdClass();        
         $rentChamber->unpaid = $this->getChamberByPaymentStatus(0)->paginate($paginate, ['*'], 'pageUnpaid');
-        $rentChamber->paid = $this->getChamberByPaymentStatus(2)->paginate($paginate, ['*'], 'pagePaid');
-        $rentChamber->delivered = $this->getChamberByPaymentStatus(3)->paginate($paginate, ['*'], 'pageDelivered');
+        $rentChamber->paid = $this->getChamberByPaymentStatus(1)->paginate($paginate, ['*'], 'pagePaid');
+        $rentChamber->delivered = $this->getChamberByPaymentStatus(2)->paginate($paginate, ['*'], 'pageDelivered');
         
         // return View
         return view('admin.chamber.index')
