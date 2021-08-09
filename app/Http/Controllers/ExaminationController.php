@@ -764,6 +764,11 @@ class ExaminationController extends Controller
 	                    'contents'=>json_encode(['by'=>$currentUser->name, self::REFERENCE_ID => '1']),
 	                );
 
+					$data_upload [] = array(
+						'name'=>"type",
+						'contents'=>"bast",
+					);
+
 	                $examinationService->api_upload($data_upload,$exam->BILLING_ID);
 			}
 			if ($request->hasFile(self::REV_LAP_UJI)) {
@@ -789,6 +794,11 @@ class ExaminationController extends Controller
 		                    'name'=>"delivered",
 		                    'contents'=>json_encode(['by'=>$currentUser->name, self::REFERENCE_ID => '1']),
 		                );
+
+						$data_upload [] = array(
+							'name'=>"type",
+							'contents'=>"bast",
+						);
 
 		                $examinationService->api_upload($data_upload,$exam->BILLING_ID);
 		            }

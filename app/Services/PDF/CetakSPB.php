@@ -163,9 +163,9 @@ class CetakSPB
 	$pdf->SetFont('','B');
 	$pdf->Cell(9);
 	if($is_poh == '1'){
-		$pdf->Cell(185,5,"POH. MANAGER USER RELATION",0,0,'L');
+		$pdf->Cell(185,5,"POH. MANAGER INFRASTRUCTURE USER RELATION",0,0,'L');
 	}else{
-		$pdf->Cell(185,5,"MANAGER USER RELATION",0,0,'L');
+		$pdf->Cell(185,5,"MANAGER INFRASTRUCTURE USER RELATION",0,0,'L');
 	}
 	$pdf->Ln(10);
 	$pdf->SetFont('','BI');

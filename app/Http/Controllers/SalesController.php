@@ -329,6 +329,10 @@ class SalesController extends Controller
                 'name'=>"delivered",
                 'contents'=>json_encode(['by'=>$currentUser->name, "reference_id" => '1']),
             );
+            $data [] = array(
+                'name'=>"type",
+                'contents'=>"bast",
+            );
             $this->api_upload($data,$STELSales->BILLING_ID);
         }
 
