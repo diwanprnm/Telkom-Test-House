@@ -476,6 +476,28 @@ class ChamberController extends Controller
         //
     }
 
+    public function cetakTiket($id)
+    {
+        $chamber = Chamber::select(
+            'companies.name as companyName',
+            'chamber.invoice',
+            'companies.email as email',
+            'start_date',
+            'end_date',
+            'price', 'tax', 'total'
+        )
+        //$chamber = Chamber::
+            ->join("users","users.id","=","chamber.user_id")
+            ->join("companies","companies.id","=",'users.company_id')
+            ->where('chamber.id',$id)
+            ->first()
+        ;
+
+
+        $PDF = new \App\Services\PDF\PDFService();
+		$PDF->cetakTiketChamber($chamber);
+    }
+
 
     private function getNextInvoice()
     {

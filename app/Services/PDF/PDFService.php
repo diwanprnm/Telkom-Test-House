@@ -121,6 +121,12 @@ class PDFService
 		$cetakTechnicalMeetingUjiLokasi->makePDF($data, new PDFMCDefault());
 	}
 
+	public function cetakTiketChamber($data)
+	{
+		$cetakTiketChamber = new CetakTiketChamber();
+		$cetakTiketChamber->makePDF($data, new PDFMCCetakTiketChamber('L','mm',['100', '200']));
+	}
+
 	private function convertDataPermohonan($data){
 		return array([
 			'nama_pemohon' => $data['namaPemohon'],
