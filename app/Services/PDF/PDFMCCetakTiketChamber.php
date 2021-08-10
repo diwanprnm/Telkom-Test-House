@@ -18,12 +18,14 @@ class PDFMCCetakTiketChamber extends FPDF{
 
 	function Header()
 	{
-
+        $this->SetTextColor(0,0,0);
+        $this->SetFont('Arial','B',10);
+        $this->setX(120); $this->Cell(80,5,"TIKET CHAMBER ",0,0,'R');$this->ln(4);
 	}
 
 	function Footer()
 	{
-
+	
 	}
 
 	/**

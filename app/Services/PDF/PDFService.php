@@ -124,7 +124,7 @@ class PDFService
 	public function cetakTiketChamber($data)
 	{
 		$cetakTiketChamber = new CetakTiketChamber();
-		$cetakTiketChamber->makePDF($data, new PDFMCCetakTiketChamber('L','mm',['100', '200']));
+		$cetakTiketChamber->makePDF($data, new PDFMCCetakTiketChamber('L','mm',['80', '210']));
 	}
 
 	private function convertDataPermohonan($data){
