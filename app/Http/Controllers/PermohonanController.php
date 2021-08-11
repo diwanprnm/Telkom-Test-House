@@ -262,6 +262,7 @@ class PermohonanController extends Controller
 				AND	TRIM(d.model) = '".trim($request->input(self::MODEL_PERANGKAT), " ")."'
 				AND	TRIM(d.mark) = '".trim($request->input('merk_perangkat'), " ")."'
 				AND	TRIM(d.capacity) = '".trim($request->input(self::KAPASITAS_PERANGKAT)," ")."'
+				AND	e.is_cancel = 0
 				ORDER BY qa_date DESC;
 				";
 		$data = DB::select($query);

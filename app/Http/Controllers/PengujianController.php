@@ -25,6 +25,8 @@ use App\Questioner;
 use App\QuestionerQuestion;
 use App\QuestionerDynamic;
 use App\GeneralSetting;
+use App\ReasonCancel;
+use App\ExaminationCancel;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -196,6 +198,7 @@ class PengujianController extends Controller
 				examinations.VA_expired,
 				examinations.function_test_date_temp,
 				examinations.function_test_TE_temp,
+				examinations.is_cancel,
 				(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name';
 			
 				$query = DB::table(self::EXAMINATIONS)
@@ -256,7 +259,9 @@ class PengujianController extends Controller
 			$data_stels = DB::select($query_stels);
 			 
 			$data_kuisioner = QuestionerQuestion::where(self::IS_ACTIVE,1)->orderBy('order_question')->get();
-            	
+
+			$data_cancel_reason = ReasonCancel::where(self::IS_ACTIVE,1)->orderBy('created_at')->get();
+
             return view('client.pengujian.index')
                 ->with(self::MESSAGE, $message)
                 ->with('data_exam_type', $data_exam_type)
@@ -267,6 +272,7 @@ class PengujianController extends Controller
                 ->with(self::STATUS, $status)
                 ->with('data_stels', $data_stels)
 				->with('data_kuisioner', $data_kuisioner)
+				->with('data_cancel_reason', $data_cancel_reason)
 				->with(self::USER_ID, $user_id);
         }else{
 			return  redirect(self::LOGIN);
@@ -1748,6 +1754,61 @@ class PengujianController extends Controller
 		}
 		return 0;
 		
+	}
+	
+	public function reqCancel(Request $request)
+    { 
+		$currentUser = Auth::user();
+		$exam = Examination::find($request->input(self::MY_EXAM_ID))->first();
+
+		$reason_id = 0;
+		$reason_name = $request->input('other_reason');
+
+		if($request->input('reason')){
+			$reason = explode("||", $request->input('reason'));
+			$reason_id = $reason[0];
+			$reason_name = $reason[1];
+		}
+		
+		// add other_reason
+		if($reason_id == 0){
+			$reason_cancel = new ReasonCancel();
+			$reason_cancel->id = Uuid::uuid4();
+			$reason_cancel->name = $request->input('other_reason');
+			$reason_cancel->from_admin = 0;
+			$reason_cancel->is_active = 0;
+			$reason_cancel->created_by = $currentUser->id;
+			$reason_cancel->created_at = date(self::DATE_FORMAT1);
+			$reason_cancel->save();
+		}
+		// save history cancel
+			$exam_cancel = new ExaminationCancel();
+			$exam_cancel->id = Uuid::uuid4();
+			$exam_cancel->examination_id = $exam->id;
+			$exam_cancel->reason_cancel_id = $reason_id ? $reason_id : $reason_cancel->id;
+			$exam_cancel->created_by = $currentUser->id;
+			$exam_cancel->created_at = date(self::DATE_FORMAT1);
+			$exam_cancel->save();
+
+		// save history examination
+			$tahap = '';
+			if($exam->registration_status == 0){$tahap = 'Registrasi';}
+			if($exam->function_status == 0){$tahap = 'Uji Fungsi';}
+			if($exam->contract_status == 0){$tahap = 'Tinjauan Kontrak';}
+			if($exam->spb_status == 0){$tahap = 'SPB';}
+			$exam_hist = new ExaminationHistory;
+			$exam_hist->examination_id = $exam->id;
+			$exam_hist->date_action = date(self::DATE_FORMAT1);
+			$exam_hist->tahap = $tahap;
+			$exam_hist->status = 1;
+			$exam_hist->keterangan = $reason_id ? $reason_name : $request->input('other_reason');
+			$exam_hist->created_by = $currentUser->id;
+			$exam_hist->created_at = date(self::DATE_FORMAT1);
+			$exam_hist->save();
+		
+		$exam->is_cancel = 1;
+		$exam->reason_cancel = $reason_id ? $reason_name : $request->input('other_reason');
+		return $exam->save() ? 1 : 0;
 	}
 	
 	public function autocomplete($query) {

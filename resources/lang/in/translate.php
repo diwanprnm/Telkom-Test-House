@@ -475,4 +475,9 @@ return [
 	'purchase_history_updateSTEL_warning' => 'Transaksi ini memiliki dokumen yang kedaluwarsa',
 
 	'message_not_found_products' => 'Dokumen yang anda cari tidak ditemukan. Silakan mencari menggunakan kata kunci yang lain.',
+	'request_cancelation' => 'Batalkan Pengujian',
+	'reason_cancelation' => 'Alasan Pembatalan',
+	'other_reason' => 'Alasan Lainnya',
+	'message_request_cancelation' => 'Perhatian, permohonan pembatalan uji ini mengakibatkan anda tidak dapat memroses kembali permohonan uji ini, apakah anda yakin?',
+	'cancel_warning' => 'Anda telah membatalkan pengujian ini.',
 ];

@@ -64,4 +64,9 @@ class Examination extends Model
     {
         return $this->hasMany('App\HistoryUF', 'examination_id')->where('function_test_TE', 2)->orderBy('created_at', 'ASC');
     }
+
+    public function examinationCancel()
+    {
+        return $this->hasMany('App\ExaminationCancel');
+    }
 }
