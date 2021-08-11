@@ -243,7 +243,7 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::find($id);
-        $companies = Company::where(self::IS_ACTIVE, true)->where('id', '<>', '1')->get(); 
+        $companies = Company::where(self::IS_ACTIVE, true)->get(); 
 
         return view('admin.profile.edit')
             ->with(self::COMPANY, $companies)
