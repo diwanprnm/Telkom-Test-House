@@ -17,10 +17,10 @@
 				</div>
 				<ol class="breadcrumb">
 					<li>
-						<span>Beranda</span>
+						<span>Pengujian</span>
 					</li>
 					<li>
-						<span>Pengujian</span>
+						<span>Pengujian Batal</span>
 					</li>
 					<li class="active">
 						<span>Detail</span>
