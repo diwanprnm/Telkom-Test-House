@@ -95,6 +95,7 @@ class ExaminationService
 			->join('devices', 'devices.id', '=', 'examinations.device_id')
 			->groupBy('examinations.id')
 			->whereNotNull('examinations.created_at')
+			->where('examinations.is_cancel', 0)
 		;
 
 		$query->where(function($q){

@@ -472,4 +472,9 @@ return [
 	'purchase_history_updateSTEL_warning' => 'This transaction has expired documents',
 
 	'message_not_found_products' => 'The document you are looking for was not found. Please search using other keywords.',
+	'request_cancelation' => 'Request Cancellation',
+	'reason_cancelation' => 'Reason for Cancellation',
+	'other_reason' => 'Other Reason',
+	'message_request_cancelation' => 'Attention, this request make you not being able to process this test again, are you sure?',
+	'cancel_warning' => 'You have canceled this test.',
 ];
