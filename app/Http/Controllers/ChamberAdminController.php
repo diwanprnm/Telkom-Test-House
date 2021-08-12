@@ -91,6 +91,7 @@ class ChamberAdminController extends Controller
         $chamber = Chamber::find($id);
         $chamber->start_date = $request->input('start_date');
         $chamber->end_date = $request->input('end_date', null);
+        $chamber->spb_date = $chamber->spb_date ?? $request->input('spb_date');
         $chamber->price = (int) preg_replace("/[^0-9]/", "", $request->input('price', 0) );
         $chamber->tax = $chamber->price * 0.1;
         $chamber->total = $chamber->price * 1.1;
