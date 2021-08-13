@@ -8,7 +8,8 @@
 		background-color: red !important;
 		color: white !important;
 	}
-	.date-tobe-booked a{
+	.date-tobe-booked a,
+	.date-tobe-booked span{
 		background-color: blue !important;
 		color: white !important;
 	}
@@ -71,42 +72,46 @@
 						</legend>
 						<div class="row"> 
 
-							<div class="col-md-6">
+							<div class="col-md-12">
 								<div class="form-group">
 									<label>Perusahaan</label>
 									<input type="text" name="company_name" class="form-control" value="{{$data->company_name}}" readonly>
 								</div>
 							</div>
-						</div>
-						<div class="row"> 
-							<div class="col-md-6">
+							<div class="col-md-12">
 								<div class="form-group">
 									<label>Tanggal 1</label>
-									<input type="text" name="start_date" class="form-control datepicker" value="{{$dataDetail[0]->date ?? ''}}">
+									<input type="text" name="start_date" class="form-control datepicker-chamber" value="{{$dataDetail[0]->date ?? ''}}">
 								</div>
 							</div>
-							<div class="col-md-6">
+							<div class="col-md-12">
 								<div class="form-group">
 									<label>Tanggal 2</label>
-									<input type="text" name="end_date" class="form-control datepicker" value="{{$dataDetail[1]->date ?? ''}}" >
+									<input type="text" name="end_date" class="form-control datepicker-chamber" value="{{$dataDetail[1]->date ?? ''}}" >
 								</div>
 							</div>
-							<div class="col-md-6">
+							<div class="col-md-12">
 								<div class="form-group">
-									<label>Harga</label>
+									<label>Biaya</label>
 									<input type="text" name="price" class="form-control text-price" value="{{$data->price}}" >
 								</div>
 							</div>
-							<div class="col-md-6">
+							<div class="col-md-12">
 								<div class="form-group">
 									<label>Pajak</label>
 									<input type="text" name="tax" class="form-control text-price" value="{{$data->tax}}" readonly>
 								</div>
 							</div>
-							<div class="col-md-6">
+							<div class="col-md-12">
 								<div class="form-group">
 									<label>Total</label>
 									<input type="text" name="total" class="form-control text-price" value="{{$data->total}}" readonly>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>Tanggal tagihan</label>
+									<input type="text" name="spb_date" class="form-control datepicker" value="{{$data->spb_date ?? ''}}" required @if ($data->spb_date) readonly disable @endif >
 								</div>
 							</div>
 						</div>
@@ -148,11 +153,13 @@ $( document ).ready(() => {
 
 // INITIALIZE
 	const id = "{{$data->id}}";
-	const myDatePicker = $('.datepicker');
+	const datePicker = $('.datepicker');
+	const myDatePicker = $('.datepicker-chamber');
 	let bookedDates = [];
 	let detailRentDate = {!! json_encode($dataDetail) !!}.map((date)=>{
 		return date.date;
 	});
+	const spbDate = "{{$data->spb_date ?? ''}}";
 
 // EVENT
 	$('input[name="price"]').change(()=>{
@@ -175,6 +182,7 @@ $( document ).ready(() => {
 	}
 
 	const initDatePicker = () => {
+		detailRentDate = detailRentDate.sort();
 		myDatePicker.datepicker({
 			dateFormat: 'yy-mm-dd', 
 			autoclose: true,
@@ -182,15 +190,26 @@ $( document ).ready(() => {
 			showButtonPanel: true,
 			firstDay: 1,
 			beforeShowDay: function(d) {
-				date = moment(d).format('YYYY-MM-DD')
-				console.log(bookedDates);
-
-				if(detailRentDate.includes(date)){ return [true, 'date-tobe-booked']; }
-				if(bookedDates.includes(date)){ return [false, 'css-class-to-highlight']; }
-				return [true, ''];
+				addedClass = '';
+				date = moment(d).format('YYYY-MM-DD');
+				clickAble = d >= new Date() && d <= moment(detailRentDate[0]).add(7, 'days');
+				if(bookedDates.includes(date)){ addedClass = 'css-class-to-highlight'; clickAble = false;}
+				if(detailRentDate.includes(date)){ addedClass = 'date-tobe-booked'; clickAble = true;}				
+				return [clickAble, addedClass];
 			},
 		});
 	}
+
+	const initDatePickerInput = () => {
+		datePicker.datepicker({
+			dateFormat: 'yy-mm-dd', 
+			autoclose: true,
+			numberOfMonths: 1,
+			showButtonPanel: true,
+			firstDay: 1,
+			minDate:0,
+		});
+	}	
 
 	const getDateRentedChamber = handleData => {
 		return $.ajax({
@@ -213,7 +232,7 @@ $( document ).ready(() => {
 // CONTRUCT
 	priceFormat($('.text-price'));
 	initCalendarByAjax();
-	//console.log(detailRentDate);
+	spbDate ? datePicker.datepicker('disable') : initDatePickerInput();
 });
 </script>
 @endsection

@@ -476,6 +476,40 @@ class ChamberController extends Controller
         //
     }
 
+    public function cetakTiket($id)
+    {
+        $monthNameId = ["Januari","Februaru","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+        $chamber = Chamber::select(
+            'chamber.id as id',
+            'chamber.invoice',
+            'companies.name as companyName',
+            'companies.email as email',
+            'users.name as userName',
+            'start_date',
+            'end_date',
+            'price', 'tax', 'total'
+        )
+        //$chamber = Chamber::
+            ->join("users","users.id","=","chamber.user_id")
+            ->join("companies","companies.id","=",'users.company_id')
+            ->where('chamber.id',$id)
+            ->first()
+        ;
+
+        $start_date = date_create($chamber->start_date);
+        $chamber->printDate = date('d') .' '. $monthNameId[(int)date('m')-1] .' '. date('Y')  ;
+        $chamber->startDate = date_format($start_date, 'd') .' '. $monthNameId[(int)date_format($start_date, 'm')-1] .' '. date_format($start_date, 'Y');
+        if ($chamber->end_date)
+        {
+            $end_date = date_create($chamber->end_date);
+            $chamber->endDate = date_format($end_date, 'd') .' '. $monthNameId[(int)date_format($end_date, 'm')-1] .' '. date_format($end_date, 'Y');
+            $chamber->startDate .= ', dan';
+        }
+
+        $PDF = new \App\Services\PDF\PDFService();
+		$PDF->cetakTiketChamber($chamber);
+    }
+
 
     private function getNextInvoice()
     {

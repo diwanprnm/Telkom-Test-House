@@ -15,7 +15,7 @@ class CreateChamberDetailTable extends Migration
         Schema::create('chamber_detail', function (Blueprint $table) {
             $table->increments('id');
             $table->uuid('chamber_id');
-            $table->date('date')->unique();
+            $table->date('date');
             $table->timestamps();
             
             $table->foreign('chamber_id')->references('id')->on('chamber');
