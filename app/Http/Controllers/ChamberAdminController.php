@@ -59,7 +59,21 @@ class ChamberAdminController extends Controller
 
     public function show($id)
     {
-        //
+        $chambers = DB::table('chamber')
+            ->select('chamber.*', 'companies.name as company_name')
+            ->join('companies', 'companies.id', '=', 'chamber.company_id')
+            ->where('chamber.id', $id)
+            ->first()
+        ;
+        $chamber_details = Chamber_detail::where('chamber_id',$chambers->id)->get();
+
+        return view('admin.chamber.show')
+            ->with('data', $chambers)
+            ->with('dataDetail', $chamber_details)
+            ->with('id_kuitansi', 'INIIDKU')
+            ->with('id_sales', 'INIIDSALES')
+            ->with('faktur_file', 'faktur_file')
+        ;
     }
 
     public function edit($id)
