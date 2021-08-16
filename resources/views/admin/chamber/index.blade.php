@@ -216,7 +216,8 @@
 								<th class="center" scope="col">Status</th>
 								<th class="center" scope="col">Payment Method</th> 
 								<th class="center" scope="col">Document Code</th> 
-								<th class="center" colspan="2"  scope="colgroup">Action</th>  
+								<th class="center" colspan="2"  scope="colgroup">Action</th>
+								<th class="center" scope="col"></th> 
 							</tr>
 						</thead>
 						@foreach ($statuses as $status)
@@ -243,6 +244,9 @@
 										<div>
 											<a href="{{URL::to('admin/chamber/'.$data->$status[$i]->id.'/upload')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Upload"><em class="fa fa-upload"></em></a>
 										</div>
+									</td>
+									<td class="center">
+										<a href="{{URL::to('admin/chamber/'.$data->$status[$i]->id)}}" class="btn btn-wide btn-primary btn-margin" tooltip-placement="top" tooltip="Detail">Detail </a>
 									</td>
 								</tr>
 								@endfor
