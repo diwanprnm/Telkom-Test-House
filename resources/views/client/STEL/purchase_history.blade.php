@@ -265,26 +265,28 @@
 												@php $update = 0; $update1 = 0; $update2 = 0; $update3 = 0; @endphp
 												@php if($data_paid[$i]->sales_detail){ $data_stel_name = ""; $data_stel_code = ""; $count = 0 @endphp
 													@foreach($data_paid[$i]->sales_detail as $item_detail)
-														@php 
-														if($item_detail->stel->is_active == 1 && $item_detail->temp_alert == 2) {
-															$update2 = 1;
-														} 
-														if($item_detail->stel->is_active == 0 && $item_detail->temp_alert == 2) {
-															$update3 = 1;
-														} 
-														@endphp
-														@php 
-														if($item_detail->stel && $count < 2){
-															if($data_stel_name == ""){
-																$data_stel_name = $item_detail->stel->name;
-																$data_stel_code = $item_detail->stel->code;
-															}else{
-																$data_stel_name = $data_stel_name.", ".$item_detail->stel->name;
-																$data_stel_code = $data_stel_code.", ".$item_detail->stel->code;
+														@if($item_detail->stel)
+															@php 
+															if($item_detail->stel->is_active == 1 && $item_detail->temp_alert == 2) {
+																$update2 = 1;
+															} 
+															if($item_detail->stel->is_active == 0 && $item_detail->temp_alert == 2) {
+																$update3 = 1;
+															} 
+															@endphp
+															@php 
+															if($count < 2){
+																if($data_stel_name == ""){
+																	$data_stel_name = $item_detail->stel->name;
+																	$data_stel_code = $item_detail->stel->code;
+																}else{
+																	$data_stel_name = $data_stel_name.", ".$item_detail->stel->name;
+																	$data_stel_code = $data_stel_code.", ".$item_detail->stel->code;
+																}
 															}
-														}
-														$count++;
-														@endphp
+															$count++;
+															@endphp
+														@endif
 													@endforeach
 												@php } $out = strlen($data_stel_code) > 25 ? substr($data_stel_code,0, 25)."..." : $data_stel_code; @endphp
 												<tr>
