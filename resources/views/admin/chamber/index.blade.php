@@ -47,6 +47,38 @@
 		}
 
 </style>
+<div class="modal fade" id="myModal_delete_detail" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title"><em class="fa fa-eyes-open"></em> Detail Pembelian STEL Akan Dihapus, Mohon Berikan Keterangan!</h4>
+			</div>
+			
+			<div class="modal-body">
+				<table style="width: 100%;"><caption></caption>
+					<tr>
+						<th scope="col">
+							<div class="form-group">
+								<label for="keterangan">Keterangan:</label>
+								<textarea class="form-control" rows="5" name="keterangan" id="keterangan"></textarea>
+							</div>
+						</th>
+					</tr>
+				</table>
+			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<table style="width: 100%;"><caption></caption>
+					<tr>
+						<th scope="col">
+							<button type="button" id="btn-modal-delete_detail" class="btn btn-danger" style="width:100%" data-delete-id="" ><em class="fa fa-check-square-o"></em> Submit</button>
+						</th>
+					</tr>
+				</table>
+			</div>
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>
 
 <div class="main-content" >
 	<div class="wrap-content container" id="container">
@@ -77,17 +109,6 @@
 			</div>
 		@endif
 
-		@if (Session::get('error'))
-			<div class="alert alert-error alert-danger">
-				{{ Session::get('error') }}
-			</div>
-		@endif
-		
-		@if (Session::get('message'))
-			<div class="alert alert-info">
-				{{ Session::get('message') }}
-			</div>
-		@endif
 		<!-- start: RESPONSIVE TABLE -->
 		<div class="container-fluid container-fullw bg-white">
 			@if (Session::get('error'))
@@ -201,7 +222,6 @@
 			    	</div>
 			    </div>
 	        </div>
-
 			<div class="col-md-12">
 				<div class="table-responsive">
 					<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
@@ -216,7 +236,7 @@
 								<th class="center" scope="col">Status</th>
 								<th class="center" scope="col">Payment Method</th> 
 								<th class="center" scope="col">Document Code</th> 
-								<th class="center" colspan="2"  scope="colgroup">Action</th>
+								<th class="center" colspan="3"  scope="colgroup">Action</th>
 								<th class="center" scope="col"></th> 
 							</tr>
 						</thead>
@@ -242,7 +262,12 @@
 									</td>
 									<td class="center">
 										<div>
-											<a href="{{URL::to('admin/chamber/'.$data->$status[$i]->id.'/upload')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Upload"><em class="fa fa-upload"></em></a>
+											<a href="{{URL::to('admin/chamber/'.$data->$status[$i]->id)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Upload"><em class="fa fa-upload"></em></a>
+										</div>
+									</td>
+									<td class="center">
+										<div>
+											<a class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Destroy" data-rent-chamber-id="{{$data->$status[$i]->id}}"  data-toggle="modal" data-target="#myModal_delete_detail" onclick="document.getElementById('btn-modal-delete_detail').setAttribute('data-delete-id', '{{ $data->$status[$i]->id }}')" ><em class="fa fa-trash"></em></a>
 										</div>
 									</td>
 									<td class="center">
@@ -326,6 +351,28 @@ $(document).ready(() => {
 		if(e.which != 13) { return; }
 		let param = getFilterParam();
 		document.location.href = baseUrl+'/admin/chamber?'+$.param(param);
+	});
+
+	$('#myModal_delete_detail').on('shown.bs.modal', function (e) {
+		$('#keterangan').focus();
+	});
+
+	$('#btn-modal-delete_detail').click(function (e) {
+		console.log(e.target.getAttribute('data-delete-id'))
+		var baseUrl = "{{URL::to('/')}}";
+		var keterangan = document.getElementById('keterangan').value;
+		let idTobeDelete = e.target.getAttribute('data-delete-id')
+		// var stel_sales_detail_id = document.getElementById('hide_stel_sales_detail_id').value;
+		if(keterangan == ''){
+			$('#myModal_delete_detail').modal('show');
+			return false;
+		}else{
+			$('#myModal_delete_detail').modal('hide');
+			if (confirm('Are you sure want to delete this data?')) {
+				document.getElementById("overlay").style.display="inherit";	
+				document.location.href = baseUrl+'/admin/chamber/delete/'+idTobeDelete+'/'+encodeURIComponent(encodeURIComponent(keterangan));
+			}
+		}
 	});
 
 	// initialize calendar view
