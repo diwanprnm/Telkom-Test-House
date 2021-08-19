@@ -231,11 +231,11 @@
 								<th class="center" scope="col">No</th> 
 								<th class="center" scope="col">Company Name</th> 
 								<th class="center" scope="col">Sales Date</th> 
+								<th class="center" scope="col">Rent Date</th> 
 								<th class="center" scope="col">Invoice</th>  
 								<th class="center" scope="col">Total</th>
 								<th class="center" scope="col">Status</th>
-								<th class="center" scope="col">Payment Method</th> 
-								<th class="center" scope="col">Document Code</th> 
+								<th class="center" scope="col">Payment Method</th>
 								<th class="center" colspan="3"  scope="colgroup">Action</th>
 								<th class="center" scope="col"></th> 
 							</tr>
@@ -248,13 +248,13 @@
 									<td class="center">{{$i+1}}</td>
 									<td class="center">{{$data->$status[$i]->company_name}}</td>
 									<td class="center">{{$data->$status[$i]->start_date}}</td>
+									<td class="center">{{$data->$status[$i]->PO_ID ?? '-'}}</td>
 
 									<td class="center">{{$data->$status[$i]->invoice}}</td>
 									<td class="center">{{ "Rp " . number_format($data->$status[$i]->total,0,'','.') . ",-" }}</td>
 									<td class="center">{{$status}}</td>
 
 									<td class="center">{{$data->$status[$i]->payment_method ?? '-'}}</td>
-									<td class="center">{{$data->$status[$i]->PO_ID ?? '-'}}</td>
 									<td class="center">
 										<div>
 											<a href="{{URL::to('admin/chamber/'.$data->$status[$i]->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>

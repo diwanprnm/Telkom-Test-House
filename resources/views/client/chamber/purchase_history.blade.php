@@ -59,7 +59,7 @@
 													<td>{{$item->created_at}}</td>
                                                     <td>
                                                         {{$item->start_date}} 
-                                                        @if($item->start_date != $item->end_date) 
+                                                        @if($item->end_date != '0000-00-00' && $item->start_date != $item->end_date) 
                                                             & {{$item->end_date}} 
                                                         @endif
                                                     </td>

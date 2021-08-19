@@ -10,6 +10,10 @@ use App\Chamber;
 use App\Chamber_detail;
 use App\Services\ExaminationService;
 use Auth;
+use Session;
+
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Client;
 
 class ChamberController extends Controller
 {
@@ -142,7 +146,7 @@ class ChamberController extends Controller
                 ];
 
                 $billing = $this->api_billing($data);
-                // dd($billing);
+                dd($billing);
 
                 $chamber->BILLING_ID = $billing && $billing->status == true ? $billing->data->_id : null;
                 if($mps_info[2] != "atm"){

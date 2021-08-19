@@ -71,7 +71,7 @@
 							Update Status Chamber
 						</legend>
 						<div class="row"> 
-
+							<input type="hidden" name="PO_ID" id="PO_ID">
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>Perusahaan</label>
@@ -162,7 +162,7 @@ $( document ).ready(() => {
 	const spbDate = "{{$data->spb_date ?? ''}}";
 
 // EVENT
-	$('input[name="price"]').change(()=>{
+	$('input[name="price"]').on("keyup change",()=>{
 		price = parseInt($('input[name="price"]').val().replace(/[^\d.-]/g, ''));
 		$('input[name="tax"]').val( Math.round(price * 0.1) );
 		$('input[name="total"]').val( Math.round(price * 1.1) );
