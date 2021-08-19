@@ -11,11 +11,7 @@ use Auth;
 use Response;
 use Storage;
 
-use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
-
-use App\Events\Notification;
-use App\NotificationTable;
+use App\Faq;
 use App\Footer;
 use App\AdminRole;
 use App\ExaminationLab;
@@ -31,6 +27,15 @@ class HomeController extends Controller
 	private const DATA_SALES = 'data_stels';
 	private const TO_LOGIN = '/login';
 	private const MESSAGE = 'message';
+	private static $CATEGORY = [
+        '1' => 'Registrasi Akun',
+        '2' => 'STEL dan Pengujian Perangkat',
+        '3' => 'Uji Fungsi',
+        '4' => 'Invoice dan Pembayaran',
+        '5' => 'SPK',
+        '6' => 'Kapabilitas TTH',
+        '7' => 'Pengambilan Laporan dan Sertifikat'
+    ];
 	
 	/**
      * Show the application dashboard.
@@ -78,13 +83,27 @@ class HomeController extends Controller
 			->with(self::MESSAGE, $message_slideshow);
     }
     
-    public function faq()
+    public function faq(Request $request)
     {
-    	$data = array();
+		$categoriesPair = [];
+        $search = trim($request->input('search'));
+    	$data = Faq::where('is_active', 1)
+			->where('question', 'like', '%'.strtolower($search).'%')
+			->orderBy('category')->get();
+		for ($i = 0; $i < count($data); $i++) {
+			foreach (self::$CATEGORY as $key => $value) {
+				if ($key == $data[$i]->category) {
+					$data[$i]->category = $value;
+					$categoriesPair[$value][] = $data[$i];
+				}
+			}
+		}
     	$page = "faq";
 		return view('client.faq')
-			->with('data', $data)
-			->with('page', $page);
+			->with('data', $categoriesPair)
+			->with('page', $page)
+			->with('search', $search)
+			;
     }
 
     public function contact()
@@ -183,13 +202,9 @@ class HomeController extends Controller
             if(count($data_layanan_active) == 0){
 				return view("errors.401_available_lab");
 			}
-			if($category == 'qa'){
-				$query_stels = $this->getInitialQuery($currentUser);
-				$data_stels = DB::select($query_stels);				
-			}else{
-				$query_stels = "SELECT code as stel, name as device_name , type as lab FROM stels WHERE is_active = 1 ORDER BY name";
-				$data_stels = DB::select($query_stels);
-			}
+
+			$data_stels = $this->getReferensiUji($currentUser, $category);
+
 			$query_layanan = ExaminationLab::where(self::IS_ACTIVE, 0);
             $data_layanan = $query_layanan->get();
 
@@ -394,5 +409,80 @@ class HomeController extends Controller
 				FROM stels s,stels_sales ss,stels_sales_detail ssd, companies c , users u
 				WHERE s.id = ssd.stels_id AND s.is_active = 1 AND ss.id = ssd.stels_sales_id AND ss.user_id = u.id AND u.company_id = c.id
 				AND (ss.payment_status = 3) AND c.id = '".$currentUser->company->id."'";
+	}
+
+	private function getReferensiUji($currentUser, $examinationType)
+	{
+		$examinationTypes = ['qa', 'ta', 'vt', 'cal'];
+		$records = [];
+		
+		if (!in_array($examinationType, $examinationTypes)) {return false;}
+
+		if ($examinationType == 'qa')
+		{
+			$records =  DB::table('stels_sales')
+				->join('stels_sales_detail', 'stels_sales.id', '=', 'stels_sales_detail.stels_sales_id')
+				->join('stels', 'stels.id', '=', 'stels_sales_detail.stels_id')
+				->join('examination_labs', 'examination_labs.id', '=', 'stels.type')
+				->join('users', 'users.id', '=', 'stels_sales.user_id')
+				->join('companies', 'companies.id', '=', 'users.company_id')
+				->select('stels.code as stel', 'stels.name as device_name', 'stels.type as lab', 'examination_labs.description as labDescription')
+				->where('stels.is_active', 1)
+				->where('companies.id', $currentUser->company->id)
+				->where('stels_sales.payment_status', 3)
+				->whereIn('stels.stel_type', [1, 3])
+				->get()
+			;
+		}
+		elseif ($examinationType == 'ta')
+		{
+			$records = DB::table('stels')
+				->join('examination_labs', 'examination_labs.id', '=', 'stels.type')
+				->select('stels.code as stel', 'stels.name as device_name', 'stels.type as lab', 'examination_labs.description as labDescription')
+				->where('stels.is_active', 1)
+				->whereIn('stels.stel_type', [5, 6, 7])
+				->get()
+			;
+		}
+		elseif ($examinationType == 'vt')
+		{
+			$records1 = DB::table('stels_sales')
+				->join('stels_sales_detail', 'stels_sales.id', '=', 'stels_sales_detail.stels_sales_id')
+				->join('stels', 'stels.id', '=', 'stels_sales_detail.stels_id')
+				->join('examination_labs', 'examination_labs.id', '=', 'stels.type')
+				->join('users', 'users.id', '=', 'stels_sales.user_id')
+				->join('companies', 'companies.id', '=', 'users.company_id')
+				->select('stels.code as stel', 'stels.name as device_name', 'stels.type as lab', 'examination_labs.description as labDescription')
+				->where('stels.is_active', 1)
+				->where('companies.id', $currentUser->company->id)
+				->where('stels_sales.payment_status', 3)
+				->whereIn('stels.stel_type', [1, 2, 3])
+				->get()
+			;
+			$records2 = DB::table('stels')
+				->join('examination_labs', 'examination_labs.id', '=', 'stels.type')
+				->select('stels.code as stel', 'stels.name as device_name', 'stels.type as lab', 'examination_labs.description as labDescription')
+				->where('stels.is_active', 1)
+				->whereIn('stels.stel_type', [5, 6, 7])
+				->get()
+			;
+			$records = array_merge($records1, $records2);
+		}
+		elseif ($examinationType == 'cal')
+		{
+			$records = DB::table('stels')
+				->join('examination_labs', 'examination_labs.id', '=', 'stels.type')
+				->select('stels.code as stel', 'stels.name as device_name', 'stels.type as lab', 'examination_labs.description as labInit')
+				->where('stels.is_active', 1)
+				->where('stels.stel_type', 4)
+				->get()
+			;
+		}
+		else
+		{
+			$record = [];
+		}
+
+		return $records;
 	}
 }

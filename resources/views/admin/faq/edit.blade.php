@@ -37,6 +37,22 @@
 	                        <div class="col-md-12">
 								<div class="form-group">
 									<label>
+										Kategori
+									</label>
+									<select id="category" name="category" class="cs-select cs-skin-elastic" required>
+										<option value="" disabled>Select Category</option>
+										<option value="1" @if ($data->category == '1') selected @endif>Registrasi Akun</option>
+										<option value="2" @if ($data->category == '2') selected @endif>STEL dan Pengujian Perangkat</option>
+										<option value="3" @if ($data->category == '3') selected @endif>Uji Fungsi</option>
+										<option value="4" @if ($data->category == '4') selected @endif>Invoice dan Pembayaran</option>
+										<option value="5" @if ($data->category == '5') selected @endif>SPK</option>
+										<option value="6" @if ($data->category == '6') selected @endif>Kapabilitas TTH</option>
+										<option value="7" @if ($data->category == '7') selected @endif>Pengambilan Laporan dan Sertifikat</option>
+									</select>
+								</div>	
+
+								<div class="form-group">
+									<label>
 										Pertanyaan *
 									</label>
 									<input type="text" name="question" class="form-control" placeholder="Pertanyaan" value="{{$data->question}}" required>
@@ -48,10 +64,23 @@
 									<label>
 										Jawaban *
 									</label>
-									<input type="text" name="answer" class="form-control" placeholder="Jawaban" value="{{$data->answer}}" required>
+									<textarea type="text" id="answer" name="answer" class="form-control" placeholder="Jawaban...." required>{{$data->answer}}</textarea>
 								</div>
 							</div>
-	                      
+
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Status *
+									</label>
+									<select name="status" class="cs-select cs-skin-elastic" required>
+										<option value="" disabled>Select...</option>
+										<option value="1" @if ($data->is_active) selected @endif>Active</option>
+										<option value="0" @if ($data->is_active == 0) selected @endif>Not Active</option>
+									</select>
+								</div>
+							</div>
+
 	                        <div class="col-md-12">
 	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
 	                                Submit
@@ -81,6 +110,22 @@
 <script src={{ asset("vendor/select2/select2.min.js") }}></script>
 <script src={{ asset("vendor/bootstrap-datepicker/bootstrap-datepicker.min.js") }}></script>
 <script src={{ asset("vendor/bootstrap-timepicker/bootstrap-timepicker.min.js") }}></script>
-<script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
+<script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script> 
+<script src={{ asset("assets/js/form-elements.js") }}></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/28.0.0/classic/ckeditor.js"></script>
+<script type="text/javascript">
+	jQuery(document).ready(function() {
+		FormElements.init();
+	});
+		ClassicEditor
+			.create(document.querySelector('#answer'))
+			.then(answer => {
+				console.log("ini isi contentnya");
+				console.log(answer.getData());
+			})
+			.catch(err => {
+				console.log(err);
+			});
+</script>
  
 @endsection

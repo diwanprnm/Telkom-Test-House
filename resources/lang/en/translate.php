@@ -35,7 +35,7 @@ return [
 	'service_company_agent'		=> 'Agent/Distributor',
 	'service_company_branch'	=> 'Manufacture',
 	'service_company_individual'=> 'User/Private',
-	'service_company_confirm'	=> "*If there is any change in the company's data, please send email to Admin urelddstelkom@gmail.com",
+	'service_company_confirm'	=> "*If there is any change in the company's data, please send email to Admin cstth@telkom.co.id",
 	
 	'service_device'					=> 'Device\'s  Data',
 	'service_device_equipment'			=> 'Device Name',
@@ -180,6 +180,7 @@ return [
 	'examination_date_begin'	=> 'Start',
 	'examination_date_end' 		=> 'End',
 	'examination_spk_code' 		=> 'SPK Number',
+	'example'					=> 'ex :',
 	
 	'examination_function_test_date'=> 'Function Test Date',
 	'examination_reschedule_test_date'=> 'Function Test',
@@ -486,4 +487,9 @@ return [
 	'purchase_history_updateSTEL_warning' => 'This transaction has expired documents',
 
 	'message_not_found_products' => 'The document you are looking for was not found. Please search using other keywords.',
+	'request_cancelation' => 'Request Cancellation',
+	'reason_cancelation' => 'Reason for Cancellation',
+	'other_reason' => 'Other Reason',
+	'message_request_cancelation' => 'Attention, this request make you not being able to process this test again, are you sure?',
+	'cancel_warning' => 'You have canceled this test.',
 ];

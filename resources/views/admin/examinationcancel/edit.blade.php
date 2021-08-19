@@ -17,17 +17,17 @@
 		<section id="page-title">
 			<div class="row">
 				<div class="col-sm-8">
-					<h1 class="mainTitle">Edit Pengujian</h1>
+					<h1 class="mainTitle">Lihat Pengujian</h1>
 				</div>
 				<ol class="breadcrumb">
 					<li>
-						<span>Beranda</span>
-					</li>
-					<li>
 						<span>Pengujian</span>
 					</li>
+					<li>
+						<span>Pengujian Batal</span>
+					</li>
 					<li class="active">
-						<span>Edit</span>
+						<span>Lihat</span>
 					</li>
 				</ol>
 			</div>

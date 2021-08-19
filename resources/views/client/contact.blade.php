@@ -36,7 +36,7 @@
 											Kota Bandung, Jawa Barat 40152<br>
 										</address>
 										<abbr title="Customer Service"><strong>{{ trans('translate.service_company_cs') }}:</strong></abbr> (+62) 812-2483-7500<br>
-										<abbr title="Email Address"><strong>{{ trans('translate.service_company_email') }}:</strong></abbr> urelddstelkom@gmail.com
+										<abbr title="Email Address"><strong>{{ trans('translate.service_company_email') }}:</strong></abbr> cstth@telkom.co.id
 									</div>
 					</div>
 

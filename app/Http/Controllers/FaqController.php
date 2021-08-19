@@ -3,20 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
-use Illuminate\View\Middleware\ShareErrorsFromSession;
-use App\Http\Requests;
 
-use App\Logs;
 use App\Faq;
 use App\Services\Logs\LogService;
 
 use Auth;
-use File;
-use Response;
 use Session;
-use Input;
 
 use Ramsey\Uuid\Uuid;
 
@@ -28,6 +21,16 @@ class FaqController extends Controller
     private const ANSWER = 'answer';
     private const ADMIN_FAQ_LOC = '/admin/faq';
     private const ERROR = 'error';
+
+    private static $CATEGORY = [
+        '1' => 'Registrasi Akun',
+        '2' => 'STEL dan Pengujian Perangkat',
+        '3' => 'Uji Fungsi',
+        '4' => 'Invoice dan Pembayaran',
+        '5' => 'SPK',
+        '6' => 'Kapabilitas TTH',
+        '7' => 'Pengambilan Laporan dan Sertifikat'
+    ];
     /**
      * Create a new controller instance.
      *
@@ -65,12 +68,16 @@ class FaqController extends Controller
         }else{
             $query = Faq::whereNotNull('created_at'); 
             
-            $faq = $query->orderBy(self::QUESTION)
+            $faq = $query->orderBy('category')->orderBy('created_at')
                         ->paginate($paginate);
         }
         
         if (count($faq) == 0){
             $message = 'Data not found';
+        }
+        for ($i=0; $i < count($faq); $i++) { 
+            $temp = $faq[$i]->category;
+            $faq[$i]->category = self::$CATEGORY[$temp];
         }
         
         return view('admin.faq.index')
@@ -102,7 +109,8 @@ class FaqController extends Controller
         $faq->id = Uuid::uuid4();
         $faq->question = $request->input(self::QUESTION);
         $faq->answer = $request->input(self::ANSWER);
-        $faq->is_active = 1;
+        $faq->category = $request->input('category');
+        $faq->is_active = $request->input('status');
         $faq->created_by = $currentUser->id;
         $faq->updated_by = $currentUser->id; 
 
@@ -163,6 +171,14 @@ class FaqController extends Controller
 
         if ($request->has(self::ANSWER)){
             $faq->answer = $request->input(self::ANSWER);
+        }
+
+        if ($request->has('category')){
+            $faq->category = $request->input('category'); 
+        }
+
+        if ($request->has('status')){
+            $faq->is_active = $request->input('status');
         }
 
         $faq->updated_by = $currentUser->id; 

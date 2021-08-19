@@ -35,7 +35,7 @@ return [
 	'service_company_cs'		=> 'Customer Service TTH',
 	'service_company_fax'		=> 'Faksimil',
 	'service_company_email'		=> 'Email',
-	'service_company_confirm'	=> '*Apabila ada perubahan data perusahaan, silakan email ke Admin urelddstelkom@gmail.com',
+	'service_company_confirm'	=> '*Apabila ada perubahan data perusahaan, silakan email ke Admin cstth@telkom.co.id',
 	
 	'service_device'				=> 'Data Perangkat', // Device Information
 	'service_device_equipment'		=> 'Nama Perangkat', // Device
@@ -181,6 +181,7 @@ return [
 	'examination_date_begin'	=> 'Mulai',
 	'examination_date_end' 		=> 'Selesai',
 	'examination_spk_code' 		=> 'Nomor SPK',
+	'example'					=> 'cth :',
 	
 	'examination_function_test_date'=> 'Tanggal Uji Fungsi',
 	'examination_reschedule_test_date'=> 'Uji Fungsi',
@@ -489,4 +490,9 @@ return [
 	'purchase_history_updateSTEL_warning' => 'Transaksi ini memiliki dokumen yang kedaluwarsa',
 
 	'message_not_found_products' => 'Dokumen yang anda cari tidak ditemukan. Silakan mencari menggunakan kata kunci yang lain.',
+	'request_cancelation' => 'Batalkan Pengujian',
+	'reason_cancelation' => 'Alasan Pembatalan',
+	'other_reason' => 'Alasan Lainnya',
+	'message_request_cancelation' => 'Perhatian, permohonan pembatalan uji ini mengakibatkan anda tidak dapat memroses kembali permohonan uji ini, apakah anda yakin?',
+	'cancel_warning' => 'Anda telah membatalkan pengujian ini.',
 ];

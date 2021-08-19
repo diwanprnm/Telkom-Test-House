@@ -52,7 +52,7 @@
 					<div class="col-md-8">
 						<h4>Quality Assurance (QA)</h4>
 						<p>{{ trans('translate.subtitle_qa_process') }}</p>
-							<a href="#videoStory1" class="btn btn-default btn-sm videoLink">{{ trans('translate.video_guide') }} <em class="fa fa-play-circle" aria-hidden="true">&nbsp;</em></a>
+							<!-- <a href="#videoStory1" class="btn btn-default btn-sm videoLink">{{ trans('translate.video_guide') }} <em class="fa fa-play-circle" aria-hidden="true">&nbsp;</em></a> -->
 						@if($qs_certificate_date == 1)
 							<a class="button button-3d nomargin btn-sky" data-toggle="modal" data-target="#modal_qs_certificate_date">{{ trans('translate.process') }}</a>
 						@else
@@ -115,7 +115,7 @@
 					<div class="col-md-8">
 						<h4>Type Approval (TA)</h4>
 						<p>{{ trans('translate.subtitle_ta_process') }}</p>
-						<a href="#videoStory2" class="btn btn-default btn-sm videoLink">{{ trans('translate.video_guide') }} <em class="fa fa-play-circle" aria-hidden="true">&nbsp;</em></a>
+						<!-- <a href="#videoStory2" class="btn btn-default btn-sm videoLink">{{ trans('translate.video_guide') }} <em class="fa fa-play-circle" aria-hidden="true">&nbsp;</em></a> -->
 						@if($qs_certificate_date == 1)
 							<a class="button button-3d nomargin btn-sky" data-toggle="modal" data-target="#modal_qs_certificate_date">{{ trans('translate.process') }}</a>
 						@else
@@ -177,7 +177,7 @@
 					<div class="col-md-8">
 						<h4>Voluntary Test (VT)</h4>
 						<p>{{ trans('translate.subtitle_vt_process') }}</p>
-						<a href="#videoStory3" class="btn btn-default btn-sm videoLink">{{ trans('translate.video_guide') }} <em class="fa fa-play-circle" aria-hidden="true">&nbsp;</em></a>
+						<!-- <a href="#videoStory3" class="btn btn-default btn-sm videoLink">{{ trans('translate.video_guide') }} <em class="fa fa-play-circle" aria-hidden="true">&nbsp;</em></a> -->
 						@if($qs_certificate_date == 1)
 							<a class="button button-3d nomargin btn-sky" data-toggle="modal" data-target="#modal_qs_certificate_date">{{ trans('translate.process') }}</a>
 						@else

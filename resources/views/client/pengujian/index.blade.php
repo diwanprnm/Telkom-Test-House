@@ -290,10 +290,17 @@
 								</table>
 							</div>
 							<div class="option-progress right"> 
-
+							@if($item->is_cancel == 0)
 								<a class="button button-3d nomargin btn-blue btn-sky" href="{{URL::to('cetakPengujian/'.$item->id.'')}}" target="_blank">{{ trans('translate.examination_print') }}</a>
+							@endif
 								<a class="button button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/detail')}}">{{ trans('translate.examination_detail') }}</a>
-								
+								<!-- jika is_cancel == 1, tampilkan alert ini -->
+								@if($item->is_cancel == 1)
+								<div class="alert" style="background-color : #ffcccc; color : #1e272e;text-align : left;">
+									{{ trans('translate.cancel_warning') }} 
+								</div> 
+								@endif
+							@if($item->is_cancel == 0)
 								@if($item->registration_status == '1' && $item->function_status != '1')
 									@if($item->deal_test_date == NULL)
 									<a class="button button-3d download_progress_btn edit_btn nomargin btn-blue btn-sky" onclick="reSchedule('@php echo $item->id @endphp','@php echo $item->cust_test_date @endphp','1','@php echo $item->deal_test_date @endphp','@php echo $item->urel_test_date @endphp','@php echo $item->function_test_TE_temp @endphp','@php echo $item->function_test_date_temp @endphp')">{{ trans('translate.examination_reschedule_test_date') }}</a>
@@ -304,6 +311,11 @@
 									<a class="button button-3d download_progress_btn edit_btn nomargin btn-blue btn-sky" onclick="reSchedule('@php echo $item->id @endphp','@php echo $item->cust_test_date @endphp','2','@php echo $item->deal_test_date @endphp','@php echo $item->urel_test_date @endphp','@php echo $item->function_test_TE_temp @endphp','@php echo $item->function_test_date_temp @endphp')">{{ trans('translate.examination_reschedule_test_date') }}</a>
 									@endif
 								@endif
+								
+								@php if($item->registration_status != 1){ @endphp
+									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{url('editprocess/'.$item->jns_pengujian.'/'.$item->id)}}">{{ trans('translate.examination_edit') }}</a>
+								@php } @endphp
+
 								<!-- jika function_test_TE_temp == 1, tampilkan alert ini -->
 								@if($item->function_test_TE_temp == 1)
 								<div class="alert" style="background-color : #ffcccc; color : #1e272e;text-align : left;">
@@ -313,17 +325,18 @@
 								@php if($item->spb_status == 1 && $item->payment_status != 1){ @endphp
 									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/pembayaran')}}">{{ trans('translate.payment_process') }}</a>
 									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/downloadSPB')}}">{{ trans('translate.download') }} SPB</a>
-									@if($item->payment_method == 2 && $item->VA_expired < date("Y-m-d H:i:s"))
-										<div class="alert" style="background-color : #ffcccc; color : #1e272e;text-align : left;">
-											{{ trans('translate.stel_total_expired') }} <a href="{{url('/resend_va_spb/'.$data[0]->id)}}"> {{ trans('translate.here') }} </a> {{ trans('translate.stel_total_resend') }}. 
-										</div> 
-									@endif
 								@php } @endphp
-								
-								@php if($item->registration_status != 1){ @endphp
-									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{url('editprocess/'.$item->jns_pengujian.'/'.$item->id)}}">{{ trans('translate.examination_edit') }}</a>
-								@php } @endphp
-								
+
+								@if($item->registration_status == 1 && $item->function_status == 1 && $item->contract_status == 1 && $item->spb_status == 1 && $item->payment_status == 0)  
+									<a class="button button-3d nomargin btn-blue btn-sky" href="javascript:void(0)" onclick="return reqCancel('{{$item->id}}');">{{ trans('translate.request_cancelation') }}</a>
+								@endif
+
+								@if($item->payment_method == 2 && $item->VA_expired < date("Y-m-d H:i:s"))
+									<div class="alert" style="background-color : #ffcccc; color : #1e272e;text-align : left;">
+										{{ trans('translate.stel_total_expired') }} <a href="{{url('/resend_va_spb/'.$data[0]->id)}}"> {{ trans('translate.here') }} </a> {{ trans('translate.stel_total_resend') }}. 
+									</div> 
+								@endif
+
 								@php if(
 				  $item->registration_status == 1 &&
                   $item->function_status == 1 &&
@@ -353,6 +366,7 @@
                 ){ @endphp
 									<a class="button button-3d edit_btn download_progress_btn nomargin btn-blue btn-sky" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->nama_perangkat }}','{{ URL::to('pengujian/'.$item->id.'/downloadSertifikat') }}','device', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})', '{{$item->id}}');">{{ trans('translate.download') }} {{ trans('translate.certificate') }}</a>
 								@php } @endphp
+							@endif
 							</div>
 						</div>
 						@endforeach
@@ -574,6 +588,47 @@
 	</div><!-- /.modal -->
 </div>
 </form>
+
+<div id="modal_request_cancel" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog modal-lg">
+
+	<!-- Modal content-->
+	<div class="modal-content">
+		<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">&times;</button>
+		<h2 class="modal-title">{{ trans('translate.attention') }}</h2>
+		</div>
+		<div class="modal-body pre-scrollable">
+			<div class="row">
+				<h4>{{ trans('translate.reason_cancelation') }} : </h4>
+				<div class="form-group">
+					@php $no = 1; @endphp
+					@foreach($data_cancel_reason as $item)
+					<div class="material-group-item">
+						<input type="radio" class="reason" name="reason" value="{{ $item->id }}||{{ $item->name }}" placeholder="{{ $item->name }}" id="reason-{{ $item->id }}"> 
+						<label for="reason-{{ $item->id }}" style="font-weight:normal;">{{ $item->name }}</label>
+					</div>
+					@php $no++; @endphp
+					@endforeach
+					<div class="material-group-item">
+						<input type="radio" class="reason" name="reason" value="0" placeholder="{{ trans('translate.other_reason') }}" id="reason-0"> 
+						<label for="reason-0" style="font-weight:normal;">{{ trans('translate.other_reason') }}</label>
+					</div>
+				</div>
+				<div class="form-group other_reason" style="display:none;">
+					<label>{{ trans('translate.other_reason') }}</label>
+					<input type="text" id="other_reason" name="other_reason" placeholder ="{{ trans('translate.other_reason') }}" class="form-control">
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="button button3d btn-sky" data-dismiss="modal">Cancel</button>
+			<button id="btn-cancel" type="button" class="button button3d btn-sky" data-dismiss="modal">Submit</button>
+		</div>
+	</div>
+
+	</div>
+</div>
 
 <input type="hidden" name="link" id="link"> 
    <div id="modal_kuisioner" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
@@ -1184,6 +1239,11 @@
           });
         }
     }
+
+		$(".reason").change(function(){
+			var reason = $('input[name="reason"]:checked').val();
+			reason == 0 ? $(".other_reason").show() : $(".other_reason").hide();
+		});
 	});
 </script>
 <script type="text/javascript" >
@@ -1498,6 +1558,38 @@
 			}
 		});
 	}
+
+	function reqCancel(a){
+		$("#my_exam_id").val(a);
+		$('#modal_request_cancel').modal('show');
+	}
+
+	$('#btn-cancel').click(function () {
+		rad_validation = ($('input[name=reason]:checked'));
+		if(rad_validation.length == 0 || (rad_validation[0].value == 0 && $("#other_reason").val() == '')){
+			alert('Reason is Required');
+			return false;
+		}
+		var baseUrl = "{{URL::to('/')}}";
+		if (confirm("{{ trans('translate.message_request_cancelation') }}")) {
+			var a = document.getElementById('my_exam_id').value;
+			var b = rad_validation[0].value;
+			var c = document.getElementById('other_reason').value;
+			$.ajax({
+				type: "POST",
+				url : "reqCancel",
+				data: {'_token':"{{ csrf_token() }}", 'my_exam_id':a, 'reason':b, 'other_reason':c},
+				beforeSend: function(){
+					// document.getElementById("overlay").style.display="inherit";
+				},
+				success:function(response){
+					// document.getElementById("overlay").style.display="none";
+					console.log(response);
+					location.reload();
+				}
+			});
+		}
+	});
 </script>
 
 @endsection

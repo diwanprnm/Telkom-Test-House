@@ -82,7 +82,7 @@
 		<br>
 			&nbsp;&nbsp;&nbsp; {!! $sn_perangkat1 !!} menjadi {!! $sn_perangkat2 !!}
 		<br><br>
-		Mohon untuk melakukan <strong>koordinasi terlebih dahulu</strong> terkait revisi perangkat dengan menghubungi staff User Relation di (022) 4571145 atau dengan mengirimkan email ke urelddstelkom@gmail.com .
+		Mohon untuk melakukan <strong>koordinasi terlebih dahulu</strong> terkait revisi perangkat dengan menghubungi staff User Relation di (022) 4571145 atau dengan mengirimkan email ke cstth@telkom.co.id .
 		<br><br>
 		Salam hangat,
 		<br>

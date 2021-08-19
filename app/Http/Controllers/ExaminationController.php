@@ -503,7 +503,7 @@ class ExaminationController extends Controller
 				->with(self::EXAMINATION_LAB)
 				->first();
 
-				if ($exam->spk_code == null && $exam->company_id == '0fbf131c-32e3-4c9a-b6e0-a0f217cb2830'){
+				if ($exam->spk_code == null && $exam->company_id == '0fbf131c-32e3-4c9a-b6e0-a0f217cb2830' && $exam->is_cancel == 0){
                     $spk_number_forOTR = $examinationService->generateSPKCode($exam_forOTR->examinationLab->lab_code,$exam_forOTR->examinationType->name,date('Y'));
                     $exam->spk_code = $spk_number_forOTR;
                     $exam->spk_date = date(self::DATE_FORMAT_2);
@@ -685,7 +685,7 @@ class ExaminationController extends Controller
 				->with(self::EXAMINATION_LAB)
 				->first();
 
-                if ($exam->spk_code == null){
+                if ($exam->spk_code == null && $exam->is_cancel == 0){
                     $spk_number_forOTR = $examinationService->generateSPKCode($exam_forOTR->examinationLab->lab_code,$exam_forOTR->examinationType->name,date('Y'));
                     $exam->spk_code = $spk_number_forOTR;
                     $exam->spk_date = date(self::DATE_FORMAT_2);
@@ -764,6 +764,11 @@ class ExaminationController extends Controller
 	                    'contents'=>json_encode(['by'=>$currentUser->name, self::REFERENCE_ID => '1']),
 	                );
 
+					$data_upload [] = array(
+						'name'=>"type",
+						'contents'=>"bast",
+					);
+
 	                $examinationService->api_upload($data_upload,$exam->BILLING_ID);
 			}
 			if ($request->hasFile(self::REV_LAP_UJI)) {
@@ -789,6 +794,11 @@ class ExaminationController extends Controller
 		                    'name'=>"delivered",
 		                    'contents'=>json_encode(['by'=>$currentUser->name, self::REFERENCE_ID => '1']),
 		                );
+
+						$data_upload [] = array(
+							'name'=>"type",
+							'contents'=>"bast",
+						);
 
 		                $examinationService->api_upload($data_upload,$exam->BILLING_ID);
 		            }
@@ -1048,6 +1058,7 @@ class ExaminationController extends Controller
 					if ($request->has(self::PAYMENT_STATUS)){$exam_hist->status = $request->input(self::PAYMENT_STATUS);}
 					if ($request->has(self::SPK_STATUS)){$exam_hist->status = $request->input(self::SPK_STATUS);}
 					if ($request->has(self::EXAMINATION_STATUS)){$exam_hist->status = $request->input(self::EXAMINATION_STATUS);}
+					if ($request->has('update_barang')){$exam_hist->status = $request->input('update_barang');}
 					if ($request->has(self::RESUME_STATUS)){$exam_hist->status = $request->input(self::RESUME_STATUS);}
 					if ($request->has(self::QA_STATUS)){$exam_hist->status = $request->input(self::QA_STATUS);}
 					if ($request->has(self::CERTIFICATE_STATUS)){$exam_hist->status = $request->input(self::CERTIFICATE_STATUS);}
@@ -2005,7 +2016,7 @@ class ExaminationController extends Controller
 	                "name" => "PT. TELKOM INDONESIA (PERSERO) Tbk",
 	                "address" => "Telkom Indonesia Graha Merah Putih, Jalan Japati No.1 Bandung, Jawa Barat, 40133",
 	                "phone" => "(+62) 812-2483-7500",
-	                "email" => "urelddstelkom@gmail.com",
+	                "email" => "cstth@telkom.co.id",
 	                "npwp" => "01.000.013.1-093.000"
 	            ],
 	            "to" => [

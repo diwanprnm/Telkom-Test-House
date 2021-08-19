@@ -105,7 +105,7 @@ class CertificationController extends Controller
         $this->validate($request, [
             self::TITLE => self::REQUIRED,
             self::IS_ACTIVE => self::REQUIRED,
-            self::IMAGE => 'required|mimes:jpg,jpeg,png'
+            self::IMAGE => 'required|mimes:jpg,jpeg,png,jfif'
         ]);
 
         $logService = new LogService();
@@ -170,7 +170,7 @@ class CertificationController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            self::IMAGE => 'mimes:jpg,jpeg,png'
+            self::IMAGE => 'mimes:jpg,jpeg,png,jfif'
         ]);
 
         $currentUser = Auth::user();

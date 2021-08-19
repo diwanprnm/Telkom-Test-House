@@ -221,6 +221,10 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::resource('/email_editors', 'EmailEditorController');
 	Route::resource('/chamber', 'ChamberAdminController');
 	Route::get('/chamber/delete/{id}/{reasonOfDeletion}', 'ChamberAdminController@deleteChamber');
+	Route::post('/email_editors/update_logo_signature', 'EmailEditorController@updateLogoSignature');
+
+	Route::resource('/examinationcancel', 'ExaminationCancelController');
+
 });
 	Route::get('/uploadCertification', 'UploadProductionController@uploadCertification');
 	Route::get('/uploadCompany', 'UploadProductionController@uploadCompany');
@@ -273,6 +277,7 @@ Route::resource('/pengujian', 'PengujianController');
 Route::get('/pengujian/{id}/detail', 'PengujianController@detail');
 Route::post('/testimonial', 'PengujianController@testimonial');
 Route::post('/cekAmbilBarang', 'PengujianController@cekAmbilBarang');
+Route::post('/reqCancel', 'PengujianController@reqCancel');
 Route::get('{path}', 'STELClientController@index')->where('path', '(STEL|S-TSEL|STD|PERDIRJEN|PERMENKOMINFO|OTHER)');
 Route::resource('/Chargeclient', 'ExaminationChargeClientController');
 Route::get('/Chargeclient', 'ExaminationChargeClientController@index');

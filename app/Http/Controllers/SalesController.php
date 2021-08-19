@@ -321,12 +321,17 @@ class SalesController extends Controller
         $attachment_count = $savedSTELFiles['attachment_count'];
         $success_count = $savedSTELFiles['success_count'];
         $data = $savedSTELFiles['data'];
+        $notifUploadSTEL = $savedSTELFiles['notifUploadSTEL'];
         
         /*TPN api_  */
         if($STELSales->BILLING_ID != null && $data != null){
             $data [] = array(
                 'name'=>"delivered",
                 'contents'=>json_encode(['by'=>$currentUser->name, "reference_id" => '1']),
+            );
+            $data [] = array(
+                'name'=>"type",
+                'contents'=>"bast",
             );
             $this->api_upload($data,$STELSales->BILLING_ID);
         }

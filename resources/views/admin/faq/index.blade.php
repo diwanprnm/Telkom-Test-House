@@ -11,7 +11,7 @@
 				</div>
 				<ol class="breadcrumb">
 					<li>
-						<span>Beranda</span>
+						<span>Customer Relation</span>
 					</li>
 					<li class="active">
 						<span>FAQ</span>
@@ -56,9 +56,11 @@
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer"><caption></caption>
 							<thead>
 								<tr>
-									<th class="center" scope="col">No</th> 
-									<th class="center" scope="col">Pertanyaan</th> 
-									<th class="center" scope="col">Jawaban</th> 
+									<th class="center" scope="col">No</th>
+									<th scope="col">Kategori</th> 
+									<th scope="col">Pertanyaan</th> 
+									<th scope="col">Jawaban</th> 
+									<th class="center" scope="col">Status</th>
                                     <th class="center" scope="col">Aksi</th>
 								</tr>
 							</thead>
@@ -66,9 +68,15 @@
 								@php $no=1; @endphp
 								@foreach($data as $item)
 									<tr>
-										 <td class="center">{{ $no }}</td>
-										 <td class="center">{{ $item->question }}</td>
-										 <td class="center">{{ $item->answer }}</td>
+										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
+										<td>{{ $item->category }}</td>
+										<td>{{ $item->question }}</td>
+										<td>{!! $item->answer !!}</td>
+										@if($item->is_active)
+											<td class="center"><span class="label label-sm label-success">Active</span></td>
+										@else
+											<td class="center"><span class="label label-sm label-warning">Not Active</span></td>
+										@endif
 										 
 	                                    <td class="center">
 											<div>

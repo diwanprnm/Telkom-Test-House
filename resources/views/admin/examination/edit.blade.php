@@ -337,7 +337,12 @@
 											@if(strpos($data->keterangan, 'qa_date') !== false)
 												@php $data_ket = explode("qa_date",$data->keterangan); @endphp
 												<tr>
-													<th colspan="3" class="center" scope="col"><p style="color:red">Perangkat ini sudah pernah diuji, dengan status "Tidak Lulus Uji" berdasarkan keputusan Sidang QA tanggal {{ $data_ket[1] }}</p></th>
+													<th colspan="3" class="left" scope="col"><p style="color:red">Perangkat ini sudah pernah diuji, dengan status "Tidak Lulus Uji" berdasarkan keputusan Sidang QA tanggal {{ $data_ket[1] }}</p></th>
+												</tr>
+											@endif
+											@if($data->spb_number && $data->payment_status == 0 && $data->spb_date < date('Y-m-d', strtotime('-3 month')))
+												<tr>
+													<th colspan="3" class="left" scope="col"><p style="color:red">SPB sudah melebihi 3 bulan batas pembayaran.</p></th>
 												</tr>
 											@endif
 												<tr>
@@ -3004,7 +3009,7 @@
 				@if($admin_roles[0]->equipment_status)
 				{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-barang')) !!}
 					{!! csrf_field() !!}
-					<input type="hidden" name="status" class="form-control" value=""/>
+					<input type="hidden" name="status" class="form-control" value="Edit Lokasi Barang"/>
 					<input type="hidden" name="keterangan" class="form-control" value=""/>
 					<fieldset>
 						<legend>
@@ -3278,42 +3283,20 @@
 									@if($rev_uji == 0)
 										@php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;@endphp
 									@endif
-									@if($item->attachment != '')
 									<div class="col-md-12">
 										<div class="form-group">
 											<label>
-												Laporan Hasil Pengujian dari OTR :
+												Laporan Hasil Pengujian dari OTR : @if($item->attachment != '') <a href="{{$item->attachment}}"> Download</a> @else Belum Tersedia @endif
 											</label>
 										</div>
 									</div>
 									<div class="col-md-12">
 										<div class="form-group">
-											<div class="col-md-4">
-												<div class="form-group">
-													<a href="{{$item->attachment}}&isCover=true&isIsi=false"> Download Sampul/Judul Laporan </a>
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group">
-													<a href="{{$item->attachment}}&isCover=false&isIsi=true"> Download Isi Laporan </a>
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group">
-													<a href="{{$item->attachment}}"> Download Keseluruhan Laporan </a>
-												</div>
-											</div>
-										</div>
-									</div>
-									@else
-									<div class="col-md-12">
-										<div class="form-group">
 											<label>
-												Laporan Hasil Pengujian dari OTR : Belum Tersedia
+												No. Laporan Uji : @if($item->attachment != '') {{ $item->no }} @else Belum Tersedia @endif
 											</label>
 										</div>
 									</div>
-									@endif
 								@endif
 								@if($item->name == 'Revisi Laporan Uji' && $rev_uji == 0)
 									@php $rev_uji = 1; $lap_uji_url = URL::to('/admin/examination/media/download/'.$item->id); $lap_uji_attach = $item->attachment;@endphp
@@ -3501,42 +3484,20 @@
 							@foreach($data->media as $item)
 								@if($item->name == 'Laporan Uji')
 									@php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;@endphp
-									@if($item->attachment != '')
 									<div class="col-md-12">
 										<div class="form-group">
 											<label>
-												Laporan Hasil Pengujian dari OTR :
+												Laporan Hasil Pengujian dari OTR : @if($item->attachment != '') <a href="{{$item->attachment}}"> Download</a> @else Belum Tersedia @endif
 											</label>
 										</div>
 									</div>
 									<div class="col-md-12">
 										<div class="form-group">
-											<div class="col-md-4">
-												<div class="form-group">
-													<a href="{{$item->attachment}}&isCover=true&isIsi=false"> Download Sampul/Judul Laporan </a>
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group">
-													<a href="{{$item->attachment}}&isCover=false&isIsi=true"> Download Isi Laporan </a>
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group">
-													<a href="{{$item->attachment}}"> Download Keseluruhan Laporan </a>
-												</div>
-											</div>
-										</div>
-									</div>
-									@else
-									<div class="col-md-12">
-										<div class="form-group">
 											<label>
-												Laporan Hasil Pengujian dari OTR : Belum Tersedia
+												No. Laporan Uji : @if($item->attachment != '') {{ $item->no }} @else Belum Tersedia @endif
 											</label>
 										</div>
 									</div>
-									@endif
 								@endif
 							@endforeach
 							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
@@ -3670,42 +3631,20 @@
 							@foreach($data->media as $item)
 								@if($item->name == 'Laporan Uji')
 									@php $lap_uji_url = $item->attachment;$lap_uji_attach = $item->attachment;@endphp
-									@if($item->attachment != '')
 									<div class="col-md-12">
 										<div class="form-group">
 											<label>
-												Laporan Hasil Pengujian dari OTR :
+												Laporan Hasil Pengujian dari OTR : @if($item->attachment != '') <a href="{{$item->attachment}}"> Download</a> @else Belum Tersedia @endif
 											</label>
 										</div>
 									</div>
 									<div class="col-md-12">
 										<div class="form-group">
-											<div class="col-md-4">
-												<div class="form-group">
-													<a href="{{$item->attachment}}&isCover=true&isIsi=false"> Download Sampul/Judul Laporan </a>
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group">
-													<a href="{{$item->attachment}}&isCover=false&isIsi=true"> Download Isi Laporan </a>
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group">
-													<a href="{{$item->attachment}}"> Download Keseluruhan Laporan </a>
-												</div>
-											</div>
-										</div>
-									</div>
-									@else
-									<div class="col-md-12">
-										<div class="form-group">
 											<label>
-												Laporan Hasil Pengujian dari OTR : Belum Tersedia
+												No. Laporan Uji : @if($item->attachment != '') {{ $item->no }} @else Belum Tersedia @endif
 											</label>
 										</div>
 									</div>
-									@endif
 								@endif
 							@endforeach
 							@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
@@ -4126,7 +4065,7 @@
 					@if($admin_roles[0]->equipment_status)
 					{!! Form::open(array('url' => 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-barang')) !!}
 						{!! csrf_field() !!}
-						<input type="hidden" name="status" class="form-control" value=""/>
+						<input type="hidden" name="status" class="form-control" value="Edit Lokasi Barang"/>
 						<input type="hidden" name="keterangan" class="form-control" value=""/>
 						<fieldset>
 							<legend>
