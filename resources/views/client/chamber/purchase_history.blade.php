@@ -75,6 +75,8 @@
 															<a class="label label-sm label-warning" style="line-height: 2;" href="{{URL::to('chamber_history/'.$item->id.'/pembayaran')}}">{{ trans('translate.examination_pay_now') }}</a>
 														</td>
 														@endif
+													@else
+														<td class="center"><span class="label label-sm label-default" style="line-height: 2;">{{ $item->spb_date ? 'Unpaid' : trans('translate.rent_chamber_client_label_waiting_verification') }}</span></td>
 													@endif
 												</tr> 
 											@php $no++;$i++; @endphp
