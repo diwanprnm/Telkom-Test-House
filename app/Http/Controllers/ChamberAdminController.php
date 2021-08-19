@@ -58,7 +58,8 @@ class ChamberAdminController extends Controller
     }
 
     public function show($id)
-    {
+    {   
+        // Get Data
         $chambers = DB::table('chamber')
             ->select('chamber.*', 'companies.name as company_name')
             ->join('companies', 'companies.id', '=', 'chamber.company_id')
@@ -67,6 +68,7 @@ class ChamberAdminController extends Controller
         ;
         $chamber_details = Chamber_detail::where('chamber_id',$chambers->id)->get();
 
+        // Return View
         return view('admin.chamber.show')
             ->with('data', $chambers)
             ->with('dataDetail', $chamber_details)
@@ -78,6 +80,7 @@ class ChamberAdminController extends Controller
 
     public function edit($id)
     {
+        // Get Data
         $chambers = DB::table('chamber')
             ->select('chamber.*', 'companies.name as company_name')
             ->join('companies', 'companies.id', '=', 'chamber.company_id')
@@ -86,6 +89,7 @@ class ChamberAdminController extends Controller
         ;
         $chamber_details = Chamber_detail::where('chamber_id',$chambers->id)->get();
 
+        // Return View
         return view('admin.chamber.edit')
             ->with('data', $chambers)
             ->with('dataDetail', $chamber_details)
@@ -94,15 +98,22 @@ class ChamberAdminController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Forn Vaildation
+        // Form Vaildation
         $this->validate($request, [
             'start_date' => 'required',
             'price' => 'required',
         ]);
 
         // Update Record
-        Chamber_detail::where('chamber_id',$id)->delete();
         $chamber = Chamber::find($id);
+        if (!$chamber){
+            Session::flash('error', 'Undefined Data');
+            return redirect('/admin/chamber/');
+        }
+
+        $chamberOld = clone $chamber;
+        $chamberDetail = Chamber_detail::where('chamber_id',$id)->delete();
+
         $chamber->start_date = $request->input('start_date');
         $chamber->end_date = $request->input('end_date', null);
         $chamber->spb_date = $chamber->spb_date ?? $request->input('spb_date');
@@ -127,6 +138,12 @@ class ChamberAdminController extends Controller
             $chamberDetail->chamber_id = $chamber->id;
             $chamberDetail->save();
         }
+
+        // Create log of Update
+        $logService = new LogService();
+        $logService->createAdminLog('Update Data Penyewaan Chamber', 'Chamber', $chamberOld );
+
+        // Redirect to view & set messages
         Session::flash('message', 'Chamber data successfully updated');
         return redirect("admin/chamber/$id/edit");
     }
@@ -134,6 +151,30 @@ class ChamberAdminController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function deleteChamber($id, $reasonOfDeletion)
+    {   
+        //Get data
+        $chamber = Chamber::find($id);
+        
+        // Filter and Feedback if no data found
+        if (!$chamber){
+            Session::flash('error', 'Undefined Data');
+            return redirect('/admin/chamber/');
+        }
+
+        // Delete the record(s)
+        $detailChamber = Chamber_detail::where('chamber_id',$id)->delete();
+        $chamber->delete();
+
+        // Create Admin Log
+        $logService = new LogService();
+        $logService->createAdminLog('Hapus Data Penyewaan Chamber', 'Chamber', $chamber, urldecode($reasonOfDeletion) );
+
+        // Feedback succeed
+        Session::flash('message', 'Successfully Delete Data');
+        return redirect('/admin/chamber/');
     }
 
 

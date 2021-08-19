@@ -220,6 +220,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::post('/orderSlideshow', 'SlideshowController@orderSlideshow');
 	Route::resource('/email_editors', 'EmailEditorController');
 	Route::resource('/chamber', 'ChamberAdminController');
+	Route::get('/chamber/delete/{id}/{reasonOfDeletion}', 'ChamberAdminController@deleteChamber');
 });
 	Route::get('/uploadCertification', 'UploadProductionController@uploadCertification');
 	Route::get('/uploadCompany', 'UploadProductionController@uploadCompany');
