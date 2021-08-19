@@ -492,4 +492,5 @@ return [
 	'other_reason' => 'Other Reason',
 	'message_request_cancelation' => 'Attention, this request make you not being able to process this test again, are you sure?',
 	'cancel_warning' => 'You have canceled this test.',
+	'spb_date' => 'SPB Date',
 ];

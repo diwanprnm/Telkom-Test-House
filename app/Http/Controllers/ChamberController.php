@@ -141,7 +141,7 @@ class ChamberController extends Controller
                         "gateway" => $mps_info[0],
                         "product_code" => $mps_info[1],
                         "product_type" => $mps_info[2],
-                        "manual_expired" => 20160
+                        "manual_expired" => 1440
                     ]
                 ];
 
@@ -280,7 +280,7 @@ class ChamberController extends Controller
 			$chamber->save();
 
 	        Session::flash('message', "Please choose another bank. If you leave or move to another page, your process will not be saved!");
-	        return redirect('pengujian/'.$id.'/pembayaran');
+	        return redirect('chamber_history/'.$id.'/pembayaran');
 		}
     }
 

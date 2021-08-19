@@ -54,7 +54,7 @@
 											<table class="table table-condensed" aria-describedby="mydesc">
 												<thead>
 													<tr>
-														<th colspan="3" scope="col">{{ trans('translate.examination_number_payment') }} : {{ $data->spb_number }}</th>
+														<th colspan="3" scope="col">{{ trans('translate.spb_date') }} : {{ $data->spb_date }}</th>
 													</tr>
 												</thead>
 												<tbody>

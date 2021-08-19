@@ -110,7 +110,7 @@
 							</div>
 							<div class="col-md-12">
 								<div class="form-group">
-									<label>Tanggal tagihan</label>
+									<label>Tanggal Tagihan</label>
 									<input type="text" name="spb_date" class="form-control datepicker" value="{{$data->spb_date ?? ''}}" required @if ($data->spb_date) readonly disable @endif >
 								</div>
 							</div>

@@ -9,7 +9,7 @@
 			<div class="container clearfix"> 
 				<div class="row">    
 					<br>
-					<p> {{ trans('translate.examination_number_payment') }}	: {{ $data[0]->spb_number }} <a href="javascript:void(0)" class="collapsible" style="text-decoration: underline !important;">{{ trans('translate.examination_detail') }}</a></p> 
+					<p> {{ trans('translate.spb_date') }}	: {{ $data[0]->spb_date }} <a href="javascript:void(0)" class="collapsible" style="text-decoration: underline !important;">{{ trans('translate.examination_detail') }}</a></p> 
 					<table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%" style="display: none;" aria-describedby="mydesc">
 						<thead>
 							<tr>
@@ -23,8 +23,8 @@
 								<td>1. </td>
 								<td>{{ trans('translate.rent_chamber_client_label_rent_date') }} : 
 									{{$data[0]->start_date}} 
-									@if($data[0]->start_date != $data[0]->end_date) 
-										{{ trans('translate.rent_chamber_client_label_rent_until') }} {{$data[0]->end_date}} 
+									@if($data[0]->end_date != '0000-00-00' && $data[0]->start_date != $data[0]->end_date) 
+										& {{$data[0]->end_date}} 
 									@endif
 									{{$data[0]->duration}} {{ trans('translate.chamber_days') }}
 								</td>

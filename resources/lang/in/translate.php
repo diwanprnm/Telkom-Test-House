@@ -495,4 +495,5 @@ return [
 	'other_reason' => 'Alasan Lainnya',
 	'message_request_cancelation' => 'Perhatian, permohonan pembatalan uji ini mengakibatkan anda tidak dapat memroses kembali permohonan uji ini, apakah anda yakin?',
 	'cancel_warning' => 'Anda telah membatalkan pengujian ini.',
+	'spb_date' => 'Tanggal SPB',
 ];
