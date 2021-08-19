@@ -16,8 +16,21 @@ use App\Services\Logs\LogService;
 use App\Chamber;
 use App\Chamber_detail;
 
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Client;
+
 class ChamberAdminController extends Controller
 {
+
+    private const HEADERS = 'headers';
+	private const CONTENT_TYPE = 'Content-type';
+	private const JSON_HEADER = 'application/json';
+	private const AUTHORIZATION = 'Authorization';
+	private const APP_GATEWAY_TPN_3 = 'app.gateway_tpn_3';
+	private const BASE_URI = 'base_uri';
+	private const APP_URI_API_TPN = 'app.url_api_tpn';
+	private const TIMEOUT = 'timeout';
+	private const HTTP_ERRORS = 'http_errors';
 
     private $request;
 
@@ -105,7 +118,7 @@ class ChamberAdminController extends Controller
         ]);
 
         // Update Record
-        $chamber = Chamber::find($id);
+        $chamber = Chamber::with('user')->with('company')->where('id', $id)->first();
         if (!$chamber){
             Session::flash('error', 'Undefined Data');
             return redirect('/admin/chamber/');
@@ -123,6 +136,58 @@ class ChamberAdminController extends Controller
         $chamber->total = $chamber->price * 1.1;
         $chamber->duration = $chamber->end_date ? 2 : 1;
         $chamber->updated_by = Auth::user()->id;
+        
+        /* 
+            Jika Pembayaran Berubah dan ada billing_id, redirect back dan alert tidak bisa mengubah harga
+        */
+
+        if($chamber->payment_status == 0){ //jika pembayaran belum paid buatkan draftnya
+            /* Kirim Draft ke TPN */
+                $details [] = 
+                [
+                    "item" => 'Biaya Sewa Chamber '.$chamber->company->name,
+                    "description" => $chamber->end_date ? $chamber->start_date." & ".$chamber->end_date : $chamber->start_date,
+                    "quantity" => 1,
+                    "price" => ceil($chamber->price),
+                    "total" => ceil($chamber->price)
+                ]
+            ;
+
+            $data_draft = [
+                "from" => [
+                    "name" => "PT. TELKOM INDONESIA (PERSERO) Tbk",
+                    "address" => "Telkom Indonesia Graha Merah Putih, Jalan Japati No.1 Bandung, Jawa Barat, 40133",
+                    "phone" => "(+62) 812-2483-7500",
+                    "email" => "cstth@telkom.co.id",
+                    "npwp" => "01.000.013.1-093.000"
+                ],
+                "to" => [
+                    "name" => $chamber->company->name ? $chamber->company->name : "-",
+                    "address" => $chamber->company->address ? $chamber->company->address : "-",
+                    "phone" => $chamber->company->phone_number ? $chamber->company->phone_number : "-",
+                    "email" => $chamber->user->email ? $chamber->user->email : "-",
+                    "npwp" => $chamber->company->npwp_number ? $chamber->company->npwp_number : "-"
+                ],
+                "product_id" => config("app.product_id_tth_3"), //product_id TTH untuk Chamber
+                "details" => $details,
+                "created" => [
+                    "by" => $chamber->user->name,
+                    "reference_id" => '1'
+                ],
+                "include_tax_invoice" => true,
+                "bank" => [
+                    "owner" => "Divisi RisTI TELKOM",
+                    "account_number" => "131-0096022712",
+                    "bank_name" => "BANK MANDIRI",
+                    "branch_office" => "KCP KAMPUS TELKOM BANDUNG"         
+                ]
+            ];
+            $purchase = $this->api_purchase($data_draft);
+            $chamber->PO_ID = $purchase && $purchase->status ? $purchase->data->_id : null;
+            /* END Kirim Draft ke TPN */
+        }
+        
+
         $chamber->save();
 
         // List Dates
@@ -148,6 +213,26 @@ class ChamberAdminController extends Controller
         Session::flash('message', 'Chamber data successfully updated');
         return redirect("admin/chamber/$id/edit");
     }
+
+    public function api_purchase($data){
+        $client = new Client([
+            self::HEADERS => [self::CONTENT_TYPE => self::JSON_HEADER, 
+                            self::AUTHORIZATION => config(self::APP_GATEWAY_TPN_3)
+                        ],
+            self::BASE_URI => config(self::APP_URI_API_TPN),
+            self::TIMEOUT  => 60.0,
+            self::HTTP_ERRORS => false,
+            'verify' => false
+        ]);
+        try {
+            
+            $params['json'] = $data;
+            $res_purchase = $client->post("v3/draftbillings", $params)->getBody();
+            return json_decode($res_purchase);
+        } catch(Exception $e){
+            return null;
+        }
+	}
 
     public function destroy($id)
     {

@@ -117,7 +117,7 @@ class ChamberController extends Controller
 
     public function doCheckout(Request $request){
         $currentUser = Auth::user();
-    	$chamber = Chamber::where('id', $request->input('hide_id'))->first();
+    	$chamber = Chamber::with('user')->with('company')->where('id', $request->input('hide_id'))->first();
         if($currentUser){ 
         	$mps_info = explode('||', $request->input("payment_method"));
            	$chamber->include_pph = $request->has('is_pph') ? 1 : 0;
@@ -146,7 +146,7 @@ class ChamberController extends Controller
                 ];
 
                 $billing = $this->api_billing($data);
-                dd($billing);
+                // dd($billing);
 
                 $chamber->BILLING_ID = $billing && $billing->status == true ? $billing->data->_id : null;
                 if($mps_info[2] != "atm"){
@@ -307,11 +307,11 @@ class ChamberController extends Controller
     public function regeneratePO($chamber){
 		$details [] = 
             [
-                "item" => 'Biaya Sewa Chamber',
-                "description" => $chamber->start_date,
+                "item" => 'Biaya Sewa Chamber '.$chamber->company->name,
+                "description" => $chamber->end_date ? $chamber->start_date." & ".$chamber->end_date : $chamber->start_date,
                 "quantity" => 1,
-                "price" => ceil($chamber->price/1.1),
-                "total" => ceil($chamber->price/1.1)
+                "price" => ceil($chamber->price),
+                "total" => ceil($chamber->price)
             ]
         ;
 
@@ -320,7 +320,7 @@ class ChamberController extends Controller
                 "name" => "PT. TELKOM INDONESIA (PERSERO) Tbk",
                 "address" => "Telkom Indonesia Graha Merah Putih, Jalan Japati No.1 Bandung, Jawa Barat, 40133",
                 "phone" => "(+62) 812-2483-7500",
-                "email" => "urelddstelkom@gmail.com",
+                "email" => "cstth@telkom.co.id",
                 "npwp" => "01.000.013.1-093.000"
             ],
             "to" => [
