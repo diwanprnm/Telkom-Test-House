@@ -357,6 +357,7 @@ Route::group(['prefix' => '/v1', 'middlewareGroups' => 'api'], function () {
 	Route::get('/checkKuitansiCHMBTPN', 'v1\ChamberAPIController@checkKuitansiTPN');
 	Route::get('/checkReturnedCHMBTPN', 'v1\ChamberAPIController@checkReturnedTPN');
 	Route::get('/checkDeliveredCHMBTPN', 'v1\ChamberAPIController@checkDeliveredTPN');
+	Route::get('/cronDeleteChamber', 'v1\ChamberAPIController@cronDeleteChamber');
 });
 
 Route::get('/do_backup', 'BackupController@backup'); 

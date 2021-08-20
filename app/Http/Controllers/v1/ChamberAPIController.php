@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Response;
 
 use App\Chamber;
+use App\Chamber_detail;
 
 class ChamberAPIController extends AppBaseController
 {
@@ -361,5 +362,47 @@ class ChamberAPIController extends AppBaseController
       } catch(Exception $e){
           return null;
       }
-    } 
+    }
+
+    public function cronDeleteChamber()
+    {
+        //get list of tobe deleted chamber
+        $chamberNotCreatingVa = $this->getChamberNotCreatingVa();
+        $chamberVaExpired = $this->getChamberVaExpired();
+        $chamberIdList = array_unique(array_merge($chamberNotCreatingVa,$chamberVaExpired));
+
+        //delete chamber & chamber_detail in list
+        Chamber_detail::whereIn('chamber_id', $chamberIdList)->delete();
+        Chamber::whereIn('id', $chamberIdList)->delete();
+    }
+
+    private function getChamberNotCreatingVa()
+    {
+        //get list of chamber that not yet creating va after 2 days (2x24) of confirmation date by admin
+        $chamberIdList = [];
+        $chambers = Chamber::where('payment_status', 0)
+            ->whereNull('VA_number')
+            ->whereDate('spb_date', '<', Carbon::now()->subDays(2)->format('Y-m-d'))
+            ->get()
+        ;
+        foreach ($chambers as $chamber){
+            $chamberIdList[] = $chamber->id;
+        }
+        return $chamberIdList;
+    }
+
+    public function getChamberVaExpired()
+    {
+        //get list of chamber that va is expired after 1 day (1x24h) from VA_expired date
+        $chamberIdList = [];
+        $chambers = Chamber::where('payment_status', 0)
+            ->whereNotNull('VA_number')
+            ->whereDate('VA_expired', '<', Carbon::now()->subDays(1)->format('Y-m-d'))
+            ->get()
+        ;
+        foreach ($chambers as $chamber){
+            $chamberIdList[] = $chamber->id;
+        }
+        return $chamberIdList;
+    }
 }
