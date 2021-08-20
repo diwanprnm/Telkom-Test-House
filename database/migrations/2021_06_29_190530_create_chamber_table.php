@@ -46,7 +46,7 @@ class CreateChamberTable extends Migration
             $table->string('VA_image_url')->nullable();
             $table->string('VA_number')->nullable();
             $table->double('VA_amount', 15, 0)->nullable();
-            $table->string('VA_expired')->timestamp()->nullable();
+            $table->dateTime('VA_expired')->nullable();
 
             $table->uuid('created_by'); 
             $table->uuid('updated_by')->nullable();
