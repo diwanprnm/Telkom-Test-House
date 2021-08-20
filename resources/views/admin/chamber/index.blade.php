@@ -248,7 +248,12 @@
 									<td class="center">{{$i+1}}</td>
 									<td class="center">{{$data->$status[$i]->company_name}}</td>
 									<td class="center">{{$data->$status[$i]->start_date}}</td>
-									<td class="center">{{$data->$status[$i]->PO_ID ?? '-'}}</td>
+									<td class="center">
+										{{$data->$status[$i]->start_date}}
+										@if ($data->$status[$i]->duration > 1)
+											& {{$data->$status[$i]->end_date}}
+										@endif
+									</td>
 
 									<td class="center">{{$data->$status[$i]->invoice}}</td>
 									<td class="center">{{ "Rp " . number_format($data->$status[$i]->total,0,'','.') . ",-" }}</td>

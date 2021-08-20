@@ -271,7 +271,15 @@ class ChamberAdminController extends Controller
         $search = $this->request->input('search', '');
         $dataRentChambers = DB::table('chamber')
             ->join('companies', 'companies.id', '=', 'chamber.company_id')
-            ->select('chamber.id as id', 'chamber.start_date as start_date', 'chamber.invoice as invoice', 'chamber.total as total', 'chamber.payment_status as payment_status', 'companies.name as company_name')
+            ->select(
+                'chamber.id as id',
+                'chamber.start_date as start_date',
+                'chamber.end_date as end_date',
+                'chamber.duration as duration',
+                'chamber.invoice as invoice',
+                'chamber.total as total',
+                'chamber.payment_status as payment_status',
+                'companies.name as company_name')
             ->where('chamber.payment_status', $paymentStatus)
         ;
 
