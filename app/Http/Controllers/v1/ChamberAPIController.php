@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Response;
 
+use App\Chamber;
+
 class ChamberAPIController extends AppBaseController
 {
     
@@ -22,5 +24,346 @@ class ChamberAPIController extends AppBaseController
       ;
       return response()->json($rentedDates);
     }
-    
+
+    public function checkBillingTPN()
+    {
+      $main_chamber = Chamber::where('payment_status', 0)->whereNotNull('BILLING_ID')->whereNull('INVOICE_ID')->get();
+      if(count($main_chamber)>0){
+        $updated_count = 0;
+        foreach ($main_chamber as $data) {
+            $chamber = Chamber::find($data->id);
+            $oldStel = $Chamber;
+            
+            $data_invoices = [
+                "billing_id" => $data->BILLING_ID,
+                "created" => [
+                    "by" => "SUPERADMIN UREL",
+                    "reference_id" => "1"
+                ]
+            ];
+
+            $billing = $this->api_billing($data->BILLING_ID);
+            if($billing && $billing->status == true && $billing->data->status_paid == 'paid'){
+                $chamber->cust_price_payment = $billing->data->draft->final_price;
+                $chamber->payment_status = 1;
+
+                $invoice = $this->api_invoice($data_invoices);
+                $chamber->INVOICE_ID = $invoice && $invoice->status == true ? $invoice->data->_id : null;
+
+                $updated_count = $invoice && $invoice->status == true ? $updated_count += 1 : $updated_count;
+
+                if($chamber->save()){
+                    $data = array( 
+                        "from"=>"admin-digimon",
+                        "to"=>$chamber->created_by,
+                        "message"=>"Pembayaran Sewa Chamber Telah diterima",
+                        "url"=>"chamber_history",
+                        "is_read"=>0,
+                        "created_at"=>date("Y-m-d H:i:s"),
+                        "updated_at"=>date("Y-m-d H:i:s")
+                    );
+
+                    $notificationService = new NotificationService();
+                    $data['id'] = $notificationService->make($data);
+                    event(new Notification($data));
+
+                    $logService = new LogService();
+                    $logService->createLog('Update Status Pembayaran Chamber', 'Chamber', $oldStel );
+                }else{
+                    $updated_count -= 1;
+                }
+            }
+        }
+        return 'checkBillingCHMBTPN Command Run successfully! '.$updated_count.'/'.count($main_chamber).' updated.';
+      }else{
+        return 'checkBillingCHMBTPN Command Run successfully! Nothing to update.';
+      }
+    }
+
+    public function api_billing($id_billing){
+      $client = new Client([
+          'headers' => ['Authorization' => config("app.gateway_tpn_3")],
+          'base_uri' => config("app.url_api_tpn"),
+          'timeout'  => 60.0,
+          'http_errors' => false
+      ]);
+      try {
+          $res_billing = $client->get("v3/billings/".$id_billing."")->getBody()->getContents();
+          $billing = json_decode($res_billing);
+
+          return $billing;
+      } catch(Exception $e){
+          return null;
+      }
+    }
+
+    public function api_invoice($data_invoices){
+      $client = new Client([
+          'headers' => ['Authorization' => config("app.gateway_tpn_3")],
+          'base_uri' => config("app.url_api_tpn"),
+          'timeout'  => 60.0,
+          'http_errors' => false
+      ]);
+      try {
+          $param_invoices['json'] = $data_invoices;
+          $res_invoices = $client->post("v3/invoices", $param_invoices)->getBody()->getContents();
+          $invoice = json_decode($res_invoices);
+
+          return $invoice;
+      } catch(Exception $e){
+          return null;
+      }
+    }
+
+    public function checkKuitansiTPN()
+    {
+      $chamber = Chamber::where('kuitansi_file', '')->whereNotNull('INVOICE_ID')->get();
+      if(count($chamber)>0){
+          $client = new Client([
+              'headers' => ['Authorization' => config("app.gateway_tpn_3")],
+              'base_uri' => config("app.url_api_tpn"),
+              'timeout'  => 60.0,
+              'http_errors' => false
+          ]);
+
+          $updated_count = 0;
+          foreach ($chamber as $data) {
+              $Chamber = Chamber::where("id", $data->id)->first();
+              if($Chamber){
+                  try {
+                      $INVOICE_ID = $Chamber->INVOICE_ID;
+                      $res_invoice = $client->request('GET', 'v3/invoices/'.$INVOICE_ID);
+                      $invoice = json_decode($res_invoice->getBody());
+                      
+                      if($invoice && $invoice->status == true){
+                          $status_invoice = $invoice->data->status_invoice;
+                          $status_faktur = $invoice->data->status_faktur;
+                          if($status_invoice == "approved" && $status_faktur == "received"){
+                              /* 
+                                * SAVE KUITANSI
+                                * Ket: Pengaplikasian upload ke minio dari stream API
+                                * Tgs: Belum ditest
+                                */
+                              $name_file = "kuitansi_chamber_$INVOICE_ID.pdf";
+                              $path_file = "chamber/$data->id/";
+                              $response = $client->request('GET', 'v3/invoices/'.$INVOICE_ID.'/exportpdf');
+                              $stream = (String)$response->getBody();
+
+                              $fileService = new FileService();
+                              $fileProperties = array(
+                                  'path' => $path_file,
+                                  'fileName' => $name_file
+                              );
+                              $isUploaded = $fileService->uploadFromStream($stream, $fileProperties);
+
+                              if($isUploaded){
+                                  $Chamber->Chamber = $name_file;
+                                  $Chamber->save();
+                                  $updated_count = $Chamber->save() ? $updated_count += 1 : $updated_count;
+                              }
+                          }
+                      }
+                  } catch(Exception $e){
+                      return null;
+                  }
+              }
+          }
+        return 'checkKuitansiCHMBTPN Command Run successfully! '.$updated_count.'/'.count($chamber).' updated.';
+      }else{
+        return 'checkKuitansiCHMBTPN Command Run successfully! Nothing to update.';
+      }
+    }
+
+    public function checkTaxInvoiceTPN()
+    {
+      $chamber = Chamber::where('faktur_file', '')->whereNotNull('INVOICE_ID')->get();
+      if(count($chamber)>0){
+        $client = new Client([
+            'headers' => ['Authorization' => config("app.gateway_tpn_3")],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+
+        $updated_count = 0;
+        foreach ($chamber as $data) {
+            $Chamber = Chamber::where("id", $data->id)->first();
+
+            if($Chamber){
+                /* GENERATE NAMA FILE FAKTUR */
+                    $filename = $Chamber->pay_date.'_'.$Chamber->INVOICE_ID;
+                /* END GENERATE NAMA FILE FAKTUR */
+                try {
+                    $INVOICE_ID = $Chamber->INVOICE_ID;
+                    $res_invoice = $client->request('GET', 'v3/invoices/'.$INVOICE_ID);
+                    $invoice = json_decode($res_invoice->getBody());
+                    
+                    if($invoice && $invoice->status == true){
+                        $status_invoice = $invoice->data->status_invoice;
+                        $status_faktur = $invoice->data->status_faktur;
+                        if($status_invoice == "approved" && $status_faktur == "received"){
+                            /* 
+                              * SAVE FAKTUR PAJAK
+                              * Ket: Pengaplikasian upload ke minio dari stream API
+                              * Tgs: Belum ditest
+                              */
+                            $name_file = "faktur_chamber_$filename.pdf";
+                            $path_file = "chamber/$data->id/";
+                            $response = $client->request('GET', 'v3/invoices/'.$INVOICE_ID.'/taxinvoice/pdf');
+                            $stream = (String)$response->getBody();
+
+                            $fileService = new FileService();
+                            $fileProperties = array(
+                                'path' => $path_file,
+                                'fileName' => $name_file
+                            );
+                            $isUploaded = $fileService->uploadFromStream($stream, $fileProperties);
+
+                            if($isUploaded){
+                                $Chamber->faktur_file = $name_file;
+                                $updated_count = $Chamber->save() ? $updated_count += 1 : $updated_count;
+                            }
+                        }
+                    }
+                } catch(Exception $e){
+                    return null;
+                }
+            }
+        }
+        return 'checkTaxInvoiceCHMBTPN Command Run successfully! '.$updated_count.'/'.count($chamber).' updated.';
+      }else{
+        return 'checkTaxInvoiceCHMBTPN Command Run successfully! Nothing to update.';
+      }
+    }
+
+    public function checkReturnedTPN()
+    {
+      $main_chamber = Chamber::where('faktur_file', '')->whereNotNull('INVOICE_ID')->get();
+      if(count($main_chamber)>0){
+          $client = new Client([
+              'headers' => ['Authorization' => config("app.gateway_tpn_3")],
+              'base_uri' => config("app.url_api_tpn"),
+              'timeout'  => 60.0,
+              'http_errors' => false
+          ]);
+
+          $updated_count = 0;
+          foreach ($main_chamber as $data) {
+              $Chamber = Chamber::where("id", $data->id)->first();
+
+              if($Chamber){
+                  try {
+                      $INVOICE_ID = $Chamber->INVOICE_ID;
+                      $res_invoice = $client->request('GET', 'v3/invoices/'.$INVOICE_ID);
+                      $invoice = json_decode($res_invoice->getBody());
+                      
+                      if($invoice && $invoice->status == true){
+                          $status_invoice = $invoice->data->status_invoice;
+                          if($status_invoice == "returned"){
+                              $res_billing = $client->request('GET', 'v3/invoices?filterobjid-billing._id='.$Chamber->BILLING_ID);
+                              $billing = json_decode($res_billing->getBody());
+                              foreach ($billing->data as $data_billing) {
+                                  if($data_billing->status_faktur == "received"){
+                                      $Chamber->INVOICE_ID = $data_billing->_id;
+                                      $updated_count = $Chamber->save() ? $updated_count += 1 : $updated_count;
+                                  }
+                              }
+                          }
+                      }
+                  } catch(Exception $e){
+                      return null;
+                  }
+              }
+          }
+          return 'checkReturnedCHMBTPN Command Run successfully! '.$updated_count.'/'.count($main_chamber).' updated.';
+      }else{
+          return 'checkReturnedCHMBTPN Command Run successfully! Nothing to update.';
+      }
+    }
+
+    public function checkDeliveredTPN()
+    {
+      $main_chamber = Chamber::where('faktur_file', '')->whereNotNull('INVOICE_ID')->get();
+      dd($main_chamber);
+      if(count($main_chamber)>0){
+          $client = new Client([
+              'headers' => ['Authorization' => config("app.gateway_tpn_3")],
+              'base_uri' => config("app.url_api_tpn"),
+              'timeout'  => 60.0,
+              'http_errors' => false
+          ]);
+
+          $updated_count = 0;
+          foreach ($main_chamber as $data) {
+              $Chamber = Chamber::with('company')->with('user')->where("id", $data->id)->first();
+              if($Chamber){
+                  try {
+                    /*
+                      Upload Tiket ke Minio
+                      if upload sukses, buat array data ticket chamber
+                    */
+                    // Array Data Ticket Chamber
+                    $data [] = [
+                        'name' => "file",
+                        'contents' => fopen($path_file, 'r'),
+                        'filename' => 'Ticket Chamber' //Ticket Chamber PT APA
+                    ];
+
+                    /*TPN api_upload*/
+                    if($Chamber->BILLING_ID != null){
+                      $data [] = array(
+                          'name'=>"delivered",
+                          'contents'=>json_encode(['by'=>'Admin', "reference_id" => '1']),
+                      );
+                      $data [] = array(
+                          'name'=>"type",
+                          'contents'=>"bast",
+                      );
+                      $this->api_upload($data,$Chamber->BILLING_ID);
+                    }
+
+                    //Update Chamber payment Status
+                    $Chamber->updated_by = 1; 
+                    $Chamber->payment_status = 3; //delivered
+
+                    if($Chamber->save()){
+                      $data['id'] = $notificationService->make(array(
+                          "from"=>self::ADMIN,
+                          "to"=>$Chamber->created_by,
+                          self::MESSAGE=>"Tiket telah diupload",
+                          "url"=>'chamber_history',
+                          self::IS_READ=>0,
+                      ));
+                      // event(new Notification($data));
+                      
+                      // Create log
+                      $logService->createLog('Upload Tiket Penyewaan Chamber', "Chamber", null);
+                    }
+                  } catch(Exception $e){
+                      return null;
+                  }
+              }
+          }
+          return 'checkDeliveredCHMBTPN Command Run successfully! '.$updated_count.'/'.count($main_chamber).' updated.';
+      }else{
+          return 'checkDeliveredCHMBTPN Command Run successfully! Nothing to update.';
+      }
+    }
+
+    public function api_upload($data, $BILLING_ID){
+      $client = new Client([
+          'headers' => ['Authorization' => config("app.gateway_tpn_3")],
+          'base_uri' => config("app.url_api_tpn"),
+          'timeout'  => 60.0,
+          'http_errors' => false
+      ]);
+      try {
+          $params['multipart'] = $data;
+          $res_upload = $client->post("v3/billings/".$BILLING_ID."/deliver", $params)->getBody(); //BILLING_ID
+          return json_decode($res_upload);
+
+      } catch(Exception $e){
+          return null;
+      }
+    } 
 }

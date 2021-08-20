@@ -352,6 +352,11 @@ Route::group(['prefix' => '/v1', 'middlewareGroups' => 'api'], function () {
 	Route::get('/checkReturnedSPBTPN', 'v1\ExaminationAPIController@checkReturnedTPN');
 	Route::get('/spbReminder', 'v1\ExaminationAPIController@spbReminder');
 	Route::get('/getDateRentedChamber', 'v1\ChamberAPIController@getDateRented');
+	Route::get('/checkBillingCHMBTPN', 'v1\ChamberAPIController@checkBillingTPN');
+	Route::get('/checkTaxInvoiceCHMBTPN', 'v1\ChamberAPIController@checkTaxInvoiceTPN');
+	Route::get('/checkKuitansiCHMBTPN', 'v1\ChamberAPIController@checkKuitansiTPN');
+	Route::get('/checkReturnedCHMBTPN', 'v1\ChamberAPIController@checkReturnedTPN');
+	Route::get('/checkDeliveredCHMBTPN', 'v1\ChamberAPIController@checkDeliveredTPN');
 });
 
 Route::get('/do_backup', 'BackupController@backup'); 
