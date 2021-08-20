@@ -68,18 +68,18 @@ class ChamberController extends Controller
             ->where('users.company_id',$currentUser->company_id)
             ->where("chamber.payment_status", 1)
         ;
-        $query_verified = Chamber::select($select)->distinct('chamber.id')
+        $query_delivered = Chamber::select($select)->distinct('chamber.id')
             ->join("chamber_detail","chamber.id","=","chamber_detail.chamber_id")
             ->join("users","users.id","=","chamber.user_id")
             ->join("companies","companies.id","=",'users.company_id')
             ->where('users.company_id',$currentUser->company_id)
-            ->where("chamber.payment_status", 2)
+            ->where("chamber.payment_status", 3)
         ;
 
         $data = $query->orderBy("chamber.created_at", 'desc')->paginate($paginate);
         $data_unpaid = $query_unpaid->orderBy("chamber.created_at", 'desc')->paginate($paginate, ['*'], 'pageUnpaid');
         $data_paid = $query_paid->orderBy("chamber.created_at", 'desc')->paginate($paginate, ['*'], 'pagePaid');
-        $data_verified = $query_verified->orderBy("chamber.created_at", 'desc')->paginate($paginate, ['*'], 'pageDelivered');
+        $data_delivered = $query_delivered->orderBy("chamber.created_at", 'desc')->paginate($paginate, ['*'], 'pageDelivered');
 
         $page = "chamber_history";
         return view('client.chamber.purchase_history') 
@@ -88,7 +88,7 @@ class ChamberController extends Controller
         ->with('data', $data)
         ->with('data_unpaid', $data_unpaid)
         ->with('data_paid', $data_paid)
-        ->with('data_verified', $data_verified);
+        ->with('data_delivered', $data_delivered);
     } 
 
     public function pembayaran($id, Request $request)

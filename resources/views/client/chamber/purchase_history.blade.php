@@ -29,7 +29,7 @@
 					<ul class="nav nav-tabs clearfix">
 						<li class="{{ $tab == 'unpaid' ? 'active' : '' }}"><a href="#tab-unpaid" data-toggle="tab"><strong>Unpaid</strong></a></li>
 						<li class="{{ $tab == 'paid' ? 'active' : '' }}"><a href="#tab-paid" data-toggle="tab"><strong>Paid</strong></a></li>
-						<li class="{{ $tab == 'verified' ? 'active' : '' }}"><a href="#tab-verified" data-toggle="tab"><strong>Verified</strong></a></li>
+						<li class="{{ $tab == 'delivered' ? 'active' : '' }}"><a href="#tab-delivered" data-toggle="tab"><strong>Delivered</strong></a></li>
 					</ul>
 					<div class="tab-content">
 						<!-- tab unpaid -->
@@ -167,8 +167,8 @@
 								</div>
 							</div>
 						</div>
-						<!-- tab verified -->
-						<div id="tab-verified" class="row clearfix tab-pane fade {{ $tab == 'verified' ? 'in active' : '' }}">
+						<!-- tab delivered -->
+						<div id="tab-delivered" class="row clearfix tab-pane fade {{ $tab == 'delivered' ? 'in active' : '' }}">
 							<div class="col-md-12">
 								<div class="table-responsive">
 									<table id="datatable1" class="table table-striped table-bordered" style="width: 100%;">
@@ -187,10 +187,10 @@
 										</thead>
 										<tbody>
 											@php $no = 1; $i = 0; @endphp
-											@if($data_verified)
-											@foreach($data_verified as $keys => $item)
+											@if($data_delivered)
+											@foreach($data_delivered as $keys => $item)
 												<tr>
-													<td>{{$no+(($data_verified->currentPage()-1)*$data_verified->perPage())}}</td>
+													<td>{{$no+(($data_delivered->currentPage()-1)*$data_delivered->perPage())}}</td>
 													<td>{{$item->created_at}}</td>
                                                     <td>
                                                         {{$item->start_date}} 
@@ -201,7 +201,7 @@
                                                     <td>{{$item->duration}} {{ trans('translate.chamber_days') }}</td>
 													<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item->total), 0, '.', ','); @endphp</td>
 													<td>{{$item->user->name}}</td>  
-													<td class="center"><span class="label label-sm label-info" style="line-height: 2;">Verified</span></td>
+													<td class="center"><span class="label label-sm label-info" style="line-height: 2;">Delivered</span></td>
 												</tr> 
 											@php $no++;$i++; @endphp
 											@endforeach
@@ -224,7 +224,7 @@
 							<div class="row">
 								<div class="col-md-12 col-sm-12">
 									<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-										@php echo $data_verified->links(); @endphp
+										@php echo $data_delivered->links(); @endphp
 									</div>
 								</div>
 							</div>

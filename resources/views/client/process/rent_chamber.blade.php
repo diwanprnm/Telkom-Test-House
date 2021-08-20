@@ -450,7 +450,7 @@ $( document ).ready(function() {
 			});
 
 			// format list date then set into html
-			textListOfDate = listOfDate.reduce((text, current)=> `${text}, <br>${current}`).replace(/,(?=[^,]*$)/, ' &');
+			textListOfDate = listOfDate.reduce((text, current)=> `${text}, ${current}`).replace(/,(?=[^,]*$)/, ' &');
 			$('#list-of-rent-date').html(textListOfDate);
 		}
 	}
