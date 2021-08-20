@@ -84,16 +84,19 @@
 									<input type="text" name="start_date" class="form-control datepicker-chamber" value="{{$dataDetail[0]->date ?? ''}}">
 								</div>
 							</div>
+							@if ($data->duration > 1)
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>Tanggal 2</label>
 									<input type="text" name="end_date" class="form-control datepicker-chamber" value="{{$dataDetail[1]->date ?? ''}}" >
 								</div>
 							</div>
+							@endif
+
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>Biaya</label>
-									<input type="text" name="price" class="form-control text-price" value="{{$data->price}}" >
+									<input type="text" name="price" class="form-control text-price" value="{{$data->price}}" @if ($data->spb_date) readonly @endif>
 								</div>
 							</div>
 							<div class="col-md-12">
@@ -111,7 +114,7 @@
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>Tanggal Tagihan</label>
-									<input type="text" name="spb_date" class="form-control datepicker" value="{{$data->spb_date ?? ''}}" required @if ($data->spb_date) readonly disable @endif >
+									<input type="text" name="spb_date" class="form-control datepicker" value="{{$data->spb_date ?? Carbon\Carbon::now()->format('Y-m-d')}}" required @if ($data->spb_date) readonly disable @endif >
 								</div>
 							</div>
 						</div>
@@ -192,7 +195,7 @@ $( document ).ready(() => {
 			beforeShowDay: function(d) {
 				addedClass = '';
 				date = moment(d).format('YYYY-MM-DD');
-				clickAble = d >= new Date() && d <= moment(detailRentDate[0]).add(7, 'days');
+				clickAble = d >= new Date() && d <= moment(detailRentDate[detailRentDate.length-1]).add(7, 'days');
 				if(bookedDates.includes(date)){ addedClass = 'css-class-to-highlight'; clickAble = false;}
 				if(detailRentDate.includes(date)){ addedClass = 'date-tobe-booked'; clickAble = true;}				
 				return [clickAble, addedClass];
