@@ -283,7 +283,7 @@ class ChamberAPIController extends AppBaseController
 
     public function checkDeliveredTPN()
     {
-      $main_chamber = Chamber::where('faktur_file', '')->whereNotNull('INVOICE_ID')->get();
+      $main_chamber = Chamber::where('faktur_file', '')->whereNotNull('INVOICE_ID')->get(); // Jika sudah dibayar dan tanggal sewa = now() - 1
       dd($main_chamber);
       if(count($main_chamber)>0){
           $client = new Client([
@@ -298,14 +298,10 @@ class ChamberAPIController extends AppBaseController
               $Chamber = Chamber::with('company')->with('user')->where("id", $data->id)->first();
               if($Chamber){
                   try {
-                    /*
-                      Upload Tiket ke Minio
-                      if upload sukses, buat array data ticket chamber
-                    */
                     // Array Data Ticket Chamber
                     $data [] = [
                         'name' => "file",
-                        'contents' => fopen($path_file, 'r'),
+                        'contents' => fopen($path_file, 'r'), //stream generate tiket chamber
                         'filename' => 'Ticket Chamber' //Ticket Chamber PT APA
                     ];
 
