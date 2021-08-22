@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\v1;
  
+//LARAVEL
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB; 
@@ -9,8 +10,14 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Response;
 
+//3rd Party
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Client;
+
+//SELF
 use App\Chamber;
 use App\Chamber_detail;
+use App\Services\ChamberService;
 
 class ChamberAPIController extends AppBaseController
 {
@@ -284,9 +291,15 @@ class ChamberAPIController extends AppBaseController
 
     public function checkDeliveredTPN()
     {
-      $main_chamber = Chamber::where('faktur_file', '')->whereNotNull('INVOICE_ID')->get(); // Jika sudah dibayar dan tanggal sewa = now() - 1
-      dd($main_chamber);
+      // Jika sudah dibayar dan tanggal sewa = now() - 1
+      $main_chamber = Chamber::whereNull('faktur_file')
+          ->whereNotNull('INVOICE_ID')
+          ->whereDate('start_date', '=',Carbon::now()->subDays(1)->format('Y-m-d'))
+          ->get()
+      ;
+
       if(count($main_chamber)>0){
+          $chamberService = new ChamberService();
           $client = new Client([
               'headers' => ['Authorization' => config("app.gateway_tpn_3")],
               'base_uri' => config("app.url_api_tpn"),
@@ -299,11 +312,12 @@ class ChamberAPIController extends AppBaseController
               $Chamber = Chamber::with('company')->with('user')->where("id", $data->id)->first();
               if($Chamber){
                   try {
+                    //dd("Ticket Chamber ".$Chamber->company->name, $chamberService->createPdf($data->id, 'getStream')); //uncomment untuk cek nama file dan stream
                     // Array Data Ticket Chamber
                     $data [] = [
                         'name' => "file",
-                        'contents' => fopen($path_file, 'r'), //stream generate tiket chamber
-                        'filename' => 'Ticket Chamber' //Ticket Chamber PT APA
+                        'contents' => $chamberService->createPdf($data->id, 'getStream'), //stream generate tiket chamber
+                        'filename' => "Ticket Chamber ".$Chamber->company->name //Ticket Chamber PT APA
                     ];
 
                     /*TPN api_upload*/
@@ -391,7 +405,7 @@ class ChamberAPIController extends AppBaseController
         return $chamberIdList;
     }
 
-    public function getChamberVaExpired()
+    private function getChamberVaExpired()
     {
         //get list of chamber that va is expired after 1 day (1x24h) from VA_expired date
         $chamberIdList = [];

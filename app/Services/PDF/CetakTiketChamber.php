@@ -38,7 +38,10 @@ class CetakTiketChamber
     /*Footer Manual*/
         
     /*End Footer Manual*/
-        //$pdf->Output(  storage_path('tmp/cetakTiketChamber.pdf') , 'F');
+        if ($data->method == 'getStream'){
+            return $pdf->Output('', 'S');
+        }
+        
         $pdf->Output();
         exit;
     }
