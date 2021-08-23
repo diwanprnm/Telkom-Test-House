@@ -302,7 +302,7 @@ class ChamberAPIController extends AppBaseController
       // Jika sudah dibayar dan tanggal sewa = now() - 1
       $main_chamber = Chamber::whereNotNull('spb_date')
           ->where('payment_status', 1)
-          ->whereDate('start_date', '=',Carbon::now()->subDays(1)->format('Y-m-d'))
+          ->whereDate('end_date', '=',Carbon::now()->subDays(1)->format('Y-m-d'))
           ->get()
       ;
 
