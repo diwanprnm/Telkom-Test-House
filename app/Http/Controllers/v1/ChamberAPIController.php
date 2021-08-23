@@ -173,7 +173,7 @@ class ChamberAPIController extends AppBaseController
                               $isUploaded = $fileService->uploadFromStream($stream, $fileProperties);
 
                               if($isUploaded){
-                                  $Chamber->Chamber = $name_file;
+                                  $Chamber->kuitansi_file = $name_file;
                                   $Chamber->save();
                                   $updated_count = $Chamber->save() ? $updated_count += 1 : $updated_count;
                               }
@@ -316,6 +316,8 @@ class ChamberAPIController extends AppBaseController
           ]);
 
           $updated_count = 0;
+          $notificationService = new NotificationService();
+          $logService = new LogService();
           foreach ($main_chamber as $data) {
               $Chamber = Chamber::with('company')->with('user')->where("id", $data->id)->first();
               if($Chamber){
@@ -347,14 +349,15 @@ class ChamberAPIController extends AppBaseController
 
                     if($Chamber->save()){
                       $data_notif['id'] = $notificationService->make(array(
-                          "from"=>self::ADMIN,
+                          "from"=> 'admin',
                           "to"=>$Chamber->created_by,
-                          self::MESSAGE=>"Tiket telah diupload",
+                          "message"=>"Tiket telah diupload",
                           "url"=>'chamber_history',
-                          self::IS_READ=>0,
+                          "is_read"=>0,
                       ));
                       // event(new Notification($data_notif));
                       
+                      $updated_count++;
                       // Create log
                       $logService->createLog('Upload Tiket Penyewaan Chamber', "Chamber", null);
                     }
