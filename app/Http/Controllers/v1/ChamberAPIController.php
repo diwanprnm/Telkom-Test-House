@@ -170,8 +170,7 @@ class ChamberAPIController extends AppBaseController
                                   'path' => $path_file,
                                   'fileName' => $name_file
                               );
-                              $fileService->uploadFromStream($stream, $fileProperties);
-                              $isUploaded = $fileService->isUploaded();
+                              $isUploaded = $fileService->uploadFromStream($stream, $fileProperties);
 
                               if($isUploaded){
                                   $Chamber->Chamber = $name_file;
