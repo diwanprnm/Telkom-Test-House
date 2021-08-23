@@ -322,7 +322,7 @@ class ChamberAPIController extends AppBaseController
                   try {
                     //dd("Ticket Chamber ".$Chamber->company->name, $chamberService->createPdf($data->id, 'getStream')); //uncomment untuk cek nama file dan stream
                     // Array Data Ticket Chamber
-                    $data [] = [
+                    $data_delivered [] = [
                         'name' => "file",
                         'contents' => $chamberService->createPdf($Chamber->id, 'getStream'), //stream generate tiket chamber
                         'filename' => "Ticket Chamber ".$Chamber->company->name //Ticket Chamber PT APA
@@ -330,15 +330,15 @@ class ChamberAPIController extends AppBaseController
 
                     /*TPN api_upload*/
                     if($Chamber->BILLING_ID != null){
-                      $data [] = array(
+                      $data_delivered [] = array(
                           'name'=>"delivered",
                           'contents'=>json_encode(['by'=>'Admin', "reference_id" => '1']),
                       );
-                      $data [] = array(
+                      $data_delivered [] = array(
                           'name'=>"type",
                           'contents'=>"bast",
                       );
-                      $this->api_upload($data,$Chamber->BILLING_ID);
+                      $this->api_upload($data_delivered,$Chamber->BILLING_ID);
                     }
 
                     //Update Chamber payment Status
@@ -346,14 +346,14 @@ class ChamberAPIController extends AppBaseController
                     $Chamber->payment_status = 3; //delivered
 
                     if($Chamber->save()){
-                      $data['id'] = $notificationService->make(array(
+                      $data_notif['id'] = $notificationService->make(array(
                           "from"=>self::ADMIN,
                           "to"=>$Chamber->created_by,
                           self::MESSAGE=>"Tiket telah diupload",
                           "url"=>'chamber_history',
                           self::IS_READ=>0,
                       ));
-                      // event(new Notification($data));
+                      // event(new Notification($data_notif));
                       
                       // Create log
                       $logService->createLog('Upload Tiket Penyewaan Chamber', "Chamber", null);
