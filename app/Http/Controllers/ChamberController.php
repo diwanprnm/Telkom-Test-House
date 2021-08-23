@@ -12,7 +12,6 @@ use App\Services\ExaminationService;
 use App\Services\ChamberService;
 use Auth;
 use Session;
-use App\Services\FileService; // delete soon
 
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
@@ -505,25 +504,4 @@ class ChamberController extends Controller
         return "CHMB ".sprintf('%04d', $record)."/$romanstMonth/$year";
     }
 
-
-    public function dudu()
-    {
-        $INVOICE_ID = 'INV0089239-dudu';
-        $id = 123;
-        
-        $name_file = "kuitansi_chamber_$INVOICE_ID.pdf";
-        $path_file = "chamber/$id/";
-        //$response = $client->request('GET', 'v3/invoices/'.$INVOICE_ID.'/exportpdf');
-        //$stream = (String)$response->getBody();
-        $stream = file_get_contents('http://tpn-digimon-apigateway-route-p-dev-telkompartner.vsan-apps.playcourt.id/v3/invoices/61232a4ee8c5db00171a5ce7/exportpdf');
-
-        $fileService = new FileService();
-        $fileProperties = array(
-            'path' => $path_file,
-            'fileName' => $name_file
-        );
-
-        dd($fileService->uploadFromStream($stream, $fileProperties));
-        dd($fileService->isUploaded());
-    }
 }
