@@ -14,6 +14,12 @@ use Response;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 
+use App\Events\Notification;
+use App\NotificationTable;
+use App\Services\NotificationService;
+use App\Services\Logs\LogService;
+use App\Services\FileService;
+
 //SELF
 use App\Chamber;
 use App\Chamber_detail;
@@ -40,7 +46,7 @@ class ChamberAPIController extends AppBaseController
         $updated_count = 0;
         foreach ($main_chamber as $data) {
             $chamber = Chamber::find($data->id);
-            $oldStel = $Chamber;
+            $oldStel = $chamber;
             
             $data_invoices = [
                 "billing_id" => $data->BILLING_ID,
@@ -54,6 +60,8 @@ class ChamberAPIController extends AppBaseController
             if($billing && $billing->status == true && $billing->data->status_paid == 'paid'){
                 $chamber->cust_price_payment = $billing->data->draft->final_price;
                 $chamber->payment_status = 1;
+                $chamber->pay_date = $billing->data->paid->at;
+                $chamber->approved_date = $billing->data->paid->at;
 
                 $invoice = $this->api_invoice($data_invoices);
                 $chamber->INVOICE_ID = $invoice && $invoice->status == true ? $invoice->data->_id : null;
@@ -71,12 +79,12 @@ class ChamberAPIController extends AppBaseController
                         "updated_at"=>date("Y-m-d H:i:s")
                     );
 
-                    $notificationService = new NotificationService();
-                    $data['id'] = $notificationService->make($data);
-                    event(new Notification($data));
+                    // $notificationService = new NotificationService();
+                    // $data['id'] = $notificationService->make($data);
+                    // event(new Notification($data));
 
-                    $logService = new LogService();
-                    $logService->createLog('Update Status Pembayaran Chamber', 'Chamber', $oldStel );
+                    // $logService = new LogService();
+                    // $logService->createLog('Update Status Pembayaran Chamber', 'Chamber', $oldStel );
                 }else{
                     $updated_count -= 1;
                 }
@@ -125,8 +133,7 @@ class ChamberAPIController extends AppBaseController
 
     public function checkKuitansiTPN()
     {
-      $chamber = Chamber::where('kuitansi_file', '')->whereNotNull('INVOICE_ID')->get();
-      dd($chamber);
+      $chamber = Chamber::whereNull('kuitansi_file')->whereNotNull('INVOICE_ID')->get();
       if(count($chamber)>0){
           $client = new Client([
               'headers' => ['Authorization' => config("app.gateway_tpn_3")],
@@ -185,8 +192,7 @@ class ChamberAPIController extends AppBaseController
 
     public function checkTaxInvoiceTPN()
     {
-      $chamber = Chamber::where('faktur_file', '')->whereNotNull('INVOICE_ID')->get();
-      dd($chamber);
+      $chamber = Chamber::whereNull('faktur_file')->whereNotNull('INVOICE_ID')->get();
       if(count($chamber)>0){
         $client = new Client([
             'headers' => ['Authorization' => config("app.gateway_tpn_3")],
@@ -248,8 +254,7 @@ class ChamberAPIController extends AppBaseController
 
     public function checkReturnedTPN()
     {
-      $main_chamber = Chamber::where('faktur_file', '')->whereNotNull('INVOICE_ID')->get();
-      dd($main_chamber);
+      $main_chamber = Chamber::whereNull('faktur_file')->whereNotNull('INVOICE_ID')->get();
       if(count($main_chamber)>0){
           $client = new Client([
               'headers' => ['Authorization' => config("app.gateway_tpn_3")],
@@ -300,7 +305,6 @@ class ChamberAPIController extends AppBaseController
           ->whereDate('start_date', '=',Carbon::now()->subDays(1)->format('Y-m-d'))
           ->get()
       ;
-      dd($main_chamber);
 
       if(count($main_chamber)>0){
           $chamberService = new ChamberService();
@@ -320,7 +324,7 @@ class ChamberAPIController extends AppBaseController
                     // Array Data Ticket Chamber
                     $data [] = [
                         'name' => "file",
-                        'contents' => $chamberService->createPdf($data->id, 'getStream'), //stream generate tiket chamber
+                        'contents' => $chamberService->createPdf($Chamber->id, 'getStream'), //stream generate tiket chamber
                         'filename' => "Ticket Chamber ".$Chamber->company->name //Ticket Chamber PT APA
                     ];
 

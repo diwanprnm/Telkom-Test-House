@@ -137,7 +137,7 @@ class ChamberAdminController extends Controller
         $chamber->duration = $chamber->end_date ? 2 : 1;
         $chamber->updated_by = Auth::user()->id;
         
-        if($chamber->payment_status == 0 && !$chamber->PO_ID == 0){ //jika draft pembayaran belum ada, buatkan draftnya
+        if($chamber->payment_status == 0 && !$chamber->PO_ID){ //jika draft pembayaran belum ada, buatkan draftnya
             /* Kirim Draft ke TPN */
                 $details [] = 
                 [

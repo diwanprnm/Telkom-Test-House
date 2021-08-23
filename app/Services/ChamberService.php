@@ -27,7 +27,7 @@ class ChamberService
         ;
             
         // Setup PDF Data formating
-        $monthNameId = ["Januari","Februaru","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+        $monthNameId = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
         $start_date = date_create($chamber->start_date);
         $chamber->printDate = date('d') .' '. $monthNameId[(int)date('m')-1] .' '. date('Y')  ;
         $chamber->startDate = date_format($start_date, 'd') .' '. $monthNameId[(int)date_format($start_date, 'm')-1] .' '. date_format($start_date, 'Y');
