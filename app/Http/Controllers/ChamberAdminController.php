@@ -128,13 +128,12 @@ class ChamberAdminController extends Controller
         $chamberDetail = Chamber_detail::where('chamber_id',$id)->delete();
 
         $chamber->start_date = $request->input('start_date');
-        $chamber->end_date = $request->input('end_date', null);
+        $chamber->end_date = $chamber->duration == 1 ? $chamber->start_date : $request->input('end_date', $chamber->start_date);
         $chamber->spb_number = $id;
         $chamber->spb_date = $chamber->spb_date ?? $request->input('spb_date');
         $chamber->price = (int) preg_replace("/[^0-9]/", "", $request->input('price', 0) );
         $chamber->tax = $chamber->price * 0.1;
         $chamber->total = $chamber->price * 1.1;
-        $chamber->duration = $chamber->end_date ? 2 : 1;
         $chamber->updated_by = Auth::user()->id;
         
         if($chamber->payment_status == 0 && !$chamber->PO_ID){ //jika draft pembayaran belum ada, buatkan draftnya
@@ -189,7 +188,7 @@ class ChamberAdminController extends Controller
         // List Dates
         $chamberDetails = [];
         array_push($chamberDetails, $request->input('start_date'));
-        if ($request->input('end_date')){
+        if ($chamber->duration > 1){
             array_push($chamberDetails, $request->input('end_date'));
         }
 
@@ -266,6 +265,7 @@ class ChamberAdminController extends Controller
         $logService = new LogService();
         $search = $this->request->input('search', '');
         $dataRentChambers = DB::table('chamber')
+            ->join('chamber_detail', 'chamber_detail.chamber_id', '=', 'chamber.id')
             ->join('companies', 'companies.id', '=', 'chamber.company_id')
             ->select(
                 'chamber.id as id',
@@ -280,6 +280,7 @@ class ChamberAdminController extends Controller
                 'chamber.VA_name as VA_name',
                 'companies.name as company_name')
             ->where('chamber.payment_status', $paymentStatus)
+            ->distinct()
         ;
 
         // If search something crate log
@@ -293,8 +294,8 @@ class ChamberAdminController extends Controller
         // Filter the query then return it
         $queryFilter = new QueryFilter($this->request, $dataRentChambers);
         return $queryFilter
-            ->beforeDate(DB::raw('DATE(chamber.start_date)'))
-            ->afterDate(DB::raw('DATE(chamber.start_date)'))
+            ->beforeDate(DB::raw('DATE(chamber_detail.date)'))
+            ->afterDate(DB::raw('DATE(chamber_detail.date)'))
             ->getSortedAndOrderedData('chamber.created_at','desc')
             ->getQuery()
         ;
