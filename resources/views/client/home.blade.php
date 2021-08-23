@@ -189,18 +189,18 @@ uncomment this part if you haven't added this code anywhere else
 				<div id="tutorial" class="clear"></div>
 
 				<div class="divider"><em class="icon-circle"></em></div>
-				<!-- <div id="section-playlist" class="title-center page-section"> -->
-					<!-- <h2>{{ trans('translate.video_tutorial') }}</h2> -->
-				<!-- </div> -->
-				<!-- <div id="root"> -->
-				  <!-- <iframe -->
-						  <!-- title="video tutorial" -->
-				          <!-- src="{{ $playlist_url }}&listType=playlist&index=0" -->
-				          <!-- allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"  -->
-				          <!-- allowfullscreen="1" -->
-				          <!-- id="iframe_yt" -->
-				          <!-- ></iframe> -->
-				<!-- </div> -->
+				<div id="section-playlist" class="title-center page-section">
+					<h2>{{ trans('translate.video_tutorial') }}</h2>
+				</div>
+				<div id="root">
+				  <iframe
+						  title="video tutorial"
+				          src="{{ $playlist_url }}&listType=playlist&index=0"
+				          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+				          allowfullscreen="1"
+				          id="iframe_yt"
+				          ></iframe>
+				</div>
 				
 				<div class="clear"></div>
 
