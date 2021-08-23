@@ -51,7 +51,7 @@ class ChamberAdminController extends Controller
         $rentChamber = new \stdClass();        
         $rentChamber->unpaid = $this->getChamberByPaymentStatus(0)->paginate($paginate, ['*'], 'pageUnpaid');
         $rentChamber->paid = $this->getChamberByPaymentStatus(1)->paginate($paginate, ['*'], 'pagePaid');
-        $rentChamber->delivered = $this->getChamberByPaymentStatus(2)->paginate($paginate, ['*'], 'pageDelivered');
+        $rentChamber->delivered = $this->getChamberByPaymentStatus(3)->paginate($paginate, ['*'], 'pageDelivered');
         
         // return View
         return view('admin.chamber.index')
@@ -137,11 +137,7 @@ class ChamberAdminController extends Controller
         $chamber->duration = $chamber->end_date ? 2 : 1;
         $chamber->updated_by = Auth::user()->id;
         
-        /* 
-            Jika Pembayaran Berubah dan ada billing_id, redirect back dan alert tidak bisa mengubah harga
-        */
-
-        if($chamber->payment_status == 0){ //jika pembayaran belum paid buatkan draftnya
+        if($chamber->payment_status == 0 && !$chamber->PO_ID == 0){ //jika draft pembayaran belum ada, buatkan draftnya
             /* Kirim Draft ke TPN */
                 $details [] = 
                 [
@@ -279,6 +275,9 @@ class ChamberAdminController extends Controller
                 'chamber.invoice as invoice',
                 'chamber.total as total',
                 'chamber.payment_status as payment_status',
+                'chamber.created_at as created_at',
+                'chamber.payment_method as payment_method',
+                'chamber.VA_name as VA_name',
                 'companies.name as company_name')
             ->where('chamber.payment_status', $paymentStatus)
         ;

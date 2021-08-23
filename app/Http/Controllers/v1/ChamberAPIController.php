@@ -126,6 +126,7 @@ class ChamberAPIController extends AppBaseController
     public function checkKuitansiTPN()
     {
       $chamber = Chamber::where('kuitansi_file', '')->whereNotNull('INVOICE_ID')->get();
+      dd($chamber);
       if(count($chamber)>0){
           $client = new Client([
               'headers' => ['Authorization' => config("app.gateway_tpn_3")],
@@ -185,6 +186,7 @@ class ChamberAPIController extends AppBaseController
     public function checkTaxInvoiceTPN()
     {
       $chamber = Chamber::where('faktur_file', '')->whereNotNull('INVOICE_ID')->get();
+      dd($chamber);
       if(count($chamber)>0){
         $client = new Client([
             'headers' => ['Authorization' => config("app.gateway_tpn_3")],
@@ -247,6 +249,7 @@ class ChamberAPIController extends AppBaseController
     public function checkReturnedTPN()
     {
       $main_chamber = Chamber::where('faktur_file', '')->whereNotNull('INVOICE_ID')->get();
+      dd($main_chamber);
       if(count($main_chamber)>0){
           $client = new Client([
               'headers' => ['Authorization' => config("app.gateway_tpn_3")],
@@ -292,11 +295,12 @@ class ChamberAPIController extends AppBaseController
     public function checkDeliveredTPN()
     {
       // Jika sudah dibayar dan tanggal sewa = now() - 1
-      $main_chamber = Chamber::whereNull('faktur_file')
-          ->whereNotNull('INVOICE_ID')
+      $main_chamber = Chamber::whereNotNull('spb_date')
+          ->where('payment_status', 1)
           ->whereDate('start_date', '=',Carbon::now()->subDays(1)->format('Y-m-d'))
           ->get()
       ;
+      dd($main_chamber);
 
       if(count($main_chamber)>0){
           $chamberService = new ChamberService();
@@ -388,6 +392,8 @@ class ChamberAPIController extends AppBaseController
         //delete chamber & chamber_detail in list
         Chamber_detail::whereIn('chamber_id', $chamberIdList)->delete();
         Chamber::whereIn('id', $chamberIdList)->delete();
+
+        return count($chamberIdList) > 0 ? 'cronDeleteChamber Command Run successfully! '.count($chamberIdList) : 'cronDeleteChamber Command Run successfully! Nothing to'.' deleted.';
     }
 
     private function getChamberNotCreatingVa()
@@ -411,7 +417,7 @@ class ChamberAPIController extends AppBaseController
         $chamberIdList = [];
         $chambers = Chamber::where('payment_status', 0)
             ->whereNotNull('VA_number')
-            ->whereDate('VA_expired', '<', Carbon::now()->subDays(1)->format('Y-m-d'))
+            ->whereDay('VA_expired', '<', Carbon::now()->subDays(1)->format('Y-m-d'))
             ->get()
         ;
         foreach ($chambers as $chamber){

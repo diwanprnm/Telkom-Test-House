@@ -23,17 +23,17 @@
 		<section id="page-title">
 			<div class="row">
 				<div class="col-sm-8">
-					<h1 class="mainTitle">Update Status Chamber</h1>
+					<h1 class="mainTitle">Manage Chamber</h1>
 				</div>
 				<ol class="breadcrumb">
 					<li>
-						<span>Beranda</span>
+						<span>Keuangan</span>
 					</li>
 					<li>
 						<span>Chamber</span>
 					</li>
 					<li class="active">
-						<span>Update Status</span>
+						<span>Manage Chamber</span>
 					</li>
 				</ol>
 			</div>
@@ -68,7 +68,7 @@
 					{!! csrf_field() !!}
 					<fieldset>
 						<legend>
-							Update Status Chamber
+							Manage Chamber
 						</legend>
 						<div class="row"> 
 							<input type="hidden" name="PO_ID" id="PO_ID">

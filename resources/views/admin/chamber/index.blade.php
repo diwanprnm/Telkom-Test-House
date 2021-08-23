@@ -52,7 +52,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title"><em class="fa fa-eyes-open"></em> Detail Pembelian STEL Akan Dihapus, Mohon Berikan Keterangan!</h4>
+				<h4 class="modal-title"><em class="fa fa-eyes-open"></em> Detail Sewa Chamber Akan Dihapus, Mohon Berikan Keterangan!</h4>
 			</div>
 			
 			<div class="modal-body">
@@ -86,14 +86,14 @@
 		<section id="page-title">
 			<div class="row">
 				<div class="col-sm-8">
-					<h1 class="mainTitle">Rekap Pembelian STEL</h1>
+					<h1 class="mainTitle">Rekap Penyewaan Chamber</h1>
 				</div>
 				<ol class="breadcrumb">
 					<li>
-						<span>Beranda</span>
+						<span>Keuangan</span>
 					</li>
 					<li class="active">
-						<span>Rekap Pembelian STEL</span>
+						<span>Rekap Penyewaan Chamber</span>
 					</li>
 				</ol>
 			</div>
@@ -122,16 +122,6 @@
 					{{ Session::get('message') }}
 				</div>
 			@endif
-
-			<div class="row">
-				<div class="col-md-6 pull-right" style="margin-bottom:10px;margin-top:20px">
-					<a style=" color:white !important;" href="{{URL::to('/admin/sales/create')}}">
-		            <button type="button" class="btn btn-wide btn-green btn-squared pull-right" >
-						Tambah
-		            </button>         
-					</a>
-		        </div>
-		    </div>
 
 			<div class="row calendar-view">
 		        <div class="col-md-6 ">
@@ -221,87 +211,83 @@
 						</fieldset>
 			    	</div>
 			    </div>
-	        </div>
-			<div class="col-md-12">
-				<div class="table-responsive">
-					<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
-						<caption>Rent Chamber Table</caption>
-						<thead>
-							<tr>
-								<th class="center" scope="col">No</th> 
-								<th class="center" scope="col">Company Name</th> 
-								<th class="center" scope="col">Sales Date</th> 
-								<th class="center" scope="col">Rent Date</th> 
-								<th class="center" scope="col">Invoice</th>  
-								<th class="center" scope="col">Total</th>
-								<th class="center" scope="col">Status</th>
-								<th class="center" scope="col">Payment Method</th>
-								<th class="center" colspan="3"  scope="colgroup">Action</th>
-								<th class="center" scope="col"></th> 
-							</tr>
-						</thead>
-						@foreach ($statuses as $status)
-						<tbody class="tab-{{$status}} tab-content" data-paginate-current-page="">
-							@if (count($data->$status))
-								@for ($i = 0; $i < count($data->$status); $i++)
+				
+				<div class="col-md-12">
+					<div class="table-responsive">
+						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+							<caption>Rent Chamber Table</caption>
+							<thead>
 								<tr>
-									<td class="center">{{$i+1}}</td>
-									<td class="center">{{$data->$status[$i]->company_name}}</td>
-									<td class="center">{{$data->$status[$i]->start_date}}</td>
-									<td class="center">
-										{{$data->$status[$i]->start_date}}
-										@if ($data->$status[$i]->duration > 1)
-											& {{$data->$status[$i]->end_date}}
-										@endif
-									</td>
+									<th class="center" scope="col">No</th> 
+									<th class="center" scope="col">Company Name</th> 
+									<th class="center" scope="col">Sales Date</th> 
+									<th class="center" scope="col">Rent Date</th> 
+									<th class="center" scope="col">Invoice</th>  
+									<th class="center" scope="col">Total</th>
+									<th class="center" scope="col">Status</th>
+									<th class="center" scope="col">Payment Method</th>
+									<th class="center" colspan="2"  scope="colgroup">Action</th>
+									<th class="center" scope="col"></th> 
+								</tr>
+							</thead>
+							@foreach ($statuses as $status)
+							<tbody class="tab-{{$status}} tab-content" data-paginate-current-page="">
+								@if (count($data->$status))
+									@for ($i = 0; $i < count($data->$status); $i++)
+									<tr>
+										<td class="center">{{$i+1}}</td>
+										<td class="center">{{$data->$status[$i]->company_name}}</td>
+										<td class="center">{{$data->$status[$i]->created_at}}</td>
+										<td class="center">
+											{{$data->$status[$i]->start_date}}
+											@if ($data->$status[$i]->duration > 1)
+												& {{$data->$status[$i]->end_date}}
+											@endif
+										</td>
 
-									<td class="center">{{$data->$status[$i]->invoice}}</td>
-									<td class="center">{{ "Rp " . number_format($data->$status[$i]->total,0,'','.') . ",-" }}</td>
-									<td class="center">{{$status}}</td>
+										<td class="center">{{$data->$status[$i]->invoice}}</td>
+										<td class="center">{{ "Rp " . number_format($data->$status[$i]->total,0,'','.') . ",-" }}</td>
+										<td class="center">{{$status}}</td>
 
-									<td class="center">{{$data->$status[$i]->payment_method ?? '-'}}</td>
-									<td class="center">
-										<div>
-											<a href="{{URL::to('admin/chamber/'.$data->$status[$i]->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
-										</div>
-									</td>
-									<td class="center">
-										<div>
-											<a href="{{URL::to('admin/chamber/'.$data->$status[$i]->id)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Upload"><em class="fa fa-upload"></em></a>
-										</div>
-									</td>
-									<td class="center">
-										<div>
-											<a class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Destroy" data-rent-chamber-id="{{$data->$status[$i]->id}}"  data-toggle="modal" data-target="#myModal_delete_detail" onclick="document.getElementById('btn-modal-delete_detail').setAttribute('data-delete-id', '{{ $data->$status[$i]->id }}')" ><em class="fa fa-trash"></em></a>
-										</div>
-									</td>
-									<td class="center">
-										<a href="{{URL::to('admin/chamber/'.$data->$status[$i]->id)}}" class="btn btn-wide btn-primary btn-margin" tooltip-placement="top" tooltip="Detail">Detail </a>
+										<td class="center">{{ $data->$status[$i]->payment_method == 1 ? 'ATM' : $data->$status[$i]->VA_name }}</td>
+										<td class="center">
+											<div>
+												<a href="{{URL::to('admin/chamber/'.$data->$status[$i]->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
+											</div>
+										</td>
+										<td class="center">
+											<div>
+												<a class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Destroy" data-rent-chamber-id="{{$data->$status[$i]->id}}"  data-toggle="modal" data-target="#myModal_delete_detail" onclick="document.getElementById('btn-modal-delete_detail').setAttribute('data-delete-id', '{{ $data->$status[$i]->id }}')" ><em class="fa fa-trash"></em></a>
+											</div>
+										</td>
+										<td class="center">
+											<a href="{{URL::to('admin/chamber/'.$data->$status[$i]->id)}}" class="btn btn-wide btn-primary btn-margin" tooltip-placement="top" tooltip="Detail">Detail </a>
+										</td>
+									</tr>
+									@endfor
+								@else
+								<tr>
+									<td colspan=9 class="center">
+										Data Tidak Ditemukan
 									</td>
 								</tr>
-								@endfor
-							@else
-							<tr>
-								<td colspan=9 class="center">
-									Data Tidak Ditemukan
-								</td>
-							</tr>
-							@endif
+								@endif
 
-						</tbody>
-						@endforeach
-					</table>
-				</div>
-				@foreach ($statuses as $status)
-				<div class="row">
-					<div class="col-md-12 col-sm-12 tab-{{$status}} tab-content">
-						<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-							{{ $data->$status->links() }}
+							</tbody>
+							@endforeach
+						</table>
+					</div>
+					@foreach ($statuses as $status)
+					<div class="row">
+						<div class="col-md-12 col-sm-12 tab-{{$status}} tab-content">
+							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
+								{{ $data->$status->links() }}
+							</div>
 						</div>
 					</div>
+					@endforeach
 				</div>
-				@endforeach
-			</div>
+	        </div>
 		</div>
 		<!-- end: RESPONSIVE TABLE --> 
 	</div>
