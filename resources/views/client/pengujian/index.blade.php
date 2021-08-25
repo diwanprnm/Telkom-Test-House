@@ -327,7 +327,7 @@
 									<a class="button edit_btn button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/downloadSPB')}}">{{ trans('translate.download') }} SPB</a>
 								@php } @endphp
 
-								@if($item->registration_status == 1 && $item->function_status == 1 && $item->contract_status == 1 && $item->spb_status == 1 && $item->payment_status == 0)  
+								@if($item->registration_status != 1 || $item->function_status != 1 || $item->contract_status != 1 || $item->spb_status != 1 || $item->payment_status != 1)  
 									<a class="button button-3d nomargin btn-blue btn-sky" href="javascript:void(0)" onclick="return reqCancel('{{$item->id}}');">{{ trans('translate.request_cancelation') }}</a>
 								@endif
 
