@@ -327,7 +327,7 @@ class ChamberAPIController extends AppBaseController
                     $data_delivered [] = [
                         'name' => "file",
                         'contents' => $chamberService->createPdf($Chamber->id, 'getStream'), //stream generate tiket chamber
-                        'filename' => "Ticket Chamber ".$Chamber->company->name //Ticket Chamber PT APA
+                        'filename' => "Ticket Chamber ".$Chamber->company->name.".pdf" //Ticket Chamber PT APA
                     ];
 
                     /*TPN api_upload*/
