@@ -49,14 +49,6 @@
 									<input type="text" name="mark" class="form-control" placeholder="Merk/Pabrik" value="{{$data->mark}}" required>
 								</div>
 							</div>
-							<div class="col-md-4">
-								<div class="form-group">
-									<label>
-										Negara Pembuat *
-									</label>
-									<input type="text" name="manufactured_by" class="form-control" placeholder="Negara Pembuat" value="{{$data->manufactured_by}}" required>
-								</div>
-							</div>
 	                        <div class="col-md-4">
 								<div class="form-group">
 									<label>
