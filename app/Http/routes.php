@@ -204,7 +204,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::get('/kuitansi/{id}/detail', 'IncomeController@detail');
 	Route::get('/downloadkuitansistel/{id}', 'SalesController@downloadkuitansistel');
 	Route::get('/downloadfakturstel/{id}', 'SalesController@downloadfakturstel');
-
+	
 	Route::resource('/spk', 'SPKController');
 	Route::resource('/faq', 'FaqController');
 	
@@ -224,6 +224,9 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::post('/email_editors/update_logo_signature', 'EmailEditorController@updateLogoSignature');
 
 	Route::resource('/examinationcancel', 'ExaminationCancelController');
+
+	Route::post('/chamber/generateKuitansiChamber', 'ChamberAdminController@generateKuitansi');
+	Route::post('/chamber/generateTaxInvoiceChamber', 'ChamberAdminController@generateTaxInvoice');
 
 });
 	Route::get('/uploadCertification', 'UploadProductionController@uploadCertification');
@@ -402,3 +405,5 @@ Route::post('/updateNotif', 'NotificationController@updateNotif');
 Route::get('/all_notifications', 'NotificationController@index');
 Route::resource('/chamber', 'ChamberController');
 Route::get('/cetakTiketChamber/{id}', 'ChamberController@cetakTiket');
+Route::get('/downloadkuitansichamber/{id}', 'ChamberController@downloadkuitansi');
+Route::get('/downloadfakturchamber/{id}', 'ChamberController@downloadfaktur');

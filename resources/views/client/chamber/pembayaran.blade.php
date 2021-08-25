@@ -66,7 +66,7 @@
 													<tr>
 														<td>{{ trans('translate.rent_chamber_client_label_rent_date') }} : 
 														{{$data->start_date}} 
-                                                        @if($data->end_date) 
+                                                        @if($data->duration > 1) 
                                                             & {{$data->end_date}} 
                                                         @endif
 														</td>

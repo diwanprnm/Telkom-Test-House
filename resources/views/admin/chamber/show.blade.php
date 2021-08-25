@@ -88,9 +88,13 @@
 										@endphp
 										{{ number_format($tax, 0, '.', ',') }}
 									</td>
-									<td class="center" style="border: 0;">
-										@if($faktur_file != '')
-										<a href="{{ URL::to('/admin/downloadfakturchamber/'.$id_sales) }}" target="_blank">
+									<td class="center">
+										@if($data->faktur_file)
+										<a href="{{ URL::to('/downloadfakturchamber/'.$data->id) }}" target="_blank">
+					                    	Faktur Pajak
+					                    </a>
+										@else
+										<a onclick="checkTaxInvoice('{{ $data->INVOICE_ID }}')">
 											<button type="button" class="btn btn-wide btn-red btn-squared" style="margin-right: 1%; width:9rem;">Cek Faktur Pajak</button>
 										</a>
 										@endif
@@ -101,12 +105,13 @@
                             		<td class="text-align-right">
 										{{ trans('translate.stel_rupiah') }}. {{ number_format($data->total, 0, '.', ',') }}
 									</td>
-									<td class="center" style="border: 0;">
-										@if($id_kuitansi != '')
-											@php
-												$id_kuitansi = preg_replace('/\\.[^.\\s]{3,4}$/', '', $id_kuitansi);
-											@endphp
-										<a href="{{ URL::to('/admin/downloadkuitansichamber/'.$id_kuitansi) }}" target="_blank">
+									<td class="center">
+										@if($data->kuitansi_file)
+										<a href="{{ URL::to('/downloadkuitansichamber/'.$data->id) }}" target="_blank">
+					                    	Kuitansi
+					                    </a>
+										@else
+										<a onclick="checkKuitansi('{{ $data->INVOICE_ID }}')">
 											<button type="button" class="btn btn-wide btn-red btn-squared" style="margin-right: 1%; width:9rem;">Cek Kuitansi</button>
 										</a>
 										@endif
@@ -143,8 +148,57 @@
 <script src={{ asset("vendor/bootstrap-datepicker/bootstrap-datepicker.min.js") }}></script>
 <script src={{ asset("vendor/bootstrap-timepicker/bootstrap-timepicker.min.js") }}></script>
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
-<script src={{ asset("assets/js/form-elements.js") }}></script>
 <script type="text/javascript">
-	
+	function checkKuitansi(a){
+		$.ajax({
+			type: "POST",
+			url : "generateKuitansiChamber",
+			data: {'_token':"{{ csrf_token() }}", 'INVOICE_ID':a},
+			beforeSend: function(){
+				document.getElementById("overlay").style.display="inherit";
+			},
+			success: function(response){
+				console.log(response);
+				if(response){
+					alert(response);
+					if(response == "Kuitansi Berhasil Disimpan."){location.reload();}
+				}else{
+					alert("Gagal mengambil data (s)");
+				}
+				document.getElementById("overlay").style.display="none";
+			},
+			error:function(response){
+				console.log(response);
+				alert("Gagal mengambil data (e)");
+				document.getElementById("overlay").style.display="none";
+			}
+		});
+	}
+
+	function checkTaxInvoice(a){
+		$.ajax({
+			type: "POST",
+			url : "generateTaxInvoiceChamber",
+			data: {'_token':"{{ csrf_token() }}", 'INVOICE_ID':a},
+			beforeSend: function(){
+				document.getElementById("overlay").style.display="inherit";
+			},
+			success: function(response){
+				console.log(response);
+				if(response){
+					alert(response);
+					if(response == "Faktur Pajak Berhasil Disimpan."){location.reload();}
+				}else{
+					alert("Gagal mengambil data (s)");
+				}
+				document.getElementById("overlay").style.display="none";
+			},
+			error:function(response){
+				console.log(response);
+				alert("Gagal mengambil data (e)");
+				document.getElementById("overlay").style.display="none";
+			}
+		});
+	}
 </script>
 @endsection

@@ -11,6 +11,7 @@ use Auth;
 // Services
 use App\Services\Querys\QueryFilter;
 use App\Services\Logs\LogService;
+use App\Services\FileService;
 
 // Models
 use App\Chamber;
@@ -89,6 +90,157 @@ class ChamberAdminController extends Controller
             ->with('id_sales', 'INIIDSALES')
             ->with('faktur_file', 'faktur_file')
         ;
+    }
+
+    public function generateKuitansi(Request $request) {
+        $this->validate($request, [
+            'INVOICE_ID' => 'required',
+        ]);
+
+        $INVOICE_ID = $request->input('INVOICE_ID');
+        
+        $client = new Client([
+            'headers' => ['Authorization' => config("app.gateway_tpn_3")],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+
+        $data = Chamber::where("INVOICE_ID", $INVOICE_ID)->first();
+        if(!$data){return "Data Pembelian Tidak Ditemukan!";}
+
+        try {
+            $res_invoice = $client->request('GET', 'v3/invoices/'.$INVOICE_ID);
+            $invoice = json_decode($res_invoice->getBody());
+            
+            if($INVOICE_ID && $invoice && $invoice->status){
+                $status_invoice = $invoice->data->status_invoice;
+                if($status_invoice == "approved"){
+                    $status_faktur = $invoice->data->status_faktur;
+                    if($status_faktur == "received"){
+                        /*SAVE KUITANSI*/
+                        $name_file = 'kuitansi_chamber_'.$INVOICE_ID.'.pdf';
+                        $path_file = "chamber/".$data->id."/";
+                        $response = $client->request('GET', 'v3/invoices/'.$INVOICE_ID.'/exportpdf');
+                        $stream = (String)$response->getBody();
+                        
+                        $fileService = new FileService();
+                        $fileProperties = array(
+                            'path' => $path_file,
+                            'fileName' => $name_file
+                        );
+        
+                        $isUploaded = $fileService->uploadFromStream($stream, $fileProperties);
+        
+                        if($isUploaded){
+                            $data->kuitansi_file = $name_file;
+                            $data->save();
+                            $result = "Kuitansi Berhasil Disimpan.";
+                        }else{
+                            $result = "Gagal Menyimpan Kuitansi!";
+                        }
+                    }else{
+                        return $invoice->data->status_faktur;
+                    }
+                }else{
+                    switch ($status_invoice) {
+                        case 'invoiced':
+                            $result = "Invoice Baru Dibuat.";
+                            break;
+                        
+                        case 'returned':
+                            $result = $invoice->data->$status_invoice->message;
+                            break;
+                        
+                        default:
+                            $result = "Invoice sudah dikirim ke DJP.";
+                            break;
+                    }
+                }
+            }else{
+                $result = "Data Invoice Tidak Ditemukan!";        
+            }
+        } catch(Exception $e){ $result = null;
+        }
+
+        return $result;
+    }
+
+    public function generateTaxInvoice(Request $request) {
+        $this->validate($request, [
+            'INVOICE_ID' => 'required',
+        ]);
+
+        $INVOICE_ID = $request->input('INVOICE_ID');
+        
+        $client = new Client([
+            'headers' => ['Authorization' => config("app.gateway_tpn_3")],
+            'base_uri' => config("app.url_api_tpn"),
+            'timeout'  => 60.0,
+            'http_errors' => false
+        ]);
+
+        $data = Chamber::where("INVOICE_ID", $INVOICE_ID)->first();
+        if(!$data){return "Data Pembelian Tidak Ditemukan!";}
+        
+        try {
+            /* GENERATE NAMA FILE FAKTUR */
+                $filename = $data->pay_date.'_'.$data->INVOICE_ID;
+            /* END GENERATE NAMA FILE FAKTUR */
+            $res_invoice = $client->request('GET', 'v3/invoices/'.$INVOICE_ID);
+            $invoice = json_decode($res_invoice->getBody());
+            
+            if($INVOICE_ID && $invoice && $invoice->status){
+                $status_invoice = $invoice->data->status_invoice;
+                if($status_invoice == "approved"){
+                    $status_faktur = $invoice->data->status_faktur;
+                    if($status_faktur == "received"){
+                        /*SAVE FAKTUR PAJAK*/
+                        $name_file = 'faktur_chamber_'.$filename.'.pdf';
+                        $path_file = "chamber/".$data->id."/";
+                        $response = $client->request('GET', 'v3/invoices/'.$INVOICE_ID.'/exportpdf');
+                        $stream = (String)$response->getBody();
+        
+                        $fileService = new FileService();
+                        $fileProperties = array(
+                            'path' => $path_file,
+                            'fileName' => $name_file
+                        );
+                        $isUploaded = $fileService->uploadFromStream($stream, $fileProperties);
+        
+                        if($isUploaded){
+                            $data->faktur_file = $name_file;
+                            $data->save();
+                            $result = "Faktur Pajak Berhasil Disimpan.";
+                        }else{
+                            $result = "Gagal Menyimpan Faktur Pajak!";
+                        }
+                    }else{
+                        $result = $invoice->data->status_faktur;
+                    }
+                }else{
+                    switch ($status_invoice) {
+                        case 'invoiced':
+                            $result = "Faktur Pajak belum Tersedia, karena Invoice Baru Dibuat.";
+                            break;
+                        
+                        case 'returned':
+                            $result = $invoice->data->$status_invoice->message;
+                            break;
+                        
+                        default:
+                        $result = "Faktur Pajak belum Tersedia. Invoice sudah dikirim ke DJP.";
+                            break;
+                    }
+                }
+            }else{
+                $result = "Data Invoice Tidak Ditemukan!";        
+            }
+        } catch(Exception $e){
+            $result = null;
+        }
+
+        return $result;
     }
 
     public function edit($id)

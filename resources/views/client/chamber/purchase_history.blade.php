@@ -59,7 +59,7 @@
 													<td>{{$item->created_at}}</td>
                                                     <td>
                                                         {{$item->start_date}} 
-                                                        @if($item->end_date) 
+                                                        @if($item->duration > 1) 
                                                             & {{$item->end_date}} 
                                                         @endif
                                                     </td>
@@ -132,7 +132,7 @@
 													<td>{{$item->created_at}}</td>
                                                     <td>
                                                         {{$item->start_date}} 
-                                                        @if($item->end_date) 
+                                                        @if($item->duration > 1) 
                                                             & {{$item->end_date}} 
                                                         @endif
                                                     </td>
@@ -140,7 +140,11 @@
 													<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item->total), 0, '.', ','); @endphp</td>
 													<td>{{$item->user->name}}</td>  
 													<td class="center"><span class="label label-sm label-success" style="line-height: 2;">Paid</span></td>
-												</tr>
+													<td>
+														<a class="label label-sm label-success" style="line-height: 2;" href="{{URL::to('downloadkuitansichamber/'.$item->id.'/')}}">{{ trans('translate.receipt') }}</a>
+														<a class="label label-sm label-success" style="line-height: 2;" href="{{URL::to('downloadfakturchamber/'.$item->id.'/')}}">{{ trans('translate.tax_invoice') }}</a>
+														<a class="label label-sm label-info" style="line-height: 2;" href="{{URL::to('cetakTiketChamber/'.$item->id.'/')}}">{{ trans('translate.ticket') }}</a>
+													</td>
 											@php $no++;$i++; @endphp
 											@endforeach
 											@else
@@ -194,7 +198,7 @@
 													<td>{{$item->created_at}}</td>
                                                     <td>
                                                         {{$item->start_date}} 
-                                                        @if($item->end_date) 
+                                                        @if($item->duration > 1) 
                                                             & {{$item->end_date}} 
                                                         @endif
                                                     </td>
@@ -202,6 +206,11 @@
 													<td>{{ trans('translate.stel_rupiah') }}. @php echo number_format(floatval($item->total), 0, '.', ','); @endphp</td>
 													<td>{{$item->user->name}}</td>  
 													<td class="center"><span class="label label-sm label-info" style="line-height: 2;">Delivered</span></td>
+													<td>
+														<a class="label label-sm label-success" style="line-height: 2;" href="{{URL::to('downloadkuitansichamber/'.$item->id.'/')}}">{{ trans('translate.receipt') }}</a>
+														<a class="label label-sm label-success" style="line-height: 2;" href="{{URL::to('downloadfakturchamber/'.$item->id.'/')}}">{{ trans('translate.tax_invoice') }}</a>
+														<a class="label label-sm label-info" style="line-height: 2;" href="{{URL::to('cetakTiketChamber/'.$item->id.'/')}}">{{ trans('translate.ticket') }}</a>
+													</td>
 												</tr> 
 											@php $no++;$i++; @endphp
 											@endforeach

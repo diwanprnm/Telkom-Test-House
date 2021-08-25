@@ -12,6 +12,7 @@ use App\Services\ExaminationService;
 use App\Services\ChamberService;
 use Auth;
 use Session;
+use Storage;
 
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
@@ -485,6 +486,25 @@ class ChamberController extends Controller
     {
         $chamberService = new ChamberService();
         $chamberService->createPdf($id);
+    }
+
+    
+    public function downloadkuitansi($id) //download kuitansi
+    {
+        $chamber = Chamber::where("id", $id)->first();
+        if (!$chamber){ return redirect("/admin/chamber")->with('error', 'Data not found'); }
+
+        $fileMinio = Storage::disk('minio')->get("chamber/$chamber->id/$chamber->kuitansi_file");
+        return response($fileMinio, 200, \App\Services\MyHelper::getHeaderImage($chamber->kuitansi_file));
+    }
+
+    public function downloadfaktur($id) //download faktur
+    {
+        $chamber = Chamber::where("id", $id)->first();
+        if (!$chamber){ return redirect("/admin/chamber")->with('error', 'Data not found'); }
+
+        $fileMinio = Storage::disk('minio')->get("chamber/$chamber->id/$chamber->faktur_file");
+        return response($fileMinio, 200, \App\Services\MyHelper::getHeaderImage($chamber->faktur_file));
     }
 
 
