@@ -51,7 +51,7 @@
                   <li><a href="{{url('contact')}}">{{ trans('translate.contact') }}</a></li>
                 </ul>
               </li>
-              <li class="{{ (!empty($page) && ($page == 'Chargeclient' || $page == 'procedure' || $page == 'pengujian' || $page == 'process'))?'current':''}}">
+              <li class="{{ (!empty($page) && ($page == 'STELclient' || $page == 'STSELclient' || $page == 'Chargeclient' || $page == 'procedure' || $page == 'pengujian' || $page == 'process' || $page == 'chamber_history'))?'current':''}}">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ trans('translate.menu_testing') }} <em class="icon-angle-down"></em></a>
                 <ul class="dropdown-menu" role="menu">
                   <li><a href="{{url('procedure')}}">{{ trans('translate.procedure') }}</a></li>
@@ -73,6 +73,7 @@
                   @php
                   }
                   @endphp
+                  <li><a href="{{ url('/chamber_history')}}">{{ trans('translate.chamber_history') }}</a></li>
                 </ul>
               </li> 
               <li class=" {{ (!empty($page) && $page == 'Devclient') ?'current':''}}">

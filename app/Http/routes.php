@@ -69,7 +69,12 @@ Route::get('/process', 'HomeController@process')->middleware(['client']);
 Route::get('/purchase_history', 'ProductsController@purchase_history')->middleware(['client']);
 Route::get('/pengujian', 'PengujianController@index')->middleware(['client']);
 Route::get('/products', 'ProductsController@index')->middleware(['client']);
-
+Route::get('/detailprocess/rentChamber', 'ChamberController@index');
+Route::get('/chamber_history', 'ChamberController@purchase_history')->middleware(['client']);
+Route::get('/chamber_history/{id}/pembayaran', 'ChamberController@pembayaran');
+Route::get('/payment_confirmation_chamber/{id}', 'ChamberController@payment_confirmation');
+Route::post('/doCheckoutChamber', 'ChamberController@doCheckout');
+Route::get('/cancel_va_chamber/{id}', 'ChamberController@api_cancel_va');
 Route::get('/detailprocess/{id}', 'HomeController@detail_process');
 Route::get('/editprocess/{jenis_uji}/{id}', 'HomeController@edit_process');
 Route::get('/faq', 'HomeController@faq');
@@ -199,7 +204,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::get('/kuitansi/{id}/detail', 'IncomeController@detail');
 	Route::get('/downloadkuitansistel/{id}', 'SalesController@downloadkuitansistel');
 	Route::get('/downloadfakturstel/{id}', 'SalesController@downloadfakturstel');
-
+	
 	Route::resource('/spk', 'SPKController');
 	Route::resource('/faq', 'FaqController');
 	
@@ -214,9 +219,14 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::resource('/videoTutorial', 'VideoTutorialController');
 	Route::post('/orderSlideshow', 'SlideshowController@orderSlideshow');
 	Route::resource('/email_editors', 'EmailEditorController');
+	Route::resource('/chamber', 'ChamberAdminController');
+	Route::get('/chamber/delete/{id}/{reasonOfDeletion}', 'ChamberAdminController@deleteChamber');
 	Route::post('/email_editors/update_logo_signature', 'EmailEditorController@updateLogoSignature');
 
 	Route::resource('/examinationcancel', 'ExaminationCancelController');
+
+	Route::post('/chamber/generateKuitansiChamber', 'ChamberAdminController@generateKuitansi');
+	Route::post('/chamber/generateTaxInvoiceChamber', 'ChamberAdminController@generateTaxInvoice');
 
 });
 	Route::get('/uploadCertification', 'UploadProductionController@uploadCertification');
@@ -344,6 +354,13 @@ Route::group(['prefix' => '/v1', 'middlewareGroups' => 'api'], function () {
 	Route::get('/checkKuitansiSPBTPN', 'v1\ExaminationAPIController@checkKuitansiTPN');
 	Route::get('/checkReturnedSPBTPN', 'v1\ExaminationAPIController@checkReturnedTPN');
 	Route::get('/spbReminder', 'v1\ExaminationAPIController@spbReminder');
+	Route::get('/getDateRentedChamber', 'v1\ChamberAPIController@getDateRented');
+	Route::get('/checkBillingCHMBTPN', 'v1\ChamberAPIController@checkBillingTPN');
+	Route::get('/checkTaxInvoiceCHMBTPN', 'v1\ChamberAPIController@checkTaxInvoiceTPN');
+	Route::get('/checkKuitansiCHMBTPN', 'v1\ChamberAPIController@checkKuitansiTPN');
+	Route::get('/checkReturnedCHMBTPN', 'v1\ChamberAPIController@checkReturnedTPN');
+	Route::get('/checkDeliveredCHMBTPN', 'v1\ChamberAPIController@checkDeliveredTPN');
+	Route::get('/cronDeleteChamber', 'v1\ChamberAPIController@cronDeleteChamber');
 });
 
 Route::get('/do_backup', 'BackupController@backup'); 
@@ -386,3 +403,7 @@ Route::get('/cetakKepuasanKonsumen/{id}', 'ExaminationDoneController@cetakKepuas
 Route::get('/cetakComplaint/{id}', 'ExaminationDoneController@cetakComplaint');
 Route::post('/updateNotif', 'NotificationController@updateNotif');
 Route::get('/all_notifications', 'NotificationController@index');
+Route::resource('/chamber', 'ChamberController');
+Route::get('/cetakTiketChamber/{id}', 'ChamberController@cetakTiket');
+Route::get('/downloadkuitansichamber/{id}', 'ChamberController@downloadkuitansi');
+Route::get('/downloadfakturchamber/{id}', 'ChamberController@downloadfaktur');

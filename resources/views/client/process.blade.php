@@ -15,7 +15,7 @@
 <section id="page-title">
 
 	<div class="container clearfix">
-		<h1>{{ trans('translate.process') }}</h1>			
+		<h1>{{ trans('translate.process') }}</h1>
 			<ol class="breadcrumb">
 				<li><a href="#">{{ trans('translate.menu_testing') }}</a></li>
 				<li class="active">{{ trans('translate.process') }}</li>
@@ -289,6 +289,17 @@
 
 				      </div>
 				    </div>
+				</div>
+
+				<div class="col-md-12 container-list">
+					<div class="col-md-4">
+						<img src="{{asset('template-assets/img/portfolio/LabTransmisi.jpg')}}" alt="portofolio lab transmisi">
+					</div>
+					<div class="col-md-8">
+						<h4>RENT CHAMBER</h4>
+						<p>{{ trans('translate.subtitle_rent_chamber') }}</p>
+						<a href="{{url('detailprocess/rentChamber')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
+					</div>
 				</div>
 
 				<div id="modal_qs_certificate_date" class="modal fade" role="dialog"  data-keyboard="false" data-backdrop="static">
