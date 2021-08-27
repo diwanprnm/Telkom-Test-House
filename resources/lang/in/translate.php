@@ -1,6 +1,7 @@
 <?php
 
 return [
+	'locale'			=> 'Indonesia',
     'home' 				=> 'Beranda', // home
 	
     'about'     		=> 'Tentang', // about
@@ -310,6 +311,11 @@ return [
 	'see_service'		=> 'lihat layanan',
 	'buy_stel'		=> 'Pembelian STEL',
 	'subtitle_buy_stel'		=> 'Cukup klik tombol di bawah, dan anda akan merasakan betapa mudahnya membeli dokumen STEL',
+	'subtitle_rent_chamber'	=> 'Mauris nunc metus, bibendum ut eleifend at, commodo sit amet orci. Pellentesque at velit purus. Maecenas lacus mauris, bibendum quis consequat et, luctus quis justo',
+	'description_rent_chamber'	=> 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in mauris iaculis, varius purus at, venenatis turpis. Donec consectetur in libero venenatis varius. Vivamus mattis tincidunt pulvinar. Suspendisse potenti. Aenean et dictum ligula. Donec ultrices elementum convallis. Donec blandit sagittis tellus, sit amet ornare sem aliquam eget. Vivamus et purus ut eros vestibulum mattis eu efficitur odio. Vestibulum ullamcorper efficitur felis quis hendrerit. Curabitur vel lectus suscipit, rutrum purus in, facilisis justo. Vestibulum molestie mi at massa tempus eleifend. Nulla facilisi. Vestibulum turpis enim, malesuada quis nisl et, vestibulum vestibulum est. Nam et erat nec dui laoreet molestie quis ut sem. Pellentesque vulputate feugiat augue quis auctor. Nulla condimentum bibendum justo congue maximus.',
+	'rent_chamber_duration'	=> 'Lama sewa (dalam hari)',
+	'rent_chamber_confirmation'	=> 'Apakah anda akan menyewa pada tanggal:',
+	'can_not_rent_chamber'	=> 'Tidak dapat menyewa pada tanggal:',
 	'our_partner'		=> 'Partner Kami',
 	'contact_description'		=> 'Masih ada pertanyaan? Hubungi kami melalui form yang ada di bawah ini',
 	'contact_subject_example'		=> 'Konfirmasi Registrasi',
@@ -438,6 +444,7 @@ return [
 
 	'tax_invoice' => 'Faktur Pajak',
 	'receipt' => 'Kuitansi',
+	'ticket' => 'Tiket',
 
 	'payment_alert_1' => 'Untuk kemudahan verifikasi pembayaran, kepada pelanggan mohon untuk membayar tagihan sesuai nominal yang tertera hingga 3 digit terakhir.',
 	'payment_alert_2' => 'Jika ada lebih dari satu transaksi, harap tidak menggabungkan pembayarannya menjadi satu.',
@@ -467,6 +474,15 @@ return [
 	'payment_process' => 'Proses Pembayaran',
 	'uf_warning' => 'Anda sudah 2 kali gagal melakukan Uji Fungsi. Anda bisa mengajukan kembali Uji Fungsi 2 bulan sejak Uji Fungsi terakhir, yaitu ',
 
+	//RENT CHAMBER
+	'chamber_history'  => 'Riwayat Chamber',
+	'rent_chamber_client_label_choose_date' => 'Pilih Tanggal',
+	'rent_chamber_client_label_choose_duration' => 'Pilih Durasi',
+	'rent_chamber_client_label_rent_date' => 'Tanggal Sewa',
+	'rent_chamber_client_label_rent_duration' => 'Durasi',
+	'chamber_days'  => 'hari',
+	'rent_chamber_client_notes' => "<label>CATATAN</label></br>* Tanda merah menandakan chamber sudah di booking.</br>* Tanda biru menandakan chamber yang anda pilih.</br>* Tidak bisa menyewa dihari Sabtu dan Minggu.",
+	'rent_chamber_client_label_waiting_verification'  => 'Menunggu Verifikasi',
 	'purchase_history_updateSTEL_unpaid' => 'Transaksi ini memiliki dokumen yang kedaluwarsa. Silakan hubungi staff kami untuk menghapus transaksi ini, lalu anda dapat melakukan transaksi ulang.',
 	'purchase_history_updateSTEL_paid' => 'Anda mendapatkan dokumen ini dengan gratis.',
 	'purchase_history_updateSTEL_delivered_warning' => 'Transaksi ini memiliki dokumen yang kedaluwarsa. Silakan lakukan transaksi baru untuk memperbarui dokumen tersebut.',
@@ -480,4 +496,5 @@ return [
 	'other_reason' => 'Alasan Lainnya',
 	'message_request_cancelation' => 'Perhatian, permohonan pembatalan uji ini mengakibatkan anda tidak dapat memroses kembali permohonan uji ini, apakah anda yakin?',
 	'cancel_warning' => 'Anda telah membatalkan pengujian ini.',
+	'spb_date' => 'Tanggal SPB',
 ];

@@ -1,6 +1,7 @@
 <?php
 
 return [
+	'locale'			=> 'English',
     'home' 				=> 'Home',
 	
     'about'     		=> 'About',
@@ -308,6 +309,11 @@ return [
 	'see_service'		=> 'see more',
 	'buy_stel'		=> 'Buy STEL Document(s)',
 	'subtitle_buy_stel'		=> 'Click button below, and you’ll find out how easy it is to buy STEL Document(s)',
+	'subtitle_rent_chamber'	=> 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...',
+	'description_rent_chamber'	=> 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in mauris iaculis, varius purus at, venenatis turpis. Donec consectetur in libero venenatis varius. Vivamus mattis tincidunt pulvinar. Suspendisse potenti. Aenean et dictum ligula. Donec ultrices elementum convallis. Donec blandit sagittis tellus, sit amet ornare sem aliquam eget. Vivamus et purus ut eros vestibulum mattis eu efficitur odio. Vestibulum ullamcorper efficitur felis quis hendrerit. Curabitur vel lectus suscipit, rutrum purus in, facilisis justo. Vestibulum molestie mi at massa tempus eleifend. Nulla facilisi. Vestibulum turpis enim, malesuada quis nisl et, vestibulum vestibulum est. Nam et erat nec dui laoreet molestie quis ut sem. Pellentesque vulputate feugiat augue quis auctor. Nulla condimentum bibendum justo congue maximus.',
+	'rent_chamber_duration'	=> 'Rent duration (in days)',
+	'rent_chamber_confirmation'	=> 'Do you wanted to rent chamber on:',
+	'can_not_rent_chamber'	=> 'Can not rent chamber on:',
 	'our_partner'		=> 'Our Partner',
 	'contact_description'		=> 'Have any question? Fill this form below',
 	'contact_subject_example'		=> 'Registration Confirmation',
@@ -435,6 +441,7 @@ return [
 
 	'tax_invoice' => 'Tax Invoice',
 	'receipt' => 'Receipt',
+	'ticket' => 'Ticket',
 
 	'payment_alert_1' => 'For ease of payment verification, customer is required to pay according to the nominal listed up to the last 3 digits.',
 	'payment_alert_2' => 'If there is more than one transaction, please do not combine the payments into one.',
@@ -464,6 +471,15 @@ return [
 	'payment_process' => 'Payment Process',
 	'uf_warning' => 'You have failed the Function Test twice. You can reapply a Function Test 2 months since the last Function Test, i.e. ',
 
+	//RENT CHAMBER
+	'chamber_history'  => 'Chamber History',
+	'rent_chamber_client_label_choose_date' => 'Choose Date',
+	'rent_chamber_client_label_choose_duration' => 'Choose Duration',
+	'rent_chamber_client_label_rent_date' => 'Rent Date',
+	'rent_chamber_client_label_rent_duration' => 'Duration',
+	'chamber_days'  => 'day(s)',
+	'rent_chamber_client_notes' => "<label>NOTES</label></br>* The red mark indicates the chamber has been rented.<br>* The blue mark indicates the chamber you have selected<br>* Cannot rent on Saturday and Sunday",
+	'rent_chamber_client_label_waiting_verification'  => 'Waiting Verification',
 	'purchase_history_updateSTEL_unpaid' => 'This transaction has expired documents. Please contact our staff to delete this transaction, then you can re-transaction.',
 	'purchase_history_updateSTEL_paid' => 'You get this document for free.',
 	'purchase_history_updateSTEL_delivered_warning' => 'This transaction has expired documents. Please make a new transaction to update the document.',
@@ -477,4 +493,5 @@ return [
 	'other_reason' => 'Other Reason',
 	'message_request_cancelation' => 'Attention, this request make you not being able to process this test again, are you sure?',
 	'cancel_warning' => 'You have canceled this test.',
+	'spb_date' => 'SPB Date',
 ];
