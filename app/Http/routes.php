@@ -407,3 +407,22 @@ Route::resource('/chamber', 'ChamberController');
 Route::get('/cetakTiketChamber/{id}', 'ChamberController@cetakTiket');
 Route::get('/downloadkuitansichamber/{id}', 'ChamberController@downloadkuitansi');
 Route::get('/downloadfakturchamber/{id}', 'ChamberController@downloadfaktur');
+
+Route::get('lala', function(){
+	$PDFData = [
+		'title' => 'Quality Asurance Test',
+        'documentNumber' => 'Tel. 103/TTH-01/2021',
+        'companyName' => 'PT. Flamboyan Tirta Utama Tbk.',
+        'brand' => 'PRIYACO',
+        'deviceName' => 'Priyaco Extreme 5',
+        'deviceType' => 'Monitor HDR',
+        'deviceCapacity' => 'HDR DCI-P3 98%',
+        'deviceSerialNumber' => 'SN:09874002382891',
+        'examinationNumber' => 'EXM1000502-TLKM-2101',
+        'examinationReference' => 'Sertifikasi KOMINFO b/g/n 1.101',
+        'signDate' => "28 Agustus 2021",
+        'signee' => "Daniel Christianto Widodo"
+	];
+	$PDF = new \App\Services\PDF\PDFService();
+	return $PDF->cetakSertifikatQA($PDFData);
+});
