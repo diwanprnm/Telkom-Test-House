@@ -2222,6 +2222,7 @@ class ExaminationAPIController extends AppBaseController
 	
 	public function spbReminder()
 	{
+		return 'This API temporarily inactive!';
 		$email_editors = new EmailEditorService();
 		$email = $email_editors->selectBy('emails.reminderSPB');
 		
