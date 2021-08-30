@@ -1757,9 +1757,9 @@ class PengujianController extends Controller
 	}
 	
 	public function reqCancel(Request $request)
-    { 
+    {
 		$currentUser = Auth::user();
-		$exam = Examination::find($request->input(self::MY_EXAM_ID))->first();
+		$exam = Examination::where('id', $request->input(self::MY_EXAM_ID))->first();
 
 		$reason_id = 0;
 		$reason_name = $request->input('other_reason');
@@ -1792,10 +1792,11 @@ class PengujianController extends Controller
 
 		// save history examination
 			$tahap = '';
-			if($exam->registration_status == 0){$tahap = 'Registrasi';}
-			if($exam->function_status == 0){$tahap = 'Uji Fungsi';}
-			if($exam->contract_status == 0){$tahap = 'Tinjauan Kontrak';}
-			if($exam->spb_status == 0){$tahap = 'SPB';}
+			if($exam->registration_status != 1){$tahap = 'Registrasi';}
+			if($exam->function_status != 1){$tahap = 'Uji Fungsi';}
+			if($exam->contract_status != 1){$tahap = 'Tinjauan Kontrak';}
+			if($exam->spb_status != 1){$tahap = 'SPB';}
+			if($exam->payment_status != 1){$tahap = 'Pembayaran';}
 			$exam_hist = new ExaminationHistory;
 			$exam_hist->examination_id = $exam->id;
 			$exam_hist->date_action = date(self::DATE_FORMAT1);

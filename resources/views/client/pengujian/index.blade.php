@@ -1240,6 +1240,9 @@
         }
     }
 
+	var reason = $('input[name="reason"]:checked').val();
+	reason == 0 ? $(".other_reason").show() : $(".other_reason").hide();
+
 		$(".reason").change(function(){
 			var reason = $('input[name="reason"]:checked').val();
 			reason == 0 ? $(".other_reason").show() : $(".other_reason").hide();
