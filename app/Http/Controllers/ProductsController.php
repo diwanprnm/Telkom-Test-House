@@ -829,7 +829,7 @@ class ProductsController extends Controller
                 "gateway" => $mps_info[0],
                 "product_code" => $mps_info[1],
                 "product_type" => $mps_info[2],
-                "manual_expired" => 1440
+                "manual_expired" => 20160
             ]
         ];
     }
