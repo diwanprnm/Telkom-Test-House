@@ -9,6 +9,7 @@ use App\Logs;
 use App\LogsAdministrator;
 use App\GeneralSetting;
 use App\Services\Logs\LogService;
+use App\Services\FileService;
 
 use Auth;
 use File;
@@ -70,11 +71,23 @@ class GeneralSettingController extends Controller
         $generalsettingSendEmail = GeneralSetting::where("code", "send_email")->first();
         $generalsettingPOH = GeneralSetting::where("code", $this::MAN)->first();
         $generalsetting = GeneralSetting::where("code", "manager_urel")->first();
+        $generalsettingPOHSM = GeneralSetting::where("code", "poh_sm_urel")->first();
+        $generalsettingSM = GeneralSetting::where("code", "sm_urel")->first();
 
         $generalsettingSendEmail->is_active = 0;
         $generalsettingPOH->is_active = 0;
+        $generalsettingPOHSM->is_active = 0;
         $oldGeneralSetting = $generalsetting; 
         $generalsetting->value = $request->input('manager_urel');
+        $generalsettingSM->value = $request->input('sm_urel');
+        if ($request->file('attachment_sm')) {
+            $fileService = new FileService();
+            $fileProperties = array(
+                'path' => 'generalsettings/'.$generalsettingSM->id.'/'
+            );
+            $fileService->upload($request->file('attachment_sm'), $fileProperties);
+            $generalsettingSM->attachment = $fileService->getFileName();
+        }
 
         if ($request->has('is_send_email_active')){
             $oldGeneralSetting = $generalsettingSendEmail; 
@@ -89,12 +102,29 @@ class GeneralSettingController extends Controller
             $generalsettingPOH->updated_by = $currentUser->id; 
         }
         
+        if ($request->has('is_poh_sm')){
+            $oldGeneralSetting = $generalsettingPOHSM; 
+            $generalsettingPOHSM->value = $request->input('poh_sm_urel');
+            $generalsettingPOHSM->is_active = 1;
+            $generalsettingPOHSM->updated_by = $currentUser->id; 
+            if ($request->file('attachment_poh_sm')) {
+                $fileService = new FileService();
+                $fileProperties = array(
+                    'path' => 'generalsettings/'.$generalsettingPOHSM->id.'/'
+                );
+                $fileService->upload($request->file('attachment_poh_sm'), $fileProperties);
+                $generalsettingPOHSM->attachment = $fileService->getFileName();
+            }
+        }
+        
+        $generalsettingPOHSM->save();
         $generalsettingPOH->save();
         $generalsettingSendEmail->save();
         $generalsetting->updated_by = $currentUser->id; 
 
         try{
             $generalsetting->save();
+            $generalsettingSM->save();
 
             $logService = new LogService();
             $logService->createLog("Update General Setting","General Setting",$oldGeneralSetting );
