@@ -293,10 +293,10 @@
 
 				<div class="col-md-12 container-list">
 					<div class="col-md-4">
-						<img src="{{asset('template-assets/img/portfolio/LabTransmisi.jpg')}}" alt="portofolio lab transmisi">
+						<img src="{{asset('template-assets/img/portfolio/Chamber.jpg')}}" alt="portofolio lab transmisi">
 					</div>
 					<div class="col-md-8">
-						<h4>RENT CHAMBER</h4>
+						<h4>{{ trans('translate.rent_chamber') }} (CHMB)</h4>
 						<p>{{ trans('translate.subtitle_rent_chamber') }}</p>
 						<a href="{{url('detailprocess/rentChamber')}}" class="button button-3d nomargin btn-sky">{{ trans('translate.process') }}</a>
 					</div>
