@@ -160,7 +160,7 @@
 										@endfor
 									</tbody>
 								</table>
-								<input type="checkbox" name="agree" required value="1"> {{ trans('translate.chamber_agree_statement') }}
+								<input type="checkbox" name="agree" required value="1">
 							</fieldset>
 
 							<h2>Second Step</h2>
@@ -543,6 +543,8 @@ $( document ).ready(function() {
 		});
 		return isSuccedd;
 	}
+
+	$('.material-group-item label').html("{{ trans('translate.chamber_agree_statement') }}");
 
 });
 
