@@ -125,15 +125,15 @@
 							<ul class="number">
 								<li>
 									<button class="step-fill active">1</button>
-									<p>Form</p>
+									<p>{{ trans('translate.declaration') }}</p>
 								</li>
 								<li>
 									<button class="step-fill">2</button>
-									<p>Data Pendukung</p>
+									<p>{{ trans('translate.choose_date_n_duration') }}</p>
 								</li>
 								<li>
 									<button class="step-fill">3</button>
-									<p>Selesai</p>
+									<p>{{ trans('translate.service_finished') }}</p>
 								</li>
 							</ul>
 						</div>
@@ -144,7 +144,23 @@
 							<h2>First Step</h2>
 							<fieldset>
 								<legend></legend>
-								<p>{{ trans('translate.description_rent_chamber') }}<p>
+								<table class="table table-condensed">
+									<caption></caption>
+									<thead>
+										<tr>
+											<th colspan="2" scope="colgroup">{{ trans('translate.description_rent_chamber') }}</th>
+										</tr>
+									</thead>
+									<tbody>
+										@for($i=1; $i<=7; $i++)
+										<tr>
+											<td>{{ $i }}.</td>
+											<td>{{ trans('translate.description_rent_chamber_'.$i) }}</td>
+										</tr>
+										@endfor
+									</tbody>
+								</table>
+								<input type="checkbox" name="agree" required value="1"> {{ trans('translate.chamber_agree_statement') }}
 							</fieldset>
 
 							<h2>Second Step</h2>
