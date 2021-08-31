@@ -509,4 +509,5 @@ return [
 	'declaration' => 'Pernyataan',
 	'choose_date_n_duration' => 'Pilih Waktu',
 	'chamber_agree_statement' => 'Saya setuju dengan pernyataan di atas sebagai pra-syarat untuk sewa Wireless / Anechoic Chamber.',
+	'must_agree' => 'Untuk melanjutkan proses selanjutnya anda harus menerima pernyataan ini',
 ];

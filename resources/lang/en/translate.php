@@ -506,4 +506,5 @@ return [
 	'declaration' => 'Declaration',
 	'choose_date_n_duration' => 'Choose Date',
 	'chamber_agree_statement' => 'I agree with the above statement as a pre-requisite for the Rent Wireless / Anechoic Chamber service.',
+	'must_agree' => 'To continue the process you must accept this statment',
 ];

@@ -98,6 +98,10 @@
 			background-color: blue !important;
 			color: white !important;
 		}
+		.grey-disabled{
+			background: #757575 !important;
+			cursor:not-allowed;
+		}
 	</style>
   <div class="overlay"></div>
 <!-- Page Title ============================================= -->
@@ -292,7 +296,10 @@ const formWizard = form.children("div").steps({
 		form.validate().settings.ignore = ":disabled,:hidden";
 
 		if (currentIndex == 0){
-			// do nothing this is text
+			if (!$("input[type='radio']:checked").val()){
+				alert("{{ trans('translate.must_agree') }}")
+				return false;
+			}
 		}
 
 		if (currentIndex == 1 && newIndex == 2){
@@ -418,34 +425,6 @@ $( document ).ready(function() {
 		return true;
 	}
 
-	// //onclick rent
-	// $('#modal-rent-button').click(() => {
-	// 	let rentDuration = parseInt($("#rent_duration").find(":selected").val());
-	// 	let rentDate = $('#rent_date').val();
-	// 	checkAvaliableAndBooked(rentDate, rentDuration);
-	// 	pbCalendar.update_view();
-	// });
-
-	// 	for (i=0; i<numDays; i++){
-	// 		willBeBookedDates = moment(date).add(i+holidayCount, 'days');
-	// 		dates.push(willBeBookedDates.format('YYYYMMDD'));
-	// 		if (willBeBookedDates.day() == 5){
-	// 			holidayCount += 2;
-	// 		}
-	// 	}
-	// 	const found = dates.some(r=> bookedDates.indexOf(r) >= 0)
-	// 	if (!found) {
-	// 		toBeBookedDates = dates;
-	// 		$('input[name=dates]').val(JSON.stringify(toBeBookedDates));
-	// 	}
-	// 	else {
-	// 		myDatePicker.val(moment(toBeBookedDates[0]).format('YYYY-MM-DD'));
-	// 		$("#duratonOfRent").val(toBeBookedDates.length);
-	// 		alert("The date you selected is not available!");
-	// 	}
-	// 	return !found;
-	// }
-
 	const calculateEndDate = () => {
 		numberOfDay = parseInt($("#duratonOfRent").find(":selected").text());
 		startRentDate = myDatePicker.val();
@@ -507,12 +486,8 @@ $( document ).ready(function() {
 	
 	initCalendarByAjax();
 	
-	
 	myDatePicker.change(calculateEndDate);
 	$('#duratonOfRent').change(calculateEndDate);
-	// $('#buttonSubmitHelper').click(()=> {
-	// 	sendFormRentChamber();
-	// });
 
 	sendFormRentChamber = () => {
 		let isSuccedd = false;
@@ -545,6 +520,14 @@ $( document ).ready(function() {
 		});
 		return isSuccedd;
 	}
+
+	$('#formBTNnext').addClass('grey-disabled');
+
+	$('#material-group-agree').click(()=>{
+		if ($("input[type='radio']:checked").val()){
+			$('#formBTNnext').removeClass('grey-disabled');
+		}
+	});
 
 });
 
