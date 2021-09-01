@@ -138,4 +138,14 @@ class PDFMCCetakSertifikatQA extends FPDF{
 		return $nl;
 	}
 
+	function ImageStream($stream, $x, $y, $w, $h)
+	{
+        $imageSize = getimagesizefromstring($stream);
+        $extension = image_type_to_extension($imageSize[2]);		
+        $tempImageLocation = tempnam(sys_get_temp_dir(),'').$extension;
+        file_put_contents($tempImageLocation, $stream);
+        $this->Image($tempImageLocation, $x, $y, $w, $h);
+        unlink($tempImageLocation);
+	}
+
 }
