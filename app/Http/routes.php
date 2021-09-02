@@ -407,24 +407,3 @@ Route::resource('/chamber', 'ChamberController');
 Route::get('/cetakTiketChamber/{id}', 'ChamberController@cetakTiket');
 Route::get('/downloadkuitansichamber/{id}', 'ChamberController@downloadkuitansi');
 Route::get('/downloadfakturchamber/{id}', 'ChamberController@downloadfaktur');
-
-Route::get('lala', function(){
-	$PDFData = [
-		'title' => 'Quality Asurance Test',
-        'documentNumber' => 'Tel. 103/TTH-01/2021',
-        'companyName' => 'PT. Flamboyan Tirta Utama Tbk. panjang sekali sampai jadi dua baris',
-        'brand' => 'PRIYACO',
-        'deviceName' => 'Priyaco Extreme 5',
-        'deviceType' => 'Monitor HDR',
-        'deviceCapacity' => 'HDR DCI-P3 98%',
-        'deviceSerialNumber' => 'SN:09874002382891',
-        'examinationNumber' => 'EXM1000502-TLKM-2101',
-        'examinationReference' => 'Sertifikasi KOMINFO b/g/n 1.101',
-        'signDate' => "28 Agustus 2021",
-        'period_id' => "3 tahun",
-        'period_en' => "3 years",
-		'signImagePath' => "https://media.japanesestation.com/images/750x422/2020/10/29/59104-contoh-desain-tanda-tangan-yang-didesain-sign-hack.jpg"
-	];
-	$PDF = new \App\Services\PDF\PDFService();
-	return $PDF->cetakSertifikatQA($PDFData);
-});

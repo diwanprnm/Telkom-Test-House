@@ -39,6 +39,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
+use Carbon\Carbon;
 use App\Events\Notification;
 use App\AdminRole;
 
@@ -860,6 +861,16 @@ class ExaminationController extends Controller
 					    }
 			        }
             	}
+
+				// TODO DANIEL
+				$pdfGenerated = $this->genereateSertifikat($exam->id, 'getStream');
+				$fileService = new FileService();
+				$fileProperties = array(
+					'path' => self::MEDIA_DEVICE_LOC.$exam->device_id."/",
+					'prefix' => "sertifikat_",
+					'fileName' => $pdfGenerated['fileName'],
+				);
+				$fileService->uploadFromStream($pdfGenerated['stream'], $fileProperties);
 
             	$data= array( 
 	                "from"=>self::ADMIN,
@@ -2336,6 +2347,63 @@ class ExaminationController extends Controller
         }
             return redirect(self::ADMIN_EXAMINATION_LOC.$examination_attachment->examination_id.self::EDIT_LOC);
 
+	}
+
+	public function genereateSertifikat($id = 'ef83abad-aa66-4909-befc-ebe24863045a', $method = 'getStream')
+	{
+		$examination = Examination::where('id', $id)
+			->with(self::COMPANY)
+			->with(self::DEVICE)
+			->with(self::MEDIA)
+			->first()
+		;
+
+		$month_list_lang_id = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'November', 'Desember'];
+		$signDate = date('d', strtotime($examination->qa_date)).' '.$month_list_lang_id[((int)date('m', strtotime($examination->qa_date)))-1].' '.date('Y', strtotime($examination->qa_date));
+		$start_certificate_period = Carbon::parse($examination->device->valid_from);
+		$end_certificate_period = Carbon::parse($examination->device->valid_thru);
+		$interval = round($start_certificate_period->diffInDays($end_certificate_period)/30);
+		if ($interval % 12 == 0){
+			$interval_year = (int)$interval/12;
+			$period_id = "$interval_year tahun";
+			$period_en = "$interval_year year".($interval_year > 1 ? 's': '');
+		}else{
+			$period_id = "$interval bulan";
+			$period_en = "$interval month".($interval > 1 ? 's': '');
+		}
+		$signeeData = \App\GeneralSetting::whereIn('code', ['sm_urel', 'poh_sm_urel'])->where('is_active', '=', 1)->first();
+		$certificateNumber = strval($examination->device->cert_number);
+
+		//dd($certificateNumber);
+
+		$PDFData = [
+			'documentNumber' => $examination->device->cert_number,
+			'companyName' => $examination->company->name,
+			'brand' => $examination->device->mark,
+			'deviceName' => $examination->device->name,
+			'deviceType' => $examination->device->model,
+			'deviceCapacity' => $examination->device->capacity,
+			'deviceSerialNumber' => $examination->device->serial_number,
+			'examinationNumber' => \App\ExaminationAttach::where('examination_id', $id)->where('name', 'Laporan Uji')->first()->no,
+			'examinationReference' => $examination->device->test_reference,
+			'signDate' => $signDate,
+			'period_id' => $period_id,
+			'period_en' => $period_en,
+			'signee' => $signeeData->value,
+			'isSigneePoh' => $signeeData->code !== 'sm_urel',
+			'signImagePath' => Storage::disk('minio')->url("generalsettings/$signeeData->id/$signeeData->attachment"),
+			'method' => $method,
+		];
+		$PDF = new \App\Services\PDF\PDFService();
+		
+		if ($method == 'getStream'){
+			return [
+				'stream' => $PDF->cetakSertifikatQA($PDFData),
+				'fileName' => str_replace("/","",$certificateNumber).'.pdf'
+			];
+		}else{
+			return $PDF->cetakSertifikatQA($PDFData);
+		}
 	}
 
 }

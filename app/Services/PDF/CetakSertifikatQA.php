@@ -9,7 +9,7 @@ class CetakSertifikatQA
 
     public function makePDF($data, $pdf)
     {
-        $title = $data['title'];
+        $title = $data['title'] ?? 'Quality Asurance Test';
         $documentNumber = $data['documentNumber'];
         $companyName = $data['companyName'];
         $brand = $data['brand'];
@@ -25,7 +25,7 @@ class CetakSertifikatQA
         $signImagePath = $data['signImagePath'];
         $signee = $data['signee'] ?? 'I Gede Astawa';
         $isSigneePoh = $data['isSigneePoh'] ?? false;
-        $pohStatus = $isSigneePoh ? 'POH ' : '';
+        $pohStatus = $isSigneePoh ? 'For ' : '';
         $signeeRole = $pohStatus."Senior Manager Infrastructure Assurance";
         $timeAndLocationSign = "Bandung, $signDate";
         $method = $data['method'] ?? '';
