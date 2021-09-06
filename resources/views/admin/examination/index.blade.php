@@ -461,8 +461,12 @@
 													$item->qa_status == '1' && $item->certificate_status != '1')
 														<a href="#step-10" class="done wait">
 													@elseif($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && $item->payment_status == '1' && $item->spk_status == '1' && $item->examination_status == '1' && $item->resume_status == '1' && $item->qa_status == '1' &&
-													$item->certificate_status == '1')
+													$item->certificate_status == '1' && $item->qa_passed == 1)
 														<a href="#step-10" class="done">
+															{{$item->qa_passed}}
+													@elseif($item->registration_status == '1' && $item->function_status == '1' && $item->contract_status == '1' && $item->spb_status == '1' && $item->payment_status == '1' && $item->spk_status == '1' && $item->examination_status == '1' && $item->resume_status == '1' && $item->qa_status == '1' &&
+													$item->certificate_status == '1' && $item->qa_passed == -1)
+														<a href="#step-10" class="done done-failed">
 													@else
 														<a href="#step-10">
 													@endif

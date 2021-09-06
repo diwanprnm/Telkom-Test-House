@@ -845,6 +845,8 @@ class ExaminationController extends Controller
             $passed = $request->input('passed');
             $exam->qa_status = $status;
             $exam->qa_passed = $passed;
+			$name_file = null;
+			$device_status = -1;
             if($exam->qa_passed == 1){  
 
             	if(strpos($exam->keterangan, self::QA_DATE) !== false){
@@ -871,6 +873,14 @@ class ExaminationController extends Controller
 					'fileName' => $pdfGenerated['fileName'],
 				);
 				$fileService->uploadFromStream($pdfGenerated['stream'], $fileProperties);
+				$name_file = $fileService->getFileName();
+				$device_status = 1;
+
+				/**
+				 * TEMPAT KIRIM KE TPN TIDAK LULUS
+				 * Streamnya = $pdfGenerated['stream']
+				 * todo @arif
+				 */
 
             	$data= array( 
 	                "from"=>self::ADMIN,
@@ -884,6 +894,7 @@ class ExaminationController extends Controller
 
 				$notification_id = $notificationService->make($data);
 			    $data['id'] = $notification_id;
+				$examinationService->sendEmailNotification($exam,$device, "emails.sertifikat", "Penerbitan Sertifikat QA [".$device->name." | ".$device->mark." | ".$device->model." | ".$device->capacity."]");
 			    // event(new Notification($data));
 
             }else{ 
@@ -902,9 +913,21 @@ class ExaminationController extends Controller
 				
 				$notification_id = $notificationService->make($data);
 			    $data['id'] = $notification_id;
+				/**
+				 * TEMPAT EMAIL TIDAK LULUS
+				 * Emailnya kalau beda silahkan di buat sendiri dibawah 🤣
+				 * todo @arif
+				 */
+				$examinationService->sendEmailNotification($exam,$device, "emails.sertifikat", "Penerbitan Sertifikat QA [".$device->name." | ".$device->mark." | ".$device->model." | ".$device->capacity."]");
 			    // event(new Notification($data));
-
             }
+
+			// Save device ceritificate
+			$device = Device::findOrFail($exam->device_id);
+			$device->certificate = $name_file;
+			$device->status = $device_status;
+			$device->save();
+
            
 			if($status == -1){
 				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::SIDANG_QA,$request->input(self::KETERANGAN));
