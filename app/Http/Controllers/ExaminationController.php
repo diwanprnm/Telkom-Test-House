@@ -36,7 +36,7 @@ use Storage;
 // UUID
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
-
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 use Carbon\Carbon;
@@ -2372,7 +2372,7 @@ class ExaminationController extends Controller
 
 	}
 
-	public function genereateSertifikat($id = 'ef83abad-aa66-4909-befc-ebe24863045a', $method = 'getStream')
+	public function genereateSertifikat($id = 'ef83abad-aa66-4909-befc-ebe24863045a', $method = '')
 	{
 		$examination = Examination::where('id', $id)
 			->with(self::COMPANY)
@@ -2396,6 +2396,8 @@ class ExaminationController extends Controller
 		}
 		$signeeData = \App\GeneralSetting::whereIn('code', ['sm_urel', 'poh_sm_urel'])->where('is_active', '=', 1)->first();
 		$certificateNumber = strval($examination->device->cert_number);
+		$telkomLogoSquarePath = '/app/Services/PDF/images/telkom-logo-square.png';
+		$qrCodeLink = url('/digitalSign/21003-132'); //todo daniel digitalSign page
 
 		//dd($certificateNumber);
 
@@ -2416,6 +2418,7 @@ class ExaminationController extends Controller
 			'isSigneePoh' => $signeeData->code !== 'sm_urel',
 			'signImagePath' => Storage::disk('minio')->url("generalsettings/$signeeData->id/$signeeData->attachment"),
 			'method' => $method,
+			'qrCode' => QrCode::format('png')->size(500)->merge($telkomLogoSquarePath)->errorCorrection('M')->generate($qrCodeLink)
 		];
 		$PDF = new \App\Services\PDF\PDFService();
 		

@@ -205,9 +205,9 @@ return [
 		// PragmaRX\Tracker\Vendor\Laravel\ServiceProvider::class,
 		'Witty\LaravelDbBackup\DBBackupServiceProvider',
         Gloudemans\Shoppingcart\ShoppingcartServiceProvider::class,
-          Ixudra\Curl\CurlServiceProvider::class,
-          
-        App\Providers\MinIOStorageServiceProvider::class
+        Ixudra\Curl\CurlServiceProvider::class,
+        App\Providers\MinIOStorageServiceProvider::class,
+        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class
     ],
 
     /*
@@ -253,14 +253,16 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Curl'          => Ixudra\Curl\Facades\Curl::class,
+        // Addtional
+        'Cart' => Gloudemans\Shoppingcart\Facades\Cart::class,
+        'Curl'  => Ixudra\Curl\Facades\Curl::class,
+		'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Form' => Collective\Html\FormFacade::class,
+		'Fpdf'	  => 'Anouar\Fpdf\Facades\Fpdf',
         'Html' => Collective\Html\HtmlFacade::class,
         'Image' => Intervention\Image\Facades\Image::class,
-		'Fpdf'	  => 'Anouar\Fpdf\Facades\Fpdf',
-		'Excel'     => Maatwebsite\Excel\Facades\Excel::class,
+        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
 		// 'Tracker' => PragmaRX\Tracker\Vendor\Laravel\Facade::class,
-        'Cart' => Gloudemans\Shoppingcart\Facades\Cart::class,
     ],
 
     'merchant_id' => env('merchant_id', 'SMART424'),

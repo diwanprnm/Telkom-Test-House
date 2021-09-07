@@ -28,7 +28,7 @@ class PDFMCCetakSertifikatQA extends FPDF{
 		$this->SetX(147);$this->SetTextColor(51,102,204);$this->SetFont('','U',8);
 		$this->Cell(0,5,"cstth@telkom.co.id",0,0,'C');$this->Ln(4);
 		$this->Image(app_path('Services/PDF/images/tth-logo-text-moto.jpg'),20,263,52);
-		$this->Image(app_path('Services/PDF/images/decorator-pattern-1.jpg'),80,260,85);
+		$this->Image(app_path('Services/PDF/images/decorator-pattern-1.jpg'),75,260,85);
 	}
 
 	/**
@@ -138,7 +138,7 @@ class PDFMCCetakSertifikatQA extends FPDF{
 		return $nl;
 	}
 
-	function ImageStream($stream, $x, $y, $w, $h)
+	function ImageStream($stream, $x, $y, $w, $h=null)
 	{
         $imageSize = getimagesizefromstring($stream);
         $extension = image_type_to_extension($imageSize[2]);		

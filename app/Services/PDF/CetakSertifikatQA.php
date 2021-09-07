@@ -29,6 +29,7 @@ class CetakSertifikatQA
         $signeeRole = $pohStatus."Senior Manager Infrastructure Assurance";
         $timeAndLocationSign = "Bandung, $signDate";
         $method = $data['method'] ?? '';
+        $qrCode = $data['qrCode'];
 
         $pdf->AliasNbPages();
         $pdf->AddPage();
@@ -112,7 +113,7 @@ class CetakSertifikatQA
         /*SIGN*/
 		$pdf->setY(200);
         $pdf->SetFont('helvetica','',11);$pdf->Cell(0,0,$timeAndLocationSign,'',0,'C');
-        // percobaan
+        // sign
         $signImageSize = getimagesize($signImagePath);
         $imageHeight = 30;
         $imageWidth = (int) ($signImageSize[0]/($signImageSize[1]/$imageHeight));
@@ -121,6 +122,9 @@ class CetakSertifikatQA
         $pdf->setY(231);
         $pdf->SetFont('helvetica','BU',11);$pdf->Cell(0,0,$signee,'',0,'C');$pdf->Ln(5);
         $pdf->SetFont('helvetica','B',11);$pdf->Cell(0,0,$signeeRole,'',0,'C');
+
+        //QRCODE
+        $pdf->ImageStream($qrCode, 163, 254, 31);
 
         //PDF-OUTPUT
         if ($method == 'getStream'){
