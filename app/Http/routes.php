@@ -228,6 +228,9 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::post('/chamber/generateKuitansiChamber', 'ChamberAdminController@generateKuitansi');
 	Route::post('/chamber/generateTaxInvoiceChamber', 'ChamberAdminController@generateTaxInvoice');
 
+	Route::resource('/sidang', 'SidangController');
+	Route::get('/sidang/delete/{id}/{reasonOfDeletion}', 'SidangController@destroy');
+
 });
 	Route::get('/uploadCertification', 'UploadProductionController@uploadCertification');
 	Route::get('/uploadCompany', 'UploadProductionController@uploadCompany');
