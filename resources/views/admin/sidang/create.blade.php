@@ -78,14 +78,7 @@
 			<input type="hidden" name="hidden_tab" id="hidden_tab" value="{{ $tab }}">
 			
 			<div id="tab-perangkat" class="row tab-content">
-		        <div class="col-md-6 pull-right">
-	                <span class="input-icon input-icon-right search-table">
-	                    <input id="search_value2" type="text" placeholder="Search" id="form-field-17" class="form-control search_value" value="{{ $search }}">
-	                    <em class="ti-search"></em>
-	                </span>
-	            </div>
-	            
-				<div class="col-md-12">
+		        <div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
 							<caption>Device Table</caption>
@@ -99,7 +92,6 @@
 									<th class="center" scope="col">Kapasitas</th>
 									<th class="center" scope="col">Negara Pembuat</th> 
 									<th class="center" scope="col">Status</th> 
-									<th class="center" scope="col">Action</th>  
 									<th class="center" scope="col"><input type="checkbox" onchange="checkAllPerangkat(this)"></th>  
 								</tr>
 							</thead>
@@ -116,11 +108,6 @@
 											<td class="center">{{ $item->device->capacity }}</td>
 											<td class="center">{{ $item->device->manufactured_by }}</td>
 											<td class="center">{{ $item->company->qs_certificate_date > date('Y-m-d') ? 'SM Eligible' : 'SM Not Eligible' }}</td>
-											<td class="center">
-												<div>
-													<a href="{{URL::to('admin/sidang_edit_perangkat/'.$item->device->id)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
-												</div>
-											</td>
 											<td class="center"><input type="checkbox" name="chk-perangkat[]" id="chk-perangkat-{{$item->id}}" class="chk-perangkat"></td>
 										</tr>
 									@php
@@ -140,7 +127,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								{{ $data_perangkat->appends(array('search2' => $search,'search3' => $search, 'tab' => 'tab-perangkat'))->links() }}
+								{{ $data_perangkat->appends(array('tab' => 'tab-perangkat'))->links() }}
 							</div>
 						</div>
 					</div>
@@ -159,14 +146,7 @@
 			</div>
 
 			<div id="tab-pending" class="row tab-content">
-		        <div class="col-md-6 pull-right">
-	                <span class="input-icon input-icon-right search-table">
-	                    <input id="search_value3" type="text" placeholder="Search" id="form-field-17" class="form-control search_value" value="{{ $search }}">
-	                    <em class="ti-search"></em>
-	                </span>
-	            </div>
-
-				<div class="col-md-12">
+		        <div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
 							<caption>Device Table</caption>
@@ -180,7 +160,6 @@
 									<th class="center" scope="col">Kapasitas</th>
 									<th class="center" scope="col">Negara Pembuat</th> 
 									<th class="center" scope="col">Status</th> 
-									<th class="center" scope="col">Action</th>  
 									<th class="center" scope="col"><input type="checkbox" onchange="checkAllPending(this)"></th>  
 								</tr>
 							</thead>
@@ -189,20 +168,15 @@
 								@if(count($data_pending)>0)
 									@foreach($data_pending as $keys => $item)
 										<tr>
-											<td class="center">{{ $no+(($data_pending->currentPage()-1)*$data_pending->perPage()) }}</td>
-											<td class="center">{{ $item->examination->company->name }}</td>
-											<td class="center">{{ $item->examination->device->name }}</td>
-											<td class="center">{{ $item->examination->device->mark }}</td>
-											<td class="center">{{ $item->examination->device->model }}</td>
-											<td class="center">{{ $item->examination->device->capacity }}</td>
-											<td class="center">{{ $item->examination->device->manufactured_by }}</td>
-											<td class="center">{{ $item->status }}</td>
-											<td class="center">
-												<div>
-													<a href="{{URL::to('admin/sidang_edit_perangkat/'.$item->examination->device->id)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
-												</div>
-											</td>
-											<td class="center"><input type="checkbox" name="chk-pending[]" id="chk-pending-{{$item->examination->id}}" class="chk-pending"></td>
+										<td class="center">{{ $no+(($data_pending->currentPage()-1)*$data_pending->perPage()) }}</td>
+											<td class="center">{{ $item->company->name }}</td>
+											<td class="center">{{ $item->device->name }}</td>
+											<td class="center">{{ $item->device->mark }}</td>
+											<td class="center">{{ $item->device->model }}</td>
+											<td class="center">{{ $item->device->capacity }}</td>
+											<td class="center">{{ $item->device->manufactured_by }}</td>
+											<td class="center">{{ $item->company->qs_certificate_date > date('Y-m-d') ? 'SM Eligible' : 'SM Not Eligible' }}</td>
+											<td class="center"><input type="checkbox" name="chk-pending[]" id="chk-pending-{{$item->id}}" class="chk-pending"></td>
 										</tr>
 									@php
 										$no++
@@ -221,7 +195,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								{{ $data_pending->appends(array('search2' => $search,'search3' => $search, 'tab' => 'tab-pending'))->links() }}
+								{{ $data_pending->appends(array('tab' => 'tab-pending'))->links() }}
 							</div>
 						</div>
 					</div>
@@ -240,14 +214,7 @@
 			</div>
 
 			<div id="tab-draft" class="row tab-content">
-		        <div class="col-md-6 pull-right">
-	                <span class="input-icon input-icon-right search-table">
-	                    <input id="search_value" type="text" placeholder="Search" id="form-field-17" class="form-control search_value" value="{{ $search }}">
-	                    <em class="ti-search"></em>
-	                </span>
-	            </div>
-
-				<div class="col-md-12">
+		        <div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
 							<caption>Device Table</caption>
@@ -261,7 +228,6 @@
 									<th class="center" scope="col">Kapasitas</th>
 									<th class="center" scope="col">Negara Pembuat</th> 
 									<th class="center" scope="col">Status</th> 
-									<th class="center" scope="col">Action</th>  
 									<th class="center" scope="col"><input type="checkbox" onchange="checkAllDraft(this)"></th>  
 								</tr>
 							</thead>
@@ -278,11 +244,6 @@
 											<td class="center">{{ $item->examination->device->capacity }}</td>
 											<td class="center">{{ $item->examination->device->manufactured_by }}</td>
 											<td class="center">{{ $item->status }}</td>
-											<td class="center">
-												<div>
-													<a href="{{URL::to('admin/sidang_edit_perangkat/'.$item->examination->device->id)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
-												</div>
-											</td>
 											<td class="center"><input type="checkbox" name="chk-draft[]" id="chk-draft-{{$item->examination->id}}" class="chk-draft"></td>
 										</tr>
 									@php
@@ -302,7 +263,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								{{ $data_draft->appends(array('search2' => $search,'search3' => $search, 'tab' => 'tab-draft'))->links() }}
+								{{ $data_draft->appends(array('tab' => 'tab-draft'))->links() }}
 							</div>
 						</div>
 					</div>
@@ -366,18 +327,6 @@
 </script>
 <script type="text/javascript">
 	jQuery(document).ready(function() {       
-		$('.search_value').keydown(function(event) {
-			if (event.keyCode == 13) {
-	            var baseUrl = "{{URL::to('/')}}";
-				var params = {
-					search2:document.getElementById(this.id).value,
-					search3:document.getElementById(this.id).value,
-					tab:$('.tabs .current').attr('data-tab')
-				};
-				document.location.href = baseUrl+'/admin/sidang/create?'+jQuery.param(params);
-	        }
-	    });
-
 		$('.chk-perangkat').change(function() {
 			count_chk_perangkat = 0;
 			let checkboxes = document.getElementsByClassName('chk-perangkat');

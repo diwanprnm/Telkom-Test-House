@@ -100,7 +100,7 @@ class SidangController extends Controller
     {
         //initial var
         $message = null;
-        $paginate = 10;
+        $paginate = 100;
         $tab = $request->input('tab');
         $search = $request->input('search2');
         $before = $request->input('before');
@@ -110,8 +110,8 @@ class SidangController extends Controller
         return view('admin.sidang.index')
             ->with('tab', $tab)
             ->with('data_sidang', $this->getData($request, 1)['data']->paginate($paginate, ['*'], 'pageSidang') )
-            ->with('data_perangkat', $this->getData($request, 2)['data']->paginate($paginate, ['*'], 'pagePerangkat'))
-            ->with('data_pending', $this->getData($request, 3)['data']->paginate($paginate, ['*'], 'pagePending'))
+            ->with('data_perangkat', $this->getData($request, 0)['data']->paginate($paginate, ['*'], 'pagePerangkat'))
+            ->with('data_pending', $this->getData($request, 2)['data']->paginate($paginate, ['*'], 'pagePending'))
             ->with('search', $search)
             ->with('before_date', $before)
             ->with('after_date', $after)
@@ -130,13 +130,14 @@ class SidangController extends Controller
                 $before ? $query->where('date', '<=', $before) : '';
                 $after ? $query->where('date', '>=', $after) : '';
                 break;
-                
-            case '2': //Perangkat Belum Sidang
+
+            case '0': //Perangkat Belum Sidang   
+            case '2': //Perangkat Pending
                 $query = Examination::with('device')->with('company')
                     ->where('examination_type_id', 1)
                     ->where('resume_status', 1)
                     ->where('qa_status', 0)
-                    ->where('qa_passed', 0)
+                    ->where('qa_passed', $type)
                 ;
                 if ($search){
                     $query->where(function($qry) use($search){
@@ -149,29 +150,6 @@ class SidangController extends Controller
                                 return $q->where('name', 'like', '%'.strtolower($search).'%');
                             })
                         ->orWhere('spk_code', 'like', '%'.strtolower($search).'%');
-                    });
-                }
-                break;
-                
-            case '3': //Perangkat Pending
-                $query = Sidang_detail::with('examination')
-                    ->with('examination.device')
-                    ->with('examination.company')
-                    ->where('result', 2)
-                ;
-                if ($search){
-                    $query->where(function($qry) use($search){
-                        $qry->whereHas('examination.device', function ($q) use ($search){
-                                return $q->where('name', 'like', '%'.strtolower($search).'%')
-                                    ->orWhere('mark', 'like', '%'.strtolower($search).'%')
-                                ;
-                            })
-                        ->orWhereHas('examination.company', function ($q) use ($search){
-                                return $q->where('name', 'like', '%'.strtolower($search).'%');
-                            })
-                        ->orWhereHas('examination', function ($q) use ($search){
-                                return $q->where('spk_code', 'like', '%'.strtolower($search).'%');
-                            });
                     });
                 }
                 break;
@@ -213,18 +191,16 @@ class SidangController extends Controller
         if(Auth::user()->id == 1 || Auth::user()->email == 'admin@mail.com'){
             //initial var
             $message = null;
-            $paginate = 10;
+            $paginate = 100;
             $tab = $request->input('tab');
-            $search = $request->input('search2');
             $sidang_id = null;
             
             //return view to saves index with data
             return view('admin.sidang.create')
                 ->with('tab', $tab)
-                ->with('data_perangkat', $this->getData($request, 2)['data']->paginate($paginate, ['*'], 'pagePerangkat'))
-                ->with('data_pending', $this->getData($request, 3)['data']->paginate($paginate, ['*'], 'pagePending'))
+                ->with('data_perangkat', $this->getData($request, 0)['data']->paginate($paginate, ['*'], 'pagePerangkat'))
+                ->with('data_pending', $this->getData($request, 2)['data']->paginate($paginate, ['*'], 'pagePending'))
                 ->with('data_draft', $this->getData($request, $sidang_id)['data']->paginate($paginate, ['*'], 'pageDraft'))
-                ->with('search', $search)
             ;
         }else{
             return view('errors.401');

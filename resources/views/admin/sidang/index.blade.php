@@ -344,15 +344,15 @@
 								@php $no = 1; @endphp
 								@if(count($data_pending)>0)
 									@foreach($data_pending as $keys => $item)
-										<tr>
+									<tr>
 											<td class="center">{{ $no+(($data_pending->currentPage()-1)*$data_pending->perPage()) }}</td>
-											<td class="center">{{ $item->examination->company->name }}</td>
-											<td class="center">{{ $item->examination->device->name }}</td>
-											<td class="center">{{ $item->examination->device->mark }}</td>
-											<td class="center">{{ $item->examination->device->model }}</td>
-											<td class="center">{{ $item->examination->device->capacity }}</td>
-											<td class="center">{{ $item->examination->device->manufactured_by }}</td>
-											<td class="center">{{ $item->status }}</td>
+											<td class="center">{{ $item->company->name }}</td>
+											<td class="center">{{ $item->device->name }}</td>
+											<td class="center">{{ $item->device->mark }}</td>
+											<td class="center">{{ $item->device->model }}</td>
+											<td class="center">{{ $item->device->capacity }}</td>
+											<td class="center">{{ $item->device->manufactured_by }}</td>
+											<td class="center">{{ $item->company->qs_certificate_date > date('Y-m-d') ? 'SM Eligible' : 'SM Not Eligible' }}</td>
 										</tr>
 									@php
 										$no++
