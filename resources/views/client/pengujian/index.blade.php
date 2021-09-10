@@ -4,7 +4,7 @@
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
-    <title>{{ trans('translate.examination') }} - Telkom DDB</title>
+    <title>{{ trans('translate.examination') }} - Telkom DDBZ</title>
 @php $date_STRING = date('d-m-Y'); @endphp
 @section('content')
 <style type="text/css">
