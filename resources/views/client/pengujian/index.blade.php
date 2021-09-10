@@ -331,7 +331,7 @@
 									<a class="button button-3d nomargin btn-blue btn-sky" href="javascript:void(0)" onclick="return reqCancel('{{$item->id}}');">{{ trans('translate.request_cancelation') }}</a>
 								@endif
 
-								@if($item->payment_method == 2 && $item->VA_expired < date("Y-m-d H:i:s"))
+								@if($item->payment_status != 1 && $item->payment_method == 2 && $item->VA_expired < date("Y-m-d H:i:s"))
 									<div class="alert" style="background-color : #ffcccc; color : #1e272e;text-align : left;">
 										{{ trans('translate.stel_total_expired') }} <a href="{{url('/resend_va_spb/'.$data[0]->id)}}"> {{ trans('translate.here') }} </a> {{ trans('translate.stel_total_resend') }}. 
 									</div> 
