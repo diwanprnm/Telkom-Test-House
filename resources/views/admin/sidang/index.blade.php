@@ -188,7 +188,7 @@
 									<th class="center" scope="col">Jumlah Tidak Lulus</th>
 									<th class="center" scope="col">Jumlah Tunda Hasil</th>
 									<th class="center" scope="col">Status</th>
-									<th class="center" colspan="2" scope="colgroup">Action</th>  
+									<th class="center" colspan="2" scope="colgroup">Aksi</th>  
 								</tr>
 							</thead>
 							<tbody> 
@@ -267,7 +267,9 @@
 									<th class="center" scope="col">Tipe</th>
 									<th class="center" scope="col">Kapasitas</th>
 									<th class="center" scope="col">Negara Pembuat</th> 
+									<th class="center" scope="col">Hasil Uji</th> 
 									<th class="center" scope="col">Status</th> 
+									<th class="center" scope="col">Aksi</th> 
 								</tr>
 							</thead>
 							<tbody> 
@@ -282,15 +284,62 @@
 											<td class="center">{{ $item->device->model }}</td>
 											<td class="center">{{ $item->device->capacity }}</td>
 											<td class="center">{{ $item->device->manufactured_by }}</td>
+											<td class="center"> fromOTR </td>
 											<td class="center">{{ $item->company->qs_certificate_date > date('Y-m-d') ? 'SM Eligible' : 'SM Not Eligible' }}</td>
+											<td class="center"><a href="javascript:void(0)" class="collapsible">Detail</a></td>
 										</tr>
+										<tr class="content" style="display: none;">
+											<td colspan="10" class="center">
+												<table class="table table-bordered table-hover table-full-width dataTable no-footer" style="width: 100%;">
+													<thead>
+														<tr>
+															<th class="center" scope="col">No. SPK</th>
+															<th class="center" scope="col">No. Laporan</th>
+															<th class="center" scope="col">No. Seri</th>
+															<th class="center" scope="col">Referensi Uji</th>
+															<th class="center" scope="col">Tanggal Penerimaan</th>  
+															<th class="center" scope="col">Tanggal Mulai Uji</th>  
+															<th class="center" scope="col">Tanggal Selesai Uji</th>  
+															<th class="center" scope="col">Diuji Oleh</th>  
+															<th class="center" scope="col">Target Penyelesaian</th>  
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td class="center">{{ $item->spk_number }}</td>
+															@php $no_lap = '-'; @endphp
+															@foreach($item->media as $file)
+																@if($file->name == 'Laporan Uji')
+																	@php $no_lap = $file->no; @endphp
+																@endif
+															@endforeach
+															<td class="center">{{ $no_lap }}</td>
+															<td class="center">{{ $item->device->serial_number }}</td>
+															<td class="center">{{ $item->device->test_reference }}</td>
+															@php $tgl_barang = '-'; @endphp
+															@foreach($item->equipmentHistory as $barang)
+																@if($barang->location == 2)
+																	@php $tgl_barang = $barang->action_date; @endphp
+																@endif
+															@endforeach
+															<td class="center">{{ $tgl_barang }}</td>
+															<td class="center">fromOTR</td>
+															<td class="center">fromOTR</td>
+															<td class="center">{{ $item->examinationLab->name }}</td>
+															<td class="center">fromOTR</td>														
+														</tr> 
+													</tbody>
+												</table>
+											</td>
+										</tr>
+										<tr class="content" style="display: none;"><td colspan="10"></td></tr>
 									@php
 										$no++
 									@endphp
 									@endforeach
 								@else
 									<tr>
-										<td colspan=8 class="center">
+										<td colspan=10 class="center">
 											Data Not Found
 										</td>
 									</tr>
@@ -337,14 +386,16 @@
 									<th class="center" scope="col">Tipe</th>
 									<th class="center" scope="col">Kapasitas</th>
 									<th class="center" scope="col">Negara Pembuat</th> 
+									<th class="center" scope="col">Hasil Uji</th> 
 									<th class="center" scope="col">Status</th> 
+									<th class="center" scope="col">Aksi</th> 
 								</tr>
 							</thead>
 							<tbody> 
 								@php $no = 1; @endphp
 								@if(count($data_pending)>0)
 									@foreach($data_pending as $keys => $item)
-									<tr>
+										<tr>
 											<td class="center">{{ $no+(($data_pending->currentPage()-1)*$data_pending->perPage()) }}</td>
 											<td class="center">{{ $item->company->name }}</td>
 											<td class="center">{{ $item->device->name }}</td>
@@ -352,15 +403,62 @@
 											<td class="center">{{ $item->device->model }}</td>
 											<td class="center">{{ $item->device->capacity }}</td>
 											<td class="center">{{ $item->device->manufactured_by }}</td>
+											<td class="center"> fromOTR </td>
 											<td class="center">{{ $item->company->qs_certificate_date > date('Y-m-d') ? 'SM Eligible' : 'SM Not Eligible' }}</td>
+											<td class="center"><a href="javascript:void(0)" class="collapsible">Detail</a></td>
 										</tr>
+										<tr class="content" style="display: none;">
+											<td colspan="10" class="center">
+												<table class="table table-bordered table-hover table-full-width dataTable no-footer" style="width: 100%;">
+													<thead>
+														<tr>
+															<th class="center" scope="col">No. SPK</th>
+															<th class="center" scope="col">No. Laporan</th>
+															<th class="center" scope="col">No. Seri</th>
+															<th class="center" scope="col">Referensi Uji</th>
+															<th class="center" scope="col">Tanggal Penerimaan</th>  
+															<th class="center" scope="col">Tanggal Mulai Uji</th>  
+															<th class="center" scope="col">Tanggal Selesai Uji</th>  
+															<th class="center" scope="col">Diuji Oleh</th>  
+															<th class="center" scope="col">Target Penyelesaian</th>  
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td class="center">{{ $item->spk_number }}</td>
+															@php $no_lap = '-'; @endphp
+															@foreach($item->media as $file)
+																@if($file->name == 'Laporan Uji')
+																	@php $no_lap = $file->no; @endphp
+																@endif
+															@endforeach
+															<td class="center">{{ $no_lap }}</td>
+															<td class="center">{{ $item->device->serial_number }}</td>
+															<td class="center">{{ $item->device->test_reference }}</td>
+															@php $tgl_barang = '-'; @endphp
+															@foreach($item->equipmentHistory as $barang)
+																@if($barang->location == 2)
+																	@php $tgl_barang = $barang->action_date; @endphp
+																@endif
+															@endforeach
+															<td class="center">{{ $tgl_barang }}</td>
+															<td class="center">fromOTR</td>
+															<td class="center">fromOTR</td>
+															<td class="center">{{ $item->examinationLab->name }}</td>
+															<td class="center">fromOTR</td>														
+														</tr> 
+													</tbody>
+												</table>
+											</td>
+										</tr>
+										<tr class="content" style="display: none;"><td colspan="10"></td></tr>
 									@php
 										$no++
 									@endphp
 									@endforeach
 								@else
 									<tr>
-										<td colspan=8 class="center">
+										<td colspan=10 class="center">
 											Data Not Found
 										</td>
 									</tr>
@@ -406,6 +504,24 @@
 	}else{
 		$(".tab-daftar-sidang").addClass('current');
 		$("#tab-daftar-sidang").addClass('current');
+	}
+
+	var coll = document.getElementsByClassName("collapsible");
+	var i;
+
+	for (i = 0; i < coll.length; i++) {
+	  coll[i].addEventListener("click", function() {
+	    this.classList.toggle("active");
+	    var content = $(this).parents().parents().next()[0];
+	    var content2 = $(this).parents().parents().next().next()[0];
+	    if (content.style.display == "") {
+	      content.style.display = "none";
+	      content2.style.display = "none";
+	    } else {
+	      content.style.display = "";
+	      content2.style.display = "";
+	    }
+	  });
 	}
 
 	jQuery(document).ready(function() {

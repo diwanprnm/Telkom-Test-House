@@ -36,7 +36,7 @@ class SidangController extends Controller
 { 
     
     private const ADMIN = 'admin';
-    private const ADMIN_SALES = '/admin/sales';
+    private const ADMIN_SIDANG = '/admin/sidang';
     private const APP_GATEWAY_TPN = 'app.gateway_tpn';
     private const APP_URL_API_TPN = 'app.url_api_tpn';
     private const AUTHORIZATION = 'Authorization';
@@ -133,11 +133,16 @@ class SidangController extends Controller
 
             case '0': //Perangkat Belum Sidang   
             case '2': //Perangkat Pending
-                $query = Examination::with('device')->with('company')
+                $query = Examination::with('device')->with('company')->with('media')->with('examinationLab')->with('equipmentHistory')
                     ->where('examination_type_id', 1)
                     ->where('resume_status', 1)
                     ->where('qa_status', 0)
                     ->where('qa_passed', $type)
+                    ->whereNotIn('id', function ($q) {
+                        $q->select('examination_id')
+                            ->from('sidang_detail')
+                            ->where('result', 0);
+                    })
                 ;
                 if ($search){
                     $query->where(function($qry) use($search){
@@ -158,6 +163,9 @@ class SidangController extends Controller
                 $query = Sidang_detail::with('examination')
                     ->with('examination.device')
                     ->with('examination.company')
+                    ->with('examination.media')
+                    ->with('examination.examinationLab')
+                    ->with('examination.equipmentHistory')
                     ->where('sidang_id', $type)
                 ;
                 if ($search){
@@ -186,17 +194,17 @@ class SidangController extends Controller
         );
     }
 
-    public function create(Request $request)
+    public function create(Request $request, $sidang_id = null)
     {
         if(Auth::user()->id == 1 || Auth::user()->email == 'admin@mail.com'){
             //initial var
             $message = null;
             $paginate = 100;
-            $tab = $request->input('tab');
-            $sidang_id = null;
+            $tab = $sidang_id ? 'tab-draft' : $request->input('tab');
             
             //return view to saves index with data
             return view('admin.sidang.create')
+                ->with('sidang_id', $sidang_id)
                 ->with('tab', $tab)
                 ->with('data_perangkat', $this->getData($request, 0)['data']->paginate($paginate, ['*'], 'pagePerangkat'))
                 ->with('data_pending', $this->getData($request, 2)['data']->paginate($paginate, ['*'], 'pagePending'))
@@ -210,63 +218,43 @@ class SidangController extends Controller
 
     public function store(Request $request)
     {
-        $this->validate($request, [
-            self::STELS => self::REQUIRED,
-            self::USER_ID_R => self::REQUIRED,
-        ]);
-        
         $currentUser = Auth::user();
         $logService = new LogService();
-        foreach ($request->input(self::STELS) as $key => $value) {
-            $stels = explode('-myToken-', $value);
-            $stel_id[] = $stels[0];
-            $stel_price[] = $stels[1];
+        $sidang_id = $request->has('sidang_id') ? $request->input('sidang_id') : null;
+        if($request->has('sidang_id')){ //save draft
+            $sidangDetail = Sidang_detail::where('sidang_id', $sidang_id)->delete();
+
+            $sidang = Sidang::find($request->input('sidang_id'));
+            $sidang->date = $request->input('date');
+            $sidang->audience = $request->input('audience');
+            $sidang->jml_perangkat = count($request->input('chk-draft'));
+            $sidang->status = 'DRAFT';
+        }else{ //save pratinjau
+            $sidang = new Sidang;
+            $sidang->id = Uuid::uuid4();
+            $sidang->status = 'PRATINJAU';
         }
-
-        $tax = $request->has('is_tax') ? 0.1*array_sum($stel_price) : 0;
-
-        $sales = new STELSales;
-        $sales->user_id = $request->input(self::USER_ID_R);
-        $sales->invoice = '';
-        $sales->name = '';
-        $sales->exp = '';
-        $sales->cvc = '';
-        $sales->cvv = '';
-        $sales->type = '';
-        $sales->no_card = '';
-        $sales->no_telp = '';
-        $sales->email = '';
-        $sales->country = '';
-        $sales->province = '';
-        $sales->city = '';
-        $sales->postal_code = '';
-        $sales->birthdate = '';
-        $sales->payment_method = 1;
-        $sales->payment_status = 1;
-        $sales->total = array_sum($stel_price) + $tax;
-        $sales->cust_price_payment = array_sum($stel_price) + $tax;
-        $sales->created_by = $request->input(self::USER_ID_R);
-        $sales->updated_by = $currentUser->id;
-
+        $sidang->created_by = $currentUser->id;
+        $sidang->updated_by = $currentUser->id;
         try{
-            if($sales->save()){
-                foreach($stel_id as $key => $row){ 
-                    $STELSalesDetail = new STELSalesDetail;
-                    $STELSalesDetail->stels_sales_id = $sales->id;
-                    $STELSalesDetail->stels_id = $stel_id[$key];
-                    $STELSalesDetail->qty = 1;
-                    $STELSalesDetail->created_by = $request->input(self::USER_ID_R);
-                    $STELSalesDetail->updated_by = $request->input(self::USER_ID_R);
-                    $STELSalesDetail->save();
+            if($sidang->save()){
+                if($request->has('chk-perangkat')){$chk = $request->input('chk-perangkat');}
+                if($request->has('chk-pending')){$chk = $request->input('chk-pending');}
+                if($request->has('chk-draft')){$chk = $request->input('chk-draft');}
+                foreach($chk as $examination_id){ 
+                    $sidangDetail = new Sidang_detail;
+                    $sidangDetail->sidang_id = $sidang->id;
+                    $sidangDetail->examination_id = $examination_id;
+                    $sidangDetail->created_by = $currentUser->id;
+                    $sidangDetail->updated_by = $currentUser->id;
+                    $sidangDetail->save();
                 }
             }
-            $logService->createAdminLog('Tambah Data Pembelian STEL', 'Rekap Pembelian STEL', $sales.$STELSalesDetail, '' );
-            Session::flash(self::MESSAGE, 'Sales successfully created');
-            return redirect(self::ADMIN_SALES);
-        } catch(Exception $e){ return redirect('/admin/sales/create')->with(self::ERROR, 'Save failed');
+            $logService->createLog($sidang_id ? 'Pratinjau Draft Sidang QA' : 'Draft Sidang QA', 'Sidang QA', '');
+            Session::flash(self::MESSAGE, 'Data successfully added');
+            return $sidang_id ? redirect(self::ADMIN_SIDANG) : redirect(self::ADMIN_SIDANG.'/create/'.$sidang->id);
+        } catch(Exception $e){ return redirect('/admin/sidang/create'.$sidang->id)->with(self::ERROR, 'Save failed');
         }
-
-        
     } 
 
     public function show($id)
@@ -276,7 +264,7 @@ class SidangController extends Controller
                     ->join(self::STELS,self::STELS_ID,"=",self::STELS_SALES_DETAIL_DOT_STELS_ID)
                     ->get();
         $STELSales = STELSales::find($id);
-        if(!$STELSales){return redirect(self::ADMIN_SALES)->with(self::ERROR, 'Undefined Data'); }
+        if(!$STELSales){return redirect(self::ADMIN_SIDANG)->with(self::ERROR, 'Undefined Data'); }
         return view('admin.sales.detail')
             ->with('data', $STELSales_detail) 
             ->with('id_sales', $id) 
@@ -348,22 +336,24 @@ class SidangController extends Controller
         return response($excel['file'], 200, $excel['headers']);
     }
 
-    public function edit($id)
+    public function edit($sidang_id)
     {
-        $select = array(self::STELS_SALES_DOT_ID,"stels_sales.id_kuitansi","stels_sales.faktur_file","stels_sales_attachment.attachment",self::STELS_SALES_ATTACHMENT_DOT_STEL_SALES_ID);  
-        $stel = STELSales::select($select)->leftJoin(self::STELS_SALES_ATTACHMENT,self::STELS_SALES_ATTACHMENT_DOT_STEL_SALES_ID,"=",self::STELS_SALES_DOT_ID)
-                ->where(self::STELS_SALES_DOT_ID,$id)->first();        
-        
-		$select = array(self::STELS_NAME,self::STELS_PRICE,self::STELS_CODE,self::STELS_SALES_DETAIL_QTY,self::STELS_SALES_DETAIL_DOT_ID,self::STELS_SALES_DETAIL_ATTACHMENT,"stels.attachment as stelAttach",self::STELS_SALES_INVOICE, self::AS_COMPANY_NAME,self::STELS_SALES_DOT_PAYMENT_STATUS); 
-		$STELSales = STELSalesDetail::select($select)->where(self::STELS_SALES_ID,$id)
-					->join(self::STELS_SALES,self::STELS_SALES_DOT_ID,"=",self::STELS_SALES_DETAIL_STELS_ID)
-					->join(self::STELS,self::STELS_ID,"=",self::STELS_SALES_DETAIL_DOT_STELS_ID)
-					->join(self::USERS,self::USER_ID,"=",self::STELS_SALES_DOT_USER_ID)
-					->join(self::COMPANIES,self::COMPANIES_DOT_ID,"=",self::USER_COMPANIES_ID)
-					->get();
-        return view('admin.sales.edit')
-            ->with('data', $stel)
-            ->with('dataStel', $STELSales);
+        if(Auth::user()->id == 1 || Auth::user()->email == 'admin@mail.com'){
+            //initial var
+            $message = null;
+            $paginate = 100;
+            $tab = $request->input('tab');
+            
+            //return view to saves index with data
+            return view('admin.sidang.edit')
+                ->with('tab', $tab)
+                ->with('data_perangkat', $this->getData($request, 0)['data']->paginate($paginate, ['*'], 'pagePerangkat'))
+                ->with('data_pending', $this->getData($request, 2)['data']->paginate($paginate, ['*'], 'pagePending'))
+                ->with('data_draft', $this->getData($request, $sidang_id)['data']->paginate($paginate, ['*'], 'pageDraft'))
+            ;
+        }else{
+            return view('errors.401');
+        }
     }
 
     public function update(Request $request, $id)
@@ -460,8 +450,8 @@ class SidangController extends Controller
                 //flash message
                 Session::flash(self::MESSAGE, 'SALES successfully updated');
             }
-            return redirect(self::ADMIN_SALES);
-        } catch(Exception $e){ return redirect(self::ADMIN_SALES.'/'.$STELSales->id.'/edit')->with(self::ERROR, 'Save failed');
+            return redirect(self::ADMIN_SIDANG);
+        } catch(Exception $e){ return redirect(self::ADMIN_SIDANG.'/'.$STELSales->id.'/edit')->with(self::ERROR, 'Save failed');
         }
  
     }
@@ -520,10 +510,10 @@ class SidangController extends Controller
             $stel_sales_detail->delete();
             $logService->createAdminLog('Hapus Data Pembelian STEL', 'Detail Pembelian STEL', $logs_a_stel_sales.$logs_a_stel_sales_detail, urldecode($reason) );
             Session::flash(self::MESSAGE, 'Successfully Delete Data');
-            return redirect('/admin/sales/'.$stel_sales->id);
+            return redirect('/admin/sidang/'.$stel_sales->id);
         }else{
             Session::flash(self::ERROR, 'Undefined Data');
-            return redirect('/admin/sales/');
+            return redirect('/admin/sidang/');
         }
 
     }

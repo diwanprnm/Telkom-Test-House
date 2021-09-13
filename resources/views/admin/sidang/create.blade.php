@@ -72,11 +72,14 @@
 			<ul class="tabs">
 				<li class="btn tab-perangkat" data-tab="tab-perangkat">Perangkat Belum Sidang QA</li>
 				<li class="btn tab-pending" data-tab="tab-pending">Perangkat Tertunda</li>
-				<li class="btn tab-draft" data-tab="tab-draft">Pratinjau Draft Sidang QA (0)</li>
+				<li class="btn tab-draft" data-tab="tab-draft">Pratinjau Draft Sidang QA ({{ count($data_draft) }})</li>
 			</ul>
 
+			{!! Form::open(array('url' => 'admin/sidang', 'method' => 'POST')) !!}
+			<input type="hidden" name="sidang_id" id="sidang_id" value="{{ $sidang_id }}">
 			<input type="hidden" name="hidden_tab" id="hidden_tab" value="{{ $tab }}">
-			
+			{!! csrf_field() !!}
+
 			<div id="tab-perangkat" class="row tab-content">
 		        <div class="col-md-12">
 					<div class="table-responsive">
@@ -91,8 +94,10 @@
 									<th class="center" scope="col">Tipe</th>
 									<th class="center" scope="col">Kapasitas</th>
 									<th class="center" scope="col">Negara Pembuat</th> 
-									<th class="center" scope="col">Status</th> 
+									<th class="center" scope="col">Hasil Uji</th> 
+									<th class="center" scope="col">Status</th>
 									<th class="center" scope="col"><input type="checkbox" onchange="checkAllPerangkat(this)"></th>  
+									<th class="center" scope="col">Aksi</th>
 								</tr>
 							</thead>
 							<tbody> 
@@ -107,16 +112,63 @@
 											<td class="center">{{ $item->device->model }}</td>
 											<td class="center">{{ $item->device->capacity }}</td>
 											<td class="center">{{ $item->device->manufactured_by }}</td>
+											<td class="center"> fromOTR </td>
 											<td class="center">{{ $item->company->qs_certificate_date > date('Y-m-d') ? 'SM Eligible' : 'SM Not Eligible' }}</td>
-											<td class="center"><input type="checkbox" name="chk-perangkat[]" id="chk-perangkat-{{$item->id}}" class="chk-perangkat"></td>
+											<td class="center"><input type="checkbox" name="chk-perangkat[]" id="chk-perangkat-{{$item->id}}" class="chk-perangkat" value="{{ $item->id }}"></td>
+											<td class="center"><a href="javascript:void(0)" class="collapsible">Detail</a></td>
 										</tr>
+										<tr class="content" style="display: none;">
+											<td colspan="11" class="center">
+												<table class="table table-bordered table-hover table-full-width dataTable no-footer" style="width: 100%;">
+													<thead>
+														<tr>
+															<th class="center" scope="col">No. SPK</th>
+															<th class="center" scope="col">No. Laporan</th>
+															<th class="center" scope="col">No. Seri</th>
+															<th class="center" scope="col">Referensi Uji</th>
+															<th class="center" scope="col">Tanggal Penerimaan</th>  
+															<th class="center" scope="col">Tanggal Mulai Uji</th>  
+															<th class="center" scope="col">Tanggal Selesai Uji</th>  
+															<th class="center" scope="col">Diuji Oleh</th>  
+															<th class="center" scope="col">Target Penyelesaian</th>  
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td class="center">{{ $item->spk_number }}</td>
+															@php $no_lap = '-'; @endphp
+															@foreach($item->media as $file)
+																@if($file->name == 'Laporan Uji')
+																	@php $no_lap = $file->no; @endphp
+																@endif
+															@endforeach
+															<td class="center">{{ $no_lap }}</td>
+															<td class="center">{{ $item->device->serial_number }}</td>
+															<td class="center">{{ $item->device->test_reference }}</td>
+															@php $tgl_barang = '-'; @endphp
+															@foreach($item->equipmentHistory as $barang)
+																@if($barang->location == 2)
+																	@php $tgl_barang = $barang->action_date; @endphp
+																@endif
+															@endforeach
+															<td class="center">{{ $tgl_barang }}</td>
+															<td class="center">fromOTR</td>
+															<td class="center">fromOTR</td>
+															<td class="center">{{ $item->examinationLab->name }}</td>
+															<td class="center">fromOTR</td>														
+														</tr> 
+													</tbody>
+												</table>
+											</td>
+										</tr>
+										<tr class="content" style="display: none;"><td colspan="11"></td></tr>
 									@php
 										$no++
 									@endphp
 									@endforeach
 								@else
 									<tr>
-										<td colspan=10 class="center">
+										<td colspan=11 class="center">
 											Data Not Found
 										</td>
 									</tr>
@@ -159,8 +211,10 @@
 									<th class="center" scope="col">Tipe</th>
 									<th class="center" scope="col">Kapasitas</th>
 									<th class="center" scope="col">Negara Pembuat</th> 
+									<th class="center" scope="col">Hasil Uji</th> 
 									<th class="center" scope="col">Status</th> 
 									<th class="center" scope="col"><input type="checkbox" onchange="checkAllPending(this)"></th>  
+									<th class="center" scope="col">Aksi</th> 
 								</tr>
 							</thead>
 							<tbody> 
@@ -175,16 +229,63 @@
 											<td class="center">{{ $item->device->model }}</td>
 											<td class="center">{{ $item->device->capacity }}</td>
 											<td class="center">{{ $item->device->manufactured_by }}</td>
+											<td class="center"> fromOTR </td>
 											<td class="center">{{ $item->company->qs_certificate_date > date('Y-m-d') ? 'SM Eligible' : 'SM Not Eligible' }}</td>
-											<td class="center"><input type="checkbox" name="chk-pending[]" id="chk-pending-{{$item->id}}" class="chk-pending"></td>
+											<td class="center"><input type="checkbox" name="chk-pending[]" id="chk-pending-{{$item->id}}" class="chk-pending" value="{{ $item->id }}"></td>
+											<td class="center"><a href="javascript:void(0)" class="collapsible">Detail</a></td>
 										</tr>
+										<tr class="content" style="display: none;">
+											<td colspan="11" class="center">
+												<table class="table table-bordered table-hover table-full-width dataTable no-footer" style="width: 100%;">
+													<thead>
+														<tr>
+															<th class="center" scope="col">No. SPK</th>
+															<th class="center" scope="col">No. Laporan</th>
+															<th class="center" scope="col">No. Seri</th>
+															<th class="center" scope="col">Referensi Uji</th>
+															<th class="center" scope="col">Tanggal Penerimaan</th>  
+															<th class="center" scope="col">Tanggal Mulai Uji</th>  
+															<th class="center" scope="col">Tanggal Selesai Uji</th>  
+															<th class="center" scope="col">Diuji Oleh</th>  
+															<th class="center" scope="col">Target Penyelesaian</th>  
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td class="center">{{ $item->spk_number }}</td>
+															@php $no_lap = '-'; @endphp
+															@foreach($item->media as $file)
+																@if($file->name == 'Laporan Uji')
+																	@php $no_lap = $file->no; @endphp
+																@endif
+															@endforeach
+															<td class="center">{{ $no_lap }}</td>
+															<td class="center">{{ $item->device->serial_number }}</td>
+															<td class="center">{{ $item->device->test_reference }}</td>
+															@php $tgl_barang = '-'; @endphp
+															@foreach($item->equipmentHistory as $barang)
+																@if($barang->location == 2)
+																	@php $tgl_barang = $barang->action_date; @endphp
+																@endif
+															@endforeach
+															<td class="center">{{ $tgl_barang }}</td>
+															<td class="center">fromOTR</td>
+															<td class="center">fromOTR</td>
+															<td class="center">{{ $item->examinationLab->name }}</td>
+															<td class="center">fromOTR</td>														
+														</tr> 
+													</tbody>
+												</table>
+											</td>
+										</tr>
+										<tr class="content" style="display: none;"><td colspan="11"></td></tr>
 									@php
 										$no++
 									@endphp
 									@endforeach
 								@else
 									<tr>
-										<td colspan=10 class="center">
+										<td colspan=11 class="center">
 											Data Not Found
 										</td>
 									</tr>
@@ -212,8 +313,28 @@
 					</a>
 				</div>
 			</div>
-
+			
 			<div id="tab-draft" class="row tab-content">
+				<div class="col-md-3">
+					<div class="form-group">
+						<label>Tanggal Sidang</label>
+						<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
+							<input type="text" name="date" class="form-control" value="{{ date('Y-m-d') }}" required/>
+							<span class="input-group-btn">
+								<button type="button" class="btn btn-default">
+									<em class="glyphicon glyphicon-calendar"></em>
+								</button>
+							</span>
+						</p>
+					</div>
+				</div>
+				<div class="col-md-3"></div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="Audience">Audience :</label>
+						<textarea class="form-control" name="audience" id="audience" required>Adi Permadi (Manager Lab IQA TTH), Eliyandri Shintani Wulandari (Manager Lab DEQA TTH), Yudha Indah Prihatini (POH Manager URel TTH), I Gede Astawa (Senior Manager TTH)</textarea>
+					</div>
+				</div>
 		        <div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
@@ -227,8 +348,10 @@
 									<th class="center" scope="col">Tipe</th>
 									<th class="center" scope="col">Kapasitas</th>
 									<th class="center" scope="col">Negara Pembuat</th> 
+									<th class="center" scope="col">Hasil Uji</th> 
 									<th class="center" scope="col">Status</th> 
-									<th class="center" scope="col"><input type="checkbox" onchange="checkAllDraft(this)"></th>  
+									<th class="center" scope="col"><input type="checkbox" onchange="checkAllDraft(this)" {{ $sidang_id ? 'checked' : '' }}></th>  
+									<th class="center" scope="col">Aksi</th> 
 								</tr>
 							</thead>
 							<tbody> 
@@ -243,16 +366,63 @@
 											<td class="center">{{ $item->examination->device->model }}</td>
 											<td class="center">{{ $item->examination->device->capacity }}</td>
 											<td class="center">{{ $item->examination->device->manufactured_by }}</td>
-											<td class="center">{{ $item->status }}</td>
-											<td class="center"><input type="checkbox" name="chk-draft[]" id="chk-draft-{{$item->examination->id}}" class="chk-draft"></td>
+											<td class="center"> fromOTR </td>
+											<td class="center">{{ $item->examination->company->qs_certificate_date > date('Y-m-d') ? 'SM Eligible' : 'SM Not Eligible' }}</td>
+											<td class="center"><input type="checkbox" name="chk-draft[]" id="chk-draft-{{$item->examination->id}}" class="chk-draft" value="{{ $item->examination->id }}" checked></td>
+											<td class="center"><a href="javascript:void(0)" class="collapsible">Detail</a></td>
 										</tr>
+										<tr class="content" style="display: none;">
+											<td colspan="11" class="center">
+												<table class="table table-bordered table-hover table-full-width dataTable no-footer" style="width: 100%;">
+													<thead>
+														<tr>
+															<th class="center" scope="col">No. SPK</th>
+															<th class="center" scope="col">No. Laporan</th>
+															<th class="center" scope="col">No. Seri</th>
+															<th class="center" scope="col">Referensi Uji</th>
+															<th class="center" scope="col">Tanggal Penerimaan</th>  
+															<th class="center" scope="col">Tanggal Mulai Uji</th>  
+															<th class="center" scope="col">Tanggal Selesai Uji</th>  
+															<th class="center" scope="col">Diuji Oleh</th>  
+															<th class="center" scope="col">Target Penyelesaian</th>  
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td class="center">{{ $item->examination->spk_number }}</td>
+															@php $no_lap = '-'; @endphp
+															@foreach($item->examination->media as $file)
+																@if($file->name == 'Laporan Uji')
+																	@php $no_lap = $file->no; @endphp
+																@endif
+															@endforeach
+															<td class="center">{{ $no_lap }}</td>
+															<td class="center">{{ $item->examination->device->serial_number }}</td>
+															<td class="center">{{ $item->examination->device->test_reference }}</td>
+															@php $tgl_barang = '-'; @endphp
+															@foreach($item->examination->equipmentHistory as $barang)
+																@if($barang->location == 2)
+																	@php $tgl_barang = $barang->action_date; @endphp
+																@endif
+															@endforeach
+															<td class="center">{{ $tgl_barang }}</td>
+															<td class="center">fromOTR</td>
+															<td class="center">fromOTR</td>
+															<td class="center">{{ $item->examination->examinationLab->name }}</td>
+															<td class="center">fromOTR</td>														
+														</tr> 
+													</tbody>
+												</table>
+											</td>
+										</tr>
+										<tr class="content" style="display: none;"><td colspan="11"></td></tr>
 									@php
 										$no++
 									@endphp
 									@endforeach
 								@else
 									<tr>
-										<td colspan=10 class="center">
+										<td colspan=11 class="center">
 											Data Not Found
 										</td>
 									</tr>
@@ -280,6 +450,7 @@
 					</a>
 				</div>
 			</div>
+			{!! Form::close() !!}
 		</div>
 		<!-- end: RESPONSIVE TABLE --> 
 	</div>
@@ -309,6 +480,24 @@
 	}else{
 		$(".tab-perangkat").addClass('current');
 		$("#tab-perangkat").addClass('current');
+	}
+
+	var coll = document.getElementsByClassName("collapsible");
+	var i;
+
+	for (i = 0; i < coll.length; i++) {
+	  coll[i].addEventListener("click", function() {
+	    this.classList.toggle("active");
+	    var content = $(this).parents().parents().next()[0];
+	    var content2 = $(this).parents().parents().next().next()[0];
+	    if (content.style.display == "") {
+	      content.style.display = "none";
+	      content2.style.display = "none";
+	    } else {
+	      content.style.display = "";
+	      content2.style.display = "";
+	    }
+	  });
 	}
 
 	jQuery(document).ready(function() {
@@ -360,6 +549,17 @@
 			$(".tab-draft").html("Pratinjau Draft Sidang QA ("+count_chk_draft+")");
 		});
 
+		$('#btn-submit-perangkat').click(function() {
+			if($('input[name="chk-perangkat[]"]:checked').length == 0) { return false; }
+		});
+
+		$('#btn-submit-pending').click(function() {
+			if($('input[name="chk-pending[]"]:checked').length == 0) { return false; }
+		});
+
+		$('#btn-submit-draft').click(function() {
+			if($('input[name="chk-draft[]"]:checked').length == 0) { return false; }
+		});
 	});
 
 	function checkAllPerangkat(box) 
@@ -384,7 +584,6 @@
 		$("#btn-submit-perangkat").html("Tambahkan ke draft ("+count_chk_perangkat+")");
 	}
 
-	
 	function checkAllPending(box) 
 	{
 		count_chk_pending = 0;
@@ -405,6 +604,28 @@
 			}
 		}
 		$("#btn-submit-pending").html("Tambahkan ke draft ("+count_chk_pending+")");
+	}
+
+	function checkAllDraft(box) 
+	{
+		count_chk_draft = 0;
+		let checkboxes = document.getElementsByClassName('chk-draft');
+
+		if (box.checked) {
+			for (let i = 0; i < checkboxes.length; i++) {
+				if (checkboxes[i].name == 'chk-draft[]') {
+					checkboxes[i].checked = true;
+					count_chk_draft++;
+				}
+			}
+		} else {
+			for (let i = 0; i < checkboxes.length; i++) {
+				if (checkboxes[i].name == 'chk-draft[]') {
+					checkboxes[i].checked = false;
+				}
+			}
+		}
+		$(".tab-draft").html("Pratinjau Draft Sidang QA ("+count_chk_draft+")");
 	}
 </script>>
 @endsection
