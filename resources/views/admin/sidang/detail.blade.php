@@ -1,61 +1,20 @@
 @extends('layouts.app')
 
 @section('content')
-
-@php
-	$currentUser = Auth::user();
-	$is_admin_mail = $currentUser['email'];
-	$is_super = $currentUser['id'];
-@endphp
-
-<input type="hide" id="hide_stel_sales_detail_id" name="hide_stel_sales_detail_id">
-<div class="modal fade" id="myModal_delete_detail" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title"><em class="fa fa-eyes-open"></em> Detail Pembelian STEL Akan Dihapus, Mohon Berikan Keterangan!</h4>
-			</div>
-			
-			<div class="modal-body">
-				<table style="width: 100%;"><caption></caption>
-					<tr>
-						<th scope="col">
-							<div class="form-group">
-								<label for="keterangan">Keterangan:</label>
-								<textarea class="form-control" rows="5" name="keterangan" id="keterangan"></textarea>
-							</div>
-						</th>
-					</tr>
-				</table>
-			</div><!-- /.modal-content -->
-			<div class="modal-footer">
-				<table style="width: 100%;"><caption></caption>
-					<tr>
-						<th scope="col">
-							<button type="button" id="btn-modal-delete_detail" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
-						</th>
-					</tr>
-				</table>
-			</div>
-		</div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
-</div>
-
 <div class="main-content" >
 	<div class="wrap-content container" id="container">
 		<!-- start: PAGE TITLE -->
 		<section id="page-title">
 			<div class="row">
 				<div class="col-sm-8">
-					<h1 class="mainTitle">Detail Pembelian STEL</h1>
+					<h1 class="mainTitle">Detail Sidang QA</h1>
 				</div>
 				<ol class="breadcrumb">
 					<li>
-						<span>Keuangan</span>
+						<span>Pengujian</span>
 					</li>
 					<li>
-						<span>Rekap Pembelian STEL</span>
+						<span>Sidang QA</span>
 					</li>
 					<li class="active">
 						<span>Detail</span>
@@ -64,29 +23,9 @@
 			</div>
 		</section>
 		<!-- end: PAGE TITLE -->
-		@if (count($errors) > 0)
-			<div class="alert alert-danger">
-				<ul>
-					@foreach ($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-			</div>
-		@endif
-
-		@if (Session::get('error'))
-			<div class="alert alert-error alert-danger">
-				{{ Session::get('error') }}
-			</div>
-		@endif
 		
-		@if (Session::get('message'))
-			<div class="alert alert-info">
-				{{ Session::get('message') }}
-			</div>
-		@endif
 		<!-- start: RESPONSIVE TABLE -->
-
+		<div class="container-fluid container-fullw bg-white">
 			@if (Session::get('error'))
 				<div class="alert alert-error alert-danger">
 					{{ Session::get('error') }}
@@ -99,118 +38,154 @@
 				</div>
 			@endif
 
-		<div class="container-fluid container-fullw bg-white">
 			<div class="row">
-				<div class="col-md-12">
-					<div class="table-responsive">
-						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
-							<caption>Sales document table</caption>
-							<thead>
-								<tr>
-									<th class="center" scope="col">No</th> 
-									<th class="center" scope="col">Document Name</th> 
-									<th class="center" scope="col">Document Code</th>  
-									<th class="center" scope="col">Price</th> 
-									<th class="center" scope="col">QTY</th> 
-									<th class="center" scope="col">Total</th>
-									<th class="center" scope="col">Attachment</th>
-								@if($is_super == '1' || $is_admin_mail == 'admin@mail.com')
-									<th class="center" scope="col">Action</th>
-								@endif
-								</tr>
-							</thead>
-							<tbody>
-							@php
-								$total = 0;
-							@endphp
-								@foreach($data as $keys => $item)
-									<tr>
-										<td class="center">{{ ++$keys }}</td> 
-										<td class="center">{{ $item->name }}</td>
-										<td class="center">{{ $item->code }}</td>
-										<td class="center">{{ trans('translate.stel_rupiah') }}. {{ number_format($item->price, 0, '.', ',')}} </td>
-										<td class="center">{{ $item->qty }}</td>
-										<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. {{ number_format($item->price * $item->qty, 0, '.', ',') }}</td> 
-										<td class="center"><a href="{{ URL::to('/admin/downloadstelwatermark/'.$item->id) }}" target="_blank">{{ $item->attachment }}</a></td>
-										@if($is_super == '1' || $is_admin_mail == 'admin@mail.com')
-										<td class="center">
-											<div>
-												<a class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Destroy" data-toggle="modal" data-target="#myModal_delete_detail" onclick="document.getElementById('hide_stel_sales_detail_id').value = '{{ $item->id }}'"><em class="fa fa-trash"></em></a>
-											</div>
-										</td>
-										@endif
-									</tr>
-									@php
-										$total +=($item->price * $item->qty);
-									@endphp
-								@endforeach
-                            </tbody>
-                            <tfoot>
-								@php
-									$unique_code = ($price_total/1.1) - $total;
-								@endphp
-                            	<tr>
-                            		<td colspan="5" class="text-align-right"> {{ trans('translate.stel_unique_code') }}</td>
-                            		<td class="text-align-right">
-										{{ trans('translate.stel_rupiah') }}. {{ number_format($unique_code, 0, '.', ',') }}
-									</td>
-                            	</tr>
-                            	<tr>
-                            		<td colspan="5" class="text-align-right"> Sub Total</td>
-                            		<td class="text-align-right">
-										{{ trans('translate.stel_rupiah') }}. {{ number_format($total + $unique_code, 0, '.', ',') }}
-									</td>
-                            	</tr>
-                           		<tr>
-                            		<td colspan="5" class="text-align-right"> Tax</td>
-									<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. 
-										@php
-											$tax =  ($total + $unique_code) * (config("cart.tax")/100);
-										@endphp
-										{{ number_format($tax, 0, '.', ',') }}
-									</td>
-                            	</tr>
-                            	<tr style="font-weight: bold;">
-                            		<td colspan="5" class="text-align-right">Total</td>
-                            		<td class="text-align-right">
-										{{ trans('translate.stel_rupiah') }}. {{ number_format($price_total, 0, '.', ',') }}
-									</td>
-                            	</tr>
-                            </tfoot>
-						</table>
+				<div class="col-md-3">
+					<div class="form-group">
+						<label>Tanggal Sidang</label>
+						<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
+							<input type="text" name="date" class="form-control" value="{{ $data[0]->sidang->date }}" disabled/>
+						</p>
 					</div>
 				</div>
+				<div class="col-md-3"></div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="Audience">Audience :</label>
+						<textarea class="form-control" name="audience" id="audience" required disabled>{{ $data[0]->sidang->audience }}</textarea>
+					</div>
+				</div>
+		        <div class="col-md-12">
+					<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+						<caption>Device Table</caption>
+						<thead>
+							<tr>
+								<th class="center" scope="col">No</th> 
+								<th class="center" scope="col">Perusahaan</th> 
+								<th class="center" scope="col">Perangkat</th> 
+								<th class="center" scope="col">Merek</th>  
+								<th class="center" scope="col">Tipe</th>
+								<th class="center" scope="col">Kapasitas</th>
+								<th class="center" scope="col">Negara Pembuat</th> 
+								<th class="center" scope="col">Hasil Uji</th> 
+								<th class="center" scope="col">Keputusan</th> 
+								<th class="center" scope="col">Masa Berlaku</th>  
+								<th class="center" scope="col">Aksi</th> 
+							</tr>
+						</thead>
+						<tbody> 
+							@php $no = 1; @endphp
+							@if(count($data)>0)
+								@foreach($data as $keys => $item)
+									<input type="hidden" value="{{ $item->id }}" name="id[]">
+									<tr>
+										<td class="center">{{ $no }}</td>
+										<td class="center">{{ $item->examination->company->name }}</td>
+										<td class="center">{{ $item->examination->device->name }}</td>
+										<td class="center">{{ $item->examination->device->mark }}</td>
+										<td class="center">{{ $item->examination->device->model }}</td>
+										<td class="center">{{ $item->examination->device->capacity }}</td>
+										<td class="center">{{ $item->examination->device->manufactured_by }}</td>
+										<td class="center"> fromOTR </td>
+										<td class="center">
+											<select class="cs-select cs-skin-elastic" name="result[]" disabled>
+												<option value="0" @if ($item->result == 0) selected @endif>Choose</option>
+												<option value="1" @if ($item->result == 1) selected @endif>Lulus</option>
+												<option value="2" @if ($item->result == 2) selected @endif>Pending</option>
+												<option value="-1" @if ($item->result == -1) selected @endif>Tidak Lulus</option>
+											</select>
+										</td>
+										<td class="center">
+											<select class="cs-select cs-skin-elastic" name="valid_range[]" disabled>
+												<option value="0" @if ($item->valid_range == 0) selected @endif>Choose</option>
+												<option value="36" @if ($item->valid_range == 36) selected @endif>3 Tahun</option>
+												<option value="12" @if ($item->valid_range == 12) selected @endif>1 Tahun</option>
+												<option value="9" @if ($item->valid_range == 9) selected @endif>9 Bulan</option>
+												<option value="6" @if ($item->valid_range == 6) selected @endif>6 Bulan</option>
+											</select>
+										</td>
+										<td class="center"><a href="javascript:void(0)" class="collapsible">Detail</a></td>
+									</tr>
+									<tr class="content" style="display: none;">
+										<td colspan="11" class="center">
+											<table class="table table-bordered table-hover table-full-width dataTable no-footer" style="width: 100%;">
+												<thead>
+													<tr>
+														<th class="center" scope="col">No. SPK</th>
+														<th class="center" scope="col">No. Laporan</th>
+														<th class="center" scope="col">No. Seri</th>
+														<th class="center" scope="col">Referensi Uji</th>
+														<th class="center" scope="col">Tanggal Penerimaan</th>  
+														<th class="center" scope="col">Tanggal Mulai Uji</th>  
+														<th class="center" scope="col">Tanggal Selesai Uji</th>  
+														<th class="center" scope="col">Diuji Oleh</th>  
+														<th class="center" scope="col">Target Penyelesaian</th>  
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td class="center">{{ $item->examination->spk_code }}</td>
+														@php $no_lap = '-'; @endphp
+														@foreach($item->examination->media as $file)
+															@if($file->name == 'Laporan Uji')
+																@php $no_lap = $file->no; @endphp
+															@endif
+														@endforeach
+														<td class="center">{{ $no_lap }}</td>
+														<td class="center">{{ $item->examination->device->serial_number }}</td>
+														<td class="center">{{ $item->examination->device->test_reference }}</td>
+														@php $tgl_barang = '-'; @endphp
+														@foreach($item->examination->equipmentHistory as $barang)
+															@if($barang->location == 2)
+																@php $tgl_barang = $barang->action_date; @endphp
+															@endif
+														@endforeach
+														<td class="center">{{ $tgl_barang }}</td>
+														<td class="center">fromOTR</td>
+														<td class="center">fromOTR</td>
+														<td class="center">{{ $item->examination->examinationLab->name }}</td>
+														<td class="center">fromOTR</td>														
+													</tr> 
+												</tbody>
+											</table>
+										</td>
+									</tr>
+									<tr class="content" style="display: none;"><td colspan="11"></td></tr>
+								@php
+									$no++
+								@endphp
+								@endforeach
+							@else
+								<tr>
+									<td colspan=11 class="center">
+										Data Not Found
+									</td>
+								</tr>
+							@endif
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="Catatan">Catatan :</label>
+						<textarea class="form-control" name="catatan" id="catatan" rows=5 disabled>{{ $data[0]->sidang->catatan }}</textarea>
+					</div>
+				</div>
+
 				<div class="col-md-12">
-					<a href="{{URL::to('/admin/sales')}}">
-                    	<button type="button" class="btn btn-wide btn-red btn-squared pull-left" style="margin-right: 1%;">Kembali</button>
-                    </a>
-					@if($id_kuitansi != '')
-						@php
-							$id_kuitansi = preg_replace('/\\.[^.\\s]{3,4}$/', '', $id_kuitansi);
-						@endphp
-					<a href="{{ URL::to('/admin/downloadkuitansistel/'.$id_kuitansi) }}" target="_blank">
-                    	<button type="button" class="btn btn-wide btn-red btn-squared pull-right" style="margin-right: 1%;">Lihat Kuitansi</button>
-                    </a>
-					@endif
-					@if($faktur_file != '')
-					<a href="{{ URL::to('/admin/downloadfakturstel/'.$id_sales) }}" target="_blank">
-                    	<button type="button" class="btn btn-wide btn-red btn-squared pull-right" style="margin-right: 1%;">Lihat Faktur Pajak</button>
-                    </a>
-					@endif
-                </div>
+					<a style=" color:white !important;" href="{{ URL::to('/admin/sidang') }}">
+						<button type="button" class="btn btn-wide btn-red btn-squared pull-right" style="margin-right:10px;">
+						Kembali
+						</button>
+					</a>
+				</div>
 			</div>
 		</div>
-		<!-- end: RESPONSIVE TABLE -->
+		<!-- end: RESPONSIVE TABLE --> 
 	</div>
 </div>
 @endsection
 
 @section('content_js')
-<style>
-	.text-align-right{
-		text-align: right;
-	}
-</style>
 <script src={{ asset("vendor/maskedinput/jquery.maskedinput.min.js") }}></script>
 <script src={{ asset("vendor/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js") }}></script>
 <script src={{ asset("vendor/autosize/autosize.min.js") }}></script>
@@ -222,28 +197,22 @@
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
 <script src={{ asset("assets/js/form-elements.js") }}></script>
 <script type="text/javascript">
-	jQuery(document).ready(function() {
-		FormElements.init();
+	var coll = document.getElementsByClassName("collapsible");
+	var i;
 
-		$('#myModal_delete_detail').on('shown.bs.modal', function () {
-		    $('#keterangan').focus();
-		});
-
-		$('#btn-modal-delete_detail').click(function () {
-		 	var baseUrl = "{{URL::to('/')}}";
-			var keterangan = document.getElementById('keterangan').value;
-			var stel_sales_detail_id = document.getElementById('hide_stel_sales_detail_id').value;
-			if(keterangan == ''){
-				$('#myModal_delete_detail').modal('show');
-				return false;
-			}else{
-				$('#myModal_delete_detail').modal('hide');
-				if (confirm('Are you sure want to delete this data?')) {
-				    document.getElementById("overlay").style.display="inherit";	
-				 	document.location.href = baseUrl+'/admin/sales/'+stel_sales_detail_id+'/'+encodeURIComponent(encodeURIComponent(keterangan))+'/deleteProduct';
-				}
-			}
-		});
-	});
+	for (i = 0; i < coll.length; i++) {
+	  coll[i].addEventListener("click", function() {
+	    this.classList.toggle("active");
+	    var content = $(this).parents().parents().next()[0];
+	    var content2 = $(this).parents().parents().next().next()[0];
+	    if (content.style.display == "") {
+	      content.style.display = "none";
+	      content2.style.display = "none";
+	    } else {
+	      content.style.display = "";
+	      content2.style.display = "";
+	    }
+	  });
+	}
 </script>
 @endsection

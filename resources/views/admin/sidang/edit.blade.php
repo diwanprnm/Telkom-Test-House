@@ -179,8 +179,8 @@
 				</div>
 
 				<div class="col-md-12">
-					<input type="hidden" id="btn-save" name="btn-save">
-					<button type="submit" class="btn btn-wide btn-green btn-squared pull-right" onclick='$("#btn-save").val("1");'>
+					<input type="hidden" id="status" name="status">
+					<button type="submit" class="btn btn-wide btn-green btn-squared pull-right" onclick='$("#status").val("DONE");'>
 						Selesai Sidang
 					</button>
 					<a style=" color:white !important;" href="{{ URL::to('/admin/sidang') }}">
@@ -188,7 +188,7 @@
 						Batal
 						</button>
 					</a>
-					<button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
+					<button type="submit" class="btn btn-wide btn-green btn-squared pull-left" onclick='$("#status").val("ON GOING");'>
 						Simpan
 					</button>
 				</div>
@@ -232,18 +232,6 @@
 
 	jQuery(document).ready(function() {
 		FormElements.init();
-	});
-
-	$(':button').click(function() {
-		if (this.id == 'Button_1') {
-			$("#hidden_field").val("LIST_ID_1");    
-		}
-		else if (this.id == 'Button_2') {
-			$("#hidden_field").val("LIST_ID_2");
-		}
-		else if (this.id == 'Button_3') {
-			$("#hidden_field").val("LIST_ID_3");
-		}
 	});
 </script>
 @endsection

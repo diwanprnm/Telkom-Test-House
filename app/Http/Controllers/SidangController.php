@@ -215,11 +215,18 @@ class SidangController extends Controller
         }
     } 
 
-    public function show($id)
+    public function show(Request $request, $sidang_id)
     {
-        return view('admin.sales.detail')
-            ->with('data', null)
-        ;
+        if(Auth::user()->id == 1 || Auth::user()->email == 'admin@mail.com'){
+            //initial var
+            $message = null;
+            $data = $this->getData($request, $sidang_id)['data']->get();
+            return view('admin.sidang.detail')
+                ->with('data', $data)
+            ;
+        }else{
+            return view('errors.401');
+        }
     }   
 
     public function excel(Request $request) 
@@ -305,22 +312,67 @@ class SidangController extends Controller
 
     public function update(Request $request, $id)
     {
-        dd($request->all());
         $currentUser = Auth::user();
-        $Sidang = Sidang::find($id);
         $notificationService = new NotificationService();
         $logService = new LogService;
 
-        $oldStel = clone $Sidang;  
-		$notifUploadSTEL = 0;
+        $jml_comply = 0;$jml_not_comply = 0;$jml_pending = 0;
+        for($i = 0; $i < count($request->input('id')); $i++){
+            $sidang_detail = Sidang_detail::find($request->input('id')[$i]);
+            $sidang_detail->result = $request->input('result')[$i];
+            $sidang_detail->valid_range = $request->input('valid_range')[$i];
+            $sidang_detail->valid_from = $request->input('date');
+            $sidang_detail->valid_thru = date('Y-m-d', strtotime("+".$sidang_detail->valid_range." months", strtotime($sidang_detail->valid_from)));
+            $sidang_detail->save();
+
+            switch ($sidang_detail->result) {
+                case 1:
+                    $jml_comply++;
+                    break;
+                case -1:
+                    $jml_not_comply++;
+                    break;
+                case 2:
+                    $jml_pending++;
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+        }
+
+        $sidang = Sidang::find($id);
+        $oldData = clone $sidang;
+
+        $sidang->date = $request->input('date');
+        $sidang->audience = $request->input('audience');
+        $sidang->jml_comply = $jml_comply;
+        $sidang->jml_not_comply = $jml_not_comply;
+        $sidang->jml_pending = $jml_pending;
+        $sidang->status = $request->input('status');
+        $sidang->catatan = $request->input('catatan');
         
         try{
-            $STELSales->save();
-            
+            $sidang->save();
+            $sidang->status = 'DONE' ? $this->updateExamination($sidang->id) : '';
+            $logService->createLog($sidang->status = 'DONE' ? 'Update Sidang QA' : 'Selesai Sidang QA', 'Sidang QA',$oldData);
             return redirect(self::ADMIN_SIDANG);
-        } catch(Exception $e){ return redirect(self::ADMIN_SIDANG.'/'.$STELSales->id.'/edit')->with(self::ERROR, 'Save failed');
-        }
- 
+        } catch(Exception $e){ return redirect(self::ADMIN_SIDANG.'/'.$sidang->id.'/edit')->with(self::ERROR, 'Save failed');
+        } 
+    }
+
+    public function updateExamination($sidang_id){
+        // update to Examination -> qa_passed (sidang_detail.result), qa_date (sidang.date), certificate_date (sidang.date)
+        // generate Sertifikat() -> exam_attach
+        // update Attachment -> name ("Sertifikat"), link (exam_attach.attachment), no (exam_attach.no)
+        // update to Device ->
+        // certificate (exam_attach.attachment), 
+        // cert_valid_from (sidang_detail.valid_from), 
+        // cert_valid_thru (sidang_detail.valid_thru), 
+        // cert_number (exam_attach.no)
+
+        // lakukan seolah2 Step Sidang QA - Step Penerbitan Sertifikat Completed
     }
 
     public function destroy($id, $reasonOfDeletion){

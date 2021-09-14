@@ -205,10 +205,17 @@
 											<td class="center">
 												{{ $item->status }}
 											</td>
-											@if($item->status == 'DRAFT' || $item->status == 'ON GOING')
+											@if($item->status == 'DRAFT')
 											<td class="center">
 												<div>
 													<a href="{{URL::to('admin/sidang/create/'.$item->id)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
+												</div>
+											</td>
+											@endif
+											@if($item->status == 'DONE')
+											<td class="center">
+												<div>
+													<a href="{{URL::to('admin/sidang/'.$item->id)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Detail"><em class="fa fa-eye"></em></a>
 												</div>
 											</td>
 											@endif
