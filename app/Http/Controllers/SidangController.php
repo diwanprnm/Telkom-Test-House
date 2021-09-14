@@ -363,16 +363,20 @@ class SidangController extends Controller
     }
 
     public function updateExamination($sidang_id){
-        // update to Examination -> qa_passed (sidang_detail.result), qa_date (sidang.date), certificate_date (sidang.date)
-        // generate Sertifikat() -> exam_attach
-        // update Attachment -> name ("Sertifikat"), link (exam_attach.attachment), no (exam_attach.no)
-        // update to Device ->
-        // certificate (exam_attach.attachment), 
-        // cert_valid_from (sidang_detail.valid_from), 
-        // cert_valid_thru (sidang_detail.valid_thru), 
-        // cert_number (exam_attach.no)
+        // 1. update to Examination -> qa_passed (sidang_detail.result), qa_date (sidang.date), certificate_date (sidang.date)
+        // 2. generate Sertifikat() -> exam_attach
+        // 3. update Attachment -> name ("Sertifikat"), link (exam_attach.attachment), no (exam_attach.no)
+        // 4. update to Device ->
+        //  a. certificate (exam_attach.attachment), 
+        //  b. cert_valid_from (sidang_detail.valid_from), 
+        //  c. cert_valid_thru (sidang_detail.valid_thru), 
+        //  d. cert_number (exam_attach.no)
 
-        // lakukan seolah2 Step Sidang QA - Step Penerbitan Sertifikat Completed
+        // 5. lakukan seolah2 Step Sidang QA - Step Penerbitan Sertifikat Completed
+        //  a. qa_status & certificate_status = 1
+        //  b. upload ke minio
+        //  c. delivered ke digimon
+        //  d. send_email
     }
 
     public function destroy($id, $reasonOfDeletion){
