@@ -127,6 +127,12 @@ class PDFService
 		return $cetakTiketChamber->makePDF($data, new PDFMCCetakTiketChamber('L','mm',['80', '210']));
 	}
 
+	public function cetakSertifikatQA($data)
+	{
+		$cetakSertifikatQA = new CetakSertifikatQA();
+		return $cetakSertifikatQA->makePDF($data, new PDFMCCetakSertifikatQA());
+	}
+
 	private function convertDataPermohonan($data){
 		return array([
 			'nama_pemohon' => $data['namaPemohon'],

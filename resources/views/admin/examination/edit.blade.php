@@ -316,8 +316,11 @@
 											$data->qa_status == '1' && $data->certificate_status != '1')
 												<a href="#step-10" class="done wait">
 											@elseif($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1' && $data->examination_status == '1' && $data->resume_status == '1' && $data->qa_status == '1' &&
-											$data->certificate_status == '1')
+											$data->certificate_status == '1' && $data->qa_passed == 1)
 												<a href="#step-10" class="done">
+											@elseif($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1' && $data->examination_status == '1' && $data->resume_status == '1' && $data->qa_status == '1' &&
+											$data->certificate_status == '1' && $data->qa_passed == -1)
+												<a href="#step-10" class="done done-failed">
 											@else
 												<a href="#step-10">
 											@endif

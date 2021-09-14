@@ -36,9 +36,10 @@ use Storage;
 // UUID
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
-
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
+use Carbon\Carbon;
 use App\Events\Notification;
 use App\AdminRole;
 
@@ -844,6 +845,8 @@ class ExaminationController extends Controller
             $passed = $request->input('passed');
             $exam->qa_status = $status;
             $exam->qa_passed = $passed;
+			$name_file = null;
+			$device_status = -1;
             if($exam->qa_passed == 1){  
 
             	if(strpos($exam->keterangan, self::QA_DATE) !== false){
@@ -861,6 +864,24 @@ class ExaminationController extends Controller
 			        }
             	}
 
+				// TODO DANIEL
+				$pdfGenerated = $this->genereateSertifikat($exam->id, 'getStream');
+				$fileService = new FileService();
+				$fileProperties = array(
+					'path' => self::MEDIA_DEVICE_LOC.$exam->device_id."/",
+					'prefix' => "sertifikat_",
+					'fileName' => $pdfGenerated['fileName'],
+				);
+				$fileService->uploadFromStream($pdfGenerated['stream'], $fileProperties);
+				$name_file = $fileService->getFileName();
+				$device_status = 1;
+
+				/**
+				 * TEMPAT KIRIM KE TPN TIDAK LULUS
+				 * Streamnya = $pdfGenerated['stream']
+				 * todo @arif
+				 */
+
             	$data= array( 
 	                "from"=>self::ADMIN,
 	                "to"=>$exam->created_by,
@@ -873,6 +894,7 @@ class ExaminationController extends Controller
 
 				$notification_id = $notificationService->make($data);
 			    $data['id'] = $notification_id;
+				$examinationService->sendEmailNotification($exam,$device, "emails.sertifikat", "Penerbitan Sertifikat QA [".$device->name." | ".$device->mark." | ".$device->model." | ".$device->capacity."]");
 			    // event(new Notification($data));
 
             }else{ 
@@ -891,9 +913,21 @@ class ExaminationController extends Controller
 				
 				$notification_id = $notificationService->make($data);
 			    $data['id'] = $notification_id;
+				/**
+				 * TEMPAT EMAIL TIDAK LULUS
+				 * Emailnya kalau beda silahkan di buat sendiri dibawah 🤣
+				 * todo @arif
+				 */
+				$examinationService->sendEmailNotification($exam,$device, "emails.sertifikat", "Penerbitan Sertifikat QA [".$device->name." | ".$device->mark." | ".$device->model." | ".$device->capacity."]");
 			    // event(new Notification($data));
-
             }
+
+			// Save device ceritificate
+			$device = Device::findOrFail($exam->device_id);
+			$device->certificate = $name_file;
+			$device->status = $device_status;
+			$device->save();
+
            
 			if($status == -1){
 				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::SIDANG_QA,$request->input(self::KETERANGAN));
@@ -2336,6 +2370,66 @@ class ExaminationController extends Controller
         }
             return redirect(self::ADMIN_EXAMINATION_LOC.$examination_attachment->examination_id.self::EDIT_LOC);
 
+	}
+
+	public function genereateSertifikat($id = 'ef83abad-aa66-4909-befc-ebe24863045a', $method = '')
+	{
+		$examination = Examination::where('id', $id)
+			->with(self::COMPANY)
+			->with(self::DEVICE)
+			->with(self::MEDIA)
+			->first()
+		;
+
+		$month_list_lang_id = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'November', 'Desember'];
+		$signDate = date('d', strtotime($examination->qa_date)).' '.$month_list_lang_id[((int)date('m', strtotime($examination->qa_date)))-1].' '.date('Y', strtotime($examination->qa_date));
+		$start_certificate_period = Carbon::parse($examination->device->valid_from);
+		$end_certificate_period = Carbon::parse($examination->device->valid_thru);
+		$interval = round($start_certificate_period->diffInDays($end_certificate_period)/30);
+		if ($interval % 12 == 0){
+			$interval_year = (int)$interval/12;
+			$period_id = "$interval_year tahun";
+			$period_en = "$interval_year year".($interval_year > 1 ? 's': '');
+		}else{
+			$period_id = "$interval bulan";
+			$period_en = "$interval month".($interval > 1 ? 's': '');
+		}
+		$signeeData = \App\GeneralSetting::whereIn('code', ['sm_urel', 'poh_sm_urel'])->where('is_active', '=', 1)->first();
+		$certificateNumber = strval($examination->device->cert_number);
+		$telkomLogoSquarePath = '/app/Services/PDF/images/telkom-logo-square.png';
+		$qrCodeLink = url('/digitalSign/21003-132'); //todo daniel digitalSign page
+
+		//dd($certificateNumber);
+
+		$PDFData = [
+			'documentNumber' => $examination->device->cert_number,
+			'companyName' => $examination->company->name,
+			'brand' => $examination->device->mark,
+			'deviceName' => $examination->device->name,
+			'deviceType' => $examination->device->model,
+			'deviceCapacity' => $examination->device->capacity,
+			'deviceSerialNumber' => $examination->device->serial_number,
+			'examinationNumber' => \App\ExaminationAttach::where('examination_id', $id)->where('name', 'Laporan Uji')->first()->no,
+			'examinationReference' => $examination->device->test_reference,
+			'signDate' => $signDate,
+			'period_id' => $period_id,
+			'period_en' => $period_en,
+			'signee' => $signeeData->value,
+			'isSigneePoh' => $signeeData->code !== 'sm_urel',
+			'signImagePath' => Storage::disk('minio')->url("generalsettings/$signeeData->id/$signeeData->attachment"),
+			'method' => $method,
+			'qrCode' => QrCode::format('png')->size(500)->merge($telkomLogoSquarePath)->errorCorrection('M')->generate($qrCodeLink)
+		];
+		$PDF = new \App\Services\PDF\PDFService();
+		
+		if ($method == 'getStream'){
+			return [
+				'stream' => $PDF->cetakSertifikatQA($PDFData),
+				'fileName' => str_replace("/","",$certificateNumber).'.pdf'
+			];
+		}else{
+			return $PDF->cetakSertifikatQA($PDFData);
+		}
 	}
 
 }

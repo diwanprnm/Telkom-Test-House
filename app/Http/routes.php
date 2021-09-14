@@ -411,3 +411,5 @@ Route::resource('/chamber', 'ChamberController');
 Route::get('/cetakTiketChamber/{id}', 'ChamberController@cetakTiket');
 Route::get('/downloadkuitansichamber/{id}', 'ChamberController@downloadkuitansi');
 Route::get('/downloadfakturchamber/{id}', 'ChamberController@downloadfaktur');
+Route::get('/test', 'TestController@index'); //todo daniel delete
+Route::get('/test2', 'ExaminationController@genereateSertifikat'); //todo daniel delete
