@@ -74,13 +74,7 @@
 											<div class="col_full">
 												<label for="register-form-repassword">{{ trans('translate.profile_company') }} :</label>
 												<select class="form-control" id="cmb-perusahaan" name="cmb-perusahaan" disabled>
-													@foreach($data_company as $item)
-														@php if($item->id == $data['company_id']){@endphp
-															<option value="{{ $item->id }}" selected>{{ $item->name }}</option>
-														@php }else{@endphp
-															<option value="{{ $item->id }}">{{ $item->name }}</option>
-														@php }@endphp
-													@endforeach
+													<option value="{{ $myComp->id }}">{{ $myComp->name }}</option>
 												</select>
 											</div> 
 
