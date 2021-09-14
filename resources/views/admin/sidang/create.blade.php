@@ -135,7 +135,7 @@
 													</thead>
 													<tbody>
 														<tr>
-															<td class="center">{{ $item->spk_number }}</td>
+															<td class="center">{{ $item->spk_code }}</td>
 															@php $no_lap = '-'; @endphp
 															@foreach($item->media as $file)
 																@if($file->name == 'Laporan Uji')
@@ -189,7 +189,15 @@
 					<button type="submit" class="btn btn-wide btn-green btn-squared pull-right" id="btn-submit-perangkat">
 						Tambahkan ke draft (0)
 					</button>
-					<a style=" color:white !important;" href="{{URL::to('/admin/sidang')}}">
+					@php
+						$url = URL::to('/admin/sidang');
+						if($sidang_id){
+							if($data_draft[0]->sidang->status == 'PRATINJAU'){
+								$url = URL::to('/admin/sidang/delete/'.$sidang_id.'/PRATINJAU');
+							}
+						}
+					@endphp
+					<a style=" color:white !important;" href="{{ $url }}">
 						<button type="button" class="btn btn-wide btn-red btn-squared pull-right" style="margin-right:10px;">
 						Batal
 						</button>
@@ -252,7 +260,7 @@
 													</thead>
 													<tbody>
 														<tr>
-															<td class="center">{{ $item->spk_number }}</td>
+															<td class="center">{{ $item->spk_code }}</td>
 															@php $no_lap = '-'; @endphp
 															@foreach($item->media as $file)
 																@if($file->name == 'Laporan Uji')
@@ -306,7 +314,15 @@
 					<button type="submit" class="btn btn-wide btn-green btn-squared pull-right" id="btn-submit-pending">
 						Tambahkan ke draft (0)
 					</button>
-					<a style=" color:white !important;" href="{{URL::to('/admin/sidang')}}">
+					@php
+						$url = URL::to('/admin/sidang');
+						if($sidang_id){
+							if($data_draft[0]->sidang->status == 'PRATINJAU'){
+								$url = URL::to('/admin/sidang/delete/'.$sidang_id.'/PRATINJAU');
+							}
+						}
+					@endphp
+					<a style=" color:white !important;" href="{{ $url }}">
 						<button type="button" class="btn btn-wide btn-red btn-squared pull-right" style="margin-right:10px;">
 						Batal
 						</button>
@@ -389,7 +405,7 @@
 													</thead>
 													<tbody>
 														<tr>
-															<td class="center">{{ $item->examination->spk_number }}</td>
+															<td class="center">{{ $item->examination->spk_code }}</td>
 															@php $no_lap = '-'; @endphp
 															@foreach($item->examination->media as $file)
 																@if($file->name == 'Laporan Uji')
@@ -443,7 +459,15 @@
 					<button type="submit" class="btn btn-wide btn-green btn-squared pull-right" id="btn-submit-draft">
 						Buat draft
 					</button>
-					<a style=" color:white !important;" href="{{URL::to('/admin/sidang')}}">
+					@php
+						$url = URL::to('/admin/sidang');
+						if($sidang_id){
+							if($data_draft[0]->sidang->status == 'PRATINJAU'){
+								$url = URL::to('/admin/sidang/delete/'.$sidang_id.'/PRATINJAU');
+							}
+						}
+					@endphp
+					<a style=" color:white !important;" href="{{ $url }}">
 						<button type="button" class="btn btn-wide btn-red btn-squared pull-right" style="margin-right:10px;">
 						Batal
 						</button>
@@ -511,6 +535,8 @@
 
 			$(this).addClass('current');
 			$("#"+tab_id).addClass('current');
+
+			$("#hidden_tab").val(tab_id);
 		});
 	});
 </script>

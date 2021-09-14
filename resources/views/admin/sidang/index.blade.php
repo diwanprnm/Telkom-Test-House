@@ -101,14 +101,14 @@
 			@endif
 
 			<ul class="tabs">
-				<li class="btn tab-daftar-sidang" data-tab="tab-daftar-sidang">Daftar Sidang QA</li>
+				<li class="btn tab-sidang" data-tab="tab-sidang">Daftar Sidang QA</li>
 				<li class="btn tab-perangkat" data-tab="tab-perangkat">Perangkat Belum Sidang QA</li>
 				<li class="btn tab-pending" data-tab="tab-pending">Perangkat Tertunda</li>
 			</ul>
 
 			<input type="hidden" name="hidden_tab" id="hidden_tab" value="{{ $tab }}">
 			
-			<div id="tab-daftar-sidang" class="row tab-content">
+			<div id="tab-sidang" class="row tab-content">
 		        <div class="col-md-6">
 		        <a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><em class="ti-filter"></em> Filter</a>
 					<!-- <button id="excel" type="submit" class="btn btn-info pull-left">
@@ -188,7 +188,7 @@
 									<th class="center" scope="col">Jumlah Tidak Lulus</th>
 									<th class="center" scope="col">Jumlah Tunda Hasil</th>
 									<th class="center" scope="col">Status</th>
-									<th class="center" colspan="2" scope="colgroup">Aksi</th>  
+									<th class="center" colspan="4" scope="colgroup">Aksi</th>  
 								</tr>
 							</thead>
 							<tbody> 
@@ -199,13 +199,22 @@
 											<td class="center">{{ $no+(($data_sidang->currentPage()-1)*$data_sidang->perPage()) }}</td>
 											<td class="center">{{ $item->date }}</td>
 											<td class="center">{{ $item->jml_perangkat }}</td>
-											<td class="center">{{ $item->jml_comply }}</td>
-											<td class="center">{{ $item->jml_not_comply }}</td>
-											<td class="center">{{ $item->jml_pending }}</td>
-											<td class="center">{{ $item->status }}</td>
+											<td class="center">{{ $item->status == 'DRAFT' ? '-' : $item->jml_comply }}</td>
+											<td class="center">{{ $item->status == 'DRAFT' ? '-' : $item->jml_not_comply }}</td>
+											<td class="center">{{ $item->status == 'DRAFT' ? '-' : $item->jml_pending }}</td>
+											<td class="center">
+												{{ $item->status }}
+											</td>
+											@if($item->status == 'DRAFT' || $item->status == 'ON GOING')
 											<td class="center">
 												<div>
-													<a href="{{URL::to('admin/sidang/'.$item->id.'/edit')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
+													<a href="{{URL::to('admin/sidang/create/'.$item->id)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
+												</div>
+											</td>
+											@endif
+											<td class="center">
+												<div>
+													<a href="{{URL::to('admin/sidang/'.$item->id.'/print')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Print"><em class="fa fa-file"></em></a>
 												</div>
 											</td>
 											<td class="center">
@@ -213,6 +222,14 @@
 													<a class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Destroy" data-sidang-id="{{ $item->id }}"  data-toggle="modal" data-target="#myModal_delete_detail" onclick="document.getElementById('btn-modal-delete_detail').setAttribute('data-delete-id', '{{ $item->id }}')" ><em class="fa fa-trash"></em></a>
 												</div>
 											</td>
+											@php $icon = $item->status == 'DRAFT' ? 'fa-play' : 'fa-spinner fa-spin'; @endphp
+											@if($item->status == 'DRAFT' || $item->status == 'ON GOING')
+											<td class="center">
+												<div>
+													<a href="{{URL::to('admin/sidang/'.$item->id.'/edit?tag='.$icon)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Play"><em class="fa {{ $icon }}"></em></a>
+												</div>
+											</td>
+											@endif
 										</tr>
 									@php
 										$no++
@@ -231,7 +248,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-								{{ $data_sidang->appends(array('before_date' => $before_date,'after_date' => $after_date, 'tab' => 'tab-daftar-sidang'))->links() }}
+								{{ $data_sidang->appends(array('before_date' => $before_date,'after_date' => $after_date, 'tab' => 'tab-sidang'))->links() }}
 							</div>
 						</div>
 					</div>
@@ -306,7 +323,7 @@
 													</thead>
 													<tbody>
 														<tr>
-															<td class="center">{{ $item->spk_number }}</td>
+															<td class="center">{{ $item->spk_code }}</td>
 															@php $no_lap = '-'; @endphp
 															@foreach($item->media as $file)
 																@if($file->name == 'Laporan Uji')
@@ -425,7 +442,7 @@
 													</thead>
 													<tbody>
 														<tr>
-															<td class="center">{{ $item->spk_number }}</td>
+															<td class="center">{{ $item->spk_code }}</td>
 															@php $no_lap = '-'; @endphp
 															@foreach($item->media as $file)
 																@if($file->name == 'Laporan Uji')
@@ -502,8 +519,8 @@
 		$("."+tab_id).addClass('current');
 		$("#"+tab_id).addClass('current');
 	}else{
-		$(".tab-daftar-sidang").addClass('current');
-		$("#tab-daftar-sidang").addClass('current');
+		$(".tab-sidang").addClass('current');
+		$("#tab-sidang").addClass('current');
 	}
 
 	var coll = document.getElementsByClassName("collapsible");

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Sidang_detail extends Model
 {
     protected $table = "sidang_detail";
-    public $incrementing = true;
+    public $incrementing = false;
     public $timestamps = true;
     public $guarded = [];
 
