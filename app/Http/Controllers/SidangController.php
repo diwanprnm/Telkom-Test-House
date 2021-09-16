@@ -458,6 +458,33 @@ class SidangController extends Controller
         }
     }
 
+    public function resetExamination($sidang_id){ // DELETE SOON
+        $data = Sidang_detail::with('examination')
+            ->where('sidang_id', $sidang_id)
+            ->get()
+        ;
+        foreach($data as $item){
+            $exam = Examination::find($item->examination_id);
+            $exam->qa_passed = 0;
+            $exam->qa_date = NULL;
+            $exam->certificate_date = NULL;
+            $exam->qa_status = 0;
+            $exam->certificate_status = 0;
+            $exam->save();
+        
+            $device = Device::find($item->examination->device_id);
+            $device->certificate = NULL;
+            $device->valid_from = NULL;
+            $device->valid_thru = NULL;
+            $device->cert_number = NULL;
+            $device->status = 0;
+            $device->save();
+        }
+
+        Session::flash('message', 'Successfully Reset Data');
+        return redirect('/admin/sidang/');
+    }
+
     private function generateNoSertifikat(){
         $thisYear = date('Y');
 		$where = "SUBSTR(cert_number,'17',4) = '".$thisYear."'";

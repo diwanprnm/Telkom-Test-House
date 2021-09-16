@@ -232,6 +232,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::get('sidang/create/{sidang_id}', 'SidangController@create');
 	Route::get('/sidang/delete/{id}/{reasonOfDeletion}', 'SidangController@destroy');
 	Route::get('sidang/updateExamination/{sidang_id}', 'SidangController@updateExamination');
+	Route::get('sidang/resetExamination/{sidang_id}', 'SidangController@resetExamination');
 
 });
 	Route::get('/uploadCertification', 'UploadProductionController@uploadCertification');
