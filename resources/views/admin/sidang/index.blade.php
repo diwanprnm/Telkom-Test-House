@@ -188,7 +188,7 @@
 									<th class="center" scope="col">Jumlah Tidak Lulus</th>
 									<th class="center" scope="col">Jumlah Tunda Hasil</th>
 									<th class="center" scope="col">Status</th>
-									<th class="center" colspan="4" scope="colgroup">Aksi</th>  
+									<th class="center" colspan="3" scope="colgroup">Aksi</th>  
 								</tr>
 							</thead>
 							<tbody> 
@@ -205,6 +205,13 @@
 											<td class="center">
 												{{ $item->status }}
 											</td>
+											@if($item->status == 'DONE')
+											<td class="center">
+												<div>
+													<a href="{{URL::to('admin/sidang/'.$item->id)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Detail"><em class="fa fa-eye"></em></a>
+												</div>
+											</td>
+											@endif
 											@if($item->status == 'DRAFT')
 											<td class="center">
 												<div>
@@ -215,25 +222,22 @@
 											@if($item->status == 'DONE')
 											<td class="center">
 												<div>
-													<a href="{{URL::to('admin/sidang/'.$item->id)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Detail"><em class="fa fa-eye"></em></a>
-												</div>
-											</td>
-											@endif
-											<td class="center">
-												<div>
 													<a href="{{URL::to('admin/sidang/'.$item->id.'/print')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Print"><em class="fa fa-file"></em></a>
 												</div>
 											</td>
+											@endif
+											@if($item->status == 'DRAFT' || $item->status == 'DONE')
 											<td class="center">
 												<div>
 													<a class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Destroy" data-sidang-id="{{ $item->id }}"  data-toggle="modal" data-target="#myModal_delete_detail" onclick="document.getElementById('btn-modal-delete_detail').setAttribute('data-delete-id', '{{ $item->id }}')" ><em class="fa fa-trash"></em></a>
 												</div>
 											</td>
-											@php $icon = $item->status == 'DRAFT' ? 'fa-play' : 'fa-spinner fa-spin'; @endphp
+											@endif
+											@php $icon = $item->status == 'DRAFT' ? 'fa-play' : 'fa-eject fa-rotate-90'; @endphp
 											@if($item->status == 'DRAFT' || $item->status == 'ON GOING')
 											<td class="center">
 												<div>
-													<a href="{{URL::to('admin/sidang/'.$item->id.'/edit?tag='.$icon)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Play"><em class="fa {{ $icon }}"></em></a>
+													<a href="{{URL::to('admin/sidang/'.$item->id.'/edit?tag='.$item->status)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Play"><em class="fa {{ $icon }}"></em></a>
 												</div>
 											</td>
 											@endif
@@ -310,7 +314,7 @@
 											<td class="center">{{ $item->device->manufactured_by }}</td>
 											<td class="center"> fromOTR </td>
 											<td class="center">{{ $item->company->qs_certificate_date > date('Y-m-d') ? 'SM Eligible' : 'SM Not Eligible' }}</td>
-											<td class="center"><a href="javascript:void(0)" class="collapsible">Detail</a></td>
+											<td class="center"><a href="javascript:void(0)" class="collapsible"><em class="fa fa-eye"></em></a></td>
 										</tr>
 										<tr class="content" style="display: none;">
 											<td colspan="10" class="center">
@@ -429,7 +433,7 @@
 											<td class="center">{{ $item->device->manufactured_by }}</td>
 											<td class="center"> fromOTR </td>
 											<td class="center">{{ $item->company->qs_certificate_date > date('Y-m-d') ? 'SM Eligible' : 'SM Not Eligible' }}</td>
-											<td class="center"><a href="javascript:void(0)" class="collapsible">Detail</a></td>
+											<td class="center"><a href="javascript:void(0)" class="collapsible"><em class="fa fa-eye"></em></a></td>
 										</tr>
 										<tr class="content" style="display: none;">
 											<td colspan="10" class="center">

@@ -69,7 +69,7 @@
 								<th class="center" scope="col">Hasil Uji</th> 
 								<th class="center" scope="col">Keputusan</th> 
 								<th class="center" scope="col">Masa Berlaku</th>  
-								<th class="center" scope="col">Aksi</th> 
+								<th class="center" colspan="2" scope="colgroup">Aksi</th> 
 							</tr>
 						</thead>
 						<tbody> 
@@ -103,10 +103,20 @@
 												<option value="6" @if ($item->valid_range == 6) selected @endif>6 Bulan</option>
 											</select>
 										</td>
-										<td class="center"><a href="javascript:void(0)" class="collapsible">Detail</a></td>
+										<td class="center">
+											<div>
+												<textarea class="content-catatan" name="catatan[]" style="display: none;" placeholder="Catatan ..." autofocus disabled>{{ $item->catatan }}</textarea>
+												<a href="javascript:void(0)" class="collapsible-catatan pull-right"><em class="fa fa-file-o"></em></a>
+											</div>
+										</td>
+										<td class="center">
+											<div>
+												<a href="javascript:void(0)" class="collapsible"><em class="fa fa-eye"></em></a>
+											</div>
+										</td>
 									</tr>
 									<tr class="content" style="display: none;">
-										<td colspan="11" class="center">
+										<td colspan="12" class="center">
 											<table class="table table-bordered table-hover table-full-width dataTable no-footer" style="width: 100%;">
 												<thead>
 													<tr>
@@ -149,14 +159,14 @@
 											</table>
 										</td>
 									</tr>
-									<tr class="content" style="display: none;"><td colspan="11"></td></tr>
+									<tr class="content" style="display: none;"><td colspan="12"></td></tr>
 								@php
 									$no++
 								@endphp
 								@endforeach
 							@else
 								<tr>
-									<td colspan=11 class="center">
+									<td colspan=12 class="center">
 										Data Not Found
 									</td>
 								</tr>
@@ -164,16 +174,10 @@
 						</tbody>
 					</table>
 				</div>
-				<div class="col-md-6">
-					<div class="form-group">
-						<label for="Catatan">Catatan :</label>
-						<textarea class="form-control" name="catatan" id="catatan" rows=5 disabled>{{ $data[0]->sidang->catatan }}</textarea>
-					</div>
-				</div>
-
+				
 				<div class="col-md-12">
 					<a style=" color:white !important;" href="{{ URL::to('/admin/sidang') }}">
-						<button type="button" class="btn btn-wide btn-red btn-squared pull-right" style="margin-right:10px;">
+						<button type="button" class="btn btn-wide btn-red btn-squared pull-right">
 						Kembali
 						</button>
 					</a>
@@ -211,6 +215,21 @@
 	    } else {
 	      content.style.display = "";
 	      content2.style.display = "";
+	    }
+	  });
+	}
+
+	var coll_catatan = document.getElementsByClassName("collapsible-catatan");
+	var i;
+
+	for (i = 0; i < coll_catatan.length; i++) {
+		coll_catatan[i].addEventListener("click", function() {
+	    this.classList.toggle("active");
+	    var content = $(this).prev()[0];
+		if (content.style.display == "") {
+	      content.style.display = "none";
+	    } else {
+	      content.style.display = "";
 	    }
 	  });
 	}

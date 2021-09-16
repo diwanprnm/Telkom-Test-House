@@ -231,6 +231,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::resource('/sidang', 'SidangController');
 	Route::get('sidang/create/{sidang_id}', 'SidangController@create');
 	Route::get('/sidang/delete/{id}/{reasonOfDeletion}', 'SidangController@destroy');
+	Route::get('sidang/updateExamination/{sidang_id}', 'SidangController@updateExamination');
 
 });
 	Route::get('/uploadCertification', 'UploadProductionController@uploadCertification');

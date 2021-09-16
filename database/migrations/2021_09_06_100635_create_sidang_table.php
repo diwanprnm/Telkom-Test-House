@@ -21,7 +21,6 @@ class CreateSidangTable extends Migration
             $table->integer('jml_not_comply')->default(0);
             $table->integer('jml_pending')->default(0);
             $table->enum('status', ['PRATINJAU', 'DRAFT', 'ON GOING', 'DONE'])->default('DRAFT');
-            $table->text('catatan')->nullable();
             
             $table->uuid('created_by');
             $table->uuid('updated_by');

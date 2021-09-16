@@ -21,7 +21,8 @@ class CreateSidangDetailTable extends Migration
             $table->date('valid_from')->nullable();
             $table->date('valid_thru')->nullable();
             $table->integer('valid_range')->default(36);
-
+            $table->text('catatan')->nullable();
+            
             $table->uuid('created_by');
             $table->uuid('updated_by');
             $table->timestamps();

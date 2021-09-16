@@ -9,6 +9,8 @@ use App\Http\Requests;
 use App\Sidang;
 use App\Sidang_detail;
 use App\Examination;
+use App\ExaminationAttach;
+use App\Device;
 use App\User;
 
 use App\Services\Querys\QueryFilter;
@@ -31,6 +33,9 @@ use GuzzleHttp\Client;
 
 use App\Events\Notification;
 use App\NotificationTable;
+
+use Carbon\Carbon;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class SidangController extends Controller
 {   
@@ -84,7 +89,6 @@ class SidangController extends Controller
                 $query = Examination::with('device')->with('company')->with('media')->with('examinationLab')->with('equipmentHistory')
                     ->where('examination_type_id', 1)
                     ->where('resume_status', 1)
-                    ->where('qa_status', 0)
                     ->where('qa_passed', $type)
                     ->whereNotIn('id', function ($q) {
                         $q->select('examination_id')
@@ -176,7 +180,7 @@ class SidangController extends Controller
                 $sidangDetail = Sidang_detail::where('sidang_id', $sidang_id)->delete();
 
                 $sidang->date = $request->input('date');
-                $sidang->audience = $request->input('audience');
+                $sidang->audience = 'Adi Permadi (Manager Lab IQA TTH), Eliandri Shintani Wulandari (Manager Lab DEQA TTH), Yudha Indah Prihatini (POH Manager URel TTH), I Gede Astawa (Senior Manager TTH).';
                 $sidang->jml_perangkat = count($request->input('chk-draft'));
                 $sidang->status = 'DRAFT';
             }
@@ -323,6 +327,7 @@ class SidangController extends Controller
             $sidang_detail->valid_range = $request->input('valid_range')[$i];
             $sidang_detail->valid_from = $request->input('date');
             $sidang_detail->valid_thru = date('Y-m-d', strtotime("+".$sidang_detail->valid_range." months", strtotime($sidang_detail->valid_from)));
+            $sidang_detail->catatan = $request->input('catatan')[$i];
             $sidang_detail->save();
 
             switch ($sidang_detail->result) {
@@ -351,7 +356,6 @@ class SidangController extends Controller
         $sidang->jml_not_comply = $jml_not_comply;
         $sidang->jml_pending = $jml_pending;
         $sidang->status = $request->input('status');
-        $sidang->catatan = $request->input('catatan');
         
         try{
             $sidang->save();
@@ -363,21 +367,190 @@ class SidangController extends Controller
     }
 
     public function updateExamination($sidang_id){
-        // 1. update to Examination -> qa_passed (sidang_detail.result), qa_date (sidang.date), certificate_date (sidang.date)
-        // 2. generate Sertifikat() -> exam_attach
-        // 3. update Attachment -> name ("Sertifikat"), link (exam_attach.attachment), no (exam_attach.no)
-        // 4. update to Device ->
-        //  a. certificate (exam_attach.attachment), 
-        //  b. cert_valid_from (sidang_detail.valid_from), 
-        //  c. cert_valid_thru (sidang_detail.valid_thru), 
-        //  d. cert_number (exam_attach.no)
+        $data = Sidang_detail::with('sidang')
+            ->with('examination')
+            ->with('examination.company')
+            ->with('examination.media')
+            ->with('examination.examinationLab')
+            ->with('examination.equipmentHistory')
+            ->where('sidang_id', $sidang_id)
+            ->get()
+        ;
+        foreach($data as $item){
+            // 1. update to Examination -> 
+                // a. qa_passed (sidang_detail.result), 
+                // b. qa_date (sidang.date), 
+                // c. certificate_date (sidang.date)
+                // d. qa_passed = 0 terhadap data pengujian yang pernah "tidak lulus"
+            $exam = Examination::find($item->examination_id);
+            $exam->qa_passed = $item->result;
+            $exam->qa_date = $item->sidang->date;
+            $exam->certificate_date = $item->sidang->date;
+            if(strpos($exam->keterangan, 'qa_date') !== false){
+                $data_ket = explode("qa_date", $exam->keterangan);
+                $devnc_exam = Examination::find($data_ket[2]);
 
-        // 5. lakukan seolah2 Step Sidang QA - Step Penerbitan Sertifikat Completed
-        //  a. qa_status & certificate_status = 1
-        //  b. upload ke minio
-        //  c. delivered ke digimon
-        //  d. send_email
+                if($devnc_exam){
+                    $devnc_exam->qa_passed = 0;
+
+                    try{
+                        $devnc_exam->save();
+                    } catch(Exception $e){
+                        // DO NOTHING
+                    }
+                }
+            }
+            $exam->qa_status = 1;
+            $exam->certificate_status = 1;
+            $exam->save();
+            
+            // 2. generate Sertifikat()
+            $cert_number = $item->result == 1 ? $this->generateNoSertifikat() : null;
+            
+            // 3. update Attachment -> name ("Sertifikat"), link (exam_attach.attachment), no (exam_attach.no) [SEPERTINYA TIDAK USAH]
+
+            if($cert_number){
+                // $pdfGenerated = $this->generateSertifikat($exam->id, 'getStream');
+				// $fileService = new FileService();
+				// $fileProperties = array(
+				// 	'path' => self::MEDIA_DEVICE_LOC.$exam->device_id."/",
+				// 	'prefix' => "sertifikat_",
+				// 	'fileName' => $pdfGenerated['fileName'],
+				// );
+				// $fileService->uploadFromStream($pdfGenerated['stream'], $fileProperties);
+				// $name_file = $fileService->getFileName();
+                $name_file = null;
+            // 4. update to Device ->
+                //  a. certificate (exam_attach.attachment), 
+                //  b. valid_from (sidang_detail.valid_from), 
+                //  c. valid_thru (sidang_detail.valid_thru), 
+                //  d. cert_number (exam_attach.no)
+                //  e. status (sidang_detail.result)
+                $device = Device::find($item->examination->device_id);
+                $device->certificate = $name_file;
+                $device->valid_from = $item->valid_from;
+                $device->valid_thru = $item->valid_thru;
+                $device->cert_number = $cert_number;
+                $device->status = 1;
+                $device->save();
+            }
+
+            // 5. lakukan seolah2 Step Sidang QA - Step Penerbitan Sertifikat Completed
+                //  a. qa_status & certificate_status = 1 [Di Step 1]
+                //  b. upload ke minio [Di Step 4]
+                //  c. delivered ke digimon [Di Step 4]
+                //  d. send_email, add_log, add_examination_history
+            switch ($item->result) {
+                case 1:
+                    # Email Sidang QA Lulus dan Sertifikat dapat di-download
+                    break;
+                case -1:
+                    # Email Sidang QA Tidak Lulus dan Sertifikat tidak dapat di-download
+                    break;
+                case 2:
+                    # Email Sidang QA Pending dan Sertifikat tidak dapat di-download
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+        }
     }
+
+    private function generateNoSertifikat(){
+        $thisYear = date('Y');
+		$where = "SUBSTR(cert_number,'17',4) = '".$thisYear."'";
+		$query = "
+			SELECT 
+			SUBSTR(cert_number,'6',3) + 1 AS last_numb
+			FROM devices 
+			WHERE 
+			".$where."
+			ORDER BY last_numb DESC LIMIT 1
+		";
+		$data = DB::select($query); 
+		if (!count($data)){
+			$cert_number = 'Tel. 001/TTH-01/'.$thisYear;
+		}
+		else{
+			$last_numb = $data[0]->last_numb;
+			if($last_numb < 10){
+				$cert_number = 'Tel. 00'.$last_numb.'/TTH-01/'.$thisYear;
+			}
+			else if($last_numb < 100){
+				$cert_number = 'Tel. 0'.$last_numb.'/TTH-01/'.$thisYear;
+			}
+			else{
+                $cert_number = 'Tel. '.$last_numb.'/TTH-01/'.$thisYear;
+			}
+		}
+
+		return $cert_number;
+    }
+
+    public function generateSertifikat($id, $method = '')
+	{
+		$examination = Examination::where('id', $id)
+			->with('company')
+			->with('device')
+			->with('media')
+			->first()
+		;
+
+		$month_list_lang_id = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'November', 'Desember'];
+		$signDate = date('d', strtotime($examination->qa_date)).' '.$month_list_lang_id[((int)date('m', strtotime($examination->qa_date)))-1].' '.date('Y', strtotime($examination->qa_date));
+		$start_certificate_period = Carbon::parse($examination->device->valid_from);
+		$end_certificate_period = Carbon::parse($examination->device->valid_thru);
+		$interval = round($start_certificate_period->diffInDays($end_certificate_period)/30);
+		if ($interval % 12 == 0){
+			$interval_year = (int)$interval/12;
+			$period_id = "$interval_year tahun";
+			$period_en = "$interval_year year".($interval_year > 1 ? 's': '');
+		}else{
+			$period_id = "$interval bulan";
+			$period_en = "$interval month".($interval > 1 ? 's': '');
+		}
+		$signeeData = \App\GeneralSetting::whereIn('code', ['sm_urel', 'poh_sm_urel'])->where('is_active', '=', 1)->first();
+		$certificateNumber = strval($examination->device->cert_number);
+		$telkomLogoSquarePath = '/app/Services/PDF/images/telkom-logo-square.png';
+		$qrCodeLink = url('/digitalSign/21003-132'); //todo daniel digitalSign page
+
+		//dd($certificateNumber);
+
+        $lap_uji = \App\ExaminationAttach::where('examination_id', $id)->where('name', 'Laporan Uji')->first();
+        $no_lap_uji = $lap_uji ? $lap_uji->no : '-';
+        
+		$PDFData = [
+			'documentNumber' => $examination->device->cert_number,
+			'companyName' => $examination->company->name,
+			'brand' => $examination->device->mark,
+			'deviceName' => $examination->device->name,
+			'deviceType' => $examination->device->model,
+			'deviceCapacity' => $examination->device->capacity,
+			'deviceSerialNumber' => $examination->device->serial_number,
+			'examinationNumber' => $no_lap_uji,
+			'examinationReference' => $examination->device->test_reference,
+			'signDate' => $signDate,
+			'period_id' => $period_id,
+			'period_en' => $period_en,
+			'signee' => $signeeData->value,
+			'isSigneePoh' => $signeeData->code !== 'sm_urel',
+			'signImagePath' => Storage::disk('minio')->url("generalsettings/$signeeData->id/$signeeData->attachment"),
+			'method' => $method,
+			'qrCode' => QrCode::format('png')->size(500)->merge($telkomLogoSquarePath)->errorCorrection('M')->generate($qrCodeLink)
+		];
+		$PDF = new \App\Services\PDF\PDFService();
+		
+		if ($method == 'getStream'){
+			return [
+				'stream' => $PDF->cetakSertifikatQA($PDFData),
+				'fileName' => str_replace("/","",$certificateNumber).'.pdf'
+			];
+		}else{
+			return $PDF->cetakSertifikatQA($PDFData);
+		}
+	}
 
     public function destroy($id, $reasonOfDeletion){
         //Get data

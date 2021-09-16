@@ -115,7 +115,7 @@
 											<td class="center"> fromOTR </td>
 											<td class="center">{{ $item->company->qs_certificate_date > date('Y-m-d') ? 'SM Eligible' : 'SM Not Eligible' }}</td>
 											<td class="center"><input type="checkbox" name="chk-perangkat[]" id="chk-perangkat-{{$item->id}}" class="chk-perangkat" value="{{ $item->id }}"></td>
-											<td class="center"><a href="javascript:void(0)" class="collapsible">Detail</a></td>
+											<td class="center"><a href="javascript:void(0)" class="collapsible"><em class="fa fa-eye"></em></a></td>
 										</tr>
 										<tr class="content" style="display: none;">
 											<td colspan="11" class="center">
@@ -240,7 +240,7 @@
 											<td class="center"> fromOTR </td>
 											<td class="center">{{ $item->company->qs_certificate_date > date('Y-m-d') ? 'SM Eligible' : 'SM Not Eligible' }}</td>
 											<td class="center"><input type="checkbox" name="chk-pending[]" id="chk-pending-{{$item->id}}" class="chk-pending" value="{{ $item->id }}"></td>
-											<td class="center"><a href="javascript:void(0)" class="collapsible">Detail</a></td>
+											<td class="center"><a href="javascript:void(0)" class="collapsible"><em class="fa fa-eye"></em></a></td>
 										</tr>
 										<tr class="content" style="display: none;">
 											<td colspan="11" class="center">
@@ -345,12 +345,6 @@
 					</div>
 				</div>
 				<div class="col-md-3"></div>
-				<div class="col-md-6">
-					<div class="form-group">
-						<label for="Audience">Audience :</label>
-						<textarea class="form-control" name="audience" id="audience" required>Adi Permadi (Manager Lab IQA TTH), Eliyandri Shintani Wulandari (Manager Lab DEQA TTH), Yudha Indah Prihatini (POH Manager URel TTH), I Gede Astawa (Senior Manager TTH)</textarea>
-					</div>
-				</div>
 		        <div class="col-md-12">
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
@@ -385,7 +379,7 @@
 											<td class="center"> fromOTR </td>
 											<td class="center">{{ $item->examination->company->qs_certificate_date > date('Y-m-d') ? 'SM Eligible' : 'SM Not Eligible' }}</td>
 											<td class="center"><input type="checkbox" name="chk-draft[]" id="chk-draft-{{$item->examination->id}}" class="chk-draft" value="{{ $item->examination->id }}" checked></td>
-											<td class="center"><a href="javascript:void(0)" class="collapsible">Detail</a></td>
+											<td class="center"><a href="javascript:void(0)" class="collapsible"><em class="fa fa-eye"></em></a></td>
 										</tr>
 										<tr class="content" style="display: none;">
 											<td colspan="11" class="center">
