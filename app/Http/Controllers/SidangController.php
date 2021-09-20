@@ -17,6 +17,7 @@ use App\Services\Querys\QueryFilter;
 use App\Services\Logs\LogService;
 use App\Services\NotificationService;
 use App\Services\SalesService;
+use App\Services\FileService;
 
 use Auth;
 use Session; 
@@ -361,6 +362,7 @@ class SidangController extends Controller
             $sidang->save();
             $sidang->status = 'DONE' ? $this->updateExamination($sidang->id) : '';
             $logService->createLog($sidang->status = 'DONE' ? 'Update Sidang QA' : 'Selesai Sidang QA', 'Sidang QA',$oldData);
+            Session::flash(self::MESSAGE, 'Data successfully updated');
             return redirect(self::ADMIN_SIDANG);
         } catch(Exception $e){ return redirect(self::ADMIN_SIDANG.'/'.$sidang->id.'/edit')->with(self::ERROR, 'Save failed');
         } 
@@ -410,16 +412,16 @@ class SidangController extends Controller
             // 3. update Attachment -> name ("Sertifikat"), link (exam_attach.attachment), no (exam_attach.no) [SEPERTINYA TIDAK USAH]
 
             if($cert_number){
-                // $pdfGenerated = $this->generateSertifikat($exam->id, 'getStream');
-				// $fileService = new FileService();
-				// $fileProperties = array(
-				// 	'path' => self::MEDIA_DEVICE_LOC.$exam->device_id."/",
-				// 	'prefix' => "sertifikat_",
-				// 	'fileName' => $pdfGenerated['fileName'],
-				// );
-				// $fileService->uploadFromStream($pdfGenerated['stream'], $fileProperties);
-				// $name_file = $fileService->getFileName();
-                $name_file = null;
+                $pdfGenerated = $this->generateSertifikat($item, $cert_number, 'getStream');
+				$fileService = new FileService();
+				$fileProperties = array(
+					'path' => 'device/'.$exam->device_id."/",
+					'prefix' => "sertifikat_",
+					'fileName' => $pdfGenerated['fileName'],
+				);
+				$fileService->uploadFromStream($pdfGenerated['stream'], $fileProperties);
+				$name_file = $fileService->getFileName();
+                // $name_file = null;
             // 4. update to Device ->
                 //  a. certificate (exam_attach.attachment), 
                 //  b. valid_from (sidang_detail.valid_from), 
@@ -516,19 +518,12 @@ class SidangController extends Controller
 		return $cert_number;
     }
 
-    public function generateSertifikat($id, $method = '')
+    public function generateSertifikat($item, $cert_number, $method = '')
 	{
-		$examination = Examination::where('id', $id)
-			->with('company')
-			->with('device')
-			->with('media')
-			->first()
-		;
-
 		$month_list_lang_id = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'November', 'Desember'];
-		$signDate = date('d', strtotime($examination->qa_date)).' '.$month_list_lang_id[((int)date('m', strtotime($examination->qa_date)))-1].' '.date('Y', strtotime($examination->qa_date));
-		$start_certificate_period = Carbon::parse($examination->device->valid_from);
-		$end_certificate_period = Carbon::parse($examination->device->valid_thru);
+		$signDate = date('d', strtotime($item->sidang->date)).' '.$month_list_lang_id[((int)date('m', strtotime($item->sidang->date)))-1].' '.date('Y', strtotime($item->sidang->date));
+		$start_certificate_period = Carbon::parse($item->valid_from);
+		$end_certificate_period = Carbon::parse($item->valid_thru);
 		$interval = round($start_certificate_period->diffInDays($end_certificate_period)/30);
 		if ($interval % 12 == 0){
 			$interval_year = (int)$interval/12;
@@ -539,25 +534,26 @@ class SidangController extends Controller
 			$period_en = "$interval month".($interval > 1 ? 's': '');
 		}
 		$signeeData = \App\GeneralSetting::whereIn('code', ['sm_urel', 'poh_sm_urel'])->where('is_active', '=', 1)->first();
-		$certificateNumber = strval($examination->device->cert_number);
+		$certificateNumber = strval($cert_number);
 		$telkomLogoSquarePath = '/app/Services/PDF/images/telkom-logo-square.png';
+        // url('/approval/{{ approval_id }}') -> approval_id didapat ketika membuat data approval
 		$qrCodeLink = url('/digitalSign/21003-132'); //todo daniel digitalSign page
 
 		//dd($certificateNumber);
 
-        $lap_uji = \App\ExaminationAttach::where('examination_id', $id)->where('name', 'Laporan Uji')->first();
+        $lap_uji = \App\ExaminationAttach::where('examination_id', $item->examination_id)->where('name', 'Laporan Uji')->first();
         $no_lap_uji = $lap_uji ? $lap_uji->no : '-';
         
 		$PDFData = [
-			'documentNumber' => $examination->device->cert_number,
-			'companyName' => $examination->company->name,
-			'brand' => $examination->device->mark,
-			'deviceName' => $examination->device->name,
-			'deviceType' => $examination->device->model,
-			'deviceCapacity' => $examination->device->capacity,
-			'deviceSerialNumber' => $examination->device->serial_number,
+			'documentNumber' => $cert_number,
+			'companyName' => $item->examination->company->name,
+			'brand' => $item->examination->device->mark,
+			'deviceName' => $item->examination->device->name,
+			'deviceType' => $item->examination->device->model,
+			'deviceCapacity' => $item->examination->device->capacity,
+			'deviceSerialNumber' => $item->examination->device->serial_number,
 			'examinationNumber' => $no_lap_uji,
-			'examinationReference' => $examination->device->test_reference,
+			'examinationReference' => $item->examination->device->test_reference,
 			'signDate' => $signDate,
 			'period_id' => $period_id,
 			'period_en' => $period_en,
