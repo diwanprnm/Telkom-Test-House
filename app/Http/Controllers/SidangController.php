@@ -418,11 +418,17 @@ class SidangController extends Controller
             ->with('examination.media')
             ->with('examination.examinationLab')
             ->with('examination.equipmentHistory')
+            ->with('examination.examinationAttach')
             ->where('sidang_id', $sidang_id)
             ->get()
         ;
+        
+        $devicesList = [];
+        $noLaporanUji = [];
+        $certificateNumberList = [];
+        $sidang_detail = $this->mergeOTR($data, 'sidang');
 
-        foreach($this->mergeOTR($data, 'sidang') as $item){
+        foreach($sidang_detail as $item){
             dd($item);
             // 1. update to Examination -> 
                 // a. qa_passed (sidang_detail.result), 
@@ -453,6 +459,7 @@ class SidangController extends Controller
             
             // 2. generate Sertifikat()
             $cert_number = $item->result == 1 ? $this->generateNoSertifikat() : null;
+            $certificateNumberList[] = $cert_number;
             
             // 3. update Attachment -> name ("Sertifikat"), link (exam_attach.attachment), no (exam_attach.no) [SEPERTINYA TIDAK USAH]
 
@@ -480,6 +487,7 @@ class SidangController extends Controller
                 $device->cert_number = $cert_number;
                 $device->status = 1;
                 $device->save();
+                $devicesList[] = $device;
 
             // 5. Save Sidang QA to Approval
                 // generate Sidang QA -> [Chris]
@@ -526,8 +534,12 @@ class SidangController extends Controller
                     break;
             }
         }
-        $id = 'lalala';
-        $generatedSidangQA = $this->generateSidangQA($id, 'getStream');
+        $PDFData = [];
+        $PDFData['devices'] = $devicesList;
+        $PDFData['sidang_detail'] = $sidang_detail;
+        $PDFData['sidang'] = Sidang::find($sidang_id);
+        $PDFData['certificateNumber'] = $certificateNumberList;
+        $generatedSidangQA = $this->generateSidangQA($PDFData, '');
     }
 
     public function resetExamination($sidang_id){ // DELETE SOON
@@ -667,17 +679,33 @@ class SidangController extends Controller
         return redirect('/admin/sidang/');
     }
 
-    public function generateSidangQA($id=null, $method = ''){
-        $keputusan_sidang_qa = [
-            -1 => 'Tidak',
-            0 => 'Belum',
-            1 => 'Lulus',
-            2 => "Pending"
-        ];
+    public function generateSidangQA($PDFData, $method = ''){        
+		$PDF = new \App\Services\PDF\PDFService();
+        $telkomLogoSquarePath = '/app/Services/PDF/images/telkom-logo-square.png';
+        $qrCodeLink = url('/digitalSign/21003-132'); //todo @arif digitalSign page
 
-        $date = '2021-10-04';
-        $tanggal = \App\Services\MyHelper::tanggalIndonesia($date);
-        return $tanggal;
+        //todo @chris diubah jadi dinamis
+        $PDFData['signees'] = [
+            [
+                'name' => "I GEDE ASTAWA",
+                'title' => "SM INFRASTRUCTURE ASSURANCE"
+            ],
+            [
+                'name' => "SONTANG HOTAPEA",
+                'title' => "Sekretaris"
+            ]
+        ];
+        $PDFData['method'] = $method;
+        $PDFData['qrCode'] = QrCode::format('png')->size(500)->merge($telkomLogoSquarePath)->errorCorrection('M')->generate($qrCodeLink);
+
+        if ($method == 'getStream'){
+			return [
+				'stream' => $PDF->cetakSidangQA($PDFData),
+				'fileName' => "sidang-qa.pdf" //todo @arif nama pdf kalau perlu diupload
+			];
+		}else{
+			return $PDF->cetakSidangQA($PDFData);
+		}
     }
 
 }
