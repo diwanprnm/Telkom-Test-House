@@ -421,7 +421,9 @@ class SidangController extends Controller
             ->where('sidang_id', $sidang_id)
             ->get()
         ;
-        foreach($data as $item){
+
+        foreach($this->mergeOTR($data, 'sidang') as $item){
+            dd($item);
             // 1. update to Examination -> 
                 // a. qa_passed (sidang_detail.result), 
                 // b. qa_date (sidang.date), 
@@ -455,28 +457,6 @@ class SidangController extends Controller
             // 3. update Attachment -> name ("Sertifikat"), link (exam_attach.attachment), no (exam_attach.no) [SEPERTINYA TIDAK USAH]
 
             if($cert_number){
-                // $approval = new Approval; -> Untuk masuk ke menu approval
-                /* 
-                    autentikasi_editor
-                    1. id [aut_ed-1]
-                    2. content [<p>]
-                    3. sign_by -> user_id [1,2,3]
-
-                    approval
-                    1. id [xxx-1]
-                    2. name [Sidang QA]
-                    3. reference_id [examination_id]
-                    4. autentikasi_editor_id -> autentikasi_editor.id [aut_ed-1]
-                    5. status [0, 1]
-
-                    approve_by
-                    1. id [yyy-1]
-                    2. approval_id -> approval.id [xxx-1]
-                    3. user_id [1,2,3]
-                    4. approved_date 
-                */
-
-
                 $pdfGenerated = $this->generateSertifikat($item, $cert_number, 'getStream');
 				$fileService = new FileService();
 				$fileProperties = array(
@@ -500,9 +480,32 @@ class SidangController extends Controller
                 $device->cert_number = $cert_number;
                 $device->status = 1;
                 $device->save();
+
+            // 5. Save Sidang QA to Approval
+                // generate Sidang QA -> [Chris]
+                // $approval = new Approval; -> Untuk masuk ke menu approval [Chandra]
+                /* 
+                    autentikasi_editor
+                    1. id [aut_ed-1]
+                    2. content [<p>]
+                    3. sign_by -> user_id [1,2,3]
+
+                    approval
+                    1. id [xxx-1]
+                    2. name [Sidang QA]
+                    3. reference_id [examination_id]
+                    4. autentikasi_editor_id -> autentikasi_editor.id [aut_ed-1]
+                    5. status [0, 1]
+
+                    approve_by
+                    1. id [yyy-1]
+                    2. approval_id -> approval.id [xxx-1]
+                    3. user_id [1,2,3]
+                    4. approved_date 
+                */
             }
 
-            // 5. lakukan seolah2 Step Sidang QA - Step Penerbitan Sertifikat Completed
+            // 6. lakukan seolah2 Step Sidang QA - Step Penerbitan Sertifikat Completed
                 //  a. qa_status & certificate_status = 1 [Di Step 1]
                 //  b. upload ke minio [Di Step 4]
                 //  c. delivered ke digimon [Di Step 4]
