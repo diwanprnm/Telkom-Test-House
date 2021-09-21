@@ -2904,7 +2904,17 @@
 									</div>
 								</div>
 							@endif
-						@endif						
+						@endif		
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Hasil Pengujian
+									</label>
+									<label>
+										: {{ $exam_schedule->data[0]->reportFinalResultValue }}
+									</label>
+								</div>
+							</div>
 							<div class="col-md-12">
 								<div class="form-group">
 									<label for="form-field-select-2">
