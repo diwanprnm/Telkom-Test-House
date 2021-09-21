@@ -4,6 +4,7 @@ namespace App\Services;
 class MyHelper
 {
     private const CONTENT_TYPE = 'Content-Type';
+    private const LIST_BULAN_INDONESIA = [ 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
     public static function filterDefault($string, $is_number = false, $is_strip = false)
     {
@@ -70,5 +71,10 @@ class MyHelper
             'Content-Disposition' => "attachment; filename=\"$fileName\"",
             'filename'=> "\"$fileName\""
         );
+    }
+
+    public static function tanggalIndonesia($date)
+    {
+        return date('d', strtotime($date)).' '.self::LIST_BULAN_INDONESIA[((int)date('m', strtotime($date)))-1].' '.date('Y', strtotime($date));
     }
 }

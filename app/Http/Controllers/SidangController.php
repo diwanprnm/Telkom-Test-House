@@ -526,6 +526,8 @@ class SidangController extends Controller
                     break;
             }
         }
+        $id = 'lalala';
+        $generatedSidangQA = $this->generateSidangQA($id, 'getStream');
     }
 
     public function resetExamination($sidang_id){ // DELETE SOON
@@ -588,8 +590,7 @@ class SidangController extends Controller
 
     public function generateSertifikat($item, $cert_number, $method = '')
 	{
-		$month_list_lang_id = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'November', 'Desember'];
-		$signDate = date('d', strtotime($item->sidang->date)).' '.$month_list_lang_id[((int)date('m', strtotime($item->sidang->date)))-1].' '.date('Y', strtotime($item->sidang->date));
+		$signDate = \App\Services\MyHelper::tanggalIndonesia($item->sidang->date);
 		$start_certificate_period = Carbon::parse($item->valid_from);
 		$end_certificate_period = Carbon::parse($item->valid_thru);
 		$interval = $start_certificate_period->diffInMonths($end_certificate_period);
@@ -664,6 +665,19 @@ class SidangController extends Controller
         // Feedback succeed
         Session::flash('message', 'Successfully Delete Data');
         return redirect('/admin/sidang/');
+    }
+
+    public function generateSidangQA($id=null, $method = ''){
+        $keputusan_sidang_qa = [
+            -1 => 'Tidak',
+            0 => 'Belum',
+            1 => 'Lulus',
+            2 => "Pending"
+        ];
+
+        $date = '2021-10-04';
+        $tanggal = \App\Services\MyHelper::tanggalIndonesia($date);
+        return $tanggal;
     }
 
 }

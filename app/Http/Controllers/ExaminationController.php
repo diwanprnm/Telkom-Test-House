@@ -2418,8 +2418,7 @@ class ExaminationController extends Controller
 			->first()
 		;
 
-		$month_list_lang_id = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'November', 'Desember'];
-		$signDate = date('d', strtotime($examination->qa_date)).' '.$month_list_lang_id[((int)date('m', strtotime($examination->qa_date)))-1].' '.date('Y', strtotime($examination->qa_date));
+		$signDate = \App\Services\MyHelper::tanggalIndonesia($examination->qa_date);
 		$start_certificate_period = Carbon::parse($examination->device->valid_from);
 		$end_certificate_period = Carbon::parse($examination->device->valid_thru);
 		$interval = round($start_certificate_period->diffInDays($end_certificate_period)/30);
