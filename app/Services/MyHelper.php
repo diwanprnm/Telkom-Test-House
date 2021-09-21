@@ -73,8 +73,9 @@ class MyHelper
         );
     }
 
-    public static function tanggalIndonesia($date)
+    public static function tanggalIndonesia($date = '')
     {
-        return date('d', strtotime($date)).' '.self::LIST_BULAN_INDONESIA[((int)date('m', strtotime($date)))-1].' '.date('Y', strtotime($date));
+        $result = !$date ? '' : date('d', strtotime($date)).' '.self::LIST_BULAN_INDONESIA[((int)date('m', strtotime($date)))-1].' '.date('Y', strtotime($date));
+        return $result;
     }
 }
