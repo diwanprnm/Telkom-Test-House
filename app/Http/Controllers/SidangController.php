@@ -18,6 +18,7 @@ use App\Services\Logs\LogService;
 use App\Services\NotificationService;
 use App\Services\SalesService;
 use App\Services\FileService;
+use App\Services\ExaminationService;
 
 use Auth;
 use Session; 
@@ -59,13 +60,18 @@ class SidangController extends Controller
         $search = $request->input('search2');
         $before = $request->input('before');
         $after = $request->input('after');
+
+        $data_perangkat = $this->getData($request, 0)['data']->paginate($paginate, ['*'], 'pagePerangkat');
+        $this->mergeOTR($data_perangkat->items(), 'perangkat');
+        $data_pending = $this->getData($request, 2)['data']->paginate($paginate, ['*'], 'pagePending');
+        $this->mergeOTR($data_pending->items(), 'perangkat');
         
         //return view to saves index with data
         return view('admin.sidang.index')
             ->with('tab', $tab)
             ->with('data_sidang', $this->getData($request, 1)['data']->paginate($paginate, ['*'], 'pageSidang') )
-            ->with('data_perangkat', $this->getData($request, 0)['data']->paginate($paginate, ['*'], 'pagePerangkat'))
-            ->with('data_pending', $this->getData($request, 2)['data']->paginate($paginate, ['*'], 'pagePending'))
+            ->with('data_perangkat', $data_perangkat)
+            ->with('data_pending', $data_pending)
             ->with('search', $search)
             ->with('before_date', $before)
             ->with('after_date', $after)
@@ -154,14 +160,21 @@ class SidangController extends Controller
             $message = null;
             $paginate = 100;
             $tab = $sidang_id ? 'tab-draft' : $request->input('tab');
+
+            $data_perangkat = $this->getData($request, 0)['data']->paginate($paginate, ['*'], 'pagePerangkat');
+            $this->mergeOTR($data_perangkat->items(), 'perangkat');
+            $data_pending = $this->getData($request, 2)['data']->paginate($paginate, ['*'], 'pagePending');
+            $this->mergeOTR($data_pending->items(), 'perangkat');
+            $data_draft = $this->getData($request, $sidang_id)['data']->paginate($paginate, ['*'], 'pageDraft');
+            $this->mergeOTR($data_draft->items(), 'sidang');
             
             //return view to saves index with data
             return view('admin.sidang.create')
                 ->with('sidang_id', $sidang_id)
                 ->with('tab', $tab)
-                ->with('data_perangkat', $this->getData($request, 0)['data']->paginate($paginate, ['*'], 'pagePerangkat'))
-                ->with('data_pending', $this->getData($request, 2)['data']->paginate($paginate, ['*'], 'pagePending'))
-                ->with('data_draft', $this->getData($request, $sidang_id)['data']->paginate($paginate, ['*'], 'pageDraft'))
+                ->with('data_perangkat', $data_perangkat)
+                ->with('data_pending', $data_pending)
+                ->with('data_draft', $data_draft)
             ;
         }else{
             return view('errors.401');
@@ -227,12 +240,42 @@ class SidangController extends Controller
             $message = null;
             $data = $this->getData($request, $sidang_id)['data']->get();
             return view('admin.sidang.detail')
-                ->with('data', $data)
+                ->with('data', $this->mergeOTR($data, 'sidang'))
             ;
         }else{
             return view('errors.401');
         }
     }   
+
+    public function mergeOTR($data, $type){
+        $examinationService = new ExaminationService();
+        $client = new Client([
+            'headers' => ['Content-type' => 'application/x-www-form-urlencoded'],
+            // Base URI is used with relative requests
+            'base_uri' => config('app.url_api_bsp'),
+            // You can set any number of default request options.
+            // self::HTTP_ERRORS => false,
+            'timeout' => 60.0,
+        ]);
+
+        for($i=0; $i<count($data); $i++){
+            $data[$i]->finalResult = NULL;
+            $data[$i]->startDate = NULL;
+            $data[$i]->endDate = NULL;
+            $data[$i]->targetDate = NULL;
+            $spk_code = $type == 'sidang' ? $data[$i]->examination->spk_code : $data[$i]->spk_code;
+            $res_exam_OTR = $client->get('spk/searchData?limit=1&spkNumber='.$spk_code)->getBody();
+            $exam_OTR = json_decode($res_exam_OTR);
+            if($exam_OTR->code != 'MSTD0059AERR' && $exam_OTR->code != 'MSTD0000AERR'){
+                $data[$i]->finalResult = $exam_OTR->data[0]->reportFinalResultValue;
+                $data[$i]->startDate = $exam_OTR->data[0]->actualStartTestDt;
+                $data[$i]->endDate = $exam_OTR->data[0]->actualFinishTestDt;
+                $data[$i]->targetDate = $exam_OTR->data[0]->targetDt;
+            }
+        }
+
+        return $data;
+    }
 
     public function excel(Request $request) 
     {
@@ -308,7 +351,7 @@ class SidangController extends Controller
             }
             $data = $this->getData($request, $sidang_id)['data']->get();
             return view('admin.sidang.edit')
-                ->with('data', $data)
+                ->with('data', $this->mergeOTR($data, 'sidang'))
             ;
         }else{
             return view('errors.401');
@@ -428,9 +471,9 @@ class SidangController extends Controller
 
                     approve_by
                     1. id [yyy-1]
-                    2. approval_id -> approval.id
-                    3. user_id
-                    4. approved_date
+                    2. approval_id -> approval.id [xxx-1]
+                    3. user_id [1,2,3]
+                    4. approved_date 
                 */
 
 

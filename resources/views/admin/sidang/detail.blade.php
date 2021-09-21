@@ -85,7 +85,7 @@
 										<td class="center">{{ $item->examination->device->model }}</td>
 										<td class="center">{{ $item->examination->device->capacity }}</td>
 										<td class="center">{{ $item->examination->device->manufactured_by }}</td>
-										<td class="center"> fromOTR </td>
+										<td class="center">{{ $item->finalResult ? $item->finalResult : '-' }}</td>
 										<td class="center">
 											<select class="cs-select cs-skin-elastic" name="result[]" disabled>
 												<option value="0" @if ($item->result == 0) selected @endif>Choose</option>
@@ -150,10 +150,10 @@
 															@endif
 														@endforeach
 														<td class="center">{{ $tgl_barang }}</td>
-														<td class="center">fromOTR</td>
-														<td class="center">fromOTR</td>
+														<td class="center">{{ $item->startDate ? $item->startDate : '-' }}</td>
+														<td class="center">{{ $item->endDate ? $item->endDate : '-' }}</td>
 														<td class="center">{{ $item->examination->examinationLab->name }}</td>
-														<td class="center">fromOTR</td>														
+														<td class="center">{{ $item->targetDate ? $item->targetDate : '-' }}</td>
 													</tr> 
 												</tbody>
 											</table>

@@ -112,7 +112,7 @@
 											<td class="center">{{ $item->device->model }}</td>
 											<td class="center">{{ $item->device->capacity }}</td>
 											<td class="center">{{ $item->device->manufactured_by }}</td>
-											<td class="center"> fromOTR </td>
+											<td class="center">{{ $item->finalResult ? $item->finalResult : '-' }}</td>
 											<td class="center">{{ $item->company->qs_certificate_date > date('Y-m-d') ? 'SM Eligible' : 'SM Not Eligible' }}</td>
 											<td class="center"><input type="checkbox" name="chk-perangkat[]" id="chk-perangkat-{{$item->id}}" class="chk-perangkat" value="{{ $item->id }}"></td>
 											<td class="center"><a href="javascript:void(0)" class="collapsible"><em class="fa fa-eye"></em></a></td>
@@ -152,10 +152,10 @@
 																@endif
 															@endforeach
 															<td class="center">{{ $tgl_barang }}</td>
-															<td class="center">fromOTR</td>
-															<td class="center">fromOTR</td>
+															<td class="center">{{ $item->startDate ? $item->startDate : '-' }}</td>
+															<td class="center">{{ $item->endDate ? $item->endDate : '-' }}</td>
 															<td class="center">{{ $item->examinationLab->name }}</td>
-															<td class="center">fromOTR</td>														
+															<td class="center">{{ $item->targetDate ? $item->targetDate : '-' }}</td>
 														</tr> 
 													</tbody>
 												</table>
@@ -237,7 +237,7 @@
 											<td class="center">{{ $item->device->model }}</td>
 											<td class="center">{{ $item->device->capacity }}</td>
 											<td class="center">{{ $item->device->manufactured_by }}</td>
-											<td class="center"> fromOTR </td>
+											<td class="center">{{ $item->finalResult ? $item->finalResult : '-' }}</td>
 											<td class="center">{{ $item->company->qs_certificate_date > date('Y-m-d') ? 'SM Eligible' : 'SM Not Eligible' }}</td>
 											<td class="center"><input type="checkbox" name="chk-pending[]" id="chk-pending-{{$item->id}}" class="chk-pending" value="{{ $item->id }}"></td>
 											<td class="center"><a href="javascript:void(0)" class="collapsible"><em class="fa fa-eye"></em></a></td>
@@ -277,10 +277,10 @@
 																@endif
 															@endforeach
 															<td class="center">{{ $tgl_barang }}</td>
-															<td class="center">fromOTR</td>
-															<td class="center">fromOTR</td>
+															<td class="center">{{ $item->startDate ? $item->startDate : '-' }}</td>
+															<td class="center">{{ $item->endDate ? $item->endDate : '-' }}</td>
 															<td class="center">{{ $item->examinationLab->name }}</td>
-															<td class="center">fromOTR</td>														
+															<td class="center">{{ $item->targetDate ? $item->targetDate : '-' }}</td>
 														</tr> 
 													</tbody>
 												</table>
@@ -376,7 +376,7 @@
 											<td class="center">{{ $item->examination->device->model }}</td>
 											<td class="center">{{ $item->examination->device->capacity }}</td>
 											<td class="center">{{ $item->examination->device->manufactured_by }}</td>
-											<td class="center"> fromOTR </td>
+											<td class="center">{{ $item->finalResult ? $item->finalResult : '-' }}</td>
 											<td class="center">{{ $item->examination->company->qs_certificate_date > date('Y-m-d') ? 'SM Eligible' : 'SM Not Eligible' }}</td>
 											<td class="center"><input type="checkbox" name="chk-draft[]" id="chk-draft-{{$item->examination->id}}" class="chk-draft" value="{{ $item->examination->id }}" checked></td>
 											<td class="center"><a href="javascript:void(0)" class="collapsible"><em class="fa fa-eye"></em></a></td>
@@ -416,10 +416,10 @@
 																@endif
 															@endforeach
 															<td class="center">{{ $tgl_barang }}</td>
-															<td class="center">fromOTR</td>
-															<td class="center">fromOTR</td>
+															<td class="center">{{ $item->startDate ? $item->startDate : '-' }}</td>
+															<td class="center">{{ $item->endDate ? $item->endDate : '-' }}</td>
 															<td class="center">{{ $item->examination->examinationLab->name }}</td>
-															<td class="center">fromOTR</td>														
+															<td class="center">{{ $item->targetDate ? $item->targetDate : '-' }}</td>
 														</tr> 
 													</tbody>
 												</table>
