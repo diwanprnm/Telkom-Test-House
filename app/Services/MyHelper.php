@@ -78,4 +78,23 @@ class MyHelper
         $result = !$date ? '' : date('d', strtotime($date)).' '.self::LIST_BULAN_INDONESIA[((int)date('m', strtotime($date)))-1].' '.date('Y', strtotime($date));
         return $result;
     }
+
+    public static function getOfficer()
+    {
+        $manager = \App\GeneralSetting::where('is_active', 1)
+            ->whereIn('code', ['manager_urel', 'poh_manager_urel'])
+            ->first()
+        ;
+        $seniorManager = \App\GeneralSetting::where('is_active', 1)
+            ->whereIn('code', ['sm_urel', 'poh_sm_urel'])
+            ->first()
+        ;
+
+        return [
+            'isSeniorManagerPOH' => $seniorManager->code == 'poh_sm_urel',
+            'isManagerPOH' => $manager->code == 'poh_manager_urel',
+            'seniorManager' => $seniorManager->value,
+            'manager' => $manager->value,
+        ];
+    }
 }
