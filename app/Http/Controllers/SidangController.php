@@ -680,23 +680,23 @@ class SidangController extends Controller
     }
 
     public function generateSidangQA($PDFData, $method = ''){        
-		$PDF = new \App\Services\PDF\PDFService();
+        $PDF = new \App\Services\PDF\PDFService();
+        $officer = \App\Services\MyHelper::getOfficer();
         $telkomLogoSquarePath = '/app/Services/PDF/images/telkom-logo-square.png';
         $qrCodeLink = url('/digitalSign/21003-132'); //todo @arif digitalSign page
-
-        //todo @chris diubah jadi dinamis
+        
+        $PDFData['qrCode'] = QrCode::format('png')->size(500)->merge($telkomLogoSquarePath)->errorCorrection('M')->generate($qrCodeLink);
+        $PDFData['method'] = $method;
         $PDFData['signees'] = [
             [
-                'name' => "I GEDE ASTAWA",
-                'title' => "SM INFRASTRUCTURE ASSURANCE"
+                'name' => strtoupper($officer['seniorManager']),
+                'title' => $officer['isSeniorManagerPOH'] ? "POH SM INFRASTRUCTURE ASSURANCE" : "SM INFRASTRUCTURE ASSURANCE",
             ],
             [
-                'name' => "SONTANG HOTAPEA",
-                'title' => "Sekretaris"
+                'name' => strtoupper($officer['manager']),
+                'title' => $officer['isManagerPOH'] ? "POH SEKRETARIS" : "SEKRETARIS",
             ]
         ];
-        $PDFData['method'] = $method;
-        $PDFData['qrCode'] = QrCode::format('png')->size(500)->merge($telkomLogoSquarePath)->errorCorrection('M')->generate($qrCodeLink);
 
         if ($method == 'getStream'){
 			return [
