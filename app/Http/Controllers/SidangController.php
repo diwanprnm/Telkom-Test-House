@@ -423,7 +423,6 @@ class SidangController extends Controller
         ;
 
         foreach($this->mergeOTR($data, 'sidang') as $item){
-            dd($item);
             // 1. update to Examination -> 
                 // a. qa_passed (sidang_detail.result), 
                 // b. qa_date (sidang.date), 
@@ -492,16 +491,15 @@ class SidangController extends Controller
 
                     approval
                     1. id [xxx-1]
-                    2. name [Sidang QA]
-                    3. reference_id [examination_id]
-                    4. autentikasi_editor_id -> autentikasi_editor.id [aut_ed-1]
-                    5. status [0, 1]
+                    2. reference_id [examination_id]
+                    3. autentikasi_editor_id -> autentikasi_editor.id [aut_ed-1]
+                    4. status [0, 1]
 
                     approve_by
                     1. id [yyy-1]
                     2. approval_id -> approval.id [xxx-1]
                     3. user_id [1,2,3]
-                    4. approved_date 
+                    4. approve_date 
                 */
             }
 
