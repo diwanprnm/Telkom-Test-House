@@ -418,9 +418,15 @@ class SidangController extends Controller
             ->with('examination.media')
             ->with('examination.examinationLab')
             ->with('examination.equipmentHistory')
+            ->with('examination.examinationAttach')
             ->where('sidang_id', $sidang_id)
             ->get()
         ;
+        
+        $devicesList = [];
+        $noLaporanUji = [];
+        $certificateNumberList = [];
+        $sidang_detail = $this->mergeOTR($data, 'sidang');
 
         foreach($this->mergeOTR($data, 'sidang') as $item){
             // 1. update to Examination -> 
@@ -452,6 +458,7 @@ class SidangController extends Controller
             
             // 2. generate Sertifikat()
             $cert_number = $item->result == 1 ? $this->generateNoSertifikat() : null;
+            $certificateNumberList[] = $cert_number;
             
             // 3. update Attachment -> name ("Sertifikat"), link (exam_attach.attachment), no (exam_attach.no) [SEPERTINYA TIDAK USAH]
 
@@ -479,6 +486,7 @@ class SidangController extends Controller
                 $device->cert_number = $cert_number;
                 $device->status = 1;
                 $device->save();
+                $devicesList[] = $device;
 
             // 5. Save Sidang QA to Approval
                 // generate Sidang QA -> [Chris]
@@ -524,6 +532,12 @@ class SidangController extends Controller
                     break;
             }
         }
+        $PDFData = [];
+        $PDFData['devices'] = $devicesList;
+        $PDFData['sidang_detail'] = $sidang_detail;
+        $PDFData['sidang'] = Sidang::find($sidang_id);
+        $PDFData['certificateNumber'] = $certificateNumberList;
+        $generatedSidangQA = $this->generateSidangQA($PDFData, '');
     }
 
     public function resetExamination($sidang_id){ // DELETE SOON
@@ -586,8 +600,7 @@ class SidangController extends Controller
 
     public function generateSertifikat($item, $cert_number, $method = '')
 	{
-		$month_list_lang_id = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'November', 'Desember'];
-		$signDate = date('d', strtotime($item->sidang->date)).' '.$month_list_lang_id[((int)date('m', strtotime($item->sidang->date)))-1].' '.date('Y', strtotime($item->sidang->date));
+		$signDate = \App\Services\MyHelper::tanggalIndonesia($item->sidang->date);
 		$start_certificate_period = Carbon::parse($item->valid_from);
 		$end_certificate_period = Carbon::parse($item->valid_thru);
 		$interval = $start_certificate_period->diffInMonths($end_certificate_period);
@@ -662,6 +675,35 @@ class SidangController extends Controller
         // Feedback succeed
         Session::flash('message', 'Successfully Delete Data');
         return redirect('/admin/sidang/');
+    }
+
+    public function generateSidangQA($PDFData, $method = ''){        
+        $PDF = new \App\Services\PDF\PDFService();
+        $officer = \App\Services\MyHelper::getOfficer();
+        $telkomLogoSquarePath = '/app/Services/PDF/images/telkom-logo-square.png';
+        $qrCodeLink = url('/digitalSign/21003-132'); //todo @arif digitalSign page
+        
+        $PDFData['qrCode'] = QrCode::format('png')->size(500)->merge($telkomLogoSquarePath)->errorCorrection('M')->generate($qrCodeLink);
+        $PDFData['method'] = $method;
+        $PDFData['signees'] = [
+            [
+                'name' => strtoupper($officer['seniorManager']),
+                'title' => $officer['isSeniorManagerPOH'] ? "POH SM INFRASTRUCTURE ASSURANCE" : "SM INFRASTRUCTURE ASSURANCE",
+            ],
+            [
+                'name' => strtoupper($officer['manager']),
+                'title' => $officer['isManagerPOH'] ? "POH SEKRETARIS" : "SEKRETARIS",
+            ]
+        ];
+
+        if ($method == 'getStream'){
+			return [
+				'stream' => $PDF->cetakSidangQA($PDFData),
+				'fileName' => "sidang-qa.pdf" //todo @arif nama pdf kalau perlu diupload
+			];
+		}else{
+			return $PDF->cetakSidangQA($PDFData);
+		}
     }
 
 }

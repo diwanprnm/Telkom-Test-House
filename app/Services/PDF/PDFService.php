@@ -133,6 +133,12 @@ class PDFService
 		return $cetakSertifikatQA->makePDF($data, new PDFMCCetakSertifikatQA());
 	}
 
+		public function cetakSidangQA($data)
+	{
+		$cetakSidangQA = new CetakSidangQA();
+		return $cetakSidangQA->makePDF($data, new PDFMCCetakSidangQA('L','mm','A4'));
+	}
+
 	private function convertDataPermohonan($data){
 		return array([
 			'nama_pemohon' => $data['namaPemohon'],
