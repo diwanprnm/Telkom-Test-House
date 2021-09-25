@@ -428,7 +428,7 @@ class SidangController extends Controller
         $certificateNumberList = [];
         $sidang_detail = $this->mergeOTR($data, 'sidang');
 
-        foreach($this->mergeOTR($data, 'sidang') as $item){
+        foreach($sidang_detail as $item){
             // 1. update to Examination -> 
                 // a. qa_passed (sidang_detail.result), 
                 // b. qa_date (sidang.date), 
@@ -472,7 +472,7 @@ class SidangController extends Controller
 				);
 				$fileService->uploadFromStream($pdfGenerated['stream'], $fileProperties);
 				$name_file = $fileService->getFileName();
-                // $name_file = null;
+                // $name_file = $cert_number;
             // 4. update to Device ->
                 //  a. certificate (exam_attach.attachment), 
                 //  b. valid_from (sidang_detail.valid_from), 
@@ -487,31 +487,9 @@ class SidangController extends Controller
                 $device->status = 1;
                 $device->save();
                 $devicesList[] = $device;
-
-            // 5. Save Sidang QA to Approval
-                // generate Sidang QA -> [Chris]
-                // $approval = new Approval; -> Untuk masuk ke menu approval [Chandra]
-                /* 
-                    autentikasi_editor
-                    1. id [aut_ed-1]
-                    2. content [<p>]
-                    3. sign_by -> user_id [1,2,3]
-
-                    approval
-                    1. id [xxx-1]
-                    2. reference_id [examination_id]
-                    3. autentikasi_editor_id -> autentikasi_editor.id [aut_ed-1]
-                    4. status [0, 1]
-
-                    approve_by
-                    1. id [yyy-1]
-                    2. approval_id -> approval.id [xxx-1]
-                    3. user_id [1,2,3]
-                    4. approve_date 
-                */
             }
 
-            // 6. lakukan seolah2 Step Sidang QA - Step Penerbitan Sertifikat Completed
+            // 5. lakukan seolah2 Step Sidang QA - Step Penerbitan Sertifikat Completed
                 //  a. qa_status & certificate_status = 1 [Di Step 1]
                 //  b. upload ke minio [Di Step 4]
                 //  c. delivered ke digimon [Di Step 4]
@@ -532,12 +510,35 @@ class SidangController extends Controller
                     break;
             }
         }
+
+        // 6. Save Sidang QA to Approval
+        // generate Sidang QA -> [Chris]
+        // $approval = new Approval; -> Untuk masuk ke menu approval [Chandra]
+        /* 
+            autentikasi_editor
+            1. id [aut_ed-1]
+            2. content [<p>]
+            3. sign_by -> user_id [1,2,3]
+
+            approval
+            1. id [xxx-1]
+            2. reference_id [examination_id]
+            3. autentikasi_editor_id -> autentikasi_editor.id [aut_ed-1]
+            4. status [0, 1]
+
+            approve_by
+            1. id [yyy-1]
+            2. approval_id -> approval.id [xxx-1]
+            3. user_id [1,2,3]
+            4. approve_date 
+        */
         $PDFData = [];
         $PDFData['devices'] = $devicesList;
         $PDFData['sidang_detail'] = $sidang_detail;
         $PDFData['sidang'] = Sidang::find($sidang_id);
         $PDFData['certificateNumber'] = $certificateNumberList;
         $generatedSidangQA = $this->generateSidangQA($PDFData, '');
+        dd($generatedSidangQA);
     }
 
     public function resetExamination($sidang_id){ // DELETE SOON
@@ -618,7 +619,7 @@ class SidangController extends Controller
         // url('/approval/{{ approval_id }}') -> approval_id didapat ketika membuat data approval
 		$qrCodeLink = url('/digitalSign/21003-132'); //todo daniel digitalSign page
 
-		//dd($certificateNumber);
+		// dd($certificateNumber);
 
         $lap_uji = \App\ExaminationAttach::where('examination_id', $item->examination_id)->where('name', 'Laporan Uji')->first();
         $no_lap_uji = $lap_uji ? $lap_uji->no : '-';
@@ -653,6 +654,36 @@ class SidangController extends Controller
 			return $PDF->cetakSertifikatQA($PDFData);
 		}
 	}
+
+    public function print($sidang_id){
+        $data = Sidang_detail::with('sidang')
+            ->with('examination')
+            ->with('examination.company')
+            ->with('examination.media')
+            ->with('examination.examinationLab')
+            ->with('examination.equipmentHistory')
+            ->with('examination.examinationAttach')
+            ->where('sidang_id', $sidang_id)
+            ->get()
+        ;
+
+        $devicesList = [];
+        $certificateNumberList = [];
+        $sidang_detail = $this->mergeOTR($data, 'sidang');
+
+        foreach($sidang_detail as $item){
+            $device = Device::find($item->examination->device_id);
+            $devicesList[] = $device;
+            $certificateNumberList[] = $item->result == 1 ? $device->cert_number : 1;
+        }
+
+        $PDFData = [];
+        $PDFData['devices'] = $devicesList;
+        $PDFData['sidang_detail'] = $sidang_detail;
+        $PDFData['sidang'] = Sidang::find($sidang_id);
+        $PDFData['certificateNumber'] = $certificateNumberList;
+        $this->generateSidangQA($PDFData, '');
+    }
 
     public function destroy($id, $reasonOfDeletion){
         //Get data

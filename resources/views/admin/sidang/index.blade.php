@@ -222,7 +222,7 @@
 											@if($item->status == 'DONE')
 											<td class="center">
 												<div>
-													<a href="{{URL::to('admin/sidang/'.$item->id.'/print')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Print"><em class="fa fa-file"></em></a>
+													<a href="{{URL::to('admin/sidang/'.$item->id.'/print')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Print" target="_blank"><em class="fa fa-file"></em></a>
 												</div>
 											</td>
 											@endif

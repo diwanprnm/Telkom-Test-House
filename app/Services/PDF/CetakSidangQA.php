@@ -114,7 +114,7 @@ class CetakSidangQA
                 $pdf->Cell(55,$rowHeight, $dataDummy ? \App\Services\MyHelper::tanggalIndonesia($dummy[$dataNumber]['target']) : \App\Services\MyHelper::tanggalIndonesia($data['sidang_detail'][$dataNumber]->targetDate ?? '') ?? '',1,2,'C',false);$pdf->SetFont('helvetica','B',8);
                 $pdf->Cell(55,$rowHeight,$dataDummy ? $dummy[$dataNumber]['hasil'] : $data['sidang_detail'][$dataNumber]->finalResult ?? '',1,2,'C',false);$pdf->SetFont('helvetica','',8);
                 $pdf->Cell(55,$rowHeight*5,$data['sidang_detail'][$dataNumber]->catatan ?? '',1,2,'C',false);$pdf->SetFont('helvetica','B',8);
-                $pdf->Cell(55,$rowHeight, $i<$dataCount || $dataDummy ? $listKeputusanSidangQA[ ($dataDummy ? $dummy[$dataNumber]['result'] : $data['sidang_detail'][$dataNumber]->finalResult) ?? ''] : '',1,2,'C',false);$pdf->SetFont('helvetica','',8);
+                $pdf->Cell(55,$rowHeight, $i<$dataCount || $dataDummy ? $listKeputusanSidangQA[ ($dataDummy ? $dummy[$dataNumber]['result'] : $data['sidang_detail'][$dataNumber]->result) ?? ''] : '',1,2,'C',false);$pdf->SetFont('helvetica','',8);
 
                 // Multiline Handling
                 if ($i<$dataCount || true){
