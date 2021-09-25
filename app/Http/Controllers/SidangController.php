@@ -532,13 +532,13 @@ class SidangController extends Controller
             3. user_id [1,2,3]
             4. approve_date 
         */
-        $PDFData = [];
-        $PDFData['devices'] = $devicesList;
-        $PDFData['sidang_detail'] = $sidang_detail;
-        $PDFData['sidang'] = Sidang::find($sidang_id);
-        $PDFData['certificateNumber'] = $certificateNumberList;
-        $generatedSidangQA = $this->generateSidangQA($PDFData, '');
-        dd($generatedSidangQA);
+        // $PDFData = [];
+        // $PDFData['devices'] = $devicesList;
+        // $PDFData['sidang_detail'] = $sidang_detail;
+        // $PDFData['sidang'] = Sidang::find($sidang_id);
+        // $PDFData['certificateNumber'] = $certificateNumberList;
+        // $generatedSidangQA = $this->generateSidangQA($PDFData, '');
+        // dd($generatedSidangQA);
     }
 
     public function resetExamination($sidang_id){ // DELETE SOON
