@@ -151,6 +151,7 @@ class PDFService
 			'pembuat_perangkat' => $data['pembuat_perangkat'],
 			'plg_id_perusahaan' => $data['plg_idPerusahaan'],
 			'nib_perusahaan' => $data['nibPerusahaan'],
+			'serial_number' => $data['serialNumber'],
 			'date' => $data['date']
 		]);
 	}

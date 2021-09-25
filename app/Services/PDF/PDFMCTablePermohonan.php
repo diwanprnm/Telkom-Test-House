@@ -7,6 +7,30 @@ use Anouar\Fpdf\Fpdf as FPDF;
 class PDFMCTablePermohonan extends FPDF{
 	var $widths;
 	var $aligns;
+	var $data;
+	var $dataType = [
+		'QA' => [
+			'title' => 'Permohonan Uji QA',
+			'document_id' => 'TLKM02/F/001 Versi 05',
+		],
+		'TA' => [
+			'title' => 'Permohonan Uji TA',
+			'document_id' => 'TLKM02/F/002 Versi 05',
+		],
+		'VT' => [
+			'title' => 'Permohonan Uji VT',
+			'document_id' => 'TLKM02/F/003 Versi 05',
+		],
+		'KAL' => [
+			'title' => 'Permohonan Kalibrasi',
+			'document_id' => 'TLKM02/F/004 Versi 05',
+		],
+	];
+
+	function setPDFData($data)
+	{
+		$this->data = $data;
+	}
 	
 	function SetWidths($w)
 	{
@@ -144,111 +168,6 @@ class PDFMCTablePermohonan extends FPDF{
 		return $nl;
 	}
 	
-	public $param1;
-	public $param2;
-	function jns_pengujian($param1,$param2) {
-		$this->param1 = $param1;
-		$this->param2 = $param2;
-	}
-	
-	public $judul;
-	public $title;
-	public $kotaPerusahaan;
-	public $date;
-	public $nama_pemohon;
-	function data_param($judul, $title, $kotaPerusahaan, $date, $nama_pemohon) {
-		$this->judul = $judul;
-		$this->title = $title;
-		$this->kotaPerusahaan = ucwords(strtolower($kotaPerusahaan));
-		$this->date = $date;
-		$this->nama_pemohon = $nama_pemohon;
-	}
-	
-	function Header()
-	{
-		// switch ($this->param) {
-			// case 1:
-				// $uji_init = 'QA';
-				// $uji_name = 'Quality Assurance';
-				// break;
-			// case 2:
-				// $uji_init = 'TA';
-				// $uji_name = 'Type Approval';
-				// break;
-			// case 3:
-				// $uji_init = 'UP';
-				// $uji_name = 'Uji Pesanan';
-				// break;
-			// case 4:
-				// $uji_init = 'CAL';
-				// $uji_name = 'Calibration';
-				// break;
-			// default:
-				// $uji_init = 'N/A';
-				// $uji_name = 'Not Applicable';
-				// break;
-		// }
-		$this->Image(public_path().'/assets/images/Telkom-Indonesia-Corporate-Logo1.jpg',10,3,27);
-		$this->SetFont('helvetica','B',12);
-		$this->SetFont('','BU');
-		$this->SetTextColor(0, 0, 0);
-		$this->Cell(120);
-		$this->Cell(70,5,$this->judul,0,0,'R');
-		$this->Ln();
-		$this->SetFont('helvetica','',10);
-		$this->Cell(120);
-		$this->SetFont('','I');
-		$this->Cell(70,5,$this->title,0,0,'R');
-		$this->Ln();
-		$this->Line(10,22.5,200,22.5);
-		$this->Line(10,23,200,23);
-		// $this->Ln();
-		// $this->SetFont('helvetica','',6);
-		// $this->Cell(120);
-		// $this->Cell(70,5,'Hal '.$this->PageNo().' of {nb}',0,0,'R');
-		$this->Ln(5);
-	}
-	//Page footer
-	function Footer()
-	{
-		$this->SetY(-34);
-		$this->SetFont('helvetica','',10);
-		$this->Cell(0,5,"$this->kotaPerusahaan, $this->date",0,0,'R');
-		$this->Ln(4);
-		$this->SetFont('','UB');
-		$this->Cell(185,5,"$this->nama_pemohon",0,0,'R');
-		$this->SetFont('helvetica','',8);
-		$this->Ln(4);
-		$this->SetFont('','U');
-		$this->Cell(185,5,"NAMA PEMOHON",0,0,'R');
-		$this->Ln(4);
-		$this->SetFont('','I');
-		$this->Cell(185,5,"Applicant's Name",0,0,'R');
-		$this->Ln(1);
-		$this->SetFont('','U');
-		$this->Cell(10,5,"Telkom Test House, Telp. (+62) 812-2483-7500",0,0,'L');
-		$this->Ln(4);
-		$this->SetFont('','I');
-		$this->Cell(10,5,"Telkom Test House, Phone. (+62) 812-2483-7500",0,0,'L');
-		$this->Ln(4);
-		$this->SetFont('helvetica','',8);
-		if($this->param1 == 'QA'){
-			$this->Cell(185,5,"TLKM02/F/001 Versi 04",0,0,'L');		
-		}
-		else if($this->param1 == 'TA'){
-			$this->Cell(185,5,"TLKM02/F/002 Versi 04",0,0,'L');		
-		}
-		else if($this->param1 == 'VT'){
-			$this->Cell(185,5,"TLKM02/F/003 Versi 04",0,0,'L');		
-		}
-		else if($this->param1 == 'KAL'){
-			$this->Cell(185,5,"TLKM02/F/004 Versi 04",0,0,'L');		
-		}
-		//Position at 1.5 cm from bottom
-		$this->SetXY(-10,-11);
-		$this->Cell(4,0.1,'Hal '.$this->PageNo().' dari {nb}',0,0,'R');
-		
-	}
 	
 	/**
 	 * Draws text within a box defined by width = w, height = h, and aligns
@@ -406,6 +325,31 @@ class PDFMCTablePermohonan extends FPDF{
 		}
 		$this->x=$this->lMargin;
 		return $nl;
+	}
+
+	function Header()
+	{
+		$this->Image(app_path('Services/PDF/images/telkom-logo-text.jpg'),170,8,25);
+		$this->Image(app_path('Services/PDF/images/tth-logo-text-opacity.jpg'),40,135,140);
+		$this->SetY(28);
+		$this->SetFont('helvetica','B',20);
+		$this->Cell(0,5,$this->dataType[$this->data['initPengujian']]['title'],0,0,'C');
+	}
+	function Footer()
+	{
+		$this->Image(app_path('Services/PDF/images/decorator-pattern-2.jpg'),0,270,110);
+		$this->Image(app_path('Services/PDF/images/telkom-logo-red-hand.jpg'),190,270,20);
+		$this->SetTextColor(130,130,130);
+		$this->SetFont('helvetica','',7.6);
+		$this->SetXY(110, -26.5);
+		$this->cell(0,3, 'Telkom Test House (TTH) - PT. Telkom Indonesia (Persero) Tbk',0,2);
+		$this->cell(0,3, 'Jl. Gegerkalong Hilir No.47, Bandung, 40152, Indonesia ',0,2);
+		$this->cell(0,3, '(+62)812-2483-7500; cstth@telkom.co.id',0,2);
+		$this->cell(0,3, 'www.telkomtesthouse.co.id',0,2);
+		$this->SetY(-9);
+		$this->SetFont('helvetica','',10);
+		$this->Cell(0,5,$this->dataType[$this->data['initPengujian']]['document_id'],0,0,'L');	
+		$this->Cell(0,5,'Hal '.$this->PageNo().' dari {nb}',0,0,'R');
 	}
 
 }
