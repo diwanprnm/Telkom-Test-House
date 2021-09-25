@@ -423,9 +423,9 @@ class SidangController extends Controller
             ->get()
         ;
         
-        $devicesList = [];
-        $noLaporanUji = [];
-        $certificateNumberList = [];
+        // $devicesList = [];
+        // $noLaporanUji = [];
+        // $certificateNumberList = [];
         $sidang_detail = $this->mergeOTR($data, 'sidang');
 
         foreach($sidang_detail as $item){
@@ -458,7 +458,7 @@ class SidangController extends Controller
             
             // 2. generate Sertifikat()
             $cert_number = $item->result == 1 ? $this->generateNoSertifikat() : null;
-            $certificateNumberList[] = $cert_number;
+            // $certificateNumberList[] = $cert_number;
             
             // 3. update Attachment -> name ("Sertifikat"), link (exam_attach.attachment), no (exam_attach.no) [SEPERTINYA TIDAK USAH]
 
@@ -486,7 +486,7 @@ class SidangController extends Controller
                 $device->cert_number = $cert_number;
                 $device->status = 1;
                 $device->save();
-                $devicesList[] = $device;
+                // $devicesList[] = $device;
             }
 
             // 5. lakukan seolah2 Step Sidang QA - Step Penerbitan Sertifikat Completed
