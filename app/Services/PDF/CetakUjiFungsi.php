@@ -13,17 +13,10 @@ class CetakUjiFungsi
 
     public function makePDF($data, $pdf)
     {
-        $no_reg = $data['no_reg'];
-        $company_name = $data['company_name'];
-        $company_address = $data['company_address'];
-        $company_phone = $data['company_phone'];
-        $device_name = $data['device_name'];
-        $device_mark = $data['device_mark'];
-        $device_manufactured_by = $data['device_manufactured_by'];
-        $device_model = $data['device_model'];
-        $device_serial_number = $data['device_serial_number'];
+        $pdf->SetMargins(17, 0, 17);
+
+
         $status = $data['status'];
-        $catatan = $data['catatan'];
         $tgl_uji_fungsi = $data['tgl_uji_fungsi'];
         $name_te = $data['name_te'];
         $pic = $data['pic'];
@@ -40,96 +33,90 @@ class CetakUjiFungsi
         $pdf->AddPage();
         
         $pdf->Ln(10);
-        $pdf->SetFont('helvetica','',11);
-        $pdf->SetWidths(array(0.00125,50,140));
-        $pdf->SetAligns(array('L','L','L'));
-        $pdf->RowRect(array('','No. Reg.',$this->doubledecode($no_reg)));	
-        $pdf->RowRect(array('','Nama Perusahaan',$this->doubledecode($company_name)));	
-        $pdf->RowRect(array('','Alamat',$this->doubledecode($company_address)));	
-        $pdf->RowRect(array('','Nomor Telepon',$this->doubledecode($company_phone)));	
-        $pdf->RowRect(array('','Nama Perangkat',$this->doubledecode($device_name)));	
-        $pdf->RowRect(array('','Merek/Pabrik',$this->doubledecode($device_mark)));	
-        $pdf->RowRect(array('','Model/Tipe',$this->doubledecode($device_model)));
-        $pdf->RowRect(array('','Nomor Seri',$this->doubledecode($device_serial_number)));
-        $pdf->RowRect(array('','Negara Pembuat',$this->doubledecode($device_manufactured_by)));
-        $pdf->Ln(1);
-        $pdf->Rect(10,$pdf->getY(),190,40);	
+        $pdf->SetFont('helvetica','',10);
+
+        $upperDatas = [
+            'Nomor Registrasi' => $this->doubledecode($data['no_reg']),
+            'Nama Perusahaan' => $data['company_name'],
+            'Alamat Perusahaan' => $data['company_address'],
+            'Nama Perangkat' => $data['device_name'],
+            'Merek' => $data['device_mark'],
+            'Tipe/Model' => $data['device_model'],
+            'Kapasitas' => $data['device_capacity'],
+            'Nomor Seri' => $data['device_serial_number'],
+            'Negara Pembuat' => $data['device_manufactured_by'],
+            'Referensi Uji' => $data['device_test_reference'],
+        ];
+
+        $keyWidth = 55;
+        $startY = 17;
+        $i = 0;
+        foreach($upperDatas as $key => $val ){
+            $i++;
+            $pdf->setXY(17,$startY+(($i+1)*10));
+            $pdf->drawTextBox($key, $keyWidth, 10, 'L', 'M');
+            $pdf->setXY(17+$keyWidth,$startY+(($i+1)*10));
+            $pdf->drawTextBox($val, 121, 10, 'L', 'M');
+        }
+
+        //HASIL UJI FUNGSI
+        $pdf->Ln(7);
+        $pdf->Rect(17,$pdf->getY(),176,30);	
         $pdf->SetFont('','B');
-        $pdf->Cell(180,10,'Hasil Uji Fungsi',0,0,'C');
-        $pdf->Ln(-14);
+        $pdf->Cell(0,5,'Hasil Uji Fungsi',0,1,'C');
+        $pdf->Ln(20);
+        $pdf->SetFont('ZapfDingbats','', 15);
+        $status = 2;
         if($status == 1){
-            $pdf->SetFont('ZapfDingbats','', 10);
-            $pdf->Cell(20);
-            $pdf->Cell(4, 100, "4", 0, 0);
-            $pdf->SetFont('helvetica','',10);
-            $pdf->Cell(18,100,'Memenuhi',0,0,'C');
-            $pdf->SetFont('ZapfDingbats','', 10);
-            $pdf->Cell(70);
-            $pdf->Cell(4, 100, "m", 0, 0);
-            $pdf->SetFont('helvetica','',10);
-            $pdf->Cell(8);
-            $pdf->Cell(18,100,'Tidak Memenuhi',0,0,'C');
+            $pdf->Cell(28, 5, "4", 0, 0, 'R');
+            $pdf->Cell(88, 5, "m", 0, 1, 'R');
         }
         else if($status == 2){
-            $pdf->SetFont('ZapfDingbats','', 10);
-            $pdf->Cell(20);
-            $pdf->Cell(4, 100, "m", 0, 0);
-            $pdf->SetFont('helvetica','',10);
-            $pdf->Cell(18,100,'Memenuhi',0,0,'C');
-            $pdf->SetFont('ZapfDingbats','', 10);
-            $pdf->Cell(70);
-            $pdf->Cell(4, 100, "4", 0, 0);
-            $pdf->SetFont('helvetica','',10);
-            $pdf->Cell(8);
-            $pdf->Cell(18,100,'Tidak Memenuhi',0,0,'C');
+            $pdf->Cell(28, 5, "m", 0, 0, 'R');
+            $pdf->Cell(88, 5, "4", 0, 1, 'R');
+        }else{
+            $pdf->Cell(28, 5, "m", 0, 0, 'R');
+            $pdf->Cell(88, 5, "m", 0, 1, 'R');
         }
-        
-        $pdf->Rect(10,$pdf->getY()+55,190,40);	
-        $pdf->Ln(1);
-        $pdf->Rect(10,$pdf->getY()+55+40,190,50);
-        $pdf->setY($pdf->getY()+58);
-        $pdf->SetWidths(array(5.00125,20,160));
-        $pdf->SetAligns(array('L','L','L'));
-        $pdf->Row(array('','Catatan:',$this->doubledecode($catatan)));	
-        $pdf->Cell(18,50,'Beri tanda',0,0,'L');
-        $pdf->SetFont('ZapfDingbats','', 10);
-        $pdf->Cell(4, 50, "4", 0, 0);
-        $pdf->SetFont('helvetica','',10);
-        $pdf->Cell(20,50,'pada kolom',0,0,'L');
+        $pdf->SetY($pdf->GetY()-5);
+        $pdf->SetFont('helvetica','', 10);
+        $pdf->Cell(28, 5);
+        $pdf->Cell(88, 5, "Memenuhi");
+        $pdf->Cell(0, 5, "Tidak Memenuhi");
+
+        //HASIL UJI FUNGSI
+        $pdf->Ln(9);
+        $pdf->Rect(17,$pdf->GetY(),176,35);
+        $pdf->Cell(0,5,'Catatan:',0,1);
+        $y = $pdf->GetY();
+        $pdf->MultiCell(0, 5,$data['catatan'],0,'L');
+        $pdf->SetY($y+(5*5));
+        $pdf->Cell(18,5,'Beritanda:');
+        $pdf->SetFont('ZapfDingbats','B');
+        $pdf->Cell(5, 5, "4");
+        $pdf->SetFont('helvetica','');
+        $pdf->Cell(20,5,'pada kolom:');
         $pdf->SetFont('','B');
-        $pdf->Cell(35,50,'HASIL UJI FUNGSI',0,0,'L');
-
-
-        /**
-         * HANDSIGN SECTION
-         */ 
-        $pdf->Ln(15);
-
-        $pdf->Ln(-20);
+        $pdf->Cell(10,5,'Hasil Uji Fungsi');
         $pdf->SetFont('','');
-        $pdf->Cell(144); $pdf->Cell(18,100-5, 'Bandung, '.$this->doubledecode($tgl_uji_fungsi) ,0,0,'C');
 
-        $pdf->Ln(-15);
-        $pdf->Cell(16); $pdf->Cell(18,110+25,'Pelanggan',0,0,'C');
-        $pdf->Cell(47); $pdf->Cell(18,110+25,'Test Engineer Laboratorium QA',0,0,'C');
-        $pdf->Cell(45); $pdf->Cell(18,110+25,'Officer UREL',0,0,'C');
 
-        $pdf->Ln(45);
-        $pdf->Cell(16); $pdf->Cell(18,100-5,$pic,0,0,'C');
-        $pdf->Cell(47); $pdf->Cell(18,100-5,$name_te,0,0,'C');
-        $pdf->Cell(45); $pdf->Cell(18,100-5,$pic_urel,0,0,'C');
-        
+        /* HANDSIGN SECTION */ 
+        $pdf->Ln(9);
+        $pdf->Rect(17,$pdf->GetY(),176,35);
+        $pdf->Cell(117); $pdf->Cell(58,5, 'Bandung, '.$this->doubledecode($tgl_uji_fungsi) ,0,1,'C');
+        $pdf->Cell(58,5,'Pelanggan',0,0,'C');
+        $pdf->Cell(59,5,'Test Engineer TTH',0,0,'C');
+        $pdf->Cell(58,5,'Officer TTH',0,1,'C');
+        $pdf->Ln(19);
+        $pdf->Cell(58,5,$pic,0,0,'C');
+        $pdf->Cell(59,5,$name_te,0,0,'C');
+        $pdf->Cell(58,5,$pic_urel,0,0,'C');
         $pdf->Ln(1);
-        $pdf->SetFont('','');
-        $pdf->Cell(16); $pdf->Cell(18,100-5, self::UNDERSCORES ,0,0,'C');
-        $pdf->Cell(47); $pdf->Cell(18,100-5, self::UNDERSCORES ,0,0,'C');
-        $pdf->Cell(45); $pdf->Cell(18,100-5, self::UNDERSCORES ,0,0,'C');
-        
-        $pdf->setData(['kodeForm' => 'TLKM02/F/005 Versi 03']);
+        $pdf->Cell(58,5,self::UNDERSCORES,0,0,'C');
+        $pdf->Cell(59,5,self::UNDERSCORES,0,0,'C');
+        $pdf->Cell(58,5,self::UNDERSCORES,0,0,'C');
 
-    /*Footer Manual*/
-        
-    /*End Footer Manual*/
         $pdf->Output();
         exit;
     }

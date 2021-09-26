@@ -2101,6 +2101,10 @@ class ExaminationController extends Controller
 			else{$device_model = $data[0]->device->model?: '-';}
 		if( strpos( $data[0]->device->serial_number, "/" ) !== false ) {$device_serial_number = urlencode(urlencode($data[0]->device->serial_number));}
 			else{$device_serial_number = $data[0]->device->serial_number?: '-';}
+		if( strpos( $data[0]->device->capacity, "/" ) !== false ) {$device_capacity = urlencode(urlencode($data[0]->device->capacity));}
+			else{$device_capacity = $data[0]->device->capacity?: '-';}
+		if( strpos( $data[0]->device->test_reference, "/" ) !== false ) {$device_test_reference = urlencode(urlencode($data[0]->device->test_reference));}
+			else{$device_test_reference = $data[0]->device->test_reference?: '-';}
 		if( strpos( $data[0]->function_test_TE, "/" ) !== false ) {$function_test_TE = urlencode(urlencode($data[0]->function_test_TE));}
 			else{$function_test_TE = $data[0]->function_test_TE?: '-';}
 		if( strpos( $data[0]->catatan, "/" ) !== false ) {$catatan = urlencode(urlencode($data[0]->catatan));}
@@ -2142,6 +2146,8 @@ class ExaminationController extends Controller
 			'device_mark' => $device_mark,
 			'device_manufactured_by' => $device_manufactured_by,
 			'device_model' => $device_model,
+			'device_capacity' => $device_capacity,
+			'device_test_reference' => $device_test_reference,
 			'device_serial_number' => $device_serial_number,
 			self::STATUS => $function_test_TE,
 			self::CATATAN => $catatan,

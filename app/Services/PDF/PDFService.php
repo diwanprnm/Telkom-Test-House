@@ -56,7 +56,7 @@ class PDFService
 	{
 		$cetakUjiFungsi = new CetakUjiFungsi();
 		if( App::environment() == 'testing'){ return ''; }
-		return $cetakUjiFungsi->makePDF($data, new PDFMCTable());
+		return $cetakUjiFungsi->makePDF($data, new PDFMCCetakUjiFungsi());
 	}
 
 
