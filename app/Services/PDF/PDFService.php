@@ -96,7 +96,7 @@ class PDFService
 	{
 		//dipanggil dari routes
 		$cetakKontrak = new CetakKontrak();
-		$cetakKontrak->makePDF($data, new PDFMCTable());
+		$cetakKontrak->makePDF($data, new PDFMCCetakKontrak());
 	}
 
 

@@ -774,6 +774,7 @@ class ExaminationService
 			self::KAPASITAS_PERANGKAT => $exam->device->capacity,
 			'referensi_perangkat' => $exam->device->test_reference,
 			self::PEMBUAT_PERANGKAT => $exam->device->manufactured_by,
+			'serial_number' => $exam->device->serial_number,
 			'is_loc_test' => $exam->is_loc_test,
 			self::CONTRACT_DATE => $contract_date_ina,
 			'manager_lab' => $manager_labs,
