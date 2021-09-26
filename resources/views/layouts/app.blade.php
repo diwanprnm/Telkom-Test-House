@@ -268,7 +268,7 @@
     @php if(config('app.IS_ENABLED_NOTIFICATION')){@endphp
      <script src="{{url('vendor/socket/socket.io.js')}}"></script>
       <script>
-        var socket = io(config('app.SOCKET'));
+        var socket = io(config('app.SOCKET_ENDPOINT'));
         // var socket = io('http://37.72.172.144:3000');
         socket.on("notification-channel:App\\Events\\Notification", function(message){ 
             var userId = $("#user_id").val();
