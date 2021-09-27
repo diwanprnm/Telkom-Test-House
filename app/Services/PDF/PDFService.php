@@ -48,7 +48,7 @@ class PDFService
 	{
 		$cetakBuktiPenerimaanPerangkat = new CetakBuktiPenerimaanPerangkat();
 		if( App::environment() == 'testing'){ return ''; }
-		return $cetakBuktiPenerimaanPerangkat->makePDF($data, new PDFMCTable());
+		return $cetakBuktiPenerimaanPerangkat->makePDF($data, new PDFMCCetakBuktiPenerimaanPerangkat());
 	}
 
 

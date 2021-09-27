@@ -35,110 +35,78 @@ class CetakBuktiPenerimaanPerangkat{
 		}else{
 			$pic_urel = '...............................';
 		}
-        
-		$pdf->judul_kop('BUKTI PENERIMAAN & PENGELUARAN PERANGKAT UJI','Nomor: '.$this->doubledecode($kode_barang));
-		$pdf->setData(['kodeForm' => 'TLKM02/F/009 Versi 01']);
+
 		$pdf->AliasNbPages();
 		$pdf->AddPage();
-		 
-		$y = $pdf->getY();
-	 
-		$pdf->SetFont('helvetica','',10);
-		$pdf->setXY(10.00125,$y + 3);
-		$pdf->Cell(10,5,"Nama Perangkat",0,0,'L');
-		$pdf->SetWidths(array(0.00125,50,55,110));
-		$pdf->Row(array("","",":",$this->doubledecode($device_name))); 
-		/*Pemilik Perangkat*/
-		$y = $pdf->getY(); 
-		$pdf->setXY(10.00125,$y + 1);
-		$pdf->Cell(10,5,"Nama Perusahaan",0,0,'L');
-		$pdf->SetWidths(array(0.00125,50,55,110));
-		$pdf->Row(array("","",":",$this->doubledecode($company_name)));
-		/*Alamat*/ 
-		$y = $pdf->getY(); 
-		$pdf->setXY(10.00125,$y + 1);
-		$pdf->Cell(10,5,"Alamat",0,0,'L');
-		$pdf->SetWidths(array(0.00125,50,55,110));
-		$pdf->Row(array("","",":",$this->doubledecode($company_address)));
-		
-		/*Phone & Fax*/
-		$y = $pdf->getY(); 
-		$pdf->setXY(10.00125,$y + 1);
-		$pdf->Cell(10,5,"Nomor Telepon",0,0,'L');
-		$pdf->SetWidths(array(0.00125,50,55,110));
-		$pdf->Row(array("","",":",$this->doubledecode($user_phone))); 
+        $pdf->SetMargins(17, 0, 17);
 
-		/*Jenis Pengujian*/ 
-		$y = $pdf->getY(); 
-		$pdf->setXY(10.00125,$y + 1);
-		$pdf->Cell(10,5,"Jenis Pengujian",0,0,'L');
-		$pdf->SetWidths(array(0.00125,50,55,110));
-		$pdf->Row(array("","",":",$this->doubledecode($exam_type).'/'.$this->doubledecode($exam_type_desc))); 
+
+		$pdf->SetFont('helvetica','',10);
+		$pdf->SetWidths([50,55,110]);
+        $pdf->Ln(5);
+		$pdf->SetX(0);
+		$pdf->Row(array("Nomor Barang",":",$this->doubledecode($kode_barang))); 
+		$pdf->Row(array("Nama Perangkat",":",$this->doubledecode($device_name))); 
+		$pdf->Row(array("Nama Perusahaan",":",$this->doubledecode($device_name))); 
+		$pdf->Row(array("Alamat Perusahaan",":",$this->doubledecode($company_address))); 
+		$pdf->Row(array("Nomor HP Pemohon",":",$this->doubledecode($user_phone))); 		
 
 	 	//LIST Perangkat
-		$pdf->Ln(2); 
-		$pdf->SetWidths(array(0.00125,20,30,30,50,60));
-		$pdf->SetAligns(array('L','C','C','C','C','C')); 
+		$pdf->Ln(5); 
+		$pdf->SetX(0);
+		$pdf->SetWidths([10,35,85,50]);
+		$pdf->SetAligns(['L','C','C','C']); 
 		$pdf->SetFont('helvetica','B',10);
- 		$pdf->RowRect(array('','No.','Jumlah','Satuan','Uraian Perangkat','Keterangan'));
+ 		$pdf->RowRect(['data'=>['No.','Jumlah (Satuan)','Merek, Tipe/Model, Kapasitas, Nomor Seri, dan Negara Pembuat','Keterangan']]);
 		$pdf->SetFont('helvetica','',10);
-        
         
         if(count($equipment)){
 			$pic = $equipment[0]->pic;
 			$no = 1;
 			foreach($equipment as $data){
-				$pdf->RowRect(array('',$no,$data->qty,$data->unit,$data->description,$data->remarks));
+				$pdf->RowRect(['data'=>[$no,"$data->qty ($data->unit)",$data->description,$data->remarks]]);
 				$no++;
 			}
-			for ($i=count($equipment); $i <24 ; $i++) { 
-				$pdf->RowRect(array('','','','','',''));
+			for ($i=count($equipment); $i < (24 - count($equipment)); $i++) { 
+				$pdf->RowRect(['data'=>['','','','']]);
 			}
 		}else{
 			$pic = '...............................';
 			for ($i=0; $i <24 ; $i++) { 
-				$pdf->RowRect(array('','','','','',''));
+				$pdf->RowRect(['data'=>['','','','']]);
 			}	  			
 		}
 
-		$pdf->Ln(2);  
+		$pdf->Ln(5);  
 	 	$pdf->SetFont('helvetica','',10); 
-	 	$pdf->SetFillColor(976,245,458);
-		$pdf->setX(10.00125);
-		$pdf->Cell(80, 4, 'Penerimaan Perangkat', 1, 0, 'C',true); 
-		$pdf->setX(120);
-		$pdf->Cell(80, 4, 'Pengambilan Perangkat', 1, 0, 'C',true); 
+		$pdf->Cell(80, 4, 'Penerimaan Perangkat', 1, 0, 'C'); 
+		$pdf->setX(115);
+		$pdf->Cell(80, 4, 'Pengambilan Perangkat', 1, 1, 'C'); 
 
 		//TTD PENERIMAAN PERANGKAT
+		$pdf->Ln(2); 
+		$pdf->Cell(40, 4, 'Pelanggan', 1, 0, 'C');
+		$pdf->Cell(40, 4, 'Officer TTH', 1, 0, 'C');
+		$pdf->setX(115);
+		$pdf->Cell(40, 4, 'Pelanggan', 1, 0, 'C');
+		$pdf->Cell(40, 4, 'Officer TTH', 1, 1, 'C'); 
+		 
 
-		$pdf->Ln(6); 
-	 	$pdf->SetFont('helvetica','',10); 
-		$pdf->setX(10.00125);
-		$pdf->Cell(40, 4, 'Pelanggan', 1, 0, 'C');
-		$pdf->Cell(40, 4, 'Telkom Test House', 1, 0, 'C');
-		 
-		$pdf->setX(10.00125);
-		$pdf->drawTextBox('('.$pic.')', 40, 25, 'C', 'B', 1);
-		$pdf->setXY(50,$pdf->getY()-25);
-		$pdf->drawTextBox('('.$pic_urel.')', 40, 25, 'C', 'B', 1); 
-		 
-		//TTD PENGAMBILAN PERANGKAT 
-	  	$pdf->SetFont('helvetica','',10); 
-	 	$pdf->setXY(120,$pdf->getY()-25);
-		$pdf->Cell(40, 4, 'Pelanggan', 1, 0, 'C');
-		$pdf->Cell(40, 4, 'Telkom Test House', 1, 0, 'C'); 
-		$pdf->setX(120);
-		$pdf->drawTextBox('(...............................)', 40, 25, 'C', 'B', 1);
-		$pdf->setXY(160,$pdf->getY() -25);
-		$pdf->drawTextBox('(...............................)', 40, 25, 'C', 'B', 1);  
+		$pdf->drawTextBox('('.$pic.')', 40, 20, 'C', 'B', 1);
+		$pdf->setXY(55,$pdf->getY()-20);
+		$pdf->drawTextBox('('.$pic_urel.')', 40, 20, 'C', 'B', 1); 
+	 	$pdf->setXY(115,$pdf->getY()-20);
+		$pdf->drawTextBox('('.$pic.')', 40, 20, 'C', 'B', 1);
+		$pdf->setXY(155,$pdf->getY()-20);
+		$pdf->drawTextBox('('.$pic_urel.')', 40, 20, 'C', 'B', 1);  
 
 		//TANGGAL PENERIMAAN & PENGEMBALIAN
-		$pdf->setXY(10,$pdf->getY() - 22);
+		$pdf->setXY(17,$pdf->getY() - 22);
 		$pdf->Cell(40,10,'Tgl '.$this->doubledecode($contract_date),0,0,'C');  
 		$pdf->Cell(40,10,'Tgl '.$this->doubledecode($contract_date),0,0,'C'); 
-		$pdf->setX(127);
-		$pdf->Cell(40,10,'Tgl ..................',0,0,'L');
-		$pdf->Cell(40,10,'Tgl ..................',0,0,'L'); 
+		$pdf->setX(115);
+		$pdf->Cell(40,10,'Tgl ..................',0,0,'C');
+		$pdf->Cell(40,10,'Tgl ..................',0,0,'C'); 
 
 		$pdf->Output();
 		exit;
