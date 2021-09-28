@@ -118,7 +118,7 @@ class PDFService
 	public function cetakTechnicalMeetingUjiLokasi($data)
 	{
 		$cetakTechnicalMeetingUjiLokasi = new CetakTechnicalMeetingUjiLokasi();
-		$cetakTechnicalMeetingUjiLokasi->makePDF($data, new PDFMCDefault());
+		$cetakTechnicalMeetingUjiLokasi->makePDF($data, new PDFMCcetakTechnicalMeetingUjiLokasi());
 	}
 
 	public function cetakTiketChamber($data)

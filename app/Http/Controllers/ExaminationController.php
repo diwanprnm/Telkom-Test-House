@@ -2211,7 +2211,14 @@ class ExaminationController extends Controller
 			'userName' => \App\Services\MyHelper::setDefault($user['name'], '-'),
 			'adminName' => Auth::user()->name,
 			'managerLab' => \App\Services\MyHelper::setDefault($manager_lab->data[0]->name, '-'),
-			'managerUrel' => \App\Services\MyHelper::setDefault($manager_urel->data[0]->name, '-')
+			'managerUrel' => \App\Services\MyHelper::setDefault($manager_urel->data[0]->name, '-'),
+
+			//todo@arif tambah field yang kosong dibawah ini
+			'exaimationDuration' => '5 (lime) Hari',
+			'penyediaAlatUkur' => 'TTH',
+			'alatUkur' => 'Signal Strength Meter',
+			'itemTest' => 'Antena Reciever',
+			'keteranganParsialTest' => 'Okei',
 		);
 
 		$PDF = new \App\Services\PDF\PDFService();
