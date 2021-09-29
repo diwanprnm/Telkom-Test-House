@@ -271,10 +271,10 @@ class ExaminationService
 		$query_gudang = "SELECT action_date FROM equipment_histories WHERE location = 2 AND examination_id = '".$id."' ORDER BY created_at DESC LIMIT 2";
 		$data_gudang = DB::select($query_gudang);
 		
-		$res_exam_approve_date = $client->get('spk/searchHistoryData?spkNumber='.$spk_code)->getBody();
+		$res_exam_approve_date = $client->get('spk/searchHistoryData?limit=1&spkNumber='.$spk_code)->getBody();
         $exam_approve_date = json_decode($res_exam_approve_date);
         
-		$res_exam_schedule = $client->get('spk/searchData?spkNumber='.$spk_code)->getBody();
+		$res_exam_schedule = $client->get('spk/searchData?limit=1&spkNumber='.$spk_code)->getBody();
 		$exam_schedule = json_decode($res_exam_schedule);
 		
         return array($data_lab, $data_gudang, $exam_approve_date, $exam_schedule);
