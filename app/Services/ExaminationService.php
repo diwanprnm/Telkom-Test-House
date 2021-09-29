@@ -780,6 +780,7 @@ class ExaminationService
 			'manager_lab' => $manager_labs,
 			self::MANAGER_UREL => $manager_urels,
 			'pic' => $pic,
+			'adminName' => $currentUser->name,
 			'is_poh' => $is_poh
 		]);
 

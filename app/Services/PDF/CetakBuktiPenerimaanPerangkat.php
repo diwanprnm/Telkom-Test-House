@@ -47,7 +47,7 @@ class CetakBuktiPenerimaanPerangkat{
 		$pdf->SetX(0);
 		$pdf->Row(array("Nomor Barang",":",$this->doubledecode($kode_barang))); 
 		$pdf->Row(array("Nama Perangkat",":",$this->doubledecode($device_name))); 
-		$pdf->Row(array("Nama Perusahaan",":",$this->doubledecode($device_name))); 
+		$pdf->Row(array("Nama Perusahaan",":",$this->doubledecode($company_name))); 
 		$pdf->Row(array("Alamat Perusahaan",":",$this->doubledecode($company_address))); 
 		$pdf->Row(array("Nomor HP Pemohon",":",$this->doubledecode($user_phone))); 		
 

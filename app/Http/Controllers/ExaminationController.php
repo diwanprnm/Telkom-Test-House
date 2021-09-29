@@ -2109,15 +2109,18 @@ class ExaminationController extends Controller
 			else{$function_test_TE = $data[0]->function_test_TE?: '-';}
 		if( strpos( $data[0]->catatan, "/" ) !== false ) {$catatan = urlencode(urlencode($data[0]->catatan));}
 			else{$catatan = $data[0]->catatan?: '-';}
-			if($function_test->code != 'MSTD0059AERR' && $function_test->code != 'MSTD0000AERR'){
-				if( strpos( $function_test->data[0]->nik, "/" ) !== false ) {$nik_te = urlencode(urlencode($function_test->data[0]->nik));}
-					else{$nik_te = $function_test->data[0]->nik?: '-';}
-				if( strpos( $function_test->data[0]->name, "/" ) !== false ) {$name_te = urlencode(urlencode($function_test->data[0]->name));}
-					else{$name_te = $function_test->data[0]->name?: '-';}
-			}else{
-				$nik_te = "-";
-				$name_te = "-";
-			}
+			// if($function_test->code != 'MSTD0059AERR' && $function_test->code != 'MSTD0000AERR'){
+			// 	if( strpos( $function_test->data[0]->nik, "/" ) !== false ) {$nik_te = urlencode(urlencode($function_test->data[0]->nik));}
+			// 		else{$nik_te = $function_test->data[0]->nik?: '-';}
+			// 	if( strpos( $function_test->data[0]->name, "/" ) !== false ) {$name_te = urlencode(urlencode($function_test->data[0]->name));}
+			// 		else{$name_te = $function_test->data[0]->name?: '-';}
+			// }else{
+			// 	$nik_te = "-";
+			// 	$name_te = "-";
+			// }
+		$nik_te = "-";
+		if( strpos( $data[0]->function_test_PIC, "/" ) !== false ) {$name_te = urlencode(urlencode($data[0]->function_test_PIC));}
+			else{$name_te = $data[0]->function_test_PIC?: '-';}
 		if(count($data[0]->equipment)>0){
 			if( strpos( $data[0]->equipment[0]->pic, "/" ) !== false ) {$pic = urlencode(urlencode($data[0]->equipment[0]->pic));}
 				else{$pic = $data[0]->equipment[0]->pic?: '-';}
