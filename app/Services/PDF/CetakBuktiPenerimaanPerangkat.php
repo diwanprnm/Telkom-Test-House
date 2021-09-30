@@ -81,7 +81,7 @@ class CetakBuktiPenerimaanPerangkat{
 	 	$pdf->SetFont('helvetica','',10); 
 		$pdf->Cell(80, 4, 'Penerimaan Perangkat', 1, 0, 'C'); 
 		$pdf->setX(115);
-		$pdf->Cell(80, 4, 'Pengambilan Perangkat', 1, 1, 'C'); 
+		$pdf->Cell(80, 4, 'Pengeluaran Perangkat', 1, 1, 'C'); 
 
 		//TTD PENERIMAAN PERANGKAT
 		$pdf->Ln(2); 

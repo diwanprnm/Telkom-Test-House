@@ -15,15 +15,15 @@ class PDFMCTablePermohonan extends FPDF{
 		],
 		'TA' => [
 			'title' => 'Permohonan Uji TA',
-			'document_id' => 'TLKM02/F/002 Versi 05',
+			'document_id' => 'TLKM02/F/001 Versi 05',
 		],
 		'VT' => [
 			'title' => 'Permohonan Uji VT',
-			'document_id' => 'TLKM02/F/003 Versi 05',
+			'document_id' => 'TLKM02/F/001 Versi 05',
 		],
 		'KAL' => [
 			'title' => 'Permohonan Kalibrasi',
-			'document_id' => 'TLKM02/F/004 Versi 05',
+			'document_id' => 'TLKM02/F/001 Versi 05',
 		],
 	];
 

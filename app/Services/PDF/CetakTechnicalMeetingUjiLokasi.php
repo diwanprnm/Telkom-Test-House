@@ -32,8 +32,8 @@ class CetakTechnicalMeetingUjiLokasi
 
         // DATA SHEET FORM UJI - SECTION
         $pdf->Cell(0,5,'B.    Data Sheet Sesuai dengan Data Perangkat',0,1);
-        $dataMatch = $dataNotMatch = '';
-        if($data['examinationFunctionTestTE']){$dataMatch = 4;} else {$dataNotMatch = 4;}
+        $dataMatch = $data['examinationFunctionTestTE'] == 1 ? '4' : '';
+        $dataNotMatch = $data['examinationFunctionTestTE'] == 2 ? '4' : '';
         $pdf->SetFont('ZapfDingbats','',20); $pdf->Cell(10,5,'',0); $pdf->Cell(10,5,$dataMatch,1,0,'C'); $pdf->SetFont('helvetica','',8); $pdf->Cell(20,5,'Sesuai');
         $pdf->SetFont('ZapfDingbats','',20); $pdf->Cell(10,5,'',0); $pdf->Cell(10,5,$dataNotMatch,1,0,'C'); $pdf->SetFont('helvetica','',8); $pdf->Cell(20,5,'Tidak Sesuai/Lengkap',0,1);
         $pdf->ln(2);
@@ -46,7 +46,7 @@ class CetakTechnicalMeetingUjiLokasi
         $pdf->Row(['Jumlah Test Engineer (TE)','Lokasi Uji', 'Durasi Pengujian', 'Transportasi dan Akomodasi']);
 		$pdf->SetFont('', '');
         $pdf->SetAligns(['C','C','C','L']);
-        $row = $pdf->Row(['data' => [$data['examinationFunctionTestPIC'], $data['companyAddress'].' - '.$data['companyCity'], $data['exaimationDuration']?? '' ], 'minHeight' => 20] );
+        $row = $pdf->Row(['data' => ['', '', $data['exaimationDuration']?? '' ], 'minHeight' => 20] );
         $maxHeight = max($row['height'],20);
         $pdf->Rect(118, $pdf->GetY()-$row['height'] ,75,$maxHeight);
         $pdf->SetXY(118, $pdf->GetY()-($row['height']));
@@ -67,7 +67,7 @@ class CetakTechnicalMeetingUjiLokasi
         $pdf->Row(['No.', 'Alat Ukur', 'Penyedia Alat Ukur']);
         $pdf->SetFont('','');
         $pdf->SetAligns(['C','C','C']);
-        $pdf->Row([ 'data' => ['1', $data['alatUkur'] ?? '', $data['penyediaAlatUkur'] ?? ''], 'minHeight' => 10 ]);
+        $pdf->Row([ 'data' => ['', $data['alatUkur'] ?? '', $data['penyediaAlatUkur'] ?? ''], 'minHeight' => 10 ]);
         $pdf->ln(2);
 
         //E.	Parsial Test
@@ -78,7 +78,7 @@ class CetakTechnicalMeetingUjiLokasi
         $pdf->Row(['No.', 'Item Test', 'Keterangan']);
         $pdf->SetFont('','');
         $pdf->SetAligns(['C','C','C']);
-        $pdf->Row([ 'data' => ['1', $data['itemTest'] ?? '', $data['keteranganParsialTest'] ?? ''], 'minHeight' => 10 ]);
+        $pdf->Row([ 'data' => ['', $data['itemTest'] ?? '', $data['keteranganParsialTest'] ?? ''], 'minHeight' => 10 ]);
         $pdf->ln(2);
 
         // DISCLAIMER - SECTION
@@ -95,7 +95,7 @@ class CetakTechnicalMeetingUjiLokasi
         $pdf->Cell(4.5,4,'5.');
         $pdf->MultiCell(0, 4,'Jika ada item test yang tidak dapat dilakukan di lokasi pelanggan maka item test harus diuji di Lab TTH dan dicantumkan di bagian E. Parsial Test.');
         $pdf->Cell(4.5,4,'6.');
-        $pdf->Write(4,'Jika kondisi yang ditemukan di lokasi tidak sesuai dengan kesepakatan dalam ');$pdf->SetFont('','I'); $pdf->Write(4,'Technical Meeting '); $pdf->SetFont('','');$pdf->Write(4,'uji lokasi ini, maka uji lokasi ini'); $pdf->ln();
+        $pdf->Write(4,'Jika kondisi yang ditemukan di lokasi tidak sesuai dengan kesepakatan dalam ');$pdf->SetFont('','I'); $pdf->Write(4,'technical meeting '); $pdf->SetFont('','');$pdf->Write(4,'uji lokasi ini, maka uji lokasi ini'); $pdf->ln();
         $pdf->Cell(4.5,4,''); $pdf->Write(4,'ditunda sampai dengan kondisi yang disepakati bersama antara pelanggan dengan TTH dan biaya yang muncul akibat penundaan ini ');$pdf->ln();
         $pdf->Cell(4.5,4,''); $pdf->Write(4,'menjadi tanggung jawab pelanggan.');
         $pdf->ln();

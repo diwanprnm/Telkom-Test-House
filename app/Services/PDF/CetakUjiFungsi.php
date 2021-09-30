@@ -66,7 +66,6 @@ class CetakUjiFungsi
         $pdf->Cell(0,5,'Hasil Uji Fungsi',0,1,'C');
         $pdf->Ln(20);
         $pdf->SetFont('ZapfDingbats','', 15);
-        $status = 2;
         if($status == 1){
             $pdf->Cell(28, 5, "4", 0, 0, 'R');
             $pdf->Cell(88, 5, "m", 0, 1, 'R');

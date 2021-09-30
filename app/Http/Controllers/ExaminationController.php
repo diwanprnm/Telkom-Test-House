@@ -2217,11 +2217,11 @@ class ExaminationController extends Controller
 			'managerUrel' => \App\Services\MyHelper::setDefault($manager_urel->data[0]->name, '-'),
 
 			//todo@arif tambah field yang kosong dibawah ini
-			'exaimationDuration' => '5 (lime) Hari',
-			'penyediaAlatUkur' => 'TTH',
-			'alatUkur' => 'Signal Strength Meter',
-			'itemTest' => 'Antena Reciever',
-			'keteranganParsialTest' => 'Okei',
+			'exaimationDuration' => '',
+			'penyediaAlatUkur' => '',
+			'alatUkur' => '',
+			'itemTest' => '',
+			'keteranganParsialTest' => '',
 		);
 
 		$PDF = new \App\Services\PDF\PDFService();

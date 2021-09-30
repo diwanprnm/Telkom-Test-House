@@ -43,9 +43,9 @@ class CetakPermohonan
         $pdf->Cell(7,5,"",1,0);$pdf->Cell(3,5,"",0,0);$pdf->Cell(45,5,"Agen/Distributor",0,0);
         $pdf->Ln(10);
         $checkPossition = [
-            'Agen' => 31.5,
-            'Pabrikan' => 86.5,
-            'Perorangan' => 141.5,
+            'Pabrikan' => 31.5,
+            'Perwakilan' => 86.5,
+            'Agen' => 141.5,
         ];
         $pdf->SetXY($checkPossition[$data[0]['jns_perusahaan']]??40, 77);
         $pdf->SetFont('ZapfDingbats','', 14);
@@ -108,11 +108,10 @@ class CetakPermohonan
         // TANDA TANGAN
         $signDate = date("d/m/Y", strtotime($data[0]['date']));
 		$pdf->SetFont('helvetica','',10);
-		$pdf->Cell(0,5,"Bandung, $signDate",0,0,'L');
-        $pdf->Ln(20);
+		$pdf->Cell(0,5,$data[0]['kotaPerusahaan'].", ".$signDate,0,0,'L');
+        $pdf->Ln(10);
 		$pdf->SetFont('','UB');
 		$pdf->Cell(0,5,$data[0]['nama_pemohon'],0,0,'L');
-
         /*End Data Pemohon*/
         $pdf->Output();
         exit;
