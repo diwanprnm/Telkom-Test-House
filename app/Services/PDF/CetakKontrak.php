@@ -25,9 +25,9 @@ class CetakKontrak
         $pdf->SetX(21.5);
         $pdf->Cell(35,5,"Nama Pemohon",0,2);
         $pdf->Cell(35,5,"Alamat Pemohon",0,2);
-        $pdf->SetXY(56.5, 49);
-        $pdf->Cell(0,5,$data[0]['nama_pemohon'],'B',2);
-        $pdf->Cell(0,5,$data[0]['alamat_pemohon'],'B',2);
+        $pdf->SetXY(56.5, 47);
+        $pdf->Cell(0,5,$data[0]['nama_pemohon'],0,2);
+        $pdf->Cell(0,5,$data[0]['alamat_pemohon'],0,2);
         $pdf->Ln(5);
 
         // DATA PERANGKAT
@@ -45,14 +45,14 @@ class CetakKontrak
         $pdf->Cell(37,5,"Nomor Seri",0,2);
         $pdf->Cell(37,5,"Referensi Uji",0,2);
         $pdf->SetXY(56.5, 69);
-        $pdf->Cell(0,5,$data[0]['nama_perangkat'],'B',2);
-        $pdf->Cell(45,5,$data[0]['merek_perangkat'],'B',2);
-        $pdf->Cell(45,5,$data[0]['kapasitas_perangkat'],'B',2);
-        $pdf->Cell(45,5,$data[0]['pembuat_perangkat'],'B',2);
+        $pdf->Cell(0,5,$data[0]['nama_perangkat'],0,2);
+        $pdf->Cell(45,5,$data[0]['merek_perangkat'],0,2);
+        $pdf->Cell(45,5,$data[0]['kapasitas_perangkat'],0,2);
+        $pdf->Cell(45,5,$data[0]['pembuat_perangkat'],0,2);
         $pdf->SetXY(132.5, 74);
-        $pdf->Cell(0,5,$data[0]['model_perangkat'],'B',2);//daniel
-        $pdf->Cell(0,5,$data[0]['serial_number'],'B',2);
-        $pdf->Cell(0,5,$data[0]['referensi_perangkat'],'B',2);
+        $pdf->Cell(0,5,$data[0]['model_perangkat'],0,2);//daniel
+        $pdf->Cell(0,5,$data[0]['serial_number'],0,2);
+        $pdf->Cell(0,5,$data[0]['referensi_perangkat'],0,2);
         $pdf->Ln(5);
 
         // DATA PERANGKAT

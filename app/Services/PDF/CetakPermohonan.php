@@ -24,12 +24,12 @@ class CetakPermohonan
         $pdf->Cell(35,5,"Alamat Pemohon",0,2);
         $pdf->Cell(35,5,"Nomor HP Pemohon",0,2);
         $pdf->SetXY(56.5, 49);
-        $pdf->Cell(0,5,$data[0]['nama_pemohon'],'B',2);
-        $pdf->Cell(0,5,$data[0]['alamat_pemohon'],'B',2);
-        $pdf->Cell(45,5,$data[0]['telepon_pemohon'],'B',0);
+        $pdf->Cell(0,5,$data[0]['nama_pemohon'],0,2);
+        $pdf->Cell(0,5,$data[0]['alamat_pemohon'],0,2);
+        $pdf->Cell(45,5,$data[0]['telepon_pemohon'],0,0);
         $pdf->Cell(3,5);
         $pdf->Cell(37,5,"Alamat E-Mail Pemohon",0,0);
-        $pdf->Cell(0,5,$data[0]['email_pemohon'],'B',0);
+        $pdf->Cell(0,5,$data[0]['email_pemohon'],0,0);
         $pdf->Ln(10);
 
         // DATA PERUSAHAAN
@@ -56,8 +56,8 @@ class CetakPermohonan
         $pdf->Cell(35,5,"Nama Perusahaan",0,2);
         $pdf->Cell(35,5,"Alamat Perusahaan",0,2);
         $pdf->SetXY(56.5, 85);
-        $pdf->Cell(0,5,$data[0]['nama_perusahaan'],'B',2);
-        $pdf->Cell(0,5,$data[0]['alamat_perusahaan'],'B',2);
+        $pdf->Cell(0,5,$data[0]['nama_perusahaan'],0,2);
+        $pdf->Cell(0,5,$data[0]['alamat_perusahaan'],0,2);
         $pdf->Ln(10);
 
         // DATA PERANGKAT
@@ -75,14 +75,14 @@ class CetakPermohonan
         $pdf->Cell(37,5,"Nomor Seri",0,2);
         $pdf->Cell(37,5,"Referensi Uji",0,2);
         $pdf->SetXY(56.5, 113);
-        $pdf->Cell(0,5,$data[0]['nama_perangkat'],'B',2);
-        $pdf->Cell(45,5,$data[0]['merek_perangkat'],'B',2);
-        $pdf->Cell(45,5,$data[0]['kapasitas_perangkat'],'B',2);
-        $pdf->Cell(45,5,$data[0]['pembuat_perangkat'],'B',2);
+        $pdf->Cell(0,5,$data[0]['nama_perangkat'],0,2);
+        $pdf->Cell(45,5,$data[0]['merek_perangkat'],0,2);
+        $pdf->Cell(45,5,$data[0]['kapasitas_perangkat'],0,2);
+        $pdf->Cell(45,5,$data[0]['pembuat_perangkat'],0,2);
         $pdf->SetXY(132.5, 118);
-        $pdf->Cell(0,5,$data[0]['model_perangkat'],'B',2);//daniel
-        $pdf->Cell(0,5,$data[0]['serial_number'],'B',2);
-        $pdf->Cell(0,5,$data[0]['referensi_perangkat'],'B',2);
+        $pdf->Cell(0,5,$data[0]['model_perangkat'],0,2);//daniel
+        $pdf->Cell(0,5,$data[0]['serial_number'],0,2);
+        $pdf->Cell(0,5,$data[0]['referensi_perangkat'],0,2);
         $pdf->Ln(10);
 
         // PERNYATAAN
