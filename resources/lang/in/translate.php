@@ -21,9 +21,10 @@ return [
 	'service_application_phone'		=> 'Telepon',
 	'service_application_fax'		=> 'Faksimil',
 	'service_application_email'		=> 'Email',
-	'service_company_agent'			=> 'Agen/Perwakilan',
+	'service_company_agent'			=> 'Agen/Distributor',
 	'service_company_branch'		=> 'Pabrikan',
 	'service_company_individual'	=> 'Pengguna/Perorangan',
+	'service_company_representative'=> 'Perwakilan',
 	
 	'service_company'			=> 'Data Perusahaan',
 	'service_company_type'		=> 'Jenis Perusahaan',

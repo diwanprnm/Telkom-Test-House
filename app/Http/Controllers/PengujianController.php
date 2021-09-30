@@ -591,7 +591,7 @@ class PengujianController extends Controller
 				self::TIMEOUT  => 60.0,
 			]);
 			
-			$res_exam_schedule = $client->get('spk/searchData?spkNumber='.$examfromOTR->spk_code)->getBody();
+			$res_exam_schedule = $client->get('spk/searchData?limit=1&spkNumber='.$examfromOTR->spk_code)->getBody();
 			$exam_schedule = json_decode($res_exam_schedule);
 			
 			$data_kuisioner = QuestionerQuestion::where(self::IS_ACTIVE,1)->orderBy('order_question')->get();

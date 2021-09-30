@@ -2101,19 +2101,26 @@ class ExaminationController extends Controller
 			else{$device_model = $data[0]->device->model?: '-';}
 		if( strpos( $data[0]->device->serial_number, "/" ) !== false ) {$device_serial_number = urlencode(urlencode($data[0]->device->serial_number));}
 			else{$device_serial_number = $data[0]->device->serial_number?: '-';}
+		if( strpos( $data[0]->device->capacity, "/" ) !== false ) {$device_capacity = urlencode(urlencode($data[0]->device->capacity));}
+			else{$device_capacity = $data[0]->device->capacity?: '-';}
+		if( strpos( $data[0]->device->test_reference, "/" ) !== false ) {$device_test_reference = urlencode(urlencode($data[0]->device->test_reference));}
+			else{$device_test_reference = $data[0]->device->test_reference?: '-';}
 		if( strpos( $data[0]->function_test_TE, "/" ) !== false ) {$function_test_TE = urlencode(urlencode($data[0]->function_test_TE));}
 			else{$function_test_TE = $data[0]->function_test_TE?: '-';}
 		if( strpos( $data[0]->catatan, "/" ) !== false ) {$catatan = urlencode(urlencode($data[0]->catatan));}
 			else{$catatan = $data[0]->catatan?: '-';}
-			if($function_test->code != 'MSTD0059AERR' && $function_test->code != 'MSTD0000AERR'){
-				if( strpos( $function_test->data[0]->nik, "/" ) !== false ) {$nik_te = urlencode(urlencode($function_test->data[0]->nik));}
-					else{$nik_te = $function_test->data[0]->nik?: '-';}
-				if( strpos( $function_test->data[0]->name, "/" ) !== false ) {$name_te = urlencode(urlencode($function_test->data[0]->name));}
-					else{$name_te = $function_test->data[0]->name?: '-';}
-			}else{
-				$nik_te = "-";
-				$name_te = "-";
-			}
+			// if($function_test->code != 'MSTD0059AERR' && $function_test->code != 'MSTD0000AERR'){
+			// 	if( strpos( $function_test->data[0]->nik, "/" ) !== false ) {$nik_te = urlencode(urlencode($function_test->data[0]->nik));}
+			// 		else{$nik_te = $function_test->data[0]->nik?: '-';}
+			// 	if( strpos( $function_test->data[0]->name, "/" ) !== false ) {$name_te = urlencode(urlencode($function_test->data[0]->name));}
+			// 		else{$name_te = $function_test->data[0]->name?: '-';}
+			// }else{
+			// 	$nik_te = "-";
+			// 	$name_te = "-";
+			// }
+		$nik_te = "-";
+		if( strpos( $data[0]->function_test_PIC, "/" ) !== false ) {$name_te = urlencode(urlencode($data[0]->function_test_PIC));}
+			else{$name_te = $data[0]->function_test_PIC?: '-';}
 		if(count($data[0]->equipment)>0){
 			if( strpos( $data[0]->equipment[0]->pic, "/" ) !== false ) {$pic = urlencode(urlencode($data[0]->equipment[0]->pic));}
 				else{$pic = $data[0]->equipment[0]->pic?: '-';}
@@ -2142,6 +2149,8 @@ class ExaminationController extends Controller
 			'device_mark' => $device_mark,
 			'device_manufactured_by' => $device_manufactured_by,
 			'device_model' => $device_model,
+			'device_capacity' => $device_capacity,
+			'device_test_reference' => $device_test_reference,
 			'device_serial_number' => $device_serial_number,
 			self::STATUS => $function_test_TE,
 			self::CATATAN => $catatan,
@@ -2205,7 +2214,14 @@ class ExaminationController extends Controller
 			'userName' => \App\Services\MyHelper::setDefault($user['name'], '-'),
 			'adminName' => Auth::user()->name,
 			'managerLab' => \App\Services\MyHelper::setDefault($manager_lab->data[0]->name, '-'),
-			'managerUrel' => \App\Services\MyHelper::setDefault($manager_urel->data[0]->name, '-')
+			'managerUrel' => \App\Services\MyHelper::setDefault($manager_urel->data[0]->name, '-'),
+
+			//todo@arif tambah field yang kosong dibawah ini
+			'exaimationDuration' => '',
+			'penyediaAlatUkur' => '',
+			'alatUkur' => '',
+			'itemTest' => '',
+			'keteranganParsialTest' => '',
 		);
 
 		$PDF = new \App\Services\PDF\PDFService();

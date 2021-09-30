@@ -35,6 +35,7 @@ return [
 	'service_company_agent'		=> 'Agent/Distributor',
 	'service_company_branch'	=> 'Manufacture',
 	'service_company_individual'=> 'User/Private',
+	'service_company_representative'=> 'Representative',
 	'service_company_confirm'	=> "*If there is any change in the company's data, please send email to Admin cstth@telkom.co.id",
 	
 	'service_device'					=> 'Device\'s  Data',

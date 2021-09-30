@@ -6,402 +6,156 @@ class CetakKontrak
 {
     public function makePDF($data, $pdf)
     { 
-        
-        if($data[0]['is_loc_test'] == 1){
-            $pdf->judul_kop('KONTRAK UJI LOKASI DALAM NEGERI','On-Site Testing Contract');
-            $pdf->setData(['kodeForm' => 'TLKM02/F/007 Versi 02']);
-        }else{
-            $pdf->judul_kop('KONTRAK UJI LABORATORIUM','Laboratory Testing Contract');
-            $pdf->setData(['kodeForm' => 'TLKM02/F/006 Versi 03']);
-        }
+        //$data[0]['is_loc_test'] = 0;
+        //dd($data[0]);
+        $pdf->setPDFData($data[0]);
+        $pdf->SetMargins(17, 0, 17);
         $pdf->AliasNbPages();
         $pdf->AddPage();
+        $charHeight = 4;
+        $currentY = 0;
+        $signDate = date("d/m/Y", strtotime($data[0]['contract_date']));
+
+        // DATA PEMOHON
+        $pdf->setY(37);
         $pdf->SetFont('helvetica','B',9);
-        $pdf->Cell(190,1,"No. Reg. ".$data[0]['no_reg'],0,0,'R');
+        $pdf->Cell(0,5,"Nomor Registrasi: ".$data[0]['no_reg'],0,1,'R');
+        $pdf->Cell(0,5,"Data Pemohon:",0,1);
+        $pdf->SetFont('','', 9);
+        $pdf->SetX(21.5);
+        $pdf->Cell(35,5,"Nama Pemohon",0,2);
+        $pdf->Cell(35,5,"Alamat Pemohon",0,2);
+        $pdf->SetXY(56.5, 49);
+        $pdf->Cell(0,5,$data[0]['nama_pemohon'],'B',2);
+        $pdf->Cell(0,5,$data[0]['alamat_pemohon'],'B',2);
+        $pdf->Ln(5);
+
+        // DATA PERANGKAT
+        $pdf->SetFont('','B');
+        $pdf->Cell(35,5,"Data Perangkat:",0,2);
+        $pdf->SetFont('','');
+        $pdf->SetX(21.5);
+        //dd($pdf->GetY());
+        $pdf->Cell(35,5,"Nama Perangkat",0,2);
+        $pdf->Cell(35,5,"Merek",0,2);
+        $pdf->Cell(35,5,"Kapasitas",0,2);
+        $pdf->Cell(35,5,"Negara Pembuat",0,2);
+        $pdf->SetXY(105, 74);
+        $pdf->Cell(37,5,"Tipe/Model",0,2);
+        $pdf->Cell(37,5,"Nomor Seri",0,2);
+        $pdf->Cell(37,5,"Referensi Uji",0,2);
+        $pdf->SetXY(56.5, 69);
+        $pdf->Cell(0,5,$data[0]['nama_perangkat'],'B',2);
+        $pdf->Cell(45,5,$data[0]['merek_perangkat'],'B',2);
+        $pdf->Cell(45,5,$data[0]['kapasitas_perangkat'],'B',2);
+        $pdf->Cell(45,5,$data[0]['pembuat_perangkat'],'B',2);
+        $pdf->SetXY(132.5, 74);
+        $pdf->Cell(0,5,$data[0]['model_perangkat'],'B',2);//daniel
+        $pdf->Cell(0,5,$data[0]['serial_number'],'B',2);
+        $pdf->Cell(0,5,$data[0]['referensi_perangkat'],'B',2);
+        $pdf->Ln(5);
+
+        // DATA PERANGKAT
+        $pdf->SetFont('','B');
+        $pdf->Cell(35,5,"Pernyataan:",0,2);
+        $pdf->SetFont('','',8);
+        $pdf->Cell(4.5,$charHeight,"1.",0,0);
+        $pdf->MultiCell(0, $charHeight,'Pelanggan memahami referensi uji, memahami item uji, dan konfigurasi uji.',0,'L');
+        if ($data[0]['is_loc_test']){
+            $pdf->Cell(4.5,$charHeight,"2.",0,0);
+            $pdf->Cell(44, $charHeight,'Kesepakatan yang tertuang dalam');$pdf->SetFont('','I');$pdf->Cell(23, $charHeight,'technical meeting');;$pdf->SetFont('','');$pdf->Cell(44, $charHeight,'uji lokasi dalam negeri adalah benar. Pelanggan menyatakan bahwa lingkungan milik',0,1);
+            $pdf->Cell(4.5,$charHeight,"",0,0);$pdf->Cell(32, $charHeight,'pelanggan (laboratorium,');$pdf->SetFont('','I');$pdf->Cell(16, $charHeight,'test enginer,');;$pdf->SetFont('','');$pdf->Cell(72, $charHeight,'sampel uji, dan alat ukur) sudah siap. Untuk kesepakatan ');$pdf->SetFont('','I');$pdf->Cell(23, $charHeight,'technical meeting');$pdf->SetFont('','');$pdf->Cell(0,$charHeight,"uji lokasi luar negeri",0,1);
+            $pdf->Cell(4.5,$charHeight,"",0,0);$pdf->Cell(0, $charHeight,'dituangkan dalam form terpisah dari kontrak uji ini.',0,1);
+            $pdf->Cell(4.5,$charHeight,"3.",0,0);
+            $pdf->Cell(107.5,$charHeight,'Telkom Test House (TTH) menerbitkan biaya uji (biaya uji perangkat dan uang harian');$pdf->SetFont('','I');$pdf->Cell(15, $charHeight,'test enginer');;$pdf->SetFont('','');$pdf->Cell(0,$charHeight,') yang nominalnya tertera sesuai Surat',0,1);
+            $pdf->Cell(4.5,$charHeight,"",0,0);$pdf->Cell(127, $charHeight,'Pemberitahuan Biaya (SPB). Di luar biaya uji ini pelanggan menanggung transportasi dan akomodasi');$pdf->SetFont('','I');$pdf->Cell(16, $charHeight,'test enginer');;$pdf->SetFont('','');$pdf->Cell(0,$charHeight,"selama melakukan uji",0,1);
+            $pdf->Cell(4.5,$charHeight,"",0,0);$pdf->MultiCell(0, $charHeight,'lokasi. Apabila pelanggan tidak melakukan pembayaran sampai akhir tahun berjalan, maka web TTH secara otomatis menghapus permohonan uji ini.',0,'L');
+            $pdf->Cell(4.5,$charHeight,"4.",0,0);
+            $pdf->MultiCell(0, $charHeight,'Web TTH secara otomatis menerbitkan nomor Surat Perintah Kerja (SPK) yang menunjukkan bahwa pembayaran ini telah terverifikasi oleh TTH. Setelah nomor SPK terbit, pelanggan tidak dapat melakukan hal-hal berikut:',0,'L');
+            $pdf->Cell(4.5,$charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"a. ",0,0);$pdf->MultiCell(0, $charHeight,'Perubahan/penambahan referensi uji.',0,'L');
+            $pdf->Cell(4.5,$charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"b. ",0,0);$pdf->MultiCell(0, $charHeight,'Pengalihan lokasi uji dari internal ke eksternal Lab TTH dan sebaliknya.',0,'L');
+            $pdf->Cell(4.5,$charHeight,"5.",0,0);
+            $pdf->MultiCell(0,$charHeight,'Pelanggan dapat mengajukan pembatalan uji setelah nomor SPK terbit, jika:',0,'L');
+            $pdf->Cell(4.5,$charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"a. ",0,0);$pdf->MultiCell(0, $charHeight,'Pengujian belum dilakukan sama sekali.',0,'L');
+            $pdf->Cell(4.5,$charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"b. ",0,0);$pdf->MultiCell(0, $charHeight,'Terdapat perubahan referensi uji pada periode nomor SPK telah terbit.',0,'L');
+            $pdf->Cell(4.5,$charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"c. ",0,0);$pdf->MultiCell(0, $charHeight,'Alat ukur mendadak rusak dan tidak dapat diperbaiki lagi.',0,'L');
+            $pdf->Cell(4.5,$charHeight,"",0,0);$pdf->Cell(88,$charHeight,"Pembatalan uji ini diputuskan selesai dengan Laporan Hasil Uji (LHU)");$pdf->SetFont('','B');$pdf->Cell(22.5,$charHeight,"tidak memenuhi/");$pdf->SetFont('','BI');$pdf->Cell(16,$charHeight,"not comply.",0,1);$pdf->SetFont('','');
+            $pdf->Cell(4.5,$charHeight,"6.",0,0);
+            $pdf->MultiCell(0,$charHeight,'Jika pembatalan uji sebelum tanggal 5 bulan berikutnya, maka biaya uji yang sudah dibayarkan dapat dikembalikan utuh (biaya uji + PPN 10 %). Namun jika sudah melebihi tanggal 5 bulan berikutnya, maka biaya uji tersebut menjadi deposit biaya permohonan uji berikutnya (hanya biaya uji saja).',0,'L');
+            $pdf->Cell(4.5,$charHeight,"7.",0,0);
+            $pdf->MultiCell(0,$charHeight,'Pelanggan menyatakan bahwa informasi perangkat uji yang didaftarkan dalam kontrak uji ini adalah sama dengan sampel uji yang diuji di lokasi.',0,'L');
+            $pdf->Cell(4.5, $charHeight,"8.",0,0);
+            $pdf->Cell(62,$charHeight,'Pelanggan menerima LHU dan/atau Sertifikat Uji ',0,'L');$pdf->SetFont('','I');$pdf->Cell(24,$charHeight,'Quality Assurance',0,'L');$pdf->SetFont('','');$pdf->Cell(0,$charHeight,'(QA) setelah pengujian perangkat selesai.',0,1);
+            $pdf->Cell(4.5, $charHeight,"9.",0,0);
+            $pdf->MultiCell(0, $charHeight,'Sebagai prasyarat mengunduh LHU dan/atau Sertifikat Uji QA, pelanggan harus mengisi survei kepuasan pelanggan yang ada di web TTH pada saat pelanggan mengunduh dokumen tersebut.',0,'L');
+            $pdf->Cell(4.5, $charHeight,"10.",0,0);
+            $pdf->MultiCell(0, $charHeight,'Pelanggan bersedia jika informasi pelanggan dan perangkat uji yang telah lulus uji QA dipublikasikan melalui web TTH.',0,'L');
+            $pdf->Cell(4.5, $charHeight,"11.",0,0);
+            $pdf->MultiCell(0, $charHeight,'Khusus untuk permohonan uji QA, pelanggan harus memperhatikan hal-hal berikut:',0,'L');
+            $pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"a. ",0,0);$pdf->MultiCell(0, $charHeight,'Pelanggan harus memastikan bahwa sertifikat CIQS maupun ISO valid sebagai prasyarat utama untuk mengeluarkan keputusan hasil uji QA.',0,'L');
+            $pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"b. ",0,0);$pdf->Cell(112, $charHeight,'Pelanggan dapat mengajukan kembali permohonan uji QA ini jika keputusan hasil uji QA',0,0); ;$pdf->SetFont('','B');$pdf->Cell(22.5,$charHeight,"tidak memenuhi/");$pdf->SetFont('','BI');$pdf->Cell(16,$charHeight,"not comply",0,0);$pdf->SetFont('','');$pdf->Cell(16,$charHeight,"terhitung 3",0,1); //                                                  terhitung 3 (tiga) bulan setelah keputusan tersebut keluar.',0,'L');$pdf->setXY(137.5,232);$pdf->SetFont('','B');$pdf->Cell(22.5,5,"tidak memenuhi/");$pdf->SetFont('','BI');$pdf->Cell(0,5,"not comply",0,1);$pdf->SetFont('','');$pdf->Ln(5);
+            $pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(111, $charHeight,'(tiga) bulan setelah keputusan tersebut keluar.',0,1);
+            $pdf->Cell(4.5, $charHeight,"12.",0,0);
+            $pdf->Cell(40, $charHeight,"Pelanggan dapat menghubungi");$pdf->SetFont('','I');$pdf->Cell(22,$charHeight,"customer service");$pdf->SetFont('','');$pdf->Cell(47,$charHeight,"TTH (WA: 081224837500 atau email:");$pdf->SetFont('','U');$pdf->SetTextColor(0,0,255);$pdf->Cell(24,$charHeight,"cstth@telkom.co.id");$pdf->SetTextColor(0,0,0);$pdf->SetFont('','');$pdf->Cell(10,$charHeight,") jika ada perbedaan informasi",0,1);
+            $pdf->Cell(4.5, $charHeight,"",0,0);$pdf->MultiCell(0, $charHeight,'pelanggan maupun perangkat uji yang tidak terkait item pengujian antara informasi saat pendaftaran dengan informasi setelah laporan.',0,'L');
+            $pdf->Cell(4.5, $charHeight,"13.",0,0);
+            $pdf->MultiCell(0, $charHeight,'Pelanggan dilarang memberikan gratifikasi dalam bentuk apapun di luar biaya uji, transportasi, dan akomodasi. Jika ditemukan',0,'L');
+            $pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(102, $charHeight,'pelanggaran dalam hal ini maka permohonan uji diputuskan selesai dengan LHU',0,0);$pdf->SetFont('','B');$pdf->Cell(22.5,$charHeight,"tidak memenuhi/");$pdf->SetFont('','BI');$pdf->Cell(16,$charHeight,"not comply.",0,1);$pdf->SetFont('','');
+        }
+        else{
+            $pdf->Cell(4.5,$charHeight,"2.",0,0);
+            $pdf->MultiCell(0, $charHeight,'Telkom Test House (TTH) menerbitkan biaya uji yang nominalnya tertera sesuai Surat Pemberitahuan Biaya (SPB). Apabila pelanggan tidak melakukan pembayaran sampai akhir tahun berjalan, maka web TTH secara otomatis menghapus permohonan uji ini.',0,'L');
+            $pdf->Cell(4.5,$charHeight,"3.",0,0);
+            $pdf->MultiCell(0,$charHeight,'Web TTH secara otomatis menerbitkan nomor Surat Perintah Kerja (SPK) yang menunjukkan bahwa pembayaran ini telah terverifikasi oleh TTH. Setelah nomor SPK terbit, pelanggan tidak dapat melakukan hal-hal berikut:',0,'L');
+            $pdf->Cell(4.5,$charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"a. ",0,0);$pdf->MultiCell(0, $charHeight,'Perubahan/penambahan referensi uji.',0,'L');
+            $pdf->Cell(4.5,$charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"b. ",0,0);$pdf->MultiCell(0, $charHeight,'Pengalihan lokasi uji dari internal ke eksternal Lab TTH dan sebaliknya.',0,'L');
+            $pdf->Cell(4.5,$charHeight,"4.",0,0);
+            $pdf->MultiCell(0, $charHeight,'Pelanggan dapat mengajukan pembatalan uji setelah nomor SPK terbit, jika:',0,'L');
+            $pdf->Cell(4.5,$charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"a. ",0,0);$pdf->MultiCell(0, $charHeight,'Pengujian belum dilakukan sama sekali.',0,'L');
+            $pdf->Cell(4.5,$charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"b. ",0,0);$pdf->MultiCell(0, $charHeight,'Terdapat perubahan referensi uji pada periode nomor SPK telah terbit.',0,'L');
+            $pdf->Cell(4.5,$charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"c. ",0,0);$pdf->MultiCell(0, $charHeight,'Alat ukur mendadak rusak dan tidak dapat diperbaiki lagi.',0,'L');
+            $pdf->Cell(4.5,$charHeight,"",0,0);$pdf->Cell(88,$charHeight,"Pembatalan uji ini diputuskan selesai dengan Laporan Hasil Uji (LHU)");$pdf->SetFont('','B');$pdf->Cell(22.5,$charHeight,"tidak memenuhi/");$pdf->SetFont('','BI');$pdf->Cell(16,$charHeight,"not comply.",0,1);$pdf->SetFont('','');
+            $pdf->Cell(4.5,$charHeight,"5.",0,0);
+            $pdf->MultiCell(0,$charHeight,'Jika pembatalan uji sebelum tanggal 5 bulan berikutnya, maka biaya uji yang sudah dibayarkan dapat dikembalikan utuh (biaya uji + PPN 10 %). Namun jika sudah melebihi tanggal 5 bulan berikutnya, maka biaya uji tersebut menjadi deposit biaya permohonan uji berikutnya (hanya biaya uji saja).',0,'L');
+            $pdf->Cell(4.5,$charHeight,"6.",0,0);
+            $pdf->MultiCell(0,$charHeight,'Pelanggan menyatakan bahwa informasi perangkat uji yang didaftarkan dalam kontrak uji ini adalah sama dengan sampel uji yang diserahkan ke TTH.',0,'L');
+            $pdf->Cell(4.5,$charHeight,"7.",0,0);
+            $pdf->Cell(0, $charHeight,'Dalam hal ada pengecekan/perubahan/peminjaman/penggantian/pengambilan perangkat uji oleh pelanggan setelah terbit nomor SPK,',0,1);//$pdf->setXY(101,192);$pdf->SetFont('','B');$pdf->Cell(22.5,5,"tidak memenuhi/");$pdf->SetFont('','BI');$pdf->Cell(0,5,"not comply",0,1);$pdf->SetFont('','');
+            $pdf->Cell(4.5,$charHeight,"",0,0);$pdf->Cell(79, $charHeight,'maka permohonan uji ini akan diputuskan selesai dengan LHU ',0,0);$pdf->SetFont('','B');$pdf->Cell(22.5,$charHeight,"tidak memenuhi/");$pdf->SetFont('','BI');$pdf->Cell(16,$charHeight,"not comply.",0,1);$pdf->SetFont('','');
+            $pdf->Cell(4.5, $charHeight,"8.",0,0);
+            $pdf->Cell(62,$charHeight,'Pelanggan menerima LHU dan/atau Sertifikat Uji',0,'L');$pdf->SetFont('','I');$pdf->Cell(24,$charHeight,'Quality Assurance',0,'L');$pdf->SetFont('','');$pdf->Cell(0,$charHeight,'(QA) setelah pengujian perangkat selesai.',0,1);
+            $pdf->Cell(4.5, $charHeight,"9.",0,0);
+            $pdf->MultiCell(0, $charHeight,'Sebagai prasyarat mengunduh LHU dan/atau Sertifikat Uji QA, pelanggan harus mengambil perangkat uji dan mengisi survei kepuasan pelanggan yang ada di web TTH pada saat pelanggan mengunduh dokumen tersebut.',0,'L');
+            $pdf->Cell(4.5, $charHeight,"10.",0,0);
+            $pdf->MultiCell(0, $charHeight,'Pelanggan bersedia jika informasi pelanggan dan perangkat uji yang telah lulus uji QA dipublikasikan melalui web TTH.',0,'L');
+            $pdf->Cell(4.5, $charHeight,"11.",0,0);
+            $pdf->MultiCell(0, $charHeight,'Khusus untuk permohonan uji QA, pelanggan harus memperhatikan hal-hal berikut:',0,'L');
+            $pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"a. ",0,0);$pdf->MultiCell(0, $charHeight,'Pelanggan harus memastikan bahwa sertifikat CIQS maupun ISO valid sebagai prasyarat utama untuk mengeluarkan keputusan hasil uji QA.',0,'L');
+            $pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"b. ",0,0);$pdf->Cell(111, $charHeight,'Pelanggan dapat mengajukan kembali permohonan uji QA ini jika keputusan hasil uji QA',0,0); ;$pdf->SetFont('','B');$pdf->Cell(22.5,$charHeight,"tidak memenuhi/");$pdf->SetFont('','BI');$pdf->Cell(16,$charHeight,"not comply",0,0);$pdf->SetFont('','');$pdf->Cell(16,$charHeight,"terhitung 3",0,1); //                                                  terhitung 3 (tiga) bulan setelah keputusan tersebut keluar.',0,'L');$pdf->setXY(137.5,232);$pdf->SetFont('','B');$pdf->Cell(22.5,5,"tidak memenuhi/");$pdf->SetFont('','BI');$pdf->Cell(0,5,"not comply",0,1);$pdf->SetFont('','');$pdf->Ln(5);
+            $pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(111, $charHeight,'(tiga) bulan setelah keputusan tersebut keluar.',0,1);
+            $pdf->Cell(4.5, $charHeight,"12.",0,0);
+            $pdf->Cell(40, $charHeight,"Pelanggan dapat menghubungi");$pdf->SetFont('','I');$pdf->Cell(22,$charHeight,"customer service");$pdf->SetFont('','');$pdf->Cell(47,$charHeight,"TTH (WA: 081224837500 atau email:");$pdf->SetFont('','U');$pdf->SetTextColor(0,0,255);$pdf->Cell(24,$charHeight,"cstth@telkom.co.id");$pdf->SetTextColor(0,0,0);$pdf->SetFont('','');$pdf->Cell(10,$charHeight,") jika ada perbedaan informasi",0,1);
+            $pdf->Cell(4.5, $charHeight,"",0,0);$pdf->MultiCell(0, $charHeight,'pelanggan maupun perangkat uji yang tidak terkait item pengujian antara informasi saat pendaftaran dengan informasi setelah laporan.',0,'L');
+            $pdf->Cell(4.5, $charHeight,"13.",0,0);
+            $pdf->MultiCell(0, $charHeight,'Pelanggan dilarang memberikan gratifikasi dalam bentuk apapun di luar biaya uji. Jika ditemukan pelanggaran dalam hal ini maka',0,'L');
+            $pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(61, $charHeight,'permohonan uji diputuskan selesai dengan LHU',0,0);$pdf->SetFont('','B');$pdf->Cell(22.5,$charHeight,"tidak memenuhi/");$pdf->SetFont('','BI');$pdf->Cell(16,$charHeight,"not comply.",0,1);$pdf->SetFont('','');
+        }
+        
+    
+        // SIGN
         $pdf->Ln(1);
-    /*Data Pemohon*/
-        $pdf->SetFont('helvetica','B',11);
-        $pdf->Cell(27.5,5,"Data Pemohon",0,0,'L');
-        $pdf->SetFont('helvetica','I',11);
-        $pdf->Cell(10,5,"/Applicant's Data",0,0,'L');
-        /*Nama Pemohon*/
-        $y = $pdf->getY();
-        $pdf->Ln(6);
-        $pdf->SetFont('helvetica','',10);
-        $pdf->setXY(10.00125,$y + 6);
-        $pdf->SetFont('','U');
-        $pdf->Cell(10,5,"Nama Pemohon",0,0,'L');
-        $pdf->SetWidths(array(0.00125,40,45,145));
-        $pdf->Row(array("","",":",$data[0]['nama_perusahaan']));
-        $y2 = $pdf->getY();
-        $pdf->setXY(10.00125,$y + 11);
-        $pdf->SetFont('','I');
-        $pdf->Cell(10,5,"Applicant's Name",0,0,'L');
-            if(($y2 - $y) > 11){
-                $yNow = $y2 - 6;
-            }else{
-                $yNow = $y2;
-            }
-        $pdf->setXY(10.00125,$yNow);
-        /*Alamat Pemohon*/
-        $y = $pdf->getY();
-        $pdf->Ln(6);
-        $pdf->SetFont('helvetica','U',10);
-        $pdf->setXY(10.00125,$y + 6);
-        $pdf->Cell(10,5,"Alamat",0,0,'L');
-        $pdf->SetWidths(array(0.00125,40,45,145));
-        $pdf->Row(array("","",":",$data[0]['alamat_perusahaan']));
-        $pdf->setXY(10.00125,$y + 11);
-        $pdf->SetFont('','I');
-        $pdf->Cell(10,5,"Address",0,0,'L');
-        $pdf->setX(10.00125);
-
-        /*Merek dan Model Perangkat*/
-        $y = $pdf->getY();
-        $pdf->SetFont('helvetica','U',10);
-        $pdf->setXY(10.00125,$y + 6);
-        $pdf->Cell(10,5,"Nomor PLG_ID",0,0,'L');
-        $pdf->SetWidths(array(0.00125,40,45,50));
-        $plg_id = $data[0]['jns_pengujian'] == 2 ? $data[0]['plg_id'] : '-';
-        $pdf->Row(array("","",":",$plg_id));
-        $y2 = $pdf->getY();
-        $pdf->setXY(110.00125,$y + 6);
-        $pdf->SetFont('','U');
-        $pdf->Cell(10,5,"NIB",0,0,'L');
-        $pdf->SetWidths(array(0.00125,135,140,50));
-        $nib = $data[0]['jns_pengujian'] == 2 ? $data[0]['nib'] : '-';
-        $pdf->Row(array("","",":",$nib));
-        $y3 = $pdf->getY();
-        $pdf->setXY(10.00125,$y + 11);
-        $pdf->SetFont('','I');
-        $pdf->Cell(100,5,"PLG_ID Number",0,0,'L');
-        $pdf->Cell(10,5,"NIB",0,0,'L');
-        $yNow = max($y,$y2,$y3);
-        if($y2 == $y3){ //
-        }else{ $yNow = $yNow - 6; }
+        $pdf->setX(134);
+        $pdf->Cell(59,$charHeight,"Bandung, $signDate",0,1,'C');
+        $pdf->Cell(59,$charHeight, 'Pelanggan', 0, 0, 'C');
+        $pdf->Cell(58,$charHeight, 'Mgr. Lab TTH', 0, 0, 'C');
+        $pdf->Cell(59,$charHeight, 'Mgr. UREL TTH', 0, 1, 'C');
+        $pdf->Ln(15);
+        $pdf->Cell(59,$charHeight, '('.$data[0]['pic'].')', 0, 0, 'C');
+        $pdf->Cell(58,$charHeight, '('.$data[0]['manager_lab'].')', 0, 0, 'C');
+        $data[0]['is_poh'] ? $pdf->Cell(59,$charHeight,'(POH '.$data[0]['manager_urel'].')', 0, 1, 'C') :  $pdf->Cell(59,$charHeight,'('.$data[0]['manager_urel'].')', 0, 1, 'C');
         
-        $pdf->setXY(10.00125,$yNow);
-        
-        $pdf->Ln(8);
-        $pdf->setX(10.00125);
-    /*End Data Pemohon*/
-    
-    /*Data Perangkat*/
-        $pdf->SetFont('helvetica','B',11);
-        $pdf->Cell(29,5,"Data Perangkat ",0,0,'L');
-        $pdf->SetFont('helvetica','I',11);
-        $pdf->Cell(10,5,"/Equipment's Data",0,0,'L');
-        /*Nama Perangkat*/
-        $y = $pdf->getY();
-        $pdf->Ln(6);
-        $pdf->SetFont('helvetica','',10);
-        $pdf->setXY(10.00125,$y + 6);
-        $pdf->SetFont('','U');
-        $pdf->Cell(10,5,"Nama Perangkat",0,0,'L');
-        $pdf->SetWidths(array(0.00125,40,45,145));
-        $pdf->Row(array("","",":",$data[0]['nama_perangkat']));
-        $y2 = $pdf->getY();
-        $pdf->setXY(10.00125,$y + 11);
-        $pdf->SetFont('','I');
-        $pdf->Cell(10,5,"Equipment Name",0,0,'L');
-        if(($y2 - $y) > 11){ $yNow = $y2 - 6;
-        }else{ $yNow = $y2; }
-        $pdf->setXY(10.00125,$yNow);
-
-        /*Merek dan Model Perangkat*/
-        $y = $pdf->getY();
-        $pdf->Ln(6);
-        $pdf->SetFont('helvetica','U',10);
-        $pdf->setXY(10.00125,$y + 6);
-        $pdf->Cell(10,5,"Merk/Pabrik",0,0,'L');
-        $pdf->SetWidths(array(0.00125,40,45,50));
-        $pdf->Row(array("","",":",$data[0]['merek_perangkat']));
-        $y2 = $pdf->getY();
-        $pdf->setXY(110.00125,$y + 6);
-        $pdf->SetFont('','U');
-        $pdf->Cell(10,5,"Model/Type",0,0,'L');
-        $pdf->SetWidths(array(0.00125,135,140,50));
-        $pdf->Row(array("","",":",$data[0]['model_perangkat']));
-        $y3 = $pdf->getY();
-        $pdf->setXY(10.00125,$y + 11);
-        $pdf->SetFont('','I');
-        $pdf->Cell(100,5,"Brand/Factory",0,0,'L');
-        $pdf->Cell(10,5,"Model/Type",0,0,'L');
-        $yNow = max($y,$y2,$y3);
-        $pdf->setXY(10.00125,$yNow);
-        $pdf->Ln(3);
-        
-        /*Kapasitas dan Referensi Uji Perangkat*/
-        $y = $pdf->getY();
-        $pdf->Ln(6);
-        $pdf->SetFont('helvetica','',10);
-        $pdf->setXY(10.00125,$y + 3);
-        $pdf->SetFont('','U');
-        $pdf->Cell(10,5,"Kapasitas/Kecepatan",0,0,'L');
-        $pdf->SetWidths(array(0.00125,40,45,50));
-        $pdf->Row(array("","",":",$data[0]['kapasitas_perangkat']));
-        $y2 = $pdf->getY();
-        $pdf->setXY(110.00125,$y + 3);
-        $pdf->SetFont('','U');
-        $pdf->Cell(10,5,"Referensi Uji",0,0,'L');
-        $pdf->SetWidths(array(0.00125,135,140,50));
-        $pdf->Row(array("","",":",$data[0]['referensi_perangkat']));
-        $y3 = $pdf->getY();
-        $pdf->setXY(10.00125,$y + 7);
-        $pdf->SetFont('','I');
-        $pdf->Cell(100,5,"Capacity/Speed",0,0,'L');
-        $pdf->Cell(10,5,"Test Reference",0,0,'L');
-        $yNow = max($y,$y2,$y3);
-        if($y2 == $y3){
-            /* // $yNow; */
-        }else{
-            $yNow = $yNow - 6;
-        }
-        $pdf->setXY(10.00125,$yNow);
-        /*Negara Pembuat Perangkat*/
-        $y = $pdf->getY();
-        $pdf->Ln(6);
-        $pdf->SetFont('helvetica','',10);
-        $pdf->setXY(10.00125,$y + 6);
-        $pdf->SetFont('','U');
-        $pdf->Cell(10,5,"Negara Pembuat",0,0,'L');
-        $pdf->SetWidths(array(0.00125,40,45,50));
-        $pdf->Row(array("","",":",$data[0]['pembuat_perangkat']));
-        $y2 = $pdf->getY();
-        $pdf->setXY(110.00125,$y + 6);
-        $pdf->SetFont('','U');
-        $pdf->Cell(10,5,"Pilihan Item Uji *)",0,0,'L');
-        $pdf->SetWidths(array(0.00125,135,140,50));
-        $pdf->Row(array("","",":",'All / Partial **)'));
-        $y3 = $pdf->getY();
-        $pdf->setXY(10.00125,$y + 11);
-        $pdf->SetFont('','I');
-        $pdf->Cell(100,5,"Made In",0,0,'L');
-        $pdf->Cell(10,5,"Test Item Choice",0,0,'L');
-        $yNow = max($y,$y2,$y3);
-        if($y2 == $y3){
-            /* // $yNow; */
-        }else{
-            $yNow = $yNow - 6;
-        }
-        $pdf->setXY(10.00125,$yNow);
-        /*Keterangan*/
-        //$pdf->Rect(54, 117, 145, 10);
-        $y = $pdf->getY();
-        $pdf->Ln(6);
-        $pdf->SetFont('helvetica','',10);
-        $pdf->setXY(10.00125,$y + 6);
-        $pdf->SetFont('','U');
-        $pdf->Cell(100,5,"Keterangan",0,0,'L');
-        $pdf->SetWidths(array(0.00125,40,45,145));
-        $pdf->Row(array("","",":",''));
-        $y2 = $pdf->getY();
-        $pdf->setXY(10.00125,$y + 11);
-        $pdf->SetFont('','I');
-        $pdf->Cell(10,5,"Note",0,0,'L');
-        $pdf->Ln(8);
-        $pdf->setX(10.00125);        
-
-    /*End Data Perangkat*/
-    
-    /*Hal-hal yang disepakati*/
-        $pdf->SetFont('helvetica','B',11);
-        $pdf->Cell(21.5,5,"Pernyataan",0,0,'L');
-        $pdf->SetFont('helvetica','',11);
-        $pdf->SetFont('','I');
-        $pdf->Cell(10,5,"/Agreements",0,0,'L');
-        $y = $pdf->getY();
-        $pdf->Ln(6);
-        $pdf->SetFont('helvetica','',10);
-        $pdf->setXY(12.00125,$y + 6);
-        // $pdf->Cell(4, 4, "", 1, 0);
-        if($data[0]['is_loc_test'] == 1){
-            $pdf->Cell(4,4,"1.",0,0,'L');
-            $pdf->Cell(10,4,"Kesepakatan yang tertuang dalam Technical Meeting Uji Lokasi Dalam Negeri adalah benar.",0,0,'L');
-            $y = $pdf->getY();
-            $pdf->Ln(5);
-            $pdf->SetFont('helvetica','',10);
-            $pdf->setXY(12.00125,$y + 6);
-            $pdf->Cell(4,4,"2.",0,0,'L');
-            $pdf->Cell(10,4,"Biaya uji lokasi (biaya uji, transportasi, dan akomodasi) sesuai dengan Surat Perintah Bayar (SPB) yang telah",0,0,'L');
-            $pdf->Ln(4);
-            $pdf->Cell(1,4,"",0,0,'L');
-            $pdf->Cell(10,4,"diterbitkan oleh TELKOM.",0,0,'L');
-            // $pdf->Cell(4, 4, "", 1, 0);
-            $y = $pdf->getY();
-            $pdf->Ln(5);
-            $pdf->SetFont('helvetica','',10);
-            $pdf->setXY(12.00125,$y + 6);
-            // $pdf->Cell(4, 4, "", 1, 0);
-            $pdf->Cell(4,4,"3.",0,0,'L');
-            $pdf->Cell(10,4,"Pelanggan memahami dan menentukan referensi uji yang akan digunakan, memahami item uji, dan konfigurasi uji.",0,0,'L');
-            $y = $pdf->getY();
-            $pdf->Ln(5);
-            $pdf->SetFont('helvetica','',10);
-            $pdf->setXY(12.00125,$y + 6);
-            // $pdf->Cell(4, 4, "", 1, 0);
-            $pdf->Cell(4,4,"4.",0,0,'L');
-            $pdf->Cell(10,4,"Pelanggan akan menerima laporan hasil uji dan/atau sertifikat.",0,0,'L');
-            $y = $pdf->getY();
-            $pdf->Ln(5);
-            $pdf->SetFont('helvetica','',10);
-            $pdf->setXY(12.00125,$y + 6);
-            // $pdf->Cell(4, 4, "", 1, 0);
-            $pdf->Cell(4,4,"5.",0,0,'L');
-            $pdf->Cell(10,4,"Pembayaran biaya uji lokasi sesuai SPB, dilakukan oleh pelanggan paling lambat 3 (tiga) hari kalender sebelum",0,0,'L');
-            $pdf->Ln(4);
-            $pdf->Cell(1,4,"",0,0,'L');
-            $pdf->Cell(10,4,"pelaksanaan uji lokasi. Apabila pada tenggang waktu tersebut, pelanggan tidak melakukan pembayaran, kontrak ini",0,0,'L');
-            $pdf->Ln(4);
-            $pdf->Cell(1,4,"",0,0,'L');
-            $pdf->Cell(10,4,"dinyatakan tidak berlaku.",0,0,'L');
-            $y = $pdf->getY();
-            $pdf->Ln(5);
-            $pdf->SetFont('helvetica','',10);
-            $pdf->setXY(12.00125,$y + 6);
-            $pdf->Cell(4,4,"6.",0,0,'L');
-            $pdf->Cell(10,4,"Pelanggan menyatakan bahwa perangkat yang didaftarkan dalam kontrak ini adalah sama dengan sampel uji.",0,0,'L');
-            $y = $pdf->getY();
-            $pdf->Ln(5);
-            $pdf->SetFont('helvetica','',10);
-            $pdf->setXY(12.00125,$y + 6);
-            $pdf->Cell(4,4,"7.",0,0,'L');
-            $pdf->Cell(10,4,"Pelanggan menyatakan bahwa lingkungan (laboratorium, teknisi, sampel uji, dan alat ukur) uji lokasi sudah siap.",0,0,'L');
-            $y = $pdf->getY();
-            $pdf->Ln(5);
-            $pdf->SetFont('helvetica','',10);
-            $pdf->setXY(12.00125,$y + 6);
-            $pdf->Cell(4,4,"8.",0,0,'L');
-            $pdf->Cell(10,4,"Kekeliruan pada penamaan perangkat dan referensi uji yang digunakan pada laporan hasil uji bukan tanggung jawab",0,0,'L');
-            $pdf->Ln(4);
-            $pdf->Cell(1,4,"",0,0,'L');
-            $pdf->Cell(10,4,"TELKOM.",0,0,'L');
-            $y = $pdf->getY();
-            $pdf->Ln(5);
-            $pdf->SetFont('helvetica','',10);
-            $pdf->setXY(12.00125,$y + 6);
-            $pdf->Cell(4,4,"9.",0,0,'L');
-            $pdf->Cell(10,4,"Pelanggan tidak berkeberatan jika data pelanggan dan data perangkat yang telah lulus uji QA dipublikasikan melalui",0,0,'L');
-            $pdf->Ln(4);
-            $pdf->Cell(1,4,"",0,0,'L');
-            $pdf->Cell(10,4,"web www.telkomtesthouse.co.id.",0,0,'L');
-        }else{		
-            $pdf->Cell(4,4,"1.",0,0,'L');
-            $pdf->Cell(10,4,"Biaya uji sesuai Surat Perintah Bayar (SPB) yang telah diterbitkan oleh TELKOM.",0,0,'L');
-            $y = $pdf->getY();
-            $pdf->Ln(5);
-            $pdf->SetFont('helvetica','',10);
-            $pdf->setXY(12.00125,$y + 6);
-            // $pdf->Cell(4, 4, "", 1, 0);
-            $pdf->Cell(4,4,"2.",0,0,'L');
-            $pdf->Cell(10,4,"Pelanggan memahami dan menentukan referensi uji yang akan digunakan, memahami item uji, dan konfigurasi uji.",0,0,'L');
-            $y = $pdf->getY();
-            $pdf->Ln(5);
-            $pdf->SetFont('helvetica','',10);
-            $pdf->setXY(12.00125,$y + 6);
-            // $pdf->Cell(4, 4, "", 1, 0);
-            $pdf->Cell(4,4,"3.",0,0,'L');
-            $pdf->Cell(10,4,"Pelanggan akan menerima laporan hasil uji dan/atau sertifikat.",0,0,'L');
-            $y = $pdf->getY();
-            $pdf->Ln(5);
-            $pdf->SetFont('helvetica','',10);
-            $pdf->setXY(12.00125,$y + 6);
-            // $pdf->Cell(4, 4, "", 1, 0);
-            $pdf->Cell(4,4,"4.",0,0,'L');
-            $pdf->Cell(10,4,"Pelanggan harus mengambil kembali sampel uji, paling lambat 30 (tiga puluh) hari kalender setelah proses uji selesai.",0,0,'L');
-            $y = $pdf->getY();
-            $pdf->Ln(5);
-            $pdf->SetFont('helvetica','',10);
-            $pdf->setXY(12.00125,$y + 6);
-            // $pdf->Cell(4, 4, "", 1, 0);
-            $pdf->Cell(4,4,"5.",0,0,'L');
-            $pdf->Cell(10,4,"Laporan hasil uji dan/atau sertifikat Quality Assurance (QA) test diberikan apabila sampel uji sudah diambil oleh",0,0,'L');
-            $pdf->Ln(4);
-            $pdf->Cell(1,4,"",0,0,'L');
-            $pdf->Cell(10,4,"pelanggan. Setelah menerima laporan hasil uji dan/atau sertifikat QA test, pelanggan telah memahami hasil uji.",0,0,'L');
-            $y = $pdf->getY();
-            $pdf->Ln(5);
-            $pdf->SetFont('helvetica','',10);
-            $pdf->setXY(12.00125,$y + 6);
-            // $pdf->Cell(4, 4, "", 1, 0);
-            $pdf->Cell(4,4,"6.",0,0,'L');
-            $pdf->Cell(10,4,"Pembayaran biaya uji sesuai SPB, dilakukan oleh pelanggan paling lambat 14 (empat belas) hari kalender setelah",0,0,'L');
-            $pdf->Ln(4);
-            $pdf->Cell(1,4,"",0,0,'L');
-            $pdf->Cell(10,4,"penerbitan SPB. Apabila pada tenggang waktu tersebut, pelanggan tidak melakukan pembayaran, kontrak ini",0,0,'L');
-            $pdf->Ln(4);
-            $pdf->Cell(1,4,"",0,0,'L');
-            $pdf->Cell(10,4,"dinyatakan tidak berlaku.",0,0,'L');
-            $y = $pdf->getY();
-            $pdf->Ln(5);
-            $pdf->SetFont('helvetica','',10);
-            $pdf->setXY(12.00125,$y + 6);
-            $pdf->Cell(4,4,"7.",0,0,'L');
-            $pdf->Cell(10,4,"Pelanggan menyatakan bahwa perangkat yang didaftarkan dalam kontrak ini adalah sama dengan sampel uji.",0,0,'L');
-            $y = $pdf->getY();
-            $pdf->Ln(5);
-            $pdf->SetFont('helvetica','',10);
-            $pdf->setXY(12.00125,$y + 6);
-            $pdf->Cell(4,4,"8.",0,0,'L');
-            $pdf->Cell(10,4,"Kekeliruan pada penamaan perangkat dan referensi uji yang digunakan pada laporan hasil uji bukan tanggung jawab",0,0,'L');
-            $pdf->Ln(4);
-            $pdf->Cell(1,4,"",0,0,'L');
-            $pdf->Cell(10,4,"TELKOM.",0,0,'L');
-            $y = $pdf->getY();
-            $pdf->Ln(5);
-            $pdf->SetFont('helvetica','',10);
-            $pdf->setXY(12.00125,$y + 6);
-            $pdf->Cell(4,4,"9.",0,0,'L');
-            $pdf->Cell(10,4,"Pelanggan tidak berkeberatan jika data pelanggan dan data perangkat yang telah lulus uji QA dipublikasikan melalui",0,0,'L');
-            $pdf->Ln(4);
-            $pdf->Cell(1,4,"",0,0,'L');
-            $pdf->Cell(10,4,"web www.telkomtesthouse.co.id.",0,0,'L');
-        }
-        $y = $pdf->getY();
-        $pdf->Ln(5);
-        $pdf->SetFont('helvetica','',10);
-        $pdf->setXY(12.00125,$y + 6);
-        $pdf->Cell(50,4,"*)  Untuk Pengujian TA",0,0,'L');
-        $pdf->Cell(4,4,"**)  Coret salah satu",0,0,'L');
-        
-        $pdf->Ln(6);
-        $pdf->setX(10.00125);
-    /*End Data Pemohon*/
-    
-    /*Footer Manual*/
-        $pdf->SetFont('helvetica','',10);
-        $pdf->Cell(126,5,"",0,0,'L');
-        $pdf->Cell(63,5,"Bandung, ".$data[0]['contract_date'],0,0,'C');
-        $pdf->Ln(5);
-        $pdf->setX(10.00125);
-        $pdf->Cell(63, 4, 'Pelanggan', 1, 0, 'C');
-        $pdf->Cell(63, 4, 'Manager Laboratorium QA', 1, 0, 'C');
-        $pdf->Cell(63, 4, 'Manager UREL', 1, 1, 'C');
-        $pdf->setX(10.00125);
-
-        $pdf->drawTextBox('('.$data[0]['pic'].')', 63, 23, 'C', 'B', 1);
-        $pdf->setXY(73.00125,$pdf->getY()-23);
-        $pdf->drawTextBox('('.$data[0]['manager_lab'].')', 63, 23, 'C', 'B', 1);
-        $pdf->setXY(136.00125,$pdf->getY()-23);
-        if($data[0]['is_poh'] == '1'){
-            $pdf->drawTextBox('POH ('.$data[0]['manager_urel'].')', 63, 23, 'C', 'B', 1);
-        }else{
-            $pdf->drawTextBox('('.$data[0]['manager_urel'].')', 63, 23, 'C', 'B', 1);
-        }
-        /*
-        $pdf->Ln(5);
-        $pdf->setX(10.00125);
-        $pdf->SetFont('','U');
-        $pdf->Cell(10,5,"Telkom Test House, Telp. (+62) 812-2483-7500",0,0,'L');
-        $pdf->Ln(4);
-        $pdf->setX(10.00125);
-        $pdf->SetFont('','I');
-        $pdf->Cell(10,5,"Telkom Test House, Phone. (+62) 812-2483-7500",0,0,'L');
-        $pdf->Ln();
-        $pdf->Ln();
-        */
-    /*End Footer Manual*/
         $pdf->Output();
         exit;
     }
+
 }

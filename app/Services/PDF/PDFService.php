@@ -48,7 +48,7 @@ class PDFService
 	{
 		$cetakBuktiPenerimaanPerangkat = new CetakBuktiPenerimaanPerangkat();
 		if( App::environment() == 'testing'){ return ''; }
-		return $cetakBuktiPenerimaanPerangkat->makePDF($data, new PDFMCTable());
+		return $cetakBuktiPenerimaanPerangkat->makePDF($data, new PDFMCCetakBuktiPenerimaanPerangkat());
 	}
 
 
@@ -56,7 +56,7 @@ class PDFService
 	{
 		$cetakUjiFungsi = new CetakUjiFungsi();
 		if( App::environment() == 'testing'){ return ''; }
-		return $cetakUjiFungsi->makePDF($data, new PDFMCTable());
+		return $cetakUjiFungsi->makePDF($data, new PDFMCCetakUjiFungsi());
 	}
 
 
@@ -96,7 +96,7 @@ class PDFService
 	{
 		//dipanggil dari routes
 		$cetakKontrak = new CetakKontrak();
-		$cetakKontrak->makePDF($data, new PDFMCTable());
+		$cetakKontrak->makePDF($data, new PDFMCCetakKontrak());
 	}
 
 
@@ -118,7 +118,7 @@ class PDFService
 	public function cetakTechnicalMeetingUjiLokasi($data)
 	{
 		$cetakTechnicalMeetingUjiLokasi = new CetakTechnicalMeetingUjiLokasi();
-		$cetakTechnicalMeetingUjiLokasi->makePDF($data, new PDFMCDefault());
+		$cetakTechnicalMeetingUjiLokasi->makePDF($data, new PDFMCcetakTechnicalMeetingUjiLokasi());
 	}
 
 	public function cetakTiketChamber($data)
@@ -151,6 +151,7 @@ class PDFService
 			'pembuat_perangkat' => $data['pembuat_perangkat'],
 			'plg_id_perusahaan' => $data['plg_idPerusahaan'],
 			'nib_perusahaan' => $data['nibPerusahaan'],
+			'serial_number' => $data['serialNumber'],
 			'date' => $data['date']
 		]);
 	}

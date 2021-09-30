@@ -1,36 +1,12 @@
 <?php
 
 namespace App\Services\PDF;
-
 use Anouar\Fpdf\Fpdf as FPDF;
 
-class PDFMCTablePermohonan extends FPDF{
+class PDFMCCetakUjiFungsi extends FPDF{
 	var $widths;
 	var $aligns;
-	var $data;
-	var $dataType = [
-		'QA' => [
-			'title' => 'Permohonan Uji QA',
-			'document_id' => 'TLKM02/F/001 Versi 05',
-		],
-		'TA' => [
-			'title' => 'Permohonan Uji TA',
-			'document_id' => 'TLKM02/F/001 Versi 05',
-		],
-		'VT' => [
-			'title' => 'Permohonan Uji VT',
-			'document_id' => 'TLKM02/F/001 Versi 05',
-		],
-		'KAL' => [
-			'title' => 'Permohonan Kalibrasi',
-			'document_id' => 'TLKM02/F/001 Versi 05',
-		],
-	];
-
-	function setPDFData($data)
-	{
-		$this->data = $data;
-	}
+	var $kodeForm = '(kode form)';
 	
 	function SetWidths($w)
 	{
@@ -42,6 +18,11 @@ class PDFMCTablePermohonan extends FPDF{
 	{
 		//Set the array of column alignments
 		$this->aligns=$a;
+	}
+
+	function setData($data)
+	{
+		$this->kodeForm = $data['kodeForm'];
 	}
 
 	function Row($data)
@@ -74,13 +55,16 @@ class PDFMCTablePermohonan extends FPDF{
 		$this->Ln($h);
 	}
 	
-	function RowRect($data)
+	function RowRect($param)
 	{
+		$data = $param['data'];
+		$minLine = $param['minHeight'] ?? 2;
+		$charHeight = $param['charHeight'] ?? 5;
 		//Calculate the height of the row
 		$nb=0;
 		for($i=0;$i<count($data);$i++)
-			$nb=max($nb,$this->NbLines($this->widths[$i],$data[$i]));
-		$h=5*$nb;
+			$nb=max($nb,$this->NbLines($this->widths[$i],$data[$i]), $minLine);
+		$h=$charHeight*$nb;
 		//Issue a page break first if needed
 		$this->CheckPageBreak($h);
 		//Draw the cells of the row
@@ -96,11 +80,13 @@ class PDFMCTablePermohonan extends FPDF{
 			}
 			$y=$this->GetY();
 			//Draw the border
-			if($i>0){
-				$this->Rect($x,$y,$w,$h);
-			}
+			// if($i>0){
+			// 	$this->Rect($x,$y,$w,$h);
+			// }
+			$this->Rect($x,$y-($h/2),$w,$h);
 			//Print the text
 			// $this->SetFont('Arial','',10);
+			//$this->Cell($w, $h,'',1);
 			$this->MultiCell($w,5,$data[$i],0,$a);
 			//Put the position to the right of the cell
 			$this->SetXY($x+$w,$y);
@@ -168,6 +154,45 @@ class PDFMCTablePermohonan extends FPDF{
 		return $nl;
 	}
 	
+	public $param1;
+	public $param2;
+	function jns_pengujian($param1,$param2) {
+		$this->param1 = $param1;
+		$this->param2 = $param2;
+	}
+	
+	public $judul;
+	public $title;
+	function judul_kop($judul,$title) {
+		$this->judul = $judul;
+		$this->title = $title;
+	}
+	
+	function Header()
+	{
+		$this->Image(app_path('Services/PDF/images/telkom-logo-text.jpg'),170,8,25);
+		$this->Image(app_path('Services/PDF/images/tth-logo-text-opacity.jpg'),40,135,140);
+		$this->SetY(28);
+		$this->SetFont('helvetica','B',20);
+		$this->Cell(0,5,'Laporan Uji Fungsi',0,0,'C');
+	}
+
+	function Footer()
+	{
+		$this->Image(app_path('Services/PDF/images/decorator-pattern-2.jpg'),0,270,110);
+		$this->Image(app_path('Services/PDF/images/telkom-logo-red-hand.jpg'),190,270,20);
+		$this->SetTextColor(130,130,130);
+		$this->SetFont('helvetica','',7.6);
+		$this->SetXY(110, -26.5);
+		$this->cell(0,3, 'Telkom Test House (TTH) - PT. Telkom Indonesia (Persero) Tbk',0,2);
+		$this->cell(0,3, 'Jl. Gegerkalong Hilir No.47, Bandung, 40152, Indonesia ',0,2);
+		$this->cell(0,3, '(+62)812-2483-7500; cstth@telkom.co.id',0,2);
+		$this->cell(0,3, 'www.telkomtesthouse.co.id',0,2);
+		$this->SetY(-9);
+		$this->SetFont('helvetica','',10);
+		$this->Cell(0,5,'TLKM02/F/005 Versi 04',0,0,'L');
+		$this->Cell(0,5,'Hal '.$this->PageNo().' dari {nb}',0,0,'R');
+	}
 	
 	/**
 	 * Draws text within a box defined by width = w, height = h, and aligns
@@ -325,31 +350,6 @@ class PDFMCTablePermohonan extends FPDF{
 		}
 		$this->x=$this->lMargin;
 		return $nl;
-	}
-
-	function Header()
-	{
-		$this->Image(app_path('Services/PDF/images/telkom-logo-text.jpg'),170,8,25);
-		$this->Image(app_path('Services/PDF/images/tth-logo-text-opacity.jpg'),40,135,140);
-		$this->SetY(28);
-		$this->SetFont('helvetica','B',20);
-		$this->Cell(0,5,$this->dataType[$this->data['initPengujian']]['title'],0,0,'C');
-	}
-	function Footer()
-	{
-		$this->Image(app_path('Services/PDF/images/decorator-pattern-2.jpg'),0,270,110);
-		$this->Image(app_path('Services/PDF/images/telkom-logo-red-hand.jpg'),190,270,20);
-		$this->SetTextColor(130,130,130);
-		$this->SetFont('helvetica','',7.6);
-		$this->SetXY(110, -26.5);
-		$this->cell(0,3, 'Telkom Test House (TTH) - PT. Telkom Indonesia (Persero) Tbk',0,2);
-		$this->cell(0,3, 'Jl. Gegerkalong Hilir No.47, Bandung, 40152, Indonesia ',0,2);
-		$this->cell(0,3, '(+62)812-2483-7500; cstth@telkom.co.id',0,2);
-		$this->cell(0,3, 'www.telkomtesthouse.co.id',0,2);
-		$this->SetY(-9);
-		$this->SetFont('helvetica','',10);
-		$this->Cell(0,5,$this->dataType[$this->data['initPengujian']]['document_id'],0,0,'L');	
-		$this->Cell(0,5,'Hal '.$this->PageNo().' dari {nb}',0,0,'R');
 	}
 
 }
