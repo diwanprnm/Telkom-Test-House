@@ -38,7 +38,7 @@ return [
 */
     /* END ENV PROD TPN */
     'IS_ENABLED_NOTIFICATION' => env('IS_ENABLED_NOTIFICATION', true),
-    'SOCKET_ENDPOINT' => env('SOCKET_ENDPOINT', true),
+    'SOCKET_ENDPOINT' => env('SOCKET_ENDPOINT', 'http://testhouse-notification-service:3000'),
 
     /*
     |--------------------------------------------------------------------------
