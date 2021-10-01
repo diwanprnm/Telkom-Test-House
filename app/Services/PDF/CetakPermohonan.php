@@ -25,7 +25,8 @@ class CetakPermohonan
         $pdf->Cell(35,5,"Nomor HP Pemohon",0,2);
         $pdf->SetXY(56.5, 49);
         $pdf->Cell(0,5,$data[0]['nama_pemohon'],0,2);
-        $pdf->Cell(0,5,$data[0]['alamat_pemohon'],0,2);
+        // $pdf->Cell(0,5,$data[0]['alamat_pemohon'],0,2);
+        $pdf->MultiCell(0, 5,$data[0]['alamat_pemohon'],0,'L');
         $pdf->Cell(45,5,$data[0]['telepon_pemohon'],0,0);
         $pdf->Cell(3,5);
         $pdf->Cell(37,5,"Alamat E-Mail Pemohon",0,0);
@@ -52,10 +53,10 @@ class CetakPermohonan
         $pdf->Cell(7, 5, "4", 0, 1, 'C');
         $pdf->SetFont('helvetica','',9);
         $pdf->Ln(4);
-        $pdf->Cell(3,5);
+        $pdf->SetX(21.5);
         $pdf->Cell(35,5,"Nama Perusahaan",0,2);
         $pdf->Cell(35,5,"Alamat Perusahaan",0,2);
-        $pdf->SetXY(56.5, 85);
+        $pdf->SetXY(56.5, 86);
         $pdf->Cell(0,5,$data[0]['nama_perusahaan'],0,2);
         $pdf->Cell(0,5,$data[0]['alamat_perusahaan'],0,2);
         $pdf->Ln(10);
@@ -74,7 +75,7 @@ class CetakPermohonan
         $pdf->Cell(37,5,"Tipe/Model",0,2);
         $pdf->Cell(37,5,"Nomor Seri",0,2);
         $pdf->Cell(37,5,"Referensi Uji",0,2);
-        $pdf->SetXY(56.5, 113);
+        $pdf->SetXY(56.5, 114);
         $pdf->Cell(0,5,$data[0]['nama_perangkat'],0,2);
         $pdf->Cell(45,5,$data[0]['merek_perangkat'],0,2);
         $pdf->Cell(45,5,$data[0]['kapasitas_perangkat'],0,2);
