@@ -268,8 +268,8 @@
     @php if(config('app.IS_ENABLED_NOTIFICATION')){@endphp
      <script src="{{url('vendor/socket/socket.io.js')}}"></script>
       <script>
-        // var socket = io(config('app.SOCKET_ENDPOINT'));
-        var socket = io('http://testhouse-notification-service:3000');
+        var socket = io("{{ config('app.SOCKET_ENDPOINT')}}");
+        // var socket = io('http://testhouse-notification-service:3000');
         socket.on("notification-channel:App\\Events\\Notification", function(message){ 
             var userId = $("#user_id").val();
             console.log(message.data);
