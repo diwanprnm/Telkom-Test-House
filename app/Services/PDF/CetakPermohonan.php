@@ -8,7 +8,7 @@ class CetakPermohonan
     public function makePDF($data, $pdf)
     {
         $pdf->setPDFData($data[0]);
-        $pdf->SetMargins(17, 0, 17);
+        $pdf->SetMargins(15, 0, 17);
         $pdf->AliasNbPages();
         $pdf->AddPage();
 
@@ -18,18 +18,13 @@ class CetakPermohonan
         $pdf->Cell(0,5,"Nomor Registrasi: ".$data[0]['no_reg'],0,1,'R');
         $pdf->Cell(0,5,"Data Pemohon:",0,1);
         $pdf->Ln(2);
-        $pdf->SetFont('','', 9);
-        $pdf->SetX(21.5);
-        $pdf->Cell(35,5,"Nama Pemohon",0,2);
-        $pdf->Cell(35,5,"Alamat Pemohon",0,2);
-        $pdf->Cell(35,5,"Nomor HP Pemohon",0,2);
-        $pdf->SetXY(56.5, 49);
-        $pdf->Cell(0,5,$data[0]['nama_pemohon'],'B',2);
-        $pdf->Cell(0,5,$data[0]['alamat_pemohon'],'B',2);
-        $pdf->Cell(45,5,$data[0]['telepon_pemohon'],'B',0);
-        $pdf->Cell(3,5);
-        $pdf->Cell(37,5,"Alamat E-Mail Pemohon",0,0);
-        $pdf->Cell(0,5,$data[0]['email_pemohon'],'B',0);
+        
+        $pdf->SetFont('','');
+        $pdf->SetWidths([6,35,136.5]);
+        $pdf->Row(["","Nama Pemohon",$data[0]['nama_pemohon']]);
+        $pdf->Row(["","Alamat Pemohon",$data[0]['alamat_pemohon']]);
+        $pdf->SetWidths([6,35,45.5,37.5,53.5]);
+        $pdf->Row(["","Nomor HP Pemohon",$data[0]['telepon_pemohon'],"Alamat E-Mail Pemohon",$data[0]['email_pemohon']]);
         $pdf->Ln(10);
 
         // DATA PERUSAHAAN
@@ -41,23 +36,19 @@ class CetakPermohonan
         $pdf->Cell(7,5,"",1,0);$pdf->Cell(3,5,"",0,0);$pdf->Cell(45,5,"Pabrikan",0,0);
         $pdf->Cell(7,5,"",1,0);$pdf->Cell(3,5,"",0,0);$pdf->Cell(45,5,"Perwakilan",0,0);
         $pdf->Cell(7,5,"",1,0);$pdf->Cell(3,5,"",0,0);$pdf->Cell(45,5,"Agen/Distributor",0,0);
-        $pdf->Ln(10);
         $checkPossition = [
             'Pabrikan' => 31.5,
             'Perwakilan' => 86.5,
             'Agen' => 141.5,
         ];
-        $pdf->SetXY($checkPossition[$data[0]['jns_perusahaan']]??40, 77);
+        $pdf->SetXY($checkPossition[$data[0]['jns_perusahaan']]??86.5, $pdf->GetY());
         $pdf->SetFont('ZapfDingbats','', 14);
         $pdf->Cell(7, 5, "4", 0, 1, 'C');
         $pdf->SetFont('helvetica','',9);
         $pdf->Ln(4);
-        $pdf->Cell(3,5);
-        $pdf->Cell(35,5,"Nama Perusahaan",0,2);
-        $pdf->Cell(35,5,"Alamat Perusahaan",0,2);
-        $pdf->SetXY(56.5, 85);
-        $pdf->Cell(0,5,$data[0]['nama_perusahaan'],'B',2);
-        $pdf->Cell(0,5,$data[0]['alamat_perusahaan'],'B',2);
+        $pdf->SetWidths([6,35,136.5]);
+        $pdf->Row(["","Nama Perusahaan",$data[0]['nama_perusahaan']]);
+        $pdf->Row(["","Alamat Perusahaan",$data[0]['alamat_perusahaan']]);
         $pdf->Ln(10);
 
         // DATA PERANGKAT
@@ -65,24 +56,12 @@ class CetakPermohonan
         $pdf->Cell(35,5,"Data Perangkat:",0,2);
         $pdf->Ln(3);
         $pdf->SetFont('','');
-        $pdf->SetX(21.5);
-        $pdf->Cell(35,5,"Nama Perangkat",0,2);
-        $pdf->Cell(35,5,"Merek",0,2);
-        $pdf->Cell(35,5,"Kapasitas",0,2);
-        $pdf->Cell(35,5,"Negara Pembuat",0,2);
-        $pdf->SetXY(105, 118);
-        $pdf->Cell(37,5,"Tipe/Model",0,2);
-        $pdf->Cell(37,5,"Nomor Seri",0,2);
-        $pdf->Cell(37,5,"Referensi Uji",0,2);
-        $pdf->SetXY(56.5, 113);
-        $pdf->Cell(0,5,$data[0]['nama_perangkat'],'B',2);
-        $pdf->Cell(45,5,$data[0]['merek_perangkat'],'B',2);
-        $pdf->Cell(45,5,$data[0]['kapasitas_perangkat'],'B',2);
-        $pdf->Cell(45,5,$data[0]['pembuat_perangkat'],'B',2);
-        $pdf->SetXY(132.5, 118);
-        $pdf->Cell(0,5,$data[0]['model_perangkat'],'B',2);//daniel
-        $pdf->Cell(0,5,$data[0]['serial_number'],'B',2);
-        $pdf->Cell(0,5,$data[0]['referensi_perangkat'],'B',2);
+        $pdf->SetWidths([6,35,136.5]);
+        $pdf->Row(["","Nama Perangkat",$data[0]['nama_perangkat']]);
+        $pdf->SetWidths([6,35,45.5,28,63]);
+        $pdf->Row(["","Merek",$data[0]['merek_perangkat'],"Tipe/Model",$data[0]['model_perangkat']]);
+        $pdf->Row(["","Kapasitas",$data[0]['kapasitas_perangkat'],"Nomor Seri",$data[0]['serial_number']]);
+        $pdf->Row(["","Negara Pembuat",$data[0]['pembuat_perangkat'],"Referensi Uji",$data[0]['referensi_perangkat']]);
         $pdf->Ln(10);
 
         // PERNYATAAN

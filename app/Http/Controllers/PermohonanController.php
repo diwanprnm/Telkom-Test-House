@@ -730,6 +730,7 @@ class PermohonanController extends Controller
 			'referensi_perangkat' => $device->test_reference,
 			'pembuat_perangkat' => $device->manufactured_by,
 			'jnsPengujian' => $exam->examination_type_id,
+			'serial_number' => $device->serial_number,
 		]);
 		$PDF = new \App\Services\PDF\PDFService();
 		return $PDF->cetakPermohonan($PDFData);	
