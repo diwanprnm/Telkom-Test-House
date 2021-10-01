@@ -25,8 +25,7 @@ class CetakPermohonan
         $pdf->Cell(35,5,"Nomor HP Pemohon",0,2);
         $pdf->SetXY(56.5, 49);
         $pdf->Cell(0,5,$data[0]['nama_pemohon'],0,2);
-        // $pdf->Cell(0,5,$data[0]['alamat_pemohon'],0,2);
-        $pdf->MultiCell(0, 5,$data[0]['alamat_pemohon'],0,'L');
+        $pdf->Cell(0,5,$data[0]['alamat_pemohon'],0,2);
         $pdf->Cell(45,5,$data[0]['telepon_pemohon'],0,0);
         $pdf->Cell(3,5);
         $pdf->Cell(37,5,"Alamat E-Mail Pemohon",0,0);
