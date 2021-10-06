@@ -60,7 +60,7 @@ class CetakKontrak
         $pdf->Cell(35,5,"Pernyataan:",0,2);
         $pdf->SetFont('','',8);
         $pdf->Cell(4.5,$charHeight,"1.",0,0);
-        $pdf->MultiCell(0, $charHeight,'Pelanggan memahami referensi uji, memahami item uji, dan konfigurasi uji.',0,'L');
+        $pdf->MultiCell(0, $charHeight,'Pelanggan memahami referensi uji, item uji, dan konfigurasi uji.',0,'L');
         if ($data[0]['is_loc_test']){
             $pdf->Cell(4.5,$charHeight,"2.",0,0);
             $pdf->Cell(44, $charHeight,'Kesepakatan yang tertuang dalam');$pdf->SetFont('','I');$pdf->Cell(23, $charHeight,'technical meeting');;$pdf->SetFont('','');$pdf->Cell(44, $charHeight,'uji lokasi dalam negeri adalah benar. Pelanggan menyatakan bahwa lingkungan milik',0,1);
