@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>DDB</title>
+	<title>Telkom Test House</title>
 <style>
 	.header{
 		margin-top:2%;
@@ -51,7 +51,7 @@
 		<br><br>
 	</p>
 	<p style="font-family:Helvetica, sans-serif; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-		Perangkat saudara/i saat ini sedang dalam proses uji (<strong style="font-style:italic;">on-progress</strong>) di Lab IAS DDB Telkom.
+		Perangkat saudara/i saat ini sedang dalam proses uji (<strong style="font-style:italic;">on-progress</strong>) di Lab Telkom Test House.
 		<br><br>
 		Salam hangat,
 		<br>

@@ -113,7 +113,7 @@ class CetakTechnicalMeetingUjiLokasi
         $pdf->SetFont('','');
         $pdf->Ln(4);
         $pdf->Cell(0,4,'Mengetahui,',0,1,'C');
-        $pdf->Cell(0,4,'Mgr. Lab TTH',0,1,'C');
+        $pdf->Cell(0,4,'Mgr. Lab',0,1,'C');
         $pdf->Ln(15);
         $pdf->SetFont('','U');
         $pdf->Cell(0,4,'( '.$data['managerLab'].' )',0,1,'C');

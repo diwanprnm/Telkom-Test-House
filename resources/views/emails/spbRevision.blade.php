@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>DDB</title>
+	<title>Telkom Test House</title>
 <style>
 	.header{
 		margin-top:2%;
@@ -75,7 +75,7 @@
 	<p style="font-family:Helvetica; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
 		<br>
 		Salam hangat,<br>
-		Telkom Test House - Laboratorium Quality Assurance – DDB<br>
+		Telkom Test House - Laboratorium Quality Assurance<br>
 		PT. Telekomunikasi Indonesia, Tbk.<br>
 		Jl. Gegerkalong Hilir No. 47 Sukasari Bandung<br>
         45012<br><br>

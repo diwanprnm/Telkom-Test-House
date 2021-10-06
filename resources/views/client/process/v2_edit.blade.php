@@ -25,7 +25,7 @@
 		]
 	@endphp
     ============================================= -->
-    <title>{{ $examintaionType[$jns_pengujian]['code']}} - Telkom DDB</title>
+    <title>{{ $examintaionType[$jns_pengujian]['code']}} - Telkom Test House</title>
 @section('content')
  <link rel="stylesheet" href="{{url('vendor/jquerystep/main.css')}}" type="text/css" />
   <link rel="stylesheet" href="{{url('vendor/jquerystep/jquery.steps.css')}}" type="text/css" />

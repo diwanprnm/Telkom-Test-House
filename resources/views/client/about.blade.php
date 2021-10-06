@@ -1,7 +1,7 @@
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
-    <title>{{ trans('translate.about') }} {{ trans('translate.about_us') }} - Telkom DDB</title>
+    <title>{{ trans('translate.about') }} {{ trans('translate.about_us') }} - Telkom Test House</title>
 @section('content')
 <style type="text/css">
 	.fluid-width-video-wrapper iframe {

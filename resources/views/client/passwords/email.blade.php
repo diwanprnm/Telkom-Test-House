@@ -1,7 +1,7 @@
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
-    <title>{{ trans('translate.reset_password') }} - Telkom DDB</title>
+    <title>{{ trans('translate.reset_password') }} - Telkom Test House</title>
 @section('content')        
         <!-- Content
         ============================================= -->

@@ -1,7 +1,7 @@
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
-    <title>Rent Chamber - Telkom DDB</title>
+    <title>Rent Chamber - Telkom Test House</title>
 @section('content')
  	<link rel="stylesheet" href="{{url('vendor/jquerystep/main.css')}}" type="text/css" />
     <link rel="stylesheet" href="{{url('vendor/jquerystep/jquery.steps.css')}}" type="text/css" /> 
