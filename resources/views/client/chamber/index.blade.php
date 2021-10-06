@@ -1,7 +1,7 @@
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
-    <title>{{ trans('translate.profile') }} - Telkom DDB</title>
+    <title>{{ trans('translate.profile') }} - Telkom Test House</title>
         <title>Laravel</title>
         <link href="{{url('assets/css/pb.calendar.min.css')}}" rel="stylesheet" type="text/css">
 		<style>

@@ -1,7 +1,7 @@
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
-    <title>{{ trans('translate.payment_status') }} - Telkom DDB</title>
+    <title>{{ trans('translate.payment_status') }} - Telkom Test House</title>
 @section('content')
 <style>
 	.tooltip-text {

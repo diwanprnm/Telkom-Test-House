@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>DDB</title>
+	<title>Telkom Test House</title>
 <style>
 	.header{
 		margin-top:2%;
@@ -51,9 +51,9 @@
 		<br><br>
 	</p>
 	<p style="font-family:Helvetica, sans-serif; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-		Dokumen pengajuan Uji {!! $exam_type !!} ({!! $exam_type_desc !!}) Anda telah diperiksa oleh staff User Relation Lab Infrastructure Assurance DDB Telkom. Proses selanjutnya adalah Uji Fungsi (pre-test) perangkat	di Lab IAS dengan alamat sbb:
+		Dokumen pengajuan Uji {!! $exam_type !!} ({!! $exam_type_desc !!}) Anda telah diperiksa oleh staff User Relation Lab Infrastructure Assurance Telkom Test House. Proses selanjutnya adalah Uji Fungsi (pre-test) perangkat	di Lab IAS dengan alamat sbb:
 		<br><br>
-		Lab Pengujian Infrastructure Assurance DDB
+		Lab Pengujian Infrastructure Assurance Telkom Test House
 		<br>
 		PT. Telekomunikasi Indonesia, Tbk
 		<br>

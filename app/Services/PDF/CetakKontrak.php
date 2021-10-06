@@ -147,8 +147,8 @@ class CetakKontrak
         $pdf->setX(134);
         $pdf->Cell(59,$charHeight,"Bandung, $signDate",0,1,'C');
         $pdf->Cell(59,$charHeight, 'Pelanggan', 0, 0, 'C');
-        $pdf->Cell(58,$charHeight, 'Mgr. Lab TTH', 0, 0, 'C');
-        $pdf->Cell(59,$charHeight, 'Mgr. UREL TTH', 0, 1, 'C');
+        $pdf->Cell(58,$charHeight, 'Mgr. Lab', 0, 0, 'C');
+        $pdf->Cell(59,$charHeight, 'Mgr. UREL', 0, 1, 'C');
         $pdf->Ln(15);
         $pdf->Cell(59,$charHeight, '('.$data[0]['pic'].')', 0, 0, 'C');
         $pdf->Cell(58,$charHeight, '('.$data[0]['manager_lab'].')', 0, 0, 'C');

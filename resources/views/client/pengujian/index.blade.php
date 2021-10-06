@@ -4,7 +4,7 @@
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
-    <title>{{ trans('translate.examination') }} - Telkom DDB</title>
+    <title>{{ trans('translate.examination') }} - Telkom Test House</title>
 @php $date_STRING = date('d-m-Y'); @endphp
 @section('content')
 <style type="text/css">
@@ -794,7 +794,7 @@
                       </tr>
                       <tr>
                         <td>16</td>
-                        <td>Kontor Telkom DDB dalam kondisi nyaman, bersih dan sudah sesuai kondisi keseluruhannya.</td> 
+                        <td>Kontor Telkom Test House dalam kondisi nyaman, bersih dan sudah sesuai kondisi keseluruhannya.</td> 
                         <td><input type="number" min="1" max="7" name="quest16_eks" class="form-control" value="1" placeholder="1-7" required></td>
                         <td><input type="number" min="1" max="7" name="quest16_perf" class="form-control" value="1" placeholder="1-7" required></td>
                       </tr>
@@ -812,7 +812,7 @@
                       </tr>
                       <tr>
                         <td>19</td>
-                        <td>Pihak Telkom DDB terutama pihak UREL yang melayani proses pengajuan hingga pelaporan sudah memahami kebutuhan kastamer.</td> 
+                        <td>Pihak Telkom Test House terutama pihak UREL yang melayani proses pengajuan hingga pelaporan sudah memahami kebutuhan kastamer.</td> 
                         <td><input type="number" min="1" max="7" name="quest19_eks" class="form-control" value="1" placeholder="1-7" required></td>
                         <td><input type="number" min="1" max="7" name="quest19_perf" class="form-control" value="1" placeholder="1-7" required></td>
                       </tr>
@@ -1090,7 +1090,7 @@
           </div>
           <div class="modal-body pre-scrollable">
                <div class="row">
-                    <h2>Silakan Ambil Barang di Gudang DDB Telkom, Sebelum mengunduh Sertifikat. Terima Kasih</h2>
+                    <h2>Silakan Ambil Barang di Gudang Telkom Test House, Sebelum mengunduh Sertifikat. Terima Kasih</h2>
                 </div>
           </div>
           <div class="modal-footer">

@@ -60,23 +60,17 @@ class CetakBuktiPenerimaanPerangkat{
  		$pdf->RowRect(['data'=>['No.','Jumlah (Satuan)','Merek, Tipe/Model, Kapasitas, Nomor Seri, dan Negara Pembuat','Keterangan']]);
 		$pdf->SetFont('helvetica','',10);
         
-        if(count($equipment)){
+        $pic = '...............................';
+		if(count($equipment)){
 			$pic = $equipment[0]->pic;
 			$no = 1;
 			foreach($equipment as $data){
 				$pdf->RowRect(['data'=>[$no,"$data->qty ($data->unit)",$data->description,$data->remarks]]);
 				$no++;
 			}
-			for ($i=count($equipment); $i < (24 - count($equipment)); $i++) { 
-				$pdf->RowRect(['data'=>['','','','']]);
-			}
-		}else{
-			$pic = '...............................';
-			for ($i=0; $i <24 ; $i++) { 
-				$pdf->RowRect(['data'=>['','','','']]);
-			}	  			
 		}
-
+		$pdf->setY(223);
+		
 		$pdf->Ln(5);  
 	 	$pdf->SetFont('helvetica','',10); 
 		$pdf->Cell(80, 4, 'Penerimaan Perangkat', 1, 0, 'C'); 

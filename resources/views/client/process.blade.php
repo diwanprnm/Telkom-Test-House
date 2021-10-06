@@ -1,7 +1,7 @@
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
-    <title>{{ trans('translate.process') }} - Telkom DDB</title>
+    <title>{{ trans('translate.process') }} - Telkom Test House</title>
 @section('content')
 <link rel="stylesheet" href="{{url('vendor/chosen/chosen.css')}}">
 <style type="text/css">

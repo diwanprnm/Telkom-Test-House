@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>DDB</title>
+	<title>Telkom Test House</title>
 	<style>
 		@import url(//fonts.googleapis.com/css?family=Lato:700);
 

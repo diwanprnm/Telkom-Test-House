@@ -1,7 +1,7 @@
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
-    <title>{{ trans('translate.certification') }} - Telkom DDB</title>
+    <title>{{ trans('translate.certification') }} - Telkom Test House</title>
 @section('content')
  		<!-- Page Title
 		============================================= -->

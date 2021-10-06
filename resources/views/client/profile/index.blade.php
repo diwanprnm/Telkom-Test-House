@@ -1,7 +1,7 @@
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
-    <title>{{ trans('translate.profile') }} - Telkom DDB</title>
+    <title>{{ trans('translate.profile') }} - Telkom Test House</title>
 @php 
 	$ADDRESS_STRING = 'address'; 
 	$EMAIL_STRING = 'email'; 
