@@ -53,10 +53,12 @@ class CetakUjiFungsi
         $i = 0;
         foreach($upperDatas as $key => $val ){
             $i++;
+            $keyHigh = strlen($val) > 121 ? 20 : 10;
             $pdf->setXY(17,$startY+(($i+1)*10));
-            $pdf->drawTextBox($key, $keyWidth, 10, 'L', 'M');
+            $pdf->drawTextBox($key, $keyWidth, $keyHigh, 'L', 'M');
             $pdf->setXY(17+$keyWidth,$startY+(($i+1)*10));
-            $pdf->drawTextBox($val, 121, 10, 'L', 'M');
+            $pdf->drawTextBox($val, 121, $keyHigh, 'L', 'M');
+            if($keyHigh == 20){$i++;}
         }
 
         //HASIL UJI FUNGSI

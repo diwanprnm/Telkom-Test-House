@@ -22,7 +22,7 @@ class CetakPermohonan
         $pdf->SetFont('','');
         $pdf->SetWidths([6,35,136.5]);
         $pdf->Row(["","Nama Pemohon",$data[0]['nama_pemohon']]);
-        $pdf->Row(["","Alamat Pemohon",$data[0]['alamat_pemohon']]);
+        $pdf->Row(["","Alamat Pemohon",$data[0]['alamat_pemohon'].'']);
         $pdf->SetWidths([6,35,45.5,37.5,53.5]);
         $pdf->Row(["","Nomor HP Pemohon",$data[0]['telepon_pemohon'],"Alamat E-Mail Pemohon",$data[0]['email_pemohon']]);
         $pdf->Ln(10);
