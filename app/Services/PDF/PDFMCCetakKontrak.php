@@ -62,7 +62,7 @@ class PDFMCCetakKontrak extends FPDF{
 			//Draw the border
 			// $this->Rect($x,$y,$w,$h);
 			//Print the text
-			$this->SetFont('Arial','',10);
+			// $this->SetFont('Arial','',10);
 			$this->MultiCell($w,5,$data[$i],0,$a);
 			//Put the position to the right of the cell
 			$this->SetXY($x+$w,$y);

@@ -34,27 +34,14 @@ class CetakKontrak
         $pdf->SetFont('','B');
         $pdf->Cell(35,5,"Data Perangkat:",0,2);
         $pdf->SetFont('','');
-        $pdf->SetX(21.5);
-        $yNow = $pdf->getY();
-        $pdf->Cell(35,5,"Nama Perangkat",0,2);
-        $pdf->Cell(35,5,"Merek",0,2);
-        $pdf->Cell(35,5,"Kapasitas",0,2);
-        $pdf->Cell(35,5,"Negara Pembuat",0,2);
-        $pdf->SetXY(105, $yNow+5);
-        $pdf->Cell(37,5,"Tipe/Model",0,2);
-        $pdf->Cell(37,5,"Nomor Seri",0,2);
-        $pdf->Cell(37,5,"Referensi Uji",0,2);
-        $pdf->SetXY(56.5, $yNow);
-        $pdf->Cell(0,5,$data[0]['nama_perangkat'],0,2);
-        $pdf->Cell(45,5,$data[0]['merek_perangkat'],0,2);
-        $pdf->Cell(45,5,$data[0]['kapasitas_perangkat'],0,2);
-        $pdf->Cell(45,5,$data[0]['pembuat_perangkat'],0,2);
-        $pdf->SetXY(132.5, $yNow+5);
-        $pdf->Cell(0,5,$data[0]['model_perangkat'],0,2);//daniel
-        $pdf->Cell(0,5,$data[0]['serial_number'],0,2);
-        $pdf->Cell(0,5,$data[0]['referensi_perangkat'],0,2);
+        $pdf->SetWidths([11.5,46.5,275]);
+        $pdf->Row(["","Nama Perangkat",$data[0]['nama_perangkat']]);
+        $pdf->SetWidths([11.5,46.5,95.5,123,56.5]);
+        $pdf->Row(["","Merek",$data[0]['merek_perangkat'],"Tipe/Model",$data[0]['model_perangkat']]);
+        $pdf->Row(["","Kapasitas",$data[0]['kapasitas_perangkat'],"Nomor Seri",$data[0]['serial_number']]);
+        $pdf->Row(["","Negara Pembuat",$data[0]['pembuat_perangkat'],"Referensi Uji",$data[0]['referensi_perangkat']]);
         $pdf->Ln(5);
-
+        
         // DATA PERANGKAT
         $pdf->SetFont('','B');
         $pdf->Cell(35,5,"Pernyataan:",0,2);
