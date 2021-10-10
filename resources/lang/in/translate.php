@@ -474,6 +474,8 @@ return [
 	'examination_payment_this_nominal' => 'TERMASUK PPh',
 	'examination_payment_will_pay' => 'SAYA AKAN MEMBAYAR TANPA PPh',
 	'examination_payment_nominal_without_pph' => 'TIDAK TERMASUK PPh',
+	'examination_payment_pph' => 'Per tanggal 8 Oktober 2021, PT TELKOM INDONESIA(Persero) Tbk, dibebaskan dari pemotongan dan/atau pemungutan PPh 23. Keputusan tersebut dapat diunduh',
+	'examination_payment_here' => 'di sini',
 
 	'payment_via_virtual_account' => 'PEMBAYARAN MELALUI VIRTUAL ACCOUNT',
 	'choose_bank' => 'Pilih Bank',

@@ -310,6 +310,7 @@ Route::post('/global/search', 'HomeController@search');
 Route::post('/client/feedback', 'PermohonanController@feedback');
 
 Route::get('/client/downloadUsman', 'HomeController@downloadUsman');
+Route::get('/client/downloadDecisionPPh23', 'PengujianController@downloadDecisionPPh23');
 Route::get('mylogsbl', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
  

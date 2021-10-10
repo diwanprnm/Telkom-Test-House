@@ -471,6 +471,8 @@ return [
 	'examination_payment_this_nominal' => 'PPh INCLUDED',
 	'examination_payment_will_pay' => 'I WILL PAY WITHOUT PPh',
 	'examination_payment_nominal_without_pph' => 'PPh EXCLUDED',
+	'examination_payment_pph' => 'As of October 8, 2021, PT TELKOM INDONESIA(Persero) Tbk, is exempted from withholding and/or collecting PPh 23. The decision can be downloaded',
+	'examination_payment_here' => 'here',
 
 	'payment_via_virtual_account' => 'PAYMENT VIA VIRTUAL ACCOUNT',
 	'choose_bank' => 'Choose Bank',
