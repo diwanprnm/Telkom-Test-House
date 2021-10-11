@@ -957,10 +957,12 @@
 							Step Pelaksanaan Uji
 						</legend>
 						<div class="row">
+						@php $reportFinalResultValue = '-'; @endphp
 						@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
 							@php
 								$start_date = new DateTime(date('Y-m-d'));
 								$end_date = new DateTime($exam_schedule->data[0]->targetDt);
+								$reportFinalResultValue = $exam_schedule->data[0]->reportFinalResultValue;
 								if($start_date>$end_date){
 									$sisa_spk = 0;
 								}else{
@@ -1064,7 +1066,7 @@
 										Hasil Pengujian
 									</label>
 									<label>
-										: {{ $exam_schedule->data[0]->reportFinalResultValue }}
+										: {{ $reportFinalResultValue }}
 									</label>
 								</div>
 							</div>
