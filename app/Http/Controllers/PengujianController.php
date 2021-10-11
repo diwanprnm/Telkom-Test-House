@@ -1928,7 +1928,7 @@ class PengujianController extends Controller
 
 	public function downloadDecisionPPh23()
     {
-		$fileName = "User Manual Situs Jasa Layanan Pelanggan Lab Pengujian [Customer].pdf";
+		$fileName = "SKB Telkom.pdf";
         $fileMinio = Storage::disk('minio')->get("usman/$fileName");
         return response($fileMinio, 200, \App\Services\MyHelper::getHeaderOctet($fileName));
 	}
