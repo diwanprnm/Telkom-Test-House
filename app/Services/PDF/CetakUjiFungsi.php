@@ -37,15 +37,15 @@ class CetakUjiFungsi
 
         $upperDatas = [
             'Nomor Registrasi' => $this->doubledecode($data['no_reg']),
-            'Nama Perusahaan' => $data['company_name'],
-            'Alamat Perusahaan' => $data['company_address'],
-            'Nama Perangkat' => $data['device_name'],
-            'Merek' => $data['device_mark'],
-            'Tipe/Model' => $data['device_model'],
-            'Kapasitas' => $data['device_capacity'],
-            'Nomor Seri' => $data['device_serial_number'],
-            'Negara Pembuat' => $data['device_manufactured_by'],
-            'Referensi Uji' => $data['device_test_reference'],
+            'Nama Perusahaan' => $this->doubledecode($data['company_name']),
+            'Alamat Perusahaan' => $this->doubledecode($data['company_address']),
+            'Nama Perangkat' => $this->doubledecode($data['device_name']),
+            'Merek' => $this->doubledecode($data['device_mark']),
+            'Tipe/Model' => $this->doubledecode($data['device_model']),
+            'Kapasitas' => $this->doubledecode($data['device_capacity']),
+            'Nomor Seri' => $this->doubledecode($data['device_serial_number']),
+            'Negara Pembuat' => $this->doubledecode($data['device_manufactured_by']),
+            'Referensi Uji' => $this->doubledecode($data['device_test_reference']),
         ];
 
         $keyWidth = 55;
