@@ -17,7 +17,7 @@
 				'code' => 'VT',
 				'name' => 'VOLUNTARY TEST TESTING PROCESS'
 			],
-			'cal' => [
+			'kal' => [
 				'number' => 4,
 				'code' => 'KAL',
 				'name' => 'CALIBRATION TESTING PROCESS'

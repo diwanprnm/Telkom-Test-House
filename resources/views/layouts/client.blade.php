@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html dir="ltr" lang="en-US">
+<html dir="ltr" lang="en-US" translate="no">
 <head>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -240,7 +240,7 @@
      <script src="https://rawgit.com/kswedberg/jquery-smooth-scroll/master/jquery.smooth-scroll.js"></script>
       <script type="text/javascript">
         $(document).ready(function() {
-
+            document.addEventListener('contextmenu', event => event.preventDefault());
           var scrollnow = function(e) {
               // if scrollnow()-function was triggered by an event
               if (e) {
