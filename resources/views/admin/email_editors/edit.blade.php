@@ -156,7 +156,7 @@
 	
 	function updateFields() {	
 		var value = `<!doctype html>
-						<html lang="en">
+						<html lang="en" translate="no">
 						<head>
 							<meta charset="UTF-8">
 							<title>Telkom Test House</title>
