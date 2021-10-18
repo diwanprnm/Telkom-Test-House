@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Illuminate\Support\Facades\Hash;
 
 use Auth;
 use Session;
@@ -103,6 +104,54 @@ class ApprovalController extends Controller
             // ->with(self::SORT_BY, $sort_by)
             // ->with(self::SORT_TYPE, $sort_type)
         ;
+    }
+
+    public function assign($id,$password)
+	{
+        if (!Hash::check($password, Auth::user()->password)){return redirect('admin/approval')->with('error', 'Password Salah!');}
+        $logService = new LogService();
+		
+		$data = ApproveBy::find($id)->first();
+        
+		if ($data){
+			try{
+                $data->approve_date = date("Y-m-d H:i:s");
+                $data->save();
+
+                $approveBy = ApproveBy::where('approval_id', $data->approval_id)->whereNull('approve_date')->get();
+                if(count($approveBy) == 0){
+                    $approval = Approval::find($data->approval_id)->first();
+                    $approval->status = 1;
+                    $approval->save();
+                }
+
+                $logService->createLog('assign', 'Approval', $data );
+				Session::flash('message', 'Document successfully approved');
+				return redirect('admin/approval');
+			}catch (Exception $e){ return redirect('admin/approval')->with('error', 'Approve failed'); }
+		}
+	}
+
+    public function show($id){
+        $approval = Approval::find($id)->with('approveBy')->with('authentikasi')->first();
+        
+        // switch ($approval->authentikasi->dir_name) {
+		// 	case 'authentikasi.registrasi':
+		// 		$content = $this->parsingSertifikat($approval->content);
+		// 		break;
+		// 	case 'authentikasi.pembayaran':
+		// 		$content = $this->parsingEmailPembayaran($email->content, $user->name);
+		// 		break;
+		// 	case 'authentikasi.sertifikat':
+		// 		$content = $this->parsingEmailSertifikat($email->content, $user->name, $exam->is_loc_test);
+		// 		break;
+		// 	default:
+		// 		$content = null;
+		// 		$subject = null;
+		// 		break;
+		// }
+
+        return view('authentikasi.sertifikat');
     }
 
 }

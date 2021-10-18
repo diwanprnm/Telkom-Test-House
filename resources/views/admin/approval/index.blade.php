@@ -1,6 +1,41 @@
 @extends('layouts.app')
 
 @section('content')
+
+<input type="hide" id="hide_approval_id" name="hide_approval_id">
+<div class="modal fade" id="myModal_assign" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title"><em class="fa fa-eyes-open"></em> Verifikasi Akun, Mohon Masukkan Password Akun Anda!</h4>
+			</div>
+			
+			<div class="modal-body">
+				<table style="width: 100%;"><caption></caption>
+					<tr>
+						<th scope="col">
+							<div class="form-group">
+								<label for="password">Password:</label>
+								<input id="password" type="password" name="password" class="form-control" placeholder="Password">
+							</div>
+						</th>
+					</tr>
+				</table>
+			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<table style="width: 100%;"><caption></caption>
+					<tr>
+						<th scope="col">
+							<button type="button" id="btn-modal-assign" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
+						</th>
+					</tr>
+				</table>
+			</div>
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>
+
 <style type="text/css">
 	.chosen-container.chosen-container-single {
 		width: 100% !important;
@@ -68,16 +103,16 @@
 										<tr>
 											<td class="center">{{$no}}</td>
 											<td class="center">{{ $item->approval->authentikasi->name }}</td>
-											<td class="center">{{ $item->approval->attachment }}</td>
+											<td class="center"><a href="{{ \Storage::disk('minio')->url($item->approval->reference_table.'/'.$item->approval->reference_id.'/'.$item->approval->attachment) }}" target="_blank">{{ $item->approval->attachment }}</a></td>
 											<td class="center">{{ $item->created_at }}</td>
 											<td class="center">
 											@if($item->approval->status)
-												<a href="{{URL::to('admin/approval/'.$item->id)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Detail"><em class="fa fa-eye"></em></a>
+												<a href="{{URL::to('admin/approval/'.$item->approval->id)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Detail" target="_blank"><em class="fa fa-eye"></em></a>
 											@else
 												@if($item->approve_date)
 													Approved
 												@else
-													<a href="{{URL::to('admin/approval/edit/'.$item->id)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil-square-o"></em></a>
+													<a data-toggle="modal" data-target="#myModal_assign" onclick="document.getElementById('hide_approval_id').value = '{{ $item->id }}'" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil-square-o"></em></a>
 												@endif
 											@endif
 											</td>
@@ -133,6 +168,36 @@
 				document.location.href = baseUrl+'/admin/approval?'+jQuery.param(params);
 	        }
 	    });
+
+		$('#myModal_assign').on('shown.bs.modal', function () {
+		    $('#password').focus();
+		});
+
+		$('#password').keydown(function(event) {
+	        if (event.keyCode == 13) {
+	            verifyAccount();
+	        }
+	    });
+
+		$('#btn-modal-assign').click(function () {
+			verifyAccount();
+		});
 	});
+
+	function verifyAccount(){
+		var baseUrl = "{{URL::to('/')}}";
+		var password = document.getElementById('password').value;
+		var approval_id = document.getElementById('hide_approval_id').value;
+		if(password == ''){
+			$('#myModal_assign').modal('show');
+			return false;
+		}else{
+			$('#myModal_assign').modal('hide');
+			if (confirm('Are you sure want to approve this document?')) {
+				document.getElementById("overlay").style.display="inherit";	
+				document.location.href = baseUrl+'/admin/approval/assign/'+approval_id+'/'+encodeURIComponent(encodeURIComponent(password));
+			}
+		}
+	}
 </script>
 @endsection

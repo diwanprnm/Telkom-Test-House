@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Autentikasi Dokumen</title>
+	<title>Autentikasi Dokumen - Telkom Test House</title>
 </head>
 <body>
 <div class="header" style="margin-top:2%;margin-bottom:2%;">
