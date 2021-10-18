@@ -16,7 +16,7 @@ class CreateApproveByTable extends Migration
             $table->uuid('id');
             $table->uuid('approval_id');
             $table->uuid('user_id');
-            $table->date('approve_date');
+            $table->dateTime('approve_date')->nullable();
 
             $table->uuid('created_by');
             $table->uuid('updated_by');

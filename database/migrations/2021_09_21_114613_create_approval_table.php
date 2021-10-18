@@ -16,6 +16,8 @@ class CreateApprovalTable extends Migration
             $table->uuid('id')->primary();
             $table->string('reference_table');
             $table->uuid('reference_id');
+            $table->string('attachment');
+            $table->boolean('status')->default(0);
             $table->uuid('autentikasi_editor_id');
 
             $table->uuid('created_by');

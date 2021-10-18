@@ -23,8 +23,9 @@ class TestController extends Controller
      */
     public function index(Request $request)
     {
-        $path = app_path('http/Controllers/Services/PDF/images/telkom-logo-square.jpg');
-        $images = QrCode::format('png')->size(500)->merge('/app/Services/PDF/images/telkom-logo-square.png')->generate('google.com');
-        return response($images, 200)->header('Content-Type', 'image/png');
+        // $path = app_path('http/Controllers/Services/PDF/images/telkom-logo-square.jpg');
+        // $images = QrCode::format('png')->size(500)->merge('/app/Services/PDF/images/telkom-logo-square.png')->generate('google.com');
+        // return response($images, 200)->header('Content-Type', 'image/png');
+        return view('authentikasi.sertifikat');
     }
 }
