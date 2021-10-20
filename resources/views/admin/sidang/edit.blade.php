@@ -225,10 +225,8 @@
 	    var content = $(this).parents().parents().next()[0];
 	    if (content.style.display == "") {
 	      content.style.display = "none";
-	      content2.style.display = "none";
 	    } else {
 	      content.style.display = "";
-	      content2.style.display = "";
 	    }
 	  });
 	}

@@ -403,7 +403,7 @@ class SidangController extends Controller
         
         try{
             $sidang->save();
-            $sidang->status = 'DONE' ? $this->updateExamination($sidang->id) : '';
+            $sidang->status == 'DONE' ? $this->updateExamination($sidang->id) : '';
             $logService->createLog($sidang->status = 'DONE' ? 'Update Sidang QA' : 'Selesai Sidang QA', 'Sidang QA',$oldData);
             Session::flash(self::MESSAGE, 'Data successfully updated');
             return redirect(self::ADMIN_SIDANG);
