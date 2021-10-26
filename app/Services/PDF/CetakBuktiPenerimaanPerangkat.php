@@ -45,11 +45,11 @@ class CetakBuktiPenerimaanPerangkat{
 		$pdf->SetWidths([50,55,110]);
         $pdf->Ln(5);
 		$pdf->SetX(0);
-		$pdf->Row(array("Nomor Barang",":",$this->doubledecode($kode_barang))); 
+		$pdf->Row(array("Label Barang",":",$this->doubledecode($kode_barang))); 
 		$pdf->Row(array("Nama Perangkat",":",$this->doubledecode($device_name))); 
 		$pdf->Row(array("Nama Perusahaan",":",$this->doubledecode($company_name))); 
 		$pdf->Row(array("Alamat Perusahaan",":",$this->doubledecode($company_address))); 
-		$pdf->Row(array("Nomor HP Pemohon",":",$this->doubledecode($user_phone))); 		
+		$pdf->Row(array("WhatsApp",":",$this->doubledecode($user_phone))); 		
 
 	 	//LIST Perangkat
 		$pdf->Ln(5); 

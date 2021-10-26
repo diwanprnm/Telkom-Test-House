@@ -16,39 +16,36 @@ class CetakPermohonan
         $pdf->setY(37);
         $pdf->SetFont('helvetica','B',9);
         $pdf->Cell(0,5,"Nomor Registrasi: ".$data[0]['no_reg'],0,1,'R');
-        $pdf->Cell(0,5,"Data Pemohon:",0,1);
+        $pdf->Cell(0,5,"Data Pelanggan:",0,1);
         $pdf->Ln(2);
         
         $pdf->SetFont('','');
         $pdf->SetWidths([6,35,136.5]);
-        $pdf->Row(["","Nama Pemohon",$data[0]['nama_pemohon']]);
-        $pdf->Row(["","Alamat Pemohon",$data[0]['alamat_pemohon'].'']);
-        $pdf->SetWidths([6,35,45.5,37.5,53.5]);
-        $pdf->Row(["","Nomor HP Pemohon",$data[0]['telepon_pemohon'],"Alamat E-Mail Pemohon",$data[0]['email_pemohon']]);
+        $pdf->Row(["","Nama Perusahaan",$data[0]['nama_perusahaan']]);
+        $pdf->Row(["","Alamat Perusahaan",$data[0]['alamat_perusahaan'].'']);
+        $pdf->Row(["","Nama PIC",$data[0]['nama_pemohon']]);
+        $pdf->Row(["","WhatsApp",$data[0]['telepon_pemohon']]);
+        $pdf->Row(["","E-Mail",$data[0]['email_pemohon']]);
         $pdf->Ln(10);
 
         // DATA PERUSAHAAN
         $pdf->SetFont('','B');
-        $pdf->Cell(35,5,"Data Perusahaan:",0,2);
-        $pdf->Ln(3);
+        $pdf->Cell(40.5,5,"Status Perusahaan:",0,0);
         $pdf->SetFont('','');
-        $pdf->SetX(31.5);
-        $pdf->Cell(7,5,"",1,0);$pdf->Cell(3,5,"",0,0);$pdf->Cell(45,5,"Pabrikan",0,0);
-        $pdf->Cell(7,5,"",1,0);$pdf->Cell(3,5,"",0,0);$pdf->Cell(45,5,"Perwakilan",0,0);
-        $pdf->Cell(7,5,"",1,0);$pdf->Cell(3,5,"",0,0);$pdf->Cell(45,5,"Agen/Distributor",0,0);
-        $checkPossition = [
-            'Pabrikan' => 31.5,
-            'Perwakilan' => 86.5,
-            'Agen' => 141.5,
-        ];
-        $pdf->SetXY($checkPossition[$data[0]['jns_perusahaan']]??86.5, $pdf->GetY());
-        $pdf->SetFont('ZapfDingbats','', 14);
-        $pdf->Cell(7, 5, "4", 0, 1, 'C');
-        $pdf->SetFont('helvetica','',9);
-        $pdf->Ln(4);
-        $pdf->SetWidths([6,35,136.5]);
-        $pdf->Row(["","Nama Perusahaan",$data[0]['nama_perusahaan']]);
-        $pdf->Row(["","Alamat Perusahaan",$data[0]['alamat_perusahaan']]);
+        switch ($data[0]['jns_perusahaan']) {
+            case 'Agen':
+                $jns_perusahaan = 'Agen/Distributor';
+                break;
+
+            case 'Pemilik':
+                $jns_perusahaan = 'Pemilik Alat Ukur';
+                break;
+                
+            default:
+                $jns_perusahaan = $data[0]['jns_perusahaan'];
+                break;
+        }
+        $pdf->Cell(45,5,$jns_perusahaan,0,0);
         $pdf->Ln(10);
 
         // DATA PERANGKAT

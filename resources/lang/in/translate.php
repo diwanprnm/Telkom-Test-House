@@ -25,6 +25,7 @@ return [
 	'service_company_branch'		=> 'Pabrikan',
 	'service_company_individual'	=> 'Pengguna/Perorangan',
 	'service_company_representative'=> 'Perwakilan',
+	'service_company_owner'			=> 'Pemilik Alat Ukur',
 	
 	'service_company'			=> 'Data Perusahaan',
 	'service_company_type'		=> 'Jenis Perusahaan',

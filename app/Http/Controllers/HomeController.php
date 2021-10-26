@@ -248,13 +248,7 @@ class HomeController extends Controller
     	$currentUser = Auth::user();
 		
 		if($currentUser){
-			if($category == 'qa'){
-				$query_stels = $this->getInitialQuery($currentUser);
-				$data_stels = DB::select($query_stels);				
-			}else{
-				$query_stels = "SELECT code as stel, name as device_name, type as lab FROM stels WHERE is_active = 1 ORDER BY name";
-				$data_stels = DB::select($query_stels);
-			}
+			$data_stels = $this->getReferensiUji($currentUser, $category);
 			$query_layanan = ExaminationLab::where(self::IS_ACTIVE, 0);
             $data_layanan = $query_layanan->get();
 			
@@ -413,7 +407,7 @@ class HomeController extends Controller
 
 	private function getReferensiUji($currentUser, $examinationType)
 	{
-		$examinationTypes = ['qa', 'ta', 'vt', 'cal'];
+		$examinationTypes = ['qa', 'ta', 'vt', 'cal', 'kal'];
 		$records = [];
 		
 		if (!in_array($examinationType, $examinationTypes)) {return false;}
@@ -468,7 +462,7 @@ class HomeController extends Controller
 			;
 			$records = array_merge($records1, $records2);
 		}
-		elseif ($examinationType == 'cal')
+		elseif ($examinationType == 'cal' || $examinationType == 'kal')
 		{
 			$records = DB::table('stels')
 				->join('examination_labs', 'examination_labs.id', '=', 'stels.type')
