@@ -132,7 +132,7 @@ table {
 					</fieldset>
 					<fieldset>
 						<legend>
-							Manage General Information
+							Manage URel Information
 						</legend>
 						<div class="row">
 						 	<div class="col-md-3">
