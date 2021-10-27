@@ -13,7 +13,7 @@ class FileService
     private $prefix = '';
     private $oldFile = '';
     private $allowedImage = ['jpeg','jpg','png','jfif'];
-    private $allowedFile = ['pdf'];
+    private $allowedFile = ['pdf','mp4','3gp'];
     private $detail = '';
     private $isUploaded = false;
     private $isDeleted = false;

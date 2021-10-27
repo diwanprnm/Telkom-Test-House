@@ -1092,6 +1092,73 @@
 										<textarea class="form-control" rows="5" name="catatan" id="catatan" readonly disabled>{{ $data->catatan }}</textarea>
 									</div>
 									<div class="form-group">
+										<label>
+											Evidence : *
+										</label>
+										<input type="file" name="evidence_file[]" id="evidence_file" class="form-control" accept="image/*, video/*" multiple="multiple"/>
+									</div>
+									<input type="hidden" id="hide-btn-type">
+									<div class="form-group">
+										<button type="submit" class="btn btn-wide btn-green btn-squared pull-right" id="btn-upload-uf" onClick="javascript:$('#hide-btn-type').val('btn-upload-uf');">
+											Upload
+										</button>
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<label class="pull-right">
+											<a class="history-tanggal-uf-button" data-toggle="collapse" href="#collapse_evidence_uf">Lihat Detail</a>
+										</label>
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div id="collapse_evidence_uf" class="form-group collapse">
+										<table class="table table-bordered"><caption></caption>
+											<thead>
+												<tr>
+													<th colspan="5" scope="col">Evidence</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr style="text-align: center;">
+													<td>No</td>
+													<td>Attachment</td>
+													<td>Created By</td>
+													<td>Created At</td>
+													<td>Action</td>
+												</tr>
+												@php $no=0;@endphp
+												@foreach($data->media as $item)
+													@if($item->name == 'Evidence UF')
+														@php $no++;@endphp
+														<tr>
+															<td style="text-align: center;">
+																<strong>{{ $no }}</strong>
+															</td>
+															<td>
+																<strong><a href="{{URL::to('/admin/examination/media/download/'.$item->id)}}"> {{ $item->attachment }}</a></strong>
+															</td>
+															<td>
+																<strong>{{ $item->user->name }}</strong>
+															</td>
+															<td>
+																<strong>{{ $item->created_at }}</strong>
+															</td>
+															<td style="text-align: center;">
+																<strong> <a class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Destroy" onclick="delete_rev_lap_uji_file('{{ $item->id }}')"><em class="fa fa-trash"></em></a> </strong>
+															</td>
+														</tr>
+													@endif
+												@endforeach
+												@if($no == 0)
+													<tr><td colspan="5" style="text-align: center;"> Data Not Found </td></tr>
+												@endif
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
 										<a href="{{URL::to($url_generate_test.$data->id)}}" target="_blank"> Buatkan Laporan {{$type_of_test}}</a>
 									</div>
 									@if (!$data['is_loc_test'])
@@ -1215,7 +1282,7 @@
 							</div>
 							@if($data->registration_status == '1')
 							<div class="col-md-12">
-								<button type="submit" class="btn btn-wide btn-green btn-squared pull-right">
+								<button type="submit" class="btn btn-wide btn-green btn-squared pull-right" id="btn-update-uf" onClick="javascript:$('#hide-btn-type').val('btn-update-uf');">
 									Update
 								</button>
 							</div>
@@ -1245,7 +1312,7 @@
 										<table style="width: 100%;"><caption></caption>
 											<tr>
 												<th scope="col">
-													<button type="submit" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
+													<button type="submit" class="btn btn-danger" style="width:100%" id="btn-update-uf-nc" onClick="javascript:$('#hide-btn-type').val('btn-update-uf');"><em class="fa fa-check-square-o"></em> Submit</button>
 												</th>
 											</tr>
 										</table>
@@ -4974,9 +5041,12 @@
 	});
 	
 	$('#form-function-test').submit(function () {
+		var btn_type = $('#hide-btn-type').val();
 		var keterangan = document.getElementById('keterangan_function').value;
 		var barang_file = document.getElementById('barang_file');
 		var barang_name = document.getElementById('barang_name');
+		var evidence_file = document.getElementById('evidence_file');
+		var evidence_name = document.getElementById('evidence_name');
 		var function_file = document.getElementById('function_file');
 		var function_name = document.getElementById('function_name');
 		var $inputs = $('#form-function-test :input');
@@ -4995,41 +5065,54 @@
 				$('#myModalketerangan_function').modal('hide');
 			}			
 		}else{
-			if(document.getElementById('hide_approval_form-function-test').value == 0){
-				if(document.getElementById('hide_is_loc_test').value == 1){
-					alert("Belum Ada Tanggal Technical Meeting FIX!");
-					return false;
-				}else{
-					alert("Belum Ada Tanggal Uji Fungsi FIX!");
-					return false;
+			if(btn_type != 'btn-upload-uf'){
+				if(document.getElementById('hide_approval_form-function-test').value == 0){
+					if(document.getElementById('hide_is_loc_test').value == 1){
+						alert("Belum Ada Tanggal Technical Meeting FIX!");
+						return false;
+					}else{
+						alert("Belum Ada Tanggal Uji Fungsi FIX!");
+						return false;
+					}
+				}
+				if(document.getElementById('hide_is_loc_test').value == 0){
+					if(document.getElementById('hide_count_equipment_form-function-test').value == 0){
+						alert("Uji Fungsi Belum dilakukan, Masukkan Barang terlebih dahulu!");
+						return false;
+					}
+				}
+				if(document.getElementById('hide_test_TE_form-function-test').value == 0){
+					if(document.getElementById('hide_is_loc_test').value == 1){
+						alert("Belum Ada Hasil Technical Meeting!");
+						return false;
+					}else{
+						alert("Belum Ada Hasil Uji Fungsi!");
+						return false;
+					}
 				}
 			}
 			if(document.getElementById('hide_is_loc_test').value == 0){
-				if(document.getElementById('hide_count_equipment_form-function-test').value == 0){
-					alert("Uji Fungsi Belum dilakukan, Masukkan Barang terlebih dahulu!");
-					return false;
+				var function_test_TE = "{{ $data->function_test_TE }}";
+				var function_test_date_approval = "{{ $data->function_test_date_approval }}";
+				if(function_test_TE == 2 && function_test_date_approval == 1){
+					if(evidence_file.value == '' && evidence_name.value == ''){
+						alert("File Evidence Uji Fungsi belum diunggah");$('#evidence_file').focus();return false;
+					}
 				}
 			}
-			if(document.getElementById('hide_test_TE_form-function-test').value == 0){
-				if(document.getElementById('hide_is_loc_test').value == 1){
-					alert("Belum Ada Hasil Technical Meeting!");
-					return false;
-				}else{
-					alert("Belum Ada Hasil Uji Fungsi!");
-					return false;
+			if(btn_type != 'btn-upload-uf'){
+				if(function_file.value == '' && function_name.value == ''){
+					if(document.getElementById('hide_is_loc_test').value == 1){
+						alert("File Laporan Hasil Technical Meeting belum diunggah");$('#function_file').focus();return false;
+						return false;
+					}else{
+						alert("File Laporan Hasil Uji Fungsi belum diunggah");$('#function_file').focus();return false;
+						return false;
+					}
 				}
-			}
-			if(function_file.value == '' && function_name.value == ''){
-				if(document.getElementById('hide_is_loc_test').value == 1){
-					alert("File Laporan Hasil Technical Meeting belum diunggah");$('#function_file').focus();return false;
-					return false;
-				}else{
-					alert("File Laporan Hasil Uji Fungsi belum diunggah");$('#function_file').focus();return false;
-					return false;
+				if(barang_file.value == '' && barang_name.value == ''){
+					alert("File Bukti Penerimaan Perangkat belum diunggah");$('#barang_file').focus();return false;
 				}
-			}
-			if(barang_file.value == '' && barang_name.value == ''){
-				alert("File Bukti Penerimaan Perangkat belum diunggah");$('#barang_file').focus();return false;
 			}
 		}
 	});

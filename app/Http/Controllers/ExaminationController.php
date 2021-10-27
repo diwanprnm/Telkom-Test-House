@@ -376,6 +376,39 @@ class ExaminationController extends Controller
 				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::REGISTRASI,$request->input(self::KETERANGAN));
 			}
         }
+		$files = $request->file('evidence_file');
+		if($request->hasFile('evidence_file')){
+			foreach ($files as $file) {
+				$fileService = new FileService();
+				$fileProperties = array(
+					'path' => self::MEDIA_EXAMINATION_LOC.$exam->id."/",
+					'prefix' => "evidence_uf_"
+				);
+				$fileService->upload($file, $fileProperties);
+				$name_file = $fileService->getFileName();
+
+				if($fileService->isUploaded()){
+					$attach = new ExaminationAttach;
+					$attach->id = Uuid::uuid4();
+					$attach->examination_id = $exam->id; 
+					$attach->name = 'Evidence UF';
+					$attach->attachment = $name_file;
+					$attach->created_by = $currentUser->id;
+					$attach->updated_by = $currentUser->id;
+
+					$attach->save();
+				}else{
+					Session::flash(self::ERROR, 'Save Evidence to directory failed');
+					return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
+				}
+			}
+			Session::flash(self::MESSAGE, 'Evidence successfully uploaded');
+			return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
+		}
+		if($request->hasFile('evidence_file'))
+		{
+			$examinationService->insertAttachment($request,$exam->id,$currentUser->id,self::BARANG_FILE,'form_penerimaan_barang_','Bukti Penerimaan & Pengeluaran Perangkat Uji1');
+		}
 		if ($request->has(self::FUNCTION_STATUS)){
 			$examinationService->insertAttachment($request,$exam->id,$currentUser->id,self::BARANG_FILE,'form_penerimaan_barang_','Bukti Penerimaan & Pengeluaran Perangkat Uji1');
 			if($exam->is_loc_test){
@@ -2080,6 +2113,7 @@ class ExaminationController extends Controller
 		->with(self::COMPANY)
 		->with(self::DEVICE)
 		->with(self::EQUIPMENT)
+		->with(self::MEDIA)
 		->get();
 		if( strpos( $data[0]->function_test_NO, "/" ) !== false ) {$no_reg = urlencode(urlencode($data[0]->function_test_NO));}
 			else{$no_reg = $data[0]->function_test_NO?: '-';}
@@ -2138,8 +2172,15 @@ class ExaminationController extends Controller
 		}else{
 			$tgl_uji_fungsi = '-';
 		}
+		$evidence = array();
+		foreach ($data[0]->media as $item) {
+			if($item->name == 'Evidence UF'){
+				array_push($evidence,$item->attachment);
+			}
+		}
 
 		$PDFData = array(
+			'id' => $id,
 			'no_reg' => $no_reg,
 			'company_name' => $company_name,
 			'company_address' => $company_address,
@@ -2158,6 +2199,7 @@ class ExaminationController extends Controller
 			'nik_te' => $nik_te,
 			'name_te' => $name_te,
 			'pic' => $pic,
+			'evidence' => $evidence,
 			'currentUser' => Auth::user()
 		);
 
@@ -2346,7 +2388,7 @@ class ExaminationController extends Controller
             // delete stels_sales_detail
             $examination_attachment->delete();
 
-            Session::flash(self::MESSAGE, 'Successfully Delete Revision File');
+            Session::flash(self::MESSAGE, 'Successfully Delete File');
         }else{
             Session::flash(self::ERROR, 'Undefined Data');
         }
