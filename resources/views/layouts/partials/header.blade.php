@@ -57,22 +57,15 @@
                   <li><a href="{{url('procedure')}}">{{ trans('translate.procedure') }}</a></li>
                   <li><a href="{{url('process')}}">{{ trans('translate.process') }}</a></li>
                   <li><a href="{{ url('pengujian')}}">{{ trans('translate.examination') }}</a></li>
-                  @php
-                  if(!empty($new_charge[0])){
-                    @endphp
-                    <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ trans('translate.charge') }}</a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="{{url('Chargeclient')}}">{{ trans('translate.charge') }}</a></li>
-                            <li><a href="{{url('NewChargeclient')}}">{{ trans('translate.new_charge') }} @php echo date("j M Y", strtotime($new_charge[0]->valid_from));@endphp</a></li>
-                        </ul>
-                    </li>
-                  @php
-                  }else{
-                    @endphp
-                    <li><a href="{{url('Chargeclient')}}">{{ trans('translate.charge') }}</a></li>
-                  @php
-                  }
-                  @endphp
+                  <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ trans('translate.charge') }}</a>
+                      <ul class="dropdown-menu" role="menu">
+                          <li><a href="{{url('Chargeclient')}}">{{ trans('translate.device_charge') }}</a></li>
+                          <li><a href="{{url('CalibrationChargeclient')}}">{{ trans('translate.calibration_charge') }}</a></li>
+                          @if(!empty($new_charge[0]))
+                          <li><a href="{{url('NewChargeclient')}}">{{ trans('translate.new_charge') }} @php echo date("j M Y", strtotime($new_charge[0]->valid_from));@endphp</a></li>
+                          @endif
+                      </ul>
+                  </li>
                   <li><a href="{{ url('/chamber_history')}}">{{ trans('translate.chamber_history') }}</a></li>
                 </ul>
               </li> 

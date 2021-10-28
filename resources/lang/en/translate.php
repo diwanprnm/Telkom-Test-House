@@ -121,6 +121,8 @@ return [
 	'stel_buyed'     	=> 'Item Bought',
     
 	'new_charge'  		=> 'New Tariff',
+	'calibration_charge'=> 'Calibration',
+	'device_charge'		=> 'Device Testing',
 	'charge'     		=> 'Tariff',
 	'charge_no'     	=> 'No',
 	'charge_stel'     	=> 'STEL',

@@ -1,19 +1,19 @@
 @extends('layouts.client')
 <!-- Document Title
     ============================================= -->
-    <title>{{ trans('translate.device_charge') }} - Telkom Test House</title>
+    <title>{{ trans('translate.calibration_charge') }} - Telkom Test House</title>
 @section('content')
  		<!-- Page Title
 		============================================= -->
 		<section id="page-title">
 
 			<div class="container clearfix">
-				<h1>{{ trans('translate.device_charge') }}</h1>
+				<h1>{{ trans('translate.calibration_charge') }}</h1>
 				
 				<ol class="breadcrumb">
 					<li><a href="#">{{ trans('translate.menu_testing') }}</a></li>
 					<li><a href="#">{{ trans('translate.charge') }}</a></li>
-					<li class="active">{{ trans('translate.device_charge') }}</li>
+					<li class="active">{{ trans('translate.calibration_charge') }}</li>
 				</ol>
 			</div>
 
@@ -28,28 +28,12 @@
 
 					<div class="container-fluid container-fullw bg-white">
 						<div class="row">
-							<div class="col-md-3 form-group">
-								<select onchange="filter()" class="form-control" id="cmb-category">
-									<option value="">{{ trans('translate.charge_choose_category') }}</option>
-									@if ($category == 'all')
-										<option value="all" selected>{{ trans('translate.charge_all_category') }}</option>
-									@else
-										<option value="all">{{ trans('translate.charge_all_category') }}</option>
-									@endif
-									@foreach ($labs as $lab)
-										@if($lab->lab_code != '025')
-											<option value="{{$lab->id}}" @if ($category == $lab->id) selected @endif >{{$lab->name}}</option>
-										@endif
-									@endforeach
-								</select>
-							</div>
-							
-							<div class="col-md-3">
+							<div class="col-md-6">
 							</div>
 							  
 							<div class="col-md-6 col-xs-12">
 								<span class="input-icon input-icon-right search-table"> 
-									<input id="search_charge" type="text" placeholder="{{ trans('translate.search_charge') }}" id="form-field-17" class="form-control " value="{{ $search }}">
+									<input id="search_calibration_charge" type="text" placeholder="{{ trans('translate.search_charge') }}" id="form-field-17" class="form-control " value="{{ $search }}">
 									<em class="ti-search"></em>
 								</span>
 							</div>
@@ -77,11 +61,8 @@
 													<th class="center" scope="col">{{ trans('translate.charge_no') }}</th>
 													<th class="center" scope="col">{{ trans('translate.charge_name') }}</th>
 													<th class="center" scope="col">{{ trans('translate.charge_stel') }}</th>
-													<th class="center" scope="col">{{ trans('translate.charge_category') }}</th>
 													<th class="center" scope="col">{{ trans('translate.charge_duration') }}</th>
 													<th class="center" scope="col">{{ trans('translate.charge_cost') }}</th>
-													<th class="center" scope="col">{{ trans('translate.charge_vt_cost') }}</th>
-													<th class="center" scope="col">{{ trans('translate.charge_ta_cost') }}</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -91,11 +72,8 @@
 													<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
 													<td class="left">{{ $item->device_name }}</td>
 													<td class="left">{{ $item->stel }}</td>
-													<td class="center">{{ $item->ExaminationLab->name }}</td>
 													<td class="center">{{ $item->duration }}</td>
 													<td class="center">@php echo number_format($item->price, 0, '.', ','); @endphp</td>
-													<td class="center">@php echo number_format($item->vt_price, 0, '.', ','); @endphp</td>
-													<td class="center">@php echo number_format($item->ta_price, 0, '.', ','); @endphp</td>
 												</tr>
 												@php $no++ @endphp
 												@endforeach
@@ -117,7 +95,7 @@
 									<div class="row">
 										<div class="col-md-12 col-sm-12">
 											<div class="dataTables_paginate paging_bootstrap_full_number pull-right" >
-												@php echo $data->appends(array('search' => $search, 'category' => $category))->links(); @endphp
+												@php echo $data->appends(array('search' => $search))->links(); @endphp
 											</div>
 										</div>
 									</div>
@@ -133,5 +111,5 @@
 @endsection
  
 @section('content_js')
-	<script type="text/javascript" src="{{url('assets/js/search/charge.js')}}"></script>
+	<script type="text/javascript" src="{{url('assets/js/search/calibration_charge.js')}}"></script>
 @endsection
