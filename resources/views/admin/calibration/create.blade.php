@@ -40,6 +40,27 @@
 									<input type="text" name="device_name" class="form-control" placeholder="Nama Alat Ukur" required>
 								</div>
 							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										Referensi Uji *
+									</label>
+									<select class="form-control" id="stel" name="stel" required>
+										<option value="" disabled selected>Select...</option>
+										@foreach($stel as $item)
+											<option value="{{$item->code}}">{{$item->code}}</option>
+										@endforeach
+									</select>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+											Durasi (Hari) *
+									</label>
+									<input type="text" id="txt-duration" name="duration" class="form-control" value="{{ old('duration') }}" placeholder="Durasi (Hari)" required>
+								</div>
+							</div>
 	                        <div class="col-md-6">
 								<div class="form-group">
 									<label>
@@ -91,11 +112,22 @@
 <script src={{ asset("vendor/bootstrap-datepicker/bootstrap-datepicker.min.js") }}></script>
 <script src={{ asset("vendor/bootstrap-timepicker/bootstrap-timepicker.min.js") }}></script>
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
+<script src={{ asset("assets/js/form-elements.js") }}></script>
 <script type="text/javascript">
+	$('#stel').chosen();
+	// $('#stel').val(0);
+	$('#stel').trigger("chosen:updated");
+
 	$('#txt-price').priceFormat({
 		prefix: '',
 		clearPrefix: true,
 		centsLimit: 0
 	}); 
+	$('#txt-duration').priceFormat({
+		prefix: '',
+		clearPrefix: true,
+		centsLimit: 0
+	}); 
+	
 </script>
 @endsection
