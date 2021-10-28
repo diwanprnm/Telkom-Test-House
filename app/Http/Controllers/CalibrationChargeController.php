@@ -95,7 +95,7 @@ class CalibrationChargeController extends Controller
      */
     public function create()
     {
-        $stel = STEL::where('stel_type', '1')->orderBy('code')->get();
+        $stel = STEL::where('stel_type', 4)->orderBy('code')->get();
         return view('admin.calibration.create')->with('stel', $stel);
         ;
     }
@@ -142,9 +142,11 @@ class CalibrationChargeController extends Controller
     public function edit($id)
     {
         $charge = CalibrationCharge::find($id);
-
+        $stel = STEL::where('stel_type', 4)->orderBy('code')->get();
+        
         return view('admin.calibration.edit')
-            ->with('data', $charge);
+            ->with('data', $charge)
+            ->with('stel', $stel);
     }
 
     /**
@@ -162,6 +164,12 @@ class CalibrationChargeController extends Controller
         $oldData = $charge;
         if ($request->has(self::DEVICE)){
             $charge->device_name = $request->input(self::DEVICE);
+        }
+        if ($request->has('stel')){
+            $charge->stel = $request->input('stel');
+        }
+        if ($request->has('duration')){
+            $charge->duration = str_replace(",","",$request->input('duration'));
         }
         if ($request->has(self::PRICE)){
             $charge->price = str_replace(",","",$request->input(self::PRICE));

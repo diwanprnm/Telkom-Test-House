@@ -41,6 +41,27 @@
 									<input type="text" name="device_name" class="form-control" placeholder="Nama Alat Ukur" value="{{ $data->device_name }}" required>
 								</div>
 							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										Referensi Uji *
+									</label>
+									<select class="form-control" id="stel" name="stel" required>
+										<option value="" disabled>Select...</option>
+										@foreach($stel as $item)
+											<option value="{{$item->code}}" @if ($item->code == $data->stel) selected @endif>{{$item->code}}</option>
+										@endforeach
+									</select>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+											Durasi (Hari) *
+									</label>
+									<input type="text" id="txt-duration" name="duration" class="form-control" value="{{ $data->duration }}" placeholder="Durasi (Hari)" required>
+								</div>
+							</div>
 	                        <div class="col-md-6">
 								<div class="form-group">
 									<label>
@@ -96,7 +117,16 @@
 <script src={{ asset("vendor/bootstrap-timepicker/bootstrap-timepicker.min.js") }}></script>
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
 <script type="text/javascript">
+	$('#stel').chosen();
+	// $('#stel').val(0);
+	$('#stel').trigger("chosen:updated");
+
 	$('#txt-price').priceFormat({
+		prefix: '',
+		clearPrefix: true,
+		centsLimit: 0
+	}); 
+	$('#txt-duration').priceFormat({
 		prefix: '',
 		clearPrefix: true,
 		centsLimit: 0
