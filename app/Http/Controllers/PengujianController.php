@@ -658,7 +658,7 @@ class PengujianController extends Controller
     {
     	$currentUser = Auth::user();
 		$query_attach = "
-			SELECT name, attachment FROM examination_attachments WHERE examination_id = '".$id."' AND (name = 'Laporan Uji' OR name = 'Revisi Laporan Uji') AND attachment != '' ORDER BY created_at DESC
+			SELECT name, attachment, no FROM examination_attachments WHERE examination_id = '".$id."' AND (name = 'Laporan Uji' OR name = 'Revisi Laporan Uji') AND attachment != '' ORDER BY created_at DESC
 		";
 		$data_attach = DB::select($query_attach);
 		 
@@ -674,6 +674,7 @@ class PengujianController extends Controller
 				if($item->name == 'Laporan Uji' && $rev_uji == 0){
 					 
 					$attach = $item->attachment;
+					$no = $item->no;
 				}
 				if($item->name == 'Revisi Laporan Uji' && $rev_uji == 0){
 					$rev_uji = 1; 
@@ -693,10 +694,17 @@ class PengujianController extends Controller
 			$exam_hist->created_at = date(self::DATE_FORMAT1);
 			$exam_hist->save();
 
-			 
-			$fileName = $attach;
-			$fileMinio = Storage::disk(self::MINIO)->get(self::MEDIA_EXAMINATION_LOC.$id.'/'.$attach);
-			return response($fileMinio, 200, \App\Services\MyHelper::getHeaderOctet($fileName));
+			if($rev_uji){
+				$fileName = $attach;
+				$fileMinio = Storage::disk(self::MINIO)->get(self::MEDIA_EXAMINATION_LOC.$id.'/'.$attach);
+				return response($fileMinio, 200, \App\Services\MyHelper::getHeaderOctet($fileName));
+			}else{
+				$file = $attach;
+				$fileName = 'Laporan Uji '.preg_replace('/[^A-Za-z0-9\-]/', '', $no);
+				$tempFile = tempnam(sys_get_temp_dir(), $fileName);
+				copy($file, $tempFile);
+				return response()->download($tempFile, $fileName);
+			}
 			 
 		}
     }
@@ -705,14 +713,32 @@ class PengujianController extends Controller
     {
     	$currentUser = Auth::user();
 		$examination = Examination::where('id', $id)->with(self::DEVICE)->get();
-		$data_attach = $examination[0]->device;
-		if (count((array)$data_attach) == 0){
+		$device = $examination[0]->device;
+
+		$attach_id = $device->id;
+		$attach = $device->certificate;
+		$jns = 'device/';
+
+		$query_attach = "
+			SELECT id, name, attachment FROM examination_attachments WHERE examination_id = '".$id."' AND name = 'Revisi Sertifikat' AND attachment != '' ORDER BY created_at DESC
+		";
+		$data_attach = DB::select($query_attach);
+		if (!$device && count((array)$data_attach) == 0){
 			$message = self::DATA_NOT_FOUND;
 			$attach = NULL;
 			Session::flash('error_download_certificate', self::DOWNLOAD_FAILED);
 			return back()->with(self::MESSAGE, $message);
 		}
 		else{
+			$rev_sertifikat = 0;
+			foreach ($data_attach as $item) {
+				if($item->name == 'Revisi Sertifikat' && $rev_sertifikat == 0){
+					$rev_sertifikat = 1; 
+					$attach_id = $id;
+					$attach = $item->attachment;
+					$jns = 'examination/';
+				}
+			}
 			
 			$examhist = ExaminationHistory::where(self::EXAMINATION_ID, "=", $id)->where("tahap", "=", "Download Sertifikat");
 			$count_download = count($examhist->get());		
@@ -726,13 +752,8 @@ class PengujianController extends Controller
 			$exam_hist->created_at = date(self::DATE_FORMAT1);
 			$exam_hist->save();
 			
-			$jns = 'device/';
-			$id = $data_attach->id;
-			$attach = $data_attach->certificate;  
-
-
 			$fileName = $attach;
-			$fileMinio = Storage::disk(self::MINIO)->get($jns.$id.'/'.$attach);
+			$fileMinio = Storage::disk(self::MINIO)->get($jns.$attach_id.'/'.$attach);
 			return response($fileMinio, 200, \App\Services\MyHelper::getHeaderOctet($fileName)); 
 		}
     }
