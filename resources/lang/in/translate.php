@@ -28,7 +28,7 @@ return [
 	'service_company_owner'			=> 'Pemilik Alat Ukur',
 	
 	'service_company'			=> 'Data Perusahaan',
-	'service_company_type'		=> 'Jenis Perusahaan',
+	'service_company_type'		=> 'Status Perusahaan',
 	'service_company_name'		=> 'Nama',
 	'service_company_address'	=> 'Alamat',
 	'service_company_plg_id'	=> 'PLG_ID',
