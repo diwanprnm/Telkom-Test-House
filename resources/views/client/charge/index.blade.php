@@ -37,7 +37,7 @@
 										<option value="all">{{ trans('translate.charge_all_category') }}</option>
 									@endif
 									@foreach ($labs as $lab)
-										@if($lab->lab_code != '025')
+										@if($lab->lab_code != '025' && $lab->lab_code != '026')
 											<option value="{{$lab->id}}" @if ($category == $lab->id) selected @endif >{{$lab->name}}</option>
 										@endif
 									@endforeach

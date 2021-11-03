@@ -116,10 +116,10 @@
 				<div class="col-md-12">
 					<div class="form-group">
 						<label>
-							Pilih STEL sebagai referensi biaya *
+							Pilih referensi uji
 						</label>
 						<select class="form-control" id="cmb-ref-perangkat" name="cmb-ref-perangkat" onchange="changeTotal();">
-								<option value="">- Pilih STEL -</option>
+								<option value="">- Pilih Referensi Uji -</option>
 							@foreach($data_stels as $item)
 								<option value="{{ $item->price }}">{{ $item->stel }} || {{ $item->price }}</option>
 							@endforeach
