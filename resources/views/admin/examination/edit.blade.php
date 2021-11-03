@@ -1093,7 +1093,7 @@
 									</div>
 									<div class="form-group">
 										<label>
-											Evidence : *
+											Evidence : *  (Bisa unggah lebih dari 1 file. Untuk video, maks. 10 detik)
 										</label>
 										<input type="file" name="evidence_file[]" id="evidence_file" class="form-control" accept="image/*, video/*" multiple="multiple"/>
 									</div>
