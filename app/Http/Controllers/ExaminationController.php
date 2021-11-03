@@ -377,7 +377,7 @@ class ExaminationController extends Controller
 			}
         }
 		$files = $request->file('evidence_file');
-		if($request->hasFile('evidence_file')){
+		if($request->hasFile('evidence_file') && $files[0]){
 			foreach ($files as $file) {
 				$fileService = new FileService();
 				$fileProperties = array(
@@ -404,10 +404,6 @@ class ExaminationController extends Controller
 			}
 			Session::flash(self::MESSAGE, 'Evidence successfully uploaded');
 			return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
-		}
-		if($request->hasFile('evidence_file'))
-		{
-			$examinationService->insertAttachment($request,$exam->id,$currentUser->id,self::BARANG_FILE,'form_penerimaan_barang_','Bukti Penerimaan & Pengeluaran Perangkat Uji1');
 		}
 		if ($request->has(self::FUNCTION_STATUS)){
 			$examinationService->insertAttachment($request,$exam->id,$currentUser->id,self::BARANG_FILE,'form_penerimaan_barang_','Bukti Penerimaan & Pengeluaran Perangkat Uji1');
