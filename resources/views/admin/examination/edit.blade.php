@@ -1153,6 +1153,7 @@
 												@if($no == 0)
 													<tr><td colspan="5" style="text-align: center;"> Data Not Found </td></tr>
 												@endif
+												<input type="hidden" id="evidence_name" value="@php echo $no; @endphp">
 											</tbody>
 										</table>
 									</div>
@@ -5046,6 +5047,7 @@
 		var barang_file = document.getElementById('barang_file');
 		var barang_name = document.getElementById('barang_name');
 		var evidence_file = document.getElementById('evidence_file');
+		var evidence_name = document.getElementById('evidence_name');
 		var function_file = document.getElementById('function_file');
 		var function_name = document.getElementById('function_name');
 		var $inputs = $('#form-function-test :input');
@@ -5092,14 +5094,14 @@
 			}
 			if(btn_type == 'btn-upload-uf'){
 				if(evidence_file.value == ''){
-					alert("File Evidence Uji Fungsi belum diunggah");$('#evidence_file').focus();return false;
+					alert("Pilih File Evidence Uji Fungsi yang akan diunggah");$('#evidence_file').focus();return false;
 				}
 			}
 			if(document.getElementById('hide_is_loc_test').value == 0){
 				var function_test_TE = "{{ $data->function_test_TE }}";
 				var function_test_date_approval = "{{ $data->function_test_date_approval }}";
 				if(function_test_TE == 2 && function_test_date_approval == 1){
-					if(evidence_file.value == ''){
+					if(evidence_file.value == '' && evidence_name.value == 0){
 						alert("File Evidence Uji Fungsi belum diunggah");$('#evidence_file').focus();return false;
 					}
 				}
