@@ -57,7 +57,11 @@ class PDFMCCetakKontrak extends FPDF{
 			$a=isset($this->aligns[$i]) ? $this->aligns[$i] : 'L';
 			//Save the current position
 			// $x=$this->GetX();
-			$x=10.00125;
+			if($i==0){
+				$x = 10.00125;
+			}else{
+				$x=$this->GetX();
+			}
 			$y=$this->GetY();
 			//Draw the border
 			// $this->Rect($x,$y,$w,$h);
