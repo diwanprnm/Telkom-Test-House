@@ -929,6 +929,30 @@ class ExaminationController extends Controller
 			}
         }
         if ($request->has(self::CERTIFICATE_STATUS)){
+			if ($request->hasFile('rev_sertifikat_file')) {
+				$fileService = new FileService();
+				$fileProperties = array(
+					'path' => self::MEDIA_EXAMINATION_LOC.$exam->id."/",
+					'prefix' => "rev_sertifikat_"
+				);
+				$fileService->upload($request->file('rev_sertifikat_file'), $fileProperties);
+				$name_file = $fileService->getFileName();
+
+				if($fileService->isUploaded()){
+                    $attach = new ExaminationAttach;
+					$attach->id = Uuid::uuid4();
+					$attach->examination_id = $exam->id; 
+					$attach->name = 'Revisi Sertifikat';
+					$attach->attachment = $name_file;
+					$attach->created_by = $currentUser->id;
+					$attach->updated_by = $currentUser->id;
+
+					$attach->save();
+				}else{
+					Session::flash(self::ERROR, 'Save Revisi Sertifikat to directory failed');
+					return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
+				}
+			}
             $status = $request->input(self::CERTIFICATE_STATUS);
             $exam->certificate_status = $status;
             $data= array( 
