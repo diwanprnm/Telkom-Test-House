@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Services\PDF;
-
+use Storage;
 
 class CetakUjiFungsi
 {
@@ -10,6 +10,8 @@ class CetakUjiFungsi
     private function doubledecode($var){
         return urldecode(urldecode($var));
     }
+
+    private $allowedFile = ['pdf','mp4','3gp'];
 
     public function makePDF($data, $pdf)
     {
@@ -31,6 +33,7 @@ class CetakUjiFungsi
         $pdf->judul_kop('LAPORAN UJI FUNGSI','Function Test Report');
         $pdf->AliasNbPages();
         $pdf->AddPage();
+        $pdf->Cell(0,5,'Laporan Uji Fungsi',0,0,'C');
         
         $pdf->Ln(10);
         $pdf->SetFont('helvetica','',10);
@@ -66,24 +69,28 @@ class CetakUjiFungsi
         $pdf->Rect(17,$pdf->getY(),176,30);	
         $pdf->SetFont('','B');
         $pdf->Cell(0,5,'Hasil Uji Fungsi',0,1,'C');
-        $pdf->Ln(20);
-        $pdf->SetFont('ZapfDingbats','', 15);
-        if($status == 1){
-            $pdf->Cell(28, 5, "4", 0, 0, 'R');
-            $pdf->Cell(88, 5, "m", 0, 1, 'R');
-        }
-        else if($status == 2){
-            $pdf->Cell(28, 5, "m", 0, 0, 'R');
-            $pdf->Cell(88, 5, "4", 0, 1, 'R');
-        }else{
-            $pdf->Cell(28, 5, "m", 0, 0, 'R');
-            $pdf->Cell(88, 5, "m", 0, 1, 'R');
-        }
-        $pdf->SetY($pdf->GetY()-5);
-        $pdf->SetFont('helvetica','', 10);
-        $pdf->Cell(28, 5);
-        $pdf->Cell(88, 5, "Memenuhi");
-        $pdf->Cell(0, 5, "Tidak Memenuhi");
+        $pdf->Ln(8);
+        $pdf->SetFont('','');
+        $pdf->Cell(0,5,$status == 1 ? 'Memenuhi' : 'Tidak Memenuhi',0,1,'C');
+        $pdf->Ln(7);$pdf->SetFont('','B');
+        // $pdf->Ln(20);
+        // $pdf->SetFont('ZapfDingbats','', 15);
+        // if($status == 1){
+        //     $pdf->Cell(28, 5, "4", 0, 0, 'R');
+        //     $pdf->Cell(88, 5, "m", 0, 1, 'R');
+        // }
+        // else if($status == 2){
+        //     $pdf->Cell(28, 5, "m", 0, 0, 'R');
+        //     $pdf->Cell(88, 5, "4", 0, 1, 'R');
+        // }else{
+        //     $pdf->Cell(28, 5, "m", 0, 0, 'R');
+        //     $pdf->Cell(88, 5, "m", 0, 1, 'R');
+        // }
+        // $pdf->SetY($pdf->GetY()-5);
+        // $pdf->SetFont('helvetica','', 10);
+        // $pdf->Cell(28, 5);
+        // $pdf->Cell(88, 5, "Memenuhi");
+        // $pdf->Cell(0, 5, "Tidak Memenuhi");
 
         //HASIL UJI FUNGSI
         $pdf->Ln(9);
@@ -92,13 +99,13 @@ class CetakUjiFungsi
         $y = $pdf->GetY();
         $pdf->MultiCell(0, 5,$data['catatan'],0,'L');
         $pdf->SetY($y+(5*5));
-        $pdf->Cell(18,5,'Beritanda:');
-        $pdf->SetFont('ZapfDingbats','B');
-        $pdf->Cell(5, 5, "4");
-        $pdf->SetFont('helvetica','');
-        $pdf->Cell(20,5,'pada kolom:');
-        $pdf->SetFont('','B');
-        $pdf->Cell(10,5,'Hasil Uji Fungsi');
+        count($data['evidence']) ? $pdf->Cell(18,5,'Bukti: lihat lampiran') : '';
+        // $pdf->SetFont('ZapfDingbats','B');
+        // $pdf->Cell(5, 5, "4");
+        // $pdf->SetFont('helvetica','');
+        // $pdf->Cell(20,5,'pada kolom:');
+        // $pdf->SetFont('','B');
+        // $pdf->Cell(10,5,'Hasil Uji Fungsi');
         $pdf->SetFont('','');
 
 
@@ -117,6 +124,21 @@ class CetakUjiFungsi
         $pdf->Cell(58,5,self::UNDERSCORES,0,0,'C');
         $pdf->Cell(59,5,self::UNDERSCORES,0,0,'C');
         $pdf->Cell(58,5,self::UNDERSCORES,0,0,'C');
+
+        if(count($data['evidence'])){
+            foreach ($data['evidence'] as $fileName) {
+                $pdf->AliasNbPages();
+                $pdf->AddPage();
+                $pdf->SetY(28);
+                $pdf->SetFont('helvetica','B',20);
+                $pdf->Cell(0,5,'Lampiran Uji Fungsi',0,0,'C');
+
+                $pdf->Ln(10);
+                $url = 'examination/'.$data['id'].'/'.$fileName;
+                $ext = pathinfo($fileName, PATHINFO_EXTENSION);
+                in_array($ext, $this->allowedFile) ? $pdf->Cell(0,5,$fileName,0,0,'C') : $pdf->Image((Storage::disk('minio')->url($url)),20,50,100);
+            }
+        }
 
         $pdf->Output();
         exit;

@@ -174,7 +174,7 @@ class PDFMCCetakUjiFungsi extends FPDF{
 		$this->Image(app_path('Services/PDF/images/tth-logo-text-opacity.jpg'),40,135,140);
 		$this->SetY(28);
 		$this->SetFont('helvetica','B',20);
-		$this->Cell(0,5,'Laporan Uji Fungsi',0,0,'C');
+		// $this->Cell(0,5,'Laporan Uji Fungsi',0,0,'C');
 	}
 
 	function Footer()
