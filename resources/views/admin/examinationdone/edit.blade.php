@@ -588,18 +588,50 @@
 										<label for="catatan">Catatan :</label>
 										<textarea class="form-control" rows="5" name="catatan" id="catatan" readonly disabled>{{ $data->catatan }}</textarea>
 									</div>
-									<div class="form-group">
-										<a href="{{URL::to($url_generate_test.$data->id)}}" target="_blank"> Buatkan Laporan {{$type_of_test}}</a>
-									</div>
-									@if (!$data['is_loc_test'])
-									@if($data->function_test_TE == 1 && $data->function_test_date_approval == 1)
-										<div class="form-group">
-											<a href="{{URL::to('/cetakFormBarang/'.$data->id)}}" target="_blank"> Buatkan Bukti Penerimaan Perangkat</a>
-										</div>
-									@endif
-									@endif
 								</div>
 							@endif
+							<div class="col-md-12">
+								<div class="form-group">
+									<table class="table table-bordered"><caption></caption>
+										<thead>
+											<tr>
+												<th colspan="5" scope="col">Evidence</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr style="text-align: center;">
+												<td>No</td>
+												<td>Attachment</td>
+												<td>Created By</td>
+												<td>Created At</td>
+											</tr>
+											@php $no=0;@endphp
+											@foreach($data->media as $item)
+												@if($item->name == 'Evidence UF')
+													@php $no++;@endphp
+													<tr>
+														<td style="text-align: center;">
+															<strong>{{ $no }}</strong>
+														</td>
+														<td>
+															<strong><a href="{{URL::to('/admin/examination/media/download/'.$item->id)}}"> {{ $item->attachment }}</a></strong>
+														</td>
+														<td>
+															<strong>{{ $item->user->name }}</strong>
+														</td>
+														<td>
+															<strong>{{ $item->created_at }}</strong>
+														</td>
+													</tr>
+												@endif
+											@endforeach
+											@if($no == 0)
+												<tr><td colspan="4" style="text-align: center;"> Data Not Found </td></tr>
+											@endif
+										</tbody>
+									</table>
+								</div>
+							</div>
 							@if(count($data->history_uf)>0)
 								<div class="col-md-12">
 									<div class="form-group">
