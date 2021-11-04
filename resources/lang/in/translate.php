@@ -123,6 +123,8 @@ return [
 	'stel_buyed'     	=> 'Sudah dibeli',
     
 	'new_charge'   		=> 'Tarif Baru', // tariff
+	'calibration_charge'=> 'Kalibrasi', // tariff
+	'device_charge'		=> 'Pengujian Perangkat',
 	'charge'     		=> 'Tarif', // tariff
 	'charge_no'     	=> 'No',
 	'charge_stel'     	=> 'STEL',

@@ -1986,13 +1986,24 @@ class ExaminationController extends Controller
 					->with(self::DEVICE)
 					->first()
 		;
-		if($exam->examination_type_id == 2){
-			$query_price = "SELECT ta_price as price FROM examination_charges WHERE stel LIKE '%".$exam->device->test_reference."%'";
-		}
-		else if($exam->examination_type_id == 3){
-			$query_price = "SELECT vt_price as price FROM examination_charges WHERE stel LIKE '%".$exam->device->test_reference."%'";
-		}else{
-			$query_price = "SELECT price FROM examination_charges WHERE stel LIKE '%".$exam->device->test_reference."%'";
+		$query_stels = "SELECT * FROM examination_charges ORDER BY device_name";
+		switch ($exam->examination_type_id) {
+			case 2:
+				$query_price = "SELECT ta_price as price FROM examination_charges WHERE stel LIKE '%".$exam->device->test_reference."%'";
+				break;
+
+			case 3:
+				$query_price = "SELECT vt_price as price FROM examination_charges WHERE stel LIKE '%".$exam->device->test_reference."%'";
+				break;
+
+			case 4:
+				$query_price = "SELECT price FROM calibration_charges WHERE stel LIKE '%".$exam->device->test_reference."%'";
+				$query_stels = "SELECT * FROM calibration_charges ORDER BY device_name";
+				break;
+			
+			default:
+				$query_price = "SELECT price FROM examination_charges WHERE stel LIKE '%".$exam->device->test_reference."%'";
+				break;
 		}
 		$price = DB::select($query_price);
 		if(!count($price)){
@@ -2001,7 +2012,6 @@ class ExaminationController extends Controller
 			$price = $price[0]->price;
 		}
 		
-		$query_stels = "SELECT * FROM examination_charges ORDER BY device_name";
 		$data_stels = DB::select($query_stels);
 
 		return view('admin.examination.spb')

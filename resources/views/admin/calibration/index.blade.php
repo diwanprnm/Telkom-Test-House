@@ -110,6 +110,8 @@
 								<tr>
 									<th class="center" id="no">No</th>
 									<th class="center" id="nama">Nama Alat Uji</th>
+									<th class="center" id="nama">Referensi Uji</th>
+									<th class="center" id="nama">Durasi (Hari)</th>
 									<th class="center" id="biaya">Biaya (Rp.)</th>
 									<th class="center" id="status">Status</th>
                                     <th class="center" id="aksi">Aksi</th>
@@ -121,6 +123,8 @@
 									<tr>
 										<td class="center">{{$no+(($data->currentPage()-1)*$data->perPage())}}</td>
 										<td class="center">{{ $item->device_name }}</td>
+										<td class="center">{{ $item->stel }}</td>
+										<td class="center">{{number_format($item->duration, 0, '.', ',')}}</td>
 										<td class="center">@php echo number_format($item->price, 0, '.', ','); @endphp</td>
 										@if($item->is_active)
 	                                    	<td class="center"><span class="label label-sm label-success">Active</span></td>

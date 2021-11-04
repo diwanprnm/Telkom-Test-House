@@ -11,6 +11,7 @@ use Session;
 use App\CalibrationCharge;
 use App\Logs;
 use App\Services\Logs\LogService;
+use App\STEL;
 
 use Excel;
 
@@ -94,7 +95,9 @@ class CalibrationChargeController extends Controller
      */
     public function create()
     {
-        return view('admin.calibration.create');
+        $stel = STEL::where('stel_type', 4)->orderBy('code')->get();
+        return view('admin.calibration.create')->with('stel', $stel);
+        ;
     }
 
     /**
@@ -110,6 +113,8 @@ class CalibrationChargeController extends Controller
         $charge = new CalibrationCharge;
         $charge->id = Uuid::uuid4();
         $charge->device_name = $request->input(self::DEVICE);
+        $charge->stel = $request->input("stel");
+        $charge->duration = str_replace(",","",$request->input('duration'));
         $charge->price = str_replace(",","",$request->input('price'));
         $charge->is_active = $request->input('is_active');
         $charge->created_by = $currentUser->id;
@@ -137,9 +142,11 @@ class CalibrationChargeController extends Controller
     public function edit($id)
     {
         $charge = CalibrationCharge::find($id);
-
+        $stel = STEL::where('stel_type', 4)->orderBy('code')->get();
+        
         return view('admin.calibration.edit')
-            ->with('data', $charge);
+            ->with('data', $charge)
+            ->with('stel', $stel);
     }
 
     /**
@@ -157,6 +164,12 @@ class CalibrationChargeController extends Controller
         $oldData = $charge;
         if ($request->has(self::DEVICE)){
             $charge->device_name = $request->input(self::DEVICE);
+        }
+        if ($request->has('stel')){
+            $charge->stel = $request->input('stel');
+        }
+        if ($request->has('duration')){
+            $charge->duration = str_replace(",","",$request->input('duration'));
         }
         if ($request->has(self::PRICE)){
             $charge->price = str_replace(",","",$request->input(self::PRICE));

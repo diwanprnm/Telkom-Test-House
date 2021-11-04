@@ -284,6 +284,8 @@ Route::post('/reqCancel', 'PengujianController@reqCancel');
 Route::get('{path}', 'STELClientController@index')->where('path', '(STEL|S-TSEL|STD|PERDIRJEN|PERMENKOMINFO|OTHER)');
 Route::resource('/Chargeclient', 'ExaminationChargeClientController');
 Route::get('/Chargeclient', 'ExaminationChargeClientController@index');
+Route::resource('/CalibrationChargeclient', 'CalibrationChargeClientController');
+Route::get('/CalibrationChargeclient', 'CalibrationChargeClientController@index');
 Route::resource('/NewChargeclient', 'ExaminationNewChargeClientController');
 Route::get('/NewChargeclient', 'ExaminationNewChargeClientController@index');
 Route::resource('/Devclient', 'DevClientController');
