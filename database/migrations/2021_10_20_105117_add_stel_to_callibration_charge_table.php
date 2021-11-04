@@ -14,8 +14,8 @@ class AddStelToCallibrationChargeTable extends Migration
     {
         Schema::table('calibration_charges', function (Blueprint $table) {
             //
-            $table->string('stel');
-            $table->string('duration');
+            $table->string('stel')->nullable();
+            $table->string('duration')->default(0);
         });
     }
 
