@@ -392,7 +392,7 @@ class PengujianControllerTest extends TestCase
      public function test_downloadLaporanPengujian()
     {
         $exam = factory(App\Examination::class)->create();
-        $examAttach = factory(App\ExaminationAttach::class)->create(['name'=>'Laporan Uji','examination_id'=>$exam->id]);
+        $examAttach = factory(App\ExaminationAttach::class)->create(['name'=>'Revisi Laporan Uji','examination_id'=>$exam->id]);
         $path = "examination/".$exam->id."/".$examAttach->attachment;
         $isFileExist = Storage::disk('minio')->exists($path);
 
