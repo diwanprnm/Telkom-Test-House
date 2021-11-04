@@ -1437,7 +1437,7 @@
 								</div>
 							</div>
 						</fieldset>
-
+						@php $rev_sertifikat = 0; $sertifikat_url = null; $sertifikat_attach = null @endphp
 	    				<fieldset>
 							<legend>
 								Step Penerbitan Sertifikat
@@ -1451,22 +1451,92 @@
 												Sertifikat File *
 											</label>
 										</div>
+									</div>
+									<div class="col-md-12">
 										<div class="form-group">
-										@php $certificate_name = ''; @endphp
-										@if($data->certificate_status)
-											@if($data->device->certificate)
-												@php $certificate_name = $data->device->cert_number; @endphp
-												<a href="{{URL::to('/admin/examination/media/download/'.$data->device_id.'/certificate')}}"> Download Certificate {{ $data->device->cert_number }}</a>
+											@php $certificate_name = ''; @endphp
+											@if($data->certificate_status)
+												@if($data->device->certificate)
+													@php $certificate_name = $data->device->cert_number; @endphp
+													@php $sertifikat_url = URL::to('/admin/examination/media/download/'.$data->device_id.'/certificate');$sertifikat_attach = $certificate_name;@endphp
+												@endif
 											@endif
-										@endif
+											Sertifikat dari Sistem : @if($certificate_name != '') <a href="{{URL::to('/admin/examination/media/download/'.$data->device_id.'/certificate')}}"> Download</a> @else Belum Tersedia @endif
+											<input type="hidden" id="certificate_name" value="@php echo $certificate_name; @endphp">
 										</div>
 									</div>
-									<div class="col-md-7">
+									@foreach($data->media as $item)
+										@if($item->name == 'Revisi Sertifikat' && $rev_sertifikat == 0)
+											@php $rev_sertifikat = 1; $sertifikat_url = URL::to('/admin/examination/media/download/'.$item->id); $sertifikat_attach = $item->attachment;@endphp
+										@endif
+									@endforeach
+									<div class="col-md-6">
 										<div class="form-group">
 											<label>
 												Nomor Sertifikat *
 											</label>
 												<input type="text" class="form-control" placeholder="Nomor Sertifikat" value="{{ $data->device->cert_number }}" readonly required>
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="form-group">
+											<label>
+												Sertifikat yang Diterbitkan
+											</label>
+											<label>
+												: @if($sertifikat_attach)
+													<a href="{{ $sertifikat_url }}"> {{ $sertifikat_attach }}</a>
+												@else
+													Belum Tersedia
+												@endif
+											</label>
+										</div>
+									</div>
+									<div class="col-md-12" class="panel panel-info">
+										<div class="form-group">
+											<label>
+												Revisi Sertifikat*
+											</label>
+										</div>
+										<div class="form-group">
+											<table class="table table-bordered"><caption></caption>
+												<thead>
+													<tr>
+														<th colspan="5" scope="col">Riwayat Revisi Sertifikat</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr style="text-align: center;">
+														<td>No</td>
+														<td>Attachment</td>
+														<td>Created By</td>
+														<td>Created At</td>
+													</tr>
+													@php $no=0;@endphp
+													@foreach($data->media as $item)
+														@if($item->name == 'Revisi Sertifikat')
+															@php $no++;@endphp
+															<tr>
+																<td style="text-align: center;">
+																	<strong>{{ $no }}</strong>
+																</td>
+																<td>
+																	<strong><a href="{{URL::to('/admin/examination/media/download/'.$item->id)}}"> {{ $item->attachment }}</a></strong>
+																</td>
+																<td>
+																	<strong>{{ $item->user->name }}</strong>
+																</td>
+																<td>
+																	<strong>{{ $item->created_at }}</strong>
+																</td>
+															</tr>
+														@endif
+													@endforeach
+													@if($no == 0)
+														<tr><td colspan="4" style="text-align: center;"> Data Not Found </td></tr>
+													@endif
+												</tbody>
+											</table>
 										</div>
 									</div>
 									<div class="col-md-6">
