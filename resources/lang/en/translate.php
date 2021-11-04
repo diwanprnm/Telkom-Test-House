@@ -23,7 +23,7 @@ return [
 	'service_application_email'		=> 'Email',
 	
 	'service_company'			=> 'Company\'s Data',
-	'service_company_type'		=> 'Companies Type',
+	'service_company_type'		=> 'Company\'s Status',
 	'service_company_name'		=> 'Name',
 	'service_company_address'	=> 'Address',
 	'service_company_plg_id'	=> 'PLG_ID',
@@ -36,6 +36,7 @@ return [
 	'service_company_branch'	=> 'Manufacture',
 	'service_company_individual'=> 'User/Private',
 	'service_company_representative'=> 'Representative',
+	'service_company_owner'			=> 'Tools Owner',
 	'service_company_confirm'	=> "*If there is any change in the company's data, please send email to Admin cstth@telkom.co.id",
 	
 	'service_device'					=> 'Device\'s  Data',

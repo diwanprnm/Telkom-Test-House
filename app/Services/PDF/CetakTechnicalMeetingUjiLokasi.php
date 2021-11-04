@@ -39,7 +39,7 @@ class CetakTechnicalMeetingUjiLokasi
         $pdf->ln(2);
 
         // KESEPAKATAN TEST ENGINER - SECTION
-        $pdf->Cell(0,5,'C.    Kesepakatan Jumlah Test Engineer, Lokasi Uji, Durasi Pengujian, Transportasi, dan Akomodasi',0,1);
+        $pdf->Cell(0,5,'C.    Kesepakatan Jumlah TE, Lokasi Uji, Durasi Pengujian serta Transportasi dan Akomodasi',0,1);
         $pdf->SetAligns(['C','C','C','C']);
         $pdf->SetWidths([36,41,24,75]);
 		$pdf->SetFont('','B');
@@ -96,7 +96,7 @@ class CetakTechnicalMeetingUjiLokasi
         $pdf->MultiCell(0, 4,'Jika ada item test yang tidak dapat dilakukan di lokasi pelanggan maka item test harus diuji di Lab TTH dan dicantumkan di bagian E. Parsial Test.');
         $pdf->Cell(4.5,4,'6.');
         $pdf->Write(4,'Jika kondisi yang ditemukan di lokasi tidak sesuai dengan kesepakatan dalam ');$pdf->SetFont('','I'); $pdf->Write(4,'technical meeting '); $pdf->SetFont('','');$pdf->Write(4,'uji lokasi ini, maka uji lokasi ini'); $pdf->ln();
-        $pdf->Cell(4.5,4,''); $pdf->Write(4,'ditunda sampai dengan kondisi yang disepakati bersama antara pelanggan dengan TTH dan biaya yang muncul akibat penundaan ini ');$pdf->ln();
+        $pdf->Cell(4.5,4,''); $pdf->Write(4,'ditunda sampai dengan kondisi yang disepakati bersama antara TTH dengan pelanggan dan biaya yang muncul akibat penundaan ini ');$pdf->ln();
         $pdf->Cell(4.5,4,''); $pdf->Write(4,'menjadi tanggung jawab pelanggan.');
         $pdf->ln();
 

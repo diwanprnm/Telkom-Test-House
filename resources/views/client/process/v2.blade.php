@@ -102,9 +102,13 @@
 
 								<div class="form-group">
 									<label for="f1-jns-perusahaan" class="text-bold required">{{ trans('translate.service_company_type') }}: </label>
+									@if($jns_pengujian == 'cal')
+									<input type="radio" name="jns_perusahaan" value="Pemilik" placeholder="{{ trans('translate.service_company_owner') }}" checked>
+									@else
 									<input type="radio" name="jns_perusahaan" value="Pabrikan" placeholder="{{ trans('translate.service_company_branch') }}" checked>
-									<!-- <input type="radio" name="jns_perusahaan" value="Perwakilan" placeholder="{{ trans('translate.service_company_representative') }}"> -->
+									<input type="radio" name="jns_perusahaan" value="Perwakilan" placeholder="{{ trans('translate.service_company_representative') }}">
 									<input type="radio" name="jns_perusahaan" value="Agen" placeholder="{{ trans('translate.service_company_agent') }}">
+									@endif
 								</div>
 								<div class="form-group txt-ref-perangkat">
 									<label for="test_reference">{{ trans('translate.service_device_test_reference') }} *</label>
@@ -174,18 +178,6 @@
 											</div>
 										</div>
 									</div>
-								@endif
-								@if ($jns_pengujian == 'ta')
-									<div class="dv-srt-sp3">
-										<div class="form-group col-xs-12">
-											<label>{{ trans('translate.service_upload_sp3') }}<span class="text-danger required">*</span></label>
-											<input class="data-upload-berkas f1-file-sp3 required" id="sp3File" name="sp3File" type="file" accept="application/pdf,image/*">
-											<div id="sp3-file"></div>
-											<div class="attachment-file">
-												*{{ trans('translate.maximum_filesize') }}
-											</div>
-										</div>
-									</div> 
 								@endif
 								<div class="dv-dll" id="dll-file-form-group">
 									<div class="form-group col-xs-12">
@@ -360,7 +352,7 @@
 				}else if (!form.valid()){
 					return false;	
 				}
-				isCompanyTypeAgen = ($('input[name="jns_perusahaan"]:checked').val() == 'Agen');
+				isCompanyTypeAgen = ($('input[name="jns_perusahaan"]:checked').val() == 'Agen' || $('input[name="jns_perusahaan"]:checked').val() == 'Perwakilan');
 				isCompanyTypeAgen ? $('#principal_file_div').show() : $('#principal_file_div').hide();
 				responseCheckSNjns = checkSNjnsPengujian();
 				if (!responseCheckSNjns){
@@ -532,21 +524,23 @@
 
 	$("#test_reference").change(function(event){
 		$(".chosen-select").trigger("chosen:updated");
-		var e = document.getElementById("test_reference");
-		if (e.options[e.selectedIndex] == undefined) {
-			leb = '';
-			return false;
-		}
-		var strUser = e.options[e.selectedIndex].text;
-		var res = strUser.split('||');
-		var deviceName = res[1].replace(/spesifikasi telekomunikasi |spesifikasi telekomunikasi perangkat |telecommunication specification |spesifikasi perangkat |perangkat /gi,"");
-		let documentName = res[0].trim();
-		deviceName = deviceName.trim();
-		$('#device_name').val(deviceName);
+		if(jns_pengujian == 'qa'){
+			var e = document.getElementById("test_reference");
+			if (e.options[e.selectedIndex] == undefined) {
+				leb = '';
+				return false;
+			}
+			var strUser = e.options[e.selectedIndex].text;
+			var res = strUser.split('||');
+			var deviceName = res[1].replace(/spesifikasi telekomunikasi |spesifikasi telekomunikasi perangkat |telecommunication specification |spesifikasi perangkat |perangkat /gi,"");
+			let documentName = res[0].trim();
+			deviceName = deviceName.trim();
+			$('#device_name').val(deviceName);
 
-		referensiUjiList.forEach((referensiUji)=>{		
-			referensiUji.stel == documentName && (lab = referensiUji.labDescription);
-		});
+			referensiUjiList.forEach((referensiUji)=>{		
+				referensiUji.stel == documentName && (lab = referensiUji.labDescription);
+			});
+		}
 
 		setSerialNumberMandatory( serialNumberRequrement[lab] );
 		setDataseetMandatory( dataseetMandatory.lab.includes(lab) && dataseetMandatory.testType.includes(jns_pengujian)  )

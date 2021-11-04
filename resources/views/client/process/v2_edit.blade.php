@@ -109,8 +109,13 @@
 									<input type="hidden" name="hide_prinsipal_file" id="hide_prinsipal_file" value="{{$userData->filesrt_prinsipal}}">
 									<div class="form-group">
 										<label for="f1-jns-perusahaan" class="text-bold required">{{ trans('translate.service_company_type') }}: </label>
-										<input type="radio" name="jns_perusahaan" value="Agen" placeholder="{{ trans('translate.service_company_agent') }}" @if ($userData->jnsPerusahaan == 'Agen') checked  @endif >
+										@if($jns_pengujian == 'kal')
+										<input type="radio" name="jns_perusahaan" value="Pemilik" placeholder="{{ trans('translate.service_company_owner') }}" checked>
+										@else
 										<input type="radio" name="jns_perusahaan" value="Pabrikan" placeholder="{{ trans('translate.service_company_branch') }}" @if ($userData->jnsPerusahaan == 'Pabrikan') checked  @endif >
+										<input type="radio" name="jns_perusahaan" value="Perwakilan" placeholder="{{ trans('translate.service_company_representative') }}" @if ($userData->jnsPerusahaan == 'Perwakilan') checked  @endif >
+										<input type="radio" name="jns_perusahaan" value="Agen" placeholder="{{ trans('translate.service_company_agent') }}" @if ($userData->jnsPerusahaan == 'Agen') checked  @endif >
+										@endif
 									</div>
 									<div class="form-group txt-ref-perangkat">
 										<label for="test_reference">{{ trans('translate.service_device_test_reference') }} *</label>
@@ -141,7 +146,7 @@
 										<label for="device_made_in">{{ trans('translate.service_device_manufactured_by') }} *</label>
 										<input type="text" name="device_made_in" placeholder="{{ trans('translate.example') }} Indonesia" id="device_made_in" class="required" value="{{$userData->pembuat_perangkat}}">
 									</div>
-									<div class="form-group">
+									<div class="form-group" id="device-serial-number-form-group">
 										<label for="device_serial_number">{{ trans('translate.service_device_serial_number') }} *</label>
 										<input type="text" name="device_serial_number" placeholder="{{ trans('translate.example') }} 123456789456"  id="device_serial_number" class="required" value="{{$userData->serialNumber}}">
 									</div>
@@ -159,7 +164,7 @@
 					            <h2>Second Step</h2>
 					            <fieldset>
 					            	<legend></legend>
-									@unless ($jns_pengujian == 'cal' || $jns_pengujian == 'qa')
+									@unless ($jns_pengujian == 'kal' || $jns_pengujian == 'qa')
 										<div class="form-group col-xs-12">
 											<label>{{ trans('translate.service_upload_reference_test') }}<span class="text-danger"></span></label>
 											<input class="data-upload-berkas f1-file-ref-uji" id="refUjiFile" name="refUjiFile" type="file" accept="application/pdf,image/*" data-target-id="f4-preview-11" data-old-filename="{{$userData->fileref_uji}}">
@@ -177,17 +182,7 @@
 											</div>
 										</div>
 									@endif
-									@if ($jns_pengujian == 'ta')
-										<div class="dv-srt-sp3">
-											<div class="form-group col-xs-12">
-												<label>{{ trans('translate.service_upload_sp3') }}<span class="text-danger required">*</span></label>
-												<input class="data-upload-berkas f1-file-sp3 @if (!$userData->filesrt_sp3) required @endif" id="sp3File" name="sp3File" type="file" accept="application/pdf,image/*" data-target-id="f4-preview-13" data-old-filename="{{$userData->filesrt_sp3}}">
-												<div class="attachment-file"> *{{ trans('translate.maximum_filesize') }} </div>
-												<a id="sp3-file" class="btn btn-link link-download-file">{{$userData->filesrt_sp3}}</a>
-											</div>
-										</div> 
-									@endif
-									<div class="dv-dll">
+									<div class="dv-dll" id="dll-file-form-group">
 										<div class="form-group col-xs-12">
 											<label>{{ trans('translate.service_upload_another_file') }}</label>
 											<input class="data-upload-berkas f1-file-dll" id="dllFile" name="dllFile" type="file" accept="application/pdf,image/*" data-target-id="f4-preview-12" data-old-filename="{{$userData->filedll}}">
@@ -338,8 +333,18 @@
 					$('.chosen-choices .search-field input').addClass('error');
 					return false;
 				}
-				isCompanyTypeAgen = ($('input[name="jns_perusahaan"]:checked').val() == 'Agen');
+				isCompanyTypeAgen = ($('input[name="jns_perusahaan"]:checked').val() == 'Agen' || $('input[name="jns_perusahaan"]:checked').val() == 'Perwakilan');
 				isCompanyTypeAgen ? $('#principal_file_div').show() : $('#principal_file_div').hide();
+				if(jns_pengujian == 'qa' && $('#principal-file')[0].text){
+					const principal_fileInput = $('#principal_file');
+					principal_fileInput.removeClass('required');
+					principal_fileInput.removeClass('error');
+				}
+				if($('#dll-file')[0].text){
+					const dll_fileInput = $('#dllFile');
+					dll_fileInput.removeClass('required');
+					dll_fileInput.removeClass('error');
+				}
 				responseCheckSNjns = checkSNjnsPengujian();
 				if (!responseCheckSNjns){
 					return responseCheckSNjns;
@@ -442,17 +447,98 @@
 
   <script src="{{url('vendor/chosen/chosen.jquery.js')}}" type="text/javascript"></script> 
   <script type="text/javascript">
+	const referensiUjiList = {!! json_encode($data_stels) !!};
+	const serialNumberRequrement = {
+		'Lab Device'	: 'mandatory',
+		'Lab Transmisi'	: 'mandatory',
+		'Lab Energi'	: 'mandatory',
+		'Lab CPE'		: 'mandatory',
+		'Lab Kabel'		: 'not mandatory',
+		'Lab Kal'		: 'not mandatory',
+		'Lab EMC'		: 'not mandatory',
+	}
+	const dataseetMandatory = {
+		'lab'			: ['Lab Transmisi', 'Lab Energi', 'Lab Device'],
+		'testType'		: ['qa', 'ta', 'vt']
+	}
+	let lab = '';
+
+	const setSerialNumberMandatory = ( mandatoryStatus = 'not mandatory' ) => {
+		const deviceSerialNumberLabel = $('#device-serial-number-form-group label');
+		const deviceSerialNumberInput = $('#device_serial_number');
+		let serialNumberLabelText = deviceSerialNumberLabel.html();
+		if ( mandatoryStatus == 'not mandatory' ){
+			deviceSerialNumberInput.removeClass('required');
+			deviceSerialNumberInput.removeClass('error');
+			if (serialNumberLabelText.substring(serialNumberLabelText.length -2) == ' *'  ){
+				deviceSerialNumberLabel.html(serialNumberLabelText.substring(0, serialNumberLabelText.length -2));
+			}
+		} else if ( mandatoryStatus == 'mandatory' ){
+			deviceSerialNumberInput.addClass('required');
+			if (serialNumberLabelText.substring(serialNumberLabelText.length -2) != ' *'  ){
+				deviceSerialNumberLabel.html(serialNumberLabelText+' *');
+			}
+		}
+	}
+
+	const setDataseetMandatory = ( isMandatory = false ) => {
+		dataseetInput = $('#dll-file-form-group input');
+		dataseetRequiredLabel = $('#dll-file-form-group label span');
+
+		if (isMandatory){
+			dataseetInput.addClass('required');
+			dataseetRequiredLabel.html('*');
+		}else{
+			dataseetInput.removeClass('required');
+			dataseetInput.removeClass('error');
+			dataseetRequiredLabel.html('');
+		}
+	}
+
 	$("#test_reference").change(function(){
 		$(".chosen-select").trigger("chosen:updated");
-		var e = document.getElementById("test_reference");
-		var strUser = e.options[e.selectedIndex].text;
-		var res = strUser.split('||');
-		var deviceName = res[1].replace(/spesifikasi telekomunikasi |spesifikasi telekomunikasi perangkat |telecommunication specification |spesifikasi perangkat |perangkat /gi,"");
-		deviceName = deviceName.trim();
-		$('#device_name').val(deviceName);
+		if(jns_pengujian == 'qa'){
+			var e = document.getElementById("test_reference");
+			if (e.options[e.selectedIndex] == undefined) {
+				leb = '';
+				return false;
+			}
+			var strUser = e.options[e.selectedIndex].text;
+			var res = strUser.split('||');
+			var deviceName = res[1].replace(/spesifikasi telekomunikasi |spesifikasi telekomunikasi perangkat |telecommunication specification |spesifikasi perangkat |perangkat /gi,"");
+			let documentName = res[0].trim();
+			deviceName = deviceName.trim();
+			$('#device_name').val(deviceName);
+
+			referensiUjiList.forEach((referensiUji)=>{		
+				referensiUji.stel == documentName && (lab = referensiUji.labDescription);
+			});
+		}
+
+		setSerialNumberMandatory( serialNumberRequrement[lab] );
+		setDataseetMandatory( dataseetMandatory.lab.includes(lab) && dataseetMandatory.testType.includes(jns_pengujian)  )
 	});
 
+	function checkMandatory(){
+		var e = document.getElementById("test_reference");
+		if (e.options[e.selectedIndex] == undefined) {
+			leb = '';
+			return false;
+		}
+		var strUser = e.options[e.selectedIndex].text;
+		var res = strUser.split('||');
+		let documentName = res[0].trim();
+		
+		referensiUjiList.forEach((referensiUji)=>{		
+			referensiUji.stel == documentName && (lab = referensiUji.labDescription);
+		});
+
+		setSerialNumberMandatory( serialNumberRequrement[lab] );
+		setDataseetMandatory( dataseetMandatory.lab.includes(lab) && dataseetMandatory.testType.includes(jns_pengujian)  )
+	}
+
 	$( document ).ready(function() {
+		checkMandatory();
 		//if test reference is filled remove error
 		$('.chosen-container .search-field').focusout(()=>{
 			$('.chosen-choices .search-choice').length && $('.chosen-choices .search-field input').removeClass('error');

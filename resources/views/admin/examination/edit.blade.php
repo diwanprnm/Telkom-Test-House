@@ -446,7 +446,7 @@
 				</div>
 				@if(isset($admin_roles[0]))
 				@if($admin_roles[0]->registration_status)
-					<!-- Datasheet, Prinsipal, PLG_ID & NIB -->
+					<!-- Datasheet, Prinsipal -->
 					@php 
 						$datasheet = 0; $datasheet_file = ''; $datasheet_link = '';
 						$prinsipal = 0; $prinsipal_file = ''; $prinsipal_link = '';
@@ -516,21 +516,6 @@
 										@if($prinsipal_file != null)
 											<label>
 												: <a href="{{ $prinsipal_link }}"> Download</a>
-											</label>
-										@else
-											<label>
-												: (Kosong)
-											</label>
-										@endif
-									@endif
-									@if($sp3)
-										<br>
-										<label>
-											PLG_ID & NIB
-										</label>
-										@if($sp3_file != null)
-											<label>
-												: <a href="{{ $sp3_link }}"> Download</a>
 											</label>
 										@else
 											<label>
@@ -643,7 +628,7 @@
 					</fieldset>
 				{!! Form::close() !!}
 				@else
-					<!-- Datasheet, Prinsipal, PLG_ID & NIB -->
+					<!-- Datasheet, Prinsipal -->
 					@php 
 						$datasheet = 0; $datasheet_file = ''; $datasheet_link = '';
 						$prinsipal = 0; $prinsipal_file = ''; $prinsipal_link = '';
@@ -710,21 +695,6 @@
 										@if($prinsipal_file != null)
 											<label>
 												: <a href="{{ $prinsipal_link }}"> Download</a>
-											</label>
-										@else
-											<label>
-												: (Kosong)
-											</label>
-										@endif
-									@endif
-									@if($sp3)
-										<br>
-										<label>
-											PLG_ID & NIB
-										</label>
-										@if($sp3_file != null)
-											<label>
-												: <a href="{{ $sp3_link }}"> Download</a>
 											</label>
 										@else
 											<label>
@@ -786,7 +756,7 @@
 					</fieldset>
 				@endif
 				@else
-					<!-- Datasheet, Prinsipal, PLG_ID & NIB -->
+					<!-- Datasheet, Prinsipal -->
 					@php 
 						$datasheet = 0; $datasheet_file = ''; $datasheet_link = '';
 						$prinsipal = 0; $prinsipal_file = ''; $prinsipal_link = '';
@@ -853,21 +823,6 @@
 										@if($prinsipal_file != null)
 											<label>
 												: <a href="{{ $prinsipal_link }}"> Download</a>
-											</label>
-										@else
-											<label>
-												: (Kosong)
-											</label>
-										@endif
-									@endif
-									@if($sp3)
-										<br>
-										<label>
-											PLG_ID & NIB
-										</label>
-										@if($sp3_file != null)
-											<label>
-												: <a href="{{ $sp3_link }}"> Download</a>
 											</label>
 										@else
 											<label>
