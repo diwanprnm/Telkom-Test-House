@@ -365,13 +365,20 @@ class SidangController extends Controller
         $logService = new LogService;
 
         $jml_comply = 0;$jml_not_comply = 0;$jml_pending = 0;
-        for($i = 0; $i < count($request->input('id')); $i++){
-            $sidang_detail = Sidang_detail::find($request->input('id')[$i]);
+        $sidangDetail = Sidang_detail::where('sidang_id', $id)->delete();
+        
+        for($i = 0; $i < count($request->input('examination_id')); $i++){
+            $sidang_detail = new Sidang_detail;
+            $sidang_detail->id = Uuid::uuid4();
+            $sidang_detail->sidang_id = $id;
+            $sidang_detail->examination_id = $request->input('examination_id')[$i];
             $sidang_detail->result = $request->input('result')[$i];
             $sidang_detail->valid_range = $request->input('valid_range')[$i];
             $sidang_detail->valid_from = $request->input('date');
             $sidang_detail->valid_thru = date('Y-m-d', strtotime("+".$sidang_detail->valid_range." months", strtotime($sidang_detail->valid_from)));
             $sidang_detail->catatan = $request->input('catatan')[$i];
+            $sidang_detail->created_by = $currentUser->id;
+            $sidang_detail->updated_by = $currentUser->id;
             $sidang_detail->save();
 
             switch ($sidang_detail->result) {

@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+<style type="text/css">
+	tbody { cursor: grab; }
+</style>
 <div class="main-content" >
 	<div class="wrap-content container" id="container">
 		<!-- start: PAGE TITLE -->
@@ -62,7 +65,7 @@
 					</div>
 				</div>
 		        <div class="col-md-12">
-					<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+					<table id="sortable" class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
 						<caption>Device Table</caption>
 						<thead>
 							<tr>
@@ -79,106 +82,109 @@
 								<th class="center" colspan="2" scope="colgroup">Aksi</th> 
 							</tr>
 						</thead>
-						<tbody> 
-							@php $no = 1; @endphp
-							@if(count($data)>0)
-								@foreach($data as $keys => $item)
-									<input type="hidden" value="{{ $item->id }}" name="id[]">
-									<tr>
-										<td class="center">{{ $no }}</td>
-										<td class="center">{{ $item->examination->company->name }}</td>
-										<td class="center">{{ $item->examination->device->name }}</td>
-										<td class="center">{{ $item->examination->device->mark }}</td>
-										<td class="center">{{ $item->examination->device->model }}</td>
-										<td class="center">{{ $item->examination->device->capacity }}</td>
-										<td class="center">{{ $item->examination->device->manufactured_by }}</td>
-										<td class="center">{{ $item->finalResult ? $item->finalResult : '-' }}</td>
-										<td class="center">
-											<select class="cs-select cs-skin-elastic" name="result[]">
-												<option value="0" @if ($item->result == 0) selected @endif>Choose</option>
-												<option value="1" @if ($item->result == 1) selected @endif>Lulus</option>
-												<option value="2" @if ($item->result == 2) selected @endif>Pending</option>
-												<option value="-1" @if ($item->result == -1) selected @endif>Tidak Lulus</option>
-											</select>
-										</td>
-										<td class="center">
-											<select class="cs-select cs-skin-elastic" name="valid_range[]">
-												<option value="0" @if ($item->valid_range == 0) selected @endif>Choose</option>
-												<option value="36" @if ($item->valid_range == 36) selected @endif>3 Tahun</option>
-												<option value="12" @if ($item->valid_range == 12) selected @endif>1 Tahun</option>
-												<option value="9" @if ($item->valid_range == 9) selected @endif>9 Bulan</option>
-												<option value="6" @if ($item->valid_range == 6) selected @endif>6 Bulan</option>
-											</select>
-										</td>
-										<td class="center">
-											<div>
-												<textarea class="content-catatan" name="catatan[]" style="display: none;" placeholder="Catatan ..." autofocus>{{ $item->catatan }}</textarea>
-												<a href="javascript:void(0)" class="collapsible-catatan pull-right"><em class="fa fa-file-o"></em></a>
-											</div>
-										</td>
-										<td class="center">
-											<div>
-												<a href="javascript:void(0)" class="collapsible"><em class="fa fa-eye"></em></a>
-											</div>
-										</td>
-									</tr>
-									<tr class="content" style="display: none;">
-										<td colspan="12" class="center">
-											<table class="table table-bordered table-hover table-full-width dataTable no-footer" style="width: 100%;">
-												<thead>
-													<tr>
-														<th class="center" scope="col">No. SPK</th>
-														<th class="center" scope="col">No. Laporan</th>
-														<th class="center" scope="col">No. Seri</th>
-														<th class="center" scope="col">Referensi Uji</th>
-														<th class="center" scope="col">Tanggal Penerimaan</th>  
-														<th class="center" scope="col">Tanggal Mulai Uji</th>  
-														<th class="center" scope="col">Tanggal Selesai Uji</th>  
-														<th class="center" scope="col">Diuji Oleh</th>  
-														<th class="center" scope="col">Target Penyelesaian</th>  
-													</tr>
-												</thead>
-												<tbody>
-													<tr>
-														<td class="center">{{ $item->examination->spk_code }}</td>
-														@php $no_lap = '-'; @endphp
-														@foreach($item->examination->media as $file)
-															@if($file->name == 'Laporan Uji')
-																@php $no_lap = $file->no; @endphp
-															@endif
-														@endforeach
-														<td class="center">{{ $no_lap }}</td>
-														<td class="center">{{ $item->examination->device->serial_number }}</td>
-														<td class="center">{{ $item->examination->device->test_reference }}</td>
-														@php $tgl_barang = '-'; @endphp
-														@foreach($item->examination->equipmentHistory as $barang)
-															@if($barang->location == 2)
-																@php $tgl_barang = $barang->action_date; @endphp
-															@endif
-														@endforeach
-														<td class="center">{{ $tgl_barang }}</td>
-														<td class="center">{{ $item->startDate ? $item->startDate : '-' }}</td>
-														<td class="center">{{ $item->endDate ? $item->endDate : '-' }}</td>
-														<td class="center">{{ $item->examination->examinationLab->name }}</td>
-														<td class="center">{{ $item->targetDate ? $item->targetDate : '-' }}</td>
-													</tr> 
-												</tbody>
-											</table>
-										</td>
-									</tr>
-									<tr class="content" style="display: none;"><td colspan="12"></td></tr>
-								@php
-									$no++
-								@endphp
-								@endforeach
-							@else
+						
+						@php $no = 1; @endphp
+						@if(count($data)>0)
+							@foreach($data as $keys => $item)
+							<tbody> 
+								<input type="hidden" value="{{ $item->examination_id }}" name="examination_id[]">
+								<tr>
+									<td class="center">{{ $no }}</td>
+									<td class="center">{{ $item->examination->company->name }}</td>
+									<td class="center">{{ $item->examination->device->name }}</td>
+									<td class="center">{{ $item->examination->device->mark }}</td>
+									<td class="center">{{ $item->examination->device->model }}</td>
+									<td class="center">{{ $item->examination->device->capacity }}</td>
+									<td class="center">{{ $item->examination->device->manufactured_by }}</td>
+									<td class="center">{{ $item->finalResult ? $item->finalResult : '-' }}</td>
+									<td class="center">
+										<select class="cs-select cs-skin-elastic" name="result[]">
+											<option value="0" @if ($item->result == 0) selected @endif>Choose</option>
+											<option value="1" @if ($item->result == 1) selected @endif>Lulus</option>
+											<option value="2" @if ($item->result == 2) selected @endif>Pending</option>
+											<option value="-1" @if ($item->result == -1) selected @endif>Tidak Lulus</option>
+										</select>
+									</td>
+									<td class="center">
+										<select class="cs-select cs-skin-elastic" name="valid_range[]">
+											<option value="0" @if ($item->valid_range == 0) selected @endif>Choose</option>
+											<option value="36" @if ($item->valid_range == 36) selected @endif>3 Tahun</option>
+											<option value="12" @if ($item->valid_range == 12) selected @endif>1 Tahun</option>
+											<option value="9" @if ($item->valid_range == 9) selected @endif>9 Bulan</option>
+											<option value="6" @if ($item->valid_range == 6) selected @endif>6 Bulan</option>
+										</select>
+									</td>
+									<td class="center">
+										<div>
+											<textarea class="content-catatan" name="catatan[]" style="display: none;" placeholder="Catatan ..." autofocus>{{ $item->catatan }}</textarea>
+											<a href="javascript:void(0)" class="collapsible-catatan pull-right"><em class="fa fa-file-o"></em></a>
+										</div>
+									</td>
+									<td class="center">
+										<div>
+											<a href="javascript:void(0)" class="collapsible"><em class="fa fa-eye"></em></a>
+										</div>
+									</td>
+								</tr>
+								<tr class="content" style="display: none;">
+									<td colspan="12" class="center">
+										<table class="table table-bordered table-hover table-full-width dataTable no-footer" style="width: 100%;">
+											<thead>
+												<tr>
+													<th class="center" scope="col">No. SPK</th>
+													<th class="center" scope="col">No. Laporan</th>
+													<th class="center" scope="col">No. Seri</th>
+													<th class="center" scope="col">Referensi Uji</th>
+													<th class="center" scope="col">Tanggal Penerimaan</th>  
+													<th class="center" scope="col">Tanggal Mulai Uji</th>  
+													<th class="center" scope="col">Tanggal Selesai Uji</th>  
+													<th class="center" scope="col">Diuji Oleh</th>  
+													<th class="center" scope="col">Target Penyelesaian</th>  
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td class="center">{{ $item->examination->spk_code }}</td>
+													@php $no_lap = '-'; @endphp
+													@foreach($item->examination->media as $file)
+														@if($file->name == 'Laporan Uji')
+															@php $no_lap = $file->no; @endphp
+														@endif
+													@endforeach
+													<td class="center">{{ $no_lap }}</td>
+													<td class="center">{{ $item->examination->device->serial_number }}</td>
+													<td class="center">{{ $item->examination->device->test_reference }}</td>
+													@php $tgl_barang = '-'; @endphp
+													@foreach($item->examination->equipmentHistory as $barang)
+														@if($barang->location == 2)
+															@php $tgl_barang = $barang->action_date; @endphp
+														@endif
+													@endforeach
+													<td class="center">{{ $tgl_barang }}</td>
+													<td class="center">{{ $item->startDate ? $item->startDate : '-' }}</td>
+													<td class="center">{{ $item->endDate ? $item->endDate : '-' }}</td>
+													<td class="center">{{ $item->examination->examinationLab->name }}</td>
+													<td class="center">{{ $item->targetDate ? $item->targetDate : '-' }}</td>
+												</tr> 
+											</tbody>
+										</table>
+									</td>
+								</tr>
+								<tr class="content" style="display: none;"><td colspan="12"></td></tr>
+							@php
+								$no++
+							@endphp
+							</tbody>
+							@endforeach
+						@else
+							<tbody> 
 								<tr>
 									<td colspan=12 class="center">
 										Data Not Found
 									</td>
 								</tr>
-							@endif
-						</tbody>
+							</tbody> 
+						@endif
 					</table>
 				</div>
 
@@ -216,6 +222,7 @@
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
 <script src={{ asset("assets/js/form-elements.js") }}></script>
 <script type="text/javascript">
+	$( "#sortable" ).sortable({delay: 150});
 	var coll = document.getElementsByClassName("collapsible");
 	var i;
 
