@@ -41,7 +41,89 @@
 				</div>
 			@endif
 
-			{!! Form::open(array('url' => 'admin/sidang/'.$data[0]->sidang->id, 'method' => 'PUT')) !!}
+			{!! Form::open(array('id' => 'form-sidang', 'url' => 'admin/sidang/'.$data[0]->sidang->id, 'method' => 'PUT')) !!}
+			<div class="modal fade" id="myModal_editPerangkat" tabindex="-1" role="dialog" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h4 class="modal-title"><em class="fa fa-eyes-open"></em> Edit Data Perangkat</h4>
+						</div>
+						
+						<div class="modal-body">
+							<table style="width: 100%;"><caption></caption>
+								<input type="hidden" name="device_id" id="device_id"></input>
+								<tr>
+									<th scope="col">
+										<div class="form-group">
+											<label for="test_reference">Referensi Uji:</label>
+											<input class="form-control" name="test_reference" id="test_reference" placeholder="referensi uji"></input>
+										</div>
+									</th>
+								</tr>
+								<tr>
+									<th scope="col">
+										<div class="form-group">
+											<label for="name">Perangkat:</label>
+											<input class="form-control" name="name" id="name" placeholder="nama perangkat"></input>
+										</div>
+									</th>
+								</tr>
+								<tr>
+									<th scope="col">
+										<div class="form-group">
+											<label for="mark">Merek:</label>
+											<input class="form-control" name="mark" id="mark" placeholder="merek perangkat"></input>
+										</div>
+									</th>
+								</tr>
+								<tr>
+									<th scope="col">
+										<div class="form-group">
+											<label for="model">Model/Tipe:</label>
+											<input class="form-control" name="model" id="model" placeholder="model/tipe"></input>
+										</div>
+									</th>
+								</tr>
+								<tr>
+									<th scope="col">
+										<div class="form-group">
+											<label for="capacity">Kapasitas:</label>
+											<input class="form-control" name="capacity" id="capacity" placeholder="kapasitas"></input>
+										</div>
+									</th>
+								</tr>
+								<tr>
+									<th scope="col">
+										<div class="form-group">
+											<label for="manufactured_by">Negara Pembuat:</label>
+											<input class="form-control" name="manufactured_by" id="manufactured_by" placeholder="negara pembuat"></input>
+										</div>
+									</th>
+								</tr>
+								<tr>
+									<th scope="col">
+										<div class="form-group">
+											<label for="serial_number">Serial Number:</label>
+											<input class="form-control" name="serial_number" id="serial_number" placeholder="serial number"></input>
+										</div>
+									</th>
+								</tr>
+							</table>
+						</div><!-- /.modal-content -->
+						<div class="modal-footer">
+							<table style="width: 100%;"><caption></caption>
+								<tr>
+									<th scope="col">
+										<button type="submit" id="btn-modal-editPerangkat" class="btn btn-danger" onclick='$("#status").val("ON GOING");' style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
+									</th>
+								</tr>
+							</table>
+						</div>
+					</div><!-- /.modal-dialog -->
+				</div><!-- /.modal -->
+			</div>
+
 			{!! csrf_field() !!}
 			<div class="row">
 				<div class="col-md-3">
@@ -79,7 +161,7 @@
 								<th class="center" scope="col">Hasil Uji</th> 
 								<th class="center" scope="col">Keputusan</th> 
 								<th class="center" scope="col">Masa Berlaku</th>  
-								<th class="center" colspan="2" scope="colgroup">Aksi</th> 
+								<th class="center" colspan="3" scope="colgroup">Aksi</th> 
 							</tr>
 						</thead>
 						
@@ -122,12 +204,17 @@
 									</td>
 									<td class="center">
 										<div>
+											<a href="javascript:editPerangkat({{ $item->examination->device }})"><em class="fa fa-pencil"></em></a>
+										</div>
+									</td>
+									<td class="center">
+										<div>
 											<a href="javascript:void(0)" class="collapsible"><em class="fa fa-eye"></em></a>
 										</div>
 									</td>
 								</tr>
 								<tr class="content" style="display: none;">
-									<td colspan="12" class="center">
+									<td colspan="13" class="center">
 										<table class="table table-bordered table-hover table-full-width dataTable no-footer" style="width: 100%;">
 											<thead>
 												<tr>
@@ -170,7 +257,7 @@
 										</table>
 									</td>
 								</tr>
-								<tr class="content" style="display: none;"><td colspan="12"></td></tr>
+								<tr class="content" style="display: none;"><td colspan="13"></td></tr>
 							@php
 								$no++
 							@endphp
@@ -179,7 +266,7 @@
 						@else
 							<tbody> 
 								<tr>
-									<td colspan=12 class="center">
+									<td colspan=13 class="center">
 										Data Not Found
 									</td>
 								</tr>
@@ -252,6 +339,27 @@
 	    }
 	  });
 	}
+
+	function editPerangkat(device){
+		$('#myModal_editPerangkat').on('shown.bs.modal', function () {
+		    $('#test_reference').focus();
+			$('#device_id').val(device.id);
+			$('#test_reference').val(device.test_reference);
+			$('#name').val(device.name);
+			$('#mark').val(device.mark);
+			$('#model').val(device.model);
+			$('#capacity').val(device.capacity);
+			$('#manufactured_by').val(device.manufactured_by);
+			$('#serial_number').val(device.serial_number);
+		});
+		
+		$('#myModal_editPerangkat').modal('show');
+	}
+
+	$('#form-sidang').submit(function () {
+		$('#myModal_editPerangkat').modal('hide');
+		document.getElementById("overlay").style.display="inherit";	
+	});
 
 	jQuery(document).ready(function() {
 		FormElements.init();

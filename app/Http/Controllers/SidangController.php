@@ -410,12 +410,41 @@ class SidangController extends Controller
         
         try{
             $sidang->save();
-            $sidang->status == 'DONE' ? $this->updateExamination($sidang->id) : '';
-            $logService->createLog($sidang->status = 'DONE' ? 'Update Sidang QA' : 'Selesai Sidang QA', 'Sidang QA',$oldData);
-            Session::flash(self::MESSAGE, 'Data successfully updated');
-            return redirect(self::ADMIN_SIDANG);
+            if($request->has('device_id')){
+                $this->updateDevice($request, $id);
+                Session::flash(self::MESSAGE, 'Data successfully updated');
+                return redirect(self::ADMIN_SIDANG.'/'.$id.'/edit');
+            }else{
+                $sidang->status == 'DONE' ? $this->updateExamination($sidang->id) : '';
+                $logService->createLog($sidang->status = 'DONE' ? 'Update Sidang QA' : 'Selesai Sidang QA', 'Sidang QA',$oldData);
+                Session::flash(self::MESSAGE, 'Data successfully updated');
+                return redirect(self::ADMIN_SIDANG);
+            }
         } catch(Exception $e){ return redirect(self::ADMIN_SIDANG.'/'.$sidang->id.'/edit')->with(self::ERROR, 'Save failed');
         } 
+    }
+
+    public function updateDevice($request, $id)
+    {
+        $currentUser = Auth::user();
+		$logService = new LogService();
+		
+		$device = Device::findOrFail($request->input('device_id'));
+        $device->test_reference = $request->input('test_reference');
+        $device->name = $request->input('name');
+        $device->mark = $request->input('mark');
+        $device->model = $request->input('model');
+        $device->capacity = $request->input('capacity');
+        $device->manufactured_by = $request->input('manufactured_by');
+        $device->serial_number = $request->input('serial_number');
+
+		$device->updated_by = $currentUser->id;
+		$device->updated_at = date('Y-m-d H:i:s');
+        
+        try{
+            $device->save();
+			$logService->createLog("update", "REVISI", $device);
+        } catch(Exception $e){ return redirect(self::ADMIN_SIDANG.'/'.$id.'/edit')->with(self::ERROR, 'Save failed'); }
     }
 
     public function updateExamination($sidang_id){
