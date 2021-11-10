@@ -3819,6 +3819,14 @@
 													</label>
 												</div>
 											</div>
+											<div class="radio">
+												<div class="radio clip-radio radio-primary">
+													<input type="radio" value="2" name="passed" id="pending">
+													<label for="pending">
+														Pending
+													</label>
+												</div>
+											</div>
 											@elseif($data->qa_passed == -1)
 											<div class="radio">
 												<div class="radio clip-radio radio-primary">
@@ -3830,9 +3838,42 @@
 											</div>
 											<div class="radio">
 												<div class="radio clip-radio radio-primary">
-													<input type="radio" value="-1" name="passed" id="notPassed" checked>
+													<input type="radio" value="-1" name="passed" id="notPassed">
 													<label for="notPassed">
 														Tidak Lulus
+													</label>
+												</div>
+											</div>
+											<div class="radio">
+												<input type="radio" value="2" name="passed" id="pending" checked>
+													<input type="radio" value="2">
+													<label for="pending">
+														Pending
+													</label>
+												</div>
+											</div>
+											@elseif($data->qa_passed == 2)
+											<div class="radio">
+												<div class="radio clip-radio radio-primary">
+														<input type="radio" value="1" name="passed" id="passed">
+														<label for="passed">
+															Lulus
+														</label>
+												</div>
+											</div>
+											<div class="radio">
+												<div class="radio clip-radio radio-primary">
+													<input type="radio" value="-1" name="passed" id="notPassed">
+													<label for="notPassed">
+														Tidak Lulus
+													</label>
+												</div>
+											</div>
+											<div class="radio">
+												<input type="radio" value="2" name="passed" id="pending" checked>
+													<input type="radio" value="2">
+													<label for="pending">
+														Pending
 													</label>
 												</div>
 											</div>
@@ -3850,6 +3891,14 @@
 													<input type="radio" value="-1" name="passed" id="notPassed">
 													<label for="notPassed">
 														Tidak Lulus
+													</label>
+												</div>
+											</div>
+											<div class="radio">
+												<input type="radio" value="2" name="passed" id="pending">
+													<input type="radio" value="2">
+													<label for="pending">
+														Pending
 													</label>
 												</div>
 											</div>
@@ -3967,6 +4016,15 @@
 													</label>
 												</div>
 											</div>
+											@elseif($data->qa_passed == 2)
+											<div class="radio">
+												<div class="radio clip-radio radio-primary">
+													<input type="radio" value="2" checked>
+													<label for="pending">
+														Pending
+													</label>
+												</div>
+											</div>
 											@endif
 										</div>
 									</div>
@@ -4033,6 +4091,15 @@
 													<input type="radio" value="-1" checked>
 													<label for="notPassed">
 														Tidak Lulus
+													</label>
+												</div>
+											</div>
+											@elseif($data->qa_passed == 2)
+											<div class="radio">
+												<div class="radio clip-radio radio-primary">
+													<input type="radio" value="2" checked>
+													<label for="pending">
+														Pending
 													</label>
 												</div>
 											</div>
@@ -5253,7 +5320,7 @@
 				$('#myModalketerangan_sidang_qa').modal('hide');
 			}
 		}else{
-			if (document.getElementById("passed").checked == false && document.getElementById("notPassed").checked == false) {
+			if (document.getElementById("passed").checked == false && document.getElementById("notPassed").checked == false && document.getElementById("pending").checked == false) {
 		     	alert("Belum Ada Hasil Sidang QA!");
 				return false;
 		    }

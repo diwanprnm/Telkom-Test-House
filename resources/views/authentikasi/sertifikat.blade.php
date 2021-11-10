@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Autentikasi Dokumen - Telkom Test House</title>
+	<title>Autentikasi Dokumen</title>
 </head>
 <body>
 <div class="header" style="margin-top:2%;margin-bottom:2%;">
@@ -16,7 +16,7 @@
 	Telkom Test House menyatakan bahwa
 </div>
 <br>
-<div class="content" style="width:75%;background-color:rgba(255,255,255,1.00);border: 3px #ff3e41 solid;border-radius:15px;position:relative;margin-left:auto;margin-right:auto;padding-left:25px;padding-right:25px;padding-top:5px;padding-bottom:5px;">
+<div class="content" style="width:75%;background-color:rgba(255,255,255,1.00); border-radius:15px; box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.2); position:relative;margin-left:auto;margin-right:auto;padding-left:25px;padding-right:25px;padding-top:5px;padding-bottom:5px;">
 	<p>
 		<strong>Jenis Dokumen:</strong>
 		<br>
@@ -59,7 +59,7 @@
 		22 Maret 2024
 		<br><br>
 	</p>
-	<hr style="border-top: 1px solid red;">
+	<hr style="border-top: 0.02px solid grey;">
 	<p>
 		Telah ditandatangi oleh
 		<br><br>

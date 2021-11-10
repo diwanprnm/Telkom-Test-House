@@ -51,6 +51,7 @@ table {
 			<div class="col-md-12">
 				{!! Form::open(array('url' => 'admin/generalSetting/'.$data[0]->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-update')) !!}
 					{!! csrf_field() !!}
+					<input type="hidden" id="status" name="status">
     				<fieldset>
 						<legend>
 							Senior Manager Information
@@ -90,7 +91,7 @@ table {
 							</div>
 	                      
 	                        <div class="col-md-12">
-	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
+	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left" onclick='$("#status").val("is_poh_sm");'>
 	                                Submit
 	                            </button>
 	                        </div>
@@ -159,7 +160,7 @@ table {
 							</div>
 	                      
 	                        <div class="col-md-12">
-	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
+	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left" onclick='$("#status").val("is_poh");'>
 	                                Submit
 	                            </button>
 	                        </div>
@@ -179,7 +180,7 @@ table {
 								</div> 
 							</div>
 	                        <div class="col-md-12">
-	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
+	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left" onclick='$("#status").val("is_send_email_active");'>
 	                                Submit
 	                            </button>
 

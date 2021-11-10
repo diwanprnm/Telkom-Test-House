@@ -1362,6 +1362,15 @@
 													</label>
 												</div>
 											</div>
+											@elseif($data->qa_passed == 2)
+											<div class="radio">
+												<div class="radio clip-radio radio-primary">
+													<input type="radio" value="2" checked>
+													<label for="pending">
+														Pending
+													</label>
+												</div>
+											</div>
 											@endif
 										</div>
 									</div>

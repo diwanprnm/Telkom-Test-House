@@ -30,7 +30,6 @@ class GeneralSettingController extends Controller
     private const MESSAGE = 'message';
     private const GEN = '/admin/generalSetting';
     private const ERR = 'error';
-    private const MAN = "poh_manager_urel";
 
     public function __construct()
     {
@@ -67,64 +66,99 @@ class GeneralSettingController extends Controller
     public function update(Request $request)
     {
         $currentUser = Auth::user();
-        
-        $generalsettingSendEmail = GeneralSetting::where("code", "send_email")->first();
-        $generalsettingPOH = GeneralSetting::where("code", $this::MAN)->first();
-        $generalsetting = GeneralSetting::where("code", "manager_urel")->first();
-        $generalsettingPOHSM = GeneralSetting::where("code", "poh_sm_urel")->first();
-        $generalsettingSM = GeneralSetting::where("code", "sm_urel")->first();
 
-        $generalsettingSendEmail->is_active = 0;
-        $generalsettingPOH->is_active = 0;
-        $generalsettingPOHSM->is_active = 0;
-        $oldGeneralSetting = $generalsetting; 
-        $generalsetting->value = $request->input('manager_urel');
-        $generalsettingSM->value = $request->input('sm_urel');
-        if ($request->file('attachment_sm')) {
-            $fileService = new FileService();
-            $fileProperties = array(
-                'path' => 'generalsettings/'.$generalsettingSM->id.'/'
-            );
-            $fileService->upload($request->file('attachment_sm'), $fileProperties);
-            $generalsettingSM->attachment = $fileService->getFileName();
-        }
+        switch ($request->input('status')) {
+            case 'is_poh_sm':
+                $generalsettingSM = GeneralSetting::where("code", "sm_urel")->first();
+                $generalsettingPOHSM = GeneralSetting::where("code", "poh_sm_urel")->first();
+                if ($request->has('is_poh_sm')){
+                    $oldGeneralSetting = $generalsettingPOHSM; 
+                    $generalsettingPOHSM->value = $request->input('poh_sm_urel');
+                    $generalsettingPOHSM->is_active = 1;
+                    $generalsettingPOHSM->updated_by = $currentUser->id; 
+                    if ($request->file('attachment_poh_sm')) {
+                        $fileService = new FileService();
+                        $fileProperties = array(
+                            'path' => 'generalsettings/'.$generalsettingPOHSM->id.'/'
+                        );
+                        $fileService->upload($request->file('attachment_poh_sm'), $fileProperties);
+                        $generalsettingPOHSM->attachment = $fileService->getFileName();
+                    }
 
-        if ($request->has('is_send_email_active')){
-            $oldGeneralSetting = $generalsettingSendEmail; 
-            $generalsettingSendEmail->is_active = 1;
-            $generalsettingSendEmail->updated_by = $currentUser->id;
-        } 
-        
-        if ($request->has('is_poh')){
-            $oldGeneralSetting = $generalsettingPOH; 
-            $generalsettingPOH->value = $request->input('poh_manager_urel');
-            $generalsettingPOH->is_active = 1;
-            $generalsettingPOH->updated_by = $currentUser->id; 
-        }
-        
-        if ($request->has('is_poh_sm')){
-            $oldGeneralSetting = $generalsettingPOHSM; 
-            $generalsettingPOHSM->value = $request->input('poh_sm_urel');
-            $generalsettingPOHSM->is_active = 1;
-            $generalsettingPOHSM->updated_by = $currentUser->id; 
-            if ($request->file('attachment_poh_sm')) {
-                $fileService = new FileService();
-                $fileProperties = array(
-                    'path' => 'generalsettings/'.$generalsettingPOHSM->id.'/'
-                );
-                $fileService->upload($request->file('attachment_poh_sm'), $fileProperties);
-                $generalsettingPOHSM->attachment = $fileService->getFileName();
-            }
-        }
-        
-        $generalsettingPOHSM->save();
-        $generalsettingPOH->save();
-        $generalsettingSendEmail->save();
-        $generalsetting->updated_by = $currentUser->id; 
+                    $generalsettingSM->is_active = 0;
+                }else{
+                    $oldGeneralSetting = $generalsettingSM; 
+                    $generalsettingSM->value = $request->input('sm_urel');
+                    $generalsettingSM->is_active = 1;
+                    $generalsettingSM->updated_by = $currentUser->id;
+                    if ($request->file('attachment_sm')) {
+                        $fileService = new FileService();
+                        $fileProperties = array(
+                            'path' => 'generalsettings/'.$generalsettingSM->id.'/'
+                        );
+                        $fileService->upload($request->file('attachment_sm'), $fileProperties);
+                        $generalsettingSM->attachment = $fileService->getFileName();
+                    }
 
+                    $generalsettingPOHSM->is_active = 0;
+                }
+                break;
+            
+            case 'is_poh':
+                $generalsetting = GeneralSetting::where("code", "manager_urel")->first();
+                $generalsettingPOH = GeneralSetting::where("code", 'poh_manager_urel')->first();
+                if ($request->has('is_poh')){
+                    $oldGeneralSetting = $generalsettingPOH; 
+                    $generalsettingPOH->value = $request->input('poh_manager_urel');
+                    $generalsettingPOH->is_active = 1;
+                    $generalsettingPOH->updated_by = $currentUser->id; 
+
+                    $generalsetting->is_active = 0;
+                }else{
+                    $oldGeneralSetting = $generalsetting; 
+                    $generalsetting->value = $request->input('manager_urel');
+                    $generalsetting->is_active = 1;
+                    $generalsetting->updated_by = $currentUser->id; 
+
+                    $generalsettingPOH->is_active = 0;
+                }
+                break;
+            
+            case 'is_send_email_active':
+                $generalsettingSendEmail = GeneralSetting::where("code", "send_email")->first();
+                $generalsettingSendEmail->is_active = 0;
+                if ($request->has('is_send_email_active')){
+                    $oldGeneralSetting = $generalsettingSendEmail; 
+                    $generalsettingSendEmail->is_active = 1;
+                    $generalsettingSendEmail->updated_by = $currentUser->id;
+                }
+                break;
+
+            default:
+                # code...
+                break;
+        }
+        
         try{
-            $generalsetting->save();
-            $generalsettingSM->save();
+            switch ($request->input('status')) {
+                case 'is_poh_sm':
+                    $generalsettingSM->save();
+                    $generalsettingPOHSM->save();
+                    break;
+                
+                case 'is_poh':
+                    $generalsetting->save();
+                    $generalsettingPOH->save();
+                    break;
+                
+                case 'is_send_email_active':
+                    $generalsettingSendEmail->save();
+                    break;
+    
+                default:
+                    # code...
+                    break;
+            }
 
             $logService = new LogService();
             $logService->createLog("Update General Setting","General Setting",$oldGeneralSetting );

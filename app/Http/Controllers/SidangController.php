@@ -410,7 +410,7 @@ class SidangController extends Controller
         
         try{
             $sidang->save();
-            if($request->has('device_id')){
+            if($request->has('device_id') && $sidang->status != 'DONE'){
                 $this->updateDevice($request, $id);
                 Session::flash(self::MESSAGE, 'Data successfully updated');
                 return redirect(self::ADMIN_SIDANG.'/'.$id.'/edit');
