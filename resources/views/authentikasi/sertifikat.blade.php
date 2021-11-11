@@ -1,5 +1,10 @@
 <!doctype html>
 <html lang="en">
+<style>
+	* {
+		font-family: "Lato", sans-serif;
+	}
+</style>
 <head>
 	<meta charset="UTF-8">
 	<title>Autentikasi Dokumen</title>
@@ -17,65 +22,69 @@
 </div>
 <br>
 <div class="content" style="width:75%;background-color:rgba(255,255,255,1.00); border-radius:15px; box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.2); position:relative;margin-left:auto;margin-right:auto;padding-left:25px;padding-right:25px;padding-top:5px;padding-bottom:5px;">
-	<p>
+	<p style="margin-left:3%;margin-top:3%;">
 		<strong>Jenis Dokumen:</strong>
 		<br>
-		Sertifikat QA
+		{!! $data['name'] !!}
 		<br><br>
 		<strong>Nama Dokumen:</strong>
 		<br>
-		Sertifikat QA.pdf
+		{!! $data['attachment'] !!}
 		<br><br>
 		<strong>Kode Dokumen:</strong>
 		<br>
-		Tel. 123
+		{!! $data['document_code'] !!}
 		<br><br>
 		<strong>Nama Perusahaan:</strong>
 		<br>
-		PT. Fiberhome
+		{!! $data['company_name'] !!}
 		<br><br>
 		<strong>Nama Perangkat:</strong>
 		<br>
-		Kabel Serat Optik
+		{!! $data['device_name'] !!}
 		<br><br>
 		<strong>Merk:</strong>
 		<br>
-		Fiberhome
+		{!! $data['mark'] !!}
 		<br><br>
 		<strong>Tipe:</strong>
 		<br>
-		SM.123
+		{!! $data['model'] !!}
 		<br><br>
 		<strong>Kapasitas:</strong>
 		<br>
-		4 s.d. 96 core
+		{!! $data['capacity'] !!}
 		<br><br>
 		<strong>Nomor Seri Perangkat:</strong>
 		<br>
-		-
+		{!! $data['serial_number'] !!}
 		<br><br>
 		<strong>Tanggal Kedaluwarsa:</strong>
 		<br>
-		22 Maret 2024
+		{!! $data['valid_thru'] !!}
 		<br><br>
 	</p>
-	<hr style="border-top: 0.02px solid grey;">
-	<p>
+	<hr style="border-top: 0.02px solid grey; margin-left:3%;margin-right:3%;">
+	<p style="margin-left:3%;">
 		Telah ditandatangi oleh
 		<br><br>
+		@foreach($data['approveBy'] as $approveBy)
+		@if($approveBy->user->email != '1' && $approveBy->user->email != 'admin@mail.com')
 		<strong>
-			I Gede Astawa
+			{!! $approveBy->user->name !!}
 			<br>
-			Senior Manager Infrastructure Assurance
+			{!! $approveBy->user->role->name !!}
 			<br>
 		</strong>
-		pada 22 Maret 2021 15:30:00
-		<br><br><br><br>
-		<strong>Adalah benar sertifikat QA yang diterbitkan oleh Telkom Test House.</strong>
+		pada {!! $approveBy->approve_date !!}
+		<br><br><br>
+		@endif
+		@endforeach
+		<h3 style="margin-left:3%;">Adalah benar sertifikat QA yang diterbitkan oleh Telkom Test House.</h3>
 	</p>
-	<!-- <p style="font-style:italic; font-family:Helvetica, sans-serif; font-size:0.88em; color:rgba(146,146,146,1.00); margin-top:-7px;">
-		<strong>Adalah benar sertifikat QA yang diterbitkan oleh Telkom Test House.</strong>
-	</p> -->
+	<p style="font-family:Lato, sans-serif; font-size:0.88em;margin-left:3%;margin-top:1%;margin-bottom:3%;">
+		Untuk memastikan bahwa anda mengakses halaman autentikasi yang benar, pastikan URL pada browser anda adalah https://www.telkomtesthouse.co.id
+	</p>
 </div>
 
 </body>

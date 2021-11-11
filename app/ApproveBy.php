@@ -16,4 +16,9 @@ class ApproveBy extends Model
     {
         return $this->belongsTo('App\Approval', 'approval_id');
     }
+    
+    public function user()
+    {
+        return $this->belongsTo('App\User', 'user_id');
+    }
 }

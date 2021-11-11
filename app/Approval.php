@@ -14,7 +14,7 @@ class Approval extends Model
 
     public function approveBy()
     {
-        return $this->hasMany('App\ApproveBy', 'approval_id');
+        return $this->hasMany('App\ApproveBy', 'approval_id')->orderBy('approve_date', 'ASC');
     }
 
     public function authentikasi()

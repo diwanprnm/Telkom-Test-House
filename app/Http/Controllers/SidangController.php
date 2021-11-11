@@ -12,6 +12,9 @@ use App\Examination;
 use App\ExaminationAttach;
 use App\Device;
 use App\User;
+use App\Approval;
+use App\ApproveBy;
+use App\AuthentikasiEditor;
 
 use App\Services\Querys\QueryFilter;
 use App\Services\Logs\LogService;
@@ -448,6 +451,7 @@ class SidangController extends Controller
     }
 
     public function updateExamination($sidang_id){
+        $currentUser = Auth::user();
         $data = Sidang_detail::with('sidang')
             ->with('examination')
             ->with('examination.company')
@@ -499,7 +503,30 @@ class SidangController extends Controller
             // 3. update Attachment -> name ("Sertifikat"), link (exam_attach.attachment), no (exam_attach.no) [SEPERTINYA TIDAK USAH]
 
             if($cert_number){
-                $pdfGenerated = $this->generateSertifikat($item, $cert_number, 'getStream');
+                $name_file = str_replace("/","",strval($cert_number)).'.pdf';
+                $auth = AuthentikasiEditor::where('dir_name', 'authentikasi.sertifikat')->first();
+                $approval = new Approval;
+                $approval->id = Uuid::uuid4();
+                $approval->reference_table = 'device';
+                $approval->reference_id = $item->examination->device_id;
+                $approval->attachment = $name_file;
+                $approval->status = 1;
+                $approval->autentikasi_editor_id = $auth->id;
+                $approval->created_by = $currentUser->id;
+                $approval->updated_by = $currentUser->id;
+                if($approval->save()){
+                    foreach(json_decode($auth->sign_by) as $sign_by){
+                        $approveBy = new ApproveBy;
+                        $approveBy->id = Uuid::uuid4();
+                        $approveBy->approval_id = $approval->id;
+                        $approveBy->user_id = $sign_by;
+                        $approveBy->approve_date = date('Y-m-d H:i:s');
+                        $approveBy->created_by = $currentUser->id;
+                        $approveBy->updated_by = $currentUser->id;
+                        $approveBy->save();
+                    }
+                }
+                $pdfGenerated = $this->generateSertifikat($item, $cert_number, 'getStream', $approval->id);
 				$fileService = new FileService();
 				$fileProperties = array(
 					'path' => 'device/'.$exam->device_id."/",
@@ -551,7 +578,7 @@ class SidangController extends Controller
         // generate Sidang QA -> [Chris]
         // $approval = new Approval; -> Untuk masuk ke menu approval [Chandra]
         /* 
-            autentikasi_editor
+            autentikasi_editor (nanti di menu authentikasi editor ada fitur manage user yang ttd ini)
             1. id [aut_ed-1]
             2. content [<p>]
             3. sign_by -> user_id [1,2,3]
@@ -568,6 +595,28 @@ class SidangController extends Controller
             3. user_id [1,2,3]
             4. approve_date 
         */
+        $auth = AuthentikasiEditor::where('dir_name', 'authentikasi.sidang')->first();
+        $approval = new Approval;
+        $approval->id = Uuid::uuid4();
+        $approval->reference_table = 'sidang';
+        $approval->reference_id = $sidang_id;
+        $approval->attachment = '-';
+        $approval->status = 1;
+        $approval->autentikasi_editor_id = $auth->id;
+        $approval->created_by = $currentUser->id;
+        $approval->updated_by = $currentUser->id;
+        if($approval->save()){
+            foreach(json_decode($auth->sign_by) as $sign_by){
+                $approveBy = new ApproveBy;
+                $approveBy->id = Uuid::uuid4();
+                $approveBy->approval_id = $approval->id;
+                $approveBy->user_id = $sign_by;
+                $approveBy->approve_date = date('Y-m-d H:i:s');
+                $approveBy->created_by = $currentUser->id;
+                $approveBy->updated_by = $currentUser->id;
+                $approveBy->save();
+            }
+        }
         // $PDFData = [];
         // $PDFData['devices'] = $devicesList;
         // $PDFData['sidang_detail'] = $sidang_detail;
@@ -635,7 +684,7 @@ class SidangController extends Controller
 		return $cert_number;
     }
 
-    public function generateSertifikat($item, $cert_number, $method = '')
+    public function generateSertifikat($item, $cert_number, $method = '', $approval_id)
 	{
 		$signDate = \App\Services\MyHelper::tanggalIndonesia($item->sidang->date);
 		$start_certificate_period = Carbon::parse($item->valid_from);
@@ -652,8 +701,8 @@ class SidangController extends Controller
 		$signeeData = \App\GeneralSetting::whereIn('code', ['sm_urel', 'poh_sm_urel'])->where('is_active', '=', 1)->first();
 		$certificateNumber = strval($cert_number);
 		$telkomLogoSquarePath = '/app/Services/PDF/images/telkom-logo-square.png';
-        // url('/approval/{{ approval_id }}') -> approval_id didapat ketika membuat data approval
-		$qrCodeLink = url('/digitalSign/21003-132'); //todo daniel digitalSign page
+        $qrCodeLink = url('/approval/'.$approval_id); //approval_id didapat ketika membuat data approval
+		// $qrCodeLink = url('/digitalSign/21003-132'); //todo daniel digitalSign page
 
 		// dd($certificateNumber);
 
