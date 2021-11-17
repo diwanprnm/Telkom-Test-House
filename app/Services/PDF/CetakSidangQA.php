@@ -82,7 +82,7 @@ class CetakSidangQA
             $pdf->Cell(57,$rowHeight,'BUATAN/Made In',1,1,'R',false);
             $pdf->Cell(57,$rowHeight,'TANGGAL PENERIMAAN/Recieved',1,1,'R',false);
             $pdf->Cell(57,$rowHeight,'TANGGAL MULAI UJI/Started',1,1,'R',false);
-            $pdf->Cell(57,$rowHeight,'TANGGAL SEKESAI UJI/Finished',1,1,'R',false);
+            $pdf->Cell(57,$rowHeight,'TANGGAL SELESAI UJI/Finished',1,1,'R',false);
             $pdf->Cell(57,$rowHeight,'DIUJI OLEH/Tested by',1,1,'R',false);
             $pdf->Cell(57,$rowHeight,'Target Penyelesaian',1,1,'R',false);$pdf->SetFont('helvetica','B',9);
             $pdf->Cell(57,$rowHeight,'Hasil Pengujian',1,1,'R',false);

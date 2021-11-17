@@ -466,9 +466,9 @@ class SidangController extends Controller
         // $devicesList = [];
         // $noLaporanUji = [];
         // $certificateNumberList = [];
-        $sidang_detail = $this->mergeOTR($data, 'sidang');
+        // $sidang_detail = $this->mergeOTR($data, 'sidang');
 
-        foreach($sidang_detail as $item){
+        foreach($data as $item){
             // 1. update to Examination -> 
                 // a. qa_passed (sidang_detail.result), 
                 // b. qa_date (sidang.date), 
@@ -556,7 +556,7 @@ class SidangController extends Controller
                 //  a. qa_status & certificate_status = 1 [Di Step 1]
                 //  b. upload ke minio [Di Step 4]
                 //  c. delivered ke digimon [Di Step 4]
-                //  d. send_email, add_log, add_examination_history
+                //  d. send_email ke PIC, add_log, add_examination_history
             switch ($item->result) {
                 case 1:
                     # Email Sidang QA Lulus dan Sertifikat dapat di-download
