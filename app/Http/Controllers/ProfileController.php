@@ -269,7 +269,7 @@ class ProfileController extends Controller
 		if($request->input('certificate_number') != $request->input('hide_certificate_number')){
 			$temp->qs_certificate_number = $request->input('certificate_number');
 			$count_commit ++ ;
-			$description = $description.'No. Sertifikat Uji Mutu, ';
+			$description = $description.'No. Sertifikat Manajemen Mutu, ';
 		}
 		
 			$timestamp = strtotime($request->input('certificate_date'));
@@ -277,7 +277,7 @@ class ProfileController extends Controller
 		if($certificate != $request->input('hide_certificate_date')){
 			$temp->qs_certificate_date = $certificate;
 			$count_commit ++ ;
-			$description = $description.'Masa berlaku Sertifikat Uji Mutu, ';
+			$description = $description.'Masa berlaku Sertifikat Manajemen Mutu, ';
 		}
 		
 		//Upload Serti Uji Mutu

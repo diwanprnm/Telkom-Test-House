@@ -15,6 +15,8 @@ use App\User;
 use App\Approval;
 use App\ApproveBy;
 use App\AuthentikasiEditor;
+use App\ExaminationType;
+use App\GeneralSetting;
 
 use App\Services\Querys\QueryFilter;
 use App\Services\Logs\LogService;
@@ -22,6 +24,7 @@ use App\Services\NotificationService;
 use App\Services\SalesService;
 use App\Services\FileService;
 use App\Services\ExaminationService;
+use App\Services\EmailEditorService;
 
 use Auth;
 use Session; 
@@ -30,6 +33,7 @@ use Excel;
 use Response;
 use Storage;
 use File;
+use Mail;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -454,8 +458,10 @@ class SidangController extends Controller
         $currentUser = Auth::user();
         $data = Sidang_detail::with('sidang')
             ->with('examination')
+            ->with('examination.user')
             ->with('examination.company')
             ->with('examination.media')
+            ->with('examination.examinationType')
             ->with('examination.examinationLab')
             ->with('examination.equipmentHistory')
             ->with('examination.examinationAttach')
@@ -498,7 +504,7 @@ class SidangController extends Controller
             
             // 2. generate Sertifikat()
             $cert_number = $item->result == 1 ? $this->generateNoSertifikat() : null;
-            // $certificateNumberList[] = $cert_number;
+            $certificateNumberList[] = $cert_number;
             
             // 3. update Attachment -> name ("Sertifikat"), link (exam_attach.attachment), no (exam_attach.no) [SEPERTINYA TIDAK USAH]
 
@@ -536,7 +542,7 @@ class SidangController extends Controller
 				$fileService->uploadFromStream($pdfGenerated['stream'], $fileProperties);
 				$name_file = $fileService->getFileName();
                 // $name_file = $cert_number;
-            // 4. update to Device ->
+             // 4. update to Device ->
                 //  a. certificate (exam_attach.attachment), 
                 //  b. valid_from (sidang_detail.valid_from), 
                 //  c. valid_thru (sidang_detail.valid_thru), 
@@ -549,7 +555,7 @@ class SidangController extends Controller
                 $device->cert_number = $cert_number;
                 $device->status = 1;
                 $device->save();
-                // $devicesList[] = $device;
+                $devicesList[] = $device;
             }
 
             // 5. lakukan seolah2 Step Sidang QA - Step Penerbitan Sertifikat Completed
@@ -557,24 +563,11 @@ class SidangController extends Controller
                 //  b. upload ke minio [Di Step 4]
                 //  c. delivered ke digimon [Di Step 4]
                 //  d. send_email ke PIC, add_log, add_examination_history
-            switch ($item->result) {
-                case 1:
-                    # Email Sidang QA Lulus dan Sertifikat dapat di-download
-                    break;
-                case -1:
-                    # Email Sidang QA Tidak Lulus dan Sertifikat tidak dapat di-download
-                    break;
-                case 2:
-                    # Email Sidang QA Pending dan Sertifikat tidak dapat di-download
-                    break;
-                
-                default:
-                    # code...
-                    break;
-            }
+            $this->sendEmail($item);
         }
 
         // 6. Save Sidang QA to Approval
+        // upload Sidang QA ke minio
         // generate Sidang QA -> [Chris]
         // $approval = new Approval; -> Untuk masuk ke menu approval [Chandra]
         /* 
@@ -617,14 +610,81 @@ class SidangController extends Controller
                 $approveBy->save();
             }
         }
-        // $PDFData = [];
-        // $PDFData['devices'] = $devicesList;
-        // $PDFData['sidang_detail'] = $sidang_detail;
-        // $PDFData['sidang'] = Sidang::find($sidang_id);
-        // $PDFData['certificateNumber'] = $certificateNumberList;
-        // $generatedSidangQA = $this->generateSidangQA($PDFData, '');
-        // dd($generatedSidangQA);
+        $sidang_detail = $this->mergeOTR($data, 'sidang');
+        $PDFData = [];
+        $PDFData['devices'] = $devicesList;
+        $PDFData['sidang_detail'] = $sidang_detail;
+        $PDFData['sidang'] = Sidang::find($sidang_id);
+        $PDFData['certificateNumber'] = $certificateNumberList;
+        $pdfGenerated = $this->generateSidangQA($PDFData, 'getStream');
+        $fileService = new FileService();
+        $fileProperties = array(
+            'path' => 'sidang/'.$sidang_id."/",
+            'prefix' => "sidang_",
+            'fileName' => $pdfGenerated['fileName'],
+        );
+        $fileService->uploadFromStream($pdfGenerated['stream'], $fileProperties);
     }
+
+    public function sendEmail($item){
+        $email_editors = new EmailEditorService();
+		switch ($item->examination->qa_passed) {
+            case 1:
+                # Email Sidang QA Lulus dan Sertifikat dapat di-download
+                $email = $email_editors->selectBy('emails.sertifikat');
+                $content = $this->parsingEmailSertifikat($email->content, $item->examination->user->name, $item->examination->is_loc_test);
+                $subject = 'Penerbitan Sertifikat QA '.$item->examination->device->name.' | '.$item->examination->device->mark.' | '.$item->examination->device->model.' | '.$item->examination->device->capacity;
+                break;
+            case -1:
+                # Email Sidang QA Tidak Lulus dan Sertifikat tidak dapat di-download
+            case 2:
+                # Email Sidang QA Pending dan Sertifikat tidak dapat di-download
+                $email = $email_editors->selectBy('emails.qaFail');
+                $content = $this->parsingEmailSidangQAFail($email->content, $item->examination->user->name, $item->examination->company->name, $item->examination->qa_passed, $item->examination->device);
+                $subject = 'Pemberitahuan Hasil Pengujian Perangkat '.$item->examination->device->name.' | '.$item->examination->device->mark.' | '.$item->examination->device->model.' | '.$item->examination->device->capacity;
+                break;
+            
+            default:
+                # code...
+                $email = null;
+                $content = null;
+				$subject = null;
+                break;
+        }
+
+        $user_email = $item->examination->user->email;
+		if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
+			Mail::send('emails.editor', array(
+					'logo' => $email->logo,
+					'content' => $content,
+					'signature' => $email->signature
+				), function ($m) use ($user_email,$subject) {
+				$m->to($user_email)->subject($subject);
+			}); 
+		}
+    }
+
+    public function parsingEmailSertifikat($content, $user_name, $is_loc_test){
+		$content = str_replace('@user_name', $user_name, $content);
+			$text1 = $is_loc_test ? 'Anda dapat' : 'Perangkat sampel uji agar segera diambil kembali sebagai syarat untuk';
+			$text2 = $is_loc_test == 0 ? ' .<br>Dokumen tersebut nanti dapat anda unduh' : '';
+		$content = str_replace('@text1', $text1, $content);
+		$content = str_replace('@text2', $text2, $content);
+		return $content;
+	}
+
+    public function parsingEmailSidangQAFail($content, $user_name, $company_name, $qa_passed, $device){
+		$content = str_replace('@user_name', $user_name, $content);
+        $content = str_replace('@company_name', $company_name, $content);
+        $content = str_replace('@device_name', $device->name, $content);
+        $content = str_replace('@device_mark', $device->mark, $content);
+        $content = str_replace('@device_model', $device->model, $content);
+        $content = str_replace('@device_capacity', $device->capacity, $content);
+        $content = str_replace('@test_reference', $device->test_reference, $content);
+		    $text1 = $qa_passed == 2 ? '<strong>PENDING</strong>' : '<strong>TIDAK LULUS</strong>';
+        $content = str_replace('@qa_passed', $text1, $content);
+		return $content;
+	}
 
     public function resetExamination($sidang_id){ // DELETE SOON
         $data = Sidang_detail::with('examination')
@@ -793,13 +853,13 @@ class SidangController extends Controller
         return redirect('/admin/sidang/');
     }
 
-    public function generateSidangQA($PDFData, $method = ''){        
+    public function generateSidangQA($PDFData, $method = ''){      
         $PDF = new \App\Services\PDF\PDFService();
         $officer = \App\Services\MyHelper::getOfficer();
         $telkomLogoSquarePath = '/app/Services/PDF/images/telkom-logo-square.png';
-        $qrCodeLink = url('/digitalSign/21003-132'); //todo @arif digitalSign page
+        // $qrCodeLink = url('/digitalSign/21003-132'); //todo @arif digitalSign page
         
-        $PDFData['qrCode'] = QrCode::format('png')->size(500)->merge($telkomLogoSquarePath)->errorCorrection('M')->generate($qrCodeLink);
+        // $PDFData['qrCode'] = QrCode::format('png')->size(500)->merge($telkomLogoSquarePath)->errorCorrection('M')->generate($qrCodeLink);
         $PDFData['method'] = $method;
         $PDFData['signees'] = [
             [
@@ -815,7 +875,7 @@ class SidangController extends Controller
         if ($method == 'getStream'){
 			return [
 				'stream' => $PDF->cetakSidangQA($PDFData),
-				'fileName' => "sidang-qa.pdf" //todo @arif nama pdf kalau perlu diupload
+				'fileName' => 'sidang '.$PDFData['sidang']->date.'.pdf' //todo @arif nama pdf kalau perlu diupload
 			];
 		}else{
 			return $PDF->cetakSidangQA($PDFData);

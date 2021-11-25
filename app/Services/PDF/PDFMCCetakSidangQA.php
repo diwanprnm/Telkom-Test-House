@@ -45,7 +45,7 @@ class PDFMCCetakSidangQA extends FPDF{
 		$this->SetFont('helvetica','B',8);
 		$this->Cell(55,5,$signees[0]['title'] ??"SM INFRASTRUCTURE ASSURANCE",0,0,'C');
 
-		$this->ImageStream($this->data['qrCode'], 245, 180, 30);
+		// $this->ImageStream($this->data['qrCode'], 245, 180, 30);
 	}
 
 	/**

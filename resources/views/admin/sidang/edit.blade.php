@@ -180,7 +180,7 @@
 									<td class="center">{{ $item->examination->device->manufactured_by }}</td>
 									<td class="center">{{ $item->finalResult ? $item->finalResult : '-' }}</td>
 									<td class="center">
-										<select class="cs-select cs-skin-elastic" name="result[]">
+										<select class="result" name="result[]">
 											<option value="0" @if ($item->result == 0) selected @endif>Choose</option>
 											<option value="1" @if ($item->result == 1) selected @endif>Lulus</option>
 											<option value="2" @if ($item->result == 2) selected @endif>Pending</option>
@@ -188,7 +188,7 @@
 										</select>
 									</td>
 									<td class="center">
-										<select class="cs-select cs-skin-elastic" name="valid_range[]">
+										<select class="valid_range" name="valid_range[]">
 											<option value="0" @if ($item->valid_range == 0) selected @endif>Choose</option>
 											<option value="36" @if ($item->valid_range == 36) selected @endif>3 Tahun</option>
 											<option value="12" @if ($item->valid_range == 12) selected @endif>1 Tahun</option>
@@ -363,6 +363,13 @@
 
 	jQuery(document).ready(function() {
 		FormElements.init();
+		$('.result').change(function() {
+			if($(this).val() == '1'){
+				$(this).closest('tr').find('.valid_range').val(36);
+			}else{
+				$(this).closest('tr').find('.valid_range').val(0);
+			}
+		});
 	});
 </script>
 @endsection
