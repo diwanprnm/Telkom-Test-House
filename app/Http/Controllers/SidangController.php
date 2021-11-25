@@ -652,7 +652,8 @@ class SidangController extends Controller
                 break;
         }
 
-        $user_email = $item->examination->user->email;
+        // $user_email = $item->examination->user->email;
+        $user_email = 'arifchandrasimanjuntak@yahoo.co.id';
 		if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
 			Mail::send('emails.editor', array(
 					'logo' => $email->logo,
