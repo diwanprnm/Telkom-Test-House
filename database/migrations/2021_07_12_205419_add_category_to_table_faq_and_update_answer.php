@@ -13,8 +13,7 @@ class AddCategoryToTableFaqAndUpdateAnswer extends Migration
     public function up()
     {
         Schema::table('faq', function (Blueprint $table) {
-            $table->dropColumn('answer');
-            $table->text("answer");
+            $table->text("answer")->change();
             $table->enum("category", [1, 2, 3, 4, 5, 6, 7])->nullable();
         });
     }
@@ -27,8 +26,7 @@ class AddCategoryToTableFaqAndUpdateAnswer extends Migration
     public function down()
     {
         Schema::table('faq', function (Blueprint $table) {
-            $table->string("answer");
-            $table->dropColumn('answer');
+            $table->string("answer")->change();
             $table->dropColumn("category");
         });
     }
