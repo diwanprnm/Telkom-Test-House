@@ -375,7 +375,6 @@ class ExaminationController extends Controller
 				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::REGISTRASI,$request->input(self::KETERANGAN));
 			}
         }
-<<<<<<< HEAD
 		$files = $request->file('evidence_file');
 		if($request->hasFile('evidence_file') && $files[0]){
 			foreach ($files as $file) {
@@ -405,13 +404,11 @@ class ExaminationController extends Controller
 			Session::flash(self::MESSAGE, 'Evidence successfully uploaded');
 			return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
 		}
-=======
 		if ($request->has('examination_lab_id')){
             $exam->examination_lab_id = $request->input('examination_lab_id');
         }
 
 		// 2. STEP UJI FUNGSI
->>>>>>> sidang-sertifikat
 		if ($request->has(self::FUNCTION_STATUS)){
 			$examinationService->insertAttachment($request,$exam->id,$currentUser->id,self::BARANG_FILE,'form_penerimaan_barang_','Bukti Penerimaan & Pengeluaran Perangkat Uji1');
 			if($exam->is_loc_test){
