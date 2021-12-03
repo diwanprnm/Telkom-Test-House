@@ -11434,3 +11434,8 @@ span.error_text {
 }input, button, select, textarea{
   font-family: inherit;
 }
+
+.done-failed .stepNumber{
+  background-color: red !important;
+  border-color:red !important;
+}

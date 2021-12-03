@@ -69,4 +69,14 @@ class Examination extends Model
     {
         return $this->hasMany('App\ExaminationCancel');
     }
+
+    public function equipmentHistory()
+    {
+        return $this->hasMany('App\EquipmentHistory')->orderBy('created_at', 'DESC');
+    }
+
+    public function examinationAttach()
+    {
+        return $this->hasMany('App\ExaminationAttach');
+    }
 }

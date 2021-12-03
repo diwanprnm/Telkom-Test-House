@@ -36,9 +36,10 @@ use Storage;
 // UUID
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
-
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
+use Carbon\Carbon;
 use App\Events\Notification;
 use App\AdminRole;
 
@@ -331,12 +332,10 @@ class ExaminationController extends Controller
 		$examinationService = new ExaminationService();
 
         $exam = Examination::find($id);
-			$device = Device::findOrFail($exam->device_id);
-			$exam_type = ExaminationType::findOrFail($exam->examination_type_id);
-
-        if ($request->has('examination_lab_id')){
-            $exam->examination_lab_id = $request->input('examination_lab_id');
-        }
+		$device = Device::findOrFail($exam->device_id);
+		$exam_type = ExaminationType::findOrFail($exam->examination_type_id);
+		
+		// 1. STEP REGISTRASI
         if ($request->has(self::REGISTRATION_STATUS)){
 			$status = $request->input(self::REGISTRATION_STATUS);
             $exam->registration_status = $status;
@@ -376,6 +375,7 @@ class ExaminationController extends Controller
 				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::REGISTRASI,$request->input(self::KETERANGAN));
 			}
         }
+<<<<<<< HEAD
 		$files = $request->file('evidence_file');
 		if($request->hasFile('evidence_file') && $files[0]){
 			foreach ($files as $file) {
@@ -405,6 +405,13 @@ class ExaminationController extends Controller
 			Session::flash(self::MESSAGE, 'Evidence successfully uploaded');
 			return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
 		}
+=======
+		if ($request->has('examination_lab_id')){
+            $exam->examination_lab_id = $request->input('examination_lab_id');
+        }
+
+		// 2. STEP UJI FUNGSI
+>>>>>>> sidang-sertifikat
 		if ($request->has(self::FUNCTION_STATUS)){
 			$examinationService->insertAttachment($request,$exam->id,$currentUser->id,self::BARANG_FILE,'form_penerimaan_barang_','Bukti Penerimaan & Pengeluaran Perangkat Uji1');
 			if($exam->is_loc_test){
@@ -474,7 +481,12 @@ class ExaminationController extends Controller
 				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Uji Fungsi",$request->input(self::KETERANGAN));
 			}
         }
-        $spk_created = 0;
+		if ($request->has(self::CATATAN)){
+            $exam->catatan = $request->input(self::CATATAN);
+        }
+        
+		// 3. STEP KONTRAK
+		$spk_created = 0;
         if ($request->has(self::CONTRACT_STATUS)){
 			if ($request->hasFile(self::CONTRACT_FILE)) {
 
@@ -577,6 +589,17 @@ class ExaminationController extends Controller
 				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Tinjauan Pustaka",$request->input(self::KETERANGAN));
 			}
         }
+		if ($request->has(self::CONTRACT_DATE)){
+            $exam->contract_date = $request->input(self::CONTRACT_DATE);
+        }
+		if ($request->has('testing_start')){
+            $exam->testing_start = $request->input('testing_start');
+        }
+		if ($request->has('testing_end')){
+            $exam->testing_end = $request->input('testing_end');
+        }
+
+		// 4. STEP SPB
 		if ($request->has(self::SPB_STATUS)){
 			$examinationService->insertAttachment($request,$exam->id,$currentUser->id,self::SPB_FILE,'spb_','SPB');
 			$status = $request->input(self::SPB_STATUS);
@@ -607,7 +630,52 @@ class ExaminationController extends Controller
 				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"SPB",$request->input(self::KETERANGAN));
 			}
         }
-		
+		if ($request->has(self::SPB_DATE)){
+            $exam->spb_date = $request->input(self::SPB_DATE);
+        }
+		if ($request->has(self::PO_ID)){
+			if($exam->payment_status == 1){
+				Session::flash(self::ERROR, 'SPB Already Paid');
+                return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
+			}
+			
+			if($exam->BILLING_ID){
+				$data_cancel_billing = [
+	            	"canceled" => [
+						self::MESSAGE => "-",
+						"by" => $currentUser->name,
+                    	self::REFERENCE_ID => '1'
+					]
+				];
+				$examinationService->api_cancel_billing($exam->BILLING_ID, $data_cancel_billing);
+			}
+			/*
+			$data_billing = [
+                "draft_id" => $request->input(self::PO_ID),
+                "created" => [
+                    "by" => $currentUser->name,
+                    self::REFERENCE_ID => '1'
+                ]
+            ];
+			$billing = $examinationService->api_billing($data_billing);
+			*/
+			$exam->PO_ID = $request->input(self::PO_ID);
+			$exam->BILLING_ID = null;
+			$exam->include_pph = 0;
+			$exam->payment_method = 0;
+			$exam->VA_name = null;
+			$exam->VA_image_url = null;
+			$exam->VA_number = null;
+			$exam->VA_amount = null;
+			$exam->VA_expired = null;
+
+            // $exam->BILLING_ID = $billing && $billing->status ? $billing->data->_id : null;
+        }
+		if ($request->has(self::SPB_NUMBER)){
+            $exam->spb_number = $request->input(self::SPB_NUMBER);
+		}
+
+		// 5. STEP PEMBAYARAN
         if ($request->has(self::PAYMENT_STATUS)){
 			if ($request->has(self::CUST_PRICE_PAYMENT)){
 				$exam->cust_price_payment = str_replace(".",'',$request->input(self::CUST_PRICE_PAYMENT));
@@ -740,6 +808,8 @@ class ExaminationController extends Controller
 				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::PEMBAYARAN,$request->input(self::KETERANGAN));
 			}
         }
+
+		// 6. STEP SPK
         if ($request->has(self::SPK_STATUS)){
             $status = $request->input(self::SPK_STATUS);
             $exam->spk_status = $status;
@@ -747,6 +817,8 @@ class ExaminationController extends Controller
 				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::PEMBUATAN_SPK,$request->input(self::KETERANGAN));
 			}
         }
+
+		// 7. STEP PENGUJIAN
         if ($request->has(self::EXAMINATION_STATUS)){
             $status = $request->input(self::EXAMINATION_STATUS);
             $exam->examination_status = $status;
@@ -778,6 +850,8 @@ class ExaminationController extends Controller
 				DB::update($query_update);
 			}
         }
+
+		// 8. STEP LAPORAN UJI
         if ($request->has(self::RESUME_STATUS)){
 			if(!$request->hasFile(self::REV_LAP_UJI) && $request->has('hide_attachment_form-lap-uji') && $exam->resume_status == 0 && $exam->BILLING_ID != null){
 					$data_upload [] = 
@@ -866,13 +940,22 @@ class ExaminationController extends Controller
 				
 			}
 		}
+		if ($request->has('resume_date')){
+            $exam->resume_date = $request->input('resume_date');
+        }
 		$examinationService->insertAttachment($request,$exam->id,$currentUser->id,self::BARANG_FILE2,'form_penerimaan_barang2_','Bukti Penerimaan & Pengeluaran Perangkat Uji2');
 		$examinationService->insertAttachment($request,$exam->id,$currentUser->id,self::TANDA_TERIMA,'form_tanda_terima_hasil_pengujian_','Tanda Terima Hasil Pengujian');
+		
+		// 9. STEP SIDANG QA
 		if ($request->has(self::QA_STATUS)){
             $status = $request->input(self::QA_STATUS);
-            $passed = $request->input('passed');
             $exam->qa_status = $status;
+			/*
+			TIDAK DIPERLUKAN LAGI KARENA SUDAH DIMANAGE DI MENU SIDANG QA
+			$passed = $request->input('passed');
             $exam->qa_passed = $passed;
+			$name_file = null;
+			$device_status = -1;
             if($exam->qa_passed == 1){  
 
             	if(strpos($exam->keterangan, self::QA_DATE) !== false){
@@ -890,6 +973,27 @@ class ExaminationController extends Controller
 			        }
             	}
 
+				// TODO DANIEL
+				$pdfGenerated = $this->generateSertifikat($exam->id, 'getStream');
+				$fileService = new FileService();
+				$fileProperties = array(
+					'path' => self::MEDIA_DEVICE_LOC.$exam->device_id."/",
+					'prefix' => "sertifikat_",
+					'fileName' => $pdfGenerated['fileName'],
+				);
+				$fileService->uploadFromStream($pdfGenerated['stream'], $fileProperties);
+				$name_file = $fileService->getFileName();
+				$device_status = 1;
+			*/
+				// Add data to examination_attachments
+
+				/**
+				 * TEMPAT KIRIM KE TPN TIDAK LULUS
+				 * Streamnya = $pdfGenerated['stream']
+				 * todo @arif
+				 */
+			/*
+				INI SEHARUSNYA ADA DI MENU SIDANG QA
             	$data= array( 
 	                "from"=>self::ADMIN,
 	                "to"=>$exam->created_by,
@@ -902,12 +1006,17 @@ class ExaminationController extends Controller
 
 				$notification_id = $notificationService->make($data);
 			    $data['id'] = $notification_id;
+				$examinationService->sendEmailNotification($exam,$device, "emails.sertifikat", "Penerbitan Sertifikat QA [".$device->name." | ".$device->mark." | ".$device->model." | ".$device->capacity."]");
+			*/
 			    // event(new Notification($data));
 
+			/*
+			TIDAK DIPERLUKAN LAGI KARENA SUDAH DIMANAGE DI MENU SIDANG QA
             }else{ 
 
             	$exam->certificate_status = 1;
-
+			/*
+				INI SEHARUSNYA ADA DI MENU SIDANG QA
 		      	$data= array( 
 	                "from"=>self::ADMIN,
 	                "to"=>$exam->created_by,
@@ -920,14 +1029,37 @@ class ExaminationController extends Controller
 				
 				$notification_id = $notificationService->make($data);
 			    $data['id'] = $notification_id;
-			    // event(new Notification($data));
 
-            }
-           
+				$examinationService->sendEmailNotification($exam,$device, "emails.sertifikat", "Penerbitan Sertifikat QA [".$device->name." | ".$device->mark." | ".$device->model." | ".$device->capacity."]");
+			*/
+				/**
+				 * TEMPAT EMAIL TIDAK LULUS
+				 * Emailnya kalau beda silahkan di buat sendiri dibawah 🤣
+				 * todo @arif
+				 */
+			    // event(new Notification($data));
+            // }
+
+			// Save device ceritificate
+		/*
+			TIDAK DIPERLUKAN LAGI KARENA SUDAH DIMANAGE DI MENU SIDANG QA
+			$device = Device::findOrFail($exam->device_id);
+			$device->certificate = $name_file;
+			$device->status = $device_status;
+			$device->save();
+		*/           
 			if($status == -1){
 				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,self::SIDANG_QA,$request->input(self::KETERANGAN));
 			}
         }
+		/*
+			TIDAK DIPERLUKAN LAGI KARENA SUDAH DIMANAGE DI MENU SIDANG QA
+			if ($request->has(self::QA_DATE)){
+				$exam->qa_date = $request->input(self::QA_DATE);
+			}
+		*/
+
+		// 10. STEP PENERBITAN SERTIFIKAT
         if ($request->has(self::CERTIFICATE_STATUS)){
 			if ($request->hasFile('rev_sertifikat_file')) {
 				$fileService = new FileService();
@@ -955,6 +1087,8 @@ class ExaminationController extends Controller
 			}
             $status = $request->input(self::CERTIFICATE_STATUS);
             $exam->certificate_status = $status;
+		/*
+			INI SEHARUSNYA ADA DI MENU SIDANG QA
             $data= array( 
 				"from"=>self::ADMIN,
 				"to"=>$exam->created_by,
@@ -964,79 +1098,22 @@ class ExaminationController extends Controller
 				self::CREATED_AT=>date(self::DATE_FORMAT_1),
 				self::UPDATED_AT=>date(self::DATE_FORMAT_1)
 			);
+		
 			if($status == 1){
 				$examinationService->sendEmailNotification($exam,$device, "emails.sertifikat", "Penerbitan Sertifikat QA [".$device->name." | ".$device->mark." | ".$device->model." | ".$device->capacity."]");
 			}else if($status == -1){
 				$examinationService->sendEmailFailure($exam->created_by,$device->name,$exam_type->name,$exam_type->description, self::EMAILS_FAIL, self::KONFORMASI_PEMBATALAN,"Pembuatan Sertifikat",$request->input(self::KETERANGAN));
 			}
+		*/
         }
-        if ($request->has('resume_date')){
-            $exam->resume_date = $request->input('resume_date');
-        }
-        if ($request->has(self::QA_DATE)){
-            $exam->qa_date = $request->input(self::QA_DATE);
-        }
-        if ($request->has('certificate_date')){
-            $exam->certificate_date = $request->input('certificate_date');
-        }
-		if ($request->has(self::CATATAN)){
-            $exam->catatan = $request->input(self::CATATAN);
-        }
-		if ($request->has(self::CONTRACT_DATE)){
-            $exam->contract_date = $request->input(self::CONTRACT_DATE);
-        }
-		if ($request->has('testing_start')){
-            $exam->testing_start = $request->input('testing_start');
-        }
-		if ($request->has('testing_end')){
-            $exam->testing_end = $request->input('testing_end');
-        }
-		if ($request->has(self::SPB_DATE)){
-            $exam->spb_date = $request->input(self::SPB_DATE);
-        }
-		if ($request->has(self::PO_ID)){
-			if($exam->payment_status == 1){
-				Session::flash(self::ERROR, 'SPB Already Paid');
-                return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
+		/*
+			TIDAK DIPERLUKAN LAGI KARENA SUDAH DIMANAGE DI MENU SIDANG QA
+			if ($request->has('certificate_date')){
+				$exam->certificate_date = $request->input('certificate_date');
 			}
-			
-			if($exam->BILLING_ID){
-				$data_cancel_billing = [
-	            	"canceled" => [
-						self::MESSAGE => "-",
-						"by" => $currentUser->name,
-                    	self::REFERENCE_ID => '1'
-					]
-				];
-				$examinationService->api_cancel_billing($exam->BILLING_ID, $data_cancel_billing);
-			}
-			/*
-			$data_billing = [
-                "draft_id" => $request->input(self::PO_ID),
-                "created" => [
-                    "by" => $currentUser->name,
-                    self::REFERENCE_ID => '1'
-                ]
-            ];
-			$billing = $examinationService->api_billing($data_billing);
-			*/
-			$exam->PO_ID = $request->input(self::PO_ID);
-			$exam->BILLING_ID = null;
-			$exam->include_pph = 0;
-			$exam->payment_method = 0;
-			$exam->VA_name = null;
-			$exam->VA_image_url = null;
-			$exam->VA_number = null;
-			$exam->VA_amount = null;
-			$exam->VA_expired = null;
-
-            // $exam->BILLING_ID = $billing && $billing->status ? $billing->data->_id : null;
-        }
-
-		if ($request->has(self::SPB_NUMBER)){
-            $exam->spb_number = $request->input(self::SPB_NUMBER);
-		}
-		
+		*/
+		/*
+		INI UNTUK KEPERLUAN REVISI SERTIFIKAT
         if ($request->hasFile(self::CERTIFICATE_DATE)) {
 			$fileService = new FileService();
 			$fileProperties = array(
@@ -1062,12 +1139,9 @@ class ExaminationController extends Controller
                 return redirect(self::ADMIN_EXAMINATION_LOC.$exam->id.self::EDIT_LOC);
             }
         }
+		*/
 		
-			$device = Device::findOrFail($exam->device_id);
-			$exam_type = ExaminationType::findOrFail($exam->examination_type_id);
-		
-        $exam->updated_by = $currentUser->id;
-
+		$exam->updated_by = $currentUser->id;
         try{
             $exam->save();
 			if($spk_created == 1){
@@ -2424,6 +2498,65 @@ class ExaminationController extends Controller
         }
             return redirect(self::ADMIN_EXAMINATION_LOC.$examination_attachment->examination_id.self::EDIT_LOC);
 
+	}
+
+	public function generateSertifikat($id = 'ef83abad-aa66-4909-befc-ebe24863045a', $method = '')
+	{
+		$examination = Examination::where('id', $id)
+			->with(self::COMPANY)
+			->with(self::DEVICE)
+			->with(self::MEDIA)
+			->first()
+		;
+
+		$signDate = \App\Services\MyHelper::tanggalIndonesia($examination->qa_date);
+		$start_certificate_period = Carbon::parse($examination->device->valid_from);
+		$end_certificate_period = Carbon::parse($examination->device->valid_thru);
+		$interval = round($start_certificate_period->diffInDays($end_certificate_period)/30);
+		if ($interval % 12 == 0){
+			$interval_year = (int)$interval/12;
+			$period_id = "$interval_year tahun";
+			$period_en = "$interval_year year".($interval_year > 1 ? 's': '');
+		}else{
+			$period_id = "$interval bulan";
+			$period_en = "$interval month".($interval > 1 ? 's': '');
+		}
+		$signeeData = \App\GeneralSetting::whereIn('code', ['sm_urel', 'poh_sm_urel'])->where('is_active', '=', 1)->first();
+		$certificateNumber = strval($examination->device->cert_number);
+		$telkomLogoSquarePath = '/app/Services/PDF/images/telkom-logo-square.png';
+		$qrCodeLink = url('/digitalSign/21003-132'); //todo daniel digitalSign page
+
+		//dd($certificateNumber);
+
+		$PDFData = [
+			'documentNumber' => $examination->device->cert_number,
+			'companyName' => $examination->company->name,
+			'brand' => $examination->device->mark,
+			'deviceName' => $examination->device->name,
+			'deviceType' => $examination->device->model,
+			'deviceCapacity' => $examination->device->capacity,
+			'deviceSerialNumber' => $examination->device->serial_number,
+			'examinationNumber' => \App\ExaminationAttach::where('examination_id', $id)->where('name', 'Laporan Uji')->first()->no,
+			'examinationReference' => $examination->device->test_reference,
+			'signDate' => $signDate,
+			'period_id' => $period_id,
+			'period_en' => $period_en,
+			'signee' => $signeeData->value,
+			'isSigneePoh' => $signeeData->code !== 'sm_urel',
+			'signImagePath' => Storage::disk('minio')->url("generalsettings/$signeeData->id/$signeeData->attachment"),
+			'method' => $method,
+			'qrCode' => QrCode::format('png')->size(500)->merge($telkomLogoSquarePath)->errorCorrection('M')->generate($qrCodeLink)
+		];
+		$PDF = new \App\Services\PDF\PDFService();
+		
+		if ($method == 'getStream'){
+			return [
+				'stream' => $PDF->cetakSertifikatQA($PDFData),
+				'fileName' => str_replace("/","",$certificateNumber).'.pdf'
+			];
+		}else{
+			return $PDF->cetakSertifikatQA($PDFData);
+		}
 	}
 
 }

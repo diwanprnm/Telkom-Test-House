@@ -316,8 +316,11 @@
 											$data->qa_status == '1' && $data->certificate_status != '1')
 												<a href="#step-10" class="done wait">
 											@elseif($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1' && $data->examination_status == '1' && $data->resume_status == '1' && $data->qa_status == '1' &&
-											$data->certificate_status == '1')
+											$data->certificate_status == '1' && $data->qa_passed == 1)
 												<a href="#step-10" class="done">
+											@elseif($data->registration_status == '1' && $data->function_status == '1' && $data->contract_status == '1' && $data->spb_status == '1' && $data->payment_status == '1' && $data->spk_status == '1' && $data->examination_status == '1' && $data->resume_status == '1' && $data->qa_status == '1' &&
+											$data->certificate_status == '1' && $data->qa_passed == -1)
+												<a href="#step-10" class="done done-failed">
 											@else
 												<a href="#step-10">
 											@endif
@@ -2873,10 +2876,12 @@
 							Step Pelaksanaan Uji
 						</legend>
 						<div class="row">
+						@php $reportFinalResultValue = '-'; @endphp
 						@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
 							@php
 								$start_date = new DateTime(date('Y-m-d'));
 								$end_date = new DateTime($exam_schedule->data[0]->targetDt);
+								$reportFinalResultValue = $exam_schedule->data[0]->reportFinalResultValue;
 								if($start_date>$end_date){
 									$sisa_spk = 0;
 								}else{
@@ -2988,7 +2993,17 @@
 									</div>
 								</div>
 							@endif
-						@endif						
+						@endif		
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Hasil Pengujian
+									</label>
+									<label>
+										: {{ $reportFinalResultValue }}
+									</label>
+								</div>
+							</div>
 							<div class="col-md-12">
 								<div class="form-group">
 									<label for="form-field-select-2">
@@ -3891,6 +3906,14 @@
 													</label>
 												</div>
 											</div>
+											<div class="radio">
+												<div class="radio clip-radio radio-primary">
+													<input type="radio" value="2" name="passed" id="pending">
+													<label for="pending">
+														Pending
+													</label>
+												</div>
+											</div>
 											@elseif($data->qa_passed == -1)
 											<div class="radio">
 												<div class="radio clip-radio radio-primary">
@@ -3902,9 +3925,42 @@
 											</div>
 											<div class="radio">
 												<div class="radio clip-radio radio-primary">
-													<input type="radio" value="-1" name="passed" id="notPassed" checked>
+													<input type="radio" value="-1" name="passed" id="notPassed">
 													<label for="notPassed">
 														Tidak Lulus
+													</label>
+												</div>
+											</div>
+											<div class="radio">
+												<input type="radio" value="2" name="passed" id="pending" checked>
+													<input type="radio" value="2">
+													<label for="pending">
+														Pending
+													</label>
+												</div>
+											</div>
+											@elseif($data->qa_passed == 2)
+											<div class="radio">
+												<div class="radio clip-radio radio-primary">
+														<input type="radio" value="1" name="passed" id="passed">
+														<label for="passed">
+															Lulus
+														</label>
+												</div>
+											</div>
+											<div class="radio">
+												<div class="radio clip-radio radio-primary">
+													<input type="radio" value="-1" name="passed" id="notPassed">
+													<label for="notPassed">
+														Tidak Lulus
+													</label>
+												</div>
+											</div>
+											<div class="radio">
+												<input type="radio" value="2" name="passed" id="pending" checked>
+													<input type="radio" value="2">
+													<label for="pending">
+														Pending
 													</label>
 												</div>
 											</div>
@@ -3922,6 +3978,14 @@
 													<input type="radio" value="-1" name="passed" id="notPassed">
 													<label for="notPassed">
 														Tidak Lulus
+													</label>
+												</div>
+											</div>
+											<div class="radio">
+												<input type="radio" value="2" name="passed" id="pending">
+													<input type="radio" value="2">
+													<label for="pending">
+														Pending
 													</label>
 												</div>
 											</div>
@@ -4039,6 +4103,15 @@
 													</label>
 												</div>
 											</div>
+											@elseif($data->qa_passed == 2)
+											<div class="radio">
+												<div class="radio clip-radio radio-primary">
+													<input type="radio" value="2" checked>
+													<label for="pending">
+														Pending
+													</label>
+												</div>
+											</div>
 											@endif
 										</div>
 									</div>
@@ -4105,6 +4178,15 @@
 													<input type="radio" value="-1" checked>
 													<label for="notPassed">
 														Tidak Lulus
+													</label>
+												</div>
+											</div>
+											@elseif($data->qa_passed == 2)
+											<div class="radio">
+												<div class="radio clip-radio radio-primary">
+													<input type="radio" value="2" checked>
+													<label for="pending">
+														Pending
 													</label>
 												</div>
 											</div>
@@ -5566,7 +5648,7 @@
 				$('#myModalketerangan_sidang_qa').modal('hide');
 			}
 		}else{
-			if (document.getElementById("passed").checked == false && document.getElementById("notPassed").checked == false) {
+			if (document.getElementById("passed").checked == false && document.getElementById("notPassed").checked == false && document.getElementById("pending").checked == false) {
 		     	alert("Belum Ada Hasil Sidang QA!");
 				return false;
 		    }

@@ -49,38 +49,49 @@ table {
 			
 			@if(isset($data[0]))
 			<div class="col-md-12">
-				{!! Form::open(array('url' => 'admin/generalSetting/'.$data[0]->id, 'method' => 'PUT', 'id' => 'form-update')) !!}
+				{!! Form::open(array('url' => 'admin/generalSetting/'.$data[0]->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-update')) !!}
 					{!! csrf_field() !!}
+					<input type="hidden" id="status" name="status">
     				<fieldset>
 						<legend>
-							Manage General Information
+							Senior Manager Information
 						</legend>
 						<div class="row">
 						 	<div class="col-md-3">
 								<div class="form-group">
 									<label>
-										<input type="checkbox" id="is_poh" name="is_poh">
+										<input type="checkbox" id="is_poh_sm" name="is_poh_sm">
 										POH
 									</label>
 								</div> 
 							</div>
 	                        <div class="col-md-12">
-                        		<div id="poh_manager_urel-div" class="form-group">
+                        		<div id="poh_sm_urel-div" class="form-group">
 									<label>
 										POH *
 									</label>
-									<input type="text" name="poh_manager_urel" class="form-control" placeholder="POH" value="{{$data[1]->value}}" required autofocus="">
+									<input type="text" name="poh_sm_urel" class="form-control" placeholder="POH" value="{{$data[4]->value}}" required autofocus="">
+									<br>
+									@if ($data[4]->attachment)
+									<img src="{{ \Storage::disk('minio')->url('generalsettings/'.$data[4]->id.'/'.$data[4]->attachment) }}" width="240" alt="Pic"/>
+									@endif
+									<input type="file" name="attachment_poh_sm" class="form-control" accept="image/jpg, image/jpeg, image/png">
 								</div>
-								<div id="manager_urel-div" class="form-group">
+								<div id="sm_urel-div" class="form-group">
 									<label>
-										Manager Urel *
+										Senior Manager URel *
 									</label>
-									<input type="text" name="manager_urel" class="form-control" placeholder="Manager Urel" value="{{$data[0]->value}}" required autofocus="">
+									<input type="text" name="sm_urel" class="form-control" placeholder="Senior Manager URel" value="{{$data[3]->value}}" required autofocus="">
+									<br>
+									@if ($data[3]->attachment) 
+									<img src="{{ \Storage::disk('minio')->url('generalsettings/'.$data[3]->id.'/'.$data[3]->attachment) }}" width="240" alt="Pic"/>
+									@endif
+									<input type="file" name="attachment_sm" class="form-control" accept="image/jpg, image/jpeg, image/png">
 								</div>
 							</div>
 	                      
 	                        <div class="col-md-12">
-	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
+	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left" onclick='$("#status").val("is_poh_sm");'>
 	                                Submit
 	                            </button>
 	                        </div>
@@ -90,7 +101,7 @@ table {
 								<div class="modal-content">
 									<div class="modal-header">
 										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-										<h4 class="modal-title"><em class="fa fa-eyes-open"></em>Setting Manager URel, POH dan/atau Aktifasi Send Email Akan Diganti, Mohon Berikan Keterangan!</h4>
+										<h4 class="modal-title"><em class="fa fa-eyes-open"></em>Setting Akan Diganti, Mohon Berikan Keterangan!</h4>
 									</div>
 									
 									<div class="modal-body">
@@ -122,6 +133,41 @@ table {
 					</fieldset>
 					<fieldset>
 						<legend>
+							Manage URel Information
+						</legend>
+						<div class="row">
+						 	<div class="col-md-3">
+								<div class="form-group">
+									<label>
+										<input type="checkbox" id="is_poh" name="is_poh">
+										POH
+									</label>
+								</div> 
+							</div>
+	                        <div class="col-md-12">
+                        		<div id="poh_manager_urel-div" class="form-group">
+									<label>
+										POH *
+									</label>
+									<input type="text" name="poh_manager_urel" class="form-control" placeholder="POH" value="{{$data[1]->value}}" required autofocus="">
+								</div>
+								<div id="manager_urel-div" class="form-group">
+									<label>
+										Manager URel *
+									</label>
+									<input type="text" name="manager_urel" class="form-control" placeholder="Manager URel" value="{{$data[0]->value}}" required autofocus="">
+								</div>
+							</div>
+	                      
+	                        <div class="col-md-12">
+	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left" onclick='$("#status").val("is_poh");'>
+	                                Submit
+	                            </button>
+	                        </div>
+						</div>
+					</fieldset>
+					<fieldset>
+						<legend>
 							Aktifasi Fungsi Send Email
 						</legend>
 						<div class="row">
@@ -134,7 +180,7 @@ table {
 								</div> 
 							</div>
 	                        <div class="col-md-12">
-	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
+	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left" onclick='$("#status").val("is_send_email_active");'>
 	                                Submit
 	                            </button>
 
@@ -186,6 +232,23 @@ table {
 	@php
 		}
 	@endphp
+
+	@php
+		if(isset($data[4]) && $data[4]->is_active){
+			@endphp		
+			$('#is_poh_sm').prop('checked', true);
+			$("#poh_sm_urel-div").show();
+			$("#sm_urel-div").hide();
+	@php
+		}else{
+	@endphp
+			$('.is_poh_sm').prop('checked', false);
+			$("#sm_urel-div").show();
+			$("#poh_sm_urel-div").hide();
+	@php
+		}
+	@endphp
+
 	$(document).ready(function() {
 	    $('#is_poh').change(function() {
 	        if(this.checked) {
@@ -194,6 +257,16 @@ table {
 	        }else{
 	            $("#manager_urel-div").show();
 	        	$("#poh_manager_urel-div").hide();
+	        }
+	    });
+
+		$('#is_poh_sm').change(function() {
+	        if(this.checked) {
+	            $("#poh_sm_urel-div").show();
+	            $("#sm_urel-div").hide();
+	        }else{
+	            $("#sm_urel-div").show();
+	        	$("#poh_sm_urel-div").hide();
 	        }
 	    });
 

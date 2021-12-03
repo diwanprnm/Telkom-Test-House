@@ -161,15 +161,15 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Nomor Sertifikat Uji Mutu
+										Nomor Sertifikat Manajemen Mutu
 									</label>
-									<input type="text" name="qs_certificate_number" class="form-control" placeholder="Nomor Sertifikat Uji Mutu" value="{{ $data->qs_certificate_number }}">
+									<input type="text" name="qs_certificate_number" class="form-control" placeholder="Nomor Sertifikat Manajemen Mutu" value="{{ $data->qs_certificate_number }}">
 								</div>
 							</div>
 	                        <div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Masa Berlaku Sertifikat Uji Mutu
+										Masa Berlaku Sertifikat Manajemen Mutu
 									</label>
 									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
 										<input type="text" name="qs_certificate_date" class="form-control" value="{{ $data->qs_certificate_date }}">
@@ -184,10 +184,10 @@
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>
-										File Sertifikat Uji Mutu
+										File Sertifikat Manajemen Mutu
 									</label>
 									@if($data->qs_certificate_file != '')
-										<a href="{{ URL::to('/admin/company/media/'.$data->id.'/qs') }}" target="_blank">Lihat File Sertifikat Uji Mutu</a>
+										<a href="{{ URL::to('/admin/company/media/'.$data->id.'/qs') }}" target="_blank">Lihat File Sertifikat Manajemen Mutu</a>
 									@endif
 									<input type="file" name="qs_certificate_file" class="form-control" accept="application/pdf, image/*">
 								</div>

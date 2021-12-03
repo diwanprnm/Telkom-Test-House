@@ -974,10 +974,12 @@
 							Step Pelaksanaan Uji
 						</legend>
 						<div class="row">
+						@php $reportFinalResultValue = '-'; @endphp
 						@if($exam_schedule->code != 'MSTD0059AERR' && $exam_schedule->code != 'MSTD0000AERR')
 							@php
 								$start_date = new DateTime(date('Y-m-d'));
 								$end_date = new DateTime($exam_schedule->data[0]->targetDt);
+								$reportFinalResultValue = $exam_schedule->data[0]->reportFinalResultValue;
 								if($start_date>$end_date){
 									$sisa_spk = 0;
 								}else{
@@ -1075,6 +1077,16 @@
 								</div>
 							@endif
 						@endif
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="form-field-select-2">
+										Hasil Pengujian
+									</label>
+									<label>
+										: {{ $reportFinalResultValue }}
+									</label>
+								</div>
+							</div>
 							<div class="col-md-12">
 								<div class="form-group">
 									<label for="form-field-select-2">
@@ -1364,6 +1376,15 @@
 													<input type="radio" value="-1" checked>
 													<label for="notPassed">
 														Tidak Lulus
+													</label>
+												</div>
+											</div>
+											@elseif($data->qa_passed == 2)
+											<div class="radio">
+												<div class="radio clip-radio radio-primary">
+													<input type="radio" value="2" checked>
+													<label for="pending">
+														Pending
 													</label>
 												</div>
 											</div>

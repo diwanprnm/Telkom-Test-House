@@ -228,6 +228,15 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::post('/chamber/generateKuitansiChamber', 'ChamberAdminController@generateKuitansi');
 	Route::post('/chamber/generateTaxInvoiceChamber', 'ChamberAdminController@generateTaxInvoice');
 
+	Route::resource('/sidang', 'SidangController');
+	Route::get('sidang/create/{sidang_id}', 'SidangController@create');
+	Route::get('/sidang/delete/{id}/{reasonOfDeletion}', 'SidangController@destroy');
+	Route::get('sidang/updateExamination/{sidang_id}', 'SidangController@updateExamination');
+	Route::get('sidang/resetExamination/{sidang_id}', 'SidangController@resetExamination');
+	Route::get('sidang/{sidang_id}/print', 'SidangController@print');
+
+	Route::resource('/approval', 'ApprovalController');
+	Route::get('/approval/assign/{id}/{password}', 'ApprovalController@assign');
 });
 	Route::get('/uploadCertification', 'UploadProductionController@uploadCertification');
 	Route::get('/uploadCompany', 'UploadProductionController@uploadCompany');
@@ -410,3 +419,5 @@ Route::resource('/chamber', 'ChamberController');
 Route::get('/cetakTiketChamber/{id}', 'ChamberController@cetakTiket');
 Route::get('/downloadkuitansichamber/{id}', 'ChamberController@downloadkuitansi');
 Route::get('/downloadfakturchamber/{id}', 'ChamberController@downloadfaktur');
+Route::get('/test', 'TestController@index'); //todo daniel delete
+Route::get('/approval/{id}', 'AuthentikasiController@index');

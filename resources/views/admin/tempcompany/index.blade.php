@@ -170,9 +170,9 @@
 											@if($item->siup_number != NULL)No. SIUPP, @endif($item->siup_number != NULL)
 											@if($item->siup_file != NULL)File SIUPP, @endif($item->siup_file != NULL)
 											@if($item->siup_date != NULL)Masa berlaku SIUPP, @endif($item->siup_date != NULL)
-											@if($item->qs_certificate_number != NULL)No. Sertifikat Uji Mutu, @endif($item->qs_certificate_number != NULL)
-											@if($item->qs_certificate_file != NULL)File Sertifikat Uji Mutu, @endif($item->qs_certificate_file != NULL)
-											@if($item->qs_certificate_date != NULL)Masa berlaku Sertifikat Uji Mutu. @endif($item->qs_certificate_date != NULL)
+											@if($item->qs_certificate_number != NULL)No. Sertifikat Manajemen Mutu, @endif($item->qs_certificate_number != NULL)
+											@if($item->qs_certificate_file != NULL)File Sertifikat Manajemen Mutu, @endif($item->qs_certificate_file != NULL)
+											@if($item->qs_certificate_date != NULL)Masa berlaku Sertifikat Manajemen Mutu. @endif($item->qs_certificate_date != NULL)
 										</td>
 	                                    @if($item->is_commited == 1)
 	                                    	<td class="center"><span class="label label-sm label-success">Approve</span></td>

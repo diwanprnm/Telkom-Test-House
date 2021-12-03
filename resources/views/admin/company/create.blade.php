@@ -155,15 +155,15 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Nomor Sertifikat Uji Mutu
+										Nomor Sertifikat Manajemen Mutu
 									</label>
-									<input type="text" name="qs_certificate_number" class="form-control" placeholder="Nomor Sertifikat Uji Mutu">
+									<input type="text" name="qs_certificate_number" class="form-control" placeholder="Nomor Sertifikat Manajemen Mutu">
 								</div>
 							</div>
 	                        <div class="col-md-6">
 								<div class="form-group">
 									<label>
-										Masa Berlaku Sertifikat Uji Mutu
+										Masa Berlaku Sertifikat Manajemen Mutu
 									</label>
 									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
 										<input type="text" name="qs_certificate_date" class="form-control">
@@ -178,7 +178,7 @@
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>
-										File Sertifikat Uji Mutu
+										File Sertifikat Manajemen Mutu
 									</label>
 									<input type="file" name="qs_certificate_file" class="form-control" accept="application/pdf, image/*">
 								</div>

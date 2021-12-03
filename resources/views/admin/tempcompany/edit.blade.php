@@ -138,21 +138,21 @@
 								@endif
 							</div>
 							<div class="col-md-6">
-								<label><strong>-</strong> Nomor Sertifikat Uji Mutu : {{ $data->company->qs_certificate_number }}</label>
+								<label><strong>-</strong> Nomor Sertifikat Manajemen Mutu : {{ $data->company->qs_certificate_number }}</label>
 								@if($data->qs_certificate_number != NULL)
 								<label>, <strong>menjadi</strong> {{ $data->qs_certificate_number }}</label>
 								<input type="hidden" name="qs_certificate_number" value="{{ $data->qs_certificate_number }}">
 								@endif
 							</div>
 							<div class="col-md-6">
-								<label><strong>-</strong> Masa berlaku Sertifikat Uji Mutu : {{ $data->company->qs_certificate_date }}</label>
+								<label><strong>-</strong> Masa berlaku Sertifikat Manajemen Mutu : {{ $data->company->qs_certificate_date }}</label>
 								@if($data->qs_certificate_date != NULL)
 								<label>, <strong>menjadi</strong> {{ $data->qs_certificate_date }}</label>
 								<input type="hidden" name="qs_certificate_date" value="{{ $data->qs_certificate_date }}">
 								@endif
 							</div>
 							<div class="col-md-12">
-								<label><strong>-</strong> File Sertifikat Uji Mutu : <a href="{{ URL::to('/admin/company/media/'.$data->company->id.'/qs') }}" style="color:#858585 !important;" target="_blank">{{ $data->company->qs_certificate_file }}</a></label>
+								<label><strong>-</strong> File Sertifikat Manajemen Mutu : <a href="{{ URL::to('/admin/company/media/'.$data->company->id.'/qs') }}" style="color:#858585 !important;" target="_blank">{{ $data->company->qs_certificate_file }}</a></label>
 								@if($data->qs_certificate_file != NULL)
 								<label>, <strong>menjadi</strong> <a href="{{ URL::to('/admin/tempcompany/media/'.$data->id.'/qs') }}" style="color:#858585 !important;" target="_blank">{{ $data->qs_certificate_file }}</a></label>
 								<input type="hidden" name="qs_certificate_file" value="{{ $data->qs_certificate_file }}">
