@@ -39,6 +39,7 @@ class GeneralSettingControllerTest extends TestCase
 	{ 
 		$this->actingAs(User::find('1'))->call('PATCH', 'admin/generalSetting/1', [ 
 			'is_poh' => null,
+			'status' => 'is_poh',
 			'manager_urel' => 'Bapak Sontang Hutapea',
 			'keterangan' => 'Diganti karena naik jabatan'
 		]);
@@ -49,6 +50,7 @@ class GeneralSettingControllerTest extends TestCase
 	{ 
 		$this->actingAs(User::find('1'))->call('PATCH', 'admin/generalSetting/2', [ 
 			'is_poh' => true,
+			'status' => 'is_poh',
 			'poh_manager_urel' => 'Ibu Henrina',
 			'keterangan' => 'Diganti karena naik jabatan'
 		]);
