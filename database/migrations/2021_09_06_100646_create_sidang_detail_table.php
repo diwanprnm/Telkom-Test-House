@@ -20,7 +20,7 @@ class CreateSidangDetailTable extends Migration
             $table->string('status'); //SM and CIGS, Eligible or Not
             $table->date('valid_from')->nullable();
             $table->date('valid_thru')->nullable();
-            $table->integer('valid_range')->default(36);
+            $table->integer('valid_range')->default(0);
             $table->text('catatan')->nullable();
             
             $table->uuid('created_by');

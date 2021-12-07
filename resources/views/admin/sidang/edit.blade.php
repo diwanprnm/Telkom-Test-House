@@ -188,7 +188,7 @@
 										</select>
 									</td>
 									<td class="center">
-										<select class="valid_range" name="valid_range[]">
+										<select class="valid_range" name="valid_range[]" disabled>
 											<option value="0" @if ($item->valid_range == 0) selected @endif>Choose</option>
 											<option value="36" @if ($item->valid_range == 36) selected @endif>3 Tahun</option>
 											<option value="12" @if ($item->valid_range == 12) selected @endif>1 Tahun</option>
@@ -366,8 +366,10 @@
 		$('.result').change(function() {
 			if($(this).val() == '1'){
 				$(this).closest('tr').find('.valid_range').val(36);
+				$(this).closest('tr').find('.valid_range').prop('disabled',false);
 			}else{
 				$(this).closest('tr').find('.valid_range').val(0);
+				$(this).closest('tr').find('.valid_range').prop('disabled',true);
 			}
 		});
 	});

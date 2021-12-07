@@ -380,7 +380,7 @@ class SidangController extends Controller
             $sidang_detail->sidang_id = $id;
             $sidang_detail->examination_id = $request->input('examination_id')[$i];
             $sidang_detail->result = $request->input('result')[$i];
-            $sidang_detail->valid_range = $request->input('valid_range')[$i];
+            $sidang_detail->valid_range = $request->input('valid_range')[$i] ? $request->input('valid_range')[$i] : 0;
             $sidang_detail->valid_from = $request->input('date');
             $sidang_detail->valid_thru = date('Y-m-d', strtotime("+".$sidang_detail->valid_range." months", strtotime($sidang_detail->valid_from)));
             $sidang_detail->catatan = $request->input('catatan')[$i];
@@ -588,12 +588,27 @@ class SidangController extends Controller
             3. user_id [1,2,3]
             4. approve_date 
         */
+        $sidang_detail = $this->mergeOTR($data, 'sidang');
+        $PDFData = [];
+        $PDFData['devices'] = $devicesList;
+        $PDFData['sidang_detail'] = $sidang_detail;
+        $PDFData['sidang'] = Sidang::find($sidang_id);
+        $PDFData['certificateNumber'] = $certificateNumberList;
+        $pdfGenerated = $this->generateSidangQA($PDFData, 'getStream');
+        $fileService = new FileService();
+        $fileProperties = array(
+            'path' => 'sidang/'.$sidang_id."/",
+            'prefix' => "sidang_",
+            'fileName' => $pdfGenerated['fileName'],
+        );
+        $fileService->uploadFromStream($pdfGenerated['stream'], $fileProperties);
+
         $auth = AuthentikasiEditor::where('dir_name', 'authentikasi.sidang')->first();
         $approval = new Approval;
         $approval->id = Uuid::uuid4();
         $approval->reference_table = 'sidang';
         $approval->reference_id = $sidang_id;
-        $approval->attachment = '-';
+        $approval->attachment = 'sidang '.$PDFData['sidang']->date.'.pdf';
         $approval->status = 1;
         $approval->autentikasi_editor_id = $auth->id;
         $approval->created_by = $currentUser->id;
@@ -610,25 +625,11 @@ class SidangController extends Controller
                 $approveBy->save();
             }
         }
-        $sidang_detail = $this->mergeOTR($data, 'sidang');
-        $PDFData = [];
-        $PDFData['devices'] = $devicesList;
-        $PDFData['sidang_detail'] = $sidang_detail;
-        $PDFData['sidang'] = Sidang::find($sidang_id);
-        $PDFData['certificateNumber'] = $certificateNumberList;
-        $pdfGenerated = $this->generateSidangQA($PDFData, 'getStream');
-        $fileService = new FileService();
-        $fileProperties = array(
-            'path' => 'sidang/'.$sidang_id."/",
-            'prefix' => "sidang_",
-            'fileName' => $pdfGenerated['fileName'],
-        );
-        $fileService->uploadFromStream($pdfGenerated['stream'], $fileProperties);
     }
 
     public function sendEmail($item){
         $email_editors = new EmailEditorService();
-		switch ($item->examination->qa_passed) {
+		switch ($item->result) {
             case 1:
                 # Email Sidang QA Lulus dan Sertifikat dapat di-download
                 $email = $email_editors->selectBy('emails.sertifikat');
@@ -651,7 +652,6 @@ class SidangController extends Controller
 				$subject = null;
                 break;
         }
-
         // $user_email = $item->examination->user->email;
         $user_email = 'arifchandrasimanjuntak@yahoo.co.id';
 		if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
@@ -829,6 +829,17 @@ class SidangController extends Controller
         $PDFData['sidang'] = Sidang::find($sidang_id);
         $PDFData['certificateNumber'] = $certificateNumberList;
         $this->generateSidangQA($PDFData, '');
+    }
+
+    public function download($sidang_id){
+        $sidang = Sidang::find($sidang_id);
+        if($sidang){
+            $fileName = 'sidang '.$sidang->date.'.pdf';
+            $file = Storage::disk('minio')->get('sidang/'.$sidang_id."/".$fileName);
+            return response($file, 200, \App\Services\MyHelper::getHeaderOctet($fileName));
+        }else{
+            return false;
+        }
     }
 
     public function destroy($id, $reasonOfDeletion){
