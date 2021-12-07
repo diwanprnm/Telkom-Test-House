@@ -380,7 +380,7 @@ class SidangController extends Controller
             $sidang_detail->sidang_id = $id;
             $sidang_detail->examination_id = $request->input('examination_id')[$i];
             $sidang_detail->result = $request->input('result')[$i];
-            $sidang_detail->valid_range = $request->input('valid_range')[$i] ? $request->input('valid_range')[$i] : 0;
+            $sidang_detail->valid_range = $request->input('valid_range')[$i];
             $sidang_detail->valid_from = $request->input('date');
             $sidang_detail->valid_thru = date('Y-m-d', strtotime("+".$sidang_detail->valid_range." months", strtotime($sidang_detail->valid_from)));
             $sidang_detail->catatan = $request->input('catatan')[$i];
