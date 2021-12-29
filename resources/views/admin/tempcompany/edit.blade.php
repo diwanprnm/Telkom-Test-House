@@ -117,21 +117,21 @@
 								@endif
 							</div>
 							<div class="col-md-6">
-								<label><strong>-</strong> Nomor SIUPP : {{ $data->company->siup_number }}</label>
+								<label><strong>-</strong> Nomor SIUP : {{ $data->company->siup_number }}</label>
 								@if($data->siup_number != NULL)
 								<label>, <strong>menjadi</strong> {{ $data->siup_number }}</label>
 								<input type="hidden" name="siup_number" value="{{ $data->siup_number }}">
 								@endif
 							</div>
 							<div class="col-md-6">
-								<label><strong>-</strong> Masa berlaku SIUPP : {{ $data->company->siup_date }}</label>
+								<label><strong>-</strong> Masa berlaku SIUP : {{ $data->company->siup_date }}</label>
 								@if($data->siup_date != NULL)
 								<label>, <strong>menjadi</strong> {{ $data->siup_date }}</label>
 								<input type="hidden" name="siup_date" value="{{ $data->siup_date }}">
 								@endif
 							</div>
 							<div class="col-md-12">
-								<label><strong>-</strong> File SIUPP : <a href="{{ URL::to('/admin/company/media/'.$data->company->id.'/siup') }}" style="color:#858585 !important;" target="_blank">{{ $data->company->siup_file }}</a></label>
+								<label><strong>-</strong> File SIUP : <a href="{{ URL::to('/admin/company/media/'.$data->company->id.'/siup') }}" style="color:#858585 !important;" target="_blank">{{ $data->company->siup_file }}</a></label>
 								@if($data->siup_file != NULL)
 								<label>, <strong>menjadi</strong> <a href="{{ URL::to('/admin/tempcompany/media/'.$data->id.'/siup') }}" style="color:#858585 !important;" target="_blank">{{ $data->siup_file }}</a></label>
 								<input type="hidden" name="siup_file" value="{{ $data->siup_file }}">

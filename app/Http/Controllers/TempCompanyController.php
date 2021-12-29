@@ -247,7 +247,7 @@ class TempCompanyController extends Controller
                         if (Storage::disk(self::MINIO)->exists($siup_file) && $company->siup_file != $tempcompany->siup_file){
                             Storage::disk(self::MINIO)->delete($siup_file);
                         }
-                    }else{ return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT)->with(self::ERROR, 'Save SIUPP to directory failed'); }
+                    }else{ return redirect(self::PAGE_TEMPCOMPANY.'/'.$id.self::PAGE_EDIT)->with(self::ERROR, 'Save SIUP to directory failed'); }
                 }   
                 if ($request->has('qs_certificate_number')){
                     $company->qs_certificate_number = $request->input('qs_certificate_number');

@@ -691,7 +691,7 @@
                 		@php
                 			for ($i=0; $i<10 ; $i++) { 
                 		@endphp
-                				<input type="radio" id="eks{{$no.$i}}" name="eks{{$no-1}}" value="{{$i+1}}" @php echo $i == 7 ? "checked" : "";@endphp><label for="eks{{$no.$i}}">{{$i+1}}</label>
+                				<input type="radio" id="eks{{$no.$i}}" name="eks{{$no-1}}" value="{{$i+1}}" @php echo $i == 9 ? "checked" : "";@endphp><label for="eks{{$no.$i}}">{{$i+1}}</label>
                 		@php
                 			}
                 		@endphp
@@ -702,7 +702,7 @@
                 		@php
                 			for ($i=0; $i<10 ; $i++) { 
                 		@endphp
-                				<input type="radio" id="pref{{$no.$i}}" name="pref{{$no-1}}" value="{{$i+1}}" @php echo $i == 7 ? "checked" : "";@endphp><label for="pref{{$no.$i}}">{{$i+1}}</label>
+                				<input type="radio" id="pref{{$no.$i}}" name="pref{{$no-1}}" value="{{$i+1}}" @php echo $i == 9 ? "checked" : "";@endphp><label for="pref{{$no.$i}}">{{$i+1}}</label>
                 		@php
                 			}
                 		@endphp
@@ -901,10 +901,10 @@
 			data: {'_token':"{{ csrf_token() }}", 'id':e},
 			type:'post',
 			beforeSend: function(){
-				// document.getElementById("overlay").style.display="inherit";
+				document.getElementById("overlay").style.display="inherit";
 			},
 			success:function(response){
-				// document.getElementById("overlay").style.display="none";
+				document.getElementById("overlay").style.display="none";
 				console.log(response);
 				if(response=='0'){
 					$('#modal_kuisioner2').modal('show');
@@ -929,6 +929,7 @@
 	}
 	
 	$('#submit-kuisioner').click(function () {
+		$('#modal_kuisioner2').modal('hide');
 		$("#my_exam_id").val(document.getElementById('exam_id').value);
 		$.ajax({
 			url : "{{URL::to('insertKuisioner')}}",
@@ -939,13 +940,12 @@
 			processData: false,
 			contentType: false,
 			beforeSend: function(){
-				// document.getElementById("overlay").style.display="inherit";
+				document.getElementById("overlay").style.display="inherit";
 			},
 			success:function(response){
-				// document.getElementById("overlay").style.display="none";
+				document.getElementById("overlay").style.display="none";
 				console.log(response);
 				// if(response==1){
-					$('#modal_kuisioner2').modal('hide');
 					$('#modal_complain').modal('show');	
 					$('#modal_complain').on('shown.bs.modal', function() {
 						$("#tanggal_complaint").focus();
@@ -956,6 +956,7 @@
 	});
 
 	$('.submit-complain').click(function () {
+		$('#modal_complain').modal('hide');
 		$.ajax({
 			url : "{{URL::to('insertComplaint')}}",
 			data:new FormData($("#form-complain")[0]),
@@ -965,10 +966,10 @@
 			processData: false,
 			contentType: false,
 			beforeSend: function(){
-				// document.getElementById("overlay").style.display="inherit";
+				document.getElementById("overlay").style.display="inherit";
 			},
 			success:function(response){
-				// document.getElementById("overlay").style.display="none";
+				document.getElementById("overlay").style.display="none";
 				console.log(response);
 				checkAmbilBarang(document.getElementById('my_exam_id').value);
 			}
@@ -976,18 +977,18 @@
 	});
 	
 	function checkAmbilBarang(a){
+		$('#modal_complain').modal('hide');
 		var link = document.getElementById('link').value;
 		$.ajax({
 			type: "POST",
 			url : "{{URL::to('cekAmbilBarang')}}",
 			data: {'_token':"{{ csrf_token() }}", 'my_exam_id':a},
 			beforeSend: function(){
-				// document.getElementById("overlay").style.display="inherit";
+				document.getElementById("overlay").style.display="inherit";
 			},
 			success:function(response){
-				// document.getElementById("overlay").style.display="none";
+				document.getElementById("overlay").style.display="none";
 				console.log(response);
-				$('#modal_complain').modal('hide');
 				if(response==1){
 					// window.location.href = '/telkomdds/public'+link;
 					window.open(link);

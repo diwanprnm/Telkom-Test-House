@@ -358,8 +358,8 @@ class CompanyController extends Controller
 			'Telepon',
 			'Faksimil',
 			'NPWP Perusahaan',
-			'SIUPP Perusahaan',
-			'Tgl. SIUPP Perusahaan',
+			'SIUP Perusahaan',
+			'Tgl. SIUP Perusahaan',
 			'Sertifikat Perusahaan',
 			'Tgl. Sertifikat Perusahaan'
 		]; 

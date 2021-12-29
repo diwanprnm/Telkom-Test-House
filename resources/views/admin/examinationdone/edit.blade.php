@@ -1330,11 +1330,13 @@
 										<a href="{{URL::to('/cetakKepuasanKonsumen/'.$data->id)}}" target="_blank"> Download Feedback</a>
 									</div>
 								</div>	
+								@if($data->questioner[0]->complaint)
 								<div class="col-md-6">
 									<div class="form-group">
 										<a href="{{URL::to('/cetakComplaint/'.$data->id)}}" target="_blank"> Download Complaint</a>
 									</div>
-								</div>	
+								</div>
+								@endif
 							</fieldset>
 						@endif
 				@if($data->examination_type_id =='1')

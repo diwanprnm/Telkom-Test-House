@@ -223,26 +223,26 @@
 					            <fieldset>
 									<legend></legend>
 					                <div class="form-group">
-											<label>{{ trans('translate.service_upload_siupp') }}<span class="text-danger">* 
-												@if($userData->fileSIUPP)
+											<label>{{ trans('translate.service_upload_siup') }}<span class="text-danger">* 
+												@if($userData->fileSIUP)
 													({{ trans('translate.file_already_exists') }})
 												@endif
 											</span></label>
-											<input   id="fileInput-SIUPP" name="fuploadsiupp" type="file" accept="application/pdf,image/*">
-											<input type="hidden" name="hide_siupp_file" id="hide_siupp_file" value="{{$userData->fileSIUPP}}"/>
-											<a id="siupp-file" class="btn btn-link">{{$userData->fileSIUPP}}</a>
+											<input   id="fileInput-SIUP" name="fuploadsiup" type="file" accept="application/pdf,image/*">
+											<input type="hidden" name="hide_siup_file" id="hide_siup_file" value="{{$userData->fileSIUP}}"/>
+											<a id="siup-file" class="btn btn-link">{{$userData->fileSIUP}}</a>
 											<div id="attachment-file">
 												*{{ trans('translate.maximum_filesize') }}
 											</div>
 										</div>
 										<div class="form-group" style="margin-bottom:0.01%">
-											<label>{{ trans('translate.service_upload_siupp_no') }}</label>
-											<input type="text" name="f1-no-siupp" placeholder="{{ trans('translate.service_upload_siupp_no') }}"   id="f1-no-siupp" value="{{$userData->noSIUPP}}" class="required">
+											<label>{{ trans('translate.service_upload_siup_no') }}</label>
+											<input type="text" name="f1-no-siup" placeholder="{{ trans('translate.service_upload_siup_no') }}"   id="f1-no-siup" value="{{$userData->noSIUP}}" class="required">
 										</div>
 										<div class="form-group">
-											<label>{{ trans('translate.service_upload_siupp_date') }}</label>
+											<label>{{ trans('translate.service_upload_siup_date') }}</label>
 
-											<input type="text" name="f1-tgl-siupp" placeholder="{{ trans('translate.service_upload_siupp_date') }}" class="data-upload-berkas datepicker f1-tgl-siupp required input-submit" id="f1-tgl-siupp" value="{{$userData->tglSIUPP}}"> 
+											<input type="text" name="f1-tgl-siup" placeholder="{{ trans('translate.service_upload_siup_date') }}" class="data-upload-berkas datepicker f1-tgl-siup required input-submit" id="f1-tgl-siup" value="{{$userData->tglSIUP}}"> 
 										</div>
 										<div class="form-group col-xs-12" style="margin-top:35px">
 											<label>{{ trans('translate.service_upload_certificate') }}<span class="text-danger">*</span></label>
@@ -463,17 +463,17 @@
 												</tr>
 											</thead>
 											<tr>
-												<td>{{ trans('translate.service_upload_siupp') }}</td>
+												<td>{{ trans('translate.service_upload_siup') }}</td>
 												<td> : </td>
 												<td> <div id="f4-preview-1"></div></td>
 											</tr>
 											<tr>
-												<td>{{ trans('translate.service_upload_siupp_no') }}</td>
+												<td>{{ trans('translate.service_upload_siup_no') }}</td>
 												<td> : </td>
 												<td> <div id="f4-preview-2"></div></td>
 											</tr>
 											<tr>
-												<td>{{ trans('translate.service_upload_siupp_date') }}</td>
+												<td>{{ trans('translate.service_upload_siup_date') }}</td>
 												<td> : </td>
 												<td> <div id="f4-preview-3"></div></td>
 											</tr>
@@ -608,9 +608,9 @@
 				$("#f3-preview-6").html($("#f1-pembuat-perangkat").val());
 				$("#f3-preview-7").html($("#f1-serialNumber-perangkat").val());
 
-				$("#f4-preview-1").html($("#f1-no-siupp").val());
-				$("#f4-preview-2").html($('#hide_siupp_file').val());
-				$("#f4-preview-3").html($("#f1-tgl-siupp").val()); 
+				$("#f4-preview-1").html($("#f1-no-siup").val());
+				$("#f4-preview-2").html($('#hide_siup_file').val());
+				$("#f4-preview-3").html($("#f1-tgl-siup").val()); 
 				$("#f4-preview-5").html($("#f1-sertifikat-sistem-mutu").val());
 				$("#f4-preview-6").html($("#hide_sertifikat_file").val());
 				$("#f4-preview-7").html($("#f1-batas-waktu").val());
@@ -746,8 +746,8 @@
   	$('ul[role="tablist"]').hide();  
 
 
-	$("#siupp-file").click(function() {
-		var file = $('#hide_siupp_file').val();
+	$("#siup-file").click(function() {
+		var file = $('#hide_siup_file').val();
 		downloadFileCompany(file);
 	});
 	

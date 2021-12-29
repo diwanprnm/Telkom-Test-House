@@ -40,12 +40,40 @@
         @media (max-width: 991px) {
             #header.sticky-style-2.navbar-in-header #header-wrap { min-height: 50px; }
         }
+        #overlay {
+          z-index: 1000;
+          display:none;
+          position: fixed;
+          top: 0px;
+          left: 0px;
+          width: 100%;
+          height: 100%;
+          background: rgba(4, 10, 30, 0.8);
+        }
+        #tengah{
+            width: 250px;
+            height: 30px;
+            position: absolute;
+            top:0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            display: block;
+    		text-align: -webkit-center;
+        }
     </style>
     @include('client.includes.favicon') 
 </head>
 
 <body class="stretched">
-
+    <div id="overlay">
+        <div id="tengah"> 
+            <br>
+            <span style="color:#ffffff">Please wait ....</span>
+            <!-- <img src='{{ asset("images/loading.gif") }}' alt="loading image"/>  -->
+        </div>
+    </div>
     <!-- Document Wrapper
     ============================================= -->
     <div id="wrapper" class="clearfix">

@@ -202,20 +202,20 @@
 						<legend></legend>
 						<h4>{{ trans('translate.service_upload') }}</h4>
 						<div class="form-group">
-							<label>{{ trans('translate.service_upload_siupp') }}<span class="text-danger">*</span></label>
-							<input class="data-upload-berkas f1-file-siupp" id="fileInput-SIUPP" name="fuploadsiupp" type="file" accept="application/pdf,image/*">
-							<input type="hidden" name="hide_siupp_file" id="hide_siupp_file" value=""/>
-							<a id="siupp-file" class="btn btn-link" style="color:black !important;" ></a>
+							<label>{{ trans('translate.service_upload_siup') }}<span class="text-danger">*</span></label>
+							<input class="data-upload-berkas f1-file-siup" id="fileInput-SIUP" name="fuploadsiup" type="file" accept="application/pdf,image/*">
+							<input type="hidden" name="hide_siup_file" id="hide_siup_file" value=""/>
+							<a id="siup-file" class="btn btn-link" style="color:black !important;" ></a>
 						</div>
 						<div class="form-group" style="margin-bottom:0.01%">
-							<label class="sr-only" for="f1-no-siupp">{{ trans('translate.service_upload_siupp_no') }}</label>
-							<input type="text" name="f1-no-siupp" placeholder="{{ trans('translate.service_upload_siupp_no') }}" class="data-upload-berkas f1-no-siupp form-control input-submit" id="f1-no-siupp">
+							<label class="sr-only" for="f1-no-siup">{{ trans('translate.service_upload_siup_no') }}</label>
+							<input type="text" name="f1-no-siup" placeholder="{{ trans('translate.service_upload_siup_no') }}" class="data-upload-berkas f1-no-siup form-control input-submit" id="f1-no-siup">
 						</div>
 						<div class="form-group">
-							<label class="sr-only" for="f1-tgl-siupp">{{ trans('translate.service_upload_siupp_date') }}</label>
-							<input type="hidden" name="f1-tgl-siupp" placeholder="{{ trans('translate.service_upload_siupp_date') }}" class="data-upload-berkas f1-tgl-siupp form-control input-submit" id="f1-tgl-siupp" readonly>
+							<label class="sr-only" for="f1-tgl-siup">{{ trans('translate.service_upload_siup_date') }}</label>
+							<input type="hidden" name="f1-tgl-siup" placeholder="{{ trans('translate.service_upload_siup_date') }}" class="data-upload-berkas f1-tgl-siup form-control input-submit" id="f1-tgl-siup" readonly>
 							<div class="col-xs-1 selectContainer">
-								D: <select name="daySIUPP" id="daySIUPP" class="form-control" style="width:auto;" onchange="setDays(monthSIUPP,this,yearSIUPP,1)">
+								D: <select name="daySIUP" id="daySIUP" class="form-control" style="width:auto;" onchange="setDays(monthSIUP,this,yearSIUP,1)">
 									@for($i = 1;$i <= 31; $i++)
 										@php
 											if($i < 10){
@@ -227,7 +227,7 @@
 								</select>
 							</div>
 							<div class="col-xs-2 selectContainer">
-								M: <select name="monthSIUPP" id="monthSIUPP" class="form-control" style="width:auto;" onchange="setDays(this,daySIUPP,yearSIUPP,1)">
+								M: <select name="monthSIUP" id="monthSIUP" class="form-control" style="width:auto;" onchange="setDays(this,daySIUP,yearSIUP,1)">
 									<option value="01">January</option>
 									<option value="02">February</option>
 									<option value="03">March</option>
@@ -243,7 +243,7 @@
 								</select>
 							</div>
 							<div class="col-xs-2 selectContainer">
-								Y: <select name="yearSIUPP" id="yearSIUPP" class="form-control" style="width:auto;" onchange="setDays(monthSIUPP,daySIUPP,this,1)">
+								Y: <select name="yearSIUP" id="yearSIUP" class="form-control" style="width:auto;" onchange="setDays(monthSIUP,daySIUP,this,1)">
 									@for($i = date('Y')+100;$i >= 1900; $i--)
 										@if($i == date('Y'))
 											<option value="{{$i}}" selected>{{$i}}</option>
@@ -461,17 +461,17 @@
 								</tr>
 							</thead>
 							<tr>
-								<td>{{ trans('translate.service_upload_siupp') }}</td>
+								<td>{{ trans('translate.service_upload_siup') }}</td>
 								<td> : </td>
 								<td> <div id="f4-preview-1"></div></td>
 							</tr>
 							<tr>
-								<td>{{ trans('translate.service_upload_siupp_no') }}</td>
+								<td>{{ trans('translate.service_upload_siup_no') }}</td>
 								<td> : </td>
 								<td> <div id="f4-preview-2"></div></td>
 							</tr>
 							<tr>
-								<td>{{ trans('translate.service_upload_siupp_date') }}</td>
+								<td>{{ trans('translate.service_upload_siup_date') }}</td>
 								<td> : </td>
 								<td> <div id="f4-preview-3"></div></td>
 							</tr>
