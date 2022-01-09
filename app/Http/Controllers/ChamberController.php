@@ -19,6 +19,10 @@ use GuzzleHttp\Client;
 
 class ChamberController extends Controller
 {
+    private const SEARCH = 'search';
+    private const AFTER_DATE = 'after_date';
+    private const BEFORE_DATE = 'before_date';
+
     public function __construct()
     {
 		parent::__construct();
@@ -46,6 +50,10 @@ class ChamberController extends Controller
     public function purchase_history(Request $request)
     {
         $currentUser = Auth::user();
+        $search = trim($request->input(self::SEARCH));
+        $after_date = trim($request->input(self::AFTER_DATE));
+        $before_date = trim($request->input(self::BEFORE_DATE));
+
         if(!$currentUser){ return redirect('login');}
         $paginate = 10; 
         $tab = $request->input('tab') ? $request->input('tab') : 'unpaid';
@@ -62,6 +70,13 @@ class ChamberController extends Controller
             ->join("companies","companies.id","=",'users.company_id')
             ->where('users.company_id',$currentUser->company_id)
             ->where("chamber.payment_status", 0)
+            ->where(function($query) use ($search, $before_date, $after_date){
+                $query->where('chamber.invoice','like','%'.$search.'%')
+                ->whereBetween('chamber.start_date', [$before_date, $after_date] )
+                ;
+            })
+            
+            
         ;
         $query_paid = Chamber::select($select)->distinct('chamber.id')
             ->join("chamber_detail","chamber.id","=","chamber_detail.chamber_id")
@@ -69,6 +84,12 @@ class ChamberController extends Controller
             ->join("companies","companies.id","=",'users.company_id')
             ->where('users.company_id',$currentUser->company_id)
             ->where("chamber.payment_status", 1)
+            ->where(function($query) use ($search, $before_date, $after_date){
+                $query->where('chamber.invoice','like','%'.$search.'%')
+                ->whereBetween('chamber.start_date', [$before_date, $after_date] )
+                ;
+            })
+            ->orWhereBetween('chamber.start_date', [$before_date, $after_date] )            
         ;
         $query_delivered = Chamber::select($select)->distinct('chamber.id')
             ->join("chamber_detail","chamber.id","=","chamber_detail.chamber_id")
@@ -76,6 +97,12 @@ class ChamberController extends Controller
             ->join("companies","companies.id","=",'users.company_id')
             ->where('users.company_id',$currentUser->company_id)
             ->where("chamber.payment_status", 3)
+            ->where(function($query) use ($search, $before_date, $after_date){
+                $query->where('chamber.invoice','like','%'.$search.'%')
+                ->orWhereBetween('chamber.start_date', [$before_date, $after_date] )
+                ;
+            })
+            ->orWhereBetween('chamber.start_date', [$before_date, $after_date] )           
         ;
 
         $data = $query->orderBy("chamber.created_at", 'desc')->paginate($paginate);
@@ -90,7 +117,8 @@ class ChamberController extends Controller
         ->with('data', $data)
         ->with('data_unpaid', $data_unpaid)
         ->with('data_paid', $data_paid)
-        ->with('data_delivered', $data_delivered);
+        ->with('data_delivered', $data_delivered)
+        ->with(self::SEARCH, $search);
     } 
 
     public function pembayaran($id, Request $request)

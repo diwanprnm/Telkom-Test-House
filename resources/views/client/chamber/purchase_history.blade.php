@@ -26,11 +26,80 @@
 		<div class="content-wrap">
 			<div class="container clearfix">
 				<div class="container-fluid container-fullw bg-white">
-					<ul class="nav nav-tabs clearfix">
-						<li class="{{ $tab == 'unpaid' ? 'active' : '' }}"><a href="#tab-unpaid" data-toggle="tab"><strong>Unpaid</strong></a></li>
-						<li class="{{ $tab == 'paid' ? 'active' : '' }}"><a href="#tab-paid" data-toggle="tab"><strong>Paid</strong></a></li>
-						<li class="{{ $tab == 'delivered' ? 'active' : '' }}"><a href="#tab-delivered" data-toggle="tab"><strong>Delivered</strong></a></li>
-					</ul>
+					<div class="row">
+					<div class="col-md-6">
+	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><em class="ti-filter"></em>
+						Filter
+					</a>
+					{{-- <button id="excel" type="submit" class="btn btn-info pull-left">
+                        Export to Excel
+                    </button> --}}
+				</div>
+					<div class="col-md-12 panel panel-info">
+			    	<div id="collapse1" class="panel-collapse collapse">
+			     		<fieldset>
+							<legend>
+								Filter
+							</legend>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>
+											Tanggal
+										</label>
+										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
+											<input type="text" placeholder="Dari Tanggal" value="" name="after_date" id="filter_after_date_input" class="form-control"/>
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-default">
+													<em class="glyphicon glyphicon-calendar"></em>
+												</button>
+											</span>
+										</p>
+									</div>
+		                        </div>
+		                        <div class="col-md-6">
+									<div class="form-group">
+										<label>
+											&nbsp;
+										</label>
+										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
+											<input type="text" placeholder="Sampai Tanggal" value="" name="before_date" id="filter_before_date_input" class="form-control"/>
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-default">
+													<em class="glyphicon glyphicon-calendar"></em>
+												</button>
+											</span>
+										</p>
+									</div>
+		                        </div>
+
+								<div class="col-md-12">
+		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
+		                                Filter
+		                            </button>
+		                        </div>
+							</div>
+							
+						</fieldset>
+			    	</div>
+			    </div>
+						<div class="col-md-6">
+							<ul class="nav nav-tabs tabs clearfix">
+								<li class="{{ $tab == 'unpaid' ? 'active' : '' }}" data-tab="unpaid"><a href="#tab-unpaid" data-toggle="tab"><strong>Unpaid</strong></a></li>
+								<li class="{{ $tab == 'paid' ? 'active' : '' }}" data-tab="paid"><a href="#tab-paid" data-toggle="tab"><strong>Paid</strong></a></li>
+								<li class="{{ $tab == 'delivered' ? 'active' : '' }}" data-tab="delivered"><a href="#tab-delivered" data-toggle="tab"><strong>Delivered</strong></a></li>
+							</ul>
+						</div>
+
+						<div class="col-md-4">
+							<span class="input-icon input-icon-right search-table  float-right"> 
+								<input id="filter_search_input" name="search" type="text" placeholder="Cari Nomor Pemesanan (CHMB ...)" id="form-field-17" class="form-control " value="{{ $search }}">
+								<em class="ti-search"></em>
+							</span> 
+						</div>
+					</div>
+					
 					<div class="tab-content">
 						<!-- tab unpaid -->
 						<div id="tab-unpaid" class="row clearfix tab-pane fade {{ $tab == 'unpaid' ? 'in active' : '' }}">
@@ -249,9 +318,89 @@
 @endsection
  
 @section('content_js')
-
+<script src={{ asset("vendor/maskedinput/jquery.maskedinput.min.js") }}></script>
+<script src={{ asset("vendor/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js") }}></script>
+<script src={{ asset("vendor/autosize/autosize.min.js") }}></script>
+<script src={{ asset("vendor/selectFx/classie.js") }}></script>
+<script src={{ asset("vendor/selectFx/selectFx.js") }}></script>
+<script src={{ asset("vendor/select2/select2.min.js") }}></script>
+<script src={{ asset("vendor/bootstrap-datepicker/bootstrap-datepicker.min.js") }}></script>
+<script src={{ asset("vendor/bootstrap-timepicker/bootstrap-timepicker.min.js") }}></script>
+<script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
+<script src={{ asset("assets/js/form-elements.js") }}></script>
+<script type="text/javascript" src="{{url('assets/js/moment.js')}}"></script>
+<script type="text/javascript" src="{{url('assets/js/pb.calendar.min.js')}}"></script>
 <script type="text/javascript">
 	
-</script>
 
+$(document).ready(() => {
+	// Initialization
+	const baseUrl = "{{URL::to('/')}}";
+	let bookedDates = [];
+	FormElements.init();
+	setFilterByParam();
+	setPaginationUrl(getFilterParam());
+	const currentTab = url.searchParams.get("tab") ?? 'tab-unpaid';
+
+	// Set destination when button filter(submit) click
+	$('#filter').click(()=>{
+		let param = getFilterParam();
+		document.location.href = baseUrl+'/chamber_history?'+$.param(param);
+	});
+
+	// Set destination when search is press with enter key
+	$('#filter_search_input').keypress(function(e) {
+		if(e.which != 13) { return; }
+		let param = getFilterParam();
+		document.location.href = baseUrl+'/chamber_history?'+$.param(param);
+	});
+
+
+});
+const url = new URL(window.location.href);
+currentTab = url.searchParams.get("tab") ?? 'tab-unpaid';
+
+// Get url parameter from filter
+const getFilterParam = () =>  {
+	return {
+		search: $('#filter_search_input').val(),
+		after_date: $('#filter_after_date_input').val(),
+		before_date: $('#filter_before_date_input').val(),
+		tab: $('.tabs .active').attr('data-tab'),
+	}
+};
+
+// Set filter from url parameter
+const setFilterByParam = () =>  {
+	$('#filter_search_input').val(url.searchParams.get("search"));
+	$('#filter_after_date_input').val(url.searchParams.get("after_date"));
+	$('#filter_before_date_input').val(url.searchParams.get("before_date"));
+};
+
+//Set pagination url manual.
+const setPaginationUrl = ( param ) => {
+	let paginationLink = $('ul.pagination li a');
+	paginationLink.each( function (element) {
+		param.pageUnpaid = new URL(this.href).searchParams.get("pageUnpaid") ?? new URL(url).searchParams.get("pageUnpaid") ;
+		param.pagePaid = new URL(this.href).searchParams.get("pagePaid") ?? new URL(url).searchParams.get("pagePaid");
+		param.pageDelivered = new URL(this.href).searchParams.get("pageDelivered") ?? new URL(url).searchParams.get("pageDelivered");
+		this.href = this.href.split("?")[0]+'?'+$.param(param);
+	});
+	
+}
+
+// Getting all date that have been rented
+const getDateRentedChamber = handleData => {
+	return $.ajax({
+		url:"{{URL::to('/v1/getDateRentedChamber')}}",  
+		success:function(data) {
+			handleData(data); 
+		}
+	});
+}
+
+// Setup calender coloring
+const setDayLabelWithClass = (list, color) => list.forEach( item => $(`.row-day .col[data-day-yyyymmdd='${item}']`).addClass(`${color} rounded-corner`) );
+
+</script>
 @endsection
