@@ -78,6 +78,15 @@
 							<option value="10">{{ trans('translate.examination_certificate') }}</option>
 						</select>
 					</div>
+
+					<div class="col form-group">
+						<div class="col-md-4">
+							<span class="input-icon input-icon-right search-table float-right"> 
+								<input id="filter_search_input" name="search" type="text" placeholder="Cari Nama Perangkat..." id="form-field-17" class="form-control " value="{{ $search }}">
+								<em class="ti-search"></em>
+							</span> 
+						</div>
+					</div>
 				</div>
 			
 				@if (Session::get('error'))
@@ -1594,6 +1603,24 @@
 			});
 		}
 	});
+
+	const baseUrl = "{{URL::to('/')}}";
+
+	// Set destination when search is press with enter key
+	$('#filter_search_input').keypress(function(e) {
+		if(e.which != 13) { return; }
+		let param = getFilterParam();
+		document.location.href = baseUrl+'/pengujian?'+$.param(param);
+	});
+
+	// Get url parameter from filter
+	const getFilterParam = () =>  {
+	return {
+		search: $('#filter_search_input').val(),
+		jns: $('#cmb-jns-pengujian').val(),
+		status: $('#cmb-jns-status').val()
+	}
+};
 </script>
 
 @endsection
