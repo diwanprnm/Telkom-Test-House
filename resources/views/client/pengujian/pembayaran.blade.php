@@ -65,13 +65,13 @@
 													<tr>
 														<td>{{ trans('translate.stel_total_payment') }} : </td>
 													</tr>
-													<tr class="with_pph">
+													<tr class="with_pph" style="display: none;">
 														<td>
 															<span style="font-weight: bold; font-size:150%; color: #fa8231;">{{ trans('translate.stel_rupiah') }}. {{ number_format($examinationsData[0]->price, 0, ",", ".") }},-</span>&nbsp;
 															<label style="font-size:70%; text-transform: none;">({{ trans('translate.examination_payment_this_nominal') }})</label>
 														</td>
 													</tr>
-													<!-- <tr class="is_pph">
+													<tr class="is_pph">
 														<td>
 															<span style="font-size:100%; color: #fa8231; text-decoration: line-through;	">{{ trans('translate.stel_rupiah') }}. {{ number_format($examinationsData[0]->price, 0, ",", ".") }},-</span>
 														</td>
@@ -85,13 +85,13 @@
 															<span style="font-weight: bold; font-size:150%; color: #fa8231;">{{ trans('translate.stel_rupiah') }}. {{ number_format($amount, 0, ",", ".") }},-</span>
 															<label style="font-size:70%; text-transform: none;">({{ trans('translate.examination_payment_nominal_without_pph') }})</label>
 														</td>
-													</tr> -->
+													</tr>
 												</tbody>
 												<tfoot>
 													<tr>
 														<td>
-															<!-- <label style="text-transform: none;"><input type="checkbox" id="is_pph" name="is_pph" checked=""> {{ trans('translate.examination_payment_will_pay') }}</label> -->
-															<label style="text-transform: none;">{{ trans('translate.examination_payment_pph') }} <a href="{{ url('/client/downloadDecisionPPh23') }}">{{ trans('translate.examination_payment_here') }}</a>.</label>
+															<label style="text-transform: none;"><input type="checkbox" id="is_pph" name="is_pph" checked=""> {{ trans('translate.examination_payment_will_pay') }}</label>
+															<!-- <label style="text-transform: none;">{{ trans('translate.examination_payment_pph') }} <a href="{{ url('/client/downloadDecisionPPh23') }}">{{ trans('translate.examination_payment_here') }}</a>.</label> -->
 														</td>
 													</tr>
 												</tfoot>
@@ -141,15 +141,15 @@
  		<script type="text/javascript">	
 	
 	 	$(document).ready(function() {
-		    // $('#is_pph').change(function() {
-		    // 	if(this.checked) {
-		    //         $(".is_pph").show();
-		    //         $(".with_pph").hide();
-		    //     }else{
-		    //     	$(".with_pph").show();
-		    //         $(".is_pph").hide();
-		    //     }
-		    // });
+		    $('#is_pph').change(function() {
+		    	if(this.checked) {
+		            $(".is_pph").show();
+		            $(".with_pph").hide();
+		        }else{
+		        	$(".with_pph").show();
+		            $(".is_pph").hide();
+		        }
+		    });
 
 		    $('#payment_method').on('change', function() {
 				var res = this.value.split("||");
