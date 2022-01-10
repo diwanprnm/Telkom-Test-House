@@ -242,14 +242,14 @@ class ProfileController extends Controller
 		if($request->input('siup_number') != $request->input('hide_siup_number')){
 			$temp->siup_number = $request->input('siup_number');
 			$count_commit ++ ;
-			$description = $description.'No. SIUPP, ';
+			$description = $description.'No. SIUP, ';
 		}
 			$timestamp = strtotime($request->input('siup_date'));
 			$siupdate = date('Y-m-d', $timestamp);
 		if($siupdate != $request->input('hide_siup_date')){
 			$temp->siup_date = $siupdate;
 			$count_commit ++ ;
-			$description = $description.'Masa berlaku SIUPP, ';
+			$description = $description.'Masa berlaku SIUP, ';
 		}
 		
 		//Upload SIUP FILE

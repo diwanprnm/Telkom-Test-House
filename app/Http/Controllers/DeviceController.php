@@ -155,8 +155,8 @@ class DeviceController extends Controller
 			'Telepon Perusahaan',
 			'Faksimil Perusahaan',
 			'NPWP Perusahaan',
-			'SIUPP Perusahaan',
-			'Tgl. SIUPP Perusahaan',
+			'SIUP Perusahaan',
+			'Tgl. SIUP Perusahaan',
 			'Sertifikat Perusahaan',
 			'Tgl. Sertifikat Perusahaan',*/
 			'Nama Perangkat',

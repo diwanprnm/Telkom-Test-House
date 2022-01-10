@@ -30,10 +30,10 @@ function bar_progress(progress_line_object, direction) {
 }
 
 jQuery(document).ready(function() {
-	$('#fileInput-SIUPP').change(function() {
-        var filename = $('#fileInput-SIUPP').val();
+	$('#fileInput-SIUP').change(function() {
+        var filename = $('#fileInput-SIUP').val();
         $('#f4-preview-1').html(filename);
-		var siupp_berkas = filename;
+		var siup_berkas = filename;
     });
     $('#fileInput-lampiran').change(function() {
         var filename = $('#fileInput-lampiran').val();
@@ -333,34 +333,34 @@ jQuery(document).ready(function() {
 			//Data Upload Berkas
 			else if($(this).hasClass('data-upload-berkas')){
 				
-				if( document.getElementById("fileInput-SIUPP").files.length == 0 ){
-					var siupp_file = document.getElementById("siupp-file").innerHTML;
-					if(siupp_file == ''){
-						alert("Tidak Ada File SIUPP!");
+				if( document.getElementById("fileInput-SIUP").files.length == 0 ){
+					var siup_file = document.getElementById("siup-file").innerHTML;
+					if(siup_file == ''){
+						alert("Tidak Ada File SIUP!");
 						$(this).addClass('input-error');next_step = false;
 						return false;
 					}
 				}
 				
-				if($(this).hasClass('f1-no-siupp')){
-					var term = document.getElementById("f1-no-siupp");
+				if($(this).hasClass('f1-no-siup')){
+					var term = document.getElementById("f1-no-siup");
 					if( term.value == "" ){
-						alert("No. SIUPP Wajib diisi!");term.focus();
+						alert("No. SIUP Wajib diisi!");term.focus();
 						$(this).addClass('input-error');next_step = false;
 						return false;
 					}
 					$('#f4-preview-2').html(term.value);
-					var no_siupp_berkas = term.value;
+					var no_siup_berkas = term.value;
 				}
-				if($(this).hasClass('f1-tgl-siupp')){
-					var term = document.getElementById("f1-tgl-siupp");
+				if($(this).hasClass('f1-tgl-siup')){
+					var term = document.getElementById("f1-tgl-siup");
 					if( term.value == "" ){
-						alert("Tanggal SIUPP Wajib diisi!");term.focus();
+						alert("Tanggal SIUP Wajib diisi!");term.focus();
 						$(this).addClass('input-error');next_step = false;
 						return false;
 					}
 					$('#f4-preview-3').html(term.value);
-					var tgl_siupp_berkas = term.value;
+					var tgl_siup_berkas = term.value;
 				}
 				
 				if($(this).hasClass('f1-sertifikat-sistem-mutu')){
