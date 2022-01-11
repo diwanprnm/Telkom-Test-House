@@ -49,11 +49,11 @@
 				<div class="container-fluid container-fullw bg-white">
 				<div class="row">
 					<div class="col-md-6">
-						<ul class="nav nav-tabs clearfix">
-							<li class="{{ $tab == 'unpaid' ? 'active' : '' }}"><a href="#tab-unpaid" data-toggle="tab"><strong>Unpaid</strong></a></li>
-							<li class="{{ $tab == 'paid' ? 'active' : '' }}"><a href="#tab-paid" data-toggle="tab"><strong>Paid</strong></a></li>
-							<li class="{{ $tab == 'delivered' ? 'active' : '' }}"><a href="#tab-delivered" data-toggle="tab"><strong>Delivered</strong></a></li>
-							<li class="{{ $tab == 'expired' ? 'active' : '' }}"><a href="#tab-expired" data-toggle="tab"><strong>Old Document</strong></a></li>
+						<ul class="nav nav-tabs tabs clearfix">
+							<li class="{{ $tab == 'unpaid' ? 'active' : '' }}"  data-tab="unpaid"><a href="#tab-unpaid" data-toggle="tab"><strong>Unpaid</strong></a></li>
+							<li class="{{ $tab == 'paid' ? 'active' : '' }}"  data-tab="paid"><a href="#tab-paid" data-toggle="tab"><strong>Paid</strong></a></li>
+							<li class="{{ $tab == 'delivered' ? 'active' : '' }}" data-tab="delivered"><a href="#tab-delivered" data-toggle="tab"><strong>Delivered</strong></a></li>
+							<li class="{{ $tab == 'expired' ? 'active' : '' }}" data-tab="expired"><a href="#tab-expired" data-toggle="tab"><strong>Old Document</strong></a></li>
 						</ul>
 					</div>					
 					<div class="col-md-4 offset-0"> 
@@ -760,11 +760,18 @@
 	  });
 	}
 
-	jQuery(document).ready(function() {       
+	jQuery(document).ready(function() {
+		const url = new URL(window.location.href);
+		const currentTab = url.searchParams.get("tab") ?? 'tab-unpaid';
+
+		// Search STEL products by name or code
 		$('#search_stel_product').keydown(function(event) {
 	        if (event.keyCode == 13) {
 	            var baseUrl = "{{URL::to('/')}}";
-				var params = { search: document.getElementById("search_stel_product").value };	
+				var params = { 
+					search: document.getElementById("search_stel_product").value,
+					tab: $('.tabs .active').attr('data-tab')
+					};	
 				document.location.href = baseUrl+'/purchase_history?'+jQuery.param(params);
 	        }
 	    });

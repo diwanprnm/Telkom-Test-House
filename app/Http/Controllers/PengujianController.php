@@ -142,7 +142,7 @@ class PengujianController extends Controller
         if ($currentUser){
             $message = null;
             $paginate = 10;
-            $search = trim($request->input(self::SEARCH));
+            $search = urldecode(trim($request->input(self::SEARCH)));
             $jns = trim($request->input('jns'));
             $status = trim($request->input(self::STATUS));
 			

@@ -142,7 +142,7 @@ class ProductsController extends Controller
     public function purchase_history(Request $request)
     {
         $currentUser = Auth::user();
-        $search = trim($request->input(self::SEARCH));
+        $search = urldecode(trim($request->input(self::SEARCH)));
         if(!$currentUser){ return redirect(self::LOGIN);}
         $paginate = 10; 
         $tab = $request->input('tab') ? $request->input('tab') : 'unpaid';

@@ -51,7 +51,7 @@ class ChamberController extends Controller
     public function purchase_history(Request $request)
     {
         $currentUser = Auth::user();
-        $search = trim($request->input(self::SEARCH));
+        $search = urldecode(trim($request->input(self::SEARCH)));
         $after_date = trim($request->input(self::AFTER_DATE));
         $before_date = trim($request->input(self::BEFORE_DATE));
 
