@@ -3,6 +3,7 @@
 @section('content')
 
 <style type="text/css">
+	tbody { cursor: grab; }
 	ul.tabs{
 		margin: 0px;
 		padding: 0px;
@@ -347,7 +348,7 @@
 				<div class="col-md-3"></div>
 		        <div class="col-md-12">
 					<div class="table-responsive">
-						<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+						<table id="sortable" class="table table-bordered table-hover table-full-width dataTable no-footer">	
 							<caption>Device Table</caption>
 							<thead>
 								<tr>
@@ -364,80 +365,83 @@
 									<th class="center" scope="col">Aksi</th> 
 								</tr>
 							</thead>
-							<tbody> 
-								@php $no = 1; @endphp
-								@if(count($data_draft)>0)
-									@foreach($data_draft as $keys => $item)
-										<tr>
-											<td class="center">{{ $no+(($data_draft->currentPage()-1)*$data_draft->perPage()) }}</td>
-											<td class="center">{{ $item->examination->company->name }}</td>
-											<td class="center">{{ $item->examination->device->name }}</td>
-											<td class="center">{{ $item->examination->device->mark }}</td>
-											<td class="center">{{ $item->examination->device->model }}</td>
-											<td class="center">{{ $item->examination->device->capacity }}</td>
-											<td class="center">{{ $item->examination->device->manufactured_by }}</td>
-											<td class="center">{{ $item->finalResult ? $item->finalResult : '-' }}</td>
-											<td class="center">{{ $item->examination->company->qs_certificate_date > date('Y-m-d') ? 'SM Eligible' : 'SM Not Eligible' }}</td>
-											<td class="center"><input type="checkbox" name="chk-draft[]" id="chk-draft-{{$item->examination->id}}" class="chk-draft" value="{{ $item->examination->id }}" checked></td>
-											<td class="center"><a href="javascript:void(0)" class="collapsible"><em class="fa fa-eye"></em></a></td>
-										</tr>
-										<tr class="content" style="display: none;">
-											<td colspan="11" class="center">
-												<table class="table table-bordered table-hover table-full-width dataTable no-footer" style="width: 100%;">
-													<thead>
-														<tr>
-															<th class="center" scope="col">No. SPK</th>
-															<th class="center" scope="col">No. Laporan</th>
-															<th class="center" scope="col">No. Seri</th>
-															<th class="center" scope="col">Referensi Uji</th>
-															<th class="center" scope="col">Tanggal Penerimaan</th>  
-															<th class="center" scope="col">Tanggal Mulai Uji</th>  
-															<th class="center" scope="col">Tanggal Selesai Uji</th>  
-															<th class="center" scope="col">Diuji Oleh</th>  
-															<th class="center" scope="col">Target Penyelesaian</th>  
-														</tr>
-													</thead>
-													<tbody>
-														<tr>
-															<td class="center">{{ $item->examination->spk_code }}</td>
-															@php $no_lap = '-'; @endphp
-															@foreach($item->examination->media as $file)
-																@if($file->name == 'Laporan Uji')
-																	@php $no_lap = $file->no; @endphp
-																@endif
-															@endforeach
-															<td class="center">{{ $no_lap }}</td>
-															<td class="center">{{ $item->examination->device->serial_number }}</td>
-															<td class="center">{{ $item->examination->device->test_reference }}</td>
-															@php $tgl_barang = '-'; @endphp
-															@foreach($item->examination->equipmentHistory as $barang)
-																@if($barang->location == 2)
-																	@php $tgl_barang = $barang->action_date; @endphp
-																@endif
-															@endforeach
-															<td class="center">{{ $tgl_barang }}</td>
-															<td class="center">{{ $item->startDate ? $item->startDate : '-' }}</td>
-															<td class="center">{{ $item->endDate ? $item->endDate : '-' }}</td>
-															<td class="center">{{ $item->examination->examinationLab->name }}</td>
-															<td class="center">{{ $item->targetDate ? $item->targetDate : '-' }}</td>
-														</tr> 
-													</tbody>
-												</table>
-											</td>
-										</tr>
-										<tr class="content" style="display: none;"><td colspan="11"></td></tr>
-									@php
-										$no++
-									@endphp
-									@endforeach
-								@else
+							
+							@php $no = 1; @endphp
+							@if(count($data_draft)>0)
+								@foreach($data_draft as $keys => $item)
+								<tbody> 
+									<tr>
+										<td class="center">{{ $no+(($data_draft->currentPage()-1)*$data_draft->perPage()) }}</td>
+										<td class="center">{{ $item->examination->company->name }}</td>
+										<td class="center">{{ $item->examination->device->name }}</td>
+										<td class="center">{{ $item->examination->device->mark }}</td>
+										<td class="center">{{ $item->examination->device->model }}</td>
+										<td class="center">{{ $item->examination->device->capacity }}</td>
+										<td class="center">{{ $item->examination->device->manufactured_by }}</td>
+										<td class="center">{{ $item->finalResult ? $item->finalResult : '-' }}</td>
+										<td class="center">{{ $item->examination->company->qs_certificate_date > date('Y-m-d') ? 'SM Eligible' : 'SM Not Eligible' }}</td>
+										<td class="center"><input type="checkbox" name="chk-draft[]" id="chk-draft-{{$item->examination->id}}" class="chk-draft" value="{{ $item->examination->id }}" checked></td>
+										<td class="center"><a href="javascript:void(0)" class="collapsible"><em class="fa fa-eye"></em></a></td>
+									</tr>
+									<tr class="content" style="display: none;">
+										<td colspan="11" class="center">
+											<table class="table table-bordered table-hover table-full-width dataTable no-footer" style="width: 100%;">
+												<thead>
+													<tr>
+														<th class="center" scope="col">No. SPK</th>
+														<th class="center" scope="col">No. Laporan</th>
+														<th class="center" scope="col">No. Seri</th>
+														<th class="center" scope="col">Referensi Uji</th>
+														<th class="center" scope="col">Tanggal Penerimaan</th>  
+														<th class="center" scope="col">Tanggal Mulai Uji</th>  
+														<th class="center" scope="col">Tanggal Selesai Uji</th>  
+														<th class="center" scope="col">Diuji Oleh</th>  
+														<th class="center" scope="col">Target Penyelesaian</th>  
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td class="center">{{ $item->examination->spk_code }}</td>
+														@php $no_lap = '-'; @endphp
+														@foreach($item->examination->media as $file)
+															@if($file->name == 'Laporan Uji')
+																@php $no_lap = $file->no; @endphp
+															@endif
+														@endforeach
+														<td class="center">{{ $no_lap }}</td>
+														<td class="center">{{ $item->examination->device->serial_number }}</td>
+														<td class="center">{{ $item->examination->device->test_reference }}</td>
+														@php $tgl_barang = '-'; @endphp
+														@foreach($item->examination->equipmentHistory as $barang)
+															@if($barang->location == 2)
+																@php $tgl_barang = $barang->action_date; @endphp
+															@endif
+														@endforeach
+														<td class="center">{{ $tgl_barang }}</td>
+														<td class="center">{{ $item->startDate ? $item->startDate : '-' }}</td>
+														<td class="center">{{ $item->endDate ? $item->endDate : '-' }}</td>
+														<td class="center">{{ $item->examination->examinationLab->name }}</td>
+														<td class="center">{{ $item->targetDate ? $item->targetDate : '-' }}</td>
+													</tr> 
+												</tbody>
+											</table>
+										</td>
+									</tr>
+									<tr class="content" style="display: none;"><td colspan="11"></td></tr>
+								@php
+									$no++
+								@endphp
+								</tbody>
+								@endforeach
+							@else
+								<tbody>
 									<tr>
 										<td colspan=11 class="center">
 											Data Not Found
 										</td>
 									</tr>
-								@endif
-                            </tbody>
+								</tbody>
+							@endif
 						</table>
 					</div>
 					<div class="row">
@@ -500,6 +504,7 @@
 		$("#tab-perangkat").addClass('current');
 	}
 
+	$( "#sortable" ).sortable({delay: 150});
 	var coll = document.getElementsByClassName("collapsible");
 	var i;
 

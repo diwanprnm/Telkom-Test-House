@@ -1,9 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<style type="text/css">
-	tbody { cursor: grab; }
-</style>
 <div class="main-content" >
 	<div class="wrap-content container" id="container">
 		<!-- start: PAGE TITLE -->
@@ -147,7 +144,7 @@
 					</div>
 				</div>
 		        <div class="col-md-12">
-					<table id="sortable" class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
+					<table class="table table-striped table-bordered table-hover table-full-width dataTable no-footer">
 						<caption>Device Table</caption>
 						<thead>
 							<tr>
@@ -169,7 +166,7 @@
 						@if(count($data)>0)
 							@foreach($data as $keys => $item)
 							<tbody> 
-								<input type="hidden" value="{{ $item->examination_id }}" name="examination_id[]">
+								<input type="hidden" value="{{ $item->id }}" name="id[]">
 								<tr>
 									<td class="center">{{ $no }}</td>
 									<td class="center">{{ $item->examination->company->name }}</td>
@@ -188,8 +185,8 @@
 										</select>
 									</td>
 									<td class="center">
-										<input type="hidden" class="valid_range_temp" name=valid_range[] value=0>
-										<select class="valid_range" name="valid_range[]" disabled>
+										<input type="hidden" class="valid_range_temp" name=valid_range[] value=0 @if ($item->result == 1) disabled @endif>
+										<select class="valid_range" name="valid_range[]" @if ($item->result != 1) disabled @endif>
 											<option value="0" @if ($item->valid_range == 0) selected @endif>Choose</option>
 											<option value="36" @if ($item->valid_range == 36) selected @endif>3 Tahun</option>
 											<option value="12" @if ($item->valid_range == 12) selected @endif>1 Tahun</option>
@@ -310,7 +307,6 @@
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
 <script src={{ asset("assets/js/form-elements.js") }}></script>
 <script type="text/javascript">
-	$( "#sortable" ).sortable({delay: 150});
 	var coll = document.getElementsByClassName("collapsible");
 	var i;
 
