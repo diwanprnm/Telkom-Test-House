@@ -235,6 +235,7 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::get('sidang/resetExamination/{sidang_id}', 'SidangController@resetExamination');
 	Route::get('sidang/{sidang_id}/print', 'SidangController@print');
 	Route::get('sidang/{sidang_id}/download', 'SidangController@download');
+	Route::get('sidang/{sidang_id}/excel', 'SidangController@excel');
 
 	Route::resource('/approval', 'ApprovalController');
 	Route::get('/approval/assign/{id}/{password}', 'ApprovalController@assign');

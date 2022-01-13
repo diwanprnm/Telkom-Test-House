@@ -332,7 +332,7 @@
 			</div>
 			
 			<div id="tab-draft" class="row tab-content">
-				<div class="col-md-3">
+				<div class="col-md-6">
 					<div class="form-group">
 						<label>Tanggal Sidang</label>
 						<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
@@ -344,8 +344,14 @@
 							</span>
 						</p>
 					</div>
+					<div class="form-group">
+						<a href="{{ URL::to('/admin/sidang/'.$sidang_id.'/excel') }}" target="_blank">
+							<button type="button" class="btn btn-info">
+								Export to Excel
+							</button>
+						</a>
+					</div>
 				</div>
-				<div class="col-md-3"></div>
 		        <div class="col-md-12">
 					<div class="table-responsive">
 						<table id="sortable" class="table table-bordered table-hover table-full-width dataTable no-footer">	

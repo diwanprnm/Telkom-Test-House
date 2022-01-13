@@ -284,65 +284,59 @@ class SidangController extends Controller
         return $data;
     }
 
-    public function excel(Request $request) 
-    {
+    public function excel($sidang_id){
         $currentUser = Auth::user();
         if (!$currentUser){return redirect(self::LOGIN);}
+        $logService = new LogService();
+
+        $data = Sidang_detail::with('sidang')
+            ->with('examination')
+            ->with('examination.company')
+            ->with('examination.media')
+            ->with('examination.examinationLab')
+            ->with('examination.equipmentHistory')
+            ->with('examination.examinationAttach')
+            ->where('sidang_id', $sidang_id)
+            ->get()
+        ;
+
+        $data_draft = $this->mergeOTR($data, 'sidang');
         
-        // initial service sales 
-        $salesService = new SalesService();
-
-        // gate Sales Data
-        $data = $salesService->getDataByStatus($request, $request->input('payment_status'));
-
         // Define the Excel spreadsheet headers
+        $examsArray = [];
         $examsArray[] = [
-            'No',
-            'Company Name',
-            'Sales Date',
-            'Invoice',
-            'Total',
+            'No.',
+            'Perusahaan',
+            'Perangkat',
+            'Merek',
+            'Tipe',
+            'Kapasitas',
+            'Negara Pembuat',
+            'Hasil Uji',
             'Status',
-            'Payment Method',
-            'Document Code'
-        ];
-
-         // Define payment status
-        $paymentStatusList = array(
-            '-1'=> 'Paid (decline)',
-            '0' => 'Unpaid',
-            '1' => 'Paid',
-            '2' => 'Paid (waiting confirmation)',
-            '3' => 'Delivered'
-        );
-        // Convert each ot the returned collection into an array, and append it to the payments array
-        $no = 0;
-        foreach ($data['data']->get() as $row) {
-            $no ++;
-            
-            if ($paymentStatusList[$row->payment_status]){
-                $payment_status = $paymentStatusList[$row->payment_status];
-            }else{
-                $payment_status = "Paid";
-            }
-
+        ]; 
+        
+        // Convert each member of the returned collection into an array,
+        // and append it to the payments array.
+        
+        $no=1;
+        foreach ($data_draft as $row) {
             $examsArray[] = [
                 $no,
-                $row->company_name,
-                $row->created_at,
-                $row->invoice,
-                number_format($row->cust_price_payment, 0, '.', ','),
-                $payment_status,
-                ($row->payment_method == 1)?'ATM':$row->VA_name,
-                $row->stel_code
+                $row->examination->company->name,
+                $row->examination->device->name,
+                $row->examination->device->mark,
+                $row->examination->device->model,
+                $row->examination->device->capacity,
+                $row->examination->device->manufactured_by,
+                $row->finalResult ? $item->finalResult : '-',
+                $row->examination->company->qs_certificate_date > date('Y-m-d') ? 'SM Eligible' : 'SM Not Eligible',
             ];
+            $no++;
         }
 
-        // Create log
-        $logService = new LogService;
-        $logService->createLog('download_excel', self::SALES,'');
-
-        $excel = \App\Services\ExcelService::download($examsArray, 'Data Sales');
+        $logService->createLog('download_excel', 'Draft Sidang QA', '');
+        $excel = \App\Services\ExcelService::download($examsArray, 'Draft Sidang QA '.$data_draft[0]->sidang->date);
         return response($excel['file'], 200, $excel['headers']);
     }
 

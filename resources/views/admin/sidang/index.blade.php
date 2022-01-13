@@ -188,7 +188,7 @@
 									<th class="center" scope="col">Jumlah Tidak Lulus</th>
 									<th class="center" scope="col">Jumlah Tunda Hasil</th>
 									<th class="center" scope="col">Status</th>
-									<th class="center" colspan="3" scope="colgroup">Aksi</th>  
+									<th class="center" colspan="4" scope="colgroup">Aksi</th>  
 								</tr>
 							</thead>
 							<tbody> 
@@ -213,6 +213,11 @@
 											</td>
 											@endif
 											@if($item->status == 'DRAFT')
+											<td class="center">
+												<div>
+													<a href="{{URL::to('admin/sidang/'.$item->id.'/excel')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Excel" target="_blank"><em class="fa fa-file-excel-o"></em></a>
+												</div>
+											</td>
 											<td class="center">
 												<div>
 													<a href="{{URL::to('admin/sidang/create/'.$item->id)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
