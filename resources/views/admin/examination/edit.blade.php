@@ -3892,10 +3892,10 @@
 											@if($data->qa_passed == 1)
 											<div class="radio">
 												<div class="radio clip-radio radio-primary">
-														<input type="radio" value="1" name="passed" id="passed" checked>
-														<label for="passed">
-															Lulus
-														</label>
+													<input type="radio" value="1" name="passed" id="passed" checked>
+													<label for="passed">
+														Lulus
+													</label>
 												</div>
 											</div>
 											<div class="radio">
@@ -3917,23 +3917,23 @@
 											@elseif($data->qa_passed == -1)
 											<div class="radio">
 												<div class="radio clip-radio radio-primary">
-														<input type="radio" value="1" name="passed" id="passed">
-														<label for="passed">
-															Lulus
-														</label>
+													<input type="radio" value="1" name="passed" id="passed">
+													<label for="passed">
+														Lulus
+													</label>
 												</div>
 											</div>
 											<div class="radio">
 												<div class="radio clip-radio radio-primary">
-													<input type="radio" value="-1" name="passed" id="notPassed">
+													<input type="radio" value="-1" name="passed" id="notPassed" checked>
 													<label for="notPassed">
 														Tidak Lulus
 													</label>
 												</div>
 											</div>
 											<div class="radio">
-												<input type="radio" value="2" name="passed" id="pending" checked>
-													<input type="radio" value="2">
+												<div class="radio clip-radio radio-primary">
+													<input type="radio" value="2" name="passed" id="pending">
 													<label for="pending">
 														Pending
 													</label>
@@ -3942,10 +3942,10 @@
 											@elseif($data->qa_passed == 2)
 											<div class="radio">
 												<div class="radio clip-radio radio-primary">
-														<input type="radio" value="1" name="passed" id="passed">
-														<label for="passed">
-															Lulus
-														</label>
+													<input type="radio" value="1" name="passed" id="passed">
+													<label for="passed">
+														Lulus
+													</label>
 												</div>
 											</div>
 											<div class="radio">
@@ -3957,8 +3957,8 @@
 												</div>
 											</div>
 											<div class="radio">
-												<input type="radio" value="2" name="passed" id="pending" checked>
-													<input type="radio" value="2">
+												<div class="radio clip-radio radio-primary">
+													<input type="radio" value="2" name="passed" id="pending" checked>
 													<label for="pending">
 														Pending
 													</label>
@@ -3967,10 +3967,10 @@
 											@else
 											<div class="radio">
 												<div class="radio clip-radio radio-primary">
-														<input type="radio" value="1" name="passed" id="passed">
-														<label for="passed">
-															Lulus
-														</label>
+													<input type="radio" value="1" name="passed" id="passed">
+													<label for="passed">
+														Lulus
+													</label>
 												</div>
 											</div>
 											<div class="radio">
@@ -3982,8 +3982,8 @@
 												</div>
 											</div>
 											<div class="radio">
-												<input type="radio" value="2" name="passed" id="pending">
-													<input type="radio" value="2">
+												<div class="radio clip-radio radio-primary">
+													<input type="radio" value="2" name="passed" id="pending">
 													<label for="pending">
 														Pending
 													</label>

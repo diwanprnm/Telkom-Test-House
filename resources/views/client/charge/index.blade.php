@@ -76,7 +76,7 @@
 												<tr>
 													<th class="center" scope="col">{{ trans('translate.charge_no') }}</th>
 													<th class="center" scope="col">{{ trans('translate.charge_name') }}</th>
-													<th class="center" scope="col">{{ trans('translate.charge_stel') }}</th>
+													<th class="center" scope="col">{{ trans('translate.menu_reference') }}</th>
 													<th class="center" scope="col">{{ trans('translate.charge_category') }}</th>
 													<th class="center" scope="col">{{ trans('translate.charge_duration') }}</th>
 													<th class="center" scope="col">{{ trans('translate.charge_cost') }}</th>
