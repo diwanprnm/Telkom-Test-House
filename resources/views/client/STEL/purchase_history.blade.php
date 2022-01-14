@@ -46,24 +46,23 @@
 	<section id="content">
 		<div class="content-wrap">
 			<div class="container clearfix">
+				
 				<div class="container-fluid container-fullw bg-white">
-				<div class="row">
-					<div class="col-md-6">
-						<ul class="nav nav-tabs tabs clearfix">
+						<div class="row offset-0"> 
+							<div class="col-md-4 pull-right">
+								<span class="input-icon input-icon-right search-table  float-right"> 
+									<input id="search_stel_product" name="search" type="text" placeholder="{{ trans('translate.search_STEL') }}" id="form-field-17" class="form-control " value="{{ $search }}">
+									<em class="ti-search"></em>
+								</span> 
+							</div>
+							
+						</div>
+						<ul class="nav nav-tabs clearfix">
 							<li class="{{ $tab == 'unpaid' ? 'active' : '' }}"  data-tab="unpaid"><a href="#tab-unpaid" data-toggle="tab"><strong>Unpaid</strong></a></li>
 							<li class="{{ $tab == 'paid' ? 'active' : '' }}"  data-tab="paid"><a href="#tab-paid" data-toggle="tab"><strong>Paid</strong></a></li>
 							<li class="{{ $tab == 'delivered' ? 'active' : '' }}" data-tab="delivered"><a href="#tab-delivered" data-toggle="tab"><strong>Delivered</strong></a></li>
 							<li class="{{ $tab == 'expired' ? 'active' : '' }}" data-tab="expired"><a href="#tab-expired" data-toggle="tab"><strong>Old Document</strong></a></li>
-						</ul>
-					</div>					
-					<div class="col-md-4 offset-0"> 
-							<span class="input-icon input-icon-right search-table  float-right"> 
-								<input id="search_stel_product" name="search" type="text" placeholder="{{ trans('translate.search_STEL') }}" id="form-field-17" class="form-control " value="{{ $search }}">
-								<em class="ti-search"></em>
-							</span> 
-						</div>			
-				</div>
-				
+						</ul>															
 					<div class="tab-content">
 						<!-- tab unpaid -->
 						<div id="tab-unpaid" class="row clearfix tab-pane fade {{ $tab == 'unpaid' ? 'in active' : '' }}">
@@ -770,7 +769,7 @@
 	            var baseUrl = "{{URL::to('/')}}";
 				var params = { 
 					search: document.getElementById("search_stel_product").value,
-					tab: $('.tabs .active').attr('data-tab')
+					tab: $('.nav-tabs .active').attr('data-tab')
 					};	
 				document.location.href = baseUrl+'/purchase_history?'+jQuery.param(params);
 	        }
