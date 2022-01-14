@@ -2,19 +2,19 @@
 
 return [
 	'locale'			=> 'Indonesia',
-    'home' 				=> 'Beranda', // home
-	
-    'about'     		=> 'Tentang', // about
+	'home' 				=> 'Beranda', // home
+
+	'about'     		=> 'Tentang', // about
 	'about_us'     		=> 'Kami',
-	
+
 	'certification'		=> 'Sertifikasi',
-	
-    'procedure'    		=> 'Prosedur',
-    
+
+	'procedure'    		=> 'Prosedur',
+
 	'service'     			=> 'Layanan Pengujian', // Testing Process
 	'process'     			=> 'Proses',
 	'service_title'			=> 'Pendaftaran pengujian dibagi menjadi 7 halaman :',
-	
+
 	'service_application'			=> 'Data Pemohonan',
 	'service_application_name'		=> 'Nama',
 	'service_application_address'	=> 'Alamat',
@@ -24,9 +24,9 @@ return [
 	'service_company_agent'			=> 'Agen/Distributor',
 	'service_company_branch'		=> 'Pabrikan',
 	'service_company_individual'	=> 'Pengguna/Perorangan',
-	'service_company_representative'=> 'Perwakilan',
+	'service_company_representative' => 'Perwakilan',
 	'service_company_owner'			=> 'Pemilik Alat Ukur',
-	
+
 	'service_company'			=> 'Data Perusahaan',
 	'service_company_type'		=> 'Status Perusahaan',
 	'service_company_name'		=> 'Nama',
@@ -38,23 +38,23 @@ return [
 	'service_company_fax'		=> 'Faksimil',
 	'service_company_email'		=> 'Email',
 	'service_company_confirm'	=> '*Apabila ada perubahan data perusahaan, silakan email ke Admin cstth@telkom.co.id',
-	
+
 	'service_device'				=> 'Data Perangkat', // Device Information
 	'service_device_equipment'		=> 'Nama Perangkat', // Device
 	'service_device_mark'			=> 'Merk/Pabrik', // Merk
 	'service_device_capacity'		=> 'Kapasitas/Kecepatan', // Capacity
-	'service_device_manufactured_by'=> 'Negara Pembuat', // Made in
+	'service_device_manufactured_by' => 'Negara Pembuat', // Made in
 	'service_device_serial_number'	=> 'Nomor Seri',
 	'service_device_model'			=> 'Model/Tipe',
 	'service_device_test_reference'	=> 'Referensi Uji',
 	'service_device_document'		=> 'Dokumen Pendukung',
 	'service_device_already_exist'	=> 'Perangkat[Nama, Merk, Model, Kapasitas] dan Jenis Pengujian sudah ada!',
 	'service_device_not_6_months_yet' => 'Perangkat pada jenis pengujian ini telah gagal sebelumnya dan belum melewati masa 6 bulan.',
-	
+
 	'service_label_testing_site'		=> 'Lokasi Pengujian',
 	'service_lab_testing'				=> "Uji Lab Telkom",
 	'service_loc_testing'				=> "Uji Lokasi",
-	
+
 	'service_upload'					=> 'Unggah Berkas',
 	'service_upload_siupp'				=> 'Lampiran SIUP',
 	'service_upload_siupp_no'			=> 'No SIUP',
@@ -65,29 +65,29 @@ return [
 	'service_upload_npwp'				=> 'Lampiran Scan NPWP',
 	'service_upload_reference_test'		=> 'Referensi Uji',
 	'service_upload_reference_test_no'	=> 'No Referensi Uji',
-	'service_upload_reference_test_date'=> 'Tanggal Referensi Uji',
+	'service_upload_reference_test_date' => 'Tanggal Referensi Uji',
 	'service_upload_support_principals'	=> 'Surat Dukungan Prinsipal',
 	'service_upload_another_file'		=> 'Dokumen Spesifikasi',
 	'service_upload_support_principals_no'	=> 'No Surat Dukungan Prinsipal',
-	'service_upload_support_principals_date'=> 'Tanggal Surat Dukungan Prinsipal',
+	'service_upload_support_principals_date' => 'Tanggal Surat Dukungan Prinsipal',
 	'service_upload_sp3'				=> 'PLG ID dan NIB',
 	'service_upload_sp3_no'				=> 'No PLG ID dan NIB',
 	'service_upload_sp3_date'			=> 'Tanggal PLG ID dan NIB',
 	'service_upload_sp3_file'			=> 'Dokumen PLG ID dan NIB',
-	
+
 	'service_preview'			=> 'Pratinjau',
 	'service_preview_exam_type'	=> 'Jenis Pengujian',
-	
+
 	'service_upload_form'	=> 'Unggah Form Pengujian',
 	'service_upload_now'		=> 'Unggah Sekarang',
 	'service_upload_later'		=> 'Unggah Nanti',
 	'service_upload_if_form'	=> 'Jika form tidak muncul secara otomatis,',
 	'service_upload_click'		=> 'Klik Disini',
 	'service_upload_later_alt'	=> 'Jika data akan diubah atau form permohonan belum diupload, klik Menu "Status Pengujian" lalu klik tombol Edit',
-	
+
 	'service_finished'		=> 'Selesai',
 	'service_thanks'		=> 'Terima kasih, pendaftaran anda akan kami proses lebih lanjut',
-	
+
 	'service_previous'		=> 'Sebelumnya',
 	'service_next'			=> 'Berikutnya',
 	'service_save'			=> 'Simpan',
@@ -96,16 +96,16 @@ return [
 	'service_operational_time'	=> 'Jam Operasional',
 
 	'operational_time'	=> 'Senin - Jumat : 09.00 - 17.00 ',
-    
+
 	'contact'     		=> 'Kontak',
-    'contact_us'		=> 'Kontak Kami',
+	'contact_us'		=> 'Kontak Kami',
 	'contact_name'		=> 'Nama',
 	'contact_question'	=> 'Kategori Pertanyaan',
 	'contact_subject'	=> 'Subjek',
 	'contact_email'		=> 'Email',
 	'contact_message'	=> 'Pesan',
 	'contact_send'		=> 'Kirim Pesan',
-	
+
 	'stel'     			=> 'STEL', // testing references
 	'stels'    			=> 'S-TSEL',
 	'stel_ref_uji'		=> 'Ref Uji',
@@ -121,9 +121,9 @@ return [
 	'stel_tax'     	=> 'Pajak',
 	'stel_in_cart'     	=> 'Sudah ada di Keranjang Belanja',
 	'stel_buyed'     	=> 'Sudah dibeli',
-    
+
 	'new_charge'   		=> 'Tarif Baru', // tariff
-	'calibration_charge'=> 'Kalibrasi', // tariff
+	'calibration_charge' => 'Kalibrasi', // tariff
 	'device_charge'		=> 'Pengujian Perangkat',
 	'charge'     		=> 'Tarif', // tariff
 	'charge_no'     	=> 'No',
@@ -134,9 +134,9 @@ return [
 	'charge_cost'     	=> 'Biaya QA',
 	'charge_vt_cost'   	=> 'Biaya VT',
 	'charge_ta_cost'   	=> 'Biaya TA',
-	'charge_choose_category'=> 'Pilih Kategori',
-	'charge_all_category'=> 'Semua Kategori',
-    
+	'charge_choose_category' => 'Pilih Kategori',
+	'charge_all_category' => 'Semua Kategori',
+
 	'devic_test_passed' 			=> 'Perangkat Lulus Uji',
 	'devic_test_passed_no' 			=> 'No',
 	'devic_test_passed_name'		=> 'Nama Perusahaan',
@@ -148,7 +148,7 @@ return [
 	'devic_test_passed_cert_numb' 	=> 'No Sertifikat',
 	'devic_test_passed_valid_form' 	=> 'Berlaku Dari',
 	'devic_test_passed_valid_thru' 	=> 'Berlaku Sampai',
-    
+
 	'examination' 				=> 'Status Pengujian', // status pengujian x testing progress
 	'examination_reg' 			=> 'Pendaftaran', // reigstration
 	'examination_function'		=> 'Uji Fungsi', // Function
@@ -166,56 +166,57 @@ return [
 	'examination_print' 		=> 'Cetak',
 	'examination_edit' 			=> 'Ubah',
 	'examination_detail' 		=> 'Rincian',
-    'examination_choose_type' 	=> 'Pilih Tipe Pengujian',
+	'examination_choose_type' 	=> 'Pilih Tipe Pengujian',
 	'examination_choose_status'	=> 'Pilih Status',
 	'examination_choose_stel'	=> 'Pilih STEL',
 	'examination_all_type' 		=> 'Semua Tipe Pengujian',
 	'examination_all_status'	=> 'Semua Status',
-	
+
 	'examination_type'	=> 'Tipe Pengujian',
 	'examination_user'	=> 'Pemohon',
-	
+
 	'examination_history' 		=> 'Riwayat Pengujian',
 	'examination_history_step'	=> 'Tahap',
-	'examination_history_status'=> 'Status',
+	'examination_history_status' => 'Status',
 	'examination_history_notes' => 'Keterangan',
 	'examination_history_date' 	=> 'Tanggal',
-	
+
 	'examination_date' 			=> 'Tanggal Uji',
 	'examination_date_begin'	=> 'Mulai',
 	'examination_date_end' 		=> 'Selesai',
 	'examination_spk_code' 		=> 'Nomor SPK',
 	'example'					=> 'cth :',
-	
-	'examination_function_test_date'=> 'Tanggal Uji Fungsi',
-	'examination_reschedule_test_date'=> 'Uji Fungsi',
-	'examination_approve_test_date'=> 'Setujui Uji Fungsi',
-	'examination_upload_payment'=> 'Unggah File Pembayaran',
-	'examination_file_payment'=> 'File Pembayaran',
-	'examination_number_payment'=> 'No. SPB',
-	'examination_date_payment'=> 'Tanggal Pembayaran',
-	'examination_price_payment'=> 'Jumlah Biaya yang ditransfer',
-	'examination_upload_payment_file'=> 'Unggah',
-	'examination_pay_now'=> 'Bayar Sekarang',
-	'examination_model'=> 'Model/Tipe',
-	'examination_mark'=> 'Merk/Pabrik',
-	'examination_capacity'=> 'Kapasitas',
-	'examination_serial_number'=> 'Nomor Seri',
-	'examination_company'=> 'Perusahaan',
-	'examination_date_regist'=> 'Tanggal Pengajuan',
-	'examination_number_exam_form'=> 'Nomor Registrasi',
-	'examination_labs_name'=> 'Nama Lab',
+
+	'examination_function_test_date' => 'Tanggal Uji Fungsi',
+	'examination_reschedule_test_date' => 'Uji Fungsi',
+	'examination_approve_test_date' => 'Setujui Uji Fungsi',
+	'examination_upload_payment' => 'Unggah File Pembayaran',
+	'examination_file_payment' => 'File Pembayaran',
+	'examination_number_payment' => 'No. SPB',
+	'examination_date_payment' => 'Tanggal Pembayaran',
+	'examination_price_payment' => 'Jumlah Biaya yang ditransfer',
+	'examination_upload_payment_file' => 'Unggah',
+	'examination_pay_now' => 'Bayar Sekarang',
+	'examination_model' => 'Model/Tipe',
+	'examination_mark' => 'Merk/Pabrik',
+	'examination_capacity' => 'Kapasitas',
+	'examination_serial_number' => 'Nomor Seri',
+	'examination_company' => 'Perusahaan',
+	'examination_date_regist' => 'Tanggal Pengajuan',
+	'examination_number_exam_form' => 'Nomor Registrasi',
+	'examination_labs_name' => 'Nama Lab',
 	'form_not_show' => 'Jika form tidak muncul secara otomatis,',
-	
+
 	'search'			=> 'Cari',
 	'search_STEL'		=> 'Cari Berdasarkan Nama atau Kode',
 	'search_charge'		=> 'Cari Berdasarkan Nama Perangkat',
 	'search_dev'		=> 'Cari Berdasarkan Perusahaan, Perangkat, atau Merk',
 	'search_exam'		=> 'Cari Berdasarkan Nama Perangkat',
+	'search_chamber_history' => 'Cari Nomor Pemesanan ( CHMB ... )',
 	'login'				=> 'Masuk',
 	'logout'			=> 'Keluar',
 	'login_title'		=> 'Masuk ke Akun Anda',
-	
+
 	'profile'					=> 'Profil',
 	'profile_name'				=> 'Nama',
 	'profile_address'			=> 'Alamat',
@@ -229,12 +230,12 @@ return [
 	'profile_new_password'		=> 'Kata Sandi Baru',
 	'profile_confirm_password'	=> 'Konfirmasi Kata Sandi Baru',
 	'profile_wrong_password'	=> 'Kata Sandi Salah',
-	'profile_password_not_match'=> 'Kata Sandi Tidak Sama',
+	'profile_password_not_match' => 'Kata Sandi Tidak Sama',
 	'profile_password_required'	=> 'Kata Sandi Harus Diisi',
 	'profile_picture'			=> 'Foto Profil',
 	'profile_save'				=> 'Simpan',
 	'my_profile'				=> 'Profil Saya',
-	
+
 	'company'					=> 'Perusahaan',
 	'company_name'				=> 'Nama',
 	'company_address'			=> 'Alamat',
@@ -255,7 +256,7 @@ return [
 	'company_certificate_file'	=> 'File Sertifikat Sistem Mutu',
 	'company_save'				=> 'Simpan',
 	'company_form_button'		=> 'Form Perusahaan Baru',
-	
+
 	'email'				=> 'Email',
 	'password'			=> 'Kata Sandi',
 
@@ -263,13 +264,13 @@ return [
 	'have_not_account'	=> 'Tidak Punya Akun ?',
 	'click_here'		=> 'Klik Disini !',
 	'password_reset'	=> 'Klik disini untuk mengubah kata sandi :',
-	
+
 	'reset_password'		=> 'Atur Ulang Kata Sandi',
 	'reset_password_email'	=> 'Email',
 	'reset_password_send'	=> 'Kirim Tautan untuk Atur Ulang Kata Sandi',
 	'reset_password_new_pass'		=> 'Kata Sandi Baru',
 	'reset_password_confirm_pass'	=> 'Konfirmasi Kata Sandi',
-	
+
 	'register'					=> 'Daftar',
 	'register_user'				=> 'Data Pemohon',
 	'register_name'				=> 'Nama',
@@ -285,31 +286,31 @@ return [
 	'register_picture'			=> 'Foto Profil',
 	'register_email_required'	=> 'Email Harus Diisi',
 	'register_email_exists'		=> 'Email Sudah Ada',
-	'register_password_required'=> 'Kata Sandi Harus Diisi',
-	'register_password_not_match'=> 'Kata Sandi Tidak Sama',
+	'register_password_required' => 'Kata Sandi Harus Diisi',
+	'register_password_not_match' => 'Kata Sandi Tidak Sama',
 	'register_not_have_account'	=> 'Belum Punya Akun',
 	'register_image_type'		=> 'Jenis File Harus Gambar!',
-	
-	'search_result'=> 'Search Result',
-	'search_result_title'=> 'Title',
-	'search_result_desc'=> 'Description',
-	'search_result_download_stel'=> 'Unduh STEL',
-	'search_result_download_exam_charge'=> 'Unduh Tarif Pengujian',
-	'search_result_exam_detail'=> 'Examination Detail',
-	
+
+	'search_result' => 'Search Result',
+	'search_result_title' => 'Title',
+	'search_result_desc' => 'Description',
+	'search_result_download_stel' => 'Unduh STEL',
+	'search_result_download_exam_charge' => 'Unduh Tarif Pengujian',
+	'search_result_exam_detail' => 'Examination Detail',
+
 	'data_not_found'	=> 'Data Tidak Ditemukan',
 	'supported'	=> 'Didukung Oleh',
 	'menu_company'    		=> 'Perusahaan',
 	'menu_testing'    		=> 'Pengujian',
 	'menu_ref'		=> 'Daftar Referensi',
 	'menu_reference'		=> 'Ref. Uji',
-	
+
 	'header_title'		=> 'Layanan Pengujian Perangkat Telekomunikasi',
 	'see_product'		=> 'Beli Dokumen STEL',
 	'payment_status'	=> 'Riwayat Pembelian',
 	'shopping_cart'		=> 'Keranjang Belanja',
 	'view_cart'			=> 'Lihat Keranjang',
-	
+
 	'header_services'		=> 'KAMI MENYEDIAKAN PENGUJIAN PERANGKAT TELEKOMUNIKASI BERKUALITAS DENGAN STANDAR INTERNASIONAL',
 	'subtitle_service'		=> 'Pilih Jenis Pengujian yang sesuai dengan kebutuhan perusahaan anda, Quality Assurance (QA), Type Approval (TA), Voluntary Test (VT), Calibration (CAL)',
 	'see_service'		=> 'lihat layanan',
@@ -331,19 +332,19 @@ return [
 	'our_partner'		=> 'Partner Kami',
 	'contact_description'		=> 'Masih ada pertanyaan? Hubungi kami melalui form yang ada di bawah ini',
 	'contact_subject_example'		=> 'Konfirmasi Registrasi',
-	
+
 	'register_message_company'		=> '*Apabila perusahaan Anda belum terdaftar di Web ini, silakan hubungi petugas User Relations DDS 022 - 4571145. 
 									Atau Daftarkan juga perusahaan Anda dengan mengisi Form di bawah!',
-									
+
 	'download_certificate_message'		=> 'Sertifikat akan terdownload, Silakan Berikan Testimoni!',
-	
+
 	'reschedule_message'	=> 'Silakan Berikan Ajuan Tanggal Uji Fungsi!',
 	'reschedule_message_agree'	=> 'Tanggal Uji Fungsi Disetujui',
 	'reschedule_date'		=> 'Tanggal',
 	'reschedule_date_cust1'	=> 'Tanggal Pengajuan Awal Kastamer',
 	'reschedule_date_te1'	=> 'Tanggal dari TE',
 	'reschedule_reason'		=> 'Alasan',
-	
+
 	'stel_add_to_cart'		=> 'Tambahkan',
 	'stel_checkout'			=> 'Beli',
 	'stel_include'			=> 'Termasuk',
@@ -364,11 +365,11 @@ return [
 	'stel_select_payment_method'	=> 'Pilih Metoda Pembayaran',
 	'stel_payment_method'	=> 'Metoda Pembayaran',
 	'stel_payment_method_atm'	=> 'Metoda Transfer ke Bank',
-	'stel_payment_method_credit'=> 'Metoda Pembayaran Kartu Kredit',
+	'stel_payment_method_credit' => 'Metoda Pembayaran Kartu Kredit',
 	'stel_payment_method_va'	=> 'Mandiri Virtual Account',
 	'stel_payment_method_bank'  => 'Pembayaran melalui metode ini dapat melalui beberapa bank yang ada pada list dibawah ini',
 	'stel_payment_confirmation'  => 'Konfirmasi Pembayaran',
-	
+
 	'stel_placeholder_cc_name'  => 'Nama Lengkap',
 	'stel_placeholder_cc_card_number'  => 'Nomor Kartu',
 	'stel_placeholder_cc_billing_address'  => 'Alamat Billing',
@@ -378,11 +379,11 @@ return [
 	'stel_placeholder_cc_city'  => 'Kota',
 	'stel_placeholder_cc_postal_code'  => 'Kode POS',
 	'stel_placeholder_cc_birthdate'  => 'Tanggal Lahir',
-	
+
 	'stel_payment_status_order_date'  => 'Tanggal Order',
 	'stel_payment_status_complete_time'  => 'Waktu Selesai',
 	'stel_payment_code' => 'Kode Pembayaran',
-	
+
 	'download'  => 'Unduh',
 	'upload'  	=> 'Unggah',
 	'sign_up'  => 'Daftar',
@@ -399,29 +400,29 @@ return [
 	'from_customer' => 'dari Kastamer',
 	'from_te' => 'dari Test Engineer',
 	'approved' => 'DISETUJUI',
-	
+
 	'document_not_found'	=> 'Dokumen Tidak Ditemukan',
 	'tax'  	=> 'Pajak',
 	'see_receipt'  	=> 'Lihat Kuitansi',
 	'see_invoice'  	=> 'Lihat Faktur Pajak',
-	
+
 	'subtitle_qa_process' => 'Pengujian penjaminan mutu perangkat telekomunikasi yang dilakukan berdasarkan referensi Spesifikasi Telekomunikasi (STEL), dan sertifikat akan dikeluarkan untuk perangkat yang lulus uji dengan masa berlaku.',
 	'subtitle_ta_process' => 'Pengujian perangkat telekomunikasi yang dilakukan berdasarkan SP3 (Surat Pengantar Pengujian Perangkat) yang dikeluarkan oleh Ditjen SDPPI (Sumber daya dan Pengembangan dan Peningkatan Informasi). Referensi TA yaitu Permen, Perdirjen, atau referensi uji lain yang ditetapkan oleh Sumber Daya dan Perangkat Pos dan Informatika (SDPPI).',
 	'subtitle_vt_process' => 'Pengujian perangkat telekomunikasi yang sifatnya berdasarkan pesanan oleh customer. Pengujian dilakukan berdasarkan referensi yang disepakati bersama antara user (Divisi Operasional/Kantor Pusat/Telkom Group) dan Divisi Digital Service (DDS) disertai Nota Dinas.',
 	'subtitle_cal_process' => 'Kalibrasi alat pengukuran',
-	
+
 	'stel_term_condition_num1'	=> 'Harga total yang tercantum pada keranjang belanja belum termasuk PPN 10% & biaya payment gateway dari pihak ketiga.',
 	'stel_term_condition_num2'	=> 'Dokumen STEL yang dibeli akan dibubuhi watermark sesuai dengan nama perusahaan yang membeli, dan tidak dapat digunakan pada perusahaan lain.',
 	'stel_term_condition_num3'	=> 'Dokumen STEL yang anda beli tidak memiliki masa berlaku hingga dikeluarkan versi yang terbaru, dan segera hubungi staff kami jika terjadi perubahan versi.',
 	'stel_term_condition_num4'	=> 'Jika dokumen STEL sudah diberikan dan ternyata terjadi kesalahan pembelian karena kelalaian customer bukan menjadi tanggung jawab PT. Telkom Indonesia, Tbk.',
 	'stel_term_condition_num5'	=> 'Ketika dokumen STEL sudah anda peroleh, kami anggap bahwa perusahaan anda sudah paham isi dari dokumen STEL tersebut ketika mengajukan permohonan pengujian perangkat.',
 	'stel_term_condition_num6'	=> 'Ketika anda menekan tombol setuju, maka anda setuju dengan poin-poin yang sudah dijelaskan di atas.',
-	
+
 	'maximum_filesize'	=> 'ukuran file maksimal 2 mb',
 	'file_already_exists'	=> 'File Sudah Ada',
 	'see_all_notifications'	=> 'Lihat Semua Pemberitahuan',
 	'notification'	=> 'Pemberitahuan',
-	
+
 	'must_be_filled'	=> 'Harus Diisi',
 	'by'	=> 'oleh',
 
@@ -446,7 +447,7 @@ return [
 	'thankyou' => 'Terima Kasih',
 	'message_close_lab_separate' => 'Sebagian Layanan Telkom Test House tutup.',
 	'message_close_separate' => 'Lab yang tutup :',
-	'message_open_lab_separate' =>'Lab yang buka :',
+	'message_open_lab_separate' => 'Lab yang buka :',
 	'close_until' => 'ditutup sampai',
 	'open_at' => 'buka pada',
 	'available_stel' => 'Berikut adalah daftar referensi uji yang masih dapat melakukan registrasi pengujian : ',
@@ -497,6 +498,9 @@ return [
 	'chamber_days'  => 'hari',
 	'rent_chamber_client_notes' => "<label>CATATAN</label></br>* Tanda merah menandakan chamber sudah di booking.</br>* Tanda biru menandakan chamber yang anda pilih.</br>* Tidak bisa menyewa dihari Sabtu dan Minggu.",
 	'rent_chamber_client_label_waiting_verification'  => 'Menunggu Verifikasi',
+	'chamber_history_date' => 'Tanggal',
+	'chamber_history_date_filter_start' => 'Tanggal Awal',
+	'chamber_history_date_filter_end' => 'Tanggal Akhir',
 	'purchase_history_updateSTEL_unpaid' => 'Transaksi ini memiliki dokumen yang kedaluwarsa. Silakan hubungi staff kami untuk menghapus transaksi ini, lalu anda dapat melakukan transaksi ulang.',
 	'purchase_history_updateSTEL_paid' => 'Anda mendapatkan dokumen ini dengan gratis.',
 	'purchase_history_updateSTEL_delivered_warning' => 'Transaksi ini memiliki dokumen yang kedaluwarsa. Silakan lakukan transaksi baru untuk memperbarui dokumen tersebut.',

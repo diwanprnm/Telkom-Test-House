@@ -26,7 +26,6 @@
 		<div class="content-wrap">
 			<div class="container clearfix">
 				<div class="container-fluid container-fullw bg-white">
-					<div class="row">
 					<div class="col-md-6">
 	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><em class="ti-filter"></em>
 						Filter
@@ -35,6 +34,12 @@
                         Export to Excel
                     </button> --}}
 				</div>
+				<div class="col-md-6">
+							<span class="input-icon input-icon-right search-table  float-right"> 
+								<input id="filter_search_input" name="search" type="text" placeholder="{{ trans('translate.search_chamber_history') }}" id="form-field-17" class="form-control " value="{{ $search }}">
+								<em class="ti-search"></em>
+							</span> 
+						</div>
 					<div class="col-md-12 panel panel-info">
 			    	<div id="collapse1" class="panel-collapse collapse">
 			     		<fieldset>
@@ -46,10 +51,10 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>
-											Tanggal
+											{{ trans('translate.chamber_history_date') }}
 										</label>
 										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-											<input type="text" placeholder="Dari Tanggal" value="" name="after_date" id="filter_after_date_input" class="form-control"/>
+											<input type="text" placeholder="{{ trans('translate.chamber_history_date_filter_start') }}" value="" name="after_date" id="filter_after_date_input" class="form-control"/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
 													<em class="glyphicon glyphicon-calendar"></em>
@@ -64,7 +69,7 @@
 											&nbsp;
 										</label>
 										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-											<input type="text" placeholder="Sampai Tanggal" value="" name="before_date" id="filter_before_date_input" class="form-control"/>
+											<input type="text" placeholder="{{ trans('translate.chamber_history_date_filter_end') }}" value="" name="before_date" id="filter_before_date_input" class="form-control"/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default">
 													<em class="glyphicon glyphicon-calendar"></em>
@@ -73,33 +78,21 @@
 										</p>
 									</div>
 		                        </div>
-
 								<div class="col-md-12">
 		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
 		                                Filter
 		                            </button>
-		                        </div>
+		                        </div>								
 							</div>
 							
 						</fieldset>
 			    	</div>
 			    </div>
-						<div class="col-md-6">
-							<ul class="nav nav-tabs tabs clearfix">
+							<ul class="nav nav-tabs clearfix">
 								<li class="{{ $tab == 'unpaid' ? 'active' : '' }}" data-tab="unpaid"><a href="#tab-unpaid" data-toggle="tab"><strong>Unpaid</strong></a></li>
 								<li class="{{ $tab == 'paid' ? 'active' : '' }}" data-tab="paid"><a href="#tab-paid" data-toggle="tab"><strong>Paid</strong></a></li>
 								<li class="{{ $tab == 'delivered' ? 'active' : '' }}" data-tab="delivered"><a href="#tab-delivered" data-toggle="tab"><strong>Delivered</strong></a></li>
-							</ul>
-						</div>
-
-						<div class="col-md-4">
-							<span class="input-icon input-icon-right search-table  float-right"> 
-								<input id="filter_search_input" name="search" type="text" placeholder="Cari Nomor Pemesanan (CHMB ...)" id="form-field-17" class="form-control " value="{{ $search }}">
-								<em class="ti-search"></em>
-							</span> 
-						</div>
-					</div>
-					
+							</ul>					
 					<div class="tab-content">
 						<!-- tab unpaid -->
 						<div id="tab-unpaid" class="row clearfix tab-pane fade {{ $tab == 'unpaid' ? 'in active' : '' }}">
@@ -366,7 +359,7 @@ const getFilterParam = () =>  {
 		search: $('#filter_search_input').val(),
 		after_date: $('#filter_after_date_input').val(),
 		before_date: $('#filter_before_date_input').val(),
-		tab: $('.tabs .active').attr('data-tab'),
+		tab: $('.nav-tabs .active').attr('data-tab'),
 	}
 };
 
