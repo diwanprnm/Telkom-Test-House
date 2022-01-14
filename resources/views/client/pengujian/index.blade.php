@@ -80,9 +80,9 @@
 					</div>
 
 					<div class="col form-group">
-						<div class="col-md-4">
+						<div class="col-md-4 pull-right">
 							<span class="input-icon input-icon-right search-table float-right"> 
-								<input id="filter_search_input" name="search" type="text" placeholder="Cari Nama Perangkat..." id="form-field-17" class="form-control " value="{{ $search }}">
+								<input id="filter_search_input" name="search" type="text" placeholder="{{ trans('translate.search_exam') }}" id="form-field-17" class="form-control " value="{{ $search }}">
 								<em class="ti-search"></em>
 							</span> 
 						</div>

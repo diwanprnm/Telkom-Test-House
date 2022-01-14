@@ -26,7 +26,7 @@
 		<div class="content-wrap">
 			<div class="container clearfix">
 				<div class="container-fluid container-fullw bg-white">
-					<div class="col-md-6">
+					<div class="col-md-8 offset-0">
 	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><em class="ti-filter"></em>
 						Filter
 					</a>
@@ -34,7 +34,7 @@
                         Export to Excel
                     </button> --}}
 				</div>
-				<div class="col-md-6">
+				<div class="col-md-4 offset-0">
 							<span class="input-icon input-icon-right search-table  float-right"> 
 								<input id="filter_search_input" name="search" type="text" placeholder="{{ trans('translate.search_chamber_history') }}" id="form-field-17" class="form-control " value="{{ $search }}">
 								<em class="ti-search"></em>
