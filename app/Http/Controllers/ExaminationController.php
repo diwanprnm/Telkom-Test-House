@@ -24,6 +24,8 @@ use App\Equipment;
 use App\EquipmentHistory;
 use App\QuestionerDynamic;
 use App\GeneralSetting;
+use App\ExaminationCancel;
+use App\HistoryUF;
 
 use Auth;
 use File;
@@ -1921,6 +1923,8 @@ class ExaminationController extends Controller
 				ExaminationHistory::where(self::EXAMINATION_ID, '=' ,''.$id.'')->delete();
 				ExaminationAttach::where(self::EXAMINATION_ID, '=' ,''.$id.'')->delete();
 				QuestionerDynamic::where(self::EXAMINATION_ID, '=' ,''.$id.'')->delete();
+				ExaminationCancel::where(self::EXAMINATION_ID, '=' ,''.$id.'')->delete();
+				HistoryUF::where(self::EXAMINATION_ID, '=' ,''.$id.'')->delete();
 				$exam->delete();
 				$device->delete();
 				
