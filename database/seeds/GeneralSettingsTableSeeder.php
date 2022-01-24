@@ -15,14 +15,14 @@ class GeneralSettingsTableSeeder extends Seeder
 
         DB::table('general_settings')->insert([
             'code' => 'manager_urel',
-            'value' => 'Sontang Hutapea',
+            'value' => 'Yudha Indah Prihatini',
             'is_active' => '1',
             'created_by' => '1',
             'created_at' => date("Y-m-d H:i:s"),
         ]);
         DB::table('general_settings')->insert([
 			'code' => 'poh_manager_urel',
-			'value' => 'Yudha Indah',
+			'value' => 'Rico Chrisnawan',
 			'created_by' => '1',
 			'created_at' => date("Y-m-d H:i:s"),
 		]);
