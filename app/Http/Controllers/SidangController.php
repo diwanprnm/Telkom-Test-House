@@ -329,7 +329,7 @@ class SidangController extends Controller
                 $row->examination->device->model,
                 $row->examination->device->capacity,
                 $row->examination->device->manufactured_by,
-                $row->finalResult ? $item->finalResult : '-',
+                $row->finalResult ? $row->finalResult : '-',
                 $row->examination->company->qs_certificate_date > date('Y-m-d') ? 'SM Eligible' : 'SM Not Eligible',
             ];
             $no++;
@@ -544,6 +544,8 @@ class SidangController extends Controller
                 $device->status = 1;
                 $device->save();
                 $devicesList[] = $device;
+            }else{
+                $devicesList[] = $item->examination->device;
             }
 
             // 5. lakukan seolah2 Step Sidang QA - Step Penerbitan Sertifikat Completed
@@ -617,29 +619,11 @@ class SidangController extends Controller
 
     public function sendEmail($item){
         $email_editors = new EmailEditorService();
-		switch ($item->result) {
-            case 1:
-                # Email Sidang QA Lulus dan Sertifikat dapat di-download
-                $email = $email_editors->selectBy('emails.sertifikat');
-                $content = $this->parsingEmailSertifikat($email->content, $item->examination->user->name, $item->examination->is_loc_test);
-                $subject = 'Penerbitan Sertifikat QA '.$item->examination->device->name.' | '.$item->examination->device->mark.' | '.$item->examination->device->model.' | '.$item->examination->device->capacity;
-                break;
-            case -1:
-                # Email Sidang QA Tidak Lulus dan Sertifikat tidak dapat di-download
-            case 2:
-                # Email Sidang QA Pending dan Sertifikat tidak dapat di-download
-                $email = $email_editors->selectBy('emails.qaFail');
-                $content = $this->parsingEmailSidangQAFail($email->content, $item->examination->user->name, $item->examination->company->name, $item->examination->qa_passed, $item->examination->device);
-                $subject = 'Pemberitahuan Hasil Pengujian Perangkat '.$item->examination->device->name.' | '.$item->examination->device->mark.' | '.$item->examination->device->model.' | '.$item->examination->device->capacity;
-                break;
-            
-            default:
-                # code...
-                $email = null;
-                $content = null;
-				$subject = null;
-                break;
-        }
+        
+        $email = $item->result == 2 ? $email_editors->selectBy('emails.qaPending') : $email_editors->selectBy('emails.qa');
+        $content = $this->parsingEmailSidangQA($email->content, $item->examination->user->name, $item->examination->company->name, $item->examination->qa_passed, $item->examination->device, $item->catatan);
+        $subject = 'Pemberitahuan Hasil Pengujian Perangkat '.$item->examination->device->name.' | '.$item->examination->device->mark.' | '.$item->examination->device->model.' | '.$item->examination->device->capacity;
+
         // $user_email = $item->examination->user->email;
         $user_email = 'arifchandrasimanjuntak@yahoo.co.id';
 		if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
@@ -662,7 +646,7 @@ class SidangController extends Controller
 		return $content;
 	}
 
-    public function parsingEmailSidangQAFail($content, $user_name, $company_name, $qa_passed, $device){
+    public function parsingEmailSidangQA($content, $user_name, $company_name, $qa_passed, $device, $catatan){
 		$content = str_replace('@user_name', $user_name, $content);
         $content = str_replace('@company_name', $company_name, $content);
         $content = str_replace('@device_name', $device->name, $content);
@@ -670,8 +654,21 @@ class SidangController extends Controller
         $content = str_replace('@device_model', $device->model, $content);
         $content = str_replace('@device_capacity', $device->capacity, $content);
         $content = str_replace('@test_reference', $device->test_reference, $content);
-		    $text1 = $qa_passed == 2 ? '<strong>PENDING</strong>' : '<strong>TIDAK LULUS</strong>';
-        $content = str_replace('@qa_passed', $text1, $content);
+        switch ($qa_passed) {
+            case '1':
+                $content = str_replace('@qa_passed', '<strong>LULUS</strong>', $content);
+                $content = str_replace('@cert1', ' dan sertifikat QA', $content);
+                $content = str_replace('@cert2', ', unduh sertifikat/ download certificate', $content);
+                break;
+            case '-1':
+                $content = str_replace('@qa_passed', '<strong>TIDAK LULUS</strong>', $content);
+                $content = str_replace('@cert1', '', $content);
+                $content = str_replace('@cert2', '', $content);
+                break;
+            case '2':
+                $content = $catatan ? str_replace('@catatan', ' dengan catatan '.$catatan, $content) : str_replace('@catatan', '', $content);
+                break;
+        }
 		return $content;
 	}
 

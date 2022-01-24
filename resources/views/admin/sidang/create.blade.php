@@ -332,7 +332,7 @@
 			</div>
 			
 			<div id="tab-draft" class="row tab-content">
-				<div class="col-md-6">
+				<div class="col-md-3">
 					<div class="form-group">
 						<label>Tanggal Sidang</label>
 						<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
@@ -461,7 +461,15 @@
 
 				<div class="col-md-12">
 					<button type="submit" class="btn btn-wide btn-green btn-squared pull-right" id="btn-submit-draft">
-						Buat draft
+					@php
+						$btn_label = 'Buat draft';
+						if($sidang_id){
+							if($data_draft[0]->sidang->status == 'DRAFT'){
+								$btn_label = 'Simpan';
+							}
+						}
+					@endphp
+					{{ $btn_label }}
 					</button>
 					@php
 						$url = URL::to('/admin/sidang');

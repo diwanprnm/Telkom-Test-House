@@ -11436,6 +11436,6 @@ span.error_text {
 }
 
 .done-failed .stepNumber{
-  background-color: red !important;
-  border-color:red !important;
+  background-color: #FF3E41 !important;
+  border-color:#FF3E41 !important;
 }
