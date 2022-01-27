@@ -44,25 +44,27 @@ class GeneralSettingController extends Controller
     public function index(Request $request)
     {
         $currentUser = Auth::user();
-        if (!$currentUser){ return redirect('login');}
+        if (!$currentUser) {
+            return redirect('login');
+        }
 
         $message = null;
-        if($currentUser->id == '1' || $currentUser->email == 'admin@mail.com'){
+        if ($currentUser->id == '1' || $currentUser->email == 'admin@mail.com') {
             $generalsetting = GeneralSetting::all();
 
-            if (!count($generalsetting)){
+            if (!count($generalsetting)) {
                 $message = 'Data not found';
             }
-            
+
             return view('admin.generalsetting.index')
                 ->with($this::MESSAGE, $message)
                 ->with('data', $generalsetting);
+        } else {
+            return view('admin.generalsetting.index')->with($this::MESSAGE, 'Access Denied') > with('data', null);
         }
-        else { return view('admin.generalsetting.index') ->with($this::MESSAGE, 'Access Denied') >with('data', null); }
-        
     }
 
-    
+
     public function update(Request $request)
     {
         $currentUser = Auth::user();
@@ -71,30 +73,30 @@ class GeneralSettingController extends Controller
             case 'is_poh_sm':
                 $generalsettingSM = GeneralSetting::where("code", "sm_urel")->first();
                 $generalsettingPOHSM = GeneralSetting::where("code", "poh_sm_urel")->first();
-                if ($request->has('is_poh_sm')){
-                    $oldGeneralSetting = $generalsettingPOHSM; 
+                if ($request->has('is_poh_sm')) {
+                    $oldGeneralSetting = $generalsettingPOHSM;
                     $generalsettingPOHSM->value = $request->input('poh_sm_urel');
                     $generalsettingPOHSM->is_active = 1;
-                    $generalsettingPOHSM->updated_by = $currentUser->id; 
+                    $generalsettingPOHSM->updated_by = $currentUser->id;
                     if ($request->file('attachment_poh_sm')) {
                         $fileService = new FileService();
                         $fileProperties = array(
-                            'path' => 'generalsettings/'.$generalsettingPOHSM->id.'/'
+                            'path' => 'generalsettings/' . $generalsettingPOHSM->id . '/'
                         );
                         $fileService->upload($request->file('attachment_poh_sm'), $fileProperties);
                         $generalsettingPOHSM->attachment = $fileService->getFileName();
                     }
 
                     $generalsettingSM->is_active = 0;
-                }else{
-                    $oldGeneralSetting = $generalsettingSM; 
+                } else {
+                    $oldGeneralSetting = $generalsettingSM;
                     $generalsettingSM->value = $request->input('sm_urel');
                     $generalsettingSM->is_active = 1;
                     $generalsettingSM->updated_by = $currentUser->id;
                     if ($request->file('attachment_sm')) {
                         $fileService = new FileService();
                         $fileProperties = array(
-                            'path' => 'generalsettings/'.$generalsettingSM->id.'/'
+                            'path' => 'generalsettings/' . $generalsettingSM->id . '/'
                         );
                         $fileService->upload($request->file('attachment_sm'), $fileProperties);
                         $generalsettingSM->attachment = $fileService->getFileName();
@@ -103,32 +105,48 @@ class GeneralSettingController extends Controller
                     $generalsettingPOHSM->is_active = 0;
                 }
                 break;
-            
+
             case 'is_poh':
                 $generalsetting = GeneralSetting::where("code", "manager_urel")->first();
                 $generalsettingPOH = GeneralSetting::where("code", 'poh_manager_urel')->first();
-                if ($request->has('is_poh')){
-                    $oldGeneralSetting = $generalsettingPOH; 
+                if ($request->has('is_poh')) {
+                    $oldGeneralSetting = $generalsettingPOH;
                     $generalsettingPOH->value = $request->input('poh_manager_urel');
                     $generalsettingPOH->is_active = 1;
-                    $generalsettingPOH->updated_by = $currentUser->id; 
+                    $generalsettingPOH->updated_by = $currentUser->id;
+                    if ($request->file('attachment_poh_manager_urel')) {
+                        $fileService = new FileService();
+                        $fileProperties = array(
+                            'path' => 'generalsettings/' . $generalsettingPOH->id . '/'
+                        );
+                        $fileService->upload($request->file('attachment_poh_manager_urel'), $fileProperties);
+                        $generalsettingPOH->attachment = $fileService->getFileName();
+                    }
 
                     $generalsetting->is_active = 0;
-                }else{
-                    $oldGeneralSetting = $generalsetting; 
+                } else {
+                    $oldGeneralSetting = $generalsetting;
                     $generalsetting->value = $request->input('manager_urel');
                     $generalsetting->is_active = 1;
-                    $generalsetting->updated_by = $currentUser->id; 
+                    $generalsetting->updated_by = $currentUser->id;
+                    if ($request->file('attachment_manager_urel')) {
+                        $fileService = new FileService();
+                        $fileProperties = array(
+                            'path' => 'generalsettings/' . $generalsetting->id . '/'
+                        );
+                        $fileService->upload($request->file('attachment_manager_urel'), $fileProperties);
+                        $generalsetting->attachment = $fileService->getFileName();
+                    }
 
                     $generalsettingPOH->is_active = 0;
                 }
                 break;
-            
+
             case 'is_send_email_active':
                 $generalsettingSendEmail = GeneralSetting::where("code", "send_email")->first();
                 $generalsettingSendEmail->is_active = 0;
-                if ($request->has('is_send_email_active')){
-                    $oldGeneralSetting = $generalsettingSendEmail; 
+                if ($request->has('is_send_email_active')) {
+                    $oldGeneralSetting = $generalsettingSendEmail;
                     $generalsettingSendEmail->is_active = 1;
                     $generalsettingSendEmail->updated_by = $currentUser->id;
                 }
@@ -138,36 +156,36 @@ class GeneralSettingController extends Controller
                 # code...
                 break;
         }
-        
-        try{
+
+        try {
             switch ($request->input('status')) {
                 case 'is_poh_sm':
                     $generalsettingSM->save();
                     $generalsettingPOHSM->save();
                     break;
-                
+
                 case 'is_poh':
                     $generalsetting->save();
                     $generalsettingPOH->save();
                     break;
-                
+
                 case 'is_send_email_active':
                     $generalsettingSendEmail->save();
                     break;
-    
+
                 default:
                     # code...
                     break;
             }
 
             $logService = new LogService();
-            $logService->createLog("Update General Setting","General Setting",$oldGeneralSetting );
-            $logService->createAdminLog('Update Manager URel atau POH' , 'General Setting', $oldGeneralSetting, $request->input('keterangan') );
+            $logService->createLog("Update General Setting", "General Setting", $oldGeneralSetting);
+            $logService->createAdminLog('Update Manager URel atau POH', 'General Setting', $oldGeneralSetting, $request->input('keterangan'));
 
             Session::flash($this::MESSAGE, 'General Setting successfully updated');
             return redirect(self::GEN);
-        } catch(Exception $e){ return redirect(self::GEN)->with($this::ERR, 'Save failed');
+        } catch (Exception $e) {
+            return redirect(self::GEN)->with($this::ERR, 'Save failed');
         }
     }
-  
 }
