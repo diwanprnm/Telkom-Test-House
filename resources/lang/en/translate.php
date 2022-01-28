@@ -495,7 +495,7 @@ return [
 	'chamber_days'  => 'day(s)',
 	'rent_chamber_client_notes' => "<label>NOTES</label></br>* The red mark indicates the chamber has been rented.<br>* The blue mark indicates the chamber you have selected<br>* Cannot rent on Saturday and Sunday",
 	'rent_chamber_client_label_waiting_verification'  => 'Waiting Verification',
-	'chamber_history_date' => 'Date',
+	'chamber_history_date' => 'Filter by Rent Date',
 	'chamber_history_date_filter_start' => 'Start Date',
 	'chamber_history_date_filter_end' => 'End Date',
 	'purchase_history_updateSTEL_unpaid' => 'This transaction has expired documents. Please contact our staff to delete this transaction, then you can re-transaction.',

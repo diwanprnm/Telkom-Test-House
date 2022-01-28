@@ -498,7 +498,7 @@ return [
 	'chamber_days'  => 'hari',
 	'rent_chamber_client_notes' => "<label>CATATAN</label></br>* Tanda merah menandakan chamber sudah di booking.</br>* Tanda biru menandakan chamber yang anda pilih.</br>* Tidak bisa menyewa dihari Sabtu dan Minggu.",
 	'rent_chamber_client_label_waiting_verification'  => 'Menunggu Verifikasi',
-	'chamber_history_date' => 'Tanggal',
+	'chamber_history_date' => 'Filter berdasarkan Tanggal Sewa',
 	'chamber_history_date_filter_start' => 'Tanggal Awal',
 	'chamber_history_date_filter_end' => 'Tanggal Akhir',
 	'purchase_history_updateSTEL_unpaid' => 'Transaksi ini memiliki dokumen yang kedaluwarsa. Silakan hubungi staff kami untuk menghapus transaksi ini, lalu anda dapat melakukan transaksi ulang.',

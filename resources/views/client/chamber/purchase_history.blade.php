@@ -26,27 +26,23 @@
 		<div class="content-wrap">
 			<div class="container clearfix">
 				<div class="container-fluid container-fullw bg-white">
-					<div class="col-md-8 offset-0">
+					{{-- <div class="col-md-8 offset-0">
 	    			<a class="btn btn-wide btn-primary pull-left" data-toggle="collapse" href="#collapse1" style="margin-right: 10px;"><em class="ti-filter"></em>
 						Filter
-					</a>
+					</a> --}}
 					{{-- <button id="excel" type="submit" class="btn btn-info pull-left">
                         Export to Excel
                     </button> --}}
-				</div>
-				<div class="col-md-4 offset-0">
-							<span class="input-icon input-icon-right search-table  float-right"> 
-								<input id="filter_search_input" name="search" type="text" placeholder="{{ trans('translate.search_chamber_history') }}" id="form-field-17" class="form-control " value="{{ $search }}">
-								<em class="ti-search"></em>
-							</span> 
-						</div>
-					<div class="col-md-12 panel panel-info">
-			    	<div id="collapse1" class="panel-collapse collapse">
-			     		<fieldset>
-							<legend>
-								Filter
-							</legend>
-							
+				{{-- </div> --}}
+				{{-- <div class="col-md-4 offset-0">
+					<span class="input-icon input-icon-right search-table  float-right"> 
+						<input id="filter_search_input" name="search" type="text" placeholder="{{ trans('translate.search_chamber_history') }}" id="form-field-17" class="form-control " value="{{ $search }}">
+						<i class="fa fa-search" aria-hidden="true"></i>
+					</span> 
+				</div> --}}
+					<div class="col-md-12 panell panell-info">
+			    	<div id="collapsse1" class="panel-collapsse collapsse">
+			     		<fieldset>							
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
@@ -56,8 +52,9 @@
 										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
 											<input type="text" placeholder="{{ trans('translate.chamber_history_date_filter_start') }}" value="" name="after_date" id="filter_after_date_input" class="form-control"/>
 											<span class="input-group-btn">
-												<button type="button" class="btn btn-default">
-													<em class="glyphicon glyphicon-calendar"></em>
+												<button type="button" class="btn btn-default form-control">
+													<i class="fa fa-calendar" aria-hidden="true"></i>
+													{{-- <em class="glyphicon glyphicon-calendar"></em> --}}
 												</button>
 											</span>
 										</p>
@@ -71,17 +68,19 @@
 										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
 											<input type="text" placeholder="{{ trans('translate.chamber_history_date_filter_end') }}" value="" name="before_date" id="filter_before_date_input" class="form-control"/>
 											<span class="input-group-btn">
-												<button type="button" class="btn btn-default">
-													<em class="glyphicon glyphicon-calendar"></em>
+												<button type="button" class="btn btn-default form-control">
+													<i class="fa fa-calendar" aria-hidden="true"></i>
+													{{-- <em class="glyphicon glyphicon-calendar"></em> --}}
 												</button>
 											</span>
 										</p>
 									</div>
 		                        </div>
 								<div class="col-md-12">
-		                            <button id="filter" type="submit" class="btn btn-wide btn-green btn-squared pull-right">
+		                            <button id="filter" type="submit" class="btn button-3d btn-sky pull-right">
 		                                Filter
 		                            </button>
+									<button id="reset" onclick="resetDate()" class="btn button-3d pull-right" style="margin-right: 1.25rem">Reset</button>
 		                        </div>								
 							</div>
 							
@@ -342,11 +341,11 @@ $(document).ready(() => {
 	});
 
 	// Set destination when search is press with enter key
-	$('#filter_search_input').keypress(function(e) {
-		if(e.which != 13) { return; }
-		let param = getFilterParam();
-		document.location.href = baseUrl+'/chamber_history?'+$.param(param);
-	});
+	// $('#filter_search_input').keypress(function(e) {
+	// 	if(e.which != 13) { return; }
+	// 	let param = getFilterParam();
+	// 	document.location.href = baseUrl+'/chamber_history?'+$.param(param);
+	// });
 
 
 });
@@ -356,7 +355,7 @@ currentTab = url.searchParams.get("tab") ?? 'tab-unpaid';
 // Get url parameter from filter
 const getFilterParam = () =>  {
 	return {
-		search: $('#filter_search_input').val(),
+		// search: $('#filter_search_input').val(),
 		after_date: $('#filter_after_date_input').val(),
 		before_date: $('#filter_before_date_input').val(),
 		tab: $('.nav-tabs .active').attr('data-tab'),
@@ -365,7 +364,7 @@ const getFilterParam = () =>  {
 
 // Set filter from url parameter
 const setFilterByParam = () =>  {
-	$('#filter_search_input').val(url.searchParams.get("search"));
+	// $('#filter_search_input').val(url.searchParams.get("search"));
 	$('#filter_after_date_input').val(url.searchParams.get("after_date"));
 	$('#filter_before_date_input').val(url.searchParams.get("before_date"));
 };
@@ -395,5 +394,9 @@ const getDateRentedChamber = handleData => {
 // Setup calender coloring
 const setDayLabelWithClass = (list, color) => list.forEach( item => $(`.row-day .col[data-day-yyyymmdd='${item}']`).addClass(`${color} rounded-corner`) );
 
+// Reset Date filter fields
+function resetDate(){
+	$('#filter_after_date_input, #filter_before_date_input').val("");
+}
 </script>
 @endsection
