@@ -150,6 +150,7 @@ table {
 										POH *
 									</label>
 									<input type="text" name="poh_manager_urel" class="form-control" placeholder="POH" value="{{$data[1]->value}}" required autofocus="">
+									<br/>
 									@if ($data[1]->attachment) 
 									<img src="{{ \Storage::disk('minio')->url('generalsettings/'.$data[1]->id.'/'.$data[1]->attachment) }}" width="240" alt="Pic"/>
 									@endif
@@ -160,6 +161,7 @@ table {
 										Manager URel *
 									</label>
 									<input type="text" name="manager_urel" class="form-control" placeholder="Manager URel" value="{{$data[0]->value}}" required autofocus="">
+									<br/>
 									@if ($data[0]->attachment) 
 									<img src="{{ \Storage::disk('minio')->url('generalsettings/'.$data[0]->id.'/'.$data[0]->attachment) }}" width="240" alt="Pic"/>
 									@endif
