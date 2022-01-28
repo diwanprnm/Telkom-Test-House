@@ -211,7 +211,7 @@ return [
 	'search_STEL'		=> 'Cari Berdasarkan Nama atau Kode',
 	'search_charge'		=> 'Cari Berdasarkan Nama Perangkat',
 	'search_dev'		=> 'Cari Berdasarkan Perusahaan, Perangkat, atau Merk',
-	'search_exam'		=> 'Cari Berdasarkan Nama Perangkat',
+	'search_exam'		=> 'Cari Berdasarkan Nama Perangkat / No. Registrasi',
 	'search_chamber_history' => 'Cari Nomor Pemesanan ( CHMB ... )',
 	'login'				=> 'Masuk',
 	'logout'			=> 'Keluar',

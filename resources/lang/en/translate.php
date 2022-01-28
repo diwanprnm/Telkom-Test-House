@@ -210,7 +210,7 @@ return [
 	'search_STEL'		=> 'Search by Name or Code',
 	'search_charge'		=> 'Search by Device Name',
 	'search_dev'		=> 'Search by Company Name, Device Name, or Merk',
-	'search_exam'		=> 'Search by Device Name',
+	'search_exam'		=> 'Search by Device Name or Registration Number',
 	'search_chamber_history' => 'Search by Order Number ( CHMB ... )',
 	'login'				=> 'Login',
 	'logout'			=> 'Logout',
