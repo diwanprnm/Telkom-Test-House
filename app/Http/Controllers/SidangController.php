@@ -655,17 +655,17 @@ class SidangController extends Controller
         $content = str_replace('@device_capacity', $device->capacity, $content);
         $content = str_replace('@test_reference', $device->test_reference, $content);
         switch ($qa_passed) {
-            case '1':
+            case 1:
                 $content = str_replace('@qa_passed', '<strong>LULUS</strong>', $content);
                 $content = str_replace('@cert1', ' dan sertifikat QA', $content);
                 $content = str_replace('@cert2', ', unduh sertifikat/ download certificate', $content);
                 break;
-            case '-1':
+            case -1:
                 $content = str_replace('@qa_passed', '<strong>TIDAK LULUS</strong>', $content);
                 $content = str_replace('@cert1', '', $content);
                 $content = str_replace('@cert2', '', $content);
                 break;
-            case '2':
+            case 2:
                 $content = $catatan ? str_replace('@catatan', ' dengan catatan '.$catatan, $content) : str_replace('@catatan', '', $content);
                 break;
         }
