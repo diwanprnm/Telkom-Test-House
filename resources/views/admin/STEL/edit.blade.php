@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="main-content" >
+<div class="main-content">
 	<div class="wrap-content container" id="container">
 		<!-- start: PAGE TITLE -->
 		<section id="page-title">
@@ -27,106 +27,106 @@
 		<div class="container-fluid container-fullw bg-white">
 			<div class="col-md-12">
 				{!! Form::open(array('url' => 'admin/stel/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data')) !!}
-					{!! csrf_field() !!}
-    				<fieldset>
-						<legend>
-							Edit Referensi Uji
-						</legend>
-						<div class="row">
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>
-										No. Dokumen *
-									</label>
-									<input type="text" id="code" name="code" class="form-control" placeholder="No. Dokumen" value="{{$data->code}}" required readonly>
-								</div>
+				{!! csrf_field() !!}
+				<fieldset>
+					<legend>
+						Edit Referensi Uji
+					</legend>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>
+									No. Dokumen *
+								</label>
+								<input type="text" id="code" name="code" class="form-control" placeholder="No. Dokumen" value="{{$data->code}}" required readonly>
 							</div>
-	                        <div class="col-md-6">
-								<div class="form-group">
-									<label>
-										Nama Dokumen *
-									</label>
-									<input type="text" name="name" class="form-control" placeholder="Nama Dokumen" value="{{$data->name}}" required>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>
-										Tahun *
-									</label>
-									<input type="number" id="year" name="year" class="form-control" placeholder="Tahun" value="{{$data->year}}" required>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>
-										Versi *
-									</label>
-									<input type="text" id="version" name="version" class="form-control" placeholder="Versi" value="{{$data->version}}" required>
-								</div>
-							</div>
-	                        <div class="col-md-4">
-								<div class="form-group">
-									<label>
-										Harga *
-									</label>
-									<input type="text" id="txt-price" name="price" class="form-control" placeholder="Harga" value="{{$data->price}}" required>
-								</div>
-							</div>
-							<div class="col-md-4">
-								<div class="form-group">
-									<label>
-										Diterbitkan pada tanggal *
-									</label>
-									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-										<input type="text" placeholder="Publish at .." value="{{ $data->publish_date }}" name="publish_date" id="publish_date" class="form-control"/>
-										<span class="input-group-btn">
-											<button type="button" class="btn btn-default">
-												<em class="glyphicon glyphicon-calendar"></em>
-											</button>
-										</span>
-									</p>
-								</div>
-							</div>
-							<div class="col-md-4">
-								<div class="form-group">
-									<label for="form-field-select-2">
-										Status *
-									</label>
-									<select name="is_active" class="cs-select cs-skin-elastic" required>
-										@if($data->is_active)
-											<option value="1" selected>Active</option>
-											<option value="0">Inactive</option>
-										@else
-											<option value="1">Active</option>
-											<option value="0" selected>Inactive</option>
-										@endif
-									</select>
-								</div>
-							</div>
-	                        <div class="col-md-6">
-								<div class="form-group">
-									<label>
-										File *
-									</label>
-									@if($data->attachment != '')
-										<a href="{{ URL::to('/admin/stel/media/'.$data->id) }}" target="_blank">Lihat File</a>
-									@endif
-									<input type="file" name="attachment" class="form-control" accept="application/pdf">
-								</div>
-							</div>
-	                        <div class="col-md-12">
-	                            <button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
-	                                Submit
-	                            </button>
-	                            <a style=" color:white !important;" href="{{URL::to('/admin/stel')}}">
-									<button type="button" class="btn btn-wide btn-red btn-squared btn-marginleft pull-left">
-									Cancel
-									</button>
-								</a>
-	                        </div>
 						</div>
-					</fieldset>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>
+									Nama Dokumen *
+								</label>
+								<input type="text" name="name" class="form-control" placeholder="Nama Dokumen" value="{{$data->name}}" required>
+							</div>
+						</div>
+						<div class="col-md-6" id="year-form">
+							<div class="form-group">
+								<label>
+									Tahun *
+								</label>
+								<input type="number" id="year" name="year" class="form-control" placeholder="Tahun" value="{{$data->year}}" required>
+							</div>
+						</div>
+						<div class="col-md-6" id="version-form">
+							<div class="form-group">
+								<label>
+									Versi *
+								</label>
+								<input type="text" id="version" name="version" class="form-control" placeholder="Versi" value="{{$data->version}}" required>
+							</div>
+						</div>
+						<div class="col-md-4" id="price-form">
+							<div class="form-group">
+								<label>
+									Harga *
+								</label>
+								<input type="text" id="txt-price" name="price" class="form-control" placeholder="Harga" value="{{$data->price}}" required>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label>
+									Diterbitkan pada tanggal *
+								</label>
+								<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
+									<input type="text" placeholder="Publish at .." value="{{ $data->publish_date }}" name="publish_date" id="publish_date" class="form-control" />
+									<span class="input-group-btn">
+										<button type="button" class="btn btn-default">
+											<em class="glyphicon glyphicon-calendar"></em>
+										</button>
+									</span>
+								</p>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="form-field-select-2">
+									Status *
+								</label>
+								<select name="is_active" class="cs-select cs-skin-elastic" required>
+									@if($data->is_active)
+									<option value="1" selected>Active</option>
+									<option value="0">Inactive</option>
+									@else
+									<option value="1">Active</option>
+									<option value="0" selected>Inactive</option>
+									@endif
+								</select>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>
+									File *
+								</label>
+								@if($data->attachment != '')
+								<a href="{{ URL::to('/admin/stel/media/'.$data->id) }}" target="_blank">Lihat File</a>
+								@endif
+								<input type="file" name="attachment" class="form-control" accept="application/pdf">
+							</div>
+						</div>
+						<div class="col-md-12">
+							<button type="submit" class="btn btn-wide btn-green btn-squared pull-left">
+								Submit
+							</button>
+							<a style=" color:white !important;" href="{{URL::to('/admin/stel')}}">
+								<button type="button" class="btn btn-wide btn-red btn-squared btn-marginleft pull-left">
+									Cancel
+								</button>
+							</a>
+						</div>
+					</div>
+				</fieldset>
 				{!! Form::close() !!}
 			</div>
 		</div>
@@ -154,78 +154,129 @@
 	val = '{{ $data->stel_type }}';
 	init_form(val);
 
-	value="{{ old('code') }}";
-	if(value){init_form(val)};
+	value = "{{ old('code') }}";
+	if (value) {
+		init_form(val)
+	};
 
-	function init_form(val){
-		switch(val) {
+	function init_form(val) {
+		switch (val) {
 			case '1':
 				type_name = 'STEL';
+				// show year-form
 				$("#year").prop('required', true);
+				$("#year-form").show();
+				// show version-form
 				$("#version").prop('required', true);
+				$("#version-form").show();
+				// show price-code-form
+				$("#price").prop('required', true);
+				$("#price-form").show();
 				break;
 			case '2':
 				type_name = 'S-TSEL';
+				// show year-form
 				$("#year").prop('required', true);
+				$("#year-form").show();
+				// show version-form
 				$("#version").prop('required', true);
+				$("#version-form").show();
+				// show price-code-form
+				$("#price").prop('required', true);
+				$("#price-form").show();
 				break;
 			case '3':
 				type_name = 'STD';
+				// show year-form
 				$("#year").prop('required', true);
+				$("#year-form").show();
+				// show price-code-form
+				$("#price").prop('required', true);
+				$("#price-form").show();
+				// show version-form
 				$("#version").prop('required', true);
+				$("#version-form").show();
 				break;
 			case '4':
 				type_name = 'TLKM/I/KAL';
+				// hide year-code-form
 				$("#year").prop('required', false);
+				$("#year-form").hide();
+				// hide price-code-form
+				$("#price").prop('required', false);
+				$("#price-form").hide();
+				// show version-form
 				$("#version").prop('required', true);
+				$("#version-form").show();
 				break;
 			case '5':
 				type_name = 'Perdirjen';
+				// show year-code-form
 				$("#year").prop('required', true);
+				$("#year-form").show();
+				// hide price-code-form
+				$("#price").prop('required', false);
+				$("#price-form").hide();
+				// hide version-form
 				$("#version").prop('required', false);
+				$("#version-form").hide();
 				break;
 			case '6':
 				type_name = 'Permenkominfo';
+				// hide year-form
 				$("#year").prop('required', true);
+				$("#year-form").show();
+				// hide price-code-form
+				$("#price").prop('required', false);
+				$("#price-form").hide();
+				// hide version-form
 				$("#version").prop('required', false);
+				$("#version-form").hide();
 				break;
 			case '7':
+				// hide year-form
 				$("#year").prop('required', false);
+				$("#year-form").hide();
+				// hide price-code-form
+				$("#price").prop('required', false);
+				$("#price-form").hide();
+				// hide version-form
 				$("#version").prop('required', false);
+				$("#version-form").hide();
 				break;
-				
+
 			default:
 				$("#year").prop('required', false);
 				$("#version").prop('required', false);
 		}
 	}
 
-	$("#year").on("keyup change", function(){
+	$("#year").on("keyup change", function() {
 		reset_code();
 	});
 
-	$("#version").keyup(function(){
+	$("#version").keyup(function() {
 		reset_code();
 	});
 
-	function reset_code(){
-		switch(val) {
+	function reset_code() {
+		switch (val) {
 			case '1':
 			case '2':
 			case '3':
 				var res = $("#code").val().split("Versi");
 				var res_code = res[0].split("-");
-				code = res_code[0]+'-'+res_code[1]+'-'+$("#year").val()+' Versi '+$("#version").val();
+				code = res_code[0] + '-' + res_code[1] + '-' + $("#year").val() + ' Versi ' + $("#version").val();
 				$("#code").val(code);
 				break;
 			case '4':
 				var res = $("#code").val().split(" ");
-				code = res[0]+' Versi '+$("#version").val();
+				code = res[0] + ' Versi ' + $("#version").val();
 				$("#code").val(code);
 				break;
-				
+
 			default:
-				
+
 		}
 	}
 
@@ -233,6 +284,6 @@
 		prefix: '',
 		clearPrefix: true,
 		centsLimit: 0
-	}); 
+	});
 </script>
 @endsection

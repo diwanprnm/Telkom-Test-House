@@ -124,7 +124,7 @@
 									<input type="text" id="version" name="version" class="form-control" placeholder="Versi" value="{{ old('version') }}" required>
 								</div>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-4" id="price-form">
 								<div class="form-group ">
 									<label>
 										Harga *
@@ -294,6 +294,9 @@
 					// show version-form
 					$("#version").prop('required', true);
 					$("#version-form").show();
+					// show price-code-form
+					$("#price").prop('required', true);
+					$("#price-form").show();
 					$("#code").prop('readonly', true);
 					code = type_name + ' ' + $("#master_code").val() + '-' + $("#year").val() + ' Versi ' + $("#version").val();
 					$("#code").val(code);
@@ -310,6 +313,9 @@
 					// show version-form
 					$("#version").prop('required', true);
 					$("#version-form").show();
+					// show price-code-form
+					$("#price").prop('required', true);
+					$("#price-form").show();
 					$("#code").prop('readonly', true);
 					code = type_name + ' ' + $("#master_code").val() + '-' + $("#year").val() + ' Versi ' + $("#version").val();
 					$("#code").val(code);
@@ -323,6 +329,9 @@
 					// show year-form
 					$("#year").prop('required', true);
 					$("#year-form").show();
+					// show price-code-form
+					$("#price").prop('required', true);
+					$("#price-form").show();
 					// show version-form
 					$("#version").prop('required', true);
 					$("#version-form").show();
@@ -332,13 +341,16 @@
 					break;
 				case '4':
 					type_name = 'TLKM/I/KAL';
-					// show master-code-form
+					// show master-code-formf
 					$("#master_code").prop('required', true);
 					$("#master-code-form").show();
 					$("#name").val('');
 					// hide year-code-form
 					$("#year").prop('required', false);
 					$("#year-form").hide();
+					// hide price-code-form
+					$("#price").prop('required', false);
+					$("#price-form").hide();
 					// show version-form
 					$("#version").prop('required', true);
 					$("#version-form").show();
@@ -356,6 +368,9 @@
 					// show year-code-form
 					$("#year").prop('required', true);
 					$("#year-form").show();
+					// hide price-code-form
+					$("#price").prop('required', false);
+					$("#price-form").hide();
 					// hide version-form
 					$("#version").prop('required', false);
 					$("#version-form").hide();
@@ -372,6 +387,9 @@
 					// hide year-form
 					$("#year").prop('required', true);
 					$("#year-form").show();
+					// hide price-code-form
+					$("#price").prop('required', false);
+					$("#price-form").hide();
 					// hide version-form
 					$("#version").prop('required', false);
 					$("#version-form").hide();
@@ -387,6 +405,9 @@
 					// hide year-form
 					$("#year").prop('required', false);
 					$("#year-form").hide();
+					// hide price-code-form
+					$("#price").prop('required', false);
+					$("#price-form").hide();
 					// hide version-form
 					$("#version").prop('required', false);
 					$("#version-form").hide();
