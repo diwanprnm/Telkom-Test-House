@@ -30,7 +30,7 @@ class PDFMCCetakSidangQA extends FPDF
 	{
 		$signees = $this->data['signees'];
 		$this->SetXY(67, -20);
-		$this->Image($signees[1]['tandaTanganManager'], (210 - 37) / 2, 187, 0, 11);
+		$this->Image($signees[1]['tandaTanganManager'], (210 - 40) / 2, 187, 0, 11);
 		$this->SetXY(67, -30);
 		$this->SetFont('helvetica', 'B', 8);
 		$this->Cell(55, 5, "Bandung, " . $this->data['date'], 0, 0, 'C');
@@ -46,7 +46,7 @@ class PDFMCCetakSidangQA extends FPDF
 
 
 		$this->SetXY(177, -20);
-		$this->Image($signees[0]['tandaTanganSeniorManager'], (210 + 170) / 2, 187, 0, 11);
+		$this->Image($signees[0]['tandaTanganSeniorManager'], (210 + 175) / 2, 187, 0, 11);
 		$this->SetXY(177, -26.5);
 		$this->Cell(55, 5, "Menyetujui", 0, 0, 'C');
 		$this->SetXY(177, -13.5);
