@@ -16,6 +16,7 @@ class CetakKontrak
         $currentY = 0;
         $signDate = date("d/m/Y", strtotime($data[0]['contract_date']));
         $isNextPage = 0;
+        $yToNextPage = 245;
 
         // DATA PEMOHON
         $pdf->setY(37);
@@ -73,27 +74,27 @@ class CetakKontrak
             $pdf->MultiCell(0,$charHeight,'Jika pembatalan uji sebelum tanggal 5 bulan berikutnya, maka biaya uji yang sudah dibayarkan dapat dikembalikan utuh (biaya uji + PPN 10 %). Namun jika sudah melebihi tanggal 5 bulan berikutnya, maka biaya uji tersebut menjadi deposit biaya permohonan uji berikutnya (hanya biaya uji saja).',0,'L');
             $pdf->Cell(4.5,$charHeight,"8.",0,0);
             $pdf->MultiCell(0,$charHeight,'Pelanggan menyatakan bahwa informasi perangkat uji yang didaftarkan dalam kontrak uji ini adalah sama dengan sampel uji yang diuji di lokasi.',0,'L');
-            if($pdf->getY() > 250  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
+            if($pdf->getY() > $yToNextPage  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
             $pdf->Cell(4.5, $charHeight,"9.",0,0);
             $pdf->Cell(62,$charHeight,'Pelanggan menerima LHU dan/atau Sertifikat Uji ',0,'L');$pdf->SetFont('','I');$pdf->Cell(24,$charHeight,'Quality Assurance',0,'L');$pdf->SetFont('','');$pdf->Cell(0,$charHeight,'(QA) setelah pengujian perangkat selesai.',0,1);
-            if($pdf->getY() > 250  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
+            if($pdf->getY() > $yToNextPage  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
             $pdf->Cell(4.5, $charHeight,"10.",0,0);
             $pdf->MultiCell(0, $charHeight,'Sebagai prasyarat mengunduh LHU dan/atau Sertifikat Uji QA, pelanggan harus mengisi survei kepuasan pelanggan yang ada di web TTH pada saat pelanggan mengunduh dokumen tersebut.',0,'L');
-            if($pdf->getY() > 250  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
+            if($pdf->getY() > $yToNextPage  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
             $pdf->Cell(4.5, $charHeight,"11.",0,0);
             $pdf->MultiCell(0, $charHeight,'Pelanggan bersedia jika informasi pelanggan dan perangkat uji yang telah lulus uji QA dipublikasikan melalui web TTH.',0,'L');
-            if($pdf->getY() > 250  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
+            if($pdf->getY() > $yToNextPage  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
             $pdf->Cell(4.5, $charHeight,"12.",0,0);
             $pdf->MultiCell(0, $charHeight,'Khusus untuk permohonan uji QA, pelanggan harus memperhatikan hal-hal berikut:',0,'L');
             $pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"a. ",0,0);$pdf->MultiCell(0, $charHeight,'Pelanggan harus memastikan bahwa sertifikat ISO maupun CIQS valid sebagai prasyarat utama untuk mengeluarkan keputusan hasil uji QA.',0,'L');
             $pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"b. ",0,0);$pdf->Cell(35, $charHeight,'Jika keputusan hasil uji QA',0,0); ;$pdf->SetFont('','B');$pdf->Cell(22.5,$charHeight,"tidak memenuhi/");$pdf->SetFont('','BI');$pdf->Cell(16,$charHeight,"not comply",0,0);$pdf->SetFont('','');$pdf->Cell(16,$charHeight,"maka pelanggan dapat mengajukan kembali permohonan uji QA ini terhitung",0,1);
             $pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(111, $charHeight,'2 (dua) bulan untuk produk Tingkat Komponen Dalam Negeri (TKDN) dan 6 (enam) bulan untuk produk non TKDN setelah keputusan',0,1);
             $pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(111, $charHeight,'tersebut keluar.',0,1);
-            if($pdf->getY() > 250  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
+            if($pdf->getY() > $yToNextPage  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
             $pdf->Cell(4.5, $charHeight,"13.",0,0);
             $pdf->Cell(40, $charHeight,"Pelanggan dapat menghubungi");$pdf->SetFont('','I');$pdf->Cell(22,$charHeight,"customer service");$pdf->SetFont('','');$pdf->Cell(47,$charHeight,"TTH (WA: 081224837500 atau email:");$pdf->SetFont('','U');$pdf->SetTextColor(0,0,255);$pdf->Cell(24,$charHeight,"cstth@telkom.co.id");$pdf->SetTextColor(0,0,0);$pdf->SetFont('','');$pdf->Cell(10,$charHeight,") jika ada perbedaan informasi",0,1);
             $pdf->Cell(4.5, $charHeight,"",0,0);$pdf->MultiCell(0, $charHeight,'pelanggan maupun perangkat uji yang tidak terkait item pengujian antara informasi saat pendaftaran dengan informasi setelah laporan.',0,'L');
-            if($pdf->getY() > 250  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
+            if($pdf->getY() > $yToNextPage  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
             $pdf->Cell(4.5, $charHeight,"14.",0,0);
             $pdf->MultiCell(0, $charHeight,'Pelanggan dilarang memberikan gratifikasi dalam bentuk apapun di luar biaya uji, transportasi, dan akomodasi. Jika ditemukan',0,'L');
             $pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(102, $charHeight,'pelanggaran dalam hal ini maka permohonan uji diputuskan selesai dengan LHU',0,0);$pdf->SetFont('','B');$pdf->Cell(22.5,$charHeight,"tidak memenuhi/");$pdf->SetFont('','BI');$pdf->Cell(16,$charHeight,"not comply.",0,1);$pdf->SetFont('','');
@@ -121,29 +122,29 @@ class CetakKontrak
             $pdf->Cell(4.5,$charHeight,"8.",0,0);
             $pdf->Cell(0, $charHeight,'Dalam hal ada pengecekan/perubahan/peminjaman/penggantian/pengambilan perangkat uji oleh pelanggan setelah terbit nomor SPK,',0,1);//$pdf->setXY(101,192);$pdf->SetFont('','B');$pdf->Cell(22.5,5,"tidak memenuhi/");$pdf->SetFont('','BI');$pdf->Cell(0,5,"not comply",0,1);$pdf->SetFont('','');
             $pdf->Cell(4.5,$charHeight,"",0,0);$pdf->Cell(76, $charHeight,'maka permohonan ini akan diputuskan selesai dengan LHU ',0,0);$pdf->SetFont('','B');$pdf->Cell(22.5,$charHeight,"tidak memenuhi/");$pdf->SetFont('','BI');$pdf->Cell(16,$charHeight,"not comply.",0,1);$pdf->SetFont('','');
-            if($pdf->getY() > 250  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
+            if($pdf->getY() > $yToNextPage  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
             $pdf->Cell(4.5, $charHeight,"9.",0,0);
             $pdf->Cell(62,$charHeight,'Pelanggan menerima LHU dan/atau Sertifikat Uji',0,'L');$pdf->SetFont('','I');$pdf->Cell(24,$charHeight,'Quality Assurance',0,'L');$pdf->SetFont('','');$pdf->Cell(0,$charHeight,'(QA) setelah pengujian perangkat selesai atau pelanggan menerima',0,1);
             $pdf->Cell(4.5, $charHeight,'',0,0);$pdf->SetFont('','I');$pdf->Cell(28, $charHeight,'Calibration Certificate',0,0);$pdf->SetFont('','');$pdf->Cell(22.5,$charHeight,"setelah kalibrasi alat ukur selesai.",0,1);
-            if($pdf->getY() > 250  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
+            if($pdf->getY() > $yToNextPage  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
             $pdf->Cell(4.5, $charHeight,"10.",0,0);
             $pdf->Cell(84.5, $charHeight,'Sebagai prasyarat mengunduh LHU dan/atau Sertifikat Uji QA atau',0,0);$pdf->SetFont('','I');$pdf->Cell(27, $charHeight,'Calibration Certificate',0,0);$pdf->SetFont('','');$pdf->Cell(62, $charHeight,', pelanggan harus mengambil perangkat uji/alat',0,1);
             $pdf->Cell(4.5, $charHeight,'',0,0);$pdf->Cell(22.5,$charHeight,"ukur dan mengisi survei kepuasan pelanggan yang ada di web TTH pada saat pelanggan mengunduh dokumen tersebut.",0,1);
-            if($pdf->getY() > 250  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
+            if($pdf->getY() > $yToNextPage  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
             $pdf->Cell(4.5, $charHeight,"11.",0,0);
             $pdf->MultiCell(0, $charHeight,'Pelanggan bersedia jika informasi pelanggan dan perangkat uji yang telah lulus uji QA dipublikasikan melalui web TTH.',0,'L');
-            if($pdf->getY() > 250  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
+            if($pdf->getY() > $yToNextPage  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
             $pdf->Cell(4.5, $charHeight,"12.",0,0);
             $pdf->MultiCell(0, $charHeight,'Khusus untuk permohonan uji QA, pelanggan harus memperhatikan hal-hal berikut:',0,'L');
             $pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"a. ",0,0);$pdf->MultiCell(0, $charHeight,'Pelanggan harus memastikan bahwa sertifikat ISO maupun CIQS valid sebagai prasyarat utama untuk mengeluarkan keputusan hasil uji QA.',0,'L');
             $pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"b. ",0,0);$pdf->Cell(35, $charHeight,'Jika keputusan hasil uji QA',0,0); ;$pdf->SetFont('','B');$pdf->Cell(22.5,$charHeight,"tidak memenuhi/");$pdf->SetFont('','BI');$pdf->Cell(16,$charHeight,"not comply",0,0);$pdf->SetFont('','');$pdf->Cell(16,$charHeight,"maka pelanggan dapat mengajukan kembali permohonan uji QA ini terhitung",0,1);
             $pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(111, $charHeight,'2 (dua) bulan untuk produk Tingkat Komponen Dalam Negeri (TKDN) dan 6 (enam) bulan untuk produk non TKDN setelah keputusan',0,1);
             $pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(111, $charHeight,'tersebut keluar.',0,1);
-            if($pdf->getY() > 250  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
+            if($pdf->getY() > $yToNextPage  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
             $pdf->Cell(4.5, $charHeight,"13.",0,0);
             $pdf->Cell(40, $charHeight,"Pelanggan dapat menghubungi");$pdf->SetFont('','I');$pdf->Cell(22,$charHeight,"customer service");$pdf->SetFont('','');$pdf->Cell(47,$charHeight,"TTH (WA: 081224837500 atau email:");$pdf->SetFont('','U');$pdf->SetTextColor(0,0,255);$pdf->Cell(24,$charHeight,"cstth@telkom.co.id");$pdf->SetTextColor(0,0,0);$pdf->SetFont('','');$pdf->Cell(10,$charHeight,") jika ada perbedaan informasi",0,1);
             $pdf->Cell(4.5, $charHeight,"",0,0);$pdf->MultiCell(0, $charHeight,'pelanggan maupun perangkat uji/alat ukur yang tidak terkait item uji antara informasi saat pendaftaran dengan informasi setelah laporan.',0,'L');
-            if($pdf->getY() > 250  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
+            if($pdf->getY() > $yToNextPage  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
             $pdf->Cell(4.5, $charHeight,"14.",0,0);
             $pdf->Cell(111, $charHeight,'Pelanggan dilarang memberikan gratifikasi dalam bentuk apapun di luar biaya uji/kalibrasi. Jika ditemukan pelanggaran dalam hal ini',0,1);
             $pdf->Cell(4.5, $charHeight,"",0,0);$pdf->Cell(69, $charHeight,'maka permohonan ini diputuskan selesai dengan LHU',0,0);$pdf->SetFont('','B');$pdf->Cell(22.5,$charHeight,"tidak memenuhi/");$pdf->SetFont('','BI');$pdf->Cell(16,$charHeight,"not comply ",0,0);$pdf->SetFont('','');$pdf->Cell(6, $charHeight,'atau',0,0);$pdf->SetFont('','BI');$pdf->Cell(16,$charHeight,"Uncalibrated Report. ",0,1);$pdf->SetFont('','');
@@ -151,7 +152,7 @@ class CetakKontrak
         
     
         // SIGN
-        if($pdf->getY() > 250  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
+        if($pdf->getY() > $yToNextPage  && $isNextPage == 0){$pdf->SetMargins(17, 0, 17);$pdf->AliasNbPages();$pdf->AddPage();$pdf->setY(37);$isNextPage = 1;}
         $pdf->Ln(1);
         $pdf->setX(134);
         $pdf->Cell(59,$charHeight,"Bandung, $signDate",0,1,'C');
