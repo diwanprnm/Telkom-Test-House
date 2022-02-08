@@ -620,7 +620,21 @@ class SidangController extends Controller
     public function sendEmail($item){
         $email_editors = new EmailEditorService();
         
-        $email = $item->result == 2 ? $email_editors->selectBy('emails.qaPending') : $email_editors->selectBy('emails.qa');
+        switch ($item->result) {
+            case 1:
+                $email = $email_editors->selectBy('emails.qa');
+                break;
+            case -1:
+                $email = $email_editors->selectBy('emails.qaFail');
+                break;
+            case 2:
+                $email = $email_editors->selectBy('emails.qaPending');
+                break;
+            default :
+                $email = $email_editors->selectBy('emails.qa');
+                break;
+        }
+
         $content = $this->parsingEmailSidangQA($email->content, $item->examination->user->name, $item->examination->company->name, $item->examination->qa_passed, $item->examination->device, $item->catatan);
         $subject = 'Pemberitahuan Hasil Pengujian Perangkat '.$item->examination->device->name.' | '.$item->examination->device->mark.' | '.$item->examination->device->model.' | '.$item->examination->device->capacity;
 
@@ -654,22 +668,9 @@ class SidangController extends Controller
         $content = str_replace('@device_model', $device->model, $content);
         $content = str_replace('@device_capacity', $device->capacity, $content);
         $content = str_replace('@test_reference', $device->test_reference, $content);
-        switch ($qa_passed) {
-            case 1:
-                $content = str_replace('@qa_passed', '<strong>LULUS</strong>', $content);
-                $content = str_replace('@cert1', ' dan sertifikat QA', $content);
-                $content = str_replace('@cert2', ', unduh sertifikat/ download certificate', $content);
-                break;
-            case -1:
-                $content = str_replace('@qa_passed', '<strong>TIDAK LULUS</strong>', $content);
-                $content = str_replace('@cert1', '', $content);
-                $content = str_replace('@cert2', '', $content);
-                break;
-            case 2:
-                $content = $catatan ? str_replace('@catatan', ' dengan catatan '.$catatan, $content) : str_replace('@catatan', '', $content);
-                break;
-        }
-		return $content;
+            $text = $catatan ? ' dengan catatan '.$catatan : '';
+        $content = str_replace('@catatan', $text, $content);
+        return $content;
 	}
 
     public function resetExamination($sidang_id){ // DELETE SOON
