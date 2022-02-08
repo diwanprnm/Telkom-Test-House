@@ -1299,6 +1299,10 @@ class PengujianController extends Controller
 
         if($currentUser){
             $exam = Examination::where('id', $id)->with('device')->get();
+			if($exam[0]->payment_status == 1){
+				Session::flash('message', 'SPB Already Paid');
+				return redirect('pengujian/');
+			}
             if($exam[0]->payment_method == 0){
 				return redirect('pengujian/'.$id.'/pembayaran');
 			}
