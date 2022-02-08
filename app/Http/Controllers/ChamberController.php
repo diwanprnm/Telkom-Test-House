@@ -80,10 +80,10 @@ class ChamberController extends Controller
         // });
         $query_unpaid->when($after_date, function ($query) use ($before_date, $after_date) {
             if ($before_date == $after_date) {
-                return $query->whereDate('chamber.end_date', '=', $before_date);
+                return $query->whereDate('chamber_detail.date', '=', $before_date);
             } else {
-                return $query->whereDate('chamber.start_date', '>=', $after_date)
-                    ->whereDate('chamber.end_date', '<=', $before_date);
+                return $query->whereDate('chamber_detail.date', '>=', $after_date)
+                    ->whereDate('chamber_detail.date', '<=', $before_date);
             }
         });
 
@@ -99,10 +99,10 @@ class ChamberController extends Controller
         // });
         $query_paid->when(!empty($after_date), function ($query) use ($before_date, $after_date) {
             if ($before_date == $after_date) {
-                return $query->whereDate('chamber.end_date', '=', $before_date);
+                return $query->whereDate('chamber_detail.date', '=', $before_date);
             } else {
-                return $query->whereDate('chamber.start_date', '>=', $after_date)
-                    ->whereDate('chamber.end_date', '<=', $before_date);
+                return $query->whereDate('chamber_detail.date', '>=', $after_date)
+                    ->whereDate('chamber_detail.date', '<=', $before_date);
             }
         });
 
@@ -119,10 +119,10 @@ class ChamberController extends Controller
         // });
         $query_delivered->when(!empty($after_date), function ($query) use ($before_date, $after_date) {
             if ($before_date == $after_date) {
-                return $query->whereDate('chamber.end_date', '=', $before_date);
+                return $query->whereDate('chamber_detail.date', '=', $before_date);
             } else {
-                return $query->whereDate('chamber.start_date', '>=', $after_date)
-                    ->whereDate('chamber.end_date', '<=', $before_date);
+                return $query->whereDate('chamber_detail.date', '>=', $after_date)
+                    ->whereDate('chamber_detail.date', '<=', $before_date);
             }
         });
 
@@ -138,7 +138,10 @@ class ChamberController extends Controller
             ->with('data', $data)
             ->with('data_unpaid', $data_unpaid)
             ->with('data_paid', $data_paid)
-            ->with('data_delivered', $data_delivered);
+            ->with('data_delivered', $data_delivered)
+            ->with('after_date', $after_date)
+            ->with('before_date', $before_date)
+            ;
         // ->with(self::SEARCH, $search);
     }
 

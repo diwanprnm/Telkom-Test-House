@@ -50,7 +50,7 @@
 											{{ trans('translate.chamber_history_date') }}
 										</label>
 										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-											<input type="text" placeholder="{{ trans('translate.chamber_history_date_filter_start') }}" value="" name="after_date" id="filter_after_date_input" class="form-control"/>
+											<input type="text" placeholder="{{ trans('translate.chamber_history_date_filter_start') }}" value="{{ $after_date }}" name="after_date" id="filter_after_date_input" class="form-control"/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default form-control">
 													<i class="fa fa-calendar" aria-hidden="true"></i>
@@ -66,7 +66,7 @@
 											&nbsp;
 										</label>
 										<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
-											<input type="text" placeholder="{{ trans('translate.chamber_history_date_filter_end') }}" value="" name="before_date" id="filter_before_date_input" class="form-control"/>
+											<input type="text" placeholder="{{ trans('translate.chamber_history_date_filter_end') }}" value="{{ $before_date }}" name="before_date" id="filter_before_date_input" class="form-control"/>
 											<span class="input-group-btn">
 												<button type="button" class="btn btn-default form-control">
 													<i class="fa fa-calendar" aria-hidden="true"></i>
@@ -77,10 +77,10 @@
 									</div>
 		                        </div>
 								<div class="col-md-12">
-		                            <button id="filter" type="submit" class="btn button-3d btn-sky pull-right">
+									<button id="filter" type="submit" class="btn button-3d btn-sky pull-right">
 		                                Filter
 		                            </button>
-									<button id="reset" onclick="resetDate()" class="btn button-3d pull-right" style="margin-right: 1.25rem">Reset</button>
+									<a class="btn btn-default pull-right" style="margin-right: 1.25rem" href="{{URL::to('chamber_history')}}">Reset <em class="fa fa-refresh"></em></a>
 		                        </div>								
 							</div>
 							

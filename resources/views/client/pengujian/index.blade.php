@@ -80,6 +80,7 @@
 					</div>
 
 					<div class="col form-group">
+						<a class="btn btn-default pull-right" style="margin-right: 1.25rem" href="{{URL::to('pengujian')}}">Reset <em class="fa fa-refresh"></em></a>
 						<div class="col-md-4 pull-right">
 							<span class="input-icon input-icon-right search-table float-right"> 
 								<input id="filter_search_input" name="search" type="search" placeholder="{{ trans('translate.search_exam') }}" id="form-field-17" class="form-control " value="{{ $search }}">

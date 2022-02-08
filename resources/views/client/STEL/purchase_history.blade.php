@@ -49,12 +49,12 @@
 				
 				<div class="container-fluid container-fullw bg-white">
 						<div class="row offset-0"> 
+							<a class="btn btn-default pull-right" style="margin-right: 1.25rem" href="{{URL::to('purchase_history')}}">Reset <em class="fa fa-refresh"></em></a>
 							<div class="col-md-4 pull-right">
 								<span class="input-icon input-icon-right search-table  float-right"> 
 									<input id="search_stel_product" name="search" type="search" placeholder="{{ trans('translate.search_STEL') }}" id="form-field-17" class="form-control " value="{{ $search }}">
 								</span> 
 							</div>
-							
 						</div>
 						<ul class="nav nav-tabs clearfix">
 							<li class="{{ $tab == 'unpaid' ? 'active' : '' }}"  data-tab="unpaid"><a href="#tab-unpaid" data-toggle="tab"><strong>Unpaid</strong></a></li>
