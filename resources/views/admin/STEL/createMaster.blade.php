@@ -295,7 +295,7 @@
 					$("#version").prop('required', true);
 					$("#version-form").show();
 					// show price-code-form
-					$("#price").prop('required', true);
+					$("#txt-price").prop('required', true);
 					$("#price-form").show();
 					$("#code").prop('readonly', true);
 					code = type_name + ' ' + $("#master_code").val() + '-' + $("#year").val() + ' Versi ' + $("#version").val();
@@ -314,7 +314,7 @@
 					$("#version").prop('required', true);
 					$("#version-form").show();
 					// show price-code-form
-					$("#price").prop('required', true);
+					$("#txt-price").prop('required', true);
 					$("#price-form").show();
 					$("#code").prop('readonly', true);
 					code = type_name + ' ' + $("#master_code").val() + '-' + $("#year").val() + ' Versi ' + $("#version").val();
@@ -330,7 +330,7 @@
 					$("#year").prop('required', true);
 					$("#year-form").show();
 					// show price-code-form
-					$("#price").prop('required', true);
+					$("#txt-price").prop('required', true);
 					$("#price-form").show();
 					// show version-form
 					$("#version").prop('required', true);
@@ -349,7 +349,7 @@
 					$("#year").prop('required', false);
 					$("#year-form").hide();
 					// hide price-code-form
-					$("#price").prop('required', false);
+					$("#txt-price").prop('required', false);
 					$("#price-form").hide();
 					// show version-form
 					$("#version").prop('required', true);
@@ -369,7 +369,7 @@
 					$("#year").prop('required', true);
 					$("#year-form").show();
 					// hide price-code-form
-					$("#price").prop('required', false);
+					$("#txt-price").prop('required', false);
 					$("#price-form").hide();
 					// hide version-form
 					$("#version").prop('required', false);
@@ -388,7 +388,7 @@
 					$("#year").prop('required', true);
 					$("#year-form").show();
 					// hide price-code-form
-					$("#price").prop('required', false);
+					$("#txt-price").prop('required', false);
 					$("#price-form").hide();
 					// hide version-form
 					$("#version").prop('required', false);
@@ -406,7 +406,7 @@
 					$("#year").prop('required', false);
 					$("#year-form").hide();
 					// hide price-code-form
-					$("#price").prop('required', false);
+					$("#txt-price").prop('required', false);
 					$("#price-form").hide();
 					// hide version-form
 					$("#version").prop('required', false);
