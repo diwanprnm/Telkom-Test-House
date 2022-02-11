@@ -282,7 +282,7 @@ class SidangController extends Controller
             $res_exam_OTR = $client->get('spk/searchData?limit=1&spkNumber=' . $spk_code)->getBody();
             $exam_OTR = json_decode($res_exam_OTR);
             if ($exam_OTR->code != 'MSTD0059AERR' && $exam_OTR->code != 'MSTD0000AERR') {
-                $data[$i]->finalResult = $exam_OTR->data[0]->reportFinalResultValue;
+                $data[$i]->finalResult = isset($exam_OTR->data[0]->reportFinalResultValue) ? $exam_OTR->data[0]->reportFinalResultValue : '-';
                 $data[$i]->startDate = $exam_OTR->data[0]->actualStartTestDt;
                 $data[$i]->endDate = $exam_OTR->data[0]->actualFinishTestDt;
                 $data[$i]->targetDate = $exam_OTR->data[0]->targetDt;
