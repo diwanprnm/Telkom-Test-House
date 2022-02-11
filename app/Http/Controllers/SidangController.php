@@ -705,16 +705,34 @@ class SidangController extends Controller
             $exam->save();
 
             $device = Device::find($item->examination->device_id);
+            if (Storage::disk('minio')->exists('device\\'.$device->id)){
+                Storage::disk('minio')->deleteDirectory('device\\'.$device->id);
+            }
             $device->certificate = NULL;
             $device->valid_from = NULL;
             $device->valid_thru = NULL;
             $device->cert_number = NULL;
             $device->status = 0;
             $device->save();
+
+            $approval = Approval::where('reference_table', 'device')->where('reference_id', $device->id)->first();
+            if($approval){
+                ApproveBy::where('approval_id', $approval->id)->delete();
+                $approval->delete();
+            }
+        }
+        if($approval){
+            $approval = Approval::where('reference_table', 'sidang')->where('reference_id', $sidang_id)->first();
+            ApproveBy::where('approval_id', $approval->id)->delete();
+            $approval->delete();
         }
 
-        Session::flash('message', 'Successfully Reset Data');
-        return redirect('/admin/sidang/');
+        if (Storage::disk('minio')->exists('sidang\\'.$sidang_id)){
+            Storage::disk('minio')->deleteDirectory('sidang\\'.$sidang_id);
+        }
+
+        // Session::flash('message', 'Successfully Reset Data');
+        // return redirect('/admin/sidang/');
     }
 
     private function generateNoSertifikat()
@@ -846,6 +864,7 @@ class SidangController extends Controller
 
     public function destroy($id, $reasonOfDeletion)
     {
+        $this->resetExamination($id);
         //Get data
         $sidang = Sidang::find($id);
 
