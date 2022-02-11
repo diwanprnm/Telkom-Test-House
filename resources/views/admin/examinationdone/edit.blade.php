@@ -979,7 +979,7 @@
 							@php
 								$start_date = new DateTime(date('Y-m-d'));
 								$end_date = new DateTime($exam_schedule->data[0]->targetDt);
-								$reportFinalResultValue = $exam_schedule->data[0]->reportFinalResultValue;
+								$reportFinalResultValue = isset($exam_schedule->data[0]->reportFinalResultValue) ? $exam_schedule->data[0]->reportFinalResultValue : '-';
 								if($start_date>$end_date){
 									$sisa_spk = 0;
 								}else{
