@@ -57,6 +57,8 @@
 						</div>
 						<div class="col-md-4 offset-0 right">
 							 <div class="btn-group">
+							 	<a href="{{URL::to('products')}}" class="btn btn-default btn-sm">
+					            <em class="fa fa-refresh"></em> Reset</a> 
 					            <a href="#" id="list" class="btn btn-default btn-sm">
 					            <em class="fa fa-th"></em> List</a> 
 					            <a href="#" id="grid" class="btn btn-default btn-sm">

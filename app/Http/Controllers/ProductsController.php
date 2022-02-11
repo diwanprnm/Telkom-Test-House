@@ -142,6 +142,7 @@ class ProductsController extends Controller
     public function purchase_history(Request $request)
     {
         $currentUser = Auth::user();
+        $search = urldecode(trim($request->input(self::SEARCH)));
         if(!$currentUser){ return redirect(self::LOGIN);}
         $paginate = 10; 
         $tab = $request->input('tab') ? $request->input('tab') : 'unpaid';
@@ -151,7 +152,7 @@ class ProductsController extends Controller
             ->join("stels","stels_sales_detail.stels_id","=","stels.id")
             ->join("users","users.id","=","stels_sales.user_id")
             ->join("companies","companies.id","=",self::USERS_DOT_COMPANY_ID)
-            ->where(self::USERS_DOT_COMPANY_ID,$currentUser->company_id)
+            ->where(self::USERS_DOT_COMPANY_ID,$currentUser->company_id)            
         ;
         $query_unpaid = STELSales::select($select)->distinct('stels_sales.id')
             ->join("stels_sales_detail","stels_sales.id","=","stels_sales_detail.stels_sales_id")
@@ -160,6 +161,10 @@ class ProductsController extends Controller
             ->join("companies","companies.id","=",self::USERS_DOT_COMPANY_ID)
             ->where(self::USERS_DOT_COMPANY_ID,$currentUser->company_id)
             ->where("stels_sales.payment_status", 0)
+            ->where(function($query) use ($search){
+                $query->where('stels.name','like','%'.$search.'%')
+                ->orWhere('stels.code','like','%'.$search.'%');
+            })
         ;
         $query_paid = STELSales::select($select)->distinct('stels_sales.id')
             ->join("stels_sales_detail","stels_sales.id","=","stels_sales_detail.stels_sales_id")
@@ -168,6 +173,10 @@ class ProductsController extends Controller
             ->join("companies","companies.id","=",self::USERS_DOT_COMPANY_ID)
             ->where(self::USERS_DOT_COMPANY_ID,$currentUser->company_id)
             ->where("stels_sales.payment_status", 1)
+            ->where(function($query) use ($search){
+                $query->where('stels.name','like','%'.$search.'%')
+                ->orWhere('stels.code','like','%'.$search.'%');
+            })
         ;
         $query_delivered = STELSales::select($select)->distinct('stels_sales.id')
             ->join("stels_sales_detail","stels_sales.id","=","stels_sales_detail.stels_sales_id")
@@ -176,6 +185,10 @@ class ProductsController extends Controller
             ->join("companies","companies.id","=",self::USERS_DOT_COMPANY_ID)
             ->where(self::USERS_DOT_COMPANY_ID,$currentUser->company_id)
             ->where("stels_sales.payment_status", 3)
+            ->where(function($query) use ($search){
+                $query->where('stels.name','like','%'.$search.'%')
+                ->orWhere('stels.code','like','%'.$search.'%');
+            })
         ;
         $query_expired = STELSales::select('stels.*')
             ->join("stels_sales_detail","stels_sales.id","=","stels_sales_detail.stels_sales_id")
@@ -185,6 +198,10 @@ class ProductsController extends Controller
             ->where(self::USERS_DOT_COMPANY_ID,$currentUser->company_id)
             ->where("stels.is_active", 0)
             ->where("stels_sales_detail.temp_alert", 3)
+            ->where(function($query) use ($search){
+                $query->where('stels.name','like','%'.$search.'%')
+                ->orWhere('stels.code','like','%'.$search.'%');
+            })
         ;
 
         $data = $query->orderBy("stels_sales.created_at", 'desc')->paginate($paginate);
@@ -202,6 +219,7 @@ class ProductsController extends Controller
         ->with('data_paid', $data_paid)
         ->with('data_delivered', $data_delivered)
         ->with('data_expired', $data_expired)
+        ->with(self::SEARCH, $search)
         ;
     } 
 

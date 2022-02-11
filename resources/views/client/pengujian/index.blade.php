@@ -78,6 +78,16 @@
 							<option value="10">{{ trans('translate.examination_certificate') }}</option>
 						</select>
 					</div>
+
+					<div class="col form-group">
+						<a class="btn btn-default pull-right" style="margin-right: 1.25rem" href="{{URL::to('pengujian')}}">Reset <em class="fa fa-refresh"></em></a>
+						<div class="col-md-4 pull-right">
+							<span class="input-icon input-icon-right search-table float-right"> 
+								<input id="filter_search_input" name="search" type="search" placeholder="{{ trans('translate.search_exam') }}" id="form-field-17" class="form-control " value="{{ $search }}">
+								<em class="ti-search"></em>
+							</span> 
+						</div>
+					</div>
 				</div>
 			
 				@if (Session::get('error'))
@@ -1594,6 +1604,31 @@
 			});
 		}
 	});
+
+	const baseUrl = "{{URL::to('/')}}";
+
+	// Set destination when search is press with enter key
+	$('#filter_search_input').keypress(function(e) {
+		if(e.which != 13) { return; }
+		let param = getFilterParam();
+		document.location.href = baseUrl+'/pengujian?'+$.param(param);
+	});
+
+	// Get url parameter from filter
+	const getFilterParam = () =>  {
+	return {
+		search: $('#filter_search_input').val(),
+		jns: $('#cmb-jns-pengujian').val(),
+		status: $('#cmb-jns-status').val()
+	}
+};
 </script>
+
+{{-- Memunculkan tombol X untuk clear form search --}}
+<style>
+	input[type=search]::-webkit-search-cancel-button {
+    -webkit-appearance: searchfield-cancel-button;
+}
+</style>
 
 @endsection

@@ -29,8 +29,8 @@
 						<div class="row">
 							<div class="col-md-6">
 							</div>
-							  
-							<div class="col-md-6 col-xs-12 form-group">
+							<a class="btn btn-default pull-right" style="margin-right: 1.25rem" href="{{URL::to('Devclient')}}">Reset <em class="fa fa-refresh"></em></a>
+							<div class="col-md-4 col-xs-12 form-group pull-right">
 								<span class="input-icon input-icon-right search-table"> 
 									<input id="search_device" type="text" placeholder="{{ trans('translate.search_dev') }}" id="form-field-17" class="form-control " value="{{ $search }}">
 									<em class="ti-search"></em>

@@ -27,7 +27,8 @@
 				<div class="container clearfix">
 
 					<div class="row"> 
-						<div class="col-md-6 pull-right">
+						<a class="btn btn-default pull-right" style="margin-right: 1.25rem" href="{{URL::to('faq')}}">Reset <em class="fa fa-refresh"></em></a>
+						<div class="col-md-4 pull-right">
 							<span class="input-icon input-icon-right search-table">
 								<input id="search_value" type="text" placeholder="Search" id="form-field-17" class="form-control " value="{{ $search }}">
 								<em class="ti-search"></em>

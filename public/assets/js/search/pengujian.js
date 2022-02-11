@@ -17,7 +17,8 @@
 		var params = {
 			// search:document.getElementById("search_value").value,
 			jns:document.getElementById("cmb-jns-pengujian").value,
-			status:document.getElementById("cmb-jns-status").value
+			status: document.getElementById("cmb-jns-status").value,
+			search: $('#filter_search_input').val(),
 		};
 		document.location.href = 'pengujian?'+jQuery.param(params);
 	}

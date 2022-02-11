@@ -46,13 +46,22 @@
 	<section id="content">
 		<div class="content-wrap">
 			<div class="container clearfix">
+				
 				<div class="container-fluid container-fullw bg-white">
-					<ul class="nav nav-tabs clearfix">
-						<li class="{{ $tab == 'unpaid' ? 'active' : '' }}"><a href="#tab-unpaid" data-toggle="tab"><strong>Unpaid</strong></a></li>
-						<li class="{{ $tab == 'paid' ? 'active' : '' }}"><a href="#tab-paid" data-toggle="tab"><strong>Paid</strong></a></li>
-						<li class="{{ $tab == 'delivered' ? 'active' : '' }}"><a href="#tab-delivered" data-toggle="tab"><strong>Delivered</strong></a></li>
-						<li class="{{ $tab == 'expired' ? 'active' : '' }}"><a href="#tab-expired" data-toggle="tab"><strong>Old Document</strong></a></li>
-					</ul>
+						<div class="row offset-0"> 
+							<a class="btn btn-default pull-right" style="margin-right: 1.25rem" href="{{URL::to('purchase_history')}}">Reset <em class="fa fa-refresh"></em></a>
+							<div class="col-md-4 pull-right">
+								<span class="input-icon input-icon-right search-table  float-right"> 
+									<input id="search_stel_product" name="search" type="search" placeholder="{{ trans('translate.search_STEL') }}" id="form-field-17" class="form-control " value="{{ $search }}">
+								</span> 
+							</div>
+						</div>
+						<ul class="nav nav-tabs clearfix">
+							<li class="{{ $tab == 'unpaid' ? 'active' : '' }}"  data-tab="unpaid"><a href="#tab-unpaid" data-toggle="tab"><strong>Unpaid</strong></a></li>
+							<li class="{{ $tab == 'paid' ? 'active' : '' }}"  data-tab="paid"><a href="#tab-paid" data-toggle="tab"><strong>Paid</strong></a></li>
+							<li class="{{ $tab == 'delivered' ? 'active' : '' }}" data-tab="delivered"><a href="#tab-delivered" data-toggle="tab"><strong>Delivered</strong></a></li>
+							<li class="{{ $tab == 'expired' ? 'active' : '' }}" data-tab="expired"><a href="#tab-expired" data-toggle="tab"><strong>Old Document</strong></a></li>
+						</ul>															
 					<div class="tab-content">
 						<!-- tab unpaid -->
 						<div id="tab-unpaid" class="row clearfix tab-pane fade {{ $tab == 'unpaid' ? 'in active' : '' }}">
@@ -748,6 +757,30 @@
 	    }
 	  });
 	}
+
+	jQuery(document).ready(function() {
+		const url = new URL(window.location.href);
+		const currentTab = url.searchParams.get("tab") ?? 'tab-unpaid';
+
+		// Search STEL products by name or code
+		$('#search_stel_product').keydown(function(event) {
+	        if (event.keyCode == 13) {
+	            var baseUrl = "{{URL::to('/')}}";
+				var params = { 
+					search: document.getElementById("search_stel_product").value,
+					tab: $('.nav-tabs .active').attr('data-tab')
+					};	
+				document.location.href = baseUrl+'/purchase_history?'+jQuery.param(params);
+	        }
+	    });
+	});
 </script>
+
+{{-- Memunculkan tombol X untuk clear form search --}}
+<style>
+	input[type=search]::-webkit-search-cancel-button {
+    -webkit-appearance: searchfield-cancel-button;
+}
+</style>
 
 @endsection

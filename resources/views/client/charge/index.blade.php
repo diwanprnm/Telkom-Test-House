@@ -46,8 +46,8 @@
 							
 							<div class="col-md-3">
 							</div>
-							  
-							<div class="col-md-6 col-xs-12">
+							<a class="btn btn-default pull-right" style="margin-right: 1.25rem" href="{{URL::to('Chargeclient')}}">Reset <em class="fa fa-refresh"></em></a>
+							<div class="col-md-4 col-xs-12 pull-right">
 								<span class="input-icon input-icon-right search-table"> 
 									<input id="search_charge" type="text" placeholder="{{ trans('translate.search_charge') }}" id="form-field-17" class="form-control " value="{{ $search }}">
 									<em class="ti-search"></em>

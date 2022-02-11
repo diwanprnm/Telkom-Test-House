@@ -1,4 +1,4 @@
-version: '2'
+version: "2"
 
 volumes:
   mysql_data: {}
@@ -10,9 +10,9 @@ networks:
 
 services:
   nginx:
-    build : .
+    build: .
     # image: 'telkomindonesia/alpine:php-7.1-nginx'
-    image: 'tth-image:latest'
+    image: "tth-image:latest"
     networks:
       - tthnet
     user: root
@@ -21,7 +21,7 @@ services:
       - CACHE_DRIVER=redis
       - SESSION_DRIVER=redis
     volumes:
-     - ./:/var/www/data/html
+      - ./:/var/www/data/html
     ports:
       - 4001:8080
     depends_on:
@@ -31,7 +31,7 @@ services:
       - "8080"
 
   notification:
-    build : ./notification
+    build: ./notification
     networks:
       - tthnet
     environment:
@@ -46,9 +46,9 @@ services:
       - redis
     expose:
       - "8080"
-    
+
   mysql_tth:
-    image: 'telkomindonesia/alpine:mysql-10.2'
+    image: "telkomindonesia/alpine:mysql-10.2"
     user: user
     networks:
       - tthnet
@@ -65,7 +65,7 @@ services:
       - mysql_data:/var/lib/mysql/data
 
   redis:
-    image: 'telkomindonesia/alpine:redis-3.2'
+    image: "telkomindonesia/alpine:redis-3.2"
     ports:
       - 6379:6379
     networks:
