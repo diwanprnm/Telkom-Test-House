@@ -116,7 +116,6 @@ class PengujianController extends Controller
 	private const HTTP_ERRORS = "http_errors";
 	private const AUTHORIZATION = 'Authorization';
 	private const DEVICES_NAME_AUTOSUGGEST = 'devices.name as autosuggest';
-	private const FUNCTION_TEST_NO = 'function_test_NO';
 
 	/**
 	 * Show the application dashboard.
@@ -201,6 +200,8 @@ class PengujianController extends Controller
 				examinations.function_test_TE_temp,
 				examinations.is_cancel,
 				(SELECT name FROM examination_labs WHERE examination_labs.id=examinations.examination_lab_id) AS labs_name';
+			// var_dump($jns != null);
+			// die;
 			$query = DB::table(self::EXAMINATIONS)
 				->join(self::DEVICES, self::EXAMINATIONS_DEVICES_DOT_ID, '=', self::DEVICES_DOT_ID)
 				->join(self::USERS, self::EXAMINATIONS_CREATED_BY, '=', self::USERS_ID)
@@ -211,42 +212,55 @@ class PengujianController extends Controller
 
 			if ($search != null) {
 				if ($jns > 0) {
-					if ($status > 0) {
+					if ($status == 1) {
 						$query->where(self::DEVICES_NAME, 'like', '%' . $search . '%')
-							->orWhere(self::FUNCTION_TEST_NO, 'like', '%' . $search . '%')
-							->where(self::EXAMINATIONS_DOT . $arr_status[$status - 1] . '', '=', '1')
-							->where(self::EXAMINATIONS_DOT . $arr_status[$status] . '', '<', '1')
+							->where(self::EXAMINATIONS_DOT . $arr_status[0], '=', '0')
+							->where(self::EXAMINATIONS_TYPE_ID, '=', '' . $request->input('jns') . '');
+					} else if ($status > 1 && $status <= count($arr_status)) {
+						$query->where(self::DEVICES_NAME, 'like', '%' . $search . '%')
+							->where(self::EXAMINATIONS_DOT . $arr_status[$status - 1] . '', '=', '0')
+							->where(self::EXAMINATIONS_DOT . $arr_status[$status - 2] . '', '=', '1')
 							->where(self::EXAMINATIONS_TYPE_ID, '=', '' . $request->input('jns') . '');
 					} else {
 						$query->where(self::DEVICES_NAME, 'like', '%' . $search . '%')
-							->orWhere(self::FUNCTION_TEST_NO, 'like', '%' . $search . '%')
 							->where(self::EXAMINATIONS_TYPE_ID, '=', '' . $request->input('jns') . '');
 					}
 				} else {
-					if ($status > 0) {
+					if ($status == 1) {
 						$query->where(self::DEVICES_NAME, 'like', '%' . $search . '%')
-							->orWhere(self::FUNCTION_TEST_NO, 'like', '%' . $search . '%')
-							->where(self::EXAMINATIONS_DOT . $arr_status[$status - 1] . '', '=', '1')
-							->where(self::EXAMINATIONS_DOT . $arr_status[$status] . '', '<', '1');
+							->where(self::EXAMINATIONS_DOT . $arr_status[0], '=', '0');
+						// ->where(self::EXAMINATIONS_TYPE_ID, '=', '' . $request->input('jns') . '');
+					} else if ($status > 1 && $status <= count($arr_status)) {
+						$query->where(self::DEVICES_NAME, 'like', '%' . $search . '%')
+							->where(self::EXAMINATIONS_DOT . $arr_status[$status - 1] . '', '=', '0')
+							->where(self::EXAMINATIONS_DOT . $arr_status[$status - 2] . '', '=', '1');
 					} else {
-						$query->where(self::DEVICES_NAME, 'like', '%' . $search . '%')
-							->orWhere(self::FUNCTION_TEST_NO, 'like', '%' . $search . '%');
+						$query->where(self::DEVICES_NAME, 'like', '%' . $search . '%');
 					}
 				}
 			} else {
 				if ($jns > 0) {
-					if ($status > 0) {
-						$query->where(self::EXAMINATIONS_DOT . $arr_status[$status - 1] . '', '=', '1')
-							->where(self::EXAMINATIONS_DOT . $arr_status[$status] . '', '<', '1')
+					if ($status == 1) {
+						$query->where(self::DEVICES_NAME, 'like', '%' . $search . '%')
+							->where(self::EXAMINATIONS_DOT . $arr_status[0], '=', '0')
+							->where(self::EXAMINATIONS_TYPE_ID, '=', '' . $request->input('jns') . '');
+					} else if ($status > 1 && $status <= count($arr_status)) {
+						$query->where(self::EXAMINATIONS_DOT . $arr_status[$status - 1] . '', '=', '0')
+							->where(self::EXAMINATIONS_DOT . $arr_status[$status - 2] . '', '=', '1')
 							->where(self::EXAMINATIONS_TYPE_ID, '=', '' . $request->input('jns') . '');
 					} else {
 						$query->where(self::EXAMINATIONS_COMPANY_ID, '=', '' . $company_id . '')
 							->where(self::EXAMINATIONS_TYPE_ID, '=', '' . $request->input('jns') . '');
 					}
 				} else {
-					if ($status > 0) {
-						$query->where(self::EXAMINATIONS_DOT . $arr_status[$status - 1] . '', '=', '1')
-							->where(self::EXAMINATIONS_DOT . $arr_status[$status] . '', '<', '1');
+					if ($status == 1) {
+						$query->where(self::DEVICES_NAME, 'like', '%' . $search . '%')
+							->where(self::EXAMINATIONS_DOT . $arr_status[0], '=', 0);
+						// ->where(self::EXAMINATIONS_TYPE_ID, '=', '' . $request->input('jns') . '');
+					}
+					if ($status > 1 && $status <= count($arr_status)) {
+						$query->where(self::EXAMINATIONS_DOT . $arr_status[$status - 1] . '', '=', '0')
+							->where(self::EXAMINATIONS_DOT . $arr_status[$status - 2] . '', '=', '1');
 					}
 				}
 			}
