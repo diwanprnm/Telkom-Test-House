@@ -653,8 +653,8 @@ class SidangController extends Controller
         $content = $this->parsingEmailSidangQA($email->content, $item->examination->user->name, $item->examination->company->name, $item->examination->qa_passed, $item->examination->device, $item->catatan);
         $subject = 'Pemberitahuan Hasil Pengujian Perangkat ' . $item->examination->device->name . ' | ' . $item->examination->device->mark . ' | ' . $item->examination->device->model . ' | ' . $item->examination->device->capacity;
 
-        // $user_email = $item->examination->user->email;
-        $user_email = 'arifchandrasimanjuntak@yahoo.co.id';
+        $user_email = $item->examination->user->email ? $item->examination->user->email : 'arifchandrasimanjuntak@yahoo.co.id';
+        // $user_email = 'arifchandrasimanjuntak@yahoo.co.id';
         if (GeneralSetting::where('code', 'send_email')->first()['is_active']) {
             Mail::send('emails.editor', array(
                 'logo' => $email->logo,
