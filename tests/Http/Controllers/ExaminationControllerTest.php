@@ -202,6 +202,7 @@ class ExaminationControllerTest extends TestCase
     public function testDownloadMediaDevices()
     {
         $device = factory(App\Device::class)->create();
+        $exam = factory(App\Examination::class)->create(['device_id'=>$device->id]);
         $path = "device/".$device->id."/".$device->certificate;
         $isFileExist = Storage::disk('minio')->exists($path);
 
