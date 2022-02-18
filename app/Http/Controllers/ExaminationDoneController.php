@@ -39,6 +39,7 @@ class ExaminationDoneController extends Controller
 	private const CREATED_AT = 'created_at';
 	private const COMPANY = 'company';
 	private const EXAMINATION_TYPE = 'examinationType';
+	private const EXAMINATION_LAB = 'examinationLab';
 	private const MEDIA = 'media';
 	private const DEVICE = 'device';
 	private const BEFORE_DATE = 'before_date';
@@ -151,7 +152,13 @@ class ExaminationDoneController extends Controller
 				})
 			->orWhereHas(self::COMPANY, function ($q) use ($search){
 					return $q->where('name', 'like', '%'.strtolower($search).'%');
-				});
+				})
+			->orWhereHas(self::EXAMINATION_LAB, function ($q) use ($search){
+					return $q->where('name', 'like', '%'.strtolower($search).'%');
+				})
+			->orWhere('function_test_NO', 'like', '%'.strtolower($search).'%')
+			->orWhere('spk_code', 'like', '%'.strtolower($search).'%')
+			->orWhere('spb_number', 'like', '%'.strtolower($search).'%');
 		});
 		
 		if ($search != null){
@@ -161,7 +168,13 @@ class ExaminationDoneController extends Controller
 					})
 				->orWhereHas(self::COMPANY, function ($q) use ($search){
 						return $q->where('name', 'like', '%'.strtolower($search).'%');
-					});
+					})
+				->orWhereHas(self::EXAMINATION_LAB, function ($q) use ($search){
+						return $q->where('name', 'like', '%'.strtolower($search).'%');
+					})
+				->orWhere('function_test_NO', 'like', '%'.strtolower($search).'%')
+				->orWhere('spk_code', 'like', '%'.strtolower($search).'%')
+				->orWhere('spb_number', 'like', '%'.strtolower($search).'%');
 			});
 			
 			$logService = new LogService();
