@@ -1254,12 +1254,31 @@ class ExaminationController extends Controller
     public function downloadMedia($id, $name)
     {
         if (strcmp($name, 'certificate') == 0){
-            $device = Device::findOrFail($id);
+            $device = Device::where('id', $id)->with('examination')->first();
 
-            if ($device){
-				$fileName = $device->certificate;
-				$fileMinio = Storage::disk(self::MINIO)->get(self::MEDIA_DEVICE_LOC.$device->id.'/'.$fileName);
+			$query_attach = "
+				SELECT id, name, attachment FROM examination_attachments WHERE examination_id = '" . $device->examination[0]->id . "' AND name = 'Revisi Sertifikat' AND attachment != '' ORDER BY created_at DESC
+			";
+			$data_attach = DB::select($query_attach);
+			if (count((array)$data_attach) > 0) {
+				$rev_sertifikat = 0;
+				foreach ($data_attach as $item) {
+					if ($item->name == 'Revisi Sertifikat' && $rev_sertifikat == 0) {
+						$rev_sertifikat = 1;
+						$attach_id = $device->examination[0]->id;
+						$attach = $item->attachment;
+						$jns = 'examination/';
+					}
+				}
+				$fileName = $attach;
+				$fileMinio = Storage::disk(self::MINIO)->get($jns. $attach_id . '/' . $attach);
 				return response($fileMinio, 200, \App\Services\MyHelper::getHeaderOctet($fileName));
+			}else{
+				if ($device){
+					$fileName = $device->certificate;
+					$fileMinio = Storage::disk(self::MINIO)->get(self::MEDIA_DEVICE_LOC.$device->id.'/'.$fileName);
+					return response($fileMinio, 200, \App\Services\MyHelper::getHeaderOctet($fileName));
+				}
             }
         } else{
             $exam = ExaminationAttach::where(self::EXAMINATION_ID, $id)

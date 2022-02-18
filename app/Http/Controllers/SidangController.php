@@ -196,7 +196,7 @@ class SidangController extends Controller
                 $sidangDetail = Sidang_detail::where('sidang_id', $sidang_id)->delete();
 
                 $sidang->date = $request->input('date');
-                $sidang->audience = 'Adi Permadi (Manager Lab IQA TTH), Eliandri Shintani Wulandari (Manager Lab DEQA TTH), Yudha Indah Prihatini (POH Manager URel TTH), I Gede Astawa (Senior Manager TTH).';
+                $sidang->audience = 'Adi Permadi (Manager Lab IQA TTH), Eliandri Shintani Wulandari (Manager Lab DEQA TTH), Yudha Indah Prihatini (Manager URel TTH), I Gede Astawa (Senior Manager TTH).';
                 $sidang->jml_perangkat = count($request->input('chk-draft'));
                 $sidang->status = 'DRAFT';
             }
