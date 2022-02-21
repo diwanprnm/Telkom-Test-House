@@ -144,9 +144,9 @@ class GeneralSettingController extends Controller
 
             case 'is_send_email_active':
                 $generalsettingSendEmail = GeneralSetting::where("code", "send_email")->first();
+                $oldGeneralSetting = $generalsettingSendEmail;
                 $generalsettingSendEmail->is_active = 0;
                 if ($request->has('is_send_email_active')) {
-                    $oldGeneralSetting = $generalsettingSendEmail;
                     $generalsettingSendEmail->is_active = 1;
                     $generalsettingSendEmail->updated_by = $currentUser->id;
                 }
