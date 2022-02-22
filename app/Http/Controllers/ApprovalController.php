@@ -69,8 +69,8 @@ class ApprovalController extends Controller
         $query = ApproveBy::with('approval')
             ->with('approval.authentikasi')
             ->with('approval.approveBy')
-            ->where('user_id', $user_id)
         ;
+        Auth::user()->id != '1' && Auth::user()->email != 'admin@mail.com' ? $query->where('user_id', $user_id) : '';
         $logService = new LogService();
         
         if ($search){
@@ -111,18 +111,25 @@ class ApprovalController extends Controller
         if (!Hash::check($password, Auth::user()->password)){return redirect('admin/approval')->with('error', 'Password Salah!');}
         $logService = new LogService();
 		
-		$data = ApproveBy::find($id)->first();
+		$data = ApproveBy::find($id);
         
 		if ($data){
 			try{
                 $data->approve_date = date("Y-m-d H:i:s");
+                $data->updated_by = Auth::user()->id;
                 $data->save();
 
                 $approveBy = ApproveBy::where('approval_id', $data->approval_id)->whereNull('approve_date')->get();
                 if(count($approveBy) == 0){
-                    $approval = Approval::find($data->approval_id)->first();
+                    $approval = Approval::find($data->approval_id);
                     $approval->status = 1;
+                    $approval->updated_by = Auth::user()->id;
                     $approval->save();
+
+                    $examination = Examination::where('device_id', $approval->reference_id)->first();
+                    $examination->certificate_status = 1;
+                    $examination->updated_by = Auth::user()->id;
+                    $examination->save();
                 }
 
                 $logService->createLog('assign', 'Approval', $data );
