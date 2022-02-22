@@ -189,13 +189,13 @@ class STELController extends Controller
     public function storeMaster(Request $request)
     {
         $currentUser = Auth::user();
-        $code_exists = $this->cekKodeSTEL($request->input('master_code'));
-
+        $code_exists = $request->input('stel_type') == 7 ? 0 : $this->cekKodeSTEL($request->input('master_code'));
+        
         if ($code_exists == 0) {
             $stelMaster = new STELMaster;
             $stelMaster->id = Uuid::uuid4();
             $stelMaster->type = $request->input('stel_type');
-            $stelMaster->code = $request->input('master_code');
+            $stelMaster->code = $request->input('stel_type') == 7 ? $request->input('code') : $request->input('master_code');
             $stelMaster->lab = $request->input('type');
             $stelMaster->lang = $request->input('lang');
             $stelMaster->total = 1;
@@ -253,8 +253,6 @@ class STELController extends Controller
                     ->with(self::ERROR, 'Nama Dokumen sudah ada!')
                     ->withInput($request->all());
             }
-        } elseif ($code_exists == 7) {
-            $stelMaster->code = '';
         } else {
             $return_page =  redirect()->back()
                 ->with(self::ERROR, 'Kode sudah ada!')
