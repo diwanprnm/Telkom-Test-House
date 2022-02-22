@@ -501,7 +501,7 @@ class SidangController extends Controller
                 }
             }
             $exam->qa_status = 1;
-            $exam->certificate_status = 1;
+            // $exam->certificate_status = 1;
             $exam->save();
 
             // 2. generate Sertifikat()
@@ -518,7 +518,7 @@ class SidangController extends Controller
                 $approval->reference_table = 'device';
                 $approval->reference_id = $item->examination->device_id;
                 $approval->attachment = $name_file;
-                $approval->status = 1;
+                $approval->status = 0;
                 $approval->autentikasi_editor_id = $auth->id;
                 $approval->created_by = $currentUser->id;
                 $approval->updated_by = $currentUser->id;
@@ -528,7 +528,7 @@ class SidangController extends Controller
                         $approveBy->id = Uuid::uuid4();
                         $approveBy->approval_id = $approval->id;
                         $approveBy->user_id = $sign_by;
-                        $approveBy->approve_date = date('Y-m-d H:i:s');
+                        // $approveBy->approve_date = date('Y-m-d H:i:s');
                         $approveBy->created_by = $currentUser->id;
                         $approveBy->updated_by = $currentUser->id;
                         $approveBy->save();
@@ -706,7 +706,7 @@ class SidangController extends Controller
 
             $device = Device::find($item->examination->device_id);
             if (Storage::disk('minio')->exists('device\\'.$device->id)){
-                Storage::disk('minio')->deleteDirectory('device\\'.$device->id);
+                Storage::disk('minio')->delete('device\\'.$device->id.'\\'.$device->certificate);
             }
             $device->certificate = NULL;
             $device->valid_from = NULL;
