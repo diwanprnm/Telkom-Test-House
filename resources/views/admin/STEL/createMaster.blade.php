@@ -278,11 +278,11 @@
 		}
 	};
 
-	SelectFx.prototype.options = {
-		onChange: function() {
-			val = $("#stel_type").val();
+	SelectFx.prototype._changeOption = function(e) {
+		if(this.el.id == "stel_type"){
+			val = this.current+1;
 			switch (val) {
-				case '1':
+				case 1:
 					type_name = 'STEL';
 					// show master-code-form
 					$("#master_code").prop('required', true);
@@ -301,7 +301,7 @@
 					code = type_name + ' ' + $("#master_code").val() + '-' + $("#year").val() + ' Versi ' + $("#version").val();
 					$("#code").val(code);
 					break;
-				case '2':
+				case 2:
 					type_name = 'S-TSEL';
 					// show master-code-form
 					$("#master_code").prop('required', true);
@@ -320,7 +320,7 @@
 					code = type_name + ' ' + $("#master_code").val() + '-' + $("#year").val() + ' Versi ' + $("#version").val();
 					$("#code").val(code);
 					break;
-				case '3':
+				case 3:
 					type_name = 'STD';
 					// show master-code-form
 					$("#master_code").prop('required', true);
@@ -339,7 +339,7 @@
 					code = type_name + ' ' + $("#master_code").val() + '-' + $("#year").val() + ' Versi ' + $("#version").val();
 					$("#code").val(code);
 					break;
-				case '4':
+				case 4:
 					type_name = 'TLKM/I/KAL';
 					// show master-code-formf
 					$("#master_code").prop('required', true);
@@ -359,7 +359,7 @@
 					$("#code").val(code);
 					break;
 
-				case '5':
+				case 5:
 					type_name = 'Perdirjen';
 					// show master-code-form
 					$("#master_code").prop('required', true);
@@ -378,7 +378,7 @@
 					code = type_name + ' ' + $("#master_code").val() + '/Dirjen/' + $("#year").val();
 					$("#code").val(code);
 					break;
-				case '6':
+				case 6:
 					type_name = 'Permenkominfo';
 					// show master-code-form
 					$("#master_code").prop('required', true);
@@ -397,7 +397,7 @@
 					code = type_name + ' ' + $("#master_code").val();
 					$("#code").val(code);
 					break;
-				case '7':
+				case 7:
 					// hide master-code-form
 					$("#master_code").prop('required', false);
 					$("#master-code-form").hide();
@@ -422,7 +422,16 @@
 					$("#code").prop('readonly', false);
 			}
 		}
-	};
+
+		// current option
+		var opt = this.selOpts[ this.current ];
+		// update current selected value
+		this.selPlaceholder.textContent = opt.textContent;
+		// change native select element´s value
+		this.el.value = opt.getAttribute( 'data-value' );
+		// callback
+		this.options.onChange( this.el.value );
+	}
 
 	$("#master_code").on("keyup change", function() {
 		reset_code();
