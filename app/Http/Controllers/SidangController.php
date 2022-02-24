@@ -158,29 +158,25 @@ class SidangController extends Controller
 
     public function create(Request $request, $sidang_id = null)
     {
-        if (Auth::user()->id == 1 || Auth::user()->email == 'admin@mail.com') {
-            //initial var
-            $message = null;
-            $paginate = 100;
-            $tab = $sidang_id ? 'tab-draft' : $request->input('tab');
+        //initial var
+        $message = null;
+        $paginate = 100;
+        $tab = $sidang_id ? 'tab-draft' : $request->input('tab');
 
-            $data_perangkat = $this->getData($request, 0)['data']->paginate($paginate, ['*'], 'pagePerangkat');
-            $this->mergeOTR($data_perangkat->items(), 'perangkat');
-            $data_pending = $this->getData($request, 2)['data']->paginate($paginate, ['*'], 'pagePending');
-            $this->mergeOTR($data_pending->items(), 'perangkat');
-            $data_draft = $this->getData($request, $sidang_id)['data']->paginate($paginate, ['*'], 'pageDraft');
-            $this->mergeOTR($data_draft->items(), 'sidang');
+        $data_perangkat = $this->getData($request, 0)['data']->paginate($paginate, ['*'], 'pagePerangkat');
+        $this->mergeOTR($data_perangkat->items(), 'perangkat');
+        $data_pending = $this->getData($request, 2)['data']->paginate($paginate, ['*'], 'pagePending');
+        $this->mergeOTR($data_pending->items(), 'perangkat');
+        $data_draft = $this->getData($request, $sidang_id)['data']->paginate($paginate, ['*'], 'pageDraft');
+        $this->mergeOTR($data_draft->items(), 'sidang');
 
-            //return view to saves index with data
-            return view('admin.sidang.create')
-                ->with('sidang_id', $sidang_id)
-                ->with('tab', $tab)
-                ->with('data_perangkat', $data_perangkat)
-                ->with('data_pending', $data_pending)
-                ->with('data_draft', $data_draft);
-        } else {
-            return view('errors.401');
-        }
+        //return view to saves index with data
+        return view('admin.sidang.create')
+            ->with('sidang_id', $sidang_id)
+            ->with('tab', $tab)
+            ->with('data_perangkat', $data_perangkat)
+            ->with('data_pending', $data_pending)
+            ->with('data_draft', $data_draft);
     }
 
 
@@ -250,15 +246,10 @@ class SidangController extends Controller
 
     public function show(Request $request, $sidang_id)
     {
-        if (Auth::user()->id == 1 || Auth::user()->email == 'admin@mail.com') {
-            //initial var
-            $message = null;
-            $data = $this->getData($request, $sidang_id)['data']->get();
-            return view('admin.sidang.detail')
-                ->with('data', $this->mergeOTR($data, 'sidang'));
-        } else {
-            return view('errors.401');
-        }
+        //initial var
+        $message = null;
+        $data = $this->getData($request, $sidang_id)['data']->get();
+        return view('admin.sidang.detail')->with('data', $this->mergeOTR($data, 'sidang'));
     }
 
     public function mergeOTR($data, $type)
@@ -352,20 +343,15 @@ class SidangController extends Controller
 
     public function edit(Request $request, $sidang_id)
     {
-        if (Auth::user()->id == 1 || Auth::user()->email == 'admin@mail.com') {
-            //initial var
-            $message = null;
-            if ($request->has('tag')) {
-                $sidang = Sidang::find($sidang_id);
-                $sidang->status = 'ON GOING';
-                $sidang->save();
-            }
-            $data = $this->getData($request, $sidang_id)['data']->get();
-            return view('admin.sidang.edit')
-                ->with('data', $this->mergeOTR($data, 'sidang'));
-        } else {
-            return view('errors.401');
+        //initial var
+        $message = null;
+        if ($request->has('tag')) {
+            $sidang = Sidang::find($sidang_id);
+            $sidang->status = 'ON GOING';
+            $sidang->save();
         }
+        $data = $this->getData($request, $sidang_id)['data']->get();
+        return view('admin.sidang.edit')->with('data', $this->mergeOTR($data, 'sidang'));
     }
 
     public function update(Request $request, $id)
