@@ -84,7 +84,7 @@ class ApprovalController extends Controller
             $logService->createLog('search', 'Approval', json_encode(array('search' => $search)) );
         }
 
-        $data = $query->orderBy('created_at')->paginate($paginate);
+        $data = $query->orderBy('created_at', 'DESC')->paginate($paginate);
         if (count($data) == 0){
             $message = 'Data not found';
         }
