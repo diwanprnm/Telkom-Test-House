@@ -80,7 +80,7 @@
 														@if($item->stelAttach !='')
 															<a href="{!! url("cetakstel?invoice_id={$item->invoice}&attach={$item->stelAttach}&company_name={$item->company_name}") !!}" target="_blank"> Generate Watermark</a>
 														@endif
-														<input type="file" name="stel_file[]" class="form-control" accept="application/pdf" style="width: auto;" required>
+														<input type="file" name="stel_file[]" class="form-control" accept="application/pdf" style="width: auto;" <?php if(!$item->attachment){echo "required";}?>>
 														<input type="hidden" name="stels_sales_detail_id[]" value="{{ $item->id }}">
 														<input type="hidden" name="stels_sales_attachment[]" value="{{ $item->attachment }}">
 													</td>
