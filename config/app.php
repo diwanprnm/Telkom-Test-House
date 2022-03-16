@@ -14,8 +14,8 @@ return [
     */
 
     'env' => env('APP_ENV', 'production'),
-    // 'url_api_bsp' => env('url_api_bsp', 'http://otr.ptbsp.com/OTR_Privy/api/'),
-    'url_api_bsp' => env('url_api_bsp', 'http://revitalisasiotr-otr.apps.playcourt.id/api/'),
+    'url_api_bsp' => env('http://otr-deploy-prod.vsan-apps.playcourt.id/api'),
+    // 'url_api_bsp' => env('url_api_bsp', 'http://otr-deploy-prod.vsan-apps.playcourt.id/api'),
     
     /* ENV DEV TPN */
 
