@@ -304,7 +304,7 @@ class SidangController extends Controller
         $data_draft = $this->mergeOTR($data, 'sidang');
 
         // echo '<pre>';
-        // var_dump($data_draft);
+        // print_r($data_draft[0]);
         // echo '</pre>';
         // die;
 
@@ -329,8 +329,8 @@ class SidangController extends Controller
             $examsArray[] = [
                 "Perangkat {$no}",
                 $row->examination->spk_code,
-                "no. laporan",
-                "no sertifikat",
+                $row->examination->media[0]->no,
+                $row->examination->device->cert_number,
                 $row->examination->company->name,
                 $row->examination->device->name,
                 $row->examination->device->mark,
@@ -339,7 +339,7 @@ class SidangController extends Controller
                 $row->examination->device->serial_number,
                 $row->examination->device->test_reference,
                 $row->examination->device->manufactured_by,
-                "tanggal penerimaan",
+                $row->examination->equipmentHistory[0]->action_date,
                 $row->startDate,
                 $row->endDate,
                 $row->examination->examinationLab->name,

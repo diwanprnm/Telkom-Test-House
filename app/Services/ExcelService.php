@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Storage;
 use Excel;
+use PHPExcel_Worksheet_Drawing;
 
 class ExcelService
 {
@@ -28,9 +29,22 @@ class ExcelService
         $transposedData = flipDiagonally($data);
         // end of the transpose part
 
+        $signeeData = \App\GeneralSetting::whereIn('code', ['sm_urel', 'poh_sm_urel'])->where('is_active', '=', 1)->first();
+
+        $signeeDataArray = array(
+            'signee' => $signeeData->value,
+            'isSigneePoh' => $signeeData->code !== 'sm_urel',
+            'signImagePath' => Storage::disk('minio')->url("generalsettings/$signeeData->id/$signeeData->attachment")
+        );
+
+        // echo '<pre>';
+        // print_r($signeeDataArray);
+        // echo '</pre>';
+        // die;
+
         // Generate and return the spreadsheet
-        Excel::create($fileName, function ($excel) use ($transposedData) {
-            $excel->sheet('sheet1', function ($sheet) use ($transposedData) {
+        Excel::create($fileName, function ($excel) use ($transposedData, $signeeDataArray) {
+            $excel->sheet('sheet1', function ($sheet) use ($transposedData, $signeeDataArray) {
                 $sheet->fromArray($transposedData, null, 'B4', false, false);
                 $sheet->cell('B1', function ($cell) {
                     $cell->setValue('RISALAH KEPUTUSAN SIDANG KOMITE VALIDASI QA DDB - 2021');
@@ -96,6 +110,31 @@ class ExcelService
                 $sheet->cell('A23', function ($cell) {
                     $cell->setValue('Keputusan Sidang');
                 });
+                $sheet->cell('B25', function ($cell) {
+                    $cell->setValue('Bandung, 15 Juni 2021');
+                });
+                $sheet->cell('B26', function ($cell) {
+                    $cell->setValue('Komite Validasi QA');
+                });
+                $sheet->cell('B32', function ($cell) use ($signeeDataArray) {
+                    $cell->setValue($signeeDataArray['signee']);
+                });
+
+                $signeeImage = file_put_contents("Tmpfile.jpg", fopen($signeeDataArray['signImagePath'], 'r'));
+
+                // echo '<pre>';
+                // print_r($signeeImage);
+                // echo '</pre>';
+                // die;
+
+                // $getSigneeImage = (function () use ($signeeDataArray) {
+                //     return $signeeDataArray['signImagePath'];
+                // });
+
+                $objDrawing = new PHPExcel_Worksheet_Drawing;
+                $objDrawing->setPath(public_path('Tmpfile.jpg')); //your image path
+                $objDrawing->setCoordinates('B27');
+                $objDrawing->setWorksheet($sheet);
             });
         })->store('xlsx');
 
