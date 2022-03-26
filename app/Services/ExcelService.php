@@ -14,6 +14,7 @@ class ExcelService
             return false;
         }
 
+
         function flipDiagonally($arr)
         {
             $out = array();
@@ -29,7 +30,14 @@ class ExcelService
         $transposedData = flipDiagonally($data);
         // end of the transpose part
 
+        // echo '<pre>';
+        // print_r($transposedData);
+        // echo '</pre>';
+        // die;
+
         $signeeData = \App\GeneralSetting::whereIn('code', ['sm_urel', 'poh_sm_urel'])->where('is_active', '=', 1)->first();
+
+        $signeeDataManager = \App\GeneralSetting::whereIn('code', ['poh_manager_urel', 'manager_urel'])->where('is_active', '=', 1)->first();
 
         $signeeDataArray = array(
             'signee' => $signeeData->value,
@@ -37,89 +45,136 @@ class ExcelService
             'signImagePath' => Storage::disk('minio')->url("generalsettings/$signeeData->id/$signeeData->attachment")
         );
 
-        // echo '<pre>';
-        // print_r($signeeDataArray);
-        // echo '</pre>';
-        // die;
+        $signeeDataManagerArray = array(
+            'signee' => $signeeDataManager->value,
+            'isSigneePoh' => $signeeDataManager->code !== 'sm_urel',
+            'signImagePath' => Storage::disk('minio')->url("generalsettings/$signeeDataManager->id/$signeeDataManager->attachment")
+        );
+
+        $lastDataColumn = chr(ord('B') + (count($data) - 1));
+        $lastDataIndex = "{$lastDataColumn}23";
+        $mainDataTableRange = "B5:{$lastDataIndex}";
+
+        $lastHeaderColumn =
+            chr(ord('A') + (count($data) + 1));
+        $lastDHeaderIndex = $lastHeaderColumn;
+        $mainDHeaderRange = "A4:{$lastDHeaderIndex}4";
 
         // Generate and return the spreadsheet
-        Excel::create($fileName, function ($excel) use ($transposedData, $signeeDataArray) {
-            $excel->sheet('sheet1', function ($sheet) use ($transposedData, $signeeDataArray) {
-                $sheet->fromArray($transposedData, null, 'B4', false, false);
-                $sheet->cell('B1', function ($cell) {
-                    $cell->setValue('RISALAH KEPUTUSAN SIDANG KOMITE VALIDASI QA DDB - 2021');
-                });
-                $sheet->cell('B2', function ($cell) {
-                    $cell->setValue('PERIODE : 15 Juni 2021');
+        Excel::create($fileName, function ($excel) use ($lastDHeaderIndex, $transposedData, $signeeDataArray, $mainDataTableRange, $mainDHeaderRange) {
+            $excel->sheet('sheet1', function ($sheet) use ($lastDHeaderIndex, $transposedData, $signeeDataArray, $mainDataTableRange, $mainDHeaderRange) {
+
+                // echo '<pre>';
+                // print_r($mainDHeaderRange);
+                // echo '</pre>';
+                // die;
+
+                $mainHeaderFont = array(
+                    'size'       => '10',
+                    'bold'       => true
+                );
+
+
+                for ($x = 'B', $index = 1; $x != $lastDHeaderIndex; $x++, $index++) {
+                    $sheet->cell("{$x}4", "Perangkat {$index}")->setFontSize('12');
+                }
+
+                $sheet->fromArray($transposedData, null, 'B5', false, false)->setAllBorders('thin')->setFontFamily('Tahoma')->setFontSize('9');
+
+                $sheet->cells($mainDHeaderRange, function ($cells) {
+                    // manipulate the range of cells
+                    $cells->setBorder('thin', 'thin', 'thin')->setFont(array(
+                        'size'       => '12',
+                        'bold'       => true
+                    ));
                 });
 
+                // Set black background
+                $sheet->row(4, function ($row) {
+                    // call cell manipulation methods
+                    $row->setBackground('#C0C0C0')->setFontFamily('Tahoma')->setFontSize('12');
+                });
+
+
+                $sheet->cell("B1", function ($cell) use ($mainHeaderFont) {
+                    $cell->setValue('RISALAH KEPUTUSAN SIDANG KOMITE VALIDASI QA DDB - 2021')->setFont($mainHeaderFont)->setFontFamily('Verdana');
+                });
+
+                $sheet->setBorder($mainDataTableRange, 'double');
+
+                $sheet->cell('B2', function ($cell) use ($mainHeaderFont) {
+                    $cell->setValue('PERIODE : 15 Juni 2021')->setFont($mainHeaderFont)->setFontFamily('Verdana');
+                });
+
+                $sheet->cell('A4', function ($cell) {
+                    $cell->setValue(' ')->setBorder('thin', 'thin', 'thin');
+                });
                 $sheet->cell('A5', function ($cell) {
-                    $cell->setValue('No. SPK');
+                    $cell->setValue('No. SPK')->setBorder('thin', 'thin', 'thin');
                 });
                 $sheet->cell('A6', function ($cell) {
-                    $cell->setValue('No. Laporan');
+                    $cell->setValue('No. Laporan')->setBorder('thin', 'thin', 'thin');
                 });
                 $sheet->cell('A7', function ($cell) {
-                    $cell->setValue('No. Sertifikat');
+                    $cell->setValue('No. Sertifikat')->setBorder('thin', 'thin', 'thin');
                 });
                 $sheet->cell('A8', function ($cell) {
-                    $cell->setValue('PEMOHON/Company');
+                    $cell->setValue('PEMOHON/Company')->setBorder('thin', 'thin', 'thin');
                 });
                 $sheet->cell('A9', function ($cell) {
-                    $cell->setValue('PERANGKAT/Equipment');
+                    $cell->setValue('PERANGKAT/Equipment')->setBorder('thin', 'thin', 'thin');
                 });
                 $sheet->cell('A10', function ($cell) {
                     $cell->setValue('MEREK/Brand');
                 });
                 $sheet->cell('A11', function ($cell) {
-                    $cell->setValue('TIPE/Type');
+                    $cell->setValue('TIPE/Type')->setBorder('thin', 'thin', 'thin');
                 });
                 $sheet->cell('A12', function ($cell) {
-                    $cell->setValue('KAPASITAS/Capacity');
+                    $cell->setValue('KAPASITAS/Capacity')->setBorder('thin', 'thin', 'thin');
                 });
                 $sheet->cell('A13', function ($cell) {
-                    $cell->setValue('NOMOR SERI/Serial Number');
+                    $cell->setValue('NOMOR SERI/Serial Number')->setBorder('thin', 'thin', 'thin');
                 });
                 $sheet->cell('A14', function ($cell) {
-                    $cell->setValue('REFERENSI UJI/Test Reference');
+                    $cell->setValue('REFERENSI UJI/Test Reference')->setBorder('thin', 'thin', 'thin');
                 });
                 $sheet->cell('A15', function ($cell) {
-                    $cell->setValue('BUATAN/Made In');
+                    $cell->setValue('BUATAN/Made In')->setBorder('thin', 'thin', 'thin');
                 });
                 $sheet->cell('A16', function ($cell) {
-                    $cell->setValue('TANGGAL PENERIMAAN/Received');
+                    $cell->setValue('TANGGAL PENERIMAAN/Received')->setBorder('thin', 'thin', 'thin');
                 });
                 $sheet->cell('A17', function ($cell) {
-                    $cell->setValue('TANGGAL MULAI UJI/Started');
+                    $cell->setValue('TANGGAL MULAI UJI/Started')->setBorder('thin', 'thin', 'thin');
                 });
                 $sheet->cell('A18', function ($cell) {
-                    $cell->setValue('TANGGAL SELESAI UJI/Finished');
+                    $cell->setValue('TANGGAL SELESAI UJI/Finished')->setBorder('thin', 'thin', 'thin');
                 });
                 $sheet->cell('A19', function ($cell) {
-                    $cell->setValue('DIUJI OLEH/Tested By');
+                    $cell->setValue('DIUJI OLEH/Tested By')->setBorder('thin', 'thin', 'thin');
                 });
                 $sheet->cell('A20', function ($cell) {
-                    $cell->setValue('Target Penyelesaian');
+                    $cell->setValue('Target Penyelesaian')->setBorder('thin', 'thin', 'thin');
                 });
                 $sheet->cell('A21', function ($cell) {
-                    $cell->setValue('Hasil Pengujian');
+                    $cell->setValue('Hasil Pengujian')->setBorder('thin', 'thin', 'thin');
                 });
                 $sheet->cell('A22', function ($cell) {
-                    $cell->setValue('Catatan');
+                    $cell->setValue('Catatan')->setBorder('thin', 'thin', 'thin');
                 });
                 $sheet->cell('A23', function ($cell) {
-                    $cell->setValue('Keputusan Sidang');
+                    $cell->setValue('Keputusan Sidang')->setBorder('thin', 'thin', 'thin');
                 });
+
+                $sheet->setBorder('A4:A23', 'double');
+
                 $sheet->cell('B25', function ($cell) {
                     $cell->setValue('Bandung, 15 Juni 2021');
                 });
                 $sheet->cell('B26', function ($cell) {
                     $cell->setValue('Komite Validasi QA');
                 });
-                $sheet->cell('B32', function ($cell) use ($signeeDataArray) {
-                    $cell->setValue($signeeDataArray['signee']);
-                });
-
                 $signeeImage = file_put_contents("Tmpfile.jpg", fopen($signeeDataArray['signImagePath'], 'r'));
 
                 // echo '<pre>';
@@ -133,8 +188,12 @@ class ExcelService
 
                 $objDrawing = new PHPExcel_Worksheet_Drawing;
                 $objDrawing->setPath(public_path('Tmpfile.jpg')); //your image path
-                $objDrawing->setCoordinates('B27');
+                $objDrawing->setCoordinates('B28');
+                $objDrawing->setHeight(50);
                 $objDrawing->setWorksheet($sheet);
+                $sheet->cell('B32', function ($cell) use ($signeeDataArray) {
+                    $cell->setValue($signeeDataArray['signee']);
+                });
             });
         })->store('xlsx');
 

@@ -304,7 +304,7 @@ class SidangController extends Controller
         $data_draft = $this->mergeOTR($data, 'sidang');
 
         // echo '<pre>';
-        // print_r($data_draft[0]);
+        // print_r($data_draft);
         // echo '</pre>';
         // die;
 
@@ -312,11 +312,15 @@ class SidangController extends Controller
         $examsArray = [];
 
         // Convert each member of the returned collection into an array,
-        // and append it to the payments array.
-
-        $no = 1;
+        // and append it to the payments array.      
 
         foreach ($data_draft as $row) {
+
+            // echo '<pre>';
+            // print_r($row);
+            // echo '</pre>';
+            // die;
+
             if ($row->result == -1) {
                 $keputusan_sidang = 'Tidak Lulus';
             } elseif ($row->result == 0) {
@@ -327,7 +331,6 @@ class SidangController extends Controller
                 $keputusan_sidang = 'Pending';
             }
             $examsArray[] = [
-                "Perangkat {$no}",
                 $row->examination->spk_code,
                 $row->examination->media[0]->no,
                 $row->examination->device->cert_number,
@@ -339,7 +342,7 @@ class SidangController extends Controller
                 $row->examination->device->serial_number,
                 $row->examination->device->test_reference,
                 $row->examination->device->manufactured_by,
-                $row->examination->equipmentHistory[0]->action_date,
+                $row->examination->action_date,
                 $row->startDate,
                 $row->endDate,
                 $row->examination->examinationLab->name,
@@ -348,7 +351,6 @@ class SidangController extends Controller
                 $row->catatan,
                 $keputusan_sidang,
             ];
-            $no++;
         }
 
         $logService->createLog('download_excel', 'Draft Sidang QA', '');
