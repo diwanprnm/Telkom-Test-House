@@ -103,7 +103,7 @@ class ExcelService
                     ))->setBackground('#C0C0C0')->setFontFamily('Tahoma');
                 });
 
-                $boldRowArray = [7, 20, 21, 23];
+                $boldRowArray = [7, 20, 21, 23, 25, 26, 33];
 
                 foreach ($boldRowArray as $boldRow) {
                     $sheet->row($boldRow, function ($row) {
@@ -203,47 +203,52 @@ class ExcelService
                 });
 
                 $sheet->cell('B25', function ($cell) use ($tanggal_sidang) {
-                    $cell->setValue("Bandung, {$tanggal_sidang}");
+                    $cell->setValue("Bandung, {$tanggal_sidang}")->setAlignment('center')->setValignment('center');
                 });
                 $sheet->cell('B26', function ($cell) {
-                    $cell->setValue('Komite Validasi QA');
+                    $cell->setValue('Komite Validasi QA,')->setAlignment('center')->setValignment('center');
                 });
+
+                // TTD Image
                 $signeeImage = file_put_contents("Tmpfile.jpg", fopen($signees[0]['tandaTanganManager'], 'r'));
                 $objDrawing = new PHPExcel_Worksheet_Drawing;
                 $objDrawing->setPath(public_path('Tmpfile.jpg')); //your image path
                 $objDrawing->setCoordinates('B28');
                 $objDrawing->setHeight(50);
+                $objDrawing->setOffsetX(80);
                 $objDrawing->setWorksheet($sheet);
                 $sheet->cell('B32', function ($cell) use ($signees) {
                     $cell->setValue($signees[0]['name'])->setFontFamily('Arial')->setFont(array(
                         'size'       => '10',
                         'bold'  => true,
                         'underline'       => true
-                    ));
+                    ))->setAlignment('center')->setValignment('center');
                 });
                 $sheet->cell('B33', function ($cell) use ($signees) {
-                    $cell->setValue($signees[0]['title']);
+                    $cell->setValue($signees[0]['title'])->setAlignment('center')->setValignment('center');
                 });
 
 
+                // TTD Image SM
                 $signeeImageSm = file_put_contents("TmpfileSM.jpg", fopen($signees[1]['tandaTanganSeniorManager'], 'r'));
                 $objDrawing = new PHPExcel_Worksheet_Drawing;
                 $objDrawing->setPath(public_path('TmpfileSM.jpg')); //your image path
                 $objDrawing->setCoordinates('E28');
                 $objDrawing->setHeight(50);
+                $objDrawing->setOffsetX(65);
                 $objDrawing->setWorksheet($sheet);
                 $sheet->cell('E26', function ($cell) {
-                    $cell->setValue('Menyetujui');
+                    $cell->setValue('Menyetujui')->setAlignment('center')->setValignment('center');
                 });
                 $sheet->cell('E32', function ($cell) use ($signees) {
                     $cell->setValue($signees[1]['name'])->setFontFamily('Arial')->setFont(array(
                         'size'       => '10',
                         'bold'  => true,
                         'underline'       => true
-                    ));
+                    ))->setAlignment('center')->setValignment('center');
                 });
                 $sheet->cell('E33', function ($cell) use ($signees) {
-                    $cell->setValue($signees[1]['title']);
+                    $cell->setValue($signees[1]['title'])->setAlignment('center')->setValignment('center');
                 });
             });
         })->store('xlsx');
