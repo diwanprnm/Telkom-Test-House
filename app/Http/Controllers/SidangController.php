@@ -342,7 +342,9 @@ class SidangController extends Controller
                 $row->examination->device->serial_number,
                 $row->examination->device->test_reference,
                 $row->examination->device->manufactured_by,
-                $row->examination->action_date,
+                \App\Services\MyHelper::tanggalIndonesia(
+                    $data_draft[2]->examination->equipmentHistory[0]->action_date
+                ),
                 $row->startDate,
                 $row->endDate,
                 $row->examination->examinationLab->name,
@@ -353,8 +355,13 @@ class SidangController extends Controller
             ];
         }
 
+        $sidangData = [
+            'sidang_date' => $data_draft[0]->sidang->date,
+            'action_date' => $data_draft[2]->examination->equipmentHistory[0]->action_date
+        ];
+
         $logService->createLog('download_excel', 'Draft Sidang QA', '');
-        $excel = \App\Services\ExcelService::download($examsArray, 'Draft Sidang QA ' . $data_draft[0]->sidang->date);
+        $excel = \App\Services\ExcelService::download($examsArray, $sidangData, 'Draft Sidang QA ' . $data_draft[0]->sidang->date);
         return response($excel['file'], 200, $excel['headers']);
     }
 

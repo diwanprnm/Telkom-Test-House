@@ -8,7 +8,7 @@ use PHPExcel_Worksheet_Drawing;
 
 class ExcelService
 {
-    public static function download($data, $fileName)
+    public static function download($data, $sidangData, $fileName)
     {
         if (!$data || !$fileName) {
             return false;
@@ -35,21 +35,20 @@ class ExcelService
         // echo '</pre>';
         // die;
 
-        $signeeData = \App\GeneralSetting::whereIn('code', ['sm_urel', 'poh_sm_urel'])->where('is_active', '=', 1)->first();
+        $officer = \App\Services\MyHelper::getOfficer();
 
-        $signeeDataManager = \App\GeneralSetting::whereIn('code', ['poh_manager_urel', 'manager_urel'])->where('is_active', '=', 1)->first();
-
-        $signeeDataArray = array(
-            'signee' => $signeeData->value,
-            'isSigneePoh' => $signeeData->code !== 'sm_urel',
-            'signImagePath' => Storage::disk('minio')->url("generalsettings/$signeeData->id/$signeeData->attachment")
-        );
-
-        $signeeDataManagerArray = array(
-            'signee' => $signeeDataManager->value,
-            'isSigneePoh' => $signeeDataManager->code !== 'sm_urel',
-            'signImagePath' => Storage::disk('minio')->url("generalsettings/$signeeDataManager->id/$signeeDataManager->attachment")
-        );
+        $signees = [
+            [
+                'name' => strtoupper($officer['manager']),
+                'title' => $officer['isManagerPOH'] ? "POH SEKRETARIS" : "SEKRETARIS",
+                'tandaTanganManager' => $officer['tandaTanganManager']
+            ],
+            [
+                'name' => strtoupper($officer['seniorManager']),
+                'title' => $officer['isSeniorManagerPOH'] ? "POH SM INFRASTRUCTURE ASSURANCE" : "SM INFRASTRUCTURE ASSURANCE",
+                'tandaTanganSeniorManager' => $officer['tandaTanganSeniorManager']
+            ]
+        ];
 
         $lastDataColumn = chr(ord('B') + (count($data) - 1));
         $lastDataIndex = "{$lastDataColumn}23";
@@ -61,13 +60,19 @@ class ExcelService
         $mainDHeaderRange = "A4:{$lastDHeaderIndex}4";
 
         // Generate and return the spreadsheet
-        Excel::create($fileName, function ($excel) use ($lastDHeaderIndex, $transposedData, $signeeDataArray, $mainDataTableRange, $mainDHeaderRange) {
-            $excel->sheet('sheet1', function ($sheet) use ($lastDHeaderIndex, $transposedData, $signeeDataArray, $mainDataTableRange, $mainDHeaderRange) {
+        Excel::create($fileName, function ($excel) use ($lastDHeaderIndex, $transposedData, $signees, $mainDataTableRange, $mainDHeaderRange, $sidangData) {
+            $excel->sheet('sheet1', function ($sheet) use ($lastDHeaderIndex, $transposedData, $signees, $mainDataTableRange, $mainDHeaderRange, $sidangData) {
 
                 // echo '<pre>';
-                // print_r($mainDHeaderRange);
+                // print_r($signees);
                 // echo '</pre>';
                 // die;
+
+                $tanggal_sidang = \App\Services\MyHelper::tanggalIndonesia(
+                    $sidangData['sidang_date']
+                );
+
+                $tahun_sidang = substr($sidangData['sidang_date'], 0, 4);
 
                 $mainHeaderFont = array(
                     'size'       => '10',
@@ -82,28 +87,51 @@ class ExcelService
                 $sheet->fromArray($transposedData, null, 'B5', false, false)->setAllBorders('thin')->setFontFamily('Tahoma')->setFontSize('9');
 
                 $sheet->cells($mainDHeaderRange, function ($cells) {
-                    // manipulate the range of cells
+                    // manipulate main data header (Perangkat #)
                     $cells->setBorder('thin', 'thin', 'thin')->setFont(array(
                         'size'       => '12',
                         'bold'       => true
-                    ));
+                    ))->setAlignment('center')->setValignment('center');
                 });
 
-                // Set black background
+                // Set grey background for main data header
                 $sheet->row(4, function ($row) {
-                    // call cell manipulation methods
-                    $row->setBackground('#C0C0C0')->setFontFamily('Tahoma')->setFontSize('12');
+                    // row manipulation methods
+                    $row->setFont(array(
+                        'size'       => '12',
+                        'bold'       => true
+                    ))->setBackground('#C0C0C0')->setFontFamily('Tahoma');
                 });
 
+                $boldRowArray = [7, 20, 21, 23];
 
-                $sheet->cell("B1", function ($cell) use ($mainHeaderFont) {
-                    $cell->setValue('RISALAH KEPUTUSAN SIDANG KOMITE VALIDASI QA DDB - 2021')->setFont($mainHeaderFont)->setFontFamily('Verdana');
+                foreach ($boldRowArray as $boldRow) {
+                    $sheet->row($boldRow, function ($row) {
+                        // embolden no. sertifikat row
+                        $row->setFont(array(
+                            'size'       => '9',
+                            'bold'       => true
+                        ))->setFontFamily('Tahoma');
+                    });
+                }
+
+                $sheet->cell("B1", function ($cell) use ($mainHeaderFont, $tahun_sidang) {
+                    $cell->setValue("RISALAH KEPUTUSAN SIDANG KOMITE VALIDASI QA DDB - {$tahun_sidang}")->setFont($mainHeaderFont)->setFontFamily('Verdana');
                 });
+
+                $sheet->mergeCells('B1:C1'); // merge Top most title
+
+                $sheet->freezePane('B1'); // Freeze A column
 
                 $sheet->setBorder($mainDataTableRange, 'double');
 
-                $sheet->cell('B2', function ($cell) use ($mainHeaderFont) {
-                    $cell->setValue('PERIODE : 15 Juni 2021')->setFont($mainHeaderFont)->setFontFamily('Verdana');
+                $sheet->cells($mainDataTableRange, function ($cells) {
+                    // manipulate main table data cells
+                    $cells->setAlignment('center')->setValignment('center');
+                });
+
+                $sheet->cell('B2', function ($cell) use ($mainHeaderFont, $tanggal_sidang) {
+                    $cell->setValue("Periode : {$tanggal_sidang}")->setFont($mainHeaderFont)->setFontFamily('Verdana');
                 });
 
                 $sheet->cell('A4', function ($cell) {
@@ -169,30 +197,53 @@ class ExcelService
 
                 $sheet->setBorder('A4:A23', 'double');
 
-                $sheet->cell('B25', function ($cell) {
-                    $cell->setValue('Bandung, 15 Juni 2021');
+                $sheet->cells('A4:A23', function ($cells) {
+                    // manipulate data attributes/properies (Leftmost column)
+                    $cells->setAlignment('right')->setValignment('center')->setFont(array('color' => array('rgb' => '000080')));
+                });
+
+                $sheet->cell('B25', function ($cell) use ($tanggal_sidang) {
+                    $cell->setValue("Bandung, {$tanggal_sidang}");
                 });
                 $sheet->cell('B26', function ($cell) {
                     $cell->setValue('Komite Validasi QA');
                 });
-                $signeeImage = file_put_contents("Tmpfile.jpg", fopen($signeeDataArray['signImagePath'], 'r'));
-
-                // echo '<pre>';
-                // print_r($signeeImage);
-                // echo '</pre>';
-                // die;
-
-                // $getSigneeImage = (function () use ($signeeDataArray) {
-                //     return $signeeDataArray['signImagePath'];
-                // });
-
+                $signeeImage = file_put_contents("Tmpfile.jpg", fopen($signees[0]['tandaTanganManager'], 'r'));
                 $objDrawing = new PHPExcel_Worksheet_Drawing;
                 $objDrawing->setPath(public_path('Tmpfile.jpg')); //your image path
                 $objDrawing->setCoordinates('B28');
                 $objDrawing->setHeight(50);
                 $objDrawing->setWorksheet($sheet);
-                $sheet->cell('B32', function ($cell) use ($signeeDataArray) {
-                    $cell->setValue($signeeDataArray['signee']);
+                $sheet->cell('B32', function ($cell) use ($signees) {
+                    $cell->setValue($signees[0]['name'])->setFontFamily('Arial')->setFont(array(
+                        'size'       => '10',
+                        'bold'  => true,
+                        'underline'       => true
+                    ));
+                });
+                $sheet->cell('B33', function ($cell) use ($signees) {
+                    $cell->setValue($signees[0]['title']);
+                });
+
+
+                $signeeImageSm = file_put_contents("TmpfileSM.jpg", fopen($signees[1]['tandaTanganSeniorManager'], 'r'));
+                $objDrawing = new PHPExcel_Worksheet_Drawing;
+                $objDrawing->setPath(public_path('TmpfileSM.jpg')); //your image path
+                $objDrawing->setCoordinates('E28');
+                $objDrawing->setHeight(50);
+                $objDrawing->setWorksheet($sheet);
+                $sheet->cell('E26', function ($cell) {
+                    $cell->setValue('Menyetujui');
+                });
+                $sheet->cell('E32', function ($cell) use ($signees) {
+                    $cell->setValue($signees[1]['name'])->setFontFamily('Arial')->setFont(array(
+                        'size'       => '10',
+                        'bold'  => true,
+                        'underline'       => true
+                    ));
+                });
+                $sheet->cell('E33', function ($cell) use ($signees) {
+                    $cell->setValue($signees[1]['title']);
                 });
             });
         })->store('xlsx');
