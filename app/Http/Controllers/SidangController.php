@@ -269,6 +269,7 @@ class SidangController extends Controller
             $data[$i]->startDate = NULL;
             $data[$i]->endDate = NULL;
             $data[$i]->targetDate = NULL;
+            $data[$i]->action_date = NULL;
             $spk_code = $type == 'sidang' ? $data[$i]->examination->spk_code : $data[$i]->spk_code;
             $res_exam_OTR = $client->get('spk/searchData?limit=1&spkNumber=' . $spk_code)->getBody();
             $exam_OTR = json_decode($res_exam_OTR);
@@ -277,6 +278,7 @@ class SidangController extends Controller
                 $data[$i]->startDate = $exam_OTR->data[0]->actualStartTestDt;
                 $data[$i]->endDate = $exam_OTR->data[0]->actualFinishTestDt;
                 $data[$i]->targetDate = $exam_OTR->data[0]->targetDt;
+                $data[$i]->action_date = $exam_OTR->data[0]->date_action;
             }
         }
 
@@ -304,7 +306,7 @@ class SidangController extends Controller
         $data_draft = $this->mergeOTR($data, 'sidang');
 
         // echo '<pre>';
-        // print_r($data_draft);
+        // print_r($data);
         // echo '</pre>';
         // die;
 
@@ -315,9 +317,12 @@ class SidangController extends Controller
         // and append it to the payments array.      
 
         foreach ($data_draft as $row) {
+            $action_date = $row->action_date;
+
+            $no = $row->examination->media[0]->no;
 
             // echo '<pre>';
-            // print_r($row);
+            // print_r($action_date);
             // echo '</pre>';
             // die;
 
@@ -331,8 +336,9 @@ class SidangController extends Controller
                 $keputusan_sidang = 'Pending';
             }
             $examsArray[] = [
+
                 $row->examination->spk_code,
-                $row->examination->media[0]->no,
+                $no,
                 $row->examination->device->cert_number,
                 $row->examination->company->name,
                 $row->examination->device->name,
@@ -343,10 +349,14 @@ class SidangController extends Controller
                 $row->examination->device->test_reference,
                 $row->examination->device->manufactured_by,
                 \App\Services\MyHelper::tanggalIndonesia(
-                    $data_draft[2]->examination->equipmentHistory[0]->action_date
+                    $action_date
                 ),
-                $row->startDate,
-                $row->endDate,
+                \App\Services\MyHelper::tanggalIndonesia(
+                    $row->startDate
+                ),
+                \App\Services\MyHelper::tanggalIndonesia(
+                    $row->endDate
+                ),
                 $row->examination->examinationLab->name,
                 $row->targetDate,
                 $row->finalResult ? $row->finalResult : '-',
@@ -357,7 +367,7 @@ class SidangController extends Controller
 
         $sidangData = [
             'sidang_date' => $data_draft[0]->sidang->date,
-            'action_date' => $data_draft[2]->examination->equipmentHistory[0]->action_date
+            'action_date' => $action_date
         ];
 
         $logService->createLog('download_excel', 'Draft Sidang QA', '');

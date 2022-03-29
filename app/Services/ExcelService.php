@@ -115,6 +115,22 @@ class ExcelService
                     });
                 }
 
+                // Row height 33
+                $row33Array = [
+                    7, 9, 10
+                ];
+                foreach ($row33Array as $row33) {
+                    $sheet->getRowDimension($row33)->setRowHeight(33);
+                }
+
+                // Row height 33
+                $row49Array = [
+                    22
+                ];
+                foreach ($row49Array as $row49) {
+                    $sheet->getRowDimension($row49)->setRowHeight(49);
+                }
+
                 $sheet->cell("B1", function ($cell) use ($mainHeaderFont, $tahun_sidang) {
                     $cell->setValue("RISALAH KEPUTUSAN SIDANG KOMITE VALIDASI QA DDB - {$tahun_sidang}")->setFont($mainHeaderFont)->setFontFamily('Verdana');
                 });
