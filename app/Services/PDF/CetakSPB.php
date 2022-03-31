@@ -34,7 +34,7 @@ class CetakSPB
 		for($i=0;$i<count($data[0]['arr_nama_perangkat']);$i++){
 			$biaya = $biaya + $data[0]['arr_biaya'][$i];
 		}
-		$ppn = floor(0.1*$biaya);
+		$ppn = floor(0.11*$biaya);
 		$total_biaya = $biaya + $ppn;
 		$terbilang = $pdf->terbilang($total_biaya, 3);
 		$spb_date = date('j', strtotime($data[0]['spb_date']))." ".strftime('%B %Y', strtotime($data[0]['spb_date']));
@@ -91,7 +91,7 @@ class CetakSPB
 		$no = $data[0]['arr_nama_perangkat'][$i] == 'Kode Unik' ? '' : ($i+1).'.';
 		$pdf->RowRect(array('',$no,$item,number_format($data[0]['arr_biaya'][$i],0,",",".").",-"));
 	}
-	$pdf->RowRect(array('','','PPN 10 %',number_format($ppn,0,",",".").",-"));
+	$pdf->RowRect(array('','','PPN 11 %',number_format($ppn,0,",",".").",-"));
 	$pdf->SetFont('helvetica','B',9);
 	$pdf->RowRect(array('','','Total Biaya Pengujian',number_format($total_biaya,0,",",".").",-"));	
 	$pdf->SetWidths(array(17,160));

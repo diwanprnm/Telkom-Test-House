@@ -321,7 +321,7 @@ return [
 	'description_rent_chamber_2' => 'Operators of Measuring Instruments and Anechoic Chamber facilities (Spectrum Analyzer, Signal generator, Antenna, Video, Absorber) are provided by Telkom Test House.',
 	'description_rent_chamber_3' => 'The maximum order time is 7 days from the desired time, for example, the customer wants to order on September 1, 2021, then the maximum order must be made on August 25, 2021.',
 	'description_rent_chamber_4' => 'The chamber rent duration is between one day or two days. If you want to rent more than two days, make a new order immediately.',
-	'description_rent_chamber_5' => 'The chamber rental value is IDR 5,000,000 / day, not including 10% PPn.',
+	'description_rent_chamber_5' => 'The chamber rental value is IDR 5,000,000 / day, not including 11% PPn.',
 	'description_rent_chamber_6' => 'Breakdown to facilities and or equipment due to customer negligence is the responsibility of the customer.',
 	'description_rent_chamber_7' => 'Chamber usage time is 09:00 – 17:00 WIB.',
 	'rent_chamber_duration'	=> 'Rent duration (in days)',
@@ -408,7 +408,7 @@ return [
 	'subtitle_vt_process' => 'Telecommunication device testing that is order-based by customer. Test is conducted based upon mutually agreed reference among user (Operational Division/Headquarter/Telkom Group) and Divisi Digital Service (DDS) accompanied by office memo.',
 	'subtitle_cal_process' => 'Calibration of measurement tools.',
 
-	'stel_term_condition_num1'	=> 'Total price listed on shopping cart is/are 10 % tax excluded and payment gateway fees from third parties excluded.',
+	'stel_term_condition_num1'	=> 'Total price listed on shopping cart is/are 11 % tax excluded and payment gateway fees from third parties excluded.',
 	'stel_term_condition_num2'	=> 'Document(s) you bought will be given a watermark represent your company name, and cannot be used by another company.',
 	'stel_term_condition_num3'	=> 'Document(s) you bought doesn’t/don’t have validity period till the new version is released, and contact immediately our staff if there has/have been changed of document version.',
 	'stel_term_condition_num4'	=> 'In case the STEL document(s) had been issued and turns out that the item was purchased by customer mistake is not responsibility of PT. Telkom Indonesia, Tbk.',

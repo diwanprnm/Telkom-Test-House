@@ -323,7 +323,7 @@ return [
 	'description_rent_chamber_2' => 'Operator perangkat Alat Ukur dan fasilitas Anechoic Chamber (Spectrum Analyzer, Signal generator, Antenna, Video, Absorber ) disediakan oleh Telkom Test House.',
 	'description_rent_chamber_3' => 'Waktu pemesanan maksimal H-7 dari waktu yang diinginkan, misal pelanggan ingin memesan tanggal 1 September 2021, maka pemesanan maksimal harus dilakukan pada tanggal 25 Agustus 2021.',
 	'description_rent_chamber_4' => 'Durasi sewa chamber antara satu hari atau dua hari. Jika ingin menyewa lebih dari dua hari, segera buat pesanan baru.',
-	'description_rent_chamber_5' => 'Nilai sewa chamber adalah Rp 5.000.000 per hari, belum termasuk PPn 10%.',
+	'description_rent_chamber_5' => 'Nilai sewa chamber adalah Rp 5.000.000 per hari, belum termasuk PPn 11%.',
 	'description_rent_chamber_6' => 'Kerusakan fasilitas dan atau perangkat karena kelalaian pelanggan menjadi tanggung jawab pelanggan.',
 	'description_rent_chamber_7' => 'Waktu penggunaan chamber pukul 09:00 – 17:00 WIB.',
 	'rent_chamber_duration'	=> 'Lama sewa (dalam hari)',
@@ -411,7 +411,7 @@ return [
 	'subtitle_vt_process' => 'Pengujian perangkat telekomunikasi yang sifatnya berdasarkan pesanan oleh customer. Pengujian dilakukan berdasarkan referensi yang disepakati bersama antara user (Divisi Operasional/Kantor Pusat/Telkom Group) dan Divisi Digital Service (DDS) disertai Nota Dinas.',
 	'subtitle_cal_process' => 'Kalibrasi alat pengukuran',
 
-	'stel_term_condition_num1'	=> 'Harga total yang tercantum pada keranjang belanja belum termasuk PPN 10% & biaya payment gateway dari pihak ketiga.',
+	'stel_term_condition_num1'	=> 'Harga total yang tercantum pada keranjang belanja belum termasuk PPN 11% & biaya payment gateway dari pihak ketiga.',
 	'stel_term_condition_num2'	=> 'Dokumen STEL yang dibeli akan dibubuhi watermark sesuai dengan nama perusahaan yang membeli, dan tidak dapat digunakan pada perusahaan lain.',
 	'stel_term_condition_num3'	=> 'Dokumen STEL yang anda beli tidak memiliki masa berlaku hingga dikeluarkan versi yang terbaru, dan segera hubungi staff kami jika terjadi perubahan versi.',
 	'stel_term_condition_num4'	=> 'Jika dokumen STEL sudah diberikan dan ternyata terjadi kesalahan pembelian karena kelalaian customer bukan menjadi tanggung jawab PT. Telkom Indonesia, Tbk.',
