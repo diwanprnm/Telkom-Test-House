@@ -19,16 +19,16 @@
 							</tr>
 						</thead>
 						<tbody>
-							@php $price = ceil(($data[0]->price/1.1)); @endphp
+							@php $price = ceil(($data[0]->price/1.11)); @endphp
 							<tr>
 								<td>1. </td>
 								<td>{{$data[0]->device->name.', '.$data[0]->device->mark.', '.$data[0]->device->capacity.', '.$data[0]->device->model}}</td>
 								<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($price)}}</td> 
 							</tr> 
-							@php $tax = floor(0.1*$price); @endphp
+							@php $tax = floor(0.11*$price); @endphp
 							<tr>
 								<td></td>
-								<td>PPN 10%</td>
+								<td>PPN 11%</td>
 								<td align="right">{{ trans('translate.stel_rupiah') }}. {{number_format($tax)}}</td> 
 							</tr> 
 						</tbody>

@@ -2200,7 +2200,7 @@ class ExaminationController extends Controller
 	        $purchase = $examinationService->api_purchase($data_draft);
 	        $total_price = $biaya;
             $PO_ID = $purchase && $purchase->status ? $purchase->data->_id : null;
-            $tax = floor(0.1*$total_price);
+            $tax = floor(0.11*$total_price);
             $final_price = $total_price + $tax;
 			/* END Kirim Draft ke TPN */
 			$data = []; 

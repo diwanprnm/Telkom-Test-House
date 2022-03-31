@@ -482,8 +482,8 @@ class ChamberController extends Controller
         $chamber->end_date = end($serializeDates);
         $chamber->duration = count($serializeDates);
         $chamber->price = $price;
-        $chamber->tax = $price * 0.1;
-        $chamber->total = $price * 1.1;
+        $chamber->tax = $price * 0.11;
+        $chamber->total = $price * 1.11;
         $chamber->created_by = $currentUser->id;
         $chamber->save();
 

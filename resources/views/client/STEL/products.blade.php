@@ -87,7 +87,7 @@
 									<div class="row">
 										<div class="col-xs-12 col-md-6">
 											<p class="lead">
-											{{ trans('translate.stel_rupiah') }}. @php echo number_format($stel->price); @endphp<span style="color:red;font-size: 12px;"> {{ trans('translate.stel_exclude') }} ppn (10%)</span></p>
+											{{ trans('translate.stel_rupiah') }}. @php echo number_format($stel->price); @endphp<span style="color:red;font-size: 12px;"> {{ trans('translate.stel_exclude') }} ppn (11%)</span></p>
 										</div>
 										<div class="col-xs-12 col-md-6">
 										<form action="products" method="POST">
