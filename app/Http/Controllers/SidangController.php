@@ -275,10 +275,10 @@ class SidangController extends Controller
             $exam_OTR = json_decode($res_exam_OTR);
             if ($exam_OTR->code != 'MSTD0059AERR' && $exam_OTR->code != 'MSTD0000AERR') {
                 $data[$i]->finalResult = isset($exam_OTR->data[0]->reportFinalResultValue) ? $exam_OTR->data[0]->reportFinalResultValue : '-';
-                $data[$i]->startDate = $exam_OTR->data[0]->actualStartTestDt;
-                $data[$i]->endDate = $exam_OTR->data[0]->actualFinishTestDt;
-                $data[$i]->targetDate = $exam_OTR->data[0]->targetDt;
-                $data[$i]->action_date = $exam_OTR->data[0]->date_action;
+                $data[$i]->startDate = isset($exam_OTR->data[0]->actualStartTestDt) ? $exam_OTR->data[0]->actualStartTestDt : '-';
+                $data[$i]->endDate = isset($exam_OTR->data[0]->actualFinishTestDt) ? $exam_OTR->data[0]->actualFinishTestDt : '-';
+                $data[$i]->targetDate = isset($exam_OTR->data[0]->targetDt) ? $exam_OTR->data[0]->targetDt : '-';
+                $data[$i]->action_date = isset($exam_OTR->data[0]->date_action) ? $exam_OTR->data[0]->date_action : '-';
             }
         }
 
@@ -366,12 +366,12 @@ class SidangController extends Controller
         }
 
         $sidangData = [
-            'sidang_date' => $data_draft[0]->sidang->date,
+            'sidang_date' => $data_draft[0]->sidang->date == '0000-00-00' ? date('Y-m-d') : $data_draft[0]->sidang->date,
             'action_date' => $action_date
         ];
 
         $logService->createLog('download_excel', 'Draft Sidang QA', '');
-        $excel = \App\Services\ExcelService::download($examsArray, $sidangData, 'Draft Sidang QA ' . $data_draft[0]->sidang->date);
+        $excel = \App\Services\ExcelService::download($examsArray, $sidangData, $data_draft[0]->sidang->date == '0000-00-00' ? 'Draft Sidang QA ' .date('Y-m-d') : 'Draft Sidang QA ' .$data_draft[0]->sidang->date);
         return response($excel['file'], 200, $excel['headers']);
     }
 
@@ -587,7 +587,7 @@ class SidangController extends Controller
             //  b. upload ke minio [Di Step 4]
             //  c. delivered ke digimon [Di Step 4]
             //  d. send_email ke PIC, add_log, add_examination_history
-            $this->sendEmail($item);
+            // $this->sendEmail($item);
         }
 
         // 6. Save Sidang QA to Approval
