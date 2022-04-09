@@ -362,7 +362,7 @@ class SidangController extends Controller
         $sidangDate = $data_draft[0]->sidang->date == '0000-00-00' ? date('Y-m-d') : $data_draft[0]->sidang->date;
 
         $logService->createLog('download_excel', 'Draft Sidang QA', '');
-        $excel = \App\Services\ExcelService::download($examsArray, $sidangDate, 'Draft Sidang QA ' .$sidangDate);
+        $excel = \App\Services\ExcelService::downloadDraftSidangQA($examsArray, $sidangDate, 'Draft Sidang QA ' .$sidangDate);
         return response($excel['file'], 200, $excel['headers']);
     }
 
