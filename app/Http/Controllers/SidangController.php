@@ -270,7 +270,6 @@ class SidangController extends Controller
             $data[$i]->startDate = NULL;
             $data[$i]->endDate = NULL;
             $data[$i]->targetDate = NULL;
-            $data[$i]->action_date = NULL;
             $spk_code = $type == 'sidang' ? $data[$i]->examination->spk_code : $data[$i]->spk_code;
             $res_exam_OTR = $client->get('spk/searchData?limit=1&spkNumber=' . $spk_code)->getBody();
             $exam_OTR = json_decode($res_exam_OTR);
@@ -279,7 +278,6 @@ class SidangController extends Controller
                 $data[$i]->startDate = isset($exam_OTR->data[0]->actualStartTestDt) ? $exam_OTR->data[0]->actualStartTestDt : '-';
                 $data[$i]->endDate = isset($exam_OTR->data[0]->actualFinishTestDt) ? $exam_OTR->data[0]->actualFinishTestDt : '-';
                 $data[$i]->targetDate = isset($exam_OTR->data[0]->targetDt) ? $exam_OTR->data[0]->targetDt : '-';
-                $data[$i]->action_date = isset($exam_OTR->data[0]->date_action) ? $exam_OTR->data[0]->date_action : '-';
             }
         }
 
@@ -318,14 +316,7 @@ class SidangController extends Controller
         // and append it to the payments array.      
 
         foreach ($data_draft as $row) {
-            $action_date = $row->action_date;
-
             $no = $row->examination->media[0]->no;
-
-            // echo '<pre>';
-            // print_r($action_date);
-            // echo '</pre>';
-            // die;
 
             if ($row->result == -1) {
                 $keputusan_sidang = 'Tidak Lulus';
@@ -350,7 +341,7 @@ class SidangController extends Controller
                 $row->examination->device->test_reference,
                 $row->examination->device->manufactured_by,
                 \App\Services\MyHelper::tanggalIndonesia(
-                    $action_date
+                    $row->examination->equipmentHistory->where('location', 2)->first()->action_date ?? ''
                 ),
                 \App\Services\MyHelper::tanggalIndonesia(
                     $row->startDate
@@ -359,20 +350,19 @@ class SidangController extends Controller
                     $row->endDate
                 ),
                 $row->examination->examinationLab->name,
-                $row->targetDate,
+                \App\Services\MyHelper::tanggalIndonesia(
+                    $row->targetDate
+                ),
                 $row->finalResult ? $row->finalResult : '-',
                 $row->catatan,
                 $keputusan_sidang,
             ];
         }
 
-        $sidangData = [
-            'sidang_date' => $data_draft[0]->sidang->date == '0000-00-00' ? date('Y-m-d') : $data_draft[0]->sidang->date,
-            'action_date' => $action_date
-        ];
+        $sidangDate = $data_draft[0]->sidang->date == '0000-00-00' ? date('Y-m-d') : $data_draft[0]->sidang->date;
 
         $logService->createLog('download_excel', 'Draft Sidang QA', '');
-        $excel = \App\Services\ExcelService::download($examsArray, $sidangData, $data_draft[0]->sidang->date == '0000-00-00' ? 'Draft Sidang QA ' .date('Y-m-d') : 'Draft Sidang QA ' .$data_draft[0]->sidang->date);
+        $excel = \App\Services\ExcelService::download($examsArray, $sidangDate, 'Draft Sidang QA ' .$sidangDate);
         return response($excel['file'], 200, $excel['headers']);
     }
 
@@ -923,7 +913,7 @@ class SidangController extends Controller
         $PDFData['signees'] = [
             [
                 'name' => strtoupper($officer['seniorManager']),
-                'title' => $officer['isSeniorManagerPOH'] ? "FOR SM INFRASTRUCTURE ASSURANCE" :  strtoupper($sm_role),
+                'title' => $officer['isSeniorManagerPOH'] ? "FOR ".strtoupper($sm_role) : strtoupper($sm_role),
                 'tandaTanganSeniorManager' => $officer['tandaTanganSeniorManager']
             ],
             [

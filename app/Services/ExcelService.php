@@ -5,10 +5,11 @@ namespace App\Services;
 use Storage;
 use Excel;
 use PHPExcel_Worksheet_Drawing;
+use App\Role;
 
 class ExcelService
 {
-    public static function download($data, $sidangData, $fileName)
+    public static function download($data, $sidangDate, $fileName)
     {
         if (!$data || !$fileName) {
             return false;
@@ -35,6 +36,9 @@ class ExcelService
         // echo '</pre>';
         // die;
 
+        $sm_role = Role::where('id', '3')->value('name');
+        $sm_role = empty($sm_role) ? 'OSM Infrastructure Research & Assurance' : $sm_role;
+
         $officer = \App\Services\MyHelper::getOfficer();
 
         $signees = [
@@ -45,7 +49,7 @@ class ExcelService
             ],
             [
                 'name' => strtoupper($officer['seniorManager']),
-                'title' => $officer['isSeniorManagerPOH'] ? "POH SM INFRASTRUCTURE ASSURANCE" : "SM INFRASTRUCTURE ASSURANCE",
+                'title' => $officer['isSeniorManagerPOH'] ? "FOR ".strtoupper($sm_role) : strtoupper($sm_role),
                 'tandaTanganSeniorManager' => $officer['tandaTanganSeniorManager']
             ]
         ];
@@ -60,8 +64,8 @@ class ExcelService
         $mainDHeaderRange = "A4:{$lastDHeaderIndex}4";
 
         // Generate and return the spreadsheet
-        Excel::create($fileName, function ($excel) use ($lastDHeaderIndex, $transposedData, $signees, $mainDataTableRange, $mainDHeaderRange, $sidangData) {
-            $excel->sheet('sheet1', function ($sheet) use ($lastDHeaderIndex, $transposedData, $signees, $mainDataTableRange, $mainDHeaderRange, $sidangData) {
+        Excel::create($fileName, function ($excel) use ($lastDHeaderIndex, $transposedData, $signees, $mainDataTableRange, $mainDHeaderRange, $sidangDate) {
+            $excel->sheet('sheet1', function ($sheet) use ($lastDHeaderIndex, $transposedData, $signees, $mainDataTableRange, $mainDHeaderRange, $sidangDate) {
 
                 // echo '<pre>';
                 // print_r($signees);
@@ -69,10 +73,10 @@ class ExcelService
                 // die;
 
                 $tanggal_sidang = \App\Services\MyHelper::tanggalIndonesia(
-                    $sidangData['sidang_date']
+                    $sidangDate
                 );
 
-                $tahun_sidang = substr($sidangData['sidang_date'], 0, 4);
+                $tahun_sidang = substr($sidangDate, 0, 4);
 
                 $mainHeaderFont = array(
                     'size'       => '10',
