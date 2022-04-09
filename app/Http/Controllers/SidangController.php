@@ -587,7 +587,7 @@ class SidangController extends Controller
             //  b. upload ke minio [Di Step 4]
             //  c. delivered ke digimon [Di Step 4]
             //  d. send_email ke PIC, add_log, add_examination_history
-            // $this->sendEmail($item);
+            $this->sendEmail($item);
         }
 
         // 6. Save Sidang QA to Approval
