@@ -185,7 +185,7 @@ class CetakSertifikatQA
         $pdf->Cell(0, 0, $signee, '', 0, 'C');
         $pdf->Ln(5);
         $pdf->SetFont('helvetica', 'B', 11);
-        $pdf->Cell(0, 0, $signeeRole[0], '', 0, 'C');
+        $pdf->Cell(0, 0, $signeeRole, '', 0, 'C');
 
         //QRCODE
         $pdf->ImageStream($qrCode, 163, 254, 31);
