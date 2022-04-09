@@ -270,14 +270,16 @@ class SidangController extends Controller
             $data[$i]->startDate = NULL;
             $data[$i]->endDate = NULL;
             $data[$i]->targetDate = NULL;
+            $data[$i]->action_date = NULL;
             $spk_code = $type == 'sidang' ? $data[$i]->examination->spk_code : $data[$i]->spk_code;
             $res_exam_OTR = $client->get('spk/searchData?limit=1&spkNumber=' . $spk_code)->getBody();
             $exam_OTR = json_decode($res_exam_OTR);
             if ($exam_OTR->code != 'MSTD0059AERR' && $exam_OTR->code != 'MSTD0000AERR') {
                 $data[$i]->finalResult = isset($exam_OTR->data[0]->reportFinalResultValue) ? $exam_OTR->data[0]->reportFinalResultValue : '-';
-                $data[$i]->startDate = $exam_OTR->data[0]->actualStartTestDt;
-                $data[$i]->endDate = $exam_OTR->data[0]->actualFinishTestDt;
-                $data[$i]->targetDate = $exam_OTR->data[0]->targetDt;
+                $data[$i]->startDate = isset($exam_OTR->data[0]->actualStartTestDt) ? $exam_OTR->data[0]->actualStartTestDt : '-';
+                $data[$i]->endDate = isset($exam_OTR->data[0]->actualFinishTestDt) ? $exam_OTR->data[0]->actualFinishTestDt : '-';
+                $data[$i]->targetDate = isset($exam_OTR->data[0]->targetDt) ? $exam_OTR->data[0]->targetDt : '-';
+                $data[$i]->action_date = isset($exam_OTR->data[0]->date_action) ? $exam_OTR->data[0]->date_action : '-';
             }
         }
 
@@ -304,41 +306,73 @@ class SidangController extends Controller
 
         $data_draft = $this->mergeOTR($data, 'sidang');
 
+        // echo '<pre>';
+        // print_r($data);
+        // echo '</pre>';
+        // die;
+
         // Define the Excel spreadsheet headers
         $examsArray = [];
-        $examsArray[] = [
-            'No.',
-            'Perusahaan',
-            'Perangkat',
-            'Merek',
-            'Tipe',
-            'Kapasitas',
-            'Negara Pembuat',
-            'Hasil Uji',
-            'Status',
-        ];
 
         // Convert each member of the returned collection into an array,
-        // and append it to the payments array.
+        // and append it to the payments array.      
 
-        $no = 1;
         foreach ($data_draft as $row) {
+            $action_date = $row->action_date;
+
+            $no = $row->examination->media[0]->no;
+
+            // echo '<pre>';
+            // print_r($action_date);
+            // echo '</pre>';
+            // die;
+
+            if ($row->result == -1) {
+                $keputusan_sidang = 'Tidak Lulus';
+            } elseif ($row->result == 0) {
+                $keputusan_sidang = 'Belum';
+            } elseif ($row->result == 1) {
+                $keputusan_sidang = 'Lulus';
+            } elseif ($row->result == 2) {
+                $keputusan_sidang = 'Pending';
+            }
             $examsArray[] = [
+
+                $row->examination->spk_code,
                 $no,
+                $row->examination->device->cert_number,
                 $row->examination->company->name,
                 $row->examination->device->name,
                 $row->examination->device->mark,
                 $row->examination->device->model,
                 $row->examination->device->capacity,
+                $row->examination->device->serial_number,
+                $row->examination->device->test_reference,
                 $row->examination->device->manufactured_by,
+                \App\Services\MyHelper::tanggalIndonesia(
+                    $action_date
+                ),
+                \App\Services\MyHelper::tanggalIndonesia(
+                    $row->startDate
+                ),
+                \App\Services\MyHelper::tanggalIndonesia(
+                    $row->endDate
+                ),
+                $row->examination->examinationLab->name,
+                $row->targetDate,
                 $row->finalResult ? $row->finalResult : '-',
-                $row->examination->company->qs_certificate_date > date('Y-m-d') ? 'SM Eligible' : 'SM Not Eligible',
+                $row->catatan,
+                $keputusan_sidang,
             ];
-            $no++;
         }
 
+        $sidangData = [
+            'sidang_date' => $data_draft[0]->sidang->date == '0000-00-00' ? date('Y-m-d') : $data_draft[0]->sidang->date,
+            'action_date' => $action_date
+        ];
+
         $logService->createLog('download_excel', 'Draft Sidang QA', '');
-        $excel = \App\Services\ExcelService::download($examsArray, 'Draft Sidang QA ' . $data_draft[0]->sidang->date);
+        $excel = \App\Services\ExcelService::download($examsArray, $sidangData, $data_draft[0]->sidang->date == '0000-00-00' ? 'Draft Sidang QA ' .date('Y-m-d') : 'Draft Sidang QA ' .$data_draft[0]->sidang->date);
         return response($excel['file'], 200, $excel['headers']);
     }
 
