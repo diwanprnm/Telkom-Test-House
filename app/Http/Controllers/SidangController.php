@@ -17,6 +17,7 @@ use App\ApproveBy;
 use App\AuthentikasiEditor;
 use App\ExaminationType;
 use App\GeneralSetting;
+use App\Role;
 
 use App\Services\Querys\QueryFilter;
 use App\Services\Logs\LogService;
@@ -620,7 +621,7 @@ class SidangController extends Controller
     public function sendEmail($item)
     {
         $email_editors = new EmailEditorService();
-        
+
         switch ($item->result) {
             case 1:
                 $email = $email_editors->selectBy('emails.qa');
@@ -631,7 +632,7 @@ class SidangController extends Controller
             case 2:
                 $email = $email_editors->selectBy('emails.qaPending');
                 break;
-            default :
+            default:
                 $email = $email_editors->selectBy('emails.qa');
                 break;
         }
@@ -671,10 +672,10 @@ class SidangController extends Controller
         $content = str_replace('@device_model', $device->model, $content);
         $content = str_replace('@device_capacity', $device->capacity, $content);
         $content = str_replace('@test_reference', $device->test_reference, $content);
-            $text = $catatan ? ' dengan catatan '.$catatan : '';
+        $text = $catatan ? ' dengan catatan ' . $catatan : '';
         $content = str_replace('@catatan', $text, $content);
         return $content;
-	}
+    }
 
     public function resetExamination($sidang_id)
     { // DELETE SOON
@@ -691,8 +692,8 @@ class SidangController extends Controller
             $exam->save();
 
             $device = Device::find($item->examination->device_id);
-            if (Storage::disk('minio')->exists('device\\'.$device->id)){
-                Storage::disk('minio')->delete('device\\'.$device->id.'\\'.$device->certificate);
+            if (Storage::disk('minio')->exists('device\\' . $device->id)) {
+                Storage::disk('minio')->delete('device\\' . $device->id . '\\' . $device->certificate);
             }
             $device->certificate = NULL;
             $device->valid_from = NULL;
@@ -702,19 +703,19 @@ class SidangController extends Controller
             $device->save();
 
             $approval = Approval::where('reference_table', 'device')->where('reference_id', $device->id)->first();
-            if($approval){
+            if ($approval) {
                 ApproveBy::where('approval_id', $approval->id)->delete();
                 $approval->delete();
             }
         }
-        if($approval){
+        if ($approval) {
             $approval = Approval::where('reference_table', 'sidang')->where('reference_id', $sidang_id)->first();
             ApproveBy::where('approval_id', $approval->id)->delete();
             $approval->delete();
         }
 
-        if (Storage::disk('minio')->exists('sidang\\'.$sidang_id)){
-            Storage::disk('minio')->deleteDirectory('sidang\\'.$sidang_id);
+        if (Storage::disk('minio')->exists('sidang\\' . $sidang_id)) {
+            Storage::disk('minio')->deleteDirectory('sidang\\' . $sidang_id);
         }
 
         // Session::flash('message', 'Successfully Reset Data');
@@ -875,6 +876,9 @@ class SidangController extends Controller
 
     public function generateSidangQA($PDFData, $method = '')
     {
+        $sm_role = Role::where('id', '3')->value('name');
+        $sm_role = empty($sm_role) ? 'OSM Infrastructure Research & Assurance' : $sm_role;
+
         $PDF = new \App\Services\PDF\PDFService();
         $officer = \App\Services\MyHelper::getOfficer();
         $telkomLogoSquarePath = '/app/Services/PDF/images/telkom-logo-square.png';
@@ -885,7 +889,7 @@ class SidangController extends Controller
         $PDFData['signees'] = [
             [
                 'name' => strtoupper($officer['seniorManager']),
-                'title' => $officer['isSeniorManagerPOH'] ? "POH SM INFRASTRUCTURE ASSURANCE" : "SM INFRASTRUCTURE ASSURANCE",
+                'title' => $officer['isSeniorManagerPOH'] ? "FOR SM INFRASTRUCTURE ASSURANCE" :  strtoupper($sm_role),
                 'tandaTanganSeniorManager' => $officer['tandaTanganSeniorManager']
             ],
             [

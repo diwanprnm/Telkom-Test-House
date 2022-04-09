@@ -2,6 +2,8 @@
 
 namespace App\Services\PDF;
 
+use App\Role;
+
 use Anouar\Fpdf\Fpdf as FPDF;
 
 class PDFMCCetakSidangQA extends FPDF
@@ -29,6 +31,8 @@ class PDFMCCetakSidangQA extends FPDF
 	function Footer()
 	{
 		$signees = $this->data['signees'];
+		$sm_role = Role::where('id', '3')->value('name');
+		$sm_role = empty($sm_role) ? 'OSM Infrastructure Research & Assurance' : $sm_role;
 
 		$tandaTanganManagerSize = getimagesize($signees[1]['tandaTanganManager']);
 		$tandaTanganManagerHeight = 11;
@@ -62,7 +66,7 @@ class PDFMCCetakSidangQA extends FPDF
 		$this->Cell(55, 5, $signees[0]['name'] ?? "I GEDE ASTAWA", 0, 0, 'C');
 		$this->SetXY(177, -10);
 		$this->SetFont('helvetica', 'B', 8);
-		$this->Cell(55, 5, $signees[0]['title'] ?? "SM INFRASTRUCTURE ASSURANCE", 0, 0, 'C');
+		$this->Cell(55, 5, $signees[0]['title'] ??  strtoupper($sm_role), 0, 0, 'C');
 
 		// $this->ImageStream($this->data['qrCode'], 245, 180, 30);
 	}
