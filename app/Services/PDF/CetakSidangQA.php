@@ -45,7 +45,7 @@ class CetakSidangQA
         ];
 
         // PDF CONFIG
-        $pdf->SetAutoPageBreak(false);
+        $pdf->SetAutoPageBreak(true);
         $pdf->setData($data);
         $pdf->AliasNbPages();
         $pdf->SetFillColor(200, 200, 200);
@@ -77,11 +77,11 @@ class CetakSidangQA
             $pdf->Cell(57, $rowHeight * 2, 'PEMOHON/Company', 1, 1, 'R', false);
             $pdf->Cell(57, $rowHeight * 2, 'PERANGKAT/Equipment', 1, 1, 'R', false);
             $pdf->Cell(57, $rowHeight * 2, 'MEREK/Brand', 1, 1, 'R', false);
-            $pdf->Cell(57, $rowHeight, 'TIPE/type', 1, 1, 'R', false);
-            $pdf->Cell(57, $rowHeight, 'KAPASITAS/capacity', 1, 1, 'R', false);
-            $pdf->Cell(57, $rowHeight, 'NOMOR SERIAL/Serial Number', 1, 1, 'R', false);
-            $pdf->Cell(57, $rowHeight, 'REFERENSI UJI/Test Reference', 1, 1, 'R', false);
-            $pdf->Cell(57, $rowHeight, 'BUATAN/Made In', 1, 1, 'R', false);
+            $pdf->Cell(57, $rowHeight * 2, 'TIPE/type', 1, 1, 'R', false);
+            $pdf->Cell(57, $rowHeight * 2, 'KAPASITAS/capacity', 1, 1, 'R', false);
+            $pdf->Cell(57, $rowHeight * 2, 'NOMOR SERIAL/Serial Number', 1, 1, 'R', false);
+            $pdf->Cell(57, $rowHeight * 2, 'REFERENSI UJI/Test Reference', 1, 1, 'R', false);
+            $pdf->Cell(57, $rowHeight * 2, 'BUATAN/Made In', 1, 1, 'R', false);
             $pdf->Cell(57, $rowHeight, 'TANGGAL PENERIMAAN/Recieved', 1, 1, 'R', false);
             $pdf->Cell(57, $rowHeight, 'TANGGAL MULAI UJI/Started', 1, 1, 'R', false);
             $pdf->Cell(57, $rowHeight, 'TANGGAL SELESAI UJI/Finished', 1, 1, 'R', false);
@@ -106,11 +106,11 @@ class CetakSidangQA
                 $pdf->Cell(55, $rowHeight * 2, '', 1, 2, '', false); //company_name multiline (handle diferently)
                 $pdf->Cell(55, $rowHeight * 2, '', 1, 2, '', false); //device_name multiline (handle diferently)
                 $pdf->Cell(55, $rowHeight * 2, '', 1, 2, '', false); //device_mark multiline (handle diferently)
-                $pdf->Cell(55, $rowHeight, $data['devices'][$dataNumber]->model ?? '', 1, 2, 'C', false);
-                $pdf->Cell(55, $rowHeight, $data['devices'][$dataNumber]->capacity ?? '', 1, 2, 'C', false);
-                $pdf->Cell(55, $rowHeight, $data['devices'][$dataNumber]->serial_number ?? '', 1, 2, 'C', false);
-                $pdf->Cell(55, $rowHeight, $data['devices'][$dataNumber]->test_reference ?? '', 1, 2, 'C', false);
-                $pdf->Cell(55, $rowHeight, $data['devices'][$dataNumber]->manufactured_by ?? '', 1, 2, 'C', false);
+                $pdf->Cell(55, $rowHeight * 2, '', 1, 2, '', false); //device_type multiline (handle diferently)
+                $pdf->Cell(55, $rowHeight * 2, '', 1, 2, '', false); //device_capacity multiline (handle diferently)
+                $pdf->Cell(55, $rowHeight * 2, '', 1, 2, '', false); //device_serial_number multiline (handle diferently)
+                $pdf->Cell(55, $rowHeight * 2, '', 1, 2, '', false); //device_test_reference multiline (handle diferently)
+                $pdf->Cell(55, $rowHeight * 2, '', 1, 2, '', false); //device_manufactured_by multiline (handle diferently)
                 $pdf->Cell(55, $rowHeight, $i < $dataCount || $dataDummy ? \App\Services\MyHelper::tanggalIndonesia($data['sidang_detail'][$dataNumber]->examination->equipmentHistory->where('location', 2)->first()->action_date ?? '') ?? '' : '', 1, 2, 'C', false);
                 $pdf->Cell(55, $rowHeight, $dataDummy ? \App\Services\MyHelper::tanggalIndonesia($dummy[$dataNumber]['started']) : \App\Services\MyHelper::tanggalIndonesia($data['sidang_detail'][$dataNumber]->startDate ?? '') ?? '', 1, 2, 'C', false);
                 $pdf->Cell(55, $rowHeight, $dataDummy ? \App\Services\MyHelper::tanggalIndonesia($dummy[$dataNumber]['finished']) : \App\Services\MyHelper::tanggalIndonesia($data['sidang_detail'][$dataNumber]->endDate ?? '') ?? '', 1, 2, 'C', false);
@@ -132,6 +132,16 @@ class CetakSidangQA
                     $pdf->drawTextBox($data['devices'][$dataNumber]->name ?? '', 55, 11, 'C', 'M');
                     $pdf->setXY(67 + (($i % 4) * 55), 30 + ($rowHeight * 8));
                     $pdf->drawTextBox($data['devices'][$dataNumber]->mark ?? '', 55, 11, 'C', 'M');
+                    $pdf->setXY(67 + (($i % 4) * 55), 30 + ($rowHeight * 10)); // type
+                    $pdf->drawTextBox($data['devices'][$dataNumber]->model ?? '', 55, 11, 'C', 'M');
+                    $pdf->setXY(67 + (($i % 4) * 55), 30 + ($rowHeight * 12)); // capacity
+                    $pdf->drawTextBox($data['devices'][$dataNumber]->capacity ?? '', 55, 11, 'C', 'M');
+                    $pdf->setXY(67 + (($i % 4) * 55), 30 + ($rowHeight * 14)); // serial_number
+                    $pdf->drawTextBox($data['devices'][$dataNumber]->serial_number ?? '', 55, 11, 'C', 'M');
+                    $pdf->setXY(67 + (($i % 4) * 55), 30 + ($rowHeight * 16)); // test_reference
+                    $pdf->drawTextBox($data['devices'][$dataNumber]->test_reference ?? '', 55, 11, 'C', 'M');
+                    $pdf->setXY(67 + (($i % 4) * 55), 30 + ($rowHeight * 16)); // manufactured_by
+                    $pdf->drawTextBox($data['devices'][$dataNumber]->manufactured_by ?? '', 55, 11, 'C', 'M');
                     $pdf->setXY(67 + (($i % 4) * 55), 30 + ($rowHeight * 21));
                     $pdf->drawTextBox($dataDummy ? $dummy[$dataNumber]['note'] : $data['sidang_detail'][$dataNumber]->catatan ?? '', 55, 27.5, 'C', 'M');
                 }
