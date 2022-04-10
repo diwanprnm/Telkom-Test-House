@@ -4,39 +4,8 @@ namespace App\Services\PDF;
 
 use App\Role;
 
-function calculateRowHeightMultiplier($string, $data_category){
-    if (strlen($string) > 32){        
-        switch ($data_category){
-             case 'company_name': 
-                $company_nameRowHeightMultiplier = 2;
-                break;
-            case 'device_name': 
-                $device_nameRowHeightMultiplier = 2;
-                break;
-            case 'device_mark': 
-                $device_markRowHeightMultiplier = 2;
-                break;
-            case 'device_model': 
-                $device_modelRowHeightMultiplier = 2;
-                break;
-            case 'device_capacity': 
-                $device_capacityRowHeightMultiplier = 2;
-                break;
-            case 'device_serial_number': 
-                $device_serial_numberRowHeightMultiplier = 2;
-                break;
-            case 'device_test_reference': 
-                $device_test_referenceRowHeightMultiplier = 2;
-                break;
-            default: break;
-        }
-    }
-}
-
 class CetakSidangQA
 {    
-
-
     public function makePDF($data, $pdf)
     {
         // BUSSINESS PROCESS, LOGIC, & CONFIG
@@ -73,14 +42,6 @@ class CetakSidangQA
             ]
         ];
 
-        // Row height multiplier
-        $company_nameRowHeightMultiplier = 1;
-        $device_nameRowHeightMultiplier = 1;
-        $device_markRowHeightMultiplier = 1;
-        $device_modelRowHeightMultiplier = 1;
-        $device_capacityRowHeightMultiplier = 1;
-        $device_serial_numberRowHeightMultiplier = 1;
-        $device_test_referenceRowHeightMultiplier = 1;
 
         // PDF CONFIG
         $pdf->SetAutoPageBreak(false);
@@ -129,36 +90,25 @@ class CetakSidangQA
                 $device_serial_number = $data['devices'][$dataNumber]->serial_number ?? '';
                 $device_test_reference = $data['devices'][$dataNumber]->test_reference ?? '';
                 $device_manufactured_by = $data['devices'][$dataNumber]->manufactured_by ?? '';
-                // echo '<pre>';
-                // print_r($transposedData);
-                // echo '</pre>';
-                // die;
 
                 $pdf->setXY(67 + (($i % 4) * 55), 30 + $rowHeight);
                 $pdf->Cell(55, $rowHeight, $spk_code, 1, 2, 'C', false);
                 $pdf->Cell(55, $rowHeight, $no_lap_uji, 1, 2, 'C', false);
                 $pdf->Cell(55, $rowHeight,  $certificateNumber, 1, 2, 'C', false);
 
-                $company_nameRowHeightMultiplier = strlen($company_name) > 32 ? 2 : $company_nameRowHeightMultiplier;
-                $pdf->Cell(55, $rowHeight * $company_nameRowHeightMultiplier, '', 1, 2, '', false); //company_name multiline (handle diferently)
+                $pdf->Cell(55, $rowHeight * 2, '', 1, 2, '', false); //company_name multiline (handle diferently)
 
-                $device_nameRowHeightMultiplier = strlen($device_name) > 32 ? 2 : $device_nameRowHeightMultiplier;
-                $pdf->Cell(55, $rowHeight * $device_nameRowHeightMultiplier, '', 1, 2, '', false); //device_name multiline (handle diferently)
+                $pdf->Cell(55, $rowHeight * 2, '', 1, 2, '', false); //device_name multiline (handle diferently)
 
-                $device_markRowHeightMultiplier = strlen($device_mark) > 32 ? 2 : $device_markRowHeightMultiplier;
-                $pdf->Cell(55, $rowHeight * $device_markRowHeightMultiplier, '', 1, 2, '', false); //device_mark multiline (handle diferently)
+                $pdf->Cell(55, $rowHeight * 2, '', 1, 2, '', false); //device_mark multiline (handle diferently)
 
-                $device_modelRowHeightMultiplier = strlen($device_model) > 32 ? 2 : $device_modelRowHeightMultiplier;
-                $pdf->Cell(55, $rowHeight * $device_modelRowHeightMultiplier, '', 1, 2, '', false); //device_type multiline (handle diferently)
+                $pdf->Cell(55, $rowHeight * 2, '', 1, 2, '', false); //device_type multiline (handle diferently)
 
-                $device_capacityRowHeightMultiplier = strlen($device_capacity) > 32 ? 2 : $device_capacityRowHeightMultiplier;
-                $pdf->Cell(55, $rowHeight * $device_capacityRowHeightMultiplier, '', 1, 2, '', false); //device_capacity multiline (handle diferently)
+                $pdf->Cell(55, $rowHeight * 2, '', 1, 2, '', false); //device_capacity multiline (handle diferently)
 
-                $device_serial_numberRowHeightMultiplier = strlen($device_serial_number) > 32 ? 2 : $device_serial_numberRowHeightMultiplier;
-                $pdf->Cell(55, $rowHeight * $device_serial_numberRowHeightMultiplier, '', 1, 2, '', false); //device_serial_number multiline (handle diferently)
+                $pdf->Cell(55, $rowHeight * 2, '', 1, 2, '', false); //device_serial_number multiline (handle diferently)
 
-                $device_test_referenceRowHeightMultiplier = strlen($device_test_reference) > 32 ? 2 : $device_test_referenceRowHeightMultiplier;
-                $pdf->Cell(55, $rowHeight * $device_test_referenceRowHeightMultiplier, '', 1, 2, '', false); //device_test_reference multiline (handle diferently)
+                $pdf->Cell(55, $rowHeight * 2, '', 1, 2, '', false); //device_test_reference multiline (handle diferently)
 
                 $pdf->Cell(55, $rowHeight, $device_manufactured_by, 1, 2, 'C', false); //device_manufactured_by multiline (handle diferently)
                 $pdf->Cell(55, $rowHeight, $action_date, 1, 2, 'C', false);
@@ -202,13 +152,13 @@ class CetakSidangQA
             $pdf->SetFont('helvetica', 'B', 9);
             $pdf->Cell(57, $rowHeight, 'No. Sertifikat', 1, 1, 'R', false);
             $pdf->SetFont('helvetica', '', 9);
-            $pdf->Cell(57, $rowHeight * $company_nameRowHeightMultiplier, 'PEMOHON/Company', 1, 1, 'R', false);
-            $pdf->Cell(57, $rowHeight * $device_nameRowHeightMultiplier, 'PERANGKAT/Equipment', 1, 1, 'R', false);
-            $pdf->Cell(57, $rowHeight * $device_markRowHeightMultiplier, 'MEREK/Brand', 1, 1, 'R', false);
-            $pdf->Cell(57, $rowHeight * $device_modelRowHeightMultiplier, 'TIPE/type', 1, 1, 'R', false);
-            $pdf->Cell(57, $rowHeight * $device_capacityRowHeightMultiplier, 'KAPASITAS/capacity', 1, 1, 'R', false);
-            $pdf->Cell(57, $rowHeight * $device_serial_numberRowHeightMultiplier, 'NOMOR SERIAL/Serial Number', 1, 1, 'R', false);
-            $pdf->Cell(57, $rowHeight * $device_test_referenceRowHeightMultiplier, 'REFERENSI UJI/Test Reference', 1, 1, 'R', false);
+            $pdf->Cell(57, $rowHeight * 2, 'PEMOHON/Company', 1, 1, 'R', false);
+            $pdf->Cell(57, $rowHeight * 2, 'PERANGKAT/Equipment', 1, 1, 'R', false);
+            $pdf->Cell(57, $rowHeight * 2, 'MEREK/Brand', 1, 1, 'R', false);
+            $pdf->Cell(57, $rowHeight * 2, 'TIPE/type', 1, 1, 'R', false);
+            $pdf->Cell(57, $rowHeight * 2, 'KAPASITAS/capacity', 1, 1, 'R', false);
+            $pdf->Cell(57, $rowHeight * 2, 'NOMOR SERIAL/Serial Number', 1, 1, 'R', false);
+            $pdf->Cell(57, $rowHeight * 2, 'REFERENSI UJI/Test Reference', 1, 1, 'R', false);
             $pdf->Cell(57, $rowHeight, 'BUATAN/Made In', 1, 1, 'R', false);
             $pdf->Cell(57, $rowHeight, 'TANGGAL PENERIMAAN/Recieved', 1, 1, 'R', false);
             $pdf->Cell(57, $rowHeight, 'TANGGAL MULAI UJI/Started', 1, 1, 'R', false);
