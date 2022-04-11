@@ -358,7 +358,7 @@
                   $item->resume_status == 1 &&
 					date('Y-m-d') >= $item->resume_date
 					){ @endphp
-									<a class="button button-3d edit_btn download_progress_btn nomargin btn-blue btn-sky" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->nama_perangkat }}','{{ URL::to('pengujian/'.$item->id.'/downloadLaporanPengujian') }}','device', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})', '{{$item->id}}');">{{ trans('translate.download') }} {{ trans('translate.examination_report') }}</a>
+									<a class="button button-3d edit_btn download_progress_btn nomargin btn-blue btn-sky" href="javascript:void(0)" onclick="return checkAmbilBarang('{{$item->id}}','{{ URL::to('pengujian/'.$item->id.'/downloadLaporanPengujian') }}');">{{ trans('translate.download') }} {{ trans('translate.examination_report') }}</a>
 								@php } @endphp
 								
 								@php if(
@@ -374,7 +374,7 @@
                   $item->qa_passed == 1 &&
                   $item->certificate_status == 1
                 ){ @endphp
-									<a class="button button-3d edit_btn download_progress_btn nomargin btn-blue btn-sky" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->nama_perangkat }}','{{ URL::to('pengujian/'.$item->id.'/downloadSertifikat') }}','device', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})', '{{$item->id}}');">{{ trans('translate.download') }} {{ trans('translate.certificate') }}</a>
+									<a class="button button-3d edit_btn download_progress_btn nomargin btn-blue btn-sky" href="javascript:void(0)" onclick="return checkAmbilBarang('{{$item->id}}','{{ URL::to('pengujian/'.$item->id.'/downloadSertifikat') }}');">{{ trans('translate.download') }} {{ trans('translate.certificate') }}</a>
 								@php } @endphp
 							@endif
 							</div>
@@ -1550,9 +1550,9 @@
 		});
 	});
 	
-	function checkAmbilBarang(a){
+	function checkAmbilBarang(a,b){
 		$('#modal_complain').modal('hide');
-		var link = document.getElementById('link').value;
+		var link = b;
 		$.ajax({
 			type: "POST",
 			url : "cekAmbilBarang",
