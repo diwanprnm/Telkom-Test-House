@@ -170,7 +170,7 @@ class PDFMCCetakBuktiPenerimaanPerangkat extends FPDF{
 		$this->Image(app_path('Services/PDF/images/tth-logo-text-opacity.jpg'),40,135,140);
 		$this->SetY(28);
 		$this->SetFont('helvetica','B',18);
-		$this->Cell(0,5,'Bukti Penerimaan & Pengeluaran Perangkat Uji (BPPPU)',0,1,'C');
+		$this->Cell(0,5,'Bukti Penerimaan & Pengeluaran Perangkat (BPPP)',0,1,'C');
 	}
 
 	function Footer()

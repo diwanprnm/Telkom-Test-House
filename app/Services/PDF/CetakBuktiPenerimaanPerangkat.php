@@ -45,11 +45,12 @@ class CetakBuktiPenerimaanPerangkat{
 		$pdf->SetWidths([50,55,110]);
         $pdf->Ln(5);
 		$pdf->SetX(0);
-		$pdf->Row(array("Label Barang",":",$this->doubledecode($kode_barang))); 
-		$pdf->Row(array("Nama Perangkat",":",$this->doubledecode($device_name))); 
+		// $pdf->Row(array("Label Barang",":",$this->doubledecode($kode_barang))); 
+		$pdf->Row(array("Nomor BPPP",":",$this->doubledecode($kode_barang))); 
+		// $pdf->Row(array("Nama Perangkat",":",$this->doubledecode($device_name))); 
 		$pdf->Row(array("Nama Perusahaan",":",$this->doubledecode($company_name))); 
-		$pdf->Row(array("Alamat Perusahaan",":",$this->doubledecode($company_address))); 
-		$pdf->Row(array("WhatsApp",":",$this->doubledecode($user_phone))); 		
+		// $pdf->Row(array("Alamat Perusahaan",":",$this->doubledecode($company_address))); 
+		// $pdf->Row(array("WhatsApp",":",$this->doubledecode($user_phone))); 		
 
 	 	//LIST Perangkat
 		$pdf->Ln(5); 
@@ -57,7 +58,7 @@ class CetakBuktiPenerimaanPerangkat{
 		$pdf->SetWidths([10,35,85,50]);
 		$pdf->SetAligns(['L','C','C','C']); 
 		$pdf->SetFont('helvetica','B',10);
- 		$pdf->RowRect(['data'=>['No.','Jumlah (Satuan)','Merek, Tipe/Model, Kapasitas, Nomor Seri, dan Negara Pembuat','Keterangan']]);
+ 		$pdf->RowRect(['data'=>['No.','Jumlah (Satuan)','Nama Perangkat, Merek, Tipe/Model, Kapasitas, Nomor Seri, dan Negara Pembuat','Keterangan']]);
 		$pdf->SetFont('helvetica','',10);
         
         $pic = '...............................';

@@ -30,10 +30,10 @@ class CetakUjiFungsi
 			$pic_urel = '-';
 		}
         
-        $pdf->judul_kop('LAPORAN UJI FUNGSI','Function Test Report');
+        $pdf->judul_kop('LAPORAN UJI FUNGSI (UF)','Function Test Report');
         $pdf->AliasNbPages();
         $pdf->AddPage();
-        $pdf->Cell(0,5,'Laporan Uji Fungsi',0,0,'C');
+        $pdf->Cell(0,5,'Laporan Uji Fungsi (UF)',0,0,'C');
         
         $pdf->Ln(10);
         $pdf->SetFont('helvetica','',10);
@@ -41,7 +41,7 @@ class CetakUjiFungsi
         $upperDatas = [
             'Nomor Registrasi' => $this->doubledecode($data['no_reg']),
             'Nama Perusahaan' => $this->doubledecode($data['company_name']),
-            'Alamat Perusahaan' => $this->doubledecode($data['company_address']),
+            // 'Alamat Perusahaan' => $this->doubledecode($data['company_address']),
             'Nama Perangkat' => $this->doubledecode($data['device_name']),
             'Merek' => $this->doubledecode($data['device_mark']),
             'Tipe/Model' => $this->doubledecode($data['device_model']),
@@ -68,10 +68,11 @@ class CetakUjiFungsi
         $pdf->Ln(7);
         $pdf->Rect(17,$pdf->getY(),176,30);	
         $pdf->SetFont('','B');
-        $pdf->Cell(0,5,'Hasil Uji Fungsi',0,1,'C');
+        $pdf->Cell(0,5,'Hasil UF',0,1,'C');
         $pdf->Ln(8);
         $pdf->SetFont('','');
         $pdf->Cell(0,5,$status == 1 ? 'Memenuhi' : 'Tidak Memenuhi',0,1,'C');
+        
         $pdf->Ln(7);$pdf->SetFont('','B');
         // $pdf->Ln(20);
         // $pdf->SetFont('ZapfDingbats','', 15);
