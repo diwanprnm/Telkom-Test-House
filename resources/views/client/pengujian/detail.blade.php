@@ -367,7 +367,7 @@
 												<td class="center">Not Completed</td>
 											@endif
 											<td>{{ $item->keterangan }} {{ trans('translate.by') }} {{ $item->user->name }}</td>
-											<td class="center">{{ $item->date_action }}</td>
+											<td class="center">{{ $item->created_at }}</td>
 										</tr>
 									@endforeach
 									</tbody>
