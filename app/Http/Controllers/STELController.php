@@ -396,7 +396,7 @@ class STELController extends Controller
         $currentUser = Auth::user();
         $logService = new LogService();
 
-        $tax = 0.1 * $item->price;
+        $tax = 0.11 * $item->price;
 
         $sales = new STELSales;
         $sales->user_id = $item->user_id;
