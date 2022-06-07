@@ -1,112 +1,16 @@
-<?php
-
-namespace App\Http\Controllers;
-
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
-use App\Http\Requests;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
-
-
-use App\Examination;
-use Carbon\Carbon;
-use Storage;
-
-class TestController extends Controller
-{
-    //todo daniel delete (CLASS DELETE)
-    
-    public function __construct()
-    {
-
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function indexs(Request $request)
-    {
-        // $path = app_path('http/Controllers/Services/PDF/images/telkom-logo-square.jpg');
-        // $images = QrCode::format('png')->size(500)->merge('/app/Services/PDF/images/telkom-logo-square.png')->generate('google.com');
-        // return response($images, 200)->header('Content-Type', 'image/png');
-        return view('authentikasi.sertifikat');
-    }
-
-    public function index($id = '65dd1840-205c-429a-ac0b-6a78e8b5aaef', $method = '')
-	{
-		$examination = Examination::where('id', $id)
-			->with('company')
-			->with('device')
-			->with('media')
-			->first()
-		;
-
-		$signDate = \App\Services\MyHelper::tanggalIndonesia($examination->qa_date);
-		$start_certificate_period = Carbon::parse($examination->device->valid_from);
-		$end_certificate_period = Carbon::parse($examination->device->valid_thru);
-		$interval = round($start_certificate_period->diffInDays($end_certificate_period)/30);
-		if ($interval % 12 == 0){
-			$interval_year = (int)$interval/12;
-			$period_id = "$interval_year tahun";
-			$period_en = "$interval_year year".($interval_year > 1 ? 's': '');
-		}else{
-			$period_id = "$interval bulan";
-			$period_en = "$interval month".($interval > 1 ? 's': '');
-		}
-		$signeeData = \App\GeneralSetting::whereIn('code', ['sm_urel', 'poh_sm_urel'])->where('is_active', '=', 1)->first();
-		$certificateNumber = strval($examination->device->cert_number);
-		$telkomLogoSquarePath = '/app/Services/PDF/images/telkom-logo-square.png';
-		$qrCodeLink = url('/digitalSign/21003-132'); //todo daniel digitalSign page
-
-		$bootstrap_url= "/images/bootstrap.min.css' rel='stylesheet'";
-		$image_top_url = 'images/telkom-logo-text.jpg';
-
-		$image_background_url = '/images/tth-logo-opacity.jpg';
-		$image_tth_motto_url = '/images/tth-logo-text-moto.jpg';
-		$image_decorator_url = '/images/decorator-pattern-1.jpg';
-		$image_qrcode_url = QrCode::format('png')->size(500)->merge($telkomLogoSquarePath)->errorCorrection('M')->generate($qrCodeLink);
-
-		// dd($image_top_url);
-
-		$PDFData = [
-			'documentNumber' => $examination->device->cert_number,
-			'companyName' => $examination->company->name,
-			'brand' => $examination->device->mark,
-			'deviceName' => $examination->device->name,
-			'deviceType' => $examination->device->model,
-			'deviceCapacity' => $examination->device->capacity,
-			'deviceSerialNumber' => $examination->device->serial_number,
-			'examinationNumber' => \App\ExaminationAttach::where('examination_id', $id)->where('name', 'Laporan Uji')->first()->no,
-			'examinationReference' => $examination->device->test_reference,
-			'signDate' => $signDate,
-			'period_id' => $period_id,
-			'period_en' => $period_en,
-			'signee' => $signeeData->value,
-			'isSigneePoh' => $signeeData->code !== 'sm_urel',
-			'signImagePath' => Storage::disk('minio')->url("generalsettings/$signeeData->id/$signeeData->attachment"),
-			'method' => $method,
-			'qrCode' => QrCode::format('png')->size(500)->merge($telkomLogoSquarePath)->errorCorrection('M')->generate($qrCodeLink)
-		];
-		$PDF = new \App\Services\PDF\PDFService();
-
-		$html_sertifikatQA = "<html>
+<html>
 
 <head>
-    <!-- <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'> -->
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>
 
     <style>
         html,
         body {
-        
+            height: 297mm;
+            width: 210mm;
             font-size: 1em;
             font-family: Arial, Helvetica, sans-serif;
             line-height: 1.2em;
-        }
-        
-        td {
-            vertical-align: text-top;
         }
         
         hr {
@@ -120,26 +24,14 @@ class TestController extends Controller
             background-size: 500px;
         }
         
-        .table-data-margin {
-            margin-left: 10%;
-        }
-        
-        .text-center {
-            text-align: center;
-        }
-        
         .small {
             font-size: smaller;
             margin-top: 0;
         }
         
-        .row {
-            width: 100%;
-        }
-        
         .row-main-wrapper {
-            width: 80%;
-            margin-left: 5%;
+            width: 600px;
+            margin-left: 10%;
         }
         
         .row-main {
@@ -147,60 +39,8 @@ class TestController extends Controller
             margin-right: 0;
         }
         
-        .fw-bold,
         .item-value {
             font-weight: bold;
-        }
-        
-        .font-italic {
-            font-style: italic;
-        }
-        
-        .kop-logo {
-            clear: both;
-            width: 100%;
-        }
-        
-        .img-top-logo {
-            float: right;
-        }
-        
-        .semicolon {
-            width: 40px;
-            text-align: right;
-            padding-right: 20px;
-        }
-        
-        .w-100 {
-            width: 100%;
-        }
-        
-        .w-80 {
-            width: 80%;
-        }
-        
-        .w-70 {
-            width: 70%;
-        }
-        
-        .w-60 {
-            width: 60%;
-        }
-        
-        .w-50 {
-            width: 50%;
-        }
-        
-        .w-40 {
-            width: 40%;
-        }
-        
-        .w-30 {
-            width: 30%;
-        }
-        
-        .w-20 {
-            width: 20%;
         }
     </style>
 </head>
@@ -208,58 +48,18 @@ class TestController extends Controller
 <body>
     <div class='wrapper py-3 px-2'>
         <div class='container'>
-
-            <table class='w-100'>
-                <tr class='row logo-top'>
-                    <td class='w-100'>
-                        <img height='120px' class='img-top-logo' src='../../../public/images/telkom-logo-text.jpg' />
-                    </td>
-                </tr>
-            </table>
-
-
-            <div class='col judul-utama text-center'>
-                <h2 class='underline fw-bold text-center'><u>Quality Assurance Test</u></h2>
-            </div>
-
-            <div class='text-center'>
-                <table class='table-data-margin'>
-                    <tr class='property surat-keterangan-ini'>
-                        <td class='w-40'>
-                            Surat keterangan ini dikeluarkan untuk
-                            <br/>
-                            <span class='font-italic small'>This declaration letter is issued to</span>
-                        </td>
-                        <td class='semicolon'>
-                            :
-                        </td>
-                        <td>
-                            <p class='col col-data-right item-value'>PT. ARIF KONVERSI SURYA INOVASI INDONESIA</p>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-
-
-
-
-
-
-
-
-
             <div class=''>
                 <div class='row kop-logo'>
                     <div class='col'>
-
+                        <img height='120px' class='float-right' src='../../../public/images/telkom-logo-text.jpg' />
                     </div>
                 </div>
 
                 <div class='col ml-5 container-padding'>
+
                     <div class='row mb-4'>
                         <div class='col judul-utama text-center'>
-
+                            <h3 class='underline fw-bold'><u>Quality Assurance Test</u></h3>
                         </div>
                     </div>
 
@@ -460,19 +260,4 @@ class TestController extends Controller
 
 </body>
 
-</html>";
-
-		// echo $html_sertifikatQA;
-		// die;
-
-		
-		// if ($method == 'getStream'){
-		// 	return [
-		// 		'stream' => $PDF->cetakSertifikatQA($PDFData),
-		// 		'fileName' => str_replace("/","",$certificateNumber).'.pdf'
-		// 	];
-		// }else{
-		// 	return $PDF->cetakSertifikatQA($PDFData);
-		// }
-	}
-}
+</html>
