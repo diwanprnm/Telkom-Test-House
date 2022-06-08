@@ -34,6 +34,15 @@ class TestController extends Controller
         return view('authentikasi.sertifikat');
     }
 
+    private function determineLongStringSize($data){
+        $main_font_size = 0.90;
+        $small_font_size = 0.8;
+        $max_length_resize = 40;
+
+        return $size =
+        strlen($data) >= $max_length_resize ? $small_font_size : $main_font_size;
+    }
+
     public function index($id = '65dd1840-205c-429a-ac0b-6a78e8b5aaef', $method = '')
 	{
 		$examination = Examination::where('id', $id)
@@ -90,15 +99,33 @@ class TestController extends Controller
 			'qrCode' => QrCode::format('png')->size(500)->merge($telkomLogoSquarePath)->errorCorrection('M')->generate($qrCodeLink)
 		];
 
+        $main_font_size = 0.98;
+        $small_font_size = 0.8;
+        $max_length_resize = 40;
         $documentNumber = $examination->device->cert_number;
+
         $companyName = $examination->company->name;
+        $companyNameSize = $this->determineLongStringSize($companyName);
+
         $brand = $examination->device->mark;
+        $brandSize = $this->determineLongStringSize($brand);
+
         $deviceName = $examination->device->name;
+        $deviceNameSize = $this->determineLongStringSize($deviceName);
+
         $deviceType = $examination->device->model;
+        $deviceTypeSize = $this->determineLongStringSize($deviceType);
+
         $deviceCapacity = $examination->device->capacity;
+        $deviceCapacitySize = $this->determineLongStringSize($deviceCapacity);
+
         $deviceSerialNumber = $examination->device->serial_number;
+        $deviceSerialNumberSize = $this->determineLongStringSize($deviceSerialNumber);
+
         $examinationNumber = \App\ExaminationAttach::where('examination_id', $id)->where('name', 'Laporan Uji')->first()->no;
         $examinationReference = $examination->device->test_reference;
+        $examinationReferenceSize = $this->determineLongStringSize($examinationReference);
+
         $signee = $signeeData->value;
         $isSigneePoh = $signeeData->code !== 'sm_urel';
 
@@ -120,11 +147,11 @@ class TestController extends Controller
 
         html,
         body {
-            font-size: 0.98em;
+            font-size: $main_font_size em;
             font-family: 'Arial Rounded MT Bold', Arial, Helvetica, sans-serif;
             line-height: 1.0em;
             padding: 0;
-            margin: 0;
+            margin-top: 0;
         }
         
         td {
@@ -289,7 +316,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td  class=''>
-                            <p class='col col-data-right item-value'>$companyName</p>
+                            <p class='col col-data-right item-value' style='font-size:$companyNameSize em;'>$companyName $companyName</p>
                         </td>
                     </tr>
                 </table>
@@ -308,7 +335,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td>
-                            <p class='col col-data-right item-value'>$brand</p>
+                            <p class='col col-data-right item-value' style='font-size:$brandSize em;'>$brand $brand</p>
                         </td>
                     </tr>
                 </table>
@@ -352,7 +379,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td  class=''>
-                            <p class='col col-data-right item-value'>$deviceName</p>
+                            <p class='col col-data-right item-value' style='font-size:$deviceNameSize em;'>$deviceName $deviceName $deviceName $deviceName  $deviceName</p>
                         </td>
                     </tr>
                 </table>
@@ -371,7 +398,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td  class=''>
-                            <p class='col col-data-right item-value'>$deviceType</p>
+                            <p class='col col-data-right item-value' style='font-size:$deviceTypeSize em;'>$deviceType $deviceType $deviceType $deviceType $deviceType $deviceType</p>
                         </td>
                     </tr>
                 </table>
@@ -390,7 +417,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td  class=''>
-                            <p class='col col-data-right item-value'>$deviceCapacity</p>
+                            <p class='col col-data-right item-value' style='font-size:$deviceCapacitySize em;'>$deviceCapacity $deviceCapacity $deviceCapacity $deviceCapacity $deviceCapacity $deviceCapacity $deviceCapacity</p>
                         </td>
                     </tr>
                 </table>
@@ -409,7 +436,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td  class=''>
-                            <p class='col col-data-right item-value'>$deviceSerialNumber</p>
+                            <p class='col col-data-right item-value' style='font-size:$deviceSerialNumberSize em;'>$deviceSerialNumber $deviceSerialNumber $deviceSerialNumber</p>
                         </td>
                     </tr>
                 </table>
@@ -428,7 +455,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td  class=''>
-                            <p class='col col-data-right item-value'>$examinationNumber</p>
+                            <p class='col col-data-right item-value' style='font-size:$examinationReferenceSize em;'>$examinationNumber $examinationNumber $examinationNumber $examinationNumber $examinationNumber</p>
                         </td>
                     </tr>
                 </table>
@@ -447,7 +474,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td  class=''>
-                            <p class='col col-data-right item-value'>$examinationReference</p>
+                            <p class='col col-data-right item-value' style='font-size:$companyNameSize em;'>$examinationReference $examinationReference  $examinationReference</p>
                         </td>
                     </tr>
                 </table>
@@ -527,6 +554,13 @@ class TestController extends Controller
         $mpdf->setAutoTopMargin = false;
         $mpdf->setAutoBottomMargin = false;
         $mpdf->autoMarginPadding = 0;
+        $mpdf->margin_left = 0;
+        $mpdf->margin_right = 0;
+        $mpdf->margin_top = 0;
+        $mpdf->margin_bottom = 0;
+        $mpdf->margin_header = 0;
+        $mpdf->margin_footer = 0;
+        $mpdf->format = array(190, 236);
 
         $mpdf->watermarkImgBehind = true;
         $mpdf->showWatermarkImage = true;
