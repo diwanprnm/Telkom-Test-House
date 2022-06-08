@@ -28,7 +28,9 @@
         "setasign/fpdf": "^1.8",
         "coraxster/flysystem-aws-s3-v3-minio": "^1.0",
         "anouar/fpdf": "^2.0",
-        "simplesoftwareio/simple-qrcode": "^2.0"
+        "simplesoftwareio/simple-qrcode": "^2.0",
+        "dompdf/dompdf": "^1.2",
+        "mpdf/mpdf": "*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -67,6 +69,9 @@
         ]
     },
     "config": {
-        "preferred-install": "dist"
+        "preferred-install": "dist",
+        "allow-plugins": {
+            "kylekatarnls/update-helper": true
+        }
     }
 }

@@ -525,7 +525,10 @@ class TestController extends Controller
         $mpdf->WriteHTML($html_sertifikatQA);
 
         // Output a PDF file directly to the browser
-        $mpdf->Output();
+        // $file_name = str_replace("/", "", $certificateNumber) . '.pdf';
+
+        $file_name = 'SertifikatQA-Test.pdf';
+        $mpdf->Output($file_name, 'D');
 
 		
 		// if ($method == 'getStream'){
