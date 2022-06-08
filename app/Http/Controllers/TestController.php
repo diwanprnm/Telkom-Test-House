@@ -120,9 +120,9 @@ class TestController extends Controller
 
         html,
         body {
-            font-size: 0.9em;
-            font-family: Arial, Helvetica, sans-serif;
-            line-height: 1.2em;
+            font-size: 0.98em;
+            font-family: 'Arial Rounded MT Bold', Arial, Helvetica, sans-serif;
+            line-height: 1.0em;
             padding: 0;
             margin: 0;
         }
@@ -133,6 +133,8 @@ class TestController extends Controller
         
         hr {
             border-color: black;
+            color: black;
+            height: 0.5px;
         }
         
         .data-row-wrapper-logo {
@@ -142,7 +144,7 @@ class TestController extends Controller
         }
         
         .table-data-margin {
-            margin-left: 5%;
+            margin-left: 7%;
         }
         
         .text-center {
@@ -150,8 +152,12 @@ class TestController extends Controller
         }
         
         .small {
-            font-size: 0.8em;
+            font-size: 0.7em;
             margin-top: 0;
+        }
+
+        .medium{
+            font-size: 0.9em;
         }
         
         .row {
@@ -241,10 +247,10 @@ class TestController extends Controller
             width: 300px;
         }
 
-        .mt-05{ margin-top: 5px; }
-        .mt-1{ margin-top: 10px; }
-        .mt-2{ margin-top: 20px; }
-        .mt-3{ margin-top: 40px; }
+        .mt-05{ margin-top: 3px; }
+        .mt-1{ margin-top: 6px; }
+        .mt-2{ margin-top: 15px; }
+        .mt-3{ margin-top: 25px; }
 
         .mb-05{ margin-bottom: 5px; }
         .mb-1{ margin-bottom: 10px; }
@@ -261,14 +267,14 @@ class TestController extends Controller
                 <tr class='row logo-top'>
                 <td></td><td></td>
                     <td class='w-100'>
-                        <img height='120px' class='img-top-logo' src='$image_top_url' />
+                        <img height='110px' class='img-top-logo' src='$image_top_url' />
                     </td>
                 </tr>
             </table>
 
 
-            <div class='col judul-utama text-center'>
-                <h2 class='underline fw-bold text-center'><u>Quality Assurance Test</u></h2>
+            <div class='col judul-utama text-center mb-2'>
+                <h1 class='underline fw-bold text-center'><u>Quality Assurance Test</u></h1>
             </div>
 
             <div class='text-center'>
@@ -334,7 +340,7 @@ class TestController extends Controller
                     <!-- End Row 2 Dengan ini PT Telkom -->
 
         <div class='data-row-wrapper-logo'>
-                <div class='text-center mt-2'>
+                <div class='text-center mt-3'>
                 <table class='table-data-margin'>
                     <tr class='property surat-keterangan-ini'>
                         <td class='table-property'>
@@ -459,7 +465,7 @@ class TestController extends Controller
         <div class='row mt-2'>
             <div class='col judul-utama text-center'>
                 <hr/>
-                <span class='underline'>QA Test perlu dilakukan kembali dalam periode waktu $period_id, kecuali ditemukan kejanggalan sebelumnya.
+                <span class='underline medium'>QA Test perlu dilakukan kembali dalam periode waktu $period_id, kecuali ditemukan kejanggalan sebelumnya.
                             <br>
                             <span class='small font-italic'>QA Test shall be repeated in a period of $period_en, except if there is/are nonconformity(s) found before that.</span>
                 </span>
@@ -470,11 +476,11 @@ class TestController extends Controller
 
 
         <!-- Signature row -->
-        <div class='row signature-row justify-content-evenly'>
+        <div class='row signature-row justify-content-evenly mt-2'>
             <div class='col text-center'>
-                <span class='row-tanggal mb-2'>Bandung, $signDate</span>
+                <span class='row-tanggal'>Bandung, $signDate</span>
                 <br>
-                <span class='row-gambar-signature'><img height='100ox' src='$signImagePath'/></span>
+                <span class='row-gambar-signature'><img class='mt-05' height='105ox' src='$signImagePath'/></span>
                 <br>
                 <span class='row-nama-title item-value'><u>$signee</u></span>
                 <br>
@@ -496,11 +502,11 @@ class TestController extends Controller
 
         <!-- Contact row -->
 
-        <table style='margin-left: 10px;'>
+        <table style='margin-left: 20px;'>
             <tr>
-                <td><img height='45px'  style='margin-left: 10px; margin-top:35px;' class='' src='$image_tth_motto_url' /></td>
-                <td><img width='370px' class=''  style='margin-left: 10px; margin-top:20px;'src='$image_decorator_url' /></td>
-                <td><img height='120px' class='float-right'  style='margin-left: 10px; float:right;'src='data:image/png;base64,$qrCode_encodedBase64' /></td>
+                <td><img height='60px'  style='margin-left: 10px; margin-top:35px;' class='' src='$image_tth_motto_url' /></td>
+                <td><img width='375px' class=''  style='margin-left: 10px; margin-top:20px;'src='$image_decorator_url' /></td>
+                <td><img height='130px' class='float-right'  style='margin-left: 10px; float:right;'src='data:image/png;base64,$qrCode_encodedBase64' /></td>
             </tr>
         </table>
 
@@ -514,12 +520,25 @@ class TestController extends Controller
 
         // echo $html_sertifikatQA;
         // die;
-
+ 
         $mpdf = new \mPDF();
 
-        $mpdf->SetWatermarkImage("$image_background_url", 1, array(120, 65), array(50, 100));
+        $mpdf->SetWatermarkImage("$image_background_url", 1, array(120, 65), array(50, 105));
+        $mpdf->setAutoTopMargin = false;
+        $mpdf->setAutoBottomMargin = false;
+        $mpdf->autoMarginPadding = 0;
+
         $mpdf->watermarkImgBehind = true;
         $mpdf->showWatermarkImage = true;
+
+        // $mpdf->SetHTMLHeader("<table class='w-100 kop-logo'>
+        //         <tr class='row logo-top'>
+        //         <td></td><td></td>
+        //             <td class='w-100'>
+        //                 <img height='110px' class='img-top-logo' src='$image_top_url' />
+        //             </td>
+        //         </tr>
+        //     </table>", 'O');
 
         // Write some HTML code:
         $mpdf->WriteHTML($html_sertifikatQA);
@@ -528,7 +547,7 @@ class TestController extends Controller
         // $file_name = str_replace("/", "", $certificateNumber) . '.pdf';
 
         $file_name = 'SertifikatQA-Test.pdf';
-        $mpdf->Output($file_name, 'D');
+        $mpdf->Output($file_name, 'I');
 
 		
 		// if ($method == 'getStream'){
