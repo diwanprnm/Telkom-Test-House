@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
-
+use App\Role;
 use App\Examination;
 use Carbon\Carbon;
 use Storage;
@@ -89,6 +89,26 @@ class TestController extends Controller
 			'method' => $method,
 			'qrCode' => QrCode::format('png')->size(500)->merge($telkomLogoSquarePath)->errorCorrection('M')->generate($qrCodeLink)
 		];
+
+        $documentNumber = $examination->device->cert_number;
+        $companyName = $examination->company->name;
+        $brand = $examination->device->mark;
+        $deviceName = $examination->device->name;
+        $deviceType = $examination->device->model;
+        $deviceCapacity = $examination->device->capacity;
+        $deviceSerialNumber = $examination->device->serial_number;
+        $examinationNumber = \App\ExaminationAttach::where('examination_id', $id)->where('name', 'Laporan Uji')->first()->no;
+        $examinationReference = $examination->device->test_reference;
+        $signee = $signeeData->value;
+        $isSigneePoh = $signeeData->code !== 'sm_urel';
+
+        $pohStatus = $isSigneePoh ? 'For ' : '';
+        $sm_role = Role::where('id', '3')->value('name');
+        $sm_role = empty($sm_role) ? 'OSM Infrastructure Research & Assurance' : $sm_role;
+        $signeeRole = $pohStatus . $sm_role;
+
+        $signImagePath = Storage::disk('minio')->url("generalsettings/$signeeData->id/$signeeData->attachment");
+        $qrCode = QrCode::format('png')->size(500)->merge($telkomLogoSquarePath)->errorCorrection('M')->generate($qrCodeLink);
 		$PDF = new \App\Services\PDF\PDFService();
 
 		$html_sertifikatQA = "<html>
@@ -264,7 +284,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td  class=''>
-                            <p class='col col-data-right item-value'>PT. ARIF KONVERSI SURYA INOVASI INDONESIA</p>
+                            <p class='col col-data-right item-value'>$companyName</p>
                         </td>
                     </tr>
                 </table>
@@ -283,7 +303,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td>
-                            <p class='col col-data-right item-value'>Schwul Industries GmbH.</p>
+                            <p class='col col-data-right item-value'>$brand</p>
                         </td>
                     </tr>
                 </table>
@@ -327,7 +347,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td  class=''>
-                            <p class='col col-data-right item-value'>Tera Router</p>
+                            <p class='col col-data-right item-value'>$deviceName</p>
                         </td>
                     </tr>
                 </table>
@@ -346,7 +366,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td  class=''>
-                            <p class='col col-data-right item-value'>THZ150G</p>
+                            <p class='col col-data-right item-value'>$deviceType</p>
                         </td>
                     </tr>
                 </table>
@@ -365,7 +385,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td  class=''>
-                            <p class='col col-data-right item-value'>150 THz</p>
+                            <p class='col col-data-right item-value'>$deviceCapacity</p>
                         </td>
                     </tr>
                 </table>
@@ -384,7 +404,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td  class=''>
-                            <p class='col col-data-right item-value'>F0800.1234-Ausf. B</p>
+                            <p class='col col-data-right item-value'>$deviceSerialNumber</p>
                         </td>
                     </tr>
                 </table>
@@ -403,7 +423,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td  class=''>
-                            <p class='col col-data-right item-value'>7775</p>
+                            <p class='col col-data-right item-value'>$examinationNumber</p>
                         </td>
                     </tr>
                 </table>
@@ -422,7 +442,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td  class=''>
-                            <p class='col col-data-right item-value'>STEL D-014-2008 Versi.1.0</p>
+                            <p class='col col-data-right item-value'>$examinationReference</p>
                         </td>
                     </tr>
                 </table>
@@ -440,9 +460,9 @@ class TestController extends Controller
         <div class='row mt-2'>
             <div class='col judul-utama text-center'>
                 <hr/>
-                <span class='underline'>QA Test perlu dilakukan kembali dalam periode waktu 0 tahun, kecuali ditemukan kejanggalan sebelumnya.
+                <span class='underline'>QA Test perlu dilakukan kembali dalam periode waktu $period_id, kecuali ditemukan kejanggalan sebelumnya.
                             <br>
-                            <span class='small font-italic'>QA Test shall be repeated in a period of 0 year, except if there is/are nonconformity(s) found before that.</span>
+                            <span class='small font-italic'>QA Test shall be repeated in a period of $period_en, except if there is/are nonconformity(s) found before that.</span>
                 </span>
                 <hr/>
             </div>
@@ -453,13 +473,13 @@ class TestController extends Controller
         <!-- Signature row -->
         <div class='row signature-row justify-content-evenly'>
             <div class='col text-center'>
-                <span class='row-tanggal'>Bandung, 06 April 2022</span>
+                <span class='row-tanggal mb-2'>Bandung, $signDate</span>
                 <br>
-                <span class='row-gambar-signature'><img height='120ox' src='../../../public/images/telkom-logo-text.jpg'/></span>
+                <span class='row-gambar-signature'><img height='100ox' src='$signImagePath'/></span>
                 <br>
-                <span class='row-nama-title item-value'><u>I Gede Astawa</u></span>
+                <span class='row-nama-title item-value'><u>$signee</u></span>
                 <br>
-                <span class='item-value'>OSM Infrastructure Research & Assurance</span>
+                <span class='item-value'>$signeeRole</span>
             </div>
         </div>
 
@@ -467,9 +487,9 @@ class TestController extends Controller
 
 
         <!-- Contact row -->
-        <div class='row contact-row small justify-content-evenly mt-4'>
+        <div class='row contact-row small justify-content-evenly mt-3'>
             <div class='col text-center'>
-                <span class='row-ptth'>PT Telkom Indonesia (Persero) Tbk - Telkom Test House</span>
+                <span class='row-ptth'>PT Telkom Indonesia (Persero) Tbk - Telkom <span style='color:red;'>Test</span> House</span>
                 <br>
                 <span class='row-alamat'>Jl. Gegerkalong Hilir No. 47 Bandung 40152 INDONESIA | Customer Service: (+62) 812-2483-7500; E-Mail: <a href='mailto:cstth@telkom.co.id'>cstth@telkom.co.id</a> </span>
             </div>
@@ -478,7 +498,7 @@ class TestController extends Controller
         <!-- Contact row -->
 
 
-        <div class='row kop-logo mx-5 mt-4 p-3' style='height:100px;'>
+        <div class='row kop-logo mx-5 mt-3 p-3' style='height:100px;'>
             <div class='col-4 p-0 m-0'>
                 <img height='60%' class='mt-3' src='../../../public/images/tth-logo-text-moto.jpg' />
             </div>
@@ -505,7 +525,7 @@ class TestController extends Controller
 
         $mpdf = new \mPDF();
 
-        $mpdf->SetWatermarkImage("$image_background_url", 1, array(120, 70), array(50, 100));
+        $mpdf->SetWatermarkImage("$image_background_url", 1, array(120, 65), array(50, 100));
         $mpdf->watermarkImgBehind = true;
         $mpdf->showWatermarkImage = true;
 
