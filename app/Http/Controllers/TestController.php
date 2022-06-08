@@ -59,16 +59,16 @@ class TestController extends Controller
 		$certificateNumber = strval($examination->device->cert_number);
 		$telkomLogoSquarePath = '/app/Services/PDF/images/telkom-logo-square.png';
 		$qrCodeLink = url('/digitalSign/21003-132'); //todo daniel digitalSign page
-
-		$bootstrap_url= "/images/bootstrap.min.css' rel='stylesheet'";
-		$image_top_url = 'images/telkom-logo-text.jpg';
-
+		
+        $image_top_url = 'images/telkom-logo-text.jpg';
 		$image_background_url = 'images/tth-logo-opacity.jpg';
-		$image_tth_motto_url = '/images/tth-logo-text-moto.jpg';
-		$image_decorator_url = '/images/decorator-pattern-1.jpg';
+		$image_tth_motto_url = 'images/tth-logo-text-moto.jpg';
+		$image_decorator_url = 'images/decorator-pattern-1.jpg';
 		$image_qrcode_url = QrCode::format('png')->size(500)->merge($telkomLogoSquarePath)->errorCorrection('M')->generate($qrCodeLink);
 
-		// dd($image_top_url);
+		$qrCode_encodedBase64 = (base64_encode($image_qrcode_url));
+
+        // dd($qrCode_encodedBase64);
 
 		$PDFData = [
 			'documentNumber' => $examination->device->cert_number,
@@ -109,7 +109,6 @@ class TestController extends Controller
 
         $signImagePath = Storage::disk('minio')->url("generalsettings/$signeeData->id/$signeeData->attachment");
         $qrCode = QrCode::format('png')->size(500)->merge($telkomLogoSquarePath)->errorCorrection('M')->generate($qrCodeLink);
-		$PDF = new \App\Services\PDF\PDFService();
 
 		$html_sertifikatQA = "<html>
 
@@ -497,20 +496,13 @@ class TestController extends Controller
 
         <!-- Contact row -->
 
-
-        <div class='row kop-logo mx-5 mt-3 p-3' style='height:100px;'>
-            <div class='col-4 p-0 m-0'>
-                <img height='60%' class='mt-3' src='../../../public/images/tth-logo-text-moto.jpg' />
-            </div>
-            <div class='col-6  p-0 m-0'>
-                <img width='95%' class='' src='../../../public/images/decorator-pattern-1.jpg' />
-            </div>
-            <div class='col  p-0 m-0'>
-                <img height='70%' class='float-end mt-3' src='../../../public/images/telkom-logo-red-hand.jpg' />
-            </div>
-        </div>
-
-
+        <table style='margin-left: 10px;'>
+            <tr>
+                <td><img height='45px'  style='margin-left: 10px; margin-top:35px;' class='' src='$image_tth_motto_url' /></td>
+                <td><img width='370px' class=''  style='margin-left: 10px; margin-top:20px;'src='$image_decorator_url' /></td>
+                <td><img height='120px' class='float-right'  style='margin-left: 10px; float:right;'src='data:image/png;base64,$qrCode_encodedBase64' /></td>
+            </tr>
+        </table>
 
 
     </div>
