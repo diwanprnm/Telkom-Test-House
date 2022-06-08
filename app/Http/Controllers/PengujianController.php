@@ -989,8 +989,8 @@ class PengujianController extends Controller
                 "item" => 'Biaya Uji '.$exam->examinationType->name.' ('.$exam->examinationType->description.')',
                 "description" => $exam->device->name.', '.$exam->device->mark.', '.$exam->device->capacity.', '.$exam->device->model,
                 "quantity" => 1,
-                "price" => $exam->price/1.1,
-                "total" => $exam->price/1.1
+                "price" => $exam->price/1.11,
+                "total" => $exam->price/1.11
             ]
         ;
 

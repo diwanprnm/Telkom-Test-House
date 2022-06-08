@@ -18,6 +18,7 @@ class ChamberService
                 'users.name as userName',
                 'start_date',
                 'end_date',
+                'duration',
                 'price', 'tax', 'total'
             )
             ->join("users","users.id","=","chamber.user_id")

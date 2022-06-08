@@ -284,8 +284,8 @@ class ChamberAdminController extends Controller
         $chamber->spb_number = $id;
         $chamber->spb_date = $chamber->spb_date ?? $request->input('spb_date');
         $chamber->price = (int) preg_replace("/[^0-9]/", "", $request->input('price', 0) );
-        $chamber->tax = $chamber->price * 0.1;
-        $chamber->total = $chamber->price * 1.1;
+        $chamber->tax = $chamber->price * 0.11;
+        $chamber->total = $chamber->price * 1.11;
         $chamber->updated_by = Auth::user()->id;
         
         if($chamber->payment_status == 0 && !$chamber->PO_ID){ //jika draft pembayaran belum ada, buatkan draftnya
