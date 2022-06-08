@@ -63,7 +63,7 @@ class TestController extends Controller
 		$bootstrap_url= "/images/bootstrap.min.css' rel='stylesheet'";
 		$image_top_url = 'images/telkom-logo-text.jpg';
 
-		$image_background_url = '/images/tth-logo-opacity.jpg';
+		$image_background_url = 'images/tth-logo-opacity.jpg';
 		$image_tth_motto_url = '/images/tth-logo-text-moto.jpg';
 		$image_decorator_url = '/images/decorator-pattern-1.jpg';
 		$image_qrcode_url = QrCode::format('png')->size(500)->merge($telkomLogoSquarePath)->errorCorrection('M')->generate($qrCodeLink);
@@ -94,15 +94,18 @@ class TestController extends Controller
 		$html_sertifikatQA = "<html>
 
 <head>
-    <!-- <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'> -->
+    <link rel='stylesheet' href=''>
 
     <style>
+        @media print { @page { size: auto; } }
+
         html,
         body {
-        
-            font-size: 1em;
+            font-size: 0.9em;
             font-family: Arial, Helvetica, sans-serif;
             line-height: 1.2em;
+            padding: 0;
+            margin: 0;
         }
         
         td {
@@ -114,14 +117,13 @@ class TestController extends Controller
         }
         
         .data-row-wrapper-logo {
-            background-image: url('../../../public/images/tth-logo-opacity.jpg');
             background-repeat: no-repeat;
             background-position: center;
             background-size: 500px;
         }
         
         .table-data-margin {
-            margin-left: 10%;
+            margin-left: 5%;
         }
         
         .text-center {
@@ -129,7 +131,7 @@ class TestController extends Controller
         }
         
         .small {
-            font-size: smaller;
+            font-size: 0.8em;
             margin-top: 0;
         }
         
@@ -159,10 +161,19 @@ class TestController extends Controller
         .kop-logo {
             clear: both;
             width: 100%;
+            margin-right:0;
+            margin-left: 500px;
+            display:block;
         }
         
-        .img-top-logo {
+        .img-top-logo, .logo-top {
             float: right;
+        }
+
+        .img-bg-data-opacity {
+            z-index:-1;
+            width: 450px;
+            margin-left: 120px;
         }
         
         .semicolon {
@@ -202,6 +213,24 @@ class TestController extends Controller
         .w-20 {
             width: 20%;
         }
+
+        .w-10 {
+            width: 10%;
+        }
+
+        .table-property{
+            width: 300px;
+        }
+
+        .mt-05{ margin-top: 5px; }
+        .mt-1{ margin-top: 10px; }
+        .mt-2{ margin-top: 20px; }
+        .mt-3{ margin-top: 40px; }
+
+        .mb-05{ margin-bottom: 5px; }
+        .mb-1{ margin-bottom: 10px; }
+        .mb-2{ margin-bottom: 20px; }
+        .mb-3{ margin-bottom: 40px; }
     </style>
 </head>
 
@@ -209,10 +238,11 @@ class TestController extends Controller
     <div class='wrapper py-3 px-2'>
         <div class='container'>
 
-            <table class='w-100'>
+            <table class='w-100 kop-logo'>
                 <tr class='row logo-top'>
+                <td></td><td></td>
                     <td class='w-100'>
-                        <img height='120px' class='img-top-logo' src='../../../public/images/telkom-logo-text.jpg' />
+                        <img height='120px' class='img-top-logo' src='$image_top_url' />
                     </td>
                 </tr>
             </table>
@@ -225,7 +255,7 @@ class TestController extends Controller
             <div class='text-center'>
                 <table class='table-data-margin'>
                     <tr class='property surat-keterangan-ini'>
-                        <td class='w-40'>
+                        <td class='table-property'>
                             Surat keterangan ini dikeluarkan untuk
                             <br/>
                             <span class='font-italic small'>This declaration letter is issued to</span>
@@ -233,7 +263,7 @@ class TestController extends Controller
                         <td class='semicolon'>
                             :
                         </td>
-                        <td>
+                        <td  class=''>
                             <p class='col col-data-right item-value'>PT. ARIF KONVERSI SURYA INOVASI INDONESIA</p>
                         </td>
                     </tr>
@@ -241,13 +271,23 @@ class TestController extends Controller
             </div>
 
 
-
-
-
-
-
-
-
+            <div class='text-center'>
+                <table class='table-data-margin'>
+                    <tr class='property surat-keterangan-ini'>
+                        <td class='table-property'>
+                            Sebagai Pabrikan/Agen/Perwakilan dari
+                            <br/>
+                            <span class='font-italic small'>As a (or) an Manufacture/Agent/Representative of</span>
+                        </td>
+                        <td class='semicolon'>
+                            :
+                        </td>
+                        <td>
+                            <p class='col col-data-right item-value'>Schwul Industries GmbH.</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
 
             <div class=''>
                 <div class='row kop-logo'>
@@ -261,39 +301,11 @@ class TestController extends Controller
                         <div class='col judul-utama text-center'>
 
                         </div>
-                    </div>
-
-                    <!-- Row 1 surat keterangan ini -->
-                    <!-- Data Row -->
-                    <div class='row row-main mb-2'>
-                        <div class='row row-main-wrapper'>
-                            <div class='col col-data-left'>
-                                <div class='row'>Surat keterangan ini dikeluarkan untuk</div>
-                                <div class='row small font-italic'>This declaration letter is issued to</div>
-                            </div>
-                            <div class='col-1 col-colon text-end'>:</div>
-                            <div class='col col-data-right item-value'>PT. ARIF KONVERSI SURYA INOVASI INDONESIA</div>
-                        </div>
-                    </div>
-                    <!-- End Data row -->
-
-                    <!-- Data Row -->
-                    <div class='row row-main mb-4'>
-                        <div class='row row-main-wrapper'>
-                            <div class='col col-data-left'>
-                                <div class='row'>Sebagai Pabrikan/Agen/Perwakilan dari</div>
-                                <div class='row small font-italic'>As a (or) an Manufacture/Agent/Representative of</div>
-                            </div>
-                            <div class='col-1 col-colon text-end'>:</div>
-                            <div class='col col-data-right item-value'>Schwul Industries GmbH.</div>
-                        </div>
-                    </div>
-                    <!-- End Data row -->
-                    <!-- End Row 1 surat keterangan ini -->
+                    </div>                   
 
 
                     <!-- Row 2 Dengan ini PT Telkom -->
-                    <div class='row mb-4'>
+                    <div class='row mt-3'>
                         <div class='col judul-utama text-center'>
                             Dengan ini <span class='underline item-value'>PT Telkom Indonesia (Persero) Tbk</span> menyatakan bahwa:
                             <br>
@@ -302,96 +314,122 @@ class TestController extends Controller
                     </div>
                     <!-- End Row 2 Dengan ini PT Telkom -->
 
-
-                    <!-- Row 3 Nama Perangkat -->
-                    <!-- Data Row -->
-                    <div class='data-row-wrapper-logo'>
-                        <div class='row row-main mb-2'>
-                            <div class='row row-main-wrapper'>
-                                <div class='col w-100 col-data-left'>
-                                    <div class='row'>Nama perangkat</div>
-                                    <div class='row small font-italic'>Equipment name</div>
-                                </div>
-                                <div class='col-1 col-colon text-end'>:</div>
-                                <div class='col col-data-right item-value'>Tera Router</div>
-                            </div>
-                        </div>
-                        <!-- End Data row -->
-
-                        <!-- Data Row -->
-                        <div class='row row-main mb-2'>
-                            <div class='row row-main-wrapper'>
-                                <div class='col w-100 col-data-left'>
-                                    <div class='row'>Tipe/Model</div>
-                                    <div class='row small font-italic'>Type/Model</div>
-                                </div>
-                                <div class='col-1 col-colon text-end'>:</div>
-                                <div class='col col-data-right item-value'>THZ150G</div>
-                            </div>
-                        </div>
-                        <!-- End Data row -->
-
-                        <!-- Data Row -->
-                        <div class='row row-main mb-2'>
-                            <div class='row row-main-wrapper'>
-                                <div class='col w-100 col-data-left'>
-                                    <div class='row'>Kapasitas</div>
-                                    <div class='row small font-italic'>Capacity</div>
-                                </div>
-                                <div class='col-1 col-colon text-end'>:</div>
-                                <div class='col col-data-right item-value'>150 THz</div>
-                            </div>
-                        </div>
-                        <!-- End Data row -->
-
-                        <!-- Data Row -->
-                        <div class='row row-main mb-2'>
-                            <div class='row row-main-wrapper'>
-                                <div class='col w-100 col-data-left'>
-                                    <div class='row'>Nomor seri</div>
-                                    <div class='row small font-italic'>Serial number</div>
-                                </div>
-                                <div class='col-1 col-colon text-end'>:</div>
-                                <div class='col col-data-right item-value'>F0800.1234-Ausf. B</div>
-                            </div>
-                        </div>
-                        <!-- End Data row -->
-
-                        <!-- Data Row -->
-                        <div class='row row-main mb-2'>
-                            <div class='row row-main-wrapper'>
-                                <div class='col w-100 col-data-left'>
-                                    <div class='row'>Berdasarkan nomor laporan hasil uji</div>
-                                    <div class='row small font-italic'>Based on the test report number</div>
-                                </div>
-                                <div class='col-1 col-colon text-end'>:</div>
-                                <div class='col col-data-right item-value'>7775</div>
-                            </div>
-                        </div>
-                        <!-- End Data row -->
-
-                        <!-- Data Row -->
-                        <div class='row row-main mb-2'>
-                            <div class='row row-main-wrapper'>
-                                <div class='col w-100 col-data-left'>
-                                    <div class='row'>Telah memenuhi spesifikasi sebagai berikut</div>
-                                    <div class='row small font-italic'>Has been complied the following specification(s)</div>
-                                </div>
-                                <div class='col-1 col-colon text-end'>:</div>
-                                <div class='col col-data-right item-value'>STEL D-014-2008 Versi.1.0</div>
-                            </div>
-                        </div>
-                        <!-- End Data row -->
-                    </div>
-
-                    <!-- End Row 3 Nama Perangkat -->
+        <div class='data-row-wrapper-logo'>
+                <div class='text-center mt-2'>
+                <table class='table-data-margin'>
+                    <tr class='property surat-keterangan-ini'>
+                        <td class='table-property'>
+                            Nama perangkat
+                            <br/>
+                            <span class='font-italic small'>Equipment name</span>
+                        </td>
+                        <td class='semicolon'>
+                            :
+                        </td>
+                        <td  class=''>
+                            <p class='col col-data-right item-value'>Tera Router</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
 
 
+            <div class='text-center mt-05'>
+                <table class='table-data-margin'>
+                    <tr class='property surat-keterangan-ini'>
+                        <td class='table-property'>
+                            Tipe/Model
+                            <br/>
+                            <span class='font-italic small'>Type/Model</span>
+                        </td>
+                        <td class='semicolon'>
+                            :
+                        </td>
+                        <td  class=''>
+                            <p class='col col-data-right item-value'>THZ150G</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
 
 
+            <div class='text-center mt-05'>
+                <table class='table-data-margin'>
+                    <tr class='property surat-keterangan-ini'>
+                        <td class='table-property'>
+                            Kapasitas
+                            <br/>
+                            <span class='font-italic small'>Capacity</span>
+                        </td>
+                        <td class='semicolon'>
+                            :
+                        </td>
+                        <td  class=''>
+                            <p class='col col-data-right item-value'>150 THz</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+                
+            <div class='text-center mt-05'>
+                <table class='table-data-margin'>
+                    <tr class='property surat-keterangan-ini'>
+                        <td class='table-property'>
+                            Nomor seri
+                            <br/>
+                            <span class='font-italic small'>Serial number</span>
+                        </td>
+                        <td class='semicolon'>
+                            :
+                        </td>
+                        <td  class=''>
+                            <p class='col col-data-right item-value'>F0800.1234-Ausf. B</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
 
 
-                </div>
+            <div class='text-center mt-05'>
+                <table class='table-data-margin'>
+                    <tr class='property surat-keterangan-ini'>
+                        <td class='table-property'>
+                            Berdasarkan nomor laporan hasil uji
+                            <br/>
+                            <span class='font-italic small'>Based on the test report number</span>
+                        </td>
+                        <td class='semicolon'>
+                            :
+                        </td>
+                        <td  class=''>
+                            <p class='col col-data-right item-value'>7775</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+
+             <div class='text-center mt-05'>
+                <table class='table-data-margin'>
+                    <tr class='property surat-keterangan-ini'>
+                        <td class='table-property'>
+                            Telah memenuhi spesifikasi sebagai berikut
+                            <br/>
+                            <span class='font-italic small'>Has been complied the following specification(s)</span>
+                        </td>
+                        <td class='semicolon'>
+                            :
+                        </td>
+                        <td  class=''>
+                            <p class='col col-data-right item-value'>STEL D-014-2008 Versi.1.0</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+
+        </div>
                 <!-- End Main padding-->
 
             </div>
@@ -399,7 +437,7 @@ class TestController extends Controller
 
 
         <!-- Row 4 QA Test perlu dilakukan -->
-        <div class='row mb-4 mx-5'>
+        <div class='row mt-2'>
             <div class='col judul-utama text-center'>
                 <hr/>
                 <span class='underline'>QA Test perlu dilakukan kembali dalam periode waktu 0 tahun, kecuali ditemukan kejanggalan sebelumnya.
@@ -462,8 +500,20 @@ class TestController extends Controller
 
 </html>";
 
-		// echo $html_sertifikatQA;
-		// die;
+        // echo $html_sertifikatQA;
+        // die;
+
+        $mpdf = new \mPDF();
+
+        $mpdf->SetWatermarkImage("$image_background_url", 1, array(120, 70), array(50, 100));
+        $mpdf->watermarkImgBehind = true;
+        $mpdf->showWatermarkImage = true;
+
+        // Write some HTML code:
+        $mpdf->WriteHTML($html_sertifikatQA);
+
+        // Output a PDF file directly to the browser
+        $mpdf->Output();
 
 		
 		// if ($method == 'getStream'){
