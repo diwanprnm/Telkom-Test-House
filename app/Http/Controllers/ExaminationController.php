@@ -2372,8 +2372,10 @@ class ExaminationController extends Controller
 			'deviceModel' => \App\Services\MyHelper::setDefault($data->device['model'], '-'),
 			'deviceCapacity' => \App\Services\MyHelper::setDefault($data->device['capacity'], '-'),
 			'deviceTestReference' => \App\Services\MyHelper::setDefault($data->device['test_reference'], '-'),
+			'examinationFunctionTestNO' => \App\Services\MyHelper::setDefault($data['function_test_NO'], '0'),
 			'examinationFunctionTestTE' => \App\Services\MyHelper::setDefault($data['function_test_TE'], '0'),
 			'examinationFunctionTestPIC' => \App\Services\MyHelper::setDefault($data['function_test_PIC'], '-'),
+			'companyName' => \App\Services\MyHelper::setDefault($data->company['name'], '-'),
 			'companyAddress' => \App\Services\MyHelper::setDefault($data->company['address'], '-'),
 			'companyCity' => \App\Services\MyHelper::setDefault($data->company['city'], '-'),
 			'examinationFunctionDate' => \App\Services\MyHelper::setDefault($tgl_uji_fungsi, '-'),
@@ -2384,6 +2386,7 @@ class ExaminationController extends Controller
 
 			//todo@arif tambah field yang kosong dibawah ini
 			'exaimationDuration' => '',
+			'keteranganAlatUkur' => '',
 			'penyediaAlatUkur' => '',
 			'alatUkur' => '',
 			'itemTest' => '',
