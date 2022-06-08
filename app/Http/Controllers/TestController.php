@@ -316,7 +316,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td  class=''>
-                            <p class='col col-data-right item-value' style='font-size:$companyNameSize em;'>$companyName $companyName</p>
+                            <p class='col col-data-right item-value' style='font-size:$companyNameSize em;'>$companyName</p>
                         </td>
                     </tr>
                 </table>
@@ -335,7 +335,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td>
-                            <p class='col col-data-right item-value' style='font-size:$brandSize em;'>$brand $brand</p>
+                            <p class='col col-data-right item-value' style='font-size:$brandSize em;'>$brand</p>
                         </td>
                     </tr>
                 </table>
@@ -379,7 +379,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td  class=''>
-                            <p class='col col-data-right item-value' style='font-size:$deviceNameSize em;'>$deviceName $deviceName $deviceName $deviceName  $deviceName</p>
+                            <p class='col col-data-right item-value' style='font-size:$deviceNameSize em;'>$deviceName</p>
                         </td>
                     </tr>
                 </table>
@@ -398,7 +398,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td  class=''>
-                            <p class='col col-data-right item-value' style='font-size:$deviceTypeSize em;'>$deviceType $deviceType $deviceType $deviceType $deviceType $deviceType</p>
+                            <p class='col col-data-right item-value' style='font-size:$deviceTypeSize em;'>$deviceType</p>
                         </td>
                     </tr>
                 </table>
@@ -417,7 +417,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td  class=''>
-                            <p class='col col-data-right item-value' style='font-size:$deviceCapacitySize em;'>$deviceCapacity $deviceCapacity $deviceCapacity $deviceCapacity $deviceCapacity $deviceCapacity $deviceCapacity</p>
+                            <p class='col col-data-right item-value' style='font-size:$deviceCapacitySize em;'>$deviceCapacity</p>
                         </td>
                     </tr>
                 </table>
@@ -436,7 +436,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td  class=''>
-                            <p class='col col-data-right item-value' style='font-size:$deviceSerialNumberSize em;'>$deviceSerialNumber $deviceSerialNumber $deviceSerialNumber</p>
+                            <p class='col col-data-right item-value' style='font-size:$deviceSerialNumberSize em;'>$deviceSerialNumber</p>
                         </td>
                     </tr>
                 </table>
@@ -455,7 +455,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td  class=''>
-                            <p class='col col-data-right item-value' style='font-size:$examinationReferenceSize em;'>$examinationNumber $examinationNumber $examinationNumber $examinationNumber $examinationNumber</p>
+                            <p class='col col-data-right item-value' style='font-size:$examinationReferenceSize em;'>$examinationNumber</p>
                         </td>
                     </tr>
                 </table>
@@ -474,7 +474,7 @@ class TestController extends Controller
                             :
                         </td>
                         <td  class=''>
-                            <p class='col col-data-right item-value' style='font-size:$companyNameSize em;'>$examinationReference $examinationReference  $examinationReference</p>
+                            <p class='col col-data-right item-value' style='font-size:$companyNameSize em;'>$examinationReference</p>
                         </td>
                     </tr>
                 </table>
