@@ -292,7 +292,7 @@
 											)
 											<tr>
 												<td>
-													<a class="btn btn-link" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->nama_perangkat }}','{{ URL::to('pengujian/'.$item->id.'/downloadLaporanPengujian') }}','{{ $item->id }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">Laporan Uji </a>
+													<a class="btn btn-link" href="javascript:void(0)" onclick="return checkAmbilBarang('{{ $item->id }}','{{ URL::to('pengujian/'.$item->id.'/downloadLaporanPengujian') }}');">Laporan Uji </a>
 												</td>
 											</tr>
 											@endif
@@ -310,7 +310,7 @@
 											)
 											<tr>
 												<td> 
-													<a class="btn btn-link" href="javascript:void(0)" onclick="return isTestimonial('{{ $item->nama_perangkat }}','{{ URL::to('pengujian/'.$item->id.'/downloadSertifikat') }}','{{ $item->id }}', '{{$item->jns_pengujian}} ({{$item->desc_pengujian}})','{{ $item->id }}');">Sertifikat </a>
+													<a class="btn btn-link" href="javascript:void(0)" onclick="return checkAmbilBarang('{{ $item->id }}','{{ URL::to('pengujian/'.$item->id.'/downloadSertifikat') }}');">Sertifikat </a>
 												</td> 
 											</tr>
 											@endif
@@ -367,7 +367,7 @@
 												<td class="center">Not Completed</td>
 											@endif
 											<td>{{ $item->keterangan }} {{ trans('translate.by') }} {{ $item->user->name }}</td>
-											<td class="center">{{ $item->date_action }}</td>
+											<td class="center">{{ $item->created_at }}</td>
 										</tr>
 									@endforeach
 									</tbody>
@@ -976,9 +976,9 @@
 		});
 	});
 	
-	function checkAmbilBarang(a){
+	function checkAmbilBarang(a,b){
 		$('#modal_complain').modal('hide');
-		var link = document.getElementById('link').value;
+		var link = b;
 		$.ajax({
 			type: "POST",
 			url : "{{URL::to('cekAmbilBarang')}}",

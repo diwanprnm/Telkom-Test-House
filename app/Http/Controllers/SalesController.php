@@ -154,7 +154,7 @@ class SalesController extends Controller
             $stel_price[] = $stels[1];
         }
 
-        $tax = $request->has('is_tax') ? 0.1*array_sum($stel_price) : 0;
+        $tax = $request->has('is_tax') ? 0.11*array_sum($stel_price) : 0;
 
         $sales = new STELSales;
         $sales->user_id = $request->input(self::USER_ID_R);
@@ -457,7 +457,7 @@ class SalesController extends Controller
             if($stel_sales){
                 $logs_a_stel_sales = $stel_sales;
                 $qty = $stel_sales_detail->qty;
-                $tax = 0.1;
+                $tax = 0.11;
                 $price = $stel_sales_detail->stel->price;
                 $total = $price+($price*$tax*$qty);
                 $stel_sales->total -= $total;
