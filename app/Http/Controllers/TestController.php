@@ -590,7 +590,7 @@ class TestController extends Controller
         // $file_name = str_replace("/", "", $certificateNumber) . '.pdf';
 
         $file_name = 'SertifikatQA-Test.pdf';
-        $mpdf->Output($file_name, 'I');
+        $mpdf->Output($file_name, 'D');
 
 		
 		// if ($method == 'getStream'){
