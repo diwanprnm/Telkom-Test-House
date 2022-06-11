@@ -11,7 +11,7 @@ class PDFMCCetakKontrak extends FPDF{
 	var $dataType = [
 		0 => [
 			'title' => 'Kontrak Uji Laboratorium',
-			'document_id' => 'TLKM02/F/006 Versi 04',
+			'document_id' => 'TLKM02/F/006 Versi 05',
 		],
 		1 => [
 			'title' => 'Kontrak Uji Lokasi',
