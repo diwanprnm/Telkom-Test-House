@@ -94,20 +94,20 @@ class CetakUjiFungsi
         // $pdf->Cell(0, 5, "Tidak Memenuhi");
 
         //HASIL UJI FUNGSI
+        $pdf->SetFont('','');
         $pdf->Ln(9);
         $pdf->Rect(17,$pdf->GetY(),176,35);
         $pdf->Cell(0,5,'Catatan:',0,1);
         $y = $pdf->GetY();
         $pdf->MultiCell(0, 5,$data['catatan'],0,'L');
         $pdf->SetY($y+(5*5));
-        count($data['evidence']) ? $pdf->Cell(18,5,'Bukti: lihat lampiran') : '';
+        count($data['evidence']) ? $pdf->Cell(18,5,'Bukti: lihat lampiran (muncul jika ada bukti)') : '';
         // $pdf->SetFont('ZapfDingbats','B');
         // $pdf->Cell(5, 5, "4");
         // $pdf->SetFont('helvetica','');
         // $pdf->Cell(20,5,'pada kolom:');
         // $pdf->SetFont('','B');
         // $pdf->Cell(10,5,'Hasil Uji Fungsi');
-        $pdf->SetFont('','');
 
 
         /* HANDSIGN SECTION */ 
@@ -131,8 +131,8 @@ class CetakUjiFungsi
                 $pdf->AliasNbPages();
                 $pdf->AddPage();
                 $pdf->SetY(28);
-                $pdf->SetFont('helvetica','B',20);
-                $pdf->Cell(0,5,'Lampiran Uji Fungsi',0,0,'C');
+                $pdf->SetFont('helvetica','BU',12);
+                $pdf->Cell(0,5,'Lampiran UF (muncul jika ada bukti)',0,0,'C');
 
                 $pdf->Ln(10);
                 $url = 'examination/'.$data['id'].'/'.$fileName;
