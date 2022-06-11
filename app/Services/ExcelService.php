@@ -5,22 +5,25 @@ namespace App\Services;
 use Storage;
 use Excel;
 use PHPExcel_Worksheet_Drawing;
+use Maatwebsite\Excel\Events\AfterSheet;
 use App\Role;
 
 class ExcelService
 {
     public static function download($data, $fileName)
     {
-        if (!$data || !$fileName){return false;}
+        if (!$data || !$fileName) {
+            return false;
+        }
 
         // Generate and return the spreadsheet
-        Excel::create($fileName , function($excel) use ($data) {
-            $excel->sheet('sheet1', function($sheet) use ($data) {
+        Excel::create($fileName, function ($excel) use ($data) {
+            $excel->sheet('sheet1', function ($sheet) use ($data, $excel) {
                 $sheet->fromArray($data, null, 'A1', false, false);
             });
         })->store('xlsx');
 
-        $file = Storage::disk('tmp')->get($fileName.'.xlsx');
+        $file = Storage::disk('tmp')->get($fileName . '.xlsx');
 
         $headers = \App\Services\MyHelper::getHeaderExcel("$fileName.xlsx");
 
@@ -28,6 +31,16 @@ class ExcelService
             'file' => $file,
             'headers' => $headers,
         );
+    }
+
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class    => function (AfterSheet $event) {
+                $cellRange = 'A1:W30'; // All headers
+                $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(24);
+            },
+        ];
     }
 
 
@@ -48,6 +61,7 @@ class ExcelService
             }
             return $out;
         }
+
 
         // here is the transpose part
         $transposedData = flipDiagonally($data);
@@ -71,7 +85,7 @@ class ExcelService
             ],
             [
                 'name' => strtoupper($officer['seniorManager']),
-                'title' => $officer['isSeniorManagerPOH'] ? "FOR ".strtoupper($sm_role) : strtoupper($sm_role),
+                'title' => $officer['isSeniorManagerPOH'] ? "FOR " . strtoupper($sm_role) : strtoupper($sm_role),
                 'tandaTanganSeniorManager' => $officer['tandaTanganSeniorManager']
             ]
         ];
@@ -88,9 +102,8 @@ class ExcelService
         // Generate and return the spreadsheet
         Excel::create($fileName, function ($excel) use ($lastDHeaderIndex, $transposedData, $signees, $mainDataTableRange, $mainDHeaderRange, $sidangDate) {
             $excel->sheet('sheet1', function ($sheet) use ($lastDHeaderIndex, $transposedData, $signees, $mainDataTableRange, $mainDHeaderRange, $sidangDate) {
-
                 // echo '<pre>';
-                // print_r($signees);
+                // print_r($sheet);
                 // echo '</pre>';
                 // die;
 
@@ -161,9 +174,12 @@ class ExcelService
                     $cell->setValue("RISALAH KEPUTUSAN SIDANG KOMITE VALIDASI QA DDB - {$tahun_sidang}")->setFont($mainHeaderFont)->setFontFamily('Verdana');
                 });
 
-                $sheet->mergeCells('B1:C1'); // merge Top most title
+                // $sheet->mergeCells('B1:C1'); // merge Top most title
 
                 $sheet->freezePane('B1'); // Freeze A column
+
+                // Disable auto size for sheet
+                $sheet->setAutoSize(false)->getStyle('B5:Z50')->getAlignment()->setWrapText(true);
 
                 $sheet->setBorder($mainDataTableRange, 'double');
 
@@ -292,6 +308,27 @@ class ExcelService
                 $sheet->cell('E33', function ($cell) use ($signees) {
                     $cell->setValue($signees[1]['title'])->setAlignment('center')->setValignment('center');
                 });
+
+                // $sheet->calculateColumnWidths();
+                $sheet->getDefaultColumnDimension()->setAutoSize(true);
+                // $sheet->getColumnDimension('B')->setAutoSize(false);
+                $sheet->getDefaultColumnDimension()->setWidth(35);
+                $sheet->getColumnDimension('B')->setWidth(35);
+
+                // echo '<pre>';
+                // print_r($sheet->getColumnDimension('B'));
+                // echo '</pre>';
+                // die;
+                // $sheet->getStyle('A1:Z50')->getAlignment()->setWrapText(true); 
+                // $sheet->getStyle('B1')->getAlignment()->setWrapText(false); 
+
+                // for($col = 'A'; $col !== 'Z'; $col++) {
+                //     $sheet->getColumnDimension($col)->setAutoSize(false);
+                //     $sheet->getColumnDimension($col)->setWidth(35);
+                //     $calculatedWidth = $sheet->getColumnDimension($col)->getWidth();
+                //     $sheet->getColumnDimension($col)->setWidth(35);
+                // }
+                // $sheet->getColumnDimension('F')->setAutoSize(false)->setWidth(35);
             });
         })->store('xlsx');
 
