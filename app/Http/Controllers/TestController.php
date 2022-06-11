@@ -34,13 +34,31 @@ class TestController extends Controller
         return view('authentikasi.sertifikat');
     }
 
+    private $panjang_halaman_mm = 297; // Panjang kertas A4 dalam mm
+
     private function determineLongStringSize($data){
         $main_font_size = 0.90;
         $small_font_size = 0.8;
-        $max_length_resize = 40;
+        $smaller_font_size = 0.7;
+        $smallest_font_size = 0.6;
 
-        return $size =
-        strlen($data) >= $max_length_resize ? $small_font_size : $main_font_size;
+        if(strlen($data) >= 40){
+            $size = $small_font_size;
+            $this->panjang_halaman_mm += 2;
+        }
+        else if (strlen($data) >= 50) {
+            $size = $smaller_font_size;
+            $this->panjang_halaman_mm += 4;
+        }
+        else if (strlen($data) >= 60) {
+            $size = $smallest_font_size;
+            $this->panjang_halaman_mm += 6;
+        }
+        else{
+            $size = $main_font_size;
+        }
+
+        return $size;
     }
 
     public function index($id = '65dd1840-205c-429a-ac0b-6a78e8b5aaef', $method = '')
@@ -214,7 +232,7 @@ class TestController extends Controller
             clear: both;
             width: 100%;
             margin-right:0;
-            margin-left: 500px;
+            margin-left: 530px;
             display:block;
         }
         
@@ -547,21 +565,12 @@ class TestController extends Controller
 
         // echo $html_sertifikatQA;
         // die;
+
+        // dd($this->panjang_halaman_mm);
  
-        $mpdf = new \mPDF();
+        $mpdf = new \mPDF('utf-8', array(210, $this->panjang_halaman_mm)); // long jadul = 310 mm
 
         $mpdf->SetWatermarkImage("$image_background_url", 1, array(120, 65), array(50, 105));
-        $mpdf->setAutoTopMargin = false;
-        $mpdf->setAutoBottomMargin = false;
-        $mpdf->autoMarginPadding = 0;
-        $mpdf->margin_left = 0;
-        $mpdf->margin_right = 0;
-        $mpdf->margin_top = 0;
-        $mpdf->margin_bottom = 0;
-        $mpdf->margin_header = 0;
-        $mpdf->margin_footer = 0;
-        $mpdf->format = array(190, 236);
-
         $mpdf->watermarkImgBehind = true;
         $mpdf->showWatermarkImage = true;
 
@@ -581,7 +590,7 @@ class TestController extends Controller
         // $file_name = str_replace("/", "", $certificateNumber) . '.pdf';
 
         $file_name = 'SertifikatQA-Test.pdf';
-        $mpdf->Output($file_name, 'I');
+        $mpdf->Output($file_name, 'D');
 
 		
 		// if ($method == 'getStream'){
