@@ -15,7 +15,7 @@ class PDFMCCetakKontrak extends FPDF{
 		],
 		1 => [
 			'title' => 'Kontrak Uji Lokasi',
-			'document_id' => 'TLKM02/F/007 Versi 03',
+			'document_id' => 'TLKM02/F/007 Versi 04',
 		]
 	];
 
