@@ -17,38 +17,36 @@ class CetakPermohonan
         $pdf->SetFont('helvetica','B',9);
         $pdf->Cell(0,5,"Nomor Registrasi: ".$data[0]['no_reg'],0,1,'R');
         $pdf->Cell(0,5,"Data Pelanggan:",0,1);
-        $pdf->Ln(2);
+        $pdf->Ln(1);
         
         $pdf->SetFont('','');
         $pdf->SetWidths([6,35,136.5]);
         $pdf->Row(["","Nama Perusahaan",$data[0]['nama_perusahaan']]);
         $pdf->Row(["","Alamat Perusahaan",$data[0]['alamat_perusahaan'].'']);
         $pdf->Row(["","Nama PIC",$data[0]['nama_pemohon']]);
-        $pdf->Row(["","WhatsApp",$data[0]['telepon_pemohon']]);
+        $pdf->Row(["","Nomor Kontak",$data[0]['telepon_pemohon']]);
         $pdf->Row(["","E-Mail",$data[0]['email_pemohon']]);
-        $pdf->Ln(10);
+        $pdf->Ln(5);
 
         // DATA PERUSAHAAN
         $pdf->SetFont('','B');
         $pdf->Cell(40.5,5,"Status Perusahaan:",0,0);
         $pdf->SetFont('','');
-        switch ($data[0]['jns_perusahaan']) {
-            case 'Agen':
-                $jns_perusahaan = 'Agen/Distributor';
-                break;
-            case 'Pemilik':
-                $jns_perusahaan = 'Pemilik Alat Ukur';
-                break;
+        // switch ($data[0]['jns_perusahaan']) {
+        //     case 'Agen':
+        //         $jns_perusahaan = 'Agen/Distributor';
+        //         break;
+        //     case 'Pemilik':
+        //         $jns_perusahaan = 'Pemilik Alat Ukur';
+        //         break;
                 
-            default:
-                $jns_perusahaan = $data[0]['jns_perusahaan'];
-                break;
-        }
+        //     default:
+        //         $jns_perusahaan = $data[0]['jns_perusahaan'];
+        //         break;
+        // }
         // $pdf->Cell(45,5,$jns_perusahaan,0,0);
-        $pdf->Ln(10);
-        // $pdf->Rect(16, 90, 4, 4, 'D');
-        // $pdf->SetFont('ZapfDingbats',0);
-        $pdf->SetFont('','');
+        $pdf->Ln(6);
+        // $pdf->SetFont('','');
        
         $pdf->Cell(4, 4, '', 0,0);
         $pdf->Cell(3.5,4.5,'',0,0);
@@ -64,14 +62,25 @@ class CetakPermohonan
 
         $pdf->Cell(4, 4, '', 1,0);
         $pdf->Cell(35,4.5,' Pemilik Alat Ukur',0,0);
-        
 
-        $pdf->Ln(10);
+        $checkPossition = [
+            'Pabrikan' => 21.5,
+            'Perwakilan' => 60.5,
+            'Agen' => 99.5,
+            'Pemilik' => 138.5,
+        ];
+
+        $pdf->SetXY($checkPossition[$data[0]['jns_perusahaan']]??86.5, $pdf->GetY());
+        $pdf->SetFont('ZapfDingbats','', 14);
+        $pdf->Cell(7, 5, "4", 0, 1, 'C');
+        $pdf->SetFont('helvetica','',9);
+
+        $pdf->Ln(5);
 
         // DATA PERANGKAT
         $pdf->SetFont('','B');
         $pdf->Cell(35,5,"Data Perangkat:",0,2);
-        $pdf->Ln(3);
+        $pdf->Ln(1);
         $pdf->SetFont('','');
         $pdf->SetWidths([6,35,136.5]);
         $pdf->Row(["","Nama Perangkat",$data[0]['nama_perangkat']]);
