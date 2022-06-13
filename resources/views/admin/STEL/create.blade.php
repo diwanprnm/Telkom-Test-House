@@ -192,7 +192,11 @@
 		if($("#stel_type").val() == '4'){
 			code = master_code[0]+' Versi '+$("#version").val();
 		}else{
-			code = master_code[0]+'-'+master_code[1]+'-'+$("#year").val()+' Versi '+$("#version").val();
+			if($("#stel_type").val() == '2'){
+				code = master_code[0]+'-'+master_code[1]+'-'+master_code[2]+'-'+$("#year").val()+' Versi '+$("#version").val();
+			}else{
+				code = master_code[0]+'-'+master_code[1]+'-'+$("#year").val()+' Versi '+$("#version").val();
+			}
 		}
 		$("#code").val(code);
 	}
