@@ -32,47 +32,47 @@ class CetakPermohonan
         $pdf->SetFont('','B');
         $pdf->Cell(40.5,5,"Status Perusahaan:",0,0);
         $pdf->SetFont('','');
-        // switch ($data[0]['jns_perusahaan']) {
-        //     case 'Agen':
-        //         $jns_perusahaan = 'Agen/Distributor';
-        //         break;
-        //     case 'Pemilik':
-        //         $jns_perusahaan = 'Pemilik Alat Ukur';
-        //         break;
+        switch ($data[0]['jns_perusahaan']) {
+            case 'Agen':
+                $jns_perusahaan = 'Agen/Distributor';
+                break;
+            case 'Pemilik':
+                $jns_perusahaan = 'Pemilik Alat Ukur';
+                break;
                 
-        //     default:
-        //         $jns_perusahaan = $data[0]['jns_perusahaan'];
-        //         break;
-        // }
-        // $pdf->Cell(45,5,$jns_perusahaan,0,0);
+            default:
+                $jns_perusahaan = $data[0]['jns_perusahaan'];
+                break;
+        }
+        $pdf->Cell(45,5,$jns_perusahaan,0,0);
         $pdf->Ln(6);
         // $pdf->SetFont('','');
        
-        $pdf->Cell(4, 4, '', 0,0);
-        $pdf->Cell(3.5,4.5,'',0,0);
+        // $pdf->Cell(4, 4, '', 0,0);
+        // $pdf->Cell(3.5,4.5,'',0,0);
 
-        $pdf->Cell(4, 4, '', 1,0);
-        $pdf->Cell(35,4.5,' Pabrikan',0,0);
+        // $pdf->Cell(4, 4, '', 1,0);
+        // $pdf->Cell(35,4.5,' Pabrikan',0,0);
 
-        $pdf->Cell(4, 4, '', 1,0);
-        $pdf->Cell(35,4.5,' Perwakilan',0,0);
+        // $pdf->Cell(4, 4, '', 1,0);
+        // $pdf->Cell(35,4.5,' Perwakilan',0,0);
 
-        $pdf->Cell(4, 4, '', 1,0);
-        $pdf->Cell(35,4.5,' Agen/Distributor',0,0);
+        // $pdf->Cell(4, 4, '', 1,0);
+        // $pdf->Cell(35,4.5,' Agen/Distributor',0,0);
 
-        $pdf->Cell(4, 4, '', 1,0);
-        $pdf->Cell(35,4.5,' Pemilik Alat Ukur',0,0);
+        // $pdf->Cell(4, 4, '', 1,0);
+        // $pdf->Cell(35,4.5,' Pemilik Alat Ukur',0,0);
 
-        $checkPossition = [
-            'Pabrikan' => 21.5,
-            'Perwakilan' => 60.5,
-            'Agen' => 99.5,
-            'Pemilik' => 138.5,
-        ];
+        // $checkPossition = [
+        //     'Pabrikan' => 21.5,
+        //     'Perwakilan' => 60.5,
+        //     'Agen' => 99.5,
+        //     'Pemilik' => 138.5,
+        // ];
 
-        $pdf->SetXY($checkPossition[$data[0]['jns_perusahaan']]??86.5, $pdf->GetY());
-        $pdf->SetFont('ZapfDingbats','', 14);
-        $pdf->Cell(7, 5, "4", 0, 1, 'C');
+        // $pdf->SetXY($checkPossition[$data[0]['jns_perusahaan']]??86.5, $pdf->GetY());
+        // $pdf->SetFont('ZapfDingbats','', 14);
+        // $pdf->Cell(7, 5, "4", 0, 1, 'C');
         $pdf->SetFont('helvetica','',9);
 
         $pdf->Ln(5);
