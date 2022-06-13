@@ -11,19 +11,19 @@ class PDFMCTablePermohonan extends FPDF{
 	var $dataType = [
 		'QA' => [
 			'title' => 'Permohonan Uji QA',
-			'document_id' => 'TLKM02/F/001 Versi 05',
+			'document_id' => 'TLKM02/F/001 Versi 06',
 		],
 		'TA' => [
 			'title' => 'Permohonan Uji TA',
-			'document_id' => 'TLKM02/F/001 Versi 05',
+			'document_id' => 'TLKM02/F/001 Versi 06',
 		],
 		'VT' => [
 			'title' => 'Permohonan Uji VT',
-			'document_id' => 'TLKM02/F/001 Versi 05',
+			'document_id' => 'TLKM02/F/001 Versi 06',
 		],
 		'KAL' => [
 			'title' => 'Permohonan Kalibrasi',
-			'document_id' => 'TLKM02/F/001 Versi 05',
+			'document_id' => 'TLKM02/F/001 Versi 06',
 		],
 	];
 
