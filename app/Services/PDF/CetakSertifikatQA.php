@@ -2,199 +2,530 @@
 
 namespace App\Services\PDF;
 
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use App\Http\Requests;
+
 use App\Role;
-
-
+use App\Examination;
+use Carbon\Carbon;
+use Storage;
 class CetakSertifikatQA
 {
+    private $panjang_halaman_mm = 297; // Panjang kertas A4 dalam mm
+
+    private function determineLongStringSize($data)
+    {
+        $main_font_size = 0.90;
+        $small_font_size = 0.8;
+        $smaller_font_size = 0.7;
+        $smallest_font_size = 0.6;
+
+        if (strlen($data) >= 40) {
+            $size = $small_font_size;
+            $this->panjang_halaman_mm += 2;
+        } else if (strlen($data) >= 50) {
+            $size = $smaller_font_size;
+            $this->panjang_halaman_mm += 4;
+        } else if (strlen($data) >= 60) {
+            $size = $smallest_font_size;
+            $this->panjang_halaman_mm += 6;
+        } else {
+            $size = $main_font_size;
+        }
+
+        return $size;
+    }
 
 
     public function makePDF($data, $pdf)
     {
-        $title = $data['title'] ?? 'Quality Asurance Test';
-        $documentNumber = $data['documentNumber'];
+
+        // dd($data);
+        // $title = $data['title'] ? $data['title'] : 'Quality Asurance Test';
+        $signeeData = \App\GeneralSetting::whereIn('code', ['sm_urel', 'poh_sm_urel'])->where('is_active', '=', 1)->first();
+        $certificateNumber = strval($data['documentNumber']);
+        $telkomLogoSquarePath = '/app/Services/PDF/images/telkom-logo-square.png';
+        $qrCodeLink = url('/digitalSign/21003-132'); //todo daniel digitalSign page
+
+        $image_top_url = 'images/telkom-logo-text.jpg';
+        $image_background_url = 'images/tth-logo-opacity.jpg';
+        $image_tth_motto_url = 'images/tth-logo-text-moto.jpg';
+        $image_decorator_url = 'images/decorator-pattern-1.jpg';
+        $image_qrcode_url = QrCode::format('png')->size(500)->merge($telkomLogoSquarePath)->errorCorrection('M')->generate($qrCodeLink);
+
+        $qrCode_encodedBase64 = (base64_encode($image_qrcode_url));
+
+        // dd($qrCode_encodedBase64);
+
+        $main_font_size = 0.98;
+        $small_font_size = 0.8;
+        $max_length_resize = 40;
+        $documentNumber = $data['examinationNumber'];
+
         $companyName = $data['companyName'];
+        $companyNameSize = $this->determineLongStringSize($companyName);
+
         $brand = $data['brand'];
+        $brandSize = $this->determineLongStringSize($brand);
+
         $deviceName = $data['deviceName'];
+        $deviceNameSize = $this->determineLongStringSize($deviceName);
+
         $deviceType = $data['deviceType'];
+        $deviceTypeSize = $this->determineLongStringSize($deviceType);
+
         $deviceCapacity = $data['deviceCapacity'];
+        $deviceCapacitySize = $this->determineLongStringSize($deviceCapacity);
+
         $deviceSerialNumber = $data['deviceSerialNumber'];
+        $deviceSerialNumberSize = $this->determineLongStringSize($deviceSerialNumber);
+
         $examinationNumber = $data['examinationNumber'];
         $examinationReference = $data['examinationReference'];
-        $signDate = $data['signDate'];
-        $period_lang_id = $data['period_id'];
-        $period_lang_en = $data['period_en'];
-        $signImagePath = $data['signImagePath'];
+        $examinationReferenceSize = $this->determineLongStringSize($examinationReference);
+
         $signee = $data['signee'] ?? 'I Gede Astawa';
         $isSigneePoh = $data['isSigneePoh'] ?? false;
+
         $pohStatus = $isSigneePoh ? 'For ' : '';
         $sm_role = Role::where('id', '3')->value('name');
         $sm_role = empty($sm_role) ? 'OSM Infrastructure Research & Assurance' : $sm_role;
         $signeeRole = $pohStatus . $sm_role;
 
-
-        $timeAndLocationSign = "Bandung, $signDate";
-        $method = $data['method'] ?? '';
+        $signImagePath = $data['signImagePath'];
         $qrCode = $data['qrCode'];
 
-        $pdf->AliasNbPages();
-        $pdf->AddPage();
+        $method = $data['method'] ?? '';
+        $signDate = $data['signDate'];
+            $period_id = $data['period_id'];
+            $period_en = $data['period_en'];
 
-        /*Header*/
-        $pdf->SetY(37);
-        $pdf->SetFont('helvetica', 'UB', 22);
-        $pdf->Cell(0, 5, $title, 0, 0, 'C');
-        $pdf->Ln(8);
-        $pdf->SetFont('helvetica', 'B', 12);
-        $pdf->Cell(0, 5, $documentNumber, 0, 0, 'C');
-        $pdf->Ln(4);
+        $html_sertifikatQA = "<html>
 
-        /*Upper Section*/
-        $pdf->setXY(27, 62);
-        $pdf->SetFont('helvetica', '', 11);
-        $pdf->Cell(78, 0, "Surat keterangan ini dikeluarkan untuk", 0, 0, 'L');
-        $pdf->Cell(5, 0, ":", 0, 0, 'L');
-        $pdf->SetFont('helvetica', 'B', 11);
-        $pdf->setXY(110, 60);
-        $pdf->MultiCell(72, 4, $companyName, 0, 'L', false);
-        $pdf->setXY(27, 66);
-        $pdf->SetFont('helvetica', 'I', 8);
-        $pdf->Cell(78, 0, "This declaration letter is issued to", 0, 0, 'L');
-        $pdf->Ln(6);
-        $pdf->setX(27);
-        $pdf->SetFont('helvetica', '', 11);
-        $pdf->Cell(78, 0, "Sebagai Pabrikan/Agen/Perwakilan dari", 0, 0, 'L');
-        $pdf->Cell(5, 0, ":", 0, 0, 'L');
-        $pdf->SetFont('helvetica', 'B', 11);
-        $pdf->setXY(110, 70);
-        $pdf->MultiCell(72, 4, $brand, 0, 'L', false);
-        $pdf->setXY(27, 76);
-        $pdf->SetFont('helvetica', 'I', 8);
-        $pdf->Cell(78, 0, "As a (or) an Manufacture/Agent/Representative of", 0, 0, 'L');
+<head>
+    <link rel='stylesheet' href=''>
 
-        /*Pernyataan*/
-        $pdf->setXY(42, 92);
-        $pdf->SetFont('helvetica', '', 11);
-        $pdf->Cell(20, 0, "Dengan ini", 0, 0, 'L');
-        $pdf->SetFont('helvetica', 'B', 11);
-        $pdf->Cell(66, 0, "PT Telkom Indonesia (Persero) Tbk ", 0, 0, 'L');
-        $pdf->SetFont('helvetica', '', 11);
-        $pdf->Cell(35, 0, "menyatakan bahwa:", 0, 0, 'L');
-        $pdf->Ln(4);
-        $pdf->SetFont('helvetica', 'I', 8);
-        $pdf->Cell(0, 0, "Hereby, PT Telkom Indonesia (Persero) Tbk declared that:", 0, 0, 'C');
+    <style>
+        @media print { @page { size: auto; } }
 
-        /*Upper Section*/
-        $pdf->setXY(27, 113);
-        $pdf->SetFont('helvetica', '', 11);
-        $pdf->Cell(78, 0, "Nama perangkat", 0, 0, 'L');
-        $pdf->Cell(5, 0, ":", 0, 0, 'L');
-        $pdf->SetFont('helvetica', 'B', 11);
-        $pdf->setXY(110, 111);
-        $pdf->MultiCell(72, 4, $deviceName, 0, 'L', false);
-        $pdf->setXY(27, 117);
-        $pdf->SetFont('helvetica', 'I', 8);
-        $pdf->Cell(78, 0, "Equipment name", 0, 0, 'L');
-        //
-        $pdf->setXY(27, 123);
-        $pdf->SetFont('helvetica', '', 11);
-        $pdf->Cell(78, 0, "Tipe/Model", 0, 0, 'L');
-        $pdf->Cell(5, 0, ":", 0, 0, 'L');
-        $pdf->SetFont('helvetica', 'B', 11);
-        $pdf->setXY(110, 121);
-        $pdf->MultiCell(72, 4, $deviceType, 0, 'L', false);
-        $pdf->setXY(27, 127);
-        $pdf->SetFont('helvetica', 'I', 8);
-        $pdf->Cell(78, 0, "Type/Model", 0, 0, 'L');
-        //
-        $pdf->setXY(27, 133);
-        $pdf->SetFont('helvetica', '', 11);
-        $pdf->Cell(78, 0, "Kapasitas", 0, 0, 'L');
-        $pdf->Cell(5, 0, ":", 0, 0, 'L');
-        $pdf->SetFont('helvetica', 'B', 11);
-        $pdf->setXY(110, 131);
-        $pdf->MultiCell(72, 4, $deviceCapacity, 0, 'L', false);
-        $pdf->setXY(27, 137);
-        $pdf->SetFont('helvetica', 'I', 8);
-        $pdf->Cell(78, 0, "Capacity", 0, 0, 'L');
-        $pdf->Ln(6);
-        $pdf->setX(27);
-        //
-        $pdf->setXY(27, 143);
-        $pdf->SetFont('helvetica', '', 11);
-        $pdf->Cell(78, 0, "Nomor seri", 0, 0, 'L');
-        $pdf->Cell(5, 0, ":", 0, 0, 'L');
-        $pdf->SetFont('helvetica', 'B', 11);
-        $pdf->setXY(110, 141);
-        $pdf->MultiCell(72, 4, $deviceSerialNumber, 0, 'L', false);
-        $pdf->setXY(27, 147);
-        $pdf->SetFont('helvetica', 'I', 8);
-        $pdf->Cell(78, 0, "Serial number", 0, 0, 'L');
-        $pdf->Ln(6);
-        $pdf->setX(27);
-        //
-        $pdf->setXY(27, 153);
-        $pdf->SetFont('helvetica', '', 11);
-        $pdf->Cell(78, 0, "Berdasarkan nomor laporan hasil uji", 0, 0, 'L');
-        $pdf->Cell(5, 0, ":", 0, 0, 'L');
-        $pdf->SetFont('helvetica', 'B', 11);
-        $pdf->setXY(110, 151);
-        $pdf->MultiCell(72, 4, $examinationNumber, 0, 'L', false);
-        $pdf->setXY(27, 157);
-        $pdf->SetFont('helvetica', 'I', 8);
-        $pdf->Cell(78, 0, "Based on the test report number", 0, 0, 'L');
-        $pdf->Ln(6);
-        $pdf->setX(27);
-        //
-        $pdf->setXY(27, 163);
-        $pdf->SetFont('helvetica', '', 11);
-        $pdf->Cell(78, 0, "Telah memenuhi spesifikasi sebagai berikut", 0, 0, 'L');
-        $pdf->Cell(5, 0, ":", 0, 0, 'L');
-        $pdf->SetFont('helvetica', 'B', 11);
-        $pdf->setXY(110, 161);
-        $pdf->MultiCell(72, 4, $examinationReference, 0, 'L', false);
-        $pdf->setXY(27, 167);
-        $pdf->SetFont('helvetica', 'I', 8);
-        $pdf->Cell(78, 0, "Has been complied the following specification(s)", 0, 0, 'L');
-        $pdf->Ln(11);
-        $pdf->setX(27);
-
-        /*KETENTUAN*/
-        $pdf->setXY(12.5, 178);
-        $pdf->Cell(185, 15, "", 'TB', 0, '');
-        $pdf->setXY(12.5, 176);
-        $pdf->SetFont('helvetica', '', 11);
-        $pdf->Cell(185, 15, "QA Test perlu dilakukan kembali dalam periode waktu $period_lang_id, kecuali ditemukan kejanggalan sebelumnya.", '', 0, 'C');
-        $pdf->Ln(4);
-        $pdf->SetFont('helvetica', 'I', 8);
-        $pdf->Cell(185, 15, "QA Test shall be repeated in a period of $period_lang_en, except if there is/are nonconformity(s) found before that.", '', 0, 'C');
-        $pdf->Ln(4);
-
-        /*SIGN*/
-        $pdf->setY(200);
-        $pdf->SetFont('helvetica', '', 11);
-        $pdf->Cell(0, 0, $timeAndLocationSign, '', 0, 'C');
-        // sign
-        $signImageSize = getimagesize($signImagePath);
-        $imageHeight = 30;
-        $imageWidth = (int) ($signImageSize[0] / ($signImageSize[1] / $imageHeight));
-        $pdf->Image($signImagePath, (210 - $imageWidth) / 2, 202, 0, $imageHeight);
-        // sign name
-        $pdf->setY(231);
-        $pdf->SetFont('helvetica', 'BU', 11);
-        $pdf->Cell(0, 0, $signee, '', 0, 'C');
-        $pdf->Ln(5);
-        $pdf->SetFont('helvetica', 'B', 11);
-        $pdf->Cell(0, 0, $signeeRole, '', 0, 'C');
-
-        //QRCODE
-        $pdf->ImageStream($qrCode, 163, 254, 31);
-
-        //PDF-OUTPUT
-        if ($method == 'getStream') {
-            return $pdf->Output('', 'S');
+        html,
+        body {
+            font-size: $main_font_size em;
+            font-family: 'Arial Rounded MT Bold', Arial, Helvetica, sans-serif;
+            line-height: 1.0em;
+            padding: 0;
+            margin-top: 0;
         }
-        $pdf->Output();
-        exit;
+        
+        td {
+            vertical-align: text-top;
+        }
+        
+        hr {
+            border-color: black;
+            color: black;
+            height: 0.5px;
+        }
+        
+        .data-row-wrapper-logo {
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 500px;
+        }
+        
+        .table-data-margin {
+            margin-left: 7%;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .small {
+            font-size: 0.7em;
+            margin-top: 0;
+        }
+
+        .medium{
+            font-size: 0.9em;
+        }
+        
+        .row {
+            width: 100%;
+        }
+        
+        .row-main-wrapper {
+            width: 80%;
+            margin-left: 5%;
+        }
+        
+        .row-main {
+            margin-left: 0;
+            margin-right: 0;
+        }
+        
+        .fw-bold,
+        .item-value {
+            font-weight: bold;
+        }
+        
+        .font-italic {
+            font-style: italic;
+        }
+        
+        .kop-logo {
+            clear: both;
+            width: 100%;
+            margin-right:0;
+            margin-left: 530px;
+            display:block;
+        }
+        
+        .img-top-logo, .logo-top {
+            float: right;
+        }
+
+        .img-bg-data-opacity {
+            z-index:-1;
+            width: 450px;
+            margin-left: 120px;
+        }
+        
+        .semicolon {
+            width: 40px;
+            text-align: right;
+            padding-right: 20px;
+        }
+        
+        .w-100 {
+            width: 100%;
+        }
+        
+        .w-80 {
+            width: 80%;
+        }
+        
+        .w-70 {
+            width: 70%;
+        }
+        
+        .w-60 {
+            width: 60%;
+        }
+        
+        .w-50 {
+            width: 50%;
+        }
+        
+        .w-40 {
+            width: 40%;
+        }
+        
+        .w-30 {
+            width: 30%;
+        }
+        
+        .w-20 {
+            width: 20%;
+        }
+
+        .w-10 {
+            width: 10%;
+        }
+
+        .table-property{
+            width: 300px;
+        }
+
+        .mt-05{ margin-top: 3px; }
+        .mt-1{ margin-top: 6px; }
+        .mt-2{ margin-top: 15px; }
+        .mt-3{ margin-top: 25px; }
+
+        .mb-05{ margin-bottom: 5px; }
+        .mb-1{ margin-bottom: 10px; }
+        .mb-2{ margin-bottom: 20px; }
+        .mb-3{ margin-bottom: 40px; }
+    </style>
+</head>
+
+<body>
+    <div class='wrapper py-3 px-2'>
+        <div class='container'>
+
+            <table class='w-100 kop-logo'>
+                <tr class='row logo-top'>
+                <td></td><td></td>
+                    <td class='w-100'>
+                        <img height='110px' class='img-top-logo' src='$image_top_url' />
+                    </td>
+                </tr>
+            </table>
+
+
+            <div class='col judul-utama text-center mb-2'>
+                <h1 class='underline fw-bold text-center'><u>Quality Assurance Test</u></h1>
+            </div>
+
+            <div class='text-center'>
+                <table class='table-data-margin'>
+                    <tr class='property surat-keterangan-ini'>
+                        <td class='table-property'>
+                            Surat keterangan ini dikeluarkan untuk
+                            <br/>
+                            <span class='font-italic small'>This declaration letter is issued to</span>
+                        </td>
+                        <td class='semicolon'>
+                            :
+                        </td>
+                        <td  class=''>
+                            <p class='col col-data-right item-value' style='font-size:$companyNameSize em;'>$companyName</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+
+            <div class='text-center'>
+                <table class='table-data-margin'>
+                    <tr class='property surat-keterangan-ini'>
+                        <td class='table-property'>
+                            Sebagai Pabrikan/Agen/Perwakilan dari
+                            <br/>
+                            <span class='font-italic small'>As a (or) an Manufacture/Agent/Representative of</span>
+                        </td>
+                        <td class='semicolon'>
+                            :
+                        </td>
+                        <td>
+                            <p class='col col-data-right item-value' style='font-size:$brandSize em;'>$brand</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class=''>
+                <div class='row kop-logo'>
+                    <div class='col'>
+
+                    </div>
+                </div>
+
+                <div class='col ml-5 container-padding'>
+                    <div class='row mb-4'>
+                        <div class='col judul-utama text-center'>
+
+                        </div>
+                    </div>                   
+
+
+                    <!-- Row 2 Dengan ini PT Telkom -->
+                    <div class='row mt-3'>
+                        <div class='col judul-utama text-center'>
+                            Dengan ini <span class='underline item-value'>PT Telkom Indonesia (Persero) Tbk</span> menyatakan bahwa:
+                            <br>
+                            <span class='small font-italic'>Hereby, PT Telkom Indonesia (Persero) Tbk declared that:</span>
+                        </div>
+                    </div>
+                    <!-- End Row 2 Dengan ini PT Telkom -->
+
+        <div class='data-row-wrapper-logo'>
+                <div class='text-center mt-3'>
+                <table class='table-data-margin'>
+                    <tr class='property surat-keterangan-ini'>
+                        <td class='table-property'>
+                            Nama perangkat
+                            <br/>
+                            <span class='font-italic small'>Equipment name</span>
+                        </td>
+                        <td class='semicolon'>
+                            :
+                        </td>
+                        <td  class=''>
+                            <p class='col col-data-right item-value' style='font-size:$deviceNameSize em;'>$deviceName</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+
+            <div class='text-center mt-05'>
+                <table class='table-data-margin'>
+                    <tr class='property surat-keterangan-ini'>
+                        <td class='table-property'>
+                            Tipe/Model
+                            <br/>
+                            <span class='font-italic small'>Type/Model</span>
+                        </td>
+                        <td class='semicolon'>
+                            :
+                        </td>
+                        <td  class=''>
+                            <p class='col col-data-right item-value' style='font-size:$deviceTypeSize em;'>$deviceType</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+
+            <div class='text-center mt-05'>
+                <table class='table-data-margin'>
+                    <tr class='property surat-keterangan-ini'>
+                        <td class='table-property'>
+                            Kapasitas
+                            <br/>
+                            <span class='font-italic small'>Capacity</span>
+                        </td>
+                        <td class='semicolon'>
+                            :
+                        </td>
+                        <td  class=''>
+                            <p class='col col-data-right item-value' style='font-size:$deviceCapacitySize em;'>$deviceCapacity</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+                
+            <div class='text-center mt-05'>
+                <table class='table-data-margin'>
+                    <tr class='property surat-keterangan-ini'>
+                        <td class='table-property'>
+                            Nomor seri
+                            <br/>
+                            <span class='font-italic small'>Serial number</span>
+                        </td>
+                        <td class='semicolon'>
+                            :
+                        </td>
+                        <td  class=''>
+                            <p class='col col-data-right item-value' style='font-size:$deviceSerialNumberSize em;'>$deviceSerialNumber</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+
+            <div class='text-center mt-05'>
+                <table class='table-data-margin'>
+                    <tr class='property surat-keterangan-ini'>
+                        <td class='table-property'>
+                            Berdasarkan nomor laporan hasil uji
+                            <br/>
+                            <span class='font-italic small'>Based on the test report number</span>
+                        </td>
+                        <td class='semicolon'>
+                            :
+                        </td>
+                        <td  class=''>
+                            <p class='col col-data-right item-value' style='font-size:$examinationReferenceSize em;'>$examinationNumber</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+
+             <div class='text-center mt-05'>
+                <table class='table-data-margin'>
+                    <tr class='property surat-keterangan-ini'>
+                        <td class='table-property'>
+                            Telah memenuhi spesifikasi sebagai berikut
+                            <br/>
+                            <span class='font-italic small'>Has been complied the following specification(s)</span>
+                        </td>
+                        <td class='semicolon'>
+                            :
+                        </td>
+                        <td  class=''>
+                            <p class='col col-data-right item-value' style='font-size:$companyNameSize em;'>$examinationReference</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+
+        </div>
+                <!-- End Main padding-->
+
+            </div>
+        </div>
+
+
+        <!-- Row 4 QA Test perlu dilakukan -->
+        <div class='row mt-2'>
+            <div class='col judul-utama text-center'>
+                <hr/>
+                <span class='underline medium'>QA Test perlu dilakukan kembali dalam periode waktu $period_id, kecuali ditemukan kejanggalan sebelumnya.
+                            <br>
+                            <span class='small font-italic'>QA Test shall be repeated in a period of $period_en, except if there is/are nonconformity(s) found before that.</span>
+                </span>
+                <hr/>
+            </div>
+        </div>
+        <!-- Row 4 QA Test perlu dilakukan -->
+
+
+        <!-- Signature row -->
+        <div class='row signature-row justify-content-evenly mt-2'>
+            <div class='col text-center'>
+                <span class='row-tanggal'>Bandung, $signDate</span>
+                <br>
+                <span class='row-gambar-signature'><img class='mt-05' height='105ox' src='$signImagePath'/></span>
+                <br>
+                <span class='row-nama-title item-value'><u>$signee</u></span>
+                <br>
+                <span class='item-value'>$signeeRole</span>
+            </div>
+        </div>
+
+        <!-- End Signature row -->
+
+
+        <!-- Contact row -->
+        <div class='row contact-row small justify-content-evenly mt-3'>
+            <div class='col text-center'>
+                <span class='row-ptth'>PT Telkom Indonesia (Persero) Tbk - Telkom <span style='color:red;'>Test</span> House</span>
+                <br>
+                <span class='row-alamat'>Jl. Gegerkalong Hilir No. 47 Bandung 40152 INDONESIA | Customer Service: (+62) 812-2483-7500; E-Mail: <a href='mailto:cstth@telkom.co.id'>cstth@telkom.co.id</a> </span>
+            </div>
+        </div>
+
+        <!-- Contact row -->
+
+        <table style='margin-left: 20px;'>
+            <tr>
+                <td><img height='60px'  style='margin-left: 10px; margin-top:35px;' class='' src='$image_tth_motto_url' /></td>
+                <td><img width='375px' class=''  style='margin-left: 10px; margin-top:20px;'src='$image_decorator_url' /></td>
+                <td><img height='130px' class='float-right'  style='margin-left: 10px; float:right;'src='data:image/png;base64,$qrCode_encodedBase64' /></td>
+            </tr>
+        </table>
+
+
+    </div>
+    <!-- end outermost container -->
+
+</body>
+
+</html>";
+
+        // echo $html_sertifikatQA;
+        // die;
+
+        // dd($this->panjang_halaman_mm);
+
+        $mpdf = new \mPDF('utf-8', array(210, $this->panjang_halaman_mm)); // long jadul = 310 mm
+
+        $mpdf->SetWatermarkImage("$image_background_url", 1, array(120, 65
+        ), array(50, 105));
+        $mpdf->watermarkImgBehind = true;
+        $mpdf->showWatermarkImage = true;
+
+        // Write some HTML code:
+        $mpdf->WriteHTML($html_sertifikatQA);
+
+        $file_name = 'SertifikatQA-Test.pdf';
+        $mpdf->Output($file_name, 'D');
     }
 }
