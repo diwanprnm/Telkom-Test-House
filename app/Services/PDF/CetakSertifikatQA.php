@@ -510,12 +510,7 @@ class CetakSertifikatQA
 
 </html>";
 
-        // echo $html_sertifikatQA;
-        // die;
-
-        // dd($this->panjang_halaman_mm);
-
-        $mpdf = new \mPDF('utf-8', array(210, $this->panjang_halaman_mm)); // long jadul = 310 mm
+        $mpdf = new \mPDF('utf-8', array(210, $this->panjang_halaman_mm));
 
         $mpdf->SetWatermarkImage("$image_background_url", 1, array(120, 65
         ), array(50, 105));
@@ -527,5 +522,12 @@ class CetakSertifikatQA
 
         $file_name = 'SertifikatQA-Test.pdf';
         $mpdf->Output($file_name, 'D');
+
+        //PDF-OUTPUT
+        if ($method == 'getStream') {
+           return $mpdf->Output($file_name, 'I');
+        }
+        return $mpdf->Output($file_name, 'D');
+        exit;
     }
 }
