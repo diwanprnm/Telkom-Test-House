@@ -521,12 +521,13 @@ class CetakSertifikatQA
         $mpdf->WriteHTML($html_sertifikatQA);
 
         $upload_directory = public_path();
-        $file_name = $upload_directory.'/SertifikatQA-Test.pdf';
-        $mpdf->Output($file_name, 'D');
+        $file_name = 'SertifikatQA-Test.pdf';
+        // $mpdf->Output($file_name, 'D');
 
         //PDF-OUTPUT
         if ($method == 'getStream') {
-           return $mpdf->Output($file_name, 'F');
+            return$mpdf->Output($file_name, 'S');
+            exit;
         }
         return $mpdf->Output($file_name, 'D');
         exit;
