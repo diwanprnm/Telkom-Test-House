@@ -1276,9 +1276,6 @@
 											@endforeach
 											@if($no == 0)
 												<tr><td colspan="5" style="text-align: center;"> Data Not Found </td></tr>
-											@else
-												@php $lap_uji_url = "URL::to('/admin/examination/media/download/'.$item->id)"; @endphp
-												@php $lap_uji_attach = $item->attachment; @endphp
 											@endif
 										</tbody>
 									</table>
