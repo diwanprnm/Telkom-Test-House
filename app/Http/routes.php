@@ -239,7 +239,10 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::get('sidang/{sidang_id}/reset', 'SidangController@resetExamination');
 
 	Route::resource('/approval', 'ApprovalController');
-	Route::get('/approval/assign/{id}/{password}', 'ApprovalController@assign');
+	Route::get('/approval/assign/{id}/{otp}', 'ApprovalController@assign');
+	Route::post('/approval/verification', 'ApprovalController@sendOtp');
+
+
 });
 	Route::get('/uploadCertification', 'UploadProductionController@uploadCertification');
 	Route::get('/uploadCompany', 'UploadProductionController@uploadCompany');
@@ -424,3 +427,4 @@ Route::get('/downloadkuitansichamber/{id}', 'ChamberController@downloadkuitansi'
 Route::get('/downloadfakturchamber/{id}', 'ChamberController@downloadfaktur');
 Route::get('/test', 'TestController@index'); //todo daniel delete
 Route::get('/approval/{id}', 'AuthentikasiController@index');
+

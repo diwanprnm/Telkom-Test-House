@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Mail\Message;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
+
+use App\User;
 use Auth;
 use Session;
+use App\GeneralSetting;
 
 use App\Approval;
 use App\ApproveBy;
@@ -21,10 +27,12 @@ use App\Company;
 use App\Logs;
 use App\Services\Logs\LogService;
 use App\Services\Querys\QueryFilter;
+use App\Services\EmailEditorService;
+
 
 use Storage;
 use File;
-
+use Illuminate\Support\Facades\Auth as FacadesAuth;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
@@ -106,32 +114,73 @@ class ApprovalController extends Controller
         ;
     }
 
-    public function assign($id,$password)
+
+    public function sendOtp(){
+        $email_editors = new EmailEditorService();
+        $emails = $email_editors->selectBy('emails.verifikasiAkun');
+        $user=Auth::user();
+        $otp = strval(mt_rand(100000,999999));
+        $content=$this->parseOtp($emails->content,$user->name, $otp);
+        $user->email3 = $otp;
+        $user->save();
+        
+        if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
+            Mail::send('emails.editor', array(
+                'content' => $content,
+                'logo' => $emails->logo,
+                'signature' => $emails->signature
+                ), function ($m) use ($user) {
+                $subject='Verifikasi Akun';
+                $m->to($user->email)->subject($subject);
+            });
+        }
+
+        return response()->json(['success'=>'The OTP code has been successfully sent to your email']);
+
+    }
+
+
+    public function parseOtp($content, $user_name, $otp){
+		$content = str_replace('@user_name', $user_name, $content);
+		$content = str_replace('@token_verification', $otp, $content);
+		return $content;
+	}
+
+
+    public function assign($id,$otp)
 	{
-        if (!Hash::check($password, Auth::user()->password)){return redirect('admin/approval')->with('error', 'Password Salah!');}
+        $user= Auth::user();
+        if ($otp!=$user->email3){
+                
+                $user->email3=null;
+                $user->save();
+                
+                return redirect('admin/approval')->with('error', 'OTP Salah!');
+            }
         $logService = new LogService();
-		
 		$data = ApproveBy::find($id);
         
 		if ($data){
 			try{
                 $data->approve_date = date("Y-m-d H:i:s");
-                $data->updated_by = Auth::user()->id;
+                $data->updated_by = $user->id;
                 $data->save();
 
                 $approveBy = ApproveBy::where('approval_id', $data->approval_id)->whereNull('approve_date')->get();
                 if(count($approveBy) == 0){
                     $approval = Approval::find($data->approval_id);
                     $approval->status = 1;
-                    $approval->updated_by = Auth::user()->id;
+                    $approval->updated_by = $user->id;
                     $approval->save();
 
                     $examination = Examination::where('device_id', $approval->reference_id)->first();
                     $examination->certificate_status = 1;
-                    $examination->updated_by = Auth::user()->id;
+                    $examination->updated_by = $user->id;
                     $examination->save();
+                    $user->email3=null;
+                    $user->save();
                 }
-
+                    //EMAIL KE SM
                 $logService->createLog('assign', 'Approval', $data );
 				Session::flash('message', 'Document successfully approved');
 				return redirect('admin/approval');
@@ -141,6 +190,7 @@ class ApprovalController extends Controller
 
     public function show($id){
         $approval = Approval::where('id', $id)->with('approveBy')->with('approveBy.user')->with('approveBy.user.role')->with('authentikasi')->first();
+        dd($approval);
         $examination = Examination::where('device_id', $approval->reference_id)->with('device')->with('company')->first();
         $data['name'] = $approval->authentikasi->name;
         $data['attachment'] = $approval->attachment;

@@ -2,22 +2,53 @@
 
 @section('content')
 
-<input type="hide" id="hide_approval_id" name="hide_approval_id">
-<div class="modal fade" id="myModal_assign" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="modal" id="modal_kirim_otp" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title"><em class="fa fa-eyes-open"></em> Verifikasi Akun, Mohon Masukkan Password Akun Anda!</h4>
+				<h4 class="modal-title"><em class="fa fa-eyes-open"></em>Verifikasi Akun</h4>
 			</div>
+			<div class="modal-body">
+				<p>Sebelum melakukan approve akan dilakukan verfikasi akun terlebih dahulu kode OTP akan dikirim ke email akun anda</p>
+				{{-- <div id="emailform">
+					<meta name="_token" content="{{ csrf_token }}"/>
+					{{ form::open(array) }}
+				</div> --}}
+			</div>
+			<div class="modal-footer">
+				<table style="width: 100%;"><caption></caption>
+					<tr>
+						<th scope="col">
+							<button type="submit" id="btn-modal-send" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o" data-toggle="modal" data-dismiss="modal" data-target="#myModal_assign"></em> Kirim OTP</button>
+							{{-- <input type = "submit" class = "btn btn-primary m-d do-ajax" value = "AJAX" /> --}}
+							{{ csrf_field() }}
+						</th>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<input type="hide" id="hide_approval_id" name="hide_approval_id">
+<div class="modal" id="myModal_assign" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title"><em class="fa fa-eyes-open"></em>Mohon Masukkan kode OTP yang telah dikirimkan ke email Anda!</h4>
+			</div>
+
 			
 			<div class="modal-body">
 				<table style="width: 100%;"><caption></caption>
 					<tr>
 						<th scope="col">
 							<div class="form-group">
-								<label for="password">Password:</label>
-								<input id="password" type="password" name="password" class="form-control" placeholder="Password">
+								<label for="otp">Kode OTP:</label>
+								<input id="otp" type="text" name="otp" class="form-control" placeholder="OTP">
 							</div>
 						</th>
 					</tr>
@@ -27,7 +58,7 @@
 				<table style="width: 100%;"><caption></caption>
 					<tr>
 						<th scope="col">
-							<button type="button" id="btn-modal-assign" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o"></em> Submit</button>
+							<button type="button" id="btn-modal-assign" class="btn btn-danger" style="width:100%"><em class="fa fa-check-square-o" ></em> Submit</button>
 						</th>
 					</tr>
 				</table>
@@ -112,7 +143,7 @@
 												@if($item->approve_date)
 													Approved
 												@else
-													<a data-toggle="modal" data-target="#myModal_assign" onclick="document.getElementById('hide_approval_id').value = '{{ $item->id }}'" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil-square-o"></em></a>
+													<a data-toggle="modal" data-target="#modal_kirim_otp" onclick="document.getElementById('hide_approval_id').value = '{{ $item->id }}'" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit" ><em class="fa fa-pencil-square-o"></em></a>
 												@endif
 											@endif
 											</td>
@@ -170,10 +201,10 @@
 	    });
 
 		$('#myModal_assign').on('shown.bs.modal', function () {
-		    $('#password').focus();
+		    $('#otp').focus();
 		});
 
-		$('#password').keydown(function(event) {
+		$('#otp').keydown(function(event) {
 	        if (event.keyCode == 13) {
 	            verifyAccount();
 	        }
@@ -182,20 +213,44 @@
 		$('#btn-modal-assign').click(function () {
 			verifyAccount();
 		});
+
+		
+			
 	});
+
+	$('body').on('click', '#btn-modal-send', function () {
+    $.ajax({
+        url: 'approval/verification',
+        headers: {'X-CSRF-TOKEN': $('input[name=_token]').val()},
+        data: {},
+		beforeSend: function(){
+			$('#modal_kirim_otp').modal('hide');
+			document.getElementById("overlay").style.display="inherit";
+		},
+        type: 'POST',
+        datatype: 'JSON',
+        success: function (resp) {	
+            $('#myModal_assign').modal('show');
+			alert(resp["success"]);
+			document.getElementById("overlay").style.display="none";
+        }
+    });
+});
+	
 
 	function verifyAccount(){
 		var baseUrl = "{{URL::to('/')}}";
-		var password = document.getElementById('password').value;
+		var otp = document.getElementById('otp').value;
 		var approval_id = document.getElementById('hide_approval_id').value;
-		if(password == ''){
+		if(otp == ''){
 			$('#myModal_assign').modal('show');
 			return false;
 		}else{
 			$('#myModal_assign').modal('hide');
 			if (confirm('Are you sure want to approve this document?')) {
 				document.getElementById("overlay").style.display="inherit";	
-				document.location.href = baseUrl+'/admin/approval/assign/'+approval_id+'/'+encodeURIComponent(encodeURIComponent(password));
+				// document.location.href = baseUrl+'/admin/approval/assign/'+approval_id+'/'+encodeURIComponent(encodeURIComponent(password));
+				document.location.href = baseUrl+'/admin/approval/assign/'+approval_id+'/'+otp;
 			}
 		}
 	}

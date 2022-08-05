@@ -180,6 +180,18 @@ class EmailEditorSeeder extends Seeder
                 'updated_by' => '1',
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
+            ],[
+                'id' => '15', 
+                'name' => 'Verifikasi Akuns', 
+                'subject' => 'Verifikasi Akun', 
+                'dir_name' => 'emails.verifikasiAkun', 
+                'logo' => 'images/TTHMain.png',
+                'content' => '<h2>Kepada Yth.</i><br><i>Bapak/Ibu @user_name</i><br><br>&nbsp;</h2><h3>Berikut kode OTP anda <b>@token_verification</b></h3><br><br><h3>Silahkan masukkan kode OTP tersebut untuk verifikasi akun anda</h3>',
+                'signature' => 'Salam hangat,&nbsp;<br>Lab Uji IAS PT. Telekomunikasi Indonesia, Tbk.&nbsp;<br><br>---&nbsp;<br><br>&nbsp;</p><p><i>Email ini dihasilkan secara otomatis oleh sistem dan mohon untuk tidak membalas email ini. Informasi lebih lanjut hubungi User Relation di <strong>0812 2483 7500</strong> (Telepon &amp; WA) atau <strong>cstelkomtesthouse@gmail.com.</strong></i>',
+                'created_by' => '1',
+                'updated_by' => '1',
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
             ]
         ]);
     }
