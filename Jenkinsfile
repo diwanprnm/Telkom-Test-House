@@ -58,7 +58,13 @@ pipeline {
         stage('Test & Build') {
             parallel {
                 stage('Unit Test') {
-                    agent { label "PHP" }
+                    agent {
+                        docker {
+                            image "playcourt/jenkins:php-7.1"
+                            label "Docker"
+                            args '-u root -v /var/lib/jenkins/:/var/lib/jenkins/'
+                        }
+                    }
                     environment { 
                        SQLLITE_PATH = $/${WORKSPACE}/database/dds_db.sqlite/$
                     }
