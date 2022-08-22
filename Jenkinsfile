@@ -73,7 +73,7 @@ pipeline {
                         script {
                             echo "Do Unit Test Here"
                             echo "Prepare Unit Test"
-                            sh "/var/lib/jenkins/bin/composer install --no-scripts --no-autoloader"
+                            sh "composer install --no-scripts --no-autoloader"
                             sh "mkdir ./bootstrap/cache"
                             //sh "/var/lib/jenkins/bin/composer update"
                             echo "Run Unit Test"
@@ -81,7 +81,7 @@ pipeline {
                             sh "mkdir -p ./storage/framework/views"
                             sh "mkdir -p ./storage/framework/cache"
                             
-                            sh "/var/lib/jenkins/bin/composer dump-autoload --optimize"
+                            sh "composer dump-autoload --optimize"
                             sh "php artisan config:clear"
                             sh "php artisan cache:clear"
                             sh "php artisan view:clear"
