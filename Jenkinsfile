@@ -58,22 +58,19 @@ pipeline {
         stage('Test & Build') {
             parallel {
                 stage('Unit Test') {
-                    agent {
-                        docker {
-                            image "playcourt/jenkins:php-7.1"
-                            label "Docker"
-                            args '-u root -v /var/lib/jenkins/:/var/lib/jenkins/'
-                        }
-                    }
+                    agent { label "PHP" }
                     environment { 
                        SQLLITE_PATH = $/${WORKSPACE}/database/dds_db.sqlite/$
                     }
                     steps {
                         unstash 'ws'
                         script {
+                            
+                            try {
+                            
                             echo "Do Unit Test Here"
                             echo "Prepare Unit Test"
-                            sh "composer install --no-scripts --no-autoloader"
+                            sh "/var/lib/jenkins/bin/composer install --no-scripts --no-autoloader"
                             sh "mkdir ./bootstrap/cache"
                             //sh "/var/lib/jenkins/bin/composer update"
                             echo "Run Unit Test"
@@ -81,7 +78,7 @@ pipeline {
                             sh "mkdir -p ./storage/framework/views"
                             sh "mkdir -p ./storage/framework/cache"
                             
-                            sh "composer dump-autoload --optimize"
+                            sh "/var/lib/jenkins/bin/composer dump-autoload --optimize"
                             sh "php artisan config:clear"
                             sh "php artisan cache:clear"
                             sh "php artisan view:clear"
@@ -95,9 +92,12 @@ pipeline {
                             sh "./vendor/bin/phpunit --log-junit reports/phpunit.xml --coverage-clover reports/phpunit.coverage.xml"
                             
                             echo "defining sonar-scanner"
+                            }catch(Exception e){}
                             //def node = tool name: 'NodeJS-12', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
                             //env.PATH = "${node}/bin:${env.PATH}"
                             def scannerHome = tool 'SonarScanner' ;
+                    
+
                             withSonarQubeEnv('SonarQube') {
                                 sh "${scannerHome}/bin/sonar-scanner"
                 }   }   }   }
