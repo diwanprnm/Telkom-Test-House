@@ -204,6 +204,18 @@ class EmailEditorSeeder extends Seeder
                 'updated_by' => '1',
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
+            ],[
+                'id' => '17', 
+                'name' => 'Pelaksanaan Uji Fungsi', 
+                'subject' => 'Pelaksanaan Uji Fungsi', 
+                'dir_name' => 'emails.pelaksanaanUF', 
+                'logo' => 'Telkom Test House.png',
+                'content' => '<p><i>Kepada Yth.&nbsp;</i><br><i>Bapak/Ibu @user_name&nbsp;</i><br><br>&nbsp;</p><p>Pelaksanaan Uji Fungsi perangkat ini:<br>No. Registrasi: @no_registrasi&nbsp;<br>Nama Perangkat: @device_name&nbsp;<br>Merek: @device_mark<br>Jenis/Tipe: @device_model<br>Kapasitas: @device_capacity</p><p>dilaksanakan pada tanggal @function_test_date&nbsp. Anda wajib datang pada tanggal tersebut.</p><p>Waktu pelaksanaan UF adalah pukul 09.00 - 15.00 WIB.</p><p>Jika anda tidak bisa datang pada tanggal tersebut, mohon menginformasikan CS TTH maksimal sehari sebelum pelaksanaan Uji Fungsi.</p><br><br><p>Mohon perhatikan faktor-faktor yang bisa menyebabkan gagal Uji Fungsi:<br>1. Tidak datang pada tanggal yang disepakati tanpa ada konfirmasi ke CSTTH.<br>2. Perangkat uji/alast ukur yang dibawa tidak lengkap/tidak dapat dioperasikan.<br>3. Perangkat uji/alat ukur yang dibawa tidak sesuai referensi uji & TM Pra UF.<br>4. Pelaksanaan UF melebihi waktu yang ditentukan (pukul 09.00-15.00 WIB).</p>',
+                'signature' => '<p>Salam hangat,&nbsp;<br>Telkom Test House, PT. Telekomunikasi Indonesia, Tbk.&nbsp;<br><br>---&nbsp;<br><br>&nbsp;</p><p>&nbsp;</p><p><i>Email ini dihasilkan secara otomatis oleh sistem dan mohon untuk tidak membalas email ini. Informasi lebih lanjut hubungi User Relation di <strong>0812 2483 7500</strong> (Telepon &amp; WA) atau <strong>cstth@telkom.co.id</strong></i></p>',
+                'created_by' => '1',
+                'updated_by' => '1',
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
             ]
         ]);
     }

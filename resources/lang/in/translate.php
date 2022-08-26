@@ -188,6 +188,7 @@ return [
 	'example'					=> 'cth :',
 
 	'examination_function_test_date' => 'Tanggal Uji Fungsi',
+	'examination_function_test_result' => 'Hasil Uji Fungsi',
 	'examination_reschedule_test_date' => 'Uji Fungsi',
 	'examination_approve_test_date' => 'Setujui Uji Fungsi',
 	'examination_upload_payment' => 'Unggah File Pembayaran',
@@ -339,6 +340,7 @@ return [
 	'download_certificate_message'		=> 'Sertifikat akan terdownload, Silakan Berikan Testimoni!',
 
 	'reschedule_message'	=> 'Silakan Berikan Ajuan Tanggal Uji Fungsi!',
+	'function_test_date_message'  => 'Tanggal Uji Fungsi yang anda pilih saat ini belum menjadi tanggal Uji Fungsi yang pasti, mohon menunggu balasan dari test engineer kami. Tanggal Uji Fungsi yang sudah pasti ditandai dengan (FIX) pada halaman permohonan uji anda.',
 	'reschedule_message_agree'	=> 'Tanggal Uji Fungsi Disetujui',
 	'reschedule_date'		=> 'Tanggal',
 	'reschedule_date_cust1'	=> 'Tanggal Pengajuan Awal Kastamer',
@@ -425,6 +427,8 @@ return [
 
 	'must_be_filled'	=> 'Harus Diisi',
 	'by'	=> 'oleh',
+	'function_result_eligible' => 'Memenuhi',
+	'function_result_not' => 'Tidak Memenuhi',
 
 	'bank_account'	=> 'Akun Bank',
 

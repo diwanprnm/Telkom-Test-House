@@ -869,8 +869,10 @@ class ExaminationAPIController extends AppBaseController
 				$examinations->function_test_reason = $param->reason;
 				if($param->is_agree == 1){
 					$examinations->function_test_status_detail = 'Tanggal uji fungsi fix';
+
 					if($examinations->save()){ 
-					 
+						
+			
 						$exam_hist = new ExaminationHistory;
 						$exam_hist->examination_id = $param->id;
 						$exam_hist->date_action = date('Y-m-d H:i:s');
@@ -880,6 +882,9 @@ class ExaminationAPIController extends AppBaseController
 						$exam_hist->created_by = $examinations->created_by;
 						$exam_hist->created_at = date('Y-m-d H:i:s');
 						$exam_hist->save();
+
+						//error
+						$this->sendEmailTanggalUF($examinations, $param->function_test_date);
 
 						$admins = AdminRole::where('function_status',1)->get()->toArray();
 						foreach ($admins as $admin) {  
@@ -970,6 +975,35 @@ class ExaminationAPIController extends AppBaseController
     		return $this->sendError('ID Examination or Date or PIC or Date Type or Approval Status Is Required');
     	}
     }
+
+	public function sendEmailTanggalUF($exam, $function_test_date){
+		$email_editors = new EmailEditorService();
+		$emails = $email_editors->selectBy('emails.pelaksanaanUF');
+		$content = $this->parseEmailTanggalUF($emails->content,$exam->applicant_name, $exam->function_test_NO, $exam->device_name, $exam->device_brand_name, $exam->device_model, $exam->device_capacity, $function_test_date);
+		if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
+			Mail::send('emails.editor', array(
+				'content' => $content,
+				'logo' => $emails->logo,
+				'signature' => $emails->signature
+				), function ($m) use ($exam) {
+					$subject='Pelaksanaan Uji Fungsi';
+				$m->to($exam->applicant_email)->subject($subject);
+			});
+		}
+	}
+
+
+	public function parseEmailTanggalUF($content, $user_name, $no_registrasi, $device_name, $device_mark, $device_model, $device_capacity, $function_test_date){
+		$content = str_replace('@user_name', $user_name, $content);
+		$content = str_replace('@no_registrasi', $no_registrasi, $content);
+		$content = str_replace('@device_name', $device_name, $content);
+		$content = str_replace('@device_mark', $device_mark, $content);
+		$content = str_replace('@device_model', $device_model, $content);
+		$content = str_replace('@device_capacity', $device_capacity, $content);
+		$content = str_replace('@function_test_date', $function_test_date, $content);
+
+		return $content;
+	}
 
 	private function masukkan_barang($data)
     {

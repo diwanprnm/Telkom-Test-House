@@ -433,6 +433,45 @@
 							</div>
 						</div>
 					</fieldset>
+
+					<fieldset>
+						<legend>
+							Technical Meeting Pra Uji Fungsi
+						</legend>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Tanggal Technical Meeting Pra Uji Fungsi*
+									</label>
+									<p class="input-group input-append" data-date-format="yyyy-mm-dd">
+										<input type="text" class="form-control" value="{{ $data->tm_date }}" readonly required/>
+										<span class="input-group-btn">
+											<button type="button" class="btn btn-default">
+												<em class="glyphicon glyphicon-calendar"></em>
+											</button>
+										</span>
+									</p>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										Technical Meeting Pra Uji Fungsi File *
+									</label>
+								</div>
+								<div class="form-group">
+									@php $tm_attach = ''; @endphp
+									@foreach($data->media as $item)
+										@if($item->name == 'TM Pra Uji Fungsi' && $item->attachment != '')
+											@php $tm_attach = $item->attachment; @endphp
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/TM Pra Uji Fungsi')}}"> Download File Technical Meeting Pra Uji Fungsi "@php echo $tm_attach; @endphp"</a>
+										@endif
+									@endforeach
+								</div>
+							</div>
+						</div>
+					</fieldset>
 				
     				<fieldset>
 						<legend>

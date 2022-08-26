@@ -165,6 +165,7 @@ class ExaminationController extends Controller
 	private const DEVICE_NAME = 'devices.name';
 	private const MINIO = 'minio';
 	private const EXAMINATION_LOC = 'examination\\';
+	private const TM_FILE = 'tm_file';
 
 	/**
      * Create a new controller instance.
@@ -409,6 +410,10 @@ class ExaminationController extends Controller
 		if ($request->has('examination_lab_id')){
             $exam->examination_lab_id = $request->input('examination_lab_id');
         }
+		if ($request->has('tm_date')){
+            $exam->tm_date = $request->input('tm_date');
+        }
+		$examinationService->insertAttachment($request,$exam->id,$currentUser->id,self::TM_FILE,'tm_pra_ujifungsi_','TM Pra Uji Fungsi');
 
 		// 2. STEP UJI FUNGSI
 		if ($request->has(self::FUNCTION_STATUS)){

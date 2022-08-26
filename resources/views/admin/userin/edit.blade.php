@@ -257,6 +257,7 @@
 											<li>
 												<label> <input type="checkbox" @php if(isset($admin_role[0])){echo $admin_role[0]['equipment_status'] || $admin_role[0]['receipt_status']? $CHECKED_STRING:'';}@endphp>Lainnya</label>
 												<ul>
+													<li><label> <input type="checkbox" name="examinations[]" value="tm_status" @php if(isset($admin_role[0])){echo $admin_role[0]['tm_status'] ?$CHECKED_STRING:'';}@endphp>Technical Meeting Pra Uji Fungsi</label></li>
 													<li><label> <input type="checkbox" name="examinations[]" value="equipment_status" @php if(isset($admin_role[0])){echo $admin_role[0]['equipment_status'] ?$CHECKED_STRING:'';}@endphp>Edit Lokasi Barang</label></li>
 													<li><label> <input type="checkbox" name="examinations[]" value="receipt_status" @php if(isset($admin_role[0])){echo $admin_role[0]['receipt_status'] ?$CHECKED_STRING:'';}@endphp>Tanda Terima Hasil Pengujian</label></li>
 												</ul>

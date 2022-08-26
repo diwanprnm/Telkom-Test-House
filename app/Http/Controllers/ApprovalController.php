@@ -155,7 +155,7 @@ class ApprovalController extends Controller
                 $user->email3=null;
                 $user->save();
                 
-                return redirect('admin/approval')->with('error', 'OTP Salah!');
+                return redirect('admin/approval')->with('error', 'Kode OTP Salah!');
             }
         $logService = new LogService();
 		$data = ApproveBy::find($id);

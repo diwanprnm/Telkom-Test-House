@@ -187,6 +187,7 @@ return [
 	'example'					=> 'ex :',
 
 	'examination_function_test_date' => 'Function Test Date',
+	'examination_function_test_result' => 'Function Test Result',
 	'examination_reschedule_test_date' => 'Function Test',
 	'examination_approve_test_date' => 'Approve Function Test',
 	'examination_upload_payment' => 'Upload Payment Attachment',
@@ -336,6 +337,8 @@ return [
 	'download_certificate_message'		=> 'Certificate will automaticly downloaded, Please give testimonial first!',
 
 	'reschedule_message'	=> 'Select Date to do Function Test!',
+	'function_test_date_message'  => 'The Function Test date you have selected is not a definite Function Test date, please wait for a reply from our test engineer.
+	The exact Function Test date is marked with (FIX) on your test request page.',
 	'reschedule_message_agree'	=> 'Approval Date to do Function Test',
 	'reschedule_date'		=> 'Date',
 	'reschedule_date_cust1'	=> 'First Request from Customer',
@@ -422,6 +425,8 @@ return [
 
 	'must_be_filled'	=> 'Must Be Filled',
 	'by'	=> 'by',
+	'function_result_eligible' => 'Eligible',
+	'function_result_not' => 'Not Eligible',
 
 	'bank_account'	=> 'Bank Account',
 

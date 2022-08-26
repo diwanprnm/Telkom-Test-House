@@ -426,6 +426,9 @@
 						<tr>
 							<th scope="col">-</th>
 						</tr>
+						<tr>
+							<p>{{ trans('translate.function_test_date_message') }}</p>
+						</tr>
 					</thead>
 					<tr>
 						<td>

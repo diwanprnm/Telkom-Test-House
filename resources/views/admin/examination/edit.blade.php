@@ -886,6 +886,142 @@
 						</div>
 					</fieldset>
 				@endif
+
+				@if(isset($admin_roles[0]))
+				@if($admin_roles[0]->tm_status)
+				{!! Form::open(array('url'=> 'admin/examination/'.$data->id, 'method' => 'PUT', 'enctype' => 'multipart/form-data', 'id' => 'form-tm')) !!}
+					{!! csrf_field() !!}
+					<input type="hidden" name="status" class="form-control" value="Tekhnical Meeting Pra Uji Fungsi"/>
+					<input type="hidden" name="keterangan" class="form-control" value=""/>
+					<fieldset>
+						<legend>
+							Technical Meeting Pra Uji Fungsi
+						</legend>
+						<div class="row">
+							
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Tanggal Technical Meeting Pra Uji Fungsi *
+									</label>
+									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
+										<input type="text" name="tm_date" class="form-control" value="{{ $data->tm_date }}" required/>
+										<span class="input-group-btn">
+											<button type="button" class="btn btn-default">
+												<em class="glyphicon glyphicon-calendar"></em>
+											</button>
+										</span>
+									</p>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										File Tecnical Meeting Pra Uji Fungsi *
+									</label>
+									<input type="file" name="tm_file" id="tm_file" class="form-control" accept="application/pdf"/>
+								</div>
+								<div class="form-group">
+									@php $tm_attach = ''; @endphp
+									@foreach($data->media as $item)
+										@if($item->name == 'TM Pra Uji Fungsi' && $item->attachment != '')
+											@php $tm_attach = $item->attachment; @endphp
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/TM Pra Uji Fungsi')}}"> Download File Technical Meeting Pra Uji Fungsi "@php echo $tm_attach; @endphp"</a>
+										@endif
+									@endforeach
+									<input type="hidden" id="tm_name" value="@php echo $tm_attach; @endphp">
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<button class="btn btn-wide btn-green btn-squared pull-right">
+										Submit
+									</button>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+					{!! Form::close() !!}
+					@else
+					<fieldset>
+						<legend>
+							Technical Meeting Pra Uji Fungsi
+						</legend>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Tanggal Technical Meeting Pra Uji Fungsi *
+									</label>
+									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
+										<input type="text" name="qa_date" class="form-control" value="{{ $data->tm_date }}" readonly required/>
+										<span class="input-group-btn">
+											<button type="button" class="btn btn-default">
+												<em class="glyphicon glyphicon-calendar"></em>
+											</button>
+										</span>
+									</p>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										Technical Meeting Pra Uji Fungsi File *
+									</label>
+								</div>
+								<div class="form-group">
+									@php $tm_attach = ''; @endphp
+									@foreach($data->media as $item)
+										@if($item->name == 'TM Pra Uji Fungsi' && $item->attachment != '')
+											@php $tm_attach = $item->attachment; @endphp
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/TM Pra Uji Fungsi')}}"> Download File Technical Meeting Pra Uji Fungsi "@php echo $tm_attach; @endphp"</a>
+										@endif
+									@endforeach
+								</div>
+							</div>
+						</div>
+					</fieldset>
+					@endif
+					@else
+					<fieldset>
+						<legend>
+							Technical Meeting Pra Uji Fungsi
+						</legend>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>
+										Tanggal Technical Meeting Pra Uji Fungsi *
+									</label>
+									<p class="input-group input-append datepicker date" data-date-format="yyyy-mm-dd">
+										<input type="text" name="tm_date" class="form-control" value="{{ $data->tm_date }}" readonly required/>
+										<span class="input-group-btn">
+											<button type="button" class="btn btn-default">
+												<em class="glyphicon glyphicon-calendar"></em>
+											</button>
+										</span>
+									</p>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>
+										Technical Meeting Pra Uji Fungsi File *
+									</label>
+								</div>
+								<div class="form-group">
+									@php $tm_attach = ''; @endphp
+									@foreach($data->media as $item)
+										@if($item->name == 'TM Pra Uji Fungsi' && $item->attachment != '')
+											@php $tm_attach = $item->attachment; @endphp
+											<a href="{{URL::to('/admin/examination/media/download/'.$data->id.'/TM Pra Uji Fungsi')}}"> Download File Technical Meeting Pra Uji Fungsi "@php echo $tm_attach; @endphp"</a>
+										@endif
+									@endforeach
+								</div>
+							</div>
+						</div>
+					</fieldset>
+				@endif
 				
 				@if(isset($admin_roles[0]))
 				@if($admin_roles[0]->function_status)
@@ -998,6 +1134,24 @@
 										</select>
 									</div>
 								</div>
+								
+								<div class="col-md-12">
+									<div class="form-group">
+										<label style="font-weight: bold;">
+											No Barang
+										</label>
+										@if($data->equipment[0]->no != null)
+											<label>
+												: {{ $data->equipment[0]->no }}
+											</label>
+										@else
+											<label>
+												: -
+											</label>
+										@endif
+									</div>
+								</div>
+
 							
 								@if($data->function_date != null)
 									@php $in_equip_date = $data->function_date; @endphp
@@ -5359,6 +5513,19 @@
 				$('#examination_lab_id').focus();
 				return false;
 			}
+		}
+	});
+
+	$('#form-tm').submit(function (){
+		var tm_file = document.getElementById('tm_file');
+		var tm_name = document.getElementById('tm_name').value;
+		var inputs = $('#form-tm :input');
+		var values = {};
+		$inputs.each(function() {
+			values[this.name] = $(this).val();
+		});
+		if(tm_file.value == '' && tm_name == ''){
+			alert("File Technical Meeting belum diunggah");$('#tm_file').focus();return false;
 		}
 	});
 	

@@ -191,6 +191,7 @@ class PengujianController extends Controller
 				examinations.function_date,
 				examinations.function_test_PIC,
 				examinations.function_test_NO,
+				examinations.function_test_TE,
 				examinations.function_test_date_approval,
 				examinations.resume_date,
 				examinations.created_at,
@@ -507,6 +508,13 @@ class PengujianController extends Controller
 					e.qa_status,
 					e.qa_passed,
 					e.certificate_status,
+					e.function_date,
+					e.urel_test_date,
+					e.function_test_reason,
+					e.function_test_PIC,
+					e.function_test_date_approval,
+					e.deal_test_date,
+					e.function_test_TE,
 					(SELECT name FROM examination_labs WHERE examination_labs.id=e.examination_lab_id) AS labs_name
 				FROM
 					examinations e,
@@ -560,6 +568,13 @@ class PengujianController extends Controller
 					e.qa_status,
 					e.qa_passed,
 					e.certificate_status,
+					e.function_date,
+					e.urel_test_date,
+					e.function_test_reason,
+					e.function_test_PIC,
+					e.function_test_date_approval,
+					e.deal_test_date,
+					e.function_test_TE,
 					(SELECT name FROM examination_labs WHERE examination_labs.id=e.examination_lab_id) AS labs_name
 				FROM
 					examinations e,
@@ -1512,6 +1527,8 @@ class PengujianController extends Controller
 
 					$deal_test_date = strtotime($request->input('deal_test_date2'));
 
+
+
 					$exam_hist = new ExaminationHistory;
 					$exam_hist->examination_id = $request->input(self::HIDE_ID_EXAM2);
 					$exam_hist->date_action = date(self::DATE_FORMAT1);
@@ -1702,6 +1719,8 @@ class PengujianController extends Controller
 			d.test_reference AS referensi_perangkat,
 			d.serial_number AS serialNumber,
 			e.jns_perusahaan AS jnsPerusahaan,
+			e.function_date,
+			e.function_test_TE,
 			e.function_test_NO,
 			e.created_at
 		FROM

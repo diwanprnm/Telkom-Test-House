@@ -272,6 +272,35 @@
 												<td>{{ trans('translate.service_device_test_reference') }}</td>
 												<td> : {{ $item->referensi_perangkat }}</td>
 											</tr>
+											<tr>
+												<td>{{ trans('translate.examination_function_test_date') }}</td>
+												<td colspan="2"> :
+													@if($item->function_date != null)
+														{{ $item->function_date }} (FIX {{ trans('translate.by') }} {{ $item->function_test_PIC}}) {{ $item->function_test_reason }}
+													@elseif($item->function_date == null && $item->urel_test_date != null)
+														{{ $item->urel_test_date }} ({{ trans('translate.from_customer') }}) {{ $item->function_test_reason }}
+													@elseif($item->urel_test_date == null && $item->deal_test_date != null && $item->function_test_date_approval == 1)
+														{{ $item->deal_test_date }} (FIX {{ trans('translate.by') }} {{ $item->function_test_PIC}}) {{ $item->function_test_reason }}
+													@elseif($item->urel_test_date == null && $item->deal_test_date != null && $item->function_test_date_approval == 0)
+														{{ $item->deal_test_date }} ({{ trans('translate.from_te') }}) {{ $item->function_test_reason }}
+													@else
+														{{ $item->cust_test_date }} {{ trans('translate.from_customer') }}
+													@endif
+												</td>
+											</tr>
+											<tr>
+												<td>{{ trans('translate.examination_function_test_result') }}</td>
+												<td> :
+													@if($item->function_test_TE == 1)
+													{{ trans('translate.function_result_eligible') }}
+													@elseif($item->function_test_TE == 2)
+													{{ trans('translate.function_result_not') }}
+													@else
+													Dll
+													@endif
+												</td>
+											</tr>
+											
 										</tbody>
 										<thead>
 											<tr>

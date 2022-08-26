@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en" translate="no">
+<head>
+	<meta charset="UTF-8">
+	<title>Telkom Test House</title>
+<style>
+	.header{
+		margin-top:2%;
+		margin-bottom:2%;
+		
+		}
+	.content{
+		width:80%;
+		min-height:450px;
+		background-color:rgba(255,255,255,1.00);
+		border: 3px #7bd4f8 solid;
+		border-radius:15px;
+		position:relative;
+		margin-left:auto;
+		margin-right:auto;
+		padding-left:25px;
+		padding-right:25px;
+		padding-top:5px;
+		padding-bottom:5px;
+		
+		}
+	
+	@font-face{
+		font-family:font-bold;
+		src:url('http://37.72.172.144/ficlip/asset_mail/HVD%20Fonts%20-%20BrandonText-Bold.otf');
+	}
+	@font-face{
+		font-family:font-regular;
+		src:url('http://37.72.172.144/ficlip/asset_mail/HVD%20Fonts%20-%20BrandonText-Regular.otf');
+	}
+</style>
+</head>
+<body>
+<div class="header" style="margin-top:2%;margin-bottom:2%;">
+	
+</div>
+<div class="content" style="width:75%;background-color:rgba(255,255,255,1.00);border: 3px #ff3e41 solid;border-radius:15px;position:relative;margin-left:auto;margin-right:auto;padding-left:25px;padding-right:25px;padding-top:5px;padding-bottom:5px;">
+	<div style="text-align:right;">
+		<img style="width:15%;" src="http://37.72.172.144/telkom-dds-web/public/assets/images/Telkom-Indonesia-Corporate-Logo1.jpg" alt="logo telkom">
+	</div>
+	<h3 style="font-family:Arial, serif; font-size:1.2em; color:rgba(110,110,110,1.00);"></h3>
+	<p style="font-style:italic; font-family:Helvetica, sans-serif; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
+		Kepada Yth.
+		<br>
+		Bapak/Ibu {!! $user_name !!}
+		<br><br>
+	</p>
+	<p style="font-family:Helvetica, sans-serif; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
+		Pelaksanaan Uji Fungsi perangkat ini:
+		<br><br>
+		No. Registrasi: ${!! $no_registrasi !!}<br>
+        Nama Perangkat: {!! $device_name !!}<br>
+        Merek: {!! $device_mark !!}<br>
+        Jenis/Tipe: {!! $decive_model !!}<br>
+        Kapasitas: {!! $device_capacity !!}
+		<br>
+        dilaksanakan pada tanggal {!! $function_test_date !!}. Anda wajib datang pada tanggal tersebut.
+        <br>
+        Waktu pelaksanaan UF adalah pukul 09.00 - 15.00 WIB.
+        <br>
+        Jika anda tidak bisa datang pada tanggal tersebut, mohon menginformasikan CS TTH maksimal sehari sebelum pelaksanaan Uji Fungsi.
+        <br><br>
+        Mohon perhatikan faktor-faktor yang bisa menyebabkan gagal Uji Fungsi:
+        <br><br>
+        1. Tidak datang pada tanggal yang disepakati tanpa ada konfirmasi ke CSTTH.<br>
+        2. Perangkat uji/alast ukur yang dibawa tidak lengkap/tidak dapat dioperasikan.<br>
+        3. Perangkat uji/alat ukur yang dibawa tidak sesuai referensi uji & TM Pra UF.<br>
+        4. Pelaksanaan UF melebihi waktu yang ditentukan (pukul 09.00-15.00 WIB).
+        <br><br>
+		Salam hangat,
+		<br>
+		Lab Uji IAS PT. Telekomunikasi Indonesia, Tbk.
+		<br><br>
+		---
+		<br><br>
+	</p>
+	<p style="font-style:italic; font-family:Helvetica, sans-serif; font-size:0.88em; color:rgba(146,146,146,1.00); margin-top:-7px;">
+		Email ini dihasilkan secara otomatis oleh sistem dan mohon untuk tidak membalas email ini. Informasi lebih lanjut hubungi User Relation di <strong>0812 2483 7500</strong> (Telepon & WA) atau <strong>cstelkomtesthouse@gmail.com.</strong>
+	</p>
+</div>
+
+</body>
+</html>

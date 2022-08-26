@@ -173,7 +173,7 @@
 							</div>
 							<div class="col-md-6 tree_examination">
 								<div class="form-group">
-									<label">
+									<label>
 										Akses Pengujian
 									</label>
 									<div class="form-group"> 
@@ -212,6 +212,7 @@
 											<li>
 												<label> <input type="checkbox">Lainnya</label>
 												<ul>
+													<li><label> <input type="checkbox" name="examinations[]" value="tm_status">Technical Meeting Pra Uji Fungsi</label></li>
 													<li><label> <input type="checkbox" name="examinations[]" value="equipment_status">Edit Lokasi Barang</label></li>
 													<li><label> <input type="checkbox" name="examinations[]" value="receipt_status">Tanda Terima Hasil Pengujian</label></li>
 												</ul>
