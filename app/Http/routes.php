@@ -239,8 +239,10 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::get('sidang/{sidang_id}/reset', 'SidangController@resetExamination');
 
 	Route::resource('/approval', 'ApprovalController');
-	Route::get('/approval/assign/{id}/{otp}', 'ApprovalController@assign');
+	Route::get('/approval/assign/{id}', 'ApprovalController@assign');
 	Route::post('/approval/verification', 'ApprovalController@sendOtp');
+	Route::post('/approval/verifyOtp', 'ApprovalController@verifyOtp');
+	Route::post('/approval/resendOtp', 'ApprovalController@resendOtp');
 
 
 });

@@ -29,7 +29,7 @@ use App\Services\Logs\LogService;
 use App\Services\Querys\QueryFilter;
 use App\Services\EmailEditorService;
 
-
+use Carbon\Carbon;
 use Storage;
 use File;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
@@ -38,6 +38,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 class ApprovalController extends Controller
 {
+    private const EMAIL = 'email';
     /**
      * Create a new controller instance.
      *
@@ -115,11 +116,13 @@ class ApprovalController extends Controller
     }
 
 
-    public function sendOtp(){
+    public function sendOtp(Request $request){
         $email_editors = new EmailEditorService();
         $emails = $email_editors->selectBy('emails.verifikasiAkun');
         $user=Auth::user();
-        $otp = strval(mt_rand(100000,999999));
+        $otp = strval(mt_rand(100000,999999));    
+        $otp_expires_time = Carbon::now()->addSeconds(300);
+        $request->session()->put('expires', $otp_expires_time);
         $content=$this->parseOtp($emails->content,$user->name, $otp);
         $user->email3 = $otp;
         $user->save();
@@ -135,7 +138,7 @@ class ApprovalController extends Controller
             });
         }
 
-        return response()->json(['success'=>'The OTP code has been successfully sent to your email']);
+        return response()->json(['success'=>'The OTP code has been successfully sent to your email','expires_otp'=>$otp_expires_time]);
 
     }
 
@@ -146,17 +149,64 @@ class ApprovalController extends Controller
 		return $content;
 	}
 
-
-    public function assign($id,$otp)
-	{
+    public function verifyOtp(Request $request){
+        $postOtp = $request['otp'];
+        $date_now = Carbon::now();
+        $otp_expires_time = $request->session()->get('expires');
         $user= Auth::user();
-        if ($otp!=$user->email3){
-                
-                $user->email3=null;
+        
+        if($otp_expires_time->lt($date_now)){
+            return response()->json(['success'=> 'expired']);
+        }else{
+            if($postOtp == $user->email3){
+                 return response()->json(['success'=>'yes']);
+            }else{
+                return response()->json(['success'=>'no']);
+            }
+        }
+    }
+
+    public function resendOtp(Request $request){
+        $email = $request['email'];
+    	if(isset($email)){
+    		$email_exists = $this->cekEmail($email);
+		 	if($email_exists == 1){ 
+                $user = User::where(self::EMAIL,'=',''.$email.'')->first();
+                $email_editors = new EmailEditorService();
+                $emails = $email_editors->selectBy('emails.verifikasiAkun');
+                $otp = strval(mt_rand(100000,999999));
+
+                $content=$this->parseOtp($emails->content,$user->name, $otp);
+                $user->email3 = $otp;
                 $user->save();
                 
-                return redirect('admin/approval')->with('error', 'OTP Salah!');
+                if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
+                    Mail::send('emails.editor', array(
+                        'content' => $content,
+                        'logo' => $emails->logo,
+                        'signature' => $emails->signature
+                        ), function ($m) use ($user) {
+                        $subject='Verifikasi Akun';
+                        $m->to($user->email)->subject($subject);
+                    });
+                }
+                return response()->json(['success'=>'The OTP code has been successfully sent to your email','send'=>'yes']);
+            }else{
+                return response()->json(['success'=>'Email salah', 'send'=>'no']);
             }
+        }
+        
+    }
+
+    function cekEmail($email)
+    {
+		$user = User::where(self::EMAIL,'=',''.$email.'')->get();
+		return count($user);
+    }
+
+    public function assign($id)
+	{
+        $user= Auth::user();
         $logService = new LogService();
 		$data = ApproveBy::find($id);
         
