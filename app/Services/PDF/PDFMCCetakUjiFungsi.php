@@ -190,7 +190,7 @@ class PDFMCCetakUjiFungsi extends FPDF{
 		$this->cell(0,3, 'www.telkomtesthouse.co.id',0,2);
 		$this->SetY(-9);
 		$this->SetFont('helvetica','',10);
-		$this->Cell(0,5,'TLKM02/F/005 Versi 05',0,0,'L');
+		$this->Cell(0,5,'TLKM02/F/005 Versi 06',0,0,'L');
 		$this->Cell(0,5,'Hal '.$this->PageNo().' dari {nb}',0,0,'R');
 	}
 	
