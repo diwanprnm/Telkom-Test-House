@@ -51,16 +51,26 @@ class CetakUjiFungsi
             'Referensi Uji' => $this->doubledecode($data['device_test_reference']),
         ];
 
-        $keyWidth = 55;
+        $keyWidth = 35;
         $startY = 17;
-        $i = 0;
+        $i = 1;
+        $pdf->SetFont('','B');
+        $pdf->setXY(17,$startY+((2)*10));
+        $pdf->drawTextBox('Keterangan', $keyWidth, 10, 'C', 'M');
+        $pdf->setXY(17+$keyWidth,$startY+((2)*10));
+        $pdf->drawTextBox('Data Perangkat Terdaftar', 75, 10, 'C', 'M');
+        $pdf->setXY(17+$keyWidth+75,$startY+((2)*10));
+        $pdf->drawTextBox('Verifikasi Data Perangkat', 66, 10, 'C', 'M');
+        $pdf->SetFont('','');
         foreach($upperDatas as $key => $val ){
             $i++;
-            $keyHigh = strlen($val) > 121 ? 20 : 10;
+            $keyHigh = strlen($val) > 75 ? 20 : 10;
             $pdf->setXY(17,$startY+(($i+1)*10));
             $pdf->drawTextBox($key, $keyWidth, $keyHigh, 'L', 'M');
             $pdf->setXY(17+$keyWidth,$startY+(($i+1)*10));
-            $pdf->drawTextBox($val, 121, $keyHigh, 'L', 'M');
+            $pdf->drawTextBox($val, 75, $keyHigh, 'L', 'M');
+            $pdf->setXY(17+$keyWidth+75,$startY+(($i+1)*10));
+            $pdf->drawTextBox('', 66, $keyHigh, 'L', 'M');
             if($keyHigh == 20){$i++;}
         }
 
