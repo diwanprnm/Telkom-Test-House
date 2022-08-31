@@ -65,6 +65,9 @@ pipeline {
                     steps {
                         unstash 'ws'
                         script {
+                            
+                            try {
+                            
                             echo "Do Unit Test Here"
                             echo "Prepare Unit Test"
                             sh "/var/lib/jenkins/bin/composer install --no-scripts --no-autoloader"
@@ -89,9 +92,12 @@ pipeline {
                             sh "./vendor/bin/phpunit --log-junit reports/phpunit.xml --coverage-clover reports/phpunit.coverage.xml"
                             
                             echo "defining sonar-scanner"
+                            }catch(Exception e){}
                             //def node = tool name: 'NodeJS-12', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
                             //env.PATH = "${node}/bin:${env.PATH}"
                             def scannerHome = tool 'SonarScanner' ;
+                    
+
                             withSonarQubeEnv('SonarQube') {
                                 sh "${scannerHome}/bin/sonar-scanner"
                 }   }   }   }
