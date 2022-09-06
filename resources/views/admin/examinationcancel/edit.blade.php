@@ -508,15 +508,15 @@
 												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal {{$type_of_test}}</th>
 											</tr>
 											<tr>
-												<th>Pengajuan Tanggal Customer</th>
-												<th>Jadwal dari Test Engineer</th>
-												<th>Pengajuan Ulang dari Customer</th>
-												<th>Jadwal dari Test Engineer</th>
+												<th scope="col">Pengajuan Tanggal Customer</th>
+												<th scope="col">Jadwal dari Test Engineer</th>
+												<th scope="col">Pengajuan Ulang dari Customer</th>
+												<th scope="col">Jadwal dari Test Engineer</th>
 											</tr>
 										</thead>
 										<tbody>
 											<tr>
-												<td> @php echo $data->cust_test_date; @endphp </td>
+												<td scope="row"> @php echo $data->cust_test_date; @endphp </td>
 												<td> @php echo $data->deal_test_date; @endphp </td>
 												<td> @php echo $data->urel_test_date; @endphp </td>
 												<td> @php echo $data->function_date; @endphp </td>
@@ -617,10 +617,10 @@
 												<th colspan="4" scope="col">Riwayat {{$type_of_test}}</th>
 											</tr>
 											<tr>
-												<th style="width: 17%;">Uji Fungsi ke-</th>
-												<th style="width: 17%;">Tanggal</th>
-												<th style="width: 30%;">Engineer</th>
-												<th>Catatan</th>
+												<th style="width: 17%;" scope="col">Uji Fungsi ke-</th>
+												<th style="width: 17%;" scope="col">Tanggal</th>
+												<th style="width: 30%;" scope="col">Engineer</th>
+												<th scope="col">Catatan</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -629,7 +629,7 @@
 												@if($item->function_test_TE == 2)
 													<tr>
 														<td> {{ $no++ }}</td>
-														<td> {{ $item->function_test_date }}</td>
+														<td scope="row"> {{ $item->function_test_date }}</td>
 														<td> {{ $item->function_test_PIC}}</td>
 														<td> {{ $item->catatan }}</td>
 													</tr>

@@ -29,6 +29,7 @@ use File;
 use Response;
 use Session;
 use Input;
+use Exception;
 
 use Storage;
 // UUID

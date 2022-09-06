@@ -16,6 +16,7 @@ use App\UsersMenus;
 use Auth;
 use Session;
 use Hash;
+use Exception;
 
 use File;
 use Image;

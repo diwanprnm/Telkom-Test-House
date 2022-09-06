@@ -10,6 +10,7 @@ use App\Services\FileService;
 
 use Session;
 use Auth;
+use Exception;
 
 use Ramsey\Uuid\Uuid;
 

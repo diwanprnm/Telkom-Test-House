@@ -35,6 +35,7 @@ use Response;
 use Storage;
 use File;
 use Mail;
+use Exception;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;

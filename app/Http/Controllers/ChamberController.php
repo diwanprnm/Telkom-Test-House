@@ -14,6 +14,7 @@ use App\Services\ChamberService;
 use Auth;
 use Session;
 use Storage;
+use Exception;
 
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;

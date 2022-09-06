@@ -15,6 +15,7 @@ use Session;
 use File;
 use Response;
 use Excel;
+use Exception;
 
 use Image;
 use Storage;
