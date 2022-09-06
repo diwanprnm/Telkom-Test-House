@@ -958,15 +958,15 @@
 												<th colspan="4" scope="col">Riwayat Pengajuan Tanggal {{$type_of_test}}</th>
 											</tr>
 											<tr>
-												<th>Pengajuan Tanggal Customer</th>
-												<th>Jadwal dari Test Engineer</th>
-												<th>Pengajuan Ulang dari Customer</th>
-												<th>Jadwal dari Test Engineer</th>
+												<th scope="col">Pengajuan Tanggal Customer</th>
+												<th scope="col">Jadwal dari Test Engineer</th>
+												<th scope="col">Pengajuan Ulang dari Customer</th>
+												<th scope="col">Jadwal dari Test Engineer</th>
 											</tr>
 										</thead>
 										<tbody>
 											<tr>
-												<td> @php echo $data->cust_test_date; @endphp </td>
+												<td scope="row"> @php echo $data->cust_test_date; @endphp </td>
 												<td> @php echo $data->deal_test_date; @endphp </td>
 												<td> @php echo $data->urel_test_date; @endphp </td>
 												<td> @php echo $data->function_date; @endphp </td>
