@@ -119,7 +119,7 @@
 										File NPWP
 									</label>
 									@if($data->npwp_file != '')
-										<a href="{{ URL::to('/admin/company/media/'.$data->id.'/npwp') }}" target="_blank">Lihat File NPWP</a>
+										<a href="{{ URL::to('/admin/company/media/'.$data->id.'/npwp') }}" rel="noopener" target="_blank">Lihat File NPWP</a>
 									@endif
 									<input type="file" name="npwp_file" class="form-control" accept="application/pdf, image/*">
 								</div>
