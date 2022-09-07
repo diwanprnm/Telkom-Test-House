@@ -55,7 +55,6 @@
  
 
 @section('content_js')
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script>
 	$(".chosen-select").chosen(); 
 </script>

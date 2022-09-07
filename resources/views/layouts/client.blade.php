@@ -266,7 +266,7 @@
 
     @php }@endphp
      @yield('content_js')
-     <script src="https://rawgit.com/kswedberg/jquery-smooth-scroll/master/jquery.smooth-scroll.js"></script>
+     <script src={{ asset("assets/js/jquery.smooth-scroll.js") }}></script>
       <script type="text/javascript">
         $(document).ready(function() {
             document.addEventListener('contextmenu', event => event.preventDefault());
