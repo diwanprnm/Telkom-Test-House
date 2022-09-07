@@ -13,7 +13,7 @@ use Session;
 use File;
 use Response;
 use Storage;
-use Excepion;
+use Exception;
 
 use App\Device;
 use App\Examination;

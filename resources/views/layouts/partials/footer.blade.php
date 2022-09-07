@@ -54,7 +54,7 @@
 
                     <div class="col_half col_last">
 
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.1452685831173!2d107.58507161477266!3d-6.873191795033207!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e690b9ba28d9%3A0x5628e04b612c3acc!2sLaboratorium%20Quality%20Assurance%20Divisi%20Digital%20Service%20PT.%20Telekomunikasi%20Indonesia!5e0!3m2!1sid!2sid!4v1625904522553!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.1452685831173!2d107.58507161477266!3d-6.873191795033207!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e690b9ba28d9%3A0x5628e04b612c3acc!2sLaboratorium%20Quality%20Assurance%20Divisi%20Digital%20Service%20PT.%20Telekomunikasi%20Indonesia!5e0!3m2!1sid!2sid!4v1625904522553!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" title="Office Location"></iframe>
 
                     </div>
 

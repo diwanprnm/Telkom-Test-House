@@ -42,7 +42,8 @@
 				</div> --}}
 					<div class="col-md-12 panell panell-info">
 			    	<div id="collapsse1" class="panel-collapsse collapsse">
-			     		<fieldset>							
+			     		<fieldset>	
+							<legend></legend>						
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
