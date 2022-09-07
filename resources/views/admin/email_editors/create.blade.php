@@ -105,7 +105,7 @@
 <script src={{ asset("vendor/bootstrap-timepicker/bootstrap-timepicker.min.js") }}></script>
 <script src={{ asset("vendor/jquery-validation/jquery.validate.min.js") }}></script>
 <script src={{ asset("assets/js/form-elements.js") }}></script>
-<script src="https://cdn.ckeditor.com/ckeditor5/28.0.0/classic/ckeditor.js"></script>
+<script src={{ asset("assets/js/ckeditor.js") }}></script>
 <script type="text/javascript">
 	jQuery(document).ready(function() {
 		FormElements.init();
