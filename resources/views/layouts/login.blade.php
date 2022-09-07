@@ -43,7 +43,7 @@
     </div>
 
     <!-- start: MAIN JAVASCRIPTS -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-show-password/1.0.3/bootstrap-show-password.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-show-password/1.0.3/bootstrap-show-password.min.js" integrity="sha512-RbWtD2SxyZp3Qln/DtcFDlifcwwrcW9lFqTDQs+a1p62epLeUel1CK1ZegdR1A+ZYz8c+BRaeL2GVxz3DQtDJw==" crossorigin="anonymous"></script>
 
     <script src={{ asset("vendor/jquery/jquery.min.js") }}></script>
     <script src={{ asset("vendor/bootstrap/js/bootstrap.min.js") }}></script>

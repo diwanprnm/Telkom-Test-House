@@ -162,7 +162,7 @@
 									</td>
 									<td class="center">
 										<div>
-											<a href="{{URL::to('cetakKuitansi/'.$item->id.'')}}" target="_blank" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
+											<a href="{{URL::to('cetakKuitansi/'.$item->id.'')}}" target="_blank" rel="noopener" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><em class="fa fa-pencil"></em></a>
 										</div>
 									</td>
 								</tr>

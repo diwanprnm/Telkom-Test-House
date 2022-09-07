@@ -110,9 +110,9 @@
 								@endif
 							</div>
 							<div class="col-md-12">
-								<label><strong>-</strong> File NPWP : <a href="{{ URL::to('/admin/company/media/'.$data->company->id.'/npwp') }}" style="color:#858585 !important;" target="_blank">{{ $data->company->npwp_file }}</a></label>
+								<label><strong>-</strong> File NPWP : <a href="{{ URL::to('/admin/company/media/'.$data->company->id.'/npwp') }}" style="color:#858585 !important;" target="_blank" rel="noopener">{{ $data->company->npwp_file }}</a></label>
 								@if($data->npwp_file != NULL)
-								<label>, <strong>menjadi</strong> <a href="{{ URL::to('/admin/tempcompany/media/'.$data->id.'/npwp') }}" style="color:#858585 !important;" target="_blank">{{ $data->npwp_file }}</a></label>
+								<label>, <strong>menjadi</strong> <a href="{{ URL::to('/admin/tempcompany/media/'.$data->id.'/npwp') }}" style="color:#858585 !important;" target="_blank" rel="noopener">{{ $data->npwp_file }}</a></label>
 								<input type="hidden" name="npwp_file" value="{{ $data->npwp_file }}">
 								@endif
 							</div>
@@ -131,9 +131,9 @@
 								@endif
 							</div>
 							<div class="col-md-12">
-								<label><strong>-</strong> File SIUP : <a href="{{ URL::to('/admin/company/media/'.$data->company->id.'/siup') }}" style="color:#858585 !important;" target="_blank">{{ $data->company->siup_file }}</a></label>
+								<label><strong>-</strong> File SIUP : <a href="{{ URL::to('/admin/company/media/'.$data->company->id.'/siup') }}" style="color:#858585 !important;" target="_blank" rel="noopener">{{ $data->company->siup_file }}</a></label>
 								@if($data->siup_file != NULL)
-								<label>, <strong>menjadi</strong> <a href="{{ URL::to('/admin/tempcompany/media/'.$data->id.'/siup') }}" style="color:#858585 !important;" target="_blank">{{ $data->siup_file }}</a></label>
+								<label>, <strong>menjadi</strong> <a href="{{ URL::to('/admin/tempcompany/media/'.$data->id.'/siup') }}" style="color:#858585 !important;" target="_blank" rel="noopener">{{ $data->siup_file }}</a></label>
 								<input type="hidden" name="siup_file" value="{{ $data->siup_file }}">
 								@endif
 							</div>
@@ -152,9 +152,9 @@
 								@endif
 							</div>
 							<div class="col-md-12">
-								<label><strong>-</strong> File Sertifikat Manajemen Mutu : <a href="{{ URL::to('/admin/company/media/'.$data->company->id.'/qs') }}" style="color:#858585 !important;" target="_blank">{{ $data->company->qs_certificate_file }}</a></label>
+								<label><strong>-</strong> File Sertifikat Manajemen Mutu : <a href="{{ URL::to('/admin/company/media/'.$data->company->id.'/qs') }}" style="color:#858585 !important;" target="_blank" rel="noopener">{{ $data->company->qs_certificate_file }}</a></label>
 								@if($data->qs_certificate_file != NULL)
-								<label>, <strong>menjadi</strong> <a href="{{ URL::to('/admin/tempcompany/media/'.$data->id.'/qs') }}" style="color:#858585 !important;" target="_blank">{{ $data->qs_certificate_file }}</a></label>
+								<label>, <strong>menjadi</strong> <a href="{{ URL::to('/admin/tempcompany/media/'.$data->id.'/qs') }}" style="color:#858585 !important;" target="_blank" rel="noopener">{{ $data->qs_certificate_file }}</a></label>
 								<input type="hidden" name="qs_certificate_file" value="{{ $data->qs_certificate_file }}">
 								@endif
 							</div>

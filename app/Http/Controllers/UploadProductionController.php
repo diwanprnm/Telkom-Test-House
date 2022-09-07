@@ -30,7 +30,7 @@ use App\QuestionerDynamic;
 
 class UploadProductionController extends Controller
 {
-    private const PROD_URL = 'http://old-telkomtesthouse-telkomtesthouse-dev.vsan-apps.playcourt.id/media/';
+    private const PROD_URL = 'https://old-telkomtesthouse-telkomtesthouse-dev.vsan-apps.playcourt.id/media/';
 
     private const EXAMINATION_ID = 'examination_id';
     private const HEADERS = 'headers';

@@ -215,7 +215,7 @@
 											@if($item->status == 'DRAFT')
 											<td class="center">
 												<div>
-													<a href="{{URL::to('admin/sidang/'.$item->id.'/excel')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Excel" target="_blank"><em class="fa fa-file-excel-o"></em></a>
+													<a href="{{URL::to('admin/sidang/'.$item->id.'/excel')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Excel" target="_blank" rel="noopener"><em class="fa fa-file-excel-o"></em></a>
 												</div>
 											</td>
 											<td class="center">
@@ -227,7 +227,7 @@
 											@if($item->status == 'DONE')
 											<td class="center">
 												<div>
-													<a href="{{URL::to('admin/sidang/'.$item->id.'/download')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Print" target="_blank"><em class="fa fa-file"></em></a>
+													<a href="{{URL::to('admin/sidang/'.$item->id.'/download')}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Print" target="_blank" rel="noopener"><em class="fa fa-file"></em></a>
 												</div>
 											</td>
 											@endif

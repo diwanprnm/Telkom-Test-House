@@ -345,7 +345,7 @@
 						</p>
 					</div>
 					<div class="form-group">
-						<a href="{{ URL::to('/admin/sidang/'.$sidang_id.'/excel') }}" target="_blank">
+						<a href="{{ URL::to('/admin/sidang/'.$sidang_id.'/excel') }}" target="_blank" rel="noopener">
 							<button type="button" class="btn btn-info">
 								Export to Excel
 							</button>

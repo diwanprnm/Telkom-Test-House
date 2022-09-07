@@ -102,7 +102,7 @@
 						</div>
 						<div class="row">
 							<div class=" pull-right col-xs-12">
-								<a class="btn btn-wide btn-primary btn-margin pull-right col-xs-12 col-lg-1" style="margin-bottom:10px;" href="{{URL::to('cetakPengujian/'.$item->id.'')}}" target="_blank">{{ trans('translate.examination_print') }}</a>
+								<a class="btn btn-wide btn-primary btn-margin pull-right col-xs-12 col-lg-1" style="margin-bottom:10px;" href="{{URL::to('cetakPengujian/'.$item->id.'')}}" target="_blank" rel="noopener">{{ trans('translate.examination_print') }}</a>
 								
 								@php if($item->spb_status == 1 && $item->payment_status == 0){ @endphp
 									<a class="btn btn-wide btn-primary btn-margin pull-right col-xs-12 col-lg-1 " href="{{URL::to('pengujian/'.$item->id.'/pembayaran')}}">{{ trans('translate.examination_payment') }}</a>

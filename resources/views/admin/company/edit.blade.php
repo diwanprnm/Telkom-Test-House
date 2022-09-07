@@ -153,7 +153,7 @@
 										File SIUP
 									</label>
 									@if($data->siup_file != '')
-										<a href="{{ URL::to('/admin/company/media/'.$data->id.'/siup') }}" target="_blank">Lihat File SIUP</a>
+										<a href="{{ URL::to('/admin/company/media/'.$data->id.'/siup') }}" target="_blank" rel="noopener">Lihat File SIUP</a>
 									@endif
 									<input type="file" name="siup_file" class="form-control" accept="application/pdf, image/*">
 								</div>
@@ -187,7 +187,7 @@
 										File Sertifikat Manajemen Mutu
 									</label>
 									@if($data->qs_certificate_file != '')
-										<a href="{{ URL::to('/admin/company/media/'.$data->id.'/qs') }}" target="_blank">Lihat File Sertifikat Manajemen Mutu</a>
+										<a href="{{ URL::to('/admin/company/media/'.$data->id.'/qs') }}" target="_blank" rel="noopener">Lihat File Sertifikat Manajemen Mutu</a>
 									@endif
 									<input type="file" name="qs_certificate_file" class="form-control" accept="application/pdf, image/*">
 								</div>

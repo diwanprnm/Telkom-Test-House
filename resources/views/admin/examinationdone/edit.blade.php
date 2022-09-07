@@ -351,7 +351,7 @@
 										Form Uji
 									</label>
 									<label>
-										: <a href="{{URL::to('cetakPengujian/'.$data->id)}}" target="_blank"> Download</a>
+										: <a href="{{URL::to('cetakPengujian/'.$data->id)}}" target="_blank" rel="noopener"> Download</a>
 									</label>
 									<br>
 									<label>
@@ -1336,13 +1336,13 @@
 								</legend>
 								<div class="col-md-6">
 									<div class="form-group">
-										<a href="{{URL::to('/cetakKepuasanKonsumen/'.$data->id)}}" target="_blank"> Download Feedback</a>
+										<a href="{{URL::to('/cetakKepuasanKonsumen/'.$data->id)}}" target="_blank" rel="noopener"> Download Feedback</a>
 									</div>
 								</div>	
 								@if($data->questioner[0]->complaint)
 								<div class="col-md-6">
 									<div class="form-group">
-										<a href="{{URL::to('/cetakComplaint/'.$data->id)}}" target="_blank"> Download Complaint</a>
+										<a href="{{URL::to('/cetakComplaint/'.$data->id)}}" target="_blank" rel="noopener"> Download Complaint</a>
 									</div>
 								</div>
 								@endif

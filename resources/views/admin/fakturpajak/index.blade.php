@@ -173,13 +173,13 @@
 													@endif
 												@elseif($item->type == 'STEL')
 													@if($item->id_kuitansi)
-														<a href="{{URL::to('/admin/downloadkuitansistel/'.$item->id_kuitansi) }}" target="_blank">Kuitansi</a>
+														<a href="{{URL::to('/admin/downloadkuitansistel/'.$item->id_kuitansi) }}" target="_blank" rel="noopener">Kuitansi</a>
 													@else
 														Kuitansi
 													@endif
 													 || 
 													@if($item->faktur_file)
-														<a href="{{URL::to('/admin/downloadfakturstel/'.$item->_id) }}" target="_blank">Faktur Pajak</a>
+														<a href="{{URL::to('/admin/downloadfakturstel/'.$item->_id) }}" target="_blank" rel="noopener">Faktur Pajak</a>
 													@else
 														Faktur Pajak
 													@endif

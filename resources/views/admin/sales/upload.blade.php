@@ -75,7 +75,7 @@
 													<td class="center">{{++$keys}}</td> 
 													<td class="center">{{ $item->name }}</td>
 													<td class="center">{{ $item->code }}</td>
-													<td class="center"><a href="{{ URL::to('/admin/downloadstelwatermark/'.$item->id) }}" target="_blank">{{ $item->attachment }}</a></td>
+													<td class="center"><a href="{{ URL::to('/admin/downloadstelwatermark/'.$item->id) }}" target="_blank" rel="noopener">{{ $item->attachment }}</a></td>
 													<td class="center">
 														@if($item->stelAttach !='')
 															<a href="{!! url("cetakstel?invoice_id={$item->invoice}&attach={$item->stelAttach}&company_name={$item->company_name}") !!}" target="_blank"> Generate Watermark</a>

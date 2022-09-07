@@ -202,7 +202,7 @@
 																		echo	number_format($tax, 0, '.', ',');@endphp</td>
 																	<td>
 																		@if($item->faktur_file != '')
-																			<a target="_blank" href="{{ URL::to('/client/downloadfakturstel/'.$item->id) }}">
+																			<a target="_blank" rel="noopener" href="{{ URL::to('/client/downloadfakturstel/'.$item->id) }}">
 																				{{ trans('translate.download') }} {{ trans('translate.tax_invoice') }}
 																			</a>
 																		@endif
@@ -213,7 +213,7 @@
 																	<td class="right">@php echo number_format($data_unpaid[$i]->total, 0, '.', ',');@endphp @if ($data_unpaid[$i]->total == 0) (Free) @endif</td>
 																	<td>
 																		@if($item->id_kuitansi != '')
-																			<a target="_blank" href="{{ URL::to('/client/downloadkuitansistel/'.$item->id_kuitansi) }}">
+																			<a target="_blank" rel="noopener" href="{{ URL::to('/client/downloadkuitansistel/'.$item->id_kuitansi) }}">
 																				{{ trans('translate.download') }} {{ trans('translate.receipt') }}
 																			</a>
 																		@endif
@@ -363,7 +363,7 @@
 																				<td class="right">{{$item_detail->qty}}</td> 
 																				<td class="right">@php echo number_format(floatval($price * $item_detail->qty), 0, '.', ','); @endphp</td>
 																				@if($item_detail->attachment !="")
-																					<td colspan="6"><a target="_blank" href="{{ URL::to('/client/downloadstelwatermark/'.$item_detail->id) }}">{{ trans('translate.download') }} File</a>
+																					<td colspan="6"><a target="_blank" rel="noopener" href="{{ URL::to('/client/downloadstelwatermark/'.$item_detail->id) }}">{{ trans('translate.download') }} File</a>
 																						@if($item_detail->temp_alert)
 																						<a>
 																						<em class="fa fa-info-circle info">
@@ -412,7 +412,7 @@
 																		echo	number_format($tax, 0, '.', ',');@endphp</td>
 																	<td>
 																		@if($item->faktur_file != '')
-																			<a target="_blank" href="{{ URL::to('/client/downloadfakturstel/'.$item->id) }}">
+																			<a target="_blank" rel="noopener" href="{{ URL::to('/client/downloadfakturstel/'.$item->id) }}">
 																				{{ trans('translate.download') }} {{ trans('translate.tax_invoice') }}
 																			</a>
 																		@endif
@@ -423,7 +423,7 @@
 																	<td class="right">@php echo number_format($data_paid[$i]->total, 0, '.', ',');@endphp @if ($data_paid[$i]->total == 0) (Free) @endif</td>
 																	<td>
 																		@if($item->id_kuitansi != '')
-																			<a target="_blank" href="{{ URL::to('/client/downloadkuitansistel/'.$item->id_kuitansi) }}">
+																			<a target="_blank" rel="noopener" href="{{ URL::to('/client/downloadkuitansistel/'.$item->id_kuitansi) }}">
 																				{{ trans('translate.download') }} {{ trans('translate.receipt') }}
 																			</a>
 																		@endif
@@ -584,7 +584,7 @@
 																				<td class="right">{{$item_detail->qty}}</td> 
 																				<td class="right">@php echo number_format(floatval($price * $item_detail->qty), 0, '.', ','); @endphp</td>
 																				@if($item_detail->attachment !="")
-																					<td colspan="6"><a target="_blank" href="{{ URL::to('/client/downloadstelwatermark/'.$item_detail->id) }}">{{ trans('translate.download') }} File</a>
+																					<td colspan="6"><a target="_blank" rel="noopener" href="{{ URL::to('/client/downloadstelwatermark/'.$item_detail->id) }}">{{ trans('translate.download') }} File</a>
 																						@if($item_detail->temp_alert == 1 OR $item_detail->temp_alert == 2)
 																						<a>
 																						<em class="fa fa-info-circle info">
@@ -633,7 +633,7 @@
 																		echo	number_format($tax, 0, '.', ',');@endphp</td>
 																	<td>
 																		@if($item->faktur_file != '')
-																			<a target="_blank" href="{{ URL::to('/client/downloadfakturstel/'.$item->id) }}">
+																			<a target="_blank" rel="noopener" href="{{ URL::to('/client/downloadfakturstel/'.$item->id) }}">
 																				{{ trans('translate.download') }} {{ trans('translate.tax_invoice') }}
 																			</a>
 																		@endif
@@ -644,7 +644,7 @@
 																	<td class="right">@php echo number_format($data_delivered[$i]->total, 0, '.', ',');@endphp @if ($data_delivered[$i]->total == 0) (Free) @endif</td>
 																	<td>
 																		@if($item->id_kuitansi != '')
-																			<a target="_blank" href="{{ URL::to('/client/downloadkuitansistel/'.$item->id_kuitansi) }}">
+																			<a target="_blank" rel="noopener" href="{{ URL::to('/client/downloadkuitansistel/'.$item->id_kuitansi) }}">
 																				{{ trans('translate.download') }} {{ trans('translate.receipt') }}
 																			</a>
 																		@endif

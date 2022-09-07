@@ -351,7 +351,7 @@
 										Form Uji
 									</label>
 									<label>
-										: <a href="{{URL::to('cetakPengujian/'.$data->id)}}" target="_blank"> Download</a>
+										: <a href="{{URL::to('cetakPengujian/'.$data->id)}}" target="_blank" rel="noopener"> Download</a>
 									</label>
 									<br>
 									<label>
@@ -589,12 +589,12 @@
 										<textarea class="form-control" rows="5" name="catatan" id="catatan" readonly disabled>{{ $data->catatan }}</textarea>
 									</div>
 									<div class="form-group">
-										<a href="{{URL::to($url_generate_test.$data->id)}}" target="_blank"> Buatkan Laporan {{$type_of_test}}</a>
+										<a href="{{URL::to($url_generate_test.$data->id)}}" target="_blank" rel="noopener"> Buatkan Laporan {{$type_of_test}}</a>
 									</div>
 									@if (!$data['is_loc_test'])
 									@if($data->function_test_TE == 1 && $data->function_test_date_approval == 1)
 										<div class="form-group">
-											<a href="{{URL::to('/cetakFormBarang/'.$data->id)}}" target="_blank"> Buatkan Bukti Penerimaan Perangkat</a>
+											<a href="{{URL::to('/cetakFormBarang/'.$data->id)}}" target="_blank" rel="noopener"> Buatkan Bukti Penerimaan Perangkat</a>
 										</div>
 									@endif
 									@endif
@@ -1310,12 +1310,12 @@
 								</legend>
 								<div class="col-md-6">
 									<div class="form-group">
-										<a href="{{URL::to('/cetakKepuasanKonsumen/'.$data->id)}}" target="_blank"> Download Feedback</a>
+										<a href="{{URL::to('/cetakKepuasanKonsumen/'.$data->id)}}" target="_blank" rel="noopener"> Download Feedback</a>
 									</div>
 								</div>	
 								<div class="col-md-6">
 									<div class="form-group">
-										<a href="{{URL::to('/cetakComplaint/'.$data->id)}}" target="_blank"> Download Complaint</a>
+										<a href="{{URL::to('/cetakComplaint/'.$data->id)}}" target="_blank" rel="noopener"> Download Complaint</a>
 									</div>
 								</div>	
 							</fieldset>
