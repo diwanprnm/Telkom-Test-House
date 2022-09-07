@@ -16,6 +16,7 @@ use Response;
 use Artisan;
 use Session;
 use Storage;
+use Exception;
 
 use File;
 

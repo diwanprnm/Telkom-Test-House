@@ -20,6 +20,7 @@ use Cart;
 use Response;
 use File;
 use Storage;
+use Exception;
 
 
 use Ramsey\Uuid\Uuid;

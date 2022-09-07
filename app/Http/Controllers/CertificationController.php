@@ -11,6 +11,7 @@ use App\Services\FileService;
 use Auth;
 use Session;
 use Image;
+use Exception;
 
 // UUID
 use Ramsey\Uuid\Uuid;

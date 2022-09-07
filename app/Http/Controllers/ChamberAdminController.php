@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Session;
 use Auth;
+use Exception;
 
 // Services
 use App\Services\Querys\QueryFilter;

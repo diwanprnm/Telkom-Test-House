@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\DB;
 use App\Services\Logs\LogService;
 use GuzzleHttp\Client;
 use Storage;
+use Exception;
 
 use App\Income;
 use App\Questioner;
