@@ -330,7 +330,7 @@
 									<div class=" pull-right col-xs-12">
 										<a class="button button-3d btn-sky nomargin" href="{{url('/pengujian')}}">{{ trans('translate.back') }}</a>
 										<a class="button button-3d btn-sky nomargin pull-right" style="margin-bottom:10px;" 
-											href="{{URL::to('cetakPengujian/'.$item->id.'')}}" target="_blank">
+											href="{{URL::to('cetakPengujian/'.$item->id.'')}}" target="_blank" rel="noopener">
 											{{ trans('translate.examination_print') }}
 										</a>
 									</div>

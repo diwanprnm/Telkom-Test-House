@@ -102,7 +102,7 @@
     <script type="text/javascript" src="{{url('new-layout/js/functions.js')}}"></script>
     <script type="text/javascript" src="{{url('assets/js/search.js')}}"></script>
     <script type="text/javascript" src="{{url('vendor/jquerymaterial/jquery.material.form.js')}}"></script> <!-- JQUERY MATERIAL FORM PLUGIN -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-show-password/1.0.3/bootstrap-show-password.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-show-password/1.0.3/bootstrap-show-password.min.js" integrity="sha512-RbWtD2SxyZp3Qln/DtcFDlifcwwrcW9lFqTDQs+a1p62epLeUel1CK1ZegdR1A+ZYz8c+BRaeL2GVxz3DQtDJw==" crossorigin="anonymous"></script>
 
     <script src={{ asset("assets/js/chosen.jquery.min.js") }}></script>
     <script type="text/javascript">
@@ -213,8 +213,9 @@
             $( window ).scrollTop( localStorage.sc );
           }
     </script> 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.min.js" integrity="sha512-SKbAu96njmWVMhYAJT5fcq1Ae5SxxKPukZj8TorqfqGC/3jqu69GYX39YT6OPpEQuDWjQmb4UIIqwr+c/ENbrA==" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+  crossorigin="anonymous"></script>
    @php if(config('app.IS_ENABLED_NOTIFICATION')){@endphp
     <script src="{{url('vendor/socket/socket.io.js')}}"></script>
     <script>

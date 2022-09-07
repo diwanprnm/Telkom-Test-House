@@ -76,7 +76,7 @@
 									</td>
 									<td class="center">{{ $data->invoice }} </td>
 									<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. {{ number_format($data->price, 0, '.', ',') }}</td> 
-									<td class="center"><a href="{{ URL::to('/cetakTiketChamber/'.$data->id) }}" target="_blank"> Tiket</a></td>
+									<td class="center"><a href="{{ URL::to('/cetakTiketChamber/'.$data->id) }}" target="_blank" rel="noopener"> Tiket</a></td>
 								</tr>
                             </tbody>
                             <tfoot>
@@ -90,7 +90,7 @@
 									</td>
 									<td class="center">
 										@if($data->faktur_file)
-										<a href="{{ URL::to('/downloadfakturchamber/'.$data->id) }}" target="_blank">
+										<a href="{{ URL::to('/downloadfakturchamber/'.$data->id) }}" target="_blank" rel="noopener">
 					                    	Faktur Pajak
 					                    </a>
 										@else
@@ -107,7 +107,7 @@
 									</td>
 									<td class="center">
 										@if($data->kuitansi_file)
-										<a href="{{ URL::to('/downloadkuitansichamber/'.$data->id) }}" target="_blank">
+										<a href="{{ URL::to('/downloadkuitansichamber/'.$data->id) }}" target="_blank" rel="noopener">
 					                    	Kuitansi
 					                    </a>
 										@else

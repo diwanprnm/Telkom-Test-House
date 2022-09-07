@@ -301,7 +301,7 @@
 							</div>
 							<div class="option-progress right"> 
 							@if($item->is_cancel == 0)
-								<a class="button button-3d nomargin btn-blue btn-sky" href="{{URL::to('cetakPengujian/'.$item->id.'')}}" target="_blank">{{ trans('translate.examination_print') }}</a>
+								<a class="button button-3d nomargin btn-blue btn-sky" href="{{URL::to('cetakPengujian/'.$item->id.'')}}" target="_blank" rel="noopener">{{ trans('translate.examination_print') }}</a>
 							@endif
 								<a class="button button-3d nomargin btn-blue btn-sky" href="{{URL::to('pengujian/'.$item->id.'/detail')}}">{{ trans('translate.examination_detail') }}</a>
 								<!-- jika is_cancel == 1, tampilkan alert ini -->

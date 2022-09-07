@@ -103,11 +103,11 @@
 										<tr>
 											<td class="center">{{$no}}</td>
 											<td class="center">{{ $item->approval->authentikasi->name }}</td>
-											<td class="center"><a href="{{ \Storage::disk('minio')->url($item->approval->reference_table.'/'.$item->approval->reference_id.'/'.$item->approval->attachment) }}" target="_blank">{{ $item->approval->attachment }}</a></td>
+											<td class="center"><a href="{{ \Storage::disk('minio')->url($item->approval->reference_table.'/'.$item->approval->reference_id.'/'.$item->approval->attachment) }}" target="_blank" rel="noopener">{{ $item->approval->attachment }}</a></td>
 											<td class="center">{{ $item->created_at }}</td>
 											<td class="center">
 											@if($item->approval->status)
-												<a href="{{URL::to('admin/approval/'.$item->approval->id)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Detail" target="_blank"><em class="fa fa-eye"></em></a>
+												<a href="{{URL::to('admin/approval/'.$item->approval->id)}}" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Detail" target="_blank" rel="noopener"><em class="fa fa-eye"></em></a>
 											@else
 												@if($item->approve_date)
 													Approved

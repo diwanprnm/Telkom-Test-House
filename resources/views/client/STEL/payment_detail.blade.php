@@ -57,11 +57,11 @@
 								@php  
 									if($stel->manual_attachment !="" && $stel->payment_status == 1){
 								@endphp
-										<td colspan="6" class="center"><a target="_blank" href="{{ URL::to('/client/downloadstelwatermark/'.$stel->id_attachment_stel) }}">{{ trans('translate.download') }} File</a></td>
+										<td colspan="6" class="center"><a target="_blank" rel="noopener" href="{{ URL::to('/client/downloadstelwatermark/'.$stel->id_attachment_stel) }}">{{ trans('translate.download') }} File</a></td>
 								@php }
 								else if($stel->attachment !="" && $stel->payment_status == 1){
 								@endphp
-									<td colspan="6" class="center"><a target="_blank" href="{!! url("cetakstel?invoice_id={$stel->invoice}&attach={$stel->attachment}&company_name={$stel->company_name}") !!}">{{ trans('translate.download') }} File</a></td>
+									<td colspan="6" class="center"><a target="_blank" rel="noopener" href="{!! url("cetakstel?invoice_id={$stel->invoice}&attach={$stel->attachment}&company_name={$stel->company_name}") !!}">{{ trans('translate.download') }} File</a></td>
 								@php
 								}
 									else{
@@ -101,12 +101,12 @@
 						<div class="col-md-6">
 				@if($stels[0]->payment_status == 1)
 					@if($stels[0]->id_kuitansi != '')
-							<a class="button button-3d btn-sky nomargin pull-right invoice-group-button" href="{{ URL::to('/client/downloadkuitansistel/'.$stels[0]->id_kuitansi) }}" target="_blank">
+							<a class="button button-3d btn-sky nomargin pull-right invoice-group-button" href="{{ URL::to('/client/downloadkuitansistel/'.$stels[0]->id_kuitansi) }}" target="_blank" rel="noopener">
 								{{ trans('translate.see_receipt') }}
 							</a>
 					@endif
 					@if($stels[0]->faktur_file != '')
-							<a class="button button-3d btn-sky nomargin pull-right invoice-group-button" href="{{ URL::to('/client/downloadfakturstel/'.$stels[0]->manual_id) }}" target="_blank">
+							<a class="button button-3d btn-sky nomargin pull-right invoice-group-button" href="{{ URL::to('/client/downloadfakturstel/'.$stels[0]->manual_id) }}" target="_blank" rel="noopener">
 								{{ trans('translate.see_invoice') }}
 							</a>
 					@endif

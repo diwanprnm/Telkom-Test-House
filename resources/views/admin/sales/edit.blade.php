@@ -59,7 +59,7 @@
 								<div class="form-group">
 									 
 									@if($data->attachment != '')
-										<a href="{{ URL::to('/admin/downloadbukti/'.$data->id) }}" target="_blank">Lihat Bukti Pembayaran</a>
+										<a href="{{ URL::to('/admin/downloadbukti/'.$data->id) }}" target="_blank" rel="noopener">Lihat Bukti Pembayaran</a>
 									@else
 										Belum ada Bukti Pembayaran
 									@endif
@@ -93,7 +93,7 @@
 										@php
 											$data->id_kuitansi = preg_replace('/\\.[^.\\s]{3,4}$/', '', $data->id_kuitansi);
 										@endphp
-										<a href="{{ URL::to('/admin/downloadkuitansistel/'.$data->id_kuitansi) }}" target="_blank">
+										<a href="{{ URL::to('/admin/downloadkuitansistel/'.$data->id_kuitansi) }}" target="_blank" rel="noopener">
 					                    	{{ $data->id_kuitansi }}
 					                    </a>
 									@endif
@@ -108,7 +108,7 @@
 								</div>
 								<div class="form-group">
 									@if($data->faktur_file != '')
-										<a href="{{ URL::to('/admin/downloadfakturstel/'.$data->id) }}" target="_blank">
+										<a href="{{ URL::to('/admin/downloadfakturstel/'.$data->id) }}" target="_blank" rel="noopener">
 					                    	{{ $data->faktur_file }}
 					                    </a>
 									@endif

@@ -131,7 +131,7 @@
 										<td class="center">{{ trans('translate.stel_rupiah') }}. {{ number_format($item->price, 0, '.', ',')}} </td>
 										<td class="center">{{ $item->qty }}</td>
 										<td class="text-align-right">{{ trans('translate.stel_rupiah') }}. {{ number_format($item->price * $item->qty, 0, '.', ',') }}</td> 
-										<td class="center"><a href="{{ URL::to('/admin/downloadstelwatermark/'.$item->id) }}" target="_blank">{{ $item->attachment }}</a></td>
+										<td class="center"><a href="{{ URL::to('/admin/downloadstelwatermark/'.$item->id) }}" target="_blank" rel="noopener">{{ $item->attachment }}</a></td>
 										@if($is_super == '1' || $is_admin_mail == 'admin@mail.com')
 										<td class="center">
 											<div>
@@ -188,12 +188,12 @@
 						@php
 							$id_kuitansi = preg_replace('/\\.[^.\\s]{3,4}$/', '', $id_kuitansi);
 						@endphp
-					<a href="{{ URL::to('/admin/downloadkuitansistel/'.$id_kuitansi) }}" target="_blank">
+					<a href="{{ URL::to('/admin/downloadkuitansistel/'.$id_kuitansi) }}" target="_blank" rel="noopener">
                     	<button type="button" class="btn btn-wide btn-red btn-squared pull-right" style="margin-right: 1%;">Lihat Kuitansi</button>
                     </a>
 					@endif
 					@if($faktur_file != '')
-					<a href="{{ URL::to('/admin/downloadfakturstel/'.$id_sales) }}" target="_blank">
+					<a href="{{ URL::to('/admin/downloadfakturstel/'.$id_sales) }}" target="_blank" rel="noopener">
                     	<button type="button" class="btn btn-wide btn-red btn-squared pull-right" style="margin-right: 1%;">Lihat Faktur Pajak</button>
                     </a>
 					@endif

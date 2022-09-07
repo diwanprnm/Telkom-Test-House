@@ -488,7 +488,7 @@
 											<button type="button" class="button button3d btn-green upload-form">{{ trans('translate.service_upload_now') }}</button>
 											<div id="attachment-file">
 												{{ trans('translate.service_upload_if_form') }}
-												<a class="btn btn-link" style="margin-left:-10px; height:37px; font-size: 100%;" href="{{ url('/cetakPermohonan') }}" target="_blank">{{ trans('translate.service_upload_click') }}</a>
+												<a class="btn btn-link" style="margin-left:-10px; height:37px; font-size: 100%;" href="{{ url('/cetakPermohonan') }}" target="_blank" rel="noopener">{{ trans('translate.service_upload_click') }}</a>
 											</div>
 										</div>
 										<div class="f1-buttons">

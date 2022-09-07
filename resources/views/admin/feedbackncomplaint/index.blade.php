@@ -199,7 +199,7 @@
 											<td class="center">{{ $item->examination->device->name }}</td>
 											<td class="center">{{ $item->examination->device->mark }}</td>
 											<td class="center">{{ $item->examination->device->capacity }}</td>
-											<td class="center"><a href="{{URL::to('/cetakKepuasanKonsumen/'.$item->examination->id)}}" target="_blank"> Download Feedback</a> @if($item->complaint) || <a href="{{URL::to('/cetakComplaint/'.$item->examination->id)}}" target="_blank"> Download Complaint</a> @endif</td>
+											<td class="center"><a href="{{URL::to('/cetakKepuasanKonsumen/'.$item->examination->id)}}" target="_blank" rel="noopener"> Download Feedback</a> @if($item->complaint) || <a href="{{URL::to('/cetakComplaint/'.$item->examination->id)}}" target="_blank" rel="noopener"> Download Complaint</a> @endif</td>
 										</tr>
 									@php
 										$no++
