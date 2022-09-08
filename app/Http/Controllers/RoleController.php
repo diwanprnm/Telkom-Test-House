@@ -17,6 +17,7 @@ use File;
 use Response;
 use Session;
 use Input;
+use Exception;
 
 use Ramsey\Uuid\Uuid;
 use App\Services\Logs\LogService;

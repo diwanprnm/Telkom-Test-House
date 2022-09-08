@@ -17,6 +17,7 @@ use App\Services\EmailEditorService;
 use Auth;
 use Mail;
 use Session;
+use Exception;
 
 use Ramsey\Uuid\Uuid;
 

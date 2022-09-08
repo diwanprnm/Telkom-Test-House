@@ -18,6 +18,7 @@ use App\Services\Logs\LogService;
 use Auth;
 use Session;
 use Excel;
+use Exception;
 use Ramsey\Uuid\Uuid;
 
 use Carbon\Carbon;

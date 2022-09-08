@@ -24,6 +24,7 @@ use Excel;
 use Response;
 use Storage;
 use File;
+use Exception;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;

@@ -16,6 +16,7 @@ use App\UsersMenus;
 use Auth;
 use Session;
 use Hash;
+use Exception;
 
 // UUID
 use Ramsey\Uuid\Uuid;

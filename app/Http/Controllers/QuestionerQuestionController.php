@@ -16,6 +16,7 @@ use Auth;
 use Response;
 use Session;
 use Input;
+use Exception;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;

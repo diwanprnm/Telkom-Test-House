@@ -14,6 +14,7 @@ use App\Logs;
 
 use Auth;
 use Session;
+use Exception;
 use Excel;
 use Ramsey\Uuid\Uuid;
 use App\Services\Logs\LogService;

@@ -11,6 +11,7 @@ use App\Question;
 
 use Auth;
 use Session;
+use Exception;
 
 class QuestionprivController extends Controller
 {

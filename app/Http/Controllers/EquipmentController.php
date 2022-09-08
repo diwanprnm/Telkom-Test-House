@@ -18,6 +18,7 @@ use Auth;
 use Session;
 use Hash;
 use Image;
+use Exception;
 
 // UUID
 use Ramsey\Uuid\Uuid;

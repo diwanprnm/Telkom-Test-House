@@ -11,6 +11,7 @@ use Response;
 use Session;
 use Input;
 use Excel;
+use Exception;
 
 use App\Logs;
 use App\ExaminationCharge;
