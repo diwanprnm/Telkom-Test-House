@@ -118,6 +118,7 @@
 									<tr class="content" style="display: none;">
 										<td colspan="12" class="center">
 											<table class="table table-bordered table-hover table-full-width dataTable no-footer" style="width: 100%;">
+												<caption>Examination Table</caption>
 												<thead>
 													<tr>
 														<th class="center" scope="col">No. SPK</th>

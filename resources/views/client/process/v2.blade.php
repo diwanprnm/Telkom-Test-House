@@ -95,6 +95,7 @@
 						<div id="wizard">
 							<h2>First Step</h2>
 							<fieldset>
+								<legend></legend>>
 								<input type="hidden" name="kode_jenis_pengujian" value="{{$examintaionType[$jns_pengujian]['number'] ?? ''}}"/>
 								<input type="hidden" name="hide_company_id" id="hide_company_id" value="{{$userData->company_id ?? ''}}">
 								<input type="hidden" name="hide_exam_id" id="hide_exam_id" value="{{$userData->id ?? ''}}"/>

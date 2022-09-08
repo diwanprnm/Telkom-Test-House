@@ -53,7 +53,7 @@
 	<p style="font-family:Helvetica, sans-serif; font-size:0.98em; color:rgba(146,146,146,1.00); margin-top:-7px;">
 		Permohonan uji perangkat anda di Telkom Test House <strong>sudah selesai</strong>. @if($is_loc_test == 0)Perangkat sampel uji agar segera diambil kembali sebagai syarat untuk @else Anda dapat @endif mengunduh Laporan Hasil Uji (LHU) dan Sertifikat di <a href="www.telkomtesthouse.co.id">www.telkomtesthouse.co.id</a> @if($is_loc_test == 0) .
 		<br>
-		Dokumen tersebut nanti dapat anda unduh @endif dengan cara <strong><i>masuk/login</i></strong> terlebih dahulu, lalu pilih menu <strong><i>pengujian/testing > status pengujian/progress</i></strong> dan tekan tombol <strong>unduh laporan & unduh sertifikat/<i>download report & download certificate</i></strong> yang terletak <strong>di kanan bawah</strong> dari permohonan uji anda.
+		Dokumen tersebut nanti dapat anda unduh @endif dengan cara <strong><em>masuk/login</em></strong> terlebih dahulu, lalu pilih menu <strong><em>pengujian/testing > status pengujian/progress</em></strong> dan tekan tombol <strong>unduh laporan & unduh sertifikat/<em>download report & download certificate</em></strong> yang terletak <strong>di kanan bawah</strong> dari permohonan uji anda.
 		<br><br>
 		Terimakasih atas kerjasama anda.
 		<br>
