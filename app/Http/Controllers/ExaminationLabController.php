@@ -11,6 +11,7 @@ use App\Logs;
 use App\Services\Logs\LogService;
 use Auth;
 use Session;
+use Exception;
 
 // UUID
 use Ramsey\Uuid\Uuid;

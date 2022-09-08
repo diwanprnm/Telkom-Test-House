@@ -10,6 +10,7 @@ use App\Testimonial;
 
 use Auth;
 use Session;
+use Exception;
 
 // UUID
 use Ramsey\Uuid\Uuid;

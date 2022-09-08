@@ -13,6 +13,7 @@ use Mail;
 use Input;
 use File;
 use Session;
+use Exception;
 //use Response;
 
 use App\Device;

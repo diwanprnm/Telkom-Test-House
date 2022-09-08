@@ -7,6 +7,7 @@ use App\Http\Requests;
 
 use Auth;
 use Session;
+use Exception;
 
 use App\CalibrationCharge;
 use App\Logs;

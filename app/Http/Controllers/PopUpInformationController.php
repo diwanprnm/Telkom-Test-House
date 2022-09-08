@@ -18,6 +18,7 @@ use Image;
 use File;
 use Response;
 use Storage;
+use Exception;
 
 // UUID
 use Ramsey\Uuid\Uuid;

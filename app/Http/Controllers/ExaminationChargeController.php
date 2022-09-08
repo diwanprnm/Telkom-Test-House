@@ -9,6 +9,7 @@ use Auth;
 use Response;
 use Session;
 use Input;
+use Exception;
 
 use App\Logs;
 use App\ExaminationCharge;

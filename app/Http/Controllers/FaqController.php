@@ -10,6 +10,7 @@ use App\Services\Logs\LogService;
 
 use Auth;
 use Session;
+use Exception;
 
 use Ramsey\Uuid\Uuid;
 

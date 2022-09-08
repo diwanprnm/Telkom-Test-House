@@ -17,6 +17,7 @@ use App\AdminRole;
 use Auth;
 use Session;
 use Hash;
+use Exception;
 
 use File;
 use Image;

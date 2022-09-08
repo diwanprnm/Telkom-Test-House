@@ -16,6 +16,7 @@ use App\Services\MyHelper;
 use Auth;
 use Session;
 use Mail;
+use Exception;
 
 // UUID
 use Ramsey\Uuid\Uuid;
