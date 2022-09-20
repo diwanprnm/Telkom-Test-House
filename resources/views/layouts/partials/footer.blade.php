@@ -69,7 +69,7 @@
                 <div class="container clearfix">
 
                     <div class="col_half">
-                        Copyrights &copy; <?php echo date("Y"); ?> All Rights Reserved by Telkom Test House
+                        Copyrights &copy; {{ date("Y") }} All Rights Reserved by Telkom Test House
                     </div>
 
                 </div>

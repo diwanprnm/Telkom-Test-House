@@ -133,7 +133,7 @@ uncomment this part if you haven't added this code anywhere else
 			<div class="swiper-wrapper">
 			
 				@foreach($data_slideshow as $item)
-				<div class="swiper-slide dark" data-timeout="{{ $item->timeout*1000 }}" style="background-image: url(<?php echo \Storage::disk('minio')->url('slideshow/'.$item->image); ?>);">
+				<div class="swiper-slide dark" data-timeout="{{ $item->timeout*1000 }}" style="background-image: url({{ \Storage::disk('minio')->url('slideshow/'.$item->image) }})">
 					<div class="container clearfix"> 
 					</div>
 				</div>

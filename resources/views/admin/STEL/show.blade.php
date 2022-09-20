@@ -89,7 +89,7 @@
 									<label>
 										Tipe *
 									</label>
-									<?php
+									@php
 										switch ($data->type) {
 											case '1':$type = 'STEL';break;
 											case '2':$type = 'S-TSEL';break;
@@ -100,7 +100,7 @@
 											case '7':$type = 'Lainnya ...';break;
 											default:$type = 'STEL';break;
 										}
-									?>
+									@endphp
 									<input type="text" id="stel_type" name="stel_type" class="form-control" placeholder="Tipe Dokumen" value="{{$type}}" readonly>
 								</div>
 							</div>
