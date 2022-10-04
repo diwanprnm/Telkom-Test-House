@@ -36,6 +36,7 @@ use App\NotificationTable;
 use App\Services\NotificationService;
 use App\Services\FileService;
 use App\Services\EmailEditorService;
+use App\Services\ExaminationService;
  
 class ExaminationAPIController extends AppBaseController
 {
@@ -1203,6 +1204,7 @@ class ExaminationAPIController extends AppBaseController
 	
 	public function updaterevisi($a,$b,$c)
     {
+		$examinationService = new ExaminationService();
 		if (!empty($b->name)){
 			$rev_name = $b->name;
 		}else{
@@ -1245,7 +1247,7 @@ class ExaminationAPIController extends AppBaseController
 			$rev_test_reference = $a->test_reference;
 		}
 		
-		$this->sendEmailRevisi(
+		$examinationService->sendEmailRevisi(
 			$c->created_by,
 			$c->examinationType->name,
 			$c->examinationType->description,
@@ -1266,57 +1268,6 @@ class ExaminationAPIController extends AppBaseController
 			"emails.revisi", 
 			"Revisi Data Permohonan Uji"
 		);
-    }
-	
-	public function sendEmailRevisi(
-		$user, 
-		$exam_type, 
-		$exam_type_desc, 
-		$perangkat1, 
-		$perangkat2, 
-		$merk_perangkat1, 
-		$merk_perangkat2, 
-		$kapasitas_perangkat1, 
-		$kapasitas_perangkat2, 
-		$pembuat_perangkat1, 
-		$pembuat_perangkat2, 
-		$model_perangkat1, 
-		$model_perangkat2, 
-		$ref_perangkat1, 
-		$ref_perangkat2, 
-		$sn_perangkat1, 
-		$sn_perangkat2, 
-		$message,
-		$subject
-	)
-    {
-        if(GeneralSetting::where('code', 'send_email')->first()['is_active']){
-			$data = User::findOrFail($user);
-		
-			Mail::send($message, array(
-				'user_name' => $data->name,
-				'exam_type' => $exam_type,
-				'exam_type_desc' => $exam_type_desc,
-				'perangkat1' => $perangkat1,
-				'perangkat2' => $perangkat2,
-				'merk_perangkat1' => $merk_perangkat1,
-				'merk_perangkat2' => $merk_perangkat2,
-				'kapasitas_perangkat1' => $kapasitas_perangkat1,
-				'kapasitas_perangkat2' => $kapasitas_perangkat2,
-				'pembuat_perangkat1' => $pembuat_perangkat1,
-				'pembuat_perangkat2' => $pembuat_perangkat2,
-				'model_perangkat1' => $model_perangkat1,
-				'model_perangkat2' => $model_perangkat2,
-				'ref_perangkat1' => $ref_perangkat1,
-				'ref_perangkat2' => $ref_perangkat2,
-				'sn_perangkat1' => $sn_perangkat1,
-				'sn_perangkat2' => $sn_perangkat2
-				), function ($m) use ($data,$subject) {
-				$m->to($data->email)->subject($subject);
-			});
-		}
-
-        return true;
     }
 	
 	public function updateFunctionStat(Request $param)
