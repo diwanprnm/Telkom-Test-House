@@ -62,16 +62,6 @@ class ChamberAdminController extends Controller
         ;
     }
 
-    public function create()
-    {
-        //
-    }
-
-    public function store(Request $request)
-    {
-        //
-    }
-
     public function show($id)
     {   
         // Get Data
@@ -381,11 +371,6 @@ class ChamberAdminController extends Controller
             return null;
         }
 	}
-
-    public function destroy($id)
-    {
-        //
-    }
 
     public function deleteChamber($id, $reasonOfDeletion)
     {   

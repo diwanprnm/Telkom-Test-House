@@ -241,21 +241,21 @@ Route::group(['prefix' => '/admin', 'middlewareGroups' => 'web'], function () {
 	Route::resource('/approval', 'ApprovalController');
 	Route::get('/approval/assign/{id}/{password}', 'ApprovalController@assign');
 });
-	Route::get('/uploadCertification', 'UploadProductionController@uploadCertification');
-	Route::get('/uploadCompany', 'UploadProductionController@uploadCompany');
-	Route::get('/uploadDevice', 'UploadProductionController@uploadDevice');
-	Route::get('/uploadExamination', 'UploadProductionController@uploadExamination');
-	Route::get('/uploadExaminationAttach', 'UploadProductionController@uploadExaminationAttach');
-	Route::get('/uploadFooter', 'UploadProductionController@uploadFooter');
-	Route::get('/uploadPopUpInformation', 'UploadProductionController@uploadPopUpInformation');
-	Route::get('/uploadSlideshow', 'UploadProductionController@uploadSlideshow');
-	Route::get('/uploadStel', 'UploadProductionController@uploadStel');
-	Route::get('/uploadStelSales1', 'UploadProductionController@uploadStelSales1');
-	Route::get('/uploadStelSales2', 'UploadProductionController@uploadStelSales2');
-	Route::get('/uploadStelAttach', 'UploadProductionController@uploadStelAttach');
-	Route::get('/uploadTempCompany', 'UploadProductionController@uploadTempCompany');
-	Route::get('/uploadUser', 'UploadProductionController@uploadUser');
-	Route::get('/deletePengujian', 'UploadProductionController@deletePengujian');
+	// Route::get('/uploadCertification', 'UploadProductionController@uploadCertification');
+	// Route::get('/uploadCompany', 'UploadProductionController@uploadCompany');
+	// Route::get('/uploadDevice', 'UploadProductionController@uploadDevice');
+	// Route::get('/uploadExamination', 'UploadProductionController@uploadExamination');
+	// Route::get('/uploadExaminationAttach', 'UploadProductionController@uploadExaminationAttach');
+	// Route::get('/uploadFooter', 'UploadProductionController@uploadFooter');
+	// Route::get('/uploadPopUpInformation', 'UploadProductionController@uploadPopUpInformation');
+	// Route::get('/uploadSlideshow', 'UploadProductionController@uploadSlideshow');
+	// Route::get('/uploadStel', 'UploadProductionController@uploadStel');
+	// Route::get('/uploadStelSales1', 'UploadProductionController@uploadStelSales1');
+	// Route::get('/uploadStelSales2', 'UploadProductionController@uploadStelSales2');
+	// Route::get('/uploadStelAttach', 'UploadProductionController@uploadStelAttach');
+	// Route::get('/uploadTempCompany', 'UploadProductionController@uploadTempCompany');
+	// Route::get('/uploadUser', 'UploadProductionController@uploadUser');
+	// Route::get('/deletePengujian', 'UploadProductionController@deletePengujian');
 
 	Route::get('/adm_dashboard_autocomplete/{query}', 'DashboardController@autocomplete')->name('adm_dashboard_autocomplete');
 	
