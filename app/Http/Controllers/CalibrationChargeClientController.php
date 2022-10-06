@@ -52,25 +52,4 @@ class CalibrationChargeClientController extends Controller
                 ->with('page', $page)
             ;
     }
-	
-	
-	public function filter(Request $request)
-    {
-		$paginate = 2;
-        $data = CalibrationCharge::whereNotNull(self::CREATED_AT)
-            ->orderBy(self::DEVICE_NAME)
-            ->paginate($paginate);
-		return response()
-            ->view('client.calibration_charge.filter', $data, 200)
-            ->header('Content-Type', 'text/html');
-    }
-	
-	public function autocomplete($query) {
-        return CalibrationCharge::select('device_name as autosuggest')
-                ->where(self::DEVICE_NAME, 'like','%'.$query.'%')
-				->orderBy(self::DEVICE_NAME)
-                ->take(5)
-                ->distinct()
-                ->get();
-    }
 }
