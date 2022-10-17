@@ -81,8 +81,10 @@ class CetakSidangQA
                 $target_date = $dataDummy ? \App\Services\MyHelper::tanggalIndonesia($dummy[$dataNumber]['target']) : \App\Services\MyHelper::tanggalIndonesia($data['sidang_detail'][$dataNumber]->targetDate ?? '') ?? '';
                 $final_result = $dataDummy ? $dummy[$dataNumber]['hasil'] : $data['sidang_detail'][$dataNumber]->finalResult ?? '';
                 $catatan = $data['sidang_detail'][$dataNumber]->catatan ?? '';
-                $result = $i < $dataCount || $dataDummy ? $listKeputusanSidangQA[($dataDummy ? $dummy[$dataNumber]['result'] : $data['sidang_detail'][$dataNumber]->result) ?? ''] : '';
+                //     $result = $i < $dataCount || $dataDummy ? $listKeputusanSidangQA[($dataDummy ? $dummy[$dataNumber]['result'] : $data['sidang_detail'][$dataNumber]->result) ?? ''] : '';
+                $result = $i < $dataCount || $dataDummy ? ($dataDummy ? $dummy[$dataNumber]['result'] : $data['sidang_detail'][$dataNumber]->result) ?? '' : '';
                 $company_name = $data['sidang_detail'][$dataNumber]->examination->company->name ?? '';
+            
                 $device_name = $data['devices'][$dataNumber]->name ?? '';
                 $device_mark = $data['devices'][$dataNumber]->mark ?? '';
                 $device_model = $data['devices'][$dataNumber]->model ?? '';
@@ -176,7 +178,7 @@ class CetakSidangQA
         if ($method == 'getStream') {
             return $pdf->Output('', 'S');
         }
-        $pdf->Output();
-        exit;
+        return $pdf->Output();
+        // exit;
     }
 }

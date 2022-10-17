@@ -63,7 +63,6 @@ class SidangController extends Controller
     public function index(Request $request)
     {
         //initial var
-        $message = null;
         $paginate = 100;
         $tab = $request->input('tab');
         $search = $request->input('search2');
@@ -184,6 +183,7 @@ class SidangController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $currentUser = Auth::user();
         $logService = new LogService();
         $sidang_id = $request->has('sidang_id') ? $request->input('sidang_id') : null;
@@ -202,6 +202,8 @@ class SidangController extends Controller
             $sidang = new Sidang;
             $sidang->id = Uuid::uuid4();
             $sidang->status = 'PRATINJAU';
+            $sidang->date = '01-01-0000'; //
+            $sidang->audience = ''; //
         }
         $sidang->created_by = $currentUser->id;
         $sidang->updated_by = $currentUser->id;
@@ -228,11 +230,14 @@ class SidangController extends Controller
                         $chk = $request->input('chk-draft');
                     }
                 }
+                
                 foreach ($chk as $examination_id) {
                     $sidangDetail = new Sidang_detail;
                     $sidangDetail->id = Uuid::uuid4();
                     $sidangDetail->sidang_id = $sidang->id;
                     $sidangDetail->examination_id = $examination_id;
+                    $sidangDetail->result = '';
+                    $sidangDetail->status = '';
                     $sidangDetail->created_by = $currentUser->id;
                     $sidangDetail->updated_by = $currentUser->id;
                     $sidangDetail->save();
@@ -242,6 +247,8 @@ class SidangController extends Controller
             Session::flash(self::MESSAGE, 'Data successfully added');
             return $draft ? redirect(self::ADMIN_SIDANG) : redirect(self::ADMIN_SIDANG . '/create/' . $sidang->id);
         } catch (Exception $e) {
+            dd('sidang save caught Error! '. $e);
+
             return redirect('/admin/sidang/create' . $sidang->id)->with(self::ERROR, 'Save failed');
         }
     }
@@ -302,7 +309,7 @@ class SidangController extends Controller
             ->with('examination.examinationAttach')
             ->where('sidang_id', $sidang_id)
             ->get();
-
+        
         $data_draft = $this->mergeOTR($data, 'sidang');
 
         // echo '<pre>';
@@ -317,7 +324,7 @@ class SidangController extends Controller
         // and append it to the payments array.      
 
         foreach ($data_draft as $row) {
-            $no = $row->examination->media[0]->no;
+            $no = isset($row->examination->media[0]->no) ? $row->examination->media[0]->no : '-';
 
             if ($row->result == -1) {
                 $keputusan_sidang = 'Tidak Lulus';
@@ -329,7 +336,6 @@ class SidangController extends Controller
                 $keputusan_sidang = 'Pending';
             }
             $examsArray[] = [
-
                 $row->examination->spk_code,
                 $no,
                 $row->examination->device->cert_number,
@@ -364,12 +370,14 @@ class SidangController extends Controller
 
         $logService->createLog('download_excel', 'Draft Sidang QA', '');
         $excel = \App\Services\ExcelService::downloadDraftSidangQA($examsArray, $sidangDate, 'Draft Sidang QA ' .$sidangDate);
+
         return response($excel['file'], 200, $excel['headers']);
     }
 
     public function edit(Request $request, $sidang_id)
     {
         //initial var
+        $sidang_id = isset($request->sidang_id) ? $request->sidang_id : $sidang_id;
         $message = null;
         if ($request->has('tag')) {
             $sidang = Sidang::find($sidang_id);
@@ -459,7 +467,6 @@ class SidangController extends Controller
 
         $device->updated_by = $currentUser->id;
         $device->updated_at = date('Y-m-d H:i:s');
-
         try {
             $device->save();
             $logService->createLog("update", "REVISI", $device);
