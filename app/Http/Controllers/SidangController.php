@@ -73,7 +73,6 @@ class SidangController extends Controller
         $this->mergeOTR($data_perangkat->items(), 'perangkat');
         $data_pending = $this->getData($request, 2)['data']->paginate($paginate, ['*'], 'pagePending');
         $this->mergeOTR($data_pending->items(), 'perangkat');
-
         //return view to saves index with data
         return view('admin.sidang.index')
             ->with('tab', $tab)
@@ -133,6 +132,8 @@ class SidangController extends Controller
                     ->with('examination.equipmentHistory')
                     ->where('sidang_id', $type);
                 if ($search) {
+                dd('case default search');
+
                     $query->where(function ($qry) use ($search) {
                         $qry->whereHas('examination.device', function ($q) use ($search) {
                             return $q->where('name', 'like', '%' . strtolower($search) . '%')

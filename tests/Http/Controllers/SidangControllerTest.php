@@ -41,6 +41,15 @@ class SidangControllerTest extends TestCase
         ->see('<h1 class="mainTitle">Sidang QA</h1>');
     }
 
+    public function testIndexAsAdminSearch2()
+    {
+        $admin = User::where('id', '=', '1')->first();
+        $this->actingAs($admin)->call('GET', 'admin/sidang?search2=Test2&search3=Test2&tab=tab-perangkat');
+        //Status sukses dan judul Sidang QA
+        $this->assertResponseStatus(200)
+            ->see('<h1 class="mainTitle">Sidang QA</h1>');
+    }
+
 
     public function testIndexWithoutDataFound()
     {
@@ -195,7 +204,28 @@ class SidangControllerTest extends TestCase
                 'search2' => 'test'
             ]
         );
+        $this->assertEquals(302, $response->status());
+    }
 
+    public function testStorePending()
+    {
+        $examination =  Examination::latest()->first();
+
+        $admin = User::where('id', '=', '1')->first();
+        $sidang = Sidang::latest()->first();
+        $response =  $this->actingAs($admin)->call(
+            'POST',
+            'admin/sidang',
+            [
+                'sidang_id' => $sidang['id'],
+                'created_by' => 1,
+                'date' => '2022-10-10',
+                'audience' => 'Adi Permadi (Manager Lab IQA TTH), Eliandri Shintani Wulandari (Manager Lab DEQA TTH), Yudha Indah Prihatini (Manager URel TTH), I Gede Astawa (Senior Manager TTH).',
+                'hidden_tab' => 'tab-pending',
+                'chk-pending' => array($examination->id),
+                'search2' => 'test'
+            ]
+        );
         $this->assertEquals(302, $response->status());
     }
 
@@ -312,6 +342,52 @@ class SidangControllerTest extends TestCase
             'admin/sidang/updateExamination/' . $sidang->id
         );
         $this->assertResponseStatus(200);
+    }
+
+
+    public function testDownload()
+    {
+        $sidang = Sidang::latest()->first();
+        $admin = User::where('id', '=', '1')->first();
+        $response =  $this->actingAs($admin)->call(
+            'GET',
+            'admin/sidang/' . $sidang->id . '/download'
+        );
+        $this->assertResponseStatus(200);
+    }
+
+    public function testResetExamination()
+    {
+        $sidang = Sidang::latest()->first();
+        $admin = User::where('id', '=', '1')->first();
+        $response =  $this->actingAs($admin)->call(
+            'GET',
+            'admin/sidang/resetExamination/' . $sidang->id
+        );
+        $this->assertResponseStatus(200);
+    }
+
+    public function testResetExaminationRoute2()
+    {
+        $sidang = Sidang::latest()->first();
+        $admin = User::where('id', '=', '1')->first();
+        $response =  $this->actingAs($admin)->call(
+            'GET',
+            'admin/sidang/'. $sidang->id.'/reset'
+        );
+        $this->assertResponseStatus(200);
+    }
+
+
+    public function testDestroy()
+    {
+        $sidang = Sidang::latest()->first();
+        $admin = User::where('id', '=', '1')->first();
+        $response =  $this->actingAs($admin)->call(
+            'GET',
+            'admin/sidang/delete/' . $sidang->id . '/UnitTestingDestroy'
+        );
+        $this->assertResponseStatus(302);
     }
 
 
