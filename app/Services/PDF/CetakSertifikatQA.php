@@ -510,7 +510,7 @@ class CetakSertifikatQA
 
 </html>";
 
-        $mpdf = new \mPDF('utf-8', array(210, $this->panjang_halaman_mm));
+        $mpdf = new \mPDF('utf-8', array(210, 297));
 
         $mpdf->SetWatermarkImage("$image_background_url", 1, array(120, 65
         ), array(50, 105));

@@ -132,7 +132,7 @@ class SidangController extends Controller
                     ->with('examination.equipmentHistory')
                     ->where('sidang_id', $type);
                 if ($search) {
-                dd('case default search');
+                // dd('case default search');
 
                     $query->where(function ($qry) use ($search) {
                         $qry->whereHas('examination.device', function ($q) use ($search) {
@@ -497,6 +497,7 @@ class SidangController extends Controller
         // $sidang_detail = $this->mergeOTR($data, 'sidang');
 
         foreach ($data as $item) {
+            // dd('item sidang id: ', $item->id,'item sidang status: ', $item);
             // 1. update to Examination -> 
             // a. qa_passed (sidang_detail.result), 
             // b. qa_date (sidang.date), 
@@ -554,6 +555,7 @@ class SidangController extends Controller
                         $approveBy->save();
                     }
                 }
+                // dd($item, $cert_number, $approval->id);
                 $pdfGenerated = $this->generateSertifikat($item, $cert_number, 'getStream', $approval->id);
                 $fileService = new FileService();
                 $fileProperties = array(

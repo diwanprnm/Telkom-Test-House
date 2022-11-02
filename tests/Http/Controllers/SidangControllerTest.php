@@ -72,6 +72,16 @@ class SidangControllerTest extends TestCase
             ->see('Data not found');
     }
 
+    public function testGetDataTypeDefault()
+    {
+        $admin = User::where('id', '=', '1')->first();
+        $this->actingAs($admin)->call('GET', 'admin/sidang?type=99&search2=test');
+        //Status sukses, judul Sidang QA, dan Pemberitahuan "Data not found"
+        $this->assertResponseStatus(200)
+            ->see('<h1 class="mainTitle">Sidang QA</h1>')
+            ->see('Data not found');
+    }
+
     public function testCreate()
     {
         $admin = User::where('id', '=', '1')->first();
@@ -315,7 +325,7 @@ class SidangControllerTest extends TestCase
             'admin/sidang/' . $sidang->id,
             [
                 'id' => array($sidang_detail['id']),
-                'result' => array('PENDING'),
+                'result' => array('1'),
                 'valid_range' => array(0),
                 'created_by' => 1,
                 'date' => '2022-10-10',
