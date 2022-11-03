@@ -264,11 +264,11 @@ class CetakSertifikatQA
             </table>
 
 
-            <div class='col judul-utama text-center mb-05'>
-                <h1 class='underline fw-bold text-center'><u>Quality Assurance Test</u></h1>
+            <div class='col judul-utama text-center' style='margin-bottom: 0px; padding-bottom: 0px;'>
+                <h1 class='underline fw-bold text-center' style='margin-bottom: 10px;'><u>Quality Assurance Test</u></h1>
             </div>
 
-            <div class='col no-sertifikat text-center mb-2'>
+            <div class='col no-sertifikat text-center mb-2' style='margin-top: 0px; padding-top: 0px;'>
                 <span class='underline fw-bold text-center'>$documentNumber</span>
             </div>
 
