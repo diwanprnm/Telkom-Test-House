@@ -1,4 +1,3 @@
-@@ -0,0 +1,120 @@
 <?php
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
