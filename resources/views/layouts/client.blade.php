@@ -213,9 +213,8 @@
             $( window ).scrollTop( localStorage.sc );
           }
     </script> 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.min.js" integrity="sha512-SKbAu96njmWVMhYAJT5fcq1Ae5SxxKPukZj8TorqfqGC/3jqu69GYX39YT6OPpEQuDWjQmb4UIIqwr+c/ENbrA==" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
-  crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.min.js" integrity="sha512-SKbAu96njmWVMhYAJT5fcq1Ae5SxxKPukZj8TorqfqGC/3jqu69GYX39YT6OPpEQuDWjQmb4UIIqwr+c/ENbrA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
    @php if(config('app.IS_ENABLED_NOTIFICATION')){@endphp
     <script src="{{url('vendor/socket/socket.io.js')}}"></script>
     <script>
