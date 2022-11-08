@@ -49,6 +49,10 @@ INSERT INTO `menus` VALUES ('47', '46', 'Rekap Pembelian STEL', 'sales', 'ti-mon
 INSERT INTO `menus` VALUES ('48', '46', 'Rekap Pengujian Perangkat', 'income', 'ti-money');
 INSERT INTO `menus` VALUES ('49', '46', 'Rekap Penyewaan Chamber', 'chamber', 'ti-money');
 INSERT INTO `menus` VALUES ('50', '0', 'Web Statistic', 'analytic', 'ti-pie-chart');
+INSERT INTO `menus` VALUES ('51', '34', 'Email Editor', 'email_editors', '');
+INSERT INTO `menus` VALUES ('52', '2', 'Pengujian Batal', 'examinationcancel', '');
+INSERT INTO `menus` VALUES ('53', '2', 'Sidang QA', 'examinationcancel', '');
+INSERT INTO `menus` VALUES ('54', '0', 'Approval', 'approval', 'ti-pencil-alt');
 
 INSERT INTO `users_menus` VALUES (1, 1, '1', '1', '', '2017-6-20 00:04:45', '2017-6-20 00:04:45');
 INSERT INTO `users_menus` VALUES (2, 2, '1', '1', '', '2017-6-20 00:04:46', '2017-6-20 00:04:46');
@@ -100,3 +104,7 @@ INSERT INTO `users_menus` VALUES (47, 47, '1', '1', '', '2020-6-01 12:43:02', '2
 INSERT INTO `users_menus` VALUES (48, 48, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');
 INSERT INTO `users_menus` VALUES (49, 49, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');
 INSERT INTO `users_menus` VALUES (50, 50, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');
+INSERT INTO `users_menus` VALUES (51, 51, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');
+INSERT INTO `users_menus` VALUES (52, 52, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');
+INSERT INTO `users_menus` VALUES (53, 53, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');
+INSERT INTO `users_menus` VALUES (54, 54, '1', '1', '', '2020-6-01 12:43:02', '2020-6-01 12:43:02');

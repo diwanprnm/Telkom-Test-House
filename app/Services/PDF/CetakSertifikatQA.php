@@ -41,14 +41,13 @@ class CetakSertifikatQA
 
     public function makePDF($data, $pdf)
     {
-
-        // dd($data);
+        // dd($data['documentNumber']);        
         // $title = $data['title'] ? $data['title'] : 'Quality Asurance Test';
+        $title = isset($data['title']) ? $data['title'] : 'Quality Asurance Test';
         $signeeData = \App\GeneralSetting::whereIn('code', ['sm_urel', 'poh_sm_urel'])->where('is_active', '=', 1)->first();
         $certificateNumber = strval($data['documentNumber']);
         $telkomLogoSquarePath = '/app/Services/PDF/images/telkom-logo-square.png';
         $qrCodeLink = url('/digitalSign/21003-132'); //todo daniel digitalSign page
-
         $image_top_url = 'images/telkom-logo-text.jpg';
         $image_background_url = 'images/tth-logo-opacity.jpg';
         $image_tth_motto_url = 'images/tth-logo-text-moto.jpg';
@@ -62,7 +61,7 @@ class CetakSertifikatQA
         $main_font_size = 0.98;
         $small_font_size = 0.8;
         $max_length_resize = 40;
-        $documentNumber = $data['examinationNumber'];
+        $documentNumber = $data['documentNumber'];
 
         $companyName = $data['companyName'];
         $companyNameSize = $this->determineLongStringSize($companyName);
@@ -265,8 +264,12 @@ class CetakSertifikatQA
             </table>
 
 
-            <div class='col judul-utama text-center mb-2'>
-                <h1 class='underline fw-bold text-center'><u>Quality Assurance Test</u></h1>
+            <div class='col judul-utama text-center' style='margin-bottom: 0px; padding-bottom: 0px;'>
+                <h1 class='underline fw-bold text-center' style='margin-bottom: 10px;'><u>Quality Assurance Test</u></h1>
+            </div>
+
+            <div class='col no-sertifikat text-center mb-2' style='margin-top: 0px; padding-top: 0px;'>
+                <span class='underline fw-bold text-center'>$documentNumber</span>
             </div>
 
             <div class='text-center'>
@@ -527,9 +530,7 @@ class CetakSertifikatQA
         //PDF-OUTPUT
         if ($method == 'getStream') {
             return$mpdf->Output($file_name, 'S');
-            exit;
         }
         return $mpdf->Output($file_name, 'D');
-        exit;
     }
 }
