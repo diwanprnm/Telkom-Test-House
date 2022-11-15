@@ -319,6 +319,7 @@ Route::post('/filterNewCharge', 'ExaminationNewChargeClientController@filter');
 Route::get('/register', 'ProfileController@register');
 Route::post('/client/register', 'ProfileController@insert');
 Route::post('/checkRegisterEmail', 'ProfileController@checkRegisterEmail');
+Route::get('/signUp', 'ProfileController@signUp');
 
 Route::post('/global/search', 'HomeController@search');
 Route::post('/client/feedback', 'PermohonanController@feedback');
