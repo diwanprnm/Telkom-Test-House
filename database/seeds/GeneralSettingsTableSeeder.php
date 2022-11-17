@@ -19,12 +19,14 @@ class GeneralSettingsTableSeeder extends Seeder
             'is_active' => '1',
             'created_by' => '1',
             'created_at' => date("Y-m-d H:i:s"),
+            'attachment' => 'TTD BU YUDHA 22.png',
         ]);
         DB::table('general_settings')->insert([
 			'code' => 'poh_manager_urel',
 			'value' => 'Rico Chrisnawan',
 			'created_by' => '1',
 			'created_at' => date("Y-m-d H:i:s"),
+            'attachment' => 'Himakom.jpg',
 		]);
         DB::table('general_settings')->insert([
 			'code' => 'send_email',
@@ -38,12 +40,14 @@ class GeneralSettingsTableSeeder extends Seeder
             'is_active' => '1',
             'created_by' => '1',
             'created_at' => date("Y-m-d H:i:s"),
+            'attachment' => 'ttd SM.jpg',
         ]);
         DB::table('general_settings')->insert([
 			'code' => 'poh_sm_urel',
 			'value' => 'Adi Permadi',
 			'created_by' => '1',
 			'created_at' => date("Y-m-d H:i:s"),
+            'attachment' => 'ttd POH SM.jpg',
 		]);
     }
 }

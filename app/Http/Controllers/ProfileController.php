@@ -348,6 +348,20 @@ class ProfileController extends Controller
 				->with('data', $data);
 		}
     }
+
+	public function signUp(Request $request)
+    {
+		$currentUser = Auth::user();
+		if ($currentUser){
+			return redirect()->back();
+		}else{
+			$query = "SELECT * FROM companies WHERE id != '1' AND is_active = 1 ORDER BY name";
+			$data = DB::select($query);
+			
+			return view('client.profile.register')
+				->with('data', $data);
+		}
+    }
 	
 	public function insert(Request $request)
     { 
