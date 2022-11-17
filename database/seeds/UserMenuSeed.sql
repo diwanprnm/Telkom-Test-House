@@ -51,7 +51,7 @@ INSERT INTO `menus` VALUES ('49', '46', 'Rekap Penyewaan Chamber', 'chamber', 't
 INSERT INTO `menus` VALUES ('50', '0', 'Web Statistic', 'analytic', 'ti-pie-chart');
 INSERT INTO `menus` VALUES ('51', '34', 'Email Editor', 'email_editors', '');
 INSERT INTO `menus` VALUES ('52', '2', 'Pengujian Batal', 'examinationcancel', '');
-INSERT INTO `menus` VALUES ('53', '2', 'Sidang QA', 'examinationcancel', '');
+INSERT INTO `menus` VALUES ('53', '2', 'Sidang QA', 'sidang', '');
 INSERT INTO `menus` VALUES ('54', '0', 'Approval', 'approval', 'ti-pencil-alt');
 
 INSERT INTO `users_menus` VALUES (1, 1, '1', '1', '', '2017-6-20 00:04:45', '2017-6-20 00:04:45');

@@ -22,5 +22,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UserMenuTableSeeder::class);
         $this->call(EmailEditorSeeder::class);
         $this->call(FaqTableSeeder::class);
+        $this->call(AutentikasiEditorTableSeeder::class);
     }
 }

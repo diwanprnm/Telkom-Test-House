@@ -1,14 +1,15 @@
 <?php
 
+use App\User;
+use App\Device;
+use App\Sidang;
+
+use App\Examination;
+use App\Sidang_detail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-
-use App\Device;
-use App\User;
-use App\Sidang;
-use App\Sidang_detail;
-use App\Examination;
 
 class SidangControllerTest extends TestCase
 {
@@ -275,11 +276,12 @@ class SidangControllerTest extends TestCase
     {
         $admin = User::where('id', '=', '1')->first();
         $sidang = Sidang::latest()->first();
+        // dd($admin);
         $response = $this->actingAs($admin)->call('GET', 'admin/sidang/' . $sidang['id'] . '/print');
         //Status sukses
-        // if($response){
-        //     dd('ooga print');
-        // }
+
+            
+        
         $this->assertResponseStatus(200);
     }
 
@@ -343,27 +345,43 @@ class SidangControllerTest extends TestCase
     }
 
 
-    public function testupdateExamination()
-    {
-        $sidang = Sidang::latest()->first();
-        $admin = User::where('id', '=', '1')->first();
-        $response =  $this->actingAs($admin)->call(
-            'GET',
-            'admin/sidang/updateExamination/' . $sidang->id
-        );
-        $this->assertResponseStatus(200);
-    }
+    // public function testupdateExamination()
+    // {
+    //     $sidang = Sidang::latest()->first();
+    //     $admin = User::where('id', '=', '1')->first();
+    //     $response =  $this->actingAs($admin)->call(
+    //         'GET',
+    //         env('MINIO_ENDPOINT'). 'admin/sidang/updateExamination/' . $sidang['id']
+    //     );
+    //     // dd($sidang, $response);
+    //     $this->assertResponseStatus(200);
+    // }
 
 
     public function testDownload()
     {
         $sidang = Sidang::latest()->first();
+        $fileName = 'sidang ' . $sidang->date . '.pdf';
+        $path = "sidang/" . $sidang->id . "/" . $fileName;
+
+        $isFileExist = Storage::disk('minio')->exists($path);
+
+        if (!$isFileExist) {
+            $file = file_get_contents('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
+            Storage::disk('minio')->put($path, $file);
+        }
         $admin = User::where('id', '=', '1')->first();
+
         $response =  $this->actingAs($admin)->call(
             'GET',
             'admin/sidang/' . $sidang->id . '/download'
         );
         $this->assertResponseStatus(200);
+        $this->assertTrue($response->headers->get('content-type') == 'application/octet-stream');
+
+        if (!$isFileExist) {
+            Storage::disk('minio')->delete($path);
+        }
     }
 
     public function testResetExamination()

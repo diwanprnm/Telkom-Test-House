@@ -1,20 +1,70 @@
 <?php
 
+use App\User;
+use App\Approval;
+use App\Examination;
+
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-use App\User;
-use App\Approval;
-
 class ApprovalControllerTest extends TestCase
 {
+    public function testIndexAsNonAdmin()
+    {
+        $user = factory(User::class)->make();
+        $this->actingAs($user)->call('GET', 'admin/approval');
+        //status sukses, tapi ada bacaaan you dont have permission
+        $this->assertResponseStatus(200)
+            ->see("Unautorizhed. You do not have permission to access this page.");
+    }
+
     public function testIndex()
     {
-        $admin = User::where('role_id', '=', '1')->first();
-        $this->actingAs($admin)->call('GET','admin/approval?search=cari');
+        $admin = User::where('id', '=', '1')->first();
+        // dd($admin);
+        $this->actingAs($admin)->call('GET','admin/approval');
         //Status sukses dan judul ARTIKEL
         $this->assertResponseStatus(200);
+    }
+
+    public function testIndexWithSearch()
+    {
+        $admin = User::where('id', '=', '1')->first();
+        $this->actingAs($admin)->call('GET', 'admin/approval?search=test');
+        //Status sukses dan judul Sidang QA
+        $this->assertResponseStatus(200)
+            ->see('<h1 class="mainTitle">Approval</h1>');
+    }
+
+    public function testAssign()
+    {
+        $approval = factory(App\Approval::class)->create();
+        $admin = User::where('id', '=', '1')->first();
+
+        $response = $this->actingAs($admin)->call('GET', 'admin/approval/assign/'. $approval->id.'/admin');
+
+        // dd($response);
+
+		$this->assertEquals(200, $response->status());
+    }
+
+    public function testShow()
+    {
+        $approval = factory(App\Approval::class)->create();
+        
+        $admin = User::where('id', '=', '1')->first();
+        $response =  $this->actingAs($admin)->call(
+            'GET',
+            'admin/approval/'. $approval->id 
+        );
+
+        // $admin = User::where('id', '=', '1')->first();
+        // $approval = Approval::where('status', '=', '1')->first();
+        // $this->actingAs($admin)->call('GET', 'admin/approval/'. $approval->id);
+        //Status sukses dan judul Sidang QA
+        $this->assertResponseStatus(200);
+            // ->see('<h1 class="mainTitle">Approval</h1>');
     }
 
     // public function testIndexWithSearch()
@@ -37,15 +87,6 @@ class ApprovalControllerTest extends TestCase
     //     ->see('Data not found');
     // }
 
-    // public function testCreate()
-    // {
-    //     $user = User::where('id', '=', '1')->first();
-    //     $this->actingAs($user)->call('GET','admin/approval/create');
-    //     //Status sukses dan judul TAMBAH ARTIKEL BARU
-    //     $this->assertResponseStatus(200)
-    //         ->see('<h1 class="mainTitle">TAMBAH ARTIKEL BARU</h1>');
-    // }
-
     // public function testStore()
     // {
     //     $user = User::where('id', '=', '1')->first();
@@ -63,32 +104,7 @@ class ApprovalControllerTest extends TestCase
     //         ->see('Approval successfully created');
     // } 
 
-    // public function testEdit()
-    // {
-    //     $approval = Approval::latest()->first();
-    //     $user = User::where('id', '=', '1')->first();
-    //     $this->actingAs($user)->call('GET','admin/approval/'.$approval->id.'/edit');
-    //     //Status respond ok, dan terdapat judul h1 "Edit Artikel"
-    //     $this->assertResponseStatus(200)
-    //         ->see('<h1 class="mainTitle">Edit Artikel</h1>');
-    // }
-
-    // public function testUpdate()
-    // {
-    //     $approval = Approval::latest()->first();
-    //     $user = User::where('id', '=', '1')->first();
-
-    //     $this->actingAs($user)->call('PATCH', "admin/approval/$approval->id", 
-	// 	[ 
-	//         'title' => 'Testing Approval',
-	//         'type' => 'Good type',
-	//         'is_active' => 1,
-	//         'description' =>  'Teks ini mendeskripsikan isi artikel yang telah di update',
-	//         'description_english' => 'This text descripted the approval that has been updated',
-    //     ]);
-    //     //redirect ke index approval dengan pesan Approval succesfully updated
-    //     $this->assertRedirectedTo('admin/approval/', ['message' => 'Approval successfully updated']);
-    // }
+    
 
     // public function testDestroy()
     // {

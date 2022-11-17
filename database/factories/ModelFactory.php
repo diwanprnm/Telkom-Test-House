@@ -698,6 +698,23 @@ $factory->define(App\TempCompany::class, function (Faker\Generator $faker) {
     ];
 });
 
+$factory->define(App\Approval::class, function (Faker\Generator $faker) {
+    return [
+        'id' => $faker->uuid,
+        'reference_table' => 'device',
+        'reference_id' => function () {
+            return factory(App\Examination::class)->create()->device_id;
+        },
+        'attachment' => $faker->word,
+        'status' => 0,
+        'autentikasi_editor_id' => 1,
+        'created_by' => 1,
+        'updated_by' => 1,
+        'created_at' => Carbon\Carbon::now(),
+        'updated_at' => Carbon\Carbon::now(),
+    ];
+});
+
 
 $factory->define(App\SPB::class, function (Faker\Generator $faker) {
     return [
@@ -719,5 +736,7 @@ $factory->define(App\SPB::class, function (Faker\Generator $faker) {
         'updated_by' => 1,
         'updated_at' => Carbon\Carbon::now(),
     ];
+
+    
 });
 
