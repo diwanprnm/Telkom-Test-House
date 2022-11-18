@@ -737,6 +737,20 @@ $factory->define(App\SPB::class, function (Faker\Generator $faker) {
         'updated_at' => Carbon\Carbon::now(),
     ];
 
+    $factory->define(App\EmailEditor::class, function (Faker\Generator $faker) {
+        return [
+            'name' => "testing_".mt_rand(0,10),
+	        'subject' => str_random(10),
+	        'content' => str_random(10) ,
+	        'dir_name' =>  str_random(10),
+	        'signature' => str_random(10) ,
+	        'logo' =>mt_rand(0,10000),
+            'created_by' => 1,
+            'created_at' => Carbon\Carbon::now(),
+            'updated_by' => 1,
+            'updated_at' => Carbon\Carbon::now(),
+        ];
+    });
     
 });
 

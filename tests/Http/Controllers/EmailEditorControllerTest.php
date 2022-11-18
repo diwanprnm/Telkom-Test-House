@@ -59,7 +59,7 @@ class EmailEditorControllerTest extends TestCase
     public function test_update_email_editors()
 	{ 
 		$user = User::find(1);
-       	$email_editors = EmailEditor::latest()->first();
+       	$email_editors = factory(App\EmailEditor::class)->make();
 		$response =  $this->actingAs($user)->call('PUT', 'admin/email_editors/'.$email_editors->id, 
 		[ 
 	        'name' => str_random(10),
