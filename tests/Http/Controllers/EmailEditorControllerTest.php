@@ -45,7 +45,7 @@ class EmailEditorControllerTest extends TestCase
 	        'signature' => str_random(10) ,
 	        'logo' =>mt_rand(0,10000)
 	    ]);   
-		$this->assertEquals(302, $response->status());
+		$this->assertEquals(200, $response->status());
 	}
 
     public function test_visit_edit_email_editors()
