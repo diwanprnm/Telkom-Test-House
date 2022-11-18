@@ -555,8 +555,7 @@ class ExaminationService
 			self::HEADERS => [self::AUTHORIZATION => config(self::APP_GATEWAY_TPN_2)],
             self::BASE_URI => config(self::APP_URI_API_TPN),
             self::TIMEOUT  => 60.0,
-            self::HTTP_ERRORS => false,
-			'verify' => false
+            self::HTTP_ERRORS => false
         ]);
         try {
             $res_payment_method = $client->get("v3/products/".config("app.product_id_tth_2")."/paymentmethods")->getBody();
