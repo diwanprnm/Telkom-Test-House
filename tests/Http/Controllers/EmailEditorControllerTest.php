@@ -37,21 +37,16 @@ class EmailEditorControllerTest extends TestCase
     public function test_stores_email_editors()
 	{ 
 		$user = User::find(1);
-       	// $file = \Storage::disk('local_public')->get("images/testing.jpg"); 
-		$response =  $this->actingAs($user)->call('POST', 'admin/email_editors', 
-		[ 
+       	$response =  $this->actingAs($user)->call('POST', 'admin/email_editors', 
+		[
 	        'name' => "testing_".mt_rand(0,10),
 	        'subject' => str_random(10),
 	        'content' => str_random(10) ,
 	        'dir_name' =>  str_random(10),
 	        'signature' => str_random(10) ,
-	        'logo' =>mt_rand(0,10000) ,
-	        'created_by' => mt_rand(0,1), 
-	        'updated_by' => mt_rand(0,1)
-	    ]);   
-		// dd($response->getContent());
-        $this->assertEquals(302, $response->status());
-	    // $email_editors = factory(App\EmailEditor::class)->make();  
+	        'logo' =>mt_rand(0,10000)
+	    ]); 
+        $this->assertRedirectedTo('admin/email_editors', ['message' => 'Email successfully created']);
 	}
 
     public function test_visit_edit_email_editors()
