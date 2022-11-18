@@ -26,28 +26,27 @@ class EmailEditorControllerTest extends TestCase
        $this->assertEquals(200, $response->status());
 	}
 	
-    public function test_visit_create_email_editors()
-	{ 
-	   $email_editors = EmailEditor::find(1);
-	   $user = User::find(1);
-	   $response =  $this->actingAs($user)->call('GET', 'admin/email_editors/create');  
-       $this->assertEquals(200, $response->status());
-	}
+    // public function test_visit_create_email_editors()
+	// { 
+	//    $user = User::find(1);
+	//    $response =  $this->actingAs($user)->call('GET', 'admin/email_editors/create');  
+    //    $this->assertEquals(200, $response->status());
+	// }
 
-    public function test_stores_email_editors()
-	{ 
-		$user = User::find(1);
-       	$response =  $this->actingAs($user)->call('POST', 'admin/email_editors', 
-		[
-	        'name' => "testing_".mt_rand(0,10),
-	        'subject' => str_random(10),
-	        'content' => str_random(10) ,
-	        'dir_name' =>  str_random(10),
-	        'signature' => str_random(10) ,
-	        'logo' =>mt_rand(0,10000)
-	    ]); 
-        $this->assertRedirectedTo('admin/email_editors', ['message' => 'Email successfully created']);
-	}
+    // public function test_stores_email_editors()
+	// { 
+	// 	$user = User::find(1);
+    //    	$response =  $this->actingAs($user)->call('POST', 'admin/email_editors', 
+	// 	[ 
+	//         'name' => "testing_".mt_rand(0,10),
+	//         'subject' => str_random(10),
+	//         'content' => str_random(10) ,
+	//         'dir_name' =>  str_random(10),
+	//         'signature' => str_random(10) ,
+	//         'logo' =>mt_rand(0,10000)
+	//     ]);   
+	// 	$this->assertEquals(302, $response->status());
+	// }
 
     public function test_visit_edit_email_editors()
 	{ 
