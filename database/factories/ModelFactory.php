@@ -739,6 +739,7 @@ $factory->define(App\SPB::class, function (Faker\Generator $faker) {
 
     $factory->define(App\EmailEditor::class, function (Faker\Generator $faker) {
         return [
+            'id' => $faker->uuid,
             'name' => "testing_".mt_rand(0,10),
 	        'subject' => str_random(10),
 	        'content' => str_random(10) ,
