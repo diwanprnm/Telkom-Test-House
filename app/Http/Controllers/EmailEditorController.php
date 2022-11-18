@@ -57,10 +57,10 @@ class EmailEditorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    // public function create()
-    // {
-    //     return view('admin.email_editors.create');
-    // }
+    public function create()
+    {
+        return view('admin.email_editors.create');
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -68,33 +68,34 @@ class EmailEditorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    // public function store(Request $request)
-    // {
-    //     $currentUser = Auth::user();
+    public function store(Request $request)
+    {
+        // dd($request->all());
+        $currentUser = Auth::user();
         
-    //     $email = new EmailEditor;
-    //     $email->id = Uuid::uuid4();
-    //     $email->name = $request->input('name');
-    //     $email->subject = $request->input('subject');
-    //     $email->content = $request->input('content');
-    //     $email->dir_name = $request->input('dir_name');
-    //     $email->signature = $request->input('signature');
-    //     $email->logo = $request->input('logo');
-    //     $email->created_by = $currentUser->id;
-    //     $email->updated_by = $currentUser->id;
+        $email = new EmailEditor;
+        $email->id = Uuid::uuid4();
+        $email->name = $request->input('name');
+        $email->subject = $request->input('subject');
+        $email->content = $request->input('content');
+        $email->dir_name = $request->input('dir_name');
+        $email->signature = $request->input('signature');
+        $email->logo = $request->input('logo');
+        $email->created_by = $currentUser->id;
+        $email->updated_by = $currentUser->id;
 
-    //     try{
-    //         $email->save(); 
+        try{
+            $email->save(); 
  
-    //         $logService = new LogService();  
-    //         $logService->createLog('Create Email',"EMAIL EDITOR",json_encode($email));
+            $logService = new LogService();  
+            $logService->createLog('Create Email',"EMAIL EDITOR",json_encode($email));
          
-    //         Session::flash('message', 'Email successfully created');
-    //     }catch(Exception $e){
-    //         Session::flash('error', "Email Failed created");
-    //         return redirect('/admin/email_editors/create')->withInput();
-    //     } 
-    // }
+            Session::flash('message', 'Email successfully created');
+        }catch(Exception $e){
+            Session::flash('error', "Email Failed created");
+            return redirect('/admin/email_editors/create')->withInput();
+        } 
+    }
 
     /**
      * Show the form for editing the specified resource.
