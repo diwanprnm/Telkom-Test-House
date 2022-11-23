@@ -109,7 +109,7 @@ class CetakUjiFungsi
         $pdf->Rect(17,$pdf->GetY(),176,35);
         $pdf->Cell(0,5,'Catatan:',0,1);
         $y = $pdf->GetY();
-        $pdf->MultiCell(0, 5,$data['catatan'],0,'L');
+        $pdf->MultiCell(0, 5,$this->doubledecode($data['catatan']),0,'L');
         $pdf->SetY($y+(5*5));
         count($data['evidence']) ? $pdf->Cell(18,5,'Bukti: lihat lampiran (muncul jika ada bukti)') : '';
         // $pdf->SetFont('ZapfDingbats','B');
