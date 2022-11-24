@@ -271,7 +271,7 @@ class SidangControllerTest extends TestCase
             ->see('Edit Data Perangkat');
     }
 
-
+/*
     public function testPrint()
     {
         $admin = User::where('id', '=', '1')->first();
@@ -284,7 +284,7 @@ class SidangControllerTest extends TestCase
         
         $this->assertResponseStatus(200);
     }
-
+*/
 
     public function testUpdate()
     {
