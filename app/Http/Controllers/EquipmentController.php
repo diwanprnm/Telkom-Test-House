@@ -122,10 +122,12 @@ class EquipmentController extends Controller
 		$in_equip_date = $request->session()->get('key_in_equip_date_for_generate_equip_masuk');
 		$examination = DB::table($this::EXAMINATIONS)
 			->join($this::DEVICE, $this::EXAMINATIONDEVICE, '=', $this::DEVICEID)
+            ->join('users', 'examinations.created_by', '=', 'users.id')
 			->select(
 					$this::EXAMID,
 					$this::DEVICENAME,
-					$this::DEVICEMODEL
+					$this::DEVICEMODEL,
+                    'users.name as user_name'
 					)
 			->orderBy($this::DEVICENAME)
 			->get();

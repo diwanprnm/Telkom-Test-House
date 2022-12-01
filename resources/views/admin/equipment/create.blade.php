@@ -160,9 +160,13 @@
 									<div class="col-md-2">
 										<div class="form-group">
 											<label>
-												PIC Customer *
+												Penanggung Jawab *
 											</label>
-											<input type="text" name="pic" class="form-control" placeholder="Nama penanggung jawab ..." required>
+											<!-- disini radio button:
+												1. Nama PIC (default)	: readonly true, autofill dari $item->user_name
+												2. Diwakilkan oleh		: readonly false, autofocus ke isian dan free text
+											-->
+											<input id="pic" type="text" name="pic" class="form-control" placeholder="Nama penanggung jawab ..." value="{{$item->user_name}}" required readonly>
 										</div>
 									</div>
 								</div>
