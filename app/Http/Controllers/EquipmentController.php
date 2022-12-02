@@ -120,19 +120,8 @@ class EquipmentController extends Controller
     {
 		$exam_id = $request->session()->get('key_exam_id_for_generate_equip_masuk');
 		$in_equip_date = $request->session()->get('key_in_equip_date_for_generate_equip_masuk');
-		$examination = DB::table($this::EXAMINATIONS)
-			->join($this::DEVICE, $this::EXAMINATIONDEVICE, '=', $this::DEVICEID)
-            ->join('users', 'examinations.created_by', '=', 'users.id')
-			->select(
-					$this::EXAMID,
-					$this::DEVICENAME,
-					$this::DEVICEMODEL,
-                    'users.name as user_name'
-					)
-			->orderBy($this::DEVICENAME)
-			->get();
-		
-        return view('admin.equipment.create')
+		$examination = Examination::where('id', $exam_id)->with('device')->with('user')->first();
+		return view('admin.equipment.create')
             ->with('exam_id', $exam_id)
             ->with('in_equip_date', $in_equip_date)
             ->with($this::EXAMINATION, $examination);

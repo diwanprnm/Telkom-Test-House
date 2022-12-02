@@ -95,11 +95,7 @@
 									</label>
 									<select class="form-control" id="examination_id" name="examination_id" required>
 										<option value="" disabled selected>Select...</option>
-										@foreach($examination as $item)
-											@if($item->id == $exam_id)
-												<option value="{{$item->id}}" selected>{{$item->name}}, model/type {{$item->model}}</option>
-											@endif
-										@endforeach
+										<option value="{{$examination->id}}" selected>{{$examination->device->name}}, model/type {{$examination->device->model}}</option>
 									</select>
 								</div>
 							</div>
@@ -163,7 +159,7 @@
 												Penanggung Jawab *
 											</label>
 											<!-- disini radio button:
-												1. Nama PIC (default)	: readonly true, autofill dari $item->user_name
+												1. Nama PIC (default)	: readonly true, autofill dari $examination->user_name
 												2. Diwakilkan oleh		: readonly false, autofocus ke isian dan free text
 											-->
 												<div class="radio-list">
@@ -184,7 +180,7 @@
 														</div>
 													</div>
 												</div>
-											<input id="pic" type="text" name="pic" class="form-control" placeholder="Nama penanggung jawab ..." value="{{$item->user_name}}" required readonly>
+											<input id="pic" type="text" name="pic" class="form-control" placeholder="Nama penanggung jawab ..." value="{{$examination->user->name}}" required readonly>
 										</div>
 									</div>
 								</div>
@@ -270,10 +266,10 @@
 	$(document).ready(function(){
 		$('.select-pic').click(function() {
 			if ($(this).val() == "readonly") {
-				$('#pic').prop({readonly: true}).val("{{ $item->user_name}}");
+				$('#pic').prop({readonly: true}).val("{{ $examination->user->name }}");
    			}
 			else {
-			$('#pic').prop({readonly: false}).focus().val("");
+				$('#pic').prop({readonly: false}).focus().val("");
 			}
   });
     });
