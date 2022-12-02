@@ -157,7 +157,7 @@
 								</div>
 								
 								<div class="row">
-									<div class="col-md-2">
+									<div class="col-md-12">
 										<div class="form-group">
 											<label>
 												Penanggung Jawab *
@@ -166,6 +166,24 @@
 												1. Nama PIC (default)	: readonly true, autofill dari $item->user_name
 												2. Diwakilkan oleh		: readonly false, autofocus ke isian dan free text
 											-->
+												<div class="radio-list">
+													<div class="radio">
+														<div class="radio clip-radio radio-primary">
+															<input type="radio" class="select-pic" value="readonly" name="radio_pic" id="namapic" checked>
+															<label for="namapic">
+																Nama PIC
+															</label>
+														</div>
+													</div>
+													<div class="radio">
+														<div class="radio clip-radio radio-primary">
+															<input type="radio" class="select-pic" value="notreadonly" name="radio_pic" id="diwakilkan">
+															<label for="diwakilkan">
+																Diwakilkan Oleh:
+															</label>
+														</div>
+													</div>
+												</div>
 											<input id="pic" type="text" name="pic" class="form-control" placeholder="Nama penanggung jawab ..." value="{{$item->user_name}}" required readonly>
 										</div>
 									</div>
@@ -222,6 +240,8 @@
 		FormElements.init();
 	});
 
+
+
 	var equip = 1;
 	function equip_fields() {
 	 
@@ -246,6 +266,17 @@
 		// window.close();
 		// location.reload();
 	// });
+
+	$(document).ready(function(){
+		$('.select-pic').click(function() {
+			if ($(this).val() == "readonly") {
+				$('#pic').prop({readonly: true}).val("{{ $item->user_name}}");
+   			}
+			else {
+			$('#pic').prop({readonly: false}).focus().val("");
+			}
+  });
+    });
 </script>
 
 </body>
