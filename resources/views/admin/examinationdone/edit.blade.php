@@ -1482,13 +1482,13 @@
 							<div class="row">
 								@if($data->qa_passed == 1)
 								<div>
-									<div class="col-md-12">
+									{{-- <div class="col-md-12">
 										<div class="form-group">
 											<label>
 												Sertifikat File *
 											</label>
 										</div>
-									</div>
+									</div> --}}
 									<div class="col-md-12">
 										<div class="form-group">
 											@php $certificate_name = ''; @endphp
